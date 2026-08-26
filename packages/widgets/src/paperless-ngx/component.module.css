@@ -16,8 +16,7 @@
   gap: clamp(8px, 3cqi, 18px);
   flex-shrink: 0;
   padding-bottom: clamp(4px, 2cqi, 10px);
-  border-bottom: 1px solid
-    rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45));
+  border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
 }
 
 .heroExpanded {
@@ -98,9 +97,7 @@
   gap: clamp(2px, 1.5cqi, 5px);
   padding: clamp(4px, 2.5cqi, 10px);
   border-radius: var(--mantine-radius-md);
-  border: 1px solid
-    rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45));
-  background-color: transparent;
+  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
   overflow: hidden;
 }
 
@@ -110,7 +107,11 @@
 }
 
 .statLabel {
-  font-size: clamp(8px, 2.5cqi, 12px);
+  font-size: clamp(
+    calc(8px * var(--board-canvas-ui-scale, 1)),
+    calc(2.5cqi * var(--board-canvas-ui-scale, 1)),
+    calc(12px * var(--board-canvas-ui-scale, 1))
+  );
   color: var(--mantine-color-dimmed);
   line-height: 1.2;
   text-align: center;
@@ -121,9 +122,13 @@
 }
 
 .statValue {
-  font-size: clamp(14px, 5.5cqi, 24px);
+  font-size: clamp(
+    calc(14px * var(--board-canvas-ui-scale, 1)),
+    calc(5.5cqi * var(--board-canvas-ui-scale, 1)),
+    calc(24px * var(--board-canvas-ui-scale, 1))
+  );
   font-weight: 700;
-  color: var(--mantine-color-text);
+  color: var(--mantine-primary-color-filled);
   line-height: 1.1;
   text-align: center;
 }

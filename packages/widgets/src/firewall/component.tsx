@@ -68,7 +68,6 @@ export default function FirewallWidget({
   const isAdvanced = displayMode === "advanced";
   const isTiny = !isAdvanced && (width < 256 || height < 180);
   const ringSize = isAdvanced ? 100 : height < 120 ? 44 : isTiny ? 64 : 100;
-  const showInterfaces = isAdvanced || (!isTiny && height >= 120);
   const t = useI18n("widget.firewall");
   const tCommon = useI18n("common");
 
@@ -179,7 +178,6 @@ export default function FirewallWidget({
                 hasError={hasError}
                 isAdvanced={isAdvanced}
                 ringSize={ringSize}
-                showInterfaces={showInterfaces}
                 accordionValue={accordionValue}
                 setAccordionValue={setAccordionValue}
                 errorLabel={t("error.internalServerError")}
@@ -210,7 +208,6 @@ interface FirewallPanelProps {
   hasError: boolean;
   isAdvanced: boolean;
   ringSize: number;
-  showInterfaces: boolean;
   accordionValue: string | null;
   setAccordionValue: (value: string | null) => void;
   errorLabel: string;
@@ -234,7 +231,6 @@ const FirewallPanel = ({
   hasError,
   isAdvanced,
   ringSize,
-  showInterfaces,
   accordionValue,
   setAccordionValue,
   errorLabel,
@@ -283,21 +279,19 @@ const FirewallPanel = ({
         )}
       </Flex>
 
-      {showInterfaces && (
-        <InterfacesPanel
-          summary={interfaces ?? []}
-          hasResult={interfacesLoaded}
-          hasError={interfacesError}
-          isAdvanced={isAdvanced}
-          accordionValue={accordionValue}
-          setAccordionValue={setAccordionValue}
-          errorLabel={errorLabel}
-          errorBadgeLabel={errorBadgeLabel}
-          noDataLabel={noDataLabel}
-          loadingLabel={loadingLabel}
-          label={interfacesLabel}
-        />
-      )}
+      <InterfacesPanel
+        summary={interfaces ?? []}
+        hasResult={interfacesLoaded}
+        hasError={interfacesError}
+        isAdvanced={isAdvanced}
+        accordionValue={accordionValue}
+        setAccordionValue={setAccordionValue}
+        errorLabel={errorLabel}
+        errorBadgeLabel={errorBadgeLabel}
+        noDataLabel={noDataLabel}
+        loadingLabel={loadingLabel}
+        label={interfacesLabel}
+      />
     </Stack>
   </Paper>
 );

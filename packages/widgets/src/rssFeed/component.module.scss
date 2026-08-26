@@ -24,6 +24,18 @@
   flex-shrink: 0;
 }
 
+.backgroundImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(5px);
+  transform: scaleX(-1.05) scaleZ(-1.05);
+  opacity: 0.25;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .entry {
     transition: none;

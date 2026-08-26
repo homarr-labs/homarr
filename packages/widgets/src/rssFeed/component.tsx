@@ -1,6 +1,6 @@
 "use client";
 
-import { Alert, Card, Flex, Group, Image, ScrollArea, SimpleGrid, Text } from "@mantine/core";
+import { Alert, Card, Flex, Group, Image, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 import { IconAlertTriangle, IconClock, IconServerOff } from "@tabler/icons-react";
 import dayjs from "dayjs";
 
@@ -104,9 +104,10 @@ export default function RssFeed({ options, width, height, displayMode }: WidgetC
     descriptionLines,
   });
   const spacing = isRoomy ? "sm" : "xs";
+  const isNarrow = width < 128 * 3;
 
   return (
-    <ScrollArea className="scroll-area-w100" w="100%" h="100%" p={isTiny ? 4 : "xs"}>
+    <ScrollArea className="scroll-area-w100" w="100%" h="100%" p={isAdvanced ? (isTiny ? 4 : "xs") : "sm"}>
       {warning && (
         <Alert
           role="presentation"
@@ -118,67 +119,109 @@ export default function RssFeed({ options, width, height, displayMode }: WidgetC
           <output>{warning}</output>
         </Alert>
       )}
-      <SimpleGrid cols={columns} w="100%" spacing={spacing} verticalSpacing={spacing}>
-        {feed.entries.map((feedEntry) => {
-          const href = getSafeApplicationUrl(feedEntry.link, { baseUrl: feedEntry.feedUrl });
-          return (
-            <Card
-              key={feedEntry.id}
-              className={classes.entry}
-              component={href ? "a" : "div"}
-              href={href}
-              radius={board.itemRadius}
-              target={href ? "_blank" : undefined}
-              rel={href ? SAFE_NEW_TAB_REL : undefined}
-              w="100%"
-              p={isDense ? 6 : "xs"}
-              title={feedEntry.title}
-            >
-              <Group wrap="nowrap" align="flex-start" gap={isDense ? "xs" : "md"}>
-                {feedEntry.enclosure !== undefined && entryDisplay.showImage && (
-                  <Image
-                    loading="lazy"
-                    className={classes.poster}
-                    src={feedEntry.enclosure}
-                    alt=""
-                    w={isRoomy ? 140 : isDense ? 64 : 96}
-                    h={isRoomy ? 96 : isDense ? 64 : 96}
-                    radius="sm"
-                    fit="cover"
-                  />
-                )}
-
-                <Flex gap={isRoomy ? "sm" : 6} direction="column" w="100%" miw={0}>
-                  <Text
-                    dir={languageDir}
-                    fz={isRoomy ? "md" : "sm"}
-                    fw={600}
-                    lh={1.25}
-                    lineClamp={isAdvanced ? undefined : 2}
-                  >
-                    {feedEntry.title}
-                  </Text>
-                  {entryDisplay.showDescription && feedEntry.description && (
-                    <Text dir={languageDir} c="dimmed" size="sm" lineClamp={entryDisplay.descriptionLineClamp}>
-                      {feedDescriptionToText(feedEntry.description)}
-                    </Text>
+      {isAdvanced ? (
+        <SimpleGrid cols={columns} w="100%" spacing={spacing} verticalSpacing={spacing}>
+          {feed.entries.map((feedEntry) => {
+            const href = getSafeApplicationUrl(feedEntry.link, { baseUrl: feedEntry.feedUrl });
+            return (
+              <Card
+                key={feedEntry.id}
+                className={classes.entry}
+                component={href ? "a" : "div"}
+                href={href}
+                radius={board.itemRadius}
+                target={href ? "_blank" : undefined}
+                rel={href ? SAFE_NEW_TAB_REL : undefined}
+                w="100%"
+                p={isDense ? 6 : "xs"}
+                title={feedEntry.title}
+              >
+                <Group wrap="nowrap" align="flex-start" gap={isDense ? "xs" : "md"}>
+                  {feedEntry.enclosure !== undefined && entryDisplay.showImage && (
+                    <Image
+                      loading="lazy"
+                      className={classes.poster}
+                      src={feedEntry.enclosure}
+                      alt=""
+                      w={isRoomy ? 140 : isDense ? 64 : 96}
+                      h={isRoomy ? 96 : isDense ? 64 : 96}
+                      radius="sm"
+                      fit="cover"
+                    />
                   )}
 
-                  <InfoDisplay
-                    source={entryDisplay.showSource ? getHostname(feedEntry.feedUrl) : undefined}
-                    date={feedEntry.published ? dayjs(feedEntry.published).fromNow() : undefined}
-                    timestamp={
-                      isAdvanced && feedEntry.published
-                        ? dayjs(feedEntry.published).format("YYYY-MM-DD HH:mm:ss Z")
-                        : undefined
-                    }
-                  />
-                </Flex>
-              </Group>
-            </Card>
-          );
-        })}
-      </SimpleGrid>
+                  <Flex gap={isRoomy ? "sm" : 6} direction="column" w="100%" miw={0}>
+                    <Text dir={languageDir} fz={isRoomy ? "md" : "sm"} fw={600} lh={1.25}>
+                      {feedEntry.title}
+                    </Text>
+                    {entryDisplay.showDescription && feedEntry.description && (
+                      <Text dir={languageDir} c="dimmed" size="sm">
+                        {feedDescriptionToText(feedEntry.description)}
+                      </Text>
+                    )}
+
+                    <InfoDisplay
+                      source={entryDisplay.showSource ? getHostname(feedEntry.feedUrl) : undefined}
+                      date={feedEntry.published ? dayjs(feedEntry.published).fromNow() : undefined}
+                      timestamp={
+                        feedEntry.published ? dayjs(feedEntry.published).format("YYYY-MM-DD HH:mm:ss Z") : undefined
+                      }
+                    />
+                  </Flex>
+                </Group>
+              </Card>
+            );
+          })}
+        </SimpleGrid>
+      ) : (
+        <Stack w="100%" gap="sm">
+          {feed.entries.map((feedEntry) => {
+            const href = getSafeApplicationUrl(feedEntry.link, { baseUrl: feedEntry.feedUrl });
+            return (
+              <Card
+                key={feedEntry.id}
+                component={href ? "a" : "div"}
+                href={href}
+                radius={board.itemRadius}
+                target={href ? "_blank" : undefined}
+                rel={href ? SAFE_NEW_TAB_REL : undefined}
+                w="100%"
+                p="sm"
+                title={feedEntry.title}
+              >
+                {feedEntry.enclosure !== undefined && (
+                  <Image className={classes.backgroundImage} src={feedEntry.enclosure} alt="" />
+                )}
+                <Group wrap="nowrap">
+                  {feedEntry.enclosure !== undefined && options.showPosterImage && !isNarrow && (
+                    <Image
+                      loading="lazy"
+                      className={classes.poster}
+                      src={feedEntry.enclosure}
+                      alt={feedEntry.title}
+                      w={140}
+                      h={140}
+                      radius="sm"
+                      fit="cover"
+                    />
+                  )}
+                  <Flex gap="sm" direction="column" w="100%" miw={0}>
+                    <Text dir={languageDir} fz="sm" lh="sm" lineClamp={2}>
+                      {feedEntry.title}
+                    </Text>
+                    {!options.hideDescription && feedEntry.description && (
+                      <Text dir={languageDir} c="dimmed" size="sm" lineClamp={options.textLinesClamp}>
+                        {feedDescriptionToText(feedEntry.description)}
+                      </Text>
+                    )}
+                    {feedEntry.published && <InfoDisplay date={dayjs(feedEntry.published).fromNow()} />}
+                  </Flex>
+                </Group>
+              </Card>
+            );
+          })}
+        </Stack>
+      )}
     </ScrollArea>
   );
 }

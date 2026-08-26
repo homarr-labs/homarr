@@ -13,10 +13,12 @@ export function StreamsList({
   streams,
   width,
   showSource,
+  transparent = false,
 }: {
   streams: SourcedTracearrStream[];
   width: number;
   showSource: boolean;
+  transparent?: boolean;
 }) {
   const t = useI18n("widget.tracearr");
 
@@ -31,7 +33,13 @@ export function StreamsList({
   return (
     <Stack gap="xs">
       {streams.map((stream) => (
-        <StreamCard key={stream.key} stream={stream} compact={width < 300} showSource={showSource} />
+        <StreamCard
+          key={stream.key}
+          stream={stream}
+          compact={width < 300}
+          showSource={showSource}
+          transparent={transparent}
+        />
       ))}
     </Stack>
   );
@@ -41,10 +49,12 @@ function StreamCard({
   stream,
   compact,
   showSource,
+  transparent,
 }: {
   stream: SourcedTracearrStream;
   compact: boolean;
   showSource: boolean;
+  transparent: boolean;
 }) {
   const t = useI18n("widget.tracearr");
   const progressPercent =
@@ -65,7 +75,12 @@ function StreamCard({
           : null;
 
   return (
-    <Paper p="xs" radius="lg" bg="transparent" style={{ position: "relative", overflow: "hidden" }}>
+    <Paper
+      p="xs"
+      radius="lg"
+      bg={transparent ? "transparent" : undefined}
+      style={{ position: "relative", overflow: "hidden" }}
+    >
       {stream.posterUrl && (
         <Box
           style={{

@@ -12,11 +12,13 @@ export const NetworkTrafficChart = ({
   isUp,
   hasShadow,
   labelDisplayMode,
+  advanced = false,
 }: {
   usageOverTime: number[];
   isUp: boolean;
   hasShadow: boolean;
   labelDisplayMode: LabelDisplayModeOption;
+  advanced?: boolean;
 }) => {
   const chartData = usageOverTime.map((usage, index) => ({ index, usage }));
   const t = useI18n("widget.systemResources.card");
@@ -36,6 +38,7 @@ export const NetworkTrafficChart = ({
       lastValue={formatByteRate(Math.round(latest))}
       chartType={hasShadow ? "area" : "line"}
       labelDisplayMode={labelDisplayMode}
+      advanced={advanced}
       tooltipProps={{
         content: ({ payload }) => {
           const value = payload[0] ? Number(payload[0].value) : 0;

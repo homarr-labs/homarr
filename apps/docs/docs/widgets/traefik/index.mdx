@@ -17,7 +17,7 @@ import { traefikIntegration } from "@site/docs/integrations/traefik";
 
 This widget displays a compact overview of your Traefik instance, including total routers, entry points, protocol-specific router/service/middleware counts, and warning or error totals when Traefik reports them.
 
-Advanced view shows every protocol and entry point, identifies every healthy Traefik source and version, and labels each resource or failed endpoint with its owning integration. Compact mode keeps the responsive aggregate overview and names each healthy source when multiple integrations are selected.
+Advanced view shows every protocol and entry point, identifies every healthy Traefik source and version, and labels each resource or failed endpoint with its owning integration. Compact mode keeps every configured protocol card and entry-point label visible and names each healthy source when multiple integrations are selected.
 
 When multiple Traefik integrations are selected, data from healthy sources remains visible if another source fails. A warning indicator identifies each unavailable integration without exposing private request details. If every selected integration fails, the widget reports an error; if cached data remains visible after a later total failure, a stale-data warning is shown.
 

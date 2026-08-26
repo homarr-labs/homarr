@@ -5,6 +5,7 @@ import {
   ActionIcon,
   Anchor,
   Badge,
+  Button,
   Card,
   Center,
   Flex,
@@ -23,6 +24,7 @@ import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useI18n } from "@homarr/translation/client";
+import { iconSizes } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
 import { useWidgetRuntimeActions } from "../runtime-hooks";
@@ -67,8 +69,7 @@ export default function IndexerManagerWidget({
   const board = useRequiredBoard();
   const isAdvanced = displayMode === "advanced";
   const hasSmallWidth = !isAdvanced && width < 256;
-  const isDense = !isAdvanced && (width < 280 || height < 180);
-  const showHealthCounts = isAdvanced || (width >= 200 && height >= 100);
+  const hasSmallHeight = !isAdvanced && height < 256;
   const allIndexers = indexersData.flatMap((entry) => entry.indexers);
   const hasSourceError = indexersData.some((entry) => Boolean(entry.error));
   const unavailableCount = allIndexers.filter(
@@ -88,24 +89,32 @@ export default function IndexerManagerWidget({
       className={`indexer-manager-container ${classes.root}`}
       h="100%"
       direction="column"
-      gap={isDense ? 4 : "xs"}
-      p={isDense ? "xs" : "sm"}
+      gap={isAdvanced ? "xs" : "sm"}
+      p="sm"
+      align={isAdvanced ? undefined : "center"}
     >
-      <Group className="indexer-manager-title" align="center" gap="xs" wrap="nowrap" w="100%">
+      <Group
+        className="indexer-manager-title"
+        align="center"
+        gap="xs"
+        wrap="nowrap"
+        w={isAdvanced ? "100%" : undefined}
+      >
         {testAllError && <VisuallyHidden role="alert">{tCommon("error")}</VisuallyHidden>}
         <Tooltip label={t("title")} disabled={!hasSmallWidth}>
           <IconReportSearch
             className="indexer-manager-title-icon"
-            size={hasSmallWidth ? 16 : 20}
-            style={{ minWidth: hasSmallWidth ? 16 : 20 }}
+            style={hasSmallWidth ? iconSizes.md : iconSizes.xl}
           />
         </Tooltip>
-        {!hasSmallWidth && (
-          <Text size={isDense ? "xs" : "sm"} fw={600} truncate="end">
-            {t("title")}
-          </Text>
-        )}
-        {showHealthCounts && (
+        <Text
+          size={hasSmallWidth ? "xs" : isAdvanced ? "sm" : "md"}
+          fw={isAdvanced ? 600 : "bold"}
+          truncate={isAdvanced ? "end" : undefined}
+        >
+          {t("title")}
+        </Text>
+        {isAdvanced && (
           <Group gap={4} wrap="nowrap">
             <Badge size="xs" color="green" variant="light">
               {allIndexers.length - unavailableCount}
@@ -117,29 +126,35 @@ export default function IndexerManagerWidget({
             )}
           </Group>
         )}
-        <Tooltip label={testAllError ? tCommon("error") : t("testAll")}>
-          <ActionIcon
-            className={combineClasses("indexer-manager-test-action-icon", classes.testAction, actionTargetClasses.root)}
-            size="sm"
-            radius={board.itemRadius}
-            variant="light"
-            color={testAllError ? "red" : undefined}
-            loading={isPending}
-            disabled={isEditMode || !canInteract}
-            loaderProps={{ type: "dots" }}
-            onClick={() => {
-              testAllIndexers();
-            }}
-            aria-label={t("testAll")}
-          >
-            <IconTestPipe size="var(--mantine-font-size-sm)" />
-          </ActionIcon>
-        </Tooltip>
+        {(isAdvanced || hasSmallHeight) && (
+          <Tooltip label={testAllError ? tCommon("error") : t("testAll")}>
+            <ActionIcon
+              className={combineClasses(
+                "indexer-manager-test-action-icon",
+                isAdvanced && classes.testAction,
+                actionTargetClasses.root,
+              )}
+              size="sm"
+              radius={board.itemRadius}
+              variant="light"
+              color={testAllError ? "red" : undefined}
+              loading={isPending}
+              disabled={isEditMode || !canInteract}
+              loaderProps={{ type: "dots" }}
+              onClick={() => {
+                testAllIndexers();
+              }}
+              aria-label={t("testAll")}
+            >
+              <IconTestPipe style={isAdvanced ? iconSizes.sm : iconSizes.xs} />
+            </ActionIcon>
+          </Tooltip>
+        )}
       </Group>
       <Card
-        className={combineClasses("indexer-manager-list-container", classes.card)}
+        className={combineClasses("indexer-manager-list-container", classes.card, isAdvanced && classes.advancedCard)}
         w="100%"
-        p={isDense ? 4 : "xs"}
+        p="xs"
         radius={board.itemRadius}
         flex={1}
       >
@@ -153,7 +168,7 @@ export default function IndexerManagerWidget({
           <ScrollArea className="indexer-manager-list-scroll-area" h="100%" scrollbars="y">
             {indexersData.map(({ integrationId, integrationName, indexers, error }) => (
               <Stack gap={4} className={`indexer-manager-${integrationId}-list-container`} p={0} key={integrationId}>
-                {(isAdvanced || indexersData.length > 1 || error) && (
+                {(isAdvanced || error) && (
                   <Group justify="space-between" wrap="nowrap" py={4}>
                     <Text size="xs" fw={600} truncate="end">
                       {integrationName}
@@ -171,14 +186,18 @@ export default function IndexerManagerWidget({
                   const presentation = statusPresentation[displayStatus];
                   return (
                     <Group
-                      className={`indexer-manager-line indexer-manager-${indexer.name} ${classes.indexerRow}`}
+                      className={combineClasses(
+                        "indexer-manager-line",
+                        `indexer-manager-${indexer.name}`,
+                        isAdvanced && classes.indexerRow,
+                      )}
                       key={indexer.id}
                       justify="space-between"
                       gap="xs"
                       wrap="nowrap"
                     >
                       <Anchor
-                        className={combineClasses("indexer-manager-line-anchor", classes.indexerLink)}
+                        className={combineClasses("indexer-manager-line-anchor", isAdvanced && classes.indexerLink)}
                         component={href ? "a" : "span"}
                         href={href}
                         target={href ? (options.openIndexerSiteInNewTab ? "_blank" : "_self") : undefined}
@@ -189,7 +208,7 @@ export default function IndexerManagerWidget({
                           className="indexer-manager-line-anchor-text"
                           c="dimmed"
                           size={hasSmallWidth ? "xs" : "sm"}
-                          truncate="end"
+                          truncate={isAdvanced ? "end" : undefined}
                         >
                           {indexer.name}
                         </Text>
@@ -201,14 +220,14 @@ export default function IndexerManagerWidget({
                       ) : displayStatus === "healthy" ? (
                         <IconCircleCheck
                           className="indexer-manager-line-status-icon indexer-manager-line-icon-enabled"
-                          color="var(--mantine-color-green-6)"
-                          size={hasSmallWidth ? 12 : 16}
+                          color="#2ecc71"
+                          style={hasSmallWidth ? iconSizes.xs : iconSizes.md}
                         />
                       ) : (
                         <IconCircleX
                           className="indexer-manager-line-status-icon indexer-manager-line-icon-disabled"
-                          color="var(--mantine-color-red-6)"
-                          size={hasSmallWidth ? 12 : 16}
+                          color="#d9534f"
+                          style={hasSmallWidth ? iconSizes.xs : iconSizes.md}
                         />
                       )}
                     </Group>
@@ -219,6 +238,25 @@ export default function IndexerManagerWidget({
           </ScrollArea>
         )}
       </Card>
+      {!isAdvanced && !hasSmallHeight && (
+        <Button
+          className="indexer-manager-test-button"
+          w="100%"
+          size="xs"
+          radius={board.itemRadius}
+          variant="light"
+          color={testAllError ? "red" : undefined}
+          leftSection={<IconTestPipe style={iconSizes.md} />}
+          loading={isPending}
+          disabled={isEditMode || !canInteract}
+          loaderProps={{ type: "dots" }}
+          onClick={() => {
+            testAllIndexers();
+          }}
+        >
+          {t("testAll")}
+        </Button>
+      )}
     </Flex>
   );
 }

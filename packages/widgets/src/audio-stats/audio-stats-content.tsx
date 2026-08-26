@@ -9,14 +9,7 @@ import { zoomCompensatedSize } from "@homarr/ui";
 
 import classes from "./component.module.css";
 import type { AudioStatsBackend, AudioStatsDisplayOptions } from "./shared";
-import {
-  AUDIO_STATS_TRANSLATION_SCOPE,
-  getGridCols,
-  getIconSize,
-  prioritizeVisibleStats,
-  getVisibleStatLimit,
-  getVisibleStats,
-} from "./shared";
+import { AUDIO_STATS_TRANSLATION_SCOPE, getGridCols, getIconSize, getVisibleStats } from "./shared";
 
 const rootClassByCompact = {
   true: classes.rootCompact,
@@ -33,13 +26,20 @@ const statTileClassByCompact = {
   false: "",
 } as const;
 
+const statTileClassByAdvanced = {
+  true: classes.statTileAdvanced,
+  false: "",
+} as const;
+
+const COMPACT_SINGLE_COLUMN_BREAKPOINT = 220;
+
 interface AudioStatsContentProps {
   backend: AudioStatsBackend;
   stats: NavidromeDashboardData | AudiobookshelfDashboardData;
   options: AudioStatsDisplayOptions;
   showAllStats?: boolean;
+  advanced?: boolean;
   width: number;
-  height: number;
 }
 
 export function AudioStatsContent({
@@ -47,15 +47,18 @@ export function AudioStatsContent({
   stats,
   options,
   showAllStats = false,
+  advanced = false,
   width,
-  height,
 }: AudioStatsContentProps) {
   const t = useI18n(AUDIO_STATS_TRANSLATION_SCOPE);
   const compact = options.compactMode ?? false;
-  const enabledStats = prioritizeVisibleStats(getVisibleStats(backend, options, stats, showAllStats), compact);
-  const visibleStats = enabledStats.slice(0, getVisibleStatLimit(width, height, enabledStats.length, compact));
+  const visibleStats = getVisibleStats(backend, options, stats, showAllStats);
   const compactKey = String(compact) as keyof typeof rootClassByCompact;
-  const gridCols = getGridCols(width, visibleStats.length, compact);
+  const advancedKey = String(advanced) as keyof typeof statTileClassByAdvanced;
+  let gridCols = getGridCols(width, visibleStats.length, compact);
+  if (!advanced && width < COMPACT_SINGLE_COLUMN_BREAKPOINT) {
+    gridCols = 1;
+  }
   const iconSize = getIconSize(width, compact);
 
   return (
@@ -66,7 +69,10 @@ export function AudioStatsContent({
           style={{ "--stat-cols": gridCols } as CSSProperties}
         >
           {visibleStats.map(({ optionKey, statKey, value, Icon }) => (
-            <div key={optionKey} className={`${classes.statTile} ${statTileClassByCompact[compactKey]}`}>
+            <div
+              key={optionKey}
+              className={`${classes.statTile} ${statTileClassByCompact[compactKey]} ${statTileClassByAdvanced[advancedKey]}`}
+            >
               <Icon className={classes.statIcon} style={zoomCompensatedSize(iconSize)} stroke={1.5} />
               <span className={classes.statValue}>{value}</span>
               <span className={classes.statLabel}>{t(statKey as never)}</span>

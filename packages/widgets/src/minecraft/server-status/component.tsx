@@ -15,6 +15,7 @@ export default function MinecraftServerStatusWidget({
   options,
   width,
   height,
+  displayMode,
 }: WidgetComponentProps<"minecraftServerStatus">) {
   const { data: result, isPending, error } = clientApi.widget.minecraft.getServerStatus.useQuery(options);
   const t = useI18n("widget.minecraftServerStatus");
@@ -34,10 +35,11 @@ export default function MinecraftServerStatusWidget({
   const { data } = result;
 
   const title = options.title.trim().length > 0 ? options.title : options.domain;
-  const isDense = width < 220 || height < 120;
-  const showServerIcon = !isDense && height >= 144;
-  const showMetadata = width >= 260 && height >= 180;
-  const showCapacity = width >= 180 && height >= 140;
+  const isAdvanced = displayMode === "advanced";
+  const isDense = isAdvanced && (width < 220 || height < 120);
+  const showServerIcon = !isAdvanced || (!isDense && height >= 144);
+  const showMetadata = isAdvanced && width >= 260 && height >= 180;
+  const showCapacity = isAdvanced && width >= 180 && height >= 140;
   const iconSize = Math.max(40, Math.min(80, width * 0.45, height * 0.45));
   const playerPercent = data.online && data.players.max > 0 ? (data.players.online / data.players.max) * 100 : 0;
 

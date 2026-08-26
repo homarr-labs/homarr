@@ -40,8 +40,12 @@
   gap: clamp(2px, 1.5cqi, 4px);
   padding: clamp(4px, 2cqi, 8px);
   border-radius: var(--mantine-radius-md);
-  background-color: transparent;
+  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
   overflow: hidden;
+}
+
+.statTileAdvanced {
+  background-color: transparent;
 }
 
 .statTileCompact {
@@ -57,7 +61,11 @@
 }
 
 .statLabel {
-  font-size: clamp(8px, 2.5cqi, 11px);
+  font-size: clamp(
+    calc(8px * var(--board-canvas-ui-scale, 1)),
+    calc(2.5cqi * var(--board-canvas-ui-scale, 1)),
+    calc(11px * var(--board-canvas-ui-scale, 1))
+  );
   color: var(--mantine-color-dimmed);
   line-height: 1.2;
   text-align: center;
@@ -68,11 +76,19 @@
 }
 
 .statTileCompact .statLabel {
-  font-size: clamp(7px, 2cqi, 9px);
+  font-size: clamp(
+    calc(7px * var(--board-canvas-ui-scale, 1)),
+    calc(2cqi * var(--board-canvas-ui-scale, 1)),
+    calc(9px * var(--board-canvas-ui-scale, 1))
+  );
 }
 
 .statValue {
-  font-size: clamp(13px, 5cqi, 20px);
+  font-size: clamp(
+    calc(13px * var(--board-canvas-ui-scale, 1)),
+    calc(5cqi * var(--board-canvas-ui-scale, 1)),
+    calc(20px * var(--board-canvas-ui-scale, 1))
+  );
   font-weight: 700;
   color: var(--mantine-primary-color-filled);
   line-height: 1.1;
@@ -84,7 +100,11 @@
 }
 
 .statTileCompact .statValue {
-  font-size: clamp(11px, 4cqi, 16px);
+  font-size: clamp(
+    calc(11px * var(--board-canvas-ui-scale, 1)),
+    calc(4cqi * var(--board-canvas-ui-scale, 1)),
+    calc(16px * var(--board-canvas-ui-scale, 1))
+  );
 }
 
 .emptyState {

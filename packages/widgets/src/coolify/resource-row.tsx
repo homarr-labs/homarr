@@ -114,7 +114,7 @@ export function ResourceRow({ item, baseUrl, isTiny, resourceType }: ResourceRow
             <IconLink size="var(--mantine-font-size-xs)" />
           </ActionIcon>
         )}
-        {!isTiny && logsUrl && (
+        {logsUrl && (
           <ActionIcon
             className={actionTargetClasses.root}
             component="a"
@@ -129,12 +129,10 @@ export function ResourceRow({ item, baseUrl, isTiny, resourceType }: ResourceRow
             <IconFileText size="var(--mantine-font-size-xs)" />
           </ActionIcon>
         )}
-        {!isTiny && (
-          <Text fz="10px" c="dimmed" lineClamp={1}>
-            {item.projectName ?? "-"} / {item.environmentName ?? "-"}
-          </Text>
-        )}
-        {!isTiny && resourceTimestamp && (
+        <Text fz="10px" c="dimmed" lineClamp={1}>
+          {item.projectName ?? "-"} / {item.environmentName ?? "-"}
+        </Text>
+        {resourceTimestamp && (
           <Text fz="10px" c="dimmed" ml="auto">
             {resourceTimestamp}
           </Text>

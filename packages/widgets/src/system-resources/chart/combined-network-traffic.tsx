@@ -11,6 +11,7 @@ export const CombinedNetworkTrafficChart = ({
   usageOverTime,
   hasShadow,
   labelDisplayMode,
+  advanced = false,
 }: {
   usageOverTime: {
     up: number;
@@ -18,6 +19,7 @@ export const CombinedNetworkTrafficChart = ({
   }[];
   hasShadow: boolean;
   labelDisplayMode: LabelDisplayModeOption;
+  advanced?: boolean;
 }) => {
   const chartData = usageOverTime.map((usage, index) => ({ index, up: usage.up, down: usage.down }));
   const t = useI18n("widget.systemResources.card");
@@ -35,6 +37,7 @@ export const CombinedNetworkTrafficChart = ({
       yAxisProps={{ domain: [0, "dataMax"] }}
       chartType={hasShadow ? "area" : "line"}
       labelDisplayMode={labelDisplayMode}
+      advanced={advanced}
       tooltipProps={{
         content: ({ payload }) => {
           return (

@@ -33,54 +33,27 @@ export const getTracearrSectionVisibility = (options: TracearrSectionOptions, is
   recentActivity: isAdvanced || options.showRecentActivity,
 });
 
-export const getCompactSectionVisibility = ({
-  height,
-  showStreams,
-  showViolations,
-  hasViolations,
-  showRecentActivity,
-}: {
-  height: number;
-  showStreams: boolean;
-  showViolations: boolean;
-  hasViolations: boolean;
-  showRecentActivity: boolean;
-}) => ({
-  violations: showViolations && (hasViolations || height >= 240 || !showStreams),
-  recentActivity: showRecentActivity && (height >= 360 || (!showStreams && (!showViolations || !hasViolations))),
-});
-
 export default function TracearrWidget({
   options,
   integrationIds,
   width,
-  height,
   displayMode = "compact",
 }: WidgetComponentProps<"tracearr">) {
   if (integrationIds.length === 0) {
     throw new NoIntegrationDataError();
   }
 
-  return (
-    <TracearrContent
-      integrationIds={integrationIds}
-      options={options}
-      width={width}
-      height={height}
-      displayMode={displayMode}
-    />
-  );
+  return <TracearrContent integrationIds={integrationIds} options={options} width={width} displayMode={displayMode} />;
 }
 
 interface TracearrContentProps {
   integrationIds: string[];
   options: WidgetComponentProps<"tracearr">["options"];
   width: number;
-  height: number;
   displayMode: "compact" | "advanced";
 }
 
-function TracearrContent({ integrationIds, options, width, height, displayMode }: TracearrContentProps) {
+function TracearrContent({ integrationIds, options, width, displayMode }: TracearrContentProps) {
   const t = useI18n("widget.tracearr");
   const dashboardQuery = clientApi.widget.tracearr.getDashboard.useQuery({ integrationIds });
   const dashboardData = getUsableWidgetQueryData(dashboardQuery) ?? [];
@@ -157,7 +130,6 @@ function TracearrContent({ integrationIds, options, width, height, displayMode }
   const sectionVisibility = getTracearrSectionVisibility(options, isAdvanced);
   const noSectionsEnabled = Object.values(sectionVisibility).every((isVisible) => !isVisible);
 
-  const compactLimit = height < 220 ? 2 : height < 360 ? 4 : 8;
   const sourcedStreams = successfulDashboards.flatMap(({ integrationId, integrationName, dashboard }) =>
     attachTracearrSource(dashboard.streams.data, { integrationId, integrationName }),
   );
@@ -167,15 +139,7 @@ function TracearrContent({ integrationIds, options, width, height, displayMode }
   const sourcedRecentActivity = successfulDashboards.flatMap(({ integrationId, integrationName, dashboard }) =>
     attachTracearrSource(dashboard.recentActivity?.data ?? [], { integrationId, integrationName }),
   );
-  const streams = isAdvanced ? sourcedStreams : sourcedStreams.slice(0, compactLimit);
   const showSource = isAdvanced || dashboardData.length > 1;
-  const compactSections = getCompactSectionVisibility({
-    height,
-    showStreams: sectionVisibility.streams,
-    showViolations: sectionVisibility.violations,
-    hasViolations: sourcedViolations.length > 0,
-    showRecentActivity: sectionVisibility.recentActivity,
-  });
 
   if (isAdvanced) {
     const isTwoColumn = width >= ADVANCED_GRID_BREAKPOINT;
@@ -196,18 +160,18 @@ function TracearrContent({ integrationIds, options, width, height, displayMode }
                 {successfulDashboards.map(({ integrationName }) => integrationName).join(" · ")}
               </Text>
               {sectionVisibility.stats && (
-                <StatsBar stats={combined.stats} summary={combined.streams.summary} width={columnWidth} />
+                <StatsBar stats={combined.stats} summary={combined.streams.summary} width={columnWidth} transparent />
               )}
               {sectionVisibility.streams && (
-                <StreamsList streams={streams} width={columnWidth} showSource={showSource} />
+                <StreamsList streams={sourcedStreams} width={columnWidth} showSource={showSource} transparent />
               )}
             </Stack>
             <Stack gap="sm">
               {sectionVisibility.violations && (
-                <ViolationsList violations={sourcedViolations} showSource={showSource} />
+                <ViolationsList violations={sourcedViolations} showSource={showSource} transparent />
               )}
               {sectionVisibility.recentActivity && (
-                <RecentActivityList sessions={sourcedRecentActivity} showSource={showSource} />
+                <RecentActivityList sessions={sourcedRecentActivity} showSource={showSource} transparent />
               )}
             </Stack>
           </SimpleGrid>
@@ -231,12 +195,10 @@ function TracearrContent({ integrationIds, options, width, height, displayMode }
           {sectionVisibility.stats && (
             <StatsBar stats={combined.stats} summary={combined.streams.summary} width={width} />
           )}
-          {compactSections.violations && (
-            <ViolationsList violations={sourcedViolations.slice(0, compactLimit)} showSource={showSource} />
-          )}
-          {sectionVisibility.streams && <StreamsList streams={streams} width={width} showSource={showSource} />}
-          {compactSections.recentActivity && (
-            <RecentActivityList sessions={sourcedRecentActivity.slice(0, compactLimit)} showSource={showSource} />
+          {sectionVisibility.streams && <StreamsList streams={sourcedStreams} width={width} showSource={showSource} />}
+          {sectionVisibility.violations && <ViolationsList violations={sourcedViolations} showSource={showSource} />}
+          {sectionVisibility.recentActivity && (
+            <RecentActivityList sessions={sourcedRecentActivity} showSource={showSource} />
           )}
           {noSectionsEnabled && (
             <Text c="dimmed" ta="center">

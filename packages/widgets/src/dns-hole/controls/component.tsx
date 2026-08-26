@@ -57,7 +57,7 @@ export default function DnsHoleControlsWidget({
   integrationIds,
   isEditMode,
   width,
-  height,
+  displayMode,
 }: WidgetComponentProps<typeof widgetKind>) {
   const board = useRequiredBoard();
   // DnsHole integrations with interaction permissions
@@ -236,7 +236,7 @@ export default function DnsHoleControlsWidget({
               t={t}
               hasIconColor={board.iconColor !== null}
               rootWidth={width}
-              rootHeight={height}
+              isAdvanced={displayMode === "advanced"}
               actionsPending={actionsPending}
             />
           ))}
@@ -275,7 +275,7 @@ interface ControlsCardProps {
   t: ReturnType<typeof useI18n<"widget.dnsHoleControls">>;
   hasIconColor: boolean;
   rootWidth: number;
-  rootHeight: number;
+  isAdvanced: boolean;
   actionsPending: boolean;
 }
 
@@ -288,7 +288,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
   t,
   hasIconColor,
   rootWidth,
-  rootHeight,
+  isAdvanced,
   actionsPending,
 }) => {
   const isConnected = useIntegrationConnected(data.integration.updatedAt, { timeout: 30000 });
@@ -299,7 +299,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
   const board = useRequiredBoard();
 
   const iconUrl = integrationDefs[data.integration.kind].iconUrl;
-  const layout = rootWidth < 256 || rootHeight < 112 ? "sm" : "md";
+  const layout = !isAdvanced && rootWidth < 256 ? "sm" : "md";
 
   return (
     <Indicator

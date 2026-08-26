@@ -58,7 +58,7 @@ import filterPanelImg from "./img/filter-panel.png";
 
 ### Features
 
-- **Responsive compact table** — in compact mode, selected columns adapt to both widget width and height; narrow or short tiles hide speed/state columns, and the shortest tiles also hide the ETA column
+- **Responsive compact table** — in compact mode, selected columns use the established width breakpoints; widget height does not remove configured columns or the footer
 - **Sortable columns** — click any sortable column header to sort the current view; the configured default controls the initial column and direction
 - **Column customization** — choose which columns to display, then hover a header to reveal its grab handle for reordering or drag its edge to resize it; layouts save automatically per widget
 - **Download-row context menu** — copy a download name or ID from any row; pause, resume, and delete actions appear when you have Interact access to that integration
@@ -72,11 +72,10 @@ import filterPanelImg from "./img/filter-panel.png";
 
 :::note
 
-Compact layouts use both dimensions: below 500px wide, speed columns are hidden; below 300px wide, the ETA and state
-columns are hidden too. A tile shorter than 180px hides speed and state columns, and a tile shorter than 120px also
-hides ETA. The footer is hidden below 96px in compact mode. Advanced view bypasses these compact size reductions,
-keeps the selected column set, and always includes the stats bar and footer controls, with the filter panel available
-from the footer.
+Compact layouts use their established width breakpoints: below 500px wide, speed columns are hidden; below 300px wide,
+the ETA and state columns are hidden too. Height does not remove configured columns or the footer. Advanced view bypasses
+the compact width reductions, keeps the selected column set, and always includes the stats bar and footer controls, with
+the filter panel available from the footer.
 
 The filter panel changes the visible rows. Its client/status filters also change the stats bar's progress, size, and
 state counts, while transfer-speed totals summarize the selected clients and the global torrent ratio summarizes the

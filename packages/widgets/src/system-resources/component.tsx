@@ -68,7 +68,7 @@ export const getVisibleSystemCharts = ({
   configuredCharts,
   hasGpu,
   hasNetwork,
-  height,
+  height: _height,
   isAdvanced,
 }: {
   configuredCharts: readonly SystemChart[];
@@ -81,7 +81,7 @@ export const getVisibleSystemCharts = ({
   const availableCharts = selectedCharts.filter(
     (chart) => (chart !== "gpu" || !isAdvanced || hasGpu) && (chart !== "network" || hasNetwork),
   );
-  return isAdvanced ? [...availableCharts] : availableCharts.slice(0, getCompactChartBudget(height));
+  return [...availableCharts];
 };
 
 export default function SystemResources({
@@ -235,10 +235,7 @@ const SystemCharts = ({
   const showNetwork = visibleCharts.includes("network");
   const labelDisplayMode = isAdvanced ? "textWithIcon" : options.labelDisplayMode;
   const chartCount = visibleCharts.length;
-  const chartColumns = useMemo(
-    () => (isAdvanced ? getAdvancedChartColumns(width) : 1),
-    [isAdvanced, width],
-  );
+  const chartColumns = useMemo(() => (isAdvanced ? getAdvancedChartColumns(width) : 1), [isAdvanced, width]);
   const compactChartGap = 8;
   const compactRowHeight = 56;
   const chartHeight = isAdvanced
@@ -269,6 +266,7 @@ const SystemCharts = ({
               cpuUsageOverTime={items.map((item) => item.cpu)}
               hasShadow={options.hasShadow}
               labelDisplayMode={labelDisplayMode}
+              advanced={isAdvanced}
             />
           </Box>
         )}
@@ -279,6 +277,7 @@ const SystemCharts = ({
               totalCapacityInBytes={memoryCapacityInBytes}
               hasShadow={options.hasShadow}
               labelDisplayMode={labelDisplayMode}
+              advanced={isAdvanced}
             />
           </Box>
         )}
@@ -288,6 +287,7 @@ const SystemCharts = ({
               gpuUsageOverTime={items.map((item) => item.gpu)}
               hasShadow={options.hasShadow}
               labelDisplayMode={labelDisplayMode}
+              advanced={isAdvanced}
             />
           </Box>
         )}
@@ -299,12 +299,14 @@ const SystemCharts = ({
                 isUp={false}
                 hasShadow={options.hasShadow}
                 labelDisplayMode={labelDisplayMode}
+                advanced={isAdvanced}
               />
               <NetworkTrafficChart
                 usageOverTime={networkItems.map((network) => network.up)}
                 isUp
                 hasShadow={options.hasShadow}
                 labelDisplayMode={labelDisplayMode}
+                advanced={isAdvanced}
               />
             </Group>
           ) : (
@@ -313,6 +315,7 @@ const SystemCharts = ({
                 usageOverTime={networkItems}
                 hasShadow={options.hasShadow}
                 labelDisplayMode={labelDisplayMode}
+                advanced={isAdvanced}
               />
             </Box>
           ))}

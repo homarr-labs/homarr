@@ -100,9 +100,7 @@ export default function MediaServerWidget({
     },
   ] satisfies { name: keyof RequestStats; icon: Icon; number: number }[];
 
-  const isTiny = width < 256 || height < 180;
-  const showSectionTitles = height >= 180;
-  const visibleStats = data.slice(0, height < 120 ? 4 : 8);
+  const isTiny = width < 256;
   const showIntegrationLegend = requestStats.integrations.length > 1 && height >= 240;
 
   return (
@@ -121,13 +119,11 @@ export default function MediaServerWidget({
         style={{ pointerEvents: isEditMode ? "none" : undefined, overflow: "hidden" }}
       >
         <Stack gap={4} w="100%">
-          {showSectionTitles && (
-            <Text className="mediaRequests-stats-stats-title" fw={600} ta="center" size={isTiny ? "xs" : "sm"}>
-              {t("titles.stats.main")}
-            </Text>
-          )}
+          <Text className="mediaRequests-stats-stats-title" fw={600} ta="center" size={isTiny ? "xs" : "sm"}>
+            {t("titles.stats.main")}
+          </Text>
           <Grid className="mediaRequests-stats-stats-grid" gap={4} w="100%">
-            {visibleStats.map((stat) => (
+            {data.map((stat) => (
               <Grid.Col
                 className={combineClasses("mediaRequests-stats-stat-wrapper", `mediaRequests-stats-stat-${stat.name}`)}
                 key={stat.name}
@@ -148,11 +144,9 @@ export default function MediaServerWidget({
           </Grid>
         </Stack>
         <Stack gap={4} w="100%" style={{ flex: 1, minHeight: 0, overflow: "hidden" }}>
-          {showSectionTitles && (
-            <Text className="mediaRequests-stats-users-title" fw={600} ta="center" size={isTiny ? "xs" : "sm"}>
-              {t("titles.users.main")} ({t("titles.users.requests")})
-            </Text>
-          )}
+          <Text className="mediaRequests-stats-users-title" fw={600} ta="center" size={isTiny ? "xs" : "sm"}>
+            {t("titles.users.main")} ({t("titles.users.requests")})
+          </Text>
           <ScrollArea className="mediaRequests-stats-users-wrapper" flex={1} mih={0} w="100%">
             <Stack gap={4}>
               {requestStats.users.map((user) => {

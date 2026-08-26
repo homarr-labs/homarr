@@ -79,12 +79,11 @@ export const getTraefikSourceDetails = (sources: readonly TraefikDashboardSource
 
 export function getTraefikProtocolKeys(
   options: Pick<WidgetComponentProps<"traefik">["options"], "showTcp" | "showUdp">,
-  height: number,
   isAdvanced: boolean,
 ): ProtocolKey[] {
   const protocols: ProtocolKey[] = ["http"];
-  if (isAdvanced || (options.showTcp && height >= 220)) protocols.push("tcp");
-  if (isAdvanced || (options.showUdp && height >= 300)) protocols.push("udp");
+  if (isAdvanced || options.showTcp) protocols.push("tcp");
+  if (isAdvanced || options.showUdp) protocols.push("udp");
   return protocols;
 }
 
@@ -105,7 +104,6 @@ function TraefikWidgetContent({
   integrationIds,
   options,
   width,
-  height,
   displayMode = "compact",
 }: WidgetComponentProps<"traefik">) {
   const t = useI18n("widget.traefik");
@@ -143,7 +141,7 @@ function TraefikWidgetContent({
     combined.failedEndpoints.length;
   const totalWarnings =
     getProtocolWarnings(combined.http) + getProtocolWarnings(combined.tcp) + getUdpWarnings(combined.udp);
-  const protocolKeys = getTraefikProtocolKeys(options, height, isAdvanced);
+  const protocolKeys = getTraefikProtocolKeys(options, isAdvanced);
   const entryPoints = getVisibleTraefikEntryPoints(combined.entryPoints, width, isAdvanced);
   const displayedVersion = successfulData.length === 1 ? successfulData[0]?.dashboard.version : null;
 
@@ -194,7 +192,7 @@ function TraefikWidgetContent({
         ))}
       </div>
 
-      {(isAdvanced || options.showEntryPoints) && entryPoints.length > 0 && (isAdvanced || height >= 340) && (
+      {(isAdvanced || options.showEntryPoints) && entryPoints.length > 0 && (
         <div className={classes.entryPoints}>
           {entryPoints.map((entryPoint) => (
             <Badge key={entryPoint} variant="light" size="sm" radius="sm">

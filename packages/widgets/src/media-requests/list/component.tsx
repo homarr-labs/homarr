@@ -29,7 +29,6 @@ export default function MediaServerWidget({
   isEditMode,
   options,
   width,
-  height,
 }: WidgetComponentProps<"mediaRequests-requestList">) {
   const interactIntegrationIds = new Set(
     useIntegrationsWithInteractAccess()
@@ -69,8 +68,7 @@ export default function MediaServerWidget({
             <MediaRequestCard
               key={`${mediaRequest.integrationId}-${mediaRequest.id}`}
               request={mediaRequest}
-              isTiny={width <= 256 || height < 96}
-              isDense={width < 340 || height < 150}
+              isTiny={width <= 256}
               showIntegrationSource={showIntegrationSource}
               canInteract={interactIntegrationIds.has(mediaRequest.integrationId)}
               options={options}
@@ -103,20 +101,12 @@ const MediaRequestSearchButton = ({ integrationIds }: { integrationIds: string[]
 interface MediaRequestCardProps {
   request: RouterOutputs["widget"]["mediaRequests"]["getLatestRequests"]["requests"][number];
   isTiny: boolean;
-  isDense: boolean;
   showIntegrationSource: boolean;
   canInteract: boolean;
   options: WidgetComponentProps<"mediaRequests-requestList">["options"];
 }
 
-const MediaRequestCard = ({
-  request,
-  isTiny,
-  isDense,
-  showIntegrationSource,
-  canInteract,
-  options,
-}: MediaRequestCardProps) => {
+const MediaRequestCard = ({ request, isTiny, showIntegrationSource, canInteract, options }: MediaRequestCardProps) => {
   const board = useRequiredBoard();
   const t = useI18n("widget.mediaRequests-requestList");
   const requestHref = getSafeApplicationUrl(request.href);
@@ -124,11 +114,21 @@ const MediaRequestCard = ({
 
   return (
     <Card
-      className={`mediaRequests-list-item-wrapper mediaRequests-list-item-${request.type} mediaRequests-list-item-${request.status} ${classes.card}`}
+      className={`mediaRequests-list-item-wrapper mediaRequests-list-item-${request.type} mediaRequests-list-item-${request.status}`}
       radius={board.itemRadius}
-      p={isDense ? 6 : "xs"}
-      withBorder
+      p="xs"
     >
+      <Image
+        className="mediaRequests-list-item-background"
+        src={request.backdropImageUrl}
+        pos="absolute"
+        w="100%"
+        h="100%"
+        opacity={0.2}
+        top={0}
+        left={0}
+        alt=""
+      />
       <Group
         className="mediaRequests-list-item-contents"
         h="100%"
@@ -137,56 +137,22 @@ const MediaRequestCard = ({
         wrap="nowrap"
         gap={0}
       >
-        <Group
-          className="mediaRequests-list-item-left-side"
-          h="100%"
-          gap={isDense ? "xs" : "md"}
-          wrap="nowrap"
-          flex={1}
-          miw={0}
-        >
+        <Group className="mediaRequests-list-item-left-side" h="100%" gap="md" wrap="nowrap" flex={1} miw={0}>
           {!isTiny && (
             <Image
               className="mediaRequests-list-item-poster"
               src={request.posterImagePath}
-              h={isDense ? 32 : 40}
+              h={40}
               w="auto"
-              radius="sm"
+              radius="md"
               alt=""
               style={{ flexShrink: 0 }}
             />
           )}
 
           <Stack gap={0} w="100%" miw={0}>
-            <Group gap="xs" justify="space-between" wrap="nowrap" className="mediaRequests-list-item-top-group">
-              <Anchor
-                className="mediaRequests-list-item-info-second-line mediaRequests-list-item-media-title"
-                component={requestHref ? "a" : "span"}
-                href={requestHref}
-                c="var(--mantine-color-text)"
-                target={requestHref ? (options.linksTargetNewTab ? "_blank" : "_self") : undefined}
-                rel={requestHref && options.linksTargetNewTab ? SAFE_NEW_TAB_REL : undefined}
-                fz={isTiny ? "xs" : "sm"}
-                fw={600}
-                title={request.name}
-                truncate="end"
-                style={{ minWidth: 0, flex: 1 }}
-              >
-                {request.name || "unknown"}
-              </Anchor>
-              {request.status === "pending" ? (
-                <DecisionButtons
-                  requestId={request.id}
-                  integrationId={request.integrationId}
-                  canInteract={canInteract}
-                  alwaysVisible={isTiny}
-                />
-              ) : (
-                <StatusBadge status={request.status} />
-              )}
-            </Group>
-            <Group justify="space-between" gap="xs" wrap="nowrap" className="mediaRequests-list-item-bottom-group">
-              <Group gap={4} wrap="nowrap" miw={0}>
+            <Group justify="space-between" gap="xs" className="mediaRequests-list-item-top-group">
+              <Group gap="xs" wrap="nowrap" miw={0}>
                 <Text className="mediaRequests-list-item-media-year" size="xs">
                   {toValidDate(request.airDate)?.getFullYear() ?? t("toBeDetermined")}
                 </Text>
@@ -206,27 +172,52 @@ const MediaRequestCard = ({
                   </Badge>
                 )}
               </Group>
-              {!isTiny && (
-                <Group className="mediaRequests-list-item-request-user" gap={4} wrap="nowrap" miw={0}>
-                  <Avatar
-                    className="mediaRequests-list-item-request-user-avatar"
-                    src={request.requestedBy?.avatar}
-                    size={18}
-                  />
-                  <Anchor
-                    className="mediaRequests-list-item-request-user-name"
-                    component={requestedByHref ? "a" : "span"}
-                    href={requestedByHref}
-                    c="dimmed"
-                    target={requestedByHref ? (options.linksTargetNewTab ? "_blank" : "_self") : undefined}
-                    rel={requestedByHref && options.linksTargetNewTab ? SAFE_NEW_TAB_REL : undefined}
-                    fz="xs"
-                    truncate="end"
-                    style={{ minWidth: 0, maxWidth: isDense ? 100 : 180 }}
-                  >
-                    {(request.requestedBy?.displayName ?? "") || "unknown"}
-                  </Anchor>
-                </Group>
+              <Group className="mediaRequests-list-item-request-user" gap={4} wrap="nowrap" miw={0}>
+                <Avatar
+                  className="mediaRequests-list-item-request-user-avatar"
+                  src={request.requestedBy?.avatar}
+                  size="xs"
+                />
+                <Anchor
+                  className="mediaRequests-list-item-request-user-name"
+                  component={requestedByHref ? "a" : "span"}
+                  href={requestedByHref}
+                  c="var(--mantine-color-text)"
+                  target={requestedByHref ? (options.linksTargetNewTab ? "_blank" : "_self") : undefined}
+                  rel={requestedByHref && options.linksTargetNewTab ? SAFE_NEW_TAB_REL : undefined}
+                  fz="xs"
+                  lineClamp={1}
+                  style={{ wordBreak: "break-all" }}
+                >
+                  {(request.requestedBy?.displayName ?? "") || "unknown"}
+                </Anchor>
+              </Group>
+            </Group>
+            <Group gap="xs" justify="space-between" wrap="nowrap" className="mediaRequests-list-item-bottom-group">
+              <Anchor
+                className="mediaRequests-list-item-info-second-line mediaRequests-list-item-media-title"
+                component={requestHref ? "a" : "span"}
+                href={requestHref}
+                c="var(--mantine-color-text)"
+                target={requestHref ? (options.linksTargetNewTab ? "_blank" : "_self") : undefined}
+                rel={requestHref && options.linksTargetNewTab ? SAFE_NEW_TAB_REL : undefined}
+                fz={isTiny ? "xs" : "sm"}
+                fw="bold"
+                title={request.name}
+                lineClamp={1}
+                style={{ minWidth: 0 }}
+              >
+                {request.name || "unknown"}
+              </Anchor>
+              {request.status === "pending" ? (
+                <DecisionButtons
+                  requestId={request.id}
+                  integrationId={request.integrationId}
+                  canInteract={canInteract}
+                  alwaysVisible
+                />
+              ) : (
+                <StatusBadge status={request.status} />
               )}
             </Group>
           </Stack>

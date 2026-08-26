@@ -8,9 +8,9 @@ export const getUmamiLayout = ({ width, height, displayMode }: UmamiLayoutInput)
   const isAdvanced = displayMode === "advanced";
   return {
     isDense: !isAdvanced && height < 120,
-    showXAxis: isAdvanced || height >= 140,
-    showSecondaryStats: isAdvanced || height >= 96,
-    showDetailedStats: isAdvanced || (width >= 260 && height >= 150),
+    showXAxis: true,
+    showSecondaryStats: true,
+    showDetailedStats: true,
     stackAdvancedContent: isAdvanced && width < 900,
   };
 };

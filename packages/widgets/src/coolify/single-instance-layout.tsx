@@ -22,17 +22,9 @@ interface SingleInstanceLayoutProps {
   isTiny: boolean;
   isAdvanced: boolean;
   widgetKey: string;
-  hideFooter: boolean;
 }
 
-export function SingleInstanceLayout({
-  instance,
-  options,
-  isTiny,
-  isAdvanced,
-  widgetKey,
-  hideFooter,
-}: SingleInstanceLayoutProps) {
+export function SingleInstanceLayout({ instance, options, isTiny, isAdvanced, widgetKey }: SingleInstanceLayoutProps) {
   const t = useI18n("widget.coolify");
   const [showIp, setShowIp] = useLocalStorage({
     key: `coolify-show-ip-${widgetKey}`,
@@ -115,7 +107,7 @@ export function SingleInstanceLayout({
           )}
         </Accordion>
 
-        {!hideFooter && <InstanceFooter version={instance.instanceInfo.version} updatedAt={instance.updatedAt} />}
+        <InstanceFooter version={instance.instanceInfo.version} updatedAt={instance.updatedAt} />
       </Stack>
     </ScrollArea>
   );

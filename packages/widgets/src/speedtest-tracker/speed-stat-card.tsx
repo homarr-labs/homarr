@@ -13,9 +13,17 @@ export interface SpeedStatCardProps {
   value: string;
   label: string;
   compact?: boolean;
+  legacySurface?: boolean;
 }
 
-export function SpeedStatCard({ icon: Icon, color, value, label, compact = false }: SpeedStatCardProps) {
+export function SpeedStatCard({
+  icon: Icon,
+  color,
+  value,
+  label,
+  compact = false,
+  legacySurface = false,
+}: SpeedStatCardProps) {
   const { ref, height, width } = useElementSize<HTMLDivElement>();
   const board = useRequiredBoard();
   const isWide = width > height + 20;
@@ -23,7 +31,8 @@ export function SpeedStatCard({ icon: Icon, color, value, label, compact = false
   const surfaceColor = `var(--mantine-color-${color}-filled)`;
   const accentColor = `var(--mantine-color-${color}-5)`;
   const surfaceAlpha = compact ? 0.1 : 0.14;
-  const surfaceBackground = `rgb(from ${surfaceColor} r g b / calc(var(--opacity, 1) * ${surfaceAlpha}))`;
+  const modernBackground = `rgb(from ${surfaceColor} r g b / calc(var(--opacity, 1) * ${surfaceAlpha}))`;
+  const surfaceBackground = legacySurface ? `var(--mantine-color-${color}-light)` : modernBackground;
   const surfaceBorder = "rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45))";
 
   return (
@@ -32,7 +41,7 @@ export function SpeedStatCard({ icon: Icon, color, value, label, compact = false
         ref={ref}
         p={compact ? "xs" : "sm"}
         radius={board.itemRadius}
-        withBorder
+        withBorder={!legacySurface}
         bg={surfaceBackground}
         h="100%"
         style={{ flex: 1, minWidth: 0, borderColor: surfaceBorder }}

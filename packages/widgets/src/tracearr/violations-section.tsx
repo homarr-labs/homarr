@@ -11,16 +11,18 @@ type SourcedTracearrViolation = SourcedTracearrItem<TracearrViolation>;
 export function ViolationsList({
   violations,
   showSource,
+  transparent = false,
 }: {
   violations: SourcedTracearrViolation[];
   showSource: boolean;
+  transparent?: boolean;
 }) {
   const t = useI18n("widget.tracearr");
   const locale = useCurrentIntlLocale();
 
   return (
     <Stack gap={4}>
-      <Text size="xs" fw={600} c="dimmed">
+      <Text size="xs" fw={600} c="dimmed" tt={transparent ? undefined : "uppercase"}>
         {t("violations.title")}
       </Text>
       {violations.length === 0 ? (
@@ -30,7 +32,7 @@ export function ViolationsList({
       ) : (
         <Stack gap="xs">
           {violations.map((violation) => (
-            <Paper key={violation.key} p="xs" radius="lg" bg="transparent">
+            <Paper key={violation.key} p="xs" radius="lg" bg={transparent ? "transparent" : undefined}>
               <Group justify="space-between" wrap="nowrap">
                 <Group gap="xs" wrap="nowrap" style={{ overflow: "hidden" }}>
                   <IconAlertTriangle

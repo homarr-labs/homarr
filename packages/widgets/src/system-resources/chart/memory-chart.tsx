@@ -12,11 +12,13 @@ export const SystemResourceMemoryChart = ({
   totalCapacityInBytes,
   hasShadow,
   labelDisplayMode,
+  advanced = false,
 }: {
   memoryUsageOverTime: number[];
   totalCapacityInBytes: number;
   hasShadow: boolean;
   labelDisplayMode: LabelDisplayModeOption;
+  advanced?: boolean;
 }) => {
   const chartData = memoryUsageOverTime.map((usage, index) => ({ index, usage }));
   const t = useI18n("widget.systemResources.card");
@@ -35,6 +37,7 @@ export const SystemResourceMemoryChart = ({
       title={t("memory")}
       icon={IconBrain}
       labelDisplayMode={labelDisplayMode}
+      advanced={advanced}
       yAxisProps={{ domain: [0, totalCapacityInBytes] }}
       lastValue={percentageUsed !== undefined ? `${Math.round(percentageUsed * 100)}%` : undefined}
       chartType={hasShadow ? "area" : "line"}
