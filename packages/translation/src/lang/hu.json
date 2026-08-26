@@ -517,7 +517,7 @@
       "transfer": {
         "label": "Tulajdonos megváltoztatása",
         "description": "A csoport tulajdonjogának átadása másik felhasználónak.",
-        "confirm": "Biztosan át akarja adni a {name} csoport tulajdonjogát {username}felhasználónak?",
+        "confirm": "Biztosan át akarja adni a {name} csoport tulajdonjogát {username} felhasználónak?",
         "notification": {
           "success": {
             "message": "A {group} csoport sikeresen áthelyezve {user} felhasználó tulajdonába"
@@ -924,7 +924,7 @@
               "title": "Új",
               "url": {
                 "label": "Alkalmazás url",
-                "description": "Az url, amelyre az alkalmazás a műszerfalról történő eléréskor irányít"
+                "description": "Az Url, amelyre az alkalmazás a műszerfalról történő eléréskor irányít"
               }
             }
           }
@@ -1345,8 +1345,8 @@
       "description": ""
     },
     "wud": {
-      "name": "",
-      "description": ""
+      "name": "What's Up Docker",
+      "description": "Figyelje, hogy mely Docker-konténereihez érhetők el lemezképfrissítések"
     },
     "paperlessNgx": {
       "name": "Paperless-ngx",
@@ -1441,18 +1441,18 @@
     "here": "itt",
     "iconPicker": {
       "label": "Ikonhivatkozás",
-      "description": "",
-      "header": "Írjon be nevet vagy objektumokat az ikonok szűréséhez... A Homarr a {countIcons} ikonok között keres.",
-      "headerLoading": "",
-      "clear": "",
-      "uploadImage": "",
-      "results": "",
-      "localImages": "",
-      "svgIcons": "",
-      "otherImages": "",
-      "urlLoading": "",
-      "urlReady": "",
-      "urlError": "",
+      "description": "Kereshet a könyvtárban, beilleszthet egy kép URL-t, vagy feltölthet egy fájlt.",
+      "header": "Írjon be nevet vagy objektumokat az ikonok szűréséhez... A Homarr a {countIcons} ikonok között keres",
+      "headerLoading": "Keresés képek neve alapján",
+      "clear": "Kép törlése",
+      "uploadImage": "Kép feltöltése",
+      "results": "Képkeresés eredményei",
+      "localImages": "Az Ön képei",
+      "svgIcons": "SVG ikonok",
+      "otherImages": "Egyéb képek",
+      "urlLoading": "Kép ellenőrzése…",
+      "urlReady": "A kép használatra kész.",
+      "urlError": "A kép nem tölthető be. Ellenőrizze az URL-t, és próbálja újra.",
       "noResults": "",
       "error": ""
     },
@@ -1808,19 +1808,19 @@
       }
     },
     "wud": {
-      "name": "",
-      "description": "",
-      "title": "",
-      "monitored": "",
-      "updatesAvailable": "",
-      "updateAvailable": "",
-      "openReleaseNotes": "",
+      "name": "What's Up Docker",
+      "description": "Megmutatja, hány figyelt konténerhez érhető el frissítés.",
+      "title": "What's Up Docker",
+      "monitored": "Figyelt",
+      "updatesAvailable": "{count, plural, one {# frissítés érhető el} other {# frissítés érhető el}}",
+      "updateAvailable": "Frissítés érhető el",
+      "openReleaseNotes": "Kiadási megjegyzések megnyitása",
       "option": {
         "showTitle": {
           "label": "Cím megjelenítése"
         },
         "showRing": {
-          "label": ""
+          "label": "Frissítési gyűrű megjelenítése"
         },
         "layout": {
           "label": "Elrendezés",
@@ -1834,8 +1834,8 @@
           }
         },
         "showUpdateList": {
-          "label": "",
-          "description": ""
+          "label": "A konténerfrissítések listájának megjelenítése",
+          "description": "Felsorolja az összes figyelt konténert, amelyhez elérhető képfrissítés."
         }
       }
     },
@@ -2088,7 +2088,7 @@
       "notFound": "Jegyzet nem található",
       "noNotes": "Nem található jegyzet",
       "integrationRequired": "Először válasszon ki egy Anchor-integrációt",
-      "updatedAt": "Frissítve: {dátum}",
+      "updatedAt": "Frissítve: {date}",
       "untitled": "Névtelen",
       "edit": "Szerkesztés",
       "save": "Mentés",
@@ -2134,7 +2134,7 @@
       },
       "error": {
         "noUrl": "Nincs megadva iFrame URL",
-        "unsupportedProtocol": "A megadott URL nem támogatott protokollt használ. Kérjük, válasszon egyet a ({supportedProtocols}) közül.",
+        "unsupportedProtocol": "A megadott URL nem támogatott protokollt használ. Kérjük, válasszon egyet a ({supportedProtocols}) közül",
         "noBrowerSupport": "Az Ön böngészője nem támogatja a beágyazott kereteket. Kérjük, frissítse böngészőjét."
       }
     },
@@ -3093,7 +3093,7 @@
       "option": {
         "albumId": {
           "label": "Album ID",
-          "description": "Ez az Immich-albumodra utaló egyedi azonosító. Az azonosítót úgy találhatod meg, hogy megnyitsz egy albumot, és lemásolod az URL-ből az egyedi karakterláncot, például: „a21aca09-9f05-47dc-b1a1-7b53c547226e”"
+          "description": "Ez az Immich-albumodra utaló egyedi azonosító. Az azonosítót úgy találhatod meg, hogy megnyitsz egy albumot, és lemásolod az URL-ből az egyedi karakterláncot, például: „a21aca09-9f05-47dc-b1a1-7b53c547226e”."
         },
         "rotationIntervalSeconds": {
           "label": "Időköz másodpercekben",

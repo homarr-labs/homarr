@@ -96,7 +96,7 @@
       "integrations": {
         "title": "Integrace",
         "subtitle": "Vyberte služby, které používáte.",
-        "description": "Vyberte integrace, které chcete připojit. Automaticky nastavíme vaši plochu s odpovídajícími widgety.",
+        "description": "Vyberte integrace, které chcete připojit. Automaticky nastavíme váš dashboard s odpovídajícími widgety.",
         "action": {
           "continue": "Pokračovat",
           "skip": "Prozatím přeskočit"
@@ -199,8 +199,8 @@
         "label": "Používat ikony pro pingy"
       },
       "enableRightClickOnWidgets": {
-        "label": "",
-        "description": ""
+        "label": "Povolit kliknutí pravým tlačítkem na widgety",
+        "description": "Zobrazit kontextovou nabídku Homarru po kliknutí pravým tlačítkem na widget. Vypnutím použijete výchozí nabídku prohlížeče (např. „Otevřít odkaz na nové kartě“)."
       },
       "defaultSearchEngine": {
         "label": "Výchozí vyhledávač"
@@ -485,7 +485,7 @@
             "description": "Umožňuje členům vytvářet vyhledávače"
           },
           "modify-all": {
-            "label": "",
+            "label": "Upravit všechny vyhledávače",
             "description": "Umožňuje členům upravovat všechny vyhledávače"
           },
           "full-all": {
@@ -520,7 +520,7 @@
         "confirm": "Jste si jisti, že chcete převést vlastnictví skupiny {name} na {username}?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Skupina {group} byla úspěšně převedena na uživatele {user}"
           },
           "error": {
             "message": "Nelze převést vlastnictví"
@@ -578,7 +578,7 @@
           "notification": {
             "success": {
               "title": "Nastvení uloženo",
-              "message": ""
+              "message": "Nastavení plochy byla úspěšně uložena"
             },
             "error": {
               "title": "Uložení nastavení selhalo",
@@ -667,7 +667,7 @@
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "Použít jinou URL pro ping",
-          "description": ""
+          "description": "Užitečné, pokud může Homarr přistupovat přímo pomocí interního názvu hostitele nebo sítě, aby se zabránilo využití šířky pásma poskytovatele internetu"
         }
       }
     },
@@ -675,7 +675,7 @@
       "select": {
         "label": "Vybrat aplikaci",
         "notFound": "Nenalezena žádná aplikace",
-        "search": "",
+        "search": "Vyhledat aplikaci",
         "noResults": "Žádné výsledky",
         "action": "Vybrat {app}",
         "title": "Vyberte aplikaci, kterou chcete přidat do tohoto panelu"
@@ -683,7 +683,7 @@
       "create": {
         "title": "Vytvořit novou aplikaci",
         "description": "Vytvořit novou aplikaci ",
-        "action": ""
+        "action": "Otevřít vytvoření aplikace"
       },
       "add": "Přidat aplikaci"
     }
@@ -691,35 +691,35 @@
   "customWidget": {
     "page": {
       "list": {
-        "title": "",
-        "noResults": "",
+        "title": "Vlastní widgety",
+        "noResults": "Zatím nemáte žádné vlastní widgety. Vytvořte svůj první!",
         "loading": "Načítání..."
       },
       "create": {
-        "title": "",
-        "subtitle": ""
+        "title": "Vytvořit vlastní widget",
+        "subtitle": "Definujte URL API, ověřování a způsob zobrazení dat odpovědi."
       },
       "edit": {
-        "title": ""
+        "title": "Upravit vlastní widget"
       }
     },
     "action": {
       "create": "Vytvořit",
       "import": "Import",
       "save": "Uložit",
-      "delete": "",
-      "deleteConfirm": "",
+      "delete": "Odstranit vlastní widget",
+      "deleteConfirm": "Opravdu chcete odstranit „{name}“? Tuto akci nelze vrátit zpět.",
       "export": "Export",
-      "addMapping": "",
-      "addColumn": "",
+      "addMapping": "Přidat mapování",
+      "addColumn": "Přidat sloupec",
       "edit": "Upravit",
-      "removeMapping": "",
-      "removeColumn": "",
+      "removeMapping": "Odstranit mapování",
+      "removeColumn": "Odstranit sloupec",
       "addItem": "Přidat položku",
       "removeItem": "Odebrat položku",
       "addBar": "Přidat lištu",
-      "duplicate": "",
-      "copyAiPrompt": "",
+      "duplicate": "Duplikovat",
+      "copyAiPrompt": "Kopírovat výzvu AI",
       "enable": "Povolit",
       "disable": "Zakázat",
       "menu": "Akce"
@@ -730,46 +730,46 @@
       "iconUrl": "URL ikony",
       "url": "URL",
       "authType": "Typ ověření",
-      "headerName": "",
+      "headerName": "Název hlavičky/parametru dotazu",
       "method": "Metoda",
-      "requestBody": "",
-      "displayType": "",
-      "jsonPath": "",
-      "jsonPathHint": "",
-      "label": "",
-      "unit": "",
-      "mappings": "",
-      "tablePath": "",
-      "tablePathHint": "",
-      "columns": "",
-      "header": "",
-      "items": "",
-      "gridColumns": "",
-      "cardStyle": "",
-      "bars": "",
-      "valuePath": "",
-      "maxPath": "",
-      "showPercentage": "",
-      "barSize": "",
-      "goodValues": "",
-      "dotSize": "",
-      "valueSize": "",
-      "labelPosition": "",
-      "kvLayout": "",
-      "striped": "",
-      "compact": "",
-      "maxHeight": "",
-      "color": "",
-      "buttonLabel": "",
-      "buttonColor": "",
-      "confirmText": "",
-      "confirmTextHint": "",
-      "successMessage": "",
-      "successMessageHint": "",
-      "enabled": "",
+      "requestBody": "Tělo požadavku",
+      "displayType": "Typ zobrazení",
+      "jsonPath": "Cesta JSON",
+      "jsonPathHint": "K extrakci hodnot použijte syntaxi JSONPath, např. $.data.temperature nebo $.items[0].name",
+      "label": "Popisek",
+      "unit": "Jednotka",
+      "mappings": "Mapování",
+      "tablePath": "Cesta pole JSON",
+      "tablePathHint": "Cesta k poli v odpovědi, např. $.data.items",
+      "columns": "Sloupce",
+      "header": "Hlavička",
+      "items": "Položky",
+      "gridColumns": "Sloupce mřížky",
+      "cardStyle": "Styl karty",
+      "bars": "Pruhy",
+      "valuePath": "Cesta hodnoty JSON",
+      "maxPath": "Cesta maximální hodnoty JSON",
+      "showPercentage": "Zobrazit procenta",
+      "barSize": "Velikost pruhu",
+      "goodValues": "Dobré hodnoty (oddělené čárkami)",
+      "dotSize": "Velikost tečky",
+      "valueSize": "Velikost hodnoty",
+      "labelPosition": "Pozice popisku",
+      "kvLayout": "Rozložení",
+      "striped": "Pruhované řádky",
+      "compact": "Kompaktní režim",
+      "maxHeight": "Maximální výška (px)",
+      "color": "Barva",
+      "buttonLabel": "Popisek tlačítka",
+      "buttonColor": "Barva tlačítka",
+      "confirmText": "Text potvrzení",
+      "confirmTextHint": "Pokud je nastaven, před provedením požadavku se zobrazí dialogové okno s potvrzením",
+      "successMessage": "Zpráva o úspěchu",
+      "successMessageHint": "Zpráva zobrazená po úspěšném provedení",
+      "enabled": "Povoleno",
       "template": {
-        "label": "",
-        "description": ""
+        "label": "Šablona JSX",
+        "description": "Šablona JSX pro Mantine. K polím odpovědi API přistupujte pomocí datových vazeb (např. data.name). Používejte pouze povolené komponenty. Zakázáno: constructor, __proto__, eval, Function, window, document."
       }
     },
     "placeholder": {
@@ -785,17 +785,17 @@
       "columnJsonPath": "$.jméno",
       "valuePath": "$.data.used",
       "maxPath": "$.data.total",
-      "goodValues": "",
-      "color": ""
+      "goodValues": "online, true, up",
+      "color": "modrá"
     },
     "cardStyleOption": {
-      "filled": "",
-      "outline": "",
-      "subtle": ""
+      "filled": "Vyplněný",
+      "outline": "Obrys",
+      "subtle": "Jemný"
     },
     "layoutOption": {
-      "list": "",
-      "grid": ""
+      "list": "Seznam",
+      "grid": "Mřížka"
     },
     "sizeOption": {
       "sm": "Malé",
@@ -810,48 +810,48 @@
     "fieldset": {
       "general": "Obecné",
       "connection": "API propojení",
-      "display": ""
+      "display": "Konfigurace zobrazení"
     },
     "displayTypeDescription": {
-      "singleValue": "",
-      "keyValue": "",
-      "table": "",
-      "statGrid": "",
-      "progressBars": "",
-      "statusIndicator": "",
-      "countGrid": "",
-      "raw": "",
-      "actionButton": "",
-      "customJsx": ""
+      "singleValue": "Zobrazit jednu extrahovanou hodnotu s popiskem a jednotkou",
+      "keyValue": "Zobrazit více popsaných hodnot vedle sebe",
+      "table": "Zobrazit řádky dat ve formátu tabulky",
+      "statGrid": "Barevné statistické karty v mřížce — například widgety Pi-Hole nebo Speedtest",
+      "progressBars": "Ukazatele průběhu zobrazující využití nebo dokončení — pro disk, paměť a kvóty",
+      "statusIndicator": "Barevné stavové tečky zobrazující stav online/offline nebo stav kondice",
+      "countGrid": "Kompaktní počítadla čísel a popisků v těsné mřížce",
+      "raw": "Formátovaný výstup JSON pro ladění",
+      "actionButton": "Tlačítko, které po kliknutí spustí požadavek",
+      "customJsx": "Vlastní rozložení JSX s použitím povolených komponent Mantine a úplnou datovou vazbou API"
     },
     "method": {
       "GET": "GET",
       "POST": "POST",
       "PUT": "PUT",
-      "DELETE": "",
-      "PATCH": ""
+      "DELETE": "ODSTRANIT",
+      "PATCH": "PATCH"
     },
     "authType": {
-      "none": "",
-      "bearer": "",
-      "basic": "",
+      "none": "Žádné",
+      "bearer": "Token Bearer",
+      "basic": "Základní ověřování",
       "apiKeyHeader": "Klíč API (záhlaví)",
       "apiKeyQuery": "Klíč API (dotazy)"
     },
     "displayType": {
-      "singleValue": "",
-      "keyValue": "",
-      "table": "",
-      "statGrid": "",
-      "progressBars": "",
-      "statusIndicator": "",
-      "countGrid": "",
-      "raw": "",
-      "actionButton": "",
-      "customJsx": ""
+      "singleValue": "Jedna hodnota",
+      "keyValue": "Klíč–hodnota",
+      "table": "Tabulka",
+      "statGrid": "Statistická mřížka",
+      "progressBars": "Ukazatele průběhu",
+      "statusIndicator": "Indikátor stavu",
+      "countGrid": "Mřížka počtů",
+      "raw": "Nezpracovaný JSON",
+      "actionButton": "Akční tlačítko",
+      "customJsx": "Vlastní JSX"
     },
     "secret": {
-      "apiKey": "",
+      "apiKey": "Klíč API / token",
       "username": "Uživatelské jméno",
       "password": "Heslo",
       "savedPlaceholder": "••••••• (uloženo, ponechte prázdné pro zachování)"
@@ -859,38 +859,38 @@
     "preview": {
       "title": "Náhled",
       "test": "Test",
-      "hint": "",
-      "rawResponse": ""
+      "hint": "Kliknutím na Test zobrazíte náhled odpovědi API s aktuální konfigurací.",
+      "rawResponse": "Nezpracovaná odpověď JSON"
     },
     "notification": {
-      "created": "",
-      "updated": "",
-      "deleted": "",
-      "imported": "",
-      "aiPromptCopied": "",
-      "aiPromptDescription": "",
-      "aiPromptCopy": "",
-      "aiPromptNoResponse": "",
-      "aiPromptCopyError": "",
-      "createError": "",
-      "updateError": "",
-      "importError": "",
-      "exportError": "",
-      "duplicated": "",
-      "duplicateError": "",
-      "toggleError": "",
-      "deleteError": "",
-      "previewError": "",
-      "executed": "",
-      "executeError": ""
+      "created": "Widget „{name}“ byl úspěšně vytvořen.",
+      "updated": "Widget „{name}“ byl úspěšně aktualizován.",
+      "deleted": "Widget „{name}“ byl odstraněn.",
+      "imported": "Widget byl úspěšně importován.",
+      "aiPromptCopied": "Výzva AI byla zkopírována do schránky",
+      "aiPromptDescription": "Zkopírujte předpřipravenou výzvu a vložte ji do libovolného chatbota AI (ChatGPT, Claude, Gemini...). Obsahuje kompletní schéma widgetu a odpověď vašeho API, takže AI pro vás může vygenerovat konfigurační JSON připravený k importu.",
+      "aiPromptCopy": "Kopírovat do schránky",
+      "aiPromptNoResponse": "Tip: Nejprve spusťte test, aby se do výzvy zahrnula odpověď API a výsledky byly lepší.",
+      "aiPromptCopyError": "Výzvu se nepodařilo zkopírovat do schránky. Váš prohlížeč tuto funkci možná nepodporuje.",
+      "createError": "Widget se nepodařilo vytvořit. Zkontrolujte dostupnost koncového bodu API.",
+      "updateError": "Widget se nepodařilo aktualizovat. Vaše změny nebyly uloženy.",
+      "importError": "Widget se nepodařilo importovat. Ujistěte se, že soubor je platný export vlastního widgetu JSON.",
+      "exportError": "Widget se nepodařilo exportovat.",
+      "duplicated": "Widget „{name}“ byl duplikován.",
+      "duplicateError": "Widget se nepodařilo duplikovat.",
+      "toggleError": "Stav widgetu se nepodařilo přepnout.",
+      "deleteError": "Widget se nepodařilo odstranit.",
+      "previewError": "Náhled se nepodařilo načíst. Zkontrolujte URL a zkuste to znovu.",
+      "executed": "Akce byla úspěšně provedena.",
+      "executeError": "Akce selhala: {error}"
     },
     "table": {
-      "name": "",
+      "name": "Název",
       "url": "URL",
-      "display": ""
+      "display": "Zobrazení"
     },
     "widget": {
-      "disabled": ""
+      "disabled": "Tento widget je zakázán"
     }
   },
   "integration": {
@@ -917,11 +917,11 @@
         "app": {
           "option": {
             "existing": {
-              "title": "",
-              "label": ""
+              "title": "Existující",
+              "label": "Vybrat existující aplikaci"
             },
             "new": {
-              "title": "",
+              "title": "Nová",
               "url": {
                 "label": "URL aplikace",
                 "description": "URL, kterou aplikace otevře při přístupu z panelu"
@@ -944,9 +944,9 @@
         },
         "app": {
           "action": {
-            "add": "",
-            "remove": "",
-            "select": ""
+            "add": "Propojit aplikaci",
+            "remove": "Odpojit",
+            "select": "Vyberte aplikaci k propojení"
           }
         }
       },
@@ -973,18 +973,18 @@
         "label": "Url"
       },
       "attemptSearchEngineCreation": {
-        "label": "",
-        "description": ""
+        "label": "Vytvořit vyhledávač",
+        "description": "Integraci „{kind}“ lze použít s vyhledávači. Zaškrtnutím této možnosti vyhledávač automaticky nakonfigurujete."
       },
       "app": {
-        "sectionTitle": ""
+        "sectionTitle": "Propojená appka"
       },
       "createApp": {
-        "label": "",
-        "description": ""
+        "label": "Vytvořit aplikaci",
+        "description": "Vytvoří aplikaci se stejným názvem a ikonou jako integrace. Pokud chcete aplikaci vytvořit s adresou URL integrace, ponechte níže uvedené pole prázdné."
       },
       "appHref": {
-        "placeholder": ""
+        "placeholder": "Vlastní URL aplikace"
       },
       "apiKeySettings": {
         "label": "Získat API klíč"
@@ -1027,7 +1027,7 @@
       "analytics": "Analytika",
       "vpn": "VPN",
       "mediaLibrary": "Knihovna médií",
-      "uptimeMonitoring": ""
+      "uptimeMonitoring": "Monitorování dostupnosti"
     },
     "testConnection": {
       "action": {
@@ -1037,134 +1037,134 @@
       "error": {
         "common": {
           "cause": {
-            "title": ""
+            "title": "Příčina s dalšími podrobnostmi"
           }
         },
         "unknown": {
           "title": "Neznámá chyba",
-          "description": ""
+          "description": "Došlo k neznámé chybě. Otevřete níže uvedenou příčinu a zobrazte další podrobnosti"
         },
         "parse": {
-          "title": "",
-          "description": ""
+          "title": "Chyba analýzy",
+          "description": "Odpověď se nepodařilo analyzovat. Ověřte, že adresa URL směřuje na základní adresu URL služby."
         },
         "authorization": {
-          "title": "",
-          "description": ""
+          "title": "Chyba autorizace",
+          "description": "Požadavek nebyl autorizován. Ověřte, že jsou přihlašovací údaje správné a že jsou nakonfigurovány s dostatečnými oprávněními."
         },
         "statusCode": {
-          "title": "",
-          "description": "",
-          "otherDescription": "",
+          "title": "Chyba odpovědi",
+          "description": "Obdržena neočekávaná odpověď {statusCode} ({reason}) z adresy <url></url>. Ověřte, že adresa URL směřuje na základní adresu URL integrace.",
+          "otherDescription": "Obdržena neočekávaná odpověď {statusCode} z adresy <url></url>. Ověřte, že adresa URL směřuje na základní adresu URL integrace.",
           "reason": {
-            "badRequest": "",
-            "notFound": "",
-            "tooManyRequests": "",
-            "internalServerError": "",
-            "serviceUnavailable": "",
-            "gatewayTimeout": ""
+            "badRequest": "Chybný požadavek",
+            "notFound": "Nenalezeno",
+            "tooManyRequests": "Příliš mnoho požadavků",
+            "internalServerError": "Interní chyba serveru",
+            "serviceUnavailable": "Služba není k dispozici",
+            "gatewayTimeout": "Časový limit brány"
           }
         },
         "certificate": {
-          "title": "",
+          "title": "Chyba certifikátu",
           "description": {
-            "expired": "",
-            "notYetValid": "",
-            "untrusted": "",
-            "hostnameMismatch": ""
+            "expired": "Platnost certifikátu vypršela.",
+            "notYetValid": "Certifikát zatím není platný.",
+            "untrusted": "Certifikát není důvěryhodný.",
+            "hostnameMismatch": "Název hostitele certifikátu neodpovídá adrese URL."
           },
           "alert": {
             "permission": {
-              "title": "",
-              "message": ""
+              "title": "Nedostatek oprávnění",
+              "message": "Nemáte oprávnění důvěřovat certifikátům ani je nahrávat. Požádejte správce o nahrání potřebného kořenového certifikátu."
             },
             "hostnameMismatch": {
-              "title": "",
-              "message": ""
+              "title": "Neshoda názvu hostitele",
+              "message": "Název hostitele v certifikátu neodpovídá názvu hostitele, ke kterému se připojujete. To může představovat bezpečnostní riziko, ale přesto můžete zvolit důvěřování tomuto certifikátu."
             },
             "extract": {
-              "title": "",
-              "message": ""
+              "title": "Extrakce certifikátu CA se nezdařila",
+              "message": "Automaticky lze načíst pouze certifikáty podepsané sebou samým bez řetězce. Pokud používáte certifikát podepsaný sebou samým, nahrajte certifikát CA ručně. Pokyny naleznete na stránce <docsLink></docsLink>."
             }
           },
           "action": {
             "retry": {
-              "label": ""
+              "label": "Zkusit vytvoření znovu"
             },
             "trust": {
-              "label": ""
+              "label": "Důvěřovat certifikátu"
             },
             "upload": {
-              "label": ""
+              "label": "Nahrát certifikát"
             }
           },
           "hostnameMismatch": {
             "confirm": {
-              "title": "",
-              "message": ""
+              "title": "Důvěřovat neshodě názvu hostitele",
+              "message": "Opravdu chcete důvěřovat certifikátu s neshodou názvu hostitele?"
             },
             "notification": {
               "success": {
-                "title": "",
-                "message": ""
+                "title": "Důvěryhodný certifikát",
+                "message": "Název hostitele byl přidán do seznamu důvěryhodných certifikátů"
               },
               "error": {
-                "title": "",
-                "message": ""
+                "title": "Certifikátu se nepodařilo důvěřovat",
+                "message": "Certifikátu s neshodou názvu hostitele nelze důvěřovat"
               }
             }
           },
           "selfSigned": {
             "confirm": {
-              "title": "",
-              "message": ""
+              "title": "Důvěřovat certifikátu podepsanému sebou samým",
+              "message": "Opravdu chcete důvěřovat tomuto certifikátu podepsanému sebou samým?"
             },
             "notification": {
               "success": {
-                "title": "",
-                "message": ""
+                "title": "Důvěryhodný certifikát",
+                "message": "Certifikát byl přidán do seznamu důvěryhodných certifikátů"
               },
               "error": {
-                "title": "",
-                "message": ""
+                "title": "Certifikátu se nepodařilo důvěřovat",
+                "message": "Certifikát se nepodařilo přidat do seznamu důvěryhodných certifikátů"
               }
             }
           },
           "details": {
-            "title": "",
-            "description": "",
+            "title": "Podrobnosti",
+            "description": "Před rozhodnutím, zda certifikátu důvěřovat, zkontrolujte jeho informace.",
             "content": {
-              "action": "",
-              "title": ""
+              "action": "Zobrazit obsah",
+              "title": "Certifikát PEM"
             }
           }
         },
         "request": {
-          "title": "",
+          "title": "Chyba požadavku",
           "description": {
             "connection": {
-              "hostUnreachable": "",
-              "networkUnreachable": "",
-              "refused": "",
-              "reset": ""
+              "hostUnreachable": "Server nebyl dostupný. Obvykle to znamená, že je hostitel offline nebo z vaší sítě nedostupný.",
+              "networkUnreachable": "Síť je nedostupná. Zkontrolujte připojení k internetu nebo konfiguraci sítě.",
+              "refused": "Server odmítl připojení. Možná není spuštěný nebo odmítá požadavky na zadaném portu.",
+              "reset": "Server neočekávaně ukončil připojení. K tomu může dojít, pokud je server nestabilní nebo se restartoval."
             },
             "dns": {
-              "notFound": "",
-              "timeout": "",
-              "noAnswer": ""
+              "notFound": "Adresu serveru se nepodařilo najít. Zkontrolujte, zda adresa URL neobsahuje překlepy nebo neplatný název domény.",
+              "timeout": "Vyhledávání DNS překročilo časový limit. Může jít o dočasný problém — zkuste to znovu za chvíli.",
+              "noAnswer": "Server DNS nevrátil platnou odpověď. Doména může existovat, ale nemá platné záznamy."
             },
             "timeout": {
-              "aborted": "",
-              "timeout": ""
+              "aborted": "Požadavek byl přerušen před dokončením. Mohlo k tomu dojít kvůli akci uživatele nebo časovému limitu systému.",
+              "timeout": "Dokončení požadavku trvalo příliš dlouho a vypršel jeho časový limit. Zkontrolujte síť nebo to zkuste později."
             }
           }
         }
       },
-      "alertNotice": "",
+      "alertNotice": "Tlačítko Uložit se aktivuje po navázání úspěšného spojení",
       "notification": {
         "success": {
           "title": "Spojení bylo úspěšné",
-          "message": ""
+          "message": "Spojení bylo úspěšně navázáno"
         },
         "invalidUrl": {
           "title": "Neplatná URL adresa",
@@ -1184,10 +1184,10 @@
         },
         "badRequest": {
           "title": "Chybný požadavek",
-          "message": ""
+          "message": "Požadavek měl chybný formát"
         },
         "unauthorized": {
-          "title": "",
+          "title": "Neautorizováno",
           "message": "Pravděpodobně špatné přihlašovací údaje"
         },
         "forbidden": {
@@ -1195,7 +1195,7 @@
           "message": "Pravděpodobně chybějící oprávnění"
         },
         "notFound": {
-          "title": "",
+          "title": "Nenalezeno",
           "message": "Pravděpodobně špatná adresa URL nebo cesta"
         },
         "internalServerError": {
@@ -1203,32 +1203,32 @@
           "message": "Server zaznamenal chybu"
         },
         "serviceUnavailable": {
-          "title": "",
-          "message": ""
+          "title": "Služba není k dispozici",
+          "message": "Server je momentálně nedostupný"
         },
         "connectionAborted": {
-          "title": "",
-          "message": ""
+          "title": "Spojení přerušeno",
+          "message": "Spojení bylo přerušeno"
         },
         "domainNotFound": {
-          "title": "",
+          "title": "Doména nenalezena",
           "message": "Doména nebyla nalezena"
         },
         "connectionRefused": {
-          "title": "",
-          "message": ""
+          "title": "Spojení odmítnuto",
+          "message": "Spojení bylo odmítnuto"
         },
         "invalidJson": {
-          "title": "",
-          "message": ""
+          "title": "Neplatný JSON",
+          "message": "Odpověď nebyla platný JSON"
         },
         "wrongPath": {
-          "title": "",
+          "title": "Nesprávná cesta",
           "message": "Cesta pravděpodobně není správná"
         },
         "tooManyRequests": {
-          "title": "",
-          "message": ""
+          "title": "Příliš mnoho požadavků v daném čase",
+          "message": "Bylo odesláno příliš mnoho požadavků. Pravděpodobně jste omezeni limitem požadavků nebo vás cílový systém odmítl"
         }
       }
     },
@@ -1262,20 +1262,20 @@
           "newLabel": "Nové heslo"
         },
         "tokenId": {
-          "label": "",
-          "newLabel": ""
+          "label": "ID tokenu",
+          "newLabel": "Nové ID tokenu"
         },
         "realm": {
-          "label": "",
-          "newLabel": ""
+          "label": "Oblast",
+          "newLabel": "Nová oblast"
         },
         "personalAccessToken": {
-          "label": "",
-          "newLabel": ""
+          "label": "Osobní přístupový token",
+          "newLabel": "Nový osobní přístupový token"
         },
         "topic": {
-          "label": "",
-          "newLabel": ""
+          "label": "Téma",
+          "newLabel": "Nové téma"
         },
         "url": {
           "label": "Url",
@@ -1302,63 +1302,63 @@
           "newLabel": "Nové ID aplikace"
         },
         "githubInstallationId": {
-          "label": "",
-          "newLabel": ""
+          "label": "ID instalace",
+          "newLabel": "Nové ID instalace"
         },
         "privateKey": {
           "label": "Soukromý klíč",
           "newLabel": "Nový soukromý klíč"
         },
         "slug": {
-          "label": "",
-          "newLabel": ""
+          "label": "Identifikátor stránky se stavem",
+          "newLabel": "Nový identifikátor stránky se stavem"
         }
       }
     },
     "permission": {
-      "use": "",
-      "interact": "",
-      "full": ""
+      "use": "Vyberte integrace v položkách",
+      "interact": "Interakce s integracemi",
+      "full": "Plný přístup k integracím"
     },
     "audiobookshelf": {
-      "name": "",
-      "description": ""
+      "name": "Audiobookshelf",
+      "description": "Samoobslužný server audioknih a podcastů"
     },
     "navidrome": {
-      "name": "",
-      "description": ""
+      "name": "Navidrome",
+      "description": "Samoobslužný server pro streamování hudby s kompatibilitou s rozhraním Subsonic API"
     },
     "uptimeKuma": {
-      "name": "",
-      "description": "",
+      "name": "Uptime Kuma",
+      "description": "Samoobslužné monitorování dostupnosti s veřejnými stránkami se stavem",
       "secret": {
         "slug": {
-          "description": ""
+          "description": "Identifikátor vaší veřejné stránky se stavem. Pokud není nastaven, použije se „default“."
         },
         "apiKey": {
-          "description": ""
+          "description": "Volitelný klíč API pro ověřený přístup k /metrics"
         }
       }
     },
     "traefik": {
-      "name": "",
-      "description": ""
+      "name": "Traefik",
+      "description": "Cloudový reverzní proxy server a nástroj pro vyvažování zátěže"
     },
     "wud": {
       "name": "Co je Docker nahoru",
       "description": "Sledujte, které z vašich kontejnerů v Dockeru mají k dispozici aktualizace obrázků"
     },
     "paperlessNgx": {
-      "name": "",
-      "description": ""
+      "name": "Paperless-ngx",
+      "description": "Systém pro správu dokumentů k archivaci a organizaci naskenovaných dokumentů"
     },
     "patchmon": {
-      "name": "",
-      "description": ""
+      "name": "PatchMon",
+      "description": "Správa oprav a monitorování hostitelů Linuxu"
     },
     "bazarr": {
-      "name": "",
-      "description": ""
+      "name": "Bazarr",
+      "description": "Doplňková aplikace k Sonarru a Radarru, která spravuje a stahuje titulky"
     }
   },
   "media": {
@@ -1398,7 +1398,7 @@
         "label": "Zkopírovat URL"
       },
       "open": {
-        "label": ""
+        "label": "Otevřít média"
       }
     },
     "noResults": {
@@ -1406,7 +1406,7 @@
     }
   },
   "common": {
-    "success": "",
+    "success": "Úspěch",
     "beta": "Beta",
     "error": "Chyba",
     "action": {
@@ -1414,9 +1414,9 @@
       "apply": "Použít",
       "backToOverview": "Zpět na přehled",
       "skip": "Přeskočit",
-      "change": "",
+      "change": "Změnit",
       "create": "Vytvořit",
-      "createAnother": "",
+      "createAnother": "Vytvořit a začít znovu",
       "edit": "Upravit",
       "import": "Importovat",
       "insert": "Vložit",
@@ -1426,7 +1426,7 @@
       "cancel": "Zrušit",
       "delete": "Odstranit",
       "discard": "Zahodit",
-      "close": "",
+      "close": "Zavřít",
       "confirm": "Potvrdit",
       "continue": "Pokračovat",
       "previous": "Zpět",
@@ -1453,8 +1453,8 @@
       "urlLoading": "Kontrola obrázku…",
       "urlReady": "Obrázek je připraven k použití",
       "urlError": "Tento obrázek nelze načíst. Zkontrolujte URL a zkuste to znovu.",
-      "noResults": "",
-      "error": ""
+      "noResults": "Žádné ikony neodpovídají „{search}“.",
+      "error": "Ikony se nepodařilo načíst."
     },
     "colorScheme": {
       "options": {
@@ -1489,7 +1489,7 @@
       }
     },
     "multiSelect": {
-      "placeholder": ""
+      "placeholder": "Vyberte jednu nebo více hodnot"
     },
     "multiText": {
       "placeholder": "Přidat více hodnot",
@@ -1506,21 +1506,21 @@
         "switchToDarkMode": "Přepnout do tmavého režimu",
         "switchToLightMode": "Přepnout do světlého režimu",
         "management": "Správa",
-        "docker": "",
+        "docker": "Docker",
         "preferences": "Vaše předvolby",
         "logout": "Odhlásit se",
         "login": "Přihlásit se",
         "homeBoard": "Vaše domácí plocha",
-        "loggedOut": "",
-        "updateAvailable": ""
+        "loggedOut": "Odhlášeno",
+        "updateAvailable": "K dispozici je {countUpdates} aktualizací: {tag}"
       }
     },
     "dangerZone": "Nebezpečná zóna",
     "noResults": "Nebyly nalezeny žádné výsledky",
-    "unsavedChanges": "",
-    "servers": "",
+    "unsavedChanges": "Máte neuložené změny!",
+    "servers": "Servery",
     "applications": "",
-    "services": "",
+    "services": "Služby",
     "preview": {
       "show": "Zobrazit náhled",
       "hide": "Skrýt náhled"
@@ -1548,7 +1548,7 @@
           "passwordRequirements": "Heslo nesplňuje požadavky",
           "boardAlreadyExists": "Plocha s tímto názvem již existuje",
           "invalidFileType": "Neplatný typ souboru, očekáván {expected}",
-          "invalidFileName": "",
+          "invalidFileName": "Neplatný název souboru",
           "fileTooLarge": "Soubor je příliš velký, maximální velikost je {maxSize}",
           "invalidConfiguration": "Neplatná konfigurace",
           "groupNameTaken": "Název skupiny je již používán"
@@ -1557,8 +1557,8 @@
     },
     "unit": {
       "speed": {
-        "kilometersPerHour": "",
-        "milesPerHour": ""
+        "kilometersPerHour": "km/h",
+        "milesPerHour": "mph"
       }
     }
   },
@@ -1570,13 +1570,13 @@
       },
       "option": {
         "title": {
-          "label": ""
+          "label": "Název"
         },
         "customCssClasses": {
-          "label": ""
+          "label": "Vlastní CSS třídy"
         },
         "borderColor": {
-          "label": ""
+          "label": "Barva okraje"
         }
       },
       "remove": {
@@ -1598,7 +1598,7 @@
         "moveDown": "Posunout dolů",
         "createAbove": "Nová kategorie nad",
         "createBelow": "Nová kategorie pod",
-        "openAllInNewTabs": ""
+        "openAllInNewTabs": "Otevřít vše na kartách"
       },
       "create": {
         "title": "Nová kategorie",
@@ -1620,15 +1620,15 @@
         }
       },
       "openAllInNewTabs": {
-        "title": "",
-        "text": ""
+        "title": "Otevřít vše na kartách",
+        "text": "Některé prohlížeče mohou z bezpečnostních důvodů blokovat hromadné otevírání karet. Homarr nemohl otevřít všechna okna, protože prohlížeč tuto akci zablokoval. Povolte možnost „Otevírat vyskakovací okna“ a zkuste to znovu."
       }
     }
   },
   "item": {
     "action": {
-      "create": "",
-      "import": "",
+      "create": "Nová položka",
+      "import": "Importovat položku",
       "edit": "Upravit položku",
       "moveResize": "Přesunout / změnit velikost položky",
       "duplicate": "Duplikovat položku",
@@ -1637,24 +1637,24 @@
     "menu": {
       "label": {
         "settings": "Nastavení",
-        "refresh": "",
-        "options": "",
-        "actions": ""
+        "refresh": "Obnovit",
+        "options": "Možnosti",
+        "actions": "Akce"
       },
       "status": {
-        "success": "",
-        "error": "",
-        "loading": "",
-        "idle": ""
+        "success": "OK",
+        "error": "Chyba",
+        "loading": "Načítání",
+        "idle": "Nečinný"
       }
     },
     "create": {
-      "title": "",
-      "search": "",
-      "addToBoard": ""
+      "title": "Vyberte položku k přidání",
+      "search": "Filtrovat položky",
+      "addToBoard": "Přidat na plochu"
     },
     "moveResize": {
-      "title": "",
+      "title": "Přesunout / změnit velikost",
       "field": {
         "width": {
           "label": "Šířka"
@@ -1663,15 +1663,15 @@
           "label": "Výška"
         },
         "xOffset": {
-          "label": ""
+          "label": "Posun X"
         },
         "yOffset": {
-          "label": ""
+          "label": "Posun Y"
         }
       }
     },
     "edit": {
-      "title": "",
+      "title": "Upravit položku",
       "tab": {
         "widget": "Upravit widget",
         "app": "Upravit aplikaci"
@@ -1681,84 +1681,84 @@
       },
       "advancedOptions": {
         "label": "Pokročilé možnosti",
-        "title": ""
+        "title": "Pokročilé možnosti položky"
       },
       "field": {
         "integrations": {
-          "label": ""
+          "label": "Integrace"
         },
         "title": {
-          "label": ""
+          "label": "Název"
         },
         "customCssClasses": {
-          "label": ""
+          "label": "Vlastní CSS třídy"
         },
         "borderColor": {
-          "label": ""
+          "label": "Barva okraje"
         }
       }
     },
     "remove": {
-      "title": "",
+      "title": "Odebrat položku",
       "message": "Jste si jisti, že chcete tuto položku odstranit?"
     }
   },
   "widget": {
     "integrationSelect": {
-      "configureIntegrationFirst": "",
-      "loading": "",
-      "placeholder": "",
-      "noResults": "",
-      "loadError": ""
+      "configureIntegrationFirst": "Nejprve připojte integraci",
+      "loading": "Načítání...",
+      "placeholder": "Vyberte možnost",
+      "noResults": "Nebyly nalezeny žádné výsledky",
+      "loadError": "Možnosti se nepodařilo načíst"
     },
     "app": {
-      "name": "",
-      "description": "",
+      "name": "App",
+      "description": "Vloží aplikaci do plochy.",
       "option": {
         "appId": {
-          "label": ""
+          "label": "Vyberte aplikaci"
         },
         "openInNewTab": {
           "label": "Otevřít na nové kartě"
         },
         "showTitle": {
-          "label": ""
+          "label": "Zobrazit název aplikace"
         },
         "pingEnabled": {
-          "label": ""
+          "label": "Povolit kontrolu stavu"
         },
         "layout": {
-          "label": "",
+          "label": "Rozložení",
           "option": {
-            "row": "",
-            "row-reverse": "",
-            "column": "",
-            "column-reverse": ""
+            "row": "Vodorovně",
+            "row-reverse": "Vodorovně (obráceně)",
+            "column": "Svisle",
+            "column-reverse": "Svisle (obráceně)"
           }
         },
         "descriptionDisplayMode": {
-          "label": "",
-          "description": "",
+          "label": "Režim zobrazení popisu",
+          "description": "Zvolte, jak se má zobrazovat popis aplikace",
           "option": {
-            "normal": "",
-            "tooltip": "",
-            "hidden": ""
+            "normal": "Ve widgetu",
+            "tooltip": "Jako nápověda",
+            "hidden": "Skryté"
           }
         }
       },
       "error": {
         "notFound": {
-          "label": "",
-          "tooltip": ""
+          "label": "Žádná appka",
+          "tooltip": "Nemáte vybranou platnou aplikaci"
         }
       }
     },
     "bookmarks": {
-      "name": "",
-      "description": "",
+      "name": "Záložky",
+      "description": "Zobrazuje odkazy na více aplikací",
       "option": {
         "title": {
-          "label": ""
+          "label": "Název"
         },
         "layout": {
           "label": "Rozložení",
@@ -1770,40 +1770,40 @@
               "label": "Vertikální"
             },
             "grid": {
-              "label": ""
+              "label": "Mřížka"
             },
             "gridHorizontal": {
-              "label": ""
+              "label": "Vodorovná mřížka"
             }
           }
         },
         "hideTitle": {
-          "label": ""
+          "label": "Skrýt název"
         },
         "hideIcon": {
-          "label": ""
+          "label": "Skrýt ikony"
         },
         "hideHostname": {
-          "label": ""
+          "label": "Skrýt názvy hostitelů"
         },
         "openNewTab": {
-          "label": ""
+          "label": "Otevřít na nové kartě"
         },
         "withBorder": {
           "label": "Zobrazit okraj"
         },
         "items": {
-          "label": "",
-          "add": ""
+          "label": "Záložky",
+          "add": "Přidat záložku"
         }
       }
     },
     "archiveTeamWarrior": {
-      "name": "",
-      "description": "",
+      "name": "ArchiveTeam Warrior",
+      "description": "Sledujte stav ArchiveTeam Warrior, projekty a aktivní archivační úlohy.",
       "option": {
         "showBroadcastMessage": {
-          "label": ""
+          "label": "Zobrazit vysílané zprávy"
         }
       }
     },
@@ -1840,7 +1840,7 @@
       }
     },
     "dnsHoleSummary": {
-      "name": "",
+      "name": "Souhrn DNS Hole",
       "description": "Zobrazí shrnutí vaší DNS Hole",
       "option": {
         "layout": {
@@ -1863,18 +1863,18 @@
       },
       "error": {
         "internalServerError": "Nepodařilo se načíst souhrn DNS Hole",
-        "integrationsDisconnected": ""
+        "integrationsDisconnected": "Data nejsou k dispozici, všechny integrace jsou odpojené"
       },
       "data": {
         "adsBlockedToday": "Zablokováno dnes",
         "adsBlockedTodayPercentage": "Zablokováno dnes",
         "dnsQueriesToday": "Dotazů dnes",
-        "domainsBeingBlocked": ""
+        "domainsBeingBlocked": "Domény na seznamu blokovaných"
       },
-      "domainsTooltip": ""
+      "domainsTooltip": "Kvůli více integracím nemůže Homarr vypočítat přesný počet blokovaných domén"
     },
     "dnsHoleControls": {
-      "name": "",
+      "name": "Ovládací prvky DNS Hole",
       "description": "Ovládejte PiHole nebo AdGuard z plochy",
       "option": {
         "layout": {
@@ -1892,11 +1892,11 @@
           }
         },
         "showToggleAllButtons": {
-          "label": ""
+          "label": "Zobrazit všechna přepínací tlačítka"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "DNS Hole se nepodařilo ovládat"
       },
       "controls": {
         "enableAll": "Povolit vše",
@@ -1906,7 +1906,7 @@
         "enabled": "Zapnuto",
         "disabled": "Vypnuto",
         "processing": "Zpracovávání",
-        "disconnected": "",
+        "disconnected": "Odpojeno",
         "hours": "Hodin",
         "minutes": "Minut",
         "unlimited": "Ponechte prázdné pro neomezené"
@@ -1917,8 +1917,8 @@
       "description": "Zobrazuje aktuální datum a čas.",
       "option": {
         "customTitleToggle": {
-          "label": "",
-          "description": ""
+          "label": "Vlastní zobrazení názvu/města",
+          "description": "Zobrazí vlastní název nebo název města/země v horní části hodin."
         },
         "customTitle": {
           "label": "Název"
@@ -1935,71 +1935,71 @@
         },
         "timezone": {
           "label": "Časové pásmo",
-          "description": ""
+          "description": "Vyberte časové pásmo podle standardu IANA"
         },
         "showDate": {
-          "label": ""
+          "label": "Zobrazit datum"
         },
         "dateFormat": {
           "label": "Formát data",
-          "description": ""
+          "description": "Jak má datum vypadat"
         },
         "customTimeFormat": {
-          "label": "",
-          "description": ""
+          "label": "Vlastní formát času",
+          "description": "K formátování času použít ISO 8601 (přepíše ostatní možnosti)"
         },
         "customDateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Vlastní formát data",
+          "description": "K formátování data použít ISO 8601 (přepíše ostatní možnosti)"
         },
         "showWeather": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit počasí",
+          "description": "Zobrazit v rohu karty malou animovanou ikonu počasí a teplotu"
         },
         "weatherLocation": {
-          "label": ""
+          "label": "Lokalita pro počasí"
         },
         "isWeatherFormatFahrenheit": {
-          "label": ""
+          "label": "Používat Fahrenheit"
         }
       }
     },
     "minecraftServerStatus": {
-      "name": "",
-      "description": "",
+      "name": "Stav serveru Minecraft",
+      "description": "Zobrazuje stav serveru Minecraft",
       "option": {
         "title": {
-          "label": ""
+          "label": "Název"
         },
         "domain": {
-          "label": ""
+          "label": "Adresa serveru"
         },
         "isBedrockServer": {
-          "label": ""
+          "label": "Server Bedrock"
         }
       },
       "status": {
-        "online": "",
-        "offline": ""
+        "online": "Online",
+        "offline": "Offline"
       }
     },
     "timetable": {
-      "name": "",
-      "description": "",
-      "title": "",
-      "noStation": "",
+      "name": "Jízdní řád",
+      "description": "Zobrazuje časy odjezdů ze stanice",
+      "title": "Odjezdy {station}",
+      "noStation": "Není vybrána žádná stanice",
       "option": {
         "baseUrl": {
-          "label": ""
+          "label": "URL Search.ch"
         },
         "station": {
-          "label": ""
+          "label": "Stanice"
         }
       }
     },
     "notebook": {
       "name": "Zápisník",
-      "description": "",
+      "description": "Jednoduchý widget poznámkového bloku s podporou Markdownu",
       "option": {
         "showToolbar": {
           "label": "Zobrazovat panel nástroju, který Vám pomůže s formátováním textu"
@@ -2022,8 +2022,8 @@
         "clear": "Vymazat formátování",
         "heading": "Nadpis {level}",
         "align": "Zarovnat text: {position}",
-        "directionLtr": "",
-        "directionRtl": "",
+        "directionLtr": "Nastavit směr textu zleva doprava",
+        "directionRtl": "Nastavit směr textu zprava doleva",
         "blockquote": "Citace",
         "horizontalLine": "Vodorovná čára",
         "bulletList": "Odrážkový seznam",
@@ -2059,43 +2059,43 @@
         "width": "Šířka",
         "height": "Výška"
       },
-      "placeholder": "",
+      "placeholder": "Začněte psát poznámky",
       "dismiss": {
-        "title": "",
-        "message": "",
+        "title": "Zahodit změny?",
+        "message": "V poznámkovém bloku máte neuložené změny. Opravdu je chcete zahodit?",
         "action": {
-          "discard": "",
-          "keepEditing": ""
+          "discard": "Zahodit změny",
+          "keepEditing": "Pokračovat v úpravách"
         }
       }
     },
     "anchorNote": {
-      "name": "",
-      "description": "",
+      "name": "Poznámka Anchor",
+      "description": "Zobrazuje vybranou poznámku z Anchoru",
       "option": {
         "noteId": {
-          "label": ""
+          "label": "Poznámka"
         },
         "showTitle": {
-          "label": ""
+          "label": "Zobrazit název"
         },
         "showUpdatedAt": {
-          "label": ""
+          "label": "Zobrazit poslední aktualizaci"
         }
       },
-      "empty": "",
-      "emptyContent": "",
-      "notFound": "",
-      "noNotes": "",
-      "integrationRequired": "",
-      "updatedAt": "",
-      "untitled": "",
-      "edit": "",
-      "save": "",
-      "cancel": "",
-      "readOnlyViewer": "",
-      "saveForbidden": "",
-      "saveFailed": ""
+      "empty": "Vyberte poznámku k zobrazení",
+      "emptyContent": "Tato poznámka nemá žádný obsah",
+      "notFound": "Poznámka nebyla nalezena",
+      "noNotes": "Nebyly nalezeny žádné poznámky",
+      "integrationRequired": "Nejprve vyberte integraci Anchor",
+      "updatedAt": "Aktualizováno {date}",
+      "untitled": "Bez názvu",
+      "edit": "Upravit",
+      "save": "Uložit",
+      "cancel": "Zrušit",
+      "readOnlyViewer": "K této poznámce máte přístup pouze pro prohlížení. Úpravy jsou zakázány.",
+      "saveForbidden": "Nemáte oprávnění tuto poznámku upravovat.",
+      "saveFailed": "Poznámku se nepodařilo uložit. Zkuste to znovu."
     },
     "iframe": {
       "name": "iFrame",
@@ -2129,36 +2129,36 @@
           "label": "Povolit polohu"
         },
         "allowModals": {
-          "label": ""
+          "label": "Povolit modální okna"
         }
       },
       "error": {
         "noUrl": "Nebyla zadána URL adresa iFrame",
-        "unsupportedProtocol": "",
+        "unsupportedProtocol": "Zadaná URL používá nepodporovaný protokol. Použijte jeden z těchto protokolů: ({supportedProtocols})",
         "noBrowerSupport": "Váš prohlížeč nepodporuje iFrame. Aktualizujte, prosím, svůj prohlížeč."
       }
     },
     "smartHome-entityState": {
       "name": "Stav entity",
-      "description": "",
+      "description": "Zobrazí stav entity a volitelně jej umožní přepínat",
       "option": {
         "entityId": {
           "label": "ID entity"
         },
         "displayName": {
-          "label": ""
+          "label": "Zobrazovaný název"
         },
         "entityUnit": {
-          "label": ""
+          "label": "Jednotka entity"
         },
         "clickable": {
-          "label": ""
+          "label": "Klikatelné"
         }
       }
     },
     "smartHome-executeAutomation": {
-      "name": "",
-      "description": "",
+      "name": "Spustit automatizaci",
+      "description": "Spusťte automatizaci jedním kliknutím",
       "option": {
         "displayName": {
           "label": "Zobrazovaný název"
@@ -2168,80 +2168,80 @@
         }
       },
       "spotlightAction": {
-        "run": ""
+        "run": "Spustit {name}"
       }
     },
     "stockPrice": {
-      "name": "",
-      "description": "",
+      "name": "Cena akcie",
+      "description": "Zobrazuje aktuální cenu akcie společnosti",
       "option": {
         "stock": {
-          "label": ""
+          "label": "Burzovní symbol"
         },
         "timeRange": {
-          "label": "",
+          "label": "Časový rozsah",
           "option": {
             "1d": {
-              "label": ""
+              "label": "1 den"
             },
             "5d": {
-              "label": ""
+              "label": "5 dní"
             },
             "1mo": {
-              "label": ""
+              "label": "1 měsíc"
             },
             "3mo": {
-              "label": ""
+              "label": "3 měsíce"
             },
             "6mo": {
-              "label": ""
+              "label": "6 měsíců"
             },
             "ytd": {
-              "label": ""
+              "label": "Od začátku roku"
             },
             "1y": {
-              "label": ""
+              "label": "1 rok"
             },
             "2y": {
-              "label": ""
+              "label": "2 roky"
             },
             "5y": {
-              "label": ""
+              "label": "5 let"
             },
             "10y": {
-              "label": ""
+              "label": "10 let"
             },
             "max": {
-              "label": ""
+              "label": "Max"
             }
           }
         },
         "timeInterval": {
-          "label": "",
+          "label": "Časový interval",
           "option": {
             "5m": {
-              "label": ""
+              "label": "5 minut"
             },
             "15m": {
-              "label": ""
+              "label": "15 minut"
             },
             "30m": {
-              "label": ""
+              "label": "30 minut"
             },
             "1h": {
-              "label": ""
+              "label": "1 hodina"
             },
             "1d": {
-              "label": ""
+              "label": "1 den"
             },
             "5d": {
-              "label": ""
+              "label": "5 dní"
             },
             "1wk": {
-              "label": ""
+              "label": "1 týden"
             },
             "1mo": {
-              "label": ""
+              "label": "1 měsíc"
             }
           }
         }
@@ -2249,27 +2249,27 @@
     },
     "calendar": {
       "name": "Kalendář",
-      "description": "",
+      "description": "Zobrazuje události z vašich integrací v kalendáři v určitém relativním časovém období",
       "duration": {
-        "allDay": ""
+        "allDay": "Celý den"
       },
       "option": {
         "releaseType": {
           "label": "Typ vydání filmu pro Radarr",
           "options": {
             "inCinemas": "V kinech",
-            "digitalRelease": "",
-            "physicalRelease": ""
+            "digitalRelease": "Digitální vydání",
+            "physicalRelease": "Fyzické vydání"
           }
         },
         "filterPastMonths": {
-          "label": ""
+          "label": "Začít od"
         },
         "filterFutureMonths": {
-          "label": ""
+          "label": "Skončit v"
         },
         "showUnmonitored": {
-          "label": ""
+          "label": "Zobrazit nesledované"
         }
       }
     },
@@ -2281,14 +2281,14 @@
           "label": "Teplota ve Fahrenheitech"
         },
         "disableTemperatureDecimals": {
-          "label": ""
+          "label": "Zakázat desetinná místa teploty"
         },
         "showCurrentWindSpeed": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit aktuální rychlost větru",
+          "description": "Pouze pro aktuální počasí"
         },
         "useImperialSpeed": {
-          "label": ""
+          "label": "Použít mph pro rychlost větru"
         },
         "location": {
           "label": "Lokalita pro počasí"
@@ -2300,7 +2300,7 @@
           "label": "Zobrazit předpověď"
         },
         "forecastDayCount": {
-          "label": "",
+          "label": "Počet dní předpovědi",
           "description": "Když widget není dostatečně široký, zobrazí se méně dní"
         },
         "dateFormat": {
@@ -2308,13 +2308,13 @@
           "description": "Jak by datum mělo vypadat"
         }
       },
-      "currentWindSpeed": "",
+      "currentWindSpeed": "{currentWindSpeed} {unit}",
       "dailyForecast": {
-        "sunrise": "",
-        "sunset": "",
-        "maxWindSpeed": "",
-        "maxWindGusts": "",
-        "humidity": ""
+        "sunrise": "Východ",
+        "sunset": "Západ",
+        "maxWindSpeed": "Max. rychlost větru: {maxWindSpeed} {unit}",
+        "maxWindGusts": "Max. nárazy větru: {maxWindGusts} {unit}",
+        "humidity": "Vlhkost: {humidity} %"
       },
       "kind": {
         "clear": "Jasno",
@@ -2351,8 +2351,8 @@
       "name": "Monitorování stavu systému",
       "description": "Zobrazuje informace o stavu a kondici Vašeho systému (systémů).",
       "tab": {
-        "system": "",
-        "cluster": ""
+        "system": "Systém",
+        "cluster": "Cluster"
       },
       "option": {
         "fahrenheit": {
@@ -2365,169 +2365,169 @@
           "label": "Zobrazit informace o paměti"
         },
         "gpu": {
-          "label": ""
+          "label": "Zobrazit informace o GPU"
         },
         "showUptime": {
-          "label": ""
+          "label": "Zobrazit uptime"
         },
         "fileSystem": {
           "label": "Zobrazit informace o souborovém systému"
         },
         "visibleStorageVolumes": {
-          "label": "",
-          "description": "",
-          "placeholder": ""
+          "label": "Viditelné úložné svazky",
+          "description": "Dostupné pouze tehdy, když jsou všechny vybrané integrace Synology. Ponechte prázdné pro zobrazení všech zjištěných úložných svazků.",
+          "placeholder": "Vyberte úložné svazky"
         },
         "defaultTab": {
-          "label": ""
+          "label": "Výchozí karta"
         },
         "visibleClusterSections": {
-          "label": ""
+          "label": "Viditelné části clusteru"
         },
         "sectionIndicatorRequirement": {
-          "label": ""
+          "label": "Požadavek indikátoru sekce"
         }
       },
       "popover": {
-        "information": "",
-        "processor": "",
-        "memory": "",
-        "memoryAvailable": "",
-        "version": "",
-        "uptime": "",
-        "loadAverage": "",
-        "minute": "",
-        "minutes": "",
-        "used": "",
+        "information": "Informace",
+        "processor": "Procesor: {cpuModelName}",
+        "memory": "Paměť: {memory} GiB",
+        "memoryAvailable": "Dostupné: {memoryAvailable} GiB ({percent} %)",
+        "version": "Verze: {version}",
+        "uptime": "Doba provozu: {months} měsíců, {days} dní, {hours} hodin, {minutes} minut",
+        "loadAverage": "Průměrné zatížení:",
+        "minute": "1 minuta",
+        "minutes": "{count} minut",
+        "used": "Využito",
         "available": "K dispozici",
-        "lastSeen": ""
+        "lastSeen": "Poslední aktualizace stavu: {lastSeen}"
       },
       "memory": {},
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Nepodařilo se načíst stav systému"
       },
       "cluster": {
         "summary": {
-          "cpu": "",
-          "memory": ""
+          "cpu": "CPU",
+          "memory": "RAM"
         },
         "resource": {
           "node": {
-            "name": ""
+            "name": "Uzly"
           },
           "qemu": {
-            "name": ""
+            "name": "VM"
           },
           "lxc": {
-            "name": ""
+            "name": "LXC"
           },
           "storage": {
-            "name": ""
+            "name": "Úložiště"
           }
         },
         "popover": {
           "rightSection": {
-            "node": "",
-            "vmId": "",
-            "plugin": ""
+            "node": "Uzel",
+            "vmId": "ID VM",
+            "plugin": "Plugin"
           },
           "detail": {
-            "cpu": "",
-            "memory": "",
-            "storage": "",
-            "uptime": "",
-            "haState": "",
+            "cpu": "Jádra",
+            "memory": "Paměť",
+            "storage": "Úložiště",
+            "uptime": "Uptime",
+            "haState": "Stav HA",
             "storageType": {
-              "local": "",
-              "shared": ""
+              "local": "Lokální úložiště",
+              "shared": "Sdílené úložiště"
             }
           }
         },
         "table": {
           "header": {
-            "name": "",
-            "cpu": "",
-            "memory": "",
-            "node": ""
+            "name": "Název",
+            "cpu": "CPU",
+            "memory": "RAM",
+            "node": "Uzel"
           }
         }
       }
     },
     "dockerContainers": {
-      "name": "",
-      "description": "",
+      "name": "Statistiky Dockeru",
+      "description": "Statistiky vašich kontejnerů (tento widget lze přidat pouze s oprávněními správce)",
       "option": {
         "columns": {
-          "label": ""
+          "label": "Zobrazované sloupce"
         },
         "enableRowSorting": {
-          "label": ""
+          "label": "Povolit řazení položek"
         },
         "defaultSort": {
-          "label": "",
+          "label": "Sloupec použitý pro výchozí řazení",
           "option": {
-            "name": "",
-            "state": "",
-            "cpuUsage": "",
-            "memoryUsage": ""
+            "name": "Název",
+            "state": "Stav",
+            "cpuUsage": "Využití CPU",
+            "memoryUsage": "Využití paměti"
           }
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "Obrátit řazení"
         },
         "columnOrder": {
-          "label": ""
+          "label": "Pořadí sloupců"
         },
         "columnWidths": {
-          "label": ""
+          "label": "Šířky sloupců"
         }
       },
       "error": {
-        "internalServerError": "",
-        "layoutSaveTitle": "",
-        "layoutSaveMessage": ""
+        "internalServerError": "Nepodařilo se načíst statistiky kontejnerů",
+        "layoutSaveTitle": "Rozložení tabulky nebylo uloženo",
+        "layoutSaveMessage": "Rozložení tabulky Dockeru se nepodařilo uložit. Zkuste sloupec znovu přesunout nebo změnit jeho velikost."
       },
       "empty": {
-        "noContainers": ""
+        "noContainers": "Opětovným kliknutím trvale odstraníte"
       }
     },
     "coolify": {
-      "name": "",
-      "description": "",
+      "name": "Coolify",
+      "description": "Přehled vaší instance Coolify se servery a aplikacemi",
       "option": {
         "showServers": {
-          "label": ""
+          "label": "Zobrazit servery"
         },
         "showApplications": {
-          "label": ""
+          "label": "Zobrazit aplikace"
         },
         "showServices": {
-          "label": ""
+          "label": "Zobrazit služby"
         }
       },
       "empty": {
-        "servers": "",
-        "applications": "",
-        "services": ""
+        "servers": "Žádné servery",
+        "applications": "Nebyly nalezeny žádné aplikace",
+        "services": "Nebyly nalezeny žádné služby"
       },
       "footer": {
-        "updated": ""
+        "updated": "Aktualizováno {when}"
       },
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "Není nakonfigurována žádná integrace Coolify",
+        "internalServerError": "Nepodařilo se načíst data Coolify"
       },
       "server": {
-        "buildServer": ""
+        "buildServer": "Sestavit"
       },
       "instances": {
-        "title": ""
+        "title": "Instance"
       }
     },
     "vpn": {
-      "name": "",
-      "description": "",
-      "serviceUnavailable": "",
+      "name": "VPN",
+      "description": "Přehled vašich připojení VPN",
+      "serviceUnavailable": "VPN není k dispozici",
       "option": {}
     },
     "ups": {
@@ -2562,85 +2562,85 @@
       }
     },
     "tracearr": {
-      "name": "",
-      "description": "",
+      "name": "Tracearr",
+      "description": "Rozšířené monitorování mediálního serveru s podrobnými údaji o streamování a překódování",
       "option": {
         "showStreams": {
-          "label": ""
+          "label": "Zobrazit aktivní streamy"
         },
         "showStats": {
-          "label": ""
+          "label": "Zobrazit souhrn statistik"
         },
         "showRecentActivity": {
-          "label": ""
+          "label": "Zobrazit nedávnou aktivitu"
         },
         "showViolations": {
-          "label": ""
+          "label": "Zobrazit porušení"
         }
       },
       "stats": {
-        "activeStreams": "",
-        "totalUsers": "",
-        "transcodes": "",
-        "bandwidth": ""
+        "activeStreams": "Aktivní streamy",
+        "totalUsers": "Celkem uživatelů",
+        "transcodes": "Překódování",
+        "bandwidth": "Šířka pásma"
       },
       "streams": {
-        "empty": "",
-        "user": "",
-        "media": "",
-        "state": "",
-        "quality": "",
-        "device": "",
-        "progress": "",
+        "empty": "Žádné aktivní streamy",
+        "user": "Uživatel",
+        "media": "Médium",
+        "state": "Stav",
+        "quality": "Kvalita",
+        "device": "Zařízení",
+        "progress": "Průběh",
         "videoDecision": {
-          "directPlay": "",
-          "transcode": "",
-          "directStream": ""
+          "directPlay": "Přímé přehrávání",
+          "transcode": "Překódování",
+          "directStream": "Přímý stream"
         }
       },
       "recentActivity": {
-        "title": "",
-        "empty": "",
-        "watched": "",
-        "partial": ""
+        "title": "Nedávná aktivita",
+        "empty": "Žádná nedávná aktivita",
+        "watched": "Zhlédnuto",
+        "partial": "Částečně"
       },
       "violations": {
-        "title": "",
-        "empty": "",
-        "rule": "",
-        "user": ""
+        "title": "Porušení",
+        "empty": "Žádná nedávná porušení",
+        "rule": "Pravidlo",
+        "user": "Uživatel"
       },
-      "noSectionsEnabled": "",
+      "noSectionsEnabled": "Nejsou povoleny žádné části",
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "Není nakonfigurována žádná integrace Tracearr",
+        "internalServerError": "Nepodařilo se načíst data Tracearr"
       }
     },
     "umami": {
-      "name": "",
-      "description": "",
-      "visitors": "",
-      "active": "",
-      "pageviews": "",
-      "visits": "",
-      "bounceRate": "",
-      "avgDuration": "",
+      "name": "Analytika Umami",
+      "description": "Zobrazuje statistiky návštěvníků z vaší instance analytiky Umami",
+      "visitors": "návštěvníci",
+      "active": "aktivní",
+      "pageviews": "zobrazení stránek",
+      "visits": "návštěvy",
+      "bounceRate": "míra okamžitého opuštění",
+      "avgDuration": "prům",
       "option": {
         "websiteId": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noWebsites": "",
-          "configureIntegrationFirst": ""
+          "label": "Web",
+          "description": "Vyberte web sledovaný vaší instancí Umami",
+          "placeholder": "Vyberte web",
+          "loading": "Načítání webů...",
+          "noWebsites": "Nebyly nalezeny žádné weby",
+          "configureIntegrationFirst": "Nejprve připojte integraci Umami"
         },
         "timeFrame": {
-          "label": "",
-          "description": "",
+          "label": "Časové období",
+          "description": "Časové období, za které se mají zobrazit údaje o návštěvnících",
           "option": {
-            "today": "",
-            "24h": "",
-            "7d": "",
+            "today": "Dnes",
+            "24h": "Posledních 24 hodin",
+            "7d": "Posledních 7 dní",
             "30d": "Posledních 30 dní",
             "month": "Tento měsíc",
             "lastMonth": "Minulý měsíc"
@@ -2716,10 +2716,10 @@
     },
     "common": {
       "location": {
-        "query": "",
-        "latitude": "",
-        "longitude": "",
-        "disabledTooltip": "",
+        "query": "Město / PSČ",
+        "latitude": "Šířka",
+        "longitude": "Zeměpisná délka",
+        "disabledTooltip": "Zadejte město nebo PSČ",
         "unknownLocation": "Neznámá poloha",
         "search": "Vyhledat",
         "table": {
@@ -2730,7 +2730,7 @@
             "population": "Populace"
           },
           "action": {
-            "select": ""
+            "select": "Vybrat {city}, {countryCode}"
           },
           "population": {
             "fallback": "Neznámý"
@@ -2742,9 +2742,9 @@
         "description": "Klikněte na <here></here> pro vytvoření nové integrace"
       },
       "app": {
-        "noData": "",
+        "noData": "Žádná aplikace",
         "description": "Klikněte na <here></here> pro vytvoření nové aplikace",
-        "quickCreate": ""
+        "quickCreate": "Vytvořit aplikaci za běhu"
       },
       "error": {
         "noIntegration": "Nebyla vybrána žádná integrace",
@@ -2764,414 +2764,414 @@
           "description": "Automatické přehrávání funguje pouze když je ztlumeno kvůli omezením prohlížeče"
         },
         "isMuted": {
-          "label": ""
+          "label": "Ztlumeno"
         },
         "hasControls": {
-          "label": ""
+          "label": "Zobrazit ovládací prvky"
         }
       },
       "error": {
-        "noUrl": "",
-        "forYoutubeUseIframe": ""
+        "noUrl": "Nebyla zadána URL adresa videa",
+        "forYoutubeUseIframe": "U videí z YouTube použijte možnost iframe"
       }
     },
     "mediaServer": {
-      "name": "",
-      "description": "",
+      "name": "Aktuální streamy mediálních serverů",
+      "description": "Zobrazuje aktuální streamy na vašich mediálních serverech",
       "option": {
         "showOnlyPlaying": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit pouze právě přehrávané",
+          "description": "Vypnutí této možnosti nebude fungovat pro Plex"
         },
         "showBitrate": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit datový tok",
+          "description": "Zobrazit aktuální datový tok přehrávání vedle umístění"
         },
         "showLocation": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit umístění",
+          "description": "Zobrazit, zda je stream ve vaší síti LAN nebo WAN"
         }
       },
       "footer": {
-        "streams": "",
-        "totalBitrate": ""
+        "streams": "{count, plural, one {# aktivní stream} few {# aktivní streamy} many {# aktivních streamů} other {# aktivních streamů}}",
+        "totalBitrate": "Celkem: {bitrate}"
       },
       "items": {
-        "currentlyPlaying": "",
+        "currentlyPlaying": "Právě se přehrává",
         "user": "Uživatel",
         "name": "Jméno",
         "id": "Id",
-        "status": "",
-        "directPlay": "",
-        "directStream": "",
-        "transcodeVideo": "",
-        "transcodeAudio": "",
-        "transcoding": "",
-        "paused": "",
-        "remaining": "",
+        "status": "Stav",
+        "directPlay": "Přímé přehrávání",
+        "directStream": "Přímý stream",
+        "transcodeVideo": "Překódování videa",
+        "transcodeAudio": "Překódování zvuku",
+        "transcoding": "Překódování",
+        "paused": "Pozastaveno",
+        "remaining": "Zbývá {minutes} min",
         "metadata": {
-          "title": "",
+          "title": "Statistiky pro nadšence",
           "video": {
-            "title": "",
-            "resolution": ""
+            "title": "Video",
+            "resolution": "Rozlišení"
           },
           "audio": {
-            "title": "",
-            "channelCount": "",
-            "codec": ""
+            "title": "Zvuk",
+            "channelCount": "Zvukové kanály",
+            "codec": "Zvukový kodek"
           },
           "transcoding": {
-            "title": "",
-            "container": "",
-            "resolution": "",
-            "target": ""
+            "title": "Překódování",
+            "container": "Kontejner",
+            "resolution": "Rozlišení",
+            "target": "Cílový kodek"
           }
         }
       }
     },
     "paperlessNgx": {
-      "name": "",
-      "description": "",
-      "documentsTotal": "",
-      "documentsInbox": "",
-      "correspondents": "",
-      "tags": "",
-      "documentTypes": "",
-      "inboxRatio": "",
-      "inbox": "",
-      "total": "",
+      "name": "Paperless-ngx",
+      "description": "Přehled archivu dokumentů Paperless-ngx",
+      "documentsTotal": "Celkem dokumentů",
+      "documentsInbox": "Doručená pošta",
+      "correspondents": "Korespondenti",
+      "tags": "Štítky",
+      "documentTypes": "Typy dokumentů",
+      "inboxRatio": "Poměr doručené pošty",
+      "inbox": "doručená pošta",
+      "total": "celkem",
       "option": {
         "showInboxRatio": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit poměr doručené pošty",
+          "description": "Zobrazit poměr dokumentů v doručené poště vůči celkovému počtu v hlavní části"
         },
         "showInboxRing": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit kruhový ukazatel doručené pošty",
+          "description": "Zobrazit kruhový ukazatel průběhu vedle poměru doručené pošty"
         },
         "showDocumentsTotal": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit celkový počet dokumentů",
+          "description": "Zobrazit celkový počet dokumentů ve vašem archivu"
         },
         "showDocumentsInbox": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit počet dokumentů v doručené poště",
+          "description": "Zobrazit počet nezpracovaných dokumentů v doručené poště"
         },
         "showCorrespondents": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit korespondenty",
+          "description": "Zobrazit celkový počet korespondentů"
         },
         "showTags": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit štítky",
+          "description": "Zobrazit celkový počet štítků"
         },
         "showDocumentTypes": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit typy dokumentů",
+          "description": "Zobrazit celkový počet typů dokumentů"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Data Paperless-ngx se nepodařilo načíst"
       }
     },
     "patchmon": {
-      "name": "",
-      "description": "",
-      "title": "",
-      "totalHosts": "",
-      "hostsNeedingUpdates": "",
-      "securityUpdates": "",
-      "upToDateHosts": "",
-      "hostsWithSecurityUpdates": "",
-      "recentUpdates24h": "",
-      "totalOutdatedPackages": "",
-      "totalRepos": "",
-      "osDistribution": "",
-      "compliance": "",
-      "complianceRatio": "",
-      "lastUpdated": "",
+      "name": "PatchMon",
+      "description": "Přehled stavu oprav hostitelů z PatchMonu",
+      "title": "Statistiky PatchMonu",
+      "totalHosts": "Celkem hostitelů",
+      "hostsNeedingUpdates": "Vyžaduje aktualizace",
+      "securityUpdates": "Bezpečnostní aktualizace",
+      "upToDateHosts": "Aktuální hostitelé",
+      "hostsWithSecurityUpdates": "Hostitelé s bezpečnostními aktualizacemi",
+      "recentUpdates24h": "Aktualizace (24 h)",
+      "totalOutdatedPackages": "Zastaralé balíčky",
+      "totalRepos": "Repozitáře",
+      "osDistribution": "Distribuce OS",
+      "compliance": "Soulad oprav",
+      "complianceRatio": "{upToDate} / {total}",
+      "lastUpdated": "Aktualizováno {time}",
       "option": {
         "showTotalHosts": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit celkový počet hostitelů",
+          "description": "Zobrazit celkový počet monitorovaných hostitelů"
         },
         "showHostsNeedingUpdates": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit hostitele vyžadující aktualizace",
+          "description": "Zobrazit hostitele s alespoň jedním zastaralým balíčkem"
         },
         "showSecurityUpdates": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit bezpečnostní aktualizace",
+          "description": "Zobrazit celkový počet dostupných bezpečnostních aktualizací"
         },
         "showUpToDateHosts": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit aktuální hostitele",
+          "description": "Zobrazit hostitele s nulovým počtem zastaralých balíčků"
         },
         "showHostsWithSecurityUpdates": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit hostitele s bezpečnostními aktualizacemi",
+          "description": "Zobrazit hostitele vyžadující bezpečnostní opravy"
         },
         "showRecentUpdates24h": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit poslední aktualizace (24 h)",
+          "description": "Zobrazit počet aktualizací použitých za posledních 24 hodin"
         },
         "showTotalOutdatedPackages": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit zastaralé balíčky",
+          "description": "Zobrazit celkový počet zastaralých balíčků na všech hostitelích"
         },
         "showTotalRepos": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit repozitáře",
+          "description": "Zobrazit počet aktivních monitorovaných repozitářů"
         },
         "enableThresholdColors": {
-          "label": "",
-          "description": ""
+          "label": "Povolit barvy podle prahových hodnot",
+          "description": "Obarvit statistické hodnoty zeleně, žlutě nebo červeně podle předvoleb závažnosti"
         },
         "useCustomThresholds": {
-          "label": "",
-          "description": ""
+          "label": "Pokročilé prahové hodnoty",
+          "description": "Přizpůsobit varovné a kritické prahové hodnoty pro jednotlivé statistiky pomocí absolutních počtů nebo procent celkového počtu hostitelů"
         },
         "thresholdMode": {
           "option": {
-            "absolute": "",
-            "percent": ""
+            "absolute": "Absolutní počet",
+            "percent": "Procento celkového počtu hostitelů"
           }
         },
         "hostsNeedingUpdatesThresholdMode": {
-          "label": "",
-          "description": ""
+          "label": "Režim prahové hodnoty pro aktualizace",
+          "description": "Porovnat počet aktualizací jako absolutní hodnotu nebo procento celkového počtu hostitelů"
         },
         "hostsNeedingUpdatesWarningAt": {
-          "label": "",
-          "description": ""
+          "label": "Varovná prahová hodnota aktualizací",
+          "description": "Při dosažení této prahové hodnoty zadat žlutou barvu"
         },
         "hostsNeedingUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": "Kritická prahová hodnota aktualizací",
+          "description": "Při dosažení této prahové hodnoty zadat červenou barvu"
         },
         "securityUpdatesThresholdMode": {
-          "label": "",
-          "description": ""
+          "label": "Režim prahové hodnoty bezpečnostních aktualizací",
+          "description": "Porovnat počet bezpečnostních aktualizací jako absolutní hodnotu nebo procento celkového počtu hostitelů"
         },
         "securityUpdatesWarningAt": {
-          "label": "",
-          "description": ""
+          "label": "Varovná prahová hodnota bezpečnostních aktualizací",
+          "description": "Při dosažení této prahové hodnoty zadat žlutou barvu"
         },
         "securityUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": "Kritická prahová hodnota bezpečnostních aktualizací",
+          "description": "Při dosažení této prahové hodnoty zadat červenou barvu"
         },
         "hostsWithSecurityUpdatesThresholdMode": {
-          "label": "",
-          "description": ""
+          "label": "Režim prahové hodnoty hostitelů s bezpečnostními aktualizacemi",
+          "description": "Porovnat počet hostitelů jako absolutní hodnotu nebo procento celkového počtu hostitelů"
         },
         "hostsWithSecurityUpdatesWarningAt": {
-          "label": "",
-          "description": ""
+          "label": "Varovná prahová hodnota hostitelů s bezpečnostními aktualizacemi",
+          "description": "Při dosažení této prahové hodnoty zadat žlutou barvu"
         },
         "hostsWithSecurityUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": "Kritická prahová hodnota hostitelů s bezpečnostními aktualizacemi",
+          "description": "Při dosažení této prahové hodnoty zadat červenou barvu"
         },
         "upToDateHostsThresholdMode": {
-          "label": "",
-          "description": ""
+          "label": "Režim prahové hodnoty aktuálních hostitelů",
+          "description": "Porovnat počet aktuálních hostitelů jako absolutní hodnotu nebo procento celkového počtu hostitelů"
         },
         "upToDateHostsWarningAt": {
-          "label": "",
-          "description": ""
+          "label": "Varovná prahová hodnota aktuálních hostitelů",
+          "description": "Při dosažení této prahové hodnoty nebo jejím překročení, ale před úplným pokrytím, zadat žlutou barvu"
         },
         "upToDateHostsCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": "Kritická prahová hodnota aktuálních hostitelů",
+          "description": "Při poklesu hodnoty pod tuto prahovou hodnotu zadat červenou barvu"
         },
         "totalOutdatedPackagesThresholdMode": {
-          "label": "",
-          "description": ""
+          "label": "Režim prahové hodnoty zastaralých balíčků",
+          "description": "Porovnat počet zastaralých balíčků jako absolutní hodnotu nebo procento celkového počtu hostitelů"
         },
         "totalOutdatedPackagesWarningAt": {
-          "label": "",
-          "description": ""
+          "label": "Varovná prahová hodnota zastaralých balíčků",
+          "description": "Při dosažení této prahové hodnoty zadat žlutou barvu"
         },
         "totalOutdatedPackagesCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": "Kritická prahová hodnota zastaralých balíčků",
+          "description": "Při dosažení této prahové hodnoty zadat červenou barvu"
         },
         "showOsDistribution": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit distribuci OS",
+          "description": "Zobrazit rozdělení monitorovaných hostitelů podle operačního systému"
         },
         "osDistributionLimit": {
-          "label": "",
-          "description": "",
+          "label": "Limit distribuce OS",
+          "description": "Maximální počet operačních systémů k zobrazení",
           "option": {
-            "3": "",
-            "5": "",
-            "10": "",
-            "all": ""
+            "3": "Nejlepší 3",
+            "5": "Nejlepších 5",
+            "10": "Nejlepších 10",
+            "all": "Vše"
           }
         },
         "showOsVersion": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit verzi OS",
+          "description": "Pokud je k dispozici, připojit verzi OS ke každému popisku distribuce"
         },
         "showComplianceHero": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit hlavní ukazatel souladu",
+          "description": "Zobrazit kruhový ukazatel souladu s procentem aktuálních hostitelů"
         },
         "osDisplayMode": {
-          "label": "",
-          "description": "",
+          "label": "Režim zobrazení OS",
+          "description": "Zvolte způsob zobrazení distribuce operačních systémů",
           "option": {
-            "bars": "",
-            "donut": ""
+            "bars": "Vodorovné pruhy",
+            "donut": "Prstencový graf"
           }
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Data PatchMonu se nepodařilo načíst"
       }
     },
     "bazarr": {
-      "name": "",
-      "description": "",
-      "episodes": "",
-      "movies": "",
-      "providers": "",
-      "status": "",
+      "name": "Bazarr",
+      "description": "Přehled chybějících titulků a stavu kondice z vaší instance Bazarru",
+      "episodes": "Chybějící epizody",
+      "movies": "Chybějící filmy",
+      "providers": "Problémy poskytovatelů",
+      "status": "Problémy se stavem",
       "option": {
         "showMissingEpisodes": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit chybějící epizody",
+          "description": "Zobrazit počet epizod s chybějícími titulky"
         },
         "showMissingMovies": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit chybějící filmy",
+          "description": "Zobrazit počet filmů s chybějícími titulky"
         },
         "showProviderIssues": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit problémy poskytovatelů",
+          "description": "Zobrazit počet poskytovatelů titulků s problémy"
         },
         "showHealthIssues": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit problémy se stavem",
+          "description": "Zobrazit počet problémů se stavem Bazarru"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Data Bazarru se nepodařilo načíst"
       }
     },
     "immich-serverStats": {
-      "name": "",
-      "description": "",
+      "name": "Statistiky serveru Immich",
+      "description": "Informace o vaší instanci Immich",
       "option": {
         "showUsers": {
           "label": "",
-          "description": ""
+          "description": "Zobrazit počet uživatelů ve vaší instanci"
         },
         "showPhotos": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit fotografie",
+          "description": "Zobrazit počet fotografií ve vaší instanci"
         },
         "showVideos": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit videa",
+          "description": "Zobrazit počet videí ve vaší instanci"
         },
         "showStorage": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit úložiště",
+          "description": "Zobrazit celkové množství využitého úložiště"
         }
       },
-      "users": "",
-      "photos": "",
-      "videos": "",
-      "storage": ""
+      "users": "Uživatelé",
+      "photos": "Fotografie",
+      "videos": "Videa",
+      "storage": "Využité úložiště"
     },
     "immich-albumCarousel": {
-      "name": "",
-      "allPhotos": "",
+      "name": "Album Immich",
+      "allPhotos": "Všechny fotografie",
       "option": {
         "albumId": {
-          "label": "",
-          "description": ""
+          "label": "Album",
+          "description": "Vyberte album Immich nebo všechny fotografie. Prázdný výběr také zobrazí náhodné fotografie z celé knihovny."
         },
         "rotationIntervalSeconds": {
-          "label": "",
-          "description": ""
+          "label": "Interval otáčení v sekundách",
+          "description": "Přepíná obrázky v albu každých X sekund. Musí být alespoň 1 a méně než 3600."
         },
         "showPhotoInfo": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit informace o fotografii",
+          "description": "Zobrazuje datum fotografie a aktuální index v dolní části prezentace"
         },
         "randomizePhotos": {
-          "label": "",
-          "description": ""
+          "label": "Náhodné pořadí fotografií",
+          "description": "Zobrazovat fotografie v náhodném pořadí namísto toho, aby se vždy začínalo stejným pořadím alba."
         }
       },
-      "description": "",
-      "noPhotos": ""
+      "description": "Prezentace obrázků z alba Immich nebo celé vaší knihovny",
+      "noPhotos": "Nebyly nalezeny žádné fotografie"
     },
     "downloads": {
-      "name": "",
-      "description": "",
+      "name": "Klient stahování",
+      "description": "Umožňuje zobrazovat a spravovat stahování z klientů Torrent i Usenet.",
       "option": {
         "columns": {
-          "label": ""
+          "label": "Zobrazované sloupce"
         },
         "enableRowSorting": {
-          "label": ""
+          "label": "Povolit řazení položek"
         },
         "defaultSort": {
-          "label": ""
+          "label": "Sloupec použitý pro výchozí řazení"
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "Obrátit řazení"
         },
         "showCompletedUsenet": {
-          "label": ""
+          "label": "Zobrazit dokončené položky Usenetu"
         },
         "showCompletedTorrent": {
-          "label": ""
+          "label": "Zobrazit dokončené položky torrentů"
         },
         "showCompletedHttp": {
-          "label": ""
+          "label": "Zobrazit dokončené ostatní položky"
         },
         "activeTorrentThreshold": {
-          "label": ""
+          "label": "Skrýt dokončené torrenty pod touto hranicí (v kiB/s)"
         },
         "categoryFilter": {
           "label": "Kategorie/štítky k filtrování"
         },
         "filterIsWhitelist": {
-          "label": ""
+          "label": "Filtrovat jako seznam povolených"
         },
         "applyFilterToRatio": {
-          "label": ""
+          "label": "Použít filtr k výpočtu poměru"
         },
         "limitPerIntegration": {
-          "label": "",
-          "description": ""
+          "label": "Omezit počet položek na integraci",
+          "description": "Omezí počet zobrazených položek pro každou integraci, nikoli globálně"
         },
         "columnOrder": {
-          "label": ""
+          "label": "Pořadí sloupců"
         },
         "columnWidths": {
-          "label": ""
+          "label": "Šířky sloupců"
         }
       },
       "errors": {
-        "noColumns": "",
-        "noCommunications": "",
-        "noItems": "",
-        "actionFailed": "",
-        "actionFailedMessage": ""
+        "noColumns": "Vyberte sloupce v položkách",
+        "noCommunications": "Data z integrace nelze načíst",
+        "noItems": "Nebyly nalezeny žádné stahované položky",
+        "actionFailed": "Akce selhala",
+        "actionFailedMessage": "Akci se nepodařilo dokončit. Zkuste to znovu."
       },
       "items": {
         "actions": {
-          "columnTitle": ""
+          "columnTitle": "Ovládací prvky"
         },
         "added": {
-          "columnTitle": "",
+          "columnTitle": "Přidáno",
           "detailsTitle": "Datum přidání"
         },
         "category": {
@@ -3184,25 +3184,25 @@
         },
         "index": {
           "columnTitle": "#",
-          "detailsTitle": ""
+          "detailsTitle": "Aktuální index v klientovi"
         },
         "id": {
           "columnTitle": "Id",
-          "detailsTitle": ""
+          "detailsTitle": "ID položky"
         },
         "integration": {
           "columnTitle": "Integrace"
         },
         "name": {
-          "columnTitle": ""
+          "columnTitle": "Název úlohy"
         },
         "progress": {
           "columnTitle": "Postup",
-          "detailsTitle": ""
+          "detailsTitle": "Průběh stahování"
         },
         "ratio": {
           "columnTitle": "Poměr",
-          "detailsTitle": ""
+          "detailsTitle": "Poměr torrentu (přijato/odesláno)"
         },
         "received": {
           "columnTitle": "Celkem staženo",
@@ -3213,25 +3213,25 @@
           "detailsTitle": "Celkem nahráno"
         },
         "size": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Velikost souboru",
+          "detailsTitle": "Celková velikost výběru/souborů"
         },
         "state": {
           "columnTitle": "Status",
-          "detailsTitle": ""
+          "detailsTitle": "Stav úlohy"
         },
         "time": {
-          "columnTitle": "",
-          "detailsTitle": "",
-          "eta": ""
+          "columnTitle": "Čas dokončení",
+          "detailsTitle": "Čas od dokončení/do dokončení",
+          "eta": "Odhadovaný čas"
         },
         "type": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Typ",
+          "detailsTitle": "Typ klienta stahování"
         },
         "upSpeed": {
           "columnTitle": "Nahrávání",
-          "detailsTitle": ""
+          "detailsTitle": "Rychlost odesílání"
         }
       },
       "states": {
@@ -3239,121 +3239,121 @@
         "queued": "Ve frontě",
         "paused": "Pozastaveno",
         "completed": "Hotovo",
-        "failed": "",
-        "processing": "",
-        "leeching": "",
-        "stalled": "",
+        "failed": "Selhalo",
+        "processing": "Zpracovávání",
+        "leeching": "Stahování",
+        "stalled": "Pozastaveno",
         "unknown": "Neznámý",
-        "seeding": ""
+        "seeding": "Sdílení"
       },
       "actions": {
         "clients": {
-          "modalTitle": "",
-          "pause": "",
-          "resume": ""
+          "modalTitle": "Seznam klientů stahování",
+          "pause": "Pozastavit všechny klienty/položky",
+          "resume": "Obnovit všechny klienty/položky"
         },
         "client": {
-          "pause": "",
-          "resume": ""
+          "pause": "Pozastavit klienta",
+          "resume": "Obnovit klienta"
         },
         "item": {
           "pause": "",
-          "resume": "",
+          "resume": "Obnovit položku",
           "delete": {
-            "title": "",
+            "title": "Smazat položku",
             "modalTitle": "Jsou si jisti, že chcete smazat tento úkol?",
-            "entry": "",
-            "entryAndFiles": ""
+            "entry": "Smazat záznam",
+            "entryAndFiles": "Smazat záznam a soubor(y)"
           }
         }
       },
-      "globalRatio": "",
+      "globalRatio": "Globální poměr",
       "contextMenu": {
-        "copyName": "",
-        "copyId": "",
-        "clearFilters": ""
+        "copyName": "Kopírovat název",
+        "copyId": "Kopírovat ID",
+        "clearFilters": "Vymazat filtry"
       },
       "footer": {
-        "filter": ""
+        "filter": "Filtrovat stahované položky"
       },
       "stats": {
-        "show": "",
-        "hide": "",
-        "overallProgress": "",
-        "totalSize": "",
-        "clients": ""
+        "show": "Zobrazit globální statistiky",
+        "hide": "Skrýt globální statistiky",
+        "overallProgress": "Celkový průběh fronty",
+        "totalSize": "Celková velikost fronty",
+        "clients": "{count, plural, one {# klient} few {# klienti} many {# klientů} other {# klientů}}"
       },
-      "disconnected": ""
+      "disconnected": "(odpojeno)"
     },
     "mediaReleases": {
-      "name": "",
-      "description": "",
+      "name": "Vydání médií",
+      "description": "Zobrazuje nově přidaná média nebo nadcházející vydání z různých integrací",
       "option": {
         "layout": {
-          "label": "",
+          "label": "Rozložení",
           "option": {
             "backdrop": {
-              "label": ""
+              "label": "Pozadí"
             },
             "poster": {
-              "label": ""
+              "label": "Plakát"
             }
           }
         },
         "showDescriptionTooltip": {
-          "label": ""
+          "label": "Zobrazit popis v nápovědě"
         },
         "showType": {
-          "label": ""
+          "label": "Zobrazit odznak typu média"
         },
         "showSource": {
-          "label": ""
+          "label": "Zobrazit zdrojovou integraci"
         }
       },
       "length": {
-        "duration": ""
+        "duration": "{length} min"
       }
     },
     "mediaRequests-requestList": {
-      "name": "",
+      "name": "Seznam požadavků na média",
       "description": "Podívejte se na seznam všech požadavků na média z vaší instance Overseerr nebo Jellyseerr",
       "option": {
         "linksTargetNewTab": {
           "label": "Otevírat odkazy v nové kartě"
         },
         "statusFilter": {
-          "label": ""
+          "label": "Stavy k zobrazení"
         },
         "recentDays": {
-          "label": ""
+          "label": "Zobrazit pouze poslední požadavky"
         }
       },
       "pending": {
-        "approve": "",
-        "approving": "",
-        "decline": ""
+        "approve": "Schválit požadavek",
+        "approving": "Schvalování požadavku...",
+        "decline": "Zamítnout požadavek"
       },
       "availability": {
         "unknown": "Neznámý",
-        "pending": "",
-        "processing": "",
-        "requested": "",
+        "pending": "Čeká",
+        "processing": "Zpracovávání",
+        "requested": "Vyžádáno",
         "partiallyAvailable": "Částečně dostupné",
         "available": "K dispozici",
-        "blacklisted": "",
-        "deleted": ""
+        "blacklisted": "Na černé listině",
+        "deleted": "Odstraněno"
       },
       "status": {
-        "pending": "",
-        "approved": "",
-        "declined": "",
-        "failed": "",
-        "completed": ""
+        "pending": "Čeká",
+        "approved": "Schváleno",
+        "declined": "Zamítnuto",
+        "failed": "Selhalo",
+        "completed": "Dokončeno"
       },
       "toBeDetermined": ""
     },
     "mediaRequests-requestStats": {
-      "name": "",
+      "name": "Statistiky požadavků na média",
       "description": "Statistiky vašich požadavků na média",
       "option": {},
       "titles": {
@@ -3361,9 +3361,9 @@
           "main": "Statistiky médií",
           "approved": "Již schváleno",
           "pending": "Čeká na schválení",
-          "processing": "",
-          "declined": "",
-          "available": "",
+          "processing": "Zpracovává se",
+          "declined": "Již zamítnuto",
+          "available": "Již dostupné",
           "tv": "Požadavky seriálů",
           "movie": "Požadavky filmů",
           "total": "Celkem"
@@ -3375,14 +3375,14 @@
       }
     },
     "mediaTranscoding": {
-      "name": "",
-      "description": "",
+      "name": "Překódování médií",
+      "description": "Statistiky, aktuální fronta a stav pracovních procesů překódování médií",
       "option": {
         "defaultView": {
           "label": "Výchozí zobrazení"
         },
         "queuePageSize": {
-          "label": ""
+          "label": "Velikost stránky fronty"
         }
       },
       "tab": {
@@ -3390,9 +3390,9 @@
         "queue": "Fronta",
         "statistics": "Statistiky"
       },
-      "currentIndex": "",
+      "currentIndex": "{start}–{end} z {total}",
       "healthCheck": {
-        "title": "",
+        "title": "Kontrola stavu",
         "queued": "Ve frontě",
         "status": {
           "healthy": "V pořádku",
@@ -3403,11 +3403,11 @@
         "statistics": {
           "empty": "Prázdné",
           "transcodes": "Překódování",
-          "transcodesCount": "",
-          "healthChecksCount": "",
-          "filesCount": "",
-          "savedSpace": "",
-          "healthChecks": "",
+          "transcodesCount": "Překódování",
+          "healthChecksCount": "Kontroly stavu",
+          "filesCount": "Soubory",
+          "savedSpace": "Ušetřené místo",
+          "healthChecks": "Kontroly stavu",
           "videoCodecs": "Kodeky",
           "videoContainers": "Kontejnery",
           "videoResolutions": "Rozlišení"
@@ -3419,7 +3419,7 @@
             "eta": "Odhadovaný čas",
             "progress": "Postup",
             "transcode": "Překódovat",
-            "healthCheck": ""
+            "healthCheck": "Kontrola stavu"
           }
         },
         "queue": {
@@ -3428,191 +3428,191 @@
             "file": "Soubor",
             "size": "Velikost",
             "transcode": "Překódovat",
-            "healthCheck": ""
+            "healthCheck": "Kontrola stavu"
           }
         }
       }
     },
     "mediaMissing": {
-      "name": "",
-      "description": "",
+      "name": "Chybějící a zařazená média",
+      "description": "Zobrazuje chybějící a zařazené filmy a epizody ze Sonarru a Radarru",
       "option": {
         "showMissing": {
-          "label": ""
+          "label": "Zobrazit chybějící položky"
         },
         "showQueued": {
-          "label": ""
+          "label": "Zobrazit zařazené položky"
         },
         "pageSize": {
-          "label": ""
+          "label": "Položek na stránku"
         }
       },
       "tab": {
-        "missing": "",
-        "queued": ""
+        "missing": "Chybějící",
+        "queued": "Ve frontě"
       },
       "type": {
-        "movie": "",
-        "episode": ""
+        "movie": "Film",
+        "episode": "Epizoda"
       },
       "empty": {
-        "missing": "",
-        "queued": "",
-        "noTabsEnabled": ""
+        "missing": "Žádné chybějící položky",
+        "queued": "Žádné položky ve frontě",
+        "noTabsEnabled": "V nastavení widgetu povolte alespoň jednu kartu"
       },
-      "timeLeft": ""
+      "timeLeft": "Zbývající čas"
     },
     "rssFeed": {
-      "name": "",
-      "description": "",
+      "name": "RSS kanály",
+      "description": "Sleduje a zobrazuje jeden nebo více obecných kanálů RSS, ATOM nebo JSON",
       "option": {
         "feedUrls": {
-          "label": ""
+          "label": "URL zdrojů"
         },
         "enableRtl": {
-          "label": ""
+          "label": "Povolit RTL"
         },
         "textLinesClamp": {
-          "label": ""
+          "label": "Omezení řádků popisu"
         },
         "maximumAmountPosts": {
-          "label": ""
+          "label": "Limit počtu příspěvků"
         },
         "hideDescription": {
-          "label": ""
+          "label": "Skrýt popis"
         },
         "showPosterImage": {
-          "label": ""
+          "label": "Zobrazit obrázek plakátu"
         }
       }
     },
     "releases": {
-      "name": "",
-      "description": "",
+      "name": "Vydání",
+      "description": "Zobrazuje seznam aktuální verze zadaných repozitářů podle zadaného regulárního výrazu verze.",
       "option": {
         "newReleaseWithin": {
-          "label": "",
-          "description": ""
+          "label": "Nové vydání v období",
+          "description": "Příklad použití: 1w (1 týden), 10M (10 měsíců). Přijaté jednotky: h (hodiny), d (dny), w (týdny), M (měsíce), y (roky). Ponechte prázdné, pokud nechcete zvýrazňovat nová vydání."
         },
         "staleReleaseWithin": {
-          "label": "",
-          "description": ""
+          "label": "Zastaralé vydání v období",
+          "description": "Příklad použití: 1w (1 týden), 10M (10 měsíců). Přijaté jednotky: h (hodiny), d (dny), w (týdny), M (měsíce), y (roky). Ponechte prázdné, pokud nechcete zvýrazňovat zastaralá vydání."
         },
         "showOnlyHighlighted": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit pouze zvýrazněné",
+          "description": "Zobrazí pouze nová nebo zastaralá vydání podle výše uvedených nastavení."
         },
         "showDetails": {
-          "label": ""
+          "label": "Zobrazit podrobnosti"
         },
         "showOnlyIcon": {
-          "label": ""
+          "label": "Zobrazit pouze ikonu"
         },
         "topReleases": {
-          "label": "",
-          "description": ""
+          "label": "Nejnovější vydání",
+          "description": "Maximální počet nejnovějších vydání k zobrazení. Nula znamená bez omezení."
         },
         "repositories": {
-          "label": "",
+          "label": "Repozitáře",
           "addRepository": {
-            "label": ""
+            "label": "Přidat repozitář"
           },
           "importRepositories": {
-            "label": "",
-            "loading": "",
-            "noImagesFound": "",
-            "listFoundImages": "",
-            "listAlreadyImportedImages": "",
-            "allImagesAlreadyImported": "",
-            "onlyAdminCanImport": "",
-            "selectAll": "",
-            "deselectAll": ""
+            "label": "Importovat z Dockeru",
+            "loading": "Načítání obrazů Dockeru",
+            "noImagesFound": "Nebyly nalezeny žádné obrazy Dockeru",
+            "listFoundImages": "Seznam nalezených obrazů",
+            "listAlreadyImportedImages": "Seznam již importovaných obrazů",
+            "allImagesAlreadyImported": "Všechny obrazy již byly importovány",
+            "onlyAdminCanImport": "Importovat z Dockeru mohou pouze správci",
+            "selectAll": "Vybrat vše",
+            "deselectAll": "Zrušit výběr všeho"
           },
           "provider": {
-            "label": ""
+            "label": "Poskytovatel"
           },
           "providerUrl": {
-            "label": ""
+            "label": "URL poskytovatele"
           },
           "identifier": {
-            "label": "",
-            "placeholder": ""
+            "label": "Identifikátor",
+            "placeholder": "Název nebo Vlastník/Název"
           },
           "name": {
-            "label": ""
+            "label": "Název"
           },
           "versionFilter": {
-            "label": "",
+            "label": "Filtr verze",
             "prefix": {
-              "label": ""
+              "label": "Předpona"
             },
             "precision": {
-              "label": "",
+              "label": "Přesnost",
               "options": {
-                "none": ""
+                "none": "Žádná"
               }
             },
             "suffix": {
-              "label": ""
+              "label": "Přípona"
             },
             "regex": {
-              "label": ""
+              "label": "Regulární výraz"
             }
           },
           "edit": {
-            "label": ""
+            "label": "Upravit"
           },
           "editForm": {
-            "title": "",
+            "title": "Upravit repozitář",
             "cancel": {
-              "label": ""
+              "label": "Zrušit"
             },
             "confirm": {
-              "label": ""
+              "label": "Potvrdit"
             }
           },
           "importForm": {
-            "title": ""
+            "title": "Importovat z Dockeru"
           },
           "example": {
-            "label": ""
+            "label": "Příklad"
           },
-          "invalid": "",
+          "invalid": "Neplatná definice repozitáře, zkontrolujte hodnoty",
           "noProvider": {
-            "label": "",
-            "tooltip": ""
+            "label": "Bez poskytovatele",
+            "tooltip": "Poskytovatele se nepodařilo analyzovat, po importu obrazů ho nastavte ručně"
           },
           "tokens": {
-            "label": "",
-            "token": "",
-            "configured": "",
-            "notConfigured": "",
-            "save": ""
+            "label": "Tokeny poskytovatele",
+            "token": "Token",
+            "configured": "Token je nakonfigurován",
+            "notConfigured": "Není nastaven žádný token",
+            "save": "Uložit"
           }
         }
       },
-      "not-found": "",
-      "pre-release": "",
-      "archived": "",
-      "forked": "",
-      "starsCount": "",
-      "forksCount": "",
-      "issuesCount": "",
-      "markViewed": "",
-      "openProjectPage": "",
-      "openReleasePage": "",
-      "releaseDescription": "",
-      "projectDescription": "",
-      "created": "",
+      "not-found": "Nenalezeno",
+      "pre-release": "Předběžné vydání",
+      "archived": "Archivováno",
+      "forked": "Fork",
+      "starsCount": "Hvězdičky",
+      "forksCount": "Forky",
+      "issuesCount": "Otevřené problémy",
+      "markViewed": "Označit jako zobrazené",
+      "openProjectPage": "Otevřít stránku projektu",
+      "openReleasePage": "Otevřít stránku vydání",
+      "releaseDescription": "Popis vydání",
+      "projectDescription": "Popis projektu",
+      "created": "Vytvořeno",
       "error": {
-        "label": "",
+        "label": "Chyba",
         "messages": {
-          "invalidIdentifier": "",
-          "noMatchingVersion": "",
-          "noReleasesFound": "",
-          "noProviderSelected": "",
-          "noProviderResponse": "",
-          "unexpected": ""
+          "invalidIdentifier": "Neplatný identifikátor",
+          "noMatchingVersion": "Nebyla nalezena žádná odpovídající verze",
+          "noReleasesFound": "Nebyla nalezena žádná vydání",
+          "noProviderSelected": "Není vybrán žádný poskytovatel",
+          "noProviderResponse": "Poskytovatel neodpověděl",
+          "unexpected": "Neočekávaná chyba poskytovatele"
         }
       }
     },
@@ -3620,273 +3620,273 @@
       "option": {},
       "card": {
         "vpn": {
-          "countConnected": ""
+          "countConnected": "Připojeno: {count}"
         }
       },
       "error": {
-        "integrationsDisconnected": "",
-        "unknownContentOption": ""
+        "integrationsDisconnected": "Data nejsou k dispozici, všechny integrace jsou odpojené",
+        "unknownContentOption": "Neznámá volba obsahu pro widget souhrnu síťového řadiče: "
       },
-      "name": "",
-      "description": ""
+      "name": "Souhrn síťového řadiče",
+      "description": "Zobrazuje souhrn síťového řadiče (například UniFi Controlleru)"
     },
     "networkControllerStatus": {
       "card": {
         "variants": {
           "wired": {
-            "name": ""
+            "name": "Kabelové"
           },
           "wifi": {
-            "name": ""
+            "name": "Wi-Fi"
           }
         },
         "users": {
-          "label": ""
+          "label": "Uživatelé"
         },
         "guests": {
-          "label": ""
+          "label": "Hosté"
         }
       },
       "option": {
         "content": {
           "option": {
             "wifi": {
-              "label": ""
+              "label": "Wi-Fi"
             },
             "wired": {
-              "label": ""
+              "label": "Kabelové"
             }
           },
-          "label": ""
+          "label": "Obsah widgetu"
         }
       },
       "error": {
-        "integrationsDisconnected": "",
-        "unknownContentOption": ""
+        "integrationsDisconnected": "Data nejsou k dispozici, všechny integrace jsou odpojené",
+        "unknownContentOption": "Neznámá volba obsahu pro widget stavu sítě: "
       },
-      "name": "",
-      "description": ""
+      "name": "Stav sítě",
+      "description": "Zobrazuje připojená zařízení v síti"
     },
     "networkController": {
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Nepodařilo se načíst souhrn síťového řadiče"
       }
     },
     "firewall": {
-      "name": "",
-      "description": "",
+      "name": "Monitorování firewallu",
+      "description": "Zobrazuje souhrn firewallů",
       "tab": {
-        "system": "",
-        "interfaces": ""
+        "system": "Systém",
+        "interfaces": "Rozhraní"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Nelze načíst data z firewallu"
       },
       "option": {
-        "interfaces": ""
+        "interfaces": "Síťová rozhraní k zobrazení"
       },
       "widget": {
-        "fwname": "",
-        "version": "",
-        "versiontitle": "",
-        "cputitle": "",
-        "memorytitle": "",
-        "cpu": "",
-        "memory": "",
+        "fwname": "Název",
+        "version": "Verze",
+        "versiontitle": "Verze",
+        "cputitle": "Využití CPU",
+        "memorytitle": "Využití paměti",
+        "cpu": "CPU",
+        "memory": "Paměť",
         "interfaces": {
-          "name": "",
-          "trans": "",
-          "recv": "",
-          "title": ""
+          "name": "název",
+          "trans": "Odesláno",
+          "recv": "Přijato",
+          "title": "Síťová rozhraní"
         }
       }
     },
     "notifications": {
-      "name": "",
-      "description": "",
-      "noItems": "",
+      "name": "Oznámení",
+      "description": "Zobrazit historii oznámení z integrace",
+      "noItems": "Žádná oznámení k zobrazení.",
       "option": {
         "hideLogos": {
-          "label": ""
+          "label": "Skrýt loga"
         }
       }
     },
     "speedtestTracker": {
-      "name": "",
-      "description": "",
+      "name": "Speedtest Tracker",
+      "description": "Zobrazuje výsledky testů rychlosti z vaší instance Speedtest Tracker.",
       "option": {
         "showLatestResult": {
-          "label": ""
+          "label": "Zobrazit nejnovější výsledek"
         },
         "showStats": {
-          "label": ""
+          "label": "Zobrazit průměry"
         },
         "showRecentResults": {
-          "label": ""
+          "label": "Zobrazit nedávné výsledky"
         },
         "showPingGraph": {
-          "label": ""
+          "label": "Zobrazit graf pingu"
         }
       },
-      "latestResult": "",
-      "averages": "",
-      "tests": "",
-      "recentResults": "",
-      "recentResultsSpeed": "",
-      "recentResultsPing": "",
-      "download": "",
-      "upload": "",
-      "ping": "",
-      "status": "",
-      "avgDownload": "",
-      "avgUpload": "",
-      "avgPing": "",
-      "healthy": "",
-      "unhealthy": "",
-      "ok": "",
-      "fail": "",
-      "noSectionsEnabled": "",
+      "latestResult": "Nejnovější výsledek",
+      "averages": "Průměry",
+      "tests": "Testů: {count}",
+      "recentResults": "Nedávné výsledky",
+      "recentResultsSpeed": "Rychlost",
+      "recentResultsPing": "Ping",
+      "download": "Stahování",
+      "upload": "Odesílání",
+      "ping": "Ping",
+      "status": "Stav",
+      "avgDownload": "Prům. stahování",
+      "avgUpload": "Prům. odesílání",
+      "avgPing": "Prům. ping",
+      "healthy": "V pořádku",
+      "unhealthy": "Nastal problém",
+      "ok": "OK",
+      "fail": "Selhání",
+      "noSectionsEnabled": "V možnostech widgetu povolte alespoň jednu část.",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Nepodařilo se načíst data Speedtestu"
       }
     },
     "uptimeKuma": {
-      "name": "",
-      "description": "",
+      "name": "Uptime Kuma",
+      "description": "Sledujte statistiky dostupnosti ze své stránky se stavem Uptime Kuma",
       "option": {
         "showAverageUptime": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit průměrnou dostupnost",
+          "description": "Zobrazit kombinovanou průměrnou dostupnost za 24 hodin v procentech"
         },
         "showUptimeRing": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit kruhový ukazatel dostupnosti",
+          "description": "Zobrazit kruhový ukazatel průběhu vedle průměrné hodnoty dostupnosti"
         },
         "showTotalMonitors": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit celkový počet monitorů",
+          "description": "Zobrazit celkový počet nakonfigurovaných monitorů"
         },
         "showUpCount": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit počet dostupných",
+          "description": "Zobrazit počet monitorů, které jsou aktuálně dostupné"
         },
         "showDownCount": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit počet nedostupných",
+          "description": "Zobrazit počet monitorů, které jsou aktuálně nedostupné"
         },
         "showPausedCount": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit počet pozastavených",
+          "description": "Zobrazit počet monitorů, které jsou aktuálně pozastavené"
         }
       },
-      "averageUptime": "",
+      "averageUptime": "Průměrná dostupnost (24 h)",
       "stats": {
-        "totalMonitors": "",
-        "upCount": "",
-        "downCount": "",
-        "pausedCount": ""
+        "totalMonitors": "Celkem monitorů",
+        "upCount": "Dostupné",
+        "downCount": "Nedostupné",
+        "pausedCount": "Pozastavené"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Data dostupnosti se nepodařilo načíst"
       }
     },
     "traefik": {
-      "name": "",
-      "description": "",
+      "name": "Traefik",
+      "description": "Přehled směrovačů, služeb, middlewaru a vstupních bodů Traefiku",
       "option": {
         "showTcp": {
-          "label": ""
+          "label": "Zobrazit TCP"
         },
         "showUdp": {
-          "label": ""
+          "label": "Zobrazit UDP"
         },
         "showEntryPoints": {
-          "label": ""
+          "label": "Zobrazit vstupní body"
         }
       },
-      "instances": "",
-      "versionUnknown": "",
+      "instances": "Instance Traefiku",
+      "versionUnknown": "Verze neznámá",
       "summary": {
-        "routers": "",
-        "entryPoints": ""
+        "routers": "Směrovače",
+        "entryPoints": "Vstupní body"
       },
       "resource": {
-        "routers": "",
-        "services": "",
-        "middlewares": ""
+        "routers": "Směrovače",
+        "services": "Služby",
+        "middlewares": "Middleware"
       },
       "status": {
-        "healthy": "",
-        "errors": "",
-        "warnings": ""
+        "healthy": "V pořádku",
+        "errors": "{count} chyb",
+        "warnings": "{count} varování"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Data Traefiku se nepodařilo načíst"
       }
     },
     "audioStats": {
-      "name": "",
-      "description": "",
+      "name": "Statistiky zvuku",
+      "description": "Statistiky knihovny a přehrávání z Navidrome nebo Audiobookshelf",
       "option": {
         "showArtists": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit interprety",
+          "description": "Zobrazit celkový počet interpretů ve vaší hudební knihovně (Navidrome)"
         },
         "showAlbums": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit alba",
+          "description": "Zobrazit celkový počet alb ve vaší hudební knihovně (Navidrome)"
         },
         "showSongs": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit skladby",
+          "description": "Zobrazit celkový počet skladeb ve vaší hudební knihovně (Navidrome)"
         },
         "showLibraryCount": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit počet knihoven",
+          "description": "Zobrazit počet knihoven ve vaší instanci (Audiobookshelf)"
         },
         "showAudiobooks": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit audioknihy",
+          "description": "Zobrazit celkový počet audioknih ve všech knihovnách (Audiobookshelf)"
         },
         "showPodcasts": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit podcasty",
+          "description": "Zobrazit celkový počet podcastů ve všech knihovnách (Audiobookshelf)"
         },
         "showListeningTime": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit dobu poslechu",
+          "description": "Zobrazit celkovou dobu vašeho poslechu (Audiobookshelf)"
         },
         "showActiveSessions": {
-          "label": "",
-          "description": ""
+          "label": "Zobrazit aktivní relace",
+          "description": "Zobrazit počet aktuálně aktivních relací přehrávání (Audiobookshelf)"
         },
         "compactMode": {
-          "label": "",
-          "description": ""
+          "label": "Kompaktní režim",
+          "description": "Použít hustší rozložení s menšími dlaždicemi, ideální pro malé velikosti widgetů"
         }
       },
-      "artists": "",
-      "albums": "",
-      "songs": "",
-      "libraryCount": "",
-      "audiobooks": "",
-      "podcasts": "",
-      "listeningTime": "",
-      "activeSessions": "",
+      "artists": "Interpreti",
+      "albums": "Alba",
+      "songs": "Skladby",
+      "libraryCount": "Knihovny",
+      "audiobooks": "Audioknihy",
+      "podcasts": "Podcasty",
+      "listeningTime": "Doba poslechu",
+      "activeSessions": "Aktivní relace",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Data zvukových statistik se nepodařilo načíst"
       }
     },
     "systemResources": {
-      "name": "",
-      "description": "",
+      "name": "Systémové prostředky",
+      "description": "Využití CPU, paměti, disku a dalšího hardwaru systému",
       "option": {
         "hasShadow": {
-          "label": ""
+          "label": "Povolit stínování grafu"
         },
         "visibleCharts": {
-          "label": "",
-          "description": "",
+          "label": "Viditelné grafy",
+          "description": "Vyberte grafy, které chcete zobrazit.",
           "option": {
             "cpu": "CPU",
             "memory": "Paměť",
@@ -3895,77 +3895,77 @@
           }
         },
         "labelDisplayMode": {
-          "label": "",
+          "label": "Režim zobrazení štítků",
           "option": {
-            "textWithIcon": "",
-            "text": "",
-            "icon": "",
-            "hidden": ""
+            "textWithIcon": "Zobrazit text s ikonou",
+            "text": "Zobrazit pouze text",
+            "icon": "Zobrazit pouze ikonu",
+            "hidden": "Skrýt štítek"
           }
         }
       },
       "card": {
-        "cpu": "",
-        "memory": "",
-        "gpu": "",
-        "network": "",
+        "cpu": "CPU",
+        "memory": "RAM",
+        "gpu": "GPU",
+        "network": "SÍŤ",
         "up": "",
-        "down": ""
+        "down": "DOLŮ"
       }
     },
     "systemDisks": {
-      "name": "",
-      "description": "",
+      "name": "Systémové disky",
+      "description": "Využití disků systému",
       "option": {
         "showTemperatureIfAvailable": {
-          "label": ""
+          "label": "Zobrazit teplotu, pokud je k dispozici"
         },
         "displayMode": {
-          "label": "",
+          "label": "Režim zobrazení",
           "option": {
             "percentage": {
-              "label": ""
+              "label": "Procenta (např. 76 %)"
             },
             "absolute": {
-              "label": ""
+              "label": "Absolutní hodnoty (např. 800 GB / 1 TB)"
             },
             "free": {
-              "label": ""
+              "label": "Procento volného místa (např. 24 % volného místa)"
             }
           }
         },
         "showBackgroundBar": {
-          "label": ""
+          "label": "Zobrazit pruh využití na pozadí"
         },
         "visibleStorageVolumes": {
-          "label": "",
-          "description": "",
-          "placeholder": ""
+          "label": "Viditelné úložné svazky",
+          "description": "Dostupné pouze tehdy, když jsou všechny vybrané integrace Synology. Ponechte prázdné pro zobrazení všech zjištěných úložných svazků.",
+          "placeholder": "Vyberte úložné svazky"
         }
       },
       "status": {
-        "unhealthy": ""
+        "unhealthy": "Nezdravý stav"
       }
     },
     "customApi": {
-      "name": "",
-      "description": "",
+      "name": "Vlastní API",
+      "description": "Zobrazujte data z libovolného externího API pomocí vlastní konfigurace.",
       "option": {
         "definitionId": {
-          "label": ""
+          "label": "ID definice"
         },
         "refreshInterval": {
-          "label": "",
-          "description": ""
+          "label": "Interval obnovení",
+          "description": "Jak často znovu načítat data z API (v sekundách)"
         }
       },
-      "noDefinition": "",
-      "definitionNotFound": "",
-      "noDisplayOutput": "",
-      "executeConfirm": "",
-      "executing": "",
-      "executeSuccess": "",
-      "executeFailed": ""
+      "noDefinition": "Není vybrána žádná definice",
+      "definitionNotFound": "Definice widgetu nebyla nalezena. Možná byla odstraněna.",
+      "noDisplayOutput": "Žádný výstup zobrazení",
+      "executeConfirm": "Opravdu chcete tuto akci provést?",
+      "executing": "Provádění...",
+      "executeSuccess": "Akce byla úspěšně provedena",
+      "executeFailed": "Akce selhala. Zkontrolujte konfiguraci widgetu."
     },
     "beszelSystemTable": {
       "name": "Systémy Beszel (tabulka)",
@@ -4014,17 +4014,17 @@
           "label": "Zobrazit verzi agenta"
         },
         "columnOrder": {
-          "label": ""
+          "label": "Pořadí sloupců"
         },
         "columnWidths": {
-          "label": ""
+          "label": "Šířky sloupců"
         }
       },
       "noRecords": "Nenalezeny žádné systémy",
       "error": {
-        "internalServerError": "",
-        "layoutSaveTitle": "",
-        "layoutSaveMessage": ""
+        "internalServerError": "K serveru Beszel se nelze připojit. Zkontrolujte nastavení integrace.",
+        "layoutSaveTitle": "Rozložení tabulky nelze uložit",
+        "layoutSaveMessage": "Pořadí nebo šířky sloupců se nepodařilo uložit. Zkuste to znovu."
       },
       "column": {
         "system": "Systém",
@@ -4083,10 +4083,10 @@
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "K serveru Beszel se nelze připojit. Zkontrolujte nastavení integrace."
       },
       "empty": {
-        "noSystems": ""
+        "noSystems": "Nebyly nalezeny žádné systémy"
       },
       "metric": {
         "cpu": "CPU",
@@ -4115,7 +4115,7 @@
       },
       "empty": "Žádné nakonfigurované výstrahy",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "K serveru Beszel se nelze připojit. Zkontrolujte nastavení integrace."
       },
       "history": "Historie",
       "resolved": "Vyřešeno",
@@ -4129,8 +4129,8 @@
       "description": "Časové grafy pro CPU, paměť, disk, síť a metriky kontejnerů Docker",
       "option": {
         "systemId": {
-          "label": "",
-          "description": ""
+          "label": "Systém",
+          "description": "Vyberte systém Beszel, pro který se mají zobrazit statistiky"
         },
         "timePeriod": {
           "label": "Časové období"
@@ -4162,13 +4162,13 @@
       },
       "selectSystem": "Vyberte systém",
       "empty": {
-        "noSystems": ""
+        "noSystems": "Nebyly nalezeny žádné systémy"
       },
       "error": {
-        "internalServerError": "",
-        "liveConnectionFailed": "",
-        "switchToHistorical": "",
-        "systemNotFound": ""
+        "internalServerError": "K serveru Beszel se nelze připojit. Zkontrolujte nastavení integrace.",
+        "liveConnectionFailed": "Živé připojení selhalo. Vaše instance Beszel možná nepodporuje streamování v reálném čase.",
+        "switchToHistorical": "Přepnout na historické zobrazení",
+        "systemNotFound": "Vybraný systém nebyl nalezen. Vyberte jiný systém."
       },
       "chart": {
         "cpu": {
@@ -4179,76 +4179,76 @@
         "memory": {
           "title": "Využití paměti",
           "subtitle": "Přesné využití v zaznamenaném čase",
-          "series": "",
-          "cache": ""
+          "series": "Použito",
+          "cache": "Mezipaměť/bufry"
         },
         "disk": {
-          "title": "",
-          "subtitle": "",
-          "series": ""
+          "title": "Využití disku",
+          "subtitle": "Využití podle souborového systému",
+          "series": "Kořenový"
         },
         "diskIO": {
-          "title": "",
-          "subtitle": "",
-          "read": "",
-          "write": ""
+          "title": "Vstup/výstup disku",
+          "subtitle": "Propustnost kořenového souborového systému",
+          "read": "Čtení",
+          "write": "Zápis"
         },
         "storage": {
-          "title": "",
-          "subtitle": "",
-          "series": ""
+          "title": "Úložiště",
+          "subtitle": "Využití disku podle souborového systému",
+          "series": "Použito"
         },
         "network": {
-          "title": "",
-          "subtitle": "",
-          "sent": "",
-          "recv": ""
+          "title": "Šířka pásma",
+          "subtitle": "Síťový provoz veřejných rozhraní",
+          "sent": "Odesláno",
+          "recv": "Přijato"
         },
         "dockerCpu": {
-          "title": "",
-          "subtitle": ""
+          "title": "Využití CPU Dockeru",
+          "subtitle": "Průměrné využití CPU kontejnerů"
         },
         "dockerMemory": {
-          "title": "",
-          "subtitle": ""
+          "title": "Využití paměti Dockeru",
+          "subtitle": "Využití paměti kontejnerů Dockeru"
         },
         "dockerNetwork": {
-          "title": "",
-          "subtitle": ""
+          "title": "Vstup/výstup sítě Dockeru",
+          "subtitle": "Síťový provoz kontejnerů Dockeru"
         }
       }
     }
   },
   "widgetPreview": {
     "toggle": {
-      "enabled": "",
-      "disabled": ""
+      "enabled": "Režim úprav povolen",
+      "disabled": "Režim úprav zakázán"
     },
     "dimensions": {
-      "title": ""
+      "title": "Změnit rozměry"
     }
   },
   "board": {
     "action": {
       "duplicate": {
-        "title": "",
-        "message": "",
+        "title": "Duplikovat plochu",
+        "message": "Tím se duplikuje plocha {name} včetně veškerého obsahu. Pokud widgety odkazují na integrace, které nemáte povoleno používat, budou odstraněny.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Plocha duplikována",
+            "message": "Plocha byla úspěšně duplikována"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Plochu nelze duplikovat",
+            "message": "Plochu se nepodařilo duplikovat"
           }
         }
       },
       "edit": {
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Změny byly úspěšně aplikovány",
+            "message": "Plocha byla úspěšně uložena"
           },
           "error": {
             "title": "Nelze uložit změny",
@@ -4256,44 +4256,44 @@
           }
         },
         "confirmLeave": {
-          "title": "",
+          "title": "Neuložené změny",
           "message": "Máte neuložené změny, jste si jistí, že chcete odejít?"
         }
       },
       "oldImport": {
-        "label": "",
+        "label": "Import z Homarru před verzí 1.0.0",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Import byl úspěšný",
+            "message": "Plocha byla úspěšně importována"
           },
           "error": {
-            "title": "",
+            "title": "Import selhal",
             "message": "Plochu se nepodařilo importovat, zkontrolujte logy pro více informací"
           }
         },
         "form": {
           "file": {
-            "label": "",
-            "invalidError": ""
+            "label": "Vybrat soubor JSON",
+            "invalidError": "Neplatný konfigurační soubor"
           },
           "apps": {
             "label": "Aplikace",
             "avoidDuplicates": {
-              "label": "",
-              "description": ""
+              "label": "Předejít duplicitám",
+              "description": "Ignoruje aplikace, pokud již existuje aplikace se stejným odkazem"
             },
             "onlyImportApps": {
-              "label": "",
-              "description": ""
+              "label": "Importovat pouze aplikace",
+              "description": "Přidá pouze aplikace; plochu je nutné vytvořit ručně"
             }
           },
           "name": {
-            "label": ""
+            "label": "Název plochy"
           },
           "screenSize": {
-            "label": "",
-            "description": "",
+            "label": "Velikost obrazovky",
+            "description": "Ve verzích před 1.0 existovaly tři různé režimy, takže jste mohli zvolit počet sloupců pro každou velikost obrazovky.",
             "option": {
               "sm": "Malé",
               "md": "Střední",
@@ -4301,16 +4301,16 @@
             }
           },
           "sidebarBehavior": {
-            "label": "",
-            "description": "",
+            "label": "Chování postranního panelu",
+            "description": "Postranní panely byly ve verzi 1.0 odstraněny. Můžete vybrat, co se má stát s položkami uvnitř nich.",
             "option": {
               "lastSection": {
-                "label": "",
-                "description": ""
+                "label": "Poslední sekce",
+                "description": "Postranní panel se zobrazí pod poslední sekcí"
               },
               "removeItems": {
-                "label": "",
-                "description": ""
+                "label": "Odebrat položky",
+                "description": "Položky obsažené v postranním panelu budou odebrány"
               }
             }
           }
@@ -4318,8 +4318,8 @@
       },
       "quickCreateApp": {
         "modal": {
-          "title": "",
-          "createAndUse": ""
+          "title": "Vytvořit aplikaci za běhu",
+          "createAndUse": "Vytvořit a použít"
         }
       }
     },
@@ -4328,7 +4328,7 @@
         "label": "Nadpis strany"
       },
       "metaTitle": {
-        "label": ""
+        "label": "Název meta tagu"
       },
       "logoImageUrl": {
         "label": "URL adresa loga"
@@ -4338,43 +4338,43 @@
       },
       "backgroundImageUrl": {
         "label": "Adresa URL obrázku na pozadí",
-        "placeholder": "",
+        "placeholder": "Začněte psát a vyhledávat místní obrázky",
         "group": {
-          "your": "",
-          "other": ""
+          "your": "Vaše obrázky",
+          "other": "Jiné obrázky"
         }
       },
       "backgroundImageAttachment": {
         "label": "Příloha obrázku na pozadí",
         "option": {
           "fixed": {
-            "label": "",
-            "description": ""
+            "label": "Pevné",
+            "description": "Pozadí zůstane na stejné pozici."
           },
           "scroll": {
-            "label": "",
-            "description": ""
+            "label": "Posouvání",
+            "description": "Pozadí se posouvá spolu s myší."
           }
         }
       },
       "backgroundImageRepeat": {
-        "label": "",
+        "label": "Opakování obrázku na pozadí",
         "option": {
           "repeat": {
             "label": "Opakovat",
             "description": "Obrázek se opakuje tak často, jak je potřeba, aby pokryl celou oblast obrazu na pozadí."
           },
           "no-repeat": {
-            "label": "",
-            "description": ""
+            "label": "Bez opakování",
+            "description": "Obrázek se neopakuje a nemusí vyplnit celý prostor."
           },
           "repeat-x": {
-            "label": "",
-            "description": ""
+            "label": "Opakovat X",
+            "description": "Stejné jako „Opakovat“, ale pouze na vodorovné ose."
           },
           "repeat-y": {
-            "label": "",
-            "description": ""
+            "label": "Opakovat Y",
+            "description": "Stejné jako „Opakovat“, ale pouze na svislé ose."
           }
         }
       },
@@ -4382,12 +4382,12 @@
         "label": "Velikost obrázku na pozadí",
         "option": {
           "cover": {
-            "label": "",
-            "description": ""
+            "label": "Překrýt",
+            "description": "Změní velikost obrázku tak, aby co nejmenší pokryl celé okno oříznutím přebytečného prostoru."
           },
           "contain": {
-            "label": "",
-            "description": ""
+            "label": "Obsáhnout",
+            "description": "Změní velikost obrázku tak, aby byl v kontejneru co největší, bez oříznutí nebo roztažení."
           }
         }
       },
@@ -4398,38 +4398,38 @@
         "label": "Doplňková barva"
       },
       "opacity": {
-        "label": ""
+        "label": "Průhlednost"
       },
       "iconColor": {
-        "label": ""
+        "label": "Barva ikony"
       },
       "clearColor": {
-        "label": ""
+        "label": "Vymazat barvu"
       },
       "customCss": {
-        "label": "",
+        "label": "Vlastní CSS pro tuto plochu",
         "description": "Dále si můžete přizpůsobit ovládací panel pomocí CSS, doporučujeme pouze zkušeným uživatelům",
         "customClassesAlert": {
-          "title": "",
-          "description": ""
+          "title": "Vlastní třídy",
+          "description": "Vlastní třídy můžete přidat k položkám plochy v pokročilých možnostech každé položky a použít je ve výše uvedeném CSS."
         }
       },
       "disableStatus": {
-        "label": "",
-        "description": ""
+        "label": "Zakázat stav aplikace",
+        "description": "Zakáže kontrolu stavu všech aplikací na této ploše"
       },
       "columnCount": {
-        "label": ""
+        "label": "Počet sloupců"
       },
       "itemRadius": {
-        "label": "",
-        "description": "",
+        "label": "Poloměr položky",
+        "description": "Mění zaoblení dlaždic na ploše",
         "option": {
-          "xs": "",
-          "sm": "",
-          "md": "",
-          "lg": "",
-          "xl": ""
+          "xs": "Velmi malé",
+          "sm": "Malé",
+          "md": "Střední",
+          "lg": "Velké",
+          "xl": "Velmi velké"
         }
       },
       "name": {
@@ -4437,25 +4437,25 @@
       },
       "isPublic": {
         "label": "Veřejné",
-        "description": ""
+        "description": "Veřejné plochy jsou přístupné všem, i bez účtu."
       }
     },
     "content": {
-      "metaTitle": ""
+      "metaTitle": "Plocha {boardName}"
     },
     "setting": {
-      "title": "",
+      "title": "Nastavení plochy {boardName}",
       "section": {
         "general": {
           "title": "Obecné",
-          "unrecognizedLink": ""
+          "unrecognizedLink": "Zadaný odkaz nebyl rozpoznán a nebude zobrazen v náhledu, ale stále může fungovat."
         },
         "layout": {
           "title": "Rozložení",
           "responsive": {
-            "title": "",
+            "title": "Responzivní rozvržení",
             "action": {
-              "add": ""
+              "add": "Přidat rozvržení"
             }
           }
         },
@@ -4463,23 +4463,23 @@
           "title": "Pozadí"
         },
         "appearance": {
-          "title": ""
+          "title": "Vzhled"
         },
         "customCss": {
-          "title": ""
+          "title": "Vlastní CSS"
         },
         "behavior": {
-          "title": ""
+          "title": "Chování"
         },
         "access": {
-          "title": "",
+          "title": "Řízení přístupu",
           "permission": {
             "item": {
               "view": {
                 "label": "Zobrazit plochu"
               },
               "modify": {
-                "label": ""
+                "label": "Upravit plochu"
               },
               "full": {
                 "label": "Plný přístup"
@@ -4491,18 +4491,18 @@
           "title": "Nebezpečná zóna",
           "action": {
             "rename": {
-              "label": "",
-              "description": "",
-              "button": "",
+              "label": "Přejmenovat plochu",
+              "description": "Změna názvu přeruší všechny odkazy na tuto plochu.",
+              "button": "Změnit název",
               "modal": {
-                "title": ""
+                "title": "Přejmenovat plochu"
               }
             },
             "visibility": {
-              "label": "",
+              "label": "Změnit viditelnost plochy",
               "description": {
-                "public": "",
-                "private": ""
+                "public": "Tato plocha je momentálně veřejná.",
+                "private": "Tato plocha je momentálně soukromá."
               },
               "button": {
                 "public": "",
@@ -4510,19 +4510,19 @@
               },
               "confirm": {
                 "public": {
-                  "title": "",
+                  "title": "Nastavit plochu jako soukromou",
                   "description": "Jste si jisti, že chcete tuto plochu učinit soukromou? Toto skryje tuto plochu před veřejností. Odkazy pro hosty přestanou fungovat."
                 },
                 "private": {
-                  "title": "",
+                  "title": "Nastavit plochu jako veřejnou",
                   "description": "Jste si jisti, že chcete tuto plochu učinit veřejnou? Toto plochu zpřístupní všem."
                 }
               }
             },
             "delete": {
-              "label": "",
-              "description": "",
-              "button": "",
+              "label": "Smazat tuto plochu",
+              "description": "Jakmile plochu smažete, není cesty zpět. Ujistěte se, že to opravdu chcete.",
+              "button": "Smazat tuto plochu",
               "confirm": {
                 "title": "Odstranit plochu",
                 "description": "Jste si jisti, že chcete odstranit tuto plochu? Toto trvale odstraní plochu a veškerý její obsah."
@@ -4536,20 +4536,20 @@
       "noBoard": {
         "title": "Vítejte v Homarru",
         "description": "Elegantní a moderní panel, který vám umožní mít všechny aplikace a služby na dosah ruky.",
-        "link": "",
-        "notice": ""
+        "link": "Vytvořte svou první plochu",
+        "notice": "Chcete-li tuto stránku skrýt, vytvořte plochu a nastavte ji jako domovskou"
       },
       "notFound": {
-        "title": "",
-        "description": "",
-        "link": "",
-        "notice": ""
+        "title": "Plocha nenalezena",
+        "description": "Zadaná plocha nebyla nalezena nebo k ní nemáte přístup.",
+        "link": "Zobrazit všechny plochy",
+        "notice": "Zkontrolujte odkaz nebo kontaktujte správce, pokud si myslíte, že by měl být dostupný"
       },
       "homeBoard": {
-        "title": "",
+        "title": "Chybí domovská plocha",
         "admin": {
-          "description": "",
-          "link": "",
+          "description": "Zatím jste pro server nenastavili domovskou plochu.",
+          "link": "Nastavit domovskou plochu pro celý server",
           "notice": "Chcete-li tuto stránku schovat pro všechny uživatele, nastavte domovskou plochu pro server"
         },
         "user": {
@@ -4558,9 +4558,9 @@
           "notice": "Chcete-li tuto stránku schovat, nastavte si domovskou plochu ve vašich preferencích"
         },
         "anonymous": {
-          "description": "",
-          "link": "",
-          "notice": ""
+          "description": "Správce serveru zatím nenastavil domovskou plochu.",
+          "link": "Zobrazit veřejné plochy",
+          "notice": "Chcete-li tuto stránku skrýt, požádejte správce serveru o nastavení domovské plochy pro server"
         }
       }
     }
@@ -4568,42 +4568,42 @@
   "layout": {
     "field": {
       "name": {
-        "label": ""
+        "label": "Název"
       },
       "columnCount": {
-        "label": ""
+        "label": "Počet sloupců"
       },
       "breakpoint": {
-        "label": "",
-        "description": ""
+        "label": "Bod přerušení",
+        "description": "Rozvržení se použije na všech obrazovkách větších než tento bod přerušení až do dalšího většího bodu přerušení."
       }
     }
   },
   "management": {
-    "metaTitle": "",
+    "metaTitle": "Správa",
     "title": {
       "morning": "Dobré ráno, {username}",
       "afternoon": "Dobré odpoledne, {username}",
       "evening": "Dobrý večer, {username}"
     },
     "notFound": {
-      "title": "",
+      "title": "Nenalezeno",
       "text": "Nepodařilo se nalézt požadovaný zdroj"
     },
     "error": {
-      "title": "",
-      "text": "",
-      "digest": ""
+      "title": "Tuto stránku se nepodařilo načíst",
+      "text": "Při načítání této stránky došlo k neočekávané chybě. Navigace je stále dostupná — zkuste stránku znovu načíst nebo použijte jinou část postranního panelu.",
+      "digest": "Reference chyby: {digest}"
     },
     "navbar": {
       "items": {
         "home": "Domovská stránka",
         "boards": "Plochy",
         "apps": "Aplikace",
-        "integrations": "",
-        "customWidgets": "",
-        "searchEngies": "",
-        "medias": "",
+        "integrations": "Integrace",
+        "customWidgets": "Vlastní widgety",
+        "searchEngies": "Vyhledávače",
+        "medias": "Média",
         "users": {
           "label": "Uživatelé",
           "items": {
@@ -4615,12 +4615,12 @@
         "tools": {
           "label": "Nástroje",
           "items": {
-            "docker": "",
-            "kubernetes": "",
-            "logs": "",
-            "api": "",
-            "certificates": "",
-            "tasks": "",
+            "docker": "Docker",
+            "kubernetes": "Kubernetes",
+            "logs": "Logy",
+            "api": "API a MCP",
+            "certificates": "Certifikáty",
+            "tasks": "Úlohy",
             "backup": "Záloha"
           }
         },
@@ -4629,9 +4629,9 @@
           "label": "Nápověda",
           "items": {
             "documentation": "Dokumentace",
-            "submitIssue": "",
+            "submitIssue": "Nahlásit problém",
             "discord": "Komunitní Discord",
-            "sourceCode": ""
+            "sourceCode": "Zdrojový kód"
           }
         },
         "about": "O aplikaci"
@@ -4643,51 +4643,51 @@
           "board": "Plochy",
           "user": "Uživatelé",
           "invite": "Pozvánky",
-          "integration": "",
+          "integration": "Integrace",
           "app": "Aplikace",
           "group": "Skupiny",
-          "searchEngine": "",
-          "media": ""
+          "searchEngine": "Vyhledávače",
+          "media": "Média"
         },
         "statisticLabel": {
           "boards": "Plochy",
           "resources": "Zdroje",
-          "authentication": "",
-          "authorization": ""
+          "authentication": "Ověřování",
+          "authorization": "Autorizace"
         },
         "heroBanner": {
-          "title": "",
-          "subtitle": ""
+          "title": "Vítejte zpět na své",
+          "subtitle": "Plocha {app}"
         }
       },
       "board": {
         "title": "Vaše plochy",
         "action": {
           "new": {
-            "label": ""
+            "label": "Nová plocha"
           },
           "open": {
-            "label": ""
+            "label": "Otevřít plochu"
           },
           "settings": {
             "label": "Nastavení"
           },
           "setHomeBoard": {
-            "label": "",
+            "label": "Nastavit jako domovskou plochu",
             "badge": {
               "label": "Domovská stránka",
-              "tooltip": ""
+              "tooltip": "Tato plocha se zobrazí jako vaše domovská plocha"
             }
           },
           "setMobileHomeBoard": {
-            "label": "",
+            "label": "Nastavit jako mobilní plochu",
             "badge": {
-              "label": "",
-              "tooltip": ""
+              "label": "Mobilní",
+              "tooltip": "Tato plocha se zobrazí jako vaše mobilní plocha"
             }
           },
           "duplicate": {
-            "label": ""
+            "label": "Duplikovat plochu"
           },
           "delete": {
             "label": "Trvale smazat",
@@ -4698,8 +4698,8 @@
           }
         },
         "visibility": {
-          "public": "",
-          "private": ""
+          "public": "Tato plocha je veřejná",
+          "private": "Tato plocha je soukromá"
         },
         "noResults": {
           "title": "Zatím žádné plochy"
@@ -4715,7 +4715,7 @@
         }
       },
       "media": {
-        "includeFromAllUsers": ""
+        "includeFromAllUsers": "Zahrnout média všech uživatelů"
       },
       "user": {
         "back": "Zpět na uživatele",
@@ -4726,13 +4726,13 @@
             "item": {
               "language": "Jazyk & oblast",
               "board": {
-                "title": "",
+                "title": "Domovská plocha",
                 "type": {
-                  "general": "",
-                  "mobile": ""
+                  "general": "Obecné",
+                  "mobile": "Mobilní"
                 }
               },
-              "search": "",
+              "search": "Vyhledávání",
               "firstDayOfWeek": "První den v týdnu",
               "accessibility": "Přístupnost",
               "onboardingTours": {
@@ -4784,7 +4784,7 @@
               "description": "Skupina {everyoneGroup} je přiřazena všem uživatelům a nemůže být odstraněna."
             },
             "review": {
-              "label": ""
+              "label": "Kontrola"
             },
             "completed": {
               "title": "Uživatel byl vytvořen"
@@ -4842,10 +4842,10 @@
             "ownerOfGroupDeleted": "Vlastník této skupiny byl odstraněn. V současné době nemá žádného vlastníka."
           },
           "setting": {
-            "title": "",
-            "alert": "",
+            "title": "Nastavení",
+            "alert": "Nastavení skupin mají prioritu podle pořadí skupin v seznamu. Nastavení nahoře přepisují nastavení dole.",
             "board": {
-              "title": ""
+              "title": "Plochy"
             }
           },
           "members": {
@@ -4865,86 +4865,86 @@
         "title": "Nastavení",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Nastavení byla úspěšně uložena"
           },
           "error": {
-            "message": ""
+            "message": "Uložení nastavení selhalo"
           }
         },
         "section": {
           "analytics": {
-            "title": "",
+            "title": "Analytika",
             "general": {
-              "title": "",
-              "text": ""
+              "title": "Pomozte nám vylepšit Homarr",
+              "text": "Pomáhá nám to zjistit, co lidé skutečně používají, abychom věděli, na co zaměřit svůj čas. Vidíme například počet vašich widgetů nebo integrací, verzi Homarru a používanou databázi. To je vše — žádné osobní údaje, URL, jména ani nic, co by mohlo identifikovat vás nebo vaše nastavení."
             }
           },
           "crawlingAndIndexing": {
-            "title": "",
-            "warning": "",
+            "title": "Procházení a indexování",
+            "warning": "Povolení nebo zakázání těchto nastavení výrazně ovlivní, jak vyhledávače indexují a procházejí vaši stránku. Každé nastavení je pouze požadavek a záleží na prohledávači, zda jej použije. Použití změn může trvat několik dní nebo týdnů. Některá nastavení mohou záviset na konkrétním vyhledávači.",
             "noIndex": {
-              "title": "",
-              "text": ""
+              "title": "Neindexovat",
+              "text": "Neindexovat web ve vyhledávačích a nezobrazovat jej ve výsledcích vyhledávání"
             },
             "noFollow": {
-              "title": "",
-              "text": ""
+              "title": "Nesledovat",
+              "text": "Při indexování nesledovat žádné odkazy. Zakázáním této možnosti umožníte prohledávačům pokusit se sledovat všechny odkazy v Homarru."
             },
             "noTranslate": {
-              "title": "",
-              "text": ""
+              "title": "Nepřekládat",
+              "text": "Pokud jazyk webu pravděpodobně není jazykem, ve kterém jej chce uživatel číst, Google zobrazí ve výsledcích vyhledávání odkaz na překlad"
             },
             "noSiteLinksSearchBox": {
-              "title": "",
-              "text": ""
+              "title": "Nezobrazovat vyhledávací pole odkazů webu",
+              "text": "Google vytvoří vyhledávací pole s procházenými odkazy spolu s dalšími přímými odkazy. Povolením této možnosti požádáte Google, aby toto pole zakázal."
             }
           },
           "board": {
             "title": "Plochy",
             "homeBoard": {
-              "label": "",
-              "mobileLabel": "",
-              "description": ""
+              "label": "Globální domovská plocha",
+              "mobileLabel": "Globální mobilní plocha",
+              "description": "K výběru jsou k dispozici pouze veřejné plochy"
             },
             "status": {
-              "title": "",
+              "title": "Stav aplikace",
               "enableStatusByDefault": {
-                "label": "",
-                "description": ""
+                "label": "Ve výchozím nastavení povolit stav",
+                "description": "Při přidání položky aplikace bude stav ve výchozím nastavení povolen"
               },
               "forceDisableStatus": {
-                "label": "",
-                "description": ""
+                "label": "Vynutit zakázání stavu",
+                "description": "Stav aplikací bude zakázán všem uživatelům a nelze jej povolit"
               }
             }
           },
           "user": {
-            "title": "",
+            "title": "Uživatelé",
             "enableGravatar": {
-              "label": "",
-              "description": ""
+              "label": "Povolit Gravatar",
+              "description": "Pokud není nastaven vlastní avatar a je nakonfigurován e-mail, použijí se avatary uživatelů z Libravataru/Gravataru"
             }
           },
           "search": {
-            "title": "",
+            "title": "Vyhledávání",
             "defaultSearchEngine": {
-              "label": "",
-              "description": ""
+              "label": "Globální výchozí vyhledávač",
+              "description": "Vyhledávače integrací zde nelze vybrat"
             }
           },
           "appearance": {
             "title": "Vzhled",
             "defaultColorScheme": {
-              "label": "",
+              "label": "Výchozí barevné schéma",
               "options": {
                 "auto": "Automaticky",
-                "light": "",
-                "dark": ""
+                "light": "Světlé",
+                "dark": "Tmavé"
               }
             }
           },
           "culture": {
-            "title": "",
+            "title": "Kultura",
             "defaultLocale": {
               "label": "Výchozí jazyk"
             }
@@ -4953,103 +4953,103 @@
       },
       "tool": {
         "tasks": {
-          "title": "",
+          "title": "Úlohy",
           "status": {
-            "idle": "",
+            "idle": "Nečinné",
             "running": "Běží",
             "error": "Chyba",
-            "disabled": ""
+            "disabled": "Vypnuto"
           },
           "job": {
             "iconsUpdater": {
-              "label": ""
+              "label": "Aktualizátor ikon"
             },
             "analytics": {
-              "label": ""
+              "label": "Analytika"
             },
             "ping": {
-              "label": ""
+              "label": "Připojení"
             }
           },
           "interval": {
-            "seconds": "",
-            "minutes": "",
-            "hours": "",
-            "midnight": "",
-            "weeklyMonday": "",
+            "seconds": "Každou {interval, plural, =1 {sekundu} few {# sekundy} many {# sekund} other {# sekundy}}",
+            "minutes": "Každou {interval, plural, =1 {minutu} few {# minuty} many {# minut} other {# minuty}}",
+            "hours": "Každou {interval, plural, =1 {hodinu} few {# hodiny} many {# hodin} other {# hodiny}}",
+            "midnight": "Každý den o půlnoci",
+            "weeklyMonday": "Každé pondělí",
             "update": {
               "success": {
-                "message": ""
+                "message": "Interval byl úspěšně aktualizován"
               },
               "error": {
-                "message": ""
+                "message": "Interval se nepodařilo aktualizovat"
               }
             }
           },
           "settings": {
-            "title": ""
+            "title": "Nastavení úlohy {jobName}"
           },
           "field": {
             "name": {
-              "label": ""
+              "label": "Název"
             },
             "interval": {
-              "label": ""
+              "label": "Interval plánování"
             },
             "lastExecution": {
-              "label": ""
+              "label": "Poslední spuštění"
             },
             "actions": {
-              "label": ""
+              "label": "Akce"
             }
           },
           "table": {
-            "search": ""
+            "search": "Hledat {count} úloh..."
           },
           "action": {
             "refresh": {
-              "label": ""
+              "label": "Obnovit"
             }
           },
           "refresh": {
             "success": {
-              "message": ""
+              "message": "Úlohy byly úspěšně obnoveny"
             },
             "error": {
-              "message": ""
+              "message": "Úlohy se nepodařilo obnovit"
             }
           },
           "trigger": {
             "success": {
-              "message": ""
+              "message": "Úloha byla úspěšně spuštěna"
             },
             "error": {
-              "message": ""
+              "message": "Úlohu se nepodařilo spustit"
             }
           },
           "enable": {
             "success": {
-              "message": ""
+              "message": "Úloha byla úspěšně povolena"
             }
           },
           "disable": {
             "success": {
-              "message": ""
+              "message": "Úloha byla úspěšně zakázána"
             }
           },
           "toggle": {
             "error": {
-              "message": ""
+              "message": "Stav úlohy se nepodařilo přepnout"
             }
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
-              "title": "",
-              "description": "",
-              "button": ""
+              "title": "Token API vytvořen",
+              "description": "Token API byl vytvořen. Buďte opatrní, tento token je v databázi zašifrován a už vám nikdy nebude znovu předán. Pokud tento token ztratíte, nebudete jej již moci získat.",
+              "button": "Zkopírovat a zavřít"
             }
           },
           "tab": {
@@ -5057,112 +5057,112 @@
               "label": "Dokumentace"
             },
             "apiKey": {
-              "label": "",
-              "title": "",
+              "label": "Ověřování",
+              "title": "Klíče API",
               "button": {
-                "createApiToken": ""
+                "createApiToken": "Vytvořit token API"
               },
               "modal": {
                 "delete": {
-                  "title": "",
-                  "text": ""
+                  "title": "Smazat token API",
+                  "text": "Token API bude trvale smazán. Klienti API používající tento token se již nebudou moci ověřit a provádět požadavky API. Tuto akci nelze vrátit zpět."
                 }
               },
               "table": {
                 "header": {
-                  "id": "",
-                  "createdBy": "",
-                  "actions": ""
+                  "id": "ID",
+                  "createdBy": "Vytvořil/a",
+                  "actions": "Akce"
                 }
               }
             },
             "mcp": {
-              "label": "",
-              "title": "",
-              "subtitle": "",
-              "description": "",
-              "noApiKey": "",
-              "createApiKeyButton": "",
+              "label": "AI / MCP",
+              "title": "Integrace AI",
+              "subtitle": "Server Model Context Protocol (MCP)",
+              "description": "Připojte asistenty AI ke své instanci Homarr a ovládejte celý svůj homelab pomocí přirozeného jazyka. Vyhledávejte a žádejte média v Overseerru, spravujte kontejnery Dockeru, přepínejte Pi-hole, kontrolujte stav serveru, ovládejte zařízení Home Assistant a další — vše ze svého asistenta AI.",
+              "noApiKey": "K ověření u serveru MCP potřebujete klíč API.",
+              "createApiKeyButton": "Vytvořit klíč API",
               "endpoint": {
-                "title": ""
+                "title": "Koncový bod MCP"
               },
               "authentication": {
-                "title": "",
-                "intro": "",
+                "title": "Ověřování",
+                "intro": "U serveru MCP se můžete ověřit pomocí klíče API nebo OAuth. Obě metody poskytují stejnou úroveň přístupu.",
                 "apiKey": {
-                  "title": "",
-                  "description": ""
+                  "title": "Klíč API (ručně)",
+                  "description": "V konfiguraci klienta MCP odešlete hlavičku ApiKey s celým klíčem API."
                 },
                 "oauth": {
-                  "title": "",
-                  "description": "",
-                  "hint": ""
+                  "title": "OAuth (přihlášení v prohlížeči)",
+                  "description": "Klienti s podporou OAuth (například Claude Code, opencode nebo Cursor) se mohou ověřit otevřením okna prohlížeče. Spusťte ve svém klientovi ověřovací příkaz, přihlaste se v prohlížeči do Homarru a jste připojeni — klíč API se vytvoří automaticky.",
+                  "hint": "Tokeny OAuth se na kartě Ověřování zobrazují jako běžné klíče API. Kdykoli je můžete odvolat."
                 },
-                "permissions": ""
+                "permissions": "Klíč API určuje oprávnění dostupná pro AI — pracuje se stejnou úrovní přístupu jako vlastník klíče."
               },
               "clientConfig": {
-                "title": "",
+                "title": "Konfigurace klienta",
                 "streamableHttp": {
-                  "recommended": "",
-                  "title": "",
-                  "worksWith": "",
-                  "addToConfig": "",
-                  "cursor": "",
-                  "claudeDesktop": "",
-                  "claudeCode": "",
-                  "vsCodeCopilot": "",
-                  "replaceHint": ""
+                  "recommended": "Doporučeno",
+                  "title": "Streamable HTTP",
+                  "worksWith": "Funguje s: Cursor, Claude Desktop, VS Code Copilot, Windsurf, Claude Code",
+                  "addToConfig": "Přidejte do konfiguračního souboru klienta MCP:",
+                  "cursor": "{name}: {file} v projektu nebo globálním nastavení",
+                  "claudeDesktop": "{name}: {file}",
+                  "claudeCode": "{name}: {file} nebo použijte {command}",
+                  "vsCodeCopilot": "{name}: {file} v nastavení pracovního prostoru",
+                  "replaceHint": "Nahraďte zástupný text klíčem API, který jste obdrželi při jeho vytvoření."
                 },
                 "stdio": {
-                  "title": "",
-                  "description": ""
+                  "title": "stdio (starší klienti prostřednictvím mostu mcp-remote)",
+                  "description": "Pro klienty, které podporují pouze přenos stdio. Vyžaduje lokálně nainstalovaný {dependency} (Node.js):"
                 }
               },
               "testConnection": {
-                "title": "",
-                "description": "",
-                "hint": ""
+                "title": "Otestovat připojení",
+                "description": "Spusťte tento příkaz v terminálu a ověřte, že je koncový bod dostupný a váš klíč API funguje:",
+                "hint": "Úspěšná odpověď vrátí možnosti serveru MCP. Pokud se zobrazí chyba, zkontrolujte nápovědy v odpovědi JSON."
               },
               "availableTools": {
-                "title": "",
-                "description": "",
-                "columnType": "",
-                "columnName": "",
-                "columnDescription": ""
+                "title": "Dostupné nástroje",
+                "description": "K dispozici je {count} nástrojů. Rozbalením kategorie zobrazíte jednotlivé nástroje a jejich popisy.",
+                "columnType": "Typ",
+                "columnName": "Nástroj",
+                "columnDescription": "Popis"
               },
               "troubleshooting": {
-                "title": "",
+                "title": "Řešení problémů",
                 "missingHeader": {
-                  "title": "",
-                  "description": ""
+                  "title": "„Chybí hlavička ApiKey“",
+                  "description": "Váš klient neodesílá hlavičku {header}. Ověřte správnost části {section} v konfiguraci MCP. Některé klienty vyžadují po změnách konfigurace restart."
                 },
                 "invalidFormat": {
-                  "title": "",
-                  "description": ""
+                  "title": "„Neplatný formát ApiKey“",
+                  "description": "Ujistěte se, že jste zkopírovali celý klíč API, nejen jeho část."
                 },
                 "invalidKey": {
-                  "title": "",
-                  "description": ""
+                  "title": "„Neplatný klíč API“",
+                  "description": "ID klíče nebylo nalezeno nebo je token nesprávný. Klíče API lze zobrazit pouze jednou při vytvoření. Pokud jste ho ztratili, odstraňte starý klíč a vytvořte nový."
                 },
                 "connectionRefused": {
-                  "title": "",
-                  "description": ""
+                  "title": "Připojení odmítnuto / vypršel časový limit",
+                  "description": "Ujistěte se, že je URL dostupná z vašeho klienta AI. Pokud Homarr běží za reverzní proxy nebo v Dockeru, použijte externí URL (nikoli {localhost}). Ověřte správnost portu (výchozí: 7575 pro Docker)."
                 },
                 "toolsNotAppearing": {
-                  "title": "",
-                  "description": ""
+                  "title": "Nástroje se nezobrazují",
+                  "description": "Některé nástroje vyžadují nakonfigurované konkrétní integrace (např. Docker nebo Overseerr). Seznam nástrojů závisí na tom, co je ve vaší instanci Homarru dostupné."
                 }
               },
-              "copy": "",
+              "copy": "Kopírovat",
               "oneClick": {
-                "title": "",
-                "subtitle": "",
-                "vsCode": "",
-                "cursor": "",
-                "copyUrl": "",
-                "copied": "",
-                "copyHint": "",
-                "manualConfig": ""
+                "title": "Instalace jedním kliknutím",
+                "subtitle": "Používá OAuth — při prvním použití se ověřte v prohlížeči",
+                "vsCode": "Instalovat ve VS Code",
+                "cursor": "Instalovat v Cursoru",
+                "copyUrl": "Kopírovat URL MCP",
+                "copied": "Zkopírováno!",
+                "copyHint": "Pro ChatGPT, Claude Code nebo libovolného klienta MCP",
+                "manualConfig": "Ruční konfigurace"
               }
             }
           }
@@ -5288,7 +5288,7 @@
         }
       },
       "about": {
-        "version": "",
+        "version": "Verze {version}",
         "text": "Homarr je komunitou řízený open source projekt, který je udržován dobrovolníky. Díky těmto lidem je Homarr od roku 2021 neustále rostoucím projektem. Náš tým na Homarru pracuje zcela na dálku z mnoha různých zemí ve svém volném čase bez jakékoli kompenzace.",
         "accordion": {
           "contributors": {
@@ -5300,27 +5300,27 @@
             "subtitle": "{count} přispívá překladem do mnoha jazyků"
           },
           "sponsors": {
-            "title": "",
-            "subtitle": ""
+            "title": "Sponzoři",
+            "subtitle": "{count} finančně podporuje projekt"
           },
           "libraries": {
-            "title": "",
-            "subtitle": ""
+            "title": "Knihovny",
+            "subtitle": "{count} použitých v kódu Homarru"
           },
           "hotkeys": {
-            "title": "",
-            "subtitle": "",
+            "title": "Zkratky",
+            "subtitle": "Klávesové zkratky pro zefektivnění práce",
             "field": {
-              "shortcut": "",
-              "action": ""
+              "shortcut": "Zkratka",
+              "action": "Akce"
             },
             "action": {
-              "toggleBoardEdit": "",
-              "toggleColorScheme": "",
-              "saveNotebook": "",
-              "openSpotlight": ""
+              "toggleBoardEdit": "Přepnout režim úprav plochy",
+              "toggleColorScheme": "Přepnout světlý/tmavý režim",
+              "saveNotebook": "Uložit poznámkový blok (pouze uvnitř widgetu poznámkového bloku)",
+              "openSpotlight": "Otevřít vyhledávání"
             },
-            "note": ""
+            "note": "Tip: Mod označuje klávesu Ctrl i klávesu ⌘ v systému macOS"
           }
         }
       }
@@ -5329,15 +5329,15 @@
   "docker": {
     "title": "Kontejnery",
     "table": {
-      "updated": "",
+      "updated": "Aktualizováno {when}",
       "refresh": {
-        "lastUpdated": ""
+        "lastUpdated": "Poslední obnovení {when}"
       },
-      "search": "",
-      "selected": "",
-      "footer": "",
-      "totalCpu": "",
-      "totalMemory": ""
+      "search": "Hledat {count} kontejnerů",
+      "selected": "Vybráno {selectCount} z {totalCount} kontejnerů",
+      "footer": "Celkem kontejnerů: {count}",
+      "totalCpu": "Celkem CPU: {cpu} %",
+      "totalMemory": "Celkem paměti: {memory}"
     },
     "field": {
       "name": {
@@ -5350,17 +5350,17 @@
           "running": "Běží",
           "paused": "Pozastaveno",
           "restarting": "Restartování",
-          "exited": "",
+          "exited": "Ukončeno",
           "removing": "Odstraňování",
-          "dead": ""
+          "dead": "Mrtvé"
         }
       },
       "stats": {
         "cpu": {
-          "label": ""
+          "label": "CPU"
         },
         "memory": {
-          "label": ""
+          "label": "Paměť"
         }
       },
       "containerImage": {
@@ -5374,7 +5374,7 @@
       }
     },
     "action": {
-      "title": "",
+      "title": "Akce",
       "logs": {
         "label": "Zobrazit logy",
         "page": {
@@ -5385,11 +5385,11 @@
         "label": "Spustit",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Kontejnery spuštěny",
+            "message": "Kontejnery byly úspěšně spuštěny"
           },
           "error": {
-            "title": "",
+            "title": "Kontejnery nebyly spuštěny",
             "message": "Nepodařilo se spustit kontejnery"
           }
         }
@@ -5398,11 +5398,11 @@
         "label": "Zastavit",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Kontejnery zastaveny",
+            "message": "Kontejnery byly úspěšně zastaveny"
           },
           "error": {
-            "title": "",
+            "title": "Kontejnery nebyly zastaveny",
             "message": "Nepodařilo se zastavit kontejnery"
           }
         }
@@ -5411,302 +5411,302 @@
         "label": "Restartovat",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Kontejnery restartovány",
+            "message": "Kontejnery byly úspěšně restartovány"
           },
           "error": {
-            "title": "",
+            "title": "Kontejnery nebyly restartovány",
             "message": "Nepodařilo se restartovat kontejnery"
           }
         }
       },
       "remove": {
         "label": "Odstranit",
-        "confirm": "",
+        "confirm": "Kliknutím znovu trvale odstraníte",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Kontejnery odstraněny",
+            "message": "Kontejnery byly úspěšně odstraněny"
           },
           "error": {
-            "title": "",
+            "title": "Kontejnery nebyly odstraněny",
             "message": "Nepodařilo se odstranit kontejnery"
           }
         }
       },
       "refresh": {
-        "label": "",
+        "label": "Obnovit",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Kontejnery obnoveny",
+            "message": "Nyní zobrazujete nejnovější data"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Kontejnery nebyly obnoveny",
+            "message": "Při obnovování kontejnerů se něco pokazilo"
           }
         }
       },
       "addToHomarr": {
-        "label": "",
+        "label": "Přidat do Homarru",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Přidáno do Homarru",
+            "message": "Vybrané aplikace byly přidány do Homarru"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Do Homarru nelze přidat",
+            "message": "Vybrané aplikace se nepodařilo přidat do Homarru"
           }
         },
         "modal": {
-          "title": ""
+          "title": "Přidat kontejner(y) Dockeru do Homarru"
         }
       }
     },
     "error": {
-      "internalServerError": "",
-      "noColumns": ""
+      "internalServerError": "Nepodařilo se načíst kontejnery Dockeru",
+      "noColumns": "V nastavení widgetu vyberte alespoň jeden sloupec"
     }
   },
   "kubernetes": {
     "cluster": {
       "title": "Panel clusteru",
-      "label": "",
-      "providers": "",
-      "version": "",
-      "architecture": "",
+      "label": "Cluster",
+      "providers": "Poskytovatelé",
+      "version": "Verze",
+      "architecture": "Architektura",
       "capacity": {
-        "title": "",
+        "title": "Kapacita",
         "resource": {
-          "reserved": "",
-          "used": ""
+          "reserved": "Vyhrazeno",
+          "used": "Využito"
         }
       },
       "resources": {
         "title": "Zdroje",
-        "nodes": "",
-        "namespaces": "",
-        "ingresses": "",
-        "services": "",
-        "pods": "",
-        "configmaps": "",
-        "secrets": "",
-        "volumes": ""
+        "nodes": "Uzly",
+        "namespaces": "Obory názvů",
+        "ingresses": "Ingressy",
+        "services": "Služby",
+        "pods": "Pody",
+        "configmaps": "ConfigMapy",
+        "secrets": "Tajné klíče",
+        "volumes": "Svazky"
       }
     },
     "nodes": {
-      "label": "",
+      "label": "Uzly",
       "field": {
         "name": {
-          "label": ""
+          "label": "Název"
         },
         "state": {
-          "label": "",
+          "label": "Stav",
           "option": {
-            "ready": "",
-            "NotReady": ""
+            "ready": "Připraven",
+            "NotReady": "Nepřipraveno"
           }
         },
         "cpu": {
-          "label": ""
+          "label": "CPU"
         },
         "memory": {
-          "label": ""
+          "label": "RAM"
         },
         "pods": {
-          "label": ""
+          "label": "Pody"
         },
         "operatingSystem": {
-          "label": ""
+          "label": "OS"
         },
         "architecture": {
-          "label": ""
+          "label": "Architektura"
         },
         "kubernetesVersion": {
-          "label": ""
+          "label": "Verze Kubernetes"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Vytvořeno"
         }
       },
       "table": {
-        "search": ""
+        "search": "Hledat {count} uzlů"
       }
     },
     "namespaces": {
-      "label": "",
+      "label": "Obory názvů",
       "field": {
         "name": {
-          "label": ""
+          "label": "Název"
         },
         "state": {
-          "label": "",
+          "label": "Stav",
           "option": {
-            "active": "",
-            "terminating": ""
+            "active": "Aktivní",
+            "terminating": "Ukončování"
           }
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Vytvořeno"
         }
       },
       "table": {
-        "search": ""
+        "search": "Hledat {count} oborů názvů"
       }
     },
     "ingresses": {
-      "label": "",
+      "label": "Ingressy",
       "field": {
         "name": {
-          "label": ""
+          "label": "Název"
         },
         "namespace": {
-          "label": ""
+          "label": "Obor názvů"
         },
         "className": {
-          "label": ""
+          "label": "Název třídy"
         },
         "rulesAndPaths": {
-          "label": ""
+          "label": "Pravidla a cesty"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Vytvořeno"
         }
       },
       "table": {
-        "search": ""
+        "search": "Hledat {count} ingressů"
       }
     },
     "services": {
-      "label": "",
+      "label": "Služby",
       "field": {
         "name": {
-          "label": ""
+          "label": "Název"
         },
         "namespace": {
-          "label": ""
+          "label": "Obor názvů"
         },
         "type": {
-          "label": ""
+          "label": "Typ"
         },
         "ports": {
-          "label": ""
+          "label": "Porty"
         },
         "targetPorts": {
-          "label": ""
+          "label": "Cílové porty"
         },
         "clusterIP": {
-          "label": ""
+          "label": "IP clusteru"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Vytvořeno"
         }
       },
       "table": {
-        "search": ""
+        "search": "Hledat {count} služeb"
       }
     },
     "pods": {
-      "label": "",
+      "label": "Pody",
       "field": {
         "name": {
-          "label": ""
+          "label": "Název"
         },
         "namespace": {
-          "label": ""
+          "label": "Obor názvů"
         },
         "image": {
-          "label": ""
+          "label": "Obraz"
         },
         "applicationType": {
-          "label": ""
+          "label": "Typ aplikace"
         },
         "status": {
-          "label": ""
+          "label": "Stav"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Vytvořeno"
         }
       },
       "table": {
-        "search": ""
+        "search": "Hledat {count} podů"
       }
     },
     "secrets": {
-      "label": "",
+      "label": "Tajné klíče",
       "field": {
         "name": {
-          "label": ""
+          "label": "Název"
         },
         "namespace": {
-          "label": ""
+          "label": "obor názvů"
         },
         "type": {
-          "label": ""
+          "label": "typ"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Vytvořeno"
         }
       },
       "table": {
-        "search": ""
+        "search": "Hledat {count} tajných klíčů"
       }
     },
     "configmaps": {
-      "label": "",
+      "label": "ConfigMapy",
       "field": {
         "name": {
-          "label": ""
+          "label": "Název"
         },
         "namespace": {
-          "label": ""
+          "label": "obor názvů"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Vytvořeno"
         }
       },
       "table": {
-        "search": ""
+        "search": "Hledat {count} ConfigMap"
       }
     },
     "volumes": {
-      "label": "",
+      "label": "Svazky",
       "field": {
         "name": {
-          "label": ""
+          "label": "Název"
         },
         "namespace": {
-          "label": ""
+          "label": "Obor názvů"
         },
         "accessModes": {
-          "label": ""
+          "label": "Režimy přístupu"
         },
         "storage": {
-          "label": ""
+          "label": "Úložiště"
         },
         "storageClassName": {
-          "label": ""
+          "label": "Název třídy úložiště"
         },
         "volumeMode": {
-          "label": ""
+          "label": "Režim svazku"
         },
         "volumeName": {
-          "label": ""
+          "label": "Název svazku"
         },
         "status": {
-          "label": ""
+          "label": "Stav"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Vytvořeno"
         }
       },
       "table": {
-        "search": ""
+        "search": "Hledat {count} svazků"
       }
     },
     "error": {
-      "internalServerError": ""
+      "internalServerError": "Nepodařilo se načíst data Kubernetes"
     }
   },
   "permission": {
@@ -5745,44 +5745,44 @@
         "label": "Plochy"
       },
       "integrations": {
-        "label": "",
+        "label": "Integrace",
         "edit": {
           "label": "Upravit"
         },
         "new": {
-          "label": ""
+          "label": "Nové"
         }
       },
       "search-engines": {
-        "label": "",
+        "label": "Vyhledávače",
         "new": {
-          "label": ""
+          "label": "Nové"
         },
         "edit": {
           "label": "Upravit"
         }
       },
       "medias": {
-        "label": ""
+        "label": "Média"
       },
       "apps": {
         "label": "Aplikace",
         "new": {
-          "label": ""
+          "label": "Nové"
         },
         "edit": {
           "label": "Upravit"
         }
       },
       "custom-widgets": {
-        "label": "",
+        "label": "Vlastní widgety",
         "new": {
-          "label": ""
+          "label": "Nový"
         },
         "edit": {
-          "label": "",
+          "label": "Upravit",
           "flow": {
-            "label": ""
+            "label": "Tok"
           }
         }
       },
@@ -5804,48 +5804,48 @@
       "tools": {
         "label": "Nástroje",
         "tasks": {
-          "label": ""
+          "label": "Úlohy"
         },
         "docker": {
-          "label": "",
+          "label": "Docker",
           "logs": {
             "label": "Logy"
           }
         },
         "kubernetes": {
-          "label": "",
+          "label": "Kubernetes",
           "nodes": {
-            "label": ""
+            "label": "Uzly"
           },
           "namespaces": {
-            "label": ""
+            "label": "Obory názvů"
           },
           "ingresses": {
-            "label": ""
+            "label": "Ingressy"
           },
           "services": {
-            "label": ""
+            "label": "Služby"
           },
           "pods": {
-            "label": ""
+            "label": "pody"
           },
           "configmaps": {
-            "label": ""
+            "label": "ConfigMapy"
           },
           "secrets": {
-            "label": ""
+            "label": "Tajné klíče"
           },
           "volumes": {
-            "label": ""
+            "label": "Svazky"
           }
         },
         "logs": {
-          "label": ""
+          "label": "Logy"
         },
         "certificates": {
-          "label": "",
+          "label": "Certifikáty",
           "hostnames": {
-            "label": ""
+            "label": "Názvy hostitelů"
           }
         }
       },
@@ -5858,28 +5858,28 @@
     }
   },
   "search": {
-    "placeholder": "",
-    "nothingFound": "",
+    "placeholder": "Hledat cokoli",
+    "nothingFound": "Nic nenalezeno",
     "error": {
-      "fetch": ""
+      "fetch": "Při načítání dat došlo k chybě"
     },
     "mode": {
       "appIntegrationBoard": {
-        "help": "",
+        "help": "Hledat aplikace, integrace nebo plochy",
         "group": {
           "app": {
             "title": "Aplikace",
             "children": {
               "action": {
                 "open": {
-                  "label": ""
+                  "label": "Otevřít URL aplikace"
                 },
                 "edit": {
-                  "label": ""
+                  "label": "Upravit appku"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Vyberte akci pro aplikaci"
               }
             }
           },
@@ -5888,41 +5888,41 @@
             "children": {
               "action": {
                 "open": {
-                  "label": ""
+                  "label": "Otevřít plochu"
                 },
                 "homeBoard": {
                   "label": ""
                 },
                 "mobileBoard": {
-                  "label": ""
+                  "label": "Nastavit jako mobilní plochu"
                 },
                 "settings": {
-                  "label": ""
+                  "label": "Otevřít nastavení"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Vyberte akci pro plochu"
               }
             }
           },
           "integration": {
-            "title": ""
+            "title": "Integrace"
           }
         }
       },
       "command": {
-        "help": "",
+        "help": "Aktivovat příkazový režim",
         "group": {
           "localCommand": {
-            "title": ""
+            "title": "Místní příkazy"
           },
           "globalCommand": {
-            "title": "",
+            "title": "Globální příkazy",
             "option": {
               "colorScheme": {
                 "auto": "Přepnout režim vzhledu",
-                "light": "",
-                "dark": ""
+                "light": "Přepnout do světlého režimu",
+                "dark": "Přepnout do tmavého režimu"
               },
               "language": {
                 "label": "Změnit jazyk",
@@ -5936,16 +5936,16 @@
                 "label": "Vytvořit novou plochu"
               },
               "importBoard": {
-                "label": ""
+                "label": "Importovat plochu"
               },
               "newApp": {
-                "label": ""
+                "label": "Vytvořit novou aplikaci"
               },
               "newIntegration": {
-                "label": "",
+                "label": "Vytvořit novou integraci",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Vyberte typ integrace, který chcete vytvořit"
                   }
                 }
               },
@@ -5953,10 +5953,10 @@
                 "label": "Vytvořit nového uživatele"
               },
               "newInvite": {
-                "label": ""
+                "label": "Vytvořit novou pozvánku"
               },
               "newGroup": {
-                "label": ""
+                "label": "Vytvořit novou skupinu"
               }
             }
           },
@@ -6063,10 +6063,10 @@
                 }
               },
               "enableRightClickOnWidgets": {
-                "label": "",
+                "label": "Povolit kliknutí pravým tlačítkem na widgety",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Povolit kliknutí pravým tlačítkem na widgety"
                   }
                 }
               },
@@ -6079,9 +6079,9 @@
       },
       "media": {
         "help": "Vyhledejte filmy nebo seriály k vyžádání",
-        "requestMovie": "",
-        "requestSeries": "",
-        "openIn": "",
+        "requestMovie": "Požádat o film",
+        "requestSeries": "Požádat o seriál",
+        "openIn": "Otevřít v {kind}",
         "group": {
           "title": "Filmy a seriály"
         },
@@ -6104,10 +6104,10 @@
         }
       },
       "external": {
-        "help": "",
+        "help": "Použít externí vyhledávač",
         "group": {
           "searchEngine": {
-            "title": "",
+            "title": "Vyhledávače",
             "tipDdgBangs": "Tip: Zde můžete také používat DuckDuckGo bangs, např. !něco",
             "bang": {
               "searchWithQuery": "Vyhledat \"{query}\" pomocí {label}",
@@ -6119,36 +6119,36 @@
             "children": {
               "action": {
                 "search": {
-                  "label": ""
+                  "label": "Hledat pomocí {name}"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Vyberte akci pro vyhledávač"
               },
               "searchResults": {
-                "title": ""
+                "title": "Vyberte výsledek vyhledávání pro akce"
               }
             },
             "option": {
               "google": {
-                "name": "",
-                "description": ""
+                "name": "Google",
+                "description": "Hledat na webu pomocí Googlu"
               },
               "bing": {
-                "name": "",
-                "description": ""
+                "name": "Bing",
+                "description": "Hledat na webu pomocí Bingu"
               },
               "duckduckgo": {
-                "name": "",
-                "description": ""
+                "name": "DuckDuckGo",
+                "description": "Hledat na webu pomocí DuckDuckGo"
               },
               "torrent": {
                 "name": "Torrenty",
-                "description": ""
+                "description": "Hledat torrenty na torrentdownloads.pro"
               },
               "youTube": {
-                "name": "",
-                "description": ""
+                "name": "YouTube",
+                "description": "Hledat videa na YouTube"
               }
             }
           }
@@ -6157,7 +6157,7 @@
       "help": {
         "group": {
           "mode": {
-            "title": ""
+            "title": "Režimy"
           },
           "help": {
             "title": "Nápověda",
@@ -6166,7 +6166,7 @@
                 "label": "Dokumentace"
               },
               "submitIssue": {
-                "label": ""
+                "label": "Nahlásit problém"
               },
               "discord": {
                 "label": "Komunitní Discord"
@@ -6178,81 +6178,81 @@
       "home": {
         "group": {
           "search": {
-            "title": "",
+            "title": "Vyhledávání",
             "option": {
               "other": {
-                "label": ""
+                "label": "Hledat pomocí jiného vyhledávače"
               },
               "no-default": {
-                "label": "",
-                "description": ""
+                "label": "Žádný výchozí vyhledávač",
+                "description": "Nastavte výchozí vyhledávač v předvolbách"
               },
               "search": {
-                "label": ""
+                "label": "Hledat „{query}“ pomocí {name}"
               },
               "from-integration": {
-                "description": ""
+                "description": "Začněte psát a vyhledávejte"
               }
             }
           },
           "local": {
-            "title": ""
+            "title": "Místní výsledky"
           }
         }
       },
       "page": {
-        "help": "",
+        "help": "Hledat stránky",
         "group": {
           "page": {
-            "title": "",
+            "title": "Stránky",
             "option": {
               "manageHome": {
-                "label": ""
+                "label": "Spravovat domovskou stránku"
               },
               "manageBoard": {
-                "label": ""
+                "label": "Spravovat plochy"
               },
               "manageApp": {
-                "label": ""
+                "label": "Spravovat aplikace"
               },
               "manageIntegration": {
-                "label": ""
+                "label": "Spravovat integrace"
               },
               "manageSearchEngine": {
-                "label": ""
+                "label": "Spravovat vyhledávače"
               },
               "manageMedia": {
-                "label": ""
+                "label": "Spravovat média"
               },
               "manageUser": {
                 "label": "Správa uživatelů"
               },
               "manageInvite": {
-                "label": ""
+                "label": "Spravovat pozvánky"
               },
               "manageGroup": {
-                "label": ""
+                "label": "Spravovat skupiny"
               },
               "manageDocker": {
-                "label": ""
+                "label": "Spravovat Docker"
               },
               "manageApi": {
-                "label": ""
+                "label": "Swagger API"
               },
               "manageLog": {
-                "label": ""
+                "label": "Zobrazit logy"
               },
               "manageTask": {
-                "label": ""
+                "label": "Spravovat úlohy"
               },
               "manageSettings": {
-                "label": ""
+                "label": "Globální nastavení"
               },
               "about": {
                 "label": "O aplikaci"
               },
               "homeBoard": {
-                "label": ""
+                "label": "Domovská plocha"
               },
               "preferences": {
                 "label": "Vaše předvolby"
@@ -6300,71 +6300,71 @@
       }
     },
     "engine": {
-      "search": "",
+      "search": "Najít vyhledávač",
       "field": {
         "name": {
           "label": "Název"
         },
         "short": {
-          "label": ""
+          "label": "Krátký"
         },
         "urlTemplate": {
-          "label": ""
+          "label": "Šablona URL vyhledávání"
         },
         "description": {
-          "label": ""
+          "label": "Popis"
         }
       },
       "page": {
         "list": {
-          "title": "",
+          "title": "Vyhledávače",
           "noResults": {
-            "title": "",
-            "action": ""
+            "title": "Zatím nejsou žádné vyhledávače",
+            "action": "Vytvořit první vyhledávač"
           },
-          "interactive": ""
+          "interactive": "Interaktivní, používá integraci"
         },
         "create": {
-          "title": "",
+          "title": "Nový vyhledávač",
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Vyhledávač vytvořen",
+              "message": "Vyhledávač byl úspěšně vytvořen"
             },
             "error": {
-              "title": "",
+              "title": "Vyhledávač nebyl vytvořen",
               "message": "Nepodařilo se vytvořit vyhledávač"
             }
           }
         },
         "edit": {
-          "title": "",
+          "title": "Upravit vyhledávač",
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Změny byly úspěšně aplikovány",
+              "message": "Vyhledávač byl úspěšně uložen"
             },
             "error": {
               "title": "Nelze uložit změny",
               "message": "Nepodařilo se uložit vyhledávač"
             }
           },
-          "configControl": "",
+          "configControl": "Konfigurace",
           "searchEngineType": {
-            "generic": "",
-            "fromIntegration": ""
+            "generic": "Obecný",
+            "fromIntegration": "Z integrace"
           }
         },
         "delete": {
-          "title": "",
+          "title": "Smazat vyhledávač",
           "message": "Jste si jisti, že chcete odstranit vyhledávač '{name}'?",
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Vyhledávač smazán",
+              "message": "Vyhledávač byl úspěšně smazán"
             },
             "error": {
-              "title": "",
+              "title": "Vyhledávač nebyl smazán",
               "message": "Nepodařilo se odstranit vyhledávač"
             }
           }
@@ -6373,11 +6373,11 @@
       "media": {
         "request": {
           "modal": {
-            "title": "",
+            "title": "Požadavek „{name}“",
             "table": {
               "header": {
-                "season": "",
-                "episodes": "",
+                "season": "Řada",
+                "episodes": "Epizody",
                 "status": "Stav"
               },
               "status": {
@@ -6385,7 +6385,7 @@
               }
             },
             "button": {
-              "send": ""
+              "send": "Odeslat požadavek"
             }
           }
         }
@@ -6395,89 +6395,89 @@
   "certificate": {
     "field": {
       "hostname": {
-        "label": ""
+        "label": "Hostitel"
       },
       "subject": {
-        "label": ""
+        "label": "Předmět"
       },
       "issuer": {
-        "label": ""
+        "label": "Vydavatel"
       },
       "validFrom": {
-        "label": ""
+        "label": "Platný od"
       },
       "validTo": {
-        "label": ""
+        "label": "Platný do"
       },
       "serialNumber": {
-        "label": ""
+        "label": "Sériové číslo"
       },
       "fingerprint": {
-        "label": ""
+        "label": "Otisk"
       }
     },
     "page": {
       "list": {
-        "title": "",
-        "description": "",
+        "title": "Důvěryhodné certifikáty",
+        "description": "Homarr je používá k získávání dat z integrací.",
         "noResults": {
-          "title": ""
+          "title": "Zatím nejsou žádné certifikáty"
         },
         "invalid": {
-          "title": "",
-          "description": ""
+          "title": "Neplatný certifikát",
+          "description": "Certifikát se nepodařilo analyzovat"
         },
-        "expires": "",
-        "toHostnames": ""
+        "expires": "Platnost končí {when}",
+        "toHostnames": "Důvěryhodné názvy hostitelů"
       },
       "hostnames": {
-        "title": "",
-        "description": "",
+        "title": "Důvěryhodné názvy hostitelů certifikátů",
+        "description": "Některé certifikáty neumožňují konkrétní doménu, kterou Homarr používá k jejich vyžádání. Proto se k obejití těchto omezení používají všechny důvěryhodné názvy hostitelů s otisky jejich certifikátů.",
         "noResults": {
-          "title": ""
+          "title": "Zatím nejsou žádné názvy hostitelů"
         },
-        "toCertificates": ""
+        "toCertificates": "Certifikáty"
       }
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "Přidat certifikát",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Certifikát přidán",
+            "message": "Certifikát byl úspěšně přidán"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Certifikát se nepodařilo přidat",
+            "message": "Certifikát nebylo možné přidat"
           }
         }
       },
       "remove": {
-        "label": "",
-        "confirm": "",
+        "label": "Odebrat certifikát",
+        "confirm": "Opravdu chcete certifikát odebrat?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Certifikát odebrán",
+            "message": "Certifikát byl úspěšně odebrán"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Certifikát nebyl odebrán",
+            "message": "Certifikát nebylo možné odebrat"
           }
         }
       },
       "removeHostname": {
-        "label": "",
-        "confirm": "",
+        "label": "Odebrat důvěryhodný název hostitele",
+        "confirm": "Opravdu chcete odebrat tento důvěryhodný název hostitele? Některé integrace mohou přestat fungovat.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Název hostitele odebrán",
+            "message": "Název hostitele byl úspěšně odebrán"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Název hostitele nebyl odebrán",
+            "message": "Název hostitele se nepodařilo odebrat"
           }
         }
       }
@@ -6486,10 +6486,10 @@
   "log": {
     "level": {
       "option": {
-        "debug": "",
-        "info": "",
+        "debug": "Ladění",
+        "info": "Info",
         "warn": "",
-        "error": ""
+        "error": "Chyba"
       }
     }
   },

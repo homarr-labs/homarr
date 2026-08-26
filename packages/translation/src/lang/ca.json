@@ -8,9 +8,9 @@
         "action": {
           "scratch": "Comença des de zero",
           "importOldmarr": "Importa des d'una versió de Homarr anterior a 1.0",
-          "restoreSqlite": "",
-          "restoreSqliteDescription": "",
-          "backToOptions": ""
+          "restoreSqlite": "Restaura des d'una còpia de seguretat SQLite",
+          "restoreSqliteDescription": "Puja una còpia de seguretat completa de la base de dades SQLite d'una instància anterior d'Homarr. Això restaurarà tots els taulers, usuaris, aplicacions, integracions i configuracions.",
+          "backToOptions": "← Torna a les opcions de configuració"
         }
       },
       "import": {
@@ -94,45 +94,45 @@
         "subtitle": "Configureu els paràmetres del servidor."
       },
       "integrations": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Integracions",
+        "subtitle": "Selecciona els serveis que utilitzes.",
+        "description": "Tria les integracions que vols connectar. Configurarem automàticament el teu tauler amb els widgets corresponents.",
         "action": {
-          "continue": "",
-          "skip": ""
+          "continue": "Continua",
+          "skip": "Omet-ho ara"
         },
         "configure": {
-          "progress": "",
-          "skip": "",
-          "finishing": "",
+          "progress": "{current} de {total}",
+          "skip": "Omet aquesta integració",
+          "finishing": "Configurant el teu tauler...",
           "error": {
-            "title": "",
-            "message": ""
+            "title": "La configuració ha fallat",
+            "message": "S'ha produït un error en configurar el teu tauler. Torna-ho a provar."
           },
           "helpers": {
-            "tooltip": "",
-            "description": ""
+            "tooltip": "Ajuda per als URL",
+            "description": "Aquests ajudants intenten endevinar l'URL dels teus serveis. Si no funciona, escriu l'adreça manualment."
           }
         },
         "urlTemplate": {
-          "label": "",
-          "placeholder": "",
-          "hint": "",
-          "warning": "",
-          "preview": "",
+          "label": "URL base",
+          "placeholder": "homelab.local o 192.168.1.1",
+          "hint": "Introdueix el domini base o la IP per emplenar automàticament els URL de les integracions",
+          "warning": "Establir ara l'URL base emplenarà automàticament tots els URL de les integracions i t'estalviarà temps durant la configuració",
+          "preview": "p. ex. {example}",
           "mode": {
-            "subdomain": "",
-            "hostPort": ""
+            "subdomain": "Subdomini",
+            "hostPort": "Amfitrió:port"
           }
         },
         "docker": {
-          "detected": "",
-          "detectedBreakdown": "",
-          "summary": "",
-          "appBadge": "",
-          "appSectionLabel": "",
-          "scanning": "",
-          "scanningDescription": ""
+          "detected": "S'han detectat {count} serveis de Docker",
+          "detectedBreakdown": "{integrations} integracions · {apps} aplicacions",
+          "summary": "Homarr ha detectat {apps} aplicacions, {integrations} de les quals tenen integracions integrades",
+          "appBadge": "Aplicació",
+          "appSectionLabel": "Aplicacions que s'afegiran al tauler ({count} seleccionades)",
+          "scanning": "Analitzant Docker...",
+          "scanningDescription": "Cercant contenidors en execució al sistema"
         }
       },
       "finish": {
@@ -177,7 +177,7 @@
       },
       "password": {
         "label": "Contrasenya",
-        "suggestionsTitle": "",
+        "suggestionsTitle": "Suggeriments de contrasenya",
         "suggestion": {
           "length": "Inclou com a mínim 8 caràcters",
           "lowercase": "Inclou minúscules",
@@ -199,8 +199,8 @@
         "label": "Utilitza icones pels pings"
       },
       "enableRightClickOnWidgets": {
-        "label": "",
-        "description": ""
+        "label": "Activa el clic dret als ginys",
+        "description": "Mostra el menú contextual d'Homarr en fer clic dret en un giny. Desactiveu-ho per utilitzar el menú predeterminat del navegador (p. ex., «Obre l'enllaç en una pestanya nova»)."
       },
       "defaultSearchEngine": {
         "label": "Motor de cerca principal"
@@ -209,7 +209,7 @@
         "label": "Obre els resultats de la cerca en una pestanya nova"
       },
       "ddgBangs": {
-        "label": ""
+        "label": "Activa els bangs de DuckDuckGo"
       }
     },
     "error": {
@@ -231,7 +231,7 @@
         },
         "forgotPassword": {
           "label": "Heu oblidat la contrasenya?",
-          "description": "Un administrador pot utilitzar el següent comandament per reinicialitzar la teva contrasenya"
+          "description": "Un administrador pot utilitzar el següent comandament per reinicialitzar la teva contrasenya:"
         }
       },
       "register": {
@@ -302,10 +302,10 @@
       "changeDdgBangs": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Els bangs de DuckDuckGo s'han activat correctament"
           },
           "error": {
-            "message": ""
+            "message": "No s'han pogut activar els bangs de DuckDuckGo"
           }
         }
       },
@@ -536,7 +536,7 @@
       },
       "delete": {
         "label": "Esborrar grup",
-        "description": "Un cop esborris el grup, no el podràs recuperar. ",
+        "description": "Un cop esborris el grup, no el podràs recuperar.",
         "confirm": "Segur que desitges esborrar el grup {name}?",
         "notification": {
           "success": {
@@ -675,222 +675,222 @@
       "select": {
         "label": "Seleccioneu l'aplicació",
         "notFound": "No s'ha trobat cap aplicació",
-        "search": "",
-        "noResults": "",
-        "action": "",
-        "title": ""
+        "search": "Cerca una aplicació",
+        "noResults": "Cap resultat",
+        "action": "Selecciona {app}",
+        "title": "Selecciona una aplicació per afegir-la a aquest tauler"
       },
       "create": {
-        "title": "",
-        "description": "",
-        "action": ""
+        "title": "Crea una aplicació nova",
+        "description": "Crea una aplicació nova ",
+        "action": "Obre la creació d'aplicacions"
       },
-      "add": ""
+      "add": "Afegeix una app"
     }
   },
   "customWidget": {
     "page": {
       "list": {
-        "title": "",
-        "noResults": "",
-        "loading": ""
+        "title": "Widgets personalitzats",
+        "noResults": "Encara no hi ha widgets personalitzats. Crea el primer!",
+        "loading": "Carregant..."
       },
       "create": {
-        "title": "",
-        "subtitle": ""
+        "title": "Crea un widget personalitzat",
+        "subtitle": "Defineix un URL d'API, l'autenticació i com es mostraran les dades de resposta."
       },
       "edit": {
-        "title": ""
+        "title": "Edita el widget personalitzat"
       }
     },
     "action": {
-      "create": "",
-      "import": "",
-      "save": "",
-      "delete": "",
-      "deleteConfirm": "",
-      "export": "",
-      "addMapping": "",
-      "addColumn": "",
-      "edit": "",
-      "removeMapping": "",
-      "removeColumn": "",
-      "addItem": "",
-      "removeItem": "",
-      "addBar": "",
-      "duplicate": "",
-      "copyAiPrompt": "",
-      "enable": "",
-      "disable": "",
-      "menu": ""
+      "create": "Crea",
+      "import": "Importa",
+      "save": "Desa",
+      "delete": "Elimina el widget personalitzat",
+      "deleteConfirm": "Segur que vols eliminar «{name}»? Aquesta acció no es pot desfer.",
+      "export": "Exporta",
+      "addMapping": "Afegeix un mapatge",
+      "addColumn": "Afegeix una columna",
+      "edit": "Edita",
+      "removeMapping": "Elimina el mapatge",
+      "removeColumn": "Elimina la columna",
+      "addItem": "Afegeix un element",
+      "removeItem": "Elimina l'element",
+      "addBar": "Afegeix una barra",
+      "duplicate": "Duplica",
+      "copyAiPrompt": "Copia la indicació per a la IA",
+      "enable": "Activa",
+      "disable": "Desactiva",
+      "menu": "Accions"
     },
     "field": {
-      "name": "",
-      "description": "",
-      "iconUrl": "",
-      "url": "",
-      "authType": "",
-      "headerName": "",
-      "method": "",
-      "requestBody": "",
-      "displayType": "",
-      "jsonPath": "",
-      "jsonPathHint": "",
-      "label": "",
-      "unit": "",
-      "mappings": "",
-      "tablePath": "",
-      "tablePathHint": "",
-      "columns": "",
-      "header": "",
-      "items": "",
-      "gridColumns": "",
-      "cardStyle": "",
-      "bars": "",
-      "valuePath": "",
-      "maxPath": "",
-      "showPercentage": "",
-      "barSize": "",
-      "goodValues": "",
-      "dotSize": "",
-      "valueSize": "",
-      "labelPosition": "",
-      "kvLayout": "",
-      "striped": "",
-      "compact": "",
-      "maxHeight": "",
-      "color": "",
-      "buttonLabel": "",
-      "buttonColor": "",
-      "confirmText": "",
-      "confirmTextHint": "",
-      "successMessage": "",
-      "successMessageHint": "",
-      "enabled": "",
+      "name": "Nom",
+      "description": "Descripció",
+      "iconUrl": "URL de la icona",
+      "url": "URL",
+      "authType": "Tipus d'autenticació",
+      "headerName": "Nom de la capçalera/paràmetre de consulta",
+      "method": "Mètode",
+      "requestBody": "Cos de la sol·licitud",
+      "displayType": "Tipus de visualització",
+      "jsonPath": "Ruta JSON",
+      "jsonPathHint": "Utilitza la sintaxi JSONPath per extreure valors, p. ex. $.data.temperature o $.items[0].name",
+      "label": "Etiqueta",
+      "unit": "Unitat",
+      "mappings": "Mapatges",
+      "tablePath": "Ruta JSON de la matriu",
+      "tablePathHint": "Ruta de la matriu a la resposta, p. ex. $.data.items",
+      "columns": "Columnes",
+      "header": "Capçalera",
+      "items": "Elements",
+      "gridColumns": "Columnes de la graella",
+      "cardStyle": "Estil de targeta",
+      "bars": "Barres",
+      "valuePath": "Ruta JSON del valor",
+      "maxPath": "Ruta JSON del valor màxim",
+      "showPercentage": "Mostra el percentatge",
+      "barSize": "Mida de la barra",
+      "goodValues": "Valors bons (separats per comes)",
+      "dotSize": "Mida del punt",
+      "valueSize": "Mida del valor",
+      "labelPosition": "Posició de l'etiqueta",
+      "kvLayout": "Disseny",
+      "striped": "Files ratllades",
+      "compact": "Mode compacte",
+      "maxHeight": "Alçada màxima (px)",
+      "color": "Color",
+      "buttonLabel": "Etiqueta del botó",
+      "buttonColor": "Color del botó",
+      "confirmText": "Text de confirmació",
+      "confirmTextHint": "Si s'estableix, apareixerà un diàleg de confirmació abans d'executar la sol·licitud",
+      "successMessage": "Missatge d'èxit",
+      "successMessageHint": "Missatge que es mostra després d'una execució correcta",
+      "enabled": "Activat",
       "template": {
-        "label": "",
-        "description": ""
+        "label": "Plantilla JSX",
+        "description": "Plantilla JSX de Mantine. Accedeix als camps de resposta de l'API mitjançant vinculacions de dades (p. ex. data.name). Utilitza només components permesos. Prohibit: constructor, __proto__, eval, Function, window, document."
       }
     },
     "placeholder": {
-      "exampleLabel": "",
-      "exampleLabelShort": "",
-      "exampleHeader": "",
-      "exampleUnit": "",
-      "iconUrl": "",
-      "url": "",
-      "headerName": "",
-      "jsonPath": "",
-      "tablePath": "",
-      "columnJsonPath": "",
-      "valuePath": "",
-      "maxPath": "",
-      "goodValues": "",
-      "color": ""
+      "exampleLabel": "Temperatura de la CPU",
+      "exampleLabelShort": "Temp. de la CPU",
+      "exampleHeader": "Nom",
+      "exampleUnit": "°C",
+      "iconUrl": "https://...",
+      "url": "https://api.example.com/api/v1/status",
+      "headerName": "X-API-Key",
+      "jsonPath": "$.data.value",
+      "tablePath": "$.data.items",
+      "columnJsonPath": "$.nom",
+      "valuePath": "$.data.used",
+      "maxPath": "$.data.total",
+      "goodValues": "online, true, up",
+      "color": "blau"
     },
     "cardStyleOption": {
-      "filled": "",
-      "outline": "",
-      "subtle": ""
+      "filled": "Emplenit",
+      "outline": "Contorn",
+      "subtle": "Subtil"
     },
     "layoutOption": {
-      "list": "",
-      "grid": ""
+      "list": "Llista",
+      "grid": "Graella"
     },
     "sizeOption": {
-      "sm": "",
-      "md": "",
-      "lg": "",
-      "xl": ""
+      "sm": "Petit",
+      "md": "Mitjà",
+      "lg": "Gran",
+      "xl": "Extra gran"
     },
     "labelPositionOption": {
-      "above": "",
-      "below": ""
+      "above": "A sobre",
+      "below": "A sota"
     },
     "fieldset": {
-      "general": "",
-      "connection": "",
-      "display": ""
+      "general": "General",
+      "connection": "Connexió a l'API",
+      "display": "Configuració de visualització"
     },
     "displayTypeDescription": {
-      "singleValue": "",
-      "keyValue": "",
-      "table": "",
-      "statGrid": "",
-      "progressBars": "",
-      "statusIndicator": "",
-      "countGrid": "",
-      "raw": "",
-      "actionButton": "",
-      "customJsx": ""
+      "singleValue": "Mostra un valor extret amb una etiqueta i una unitat",
+      "keyValue": "Mostra diversos valors etiquetats un al costat de l'altre",
+      "table": "Mostra files de dades en format de taula",
+      "statGrid": "Targetes d'estadístiques de colors en una graella, com els widgets de Pi-Hole o Speedtest",
+      "progressBars": "Barres de progrés que mostren l'ús o la compleció, per a disc, memòria i quotes",
+      "statusIndicator": "Punts d'estat de colors que mostren estats en línia/desconnectat o de salut",
+      "countGrid": "Comptadors compactes de nombre i etiqueta en una graella estreta",
+      "raw": "Sortida JSON amb format per a la depuració",
+      "actionButton": "Un botó que activa una sol·licitud quan s'hi fa clic",
+      "customJsx": "Disseny JSX personalitzat amb components Mantine permesos i vinculació completa de dades de l'API"
     },
     "method": {
-      "GET": "",
-      "POST": "",
-      "PUT": "",
-      "DELETE": "",
-      "PATCH": ""
+      "GET": "GET",
+      "POST": "POST",
+      "PUT": "PUT",
+      "DELETE": "DELETE",
+      "PATCH": "PATCH"
     },
     "authType": {
-      "none": "",
-      "bearer": "",
-      "basic": "",
-      "apiKeyHeader": "",
-      "apiKeyQuery": ""
+      "none": "Cap",
+      "bearer": "Testimoni Bearer",
+      "basic": "Autenticació bàsica",
+      "apiKeyHeader": "Clau d'API (capçalera)",
+      "apiKeyQuery": "Clau d'API (consulta)"
     },
     "displayType": {
-      "singleValue": "",
-      "keyValue": "",
-      "table": "",
-      "statGrid": "",
-      "progressBars": "",
-      "statusIndicator": "",
-      "countGrid": "",
-      "raw": "",
-      "actionButton": "",
-      "customJsx": ""
+      "singleValue": "Valor únic",
+      "keyValue": "Clau-valor",
+      "table": "Taula",
+      "statGrid": "Graella d'estadístiques",
+      "progressBars": "Barres de progrés",
+      "statusIndicator": "Indicador d'estat",
+      "countGrid": "Graella de recomptes",
+      "raw": "JSON sense processar",
+      "actionButton": "Botó d'acció",
+      "customJsx": "JSX personalitzat"
     },
     "secret": {
-      "apiKey": "",
-      "username": "",
-      "password": "",
-      "savedPlaceholder": ""
+      "apiKey": "Clau d'API / testimoni",
+      "username": "Nom d'usuari",
+      "password": "Contrasenya",
+      "savedPlaceholder": "••••••• (desat, deixa-ho buit per conservar-ho)"
     },
     "preview": {
-      "title": "",
-      "test": "",
-      "hint": "",
-      "rawResponse": ""
+      "title": "Previsualització",
+      "test": "Prova",
+      "hint": "Fes clic a Prova per previsualitzar la resposta de l'API amb la configuració actual.",
+      "rawResponse": "Resposta JSON sense processar"
     },
     "notification": {
-      "created": "",
-      "updated": "",
-      "deleted": "",
-      "imported": "",
-      "aiPromptCopied": "",
-      "aiPromptDescription": "",
-      "aiPromptCopy": "",
-      "aiPromptNoResponse": "",
-      "aiPromptCopyError": "",
-      "createError": "",
-      "updateError": "",
-      "importError": "",
-      "exportError": "",
-      "duplicated": "",
-      "duplicateError": "",
-      "toggleError": "",
-      "deleteError": "",
-      "previewError": "",
-      "executed": "",
-      "executeError": ""
+      "created": "El widget «{name}» s'ha creat correctament.",
+      "updated": "El widget «{name}» s'ha actualitzat correctament.",
+      "deleted": "S'ha eliminat el widget «{name}».",
+      "imported": "El giny s'ha importat correctament.",
+      "aiPromptCopied": "La indicació per a la IA s'ha copiat al porta-retalls",
+      "aiPromptDescription": "Copia una indicació preparada per enganxar-la en qualsevol chatbot d'IA (ChatGPT, Claude, Gemini...). Inclou l'esquema complet del widget i la resposta de l'API perquè la IA pugui generar una configuració JSON llesta per importar.",
+      "aiPromptCopy": "Copia al porta-retalls",
+      "aiPromptNoResponse": "Consell: executa primer una prova per incloure la resposta de l'API a la indicació i obtenir millors resultats.",
+      "aiPromptCopyError": "No s'ha pogut copiar la indicació al porta-retalls. És possible que el navegador no admeti aquesta funció.",
+      "createError": "No s'ha pogut crear el widget. Comprova que el punt final de l'API sigui accessible.",
+      "updateError": "No s'ha pogut actualitzar el widget. No s'han desat els canvis.",
+      "importError": "No s'ha pogut importar el widget. Assegura't que el fitxer sigui una exportació JSON de widget personalitzat vàlida.",
+      "exportError": "No s'ha pogut exportar el widget.",
+      "duplicated": "El widget «{name}» s'ha duplicat.",
+      "duplicateError": "No s'ha pogut duplicar el widget.",
+      "toggleError": "No s'ha pogut canviar l'estat del giny.",
+      "deleteError": "No s'ha pogut eliminar el giny.",
+      "previewError": "No s'ha pogut obtenir la previsualització. Comproveu l'URL i torneu-ho a provar.",
+      "executed": "L'acció s'ha executat correctament.",
+      "executeError": "L'acció ha fallat: {error}"
     },
     "table": {
-      "name": "",
-      "url": "",
-      "display": ""
+      "name": "Nom",
+      "url": "URL",
+      "display": "Mostra"
     },
     "widget": {
-      "disabled": ""
+      "disabled": "Aquest giny està desactivat"
     }
   },
   "integration": {
@@ -917,14 +917,14 @@
         "app": {
           "option": {
             "existing": {
-              "title": "",
-              "label": ""
+              "title": "Existent",
+              "label": "Selecciona una aplicació existent"
             },
             "new": {
-              "title": "",
+              "title": "Nou",
               "url": {
-                "label": "",
-                "description": ""
+                "label": "URL d'app",
+                "description": "URL que obrirà l'aplicació en accedir-hi des del tauler"
               }
             }
           }
@@ -944,9 +944,9 @@
         },
         "app": {
           "action": {
-            "add": "",
-            "remove": "",
-            "select": ""
+            "add": "Enllaça una app",
+            "remove": "Desenllaça",
+            "select": "Tria una app per enllaçar"
           }
         }
       },
@@ -977,57 +977,57 @@
         "description": "La integració \"{kind}\" es pot utilitzar amb els motors de cerca. Seleccioneu aquesta opció per configurar el motor de cerca automàticament."
       },
       "app": {
-        "sectionTitle": ""
+        "sectionTitle": "App enllaçada"
       },
       "createApp": {
         "label": "Crear aplicació",
         "description": "Crea una aplicació amb el mateix nom i icona que la integració. Deixa el camp d'entrada següent buit per crear l'aplicació amb l'URL de la integració."
       },
       "appHref": {
-        "placeholder": ""
+        "placeholder": "URL d'app pròpia"
       },
       "apiKeySettings": {
-        "label": ""
+        "label": "Obtén la clau d'API"
       }
     },
     "action": {
       "create": "Nova integració"
     },
     "grid": {
-      "widgetCount": "",
-      "noWidgets": "",
-      "detected": ""
+      "widgetCount": "{count} ginys",
+      "noWidgets": "Cap widget",
+      "detected": "Detectat mitjançant Docker"
     },
     "category": {
-      "dnsHole": "",
-      "mediaService": "",
-      "calendar": "",
-      "mediaSearch": "",
-      "mediaRelease": "",
-      "mediaRequest": "",
-      "downloadClient": "",
-      "usenet": "",
-      "torrent": "",
-      "miscellaneous": "",
-      "smartHomeServer": "",
-      "indexerManager": "",
-      "healthMonitoring": "",
-      "search": "",
-      "mediaTranscoding": "",
-      "networkController": "",
-      "releasesProvider": "",
-      "notifications": "",
-      "firewall": "",
-      "timetable": "",
-      "photoService": "",
-      "documents": "",
-      "notes": "",
-      "mediaMonitoring": "",
-      "speedtest": "",
-      "analytics": "",
-      "vpn": "",
-      "mediaLibrary": "",
-      "uptimeMonitoring": ""
+      "dnsHole": "DNS",
+      "mediaService": "Multimèdia",
+      "calendar": "Calendari",
+      "mediaSearch": "Cerca",
+      "mediaRelease": "Llançaments",
+      "mediaRequest": "Sol·licituds",
+      "downloadClient": "Descàrregues",
+      "usenet": "Usenet",
+      "torrent": "Torrent",
+      "miscellaneous": "Miscel·lània",
+      "smartHomeServer": "Llar intel·ligent",
+      "indexerManager": "Indexador",
+      "healthMonitoring": "Salut",
+      "search": "Cerca",
+      "mediaTranscoding": "Transcodificació",
+      "networkController": "Xarxa",
+      "releasesProvider": "Proveïdor de llançaments",
+      "notifications": "Notificacions",
+      "firewall": "Tallafoc",
+      "timetable": "Horari",
+      "photoService": "Fotos",
+      "documents": "Documents",
+      "notes": "Notes",
+      "mediaMonitoring": "Monitoratge",
+      "speedtest": "Prova de velocitat",
+      "analytics": "Analítica",
+      "vpn": "VPN",
+      "mediaLibrary": "Biblioteca multimèdia",
+      "uptimeMonitoring": "Monitoratge del temps d'activitat"
     },
     "testConnection": {
       "action": {
@@ -1037,125 +1037,125 @@
       "error": {
         "common": {
           "cause": {
-            "title": ""
+            "title": "Causa amb més detalls"
           }
         },
         "unknown": {
-          "title": "",
-          "description": ""
+          "title": "Error desconegut",
+          "description": "S'ha produït un error desconegut; obre la causa següent per veure'n més detalls"
         },
         "parse": {
-          "title": "",
-          "description": ""
+          "title": "Error d'anàlisi",
+          "description": "No s'ha pogut analitzar la resposta. Verifica que l'URL apunti a l'URL base del servei."
         },
         "authorization": {
-          "title": "",
-          "description": ""
+          "title": "Error d'autorització",
+          "description": "La sol·licitud no estava autoritzada. Verifica que les credencials siguin correctes i que estiguin configurades amb permisos suficients."
         },
         "statusCode": {
-          "title": "",
-          "description": "",
-          "otherDescription": "",
+          "title": "Error de resposta",
+          "description": "S'ha rebut una resposta inesperada {statusCode} ({reason}) de <url></url>. Verifica que l'URL apunti a l'URL base de la integració.",
+          "otherDescription": "S'ha rebut una resposta inesperada {statusCode} de <url></url>. Verifica que l'URL apunti a l'URL base de la integració.",
           "reason": {
-            "badRequest": "",
-            "notFound": "",
-            "tooManyRequests": "",
-            "internalServerError": "",
-            "serviceUnavailable": "",
-            "gatewayTimeout": ""
+            "badRequest": "Petició errònia",
+            "notFound": "No s'ha trobat",
+            "tooManyRequests": "Massa sol·licituds",
+            "internalServerError": "Error intern del servidor",
+            "serviceUnavailable": "Servei no disponible",
+            "gatewayTimeout": "Temps d'espera gateway"
           }
         },
         "certificate": {
-          "title": "",
+          "title": "Error del certificat",
           "description": {
-            "expired": "",
-            "notYetValid": "",
-            "untrusted": "",
-            "hostnameMismatch": ""
+            "expired": "El certificat ha caducat.",
+            "notYetValid": "El certificat encara no és vàlid.",
+            "untrusted": "No es confia en el certificat.",
+            "hostnameMismatch": "El nom d'amfitrió del certificat no coincideix amb l'URL."
           },
           "alert": {
             "permission": {
-              "title": "",
-              "message": ""
+              "title": "No hi ha prou permisos",
+              "message": "No tens permís per confiar en certificats ni pujar-ne. Contacta amb l'administrador perquè pugi el certificat arrel necessari."
             },
             "hostnameMismatch": {
-              "title": "",
-              "message": ""
+              "title": "Nom d'amfitrió diferent",
+              "message": "El nom d'amfitrió del certificat no coincideix amb el nom d'amfitrió al qual et connectes. Això podria indicar un risc de seguretat, però encara pots triar confiar en aquest certificat."
             },
             "extract": {
-              "title": "",
-              "message": ""
+              "title": "No s'ha pogut extreure el certificat de la CA",
+              "message": "Només es poden obtenir automàticament certificats autofirmats sense cadena. Si fas servir un certificat autofirmat, assegura't de pujar manualment el certificat de la CA. Trobaràs instruccions sobre com fer-ho a <docsLink></docsLink>."
             }
           },
           "action": {
             "retry": {
-              "label": ""
+              "label": "Reintenta crear"
             },
             "trust": {
-              "label": ""
+              "label": "Confia en el certificat"
             },
             "upload": {
-              "label": ""
+              "label": "Puja el certificat"
             }
           },
           "hostnameMismatch": {
             "confirm": {
-              "title": "",
-              "message": ""
+              "title": "Confia en el nom diferent",
+              "message": "Segur que vols confiar en el certificat amb un nom d'amfitrió no coincident?"
             },
             "notification": {
               "success": {
-                "title": "",
-                "message": ""
+                "title": "Certificat de confiança",
+                "message": "Nom d'amfitrió afegit a la llista de certificats de confiança"
               },
               "error": {
-                "title": "",
-                "message": ""
+                "title": "No s'ha pogut confiar en el certificat",
+                "message": "No s'ha pogut confiar en el certificat amb el nom d'amfitrió no coincident"
               }
             }
           },
           "selfSigned": {
             "confirm": {
-              "title": "",
-              "message": ""
+              "title": "Confia en el certificat autofirmat",
+              "message": "Segur que vols confiar en aquest certificat autofirmat?"
             },
             "notification": {
               "success": {
-                "title": "",
-                "message": ""
+                "title": "Certificat de confiança",
+                "message": "Certificat afegit a la llista de certificats de confiança"
               },
               "error": {
-                "title": "",
-                "message": ""
+                "title": "No s'ha pogut confiar en el certificat",
+                "message": "No s'ha pogut afegir el certificat a la llista de certificats de confiança"
               }
             }
           },
           "details": {
-            "title": "",
-            "description": "",
+            "title": "Detalls",
+            "description": "Revisa la informació del certificat abans de decidir si hi confies.",
             "content": {
-              "action": "",
-              "title": ""
+              "action": "Mostra el contingut",
+              "title": "Certificat PEM"
             }
           }
         },
         "request": {
-          "title": "",
+          "title": "Error de sol·licitud",
           "description": {
             "connection": {
-              "hostUnreachable": "",
-              "networkUnreachable": "",
-              "refused": "",
-              "reset": ""
+              "hostUnreachable": "No s'ha pogut contactar amb el servidor. Normalment això significa que l'amfitrió està fora de línia o no és accessible des de la teva xarxa.",
+              "networkUnreachable": "No es pot accedir a la xarxa. Comprova la connexió a Internet o la configuració de xarxa.",
+              "refused": "El servidor ha rebutjat la connexió. És possible que no estigui en funcionament o que rebutgi sol·licituds al port especificat.",
+              "reset": "El servidor ha tancat la connexió inesperadament. Això pot passar si el servidor és inestable o s'ha reiniciat."
             },
             "dns": {
-              "notFound": "",
-              "timeout": "",
-              "noAnswer": ""
+              "notFound": "No s'ha pogut trobar l'adreça del servidor. Comprova si hi ha errors tipogràfics a l'URL o noms de domini no vàlids.",
+              "timeout": "La cerca DNS ha exhaurit el temps d'espera. Pot ser un problema temporal; torna-ho a provar d'aquí a uns moments.",
+              "noAnswer": "El servidor DNS no ha retornat una resposta vàlida. És possible que el domini existeixi però no tingui registres vàlids."
             },
             "timeout": {
-              "aborted": "",
-              "timeout": ""
+              "aborted": "La sol·licitud s'ha cancel·lat abans de completar-se. Això pot ser degut a una acció de l'usuari o al temps d'espera del sistema.",
+              "timeout": "La sol·licitud ha trigat massa a completar-se i s'ha exhaurit el temps d'espera. Comprova la xarxa o torna-ho a provar més tard."
             }
           }
         }
@@ -1227,8 +1227,8 @@
           "message": "Probablement la ruta no és correcta"
         },
         "tooManyRequests": {
-          "title": "",
-          "message": ""
+          "title": "Massa sol·licituds en un període de temps determinat",
+          "message": "Hi ha hagut massa sol·licituds. És probable que s'hagi aplicat un límit de freqüència o que el sistema de destinació les hagi rebutjat"
         }
       }
     },
@@ -1270,48 +1270,48 @@
           "newLabel": "Nou realm"
         },
         "personalAccessToken": {
-          "label": "",
-          "newLabel": ""
+          "label": "Testimoni d'accés personal",
+          "newLabel": "Testimoni d'accés personal nou"
         },
         "topic": {
-          "label": "",
-          "newLabel": ""
+          "label": "Tema",
+          "newLabel": "Tema nou"
         },
         "url": {
-          "label": "",
-          "newLabel": ""
+          "label": "URL",
+          "newLabel": "URL nova"
         },
         "opnsenseApiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "Clau d'API (clau)",
+          "newLabel": "Clau d'API nova (clau)"
         },
         "opnsenseApiSecret": {
-          "label": "",
-          "newLabel": ""
+          "label": "Clau d'API (secret)",
+          "newLabel": "Clau d'API nova (secret)"
         },
         "patchmonApiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "Clau de l'API",
+          "newLabel": "Clau d'API nova"
         },
         "patchmonApiSecret": {
-          "label": "",
-          "newLabel": ""
+          "label": "Secret de l'API",
+          "newLabel": "Secret d'API nou"
         },
         "githubAppId": {
-          "label": "",
-          "newLabel": ""
+          "label": "ID d'app",
+          "newLabel": "ID d'app nou"
         },
         "githubInstallationId": {
-          "label": "",
-          "newLabel": ""
+          "label": "ID d'instal·lació",
+          "newLabel": "ID d'instal·lació nova"
         },
         "privateKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "Clau privada",
+          "newLabel": "Clau privada nova"
         },
         "slug": {
-          "label": "",
-          "newLabel": ""
+          "label": "Identificador de la pàgina d'estat",
+          "newLabel": "Identificador de la pàgina d'estat nou"
         }
       }
     },
@@ -1321,44 +1321,44 @@
       "full": "Accés total a les integracions"
     },
     "audiobookshelf": {
-      "name": "",
-      "description": ""
+      "name": "Audiobookshelf",
+      "description": "Servidor autoallotjat de llibres d'àudio i podcasts"
     },
     "navidrome": {
-      "name": "",
-      "description": ""
+      "name": "Navidrome",
+      "description": "Servidor autoallotjat de reproducció de música compatible amb l'API Subsonic"
     },
     "uptimeKuma": {
-      "name": "",
-      "description": "",
+      "name": "Uptime Kuma",
+      "description": "Monitoratge autoallotjat del temps d'activitat amb pàgines d'estat públiques",
       "secret": {
         "slug": {
-          "description": ""
+          "description": "L'identificador de la pàgina d'estat pública. El valor predeterminat és «default» si no s'estableix."
         },
         "apiKey": {
-          "description": ""
+          "description": "Clau d'API opcional per accedir autenticadament a /metrics"
         }
       }
     },
     "traefik": {
-      "name": "",
-      "description": ""
+      "name": "Traefik",
+      "description": "Proxy invers i equilibrador de càrrega natius del núvol"
     },
     "wud": {
       "name": "What's Up Docker",
-      "description": "Controla quins contenidors Docker tenen actualitzacions d'imatges disponibles."
+      "description": "Controla quins contenidors Docker tenen actualitzacions d'imatges disponibles"
     },
     "paperlessNgx": {
-      "name": "",
-      "description": ""
+      "name": "Paperless-ngx",
+      "description": "Sistema de gestió documental per arxivar i organitzar documents escanejats"
     },
     "patchmon": {
-      "name": "",
-      "description": ""
+      "name": "PatchMon",
+      "description": "Gestió i supervisió de pedaços per a amfitrions Linux"
     },
     "bazarr": {
-      "name": "",
-      "description": ""
+      "name": "Bazarr",
+      "description": "Aplicació complementària de Sonarr i Radarr que gestiona i descarrega subtítols"
     }
   },
   "media": {
@@ -1402,19 +1402,19 @@
       }
     },
     "noResults": {
-      "title": ""
+      "title": "No s'ha pujat cap contingut multimèdia"
     }
   },
   "common": {
-    "success": "",
+    "success": "Correcte",
     "beta": "Beta",
     "error": "Error",
     "action": {
       "add": "Afegeix",
       "apply": "Aplica",
       "backToOverview": "Torna a la visió general",
-      "skip": "",
-      "change": "",
+      "skip": "Omet",
+      "change": "Canvia",
       "create": "Crea",
       "createAnother": "Crear i començar de nou",
       "edit": "Edita",
@@ -1426,7 +1426,7 @@
       "cancel": "Cancel·la",
       "delete": "Elimina",
       "discard": "Descarta",
-      "close": "",
+      "close": "Tanca",
       "confirm": "Confirma",
       "continue": "Continua",
       "previous": "Anterior",
@@ -1435,8 +1435,8 @@
       "checkLogs": "Consulteu els registres per a més detalls",
       "tryAgain": "Torna-ho a provar",
       "loading": "Carregant",
-      "show": "",
-      "hide": ""
+      "show": "Mostra",
+      "hide": "Oculta"
     },
     "here": "aquí",
     "iconPicker": {
@@ -1453,12 +1453,12 @@
       "urlLoading": "Comprovant la imatge…",
       "urlReady": "La imatge està a punt per utilitzar",
       "urlError": "No s'ha pogut carregar aquesta imatge. Comprova l'URL i torna-ho a provar.",
-      "noResults": "",
-      "error": ""
+      "noResults": "No hi ha icones que coincideixin amb «{search}».",
+      "error": "No s'han pogut carregar les icones."
     },
     "colorScheme": {
       "options": {
-        "auto": "",
+        "auto": "Automàtic",
         "light": "Clar",
         "dark": "Fosc"
       }
@@ -1506,7 +1506,7 @@
         "switchToDarkMode": "Canvia al mode fosc",
         "switchToLightMode": "Canvia al mode clar",
         "management": "Gestió",
-        "docker": "",
+        "docker": "Docker",
         "preferences": "Les vostres preferències",
         "logout": "Tanca la sessió",
         "login": "Inicia la sessió",
@@ -1518,9 +1518,9 @@
     "dangerZone": "Zona de perill",
     "noResults": "No s'han trobat resultats",
     "unsavedChanges": "Tens canvis sense desar!",
-    "servers": "",
-    "applications": "",
-    "services": "",
+    "servers": "Servidors",
+    "applications": "Apps",
+    "services": "Serveis",
     "preview": {
       "show": "Mostra la previsualització",
       "hide": "Amaga la previsualització"
@@ -1557,8 +1557,8 @@
     },
     "unit": {
       "speed": {
-        "kilometersPerHour": "",
-        "milesPerHour": ""
+        "kilometersPerHour": "km/h",
+        "milesPerHour": "mph"
       }
     }
   },
@@ -1570,10 +1570,10 @@
       },
       "option": {
         "title": {
-          "label": ""
+          "label": "Títol"
         },
         "customCssClasses": {
-          "label": ""
+          "label": "Classes css personalitzades"
         },
         "borderColor": {
           "label": "Color de la vora"
@@ -1616,7 +1616,7 @@
         "label": {
           "create": "Nova categoria",
           "changePosition": "Canvia la posició",
-          "settings": ""
+          "settings": "Configuració"
         }
       },
       "openAllInNewTabs": {
@@ -1637,15 +1637,15 @@
     "menu": {
       "label": {
         "settings": "Configuració",
-        "refresh": "",
-        "options": "",
-        "actions": ""
+        "refresh": "Actualitza",
+        "options": "Opcions",
+        "actions": "Accions"
       },
       "status": {
-        "success": "",
-        "error": "",
-        "loading": "",
-        "idle": ""
+        "success": "D'acord",
+        "error": "Error",
+        "loading": "S'està carregant",
+        "idle": "Inactiu"
       }
     },
     "create": {
@@ -1673,11 +1673,11 @@
     "edit": {
       "title": "Edita element",
       "tab": {
-        "widget": "",
-        "app": ""
+        "widget": "Edita el widget",
+        "app": "Edita l'aplicació"
       },
       "app": {
-        "propagationNotice": ""
+        "propagationNotice": "Els canvis d'aquesta aplicació s'aplicaran a tot arreu on s'utilitzi, en tots els taulers."
       },
       "advancedOptions": {
         "label": "Opcions avançades",
@@ -1688,7 +1688,7 @@
           "label": "Integracions"
         },
         "title": {
-          "label": ""
+          "label": "Títol"
         },
         "customCssClasses": {
           "label": "Classes css personalitzades"
@@ -1705,11 +1705,11 @@
   },
   "widget": {
     "integrationSelect": {
-      "configureIntegrationFirst": "",
-      "loading": "",
-      "placeholder": "",
-      "noResults": "",
-      "loadError": ""
+      "configureIntegrationFirst": "Connecteu primer una integració",
+      "loading": "S'està carregant...",
+      "placeholder": "Seleccioneu una opció",
+      "noResults": "No s'han trobat resultats",
+      "loadError": "No s'han pogut carregar les opcions"
     },
     "app": {
       "name": "Aplicació",
@@ -1728,21 +1728,21 @@
           "label": "Activar comprovació d'estat"
         },
         "layout": {
-          "label": "",
+          "label": "Disseny",
           "option": {
-            "row": "",
-            "row-reverse": "",
-            "column": "",
-            "column-reverse": ""
+            "row": "Horitzontal",
+            "row-reverse": "Horitzontal (invertit)",
+            "column": "Vertical",
+            "column-reverse": "Vertical (invertit)"
           }
         },
         "descriptionDisplayMode": {
-          "label": "",
-          "description": "",
+          "label": "Mode de visualització de la descripció",
+          "description": "Tria com es mostrarà la descripció de l'aplicació",
           "option": {
-            "normal": "",
-            "tooltip": "",
-            "hidden": ""
+            "normal": "Dins del giny",
+            "tooltip": "Com a tooltip",
+            "hidden": "Ocult"
           }
         }
       },
@@ -1790,7 +1790,7 @@
           "label": "Obrir en una pestanya nova"
         },
         "withBorder": {
-          "label": ""
+          "label": "Mostra la vora"
         },
         "items": {
           "label": "Adreces d'interès",
@@ -1799,11 +1799,11 @@
       }
     },
     "archiveTeamWarrior": {
-      "name": "",
-      "description": "",
+      "name": "ArchiveTeam Warrior",
+      "description": "Superviseu l'estat d'ArchiveTeam Warrior, els projectes i les tasques d'arxivament actives.",
       "option": {
         "showBroadcastMessage": {
-          "label": ""
+          "label": "Mostra els missatges de difusió"
         }
       }
     },
@@ -1953,14 +1953,14 @@
           "description": "Utilitza ISO 8601 per formatar la data (això anul·larà altres opcions)"
         },
         "showWeather": {
-          "label": "",
-          "description": ""
+          "label": "Mostra el temps",
+          "description": "Mostra una petita icona del temps animada i la temperatura a la cantonada de la targeta"
         },
         "weatherLocation": {
-          "label": ""
+          "label": "Ubicació meteorològica"
         },
         "isWeatherFormatFahrenheit": {
-          "label": ""
+          "label": "Utilitza Fahrenheit"
         }
       }
     },
@@ -1984,16 +1984,16 @@
       }
     },
     "timetable": {
-      "name": "",
-      "description": "",
-      "title": "",
-      "noStation": "",
+      "name": "Horari",
+      "description": "Mostra les hores de sortida d'una estació",
+      "title": "Sortides {station}",
+      "noStation": "No s'ha seleccionat cap estació",
       "option": {
         "baseUrl": {
-          "label": ""
+          "label": "URL de Search.ch"
         },
         "station": {
-          "label": ""
+          "label": "Estació"
         }
       }
     },
@@ -2022,8 +2022,8 @@
         "clear": "Esborra el format",
         "heading": "Encapçalament {level}",
         "align": "Alinea el text: {position}",
-        "directionLtr": "",
-        "directionRtl": "",
+        "directionLtr": "Estableix la direcció del text d'esquerra a dreta",
+        "directionRtl": "Estableix la direcció del text de dreta a esquerra",
         "blockquote": "Citació",
         "horizontalLine": "Línia horitzontal",
         "bulletList": "Llista no ordenada",
@@ -2059,43 +2059,43 @@
         "width": "Amplada",
         "height": "Alçada"
       },
-      "placeholder": "",
+      "placeholder": "Comença a escriure les teves notes",
       "dismiss": {
-        "title": "",
-        "message": "",
+        "title": "Vols descartar els canvis?",
+        "message": "Tens canvis sense desar a la llibreta. Segur que vols descartar-los?",
         "action": {
-          "discard": "",
-          "keepEditing": ""
+          "discard": "Descarta els canvis",
+          "keepEditing": "Continua editant"
         }
       }
     },
     "anchorNote": {
-      "name": "",
-      "description": "",
+      "name": "Nota d'Anchor",
+      "description": "Mostra una nota seleccionada d'Anchor",
       "option": {
         "noteId": {
-          "label": ""
+          "label": "Nota"
         },
         "showTitle": {
-          "label": ""
+          "label": "Mostra el títol"
         },
         "showUpdatedAt": {
-          "label": ""
+          "label": "Mostra l'última actualització"
         }
       },
-      "empty": "",
-      "emptyContent": "",
-      "notFound": "",
-      "noNotes": "",
-      "integrationRequired": "",
-      "updatedAt": "",
-      "untitled": "",
-      "edit": "",
-      "save": "",
-      "cancel": "",
-      "readOnlyViewer": "",
-      "saveForbidden": "",
-      "saveFailed": ""
+      "empty": "Selecciona una nota per mostrar",
+      "emptyContent": "Aquesta nota no té contingut",
+      "notFound": "No s'ha trobat la nota",
+      "noNotes": "No s'han trobat notes",
+      "integrationRequired": "Selecciona primer una integració d'Anchor",
+      "updatedAt": "Actualitzat {date}",
+      "untitled": "Sense títol",
+      "edit": "Edita",
+      "save": "Desa",
+      "cancel": "Cancel·la",
+      "readOnlyViewer": "Tens accés de visualització a aquesta nota. L'edició està desactivada.",
+      "saveForbidden": "No tens permís per editar aquesta nota.",
+      "saveFailed": "No s'ha pogut desar aquesta nota. Torna-ho a provar."
     },
     "iframe": {
       "name": "iFrame",
@@ -2129,7 +2129,7 @@
           "label": "Permet la geolocalització"
         },
         "allowModals": {
-          "label": ""
+          "label": "Permet els modals"
         }
       },
       "error": {
@@ -2172,76 +2172,76 @@
       }
     },
     "stockPrice": {
-      "name": "",
-      "description": "",
+      "name": "Preu de les accions",
+      "description": "Mostra el preu actual de les accions d'una empresa",
       "option": {
         "stock": {
-          "label": ""
+          "label": "Símbol de l'acció"
         },
         "timeRange": {
-          "label": "",
+          "label": "Interval de temps",
           "option": {
             "1d": {
-              "label": ""
+              "label": "1 dia"
             },
             "5d": {
-              "label": ""
+              "label": "5 dies"
             },
             "1mo": {
-              "label": ""
+              "label": "1 mes"
             },
             "3mo": {
-              "label": ""
+              "label": "3 mesos"
             },
             "6mo": {
-              "label": ""
+              "label": "6 mesos"
             },
             "ytd": {
-              "label": ""
+              "label": "Any en curs"
             },
             "1y": {
-              "label": ""
+              "label": "1 any"
             },
             "2y": {
-              "label": ""
+              "label": "2 anys"
             },
             "5y": {
-              "label": ""
+              "label": "5 anys"
             },
             "10y": {
-              "label": ""
+              "label": "10 anys"
             },
             "max": {
-              "label": ""
+              "label": "Màxim"
             }
           }
         },
         "timeInterval": {
-          "label": "",
+          "label": "Interval de temps",
           "option": {
             "5m": {
-              "label": ""
+              "label": "5 minuts"
             },
             "15m": {
-              "label": ""
+              "label": "15 minuts"
             },
             "30m": {
-              "label": ""
+              "label": "30 minuts"
             },
             "1h": {
-              "label": ""
+              "label": "1 hora"
             },
             "1d": {
-              "label": ""
+              "label": "1 dia"
             },
             "5d": {
-              "label": ""
+              "label": "5 dies"
             },
             "1wk": {
-              "label": ""
+              "label": "1 setmana"
             },
             "1mo": {
-              "label": ""
+              "label": "1 mes"
             }
           }
         }
@@ -2251,7 +2251,7 @@
       "name": "Calendari",
       "description": "Mostra esdeveniments de les vostres integracions en una vista de calendari dins d'un període de temps relatiu determinat",
       "duration": {
-        "allDay": ""
+        "allDay": "Tot el dia"
       },
       "option": {
         "releaseType": {
@@ -2288,7 +2288,7 @@
           "description": "Només al temps actual"
         },
         "useImperialSpeed": {
-          "label": ""
+          "label": "Usa mph per al vent"
         },
         "location": {
           "label": "Ubicació meteorològica"
@@ -2308,13 +2308,13 @@
           "description": "Com s'ha de mostrar la data"
         }
       },
-      "currentWindSpeed": "",
+      "currentWindSpeed": "{currentWindSpeed} {unit}",
       "dailyForecast": {
         "sunrise": "Sortida del sol",
         "sunset": "Posta de sol",
-        "maxWindSpeed": "",
-        "maxWindGusts": "",
-        "humidity": ""
+        "maxWindSpeed": "Velocitat màxima del vent: {maxWindSpeed} {unit}",
+        "maxWindGusts": "Ràfegues màximes: {maxWindGusts} {unit}",
+        "humidity": "Humitat: {humidity}%"
       },
       "kind": {
         "clear": "Clar",
@@ -2365,24 +2365,24 @@
           "label": "Mostra informació de la memòria"
         },
         "gpu": {
-          "label": ""
+          "label": "Mostra la informació de la GPU"
         },
         "showUptime": {
-          "label": ""
+          "label": "Mostra l'activitat"
         },
         "fileSystem": {
           "label": "Mostra informació del sistema de fitxers"
         },
         "visibleStorageVolumes": {
-          "label": "",
-          "description": "",
-          "placeholder": ""
+          "label": "Volums d'emmagatzematge visibles",
+          "description": "Només està disponible quan totes les integracions seleccionades són de Synology. Deixeu-ho buit per mostrar tots els volums d'emmagatzematge detectats.",
+          "placeholder": "Seleccioneu volums d'emmagatzematge"
         },
         "defaultTab": {
           "label": "Pestanya predeterminada"
         },
         "visibleClusterSections": {
-          "label": ""
+          "label": "Seccions del clúster visibles"
         },
         "sectionIndicatorRequirement": {
           "label": "Requisit de l'indicador de secció"
@@ -2454,264 +2454,264 @@
       }
     },
     "dockerContainers": {
-      "name": "",
-      "description": "",
+      "name": "Estadístiques Docker",
+      "description": "Estadístiques dels teus contenidors (aquest giny només es pot afegir amb privilegis d'administrador)",
       "option": {
         "columns": {
-          "label": ""
+          "label": "Columnes que es mostraran"
         },
         "enableRowSorting": {
-          "label": ""
+          "label": "Activa l'ordenació dels elements"
         },
         "defaultSort": {
-          "label": "",
+          "label": "Columna utilitzada per ordenar per defecte",
           "option": {
-            "name": "",
-            "state": "",
-            "cpuUsage": "",
-            "memoryUsage": ""
+            "name": "Nom",
+            "state": "Estat",
+            "cpuUsage": "Ús de la CPU",
+            "memoryUsage": "Ús de la memòria"
           }
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "Inverteix l'ordenació"
         },
         "columnOrder": {
-          "label": ""
+          "label": "Ordre de les columnes"
         },
         "columnWidths": {
-          "label": ""
+          "label": "Amplades de les columnes"
         }
       },
       "error": {
-        "internalServerError": "",
-        "layoutSaveTitle": "",
-        "layoutSaveMessage": ""
+        "internalServerError": "No s'han obtingut estadístiques",
+        "layoutSaveTitle": "No s'ha desat la disposició de la taula",
+        "layoutSaveMessage": "No s'ha pogut desar la disposició de la taula de Docker. Torneu a moure o canviar la mida de la columna."
       },
       "empty": {
-        "noContainers": ""
+        "noContainers": "No s'han trobat contenidors"
       }
     },
     "coolify": {
-      "name": "",
-      "description": "",
+      "name": "Coolify",
+      "description": "Visió general de la teva instància de Coolify amb servidors i aplicacions",
       "option": {
         "showServers": {
-          "label": ""
+          "label": "Mostra els servidors"
         },
         "showApplications": {
-          "label": ""
+          "label": "Mostra les aplicacions"
         },
         "showServices": {
-          "label": ""
+          "label": "Mostra els serveis"
         }
       },
       "empty": {
-        "servers": "",
-        "applications": "",
-        "services": ""
+        "servers": "No s'han trobat servidors",
+        "applications": "No s'han trobat aplicacions",
+        "services": "No s'han trobat serveis"
       },
       "footer": {
-        "updated": ""
+        "updated": "Actualitzat {when}"
       },
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "No hi ha cap integració de Coolify configurada",
+        "internalServerError": "No s'han pogut obtenir les dades de Coolify"
       },
       "server": {
-        "buildServer": ""
+        "buildServer": "Muntar"
       },
       "instances": {
-        "title": ""
+        "title": "Instàncies"
       }
     },
     "vpn": {
-      "name": "",
-      "description": "",
-      "serviceUnavailable": "",
+      "name": "VPN",
+      "description": "Resum de les vostres connexions VPN",
+      "serviceUnavailable": "VPN no disponible",
       "option": {}
     },
     "ups": {
-      "name": "",
-      "description": "",
+      "name": "UPS",
+      "description": "Supervisa l'estat dels teus dispositius UPS mitjançant un servidor NUT",
       "option": {
         "showBattery": {
-          "label": ""
+          "label": "Mostra la bateria"
         },
         "showLoad": {
-          "label": ""
+          "label": "Mostra la càrrega"
         },
         "showVoltage": {
-          "label": ""
+          "label": "Mostra el voltatge"
         }
       },
       "status": {
-        "online": "",
-        "onBattery": "",
-        "lowBattery": "",
-        "charging": "",
-        "unknown": ""
+        "online": "En línia",
+        "onBattery": "Amb bateria",
+        "lowBattery": "Bateria baixa",
+        "charging": "Carregant",
+        "unknown": "Desconegut"
       },
       "field": {
-        "runtime": "",
-        "load": "",
-        "input": "",
-        "output": ""
+        "runtime": "Autonomia",
+        "load": "Càrrega",
+        "input": "Entrada",
+        "output": "Sortida"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "No s'han pogut obtenir les dades de l'UPS"
       }
     },
     "tracearr": {
-      "name": "",
-      "description": "",
+      "name": "Tracearr",
+      "description": "Supervisió millorada del servidor multimèdia amb dades detallades de transmissió i transcodificació",
       "option": {
         "showStreams": {
-          "label": ""
+          "label": "Mostra les transmissions actives"
         },
         "showStats": {
-          "label": ""
+          "label": "Mostra el resum d'estadístiques"
         },
         "showRecentActivity": {
-          "label": ""
+          "label": "Mostra l'activitat recent"
         },
         "showViolations": {
-          "label": ""
+          "label": "Mostra les infraccions"
         }
       },
       "stats": {
-        "activeStreams": "",
-        "totalUsers": "",
-        "transcodes": "",
-        "bandwidth": ""
+        "activeStreams": "Transmissions actives",
+        "totalUsers": "Usuaris totals",
+        "transcodes": "Transcodificacions",
+        "bandwidth": "Amplada de banda"
       },
       "streams": {
-        "empty": "",
-        "user": "",
-        "media": "",
-        "state": "",
-        "quality": "",
-        "device": "",
-        "progress": "",
+        "empty": "No hi ha transmissions actives",
+        "user": "Usuari",
+        "media": "Medi",
+        "state": "Estat",
+        "quality": "Qualitat",
+        "device": "Dispositiu",
+        "progress": "Progrés",
         "videoDecision": {
-          "directPlay": "",
-          "transcode": "",
-          "directStream": ""
+          "directPlay": "Reproducció directa",
+          "transcode": "Transcodificació",
+          "directStream": "Transmissió directa"
         }
       },
       "recentActivity": {
-        "title": "",
-        "empty": "",
-        "watched": "",
-        "partial": ""
+        "title": "Activitat recent",
+        "empty": "No hi ha activitat recent",
+        "watched": "Vist",
+        "partial": "Parcial"
       },
       "violations": {
-        "title": "",
-        "empty": "",
-        "rule": "",
-        "user": ""
+        "title": "Infraccions",
+        "empty": "No hi ha infraccions recents",
+        "rule": "Regla",
+        "user": "Usuari"
       },
-      "noSectionsEnabled": "",
+      "noSectionsEnabled": "No hi ha cap secció activada",
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "No hi ha cap integració de Tracearr configurada",
+        "internalServerError": "No s'han pogut obtenir les dades de Tracearr"
       }
     },
     "umami": {
-      "name": "",
-      "description": "",
-      "visitors": "",
-      "active": "",
-      "pageviews": "",
-      "visits": "",
-      "bounceRate": "",
-      "avgDuration": "",
+      "name": "Analítica d'Umami",
+      "description": "Mostra les estadístiques de visitants de la teva instància d'analítica d'Umami",
+      "visitors": "visitants",
+      "active": "actius",
+      "pageviews": "visualitzacions de pàgina",
+      "visits": "visites",
+      "bounceRate": "rebot",
+      "avgDuration": "mitj",
       "option": {
         "websiteId": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noWebsites": "",
-          "configureIntegrationFirst": ""
+          "label": "Lloc web",
+          "description": "Selecciona un lloc web seguit per la teva instància d'Umami",
+          "placeholder": "Selecciona un lloc web",
+          "loading": "S'estan carregant els llocs web...",
+          "noWebsites": "No s'han trobat llocs web",
+          "configureIntegrationFirst": "Connecta primer una integració d'Umami"
         },
         "timeFrame": {
-          "label": "",
-          "description": "",
+          "label": "Període de temps",
+          "description": "Període del qual es mostraran les dades dels visitants",
           "option": {
-            "today": "",
-            "24h": "",
-            "7d": "",
-            "30d": "",
-            "month": "",
-            "lastMonth": ""
+            "today": "Avui",
+            "24h": "Últimes 24 hores",
+            "7d": "Últims 7 dies",
+            "30d": "Últims 30 dies",
+            "month": "Aquest mes",
+            "lastMonth": "El mes passat"
           }
         },
         "eventName": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noEvents": "",
-          "none": "",
-          "configureWebsiteFirst": ""
+          "label": "Esdeveniment",
+          "description": "Mostra el nombre total d'ocurrències d'un esdeveniment específic",
+          "placeholder": "Selecciona un esdeveniment",
+          "loading": "Carregant esdeveniments...",
+          "noEvents": "No s'han trobat esdeveniments",
+          "none": "Cap esdeveniment",
+          "configureWebsiteFirst": "Selecciona primer un lloc web per carregar els esdeveniments"
         },
         "chartType": {
-          "label": "",
-          "description": "",
+          "label": "Tipus de gràfic",
+          "description": "Estil de visualització del gràfic",
           "option": {
-            "bar": "",
-            "sparkline": ""
+            "bar": "Gràfic de barres",
+            "sparkline": "Gràfic de línies"
           }
         },
         "chartStyle": {
-          "label": "",
-          "description": "",
+          "label": "Estil del gràfic",
+          "description": "Com es mostra la sèrie d'esdeveniments al gràfic",
           "option": {
-            "grouped": "",
-            "overlay": ""
+            "grouped": "Un al costat de l'altre",
+            "overlay": "Superposat (subconjunt)"
           }
         },
         "viewMode": {
-          "label": "",
-          "description": "",
+          "label": "Visualització",
+          "description": "Què es mostrarà al cos del widget",
           "option": {
-            "chart": "",
-            "events": "",
-            "topPages": "",
-            "topReferrers": ""
+            "chart": "Gràfic",
+            "events": "Gràfic d'esdeveniments",
+            "topPages": "Pàgines principals",
+            "topReferrers": "Referents principals"
           }
         },
         "eventNames": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noEvents": "",
-          "configureWebsiteFirst": ""
+          "label": "Esdeveniments",
+          "description": "Selecciona un o més esdeveniments per al gràfic",
+          "placeholder": "Selecciona esdeveniments...",
+          "loading": "Carregant esdeveniments...",
+          "noEvents": "No s'han trobat esdeveniments",
+          "configureWebsiteFirst": "Selecciona primer un lloc web per carregar els esdeveniments"
         },
         "topCount": {
-          "label": "",
-          "description": ""
+          "label": "Elements que es mostraran",
+          "description": "Nombre màxim d'elements que es mostraran (màx. 500)"
         }
       },
       "event": {
-        "occurrences": "",
-        "label": ""
+        "occurrences": "esdeveniments",
+        "label": "esdeveniments"
       },
       "topPages": {
-        "direct": ""
+        "direct": "Directe"
       },
       "topReferrers": {
-        "direct": ""
+        "direct": "Directe"
       },
       "events": {
-        "selectPrompt": ""
+        "selectPrompt": "Selecciona esdeveniments per al gràfic"
       },
       "error": {
-        "noIntegration": "",
-        "noWebsite": "",
-        "noData": "",
-        "internalServerError": ""
+        "noIntegration": "No s'ha configurat cap integració amb Umami",
+        "noWebsite": "No s'ha configurat cap lloc web",
+        "noData": "No hi ha dades disponibles",
+        "internalServerError": "No s'han pogut obtenir les dades d'Umami"
       }
     },
     "common": {
@@ -2780,336 +2780,336 @@
       "description": "Mostra els fluxos actuals als vostres servidors multimèdia",
       "option": {
         "showOnlyPlaying": {
-          "label": "",
-          "description": ""
+          "label": "Mostra només el que s'està reproduint",
+          "description": "Desactivar aquesta opció no funcionarà amb Plex"
         },
         "showBitrate": {
-          "label": "",
-          "description": ""
+          "label": "Mostra la taxa de bits",
+          "description": "Mostra la taxa de bits de reproducció actual al costat de la ubicació"
         },
         "showLocation": {
-          "label": "",
-          "description": ""
+          "label": "Mostra la ubicació",
+          "description": "Mostra si la transmissió és a la vostra LAN o WAN"
         }
       },
       "footer": {
-        "streams": "",
-        "totalBitrate": ""
+        "streams": "{count, plural, one {# transmissió activa} other {# transmissions actives}}",
+        "totalBitrate": "Total: {bitrate}"
       },
       "items": {
         "currentlyPlaying": "S'està reproduint",
         "user": "Usuari",
         "name": "Nom",
         "id": "ID",
-        "status": "",
-        "directPlay": "",
-        "directStream": "",
-        "transcodeVideo": "",
-        "transcodeAudio": "",
-        "transcoding": "",
-        "paused": "",
-        "remaining": "",
+        "status": "Estat",
+        "directPlay": "Reproducció directa",
+        "directStream": "Transmissió directa",
+        "transcodeVideo": "Transcodificació de vídeo",
+        "transcodeAudio": "Transcodificació d'àudio",
+        "transcoding": "Transcodificació",
+        "paused": "En pausa",
+        "remaining": "Queden {minutes} min",
         "metadata": {
-          "title": "",
+          "title": "Dades curioses",
           "video": {
-            "title": "",
-            "resolution": ""
+            "title": "Vídeo",
+            "resolution": "Resolució"
           },
           "audio": {
-            "title": "",
-            "channelCount": "",
-            "codec": ""
+            "title": "Àudio",
+            "channelCount": "Canals d'àudio",
+            "codec": "Còdec d'àudio"
           },
           "transcoding": {
-            "title": "",
-            "container": "",
-            "resolution": "",
-            "target": ""
+            "title": "Transcodificació",
+            "container": "Contenidor",
+            "resolution": "Resolució",
+            "target": "Còdec de destinació"
           }
         }
       }
     },
     "paperlessNgx": {
-      "name": "",
-      "description": "",
-      "documentsTotal": "",
-      "documentsInbox": "",
-      "correspondents": "",
-      "tags": "",
-      "documentTypes": "",
-      "inboxRatio": "",
-      "inbox": "",
-      "total": "",
+      "name": "Paperless-ngx",
+      "description": "Visió general del teu arxiu de documents de Paperless-ngx",
+      "documentsTotal": "Total de documents",
+      "documentsInbox": "Safata d'entrada",
+      "correspondents": "Remitents",
+      "tags": "Etiquetes",
+      "documentTypes": "Tipus de document",
+      "inboxRatio": "Proporció de la safata d'entrada",
+      "inbox": "safata d'entrada",
+      "total": "total",
       "option": {
         "showInboxRatio": {
-          "label": "",
-          "description": ""
+          "label": "Mostra la proporció de la safata d'entrada",
+          "description": "Mostra la proporció de documents de la safata d'entrada respecte del total a la secció principal"
         },
         "showInboxRing": {
-          "label": "",
-          "description": ""
+          "label": "Mostra l'anell de la safata d'entrada",
+          "description": "Mostra un anell de progrés al costat de la proporció de la safata d'entrada"
         },
         "showDocumentsTotal": {
-          "label": "",
-          "description": ""
+          "label": "Mostra el total de documents",
+          "description": "Mostra el nombre total de documents del teu arxiu"
         },
         "showDocumentsInbox": {
-          "label": "",
-          "description": ""
+          "label": "Mostra el nombre de documents de la safata d'entrada",
+          "description": "Mostra el nombre de documents sense processar de la safata d'entrada"
         },
         "showCorrespondents": {
-          "label": "",
-          "description": ""
+          "label": "Mostra els remitents",
+          "description": "Mostra el nombre total de remitents"
         },
         "showTags": {
-          "label": "",
-          "description": ""
+          "label": "Mostra les etiquetes",
+          "description": "Mostra el nombre total d'etiquetes"
         },
         "showDocumentTypes": {
-          "label": "",
-          "description": ""
+          "label": "Mostra els tipus de document",
+          "description": "Mostra el nombre total de tipus de document"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "No s'han pogut obtenir les dades de Paperless-ngx"
       }
     },
     "patchmon": {
-      "name": "",
-      "description": "",
-      "title": "",
-      "totalHosts": "",
-      "hostsNeedingUpdates": "",
-      "securityUpdates": "",
-      "upToDateHosts": "",
-      "hostsWithSecurityUpdates": "",
-      "recentUpdates24h": "",
-      "totalOutdatedPackages": "",
-      "totalRepos": "",
-      "osDistribution": "",
-      "compliance": "",
-      "complianceRatio": "",
-      "lastUpdated": "",
+      "name": "PatchMon",
+      "description": "Resum de l'estat dels pedaços dels amfitrions des de PatchMon",
+      "title": "Estadístiques de PatchMon",
+      "totalHosts": "Amfitrions totals",
+      "hostsNeedingUpdates": "Necessiten actualitzacions",
+      "securityUpdates": "Actualitzacions de seguretat",
+      "upToDateHosts": "Amfitrions actualitzats",
+      "hostsWithSecurityUpdates": "Amfitrions amb actualitzacions de seguretat",
+      "recentUpdates24h": "Actualitzacions (24 h)",
+      "totalOutdatedPackages": "Paquets obsolets",
+      "totalRepos": "Repositoris",
+      "osDistribution": "Distribució del sistema operatiu",
+      "compliance": "Compliment dels pedaços",
+      "complianceRatio": "{upToDate} / {total}",
+      "lastUpdated": "Actualitzat {time}",
       "option": {
         "showTotalHosts": {
-          "label": "",
-          "description": ""
+          "label": "Mostra el total d'amfitrions",
+          "description": "Mostra el nombre total d'amfitrions supervisats"
         },
         "showHostsNeedingUpdates": {
-          "label": "",
-          "description": ""
+          "label": "Mostra els amfitrions que necessiten actualitzacions",
+          "description": "Mostra els amfitrions amb almenys un paquet obsolet"
         },
         "showSecurityUpdates": {
-          "label": "",
-          "description": ""
+          "label": "Mostra les actualitzacions de seguretat",
+          "description": "Mostra el nombre total d'actualitzacions de seguretat disponibles"
         },
         "showUpToDateHosts": {
-          "label": "",
-          "description": ""
+          "label": "Mostra els amfitrions actualitzats",
+          "description": "Mostra els amfitrions sense cap paquet obsolet"
         },
         "showHostsWithSecurityUpdates": {
-          "label": "",
-          "description": ""
+          "label": "Mostra els amfitrions amb actualitzacions de seguretat",
+          "description": "Mostra els amfitrions que necessiten pedaços de seguretat"
         },
         "showRecentUpdates24h": {
-          "label": "",
-          "description": ""
+          "label": "Mostra les actualitzacions recents (24 h)",
+          "description": "Mostra el nombre d'actualitzacions aplicades durant les darreres 24 hores"
         },
         "showTotalOutdatedPackages": {
-          "label": "",
-          "description": ""
+          "label": "Mostra els paquets obsolets",
+          "description": "Mostra el nombre total de paquets obsolets de tots els amfitrions"
         },
         "showTotalRepos": {
-          "label": "",
-          "description": ""
+          "label": "Mostra els repositoris",
+          "description": "Mostra el nombre de repositoris actius que se supervisen"
         },
         "enableThresholdColors": {
-          "label": "",
-          "description": ""
+          "label": "Activa els colors dels llindars",
+          "description": "Acoloreix els valors de les estadístiques de verd, groc o vermell segons els nivells de gravetat predefinits"
         },
         "useCustomThresholds": {
-          "label": "",
-          "description": ""
+          "label": "Llindars avançats",
+          "description": "Personalitzeu els llindars d'avís i crític per estadística mitjançant recomptes absoluts o percentatges del total d'amfitrions"
         },
         "thresholdMode": {
           "option": {
-            "absolute": "",
-            "percent": ""
+            "absolute": "Recompte absolut",
+            "percent": "Percentatge del total d'amfitrions"
           }
         },
         "hostsNeedingUpdatesThresholdMode": {
-          "label": "",
-          "description": ""
+          "label": "Mode de llindar d'amfitrions que necessiten actualitzacions",
+          "description": "Compareu el recompte d'amfitrions que necessiten actualitzacions com a valor absolut o percentatge del total d'amfitrions"
         },
         "hostsNeedingUpdatesWarningAt": {
-          "label": "",
-          "description": ""
+          "label": "Llindar d'avís d'amfitrions que necessiten actualitzacions",
+          "description": "Introduïu el groc quan el valor arribi a aquest llindar"
         },
         "hostsNeedingUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": "Llindar crític d'amfitrions que necessiten actualitzacions",
+          "description": "Introduïu el vermell quan el valor arribi a aquest llindar"
         },
         "securityUpdatesThresholdMode": {
-          "label": "",
-          "description": ""
+          "label": "Mode de llindar d'actualitzacions de seguretat",
+          "description": "Compareu el recompte d'actualitzacions de seguretat com a valor absolut o percentatge del total d'amfitrions"
         },
         "securityUpdatesWarningAt": {
-          "label": "",
-          "description": ""
+          "label": "Llindar d'avís d'actualitzacions de seguretat",
+          "description": "Introduïu el groc quan el valor arribi a aquest llindar"
         },
         "securityUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": "Llindar crític d'actualitzacions de seguretat",
+          "description": "Introduïu el vermell quan el valor arribi a aquest llindar"
         },
         "hostsWithSecurityUpdatesThresholdMode": {
-          "label": "",
-          "description": ""
+          "label": "Mode de llindar d'amfitrions amb actualitzacions de seguretat",
+          "description": "Compareu el recompte d'amfitrions com a valor absolut o percentatge del total d'amfitrions"
         },
         "hostsWithSecurityUpdatesWarningAt": {
-          "label": "",
-          "description": ""
+          "label": "Llindar d'avís d'amfitrions amb actualitzacions de seguretat",
+          "description": "Introduïu el groc quan el valor arribi a aquest llindar"
         },
         "hostsWithSecurityUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": "Llindar crític d'amfitrions amb actualitzacions de seguretat",
+          "description": "Introduïu el vermell quan el valor arribi a aquest llindar"
         },
         "upToDateHostsThresholdMode": {
-          "label": "",
-          "description": ""
+          "label": "Mode de llindar d'amfitrions actualitzats",
+          "description": "Compareu el recompte d'amfitrions actualitzats com a valor absolut o percentatge del total d'amfitrions"
         },
         "upToDateHostsWarningAt": {
-          "label": "",
-          "description": ""
+          "label": "Llindar d'avís d'amfitrions actualitzats",
+          "description": "Introduïu el groc quan el valor sigui igual o superior a aquest llindar però inferior a la cobertura total"
         },
         "upToDateHostsCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": "Llindar crític d'amfitrions actualitzats",
+          "description": "Introduïu el vermell quan el valor caigui per sota d'aquest llindar"
         },
         "totalOutdatedPackagesThresholdMode": {
-          "label": "",
-          "description": ""
+          "label": "Mode de llindar de paquets obsolets",
+          "description": "Compareu el recompte de paquets obsolets com a valor absolut o percentatge del total d'amfitrions"
         },
         "totalOutdatedPackagesWarningAt": {
-          "label": "",
-          "description": ""
+          "label": "Llindar d'avís de paquets obsolets",
+          "description": "Introduïu el groc quan el valor arribi a aquest llindar"
         },
         "totalOutdatedPackagesCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": "Llindar crític de paquets obsolets",
+          "description": "Introduïu el vermell quan el valor arribi a aquest llindar"
         },
         "showOsDistribution": {
-          "label": "",
-          "description": ""
+          "label": "Mostra la distribució del sistema operatiu",
+          "description": "Mostra el desglossament dels amfitrions supervisats per sistema operatiu"
         },
         "osDistributionLimit": {
-          "label": "",
-          "description": "",
+          "label": "Límit de distribucions del sistema operatiu",
+          "description": "Nombre màxim de sistemes operatius que es mostraran",
           "option": {
-            "3": "",
-            "5": "",
-            "10": "",
-            "all": ""
+            "3": "3 principals",
+            "5": "5 principals",
+            "10": "10 principals",
+            "all": "Tots"
           }
         },
         "showOsVersion": {
-          "label": "",
-          "description": ""
+          "label": "Mostra la versió del sistema operatiu",
+          "description": "Afegeix la versió del sistema operatiu a cada etiqueta de distribució quan estigui disponible"
         },
         "showComplianceHero": {
-          "label": "",
-          "description": ""
+          "label": "Mostra el resum del compliment",
+          "description": "Mostra un anell de compliment amb el percentatge d'amfitrions actualitzats"
         },
         "osDisplayMode": {
-          "label": "",
-          "description": "",
+          "label": "Mode de visualització del sistema operatiu",
+          "description": "Trieu com es mostrarà la distribució del sistema operatiu",
           "option": {
-            "bars": "",
-            "donut": ""
+            "bars": "Barres horitzontals",
+            "donut": "Gràfic de rosca"
           }
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "No s'han pogut obtenir les dades de PatchMon"
       }
     },
     "bazarr": {
-      "name": "",
-      "description": "",
-      "episodes": "",
-      "movies": "",
-      "providers": "",
-      "status": "",
+      "name": "Bazarr",
+      "description": "Resum dels subtítols que falten i de l'estat de salut de la vostra instància de Bazarr",
+      "episodes": "Episodis que falten",
+      "movies": "Pel·lícules que falten",
+      "providers": "Problemes dels proveïdors",
+      "status": "Problemes de salut",
       "option": {
         "showMissingEpisodes": {
-          "label": "",
-          "description": ""
+          "label": "Mostra els episodis que falten",
+          "description": "Mostra el nombre d'episodis als quals falten subtítols"
         },
         "showMissingMovies": {
-          "label": "",
-          "description": ""
+          "label": "Mostra les pel·lícules que falten",
+          "description": "Mostra el nombre de pel·lícules a les quals falten subtítols"
         },
         "showProviderIssues": {
-          "label": "",
-          "description": ""
+          "label": "Mostra els problemes dels proveïdors",
+          "description": "Mostra el nombre de proveïdors de subtítols amb problemes"
         },
         "showHealthIssues": {
-          "label": "",
-          "description": ""
+          "label": "Mostra els problemes de salut",
+          "description": "Mostra el nombre de problemes de salut de Bazarr"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "No s'han pogut obtenir les dades de Bazarr"
       }
     },
     "immich-serverStats": {
-      "name": "",
-      "description": "",
+      "name": "Estadístiques del servidor Immich",
+      "description": "Informació sobre la teva instància d'Immich",
       "option": {
         "showUsers": {
-          "label": "",
-          "description": ""
+          "label": "Mostra usuaris",
+          "description": "Mostra el nombre d'usuaris de la teva instància"
         },
         "showPhotos": {
-          "label": "",
-          "description": ""
+          "label": "Mostra les fotos",
+          "description": "Mostra el nombre de fotos de la teva instància"
         },
         "showVideos": {
-          "label": "",
-          "description": ""
+          "label": "Mostra els vídeos",
+          "description": "Mostra el nombre de vídeos de la teva instància"
         },
         "showStorage": {
-          "label": "",
-          "description": ""
+          "label": "Mostra espai",
+          "description": "Mostra la quantitat total d'emmagatzematge utilitzat"
         }
       },
-      "users": "",
-      "photos": "",
-      "videos": "",
-      "storage": ""
+      "users": "Usuaris",
+      "photos": "Fotos",
+      "videos": "Vídeos",
+      "storage": "Emmagatzematge utilitzat"
     },
     "immich-albumCarousel": {
-      "name": "",
-      "allPhotos": "",
+      "name": "Àlbum d'Immich",
+      "allPhotos": "Totes les fotos",
       "option": {
         "albumId": {
-          "label": "",
-          "description": ""
+          "label": "Àlbum",
+          "description": "Seleccioneu un àlbum d'Immich o Totes les fotos. Una selecció buida també mostra fotos aleatòries de tota la biblioteca."
         },
         "rotationIntervalSeconds": {
-          "label": "",
-          "description": ""
+          "label": "Interval en segons",
+          "description": "Rota entre les imatges de l'àlbum cada X segons. Ha de ser com a mínim 1 i inferior a 3600."
         },
         "showPhotoInfo": {
-          "label": "",
-          "description": ""
+          "label": "Mostra la informació de la foto",
+          "description": "Mostra la data de la imatge i l'índex actual a la part inferior de la presentació de diapositives"
         },
         "randomizePhotos": {
-          "label": "",
-          "description": ""
+          "label": "Aleatoritza les fotos",
+          "description": "Mostra les fotos en un ordre aleatori en lloc de començar sempre amb el mateix ordre de l'àlbum."
         }
       },
-      "description": "",
-      "noPhotos": ""
+      "description": "Presentació de fotos d'un àlbum d'Immich o de tota la biblioteca",
+      "noPhotos": "No s'han trobat fotos"
     },
     "downloads": {
       "name": "Client de descàrregues",
@@ -3134,7 +3134,7 @@
           "label": "Mostra les entrades torrent marcades com a completades"
         },
         "showCompletedHttp": {
-          "label": ""
+          "label": "Mostra les entrades diverses marcades com a completades"
         },
         "activeTorrentThreshold": {
           "label": "Amaga els torrents completats sota aquest llindar (en kiB/s)"
@@ -3149,22 +3149,22 @@
           "label": "Utilitza el filtre per calcular la ràtio"
         },
         "limitPerIntegration": {
-          "label": "",
-          "description": ""
+          "label": "Limita els elements per integració",
+          "description": "Això limitarà el nombre d'elements que es mostren per integració, no globalment"
         },
         "columnOrder": {
-          "label": ""
+          "label": "Ordre de les columnes"
         },
         "columnWidths": {
-          "label": ""
+          "label": "Amplades de les columnes"
         }
       },
       "errors": {
         "noColumns": "Seleccioneu columnes als elements",
         "noCommunications": "No es poden carregar dades de la integració",
-        "noItems": "",
-        "actionFailed": "",
-        "actionFailedMessage": ""
+        "noItems": "No s'han trobat baixades",
+        "actionFailed": "L'acció ha fallat",
+        "actionFailedMessage": "No s'ha pogut completar l'acció. Torneu-ho a provar."
       },
       "items": {
         "actions": {
@@ -3188,7 +3188,7 @@
         },
         "id": {
           "columnTitle": "ID",
-          "detailsTitle": ""
+          "detailsTitle": "ID de l'element"
         },
         "integration": {
           "columnTitle": "Integració"
@@ -3223,7 +3223,7 @@
         "time": {
           "columnTitle": "Hora de finalització",
           "detailsTitle": "Temps fins/des de la finalització",
-          "eta": ""
+          "eta": "Temps estimat"
         },
         "type": {
           "columnTitle": "Tipus",
@@ -3269,49 +3269,49 @@
       },
       "globalRatio": "Ràtio global",
       "contextMenu": {
-        "copyName": "",
-        "copyId": "",
-        "clearFilters": ""
+        "copyName": "Copia el nom",
+        "copyId": "Copia l'ID",
+        "clearFilters": "Esborra els filtres"
       },
       "footer": {
-        "filter": ""
+        "filter": "Filtra les baixades"
       },
       "stats": {
-        "show": "",
-        "hide": "",
-        "overallProgress": "",
-        "totalSize": "",
-        "clients": ""
+        "show": "Mostra les estadístiques globals",
+        "hide": "Amaga les estadístiques globals",
+        "overallProgress": "Progrés general de la cua",
+        "totalSize": "Mida total de la cua",
+        "clients": "{count, plural, one {# client} other {# clients}}"
       },
-      "disconnected": ""
+      "disconnected": "(desconnectat)"
     },
     "mediaReleases": {
-      "name": "",
-      "description": "",
+      "name": "Llançaments multimèdia",
+      "description": "Mostra contingut multimèdia afegit recentment o pròxims llançaments de diferents integracions",
       "option": {
         "layout": {
-          "label": "",
+          "label": "Disseny",
           "option": {
             "backdrop": {
-              "label": ""
+              "label": "Imatge de fons"
             },
             "poster": {
-              "label": ""
+              "label": "Pòster"
             }
           }
         },
         "showDescriptionTooltip": {
-          "label": ""
+          "label": "Mostra la descripció"
         },
         "showType": {
-          "label": ""
+          "label": "Mostra el tipus de mèdia"
         },
         "showSource": {
-          "label": ""
+          "label": "Mostra la integració d'origen"
         }
       },
       "length": {
-        "duration": ""
+        "duration": "{length} min"
       }
     },
     "mediaRequests-requestList": {
@@ -3322,10 +3322,10 @@
           "label": "Obre els enllaços en una pestanya nova"
         },
         "statusFilter": {
-          "label": ""
+          "label": "Estats que es mostraran"
         },
         "recentDays": {
-          "label": ""
+          "label": "Mostra només les sol·licituds recents"
         }
       },
       "pending": {
@@ -3337,18 +3337,18 @@
         "unknown": "Desconegut",
         "pending": "Pendent",
         "processing": "Processant",
-        "requested": "",
+        "requested": "Sol·licitat",
         "partiallyAvailable": "Parcial",
         "available": "Disponible",
-        "blacklisted": "",
-        "deleted": ""
+        "blacklisted": "A la llista negra",
+        "deleted": "Eliminat"
       },
       "status": {
         "pending": "Pendent",
         "approved": "Aprovat",
         "declined": "Rebutjat",
         "failed": "Fallat",
-        "completed": ""
+        "completed": "Completat"
       },
       "toBeDetermined": "Per determinar"
     },
@@ -3434,33 +3434,33 @@
       }
     },
     "mediaMissing": {
-      "name": "",
-      "description": "",
+      "name": "Contingut que falta i en cua",
+      "description": "Mostra les pel·lícules i els episodis que falten i en cua de Radarr i Sonarr",
       "option": {
         "showMissing": {
-          "label": ""
+          "label": "Mostra els elements que falten"
         },
         "showQueued": {
-          "label": ""
+          "label": "Mostra els elements en cua"
         },
         "pageSize": {
-          "label": ""
+          "label": "Elements per pàgina"
         }
       },
       "tab": {
-        "missing": "",
-        "queued": ""
+        "missing": "Falten",
+        "queued": "En cua"
       },
       "type": {
-        "movie": "",
-        "episode": ""
+        "movie": "Pel·lícula",
+        "episode": "Episodi"
       },
       "empty": {
-        "missing": "",
-        "queued": "",
-        "noTabsEnabled": ""
+        "missing": "No hi ha elements que faltin",
+        "queued": "No hi ha elements en cua",
+        "noTabsEnabled": "Activeu almenys una pestanya a la configuració del giny"
       },
-      "timeLeft": ""
+      "timeLeft": "Temps restant"
     },
     "rssFeed": {
       "name": "Fonts RSS",
@@ -3479,140 +3479,140 @@
           "label": "Límit de quantitat de publicacions"
         },
         "hideDescription": {
-          "label": ""
+          "label": "Amaga la descripció"
         },
         "showPosterImage": {
-          "label": ""
+          "label": "Mostra la imatge del pòster"
         }
       }
     },
     "releases": {
-      "name": "",
-      "description": "",
+      "name": "Versions",
+      "description": "Mostra una llista de la versió actual dels repositoris indicats amb l'expressió regular de versió especificada.",
       "option": {
         "newReleaseWithin": {
-          "label": "",
-          "description": ""
+          "label": "Llançaments nous dins de",
+          "description": "Exemple d'ús: 1w (1 setmana), 10M (10 mesos). Unitats acceptades: h (hores), d (dies), w (setmanes), M (mesos), y (anys). Deixa-ho buit per no destacar els llançaments nous."
         },
         "staleReleaseWithin": {
-          "label": "",
-          "description": ""
+          "label": "Llançaments antics dins de",
+          "description": "Exemple d'ús: 1w (1 setmana), 10M (10 mesos). Unitats acceptades: h (hores), d (dies), w (setmanes), M (mesos), y (anys). Deixa-ho buit per no destacar els llançaments antics."
         },
         "showOnlyHighlighted": {
-          "label": "",
-          "description": ""
+          "label": "Mostra només els destacats",
+          "description": "Mostra només els llançaments nous o antics, segons el que s'ha indicat anteriorment."
         },
         "showDetails": {
-          "label": ""
+          "label": "Mostra els detalls"
         },
         "showOnlyIcon": {
-          "label": ""
+          "label": "Mostra només la icona"
         },
         "topReleases": {
-          "label": "",
-          "description": ""
+          "label": "Millors llançaments",
+          "description": "Nombre màxim dels últims llançaments que es mostraran. Zero significa que no hi ha límit."
         },
         "repositories": {
-          "label": "",
+          "label": "Repositoris",
           "addRepository": {
-            "label": ""
+            "label": "Afegeix un repositori"
           },
           "importRepositories": {
-            "label": "",
-            "loading": "",
-            "noImagesFound": "",
-            "listFoundImages": "",
-            "listAlreadyImportedImages": "",
-            "allImagesAlreadyImported": "",
-            "onlyAdminCanImport": "",
-            "selectAll": "",
-            "deselectAll": ""
+            "label": "Importa des de Docker",
+            "loading": "Carregant imatges Docker",
+            "noImagesFound": "No s'han trobat imatges de Docker",
+            "listFoundImages": "Llista d'imatges trobades",
+            "listAlreadyImportedImages": "Llista d'imatges ja importades",
+            "allImagesAlreadyImported": "Totes les imatges ja s'han importat",
+            "onlyAdminCanImport": "Només els administradors poden importar des de Docker",
+            "selectAll": "Selecciona-ho tot",
+            "deselectAll": "Desselecciona-ho tot"
           },
           "provider": {
-            "label": ""
+            "label": "Proveïdor"
           },
           "providerUrl": {
-            "label": ""
+            "label": "URL del proveïdor"
           },
           "identifier": {
-            "label": "",
-            "placeholder": ""
+            "label": "Identificador",
+            "placeholder": "Nom o propietari/nom"
           },
           "name": {
-            "label": ""
+            "label": "Nom"
           },
           "versionFilter": {
-            "label": "",
+            "label": "Filtre de versions",
             "prefix": {
-              "label": ""
+              "label": "Prefix"
             },
             "precision": {
-              "label": "",
+              "label": "Precisió",
               "options": {
-                "none": ""
+                "none": "Cap"
               }
             },
             "suffix": {
-              "label": ""
+              "label": "Sufix"
             },
             "regex": {
-              "label": ""
+              "label": "Expressió regular"
             }
           },
           "edit": {
-            "label": ""
+            "label": "Edita"
           },
           "editForm": {
-            "title": "",
+            "title": "Edita el repositori",
             "cancel": {
-              "label": ""
+              "label": "Cancel·la"
             },
             "confirm": {
-              "label": ""
+              "label": "Confirma"
             }
           },
           "importForm": {
-            "title": ""
+            "title": "Importa des de Docker"
           },
           "example": {
-            "label": ""
+            "label": "Exemple"
           },
-          "invalid": "",
+          "invalid": "Definició del repositori no vàlida; comprova els valors",
           "noProvider": {
-            "label": "",
-            "tooltip": ""
+            "label": "Sense proveïdor",
+            "tooltip": "No s'ha pogut analitzar el proveïdor; configura'l manualment després d'importar les imatges"
           },
           "tokens": {
-            "label": "",
-            "token": "",
-            "configured": "",
-            "notConfigured": "",
-            "save": ""
+            "label": "Tokens del proveïdor",
+            "token": "Testimoni",
+            "configured": "Token configurat",
+            "notConfigured": "No s'ha definit cap token",
+            "save": "Desa"
           }
         }
       },
-      "not-found": "",
-      "pre-release": "",
-      "archived": "",
-      "forked": "",
-      "starsCount": "",
-      "forksCount": "",
-      "issuesCount": "",
-      "markViewed": "",
-      "openProjectPage": "",
-      "openReleasePage": "",
-      "releaseDescription": "",
-      "projectDescription": "",
-      "created": "",
+      "not-found": "No s'ha trobat",
+      "pre-release": "Prellançament",
+      "archived": "Arxivat",
+      "forked": "Bifurcat",
+      "starsCount": "Estrelles",
+      "forksCount": "Forks",
+      "issuesCount": "Problemes oberts",
+      "markViewed": "Marca com a vist",
+      "openProjectPage": "Obre la pàgina del projecte",
+      "openReleasePage": "Obre la pàgina del llançament",
+      "releaseDescription": "Descripció del llançament",
+      "projectDescription": "Descripció del projecte",
+      "created": "Creat",
       "error": {
-        "label": "",
+        "label": "Error",
         "messages": {
-          "invalidIdentifier": "",
-          "noMatchingVersion": "",
-          "noReleasesFound": "",
-          "noProviderSelected": "",
-          "noProviderResponse": "",
-          "unexpected": ""
+          "invalidIdentifier": "Identificador no vàlid",
+          "noMatchingVersion": "No s'ha trobat cap versió coincident",
+          "noReleasesFound": "No s'han trobat llançaments",
+          "noProviderSelected": "No s'ha seleccionat cap proveïdor",
+          "noProviderResponse": "El proveïdor no ha respost",
+          "unexpected": "Error inesperat del proveïdor"
         }
       }
     },
@@ -3620,601 +3620,601 @@
       "option": {},
       "card": {
         "vpn": {
-          "countConnected": ""
+          "countConnected": "{count} connectats"
         }
       },
       "error": {
-        "integrationsDisconnected": "",
-        "unknownContentOption": ""
+        "integrationsDisconnected": "No hi ha dades disponibles; totes les integracions estan desconnectades",
+        "unknownContentOption": "Opció de contingut desconeguda per al giny de resum del controlador de xarxa: "
       },
-      "name": "",
-      "description": ""
+      "name": "Resum del controlador de xarxa",
+      "description": "Mostra el resum d'un controlador de xarxa (com ara UniFi Controller)"
     },
     "networkControllerStatus": {
       "card": {
         "variants": {
           "wired": {
-            "name": ""
+            "name": "Amb cable"
           },
           "wifi": {
-            "name": ""
+            "name": "Wi-Fi"
           }
         },
         "users": {
-          "label": ""
+          "label": "Usuaris"
         },
         "guests": {
-          "label": ""
+          "label": "Convidats"
         }
       },
       "option": {
         "content": {
           "option": {
             "wifi": {
-              "label": ""
+              "label": "Wi-Fi"
             },
             "wired": {
-              "label": ""
+              "label": "Amb cable"
             }
           },
-          "label": ""
+          "label": "Contingut del giny"
         }
       },
       "error": {
-        "integrationsDisconnected": "",
-        "unknownContentOption": ""
+        "integrationsDisconnected": "No hi ha dades disponibles; totes les integracions estan desconnectades",
+        "unknownContentOption": "Opció de contingut desconeguda per al giny d'estat de la xarxa: "
       },
-      "name": "",
-      "description": ""
+      "name": "Estat de la xarxa",
+      "description": "Mostra els dispositius connectats a una xarxa"
     },
     "networkController": {
       "error": {
-        "internalServerError": ""
+        "internalServerError": "No s'ha pogut obtenir el resum del controlador de xarxa"
       }
     },
     "firewall": {
-      "name": "",
-      "description": "",
+      "name": "Supervisió del tallafoc",
+      "description": "Mostra un resum dels tallafocs",
       "tab": {
-        "system": "",
-        "interfaces": ""
+        "system": "Sistema",
+        "interfaces": "Interfícies"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "No s'han pogut obtenir dades del tallafoc"
       },
       "option": {
-        "interfaces": ""
+        "interfaces": "Interfícies de xarxa que es mostraran"
       },
       "widget": {
-        "fwname": "",
-        "version": "",
-        "versiontitle": "",
-        "cputitle": "",
-        "memorytitle": "",
-        "cpu": "",
-        "memory": "",
+        "fwname": "Nom",
+        "version": "Versió",
+        "versiontitle": "Versions",
+        "cputitle": "Ús de la CPU",
+        "memorytitle": "Ús de la memòria",
+        "cpu": "CPU",
+        "memory": "Memòria",
         "interfaces": {
-          "name": "",
-          "trans": "",
-          "recv": "",
-          "title": ""
+          "name": "nom",
+          "trans": "Transmès",
+          "recv": "Rebut",
+          "title": "Interfícies de xarxa"
         }
       }
     },
     "notifications": {
-      "name": "",
-      "description": "",
-      "noItems": "",
+      "name": "Notificacions",
+      "description": "Mostra l'historial de notificacions d'una integració",
+      "noItems": "No hi ha notificacions per mostrar.",
       "option": {
         "hideLogos": {
-          "label": ""
+          "label": "Amaga els logotips"
         }
       }
     },
     "speedtestTracker": {
-      "name": "",
-      "description": "",
+      "name": "Speedtest Tracker",
+      "description": "Mostra els resultats de les proves de velocitat de la teva instància de Speedtest Tracker.",
       "option": {
         "showLatestResult": {
-          "label": ""
+          "label": "Mostra l'últim resultat"
         },
         "showStats": {
-          "label": ""
+          "label": "Mostra les mitjanes"
         },
         "showRecentResults": {
-          "label": ""
+          "label": "Mostra els resultats recents"
         },
         "showPingGraph": {
-          "label": ""
+          "label": "Mostra el gràfic del ping"
         }
       },
-      "latestResult": "",
-      "averages": "",
-      "tests": "",
-      "recentResults": "",
-      "recentResultsSpeed": "",
-      "recentResultsPing": "",
-      "download": "",
-      "upload": "",
-      "ping": "",
-      "status": "",
-      "avgDownload": "",
-      "avgUpload": "",
-      "avgPing": "",
-      "healthy": "",
-      "unhealthy": "",
-      "ok": "",
-      "fail": "",
-      "noSectionsEnabled": "",
+      "latestResult": "Últim resultat",
+      "averages": "Mitjanes",
+      "tests": "{count} proves",
+      "recentResults": "Resultats recents",
+      "recentResultsSpeed": "Velocitat",
+      "recentResultsPing": "Ping",
+      "download": "Baixada",
+      "upload": "Pujada",
+      "ping": "Ping",
+      "status": "Estat",
+      "avgDownload": "Mitjana de baixada",
+      "avgUpload": "Mitjana de pujada",
+      "avgPing": "Ping mitjà",
+      "healthy": "En bon estat",
+      "unhealthy": "En mal estat",
+      "ok": "Correcte",
+      "fail": "Error",
+      "noSectionsEnabled": "Activa com a mínim una secció a les opcions del giny.",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "No s'han pogut obtenir les dades de Speedtest"
       }
     },
     "uptimeKuma": {
-      "name": "",
-      "description": "",
+      "name": "Uptime Kuma",
+      "description": "Supervisa les estadístiques de temps d'activitat de la teva pàgina d'estat d'Uptime Kuma",
       "option": {
         "showAverageUptime": {
-          "label": "",
-          "description": ""
+          "label": "Mostra el temps d'activitat mitjà",
+          "description": "Mostra el percentatge mitjà combinat de temps d'activitat de les darreres 24 hores"
         },
         "showUptimeRing": {
-          "label": "",
-          "description": ""
+          "label": "Mostra l'anell de temps d'activitat",
+          "description": "Mostra un anell de progrés al costat del valor mitjà de temps d'activitat"
         },
         "showTotalMonitors": {
-          "label": "",
-          "description": ""
+          "label": "Mostra el total de monitors",
+          "description": "Mostra el nombre total de monitors configurats"
         },
         "showUpCount": {
-          "label": "",
-          "description": ""
+          "label": "Mostra el recompte d'actius",
+          "description": "Mostra quants monitors estan actius actualment"
         },
         "showDownCount": {
-          "label": "",
-          "description": ""
+          "label": "Mostra el recompte d'inactius",
+          "description": "Mostra quants monitors estan inactius actualment"
         },
         "showPausedCount": {
-          "label": "",
-          "description": ""
+          "label": "Mostra el recompte de pausats",
+          "description": "Mostra quants monitors estan pausats actualment"
         }
       },
-      "averageUptime": "",
+      "averageUptime": "Temps d'activitat mitjà (24 h)",
       "stats": {
-        "totalMonitors": "",
-        "upCount": "",
-        "downCount": "",
-        "pausedCount": ""
+        "totalMonitors": "Total de monitors",
+        "upCount": "Actius",
+        "downCount": "Inactius",
+        "pausedCount": "Pausats"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "No s'han pogut obtenir les dades de temps d'activitat"
       }
     },
     "traefik": {
-      "name": "",
-      "description": "",
+      "name": "Traefik",
+      "description": "Resum dels encaminadors, serveis, intermediaris i punts d'entrada de Traefik",
       "option": {
         "showTcp": {
-          "label": ""
+          "label": "Mostra TCP"
         },
         "showUdp": {
-          "label": ""
+          "label": "Mostra UDP"
         },
         "showEntryPoints": {
-          "label": ""
+          "label": "Mostra els punts d'entrada"
         }
       },
-      "instances": "",
-      "versionUnknown": "",
+      "instances": "Instàncies de Traefik",
+      "versionUnknown": "Versió desconeguda",
       "summary": {
-        "routers": "",
-        "entryPoints": ""
+        "routers": "Encaminadors",
+        "entryPoints": "Punts d'entrada"
       },
       "resource": {
-        "routers": "",
-        "services": "",
-        "middlewares": ""
+        "routers": "Encaminadors",
+        "services": "Serveis",
+        "middlewares": "Intermediaris"
       },
       "status": {
-        "healthy": "",
-        "errors": "",
-        "warnings": ""
+        "healthy": "En bon estat",
+        "errors": "{count} errors",
+        "warnings": "{count} avisos"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "No s'han pogut obtenir les dades de Traefik"
       }
     },
     "audioStats": {
-      "name": "",
-      "description": "",
+      "name": "Estadístiques d'àudio",
+      "description": "Estadístiques de la biblioteca i la reproducció de Navidrome o Audiobookshelf",
       "option": {
         "showArtists": {
-          "label": "",
-          "description": ""
+          "label": "Mostra els artistes",
+          "description": "Mostra el nombre total d'artistes de la teva biblioteca musical (Navidrome)"
         },
         "showAlbums": {
-          "label": "",
-          "description": ""
+          "label": "Mostra els àlbums",
+          "description": "Mostra el nombre total d'àlbums de la teva biblioteca musical (Navidrome)"
         },
         "showSongs": {
-          "label": "",
-          "description": ""
+          "label": "Mostra les cançons",
+          "description": "Mostra el nombre total de cançons de la teva biblioteca musical (Navidrome)"
         },
         "showLibraryCount": {
-          "label": "",
-          "description": ""
+          "label": "Mostra el recompte de biblioteques",
+          "description": "Mostra el nombre de biblioteques de la teva instància (Audiobookshelf)"
         },
         "showAudiobooks": {
-          "label": "",
-          "description": ""
+          "label": "Mostra els llibres d'àudio",
+          "description": "Mostra el nombre total de llibres d'àudio de totes les biblioteques (Audiobookshelf)"
         },
         "showPodcasts": {
-          "label": "",
-          "description": ""
+          "label": "Mostra els podcasts",
+          "description": "Mostra el nombre total de podcasts de totes les biblioteques (Audiobookshelf)"
         },
         "showListeningTime": {
-          "label": "",
-          "description": ""
+          "label": "Mostra el temps d'escolta",
+          "description": "Mostra el teu temps total d'escolta (Audiobookshelf)"
         },
         "showActiveSessions": {
-          "label": "",
-          "description": ""
+          "label": "Mostra les sessions actives",
+          "description": "Mostra el nombre de sessions de reproducció actives actualment (Audiobookshelf)"
         },
         "compactMode": {
-          "label": "",
-          "description": ""
+          "label": "Mode compacte",
+          "description": "Utilitza un disseny més dens amb fitxes més petites, ideal per a widgets petits"
         }
       },
-      "artists": "",
-      "albums": "",
-      "songs": "",
-      "libraryCount": "",
-      "audiobooks": "",
-      "podcasts": "",
-      "listeningTime": "",
-      "activeSessions": "",
+      "artists": "Artistes",
+      "albums": "Àlbums",
+      "songs": "Cançons",
+      "libraryCount": "Biblioteques",
+      "audiobooks": "Llibres d'àudio",
+      "podcasts": "Podcasts",
+      "listeningTime": "Temps d'escolta",
+      "activeSessions": "Sessions actives",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "No s'han pogut obtenir les dades d'estadístiques d'àudio"
       }
     },
     "systemResources": {
-      "name": "",
-      "description": "",
+      "name": "Recursos del sistema",
+      "description": "Ús de la CPU, la memòria, el disc i altre maquinari del sistema",
       "option": {
         "hasShadow": {
-          "label": ""
+          "label": "Activa l'ombrejat dels gràfics"
         },
         "visibleCharts": {
-          "label": "",
-          "description": "",
+          "label": "Gràfics visibles",
+          "description": "Selecciona els gràfics que vols que siguin visibles.",
           "option": {
-            "cpu": "",
-            "memory": "",
-            "gpu": "",
-            "network": ""
+            "cpu": "CPU",
+            "memory": "Memòria",
+            "gpu": "GPU",
+            "network": "Xarxa"
           }
         },
         "labelDisplayMode": {
-          "label": "",
+          "label": "Mode d'etiqueta",
           "option": {
-            "textWithIcon": "",
-            "text": "",
-            "icon": "",
-            "hidden": ""
+            "textWithIcon": "Mostra el text amb la icona",
+            "text": "Mostra només el text",
+            "icon": "Mostra només la icona",
+            "hidden": "Amaga l'etiqueta"
           }
         }
       },
       "card": {
-        "cpu": "",
-        "memory": "",
-        "gpu": "",
-        "network": "",
-        "up": "",
-        "down": ""
+        "cpu": "CPU",
+        "memory": "MEM",
+        "gpu": "GPU",
+        "network": "XARXA",
+        "up": "PUJ",
+        "down": "BAIXADA"
       }
     },
     "systemDisks": {
-      "name": "",
-      "description": "",
+      "name": "Discs del sistema",
+      "description": "Ús del disc del sistema",
       "option": {
         "showTemperatureIfAvailable": {
-          "label": ""
+          "label": "Mostra la temperatura si està disponible"
         },
         "displayMode": {
-          "label": "",
+          "label": "Mode de visualització",
           "option": {
             "percentage": {
-              "label": ""
+              "label": "Percentatge (p. ex., 76%)"
             },
             "absolute": {
-              "label": ""
+              "label": "Valors absoluts (p. ex., 800 GB / 1 TB)"
             },
             "free": {
-              "label": ""
+              "label": "Percentatge d'espai lliure (p. ex., 24% lliure)"
             }
           }
         },
         "showBackgroundBar": {
-          "label": ""
+          "label": "Mostra la barra d'ús de fons"
         },
         "visibleStorageVolumes": {
-          "label": "",
-          "description": "",
-          "placeholder": ""
+          "label": "Volums d'emmagatzematge visibles",
+          "description": "Només està disponible quan totes les integracions seleccionades són de Synology. Deixeu-ho buit per mostrar tots els volums d'emmagatzematge detectats.",
+          "placeholder": "Seleccioneu volums d'emmagatzematge"
         }
       },
       "status": {
-        "unhealthy": ""
+        "unhealthy": "En mal estat"
       }
     },
     "customApi": {
-      "name": "",
-      "description": "",
+      "name": "API personalitzada",
+      "description": "Mostra dades de qualsevol API externa amb una configuració personalitzada.",
       "option": {
         "definitionId": {
-          "label": ""
+          "label": "ID de definició"
         },
         "refreshInterval": {
-          "label": "",
-          "description": ""
+          "label": "Interval d'actualització",
+          "description": "Amb quina freqüència es tornen a obtenir dades de l'API (en segons)"
         }
       },
-      "noDefinition": "",
-      "definitionNotFound": "",
-      "noDisplayOutput": "",
-      "executeConfirm": "",
-      "executing": "",
-      "executeSuccess": "",
-      "executeFailed": ""
+      "noDefinition": "No s'ha seleccionat cap definició",
+      "definitionNotFound": "No s'ha trobat la definició del giny. És possible que s'hagi eliminat.",
+      "noDisplayOutput": "Sense sortida per mostrar",
+      "executeConfirm": "Esteu segur que voleu executar aquesta acció?",
+      "executing": "S'està executant...",
+      "executeSuccess": "L'acció s'ha executat correctament",
+      "executeFailed": "L'acció ha fallat. Comproveu la configuració del giny."
     },
     "beszelSystemTable": {
-      "name": "",
-      "description": "",
+      "name": "Sistemes Beszel (taula)",
+      "description": "Vista en taula de tots els sistemes monitorats per Beszel, amb columnes ordenables i indicadors d'estat",
       "option": {
         "statusFilter": {
-          "label": ""
+          "label": "Filtre d'estat"
         },
         "sortBy": {
-          "label": ""
+          "label": "Ordena per"
         },
         "sortDirection": {
-          "label": ""
+          "label": "Direcció de l'ordenació"
         },
         "showCpu": {
-          "label": ""
+          "label": "Mostra la CPU"
         },
         "showMemory": {
-          "label": ""
+          "label": "Mostra la memòria"
         },
         "showDisk": {
-          "label": ""
+          "label": "Mostra el disc"
         },
         "showGpu": {
-          "label": ""
+          "label": "Mostra la GPU"
         },
         "showLoadAvg": {
-          "label": ""
+          "label": "Mostra la càrrega mitjana"
         },
         "showNet": {
-          "label": ""
+          "label": "Mostra la xarxa"
         },
         "showTemp": {
-          "label": ""
+          "label": "Mostra la temperatura"
         },
         "showBattery": {
-          "label": ""
+          "label": "Mostra la bateria"
         },
         "showServices": {
-          "label": ""
+          "label": "Mostra els serveis"
         },
         "showUptime": {
-          "label": ""
+          "label": "Mostra el temps d'activitat"
         },
         "showAgent": {
-          "label": ""
+          "label": "Mostra la versió de l'agent"
         },
         "columnOrder": {
-          "label": ""
+          "label": "Ordre de les columnes"
         },
         "columnWidths": {
-          "label": ""
+          "label": "Amplades de les columnes"
         }
       },
-      "noRecords": "",
+      "noRecords": "No s'han trobat sistemes",
       "error": {
-        "internalServerError": "",
-        "layoutSaveTitle": "",
-        "layoutSaveMessage": ""
+        "internalServerError": "No es pot connectar amb Beszel. Comproveu la configuració de la integració.",
+        "layoutSaveTitle": "No s'ha pogut desar la disposició de la taula",
+        "layoutSaveMessage": "No s'ha pogut desar l'ordre o les amplades de les columnes. Torneu-ho a provar."
       },
       "column": {
-        "system": "",
-        "cpu": "",
-        "memory": "",
-        "disk": "",
-        "gpu": "",
-        "loadAvg": "",
-        "net": "",
-        "temp": "",
-        "battery": "",
-        "services": "",
-        "uptime": "",
-        "agent": ""
+        "system": "Sistema",
+        "cpu": "CPU",
+        "memory": "Memòria",
+        "disk": "Disc",
+        "gpu": "GPU",
+        "loadAvg": "Càrrega mitjana",
+        "net": "Xarxa",
+        "temp": "Temp",
+        "battery": "Bateria",
+        "services": "Serveis",
+        "uptime": "Temps d'activitat",
+        "agent": "Agent"
       }
     },
     "beszelSystemGrid": {
-      "name": "",
-      "description": "",
+      "name": "Sistemes Beszel (graella)",
+      "description": "Vista en graella de targetes de tots els sistemes monitorats per Beszel, amb mètriques en temps real",
       "option": {
         "statusFilter": {
-          "label": ""
+          "label": "Filtre d'estat"
         },
         "showCpu": {
-          "label": ""
+          "label": "Mostra la CPU"
         },
         "showMemory": {
-          "label": ""
+          "label": "Mostra la memòria"
         },
         "showDisk": {
-          "label": ""
+          "label": "Mostra el disc"
         },
         "showGpu": {
-          "label": ""
+          "label": "Mostra la GPU"
         },
         "showLoadAvg": {
-          "label": ""
+          "label": "Mostra la càrrega mitjana"
         },
         "showNet": {
-          "label": ""
+          "label": "Mostra la xarxa"
         },
         "showTemp": {
-          "label": ""
+          "label": "Mostra la temperatura"
         },
         "showBattery": {
-          "label": ""
+          "label": "Mostra la bateria"
         },
         "showServices": {
-          "label": ""
+          "label": "Mostra els serveis"
         },
         "showUptime": {
-          "label": ""
+          "label": "Mostra el temps d'activitat"
         },
         "showAgent": {
-          "label": ""
+          "label": "Mostra la versió de l'agent"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "No es pot connectar amb Beszel. Comproveu la configuració de la integració."
       },
       "empty": {
-        "noSystems": ""
+        "noSystems": "No s'han trobat sistemes"
       },
       "metric": {
-        "cpu": "",
-        "memory": "",
-        "disk": "",
-        "gpu": "",
-        "loadAvg": "",
-        "net": "",
-        "temp": "",
-        "battery": "",
-        "services": "",
-        "uptime": "",
-        "agent": ""
+        "cpu": "CPU",
+        "memory": "Memòria",
+        "disk": "Disc",
+        "gpu": "GPU",
+        "loadAvg": "Càrrega mitjana",
+        "net": "Xarxa",
+        "temp": "Temp",
+        "battery": "Bateria",
+        "services": "Serveis",
+        "uptime": "Temps d'activitat",
+        "agent": "Agent"
       }
     },
     "beszelAlerts": {
-      "name": "",
-      "description": "",
+      "name": "Alertes de Beszel",
+      "description": "Consulta les configuracions i l'historial de les alertes de Beszel",
       "option": {
         "showHistory": {
-          "label": ""
+          "label": "Mostra l'historial d'alertes"
         },
         "maxHistoryItems": {
-          "label": ""
+          "label": "Nombre màxim d'elements de l'historial"
         }
       },
-      "empty": "",
+      "empty": "No hi ha alertes configurades",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "No es pot connectar amb Beszel. Comproveu la configuració de la integració."
       },
-      "history": "",
-      "resolved": "",
+      "history": "Historial",
+      "resolved": "Resoltes",
       "status": {
-        "triggered": "",
-        "ok": ""
+        "triggered": "Activada",
+        "ok": "Correcte"
       }
     },
     "beszelSystemStats": {
-      "name": "",
-      "description": "",
+      "name": "Estadístiques del sistema Beszel",
+      "description": "Gràfics temporals de CPU, memòria, disc, xarxa i mètriques dels contenidors Docker",
       "option": {
         "systemId": {
-          "label": "",
-          "description": ""
+          "label": "Sistema",
+          "description": "Seleccioneu un sistema de Beszel per mostrar-ne les estadístiques"
         },
         "timePeriod": {
-          "label": ""
+          "label": "Període de temps"
         },
         "showCpu": {
-          "label": ""
+          "label": "Mostra el gràfic de la CPU"
         },
         "showMemory": {
-          "label": ""
+          "label": "Mostra el gràfic de la memòria"
         },
         "showDisk": {
-          "label": ""
+          "label": "Mostra el gràfic del disc"
         },
         "showDiskIO": {
-          "label": ""
+          "label": "Mostra el gràfic d'E/S del disc"
         },
         "showNetwork": {
-          "label": ""
+          "label": "Mostra el gràfic de la xarxa"
         },
         "showDockerCpu": {
-          "label": ""
+          "label": "Mostra el gràfic de CPU de Docker"
         },
         "showDockerMemory": {
-          "label": ""
+          "label": "Mostra el gràfic de memòria de Docker"
         },
         "showDockerNetwork": {
-          "label": ""
+          "label": "Mostra el gràfic de xarxa de Docker"
         }
       },
-      "selectSystem": "",
+      "selectSystem": "Selecciona un sistema",
       "empty": {
-        "noSystems": ""
+        "noSystems": "No s'han trobat sistemes"
       },
       "error": {
-        "internalServerError": "",
-        "liveConnectionFailed": "",
-        "switchToHistorical": "",
-        "systemNotFound": ""
+        "internalServerError": "No es pot connectar amb Beszel. Comproveu la configuració de la integració.",
+        "liveConnectionFailed": "La connexió en directe ha fallat. És possible que la vostra instància de Beszel no admeti la transmissió en temps real.",
+        "switchToHistorical": "Canvia a la vista històrica",
+        "systemNotFound": "No s'ha trobat el sistema seleccionat. Trieu-ne un altre."
       },
       "chart": {
         "cpu": {
-          "title": "",
-          "subtitle": "",
-          "series": ""
+          "title": "Ús de la CPU",
+          "subtitle": "Ús mitjà de la CPU de tot el sistema",
+          "series": "CPU"
         },
         "memory": {
-          "title": "",
-          "subtitle": "",
-          "series": "",
-          "cache": ""
+          "title": "Ús de la memòria",
+          "subtitle": "Ús precís en el moment registrat",
+          "series": "Utilitzada",
+          "cache": "Memòria cau/búfers"
         },
         "disk": {
-          "title": "",
-          "subtitle": "",
-          "series": ""
+          "title": "Ús del disc",
+          "subtitle": "Ús per sistema de fitxers",
+          "series": "Arrel"
         },
         "diskIO": {
-          "title": "",
-          "subtitle": "",
-          "read": "",
-          "write": ""
+          "title": "E/S del disc",
+          "subtitle": "Rendiment del sistema de fitxers arrel",
+          "read": "Lectura",
+          "write": "Escriptura"
         },
         "storage": {
-          "title": "",
-          "subtitle": "",
-          "series": ""
+          "title": "Emmagatzematge",
+          "subtitle": "Ús del disc per sistema de fitxers",
+          "series": "Utilitzat"
         },
         "network": {
-          "title": "",
-          "subtitle": "",
-          "sent": "",
-          "recv": ""
+          "title": "Amplada de banda",
+          "subtitle": "Trànsit de xarxa de les interfícies públiques",
+          "sent": "Enviat",
+          "recv": "Rebut"
         },
         "dockerCpu": {
-          "title": "",
-          "subtitle": ""
+          "title": "Ús de CPU de Docker",
+          "subtitle": "Ús mitjà de CPU dels contenidors"
         },
         "dockerMemory": {
-          "title": "",
-          "subtitle": ""
+          "title": "Ús de memòria de Docker",
+          "subtitle": "Ús de memòria dels contenidors Docker"
         },
         "dockerNetwork": {
-          "title": "",
-          "subtitle": ""
+          "title": "E/S de xarxa de Docker",
+          "subtitle": "Trànsit de xarxa dels contenidors Docker"
         }
       }
     }
@@ -4338,10 +4338,10 @@
       },
       "backgroundImageUrl": {
         "label": "URL de la imatge de fons",
-        "placeholder": "",
+        "placeholder": "Comença a escriure per cercar imatges locals",
         "group": {
-          "your": "",
-          "other": ""
+          "your": "Les teves imatges",
+          "other": "Altres imatges"
         }
       },
       "backgroundImageAttachment": {
@@ -4404,7 +4404,7 @@
         "label": "Color de la icona"
       },
       "clearColor": {
-        "label": ""
+        "label": "Neteja el color"
       },
       "customCss": {
         "label": "css personalitzat per a aquest tauler",
@@ -4591,9 +4591,9 @@
       "text": "No s'ha pogut trobar el recurs sol·licitat"
     },
     "error": {
-      "title": "",
-      "text": "",
-      "digest": ""
+      "title": "No s'ha pogut carregar aquesta pàgina",
+      "text": "S'ha produït un error inesperat en carregar aquesta pàgina. La navegació continua disponible: proveu de tornar a carregar-la o utilitzeu una altra secció de la barra lateral.",
+      "digest": "Referència de l'error: {digest}"
     },
     "navbar": {
       "items": {
@@ -4601,7 +4601,7 @@
         "boards": "Taulers",
         "apps": "Aplicacions",
         "integrations": "Integracions",
-        "customWidgets": "",
+        "customWidgets": "Ginys personalitzats",
         "searchEngies": "Motors de cerca",
         "medias": "Multimèdia",
         "users": {
@@ -4618,10 +4618,10 @@
             "docker": "Docker",
             "kubernetes": "Kubernetes",
             "logs": "Registres",
-            "api": "",
+            "api": "API i MCP",
             "certificates": "Certificats",
             "tasks": "Tasques",
-            "backup": ""
+            "backup": "Còpia de seguretat"
           }
         },
         "settings": "Configuració",
@@ -4646,8 +4646,8 @@
           "integration": "Integracions",
           "app": "Aplicacions",
           "group": "Grups",
-          "searchEngine": "",
-          "media": ""
+          "searchEngine": "Motors de cerca",
+          "media": "Medis"
         },
         "statisticLabel": {
           "boards": "Taulers",
@@ -4656,8 +4656,8 @@
           "authorization": "Autorització"
         },
         "heroBanner": {
-          "title": "",
-          "subtitle": ""
+          "title": "Ben tornat al teu",
+          "subtitle": "Tauler de {app}"
         }
       },
       "board": {
@@ -4702,7 +4702,7 @@
           "private": "Aquest tauler és privat"
         },
         "noResults": {
-          "title": ""
+          "title": "Encara no hi ha taulers"
         },
         "modal": {
           "createBoard": {
@@ -4736,20 +4736,20 @@
               "firstDayOfWeek": "Primer dia de la setmana",
               "accessibility": "Accessibilitat",
               "onboardingTours": {
-                "title": "",
-                "description": "",
-                "reset": "",
+                "title": "Visites guiades d'introducció",
+                "description": "Restableix les visites guiades d'introducció per tornar-les a veure la pròxima vegada que visitis l'àrea de gestió o el tauler.",
+                "reset": "Restableix les visites guiades d'introducció",
                 "resetSuccess": {
-                  "title": "",
-                  "message": ""
+                  "title": "Visites restablertes",
+                  "message": "Les visites guiades d'introducció es tornaran a mostrar en la pròxima visita"
                 },
                 "status": {
-                  "completed": "",
-                  "notStarted": ""
+                  "completed": "Completat",
+                  "notStarted": "No iniciat"
                 },
                 "name": {
-                  "management": "",
-                  "dashboard": ""
+                  "management": "Gestió",
+                  "dashboard": "Tauler"
                 }
               }
             }
@@ -4875,8 +4875,8 @@
           "analytics": {
             "title": "Analítica",
             "general": {
-              "title": "",
-              "text": ""
+              "title": "Ajudeu-nos a millorar Homarr",
+              "text": "Això ens ajuda a saber què utilitza realment la gent i on hem de dedicar el nostre temps. Veiem dades com ara quants ginys o integracions teniu, la vostra versió d'Homarr i quina base de dades feu servir. Això és tot: cap informació personal, cap URL, cap nom ni res que pugui identificar-vos a vosaltres o la vostra configuració."
             }
           },
           "crawlingAndIndexing": {
@@ -4919,10 +4919,10 @@
             }
           },
           "user": {
-            "title": "",
+            "title": "Usuaris",
             "enableGravatar": {
-              "label": "",
-              "description": ""
+              "label": "Activa Gravatar",
+              "description": "Utilitza els avatars d'usuari de Libravatar/Gravatar quan no hi ha cap avatar personalitzat i hi ha un correu electrònic configurat"
             }
           },
           "search": {
@@ -4937,7 +4937,7 @@
             "defaultColorScheme": {
               "label": "Esquema de color per defecte",
               "options": {
-                "auto": "",
+                "auto": "Automàtic",
                 "light": "Clar",
                 "dark": "Fosc"
               }
@@ -4958,7 +4958,7 @@
             "idle": "Inactiu",
             "running": "En execució",
             "error": "Error",
-            "disabled": ""
+            "disabled": "Desactivat"
           },
           "job": {
             "iconsUpdater": {
@@ -4975,71 +4975,71 @@
             "seconds": "",
             "minutes": "",
             "hours": "",
-            "midnight": "",
-            "weeklyMonday": "",
+            "midnight": "Cada dia a mitjanit",
+            "weeklyMonday": "Cada setmana dilluns",
             "update": {
               "success": {
-                "message": ""
+                "message": "L'interval s'ha actualitzat correctament"
               },
               "error": {
-                "message": ""
+                "message": "No s'ha pogut actualitzar l'interval"
               }
             }
           },
           "settings": {
-            "title": ""
+            "title": "Configuració de la tasca per a {jobName}"
           },
           "field": {
             "name": {
-              "label": ""
+              "label": "Nom"
             },
             "interval": {
-              "label": ""
+              "label": "Interval de programació"
             },
             "lastExecution": {
-              "label": ""
+              "label": "Última execució"
             },
             "actions": {
-              "label": ""
+              "label": "Accions"
             }
           },
           "table": {
-            "search": ""
+            "search": "Cerca {count} tasques..."
           },
           "action": {
             "refresh": {
-              "label": ""
+              "label": "Actualitza"
             }
           },
           "refresh": {
             "success": {
-              "message": ""
+              "message": "Les tasques s'han actualitzat correctament"
             },
             "error": {
-              "message": ""
+              "message": "No s'han pogut actualitzar les tasques"
             }
           },
           "trigger": {
             "success": {
-              "message": ""
+              "message": "La tasca s'ha activat correctament"
             },
             "error": {
-              "message": ""
+              "message": "No s'ha pogut activar la tasca"
             }
           },
           "enable": {
             "success": {
-              "message": ""
+              "message": "La tasca s'ha habilitat correctament"
             }
           },
           "disable": {
             "success": {
-              "message": ""
+              "message": "La tasca s'ha desactivat correctament"
             }
           },
           "toggle": {
             "error": {
-              "message": ""
+              "message": "No s'ha pogut canviar l'estat de la tasca"
             }
           }
         },
@@ -5077,213 +5077,213 @@
               }
             },
             "mcp": {
-              "label": "",
-              "title": "",
-              "subtitle": "",
-              "description": "",
-              "noApiKey": "",
-              "createApiKeyButton": "",
+              "label": "IA / MCP",
+              "title": "Integració d'IA",
+              "subtitle": "Servidor del Model Context Protocol (MCP)",
+              "description": "Connecta els assistents d'IA a la teva instància d'Homarr i controla tot el teu homelab mitjançant llenguatge natural. Cerca i sol·licita contingut multimèdia a Overseerr, gestiona contenidors Docker, activa o desactiva Pi-hole, comprova l'estat del servidor, controla els dispositius d'Home Assistant i molt més, tot des del teu assistent d'IA.",
+              "noApiKey": "Necessites una clau d'API per autenticar-te amb el servidor MCP.",
+              "createApiKeyButton": "Crea una clau d'API",
               "endpoint": {
-                "title": ""
+                "title": "Punt final MCP"
               },
               "authentication": {
-                "title": "",
-                "intro": "",
+                "title": "Autenticació",
+                "intro": "Pots autenticar-te amb el servidor MCP mitjançant una clau d'API o OAuth. Tots dos mètodes proporcionen el mateix nivell d'accés.",
                 "apiKey": {
-                  "title": "",
-                  "description": ""
+                  "title": "Clau d'API (manual)",
+                  "description": "Passa la capçalera ApiKey amb la teva clau d'API completa a la configuració del client MCP."
                 },
                 "oauth": {
-                  "title": "",
-                  "description": "",
-                  "hint": ""
+                  "title": "OAuth (inici de sessió al navegador)",
+                  "description": "Els clients compatibles amb OAuth (com Claude Code, opencode o Cursor) poden autenticar-se obrint una finestra del navegador. Executa l'ordre d'autenticació al client, inicia sessió a Homarr al navegador i ja estaràs connectat; es crearà una clau d'API automàticament.",
+                  "hint": "Els testimonis OAuth apareixen com a claus d'API normals a la pestanya Autenticació. Pots revocar-los en qualsevol moment."
                 },
-                "permissions": ""
+                "permissions": "La clau d'API determina els permisos disponibles per a la IA; funciona amb el mateix nivell d'accés que el propietari de la clau."
               },
               "clientConfig": {
-                "title": "",
+                "title": "Configuració del client",
                 "streamableHttp": {
-                  "recommended": "",
-                  "title": "",
-                  "worksWith": "",
-                  "addToConfig": "",
-                  "cursor": "",
-                  "claudeDesktop": "",
-                  "claudeCode": "",
-                  "vsCodeCopilot": "",
-                  "replaceHint": ""
+                  "recommended": "Recomanat",
+                  "title": "HTTP transmissible",
+                  "worksWith": "Funciona amb: Cursor, Claude Desktop, VS Code Copilot, Windsurf, Claude Code",
+                  "addToConfig": "Afegeix-ho al fitxer de configuració del client MCP:",
+                  "cursor": "{name}: {file} a la configuració del projecte o global",
+                  "claudeDesktop": "{name}: {file}",
+                  "claudeCode": "{name}: {file} o utilitza {command}",
+                  "vsCodeCopilot": "{name}: {file} a la configuració de l'espai de treball",
+                  "replaceHint": "Substitueix el marcador de posició per la clau d'API que has rebut en crear-la."
                 },
                 "stdio": {
-                  "title": "",
-                  "description": ""
+                  "title": "stdio (clients antics mitjançant el pont mcp-remote)",
+                  "description": "Per als clients que només admeten el transport stdio. Requereix tenir {dependency} (Node.js) instal·lat localment:"
                 }
               },
               "testConnection": {
-                "title": "",
-                "description": "",
-                "hint": ""
+                "title": "Prova la teva connexió",
+                "description": "Executa això al terminal per verificar que el punt final és accessible i que la clau d'API funciona:",
+                "hint": "Una resposta correcta retorna les capacitats del servidor MCP. Si veus un error, consulta la resposta JSON per obtenir pistes."
               },
               "availableTools": {
-                "title": "",
-                "description": "",
-                "columnType": "",
-                "columnName": "",
-                "columnDescription": ""
+                "title": "Eines disponibles",
+                "description": "Hi ha {count} eines disponibles. Amplia una categoria per veure les eines individuals i les seves descripcions.",
+                "columnType": "Tipus",
+                "columnName": "Eina",
+                "columnDescription": "Descripció"
               },
               "troubleshooting": {
-                "title": "",
+                "title": "Resolució de problemes",
                 "missingHeader": {
-                  "title": "",
-                  "description": ""
+                  "title": "«Falta la capçalera ApiKey»",
+                  "description": "El teu client no envia la capçalera {header}. Verifica que la secció {section} de la configuració MCP sigui correcta. Alguns clients requereixen reiniciar-se després de canviar la configuració."
                 },
                 "invalidFormat": {
-                  "title": "",
-                  "description": ""
+                  "title": "«Format d'ApiKey no vàlid»",
+                  "description": "Assegura't d'haver copiat la clau d'API completa, no només una part."
                 },
                 "invalidKey": {
-                  "title": "",
-                  "description": ""
+                  "title": "«Clau d'API no vàlida»",
+                  "description": "No s'ha trobat l'identificador de la clau o el testimoni és incorrecte. Les claus d'API només es poden veure una vegada en crear-les. Si l'has perdut, elimina la clau antiga i crea'n una de nova."
                 },
                 "connectionRefused": {
-                  "title": "",
-                  "description": ""
+                  "title": "Connexió rebutjada / temps d'espera excedit",
+                  "description": "Assegura't que l'URL sigui accessible des del teu client d'IA. Si Homarr s'executa darrere d'un proxy invers o a Docker, utilitza l'URL extern (no {localhost}). Verifica que el port sigui correcte (predeterminat: 7575 per a Docker)."
                 },
                 "toolsNotAppearing": {
-                  "title": "",
-                  "description": ""
+                  "title": "No es mostren les eines",
+                  "description": "Algunes eines requereixen configurar integracions específiques (p. ex., Docker o Overseerr). La llista d'eines depèn del que estigui disponible a la teva instància d'Homarr."
                 }
               },
-              "copy": "",
+              "copy": "Copia",
               "oneClick": {
-                "title": "",
-                "subtitle": "",
-                "vsCode": "",
-                "cursor": "",
-                "copyUrl": "",
-                "copied": "",
-                "copyHint": "",
-                "manualConfig": ""
+                "title": "Instal·la amb un clic",
+                "subtitle": "Utilitza OAuth: autentica't al navegador durant el primer ús",
+                "vsCode": "Instal·la al VS Code",
+                "cursor": "Instal·la al Cursor",
+                "copyUrl": "Copia l'URL MCP",
+                "copied": "Copiat!",
+                "copyHint": "Per a ChatGPT, Claude Code o qualsevol client MCP",
+                "manualConfig": "Configuració manual"
               }
             }
           }
         },
         "backup": {
-          "title": "",
-          "metaTitle": "",
+          "title": "Còpia de seguretat completa de la base de dades",
+          "metaTitle": "Còpia de seguretat i restauració",
           "export": {
-            "title": "",
-            "description": "",
-            "button": "",
-            "error": "",
+            "title": "Exporta la base de dades",
+            "description": "Baixa una còpia completa de la base de dades SQLite, incloses totes les configuracions, usuaris, taulers i secrets d'integració xifrats. La còpia s'empaqueta com a fitxer ZIP amb la clau de xifratge i les metadades.",
+            "button": "Baixa la còpia de seguretat",
+            "error": "L'exportació ha fallat",
             "confirm": {
-              "title": "",
-              "warningTitle": "",
-              "warningBody": "",
-              "typePrompt": "",
-              "submit": "",
-              "cancel": ""
+              "title": "Exportació de dades sensibles",
+              "warningTitle": "Aquesta exportació conté tota la base de dades.",
+              "warningBody": "La còpia de seguretat inclou tots els usuaris, els secrets de les integracions (xifrats), les claus d'API, les configuracions dels taulers i les dades de l'aplicació. Emmagatzema el fitxer exportat de manera segura i no el comparteixis.",
+              "typePrompt": "Escriu «{phrase}» per continuar",
+              "submit": "Exporta la base de dades",
+              "cancel": "Cancel·la"
             }
           },
           "import": {
-            "title": "",
-            "description": "",
-            "warning": "",
+            "title": "Restaura la base de dades",
+            "description": "Puja una còpia ZIP exportada anteriorment per restaurar la base de dades. Això substituirà tota la base de dades. Si la còpia es va crear amb una clau de xifratge diferent, els secrets es tornaran a xifrar automàticament.",
+            "warning": "Restaurar una còpia de seguretat substituirà completament la base de dades actual i reiniciarà l'aplicació. Aquesta acció no es pot desfer.",
             "dropzone": {
-              "title": "",
-              "description": ""
+              "title": "Deixa aquí la còpia ZIP o fes clic per explorar",
+              "description": "Només s'accepten fitxers .zip d'una còpia de seguretat SQLite d'Homarr"
             },
-            "changeFile": "",
-            "button": "",
+            "changeFile": "Canvia el fitxer",
+            "button": "Restaura la base de dades",
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Restauració completada",
+              "message": "La base de dades s'ha restaurat correctament. L'aplicació s'està reiniciant..."
             },
-            "error": ""
+            "error": "La importació ha fallat"
           },
           "preview": {
-            "title": "",
-            "exported": "",
-            "loading": "",
-            "errorTitle": "",
-            "entity": "",
-            "count": "",
-            "boards": "",
+            "title": "Contingut de la còpia de seguretat",
+            "exported": "Exportat el {date}",
+            "loading": "Analitzant el fitxer de còpia de seguretat...",
+            "errorTitle": "Error de previsualització",
+            "entity": "Entitat",
+            "count": "Nombre",
+            "boards": "Taulers",
             "entities": {
-              "board": "",
-              "user": "",
-              "app": "",
-              "integration": "",
-              "item": "",
-              "media": "",
-              "search_engine": ""
+              "board": "Taulers",
+              "user": "Usuaris",
+              "app": "Aplicacions",
+              "integration": "Integracions",
+              "item": "Ginys",
+              "media": "Multimèdia",
+              "search_engine": "Motors de cerca"
             },
-            "analyzeError": "",
-            "invalidMissingMetadata": "",
-            "invalidMissingDb": ""
+            "analyzeError": "No s'ha pogut analitzar el fitxer de còpia de seguretat",
+            "invalidMissingMetadata": "Còpia de seguretat no vàlida: falta metadata.json",
+            "invalidMissingDb": "Còpia de seguretat no vàlida: falta db.sqlite"
           },
           "restore": {
             "dropzone": {
-              "title": "",
-              "description": ""
+              "title": "Deixa aquí la còpia ZIP",
+              "description": "Accepta fitxers .zip d'una còpia de seguretat SQLite d'Homarr (màx. 256 MB)"
             },
-            "analyzing": "",
-            "changeFile": "",
-            "continueToRestore": "",
-            "tryAgain": "",
-            "analysisError": "",
+            "analyzing": "Analitzant la còpia de seguretat...",
+            "changeFile": "Canvia el fitxer",
+            "continueToRestore": "Continua per restaurar",
+            "tryAgain": "Torna-ho a provar",
+            "analysisError": "Error d'anàlisi",
             "preview": {
-              "title": "",
-              "exported": "",
-              "entity": "",
-              "count": "",
-              "boards": "",
+              "title": "Contingut de la còpia de seguretat",
+              "exported": "Exportat el {date}",
+              "entity": "Entitat",
+              "count": "Nombre",
+              "boards": "Taulers",
               "entities": {
-                "board": "",
-                "user": "",
-                "app": "",
-                "integration": "",
-                "item": "",
-                "media": "",
-                "search_engine": ""
+                "board": "Taulers",
+                "user": "Usuaris",
+                "app": "Aplicacions",
+                "integration": "Integracions",
+                "item": "Ginys",
+                "media": "Multimèdia",
+                "search_engine": "Motors de cerca"
               },
-              "migrationsApplied": "",
-              "migrationsAppliedPlural": "",
-              "migrationsOlderVersion": "",
-              "migrationsOlderVersionPlural": "",
-              "migrationsUpToDate": "",
-              "upToDate": "",
-              "migrationsPending": ""
+              "migrationsApplied": "S'ha aplicat {count} migració",
+              "migrationsAppliedPlural": "S'han aplicat {count} migracions",
+              "migrationsOlderVersion": "Aquesta còpia de seguretat prové d'una versió anterior d'Homarr. S'ha aplicat {count} migració de l'esquema per actualitzar-la.",
+              "migrationsOlderVersionPlural": "Aquesta còpia de seguretat prové d'una versió anterior d'Homarr. S'han aplicat {count} migracions de l'esquema per actualitzar-la.",
+              "migrationsUpToDate": "L'esquema de la base de dades està actualitzat ({count} migracions aplicades)",
+              "upToDate": "Actualitzat",
+              "migrationsPending": "{count} pendents"
             },
             "migration": {
-              "title": "",
-              "migrationLabel": ""
+              "title": "Aplicant migracions ({current}/{total})",
+              "migrationLabel": "Migració {index}"
             },
             "confirm": {
-              "title": "",
-              "warningTitle": "",
-              "warningBody": "",
-              "typePrompt": "",
-              "cancel": "",
-              "submit": ""
+              "title": "Acció destructiva",
+              "warningTitle": "Això substituirà permanentment tota la base de dades.",
+              "warningBody": "Es perdran tots els taulers, usuaris, aplicacions, integracions, configuracions i sessions actuals. Aquesta acció no es pot desfer. L'aplicació es reiniciarà després de la restauració.",
+              "typePrompt": "Escriu «{phrase}» per continuar",
+              "cancel": "Cancel·la",
+              "submit": "Restaura la base de dades"
             },
             "progress": {
-              "title": "",
-              "extracting": "",
-              "migrating": "",
-              "encrypting": "",
-              "swapping": "",
-              "restarting": ""
+              "title": "Restaurant la base de dades...",
+              "extracting": "Extraient l'arxiu de còpia de seguretat",
+              "migrating": "Aplicant les migracions de la base de dades",
+              "encrypting": "Tornant a xifrar els secrets de les integracions",
+              "swapping": "Substituint el fitxer de la base de dades",
+              "restarting": "Reiniciant el servidor"
             },
             "complete": {
-              "title": "",
-              "message": ""
+              "title": "Restauració completada",
+              "message": "La base de dades s'ha restaurat correctament. El servidor s'està reiniciant; actualitza la pàgina d'aquí a uns segons."
             },
             "failed": {
-              "title": ""
+              "title": "La restauració ha fallat"
             },
-            "invalidMissingMetadata": "",
-            "invalidMissingDb": "",
-            "analyzeError": ""
+            "invalidMissingMetadata": "Còpia de seguretat no vàlida: falta metadata.json",
+            "invalidMissingDb": "Còpia de seguretat no vàlida: falta db.sqlite",
+            "analyzeError": "No s'ha pogut analitzar la còpia de seguretat"
           }
         }
       },
@@ -5300,27 +5300,27 @@
             "subtitle": "{count} contribuint amb traduccions en molts idiomes"
           },
           "sponsors": {
-            "title": "",
-            "subtitle": ""
+            "title": "Patrocinadors",
+            "subtitle": "{count} donen suport econòmic al projecte"
           },
           "libraries": {
             "title": "Biblioteques",
             "subtitle": "{count} utilitzades al codi de Homarr"
           },
           "hotkeys": {
-            "title": "",
-            "subtitle": "",
+            "title": "Dreceres",
+            "subtitle": "Dreceres de teclat per millorar el teu flux de treball",
             "field": {
-              "shortcut": "",
-              "action": ""
+              "shortcut": "Drecera",
+              "action": "Acció"
             },
             "action": {
-              "toggleBoardEdit": "",
-              "toggleColorScheme": "",
-              "saveNotebook": "",
-              "openSpotlight": ""
+              "toggleBoardEdit": "Canvia l'edició del tauler",
+              "toggleColorScheme": "Canvia entre el mode clar i el fosc",
+              "saveNotebook": "Desa la llibreta (només dins del giny de llibreta)",
+              "openSpotlight": "Obre la cerca"
             },
-            "note": ""
+            "note": "Consell: Mod fa referència tant a la tecla Ctrl com a la tecla ⌘ de macOS"
           }
         }
       }
@@ -5331,13 +5331,13 @@
     "table": {
       "updated": "Actualitzat {when}",
       "refresh": {
-        "lastUpdated": ""
+        "lastUpdated": "Darrera actualització {when}"
       },
-      "search": "",
+      "search": "Cerca {count} contenidors",
       "selected": "{selectCount} de {totalCount} contenidors seleccionats",
-      "footer": "",
-      "totalCpu": "",
-      "totalMemory": ""
+      "footer": "Total: {count} contenidors",
+      "totalCpu": "CPU total: {cpu}%",
+      "totalMemory": "Memòria total: {memory}"
     },
     "field": {
       "name": {
@@ -5357,10 +5357,10 @@
       },
       "stats": {
         "cpu": {
-          "label": ""
+          "label": "CPU"
         },
         "memory": {
-          "label": ""
+          "label": "Memòria"
         }
       },
       "containerImage": {
@@ -5370,15 +5370,15 @@
         "label": "Ports"
       },
       "host": {
-        "label": ""
+        "label": "Amfitrió"
       }
     },
     "action": {
-      "title": "",
+      "title": "Accions",
       "logs": {
-        "label": "",
+        "label": "Mostra els registres",
         "page": {
-          "title": ""
+          "title": "Registres de {name}"
         }
       },
       "start": {
@@ -5422,7 +5422,7 @@
       },
       "remove": {
         "label": "Elimina",
-        "confirm": "",
+        "confirm": "Feu clic de nou per eliminar permanentment",
         "notification": {
           "success": {
             "title": "Contenidors eliminats",
@@ -5466,7 +5466,7 @@
     },
     "error": {
       "internalServerError": "No s'han pogut obtenir els contenidors Docker",
-      "noColumns": ""
+      "noColumns": "Seleccioneu almenys una columna a la configuració del giny"
     }
   },
   "kubernetes": {
@@ -5775,14 +5775,14 @@
         }
       },
       "custom-widgets": {
-        "label": "",
+        "label": "Ginys personalitzats",
         "new": {
-          "label": ""
+          "label": "Nou"
         },
         "edit": {
-          "label": "",
+          "label": "Edita",
           "flow": {
-            "label": ""
+            "label": "Flux"
           }
         }
       },
@@ -5804,12 +5804,12 @@
       "tools": {
         "label": "Eines",
         "tasks": {
-          "label": ""
+          "label": "Tasques"
         },
         "docker": {
           "label": "Docker",
           "logs": {
-            "label": ""
+            "label": "Registres"
           }
         },
         "kubernetes": {
@@ -5845,7 +5845,7 @@
         "certificates": {
           "label": "Certificats",
           "hostnames": {
-            "label": ""
+            "label": "Noms d'amfitrió"
           }
         }
       },
@@ -5920,7 +5920,7 @@
             "title": "Ordres globals",
             "option": {
               "colorScheme": {
-                "auto": "",
+                "auto": "Canvia el mode d'aparença",
                 "light": "Canvia al mode clar",
                 "dark": "Canvia al mode fosc"
               },
@@ -5961,146 +5961,146 @@
             }
           },
           "preferences": {
-            "title": "",
+            "title": "Preferències",
             "children": {
               "detail": {
-                "title": "",
-                "backHint": "",
-                "backAction": ""
+                "title": "Selecciona una preferència per canviar-la",
+                "backHint": "Prem Retrocés o utilitza el botó enrere per tornar",
+                "backAction": "Torna enrere"
               }
             },
             "notification": {
               "error": {
-                "message": ""
+                "message": "No s'ha pogut actualitzar la preferència"
               }
             },
             "option": {
               "preferences": {
-                "label": ""
+                "label": "Obre les preferències"
               },
               "boolean": {
-                "enabled": "",
-                "disabled": ""
+                "enabled": "Activat",
+                "disabled": "Desactivat"
               },
               "board": {
-                "none": "",
-                "unavailable": ""
+                "none": "Cap",
+                "unavailable": "Seleccionat actualment (no disponible)"
               },
               "searchEngine": {
-                "none": "",
-                "unavailable": ""
+                "none": "Cap",
+                "unavailable": "Seleccionat actualment (no disponible)"
               },
               "colorScheme": {
-                "label": "",
+                "label": "Esquema de colors",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Selecciona el teu esquema de colors"
                   }
                 }
               },
               "locale": {
-                "label": "",
+                "label": "Idioma",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Selecciona el teu idioma preferit"
                   }
                 }
               },
               "defaultSearchEngineId": {
-                "label": "",
+                "label": "Motor de cerca principal",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Selecciona el teu motor de cerca principal"
                   }
                 }
               },
               "openSearchInNewTab": {
-                "label": "",
+                "label": "Obre els resultats de la cerca en una pestanya nova",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Obre els resultats de la cerca en una pestanya nova"
                   }
                 }
               },
               "ddgBangs": {
-                "label": "",
+                "label": "Activa els bangs de DuckDuckGo",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Activa els bangs de DuckDuckGo"
                   }
                 }
               },
               "firstDayOfWeek": {
-                "label": "",
+                "label": "Primer dia de la setmana",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Selecciona el primer dia de la setmana"
                   }
                 }
               },
               "homeBoardId": {
-                "label": "",
+                "label": "Tauler d'inici",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Selecciona el teu tauler d'inici"
                   }
                 }
               },
               "mobileHomeBoardId": {
-                "label": "",
+                "label": "Tauler d'inici mòbil",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Selecciona el teu tauler d'inici mòbil"
                   }
                 }
               },
               "pingIconsEnabled": {
-                "label": "",
+                "label": "Utilitza icones per als pings",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Utilitza icones per als pings"
                   }
                 }
               },
               "enableRightClickOnWidgets": {
-                "label": "",
+                "label": "Activa el clic dret als ginys",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Activa el clic dret als ginys"
                   }
                 }
               },
               "fullPreferencesPage": {
-                "label": ""
+                "label": "Obre la pàgina de preferències completa"
               }
             }
           }
         }
       },
       "media": {
-        "help": "",
+        "help": "Cerca pel·lícules o sèries per sol·licitar-les",
         "requestMovie": "Sol·licitar pel·lícula",
         "requestSeries": "Sol·licitar sèrie",
         "openIn": "Obrir a {kind}",
         "group": {
-          "title": ""
+          "title": "Pel·lícules i sèries"
         },
         "action": {
           "search": {
-            "label": "",
-            "description": "",
+            "label": "Cerca pel·lícules o sèries",
+            "description": "Comença a escriure per cercar a les integracions de sol·licitud multimèdia",
             "disabled": {
-              "noIntegration": "",
-              "scoped": ""
+              "noIntegration": "Afegeix una integració d'Overseerr, Jellyseerr o Seerr per activar la cerca multimèdia.",
+              "scoped": "Aquest widget no té cap integració de sol·licitud multimèdia accessible."
             }
           }
         },
         "availability": {
-          "available": "",
-          "partiallyAvailable": "",
-          "processing": "",
-          "requested": "",
-          "pending": ""
+          "available": "Disponible",
+          "partiallyAvailable": "Parcial",
+          "processing": "En procés",
+          "requested": "Sol·licitat",
+          "pending": "Sol·licitat"
         }
       },
       "external": {
@@ -6108,13 +6108,13 @@
         "group": {
           "searchEngine": {
             "title": "Motors de cerca",
-            "tipDdgBangs": "",
+            "tipDdgBangs": "Consell: aquí també pots utilitzar qualsevol bang de DuckDuckGo, p. ex. !something",
             "bang": {
-              "searchWithQuery": "",
-              "pressEnterToOpen": "",
-              "engineSelected": "",
-              "typeQueryToContinue": "",
-              "emptyBangHint": ""
+              "searchWithQuery": "Cerca «{query}» amb {label}",
+              "pressEnterToOpen": "Prem Retorn per obrir",
+              "engineSelected": "{label} seleccionat (!{bang})",
+              "typeQueryToContinue": "Escriu la consulta de cerca per continuar",
+              "emptyBangHint": "Escriu un bang, p. ex. !yt, i prem Espai per seleccionar-lo"
             },
             "children": {
               "action": {
@@ -6378,10 +6378,10 @@
               "header": {
                 "season": "Temporada",
                 "episodes": "Episodis",
-                "status": ""
+                "status": "Estat"
               },
               "status": {
-                "requested": ""
+                "requested": "Sol·licitat"
               }
             },
             "button": {
@@ -6395,25 +6395,25 @@
   "certificate": {
     "field": {
       "hostname": {
-        "label": ""
+        "label": "Nom d'amfitrió"
       },
       "subject": {
-        "label": ""
+        "label": "Assumpte"
       },
       "issuer": {
-        "label": ""
+        "label": "Emissor"
       },
       "validFrom": {
-        "label": ""
+        "label": "Vàlid des de"
       },
       "validTo": {
-        "label": ""
+        "label": "Vàlid fins a"
       },
       "serialNumber": {
-        "label": ""
+        "label": "Número de sèrie"
       },
       "fingerprint": {
-        "label": ""
+        "label": "Empremta digital"
       }
     },
     "page": {
@@ -6424,19 +6424,19 @@
           "title": "Encara no hi ha certificats"
         },
         "invalid": {
-          "title": "",
-          "description": ""
+          "title": "Certificat no vàlid",
+          "description": "No s'ha pogut analitzar el certificat"
         },
         "expires": "Caduca {when}",
-        "toHostnames": ""
+        "toHostnames": "Noms d'amfitrió de confiança"
       },
       "hostnames": {
-        "title": "",
-        "description": "",
+        "title": "Noms d'amfitrió de certificats de confiança",
+        "description": "Alguns certificats no permeten el domini específic que Homarr utilitza per sol·licitar-los; per això, s’utilitzen tots els noms d’amfitrió de confiança amb les seves empremtes digitals de certificat per evitar aquestes restriccions.",
         "noResults": {
-          "title": ""
+          "title": "Encara no hi ha cap nom d'amfitrió"
         },
-        "toCertificates": ""
+        "toCertificates": "Certificats"
       }
     },
     "action": {
@@ -6468,16 +6468,16 @@
         }
       },
       "removeHostname": {
-        "label": "",
-        "confirm": "",
+        "label": "Elimina el nom d'amfitrió de confiança",
+        "confirm": "Segur que vols eliminar aquest nom d'amfitrió de confiança? Això pot fer que algunes integracions deixin de funcionar.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Nom d'amfitrió eliminat",
+            "message": "El nom d'amfitrió s'ha eliminat correctament"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "No s'ha eliminat el nom d'amfitrió",
+            "message": "No s'ha pogut eliminar el nom d'amfitrió"
           }
         }
       }
@@ -6486,77 +6486,77 @@
   "log": {
     "level": {
       "option": {
-        "debug": "",
-        "info": "",
-        "warn": "",
-        "error": ""
+        "debug": "Depuració",
+        "info": "Info",
+        "warn": "Avís",
+        "error": "Error"
       }
     }
   },
   "onboardingTour": {
-    "learnMore": "",
-    "next": "",
-    "prev": "",
-    "done": "",
-    "skip": "",
+    "learnMore": "Llegeix la documentació",
+    "next": "Següent",
+    "prev": "Enrere",
+    "done": "Fet",
+    "skip": "Omet la visita",
     "manage": {
       "welcome": {
-        "title": "",
-        "description": ""
+        "title": "Us donem la benvinguda a Homarr!",
+        "description": "Aquest és el teu centre de control. Des d'aquí gestiones taulers, aplicacions, integracions, usuaris i la configuració del servidor. Fem una visita per cada secció."
       },
       "boardsList": {
-        "title": "",
-        "description": ""
+        "title": "Els teus taulers",
+        "description": "Aquí hi ha tots els teus taulers. Cada tauler té el seu propi disseny, fons i configuració d'accés. Pots veure qui n'ha creat cadascun i si és públic o privat."
       },
       "boardsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Crea un tauler",
+        "description": "Fes clic aquí per crear un tauler nou o importar-ne un d'una instal·lació anterior d'Homarr. Cada tauler té el seu propi URL que pots compartir."
       },
       "appsList": {
-        "title": "",
-        "description": ""
+        "title": "Les teves aplicacions",
+        "description": "Aquestes són totes les aplicacions que has afegit: enllaços als teus serveis allotjats localment. Cada aplicació té una icona, una comprovació de salut opcional i una insígnia d'estat al tauler."
       },
       "appsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Afegeix una aplicació",
+        "description": "Registra aquí un servei nou. Dona-li un nom, un URL i una icona; apareixerà com una fitxa als teus taulers amb monitoratge de l'estat en temps real."
       },
       "integrationsList": {
-        "title": "",
-        "description": ""
+        "title": "Les teves integracions",
+        "description": "Aquests són els serveis connectats a Homarr: Sonarr, Radarr, Plex, Jellyfin i més de 50. Totes les credencials es xifren quan estan emmagatzemades."
       },
       "integrationsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Afegeix una integració",
+        "description": "Connecta aquí un servei nou. Tria'n el tipus, introdueix l'URL i la clau d'API; Homarr validarà la connexió abans de desar-la."
       },
       "usersList": {
-        "title": "",
-        "description": ""
+        "title": "Els teus usuaris",
+        "description": "Consulta tothom qui hi té accés. Organitza els usuaris en grups i controla qui pot veure o editar cada tauler."
       },
       "usersCreate": {
-        "title": "",
-        "description": ""
+        "title": "Crea un usuari",
+        "description": "Afegeix aquí un compte d'usuari nou. També pots utilitzar enllaços d'invitació per facilitar la incorporació. Això és tot; ja ho tens!"
       }
     },
     "board": {
       "welcome": {
-        "title": "",
-        "description": ""
+        "title": "Aquest és el teu tauler",
+        "description": "Un tauler d'arrossegar i deixar anar on organitzes aplicacions i widgets. Prem Ctrl+K en qualsevol moment per cercar aplicacions, taulers i accions."
       },
       "editMode": {
-        "title": "",
-        "description": ""
+        "title": "Mode d'edició",
+        "description": "Fes clic aquí per entrar en el mode d'edició. A continuació podràs afegir widgets, aplicacions i seccions; arrossega per reposicionar i canvia la mida amb l'ansa de la cantonada. Torna a fer clic per desar els canvis."
       },
       "settings": {
-        "title": "",
-        "description": ""
+        "title": "Configuració del tauler",
+        "description": "Canvia el nom, les columnes, el fons, els colors i qui hi pot accedir. Cada tauler pot ser públic o privat."
       },
       "switcher": {
-        "title": "",
-        "description": ""
+        "title": "Canvia de tauler",
+        "description": "Canvia entre taulers. Crea taulers separats per a diferents finalitats: multimèdia, xarxes, per usuari o qualsevol altra que vulguis."
       },
       "userMenu": {
-        "title": "",
-        "description": ""
+        "title": "El teu perfil",
+        "description": "Canvia l'esquema de colors, l'idioma, el tauler d'inici i les preferències. També pots anar a l'àrea de gestió des d'aquí."
       }
     }
   }

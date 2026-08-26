@@ -1345,8 +1345,8 @@
       "description": "雲原生反向代理和負載平衡器"
     },
     "wud": {
-      "name": "",
-      "description": ""
+      "name": "What's Up Docker",
+      "description": "監控您的 Docker 容器中哪些有可用的映像更新"
     },
     "paperlessNgx": {
       "name": "Paperless-ngx",
@@ -1441,18 +1441,18 @@
     "here": "此處",
     "iconPicker": {
       "label": "Icon 網址",
-      "description": "",
+      "description": "搜尋圖庫、貼上圖片網址或上傳檔案。",
       "header": "輸入名稱或物件來篩選 icons，Homarr 會自動搜尋 {countIcons}",
-      "headerLoading": "輸入以搜尋圖示…",
-      "clear": "",
-      "uploadImage": "",
-      "results": "",
+      "headerLoading": "輸入以搜尋圖示",
+      "clear": "清除圖片",
+      "uploadImage": "上傳圖片",
+      "results": "圖片搜尋結果",
       "localImages": "你的圖像",
-      "svgIcons": "",
+      "svgIcons": "SVG 圖示",
       "otherImages": "其他圖像",
-      "urlLoading": "",
-      "urlReady": "",
-      "urlError": "",
+      "urlLoading": "正在檢查圖片…",
+      "urlReady": "圖片已可使用",
+      "urlError": "無法載入此圖片。請檢查網址後再試一次。",
       "noResults": "沒有符合 \"{search}\" 的圖示。",
       "error": "無法載入圖示。"
     },
@@ -1808,19 +1808,19 @@
       }
     },
     "wud": {
-      "name": "",
-      "description": "",
-      "title": "",
-      "monitored": "",
-      "updatesAvailable": "",
-      "updateAvailable": "",
-      "openReleaseNotes": "",
+      "name": "What's Up Docker",
+      "description": "顯示有多少受監控的容器有可用更新。",
+      "title": "What's Up Docker",
+      "monitored": "已監控",
+      "updatesAvailable": "{count, plural, other {# 個可用更新}}",
+      "updateAvailable": "有可用更新",
+      "openReleaseNotes": "開啟發佈說明",
       "option": {
         "showTitle": {
-          "label": ""
+          "label": "顯示標題"
         },
         "showRing": {
-          "label": ""
+          "label": "顯示更新環"
         },
         "layout": {
           "label": "顯示布局",
@@ -1834,8 +1834,8 @@
           }
         },
         "showUpdateList": {
-          "label": "",
-          "description": ""
+          "label": "顯示容器更新清單",
+          "description": "列出每個具有可用映像更新的受監控容器"
         }
       }
     },
@@ -2308,12 +2308,12 @@
           "description": "日期應該是什麼樣式"
         }
       },
-      "currentWindSpeed": "{currentWindSpeed} 公里/時",
+      "currentWindSpeed": "{currentWindSpeed} {unit}",
       "dailyForecast": {
         "sunrise": "日出",
         "sunset": "日落",
-        "maxWindSpeed": "最大風速：{maxWindSpeed} 公里/時",
-        "maxWindGusts": "最大陣風：{maxWindGusts} 公里/時",
+        "maxWindSpeed": "最大風速：{maxWindSpeed} {unit}",
+        "maxWindGusts": "最大陣風：{maxWindGusts} {unit}",
         "humidity": "濕度: {humidity}%"
       },
       "kind": {
@@ -2476,19 +2476,19 @@
           "label": ""
         },
         "columnOrder": {
-          "label": ""
+          "label": "欄位順序"
         },
         "columnWidths": {
-          "label": ""
+          "label": "欄位寬度"
         }
       },
       "error": {
         "internalServerError": "",
-        "layoutSaveTitle": "",
-        "layoutSaveMessage": ""
+        "layoutSaveTitle": "表格版面配置未儲存",
+        "layoutSaveMessage": "無法儲存 Docker 表格版面配置。請再次移動或調整欄位大小。"
       },
       "empty": {
-        "noContainers": ""
+        "noContainers": "找不到任何容器"
       }
     },
     "coolify": {
@@ -2784,17 +2784,17 @@
           "description": "停用此功能將無法在 Plex 上運作"
         },
         "showBitrate": {
-          "label": "",
-          "description": ""
+          "label": "顯示位元速率",
+          "description": "在地點旁顯示目前的播放位元速率"
         },
         "showLocation": {
-          "label": "",
-          "description": ""
+          "label": "顯示位置",
+          "description": "顯示串流位於 LAN 或 WAN"
         }
       },
       "footer": {
-        "streams": "",
-        "totalBitrate": ""
+        "streams": "{count, plural, other {# 個使用中的串流}}",
+        "totalBitrate": "總計：{bitrate}"
       },
       "items": {
         "currentlyPlaying": "目前播放中",
@@ -2803,9 +2803,9 @@
         "id": "ID",
         "status": "狀態",
         "directPlay": "直接播放",
-        "directStream": "",
-        "transcodeVideo": "",
-        "transcodeAudio": "",
+        "directStream": "直接串流",
+        "transcodeVideo": "轉碼影片",
+        "transcodeAudio": "轉碼音訊",
         "transcoding": "轉碼中",
         "paused": "已暫停",
         "remaining": "剩餘 {minutes} 分鐘",
@@ -3153,18 +3153,18 @@
           "description": ""
         },
         "columnOrder": {
-          "label": ""
+          "label": "欄位順序"
         },
         "columnWidths": {
-          "label": ""
+          "label": "欄位寬度"
         }
       },
       "errors": {
         "noColumns": "於項目中選擇列",
         "noCommunications": "無法從集成中加載數據",
-        "noItems": "",
-        "actionFailed": "",
-        "actionFailedMessage": ""
+        "noItems": "找不到下載項目",
+        "actionFailed": "操作失敗",
+        "actionFailedMessage": "無法完成此操作，請再試一次。"
       },
       "items": {
         "actions": {
@@ -3188,7 +3188,7 @@
         },
         "id": {
           "columnTitle": "ID",
-          "detailsTitle": ""
+          "detailsTitle": "項目 ID"
         },
         "integration": {
           "columnTitle": "集成"
@@ -3223,7 +3223,7 @@
         "time": {
           "columnTitle": "完成時間",
           "detailsTitle": "剩餘完成時間",
-          "eta": ""
+          "eta": "剩餘時間"
         },
         "type": {
           "columnTitle": "類型",
@@ -3269,21 +3269,21 @@
       },
       "globalRatio": "全局速率",
       "contextMenu": {
-        "copyName": "",
-        "copyId": "",
-        "clearFilters": ""
+        "copyName": "複製名稱",
+        "copyId": "複製 ID",
+        "clearFilters": "清除篩選器"
       },
       "footer": {
-        "filter": ""
+        "filter": "篩選下載項目"
       },
       "stats": {
-        "show": "",
-        "hide": "",
-        "overallProgress": "",
-        "totalSize": "",
-        "clients": ""
+        "show": "顯示全域統計資料",
+        "hide": "隱藏全域統計資料",
+        "overallProgress": "整體佇列進度",
+        "totalSize": "佇列總大小",
+        "clients": "{count, plural, other {# 個用戶端}}"
       },
-      "disconnected": ""
+      "disconnected": "(斷線)"
     },
     "mediaReleases": {
       "name": "",
@@ -4014,17 +4014,17 @@
           "label": "顯示代理版本"
         },
         "columnOrder": {
-          "label": ""
+          "label": "欄位順序"
         },
         "columnWidths": {
-          "label": ""
+          "label": "欄位寬度"
         }
       },
       "noRecords": "找不到系統",
       "error": {
         "internalServerError": "無法連線到 Beszel。請檢查整合設定。",
-        "layoutSaveTitle": "",
-        "layoutSaveMessage": ""
+        "layoutSaveTitle": "無法儲存表格版面配置",
+        "layoutSaveMessage": "無法儲存您的欄位順序或寬度。請再試一次。"
       },
       "column": {
         "system": "系統",
@@ -4876,7 +4876,7 @@
             "title": "分析",
             "general": {
               "title": "發送匿名分析",
-              "text": "Homarr 使用開源軟體 Umami 發送匿名分析，他從不收集任何個人資料，因此完全符合 GDPR 和 CCPA 要求，我們鼓勵啟用分析，因為可以幫助我們的團隊識別問題，並確認待辦事項的優先級別"
+              "text": "Homarr 使用開源軟體 Umami 發送匿名分析，他從不收集任何個人資料，因此完全符合 GDPR 和 CCPA 要求，我們鼓勵啟用分析，因為可以幫助我們的團隊識別問題，並確認待辦事項的優先級別。"
             }
           },
           "crawlingAndIndexing": {
@@ -5422,7 +5422,7 @@
       },
       "remove": {
         "label": "移除",
-        "confirm": "",
+        "confirm": "再次點擊以永久移除",
         "notification": {
           "success": {
             "title": "容器已移除",

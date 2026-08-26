@@ -1345,8 +1345,8 @@
       "description": ""
     },
     "wud": {
-      "name": "",
-      "description": ""
+      "name": "וואטס אפ דוקר",
+      "description": "עקוב אחר אילו מקונטיינרי הדוקר שלך כוללים עדכוני תמונה זמינים"
     },
     "paperlessNgx": {
       "name": "",
@@ -1441,18 +1441,18 @@
     "here": "כאן",
     "iconPicker": {
       "label": "קישור של הסמל",
-      "description": "",
-      "header": "הקלד שם או אובייקטים לסינון עבור אייקונים... Homarr יחפש עבורך סמלים של {countIcons} .",
-      "headerLoading": "",
-      "clear": "",
-      "uploadImage": "",
-      "results": "",
+      "description": "חפש בספרייה, הדבק כתובת URL של תמונה, או העלה קובץ.",
+      "header": "הקלד שם או אובייקטים לסינון עבור אייקונים... Homarr יחפש עבורך סמלים של {countIcons} ",
+      "headerLoading": "חפש תמונות לפי שם",
+      "clear": "נקה תמונה",
+      "uploadImage": "העלה תמונה",
+      "results": "תוצאות חיפוש תמונות",
       "localImages": "התמונות שלך",
-      "svgIcons": "",
+      "svgIcons": "סמלי SVG",
       "otherImages": "תמונות אחרות",
-      "urlLoading": "",
-      "urlReady": "",
-      "urlError": "",
+      "urlLoading": "בודק תמונה…",
+      "urlReady": "התמונה מוכנה לשימוש",
+      "urlError": "לא ניתן היה לטעון את התמונה. בדוק את כתובת ה-URL ונסה שוב.",
       "noResults": "",
       "error": ""
     },
@@ -1808,19 +1808,19 @@
       }
     },
     "wud": {
-      "name": "",
-      "description": "",
-      "title": "",
-      "monitored": "",
-      "updatesAvailable": "",
-      "updateAvailable": "",
-      "openReleaseNotes": "",
+      "name": "וואטס אפ דוקר",
+      "description": "הצג כמה מהמכולות הנצפות עם עדכונים זמינים.",
+      "title": "What's Up Docker",
+      "monitored": "מנוטר",
+      "updatesAvailable": "{count, plural, one {# עדכון זמין} two {# עדכונים זמינים} many {# עדכונים זמינים} other {# עדכונים זמינים}}",
+      "updateAvailable": "עדכון זמין",
+      "openReleaseNotes": "פתח הערות שחרור",
       "option": {
         "showTitle": {
-          "label": ""
+          "label": "הצג כותרת"
         },
         "showRing": {
-          "label": ""
+          "label": "הצג טבעת עדכון"
         },
         "layout": {
           "label": "פריסה",
@@ -1834,8 +1834,8 @@
           }
         },
         "showUpdateList": {
-          "label": "",
-          "description": ""
+          "label": "הצג רשימת עדכוני מכולות",
+          "description": "מפרט כל מכולה מנוטרת שיש עדכון תמונה זמין עבורה"
         }
       }
     },
@@ -2641,7 +2641,7 @@
             "today": "היום",
             "24h": "24 השעות האחרונות",
             "7d": "7 הימים האחרונים",
-            "30d": "",
+            "30d": "30 הימים האחרונים",
             "month": "",
             "lastMonth": ""
           }

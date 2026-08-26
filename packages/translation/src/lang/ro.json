@@ -51,7 +51,7 @@
           }
         },
         "tokenModal": {
-          "title": "Introdu token-ul de import",
+          "title": "Introdu codul de import",
           "field": {
             "token": {
               "label": "Token-ul",
@@ -540,7 +540,7 @@
         "confirm": "Sunteţi sigur că doriţi să ştergeţi grupul {name}?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Grupul {name} a fost șters cu succes"
           },
           "error": {
             "message": "Imposibil de șters grupul {name}"
@@ -769,7 +769,7 @@
       "enabled": "Activat",
       "template": {
         "label": "Şablon JSX",
-        "description": ""
+        "description": "Șablon Mantine JSX. Accesați câmpurile răspunsului API prin legături de date (de ex. data.name). Utilizați numai componente permise. Interzis: constructor, __proto__, eval, Function, window, document."
       }
     },
     "placeholder": {
@@ -1507,7 +1507,7 @@
         "switchToLightMode": "Comutați la modul lumină",
         "management": "Gestionare",
         "docker": "Doctor",
-        "preferences": "Preferințele dvs.",
+        "preferences": "Preferințele dvs",
         "logout": "Deconectare",
         "login": "Utilizator",
         "homeBoard": "Tabloul de bord",
@@ -1875,7 +1875,7 @@
     },
     "dnsHoleControls": {
       "name": "Controale DNS",
-      "description": "Controlați PiHole sau AdGuard din planșa dvs.",
+      "description": "Controlați PiHole sau AdGuard din planșa dvs",
       "option": {
         "layout": {
           "label": "Aspect",
@@ -4035,7 +4035,7 @@
         "loadAvg": "Încărcare medie",
         "net": "Rețea",
         "temp": "Temp",
-        "battery": "Bat.",
+        "battery": "Bat",
         "services": "Servicii",
         "uptime": "Uptime",
         "agent": "Agent"
@@ -4096,7 +4096,7 @@
         "loadAvg": "Încărcare medie",
         "net": "Rețea",
         "temp": "Temp",
-        "battery": "Bat.",
+        "battery": "Bat",
         "services": "Servicii",
         "uptime": "Uptime",
         "agent": "Agent"
@@ -4334,7 +4334,7 @@
         "label": "URL imagine logo"
       },
       "faviconImageUrl": {
-        "label": "URL imagine fichar@@0icon"
+        "label": "URL imagine favicon"
       },
       "backgroundImageUrl": {
         "label": "URL-ul imaginii de fundal",
@@ -5134,7 +5134,7 @@
                 "title": "Depanare",
                 "missingHeader": {
                   "title": "\"Lipsă header ApiKey",
-                  "description": "Clientul dvs. nu trimite headerul {header} . Verificați dacă secțiunea {section} din configurația MCP este corectă. Unii clienți necesită repornirea după modificarea configurării."
+                  "description": "Clientul dvs. nu trimite headerul {header}. Verificați dacă secțiunea {section} din configurația MCP este corectă. Unii clienți necesită repornirea după modificarea configurării."
                 },
                 "invalidFormat": {
                   "title": "\"Format ApiKey nevalid\"",
@@ -6255,7 +6255,7 @@
                 "label": "Tablou principal"
               },
               "preferences": {
-                "label": "Preferințele dvs."
+                "label": "Preferințele dvs"
               }
             }
           }

@@ -119,7 +119,7 @@
           "placeholder": "homelab.local или 192.168.1.1",
           "hint": "Введите базовый домен или IP для автозаполнения URL интеграций",
           "warning": "Установка базового URL сейчас автоматически заполнит все URL интеграций, сэкономив время при настройке",
-          "preview": "например, {example}",
+          "preview": "например {example}",
           "mode": {
             "subdomain": "Поддомен",
             "hostPort": "Хост:Порт"
@@ -199,8 +199,8 @@
         "label": "Использовать индикаторы доступности"
       },
       "enableRightClickOnWidgets": {
-        "label": "",
-        "description": ""
+        "label": "Включить правый клик по виджетам",
+        "description": "Показывать контекстное меню Homarr при нажатии правой кнопкой мыши на виджете. Отключите для использования меню браузера по умолчанию (например, «Открыть ссылку в новой вкладке»)."
       },
       "defaultSearchEngine": {
         "label": "Поисковая система по умолчанию"
@@ -691,206 +691,206 @@
   "customWidget": {
     "page": {
       "list": {
-        "title": "",
-        "noResults": "",
-        "loading": ""
+        "title": "Пользовательские виджеты",
+        "noResults": "Пока нет пользовательских виджетов. Создайте первый!",
+        "loading": "Загрузка..."
       },
       "create": {
-        "title": "",
-        "subtitle": ""
+        "title": "Создать пользовательский виджет",
+        "subtitle": "Определите URL-адрес API, аутентификацию и способ отображения данных ответа."
       },
       "edit": {
-        "title": ""
+        "title": "Изменить пользовательский виджет"
       }
     },
     "action": {
-      "create": "",
-      "import": "",
-      "save": "",
-      "delete": "",
-      "deleteConfirm": "",
-      "export": "",
-      "addMapping": "",
-      "addColumn": "",
-      "edit": "",
-      "removeMapping": "",
-      "removeColumn": "",
-      "addItem": "",
-      "removeItem": "",
-      "addBar": "",
-      "duplicate": "",
-      "copyAiPrompt": "",
-      "enable": "",
-      "disable": "",
-      "menu": ""
+      "create": "Создать",
+      "import": "Импорт",
+      "save": "Сохранить",
+      "delete": "Удалить пользовательский виджет",
+      "deleteConfirm": "Вы уверены, что хотите удалить «{name}»? Это действие нельзя отменить.",
+      "export": "Экспорт",
+      "addMapping": "Добавление раскладки",
+      "addColumn": "Добавить столбец",
+      "edit": "Редактировать",
+      "removeMapping": "Удалить сопоставление",
+      "removeColumn": "Удалить столбец",
+      "addItem": "Добавить элемент",
+      "removeItem": "Удалить элемент",
+      "addBar": "Добавить панель",
+      "duplicate": "Создать копию",
+      "copyAiPrompt": "Копировать ИИ-запрос",
+      "enable": "Включить",
+      "disable": "Выключить",
+      "menu": "Действия"
     },
     "field": {
-      "name": "",
-      "description": "",
-      "iconUrl": "",
-      "url": "",
-      "authType": "",
-      "headerName": "",
-      "method": "",
-      "requestBody": "",
-      "displayType": "",
-      "jsonPath": "",
-      "jsonPathHint": "",
-      "label": "",
-      "unit": "",
-      "mappings": "",
-      "tablePath": "",
-      "tablePathHint": "",
-      "columns": "",
-      "header": "",
-      "items": "",
-      "gridColumns": "",
-      "cardStyle": "",
-      "bars": "",
-      "valuePath": "",
-      "maxPath": "",
-      "showPercentage": "",
-      "barSize": "",
-      "goodValues": "",
-      "dotSize": "",
-      "valueSize": "",
-      "labelPosition": "",
-      "kvLayout": "",
-      "striped": "",
-      "compact": "",
-      "maxHeight": "",
-      "color": "",
-      "buttonLabel": "",
-      "buttonColor": "",
-      "confirmText": "",
-      "confirmTextHint": "",
-      "successMessage": "",
-      "successMessageHint": "",
-      "enabled": "",
+      "name": "Имя",
+      "description": "Описание",
+      "iconUrl": "URL иконки",
+      "url": "URL-адрес",
+      "authType": "Тип авторизации",
+      "headerName": "Имя параметра заголовка/запроса",
+      "method": "Метод",
+      "requestBody": "Тело запроса",
+      "displayType": "Тип отображения",
+      "jsonPath": "Путь к JSON",
+      "jsonPathHint": "Используйте синтаксис JSONPath для извлечения значений, например $.data.temperature или $.items[0].name",
+      "label": "Метка",
+      "unit": "Единица измерения",
+      "mappings": "Сопоставления",
+      "tablePath": "Путь к массиву JSON",
+      "tablePathHint": "Путь к массиву в ответе, например $.data.items",
+      "columns": "Столбцы",
+      "header": "Заголовок",
+      "items": "Элементы",
+      "gridColumns": "Столбцов в сетке",
+      "cardStyle": "Карточки",
+      "bars": "Панели",
+      "valuePath": "Путь значения JSON",
+      "maxPath": "Путь к Max Value JSON",
+      "showPercentage": "Показать в процентах",
+      "barSize": "Размер панели",
+      "goodValues": "Хорошие значения (через запятую)",
+      "dotSize": "Размер точки",
+      "valueSize": "Размер значения",
+      "labelPosition": "Позиция метки",
+      "kvLayout": "Макет",
+      "striped": "Полосы",
+      "compact": "Компактный режим",
+      "maxHeight": "Максимальная высота (в пикселях)",
+      "color": "Цвет",
+      "buttonLabel": "Подпись кнопки",
+      "buttonColor": "Цвет кнопки",
+      "confirmText": "Текст подтверждения",
+      "confirmTextHint": "Если установлено, появится диалоговое окно подтверждения перед выполнением запроса",
+      "successMessage": "Сообщение об успехе",
+      "successMessageHint": "Сообщение, отображаемое после успешного выполнения",
+      "enabled": "Включено",
       "template": {
-        "label": "",
-        "description": ""
+        "label": "Шаблон JSX",
+        "description": "Шаблон Mantine JSX. Доступ к полям ответа API через привязки данных (например, data.name). Использует только белый список. Запрещено: constructor, __proto__, eval, Function, window, document."
       }
     },
     "placeholder": {
-      "exampleLabel": "",
-      "exampleLabelShort": "",
-      "exampleHeader": "",
-      "exampleUnit": "",
-      "iconUrl": "",
-      "url": "",
-      "headerName": "",
-      "jsonPath": "",
-      "tablePath": "",
-      "columnJsonPath": "",
-      "valuePath": "",
-      "maxPath": "",
-      "goodValues": "",
-      "color": ""
+      "exampleLabel": "Температура ЦП",
+      "exampleLabelShort": "Темп ЦП",
+      "exampleHeader": "Имя",
+      "exampleUnit": "°C",
+      "iconUrl": "https://...",
+      "url": "https://api.example.com/api/v1/status",
+      "headerName": "X-API-Key",
+      "jsonPath": "$.data.value",
+      "tablePath": "$.data.items",
+      "columnJsonPath": "$.name",
+      "valuePath": "$.data.used",
+      "maxPath": "$.data.total",
+      "goodValues": "онлайн, истина, вверх",
+      "color": "синий"
     },
     "cardStyleOption": {
-      "filled": "",
-      "outline": "",
-      "subtle": ""
+      "filled": "Заполнено",
+      "outline": "Контур",
+      "subtle": "Тонкий"
     },
     "layoutOption": {
-      "list": "",
-      "grid": ""
+      "list": "Список",
+      "grid": "Сетка"
     },
     "sizeOption": {
-      "sm": "",
-      "md": "",
-      "lg": "",
-      "xl": ""
+      "sm": "Маленький",
+      "md": "Средний",
+      "lg": "Большой",
+      "xl": "Огромный"
     },
     "labelPositionOption": {
-      "above": "",
-      "below": ""
+      "above": "Сверху",
+      "below": "Внизу"
     },
     "fieldset": {
-      "general": "",
-      "connection": "",
-      "display": ""
+      "general": "Общие",
+      "connection": "Подключение к API",
+      "display": "Конфигурация отображения"
     },
     "displayTypeDescription": {
-      "singleValue": "",
-      "keyValue": "",
-      "table": "",
-      "statGrid": "",
-      "progressBars": "",
-      "statusIndicator": "",
-      "countGrid": "",
-      "raw": "",
-      "actionButton": "",
-      "customJsx": ""
+      "singleValue": "Показать одно извлеченное значение с меткой и единицей измерения",
+      "keyValue": "Показывать несколько отмеченных значений параллельно",
+      "table": "Показать строки данных в табличном формате",
+      "statGrid": "Цветные карточки статистики в сетке — например, виджеты Pi-Hole или Speedtest",
+      "progressBars": "Индикаторы использования или завершения — для диска, памяти, квот",
+      "statusIndicator": "Цветные точки статуса, для состояния онлайн/оффлайн или здоровья",
+      "countGrid": "Компактные число + счетчики ярлыков в жесткой сетке",
+      "raw": "Вывод JSON для отладки",
+      "actionButton": "Кнопка, которая запускает запрос при нажатии",
+      "customJsx": "Пользовательский JSX макет с использованием компонентов Mantine из белого списка с полной привязкой данных API"
     },
     "method": {
-      "GET": "",
-      "POST": "",
-      "PUT": "",
-      "DELETE": "",
-      "PATCH": ""
+      "GET": "GET",
+      "POST": "POST",
+      "PUT": "PUT",
+      "DELETE": "PUT",
+      "PATCH": "PATCH"
     },
     "authType": {
-      "none": "",
-      "bearer": "",
-      "basic": "",
-      "apiKeyHeader": "",
-      "apiKeyQuery": ""
+      "none": "Ничего",
+      "bearer": "Жетон источника",
+      "basic": "Базовая аутентификация",
+      "apiKeyHeader": "Ключ API (заголовок)",
+      "apiKeyQuery": "Ключ API (запрос)"
     },
     "displayType": {
-      "singleValue": "",
-      "keyValue": "",
-      "table": "",
-      "statGrid": "",
-      "progressBars": "",
-      "statusIndicator": "",
-      "countGrid": "",
-      "raw": "",
-      "actionButton": "",
-      "customJsx": ""
+      "singleValue": "Одиночное значение",
+      "keyValue": "Ключевое значение",
+      "table": "Таблица",
+      "statGrid": "Статистика",
+      "progressBars": "Индикаторы выполнения",
+      "statusIndicator": "Индикатор состояния",
+      "countGrid": "Счетчик",
+      "raw": "Исходный JSON",
+      "actionButton": "Кнопка действия",
+      "customJsx": "Пользовательский JSX"
     },
     "secret": {
-      "apiKey": "",
-      "username": "",
-      "password": "",
-      "savedPlaceholder": ""
+      "apiKey": "Ключ API / Токен",
+      "username": "Имя пользователя",
+      "password": "Пароль",
+      "savedPlaceholder": "••••• (сохраненное значение, оставьте пустым для сохранения)"
     },
     "preview": {
-      "title": "",
-      "test": "",
-      "hint": "",
-      "rawResponse": ""
+      "title": "Предварительный просмотр",
+      "test": "Тест",
+      "hint": "Нажмите «Тест», чтобы просмотреть ответ API с текущей конфигурацией.",
+      "rawResponse": "Необработанный ответ в формате JSON"
     },
     "notification": {
-      "created": "",
-      "updated": "",
-      "deleted": "",
-      "imported": "",
-      "aiPromptCopied": "",
-      "aiPromptDescription": "",
-      "aiPromptCopy": "",
-      "aiPromptNoResponse": "",
-      "aiPromptCopyError": "",
-      "createError": "",
-      "updateError": "",
-      "importError": "",
-      "exportError": "",
-      "duplicated": "",
-      "duplicateError": "",
-      "toggleError": "",
-      "deleteError": "",
-      "previewError": "",
-      "executed": "",
-      "executeError": ""
+      "created": "Виджет \"{name}\" успешно создан.",
+      "updated": "Виджет \"{name}\" успешно обновлен.",
+      "deleted": "Виджет \"{name}\" удален.",
+      "imported": "Виджет успешно импортирован.",
+      "aiPromptCopied": "Промпт ИИ скопирован в буфер обмена",
+      "aiPromptDescription": "Скопируйте предварительно созданный промпт, чтобы вставить в любой ИИ-бот (ChatGPT, Claude, Gemini...). Он включает в себя полную схему виджетов и ваш ответ API, чтобы ИИ мог создать готовую к импорту конфигурацию JSON.",
+      "aiPromptCopy": "Скопировать в буфер обмена",
+      "aiPromptNoResponse": "Подсказка: Запустите тест, чтобы включить ответ API в промпт для улучшения результатов.",
+      "aiPromptCopyError": "Не удалось скопировать промпт в буфер обмена. Возможно, ваш браузер не поддерживает эту функцию.",
+      "createError": "Не удалось создать виджет. Проверьте доступность конечной точки API.",
+      "updateError": "Не удалось обновить виджет. Ваши изменения не были сохранены.",
+      "importError": "Не удалось импортировать виджет. Убедитесь, что файл - это валидный JSON для экспорта пользовательского виджета.",
+      "exportError": "Не удалось экспортировать виджет.",
+      "duplicated": "Виджет \"{name}\" повторяется.",
+      "duplicateError": "Не удалось сделать копию виджета.",
+      "toggleError": "Не удалось переключить статус виджета.",
+      "deleteError": "Не удалось удалить виджет.",
+      "previewError": "Не удалось получить предварительный просмотр. Проверьте URL-адрес и повторите попытку.",
+      "executed": "Действие выполнено успешно.",
+      "executeError": "Действие не удалось: {error}"
     },
     "table": {
-      "name": "",
-      "url": "",
-      "display": ""
+      "name": "Имя",
+      "url": "URL",
+      "display": "Отображение"
     },
     "widget": {
-      "disabled": ""
+      "disabled": "Этот виджет выключен"
     }
   },
   "integration": {
@@ -1025,7 +1025,7 @@
       "mediaMonitoring": "Мониторинг",
       "speedtest": "Тест скорости",
       "analytics": "Аналитика",
-      "vpn": "",
+      "vpn": "VPN",
       "mediaLibrary": "Медиа-библиотека",
       "uptimeMonitoring": "Мониторинг доступности"
     },
@@ -1290,12 +1290,12 @@
           "newLabel": "Новый API-ключ (Secret)"
         },
         "patchmonApiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "Ключ API",
+          "newLabel": "Новый Ключ API"
         },
         "patchmonApiSecret": {
-          "label": "",
-          "newLabel": ""
+          "label": "Секрет API",
+          "newLabel": "Новый API секрет"
         },
         "githubAppId": {
           "label": "App Id",
@@ -1330,35 +1330,35 @@
     },
     "uptimeKuma": {
       "name": "Uptime Kuma",
-      "description": "",
+      "description": "Приложение для мониторинга работоспособности других приложений и сервисов",
       "secret": {
         "slug": {
-          "description": ""
+          "description": "Метка статуса вашей публичной страницы. \"Default\", если не установлена."
         },
         "apiKey": {
-          "description": ""
+          "description": "Необязательный ключ API для доступа к аутентификации"
         }
       }
     },
     "traefik": {
-      "name": "",
-      "description": ""
+      "name": "Traefik",
+      "description": "Облачный обратный прокси и балансировщик нагрузки"
     },
     "wud": {
       "name": "Что же докер",
       "description": "Мониторинг того, какие из контейнеров Docker доступны для обновления изображений"
     },
     "paperlessNgx": {
-      "name": "",
-      "description": ""
+      "name": "Paperless-ngx",
+      "description": "Система управления документами для архивирования и организации сканированных документов"
     },
     "patchmon": {
-      "name": "",
-      "description": ""
+      "name": "PatchMon",
+      "description": "Управление исправлениями и мониторинг для узлов Linux"
     },
     "bazarr": {
-      "name": "",
-      "description": ""
+      "name": "Bazarr",
+      "description": "Программное дополнение к Sonarr и Radarr, которое управляет субтитрами и загружает их"
     }
   },
   "media": {
@@ -1442,7 +1442,7 @@
     "iconPicker": {
       "label": "URL иконки",
       "description": "Поиск в библиотеке, вставьте URL изображения или загрузите файл.",
-      "header": "Введите название или объекты для фильтрации иконок... Homarr найдёт для вас среди {countIcons} иконок.",
+      "header": "Искать изображения {countIcons} по имени",
       "headerLoading": "Поиск изображений по имени",
       "clear": "Очистить изображение",
       "uploadImage": "Загрузить изображение",
@@ -1453,8 +1453,8 @@
       "urlLoading": "Проверка изображения…",
       "urlReady": "Изображение готово к использованию",
       "urlError": "Это изображение не может быть загружено. Проверьте URL и повторите попытку.",
-      "noResults": "",
-      "error": ""
+      "noResults": "Нет значков, соответствующих \"{search}\".",
+      "error": "Не удалось загрузить иконки."
     },
     "colorScheme": {
       "options": {
@@ -1506,7 +1506,7 @@
         "switchToDarkMode": "Переключить на тёмную тему",
         "switchToLightMode": "Переключить на светлую тему",
         "management": "Управление",
-        "docker": "",
+        "docker": "Docker",
         "preferences": "Настройки",
         "logout": "Выйти",
         "login": "Вход",
@@ -1637,15 +1637,15 @@
     "menu": {
       "label": {
         "settings": "Настройки",
-        "refresh": "",
-        "options": "",
-        "actions": ""
+        "refresh": "Обновить",
+        "options": "Опции",
+        "actions": "Действия"
       },
       "status": {
-        "success": "",
-        "error": "",
-        "loading": "",
-        "idle": ""
+        "success": "ОК",
+        "error": "Ошибка",
+        "loading": "Загрузка",
+        "idle": "Простой"
       }
     },
     "create": {
@@ -1705,11 +1705,11 @@
   },
   "widget": {
     "integrationSelect": {
-      "configureIntegrationFirst": "",
-      "loading": "",
-      "placeholder": "",
-      "noResults": "",
-      "loadError": ""
+      "configureIntegrationFirst": "Сначала подключите интеграцию",
+      "loading": "Загрузка...",
+      "placeholder": "Выберите опцию",
+      "noResults": "Ничего не найдено",
+      "loadError": "Не удалось загрузить параметры"
     },
     "app": {
       "name": "Приложение",
@@ -1799,11 +1799,11 @@
       }
     },
     "archiveTeamWarrior": {
-      "name": "",
-      "description": "",
+      "name": "ArchiveTeam Warrior",
+      "description": "Отслеживать статус ArchiveTeam Warrior, проекты и активные архивированные задания.",
       "option": {
         "showBroadcastMessage": {
-          "label": ""
+          "label": "Показать широковещательные сообщения"
         }
       }
     },
@@ -1953,14 +1953,14 @@
           "description": "Используйте формат ISO 8601 для отображения даты (это переопределит другие настройки)"
         },
         "showWeather": {
-          "label": "",
-          "description": ""
+          "label": "Показывать погоду",
+          "description": "Отображение маленькой анимированной иконки погоды и температуры в углу карточки"
         },
         "weatherLocation": {
-          "label": ""
+          "label": "Местоположение для прогноза"
         },
         "isWeatherFormatFahrenheit": {
-          "label": ""
+          "label": "Использовать шкалу Фаренгейта"
         }
       }
     },
@@ -1990,7 +1990,7 @@
       "noStation": "Станция не выбрана",
       "option": {
         "baseUrl": {
-          "label": ""
+          "label": "URL поиска"
         },
         "station": {
           "label": "Станция"
@@ -2022,8 +2022,8 @@
         "clear": "Очистить форматирование",
         "heading": "Заголовок {level}",
         "align": "Выравнивание текста: {position}",
-        "directionLtr": "",
-        "directionRtl": "",
+        "directionLtr": "Установить направление текста слева направо",
+        "directionRtl": "Установить направление текста справа налево",
         "blockquote": "Цитата",
         "horizontalLine": "Горизонтальная линия",
         "bulletList": "Маркированный список",
@@ -2314,7 +2314,7 @@
         "sunset": "Закат",
         "maxWindSpeed": "Макс. скорость ветра: {maxWindSpeed} {unit}",
         "maxWindGusts": "Макс. порывы ветра: {maxWindGusts} {unit}",
-        "humidity": ""
+        "humidity": "Влажность: {humidity}%"
       },
       "kind": {
         "clear": "Ясно",
@@ -2374,9 +2374,9 @@
           "label": "Показать информацию о файловой системе"
         },
         "visibleStorageVolumes": {
-          "label": "",
-          "description": "",
-          "placeholder": ""
+          "label": "Видимые объемы хранения",
+          "description": "Доступно только тогда, когда все выбранные интеграции от Synology. Оставьте пустым, чтобы показать все обнаруженные тома хранения.",
+          "placeholder": "Выбрать тома хранения"
         },
         "defaultTab": {
           "label": "Вкладка по умолчанию"
@@ -2458,7 +2458,7 @@
       "description": "Статистика контейнеров (этот виджет можно добавить только с правами администратора)",
       "option": {
         "columns": {
-          "label": ""
+          "label": "Столбцы для отображения"
         },
         "enableRowSorting": {
           "label": "Включить сортировку элементов"
@@ -2476,19 +2476,19 @@
           "label": "Обратная сортировка"
         },
         "columnOrder": {
-          "label": ""
+          "label": "Порядок столбцов"
         },
         "columnWidths": {
-          "label": ""
+          "label": "Ширина колонки"
         }
       },
       "error": {
         "internalServerError": "Не удалось получить статистику контейнеров",
-        "layoutSaveTitle": "",
-        "layoutSaveMessage": ""
+        "layoutSaveTitle": "Макет таблицы не сохранён",
+        "layoutSaveMessage": "Не удалось сохранить расположение таблицы Docker. Попробуйте переместить или изменить расположение столбца."
       },
       "empty": {
-        "noContainers": ""
+        "noContainers": "Контейнеры не найдены"
       }
     },
     "coolify": {
@@ -2525,9 +2525,9 @@
       }
     },
     "vpn": {
-      "name": "",
-      "description": "",
-      "serviceUnavailable": "",
+      "name": "VPN",
+      "description": "Обзор ваших VPN-подключений",
+      "serviceUnavailable": "VPN недоступен",
       "option": {}
     },
     "ups": {
@@ -2784,31 +2784,31 @@
           "description": "Отключение этой опции не работает для Plex"
         },
         "showBitrate": {
-          "label": "",
-          "description": ""
+          "label": "Показать битрейт",
+          "description": "Показать текущий битрейт воспроизведения рядом с местоположением"
         },
         "showLocation": {
-          "label": "",
-          "description": ""
+          "label": "Показать местоположение",
+          "description": "Показывать, есть ли поток в вашей локальной сети или WAN"
         }
       },
       "footer": {
-        "streams": "",
-        "totalBitrate": ""
+        "streams": "{count, plural, one {# активный поток} other {# активных потоков}}",
+        "totalBitrate": "Всего: {bitrate}"
       },
       "items": {
         "currentlyPlaying": "Сейчас воспроизводится",
         "user": "Пользователь",
         "name": "Название",
         "id": "Id",
-        "status": "",
-        "directPlay": "",
-        "directStream": "",
-        "transcodeVideo": "",
-        "transcodeAudio": "",
-        "transcoding": "",
-        "paused": "",
-        "remaining": "",
+        "status": "Статус",
+        "directPlay": "Прямое воспроизведение",
+        "directStream": "Прямой поток",
+        "transcodeVideo": "Транскодирование видео",
+        "transcodeAudio": "Транскодирование аудио",
+        "transcoding": "Транскодирование",
+        "paused": "Приостановлено",
+        "remaining": "{minutes} мин осталось",
         "metadata": {
           "title": "Техническая информация",
           "video": {
@@ -2830,235 +2830,235 @@
       }
     },
     "paperlessNgx": {
-      "name": "",
-      "description": "",
-      "documentsTotal": "",
-      "documentsInbox": "",
-      "correspondents": "",
-      "tags": "",
-      "documentTypes": "",
-      "inboxRatio": "",
-      "inbox": "",
-      "total": "",
+      "name": "Paperless-ngx",
+      "description": "Обзор архива документов Paperless-ngx",
+      "documentsTotal": "Всего документов",
+      "documentsInbox": "Входящие",
+      "correspondents": "Корреспонденты",
+      "tags": "Теги",
+      "documentTypes": "Типы документов",
+      "inboxRatio": "Соотношение входящих",
+      "inbox": "входящие",
+      "total": "всего",
       "option": {
         "showInboxRatio": {
-          "label": "",
-          "description": ""
+          "label": "Показать соотношение входящих",
+          "description": "Отображать соотношение входящих к общему количеству документов"
         },
         "showInboxRing": {
-          "label": "",
-          "description": ""
+          "label": "Показать кольцо входящих",
+          "description": "Отображать кольцо прогресса наряду с соотношением входящих"
         },
         "showDocumentsTotal": {
-          "label": "",
-          "description": ""
+          "label": "Показать общее количество документов",
+          "description": "Показать общее количество документов в вашем архиве"
         },
         "showDocumentsInbox": {
-          "label": "",
-          "description": ""
+          "label": "Показывать число входящих",
+          "description": "Показывать количество необработанных документов во входящих"
         },
         "showCorrespondents": {
-          "label": "",
-          "description": ""
+          "label": "Показать корреспондентов",
+          "description": "Показать общее количество корреспондентов"
         },
         "showTags": {
-          "label": "",
-          "description": ""
+          "label": "Показывать теги",
+          "description": "Показать общее количество тегов"
         },
         "showDocumentTypes": {
-          "label": "",
-          "description": ""
+          "label": "Показывать типы документов",
+          "description": "Показать общее количество типов документов"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Не удалось получить данные Paperless-ngx"
       }
     },
     "patchmon": {
-      "name": "",
-      "description": "",
-      "title": "",
-      "totalHosts": "",
-      "hostsNeedingUpdates": "",
-      "securityUpdates": "",
-      "upToDateHosts": "",
-      "hostsWithSecurityUpdates": "",
-      "recentUpdates24h": "",
-      "totalOutdatedPackages": "",
-      "totalRepos": "",
-      "osDistribution": "",
-      "compliance": "",
-      "complianceRatio": "",
-      "lastUpdated": "",
+      "name": "PatchMon",
+      "description": "Обзор состояния патча узла из PatchMon",
+      "title": "Статистика PatchMon",
+      "totalHosts": "Всего узлов",
+      "hostsNeedingUpdates": "Требуется обновление",
+      "securityUpdates": "Обновление безопасности",
+      "upToDateHosts": "Обновленные узлы",
+      "hostsWithSecurityUpdates": "Узлы с обновлениями безопасности",
+      "recentUpdates24h": "Обновления (24ч)",
+      "totalOutdatedPackages": "Устаревшие пакеты",
+      "totalRepos": "Репозитории",
+      "osDistribution": "Распространение ОС",
+      "compliance": "Соответствие патча",
+      "complianceRatio": "{upToDate} / {total}",
+      "lastUpdated": "Обновлено {time}",
       "option": {
         "showTotalHosts": {
-          "label": "",
-          "description": ""
+          "label": "Показать все узлы",
+          "description": "Показывать общее количество контролируемых узлов"
         },
         "showHostsNeedingUpdates": {
-          "label": "",
-          "description": ""
+          "label": "Показать узлы, нуждающиеся в обновлениях",
+          "description": "Отображать узлы с как минимум одним устаревшим пакетом"
         },
         "showSecurityUpdates": {
-          "label": "",
-          "description": ""
+          "label": "Показать обновления безопасности",
+          "description": "Показывать общее количество доступных обновлений безопасности"
         },
         "showUpToDateHosts": {
-          "label": "",
-          "description": ""
+          "label": "Показывать обновленные узлы",
+          "description": "Показывать хосты с нулевым количеством устаревших пакетов"
         },
         "showHostsWithSecurityUpdates": {
-          "label": "",
-          "description": ""
+          "label": "Показывать хосты с обновлениями безопасности",
+          "description": "Отображать хосты, требующие защитных патчей"
         },
         "showRecentUpdates24h": {
-          "label": "",
-          "description": ""
+          "label": "Показать недавние обновления (24ч)",
+          "description": "Показывать количество обновлений за последние 24 часа"
         },
         "showTotalOutdatedPackages": {
-          "label": "",
-          "description": ""
+          "label": "Показать устаревшие пакеты",
+          "description": "Показывать общее количество устаревших пакетов на всех узлах"
         },
         "showTotalRepos": {
-          "label": "",
-          "description": ""
+          "label": "Показать репозитории",
+          "description": "Показывать количество отслеживаемых активных репозиториев"
         },
         "enableThresholdColors": {
-          "label": "",
-          "description": ""
+          "label": "Включить пороговые цвета",
+          "description": "Цветовые значения статистики зеленые, желтые, или красные на основе пресетов серьезности"
         },
         "useCustomThresholds": {
-          "label": "",
-          "description": ""
+          "label": "Расширенные пороги",
+          "description": "Настройка предупреждений и критических значений для статистики с использованием абсолютного количества или процентов от общего числа хостов"
         },
         "thresholdMode": {
           "option": {
-            "absolute": "",
-            "percent": ""
+            "absolute": "Абсолютное количество",
+            "percent": "Процент от общего числа хостов"
           }
         },
         "hostsNeedingUpdatesThresholdMode": {
-          "label": "",
-          "description": ""
+          "label": "Нужен режим обновления порога",
+          "description": "Сравнить счетчик нуждающихся в обновлении как абсолютное значение или процент от общего числа хостов"
         },
         "hostsNeedingUpdatesWarningAt": {
-          "label": "",
-          "description": ""
+          "label": "Порог предупреждения о нуждающихся в обновлении",
+          "description": "Желтый цвет при достижении этого порога"
         },
         "hostsNeedingUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": "Критический порог для нуждающихся в обновлении",
+          "description": "Красный цвет при достижении этого порога"
         },
         "securityUpdatesThresholdMode": {
-          "label": "",
-          "description": ""
+          "label": "Режим порога обновлений безопасности",
+          "description": "Сравнение количество нуждающихся в обновлении безопасности как абсолютного значения или процента от общего числа хостов"
         },
         "securityUpdatesWarningAt": {
-          "label": "",
-          "description": ""
+          "label": "Порог предупреждения о нуждающихся в обновлении безопасности",
+          "description": "Желтый цвет при достижении этого порога"
         },
         "securityUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": "Критический порог для нуждающихся в обновлении безопасности",
+          "description": "Красный цвет при достижении этого порога"
         },
         "hostsWithSecurityUpdatesThresholdMode": {
-          "label": "",
-          "description": ""
+          "label": "Узлы с порогом обновлений безопасности",
+          "description": "Сравнить количество хостов как абсолютное значение или процент от общего числа хостов"
         },
         "hostsWithSecurityUpdatesWarningAt": {
-          "label": "",
-          "description": ""
+          "label": "Узлы с порогом предупреждения об обновлениях безопасности",
+          "description": "Желтый цвет при достижении этого порога"
         },
         "hostsWithSecurityUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": "Узлы с критическим порогом обновлений безопасности",
+          "description": "Красный цвет при достижении этого порога"
         },
         "upToDateHostsThresholdMode": {
-          "label": "",
-          "description": ""
+          "label": "Режим порога обновленных узлов",
+          "description": "Сравнить количество обновленных хостов как абсолютное значение или процент от общего числа хостов"
         },
         "upToDateHostsWarningAt": {
-          "label": "",
-          "description": ""
+          "label": "Порог предупреждения для обновленных узлов",
+          "description": "Желтый, когда значение находится на или превышает этот порог, но ниже полного покрытия"
         },
         "upToDateHostsCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": "Критический порог для обновленных узлов",
+          "description": "Красный цвет, когда значение падает ниже этого порога"
         },
         "totalOutdatedPackagesThresholdMode": {
-          "label": "",
-          "description": ""
+          "label": "Режим порога устаревших пакетов",
+          "description": "Сравнить количество устаревших пакетов как абсолютное значение или процент от общего числа хостов"
         },
         "totalOutdatedPackagesWarningAt": {
-          "label": "",
-          "description": ""
+          "label": "Порог предупреждения об устаревших пакетах",
+          "description": "Желтый цвет при достижении этого порога"
         },
         "totalOutdatedPackagesCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": "Критический порог устаревших пакетов",
+          "description": "Красный цвет при достижении этого порога"
         },
         "showOsDistribution": {
-          "label": "",
-          "description": ""
+          "label": "Показать распределение ОС",
+          "description": "Показать разбивку контролируемых узлов по операционной системе"
         },
         "osDistributionLimit": {
-          "label": "",
-          "description": "",
+          "label": "Лимит распределения ОС",
+          "description": "Максимальное количество отображаемых ОС",
           "option": {
-            "3": "",
-            "5": "",
-            "10": "",
-            "all": ""
+            "3": "Топ-3",
+            "5": "Топ-5",
+            "10": "Топ-10",
+            "all": "Все"
           }
         },
         "showOsVersion": {
-          "label": "",
-          "description": ""
+          "label": "Показать версию ОС",
+          "description": "Добавлять версию ОС к каждой метке дистрибутива, если доступна"
         },
         "showComplianceHero": {
-          "label": "",
-          "description": ""
+          "label": "Отображать индикатор соответствия",
+          "description": "Отображать кольцо соответствия, показывающее процент обновляемых узлов"
         },
         "osDisplayMode": {
-          "label": "",
-          "description": "",
+          "label": "Режим отображения ОС",
+          "description": "Выберите способ отображения распределения операционной системы",
           "option": {
-            "bars": "",
-            "donut": ""
+            "bars": "Горизонтальные полосы",
+            "donut": "Кольцевая диаграмма"
           }
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Не удалось получить данные PatchMon"
       }
     },
     "bazarr": {
-      "name": "",
-      "description": "",
-      "episodes": "",
-      "movies": "",
-      "providers": "",
-      "status": "",
+      "name": "Bazarr",
+      "description": "Обзор недостающих субтитров и состояния вашего экземпляра Bazarr",
+      "episodes": "Отсутствующие эпизоды",
+      "movies": "Отсутствующие фильмы",
+      "providers": "Проблемы провайдера",
+      "status": "Проблемы с состоянием",
       "option": {
         "showMissingEpisodes": {
-          "label": "",
-          "description": ""
+          "label": "Показать недостающие эпизоды",
+          "description": "Показывать количество эпизодов с отсутствующими субтитрами"
         },
         "showMissingMovies": {
-          "label": "",
-          "description": ""
+          "label": "Показать отсутствующие фильмы",
+          "description": "Показывать количество фильмов с отсутствующими субтитрами"
         },
         "showProviderIssues": {
-          "label": "",
-          "description": ""
+          "label": "Показать проблемы провайдера",
+          "description": "Показывать количество провайдеров субтитров с проблемами"
         },
         "showHealthIssues": {
-          "label": "",
-          "description": ""
+          "label": "Показать проблемы с состоянием",
+          "description": "Показывать количество проблем с состоянием Bazarr"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Не удалось получить данные Bazarr"
       }
     },
     "immich-serverStats": {
@@ -3089,11 +3089,11 @@
     },
     "immich-albumCarousel": {
       "name": "Альбом Immich",
-      "allPhotos": "",
+      "allPhotos": "Все фото",
       "option": {
         "albumId": {
           "label": "ID альбома",
-          "description": "Уникальный идентификатор вашего альбома Immich. Его можно найти, открыв альбом и скопировав уникальную строку из URL, например 'a21aca09-9f05-47dc-b1a1-7b53c547226e'"
+          "description": "Уникальный идентификатор вашего альбома Immich. Его можно найти, открыв альбом и скопировав уникальную строку из URL, например 'a21aca09-9f05-47dc-b1a1-7b53c547226e'."
         },
         "rotationIntervalSeconds": {
           "label": "Интервал в секундах",
@@ -3104,8 +3104,8 @@
           "description": "Отображать дату снимка и текущий номер в нижней части слайд-шоу"
         },
         "randomizePhotos": {
-          "label": "",
-          "description": ""
+          "label": "Случайный порядок фото",
+          "description": "Показывать фотографии в случайном порядке вместо того, чтобы всегда начинать с одного порядка."
         }
       },
       "description": "Слайд-шоу фотографий из вашего альбома Immich",
@@ -3153,18 +3153,18 @@
           "description": "Ограничивает количество отображаемых элементов для каждой интеграции, а не глобально"
         },
         "columnOrder": {
-          "label": ""
+          "label": "Порядок столбцов"
         },
         "columnWidths": {
-          "label": ""
+          "label": "Ширина столбца"
         }
       },
       "errors": {
         "noColumns": "Выберите столбцы в настройках элементов",
         "noCommunications": "Не удалось загрузить данные из интеграции",
-        "noItems": "",
-        "actionFailed": "",
-        "actionFailedMessage": ""
+        "noItems": "Загрузки не найдены",
+        "actionFailed": "Действие не удалось",
+        "actionFailedMessage": "Не удалось выполнить операцию. Попробуйте ещё раз."
       },
       "items": {
         "actions": {
@@ -3188,7 +3188,7 @@
         },
         "id": {
           "columnTitle": "Id",
-          "detailsTitle": ""
+          "detailsTitle": "ID элемента"
         },
         "integration": {
           "columnTitle": "Интеграция"
@@ -3223,7 +3223,7 @@
         "time": {
           "columnTitle": "Время завершения",
           "detailsTitle": "Время с/до завершения",
-          "eta": ""
+          "eta": "Ожидаемое время"
         },
         "type": {
           "columnTitle": "Тип",
@@ -3269,21 +3269,21 @@
       },
       "globalRatio": "Общий рейтинг",
       "contextMenu": {
-        "copyName": "",
-        "copyId": "",
-        "clearFilters": ""
+        "copyName": "Скопировать имя",
+        "copyId": "Скопировать ID",
+        "clearFilters": "Сбросить фильтры"
       },
       "footer": {
-        "filter": ""
+        "filter": "Фильтровать загрузки"
       },
       "stats": {
-        "show": "",
-        "hide": "",
-        "overallProgress": "",
-        "totalSize": "",
-        "clients": ""
+        "show": "Показать общую статистику",
+        "hide": "Скрыть общую статистику",
+        "overallProgress": "Общее состояние очереди",
+        "totalSize": "Общий размер очереди",
+        "clients": "{count, plural, one {# клиент} other {# клиентов}}"
       },
-      "disconnected": ""
+      "disconnected": "(отключено)"
     },
     "mediaReleases": {
       "name": "Медиарелизы",
@@ -3322,10 +3322,10 @@
           "label": "Открывать ссылки в новой вкладке"
         },
         "statusFilter": {
-          "label": ""
+          "label": "Отображение статусов"
         },
         "recentDays": {
-          "label": ""
+          "label": "Показать только недавние запросы"
         }
       },
       "pending": {
@@ -3434,33 +3434,33 @@
       }
     },
     "mediaMissing": {
-      "name": "",
-      "description": "",
+      "name": "Отсутствующие медиа и медиа в очереди",
+      "description": "Показывать отсутствующие и поставленные в очередь фильмы и эпизоды от Radarr и Sonarr",
       "option": {
         "showMissing": {
-          "label": ""
+          "label": "Показать недостающие элементы"
         },
         "showQueued": {
-          "label": ""
+          "label": "Показать элементы в очереди"
         },
         "pageSize": {
-          "label": ""
+          "label": "Элементов на странице"
         }
       },
       "tab": {
-        "missing": "",
-        "queued": ""
+        "missing": "Отсутствует",
+        "queued": "В очереди"
       },
       "type": {
-        "movie": "",
-        "episode": ""
+        "movie": "Фильм",
+        "episode": "Серия"
       },
       "empty": {
-        "missing": "",
-        "queued": "",
-        "noTabsEnabled": ""
+        "missing": "Нет отсутствующих элементов",
+        "queued": "Нет элементов в очереди",
+        "noTabsEnabled": "Включите хотя бы одну вкладку в настройках виджета"
       },
-      "timeLeft": ""
+      "timeLeft": "Осталось времени"
     },
     "rssFeed": {
       "name": "RSS-ленты",
@@ -3532,7 +3532,7 @@
             "label": "Провайдер"
           },
           "providerUrl": {
-            "label": ""
+            "label": "URL провайдера"
           },
           "identifier": {
             "label": "Идентификатор",
@@ -3583,11 +3583,11 @@
             "tooltip": "Не удалось определить провайдер, укажите его вручную после импорта образов"
           },
           "tokens": {
-            "label": "",
-            "token": "",
-            "configured": "",
-            "notConfigured": "",
-            "save": ""
+            "label": "Токены провайдера",
+            "token": "Токен",
+            "configured": "Токен настроен",
+            "notConfigured": "Токен не установлен",
+            "save": "Сохранить"
           }
         }
       },
@@ -3610,9 +3610,9 @@
           "invalidIdentifier": "Неверный идентификатор",
           "noMatchingVersion": "Подходящая версия не найдена",
           "noReleasesFound": "Релизы не найдены",
-          "noProviderSelected": "",
+          "noProviderSelected": "Провайдер не выбран",
           "noProviderResponse": "Нет ответа от провайдера",
-          "unexpected": ""
+          "unexpected": "Неожиданная ошибка провайдера"
         }
       }
     },
@@ -3707,7 +3707,7 @@
       "noItems": "Нет уведомлений для отображения.",
       "option": {
         "hideLogos": {
-          "label": ""
+          "label": "Скрыть логотипы"
         }
       }
     },
@@ -3751,130 +3751,130 @@
       }
     },
     "uptimeKuma": {
-      "name": "",
-      "description": "",
+      "name": "Uptime Kuma",
+      "description": "Отслеживать статистику с вашей страницы статуса Uptime Kuma",
       "option": {
         "showAverageUptime": {
-          "label": "",
-          "description": ""
+          "label": "Показывать среднее время работы",
+          "description": "Отображение комбинированного 24-часового среднего процента работы"
         },
         "showUptimeRing": {
-          "label": "",
-          "description": ""
+          "label": "Показать время работы",
+          "description": "Отображать кольцо прогресса наряду со средним значением времени работы"
         },
         "showTotalMonitors": {
-          "label": "",
-          "description": ""
+          "label": "Показывать общее количество мониторов",
+          "description": "Показать общее количество настроенных мониторов"
         },
         "showUpCount": {
-          "label": "",
-          "description": ""
+          "label": "Показывать счётчик работающих",
+          "description": "Показать сколько мониторов сейчас работает"
         },
         "showDownCount": {
-          "label": "",
-          "description": ""
+          "label": "Показывать счётчик неработающих",
+          "description": "Показывать, сколько мониторов сейчас не работает"
         },
         "showPausedCount": {
-          "label": "",
-          "description": ""
+          "label": "Показывать количество мониторов на паузе",
+          "description": "Показывать, сколько мониторов в данный момент приостановлено"
         }
       },
-      "averageUptime": "",
+      "averageUptime": "Среднее время работы (24ч)",
       "stats": {
-        "totalMonitors": "",
-        "upCount": "",
-        "downCount": "",
-        "pausedCount": ""
+        "totalMonitors": "Всего мониторов",
+        "upCount": "Работает",
+        "downCount": "Не работает",
+        "pausedCount": "Пауза"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Не удалось получить данные"
       }
     },
     "traefik": {
-      "name": "",
-      "description": "",
+      "name": "Traefik",
+      "description": "Обзор маршрутизаторов, сервисов, посреднических и контрольных точек",
       "option": {
         "showTcp": {
-          "label": ""
+          "label": "Показать TCP"
         },
         "showUdp": {
-          "label": ""
+          "label": "Показать UDP"
         },
         "showEntryPoints": {
-          "label": ""
+          "label": "Показать точки входа"
         }
       },
-      "instances": "",
-      "versionUnknown": "",
+      "instances": "Экземпляры Traefik",
+      "versionUnknown": "Версия неизвестна",
       "summary": {
-        "routers": "",
-        "entryPoints": ""
+        "routers": "Маршрутизаторы",
+        "entryPoints": "Точки входа"
       },
       "resource": {
-        "routers": "",
-        "services": "",
-        "middlewares": ""
+        "routers": "Маршрутизаторы",
+        "services": "Сервисов",
+        "middlewares": "Посредники"
       },
       "status": {
-        "healthy": "",
-        "errors": "",
-        "warnings": ""
+        "healthy": "Исправно",
+        "errors": "{count} ошибок",
+        "warnings": "{count} предупреждений"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Не удалось получить данные Traefik"
       }
     },
     "audioStats": {
-      "name": "",
-      "description": "",
+      "name": "Статистика аудио",
+      "description": "Статистика библиотеки и воспроизведения из Navidrome или Audiobookshelf",
       "option": {
         "showArtists": {
-          "label": "",
-          "description": ""
+          "label": "Показать исполнителя",
+          "description": "Показать общее количество исполнителей в вашей музыкальной библиотеке (Navidrome)"
         },
         "showAlbums": {
-          "label": "",
-          "description": ""
+          "label": "Показать альбомы",
+          "description": "Показать общее количество альбомов в вашей музыкальной библиотеке (Navidrome)"
         },
         "showSongs": {
-          "label": "",
-          "description": ""
+          "label": "Показать песни",
+          "description": "Показать общее количество песен в вашей музыкальной библиотеке (Navidrome)"
         },
         "showLibraryCount": {
-          "label": "",
-          "description": ""
+          "label": "Показать число библиотек",
+          "description": "Показать количество библиотек на вашем экземпляре (Audiobookshelf)"
         },
         "showAudiobooks": {
-          "label": "",
-          "description": ""
+          "label": "Показать аудиокниги",
+          "description": "Показать общее количество аудиокниг во всех библиотеках (Audiobookshelf)"
         },
         "showPodcasts": {
-          "label": "",
-          "description": ""
+          "label": "Показать подкасты",
+          "description": "Показать общее количество подкастов во всех библиотеках (Audiobookshelf)"
         },
         "showListeningTime": {
-          "label": "",
-          "description": ""
+          "label": "Показать время прослушивания",
+          "description": "Показать общее время прослушивания (Audiobookshelf)"
         },
         "showActiveSessions": {
-          "label": "",
-          "description": ""
+          "label": "Показать активные сессии",
+          "description": "Показывать количество текущих сеансов воспроизведения (Audiobookshelf)"
         },
         "compactMode": {
-          "label": "",
-          "description": ""
+          "label": "Компактный режим",
+          "description": "Использовать макет с мелкими плитками, идеально подходит для маленьких виджетов"
         }
       },
-      "artists": "",
-      "albums": "",
-      "songs": "",
-      "libraryCount": "",
-      "audiobooks": "",
-      "podcasts": "",
-      "listeningTime": "",
-      "activeSessions": "",
+      "artists": "Исполнители",
+      "albums": "Альбомы",
+      "songs": "Песни",
+      "libraryCount": "Библиотеки",
+      "audiobooks": "Аудиокниги",
+      "podcasts": "Подкасты",
+      "listeningTime": "Время прослушивания",
+      "activeSessions": "Активные сессии",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Не удалось получить данные статистики аудио"
       }
     },
     "systemResources": {
@@ -3938,9 +3938,9 @@
           "label": "Показывать фоновую шкалу использования"
         },
         "visibleStorageVolumes": {
-          "label": "",
-          "description": "",
-          "placeholder": ""
+          "label": "Видимые тома хранения",
+          "description": "Доступно только тогда, когда все выбранные интеграции от Synology. Оставьте пустым, чтобы показать все обнаруженные тома хранения.",
+          "placeholder": "Выбрать тома хранения"
         }
       },
       "status": {
@@ -3948,24 +3948,24 @@
       }
     },
     "customApi": {
-      "name": "",
-      "description": "",
+      "name": "Пользовательский API",
+      "description": "Отображение данных из любого внешнего API с пользовательской конфигурацией.",
       "option": {
         "definitionId": {
-          "label": ""
+          "label": "ID определения"
         },
         "refreshInterval": {
-          "label": "",
-          "description": ""
+          "label": "Интервал обновления",
+          "description": "Как часто получать данные из API (в секундах)"
         }
       },
-      "noDefinition": "",
-      "definitionNotFound": "",
-      "noDisplayOutput": "",
-      "executeConfirm": "",
-      "executing": "",
-      "executeSuccess": "",
-      "executeFailed": ""
+      "noDefinition": "Определение не выбрано",
+      "definitionNotFound": "Определение виджета не найдено. Возможно, он было удален.",
+      "noDisplayOutput": "Нет вывода",
+      "executeConfirm": "Вы точно хотите выполнить это действие?",
+      "executing": "Выполнение...",
+      "executeSuccess": "Действие выполнено успешно",
+      "executeFailed": "Действие не удалось. Проверьте настройки виджетов."
     },
     "beszelSystemTable": {
       "name": "Системы Beszel (Таблица)",
@@ -4014,17 +4014,17 @@
           "label": "Показать версию агента"
         },
         "columnOrder": {
-          "label": ""
+          "label": "Порядок столбцов"
         },
         "columnWidths": {
-          "label": ""
+          "label": "Ширина столбца"
         }
       },
       "noRecords": "Системы не найдены",
       "error": {
-        "internalServerError": "",
-        "layoutSaveTitle": "",
-        "layoutSaveMessage": ""
+        "internalServerError": "Не удается подключиться к Beszel. Проверьте настройки интеграции.",
+        "layoutSaveTitle": "Не удается сохранить макет таблицы",
+        "layoutSaveMessage": "Не удалось сохранить порядок или ширину столбцов. Пожалуйста, попробуйте еще раз."
       },
       "column": {
         "system": "Система",
@@ -4083,10 +4083,10 @@
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Не удается подключиться к Beszel. Проверьте настройки интеграции."
       },
       "empty": {
-        "noSystems": ""
+        "noSystems": "Систем не найдено"
       },
       "metric": {
         "cpu": "ЦП",
@@ -4115,7 +4115,7 @@
       },
       "empty": "Нет настроенных оповещений",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Не удается подключиться к Beszel. Проверьте настройки интеграции."
       },
       "history": "История",
       "resolved": "Решено",
@@ -4129,8 +4129,8 @@
       "description": "Графики временных рядов для метрик ЦП, памяти, диска, сети и контейнеров Docker",
       "option": {
         "systemId": {
-          "label": "",
-          "description": ""
+          "label": "Система",
+          "description": "Выберите систему Beszel для отображения статистики для"
         },
         "timePeriod": {
           "label": "Период времени"
@@ -4162,13 +4162,13 @@
       },
       "selectSystem": "Выберите систему",
       "empty": {
-        "noSystems": ""
+        "noSystems": "Систем не найдено"
       },
       "error": {
-        "internalServerError": "",
-        "liveConnectionFailed": "",
-        "switchToHistorical": "",
-        "systemNotFound": ""
+        "internalServerError": "Не удается подключиться к Beszel. Проверьте настройки интеграции.",
+        "liveConnectionFailed": "Соединение не удалось. Ваш экземпляр Beszel может не поддерживать потоковое вещание в режиме реального времени.",
+        "switchToHistorical": "Перейти на исторический вид",
+        "systemNotFound": "Выбранная система не найдена. Выберите другую систему."
       },
       "chart": {
         "cpu": {
@@ -4184,8 +4184,8 @@
         },
         "disk": {
           "title": "Использование диска",
-          "subtitle": "",
-          "series": ""
+          "subtitle": "Использовано файловой системой",
+          "series": "Корневая"
         },
         "diskIO": {
           "title": "Ввод-вывод диска",
@@ -4194,9 +4194,9 @@
           "write": "Запись"
         },
         "storage": {
-          "title": "",
-          "subtitle": "",
-          "series": ""
+          "title": "Хранилище",
+          "subtitle": "Использовано файловой системой",
+          "series": "Использовано"
         },
         "network": {
           "title": "Пропускная способность",
@@ -4591,9 +4591,9 @@
       "text": "Запрошенный ресурс не найден"
     },
     "error": {
-      "title": "",
-      "text": "",
-      "digest": ""
+      "title": "Не удалось загрузить эту страницу",
+      "text": "Во время загрузки этой страницы произошла непредвиденная ошибка. Ваша навигация по-прежнему доступна — попробуйте перезагрузить страницу, или используйте другой раздел из боковой панели.",
+      "digest": "Ссылка на ошибку: {digest}"
     },
     "navbar": {
       "items": {
@@ -4601,7 +4601,7 @@
         "boards": "Панели",
         "apps": "Приложения",
         "integrations": "Интеграции",
-        "customWidgets": "",
+        "customWidgets": "Пользовательские виджеты",
         "searchEngies": "Поисковые системы",
         "medias": "Медиафайлы",
         "users": {
@@ -5077,92 +5077,92 @@
               }
             },
             "mcp": {
-              "label": "",
-              "title": "",
-              "subtitle": "",
-              "description": "",
-              "noApiKey": "",
-              "createApiKeyButton": "",
+              "label": "AI / MCP",
+              "title": "Интеграция с ИИ",
+              "subtitle": "Сервер Контекстного Протокола Модели (MCP)",
+              "description": "Подключите ассистентов ИИ к вашему экземпляру Homarr и управляйте всей вашей домашней страницей естественным языком. Ищите и запрашивайте медиафайлы на Overseerr, управляйте контейнерами Docker, переключайте Pi-hole, проверьте здоровье сервера, управляйте устройствами Home Assistant и многое другое — от вашего ИИ-помощника.",
+              "noApiKey": "Вам нужен API-ключ для аутентификации на MCP сервере.",
+              "createApiKeyButton": "Создать API-ключ",
               "endpoint": {
-                "title": ""
+                "title": "Конечная точка MCP"
               },
               "authentication": {
-                "title": "",
-                "intro": "",
+                "title": "Аутентификация",
+                "intro": "Вы можете аутентифицироваться на сервере MCP, используя либо ключ API, либо OAuth. Оба метода дают одинаковый уровень доступа.",
                 "apiKey": {
-                  "title": "",
-                  "description": ""
+                  "title": "API-ключ (ручной)",
+                  "description": "Передать заголовок ApiKey с полным API-ключом в конфигурации MCP клиента."
                 },
                 "oauth": {
-                  "title": "",
-                  "description": "",
-                  "hint": ""
+                  "title": "OAuth (логин в браузере)",
+                  "description": "Клиенты, поддерживающие OAuth (например, Claude Code, opencode или Cursor), могут аутентифицироваться открыв окно браузера. Запустите команду авторизации в клиенте, войдите в Homarr, и вы подключены — API ключ создается автоматически.",
+                  "hint": "Токены OAuth отображаются как обычные API ключи во вкладке Аутенитфикация. Вы можете отозвать их в любой момент."
                 },
-                "permissions": ""
+                "permissions": "Ключ API определяет разрешения, доступные ИИ — он работает с тем же уровнем доступа, что и владелец ключа."
               },
               "clientConfig": {
-                "title": "",
+                "title": "Конфигурация клиента",
                 "streamableHttp": {
-                  "recommended": "",
-                  "title": "",
-                  "worksWith": "",
-                  "addToConfig": "",
-                  "cursor": "",
-                  "claudeDesktop": "",
-                  "claudeCode": "",
-                  "vsCodeCopilot": "",
-                  "replaceHint": ""
+                  "recommended": "Рекомендовано",
+                  "title": "Потоковый HTTP",
+                  "worksWith": "Работает с Cursor, Claude Desktop, VS Code Copilot, Windsurf, Claude Code",
+                  "addToConfig": "Добавьте в ваш файл конфигурации MCP клиента:",
+                  "cursor": "{name}: {file} в вашем проекте или глобальных настройках",
+                  "claudeDesktop": "{name}: {file}",
+                  "claudeCode": "{name}: {file} или используйте {command}",
+                  "vsCodeCopilot": "{name}: {file} в настройках рабочей области",
+                  "replaceHint": "Замените заполнитель на полученный API-ключ, когда создадите его."
                 },
                 "stdio": {
-                  "title": "",
-                  "description": ""
+                  "title": "stdio (старые клиенты через mcp-мост)",
+                  "description": "Для клиентов, которые поддерживают только stdio транспорт. Требуется установить {dependency} (Node.js) локально:"
                 }
               },
               "testConnection": {
-                "title": "",
-                "description": "",
-                "hint": ""
+                "title": "Проверьте подключение",
+                "description": "Запустите это в терминале, чтобы убедиться, что конечная точка доступна и API-ключ работает:",
+                "hint": "Успешный ответ возвращает возможности MCP сервера. Если вы видите ошибку, проверьте подсказки в ответах JSON."
               },
               "availableTools": {
-                "title": "",
-                "description": "",
-                "columnType": "",
-                "columnName": "",
-                "columnDescription": ""
+                "title": "Доступные инструменты",
+                "description": "{count} инструментов доступно. Разверните категорию для просмотра отдельных инструментов и их описаний.",
+                "columnType": "Тип",
+                "columnName": "Инструмент",
+                "columnDescription": "Описание"
               },
               "troubleshooting": {
-                "title": "",
+                "title": "Устранение неполадок",
                 "missingHeader": {
-                  "title": "",
-                  "description": ""
+                  "title": "\"Отсутствует заголовок ApiKey\"",
+                  "description": "Ваш клиент не отправляет заголовок {header}. Проверьте раздел {section} в конфигурации MCP. Некоторые клиенты требуют перезапуска после изменения конфигурации."
                 },
                 "invalidFormat": {
-                  "title": "",
-                  "description": ""
+                  "title": "\"Неправильный формат ApiKey\"",
+                  "description": "Убедитесь, что вы скопировали полный API-ключ, а не его часть."
                 },
                 "invalidKey": {
-                  "title": "",
-                  "description": ""
+                  "title": "\"Неверный ключ API\"",
+                  "description": "ID ключа не найден или токен неправильный. Ключи API можно просмотреть только после создания. Если вы его потеряли, удалите старый ключ и создайте новый."
                 },
                 "connectionRefused": {
-                  "title": "",
-                  "description": ""
+                  "title": "Соединение отклонено / таймаут",
+                  "description": "Убедитесь, что URL-адрес доступен из вашего ИИ-клиента. Если Homarr работает за обратным прокси или в Docker, используйте внешний URL (не {localhost}). Проверьте правильность порта (по умолчанию 7575 для Docker)."
                 },
                 "toolsNotAppearing": {
-                  "title": "",
-                  "description": ""
+                  "title": "Инструменты не отображаются",
+                  "description": "Некоторые инструменты требуют определённой интеграции (например, Docker, Overseerr). Список инструментов зависит от того, что доступно в вашем экземпляре Homarr."
                 }
               },
-              "copy": "",
+              "copy": "Копировать",
               "oneClick": {
-                "title": "",
-                "subtitle": "",
-                "vsCode": "",
-                "cursor": "",
-                "copyUrl": "",
-                "copied": "",
-                "copyHint": "",
-                "manualConfig": ""
+                "title": "Установить в один клик",
+                "subtitle": "Использует OAuth — авторизоваться в вашем браузере при первом использовании",
+                "vsCode": "Установить в VS Code",
+                "cursor": "Установить в Cursor",
+                "copyUrl": "Копировать URL-адрес MCP",
+                "copied": "Скопировано!",
+                "copyHint": "Для ChatGPT, Claude Code или любого клиента MCP",
+                "manualConfig": "Ручная настройка"
               }
             }
           }
@@ -5331,13 +5331,13 @@
     "table": {
       "updated": "Обновлено {when}",
       "refresh": {
-        "lastUpdated": ""
+        "lastUpdated": "Последнее обновление {when}"
       },
       "search": "Поиск среди {count} контейнеров",
       "selected": "Выбрано {selectCount} из {totalCount} контейнеров",
       "footer": "Всего {count} контейнеров",
-      "totalCpu": "",
-      "totalMemory": ""
+      "totalCpu": "Всего ЦП: {cpu}%",
+      "totalMemory": "Всего ОЗУ: {memory}"
     },
     "field": {
       "name": {
@@ -5422,7 +5422,7 @@
       },
       "remove": {
         "label": "Удалить",
-        "confirm": "",
+        "confirm": "Нажмите снова, чтобы удалить окончательно",
         "notification": {
           "success": {
             "title": "Контейнеры удалены",
@@ -5466,7 +5466,7 @@
     },
     "error": {
       "internalServerError": "Произошла ошибка при обновлении данных о контейнерах",
-      "noColumns": ""
+      "noColumns": "Выберите хотя бы один столбец в настройках виджета"
     }
   },
   "kubernetes": {
@@ -5775,14 +5775,14 @@
         }
       },
       "custom-widgets": {
-        "label": "",
+        "label": "Пользовательские виджеты",
         "new": {
-          "label": ""
+          "label": "Новый"
         },
         "edit": {
-          "label": "",
+          "label": "Редактировать",
           "flow": {
-            "label": ""
+            "label": "Поток"
           }
         }
       },
@@ -6063,10 +6063,10 @@
                 }
               },
               "enableRightClickOnWidgets": {
-                "label": "",
+                "label": "Включить правый клик по виджетам",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Включить правый клик по виджетам"
                   }
                 }
               },
