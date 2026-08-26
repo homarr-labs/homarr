@@ -8,6 +8,7 @@ import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useTimeAgo } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";
+import { iconSizes } from "@homarr/ui";
 
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
 import { getUsableWidgetQueryData } from "../common/query-state";
@@ -158,7 +159,11 @@ const InfoDisplay = ({ date, source, dense }: { date: Date; source?: string; den
 
   return (
     <Group gap={5} align="center" wrap="nowrap">
-      <IconClock aria-hidden size={dense ? 12 : "1rem"} color="var(--mantine-color-dimmed)" />
+      <IconClock
+        aria-hidden
+        style={dense ? iconSizes.xs : iconSizes.md}
+        color="var(--mantine-color-dimmed)"
+      />
       <Text size={dense ? "xs" : "sm"} c="dimmed">
         {timeAgo}
       </Text>

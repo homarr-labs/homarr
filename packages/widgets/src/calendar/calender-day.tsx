@@ -95,7 +95,14 @@ const NotificationIndicator = ({ events, size, visible }: NotificationIndicatorP
     >
       {notificationEvents.map((notificationEvent) => {
         return (
-          <Box key={notificationEvent} bg={notificationEvent} h={size} w={size} p={0} style={{ borderRadius: 999 }} />
+          <Box
+            key={notificationEvent}
+            bg={notificationEvent}
+            h={size}
+            w={size * 2}
+            p={0}
+            style={{ borderRadius: 999 }}
+          />
         );
       })}
     </Flex>

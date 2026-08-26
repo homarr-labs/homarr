@@ -2,6 +2,7 @@ import { Box, Group, Loader, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
+import { zoomCompensatedSize } from "@homarr/ui";
 
 import { isInitialWidgetQueryPending } from "../common/query-state";
 import { AnimatedWeatherIcon } from "../weather/animated-icon";
@@ -46,20 +47,35 @@ export const ClockWeatherSummary = ({
   };
 
   return (
-    <Stack gap={detailed ? 3 : 0} align="flex-start">
-      <Group gap={5} wrap="nowrap">
-        <AnimatedWeatherIcon
-          animated={animateIcon}
-          code={weather.current.weatherCode}
-          isDay={weather.current.isDay}
-          size={detailed ? 28 : 22}
-        />
-        <Text size={detailed ? "sm" : "xs"} fw={detailed ? 600 : undefined} c={detailed ? undefined : "dimmed"}>
-          {Math.round(temperature)}
-          {unit}
-        </Text>
-        {detailed && <WeatherDescription weatherOnly weatherCode={weather.current.weatherCode} />}
-      </Group>
+    <Stack gap={detailed ? 3 : 2} align={detailed ? "flex-start" : "center"}>
+      {detailed ? (
+        <Group gap={5} wrap="nowrap">
+          <AnimatedWeatherIcon
+            animated={animateIcon}
+            code={weather.current.weatherCode}
+            isDay={weather.current.isDay}
+            style={zoomCompensatedSize(28)}
+          />
+          <Text size="sm" fw={600}>
+            {Math.round(temperature)}
+            {unit}
+          </Text>
+          <WeatherDescription weatherOnly weatherCode={weather.current.weatherCode} />
+        </Group>
+      ) : (
+        <Stack gap={1} align="center">
+          <AnimatedWeatherIcon
+            animated={animateIcon}
+            code={weather.current.weatherCode}
+            isDay={weather.current.isDay}
+            style={zoomCompensatedSize(26)}
+          />
+          <Text size="xs" c="dimmed">
+            {Math.round(temperature)}
+            {unit}
+          </Text>
+        </Stack>
+      )}
       {detailed && (
         <Box>
           <Text size="xs" fw={600} lineClamp={1}>

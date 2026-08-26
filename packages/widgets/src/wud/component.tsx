@@ -9,6 +9,7 @@ import { useRequiredBoard } from "@homarr/boards/context";
 import { getIconUrl } from "@homarr/definitions";
 import type { WudContainerUpdate } from "@homarr/integrations";
 import { useI18n } from "@homarr/translation/client";
+import { zoomCompensatedSize } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
@@ -64,7 +65,7 @@ const WudWidgetContent = ({
           <Text size={isTiny ? "8px" : "xs"} fw={700}>
             {updatePercentage}%
           </Text>
-          <IconBrandDocker size={isTiny ? 8 : 16} />
+          <IconBrandDocker style={zoomCompensatedSize(isTiny ? 8 : 16)} />
         </Center>
       }
       sections={[{ value: updatePercentage, color: progressColor(updatePercentage) }]}

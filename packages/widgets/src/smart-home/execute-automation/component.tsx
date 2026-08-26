@@ -19,6 +19,7 @@ import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
 import { useRegisterSpotlightContextActions } from "@homarr/spotlight";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
+import { zoomCompensatedSize } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../../definition";
 import { isSmartHomeTiny } from "../layout";
@@ -126,7 +127,7 @@ export default function SmartHomeTriggerAutomationWidget({
         <Center w="100%" h="100%">
           <Stack align="center" gap={isTiny ? 6 : "md"} p="xs" maw="100%">
             <ThemeIcon variant="light" size={isTiny ? "md" : "xl"} radius="xl">
-              <IconAutomation size={isTiny ? 14 : 24} />
+              <IconAutomation style={zoomCompensatedSize(isTiny ? 14 : 24)} />
             </ThemeIcon>
             <Text ta="center" fw={600} fz={isTiny ? "xs" : "sm"} lineClamp={2} maw="100%">
               {options.displayName}

@@ -11,6 +11,7 @@ import {
 } from "@tabler/icons-react";
 
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
+import { iconSizes, zoomCompensatedSize } from "@homarr/ui";
 
 import type { WidgetProps } from "../definition";
 import { AnimatedWeatherIcon } from "./animated-icon";
@@ -88,7 +89,7 @@ export const DailyWeatherDetails = ({
       <Group justify="space-between" align="center" gap="md" wrap="nowrap">
         <Group gap="sm" wrap="nowrap" miw={0}>
           <ThemeIcon variant="light" size={46} radius="xl">
-            <AnimatedWeatherIcon animated={animateIcons} code={day.weatherCode} size={28} />
+            <AnimatedWeatherIcon animated={animateIcons} code={day.weatherCode} style={zoomCompensatedSize(28)} />
           </ThemeIcon>
           <Stack gap={0} miw={0}>
             <Text fw={700} truncate>
@@ -109,29 +110,29 @@ export const DailyWeatherDetails = ({
 
       <SimpleGrid cols={2} spacing={6}>
         <DetailMetric
-          icon={<IconTemperature size={16} aria-hidden />}
+          icon={<IconTemperature style={iconSizes.md} aria-hidden />}
           label={t("advanced.detailLabel.feelsLike")}
           value={`${getPreferredUnit(day.maxApparentTemperature, isFahrenheit, disableTemperatureDecimals)} / ${getPreferredUnit(day.minApparentTemperature, isFahrenheit, disableTemperatureDecimals)}`}
         />
         <DetailMetric
-          icon={<IconDroplets size={16} aria-hidden />}
+          icon={<IconDroplets style={iconSizes.md} aria-hidden />}
           label={t("advanced.detailLabel.precipitation")}
           value={`${day.precipitationProbability ?? "?"}% · ${day.precipitation?.toFixed(1) ?? "?"} mm`}
         />
         {showHumidity && (
           <DetailMetric
-            icon={<IconGauge size={16} aria-hidden />}
+            icon={<IconGauge style={iconSizes.md} aria-hidden />}
             label={t("advanced.detailLabel.humidity")}
             value={`${day.averageHumidity ?? "?"}%`}
           />
         )}
         <DetailMetric
-          icon={<IconWind size={16} aria-hidden />}
+          icon={<IconWind style={iconSizes.md} aria-hidden />}
           label={t("advanced.detailLabel.wind")}
           value={`${getPreferredWindSpeed(day.maxWindSpeed, useImperialSpeed)} / ${getPreferredWindSpeed(day.maxWindGusts, useImperialSpeed)} ${speedUnit}`}
         />
         <DetailMetric
-          icon={<IconSunHigh size={16} aria-hidden />}
+          icon={<IconSunHigh style={iconSizes.md} aria-hidden />}
           label={t("advanced.detailLabel.uv")}
           value={day.uvIndex?.toFixed(1) ?? "?"}
         />
@@ -140,17 +141,17 @@ export const DailyWeatherDetails = ({
       <Paper className={classes.solarDetails} p="xs" radius="md">
         <SimpleGrid cols={3} spacing="xs">
           <SolarMetric
-            icon={<IconSunrise size={17} aria-hidden />}
+            icon={<IconSunrise style={iconSizes.md} aria-hidden />}
             label={t("dailyForecast.sunrise")}
             value={getPreferredTime(day.sunriseAt, locale, timeZone)}
           />
           <SolarMetric
-            icon={<IconSunset size={17} aria-hidden />}
+            icon={<IconSunset style={iconSizes.md} aria-hidden />}
             label={t("dailyForecast.sunset")}
             value={getPreferredTime(day.sunsetAt, locale, timeZone)}
           />
           <SolarMetric
-            icon={<IconSunHigh size={17} aria-hidden />}
+            icon={<IconSunHigh style={iconSizes.md} aria-hidden />}
             label={t("advanced.detailLabel.daylight")}
             value={getPreferredDaylightDuration(day.daylightDuration)}
           />

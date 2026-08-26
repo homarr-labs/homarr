@@ -8,6 +8,7 @@ import { clientApi } from "@homarr/api/client";
 import { invariantTechnicalLabels } from "@homarr/definitions";
 import type { BeszelContainerStatsRecord, BeszelSystemStatsRecord } from "@homarr/integrations/types";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
+import { zoomCompensatedSize } from "@homarr/ui";
 
 import { getUsableWidgetQueryData } from "../../common/query-state";
 import { containerColors } from "./colors";
@@ -209,7 +210,7 @@ export function BeszelStatsView({
     return (
       <Center h={CHART_HEIGHT}>
         <Stack align="center" gap="sm" p="md">
-          <IconPlugConnectedX size={40} />
+          <IconPlugConnectedX style={zoomCompensatedSize(40)} />
           <Text size="sm" c="dimmed" ta="center">
             {t("error.liveConnectionFailed")}
           </Text>
@@ -238,7 +239,7 @@ export function BeszelStatsView({
     return (
       <Center h={CHART_HEIGHT}>
         <Stack align="center" gap="xs">
-          <IconServerOff size={24} opacity={0.5} />
+          <IconServerOff style={zoomCompensatedSize(24)} opacity={0.5} />
           <Text size="sm" c="dimmed">
             {tBeszel("error.internalServerError")}
           </Text>

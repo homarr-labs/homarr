@@ -2,6 +2,7 @@ import { Center, Group, SimpleGrid, Stack, Text } from "@mantine/core";
 import { IconWifi } from "@tabler/icons-react";
 
 import { useI18n } from "@homarr/translation/client";
+import { iconSizes } from "@homarr/ui";
 
 import { StatRow } from "./stat-row";
 
@@ -21,7 +22,7 @@ export const WifiVariant = ({
     <Stack h="100%" align="center" justify="center" gap={compact ? "sm" : "md"}>
       <Group gap="xs" wrap="nowrap" justify="center">
         <Center w={24} h={24}>
-          <IconWifi size={20} />
+          <IconWifi style={iconSizes.xl} />
         </Center>
         <Text size={"md"} fw={"bold"}>
           {t("variants.wifi.name")}

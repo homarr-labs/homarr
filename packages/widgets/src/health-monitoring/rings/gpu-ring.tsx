@@ -1,6 +1,8 @@
 import { Center, RingProgress, Stack, Text, Tooltip } from "@mantine/core";
 import { IconDeviceDesktop } from "@tabler/icons-react";
 
+import { zoomCompensatedSize } from "@homarr/ui";
+
 import { progressColor } from "../system-health";
 
 interface GpuRingProps {
@@ -49,7 +51,10 @@ export const GpuRing = ({ gpu, isTiny, fahrenheit }: GpuRingProps) => {
               className="health-monitoring-gpu-utilization-value"
               size={isTiny ? "8px" : "xs"}
             >{`${gpu.processorUtilization.toFixed(0)}%`}</Text>
-            <IconDeviceDesktop className="health-monitoring-gpu-utilization-icon" size={isTiny ? 8 : 16} />
+            <IconDeviceDesktop
+              className="health-monitoring-gpu-utilization-icon"
+              style={zoomCompensatedSize(isTiny ? 8 : 16)}
+            />
           </Center>
         }
         sections={[

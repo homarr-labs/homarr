@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { List, Stack, Text } from "@mantine/core";
 import {
   IconCloud,
@@ -25,19 +26,23 @@ interface WeatherIconProps {
   code: number;
   isDay?: boolean;
   size?: string | number;
+  style?: CSSProperties;
 }
 
 /**
  * Icon which should be displayed when specific code is defined
  * @param code weather code from api
  * @param size size of the icon, accepts relative sizes too
+ * @param style CSS overrides (e.g. from `zoomCompensatedSize`) - prefer this over `size` for a
+ * board-zoom-safe size, since `size` becomes a raw SVG width/height attribute that `var()` isn't
+ * guaranteed to resolve inside (see `iconSizes` in @homarr/ui).
  * @returns Icon corresponding to the weather code
  */
-export const WeatherIcon = ({ code, isDay = true, size = 50 }: WeatherIconProps) => {
-  if (code === 0 && !isDay) return <IconMoon style={{ float: "left" }} size={size} />;
+export const WeatherIcon = ({ code, isDay = true, size = 50, style }: WeatherIconProps) => {
+  if (code === 0 && !isDay) return <IconMoon style={{ float: "left", ...style }} size={size} />;
   const { icon: Icon } = weatherDefinitions.find((definition) => definition.codes.includes(code)) ?? unknownWeather;
 
-  return <Icon style={{ float: "left" }} size={size} />;
+  return <Icon style={{ float: "left", ...style }} size={size} />;
 };
 
 export const getWeatherKind = (code: number) =>

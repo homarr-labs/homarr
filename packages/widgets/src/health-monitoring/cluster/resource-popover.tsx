@@ -19,6 +19,7 @@ import duration from "dayjs/plugin/duration";
 import { capitalize, formatBytes, formatBytesPair } from "@homarr/common";
 import type { ComputeResource, Resource, StorageResource } from "@homarr/integrations/types";
 import { useI18n } from "@homarr/translation/client";
+import { zoomCompensatedSize } from "@homarr/ui";
 
 dayjs.extend(duration);
 
@@ -197,17 +198,18 @@ const StorageType = ({ item }: { item: StorageResource }) => {
 };
 
 const ResourceIcon = ({ type, size }: { type: Resource["type"]; size: number }) => {
+  const style = zoomCompensatedSize(size);
   switch (type) {
     case "node":
-      return <IconServer size={size} />;
+      return <IconServer style={style} />;
     case "lxc":
-      return <IconDeviceLaptop size={size} />;
+      return <IconDeviceLaptop style={style} />;
     case "qemu":
-      return <IconDeviceLaptop size={size} />;
+      return <IconDeviceLaptop style={style} />;
     case "storage":
-      return <IconDatabase size={size} />;
+      return <IconDatabase style={style} />;
     default:
       console.error(`Unknown resource type: ${type as string}`);
-      return <IconQuestionMark size={size} />;
+      return <IconQuestionMark style={style} />;
   }
 };

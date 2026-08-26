@@ -6,6 +6,7 @@ import { IconCube, IconUsersGroup } from "@tabler/icons-react";
 import { clientApi } from "@homarr/api/client";
 import { formatNumber } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";
+import { zoomCompensatedSize } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../../common/empty-state";
 import type { WidgetComponentProps } from "../../definition";
@@ -71,7 +72,12 @@ export default function MinecraftServerStatusWidget({
             showServerIcon &&
             (data.icon ? (
               <img
-                style={{ flex: 1, width: iconSize, maxHeight: iconSize, objectFit: "contain" }}
+                style={{
+                  flex: 1,
+                  width: `calc(${iconSize}px * var(--board-canvas-ui-scale, 1))`,
+                  maxHeight: `calc(${iconSize}px * var(--board-canvas-ui-scale, 1))`,
+                  objectFit: "contain",
+                }}
                 alt={`minecraft icon ${options.domain}`}
                 src={data.icon}
               />
@@ -84,12 +90,12 @@ export default function MinecraftServerStatusWidget({
                   justifyContent: "center",
                 }}
               >
-                <IconCube size={iconSize} color="var(--mantine-color-gray-5)" />
+                <IconCube style={zoomCompensatedSize(iconSize)} color="var(--mantine-color-gray-5)" />
               </Box>
             ))}
           <Stack gap={4} w={showCapacity ? "min(100%, 420px)" : "auto"} align="stretch">
             <Group gap={5} c="dimmed" align="center" justify="center">
-              <IconUsersGroup size={showMetadata ? "1.25rem" : "1rem"} />
+              <IconUsersGroup style={zoomCompensatedSize(showMetadata ? 20 : 16)} />
               <Text size={showMetadata ? "lg" : isDense ? "sm" : "md"}>
                 {formatNumber(data.players.online, 1)} / {formatNumber(data.players.max, 1)}
               </Text>

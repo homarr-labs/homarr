@@ -17,6 +17,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 
 import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
+import { iconSizes, zoomCompensatedSize } from "@homarr/ui";
 import type { TablerIcon } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../common/empty-state";
@@ -234,7 +235,12 @@ export default function PatchMonWidget({
               style={{ "--stat-bg": severityToMantineBgColor(severity) } as CSSProperties}
             >
               {showIcons && (
-                <Icon className={classes.statIcon} size={iconSize} stroke={1.5} color={severityToIconColor(severity)} />
+                <Icon
+                  className={classes.statIcon}
+                  style={zoomCompensatedSize(iconSize)}
+                  stroke={1.5}
+                  color={severityToIconColor(severity)}
+                />
               )}
               <span className={classes.statValue}>
                 <Text component="span" fw={700} size="inherit" c={severityToMantineColor(severity)}>
@@ -444,7 +450,7 @@ function CompactStatGrid({
               {showIcon && (
                 <Icon
                   className={classes.statIcon}
-                  size="var(--mantine-font-size-lg)"
+                  style={iconSizes.lg}
                   stroke={1.5}
                   color={severityToIconColor(severity)}
                 />

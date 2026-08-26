@@ -21,6 +21,7 @@ import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useRegisterSpotlightContextResults } from "@homarr/spotlight";
 import { useI18n } from "@homarr/translation/client";
+import { iconSizes, zoomCompensatedSize } from "@homarr/ui";
 
 import { getSafeAppHref, SAFE_NEW_TAB_REL } from "../common/application-url";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
@@ -141,7 +142,7 @@ export default function BookmarksWidget({
         <Center flex={1}>
           <Stack align="center" gap={6}>
             <ThemeIcon variant="light" size="lg" radius="xl">
-              <IconBookmark size={20} />
+              <IconBookmark style={iconSizes.xl} />
             </ThemeIcon>
             <Text size="sm" c="dimmed" ta="center">
               {t("empty")}
@@ -262,7 +263,7 @@ const BookmarkCard = ({
               transition: reduceMotion ? undefined : "opacity 120ms ease, transform 120ms ease",
             }}
           >
-            <IconArrowUpRight size={14} />
+            <IconArrowUpRight style={iconSizes.sm} />
           </ThemeIcon>
         ) : null}
       </Group>
@@ -339,7 +340,7 @@ const BookmarkAvatar = ({ bookmark, iconUrl, size }: { bookmark: BookmarkItem; i
     imageProps={{ referrerPolicy: "no-referrer" }}
     styles={{ image: { objectFit: "contain" } }}
   >
-    <IconLink size={Math.max(14, size / 2)} />
+    <IconLink style={zoomCompensatedSize(Math.max(14, size / 2))} />
   </Avatar>
 );
 

@@ -7,6 +7,7 @@ import { IconArrowDown, IconArrowUp, IconClockPause, IconServer } from "@tabler/
 import { clientApi } from "@homarr/api/client";
 import { formatNumber } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";
+import { zoomCompensatedSize } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
@@ -215,7 +216,7 @@ function UptimeKumaContent({ integrationIds, options, width, height, displayMode
               <div key={statKey} className={classes.statTile}>
                 <Icon
                   className={classes.statIcon}
-                  size={iconSize}
+                  style={zoomCompensatedSize(iconSize)}
                   stroke={1.5}
                   color={`var(--mantine-color-${color}-6)`}
                 />
