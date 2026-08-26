@@ -239,10 +239,8 @@ export const createSessionQueryPersister = (
   const persistNow = (client: PersistedClient) => {
     if (!storage || persistenceDisabled) return;
     let candidate: PersistedClient | undefined;
-    let sanitizedQueryCount = 0;
     try {
       const sanitizedClient = sanitizePersistedClient(client);
-      sanitizedQueryCount = sanitizedClient.clientState.queries.length;
       candidate = trimToQueryLimit(sanitizedClient);
     } catch {
       persistenceDisabled = true;
@@ -254,10 +252,11 @@ export const createSessionQueryPersister = (
       return;
     }
 
+    let quotaLimited = false;
     while (candidate) {
       try {
         storage.setItem(key, stringify(candidate));
-        if (candidate.clientState.queries.length < sanitizedQueryCount) {
+        if (quotaLimited) {
           persistedQueryLimit = Math.min(persistedQueryLimit, candidate.clientState.queries.length);
         }
         return;
@@ -267,6 +266,7 @@ export const createSessionQueryPersister = (
           persistenceDisabled = true;
           return;
         }
+        quotaLimited = true;
         candidate = keepNewestQueries(candidate, Math.floor(candidate.clientState.queries.length / 2));
       }
     }

@@ -199,12 +199,13 @@ export function DockerTable({ initialData }: DockerTableProps) {
     refetchOnMount: false,
   });
   const refreshInventory = clientApi.docker.refreshInventory.useMutation({
-    async onSuccess() {
+    async onSuccess(result) {
       await Promise.all([
         utils.docker.getContainers.invalidate(),
         utils.docker.reconcileServices.invalidate(),
         utils.docker.getServiceHealth.invalidate(),
       ]);
+      if (result.scope === "local") return;
       showSuccessNotification({
         title: tDocker("action.refresh.notification.success.title"),
         message: tDocker("action.refresh.notification.success.message"),

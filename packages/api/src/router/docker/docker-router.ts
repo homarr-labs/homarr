@@ -44,10 +44,12 @@ try {
 const publishDockerInventoryRefreshAsync = async () => {
   try {
     await dockerInventoryRefreshChannel.publishAsync({ requestedAt: Date.now() });
+    return true;
   } catch (error) {
     if (!isRedisDisabled()) {
       logger.warn(new Error("Failed to publish Docker inventory refresh", { cause: error }));
     }
+    return false;
   }
 };
 
@@ -91,7 +93,9 @@ export const dockerRouter = createTRPCRouter({
     .concat(dockerMiddleware())
     .mutation(async () => {
       resetDockerInventory();
-      await publishDockerInventoryRefreshAsync();
+      const propagated = await publishDockerInventoryRefreshAsync();
+      if (propagated) return { scope: "all" as const };
+      return { scope: "local" as const };
     }),
   getContainers: permissionRequiredProcedure
     .requiresPermission("admin")
