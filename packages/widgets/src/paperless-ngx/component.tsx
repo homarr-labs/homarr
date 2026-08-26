@@ -32,7 +32,7 @@ const statIcons = {
 const gridHiddenWhenHeroShown = new Set(["documentsTotal", "documentsInbox"]);
 
 const gridColsByWidth = [
-  { minWidth: 380, cols: 3 },
+  { minWidth: 300, cols: 3 },
   { minWidth: 220, cols: 2 },
   { minWidth: 0, cols: 1 },
 ] as const;
