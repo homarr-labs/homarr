@@ -6,8 +6,9 @@ import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition, matchesWidgetRuntimeQuery } from "../definition";
 import { optionsBuilder } from "../options";
+import { views } from "./views";
 
-export const views = ["workers", "queue", "statistics"] as const;
+export { views };
 
 export const { componentLoader, definition } = createWidgetDefinition("mediaTranscoding", {
   icon: IconTransform,

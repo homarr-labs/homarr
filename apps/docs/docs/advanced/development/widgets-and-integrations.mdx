@@ -25,9 +25,11 @@ Keep the UI, options, helpers, and tests together in `packages/widgets/src/<widg
    `packages/definitions/src/widget-integration-map.ts`, then spread `getWidgetIntegrationConfig(kind)` into the local
    definition. This server-safe config is also the API authorization boundary, avoiding a package cycle without
    duplicating widget metadata.
-4. Register the module in the explicit lazy-loader and type-only maps in `packages/widgets/src/registry.ts`, then add
-   its icon to `packages/ui/src/widget-icons.ts`. The two registry entries preserve exact option/component inference;
-   keep them in the same order so drift is obvious in review.
+4. Register the widget in both explicit literal loader maps and the type-only module map in
+   `packages/widgets/src/registry.ts`, then add its icon to `packages/ui/src/widget-icons.ts`. The module and component
+   loaders must both use literal import paths. Keeping them separate lets a cold widget load request its definition
+   and component chunks in parallel; the type-only map preserves exact option and component inference. Keep all three
+   maps in the same order so drift is obvious in review.
 5. If the widget needs server data, add its tRPC router under `packages/api/src/router/widgets/` and add its explicit
    lazy import to `packages/api/src/router/widgets/index.ts`. Keep upstream requests and Redis response caching in
    `@homarr/request-handler`. Use the widget integration middleware for integration-backed procedures.
@@ -66,9 +68,15 @@ real caveats.
 
 ## Data and errors
 
-- TanStack Query owns browser caching and refresh behavior. Redis owns shared server response caching.
+- TanStack Query owns browser caching and refresh behavior. Redis owns shared server response caching for bounded key
+  spaces. Public handlers whose keys come from arbitrary URLs, domains, symbols, or coordinates stay in the bounded
+  process-local cache.
 - Cache raw service responses, never authorization decisions or decrypted credentials. Integration-backed cache keys
-  include the integration identity and are invalidated after mutations.
+  include keyed credential fingerprints and the complete integration identity, and are invalidated after mutations.
+  The fingerprints change with credentials without exposing their values in Redis keys.
+- Give upstream requests a finite deadline and pass the request handler's `AbortSignal` into clients that support it.
+  Admission is bounded per handler. Request deduplication and distributed lock ownership remain active until the
+  upstream settles or a bounded cleanup grace expires, while unresolved upstream work stays separately capped.
 - Keep validation and authorization on the server. Client-side checks improve UX but do not replace tRPC guards.
 - Use the shared logger with safe identifiers, operation names, duration, and the original error cause. Never log
   secrets or full upstream payloads.
@@ -77,3 +85,18 @@ real caveats.
 
 Registration files intentionally contain boring, explicit imports. This small amount of repetition preserves exact
 TypeScript inference, gives Next.js discoverable lazy chunks, and keeps Ctrl+click navigation reliable.
+
+## Registry imports
+
+Use `@homarr/widgets/manifest` to load registered widgets. `loadWidgetDefinition` is the metadata-only path;
+`loadWidgetComponent` loads only the UI module; and `loadWidgetResources` requests both paths in parallel. These
+loaders cache in-flight and successful promises and remove rejected promises so a later request can retry.
+
+The former root `widgetImports` and `loadWidgetDynamic` exports are intentionally not compatibility aliases.
+`widgetImports` synchronously imported every widget module, and `loadWidgetDynamic` depended on that eager map.
+Restoring them at the package root would defeat lazy definition chunks or add client-only runtime dependencies to
+every root consumer. Migrate metadata consumers to `loadWidgetDefinition`, renderers to `loadWidgetResources`, and
+type-only registry consumers from the removed internal `WidgetImportRecord` helper to the root `WidgetImports` type.
+
+`@homarr/widgets/catalog` remains as a deprecated compatibility subpath for `widgetCatalogIcons`. New imports should
+use `@homarr/ui/widget-icons`, which is the canonical server-safe icon catalog.

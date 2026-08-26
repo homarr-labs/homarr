@@ -5,9 +5,10 @@ import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/common";
 import type { Database, InferSelectModel } from "@homarr/db";
 import { asc, eq, inArray, like } from "@homarr/db";
-import { apps } from "@homarr/db/schema";
+import { apps, integrations } from "@homarr/db/schema";
 import { selectAppSchema } from "@homarr/db/validationSchemas";
 import { getIconForName } from "@homarr/icons";
+import { invalidateIntegrationResponseCacheAsync } from "@homarr/redis";
 import { appCreateManySchema, appEditSchema, appManageSchema } from "@homarr/validation/app";
 import { byIdSchema, paginatedSchema } from "@homarr/validation/common";
 
@@ -256,6 +257,14 @@ export const appRouter = createTRPCRouter({
           pingUrl: input.pingUrl === "" ? null : input.pingUrl,
         })
         .where(eq(apps.id, input.id));
+
+      if (app.href !== input.href) {
+        const linkedIntegrations = await ctx.db.query.integrations.findMany({
+          columns: { id: true },
+          where: eq(integrations.appId, input.id),
+        });
+        await Promise.all(linkedIntegrations.map(({ id }) => invalidateIntegrationResponseCacheAsync(id)));
+      }
     }),
   delete: permissionRequiredProcedure
     .requiresPermission("app-full-all")
@@ -271,7 +280,12 @@ export const appRouter = createTRPCRouter({
     })
     .input(byIdSchema)
     .mutation(async ({ ctx, input }) => {
+      const linkedIntegrations = await ctx.db.query.integrations.findMany({
+        columns: { id: true },
+        where: eq(integrations.appId, input.id),
+      });
       await ctx.db.delete(apps).where(eq(apps.id, input.id));
+      await Promise.all(linkedIntegrations.map(({ id }) => invalidateIntegrationResponseCacheAsync(id)));
     }),
 });
 

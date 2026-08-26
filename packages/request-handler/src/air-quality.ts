@@ -5,7 +5,6 @@ import { z } from "zod";
 
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
-import { withTimeoutAsync } from "@homarr/core/infrastructure/http/timeout";
 
 import { createWidgetRequestHandler } from "./lib/widget-request-handler";
 
@@ -44,11 +43,12 @@ const requestedVariables = [
 ] as const;
 
 export const airQualityRequestHandler = createWidgetRequestHandler({
-  cacheNamespace: "air-quality",
+  // Coordinates are a public, continuous key space. Keep this cache process-local and bounded.
   cacheTtlMs: 15 * 60 * 1000,
   fallbackToStaleOnError: true,
   staleIfErrorTtlMs: 24 * 60 * 60 * 1000,
-  async requestAsync(input: { latitude: number; longitude: number }) {
+  requestTimeoutMs: 10_000,
+  async requestAsync(input: { latitude: number; longitude: number }, signal: AbortSignal) {
     const url = new URL("https://air-quality-api.open-meteo.com/v1/air-quality");
     url.searchParams.set("latitude", input.latitude.toString());
     url.searchParams.set("longitude", input.longitude.toString());
@@ -57,9 +57,7 @@ export const airQualityRequestHandler = createWidgetRequestHandler({
     url.searchParams.set("forecast_days", FORECAST_DAYS.toString());
     url.searchParams.set("timezone", "auto");
 
-    const response = await withTimeoutAsync(async (signal) => {
-      return await fetchWithTrustedCertificatesAsync(url.toString(), { signal });
-    });
+    const response = await fetchWithTrustedCertificatesAsync(url.toString(), { signal });
     if (!response.ok) throw new ResponseError(response);
 
     const json: unknown = await response.json();

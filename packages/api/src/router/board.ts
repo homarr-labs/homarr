@@ -161,8 +161,8 @@ const validateWidgetConfigurationsAsync = async (
   );
   if (invalidIntegrationIds.length > 0) {
     throw new TRPCError({
-      code: "BAD_REQUEST",
-      message: `Invalid integration IDs: ${invalidIntegrationIds.join(", ")}`,
+      code: "NOT_FOUND",
+      message: "Integration not found",
     });
   }
 

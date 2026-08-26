@@ -1,19 +1,17 @@
 import { z } from "zod/v4";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
-import { withTimeoutAsync } from "@homarr/core/infrastructure/http/timeout";
 
 import { createWidgetRequestHandler } from "./lib/widget-request-handler";
 
 export const fetchStockPriceHandler = createWidgetRequestHandler({
-  cacheNamespace: "stock-price",
-  async requestAsync(input: { stock: string; timeRange: string; timeInterval: string }) {
-    const response = await withTimeoutAsync(async (signal) => {
-      return await fetchWithTrustedCertificatesAsync(
-        `https://query1.finance.yahoo.com/v8/finance/chart/${input.stock}?range=${input.timeRange}&interval=${input.timeInterval}`,
-        { signal },
-      );
-    });
+  // Symbols are supplied through a public procedure and form an unbounded key space.
+  requestTimeoutMs: 10_000,
+  async requestAsync(input: { stock: string; timeRange: string; timeInterval: string }, signal) {
+    const response = await fetchWithTrustedCertificatesAsync(
+      `https://query1.finance.yahoo.com/v8/finance/chart/${input.stock}?range=${input.timeRange}&interval=${input.timeInterval}`,
+      { signal },
+    );
     const data = dataSchema.parse(await response.json());
 
     if ("error" in data) {

@@ -10,19 +10,23 @@ import { createWidgetRequestHandler } from "./lib/widget-request-handler";
 const logger = createLogger({ module: "rssFeedsRequestHandler" });
 
 export const rssFeedsRequestHandler = createWidgetRequestHandler({
-  cacheNamespace: "rss-feeds",
-  async requestAsync(input: { url: string; count: number }) {
-    const result = (await extract(input.url, {
-      getExtraEntryFields: (feedEntry) => {
-        const media = attemptGetImageFromEntry(input.url, feedEntry);
-        if (!media) {
-          return {};
-        }
-        return {
-          enclosure: media,
-        };
+  // Authorized editors can supply arbitrary URLs, so keep this cache process-local and bounded.
+  async requestAsync(input: { url: string; count: number }, signal) {
+    const result = (await extract(
+      input.url,
+      {
+        getExtraEntryFields: (feedEntry) => {
+          const media = attemptGetImageFromEntry(input.url, feedEntry);
+          if (!media) {
+            return {};
+          }
+          return {
+            enclosure: media,
+          };
+        },
       },
-    })) as ExtendedFeedData;
+      { signal },
+    )) as ExtendedFeedData;
 
     return {
       ...result,

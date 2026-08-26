@@ -8,7 +8,7 @@ import type { SettingsContextProps } from "@homarr/settings/creator";
 import type { WidgetComponentProps, WidgetDefinition } from "./definition";
 import type { WidgetOptionDefinition } from "./options";
 import type { WidgetImports } from "./registry";
-import { widgetModuleLoaders } from "./registry";
+import { widgetComponentLoaders, widgetModuleLoaders } from "./registry";
 
 type RegisteredWidgetModule = WidgetImports[WidgetKind];
 type RegisteredWidgetComponentModule = Awaited<ReturnType<RegisteredWidgetModule["componentLoader"]>>;
@@ -87,15 +87,7 @@ export const loadWidgetModule = <TKind extends WidgetKind>(kind: TKind) =>
   correlateWidgetPromise(kind, "module", loadRegisteredWidgetModule(kind));
 
 const loadRegisteredWidgetComponent = createRetryableLoader(
-  new Map<WidgetKind, () => Promise<RegisteredWidgetComponentModule>>(
-    widgetKinds.map((kind) => [
-      kind,
-      async () => {
-        const widgetModule = await loadRegisteredWidgetModule(kind);
-        return widgetModule.componentLoader();
-      },
-    ]),
-  ),
+  new Map<WidgetKind, () => Promise<RegisteredWidgetComponentModule>>(objectEntries(widgetComponentLoaders)),
 );
 
 export const loadWidgetComponent = <TKind extends WidgetKind>(kind: TKind) =>

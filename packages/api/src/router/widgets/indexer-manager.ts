@@ -38,7 +38,7 @@ export const indexerManagerRouter = createTRPCRouter({
   testAllIndexers: protectedProcedure
     .concat(createManyWidgetIntegrationMiddleware("interact", "indexerManager"))
     .mutation(async ({ ctx }) => {
-      await Promise.all(
+      const results = await Promise.allSettled(
         ctx.integrations.map(async (integration) => {
           const client = await createIntegrationAsync(integration);
           await client.testAllAsync().catch((err) => {
@@ -51,5 +51,8 @@ export const indexerManagerRouter = createTRPCRouter({
         }),
       );
       await indexerManagerRequestHandler.invalidateCacheAsync(ctx.integrations.map(({ id }) => id));
+
+      const firstFailure = results.find((result) => result.status === "rejected");
+      if (firstFailure?.status === "rejected") throw firstFailure.reason;
     }),
 });

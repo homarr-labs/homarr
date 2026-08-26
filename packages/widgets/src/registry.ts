@@ -186,6 +186,75 @@ export type WidgetImports = {
   wud: typeof wud;
 };
 
+type WidgetComponentLoaders = {
+  [TKind in WidgetKind]: WidgetImports[TKind]["componentLoader"];
+};
+
+// Keep component imports literal and separate from widgetModuleLoaders. The
+// manifest starts both chunk requests together on a cold widget load; resolving
+// this loader through the widget module would serialize those requests.
+export const widgetComponentLoaders = {
+  clock: () => import("./clock/component"),
+  airQuality: () => import("./air-quality/component"),
+  countdown: () => import("./countdown/component"),
+  timer: () => import("./timer/component"),
+  app: () => import("./app/component"),
+  assistant: () => import("./assistant/component"),
+  archiveTeamWarrior: () => import("./archive-team-warrior/component"),
+  anchorNote: () => import("./anchor-note/component"),
+  notebook: () => import("./notebook/component"),
+  iframe: () => import("./iframe/component"),
+  video: () => import("./video/component"),
+  dnsHoleSummary: () => import("./dns-hole/summary/component"),
+  dnsHoleControls: () => import("./dns-hole/controls/component"),
+  "smartHome-entityState": () => import("./smart-home/entity-state/component"),
+  "smartHome-executeAutomation": () => import("./smart-home/execute-automation/component"),
+  stockPrice: () => import("./stocks/component"),
+  mediaServer: () => import("./media-server/component"),
+  calendar: () => import("./calendar/component"),
+  downloads: () => import("./downloads/component"),
+  "mediaRequests-requestList": () => import("./media-requests/list/component"),
+  "mediaRequests-requestStats": () => import("./media-requests/stats/component"),
+  mediaMissing: () => import("./media-missing/component"),
+  networkControllerSummary: () => import("./network-controller/summary/component"),
+  networkControllerStatus: () => import("./network-controller/network-status/component"),
+  rssFeed: () => import("./rssFeed/component"),
+  bookmarks: () => import("./bookmarks/component"),
+  bazarr: () => import("./bazarr/component"),
+  indexerManager: () => import("./indexer-manager/component"),
+  healthMonitoring: () => import("./health-monitoring/component"),
+  mediaTranscoding: () => import("./media-transcoding/component"),
+  minecraftServerStatus: () => import("./minecraft/server-status/component"),
+  dockerContainers: () => import("./docker/component"),
+  releases: () => import("./releases/component"),
+  firewall: () => import("./firewall/component"),
+  notifications: () => import("./notifications/component"),
+  mediaReleases: () => import("./media-releases/component"),
+  systemResources: () => import("./system-resources/component"),
+  coolify: () => import("./coolify/component"),
+  systemDisks: () => import("./system-disks/component"),
+  timetable: () => import("./timetable/component"),
+  "immich-serverStats": () => import("./immich/server-stats/component"),
+  "immich-albumCarousel": () => import("./immich/album-carousel/component"),
+  paperlessNgx: () => import("./paperless-ngx/component"),
+  patchmon: () => import("./patchmon/component"),
+  tracearr: () => import("./tracearr/component"),
+  speedtestTracker: () => import("./speedtest-tracker/component"),
+  uptimeKuma: () => import("./uptime-kuma/component"),
+  audioStats: () => import("./audio-stats/component"),
+  umami: () => import("./umami/component"),
+  vpn: () => import("./vpn/component"),
+  ups: () => import("./ups/component"),
+  beszelSystemTable: () => import("./beszel-system-table/component"),
+  beszelSystemGrid: () => import("./beszel-system-grid/component"),
+  beszelAlerts: () => import("./beszel-alerts/component"),
+  beszelSystemStats: () => import("./beszel-system-stats/component"),
+  traefik: () => import("./traefik/component"),
+  customApi: () => import("./custom-api/component"),
+  weather: () => import("./weather/component"),
+  wud: () => import("./wud/component"),
+} satisfies WidgetComponentLoaders;
+
 export type WidgetImportKey = keyof WidgetImports;
 
 export type inferSupportedIntegrations<TKind extends WidgetKind> = (WidgetImports[TKind]["definition"] extends {

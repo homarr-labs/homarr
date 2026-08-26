@@ -5,23 +5,26 @@ import { createRequestHandler } from "./request-handler";
 import type { SharedCacheAdapter } from "./request-handler";
 
 interface Options<TData, TInput extends Record<string, unknown>> {
-  requestAsync: (input: TInput) => Promise<TData>;
+  requestAsync: (input: TInput, signal: AbortSignal) => Promise<TData>;
   cacheTtlMs?: number;
   fallbackToStaleOnError?: boolean;
   staleIfErrorTtlMs?: number;
+  requestTimeoutMs?: number;
   cacheNamespace?: string;
+  cacheVersion?: string;
 }
 
 export const createWidgetRequestHandler = <TData, TInput extends Record<string, unknown>>(
   options: Options<TData, TInput>,
 ) => {
   const cacheNamespace = options.cacheNamespace;
-  let getSharedCacheAsync: ((input: TInput) => Promise<SharedCacheAdapter<TData>>) | undefined;
+  let getSharedCacheAsync: ((input: TInput, cacheIdentity: string) => Promise<SharedCacheAdapter<TData>>) | undefined;
   if (cacheNamespace) {
-    getSharedCacheAsync = async (input) =>
+    getSharedCacheAsync = async (_input, cacheIdentity) =>
       await createWidgetSharedCacheAsync<TData>({
         namespace: cacheNamespace,
-        cacheInput: input,
+        cacheIdentity,
+        cacheVersion: options.cacheVersion,
       });
   }
 
@@ -30,6 +33,7 @@ export const createWidgetRequestHandler = <TData, TInput extends Record<string, 
     cacheTtlMs: options.cacheTtlMs,
     fallbackToStaleOnError: options.fallbackToStaleOnError,
     staleIfErrorTtlMs: options.staleIfErrorTtlMs,
+    requestTimeoutMs: options.requestTimeoutMs,
     getCacheKey: hashSharedCacheInput,
     getSharedCacheAsync,
   });
