@@ -34,7 +34,7 @@ export const WiredVariant = ({
       <>
         <Group gap="xs" wrap="nowrap" mb={titleMargin}>
           <IconNetwork style={zoomCompensatedSize(iconSize)} />
-          <Text size="md" fw="bold">
+          <Text size="md" fw="bold" style={{ whiteSpace: "nowrap", flexShrink: 0 }}>
             {t("variants.wired.name")}
           </Text>
         </Group>

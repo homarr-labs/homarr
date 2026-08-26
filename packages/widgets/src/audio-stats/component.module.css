@@ -14,6 +14,11 @@
   gap: clamp(2px, 1cqi, 4px);
 }
 
+.rootShort {
+  padding: 4px;
+  gap: 2px;
+}
+
 .grid {
   display: grid;
   flex: 1;
@@ -27,6 +32,10 @@
 
 .gridCompact {
   gap: clamp(2px, 1cqi, 4px);
+}
+
+.gridShort {
+  gap: 2px;
 }
 
 .statTile {
@@ -54,6 +63,17 @@
   border-radius: var(--mantine-radius-sm);
 }
 
+.statTileShort {
+  gap: 2px;
+  padding: 3px;
+}
+
+.statTileNarrowShort {
+  flex-direction: row;
+  gap: 2px;
+  padding: 1px 3px;
+}
+
 .statIcon {
   color: var(--mantine-color-dimmed);
   flex-shrink: 0;
@@ -61,6 +81,7 @@
 }
 
 .statLabel {
+  flex-shrink: 0;
   font-size: clamp(
     calc(8px * var(--board-canvas-ui-scale, 1)),
     calc(2.5cqi * var(--board-canvas-ui-scale, 1)),
@@ -83,7 +104,20 @@
   );
 }
 
+.statLabelShort {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .statValue {
+  flex-shrink: 0;
   font-size: clamp(
     calc(13px * var(--board-canvas-ui-scale, 1)),
     calc(5cqi * var(--board-canvas-ui-scale, 1)),
@@ -105,6 +139,15 @@
     calc(4cqi * var(--board-canvas-ui-scale, 1)),
     calc(16px * var(--board-canvas-ui-scale, 1))
   );
+}
+
+.statValueShort {
+  font-size: calc(12px * var(--board-canvas-ui-scale, 1));
+  line-height: 1;
+}
+
+.statValueNarrowShort {
+  font-size: calc(11px * var(--board-canvas-ui-scale, 1));
 }
 
 .emptyState {

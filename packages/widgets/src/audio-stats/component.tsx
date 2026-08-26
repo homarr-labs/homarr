@@ -17,6 +17,7 @@ export default function AudioStatsWidget({
   integrationIds,
   options,
   width,
+  height,
   displayScale = 1,
   displayMode = "compact",
   widgetRuntimeRef,
@@ -40,8 +41,10 @@ export default function AudioStatsWidget({
   if (!response) return <WidgetEmptyState />;
 
   let responsiveWidth = width;
+  let responsiveHeight = height;
   if (displayMode === "compact" && Number.isFinite(displayScale) && displayScale > 0) {
     responsiveWidth *= displayScale;
+    responsiveHeight *= displayScale;
   }
 
   const summary = (
@@ -52,6 +55,7 @@ export default function AudioStatsWidget({
       showAllStats={displayMode === "advanced"}
       advanced={displayMode === "advanced"}
       width={responsiveWidth}
+      height={responsiveHeight}
     />
   );
   if (displayMode === "compact") {

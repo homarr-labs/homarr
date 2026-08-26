@@ -34,7 +34,7 @@ export const WifiVariant = ({
       <>
         <Group gap="xs" wrap="nowrap" mb={titleMargin}>
           <IconWifi style={zoomCompensatedSize(iconSize)} />
-          <Text size="md" fw="bold">
+          <Text size="md" fw="bold" style={{ whiteSpace: "nowrap", flexShrink: 0 }}>
             {t("variants.wifi.name")}
           </Text>
         </Group>
