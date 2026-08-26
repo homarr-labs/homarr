@@ -4387,7 +4387,7 @@
                             "enum": ["input", "icon"]
                           },
                           "logoDisplay": {
-                            "default": "logo",
+                            "default": "logoAndText",
                             "type": "string",
                             "enum": ["logo", "logoAndText"]
                           },
