@@ -64,8 +64,8 @@ const statLabelClassByLayout = {
 
 const statValueClassByLayout = {
   default: "",
-  short: classes.statValueShort,
-  narrowShort: `${classes.statValueShort} ${classes.statValueNarrowShort}`,
+  short: "",
+  narrowShort: classes.statValueNarrowShort,
 } as const;
 
 const ringSizeByWidth = [

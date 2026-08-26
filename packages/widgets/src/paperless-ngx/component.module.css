@@ -173,13 +173,9 @@
   white-space: nowrap;
 }
 
-.statValueShort {
-  font-size: calc(12px * var(--board-canvas-ui-scale, 1));
-  line-height: 1;
-}
-
 .statValueNarrowShort {
   font-size: calc(11px * var(--board-canvas-ui-scale, 1));
+  line-height: 1;
 }
 
 .emptyState {
