@@ -110,14 +110,13 @@ export default function SystemResources({
     lastUpdatedAt.current = dataUpdatedAt;
     setHistoryByIntegration((previous) =>
       Object.fromEntries(
-        data.map((entry) => [
-          entry.integrationId,
-          appendBoundedHistory(
-            previous[entry.integrationId] ?? [],
-            toChartItem(entry.healthInfo),
-            ADVANCED_HISTORY_SIZE,
-          ),
-        ]),
+        data.map((entry) => {
+          const currentItem = toChartItem(entry.healthInfo);
+          // Seed with the current item when there's no history yet, so the first real
+          // update lands at 2 points instead of dropping back to the single-value fallback.
+          const seed = previous[entry.integrationId] ?? [currentItem];
+          return [entry.integrationId, appendBoundedHistory(seed, currentItem, ADVANCED_HISTORY_SIZE)];
+        }),
       ),
     );
   }, [dataUpdatedAt, data]);
@@ -126,7 +125,9 @@ export default function SystemResources({
   const panelWidth = width / panelColumns;
   const renderCharts = (entry: (typeof data)[number], availableWidth: number, availableHeight: number) => {
     const currentItem = toChartItem(entry.healthInfo);
-    const fullHistory = historyByIntegration[entry.integrationId] ?? [currentItem];
+    // Duplicate the first point so the chart has two points to draw a line from
+    // immediately, instead of showing the single-value fallback until the next poll.
+    const fullHistory = historyByIntegration[entry.integrationId] ?? [currentItem, currentItem];
     const history = isAdvanced ? fullHistory : fullHistory.slice(-COMPACT_HISTORY_SIZE);
 
     return (
@@ -225,20 +226,24 @@ const SystemCharts = ({
   const showNetwork = visibleCharts.includes("network");
   const labelDisplayMode = isAdvanced ? "textWithIcon" : options.labelDisplayMode;
   const chartCount = visibleCharts.length;
-  const chartColumns = isAdvanced && width >= 560 ? 2 : 1;
+  const chartColumns = isAdvanced ? (width >= 1100 ? 4 : width >= 560 ? 2 : 1) : 1;
   const compactChartGap = 8;
+  const compactRowHeight = 56;
   const chartHeight = isAdvanced
-    ? 180
-    : `calc((100% - ${Math.max(0, chartCount - 1) * compactChartGap}px) / ${Math.max(1, chartCount)})`;
+    ? 110
+    : Math.max(
+        28,
+        Math.min(compactRowHeight, (height - Math.max(0, chartCount - 1) * compactChartGap) / Math.max(1, chartCount)),
+      );
 
   return (
-    <Stack gap={isAdvanced ? "xs" : compactChartGap} h={isAdvanced ? "auto" : height} miw={0}>
+    <Stack gap={isAdvanced ? "xs" : compactChartGap} h="auto" miw={0}>
       {showTitle && (
         <Text size="sm" fw={600} truncate="end">
           {integrationName}
         </Text>
       )}
-      <SimpleGrid cols={chartColumns} spacing={isAdvanced ? "xs" : compactChartGap} style={{ flex: 1, minHeight: 0 }}>
+      <SimpleGrid cols={chartColumns} spacing={isAdvanced ? "xs" : compactChartGap}>
         {chartCount === 0 && (
           <Center h="100%">
             <Text size="sm" c="dimmed">
