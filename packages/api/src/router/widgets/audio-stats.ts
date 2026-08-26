@@ -1,14 +1,16 @@
 import { audiobookshelfRequestHandler } from "@homarr/request-handler/audiobookshelf";
 import { navidromeRequestHandler } from "@homarr/request-handler/navidrome";
+import { mockWidgetData } from "@homarr/integrations";
 
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const audioStatsRouter = createTRPCRouter({
   getStats: publicProcedure
-    .concat(createOneIntegrationMiddleware("query", "navidrome", "audiobookshelf"))
+    .concat(createOneIntegrationMiddleware("query", "navidrome", "audiobookshelf", "mock"))
     .query(async ({ ctx }) => {
       const { kind } = ctx.integration;
+      if (kind === "mock") return { kind: "navidrome" as const, data: mockWidgetData.audioStats };
 
       const fetchByKind = {
         navidrome: async () => {

@@ -8,7 +8,7 @@ export const { definition, componentLoader } = createWidgetDefinition("anchorNot
   supportsAdvancedFocus: true,
   queryKey: [["widget", "anchorNotes"]],
   maxIntegrations: 1,
-  supportedIntegrations: ["anchor"],
+  supportedIntegrations: ["anchor", "mock"],
   createOptions() {
     return optionsBuilder.from((factory) => ({
       noteId: factory.anchorNote(),

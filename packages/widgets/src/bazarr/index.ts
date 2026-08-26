@@ -6,7 +6,7 @@ import { optionsBuilder } from "../options";
 export const { definition, componentLoader } = createWidgetDefinition("bazarr", {
   supportsAdvancedFocus: true,
   icon: IconBadgeCc,
-  supportedIntegrations: ["bazarr"],
+  supportedIntegrations: ["bazarr", "mock"],
   integrationsRequired: true,
   maxIntegrations: 1,
   createOptions() {

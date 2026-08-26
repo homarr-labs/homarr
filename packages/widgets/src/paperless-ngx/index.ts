@@ -7,7 +7,7 @@ export const { definition, componentLoader } = createWidgetDefinition("paperless
   supportsAdvancedFocus: false,
   icon: IconFileText,
   refetchInterval: null,
-  supportedIntegrations: ["paperlessNgx"],
+  supportedIntegrations: ["paperlessNgx", "mock"],
   integrationsRequired: true,
   maxIntegrations: 1,
   createOptions() {

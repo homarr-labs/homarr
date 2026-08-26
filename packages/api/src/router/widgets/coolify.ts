@@ -1,4 +1,5 @@
 import type { CoolifyInstanceInfo } from "@homarr/integrations/types";
+import { mockWidgetData } from "@homarr/integrations";
 import { coolifyRequestHandler } from "@homarr/request-handler/coolify";
 
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
@@ -16,12 +17,22 @@ interface CoolifyInstanceResult {
 
 export const coolifyRouter = createTRPCRouter({
   getInstancesInfo: publicProcedure
-    .concat(createManyIntegrationMiddleware("query", "coolify"))
+    .concat(createManyIntegrationMiddleware("query", "coolify", "mock"))
     .query(async ({ ctx }) => {
       return await settleIntegrationQueries(
         ctx.integrations,
         async (integration): Promise<CoolifyInstanceResult> => {
-          const innerHandler = coolifyRequestHandler.handler(integration, {});
+          if (integration.kind === "mock") {
+            return {
+              integrationId: integration.id,
+              integrationName: integration.name,
+              integrationUrl: integration.url,
+              instanceInfo: mockWidgetData.coolify,
+              updatedAt: new Date(mockWidgetData.timestamp),
+            };
+          }
+
+          const innerHandler = coolifyRequestHandler.handler({ ...integration, kind: "coolify" }, {});
           const { data, timestamp } = await innerHandler.getDataAsync();
 
           return {

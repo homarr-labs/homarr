@@ -7,6 +7,7 @@ import SuperJSON from "superjson";
 import { expect, test } from "vitest";
 
 import { DB_CASING } from "@homarr/core/infrastructure/db/constants";
+import { widgetIntegrationSupport, widgetKinds } from "@homarr/definitions";
 
 import type { Database } from "..";
 import { seedDataAsync } from "../migrations/seed";
@@ -45,7 +46,7 @@ test("SQLite migrations seed the five disabled bundled custom widgets", async ()
   connection.close();
 });
 
-test("SQLite migrations seed the redesigned demo dashboard", async () => {
+test("SQLite migrations seed the complete demo widget gallery", async () => {
   const previousDemoMode = process.env.DEMO_MODE;
   process.env.DEMO_MODE = "true";
   const connection = new BetterSqlite3(":memory:");
@@ -65,7 +66,7 @@ test("SQLite migrations seed the redesigned demo dashboard", async () => {
       with: {
         layouts: true,
         sections: { with: { collapseStates: true, layouts: true } },
-        items: { with: { layouts: true } },
+        items: { with: { integrations: true, layouts: true } },
       },
     });
     if (!board) throw new Error("Demo board was not seeded");
@@ -125,6 +126,18 @@ test("SQLite migrations seed the redesigned demo dashboard", async () => {
     expectItemLayout("beszelSystemStats", 6, 7, 3, 2);
     expectItemLayout("notifications", 3, 9, 2, 2);
     expectItemLayout("beszelAlerts", 5, 9, 4, 2);
+
+    expect(new Set(board.items.map((item) => item.kind))).toEqual(new Set(widgetKinds));
+    const mockIntegration = await database.query.integrations.findFirst({
+      where: (table, { eq }) => eq(table.kind, "mock"),
+    });
+    if (!mockIntegration) throw new Error("Demo mock integration was not seeded");
+    for (const item of board.items) {
+      if (widgetIntegrationSupport[item.kind] === undefined) continue;
+      expect(item.integrations).toEqual([
+        expect.objectContaining({ integrationId: mockIntegration.id, itemId: item.id }),
+      ]);
+    }
 
     for (const kind of ["weather", "airQuality"]) {
       const item = itemByKind(kind);

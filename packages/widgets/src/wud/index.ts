@@ -7,7 +7,7 @@ export const { definition, componentLoader } = createWidgetDefinition("wud", {
   icon: IconBrandDocker,
   supportsAdvancedFocus: true,
   refetchInterval: null,
-  supportedIntegrations: ["wud"],
+  supportedIntegrations: ["wud", "mock"],
   integrationsRequired: true,
   maxIntegrations: 1,
   createOptions() {

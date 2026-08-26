@@ -12,5 +12,5 @@ export const { componentLoader, definition } = createWidgetDefinition("vpn", {
   createOptions() {
     return optionsBuilder.from(() => ({}));
   },
-  supportedIntegrations: getIntegrationKindsByCategory("vpn"),
+  supportedIntegrations: [...getIntegrationKindsByCategory("vpn"), "mock"],
 }).withDynamicImport(() => import("./component"));

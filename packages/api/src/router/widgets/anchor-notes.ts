@@ -3,7 +3,12 @@ import { z } from "zod/v4";
 
 import { ResponseError } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { anchorNotesListInputSchema, anchorNoteUpdateInputSchema, createIntegrationAsync } from "@homarr/integrations";
+import {
+  anchorNotesListInputSchema,
+  anchorNoteUpdateInputSchema,
+  createIntegrationAsync,
+  mockWidgetData,
+} from "@homarr/integrations";
 import { anchorNoteRequestHandler, anchorNotesListRequestHandler } from "@homarr/request-handler/anchor-notes";
 
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";
@@ -14,6 +19,12 @@ const noteIdInput = z.object({
 });
 
 const logger = createLogger({ module: "anchorNotesRouter" });
+
+const assertMockNoteExists = (noteId: string) => {
+  if (noteId === mockWidgetData.anchorNote.id) return;
+
+  throw new TRPCError({ code: "NOT_FOUND", message: "Note not found" });
+};
 
 const isJsonDeltaString = (value: string) => {
   try {
@@ -40,33 +51,63 @@ const normalizeAnchorContent = (content: string | undefined) => {
 
 export const anchorNotesRouter = createTRPCRouter({
   listNotes: publicProcedure
-    .concat(createOneIntegrationMiddleware("query", "anchor"))
+    .concat(createOneIntegrationMiddleware("query", "anchor", "mock"))
     .input(anchorNotesListInputSchema)
     .query(async ({ ctx, input }) => {
-      const handler = anchorNotesListRequestHandler.handler(ctx.integration, { ...input, limit: input.limit ?? 50 });
+      if (ctx.integration.kind === "mock") {
+        const search = input.search?.toLowerCase();
+        const notes = mockWidgetData.anchorNotes.filter((note) => !search || note.title.toLowerCase().includes(search));
+        return notes.slice(0, input.limit ?? 50);
+      }
+
+      const handler = anchorNotesListRequestHandler.handler(
+        { ...ctx.integration, kind: "anchor" },
+        {
+          ...input,
+          limit: input.limit ?? 50,
+        },
+      );
 
       const { data } = await handler.getDataAsync();
 
       return data;
     }),
   getNote: publicProcedure
-    .concat(createOneIntegrationMiddleware("query", "anchor"))
+    .concat(createOneIntegrationMiddleware("query", "anchor", "mock"))
     .input(noteIdInput)
     .query(async ({ ctx, input }) => {
-      const handler = anchorNoteRequestHandler.handler(ctx.integration, { noteId: input.noteId });
+      if (ctx.integration.kind === "mock") {
+        assertMockNoteExists(input.noteId);
+        return mockWidgetData.anchorNote;
+      }
+
+      const handler = anchorNoteRequestHandler.handler(
+        { ...ctx.integration, kind: "anchor" },
+        { noteId: input.noteId },
+      );
 
       const { data } = await handler.getDataAsync();
 
       return data;
     }),
   updateNote: protectedProcedure
-    .concat(createOneIntegrationMiddleware("interact", "anchor"))
+    .concat(createOneIntegrationMiddleware("interact", "anchor", "mock"))
     .input(anchorNoteUpdateInputSchema)
     .mutation(async ({ ctx, input }) => {
-      const integrationInstance = await createIntegrationAsync(ctx.integration);
       const normalizedContent = normalizeAnchorContent(input.content);
       const isContentNormalized =
         input.content !== undefined && normalizedContent !== undefined && input.content !== normalizedContent;
+
+      if (ctx.integration.kind === "mock") {
+        assertMockNoteExists(input.noteId);
+        return {
+          ...mockWidgetData.anchorNote,
+          ...(input.title !== undefined ? { title: input.title } : {}),
+          ...(normalizedContent !== undefined ? { content: normalizedContent } : {}),
+        };
+      }
+
+      const integrationInstance = await createIntegrationAsync({ ...ctx.integration, kind: "anchor" });
 
       try {
         const updatedNote = await integrationInstance.updateNoteAsync({

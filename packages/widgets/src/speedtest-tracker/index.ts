@@ -30,7 +30,7 @@ export const { definition, componentLoader } = createWidgetDefinition("speedtest
       },
     );
   },
-  supportedIntegrations: ["speedtestTracker"],
+  supportedIntegrations: ["speedtestTracker", "mock"],
   errors: {
     INTERNAL_SERVER_ERROR: {
       icon: IconServerOff,
