@@ -1,4 +1,5 @@
 import { tracearrRequestHandler } from "@homarr/request-handler/tracearr";
+import { mockWidgetData } from "@homarr/integrations";
 
 import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { settleIntegrationQueries, toPublicIntegrationError } from "../../settle-integrations";
@@ -11,16 +12,26 @@ export const tracearrRouter = createTRPCRouter({
       return await settleIntegrationQueries(
         ctx.integrations,
         async (integration) => {
-          const innerHandler = tracearrRequestHandler.handler(integration, {});
+          if (integration.kind === "mock") {
+            return {
+              integrationId: integration.id,
+              integrationName: integration.name,
+              integrationUrl: integration.url,
+              dashboard: mockWidgetData.tracearr,
+              updatedAt: new Date(mockWidgetData.timestamp),
+              error: undefined,
+            };
+          }
+          const innerHandler = tracearrRequestHandler.handler({ ...integration, kind: "tracearr" }, {});
           const { data, timestamp } = await innerHandler.getDataAsync();
 
           return {
             integrationId: integration.id,
             integrationName: integration.name,
             integrationUrl: integration.url,
-            dashboard: data,
+            dashboard: data as typeof data | null,
             updatedAt: timestamp,
-            error: undefined,
+            error: undefined as string | undefined,
           };
         },
         {

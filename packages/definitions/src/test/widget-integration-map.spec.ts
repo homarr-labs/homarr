@@ -26,6 +26,12 @@ describe("widget integration config", () => {
     }
   });
 
+  test("supports the mock integration for every integration-backed widget", () => {
+    for (const config of Object.values(widgetIntegrationConfigs)) {
+      expect(config.supportedIntegrations).toContain("mock");
+    }
+  });
+
   test("derives optional connections and server selection limits", () => {
     expect(widgetKindsWithOptionalIntegrations).toEqual(new Set(["calendar"]));
     expect(widgetIntegrationLimits).toEqual({

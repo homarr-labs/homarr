@@ -89,8 +89,9 @@ const repairIconSearchInput = <T extends AssistantToolCallInput>(toolCall: T): T
   };
 };
 
-const repairCustomWidgetToolInput = <T extends AssistantToolCallInput>(toolCall: T): T | null => {
-  if (!toolCall.toolName.startsWith("customWidget_")) return null;
+const repairMultilineToolInput = <T extends AssistantToolCallInput>(toolCall: T): T | null => {
+  const isCustomWidgetTool = toolCall.toolName.startsWith("customWidget_");
+  if (!isCustomWidgetTool && toolCall.toolName !== "configure_board_settings") return null;
   if (customWidgetNoInputToolNames.has(toolCall.toolName)) {
     try {
       const input = JSON.parse(toolCall.input) as unknown;
@@ -114,4 +115,4 @@ const repairCustomWidgetToolInput = <T extends AssistantToolCallInput>(toolCall:
 };
 
 export const repairAssistantToolInput = <T extends AssistantToolCallInput>(toolCall: T): T | null =>
-  repairIconSearchInput(toolCall) ?? repairCustomWidgetToolInput(toolCall);
+  repairIconSearchInput(toolCall) ?? repairMultilineToolInput(toolCall);

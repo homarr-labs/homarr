@@ -3,6 +3,7 @@ import { Group, Popover, Stack, Text, UnstyledButton } from "@mantine/core";
 import { IconArrowDownRight, IconArrowUpRight, IconDroplets, IconMapPin, IconWind } from "@tabler/icons-react";
 
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
+import { zoomCompensatedSize } from "@homarr/ui";
 
 import type { WidgetProps } from "../definition";
 import { AnimatedWeatherIcon } from "./animated-icon";
@@ -55,7 +56,7 @@ export const CompactWeather = ({ height, isEditMode, options, weather, width }: 
                 animated={options.animateIcons}
                 code={weather.current.weatherCode}
                 isDay={weather.current.isDay}
-                size={layout.tier === "micro" ? 18 : 32}
+                style={zoomCompensatedSize(layout.tier === "micro" ? 18 : 32)}
               />
             </UnstyledButton>
           </Popover.Target>
@@ -132,7 +133,11 @@ export const CompactWeather = ({ height, isEditMode, options, weather, width }: 
                     <Text component="span" size="sm" fw={600} tt="capitalize">
                       {getPreferredDate(day.date, locale, { weekday: "short" })}
                     </Text>
-                    <AnimatedWeatherIcon animated={options.animateIcons} code={day.weatherCode} size={18} />
+                    <AnimatedWeatherIcon
+                      animated={options.animateIcons}
+                      code={day.weatherCode}
+                      style={zoomCompensatedSize(18)}
+                    />
                     <Text component="span" size="sm">
                       {getPreferredUnit(
                         day.maxTemperature,

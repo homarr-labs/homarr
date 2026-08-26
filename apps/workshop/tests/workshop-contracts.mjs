@@ -82,6 +82,14 @@ for (const forbidden of ['name: "assistant_requests"', 'name: "assistant_activit
   if (providerMigration.includes(forbidden)) throw new Error(`Homarr provider must not persist ${forbidden}`);
 }
 
+const dailyQuotaMigration = await read("apps/workshop/pb_migrations/1787670446_daily_assistant_quotas.js");
+for (const required of [
+  'removeIndex("idx_assistant_quotas_user")',
+  'addIndex("idx_assistant_quotas_user_day", true, "user, day", "")',
+]) {
+  if (!dailyQuotaMigration.includes(required)) throw new Error(`Daily quota migration is missing: ${required}`);
+}
+
 const providerBackend = await read("apps/workshop/homarr_provider.go");
 for (const required of [
   '"homarr/model"',

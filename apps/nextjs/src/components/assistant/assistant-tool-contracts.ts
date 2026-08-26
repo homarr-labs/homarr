@@ -54,7 +54,7 @@ export const assistantBoardSettingsChangesSchema = z
 export const browserToolContracts = {
   ask_user: {
     description:
-      "Pause and ask the user one concise structured question. Use this for missing information or a meaningful choice, never as a second confirmation before a mutating tool. Provide 2-4 distinct options and classify every option: agreement, approval, or proceeding is affirmative; refusal or stopping is negative; unrelated selections are alternative. A confirmation question must have exactly one affirmative option. The UI adds a freeform Other choice when allowOther is not false.",
+      "Pause and ask the user one concise structured question. Use this only for missing information or a meaningful choice, never to confirm details that are already sufficient for a native review form or mutating tool. In particular, do not use ask_user before configure_app, configure_board_settings, or configure_widget when their inputs are known. Provide 2-4 distinct options and classify every option: agreement, approval, or proceeding is affirmative; refusal or stopping is negative; unrelated selections are alternative. A confirmation question must have exactly one affirmative option. The UI adds a freeform Other choice when allowOther is not false.",
     parameters: z.object({
       question: z.string().trim().min(1).max(240),
       description: z.string().trim().max(400).optional(),
@@ -82,7 +82,7 @@ export const browserToolContracts = {
   },
   configure_board_settings: {
     description:
-      "Open Homarr's native board settings and custom CSS review form. Always call board_getBoardSettings first, then pass only the requested proposed changes here. The user can edit the complete stylesheet and all supported settings. Use the returned flat object directly with board_savePartialBoardSettings; do not ask for confirmation in prose.",
+      "Open Homarr's native board settings and custom CSS review form. This form is the user's confirmation step. Always call board_getBoardSettings first, then call this tool directly with only the requested proposed changes, including the complete resulting stylesheet in changes.customCss for a CSS request. Do not call ask_user between those tools when the requested changes are known. The user can edit the complete stylesheet and all supported settings. Use the returned flat object directly with board_savePartialBoardSettings.",
     parameters: z.object({
       boardId: z.string().trim().min(1).max(64),
       boardName: z.string().trim().min(1).max(255),

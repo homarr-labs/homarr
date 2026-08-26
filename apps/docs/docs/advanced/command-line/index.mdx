@@ -36,6 +36,8 @@ pnpm cli harness setup feature-board
 
 The command builds `homarr:feature-board`, starts a container with a persistent data volume, enables demo mode, and keeps demo mutations writable (`DEMO_READ_ONLY=false`). Docker assigns a free host port by default; use the URL printed by the command or query it later:
 
+The demo board includes every widget kind. Integration-backed widgets use the bundled mock integration; media widgets use public stock assets.
+
 ```sh
 pnpm cli harness port feature-board
 ```

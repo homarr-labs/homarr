@@ -220,7 +220,7 @@ const renderMessage = (message: AssistantConversationExportMessage, index: numbe
 
 export const buildAssistantMessageMarkdown = (message: AssistantConversationExportMessage, exportedAt = new Date()) => {
   const title = `${roleLabel(getMessagePayload(message)?.role)} ${message.id}`;
-  return `# ${title}\n\n> Homarr Assistant debugging export. Secret-looking fields and embedded file data are redacted.\n\n- Exported: ${exportedAt.toISOString()}\n\n${renderMessage(message, 0)}\n`;
+  return `# ${title}\n\n> Assistant debugging export. Secret-looking fields and embedded file data are redacted.\n\n- Exported: ${exportedAt.toISOString()}\n\n${renderMessage(message, 0)}\n`;
 };
 
 export const buildAssistantConversationMarkdown = ({
@@ -233,7 +233,7 @@ export const buildAssistantConversationMarkdown = ({
   const header = [
     `# ${title}`,
     "",
-    "> Homarr Assistant debugging export. Secret-looking fields and embedded file data are redacted.",
+    "> Assistant debugging export. Secret-looking fields and embedded file data are redacted.",
     "",
     `- Conversation ID: \`${thread.id}\``,
     `- Model: ${thread.modelId ? `\`${thread.modelId}\`` : "Not recorded"}`,

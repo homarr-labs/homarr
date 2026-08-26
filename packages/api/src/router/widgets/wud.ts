@@ -1,4 +1,5 @@
 import { wudStatsRequestHandler } from "@homarr/request-handler/wud";
+import { mockWidgetData } from "@homarr/integrations";
 
 import { createOneWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
@@ -9,12 +10,15 @@ export const wudRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Returns monitored-container counts and available updates from a What's Up Docker integration. REQUIRED: integrationId from integration_all. The caller needs query permission for that integration.",
+          "Returns monitored-container counts and available updates from a What's Up Docker integration, or mock statistics from a mock integration. REQUIRED: integrationId from integration_all. The caller needs query permission for that integration.",
       },
     })
     .concat(createOneWidgetIntegrationMiddleware("query", "wud"))
     .query(async ({ ctx }) => {
-      const handler = wudStatsRequestHandler.handler(ctx.integration, {});
+      if (ctx.integration.kind === "mock") {
+        return { stats: mockWidgetData.wud, updatedAt: new Date(mockWidgetData.timestamp) };
+      }
+      const handler = wudStatsRequestHandler.handler({ ...ctx.integration, kind: "wud" }, {});
       const { data, timestamp } = await handler.getDataAsync();
 
       return {

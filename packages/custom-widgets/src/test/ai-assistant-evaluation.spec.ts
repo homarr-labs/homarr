@@ -146,6 +146,24 @@ describe("Custom Widget assistant live evaluation harness", () => {
     });
   });
 
+  it("rejects a late example without reducing the existing component-document budget", () => {
+    const testCase = CUSTOM_WIDGET_AI_EVALUATION_CASES.find(({ id }) => id === "fake-service-health");
+    if (!testCase) throw new Error("Fake service-health case is missing");
+    const state = createAssistantEvaluationState();
+
+    for (let index = 0; index < 8; index += 1) {
+      executeAssistantEvaluationTool(testCase, state, "customWidget_getComponent", { name: "Text" });
+    }
+    expect(
+      executeAssistantEvaluationTool(testCase, state, "customWidget_getExample", { name: "service-dashboard" }),
+    ).toEqual({
+      error:
+        "An example must be loaded before component documentation. Keep the existing component-document budget and continue to customWidget_validate.",
+    });
+    expect(state.calledTools).not.toContain("customWidget_getExample");
+    expect(state.calledTools.filter((name) => name === "customWidget_getComponent")).toHaveLength(8);
+  });
+
   it("enforces explicit multi-iteration preview requests before persistence", () => {
     const baseCase = CUSTOM_WIDGET_AI_EVALUATION_CASES.find(({ id }) => id === "fake-service-health");
     if (!baseCase) throw new Error("Fake service-health case is missing");

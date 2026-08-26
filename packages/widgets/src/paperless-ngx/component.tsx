@@ -7,6 +7,7 @@ import { IconFileDescription, IconFileText, IconInbox, IconTag, IconUsers } from
 
 import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
+import { zoomCompensatedSize } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
@@ -184,7 +185,7 @@ export default function PaperlessNgxWidget({
             const Icon = statIcons[statKey];
             return (
               <div key={statKey} className={classes.statTile}>
-                <Icon className={classes.statIcon} size={iconSize} stroke={1.5} />
+                <Icon className={classes.statIcon} style={zoomCompensatedSize(iconSize)} stroke={1.5} />
                 <span className={classes.statValue}>{statValues[statKey]}</span>
                 <span className={classes.statLabel}>{t(statKey)}</span>
               </div>

@@ -44,6 +44,7 @@ import { useModalAction } from "@homarr/modals";
 import { AddDockerAppToHomarr, useDockerContainerRemovalConfirmation } from "@homarr/modals-collection";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
+import { zoomCompensatedSize } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
 import { getUsableWidgetQueryData } from "../common/query-state";
@@ -82,7 +83,7 @@ const containerMenuWidth = 240;
 const rowActionButtonSize = 22;
 const rowActionIconVisualSize = 32;
 const footerRefreshButtonSize = 24;
-const footerRefreshIconVisualSize = 30;
+const footerRefreshIconVisualSize = 18;
 
 const createContainerLogsPath = (container: Pick<DockerContainer, "endpointId" | "id" | "name">) =>
   `/manage/tools/docker/logs/${container.id}?name=${encodeURIComponent(container.name)}&endpointId=${encodeURIComponent(container.endpointId)}`;
@@ -493,8 +494,13 @@ export default function DockerWidget({
                 style={{ position: "relative", overflow: "visible" }}
               >
                 <IconRefresh
-                  size={footerRefreshIconVisualSize}
-                  style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}
+                  style={{
+                    ...zoomCompensatedSize(footerRefreshIconVisualSize),
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                  }}
                 />
               </ActionIcon>
             </Tooltip>

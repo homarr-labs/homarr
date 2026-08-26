@@ -1,6 +1,6 @@
 "use client";
 
-import type { FocusEventHandler, KeyboardEventHandler } from "react";
+import type { FocusEventHandler, KeyboardEventHandler, ReactNode } from "react";
 import { startTransition, useEffect, useMemo, useState } from "react";
 import {
   ActionIcon,
@@ -48,6 +48,7 @@ interface IconPickerProps {
   onFocus?: FocusEventHandler;
   onBlur?: FocusEventHandler;
   label?: string;
+  description?: ReactNode;
   placeholder?: string;
   suggestedSearch?: string | null;
   withAsterisk?: boolean;
@@ -63,6 +64,7 @@ export const IconPicker = ({
   onBlur,
   withAsterisk = true,
   label,
+  description,
   placeholder,
   suggestedSearch,
 }: IconPickerProps) => {
@@ -272,6 +274,7 @@ export const IconPicker = ({
     (query.data
       ? tCommon("iconPicker.header", { countIcons: String(query.data.countIcons) })
       : tCommon("iconPicker.headerLoading"));
+  const inputDescription = description === undefined ? tCommon("iconPicker.description") : description;
 
   return (
     <Combobox
@@ -359,7 +362,7 @@ export const IconPicker = ({
           withAsterisk={withAsterisk}
           error={error}
           label={label ?? tCommon("iconPicker.label")}
-          description={tCommon("iconPicker.description")}
+          description={inputDescription}
           styles={{
             description: { color: "var(--mantine-color-text)" },
             input: { color: "var(--mantine-color-text)" },

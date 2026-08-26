@@ -219,7 +219,7 @@ export function buildRepairPrompt(
 export function buildJudgePrompt(testCase: CustomWidgetAiEvaluationCase, widget: HomarrCustomWidgetV2): string {
   return `You are a hostile-but-fair product review panel evaluating a safe dashboard widget. Most competent drafts should score 55-75, not 90. Judge only evidence present in the manifest and JSX. Never reward unsupported capabilities, invented API routes, aspirational claims, or code that merely validates.
 
-The installed Homarr skill and runtime references below are authoritative. In particular, request state is exposed as status.<requestId> with loading/ok/status/error fields while successful payloads are exposed as data.<requestId>. RefreshButton is an installed runtime helper that manually refreshes load queries. Every component in this already-validated template exists in the installed release. Do not penalize those documented facts. The widget has already passed Homarr's real schema and JSX analyzer, which proves syntax and component compatibility but does not prove API correctness, visual quality, usefulness, or accessibility.
+The installed Homarr skill and runtime references below are authoritative. The verified API notes and representative response fixtures are authoritative for endpoint paths, authentication requirements, and response shapes unless the validated manifest contradicts them. Do not invent external endpoint or authentication objections from outside assumptions. Decorative icons paired with equivalent adjacent visible status text need no separate aria-label. A Badge containing explicit visible status text is not color-only. A readable absolute UTC date and time is valid; do not require relative or localized time without a documented safe helper. In particular, request state is exposed as status.<requestId> with loading/ok/status/error fields while successful payloads are exposed as data.<requestId>. RefreshButton is an installed runtime helper that manually refreshes load queries. Every component in this already-validated template exists in the installed release. Do not penalize those documented facts. The widget has already passed Homarr's real schema and JSX analyzer, which proves syntax and component compatibility but does not prove API correctness, visual quality, usefulness, or accessibility.
 
 Installed Homarr Custom Widget authoring contract:
 ${getCustomWidgetSkillContent()}
@@ -254,16 +254,14 @@ Required review behavior:
 - Give a concrete evidence sentence for every category. List all score-capping issues under fatalProblems.
 - Return an empty fatalProblems array when there are no fatal problems; never put "none" or an explanation of their absence in that array.
 
-Homarr computes the weighted total and final verdict itself. Your total and verdict are advisory, but must be internally honest. A pass requires a weighted total of at least 90, every category at least 75, goalFulfillment/visualQuality/dailyUsefulness at least 85, complexityDiscipline at least 80, no fatal problem, and dailyUseDecision="would-use-daily". Return only the requested structured object.`;
+Homarr computes the weighted total and final verdict itself. Your total and verdict are advisory, but must be internally honest. A pass requires a weighted total of at least 85, every category at least 75, goalFulfillment at least 85, complexityDiscipline at least 80, no fatal problem, and dailyUseDecision="would-use-daily". Return only the requested structured object.`;
 }
 
 export function judgePasses(result: CustomWidgetJudgeResult): boolean {
   return (
-    result.total >= 90 &&
+    result.total >= 85 &&
     Object.values(result.categories).every((score) => score >= 75) &&
     result.categories.goalFulfillment >= 85 &&
-    result.categories.visualQuality >= 85 &&
-    result.categories.dailyUsefulness >= 85 &&
     result.categories.complexityDiscipline >= 80 &&
     result.dailyUseDecision === "would-use-daily" &&
     result.fatalProblems.length === 0

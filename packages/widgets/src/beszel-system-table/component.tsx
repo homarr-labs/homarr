@@ -18,6 +18,7 @@ import {
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
+import { zoomCompensatedSize } from "@homarr/ui";
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import { useOptionalBoard } from "@homarr/boards/context";
 import { formatBytes } from "@homarr/common";
@@ -202,7 +203,7 @@ export default function BeszelSystemTableWidget({
         ellipsis: true,
         title: (
           <Group gap={4} wrap="nowrap">
-            <Server size={size.iconSize} />
+            <Server style={zoomCompensatedSize(size.iconSize)} />
             <Text inherit>{tBeszel("metric.system")}</Text>
           </Group>
         ),
@@ -269,7 +270,7 @@ export default function BeszelSystemTableWidget({
         width: 140,
         title: (
           <Group gap={4} wrap="nowrap">
-            <Cpu size={size.iconSize} />
+            <Cpu style={zoomCompensatedSize(size.iconSize)} />
             <Text inherit>{invariantTechnicalLabels.cpu}</Text>
           </Group>
         ),
@@ -281,7 +282,7 @@ export default function BeszelSystemTableWidget({
         width: 140,
         title: (
           <Group gap={4} wrap="nowrap">
-            <MemoryStick size={size.iconSize} />
+            <MemoryStick style={zoomCompensatedSize(size.iconSize)} />
             <Text inherit>{tBeszel("metric.memory")}</Text>
           </Group>
         ),
@@ -293,7 +294,7 @@ export default function BeszelSystemTableWidget({
         width: 160,
         title: (
           <Group gap={4} wrap="nowrap">
-            <HardDrive size={size.iconSize} />
+            <HardDrive style={zoomCompensatedSize(size.iconSize)} />
             <Text inherit>{tBeszel("metric.disk")}</Text>
           </Group>
         ),
@@ -313,7 +314,7 @@ export default function BeszelSystemTableWidget({
         width: 140,
         title: (
           <Group gap={4} wrap="nowrap">
-            <Monitor size={size.iconSize} />
+            <Monitor style={zoomCompensatedSize(size.iconSize)} />
             <Text inherit>{invariantTechnicalLabels.gpu}</Text>
           </Group>
         ),
@@ -325,7 +326,7 @@ export default function BeszelSystemTableWidget({
         width: 100,
         title: (
           <Group gap={4} wrap="nowrap">
-            <Activity size={size.iconSize} />
+            <Activity style={zoomCompensatedSize(size.iconSize)} />
             <Text inherit>{tBeszel("metric.loadAvg")}</Text>
           </Group>
         ),
@@ -347,7 +348,7 @@ export default function BeszelSystemTableWidget({
         width: 100,
         title: (
           <Group gap={4} wrap="nowrap">
-            <Network size={size.iconSize} />
+            <Network style={zoomCompensatedSize(size.iconSize)} />
             <Text inherit>{tBeszel("metric.net")}</Text>
           </Group>
         ),
@@ -363,7 +364,7 @@ export default function BeszelSystemTableWidget({
         width: 80,
         title: (
           <Group gap={4} wrap="nowrap">
-            <Thermometer size={size.iconSize} />
+            <Thermometer style={zoomCompensatedSize(size.iconSize)} />
             <Text inherit>{tBeszel("metric.temp")}</Text>
           </Group>
         ),
@@ -375,7 +376,7 @@ export default function BeszelSystemTableWidget({
         width: 70,
         title: (
           <Group gap={4} wrap="nowrap">
-            <Battery size={size.iconSize} />
+            <Battery style={zoomCompensatedSize(size.iconSize)} />
             <Text inherit>{tBeszel("metric.battery")}</Text>
           </Group>
         ),
@@ -386,7 +387,7 @@ export default function BeszelSystemTableWidget({
         width: 80,
         title: (
           <Group gap={4} wrap="nowrap">
-            <Server size={size.iconSize} />
+            <Server style={zoomCompensatedSize(size.iconSize)} />
             <Text inherit>{tCommon("services")}</Text>
           </Group>
         ),
@@ -398,7 +399,7 @@ export default function BeszelSystemTableWidget({
         width: 90,
         title: (
           <Group gap={4} wrap="nowrap">
-            <Activity size={size.iconSize} />
+            <Activity style={zoomCompensatedSize(size.iconSize)} />
             <Text inherit>{tBeszel("metric.uptime")}</Text>
           </Group>
         ),
@@ -410,7 +411,7 @@ export default function BeszelSystemTableWidget({
         width: 90,
         title: (
           <Group gap={4} wrap="nowrap">
-            <Wifi size={size.iconSize} />
+            <Wifi style={zoomCompensatedSize(size.iconSize)} />
             <Text inherit>{tBeszel("metric.agent")}</Text>
           </Group>
         ),

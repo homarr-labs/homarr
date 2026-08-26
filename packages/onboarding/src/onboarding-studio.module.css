@@ -88,6 +88,33 @@
   max-width: min(92vw, 42rem);
 }
 
+.customBrand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--mantine-spacing-md);
+  max-width: min(92vw, 42rem);
+  color: var(--mantine-color-text);
+  font-size: clamp(2rem, 6vw, 4rem);
+  font-weight: 750;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.customBrand[data-large="true"] {
+  font-size: clamp(2.5rem, 8vw, 5.5rem);
+}
+
+.customBrandImage {
+  width: auto;
+  height: clamp(4rem, 11vw, 7rem);
+  object-fit: contain;
+}
+
+.customBrand[data-large="true"] .customBrandImage {
+  height: clamp(5rem, 16vw, 9rem);
+}
+
 .celebratingWordmark {
   animation: wordmarkJump 360ms ease-out;
 }
@@ -138,6 +165,25 @@
   display: grid;
   min-height: 100dvh;
   padding-block: clamp(1rem, 4vw, 3rem) calc(clamp(1rem, 4vw, 3rem) + env(safe-area-inset-bottom));
+}
+
+.authBackground {
+  position: fixed;
+  z-index: 0;
+  inset: 0;
+  background-position: center;
+  background-size: cover;
+}
+
+.authBackground::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: rgb(0 0 0 / var(--auth-background-overlay, 0.55));
+}
+
+.page[data-background-image] .marqueeBackdrop {
+  opacity: 0.14;
 }
 
 .authLayout {

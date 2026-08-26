@@ -6,6 +6,7 @@ import { clientApi } from "@homarr/api/client";
 import { invariantTechnicalLabels } from "@homarr/definitions";
 import type { Resource } from "@homarr/integrations/types";
 import { useI18n } from "@homarr/translation/client";
+import { zoomCompensatedSize } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../../common/empty-state";
 import { getUsableWidgetQueryData } from "../../common/query-state";
@@ -185,7 +186,7 @@ const SummaryHeader = ({ cpu, memory, isTiny }: SummaryHeaderProps) => {
               thickness={isTiny ? 2 : 4}
               label={
                 <Center>
-                  <IconCpu size={isTiny ? 12 : 20} />
+                  <IconCpu style={zoomCompensatedSize(isTiny ? 12 : 20)} />
                 </Center>
               }
               sections={[{ value: cpu.value, color: cpu.value > 75 ? "orange" : "green" }]}
@@ -208,7 +209,7 @@ const SummaryHeader = ({ cpu, memory, isTiny }: SummaryHeaderProps) => {
               thickness={isTiny ? 2 : 4}
               label={
                 <Center>
-                  <IconBrain size={isTiny ? 12 : 20} />
+                  <IconBrain style={zoomCompensatedSize(isTiny ? 12 : 20)} />
                 </Center>
               }
               sections={[{ value: memory.value, color: memory.value > 75 ? "orange" : "green" }]}

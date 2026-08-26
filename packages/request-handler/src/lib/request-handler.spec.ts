@@ -322,7 +322,7 @@ describe("createRequestHandler", () => {
 });
 
 describe("createIntegrationRequestHandler", () => {
-  it("keys requests by integration id and options without retaining secret values", async () => {
+  it("does not deduplicate requests across rotated integration secrets", async () => {
     let calls = 0;
     const request = deferred<string>();
     const handler = createIntegrationRequestHandler<string, "sonarr", { page: number }>({
@@ -332,11 +332,16 @@ describe("createIntegrationRequestHandler", () => {
       },
     });
     const first = handler.handler(createIntegration("first-secret"), { page: 1 }).getDataAsync();
+    const duplicate = handler.handler(createIntegration("first-secret"), { page: 1 }).getDataAsync();
     const second = handler.handler(createIntegration("rotated-secret"), { page: 1 }).getDataAsync();
-    expect(calls).toBe(1);
+    expect(calls).toBe(2);
 
     request.resolve("value");
-    await expect(Promise.all([first, second])).resolves.toMatchObject([{ data: "value" }, { data: "value" }]);
+    await expect(Promise.all([first, duplicate, second])).resolves.toMatchObject([
+      { data: "value" },
+      { data: "value" },
+      { data: "value" },
+    ]);
   });
 });
 

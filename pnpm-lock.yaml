@@ -2599,6 +2599,9 @@ importers:
       '@homarr/translation':
         specifier: workspace:^0.1.0
         version: link:../translation
+      zod:
+        specifier: 'catalog:'
+        version: 4.4.3
     devDependencies:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
@@ -2615,6 +2618,9 @@ importers:
       '@homarr/server-settings':
         specifier: workspace:^0.1.0
         version: link:../server-settings
+      '@homarr/validation':
+        specifier: workspace:^0.1.0
+        version: link:../validation
       '@mantine/dates':
         specifier: 'catalog:'
         version: 9.4.1(@mantine/core@9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.4.1(react@19.2.7))(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)

@@ -14,6 +14,7 @@ import {
 import { clientApi } from "@homarr/api/client";
 import type { TraefikDashboardData, TraefikProtocolSummary, TraefikResourceSummary } from "@homarr/integrations/types";
 import { useI18n } from "@homarr/translation/client";
+import { zoomCompensatedSize } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
@@ -176,12 +177,12 @@ function TraefikWidgetContent({
 
       <div className={classes.hero}>
         <SummaryMetric
-          icon={<IconRoute size={getHeroIconSize(width)} />}
+          icon={<IconRoute style={zoomCompensatedSize(getHeroIconSize(width))} />}
           label={t("summary.routers")}
           value={totalRouters}
         />
         <SummaryMetric
-          icon={<IconDoorEnter size={getHeroIconSize(width)} />}
+          icon={<IconDoorEnter style={zoomCompensatedSize(getHeroIconSize(width))} />}
           label={t("summary.entryPoints")}
           value={dedupe(combined.entryPoints).length}
         />

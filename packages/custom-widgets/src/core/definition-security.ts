@@ -191,6 +191,70 @@ export function redactCustomWidgetCredentialLiterals(value: string): string {
     );
 }
 
+export function redactCustomWidgetAiContext(value: unknown, path: DefinitionPath = []): unknown {
+  if (Array.isArray(value)) return value.map((entry, index) => redactCustomWidgetAiContext(entry, [...path, index]));
+  if (value !== null && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, entry]) => {
+        const entryPath = [...path, key];
+        const risk = getCustomWidgetCredentialKeyRisk(key);
+        if (risk === "strong" && !isSchemaAuthenticationControl(entryPath)) {
+          if (!isHarmlessCustomWidgetCredentialSetting(entry)) return [key, "[REDACTED]"];
+        }
+        if (risk === "ambiguous" && typeof entry === "string") {
+          if (redactCustomWidgetCredentialLiterals(entry) !== entry) return [key, "[REDACTED]"];
+        }
+        return [key, redactCustomWidgetAiContext(entry, entryPath)];
+      }),
+    );
+  }
+  if (typeof value !== "string") return value;
+
+  const lastPathPart = path.at(-1);
+  let key = "";
+  if (typeof lastPathPart === "string") key = lastPathPart;
+  if (["sources", "requests", "options"].includes(key)) {
+    try {
+      const parsed: unknown = JSON.parse(value);
+      return redactCustomWidgetAiContext(parsed, path);
+    } catch {
+      /* Invalid editor JSON is still useful prompt context. */
+    }
+  }
+  if (key === "baseUrl" || key === "iconUrl") {
+    return redactCustomWidgetCredentialLiterals(redactCustomWidgetAiUrl(value));
+  }
+  return redactCustomWidgetAiText(value);
+}
+
+export function redactCustomWidgetAiResponse(value: string): string {
+  try {
+    const parsed: unknown = JSON.parse(value);
+    return JSON.stringify(redactCustomWidgetAiContext(parsed), null, 2);
+  } catch {
+    return redactCustomWidgetAiText(value);
+  }
+}
+
+export function redactCustomWidgetAiUrl(value: string): string {
+  try {
+    const url = new URL(value);
+    url.username = "";
+    url.password = "";
+    url.search = "";
+    url.hash = "";
+    return url.toString();
+  } catch {
+    return "[REDACTED_URL]";
+  }
+}
+
+export function redactCustomWidgetAiText(value: string): string {
+  return redactCustomWidgetCredentialLiterals(
+    value.replace(/\bhttps?:\/\/[^\s"'<>]+/giu, (candidate) => redactCustomWidgetAiUrl(candidate)),
+  );
+}
+
 function isSchemaAuthenticationControl(path: DefinitionPath): boolean {
   return (
     path.length === 3 &&

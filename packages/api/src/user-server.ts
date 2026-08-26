@@ -13,6 +13,7 @@ export const getRscUserSettingsAsync = cache(async (userId: string) =>
       firstDayOfWeek: true,
       pingIconsEnabled: true,
       enableRightClickOnWidgets: true,
+      headerPreferences: true,
       defaultSearchEngineId: true,
       openSearchInNewTab: true,
       ddgBangs: true,

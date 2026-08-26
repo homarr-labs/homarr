@@ -1,4 +1,5 @@
 import { speedtestTrackerRequestHandler } from "@homarr/request-handler/speedtest-tracker";
+import { mockWidgetData } from "@homarr/integrations";
 
 import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { settleIntegrationQueries, toPublicIntegrationError } from "../../settle-integrations";
@@ -11,7 +12,17 @@ export const speedtestTrackerRouter = createTRPCRouter({
       return await settleIntegrationQueries(
         ctx.integrations,
         async (integration) => {
-          const innerHandler = speedtestTrackerRequestHandler.handler(integration, {});
+          if (integration.kind === "mock") {
+            return {
+              integrationId: integration.id,
+              integrationName: integration.name,
+              integrationUrl: integration.url,
+              dashboard: mockWidgetData.speedtestTracker,
+              updatedAt: new Date(mockWidgetData.timestamp),
+              error: undefined,
+            };
+          }
+          const innerHandler = speedtestTrackerRequestHandler.handler({ ...integration, kind: "speedtestTracker" }, {});
           const { data, timestamp } = await innerHandler.getDataAsync();
 
           return {

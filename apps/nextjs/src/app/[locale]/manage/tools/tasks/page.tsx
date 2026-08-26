@@ -6,7 +6,6 @@ import { auth } from "@homarr/auth/next";
 import { getI18n } from "@homarr/translation/server";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
-import { createMetaTitle } from "~/metadata";
 import { TasksTable } from "./_components/tasks-table";
 
 export async function generateMetadata() {
@@ -17,7 +16,7 @@ export async function generateMetadata() {
   const t = await getI18n("management");
 
   return {
-    title: createMetaTitle(t("metaTitle")),
+    title: t("metaTitle"),
   };
 }
 

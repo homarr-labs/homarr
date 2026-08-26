@@ -1,4 +1,5 @@
 import { paperlessNgxStatsRequestHandler } from "@homarr/request-handler/paperless-ngx";
+import { mockWidgetData } from "@homarr/integrations";
 
 import { createOneWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
@@ -7,7 +8,8 @@ export const paperlessNgxRouter = createTRPCRouter({
   getStats: publicProcedure
     .concat(createOneWidgetIntegrationMiddleware("query", "paperlessNgx"))
     .query(async ({ ctx }) => {
-      const innerHandler = paperlessNgxStatsRequestHandler.handler(ctx.integration, {});
+      if (ctx.integration.kind === "mock") return mockWidgetData.paperlessNgx;
+      const innerHandler = paperlessNgxStatsRequestHandler.handler({ ...ctx.integration, kind: "paperlessNgx" }, {});
       const data = await innerHandler.getDataAsync();
       return data.data;
     }),

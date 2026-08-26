@@ -3453,6 +3453,9 @@
                     "enableRightClickOnWidgets": {
                       "type": "boolean"
                     },
+                    "headerPreferences": {
+                      "type": "string"
+                    },
                     "defaultSearchEngineId": {
                       "anyOf": [
                         {
@@ -3488,6 +3491,7 @@
                     "firstDayOfWeek",
                     "pingIconsEnabled",
                     "enableRightClickOnWidgets",
+                    "headerPreferences",
                     "defaultSearchEngineId",
                     "openSearchInNewTab",
                     "ddgBangs",
@@ -4280,6 +4284,353 @@
                   }
                 },
                 "required": ["enableRightClickOnWidgets", "id"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/header-preferences": {
+      "patch": {
+        "operationId": "userRouter-changeHeaderPreferences",
+        "tags": ["users"],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "headerPreferences": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "version": {
+                            "type": "number",
+                            "const": 3
+                          },
+                          "visible": {
+                            "type": "boolean"
+                          },
+                          "searchDisplay": {
+                            "type": "string",
+                            "enum": ["input", "icon"]
+                          },
+                          "logoDisplay": {
+                            "default": "logoAndText",
+                            "type": "string",
+                            "enum": ["logo", "logoAndText"]
+                          },
+                          "zones": {
+                            "type": "object",
+                            "properties": {
+                              "left": {
+                                "maxItems": 100,
+                                "type": "array",
+                                "items": {
+                                  "oneOf": [
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "const": "builtin"
+                                        },
+                                        "id": {
+                                          "type": "string",
+                                          "enum": [
+                                            "logo",
+                                            "search",
+                                            "home",
+                                            "boardSwitcher",
+                                            "assistant",
+                                            "docker",
+                                            "boardEdit",
+                                            "boardSettings",
+                                            "settings",
+                                            "themeToggle",
+                                            "user"
+                                          ]
+                                        }
+                                      },
+                                      "required": ["type", "id"],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "const": "board"
+                                        },
+                                        "boardId": {
+                                          "type": "string",
+                                          "minLength": 1,
+                                          "maxLength": 255
+                                        }
+                                      },
+                                      "required": ["type", "boardId"],
+                                      "additionalProperties": false
+                                    }
+                                  ],
+                                  "type": "object"
+                                }
+                              },
+                              "center": {
+                                "maxItems": 100,
+                                "type": "array",
+                                "items": {
+                                  "oneOf": [
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "const": "builtin"
+                                        },
+                                        "id": {
+                                          "type": "string",
+                                          "enum": [
+                                            "logo",
+                                            "search",
+                                            "home",
+                                            "boardSwitcher",
+                                            "assistant",
+                                            "docker",
+                                            "boardEdit",
+                                            "boardSettings",
+                                            "settings",
+                                            "themeToggle",
+                                            "user"
+                                          ]
+                                        }
+                                      },
+                                      "required": ["type", "id"],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "const": "board"
+                                        },
+                                        "boardId": {
+                                          "type": "string",
+                                          "minLength": 1,
+                                          "maxLength": 255
+                                        }
+                                      },
+                                      "required": ["type", "boardId"],
+                                      "additionalProperties": false
+                                    }
+                                  ],
+                                  "type": "object"
+                                }
+                              },
+                              "right": {
+                                "maxItems": 100,
+                                "type": "array",
+                                "items": {
+                                  "oneOf": [
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "const": "builtin"
+                                        },
+                                        "id": {
+                                          "type": "string",
+                                          "enum": [
+                                            "logo",
+                                            "search",
+                                            "home",
+                                            "boardSwitcher",
+                                            "assistant",
+                                            "docker",
+                                            "boardEdit",
+                                            "boardSettings",
+                                            "settings",
+                                            "themeToggle",
+                                            "user"
+                                          ]
+                                        }
+                                      },
+                                      "required": ["type", "id"],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "const": "board"
+                                        },
+                                        "boardId": {
+                                          "type": "string",
+                                          "minLength": 1,
+                                          "maxLength": 255
+                                        }
+                                      },
+                                      "required": ["type", "boardId"],
+                                      "additionalProperties": false
+                                    }
+                                  ],
+                                  "type": "object"
+                                }
+                              }
+                            },
+                            "required": ["left", "center", "right"],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": ["version", "visible", "searchDisplay", "zones"],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "version": {
+                            "type": "number",
+                            "const": 1
+                          },
+                          "visible": {
+                            "type": "boolean"
+                          },
+                          "items": {
+                            "minItems": 1,
+                            "maxItems": 6,
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "enum": ["logo", "search", "boardSwitcher", "assistant", "docker", "user"]
+                            }
+                          }
+                        },
+                        "required": ["version", "visible", "items"],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "version": {
+                            "type": "number",
+                            "const": 2
+                          },
+                          "visible": {
+                            "type": "boolean"
+                          },
+                          "zones": {
+                            "type": "object",
+                            "properties": {
+                              "left": {
+                                "maxItems": 6,
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "enum": ["logo", "search", "boardSwitcher", "assistant", "docker", "user"]
+                                }
+                              },
+                              "center": {
+                                "maxItems": 6,
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "enum": ["logo", "search", "boardSwitcher", "assistant", "docker", "user"]
+                                }
+                              },
+                              "right": {
+                                "maxItems": 6,
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "enum": ["logo", "search", "boardSwitcher", "assistant", "docker", "user"]
+                                }
+                              }
+                            },
+                            "required": ["left", "center", "right"],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": ["version", "visible", "zones"],
+                        "additionalProperties": false
+                      }
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": ["id", "headerPreferences"]
               }
             }
           }

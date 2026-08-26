@@ -12,7 +12,8 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ModalProvider } from "@homarr/modals";
 
 import { MainHeader } from "~/components/layout/header";
-import { BoardLogoWithTitle } from "~/components/layout/logo/board-logo";
+import { appShellLogoHeight } from "~/components/layout/constants";
+import { BoardLogo, BoardLogoWithTitle } from "~/components/layout/logo/board-logo";
 import { ClientShell } from "~/components/layout/shell";
 import { BoardTourGate } from "~/components/onboarding/board-tour-gate";
 import { env } from "~/env";
@@ -27,13 +28,17 @@ import { BoardMantineProvider } from "./(content)/_theme";
 const logger = createLogger({ module: "createBoardLayout" });
 
 interface CreateBoardLayoutProps<TParams extends Params> {
-  headerActions: JSX.Element;
+  headerActions?: JSX.Element;
+  headerBoardEditAction?: JSX.Element;
+  headerBoardSettingsAction?: JSX.Element;
   getInitialBoardAsync: (params: TParams) => Promise<Board>;
   withTour?: boolean;
 }
 
 export const createBoardLayout = <TParams extends Params>({
   headerActions,
+  headerBoardEditAction,
+  headerBoardSettingsAction,
   getInitialBoardAsync: getInitialBoard,
   withTour = false,
 }: CreateBoardLayoutProps<TParams>) => {
@@ -105,8 +110,11 @@ export const createBoardLayout = <TParams extends Params>({
               <BoardTourGate enabled={shouldRunBoardTour}>
                 <ClientShell hasNavigation={false}>
                   <MainHeader
-                    logo={<BoardLogoWithTitle size="md" hideTitleOnMobile />}
+                    logo={<BoardLogo size={appShellLogoHeight} />}
+                    logoWithTitle={<BoardLogoWithTitle size="md" hideTitleOnMobile />}
                     actions={headerActions}
+                    boardEditAction={headerBoardEditAction}
+                    boardSettingsAction={headerBoardSettingsAction}
                     hasNavigation={false}
                   />
                   <AppShellMain data-advanced-focus-background>{children}</AppShellMain>

@@ -29,6 +29,7 @@ import type {
   WidgetKind,
 } from "@homarr/definitions";
 import type { CustomWidgetSecretKind } from "@homarr/custom-widgets/core";
+import { defaultHeaderPreferencesSerialized } from "@homarr/validation/header-preferences";
 
 export * from "@homarr/core/infrastructure/certificates/hostnames/db/sqlite";
 
@@ -65,6 +66,7 @@ export const users = sqliteTable("user", {
   firstDayOfWeek: int().$type<DayOfWeek>().default(1).notNull(), // Defaults to Monday
   pingIconsEnabled: int({ mode: "boolean" }).default(false).notNull(),
   enableRightClickOnWidgets: int({ mode: "boolean" }).default(true).notNull(),
+  headerPreferences: text().default(defaultHeaderPreferencesSerialized).notNull(),
   completedManageTour: int({ mode: "boolean" }).default(false).notNull(),
   completedBoardTour: int({ mode: "boolean" }).default(false).notNull(),
 });

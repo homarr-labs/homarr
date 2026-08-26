@@ -16,6 +16,7 @@ import {
 import { IconDroplets, IconMapPin, IconSunHigh, IconSunrise, IconSunset, IconWind } from "@tabler/icons-react";
 
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
+import { iconSizes, zoomCompensatedSize } from "@homarr/ui";
 
 import type { WidgetProps } from "../definition";
 import { AnimatedWeatherIcon } from "./animated-icon";
@@ -206,7 +207,7 @@ export const AdvancedWeather = ({ height, options, weather, width }: AdvancedWea
 
         <SimpleGrid cols={layout.metricColumns} spacing="xs">
           <MetricCard
-            icon={<IconDroplets size={18} aria-hidden />}
+            icon={<IconDroplets style={iconSizes.lg} aria-hidden />}
             label={t("advanced.nextHourPrecipitation")}
             value={t("advanced.precipitationValue", {
               amount: nextHour?.precipitation?.toFixed(1) ?? "?",
@@ -215,13 +216,13 @@ export const AdvancedWeather = ({ height, options, weather, width }: AdvancedWea
           />
           {options.showHumidity && (
             <MetricCard
-              icon={<IconDroplets size={18} aria-hidden />}
+              icon={<IconDroplets style={iconSizes.lg} aria-hidden />}
               label={t("advanced.currentHumidity")}
               value={`${weather.current.relativeHumidity}%`}
             />
           )}
           <MetricCard
-            icon={<IconWind size={18} aria-hidden />}
+            icon={<IconWind style={iconSizes.lg} aria-hidden />}
             label={t("advanced.currentWind")}
             value={t("advanced.windValue", {
               gusts: getPreferredWindSpeed(weather.current.windGusts, options.useImperialSpeed),
@@ -230,17 +231,17 @@ export const AdvancedWeather = ({ height, options, weather, width }: AdvancedWea
             })}
           />
           <MetricCard
-            icon={<IconSunHigh size={18} aria-hidden />}
+            icon={<IconSunHigh style={iconSizes.lg} aria-hidden />}
             label={t("advanced.todayUv")}
             value={today?.uvIndex?.toFixed(1) ?? "?"}
           />
           <MetricCard
-            icon={<IconSunrise size={18} aria-hidden />}
+            icon={<IconSunrise style={iconSizes.lg} aria-hidden />}
             label={t("dailyForecast.sunrise")}
             value={getPreferredTime(today?.sunriseAt, locale, weather.timezone)}
           />
           <MetricCard
-            icon={<IconSunset size={18} aria-hidden />}
+            icon={<IconSunset style={iconSizes.lg} aria-hidden />}
             label={t("dailyForecast.sunset")}
             value={getPreferredTime(today?.sunsetAt, locale, weather.timezone)}
           />
@@ -322,7 +323,11 @@ export const AdvancedWeather = ({ height, options, weather, width }: AdvancedWea
                             {getPreferredDate(day.date, locale, { month: "short", day: "numeric" })}
                           </Text>
                         </Stack>
-                        <AnimatedWeatherIcon animated={options.animateIcons} code={day.weatherCode} size={28} />
+                        <AnimatedWeatherIcon
+                          animated={options.animateIcons}
+                          code={day.weatherCode}
+                          style={zoomCompensatedSize(28)}
+                        />
                       </Group>
 
                       <Text size="sm" fw={500} lineClamp={1}>
@@ -348,13 +353,13 @@ export const AdvancedWeather = ({ height, options, weather, width }: AdvancedWea
 
                       <Group className={classes.dailyCardFacts} justify="space-between" gap={4} wrap="nowrap">
                         <Group gap={3} wrap="nowrap">
-                          <IconDroplets size={14} aria-hidden />
+                          <IconDroplets style={iconSizes.sm} aria-hidden />
                           <Text className={classes.dailyCardFact} fz={11}>
                             {day.precipitationProbability ?? "?"}%
                           </Text>
                         </Group>
                         <Group gap={3} wrap="nowrap">
-                          <IconWind size={14} aria-hidden />
+                          <IconWind style={iconSizes.sm} aria-hidden />
                           <Text className={classes.dailyCardFact} fz={11}>
                             {getPreferredWindSpeed(day.maxWindSpeed, options.useImperialSpeed)} {speedUnit}
                           </Text>

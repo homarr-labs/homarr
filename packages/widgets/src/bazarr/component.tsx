@@ -7,6 +7,7 @@ import { IconAlertTriangle, IconBell, IconDeviceTv, IconMovie, IconPlugConnected
 import { clientApi } from "@homarr/api/client";
 import { getIntegrationName } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
+import { zoomCompensatedSize } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
@@ -122,7 +123,7 @@ export default function BazarrWidget({
 
           return (
             <div key={statKey} className={`${classes.statTile} ${isWarning ? classes.statTileWarning : ""}`}>
-              <Icon className={classes.statIcon} size={iconSize} stroke={1.5} />
+              <Icon className={classes.statIcon} style={zoomCompensatedSize(iconSize)} stroke={1.5} />
               <span className={`${classes.statValue} ${isWarning ? classes.statValueWarning : ""}`}>
                 {typeof value === "string" && value.trim() === "" ? "—" : value}
               </span>

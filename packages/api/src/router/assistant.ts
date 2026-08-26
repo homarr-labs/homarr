@@ -495,7 +495,7 @@ export const assistantRouter = createTRPCRouter({
         models: [
           {
             id: "homarr-assistant",
-            name: "Homarr Assistant (Demo)",
+            name: "Assistant (Demo)",
             description: null,
             contextLength: null,
             promptPrice: null,
@@ -507,7 +507,7 @@ export const assistantRouter = createTRPCRouter({
       };
     }
     if (!configuration?.enabled || !configuration.modelId) {
-      throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Homarr Assistant is not configured." });
+      throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Assistant is not configured." });
     }
     const discoveredModels = await getAssistantModelsAsync(configuration).catch(() => []);
     const resolvedDefaultId = resolveAssistantModelId(discoveredModels, configuration.modelId) ?? configuration.modelId;
@@ -708,7 +708,7 @@ export const assistantRouter = createTRPCRouter({
         getConfigurationAsync(ctx.db),
       ]);
       if (!configuration?.enabled || !configuration.modelId) {
-        throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Homarr Assistant is not configured." });
+        throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Assistant is not configured." });
       }
       const selectedModel = await getSelectedModelDetailsAsync(configuration, input.modelId).catch(() => null);
       if (input.modelId !== configuration.modelId && !selectedModel) {

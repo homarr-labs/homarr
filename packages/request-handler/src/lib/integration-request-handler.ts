@@ -34,7 +34,7 @@ const getIntegrationCacheIdentity = <TKind extends IntegrationKind, TInput exten
   integration: IntegrationOfKind<TKind>;
   options: TInput;
 }) => {
-  const secretRevisions = integration.decryptedSecrets
+  const secretRevisions = (integration.decryptedSecrets ?? [])
     .map((secret) => ({
       kind: secret.kind,
       fingerprint: createKeyedFingerprint(JSON.stringify([secret.kind, secret.value])),

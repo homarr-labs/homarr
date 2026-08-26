@@ -43,6 +43,21 @@ describe("shared Custom JSX policy", () => {
     expect(validateCustomJsxTemplate('<ThemeIcon><Icon name="brand-docker" /></ThemeIcon>')).toEqual([]);
   });
 
+  test("rejects TablerIcon without its required name prop", () => {
+    expect(validateCustomJsxTemplate('<TablerIcon icon="IconHeartbeat" />')).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          severity: "error",
+          message: expect.stringContaining("MISSING_REQUIRED_PROP: 'name' on TablerIcon"),
+        }),
+        expect.objectContaining({
+          severity: "error",
+          message: expect.stringContaining("UNKNOWN_COMPONENT_PROP: 'icon' on TablerIcon"),
+        }),
+      ]),
+    );
+  });
+
   test("accepts common bounded formatting and collection operations", () => {
     expect(
       validateCustomJsxTemplate(

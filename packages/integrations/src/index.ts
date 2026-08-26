@@ -45,6 +45,7 @@ export { UmamiIntegration } from "./umami/umami-integration";
 export { PeaNutIntegration } from "./peanut/peanut-integration";
 export { BazarrIntegration } from "./bazarr/bazarr-integration";
 export { TraefikIntegration } from "./traefik/traefik-integration";
+export { mockWidgetData } from "./mock/widget-data";
 
 // Types
 export type { IntegrationInput } from "./base/integration";

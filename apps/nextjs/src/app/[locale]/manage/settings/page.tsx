@@ -9,10 +9,9 @@ import { SettingsForm } from "./_components/settings-form";
 
 export async function generateMetadata() {
   const t = await getI18n("management");
-  const metaTitle = `${t("metaTitle")} • Homarr`;
 
   return {
-    title: metaTitle,
+    title: t("metaTitle"),
   };
 }
 

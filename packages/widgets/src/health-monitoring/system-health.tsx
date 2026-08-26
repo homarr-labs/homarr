@@ -40,6 +40,7 @@ import { useRequiredBoard } from "@homarr/boards/context";
 import { formatBytes } from "@homarr/common";
 import type { ScopedTranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
+import { zoomCompensatedSize } from "@homarr/ui";
 
 import { filterStorageVolumes, normalizeStorageDeviceName } from "../filter-storage-volumes";
 import { WidgetEmptyState } from "../common/empty-state";
@@ -156,7 +157,10 @@ export const SystemHealthMonitoring = ({
                     onClick={() => setOpenedIntegrationId(integrationId)}
                     aria-label={t("popover.information")}
                   >
-                    <IconInfoCircle className="health-monitoring-information-icon" size={30} />
+                    <IconInfoCircle
+                      className="health-monitoring-information-icon"
+                      style={zoomCompensatedSize(30)}
+                    />
                   </ActionIcon>
                 </Indicator>
                 <Modal
@@ -284,45 +288,76 @@ const SystemInformationList = ({
   memoryUsage: ReturnType<typeof formatMemoryUsage>;
   t: ScopedTranslationFunction<"widget.healthMonitoring">;
   compact?: boolean;
-}) => (
-  <List
-    className="health-monitoring-information-list"
-    center
-    spacing={compact ? 4 : "xs"}
-    size={compact ? "sm" : undefined}
-  >
-    <List.Item className="health-monitoring-information-processor" icon={<IconCpu2 size={compact ? 18 : 30} />}>
-      {t("popover.processor", { cpuModelName: healthInfo.cpuModelName })}
-    </List.Item>
-    <List.Item className="health-monitoring-information-memory" icon={<IconBrain size={compact ? 18 : 30} />}>
-      {t("popover.memory", { memory: memoryUsage.memTotal.GB })}
-    </List.Item>
-    <List.Item className="health-monitoring-information-memory" icon={<IconBrain size={compact ? 18 : 30} />}>
-      {t("popover.memoryAvailable", {
-        memoryAvailable: memoryUsage.memFree.GB,
-        percent: String(memoryUsage.memFree.percent),
-      })}
-    </List.Item>
-    <List.Item className="health-monitoring-information-version" icon={<IconVersions size={compact ? 18 : 30} />}>
-      {t("popover.version", { version: healthInfo.version })}
-    </List.Item>
-    <List.Item className="health-monitoring-information-uptime" icon={<IconClock size={compact ? 18 : 30} />}>
-      {formatUptime(healthInfo.uptime, t)}
-    </List.Item>
-    {healthInfo.loadAverage && (
-      <List.Item className="health-monitoring-information-load-average" icon={<IconCpu size={compact ? 18 : 30} />}>
-        {t("popover.loadAverage")}: {healthInfo.loadAverage["1min"]}% / {healthInfo.loadAverage["5min"]}% /{" "}
-        {healthInfo.loadAverage["15min"]}%
+}) => {
+  // compact is only true for the inline on-board card; the non-compact usage renders inside a portaled Modal,
+  // which sits outside the zoomed canvas and must not be zoom-compensated.
+  const iconSize = compact ? 18 : 30;
+  const iconSizeProp = compact ? undefined : iconSize;
+  const iconStyle = compact ? zoomCompensatedSize(iconSize) : undefined;
+  return (
+    <List
+      className="health-monitoring-information-list"
+      center
+      spacing={compact ? 4 : "xs"}
+      size={compact ? "sm" : undefined}
+    >
+      <List.Item
+        className="health-monitoring-information-processor"
+        icon={<IconCpu2 size={iconSizeProp} style={iconStyle} />}
+      >
+        {t("popover.processor", { cpuModelName: healthInfo.cpuModelName })}
       </List.Item>
-    )}
-    <List.Item className="health-monitoring-information-updates" icon={<IconPackages size={compact ? 18 : 30} />}>
-      {t("popover.updatesAvailable", { count: healthInfo.availablePkgUpdates })}
-    </List.Item>
-    <List.Item className="health-monitoring-information-reboot" icon={<IconRefreshAlert size={compact ? 18 : 30} />}>
-      {healthInfo.rebootRequired ? t("popover.rebootRequired") : t("popover.rebootNotRequired")}
-    </List.Item>
-  </List>
-);
+      <List.Item
+        className="health-monitoring-information-memory"
+        icon={<IconBrain size={iconSizeProp} style={iconStyle} />}
+      >
+        {t("popover.memory", { memory: memoryUsage.memTotal.GB })}
+      </List.Item>
+      <List.Item
+        className="health-monitoring-information-memory"
+        icon={<IconBrain size={iconSizeProp} style={iconStyle} />}
+      >
+        {t("popover.memoryAvailable", {
+          memoryAvailable: memoryUsage.memFree.GB,
+          percent: String(memoryUsage.memFree.percent),
+        })}
+      </List.Item>
+      <List.Item
+        className="health-monitoring-information-version"
+        icon={<IconVersions size={iconSizeProp} style={iconStyle} />}
+      >
+        {t("popover.version", { version: healthInfo.version })}
+      </List.Item>
+      <List.Item
+        className="health-monitoring-information-uptime"
+        icon={<IconClock size={iconSizeProp} style={iconStyle} />}
+      >
+        {formatUptime(healthInfo.uptime, t)}
+      </List.Item>
+      {healthInfo.loadAverage && (
+        <List.Item
+          className="health-monitoring-information-load-average"
+          icon={<IconCpu size={iconSizeProp} style={iconStyle} />}
+        >
+          {t("popover.loadAverage")}: {healthInfo.loadAverage["1min"]}% / {healthInfo.loadAverage["5min"]}% /{" "}
+          {healthInfo.loadAverage["15min"]}%
+        </List.Item>
+      )}
+      <List.Item
+        className="health-monitoring-information-updates"
+        icon={<IconPackages size={iconSizeProp} style={iconStyle} />}
+      >
+        {t("popover.updatesAvailable", { count: healthInfo.availablePkgUpdates })}
+      </List.Item>
+      <List.Item
+        className="health-monitoring-information-reboot"
+        icon={<IconRefreshAlert size={iconSizeProp} style={iconStyle} />}
+      >
+        {healthInfo.rebootRequired ? t("popover.rebootRequired") : t("popover.rebootNotRequired")}
+      </List.Item>
+    </List>
+  );
+};
 
 export const formatUptime = (uptimeInSeconds: number, t: ScopedTranslationFunction<"widget.healthMonitoring">) => {
   const uptimeDuration = dayjs.duration(uptimeInSeconds, "seconds");

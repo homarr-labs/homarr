@@ -7,14 +7,13 @@ import { getI18n } from "@homarr/translation/server";
 import { Link } from "@homarr/ui";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
-import { createMetaTitle } from "~/metadata";
 import { HeroBanner } from "./_components/hero-banner";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getI18n("management");
 
   return {
-    title: createMetaTitle(t("metaTitle")),
+    title: t("metaTitle"),
   };
 }
 

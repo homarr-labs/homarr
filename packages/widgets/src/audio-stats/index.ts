@@ -6,7 +6,8 @@ import { createWidgetDefinition, matchesWidgetRuntimeQuery } from "../definition
 import { optionsBuilder } from "../options";
 
 const hideUnlessNavidrome = {
-  shouldHide: (_: unknown, integrationKinds: string[]) => !integrationKinds.includes("navidrome"),
+  shouldHide: (_: unknown, integrationKinds: string[]) =>
+    !integrationKinds.includes("navidrome") && !integrationKinds.includes("mock"),
 };
 
 const hideUnlessAudiobookshelf = {

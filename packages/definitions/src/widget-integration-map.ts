@@ -59,34 +59,34 @@ export const widgetIntegrationConfigs = {
   healthMonitoring: {
     supportedIntegrations: [...healthMonitoringGeneralIntegrationKinds, ...healthMonitoringClusterIntegrationKinds],
   },
-  firewall: { supportedIntegrations: getIntegrationKindsByCategory("firewall") },
+  firewall: { supportedIntegrations: [...getIntegrationKindsByCategory("firewall"), "mock"] },
   notifications: { supportedIntegrations: getIntegrationKindsByCategory("notifications") },
   mediaReleases: { supportedIntegrations: ["mock", "emby", "jellyfin", "plex"] },
   systemResources: {
-    supportedIntegrations: [...healthMonitoringGeneralIntegrationKinds],
+    supportedIntegrations: [...healthMonitoringSystemIntegrationKinds],
   },
-  systemDisks: { supportedIntegrations: ["dashDot", "openmediavault", "truenas", "unraid", "synology"] },
+  systemDisks: { supportedIntegrations: ["dashDot", "openmediavault", "truenas", "unraid", "synology", "mock"] },
   beszelAlerts: { supportedIntegrations: ["beszel", "mock"] },
   beszelSystemGrid: { supportedIntegrations: ["beszel", "mock"] },
   beszelSystemStats: { supportedIntegrations: ["beszel", "mock"] },
   beszelSystemTable: { supportedIntegrations: ["beszel", "mock"] },
-  coolify: { supportedIntegrations: ["coolify"] },
-  "immich-serverStats": { supportedIntegrations: ["immich"], maxIntegrations: 1 },
-  "immich-albumCarousel": { supportedIntegrations: ["immich"], maxIntegrations: 1 },
-  paperlessNgx: { supportedIntegrations: ["paperlessNgx"], maxIntegrations: 1 },
-  patchmon: { supportedIntegrations: ["patchmon"], maxIntegrations: 1 },
-  bazarr: { supportedIntegrations: ["bazarr"], maxIntegrations: 1 },
-  tracearr: { supportedIntegrations: ["tracearr"] },
-  speedtestTracker: { supportedIntegrations: ["speedtestTracker"] },
-  uptimeKuma: { supportedIntegrations: ["uptimeKuma"] },
-  audioStats: { supportedIntegrations: ["navidrome", "audiobookshelf"], maxIntegrations: 1 },
-  umami: { supportedIntegrations: ["umami"], maxIntegrations: 1 },
-  vpn: { supportedIntegrations: getIntegrationKindsByCategory("vpn") },
+  coolify: { supportedIntegrations: ["coolify", "mock"] },
+  "immich-serverStats": { supportedIntegrations: ["immich", "mock"], maxIntegrations: 1 },
+  "immich-albumCarousel": { supportedIntegrations: ["immich", "mock"], maxIntegrations: 1 },
+  paperlessNgx: { supportedIntegrations: ["paperlessNgx", "mock"], maxIntegrations: 1 },
+  patchmon: { supportedIntegrations: ["patchmon", "mock"], maxIntegrations: 1 },
+  bazarr: { supportedIntegrations: ["bazarr", "mock"], maxIntegrations: 1 },
+  tracearr: { supportedIntegrations: ["tracearr", "mock"] },
+  speedtestTracker: { supportedIntegrations: ["speedtestTracker", "mock"] },
+  uptimeKuma: { supportedIntegrations: ["uptimeKuma", "mock"] },
+  audioStats: { supportedIntegrations: ["navidrome", "audiobookshelf", "mock"], maxIntegrations: 1 },
+  umami: { supportedIntegrations: ["umami", "mock"], maxIntegrations: 1 },
+  vpn: { supportedIntegrations: [...getIntegrationKindsByCategory("vpn"), "mock"] },
   ups: { supportedIntegrations: getIntegrationKindsByCategory("ups") },
-  archiveTeamWarrior: { supportedIntegrations: ["archiveTeamWarrior"], maxIntegrations: 1 },
-  anchorNote: { supportedIntegrations: ["anchor"], maxIntegrations: 1 },
-  traefik: { supportedIntegrations: ["traefik"] },
-  wud: { supportedIntegrations: ["wud"], maxIntegrations: 1 },
+  archiveTeamWarrior: { supportedIntegrations: ["archiveTeamWarrior", "mock"], maxIntegrations: 1 },
+  anchorNote: { supportedIntegrations: ["anchor", "mock"], maxIntegrations: 1 },
+  traefik: { supportedIntegrations: ["traefik", "mock"] },
+  wud: { supportedIntegrations: ["wud", "mock"], maxIntegrations: 1 },
 } satisfies Partial<Record<WidgetKind, WidgetIntegrationConfig>>;
 
 export type WidgetKindWithIntegration = keyof typeof widgetIntegrationConfigs;
@@ -205,6 +205,18 @@ export const getDefaultWidgetConfig = (kind: WidgetKind): DefaultWidgetConfig =>
 export const generalWidgets: WidgetKind[] = defaultWidgetConfigs
   .filter((config) => !config.skip)
   .map((config) => config.kind);
+
+export const featuredIntegrations: readonly IntegrationKind[] = [
+  "sonarr",
+  "radarr",
+  "prowlarr",
+  "sabNzbd",
+  "qBittorrent",
+  "seerr",
+  "jellyfin",
+];
+
+export const hiddenFromOnboarding = new Set<IntegrationKind>(["mock"]);
 
 export const defaultBookmarkApps = [
   {

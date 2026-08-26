@@ -1,5 +1,6 @@
 import { z } from "zod/v4";
 
+import { mockWidgetData } from "@homarr/integrations";
 import {
   immichAlbumRequestHandler,
   immichAlbumsRequestHandler,
@@ -13,7 +14,8 @@ export const immichRouter = createTRPCRouter({
   getServerStats: publicProcedure
     .concat(createOneWidgetIntegrationMiddleware("query", "immich-serverStats"))
     .query(async ({ ctx }) => {
-      const innerHandler = immichStatsRequestHandler.handler(ctx.integration, {});
+      if (ctx.integration.kind === "mock") return mockWidgetData.immichStats;
+      const innerHandler = immichStatsRequestHandler.handler({ ...ctx.integration, kind: "immich" }, {});
       const data = await innerHandler.getDataAsync();
       return data.data;
     }),
@@ -26,7 +28,13 @@ export const immichRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
-      const innerHandler = immichAlbumRequestHandler.handler(ctx.integration, { albumId: input.albumId });
+      if (ctx.integration.kind === "mock") return mockWidgetData.immichAlbum;
+      const innerHandler = immichAlbumRequestHandler.handler(
+        { ...ctx.integration, kind: "immich" },
+        {
+          albumId: input.albumId,
+        },
+      );
       const data = await innerHandler.getDataAsync();
       return data.data;
     }),
@@ -39,7 +47,13 @@ export const immichRouter = createTRPCRouter({
     )
     .concat(createOneWidgetIntegrationMiddleware("query", "immich-albumCarousel"))
     .query(async ({ ctx, input }) => {
-      const innerHandler = immichAlbumsRequestHandler.handler(ctx.integration, { limit: input.limit });
+      if (ctx.integration.kind === "mock") return mockWidgetData.immichAlbums.slice(0, input.limit);
+      const innerHandler = immichAlbumsRequestHandler.handler(
+        { ...ctx.integration, kind: "immich" },
+        {
+          limit: input.limit,
+        },
+      );
       const data = await innerHandler.getDataAsync();
       return data.data;
     }),

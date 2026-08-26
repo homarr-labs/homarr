@@ -436,9 +436,21 @@ const resetUsage = await request("/api/ai/usage", { headers: authorSession.heade
 if (resetUsage.limit !== 50 || resetUsage.used !== 0 || resetUsage.remaining !== 50) {
   throw new Error(`Quota did not reset at the UTC day boundary: ${JSON.stringify(resetUsage)}`);
 }
-const resetQuota = (
+const today = new Date().toISOString().slice(0, 10);
+const resetQuotas = (
   await request("/api/collections/assistant_quotas/records?perPage=20", { headers: rootHeaders })
-).items.find((item) => item.user === author.id);
+).items.filter((item) => item.user === author.id);
+const historicalQuota = resetQuotas.find((item) => item.id === authorQuota.id);
+const resetQuota = resetQuotas.find((item) => item.day === today);
+if (
+  resetQuotas.length !== 2 ||
+  historicalQuota?.day !== "2000-01-01" ||
+  historicalQuota.used !== 49 ||
+  !resetQuota ||
+  resetQuota.used !== 0
+) {
+  throw new Error(`Daily quota history was not preserved: ${JSON.stringify(resetQuotas)}`);
+}
 await request(`/api/collections/assistant_quotas/records/${resetQuota.id}`, {
   method: "PATCH",
   headers: rootHeaders,

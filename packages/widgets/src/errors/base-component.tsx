@@ -5,7 +5,7 @@ import { useSession } from "@homarr/auth/client";
 import type { stringOrTranslation } from "@homarr/translation";
 import { translateIfNecessary } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
-import { Link } from "@homarr/ui";
+import { Link, zoomCompensatedSize } from "@homarr/ui";
 import type { TablerIcon } from "@homarr/ui";
 
 export interface BaseWidgetErrorProps {
@@ -23,7 +23,7 @@ export const BaseWidgetError = (props: BaseWidgetErrorProps) => {
 
   return (
     <Stack h="100%" align="center" justify="center" gap="md" data-homarr-widget-error>
-      <props.icon size={40} />
+      <props.icon style={zoomCompensatedSize(40)} />
       <Stack gap={0}>
         <Text ta="center">{translateIfNecessary(t, props.message)}</Text>
         {props.showLogsLink && session?.user.permissions.includes("other-view-logs") && (

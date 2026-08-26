@@ -5,7 +5,6 @@ import { auth } from "@homarr/auth/next";
 import { dbEnv } from "@homarr/core/infrastructure/db/env";
 import { getI18n } from "@homarr/translation/server";
 
-import { createMetaTitle } from "~/metadata";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { BackupExportCard } from "./_components/backup-export-card";
 import { BackupImportCard } from "./_components/backup-import-card";
@@ -19,7 +18,7 @@ export async function generateMetadata() {
   const t = await getI18n("management.page.tool.backup");
 
   return {
-    title: createMetaTitle(t("metaTitle")),
+    title: t("metaTitle"),
   };
 }
 

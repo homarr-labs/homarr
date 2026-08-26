@@ -1,3 +1,4 @@
+import { mockWidgetData } from "@homarr/integrations";
 import {
   firewallCpuRequestHandler,
   firewallInterfacesRequestHandler,
@@ -24,19 +25,31 @@ interface FirewallQueryResult<TData> {
   integration: {
     id: string;
     name: string;
-    kind: FirewallIntegration["kind"];
+    kind: FirewallIntegration["kind"] | "mock";
     updatedAt: Date;
   };
   summary: TData;
   error: string | undefined;
 }
 
-const queryFirewall = <TData>(handler: FirewallHandler<TData>, createFallback: () => TData) =>
+const queryFirewall = <TData>(handler: FirewallHandler<TData>, createFallback: () => TData, getMockData: () => TData) =>
   publicProcedure.concat(firewallMiddleware).query(async ({ ctx }) =>
     settleIntegrationQueries(
       ctx.integrations,
       async (integration): Promise<FirewallQueryResult<TData>> => {
-        const { data, timestamp } = await handler.handler(integration, {}).getDataAsync();
+        if (integration.kind === "mock") {
+          return {
+            integration: {
+              id: integration.id,
+              name: integration.name,
+              kind: integration.kind,
+              updatedAt: new Date(mockWidgetData.timestamp),
+            },
+            summary: getMockData(),
+            error: undefined,
+          };
+        }
+        const { data, timestamp } = await handler.handler({ ...integration, kind: "opnsense" }, {}).getDataAsync();
         return {
           integration: { id: integration.id, name: integration.name, kind: integration.kind, updatedAt: timestamp },
           summary: data,
@@ -44,7 +57,7 @@ const queryFirewall = <TData>(handler: FirewallHandler<TData>, createFallback: (
         };
       },
       {
-        fallback: (integration, error) => ({
+        fallback: (integration, error): FirewallQueryResult<TData> => ({
           integration: { id: integration.id, name: integration.name, kind: integration.kind, updatedAt: new Date(0) },
           summary: createFallback(),
           error: toPublicIntegrationError(error),
@@ -55,8 +68,24 @@ const queryFirewall = <TData>(handler: FirewallHandler<TData>, createFallback: (
   );
 
 export const firewallRouter = createTRPCRouter({
-  getFirewallCpuStatus: queryFirewall(firewallCpuRequestHandler, () => ({ total: 0 })),
-  getFirewallInterfacesStatus: queryFirewall(firewallInterfacesRequestHandler, () => []),
-  getFirewallVersionStatus: queryFirewall(firewallVersionRequestHandler, () => ({ version: "Unknown" })),
-  getFirewallMemoryStatus: queryFirewall(firewallMemoryRequestHandler, () => ({ used: 0, total: 0, percent: 0 })),
+  getFirewallCpuStatus: queryFirewall(
+    firewallCpuRequestHandler,
+    () => ({ total: 0 }),
+    () => mockWidgetData.firewallCpu,
+  ),
+  getFirewallInterfacesStatus: queryFirewall(
+    firewallInterfacesRequestHandler,
+    () => [],
+    () => mockWidgetData.firewallInterfaces,
+  ),
+  getFirewallVersionStatus: queryFirewall(
+    firewallVersionRequestHandler,
+    () => ({ version: "Unknown" }),
+    () => mockWidgetData.firewallVersion,
+  ),
+  getFirewallMemoryStatus: queryFirewall(
+    firewallMemoryRequestHandler,
+    () => ({ used: 0, total: 0, percent: 0 }),
+    () => mockWidgetData.firewallMemory,
+  ),
 });

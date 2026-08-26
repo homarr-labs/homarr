@@ -8,9 +8,8 @@ import { OnboardingTour } from "@gfazioli/mantine-onboarding-tour";
 import { Button, Center, Group, Image, Kbd, Text } from "@mantine/core";
 import type { FloatingPosition } from "@mantine/core";
 
+import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
-
-import { homarrLogoPath } from "~/components/layout/logo/homarr-logo";
 
 interface TourShellProps extends PropsWithChildren {
   steps: OnboardingTourStep[];
@@ -79,6 +78,7 @@ const TourDoneButton = ({ label, onClick }: TourDoneButtonProps) => {
 export const TourShell = ({ steps, started, onEnd, stepRoutes, position, children }: TourShellProps) => {
   const tCommon = useI18n("common.action");
   const tTour = useI18n("onboardingTour");
+  const { branding } = useSettings();
   const router = useRouter();
   const forwardActionRef = useRef<(() => void) | null>(null);
 
@@ -145,7 +145,13 @@ export const TourShell = ({ steps, started, onEnd, stepRoutes, position, childre
           </Group>
           {stepIndexFromController(controller) === 0 && (
             <Center py="xs">
-              <Image src={homarrLogoPath} alt="Homarr" w={64} h={64} fit="contain" />
+              <Image
+                src={branding.logoImageUrl ?? "/logo/logo.png"}
+                alt={`${branding.appName} logo`}
+                w={64}
+                h={64}
+                fit="contain"
+              />
             </Center>
           )}
         </>

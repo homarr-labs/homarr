@@ -39,10 +39,9 @@ const loadBoardEditorAsync = async () =>
   ]);
 const BoardEditActions = dynamic(loadEditActionsAsync, { ssr: false });
 
-export const BoardContentHeaderActions = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
+export const BoardContentEditAction = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   const [isEditMode] = useEditMode();
   const board = useRequiredBoard();
-  const t = useI18n("board");
   const { hasChangeAccess } = useBoardPermissions(board);
 
   if (!hasChangeAccess) return null;
@@ -50,17 +49,24 @@ export const BoardContentHeaderActions = ({ demoReadOnly }: { demoReadOnly: bool
   return (
     <>
       {isEditMode && <BoardEditActions />}
-
       <EditModeMenu demoReadOnly={demoReadOnly} />
-
-      {!demoReadOnly && (
-        <TourTarget id="board-settings">
-          <HeaderButton href={`/boards/${board.name}/settings`} aria-label={t("action.settings")}>
-            <IconSettings stroke={1.5} />
-          </HeaderButton>
-        </TourTarget>
-      )}
     </>
+  );
+};
+
+export const BoardContentSettingsAction = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
+  const board = useRequiredBoard();
+  const t = useI18n("board");
+  const { hasChangeAccess } = useBoardPermissions(board);
+
+  if (!hasChangeAccess || demoReadOnly) return null;
+
+  return (
+    <TourTarget id="board-settings">
+      <HeaderButton href={`/boards/${board.name}/settings`} aria-label={t("action.settings")}>
+        <IconSettings stroke={1.5} />
+      </HeaderButton>
+    </TourTarget>
   );
 };
 

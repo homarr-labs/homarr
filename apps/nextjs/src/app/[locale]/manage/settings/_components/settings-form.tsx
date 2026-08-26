@@ -12,12 +12,14 @@ import { colorSchemes } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import type { ServerSettings, defaultServerSettingsKeys } from "@homarr/server-settings";
+import { brandingServerSettingsSchema } from "@homarr/server-settings";
 import { useI18n } from "@homarr/translation/client";
 
 import { UnsavedChangesBar } from "~/components/manage/unsaved-changes-bar";
 import { AnalyticsSettings } from "./analytics.settings";
 import { AppearanceSettingsForm } from "./appearance-settings-form";
 import { BoardSettingsForm } from "./board-settings-form";
+import { BrandingSettingsForm } from "./branding-settings-form";
 import { CrawlingAndIndexingSettings } from "./crawling-and-indexing.settings";
 import { CultureSettingsForm } from "./culture-settings-form";
 import { SearchSettingsForm } from "./search-settings-form";
@@ -37,6 +39,7 @@ const settingsFormSchema = z.object({
   defaultSearchEngineId: z.string().nullable(),
   defaultColorScheme: z.enum(colorSchemes),
   defaultLocale: z.string(),
+  branding: brandingServerSettingsSchema,
 });
 
 export type FormValues = z.infer<typeof settingsFormSchema>;
@@ -55,6 +58,7 @@ const buildInitialValues = (initialData: ServerSettings): FormValues => ({
   defaultSearchEngineId: initialData.search.defaultSearchEngineId,
   defaultColorScheme: initialData.appearance.defaultColorScheme,
   defaultLocale: initialData.culture.defaultLocale,
+  branding: initialData.branding,
 });
 
 interface SettingsFormProps {
@@ -137,6 +141,11 @@ export const SettingsForm = ({ initialData, selectableBoards, selectableSearchEn
         value: { defaultColorScheme: values.defaultColorScheme },
       },
       { settingsKey: "culture", when: changed("defaultLocale"), value: { defaultLocale: values.defaultLocale } },
+      {
+        settingsKey: "branding",
+        when: changed("branding"),
+        value: values.branding,
+      },
     ];
 
     const promises = groups
@@ -176,6 +185,7 @@ export const SettingsForm = ({ initialData, selectableBoards, selectableSearchEn
         <UserSettingsForm form={form} />
         <SearchSettingsForm form={form} selectableSearchEngines={selectableSearchEngines} />
         <AppearanceSettingsForm form={form} />
+        <BrandingSettingsForm form={form} />
         <CultureSettingsForm form={form} />
         <AnalyticsSettings form={form} />
         <CrawlingAndIndexingSettings form={form} />

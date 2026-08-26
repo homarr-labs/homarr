@@ -21,6 +21,7 @@ import { IconBell, IconPlayerPause, IconPlayerPlay, IconRefresh, IconSettings, I
 import { useTiks } from "@rexa-developer/tiks/react";
 
 import { useI18n } from "@homarr/translation/client";
+import { iconSizes } from "@homarr/ui";
 
 import {
   claimBrowserAlertOccurrence,
@@ -427,7 +428,7 @@ const AdvancedTimer = ({
         <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
           <Paper withBorder p="md">
             <Group gap="xs" mb="sm">
-              <IconSettings size={18} aria-hidden />
+              <IconSettings style={iconSizes.lg} aria-hidden />
               <Text fw={600}>{t("advanced.settings")}</Text>
             </Group>
             <SettingsSummary mode={runtime.mode} durations={durations} />
@@ -438,7 +439,7 @@ const AdvancedTimer = ({
 
           <Paper withBorder p="md">
             <Group gap="xs" mb="sm">
-              <IconBell size={18} aria-hidden />
+              <IconBell style={iconSizes.lg} aria-hidden />
               <Text fw={600}>{t("advanced.localAlerts")}</Text>
             </Group>
             <Stack gap="sm">
@@ -453,7 +454,7 @@ const AdvancedTimer = ({
                 disabled={disabled}
                 label={t("advanced.sound")}
                 onChange={(event) => onSoundChange(event.currentTarget.checked)}
-                thumbIcon={<IconVolume size={12} />}
+                thumbIcon={<IconVolume style={iconSizes.sm} />}
               />
               <Text size="xs" c="dimmed">
                 {t("advanced.localAlertsHint")}

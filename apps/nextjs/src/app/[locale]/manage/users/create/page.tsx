@@ -8,7 +8,6 @@ import { everyoneGroup } from "@homarr/definitions";
 import { getI18n } from "@homarr/translation/server";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
-import { createMetaTitle } from "~/metadata";
 import { UserCreateStepperComponent } from "./_components/create-user-stepper";
 
 export async function generateMetadata() {
@@ -22,7 +21,7 @@ export async function generateMetadata() {
   const t = await getI18n("management.page.user.create");
 
   return {
-    title: createMetaTitle(t("metaTitle")),
+    title: t("metaTitle"),
   };
 }
 

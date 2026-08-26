@@ -3,6 +3,7 @@ import { z } from "zod/v4";
 
 import { ResponseError } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
+import { mockWidgetData } from "@homarr/integrations";
 import { anchorNotesListInputSchema, anchorNoteUpdateInputSchema } from "@homarr/integrations/anchor";
 import { createIntegrationAsync } from "@homarr/integrations/factory";
 import { anchorNoteRequestHandler, anchorNotesListRequestHandler } from "@homarr/request-handler/anchor-notes";
@@ -15,6 +16,12 @@ const noteIdInput = z.object({
 });
 
 const logger = createLogger({ module: "anchorNotesRouter" });
+
+const assertMockNoteExists = (noteId: string) => {
+  if (noteId === mockWidgetData.anchorNote.id) return;
+
+  throw new TRPCError({ code: "NOT_FOUND", message: "Note not found" });
+};
 
 const isJsonDeltaString = (value: string) => {
   try {
@@ -44,7 +51,19 @@ export const anchorNotesRouter = createTRPCRouter({
     .concat(createOneWidgetIntegrationMiddleware("query", "anchorNote"))
     .input(anchorNotesListInputSchema)
     .query(async ({ ctx, input }) => {
-      const handler = anchorNotesListRequestHandler.handler(ctx.integration, { ...input, limit: input.limit ?? 50 });
+      if (ctx.integration.kind === "mock") {
+        const search = input.search?.toLowerCase();
+        const notes = mockWidgetData.anchorNotes.filter((note) => !search || note.title.toLowerCase().includes(search));
+        return notes.slice(0, input.limit ?? 50);
+      }
+
+      const handler = anchorNotesListRequestHandler.handler(
+        { ...ctx.integration, kind: "anchor" },
+        {
+          ...input,
+          limit: input.limit ?? 50,
+        },
+      );
 
       const { data } = await handler.getDataAsync();
 
@@ -54,7 +73,15 @@ export const anchorNotesRouter = createTRPCRouter({
     .concat(createOneWidgetIntegrationMiddleware("query", "anchorNote"))
     .input(noteIdInput)
     .query(async ({ ctx, input }) => {
-      const handler = anchorNoteRequestHandler.handler(ctx.integration, { noteId: input.noteId });
+      if (ctx.integration.kind === "mock") {
+        assertMockNoteExists(input.noteId);
+        return mockWidgetData.anchorNote;
+      }
+
+      const handler = anchorNoteRequestHandler.handler(
+        { ...ctx.integration, kind: "anchor" },
+        { noteId: input.noteId },
+      );
 
       const { data } = await handler.getDataAsync();
 
@@ -64,10 +91,20 @@ export const anchorNotesRouter = createTRPCRouter({
     .concat(createOneWidgetIntegrationMiddleware("interact", "anchorNote"))
     .input(anchorNoteUpdateInputSchema)
     .mutation(async ({ ctx, input }) => {
-      const integrationInstance = await createIntegrationAsync(ctx.integration);
       const normalizedContent = normalizeAnchorContent(input.content);
       const isContentNormalized =
         input.content !== undefined && normalizedContent !== undefined && input.content !== normalizedContent;
+
+      if (ctx.integration.kind === "mock") {
+        assertMockNoteExists(input.noteId);
+        return {
+          ...mockWidgetData.anchorNote,
+          ...(input.title !== undefined ? { title: input.title } : {}),
+          ...(normalizedContent !== undefined ? { content: normalizedContent } : {}),
+        };
+      }
+
+      const integrationInstance = await createIntegrationAsync({ ...ctx.integration, kind: "anchor" });
 
       try {
         const updatedNote = await integrationInstance.updateNoteAsync({

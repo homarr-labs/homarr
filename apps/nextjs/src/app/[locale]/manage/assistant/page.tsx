@@ -10,7 +10,7 @@ import { AssistantConfiguration } from "./_components/assistant-configuration";
 export async function generateMetadata() {
   const t = await getI18n("management.page.settings.section.assistant");
   return {
-    title: `${t("title")} • Homarr`,
+    title: t("title"),
   };
 }
 

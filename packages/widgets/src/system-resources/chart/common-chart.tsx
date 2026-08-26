@@ -7,6 +7,7 @@ import { useElementSize, useHover, useMergedRef } from "@mantine/hooks";
 import type { TooltipProps, YAxisProps } from "recharts";
 
 import { useRequiredBoard } from "@homarr/boards/context";
+import { zoomCompensatedSize } from "@homarr/ui";
 import type { TablerIcon } from "@homarr/ui";
 
 import type { LabelDisplayModeOption } from "..";
@@ -69,7 +70,7 @@ export const CommonChart = ({
           style={{ zIndex: 2, pointerEvents: "none" }}
           align="center"
         >
-          {showIcon && <Icon color={"var(--mantine-color-dimmed)"} size={height > 100 ? 20 : 14} stroke={1.5} />}
+          {showIcon && <Icon color={"var(--mantine-color-dimmed)"} style={zoomCompensatedSize(height > 100 ? 20 : 14)} stroke={1.5} />}
           {showText && (
             <Text c={"dimmed"} size={height > 100 ? "md" : "xs"} fw={"bold"}>
               {title}
@@ -92,7 +93,7 @@ export const CommonChart = ({
       {data.length <= 1 ? (
         <Center pos="absolute" w="100%" h="100%">
           <Stack px={"xs"} align={"center"} gap={4}>
-            {showIcon && <Icon color={"var(--mantine-color-dimmed)"} size={height > 100 ? 20 : 14} stroke={1.5} />}
+            {showIcon && <Icon color={"var(--mantine-color-dimmed)"} style={zoomCompensatedSize(height > 100 ? 20 : 14)} stroke={1.5} />}
             {showText && (
               <Text c={"dimmed"} size={height > 100 ? "md" : "xs"} fw={"bold"} ta="center">
                 {title}

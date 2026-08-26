@@ -2,6 +2,7 @@ import { Center, Group, SimpleGrid, Stack, Text } from "@mantine/core";
 import { IconNetwork } from "@tabler/icons-react";
 
 import { useI18n } from "@homarr/translation/client";
+import { iconSizes } from "@homarr/ui";
 
 import { StatRow } from "./stat-row";
 
@@ -21,7 +22,7 @@ export const WiredVariant = ({
     <Stack h="100%" align="center" justify="center" gap={compact ? "sm" : "md"}>
       <Group gap="xs" wrap="nowrap" justify="center">
         <Center w={24} h={24}>
-          <IconNetwork size={20} />
+          <IconNetwork style={iconSizes.xl} />
         </Center>
         <Text size={"md"} fw={"bold"}>
           {t("variants.wired.name")}

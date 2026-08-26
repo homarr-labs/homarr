@@ -337,6 +337,13 @@
       "when": 1786217088950,
       "tag": "0047_add_assistant_tables",
       "breakpoints": true
+    },
+    {
+      "idx": 48,
+      "version": "5",
+      "when": 1787556966768,
+      "tag": "0048_add_header_preferences_and_branding",
+      "breakpoints": true
     }
   ]
 }

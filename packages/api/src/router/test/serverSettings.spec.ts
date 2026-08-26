@@ -79,7 +79,7 @@ describe("saveSettings", () => {
     });
 
     const dbSettings = await db.select().from(serverSettings);
-    expect(dbSettings).toStrictEqual([
+    expect(dbSettings.filter(({ settingKey }) => settingKey === "analytics")).toStrictEqual([
       {
         settingKey: "analytics",
         value: stringify({
@@ -124,7 +124,7 @@ describe("board settings API", () => {
       forceDisableStatus: true,
     });
     const dbSettings = await db.select().from(serverSettings);
-    expect(dbSettings).toStrictEqual([
+    expect(dbSettings.filter(({ settingKey }) => settingKey === "board")).toStrictEqual([
       {
         settingKey: "board",
         value: stringify(result),
@@ -155,7 +155,7 @@ describe("board settings API", () => {
       enableStatusByDefault: false,
     });
     const dbSettings = await db.select().from(serverSettings);
-    expect(dbSettings).toStrictEqual([
+    expect(dbSettings.filter(({ settingKey }) => settingKey === "board")).toStrictEqual([
       {
         settingKey: "board",
         value: stringify(result),

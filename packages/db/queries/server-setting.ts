@@ -1,7 +1,7 @@
 import SuperJSON from "superjson";
 
 import type { ServerSettings } from "@homarr/server-settings";
-import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server-settings";
+import { defaultServerSettings, defaultServerSettingsKeys, parseBrandingSettings } from "@homarr/server-settings";
 
 import type { Database } from "..";
 import { eq } from "..";
@@ -18,10 +18,15 @@ export const getServerSettingsAsync = async (db: Database) => {
       return acc;
     }
 
+    const parsedSetting = SuperJSON.parse<Record<string, unknown>>(setting.value);
+    if (settingKey === "branding") {
+      acc[settingKey] = parseBrandingSettings(parsedSetting) as never;
+      return acc;
+    }
     acc[settingKey] = {
       ...defaultServerSettings[settingKey],
-      ...SuperJSON.parse(setting.value),
-    };
+      ...parsedSetting,
+    } as never;
     return acc;
   }, {} as ServerSettings);
 };
@@ -35,7 +40,14 @@ export const getServerSettingByKeyAsync = async <TKey extends keyof ServerSettin
     return defaultServerSettings[key];
   }
 
-  return SuperJSON.parse<ServerSettings[TKey]>(dbSettings.value);
+  const parsedSetting = SuperJSON.parse<ServerSettings[TKey]>(dbSettings.value);
+  if (key === "branding") {
+    return parseBrandingSettings(parsedSetting) as ServerSettings[TKey];
+  }
+  return {
+    ...defaultServerSettings[key],
+    ...parsedSetting,
+  } as ServerSettings[TKey];
 };
 
 export const updateServerSettingByKeyAsync = async <TKey extends keyof ServerSettings>(

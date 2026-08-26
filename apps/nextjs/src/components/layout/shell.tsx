@@ -3,6 +3,7 @@
 import type { PropsWithChildren } from "react";
 import { AppShell } from "@mantine/core";
 import { useAtomValue } from "jotai";
+import { useSettings } from "@homarr/settings";
 
 import { useOptionalBackgroundProps } from "./background";
 import { appShellHeaderHeight } from "./constants";
@@ -20,11 +21,13 @@ export const ClientShell = ({
 }: PropsWithChildren<ClientShellProps>) => {
   const collapsed = useAtomValue(navigationCollapsedAtom);
   const backgroundProps = useOptionalBackgroundProps();
+  const { headerPreferences } = useSettings();
+  const isHeaderVisible = hasHeader && headerPreferences.visible;
 
   return (
     <AppShell
       {...backgroundProps}
-      header={hasHeader ? { height: appShellHeaderHeight } : undefined}
+      header={isHeaderVisible ? { height: appShellHeaderHeight } : undefined}
       navbar={
         hasNavigation
           ? {

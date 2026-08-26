@@ -1,6 +1,8 @@
 import { Center, RingProgress, Text } from "@mantine/core";
 import { IconBrain } from "@tabler/icons-react";
 
+import { zoomCompensatedSize } from "@homarr/ui";
+
 import { progressColor } from "../system-health";
 
 export const MemoryRing = ({ available, used, isTiny }: { available: number; used: number; isTiny: boolean }) => {
@@ -17,7 +19,7 @@ export const MemoryRing = ({ available, used, isTiny }: { available: number; use
           <Text className="health-monitoring-memory-value" size={isTiny ? "8px" : "xs"}>
             {memoryUsage.memUsed.GB}GiB
           </Text>
-          <IconBrain className="health-monitoring-memory-icon" size={isTiny ? 8 : 16} />
+          <IconBrain className="health-monitoring-memory-icon" style={zoomCompensatedSize(isTiny ? 8 : 16)} />
         </Center>
       }
       sections={[

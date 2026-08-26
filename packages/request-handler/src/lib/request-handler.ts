@@ -162,7 +162,12 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
     const controller = new AbortController();
     const timeoutError = new RequestHandlerTimeoutError();
     const remainingMs = deadlineAt - Date.now();
-    const upstreamRequest = Promise.resolve().then(async () => await options.requestAsync(input, controller.signal));
+    let upstreamRequest: Promise<TData>;
+    try {
+      upstreamRequest = Promise.resolve(options.requestAsync(input, controller.signal));
+    } catch (error) {
+      upstreamRequest = Promise.reject(error);
+    }
     const settledAsync = upstreamRequest.then(
       () => undefined,
       () => undefined,
@@ -239,8 +244,9 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
         const baseKey = options.getCacheKey?.(input) ?? JSON.stringify(input);
         const requestGeneration = generation;
         let sharedCache: SharedCacheAdapter<TData> | undefined;
-        if (ttl > 0) {
-          sharedCache = await resolveSharedCacheAsync(input, baseKey, requestGeneration);
+        const sharedCacheResolution = ttl > 0 ? resolveSharedCacheAsync(input, baseKey, requestGeneration) : undefined;
+        if (sharedCacheResolution) {
+          sharedCache = await sharedCacheResolution;
           throwIfDeadlineExceeded(deadlineAt);
         }
 

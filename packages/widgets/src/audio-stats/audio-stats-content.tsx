@@ -5,6 +5,7 @@ import { Text } from "@mantine/core";
 
 import type { AudiobookshelfDashboardData, NavidromeDashboardData } from "@homarr/integrations/types";
 import { useI18n } from "@homarr/translation/client";
+import { zoomCompensatedSize } from "@homarr/ui";
 
 import classes from "./component.module.css";
 import type { AudioStatsBackend, AudioStatsDisplayOptions } from "./shared";
@@ -66,7 +67,7 @@ export function AudioStatsContent({
         >
           {visibleStats.map(({ optionKey, statKey, value, Icon }) => (
             <div key={optionKey} className={`${classes.statTile} ${statTileClassByCompact[compactKey]}`}>
-              <Icon className={classes.statIcon} size={iconSize} stroke={1.5} />
+              <Icon className={classes.statIcon} style={zoomCompensatedSize(iconSize)} stroke={1.5} />
               <span className={classes.statValue}>{value}</span>
               <span className={classes.statLabel}>{t(statKey as never)}</span>
             </div>

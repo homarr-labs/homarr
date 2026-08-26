@@ -142,6 +142,13 @@
         "secondaryColor": "Secondary color",
         "resetColors": "Reset colors",
         "radius": "Widget corner radius",
+        "radiusOptions": {
+          "xs": "Tight",
+          "sm": "Subtle",
+          "md": "Balanced",
+          "lg": "Rounded",
+          "xl": "Soft"
+        },
         "columns": "Board columns",
         "columnsDescription": "Columns define the horizontal grid used to size and position items. 12 is plenty for most people.",
         "columnCount": "{count, plural, one {# column} other {# columns}}",
@@ -242,7 +249,9 @@
       },
       "invite": {
         "title": "Join Homarr",
+        "titleWithAppName": "Join {appName}",
         "subtitle": "Welcome to Homarr! Please create your account",
+        "subtitleWithAppName": "Welcome to {appName}! Please create your account",
         "description": "You were invited by {username}"
       }
     },
@@ -1847,13 +1856,14 @@
     },
     "userAvatar": {
       "menu": {
+        "open": "Open account menu",
         "management": "Management",
         "preferences": "Your preferences",
         "logout": "Logout",
         "login": "Login",
         "homeBoard": "Your home board",
         "updateAvailable": "{countUpdates} updates available: {tag}",
-        "assistant": "Homarr Assistant",
+        "assistant": "Assistant",
         "assistantThinking": "Thinking",
         "modifier": "Mod"
       }
@@ -5336,7 +5346,8 @@
         }
       },
       "primaryColor": {
-        "label": "Primary color"
+        "label": "Primary color",
+        "locked": "Your administrator keeps the instance brand color on every board."
       },
       "secondaryColor": {
         "label": "Secondary color"
@@ -5676,6 +5687,65 @@
         "setting": {
           "general": {
             "title": "General",
+            "header": {
+              "title": "Header studio",
+              "badge": "Personal",
+              "description": "Drag controls anywhere in the row. Left, Center, and Right stay fixed while controls shift around them.",
+              "device": {
+                "desktop": "Desktop",
+                "mobile": "Mobile"
+              },
+              "zones": {
+                "left": "Left",
+                "center": "Center",
+                "right": "Right"
+              },
+              "action": {
+                "hide": "Hide the header",
+                "show": "Show the header",
+                "configure": "Move or configure {item}",
+                "remove": "Remove {item}",
+                "dropIntoZone": "Move into the {zone} section"
+              },
+              "preview": {
+                "board": "Dashboard preview for {name}",
+                "empty": "No dashboard layout is available"
+              },
+              "available": {
+                "title": "Available controls",
+                "description": "Add a control, then drag its full button into position above.",
+                "requiredAlways": "This control is required, but you can move it anywhere in the header.",
+                "allAdded": "Every built-in control is already in your header.",
+                "add": "Add {item}",
+                "boardShortcut": "Board shortcut",
+                "chooseBoard": "Choose a board"
+              },
+              "configuration": {
+                "description": "This control stays the same size as it does in the live header.",
+                "searchDisplay": {
+                  "input": "Search bar",
+                  "icon": "Icon only"
+                },
+                "logoDisplay": {
+                  "logo": "Logo only",
+                  "logoAndText": "Logo + text"
+                }
+              },
+              "items": {
+                "logo": "Logo",
+                "search": "Search",
+                "home": "Home board",
+                "boardSwitcher": "Boards",
+                "assistant": "Assistant",
+                "docker": "Docker",
+                "boardEdit": "Edit board",
+                "boardSettings": "Board settings",
+                "settings": "Your settings",
+                "themeToggle": "Toggle theme",
+                "user": "Account",
+                "boardUnavailable": "Board unavailable"
+              }
+            },
             "item": {
               "language": "Language & Region",
               "board": {
@@ -5872,6 +5942,80 @@
             "title": "Appearance",
             "defaultColorScheme": {
               "label": "Default color scheme"
+            }
+          },
+          "branding": {
+            "title": "Instance branding",
+            "groups": {
+              "identity": "Identity",
+              "appearance": "Appearance",
+              "authentication": "Authentication"
+            },
+            "identity": {
+              "description": "The application logo is the larger mark used inside the app, on sign-in pages, and for installed apps. The browser icon (favicon) is the small square used in tabs and bookmarks; when empty, it falls back to the application logo."
+            },
+            "appName": {
+              "label": "Application name"
+            },
+            "greeting": {
+              "label": "Custom greeting"
+            },
+            "logo": {
+              "label": "Application logo",
+              "placeholder": "/logo/logo.png"
+            },
+            "favicon": {
+              "label": "Browser icon (favicon)",
+              "placeholder": "Uses application logo"
+            },
+            "primaryColor": {
+              "label": "Primary color"
+            },
+            "secondaryColor": {
+              "label": "Secondary accent"
+            },
+            "lockPrimaryColor": {
+              "label": "Keep this color on every board",
+              "description": "Prevents board colors from replacing the application accent."
+            },
+            "signInBackground": {
+              "label": "Authentication background",
+              "placeholder": "https://example.com/background.jpg"
+            },
+            "signInOverlay": {
+              "label": "Background overlay"
+            },
+            "defaultRadius": {
+              "label": "Corner style",
+              "options": {
+                "xs": "Tight",
+                "sm": "Subtle",
+                "md": "Balanced",
+                "lg": "Rounded",
+                "xl": "Soft"
+              }
+            },
+            "authVisibility": {
+              "description": "Choose what appears on every authentication page.",
+              "appName": "Application name",
+              "logo": "Application logo",
+              "greeting": "Greeting"
+            },
+            "summary": {
+              "title": "Current branding",
+              "cornerStyle": "Corner style",
+              "palette": "Palette",
+              "backgroundConfigured": "Custom background · {overlay}% overlay",
+              "backgroundDefault": "Default background",
+              "greetingConfigured": "Custom greeting",
+              "greetingDefault": "Default greeting",
+              "boardColorLocked": "Board color locked",
+              "boardColorFlexible": "Board colors allowed",
+              "appName": "Name",
+              "logo": "Logo",
+              "greeting": "Greeting",
+              "on": "On",
+              "off": "Off"
             }
           },
           "culture": {
@@ -6318,7 +6462,7 @@
               "openSpotlightApps": "Open app search",
               "openSpotlightAssistant": "Open Assistant mode",
               "openSpotlightPreferences": "Open preferences mode",
-              "openAssistant": "Open Homarr Assistant"
+              "openAssistant": "Open Assistant"
             },
             "note": "Tip: Mod refers to both Ctrl key and ⌘ key on macOS"
           }
@@ -6802,7 +6946,7 @@
       },
       "assistant": {
         "label": "Assistant",
-        "placeholder": "Ask Homarr Assistant"
+        "placeholder": "Ask Assistant"
       },
       "external": {
         "label": "Web",
@@ -7508,12 +7652,16 @@
       }
     }
   },
+  "metadata": {
+    "description": "A self-hosted dashboard for the *arr stack and your entire homelab. Integrates with 50+ services, real-time widgets, no config files.",
+    "dashboardTitle": "{appName} Dashboard"
+  },
   "assistant": {
-    "title": "Homarr Assistant",
-    "open": "Open Homarr Assistant",
+    "title": "Assistant",
+    "open": "Open Assistant",
     "close": "Close assistant",
     "minimize": "Minimize assistant",
-    "spotlight": "Ask Homarr Assistant",
+    "spotlight": "Ask Assistant",
     "spotlightDescription": "Type and send a prompt without leaving the command menu.",
     "spotlightPrompt": {
       "title": "Ask Assistant",
@@ -7525,7 +7673,7 @@
       "checking": "Checking whether the assistant is available…",
       "error": "The assistant's availability could not be checked. Try again.",
       "notConfigured": "An administrator must configure and enable the assistant first.",
-      "signIn": "Sign in to use Homarr Assistant."
+      "signIn": "Sign in to use Assistant."
     },
     "newConversation": "New conversation",
     "conversations": "Conversations",
@@ -7568,7 +7716,7 @@
         "prompt": "Help me improve a board's appearance or custom CSS. Show me my boards first, then preserve my current settings while we make the change."
       }
     },
-    "composerPlaceholder": "Ask Homarr Assistant…",
+    "composerPlaceholder": "Ask Assistant…",
     "runtime": {
       "model": "Model",
       "searchModels": "Search models",
