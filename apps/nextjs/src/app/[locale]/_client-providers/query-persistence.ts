@@ -9,7 +9,7 @@ export const queryPersistenceMaxDataBytes = 256 * 1024;
 export const queryPersistenceMaxCacheBytes = 2 * 1024 * 1024;
 export const queryPersistenceThrottleMs = 1_000;
 export const queryPersistenceIdleTimeoutMs = 1_000;
-export const queryPersistenceBuster = "v2-session-superjson";
+export const queryPersistenceBuster = "v3-forbidden-filter";
 
 const queryPersistenceStoragePrefix = "homarr:widget-query-cache";
 
