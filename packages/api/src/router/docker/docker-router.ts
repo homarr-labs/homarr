@@ -4,6 +4,7 @@ import { z } from "zod/v4";
 
 import type { ContainerState, DockerContainerTarget, Port } from "@homarr/docker";
 import { DockerSingleton } from "@homarr/docker";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import { createSubPubChannel } from "@homarr/redis";
 import {
   dockerContainersRequestHandler,
@@ -23,6 +24,7 @@ const dockerContainerTargetSchema = z.object({
   id: z.string().min(1),
 });
 const dockerContainerTargetsSchema = z.array(dockerContainerTargetSchema).min(1).max(100);
+const logger = createLogger({ module: "dockerRouter" });
 
 const resetDockerInventory = () => {
   DockerSingleton.reset();
@@ -43,7 +45,9 @@ const publishDockerInventoryRefreshAsync = async () => {
   try {
     await dockerInventoryRefreshChannel.publishAsync({ requestedAt: Date.now() });
   } catch (error) {
-    if (!isRedisDisabled()) throw error;
+    if (!isRedisDisabled()) {
+      logger.warn(new Error("Failed to publish Docker inventory refresh", { cause: error }));
+    }
   }
 };
 
