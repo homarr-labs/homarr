@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Box, Card, Group, ScrollArea, SimpleGrid, Text, Tooltip, useMantineColorScheme } from "@mantine/core";
+import { Box, Card, Group, ScrollArea, SimpleGrid, Text, Tooltip, useComputedColorScheme } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
@@ -113,7 +113,7 @@ const SystemDiskCard = ({
   showTemperature,
 }: SystemDiskCardProps) => {
   const board = useRequiredBoard();
-  const scheme = useMantineColorScheme();
+  const colorScheme = useComputedColorScheme("light");
   const t = useI18n("widget.systemDisks");
   const valueRef = useRef<HTMLParagraphElement>(null);
   const [valueFits, setValueFits] = useState(true);
@@ -150,7 +150,7 @@ const SystemDiskCard = ({
     .join(" · ");
   const backgroundColor = "rgb(from var(--mantine-color-primaryColor-filled) r g b / calc(var(--opacity, 1) * 0.12))";
   const borderColor = "rgb(from var(--mantine-color-secondaryColor-filled) r g b / calc(var(--opacity, 1) * 0.45))";
-  const legacyBackground = scheme.colorScheme === "dark" ? "dark.7" : "gray.1";
+  const legacyBackground = colorScheme === "dark" ? "dark.7" : "gray.1";
   const cardBackground = isAdvanced ? backgroundColor : legacyBackground;
   const progressBackground = healthy ? "var(--mantine-color-green-light)" : "var(--mantine-color-red-light)";
   const legacyProgressColor = healthy ? "green" : "red";

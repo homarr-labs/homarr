@@ -23,6 +23,7 @@ import combineClasses from "clsx";
 import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
+import { showErrorNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { iconSizes } from "@homarr/ui";
 
@@ -62,6 +63,11 @@ export default function IndexerManagerWidget({
     isPending,
     error: testAllError,
   } = clientApi.widget.indexerManager.testAllIndexers.useMutation({
+    onError: () =>
+      showErrorNotification({
+        title: tCommon("error"),
+        message: t("error.testAll"),
+      }),
     onSettled: () => void utils.widget.indexerManager.getIndexersStatus.invalidate(),
   });
   const interactIntegrationIds = new Set(useIntegrationsWithInteractAccess().map(({ id }) => id));

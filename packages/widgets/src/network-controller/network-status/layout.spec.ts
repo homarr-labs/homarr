@@ -60,6 +60,12 @@ describe("network controller status layout", () => {
       getNetworkControllerStatusLayout({ width: 199, height: 119, displayMode: "compact", content: "wifi" }),
     ).toMatchObject({ padding: 4, horizontalStats: true });
     expect(
+      getNetworkControllerStatusLayout({ width: 199, height: 80, displayMode: "compact", content: "wifi" }),
+    ).toMatchObject({ inlineStats: false });
+    expect(
+      getNetworkControllerStatusLayout({ width: 199, height: 79, displayMode: "compact", content: "wifi" }),
+    ).toMatchObject({ inlineStats: true });
+    expect(
       getNetworkControllerStatusLayout({ width: 960, height: 320, displayMode: "advanced", content: "wifi" }),
     ).toMatchObject({ sourceColumns: 2 });
   });

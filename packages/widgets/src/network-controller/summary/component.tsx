@@ -63,9 +63,23 @@ export default function NetworkControllerSummaryWidget({
       <IntegrationErrorIndicator results={indicatorResults} />
     </Group>
   );
+  const firstSummary = summaries[0];
+
+  if (isPending || !firstSummary) {
+    return (
+      <Stack h="100%" gap={0}>
+        {queryIndicators}
+        <Center p="sm" style={{ flex: 1 }}>
+          <Text c="dimmed" size="sm" ta="center">
+            {isPending ? tCommon("action.loading") : tWidgetCommon("integrationDisconnected")}
+          </Text>
+        </Center>
+      </Stack>
+    );
+  }
 
   if (!isAdvanced) {
-    const summary = summaries[0]?.summary;
+    const summary = firstSummary.summary;
 
     return (
       <Box h="100%" p="sm" pos="relative">
@@ -77,8 +91,8 @@ export default function NetworkControllerSummaryWidget({
             <List.Item
               icon={
                 <StatusIcon
-                  status={summary?.wanStatus ?? "disabled"}
-                  label={statusLabels[getBinaryStatusKey(summary?.wanStatus)]}
+                  status={summary.wanStatus}
+                  label={statusLabels[getBinaryStatusKey(summary.wanStatus)]}
                   style={iconSizes.xl}
                 />
               }
@@ -88,8 +102,8 @@ export default function NetworkControllerSummaryWidget({
             <List.Item
               icon={
                 <StatusIcon
-                  status={summary?.www.status ?? "disabled"}
-                  label={statusLabels[getBinaryStatusKey(summary?.www.status)]}
+                  status={summary.www.status}
+                  label={statusLabels[getBinaryStatusKey(summary.www.status)]}
                   style={iconSizes.xl}
                 />
               }
@@ -97,15 +111,15 @@ export default function NetworkControllerSummaryWidget({
               <Text>
                 WWW
                 <Text c="dimmed" size="md" ms="xs" span>
-                  {summary?.www.latency ?? 0}ms
+                  {summary.www.latency}ms
                 </Text>
               </Text>
             </List.Item>
             <List.Item
               icon={
                 <StatusIcon
-                  status={summary?.wifi.status ?? "disabled"}
-                  label={statusLabels[getBinaryStatusKey(summary?.wifi.status)]}
+                  status={summary.wifi.status}
+                  label={statusLabels[getBinaryStatusKey(summary.wifi.status)]}
                   style={iconSizes.xl}
                 />
               }
@@ -115,8 +129,8 @@ export default function NetworkControllerSummaryWidget({
             <List.Item
               icon={
                 <StatusIcon
-                  status={summary?.vpn.status ?? "disabled"}
-                  label={statusLabels[getBinaryStatusKey(summary?.vpn.status)]}
+                  status={summary.vpn.status}
+                  label={statusLabels[getBinaryStatusKey(summary.vpn.status)]}
                   style={iconSizes.xl}
                 />
               }
@@ -124,26 +138,13 @@ export default function NetworkControllerSummaryWidget({
               <Text>
                 {t("card.vpn.label")}
                 <Text c="dimmed" size="md" ms="xs" span>
-                  {t("card.vpn.countConnected", { count: summary?.vpn.users ?? 0 })}
+                  {t("card.vpn.countConnected", { count: summary.vpn.users })}
                 </Text>
               </Text>
             </List.Item>
           </List>
         </Center>
       </Box>
-    );
-  }
-
-  if (isPending || summaries.length === 0) {
-    return (
-      <Stack h="100%" gap={0}>
-        {queryIndicators}
-        <Center p="sm" style={{ flex: 1 }}>
-          <Text c="dimmed" size="sm" ta="center">
-            {isPending ? tCommon("action.loading") : tWidgetCommon("integrationDisconnected")}
-          </Text>
-        </Center>
-      </Stack>
     );
   }
 

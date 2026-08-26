@@ -189,7 +189,7 @@ const MediaRequestCard = ({ request, isTiny, showIntegrationSource, canInteract,
                   lineClamp={1}
                   style={{ wordBreak: "break-all" }}
                 >
-                  {(request.requestedBy?.displayName ?? "") || "unknown"}
+                  {(request.requestedBy?.displayName ?? "") || t("unknown")}
                 </Anchor>
               </Group>
             </Group>
@@ -207,7 +207,7 @@ const MediaRequestCard = ({ request, isTiny, showIntegrationSource, canInteract,
                 lineClamp={1}
                 style={{ minWidth: 0 }}
               >
-                {request.name || "unknown"}
+                {request.name || t("unknown")}
               </Anchor>
               {request.status === "pending" ? (
                 <DecisionButtons

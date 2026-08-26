@@ -167,7 +167,13 @@ function DepartureRow({ entry, dense, locale }: { entry: TimetableEntryView; den
       </Group>
 
       {entry.platform && (
-        <Text size={dense ? "xs" : "sm"} c={entry.platform.hasChanged ? "red" : undefined} style={{ flexShrink: 0 }}>
+        <Text
+          size={dense ? "xs" : "sm"}
+          c={entry.platform.hasChanged ? "red" : undefined}
+          maw="35%"
+          truncate="end"
+          style={{ flexShrink: 1, minWidth: 0 }}
+        >
           {entry.platform.name}
         </Text>
       )}

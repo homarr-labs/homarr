@@ -29,6 +29,6 @@
   .statItem,
   .statItemDense,
   .statItemCompact {
-    border-color: CanvasText;
+    border: 0.0625rem solid CanvasText;
   }
 }

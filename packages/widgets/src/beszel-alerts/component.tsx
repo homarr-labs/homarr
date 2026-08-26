@@ -252,15 +252,14 @@ const unitSuffixMap: Record<string, string> = {
   Status: "",
 };
 
-function formatAlertDescription(name: string, value: number, min: number): string {
-  const suffix = unitSuffixMap[name] ?? "";
-  if (name === "Status") return `down for ${min} min`;
-  return `exceeds ${value}${suffix} over ${min} min`;
-}
-
 function AlertRow({ name, value, min, systemName, integrationName, triggered, isAdvanced }: AlertRowProps) {
+  const t = useI18n("widget.beszelAlerts");
   const Icon = alertIconMap[name] ?? Server;
-  const description = formatAlertDescription(name, value, min);
+  const suffix = unitSuffixMap[name] ?? "";
+  let description = t("description.threshold", { value: `${value}${suffix}`, minutes: min });
+  if (name === "Status") {
+    description = t("description.statusDuration", { minutes: min });
+  }
   const accentColor = triggered ? "red" : "green";
   const borderColor = triggered ? "red" : "gray";
   const rowStyle = isAdvanced
