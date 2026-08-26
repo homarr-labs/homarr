@@ -32,7 +32,7 @@ export function getCompactStatLayout({
   defaultColumns,
   defaultIconSize,
 }: CompactStatLayoutInput): CompactStatLayout {
-  if (!compactDisplay || height >= SHORT_HEIGHT_BREAKPOINT) {
+  if (!compactDisplay) {
     return {
       state: "default",
       columns: defaultColumns,
@@ -45,6 +45,14 @@ export function getCompactStatLayout({
       state: "narrowShort",
       columns: 1,
       iconSize: NARROW_SHORT_ICON_SIZE,
+    };
+  }
+
+  if (height >= SHORT_HEIGHT_BREAKPOINT) {
+    return {
+      state: "default",
+      columns: defaultColumns,
+      iconSize: defaultIconSize,
     };
   }
 
