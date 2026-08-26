@@ -76,7 +76,7 @@ func (m Model) instanceTarget(row instanceRow) target {
 	result := target{
 		label:     row.container.Name,
 		container: row.container.Name,
-		volume:    row.container.Name + "_data",
+		volume:    row.volume,
 		running:   row.container.Running(),
 		port:      row.container.HostPort(),
 	}
@@ -315,6 +315,10 @@ func (m Model) deleteImage(reference string) (Model, tea.Cmd) {
 // away either way, and failing halfway would leave the user to work out why.
 func (m Model) deleteData(subject target) (Model, tea.Cmd) {
 	container, volume := subject.container, subject.volume
+	if volume == "" {
+		m.status, m.statusLevel = subject.label+" has no data volume to delete", levelWarn
+		return m, nil
+	}
 	m.tasks.Action("delete data "+volume, volume, func(ctx context.Context) error {
 		_ = docker.RemoveContext(ctx, container)
 		return docker.RemoveVolume(ctx, volume)

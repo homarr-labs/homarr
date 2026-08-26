@@ -805,10 +805,7 @@ const buildDemoWidgets = (appIds: string[], customWidgetDefinitionId: string): D
     width: 4,
     height: 3,
     needsIntegration: false,
-    options: {
-      embedUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/homarr.svg",
-      allowScrolling: false,
-    },
+    options: { embedUrl: "/api/demo-assets/overview", allowScrolling: true },
   },
   {
     kind: "video",
@@ -818,7 +815,7 @@ const buildDemoWidgets = (appIds: string[], customWidgetDefinitionId: string): D
     height: 3,
     needsIntegration: false,
     options: {
-      feedUrl: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+      feedUrl: "/api/demo-assets/video/file.mp4",
       hasAutoPlay: false,
       isMuted: true,
       hasControls: true,

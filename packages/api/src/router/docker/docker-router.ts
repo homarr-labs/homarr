@@ -4,6 +4,7 @@ import { z } from "zod/v4";
 
 import type { ContainerState, DockerContainerTarget, Port } from "@homarr/docker";
 import { DockerSingleton } from "@homarr/docker";
+import { createSubPubChannel } from "@homarr/redis";
 import {
   dockerContainersRequestHandler,
   findDockerContainerAsync,
@@ -22,6 +23,29 @@ const dockerContainerTargetSchema = z.object({
   id: z.string().min(1),
 });
 const dockerContainerTargetsSchema = z.array(dockerContainerTargetSchema).min(1).max(100);
+
+const resetDockerInventory = () => {
+  DockerSingleton.reset();
+  dockerContainersRequestHandler.invalidateCache();
+};
+
+const dockerInventoryRefreshChannel = createSubPubChannel<{ requestedAt: number }>("docker-inventory-refresh", {
+  persist: false,
+});
+const isRedisDisabled = () => Boolean(process.env.CI) || Boolean(process.env.DISABLE_REDIS_LOGS);
+try {
+  dockerInventoryRefreshChannel.subscribe(resetDockerInventory);
+} catch (error) {
+  if (!isRedisDisabled()) throw error;
+}
+
+const publishDockerInventoryRefreshAsync = async () => {
+  try {
+    await dockerInventoryRefreshChannel.publishAsync({ requestedAt: Date.now() });
+  } catch (error) {
+    if (!isRedisDisabled()) throw error;
+  }
+};
 
 const normalizeGetContainersInput = (input: { endpointIds?: string[] } | undefined) => {
   if (!input?.endpointIds || input.endpointIds.length === 0) return {};
@@ -61,9 +85,9 @@ export const dockerRouter = createTRPCRouter({
       },
     })
     .concat(dockerMiddleware())
-    .mutation(() => {
-      DockerSingleton.reset();
-      dockerContainersRequestHandler.invalidateCache();
+    .mutation(async () => {
+      resetDockerInventory();
+      await publishDockerInventoryRefreshAsync();
     }),
   getContainers: permissionRequiredProcedure
     .requiresPermission("admin")

@@ -9,6 +9,7 @@ import {
   getQueryPersistenceStorageKey,
   queryPersistenceBuster,
   queryPersistenceMaxDataBytes,
+  queryPersistenceThrottleMs,
   shouldPersistDashboardQuery,
 } from "./query-persistence";
 
@@ -54,6 +55,15 @@ describe("widget query persistence", () => {
       queryKey: [["widget", "calendar", "findAllEvents"], { type: "query" }],
       queryFn: () => Promise.resolve([]),
     });
+    const forbidden = createSuccessfulQuery(
+      [["widget", "calendar", "findAllEvents"], { type: "query" }],
+      [{ title: "revoked" }],
+    );
+    forbidden.query.setState({
+      ...forbidden.query.state,
+      error: Object.assign(new Error("access denied"), { data: { code: "FORBIDDEN" } }),
+      status: "error",
+    });
 
     expect(shouldPersistDashboardQuery(widget.query)).toBe(true);
     expect(shouldPersistDashboardQuery(supporting.query)).toBe(true);
@@ -61,6 +71,7 @@ describe("widget query persistence", () => {
     expect(shouldPersistDashboardQuery(ping.query)).toBe(false);
     expect(shouldPersistDashboardQuery(oversized.query)).toBe(false);
     expect(shouldPersistDashboardQuery(pending)).toBe(false);
+    expect(shouldPersistDashboardQuery(forbidden.query)).toBe(false);
   });
 
   test("uses stable, isolated storage keys for anonymous and authenticated scopes", () => {
@@ -169,6 +180,19 @@ describe("widget query persistence", () => {
     expect(restored?.clientState.queries[0]?.state.error).toBeNull();
     expect(restored?.clientState.queries[0]?.state.isInvalidated).toBe(true);
     expect(window.sessionStorage.getItem(key)).not.toContain("private refresh error");
+
+    query.setState({
+      ...query.state,
+      error: Object.assign(new Error("access denied"), { data: { code: "FORBIDDEN" } }),
+      status: "error",
+    });
+    persister.persistClient({
+      timestamp: Date.now(),
+      buster: queryPersistenceBuster,
+      clientState: dehydrate(queryClient),
+    });
+    persister.flush();
+    expect(window.sessionStorage.getItem(key)).toBeNull();
 
     window.sessionStorage.setItem(key, "not-valid-superjson");
     expect(persister.restoreClient()).toBeUndefined();
@@ -280,6 +304,10 @@ describe("widget query persistence", () => {
     const restored = await persister.restoreClient();
     expect(restored?.clientState.queries).toHaveLength(1);
     expect(restored?.clientState.queries[0]?.queryKey).toEqual([["widget", "recent"], { type: "query" }]);
+
+    persister.persistClient(persistedClient);
+    persister.flush();
+    expect(setItemSpy).toHaveBeenCalledTimes(3);
   });
 
   test("coalesces pending writes and can synchronously flush the latest cache before reload", async () => {
@@ -303,9 +331,11 @@ describe("widget query persistence", () => {
     });
 
     expect(setItem).not.toHaveBeenCalled();
+    await vi.advanceTimersByTimeAsync(queryPersistenceThrottleMs - 1);
+    expect(setItem).not.toHaveBeenCalled();
     persister.flush();
     expect(setItem).toHaveBeenCalledOnce();
-    await vi.advanceTimersByTimeAsync(0);
+    await vi.advanceTimersByTimeAsync(queryPersistenceThrottleMs);
     expect(setItem).toHaveBeenCalledOnce();
 
     const restored = await persister.restoreClient();

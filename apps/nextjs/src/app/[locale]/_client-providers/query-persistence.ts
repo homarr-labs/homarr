@@ -1,12 +1,14 @@
 import type { QueryKey } from "@tanstack/react-query";
 import type { PersistedClient, Persister } from "@tanstack/react-query-persist-client";
-import { removeOldestQuery } from "@tanstack/react-query-persist-client";
 import { parse, stringify } from "superjson";
 
 import { isWidgetDataQueryKey, queryCacheDefaultGcTimeMs } from "@homarr/api/query-cache";
 
 export const queryPersistenceMaxAgeMs = queryCacheDefaultGcTimeMs;
 export const queryPersistenceMaxDataBytes = 256 * 1024;
+export const queryPersistenceMaxCacheBytes = 2 * 1024 * 1024;
+export const queryPersistenceThrottleMs = 1_000;
+export const queryPersistenceIdleTimeoutMs = 1_000;
 export const queryPersistenceBuster = "v2-session-superjson";
 
 const queryPersistenceStoragePrefix = "homarr:widget-query-cache";
@@ -19,6 +21,7 @@ interface PersistableQuery {
   state: {
     data: unknown;
     dataUpdatedAt: number;
+    error?: unknown;
   };
 }
 
@@ -27,6 +30,28 @@ export type SessionQueryPersister = Persister & { flush: () => void; stop: () =>
 const textEncoder = new TextEncoder();
 const budgetVerdictCache = new WeakMap<object, boolean>();
 
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === "object" && value !== null && !Array.isArray(value);
+
+interface ForbiddenTrpcError {
+  data: { code: "FORBIDDEN" };
+}
+
+const isTrpcForbiddenError = (error: unknown): error is ForbiddenTrpcError => {
+  if (!isRecord(error) || !isRecord(error.data)) return false;
+  return error.data.code === "FORBIDDEN";
+};
+
+const isQuotaExceededError = (error: unknown): boolean => {
+  if (!isRecord(error)) return false;
+  return (
+    error.name === "QuotaExceededError" ||
+    error.name === "NS_ERROR_DOM_QUOTA_REACHED" ||
+    error.code === 22 ||
+    error.code === 1014
+  );
+};
+
 const measureFitsBudget = (data: unknown) => {
   try {
     return textEncoder.encode(stringify(data)).byteLength <= queryPersistenceMaxDataBytes;
@@ -34,6 +59,8 @@ const measureFitsBudget = (data: unknown) => {
     return false;
   }
 };
+
+const measureSerializedBytes = (data: unknown) => textEncoder.encode(stringify(data)).byteLength;
 
 const fitsStorageBudget = (data: unknown) => {
   if (typeof data !== "object" || data === null) return measureFitsBudget(data);
@@ -53,9 +80,24 @@ const holdsDashboardData = (query: PersistableQuery) =>
   isWidgetDataQueryKey(query.queryKey);
 
 export const shouldPersistDashboardQuery = (query: PersistableQuery) =>
-  holdsDashboardData(query) && fitsStorageBudget(query.state.data);
+  holdsDashboardData(query) && !isTrpcForbiddenError(query.state.error) && fitsStorageBudget(query.state.data);
 
 type DehydratedQuery = PersistedClient["clientState"]["queries"][number];
+
+const keepNewestQueries = (client: PersistedClient, maximumQueries: number): PersistedClient | undefined => {
+  if (maximumQueries <= 0) return undefined;
+  if (client.clientState.queries.length <= maximumQueries) return client;
+
+  return {
+    ...client,
+    clientState: {
+      ...client.clientState,
+      queries: client.clientState.queries
+        .toSorted((left, right) => right.state.dataUpdatedAt - left.state.dataUpdatedAt)
+        .slice(0, maximumQueries),
+    },
+  };
+};
 
 const sanitizePersistedQuery = (query: DehydratedQuery): DehydratedQuery => ({
   ...query,
@@ -76,12 +118,11 @@ const sanitizePersistedClient = (client: PersistedClient): PersistedClient => ({
   ...client,
   clientState: {
     mutations: [],
-    queries: client.clientState.queries.map(sanitizePersistedQuery),
+    queries: client.clientState.queries
+      .filter((query) => !isTrpcForbiddenError(query.state.error))
+      .map(sanitizePersistedQuery),
   },
 });
-
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-  typeof value === "object" && value !== null && !Array.isArray(value);
 
 const isRestorableQuery = (value: unknown): value is DehydratedQuery => {
   if (!isRecord(value) || typeof value.queryHash !== "string" || !Array.isArray(value.queryKey)) return false;
@@ -146,15 +187,53 @@ export const createSessionQueryPersister = (
   const key = getQueryPersistenceStorageKey(scope);
   removeForeignScopes(storage, key);
   let pendingClient: PersistedClient | undefined;
-  let persistTimer: ReturnType<typeof setTimeout> | undefined;
+  let persistDelayTimer: ReturnType<typeof setTimeout> | undefined;
+  let persistIdleCallback: number | undefined;
+  let persistedQueryLimit = Number.POSITIVE_INFINITY;
+  let persistenceDisabled = false;
   let stopped = false;
 
-  const persistNow = (client: PersistedClient) => {
-    if (!storage) return;
-    let candidate: PersistedClient | undefined = sanitizePersistedClient(client);
-    let errorCount = 0;
+  const trimToQueryLimit = (client: PersistedClient): PersistedClient | undefined => {
+    const limitedClient = keepNewestQueries(client, persistedQueryLimit);
+    if (!limitedClient || measureSerializedBytes(limitedClient) <= queryPersistenceMaxCacheBytes) return limitedClient;
 
-    if (candidate.clientState.queries.length === 0) {
+    const emptyClient: PersistedClient = {
+      ...limitedClient,
+      clientState: { ...limitedClient.clientState, queries: [] },
+    };
+    let remainingBytes = queryPersistenceMaxCacheBytes - measureSerializedBytes(emptyClient);
+    const selectedQueries: DehydratedQuery[] = [];
+    const newestQueries = limitedClient.clientState.queries.toSorted(
+      (left, right) => right.state.dataUpdatedAt - left.state.dataUpdatedAt,
+    );
+
+    for (const query of newestQueries) {
+      const queryBytes = measureSerializedBytes(query) + 1;
+      if (queryBytes > remainingBytes) continue;
+      selectedQueries.push(query);
+      remainingBytes -= queryBytes;
+    }
+
+    return {
+      ...limitedClient,
+      clientState: { ...limitedClient.clientState, queries: selectedQueries },
+    };
+  };
+
+  const persistNow = (client: PersistedClient) => {
+    if (!storage || persistenceDisabled) return;
+    let candidate: PersistedClient | undefined;
+    let sanitizedQueryCount = 0;
+    try {
+      const sanitizedClient = sanitizePersistedClient(client);
+      sanitizedQueryCount = sanitizedClient.clientState.queries.length;
+      candidate = trimToQueryLimit(sanitizedClient);
+    } catch {
+      persistenceDisabled = true;
+      removeStorageItem(storage, key);
+      return;
+    }
+    if (!candidate || candidate.clientState.queries.length === 0) {
       removeStorageItem(storage, key);
       return;
     }
@@ -162,37 +241,56 @@ export const createSessionQueryPersister = (
     while (candidate) {
       try {
         storage.setItem(key, stringify(candidate));
+        if (candidate.clientState.queries.length < sanitizedQueryCount) {
+          persistedQueryLimit = Math.min(persistedQueryLimit, candidate.clientState.queries.length);
+        }
         return;
       } catch (error) {
-        errorCount += 1;
-        candidate = removeOldestQuery({
-          persistedClient: candidate,
-          error: error instanceof Error ? error : new Error("Failed to persist the widget query cache"),
-          errorCount,
-        });
+        removeStorageItem(storage, key);
+        if (!isQuotaExceededError(error)) {
+          persistenceDisabled = true;
+          return;
+        }
+        candidate = keepNewestQueries(candidate, Math.floor(candidate.clientState.queries.length / 2));
       }
+    }
+
+    persistenceDisabled = true;
+  };
+
+  const clearScheduledPersist = () => {
+    if (persistDelayTimer !== undefined) {
+      clearTimeout(persistDelayTimer);
+      persistDelayTimer = undefined;
+    }
+    if (persistIdleCallback !== undefined && typeof window !== "undefined") {
+      window.cancelIdleCallback?.(persistIdleCallback);
+      persistIdleCallback = undefined;
     }
   };
 
-  const clearPersistTimer = () => {
-    if (persistTimer === undefined) return;
-    clearTimeout(persistTimer);
-    persistTimer = undefined;
-  };
-
   const flush = () => {
-    clearPersistTimer();
+    clearScheduledPersist();
     const client = pendingClient;
     pendingClient = undefined;
     if (client) persistNow(client);
   };
 
+  const scheduleIdlePersist = () => {
+    persistDelayTimer = undefined;
+    if (typeof window !== "undefined" && window.requestIdleCallback) {
+      persistIdleCallback = window.requestIdleCallback(flush, { timeout: queryPersistenceIdleTimeoutMs });
+      return;
+    }
+    flush();
+  };
+
   return {
     persistClient(client) {
-      if (!storage || stopped) return;
+      if (!storage || stopped || persistenceDisabled) return;
       pendingClient = client;
-      if (persistTimer !== undefined) return;
-      persistTimer = setTimeout(flush, 0);
+      if (persistDelayTimer !== undefined || persistIdleCallback !== undefined) return;
+      persistDelayTimer = setTimeout(scheduleIdlePersist, queryPersistenceThrottleMs);
     },
     restoreClient() {
       try {
@@ -212,14 +310,14 @@ export const createSessionQueryPersister = (
       }
     },
     removeClient() {
-      clearPersistTimer();
+      clearScheduledPersist();
       pendingClient = undefined;
       removeStorageItem(storage, key);
     },
     flush,
     stop() {
       stopped = true;
-      clearPersistTimer();
+      clearScheduledPersist();
       pendingClient = undefined;
     },
   };

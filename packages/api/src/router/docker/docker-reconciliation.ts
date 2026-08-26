@@ -84,15 +84,13 @@ export const getDockerReconciliationAsync = async (db: Database) => {
     const appAmbiguous =
       !linkedApp && (exactAppMatches.length > 1 || (exactAppMatches.length === 0 && nameAppMatches.length > 1));
     const ambiguous = integrationAmbiguous || appAmbiguous;
-    const state: DockerReconciliationState = integrationMoved
-      ? "moved"
-      : linked
-        ? "linked"
-        : integration || app
-          ? "represented"
-          : match
-            ? "newRecognized"
-            : "newApp";
+    const state = getReconciliationState({
+      integrationMoved,
+      linked,
+      represented: Boolean(integration || app),
+      recognized: Boolean(match),
+    });
+    const nextAction = getCandidateNextAction(state, integrationAmbiguous, appAmbiguous);
 
     return {
       candidateKey: container.resourceId,
@@ -103,11 +101,7 @@ export const getDockerReconciliationAsync = async (db: Database) => {
       match,
       urlCandidates,
       state,
-      nextAction: integrationAmbiguous
-        ? ("reviewIntegration" as const)
-        : appAmbiguous
-          ? ("viewRepresentation" as const)
-          : nextActionForState(state),
+      nextAction,
       representation: {
         integration: integration
           ? {
@@ -147,92 +141,141 @@ export const getDockerServiceHealthAsync = async (db: Database) => {
       status: endpoint.status,
       nextAction: endpoint.status === "unavailable" ? ("checkEndpoint" as const) : ("none" as const),
     })),
-    services: reconciliation.candidates.map((candidate) => ({
-      key: candidate.candidateKey,
-      identity: {
-        endpointId: candidate.endpointId,
-        nativeId: candidate.nativeId,
-        name: candidate.container.name,
-        integration: candidate.representation.integration,
-        app: candidate.representation.app,
-      },
-      layers: [
-        { layer: "docker" as const, status: "available" as const, nextAction: "none" as const },
-        {
-          layer: "integrationConfiguration" as const,
-          status: integrationHealthStatus(
-            candidate.state,
-            candidate.match?.kind,
-            Boolean(candidate.representation.integration),
-          ),
-          nextAction:
-            candidate.nextAction === "reviewIntegration"
-              ? ("reviewIntegration" as const)
-              : candidate.state === "newRecognized"
-                ? ("setupIntegration" as const)
-                : ("none" as const),
+    services: reconciliation.candidates.map((candidate) => {
+      const integration = candidate.representation.integration;
+      const app = candidate.representation.app;
+      const itemCount = integration?.itemCount;
+
+      return {
+        key: candidate.candidateKey,
+        identity: {
+          endpointId: candidate.endpointId,
+          nativeId: candidate.nativeId,
+          name: candidate.container.name,
+          integration,
+          app,
         },
-        {
-          layer: "authentication" as const,
-          status: "notObserved" as const,
-          nextAction: candidate.representation.integration
-            ? ("testConnection" as const)
-            : candidate.nextAction === "reviewIntegration"
-              ? ("reviewIntegration" as const)
-              : candidate.match
-                ? ("setupIntegration" as const)
-                : ("none" as const),
-        },
-        {
-          layer: "apiRequest" as const,
-          status: "notObserved" as const,
-          nextAction: candidate.representation.integration
-            ? ("openIntegrationDiagnostics" as const)
-            : ("none" as const),
-        },
-        {
-          layer: "appRepresentation" as const,
-          status: candidate.representation.app ? ("linked" as const) : ("missing" as const),
-          nextAction: candidate.representation.app
-            ? ("none" as const)
-            : candidate.representation.signals.ambiguous && candidate.nextAction === "viewRepresentation"
-              ? ("viewRepresentation" as const)
-              : ("createApp" as const),
-        },
-        {
-          layer: "widgetConfiguration" as const,
-          status: candidate.representation.integration
-            ? candidate.representation.integration.itemCount > 0
-              ? ("linked" as const)
-              : ("unused" as const)
-            : ("notApplicable" as const),
-          nextAction:
-            candidate.representation.integration && candidate.representation.integration.itemCount === 0
-              ? ("addWidget" as const)
-              : ("none" as const),
-        },
-        {
-          layer: "widgetQuery" as const,
-          status: "notObserved" as const,
-          nextAction:
-            candidate.representation.integration && candidate.representation.integration.itemCount > 0
-              ? ("openBoard" as const)
-              : ("none" as const),
-        },
-      ],
-      status: candidate.state,
-      nextAction: candidate.nextAction,
-    })),
+        layers: [
+          { layer: "docker" as const, status: "available" as const, nextAction: "none" as const },
+          {
+            layer: "integrationConfiguration" as const,
+            status: integrationHealthStatus(candidate.state, candidate.match?.kind, Boolean(integration)),
+            nextAction: getIntegrationConfigurationNextAction(candidate.state, candidate.nextAction),
+          },
+          {
+            layer: "authentication" as const,
+            status: "notObserved" as const,
+            nextAction: getAuthenticationNextAction(
+              Boolean(integration),
+              Boolean(candidate.match),
+              candidate.nextAction,
+            ),
+          },
+          {
+            layer: "apiRequest" as const,
+            status: "notObserved" as const,
+            nextAction: integration ? ("openIntegrationDiagnostics" as const) : ("none" as const),
+          },
+          {
+            layer: "appRepresentation" as const,
+            status: app ? ("linked" as const) : ("missing" as const),
+            nextAction: getAppRepresentationNextAction(
+              Boolean(app),
+              candidate.representation.signals.ambiguous,
+              candidate.nextAction,
+            ),
+          },
+          {
+            layer: "widgetConfiguration" as const,
+            status: getWidgetConfigurationStatus(itemCount),
+            nextAction: itemCount === 0 ? ("addWidget" as const) : ("none" as const),
+          },
+          {
+            layer: "widgetQuery" as const,
+            status: "notObserved" as const,
+            nextAction: itemCount !== undefined && itemCount > 0 ? ("openBoard" as const) : ("none" as const),
+          },
+        ],
+        status: candidate.state,
+        nextAction: candidate.nextAction,
+      };
+    }),
   };
 };
 
 const normalizeName = (value: string) => value.trim().toLowerCase();
+
+interface ReconciliationStateInput {
+  integrationMoved: boolean;
+  linked: boolean;
+  represented: boolean;
+  recognized: boolean;
+}
+
+const getReconciliationState = ({
+  integrationMoved,
+  linked,
+  represented,
+  recognized,
+}: ReconciliationStateInput): DockerReconciliationState => {
+  if (integrationMoved) return "moved";
+  if (linked) return "linked";
+  if (represented) return "represented";
+  if (recognized) return "newRecognized";
+  return "newApp";
+};
+
+const getCandidateNextAction = (
+  state: DockerReconciliationState,
+  integrationAmbiguous: boolean,
+  appAmbiguous: boolean,
+) => {
+  if (integrationAmbiguous) return "reviewIntegration" as const;
+  if (appAmbiguous) return "viewRepresentation" as const;
+  return nextActionForState(state);
+};
 
 const nextActionForState = (state: DockerReconciliationState): DockerReconciliationNextAction => {
   if (state === "newRecognized") return "setupIntegration";
   if (state === "newApp") return "createApp";
   if (state === "moved") return "reviewIntegration";
   return "viewRepresentation";
+};
+
+const getIntegrationConfigurationNextAction = (
+  state: DockerReconciliationState,
+  nextAction: DockerReconciliationNextAction,
+) => {
+  if (nextAction === "reviewIntegration") return "reviewIntegration" as const;
+  if (state === "newRecognized") return "setupIntegration" as const;
+  return "none" as const;
+};
+
+const getAuthenticationNextAction = (
+  hasIntegration: boolean,
+  hasMatch: boolean,
+  nextAction: DockerReconciliationNextAction,
+) => {
+  if (hasIntegration) return "testConnection" as const;
+  if (nextAction === "reviewIntegration") return "reviewIntegration" as const;
+  if (hasMatch) return "setupIntegration" as const;
+  return "none" as const;
+};
+
+const getAppRepresentationNextAction = (
+  hasApp: boolean,
+  ambiguous: boolean,
+  nextAction: DockerReconciliationNextAction,
+) => {
+  if (hasApp) return "none" as const;
+  if (ambiguous && nextAction === "viewRepresentation") return "viewRepresentation" as const;
+  return "createApp" as const;
+};
+
+const getWidgetConfigurationStatus = (itemCount: number | undefined) => {
+  if (itemCount === undefined) return "notApplicable" as const;
+  if (itemCount > 0) return "linked" as const;
+  return "unused" as const;
 };
 
 const integrationHealthStatus = (
@@ -242,5 +285,6 @@ const integrationHealthStatus = (
 ) => {
   if (!kind) return "notApplicable" as const;
   if (state === "moved") return "changed" as const;
-  return hasIntegration ? ("configured" as const) : ("missing" as const);
+  if (hasIntegration) return "configured" as const;
+  return "missing" as const;
 };

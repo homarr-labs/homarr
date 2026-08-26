@@ -63,10 +63,14 @@ export interface WidgetEditModalSize {
   height: number;
 }
 
+export interface WidgetPreviewDimensions extends WidgetEditModalSize {
+  scale?: number;
+}
+
 interface WidgetEditPreviewResizeOptions {
   initialSize: WidgetEditModalSize;
   maximumSize: WidgetEditModalSize;
-  getDimensions?: (size: WidgetEditModalSize) => { width: number; height: number; scale?: number };
+  getDimensions?: (size: WidgetEditModalSize) => WidgetPreviewDimensions;
 }
 
 export interface EmbeddedIntegrationEditFormHandle {
@@ -94,7 +98,7 @@ export interface WidgetEditModalProps<TSort extends WidgetKind> {
   onIntegrationSaved?: () => void;
   onOpenNewIntegration?: (onCreated?: (id: string) => void) => void;
   previewComponent?: ComponentType<WidgetComponentProps<TSort>>;
-  previewDimensions?: { width: number; height: number; scale?: number };
+  previewDimensions?: WidgetPreviewDimensions;
   previewResize?: WidgetEditPreviewResizeOptions;
   previewWrapper?: ComponentType<PropsWithChildren>;
 }
@@ -106,7 +110,7 @@ interface WidgetEditPreviewProps {
   state: WidgetEditModalState;
   itemId?: string;
   boardId?: string;
-  dimensions?: { width: number; height: number; scale?: number };
+  dimensions?: WidgetPreviewDimensions;
   integrationData: IntegrationSelectOption[];
   onChangeOptions: (newOptions: Record<string, unknown>) => void;
   resize?: {
@@ -174,7 +178,9 @@ const WidgetEditPreview = ({
       },
     }));
   let componentItemId = itemId;
-  if (kind === "assistant") componentItemId = `widget-preview-${generatedPreviewId}`;
+  if (kind === "assistant" || kind === "timer") {
+    componentItemId = `widget-preview-${generatedPreviewId}`;
+  }
   const isPendingCustomWidget = kind === "customApi" && !itemId;
   const previewOpacity = (board?.opacity ?? 100) / 100;
   const handleResizeValue = (dimension: keyof WidgetEditModalSize, value: string | number) => {

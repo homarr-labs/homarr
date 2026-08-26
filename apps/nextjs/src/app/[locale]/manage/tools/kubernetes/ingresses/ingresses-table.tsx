@@ -17,6 +17,7 @@ import { useI18n } from "@homarr/translation/client";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
 import KubernetesErrorPage from "../cluster-dashboard/error";
+import { createKubernetesResourceQueryOptions } from "../kubernetes-query-options";
 
 dayjs.extend(relativeTime);
 
@@ -84,13 +85,7 @@ export function IngressesTable({ contextId, initialIngresses }: IngressesTableCo
 
   const { data, isError } = clientApi.kubernetes.ingresses.getIngresses.useQuery(
     { contextId },
-    {
-      initialData: initialIngresses,
-      refetchOnMount: "always",
-      refetchOnWindowFocus: true,
-      refetchOnReconnect: true,
-      refetchInterval: (query) => (query.state.status === "error" ? 30_000 : false),
-    },
+    createKubernetesResourceQueryOptions(initialIngresses),
   );
 
   const table = useTranslatedMantineReactTable({

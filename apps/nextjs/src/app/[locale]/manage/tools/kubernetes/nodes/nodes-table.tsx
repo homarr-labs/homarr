@@ -17,6 +17,7 @@ import { useI18n } from "@homarr/translation/client";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
 import KubernetesErrorPage from "../cluster-dashboard/error";
+import { createKubernetesResourceQueryOptions } from "../kubernetes-query-options";
 
 dayjs.extend(relativeTime);
 
@@ -97,13 +98,7 @@ export function NodesTable({ contextId, initialNodes }: NodesListComponentProps)
 
   const { data, isError } = clientApi.kubernetes.nodes.getNodes.useQuery(
     { contextId },
-    {
-      initialData: initialNodes,
-      refetchOnMount: "always",
-      refetchOnWindowFocus: true,
-      refetchOnReconnect: true,
-      refetchInterval: (query) => (query.state.status === "error" ? 30_000 : false),
-    },
+    createKubernetesResourceQueryOptions(initialNodes),
   );
 
   const table = useTranslatedMantineReactTable({
