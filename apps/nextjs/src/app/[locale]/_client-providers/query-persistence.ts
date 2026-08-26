@@ -214,10 +214,26 @@ export const createSessionQueryPersister = (
       remainingBytes -= queryBytes;
     }
 
-    return {
+    const buildCandidate = (queryCount: number): PersistedClient => ({
       ...limitedClient,
-      clientState: { ...limitedClient.clientState, queries: selectedQueries },
-    };
+      clientState: { ...limitedClient.clientState, queries: selectedQueries.slice(0, queryCount) },
+    });
+    let minimumQueryCount = 0;
+    let maximumQueryCount = selectedQueries.length;
+
+    while (minimumQueryCount < maximumQueryCount) {
+      const queryCount = Math.ceil((minimumQueryCount + maximumQueryCount) / 2);
+      const candidate = buildCandidate(queryCount);
+      if (measureSerializedBytes(candidate) <= queryPersistenceMaxCacheBytes) {
+        minimumQueryCount = queryCount;
+      } else {
+        maximumQueryCount = queryCount - 1;
+      }
+    }
+
+    const candidate = buildCandidate(minimumQueryCount);
+    if (measureSerializedBytes(candidate) > queryPersistenceMaxCacheBytes) return undefined;
+    return candidate;
   };
 
   const persistNow = (client: PersistedClient) => {

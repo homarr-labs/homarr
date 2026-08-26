@@ -51,7 +51,7 @@ export const immichRouter = createTRPCRouter({
     .concat(createImmichIntegrationMiddleware("query"))
     .query(async ({ ctx, input }) => {
       if (ctx.integration.kind === "mock") {
-        if (input.limit === undefined) return mockWidgetData.immichAlbums;
+        if (input.limit === undefined) return [...mockWidgetData.immichAlbums];
         return mockWidgetData.immichAlbums.slice(0, input.limit);
       }
       const innerHandler = immichAlbumsRequestHandler.handler(

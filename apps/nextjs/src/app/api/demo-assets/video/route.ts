@@ -4,7 +4,7 @@ const videoBase64 =
 export const GET = () =>
   new Response(Buffer.from(videoBase64, "base64"), {
     headers: {
-      "Cache-Control": "public, max-age=31536000, immutable",
+      "Cache-Control": "public, max-age=3600",
       "Content-Type": "video/mp4",
     },
   });

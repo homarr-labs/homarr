@@ -50,7 +50,7 @@ const overview = `<!doctype html>
 export const GET = () =>
   new Response(overview, {
     headers: {
-      "Cache-Control": "public, max-age=31536000, immutable",
+      "Cache-Control": "public, max-age=3600",
       "Content-Type": "text/html; charset=utf-8",
     },
   });
