@@ -12,8 +12,7 @@ import { getNetworkControllerStatusLayout } from "./layout";
 import { WifiVariant } from "./variants/wifi-variant";
 import { WiredVariant } from "./variants/wired-variant";
 
-const neutralBorderColor =
-  "rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45))";
+const neutralBorderColor = "rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45))";
 
 export default function NetworkControllerNetworkStatusWidget({
   options,
@@ -21,6 +20,7 @@ export default function NetworkControllerNetworkStatusWidget({
   displayMode,
   width,
   height,
+  displayScale = 1,
 }: WidgetComponentProps<"networkControllerStatus">) {
   const summaryQuery = clientApi.widget.networkController.summary.useQuery({
     integrationIds,
@@ -41,7 +41,18 @@ export default function NetworkControllerNetworkStatusWidget({
   const countWifiUsers = summaries.reduce((sum, { summary }) => sum + summary.wifi.users, 0);
   const countLanGuests = summaries.reduce((sum, { summary }) => sum + summary.lan.guests, 0);
   const countLanUsers = summaries.reduce((sum, { summary }) => sum + summary.lan.users, 0);
-  const layout = getNetworkControllerStatusLayout({ width, height, displayMode, content: options.content });
+  let responsiveWidth = width;
+  let responsiveHeight = height;
+  if (!isAdvanced && Number.isFinite(displayScale) && displayScale > 0) {
+    responsiveWidth *= displayScale;
+    responsiveHeight *= displayScale;
+  }
+  const layout = getNetworkControllerStatusLayout({
+    width: responsiveWidth,
+    height: responsiveHeight,
+    displayMode,
+    content: options.content,
+  });
   const indicatorResults =
     results.length > 0 || !summaryQuery.error
       ? results
@@ -54,14 +65,26 @@ export default function NetworkControllerNetworkStatusWidget({
 
   if (!isAdvanced) {
     return (
-      <Box h="100%" p="sm" pos="relative">
+      <Box h="100%" p={layout.padding} pos="relative">
         <Box pos="absolute" top={4} right={8} style={{ zIndex: 2 }}>
           {queryIndicators}
         </Box>
         {options.content === "wifi" ? (
-          <WifiVariant countGuests={countWifiGuests} countUsers={countWifiUsers} />
+          <WifiVariant
+            countGuests={countWifiGuests}
+            countUsers={countWifiUsers}
+            compact={layout.compact}
+            horizontal={layout.horizontalStats}
+            inline={layout.inlineStats}
+          />
         ) : (
-          <WiredVariant countGuests={countLanGuests} countUsers={countLanUsers} />
+          <WiredVariant
+            countGuests={countLanGuests}
+            countUsers={countLanUsers}
+            compact={layout.compact}
+            horizontal={layout.horizontalStats}
+            inline={layout.inlineStats}
+          />
         )}
       </Box>
     );
@@ -103,20 +126,10 @@ export default function NetworkControllerNetworkStatusWidget({
                 </Badge>
               </Group>
               <SimpleGrid cols={layout.columns} spacing="sm">
-                <Card
-                  p={layout.cardPadding}
-                  withBorder
-                  bg="transparent"
-                  style={{ borderColor: neutralBorderColor }}
-                >
+                <Card p={layout.cardPadding} withBorder bg="transparent" style={{ borderColor: neutralBorderColor }}>
                   <WifiVariant countGuests={summary.wifi.guests} countUsers={summary.wifi.users} advanced />
                 </Card>
-                <Card
-                  p={layout.cardPadding}
-                  withBorder
-                  bg="transparent"
-                  style={{ borderColor: neutralBorderColor }}
-                >
+                <Card p={layout.cardPadding} withBorder bg="transparent" style={{ borderColor: neutralBorderColor }}>
                   <WiredVariant countGuests={summary.lan.guests} countUsers={summary.lan.users} advanced />
                 </Card>
               </SimpleGrid>

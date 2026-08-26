@@ -12,27 +12,36 @@ export const WifiVariant = ({
   advanced = false,
   compact = false,
   horizontal = false,
+  inline = false,
 }: {
   countUsers: number;
   countGuests: number;
   advanced?: boolean;
   compact?: boolean;
   horizontal?: boolean;
+  inline?: boolean;
 }) => {
   const t = useI18n("widget.networkControllerStatus.card");
   if (!advanced) {
+    const iconSize = horizontal ? 20 : 24;
+    let titleMargin: 0 | "xs" | "md" = "md";
+    if (compact) titleMargin = "xs";
+    if (horizontal) titleMargin = 0;
+    let statsSpacing: number | "xs" | "lg" = "lg";
+    if (compact) statsSpacing = "xs";
+    if (horizontal) statsSpacing = 4;
     return (
       <>
-        <Group gap="xs" wrap="nowrap" mb="md">
-          <IconWifi style={zoomCompensatedSize(24)} />
+        <Group gap="xs" wrap="nowrap" mb={titleMargin}>
+          <IconWifi style={zoomCompensatedSize(iconSize)} />
           <Text size="md" fw="bold">
             {t("variants.wifi.name")}
           </Text>
         </Group>
-        <Stack gap="lg">
-          <StatRow label={t("users.label")} value={countUsers} />
-          <StatRow label={t("guests.label")} value={countGuests} />
-        </Stack>
+        <SimpleGrid cols={horizontal ? 2 : 1} spacing={statsSpacing}>
+          <StatRow label={t("users.label")} value={countUsers} compact={compact} inline={inline} />
+          <StatRow label={t("guests.label")} value={countGuests} compact={compact} inline={inline} />
+        </SimpleGrid>
       </>
     );
   }
