@@ -2620,7 +2620,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "('{\"version\":3,\"visible\":true,\"searchDisplay\":\"input\",\"logoDisplay\":\"logo\",\"zones\":{\"left\":[{\"type\":\"builtin\",\"id\":\"logo\"}],\"center\":[{\"type\":\"builtin\",\"id\":\"search\"}],\"right\":[{\"type\":\"builtin\",\"id\":\"boardEdit\"},{\"type\":\"builtin\",\"id\":\"boardSettings\"},{\"type\":\"builtin\",\"id\":\"user\"}]}}')"
+          "default": "('{\"version\":3,\"visible\":true,\"searchDisplay\":\"input\",\"logoDisplay\":\"logoAndText\",\"zones\":{\"left\":[{\"type\":\"builtin\",\"id\":\"logo\"}],\"center\":[{\"type\":\"builtin\",\"id\":\"search\"}],\"right\":[{\"type\":\"builtin\",\"id\":\"boardEdit\"},{\"type\":\"builtin\",\"id\":\"boardSettings\"},{\"type\":\"builtin\",\"id\":\"user\"}]}}')"
         },
         "completed_manage_tour": {
           "name": "completed_manage_tour",

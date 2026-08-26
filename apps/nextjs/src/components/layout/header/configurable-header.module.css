@@ -16,7 +16,10 @@
   display: flex;
   align-items: center;
   gap: var(--mantine-spacing-sm);
+  box-sizing: border-box;
   min-width: 0;
+  height: 100%;
+  padding-inline-end: rem(10px);
   overflow-x: auto;
   scrollbar-width: none;
 }
