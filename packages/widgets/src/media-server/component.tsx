@@ -35,6 +35,7 @@ import { objectEntries } from "@homarr/common";
 import { getIconUrl } from "@homarr/definitions";
 import type { StreamSession } from "@homarr/integrations";
 import { useI18n } from "@homarr/translation/client";
+import { zoomCompensatedSize } from "@homarr/ui";
 import type { TablerIcon } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
@@ -419,7 +420,10 @@ export default function MediaServerWidget({
         }}
       >
         <Group gap={isAdvanced ? 6 : 4} wrap="nowrap">
-          <IconVideo size={isAdvanced ? "var(--mantine-font-size-xs)" : 16} style={{ flexShrink: 0 }} />
+          <IconVideo
+            size={isAdvanced ? "var(--mantine-font-size-xs)" : undefined}
+            style={isAdvanced ? { flexShrink: 0 } : zoomCompensatedSize(16)}
+          />
           <Text size="sm" fw={isAdvanced ? 500 : undefined} style={{ whiteSpace: "nowrap" }}>
             {(t as unknown as (key: string, params?: { count: number }) => string)("footer.streams", {
               count: flatSessions.length,
