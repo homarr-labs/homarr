@@ -72,6 +72,11 @@ describe("dashboard query persistence", () => {
     const { queryClient } = createSuccessfulQuery([["widget", "calendar", "findAllEvents"], { type: "query" }], {
       startsAt: new Date("2026-08-22T12:00:00.000Z"),
     });
+    const cachedQuery = queryClient.getQueryCache().find({
+      queryKey: [["widget", "calendar", "findAllEvents"], { type: "query" }],
+    });
+    if (!cachedQuery) throw new Error("Expected cached query to be present");
+    cachedQuery.setState({ ...cachedQuery.state, error: new Error("refresh failed"), status: "error" });
     queryClient.getMutationCache().build(
       queryClient,
       { mutationKey: ["integration", "create"], mutationFn: async () => undefined },
@@ -102,6 +107,8 @@ describe("dashboard query persistence", () => {
     expect(restored?.clientState.queries[0]?.state.data).toEqual({
       startsAt: new Date("2026-08-22T12:00:00.000Z"),
     });
+    expect(restored?.clientState.queries[0]?.state.status).toBe("success");
+    expect(restored?.clientState.queries[0]?.state.error).toBeNull();
     expect(await userB.persister.restoreClient()).toBeUndefined();
 
     await userA.persister.removeClient();
@@ -109,11 +116,16 @@ describe("dashboard query persistence", () => {
   });
 
   test("treats unavailable session storage as an empty cache", async () => {
-    vi.spyOn(window, "sessionStorage", "get").mockImplementation(() => {
+    const blockedStorage = createMemoryStorage();
+    blockedStorage.getItem = () => {
       throw new DOMException("blocked", "SecurityError");
-    });
+    };
+    blockedStorage.removeItem = () => {
+      throw new DOMException("blocked", "SecurityError");
+    };
 
-    const persistence = createSessionQueryPersistence("blocked");
+    const persistence = createSessionQueryPersistence("blocked", blockedStorage);
     expect(await persistence.persister.restoreClient()).toBeUndefined();
+    expect(() => persistence.persister.removeClient()).not.toThrow();
   });
 });
