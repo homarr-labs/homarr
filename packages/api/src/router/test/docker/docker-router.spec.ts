@@ -15,17 +15,6 @@ const findDockerContainerAsyncMock = vi.hoisted(() => vi.fn());
 const hasDockerEndpointCapabilityMock = vi.hoisted(() => vi.fn(() => true));
 const invalidateDockerCacheMock = vi.hoisted(() => vi.fn());
 const resetDockerSingletonMock = vi.hoisted(() => vi.fn());
-const dockerInventoryRefreshChannelMock = vi.hoisted(() => {
-  let subscriber: (() => void) | undefined;
-  return {
-    publishAsync: vi.fn(async () => undefined),
-    subscribe: vi.fn((callback: () => void) => {
-      subscriber = callback;
-      return () => undefined;
-    }),
-    trigger: () => subscriber?.(),
-  };
-});
 const getDockerDataAsyncMock = vi.hoisted(() =>
   vi.fn<
     () => Promise<{
@@ -76,9 +65,6 @@ vi.mock("@homarr/docker", () => ({
     ],
     reset: resetDockerSingletonMock,
   },
-}));
-vi.mock("@homarr/redis", () => ({
-  createSubPubChannel: () => dockerInventoryRefreshChannelMock,
 }));
 vi.mock("@homarr/request-handler/docker", () => ({
   findDockerContainerAsync: findDockerContainerAsyncMock,
@@ -517,12 +503,6 @@ test("invalidates the shared Docker inventory on explicit refresh", async () => 
 
   expect(invalidateDockerCacheMock).toHaveBeenCalledOnce();
   expect(resetDockerSingletonMock).toHaveBeenCalledOnce();
-  expect(dockerInventoryRefreshChannelMock.publishAsync).toHaveBeenCalledOnce();
-
-  dockerInventoryRefreshChannelMock.trigger();
-
-  expect(invalidateDockerCacheMock).toHaveBeenCalledTimes(2);
-  expect(resetDockerSingletonMock).toHaveBeenCalledTimes(2);
 });
 
 test("projects persisted service layers without inventing runtime health", async () => {

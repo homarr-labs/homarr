@@ -42,7 +42,7 @@ import type { ContainerState, DockerEndpointCapability } from "@homarr/docker";
 import { containerStateColorMap, cpuUsageColor, memoryUsageColor, safeValue } from "@homarr/docker/shared";
 import { useModalAction } from "@homarr/modals";
 import { AddDockerAppToHomarr, useDockerContainerRemovalConfirmation } from "@homarr/modals-collection";
-import { showErrorNotification, showSuccessNotification, showWarningNotification } from "@homarr/notifications";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { zoomCompensatedSize } from "@homarr/ui";
 
@@ -285,18 +285,12 @@ export default function DockerWidget({
   const data = getUsableWidgetQueryData(containersQuery);
   const { isFetching } = containersQuery;
   const refreshInventory = clientApi.docker.refreshInventory.useMutation({
-    async onSuccess(result) {
+    async onSuccess() {
       await Promise.all([
         utils.docker.getContainers.invalidate(),
         utils.docker.reconcileServices.invalidate(),
         utils.docker.getServiceHealth.invalidate(),
       ]);
-      if (result.scope === "local") {
-        showWarningNotification({
-          title: t("action.refresh.notification.warning.title"),
-          message: t("action.refresh.notification.warning.message"),
-        });
-      }
     },
     onError() {
       showErrorNotification({

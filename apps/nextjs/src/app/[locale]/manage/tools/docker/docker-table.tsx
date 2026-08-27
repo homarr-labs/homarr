@@ -25,7 +25,7 @@ import type { ContainerState, DockerEndpointCapability } from "@homarr/docker";
 import { containerStateColorMap, cpuUsageColor, memoryUsageColor, safeValue } from "@homarr/docker/shared";
 import { useModalAction } from "@homarr/modals";
 import { AddDockerAppToHomarr, useDockerContainerRemovalConfirmation } from "@homarr/modals-collection";
-import { showErrorNotification, showSuccessNotification, showWarningNotification } from "@homarr/notifications";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import type { ScopedTranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
@@ -199,19 +199,12 @@ export function DockerTable({ initialData }: DockerTableProps) {
     refetchOnMount: false,
   });
   const refreshInventory = clientApi.docker.refreshInventory.useMutation({
-    async onSuccess(result) {
+    async onSuccess() {
       await Promise.all([
         utils.docker.getContainers.invalidate(),
         utils.docker.reconcileServices.invalidate(),
         utils.docker.getServiceHealth.invalidate(),
       ]);
-      if (result.scope === "local") {
-        showWarningNotification({
-          title: tDocker("action.refresh.notification.warning.title"),
-          message: tDocker("action.refresh.notification.warning.message"),
-        });
-        return;
-      }
       showSuccessNotification({
         title: tDocker("action.refresh.notification.success.title"),
         message: tDocker("action.refresh.notification.success.message"),

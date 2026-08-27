@@ -4,8 +4,6 @@ import { z } from "zod/v4";
 
 import type { ContainerState, DockerContainerTarget, Port } from "@homarr/docker";
 import { DockerSingleton } from "@homarr/docker";
-import { createLogger } from "@homarr/core/infrastructure/logs";
-import { createSubPubChannel } from "@homarr/redis";
 import {
   dockerContainersRequestHandler,
   findDockerContainerAsync,
@@ -24,34 +22,6 @@ const dockerContainerTargetSchema = z.object({
   id: z.string().min(1),
 });
 const dockerContainerTargetsSchema = z.array(dockerContainerTargetSchema).min(1).max(100);
-const logger = createLogger({ module: "dockerRouter" });
-
-const resetDockerInventory = () => {
-  DockerSingleton.reset();
-  dockerContainersRequestHandler.invalidateCache();
-};
-
-const dockerInventoryRefreshChannel = createSubPubChannel<{ requestedAt: number }>("docker-inventory-refresh", {
-  persist: false,
-});
-const isRedisDisabled = () => Boolean(process.env.CI) || Boolean(process.env.DISABLE_REDIS_LOGS);
-try {
-  dockerInventoryRefreshChannel.subscribe(resetDockerInventory);
-} catch (error) {
-  if (!isRedisDisabled()) throw error;
-}
-
-const publishDockerInventoryRefreshAsync = async () => {
-  try {
-    await dockerInventoryRefreshChannel.publishAsync({ requestedAt: Date.now() });
-    return true;
-  } catch (error) {
-    if (!isRedisDisabled()) {
-      logger.warn(new Error("Failed to publish Docker inventory refresh", { cause: error }));
-    }
-    return false;
-  }
-};
 
 const normalizeGetContainersInput = (input: { endpointIds?: string[] } | undefined) => {
   if (!input?.endpointIds || input.endpointIds.length === 0) return {};
@@ -87,15 +57,13 @@ export const dockerRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Invalidate the local Docker inventory and publish a non-persistent Redis refresh event. Returns scope 'published' when Redis accepts the event or 'local' when only this replica is refreshed. Requires admin permission.",
+          "Invalidate the cached Docker inventory so the next Docker query performs a fresh user-requested discovery. Requires admin permission.",
       },
     })
     .concat(dockerMiddleware())
-    .mutation(async () => {
-      resetDockerInventory();
-      const propagated = await publishDockerInventoryRefreshAsync();
-      if (propagated) return { scope: "published" as const };
-      return { scope: "local" as const };
+    .mutation(() => {
+      DockerSingleton.reset();
+      dockerContainersRequestHandler.invalidateCache();
     }),
   getContainers: permissionRequiredProcedure
     .requiresPermission("admin")

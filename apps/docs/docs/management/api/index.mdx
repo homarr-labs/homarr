@@ -144,10 +144,6 @@ Docker or Podman endpoints from targeting the wrong service.
 Docker environment, or pass one or more IDs returned by `docker.getEndpoints` to query only those Dockerode clients. The
 Docker widget uses the same behavior for its environment selector.
 
-`docker.refreshInventory` always refreshes the current replica and returns `scope: "published"` when Redis accepts the
-non-persistent refresh event, or `scope: "local"` when publication fails. Published scope does not confirm that every replica
-processed the event. A local result is partial success: retry after restoring Redis to notify the other replicas.
-
 ## Partial integration failures
 
 Multi-integration widget queries keep data from integrations that remain available. Calendar and media-server results include

@@ -6644,10 +6644,6 @@
             "title": "Containers refreshed",
             "message": "You are now viewing the most recent data"
           },
-          "warning": {
-            "title": "Only this Homarr instance was refreshed",
-            "message": "Redis did not accept the refresh event, so other Homarr instances may still show older Docker data"
-          },
           "error": {
             "title": "Containers not refreshed",
             "message": "Something went wrong while refreshing the containers"
