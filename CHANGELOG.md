@@ -1,3 +1,5 @@
+## [1.76.2](https://github.com/homarr-labs/homarr/compare/v1.76.1...v1.76.2) (2026-08-27)
+
 ## [1.76.1](https://github.com/homarr-labs/homarr/compare/v1.76.0...v1.76.1) (2026-08-26)
 
 ## [1.76.0](https://github.com/homarr-labs/homarr/compare/v1.75.0...v1.76.0) (2026-08-21)
