@@ -37,7 +37,7 @@ afterEach(() => {
 });
 
 describe("dashboard query persistence", () => {
-  test("keeps successful dashboard data and skips volatile or unrelated queries", () => {
+  test("keeps usable dashboard data and skips volatile or unrelated queries", () => {
     const widget = createSuccessfulQuery([["widget", "weather", "atLocation"], { type: "query" }], { temp: 21 });
     const supporting = createSuccessfulQuery([["app", "byIds"], { type: "query" }], [{ id: "app-1" }]);
     const ping = createSuccessfulQuery([["widget", "app", "ping"], { type: "query" }], { status: "online" });
@@ -57,7 +57,7 @@ describe("dashboard query persistence", () => {
     expect(shouldPersistDashboardQuery(beszel.query)).toBe(false);
     expect(shouldPersistDashboardQuery(unrelated.query)).toBe(false);
     expect(shouldPersistDashboardQuery(pending)).toBe(false);
-    expect(shouldPersistDashboardQuery(failed.query)).toBe(false);
+    expect(shouldPersistDashboardQuery(failed.query)).toBe(true);
   });
 
   test("round-trips dashboard data with SuperJSON in an isolated session scope", async () => {
@@ -68,14 +68,31 @@ describe("dashboard query persistence", () => {
     const { queryClient } = createSuccessfulQuery([["widget", "calendar", "findAllEvents"], { type: "query" }], {
       startsAt: new Date("2026-08-22T12:00:00.000Z"),
     });
+    queryClient.getMutationCache().build(
+      queryClient,
+      { mutationKey: ["integration", "create"], mutationFn: async () => undefined },
+      {
+        context: undefined,
+        data: undefined,
+        error: null,
+        failureCount: 0,
+        failureReason: null,
+        isPaused: true,
+        status: "pending",
+        submittedAt: Date.now(),
+        variables: { apiKey: "secret" },
+      },
+    );
     const persistedClient: PersistedClient = {
       timestamp: Date.now(),
       buster: queryPersistenceBuster,
       clientState: dehydrate(queryClient, userA.dehydrateOptions),
     };
 
+    expect(persistedClient.clientState.mutations).toHaveLength(0);
+
     await userA.persister.persistClient(persistedClient);
-    await vi.runAllTimersAsync();
+    await vi.advanceTimersByTimeAsync(1_000);
 
     const restored = await userA.persister.restoreClient();
     expect(restored?.clientState.queries[0]?.state.data).toEqual({

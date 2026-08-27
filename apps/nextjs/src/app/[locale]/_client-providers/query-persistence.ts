@@ -19,7 +19,7 @@ interface PersistableQuery {
 }
 
 export const shouldPersistDashboardQuery = (query: PersistableQuery) =>
-  query.state.status === "success" && query.state.data !== undefined && isWidgetDataQueryKey(query.queryKey);
+  query.state.data !== undefined && isWidgetDataQueryKey(query.queryKey);
 
 const getSessionStorage = () => {
   if (typeof window === "undefined") return undefined;
@@ -46,5 +46,8 @@ export const createSessionQueryPersistence = (
   }),
   maxAge: queryCacheDefaultGcTimeMs,
   buster: queryPersistenceBuster,
-  dehydrateOptions: { shouldDehydrateQuery: shouldPersistDashboardQuery },
+  dehydrateOptions: {
+    shouldDehydrateMutation: () => false,
+    shouldDehydrateQuery: shouldPersistDashboardQuery,
+  },
 });
