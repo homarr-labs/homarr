@@ -10,7 +10,15 @@ import { formatResultSpeed } from "./helpers";
 import { SectionLabel } from "./section-label";
 import { SpeedStatCard } from "./speed-stat-card";
 
-export function LatestResultSection({ result, width = 500 }: { result: SpeedtestTrackerResult; width?: number }) {
+export function LatestResultSection({
+  result,
+  width = 500,
+  compactSurface = false,
+}: {
+  result: SpeedtestTrackerResult;
+  width?: number;
+  compactSurface?: boolean;
+}) {
   const t = useI18n("widget.speedtestTracker");
   const locale = useCurrentIntlLocale();
   const timestamp = Intl.DateTimeFormat(locale, {
@@ -25,7 +33,7 @@ export function LatestResultSection({ result, width = 500 }: { result: Speedtest
   return (
     <Stack gap={6} h="100%">
       <Group justify="space-between" align="center" wrap="nowrap">
-        <SectionLabel>{t("latestResult")}</SectionLabel>
+        <SectionLabel uppercase={compactSurface}>{t("latestResult")}</SectionLabel>
         <Text size="xs" c="dimmed" truncate title={timestamp} style={{ minWidth: 0 }}>
           {timestamp}
         </Text>
@@ -36,18 +44,21 @@ export function LatestResultSection({ result, width = 500 }: { result: Speedtest
           color="blue"
           value={formatResultSpeed(result, "download")}
           label={t("download")}
+          legacySurface={compactSurface}
         />
         <SpeedStatCard
           icon={IconArrowUp}
           color="teal"
           value={formatResultSpeed(result, "upload")}
           label={t("upload")}
+          legacySurface={compactSurface}
         />
         <SpeedStatCard
           icon={IconWaveSine}
           color="orange"
           value={result.ping !== null ? `${result.ping.toFixed(1)} ms` : "—"}
           label={t("ping")}
+          legacySurface={compactSurface}
         />
         {result.healthy !== null && (
           <SpeedStatCard
@@ -55,6 +66,7 @@ export function LatestResultSection({ result, width = 500 }: { result: Speedtest
             color={result.healthy ? "green" : "red"}
             value={result.healthy ? t("healthy") : t("unhealthy")}
             label={t("status")}
+            legacySurface={compactSurface}
           />
         )}
       </SimpleGrid>

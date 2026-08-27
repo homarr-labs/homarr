@@ -54,11 +54,13 @@ export const LazySpotlight = () => {
     };
   }, []);
 
-  return isMounted || isPreloaded ? (
+  if (!isMounted && !isPreloaded) return null;
+
+  return (
     <>
       {isPreloaded && <span hidden data-homarr-dev-benchmark-spotlight-preloaded />}
       {isMounted && <span hidden data-homarr-dev-benchmark-spotlight-mounted />}
-      <Spotlight />
+      {isMounted && <Spotlight />}
     </>
-  ) : null;
+  );
 };

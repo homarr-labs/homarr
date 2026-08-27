@@ -156,23 +156,6 @@ export const getGridCols = (width: number, visibleCount: number, compact: boolea
   return Math.min(maxCols, Math.max(visibleCount, 1));
 };
 
-export const getVisibleStatLimit = (width: number, height: number, visibleCount: number, compact: boolean): number => {
-  if (!compact) return visibleCount;
-
-  const columns = getGridCols(width, visibleCount, true);
-  const rows = Math.max(1, Math.floor(Math.max(0, height - 8) / 44));
-  return Math.min(visibleCount, columns * rows);
-};
-
-export const prioritizeVisibleStats = (stats: VisibleStat[], compact: boolean): VisibleStat[] => {
-  if (!compact) return stats;
-  return stats.toSorted(
-    (left, right) =>
-      Number(right.statKey === "activeSessions" && Number(right.value) > 0) -
-      Number(left.statKey === "activeSessions" && Number(left.value) > 0),
-  );
-};
-
 const fallbackIconSize = { true: 14, false: 16 } as const;
 
 export const getIconSize = (width: number, compact: boolean): number => {

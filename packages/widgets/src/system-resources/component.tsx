@@ -19,6 +19,15 @@ const COMPACT_HISTORY_SIZE = 15;
 const ADVANCED_HISTORY_SIZE = 60;
 const ALL_SYSTEM_CHARTS = ["cpu", "memory", "gpu", "network"] as const;
 
+const ADVANCED_CHART_COLUMN_BREAKPOINTS = [
+  { minWidth: 1100, columns: 4 },
+  { minWidth: 560, columns: 2 },
+  { minWidth: 0, columns: 1 },
+] as const;
+
+const getAdvancedChartColumns = (width: number): number =>
+  ADVANCED_CHART_COLUMN_BREAKPOINTS.find(({ minWidth }) => width >= minWidth)?.columns ?? 1;
+
 type SystemChart = WidgetComponentProps<"systemResources">["options"]["visibleCharts"][number];
 
 type ChartItem = {
@@ -59,7 +68,7 @@ export const getVisibleSystemCharts = ({
   configuredCharts,
   hasGpu,
   hasNetwork,
-  height,
+  height: _height,
   isAdvanced,
 }: {
   configuredCharts: readonly SystemChart[];
@@ -72,7 +81,7 @@ export const getVisibleSystemCharts = ({
   const availableCharts = selectedCharts.filter(
     (chart) => (chart !== "gpu" || !isAdvanced || hasGpu) && (chart !== "network" || hasNetwork),
   );
-  return isAdvanced ? [...availableCharts] : availableCharts.slice(0, getCompactChartBudget(height));
+  return [...availableCharts];
 };
 
 export default function SystemResources({
@@ -110,14 +119,13 @@ export default function SystemResources({
     lastUpdatedAt.current = dataUpdatedAt;
     setHistoryByIntegration((previous) =>
       Object.fromEntries(
-        data.map((entry) => [
-          entry.integrationId,
-          appendBoundedHistory(
-            previous[entry.integrationId] ?? [],
-            toChartItem(entry.healthInfo),
-            ADVANCED_HISTORY_SIZE,
-          ),
-        ]),
+        data.map((entry) => {
+          const currentItem = toChartItem(entry.healthInfo);
+          // Seed with the current item when there's no history yet, so the first real
+          // update lands at 2 points instead of dropping back to the single-value fallback.
+          const seed = previous[entry.integrationId] ?? [currentItem];
+          return [entry.integrationId, appendBoundedHistory(seed, currentItem, ADVANCED_HISTORY_SIZE)];
+        }),
       ),
     );
   }, [dataUpdatedAt, data]);
@@ -126,7 +134,9 @@ export default function SystemResources({
   const panelWidth = width / panelColumns;
   const renderCharts = (entry: (typeof data)[number], availableWidth: number, availableHeight: number) => {
     const currentItem = toChartItem(entry.healthInfo);
-    const fullHistory = historyByIntegration[entry.integrationId] ?? [currentItem];
+    // Duplicate the first point so the chart has two points to draw a line from
+    // immediately, instead of showing the single-value fallback until the next poll.
+    const fullHistory = historyByIntegration[entry.integrationId] ?? [currentItem, currentItem];
     const history = isAdvanced ? fullHistory : fullHistory.slice(-COMPACT_HISTORY_SIZE);
 
     return (
@@ -225,20 +235,24 @@ const SystemCharts = ({
   const showNetwork = visibleCharts.includes("network");
   const labelDisplayMode = isAdvanced ? "textWithIcon" : options.labelDisplayMode;
   const chartCount = visibleCharts.length;
-  const chartColumns = isAdvanced && width >= 560 ? 2 : 1;
+  const chartColumns = useMemo(() => (isAdvanced ? getAdvancedChartColumns(width) : 1), [isAdvanced, width]);
   const compactChartGap = 8;
+  const compactRowHeight = 56;
   const chartHeight = isAdvanced
-    ? 180
-    : `calc((100% - ${Math.max(0, chartCount - 1) * compactChartGap}px) / ${Math.max(1, chartCount)})`;
+    ? 110
+    : Math.max(
+        28,
+        Math.min(compactRowHeight, (height - Math.max(0, chartCount - 1) * compactChartGap) / Math.max(1, chartCount)),
+      );
 
   return (
-    <Stack gap={isAdvanced ? "xs" : compactChartGap} h={isAdvanced ? "auto" : height} miw={0}>
+    <Stack gap={isAdvanced ? "xs" : compactChartGap} h="auto" miw={0}>
       {showTitle && (
         <Text size="sm" fw={600} truncate="end">
           {integrationName}
         </Text>
       )}
-      <SimpleGrid cols={chartColumns} spacing={isAdvanced ? "xs" : compactChartGap} style={{ flex: 1, minHeight: 0 }}>
+      <SimpleGrid cols={chartColumns} spacing={isAdvanced ? "xs" : compactChartGap}>
         {chartCount === 0 && (
           <Center h="100%">
             <Text size="sm" c="dimmed">
@@ -252,6 +266,7 @@ const SystemCharts = ({
               cpuUsageOverTime={items.map((item) => item.cpu)}
               hasShadow={options.hasShadow}
               labelDisplayMode={labelDisplayMode}
+              advanced={isAdvanced}
             />
           </Box>
         )}
@@ -262,6 +277,7 @@ const SystemCharts = ({
               totalCapacityInBytes={memoryCapacityInBytes}
               hasShadow={options.hasShadow}
               labelDisplayMode={labelDisplayMode}
+              advanced={isAdvanced}
             />
           </Box>
         )}
@@ -271,6 +287,7 @@ const SystemCharts = ({
               gpuUsageOverTime={items.map((item) => item.gpu)}
               hasShadow={options.hasShadow}
               labelDisplayMode={labelDisplayMode}
+              advanced={isAdvanced}
             />
           </Box>
         )}
@@ -282,12 +299,14 @@ const SystemCharts = ({
                 isUp={false}
                 hasShadow={options.hasShadow}
                 labelDisplayMode={labelDisplayMode}
+                advanced={isAdvanced}
               />
               <NetworkTrafficChart
                 usageOverTime={networkItems.map((network) => network.up)}
                 isUp
                 hasShadow={options.hasShadow}
                 labelDisplayMode={labelDisplayMode}
+                advanced={isAdvanced}
               />
             </Group>
           ) : (
@@ -296,6 +315,7 @@ const SystemCharts = ({
                 usageOverTime={networkItems}
                 hasShadow={options.hasShadow}
                 labelDisplayMode={labelDisplayMode}
+                advanced={isAdvanced}
               />
             </Box>
           ))}

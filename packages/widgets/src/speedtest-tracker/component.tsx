@@ -11,7 +11,7 @@ import { IntegrationErrorIndicator } from "../common/integration-error-indicator
 import { getUsableWidgetQueryData } from "../common/query-state";
 import { WidgetEmptyState } from "../common/empty-state";
 import { AveragesSection } from "./averages";
-import { combineSpeedtestDashboards, getAvailableSpeedtestDashboards, getCompactSections } from "./helpers";
+import { combineSpeedtestDashboards, getAvailableSpeedtestDashboards } from "./helpers";
 import { LatestResultSection } from "./latest-result";
 import { RecentResultsSection } from "./recent-results";
 
@@ -51,16 +51,19 @@ export default function SpeedtestTrackerWidget({
   const advancedSectionWidth = width >= 720 ? width / 2 : width;
 
   const latest = showLatestResult && combined.latestResult && (
-    <LatestResultSection result={combined.latestResult} width={isAdvanced ? advancedSectionWidth : width} />
+    <LatestResultSection
+      result={combined.latestResult}
+      width={isAdvanced ? advancedSectionWidth : width}
+      compactSurface={!isAdvanced}
+    />
   );
   const averages = showStats && combined.stats && (
-    <AveragesSection stats={combined.stats} width={isAdvanced ? advancedSectionWidth : width} />
+    <AveragesSection
+      stats={combined.stats}
+      width={isAdvanced ? advancedSectionWidth : width}
+      compactSurface={!isAdvanced}
+    />
   );
-  const compactSections = getCompactSections(height, {
-    latest: Boolean(latest),
-    chart: hasChart,
-    averages: Boolean(averages),
-  });
 
   if (displayMode === "advanced") {
     const sourceColumns = successfulDashboards.length > 1 && width >= 900 ? 2 : 1;
@@ -136,15 +139,15 @@ export default function SpeedtestTrackerWidget({
             {successfulDashboards.map(({ integrationName }) => integrationName).join(" · ")}
           </Text>
         )}
-        {(compactSections.latest || compactSections.averages) && (
+        {(latest || averages) && (
           <Stack gap="sm" style={{ flex: 1, minHeight: 0 }}>
-            {compactSections.latest && <div style={{ flex: 1, minHeight: 0 }}>{latest}</div>}
-            {compactSections.averages && <div style={{ flex: 1, minHeight: 0 }}>{averages}</div>}
+            {latest && <div style={{ flex: 1, minHeight: 0 }}>{latest}</div>}
+            {averages && <div style={{ flex: 1, minHeight: 0 }}>{averages}</div>}
           </Stack>
         )}
-        {compactSections.chart && (
+        {hasChart && (
           <div style={{ flex: 2, minHeight: 0 }}>
-            <RecentResultsSection results={recentFiltered} showPingGraph={showPingGraph} />
+            <RecentResultsSection results={recentFiltered} showPingGraph={showPingGraph} uppercaseLabels />
           </div>
         )}
         {noSectionsEnabled && (

@@ -4,9 +4,14 @@
   flex-direction: column;
   height: 100%;
   min-height: 0;
-  padding: clamp(6px, 3cqi, 14px);
-  gap: clamp(4px, 2cqi, 10px);
+  padding: clamp(6px, 3cqi, 12px);
+  gap: clamp(4px, 2cqi, 8px);
   overflow: hidden;
+}
+
+.rootShort {
+  padding: 4px;
+  gap: 2px;
 }
 
 .hero {
@@ -16,8 +21,7 @@
   gap: clamp(8px, 3cqi, 18px);
   flex-shrink: 0;
   padding-bottom: clamp(4px, 2cqi, 10px);
-  border-bottom: 1px solid
-    rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45));
+  border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
 }
 
 .heroExpanded {
@@ -81,11 +85,16 @@
 .grid {
   display: grid;
   flex: 1;
+  width: 100%;
   min-height: 0;
-  gap: clamp(4px, 2cqi, 10px);
+  gap: clamp(4px, 2cqi, 8px);
   grid-template-columns: repeat(var(--stat-cols, 2), minmax(0, 1fr));
   grid-auto-rows: 1fr;
   align-content: stretch;
+}
+
+.gridShort {
+  gap: 2px;
 }
 
 .statTile {
@@ -95,22 +104,37 @@
   justify-content: center;
   min-height: 0;
   min-width: 0;
-  gap: clamp(2px, 1.5cqi, 5px);
-  padding: clamp(4px, 2.5cqi, 10px);
+  gap: clamp(2px, 1.5cqi, 4px);
+  padding: clamp(4px, 2cqi, 8px);
   border-radius: var(--mantine-radius-md);
-  border: 1px solid
-    rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45));
-  background-color: transparent;
+  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
   overflow: hidden;
+}
+
+.statTileShort {
+  gap: 2px;
+  padding: 3px;
+}
+
+.statTileNarrowShort {
+  flex-direction: row;
+  gap: 2px;
+  padding: 1px 3px;
 }
 
 .statIcon {
   color: var(--mantine-color-dimmed);
   flex-shrink: 0;
+  line-height: 0;
 }
 
 .statLabel {
-  font-size: clamp(8px, 2.5cqi, 12px);
+  flex-shrink: 0;
+  font-size: clamp(
+    calc(8px * var(--board-canvas-ui-scale, 1)),
+    calc(2.5cqi * var(--board-canvas-ui-scale, 1)),
+    calc(11px * var(--board-canvas-ui-scale, 1))
+  );
   color: var(--mantine-color-dimmed);
   line-height: 1.2;
   text-align: center;
@@ -120,12 +144,38 @@
   white-space: nowrap;
 }
 
+.statLabelShort {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .statValue {
-  font-size: clamp(14px, 5.5cqi, 24px);
+  flex-shrink: 0;
+  font-size: clamp(
+    calc(13px * var(--board-canvas-ui-scale, 1)),
+    calc(5cqi * var(--board-canvas-ui-scale, 1)),
+    calc(20px * var(--board-canvas-ui-scale, 1))
+  );
   font-weight: 700;
-  color: var(--mantine-color-text);
+  color: var(--mantine-primary-color-filled);
   line-height: 1.1;
   text-align: center;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.statValueNarrowShort {
+  font-size: calc(11px * var(--board-canvas-ui-scale, 1));
+  line-height: 1;
 }
 
 .emptyState {

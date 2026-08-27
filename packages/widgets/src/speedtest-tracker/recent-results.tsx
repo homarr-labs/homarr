@@ -114,30 +114,40 @@ function formatTooltipDate(label: number | string | undefined, locale: string): 
 export function RecentResultsSection({
   results,
   showPingGraph,
+  uppercaseLabels = false,
 }: {
   results: SpeedtestTrackerResult[];
   showPingGraph: boolean;
+  uppercaseLabels?: boolean;
 }) {
   const t = useI18n("widget.speedtestTracker");
 
   return (
     <Stack gap={4} h="100%" style={{ minHeight: 0 }}>
-      <SectionLabel>{t("recentResults")}</SectionLabel>
+      <SectionLabel uppercase={uppercaseLabels}>{t("recentResults")}</SectionLabel>
       <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", gap: 4 }}>
-        <SpeedSubChart results={results} showLabel={showPingGraph} />
-        {showPingGraph && <PingSubChart results={results} />}
+        <SpeedSubChart results={results} showLabel={showPingGraph} uppercaseLabels={uppercaseLabels} />
+        {showPingGraph && <PingSubChart results={results} uppercaseLabels={uppercaseLabels} />}
       </div>
     </Stack>
   );
 }
 
-function SpeedSubChart({ results, showLabel }: { results: SpeedtestTrackerResult[]; showLabel: boolean }) {
+function SpeedSubChart({
+  results,
+  showLabel,
+  uppercaseLabels,
+}: {
+  results: SpeedtestTrackerResult[];
+  showLabel: boolean;
+  uppercaseLabels: boolean;
+}) {
   const t = useI18n("widget.speedtestTracker");
   const { ref, height } = useElementSize<HTMLDivElement>();
 
   return (
     <div style={{ flex: 2, minHeight: 0, display: "flex", flexDirection: "column", gap: 2 }}>
-      {showLabel && <SectionLabel>{t("recentResultsSpeed")}</SectionLabel>}
+      {showLabel && <SectionLabel uppercase={uppercaseLabels}>{t("recentResultsSpeed")}</SectionLabel>}
       <div ref={ref} style={{ flex: 1, minHeight: 0 }}>
         {height > 0 && <SpeedHistoryChart results={results} height={height} />}
       </div>
@@ -145,13 +155,13 @@ function SpeedSubChart({ results, showLabel }: { results: SpeedtestTrackerResult
   );
 }
 
-function PingSubChart({ results }: { results: SpeedtestTrackerResult[] }) {
+function PingSubChart({ results, uppercaseLabels }: { results: SpeedtestTrackerResult[]; uppercaseLabels: boolean }) {
   const t = useI18n("widget.speedtestTracker");
   const { ref, height } = useElementSize<HTMLDivElement>();
 
   return (
     <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", gap: 2 }}>
-      <SectionLabel>{t("recentResultsPing")}</SectionLabel>
+      <SectionLabel uppercase={uppercaseLabels}>{t("recentResultsPing")}</SectionLabel>
       <div ref={ref} style={{ flex: 1, minHeight: 0 }}>
         {height > 0 && <PingHistoryChart results={results} height={height} />}
       </div>

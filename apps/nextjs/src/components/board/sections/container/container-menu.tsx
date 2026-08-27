@@ -1,12 +1,12 @@
 import { ActionIcon, Menu } from "@mantine/core";
-import { IconArrowsMove, IconLayoutKanban, IconPencil } from "@tabler/icons-react";
+import { IconArrowsMove, IconLayoutKanban, IconPencil, IconTrash } from "@tabler/icons-react";
 
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
+import { InlineConfirmMenuItem } from "@homarr/ui";
 
 import type { ContainerSectionItem } from "~/app/[locale]/boards/_types";
-import { BoardRemoveConfirmationMenuItem } from "../../remove-confirmation-menu-item";
 import { useOpenItemMoveModal } from "../../items/item-move-modal";
 import { useSectionContext } from "../section-context";
 import { useContainerActions } from "./container-actions";
@@ -59,11 +59,14 @@ export const BoardContainerMenu = ({ section }: { section: ContainerSectionItem 
           {tItem("action.moveResize")}
         </Menu.Item>
         <Menu.Divider />
-        <BoardRemoveConfirmationMenuItem
-          label={tContainer("action.remove")}
-          confirmationLabel={tContainer("remove.message")}
+        <InlineConfirmMenuItem
+          color="red"
+          confirmLabel={tContainer("remove.message")}
+          leftSection={<IconTrash size={16} />}
           onConfirm={() => removeContainer({ id: section.id })}
-        />
+        >
+          {tContainer("action.remove")}
+        </InlineConfirmMenuItem>
       </Menu.Dropdown>
     </Menu>
   );

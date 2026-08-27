@@ -14,6 +14,11 @@
   gap: clamp(2px, 1cqi, 4px);
 }
 
+.rootShort {
+  padding: 4px;
+  gap: 2px;
+}
+
 .grid {
   display: grid;
   flex: 1;
@@ -29,6 +34,10 @@
   gap: clamp(2px, 1cqi, 4px);
 }
 
+.gridShort {
+  gap: 2px;
+}
+
 .statTile {
   display: flex;
   flex-direction: column;
@@ -40,14 +49,29 @@
   gap: clamp(2px, 1.5cqi, 4px);
   padding: clamp(4px, 2cqi, 8px);
   border-radius: var(--mantine-radius-md);
-  background-color: transparent;
+  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
   overflow: hidden;
+}
+
+.statTileAdvanced {
+  background-color: transparent;
 }
 
 .statTileCompact {
   gap: clamp(1px, 0.8cqi, 2px);
   padding: clamp(2px, 1.2cqi, 5px);
   border-radius: var(--mantine-radius-sm);
+}
+
+.statTileShort {
+  gap: 2px;
+  padding: 3px;
+}
+
+.statTileNarrowShort {
+  flex-direction: row;
+  gap: 2px;
+  padding: 1px 3px;
 }
 
 .statIcon {
@@ -57,7 +81,12 @@
 }
 
 .statLabel {
-  font-size: clamp(8px, 2.5cqi, 11px);
+  flex-shrink: 0;
+  font-size: clamp(
+    calc(8px * var(--board-canvas-ui-scale, 1)),
+    calc(2.5cqi * var(--board-canvas-ui-scale, 1)),
+    calc(11px * var(--board-canvas-ui-scale, 1))
+  );
   color: var(--mantine-color-dimmed);
   line-height: 1.2;
   text-align: center;
@@ -68,11 +97,32 @@
 }
 
 .statTileCompact .statLabel {
-  font-size: clamp(7px, 2cqi, 9px);
+  font-size: clamp(
+    calc(7px * var(--board-canvas-ui-scale, 1)),
+    calc(2cqi * var(--board-canvas-ui-scale, 1)),
+    calc(9px * var(--board-canvas-ui-scale, 1))
+  );
+}
+
+.statLabelShort {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .statValue {
-  font-size: clamp(13px, 5cqi, 20px);
+  flex-shrink: 0;
+  font-size: clamp(
+    calc(13px * var(--board-canvas-ui-scale, 1)),
+    calc(5cqi * var(--board-canvas-ui-scale, 1)),
+    calc(20px * var(--board-canvas-ui-scale, 1))
+  );
   font-weight: 700;
   color: var(--mantine-primary-color-filled);
   line-height: 1.1;
@@ -84,7 +134,16 @@
 }
 
 .statTileCompact .statValue {
-  font-size: clamp(11px, 4cqi, 16px);
+  font-size: clamp(
+    calc(11px * var(--board-canvas-ui-scale, 1)),
+    calc(4cqi * var(--board-canvas-ui-scale, 1)),
+    calc(16px * var(--board-canvas-ui-scale, 1))
+  );
+}
+
+.statValueNarrowShort {
+  font-size: calc(11px * var(--board-canvas-ui-scale, 1));
+  line-height: 1;
 }
 
 .emptyState {

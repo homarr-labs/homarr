@@ -10,10 +10,12 @@ export const SystemResourceCPUChart = ({
   cpuUsageOverTime,
   hasShadow,
   labelDisplayMode,
+  advanced = false,
 }: {
   cpuUsageOverTime: number[];
   hasShadow: boolean;
   labelDisplayMode: LabelDisplayModeOption;
+  advanced?: boolean;
 }) => {
   const chartData = cpuUsageOverTime.map((usage, index) => ({ index, usage }));
 
@@ -31,6 +33,7 @@ export const SystemResourceCPUChart = ({
       chartType={hasShadow ? "area" : "line"}
       yAxisProps={{ domain: [0, 100] }}
       labelDisplayMode={labelDisplayMode}
+      advanced={advanced}
       tooltipProps={{
         content: ({ payload }) => {
           const value = payload[0] ? Number(payload[0].value) : 0;

@@ -11,7 +11,7 @@ interface NetworkControllerStatusLayoutInput {
 }
 
 export interface NetworkControllerStatusLayout {
-  padding: "xs" | "sm" | "md";
+  padding: 4 | "xs" | "sm" | "md";
   columns: 1 | 2;
   sourceColumns: 1 | 2;
   showWifi: boolean;
@@ -20,6 +20,7 @@ export interface NetworkControllerStatusLayout {
   withBorder: boolean;
   compact: boolean;
   horizontalStats: boolean;
+  inlineStats: boolean;
 }
 
 export const getNetworkControllerStatusLayout = ({
@@ -29,16 +30,18 @@ export const getNetworkControllerStatusLayout = ({
   content,
 }: NetworkControllerStatusLayoutInput): NetworkControllerStatusLayout => {
   const isAdvanced = displayMode === "advanced";
+  const compact = !isAdvanced && (width < 240 || height < 180);
 
   return {
-    padding: isAdvanced ? "md" : height < 120 ? "xs" : "sm",
+    padding: isAdvanced ? "md" : height < 120 ? 4 : "sm",
     columns: isAdvanced && width >= 560 ? 2 : 1,
     sourceColumns: isAdvanced && width >= 960 ? 2 : 1,
     showWifi: isAdvanced || content === "wifi",
     showWired: isAdvanced || content === "wired",
     cardPadding: isAdvanced ? "md" : 0,
     withBorder: isAdvanced,
-    compact: !isAdvanced,
-    horizontalStats: !isAdvanced && height < 150 && width >= 200,
+    compact,
+    horizontalStats: compact && height < 150,
+    inlineStats: compact && height < 80,
   };
 };

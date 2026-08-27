@@ -72,6 +72,7 @@
     "@rexa-developer/tiks": "catalog:",
     "@scalar/api-reference-react": "catalog:",
     "@tabler/icons-react": "catalog:",
+    "@tanstack/query-sync-storage-persister": "catalog:",
     "@tanstack/react-devtools": "catalog:",
     "@tanstack/react-query": "catalog:",
     "@tanstack/react-query-devtools": "catalog:",

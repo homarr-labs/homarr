@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Accordion, Anchor, Badge, Card, Group, Image, Stack, Text, Tooltip } from "@mantine/core";
+import { Accordion, Anchor, Badge, Card, Group, Image, Stack, Text } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 
 import { useTimeAgo } from "@homarr/common";
@@ -22,12 +22,10 @@ interface InstanceCardProps {
   isTiny: boolean;
   isAdvanced: boolean;
   widgetKey: string;
-  hideFooter: boolean;
 }
 
-export function InstanceCard({ instance, options, isTiny, isAdvanced, widgetKey, hideFooter }: InstanceCardProps) {
+export function InstanceCard({ instance, options, isTiny, isAdvanced, widgetKey }: InstanceCardProps) {
   const t = useI18n("widget.coolify");
-  const tCommon = useI18n("common");
   const cardKey = `${widgetKey}-${instance.integrationId}`;
   const [showIp, setShowIp] = useLocalStorage({
     key: `coolify-show-ip-${cardKey}`,
@@ -53,32 +51,10 @@ export function InstanceCard({ instance, options, isTiny, isAdvanced, widgetKey,
   const runningServices = instance.instanceInfo.services.filter(
     (s) => parseStatus(s.status ?? "") === "running",
   ).length;
-  const healthyResources =
-    (options.showServers ? onlineServers : 0) +
-    (options.showApplications ? runningApps : 0) +
-    (options.showServices ? runningServices : 0);
-  const totalResources =
-    (options.showServers ? instance.instanceInfo.servers.length : 0) +
-    (options.showApplications ? instance.instanceInfo.applications.length : 0) +
-    (options.showServices ? instance.instanceInfo.services.length : 0);
-  const resourceSummary = [
-    options.showServers ? `${tCommon("servers")}: ${onlineServers}/${instance.instanceInfo.servers.length}` : null,
-    options.showApplications
-      ? `${tCommon("applications")}: ${runningApps}/${instance.instanceInfo.applications.length}`
-      : null,
-    options.showServices ? `${tCommon("services")}: ${runningServices}/${instance.instanceInfo.services.length}` : null,
-  ]
-    .filter(Boolean)
-    .join(" · ");
 
   return (
     <Card p={0} radius="sm" bg="transparent">
-      <Group
-        p="xs"
-        justify="space-between"
-        wrap="nowrap"
-        className={classes.neutralDividerBottom}
-      >
+      <Group p="xs" justify="space-between" wrap="nowrap" className={classes.neutralDividerBottom}>
         <Group gap={4} wrap="nowrap" miw={0}>
           <Image src={COOLIFY_ICON_URL} alt="Coolify" w={16} h={16} />
           <Stack gap={0} miw={0}>
@@ -102,19 +78,12 @@ export function InstanceCard({ instance, options, isTiny, isAdvanced, widgetKey,
           </Stack>
         </Group>
         <Group gap={4} wrap="nowrap">
-          {isTiny && totalResources > 0 ? (
-            <Tooltip label={resourceSummary}>
-              <Badge variant="dot" color={getBadgeColor(healthyResources, totalResources)} size="xs">
-                {healthyResources}/{totalResources}
-              </Badge>
-            </Tooltip>
-          ) : null}
-          {!isTiny && options.showServers && (
+          {options.showServers && (
             <Badge variant="dot" color={getBadgeColor(onlineServers, instance.instanceInfo.servers.length)} size="xs">
               {onlineServers}/{instance.instanceInfo.servers.length}
             </Badge>
           )}
-          {!isTiny && options.showApplications && (
+          {options.showApplications && (
             <Badge
               variant="dot"
               color={getBadgeColor(runningApps, instance.instanceInfo.applications.length)}
@@ -123,7 +92,7 @@ export function InstanceCard({ instance, options, isTiny, isAdvanced, widgetKey,
               {runningApps}/{instance.instanceInfo.applications.length}
             </Badge>
           )}
-          {!isTiny && options.showServices && (
+          {options.showServices && (
             <Badge
               variant="dot"
               color={getBadgeColor(runningServices, instance.instanceInfo.services.length)}
@@ -168,7 +137,7 @@ export function InstanceCard({ instance, options, isTiny, isAdvanced, widgetKey,
         )}
       </Accordion>
 
-      {!hideFooter && <InstanceFooter version={instance.instanceInfo.version} updatedAt={instance.updatedAt} />}
+      <InstanceFooter version={instance.instanceInfo.version} updatedAt={instance.updatedAt} />
     </Card>
   );
 }

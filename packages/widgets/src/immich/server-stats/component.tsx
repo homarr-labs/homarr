@@ -60,54 +60,57 @@ export default function ImmichServerStatsWidget({
     {
       key: "users",
       enabled: statVisibility.showUsers,
-      icon: <IconUsers style={zoomCompensatedSize(statsLayout.dense ? 16 : 18)} />,
+      icon: <IconUsers style={zoomCompensatedSize(isAdvanced ? 18 : 20)} />,
       label: t("users"),
       value: stats.userCount.toLocaleString(locale),
     },
     {
       key: "photos",
       enabled: statVisibility.showPhotos,
-      icon: <IconPhoto style={zoomCompensatedSize(statsLayout.dense ? 16 : 18)} />,
+      icon: <IconPhoto style={zoomCompensatedSize(isAdvanced ? 18 : 20)} />,
       label: t("photos"),
       value: stats.photoCount.toLocaleString(locale),
     },
     {
       key: "videos",
       enabled: statVisibility.showVideos,
-      icon: <IconVideo style={zoomCompensatedSize(statsLayout.dense ? 16 : 18)} />,
+      icon: <IconVideo style={zoomCompensatedSize(isAdvanced ? 18 : 20)} />,
       label: t("videos"),
       value: stats.videoCount.toLocaleString(locale),
     },
     {
       key: "storage",
       enabled: statVisibility.showStorage,
-      icon: <IconDatabase style={zoomCompensatedSize(statsLayout.dense ? 16 : 18)} />,
+      icon: <IconDatabase style={zoomCompensatedSize(isAdvanced ? 18 : 20)} />,
       label: t("storage"),
       value: formatBytes(stats.totalLibraryUsageInBytes),
     },
   ]
     .filter((item) => item.enabled)
     .map(({ key, icon, label, value }) => (
-      <StatItem key={key} icon={icon} label={label} value={value} dense={statsLayout.dense} />
+      <StatItem
+        key={key}
+        icon={icon}
+        label={label}
+        value={value}
+        dense={isAdvanced && statsLayout.dense}
+        compact={!isAdvanced}
+      />
     ));
-
-  const statsContent =
-    isAdvanced || statsLayout.dense ? (
-      <SimpleGrid cols={statsLayout.columns} spacing={statsLayout.dense ? 4 : "sm"}>
-        {statItems}
-      </SimpleGrid>
-    ) : (
-      <Stack gap="xs">{statItems}</Stack>
-    );
 
   if (!isAdvanced) {
     return (
-      <Stack gap="md" h="100%" p={statsLayout.dense ? "xs" : "md"} justify="center" pos="relative">
-        {statsContent}
+      <Stack gap="md" h="100%" p="md">
+        {statItems}
       </Stack>
     );
   }
 
+  const statsContent = (
+    <SimpleGrid cols={statsLayout.columns} spacing={statsLayout.dense ? 4 : "sm"}>
+      {statItems}
+    </SimpleGrid>
+  );
   const sortedAlbums = albums;
   const maxAssets = sortedAlbums[0]?.assetCount ?? 1;
   return (
@@ -150,9 +153,10 @@ interface StatItemProps {
   label: string;
   value: string | number;
   dense: boolean;
+  compact: boolean;
 }
 
-function StatItem({ icon, label, value, dense }: StatItemProps) {
+function StatItem({ icon, label, value, dense, compact }: StatItemProps) {
   if (dense) {
     return (
       <Stack gap={1} align="center" justify="center" className={classes.statItemDense} title={`${label}: ${value}`}>
@@ -167,7 +171,7 @@ function StatItem({ icon, label, value, dense }: StatItemProps) {
   }
 
   return (
-    <Group justify="space-between" align="center" className={classes.statItem}>
+    <Group justify="space-between" align="center" className={compact ? classes.statItemCompact : classes.statItem}>
       <Group gap="sm" align="center" wrap="nowrap" miw={0}>
         {icon}
         <Text size="sm" fw={500} truncate="end">
@@ -181,16 +185,13 @@ function StatItem({ icon, label, value, dense }: StatItemProps) {
   );
 }
 
-export const getImmichStatsLayout = (width: number, height: number, itemCount: number, isAdvanced = false) => {
+export const getImmichStatsLayout = (width: number, _height: number, itemCount: number, isAdvanced = false) => {
   const count = Math.max(1, itemCount);
   if (isAdvanced) {
     return { columns: width >= 720 ? Math.min(count, 4) : width >= 360 ? Math.min(count, 2) : 1, dense: false };
   }
 
-  const dense = width < 320 || height < 160;
-  if (height < 140) return { columns: Math.min(count, width >= 360 ? 4 : 2), dense: true };
-  if (height < 220) return { columns: Math.min(count, 2), dense: true };
-  return { columns: Math.min(count, width >= 280 ? 2 : 1), dense };
+  return { columns: 1, dense: false };
 };
 
 export const getImmichStatVisibility = (

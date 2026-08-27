@@ -14,6 +14,8 @@ import type { ScopedTranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
+import { createKubernetesResourceQueryOptions } from "../kubernetes-query-options";
+
 dayjs.extend(relativeTime);
 
 interface ServicesTableComponentProps {
@@ -71,13 +73,7 @@ export function ServicesTable({ contextId, initialServices }: ServicesTableCompo
 
   const { data } = clientApi.kubernetes.services.getServices.useQuery(
     { contextId },
-    {
-      initialData: initialServices,
-      refetchOnMount: "always",
-      refetchOnWindowFocus: true,
-      refetchOnReconnect: true,
-      refetchInterval: (query) => (query.state.status === "error" ? 30_000 : false),
-    },
+    createKubernetesResourceQueryOptions(initialServices),
   );
 
   const table = useTranslatedMantineReactTable({

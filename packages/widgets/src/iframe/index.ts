@@ -1,7 +1,6 @@
 import { IconBrowser, IconExternalLink } from "@tabler/icons-react";
 
 import { createWidgetDefinition } from "../definition";
-import { getSafeApplicationUrl } from "../common/application-url";
 import { optionsBuilder } from "../options";
 
 const createOptions = () =>
@@ -23,17 +22,17 @@ export const { definition, componentLoader } = createWidgetDefinition("iframe", 
   supportsAdvancedFocus: false,
   icon: IconBrowser,
   contextActions: ({ options }) => {
-    const embedUrl = getSafeApplicationUrl(options.embedUrl);
-    return embedUrl
-      ? [
-          {
-            key: "open-iframe",
-            label: "widget.common.openInNewTab.label",
-            icon: IconExternalLink,
-            onClick: () => window.open(embedUrl, "_blank", "noopener,noreferrer"),
-          },
-        ]
-      : [];
+    const embedUrl = options.embedUrl;
+    if (typeof embedUrl !== "string" || embedUrl.trim() === "") return [];
+
+    return [
+      {
+        key: "open-iframe",
+        label: "widget.common.openInNewTab.label",
+        icon: IconExternalLink,
+        onClick: () => window.open(embedUrl, "_blank", "noopener,noreferrer"),
+      },
+    ];
   },
   createOptions,
 }).withDynamicImport(() => import("./component"));

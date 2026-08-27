@@ -2,7 +2,7 @@
 
 import type { MutableRefObject, ReactNode, RefObject } from "react";
 import { useCallback, useMemo, useState } from "react";
-import { Group, Loader, Menu, Text, Tooltip } from "@mantine/core";
+import { Drawer, Group, Loader, Menu, Text, Tooltip } from "@mantine/core";
 import { IconAlertTriangle, IconCircleCheck, IconMaximize, IconRefresh, IconSettings } from "@tabler/icons-react";
 import type { QueryClient, QueryKey } from "@tanstack/react-query";
 import { useIsFetching, useQueryClient } from "@tanstack/react-query";
@@ -20,10 +20,12 @@ import { getWidgetName } from "@homarr/definitions";
 import { translateIfNecessary } from "@homarr/translation";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
+import { useIsMobile } from "@homarr/ui/hooks";
 import type { WidgetDefinition, WidgetRuntimeRef } from "@homarr/widgets/definition";
 import { getWidgetQueryKeys, getWidgetRuntimeQueries, supportsAdvancedFocus } from "@homarr/widgets/definition";
 import { reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 import { getWidgetOptionTranslationNamespace } from "@homarr/widgets/option-translation";
+import type { WidgetPreviewDimensions } from "@homarr/widgets/modals";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
 import { useAdvancedFocus } from "../advanced-focus/context";
@@ -31,11 +33,14 @@ import { useBoardPermissions } from "../permissions/client";
 import { useItemActions } from "./item-actions";
 import { LazyWidgetEditModal, preloadWidgetEditModal } from "./lazy-widget-edit-modal";
 import { matchesWidgetItemQuery } from "./widget-query-scope";
+import classes from "./widget-context-menu.module.css";
+
+type ToggleOption = [key: string, option: { type: string; skipContextMenu?: boolean }];
 
 interface WidgetContextMenuProps {
   item: SectionItem;
   definition: WidgetDefinition;
-  previewDimensions: { width: number; height: number; scale?: number };
+  previewDimensions: WidgetPreviewDimensions;
   widgetStateRef: MutableRefObject<Record<string, unknown> | null>;
   widgetRuntimeRef: WidgetRuntimeRef;
   sourceRef: RefObject<HTMLElement | null>;
@@ -134,11 +139,12 @@ export const WidgetContextMenu = ({
     [item.id, persistBoard],
   );
 
-  type OptionDef = { type: string; skipContextMenu?: boolean };
   const toggleOptions = useMemo(() => {
     if (!canConfigureWidget) return [];
-    const rawOptions = definition.createOptions(settings) as unknown as Record<string, OptionDef>;
-    return Object.entries(rawOptions).filter(([, option]) => option.type === "switch" && !option.skipContextMenu);
+    const rawOptions = definition.createOptions(settings) as unknown as Record<string, ToggleOption[1]>;
+    return Object.entries(rawOptions).filter(
+      ([, option]) => option.type === "switch" && !option.skipContextMenu,
+    ) as ToggleOption[];
   }, [canConfigureWidget, definition, settings]);
 
   const widgetContextActions =
@@ -222,6 +228,18 @@ export const WidgetContextMenu = ({
     [setItemOptions],
   );
 
+  const handleOpenAdvancedFocus = useCallback(() => {
+    if (!sourceRef.current) return;
+    openAdvancedFocus(item.id, sourceRef.current, {
+      restoreFocusTarget:
+        sourceRef.current.querySelector<HTMLElement>("[data-advanced-focus-trigger]") ?? sourceRef.current,
+    });
+  }, [item.id, openAdvancedFocus, sourceRef]);
+
+  const handleCloseMenu = useCallback(() => {
+    setMenuOpened(false);
+  }, []);
+
   if (!session || !settings.enableRightClickOnWidgets || isEditMode || item.kind === "app") {
     return <>{children}</>;
   }
@@ -239,21 +257,10 @@ export const WidgetContextMenu = ({
       onChange={setMenuOpened}
     >
       <Menu.ContextMenu>{children}</Menu.ContextMenu>
-      <Menu.Dropdown>
+      <WidgetContextMenuDropdown opened={menuOpened} onClose={handleCloseMenu} title={getWidgetName(item.kind, t)}>
         {canOpenAdvancedFocus && (
           <>
-            <Menu.Item
-              closeMenuOnClick
-              leftSection={<IconMaximize size={16} />}
-              onClick={() => {
-                if (sourceRef.current)
-                  openAdvancedFocus(item.id, sourceRef.current, {
-                    restoreFocusTarget:
-                      sourceRef.current.querySelector<HTMLElement>("[data-advanced-focus-trigger]") ??
-                      sourceRef.current,
-                  });
-              }}
-            >
+            <Menu.Item closeMenuOnClick leftSection={<IconMaximize size={16} />} onClick={handleOpenAdvancedFocus}>
               {t("item.advancedFocus.open")}
             </Menu.Item>
             <Menu.Divider />
@@ -319,8 +326,36 @@ export const WidgetContextMenu = ({
         >
           {tMenu("settings")}
         </Menu.Item>
-      </Menu.Dropdown>
+      </WidgetContextMenuDropdown>
     </Menu>
+  );
+};
+
+interface WidgetContextMenuDropdownProps {
+  opened: boolean;
+  onClose: () => void;
+  title: string;
+  children: ReactNode;
+}
+
+const WidgetContextMenuDropdown = ({ opened, onClose, title, children }: WidgetContextMenuDropdownProps) => {
+  const isMobile = useIsMobile();
+
+  if (!isMobile) return <Menu.Dropdown>{children}</Menu.Dropdown>;
+
+  return (
+    <Drawer
+      opened={opened}
+      onClose={onClose}
+      position="bottom"
+      size="min(80dvh, 40rem)"
+      title={title}
+      classNames={{ content: classes.mobileDrawerContent, body: classes.mobileDrawerBody }}
+    >
+      <div className={classes.mobileActionList} role="menu" aria-orientation="vertical" data-menu-dropdown>
+        {children}
+      </div>
+    </Drawer>
   );
 };
 

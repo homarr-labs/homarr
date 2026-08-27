@@ -12,8 +12,6 @@ import {
 
 import { useSession } from "@homarr/auth/client";
 import type { GroupPermissionKey } from "@homarr/definitions";
-import { useModalAction } from "@homarr/modals";
-import { AddBoardModal, AddGroupModal, InviteCreateModal } from "@homarr/modals-collection";
 import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
@@ -78,16 +76,7 @@ export const globalCommandGroup = createGroup<Command>({
         commandKey: "newBoard",
         icon: IconCategoryPlus,
         name: tOption("newBoard.label"),
-        useInteraction() {
-          const { openModal } = useModalAction(AddBoardModal);
-
-          return {
-            type: "javaScript",
-            onSelect() {
-              openModal(undefined);
-            },
-          };
-        },
+        useInteraction: interaction.link(() => ({ href: "/manage/boards?create=true" })),
         hidden: !session?.user.permissions.includes("board-create"),
       },
       {
@@ -115,32 +104,14 @@ export const globalCommandGroup = createGroup<Command>({
         commandKey: "newInvite",
         icon: IconMailForward,
         name: tOption("newInvite.label"),
-        useInteraction() {
-          const { openModal } = useModalAction(InviteCreateModal);
-
-          return {
-            type: "javaScript",
-            onSelect() {
-              openModal(undefined);
-            },
-          };
-        },
+        useInteraction: interaction.link(() => ({ href: "/manage/users/invites?create=true" })),
         hidden: !session?.user.permissions.includes("admin"),
       },
       {
         commandKey: "newGroup",
         icon: IconUsersGroup,
         name: tOption("newGroup.label"),
-        useInteraction() {
-          const { openModal } = useModalAction(AddGroupModal);
-
-          return {
-            type: "javaScript",
-            onSelect() {
-              openModal(undefined);
-            },
-          };
-        },
+        useInteraction: interaction.link(() => ({ href: "/manage/users/groups?create=true" })),
         hidden: !session?.user.permissions.includes("admin"),
       },
     ];

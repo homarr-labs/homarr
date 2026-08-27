@@ -5,11 +5,9 @@ import { useCallback } from "react";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import type { SupportedAuthProvider } from "@homarr/definitions";
-import { useModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
 
-import { UserSelectModal } from "~/components/access/user-select-modal";
-import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
+import { UserSelect } from "~/components/access/user-select";
 
 interface AddGroupMemberProps {
   groupId: string;
@@ -20,27 +18,23 @@ interface AddGroupMemberProps {
 export const AddGroupMember = ({ groupId, presentUserIds, allowedProviders }: AddGroupMemberProps) => {
   const tMembersAdd = useI18n("group.action.addMember");
   const { mutateAsync } = clientApi.group.addMember.useMutation();
-  const { openModal } = useModalAction(UserSelectModal);
+  const handleAddMember = useCallback(
+    async ({ id }: { id: string }) => {
+      await mutateAsync({
+        userId: id,
+        groupId,
+      });
+      await revalidatePathActionAsync(`/manage/users/groups/${groupId}/members`);
+    },
+    [groupId, mutateAsync],
+  );
 
-  const handleAddMember = useCallback(() => {
-    openModal(
-      {
-        // eslint-disable-next-line no-restricted-syntax
-        async onSelect({ id }) {
-          await mutateAsync({
-            userId: id,
-            groupId,
-          });
-          await revalidatePathActionAsync(`/manage/users/groups/${groupId}}/members`);
-        },
-        presentUserIds,
-        allowedProviders,
-      },
-      {
-        title: tMembersAdd("label"),
-      },
-    );
-  }, [openModal, presentUserIds, groupId, mutateAsync, tMembersAdd, allowedProviders]);
-
-  return <MobileAffixButton onClick={handleAddMember}>{tMembersAdd("label")}</MobileAffixButton>;
+  return (
+    <UserSelect
+      presentUserIds={presentUserIds}
+      allowedProviders={allowedProviders}
+      onSelect={handleAddMember}
+      triggerLabel={tMembersAdd("label")}
+    />
+  );
 };

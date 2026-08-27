@@ -5,19 +5,25 @@
 import { useEffect, useId, useRef, useState } from "react";
 import type { ComponentType, FormEvent, PropsWithChildren } from "react";
 import {
+  Accordion,
   Alert,
   Badge,
   Box,
   Button,
   Center,
+  CloseButton,
+  ColorInput,
   Divider,
   Group,
+  Input as MantineInput,
   NumberInput,
   SimpleGrid,
   Stack,
   Tabs,
   Text,
+  TextInput,
   Tooltip,
+  useMantineTheme,
 } from "@mantine/core";
 import { schemaResolver } from "@mantine/form";
 import { useElementSize } from "@mantine/hooks";
@@ -30,11 +36,11 @@ import { objectEntries } from "@homarr/common";
 import { IntegrationProvider, useSession } from "@homarr/auth/client";
 import { useOptionalBoard } from "@homarr/boards/context";
 import type { WidgetKind } from "@homarr/definitions";
-import { createModal, modalSizeForm, useModalAction } from "@homarr/modals";
+import { createModal, modalSizeForm } from "@homarr/modals";
 import type { SettingsContextProps } from "@homarr/settings/creator";
 import { SpotlightProvider } from "@homarr/spotlight";
 import { useI18n } from "@homarr/translation/client";
-import { IntegrationAvatar } from "@homarr/ui";
+import { IntegrationAvatar, TextMultiSelect } from "@homarr/ui";
 import { zodErrorMap } from "@homarr/validation/form/i18n";
 
 import { getInputForType } from "../_inputs";
@@ -47,7 +53,6 @@ import { OPTIONS_SUPER_REFINE } from "../options";
 import type { IntegrationSelectOption } from "../widget-integration-select";
 import { WidgetIntegrationSelect } from "../widget-integration-select";
 import { WidgetCardShell, WidgetTitleBadge } from "../widget-card-shell";
-import { WidgetAdvancedOptionsModal } from "./widget-advanced-options-modal";
 import type { EmbeddedAppEditFormHandle } from "./embedded-app-edit-form";
 import { EmbeddedAppEditForm } from "./embedded-app-edit-form";
 import classes from "./widget-edit-modal.module.css";
@@ -63,10 +68,14 @@ export interface WidgetEditModalSize {
   height: number;
 }
 
+export interface WidgetPreviewDimensions extends WidgetEditModalSize {
+  scale?: number;
+}
+
 interface WidgetEditPreviewResizeOptions {
   initialSize: WidgetEditModalSize;
   maximumSize: WidgetEditModalSize;
-  getDimensions?: (size: WidgetEditModalSize) => { width: number; height: number; scale?: number };
+  getDimensions?: (size: WidgetEditModalSize) => WidgetPreviewDimensions;
 }
 
 export interface EmbeddedIntegrationEditFormHandle {
@@ -94,7 +103,7 @@ export interface WidgetEditModalProps<TSort extends WidgetKind> {
   onIntegrationSaved?: () => void;
   onOpenNewIntegration?: (onCreated?: (id: string) => void) => void;
   previewComponent?: ComponentType<WidgetComponentProps<TSort>>;
-  previewDimensions?: { width: number; height: number; scale?: number };
+  previewDimensions?: WidgetPreviewDimensions;
   previewResize?: WidgetEditPreviewResizeOptions;
   previewWrapper?: ComponentType<PropsWithChildren>;
 }
@@ -106,7 +115,7 @@ interface WidgetEditPreviewProps {
   state: WidgetEditModalState;
   itemId?: string;
   boardId?: string;
-  dimensions?: { width: number; height: number; scale?: number };
+  dimensions?: WidgetPreviewDimensions;
   integrationData: IntegrationSelectOption[];
   onChangeOptions: (newOptions: Record<string, unknown>) => void;
   resize?: {
@@ -174,7 +183,9 @@ const WidgetEditPreview = ({
       },
     }));
   let componentItemId = itemId;
-  if (kind === "assistant") componentItemId = `widget-preview-${generatedPreviewId}`;
+  if (kind === "assistant" || kind === "timer") {
+    componentItemId = `widget-preview-${generatedPreviewId}`;
+  }
   const isPendingCustomWidget = kind === "customApi" && !itemId;
   const previewOpacity = (board?.opacity ?? 100) / 100;
   const handleResizeValue = (dimension: keyof WidgetEditModalSize, value: string | number) => {
@@ -281,6 +292,7 @@ const WidgetEditPreview = ({
                               integrationIds={state.integrationIds}
                               width={sourceWidth}
                               height={sourceHeight}
+                              displayScale={previewScale}
                               isEditMode={isPendingCustomWidget}
                               displayMode="compact"
                               boardId={boardId}
@@ -313,7 +325,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
   const tCommon = useI18n("common");
   const board = useOptionalBoard();
   const { data: session } = useSession();
-  const [advancedOptions, setAdvancedOptions] = useState<BoardItemAdvancedOptions>(innerProps.value.advancedOptions);
+  const theme = useMantineTheme();
   const appEditRef = useRef<EmbeddedAppEditFormHandle>(null);
   const integrationEditHandles = useRef(new Map<string, EmbeddedIntegrationEditFormHandle>());
   const integrationEditRefCallbacks = useRef(
@@ -367,6 +379,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
         options: optionsSchema,
         integrationIds: integrationIdsSchema,
         advancedOptions: z.object({
+          title: z.string().max(64).nullable(),
           customCssClasses: z.array(z.string()),
           borderColor: z.string(),
         }),
@@ -376,7 +389,6 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
     validateInputOnBlur: true,
     validateInputOnChange: true,
   });
-  const { openModal } = useModalAction(WidgetAdvancedOptionsModal);
 
   const canModifyApps = session?.user.permissions.includes("app-modify-all") ?? false;
   const canConfigureWidget = innerProps.kind !== "customApi" || (session?.user.permissions.includes("admin") ?? false);
@@ -456,7 +468,10 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
       innerProps.onSuccessfulEdit(
         {
           ...values,
-          advancedOptions,
+          advancedOptions: {
+            ...values.advancedOptions,
+            title: values.advancedOptions.title?.trim() || null,
+          },
         },
         previewSize ?? undefined,
       );
@@ -518,14 +533,14 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
     <Box
       className={classes.workspace}
       data-with-preview={innerProps.previewComponent ? true : undefined}
-      data-with-settings={hasWidgetSettings ? true : undefined}
+      data-with-settings
     >
       {innerProps.previewComponent && (
         <WidgetEditPreview
           kind={innerProps.kind}
           Component={innerProps.previewComponent}
           definition={definition}
-          state={{ ...form.values, advancedOptions }}
+          state={form.values}
           itemId={innerProps.itemId}
           boardId={innerProps.boardId ?? board?.id}
           dimensions={previewDimensions}
@@ -535,107 +550,131 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
           PreviewWrapper={innerProps.previewWrapper}
         />
       )}
-      {innerProps.previewComponent && hasWidgetSettings && (
-        <Divider orientation="vertical" className={classes.previewDivider} />
-      )}
-      <form id={widgetFormId} className={classes.settingsForm} onSubmit={onFormSubmit} hidden={!hasWidgetSettings}>
-        {hasWidgetSettings && (
-          <Stack className={classes.settingsPanel} gap="sm">
-            <Group gap="xs" wrap="nowrap">
-              <IconSettings size={16} />
-              <Text fw={600} size="sm">
-                {tItem("settings.label")}
-              </Text>
-            </Group>
-            {canConfigureWidget && innerProps.integrationSupport && (
-              <Box className={classes.fullWidthField}>
-                <WidgetIntegrationSelect
-                  label={tItem("field.integrations.label")}
-                  data={innerProps.integrationData}
-                  canSelectMultiple={maxIntegrations > 1}
-                  withAsterisk={integrationsRequired}
-                  onOpenNewIntegration={canCreateIntegration ? handleOpenNewIntegration : undefined}
-                  {...form.getInputProps("integrationIds")}
-                />
-              </Box>
-            )}
-            {canConfigureWidget && (
-              <Stack gap="sm">
-                {switchOptions.length > 0 && (
-                  <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm" verticalSpacing="sm">
-                    {switchOptions.map(([key, value]) => {
-                      const Input = getInputForType(value.type);
-                      if (!Input) {
-                        return null;
-                      }
+      {innerProps.previewComponent && <Divider orientation="vertical" className={classes.previewDivider} />}
+      <form id={widgetFormId} className={classes.settingsForm} onSubmit={onFormSubmit}>
+        <Stack className={classes.settingsPanel} gap="sm">
+          {hasWidgetSettings && (
+            <>
+              <Group gap="xs" wrap="nowrap">
+                <IconSettings size={16} />
+                <Text fw={600} size="sm">
+                  {tItem("settings.label")}
+                </Text>
+              </Group>
+              {canConfigureWidget && innerProps.integrationSupport && (
+                <Box className={classes.fullWidthField}>
+                  <WidgetIntegrationSelect
+                    label={tItem("field.integrations.label")}
+                    data={innerProps.integrationData}
+                    canSelectMultiple={maxIntegrations > 1}
+                    withAsterisk={integrationsRequired}
+                    onOpenNewIntegration={canCreateIntegration ? handleOpenNewIntegration : undefined}
+                    {...form.getInputProps("integrationIds")}
+                  />
+                </Box>
+              )}
+              {canConfigureWidget && (
+                <Stack gap="sm">
+                  {switchOptions.length > 0 && (
+                    <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm" verticalSpacing="sm">
+                      {switchOptions.map(([key, value]) => {
+                        const Input = getInputForType(value.type);
+                        if (!Input) {
+                          return null;
+                        }
 
-                      return (
-                        <Box
-                          key={key}
-                          className={classes.switchOption}
-                          data-option-type={value.type}
-                          onClick={(event) => {
-                            const target = event.target;
-                            if (target instanceof Element && target.closest("label, input")) return;
-                            const input = event.currentTarget.querySelector<HTMLInputElement>("input[type=checkbox]");
-                            if (!input?.disabled) input?.click();
-                          }}
-                        >
-                          <Input
-                            kind={innerProps.kind}
-                            property={key}
-                            options={value as never}
-                            initialOptions={innerProps.value.options}
-                            itemId={innerProps.itemId}
-                            boardId={innerProps.boardId ?? board?.id}
-                          />
-                        </Box>
-                      );
-                    })}
-                  </SimpleGrid>
-                )}
-                {otherOptions.map(([key, value]) => {
-                  const Input = getInputForType(value.type);
-                  if (!Input) {
-                    return null;
-                  }
+                        return (
+                          <Box
+                            key={key}
+                            className={classes.switchOption}
+                            data-option-type={value.type}
+                            onClick={(event) => {
+                              const target = event.target;
+                              if (target instanceof Element && target.closest("label, input")) return;
+                              const input = event.currentTarget.querySelector<HTMLInputElement>("input[type=checkbox]");
+                              if (!input?.disabled) input?.click();
+                            }}
+                          >
+                            <Input
+                              kind={innerProps.kind}
+                              property={key}
+                              options={value as never}
+                              initialOptions={innerProps.value.options}
+                              itemId={innerProps.itemId}
+                              boardId={innerProps.boardId ?? board?.id}
+                            />
+                          </Box>
+                        );
+                      })}
+                    </SimpleGrid>
+                  )}
+                  {otherOptions.map(([key, value]) => {
+                    const Input = getInputForType(value.type);
+                    if (!Input) {
+                      return null;
+                    }
 
-                  return (
-                    <Box key={key} data-option-type={value.type}>
-                      <Input
-                        kind={innerProps.kind}
-                        property={key}
-                        options={value as never}
-                        initialOptions={innerProps.value.options}
-                        itemId={innerProps.itemId}
-                        boardId={innerProps.boardId ?? board?.id}
+                    return (
+                      <Box key={key} data-option-type={value.type}>
+                        <Input
+                          kind={innerProps.kind}
+                          property={key}
+                          options={value as never}
+                          initialOptions={innerProps.value.options}
+                          itemId={innerProps.itemId}
+                          boardId={innerProps.boardId ?? board?.id}
+                        />
+                      </Box>
+                    );
+                  })}
+                </Stack>
+              )}
+            </>
+          )}
+          <Accordion variant="contained">
+            <Accordion.Item value="advanced-options">
+              <Accordion.Control>{tItem("advancedOptions.label")}</Accordion.Control>
+              <Accordion.Panel>
+                <Stack gap="sm">
+                  <TextInput
+                    label={tItem("field.title.label")}
+                    rightSection={
+                      <MantineInput.ClearButton
+                        onClick={() => form.setFieldValue("advancedOptions.title", "")}
+                        disabled={!form.values.advancedOptions.title}
                       />
-                    </Box>
-                  );
-                })}
-              </Stack>
-            )}
-          </Stack>
-        )}
+                    }
+                    {...form.getInputProps("advancedOptions.title")}
+                  />
+                  <TextMultiSelect
+                    label={tItem("field.customCssClasses.label")}
+                    {...form.getInputProps("advancedOptions.customCssClasses")}
+                  />
+                  <ColorInput
+                    label={tItem("field.borderColor.label")}
+                    format="hex"
+                    swatches={Object.values(theme.colors).map((color) => color[6])}
+                    rightSection={
+                      <CloseButton
+                        aria-label={tCommon("action.remove")}
+                        onClick={() => form.setFieldValue("advancedOptions.borderColor", "")}
+                        style={{ display: form.values.advancedOptions.borderColor ? undefined : "none" }}
+                      />
+                    }
+                    {...form.getInputProps("advancedOptions.borderColor")}
+                  />
+                </Stack>
+              </Accordion.Panel>
+            </Accordion.Item>
+          </Accordion>
+        </Stack>
       </form>
     </Box>
   );
 
   const footer = (
     <Box className={classes.footer}>
-      <Group justify="space-between" wrap="nowrap">
-        <Button
-          variant="subtle"
-          type="button"
-          onClick={() =>
-            openModal({
-              advancedOptions,
-              onSuccess: setAdvancedOptions,
-            })
-          }
-        >
-          {tItem("advancedOptions.label")}
-        </Button>
+      <Group justify="end" wrap="nowrap">
         <Group gap="xs" wrap="nowrap">
           <Button onClick={actions.closeModal} variant="subtle" color="gray">
             {tCommon("action.cancel")}

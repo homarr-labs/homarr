@@ -27,11 +27,12 @@ export const MainHeader = async ({
   const session = await auth();
   const isAdmin = Boolean(session?.user.permissions.includes("admin"));
   const isDockerEnabled = isAdmin && env.ENABLE_DOCKER;
+  const resolvedLogoWithTitle = logoWithTitle ?? <HomarrLogoWithTitle size="md" />;
 
   return (
     <ConfigurableHeader
       logo={logo ?? <HomarrLogo size={appShellLogoHeight} />}
-      logoWithTitle={logoWithTitle ?? <HomarrLogoWithTitle size="md" />}
+      logoWithTitle={resolvedLogoWithTitle}
       actions={actions}
       boardEditAction={boardEditAction}
       boardSettingsAction={boardSettingsAction}

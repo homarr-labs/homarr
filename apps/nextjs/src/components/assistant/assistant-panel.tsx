@@ -130,8 +130,8 @@ import { useTimeAgo } from "@homarr/common";
 import { assistantProviderIds, assistantProviderPresets, assistantReasoningModes } from "@homarr/definitions";
 import type { AssistantProvider } from "@homarr/definitions";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import { useConfirmModal } from "@homarr/modals";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
+import { InlineConfirmActionIcon } from "@homarr/ui";
 
 import classes from "./assistant-panel.module.css";
 import { getAssistantActivityState } from "./assistant-activity-state";
@@ -2001,7 +2001,6 @@ const ThreadListItem = () => {
   const t = useI18n("assistant");
   const actionT = useI18n("common.action");
   const aui = useAui();
-  const { openConfirmModal } = useConfirmModal();
   const onSelect = useContext(HistorySelectContext);
   const remoteId = useAuiState((state) => state.threadListItem.remoteId);
   const title = useAuiState((state) => state.threadListItem.title);
@@ -2054,23 +2053,15 @@ const ThreadListItem = () => {
     }
   };
 
-  const deleteConversation = () => {
-    openConfirmModal({
-      title: t("deleteConversation.title"),
-      children: t("deleteConversation.description", { title: title ?? t("newConversation") }),
-      confirmProps: { color: "red" },
-      labels: { confirm: actionT("delete"), cancel: actionT("cancel") },
-      onConfirm: async () => {
-        try {
-          await aui.threadListItem().delete();
-        } catch {
-          showErrorNotification({
-            title: t("deleteConversation.failedTitle"),
-            message: t("deleteConversation.failedDescription"),
-          });
-        }
-      },
-    });
+  const deleteConversation = async () => {
+    try {
+      await aui.threadListItem().delete();
+    } catch {
+      showErrorNotification({
+        title: t("deleteConversation.failedTitle"),
+        message: t("deleteConversation.failedDescription"),
+      });
+    }
   };
 
   if (renameOpened) {
@@ -2152,16 +2143,19 @@ const ThreadListItem = () => {
           >
             <IconFileExport size={14} />
           </ActionIcon>
-          <ActionIcon
+          <InlineConfirmActionIcon
             variant="subtle"
             color="red"
             size="sm"
             title={actionT("delete")}
             aria-label={actionT("delete")}
-            onClick={deleteConversation}
+            confirmLabel={t("deleteConversation.description", { title: title ?? t("newConversation") })}
+            confirmationAriaLabel={t("deleteConversation.title")}
+            confirmationChildren={<IconCheck size={14} />}
+            onConfirm={deleteConversation}
           >
             <IconTrash size={14} />
-          </ActionIcon>
+          </InlineConfirmActionIcon>
         </Group>
       )}
       <ActionIcon

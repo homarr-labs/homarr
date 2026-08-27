@@ -10,10 +10,12 @@ export const SystemResourceGPUChart = ({
   gpuUsageOverTime,
   hasShadow,
   labelDisplayMode,
+  advanced = false,
 }: {
   gpuUsageOverTime: number[];
   hasShadow: boolean;
   labelDisplayMode: LabelDisplayModeOption;
+  advanced?: boolean;
 }) => {
   const chartData = gpuUsageOverTime.map((usage, index) => ({ index, usage }));
 
@@ -31,6 +33,7 @@ export const SystemResourceGPUChart = ({
       chartType={hasShadow ? "area" : "line"}
       yAxisProps={{ domain: [0, 100] }}
       labelDisplayMode={labelDisplayMode}
+      advanced={advanced}
       tooltipProps={{
         content: ({ payload }) => {
           const value = payload[0] ? Number(payload[0].value) : 0;

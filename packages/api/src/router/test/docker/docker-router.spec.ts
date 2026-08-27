@@ -14,6 +14,7 @@ import { dockerRouter } from "../../docker/docker-router";
 const findDockerContainerAsyncMock = vi.hoisted(() => vi.fn());
 const hasDockerEndpointCapabilityMock = vi.hoisted(() => vi.fn(() => true));
 const invalidateDockerCacheMock = vi.hoisted(() => vi.fn());
+const resetDockerSingletonMock = vi.hoisted(() => vi.fn());
 const getDockerDataAsyncMock = vi.hoisted(() =>
   vi.fn<
     () => Promise<{
@@ -62,7 +63,7 @@ vi.mock("@homarr/docker", () => ({
         },
       },
     ],
-    reset: () => undefined,
+    reset: resetDockerSingletonMock,
   },
 }));
 vi.mock("@homarr/request-handler/docker", () => ({
@@ -501,6 +502,7 @@ test("invalidates the shared Docker inventory on explicit refresh", async () => 
   await createAdminCaller().refreshInventory();
 
   expect(invalidateDockerCacheMock).toHaveBeenCalledOnce();
+  expect(resetDockerSingletonMock).toHaveBeenCalledOnce();
 });
 
 test("projects persisted service layers without inventing runtime health", async () => {

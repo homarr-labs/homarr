@@ -10,24 +10,17 @@ import { useI18n } from "@homarr/translation/client";
 
 import { useOptionalHomarrAssistant } from "~/components/assistant/assistant-context";
 
-interface CopyAiPromptButtonBaseProps {
+interface CopyAiPromptButtonProps {
   rawResponse?: string | null;
   request?: string | null;
   documentationUrl?: string | null;
+  getDraft: () => CustomWidgetAiDraft;
+  getDiagnostics: () => readonly CustomWidgetAiDiagnostic[];
 }
-
-type CopyAiPromptButtonProps = CopyAiPromptButtonBaseProps &
-  ({ draft: CustomWidgetAiDraft; getDraft?: never } | { draft?: never; getDraft(): CustomWidgetAiDraft }) &
-  (
-    | { diagnostics: readonly CustomWidgetAiDiagnostic[]; getDiagnostics?: never }
-    | { diagnostics?: never; getDiagnostics(): readonly CustomWidgetAiDiagnostic[] }
-  );
 
 export const CopyAiPromptButton = ({
   rawResponse,
-  draft,
   getDraft,
-  diagnostics,
   getDiagnostics,
   request,
   documentationUrl,
@@ -35,23 +28,14 @@ export const CopyAiPromptButton = ({
   const t = useI18n("customWidget");
   const assistant = useOptionalHomarrAssistant();
 
-  const readDraft = () => {
-    if (getDraft) return getDraft();
-    return draft;
-  };
-  const readDiagnostics = () => {
-    if (getDiagnostics) return getDiagnostics();
-    return diagnostics;
-  };
-
   const handleAssistant = () => {
     const prompt = buildCustomWidgetAssistantPrompt(
       undefined,
       rawResponse,
-      readDraft(),
+      getDraft(),
       request,
       documentationUrl,
-      readDiagnostics(),
+      getDiagnostics(),
     );
     if (!assistant?.enabled || !assistant.sendPrompt(prompt)) return;
     showSuccessNotification({ title: t("action.aiPrompt"), message: t("notification.aiPromptSent") });
@@ -62,10 +46,10 @@ export const CopyAiPromptButton = ({
       const value = buildCustomWidgetAiPrompt(
         undefined,
         rawResponse,
-        readDraft(),
+        getDraft(),
         request,
         documentationUrl,
-        readDiagnostics(),
+        getDiagnostics(),
       );
       await navigator.clipboard.writeText(value);
       showSuccessNotification({

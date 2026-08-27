@@ -13,6 +13,8 @@ import type { ScopedTranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
+import { createKubernetesResourceQueryOptions } from "../kubernetes-query-options";
+
 dayjs.extend(relativeTime);
 
 interface SecretsTableComponentProps {
@@ -52,13 +54,7 @@ export function SecretsTable({ contextId, initialSecrets }: SecretsTableComponen
 
   const { data } = clientApi.kubernetes.secrets.getSecrets.useQuery(
     { contextId },
-    {
-      initialData: initialSecrets,
-      refetchOnMount: "always",
-      refetchOnWindowFocus: true,
-      refetchOnReconnect: true,
-      refetchInterval: (query) => (query.state.status === "error" ? 30_000 : false),
-    },
+    createKubernetesResourceQueryOptions(initialSecrets),
   );
 
   const table = useTranslatedMantineReactTable({

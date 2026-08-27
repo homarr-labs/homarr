@@ -18,7 +18,7 @@ import {
   getReadonlyCanvasAttributes,
   normalizeGridPlacement,
 } from "~/components/board/layout";
-import { useBoardCanvasScale } from "~/components/board/layout/scaled-board-canvas";
+import { calculateBoardUiScale, useBoardCanvasScale } from "~/components/board/layout/scaled-board-canvas";
 import { useGridEditorRuntimeStatus } from "./grid-editor-runtime";
 import { createGridEntryElementStore, useGridEditorRegistry } from "./grid-editor-registry";
 import type { SectionGridPlacement } from "./use-grid-layout-actions";
@@ -138,9 +138,56 @@ export const SectionGrid = ({
   // of expanding to fit every widget, so its viewport height is capped independently of rowCount.
   const isScrollableContainer = section.kind === "container" && section.options.scrollable;
   const viewportRowCount = isScrollableContainer ? Math.max(requestedRowCount, 1) : rowCount;
-  const logicalWidth = getLogicalGridSize(columnCount);
-  const logicalHeight = getLogicalGridSize(rowCount);
-  const viewportHeight = getLogicalGridSize(viewportRowCount);
+  // A container's own visible card is inset from its allocated board cell by the board's
+  // standard per-item gap (see the base, non-container `.staticItem[data-type="item"] >
+  // .contentMount` rule in section-grid.module.css - a container is placed as an "item" like
+  // any widget, so it gets that same gap). A widget's content just fills whatever size its
+  // card ends up being, but this SectionGrid instead computes its own fixed pixel size from
+  // the same column/row counts used to allocate the *outer*, uninset cell - so without
+  // subtracting that gap back out here, a container's inner grid renders larger than its own
+  // card and visually spills past its right/bottom edges. 10 must match that CSS rule's inset.
+  const effectiveCanvasScale = Number.isFinite(canvasScale) && canvasScale > 0 ? canvasScale : 1;
+  const outerCardInset = section.kind === "container" ? (2 * 10) / effectiveCanvasScale : 0;
+  const logicalWidth = getLogicalGridSize(columnCount) - outerCardInset;
+  const viewportHeight = getLogicalGridSize(viewportRowCount) - outerCardInset;
+  // Items are positioned in a coordinate space sized to the *un-inset* column/row count
+  // (fullGridWidth/Height below - see getLogicalItemStyle), but logicalWidth/Height above are
+  // deliberately smaller by outerCardInset to match the container's actual visible card size.
+  // Left alone, that mismatch means the items - not just the grid's own box - spill past the
+  // card's right/bottom edge by exactly that inset. Scale the grid's content down by the same
+  // ratio the board's own canvas uses for its whole-board zoom (see ScaledBoardCanvas), just one
+  // level deeper, so it fits the actual card instead of clipping. --board-canvas-ui-scale is
+  // corrected to compensate so icon/text sizing inside the container isn't affected.
+  const fullGridWidth = getLogicalGridSize(columnCount);
+  const fullGridHeight = getLogicalGridSize(rowCount);
+  // For a scrollable container, rowCount covers *all* content rows, not just the visible card -
+  // fullGridHeight grows right along with it, so a ratio built from it drifts toward 1 as content
+  // grows regardless of the (fixed) inset, under-scaling relative to what the actually-visible
+  // viewport needs and clipping the bottom of the visible rows. viewportHeight/viewportRowCount
+  // describe the real visible card size in both cases (they equal the non-scrollable values when
+  // rowCount and viewportRowCount are the same), so use those instead.
+  const fullViewportHeight = getLogicalGridSize(viewportRowCount);
+  // A uniform zoom is required (not a non-uniform transform scale(x, y)) - --board-canvas-ui-scale
+  // is a single scalar that every icon/text/custom-CSS size compensation in the app multiplies
+  // by, so a non-uniform stretch can never be captured by it correctly. That means one axis can
+  // be left with a small amount of unfilled slack when width/height need different ratios to
+  // exactly fit - centered below so it's even on both sides rather than left-aligned.
+  // logicalWidth/viewportHeight can go non-positive for a narrow (e.g. single-column) container
+  // on a heavily zoomed-out board, where outerCardInset (which grows as canvasScale shrinks) can
+  // exceed the container's own un-inset size. Floor the scale well above 0 so it can never reach
+  // zero or negative - combinedUiScale divides by this value, and this value is also used as
+  // zoom directly, both of which break (Infinity/NaN, or invalid/collapsed content) otherwise.
+  const containerContentScale =
+    section.kind === "container" && fullGridWidth > 0 && fullViewportHeight > 0
+      ? Math.max(0.01, Math.min(logicalWidth / fullGridWidth, viewportHeight / fullViewportHeight, 1))
+      : 1;
+  // Compute the combined value in JS rather than a CSS calc() referencing the existing
+  // --board-canvas-ui-scale: custom properties declared on the *same* element don't have a
+  // sequential/temporal order the way normal variables do, so any calc() on this element that
+  // both reads and writes --board-canvas-ui-scale (even indirectly, through another property)
+  // is a circular reference - CSS invalidates the whole group rather than using "the old value",
+  // silently breaking every icon/text/custom-CSS size that compensates off it for descendants.
+  const combinedUiScale = calculateBoardUiScale(canvasScale) / containerContentScale;
   // A collapsed container's compact coordinates are display-only. Its own
   // nested grid stays inactive until an explicit edit interaction expands it.
   const isInteractionDisabled = section.kind === "container" && collapsedSectionIds.has(section.id);
@@ -249,7 +296,15 @@ export const SectionGrid = ({
       >
         <Box
           className={classes.staticGrid}
-          style={{ width: logicalWidth, height: logicalHeight }}
+          style={
+            {
+              width: fullGridWidth,
+              height: fullGridHeight,
+              zoom: containerContentScale,
+              margin: containerContentScale < 1 ? "0 auto" : undefined,
+              ...(containerContentScale < 1 ? { "--board-canvas-ui-scale": combinedUiScale } : {}),
+            } as CSSProperties
+          }
           data-grid-section-id={section.id}
           data-kind={section.kind}
           data-grid-editor-error={isEditMode && editorRuntimeStatus === "error" ? "true" : undefined}

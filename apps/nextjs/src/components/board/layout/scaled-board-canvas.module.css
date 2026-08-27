@@ -30,11 +30,15 @@
   --mantine-spacing-md: calc(1rem * var(--board-canvas-ui-scale, 1));
   --mantine-spacing-lg: calc(1.25rem * var(--board-canvas-ui-scale, 1));
   --mantine-spacing-xl: calc(2rem * var(--board-canvas-ui-scale, 1));
+  --mantine-font-size-xxs: calc(0.6875rem * var(--board-canvas-ui-scale, 1));
   --mantine-font-size-xs: calc(0.75rem * var(--board-canvas-ui-scale, 1));
   --mantine-font-size-sm: calc(0.875rem * var(--board-canvas-ui-scale, 1));
   --mantine-font-size-md: calc(1rem * var(--board-canvas-ui-scale, 1));
   --mantine-font-size-lg: calc(1.125rem * var(--board-canvas-ui-scale, 1));
   --mantine-font-size-xl: calc(1.25rem * var(--board-canvas-ui-scale, 1));
+  --mantine-font-size-2xl: calc(1.5rem * var(--board-canvas-ui-scale, 1));
+  --mantine-font-size-3xl: calc(1.75rem * var(--board-canvas-ui-scale, 1));
+  --mantine-font-size-4xl: calc(2.25rem * var(--board-canvas-ui-scale, 1));
   --mantine-h1-font-size: calc(2.125rem * var(--board-canvas-ui-scale, 1));
   --mantine-h2-font-size: calc(1.625rem * var(--board-canvas-ui-scale, 1));
   --mantine-h3-font-size: calc(1.375rem * var(--board-canvas-ui-scale, 1));

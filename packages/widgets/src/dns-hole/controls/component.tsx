@@ -1,5 +1,8 @@
 "use client";
 
+/* eslint-disable react/no-unstable-nested-components -- TimerPopover uses render props to wire controlled targets. */
+/* eslint-disable import/no-unassigned-import -- The shared widget stylesheet is loaded for its side effects. */
+
 import "../../widgets-common.css";
 
 import { useState } from "react";
@@ -18,7 +21,6 @@ import {
   Tooltip,
   UnstyledButton,
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
 import { IconCircleFilled, IconClockPause, IconPlayerPlay, IconPlayerStop } from "@tabler/icons-react";
 import combineClasses from "clsx";
 
@@ -38,7 +40,7 @@ import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../../com
 import { WidgetQueryLoadingState } from "../../common/query-state-indicator";
 import actionTargetClasses from "../../common/action-target.module.css";
 import classes from "./component.module.css";
-import TimerModal from "./TimerModal";
+import TimerPopover from "./timer-popover";
 
 const dnsLightStatus = (enabled: boolean | undefined) =>
   `var(--mantine-color-${typeof enabled === "undefined" ? "blue" : enabled ? "green" : "red"}-6`;
@@ -57,7 +59,7 @@ export default function DnsHoleControlsWidget({
   integrationIds,
   isEditMode,
   width,
-  height,
+  displayMode,
 }: WidgetComponentProps<typeof widgetKind>) {
   const board = useRequiredBoard();
   // DnsHole integrations with interaction permissions
@@ -123,11 +125,8 @@ export default function DnsHoleControlsWidget({
 
   const t = useI18n("widget.dnsHoleControls");
 
-  // Timer modal setup
-  const [selectedIntegrationIds, setSelectedIntegrationIds] = useState<string[]>([]);
   const [bulkPending, setBulkPending] = useState(false);
   const [bulkFailureCount, setBulkFailureCount] = useState(0);
-  const [opened, { close, open }] = useDisclosure(false);
 
   const controlAllButtonsVisible = options.showToggleAllButtons && integrationsWithInteractions.length > 0;
   const actionsPending = bulkPending || isEnabling || isDisabling;
@@ -177,26 +176,29 @@ export default function DnsHoleControlsWidget({
             </Button>
           </Tooltip>
 
-          <Tooltip label={t("controls.setTimer")}>
-            <Button
-              aria-label={t("controls.setTimer")}
-              size="xs"
-              p={0}
-              className="dns-hole-controls-timer-all-button"
-              onClick={() => {
-                setSelectedIntegrationIds(integrationsSummaries.enabled);
-                open();
-              }}
-              disabled={integrationsSummaries.enabled.length === 0 || actionsPending}
-              variant="light"
-              color="yellow"
-              bd={0}
-              radius={board.itemRadius}
-              flex={1}
-            >
-              <IconClockPause className="dns-hole-controls-timer-all-icon" size="var(--mantine-font-size-md)" />
-            </Button>
-          </Tooltip>
+          <TimerPopover
+            target={(onClick) => (
+              <Tooltip label={t("controls.setTimer")}>
+                <Button
+                  aria-label={t("controls.setTimer")}
+                  size="xs"
+                  p={0}
+                  className="dns-hole-controls-timer-all-button"
+                  disabled={integrationsSummaries.enabled.length === 0 || actionsPending}
+                  variant="light"
+                  color="yellow"
+                  bd={0}
+                  radius={board.itemRadius}
+                  flex={1}
+                  onClick={onClick}
+                >
+                  <IconClockPause className="dns-hole-controls-timer-all-icon" size="var(--mantine-font-size-md)" />
+                </Button>
+              </Tooltip>
+            )}
+            selectedIntegrationIds={integrationsSummaries.enabled}
+            disableDns={(input) => void disableDns(input).catch(() => undefined)}
+          />
 
           <Tooltip label={t("controls.disableAll")}>
             <Button
@@ -230,13 +232,12 @@ export default function DnsHoleControlsWidget({
               key={summary.integration.id}
               integrationsWithInteractions={integrationsWithInteractions}
               toggleDns={toggleDns}
+              disableDns={(input) => void disableDns(input).catch(() => undefined)}
               data={summary}
-              setSelectedIntegrationIds={setSelectedIntegrationIds}
-              open={open}
               t={t}
               hasIconColor={board.iconColor !== null}
               rootWidth={width}
-              rootHeight={height}
+              isAdvanced={displayMode === "advanced"}
               actionsPending={actionsPending}
             />
           ))}
@@ -255,13 +256,6 @@ export default function DnsHoleControlsWidget({
           </Text>
         </Tooltip>
       )}
-
-      <TimerModal
-        opened={opened}
-        close={close}
-        selectedIntegrationIds={selectedIntegrationIds}
-        disableDns={(input) => void disableDns(input).catch(() => undefined)}
-      />
     </Stack>
   );
 }
@@ -269,26 +263,24 @@ export default function DnsHoleControlsWidget({
 interface ControlsCardProps {
   integrationsWithInteractions: string[];
   toggleDns: (integrationId: string) => Promise<void>;
+  disableDns: (data: { duration: number; integrationId: string }) => void;
   data: AvailableDnsSummaryResult;
-  setSelectedIntegrationIds: (integrationId: string[]) => void;
-  open: () => void;
   t: ReturnType<typeof useI18n<"widget.dnsHoleControls">>;
   hasIconColor: boolean;
   rootWidth: number;
-  rootHeight: number;
+  isAdvanced: boolean;
   actionsPending: boolean;
 }
 
 const ControlsCard: React.FC<ControlsCardProps> = ({
   integrationsWithInteractions,
   toggleDns,
+  disableDns,
   data,
-  setSelectedIntegrationIds,
-  open,
   t,
   hasIconColor,
   rootWidth,
-  rootHeight,
+  isAdvanced,
   actionsPending,
 }) => {
   const isConnected = useIntegrationConnected(data.integration.updatedAt, { timeout: 30000 });
@@ -299,7 +291,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
   const board = useRequiredBoard();
 
   const iconUrl = integrationDefs[data.integration.kind].iconUrl;
-  const layout = rootWidth < 256 || rootHeight < 112 ? "sm" : "md";
+  const layout = !isAdvanced && rootWidth < 256 ? "sm" : "md";
 
   return (
     <Indicator
@@ -382,21 +374,24 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
                       <IconPlayerStop size="var(--mantine-font-size-xs)" />
                     </ActionIcon>
                   )}
-                  <ActionIcon
-                    className={actionTargetClasses.root}
-                    aria-label={`${t("controls.setTimer")}: ${data.integration.name}`}
-                    onClick={() => {
-                      setSelectedIntegrationIds([data.integration.id]);
-                      open();
-                    }}
-                    size="sm"
-                    color="yellow"
-                    variant="light"
-                    display={isInteractPermitted ? undefined : "none"}
-                    disabled={!controlEnabled || !isEnabled}
-                  >
-                    <IconClockPause size="var(--mantine-font-size-xs)" />
-                  </ActionIcon>
+                  <TimerPopover
+                    target={(onClick) => (
+                      <ActionIcon
+                        className={actionTargetClasses.root}
+                        aria-label={`${t("controls.setTimer")}: ${data.integration.name}`}
+                        size="sm"
+                        color="yellow"
+                        variant="light"
+                        display={isInteractPermitted ? undefined : "none"}
+                        disabled={!controlEnabled || !isEnabled}
+                        onClick={onClick}
+                      >
+                        <IconClockPause size="var(--mantine-font-size-xs)" />
+                      </ActionIcon>
+                    )}
+                    selectedIntegrationIds={[data.integration.id]}
+                    disableDns={disableDns}
+                  />
                 </Group>
               )}
               {layout === "md" && (
@@ -445,24 +440,27 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
             </Flex>
           </Flex>
           {layout === "md" && (
-            <ActionIcon
-              aria-label={`${t("controls.setTimer")}: ${data.integration.name}`}
-              className={combineClasses("dns-hole-controls-item-timer-button", actionTargetClasses.root)}
-              display={isInteractPermitted ? undefined : "none"}
-              disabled={!controlEnabled || !isEnabled}
-              color="yellow"
-              size={30}
-              radius={board.itemRadius}
-              bd={0}
-              ms={"auto"}
-              variant="subtle"
-              onClick={() => {
-                setSelectedIntegrationIds([data.integration.id]);
-                open();
-              }}
-            >
-              <IconClockPause className="dns-hole-controls-item-timer-icon" size="var(--mantine-font-size-xl)" />
-            </ActionIcon>
+            <TimerPopover
+              target={(onClick) => (
+                <ActionIcon
+                  aria-label={`${t("controls.setTimer")}: ${data.integration.name}`}
+                  className={combineClasses("dns-hole-controls-item-timer-button", actionTargetClasses.root)}
+                  display={isInteractPermitted ? undefined : "none"}
+                  disabled={!controlEnabled || !isEnabled}
+                  color="yellow"
+                  size={30}
+                  radius={board.itemRadius}
+                  bd={0}
+                  ms={"auto"}
+                  variant="subtle"
+                  onClick={onClick}
+                >
+                  <IconClockPause className="dns-hole-controls-item-timer-icon" size="var(--mantine-font-size-xl)" />
+                </ActionIcon>
+              )}
+              selectedIntegrationIds={[data.integration.id]}
+              disableDns={disableDns}
+            />
           )}
         </Flex>
       </Card>

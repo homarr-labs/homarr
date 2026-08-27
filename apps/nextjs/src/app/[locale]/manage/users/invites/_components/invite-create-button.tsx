@@ -2,18 +2,15 @@
 
 import { Button } from "@mantine/core";
 
-import { useModalAction } from "@homarr/modals";
-import { InviteCreateModal } from "@homarr/modals-collection";
 import { useI18n } from "@homarr/translation/client";
 
 import { MANAGE_ACTION_BUTTON_MIN_WIDTH } from "~/components/manage/manage-page.constants";
 
-export const InviteCreateButton = () => {
+export const InviteCreateButton = ({ onClick }: { onClick: () => void }) => {
   const t = useI18n("management.page.user.invite");
-  const { openModal } = useModalAction(InviteCreateModal);
 
   return (
-    <Button miw={MANAGE_ACTION_BUTTON_MIN_WIDTH} onClick={() => openModal()}>
+    <Button miw={MANAGE_ACTION_BUTTON_MIN_WIDTH} onClick={onClick}>
       {t("action.new.title")}
     </Button>
   );

@@ -1,15 +1,16 @@
 "use client";
 
-import { useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@mantine/core";
+import { Box, Button, Group, TextInput } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
-import { useConfirmModal, useModalAction } from "@homarr/modals";
+import { useZodForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
+import { InlineConfirmButton } from "@homarr/ui";
+import { boardRenameSchema } from "@homarr/validation/board";
 
-import { BoardRenameModal } from "~/components/board/modals/board-rename-modal";
 import { DangerZoneItem, DangerZoneRoot } from "~/components/manage/danger-zone";
 
 export const DangerZoneSettingsContent = ({ hideVisibility }: { hideVisibility: boolean }) => {
@@ -17,70 +18,70 @@ export const DangerZoneSettingsContent = ({ hideVisibility }: { hideVisibility: 
   const t = useI18n("board.setting");
   const tCommonAction = useI18n("common.action");
   const router = useRouter();
-  const { openConfirmModal } = useConfirmModal();
-  const { openModal } = useModalAction(BoardRenameModal);
+  const utils = clientApi.useUtils();
+  const [isRenaming, setIsRenaming] = useState(false);
+  const renameInputRef = useRef<HTMLInputElement>(null);
+  const renameForm = useZodForm(boardRenameSchema.omit({ id: true }), {
+    initialValues: {
+      name: board.name,
+    },
+  });
+  const { mutate: renameBoard, isPending: isRenamePending } = clientApi.board.renameBoard.useMutation({
+    onSettled() {
+      void utils.board.getBoardByName.invalidate({ name: board.name });
+      void utils.board.getHomeBoard.invalidate();
+    },
+  });
   const { mutate: changeVisibility, isPending: isChangeVisibilityPending } =
     clientApi.board.changeBoardVisibility.useMutation();
   const { mutate: deleteBoard, isPending: isDeletePending } = clientApi.board.deleteBoard.useMutation();
-  const utils = clientApi.useUtils();
   const visibility = board.isPublic ? "public" : "private";
 
-  const onRenameClick = useCallback(
-    () =>
-      openModal({
+  useEffect(() => {
+    if (isRenaming) renameInputRef.current?.focus();
+  }, [isRenaming]);
+
+  const handleRename = renameForm.onSubmit((values) => {
+    renameBoard(
+      { id: board.id, name: values.name },
+      {
+        onSuccess() {
+          router.push(`/boards/${values.name}/settings`);
+        },
+      },
+    );
+  });
+
+  const cancelRename = () => {
+    renameForm.reset();
+    setIsRenaming(false);
+  };
+
+  const handleVisibilityChange = () => {
+    changeVisibility(
+      {
         id: board.id,
-        previousName: board.name,
-        onSuccess: (name) => router.push(`/boards/${name}/settings`),
-      }),
-    [board.id, board.name, router, openModal],
-  );
-
-  const onVisibilityClick = useCallback(() => {
-    openConfirmModal({
-      title: t(`section.dangerZone.action.visibility.confirm.${visibility}.title`),
-      children: t(`section.dangerZone.action.visibility.confirm.${visibility}.description`),
-      onConfirm: () => {
-        changeVisibility(
-          {
-            id: board.id,
-            visibility: visibility === "public" ? "private" : "public",
-          },
-          {
-            onSettled() {
-              void utils.board.getBoardByName.invalidate({ name: board.name });
-              void utils.board.getHomeBoard.invalidate();
-            },
-          },
-        );
+        visibility: visibility === "public" ? "private" : "public",
       },
-    });
-  }, [
-    board.id,
-    board.name,
-    changeVisibility,
-    t,
-    utils.board.getBoardByName,
-    utils.board.getHomeBoard,
-    visibility,
-    openConfirmModal,
-  ]);
-
-  const onDeleteClick = useCallback(() => {
-    openConfirmModal({
-      title: t("section.dangerZone.action.delete.confirm.title"),
-      children: t("section.dangerZone.action.delete.confirm.description"),
-      onConfirm: () => {
-        deleteBoard(
-          { id: board.id },
-          {
-            onSettled: () => {
-              router.push("/");
-            },
-          },
-        );
+      {
+        onSettled() {
+          void utils.board.getBoardByName.invalidate({ name: board.name });
+          void utils.board.getHomeBoard.invalidate();
+        },
       },
-    });
-  }, [board.id, deleteBoard, router, t, openConfirmModal]);
+    );
+  };
+
+  const handleDelete = () => {
+    deleteBoard(
+      { id: board.id },
+      {
+        onSettled: () => {
+          router.push("/");
+        },
+      },
+    );
+  };
 
   return (
     <DangerZoneRoot>
@@ -88,9 +89,28 @@ export const DangerZoneSettingsContent = ({ hideVisibility }: { hideVisibility: 
         label={t("section.dangerZone.action.rename.label")}
         description={t("section.dangerZone.action.rename.description")}
         action={
-          <Button variant="subtle" color="red" onClick={onRenameClick}>
-            {t("section.dangerZone.action.rename.button")}
-          </Button>
+          isRenaming ? (
+            <Box component="form" onSubmit={handleRename}>
+              <Group wrap="wrap" justify="end">
+                <TextInput
+                  ref={renameInputRef}
+                  aria-label={t("section.dangerZone.action.rename.label")}
+                  size="sm"
+                  {...renameForm.getInputProps("name")}
+                />
+                <Button variant="default" onClick={cancelRename} disabled={isRenamePending}>
+                  {tCommonAction("cancel")}
+                </Button>
+                <Button type="submit" color="red" loading={isRenamePending}>
+                  {tCommonAction("confirm")}
+                </Button>
+              </Group>
+            </Box>
+          ) : (
+            <Button variant="subtle" color="red" onClick={() => setIsRenaming(true)}>
+              {t("section.dangerZone.action.rename.button")}
+            </Button>
+          )
         }
       />
       {!hideVisibility && (
@@ -98,9 +118,15 @@ export const DangerZoneSettingsContent = ({ hideVisibility }: { hideVisibility: 
           label={t("section.dangerZone.action.visibility.label")}
           description={t(`section.dangerZone.action.visibility.description.${visibility}`)}
           action={
-            <Button variant="subtle" color="red" loading={isChangeVisibilityPending} onClick={onVisibilityClick}>
+            <InlineConfirmButton
+              variant="subtle"
+              color="red"
+              loading={isChangeVisibilityPending}
+              onConfirm={handleVisibilityChange}
+              confirmLabel={tCommonAction("confirm")}
+            >
               {t(`section.dangerZone.action.visibility.button.${visibility}`)}
-            </Button>
+            </InlineConfirmButton>
           }
         />
       )}
@@ -108,9 +134,15 @@ export const DangerZoneSettingsContent = ({ hideVisibility }: { hideVisibility: 
         label={tCommonAction("delete")}
         description={t("section.dangerZone.action.delete.description")}
         action={
-          <Button variant="subtle" color="red" loading={isDeletePending} onClick={onDeleteClick}>
+          <InlineConfirmButton
+            variant="subtle"
+            color="red"
+            loading={isDeletePending}
+            onConfirm={handleDelete}
+            confirmLabel={tCommonAction("confirm")}
+          >
             {tCommonAction("delete")}
-          </Button>
+          </InlineConfirmButton>
         }
       />
     </DangerZoneRoot>

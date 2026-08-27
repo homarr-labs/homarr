@@ -1,15 +1,14 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { TextInput } from "@mantine/core";
+import { useEffect, useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Button, Card, Collapse, Group, Stack, TextInput } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
-import { useModalAction } from "@homarr/modals";
-import { AddGroupModal } from "@homarr/modals-collection";
 import { useI18n } from "@homarr/translation/client";
 
-import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
+import { GroupCreateForm } from "./_components/group-create-form";
 import { GroupsTable } from "./_groups-table";
 
 interface GroupsListProps {
@@ -18,6 +17,10 @@ interface GroupsListProps {
 
 export const GroupsList = ({ groups }: GroupsListProps) => {
   const [search, setSearch] = useState("");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [isCreateOpen, setIsCreateOpen] = useState(searchParams.get("create") === "true");
+  const [formKey, setFormKey] = useState(0);
   const initialGroupIds = useMemo(
     () => groups.sort((groupA, groupB) => groupA.position - groupB.position).map((group) => group.id),
     [groups],
@@ -31,8 +34,46 @@ export const GroupsList = ({ groups }: GroupsListProps) => {
   );
   const tGroup = useI18n("group");
 
+  useEffect(() => {
+    if (searchParams.get("create") !== "true") return;
+
+    setFormKey((value) => value + 1);
+    setIsCreateOpen(true);
+  }, [searchParams]);
+
+  const closeCreate = () => {
+    setIsCreateOpen(false);
+    setFormKey((value) => value + 1);
+    if (searchParams.has("create")) router.replace("/manage/users/groups", { scroll: false });
+  };
+
+  const toggleCreate = () => {
+    if (isCreateOpen) {
+      closeCreate();
+      return;
+    }
+
+    setFormKey((value) => value + 1);
+    setIsCreateOpen(true);
+  };
+
   return (
-    <>
+    <Stack>
+      <Group justify="end">
+        <Button onClick={toggleCreate}>{tGroup("action.create.label")}</Button>
+      </Group>
+      <Collapse expanded={isCreateOpen}>
+        <Card withBorder>
+          <GroupCreateForm
+            key={formKey}
+            onCancel={closeCreate}
+            onCreated={() => {
+              closeCreate();
+              router.refresh();
+            }}
+          />
+        </Card>
+      </Collapse>
       <TextInput
         leftSection={<IconSearch size={20} stroke={1.5} />}
         value={search}
@@ -40,13 +81,6 @@ export const GroupsList = ({ groups }: GroupsListProps) => {
         placeholder={`${tGroup("search")}...`}
       />
       <GroupsTable groups={filteredGroups} initialGroupIds={initialGroupIds} hasFilter={search.length !== 0} />
-    </>
+    </Stack>
   );
-};
-
-export const AddGroupButton = () => {
-  const tGroup = useI18n("group");
-  const { openModal } = useModalAction(AddGroupModal);
-
-  return <MobileAffixButton onClick={() => openModal()}>{tGroup("action.create.label")}</MobileAffixButton>;
 };

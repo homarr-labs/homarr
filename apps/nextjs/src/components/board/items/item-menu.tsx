@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { ActionIcon, Menu } from "@mantine/core";
-import { IconCopy, IconDotsVertical, IconLayoutKanban, IconPencil } from "@tabler/icons-react";
+import { IconCopy, IconDotsVertical, IconLayoutKanban, IconPencil, IconTrash } from "@tabler/icons-react";
 
 import { useSession } from "@homarr/auth/client";
 import { useEditMode } from "@homarr/boards/edit-mode";
@@ -8,20 +8,21 @@ import { getWidgetName } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
+import { InlineConfirmMenuItem } from "@homarr/ui";
 import type { WidgetDefinition } from "@homarr/widgets/definition";
+import type { WidgetPreviewDimensions } from "@homarr/widgets/modals";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
-import { BoardRemoveConfirmationMenuItem } from "../remove-confirmation-menu-item";
 import { useSectionContext } from "../sections/section-context";
 import { useItemActions } from "./item-actions";
-import { useOpenItemMoveModal } from "./item-move-modal";
 import itemContentClasses from "./item-content.module.css";
+import { useOpenItemMoveModal } from "./item-move-modal";
 import { LazyWidgetEditModal, preloadWidgetEditModal } from "./lazy-widget-edit-modal";
 
 interface BoardItemMenuProps {
   item: SectionItem;
   definition: WidgetDefinition;
-  previewDimensions: { width: number; height: number; scale?: number };
+  previewDimensions: WidgetPreviewDimensions;
   resetErrorBoundary?: () => void;
 }
 
@@ -142,11 +143,14 @@ const BoardItemMenuInner = ({ item, definition, previewDimensions, resetErrorBou
           </Menu.Item>
         )}
         <Menu.Divider />
-        <BoardRemoveConfirmationMenuItem
-          label={tItem("action.remove")}
-          confirmationLabel={tItem("remove.message")}
+        <InlineConfirmMenuItem
+          color="red"
+          confirmLabel={tItem("remove.message")}
+          leftSection={<IconTrash size={16} />}
           onConfirm={() => removeItem({ itemId: item.id })}
-        />
+        >
+          {tItem("action.remove")}
+        </InlineConfirmMenuItem>
       </Menu.Dropdown>
     </Menu>
   );

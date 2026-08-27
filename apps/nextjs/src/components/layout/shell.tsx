@@ -22,12 +22,12 @@ export const ClientShell = ({
   const collapsed = useAtomValue(navigationCollapsedAtom);
   const backgroundProps = useOptionalBackgroundProps();
   const { headerPreferences } = useSettings();
-  const isHeaderVisible = hasHeader && headerPreferences.visible;
+  const headerHeight = headerPreferences.visible ? appShellHeaderHeight : { base: appShellHeaderHeight, sm: 0 };
 
   return (
     <AppShell
       {...backgroundProps}
-      header={isHeaderVisible ? { height: appShellHeaderHeight } : undefined}
+      header={hasHeader ? { height: headerHeight } : undefined}
       navbar={
         hasNavigation
           ? {

@@ -65,17 +65,12 @@ const TimetableWidgetInner = ({ station, baseUrl, itemId, displayMode, width, he
   const compactStaleWarning = error && staleTime ? t("warning.staleCompact") : undefined;
   const isAdvanced = displayMode === "advanced";
   const isDense = !isAdvanced && (width < 300 || height < 160);
-  const showTitle = isAdvanced || height >= 112;
-  const showLine = isAdvanced || width >= 200;
-  const showPlatform = isAdvanced || width >= 320;
 
   return (
     <Stack w="100%" h="100%" gap={isDense ? 4 : "xs"} p={isDense ? "xs" : "sm"}>
-      {showTitle && (
-        <Text fw={600} size={isDense ? "sm" : undefined} truncate="end">
-          {t("title", { station: station.label })}
-        </Text>
-      )}
+      <Text fw={600} size={isDense ? "sm" : undefined} truncate="end">
+        {t("title", { station: station.label })}
+      </Text>
       {compactStaleWarning && displayMode === "compact" && (
         <Group gap={2} wrap="nowrap">
           <IconAlertTriangle
@@ -113,8 +108,6 @@ const TimetableWidgetInner = ({ station, baseUrl, itemId, displayMode, width, he
                 key={`${entry.timestamp.toISOString()}-${entry.location}`}
                 entry={entry}
                 dense={isDense}
-                showLine={showLine}
-                showPlatform={showPlatform}
                 locale={locale}
               />
             ))
@@ -144,23 +137,11 @@ interface TimetableEntryView {
   platform: { name: string; hasChanged: boolean } | null;
 }
 
-function DepartureRow({
-  entry,
-  dense,
-  showLine,
-  showPlatform,
-  locale,
-}: {
-  entry: TimetableEntryView;
-  dense: boolean;
-  showLine: boolean;
-  showPlatform: boolean;
-  locale: string;
-}) {
+function DepartureRow({ entry, dense, locale }: { entry: TimetableEntryView; dense: boolean; locale: string }) {
   return (
     <Group justify="space-between" w="100%" wrap="nowrap">
       <Group gap={dense ? 6 : "sm"} wrap="nowrap" style={{ minWidth: 0 }}>
-        {showLine && entry.line && (
+        {entry.line && (
           <Badge
             size="sm"
             color={entry.line.color ?? undefined}
@@ -185,8 +166,14 @@ function DepartureRow({
         </Text>
       </Group>
 
-      {showPlatform && entry.platform && (
-        <Text size={dense ? "xs" : "sm"} c={entry.platform.hasChanged ? "red" : undefined} style={{ flexShrink: 0 }}>
+      {entry.platform && (
+        <Text
+          size={dense ? "xs" : "sm"}
+          c={entry.platform.hasChanged ? "red" : undefined}
+          maw="35%"
+          truncate="end"
+          style={{ flexShrink: 1, minWidth: 0 }}
+        >
           {entry.platform.name}
         </Text>
       )}

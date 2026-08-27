@@ -8,10 +8,8 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
-import { useConfirmModal, useModalAction } from "@homarr/modals";
-import { DuplicateBoardModal } from "@homarr/modals-collection";
 import { useI18n } from "@homarr/translation/client";
-import { Link } from "@homarr/ui";
+import { InlineConfirmMenuItem, Link } from "@homarr/ui";
 
 import { useBoardPermissions } from "~/components/board/permissions/client";
 
@@ -25,18 +23,16 @@ interface BoardCardMenuDropdownProps {
     RouterOutputs["board"]["getManageOverview"][number],
     "id" | "name" | "creator" | "userPermissions" | "groupPermissions" | "isPublic"
   >;
+  onDuplicate: () => void;
 }
 
-export const BoardCardMenuDropdown = ({ board }: BoardCardMenuDropdownProps) => {
+export const BoardCardMenuDropdown = ({ board, onDuplicate }: BoardCardMenuDropdownProps) => {
   const t = useI18n("management.page.board.action");
   const tRoot = useI18n();
   const tCommon = useI18n("common");
 
   const { hasFullAccess, hasChangeAccess } = useBoardPermissions(board);
   const { data: session } = useSession();
-
-  const { openConfirmModal } = useConfirmModal();
-  const { openModal: openDuplicateModal } = useModalAction(DuplicateBoardModal);
 
   const setHomeBoardMutation = clientApi.board.setHomeBoard.useMutation({
     onSettled: async () => {
@@ -56,20 +52,10 @@ export const BoardCardMenuDropdown = ({ board }: BoardCardMenuDropdownProps) => 
     },
   });
 
-  const handleDeletion = useCallback(() => {
-    openConfirmModal({
-      title: tCommon("action.deleteNamed", { name: board.name }),
-      children: t("delete.confirm.description", {
-        name: board.name,
-      }),
-      // eslint-disable-next-line no-restricted-syntax
-      onConfirm: async () => {
-        await deleteBoardMutation.mutateAsync({
-          id: board.id,
-        });
-      },
-    });
-  }, [board.id, board.name, deleteBoardMutation, openConfirmModal, t, tCommon]);
+  const handleDeletion = useCallback(
+    () => deleteBoardMutation.mutateAsync({ id: board.id }),
+    [board.id, deleteBoardMutation],
+  );
 
   const handleSetHomeBoard = useCallback(async () => {
     await setHomeBoardMutation.mutateAsync({ id: board.id });
@@ -78,15 +64,6 @@ export const BoardCardMenuDropdown = ({ board }: BoardCardMenuDropdownProps) => 
   const handleSetMobileHomeBoard = useCallback(async () => {
     await setMobileHomeBoardMutation.mutateAsync({ id: board.id });
   }, [board.id, setMobileHomeBoardMutation]);
-
-  const handleDuplicateBoard = useCallback(() => {
-    openDuplicateModal({
-      board: {
-        id: board.id,
-        name: board.name,
-      },
-    });
-  }, [board.id, board.name, openDuplicateModal]);
 
   return (
     <Menu.Dropdown>
@@ -97,7 +74,7 @@ export const BoardCardMenuDropdown = ({ board }: BoardCardMenuDropdownProps) => 
         {t("setMobileHomeBoard.label")}
       </Menu.Item>
       {session?.user.permissions.includes("board-create") && (
-        <Menu.Item onClick={handleDuplicateBoard} leftSection={<IconCopy {...iconProps} />}>
+        <Menu.Item onClick={onDuplicate} leftSection={<IconCopy {...iconProps} />}>
           {tRoot("board.action.duplicate.title")}
         </Menu.Item>
       )}
@@ -117,14 +94,15 @@ export const BoardCardMenuDropdown = ({ board }: BoardCardMenuDropdownProps) => 
         <>
           <Menu.Divider />
           <Menu.Label c="red.7">{tCommon("dangerZone")}</Menu.Label>
-          <Menu.Item
+          <InlineConfirmMenuItem
             c="red.7"
             leftSection={<IconTrash {...iconProps} />}
-            onClick={handleDeletion}
+            onConfirm={handleDeletion}
+            confirmLabel={tCommon("action.confirm")}
             disabled={deleteBoardMutation.isPending}
           >
             {tCommon("action.delete")}
-          </Menu.Item>
+          </InlineConfirmMenuItem>
         </>
       )}
     </Menu.Dropdown>

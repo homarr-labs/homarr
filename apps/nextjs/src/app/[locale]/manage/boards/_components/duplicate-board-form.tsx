@@ -1,29 +1,32 @@
+"use client";
+
+import { useRouter } from "next/navigation";
 import { Button, Group, Stack, Text, TextInput } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useZodForm } from "@homarr/form";
+import { BoardNameAvailability, useBoardNameStatus } from "@homarr/forms-collection";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { boardDuplicateSchema } from "@homarr/validation/board";
 
-import { createModal } from "../../../modals/src/creator";
-import { useBoardNameStatus } from "./add-board-modal";
-
-interface InnerProps {
+interface DuplicateBoardFormProps {
   board: {
     id: string;
     name: string;
   };
+  onCancel: () => void;
 }
 
-export const DuplicateBoardModal = createModal<InnerProps>(({ actions, innerProps }) => {
+export const DuplicateBoardForm = ({ board, onCancel }: DuplicateBoardFormProps) => {
   const tBoard = useI18n("board");
   const tCommon = useI18n("common");
+  const router = useRouter();
   const form = useZodForm(boardDuplicateSchema.omit({ id: true }), {
     mode: "controlled",
     initialValues: {
-      name: innerProps.board.name,
+      name: board.name,
     },
   });
   const boardNameStatus = useBoardNameStatus(form.values.name);
@@ -36,20 +39,21 @@ export const DuplicateBoardModal = createModal<InnerProps>(({ actions, innerProp
   return (
     <form
       onSubmit={form.onSubmit(async (values) => {
-        // Prevent submit before name availability check
         if (!boardNameStatus.canSubmit) return;
+
         await mutateAsync(
           {
             ...values,
-            id: innerProps.board.id,
+            id: board.id,
           },
           {
             onSuccess() {
-              actions.closeModal();
               showSuccessNotification({
                 title: tBoard("action.duplicate.notification.success.title"),
                 message: tBoard("action.duplicate.notification.success.message"),
               });
+              onCancel();
+              router.refresh();
             },
             onError() {
               showErrorNotification({
@@ -61,39 +65,26 @@ export const DuplicateBoardModal = createModal<InnerProps>(({ actions, innerProp
         );
       })}
     >
-      <Stack>
+      <Stack maw={720}>
         <Text size="sm" c="gray.6">
-          {tBoard("action.duplicate.message", { name: innerProps.board.name })}
+          {tBoard("action.duplicate.message", { name: board.name })}
         </Text>
-
         <TextInput
           label={tCommon("field.name")}
-          data-autofocus
+          autoFocus
           {...form.getInputProps("name")}
-          description={
-            boardNameStatus.description ? (
-              <Group c={boardNameStatus.description.color} gap="xs" align="center">
-                {boardNameStatus.description.icon ? <boardNameStatus.description.icon size={16} /> : null}
-                <span>{boardNameStatus.description.label}</span>
-              </Group>
-            ) : null
-          }
+          description={<BoardNameAvailability status={boardNameStatus} />}
           withAsterisk
         />
-
-        <Group justify="end">
-          <Button variant="subtle" color="gray" onClick={actions.closeModal}>
+        <Group justify="end" wrap="wrap">
+          <Button variant="default" onClick={onCancel}>
             {tCommon("action.cancel")}
           </Button>
-          <Button type="submit" loading={isPending}>
-            {tCommon("action.create")}
+          <Button type="submit" loading={isPending} disabled={!boardNameStatus.canSubmit}>
+            {tBoard("action.duplicate.title")}
           </Button>
         </Group>
       </Stack>
     </form>
   );
-}).withOptions({
-  defaultTitle(t) {
-    return t("board.action.duplicate.title");
-  },
-});
+};

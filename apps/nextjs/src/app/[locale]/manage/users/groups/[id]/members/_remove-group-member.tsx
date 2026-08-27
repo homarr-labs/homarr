@@ -1,12 +1,11 @@
 "use client";
 
 import { useCallback } from "react";
-import { Button } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
-import { useConfirmModal } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
+import { InlineConfirmButton } from "@homarr/ui";
 
 interface RemoveGroupMemberProps {
   groupId: string;
@@ -15,30 +14,25 @@ interface RemoveGroupMemberProps {
 
 export const RemoveGroupMember = ({ groupId, user }: RemoveGroupMemberProps) => {
   const tCommon = useI18n("common");
-  const tRemoveMember = useI18n("group.action.removeMember");
   const { mutateAsync } = clientApi.group.removeMember.useMutation();
-  const { openConfirmModal } = useConfirmModal();
 
-  const handleRemove = useCallback(() => {
-    openConfirmModal({
-      title: tRemoveMember("label"),
-      children: tRemoveMember("confirm", {
-        user: user.name ?? "",
-      }),
-      // eslint-disable-next-line no-restricted-syntax
-      onConfirm: async () => {
-        await mutateAsync({
-          groupId,
-          userId: user.id,
-        });
-        await revalidatePathActionAsync(`/manage/users/groups/${groupId}/members`);
-      },
+  const handleRemove = useCallback(async () => {
+    await mutateAsync({
+      groupId,
+      userId: user.id,
     });
-  }, [openConfirmModal, mutateAsync, groupId, user.id, user.name, tRemoveMember]);
+    await revalidatePathActionAsync(`/manage/users/groups/${groupId}/members`);
+  }, [mutateAsync, groupId, user.id]);
 
   return (
-    <Button variant="subtle" color="red.9" size="compact-sm" onClick={handleRemove}>
+    <InlineConfirmButton
+      variant="subtle"
+      color="red.9"
+      size="compact-sm"
+      confirmLabel={tCommon("action.confirm")}
+      onConfirm={handleRemove}
+    >
       {tCommon("action.remove")}
-    </Button>
+    </InlineConfirmButton>
   );
 };

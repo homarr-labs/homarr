@@ -7,7 +7,7 @@ describe("network controller status layout", () => {
     {
       name: "minimum compact",
       input: { width: 160, height: 90, displayMode: "compact" as const, content: "wifi" as const },
-      expected: { padding: "xs", columns: 1, showWifi: true, showWired: false, horizontalStats: false },
+      expected: { padding: 4, columns: 1, showWifi: true, showWired: false, horizontalStats: true },
     },
     {
       name: "short compact",
@@ -58,7 +58,13 @@ describe("network controller status layout", () => {
     ).toMatchObject({ padding: "sm", horizontalStats: false });
     expect(
       getNetworkControllerStatusLayout({ width: 199, height: 119, displayMode: "compact", content: "wifi" }),
-    ).toMatchObject({ padding: "xs", horizontalStats: false });
+    ).toMatchObject({ padding: 4, horizontalStats: true });
+    expect(
+      getNetworkControllerStatusLayout({ width: 199, height: 80, displayMode: "compact", content: "wifi" }),
+    ).toMatchObject({ inlineStats: false });
+    expect(
+      getNetworkControllerStatusLayout({ width: 199, height: 79, displayMode: "compact", content: "wifi" }),
+    ).toMatchObject({ inlineStats: true });
     expect(
       getNetworkControllerStatusLayout({ width: 960, height: 320, displayMode: "advanced", content: "wifi" }),
     ).toMatchObject({ sourceColumns: 2 });

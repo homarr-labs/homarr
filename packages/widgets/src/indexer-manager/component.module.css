@@ -1,4 +1,8 @@
 .card {
+  background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-7));
+}
+
+.advancedCard {
   background-color: transparent;
   border: 1px solid rgb(from var(--mantine-color-secondaryColor-filled) r g b / calc(var(--opacity, 1) * 0.38));
 }

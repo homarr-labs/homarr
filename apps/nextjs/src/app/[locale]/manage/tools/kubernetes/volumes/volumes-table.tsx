@@ -13,6 +13,8 @@ import type { ScopedTranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
+import { createKubernetesResourceQueryOptions } from "../kubernetes-query-options";
+
 dayjs.extend(relativeTime);
 
 interface VolumesTableComponentProps {
@@ -76,13 +78,7 @@ export function VolumesTable({ contextId, initialVolumes }: VolumesTableComponen
 
   const { data } = clientApi.kubernetes.volumes.getVolumes.useQuery(
     { contextId },
-    {
-      initialData: initialVolumes,
-      refetchOnMount: "always",
-      refetchOnWindowFocus: true,
-      refetchOnReconnect: true,
-      refetchInterval: (query) => (query.state.status === "error" ? 30_000 : false),
-    },
+    createKubernetesResourceQueryOptions(initialVolumes),
   );
 
   const table = useTranslatedMantineReactTable({

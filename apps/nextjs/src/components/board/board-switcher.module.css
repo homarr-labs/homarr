@@ -15,6 +15,10 @@
   outline: none;
 }
 
+.results {
+  min-height: 0;
+}
+
 .searchInput {
   border-color: color-mix(in srgb, var(--mantine-color-default-border) 72%, transparent);
   background: color-mix(in srgb, var(--mantine-color-body) 54%, transparent);
@@ -43,4 +47,20 @@
 .option[data-active="true"] .card {
   border-color: var(--mantine-primary-color-filled);
   box-shadow: var(--mantine-shadow-md);
+}
+
+@media (max-width: $mantine-breakpoint-sm) {
+  .modalContent {
+    height: calc(100dvh - var(--modal-y-offset) * 2);
+  }
+
+  .modalBody,
+  .content {
+    min-height: 0;
+    height: 100%;
+  }
+
+  .results {
+    flex: 1;
+  }
 }

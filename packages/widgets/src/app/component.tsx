@@ -2,7 +2,7 @@
 
 import type { PropsWithChildren } from "react";
 import { Fragment, Suspense } from "react";
-import { Box, Flex, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
+import { Box, Flex, rem, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
 import { IconMinus } from "@tabler/icons-react";
 import combineClasses from "clsx";
 
@@ -59,19 +59,19 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
                 <Text
                   className="app-title"
                   fw={700}
-                  size={isTiny ? "xs" : "sm"}
+                  size={isTiny ? rem(8) : "sm"}
                   ta={isColumnLayout ? "center" : undefined}
                 >
                   {app.name}
                 </Text>
               )}
-              {options.descriptionDisplayMode === "normal" && !isTiny && (
+              {options.descriptionDisplayMode === "normal" && (
                 <Text
                   className="app-description"
-                  size="sm"
+                  size={isTiny ? rem(8) : "sm"}
                   ta={isColumnLayout ? "center" : undefined}
                   c="dimmed"
-                  lineClamp={Math.max(1, Math.floor((height - 48) / 18))}
+                  lineClamp={4}
                 >
                   {app.description?.split("\n").map((line, index) => (
                     <Fragment key={index}>
@@ -91,7 +91,7 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
                 height: "100%",
                 width: "100%",
                 minWidth: "20%",
-                maxWidth: isColumnLayout ? undefined : isTiny ? "38%" : "50%",
+                maxWidth: isColumnLayout ? undefined : "50%",
               }}
             />
           </Flex>

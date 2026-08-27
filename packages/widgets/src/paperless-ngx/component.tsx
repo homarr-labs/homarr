@@ -9,6 +9,7 @@ import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
 import { zoomCompensatedSize } from "@homarr/ui";
 
+import { getCompactStatLayout } from "../common/compact-stat-layout";
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.css";
@@ -32,10 +33,40 @@ const statIcons = {
 const gridHiddenWhenHeroShown = new Set(["documentsTotal", "documentsInbox"]);
 
 const gridColsByWidth = [
-  { minWidth: 380, cols: 3 },
+  { minWidth: 300, cols: 3 },
   { minWidth: 220, cols: 2 },
   { minWidth: 0, cols: 1 },
 ] as const;
+
+const rootClassByLayout = {
+  default: "",
+  short: classes.rootShort,
+  narrowShort: classes.rootShort,
+} as const;
+
+const gridClassByLayout = {
+  default: "",
+  short: classes.gridShort,
+  narrowShort: classes.gridShort,
+} as const;
+
+const statTileClassByLayout = {
+  default: "",
+  short: classes.statTileShort,
+  narrowShort: `${classes.statTileShort} ${classes.statTileNarrowShort}`,
+} as const;
+
+const statLabelClassByLayout = {
+  default: "",
+  short: classes.statLabelShort,
+  narrowShort: classes.statLabelShort,
+} as const;
+
+const statValueClassByLayout = {
+  default: "",
+  short: "",
+  narrowShort: classes.statValueNarrowShort,
+} as const;
 
 const ringSizeByWidth = [
   { minWidth: 400, size: 88 },
@@ -76,6 +107,8 @@ export default function PaperlessNgxWidget({
   options,
   width,
   height,
+  displayScale = 1,
+  displayMode = "compact",
 }: WidgetComponentProps<"paperlessNgx">) {
   const t = useI18n("widget.paperlessNgx");
   const tCommon = useI18n("common");
@@ -116,19 +149,31 @@ export default function PaperlessNgxWidget({
     .map(([, statKey]) => statKey)
     .filter((statKey) => !(showHero && gridHiddenWhenHeroShown.has(statKey)));
 
-  const gridCols = Math.max(1, Math.min(visibleStatKeys.length, getGridCols(width, height)));
-  const ringSize = getRingSize(Math.min(width, height * 2));
-  const iconSize = getIconSize(width);
+  let responsiveWidth = width;
+  let responsiveHeight = height;
+  if (displayMode === "compact" && Number.isFinite(displayScale) && displayScale > 0) {
+    responsiveWidth *= displayScale;
+    responsiveHeight *= displayScale;
+  }
+  const advanced = displayMode === "advanced";
+  const layout = getCompactStatLayout({
+    width: responsiveWidth,
+    height: responsiveHeight,
+    visibleCount: visibleStatKeys.length,
+    compactDisplay: !advanced,
+    defaultColumns: getGridCols(responsiveWidth),
+    defaultIconSize: getIconSize(responsiveWidth),
+  });
+  const ringSize = getRingSize(responsiveWidth);
   const ringLabelSize = getRingLabelSize(ringSize);
   const hasContent = showHero || visibleStatKeys.length > 0;
 
   const heroLayoutClass =
     heroLayoutBySecondaryStats[String(visibleStatKeys.length > 0) as keyof typeof heroLayoutBySecondaryStats];
-  const showInboxRing = options.showInboxRing && height >= 120;
-  const heroRingClass = heroVariantByRing[String(showInboxRing) as keyof typeof heroVariantByRing];
+  const heroRingClass = heroVariantByRing[String(options.showInboxRing) as keyof typeof heroVariantByRing];
 
   const visibleHeroParts = Object.entries(heroPartVisibility).filter(
-    ([partKey, optionKey]) => options[optionKey as keyof typeof options] && (partKey !== "ring" || showInboxRing),
+    ([, optionKey]) => options[optionKey as keyof typeof options],
   );
 
   const heroPartRenderers = {
@@ -162,7 +207,7 @@ export default function PaperlessNgxWidget({
   } as const;
 
   return (
-    <div className={classes.root}>
+    <div className={`${classes.root} ${rootClassByLayout[layout.state]}`}>
       {showHero && (
         <div className={`${classes.hero} ${heroLayoutClass} ${heroRingClass}`}>
           {visibleHeroParts.map(([partKey]) => (
@@ -180,14 +225,19 @@ export default function PaperlessNgxWidget({
       )}
 
       {visibleStatKeys.length > 0 && (
-        <div className={classes.grid} style={{ "--stat-cols": gridCols } as CSSProperties}>
+        <div
+          className={`${classes.grid} ${gridClassByLayout[layout.state]}`}
+          style={{ "--stat-cols": layout.columns } as CSSProperties}
+        >
           {visibleStatKeys.map((statKey) => {
             const Icon = statIcons[statKey];
             return (
-              <div key={statKey} className={classes.statTile}>
-                <Icon className={classes.statIcon} style={zoomCompensatedSize(iconSize)} stroke={1.5} />
-                <span className={classes.statValue}>{statValues[statKey]}</span>
-                <span className={classes.statLabel}>{t(statKey)}</span>
+              <div key={statKey} className={`${classes.statTile} ${statTileClassByLayout[layout.state]}`}>
+                <Icon className={classes.statIcon} style={zoomCompensatedSize(layout.iconSize)} stroke={1.5} />
+                <span className={`${classes.statValue} ${statValueClassByLayout[layout.state]}`}>
+                  {statValues[statKey]}
+                </span>
+                <span className={`${classes.statLabel} ${statLabelClassByLayout[layout.state]}`}>{t(statKey)}</span>
               </div>
             );
           })}
@@ -205,9 +255,9 @@ function computeInboxProgress(total: number, inbox: number): number {
   return Math.round((inbox / total) * 100);
 }
 
-function getGridCols(width: number, height: number): number {
+function getGridCols(width: number): number {
   const match = gridColsByWidth.find(({ minWidth }) => width >= minWidth);
-  return Math.min(match?.cols ?? 1, height < 140 ? 2 : 5);
+  return match?.cols ?? 1;
 }
 
 function getRingSize(width: number): number {

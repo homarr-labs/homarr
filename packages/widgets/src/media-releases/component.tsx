@@ -40,7 +40,6 @@ export default function MediaReleasesWidget({
   options,
   integrationIds,
   width,
-  height,
   displayMode,
 }: WidgetComponentProps<"mediaReleases">) {
   const releasesQuery = clientApi.widget.mediaRelease.getMediaReleases.useQuery({ integrationIds });
@@ -63,7 +62,7 @@ export default function MediaReleasesWidget({
             {releases.map((item, index) => (
               <Fragment key={`${item.integration.id}:${item.id}`}>
                 {!isAdvanced && index !== 0 && options.layout === "poster" && <Divider />}
-                <Item item={item} options={options} isAdvanced={isAdvanced} width={width} height={height} />
+                <Item item={item} options={options} isAdvanced={isAdvanced} />
               </Fragment>
             ))}
           </SimpleGrid>
@@ -82,30 +81,27 @@ interface ItemProps {
   item: RouterOutputs["widget"]["mediaRelease"]["getMediaReleases"]["releases"][number];
   options: WidgetComponentProps<"mediaReleases">["options"];
   isAdvanced: boolean;
-  width: number;
-  height: number;
 }
 
-const formatReleaseDate = (value: unknown, locale: string, compact: boolean) => {
+const formatReleaseDate = (value: unknown, locale: string) => {
   const date = toValidDate(value);
   if (!date) return "—";
   return Intl.DateTimeFormat(locale, {
-    month: compact ? "short" : "2-digit",
+    month: "2-digit",
     year: "numeric",
     day: "2-digit",
-    ...(compact ? {} : { hour: "2-digit", minute: "2-digit", hour12: false }),
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
   }).format(date);
 };
 
-const Item = ({ item, options, isAdvanced, width, height }: ItemProps) => {
+const Item = ({ item, options, isAdvanced }: ItemProps) => {
   const locale = useCurrentIntlLocale();
   const t = useI18n("widget.mediaReleases");
   const length = formatLength(item.length, item.type, t);
-  const isCompact = !isAdvanced && (width < 340 || height < 180);
-  const isTiny = !isAdvanced && (width < 220 || height < 105);
-  const showPoster = (isAdvanced || options.layout === "poster") && !isTiny;
-  const showExtendedMetadata = isAdvanced || (!isCompact && width >= 360);
-  const showSide = isAdvanced || (!isTiny && (options.showType || options.showSource));
+  const showPoster = isAdvanced || options.layout === "poster";
+  const showSide = isAdvanced || options.showType || options.showSource;
   const href = getSafeApplicationUrl(item.href);
 
   return (
@@ -129,7 +125,7 @@ const Item = ({ item, options, isAdvanced, width, height }: ItemProps) => {
         target={href ? "_blank" : undefined}
         rel={href ? SAFE_NEW_TAB_REL : undefined}
         pos="relative"
-        p={isAdvanced ? "sm" : options.layout === "poster" ? 4 : isTiny ? 4 : 6}
+        p={isAdvanced ? "sm" : options.layout === "poster" ? 0 : 4}
         h="100%"
         title={item.title}
         style={
@@ -158,57 +154,61 @@ const Item = ({ item, options, isAdvanced, width, height }: ItemProps) => {
             }}
           />
         )}
-        <Group justify="space-between" h="100%" wrap="nowrap" gap={isCompact ? "xs" : "sm"}>
+        <Group justify="space-between" h="100%" wrap="nowrap" gap={isAdvanced ? "sm" : undefined}>
           <Group align="start" wrap="nowrap" style={{ zIndex: 0, minWidth: 0, flex: 1 }} gap="xs">
             {showPoster && (
               <Image
-                w={isAdvanced ? 80 : isCompact ? 44 : 60}
+                w={isAdvanced ? 80 : 60}
                 src={item.imageUrls.poster}
-                alt=""
-                radius="xs"
+                alt={isAdvanced ? "" : item.title}
+                radius={isAdvanced ? "xs" : undefined}
                 loading="lazy"
                 style={{ flexShrink: 0 }}
               />
             )}
-            <Stack gap={isCompact ? 2 : 4} style={{ minWidth: 0, flex: 1 }}>
+            <Stack gap={4} style={{ minWidth: 0, flex: 1 }}>
               <Stack gap={0}>
-                <Text size={isTiny ? "xs" : "sm"} fw="bold" lineClamp={isCompact ? 1 : 2}>
+                <Text size="sm" fw="bold" lineClamp={2}>
                   {item.title}
                 </Text>
-                {item.subtitle !== undefined && !isTiny && (
-                  <Text size={isCompact ? "xs" : "sm"} c={isCompact ? "dimmed" : undefined} lineClamp={1}>
+                {item.subtitle !== undefined && (
+                  <Text size="sm" lineClamp={1}>
                     {item.subtitle}
                   </Text>
                 )}
               </Stack>
-              <Group gap={6} wrap="nowrap" style={{ minWidth: 0 }}>
-                <Info icon={IconCalendar} label={formatReleaseDate(item.releaseDate, locale, isCompact)} />
-                {length !== undefined && !isTiny && (
+              <Group
+                gap={6}
+                wrap={isAdvanced ? "nowrap" : "wrap"}
+                style={isAdvanced ? { minWidth: 0 } : { minWidth: 0, rowGap: 0 }}
+              >
+                <Info icon={IconCalendar} label={formatReleaseDate(item.releaseDate, locale)} />
+                {length !== undefined && (
                   <>
                     <InfoDivider />
                     <Info icon={length.type === "duration" ? IconClock : IconBook} label={length.label} />
                   </>
                 )}
-                {item.producer !== undefined && showExtendedMetadata && (
+                {item.producer !== undefined && (
                   <>
                     <InfoDivider />
                     <Info label={item.producer} />
                   </>
                 )}
-                {item.rating !== undefined && showExtendedMetadata && (
+                {item.rating !== undefined && (
                   <>
                     <InfoDivider />
                     <Info icon={IconStarFilled} label={item.rating} />
                   </>
                 )}
-                {item.price !== undefined && showExtendedMetadata && (
+                {item.price !== undefined && (
                   <>
                     <InfoDivider />
                     <Info label={`$${item.price.toFixed(2)}`} />
                   </>
                 )}
               </Group>
-              {item.tags.length > 0 && (isAdvanced || !isCompact) && (
+              {item.tags.length > 0 && (
                 <OverflowBadge
                   size="xs"
                   groupGap={4}

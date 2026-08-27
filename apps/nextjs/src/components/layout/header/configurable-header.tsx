@@ -2,15 +2,7 @@
 
 import type { ReactNode } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  AppShellHeader,
-  Avatar,
-  Group,
-  Indicator,
-  Loader,
-  Tooltip,
-  useMantineColorScheme,
-} from "@mantine/core";
+import { AppShellHeader, Avatar, Group, Indicator, Loader, Tooltip, useMantineColorScheme } from "@mantine/core";
 import {
   IconBrandDocker,
   IconHome,
@@ -116,14 +108,15 @@ export const ConfigurableHeader = ({
 
         return (
           <>
-            {headerPreferences.visible ? (
-              <AppShellHeader
-                maw="100vw"
-                zIndex="var(--homarr-z-index-board-header)"
-                className={classes.header}
-                data-advanced-focus-background
-                data-app-shell-header
-              >
+            <AppShellHeader
+              maw="100vw"
+              zIndex="var(--homarr-z-index-board-header)"
+              className={classes.header}
+              data-desktop-visible={headerPreferences.visible}
+              data-advanced-focus-background
+              data-app-shell-header
+            >
+              <div className={classes.desktopContent}>
                 <div className={classes.content}>
                   <div className={classes.zone} data-zone="left">
                     {hasNavigation ? <ClientBurger /> : null}
@@ -137,8 +130,31 @@ export const ConfigurableHeader = ({
                     {actions ? <Group className={classes.contextActions}>{actions}</Group> : null}
                   </div>
                 </div>
-              </AppShellHeader>
-            ) : (
+              </div>
+              <div className={classes.mobileContent}>
+                <Group className={classes.mobileIdentity} gap="xs" wrap="nowrap">
+                  {hasNavigation ? <ClientBurger /> : null}
+                  <HeaderLogo display="logo" logo={logo} logoWithTitle={logoWithTitle} label={t("items.logo")} />
+                </Group>
+                <Group className={classes.mobileActions} gap="xs" wrap="nowrap">
+                  {actions}
+                  {boardEditAction}
+                  {boardSettingsAction}
+                  <TourTarget id="board-search">
+                    <MobileSearchButton alwaysVisible />
+                  </TourTarget>
+                  <TourTarget id="board-user-menu">
+                    <UserButtonClient
+                      avatar={avatar}
+                      isAdmin={isAdmin}
+                      isDockerEnabled={isDockerEnabled}
+                      boardSwitcher={boardSwitcher}
+                    />
+                  </TourTarget>
+                </Group>
+              </div>
+            </AppShellHeader>
+            {!headerPreferences.visible ? (
               <FloatingHeaderControls>
                 {hasNavigation ? <ClientBurger /> : null}
                 <UserButtonClient
@@ -148,7 +164,7 @@ export const ConfigurableHeader = ({
                   boardSwitcher={boardSwitcher}
                 />
               </FloatingHeaderControls>
-            )}
+            ) : null}
             <LazySpotlight />
           </>
         );
@@ -291,7 +307,7 @@ const HeaderItem = ({
       <Tooltip label={board.name}>
         <HeaderButton href={`/boards/${encodeURIComponent(board.name)}`} aria-label={board.name}>
           <Avatar src={board.logoImageUrl} size={22} radius="sm">
-            <IconLayoutDashboard size={17} stroke={1.5} />
+            {getBoardInitial(board.name)}
           </Avatar>
         </HeaderButton>
       </Tooltip>
@@ -299,14 +315,7 @@ const HeaderItem = ({
   }
 
   if (item.id === "logo") {
-    return (
-      <HeaderLogo
-        display={logoDisplay}
-        logo={logo}
-        logoWithTitle={logoWithTitle}
-        label={label("logo")}
-      />
-    );
+    return <HeaderLogo display={logoDisplay} logo={logo} logoWithTitle={logoWithTitle} label={label("logo")} />;
   }
 
   if (item.id === "boardEdit") return boardEditAction;
@@ -416,3 +425,5 @@ const HeaderItem = ({
     </TourTarget>
   );
 };
+
+const getBoardInitial = (name: string) => Array.from(name.trim())[0]?.toLocaleUpperCase() ?? "?";
