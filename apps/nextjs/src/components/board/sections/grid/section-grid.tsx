@@ -149,7 +149,6 @@ export const SectionGrid = ({
   const effectiveCanvasScale = Number.isFinite(canvasScale) && canvasScale > 0 ? canvasScale : 1;
   const outerCardInset = section.kind === "container" ? (2 * 10) / effectiveCanvasScale : 0;
   const logicalWidth = getLogicalGridSize(columnCount) - outerCardInset;
-  const logicalHeight = getLogicalGridSize(rowCount) - outerCardInset;
   const viewportHeight = getLogicalGridSize(viewportRowCount) - outerCardInset;
   // Items are positioned in a coordinate space sized to the *un-inset* column/row count
   // (fullGridWidth/Height below - see getLogicalItemStyle), but logicalWidth/Height above are
@@ -162,11 +161,11 @@ export const SectionGrid = ({
   const fullGridWidth = getLogicalGridSize(columnCount);
   const fullGridHeight = getLogicalGridSize(rowCount);
   // For a scrollable container, rowCount covers *all* content rows, not just the visible card -
-  // fullGridHeight/logicalHeight grow together with it, so their ratio drifts toward 1 as content
+  // fullGridHeight grows right along with it, so a ratio built from it drifts toward 1 as content
   // grows regardless of the (fixed) inset, under-scaling relative to what the actually-visible
   // viewport needs and clipping the bottom of the visible rows. viewportHeight/viewportRowCount
-  // describe the real visible card size in both cases (they equal logicalHeight/rowCount when not
-  // scrollable), so use those instead.
+  // describe the real visible card size in both cases (they equal the non-scrollable values when
+  // rowCount and viewportRowCount are the same), so use those instead.
   const fullViewportHeight = getLogicalGridSize(viewportRowCount);
   // A uniform zoom is required (not a non-uniform transform scale(x, y)) - --board-canvas-ui-scale
   // is a single scalar that every icon/text/custom-CSS size compensation in the app multiplies
