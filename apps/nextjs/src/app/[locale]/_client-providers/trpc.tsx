@@ -3,7 +3,7 @@
 import type { PropsWithChildren } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
-import { QueryClient } from "@tanstack/react-query";
+import { QueryCache, QueryClient } from "@tanstack/react-query";
 import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import {
@@ -25,6 +25,8 @@ import type { AppRouter } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import {
   dashboardSupportingQueryPolicies,
+  isTrpcForbiddenError,
+  isWidgetDataQueryKey,
   queryCacheDefaultGcTimeMs,
   queryCacheDefaultRefetchIntervalMs,
   queryCacheDefaultStaleTimeMs,
@@ -36,13 +38,8 @@ import { showWarningNotification } from "@homarr/notifications";
 import { widgetQueryRefetchIntervals } from "@homarr/widgets/refetch-intervals";
 
 import { getSessionQueryScope, SessionQueryScopeGuard } from "./session-query-scope";
-import {
-  createSessionQueryPersister,
-  queryPersistenceBuster,
-  queryPersistenceMaxAgeMs,
-  shouldPersistDashboardQuery,
-} from "./query-persistence";
-import type { SessionQueryPersister } from "./query-persistence";
+import { createSessionQueryPersistence } from "./query-persistence";
+import type { SessionQueryPersistence } from "./query-persistence";
 import { createQueryRetry } from "./query-retry";
 
 const DevelopmentTools =
@@ -75,11 +72,11 @@ export function TRPCReactProvider({ children }: PropsWithChildren) {
   const { data: session } = useSession();
   const sessionQueryScope = getSessionQueryScope(session);
   const [initialSessionQueryScope] = useState(() => sessionQueryScope);
-  const [queryPersister] = useState(() => createSessionQueryPersister(initialSessionQueryScope));
+  const [queryPersistence] = useState(() => createSessionQueryPersistence(initialSessionQueryScope));
   const handleScopeChange = useCallback(() => {
-    void queryPersister.removeClient();
+    void queryPersistence.persister.removeClient();
     reloadPage();
-  }, [queryPersister]);
+  }, [queryPersistence]);
 
   return (
     <SessionQueryScopeGuard
@@ -87,7 +84,7 @@ export function TRPCReactProvider({ children }: PropsWithChildren) {
       currentScope={sessionQueryScope}
       onScopeChange={handleScopeChange}
     >
-      <ScopedTRPCReactProvider queryPersister={queryPersister}>{children}</ScopedTRPCReactProvider>
+      <ScopedTRPCReactProvider queryPersistence={queryPersistence}>{children}</ScopedTRPCReactProvider>
     </SessionQueryScopeGuard>
   );
 }
@@ -96,8 +93,8 @@ const reloadPage = () => window.location.reload();
 
 const ScopedTRPCReactProvider = ({
   children,
-  queryPersister,
-}: PropsWithChildren<{ queryPersister: SessionQueryPersister }>) => {
+  queryPersistence,
+}: PropsWithChildren<{ queryPersistence: SessionQueryPersistence }>) => {
   const wsClient = useMemo(
     () =>
       createWSClient({
@@ -114,6 +111,13 @@ const ScopedTRPCReactProvider = ({
   );
   const [queryClient] = useState(() => {
     const client = new QueryClient({
+      queryCache: new QueryCache({
+        onError(error, query) {
+          if (!isTrpcForbiddenError(error) || !isWidgetDataQueryKey(query.queryKey)) return;
+          void queryPersistence.persister.removeClient();
+          query.setState({ data: undefined, dataUpdatedAt: 0, isInvalidated: true });
+        },
+      }),
       defaultOptions: {
         queries: {
           staleTime: queryCacheDefaultStaleTimeMs,
@@ -152,15 +156,6 @@ const ScopedTRPCReactProvider = ({
     return client;
   });
 
-  useEffect(() => {
-    const flush = () => queryPersister.flush();
-    window.addEventListener("pagehide", flush);
-    return () => {
-      window.removeEventListener("pagehide", flush);
-      flush();
-      queryPersister.stop();
-    };
-  }, [queryPersister]);
   useEffect(() => () => queryClient.clear(), [queryClient]);
 
   const trpcClient = useMemo(() => {
@@ -211,15 +206,7 @@ const ScopedTRPCReactProvider = ({
 
   return (
     <clientApi.Provider client={trpcClient} queryClient={queryClient}>
-      <PersistQueryClientProvider
-        client={queryClient}
-        persistOptions={{
-          persister: queryPersister,
-          maxAge: queryPersistenceMaxAgeMs,
-          buster: queryPersistenceBuster,
-          dehydrateOptions: { shouldDehydrateQuery: shouldPersistDashboardQuery },
-        }}
-      >
+      <PersistQueryClientProvider client={queryClient} persistOptions={queryPersistence}>
         <ReactQueryStreamedHydration transformer={superjson}>{children}</ReactQueryStreamedHydration>
         {process.env.NODE_ENV === "development" && <DevelopmentTools />}
       </PersistQueryClientProvider>

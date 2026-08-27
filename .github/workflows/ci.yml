@@ -320,8 +320,12 @@ jobs:
 
   publish-preview:
     name: Publish multi-platform preview image
-    needs: [preview-amd64, preview-arm64]
+    needs: [container, preview-amd64, preview-arm64]
     if: |
+      !cancelled() &&
+      needs.container.result == 'success' &&
+      needs.preview-amd64.result == 'success' &&
+      needs.preview-arm64.result == 'success' &&
       (
         (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) ||
         (github.event_name == 'push' && github.ref == 'refs/heads/release/v2') ||
@@ -375,9 +379,6 @@ jobs:
           ARM64_DIGEST: ${{ needs.preview-arm64.outputs.digest }}
         run: |
           tags=(-t "${PREVIEW_IMAGE}:${PREVIEW_TAG}")
-          if [[ "${GITHUB_EVENT_NAME}" == "push" && "${GITHUB_REF}" == "refs/heads/release/v2" ]]; then
-            tags+=(-t "${PREVIEW_IMAGE}:pr-6545")
-          fi
           docker buildx imagetools create "${tags[@]}" \
             "${PREVIEW_IMAGE}@${AMD64_DIGEST}" \
             "${PREVIEW_IMAGE}@${ARM64_DIGEST}"
@@ -386,9 +387,6 @@ jobs:
         if: "!env.ACT"
         run: |
           tags=("${PREVIEW_TAG}")
-          if [[ "${GITHUB_EVENT_NAME}" == "push" && "${GITHUB_REF}" == "refs/heads/release/v2" ]]; then
-            tags+=("pr-6545")
-          fi
           for tag in "${tags[@]}"; do
             image="${PREVIEW_IMAGE}:${tag}"
             manifest="$(docker buildx imagetools inspect "$image" --raw)"
@@ -433,6 +431,14 @@ jobs:
             );
             if (!target) {
               core.info(`No package version found with tag "${tag}"`);
+              return;
+            }
+            const targetTags = target.metadata?.container?.tags ?? [];
+            const extraTags = targetTags.filter((targetTag) => targetTag !== tag);
+            if (extraTags.length > 0) {
+              core.setFailed(
+                `Package version ${target.id} also carries tag(s) ${extraTags.map((targetTag) => `"${targetTag}"`).join(", ")}; refusing cleanup.`,
+              );
               return;
             }
             await github.rest.packages.deletePackageVersionForOrg({

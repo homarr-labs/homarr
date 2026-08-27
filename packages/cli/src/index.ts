@@ -6,7 +6,8 @@ import { harnessRoot, normalizeHarnessEnvironmentArgs } from "./commands/harness
 const harnessCommandNames = new Set(["harness", "local-harness"]);
 
 function isHarnessInvocation(argv: string[]): boolean {
-  return argv.slice(2).some((argument) => harnessCommandNames.has(argument));
+  const command = argv[2];
+  return command !== undefined && harnessCommandNames.has(command);
 }
 
 async function main(): Promise<void> {

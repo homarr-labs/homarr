@@ -25,6 +25,7 @@ import type { WidgetDefinition, WidgetRuntimeRef } from "@homarr/widgets/definit
 import { getWidgetQueryKeys, getWidgetRuntimeQueries, supportsAdvancedFocus } from "@homarr/widgets/definition";
 import { reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 import { getWidgetOptionTranslationNamespace } from "@homarr/widgets/option-translation";
+import type { WidgetPreviewDimensions } from "@homarr/widgets/modals";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
 import { useAdvancedFocus } from "../advanced-focus/context";
@@ -39,7 +40,7 @@ type ToggleOption = [key: string, option: { type: string; skipContextMenu?: bool
 interface WidgetContextMenuProps {
   item: SectionItem;
   definition: WidgetDefinition;
-  previewDimensions: { width: number; height: number; scale?: number };
+  previewDimensions: WidgetPreviewDimensions;
   widgetStateRef: MutableRefObject<Record<string, unknown> | null>;
   widgetRuntimeRef: WidgetRuntimeRef;
   sourceRef: RefObject<HTMLElement | null>;

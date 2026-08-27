@@ -65,6 +65,10 @@ func (m Model) handleManageKey(msg tea.KeyPressMsg) (tea.Model, tea.Cmd) {
 		return m.arm(actionDeleteImage, subject)
 
 	case key.Matches(msg, m.keys.ManageData):
+		if subject.volume == "" {
+			m.status, m.statusLevel = subject.label+" has no data volume to delete", levelWarn
+			return m, nil
+		}
 		return m.arm(actionDeleteData, subject)
 
 	case key.Matches(msg, m.keys.ManageStop):

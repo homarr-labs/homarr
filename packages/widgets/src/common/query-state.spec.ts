@@ -12,6 +12,11 @@ describe("getUsableWidgetQueryData", () => {
     expect(getUsableWidgetQueryData({ data, error: new Error("offline") })).toBe(data);
   });
 
+  test("throws access-denied refetches instead of rendering stale cached data", () => {
+    const error = { data: { code: "FORBIDDEN" } };
+    expect(() => getUsableWidgetQueryData({ data: [{ id: "revoked" }], error })).toThrow(error);
+  });
+
   test("throws a terminal failure when no usable data exists", () => {
     const error = new Error("offline");
     expect(() => getUsableWidgetQueryData({ data: undefined, error })).toThrow(error);

@@ -10,6 +10,7 @@ import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 import { InlineConfirmMenuItem } from "@homarr/ui";
 import type { WidgetDefinition } from "@homarr/widgets/definition";
+import type { WidgetPreviewDimensions } from "@homarr/widgets/modals";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
 import { useSectionContext } from "../sections/section-context";
@@ -21,7 +22,7 @@ import { LazyWidgetEditModal, preloadWidgetEditModal } from "./lazy-widget-edit-
 interface BoardItemMenuProps {
   item: SectionItem;
   definition: WidgetDefinition;
-  previewDimensions: { width: number; height: number; scale?: number };
+  previewDimensions: WidgetPreviewDimensions;
   resetErrorBoundary?: () => void;
 }
 

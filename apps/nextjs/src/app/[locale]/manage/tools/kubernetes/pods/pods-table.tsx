@@ -13,6 +13,8 @@ import type { ScopedTranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
+import { createKubernetesResourceQueryOptions } from "../kubernetes-query-options";
+
 dayjs.extend(relativeTime);
 
 interface PodsTableComponentProps {
@@ -57,13 +59,7 @@ export function PodsTable({ contextId, initialPods }: PodsTableComponentProps) {
 
   const { data } = clientApi.kubernetes.pods.getPods.useQuery(
     { contextId },
-    {
-      initialData: initialPods,
-      refetchOnMount: "always",
-      refetchOnWindowFocus: true,
-      refetchOnReconnect: true,
-      refetchInterval: (query) => (query.state.status === "error" ? 30_000 : false),
-    },
+    createKubernetesResourceQueryOptions(initialPods),
   );
 
   const table = useTranslatedMantineReactTable({

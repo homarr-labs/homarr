@@ -115,6 +115,8 @@ The OpenAPI and MCP APIs include board management endpoints for common automatio
 
 Board layout responses identify each layout with a `mobile`, `base`, or `custom` role. Mobile and Base are protected. Layout-saving clients must preserve existing roles, keep Mobile at breakpoint `0`, keep Base as the highest breakpoint, and use unique custom breakpoints between them. The layout save operation returns the canonical saved layouts, including server-generated IDs for new custom layouts. A non-Base layout can be regenerated from Base with the protected reset operation.
 
+The internal `board.getManageOverview` tRPC query returns compact board previews limited to 12 layout rows by default. Callers may provide `previewRowLimit` from 1 through 48; `fullPreview: true` requests the server's 48-row maximum.
+
 Use the interactive API reference to inspect the exact request body for each endpoint under the `boards` and `settings` tags.
 
 ## Docker action payload migration

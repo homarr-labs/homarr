@@ -30,11 +30,12 @@ import { useRegisterSpotlightContextActions } from "@homarr/spotlight";
 import { useI18n } from "@homarr/translation/client";
 import { Link, UserAvatar } from "@homarr/ui";
 
-import { BoardLayoutThumbnail } from "~/components/board/board-layout-thumbnail";
+import { BoardLayoutThumbnail, maxBoardLayoutThumbnailRows } from "~/components/board/board-layout-thumbnail";
 
 import classes from "./board-switcher.module.css";
 
 export const boardSwitcherHotkey = "shift+c";
+const boardSwitcherPreview = { previewRowLimit: maxBoardLayoutThumbnailRows } as const;
 
 export interface BoardSwitcherControls {
   open: () => void;
@@ -61,18 +62,12 @@ export const BoardSwitcher = ({ children }: BoardSwitcherProps) => {
     data: boards = [],
     isPending,
     isError,
-  } = clientApi.board.getManageOverview.useQuery(
-    { fullPreview: true },
-    {
-      enabled: isOpen,
-    },
-  );
+  } = clientApi.board.getManageOverview.useQuery(boardSwitcherPreview, {
+    enabled: isOpen,
+  });
 
   const switcherBoards = useMemo(
-    () => [
-      ...boards.filter((board) => board.id !== currentBoard?.id),
-      ...boards.filter((board) => board.id === currentBoard?.id),
-    ],
+    () => boards.filter((board) => board.id !== currentBoard?.id),
     [boards, currentBoard?.id],
   );
   const filteredBoards = useMemo(() => {
@@ -91,7 +86,7 @@ export const BoardSwitcher = ({ children }: BoardSwitcherProps) => {
     setSearch("");
     setActiveIndex(0);
   }, []);
-  const preloadBoards = () => void utils.board.getManageOverview.prefetch({ fullPreview: true });
+  const preloadBoards = () => void utils.board.getManageOverview.prefetch(boardSwitcherPreview);
 
   const spotlightAction = useMemo(
     () => ({
@@ -341,7 +336,7 @@ const getBoardSwitcherResults = ({
               <BoardLayoutThumbnail
                 preview={board.preview}
                 label={t("preview", { name: board.name, count: String(board.preview?.items.length ?? 0) })}
-                fitFullLayout
+                previewRowLimit={boardSwitcherPreview.previewRowLimit}
               />
             </Card.Section>
             <Card.Section withBorder px="sm" py={6}>

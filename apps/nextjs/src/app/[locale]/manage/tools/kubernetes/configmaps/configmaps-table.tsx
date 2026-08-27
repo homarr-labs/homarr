@@ -13,6 +13,8 @@ import type { ScopedTranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
+import { createKubernetesResourceQueryOptions } from "../kubernetes-query-options";
+
 dayjs.extend(relativeTime);
 
 interface ConfigMapsTableComponentProps {
@@ -47,13 +49,7 @@ export function ConfigmapsTable({ contextId, initialConfigMaps }: ConfigMapsTabl
 
   const { data } = clientApi.kubernetes.configMaps.getConfigMaps.useQuery(
     { contextId },
-    {
-      initialData: initialConfigMaps,
-      refetchOnMount: "always",
-      refetchOnWindowFocus: true,
-      refetchOnReconnect: true,
-      refetchInterval: (query) => (query.state.status === "error" ? 30_000 : false),
-    },
+    createKubernetesResourceQueryOptions(initialConfigMaps),
   );
 
   const table = useTranslatedMantineReactTable({

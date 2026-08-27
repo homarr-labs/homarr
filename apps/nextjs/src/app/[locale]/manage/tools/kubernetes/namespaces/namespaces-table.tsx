@@ -15,6 +15,8 @@ import type { ScopedTranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
+import { createKubernetesResourceQueryOptions } from "../kubernetes-query-options";
+
 dayjs.extend(relativeTime);
 
 interface NamespacesTableComponentProps {
@@ -66,13 +68,7 @@ export function NamespacesTable({ contextId, initialNamespaces }: NamespacesTabl
 
   const { data } = clientApi.kubernetes.namespaces.getNamespaces.useQuery(
     { contextId },
-    {
-      initialData: initialNamespaces,
-      refetchOnMount: "always",
-      refetchOnWindowFocus: true,
-      refetchOnReconnect: true,
-      refetchInterval: (query) => (query.state.status === "error" ? 30_000 : false),
-    },
+    createKubernetesResourceQueryOptions(initialNamespaces),
   );
 
   const table = useTranslatedMantineReactTable({
