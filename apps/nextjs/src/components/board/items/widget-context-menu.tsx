@@ -3,7 +3,6 @@
 import type { MutableRefObject, ReactNode, RefObject } from "react";
 import { useCallback, useMemo, useState } from "react";
 import { Drawer, Group, Loader, Menu, Text, Tooltip } from "@mantine/core";
-import { useMediaQuery } from "@mantine/hooks";
 import { IconAlertTriangle, IconCircleCheck, IconMaximize, IconRefresh, IconSettings } from "@tabler/icons-react";
 import type { QueryClient, QueryKey } from "@tanstack/react-query";
 import { useIsFetching, useQueryClient } from "@tanstack/react-query";
@@ -21,7 +20,8 @@ import { getWidgetName } from "@homarr/definitions";
 import { translateIfNecessary } from "@homarr/translation";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
-import type { WidgetContextMenuAction, WidgetDefinition, WidgetRuntimeRef } from "@homarr/widgets/definition";
+import { useIsMobile } from "@homarr/ui/hooks";
+import type { WidgetDefinition, WidgetRuntimeRef } from "@homarr/widgets/definition";
 import { getWidgetQueryKeys, getWidgetRuntimeQueries, supportsAdvancedFocus } from "@homarr/widgets/definition";
 import { reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 import { getWidgetOptionTranslationNamespace } from "@homarr/widgets/option-translation";
@@ -60,6 +60,8 @@ export const WidgetContextMenu = ({
   const { hasChangeAccess } = useBoardPermissions(board);
   const { updateAndPersistBoard } = usePersistBoard(board);
   const t = useI18n();
+  const tMenu = useI18n("item.menu.label");
+  const tCommon = useI18n("common.action");
   const settings = useSettings();
   const { openModal } = useModalAction(LazyWidgetEditModal);
   const { updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations } = useItemActions();
@@ -74,7 +76,6 @@ export const WidgetContextMenu = ({
   const { open: openAdvancedFocus } = useAdvancedFocus();
   const integrationsWithInteractAccess = useIntegrationsWithInteractAccess();
   const [menuOpened, setMenuOpened] = useState(false);
-  const isMobile = useMediaQuery("(max-width: 48em)");
 
   const persistBoard = useCallback(
     (updater: (previous: typeof board) => typeof board) => {
@@ -234,29 +235,15 @@ export const WidgetContextMenu = ({
     });
   }, [item.id, openAdvancedFocus, sourceRef]);
 
+  const handleCloseMenu = useCallback(() => {
+    setMenuOpened(false);
+  }, []);
+
   if (!session || !settings.enableRightClickOnWidgets || isEditMode || item.kind === "app") {
     return <>{children}</>;
   }
 
   const visibleWidgetActions = widgetContextActions.filter((action) => !action.hidden);
-  const actionContent = (
-    <WidgetContextActions
-      canOpenAdvancedFocus={canOpenAdvancedFocus}
-      onOpenAdvancedFocus={handleOpenAdvancedFocus}
-      toggleOptions={toggleOptions}
-      options={options}
-      onToggle={handleToggle}
-      itemKind={item.kind}
-      visibleWidgetActions={visibleWidgetActions}
-      isWidgetFetching={isWidgetFetching}
-      onRefetch={handleRefetch}
-      queryClient={queryClient}
-      matchesWidgetQuery={matchesWidgetQuery}
-      onEdit={openEditModal}
-      canConfigureWidget={canConfigureWidget}
-      isIntegrationDataPending={hasSupportedIntegrations && isPending}
-    />
-  );
 
   return (
     <Menu
@@ -269,134 +256,105 @@ export const WidgetContextMenu = ({
       onChange={setMenuOpened}
     >
       <Menu.ContextMenu>{children}</Menu.ContextMenu>
-      {isMobile ? (
-        <Drawer
-          opened={menuOpened}
-          onClose={() => setMenuOpened(false)}
-          position="bottom"
-          size="min(80dvh, 40rem)"
-          title={getWidgetName(item.kind, t)}
-          classNames={{ content: classes.mobileDrawerContent, body: classes.mobileDrawerBody }}
+      <WidgetContextMenuDropdown opened={menuOpened} onClose={handleCloseMenu} title={getWidgetName(item.kind, t)}>
+        {canOpenAdvancedFocus && (
+          <>
+            <Menu.Item closeMenuOnClick leftSection={<IconMaximize size={16} />} onClick={handleOpenAdvancedFocus}>
+              {t("item.advancedFocus.open")}
+            </Menu.Item>
+            <Menu.Divider />
+          </>
+        )}
+
+        {toggleOptions.length > 0 && (
+          <>
+            <Menu.Label>{tMenu("options")}</Menu.Label>
+            {toggleOptions.map(([key]) => (
+              <Menu.CheckboxItem key={key} checked={Boolean(options[key])} onChange={handleToggle(key)}>
+                {t(`${getWidgetOptionTranslationNamespace(item.kind, key)}.label` as never)}
+              </Menu.CheckboxItem>
+            ))}
+          </>
+        )}
+
+        {visibleWidgetActions.length > 0 && (
+          <>
+            {toggleOptions.length > 0 && <Menu.Divider />}
+            <Menu.Label>{tMenu("actions")}</Menu.Label>
+            {visibleWidgetActions.map((action) => {
+              const Icon = action.icon;
+              return (
+                <Menu.Item
+                  key={action.key}
+                  closeMenuOnClick
+                  leftSection={Icon ? <Icon size={16} /> : undefined}
+                  onClick={action.onClick}
+                  disabled={action.disabled}
+                  color={action.color}
+                >
+                  {translateIfNecessary(t, action.label)}
+                </Menu.Item>
+              );
+            })}
+          </>
+        )}
+
+        {(toggleOptions.length > 0 || visibleWidgetActions.length > 0) && <Menu.Divider />}
+        <Menu.Item
+          leftSection={isWidgetFetching ? <Loader size={16} /> : <IconRefresh size={16} />}
+          onClick={handleRefetch}
+          disabled={isWidgetFetching}
         >
-          <div className={classes.mobileActionList} role="menu" aria-orientation="vertical" data-menu-dropdown>
-            {actionContent}
-          </div>
-        </Drawer>
-      ) : (
-        <Menu.Dropdown>{actionContent}</Menu.Dropdown>
-      )}
+          <Group justify="space-between" wrap="nowrap" gap="sm">
+            {tCommon("refresh")}
+            <WidgetQueryStatus
+              queryClient={queryClient}
+              matchesQuery={matchesWidgetQuery}
+              isFetching={isWidgetFetching}
+              t={t}
+            />
+          </Group>
+        </Menu.Item>
+        <Menu.Item
+          closeMenuOnClick
+          leftSection={<IconSettings size={16} />}
+          onClick={openEditModal}
+          onFocus={preloadWidgetEditModal}
+          onPointerEnter={preloadWidgetEditModal}
+          disabled={!canConfigureWidget || (hasSupportedIntegrations && isPending)}
+        >
+          {tMenu("settings")}
+        </Menu.Item>
+      </WidgetContextMenuDropdown>
     </Menu>
   );
 };
 
-interface WidgetContextActionsProps {
-  canOpenAdvancedFocus: boolean;
-  onOpenAdvancedFocus: () => void;
-  toggleOptions: ToggleOption[];
-  options: Record<string, unknown>;
-  onToggle: (key: string) => (checked: boolean) => void;
-  itemKind: SectionItem["kind"];
-  visibleWidgetActions: WidgetContextMenuAction[];
-  isWidgetFetching: boolean;
-  onRefetch: () => void;
-  queryClient: QueryClient;
-  matchesWidgetQuery: (queryKey: QueryKey) => boolean;
-  onEdit: () => void;
-  canConfigureWidget: boolean;
-  isIntegrationDataPending: boolean;
+interface WidgetContextMenuDropdownProps {
+  opened: boolean;
+  onClose: () => void;
+  title: string;
+  children: ReactNode;
 }
 
-const WidgetContextActions = ({
-  canOpenAdvancedFocus,
-  onOpenAdvancedFocus,
-  toggleOptions,
-  options,
-  onToggle,
-  itemKind,
-  visibleWidgetActions,
-  isWidgetFetching,
-  onRefetch,
-  queryClient,
-  matchesWidgetQuery,
-  onEdit,
-  canConfigureWidget,
-  isIntegrationDataPending,
-}: WidgetContextActionsProps) => {
-  const t = useI18n();
-  const tMenu = useI18n("item.menu.label");
-  const tCommon = useI18n("common.action");
+const WidgetContextMenuDropdown = ({ opened, onClose, title, children }: WidgetContextMenuDropdownProps) => {
+  const isMobile = useIsMobile();
+
+  if (!isMobile) return <Menu.Dropdown>{children}</Menu.Dropdown>;
 
   return (
-    <>
-      {canOpenAdvancedFocus && (
-        <>
-          <Menu.Item closeMenuOnClick leftSection={<IconMaximize size={16} />} onClick={onOpenAdvancedFocus}>
-            {t("item.advancedFocus.open")}
-          </Menu.Item>
-          <Menu.Divider />
-        </>
-      )}
-
-      {toggleOptions.length > 0 && (
-        <>
-          <Menu.Label>{tMenu("options")}</Menu.Label>
-          {toggleOptions.map(([key]) => (
-            <Menu.CheckboxItem key={key} checked={Boolean(options[key])} onChange={onToggle(key)}>
-              {t(`${getWidgetOptionTranslationNamespace(itemKind, key)}.label` as never)}
-            </Menu.CheckboxItem>
-          ))}
-        </>
-      )}
-
-      {visibleWidgetActions.length > 0 && (
-        <>
-          {toggleOptions.length > 0 && <Menu.Divider />}
-          <Menu.Label>{tMenu("actions")}</Menu.Label>
-          {visibleWidgetActions.map((action) => {
-            const Icon = action.icon;
-            return (
-              <Menu.Item
-                key={action.key}
-                closeMenuOnClick
-                leftSection={Icon ? <Icon size={16} /> : undefined}
-                onClick={action.onClick}
-                disabled={action.disabled}
-                color={action.color}
-              >
-                {translateIfNecessary(t, action.label)}
-              </Menu.Item>
-            );
-          })}
-        </>
-      )}
-
-      {(toggleOptions.length > 0 || visibleWidgetActions.length > 0) && <Menu.Divider />}
-      <Menu.Item
-        leftSection={isWidgetFetching ? <Loader size={16} /> : <IconRefresh size={16} />}
-        onClick={onRefetch}
-        disabled={isWidgetFetching}
-      >
-        <Group justify="space-between" wrap="nowrap" gap="sm">
-          {tCommon("refresh")}
-          <WidgetQueryStatus
-            queryClient={queryClient}
-            matchesQuery={matchesWidgetQuery}
-            isFetching={isWidgetFetching}
-            t={t}
-          />
-        </Group>
-      </Menu.Item>
-      <Menu.Item
-        closeMenuOnClick
-        leftSection={<IconSettings size={16} />}
-        onClick={onEdit}
-        onFocus={preloadWidgetEditModal}
-        onPointerEnter={preloadWidgetEditModal}
-        disabled={!canConfigureWidget || isIntegrationDataPending}
-      >
-        {tMenu("settings")}
-      </Menu.Item>
-    </>
+    <Drawer
+      opened={opened}
+      onClose={onClose}
+      position="bottom"
+      size="min(80dvh, 40rem)"
+      title={title}
+      classNames={{ content: classes.mobileDrawerContent, body: classes.mobileDrawerBody }}
+    >
+      <div className={classes.mobileActionList} role="menu" aria-orientation="vertical" data-menu-dropdown>
+        {children}
+      </div>
+    </Drawer>
   );
 };
 

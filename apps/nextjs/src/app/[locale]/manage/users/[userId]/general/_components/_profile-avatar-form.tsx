@@ -2,7 +2,7 @@
 
 import { useCallback } from "react";
 import { Box, Button, FileButton, Menu, UnstyledButton } from "@mantine/core";
-import { useDisclosure, useMediaQuery } from "@mantine/hooks";
+import { useDisclosure } from "@mantine/hooks";
 import { IconPencil, IconPhotoEdit, IconPhotoX } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -12,6 +12,7 @@ import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { UserAvatar } from "@homarr/ui";
+import { useIsMobile } from "@homarr/ui/hooks";
 
 interface UserProfileAvatarForm {
   user: RouterOutputs["user"]["getById"];
@@ -25,7 +26,7 @@ export const UserProfileAvatarForm = ({ user }: UserProfileAvatarForm) => {
     },
   });
   const [opened, { toggle }] = useDisclosure(false);
-  const isMobile = useMediaQuery("(max-width: 48em)");
+  const isMobile = useIsMobile();
   const { openConfirmModal } = useConfirmModal();
   const tCommon = useI18n("common");
   const tManageAvatar = useI18n("user.action.manageAvatar");
