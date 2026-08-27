@@ -127,7 +127,12 @@ export const CommonChart = ({
             },
           }}
           tooltipAnimationDuration={200}
-          tooltipProps={tooltipProps}
+          tooltipProps={{
+            // Render via portal so the tooltip isn't clipped by the card's overflow:hidden
+            // (needed to stop the chart line itself bleeding past its rounded corners).
+            portal: typeof document !== "undefined" ? document.body : undefined,
+            ...tooltipProps,
+          }}
           withTooltip={height >= 64}
           yAxisProps={yAxisProps}
           fillOpacity={chartType === "area" ? 0.3 : undefined}

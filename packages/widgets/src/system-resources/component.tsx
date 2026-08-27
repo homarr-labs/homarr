@@ -19,6 +19,15 @@ const COMPACT_HISTORY_SIZE = 15;
 const ADVANCED_HISTORY_SIZE = 60;
 const ALL_SYSTEM_CHARTS = ["cpu", "memory", "gpu", "network"] as const;
 
+const ADVANCED_CHART_COLUMN_BREAKPOINTS = [
+  { minWidth: 1100, columns: 4 },
+  { minWidth: 560, columns: 2 },
+  { minWidth: 0, columns: 1 },
+] as const;
+
+const getAdvancedChartColumns = (width: number): number =>
+  ADVANCED_CHART_COLUMN_BREAKPOINTS.find(({ minWidth }) => width >= minWidth)?.columns ?? 1;
+
 type SystemChart = WidgetComponentProps<"systemResources">["options"]["visibleCharts"][number];
 
 type ChartItem = {
@@ -226,7 +235,10 @@ const SystemCharts = ({
   const showNetwork = visibleCharts.includes("network");
   const labelDisplayMode = isAdvanced ? "textWithIcon" : options.labelDisplayMode;
   const chartCount = visibleCharts.length;
-  const chartColumns = isAdvanced ? (width >= 1100 ? 4 : width >= 560 ? 2 : 1) : 1;
+  const chartColumns = useMemo(
+    () => (isAdvanced ? getAdvancedChartColumns(width) : 1),
+    [isAdvanced, width],
+  );
   const compactChartGap = 8;
   const compactRowHeight = 56;
   const chartHeight = isAdvanced
