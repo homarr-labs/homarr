@@ -10,6 +10,7 @@ import { HomarrLogo, HomarrLogoWithTitle } from "./logo/homarr-logo";
 interface Props {
   logo?: ReactNode;
   logoWithTitle?: ReactNode;
+  mobileLogoWithTitle?: ReactNode;
   actions?: ReactNode;
   boardEditAction?: ReactNode;
   boardSettingsAction?: ReactNode;
@@ -19,6 +20,7 @@ interface Props {
 export const MainHeader = async ({
   logo,
   logoWithTitle,
+  mobileLogoWithTitle,
   actions,
   boardEditAction,
   boardSettingsAction,
@@ -27,11 +29,13 @@ export const MainHeader = async ({
   const session = await auth();
   const isAdmin = Boolean(session?.user.permissions.includes("admin"));
   const isDockerEnabled = isAdmin && env.ENABLE_DOCKER;
+  const resolvedLogoWithTitle = logoWithTitle ?? <HomarrLogoWithTitle size="md" />;
 
   return (
     <ConfigurableHeader
       logo={logo ?? <HomarrLogo size={appShellLogoHeight} />}
-      logoWithTitle={logoWithTitle ?? <HomarrLogoWithTitle size="md" />}
+      logoWithTitle={resolvedLogoWithTitle}
+      mobileLogoWithTitle={mobileLogoWithTitle ?? resolvedLogoWithTitle}
       actions={actions}
       boardEditAction={boardEditAction}
       boardSettingsAction={boardSettingsAction}

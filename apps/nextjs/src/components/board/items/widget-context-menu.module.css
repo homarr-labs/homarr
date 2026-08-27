@@ -1,0 +1,14 @@
+.mobileDrawerContent {
+  height: min(80dvh, rem(640px));
+  max-height: 80dvh;
+  overscroll-behavior: contain;
+}
+
+.mobileDrawerBody {
+  padding-bottom: max(var(--mantine-spacing-md), env(safe-area-inset-bottom));
+}
+
+.mobileActionList {
+  display: flex;
+  flex-direction: column;
+}

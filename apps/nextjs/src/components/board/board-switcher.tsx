@@ -228,7 +228,13 @@ export const BoardSwitcher = ({ children }: BoardSwitcherProps) => {
             radius="xl"
             classNames={{ input: classes.searchInput }}
           />
-          <ScrollArea.Autosize mah="min(80vh, 42rem)" type="never">
+          <ScrollArea.Autosize
+            mah="min(80vh, 42rem)"
+            type="never"
+            scrollbars="y"
+            overscrollBehavior="contain"
+            className={classes.results}
+          >
             {results}
           </ScrollArea.Autosize>
         </Stack>

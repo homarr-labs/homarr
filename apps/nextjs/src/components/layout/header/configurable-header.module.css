@@ -2,6 +2,15 @@
   overflow: hidden;
 }
 
+.header[data-desktop-visible="false"] {
+  display: none;
+}
+
+.desktopContent {
+  width: 100%;
+  height: 100%;
+}
+
 .content {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -64,6 +73,41 @@
   flex: 0 0 auto;
 }
 
+.mobileContent {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mantine-spacing-xs);
+  width: 100%;
+  height: 100%;
+  padding-inline: var(--mantine-spacing-xs);
+}
+
+.mobileIdentity,
+.mobileActions {
+  min-width: 0;
+}
+
+.mobileIdentity {
+  flex: 1 1 auto;
+  overflow: hidden;
+}
+
+.mobileIdentity > :last-child {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.mobileIdentity h2 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mobileActions {
+  flex: 0 0 auto;
+}
+
 .floatingControls {
   position: fixed;
   z-index: var(--homarr-z-index-board-header);
@@ -111,18 +155,21 @@
 }
 
 @media (max-width: $mantine-breakpoint-sm) {
-  .content {
-    gap: var(--mantine-spacing-xs);
-    padding-inline: var(--mantine-spacing-xs);
+  .header[data-desktop-visible="false"] {
+    display: block;
   }
 
-  .zone {
-    gap: var(--mantine-spacing-xs);
+  .desktopContent {
+    display: none;
   }
 
-  .search {
-    width: auto;
-    flex: 0 0 auto;
+  .mobileContent {
+    display: flex;
+  }
+
+  .floatingControls,
+  .floatingControlsCorner {
+    display: none;
   }
 }
 
