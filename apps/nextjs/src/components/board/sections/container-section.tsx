@@ -67,7 +67,7 @@ export const BoardContainerSection = ({ section }: Props) => {
           <Button
             className={classes.containerToggle}
             pos="absolute"
-            top={isVisuallyCollapsed ? 0 : "calc(var(--mantine-spacing-xs) * -1)"}
+            top={0}
             left={0}
             w="100%"
             h={isVisuallyCollapsed ? "100%" : 24}
