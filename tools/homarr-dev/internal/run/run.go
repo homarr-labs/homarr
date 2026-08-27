@@ -70,7 +70,7 @@ func BuildPlan(opts Options) (*Plan, error) {
 	}
 	p.Env = append(p.Env, opts.Env...)
 	if opts.Demo {
-		p.Env = append(p.Env, "DEMO_MODE=true", "UNSAFE_ENABLE_MOCK_INTEGRATION=true")
+		p.Env = append(p.Env, "DEMO_MODE=true", "DEMO_READ_ONLY=false", "UNSAFE_ENABLE_MOCK_INTEGRATION=true")
 		p.Label += " (demo)"
 	}
 	return p, nil
