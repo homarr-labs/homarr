@@ -6,7 +6,7 @@ import { parse, stringify } from "superjson";
 
 import { isPersistableDashboardQueryKey, queryCacheDefaultGcTimeMs } from "@homarr/api/query-cache";
 
-export const queryPersistenceBuster = "v5-dashboard-data";
+export const queryPersistenceBuster = "v6-dashboard-data";
 
 const queryPersistenceStoragePrefix = "homarr:widget-query-cache";
 
