@@ -53,7 +53,7 @@ export const CommonChart = ({
       ref={ref}
       h={"100%"}
       pos={"relative"}
-      style={{ overflow: "visible", border: `1px solid ${borderColor}` }}
+      style={{ overflow: "hidden", border: `1px solid ${borderColor}` }}
       p={0}
       bg={backgroundColor}
       radius={board.itemRadius}
@@ -127,7 +127,12 @@ export const CommonChart = ({
             },
           }}
           tooltipAnimationDuration={200}
-          tooltipProps={tooltipProps}
+          tooltipProps={{
+            // Render via portal so the tooltip isn't clipped by the card's overflow:hidden
+            // (needed to stop the chart line itself bleeding past its rounded corners).
+            portal: typeof document !== "undefined" ? document.body : undefined,
+            ...tooltipProps,
+          }}
           withTooltip={height >= 64}
           yAxisProps={yAxisProps}
           fillOpacity={chartType === "area" ? 0.3 : undefined}

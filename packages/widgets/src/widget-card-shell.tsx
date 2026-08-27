@@ -11,7 +11,6 @@ import type { BoardItemAdvancedOptions } from "@homarr/validation/shared";
 import classes from "./widget-card-shell.module.css";
 
 const getOverflow = (kind: WidgetKind, hasCustomCssClasses: boolean): CSSProperties => {
-  if (kind === "systemResources") return { overflowX: "visible", overflowY: "visible" };
   if (kind === "iframe" || kind === "assistant") return { overflowX: "hidden", overflowY: "hidden" };
   if (hasCustomCssClasses) return {};
   return { overflowX: "hidden", overflowY: "auto" };
