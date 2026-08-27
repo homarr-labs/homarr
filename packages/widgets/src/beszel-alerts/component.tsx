@@ -256,9 +256,9 @@ function AlertRow({ name, value, min, systemName, integrationName, triggered, is
   const t = useI18n("widget.beszelAlerts");
   const Icon = alertIconMap[name] ?? Server;
   const suffix = unitSuffixMap[name] ?? "";
-  let description = t("description.threshold", { value: `${value}${suffix}`, minutes: min });
+  let description = t("alertDescription.threshold", { value: `${value}${suffix}`, minutes: min });
   if (name === "Status") {
-    description = t("description.statusDuration", { minutes: min });
+    description = t("alertDescription.statusDuration", { minutes: min });
   }
   const accentColor = triggered ? "red" : "green";
   const borderColor = triggered ? "red" : "gray";

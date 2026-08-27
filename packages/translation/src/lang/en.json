@@ -4963,7 +4963,7 @@
       "empty": "No alerts configured",
       "history": "History",
       "resolved": "Resolved",
-      "description": {
+      "alertDescription": {
         "statusDuration": "Down for {minutes} min",
         "threshold": "Exceeds {value} over {minutes} min"
       },
