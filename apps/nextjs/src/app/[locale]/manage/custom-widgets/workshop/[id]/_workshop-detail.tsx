@@ -35,7 +35,7 @@ import { ManageStickyFooter } from "~/components/manage/manage-sticky-footer";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { WorkshopCodeViewer } from "~/components/workshop/workshop-code-viewer";
 import { getWorkshopWebUrl } from "~/components/workshop/workshop-client";
-import { WorkshopReportModal } from "~/components/workshop/workshop-report-modal";
+import { WorkshopReportForm } from "~/components/workshop/workshop-report-form";
 import { WorkshopScreenshots } from "~/components/workshop/workshop-screenshots";
 import { useWorkshopSession } from "~/components/workshop/workshop-session";
 import { WorkshopVoteControl } from "~/components/workshop/workshop-vote-control";
@@ -213,6 +213,13 @@ export function WorkshopDetail({ id }: { id: string }) {
           </Accordion.Item>
         </Accordion>
 
+        <WorkshopReportForm
+          client={session.client}
+          submissionId={submission.id}
+          opened={reportOpened}
+          onClose={reportControls.close}
+        />
+
         <ManageStickyFooter
           secondary={
             <>
@@ -241,6 +248,8 @@ export function WorkshopDetail({ id }: { id: string }) {
                     leftSection={<IconFlag size={16} />}
                     disabled={!session.user}
                     onClick={reportControls.open}
+                    aria-expanded={reportOpened}
+                    aria-controls="workshop-report-form"
                   >
                     {t("report")}
                   </Button>
@@ -259,13 +268,6 @@ export function WorkshopDetail({ id }: { id: string }) {
           </Button>
         </ManageStickyFooter>
       </Stack>
-
-      <WorkshopReportModal
-        client={session.client}
-        submissionId={submission.id}
-        opened={reportOpened}
-        onClose={reportControls.close}
-      />
     </ManagePageLayout>
   );
 }

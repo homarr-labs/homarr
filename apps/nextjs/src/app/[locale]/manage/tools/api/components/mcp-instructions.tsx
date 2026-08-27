@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback, useState } from "react";
 import {
   Accordion,
   AccordionControl,
@@ -36,12 +37,11 @@ import {
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
-import { useModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
 
-import { CopyApiKeyModal } from "./copy-api-key-modal";
 import type { McpToolGroup } from "./api-page-tabs";
 import classes from "./mcp-tools-accordion.module.css";
+import { NewApiKeyAlert } from "./new-api-key-alert";
 
 const toolTypeDisplay: Record<"query" | "mutation", { color: string; method: string }> = {
   query: { color: "blue", method: "GET" },
@@ -52,18 +52,23 @@ interface McpInstructionsProps {
   baseUrl: string;
   hasApiKeys: boolean;
   toolGroups: McpToolGroup[];
+  onApiKeyCreated: () => void;
 }
 
-export function McpInstructions({ baseUrl, hasApiKeys, toolGroups }: McpInstructionsProps) {
+export function McpInstructions({ baseUrl, hasApiKeys, toolGroups, onApiKeyCreated }: McpInstructionsProps) {
   const t = useI18n("management.page.tool.api.tab.mcp");
   const tCommon = useI18n("common");
-  const { openModal } = useModalAction(CopyApiKeyModal);
+  const [newApiKey, setNewApiKey] = useState<string | null>(null);
   const { mutate: createApiKey, isPending } = clientApi.apiKeys.create.useMutation({
-    async onSuccess(data) {
-      openModal({ apiKey: data.apiKey });
-      await revalidatePathActionAsync("/manage/tools/api");
+    onSuccess(data) {
+      setNewApiKey(data.apiKey);
+      onApiKeyCreated();
     },
   });
+  const handleDismissNewApiKey = useCallback(async () => {
+    setNewApiKey(null);
+    await revalidatePathActionAsync("/manage/tools/api");
+  }, []);
   const mcpUrl = `${baseUrl}/api/mcp`;
 
   const streamableHttpConfig = JSON.stringify(
@@ -114,7 +119,7 @@ export function McpInstructions({ baseUrl, hasApiKeys, toolGroups }: McpInstruct
         <Text size="sm">{t("description")}</Text>
       </Alert>
 
-      {!hasApiKeys && (
+      {!hasApiKeys && !newApiKey && (
         <Alert variant="light" color="yellow" icon={<IconKey size={18} />}>
           <Group justify="space-between" align="center">
             <Text size="sm">{t("noApiKey")}</Text>
@@ -130,6 +135,8 @@ export function McpInstructions({ baseUrl, hasApiKeys, toolGroups }: McpInstruct
           </Group>
         </Alert>
       )}
+
+      {newApiKey && <NewApiKeyAlert apiKey={newApiKey} onDismiss={handleDismissNewApiKey} />}
 
       <div>
         <Title order={5} mb="xs">
@@ -305,7 +312,7 @@ export function McpInstructions({ baseUrl, hasApiKeys, toolGroups }: McpInstruct
                 <Stack gap={6}>
                   {group.tools.map((tool) => (
                     <div key={tool.name} className={classes.toolRow}>
-                      <Badge size="sm" w={50} radius="xs" variant="light" color={toolTypeDisplay[tool.type].color}>
+                      <Badge size="sm" w={50} radius="xs" color={toolTypeDisplay[tool.type].color} variant="light">
                         {toolTypeDisplay[tool.type].method}
                       </Badge>
                       <div>

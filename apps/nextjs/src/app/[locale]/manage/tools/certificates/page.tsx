@@ -13,7 +13,7 @@ import { Link } from "@homarr/ui";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { NoResults } from "~/components/no-results";
-import { AddCertificateButton } from "./_components/add-certificate";
+import { AddCertificateSection } from "./_components/add-certificate";
 import { RemoveCertificate } from "./_components/remove-certificate";
 
 interface CertificatesPageProps {
@@ -69,9 +69,10 @@ export default async function CertificatesPage({ params }: CertificatesPageProps
             <Button variant="default" component={Link} href="/manage/tools/certificates/hostnames">
               {t("page.list.toHostnames")}
             </Button>
-            <AddCertificateButton />
           </Group>
         </Group>
+
+        <AddCertificateSection />
 
         {x509Certificates.length === 0 && (
           <NoResults icon={IconCertificateOff} title={t("page.list.noResults.title")} />

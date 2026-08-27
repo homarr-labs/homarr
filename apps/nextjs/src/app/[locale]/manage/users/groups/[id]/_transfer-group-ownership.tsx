@@ -1,15 +1,14 @@
 "use client";
 
-import { useCallback, useState } from "react";
-import { Button, useMatches } from "@mantine/core";
+import { useState } from "react";
+import { Button, Group, Stack, Text, useMatches } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
-import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 
-import { UserSelectModal } from "~/components/access/user-select-modal";
+import { UserSelect } from "~/components/access/user-select";
 
 interface TransferGroupOwnershipProps {
   group: {
@@ -19,75 +18,87 @@ interface TransferGroupOwnershipProps {
   };
 }
 
+interface SelectedOwner {
+  id: string;
+  name: string;
+}
+
 export const TransferGroupOwnership = ({ group }: TransferGroupOwnershipProps) => {
   const tTransfer = useI18n("group.action.transfer");
   const tCommon = useI18n("common");
   const [innerOwnerId, setInnerOwnerId] = useState(group.ownerId);
-  const { openModal } = useModalAction(UserSelectModal);
-  const { openConfirmModal } = useConfirmModal();
-  const { mutateAsync } = clientApi.group.transferOwnership.useMutation({
+  const [selectedOwner, setSelectedOwner] = useState<SelectedOwner>();
+  const { mutateAsync, isPending } = clientApi.group.transferOwnership.useMutation({
     async onSuccess() {
       await revalidatePathActionAsync(`/manage/users/groups/${group.id}`);
     },
   });
 
-  const handleTransfer = useCallback(() => {
-    openModal(
+  const handleTransfer = async () => {
+    if (!selectedOwner) return;
+
+    await mutateAsync(
       {
-        confirmLabel: tCommon("action.continue"),
-        presentUserIds: innerOwnerId ? [innerOwnerId] : [],
-        onSelect: ({ id, name }) => {
-          openConfirmModal({
-            title: tTransfer("label"),
-            children: tTransfer("confirm", {
-              name: group.name,
-              username: name,
+        groupId: group.id,
+        userId: selectedOwner.id,
+      },
+      {
+        onSuccess() {
+          setInnerOwnerId(selectedOwner.id);
+          showSuccessNotification({
+            title: tCommon("notification.transfer.success"),
+            message: tTransfer("notification.success.message", {
+              group: group.name,
+              user: selectedOwner.name,
             }),
-            // eslint-disable-next-line no-restricted-syntax
-            onConfirm: async () => {
-              await mutateAsync(
-                {
-                  groupId: group.id,
-                  userId: id,
-                },
-                {
-                  onSuccess() {
-                    setInnerOwnerId(id);
-                    showSuccessNotification({
-                      title: tCommon("notification.transfer.success"),
-                      message: tTransfer("notification.success.message", {
-                        group: group.name,
-                        user: name,
-                      }),
-                    });
-                  },
-                  onError() {
-                    showErrorNotification({
-                      title: tCommon("notification.transfer.error"),
-                      message: tTransfer("notification.error.message"),
-                    });
-                  },
-                },
-              );
-            },
+          });
+          setSelectedOwner(undefined);
+        },
+        onError() {
+          showErrorNotification({
+            title: tCommon("notification.transfer.error"),
+            message: tTransfer("notification.error.message"),
           });
         },
       },
-      {
-        title: tTransfer("label"),
-      },
     );
-  }, [group.id, group.name, innerOwnerId, mutateAsync, openConfirmModal, openModal, tCommon, tTransfer]);
+  };
 
   const fullWidth = useMatches({
     xs: true,
     sm: true,
     md: false,
   });
+  const presentUserIds: string[] = [];
+  if (innerOwnerId) presentUserIds.push(innerOwnerId);
+
+  if (!selectedOwner) {
+    return (
+      <UserSelect
+        presentUserIds={presentUserIds}
+        onSelect={setSelectedOwner}
+        triggerLabel={tTransfer("label")}
+        triggerProps={{ variant: "subtle", color: "red", fullWidth }}
+      />
+    );
+  }
 
   return (
-    <Button variant="subtle" color="red" onClick={handleTransfer} fullWidth={fullWidth}>
-      {tTransfer("label")}
-    </Button>
+    <Stack gap="xs" maw={420}>
+      <Text size="sm">
+        {tTransfer("confirm", {
+          name: group.name,
+          username: selectedOwner.name,
+        })}
+      </Text>
+      <Group justify="end" wrap="wrap">
+        <Button variant="default" onClick={() => setSelectedOwner(undefined)} disabled={isPending}>
+          {tCommon("action.cancel")}
+        </Button>
+        <Button color="red" onClick={() => void handleTransfer()} loading={isPending}>
+          {tCommon("action.confirm")}
+        </Button>
+      </Group>
+    </Stack>
   );
 };

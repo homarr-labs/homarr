@@ -5,9 +5,7 @@ import { auth } from "@homarr/auth/next";
 import { isProviderEnabled } from "@homarr/auth/server";
 import { getI18n } from "@homarr/translation/server";
 
-import { ManageMobilePrimaryAction } from "~/components/manage/manage-mobile-primary-action";
 import { ManagePageLayout } from "~/components/manage/manage-page-layout";
-import { InviteCreateButton } from "./_components/invite-create-button";
 import { InviteListComponent } from "./_components/invite-list";
 
 export default async function InvitesOverviewPage() {
@@ -24,15 +22,7 @@ export default async function InvitesOverviewPage() {
   const initialInvites = await api.invite.getAll();
 
   return (
-    <ManagePageLayout
-      title={t("title")}
-      primaryAction={
-        <ManageMobilePrimaryAction>
-          <InviteCreateButton />
-        </ManageMobilePrimaryAction>
-      }
-      floatingPrimaryAction
-    >
+    <ManagePageLayout title={t("title")}>
       <InviteListComponent initialInvites={initialInvites} />
     </ManagePageLayout>
   );

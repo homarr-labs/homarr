@@ -20,8 +20,8 @@ import { WidgetError } from "@homarr/widgets/errors";
 import { loadWidgetResources, reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 
 import { LazyWidgetEditModal, preloadWidgetEditModal } from "~/components/board/items/lazy-widget-edit-modal";
-import type { Dimensions } from "./_dimension-modal";
-import { PreviewDimensionsModal } from "./_dimension-modal";
+import type { Dimensions } from "./_dimension-popover";
+import { PreviewDimensionsPopover } from "./_dimension-popover";
 
 interface WidgetPreviewPageContentProps {
   kind: WidgetKind;
@@ -32,7 +32,6 @@ export const WidgetPreviewPageContent = ({ kind }: WidgetPreviewPageContentProps
   const t = useI18n();
   const utils = clientApi.useUtils();
   const { openModal: openWidgetEditModal } = useModalAction(LazyWidgetEditModal);
-  const { openModal: openPreviewDimensionsModal } = useModalAction(PreviewDimensionsModal);
   const { definition: currentDefinition, Component } = use(loadWidgetResources(kind));
   const [editMode, setEditMode] = useState(false);
   const [isEditorLoading, setIsEditorLoading] = useState(false);
@@ -98,13 +97,6 @@ export const WidgetPreviewPageContent = ({ kind }: WidgetPreviewPageContentProps
     });
   }, [editMode, t]);
 
-  const openDimensionsModal = useCallback(() => {
-    openPreviewDimensionsModal({
-      dimensions,
-      setDimensions,
-    });
-  }, [dimensions, openPreviewDimensionsModal]);
-
   const updateOptions = useCallback(
     ({ newOptions }: { newOptions: Record<string, unknown> }) =>
       setState((current) => ({ ...current, options: { ...current.options, ...newOptions } })),
@@ -162,15 +154,21 @@ export const WidgetPreviewPageContent = ({ kind }: WidgetPreviewPageContentProps
         </ActionIcon>
       </Affix>
       <Affix bottom={12} right={72 + 120}>
-        <ActionIcon
-          size={48}
-          variant="default"
-          radius="xl"
-          onClick={openDimensionsModal}
-          aria-label={t("widgetPreview.dimensions.title")}
-        >
-          <IconDimensions size={24} />
-        </ActionIcon>
+        <PreviewDimensionsPopover
+          dimensions={dimensions}
+          setDimensions={setDimensions}
+          target={(onClick) => (
+            <ActionIcon
+              size={48}
+              variant="default"
+              radius="xl"
+              aria-label={t("widgetPreview.dimensions.title")}
+              onClick={onClick}
+            >
+              <IconDimensions size={24} />
+            </ActionIcon>
+          )}
+        />
       </Affix>
     </>
   );

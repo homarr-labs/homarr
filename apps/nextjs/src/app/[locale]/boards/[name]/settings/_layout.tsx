@@ -23,9 +23,9 @@ import { IconEdit, IconRefresh } from "@tabler/icons-react";
 import { clientApi } from "@homarr/api/client";
 import { createId } from "@homarr/common";
 import type { UseFormReturnType } from "@homarr/form";
-import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
+import { InlineConfirmButton } from "@homarr/ui";
 
 import { SectionCard } from "~/components/manage/section-card";
 import type { Board } from "../../_types";
@@ -46,7 +46,6 @@ export const LayoutSettingsContent = ({ board, form, isSaving, saveSettingsAsync
   const tCommon = useI18n("common");
   const router = useRouter();
   const utils = clientApi.useUtils();
-  const { openConfirmModal } = useConfirmModal();
   const [editingLayoutId, setEditingLayoutId] = useState<string | null>(null);
   const [resettingLayoutId, setResettingLayoutId] = useState<string | null>(null);
   const { mutateAsync: resetLayout } = clientApi.board.resetLayout.useMutation({
@@ -84,29 +83,20 @@ export const LayoutSettingsContent = ({ board, form, isSaving, saveSettingsAsync
     }
   };
 
-  const confirmReset = (layout: FormValues["layouts"][number]) => {
-    openConfirmModal({
-      title: tBoard("setting.section.layout.reset.confirm.title", { layoutName: layout.name }),
-      children: tBoard("setting.section.layout.reset.confirm.message"),
-      confirmProps: { children: tBoard("setting.section.layout.reset.action"), color: "red" },
-      onConfirm() {
-        setResettingLayoutId(layout.id);
-        void (async () => {
-          try {
-            const canonicalLayout = board.layouts.find((candidate) => candidate.id === layout.id);
-            if (!canonicalLayout) return;
+  const handleReset = async (layout: FormValues["layouts"][number]) => {
+    setResettingLayoutId(layout.id);
+    try {
+      const canonicalLayout = board.layouts.find((candidate) => candidate.id === layout.id);
+      if (!canonicalLayout) return;
 
-            await resetLayout({ boardId: board.id, layoutId: canonicalLayout.id });
-            await utils.board.getBoardByName.invalidate({ name: board.name });
-            router.refresh();
-          } catch {
-            // The mutation callback displays the error notification.
-          } finally {
-            setResettingLayoutId(null);
-          }
-        })();
-      },
-    });
+      await resetLayout({ boardId: board.id, layoutId: canonicalLayout.id });
+      await utils.board.getBoardByName.invalidate({ name: board.name });
+      router.refresh();
+    } catch {
+      // The mutation callback displays the error notification.
+    } finally {
+      setResettingLayoutId(null);
+    }
   };
 
   const nextBreakpoint = getNextCustomBreakpoint(form.values.layouts);
@@ -236,16 +226,17 @@ export const LayoutSettingsContent = ({ board, form, isSaving, saveSettingsAsync
               <Group justify="space-between" mt="lg" gap="sm" wrap="wrap">
                 <Group gap="xs">
                   {layout.role !== "base" && persistedLayout && (
-                    <Button
+                    <InlineConfirmButton
                       type="button"
                       variant="default"
                       leftSection={<IconRefresh size={16} color="var(--mantine-color-red-5)" />}
                       loading={resettingLayoutId === layout.id}
                       disabled={isSaving}
-                      onClick={() => confirmReset(layout)}
+                      onConfirm={() => handleReset(layout)}
+                      confirmLabel={tCommon("action.confirm")}
                     >
                       {tBoard("setting.section.layout.reset.action")}
-                    </Button>
+                    </InlineConfirmButton>
                   )}
                   {layout.role === "custom" && (
                     <Button

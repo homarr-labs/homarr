@@ -1,17 +1,18 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ActionIcon,
   Alert,
   Anchor,
   Button,
+  Collapse,
   Fieldset,
   Group,
   Loader,
   NumberInput,
+  Paper,
   Stack,
-  Table,
   Text,
   TextInput,
   Tooltip,
@@ -20,7 +21,6 @@ import { IconClick, IconListSearch } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { createModal, useModalAction } from "@homarr/modals";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import { formatLocalizedCompactNumber } from "../common/locale";
@@ -33,7 +33,7 @@ export const WidgetLocationInput = ({ property, kind, options }: CommonWidgetInp
   const t = useWidgetInputTranslation(kind, property);
   const tLocation = useI18n("widget.common.location");
   const form = useFormContext();
-  const { openModal } = useModalAction(LocationSearchModal);
+  const [searchQuery, setSearchQuery] = useState<string | null>(null);
   const fieldPath = `options.${property}`;
   const inputProps = form.getInputProps(fieldPath);
   const value = isOptionLocation(inputProps.value) ? inputProps.value : options.defaultValue;
@@ -58,26 +58,23 @@ export const WidgetLocationInput = ({ property, kind, options }: CommonWidgetInp
       handleChange(location);
       form.clearFieldError(`options.${property}.latitude`);
       form.clearFieldError(`options.${property}.longitude`);
+      setSearchQuery(null);
     },
     [form, handleChange, property],
   );
 
   const onSearch = useCallback(() => {
     if (!selectionEnabled) return;
+    setSearchQuery(value.name);
+  }, [selectionEnabled, value.name]);
 
-    openModal({
-      query: value.name,
-      onLocationSelect,
-    });
-  }, [selectionEnabled, value.name, onLocationSelect, openModal]);
-
-  form.watch(`options.${property}.latitude`, ({ value }) => {
-    if (typeof value !== "number") return;
+  form.watch(`options.${property}.latitude`, ({ value: nextValue }) => {
+    if (typeof nextValue !== "number") return;
     form.setFieldValue(`options.${property}.name`, unknownLocation);
   });
 
-  form.watch(`options.${property}.longitude`, ({ value }) => {
-    if (typeof value !== "number") return;
+  form.watch(`options.${property}.longitude`, ({ value: nextValue }) => {
+    if (typeof nextValue !== "number") return;
     form.setFieldValue(`options.${property}.name`, unknownLocation);
   });
 
@@ -121,6 +118,16 @@ export const WidgetLocationInput = ({ property, kind, options }: CommonWidgetInp
             value={longitudeInputProps.value ?? value.longitude}
           />
         </Group>
+
+        <Collapse expanded={searchQuery !== null}>
+          {searchQuery && (
+            <LocationSearchResults
+              query={searchQuery}
+              onLocationSelect={onLocationSelect}
+              onClose={() => setSearchQuery(null)}
+            />
+          )}
+        </Collapse>
       </Stack>
     </Fieldset>
   );
@@ -143,124 +150,123 @@ type LocationOnChange = (
   },
 ) => void;
 
-interface LocationSearchInnerProps {
+interface LocationSearchResultsProps {
   query: string;
   onLocationSelect: (location: OptionLocation) => void;
+  onClose: () => void;
 }
 
-const LocationSearchModal = createModal<LocationSearchInnerProps>(({ actions, innerProps }) => {
-  const t = useI18n("widget.common.location.table");
+const LocationSearchResults = ({ query, onLocationSelect, onClose }: LocationSearchResultsProps) => {
+  const tLocation = useI18n("widget.common.location");
   const tCommon = useI18n("common");
-  const { data, isPending, error } = clientApi.location.searchCity.useQuery({
-    query: innerProps.query,
-  });
+  const { data, isPending, error, refetch } = clientApi.location.searchCity.useQuery({ query });
 
   if (error) {
     return (
-      <Alert title={tCommon("error")} color="red">
-        {tCommon("action.tryAgain")}
-      </Alert>
+      <Stack gap="xs">
+        <Alert title={tCommon("error")} color="red">
+          <Button variant="light" color="red" size="compact-sm" onClick={() => void refetch()}>
+            {tCommon("action.tryAgain")}
+          </Button>
+        </Alert>
+        <Group justify="right">
+          <Button variant="default" size="compact-sm" onClick={onClose}>
+            {tCommon("action.close")}
+          </Button>
+        </Group>
+      </Stack>
     );
   }
 
   return (
-    <Stack>
-      <Table striped>
-        <Table.Thead>
-          <Table.Tr>
-            <Table.Th style={{ width: "70%" }}>{t("header.city")}</Table.Th>
-            <Table.Th style={{ width: "50%" }}>{t("header.country")}</Table.Th>
-            <Table.Th>{t("header.coordinates")}</Table.Th>
-            <Table.Th>{t("header.population")}</Table.Th>
-            <Table.Th style={{ width: 40 }} />
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>
-          {isPending && (
-            <Table.Tr>
-              <Table.Td colSpan={5}>
-                <Group justify="center">
-                  <Loader />
-                </Group>
-              </Table.Td>
-            </Table.Tr>
-          )}
-          {data?.results.map((city) => (
-            <LocationSelectTableRow
-              key={city.id}
-              city={city}
-              onLocationSelect={innerProps.onLocationSelect}
-              closeModal={actions.closeModal}
-            />
-          ))}
-        </Table.Tbody>
-      </Table>
+    <Stack component="section" aria-label={tLocation("search")} gap="xs">
+      <Stack gap={4} mah={320} style={{ overflow: "hidden auto" }}>
+        {isPending && (
+          <Group justify="center" py="md">
+            <Loader />
+          </Group>
+        )}
+        {!isPending && data?.results.length === 0 && (
+          <Text ta="center" c="dimmed" py="md">
+            {tCommon("noResults")}
+          </Text>
+        )}
+        {data?.results.map((city) => (
+          <LocationSelectResult key={city.id} city={city} onLocationSelect={onLocationSelect} />
+        ))}
+      </Stack>
       <Group justify="right">
-        <Button variant="light" onClick={actions.closeModal}>
-          {tCommon("action.cancel")}
+        <Button variant="default" size="compact-sm" onClick={onClose}>
+          {tCommon("action.close")}
         </Button>
       </Group>
     </Stack>
   );
-}).withOptions({
-  defaultTitle(t) {
-    return t("widget.common.location.search");
-  },
-  size: "xl",
-});
+};
 
-interface LocationSearchTableRowProps {
+interface LocationSelectResultProps {
   city: RouterOutputs["location"]["searchCity"]["results"][number];
   onLocationSelect: (location: OptionLocation) => void;
-  closeModal: () => void;
 }
 
-const LocationSelectTableRow = ({ city, onLocationSelect, closeModal }: LocationSearchTableRowProps) => {
+const LocationSelectResult = ({ city, onLocationSelect }: LocationSelectResultProps) => {
   const t = useI18n("widget.common.location.table");
   const locale = useCurrentIntlLocale();
+  let populationLabel = t("population.fallback");
+  if (city.population) {
+    populationLabel = `${t("header.population")}: ${formatLocalizedCompactNumber(city.population, locale)}`;
+  }
   const onSelect = useCallback(() => {
     onLocationSelect({
       name: city.name,
       latitude: city.latitude,
       longitude: city.longitude,
     });
-    closeModal();
-  }, [city, onLocationSelect, closeModal]);
+  }, [city, onLocationSelect]);
 
   return (
-    <Table.Tr>
-      <Table.Td>
-        <Text style={{ whiteSpace: "nowrap" }}>{city.name}</Text>
-      </Table.Td>
-      <Table.Td>
-        <Text style={{ whiteSpace: "nowrap" }}>{city.country}</Text>
-      </Table.Td>
-      <Table.Td>
-        <Anchor target="_blank" href={`https://www.google.com/maps/place/${city.latitude},${city.longitude}`}>
-          <Text style={{ whiteSpace: "nowrap" }}>
-            {city.latitude}, {city.longitude}
+    <Paper withBorder p="xs">
+      <Group justify="space-between" align="flex-start" wrap="nowrap">
+        <Stack gap={2} miw={0}>
+          <Text fw={500} style={{ overflowWrap: "anywhere" }}>
+            {city.name}
           </Text>
-        </Anchor>
-      </Table.Td>
-      <Table.Td>
-        {city.population ? (
-          <Text style={{ whiteSpace: "nowrap" }}>{formatLocalizedCompactNumber(city.population, locale)}</Text>
-        ) : (
-          <Text c="gray"> {t("population.fallback")}</Text>
-        )}
-      </Table.Td>
-      <Table.Td>
+          <Text size="xs" c="dimmed" style={{ overflowWrap: "anywhere" }}>
+            {city.country}
+          </Text>
+          <Group gap="xs" wrap="wrap">
+            <Anchor
+              size="xs"
+              target="_blank"
+              href={`https://www.google.com/maps/place/${city.latitude},${city.longitude}`}
+            >
+              {city.latitude}, {city.longitude}
+            </Anchor>
+            <Text size="xs" c="dimmed">
+              {populationLabel}
+            </Text>
+          </Group>
+        </Stack>
         <Tooltip
           label={t("action.select", {
             city: city.name,
             countryCode: city.country_code ?? "??",
           })}
         >
-          <ActionIcon color="red" variant="subtle" onClick={onSelect}>
+          <ActionIcon
+            flex="0 0 auto"
+            color="red"
+            variant="subtle"
+            onClick={onSelect}
+            aria-label={t("action.select", {
+              city: city.name,
+              countryCode: city.country_code ?? "??",
+            })}
+          >
             <IconClick size="var(--mantine-font-size-md)" />
           </ActionIcon>
         </Tooltip>
-      </Table.Td>
-    </Table.Tr>
+      </Group>
+    </Paper>
   );
 };

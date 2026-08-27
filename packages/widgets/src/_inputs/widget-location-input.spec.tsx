@@ -1,5 +1,7 @@
 // @vitest-environment jsdom
 
+/* eslint-disable unicorn/consistent-function-scoping -- Component mocks are intentionally colocated with their module factory. */
+
 import { act } from "react";
 import type { ReactNode } from "react";
 import { createRoot } from "react-dom/client";
@@ -30,6 +32,7 @@ vi.mock("@mantine/core", () => {
 
   return {
     Button: Container,
+    Collapse: Container,
     Fieldset: Container,
     Group: Container,
     NumberInput: Input,
@@ -38,11 +41,6 @@ vi.mock("@mantine/core", () => {
     Tooltip: Container,
   };
 });
-
-vi.mock("@homarr/modals", () => ({
-  createModal: () => ({ withOptions: () => null }),
-  useModalAction: () => ({ openModal: vi.fn() }),
-}));
 
 vi.mock("@homarr/translation/client", () => ({
   useCurrentIntlLocale: () => "en",

@@ -9,7 +9,7 @@ import { getI18n } from "@homarr/translation/server";
 import { Link } from "@homarr/ui";
 
 import { ManagePageLayout } from "~/components/manage/manage-page-layout";
-import { AddGroupButton, GroupsList } from "./_client";
+import { GroupsList } from "./_client";
 import classes from "./groups.module.css";
 
 export default async function GroupsListPage() {
@@ -26,7 +26,7 @@ export default async function GroupsListPage() {
   const groupsWithoutEveryone = groups.filter((group) => group.name !== everyoneGroup);
 
   return (
-    <ManagePageLayout title={tCommon("entity.groups")} primaryAction={<AddGroupButton />} floatingPrimaryAction>
+    <ManagePageLayout title={tCommon("entity.groups")}>
       <Stack>
         {dbEveryoneGroup && (
           <UnstyledButton component={Link} href={`/manage/users/groups/${dbEveryoneGroup.id}`}>

@@ -12,7 +12,6 @@ import { everyoneGroup, groupPermissions } from "@homarr/definitions";
 import type { IsValid } from "@homarr/form";
 import { useZodForm } from "@homarr/form";
 import { UserCreatePasswordFields } from "@homarr/forms-collection";
-import { useModalAction } from "@homarr/modals";
 import { showErrorNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { UserAvatar } from "@homarr/ui";
@@ -20,7 +19,7 @@ import { createCustomErrorParams } from "@homarr/validation/form/i18n";
 import { optionalEmailSchema } from "@homarr/validation/email";
 import { userPasswordSchema } from "@homarr/validation/user";
 
-import { GroupSelectModal } from "~/components/access/group-select-modal";
+import { GroupSelect } from "~/components/access/group-select";
 import { StepperNavigationComponent } from "./stepper-navigation";
 
 interface GroupWithPermissions {
@@ -224,23 +223,6 @@ const GroupsForm = ({ addGroup, removeGroup, initialGroups }: GroupsFormProps) =
   const tCommon = useI18n("common");
   const tPermission = useI18n("permission");
   const [groups, { append, filter }] = useListState<GroupWithPermissions>(initialGroups);
-  const { openModal } = useModalAction(GroupSelectModal);
-
-  const handleAddClick = () => {
-    openModal({
-      presentGroupIds: groups.map((group) => group.id),
-      withPermissions: true,
-      onSelect({ id, name, permissions }) {
-        if (!permissions) return;
-
-        startTransition(() => {
-          addGroup(id);
-          append({ id, name, permissions });
-        });
-      },
-    });
-  };
-
   const handleGroupRemove = (id: string) => {
     filter((group) => group.id !== id);
     removeGroup(id);
@@ -256,14 +238,23 @@ const GroupsForm = ({ addGroup, removeGroup, initialGroups }: GroupsFormProps) =
               {tCreate("step.groups.description", { everyoneGroup })}
             </Text>
           </Stack>
-          <Button
-            variant="subtle"
-            color="gray"
-            leftSection={<IconPlus size={16} stroke={1.5} />}
-            onClick={handleAddClick}
-          >
-            {tCommon("action.add")}
-          </Button>
+          <GroupSelect
+            presentGroupIds={groups.map((group) => group.id)}
+            withPermissions
+            onSelect={({ id, name, permissions }) => {
+              if (!permissions) return;
+
+              startTransition(() => {
+                addGroup(id);
+                append({ id, name, permissions });
+              });
+            }}
+            triggerProps={{
+              variant: "subtle",
+              color: "gray",
+              leftSection: <IconPlus size={16} stroke={1.5} />,
+            }}
+          />
         </Group>
         <Table>
           <Table.Thead>

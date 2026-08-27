@@ -20,10 +20,9 @@ import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { formatCustomWidgetImportIssues, parseCustomWidgetClipboardDetailed } from "@homarr/custom-widgets/core";
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
-import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import { Link } from "@homarr/ui";
+import { InlineConfirmMenuItem, Link } from "@homarr/ui";
 
 import { CustomWidgetImportDialog } from "~/components/custom-widgets/custom-widget-import-dialog";
 import { downloadJson } from "~/components/custom-widgets/download";
@@ -40,7 +39,7 @@ interface WidgetRef {
 
 export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
   const t = useI18n("customWidget");
-  const { openConfirmModal } = useConfirmModal();
+  const tCommon = useI18n("common");
   const deleteMutation = clientApi.customWidget.delete.useMutation();
   const duplicateMutation = clientApi.customWidget.duplicate.useMutation();
   const toggleMutation = clientApi.customWidget.toggleEnabled.useMutation();
@@ -173,30 +172,24 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
   };
 
   const handleDelete = () => {
-    openConfirmModal({
-      title: t("action.delete"),
-      children: t("action.deleteConfirm", { name: widget.name }),
-      onConfirm: () => {
-        deleteMutation.mutate(
-          { id: widget.id },
-          {
-            onSuccess: () => {
-              showSuccessNotification({
-                title: t("action.delete"),
-                message: t("notification.deleted", { name: widget.name }),
-              });
-              void utils.customWidget.list.invalidate();
-              void utils.customWidget.available.invalidate();
-              void utils.widget.customApi.getData.invalidate();
-              void revalidatePathActionAsync("/manage/custom-widgets");
-            },
-            onError: () => {
-              showErrorNotification({ title: t("action.delete"), message: t("notification.deleteError") });
-            },
-          },
-        );
+    deleteMutation.mutate(
+      { id: widget.id },
+      {
+        onSuccess: () => {
+          showSuccessNotification({
+            title: t("action.delete"),
+            message: t("notification.deleted", { name: widget.name }),
+          });
+          void utils.customWidget.list.invalidate();
+          void utils.customWidget.available.invalidate();
+          void utils.widget.customApi.getData.invalidate();
+          void revalidatePathActionAsync("/manage/custom-widgets");
+        },
+        onError: () => {
+          showErrorNotification({ title: t("action.delete"), message: t("notification.deleteError") });
+        },
       },
-    });
+    );
   };
 
   return (
@@ -263,14 +256,15 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
             </>
           )}
           {!widget.migrationRequired && (
-            <Menu.Item
+            <InlineConfirmMenuItem
               color="red"
               leftSection={<IconTrash {...iconProps} />}
-              onClick={handleDelete}
+              onConfirm={handleDelete}
+              confirmLabel={tCommon("action.confirm")}
               disabled={deleteMutation.isPending}
             >
               {t("action.delete")}
-            </Menu.Item>
+            </InlineConfirmMenuItem>
           )}
         </Menu.Dropdown>
       </Menu>

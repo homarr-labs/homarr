@@ -1,3 +1,5 @@
+"use client";
+
 import { useRouter } from "next/navigation";
 import { Button, Group, InputWrapper, Slider, Stack, Switch, TextInput } from "@mantine/core";
 import { useDebouncedValue } from "@mantine/hooks";
@@ -6,12 +8,16 @@ import { IconAlertTriangle, IconCircleCheck } from "@tabler/icons-react";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useZodForm } from "@homarr/form";
-import { createModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
+import type { TablerIcon } from "@homarr/ui";
 import { boardColumnCountSchema, boardCreateSchema, boardNameSchema } from "@homarr/validation/board";
 
-export const AddBoardModal = createModal(({ actions }) => {
+interface BoardCreateFormProps {
+  onCancel?: () => void;
+}
+
+export const BoardCreateForm = ({ onCancel }: BoardCreateFormProps) => {
   const tBoard = useI18n("board");
   const tCommon = useI18n("common");
   const router = useRouter();
@@ -38,7 +44,6 @@ export const AddBoardModal = createModal(({ actions }) => {
         if (!boardNameStatus.canSubmit) return;
         mutate(values, {
           onSuccess: (result) => {
-            actions.closeModal();
             showSuccessNotification({
               title: tBoard("action.create.notification.success.title"),
               message: tBoard("action.create.notification.success.message", { name: values.name }),
@@ -56,24 +61,17 @@ export const AddBoardModal = createModal(({ actions }) => {
         });
       })}
     >
-      <Stack>
+      <Stack maw={720}>
         <TextInput
           label={tCommon("field.name")}
-          data-autofocus
+          withAsterisk
+          autoFocus
           {...form.getInputProps("name")}
-          description={
-            boardNameStatus.description ? (
-              <span>
-                <Group c={boardNameStatus.description.color} gap="xs" align="center">
-                  {boardNameStatus.description.icon ? <boardNameStatus.description.icon size={16} /> : null}
-                  <span>{boardNameStatus.description.label}</span>
-                </Group>
-              </span>
-            ) : null
-          }
+          description={<BoardNameAvailability status={boardNameStatus} />}
         />
         <InputWrapper label={tBoard("field.columnCount.label")} {...form.getInputProps("columnCount")}>
           <Slider
+            aria-label={tBoard("field.columnCount.label")}
             min={boardColumnCountSchema.minValue ?? undefined}
             max={boardColumnCountSchema.maxValue ?? undefined}
             step={1}
@@ -87,50 +85,71 @@ export const AddBoardModal = createModal(({ actions }) => {
           {...form.getInputProps("isPublic")}
         />
 
-        <Group justify="right">
-          <Button onClick={actions.closeModal} variant="subtle" color="gray">
-            {tCommon("action.cancel")}
-          </Button>
-          <Button type="submit" loading={isPending}>
+        <Group justify="end" wrap="wrap">
+          {onCancel && (
+            <Button variant="default" onClick={onCancel}>
+              {tCommon("action.cancel")}
+            </Button>
+          )}
+          <Button type="submit" loading={isPending} disabled={!boardNameStatus.canSubmit}>
             {tCommon("action.create")}
           </Button>
         </Group>
       </Stack>
     </form>
   );
-}).withOptions({
-  defaultTitle: (t) => t("management.page.board.action.new.label"),
-});
+};
 
 export const useBoardNameStatus = (name: string) => {
   const tBoard = useI18n("board");
   const tCommon = useI18n("common");
   const [debouncedName] = useDebouncedValue(name, 250);
+  const isValidName = boardNameSchema.safeParse(name).success;
+  const isDebouncing = name !== debouncedName;
   const { data: boardExists, isLoading } = clientApi.board.exists.useQuery(debouncedName, {
     enabled: boardNameSchema.safeParse(debouncedName).success,
   });
+  let description: { label: string; icon?: TablerIcon; color?: string } | undefined;
+
+  if (debouncedName.trim() !== "") {
+    if (isDebouncing || isLoading) {
+      description = {
+        label: tBoard("action.create.availability.checking"),
+      };
+    } else if (boardExists !== undefined) {
+      if (boardExists) {
+        description = {
+          icon: IconAlertTriangle,
+          label: tCommon("zod.errors.custom.boardAlreadyExists"),
+          color: "red",
+        };
+      } else {
+        description = {
+          icon: IconCircleCheck,
+          label: tBoard("action.create.availability.available", { name: debouncedName }),
+          color: "green",
+        };
+      }
+    }
+  }
 
   return {
-    canSubmit: !boardExists && !isLoading,
-    description:
-      debouncedName.trim() === ""
-        ? undefined
-        : isLoading
-          ? {
-              label: tBoard("action.create.availability.checking"),
-            }
-          : boardExists === undefined
-            ? undefined
-            : boardExists
-              ? {
-                  icon: IconAlertTriangle,
-                  label: tCommon("zod.errors.custom.boardAlreadyExists"), // The board ${debouncedName} already exists
-                  color: "red",
-                }
-              : {
-                  icon: IconCircleCheck,
-                  label: tBoard("action.create.availability.available", { name: debouncedName }),
-                  color: "green",
-                },
+    canSubmit: isValidName && !isDebouncing && boardExists === false && !isLoading,
+    description,
   };
+};
+
+export type BoardNameStatus = ReturnType<typeof useBoardNameStatus>;
+
+export const BoardNameAvailability = ({ status }: { status: BoardNameStatus }) => {
+  if (!status.description) return null;
+
+  const Icon = status.description.icon;
+
+  return (
+    <Group component="output" c={status.description.color} gap="xs" align="center" aria-live="polite">
+      {Icon && <Icon size={16} />}
+      <span>{status.description.label}</span>
+    </Group>
+  );
 };
