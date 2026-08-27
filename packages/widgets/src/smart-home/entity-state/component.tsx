@@ -98,14 +98,15 @@ export default function SmartHomeEntityStateWidget({
 
   if (entityError && entity === undefined) throw entityError;
 
-  const isTiny = isSmartHomeTiny(width, height);
+  const isAdvanced = displayMode === "advanced";
+  const isTiny = isAdvanced ? isSmartHomeTiny(width, height) : width < 128;
   const advancedAttributes = [
     { key: "unit" as const, value: entity?.attributes.unit_of_measurement },
     { key: "deviceClass" as const, value: entity?.attributes.device_class },
     { key: "icon" as const, value: entity?.attributes.icon },
   ].filter(({ value }) => typeof value === "string" && value.length > 0);
   const displayName =
-    displayMode === "advanced" && typeof entity?.attributes.friendly_name === "string"
+    isAdvanced && typeof entity?.attributes.friendly_name === "string"
       ? entity.attributes.friendly_name
       : options.displayName;
   const knownStates = {
@@ -133,20 +134,34 @@ export default function SmartHomeEntityStateWidget({
       }}
     >
       <Center h="100%" w="100%">
-        <Stack align="center" gap={isTiny ? 4 : "md"} p="xs" maw="100%">
-          <Text ta="center" fw={700} size={isTiny ? "lg" : "2xl"} lh={1.1} lineClamp={1} maw="100%">
-            {state}
-            {attribute}
-          </Text>
-          <Text ta="center" c="dimmed" fw={500} size={isTiny ? "xs" : "sm"} lineClamp={2} maw="100%">
-            {displayName}
-          </Text>
+        <Stack align="center" gap={isAdvanced && isTiny ? 4 : "md"} p={isAdvanced ? "xs" : undefined} maw="100%">
+          {isAdvanced ? (
+            <>
+              <Text ta="center" fw={700} size={isTiny ? "lg" : "2xl"} lh={1.1} lineClamp={1} maw="100%">
+                {state}
+                {attribute}
+              </Text>
+              <Text ta="center" c="dimmed" fw={500} size={isTiny ? "xs" : "sm"} lineClamp={2} maw="100%">
+                {displayName}
+              </Text>
+            </>
+          ) : (
+            <>
+              <Text ta="center" fw="bold" size={isTiny ? "sm" : "lg"} lineClamp={2} maw="100%">
+                {displayName}
+              </Text>
+              <Text ta="center" size={isTiny ? "xs" : "lg"} lineClamp={1} maw="100%">
+                {state}
+                {attribute}
+              </Text>
+            </>
+          )}
           {queryErrorLabel && (
             <Text size="xs" c="orange" ta="center" lineClamp={1} maw="100%" aria-live="polite">
               {queryErrorLabel}
             </Text>
           )}
-          {displayMode === "advanced" && entity && (
+          {isAdvanced && entity && (
             <>
               <Group justify="center" gap={4}>
                 {advancedAttributes.map(({ key, value }) => (

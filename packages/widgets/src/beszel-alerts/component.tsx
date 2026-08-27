@@ -1,20 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import {
-  Badge,
-  Box,
-  Center,
-  Divider,
-  Group,
-  Loader,
-  ScrollArea,
-  Stack,
-  Text,
-  ThemeIcon,
-  Tooltip,
-  VisuallyHidden,
-} from "@mantine/core";
+import { Badge, Box, Center, Divider, Group, Loader, ScrollArea, Stack, Text, ThemeIcon } from "@mantine/core";
 import { IconBellOff, IconCircleCheck, IconFlame, IconHistory } from "@tabler/icons-react";
 import { getQueryKey } from "@trpc/react-query";
 import dayjs from "dayjs";
@@ -53,7 +40,6 @@ export default function BeszelAlertsWidget({
   options,
   integrationIds,
   isEditMode,
-  height,
   displayMode,
   widgetRuntimeRef,
 }: WidgetComponentProps<"beszelAlerts">) {
@@ -109,9 +95,7 @@ export default function BeszelAlertsWidget({
 
   const triggeredAlerts = alerts.filter((a) => a.triggered);
   const okAlerts = alerts.filter((a) => !a.triggered);
-  const showOkAlerts = isAdvanced || triggeredAlerts.length === 0 || height >= 260;
-  const showHistory = isAdvanced || (options.showHistory && height >= 360);
-  const showAlertDescriptions = isAdvanced || height >= 190;
+  const showHistory = isAdvanced || options.showHistory;
 
   if (isPending) {
     return (
@@ -145,7 +129,7 @@ export default function BeszelAlertsWidget({
             <Stack gap={6}>
               <Group gap={6}>
                 <IconFlame size="var(--mantine-font-size-sm)" color="var(--mantine-color-red-6)" />
-                <Text size="xs" fw={600} c="red">
+                <Text size="xs" fw={600} c="red" tt={isAdvanced ? undefined : "uppercase"}>
                   {t("status.triggered")} ({triggeredAlerts.length})
                 </Text>
               </Group>
@@ -158,19 +142,19 @@ export default function BeszelAlertsWidget({
                   systemName={getBeszelSystemName(systemNameMap, alert.integrationId, alert.system)}
                   integrationName={showIntegrationName ? alert.integrationName : undefined}
                   triggered
-                  showDescription={showAlertDescriptions}
+                  isAdvanced={isAdvanced}
                 />
               ))}
             </Stack>
           )}
 
-          {triggeredAlerts.length > 0 && showOkAlerts && okAlerts.length > 0 && <Divider />}
+          {triggeredAlerts.length > 0 && okAlerts.length > 0 && <Divider />}
 
-          {showOkAlerts && okAlerts.length > 0 && (
+          {okAlerts.length > 0 && (
             <Stack gap={6}>
               <Group gap={6}>
                 <IconCircleCheck size="var(--mantine-font-size-sm)" color="var(--mantine-color-green-6)" />
-                <Text size="xs" fw={600} c="dimmed">
+                <Text size="xs" fw={600} c="dimmed" tt={isAdvanced ? undefined : "uppercase"}>
                   {t("status.ok")} ({okAlerts.length})
                 </Text>
               </Group>
@@ -183,7 +167,7 @@ export default function BeszelAlertsWidget({
                   systemName={getBeszelSystemName(systemNameMap, alert.integrationId, alert.system)}
                   integrationName={showIntegrationName ? alert.integrationName : undefined}
                   triggered={false}
-                  showDescription={showAlertDescriptions}
+                  isAdvanced={isAdvanced}
                 />
               ))}
             </Stack>
@@ -195,7 +179,7 @@ export default function BeszelAlertsWidget({
               <Stack gap={6}>
                 <Group gap={6}>
                   <IconHistory size="var(--mantine-font-size-sm)" opacity={0.5} />
-                  <Text size="xs" fw={600} c="dimmed">
+                  <Text size="xs" fw={600} c="dimmed" tt={isAdvanced ? undefined : "uppercase"}>
                     {t("history")}
                   </Text>
                 </Group>
@@ -250,7 +234,7 @@ interface AlertRowProps {
   systemName: string;
   integrationName?: string;
   triggered: boolean;
-  showDescription: boolean;
+  isAdvanced: boolean;
 }
 
 const unitSuffixMap: Record<string, string> = {
@@ -268,49 +252,46 @@ const unitSuffixMap: Record<string, string> = {
   Status: "",
 };
 
-function formatAlertDescription(name: string, value: number, min: number): string {
-  const suffix = unitSuffixMap[name] ?? "";
-  if (name === "Status") return `down for ${min} min`;
-  return `exceeds ${value}${suffix} over ${min} min`;
-}
-
-function AlertRow({ name, value, min, systemName, integrationName, triggered, showDescription }: AlertRowProps) {
+function AlertRow({ name, value, min, systemName, integrationName, triggered, isAdvanced }: AlertRowProps) {
+  const t = useI18n("widget.beszelAlerts");
   const Icon = alertIconMap[name] ?? Server;
-  const description = formatAlertDescription(name, value, min);
+  const suffix = unitSuffixMap[name] ?? "";
+  let description = t("alertDescription.threshold", { value: `${value}${suffix}`, minutes: min });
+  if (name === "Status") {
+    description = t("alertDescription.statusDuration", { minutes: min });
+  }
+  const accentColor = triggered ? "red" : "green";
+  const borderColor = triggered ? "red" : "gray";
+  const rowStyle = isAdvanced
+    ? {
+        borderRadius: "var(--mantine-radius-sm)",
+        border: `1px solid var(--mantine-color-${borderColor}-4)`,
+        backgroundColor: triggered ? "var(--mantine-color-red-light)" : "var(--mantine-color-default-hover)",
+      }
+    : {
+        borderRadius: "var(--mantine-radius-sm)",
+        borderLeft: `3px solid var(--mantine-color-${accentColor}-6)`,
+        backgroundColor: triggered ? "var(--mantine-color-red-light)" : "var(--mantine-color-default-hover)",
+      };
   return (
-    <Tooltip label={description} disabled={showDescription} withArrow>
-      <Group
-        wrap="nowrap"
-        gap="xs"
-        py={showDescription ? 4 : 2}
-        px={8}
-        style={{
-          borderRadius: "var(--mantine-radius-sm)",
-          border: `1px solid var(--mantine-color-${triggered ? "red" : "gray"}-4)`,
-          backgroundColor: triggered ? "var(--mantine-color-red-light)" : "var(--mantine-color-default-hover)",
-        }}
-      >
-        <Icon size="var(--mantine-font-size-sm)" opacity={0.7} style={{ flexShrink: 0 }} />
-        <Stack gap={0} style={{ flex: 1, minWidth: 0 }}>
-          <Group gap={6} wrap="nowrap">
-            <Text size="xs" fw={600} truncate>
-              {integrationName ? `${systemName} · ${integrationName}` : systemName}
-            </Text>
-            <Text size="xs" c="dimmed">
-              ·
-            </Text>
-            <Text size="xs" c="dimmed" style={{ whiteSpace: "nowrap" }}>
-              {name}
-            </Text>
-          </Group>
-          {showDescription && (
-            <Text size="xs" c="dimmed" truncate>
-              {description}
-            </Text>
-          )}
-          {!showDescription && <VisuallyHidden>{description}</VisuallyHidden>}
-        </Stack>
-      </Group>
-    </Tooltip>
+    <Group wrap="nowrap" gap="xs" py={4} pr={8} pl={isAdvanced ? 8 : 12} style={rowStyle}>
+      <Icon size="var(--mantine-font-size-sm)" opacity={0.7} style={{ flexShrink: 0 }} />
+      <Stack gap={0} style={{ flex: 1, minWidth: 0 }}>
+        <Group gap={6} wrap="nowrap">
+          <Text size="xs" fw={600} truncate>
+            {integrationName ? `${systemName} · ${integrationName}` : systemName}
+          </Text>
+          <Text size="xs" c="dimmed">
+            ·
+          </Text>
+          <Text size="xs" c="dimmed" style={{ whiteSpace: "nowrap" }}>
+            {name}
+          </Text>
+        </Group>
+        <Text size="xs" c="dimmed" truncate>
+          {description}
+        </Text>
+      </Stack>
+    </Group>
   );
 }

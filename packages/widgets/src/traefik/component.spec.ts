@@ -39,8 +39,8 @@ describe("Traefik source ownership", () => {
 });
 
 describe("Traefik advanced disclosure", () => {
-  test("shows every protocol regardless of compact toggles and height", () => {
-    expect(getTraefikProtocolKeys({ showTcp: false, showUdp: false }, 100, true)).toEqual(["http", "tcp", "udp"]);
+  test("shows every protocol in advanced mode regardless of compact toggles", () => {
+    expect(getTraefikProtocolKeys({ showTcp: false, showUdp: false }, true)).toEqual(["http", "tcp", "udp"]);
   });
 
   test("shows every unique entry point regardless of compact width limits", () => {

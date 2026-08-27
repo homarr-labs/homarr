@@ -281,6 +281,7 @@ const WidgetEditPreview = ({
                               integrationIds={state.integrationIds}
                               width={sourceWidth}
                               height={sourceHeight}
+                              displayScale={previewScale}
                               isEditMode={isPendingCustomWidget}
                               displayMode="compact"
                               boardId={boardId}

@@ -15,7 +15,7 @@ import { tracearrIntegration } from "@site/docs/integrations/tracearr";
 
 <WidgetHeader widget={tracearrWidget} categories={["Media Monitoring"]} />
 
-The Tracearr widget provides a real-time monitoring dashboard for your media server activity. It displays active streams, user statistics, recent watching history, and policy violations.
+The Tracearr widget provides a real-time monitoring dashboard for your media server activity. It displays active streams, user statistics, recent watching history, and policy violations. Compact mode renders every enabled section in that familiar order without hiding or truncating sections based on widget height.
 
 When multiple Tracearr integrations are selected, every stream, violation, and activity row keeps its source identity and an integration-scoped key. Data from healthy sources remains visible if another source fails, and a warning identifies each unavailable integration without exposing private request details. If every selected integration fails, the widget reports an error; if cached data remains visible after a later total failure, a stale-data warning is shown.
 

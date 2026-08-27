@@ -10,16 +10,18 @@ type SourcedTracearrHistorySession = SourcedTracearrItem<TracearrHistorySession>
 export function RecentActivityList({
   sessions,
   showSource,
+  transparent = false,
 }: {
   sessions: SourcedTracearrHistorySession[];
   showSource: boolean;
+  transparent?: boolean;
 }) {
   const t = useI18n("widget.tracearr");
   const locale = useCurrentIntlLocale();
 
   return (
     <Stack gap={4}>
-      <Text size="xs" fw={600} c="dimmed">
+      <Text size="xs" fw={600} c="dimmed" tt={transparent ? undefined : "uppercase"}>
         {t("recentActivity.title")}
       </Text>
       {sessions.length === 0 ? (
@@ -35,7 +37,7 @@ export function RecentActivityList({
                 : session.mediaTitle;
 
             return (
-              <Paper key={session.key} p="sm" radius="lg" bg="transparent">
+              <Paper key={session.key} p="sm" radius="lg" bg={transparent ? "transparent" : undefined}>
                 <Group justify="space-between" wrap="nowrap">
                   <Group gap="xs" wrap="nowrap" style={{ overflow: "hidden" }}>
                     <Avatar src={session.user.avatarUrl} alt={session.user.username} radius="xl" size="sm" />

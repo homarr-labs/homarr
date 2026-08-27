@@ -16,7 +16,6 @@ import {
   Stack,
   Text,
   Tooltip,
-  VisuallyHidden,
 } from "@mantine/core";
 import {
   IconBrandDocker,
@@ -111,33 +110,11 @@ const ContainerStateBadge = ({ state }: { state: ContainerState }) => {
   );
 };
 
-const ContainerStateDot = ({ state }: { state: ContainerState }) => {
-  const t = useI18n("docker.field.state.option");
-  const label = t(state);
-
-  return (
-    <Tooltip label={label} withArrow>
-      <Box component="span" style={{ display: "inline-flex", flexShrink: 0 }}>
-        <Box
-          component="span"
-          aria-hidden="true"
-          w={8}
-          h={8}
-          bg={`${containerStateColorMap[state]}.6`}
-          style={{ borderRadius: "50%" }}
-        />
-        <VisuallyHidden>{label}</VisuallyHidden>
-      </Box>
-    </Tooltip>
-  );
-};
-
 const createColumns = (
   t: ReturnType<typeof useI18n<"docker">>,
   tCommon: ReturnType<typeof useI18n<"common">>,
   handlers: ContainerActionHandlers,
   sortingEnabled: boolean,
-  inlineState: boolean,
 ): DataTableColumn<DockerContainer>[] => [
   {
     accessor: "name",
@@ -147,7 +124,6 @@ const createColumns = (
     sortable: sortingEnabled,
     render: (container) => (
       <Group gap="xs" wrap="nowrap" style={{ overflow: "hidden" }}>
-        {inlineState && <ContainerStateDot state={container.state} />}
         <Avatar
           variant="outline"
           radius="sm"
@@ -387,14 +363,12 @@ export default function DockerWidget({
     () => getDockerColumnVisibility(options.columns, width, isAdvanced),
     [isAdvanced, options.columns, width],
   );
-  const inlineState =
-    !isAdvanced && width < 340 && options.columns.includes("name") && options.columns.includes("state");
   const columns = useMemo(() => {
     const sortingEnabled = (isAdvanced || options.enableRowSorting) && !isEditMode;
-    return createColumns(t, tCommon, actionHandlers, sortingEnabled, inlineState).filter(
+    return createColumns(t, tCommon, actionHandlers, sortingEnabled).filter(
       ({ accessor }) => columnVisibility[String(accessor) as keyof typeof columnVisibility],
     );
-  }, [actionHandlers, columnVisibility, inlineState, isAdvanced, isEditMode, options.enableRowSorting, t, tCommon]);
+  }, [actionHandlers, columnVisibility, isAdvanced, isEditMode, options.enableRowSorting, t, tCommon]);
   const { effectiveColumns, storeKey } = usePersistedTableLayout({
     columns,
     columnAccessors,
@@ -435,7 +409,7 @@ export default function DockerWidget({
       <Box style={{ flex: 1, minHeight: 0 }}>
         <HomarrDataTable
           isEditMode={isEditMode}
-          cellPadding="2px 8px"
+          cellPadding={isAdvanced || width < 400 ? "2px 8px" : "4px 8px"}
           className="docker-table"
           rowCursor="default"
           fetching={isFetching && containers.length === 0}

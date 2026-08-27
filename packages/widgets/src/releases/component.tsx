@@ -65,7 +65,7 @@ export default function ReleasesWidget({ options, itemId, width, displayMode }: 
     defaultValue: {},
   });
   const isAdvanced = displayMode === "advanced";
-  const columns = Math.max(1, Math.floor(width / 420));
+  const columns = isAdvanced ? Math.max(1, Math.floor(width / 420)) : 1;
 
   const relativeDateOptions = useMemo(
     () => ({

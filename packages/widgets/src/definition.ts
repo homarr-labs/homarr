@@ -180,6 +180,7 @@ export type WidgetComponentProps<TKind extends WidgetKind> = WidgetProps<TKind> 
   setOptions: ({ newOptions }: { newOptions: Partial<inferOptionsFromCreator<WidgetOptionsRecordOf<TKind>>> }) => void;
   width: number;
   height: number;
+  displayScale?: number;
   widgetRuntimeRef?: WidgetRuntimeRef;
   widgetStateRef?: React.MutableRefObject<Record<string, unknown> | null>;
   removeItem?: () => void;

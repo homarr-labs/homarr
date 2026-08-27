@@ -18,6 +18,7 @@ export default function AudioStatsWidget({
   options,
   width,
   height,
+  displayScale = 1,
   displayMode = "compact",
   widgetRuntimeRef,
 }: WidgetComponentProps<"audioStats">) {
@@ -39,14 +40,22 @@ export default function AudioStatsWidget({
   const currentStreams = streamResults ?? [];
   if (!response) return <WidgetEmptyState />;
 
+  let responsiveWidth = width;
+  let responsiveHeight = height;
+  if (displayMode === "compact" && Number.isFinite(displayScale) && displayScale > 0) {
+    responsiveWidth *= displayScale;
+    responsiveHeight *= displayScale;
+  }
+
   const summary = (
     <AudioStatsContent
       backend={response.kind}
       stats={response.data}
-      options={{ ...options, compactMode: displayMode === "compact" && (options.compactMode || height < 160) }}
+      options={{ ...options, compactMode: displayMode === "compact" && options.compactMode }}
       showAllStats={displayMode === "advanced"}
-      width={width}
-      height={height}
+      advanced={displayMode === "advanced"}
+      width={responsiveWidth}
+      height={responsiveHeight}
     />
   );
   if (displayMode === "compact") {

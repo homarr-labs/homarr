@@ -8,10 +8,12 @@ export function StatsBar({
   stats,
   summary,
   width,
+  transparent = false,
 }: {
   stats: TracearrDashboardData["stats"];
   summary: TracearrDashboardData["streams"]["summary"];
   width: number;
+  transparent?: boolean;
 }) {
   const t = useI18n("widget.tracearr");
   const cols = width > 400 ? 4 : width > 250 ? 2 : 1;
@@ -22,29 +24,43 @@ export function StatsBar({
         icon={<IconVideo size="var(--mantine-font-size-md)" />}
         label={t("stats.activeStreams")}
         value={stats.activeStreams}
+        transparent={transparent}
       />
       <StatCard
         icon={<IconUsers size="var(--mantine-font-size-md)" />}
         label={t("stats.totalUsers")}
         value={stats.totalUsers}
+        transparent={transparent}
       />
       <StatCard
         icon={<IconDevices size="var(--mantine-font-size-md)" />}
         label={t("stats.transcodes")}
         value={`${summary.transcodes}/${summary.total}`}
+        transparent={transparent}
       />
       <StatCard
         icon={<IconNetwork size="var(--mantine-font-size-md)" />}
         label={t("stats.bandwidth")}
         value={summary.totalBitrate}
+        transparent={transparent}
       />
     </SimpleGrid>
   );
 }
 
-function StatCard({ icon, label, value }: { icon: React.ReactNode; label: string; value: string | number }) {
+function StatCard({
+  icon,
+  label,
+  value,
+  transparent,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string | number;
+  transparent: boolean;
+}) {
   return (
-    <Paper p="xs" radius="lg" bg="transparent">
+    <Paper p="xs" radius="lg" bg={transparent ? "transparent" : undefined}>
       <Group gap={4} wrap="nowrap">
         {icon}
         <Stack gap={0} style={{ overflow: "hidden" }}>

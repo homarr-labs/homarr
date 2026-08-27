@@ -106,10 +106,10 @@ describe("SessionDetailsPopover", () => {
 });
 
 describe("getMediaServerColumnVisibility", () => {
-  test("keeps a stable responsive column model from the zero-sized first render", () => {
-    expect(getMediaServerColumnVisibility(0, false)).toEqual({ user: false, status: false });
-    expect(getMediaServerColumnVisibility(300, false)).toEqual({ user: true, status: false });
-    expect(getMediaServerColumnVisibility(420, false)).toEqual({ user: true, status: false });
+  test("keeps every compact column visible at every width", () => {
+    expect(getMediaServerColumnVisibility(0, false)).toEqual({ user: true, status: true });
+    expect(getMediaServerColumnVisibility(300, false)).toEqual({ user: true, status: true });
+    expect(getMediaServerColumnVisibility(420, false)).toEqual({ user: true, status: true });
     expect(getMediaServerColumnVisibility(540, false)).toEqual({ user: true, status: true });
     expect(getMediaServerColumnVisibility(0, true)).toEqual({ user: true, status: true });
   });

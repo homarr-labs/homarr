@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import type { AreaChartSeries } from "@mantine/charts";
 import { AreaChart, LineChart } from "@mantine/charts";
-import { Card, Center, Group, Stack, Text, useMantineTheme } from "@mantine/core";
+import { Card, Center, Group, Stack, Text, useComputedColorScheme, useMantineTheme } from "@mantine/core";
 import { useElementSize, useHover, useMergedRef } from "@mantine/hooks";
 import type { TooltipProps, YAxisProps } from "recharts";
 
@@ -23,6 +23,7 @@ export const CommonChart = ({
   yAxisProps,
   lastValue,
   chartType = "line",
+  advanced = false,
 }: {
   data: Record<string, any>[];
   dataKey: string;
@@ -34,30 +35,32 @@ export const CommonChart = ({
   yAxisProps?: Omit<YAxisProps, "ref">;
   lastValue?: string;
   chartType?: "line" | "area";
+  advanced?: boolean;
 }) => {
   const { ref: elementSizeRef, height } = useElementSize();
   const theme = useMantineTheme();
+  const colorScheme = useComputedColorScheme("light");
   const board = useRequiredBoard();
   const { hovered, ref: hoverRef } = useHover();
   const ref = useMergedRef(elementSizeRef, hoverRef);
 
-  const backgroundColor = "rgb(from var(--mantine-color-primaryColor-filled) r g b / calc(var(--opacity, 1) * 0.12))";
-  const borderColor = "rgb(from var(--mantine-color-secondaryColor-filled) r g b / calc(var(--opacity, 1) * 0.45))";
+  const opacity = board.opacity / 100;
+  let backgroundColor = colorScheme === "dark" ? `rgba(57, 57, 57, ${opacity})` : `rgba(246, 247, 248, ${opacity})`;
+  const cardStyle: CSSProperties = { overflow: "hidden" };
+  const chartRootStyle: CSSProperties = { padding: 5, borderRadius: theme.radius[board.itemRadius] };
+  if (advanced) {
+    backgroundColor = "rgb(from var(--mantine-color-primaryColor-filled) r g b / calc(var(--opacity, 1) * 0.12))";
+    cardStyle.border =
+      "1px solid rgb(from var(--mantine-color-secondaryColor-filled) r g b / calc(var(--opacity, 1) * 0.45))";
+    chartRootStyle.backgroundColor = backgroundColor;
+  }
 
   const ChartComponent = chartType === "line" ? LineChart : AreaChart;
   const showIcon = labelDisplayMode === "icon" || labelDisplayMode === "textWithIcon";
   const showText = labelDisplayMode === "text" || labelDisplayMode === "textWithIcon";
 
   return (
-    <Card
-      ref={ref}
-      h={"100%"}
-      pos={"relative"}
-      style={{ overflow: "hidden", border: `1px solid ${borderColor}` }}
-      p={0}
-      bg={backgroundColor}
-      radius={board.itemRadius}
-    >
+    <Card ref={ref} h={"100%"} pos={"relative"} style={cardStyle} p={0} bg={backgroundColor} radius={board.itemRadius}>
       {data.length > 1 && height > 40 && !hovered && (
         <Group
           pos={"absolute"}
@@ -70,7 +73,13 @@ export const CommonChart = ({
           style={{ zIndex: 2, pointerEvents: "none" }}
           align="center"
         >
-          {showIcon && <Icon color={"var(--mantine-color-dimmed)"} style={zoomCompensatedSize(height > 100 ? 20 : 14)} stroke={1.5} />}
+          {showIcon && (
+            <Icon
+              color="var(--mantine-color-dimmed)"
+              style={zoomCompensatedSize(height > 100 ? 20 : 14)}
+              stroke={1.5}
+            />
+          )}
           {showText && (
             <Text c={"dimmed"} size={height > 100 ? "md" : "xs"} fw={"bold"}>
               {title}
@@ -83,7 +92,7 @@ export const CommonChart = ({
           )}
         </Group>
       )}
-      {data.length > 1 && height > 0 && height <= 40 && lastValue && !hovered && (
+      {advanced && data.length > 1 && height > 0 && height <= 40 && lastValue && !hovered && (
         <Center pos="absolute" w="100%" h="100%" style={{ zIndex: 2, pointerEvents: "none" }}>
           <Text size="xs" fw={600}>
             {lastValue}
@@ -93,13 +102,19 @@ export const CommonChart = ({
       {data.length <= 1 ? (
         <Center pos="absolute" w="100%" h="100%">
           <Stack px={"xs"} align={"center"} gap={4}>
-            {showIcon && <Icon color={"var(--mantine-color-dimmed)"} style={zoomCompensatedSize(height > 100 ? 20 : 14)} stroke={1.5} />}
+            {showIcon && (
+              <Icon
+                color="var(--mantine-color-dimmed)"
+                style={zoomCompensatedSize(height > 100 ? 20 : 14)}
+                stroke={1.5}
+              />
+            )}
             {showText && (
               <Text c={"dimmed"} size={height > 100 ? "md" : "xs"} fw={"bold"} ta="center">
                 {title}
               </Text>
             )}
-            {lastValue && (
+            {advanced && lastValue && (
               <Text size={height > 100 ? "md" : "xs"} fw={600} ta="center">
                 {lastValue}
               </Text>
@@ -119,13 +134,7 @@ export const CommonChart = ({
           withYAxis={false}
           withDots={false}
           bg={backgroundColor}
-          styles={{
-            root: {
-              padding: 5,
-              borderRadius: theme.radius[board.itemRadius],
-              backgroundColor,
-            },
-          }}
+          styles={{ root: chartRootStyle }}
           tooltipAnimationDuration={200}
           tooltipProps={{
             // Render via portal so the tooltip isn't clipped by the card's overflow:hidden

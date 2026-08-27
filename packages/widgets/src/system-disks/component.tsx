@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Box, Card, Group, ScrollArea, SimpleGrid, Text, Tooltip } from "@mantine/core";
+import { Box, Card, Group, ScrollArea, SimpleGrid, Text, Tooltip, useComputedColorScheme } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
@@ -28,12 +28,12 @@ const advancedColumnBreakpoints = [
   { minimumWidth: 0, columns: 1 },
 ] as const;
 
-const getSystemDisksLayout = (width: number, height: number, diskCount: number, isAdvanced: boolean) => {
+const getSystemDisksLayout = (width: number, diskCount: number, isAdvanced: boolean) => {
   if (!isAdvanced) {
     return {
       columns: 1,
-      showSecondaryText: height >= 160 && width >= 260,
-      showTemperature: height >= 100 && width >= 220,
+      showSecondaryText: false,
+      showTemperature: true,
     };
   }
 
@@ -113,6 +113,7 @@ const SystemDiskCard = ({
   showTemperature,
 }: SystemDiskCardProps) => {
   const board = useRequiredBoard();
+  const colorScheme = useComputedColorScheme("light");
   const t = useI18n("widget.systemDisks");
   const valueRef = useRef<HTMLParagraphElement>(null);
   const [valueFits, setValueFits] = useState(true);
@@ -149,6 +150,10 @@ const SystemDiskCard = ({
     .join(" · ");
   const backgroundColor = "rgb(from var(--mantine-color-primaryColor-filled) r g b / calc(var(--opacity, 1) * 0.12))";
   const borderColor = "rgb(from var(--mantine-color-secondaryColor-filled) r g b / calc(var(--opacity, 1) * 0.45))";
+  const legacyBackground = colorScheme === "dark" ? "dark.7" : "gray.1";
+  const cardBackground = isAdvanced ? backgroundColor : legacyBackground;
+  const progressBackground = healthy ? "var(--mantine-color-green-light)" : "var(--mantine-color-red-light)";
+  const legacyProgressColor = healthy ? "green" : "red";
 
   return (
     <Tooltip
@@ -160,13 +165,13 @@ const SystemDiskCard = ({
       <Card
         radius={board.itemRadius}
         py="xs"
-        withBorder
-        bg={backgroundColor}
-        style={{ overflow: "hidden", position: "relative", borderColor }}
+        withBorder={isAdvanced}
+        bg={cardBackground}
+        style={{ overflow: "hidden", position: "relative", borderColor: isAdvanced ? borderColor : undefined }}
       >
         <Group justify="space-between" wrap="nowrap" style={{ zIndex: 1, minWidth: 0 }}>
           <div style={{ minWidth: 0, flex: 1 }}>
-            <Text fw={700} size="sm" truncate="end">
+            <Text fw={700} size={isAdvanced ? "sm" : undefined} truncate="end">
               {deviceName}
             </Text>
             {integrationName && (
@@ -174,7 +179,11 @@ const SystemDiskCard = ({
                 {integrationName}
               </Text>
             )}
-            <Text ref={valueRef} size="sm" style={{ visibility: valueFits ? "visible" : "hidden" }}>
+            <Text
+              ref={valueRef}
+              size={isAdvanced ? "sm" : undefined}
+              style={{ visibility: valueFits ? "visible" : "hidden" }}
+            >
               <span>{displayText}</span>
               {!healthy && <span style={{ marginLeft: 5 }}>{unhealthyLabel}</span>}
             </Text>
@@ -195,10 +204,13 @@ const SystemDiskCard = ({
             )}
           </div>
           <div style={{ flexShrink: 0 }}>
-            {showTemperature && (hasTemperature || isAdvanced) ? <Text size="sm">{temperatureText}</Text> : null}
+            {showTemperature && (hasTemperature || isAdvanced) ? (
+              <Text size={isAdvanced ? "sm" : undefined}>{temperatureText}</Text>
+            ) : null}
           </div>
         </Group>
         <Box
+          bg={isAdvanced ? undefined : legacyProgressColor}
           style={{
             position: "absolute",
             top: 0,
@@ -207,7 +219,7 @@ const SystemDiskCard = ({
             height: "100%",
             zIndex: 0,
             display: showBackgroundBar ? "block" : "none",
-            backgroundColor: healthy ? "var(--mantine-color-green-light)" : "var(--mantine-color-red-light)",
+            backgroundColor: isAdvanced ? progressBackground : undefined,
           }}
         ></Box>
       </Card>
@@ -219,7 +231,6 @@ export default function SystemResources({
   integrationIds,
   options,
   width,
-  height,
   displayMode,
 }: WidgetComponentProps<"systemDisks">) {
   const t = useI18n("widget.systemDisks");
@@ -247,8 +258,8 @@ export default function SystemResources({
   });
   const isAdvanced = displayMode === "advanced";
   const layout = useMemo(
-    () => getSystemDisksLayout(width, height, disks.length, isAdvanced),
-    [disks.length, height, isAdvanced, width],
+    () => getSystemDisksLayout(width, disks.length, isAdvanced),
+    [disks.length, isAdvanced, width],
   );
   const queryIndicators = (
     <Group gap={0}>

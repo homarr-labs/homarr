@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 
 import type { AudiobookshelfDashboardData, NavidromeDashboardData } from "@homarr/integrations/types";
 
-import { getGridCols, getIconSize, getVisibleStatLimit, getVisibleStats, prioritizeVisibleStats } from "./shared";
+import { getGridCols, getIconSize, getVisibleStats } from "./shared";
 
 describe("getGridCols", () => {
   test("caps columns to visible stat count", () => {
@@ -34,17 +34,6 @@ describe("getIconSize", () => {
 
   test("returns fallback for very narrow non-compact container", () => {
     expect(getIconSize(50, false)).toBe(16);
-  });
-});
-
-describe("getVisibleStatLimit", () => {
-  test("keeps compact metrics legible when height is constrained", () => {
-    expect(getVisibleStatLimit(100, 80, 5, true)).toBe(1);
-    expect(getVisibleStatLimit(180, 50, 5, true)).toBe(3);
-  });
-
-  test("preserves every configured metric outside compact mode", () => {
-    expect(getVisibleStatLimit(100, 80, 5, false)).toBe(5);
   });
 });
 
@@ -115,23 +104,5 @@ describe("getVisibleStats", () => {
     const result = getVisibleStats("audiobookshelf", { showListeningTime: true }, audiobookshelfStats);
     expect(result).toHaveLength(1);
     expect(typeof result[0]?.value).toBe("string");
-  });
-});
-
-describe("prioritizeVisibleStats", () => {
-  test("puts an active session first only on compact surfaces", () => {
-    const stats = getVisibleStats(
-      "audiobookshelf",
-      { showLibraryCount: true, showActiveSessions: true },
-      {
-        libraryCount: 3,
-        totalAudiobooks: 150,
-        totalPodcasts: 20,
-        totalListeningTimeSeconds: 86400,
-        activeSessions: 2,
-      },
-    );
-    expect(prioritizeVisibleStats(stats, true)[0]?.statKey).toBe("activeSessions");
-    expect(prioritizeVisibleStats(stats, false)[0]?.statKey).toBe("libraryCount");
   });
 });

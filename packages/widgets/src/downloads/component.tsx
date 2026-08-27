@@ -159,10 +159,8 @@ const speedColumnConfig = {
   up: { Icon: IconUpload, color: "green" as const },
 } as const;
 
-export function getSizeConfig(width: number, height = Number.POSITIVE_INFINITY, isAdvanced = false): SizeConfig {
+export function getSizeConfig(width: number, _height = Number.POSITIVE_INFINITY, isAdvanced = false): SizeConfig {
   if (isAdvanced) return DEFAULT_SIZE_CONFIG;
-  if (height < 120) return SIZE_BREAKPOINTS[0]?.config ?? DEFAULT_SIZE_CONFIG;
-  if (height < 180) return SIZE_BREAKPOINTS[1]?.config ?? DEFAULT_SIZE_CONFIG;
   for (const { maxWidth, config } of SIZE_BREAKPOINTS) {
     if (width < maxWidth) return config;
   }
@@ -796,25 +794,23 @@ export default function DownloadClientsWidget({
         />
       </Box>
 
-      {(isAdvanced || height >= 96) && (
-        <WidgetFooter
-          key={`footer-${displayMode}`}
-          clients={clients}
-          totalSpeed={totalSpeed}
-          totalUpSpeed={totalUpSpeed}
-          globalRatio={globalRatio}
-          hasTorrents={hasTorrents}
-          clientFilter={clientFilter}
-          setClientFilter={setClientFilter}
-          statusFilter={statusFilter}
-          setStatusFilter={setStatusFilter}
-          availableStatuses={availableStatuses}
-          pauseQueue={mutatePauseQueue}
-          resumeQueue={mutateResumeQueue}
-          showStats={statsDisplay.visible}
-          toggleStats={statsDisplay.canToggle ? toggleStats : undefined}
-        />
-      )}
+      <WidgetFooter
+        key={`footer-${displayMode}`}
+        clients={clients}
+        totalSpeed={totalSpeed}
+        totalUpSpeed={totalUpSpeed}
+        globalRatio={globalRatio}
+        hasTorrents={hasTorrents}
+        clientFilter={clientFilter}
+        setClientFilter={setClientFilter}
+        statusFilter={statusFilter}
+        setStatusFilter={setStatusFilter}
+        availableStatuses={availableStatuses}
+        pauseQueue={mutatePauseQueue}
+        resumeQueue={mutateResumeQueue}
+        showStats={statsDisplay.visible}
+        toggleStats={statsDisplay.canToggle ? toggleStats : undefined}
+      />
 
       {contextMenu && <RowContextMenu state={contextMenu} onClose={closeContextMenu} t={t} />}
     </Stack>

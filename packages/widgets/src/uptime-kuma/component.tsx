@@ -79,25 +79,6 @@ const heroVariantByRing = {
   false: classes.heroTextOnly,
 } as const;
 
-export function getCompactStatLimit(height: number, showHero: boolean, statCount: number): number {
-  if (showHero) {
-    if (height < 180) return 0;
-    if (height < 260) return Math.min(2, statCount);
-    if (height < 340) return Math.min(4, statCount);
-  } else {
-    if (height < 130) return Math.min(2, statCount);
-    if (height < 220) return Math.min(4, statCount);
-  }
-  return statCount;
-}
-
-export function getCompactStatPriority(statKey: keyof typeof statIcons, value: number): number {
-  if (statKey === "downCount") return value > 0 ? 0 : 4;
-  if (statKey === "pausedCount") return value > 0 ? 1 : 5;
-  if (statKey === "totalMonitors") return 2;
-  return 3;
-}
-
 export default function UptimeKumaWidget({
   integrationIds,
   options,
@@ -158,16 +139,8 @@ function UptimeKumaContent({ integrationIds, options, width, height, displayMode
     .map(([, statKey]) => statKey);
 
   const showHero = isAdvanced || options.showAverageUptime;
-  const showRing = isAdvanced || (options.showUptimeRing && width >= 170 && height >= 110);
-  const prioritizedStatKeys = isAdvanced
-    ? enabledStatKeys
-    : enabledStatKeys.toSorted(
-        (left, right) => getCompactStatPriority(left, combined[left]) - getCompactStatPriority(right, combined[right]),
-      );
-  const visibleStatKeys = prioritizedStatKeys.slice(
-    0,
-    isAdvanced ? prioritizedStatKeys.length : getCompactStatLimit(height, showHero, prioritizedStatKeys.length),
-  );
+  const showRing = isAdvanced || options.showUptimeRing;
+  const visibleStatKeys = enabledStatKeys;
   const hasContent = showHero || visibleStatKeys.length > 0;
 
   const heroLayoutClass =
@@ -226,24 +199,6 @@ function UptimeKumaContent({ integrationIds, options, width, height, displayMode
             );
           })}
         </div>
-      )}
-      {displayMode === "compact" && height >= 300 && combined.downCount > 0 && (
-        <Stack gap={2} px="sm">
-          {monitors
-            .filter((monitor) => monitor.status === "down")
-            .slice(0, 3)
-            .map((monitor) => (
-              <Group key={monitor.key} justify="space-between" wrap="nowrap">
-                <Text size="xs" truncate>
-                  {monitor.name}
-                </Text>
-                <Badge size="xs" color="red">
-                  {t("status.down")} ·{" "}
-                  {monitor.uptimePercent24h === null ? "—" : `${formatNumber(monitor.uptimePercent24h, 1)}%`}
-                </Badge>
-              </Group>
-            ))}
-        </Stack>
       )}
     </div>
   );

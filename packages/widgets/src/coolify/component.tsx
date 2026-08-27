@@ -17,7 +17,6 @@ export default function CoolifyWidget({
   options,
   integrationIds,
   width,
-  height,
   displayMode,
 }: WidgetComponentProps<"coolify">) {
   const t = useI18n("widget.coolify");
@@ -38,7 +37,6 @@ export default function CoolifyWidget({
       integrationIds={integrationIds}
       options={{ ...options, ...sectionVisibility }}
       width={width}
-      height={height}
       isAdvanced={isAdvanced}
     />
   );
@@ -48,11 +46,10 @@ interface CoolifyContentProps {
   integrationIds: string[];
   options: WidgetComponentProps<"coolify">["options"];
   width: number;
-  height: number;
   isAdvanced: boolean;
 }
 
-function CoolifyContent({ integrationIds, options, width, height, isAdvanced }: CoolifyContentProps) {
+function CoolifyContent({ integrationIds, options, width, isAdvanced }: CoolifyContentProps) {
   const t = useI18n("common");
   const instancesQuery = clientApi.widget.coolify.getInstancesInfo.useQuery({
     integrationIds,
@@ -64,8 +61,7 @@ function CoolifyContent({ integrationIds, options, width, height, isAdvanced }: 
   );
   const failedInstances = instancesData.filter((instance) => instance.instanceInfo === null);
 
-  const isTiny = width < 256 || height < 144;
-  const hideFooter = height < 112;
+  const isTiny = width < 256;
   const [firstInstance] = successfulInstances;
   const widgetKey = createWidgetKey(integrationIds);
 
@@ -100,7 +96,6 @@ function CoolifyContent({ integrationIds, options, width, height, isAdvanced }: 
             isTiny={!isAdvanced && isTiny}
             isAdvanced={isAdvanced}
             widgetKey={widgetKey}
-            hideFooter={!isAdvanced && hideFooter}
           />
         </div>
       </Stack>
@@ -120,7 +115,6 @@ function CoolifyContent({ integrationIds, options, width, height, isAdvanced }: 
               isTiny={!isAdvanced && isTiny}
               isAdvanced={isAdvanced}
               widgetKey={widgetKey}
-              hideFooter={!isAdvanced && hideFooter}
             />
           ))}
         </SimpleGrid>

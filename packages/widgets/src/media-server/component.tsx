@@ -35,6 +35,7 @@ import { objectEntries } from "@homarr/common";
 import { getIconUrl } from "@homarr/definitions";
 import type { StreamSession } from "@homarr/integrations";
 import { useI18n } from "@homarr/translation/client";
+import { zoomCompensatedSize } from "@homarr/ui";
 import type { TablerIcon } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
@@ -48,11 +49,9 @@ type PlaybackStatus = "directPlay" | "directStream" | "transcodeVideo" | "transc
 type SortColumn = "user" | "currentlyPlaying" | "status";
 type SortState = { column: SortColumn; descending: boolean } | null;
 
-export const getMediaServerColumnVisibility = (width: number, isAdvanced: boolean) => ({
-  user: isAdvanced || width >= 300,
-  // The user (26%) and status (22%) columns together need a floor here, otherwise the
-  // currentlyPlaying column - the primary content - gets squeezed to almost nothing.
-  status: isAdvanced || width >= 540,
+export const getMediaServerColumnVisibility = (_width: number, _isAdvanced: boolean) => ({
+  user: true,
+  status: true,
 });
 
 function getPlaybackStatus(transcoding: TranscodingDecision | undefined): PlaybackStatus {
@@ -171,7 +170,6 @@ export default function MediaServerWidget({
   options,
   integrationIds,
   width,
-  height,
   isEditMode,
   displayMode,
 }: WidgetComponentProps<"mediaServer">) {
@@ -411,61 +409,76 @@ export default function MediaServerWidget({
           </Table.Tbody>
         </Table>
       </div>
-      {(isAdvanced || height >= 144) && (
-        <Group
-          gap="xs"
-          h={30}
-          px="xs"
-          pr="md"
-          justify="space-between"
-          style={{
-            borderTop: "1px solid var(--border-color)",
-          }}
-        >
-          <Group gap={6} wrap="nowrap">
-            <IconVideo size="var(--mantine-font-size-xs)" style={{ flexShrink: 0 }} />
-            <Text size="sm" fw={500} style={{ whiteSpace: "nowrap" }}>
-              {(t as unknown as (key: string, params?: { count: number }) => string)("footer.streams", {
-                count: flatSessions.length,
-              })}
-            </Text>
-            {totalBitrateLabel && (isAdvanced || width >= 300) && (
-              <>
+      <Group
+        gap="xs"
+        h={30}
+        px="xs"
+        pr="md"
+        justify="space-between"
+        style={{
+          borderTop: "1px solid var(--border-color)",
+        }}
+      >
+        <Group gap={isAdvanced ? 6 : 4} wrap="nowrap">
+          <IconVideo
+            size={isAdvanced ? "var(--mantine-font-size-xs)" : undefined}
+            style={isAdvanced ? { flexShrink: 0 } : zoomCompensatedSize(16)}
+          />
+          <Text size="sm" fw={isAdvanced ? 500 : undefined} style={{ whiteSpace: "nowrap" }}>
+            {(t as unknown as (key: string, params?: { count: number }) => string)("footer.streams", {
+              count: flatSessions.length,
+            })}
+          </Text>
+          {totalBitrateLabel && (
+            <>
+              {isAdvanced && (
                 <Text size="sm" c="dimmed" style={{ whiteSpace: "nowrap" }}>
                   •
                 </Text>
-                <Text size="sm" c="dimmed" style={{ whiteSpace: "nowrap" }}>
-                  {t("footer.totalBitrate", { bitrate: totalBitrateLabel })}
-                </Text>
-              </>
-            )}
-          </Group>
-          <Group gap={6}>
-            {uniqueIntegrations.map((integration) => (
-              <Group
-                key={integration.integrationId}
-                gap={6}
-                align="center"
-                wrap="nowrap"
-                pl={2}
-                pr={8}
-                py={2}
-                style={{
-                  backgroundColor: "var(--mantine-color-default-hover)",
-                  borderRadius: 999,
-                }}
-              >
-                <Avatar className="media-server-icon" src={integration.integrationIcon} radius="xl" size={18} />
-                {(isAdvanced || width >= 480) && (
-                  <Text className="media-server-name" size="xs" fw={500} truncate="end">
-                    {integration.integrationName}
-                  </Text>
-                )}
-              </Group>
-            ))}
-          </Group>
+              )}
+              <Text size="sm" c="dimmed" style={{ whiteSpace: "nowrap" }}>
+                {t("footer.totalBitrate", { bitrate: totalBitrateLabel })}
+              </Text>
+            </>
+          )}
         </Group>
-      )}
+        <Group gap={isAdvanced ? 6 : "xs"} wrap="nowrap">
+          {uniqueIntegrations.map((integration) => (
+            <Group
+              key={integration.integrationId}
+              gap={isAdvanced ? 6 : "xs"}
+              align="center"
+              wrap="nowrap"
+              pl={isAdvanced ? 2 : undefined}
+              pr={isAdvanced ? 8 : undefined}
+              py={isAdvanced ? 2 : undefined}
+              style={
+                isAdvanced
+                  ? {
+                      backgroundColor: "var(--mantine-color-default-hover)",
+                      borderRadius: 999,
+                    }
+                  : undefined
+              }
+            >
+              <Avatar
+                className="media-server-icon"
+                src={integration.integrationIcon}
+                radius={isAdvanced ? "xl" : "xs"}
+                size={isAdvanced ? 18 : "xs"}
+              />
+              <Text
+                className="media-server-name"
+                size={isAdvanced ? "xs" : "sm"}
+                fw={isAdvanced ? 500 : undefined}
+                truncate={isAdvanced ? "end" : undefined}
+              >
+                {integration.integrationName}
+              </Text>
+            </Group>
+          ))}
+        </Group>
+      </Group>
     </Stack>
   );
 }

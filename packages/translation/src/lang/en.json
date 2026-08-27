@@ -3179,7 +3179,8 @@
         "disabled": "Disabled"
       },
       "error": {
-        "internalServerError": "Failed to fetch indexers status"
+        "internalServerError": "Failed to fetch indexers status",
+        "testAll": "The indexer test failed. Try again."
       }
     },
     "healthMonitoring": {
@@ -4249,6 +4250,7 @@
         "failed": "Failed",
         "completed": "Completed"
       },
+      "unknown": "Unknown",
       "toBeDetermined": "TBD"
     },
     "mediaRequests-requestStats": {
@@ -4961,6 +4963,10 @@
       "empty": "No alerts configured",
       "history": "History",
       "resolved": "Resolved",
+      "alertDescription": {
+        "statusDuration": "Down for {minutes} min",
+        "threshold": "Exceeds {value} over {minutes} min"
+      },
       "status": {
         "triggered": "Triggered",
         "ok": "OK"

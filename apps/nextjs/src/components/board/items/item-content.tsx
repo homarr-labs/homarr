@@ -334,6 +334,7 @@ const LoadedBoardItemContent = ({
             item={item}
             width={width}
             height={height}
+            displayScale={boardCanvasScale}
             widgetStateRef={widgetStateRef}
             widgetRuntimeRef={widgetRuntimeRef}
             displayMode={isAdvanced ? "advanced" : "compact"}
@@ -436,6 +437,7 @@ interface InnerContentProps {
   item: SectionItem;
   width: number;
   height: number;
+  displayScale: number;
   widgetStateRef: MutableRefObject<Record<string, unknown> | null>;
   widgetRuntimeRef: WidgetRuntimeRef;
   displayMode: "compact" | "advanced";
