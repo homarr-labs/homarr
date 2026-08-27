@@ -19,7 +19,6 @@ export const queryCacheDefaultGcTimeMs = 1000 * 60 * 5;
 export const queryCacheMetadataStaleTimeMs = 1000 * 60 * 5;
 
 const widgetDataQueryPaths = new Set(["app.byId", "app.byIds", "docker.getContainers", "integration.byIds"]);
-const persistableDashboardDataPaths = new Set(["widget.stockPrice.getPriceHistory"]);
 // Beszel system stats are large time-series payloads and were deliberately kept out of
 // the persisted cache in #6289; live stats come from an SSE subscription instead.
 const excludedWidgetPaths = new Set(["widget.app.ping", "widget.beszel.getSystemStats"]);
@@ -77,13 +76,4 @@ export const isWidgetDataQueryKey = (queryKey: QueryKey) => {
   if (!path) return false;
 
   return isWidgetDataTrpcPath(path.join("."));
-};
-
-// Persist only data that is both public and independent of Homarr access grants.
-// Integration, app, Docker, board-backed, and location queries must refetch after reload.
-export const isPersistableDashboardQueryKey = (queryKey: QueryKey) => {
-  const path = getTrpcPathFromQueryKey(queryKey);
-  if (!path) return false;
-
-  return persistableDashboardDataPaths.has(path.join("."));
 };

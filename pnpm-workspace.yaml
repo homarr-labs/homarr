@@ -59,6 +59,7 @@ catalog:
   "@semantic-release/release-notes-generator": ^14.1.1
   "@t3-oss/env-nextjs": ^0.13.11
   "@tabler/icons-react": ^3.44.0
+  "@tanstack/query-sync-storage-persister": 5.101.2
   "@tanstack/react-devtools": ^0.10.8
   "@tanstack/react-query": ^5.101.2
   "@tanstack/react-query-devtools": ^5.101.2
