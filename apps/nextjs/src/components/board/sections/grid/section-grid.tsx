@@ -172,9 +172,14 @@ export const SectionGrid = ({
   // by, so a non-uniform stretch can never be captured by it correctly. That means one axis can
   // be left with a small amount of unfilled slack when width/height need different ratios to
   // exactly fit - centered below so it's even on both sides rather than left-aligned.
+  // logicalWidth/viewportHeight can go non-positive for a narrow (e.g. single-column) container
+  // on a heavily zoomed-out board, where outerCardInset (which grows as canvasScale shrinks) can
+  // exceed the container's own un-inset size. Floor the scale well above 0 so it can never reach
+  // zero or negative - combinedUiScale divides by this value, and this value is also used as
+  // zoom directly, both of which break (Infinity/NaN, or invalid/collapsed content) otherwise.
   const containerContentScale =
     section.kind === "container" && fullGridWidth > 0 && fullViewportHeight > 0
-      ? Math.min(logicalWidth / fullGridWidth, viewportHeight / fullViewportHeight, 1)
+      ? Math.max(0.01, Math.min(logicalWidth / fullGridWidth, viewportHeight / fullViewportHeight, 1))
       : 1;
   // Compute the combined value in JS rather than a CSS calc() referencing the existing
   // --board-canvas-ui-scale: custom properties declared on the *same* element don't have a
