@@ -146,7 +146,8 @@ export const SectionGrid = ({
   // the same column/row counts used to allocate the *outer*, uninset cell - so without
   // subtracting that gap back out here, a container's inner grid renders larger than its own
   // card and visually spills past its right/bottom edges. 10 must match that CSS rule's inset.
-  const outerCardInset = section.kind === "container" ? (2 * 10) / canvasScale : 0;
+  const effectiveCanvasScale = Number.isFinite(canvasScale) && canvasScale > 0 ? canvasScale : 1;
+  const outerCardInset = section.kind === "container" ? (2 * 10) / effectiveCanvasScale : 0;
   const logicalWidth = getLogicalGridSize(columnCount) - outerCardInset;
   const logicalHeight = getLogicalGridSize(rowCount) - outerCardInset;
   const viewportHeight = getLogicalGridSize(viewportRowCount) - outerCardInset;
@@ -160,14 +161,21 @@ export const SectionGrid = ({
   // corrected to compensate so icon/text sizing inside the container isn't affected.
   const fullGridWidth = getLogicalGridSize(columnCount);
   const fullGridHeight = getLogicalGridSize(rowCount);
+  // For a scrollable container, rowCount covers *all* content rows, not just the visible card -
+  // fullGridHeight/logicalHeight grow together with it, so their ratio drifts toward 1 as content
+  // grows regardless of the (fixed) inset, under-scaling relative to what the actually-visible
+  // viewport needs and clipping the bottom of the visible rows. viewportHeight/viewportRowCount
+  // describe the real visible card size in both cases (they equal logicalHeight/rowCount when not
+  // scrollable), so use those instead.
+  const fullViewportHeight = getLogicalGridSize(viewportRowCount);
   // A uniform zoom is required (not a non-uniform transform scale(x, y)) - --board-canvas-ui-scale
   // is a single scalar that every icon/text/custom-CSS size compensation in the app multiplies
   // by, so a non-uniform stretch can never be captured by it correctly. That means one axis can
   // be left with a small amount of unfilled slack when width/height need different ratios to
   // exactly fit - centered below so it's even on both sides rather than left-aligned.
   const containerContentScale =
-    section.kind === "container" && fullGridWidth > 0 && fullGridHeight > 0
-      ? Math.min(logicalWidth / fullGridWidth, logicalHeight / fullGridHeight, 1)
+    section.kind === "container" && fullGridWidth > 0 && fullViewportHeight > 0
+      ? Math.min(logicalWidth / fullGridWidth, viewportHeight / fullViewportHeight, 1)
       : 1;
   // Compute the combined value in JS rather than a CSS calc() referencing the existing
   // --board-canvas-ui-scale: custom properties declared on the *same* element don't have a
