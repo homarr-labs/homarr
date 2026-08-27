@@ -44,9 +44,3 @@ export const BoardLogoWithTitle = ({ size, hideTitleOnMobile }: CommonLogoWithTi
     />
   );
 };
-
-export const BoardLogoWithName = ({ size }: Pick<CommonLogoWithTitleProps, "size">) => {
-  const board = useRequiredBoard();
-  const imageOptions = useImageOptions();
-  return <LogoWithTitle size={size} title={board.name} image={imageOptions} />;
-};

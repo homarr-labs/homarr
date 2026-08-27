@@ -38,7 +38,6 @@ import classes from "./configurable-header.module.css";
 interface ConfigurableHeaderProps {
   logo: ReactNode;
   logoWithTitle: ReactNode;
-  mobileLogoWithTitle: ReactNode;
   actions?: ReactNode;
   boardEditAction?: ReactNode;
   boardSettingsAction?: ReactNode;
@@ -57,7 +56,6 @@ const floatingControlsDismissDelayMs = 900;
 export const ConfigurableHeader = ({
   logo,
   logoWithTitle,
-  mobileLogoWithTitle,
   actions,
   boardEditAction,
   boardSettingsAction,
@@ -136,12 +134,7 @@ export const ConfigurableHeader = ({
               <div className={classes.mobileContent}>
                 <Group className={classes.mobileIdentity} gap="xs" wrap="nowrap">
                   {hasNavigation ? <ClientBurger /> : null}
-                  <HeaderLogo
-                    display="logoAndText"
-                    logo={logo}
-                    logoWithTitle={mobileLogoWithTitle}
-                    label={t("items.logo")}
-                  />
+                  <HeaderLogo display="logo" logo={logo} logoWithTitle={logoWithTitle} label={t("items.logo")} />
                 </Group>
                 <Group className={classes.mobileActions} gap="xs" wrap="nowrap">
                   {actions}
