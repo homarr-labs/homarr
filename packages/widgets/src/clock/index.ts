@@ -12,6 +12,23 @@ import {
 
 const timeZoneOptions = getTimeZoneOptions();
 
+// Mantine theme color names, used to let users pick their own day/night weather colors.
+const weatherColorOptions: string[] = [
+  "red",
+  "pink",
+  "grape",
+  "violet",
+  "indigo",
+  "blue",
+  "cyan",
+  "teal",
+  "green",
+  "lime",
+  "yellow",
+  "orange",
+  "gray",
+];
+
 export const { definition, componentLoader } = createWidgetDefinition("clock", {
   icon: IconClock,
   supportsAdvancedFocus: true,
@@ -101,6 +118,18 @@ export const { definition, componentLoader } = createWidgetDefinition("clock", {
           defaultValue: false,
           withDescription: true,
         }),
+        colorWeatherByDayNight: factory.switch({
+          defaultValue: false,
+          withDescription: true,
+        }),
+        dayWeatherColor: factory.select({
+          options: weatherColorOptions,
+          defaultValue: "orange",
+        }),
+        nightWeatherColor: factory.select({
+          options: weatherColorOptions,
+          defaultValue: "blue",
+        }),
         worldClockCities: factory.timezoneList({
           defaultValue: defaultWorldClockCities.map((city) => ({ ...city })),
           maxValues: maximumWorldClockCities,
@@ -130,6 +159,15 @@ export const { definition, componentLoader } = createWidgetDefinition("clock", {
         },
         animateWeatherIcon: {
           shouldHide: (options) => !options.showWeather,
+        },
+        colorWeatherByDayNight: {
+          shouldHide: (options) => !options.showWeather,
+        },
+        dayWeatherColor: {
+          shouldHide: (options) => !options.showWeather || !options.colorWeatherByDayNight,
+        },
+        nightWeatherColor: {
+          shouldHide: (options) => !options.showWeather || !options.colorWeatherByDayNight,
         },
       },
     );
