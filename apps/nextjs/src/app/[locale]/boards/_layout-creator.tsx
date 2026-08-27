@@ -111,7 +111,7 @@ export const createBoardLayout = <TParams extends Params>({
                 <ClientShell hasNavigation={false}>
                   <MainHeader
                     logo={<BoardLogo size={appShellLogoHeight} />}
-                    logoWithTitle={<BoardLogoWithTitle size="md" hideTitleOnMobile />}
+                    logoWithTitle={<BoardLogoWithTitle size="md" />}
                     actions={headerActions}
                     boardEditAction={headerBoardEditAction}
                     boardSettingsAction={headerBoardSettingsAction}

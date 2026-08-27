@@ -4,7 +4,6 @@ import type { PropsWithChildren } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import type { OnboardingTourFocusRevealProps, OnboardingTourStep } from "@gfazioli/mantine-onboarding-tour";
-import { useMediaQuery } from "@mantine/hooks";
 import {
   IconAffiliateFilled,
   IconAppsFilled,
@@ -16,6 +15,7 @@ import {
 import { clientApi } from "@homarr/api/client";
 import { createDocumentationLink } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
+import { useIsMobile } from "@homarr/ui/hooks";
 
 import { TourTargetsProvider } from "~/components/layout/header/tour-target";
 import { TourShell } from "./tour-shell";
@@ -48,7 +48,7 @@ const usersStepFocusRevealProps: OnboardingTourFocusRevealProps = {
 export const ManageTourProvider = ({ children, isAdmin }: ManageTourProviderProps) => {
   const t = useI18n("onboardingTour.manage");
   const { mutate: completeTour } = clientApi.user.completeTour.useMutation();
-  const isMobile = useMediaQuery("(max-width: 48em)");
+  const isMobile = useIsMobile();
   const pathname = usePathname();
   const router = useRouter();
 
