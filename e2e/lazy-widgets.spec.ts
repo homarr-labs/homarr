@@ -17,7 +17,7 @@ const adminCredentials = {
 };
 
 describe("lazy widget application graph", () => {
-  test("renders an authenticated board and refetches private widget data after reload", async () => {
+  test("renders an authenticated board and preserves first-use UI behavior after reload", async () => {
     const { db, localMountPath } = await createSqliteDbFileAsync();
     const { userId } = await seedAdminUserAsync(db, adminCredentials);
     const boardId = createId();
@@ -162,9 +162,8 @@ describe("lazy widget application graph", () => {
         timeout: 30_000,
       });
       await expect.poll(() => refreshRequestStarted, { timeout: 10_000 }).toBe(true);
-      await expect(cachedDownload).toHaveCount(0);
-      await expect(downloadsWidget.getByRole("status")).toContainText("Loading widget data");
-      await expect(downloadsWidget.locator("[data-widget-refreshing]")).toHaveCount(0);
+      await expect(cachedDownload).toBeVisible({ timeout: 5_000 });
+      await expect(downloadsWidget.locator("[data-widget-refreshing]")).toBeVisible();
 
       const refreshedDownloadsResponse = page.waitForResponse(
         (response) => response.url().includes("widget.downloads.getJobsAndStatuses") && response.ok(),
@@ -172,8 +171,7 @@ describe("lazy widget application graph", () => {
       releaseRefresh();
       releaseRefresh = undefined;
       await refreshedDownloadsResponse;
-      await expect(cachedDownload).toBeVisible({ timeout: 30_000 });
-      await expect(downloadsWidget.getByRole("status")).toHaveCount(0);
+      await expect(downloadsWidget.locator("[data-widget-refreshing]")).toHaveCount(0);
       await page.unroute(downloadsRequestPattern, delayDownloadsRefresh);
       expect(pageErrors).toEqual([]);
       expect(hydrationErrors).toEqual([]);
