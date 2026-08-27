@@ -14,6 +14,7 @@ import { db } from "@homarr/db";
 
 import { getPackageVersion } from "~/versions/package-reader";
 import { extractMcpTools } from "../_extract-tools";
+import { serializeMcpToolResult } from "../_serialize-result";
 
 const logger = createLogger({ module: "mcpRoute" });
 
@@ -203,7 +204,7 @@ const mcpHandler = createMcpHandler(
         const input = args && Object.keys(args).length > 0 ? args : undefined;
         const result = await procedure(input);
         return {
-          content: [{ type: "text" as const, text: JSON.stringify(result) }],
+          content: [{ type: "text" as const, text: serializeMcpToolResult(result) }],
         };
       } catch (error) {
         const message = sanitizeErrorMessage(error);
