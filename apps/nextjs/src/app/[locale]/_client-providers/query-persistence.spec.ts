@@ -42,6 +42,9 @@ describe("dashboard query persistence", () => {
     const supporting = createSuccessfulQuery([["app", "byIds"], { type: "query" }], [{ id: "app-1" }]);
     const ping = createSuccessfulQuery([["widget", "app", "ping"], { type: "query" }], { status: "online" });
     const beszel = createSuccessfulQuery([["widget", "beszel", "getSystemStats"], { type: "query" }], []);
+    const customApi = createSuccessfulQuery([["widget", "customApi", "getData"], { type: "query" }], {
+      apiKey: "secret",
+    });
     const unrelated = createSuccessfulQuery([["board", "getBoardByName"], { type: "query" }], { name: "Home" });
     const pendingClient = new QueryClient();
     const pending = pendingClient.getQueryCache().build(pendingClient, {
@@ -55,6 +58,7 @@ describe("dashboard query persistence", () => {
     expect(shouldPersistDashboardQuery(supporting.query)).toBe(true);
     expect(shouldPersistDashboardQuery(ping.query)).toBe(false);
     expect(shouldPersistDashboardQuery(beszel.query)).toBe(false);
+    expect(shouldPersistDashboardQuery(customApi.query)).toBe(false);
     expect(shouldPersistDashboardQuery(unrelated.query)).toBe(false);
     expect(shouldPersistDashboardQuery(pending)).toBe(false);
     expect(shouldPersistDashboardQuery(failed.query)).toBe(true);

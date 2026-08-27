@@ -4,7 +4,7 @@ import { removeOldestQuery } from "@tanstack/react-query-persist-client";
 import type { PersistQueryClientProviderProps } from "@tanstack/react-query-persist-client";
 import { parse, stringify } from "superjson";
 
-import { isWidgetDataQueryKey, queryCacheDefaultGcTimeMs } from "@homarr/api/query-cache";
+import { isPersistableDashboardQueryKey, queryCacheDefaultGcTimeMs } from "@homarr/api/query-cache";
 
 export const queryPersistenceBuster = "v5-dashboard-data";
 
@@ -19,7 +19,7 @@ interface PersistableQuery {
 }
 
 export const shouldPersistDashboardQuery = (query: PersistableQuery) =>
-  query.state.data !== undefined && isWidgetDataQueryKey(query.queryKey);
+  query.state.data !== undefined && isPersistableDashboardQueryKey(query.queryKey);
 
 const getSessionStorage = () => {
   if (typeof window === "undefined") return undefined;

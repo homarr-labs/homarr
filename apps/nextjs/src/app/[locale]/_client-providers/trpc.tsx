@@ -114,6 +114,7 @@ const ScopedTRPCReactProvider = ({
       queryCache: new QueryCache({
         onError(error, query) {
           if (!isTrpcForbiddenError(error) || !isWidgetDataQueryKey(query.queryKey)) return;
+          void queryPersistence.persister.removeClient();
           query.setState({ data: undefined, dataUpdatedAt: 0, isInvalidated: true });
         },
       }),
