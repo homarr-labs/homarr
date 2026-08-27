@@ -11,6 +11,7 @@ import { useI18n } from "@homarr/translation/client";
 import type { Board, ContainerSectionItem, SectionItem } from "~/app/[locale]/boards/_types";
 import { getLayoutRowCount } from "../layout";
 import { resolvePinnedGridCollisions } from "../sections/grid/dnd";
+import type { RegisteredGridEditor } from "../sections/grid/grid-editor-registry";
 import { useRegisteredGridEditors } from "../sections/grid/grid-editor-registry";
 import { getSectionGridColumnCount, getSectionGridPlacements } from "../sections/grid/section-grid-placements";
 import type { CommitSectionGridInput, SectionGridPlacement } from "../sections/grid/use-grid-layout-actions";
@@ -30,6 +31,7 @@ interface InnerProps extends OpenItemMoveModalInput {
   board: Board;
   currentLayoutId: string;
   commitSectionGrids: (snapshots: readonly CommitSectionGridInput[]) => void;
+  registeredGridEditors: ReadonlyMap<string, Pick<RegisteredGridEditor, "placementMaxRowCount">>;
 }
 
 interface MoveTarget {
@@ -57,8 +59,7 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
   const tLandmark = useI18n("board.landmark");
   const tContainer = useI18n("section.container");
   const tMoveResize = useI18n("item.moveResize");
-  const { board, commitSectionGrids, currentLayoutId, entry, sourceSectionId } = innerProps;
-  const registeredGridEditors = useRegisteredGridEditors();
+  const { board, commitSectionGrids, currentLayoutId, entry, registeredGridEditors, sourceSectionId } = innerProps;
   const minimumSize = useMemo(
     () => getEntryMinimumSize(board, currentLayoutId, entry),
     [board, currentLayoutId, entry],
@@ -235,6 +236,7 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
 export const useOpenItemMoveModal = () => {
   const board = useRequiredBoard();
   const currentLayoutId = useCurrentLayout();
+  const registeredGridEditors = useRegisteredGridEditors();
   const { commitSectionGrids } = useGridLayoutActions();
   const { openModal } = useModalAction(ItemMoveModal);
 
@@ -245,9 +247,10 @@ export const useOpenItemMoveModal = () => {
         board,
         currentLayoutId,
         commitSectionGrids,
+        registeredGridEditors,
       });
     },
-    [board, commitSectionGrids, currentLayoutId, openModal],
+    [board, commitSectionGrids, currentLayoutId, openModal, registeredGridEditors],
   );
 };
 
