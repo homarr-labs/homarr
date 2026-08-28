@@ -16,7 +16,7 @@ export const headerBuiltinItemIds = [
   "user",
 ] as const;
 
-export const requiredHeaderBuiltinItemIds = ["boardEdit", "boardSettings", "user"] as const;
+export const requiredHeaderBuiltinItemIds = ["user"] as const;
 
 export const headerPreferenceItemIds = headerBuiltinItemIds;
 export const headerItemIds = headerBuiltinItemIds;

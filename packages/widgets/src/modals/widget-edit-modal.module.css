@@ -143,6 +143,7 @@
   margin-inline: calc(var(--mantine-spacing-md) * -1);
   margin-bottom: calc(var(--mantine-spacing-md) * -1);
   padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+  padding-bottom: max(var(--mantine-spacing-sm), env(safe-area-inset-bottom));
   border-top: 1px solid var(--mantine-color-default-border);
   background: color-mix(in srgb, var(--mantine-color-body) 94%, transparent);
   backdrop-filter: blur(10px);
