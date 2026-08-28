@@ -4672,12 +4672,6 @@
       "noSectionsEnabled": "Enable at least one section in widget options.",
       "error": {
         "internalServerError": "Failed to fetch speedtest data"
-      },
-      "range": {
-        "twelveHours": "12h",
-        "oneDay": "24h",
-        "all": "All",
-        "lastThirty": "Last 30"
       }
     },
     "uptimeKuma": {
@@ -5424,7 +5418,7 @@
           "title": "Layout",
           "responsive": {
             "title": "Responsive layouts",
-            "description": "Each layout keeps its own widget positions and sizes. Mobile and Base are always available; add custom layouts for widths in between.",
+            "description": "Each layout keeps its own widget positions and sizes. Mobile and Base are always available; add custom layouts at any additional breakpoint.",
             "action": {
               "add": "Add layout"
             }

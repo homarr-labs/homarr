@@ -33,14 +33,14 @@ export const normalizeBoardLayoutRoles = <
   const baseLayouts = sourceLayouts.filter((layout) => layout.role === "base");
   const mobileLayout = mobileLayouts.length === 1 ? mobileLayouts[0] : undefined;
   const baseLayout = baseLayouts.length === 1 ? baseLayouts[0] : undefined;
-  const orderedLayouts =
-    mobileLayout && baseLayout
-      ? [
-          mobileLayout,
-          ...sourceLayouts.filter((layout) => layout.role === "custom").toSorted(compareBoardLayouts),
-          baseLayout,
-        ]
-      : sourceLayouts.toSorted(compareBoardLayouts);
+  const hasProtectedLayouts = mobileLayout !== undefined && baseLayout !== undefined;
+  let orderedLayouts = sourceLayouts.toSorted(compareBoardLayouts);
+  if (hasProtectedLayouts) {
+    orderedLayouts = [
+      mobileLayout,
+      ...sourceLayouts.filter((layout) => layout.id !== mobileLayout.id).toSorted(compareBoardLayouts),
+    ];
+  }
 
   let previousBreakpoint = -1;
   return orderedLayouts.map((layout, index) => {
@@ -49,7 +49,12 @@ export const normalizeBoardLayoutRoles = <
       index === 0
         ? 0
         : Math.min(MAX_LAYOUT_BREAKPOINT - remainingLayouts, Math.max(previousBreakpoint + 1, layout.breakpoint));
-    const role: LayoutRole = index === 0 ? "mobile" : index === orderedLayouts.length - 1 ? "base" : "custom";
+    let role: LayoutRole = layout.role ?? "custom";
+    if (!hasProtectedLayouts) {
+      if (index === 0) role = "mobile";
+      else if (index === orderedLayouts.length - 1) role = "base";
+      else role = "custom";
+    }
     previousBreakpoint = breakpoint;
     return { ...layout, breakpoint, role };
   });

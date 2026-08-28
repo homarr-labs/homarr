@@ -116,10 +116,6 @@ export const responsiveBoardLayoutsSchema = z
       ctx.addIssue({ code: "custom", message: "The Mobile layout breakpoint must be 0" });
     }
 
-    if (layouts.some((layout) => layout.id !== baseLayout.id && layout.breakpoint >= baseLayout.breakpoint)) {
-      ctx.addIssue({ code: "custom", message: "The Base layout must have the highest breakpoint" });
-    }
-
     if (new Set(layouts.map((layout) => layout.breakpoint)).size !== layouts.length) {
       ctx.addIssue({ code: "custom", message: "Layout breakpoints must be unique" });
     }
