@@ -97,9 +97,16 @@ export const CommonChart = ({
     setHoveredIndex(Math.min(data.length - 1, Math.max(0, index)));
   };
 
+  // Clamp on read rather than syncing via an effect - handles data growing/shrinking
+  // between renders (e.g. history resetting on integration change) without ever
+  // handing a stale or out-of-range index to tooltipLabel.
+  const clampedHoveredIndex = Math.max(
+    0,
+    Math.min(hoveredIndex, data.length - 1),
+  );
   const resolvedTooltipLabel =
     typeof tooltipLabel === "function"
-      ? tooltipLabel(hoveredIndex)
+      ? tooltipLabel(clampedHoveredIndex)
       : (tooltipLabel ?? lastValue);
 
   return (

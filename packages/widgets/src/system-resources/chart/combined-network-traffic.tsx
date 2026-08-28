@@ -39,7 +39,9 @@ export const CombinedNetworkTrafficChart = ({
             h={8}
             style={{ borderRadius: 99, flexShrink: 0 }}
           />
-          <Text size="xs">{formatByteRate(Math.round(point?.up ?? 0))}</Text>
+          <Text size="xs">
+            {t("up")}: {formatByteRate(Math.round(point?.up ?? 0))}
+          </Text>
         </Group>
         <Group gap={4} wrap="nowrap">
           <Box
@@ -48,7 +50,9 @@ export const CombinedNetworkTrafficChart = ({
             h={8}
             style={{ borderRadius: 99, flexShrink: 0 }}
           />
-          <Text size="xs">{formatByteRate(Math.round(point?.down ?? 0))}</Text>
+          <Text size="xs">
+            {t("down")}: {formatByteRate(Math.round(point?.down ?? 0))}
+          </Text>
         </Group>
       </Stack>
     );
