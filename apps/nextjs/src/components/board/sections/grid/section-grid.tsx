@@ -148,8 +148,25 @@ export const SectionGrid = ({
   // card and visually spills past its right/bottom edges. 10 must match that CSS rule's inset.
   const effectiveCanvasScale = Number.isFinite(canvasScale) && canvasScale > 0 ? canvasScale : 1;
   const outerCardInset = section.kind === "container" ? (2 * 10) / effectiveCanvasScale : 0;
+  // A collapsible container's toggle bar (see the `containerToggle` Button in
+  // container-section.tsx) is an absolutely positioned overlay sitting on top of this grid.
+  // Its height comes from a Mantine size prop, which - like spacing/font-size - is compensated
+  // by --mantine-scale to render at a constant physical size regardless of board zoom (see
+  // scaled-board-canvas.module.css). That makes it behave like the outerCardInset gap above,
+  // not like the grid's own un-compensated logical-pixel math, so it needs the same
+  // effectiveCanvasScale conversion - a plain, unconverted subtraction would under-reserve on
+  // a zoomed-out board and leave the header overlapping the content. Without reserving it at
+  // all, the header bar covers the first row of the container's content instead of sitting
+  // above it. Only the vertical axis is affected - the toggle spans the full width already.
+  const collapsibleHeaderInset =
+    section.kind === "container" && section.options.collapsible
+      ? CONTAINER_HEADER_HEIGHT / effectiveCanvasScale
+      : 0;
   const logicalWidth = getLogicalGridSize(columnCount) - outerCardInset;
-  const viewportHeight = getLogicalGridSize(viewportRowCount) - outerCardInset;
+  const viewportHeight = Math.max(
+    1,
+    getLogicalGridSize(viewportRowCount) - outerCardInset - collapsibleHeaderInset,
+  );
   // Items are positioned in a coordinate space sized to the *un-inset* column/row count
   // (fullGridWidth/Height below - see getLogicalItemStyle), but logicalWidth/Height above are
   // deliberately smaller by outerCardInset to match the container's actual visible card size.
@@ -283,6 +300,7 @@ export const SectionGrid = ({
           {
             width: logicalWidth,
             height: `var(--board-grid-drag-height, ${viewportHeight}px)`,
+            marginTop: collapsibleHeaderInset || undefined,
             "--board-item-radius": `var(--mantine-radius-${board.itemRadius})`,
           } as CSSProperties
         }
@@ -316,6 +334,9 @@ export const SectionGrid = ({
     </SectionProvider>
   );
 };
+
+// Matches the collapsible container toggle's h={24} in container-section.tsx.
+const CONTAINER_HEADER_HEIGHT = 24;
 
 const INTERACTIVE_GRID_SELECTOR =
   'a,button,input,textarea,select,option,[contenteditable="true"],[role="button"],[data-grid-no-drag]';
