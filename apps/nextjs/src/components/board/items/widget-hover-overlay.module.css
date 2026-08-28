@@ -49,12 +49,14 @@
 }
 
 .widgetIcon {
+  width: var(--mantine-font-size-sm);
+  height: var(--mantine-font-size-sm);
   flex-shrink: 0;
   color: var(--mantine-color-dimmed);
 }
 
 .name {
-  font-size: 11px;
+  font-size: var(--mantine-font-size-xs);
   font-weight: 600;
   line-height: 1.2;
   white-space: nowrap;
@@ -94,7 +96,7 @@
   padding: 2px 6px;
   border-radius: var(--mantine-radius-md);
   background-color: var(--chip-background);
-  font-size: 10px;
+  font-size: var(--mantine-font-size-xxs);
   line-height: 1.2;
   white-space: nowrap;
   overflow: hidden;

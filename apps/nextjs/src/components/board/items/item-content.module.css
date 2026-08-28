@@ -1,7 +1,7 @@
 .settingsButton {
   position: absolute;
-  top: -34px;
-  right: 14px;
+  top: calc(var(--mantine-spacing-sm) / 2);
+  right: calc(var(--mantine-spacing-sm) / 2);
   z-index: 201;
   opacity: 0;
   pointer-events: none;
@@ -52,7 +52,6 @@
 
 @media (max-width: 768px) {
   .settingsButton {
-    right: 4px;
     opacity: 1;
     pointer-events: auto;
   }

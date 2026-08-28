@@ -2776,14 +2776,11 @@ export const boardLayoutsNeedRepair = (
 ) => {
   const mobileLayouts = boardLayouts.filter((layout) => layout.role === "mobile");
   const baseLayouts = boardLayouts.filter((layout) => layout.role === "base");
-  const baseLayout = baseLayouts.at(0);
 
   return (
     mobileLayouts.length !== 1 ||
     baseLayouts.length !== 1 ||
     mobileLayouts.at(0)?.breakpoint !== 0 ||
-    !baseLayout ||
-    boardLayouts.some((layout) => layout.id !== baseLayout.id && layout.breakpoint >= baseLayout.breakpoint) ||
     new Set(boardLayouts.map((layout) => layout.breakpoint)).size !== boardLayouts.length
   );
 };

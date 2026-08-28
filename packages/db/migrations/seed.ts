@@ -143,8 +143,8 @@ export const seedProtectedBoardLayoutsAsync = async (db: Database, boardId?: str
       }
     }
 
-    const mobileLayout = normalizedLayouts[0];
-    const baseLayout = normalizedLayouts.at(-1);
+    const mobileLayout = normalizedLayouts.find((layout) => layout.role === "mobile");
+    const baseLayout = normalizedLayouts.find((layout) => layout.role === "base");
     if (mobileLayout && baseLayout) {
       await insertMissingProjectedPositionsAsync(
         db,
