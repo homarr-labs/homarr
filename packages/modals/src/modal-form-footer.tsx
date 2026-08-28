@@ -7,6 +7,7 @@ import { useI18n } from "@homarr/translation/client";
 
 interface ModalFormFooterProps {
   onCancel: () => void;
+  form?: string;
   submitLabel?: string;
   cancelLabel?: string;
   loading?: boolean;
@@ -18,24 +19,38 @@ const ActionButtons = ({
   submitLabel,
   cancelLabel,
   loading,
-}: Pick<ModalFormFooterProps, "onCancel" | "submitLabel" | "cancelLabel" | "loading">) => {
-  const t = useI18n();
+  form,
+}: Pick<ModalFormFooterProps, "onCancel" | "submitLabel" | "cancelLabel" | "loading" | "form">) => {
+  const t = useI18n("common.action");
 
   return (
     <>
       <Button onClick={onCancel} variant="subtle" color="gray">
-        {cancelLabel ?? t("common.action.cancel")}
+        {cancelLabel ?? t("cancel")}
       </Button>
-      <Button type="submit" loading={loading}>
-        {submitLabel ?? t("common.action.saveChanges")}
+      <Button type="submit" form={form} loading={loading}>
+        {submitLabel ?? t("saveChanges")}
       </Button>
     </>
   );
 };
 
-export const ModalFormFooter = ({ onCancel, submitLabel, cancelLabel, loading, leftSection }: ModalFormFooterProps) => {
+export const ModalFormFooter = ({
+  onCancel,
+  form,
+  submitLabel,
+  cancelLabel,
+  loading,
+  leftSection,
+}: ModalFormFooterProps) => {
   const actionButtons = (
-    <ActionButtons onCancel={onCancel} submitLabel={submitLabel} cancelLabel={cancelLabel} loading={loading} />
+    <ActionButtons
+      onCancel={onCancel}
+      form={form}
+      submitLabel={submitLabel}
+      cancelLabel={cancelLabel}
+      loading={loading}
+    />
   );
 
   if (leftSection) {

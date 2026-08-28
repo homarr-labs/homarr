@@ -6,6 +6,7 @@ import { Badge, Indicator, Kbd, Loader, Menu, Text } from "@mantine/core";
 import {
   IconBrandDocker,
   IconHome,
+  IconLayoutDashboard,
   IconLogin,
   IconLogout,
   IconReplace,
@@ -16,6 +17,8 @@ import {
 
 import type { RouterOutputs } from "@homarr/api";
 import { signOut, useSession } from "@homarr/auth/client";
+import { constructBoardPermissions } from "@homarr/auth/shared";
+import { useOptionalBoard } from "@homarr/boards/context";
 import { hotkeys, invariantTechnicalLabels } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
@@ -46,6 +49,8 @@ export const UserAvatarMenu = ({ children, availableUpdates, isDockerEnabled, bo
   const t = useI18n("common.userAvatar.menu");
   const tBoard = useI18n("board");
   const session = useSession();
+  const board = useOptionalBoard();
+  const boardPermissions = board && constructBoardPermissions(board, session.data ?? null);
 
   const { logoutUrl } = useAuthContext();
   const { openModal: openDockerModal } = useModalAction(DockerQuickAccessModal);
@@ -67,6 +72,15 @@ export const UserAvatarMenu = ({ children, availableUpdates, isDockerEnabled, bo
         <Menu.Item component={Link} href="/boards" leftSection={<IconHome size="1rem" />}>
           {t("homeBoard")}
         </Menu.Item>
+        {board && boardPermissions?.hasChangeAccess && (
+          <Menu.Item
+            component={Link}
+            href={`/boards/${encodeURIComponent(board.name)}/settings`}
+            leftSection={<IconLayoutDashboard size="1rem" />}
+          >
+            {tBoard("action.settings")}
+          </Menu.Item>
+        )}
         <Menu.Item
           leftSection={<IconReplace size="1rem" />}
           rightSection={<Kbd size="xs">{formatHotkeyLabel(boardSwitcher.hotkey, t("modifier"))}</Kbd>}

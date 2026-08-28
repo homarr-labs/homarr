@@ -44,6 +44,7 @@ interface WidgetContextMenuProps {
   widgetStateRef: MutableRefObject<Record<string, unknown> | null>;
   widgetRuntimeRef: WidgetRuntimeRef;
   sourceRef: RefObject<HTMLElement | null>;
+  disabled?: boolean;
   children: ReactNode;
 }
 
@@ -53,6 +54,7 @@ export const WidgetContextMenu = ({
   previewDimensions,
   widgetRuntimeRef,
   sourceRef,
+  disabled = false,
   children,
 }: WidgetContextMenuProps) => {
   const { data: session } = useSession();
@@ -162,6 +164,7 @@ export const WidgetContextMenu = ({
     }) ?? [];
 
   const openEditModal = useCallback(() => {
+    setMenuOpened(false);
     openModal(
       {
         kind: item.kind,
@@ -230,6 +233,7 @@ export const WidgetContextMenu = ({
 
   const handleOpenAdvancedFocus = useCallback(() => {
     if (!sourceRef.current) return;
+    setMenuOpened(false);
     openAdvancedFocus(item.id, sourceRef.current, {
       restoreFocusTarget:
         sourceRef.current.querySelector<HTMLElement>("[data-advanced-focus-trigger]") ?? sourceRef.current,
@@ -256,7 +260,7 @@ export const WidgetContextMenu = ({
       opened={menuOpened}
       onChange={setMenuOpened}
     >
-      <Menu.ContextMenu>{children}</Menu.ContextMenu>
+      <Menu.ContextMenu disabled={disabled}>{children}</Menu.ContextMenu>
       <WidgetContextMenuDropdown opened={menuOpened} onClose={handleCloseMenu} title={getWidgetName(item.kind, t)}>
         {canOpenAdvancedFocus && (
           <>

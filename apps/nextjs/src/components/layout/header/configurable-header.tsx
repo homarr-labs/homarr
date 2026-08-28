@@ -3,15 +3,7 @@
 import type { ReactNode } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AppShellHeader, Avatar, Group, Indicator, Loader, Tooltip, useMantineColorScheme } from "@mantine/core";
-import {
-  IconBrandDocker,
-  IconHome,
-  IconLayoutDashboard,
-  IconReplace,
-  IconRobot,
-  IconSettings,
-  IconSunMoon,
-} from "@tabler/icons-react";
+import { IconBrandDocker, IconHome, IconReplace, IconRobot, IconSettings, IconSunMoon } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -81,7 +73,10 @@ export const ConfigurableHeader = ({
   return (
     <BoardSwitcher>
       {(boardSwitcher) => {
-        const renderItems = (items: HeaderItem[]) =>
+        const renderItems = (
+          items: HeaderItem[],
+          display: { search: "input" | "icon"; logo: "logo" | "logoAndText" },
+        ) =>
           items.map((item) => (
             <HeaderItem
               key={getHeaderItemKey(item)}
@@ -95,8 +90,8 @@ export const ConfigurableHeader = ({
               isAdmin={isAdmin}
               isDockerEnabled={isDockerEnabled}
               board={item.type === "board" ? boardsById.get(item.boardId) : undefined}
-              searchDisplay={headerPreferences.searchDisplay}
-              logoDisplay={headerPreferences.logoDisplay}
+              searchDisplay={display.search}
+              logoDisplay={display.logo}
               boardSwitcher={boardSwitcher}
               assistant={assistant}
               openDockerModal={openDockerModal}
@@ -106,13 +101,19 @@ export const ConfigurableHeader = ({
             />
           ));
 
+        const desktopDisplay = {
+          search: headerPreferences.searchDisplay,
+          logo: headerPreferences.logoDisplay,
+        };
+        const mobileDisplay = { search: "icon", logo: "logo" } as const;
+
         return (
           <>
             <AppShellHeader
               maw="100vw"
               zIndex="var(--homarr-z-index-board-header)"
               className={classes.header}
-              data-desktop-visible={headerPreferences.visible}
+              data-visible={headerPreferences.visible}
               data-advanced-focus-background
               data-app-shell-header
             >
@@ -120,37 +121,26 @@ export const ConfigurableHeader = ({
                 <div className={classes.content}>
                   <div className={classes.zone} data-zone="left">
                     {hasNavigation ? <ClientBurger /> : null}
-                    {renderItems(headerPreferences.zones.left)}
+                    {renderItems(headerPreferences.zones.left, desktopDisplay)}
                   </div>
                   <div className={classes.zone} data-zone="center">
-                    {renderItems(headerPreferences.zones.center)}
+                    {renderItems(headerPreferences.zones.center, desktopDisplay)}
                   </div>
                   <div className={classes.zone} data-zone="right">
-                    {renderItems(headerPreferences.zones.right)}
+                    {renderItems(headerPreferences.zones.right, desktopDisplay)}
                     {actions ? <Group className={classes.contextActions}>{actions}</Group> : null}
                   </div>
                 </div>
               </div>
               <div className={classes.mobileContent}>
-                <Group className={classes.mobileIdentity} gap="xs" wrap="nowrap">
+                <Group className={classes.mobileZone} data-zone="left" gap="xs" wrap="nowrap">
                   {hasNavigation ? <ClientBurger /> : null}
-                  <HeaderLogo display="logo" logo={logo} logoWithTitle={logoWithTitle} label={t("items.logo")} />
+                  {renderItems(headerPreferences.zones.left, mobileDisplay)}
                 </Group>
-                <Group className={classes.mobileActions} gap="xs" wrap="nowrap">
-                  {actions}
-                  {boardEditAction}
-                  {boardSettingsAction}
-                  <TourTarget id="board-search">
-                    <MobileSearchButton alwaysVisible />
-                  </TourTarget>
-                  <TourTarget id="board-user-menu">
-                    <UserButtonClient
-                      avatar={avatar}
-                      isAdmin={isAdmin}
-                      isDockerEnabled={isDockerEnabled}
-                      boardSwitcher={boardSwitcher}
-                    />
-                  </TourTarget>
+                <Group className={classes.mobileZone} data-zone="right" gap="xs" wrap="nowrap">
+                  {renderItems(headerPreferences.zones.center, mobileDisplay)}
+                  {renderItems(headerPreferences.zones.right, mobileDisplay)}
+                  {actions ? <Group className={classes.contextActions}>{actions}</Group> : null}
                 </Group>
               </div>
             </AppShellHeader>
@@ -298,7 +288,9 @@ const HeaderItem = ({
       return (
         <Tooltip label={boardUnavailableLabel}>
           <HeaderButton aria-label={boardUnavailableLabel} disabled>
-            <IconLayoutDashboard size={20} stroke={1.5} />
+            <Avatar size={22} radius="sm">
+              ?
+            </Avatar>
           </HeaderButton>
         </Tooltip>
       );
@@ -416,14 +408,19 @@ const HeaderItem = ({
 
   return (
     <TourTarget id="board-user-menu">
-      <UserButtonClient
-        avatar={avatar}
-        isAdmin={isAdmin}
-        isDockerEnabled={isDockerEnabled}
-        boardSwitcher={boardSwitcher}
-      />
+      <div className={classes.userMenu}>
+        <UserButtonClient
+          avatar={avatar}
+          isAdmin={isAdmin}
+          isDockerEnabled={isDockerEnabled}
+          boardSwitcher={boardSwitcher}
+        />
+      </div>
     </TourTarget>
   );
 };
 
-const getBoardInitial = (name: string) => Array.from(name.trim())[0]?.toLocaleUpperCase() ?? "?";
+const getBoardInitial = (name: string) => {
+  const firstCharacter = Array.from(name.trim())[0] ?? "?";
+  return Array.from(firstCharacter.toUpperCase())[0] ?? "?";
+};

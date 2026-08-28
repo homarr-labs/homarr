@@ -49,8 +49,7 @@ export const BoardCreateForm = ({ onCancel }: BoardCreateFormProps) => {
               message: tBoard("action.create.notification.success.message", { name: values.name }),
             });
             const name = encodeURIComponent(result.name);
-            const layoutId = encodeURIComponent(result.layoutId);
-            router.push(`/boards/${name}?layout=${layoutId}&edit=true&add=true`);
+            router.push(`/boards/${name}`);
           },
           onError() {
             showErrorNotification({
