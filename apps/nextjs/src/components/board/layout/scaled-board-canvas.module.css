@@ -45,4 +45,13 @@
   --mantine-h4-font-size: calc(1.125rem * var(--board-canvas-ui-scale, 1));
   --mantine-h5-font-size: calc(1rem * var(--board-canvas-ui-scale, 1));
   --mantine-h6-font-size: calc(0.875rem * var(--board-canvas-ui-scale, 1));
+  /* Without these, border-radius tokens (e.g. the board's "Item radius" setting) stay at their
+   * flat rem value while the canvas zoom shrinks the rendered card, so the chosen radius becomes
+   * imperceptibly small on busy/zoomed-out boards - same class of bug as the spacing/font tokens
+   * above, just never ported over to radius. */
+  --mantine-radius-xs: calc(0.25rem * var(--board-canvas-ui-scale, 1));
+  --mantine-radius-sm: calc(0.25rem * var(--board-canvas-ui-scale, 1));
+  --mantine-radius-md: calc(0.5rem * var(--board-canvas-ui-scale, 1));
+  --mantine-radius-lg: calc(0.75rem * var(--board-canvas-ui-scale, 1));
+  --mantine-radius-xl: calc(1rem * var(--board-canvas-ui-scale, 1));
 }

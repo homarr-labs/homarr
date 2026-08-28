@@ -22,7 +22,7 @@ export const ClientShell = ({
   const collapsed = useAtomValue(navigationCollapsedAtom);
   const backgroundProps = useOptionalBackgroundProps();
   const { headerPreferences } = useSettings();
-  const headerHeight = headerPreferences.visible ? appShellHeaderHeight : { base: appShellHeaderHeight, sm: 0 };
+  const headerHeight = headerPreferences.visible ? appShellHeaderHeight : 0;
 
   return (
     <AppShell

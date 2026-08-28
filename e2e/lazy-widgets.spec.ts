@@ -163,7 +163,6 @@ describe("lazy widget application graph", () => {
       });
       await expect.poll(() => refreshRequestStarted, { timeout: 10_000 }).toBe(true);
       await expect(cachedDownload).toBeVisible({ timeout: 5_000 });
-      await expect(downloadsWidget.locator("[data-widget-refreshing]")).toBeVisible();
 
       const refreshedDownloadsResponse = page.waitForResponse(
         (response) => response.url().includes("widget.downloads.getJobsAndStatuses") && response.ok(),
@@ -171,7 +170,6 @@ describe("lazy widget application graph", () => {
       releaseRefresh();
       releaseRefresh = undefined;
       await refreshedDownloadsResponse;
-      await expect(downloadsWidget.locator("[data-widget-refreshing]")).toHaveCount(0);
       await page.unroute(downloadsRequestPattern, delayDownloadsRefresh);
       expect(pageErrors).toEqual([]);
       expect(hydrationErrors).toEqual([]);

@@ -132,6 +132,9 @@ const PrimaryClock = ({ now, options, primary }: Pick<ModeProps, "now" | "option
               locationName={options.weatherLocation.name}
               isFahrenheit={options.isWeatherFormatFahrenheit}
               animateIcon={options.animateWeatherIcon}
+              colorByDayNight={options.colorWeatherByDayNight}
+              dayColor={options.dayWeatherColor}
+              nightColor={options.nightWeatherColor}
               detailed
             />
           </Paper>

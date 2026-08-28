@@ -2430,6 +2430,16 @@
           "label": "Animate weather icon",
           "description": "Animate the weather icon. Disabled by default and always disabled when reduced motion is requested."
         },
+        "colorWeatherByDayNight": {
+          "label": "Color weather by day/night",
+          "description": "Tint the weather icon and temperature with a day color or a night color, based on whether it's currently day or night at the chosen location."
+        },
+        "dayWeatherColor": {
+          "label": "Day color"
+        },
+        "nightWeatherColor": {
+          "label": "Night color"
+        },
         "worldClockCities": {
           "label": "World clock cities",
           "description": "Add and order up to six cities for advanced view."
@@ -4841,7 +4851,8 @@
         "memory": "MEM",
         "network": "NET",
         "up": "UP",
-        "down": "DOWN"
+        "down": "DOWN",
+        "memoryTooltip": "{used} / {available} ({percent}%)"
       }
     },
     "systemDisks": {

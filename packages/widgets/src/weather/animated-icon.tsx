@@ -26,7 +26,7 @@ export const AnimatedWeatherIcon = ({ animated = false, code, isDay, size = 26, 
   let animationClass = "";
   if (animated && (code !== 0 || isDay !== false)) animationClass = getAnimationClass(code);
   return (
-    <span className={`weather-anim-wrapper ${animationClass}`}>
+    <span className={`weather-anim-wrapper ${animationClass}`} data-is-day={isDay === false ? "false" : "true"}>
       <WeatherIcon code={code} isDay={isDay} size={size} style={style} />
     </span>
   );

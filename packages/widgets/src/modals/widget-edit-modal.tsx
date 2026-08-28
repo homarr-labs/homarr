@@ -36,7 +36,7 @@ import { objectEntries } from "@homarr/common";
 import { IntegrationProvider, useSession } from "@homarr/auth/client";
 import { useOptionalBoard } from "@homarr/boards/context";
 import type { WidgetKind } from "@homarr/definitions";
-import { createModal, modalSizeForm } from "@homarr/modals";
+import { createModal, ModalFormFooter, modalSizeForm } from "@homarr/modals";
 import type { SettingsContextProps } from "@homarr/settings/creator";
 import { SpotlightProvider } from "@homarr/spotlight";
 import { useI18n } from "@homarr/translation/client";
@@ -674,16 +674,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
 
   const footer = (
     <Box className={classes.footer}>
-      <Group justify="end" wrap="nowrap">
-        <Group gap="xs" wrap="nowrap">
-          <Button onClick={actions.closeModal} variant="subtle" color="gray">
-            {tCommon("action.cancel")}
-          </Button>
-          <Button type="submit" form={widgetFormId} loading={isSubmitting}>
-            {tCommon("action.saveChanges")}
-          </Button>
-        </Group>
-      </Group>
+      <ModalFormFooter onCancel={actions.closeModal} form={widgetFormId} loading={isSubmitting} />
     </Box>
   );
 

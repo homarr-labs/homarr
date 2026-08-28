@@ -2,7 +2,7 @@
   overflow: hidden;
 }
 
-.header[data-desktop-visible="false"] {
+.header[data-visible="false"] {
   display: none;
 }
 
@@ -73,39 +73,38 @@
   flex: 0 0 auto;
 }
 
+.userMenu {
+  display: flex;
+  padding-inline: rem(6px);
+}
+
 .mobileContent {
   display: none;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  justify-content: space-between;
   gap: var(--mantine-spacing-xs);
   width: 100%;
   height: 100%;
   padding-inline: var(--mantine-spacing-xs);
 }
 
-.mobileIdentity,
-.mobileActions {
+.mobileZone {
   min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
 }
 
-.mobileIdentity {
-  flex: 1 1 auto;
-  overflow: hidden;
+.mobileZone::-webkit-scrollbar {
+  display: none;
 }
 
-.mobileIdentity > :last-child {
-  flex: 1 1 auto;
-  min-width: 0;
-  overflow: hidden;
+.mobileZone[data-zone="left"] {
+  justify-content: flex-start;
 }
 
-.mobileIdentity h2 {
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.mobileActions {
-  flex: 0 0 auto;
+.mobileZone[data-zone="right"] {
+  justify-content: flex-end;
+  max-width: 72vw;
 }
 
 .floatingControls {
@@ -155,21 +154,12 @@
 }
 
 @media (max-width: $mantine-breakpoint-sm) {
-  .header[data-desktop-visible="false"] {
-    display: block;
-  }
-
   .desktopContent {
     display: none;
   }
 
   .mobileContent {
-    display: flex;
-  }
-
-  .floatingControls,
-  .floatingControlsCorner {
-    display: none;
+    display: grid;
   }
 }
 
