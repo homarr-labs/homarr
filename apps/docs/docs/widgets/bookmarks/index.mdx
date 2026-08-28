@@ -1,29 +1,26 @@
 ---
-title: 'Bookmarks'
-description: 'Displays multiple app links'
+title: "Bookmarks"
+description: "Displays multiple app links"
 hide_title: true
 ---
 
-import { AddingWidget } from '@site/src/components/widgets/adding';
-import { WidgetConfig } from '@site/src/components/widgets/configuration';
-import { WidgetHeader } from '@site/src/components/widgets/header';
-import { bookmarksWidget } from '.';
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { bookmarksWidget } from ".";
 
-
-<WidgetHeader
-  widget={bookmarksWidget}
-  categories={['Links', 'Apps']}
-/>
+<WidgetHeader widget={bookmarksWidget} categories={["Links", "Apps"]} />
 
 The bookmarks widget allows you to display multiple app links in a single widget.
 You can add links to your favorite applications, websites, or any other resources you want quick access to.
+In view mode, right-clicking uses the browser's link menu. Homarr's widget menu remains available in edit mode.
 
 ### Screenshots
 
-import gridIconsOnly from './img/grid-icons-only.png';
-import gridWithTitle from './img/grid-with-title.png';
-import verticalListAll from './img/vertical-list-all.png';
-import vericalListSimple from './img/vertical-list-simple.png';
+import gridIconsOnly from "./img/grid-icons-only.png";
+import gridWithTitle from "./img/grid-with-title.png";
+import verticalListAll from "./img/vertical-list-all.png";
+import vericalListSimple from "./img/vertical-list-simple.png";
 
 <div className='flex gap-1'>
     <div className='flex flex-col gap-1'>
@@ -33,12 +30,13 @@ import vericalListSimple from './img/vertical-list-simple.png';
 
     <img src={gridWithTitle} alt="bookmarks grid with-title" width={256 + 4} height={256 + 4} />
     <img src={verticalListAll} alt="bookmarks vertical-list all-elements" width={128} height={256 + 4} />
-</div>
 
+</div>
 
 ### Adding the widget
 
 <AddingWidget />
 
 ### Configuration
+
 <WidgetConfig configuration={bookmarksWidget.configuration} />
