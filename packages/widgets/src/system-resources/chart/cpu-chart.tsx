@@ -35,6 +35,7 @@ export const SystemResourceCPUChart = ({
       yAxisProps={{ domain: [0, 100] }}
       labelDisplayMode={labelDisplayMode}
       advanced={advanced}
+      tooltipLabel={(index) => `${Math.round(cpuUsageOverTime[index] ?? 0)}%`}
     />
   );
 };

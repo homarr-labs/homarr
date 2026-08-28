@@ -32,11 +32,19 @@ export const SystemResourceMemoryChart = ({
         totalCapacityInBytes
       : undefined;
 
-  const lastUsed = memoryUsageOverTime.at(-1) ?? 0;
-  const memory = formatBytesPair(Math.round(lastUsed), totalCapacityInBytes);
-  const tooltipLabel = `${memory.used} / ${memory.available} (${
-    percentageUsed !== undefined ? Math.round(percentageUsed * 100) : 0
-  }%)`;
+  const tooltipLabel = (index: number) => {
+    const used = memoryUsageOverTime[index] ?? 0;
+    const memory = formatBytesPair(Math.round(used), totalCapacityInBytes);
+    const percent =
+      totalCapacityInBytes > 0
+        ? Math.round((used / totalCapacityInBytes) * 100)
+        : 0;
+    return t("memoryTooltip", {
+      used: memory.used,
+      available: memory.available,
+      percent,
+    });
+  };
 
   return (
     <CommonChart

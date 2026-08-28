@@ -38,6 +38,9 @@ export const NetworkTrafficChart = ({
       chartType={hasShadow ? "area" : "line"}
       labelDisplayMode={labelDisplayMode}
       advanced={advanced}
+      tooltipLabel={(index) =>
+        formatByteRate(Math.round(usageOverTime[index] ?? 0))
+      }
     />
   );
 };

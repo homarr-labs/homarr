@@ -4851,7 +4851,8 @@
         "memory": "MEM",
         "network": "NET",
         "up": "UP",
-        "down": "DOWN"
+        "down": "DOWN",
+        "memoryTooltip": "{used} / {available} ({percent}%)"
       }
     },
     "systemDisks": {

@@ -35,6 +35,7 @@ export const SystemResourceGPUChart = ({
       yAxisProps={{ domain: [0, 100] }}
       labelDisplayMode={labelDisplayMode}
       advanced={advanced}
+      tooltipLabel={(index) => `${Math.round(gpuUsageOverTime[index] ?? 0)}%`}
     />
   );
 };
