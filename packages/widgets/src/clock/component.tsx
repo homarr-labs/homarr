@@ -54,6 +54,9 @@ export default function ClockWidget({ options, width, height, displayMode }: Wid
             locationName={options.weatherLocation.name}
             isFahrenheit={options.isWeatherFormatFahrenheit}
             animateIcon={options.animateWeatherIcon}
+            colorByDayNight={options.colorWeatherByDayNight}
+            dayColor={options.dayWeatherColor}
+            nightColor={options.nightWeatherColor}
             detailed={false}
           />
         </Box>

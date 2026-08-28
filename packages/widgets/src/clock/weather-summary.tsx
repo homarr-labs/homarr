@@ -14,6 +14,9 @@ interface ClockWeatherSummaryProps {
   locationName: string;
   isFahrenheit: boolean;
   animateIcon: boolean;
+  colorByDayNight: boolean;
+  dayColor: string;
+  nightColor: string;
   detailed: boolean;
 }
 
@@ -23,6 +26,9 @@ export const ClockWeatherSummary = ({
   locationName,
   isFahrenheit,
   animateIcon,
+  colorByDayNight,
+  dayColor,
+  nightColor,
   detailed,
 }: ClockWeatherSummaryProps) => {
   const tCommon = useI18n("common");
@@ -46,6 +52,10 @@ export const ClockWeatherSummary = ({
     return `${Math.round(preferred)}${unit}`;
   };
 
+  const weatherColor = colorByDayNight
+    ? `var(--mantine-color-${weather.current.isDay ? dayColor : nightColor}-5)`
+    : undefined;
+
   return (
     <Stack gap={detailed ? 3 : 2} align={detailed ? "flex-start" : "center"}>
       {detailed ? (
@@ -54,9 +64,9 @@ export const ClockWeatherSummary = ({
             animated={animateIcon}
             code={weather.current.weatherCode}
             isDay={weather.current.isDay}
-            style={zoomCompensatedSize(28)}
+            style={{ ...zoomCompensatedSize(28), ...(weatherColor ? { color: weatherColor } : undefined) }}
           />
-          <Text size="sm" fw={600}>
+          <Text size="sm" fw={600} c={weatherColor}>
             {Math.round(temperature)}
             {unit}
           </Text>
@@ -68,9 +78,9 @@ export const ClockWeatherSummary = ({
             animated={animateIcon}
             code={weather.current.weatherCode}
             isDay={weather.current.isDay}
-            style={zoomCompensatedSize(26)}
+            style={{ ...zoomCompensatedSize(26), ...(weatherColor ? { color: weatherColor } : undefined) }}
           />
-          <Text size="xs" c="dimmed">
+          <Text size="xs" c={weatherColor ?? "dimmed"}>
             {Math.round(temperature)}
             {unit}
           </Text>
