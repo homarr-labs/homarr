@@ -23,11 +23,15 @@ import { getUsableWidgetQueryData } from "../common/query-state";
 import { BeszelStatsView } from "../beszel/_shared/stats-view";
 import { createBeszelSystemChoices, resolveBeszelSystemChoice } from "./selection";
 
+const CONTROLS_ROW_HEIGHT = 36;
+const STACK_PADDING = 20;
+
 export default function BeszelSystemStatsWidget({
   options,
   integrationIds,
   isEditMode,
   width,
+  height,
   boardId,
   itemId,
   setOptions,
@@ -256,6 +260,7 @@ export default function BeszelSystemStatsWidget({
             systemId={selectedSystem?.systemId ?? ""}
             timePeriod={options.timePeriod as BeszelTimePeriod}
             columns={width > 600 ? 2 : 1}
+            availableHeight={Math.max(0, height - STACK_PADDING - (isEditMode ? 0 : CONTROLS_ROW_HEIGHT))}
             visibility={{
               cpu: options.showCpu,
               memory: options.showMemory,
