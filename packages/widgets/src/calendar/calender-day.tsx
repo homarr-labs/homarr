@@ -13,15 +13,25 @@ interface CalendarDayProps {
   rootHeight: number;
 }
 
+const fallbackDayScale = { textSize: "xs" as const, indicatorSize: 3, indicatorMarginTop: 2 };
+const dayScaleTiers = [
+  { minAxisSize: 700, textSize: "lg" as const, indicatorSize: 6, indicatorMarginTop: 6 },
+  { minAxisSize: 450, textSize: "md" as const, indicatorSize: 5, indicatorMarginTop: 4 },
+  { minAxisSize: 250, textSize: "sm" as const, indicatorSize: 4, indicatorMarginTop: 3 },
+  { minAxisSize: 0, ...fallbackDayScale },
+];
+
+const getDayScale = (minAxisSize: number) =>
+  dayScaleTiers.find((tier) => minAxisSize >= tier.minAxisSize) ?? fallbackDayScale;
+
 export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: CalendarDayProps) => {
   const board = useRequiredBoard();
   const mantineTheme = useMantineTheme();
   const actualItemRadius = mantineTheme.radius[board.itemRadius];
 
   const minAxisSize = Math.min(rootWidth, rootHeight);
-  const shouldScaleDown = minAxisSize < 350;
   const shouldShowIndicators = rootHeight >= 256;
-  const indicatorSize = shouldScaleDown ? 3 : 4;
+  const { textSize, indicatorSize, indicatorMarginTop } = getDayScale(minAxisSize);
 
   const cell = (
     <Container
@@ -39,10 +49,15 @@ export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: C
         justifyContent: "center",
       }}
     >
-      <Text ta={"center"} size={shouldScaleDown ? "xs" : "md"} lh={1}>
+      <Text ta={"center"} size={textSize} lh={1}>
         {date.getDate()}
       </Text>
-      <NotificationIndicator events={events} size={indicatorSize} visible={shouldShowIndicators} />
+      <NotificationIndicator
+        events={events}
+        size={indicatorSize}
+        marginTop={indicatorMarginTop}
+        visible={shouldShowIndicators}
+      />
     </Container>
   );
 
@@ -70,10 +85,11 @@ export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: C
 interface NotificationIndicatorProps {
   events: CalendarEvent[];
   size: number;
+  marginTop: number;
   visible: boolean;
 }
 
-const NotificationIndicator = ({ events, size, visible }: NotificationIndicatorProps) => {
+const NotificationIndicator = ({ events, size, marginTop, visible }: NotificationIndicatorProps) => {
   const notificationEvents = [...new Set(events.map((event) => event.indicatorColor))].filter(
     (color): color is string => Boolean(color),
   );
@@ -82,7 +98,7 @@ const NotificationIndicator = ({ events, size, visible }: NotificationIndicatorP
 
   return (
     <Flex
-      mt={3}
+      mt={marginTop}
       w="fit-content"
       maw="75%"
       h={size}
