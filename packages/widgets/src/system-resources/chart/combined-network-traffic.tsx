@@ -1,4 +1,4 @@
-import { Box, Group, Paper, Stack, Text } from "@mantine/core";
+import { Box, Group, Stack, Text } from "@mantine/core";
 import { IconNetwork } from "@tabler/icons-react";
 
 import { formatByteRate } from "@homarr/common";
@@ -21,8 +21,36 @@ export const CombinedNetworkTrafficChart = ({
   labelDisplayMode: LabelDisplayModeOption;
   advanced?: boolean;
 }) => {
-  const chartData = usageOverTime.map((usage, index) => ({ index, up: usage.up, down: usage.down }));
+  const chartData = usageOverTime.map((usage, index) => ({
+    index,
+    up: usage.up,
+    down: usage.down,
+  }));
   const t = useI18n("widget.systemResources.card");
+
+  const latest = usageOverTime.at(-1);
+  const tooltipLabel = (
+    <Stack gap={2}>
+      <Group gap={4} wrap="nowrap">
+        <Box
+          bg="orange.5"
+          w={8}
+          h={8}
+          style={{ borderRadius: 99, flexShrink: 0 }}
+        />
+        <Text size="xs">{formatByteRate(Math.round(latest?.up ?? 0))}</Text>
+      </Group>
+      <Group gap={4} wrap="nowrap">
+        <Box
+          bg="yellow.5"
+          w={8}
+          h={8}
+          style={{ borderRadius: 99, flexShrink: 0 }}
+        />
+        <Text size="xs">{formatByteRate(Math.round(latest?.down ?? 0))}</Text>
+      </Group>
+    </Stack>
+  );
 
   return (
     <CommonChart
@@ -38,28 +66,7 @@ export const CombinedNetworkTrafficChart = ({
       chartType={hasShadow ? "area" : "line"}
       labelDisplayMode={labelDisplayMode}
       advanced={advanced}
-      tooltipProps={{
-        content: ({ payload }) => {
-          return (
-            <Paper px={3} py={2} shadow="md">
-              <Stack gap={0}>
-                {payload.map((payloadData) => (
-                  <Group key={payloadData.key} gap={4}>
-                    <Box bg={payloadData.color} w={10} h={10} style={{ borderRadius: 99 }}></Box>
-                    <Text c="dimmed" size="xs">
-                      {payloadData.value === undefined ? (
-                        <>N/A</>
-                      ) : (
-                        formatByteRate(Math.round(Number(payloadData.value)))
-                      )}
-                    </Text>
-                  </Group>
-                ))}
-              </Stack>
-            </Paper>
-          );
-        },
-      }}
+      tooltipLabel={tooltipLabel}
     />
   );
 };

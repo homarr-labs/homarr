@@ -1,4 +1,3 @@
-import { Paper, Text } from "@mantine/core";
 import { IconArrowDown, IconArrowUp } from "@tabler/icons-react";
 
 import { formatByteRate } from "@homarr/common";
@@ -39,18 +38,6 @@ export const NetworkTrafficChart = ({
       chartType={hasShadow ? "area" : "line"}
       labelDisplayMode={labelDisplayMode}
       advanced={advanced}
-      tooltipProps={{
-        content: ({ payload }) => {
-          const value = payload[0] ? Number(payload[0].value) : 0;
-          return (
-            <Paper px={3} py={2} shadow="md">
-              <Text c="dimmed" size="xs">
-                {formatByteRate(Math.round(value))}
-              </Text>
-            </Paper>
-          );
-        },
-      }}
     />
   );
 };
