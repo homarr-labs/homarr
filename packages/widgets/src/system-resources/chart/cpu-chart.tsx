@@ -26,9 +26,9 @@ export const SystemResourceCPUChart = ({
       title={invariantTechnicalLabels.cpu}
       icon={IconCpu}
       lastValue={
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         cpuUsageOverTime.length > 0
-          ? `${Math.round(cpuUsageOverTime[cpuUsageOverTime.length - 1]!)}%`
+          ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            `${Math.round(cpuUsageOverTime[cpuUsageOverTime.length - 1]!)}%`
           : undefined
       }
       chartType={hasShadow ? "area" : "line"}

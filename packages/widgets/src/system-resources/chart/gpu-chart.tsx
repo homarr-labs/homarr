@@ -26,9 +26,9 @@ export const SystemResourceGPUChart = ({
       title={invariantTechnicalLabels.gpu}
       icon={IconDeviceDesktop}
       lastValue={
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         gpuUsageOverTime.length > 0
-          ? `${Math.round(gpuUsageOverTime[gpuUsageOverTime.length - 1]!)}%`
+          ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            `${Math.round(gpuUsageOverTime[gpuUsageOverTime.length - 1]!)}%`
           : undefined
       }
       chartType={hasShadow ? "area" : "line"}
