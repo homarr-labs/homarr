@@ -73,6 +73,11 @@
   flex: 0 0 auto;
 }
 
+.userMenu {
+  display: flex;
+  padding-inline: rem(6px);
+}
+
 .mobileContent {
   display: none;
   grid-template-columns: minmax(0, 1fr) auto;

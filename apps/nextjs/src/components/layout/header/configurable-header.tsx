@@ -408,12 +408,14 @@ const HeaderItem = ({
 
   return (
     <TourTarget id="board-user-menu">
-      <UserButtonClient
-        avatar={avatar}
-        isAdmin={isAdmin}
-        isDockerEnabled={isDockerEnabled}
-        boardSwitcher={boardSwitcher}
-      />
+      <div className={classes.userMenu}>
+        <UserButtonClient
+          avatar={avatar}
+          isAdmin={isAdmin}
+          isDockerEnabled={isDockerEnabled}
+          boardSwitcher={boardSwitcher}
+        />
+      </div>
     </TourTarget>
   );
 };
