@@ -21,9 +21,17 @@ export default function BoardEditActions() {
   return <AddMenu />;
 }
 
-export const InitialBoardAddAction = () => {
+const AddMenu = () => {
+  const { data: session } = useSession();
   const board = useRequiredBoard();
   const { openModal: openItemSelectModal } = useModalAction(ItemSelectModal);
+  const { openModal: openAppSelectModal } = useModalAction(AppSelectModal);
+  const { openModal: openIntegrationSelectModal } = useModalAction(IntegrationSelectModal);
+  const { addContainer } = useContainerActions();
+  const { createItem } = useItemActions();
+  const tBoard = useI18n("board");
+  const tIntegration = useI18n("integration");
+  const tContainer = useI18n("section.container");
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -39,21 +47,6 @@ export const InitialBoardAddAction = () => {
     const query = nextSearchParams.toString();
     router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
   }, [board.id, openItemSelectModal, pathname, router, searchParams]);
-
-  return null;
-};
-
-const AddMenu = () => {
-  const { data: session } = useSession();
-  const board = useRequiredBoard();
-  const { openModal: openItemSelectModal } = useModalAction(ItemSelectModal);
-  const { openModal: openAppSelectModal } = useModalAction(AppSelectModal);
-  const { openModal: openIntegrationSelectModal } = useModalAction(IntegrationSelectModal);
-  const { addContainer } = useContainerActions();
-  const { createItem } = useItemActions();
-  const tBoard = useI18n("board");
-  const tIntegration = useI18n("integration");
-  const tContainer = useI18n("section.container");
 
   const handleSelectItem = () => {
     openItemSelectModal({ boardId: board.id });

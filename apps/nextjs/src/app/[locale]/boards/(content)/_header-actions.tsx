@@ -38,26 +38,16 @@ const loadBoardEditorAsync = async () =>
     import("~/components/board/sections/container/container-menu"),
   ]);
 const BoardEditActions = dynamic(loadEditActionsAsync, { ssr: false });
-const InitialBoardAddAction = dynamic(
-  async () => {
-    const editActions = await loadEditActionsAsync();
-    return editActions.InitialBoardAddAction;
-  },
-  { ssr: false },
-);
 
 export const BoardContentEditAction = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   const [isEditMode] = useEditMode();
   const board = useRequiredBoard();
-  const searchParams = useSearchParams();
   const { hasChangeAccess } = useBoardPermissions(board);
-  const shouldOpenInitialAdd = searchParams.get("add") === "true";
 
   if (!hasChangeAccess) return null;
 
   return (
     <>
-      {shouldOpenInitialAdd && <InitialBoardAddAction />}
       {isEditMode && <BoardEditActions />}
       <EditModeMenu demoReadOnly={demoReadOnly} />
     </>

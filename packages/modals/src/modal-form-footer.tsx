@@ -21,15 +21,15 @@ const ActionButtons = ({
   loading,
   form,
 }: Pick<ModalFormFooterProps, "onCancel" | "submitLabel" | "cancelLabel" | "loading" | "form">) => {
-  const t = useI18n();
+  const t = useI18n("common.action");
 
   return (
     <>
       <Button onClick={onCancel} variant="subtle" color="gray">
-        {cancelLabel ?? t("common.action.cancel")}
+        {cancelLabel ?? t("cancel")}
       </Button>
       <Button type="submit" form={form} loading={loading}>
-        {submitLabel ?? t("common.action.saveChanges")}
+        {submitLabel ?? t("saveChanges")}
       </Button>
     </>
   );
