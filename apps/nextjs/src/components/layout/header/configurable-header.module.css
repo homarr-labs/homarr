@@ -1,9 +1,14 @@
 .header {
   overflow: hidden;
+  transition: transform 220ms ease;
 }
 
 .header[data-visible="false"] {
   display: none;
+}
+
+.header[data-auto-hidden="true"]:not(:focus-within) {
+  transform: translateY(-100%);
 }
 
 .desktopContent {
@@ -176,6 +181,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .header,
   .floatingControls {
     transition: none;
   }
