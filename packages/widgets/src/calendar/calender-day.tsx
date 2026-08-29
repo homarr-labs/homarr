@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Box, Container, Flex, HoverCard, Text, useMantineTheme } from "@mantine/core";
 
 import { useRequiredBoard } from "@homarr/boards/context";
@@ -31,7 +32,7 @@ export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: C
 
   const minAxisSize = Math.min(rootWidth, rootHeight);
   const shouldShowIndicators = rootHeight >= 256;
-  const { textSize, indicatorSize, indicatorMarginTop } = getDayScale(minAxisSize);
+  const { textSize, indicatorSize, indicatorMarginTop } = useMemo(() => getDayScale(minAxisSize), [minAxisSize]);
 
   const cell = (
     <Container
@@ -94,7 +95,7 @@ const NotificationIndicator = ({ events, size, marginTop, visible }: Notificatio
     (color): color is string => Boolean(color),
   );
 
-  if (!visible) return null;
+  if (!visible || notificationEvents.length === 0) return null;
 
   return (
     <Flex

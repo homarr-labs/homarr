@@ -68,10 +68,11 @@ interface BeszelStatsViewProps {
 
 const MIN_CHART_HEIGHT = 100;
 const PANEL_ROW_OVERHEAD = 28;
+const GRID_ROW_GAP = 16;
 
 const computeChartHeight = (availableHeight: number | undefined, rowCount: number) => {
   if (!availableHeight || rowCount <= 0) return CHART_HEIGHT;
-  const perRow = availableHeight / rowCount - PANEL_ROW_OVERHEAD;
+  const perRow = (availableHeight - (rowCount - 1) * GRID_ROW_GAP) / rowCount - PANEL_ROW_OVERHEAD;
   return Math.max(MIN_CHART_HEIGHT, Math.min(CHART_HEIGHT, Math.floor(perRow)));
 };
 

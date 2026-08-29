@@ -24,7 +24,8 @@ import { BeszelStatsView } from "../beszel/_shared/stats-view";
 import { createBeszelSystemChoices, resolveBeszelSystemChoice } from "./selection";
 
 const CONTROLS_ROW_HEIGHT = 36;
-const STACK_PADDING = 20;
+const CONTROLS_ROW_GAP = 16;
+const STACK_PADDING = 24;
 
 export default function BeszelSystemStatsWidget({
   options,
@@ -260,7 +261,10 @@ export default function BeszelSystemStatsWidget({
             systemId={selectedSystem?.systemId ?? ""}
             timePeriod={options.timePeriod as BeszelTimePeriod}
             columns={width > 600 ? 2 : 1}
-            availableHeight={Math.max(0, height - STACK_PADDING - (isEditMode ? 0 : CONTROLS_ROW_HEIGHT))}
+            availableHeight={Math.max(
+              0,
+              height - STACK_PADDING - (isEditMode ? 0 : CONTROLS_ROW_HEIGHT + CONTROLS_ROW_GAP),
+            )}
             visibility={{
               cpu: options.showCpu,
               memory: options.showMemory,
