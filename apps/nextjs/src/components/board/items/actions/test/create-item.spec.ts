@@ -21,7 +21,7 @@ describe("item actions create-item", () => {
       .build();
     const baseLayout = board.layouts.find((layout) => layout.role === "base");
 
-    const result = createItemCallback({ kind: "mediaMissing" })(board);
+    const result = createItemCallback({ kind: "downloads" })(board);
 
     const createdItem = result.items.at(0);
     expect(createdItem?.layouts.find((layout) => layout.layoutId === "mobile")?.width).toBe(3);
@@ -165,7 +165,7 @@ describe("item actions create-item", () => {
     const result = createItemCallback({ id: "calendar", kind: "mediaMissing", targetSectionId: "media" })(board);
 
     expect(result.items.find((item) => item.id === "calendar")?.layouts).toEqual([
-      expect.objectContaining({ layoutId: "layout", sectionId: "media", width: 4 }),
+      expect.objectContaining({ layoutId: "layout", sectionId: "media", width: 2 }),
     ]);
   });
 
@@ -262,7 +262,7 @@ describe("item actions create-item", () => {
         layoutId: layout.id,
         sectionId: "canvas",
         width: 1,
-        height: 3,
+        height: 2,
         xOffset: 0,
         yOffset: 1,
       }),

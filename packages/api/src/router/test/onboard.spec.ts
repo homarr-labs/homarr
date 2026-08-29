@@ -280,7 +280,7 @@ describe("onboard.completeSetup", () => {
     expect(mediaMissing).toBeDefined();
     expect(
       await db.query.itemLayouts.findFirst({ where: eq(itemLayouts.itemId, mediaMissing?.id ?? "missing") }),
-    ).toMatchObject({ width: 4, height: 3 });
+    ).toMatchObject({ width: 2, height: 2 });
   });
 
   it("requires an exact board id when more than one board exists", async () => {

@@ -35,13 +35,13 @@ const tooltips = {
   bytesTotal: makeTooltipProps(formatStorageBytes, true),
 };
 
-const ChartSkeleton = () => (
+const ChartSkeleton = ({ height }: { height: number }) => (
   <Stack gap={4} style={{ minWidth: 0 }}>
     <Group gap="xs">
       <Skeleton h={14} w={72} radius="sm" />
       <Skeleton h={10} w={110} radius="sm" />
     </Group>
-    <Skeleton h={CHART_HEIGHT} radius="sm" />
+    <Skeleton h={height} radius="sm" />
   </Stack>
 );
 
@@ -67,7 +67,7 @@ interface BeszelStatsViewProps {
 }
 
 const MIN_CHART_HEIGHT = 100;
-const PANEL_ROW_OVERHEAD = 28;
+const PANEL_ROW_OVERHEAD = 25;
 const GRID_ROW_GAP = 16;
 
 const computeChartHeight = (availableHeight: number | undefined, rowCount: number) => {
@@ -238,10 +238,13 @@ export function BeszelStatsView({
 
   if (!activeStats) {
     const visibleChartCount = Object.values(visibility).filter(Boolean).length;
+    const effectiveColumns = Math.min(columns, Math.max(1, visibleChartCount)) as 1 | 2;
+    const rowCount = Math.ceil(visibleChartCount / effectiveColumns);
+    const chartHeight = computeChartHeight(availableHeight, rowCount);
     return (
-      <SimpleGrid cols={columns} spacing="md" aria-label={t("name")}>
+      <SimpleGrid cols={effectiveColumns} spacing="md" aria-label={t("name")}>
         {Array.from({ length: visibleChartCount }, (_, index) => (
-          <ChartSkeleton key={index} />
+          <ChartSkeleton key={index} height={chartHeight} />
         ))}
       </SimpleGrid>
     );
