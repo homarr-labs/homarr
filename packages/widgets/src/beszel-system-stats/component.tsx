@@ -23,9 +23,8 @@ import { getUsableWidgetQueryData } from "../common/query-state";
 import { BeszelStatsView } from "../beszel/_shared/stats-view";
 import { createBeszelSystemChoices, resolveBeszelSystemChoice } from "./selection";
 
-const CONTROLS_ROW_HEIGHT = 36;
-const CONTROLS_ROW_GAP = 16;
 const STACK_PADDING = 24;
+const SCROLL_FIT_BUFFER = 2;
 
 export default function BeszelSystemStatsWidget({
   options,
@@ -33,6 +32,7 @@ export default function BeszelSystemStatsWidget({
   isEditMode,
   width,
   height,
+  displayScale = 1,
   boardId,
   itemId,
   setOptions,
@@ -71,6 +71,12 @@ export default function BeszelSystemStatsWidget({
     { value: "1w", label: t("period.oneWeek") },
     { value: "30d", label: t("period.thirtyDays") },
   ];
+  let responsiveWidth = width;
+  let responsiveHeight = height;
+  if (Number.isFinite(displayScale) && displayScale > 0) {
+    responsiveWidth *= displayScale;
+    responsiveHeight *= displayScale;
+  }
   useWidgetRuntimeQueries(
     widgetRuntimeRef,
     selectedSystem && options.timePeriod !== "1m"
@@ -185,86 +191,83 @@ export default function BeszelSystemStatsWidget({
   }
 
   return (
-    <Box h="100%" pos="relative">
+    <Box h="100%" pos="relative" className={classes.beszelStatsRoot}>
       <Box pos="absolute" top={4} right={8} style={{ zIndex: 1 }}>
         <Group gap={0}>
           <IntegrationErrorIndicator results={systemsResult} />
         </Group>
       </Box>
+      {!isEditMode && (
+        <Group gap="xs" wrap="nowrap" className={classes.beszelStatsControls}>
+          {systems.length > 1 && (
+            <Menu position="bottom-start" withArrow shadow="md" withinPortal>
+              <Menu.Target>
+                <Button
+                  variant="default"
+                  size="compact-xs"
+                  leftSection={<IconServer style={iconSizes.sm} />}
+                  className={classes.beszelStatsSystemToggle}
+                  disabled={isSelectionSavePending}
+                >
+                  {selectedLabel}
+                </Button>
+              </Menu.Target>
+              <Menu.Dropdown>
+                {systems.map((system) => (
+                  <Menu.Item
+                    key={system.value}
+                    fz="xs"
+                    fw={system.value === selectedValue ? 600 : 400}
+                    c={system.value !== selectedValue ? "dimmed" : undefined}
+                    disabled={isSelectionSavePending}
+                    onClick={() => handleSelectSystem(system.value)}
+                  >
+                    {system.label}
+                  </Menu.Item>
+                ))}
+              </Menu.Dropdown>
+            </Menu>
+          )}
+          {responsiveWidth >= 560 ? (
+            <Button.Group className={classes.beszelStatsPeriodToggle}>
+              {periodOptions.map((period) => (
+                <Button
+                  key={period.value}
+                  size="compact-xs"
+                  variant={period.value === options.timePeriod ? "filled" : "default"}
+                  className={classes.beszelStatsPeriodButton}
+                  aria-pressed={period.value === options.timePeriod}
+                  disabled={isSelectionSavePending}
+                  onClick={() => handleTimePeriod(period.value)}
+                >
+                  {period.label}
+                </Button>
+              ))}
+            </Button.Group>
+          ) : (
+            <Select
+              size="xs"
+              value={options.timePeriod}
+              onChange={(value) => value && handleTimePeriod(value)}
+              disabled={isSelectionSavePending}
+              data={periodOptions}
+              className={classes.beszelStatsPeriodToggle}
+            />
+          )}
+        </Group>
+      )}
       <ScrollArea
         h="100%"
         className={classes.beszelStatsContainer}
         style={{ pointerEvents: isEditMode ? "none" : undefined }}
       >
-        <Stack gap="md" p="sm">
-          {!isEditMode && (
-            <Group gap="xs" wrap="nowrap" className={classes.beszelStatsControls}>
-              {systems.length > 1 && (
-                <Menu position="bottom-start" withArrow shadow="md" withinPortal>
-                  <Menu.Target>
-                    <Button
-                      variant="default"
-                      size="compact-xs"
-                      leftSection={<IconServer style={iconSizes.sm} />}
-                      className={classes.beszelStatsSystemToggle}
-                      disabled={isSelectionSavePending}
-                    >
-                      {selectedLabel}
-                    </Button>
-                  </Menu.Target>
-                  <Menu.Dropdown>
-                    {systems.map((system) => (
-                      <Menu.Item
-                        key={system.value}
-                        fz="xs"
-                        fw={system.value === selectedValue ? 600 : 400}
-                        c={system.value !== selectedValue ? "dimmed" : undefined}
-                        disabled={isSelectionSavePending}
-                        onClick={() => handleSelectSystem(system.value)}
-                      >
-                        {system.label}
-                      </Menu.Item>
-                    ))}
-                  </Menu.Dropdown>
-                </Menu>
-              )}
-              {width >= 560 ? (
-                <Button.Group className={classes.beszelStatsPeriodToggle}>
-                  {periodOptions.map((period) => (
-                    <Button
-                      key={period.value}
-                      size="compact-xs"
-                      variant={period.value === options.timePeriod ? "filled" : "default"}
-                      className={classes.beszelStatsPeriodButton}
-                      aria-pressed={period.value === options.timePeriod}
-                      disabled={isSelectionSavePending}
-                      onClick={() => handleTimePeriod(period.value)}
-                    >
-                      {period.label}
-                    </Button>
-                  ))}
-                </Button.Group>
-              ) : (
-                <Select
-                  size="xs"
-                  value={options.timePeriod}
-                  onChange={(value) => value && handleTimePeriod(value)}
-                  disabled={isSelectionSavePending}
-                  data={periodOptions}
-                  className={classes.beszelStatsPeriodToggle}
-                />
-              )}
-            </Group>
-          )}
+        <Stack p="sm">
           <BeszelStatsView
             integrationIds={selectedSystem ? [selectedSystem.integrationId] : []}
             systemId={selectedSystem?.systemId ?? ""}
             timePeriod={options.timePeriod as BeszelTimePeriod}
-            columns={width > 600 ? 2 : 1}
-            availableHeight={Math.max(
-              0,
-              height - STACK_PADDING - (isEditMode ? 0 : CONTROLS_ROW_HEIGHT + CONTROLS_ROW_GAP),
-            )}
+            columns={responsiveWidth > 600 ? 2 : 1}
+            availableHeight={Math.max(0, responsiveHeight - STACK_PADDING - SCROLL_FIT_BUFFER)}
             visibility={{
               cpu: options.showCpu,
               memory: options.showMemory,

@@ -101,12 +101,12 @@ interface BeszelChartPanelProps {
 
 export const BeszelChartPanel = memo(({ title, subtitle, chartProps }: BeszelChartPanelProps) => (
   <Stack gap={4} style={panelStyle}>
-    <Group gap="xs">
-      <Text size="sm" fw={600}>
+    <Group gap="xs" wrap="nowrap">
+      <Text size="sm" fw={600} style={{ flexShrink: 0 }}>
         {title}
       </Text>
       {subtitle && (
-        <Text size="xs" c="dimmed">
+        <Text size="xs" c="dimmed" truncate style={{ minWidth: 0 }}>
           {subtitle}
         </Text>
       )}
