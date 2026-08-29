@@ -14,6 +14,7 @@
     "check:custom-widgets": "pnpm --filter @homarr/custom-widgets check:architecture",
     "check:custom-widget-bundle": "node ./scripts/check-custom-widget-bundle.mjs",
     "check:openapi": "tsx ./scripts/check-openapi-schema.mts",
+    "generate:openapi": "tsx ./scripts/generate-openapi-schema.mts",
     "ci:act:all": "bash scripts/ci/act.sh all",
     "ci:act:cleanup": "bash scripts/ci/act.sh cleanup",
     "ci:act:docker": "bash scripts/ci/act.sh docker",

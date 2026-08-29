@@ -18,6 +18,7 @@ import {
   Paper,
   SegmentedControl,
   Stack,
+  Switch,
   Text,
   ThemeIcon,
   Tooltip,
@@ -202,7 +203,16 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
               {t("description")}
             </Text>
           </Stack>
-          <Group gap="xs">
+          <Group gap="sm">
+            <Tooltip label={t("action.autoHideOnScrollDescription")} disabled={!value.visible}>
+              <Switch
+                size="sm"
+                label={t("action.autoHideOnScroll")}
+                checked={value.autoHideOnScroll}
+                disabled={!value.visible}
+                onChange={(event) => onChange({ ...value, autoHideOnScroll: event.currentTarget.checked })}
+              />
+            </Tooltip>
             <Tooltip label={value.visible ? t("action.hide") : t("action.show")}>
               <ActionIcon
                 size="lg"

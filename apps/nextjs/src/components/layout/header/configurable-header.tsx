@@ -7,6 +7,7 @@ import { IconBrandDocker, IconHome, IconReplace, IconRobot, IconSettings, IconSu
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { useOptionalEditMode } from "@homarr/boards/edit-mode";
 import { invariantTechnicalLabels } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import { useSettings } from "@homarr/settings";
@@ -24,6 +25,7 @@ import { HeaderLogo } from "./header-logo";
 import { LazySpotlight } from "./lazy-spotlight";
 import { DesktopSearchInput, MobileSearchButton } from "./search";
 import { TourTarget } from "./tour-target";
+import { useHeaderAutoHide } from "./use-header-auto-hide";
 import { UserButtonClient } from "./user-client";
 import classes from "./configurable-header.module.css";
 
@@ -69,6 +71,10 @@ export const ConfigurableHeader = ({
     staleTime: 60_000,
   });
   const boardsById = useMemo(() => new Map(boards.map((board) => [board.id, board])), [boards]);
+  const isEditMode = useOptionalEditMode();
+  const isAutoHidden = useHeaderAutoHide(
+    headerPreferences.visible && headerPreferences.autoHideOnScroll && !isEditMode,
+  );
 
   return (
     <BoardSwitcher>
@@ -114,6 +120,7 @@ export const ConfigurableHeader = ({
               zIndex="var(--homarr-z-index-board-header)"
               className={classes.header}
               data-visible={headerPreferences.visible}
+              data-auto-hidden={isAutoHidden || undefined}
               data-advanced-focus-background
               data-app-shell-header
             >
