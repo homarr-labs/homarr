@@ -20,7 +20,7 @@ import { WidgetQueryLoadingState } from "../../common/query-state-indicator";
 import actionTargetClasses from "../../common/action-target.module.css";
 import { IntegrationErrorIndicator } from "../../common/integration-error-indicator";
 import type { WidgetComponentProps } from "../../definition";
-import { NoIntegrationDataError } from "../../errors/no-data-integration";
+import { MediaRequestsEmptyState } from "../empty-state";
 import classes from "./component.module.css";
 import searchClasses from "../search-button.module.css";
 
@@ -30,6 +30,7 @@ export default function MediaServerWidget({
   options,
   width,
 }: WidgetComponentProps<"mediaRequests-requestList">) {
+  const t = useI18n("widget.mediaRequests-requestList");
   const interactIntegrationIds = new Set(
     useIntegrationsWithInteractAccess()
       .filter(({ id }) => integrationIds.includes(id))
@@ -48,7 +49,16 @@ export default function MediaServerWidget({
   if (isInitialWidgetQueryPending(mediaRequestQuery)) return <WidgetQueryLoadingState />;
   if (!mediaRequestData) return <WidgetEmptyState />;
   const { requests: mediaRequests, failedIntegrations } = mediaRequestData;
-  if (mediaRequests.length === 0 && failedIntegrations.length === 0) throw new NoIntegrationDataError();
+  if (mediaRequests.length === 0 && failedIntegrations.length === 0) {
+    return (
+      <MediaRequestsEmptyState
+        title={t("empty.title")}
+        description={t("empty.description")}
+        integrationIds={integrationIds}
+        isEditMode={isEditMode}
+      />
+    );
+  }
   const showIntegrationSource = new Set(mediaRequests.map(({ integrationId }) => integrationId)).size > 1;
 
   return (
