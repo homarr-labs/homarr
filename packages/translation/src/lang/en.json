@@ -4227,7 +4227,11 @@
     },
     "mediaRequests-requestList": {
       "name": "Media Requests List",
-      "description": "See a list of all media requests from your Overseerr or Jellyseerr instance",
+      "description": "See a list of all media requests from your Seerr, Overseerr, or Jellyseerr instance",
+      "empty": {
+        "title": "No media requests yet",
+        "description": "Search for a movie or show to start a request."
+      },
       "option": {
         "linksTargetNewTab": {
           "label": "Open links in new tab"
@@ -4267,6 +4271,10 @@
     "mediaRequests-requestStats": {
       "name": "Media Requests Stats",
       "description": "Statistics about your media requests",
+      "empty": {
+        "title": "No request activity yet",
+        "description": "Stats will appear after the first media request."
+      },
       "titles": {
         "stats": {
           "main": "Media Stats",

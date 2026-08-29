@@ -16,6 +16,7 @@ import TabItem from "@theme/TabItem";
 import { mediaRequestListWidget } from ".";
 import { jellyseerrIntegration } from "@site/docs/integrations/jellyseerr";
 import { overseerrIntegration } from "@site/docs/integrations/overseerr";
+import { seerrIntegration } from "@site/docs/integrations/seerr";
 
 <WidgetHeader widget={mediaRequestListWidget} categories={["Media requests"]} />
 
@@ -39,6 +40,9 @@ import mediaRequestList from "./img/list.png";
     {
       integration: overseerrIntegration,
     },
+    {
+      integration: seerrIntegration,
+    },
   ]}
 />
 
@@ -46,6 +50,7 @@ import mediaRequestList from "./img/list.png";
 
 - Approve / decline a request by clicking on the thumbs up or down icon.
 - Hover over the widget to reveal a **search button** that opens Spotlight in media request search mode, scoped to the widget's integrations.
+- When no requests exist yet, the widget offers the same media search action instead of reporting an integration error.
 - A warning indicator identifies unavailable integrations without hiding requests returned by healthy integrations.
 
 <WidgetInteractionGuide advancedView={false} />

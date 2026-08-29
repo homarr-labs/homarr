@@ -28,7 +28,7 @@ import { WidgetQueryLoadingState } from "../../common/query-state-indicator";
 import actionTargetClasses from "../../common/action-target.module.css";
 import { IntegrationErrorIndicator } from "../../common/integration-error-indicator";
 import type { WidgetComponentProps } from "../../definition";
-import { NoIntegrationDataError } from "../../errors/no-data-integration";
+import { MediaRequestsEmptyState } from "../empty-state";
 import classes from "./component.module.css";
 import searchClasses from "../search-button.module.css";
 
@@ -54,8 +54,16 @@ export default function MediaServerWidget({
     requestStats.users.length === 0 &&
     requestStats.stats.length === 0 &&
     requestStats.failedIntegrations.length === 0
-  )
-    throw new NoIntegrationDataError();
+  ) {
+    return (
+      <MediaRequestsEmptyState
+        title={t("empty.title")}
+        description={t("empty.description")}
+        integrationIds={integrationIds}
+        isEditMode={isEditMode}
+      />
+    );
+  }
 
   const data = [
     {
