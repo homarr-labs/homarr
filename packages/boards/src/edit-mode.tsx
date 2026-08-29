@@ -26,8 +26,3 @@ export const useEditMode = () => {
 
   return context;
 };
-
-export const useOptionalEditMode = (): boolean => {
-  const context = useContext(EditModeContext);
-  return context ? context[0] : false;
-};

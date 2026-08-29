@@ -4391,10 +4391,6 @@
                             "type": "string",
                             "enum": ["logo", "logoAndText"]
                           },
-                          "autoHideOnScroll": {
-                            "default": false,
-                            "type": "boolean"
-                          },
                           "zones": {
                             "type": "object",
                             "properties": {

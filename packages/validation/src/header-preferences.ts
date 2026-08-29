@@ -105,7 +105,6 @@ export const headerPreferencesSchema = z
     visible: z.boolean(),
     searchDisplay: z.enum(headerSearchDisplayValues),
     logoDisplay: z.enum(headerLogoDisplayValues).default("logoAndText"),
-    autoHideOnScroll: z.boolean().default(false),
     zones: headerZonesSchema,
   })
   .strict();
@@ -156,7 +155,6 @@ const migrateLegacyItems = (
   visible,
   searchDisplay: "input",
   logoDisplay: "logoAndText",
-  autoHideOnScroll: false,
   zones: {
     left: zones.left.map(createBuiltinHeaderItem),
     center: zones.center.map(createBuiltinHeaderItem),
@@ -211,7 +209,6 @@ export const defaultHeaderPreferences = {
   visible: true,
   searchDisplay: "input",
   logoDisplay: "logoAndText",
-  autoHideOnScroll: false,
   zones: {
     left: [createBuiltinHeaderItem("logo")],
     center: [createBuiltinHeaderItem("search")],
