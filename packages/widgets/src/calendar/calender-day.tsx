@@ -95,7 +95,7 @@ const NotificationIndicator = ({ events, size, marginTop, visible }: Notificatio
     (color): color is string => Boolean(color),
   );
 
-  if (!visible || notificationEvents.length === 0) return null;
+  if (!visible) return null;
 
   return (
     <Flex
