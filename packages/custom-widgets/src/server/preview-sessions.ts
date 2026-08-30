@@ -9,6 +9,14 @@ import {
 } from "../core";
 import type { CustomJsxRequest, CustomWidgetOptions, CustomWidgetSource } from "../core";
 import { CustomWidgetDomainError } from "./errors";
+import {
+  getPreviewEvidenceKey,
+  isVerifiedPreviewEvidence,
+  parsePreviewJournalEntries,
+  parsePreviewStoredValue,
+  previewJournalEntrySchema,
+} from "./preview-session-evidence";
+import type { CustomWidgetPreviewJournalEntry } from "./preview-session-evidence";
 import { validatePreviewTemplateRevision } from "./preview-session-template";
 
 const SESSION_TTL_MS = 10 * 60_000;
@@ -40,19 +48,7 @@ const sessionSchema = z.object({
 });
 export type CustomWidgetPreviewSession = z.infer<typeof sessionSchema>;
 
-const journalEntrySchema = z.object({
-  id: z.string(),
-  requestId: z.string(),
-  kind: z.enum(["query", "action"]),
-  method: z.enum(["GET", "POST", "PUT", "PATCH", "DELETE"]),
-  path: z.string(),
-  status: z.number().nullable(),
-  durationMs: z.number().nonnegative(),
-  simulated: z.boolean(),
-  sessionRevision: z.number().int().nonnegative(),
-  timestamp: z.number(),
-});
-export type CustomWidgetPreviewJournalEntry = z.infer<typeof journalEntrySchema>;
+export type { CustomWidgetPreviewJournalEntry } from "./preview-session-evidence";
 
 export interface CreatePreviewSessionInput {
   userId: string;
@@ -128,7 +124,7 @@ export class CustomWidgetPreviewSessionService {
 
   public async get(id: string, userId: string): Promise<CustomWidgetPreviewSession> {
     const candidate = this.options.store ? await this.options.store.getSession(id) : this.sessions.get(id);
-    const parsed = sessionSchema.safeParse(parseStoredValue(candidate));
+    const parsed = sessionSchema.safeParse(parsePreviewStoredValue(candidate));
     if (!parsed.success || parsed.data.expiresAt <= this.now()) {
       if (this.options.store) await this.options.store.deleteSession(id);
       else {
@@ -169,24 +165,21 @@ export class CustomWidgetPreviewSessionService {
     session: CustomWidgetPreviewSession,
     input: Omit<CustomWidgetPreviewJournalEntry, "id" | "timestamp">,
   ): Promise<void> {
-    const value = journalEntrySchema.parse({ ...input, id: this.options.createId(), timestamp: this.now() });
+    const value = previewJournalEntrySchema.parse({ ...input, id: this.options.createId(), timestamp: this.now() });
     const ttlMs = Math.max(1, session.expiresAt - this.now());
-    const isVerified =
-      (value.kind === "query" && value.status !== null && value.status >= 200 && value.status < 300) ||
-      (value.kind === "action" &&
-        (value.simulated || (value.status !== null && value.status >= 200 && value.status < 300)));
-    const evidenceKey = `${value.sessionRevision}:${value.kind}:${value.requestId}`;
     if (this.options.store) {
       const writes = [this.options.store.appendJournal(session.id, value, MAX_JOURNAL_ENTRIES, ttlMs)];
-      if (isVerified) writes.push(this.options.store.saveEvidence(session.id, evidenceKey, value, ttlMs));
+      if (isVerifiedPreviewEvidence(value)) {
+        writes.push(this.options.store.saveEvidence(session.id, getPreviewEvidenceKey(value), value, ttlMs));
+      }
       await Promise.all(writes);
       return;
     }
 
     this.journals.set(session.id, [value, ...(this.journals.get(session.id) ?? [])].slice(0, MAX_JOURNAL_ENTRIES));
-    if (!isVerified) return;
+    if (!isVerifiedPreviewEvidence(value)) return;
     const evidence = this.evidence.get(session.id) ?? new Map<string, CustomWidgetPreviewJournalEntry>();
-    evidence.set(evidenceKey, value);
+    evidence.set(getPreviewEvidenceKey(value), value);
     this.evidence.set(session.id, evidence);
   }
 
@@ -195,10 +188,7 @@ export class CustomWidgetPreviewSessionService {
     const entries = this.options.store
       ? await this.options.store.getJournal(id, MAX_JOURNAL_ENTRIES)
       : (this.journals.get(id) ?? []);
-    return entries.flatMap((entry) => {
-      const parsed = journalEntrySchema.safeParse(parseStoredValue(entry));
-      return parsed.success ? [parsed.data] : [];
-    });
+    return parsePreviewJournalEntries(entries);
   }
 
   public async getEvidence(id: string, userId: string): Promise<CustomWidgetPreviewJournalEntry[]> {
@@ -206,10 +196,7 @@ export class CustomWidgetPreviewSessionService {
     const entries = this.options.store
       ? await this.options.store.getEvidence(id)
       : [...(this.evidence.get(id)?.values() ?? [])];
-    return entries.flatMap((entry) => {
-      const parsed = journalEntrySchema.safeParse(parseStoredValue(entry));
-      return parsed.success ? [parsed.data] : [];
-    });
+    return parsePreviewJournalEntries(entries);
   }
 
   public getSecrets(session: CustomWidgetPreviewSession, sourceId: string) {
@@ -309,14 +296,5 @@ export class CustomWidgetPreviewSessionService {
     if (!ttlMs) throw new CustomWidgetDomainError({ code: "NOT_FOUND", message: "Preview session expired" });
     if (this.options.store) await this.options.store.saveSession(session.id, session, ttlMs);
     else this.sessions.set(session.id, session);
-  }
-}
-
-function parseStoredValue(value: unknown): unknown {
-  if (typeof value !== "string") return value;
-  try {
-    return JSON.parse(value) as unknown;
-  } catch {
-    return null;
   }
 }
