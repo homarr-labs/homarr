@@ -2,7 +2,8 @@
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  overflow: clip;
+  overflow-x: clip;
+  overflow-y: visible;
 }
 
 .viewport[data-board-hydrated="false"] {

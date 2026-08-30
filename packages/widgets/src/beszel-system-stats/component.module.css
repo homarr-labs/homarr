@@ -1,11 +1,16 @@
 .beszelStatsControls {
+  position: absolute;
+  z-index: 2;
+  top: var(--mantine-spacing-sm);
+  right: var(--mantine-spacing-sm);
+  left: var(--mantine-spacing-sm);
   opacity: 0;
   transition: opacity 150ms ease-out;
   pointer-events: none;
 }
 
-.beszelStatsContainer:hover .beszelStatsControls,
-.beszelStatsContainer:focus-within .beszelStatsControls {
+.beszelStatsRoot:hover .beszelStatsControls,
+.beszelStatsRoot:focus-within .beszelStatsControls {
   opacity: 1;
   pointer-events: auto;
 }

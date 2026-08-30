@@ -129,8 +129,9 @@ function UptimeKumaContent({ integrationIds, options, width, height, displayMode
   );
   const uptimeValue = clampPercent(combined.averageUptimePercent);
   const uptimeColor = getUptimeColor(uptimeValue);
-  const ringSize = getRingSize(width);
-  const iconSize = getIconSize(width);
+  const visualScale = Math.min(width, height);
+  const ringSize = getRingSize(visualScale);
+  const iconSize = getIconSize(visualScale);
   const gridCols = getGridCols(width);
   const isAdvanced = displayMode === "advanced";
 
@@ -247,7 +248,7 @@ function UptimeKumaContent({ integrationIds, options, width, height, displayMode
         </Group>
         <ScrollArea h="100%">
           <Stack gap="lg" p="md">
-            <Box h={Math.max(280, Math.min(420, height - 120))}>{summaryContent}</Box>
+            <Box h={Math.min(420, Math.max(180, Math.floor(height * 0.55)))}>{summaryContent}</Box>
             {monitorList}
           </Stack>
         </ScrollArea>

@@ -40,6 +40,8 @@ interface Props {
   saveSettingsAsync: () => Promise<FormValues | null>;
 }
 
+const layoutRoleOrder = { base: 0, custom: 1, mobile: 2 } as const;
+
 export const LayoutSettingsContent = ({ board, form, isSaving, saveSettingsAsync }: Props) => {
   const tBoard = useI18n("board");
   const tLayout = useI18n("layout");
@@ -101,6 +103,9 @@ export const LayoutSettingsContent = ({ board, form, isSaving, saveSettingsAsync
 
   const nextBreakpoint = getNextCustomBreakpoint(form.values.layouts);
   const baseLayout = form.values.layouts.find((layout) => layout.role === "base");
+  const displayedLayouts = form.values.layouts
+    .map((layout, index) => ({ layout, index }))
+    .toSorted((first, second) => layoutRoleOrder[first.layout.role] - layoutRoleOrder[second.layout.role]);
 
   return (
     <SectionCard title={tBoard("setting.section.layout.title")}>
@@ -134,13 +139,9 @@ export const LayoutSettingsContent = ({ board, form, isSaving, saveSettingsAsync
           </Button>
         </Group>
 
-        {form.values.layouts.map((layout, index) => {
+        {displayedLayouts.map(({ layout, index }) => {
           const persistedLayout = board.layouts.find((candidate) => candidate.id === layout.id);
           const sourceLayout = persistedLayout ?? board.layouts.find((candidate) => candidate.role === "base");
-          const customBreakpoints = form.values.layouts
-            .filter((candidate) => candidate.role === "custom" && candidate.id !== layout.id)
-            .map((candidate) => candidate.breakpoint);
-          const baseBreakpoint = form.values.layouts.find((candidate) => candidate.role === "base")?.breakpoint ?? 768;
 
           return (
             <Fieldset
@@ -190,12 +191,8 @@ export const LayoutSettingsContent = ({ board, form, isSaving, saveSettingsAsync
                       }
                       disabled={layout.role === "mobile"}
                       styles={{ description: { color: "var(--mantine-color-text)" } }}
-                      min={
-                        layout.role === "base"
-                          ? Math.max(1, ...customBreakpoints.map((breakpoint) => breakpoint + 1))
-                          : 1
-                      }
-                      max={layout.role === "custom" ? baseBreakpoint - 1 : 32767}
+                      min={layout.role === "mobile" ? 0 : 1}
+                      max={32767}
                     />
                   </Stack>
                 </Grid.Col>

@@ -13,7 +13,7 @@
 
 .board-grid-entry:has([data-board-widget-header]):hover,
 .board-grid-entry:has([data-board-widget-header]):focus-within {
-  z-index: 10;
+  z-index: calc(var(--homarr-z-index-board-header) - 1);
 }
 
 .board-grid-entry[data-grid-preview="true"] {
