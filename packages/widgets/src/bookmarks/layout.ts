@@ -240,8 +240,20 @@ export const getBookmarkDisplayPlan = ({
     };
   }
 
-  let columns: number = widthSettings.compactColumns;
-  let orientation: BookmarkOrientation = "horizontal";
+  if (layout === "gridHorizontal") {
+    return {
+      columns: Math.min(count, widthSettings.compactColumns),
+      horizontalScroll: false,
+      itemHeight: 56,
+      itemWidth: widthSettings.rowItemWidth,
+      orientation: "horizontal",
+      showHostname: widthSettings.showHostname && heightSettings.showHostname,
+      showTitle: widthSettings.showTitle && heightSettings.showTitle,
+    };
+  }
+
+  let columns: number = widthSettings.adaptiveColumns;
+  let orientation: BookmarkOrientation = widthSettings.adaptiveOrientation;
   if (layout === "grid") {
     columns = widthSettings.gridColumns;
     orientation = "vertical";

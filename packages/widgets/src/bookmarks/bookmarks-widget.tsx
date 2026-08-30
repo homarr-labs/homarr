@@ -6,6 +6,7 @@ import {
   Box,
   Card,
   Center,
+  Grid,
   Group,
   ScrollArea,
   SimpleGrid,
@@ -156,6 +157,14 @@ export default function BookmarksWidget({
               <Group gap={options.spacing} wrap="nowrap" mih="100%" align="stretch">
                 {cards}
               </Group>
+            ) : options.grow ? (
+              <Grid grow columns={plan.columns} gap={options.spacing}>
+                {cards.map((card) => (
+                  <Grid.Col key={card.key} span={1}>
+                    {card}
+                  </Grid.Col>
+                ))}
+              </Grid>
             ) : (
               <SimpleGrid cols={plan.columns} spacing={options.spacing} verticalSpacing={options.spacing}>
                 {cards}

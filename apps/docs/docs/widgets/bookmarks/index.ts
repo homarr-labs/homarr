@@ -57,6 +57,12 @@ export const bookmarksWidget: WidgetDefinition = {
         defaultValue: "yes",
       },
       {
+        name: "Expand cards to fill row",
+        description: "Whether cards in an incomplete final row expand to use the remaining width.",
+        values: { type: "boolean" },
+        defaultValue: "no",
+      },
+      {
         name: "Bookmarks",
         description: "URLs and existing Apps shown by the widget.",
         values: "Paste one or many URLs, or find an existing App. Drag to reorder.",

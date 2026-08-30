@@ -49,6 +49,7 @@ export const { definition, componentLoader } = createWidgetDefinition("bookmarks
       hideHostname: factory.switch({ defaultValue: false }),
       openNewTab: factory.switch({ defaultValue: true }),
       withBorder: factory.switch({ defaultValue: false }),
+      grow: factory.switch({ defaultValue: false }),
       customUrls: factory.internal({ defaultValue: [] as string[] }),
       items: factory.sortableItemList<BookmarkSelectionItem, string>({
         ItemComponent: ({ item, handle, removeItem, removeLabel, rootAttributes }) => {
