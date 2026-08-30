@@ -108,4 +108,5 @@ pnpm verify:search
 
 ## Contributing
 
-When making changes to the homarr codebase that affect user-facing behavior, **always update the corresponding documentation in this app**. See `.cursor/rules/documentation-sync.mdc` for the complete mapping of code changes to doc locations.
+When a Homarr change affects user-facing behavior, update the corresponding documentation in this app. See the
+[documentation-sync skill](../../.agents/skills/documentation-sync/SKILL.md) for the code-to-documentation mapping.

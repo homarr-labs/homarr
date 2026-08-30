@@ -127,5 +127,34 @@ GitHub OAuth requires both credentials and the callback `https://v2.preview.homa
 after changing environment values, then verify the health endpoint, `/workshop`, a public listing request, GitHub
 sign-in, and an installation from the Homarr preview.
 
-Back up application and PocketBase data before deployment. Publish the combined image by immutable digest, test the
-exact digest in staging, rehearse application rollback and PocketBase restore, then promote that same digest.
+## Backup and restore
+
+PocketBase data lives in `/pb_data`. Stop writes and copy it to a new, empty backup directory:
+
+```sh
+docker compose --env-file apps/workshop/.env.staging \
+  -f apps/workshop/docker-compose.staging.yml stop workshop
+docker compose --env-file apps/workshop/.env.staging \
+  -f apps/workshop/docker-compose.staging.yml cp workshop:/pb_data/. ./workshop-backup
+docker compose --env-file apps/workshop/.env.staging \
+  -f apps/workshop/docker-compose.staging.yml start workshop
+```
+
+Restore only after preserving the current volume and confirming the backup contains `data.db`:
+
+```sh
+test -f ./workshop-backup/data.db
+docker compose --env-file apps/workshop/.env.staging \
+  -f apps/workshop/docker-compose.staging.yml stop workshop
+docker compose --env-file apps/workshop/.env.staging \
+  -f apps/workshop/docker-compose.staging.yml run --rm --no-deps --entrypoint sh workshop \
+  -c 'find /pb_data -mindepth 1 -maxdepth 1 -exec rm -rf {} +'
+docker compose --env-file apps/workshop/.env.staging \
+  -f apps/workshop/docker-compose.staging.yml cp ./workshop-backup/. workshop:/pb_data
+docker compose --env-file apps/workshop/.env.staging \
+  -f apps/workshop/docker-compose.staging.yml start workshop
+curl --fail http://127.0.0.1:8090/api/health
+```
+
+The restore empties the selected volume. Rehearse it in staging, then verify sign-in and one installation. Publish by
+immutable digest, validate that exact digest in staging, and promote the same digest.

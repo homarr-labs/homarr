@@ -38,7 +38,7 @@ jobs:
       SKIP_RELEASE: ${{ github.event_name == 'workflow_dispatch' || github.ref_name == 'dev' || github.ref_name == 'next' }}
     outputs:
       version: ${{ steps.read-semver.outputs.version || steps.version-fallback.outputs.version }}
-      git_ref: ${{ steps.read-git-ref.outputs.ref || github.ref }}
+      git_ref: ${{ steps.read-git-ref.outputs.ref || steps.read-semver.outputs.version || github.ref }}
       skipped: ${{ env.SKIP_RELEASE }}
     steps:
       - run: echo "Manual dispatch redeploys the latest existing release without creating a new one"
