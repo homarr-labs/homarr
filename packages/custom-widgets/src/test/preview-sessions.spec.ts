@@ -134,6 +134,8 @@ describe("preview sessions", () => {
       },
       appendJournal: async () => undefined,
       getJournal: async () => [],
+      saveEvidence: async () => undefined,
+      getEvidence: async () => [],
     };
     const service = new CustomWidgetPreviewSessionService({
       createId: () => "session",

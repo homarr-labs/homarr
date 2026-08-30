@@ -18,6 +18,7 @@ import { configureCustomWidgetSourceFromRequest } from "../../custom-widget/secr
 import {
   appendPreviewJournal,
   configurePreviewSessionSource,
+  getPreviewJournal,
   getPreviewSession,
 } from "../../custom-widget/preview-sessions";
 import { serializeCustomWidgetDefinition } from "../../custom-widget/stored-definition";
@@ -292,6 +293,43 @@ describe("custom widget definition persistence", () => {
 
     const created = await caller.createFromPreview(createInput);
     await expect(caller.get({ id: created.id })).resolves.toMatchObject({ template: revisedTemplate });
+  });
+
+  test("retains persistence evidence for every request beyond the bounded journal", async () => {
+    const db = await prepareDatabase();
+    const caller = createCaller(db);
+    const requests = Object.fromEntries(
+      Array.from({ length: 64 }, (_, index) => [`query-${index}`, { path: `/queries/${index}` }]),
+    );
+    const definition = customWidgetDefinitionSchema.parse({
+      $schema: "homarr-custom-widget-v2",
+      name: "Large request set",
+      sources: {
+        default: { baseUrl: "https://example.com", networkScope: "public", auth: "none" },
+      },
+      requests,
+      options: {},
+      template: "<Text>All requests tested</Text>",
+    });
+    const preview = await caller.previewCreate({ definition, secrets: [] });
+    const previewSession = await getPreviewSession(preview.previewSession.id, userId);
+
+    for (const [requestId, request] of Object.entries(previewSession.requests)) {
+      await appendPreviewJournal(previewSession, {
+        requestId,
+        kind: "query",
+        method: request.method,
+        path: request.path,
+        status: 200,
+        durationMs: 1,
+        simulated: false,
+      });
+    }
+
+    expect(await getPreviewJournal(previewSession.id, userId)).toHaveLength(50);
+    await expect(caller.createFromPreview({ previewSessionId: previewSession.id })).resolves.toMatchObject({
+      managementPath: expect.stringContaining("/manage/custom-widgets/edit/"),
+    });
   });
 
   test("updates a saved widget with MCP-friendly multiline templateLines", async () => {

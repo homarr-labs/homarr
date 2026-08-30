@@ -15,6 +15,15 @@ const userMessage = (text: string): UIMessage => ({
 });
 
 describe("Custom Widget authoring context", () => {
+  test("refunds a focused discovery claim when the tool call fails", () => {
+    const controller = createCustomWidgetDiscoveryPhaseController();
+
+    expect(controller.claim("customWidget_getComponents")).toBe(true);
+    expect(controller.claim("customWidget_getComponents")).toBe(false);
+    controller.observeFailure("customWidget_getComponents");
+    expect(controller.claim("customWidget_getComponents")).toBe(true);
+  });
+
   test.each([
     "Create a custom widget for these fixtures",
     "Create custom widgets for these services",

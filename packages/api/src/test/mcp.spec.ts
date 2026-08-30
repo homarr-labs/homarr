@@ -205,6 +205,17 @@ test("MCP tools are deterministically ordered and retain executable schemas", ()
   expect(tools.every((tool) => tool.inputValidator instanceof z.ZodObject)).toBe(true);
 });
 
+test("publishes both Custom Widget template input formats", () => {
+  const tool = extractMcpToolsFromProcedures(mcpRouter).find(
+    (candidate) => candidate.name === "customWidget_validateTemplate",
+  );
+
+  expect(tool?.inputSchema.properties).toMatchObject({
+    template: expect.any(Object),
+    templateLines: expect.any(Object),
+  });
+});
+
 describe("custom widget authoring procedure access", () => {
   const unauthenticatedCaller = mcpRouter.createCaller({
     db: null as never,

@@ -14,6 +14,7 @@ import { toTrpcError } from "./domain-error";
 
 const SESSION_PREFIX = "custom-widget:preview-session:";
 const JOURNAL_PREFIX = "custom-widget:preview-journal:";
+const EVIDENCE_PREFIX = "custom-widget:preview-evidence:";
 const COMPARE_AND_SWAP_SESSION_SCRIPT = `
 local current = redis.call('GET', KEYS[1])
 if not current then return 0 end
@@ -64,6 +65,13 @@ class RedisPreviewSessionStore implements PreviewSessionStore {
   public getJournal(id: string, maxEntries: number) {
     return this.redis.lrange(`${JOURNAL_PREFIX}${id}`, 0, maxEntries - 1);
   }
+  public async saveEvidence(id: string, key: string, value: unknown, ttlMs: number) {
+    const evidenceKey = `${EVIDENCE_PREFIX}${id}`;
+    await this.redis.multi().hset(evidenceKey, key, JSON.stringify(value)).pexpire(evidenceKey, ttlMs).exec();
+  }
+  public getEvidence(id: string) {
+    return this.redis.hvals(`${EVIDENCE_PREFIX}${id}`);
+  }
 }
 
 let service: CustomWidgetPreviewSessionService | undefined;
@@ -104,6 +112,7 @@ export const appendPreviewJournal = (
   entry: Omit<CustomWidgetPreviewJournalEntry, "id" | "sessionRevision" | "timestamp">,
 ) => call(() => getService().appendJournal(session, { ...entry, sessionRevision: session.revision }));
 export const getPreviewJournal = (id: string, userId: string) => call(() => getService().getJournal(id, userId));
+export const getPreviewEvidence = (id: string, userId: string) => call(() => getService().getEvidence(id, userId));
 export const getPreviewSessionSecrets = (session: CustomWidgetPreviewSession, sourceId: string) =>
   getService().getSecrets(session, sourceId);
 export const setPreviewSessionSecrets = (id: string, userId: string, secrets: CreatePreviewSessionInput["secrets"]) =>

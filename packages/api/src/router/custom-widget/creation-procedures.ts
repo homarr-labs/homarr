@@ -11,7 +11,7 @@ import {
 import { permissionRequiredProcedure } from "../../trpc";
 import { parseCustomWidgetAuthoringInput } from "./authoring-validation";
 import { insertCustomWidgetDefinition } from "./definition-insert";
-import { getPreviewJournal, getPreviewSession, getPreviewSessionSecrets } from "./preview-sessions";
+import { getPreviewEvidence, getPreviewSession, getPreviewSessionSecrets } from "./preview-sessions";
 import { assertSecretSources } from "./secret-policy";
 
 const logger = createLogger({ module: "custom-widget" });
@@ -37,7 +37,7 @@ export const creationProcedures = {
       mcp: {
         enabled: true,
         description:
-          "Create a Custom JSX widget without reusing a preview. Prefer customWidget_createFromPreview after full preview validation and query checks so the definition is not streamed again.",
+          "Requires administrator permission. Create a Custom JSX widget without reusing a preview. Prefer customWidget_createFromPreview after full preview validation and query checks so the definition is not streamed again.",
       },
     })
     .input(customWidgetCreateSchema)
@@ -56,16 +56,16 @@ export const creationProcedures = {
       mcp: {
         enabled: true,
         description:
-          "Persist the exact tested definition from a customWidget_previewCreate or customWidget_previewReviseTemplate session. Prefer this over resending a large widget to customWidget_create. Every query and action in the final preview revision must have current evidence.",
+          "Requires administrator permission. Persist the exact tested definition from a customWidget_previewCreate or customWidget_previewReviseTemplate session. Prefer this over resending a large widget to customWidget_create. Every query and action in the final preview revision must have current evidence.",
       },
     })
     .input(z.object({ previewSessionId: z.string().min(1), targetBoardId: z.string().min(1).optional() }))
     .mutation(async ({ ctx, input }) => {
       const session = await getPreviewSession(input.previewSessionId, ctx.session.user.id);
-      const journal = await getPreviewJournal(session.id, ctx.session.user.id);
+      const evidence = await getPreviewEvidence(session.id, ctx.session.user.id);
       const unverifiedQueryIds = Object.entries(session.requests).flatMap(([requestId, request]) => {
         if (request.kind !== "query") return [];
-        const verified = journal.some(
+        const verified = evidence.some(
           (entry) =>
             entry.kind === "query" &&
             entry.requestId === requestId &&
@@ -84,12 +84,8 @@ export const creationProcedures = {
       }
       const unverifiedActionIds = Object.entries(session.requests).flatMap(([requestId, request]) => {
         if (request.kind !== "action") return [];
-        const verified = journal.some((entry) => {
-          if (
-            entry.kind !== "action" ||
-            entry.requestId !== requestId ||
-            entry.sessionRevision !== session.revision
-          ) {
+        const verified = evidence.some((entry) => {
+          if (entry.kind !== "action" || entry.requestId !== requestId || entry.sessionRevision !== session.revision) {
             return false;
           }
           if (entry.simulated) return true;

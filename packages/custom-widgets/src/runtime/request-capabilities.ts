@@ -12,6 +12,22 @@ const methods = new Set(["GET", "POST", "PUT", "PATCH", "DELETE"]);
 const kinds = new Set(["query", "action"]);
 const permissions = new Set(["view", "modify", "full"]);
 
+const parseConfirmation = (value: unknown): CustomJsxRequestCapability["confirmation"] => {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return undefined;
+  const record = value as Record<string, unknown>;
+  if (typeof record.title !== "string" || typeof record.message !== "string") return undefined;
+  if (record.confirmLabel !== undefined && typeof record.confirmLabel !== "string") return undefined;
+  if (record.destructive !== undefined && typeof record.destructive !== "boolean") return undefined;
+
+  const confirmation: NonNullable<CustomJsxRequestCapability["confirmation"]> = {
+    title: record.title,
+    message: record.message,
+  };
+  if (typeof record.confirmLabel === "string") confirmation.confirmLabel = record.confirmLabel;
+  if (typeof record.destructive === "boolean") confirmation.destructive = record.destructive;
+  return confirmation;
+};
+
 export function parseRequestCapabilities(value: unknown): CustomJsxRequestCapability[] {
   if (!Array.isArray(value)) return [];
   return value.flatMap((candidate) => {
@@ -34,10 +50,7 @@ export function parseRequestCapabilities(value: unknown): CustomJsxRequestCapabi
         method: record.method,
         trigger: record.trigger === "load" ? "load" : "manual",
         minimumBoardPermission: record.minimumBoardPermission,
-        confirmation:
-          record.confirmation && typeof record.confirmation === "object"
-            ? (record.confirmation as CustomJsxRequestCapability["confirmation"])
-            : undefined,
+        confirmation: parseConfirmation(record.confirmation),
         invalidates: Array.isArray(record.invalidates)
           ? record.invalidates.filter((entry): entry is string => typeof entry === "string")
           : [],

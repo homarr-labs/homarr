@@ -64,6 +64,13 @@ it("normalizes request capabilities and drops malformed entries", () => {
         confirmation: { title: "Approve", message: "Approve this request?" },
         invalidates: ["queue", 3],
       },
+      {
+        id: "malformed-confirmation",
+        kind: "action",
+        method: "POST",
+        minimumBoardPermission: "modify",
+        confirmation: { title: 3, message: "Approve this request?" },
+      },
       { id: "unsafe", kind: "action", method: "TRACE", minimumBoardPermission: "full" },
     ]),
   ).toEqual([
@@ -75,6 +82,15 @@ it("normalizes request capabilities and drops malformed entries", () => {
       minimumBoardPermission: "modify",
       confirmation: { title: "Approve", message: "Approve this request?" },
       invalidates: ["queue"],
+    },
+    {
+      id: "malformed-confirmation",
+      kind: "action",
+      method: "POST",
+      trigger: "manual",
+      minimumBoardPermission: "modify",
+      confirmation: undefined,
+      invalidates: [],
     },
   ]);
 });

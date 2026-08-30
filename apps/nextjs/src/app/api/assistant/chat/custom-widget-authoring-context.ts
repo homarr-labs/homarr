@@ -42,7 +42,17 @@ export const createCustomWidgetDiscoveryPhaseController = (limit = maxFocusedCom
       if (toolName === "customWidget_createFromPreview" && typeof result?.id === "string") reset();
     },
     observeFailure(toolName: string) {
-      if (toolName === "customWidget_validateTemplate" || toolName === "customWidget_previewCreate") reset();
+      if (toolName === "customWidget_validateTemplate" || toolName === "customWidget_previewCreate") {
+        reset();
+        return;
+      }
+      if (customWidgetContextToolBudgets[toolName] === undefined) return;
+      const used = calls.get(toolName) ?? 0;
+      if (used <= 1) {
+        calls.delete(toolName);
+        return;
+      }
+      calls.set(toolName, used - 1);
     },
   };
 };
