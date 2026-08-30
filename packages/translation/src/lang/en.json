@@ -2272,6 +2272,9 @@
         "withBorder": {
           "label": "Show border"
         },
+        "grow": {
+          "label": "Expand cards to fill row"
+        },
         "customUrls": {
           "label": "Custom links"
         },

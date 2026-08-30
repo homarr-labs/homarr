@@ -136,12 +136,12 @@ Credentials are stored separately and never exported or returned to an agent. A 
 
 export const CUSTOM_WIDGET_SKILL_MD = `---
 name: homarr-custom-widget
-description: Author safe Homarr Custom JSX v2 widgets from API documentation.
+description: Author, validate, preview, test, install, or configure API-backed Homarr Custom JSX v2 widgets.
 ---
 
 # Homarr Custom Widget
 
-Author one widget or a coordinated set of widgets. Start with the compact release-matched entrypoint; load only needed references, components, shared props, or examples. Run lifecycle tools alone; independent context reads may run together. For a set, research once and finish each widget's validation, evidence, and persistence before the next.
+Author one widget or a coordinated set of widgets. Load only needed release-matched context. Run lifecycle tools alone; independent reads may run together. For a set, research once and finish each widget's validation, evidence, and persistence before the next.
 
 1. Read primary API documentation. Use web search when documentation is not supplied or may have changed.
 2. Create credential-free definitions with keyed \`sources\`, \`requests\`, optional \`options\`, and safe JSX \`template\`.

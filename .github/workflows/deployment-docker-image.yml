@@ -13,7 +13,7 @@ on:
         type: boolean
         required: false
         default: true
-        description: Send notifications
+        description: Send notifications when redeploying an existing release
 
 permissions:
   contents: write # Required to update package.json version
@@ -38,10 +38,10 @@ jobs:
       SKIP_RELEASE: ${{ github.event_name == 'workflow_dispatch' || github.ref_name == 'dev' || github.ref_name == 'next' }}
     outputs:
       version: ${{ steps.read-semver.outputs.version || steps.version-fallback.outputs.version }}
-      git_ref: ${{ steps.read-git-ref.outputs.ref || github.ref }}
+      git_ref: ${{ steps.read-git-ref.outputs.ref || steps.read-semver.outputs.version || github.ref }}
       skipped: ${{ env.SKIP_RELEASE }}
     steps:
-      - run: echo "Skipping release for workflow_dispatch event"
+      - run: echo "Manual dispatch redeploys the latest existing release without creating a new one"
         if: env.SKIP_RELEASE == 'true'
         # The below generated version fallback represents a normalized branch name, for example "feature/branch-name" -> "feature-branch-name"
       - run: echo "version="$(echo ${{github.ref_name}} | sed 's/[^a-zA-Z0-9\-]/-/g') >> "$GITHUB_OUTPUT"
@@ -58,8 +58,9 @@ jobs:
           permission-contents: write # required to commit package.json & changelog changes, merge them to dev / next and publish the release
 
       - uses: actions/checkout@v7
-        if: env.SKIP_RELEASE == 'false'
+        if: env.SKIP_RELEASE == 'false' || github.ref_name == 'main' || github.ref_name == 'beta'
         with:
+          fetch-depth: 0
           persist-credentials: false
       - uses: pnpm/action-setup@v6
         if: env.SKIP_RELEASE == 'false'
@@ -68,12 +69,29 @@ jobs:
         with:
           node-version: 24.18.0
           package-manager-cache: false
-      - run: npm i -g pnpm
-        if: env.SKIP_RELEASE == 'false'
-      - name: Install dependencies
+      - name: Verify major release intent
         if: env.SKIP_RELEASE == 'false'
         run: |
-          pnpm install
+          latest_tag="$(git describe --tags --abbrev=0)"
+          latest_major="${latest_tag#v}"
+          latest_major="${latest_major%%.*}"
+          package_version="$(jq --raw-output '.version' package.json)"
+          package_major="${package_version%%.*}"
+
+          if (( package_major <= latest_major )); then
+            exit 0
+          fi
+
+          if git log --format='%s%n%b' "${latest_tag}..HEAD" \
+            | grep --extended-regexp --quiet '(^[[:alnum:]-]+(\([^)]*\))?!:)|(^BREAKING[ -]CHANGE:)'; then
+            exit 0
+          fi
+
+          echo "::error::package.json declares ${package_version}, but commits since ${latest_tag} contain no breaking-change signal. Use a conventional ! commit or BREAKING CHANGE footer so Semantic Release creates the intended major version."
+          exit 1
+      - name: Install dependencies
+        if: env.SKIP_RELEASE == 'false'
+        run: pnpm install --frozen-lockfile
       - name: Run Semantic Release
         if: env.SKIP_RELEASE == 'false'
         env:
@@ -205,9 +223,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
+      - uses: actions/checkout@v7
+        if: needs.release.outputs.skipped == 'false'
+        with:
+          ref: ${{ needs.release.outputs.git_ref }}
+          persist-credentials: false
       - name: Extract amd64
         if: needs.release.outputs.skipped == 'false'
-        uses: homarr-labs/homarr/.github/actions/extract-build-artifact@dev
+        uses: ./.github/actions/extract-build-artifact
         with:
           digest: "${{ env.GHCR_REPO }}@${{ needs.build-amd64.outputs.digest }}"
           architecture: amd64
@@ -221,9 +244,14 @@ jobs:
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 5
     steps:
+      - uses: actions/checkout@v7
+        if: needs.release.outputs.skipped == 'false'
+        with:
+          ref: ${{ needs.release.outputs.git_ref }}
+          persist-credentials: false
       - name: Extract arm64
         if: needs.release.outputs.skipped == 'false'
-        uses: homarr-labs/homarr/.github/actions/extract-build-artifact@dev
+        uses: ./.github/actions/extract-build-artifact
         with:
           digest: "${{ env.GHCR_REPO }}@${{ needs.build-arm64.outputs.digest }}"
           architecture: arm64
@@ -284,6 +312,7 @@ jobs:
           gh release edit --repo ${{ github.repository }} ${{ needs.release.outputs.version }} --draft=false
 
       - name: Discord notification
+        if: github.event_name != 'workflow_dispatch' || inputs['send-notifications']
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@0.4.0

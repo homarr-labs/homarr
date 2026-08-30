@@ -15,9 +15,6 @@ jobs:
   update-contributors:
     runs-on: ubuntu-latest
     timeout-minutes: 2
-    strategy:
-      matrix:
-        node-version: [22]
     steps:
       - name: Obtain token
         id: obtainToken
@@ -34,10 +31,10 @@ jobs:
           GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
 
       - uses: pnpm/action-setup@v6
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 24.18.0
           cache: "pnpm"
 
       - name: Run update script
