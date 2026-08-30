@@ -2,7 +2,12 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 import { CUSTOM_WIDGET_MCP_AUTHORING_PROMPT } from "@homarr/custom-widgets/authoring-prompt";
-import { getCustomWidgetComponentCatalog, getCustomWidgetSkill } from "@homarr/custom-widgets/authoring-resources";
+import {
+  CUSTOM_WIDGET_SKILL_REFERENCE_NAMES,
+  getCustomWidgetComponentCatalog,
+  getCustomWidgetSkillEntrypoint,
+  getCustomWidgetSkillReference,
+} from "@homarr/custom-widgets/authoring-resources";
 import { getCustomWidgetJsonSchema } from "@homarr/custom-widgets/core";
 
 import { adminRoute } from "../admin";
@@ -14,7 +19,10 @@ interface RouteContext {
 const resources = new Map<string, () => unknown>([
   ["schema", getCustomWidgetJsonSchema],
   ["components", getCustomWidgetComponentCatalog],
-  ["skill", getCustomWidgetSkill],
+  ["skill", getCustomWidgetSkillEntrypoint],
+  ...CUSTOM_WIDGET_SKILL_REFERENCE_NAMES.map(
+    (name) => [`reference-${name}`, () => getCustomWidgetSkillReference(name)] as const,
+  ),
   [
     "authoring-prompt",
     () => ({
@@ -24,8 +32,14 @@ const resources = new Map<string, () => unknown>([
         "homarr://custom-widgets/schema",
         "homarr://custom-widgets/components",
         "homarr://custom-widgets/skill",
+        "homarr://custom-widgets/references/{schema|runtime|security}",
       ],
-      httpResources: ["/api/custom-widgets/schema", "/api/custom-widgets/components", "/api/custom-widgets/skill"],
+      httpResources: [
+        "/api/custom-widgets/schema",
+        "/api/custom-widgets/components",
+        "/api/custom-widgets/skill",
+        "/api/custom-widgets/reference-{schema|runtime|security}",
+      ],
     }),
   ],
 ]);

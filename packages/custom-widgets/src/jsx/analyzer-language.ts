@@ -49,6 +49,7 @@ const callableRootMembers: Readonly<Record<string, ReadonlySet<string>>> = {
     "now",
     "toISOString",
     "toLocaleDateString",
+    "toLocaleString",
     "toLocaleTimeString",
   ]),
   JSON: new Set(["stringify"]),

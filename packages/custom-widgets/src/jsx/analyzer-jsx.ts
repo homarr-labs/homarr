@@ -17,6 +17,8 @@ interface AnalyzerJsxContext {
   visitArrow(node: AstNode, depth: number, bindings: ReadonlySet<string>): void;
 }
 
+const componentsRequiringLiteralRequestId = new Set(["SubFetch", "ActionButton", "ToggleSwitch"]);
+
 export function analyzeCustomJsxElement(
   node: AstNode,
   depth: number,
@@ -33,6 +35,17 @@ export function analyzeCustomJsxElement(
   const resolvedName = name ? resolveCustomJsxComponentName(name) : null;
   const descriptor = resolvedName ? customJsxComponentByName.get(resolvedName) : undefined;
   const attributes = nodesOf(opening.attributes);
+  if (resolvedName && componentsRequiringLiteralRequestId.has(resolvedName)) {
+    const requestIdAttribute = attributes.find((attribute) => {
+      if (attribute.type !== "JSXAttribute") return false;
+      const attributeName = nodeOf(attribute.name);
+      return attributeName?.type === "JSXIdentifier" && attributeName.name === "requestId";
+    });
+    const requestIdValue = requestIdAttribute ? nodeOf(requestIdAttribute.value) : null;
+    if (requestIdValue?.type !== "Literal" || typeof requestIdValue.value !== "string" || !requestIdValue.value) {
+      context.add(requestIdAttribute ?? opening, `${resolvedName} must use a literal requestId`);
+    }
+  }
   if (resolvedName === "TablerIcon") {
     const attributeNames = new Set<string>();
     for (const attribute of attributes) {
@@ -136,6 +149,10 @@ function analyzeAttributeValue(
     const reason = getInvalidCustomJsxPropValueReason(componentName, attributeName, literalValue.value);
     if (reason) context.add(attribute, `INVALID_PROP_VALUE: ${reason}`);
   }
+  const expression = value?.type === "JSXExpressionContainer" ? nodeOf(value.expression) : null;
+  if (attributeName === "resetKey" && ["ArrayExpression", "ObjectExpression"].includes(expression?.type ?? "")) {
+    context.add(attribute, "INVALID_PROP_VALUE: resetKey must resolve to a finite number, string, boolean, or null");
+  }
   if (
     CUSTOM_JSX_URL_PROPS.has(attributeName) &&
     value?.type === "Literal" &&
@@ -145,7 +162,6 @@ function analyzeAttributeValue(
     context.add(attribute, `INVALID_PROP_VALUE: '${attributeName}' contains an unsafe URL`);
   }
   if (value?.type !== "JSXExpressionContainer") return;
-  const expression = nodeOf(value.expression);
   if (expression && containsEscapingCallback(expression)) {
     context.add(attribute, `BLOCKED_CAPABILITY: Callback prop '${attributeName}' is not allowed`);
   } else if (expression && expression.type !== "JSXEmptyExpression") {

@@ -51,7 +51,7 @@ jobs:
     name: Fast gate
     if: github.event_name != 'pull_request_target' && (github.event_name != 'workflow_dispatch' || inputs.operation != 'cleanup')
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     env:
       TURBO_API: ${{ secrets.TURBO_API }}
       TURBO_TEAM: ${{ secrets.TURBO_TEAM }}

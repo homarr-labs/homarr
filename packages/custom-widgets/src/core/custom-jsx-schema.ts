@@ -19,6 +19,12 @@ export * from "./request-schema";
 export const CUSTOM_WIDGET_SCHEMA = "homarr-custom-widget-v2";
 const CUSTOM_WIDGET_TEMPLATE_MAX_LENGTH = 50_000;
 
+export const normalizeCustomJsxAuthoringTemplate = (template: string) =>
+  template
+    .normalize("NFC")
+    .replaceAll("\u200B", "")
+    .replaceAll(/(\s)[\u0300-\u036f]+(?=[\p{L}\p{N}_$])/gu, "$1");
+
 export const customWidgetBindingIdentifierSchema = z
   .string()
   .min(1)
@@ -30,18 +36,23 @@ export const customWidgetBindingIdentifierSchema = z
 
 export const customJsxTemplateSchema = z
   .string()
-  .min(1)
-  .max(CUSTOM_WIDGET_TEMPLATE_MAX_LENGTH)
-  .superRefine((template, ctx) => {
-    for (const diagnostic of validateCustomJsxTemplate(template)) {
-      if (diagnostic.severity === "error") {
-        ctx.addIssue({
-          code: "custom",
-          message: `${diagnostic.message} (line ${diagnostic.line}, column ${diagnostic.column})`,
-        });
-      }
-    }
-  });
+  .transform(normalizeCustomJsxAuthoringTemplate)
+  .pipe(
+    z
+      .string()
+      .min(1)
+      .max(CUSTOM_WIDGET_TEMPLATE_MAX_LENGTH)
+      .superRefine((template, ctx) => {
+        for (const diagnostic of validateCustomJsxTemplate(template)) {
+          if (diagnostic.severity === "error") {
+            ctx.addIssue({
+              code: "custom",
+              message: `${diagnostic.message} (line ${diagnostic.line}, column ${diagnostic.column})`,
+            });
+          }
+        }
+      }),
+  );
 
 export const customWidgetSecretInputSchema = z.strictObject({
   sourceId: customWidgetIdentifierSchema,
@@ -195,7 +206,7 @@ function validateTemplateRequests(template: string, requests: Record<string, Cus
 export type HomarrCustomWidgetV2 = z.infer<typeof customWidgetDefinitionSchema>;
 export type HomarrCustomWidgetV2Input = z.input<typeof customWidgetDefinitionSchema>;
 
-const customWidgetTemplateLinesSchema = z
+export const customWidgetTemplateLinesSchema = z
   .array(z.string().max(10_000))
   .min(1)
   .max(2_000)

@@ -4,11 +4,12 @@ import path from "node:path";
 import { z } from "zod/v4";
 
 import { buildCustomWidgetAiPrompt } from "../src/core/ai-prompt";
-import { getCustomWidgetSkillContent } from "../src/core/authoring-resources";
+import { getCustomWidgetSkillReference } from "../src/core/authoring-resources";
 import { customWidgetDefinitionSchema } from "../src/core/custom-jsx-schema";
 import type { HomarrCustomWidgetV2 } from "../src/core/custom-jsx-schema";
 import { formatCustomWidgetImportIssues, parseCustomWidgetAiResponse } from "../src/core/import";
 import type { CustomWidgetAiEvaluationCase } from "./ai-evaluation-cases";
+import type { CustomWidgetAiExpectation } from "./ai-evaluation-cases";
 
 // OpenRouter exposes the rolling "latest" route with a leading tilde. The non-tilde
 // deepseek/deepseek-v4-flash-latest alias is rejected by the chat-completions API.
@@ -16,6 +17,18 @@ export const DEFAULT_GENERATOR_MODEL = "~deepseek/deepseek-v4-flash-latest";
 export const DEFAULT_JUDGE_MODEL = "~deepseek/deepseek-v4-flash-latest";
 export const DEFAULT_AI_PROVIDER_BASE_URL = "https://openrouter.ai/api/v1";
 export const MAX_AI_EVALUATION_LOOPS = 10;
+export function getAiEvaluationMaxOutputTokens(purpose: "generation" | "judge", configuredValue: string | undefined) {
+  let defaultValue = 20_000;
+  let minimum = 4_096;
+  if (purpose === "judge") {
+    defaultValue = 8_000;
+    minimum = 2_000;
+  }
+  if (configuredValue === undefined) return defaultValue;
+  const configured = Number(configuredValue);
+  if (!Number.isInteger(configured) || configured <= 0) return defaultValue;
+  return Math.min(defaultValue, Math.max(minimum, configured));
+}
 export const getAiProviderChatCompletionsUrl = (baseUrl = DEFAULT_AI_PROVIDER_BASE_URL) =>
   `${baseUrl.replace(/\/+$/u, "")}/chat/completions`;
 export const resolveAiEvaluationProviderConfig = (environment: Record<string, string | undefined>) => {
@@ -128,19 +141,137 @@ export function getEvaluationResponseFixtureText(testCase: CustomWidgetAiEvaluat
 
 const getExpectedBindingValue = (value: unknown): string => {
   if (typeof value === "string") return value;
-  if (typeof value !== "object" || value === null || Array.isArray(value)) return JSON.stringify(value);
+  if (typeof value !== "object" || value === null || Array.isArray(value))
+    return JSON.stringify(value) ?? String(value);
   if ("$param" in value && typeof value.$param === "string") return `$param:${value.$param}`;
   if ("$option" in value && typeof value.$option === "string") return `$option:${value.$option}`;
   return JSON.stringify(value);
 };
 
+const bindingMatchesExpectation = (
+  value: unknown,
+  expected: string | readonly string[],
+  options: HomarrCustomWidgetV2["options"],
+): boolean => {
+  if (Array.isArray(expected)) {
+    return expected.some((candidate) => bindingMatchesExpectation(value, candidate, options));
+  }
+  const actual = getExpectedBindingValue(value);
+  if (actual === expected) return true;
+  if (expected === "$param:*" && actual.startsWith("$param:")) return true;
+  if (expected === "$option:*" && actual.startsWith("$option:")) return true;
+  if (typeof value !== "object" || value === null || Array.isArray(value)) return false;
+  if (!("$option" in value) || typeof value.$option !== "string") return false;
+  const option = options[value.$option];
+  if (!option) return false;
+  return getExpectedBindingValue(option.default) === expected;
+};
+
+export interface DeterministicEvaluationIssue {
+  path?: Array<string | number>;
+  message: string;
+}
+
+export const getExpectedWidgetCase = (
+  testCase: CustomWidgetAiEvaluationCase,
+  expectedWidget: NonNullable<CustomWidgetAiEvaluationCase["expectedWidgets"]>[number],
+): CustomWidgetAiEvaluationCase => ({
+  ...testCase,
+  id: `${testCase.id}-${expectedWidget.id}`,
+  request: expectedWidget.request,
+  apiNotes: expectedWidget.apiNotes ?? testCase.apiNotes,
+  previewResponses: testCase.previewResponses?.filter((previewResponse) =>
+    expectedWidget.expectations.requests.some(
+      (request) =>
+        request.pathIncludes === previewResponse.pathIncludes &&
+        (previewResponse.kind === undefined || request.kind === previewResponse.kind) &&
+        (previewResponse.method === undefined || request.method === previewResponse.method),
+    ),
+  ),
+  expectations: expectedWidget.expectations,
+  expectedWidgets: undefined,
+});
+
+const getAuthName = (source: HomarrCustomWidgetV2["sources"][string] | undefined) =>
+  typeof source?.auth === "object" ? source.auth.name : undefined;
+
+const requestMatchesExpectation = (
+  request: HomarrCustomWidgetV2["requests"][string],
+  expected: CustomWidgetAiExpectation["requests"][number],
+  options: HomarrCustomWidgetV2["options"],
+  requests: HomarrCustomWidgetV2["requests"],
+) => {
+  if (
+    request.kind !== expected.kind ||
+    request.method !== expected.method ||
+    !request.path.includes(expected.pathIncludes) ||
+    (expected.trigger !== undefined && request.trigger !== expected.trigger) ||
+    (expected.permission !== undefined && request.permission !== expected.permission)
+  ) {
+    return false;
+  }
+  const queryMatches = Object.entries(expected.queryIncludes ?? {}).every(([key, value]) =>
+    bindingMatchesExpectation(request.query?.[key], value, options),
+  );
+  if (!queryMatches) return false;
+  const bodyMatches = Object.entries(expected.bodyIncludes ?? {}).every(([key, value]) => {
+    if (typeof request.body !== "object" || request.body === null || Array.isArray(request.body)) return false;
+    const body = request.body as Record<string, unknown>;
+    return bindingMatchesExpectation(body[key], value, options);
+  });
+  if (!bodyMatches) return false;
+  const invalidates = new Set(request.invalidates ?? []);
+  if (!(expected.invalidates ?? []).every((requestId) => invalidates.has(requestId))) return false;
+  const invalidatedRequests = [...invalidates]
+    .map((requestId) => requests[requestId])
+    .filter((candidate) => candidate !== undefined);
+  if (
+    !(expected.invalidatesPaths ?? []).every((path) => invalidatedRequests.some((candidate) => candidate.path === path))
+  ) {
+    return false;
+  }
+  if (expected.requiresConfirmation === true && request.confirmation === undefined) return false;
+  return true;
+};
+
+const getExpectedRequestConstraintSummary = (expected: CustomWidgetAiExpectation["requests"][number]) => {
+  const formatBinding = (value: string | readonly string[]): string => {
+    if (Array.isArray(value)) return value.map((candidate) => formatBinding(candidate)).join(" or ");
+    if (value === "$param:*") return "any $param binding";
+    if (value === "$option:*") return "any $option binding";
+    return JSON.stringify(value);
+  };
+  const formatBindings = (bindings: Readonly<Record<string, string | readonly string[]>>) =>
+    Object.entries(bindings)
+      .map(([name, value]) => `${name}=${formatBinding(value)}`)
+      .join(", ");
+  const constraints: string[] = [];
+  if (expected.trigger !== undefined) constraints.push(`trigger=${expected.trigger}`);
+  if (expected.permission !== undefined) constraints.push(`permission=${expected.permission}`);
+  if (expected.queryIncludes !== undefined) {
+    constraints.push(`query bindings ${formatBindings(expected.queryIncludes)}`);
+  }
+  if (expected.bodyIncludes !== undefined) {
+    constraints.push(`body bindings ${formatBindings(expected.bodyIncludes)}`);
+  }
+  if (expected.invalidatesPaths?.length) {
+    constraints.push(`invalidates query request IDs for paths ${expected.invalidatesPaths.join(", ")}`);
+  }
+  if (expected.invalidates?.length) {
+    constraints.push(`invalidates request IDs ${expected.invalidates.join(", ")}`);
+  }
+  if (expected.requiresConfirmation === true) constraints.push("confirmation is required");
+  if (constraints.length === 0) return "";
+  return ` Required: ${constraints.join("; ")}.`;
+};
+
 export function getDeterministicEvaluationIssues(
   testCase: CustomWidgetAiEvaluationCase,
   widget: HomarrCustomWidgetV2,
-): Array<{ path?: Array<string | number>; message: string }> {
+): DeterministicEvaluationIssue[] {
   const expectations = testCase.expectations;
   if (!expectations) return [];
-  const issues: Array<{ path?: Array<string | number>; message: string }> = [];
+  const issues: DeterministicEvaluationIssue[] = [];
   const source = widget.sources.default;
   if (!source || source.baseUrl !== expectations.sourceBaseUrl) {
     issues.push({
@@ -155,43 +286,49 @@ export function getDeterministicEvaluationIssues(
       message: `Use the verified ${expectations.sourceAuth} authentication mode.`,
     });
   }
-  if (
-    expectations.sourceAuth === "apiKeyQuery" &&
-    typeof source?.auth === "object" &&
-    source.auth.name !== expectations.sourceAuthName
-  ) {
+  if (expectations.sourceNetworkScope !== undefined && source?.networkScope !== expectations.sourceNetworkScope) {
+    issues.push({
+      path: ["sources", "default", "networkScope"],
+      message: `Use the verified ${expectations.sourceNetworkScope} network scope.`,
+    });
+  }
+  if (expectations.sourceAuthName !== undefined && getAuthName(source) !== expectations.sourceAuthName) {
     issues.push({
       path: ["sources", "default", "auth", "name"],
-      message: `Use '${expectations.sourceAuthName}' as the verified API-key query parameter.`,
+      message: `Use '${expectations.sourceAuthName}' as the verified API-key name.`,
+    });
+  }
+  if (
+    expectations.minimumTemplateCharacters !== undefined &&
+    widget.template.length < expectations.minimumTemplateCharacters
+  ) {
+    issues.push({
+      path: ["template"],
+      message: `Build a substantive interface of at least ${expectations.minimumTemplateCharacters} JSX characters.`,
     });
   }
   const matchedRequestIds = new Set<string>();
   for (const expected of expectations.requests) {
     const match = Object.entries(widget.requests).find(([requestId, request]) => {
       if (matchedRequestIds.has(requestId)) return false;
-      if (
-        request.kind !== expected.kind ||
-        request.method !== expected.method ||
-        !request.path.includes(expected.pathIncludes) ||
-        (expected.trigger !== undefined && request.trigger !== expected.trigger)
-      ) {
-        return false;
-      }
-      return Object.entries(expected.queryIncludes ?? {}).every(
-        ([key, value]) => getExpectedBindingValue(request.query?.[key]) === value,
-      );
+      return requestMatchesExpectation(request, expected, widget.options, widget.requests);
     });
     if (!match) {
       issues.push({
         path: ["requests"],
-        message:
-          `Define the verified ${expected.trigger ?? ""} ${expected.kind} request ${expected.method} ${expected.pathIncludes} with its documented query bindings.`.replace(
-            /\s+/gu,
-            " ",
-          ),
+        message: `${`Define the verified ${expected.trigger ?? ""} ${expected.kind} request ${expected.method} ${expected.pathIncludes}.`.replace(
+          /\s+/gu,
+          " ",
+        )}${getExpectedRequestConstraintSummary(expected)}`,
       });
     } else {
       matchedRequestIds.add(match[0]);
+      if (expected.requiresStatusBinding === true && !widget.template.includes(`status.${match[0]}`)) {
+        issues.push({
+          path: ["template"],
+          message: `Read loading, error, and success state from status.${match[0]}; there is no global status.loading or status.ok.`,
+        });
+      }
     }
   }
   for (const requiredText of expectations.templateIncludes ?? []) {
@@ -201,6 +338,116 @@ export function getDeterministicEvaluationIssues(
         message: `Render or use the required '${requiredText}' capability from the verified response and request.`,
       });
     }
+  }
+  for (const alternatives of expectations.templateIncludesAny ?? []) {
+    if (alternatives.some((text) => widget.template.includes(text))) continue;
+    issues.push({
+      path: ["template"],
+      message: `Render or use one equivalent capability: ${alternatives.map((text) => `'${text}'`).join(", ")}.`,
+    });
+  }
+  for (const match of widget.template.matchAll(/<Pagination\b([^>]*)>/gu)) {
+    const attributes = match[1] ?? "";
+    const binding = attributes.match(/\bbind\s*=\s*["']([^"']+)["']/u)?.[1];
+    if (binding && widget.template.includes(`inputs.${binding}`)) continue;
+    issues.push({
+      path: ["template"],
+      message:
+        "Wire Pagination with bind and use its inputs value in a supported request/helper, or render pagination context as text instead.",
+    });
+  }
+  return issues;
+}
+
+export interface DeterministicEvaluationMatch {
+  expectedWidgetId: string;
+  widgetIndex: number;
+  testCase: CustomWidgetAiEvaluationCase;
+  issues: DeterministicEvaluationIssue[];
+}
+
+const getWidgetIndexPermutations = (widgetCount: number, expectedCount: number) => {
+  const permutations: number[][] = [];
+  const visit = (selected: number[]) => {
+    if (selected.length === expectedCount) {
+      permutations.push(selected);
+      return;
+    }
+    for (let widgetIndex = 0; widgetIndex < widgetCount; widgetIndex += 1) {
+      if (selected.includes(widgetIndex)) continue;
+      visit([...selected, widgetIndex]);
+    }
+  };
+  visit([]);
+  return permutations;
+};
+
+export function getDeterministicEvaluationMatches(
+  testCase: CustomWidgetAiEvaluationCase,
+  widgets: readonly HomarrCustomWidgetV2[],
+): DeterministicEvaluationMatch[] {
+  const expectedWidgets = testCase.expectedWidgets;
+  if (!expectedWidgets?.length) {
+    const widget = widgets[0];
+    if (!widget) return [];
+    return [
+      {
+        expectedWidgetId: testCase.id,
+        widgetIndex: 0,
+        testCase,
+        issues: getDeterministicEvaluationIssues(testCase, widget),
+      },
+    ];
+  }
+  if (widgets.length < expectedWidgets.length) return [];
+  let bestMatches: DeterministicEvaluationMatch[] = [];
+  let bestIssueCount = Number.POSITIVE_INFINITY;
+  for (const permutation of getWidgetIndexPermutations(widgets.length, expectedWidgets.length)) {
+    const matches = expectedWidgets.map((expectedWidget, expectedIndex) => {
+      const widgetIndex = permutation[expectedIndex] ?? -1;
+      const expectedCase = getExpectedWidgetCase(testCase, expectedWidget);
+      return {
+        expectedWidgetId: expectedWidget.id,
+        widgetIndex,
+        testCase: expectedCase,
+        issues: getDeterministicEvaluationIssues(expectedCase, widgets[widgetIndex] as HomarrCustomWidgetV2),
+      };
+    });
+    const issueCount = matches.reduce((sum, match) => sum + match.issues.length, 0);
+    if (issueCount >= bestIssueCount) continue;
+    bestMatches = matches;
+    bestIssueCount = issueCount;
+  }
+  return bestMatches;
+}
+
+export function getDeterministicEvaluationSuiteIssues(
+  testCase: CustomWidgetAiEvaluationCase,
+  widgets: readonly HomarrCustomWidgetV2[],
+): DeterministicEvaluationIssue[] {
+  if (!testCase.expectedWidgets?.length) {
+    const widget = widgets[0];
+    if (!widget) return [{ message: "Create the required widget." }];
+    return getDeterministicEvaluationIssues(testCase, widget);
+  }
+  const issues: DeterministicEvaluationIssue[] = [];
+  if (widgets.length !== testCase.expectedWidgets.length) {
+    issues.push({
+      message: `Create exactly ${testCase.expectedWidgets.length} independent widgets; received ${widgets.length}.`,
+    });
+  }
+  const matches = getDeterministicEvaluationMatches(testCase, widgets);
+  if (matches.length === 0) {
+    issues.push({ message: "Every requested widget job needs its own complete manifest." });
+    return issues;
+  }
+  for (const match of matches) {
+    issues.push(
+      ...match.issues.map((issue) => ({
+        ...issue,
+        message: `${match.expectedWidgetId}: ${issue.message}`,
+      })),
+    );
   }
   return issues;
 }
@@ -216,13 +463,24 @@ export function buildRepairPrompt(
   return `${originalPrompt}\n\nYour previous response did not validate. Correct only the generic contract/runtime problems below while preserving a polished design.\n\nDiagnostics:\n${diagnostics}\n\nPrevious response:\n${previousResponse}`;
 }
 
+const getJudgeRuntimeContext = (widget: HomarrCustomWidgetV2) => {
+  const sections = [getCustomWidgetSkillReference("runtime").content];
+  const hasMutation = Object.values(widget.requests).some((request) => request.kind === "action");
+  const hasProtectedSource = Object.values(widget.sources).some((source) => {
+    const authType = typeof source.auth === "string" ? source.auth : source.auth.type;
+    return authType !== "none";
+  });
+  if (hasMutation || hasProtectedSource) sections.push(getCustomWidgetSkillReference("security").content);
+  return sections.join("\n\n");
+};
+
 export function buildJudgePrompt(testCase: CustomWidgetAiEvaluationCase, widget: HomarrCustomWidgetV2): string {
   return `You are a hostile-but-fair product review panel evaluating a safe dashboard widget. Most competent drafts should score 55-75, not 90. Judge only evidence present in the manifest and JSX. Never reward unsupported capabilities, invented API routes, aspirational claims, or code that merely validates.
 
-The installed Homarr skill and runtime references below are authoritative. The verified API notes and representative response fixtures are authoritative for endpoint paths, authentication requirements, and response shapes unless the validated manifest contradicts them. Do not invent external endpoint or authentication objections from outside assumptions. Decorative icons paired with equivalent adjacent visible status text need no separate aria-label. A Badge containing explicit visible status text is not color-only. A readable absolute UTC date and time is valid; do not require relative or localized time without a documented safe helper. In particular, request state is exposed as status.<requestId> with loading/ok/status/error fields while successful payloads are exposed as data.<requestId>. RefreshButton is an installed runtime helper that manually refreshes load queries. Every component in this already-validated template exists in the installed release. Do not penalize those documented facts. The widget has already passed Homarr's real schema and JSX analyzer, which proves syntax and component compatibility but does not prove API correctness, visual quality, usefulness, or accessibility.
+The installed Homarr skill and runtime references below are authoritative. The verified API notes and representative response fixtures are authoritative for endpoint paths, authentication requirements, and response shapes unless the validated manifest contradicts them. Do not invent external endpoint or authentication objections from outside assumptions. Judge only the scoped Request below; an endpoint mentioned in broader API notes is available, not automatically required, and an optional fixture field omitted by the scoped Request is not a missing capability. Decorative icons paired with equivalent adjacent visible status text need no separate aria-label. A Badge containing explicit visible status text is not color-only. Date.toLocaleString(value, "en-US", "UTC") is an installed safe static helper for concise absolute UTC timestamps; do not require relative time. In particular, request state is exposed as status.<requestId> with loading/ok/status/error fields while successful payloads are exposed as data.<requestId>. RefreshButton is an installed runtime helper: it refreshes load queries by default; inside a successful manual result, requestId targets and reruns that active query with unchanged parameters. A bound Pagination should declare defaultValue={1}; resetKey={inputs.query} restores that default when its dependent scalar query changes. SubFetch without trigger="manual" runs automatically and reruns when bound params change, so never demand a hidden input, debounce callback, or raw event. When the scoped Request requires manual search, do not penalize the required re-trigger after query or page changes. A manual SubFetch synchronously hides its old result and returns to its trigger when its request ID, normalized parameters, or effective definition changes; it cannot display stale results under edited inputs or fetch the new parameters before another trigger. ActionButton supplies pending UI, native success/error notification, confirmation, and declared invalidation; do not demand duplicate local action state. Safe templates forbid local declarations and helper functions, so do not penalize a repeated short literal label array used for distinct enum fields as an avoidable missing abstraction. Every component in this already-validated template exists in the installed release. Do not penalize those documented facts. The widget has already passed Homarr's real schema and JSX analyzer, which proves syntax and component compatibility but does not prove API correctness, visual quality, usefulness, or accessibility.
 
-Installed Homarr Custom Widget authoring contract:
-${getCustomWidgetSkillContent()}
+Task-relevant installed Homarr runtime references:
+${getJudgeRuntimeContext(widget)}
 
 Request:
 ${testCase.request}
@@ -247,7 +505,9 @@ Required review behavior:
 - Compare every requested capability with concrete manifest/JSX evidence. A missing or invented core capability is fatal and caps total at 79.
 - Judge whether the API design can actually reach the stated goal, including response paths, bindings, invalidation, and action safety.
 - Judge visual quality, not component count: hierarchy, density, whitespace, typography, restrained color, scanability, and avoidance of repetitive nested cards.
+- A purpose-specific asymmetric summary, divided hierarchy, responsive density, and restrained semantic accents can clear 75 without decorative chrome. Do not demand gradients, novelty, or a generic selected-row detail interaction.
 - Judge daily usefulness: information priority, interaction cost, refresh behavior, narrow-tile usability, and whether the widget is pleasant rather than demo-like.
+- A required manual search rerun is deliberate interaction, not daily-use friction. SubFetch owns failure and retry before its child renders; never demand an unreachable child error branch or a RefreshButton there.
 - Judge complexity discipline: penalize duplicate requests/options, unnecessary controls, excessive JSX, cleverness, and UI chrome that does not help the goal. Complexity must earn its place.
 - Recommend only interactions supported by the installed authoring contract. Do not suggest portals, modals, arbitrary event handlers, or other blocked capabilities. Prefer a responsive in-widget detail area when separation is useful.
 - A visually generic but valid widget should normally score below 75 for visualQuality. A widget that is attractive but inconvenient should score below 75 for dailyUsefulness.
@@ -419,7 +679,7 @@ export function parseJudgeResult(raw: string): CustomWidgetJudgeResult {
   const parsed: unknown = JSON.parse(normalizedRaw);
   const result = judgeResultSchema.parse(parsed);
   const fatalProblems = result.fatalProblems.filter(
-    (problem) => !/^(?:none|no fatal problems?)(?:\b|\s*[:.-])/iu.test(problem.trim()),
+    (problem) => !/^(?:none|no fatal (?:problems?|issues?))(?:\b|\s*[:.-])/iu.test(problem.trim()),
   );
   const weightedTotal = Object.entries(categoryWeights).reduce(
     (sum, [category, weight]) => sum + result.categories[category as keyof typeof categoryWeights] * weight,
@@ -445,6 +705,8 @@ async function callOpenRouter(args: {
   purpose: "generation" | "judge";
 }): Promise<string> {
   const isJudge = args.purpose === "judge";
+  let configuredMaxOutputTokens = process.env.CUSTOM_WIDGET_AI_GENERATION_MAX_OUTPUT_TOKENS;
+  if (isJudge) configuredMaxOutputTokens = process.env.CUSTOM_WIDGET_AI_JUDGE_MAX_OUTPUT_TOKENS;
   const response = await fetch(getAiProviderChatCompletionsUrl(args.baseUrl), {
     method: "POST",
     headers: {
@@ -457,7 +719,7 @@ async function callOpenRouter(args: {
       model: args.model,
       messages: [{ role: "user", content: args.prompt }],
       temperature: isJudge ? 0 : 0.2,
-      max_tokens: isJudge ? 8_000 : 20_000,
+      max_tokens: getAiEvaluationMaxOutputTokens(args.purpose, configuredMaxOutputTokens),
       reasoning: isJudge ? { enabled: false, exclude: true } : { effort: "high", exclude: true },
       ...(isJudge ? { response_format: getJudgeResponseFormat() } : {}),
     }),

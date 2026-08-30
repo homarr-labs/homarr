@@ -1,3 +1,5 @@
+import { normalizeCustomWidgetLifecycleToolInput } from "@homarr/custom-widgets/core";
+
 interface AssistantToolCallInput {
   toolName: string;
   input: string;
@@ -114,5 +116,19 @@ const repairMultilineToolInput = <T extends AssistantToolCallInput>(toolCall: T)
   }
 };
 
+const repairCustomWidgetLifecycleInput = <T extends AssistantToolCallInput>(toolCall: T): T | null => {
+  if (!toolCall.toolName.startsWith("customWidget_")) return null;
+  let input: unknown;
+  try {
+    input = JSON.parse(toolCall.input);
+  } catch {
+    return null;
+  }
+  if (typeof input !== "object" || input === null || Array.isArray(input)) return null;
+  const normalized = normalizeCustomWidgetLifecycleToolInput(toolCall.toolName, input as Record<string, unknown>);
+  if (normalized === input) return null;
+  return { ...toolCall, input: JSON.stringify(normalized) };
+};
+
 export const repairAssistantToolInput = <T extends AssistantToolCallInput>(toolCall: T): T | null =>
-  repairIconSearchInput(toolCall) ?? repairMultilineToolInput(toolCall);
+  repairIconSearchInput(toolCall) ?? repairCustomWidgetLifecycleInput(toolCall) ?? repairMultilineToolInput(toolCall);

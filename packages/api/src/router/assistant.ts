@@ -79,6 +79,8 @@ export type AssistantContextEntity = {
   boardId?: string;
 };
 
+export type AssistantContextReference = Pick<AssistantContextEntity, "id" | "type">;
+
 const modelListCache = new Map<string, { expiresAt: number; value: z.infer<typeof modelSchema>[] }>();
 
 const customHeadersSchema = z
@@ -402,6 +404,110 @@ export const getAssistantContextEntitiesAsync = async (ctx: AssistantContext): P
           board.id === homeBoardId ? "Home board" : board.isMobileHome ? "Mobile home board" : "Homarr board",
       }),
     ),
+    ...availableItems.flatMap((item): AssistantContextEntity[] => {
+      const board = boardsById.get(item.boardId);
+      if (!board) return [];
+      return [
+        {
+          id: item.id,
+          type: "widget",
+          label: `${item.kind} · ${board.name}`,
+          description: `${item.kind} widget on ${board.name}`,
+          boardId: board.id,
+        },
+      ];
+    }),
+  ];
+};
+
+export const getAssistantRequestContextEntitiesAsync = async (
+  ctx: AssistantContext,
+  references: readonly AssistantContextReference[],
+): Promise<AssistantContextEntity[]> => {
+  const session = ctx.session;
+  if (!session) return [];
+
+  const referenceIds = (type: AssistantContextEntity["type"]) =>
+    references.filter((reference) => reference.type === type).map((reference) => reference.id);
+  const appIds = referenceIds("app");
+  const integrationIds = referenceIds("integration");
+  const itemIds = referenceIds("widget");
+  const [availableBoards, currentUser] = await Promise.all([
+    boardRouter.createCaller(ctx).getAllBoards(),
+    ctx.db.query.users.findFirst({ where: eq(users.id, session.user.id) }),
+  ]);
+  const boardIds = availableBoards.map((board) => board.id);
+  const [availableApps, availableIntegrations, availableItems] = await Promise.all([
+    appIds.length > 0
+      ? ctx.db.query.apps.findMany({
+          columns: { id: true, name: true, description: true, iconUrl: true },
+          where: inArray(apps.id, appIds),
+          limit: 30,
+        })
+      : [],
+    (async () => {
+      if (integrationIds.length === 0) return [];
+      const groupsOfCurrentUser = await ctx.db.query.groupMembers.findMany({
+        where: eq(groupMembers.userId, session.user.id),
+      });
+      return ctx.db.query.integrations.findMany({
+        columns: { id: true, name: true, kind: true },
+        where: inArray(integrations.id, integrationIds),
+        with: {
+          userPermissions: {
+            where: eq(integrationUserPermissions.userId, session.user.id),
+          },
+          groupPermissions: {
+            where: inArray(
+              integrationGroupPermissions.groupId,
+              groupsOfCurrentUser.map((group) => group.groupId).concat(""),
+            ),
+          },
+        },
+        limit: 30,
+      });
+    })(),
+    itemIds.length > 0 && boardIds.length > 0
+      ? ctx.db.query.items.findMany({
+          columns: { id: true, boardId: true, kind: true },
+          where: and(inArray(items.id, itemIds), inArray(items.boardId, boardIds)),
+          limit: 30,
+        })
+      : [],
+  ]);
+  const homeBoardId = await getHomeIdBoardAsync(ctx.db, currentUser ?? null, ctx.deviceType);
+  const boardsById = new Map(availableBoards.map((board) => [board.id, board]));
+
+  return [
+    ...availableBoards.map(
+      (board): AssistantContextEntity => ({
+        id: board.id,
+        type: "board",
+        label: board.name,
+        description:
+          board.id === homeBoardId ? "Home board" : board.isMobileHome ? "Mobile home board" : "Homarr board",
+      }),
+    ),
+    ...availableApps.map(
+      (app): AssistantContextEntity => ({
+        id: app.id,
+        type: "app",
+        label: app.name,
+        description: app.description ?? "Homarr app",
+        iconUrl: app.iconUrl,
+      }),
+    ),
+    ...availableIntegrations
+      .filter((integration) => constructIntegrationPermissions(integration, session).hasUseAccess)
+      .map(
+        (integration): AssistantContextEntity => ({
+          id: integration.id,
+          type: "integration",
+          label: integration.name,
+          description: `${integration.kind} integration`,
+          iconUrl: getIconUrl(integration.kind),
+        }),
+      ),
     ...availableItems.flatMap((item): AssistantContextEntity[] => {
       const board = boardsById.get(item.boardId);
       if (!board) return [];

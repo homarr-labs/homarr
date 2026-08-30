@@ -18,6 +18,7 @@ import { configureCustomWidgetSourceFromRequest } from "../../custom-widget/secr
 import {
   appendPreviewJournal,
   configurePreviewSessionSource,
+  getPreviewJournal,
   getPreviewSession,
 } from "../../custom-widget/preview-sessions";
 import { serializeCustomWidgetDefinition } from "../../custom-widget/stored-definition";
@@ -209,6 +210,125 @@ describe("custom widget definition persistence", () => {
       sources: pokedex.sources,
       requests: pokedex.requests,
       options: pokedex.options,
+    });
+  });
+
+  test("requires current-revision query and action evidence after a template-only preview revision", async () => {
+    const db = await prepareDatabase();
+    const caller = createCaller(db);
+    const definition = customWidgetDefinitionSchema.parse({
+      $schema: "homarr-custom-widget-v2",
+      name: "Request queue",
+      sources: {
+        default: { baseUrl: "https://example.com", networkScope: "public", auth: "none" },
+      },
+      requests: {
+        queue: { path: "/requests" },
+        approve: {
+          kind: "action",
+          method: "POST",
+          path: "/requests/{param:id}/approve",
+          confirmation: "Approve this request?",
+          invalidates: ["queue"],
+        },
+      },
+      options: {},
+      template:
+        '<Stack><Text>{data.queue?.length ?? 0} requests</Text><ActionButton requestId="approve" params={{ id: 1 }}>Approve</ActionButton></Stack>',
+    });
+    const preview = await caller.previewCreate({ definition, secrets: [] });
+    const createInput = { previewSessionId: preview.previewSession.id };
+    const initialSession = await getPreviewSession(preview.previewSession.id, userId);
+    await appendPreviewJournal(initialSession, {
+      requestId: "queue",
+      kind: "query",
+      method: "GET",
+      path: "/requests",
+      status: 200,
+      durationMs: 1,
+      simulated: false,
+    });
+
+    await expect(caller.createFromPreview(createInput)).rejects.toThrow(
+      "Test every final preview action before creating the widget: approve",
+    );
+    await appendPreviewJournal(initialSession, {
+      requestId: "approve",
+      kind: "action",
+      method: "POST",
+      path: "/requests/{param:id}/approve",
+      status: null,
+      durationMs: 0,
+      simulated: true,
+    });
+    const revisedTemplate = definition.template.replace("requests</Text>", "pending requests</Text>");
+    await caller.previewReviseTemplate({
+      sessionId: initialSession.id,
+      expectedRevision: initialSession.revision,
+      template: revisedTemplate,
+    });
+
+    await expect(caller.createFromPreview(createInput)).rejects.toThrow(
+      "Test every final preview query successfully before creating the widget: queue",
+    );
+    const revisedSession = await getPreviewSession(preview.previewSession.id, userId);
+    await appendPreviewJournal(revisedSession, {
+      requestId: "queue",
+      kind: "query",
+      method: "GET",
+      path: "/requests",
+      status: 200,
+      durationMs: 1,
+      simulated: false,
+    });
+    await appendPreviewJournal(revisedSession, {
+      requestId: "approve",
+      kind: "action",
+      method: "POST",
+      path: "/requests/{param:id}/approve",
+      status: null,
+      durationMs: 0,
+      simulated: true,
+    });
+
+    const created = await caller.createFromPreview(createInput);
+    await expect(caller.get({ id: created.id })).resolves.toMatchObject({ template: revisedTemplate });
+  });
+
+  test("retains persistence evidence for every request beyond the bounded journal", async () => {
+    const db = await prepareDatabase();
+    const caller = createCaller(db);
+    const requests = Object.fromEntries(
+      Array.from({ length: 64 }, (_, index) => [`query-${index}`, { path: `/queries/${index}` }]),
+    );
+    const definition = customWidgetDefinitionSchema.parse({
+      $schema: "homarr-custom-widget-v2",
+      name: "Large request set",
+      sources: {
+        default: { baseUrl: "https://example.com", networkScope: "public", auth: "none" },
+      },
+      requests,
+      options: {},
+      template: "<Text>All requests tested</Text>",
+    });
+    const preview = await caller.previewCreate({ definition, secrets: [] });
+    const previewSession = await getPreviewSession(preview.previewSession.id, userId);
+
+    for (const [requestId, request] of Object.entries(previewSession.requests)) {
+      await appendPreviewJournal(previewSession, {
+        requestId,
+        kind: "query",
+        method: request.method,
+        path: request.path,
+        status: 200,
+        durationMs: 1,
+        simulated: false,
+      });
+    }
+
+    expect(await getPreviewJournal(previewSession.id, userId)).toHaveLength(50);
+    await expect(caller.createFromPreview({ previewSessionId: previewSession.id })).resolves.toMatchObject({
+      managementPath: expect.stringContaining("/manage/custom-widgets/edit/"),
     });
   });
 

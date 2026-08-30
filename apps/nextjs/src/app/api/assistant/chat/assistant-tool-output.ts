@@ -1,6 +1,25 @@
 import { serialize } from "superjson";
 
 export const customWidgetPreviewQueryOutputMaxCharacters = 8_000;
+export const assistantToolOutputMaxCharacters = 24_000;
+const customWidgetAuthoringResourceOutputMaxCharacters = 60_000;
+
+const customWidgetAuthoringResourceToolNames = new Set([
+  "customWidget_schema",
+  "customWidget_getSkill",
+  "customWidget_getReference",
+  "customWidget_getComponentCatalog",
+  "customWidget_getComponent",
+  "customWidget_getComponents",
+  "customWidget_getSharedProps",
+  "customWidget_getExample",
+]);
+
+export const getAssistantToolOutputMaxCharacters = (toolName: string) => {
+  if (toolName === "customWidget_previewQuery") return customWidgetPreviewQueryOutputMaxCharacters;
+  if (customWidgetAuthoringResourceToolNames.has(toolName)) return customWidgetAuthoringResourceOutputMaxCharacters;
+  return assistantToolOutputMaxCharacters;
+};
 
 type AssistantToolOutputOptions = {
   maxCharacters?: number;
@@ -35,7 +54,7 @@ export const toAssistantToolOutput = (value: unknown, options: AssistantToolOutp
     truncated: true as const,
     originalCharacters: serialized.length,
     preview: serialized.slice(0, previewCharacters),
-    note: "The preview query response was truncated to protect the conversation context. The preview contains the beginning of the real response for shape and binding verification.",
+    note: "The tool result was truncated to protect the conversation context. Use a narrower search or more specific tool when more detail is needed.",
   });
   let lowerBound = 0;
   let upperBound = serialized.length;

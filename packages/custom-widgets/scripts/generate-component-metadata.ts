@@ -4,7 +4,7 @@ import { resolve } from "node:path";
 import * as Charts from "@mantine/charts";
 import * as Core from "@mantine/core";
 import * as Dates from "@mantine/dates";
-import ts from "typescript";
+import ts from "typescript-compiler-api";
 
 import {
   CUSTOM_JSX_AUTHORING_CATALOG_SCHEMA_VERSION,
@@ -267,6 +267,7 @@ function buildComponentApi(
           bind: {
             type: bindType,
             initialProp: bindType === "boolean" ? ("defaultChecked" as const) : ("defaultValue" as const),
+            resetProp: "resetKey" as const,
           },
         }
       : {}),
@@ -587,7 +588,7 @@ const HOMARR_COMPONENT_DESCRIPTIONS: Readonly<Record<string, string>> = {
   SubData: "Reads a nested value from a named manual-query result.",
   ActionButton: "Runs a named user-triggered action.",
   ToggleSwitch: "Runs named actions for the enabled and disabled states.",
-  RefreshButton: "Refreshes load-triggered widget queries.",
+  RefreshButton: "Refreshes one active named query or all widget queries.",
   TablerIcon: "Resolves an installed Tabler icon by its safe name.",
 };
 
@@ -683,6 +684,7 @@ const HOMARR_COMPONENT_PROPS: Readonly<Record<string, Readonly<Record<string, Ho
     disabled: optionalProp("boolean | string"),
   },
   RefreshButton: {
+    requestId: optionalProp("string", undefined, "Optional named query to refresh instead of all widget queries."),
     label: optionalProp("string"),
     color: optionalProp("string"),
     variant: optionalProp("string"),
@@ -727,6 +729,7 @@ const FALLBACK_PROP_DESCRIPTIONS: Readonly<Record<string, string>> = {
   key: "Stable identity used by React when rendering collections.",
   requestId: "Identifier of the named Custom Widget request.",
   bind: "Name of the temporary in-memory input value.",
+  resetKey: "Scalar dependency that resets a temporary input to its declared default when changed.",
 };
 
 await generateCatalog();

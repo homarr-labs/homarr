@@ -18,9 +18,8 @@ describe("withAssistantToolPolicy", () => {
   test("tells models to call approval-gated mutations without a prose confirmation", () => {
     const description = withAssistantToolPolicy("Create a Homarr app.", true);
 
-    expect(description).toContain("call this tool immediately");
-    expect(description).toContain("does not execute until the user selects Approve and run");
-    expect(description).toContain("Never ask for confirmation in prose");
+    expect(description).toContain("native approval UI");
+    expect(description).toContain("without separate prose confirmation");
   });
 
   test("does not alter read-only tool descriptions", () => {
@@ -29,44 +28,24 @@ describe("withAssistantToolPolicy", () => {
 });
 
 describe("customWidgetAssistantInstructions", () => {
-  test("requires the complete skill and real preview-query data before creation", () => {
-    expect(customWidgetAssistantInstructions).toContain("Custom Widget tools are mandatory");
-    expect(customWidgetAssistantInstructions).toContain("only a manifest, JSX, instructions");
-    expect(customWidgetAssistantInstructions).toContain("when they are preloaded below");
-    expect(customWidgetAssistantInstructions).toContain("do not call customWidget_getSkill or customWidget_schema");
-    expect(customWidgetAssistantInstructions).toContain(
-      "already loaded their complete contents into this system prompt",
-    );
-    expect(customWidgetAssistantInstructions).toContain("first call customWidget_getSkill");
-    expect(customWidgetAssistantInstructions).toContain("customWidget_schema");
-    expect(customWidgetAssistantInstructions).toContain("customWidget_getComponentCatalog");
-    expect(customWidgetAssistantInstructions).toContain("customWidget_getComponent");
-    expect(customWidgetAssistantInstructions).toContain("customWidget_getSharedProps once");
-    expect(customWidgetAssistantInstructions).toContain("at most eight named component documents");
-    expect(customWidgetAssistantInstructions).toContain("at most four after loading a complete example");
-    expect(customWidgetAssistantInstructions).toContain("successful preview responses as binding contracts");
-    expect(customWidgetAssistantInstructions).toContain("Make initial states actionable");
-    expect(customWidgetAssistantInstructions).toContain("never load the catalog component-by-component");
-    expect(customWidgetAssistantInstructions).toContain("compact rows that remain scannable in narrow tiles");
-    expect(customWidgetAssistantInstructions).toContain("Label standalone icons");
-    expect(customWidgetAssistantInstructions).toContain("customWidget_getExample");
+  test("loads authoring resources lazily and verifies every final preview", () => {
+    expect(customWidgetAssistantInstructions.length).toBeLessThan(4_100);
+    expect(customWidgetAssistantInstructions).toContain("customWidget_getSkill");
+    expect(customWidgetAssistantInstructions).toContain("staged by the authoring lifecycle");
+    expect(customWidgetAssistantInstructions).toContain("task-needed");
+    expect(customWidgetAssistantInstructions).toContain("Reuse loaded context");
+    expect(customWidgetAssistantInstructions).toContain("customWidget_findComponents");
+    expect(customWidgetAssistantInstructions).toContain("no arbitrary documentation or creativity cap");
+    expect(customWidgetAssistantInstructions).toContain("coordinated set");
+    expect(customWidgetAssistantInstructions).toContain("research primary API documentation once");
     expect(customWidgetAssistantInstructions).toContain("templateLines");
-    expect(customWidgetAssistantInstructions).toContain("installed `pokedex` example");
-    expect(customWidgetAssistantInstructions).toContain("Honor an explicit iteration count");
-    expect(customWidgetAssistantInstructions).toContain("customWidget_validate with the complete definition");
-    expect(customWidgetAssistantInstructions).toContain("customWidget_previewQuery for every query returned");
-    expect(customWidgetAssistantInstructions).toContain("the previous validation and preview evidence is stale");
-    expect(customWidgetAssistantInstructions).toContain("Never substitute a later unvalidated version");
+    expect(customWidgetAssistantInstructions).toContain("customWidget_validateTemplate");
+    expect(customWidgetAssistantInstructions).toContain("customWidget_previewCreate");
+    expect(customWidgetAssistantInstructions).toContain("every returned query");
+    expect(customWidgetAssistantInstructions).toContain("every relevant simulated action");
+    expect(customWidgetAssistantInstructions).toContain("material definition change");
     expect(customWidgetAssistantInstructions).toContain("customWidget_createFromPreview");
-    expect(customWidgetAssistantInstructions).toContain("Never say the widget is created, updated, placed");
-    expect(customWidgetAssistantInstructions).toContain("corresponding customWidget_create, customWidget_update");
-    expect(customWidgetAssistantInstructions).toContain("managementPath");
-  });
-
-  test("routes meaningful follow-up choices through ask_user instead of prose", () => {
-    expect(customWidgetAssistantInstructions).toContain("call ask_user with explicit choices");
-    expect(customWidgetAssistantInstructions).toContain("Never end a custom-widget response with a prose question");
-    expect(customWidgetAssistantInstructions).toContain("purely rhetorical questions do not require ask_user");
+    expect(customWidgetAssistantInstructions).toContain("definition is not streamed again");
   });
 });
 
@@ -201,93 +180,45 @@ describe("getForcedAssistantToolName", () => {
 });
 
 describe("getRequiredAssistantToolNames", () => {
-  test("requires a structured placement decision after custom widget creation", () => {
-    expect(
-      getRequiredAssistantToolNames([
-        assistantMessage({
-          type: "dynamic-tool",
-          toolName: "customWidget_create",
-          toolCallId: "create-widget-1",
-          input: { name: "PSG fixtures" },
-          state: "output-available",
-          output: {
-            id: "widget-1",
-            managementPath: "/manage/custom-widgets/edit/widget-1",
-            nextAction: {
-              type: "place-custom-widget",
-              targetBoardId: "board-hey",
-            },
-          },
-        }),
-      ]),
-    ).toEqual(["configure_widget"]);
-  });
+  const successfulCreation = {
+    id: "widget-1",
+    managementPath: "/manage/custom-widgets/edit/widget-1",
+  };
 
-  test("requires placement after persisting the final tested preview", () => {
+  test("requires a structured placement choice after persisted creation", () => {
     expect(
       getRequiredAssistantToolNames([
         assistantMessage({
           type: "dynamic-tool",
           toolName: "customWidget_createFromPreview",
-          toolCallId: "create-widget-from-preview-1",
-          input: { previewSessionId: "preview-3" },
+          toolCallId: "create-widget-1",
+          input: { previewSessionId: "preview-1" },
           state: "output-available",
-          output: {
-            id: "widget-1",
-            managementPath: "/manage/custom-widgets/edit/widget-1",
-          },
+          output: successfulCreation,
         }),
       ]),
     ).toEqual(["configure_widget", "ask_user"]);
   });
 
-  test("does not force a follow-up after failed custom widget creation", () => {
-    expect(
-      getRequiredAssistantToolNames([
-        assistantMessage({
-          type: "dynamic-tool",
-          toolName: "customWidget_create",
-          toolCallId: "create-widget-1",
-          input: { name: "PSG fixtures" },
-          state: "output-available",
-          output: { error: "The custom widget input was invalid." },
-        }),
-      ]),
-    ).toEqual([]);
-  });
-
-  test("requires the structured follow-up immediately after creation in the same agent run", () => {
-    const completedSteps = [
+  test("places directly when creation already has a target board", () => {
+    const steps = [
       {
         toolResults: [
           {
-            toolName: "customWidget_previewQuery",
-            output: { status: 200, data: { events: [] } },
-          },
-        ],
-      },
-      {
-        toolResults: [
-          {
-            toolName: "customWidget_create",
+            toolName: "customWidget_createFromPreview",
             output: {
-              id: "widget-1",
-              managementPath: "/manage/custom-widgets/edit/widget-1",
-              nextAction: {
-                type: "place-custom-widget",
-                widgetKind: "customApi",
-                options: { definitionId: "widget-1" },
-              },
+              ...successfulCreation,
+              nextAction: { type: "place-custom-widget", targetBoardId: "board-1" },
             },
           },
         ],
       },
     ];
 
-    expect(getRequiredAssistantToolNames([], completedSteps)).toEqual(["configure_widget", "ask_user"]);
+    expect(getRequiredAssistantToolNames([], steps)).toEqual(["configure_widget"]);
   });
 
-  test("requires the structured follow-up after an approved creation executes before step zero", () => {
+  test("handles an approved creation that executes before step zero", () => {
     const responseMessages = [
       {
         role: "tool",
@@ -295,19 +226,8 @@ describe("getRequiredAssistantToolNames", () => {
           {
             type: "tool-result",
             toolCallId: "create-widget-1",
-            toolName: "customWidget_create",
-            output: {
-              type: "json",
-              value: {
-                id: "widget-1",
-                managementPath: "/manage/custom-widgets/edit/widget-1",
-                nextAction: {
-                  type: "place-custom-widget",
-                  widgetKind: "customApi",
-                  options: { definitionId: "widget-1" },
-                },
-              },
-            },
+            toolName: "customWidget_createFromPreview",
+            output: { type: "json", value: successfulCreation },
           },
         ],
       },
@@ -316,42 +236,18 @@ describe("getRequiredAssistantToolNames", () => {
     expect(getRequiredAssistantToolNames([], [], responseMessages)).toEqual(["configure_widget", "ask_user"]);
   });
 
-  test("does not keep forcing the creation follow-up after a later step has completed", () => {
-    const completedSteps = [
+  test("does not force placement after failed creation", () => {
+    const steps = [
       {
         toolResults: [
           {
-            toolName: "customWidget_create",
-            output: {
-              id: "widget-1",
-              managementPath: "/manage/custom-widgets/edit/widget-1",
-            },
+            toolName: "customWidget_createFromPreview",
+            output: { error: "Creation failed" },
           },
         ],
-      },
-      {
-        toolResults: [{ toolName: "board_all", output: { boards: [] } }],
       },
     ];
 
-    expect(getRequiredAssistantToolNames([], completedSteps)).toEqual([]);
-  });
-
-  test("does not require a follow-up for an in-request creation error", () => {
-    expect(
-      getRequiredAssistantToolNames(
-        [],
-        [
-          {
-            toolResults: [
-              {
-                toolName: "customWidget_create",
-                output: { error: "The custom widget input was invalid." },
-              },
-            ],
-          },
-        ],
-      ),
-    ).toEqual([]);
+    expect(getRequiredAssistantToolNames([], steps)).toEqual([]);
   });
 });

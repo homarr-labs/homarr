@@ -28,7 +28,8 @@ before it reaches `data`, so treat it as untrusted input even when the source is
 ```jsx
 <Stack>
   <TextInput bind="search" defaultValue="" label="Search" />
-  <SubFetch requestId="search" params={{ query: inputs.search }}>
+  <Pagination bind="page" resetKey={inputs.search} defaultValue={1} total={5} />
+  <SubFetch requestId="search" trigger="manual" params={{ query: inputs.search, page: inputs.page ?? 1 }}>
     {(results, meta) => (
       <Stack>
         {(results ?? []).map((item) => (
@@ -42,9 +43,13 @@ before it reaches `data`, so treat it as untrusted input even when the source is
 
 Bound values live only in React memory while the widget is mounted. They are not saved to the database, board options, exports, browser storage, or `localStorage`. Remounting resets them. Components can share a binding when their adapter types agree.
 
+Bindable controls accept a scalar `resetKey`. When it changes, Homarr restores that control to its declared `defaultValue` or `defaultChecked` without running a request. This keeps dependent pagination correct while a manual `SubFetch` waits for the user to submit the new query.
+
 ## Expression language
 
 Use expressions, conditionals, optional chaining, arrays, objects, template strings, safe standard helpers, and expression callbacks for `map`, `filter`, `sort`, and trusted runtime slots. Callback blocks, authored `const`, IIFEs, authored recursion, arbitrary functions, imports, hooks, refs, raw events, browser requests, `eval`, and bigint are blocked.
+
+For user-facing timestamps, use the safe static helpers instead of `new Date` or an invented component. `Date.toLocaleString(value, "en-US", "UTC")` produces a concise absolute date and time for an explicitly labeled UTC value. `Date.toISOString`, `Date.toLocaleDateString`, and `Date.toLocaleTimeString` are also available.
 
 Bounded regex literals are supported for string matching, splitting, search, and replacement. Regex literals are limited to
 128 characters and flags `gimsu`; lookarounds, backreferences, repeated alternatives/groups, unsupported flags, and more
@@ -58,11 +63,14 @@ than one variable quantifier are rejected.
 - `SubFetch` with `trigger="manual"` keeps its result local to that instance; it does not populate the shared
   `data.requestId` or `status.requestId` roots. The child callback receives `(result, meta)`, while loading, errors, and
   retry are handled by `SubFetch`. Provide both `triggerContent` and `triggerAriaLabel` when custom content launches it.
+- `SubFetch`, `ActionButton`, and `ToggleSwitch` require a quoted literal `requestId`. Independent JSX validation rejects
+  missing or computed IDs before a complete manifest or preview must be sent.
 - `ActionButton` and `ToggleSwitch` run actions only when the widget is mounted outside edit mode. A toggle needs both
   enabled and disabled request parameters and rolls back its visual state if the action fails.
 - `RefreshButton` renders a compact, accessible icon control that invalidates the client&apos;s load-query cache so active load
-  queries can refetch; it does not execute a request itself. It is disabled when the widget has no active item or preview
-  session, or while the board is in edit mode.
+  queries can refetch. Set `requestId` inside a successful manual `SubFetch` result to rerun only that named query with the
+  same parameters. A targeted rerun respects an explicit request `cacheSeconds`; an untargeted button also clears the
+  widget&apos;s server cache. It is disabled when there is no active item/preview or while the board is in edit mode.
 - `Icon`/`TablerIcon` resolves installed safe icons.
 
 Always include responsive loading, empty, error, and success states. Runtime failures remain inside the widget tile.

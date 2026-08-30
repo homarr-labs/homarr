@@ -15,11 +15,12 @@ stateless compatibility path. It does not create protocol sessions or require st
 server and extracts its tools only after an authenticated request reaches the route. The previous `/api/mcp/mcp` URL
 remains available as a compatibility alias, but new clients should always use `/api/mcp`.
 
-With MCP, you can ask your AI assistant to manage apps, integrations, users, boards, Docker containers, media servers, DNS settings, and more - all through Homarr's existing tRPC API, now exposed as 50+ AI-callable tools.
+With MCP, you can ask your AI assistant to manage apps, integrations, users, boards, Docker and Kubernetes resources,
+media servers, DNS settings, and more through Homarr's existing tRPC API.
 
-The optional [Assistant](./assistant) uses these same tool definitions internally.
-Unlike external MCP clients, it uses the current Homarr session directly and asks for in-conversation
-approval before running mutating procedures.
+The optional [Assistant](./assistant) uses this same complete tool catalog internally, but sends only a relevant subset
+of schemas to the model at each step. It uses the current Homarr session directly and asks for in-conversation approval
+before running mutating procedures.
 
 ## Getting Started
 
@@ -186,45 +187,50 @@ The tools table on the MCP tab is dynamically generated - it always reflects the
 - **"How many users are on my Homarr instance?"** - AI lists all users (admin only)
 - **"Toggle Pi-hole blocking for 5 minutes"** - AI interacts with DNS controls
 - **"How are my servers doing?"** - AI fetches Beszel system stats including CPU, memory, disk, and alerts
-- **"Build a Custom Widget for this API"** - AI validates and previews one definition before it saves the definition
+- **"Build two Custom Widgets for this API"** - AI researches once, then validates and previews each definition before saving it
 
 ## Create a Custom Widget with an AI agent
 
-An agent creates one `homarr-custom-widget-v2` definition at a time. Start with the native prompt `homarr-custom-widget-author`.
+An agent can create one `homarr-custom-widget-v2` definition or a coordinated set. Start with the native prompt
+`homarr-custom-widget-author`.
 
 The API key owner must be a Homarr administrator. The same rule applies to management, import, migration, preview,
 secrets, publication, Workshop installation, and the HTTP authoring resources.
 
-Load the installed skill before authoring. `customWidget_getSkill` returns the complete `SKILL.md` entrypoint and every
-bundled reference in one response, so an MCP client does not need filesystem access or a second documentation fetch.
-Then read the live schema and only the component resources required by the design. These resources describe the
-installed Mantine components.
+Load the installed skill before authoring. `customWidget_getSkill` returns its compact `SKILL.md` entrypoint and a
+reference index. Load a named schema, runtime, or security reference with `customWidget_getReference` only when the
+design needs it. Read the live JSON Schema or component resources when their detail is required by the design.
 
-1. Call `customWidget_getSkill`, `customWidget_getAuthoringPrompt`, `customWidget_schema`, and
-   `customWidget_getComponentCatalog`.
-2. Fetch only the relevant installed component documentation with `customWidget_getComponent` and, when useful,
+1. Call `customWidget_getSkill`. Homarr Assistant stages the next typed authoring tools automatically as the widget
+   moves through context, validation, preview, evidence, and persistence phases.
+2. Load the live schema and applicable named references on demand. Prefer `customWidget_findComponents` for a small
+   release-matched result set; reserve the full catalog for broad exploration. Fetch only relevant installed component
+   documentation with `customWidget_getComponents` (or `customWidget_getComponent` for one repair) and, when useful,
    one interaction example with `customWidget_getExample`. Component results contain component-specific props; collect
    any needed shared prop names from the compact catalog and fetch them together once with `customWidget_getSharedProps`.
-3. Build one Custom Widget definition. Use `templateLines` for generated multiline JSX to avoid a fragile JSON-escaped
-   template string.
-4. Call `customWidget_validate` without saving the definition and repair every returned issue path.
-5. Call `customWidget_previewCreate`.
-6. Call `customWidget_previewQuery` for every entry in the returned `queries` list. Supply the listed invocation
+3. Build each Custom Widget definition. Use `templateLines` for generated multiline JSX and
+   `customWidget_validateTemplate` for focused JSX diagnostics without resending the complete manifest.
+4. Send the coherent complete definition once to `customWidget_previewCreate`; preview creation performs full
+   validation and creates the testable preview.
+5. Call `customWidget_previewQuery` for every entry in the returned `queries` list. Supply the listed invocation
    parameters for manual queries and inspect the real HTTP status and response shape before binding template fields.
-7. Test relevant actions with `customWidget_previewAction` in simulation mode.
-8. Open the returned `previewPath` or `previewUrl`.
-9. Examine `customWidget_previewJournal`.
-10. Revise the local candidate and create another preview session until validation, query data, actions, and rendering
-    are ready.
-11. Call `customWidget_create`, supplying any credentials and deployment-specific source URLs the user already provided.
-12. Open the returned `managementPath` to review the exact saved definition.
-13. If the user must enter the source URL or credentials, call `customWidget_configurationRequestUser` with the new definition ID and wait for completion.
-14. Create a final preview with that definition ID so Homarr loads its stored credentials, then test it again.
-15. Use `customWidget_update` or `customWidget_templatePatch` for any final saved-definition corrections.
-16. Repeat this procedure for the next Custom Widget.
+6. Test every relevant entry in the returned `actions` list with `customWidget_previewAction` in simulation mode. The
+   list exposes each action's method, parameters, minimum board permission, confirmation, and invalidated queries.
+7. Open the returned `previewPath` or `previewUrl`.
+8. Examine `customWidget_previewJournal`.
+9. For a JSX-only evidence correction, validate it and call `customWidget_previewReviseTemplate` with the session ID
+   and revision. It inherits the manifest and returns fresh evidence lists without resending sources, requests, or
+   options. Create another preview only when those manifest sections change.
+10. Retest every returned query and action for the current revision, then call `customWidget_createFromPreview` with
+    the session ID so the definition is not streamed again.
+11. Open the returned `managementPath` to review the exact saved definition.
+12. If the user must enter the source URL or credentials, call `customWidget_configurationRequestUser` with the new definition ID and wait for completion.
+13. Create a final preview with that definition ID so Homarr loads its stored credentials, then test it again.
+14. Use `customWidget_update` or `customWidget_templatePatch` for any final saved-definition corrections.
+15. Repeat the independent preview and persistence lifecycle for every definition in the requested set.
 
-Validation and preview creation return compact lifecycle metadata. They do not echo the submitted widget or duplicate
-its template as both a string and line array; the agent should retain and reuse its local candidate.
+Validation, preview creation, and template revision return compact lifecycle metadata. They do not echo the submitted
+widget or duplicate its template as both a string and line array; the agent should retain and reuse its local candidate.
 
 The agent receives the configuration-request status. The agent does not receive plaintext credentials. A preview-scoped setup URL configures only that temporary preview; use a definition-scoped URL when the values must persist.
 
@@ -235,6 +241,7 @@ Discovery resources:
 - `homarr://custom-widgets/components/{name}`
 - `homarr://custom-widgets/examples/{name}`
 - `homarr://custom-widgets/skill`
+- `homarr://custom-widgets/references/{schema|runtime|security}`
 
 An authenticated administrator can use the matching `/api/custom-widgets/authoring-prompt`, `/schema`, `/components`,
 and `/skill` endpoints instead of MCP resource URIs. These endpoints are not public schema downloads.
@@ -243,13 +250,16 @@ The Custom Widget tools are:
 
 - `customWidget_schema`
 - `customWidget_validate`
+- `customWidget_validateTemplate`
 - `customWidget_list`
 - `customWidget_get`
 - `customWidget_create`
+- `customWidget_createFromPreview`
 - `customWidget_update`
 - `customWidget_delete`
 - `customWidget_templatePatch`
 - `customWidget_previewCreate`
+- `customWidget_previewReviseTemplate`
 - `customWidget_previewQuery`
 - `customWidget_previewAction`
 - `customWidget_previewJournal`
@@ -261,10 +271,13 @@ The Custom Widget tools are:
 - `customWidget_workshopInstall`
 - `customWidget_getAuthoringPrompt`
 - `customWidget_getComponentCatalog`
+- `customWidget_findComponents`
+- `customWidget_getComponents`
 - `customWidget_getComponent`
 - `customWidget_getSharedProps`
 - `customWidget_getExample`
 - `customWidget_getSkill`
+- `customWidget_getReference`
 
 Custom Widget permissions are not assignable group capabilities. Administrator status is required for the complete
 authoring surface. A source-configuration URL is short-lived and single-use, requires the same logged-in administrator

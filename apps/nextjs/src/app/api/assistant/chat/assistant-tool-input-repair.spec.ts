@@ -24,6 +24,34 @@ describe("repairAssistantToolInput", () => {
     expect(JSON.parse(repaired?.input ?? "")).toEqual({ value: "before\u0000\b\fafter" });
   });
 
+  test("unwraps a complete stringified preview definition without changing its contents", () => {
+    const definition = {
+      $schema: "homarr-custom-widget-v2",
+      name: "Media research",
+      templateLines: ["<Stack>", "  <Text>Ready</Text>", "</Stack>"],
+    };
+    const repaired = repairAssistantToolInput({
+      toolName: "customWidget_previewCreate",
+      input: JSON.stringify({ definition: JSON.stringify(definition) }),
+    });
+
+    expect(JSON.parse(repaired?.input ?? "")).toEqual({ definition });
+  });
+
+  test("keeps only templateLines when a provider duplicates the Assistant JSX format", () => {
+    const repaired = repairAssistantToolInput({
+      toolName: "customWidget_validateTemplate",
+      input: JSON.stringify({
+        template: "<Text>stale</Text>",
+        templateLines: ["<Text>", "  Ready", "</Text>"],
+      }),
+    });
+
+    expect(JSON.parse(repaired?.input ?? "")).toEqual({
+      templateLines: ["<Text>", "  Ready", "</Text>"],
+    });
+  });
+
   test("does not alter unrelated tools or guess at truncated JSON", () => {
     expect(repairAssistantToolInput({ toolName: "app_create", input: '{"name":"Wiki\npedia"}' })).toBeNull();
     expect(
@@ -45,6 +73,30 @@ describe("repairAssistantToolInput", () => {
 
   test("does not guess icon search text when the streamed string itself is incomplete", () => {
     expect(repairAssistantToolInput({ toolName: "icon_findIcons", input: '{"searchText":"homar' })).toBeNull();
+  });
+
+  test.each([
+    [
+      "customWidget_previewQuery",
+      { previewId: "preview-1", requestId: "search" },
+      { sessionId: "preview-1", requestId: "search" },
+    ],
+    [
+      "customWidget_previewAction",
+      { previewSessionId: "preview-1", requestId: "requestMovie", params: { mediaId: 603 } },
+      { sessionId: "preview-1", requestId: "requestMovie", params: { mediaId: 603 } },
+    ],
+    ["customWidget_previewJournal", { previewSession: { id: "preview-1" } }, { sessionId: "preview-1" }],
+    [
+      "customWidget_previewReviseTemplate",
+      { previewSessionId: "preview-1", templateLines: ["<Text>Ready</Text>"] },
+      { sessionId: "preview-1", templateLines: ["<Text>Ready</Text>"] },
+    ],
+    ["customWidget_createFromPreview", { previewSession: "preview-1" }, { previewSessionId: "preview-1" }],
+  ])("repairs safe preview-session aliases for %s", (toolName, input, expected) => {
+    const repaired = repairAssistantToolInput({ toolName, input: JSON.stringify(input) });
+
+    expect(JSON.parse(repaired?.input ?? "")).toEqual(expected);
   });
 
   test.each([

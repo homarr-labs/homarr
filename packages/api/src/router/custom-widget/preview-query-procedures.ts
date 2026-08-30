@@ -28,7 +28,7 @@ export const previewQueryProcedures = {
       mcp: {
         enabled: true,
         description:
-          "Execute one real API query from customWidget_previewCreate.queries and return its HTTP status plus parsed data so request paths and template bindings can be verified. Call once for every returned query before customWidget_create.",
+          "Execute one real API query from a preview evidence list and return its HTTP status plus parsed data so request paths and template bindings can be verified. Call once for every query in the current preview revision before customWidget_createFromPreview.",
       },
     })
     .input(previewSessionRequestSchema)
@@ -73,6 +73,8 @@ export const previewQueryProcedures = {
           simulated: false,
         });
         return {
+          sessionId: session.id,
+          requestId: request.id,
           ok: response.ok,
           status: response.status,
           statusText: response.statusText,

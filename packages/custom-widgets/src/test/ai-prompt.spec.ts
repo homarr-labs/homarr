@@ -3,7 +3,9 @@ import { describe, expect, it } from "vitest";
 import {
   buildCustomWidgetAiPrompt,
   buildCustomWidgetMcpPrompt,
+  CUSTOM_WIDGET_ASSISTANT_POLICY,
   CUSTOM_WIDGET_FINAL_OUTPUT_INSTRUCTION,
+  CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION,
   CUSTOM_WIDGET_MCP_AUTHORING_PROMPT,
 } from "../core/ai-prompt";
 
@@ -43,58 +45,85 @@ describe("AI prompt", () => {
     expect(prompt.match(/Recommended components:/gu)).toHaveLength(1);
   });
 
-  it("makes the connected MCP workflow load the complete skill and test every preview query", () => {
-    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("First call customWidget_getSkill");
-    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("customWidget_validate");
-    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("customWidget_previewCreate");
-    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("customWidget_previewQuery once for every query");
-    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("customWidget_createFromPreview");
-    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("customWidget_getSharedProps");
-    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("at most eight named component documents");
-    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("at most four after loading a complete example");
-    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("Treat preview data as the binding contract");
-    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("Make initial states actionable");
-    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("Label standalone icons");
-    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("Prefer templateLines");
-    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("Make one documentation tool call at a time");
-    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("Never issue batched customWidget_getComponent calls");
-    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain(
-      "choose at most four component names total and never request a fifth",
+  it("makes the connected MCP workflow lazy, batch-capable, and evidence-driven", () => {
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY.length).toBeLessThan(4_000);
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT.length).toBeLessThan(4_500);
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Start with customWidget_getSkill");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("one focused component search per widget job");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Lifecycle tools run one at a time");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("change the active phase");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("customWidget_getComponents");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Do not load the full catalog");
+    expect(CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION).toContain("staged by the authoring lifecycle");
+    expect(CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION).toContain("task-needed");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Reuse loaded context");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("no arbitrary documentation or creativity cap");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("one focused component search per widget job");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("presentation components exist");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Load the compact schema reference once for a new manifest");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("skip it for a supplied valid v2 draft");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("validate one response-driven correction");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("customWidget_previewReviseTemplate");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("it inherits the manifest and resets evidence");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain(
+      "fresh previewCreate only when sources, requests, or options change",
     );
-    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain(
-      "reject IIFEs, new, block callbacks or => {, and raw HTML tags such as span",
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Do not reopen discovery or add optional polish");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("byte-identical template");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("coordinated set");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("research primary API documentation once");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Before previewing any authenticated source or mutation");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("security reference exactly once");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("SubFetch");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain('<SubFetch trigger="manual">');
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain('<RefreshButton requestId="x">');
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("SubFetch owns loading/error/retry");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("literal inherited requestId");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("RefreshButton");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("load queries");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Fixed query/body values stay primitives");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("load queries never contain $param");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("resetKey={inputs.query}");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("defaultValue={1}");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("ActionButton");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("ToggleSwitch");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Do not simplify because JSX is interpreted");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("choicesFrom");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("charts");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("multiple sources");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("customWidget_validateTemplate");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("queries and actions that need evidence");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("every relevant simulated action");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("byte-identical template");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("customWidget_createFromPreview");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("reserved roots");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("one JSX expression");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("statement-bodied callbacks");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Fix unknown-prop warnings before preview");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("IconFoo");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("exact response envelope");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Never map the envelope as an array");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("indexed literal label arrays");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Wire every stateful control");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("remove dead controls");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("keep sibling request data/errors independent");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("preserve field meaning");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("documented Date helpers");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Base artwork fills its row");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("responsive media grid");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("one summary of responsive metrics");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("One primary badge");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).not.toContain("Example —");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).not.toContain("Recommended components:");
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).not.toContain("homarr_findTools");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY.indexOf("customWidget_validateTemplate")).toBeLessThan(
+      CUSTOM_WIDGET_ASSISTANT_POLICY.indexOf("customWidget_previewCreate"),
     );
-    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("concise human-readable absolute dates and times");
-    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain(
-      "do not compute relative time with Date, Date.now, or Date.parse unless the live docs provide a safe helper",
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY.indexOf("customWidget_previewCreate")).toBeLessThan(
+      CUSTOM_WIDGET_ASSISTANT_POLICY.indexOf("customWidget_previewReviseTemplate"),
     );
-    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("one restrained accent for decorative chrome");
-    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain(
-      "operational, degraded, and down states retain distinct semantic colors",
-    );
-    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("Do not wrap every metric or service row in Paper or Card");
-    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("one dominant surface with clearly separated service rows");
-    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain(
-      "a one-column compact narrow layout, and an intentionally more spacious wide layout",
-    );
-    const orderedSteps = [
-      "1. First call customWidget_getSkill",
-      "2. Call customWidget_schema",
-      "3. If a complete example is useful, call customWidget_getExample before any customWidget_getComponent call",
-      "4. Before validation",
-      "5. Call customWidget_previewCreate",
-      "6. Call customWidget_previewQuery once for every query",
-      "7. Call customWidget_createFromPreview",
-    ];
-    for (const [index, step] of orderedSteps.entries()) {
-      expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain(step);
-      if (index === 0) continue;
-      expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT.indexOf(orderedSteps[index - 1] ?? "")).toBeLessThan(
-        CUSTOM_WIDGET_MCP_AUTHORING_PROMPT.indexOf(step),
-      );
-    }
-    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT.indexOf("customWidget_previewQuery")).toBeLessThan(
-      CUSTOM_WIDGET_MCP_AUTHORING_PROMPT.indexOf("customWidget_create"),
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY.indexOf("customWidget_previewReviseTemplate")).toBeLessThan(
+      CUSTOM_WIDGET_ASSISTANT_POLICY.indexOf("customWidget_createFromPreview"),
     );
 
     const prompt = buildCustomWidgetMcpPrompt(

@@ -72,7 +72,14 @@ const server = createServer(async (request, response) => {
   const webSearchTools = body.tools?.filter((tool) => tool.type === "openrouter:web_search") ?? [];
   if (
     webSearchTools.length > 1 ||
-    webSearchTools.some((tool) => tool.parameters?.max_results !== 5 || tool.parameters?.max_uses !== 3)
+    webSearchTools.some(
+      (tool) =>
+        tool.parameters?.max_results !== 5 ||
+        tool.parameters?.max_uses !== 3 ||
+        tool.parameters?.max_total_results !== 10 ||
+        tool.parameters?.max_characters !== 2500 ||
+        tool.parameters?.search_context_size !== "low",
+    )
   ) {
     json(response, 400, { error: { message: "Unbounded web search controls reached the upstream" } });
     return;

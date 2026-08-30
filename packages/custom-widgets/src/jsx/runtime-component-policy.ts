@@ -17,6 +17,11 @@ export function getScopedCustomJsxControlName(scopeId: string, name: string) {
 }
 
 export function getInvalidCustomJsxPropValueReason(componentName: string, propName: string, value: unknown) {
+  if (propName === "resetKey" && value !== null) {
+    const scalar =
+      typeof value === "string" || typeof value === "boolean" || (typeof value === "number" && Number.isFinite(value));
+    if (!scalar) return "resetKey supports only a finite number, string, boolean, or null";
+  }
   if (
     ["DateTimePicker", "InlineDateTimePicker"].includes(componentName) &&
     propName === "type" &&

@@ -16,7 +16,11 @@ export const previewActionProcedures = {
   previewAction: permissionRequiredProcedure
     .requiresPermission("admin")
     .meta({
-      mcp: { enabled: true, description: "Simulate or run one named action in a custom widget preview session." },
+      mcp: {
+        enabled: true,
+        description:
+          "Test one action from the current preview revision. Supply its required params and keep preview actions simulated unless the user explicitly enabled live actions. Verify confirmation, permission, and invalidation metadata before customWidget_createFromPreview.",
+      },
     })
     .input(previewSessionRequestSchema.extend({ confirmed: z.boolean().optional() }))
     .mutation(async ({ ctx, input }) => {
@@ -40,7 +44,15 @@ export const previewActionProcedures = {
           durationMs: 0,
           simulated: true,
         });
-        return { ok: true, status: 0, statusText: "Simulated", data: null, simulated: true as const };
+        return {
+          sessionId: session.id,
+          requestId: request.id,
+          ok: true,
+          status: 0,
+          statusText: "Simulated",
+          data: null,
+          simulated: true as const,
+        };
       }
       if ((request.confirmation || request.method === "DELETE") && input.confirmed !== true) {
         throw new TRPCError({ code: "PRECONDITION_FAILED", message: "This action requires confirmation" });
@@ -78,6 +90,8 @@ export const previewActionProcedures = {
           simulated: false,
         });
         return {
+          sessionId: session.id,
+          requestId: request.id,
           ok: response.ok,
           status: response.status,
           statusText: response.statusText,

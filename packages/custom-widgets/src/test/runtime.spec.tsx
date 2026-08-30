@@ -8,7 +8,15 @@ import { MantineProvider } from "@mantine/core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { ActionButton, CustomJsxRenderer, CustomWidgetRuntimeProvider, SubFetch, ToggleSwitch } from "../runtime";
+import {
+  ActionButton,
+  CustomJsxRenderer,
+  CustomWidgetRuntimeProvider,
+  parseRequestCapabilities,
+  RefreshButton,
+  SubFetch,
+  ToggleSwitch,
+} from "../runtime";
 import { createCustomJsxComponents } from "../jsx";
 import { MAX_REFRESH_INTERVAL_MS, MAX_REFRESH_INTERVAL_SECONDS, normalizeRefreshInterval } from "../runtime/sub-fetch";
 import type {
@@ -43,6 +51,49 @@ const rendererMessages = {
   bindingTypeConflict: (name: string, firstType: string, secondType: string) =>
     `Input ${name} conflicts between ${firstType} and ${secondType}`,
 } satisfies CustomJsxRendererMessages;
+
+it("normalizes request capabilities and drops malformed entries", () => {
+  expect(
+    parseRequestCapabilities([
+      {
+        id: "approve",
+        kind: "action",
+        method: "POST",
+        trigger: "manual",
+        minimumBoardPermission: "modify",
+        confirmation: { title: "Approve", message: "Approve this request?" },
+        invalidates: ["queue", 3],
+      },
+      {
+        id: "malformed-confirmation",
+        kind: "action",
+        method: "POST",
+        minimumBoardPermission: "modify",
+        confirmation: { title: 3, message: "Approve this request?" },
+      },
+      { id: "unsafe", kind: "action", method: "TRACE", minimumBoardPermission: "full" },
+    ]),
+  ).toEqual([
+    {
+      id: "approve",
+      kind: "action",
+      method: "POST",
+      trigger: "manual",
+      minimumBoardPermission: "modify",
+      confirmation: { title: "Approve", message: "Approve this request?" },
+      invalidates: ["queue"],
+    },
+    {
+      id: "malformed-confirmation",
+      kind: "action",
+      method: "POST",
+      trigger: "manual",
+      minimumBoardPermission: "modify",
+      confirmation: undefined,
+      invalidates: [],
+    },
+  ]);
+});
 
 let root: Root;
 let host: HTMLDivElement;
@@ -266,6 +317,60 @@ describe("Custom Widget runtime ports", () => {
     expect(host.textContent).toContain("p");
   });
 
+  it("resets a dependent binding when its scalar reset key changes", async () => {
+    const query = vi.fn<CustomWidgetRuntimePort["query"]>(async () => ({
+      ok: true,
+      status: 200,
+      data: { name: "The Matrix" },
+    }));
+    const components = createCustomJsxComponents({
+      TablerIcon: (() => null) as never,
+      copyLabels: { copy: "Copy", copied: "Copied" },
+    });
+    await render(
+      <CustomJsxRenderer
+        template={
+          '<Stack><TextInput bind="search" defaultValue="matrix" placeholder="Search"/><Pagination bind="page" resetKey={inputs.search} defaultValue={1} total={5}/><Text>search:{inputs.search}</Text><Text>page:{inputs.page}</Text><SubFetch requestId="search" trigger="manual" params={{ query: inputs.search, page: inputs.page ?? 1 }}>{(result) => <Text>{result.name}</Text>}</SubFetch></Stack>'
+        }
+        data={{}}
+        components={components}
+        createBindings={() => ({})}
+        messages={rendererMessages}
+      />,
+      createPort({ query }),
+    );
+    await settle();
+
+    const pageThree = [...host.querySelectorAll("button")].find((button) => button.textContent === "3");
+    expect(pageThree).toBeTruthy();
+    await act(async () => pageThree?.click());
+    await settle();
+    expect(host.textContent).toContain("page:3");
+
+    const input = host.querySelector('input[placeholder="Search"]') as HTMLInputElement;
+    await act(async () => {
+      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")?.set?.call(input, "s");
+      input.dispatchEvent(new InputEvent("input", { bubbles: true, data: "s", inputType: "insertText" }));
+    });
+    await settle();
+
+    expect(input.value).toBe("s");
+    expect(host.textContent).toContain("search:s");
+    expect(host.textContent).toContain("page:1");
+    expect(query).not.toHaveBeenCalled();
+
+    const load = [...host.querySelectorAll("button")].find((button) => button.textContent === "Load");
+    expect(load).toBeTruthy();
+    await act(async () => load?.click());
+    await settle();
+
+    expect(query).toHaveBeenCalledOnce();
+    expect(query.mock.calls[0]?.[0]).toMatchObject({
+      requestId: "search",
+      params: { query: "s", page: 1 },
+    });
+  });
+
   it("resets temporary bindings when the template changes", async () => {
     const components = createCustomJsxComponents({
       TablerIcon: (() => null) as never,
@@ -381,6 +486,87 @@ describe("Custom Widget runtime ports", () => {
 
     expect(port.query).toHaveBeenCalledOnce();
     expect(host.textContent).toContain("Bulbasaur:200:false");
+  });
+
+  it("reruns a successful manual query through a targeted refresh button", async () => {
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    const query = vi.fn<CustomWidgetRuntimePort["query"]>(async () => ({
+      ok: true,
+      status: 200,
+      data: { name: "Bulbasaur" },
+    }));
+    const invalidate = vi.fn<CustomWidgetRuntimePort["invalidate"]>(async ({ itemId, targets }) => {
+      await queryClient.invalidateQueries({
+        predicate: ({ queryKey }) =>
+          queryKey[0] === "custom-widget" &&
+          queryKey[1] === "item" &&
+          queryKey[2] === itemId &&
+          (targets.includes("*") || targets.includes(String(queryKey[3]))),
+      });
+    });
+    const port = createPort({ query, invalidate });
+    await render(
+      <SubFetch requestId="details" trigger="manual">
+        {(data) => (
+          <span>
+            {(data as { name: string }).name}
+            <RefreshButton requestId="details" label="Run details again" />
+          </span>
+        )}
+      </SubFetch>,
+      port,
+      [],
+      undefined,
+      { queryClient },
+    );
+
+    await act(async () => (host.querySelector("button") as HTMLButtonElement).click());
+    await settle();
+    expect(query).toHaveBeenCalledOnce();
+
+    const rerun = host.querySelector('button[aria-label="Run details again"]') as HTMLButtonElement;
+    await act(async () => rerun.click());
+    await settle();
+
+    expect(invalidate).toHaveBeenCalledWith(expect.objectContaining({ targets: ["details"] }));
+    expect(query).toHaveBeenCalledTimes(2);
+  });
+
+  it("keeps an untargeted refresh global", async () => {
+    const port = createPort();
+    await render(<RefreshButton label="Refresh all" />, port);
+
+    await act(async () => (host.querySelector("button") as HTMLButtonElement).click());
+    await settle();
+
+    expect(port.invalidate).toHaveBeenCalledWith(expect.objectContaining({ targets: ["parent", "*"] }));
+  });
+
+  it("returns to the manual trigger without fetching or showing stale results when params change", async () => {
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    const port = createPort();
+    const renderSearch = (query: string) =>
+      render(
+        <SubFetch requestId="details" trigger="manual" params={{ query }}>
+          {(data) => <span>{(data as { name: string }).name}</span>}
+        </SubFetch>,
+        port,
+        [],
+        undefined,
+        { queryClient },
+      );
+
+    await renderSearch("bulbasaur");
+    await act(async () => (host.querySelector("button") as HTMLButtonElement).click());
+    await settle();
+    expect(host.textContent).toContain("Bulbasaur");
+
+    await renderSearch("ivysaur");
+    await settle();
+
+    expect(port.query).toHaveBeenCalledOnce();
+    expect(host.textContent).toContain("Load");
+    expect(host.textContent).not.toContain("Bulbasaur");
   });
 
   it("keeps manual query results local instead of publishing a shared request slot", async () => {

@@ -18,7 +18,7 @@ export const customJsxComponentRegistry: readonly CustomJsxComponentDescriptor[]
                 (propName) => !component.blockedProps.some((blockedProp) => blockedProp.name === propName),
               ),
               ...component.props.map(({ name }) => name),
-              ...(component.bind ? ["bind"] : []),
+              ...(component.bind ? ["bind", component.bind.resetProp] : []),
             ]),
           ],
     blockedProps: component.blockedProps,

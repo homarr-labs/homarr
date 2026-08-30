@@ -30,6 +30,16 @@ export type { CustomJsxTemplateDiagnostic } from "./analyzer-diagnostics";
 const JsxParser = Parser.extend(jsx());
 const requestStatusLabels = new Set(["loading", "success", "error"]);
 
+export function addCustomJsxDiagnosticSourceExcerpts(
+  template: string,
+  diagnostics: readonly CustomJsxTemplateDiagnostic[],
+) {
+  return diagnostics.map((diagnostic) => ({
+    ...diagnostic,
+    sourceExcerpt: template.slice(Math.max(0, diagnostic.index - 100), diagnostic.index + 100),
+  }));
+}
+
 function directRequestStatusId(node: AstNode | null): string | null {
   if (node?.type !== "MemberExpression") return null;
   const object = nodeOf(node.object);
