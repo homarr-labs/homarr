@@ -18,6 +18,7 @@
     "./catalog-example": "./src/core/component-example.ts",
     "./core": "./src/core/index.ts",
     "./jsx": "./src/jsx/index.ts",
+    "./jsx/analyzer": "./src/jsx/analyzer.ts",
     "./runtime": "./src/runtime/index.ts",
     "./server": "./src/server/index.ts",
     "./workbench": "./src/workbench/index.ts"

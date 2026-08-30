@@ -19,7 +19,7 @@ import {
   normalizeCustomJsxAuthoringTemplate,
   normalizeCustomWidgetAuthoringDefinition,
 } from "@homarr/custom-widgets/core";
-import { addCustomJsxDiagnosticSourceExcerpts, validateCustomJsxTemplate } from "@homarr/custom-widgets/jsx";
+import { addCustomJsxDiagnosticSourceExcerpts, validateCustomJsxTemplate } from "@homarr/custom-widgets/jsx/analyzer";
 
 import { permissionRequiredProcedure } from "../../trpc";
 
@@ -217,9 +217,7 @@ export const metadataProcedures = {
       const template = normalizeCustomJsxAuthoringTemplate(rawTemplate);
       const diagnostics = addCustomJsxDiagnosticSourceExcerpts(template, validateCustomJsxTemplate(template));
       const valid = diagnostics.every((diagnostic) => diagnostic.severity !== "error");
-      const hasUnknownProp = diagnostics.some((diagnostic) =>
-        diagnostic.message.startsWith("UNKNOWN_MANTINE_PROP"),
-      );
+      const hasUnknownProp = diagnostics.some((diagnostic) => diagnostic.message.startsWith("UNKNOWN_MANTINE_PROP"));
       let nextStep =
         "After the manifest and template agree, send the complete definition once to customWidget_previewCreate for full validation and a testable preview.";
       if (!valid) {
