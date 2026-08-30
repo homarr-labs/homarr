@@ -67,7 +67,7 @@ Credentials are stored separately and never exported or returned to an agent. A 
 
 export const CUSTOM_WIDGET_SKILL_MD = `---
 name: homarr-custom-widget
-description: Author safe Homarr Custom JSX v2 widgets from API documentation.
+description: Author, validate, preview, install, and configure safe Homarr Custom JSX v2 widgets. Use when creating a widget from API documentation, testing its states and actions, installing one from Workshop, or configuring sources and credentials through Homarr.
 ---
 
 # Homarr Custom Widget
