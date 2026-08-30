@@ -13,7 +13,7 @@ on:
         type: boolean
         required: false
         default: true
-        description: Send notifications
+        description: Send notifications when redeploying an existing release
 
 permissions:
   contents: write # Required to update package.json version
@@ -41,7 +41,7 @@ jobs:
       git_ref: ${{ steps.read-git-ref.outputs.ref || github.ref }}
       skipped: ${{ env.SKIP_RELEASE }}
     steps:
-      - run: echo "Skipping release for workflow_dispatch event"
+      - run: echo "Manual dispatch redeploys the latest existing release without creating a new one"
         if: env.SKIP_RELEASE == 'true'
         # The below generated version fallback represents a normalized branch name, for example "feature/branch-name" -> "feature-branch-name"
       - run: echo "version="$(echo ${{github.ref_name}} | sed 's/[^a-zA-Z0-9\-]/-/g') >> "$GITHUB_OUTPUT"
@@ -69,6 +69,26 @@ jobs:
         with:
           node-version: 24.18.0
           package-manager-cache: false
+      - name: Verify major release intent
+        if: env.SKIP_RELEASE == 'false'
+        run: |
+          latest_tag="$(git describe --tags --abbrev=0)"
+          latest_major="${latest_tag#v}"
+          latest_major="${latest_major%%.*}"
+          package_version="$(jq --raw-output '.version' package.json)"
+          package_major="${package_version%%.*}"
+
+          if (( package_major <= latest_major )); then
+            exit 0
+          fi
+
+          if git log --format='%s%n%b' "${latest_tag}..HEAD" \
+            | grep --extended-regexp --quiet '(^[[:alnum:]-]+(\([^)]*\))?!:)|(^BREAKING[ -]CHANGE:)'; then
+            exit 0
+          fi
+
+          echo "::error::package.json declares ${package_version}, but commits since ${latest_tag} contain no breaking-change signal. Use a conventional ! commit or BREAKING CHANGE footer so Semantic Release creates the intended major version."
+          exit 1
       - name: Install dependencies
         if: env.SKIP_RELEASE == 'false'
         run: pnpm install --frozen-lockfile

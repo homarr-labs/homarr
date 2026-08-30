@@ -1,6 +1,6 @@
 ---
 name: homarr-custom-widget
-description: Author safe Homarr Custom JSX v2 widgets from API documentation.
+description: Author, validate, preview, install, and configure safe Homarr Custom JSX v2 widgets. Use when creating a widget from API documentation, testing its states and actions, installing one from Workshop, or configuring sources and credentials through Homarr.
 ---
 
 # Homarr Custom Widget

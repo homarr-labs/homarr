@@ -7,8 +7,9 @@ homarr/
 ├── apps/
 │   ├── nextjs/          # Main Next.js application (port 3000)
 │   ├── docs/            # Docusaurus 3 documentation site (@homarr/docs)
-│   ├── tasks/           # Cron job runner + Fastify tRPC API (port 3002)
-│   └── websocket/       # Standalone tRPC WebSocket server (port 3001)
+│   ├── tasks/           # Cron-job initialization and scheduling runtime
+│   ├── websocket/       # Standalone tRPC WebSocket server (port 3001)
+│   └── workshop/        # Go/PocketBase Workshop service
 ├── packages/
 │   ├── api/             # tRPC appRouter, procedures, OpenAPI
 │   ├── auth/            # NextAuth config, providers, session, API keys
@@ -40,6 +41,9 @@ homarr/
 │   ├── analytics/       # Server-side analytics (Umami)
 │   ├── server-settings/ # Server setting keys/types
 │   ├── settings/        # User-facing settings UI context
+│   ├── custom-widgets/  # Custom JSX v2 schema, validation, and runtime
+│   ├── onboarding/      # Onboarding studio and setup flow
+│   ├── workshop/        # Homarr-side Workshop client and contracts
 │   └── cli/             # Node CLI for ops (brocli)
 ├── tooling/
 │   ├── typescript/      # Base tsconfig
@@ -59,7 +63,7 @@ When modifying user-facing code, you MUST also update the corresponding document
 
 - New integration → `apps/docs/docs/integrations/<slug>/index.mdx` + `index.ts`
 - New widget → `apps/docs/docs/widgets/<slug>/index.mdx` + `index.ts`
-- Changed API → `apps/docs/docs/management/api.mdx`
+- Changed API → `apps/docs/docs/management/api/index.mdx`
 - New/changed env vars → `apps/docs/docs/advanced/`
 - New CLI commands → `apps/docs/docs/advanced/command-line/`
 - Auth changes → `apps/docs/docs/advanced/` SSO pages
@@ -82,9 +86,21 @@ When modifying user-facing code, you MUST also update the corresponding document
 - Lint: oxlint (not ESLint)
 - Format: oxfmt (not Prettier)
 - UI: Mantine (not Tailwind) — Tailwind is only used in docs app
+- Mantine: use the project-scoped MCP server in `.mcp.json` for current v9 APIs, and check `packages/ui/` before creating a new primitive.
 - Icons: @tabler/icons-react
 - Docs app can import from `@homarr/definitions` for shared types
 - Run `pnpm dev:cli -- dev` to browse local `homarr:*` images and remote PR images.
 - Run `pnpm dev:cli -- build <name>` from a Homarr checkout to build `homarr:<name>` with rebuild provenance.
 - Run `pnpm dev:cli -- build --pr <number>` to build a PR locally from a temporary checkout.
 - Run Go checks from `tools/homarr-dev` with `go test ./...` and `go vet ./...`.
+
+## Agent Skills
+
+Portable skills live in `.agents/skills/`. Read the relevant `SKILL.md` before working in that domain; detailed references are loaded only when needed. Claude-compatible discovery is provided through `.claude/skills`.
+
+- `codebase-context` — architecture, package boundaries, and shared utilities
+- `documentation-sync` — required user-facing documentation updates
+- `mcp-integration` — safe tRPC-to-MCP exposure
+- `datatable-migration` — Mantine DataTable migration patterns
+- `homarr-custom-widget` — safe Custom JSX v2 authoring
+- `release-homarr` — release preparation, publication, and recovery

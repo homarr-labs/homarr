@@ -1,0 +1,4 @@
+interface:
+  display_name: "Homarr Codebase Context"
+  short_description: "Navigate Homarr architecture and shared APIs"
+  default_prompt: "Use $codebase-context to locate the right Homarr package and reuse existing shared APIs."
