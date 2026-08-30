@@ -4,6 +4,7 @@ import type { UIMessage } from "ai";
 import {
   customWidgetAssistantInstructions,
   getForcedAssistantToolName,
+  getRequiredAssistantToolNames,
   withAssistantToolPolicy,
 } from "./assistant-tool-policy";
 
@@ -175,5 +176,78 @@ describe("getForcedAssistantToolName", () => {
         ),
       ]),
     ).toBeUndefined();
+  });
+});
+
+describe("getRequiredAssistantToolNames", () => {
+  const successfulCreation = {
+    id: "widget-1",
+    managementPath: "/manage/custom-widgets/edit/widget-1",
+  };
+
+  test("requires a structured placement choice after persisted creation", () => {
+    expect(
+      getRequiredAssistantToolNames([
+        assistantMessage({
+          type: "dynamic-tool",
+          toolName: "customWidget_createFromPreview",
+          toolCallId: "create-widget-1",
+          input: { previewSessionId: "preview-1" },
+          state: "output-available",
+          output: successfulCreation,
+        }),
+      ]),
+    ).toEqual(["configure_widget", "ask_user"]);
+  });
+
+  test("places directly when creation already has a target board", () => {
+    const steps = [
+      {
+        toolResults: [
+          {
+            toolName: "customWidget_createFromPreview",
+            output: {
+              ...successfulCreation,
+              nextAction: { type: "place-custom-widget", targetBoardId: "board-1" },
+            },
+          },
+        ],
+      },
+    ];
+
+    expect(getRequiredAssistantToolNames([], steps)).toEqual(["configure_widget"]);
+  });
+
+  test("handles an approved creation that executes before step zero", () => {
+    const responseMessages = [
+      {
+        role: "tool",
+        content: [
+          {
+            type: "tool-result",
+            toolCallId: "create-widget-1",
+            toolName: "customWidget_createFromPreview",
+            output: { type: "json", value: successfulCreation },
+          },
+        ],
+      },
+    ];
+
+    expect(getRequiredAssistantToolNames([], [], responseMessages)).toEqual(["configure_widget", "ask_user"]);
+  });
+
+  test("does not force placement after failed creation", () => {
+    const steps = [
+      {
+        toolResults: [
+          {
+            toolName: "customWidget_createFromPreview",
+            output: { error: "Creation failed" },
+          },
+        ],
+      },
+    ];
+
+    expect(getRequiredAssistantToolNames([], steps)).toEqual([]);
   });
 });

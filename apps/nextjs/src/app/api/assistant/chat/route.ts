@@ -78,6 +78,7 @@ import { createAssistantMcpToolGroups } from "./assistant-tool-groups";
 import {
   customWidgetAssistantInstructions,
   getForcedAssistantToolName,
+  getRequiredAssistantToolNames,
   withAssistantToolPolicy,
 } from "./assistant-tool-policy";
 
@@ -719,13 +720,24 @@ export async function POST(request: Request) {
       instructions: baseInstructions,
       messages: initialModelMessages,
       tools: availableTools,
-      prepareStep: ({ messages, stepNumber, steps }) => {
+      prepareStep: ({ messages, responseMessages, stepNumber, steps }) => {
         customWidgetToolStepGate.begin(stepNumber);
         if (stepNumber === 0 && forcedToolName !== undefined && forcedToolName in availableTools) {
           return {
             activeTools: [forcedToolName],
             instructions: getStepInstructions([forcedToolName]),
             toolChoice: { type: "tool", toolName: forcedToolName },
+          };
+        }
+        const requiredToolNames = getRequiredAssistantToolNames(incomingMessages, steps, responseMessages).filter(
+          (toolName) => toolName in availableTools,
+        );
+        if (requiredToolNames.length > 0) {
+          return {
+            activeTools: requiredToolNames,
+            instructions: getStepInstructions(requiredToolNames),
+            messages: compactAssistantStepMessages(messages),
+            toolChoice: "required",
           };
         }
         const activeTools = getActiveToolNames(steps);
