@@ -28,7 +28,14 @@ The object key `default` is the required source ID; `default` is not a property 
   "requests": {
     "summary": { "path": "/summary" },
     "search": { "trigger": "manual", "path": "/search", "query": { "q": { "$param": "query" } } },
-    "create": { "kind": "action", "method": "POST", "path": "/items", "body": { "id": { "$param": "id" } }, "confirmation": "Create this item?", "invalidates": ["search"] }
+    "create": {
+      "kind": "action",
+      "method": "POST",
+      "path": "/items",
+      "body": { "id": { "$param": "id" } },
+      "confirmation": "Create this item?",
+      "invalidates": ["search"]
+    }
   }
 }
 ```

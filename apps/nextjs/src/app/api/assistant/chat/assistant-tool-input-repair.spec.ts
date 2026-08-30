@@ -76,7 +76,11 @@ describe("repairAssistantToolInput", () => {
   });
 
   test.each([
-    ["customWidget_previewQuery", { previewId: "preview-1", requestId: "search" }, { sessionId: "preview-1", requestId: "search" }],
+    [
+      "customWidget_previewQuery",
+      { previewId: "preview-1", requestId: "search" },
+      { sessionId: "preview-1", requestId: "search" },
+    ],
     [
       "customWidget_previewAction",
       { previewSessionId: "preview-1", requestId: "requestMovie", params: { mediaId: 603 } },

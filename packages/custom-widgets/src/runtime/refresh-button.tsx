@@ -14,7 +14,13 @@ export interface RefreshButtonProps {
   size?: string;
 }
 
-export function RefreshButton({ requestId, label, color = "gray", variant = "subtle", size = "sm" }: RefreshButtonProps) {
+export function RefreshButton({
+  requestId,
+  label,
+  color = "gray",
+  variant = "subtle",
+  size = "sm",
+}: RefreshButtonProps) {
   const runtime = useCustomWidgetRuntime();
   const [loading, setLoading] = useState(false);
   const refresh = async () => {

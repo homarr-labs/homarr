@@ -110,7 +110,7 @@ describe("custom widget agent preview workflow", () => {
       },
       secrets: [],
     });
-    const revisedTemplate = '<Stack><Text>{data.fixtures?.name}</Text><Badge>Ready</Badge></Stack>';
+    const revisedTemplate = "<Stack><Text>{data.fixtures?.name}</Text><Badge>Ready</Badge></Stack>";
 
     const revised = await caller.previewReviseTemplate({
       sessionId: preview.previewSession.id,

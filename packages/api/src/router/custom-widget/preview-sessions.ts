@@ -101,12 +101,8 @@ export const createPreviewSession = (input: CreatePreviewSessionInput) => call((
 export const getPreviewSession = (id: string, userId: string) => call(() => getService().get(id, userId));
 export const setPreviewSessionLiveActions = (id: string, userId: string, enabled: boolean) =>
   call(() => getService().setLiveActions(id, userId, enabled));
-export const revisePreviewSessionTemplate = (
-  id: string,
-  userId: string,
-  template: string,
-  expectedRevision?: number,
-) => call(() => getService().reviseTemplate(id, userId, template, expectedRevision));
+export const revisePreviewSessionTemplate = (id: string, userId: string, template: string, expectedRevision?: number) =>
+  call(() => getService().reviseTemplate(id, userId, template, expectedRevision));
 export const appendPreviewJournal = (
   session: CustomWidgetPreviewSession,
   entry: Omit<CustomWidgetPreviewJournalEntry, "id" | "sessionRevision" | "timestamp">,

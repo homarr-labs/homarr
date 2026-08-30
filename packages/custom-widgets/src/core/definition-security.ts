@@ -30,8 +30,7 @@ const harmlessCredentialSettings = new Set([
 
 const commonCredentialLiteralPattern =
   /\b(?:sk|pk|rk)-(?:[A-Za-z0-9][A-Za-z0-9._-]{7,})\b|\b(?:sk_(?:live|test)|github_pat|glpat|gh[pousr]|hf_|xox[baprs])-?[A-Za-z0-9._-]{8,}\b|\b(?:AKIA|ASIA)[A-Z0-9]{16}\b|\bAIza[0-9A-Za-z_-]{20,}\b|\beyJ[A-Za-z0-9_-]{8,}\.eyJ[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}\b/giu;
-const authorizationSchemePattern =
-  /(^|[^A-Za-z0-9_-])(bearer|basic)([\s:_-]+)(["']?)([A-Za-z0-9._~+/%=-]{8,})/giu;
+const authorizationSchemePattern = /(^|[^A-Za-z0-9_-])(bearer|basic)([\s:_-]+)(["']?)([A-Za-z0-9._~+/%=-]{8,})/giu;
 const credentialAssignmentPattern =
   /\b(authorization|auth(?:entication)?(?:[ _-]?(?:tokens?|keys?|credentials?))?|credentials?|api[ _-]?keys?|passwords?|passwds?|secrets?|tokens?|access[ _-]?(?:tokens?|keys?)|refresh[ _-]?tokens?|client[ _-]?secrets?|private[ _-]?keys?|signing[ _-]?keys?)((?:["']?\s*[:=]\s*["']?))([^\s,;"'}<>]+)/giu;
 

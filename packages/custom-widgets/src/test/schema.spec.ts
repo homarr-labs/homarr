@@ -91,7 +91,7 @@ describe("lean Custom Widget schema", () => {
   it("removes model-inserted zero-width spaces before JSX validation and persistence", () => {
     const candidate = customWidgetDefinitionSchema.parse({
       ...CUSTOM_WIDGET_STARTER,
-      template: '<Stack>\u200b<Text>Cafe\u0301 {1 ?? \u03040}</Text>\u200b</Stack>',
+      template: "<Stack>\u200b<Text>Cafe\u0301 {1 ?? \u03040}</Text>\u200b</Stack>",
     });
 
     expect(candidate.template).toBe("<Stack><Text>Café {1 ?? 0}</Text></Stack>");
@@ -319,7 +319,7 @@ describe("lean Custom Widget schema", () => {
       customWidgetDefinitionSchema.safeParse({
         ...CUSTOM_WIDGET_STARTER,
         template:
-          '<Text>https://www.themoviedb.org/assets/2/v4/glyphicons/basic/glyphicons-basic-38-picture-grey-c8f8b4d9.svg</Text>',
+          "<Text>https://www.themoviedb.org/assets/2/v4/glyphicons/basic/glyphicons-basic-38-picture-grey-c8f8b4d9.svg</Text>",
       }).success,
     ).toBe(true);
   });

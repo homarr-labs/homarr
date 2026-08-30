@@ -228,7 +228,7 @@ describe("preview sessions", () => {
     const revised = await service.reviseTemplate(
       "session",
       "owner",
-      '<Stack><Text>{data.data?.name}</Text><Badge>Ready</Badge></Stack>',
+      "<Stack><Text>{data.data?.name}</Text><Badge>Ready</Badge></Stack>",
       0,
     );
     const session = await service.get("session", "owner");
@@ -238,13 +238,11 @@ describe("preview sessions", () => {
     expect(session.sources).toEqual(original.sources);
     expect(session.requests).toEqual(original.requests);
     expect(session.optionDefinitions).toEqual(original.optionDefinitions);
-    expect(await service.getJournal("session", "owner")).toEqual([
-      expect.objectContaining({ sessionRevision: 0 }),
-    ]);
+    expect(await service.getJournal("session", "owner")).toEqual([expect.objectContaining({ sessionRevision: 0 })]);
     await expect(service.reviseTemplate("session", "owner", session.template, 1)).rejects.toThrow("unchanged");
-    await expect(
-      service.reviseTemplate("session", "owner", "<Text>Stale edit</Text>", 0),
-    ).rejects.toMatchObject({ code: "CONFLICT" });
+    await expect(service.reviseTemplate("session", "owner", "<Text>Stale edit</Text>", 0)).rejects.toMatchObject({
+      code: "CONFLICT",
+    });
     await expect(
       service.reviseTemplate("session", "owner", '<ActionButton requestId="missing">Run</ActionButton>', 1),
     ).rejects.toMatchObject({ code: "BAD_REQUEST" });
