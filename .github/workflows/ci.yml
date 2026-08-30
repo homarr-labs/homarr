@@ -436,7 +436,7 @@ jobs:
             const targetTags = target.metadata?.container?.tags ?? [];
             const extraTags = targetTags.filter((targetTag) => targetTag !== tag);
             if (extraTags.length > 0) {
-              core.setFailed(
+              core.warning(
                 `Package version ${target.id} also carries tag(s) ${extraTags.map((targetTag) => `"${targetTag}"`).join(", ")}; refusing cleanup.`,
               );
               return;

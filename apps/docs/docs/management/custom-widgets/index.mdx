@@ -21,7 +21,8 @@ export const completeManifest = `{
 
 :::warning Experimental feature
 
-This feature is experimental and will probably change. If you encounter bugs, need more capabilities, or find something confusing, tell us in the [official discussion thread](https://github.com/homarr-labs/homarr/discussions/categories/custom-widgets). Your feedback directly shapes what comes next. Happy hacking!
+This feature is experimental and may change. Share feedback in the
+[Custom Widgets discussion](https://github.com/homarr-labs/homarr/discussions/categories/custom-widgets).
 
 :::
 
@@ -84,54 +85,35 @@ Mutations remain authenticated and enforce each request's view, modify, or full 
 - [Use MCP and the skills.sh skill](./agent-authoring).
 - [Correct problems](./troubleshooting).
 
-The workbench keeps one continuous layout with visual source, request, and option editors. Advanced raw JSON remains available for experts and AI paste. Invalid values stay inline and disable both preview and Save/Create until they are corrected.
+The workbench provides visual source, request, and option editors, with raw JSON available for advanced use. Invalid
+values remain marked and disable preview and saving until corrected.
 
-Exports, imports, the official Workshop client, and MCP validate the same schema. PocketBase stores community
-submissions without interpreting their content, and Homarr validates them before installation. Widgets saved in the v1
-format remain visible to administrators with a **Migration required** badge after upgrading. Use **Copy migration
-prompt**, give the redacted prompt to an LLM, copy its single complete JSON block, then select **Paste migrated widget**
-from that widget's action menu. Homarr reads the `template` value into the JSX editor automatically. The prompt keeps safe
-request metadata but deliberately omits the v1 display configuration because legacy free-text and JSX can contain
-hard-coded credentials. Add a credential-free description of the widget's visible layout and behavior when sending the
-prompt.
+Exports, imports, Workshop, and MCP validate the same schema. Homarr also validates community content before
+installation.
 
-Homarr keeps the original v1 definition and encrypted secret as a compatibility backup even after the validated v2
-replacement is created. The v2 record uses the same stable ID and takes precedence. The archived v1 copy stays hidden
-while the replacement exists; deleting the v2 record surfaces the v1 entry as migration-required again. Automatic
-legacy deletion is intentionally unavailable during v2 stabilization. Credentials are never included in prompts,
-logs, or exports.
-
-For administrators adding widgets while editing a board, the Custom Widgets section includes **Import from
-Workshop**. Non-administrators do not see the Custom Widget picker or Workshop actions. Selecting **Install widget**
-opens a two-step modal flow: first review the Workshop entry and its complete source in the read-only editor, then
-confirm API sources and credentials. After import, the new definition appears in the picker. Its tile waits for the board
-to be saved before server requests run.
+Legacy definitions show a **Migration required** badge. Use **Copy migration prompt**, describe the visible layout
+without secrets, and import the returned v2 JSON with **Paste migrated widget**. Homarr preserves the v1 definition and
+encrypted secret for rollback; credentials never appear in prompts, logs, or exports.
 
 ## Import and Workshop
 
-The install flow always links to the corresponding public Workshop entry under the configured Workshop origin. Import confirmation shows origins, authentication modes, network scopes, methods, actions, and permissions. Every source has a suggested URL, but private and loopback sources must be confirmed or replaced for the current Homarr installation. The same screen accepts API keys, tokens, usernames, and passwords; credentials remain optional at install time and missing values stay visible on the Custom Widgets page.
-
-For example, installing **Tautulli Activity** asks for both the user's Tautulli URL and API key. A stable public source such as PokéAPI keeps its published URL without creating unnecessary setup work.
+Administrators can select **Import from Workshop** while adding a board item. Review the complete source and requested
+permissions, then confirm deployment-specific URLs and credentials. Private and loopback URLs must be confirmed or
+replaced for the current Homarr installation.
 
 Workshop publishes technically valid widgets immediately; users can vote or report them, and Workshop moderators can
-delete submissions. The report form expands within the Workshop detail page instead of interrupting the review with a
-dialog. Community moderation is separate from Homarr administration and is not a security boundary.
-Publishers should replace personal private-network hosts with a clear service placeholder before publishing. Homarr
-performs definitive validation again at install time.
+delete submissions. Community moderation is separate from Homarr administration and is not a security boundary. Review
+the source before installation and replace personal private-network hosts before publishing.
 
-Connected agents can search, inspect, and install Workshop widgets with `customWidget_workshopSearch`, `customWidget_workshopGet`, and `customWidget_workshopInstall`. After installation they can set a source URL and credentials with `customWidget_sourceConfigure`, or create a secure user-facing setup URL with `customWidget_configurationRequestUser`. Secret values are never returned through MCP.
-
-These tools are only exposed to API keys owned by Homarr administrators. Opening and completing a source-configuration
-URL also requires the same authenticated administrator; the URL is short-lived, single-use, and redacted.
+Connected agents can also search and install Workshop widgets. See [agent authoring](./agent-authoring) for the secure
+configuration flow; secret values are never returned through MCP.
 
 ## Reliability and rollback
 
-Custom Widget response caches and action invalidation use shared Redis state, so multiple Homarr replicas see the same
-versioned cache generation. Deployments must point every replica at the same Redis service.
+Multiple Homarr replicas must use the same Redis service so Custom Widget response caches invalidate consistently.
 
-Before upgrading, back up the database and `SECRET_ENCRYPTION_KEY`; a v1 binary can still read preserved v1 tables
-during application rollback. Widgets created only in v2 may be unavailable to the rolled-back binary, but do not
-replace the v1 backup.
+Before upgrading, back up the database and `SECRET_ENCRYPTION_KEY`. A v1 rollback can read preserved v1 definitions,
+but widgets created only in v2 may be unavailable.
 
 ## Bundled examples
 

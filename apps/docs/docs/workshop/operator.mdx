@@ -92,10 +92,6 @@ pnpm test:workshop-live-provider
 This optional check consumes one provider request. The test client needs neither the OpenRouter key nor the private
 upstream model ID. Do not run it in CI or with a normal user's Workshop token.
 
-The Custom Widget AI tests can use this proxy. Set `AI_PROVIDER_BASE_URL` to the `/api/ai/v1` endpoint and
-`AI_PROVIDER_API_KEY` to a temporary Workshop user token. See
-[Agent authoring](../management/custom-widgets/agent-authoring#evaluate-the-copied-prompt) for the command.
-
 ## Staging and demo deployment
 
 Use `apps/workshop/docker-compose.staging.yml` with the published `ghcr.io/homarr-labs/workshop:v2` image for a v2
@@ -131,17 +127,34 @@ GitHub OAuth requires both credentials and the callback `https://v2.preview.homa
 after changing environment values, then verify the health endpoint, `/workshop`, a public listing request, GitHub
 sign-in, and an installation from the Homarr preview.
 
-Back up application and PocketBase data before deployment. Publish the combined image by immutable digest, test the
-exact digest in staging, rehearse application rollback and PocketBase restore, then promote that same digest.
+## Backup and restore
 
-## Client architecture
+PocketBase data lives in `/pb_data`. Stop writes and copy it to a new, empty backup directory:
 
-Workshop access is centralized in `@homarr/workshop/backend`. It exports the typed `WorkshopBackend`, its typed
-PocketBase instance, stable TanStack Query option factories, and the `useWorkshop…` query and mutation hooks used by
-Homarr. The documentation site uses the same backend rather than maintaining a second API contract.
+```sh
+docker compose --env-file apps/workshop/.env.staging \
+  -f apps/workshop/docker-compose.staging.yml stop workshop
+docker compose --env-file apps/workshop/.env.staging \
+  -f apps/workshop/docker-compose.staging.yml cp workshop:/pb_data/. ./workshop-backup
+docker compose --env-file apps/workshop/.env.staging \
+  -f apps/workshop/docker-compose.staging.yml start workshop
+```
 
-Listing fields derived by the `workshop_listings` view—such as submission type, score, and counts—are normalized by the
-shared client. Healthy deployments keep filtering, sorting, and pagination in PocketBase. If a persistent development
-volume still has an older view that rejects those fields, the client retries without them and applies the same
-operations locally; it can also fall back to the base submissions collection. Production deployments should
-nevertheless apply the current migration so the view exposes the complete metadata.
+Restore only after preserving the current volume and confirming the backup contains `data.db`:
+
+```sh
+test -f ./workshop-backup/data.db
+docker compose --env-file apps/workshop/.env.staging \
+  -f apps/workshop/docker-compose.staging.yml stop workshop
+docker compose --env-file apps/workshop/.env.staging \
+  -f apps/workshop/docker-compose.staging.yml run --rm --no-deps --entrypoint sh workshop \
+  -c 'find /pb_data -mindepth 1 -maxdepth 1 -exec rm -rf {} +'
+docker compose --env-file apps/workshop/.env.staging \
+  -f apps/workshop/docker-compose.staging.yml cp ./workshop-backup/. workshop:/pb_data
+docker compose --env-file apps/workshop/.env.staging \
+  -f apps/workshop/docker-compose.staging.yml start workshop
+curl --fail http://127.0.0.1:8090/api/health
+```
+
+The restore empties the selected volume. Rehearse it in staging, then verify sign-in and one installation. Publish by
+immutable digest, validate that exact digest in staging, and promote the same digest.
