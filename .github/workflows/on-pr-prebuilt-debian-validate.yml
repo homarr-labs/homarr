@@ -5,7 +5,7 @@ permissions:
 
 on:
   pull_request:
-    branches: ["*"]
+    branches: ["**"]
     paths: [".github/actions/prebuilt-debian/**", "deployments/prebuilt-debian/**"]
 
 jobs:

@@ -3,7 +3,7 @@ name: Formatting
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-    branches: ["*"]
+    branches: ["**"]
 
 permissions:
   contents: read

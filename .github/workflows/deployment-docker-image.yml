@@ -58,8 +58,9 @@ jobs:
           permission-contents: write # required to commit package.json & changelog changes, merge them to dev / next and publish the release
 
       - uses: actions/checkout@v7
-        if: env.SKIP_RELEASE == 'false'
+        if: env.SKIP_RELEASE == 'false' || github.ref_name == 'main' || github.ref_name == 'beta'
         with:
+          fetch-depth: 0
           persist-credentials: false
       - uses: pnpm/action-setup@v6
         if: env.SKIP_RELEASE == 'false'
@@ -68,12 +69,9 @@ jobs:
         with:
           node-version: 24.18.0
           package-manager-cache: false
-      - run: npm i -g pnpm
-        if: env.SKIP_RELEASE == 'false'
       - name: Install dependencies
         if: env.SKIP_RELEASE == 'false'
-        run: |
-          pnpm install
+        run: pnpm install --frozen-lockfile
       - name: Run Semantic Release
         if: env.SKIP_RELEASE == 'false'
         env:
@@ -205,9 +203,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
+      - uses: actions/checkout@v7
+        if: needs.release.outputs.skipped == 'false'
+        with:
+          ref: ${{ needs.release.outputs.git_ref }}
+          persist-credentials: false
       - name: Extract amd64
         if: needs.release.outputs.skipped == 'false'
-        uses: homarr-labs/homarr/.github/actions/extract-build-artifact@dev
+        uses: ./.github/actions/extract-build-artifact
         with:
           digest: "${{ env.GHCR_REPO }}@${{ needs.build-amd64.outputs.digest }}"
           architecture: amd64
@@ -221,9 +224,14 @@ jobs:
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 5
     steps:
+      - uses: actions/checkout@v7
+        if: needs.release.outputs.skipped == 'false'
+        with:
+          ref: ${{ needs.release.outputs.git_ref }}
+          persist-credentials: false
       - name: Extract arm64
         if: needs.release.outputs.skipped == 'false'
-        uses: homarr-labs/homarr/.github/actions/extract-build-artifact@dev
+        uses: ./.github/actions/extract-build-artifact
         with:
           digest: "${{ env.GHCR_REPO }}@${{ needs.build-arm64.outputs.digest }}"
           architecture: arm64
@@ -284,6 +292,7 @@ jobs:
           gh release edit --repo ${{ github.repository }} ${{ needs.release.outputs.version }} --draft=false
 
       - name: Discord notification
+        if: github.event_name != 'workflow_dispatch' || inputs['send-notifications']
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@0.4.0

@@ -40,6 +40,26 @@ Using the `PUID` and `PGID` will require you to set the correct permissions on t
 Workshop service operators can find its server-only configuration in the
 [Workshop operator guide](../../workshop/operator#environment-variables).
 
+### Workshop service
+
+These variables configure the separate Workshop service, not the Homarr application container.
+
+| Environment Variable                        | Description                                                               | Default                           |
+| ------------------------------------------- | ------------------------------------------------------------------------- | --------------------------------- |
+| `WORKSHOP_PUBLIC_ORIGIN`                    | Public origin used in PocketBase links and email                          | Required in production            |
+| `PB_ALLOWED_ORIGINS`                        | Browser origins allowed to call PocketBase                                | `*` for the public community      |
+| `WORKSHOP_IMAGE`                            | Workshop image used by the staging Compose file                           | `ghcr.io/homarr-labs/workshop:v2` |
+| `WORKSHOP_EXPOSE_PORT`                      | Host port for the combined staging service                                | `8090`                            |
+| `PB_EXPOSE_PORT`                            | Host port for local PocketBase development                                | `8090`                            |
+| `DOCS_EXPOSE_PORT`                          | Host port for local documentation development                             | `3003`                            |
+| `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` | Optional GitHub OAuth application credentials                             | -                                 |
+| `OPENROUTER_API_KEY`                        | Server-only upstream key that enables the Homarr Assistant provider       | Provider disabled                 |
+| `HOMARR_AI_DAILY_REQUEST_LIMIT`             | Daily Assistant request units per user                                    | `50`                              |
+| `HOMARR_AI_GLOBAL_DAILY_REQUEST_LIMIT`      | Daily Assistant request units shared by all users                         | `10000`                           |
+| `HOMARR_AI_OPENROUTER_BASE_URL`             | OpenRouter-compatible provider endpoint                                   | `https://openrouter.ai/api/v1`    |
+| `HOMARR_AI_OPENROUTER_MODEL`                | Upstream model exposed through the stable `homarr/model` alias            | Selected by the Homarr team       |
+| `HOMARR_AI_ALLOW_INSECURE_UPSTREAM`         | Allows an HTTP upstream for local provider tests; never use in production | `false`                           |
+
 ## Authentication
 
 See [Single Sign-On](/docs/advanced/single-sign-on) for more informations.

@@ -23,7 +23,7 @@ Homarr is an open-source, self-hosted dashboard for managing homelab services. I
 - **Testing**: Vitest + jsdom, Playwright for E2E
 - **Lint/Format**: oxlint + oxfmt (not ESLint/Prettier)
 - **Docs**: Docusaurus 3 in `apps/docs/` (`@homarr/docs`)
-- **Package manager**: pnpm 10.34.1, Node >= 24.16.0
+- **Package manager**: pnpm 11.15.1, Node >= 24.18.0
 
 ## Repository Structure
 

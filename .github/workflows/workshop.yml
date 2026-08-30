@@ -8,6 +8,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ (github.ref_name == 'v2' || github.ref_name == 'release/v2') && 'v2-preview' || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   validate:
     runs-on: ubuntu-24.04
@@ -102,6 +106,19 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Verify branch head before publication
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const branchName = context.ref.replace("refs/heads/", "");
+            const { data: branch } = await github.rest.repos.getBranch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              branch: branchName,
+            });
+            if (branch.commit.sha !== context.sha) {
+              core.setFailed(`Branch ${branchName} moved from ${context.sha} to ${branch.commit.sha}.`);
+            }
       - name: Publish multi-platform image
         env:
           AMD64_DIGEST: ${{ needs.publish-amd64.outputs.digest }}

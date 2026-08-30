@@ -92,10 +92,6 @@ pnpm test:workshop-live-provider
 This optional check consumes one provider request. The test client needs neither the OpenRouter key nor the private
 upstream model ID. Do not run it in CI or with a normal user's Workshop token.
 
-The Custom Widget AI tests can use this proxy. Set `AI_PROVIDER_BASE_URL` to the `/api/ai/v1` endpoint and
-`AI_PROVIDER_API_KEY` to a temporary Workshop user token. See
-[Agent authoring](../management/custom-widgets/agent-authoring#evaluate-the-copied-prompt) for the command.
-
 ## Staging and demo deployment
 
 Use `apps/workshop/docker-compose.staging.yml` with the published `ghcr.io/homarr-labs/workshop:v2` image for a v2
@@ -133,15 +129,3 @@ sign-in, and an installation from the Homarr preview.
 
 Back up application and PocketBase data before deployment. Publish the combined image by immutable digest, test the
 exact digest in staging, rehearse application rollback and PocketBase restore, then promote that same digest.
-
-## Client architecture
-
-Workshop access is centralized in `@homarr/workshop/backend`. It exports the typed `WorkshopBackend`, its typed
-PocketBase instance, stable TanStack Query option factories, and the `useWorkshop…` query and mutation hooks used by
-Homarr. The documentation site uses the same backend rather than maintaining a second API contract.
-
-Listing fields derived by the `workshop_listings` view—such as submission type, score, and counts—are normalized by the
-shared client. Healthy deployments keep filtering, sorting, and pagination in PocketBase. If a persistent development
-volume still has an older view that rejects those fields, the client retries without them and applies the same
-operations locally; it can also fall back to the base submissions collection. Production deployments should
-nevertheless apply the current migration so the view exposes the complete metadata.
