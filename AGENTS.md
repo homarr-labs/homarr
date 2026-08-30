@@ -16,14 +16,14 @@ homarr/
 │   ├── db/              # Drizzle schema (3 DB drivers), migrations, queries
 │   ├── core/            # Env validation, DB/Redis driver factories, logging
 │   ├── definitions/     # Domain enums: WidgetKind, IntegrationKind, permissions
-│   ├── widgets/         # All 39 dashboard widgets (definitions + components)
+│   ├── widgets/         # Dashboard widget definitions and components
 │   ├── integrations/    # Integration classes (HTTP clients to external apps)
 │   ├── redis/           # Redis pub/sub channels, caching abstractions
 │   ├── translation/     # next-intl setup, locale configs, lang JSON files
 │   ├── ui/              # Shared Mantine components, theme, hooks
 │   ├── validation/      # Shared zod schemas for API/forms
 │   ├── common/          # Shared utilities, IDs, errors
-│   ├── cron-jobs/       # Cron job implementations (25+ jobs)
+│   ├── cron-jobs/       # Cron job implementations
 │   ├── cron-jobs-core/  # Cron scheduling primitives
 │   ├── cron-job-status/ # Cron status via Redis
 │   ├── boards/          # Board context, edit mode, cache updater
@@ -101,5 +101,4 @@ Portable skills live in `.agents/skills/`. Read the relevant `SKILL.md` before w
 - `codebase-context` — architecture, package boundaries, and shared utilities
 - `documentation-sync` — required user-facing documentation updates
 - `mcp-integration` — safe tRPC-to-MCP exposure
-- `datatable-migration` — Mantine DataTable migration patterns
 - `homarr-custom-widget` — safe Custom JSX v2 authoring

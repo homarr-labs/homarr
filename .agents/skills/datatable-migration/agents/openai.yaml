@@ -1,4 +1,0 @@
-interface:
-  display_name: "Homarr DataTable Migration"
-  short_description: "Migrate Homarr tables to Mantine DataTable"
-  default_prompt: "Use $datatable-migration to migrate this Homarr table while preserving behavior and shared widget patterns."
