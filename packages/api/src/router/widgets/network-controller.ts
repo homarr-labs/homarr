@@ -1,9 +1,8 @@
 import type { IntegrationKindByCategory } from "@homarr/definitions";
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { NetworkControllerSummary } from "@homarr/integrations/types";
 import { networkControllerRequestHandler } from "@homarr/request-handler/network-controller";
 
-import { createManyIntegrationMiddleware } from "../../middlewares/integration";
+import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { PUBLIC_INTEGRATION_ERROR, settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
@@ -22,7 +21,7 @@ interface NetworkControllerQueryResult {
 
 export const networkControllerRouter = createTRPCRouter({
   summary: publicProcedure
-    .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("networkController")))
+    .concat(createManyWidgetIntegrationMiddleware("query", "networkControllerSummary"))
     .query(async ({ ctx }) => {
       return await settleIntegrationQueries<(typeof ctx.integrations)[number], NetworkControllerQueryResult>(
         ctx.integrations,

@@ -1,5 +1,7 @@
 import { IconGraphFilled } from "@tabler/icons-react";
 
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
+
 import { createWidgetDefinition, matchesWidgetRuntimeQuery } from "../../definition";
 import { optionsBuilder } from "../../options";
 
@@ -9,9 +11,7 @@ export const { definition, componentLoader } = createWidgetDefinition("immich-se
   queryKeys: [[["widget", "immich", "getServerStats"]], [["widget", "immich", "getAlbums"]]],
   queryMatcher: matchesWidgetRuntimeQuery,
   refetchInterval: null,
-  supportedIntegrations: ["immich", "mock"],
-  integrationsRequired: true,
-  maxIntegrations: 1,
+  ...getWidgetIntegrationConfig("immich-serverStats"),
   createOptions() {
     return optionsBuilder.from((factory) => ({
       showUsers: factory.switch({

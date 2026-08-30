@@ -22,7 +22,7 @@ import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { getBoardLaneColumnCount, getRootSectionLane, getWidgetName } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
-import { widgetCatalogIcons } from "@homarr/widgets/catalog";
+import { widgetCatalogIcons } from "@homarr/ui/widget-icons";
 
 import type { EmptySection } from "~/app/[locale]/boards/_types";
 import { useRegisteredGridEditors } from "~/components/board/sections/grid/grid-editor-registry";

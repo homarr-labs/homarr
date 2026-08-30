@@ -2,6 +2,7 @@ import { IconChevronLeft, IconChevronRight, IconPhoto, IconPlayerPause } from "@
 import z from "zod";
 
 import { clientApi } from "@homarr/api/client";
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
 import { createWidgetDefinition, widgetQueryInputMatches } from "../../definition";
@@ -62,9 +63,7 @@ export const { definition, componentLoader } = createWidgetDefinition("immich-al
           : undefined,
     }),
   refetchInterval: null,
-  supportedIntegrations: ["immich", "mock"],
-  integrationsRequired: true,
-  maxIntegrations: 1,
+  ...getWidgetIntegrationConfig("immich-albumCarousel"),
   contextActions: ({ widgetRuntimeRef }) => {
     const actions = widgetRuntimeRef.current.actions;
     return [

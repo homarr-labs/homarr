@@ -1,6 +1,6 @@
 import { IconMessage } from "@tabler/icons-react";
 
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
@@ -19,5 +19,5 @@ export const { componentLoader, definition } = createWidgetDefinition("notificat
       hideLogos: factory.switch({ defaultValue: false }),
     }));
   },
-  supportedIntegrations: getIntegrationKindsByCategory("notifications"),
+  ...getWidgetIntegrationConfig("notifications"),
 }).withDynamicImport(() => import("./component"));

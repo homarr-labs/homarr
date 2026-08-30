@@ -40,7 +40,7 @@ homarr/
 │   ├── db/              # Drizzle schema (3 DB drivers), migrations, queries
 │   ├── core/            # Env validation, DB/Redis driver factories, logging
 │   ├── definitions/     # Domain enums: WidgetKind, IntegrationKind, permissions
-│   ├── widgets/         # All 39 dashboard widgets (definitions + components)
+│   ├── widgets/         # Dashboard widget definitions, components, and lazy registry
 │   ├── integrations/    # Integration classes (HTTP clients to external apps)
 │   ├── redis/           # Redis pub/sub channels, caching abstractions
 │   ├── translation/     # next-intl setup, locale configs, lang JSON files
@@ -118,11 +118,15 @@ Selected at runtime via `DB_DRIVER` env (`better-sqlite3` | `mysql2` | `node-pos
 
 ### Widget System
 
-Widgets are registered in `packages/widgets/src/index.tsx` as `widgetImports` (must satisfy `Record<WidgetKind, ...>`). Each widget:
-- Has a `definition` created via `createWidgetDefinition(kind, { icon, createOptions, supportedIntegrations? })`
-- Uses `optionsBuilder.from(factory => ({ ... }))` for typed options
-- Loads dynamically via `next/dynamic`
-- Fetches data via tRPC client hooks (backed by cron job caches)
+Widget kinds live in `packages/definitions/src/widget.ts`. Integration selection and authorization metadata lives in
+`packages/definitions/src/widget-integration-map.ts`. Each widget module exports a typed `definition` and
+`componentLoader` created with `createWidgetDefinition(...).withDynamicImport(...)`.
+
+Register widgets in all three explicit maps in `packages/widgets/src/registry.ts`: the type-only module map, literal
+module loaders, and literal component loaders. The two runtime loader maps are deliberately separate so
+`packages/widgets/src/manifest.ts` can request a widget's definition chunk and component chunk in parallel while
+keeping every lazy import statically discoverable by Next.js. The manifest owns promise caching and clears rejected
+entries so later loads can retry. Do not restore an eager root `widgetImports` map.
 
 ### Integration System
 

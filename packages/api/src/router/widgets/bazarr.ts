@@ -1,7 +1,7 @@
 import { bazarrBadgesRequestHandler } from "@homarr/request-handler/bazarr";
 import { mockWidgetData } from "@homarr/integrations";
 
-import { createOneIntegrationMiddleware } from "../../middlewares/integration";
+import { createOneWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const bazarrRouter = createTRPCRouter({
@@ -13,7 +13,7 @@ export const bazarrRouter = createTRPCRouter({
           "Get missing subtitle counts, provider issues, and health warnings for a Bazarr integration. REQUIRED: integrationId from integration_all",
       },
     })
-    .concat(createOneIntegrationMiddleware("query", "bazarr", "mock"))
+    .concat(createOneWidgetIntegrationMiddleware("query", "bazarr"))
     .query(async ({ ctx }) => {
       if (ctx.integration.kind === "mock") return mockWidgetData.bazarr;
 

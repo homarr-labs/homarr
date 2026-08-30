@@ -1,6 +1,6 @@
 import type { IntegrationKindByCategory } from "@homarr/definitions";
-import { createIntegrationAsync } from "@homarr/integrations";
-import type { IMediaOrganizerIntegration, MissingMediaItem, QueuedMediaItem } from "@homarr/integrations/types";
+import { createIntegrationAsync } from "@homarr/integrations/factory";
+import type { MissingMediaItem, QueuedMediaItem } from "@homarr/integrations/types";
 
 import { createIntegrationRequestHandler } from "./lib/integration-request-handler";
 
@@ -16,8 +16,9 @@ export const mediaOrganizerRequestHandler = createIntegrationRequestHandler<
   IntegrationKindByCategory<"mediaOrganizer">,
   { pageSize: number }
 >({
+  cacheNamespace: "media-organizer:summary",
   async requestAsync(integration, input) {
-    const integrationInstance = (await createIntegrationAsync(integration)) as unknown as IMediaOrganizerIntegration;
+    const integrationInstance = await createIntegrationAsync(integration);
     const [missingResult, queueResult] = await Promise.all([
       integrationInstance.getMissingAsync(input.pageSize),
       integrationInstance.getMediaQueueAsync(input.pageSize),

@@ -1,5 +1,5 @@
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { createIntegrationAsync } from "@homarr/integrations";
+import { createIntegrationAsync } from "@homarr/integrations/factory";
 import type {
   BeszelAlert,
   BeszelAlertHistory,
@@ -57,6 +57,7 @@ export const beszelSystemsRequestHandler = createIntegrationRequestHandler<
   "beszel" | "mock",
   Record<string, never>
 >({
+  cacheNamespace: "beszel:systems",
   async requestAsync(integration) {
     const start = performance.now();
     const instance = await createIntegrationAsync(integration);
@@ -89,6 +90,7 @@ export const beszelAlertsRequestHandler = createIntegrationRequestHandler<
   "beszel" | "mock",
   { includeHistory: boolean; maxHistoryItems: number }
 >({
+  cacheNamespace: "beszel:alerts",
   async requestAsync(integration, input) {
     const start = performance.now();
     const instance = await createIntegrationAsync(integration);
@@ -123,6 +125,7 @@ export const beszelStatsRequestHandler = createIntegrationRequestHandler<
   "beszel" | "mock",
   { systemId: string; timePeriod: string; includeDocker: boolean }
 >({
+  cacheNamespace: "beszel:stats",
   // No cache — the widget polls every 5s for live updates;
   // a TTL here would serve stale records between polls.
   cacheTtlMs: 0,

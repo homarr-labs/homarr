@@ -1,5 +1,7 @@
 import { IconNotes } from "@tabler/icons-react";
 
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
+
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 
@@ -7,8 +9,7 @@ export const { definition, componentLoader } = createWidgetDefinition("anchorNot
   icon: IconNotes,
   supportsAdvancedFocus: true,
   queryKey: [["widget", "anchorNotes"]],
-  maxIntegrations: 1,
-  supportedIntegrations: ["anchor", "mock"],
+  ...getWidgetIntegrationConfig("anchorNote"),
   createOptions() {
     return optionsBuilder.from((factory) => ({
       noteId: factory.anchorNote(),

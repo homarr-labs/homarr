@@ -6,7 +6,7 @@ const mocks = vi.hoisted(() => ({
   createIntegrationAsync: vi.fn(),
 }));
 
-vi.mock("@homarr/integrations", () => ({
+vi.mock("@homarr/integrations/factory", () => ({
   createIntegrationAsync: mocks.createIntegrationAsync,
 }));
 

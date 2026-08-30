@@ -41,6 +41,14 @@ const defaultSession = {
   expires: new Date().toISOString(),
 } satisfies Session;
 
+const integrationUseSession = {
+  ...defaultSession,
+  user: {
+    ...defaultSession.user,
+    permissions: ["integration-use-all"],
+  },
+} satisfies Session;
+
 // Mock the auth module to return an empty session
 vi.mock("@homarr/auth", () => ({ auth: () => ({}) as Session }));
 
@@ -698,7 +706,8 @@ describe("duplicateBoard should preserve protected layout invariants", () => {
       },
     };
     const caller = boardRouter.createCaller({ db, deviceType: undefined, session });
-    const { boardId } = await createFullBoardAsync(db, "source");
+    const { boardId, integrationId } = await createFullBoardAsync(db, "source");
+    await db.delete(integrationItems).where(eq(integrationItems.integrationId, integrationId));
 
     const result = await caller.duplicateBoard({ id: boardId, name: "copy" });
 
@@ -1195,7 +1204,7 @@ describe("saveBoard should save full board", () => {
   it("should remove integration reference when not present in input", async () => {
     const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: integrationUseSession });
     const anotherIntegration = {
       id: createId(),
       kind: "adGuardHome",
@@ -1219,8 +1228,8 @@ describe("saveBoard should save full board", () => {
       items: [
         {
           id: itemId,
-          kind: "clock",
-          options: { is24HourFormat: true },
+          kind: "dnsHoleSummary",
+          options: { usePiHoleColors: true, layout: "grid" },
           integrationIds: [anotherIntegration.id],
           layouts: [
             {
@@ -1526,7 +1535,7 @@ describe("saveBoard should save full board", () => {
   it("should add integration reference when present in input", async () => {
     const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: integrationUseSession });
     const integration = {
       id: createId(),
       kind: "plex",
@@ -1550,8 +1559,8 @@ describe("saveBoard should save full board", () => {
       items: [
         {
           id: itemId,
-          kind: "clock",
-          options: { is24HourFormat: true },
+          kind: "mediaServer",
+          options: { showOnlyPlaying: true, showBitrate: true, showLocation: true },
           integrationIds: [integration.id],
           layouts: [
             {

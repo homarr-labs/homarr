@@ -3,7 +3,7 @@ import { randomUUID } from "crypto";
 import type { MaybePromise } from "@homarr/common/types";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
-import { createRedisConnection } from "./connection";
+import { createRedisConnection, requireRedisConnection } from "./connection";
 
 const logger = createLogger({ module: "channelSubscriptionTracker" });
 
@@ -63,7 +63,9 @@ export class ChannelSubscriptionTracker {
     // Subscribe when this channel has no active or pending Redis subscription.
     if (!ready) {
       logger.debug("Subscribing to redis channel", { channel: channelName });
-      ready = this.redis.subscribe(channelName).then(() => undefined);
+      ready = requireRedisConnection(this.redis)
+        .subscribe(channelName)
+        .then(() => undefined);
       this.subscriptionReadiness.set(channelName, ready);
       void ready.catch(() => {
         if (this.subscriptionReadiness.get(channelName) === ready) {
@@ -91,7 +93,7 @@ export class ChannelSubscriptionTracker {
       }
 
       logger.debug("Unsubscribing from redis channel", { channel: channelName });
-      void this.redis.unsubscribe(channelName);
+      void requireRedisConnection(this.redis).unsubscribe(channelName);
       this.subscriptions.delete(channelName);
       this.subscriptionReadiness.delete(channelName);
     };
@@ -104,7 +106,7 @@ export class ChannelSubscriptionTracker {
    */
   private static activateListener() {
     logger.debug("Activating listener");
-    this.redis.on("message", (channel, message) => {
+    requireRedisConnection(this.redis).on("message", (channel, message) => {
       const channelSubscriptions = this.subscriptions.get(channel);
       if (!channelSubscriptions) {
         logger.warn("Received message on unknown channel", { channel });

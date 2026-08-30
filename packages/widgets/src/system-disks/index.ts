@@ -1,5 +1,7 @@
 import { IconServer2 } from "@tabler/icons-react";
 
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
+
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 import { createStorageVolumeMultiSelectOptions } from "../storage-volume-options";
@@ -9,7 +11,7 @@ export const { definition, componentLoader } = createWidgetDefinition("systemDis
   icon: IconServer2,
   queryKey: [["widget", "healthMonitoring"]],
   refetchInterval: 10,
-  supportedIntegrations: ["dashDot", "openmediavault", "truenas", "unraid", "synology", "mock"],
+  ...getWidgetIntegrationConfig("systemDisks"),
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({

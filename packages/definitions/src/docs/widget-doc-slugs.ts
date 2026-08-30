@@ -1,6 +1,6 @@
 import type { WidgetKind } from "../widget";
 
-export const widgetDocSlugs: Record<WidgetKind, string | null> = {
+export const widgetDocSlugs = {
   clock: "clock",
   weather: "weather",
   airQuality: "air-quality",
@@ -60,4 +60,4 @@ export const widgetDocSlugs: Record<WidgetKind, string | null> = {
   customApi: "custom-api",
   assistant: "assistant",
   wud: "whats-up-docker",
-};
+} satisfies Record<WidgetKind, string | null>;

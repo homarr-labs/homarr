@@ -1,12 +1,30 @@
 import superjson from "superjson";
 
 import { createId } from "@homarr/common";
+import { createLogger } from "@homarr/core/infrastructure/logs";
+import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 
 import { ChannelSubscriptionTracker } from "./channel-subscription-tracker";
-import { createRedisConnection } from "./connection";
+import { createRedisConnection, requireRedisConnection } from "./connection";
 
 const publisher = createRedisConnection();
 const lastDataClient = createRedisConnection();
+const logger = createLogger({ module: "redisChannel" });
+const boundedCacheClient = createRedisConnection({
+  autoResendUnfulfilledCommands: false,
+  commandTimeout: 500,
+  enableOfflineQueue: false,
+  maxRetriesPerRequest: 1,
+});
+
+interface RedisChannelOptions {
+  useBoundedCacheClient?: boolean;
+}
+
+const selectRedisClient = (options: RedisChannelOptions) => {
+  if (options.useBoundedCacheClient) return boundedCacheClient;
+  return getSetClient;
+};
 
 /**
  * Creates a new pub/sub channel.
@@ -23,11 +41,13 @@ export const createSubPubChannel = <TData>(name: string, { persist }: { persist:
      */
     subscribe: (callback: (data: TData) => void) => {
       if (persist) {
-        void lastDataClient.get(lastChannelName).then((data) => {
-          if (data) {
-            callback(superjson.parse(data));
-          }
-        });
+        void requireRedisConnection(lastDataClient)
+          .get(lastChannelName)
+          .then((data) => {
+            if (data) {
+              callback(superjson.parse(data));
+            }
+          });
       }
       return ChannelSubscriptionTracker.subscribe(channelName, (message) => {
         callback(superjson.parse(message));
@@ -39,12 +59,12 @@ export const createSubPubChannel = <TData>(name: string, { persist }: { persist:
      */
     publishAsync: async (data: TData) => {
       if (persist) {
-        await lastDataClient.set(lastChannelName, superjson.stringify(data));
+        await requireRedisConnection(lastDataClient).set(lastChannelName, superjson.stringify(data));
       }
-      await publisher.publish(channelName, superjson.stringify(data));
+      await requireRedisConnection(publisher).publish(channelName, superjson.stringify(data));
     },
     getLastDataAsync: async () => {
-      const data = await lastDataClient.get(lastChannelName);
+      const data = await requireRedisConnection(lastDataClient).get(lastChannelName);
       return data ? superjson.parse<TData>(data) : null;
     },
   };
@@ -65,7 +85,7 @@ export const createListChannel = <TItem>(name: string) => {
      * @returns an array of all items
      */
     getAllAsync: async () => {
-      const items = await getSetClient.lrange(listChannelName, 0, -1);
+      const items = await requireRedisConnection(getSetClient).lrange(listChannelName, 0, -1);
       return items.map((item) => superjson.parse<TItem>(item));
     },
     /**
@@ -73,20 +93,20 @@ export const createListChannel = <TItem>(name: string) => {
      * @param item item to remove
      */
     removeAsync: async (item: TItem) => {
-      await getSetClient.lrem(listChannelName, 0, superjson.stringify(item));
+      await requireRedisConnection(getSetClient).lrem(listChannelName, 0, superjson.stringify(item));
     },
     /**
      * Clear all items from the channels list
      */
     clearAsync: async () => {
-      await getSetClient.del(listChannelName);
+      await requireRedisConnection(getSetClient).del(listChannelName);
     },
     /**
      * Add an item to the channels list
      * @param item item to add
      */
     addAsync: async (item: TItem) => {
-      await getSetClient.lpush(listChannelName, superjson.stringify(item));
+      await requireRedisConnection(getSetClient).lpush(listChannelName, superjson.stringify(item));
     },
   };
 };
@@ -95,33 +115,46 @@ export const createListChannel = <TItem>(name: string) => {
  * Creates a new redis channel for getting and setting data
  * @param name name of channel
  */
-export const createGetSetChannel = <TData>(name: string) => {
+export const createGetSetChannel = <TData>(name: string, options: RedisChannelOptions = {}) => {
+  const client = selectRedisClient(options);
   return {
     /**
      * Get data from the channel
      * @returns data or null if not found
      */
     getAsync: async () => {
-      const data = await getSetClient.get(name);
+      const data = await requireRedisConnection(client).get(name);
       return data ? superjson.parse<TData>(data) : null;
     },
     /**
      * Set data in the channel
      * @param data data to be stored in the channel
-     * @param options optional TTL in seconds
+     * @param options optional TTL in seconds or milliseconds
      */
-    setAsync: async (data: TData, options?: { ttlSeconds?: number }) => {
-      if (options?.ttlSeconds) {
-        await getSetClient.set(name, superjson.stringify(data), "EX", options.ttlSeconds);
+    setAsync: async (data: TData, options?: { ttlSeconds?: number; ttlMs?: number }) => {
+      if (options?.ttlMs !== undefined) {
+        if (options.ttlMs <= 0) {
+          await requireRedisConnection(client).del(name);
+          return;
+        }
+        await requireRedisConnection(client).set(name, superjson.stringify(data), "PX", options.ttlMs);
         return;
       }
-      await getSetClient.set(name, superjson.stringify(data));
+      if (options?.ttlSeconds !== undefined) {
+        if (options.ttlSeconds <= 0) {
+          await requireRedisConnection(client).del(name);
+          return;
+        }
+        await requireRedisConnection(client).set(name, superjson.stringify(data), "EX", options.ttlSeconds);
+        return;
+      }
+      await requireRedisConnection(client).set(name, superjson.stringify(data));
     },
     /**
      * Remove data from the channel
      */
     removeAsync: async () => {
-      await getSetClient.del(name);
+      await requireRedisConnection(client).del(name);
     },
   };
 };
@@ -132,34 +165,571 @@ export const createGetSetChannel = <TData>(name: string) => {
  * The token prevents a process from releasing a lock that expired and was
  * acquired by another process in the meantime.
  */
-export const createLockChannel = (name: string) => {
+export const createLockChannel = (name: string, options: RedisChannelOptions = {}) => {
+  const selectedClient = selectRedisClient(options);
+  const releaseIfOwnedAsync = async (token: string) => {
+    if (!selectedClient) return;
+
+    await selectedClient.eval(
+      "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end",
+      1,
+      name,
+      token,
+    );
+  };
+
   return {
     acquireAsync: async (ttlSeconds: number) => {
       const token = createId();
-      const client = getSetClient as typeof getSetClient | null;
+      const client = selectedClient;
       if (!client) return token;
 
-      const result = await client.set(name, token, "EX", ttlSeconds, "NX");
-      return result === "OK" ? token : null;
+      try {
+        const result = await client.set(name, token, "EX", ttlSeconds, "NX");
+        return result === "OK" ? token : null;
+      } catch (error) {
+        // The SET may have reached Redis even when its reply timed out. Queue a
+        // token-fenced cleanup so an ambiguous acquisition cannot orphan a lock.
+        void releaseIfOwnedAsync(token).catch(() => undefined);
+        throw error;
+      }
     },
-    releaseAsync: async (token: string) => {
-      const client = getSetClient as typeof getSetClient | null;
-      if (!client) return;
+    renewAsync: async (token: string, ttlSeconds: number) => {
+      const client = selectedClient;
+      if (!client) return true;
 
-      await client.eval(
-        "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end",
+      const result = await client.eval(
+        "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('expire', KEYS[1], ARGV[2]) else return 0 end",
         1,
         name,
         token,
+        ttlSeconds,
       );
+      return result === 1;
+    },
+    setIfOwnedAsync: async <TData>(token: string, targetName: string, data: TData, ttlMs: number) => {
+      const client = selectedClient;
+      if (!client) return true;
+
+      const result = await client.eval(
+        "if redis.call('get', KEYS[1]) ~= ARGV[1] then return 0 end redis.call('set', KEYS[2], ARGV[2], 'PX', ARGV[3]) return 1",
+        2,
+        name,
+        targetName,
+        token,
+        superjson.stringify(data),
+        ttlMs,
+      );
+      return result === 1;
+    },
+    releaseAsync: async (token: string) => {
+      await releaseIfOwnedAsync(token);
     },
   };
 };
 
+const integrationCacheGenerationKey = (integrationId: string) => `integration-cache:generation:${integrationId}`;
+const integrationCacheGlobalGenerationKey = "integration-cache:global-generation:v1";
+export const getIntegrationSessionStoreKey = (integrationId: string) => `session-store:${integrationId}`;
+interface PendingIntegrationCacheInvalidation {
+  generation: string;
+  clearSession: boolean;
+}
+
+const pendingIntegrationCacheInvalidations = new Map<string, PendingIntegrationCacheInvalidation>();
+let integrationCacheOverflowGeneration: string | undefined;
+const MAX_PENDING_INTEGRATION_CACHE_INVALIDATIONS = 1000;
+const CACHE_GENERATION_REDIS_TIMEOUT_MS = 750;
+const CACHE_GENERATION_SUCCESS_TTL_MS = 1000;
+const CACHE_GENERATION_UNAVAILABLE_TTL_MS = 5000;
+const CACHE_GENERATION_REDIS_TTL_SECONDS = 30 * 24 * 60 * 60;
+const MAX_CACHE_GENERATION_READS = 1000;
+
+export interface IntegrationCacheGeneration {
+  value: string;
+  isShared: boolean;
+}
+
+interface CacheGenerationReadEntry {
+  generation: IntegrationCacheGeneration;
+  expiresAt: number;
+}
+
+interface CacheGenerationReadInFlight {
+  promise: Promise<IntegrationCacheGeneration>;
+  token: object;
+}
+
+const cacheGenerationReads = new Map<string, CacheGenerationReadEntry>();
+const cacheGenerationReadsInFlight = new Map<string, CacheGenerationReadInFlight>();
+
+const logCacheGenerationFailure = (message: string, metadata: Record<string, unknown>, error: unknown) => {
+  logger.warn(new ErrorWithMetadata(message, metadata, { cause: error }));
+};
+
+const withCacheGenerationRedisTimeoutAsync = async <T>(promise: Promise<T>): Promise<T> => {
+  return await new Promise<T>((resolve, reject) => {
+    const timer = setTimeout(
+      () => reject(new Error("Redis cache generation operation timed out")),
+      CACHE_GENERATION_REDIS_TIMEOUT_MS,
+    );
+    timer.unref?.();
+    void promise.then(resolve, reject).finally(() => clearTimeout(timer));
+  });
+};
+
+const combineCacheGenerations = (
+  globalGeneration: string | null | undefined,
+  scopedGeneration: string | null | undefined,
+) => {
+  const scopedValue = scopedGeneration ?? "0";
+  if (!globalGeneration || globalGeneration === "0") return scopedValue;
+  return `${globalGeneration}:${scopedValue}`;
+};
+
+const advanceGlobalCacheGenerationAsync = async (cacheKey: string) => {
+  const client = boundedCacheClient;
+  if (!client) return null;
+
+  const results = await withCacheGenerationRedisTimeoutAsync(
+    client.multi().incr(cacheKey).expire(cacheKey, CACHE_GENERATION_REDIS_TTL_SECONDS).exec(),
+  );
+  const generationResult = results?.[0];
+  const expiryResult = results?.[1];
+  if (!generationResult || generationResult[0]) throw generationResult?.[0] ?? new Error("Missing generation result");
+  if (!expiryResult || expiryResult[0]) throw expiryResult?.[0] ?? new Error("Missing generation expiry result");
+  return String(generationResult[1]);
+};
+
+const setCacheGenerationRead = (
+  cacheKey: string,
+  generation: IntegrationCacheGeneration,
+  ttlMs = generation.isShared ? CACHE_GENERATION_SUCCESS_TTL_MS : CACHE_GENERATION_UNAVAILABLE_TTL_MS,
+) => {
+  if (cacheGenerationReads.has(cacheKey)) cacheGenerationReads.delete(cacheKey);
+  while (cacheGenerationReads.size >= MAX_CACHE_GENERATION_READS) {
+    const oldestCacheKey = cacheGenerationReads.keys().next().value;
+    if (!oldestCacheKey) break;
+    cacheGenerationReads.delete(oldestCacheKey);
+  }
+  cacheGenerationReads.set(cacheKey, {
+    generation,
+    expiresAt: Date.now() + ttlMs,
+  });
+};
+
+const beginCacheGenerationInvalidation = (cacheKey: string, pendingGeneration: string) => {
+  cacheGenerationReadsInFlight.delete(cacheKey);
+  setCacheGenerationRead(cacheKey, { value: pendingGeneration, isShared: false });
+};
+
+interface GetCachedGenerationOptions {
+  cacheKey: string;
+  readAsync: () => Promise<string | null>;
+  fallback: IntegrationCacheGeneration;
+  errorMessage: string;
+  errorMetadata: Record<string, unknown>;
+  force?: boolean;
+  throwOnError?: boolean;
+}
+
+const getCachedGenerationAsync = async ({
+  cacheKey,
+  readAsync,
+  fallback,
+  errorMessage,
+  errorMetadata,
+  force = false,
+  throwOnError = false,
+}: GetCachedGenerationOptions): Promise<IntegrationCacheGeneration> => {
+  if (!force) {
+    const cached = cacheGenerationReads.get(cacheKey);
+    if (cached && Date.now() < cached.expiresAt) {
+      cacheGenerationReads.delete(cacheKey);
+      cacheGenerationReads.set(cacheKey, cached);
+      return cached.generation;
+    }
+    if (cached) cacheGenerationReads.delete(cacheKey);
+  }
+
+  const existing = cacheGenerationReadsInFlight.get(cacheKey);
+  if (existing) return await existing.promise;
+
+  const token = {};
+  const promise = (async () => {
+    let generation = fallback;
+    try {
+      const value = await readAsync();
+      if (value !== null) generation = { value, isShared: true };
+    } catch (error) {
+      logCacheGenerationFailure(errorMessage, errorMetadata, error);
+      if (throwOnError) throw error;
+    }
+
+    if (cacheGenerationReadsInFlight.get(cacheKey)?.token === token) {
+      setCacheGenerationRead(cacheKey, generation);
+    }
+    return generation;
+  })().finally(() => {
+    if (cacheGenerationReadsInFlight.get(cacheKey)?.token === token) {
+      cacheGenerationReadsInFlight.delete(cacheKey);
+    }
+  });
+  cacheGenerationReadsInFlight.set(cacheKey, { promise, token });
+  return await promise;
+};
+
+const advanceIntegrationCacheGenerationAsync = async (integrationId: string) => {
+  const client = boundedCacheClient;
+  if (!client) return null;
+
+  const results = await withCacheGenerationRedisTimeoutAsync(
+    client
+      .multi()
+      .incr(integrationCacheGenerationKey(integrationId))
+      .expire(integrationCacheGenerationKey(integrationId), CACHE_GENERATION_REDIS_TTL_SECONDS)
+      .del(getIntegrationSessionStoreKey(integrationId))
+      .get(integrationCacheGlobalGenerationKey)
+      .exec(),
+  );
+  const generationResult = results?.[0];
+  const expiryResult = results?.[1];
+  const sessionResult = results?.[2];
+  const globalGenerationResult = results?.[3];
+  if (!generationResult || generationResult[0]) throw generationResult?.[0] ?? new Error("Missing generation result");
+  if (!expiryResult || expiryResult[0]) throw expiryResult?.[0] ?? new Error("Missing generation expiry result");
+  if (!sessionResult || sessionResult[0]) throw sessionResult?.[0] ?? new Error("Missing session result");
+  if (!globalGenerationResult || globalGenerationResult[0]) {
+    throw globalGenerationResult?.[0] ?? new Error("Missing global generation result");
+  }
+  return combineCacheGenerations(globalGenerationResult[1] as string | null, String(generationResult[1]));
+};
+
+const advanceIntegrationResponseCacheGenerationAsync = async (integrationId: string) => {
+  const client = boundedCacheClient;
+  if (!client) return null;
+
+  const cacheKey = integrationCacheGenerationKey(integrationId);
+  const results = await withCacheGenerationRedisTimeoutAsync(
+    client
+      .multi()
+      .incr(cacheKey)
+      .expire(cacheKey, CACHE_GENERATION_REDIS_TTL_SECONDS)
+      .get(integrationCacheGlobalGenerationKey)
+      .exec(),
+  );
+  const generationResult = results?.[0];
+  const expiryResult = results?.[1];
+  const globalGenerationResult = results?.[2];
+  if (!generationResult || generationResult[0]) throw generationResult?.[0] ?? new Error("Missing generation result");
+  if (!expiryResult || expiryResult[0]) throw expiryResult?.[0] ?? new Error("Missing generation expiry result");
+  if (!globalGenerationResult || globalGenerationResult[0]) {
+    throw globalGenerationResult?.[0] ?? new Error("Missing global generation result");
+  }
+  return combineCacheGenerations(globalGenerationResult[1] as string | null, String(generationResult[1]));
+};
+
+const getIntegrationCacheInvalidationOperation = (clearSession: boolean) => {
+  if (clearSession) {
+    return {
+      advanceAsync: advanceIntegrationCacheGenerationAsync,
+      operation: "generation-advance-and-session-delete",
+      failureMessage: "Failed to invalidate integration and session caches in Redis",
+    };
+  }
+  return {
+    advanceAsync: advanceIntegrationResponseCacheGenerationAsync,
+    operation: "generation-advance",
+    failureMessage: "Failed to invalidate integration response caches in Redis",
+  };
+};
+
+let integrationCacheOverflowRecoveryInFlight: Promise<boolean> | undefined;
+
+const recoverIntegrationCacheOverflowAsync = async () => {
+  if (!integrationCacheOverflowGeneration) return true;
+  if (integrationCacheOverflowRecoveryInFlight) return await integrationCacheOverflowRecoveryInFlight;
+
+  const overflowGeneration = integrationCacheOverflowGeneration;
+  let promise: Promise<boolean>;
+  promise = (async () => {
+    try {
+      const generation = await advanceGlobalCacheGenerationAsync(integrationCacheGlobalGenerationKey);
+      if (generation === null) return false;
+
+      cacheGenerationReads.clear();
+      cacheGenerationReadsInFlight.clear();
+      if (integrationCacheOverflowGeneration !== overflowGeneration) return false;
+      integrationCacheOverflowGeneration = undefined;
+      return true;
+    } catch (error) {
+      logCacheGenerationFailure(
+        "Failed to recover integration cache invalidation overflow",
+        { operation: "global-generation-advance" },
+        error,
+      );
+      return false;
+    }
+  })().finally(() => {
+    if (integrationCacheOverflowRecoveryInFlight === promise) {
+      integrationCacheOverflowRecoveryInFlight = undefined;
+    }
+  });
+  integrationCacheOverflowRecoveryInFlight = promise;
+  return await promise;
+};
+
+export const getIntegrationCacheGenerationAsync = async (
+  integrationId: string,
+): Promise<IntegrationCacheGeneration> => {
+  const cacheKey = integrationCacheGenerationKey(integrationId);
+  const pendingInvalidation = pendingIntegrationCacheInvalidations.get(integrationId);
+  if (pendingInvalidation) {
+    const invalidationOperation = getIntegrationCacheInvalidationOperation(pendingInvalidation.clearSession);
+    const generation = await getCachedGenerationAsync({
+      cacheKey,
+      readAsync: async () => await invalidationOperation.advanceAsync(integrationId),
+      fallback: { value: pendingInvalidation.generation, isShared: false },
+      errorMessage: "Failed to retry integration cache invalidation",
+      errorMetadata: {
+        integrationId,
+        operation: invalidationOperation.operation,
+      },
+    });
+    if (
+      generation.isShared &&
+      pendingIntegrationCacheInvalidations.get(integrationId)?.generation === pendingInvalidation.generation
+    ) {
+      pendingIntegrationCacheInvalidations.delete(integrationId);
+      return generation;
+    }
+    const latestPendingInvalidation = pendingIntegrationCacheInvalidations.get(integrationId);
+    if (latestPendingInvalidation) return { value: latestPendingInvalidation.generation, isShared: false };
+    return generation;
+  }
+
+  if (integrationCacheOverflowGeneration) {
+    await recoverIntegrationCacheOverflowAsync();
+    if (integrationCacheOverflowGeneration) {
+      return { value: integrationCacheOverflowGeneration, isShared: false };
+    }
+  }
+
+  const client = boundedCacheClient;
+  return await getCachedGenerationAsync({
+    cacheKey,
+    readAsync: async () => {
+      if (!client) return null;
+      const [globalGeneration, scopedGeneration] = await withCacheGenerationRedisTimeoutAsync(
+        client.mget(integrationCacheGlobalGenerationKey, cacheKey),
+      );
+      return combineCacheGenerations(globalGeneration, scopedGeneration);
+    },
+    fallback: { value: "redis-unavailable", isShared: false },
+    errorMessage: "Failed to read integration cache generation",
+    errorMetadata: { integrationId, operation: "generation-read" },
+  });
+};
+
+const invalidateIntegrationCacheGenerationAsync = async (
+  integrationId: string,
+  clearSession: boolean,
+): Promise<void> => {
+  const previousInvalidation = pendingIntegrationCacheInvalidations.get(integrationId);
+  const pendingInvalidation: PendingIntegrationCacheInvalidation = {
+    generation: `local-${createId()}`,
+    clearSession: clearSession || previousInvalidation?.clearSession === true,
+  };
+  const canTrackInvalidation =
+    !integrationCacheOverflowGeneration &&
+    (previousInvalidation !== undefined ||
+      pendingIntegrationCacheInvalidations.size < MAX_PENDING_INTEGRATION_CACHE_INVALIDATIONS);
+  if (canTrackInvalidation) {
+    pendingIntegrationCacheInvalidations.set(integrationId, pendingInvalidation);
+  } else if (integrationCacheOverflowGeneration) {
+    integrationCacheOverflowGeneration = pendingInvalidation.generation;
+  }
+  const cacheKey = integrationCacheGenerationKey(integrationId);
+  beginCacheGenerationInvalidation(cacheKey, pendingInvalidation.generation);
+  const invalidationOperation = getIntegrationCacheInvalidationOperation(pendingInvalidation.clearSession);
+
+  let generation: IntegrationCacheGeneration;
+  try {
+    generation = await getCachedGenerationAsync({
+      cacheKey,
+      readAsync: async () => await invalidationOperation.advanceAsync(integrationId),
+      fallback: { value: pendingInvalidation.generation, isShared: false },
+      errorMessage: invalidationOperation.failureMessage,
+      errorMetadata: {
+        integrationId,
+        operation: invalidationOperation.operation,
+      },
+      force: true,
+      throwOnError: clearSession,
+    });
+  } catch (error) {
+    if (!canTrackInvalidation) integrationCacheOverflowGeneration = pendingInvalidation.generation;
+    throw error;
+  }
+  if (!generation.isShared && !canTrackInvalidation) {
+    integrationCacheOverflowGeneration = pendingInvalidation.generation;
+  }
+  if (
+    generation.isShared &&
+    pendingIntegrationCacheInvalidations.get(integrationId)?.generation === pendingInvalidation.generation
+  ) {
+    pendingIntegrationCacheInvalidations.delete(integrationId);
+  }
+};
+
 export const invalidateIntegrationCacheAsync = async (integrationId: string): Promise<void> => {
-  const client = getSetClient as typeof getSetClient | null;
-  if (!client) return;
-  await client.del(`session-store:${integrationId}`);
+  await invalidateIntegrationCacheGenerationAsync(integrationId, true);
+};
+
+/** Advances response-cache generation without evicting cached integration credentials. */
+export const invalidateIntegrationResponseCacheAsync = async (integrationId: string): Promise<void> => {
+  await invalidateIntegrationCacheGenerationAsync(integrationId, false);
+};
+
+const widgetCacheGenerationKey = (namespace: string) => `widget-cache:generation:${namespace}`;
+const widgetCacheGlobalGenerationKey = "widget-cache:global-generation:v1";
+const pendingWidgetCacheInvalidations = new Map<string, string>();
+let widgetCacheOverflowGeneration: string | undefined;
+const MAX_PENDING_WIDGET_CACHE_INVALIDATIONS = 1000;
+
+const advanceWidgetCacheGenerationAsync = async (namespace: string) => {
+  const client = boundedCacheClient;
+  if (!client) return null;
+
+  const cacheKey = widgetCacheGenerationKey(namespace);
+  const results = await withCacheGenerationRedisTimeoutAsync(
+    client
+      .multi()
+      .incr(cacheKey)
+      .expire(cacheKey, CACHE_GENERATION_REDIS_TTL_SECONDS)
+      .get(widgetCacheGlobalGenerationKey)
+      .exec(),
+  );
+  const generationResult = results?.[0];
+  const expiryResult = results?.[1];
+  const globalGenerationResult = results?.[2];
+  if (!generationResult || generationResult[0]) throw generationResult?.[0] ?? new Error("Missing generation result");
+  if (!expiryResult || expiryResult[0]) throw expiryResult?.[0] ?? new Error("Missing generation expiry result");
+  if (!globalGenerationResult || globalGenerationResult[0]) {
+    throw globalGenerationResult?.[0] ?? new Error("Missing global generation result");
+  }
+  return combineCacheGenerations(globalGenerationResult[1] as string | null, String(generationResult[1]));
+};
+
+export type WidgetCacheGeneration = IntegrationCacheGeneration;
+
+let widgetCacheOverflowRecoveryInFlight: Promise<boolean> | undefined;
+
+const recoverWidgetCacheOverflowAsync = async () => {
+  if (!widgetCacheOverflowGeneration) return true;
+  if (widgetCacheOverflowRecoveryInFlight) return await widgetCacheOverflowRecoveryInFlight;
+
+  const overflowGeneration = widgetCacheOverflowGeneration;
+  let promise: Promise<boolean>;
+  promise = (async () => {
+    try {
+      const generation = await advanceGlobalCacheGenerationAsync(widgetCacheGlobalGenerationKey);
+      if (generation === null) return false;
+
+      cacheGenerationReads.clear();
+      cacheGenerationReadsInFlight.clear();
+      if (widgetCacheOverflowGeneration !== overflowGeneration) return false;
+      widgetCacheOverflowGeneration = undefined;
+      return true;
+    } catch (error) {
+      logCacheGenerationFailure(
+        "Failed to recover widget cache invalidation overflow",
+        { operation: "global-generation-advance" },
+        error,
+      );
+      return false;
+    }
+  })().finally(() => {
+    if (widgetCacheOverflowRecoveryInFlight === promise) {
+      widgetCacheOverflowRecoveryInFlight = undefined;
+    }
+  });
+  widgetCacheOverflowRecoveryInFlight = promise;
+  return await promise;
+};
+
+export const getWidgetCacheGenerationAsync = async (namespace: string): Promise<WidgetCacheGeneration> => {
+  const cacheKey = widgetCacheGenerationKey(namespace);
+  const pendingGeneration = pendingWidgetCacheInvalidations.get(namespace);
+  if (pendingGeneration) {
+    const generation = await getCachedGenerationAsync({
+      cacheKey,
+      readAsync: async () => await advanceWidgetCacheGenerationAsync(namespace),
+      fallback: { value: pendingGeneration, isShared: false },
+      errorMessage: "Failed to retry widget cache invalidation",
+      errorMetadata: { cacheNamespace: namespace, operation: "generation-advance" },
+    });
+    if (generation.isShared && pendingWidgetCacheInvalidations.get(namespace) === pendingGeneration) {
+      pendingWidgetCacheInvalidations.delete(namespace);
+      return generation;
+    }
+    const latestPendingGeneration = pendingWidgetCacheInvalidations.get(namespace);
+    if (latestPendingGeneration) return { value: latestPendingGeneration, isShared: false };
+    return generation;
+  }
+
+  if (widgetCacheOverflowGeneration) {
+    await recoverWidgetCacheOverflowAsync();
+    if (widgetCacheOverflowGeneration) {
+      return { value: widgetCacheOverflowGeneration, isShared: false };
+    }
+  }
+
+  const client = boundedCacheClient;
+  return await getCachedGenerationAsync({
+    cacheKey,
+    readAsync: async () => {
+      if (!client) return null;
+      const [globalGeneration, scopedGeneration] = await withCacheGenerationRedisTimeoutAsync(
+        client.mget(widgetCacheGlobalGenerationKey, cacheKey),
+      );
+      return combineCacheGenerations(globalGeneration, scopedGeneration);
+    },
+    fallback: { value: "redis-unavailable", isShared: false },
+    errorMessage: "Failed to read widget cache generation",
+    errorMetadata: { cacheNamespace: namespace, operation: "generation-read" },
+  });
+};
+
+export const invalidateWidgetCache = (namespace: string): void => {
+  const pendingGeneration = `local-${createId()}`;
+  const previousGeneration = pendingWidgetCacheInvalidations.get(namespace);
+  const canTrackInvalidation =
+    !widgetCacheOverflowGeneration &&
+    (previousGeneration !== undefined || pendingWidgetCacheInvalidations.size < MAX_PENDING_WIDGET_CACHE_INVALIDATIONS);
+  if (canTrackInvalidation) {
+    pendingWidgetCacheInvalidations.set(namespace, pendingGeneration);
+  } else if (widgetCacheOverflowGeneration) {
+    widgetCacheOverflowGeneration = pendingGeneration;
+  }
+  const cacheKey = widgetCacheGenerationKey(namespace);
+  beginCacheGenerationInvalidation(cacheKey, pendingGeneration);
+
+  void getCachedGenerationAsync({
+    cacheKey,
+    readAsync: async () => await advanceWidgetCacheGenerationAsync(namespace),
+    fallback: { value: pendingGeneration, isShared: false },
+    errorMessage: "Failed to invalidate widget caches in Redis",
+    errorMetadata: { cacheNamespace: namespace, operation: "generation-advance" },
+    force: true,
+  }).then((generation) => {
+    if (!generation.isShared && !canTrackInvalidation) {
+      widgetCacheOverflowGeneration = pendingGeneration;
+    }
+    if (generation.isShared && pendingWidgetCacheInvalidations.get(namespace) === pendingGeneration) {
+      pendingWidgetCacheInvalidations.delete(namespace);
+    }
+  });
 };
 
 /**
@@ -167,11 +737,11 @@ export const invalidateIntegrationCacheAsync = async (integrationId: string): Pr
  */
 export const createChannelEventHistoryOld = <TData>(channelName: string, maxElements = 15) => {
   const popElementsOverMaxAsync = async () => {
-    const length = await getSetClient.llen(channelName);
+    const length = await requireRedisConnection(getSetClient).llen(channelName);
     if (length <= maxElements) {
       return;
     }
-    await getSetClient.ltrim(channelName, 0, maxElements - 1);
+    await requireRedisConnection(getSetClient).ltrim(channelName, 0, maxElements - 1);
   };
 
   return {
@@ -181,33 +751,41 @@ export const createChannelEventHistoryOld = <TData>(channelName: string, maxElem
       });
     },
     publishAndPushAsync: async (data: TData) => {
-      await publisher.publish(channelName, superjson.stringify(data));
-      await getSetClient.lpush(channelName, superjson.stringify({ data, timestamp: new Date() }));
+      await requireRedisConnection(publisher).publish(channelName, superjson.stringify(data));
+      await requireRedisConnection(getSetClient).lpush(
+        channelName,
+        superjson.stringify({ data, timestamp: new Date() }),
+      );
       await popElementsOverMaxAsync();
     },
     pushAsync: async (data: TData) => {
-      await getSetClient.lpush(channelName, superjson.stringify({ data, timestamp: new Date() }));
+      await requireRedisConnection(getSetClient).lpush(
+        channelName,
+        superjson.stringify({ data, timestamp: new Date() }),
+      );
       await popElementsOverMaxAsync();
     },
     clearAsync: async () => {
-      await getSetClient.del(channelName);
+      await requireRedisConnection(getSetClient).del(channelName);
     },
     getLastAsync: async () => {
-      const length = await getSetClient.llen(channelName);
-      const data = await getSetClient.lrange(channelName, length - 1, length);
+      const client = requireRedisConnection(getSetClient);
+      const length = await client.llen(channelName);
+      const data = await client.lrange(channelName, length - 1, length);
       if (data.length !== 1) return null;
 
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return superjson.parse<{ data: TData; timestamp: Date }>(data[0]!);
     },
     getSliceAsync: async (startIndex: number, endIndex: number) => {
-      const range = await getSetClient.lrange(channelName, startIndex, endIndex);
+      const range = await requireRedisConnection(getSetClient).lrange(channelName, startIndex, endIndex);
       return range.map((item) => superjson.parse<{ data: TData; timestamp: Date }>(item));
     },
     getSliceUntilTimeAsync: async (time: Date) => {
-      const length = await getSetClient.llen(channelName);
+      const client = requireRedisConnection(getSetClient);
+      const length = await client.llen(channelName);
       const items: TData[] = [];
-      const itemsInCollection = await getSetClient.lrange(channelName, 0, length - 1);
+      const itemsInCollection = await client.lrange(channelName, 0, length - 1);
 
       for (let i = 0; i < length - 1; i++) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -220,7 +798,7 @@ export const createChannelEventHistoryOld = <TData>(channelName: string, maxElem
       return items;
     },
     getLengthAsync: async () => {
-      return await getSetClient.llen(channelName);
+      return await requireRedisConnection(getSetClient).llen(channelName);
     },
     name: channelName,
   };
@@ -238,11 +816,11 @@ type WithId<TItem> = TItem & { _id: string };
 export const createQueueChannel = <TItem>(name: string) => {
   const queueChannelName = `queue:${name}`;
   const getDataAsync = async () => {
-    const data = await queueClient.get(queueChannelName);
+    const data = await requireRedisConnection(queueClient).get(queueChannelName);
     return data ? superjson.parse<WithId<TItem>[]>(data) : [];
   };
   const setDataAsync = async (data: WithId<TItem>[]) => {
-    await queueClient.set(queueChannelName, superjson.stringify(data));
+    await requireRedisConnection(queueClient).set(queueChannelName, superjson.stringify(data));
   };
 
   return {
@@ -289,5 +867,5 @@ export const createQueueChannel = <TItem>(name: string) => {
 };
 
 export const handshakeAsync = async () => {
-  await getSetClient.hello();
+  await requireRedisConnection(getSetClient).hello();
 };

@@ -80,18 +80,10 @@ function clearAuthFailures(ip: string | null) {
   authFailures.delete(ip ?? "unknown");
 }
 
-let toolsCache: McpTool[] | null = null;
-
-function getTools() {
-  if (!toolsCache) {
-    toolsCache = extractMcpTools();
-    logger.info(`Extracted ${toolsCache.length} MCP tools`);
-  }
-  return toolsCache;
-}
-
-const getVisibleTools = (isAdmin: boolean) =>
-  isAdmin ? getTools() : getTools().filter((tool) => !tool.name.startsWith("customWidget_"));
+const getVisibleTools = (tools: McpTool[], isAdmin: boolean) => {
+  if (isAdmin) return tools;
+  return tools.filter((tool) => !tool.name.startsWith("customWidget_"));
+};
 
 function registerCustomWidgetAuthoring(server: McpServer) {
   server.registerPrompt(
@@ -336,7 +328,7 @@ export const handleMcpRequest = async (req: NextRequest) => {
   const isAdmin = session.user.permissions.includes("admin");
   const protocolHandler = createMcpProtocolHandler({
     caller,
-    tools: getVisibleTools(isAdmin),
+    tools: getVisibleTools(extractMcpTools(), isAdmin),
     version: getPackageVersion(),
     instructions: SERVER_INSTRUCTIONS,
     configureServer: isAdmin ? registerCustomWidgetAuthoring : undefined,

@@ -42,7 +42,7 @@ import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 import { SelectableCard } from "@homarr/ui";
 import type { TablerIcon } from "@homarr/ui";
-import { widgetCatalogIcons } from "@homarr/widgets/catalog";
+import { widgetCatalogIcons } from "@homarr/ui/widget-icons";
 import { loadWidgetDefinition, reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 
 import type { EmptySection } from "~/app/[locale]/boards/_types";

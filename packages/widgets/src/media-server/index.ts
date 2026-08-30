@@ -1,6 +1,6 @@
 import { IconVideo } from "@tabler/icons-react";
 
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
@@ -22,5 +22,5 @@ export const { componentLoader, definition } = createWidgetDefinition("mediaServ
       showLocation: factory.switch({ defaultValue: true, withDescription: true }),
     }));
   },
-  supportedIntegrations: getIntegrationKindsByCategory("mediaService"),
+  ...getWidgetIntegrationConfig("mediaServer"),
 }).withDynamicImport(() => import("./component"));

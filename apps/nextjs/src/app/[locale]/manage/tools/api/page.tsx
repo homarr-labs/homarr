@@ -2,7 +2,6 @@ import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { Stack } from "@mantine/core";
 
-import { mcpRouter } from "@homarr/api/mcp";
 import { openApiDocument } from "@homarr/api/open-api";
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
@@ -16,40 +15,24 @@ import { ScalarApiReference } from "./components/scalar-api-reference";
 
 import type { McpToolGroup } from "./components/api-page-tabs";
 
-let cachedToolGroups: McpToolGroup[] | null = null;
-
 function getMcpToolGroups(): McpToolGroup[] {
-  if (cachedToolGroups) return cachedToolGroups;
-
   const tools = extractMcpTools();
-
-  const procedures = (mcpRouter as any)._def.procedures as Record<string, { _def?: { type?: string } }>;
-  const procedureTypeMap = new Map<string, "query" | "mutation">();
-  for (const [key, proc] of Object.entries(procedures)) {
-    const type = proc?._def?.type;
-    if (type === "query" || type === "mutation") {
-      procedureTypeMap.set(key, type);
-    }
-  }
-
   const groups = new Map<string, McpToolGroup["tools"]>();
   for (const tool of tools) {
     const namespace = tool.pathInRouter[0] ?? "other";
     if (!groups.has(namespace)) {
       groups.set(namespace, []);
     }
-    const procedureKey = tool.pathInRouter.join(".");
     groups.get(namespace)?.push({
       name: tool.name,
       description: tool.description,
-      type: procedureTypeMap.get(procedureKey) ?? "query",
+      type: tool.type,
     });
   }
-  cachedToolGroups = Array.from(groups.entries()).map(([namespace, items]) => ({
+  return Array.from(groups.entries()).map(([namespace, items]) => ({
     namespace,
     tools: items,
   }));
-  return cachedToolGroups;
 }
 
 export async function generateMetadata() {
@@ -70,12 +53,14 @@ export default async function ApiPage() {
   if (!session?.user.permissions.includes("admin")) {
     notFound();
   }
-  const requestHeaders = await headers();
+  const [requestHeaders, apiKeys, t, toolGroups] = await Promise.all([
+    headers(),
+    api.apiKeys.getAll(),
+    getI18n("management.page.tool.api.tab"),
+    getMcpToolGroups(),
+  ]);
   const baseUrl = extractBaseUrlFromHeaders(requestHeaders);
   const document = openApiDocument(baseUrl);
-  const apiKeys = await api.apiKeys.getAll();
-  const t = await getI18n("management.page.tool.api.tab");
-  const toolGroups = getMcpToolGroups();
 
   return (
     <>

@@ -1,20 +1,15 @@
 import { TRPCError } from "@trpc/server";
 
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
-import { createIntegrationAsync } from "@homarr/integrations";
+import { createIntegrationAsync } from "@homarr/integrations/factory";
 import { indexerManagerRequestHandler } from "@homarr/request-handler/indexer-manager";
 
-import type { IntegrationAction } from "../../middlewares/integration";
-import { createManyIntegrationMiddleware } from "../../middlewares/integration";
+import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { settleIntegrationQueries, toPublicIntegrationError } from "../../settle-integrations";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 
-const createIndexerManagerIntegrationMiddleware = (action: IntegrationAction) =>
-  createManyIntegrationMiddleware(action, ...getIntegrationKindsByCategory("indexerManager"));
-
 export const indexerManagerRouter = createTRPCRouter({
   getIndexersStatus: publicProcedure
-    .concat(createIndexerManagerIntegrationMiddleware("query"))
+    .concat(createManyWidgetIntegrationMiddleware("query", "indexerManager"))
     .query(async ({ ctx }) => {
       return await settleIntegrationQueries(
         ctx.integrations,
@@ -26,7 +21,7 @@ export const indexerManagerRouter = createTRPCRouter({
             integrationId: integration.id,
             integrationName: integration.name,
             indexers,
-            error: undefined as string | undefined,
+            error: undefined,
           };
         },
         {
@@ -41,9 +36,9 @@ export const indexerManagerRouter = createTRPCRouter({
       );
     }),
   testAllIndexers: protectedProcedure
-    .concat(createIndexerManagerIntegrationMiddleware("interact"))
+    .concat(createManyWidgetIntegrationMiddleware("interact", "indexerManager"))
     .mutation(async ({ ctx }) => {
-      await Promise.all(
+      const results = await Promise.allSettled(
         ctx.integrations.map(async (integration) => {
           const client = await createIntegrationAsync(integration);
           await client.testAllAsync().catch((err) => {
@@ -55,5 +50,9 @@ export const indexerManagerRouter = createTRPCRouter({
           });
         }),
       );
+      await indexerManagerRequestHandler.invalidateCacheAsync(ctx.integrations.map(({ id }) => id));
+
+      const firstFailure = results.find((result) => result.status === "rejected");
+      if (firstFailure?.status === "rejected") throw firstFailure.reason;
     }),
 });

@@ -3,25 +3,13 @@
 import { useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import { getQueryKey } from "@trpc/react-query";
-import {
-  Button,
-  Divider,
-  Group,
-  Pagination,
-  Paper,
-  ScrollArea,
-  Select,
-  SimpleGrid,
-  Stack,
-  Text,
-} from "@mantine/core";
+import { Button, Divider, Group, Pagination, Paper, ScrollArea, Select, SimpleGrid, Stack, Text } from "@mantine/core";
 import { IconClipboardList, IconCpu2, IconReportAnalytics } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
-import { views } from ".";
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
 import { getUsableWidgetQueryData } from "../common/query-state";
@@ -30,6 +18,7 @@ import { HealthCheckStatus } from "./health-check-status";
 import { QueuePanel } from "./panels/queue.panel";
 import { StatisticsPanel } from "./panels/statistics.panel";
 import { WorkersPanel } from "./panels/workers.panel";
+import { views } from "./views";
 
 type View = (typeof views)[number];
 

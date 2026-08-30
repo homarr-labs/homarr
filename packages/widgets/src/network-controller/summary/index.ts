@@ -1,6 +1,6 @@
 import { IconServerOff, IconTopologyFull } from "@tabler/icons-react";
 
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../../definition";
 import { optionsBuilder } from "../../options";
@@ -13,7 +13,7 @@ export const { definition, componentLoader } = createWidgetDefinition("networkCo
   createOptions() {
     return optionsBuilder.from(() => ({}));
   },
-  supportedIntegrations: getIntegrationKindsByCategory("networkController"),
+  ...getWidgetIntegrationConfig("networkControllerSummary"),
   errors: {
     INTERNAL_SERVER_ERROR: {
       icon: IconServerOff,

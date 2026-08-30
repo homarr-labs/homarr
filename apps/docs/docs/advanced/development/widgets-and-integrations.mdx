@@ -1,0 +1,102 @@
+---
+title: Widgets and integrations
+tags:
+  - Developer
+  - Technical documentation
+  - Widgets
+  - Integrations
+sidebar_position: 2
+---
+
+Homarr keeps feature registration explicit and typed. Feature registration has no generator or generated registry.
+A new feature is available when its typed metadata and lazy loader are registered.
+
+## Add a widget
+
+Keep the UI, options, helpers, and tests together in `packages/widgets/src/<widget>/`. The usual folder only needs an
+`index.ts` definition and a lazily imported `component.tsx`; complex widgets can add local files as needed.
+
+1. Add the stable kind to `packages/definitions/src/widget.ts` and its documentation slug to the direct typed map in
+   `packages/definitions/src/docs/widget-doc-slugs.ts`.
+2. Export `definition` and `componentLoader` from `packages/widgets/src/<widget>/index.ts` with
+   `createWidgetDefinition`. The local definition owns its icon, query keys, refresh interval, options, matchers, and
+   errors. Keep the component behind `withDynamicImport` so adding a widget does not load it on every dashboard.
+3. For an integration-backed widget, add its integration kinds and selection rules once to
+   `packages/definitions/src/widget-integration-map.ts`, then spread `getWidgetIntegrationConfig(kind)` into the local
+   definition. This server-safe config is also the API authorization boundary, avoiding a package cycle without
+   duplicating widget metadata.
+4. Register the widget in both explicit literal loader maps and the type-only module map in
+   `packages/widgets/src/registry.ts`, then add its icon to `packages/ui/src/widget-icons.ts`. The module and component
+   loaders must both use literal import paths. Keeping them separate lets a cold widget load request its definition
+   and component chunks in parallel; the type-only map preserves exact option and component inference. Keep all three
+   maps in the same order so drift is obvious in review.
+5. If the widget needs server data, add its tRPC router under `packages/api/src/router/widgets/` and add its explicit
+   lazy import to `packages/api/src/router/widgets/index.ts`. Keep upstream requests and Redis response caching in
+   `@homarr/request-handler`. Use the widget integration middleware for integration-backed procedures.
+6. Add canonical documentation in `apps/docs/docs/widgets/<slug>/`.
+
+Weather is the small integration-free example. Downloads shows integration selection, polling, server caching,
+mutations, partial upstream failures, and a larger options surface.
+
+## Add an integration
+
+Keep the HTTP client and its capability-specific types in `packages/integrations/src/<integration>/`.
+
+1. Add the typed definition to `packages/definitions/src/integration.ts`, including credential alternatives,
+   categories, documentation slug, ports, Docker aliases, and onboarding metadata when relevant.
+2. Add an explicit lazy creator to `packages/integrations/src/base/creator.ts`. The literal import keeps the
+   implementation out of the initial server bundle and makes the registration easy to find.
+3. Implement only the interfaces required by the widgets that use the service.
+4. Add canonical documentation in `apps/docs/docs/integrations/<slug>/`. Its `index.ts` must satisfy
+   `IntegrationDefinition` so invalid metadata fails type checking without widening the object. Use a type-only import
+   and `satisfies IntegrationDefinition`; do not cast the object.
+
+Beszel is a compact example with several widgets sharing one integration client.
+
+## Write user documentation
+
+Write for technically capable self-hosters. Keep each page short and operational.
+
+- Start with one sentence describing what the integration or widget adds to Homarr.
+- Include prerequisites, credentials, permissions, destructive actions, and non-obvious limits only when they matter.
+- Use numbered steps only when order matters. Prefer the exact UI labels a user must select.
+- Do not add marketing, implementation history, architecture internals, or explanations of basic self-hosting concepts.
+- End when the user can configure and verify the feature; do not repeat the same information in a summary.
+
+The usual page needs only an introduction and a `Configuration` section. Add `Notes` or `Troubleshooting` only for
+real caveats.
+
+## Data and errors
+
+- TanStack Query owns browser caching and refresh behavior. Redis owns shared server response caching for bounded key
+  spaces. Public handlers whose keys come from arbitrary URLs, domains, symbols, or coordinates stay in the bounded
+  process-local cache.
+- Cache raw service responses, never authorization decisions or decrypted credentials. Integration-backed cache keys
+  include keyed credential fingerprints and the complete integration identity, and are invalidated after mutations.
+  The fingerprints change with credentials without exposing their values in Redis keys.
+- Give upstream requests a finite deadline and pass the request handler's `AbortSignal` into clients that support it.
+  Admission is bounded per handler. Request deduplication and distributed lock ownership remain active until the
+  upstream settles or a bounded cleanup grace expires, while unresolved upstream work stays separately capped.
+- Keep validation and authorization on the server. Client-side checks improve UX but do not replace tRPC guards.
+- Use the shared logger with safe identifiers, operation names, duration, and the original error cause. Never log
+  secrets or full upstream payloads.
+- Multi-integration reads should return successful providers when one service fails and surface a clear error when all
+  providers fail.
+
+Registration files intentionally contain boring, explicit imports. This small amount of repetition preserves exact
+TypeScript inference, gives Next.js discoverable lazy chunks, and keeps Ctrl+click navigation reliable.
+
+## Registry imports
+
+Use `@homarr/widgets/manifest` to load registered widgets. `loadWidgetDefinition` is the metadata-only path;
+`loadWidgetComponent` loads only the UI module; and `loadWidgetResources` requests both paths in parallel. These
+loaders cache in-flight and successful promises and remove rejected promises so a later request can retry.
+
+The former root `widgetImports` and `loadWidgetDynamic` exports are intentionally not compatibility aliases.
+`widgetImports` synchronously imported every widget module, and `loadWidgetDynamic` depended on that eager map.
+Restoring them at the package root would defeat lazy definition chunks or add client-only runtime dependencies to
+every root consumer. Migrate metadata consumers to `loadWidgetDefinition`, renderers to `loadWidgetResources`, and
+type-only registry consumers from the removed internal `WidgetImportRecord` helper to the root `WidgetImports` type.
+
+`@homarr/widgets/catalog` remains as a deprecated compatibility subpath for `widgetCatalogIcons`. New imports should
+use `@homarr/ui/widget-icons`, which is the canonical server-safe icon catalog.

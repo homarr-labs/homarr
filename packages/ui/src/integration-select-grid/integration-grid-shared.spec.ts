@@ -8,7 +8,7 @@ describe("buildSortedIntegrations", () => {
   it("keeps every real integration available during onboarding", () => {
     const kinds = buildSortedIntegrations({ onboarding: true }).map((integration) => integration.kind);
 
-    expect(kinds).toHaveLength(integrationKinds.length - 1);
+    expect(kinds).toHaveLength(integrationKinds.filter((kind) => kind !== "mock").length);
     expect(kinds).not.toContain("mock");
   });
 

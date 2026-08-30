@@ -1,82 +1,108 @@
+import { objectEntries } from "@homarr/common";
+
 import { createDocumentationLink } from "./docs";
 import type { IntegrationKind } from "./integration";
 import { getIntegrationKindsByCategory, integrationKinds } from "./integration";
 import type { WidgetKind } from "./widget";
 import { widgetDefaultSizes } from "./widget";
 
-/**
- * Server-safe capability metadata shared by the API and widget catalog.
- * Keep this intentionally small: presentation, options, and request contracts
- * remain owned by their feature packages.
- */
-export interface NativeFeatureCapabilityDescriptor {
-  integrations: readonly IntegrationKind[];
-  connectionOptional?: true;
-  serverMaxIntegrations?: number;
+/** Integration selection shared by the widget UI and API trust boundary. */
+export interface WidgetIntegrationConfig {
+  supportedIntegrations: IntegrationKind[];
+  integrationsRequired?: false;
+  maxIntegrations?: number;
 }
 
-export const nativeFeatureCapabilities = {
-  dnsHoleSummary: { integrations: getIntegrationKindsByCategory("dnsHole") },
-  dnsHoleControls: { integrations: getIntegrationKindsByCategory("dnsHole") },
+const healthMonitoringGeneralIntegrationKinds = [
+  "openmediavault",
+  "dashDot",
+  "truenas",
+  "unraid",
+  "glances",
+  "synology",
+] as const satisfies readonly IntegrationKind[];
+
+export const healthMonitoringSystemIntegrationKinds = [
+  ...healthMonitoringGeneralIntegrationKinds,
+  "mock",
+] as const satisfies readonly IntegrationKind[];
+
+export const healthMonitoringClusterIntegrationKinds = [
+  "proxmox",
+  "mock",
+] as const satisfies readonly IntegrationKind[];
+
+export const widgetIntegrationConfigs = {
+  dnsHoleSummary: { supportedIntegrations: getIntegrationKindsByCategory("dnsHole") },
+  dnsHoleControls: { supportedIntegrations: getIntegrationKindsByCategory("dnsHole") },
   "smartHome-entityState": {
-    integrations: getIntegrationKindsByCategory("smartHomeServer"),
-    serverMaxIntegrations: 1,
+    supportedIntegrations: getIntegrationKindsByCategory("smartHomeServer"),
+    maxIntegrations: 1,
   },
   "smartHome-executeAutomation": {
-    integrations: getIntegrationKindsByCategory("smartHomeServer"),
-    serverMaxIntegrations: 1,
+    supportedIntegrations: getIntegrationKindsByCategory("smartHomeServer"),
+    maxIntegrations: 1,
   },
-  mediaServer: { integrations: getIntegrationKindsByCategory("mediaService") },
-  calendar: { integrations: getIntegrationKindsByCategory("calendar"), connectionOptional: true },
-  downloads: { integrations: getIntegrationKindsByCategory("downloadClient") },
-  "mediaRequests-requestList": { integrations: getIntegrationKindsByCategory("mediaRequest") },
-  "mediaRequests-requestStats": { integrations: getIntegrationKindsByCategory("mediaRequest") },
-  mediaTranscoding: { integrations: getIntegrationKindsByCategory("mediaTranscoding"), serverMaxIntegrations: 1 },
-  mediaMissing: { integrations: getIntegrationKindsByCategory("mediaOrganizer") },
-  networkControllerSummary: { integrations: getIntegrationKindsByCategory("networkController") },
-  networkControllerStatus: { integrations: getIntegrationKindsByCategory("networkController") },
-  indexerManager: { integrations: getIntegrationKindsByCategory("indexerManager") },
+  mediaServer: { supportedIntegrations: getIntegrationKindsByCategory("mediaService") },
+  calendar: { supportedIntegrations: getIntegrationKindsByCategory("calendar"), integrationsRequired: false },
+  downloads: { supportedIntegrations: getIntegrationKindsByCategory("downloadClient") },
+  "mediaRequests-requestList": { supportedIntegrations: getIntegrationKindsByCategory("mediaRequest") },
+  "mediaRequests-requestStats": { supportedIntegrations: getIntegrationKindsByCategory("mediaRequest") },
+  mediaTranscoding: {
+    supportedIntegrations: getIntegrationKindsByCategory("mediaTranscoding"),
+    maxIntegrations: 1,
+  },
+  mediaMissing: { supportedIntegrations: getIntegrationKindsByCategory("mediaOrganizer") },
+  networkControllerSummary: { supportedIntegrations: getIntegrationKindsByCategory("networkController") },
+  networkControllerStatus: { supportedIntegrations: getIntegrationKindsByCategory("networkController") },
+  indexerManager: { supportedIntegrations: getIntegrationKindsByCategory("indexerManager") },
   healthMonitoring: {
-    integrations: getIntegrationKindsByCategory("healthMonitoring").filter(
-      (kind) => kind !== "patchmon" && kind !== "wud",
-    ),
+    supportedIntegrations: [...healthMonitoringGeneralIntegrationKinds, ...healthMonitoringClusterIntegrationKinds],
   },
-  firewall: { integrations: [...getIntegrationKindsByCategory("firewall"), "mock"] },
-  notifications: { integrations: getIntegrationKindsByCategory("notifications") },
-  mediaReleases: { integrations: ["mock", "emby", "jellyfin", "plex"] },
-  systemResources: { integrations: ["dashDot", "openmediavault", "truenas", "unraid", "glances", "synology", "mock"] },
-  systemDisks: { integrations: ["dashDot", "openmediavault", "truenas", "unraid", "synology", "mock"] },
-  beszelAlerts: { integrations: ["beszel", "mock"] },
-  beszelSystemGrid: { integrations: ["beszel", "mock"] },
-  beszelSystemStats: { integrations: ["beszel", "mock"] },
-  beszelSystemTable: { integrations: ["beszel", "mock"] },
-  coolify: { integrations: ["coolify", "mock"] },
-  "immich-serverStats": { integrations: ["immich", "mock"], serverMaxIntegrations: 1 },
-  "immich-albumCarousel": { integrations: ["immich", "mock"], serverMaxIntegrations: 1 },
-  paperlessNgx: { integrations: ["paperlessNgx", "mock"], serverMaxIntegrations: 1 },
-  patchmon: { integrations: ["patchmon", "mock"], serverMaxIntegrations: 1 },
-  bazarr: { integrations: ["bazarr", "mock"], serverMaxIntegrations: 1 },
-  tracearr: { integrations: ["tracearr", "mock"] },
-  speedtestTracker: { integrations: ["speedtestTracker", "mock"] },
-  uptimeKuma: { integrations: ["uptimeKuma", "mock"] },
-  audioStats: { integrations: ["navidrome", "audiobookshelf", "mock"], serverMaxIntegrations: 1 },
-  umami: { integrations: ["umami", "mock"], serverMaxIntegrations: 1 },
-  vpn: { integrations: [...getIntegrationKindsByCategory("vpn"), "mock"] },
-  ups: { integrations: getIntegrationKindsByCategory("ups") },
-  archiveTeamWarrior: { integrations: ["archiveTeamWarrior", "mock"], serverMaxIntegrations: 1 },
-  anchorNote: { integrations: ["anchor", "mock"], serverMaxIntegrations: 1 },
-  traefik: { integrations: ["traefik", "mock"] },
-  wud: { integrations: ["wud", "mock"], serverMaxIntegrations: 1 },
-} as const satisfies Partial<Record<WidgetKind, NativeFeatureCapabilityDescriptor>>;
+  firewall: { supportedIntegrations: [...getIntegrationKindsByCategory("firewall"), "mock"] },
+  notifications: { supportedIntegrations: getIntegrationKindsByCategory("notifications") },
+  mediaReleases: { supportedIntegrations: ["mock", "emby", "jellyfin", "plex"] },
+  systemResources: {
+    supportedIntegrations: [...healthMonitoringSystemIntegrationKinds],
+  },
+  systemDisks: { supportedIntegrations: ["dashDot", "openmediavault", "truenas", "unraid", "synology", "mock"] },
+  beszelAlerts: { supportedIntegrations: ["beszel", "mock"] },
+  beszelSystemGrid: { supportedIntegrations: ["beszel", "mock"] },
+  beszelSystemStats: { supportedIntegrations: ["beszel", "mock"] },
+  beszelSystemTable: { supportedIntegrations: ["beszel", "mock"] },
+  coolify: { supportedIntegrations: ["coolify", "mock"] },
+  "immich-serverStats": { supportedIntegrations: ["immich", "mock"], maxIntegrations: 1 },
+  "immich-albumCarousel": { supportedIntegrations: ["immich", "mock"], maxIntegrations: 1 },
+  paperlessNgx: { supportedIntegrations: ["paperlessNgx", "mock"], maxIntegrations: 1 },
+  patchmon: { supportedIntegrations: ["patchmon", "mock"], maxIntegrations: 1 },
+  bazarr: { supportedIntegrations: ["bazarr", "mock"], maxIntegrations: 1 },
+  tracearr: { supportedIntegrations: ["tracearr", "mock"] },
+  speedtestTracker: { supportedIntegrations: ["speedtestTracker", "mock"] },
+  uptimeKuma: { supportedIntegrations: ["uptimeKuma", "mock"] },
+  audioStats: { supportedIntegrations: ["navidrome", "audiobookshelf", "mock"], maxIntegrations: 1 },
+  umami: { supportedIntegrations: ["umami", "mock"], maxIntegrations: 1 },
+  vpn: { supportedIntegrations: [...getIntegrationKindsByCategory("vpn"), "mock"] },
+  ups: { supportedIntegrations: getIntegrationKindsByCategory("ups") },
+  archiveTeamWarrior: { supportedIntegrations: ["archiveTeamWarrior", "mock"], maxIntegrations: 1 },
+  anchorNote: { supportedIntegrations: ["anchor", "mock"], maxIntegrations: 1 },
+  traefik: { supportedIntegrations: ["traefik", "mock"] },
+  wud: { supportedIntegrations: ["wud", "mock"], maxIntegrations: 1 },
+} satisfies Partial<Record<WidgetKind, WidgetIntegrationConfig>>;
 
-const nativeFeatureCapabilityEntries = Object.entries(nativeFeatureCapabilities) as [
-  WidgetKind,
-  NativeFeatureCapabilityDescriptor,
-][];
+export type WidgetKindWithIntegration = keyof typeof widgetIntegrationConfigs;
+
+export type WidgetIntegrationKind<TKind extends WidgetKindWithIntegration> =
+  (typeof widgetIntegrationConfigs)[TKind]["supportedIntegrations"][number];
+
+export const getWidgetIntegrationConfig = <TKind extends WidgetKindWithIntegration>(
+  kind: TKind,
+): (typeof widgetIntegrationConfigs)[TKind] => widgetIntegrationConfigs[kind];
+
+const widgetIntegrationConfigEntries = objectEntries(widgetIntegrationConfigs);
 
 const createWidgetIntegrationSupport = () => {
   const result: Partial<Record<WidgetKind, readonly IntegrationKind[]>> = {};
-  for (const [kind, capability] of nativeFeatureCapabilityEntries) result[kind] = capability.integrations;
+  for (const [kind, config] of widgetIntegrationConfigEntries) result[kind] = config.supportedIntegrations;
   return result;
 };
 
@@ -84,16 +110,15 @@ export const widgetIntegrationSupport = createWidgetIntegrationSupport();
 
 /** Widgets that remain useful without a configured integration. */
 export const widgetKindsWithOptionalIntegrations = new Set<WidgetKind>(
-  nativeFeatureCapabilityEntries
-    .filter(([, capability]) => capability.connectionOptional === true)
+  widgetIntegrationConfigEntries
+    .filter(([, config]) => "integrationsRequired" in config && config.integrationsRequired === false)
     .map(([kind]) => kind),
 );
 
-/** Widgets that support fewer integrations than the default unlimited selection. */
 const createWidgetIntegrationLimits = () => {
   const result: Partial<Record<WidgetKind, number>> = {};
-  for (const [kind, capability] of nativeFeatureCapabilityEntries) {
-    if (capability.serverMaxIntegrations !== undefined) result[kind] = capability.serverMaxIntegrations;
+  for (const [kind, config] of widgetIntegrationConfigEntries) {
+    if ("maxIntegrations" in config) result[kind] = config.maxIntegrations;
   }
   return result;
 };
@@ -108,21 +133,26 @@ export type WidgetIntegrationIssue =
 
 export const getWidgetIntegrationIssue = (
   widgetKind: WidgetKind,
-  integrationKinds: readonly IntegrationKind[],
+  selectedIntegrationKinds: readonly IntegrationKind[],
 ): WidgetIntegrationIssue | null => {
   const supportedIntegrations = widgetIntegrationSupport[widgetKind];
   const integrationLimit = widgetIntegrationLimits[widgetKind] ?? Number.POSITIVE_INFINITY;
-  if (integrationKinds.length > integrationLimit) return { code: "integration-limit", limit: integrationLimit };
-  if (supportedIntegrations === undefined && integrationKinds.length > 0) return { code: "integration-not-supported" };
+  if (selectedIntegrationKinds.length > integrationLimit) {
+    return { code: "integration-limit", limit: integrationLimit };
+  }
+  if (supportedIntegrations === undefined && selectedIntegrationKinds.length > 0) {
+    return { code: "integration-not-supported" };
+  }
   if (
     supportedIntegrations !== undefined &&
-    integrationKinds.length === 0 &&
+    selectedIntegrationKinds.length === 0 &&
     !widgetKindsWithOptionalIntegrations.has(widgetKind)
   ) {
     return { code: "integration-required" };
   }
-  const incompatibleKinds = integrationKinds.filter((kind) => !supportedIntegrations?.includes(kind));
-  return incompatibleKinds.length > 0 ? { code: "incompatible-integration", incompatibleKinds } : null;
+  const incompatibleKinds = selectedIntegrationKinds.filter((kind) => !supportedIntegrations?.includes(kind));
+  if (incompatibleKinds.length === 0) return null;
+  return { code: "incompatible-integration", incompatibleKinds };
 };
 
 export const getWidgetIntegrationIssueMessage = (widgetKind: WidgetKind, issue: WidgetIntegrationIssue) => {
@@ -134,22 +164,24 @@ export const getWidgetIntegrationIssueMessage = (widgetKind: WidgetKind, issue: 
   return `${widgetKind} does not support integration kind${issue.incompatibleKinds.length === 1 ? "" : "s"}: ${issue.incompatibleKinds.join(", ")}`;
 };
 
-/** Reverse capability index generated from nativeFeatureCapabilities. */
 const createIntegrationWidgetSupport = () => {
   const result = {} as Record<IntegrationKind, readonly WidgetKind[]>;
   for (const integrationKind of integrationKinds) {
-    result[integrationKind] = nativeFeatureCapabilityEntries
-      .filter(([, capability]) => capability.integrations.includes(integrationKind))
+    result[integrationKind] = widgetIntegrationConfigEntries
+      .filter(([, config]) => supportsIntegration(config, integrationKind))
       .map(([widgetKind]) => widgetKind);
   }
   return result;
 };
 
+const supportsIntegration = (config: WidgetIntegrationConfig, integrationKind: IntegrationKind) =>
+  config.supportedIntegrations.includes(integrationKind);
+
 export const integrationWidgetSupport = createIntegrationWidgetSupport();
 
-export const getWidgetKindsForIntegration = (integrationKind: IntegrationKind): WidgetKind[] => [
-  ...integrationWidgetSupport[integrationKind],
-];
+export const getWidgetKindsForIntegration = (integrationKind: IntegrationKind): WidgetKind[] => {
+  return [...integrationWidgetSupport[integrationKind]];
+};
 
 export interface DefaultWidgetConfig {
   kind: WidgetKind;

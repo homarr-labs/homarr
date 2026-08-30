@@ -2,45 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { Badge, Center, Group, Input, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
-import {
-  IconAd,
-  IconApps,
-  IconBinaryTree,
-  IconBookmark,
-  IconBrandDocker,
-  IconBrandMinecraft,
-  IconBrowser,
-  IconBuildingBank,
-  IconBusStop,
-  IconCalendar,
-  IconChartBar,
-  IconClock,
-  IconClockPlay,
-  IconCloud,
-  IconDeviceCctv,
-  IconDeviceGamepad,
-  IconDownload,
-  IconGraphFilled,
-  IconHeartRateMonitor,
-  IconHourglass,
-  IconMessage,
-  IconMovie,
-  IconNotes,
-  IconPuzzle,
-  IconReportSearch,
-  IconRobot,
-  IconRocket,
-  IconRss,
-  IconSearch,
-  IconServer2,
-  IconTicket,
-  IconTopologyFull,
-  IconTransform,
-  IconVideo,
-  IconWall,
-  IconWind,
-  IconZoomQuestion,
-} from "@tabler/icons-react";
+import { IconSearch } from "@tabler/icons-react";
 
 import { getWidgetName } from "@homarr/definitions";
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
@@ -49,6 +11,7 @@ import { useI18n } from "@homarr/translation/client";
 import { IntegrationAvatar } from "../components/integration-avatar";
 import { SelectableCard } from "../components/selectable-card";
 import { selectGridCols } from "../select-grid-layout";
+import { widgetCatalogIcons } from "../widget-icons";
 import { buildSortedIntegrations, filterIntegrations } from "./integration-grid-shared";
 import type { IntegrationGridItem } from "./integration-grid-shared";
 
@@ -155,48 +118,6 @@ const IntegrationCard = ({
   );
 };
 
-const widgetIconsMap: Partial<Record<WidgetKind, typeof IconPuzzle>> = {
-  clock: IconClock,
-  weather: IconCloud,
-  airQuality: IconWind,
-  countdown: IconHourglass,
-  timer: IconClockPlay,
-  app: IconApps,
-  assistant: IconRobot,
-  iframe: IconBrowser,
-  video: IconDeviceCctv,
-  notebook: IconNotes,
-  anchorNote: IconNotes,
-  dnsHoleSummary: IconAd,
-  dnsHoleControls: IconDeviceGamepad,
-  "smartHome-entityState": IconBinaryTree,
-  "smartHome-executeAutomation": IconBinaryTree,
-  stockPrice: IconBuildingBank,
-  mediaServer: IconVideo,
-  calendar: IconCalendar,
-  downloads: IconDownload,
-  "mediaRequests-requestList": IconZoomQuestion,
-  "mediaRequests-requestStats": IconChartBar,
-  mediaTranscoding: IconTransform,
-  mediaMissing: IconMovie,
-  minecraftServerStatus: IconBrandMinecraft,
-  networkControllerSummary: IconTopologyFull,
-  networkControllerStatus: IconTopologyFull,
-  rssFeed: IconRss,
-  bookmarks: IconBookmark,
-  indexerManager: IconReportSearch,
-  healthMonitoring: IconHeartRateMonitor,
-  releases: IconRocket,
-  mediaReleases: IconTicket,
-  dockerContainers: IconBrandDocker,
-  firewall: IconWall,
-  notifications: IconMessage,
-  systemResources: IconGraphFilled,
-  coolify: IconCloud,
-  systemDisks: IconServer2,
-  timetable: IconBusStop,
-};
-
 const IntegrationTiedWidgets = ({ widgets, limit }: { widgets: WidgetKind[]; limit?: number }) => {
   const t = useI18n();
   if (widgets.length === 0) {
@@ -213,7 +134,7 @@ const IntegrationTiedWidgets = ({ widgets, limit }: { widgets: WidgetKind[]; lim
   return (
     <Group gap={4} wrap="wrap">
       {items.map((widgetKind) => {
-        const WidgetIcon = widgetIconsMap[widgetKind] ?? IconPuzzle;
+        const WidgetIcon = widgetCatalogIcons[widgetKind];
         return (
           <Badge
             key={widgetKind}

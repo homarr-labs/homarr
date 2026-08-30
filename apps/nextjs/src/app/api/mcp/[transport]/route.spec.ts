@@ -46,18 +46,21 @@ vi.mock("../_extract-tools", () => ({
     {
       name: "board_getAllBoards",
       description: "List boards",
+      type: "query",
       pathInRouter: ["board", "getAllBoards"],
       inputSchema: { type: "object", properties: {} },
     },
     {
       name: "customWidget_list",
       description: "List Custom Widgets",
+      type: "query",
       pathInRouter: ["customWidget", "list"],
       inputSchema: { type: "object", properties: {} },
     },
     {
       name: "customWidget_workshopSearch",
       description: "Search Workshop",
+      type: "query",
       pathInRouter: ["customWidget", "workshopSearch"],
       inputSchema: { type: "object", properties: {} },
     },

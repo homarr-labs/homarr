@@ -145,10 +145,14 @@ const ScopedTRPCReactProvider = ({
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
     });
-    for (const { queryKey, intervalSeconds } of widgetQueryRefetchIntervals) {
-      client.setQueryDefaults(queryKey, {
-        refetchInterval: intervalSeconds === null ? false : intervalSeconds * 1000,
-      });
+    for (const queryDefaults of widgetQueryRefetchIntervals) {
+      const policy: { refetchInterval?: number | false; staleTime?: number } = {};
+      if (queryDefaults.intervalSeconds === null) policy.refetchInterval = false;
+      if (typeof queryDefaults.intervalSeconds === "number") {
+        policy.refetchInterval = queryDefaults.intervalSeconds * 1000;
+      }
+      if ("staleTimeSeconds" in queryDefaults) policy.staleTime = queryDefaults.staleTimeSeconds * 1000;
+      client.setQueryDefaults(queryDefaults.queryKey, policy);
     }
     for (const { queryKey, ...policy } of dashboardSupportingQueryPolicies) {
       client.setQueryDefaults(queryKey, policy);

@@ -59,15 +59,19 @@ export const widgetKinds = [
   "assistant",
   "wud",
 ] as const;
+
 export type WidgetKind = (typeof widgetKinds)[number];
 
 export const widgetDefaultSizes: Partial<Record<WidgetKind, { width: number; height: number }>> = {
+  clock: { width: 2, height: 1 },
+  weather: { width: 2, height: 1 },
   airQuality: { width: 2, height: 1 },
   calendar: { width: 2, height: 2 },
   countdown: { width: 2, height: 1 },
   downloads: { width: 4, height: 2 },
   indexerManager: { width: 2, height: 3 },
   timer: { width: 2, height: 1 },
+  bookmarks: { width: 2, height: 2 },
   uptimeKuma: { width: 2, height: 3 },
   audioStats: { width: 2, height: 2 },
   paperlessNgx: { width: 2, height: 2 },

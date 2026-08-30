@@ -1,7 +1,7 @@
 import { IconAlignLeft, IconEyeOff, IconGraphFilled, IconListDetails, IconPhoto } from "@tabler/icons-react";
 
 import { objectEntries } from "@homarr/common";
-import { invariantTechnicalLabels } from "@homarr/definitions";
+import { getWidgetIntegrationConfig, invariantTechnicalLabels } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
@@ -24,7 +24,7 @@ export const { definition, componentLoader } = createWidgetDefinition("systemRes
   supportsAdvancedFocus: true,
   queryKey: [["widget", "healthMonitoring"]],
   refetchInterval: 10,
-  supportedIntegrations: ["dashDot", "openmediavault", "truenas", "unraid", "glances", "synology", "mock"],
+  ...getWidgetIntegrationConfig("systemResources"),
   createOptions() {
     return optionsBuilder.from((factory) => ({
       hasShadow: factory.switch({ defaultValue: true }),

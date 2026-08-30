@@ -173,7 +173,9 @@ export function RequestBodyEditor({
         onChange={(next) => {
           setDraft(next);
           try {
-            onChange(next.trim() ? (JSON.parse(next) as unknown) : undefined);
+            let parsed: unknown;
+            if (next.trim()) parsed = JSON.parse(next);
+            onChange(parsed);
             setError(undefined);
           } catch (cause) {
             setError(cause instanceof Error ? cause.message : t("invalidJson"));

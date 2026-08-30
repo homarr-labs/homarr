@@ -1,5 +1,7 @@
 import { IconHeadphones, IconServerOff } from "@tabler/icons-react";
 
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
+
 import { createWidgetDefinition, matchesWidgetRuntimeQuery } from "../definition";
 import { optionsBuilder } from "../options";
 
@@ -17,9 +19,7 @@ export const { definition, componentLoader } = createWidgetDefinition("audioStat
   supportsAdvancedFocus: true,
   queryKeys: [[["widget", "audioStats", "getStats"]], [["widget", "mediaServer", "getCurrentStreams"]]],
   queryMatcher: matchesWidgetRuntimeQuery,
-  supportedIntegrations: ["navidrome", "audiobookshelf", "mock"],
-  integrationsRequired: true,
-  maxIntegrations: 1,
+  ...getWidgetIntegrationConfig("audioStats"),
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({

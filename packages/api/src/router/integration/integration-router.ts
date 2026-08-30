@@ -27,8 +27,10 @@ import {
   integrationKinds,
   integrationSecretKindObject,
 } from "@homarr/definitions";
-import { createIntegrationAsync } from "@homarr/integrations";
+import { createIntegrationAsync } from "@homarr/integrations/factory";
 import { invalidateIntegrationCacheAsync } from "@homarr/redis";
+import { mediaRequestListRequestHandler } from "@homarr/request-handler/media-request-list";
+import { mediaRequestStatsRequestHandler } from "@homarr/request-handler/media-request-stats";
 import { byIdSchema } from "@homarr/validation/common";
 import {
   integrationCreateSchema,
@@ -156,9 +158,21 @@ export const integrationRouter = createTRPCRouter({
     })
     .input(byIdSchema)
     .query(async ({ ctx, input }) => {
-      await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.id), "full");
+      const integrationWhere = eq(integrations.id, input.id);
+
+      await throwIfActionForbiddenAsync(ctx, integrationWhere, "full").catch((error) => {
+        if (error instanceof TRPCError && error.code === "NOT_FOUND") {
+          logger.warn("Integration lookup refused", {
+            integrationId: input.id,
+            errorCode: error.code,
+            reason: "integration-not-found-or-forbidden",
+          });
+        }
+        throw error;
+      });
+
       const integration = await ctx.db.query.integrations.findFirst({
-        where: eq(integrations.id, input.id),
+        where: integrationWhere,
         with: {
           secrets: {
             columns: {
@@ -179,6 +193,11 @@ export const integrationRouter = createTRPCRouter({
       });
 
       if (!integration) {
+        logger.warn("Integration lookup refused", {
+          integrationId: input.id,
+          errorCode: "NOT_FOUND",
+          reason: "integration-not-found",
+        });
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "Integration not found",
@@ -695,7 +714,17 @@ export const integrationRouter = createTRPCRouter({
     .input(mediaRequestRequestSchema)
     .mutation(async ({ ctx, input }) => {
       const integration = await createIntegrationAsync(ctx.integration);
-      return await integration.requestMediaAsync(input.mediaType, input.mediaId, input.seasons);
+      const result = await integration.requestMediaAsync(input.mediaType, input.mediaId, input.seasons);
+      try {
+        mediaRequestListRequestHandler.invalidateCache();
+        await mediaRequestStatsRequestHandler.invalidateCacheAsync([ctx.integration.id]);
+      } catch (error) {
+        logger.warn("Failed to invalidate media request caches after a successful request", {
+          integrationId: ctx.integration.id,
+          error: String(error),
+        });
+      }
+      return result;
     }),
 });
 

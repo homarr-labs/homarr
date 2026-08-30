@@ -129,7 +129,9 @@ const CustomWidgetFormView = memo(function CustomWidgetFormView(props: CustomWid
             className={classes.paneSwitcher}
             fullWidth
             value={props.mobilePane}
-            onChange={(value) => props.setMobilePane(value as MobilePane)}
+            onChange={(value) => {
+              if (value === "configure" || value === "preview") props.setMobilePane(value);
+            }}
             data={[
               { value: "configure", label: w("configure") },
               { value: "preview", label: w("section.preview") },

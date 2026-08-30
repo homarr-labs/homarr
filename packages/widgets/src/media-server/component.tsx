@@ -425,9 +425,7 @@ export default function MediaServerWidget({
             style={isAdvanced ? { flexShrink: 0 } : zoomCompensatedSize(16)}
           />
           <Text size="sm" fw={isAdvanced ? 500 : undefined} style={{ whiteSpace: "nowrap" }}>
-            {(t as unknown as (key: string, params?: { count: number }) => string)("footer.streams", {
-              count: flatSessions.length,
-            })}
+            {t("footer.streams", { count: flatSessions.length })}
           </Text>
           {totalBitrateLabel && (
             <>

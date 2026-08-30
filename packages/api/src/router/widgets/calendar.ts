@@ -1,10 +1,9 @@
 import { z } from "zod/v4";
 
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { radarrReleaseTypes } from "@homarr/integrations/types";
 import { calendarMonthRequestHandler } from "@homarr/request-handler/calendar";
 
-import { createManyIntegrationMiddleware } from "../../middlewares/integration";
+import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { PUBLIC_INTEGRATION_ERROR, settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
@@ -25,7 +24,7 @@ export const calendarRouter = createTRPCRouter({
         showUnmonitored: z.boolean(),
       }),
     )
-    .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("calendar")))
+    .concat(createManyWidgetIntegrationMiddleware("query", "calendar"))
     .query(async ({ ctx, input }) => {
       return await settleIntegrationQueries(
         ctx.integrations,
@@ -44,7 +43,7 @@ export const calendarRouter = createTRPCRouter({
               name: integration.name,
               kind: integration.kind,
             },
-            error: undefined as string | undefined,
+            error: undefined,
           };
         },
         {

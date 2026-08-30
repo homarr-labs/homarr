@@ -1,6 +1,8 @@
 import { IconChartBar, IconServerOff } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
+
 import { createWidgetDefinition, matchesWidgetRuntimeQuery } from "../definition";
 import { optionsBuilder } from "../options";
 
@@ -18,9 +20,7 @@ export const { definition, componentLoader } = createWidgetDefinition("umami", {
   ],
   queryMatcher: matchesWidgetRuntimeQuery,
   refetchInterval: null,
-  supportedIntegrations: ["umami", "mock"],
-  integrationsRequired: true,
-  maxIntegrations: 1,
+  ...getWidgetIntegrationConfig("umami"),
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({

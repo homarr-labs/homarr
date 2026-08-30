@@ -327,20 +327,6 @@ const sumCompleteStepMetric = (
   return (values as number[]).reduce((sum, value) => sum + value, 0);
 };
 
-const getProcedureTypeMap = () => {
-  const procedures = (
-    mcpRouter as unknown as {
-      ["_def"]: { procedures: Record<string, { ["_def"]?: { type?: string } }> };
-    }
-  )["_def"].procedures;
-  return new Map(
-    Object.entries(procedures).flatMap(([path, procedure]) => {
-      const type = procedure["_def"]?.type;
-      return type === "query" || type === "mutation" ? [[path, type] as const] : [];
-    }),
-  );
-};
-
 const waitForDemoChunkAsync = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 const createDemoAssistantResponse = (request: z.infer<typeof requestSchema>) => {
@@ -385,7 +371,8 @@ export async function POST(request: Request) {
   const parsed = requestSchema.safeParse(
     (() => {
       try {
-        return JSON.parse(requestBody) as unknown;
+        const value: unknown = JSON.parse(requestBody);
+        return value;
       } catch {
         return null;
       }
@@ -516,14 +503,13 @@ export async function POST(request: Request) {
   const canAuthorCustomWidgets = session.user.permissions.includes("admin");
   const customWidgetAuthoringContext = getCustomWidgetAuthoringContext(incomingMessages, canAuthorCustomWidgets);
   const caller = mcpRouter.createCaller(context);
-  const procedureTypes = getProcedureTypeMap();
   const omittedCustomWidgetTools = new Set<string>(customWidgetAuthoringContext.omittedToolNames);
   const mcpTools = extractMcpTools().filter((mcpTool) => !omittedCustomWidgetTools.has(mcpTool.name));
   const customWidgetComponentDocumentBudget = createCustomWidgetComponentDocumentBudget();
 
   const homarrTools = Object.fromEntries(
     mcpTools.map((mcpTool) => {
-      const requiresApproval = procedureTypes.get(mcpTool.pathInRouter.join(".")) === "mutation";
+      const requiresApproval = mcpTool.type === "mutation";
       return [
         mcpTool.name,
         tool({
@@ -571,11 +557,9 @@ export async function POST(request: Request) {
     }),
   ) satisfies ToolSet;
   const toolApproval = Object.fromEntries(
-    mcpTools.flatMap((mcpTool) =>
-      procedureTypes.get(mcpTool.pathInRouter.join(".")) === "mutation"
-        ? [[mcpTool.name, "user-approval" as const]]
-        : [],
-    ),
+    mcpTools
+      .filter((mcpTool) => mcpTool.type === "mutation")
+      .map((mcpTool) => [mcpTool.name, "user-approval" as const]),
   );
 
   const frontendTools = Object.fromEntries(

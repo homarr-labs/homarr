@@ -1,6 +1,6 @@
 import { objectKeys } from "@homarr/common";
 
-import { integrationDefs } from "./integration";
+import { getIntegrationDockerMetadata, integrationDefs } from "./integration";
 import type { IntegrationKind } from "./integration";
 
 export const extractContainerImageName = (image: string): string => image.split("/").at(-1)?.split(":").at(0) ?? "";
@@ -13,30 +13,6 @@ const extractIconSlug = (iconUrl: string): string => {
 export const integrationIconSlugs: Record<IntegrationKind, string> = Object.fromEntries(
   objectKeys(integrationDefs).map((kind) => [kind, extractIconSlug(integrationDefs[kind].iconUrl)]),
 ) as Record<IntegrationKind, string>;
-
-const integrationAliases: Partial<Record<IntegrationKind, readonly string[]>> = {
-  piHole: ["pihole", "pi-hole"],
-  adGuardHome: ["adguardhome", "adguard-home", "adguard"],
-  homeAssistant: ["homeassistant", "home-assistant", "hass"],
-  openmediavault: ["omv"],
-  qBittorrent: ["qbittorrent"],
-  sabNzbd: ["sabnzbd"],
-  nzbGet: ["nzbget"],
-  unifiController: ["unifi", "unifi-controller"],
-  jellyseerr: ["jellyseerr"],
-  overseerr: ["overseerr"],
-  dashDot: ["dashdot", "dash-dot", "dash."],
-  speedtestTracker: ["speedtest-tracker"],
-  uptimeKuma: ["uptime-kuma"],
-  audiobookshelf: ["audiobookshelf"],
-  navidrome: ["navidrome"],
-  paperlessNgx: ["paperless-ngx", "paperless"],
-  patchmon: ["patchmon", "patch-mon"],
-  coolify: ["coolify"],
-  truenas: ["truenas"],
-  bazarr: ["bazarr"],
-  synology: ["synology", "diskstation"],
-};
 
 export const matchIntegrationKind = (search: string): IntegrationKind | null => {
   const normalized = search.toLowerCase().trim();
@@ -51,8 +27,8 @@ export const matchIntegrationKind = (search: string): IntegrationKind | null => 
     if (integrationIconSlugs[kind] === normalized) return kind;
   }
 
-  for (const [kind, aliases] of Object.entries(integrationAliases) as [IntegrationKind, readonly string[]][]) {
-    if (aliases.some((alias) => alias === normalized)) return kind;
+  for (const kind of objectKeys(integrationDefs)) {
+    if (getIntegrationDockerMetadata(kind).aliases.some((alias) => alias === normalized)) return kind;
   }
 
   for (const kind of objectKeys(integrationDefs)) {
@@ -63,8 +39,6 @@ export const matchIntegrationKind = (search: string): IntegrationKind | null => 
   return null;
 };
 
-const notDockerDiscoverable = new Set<IntegrationKind>(["ical", "mock"]);
-
 interface ContainerMatchInput {
   image: string;
   name: string;
@@ -73,10 +47,10 @@ interface ContainerMatchInput {
 export const matchIntegrationKindFromContainer = (container: ContainerMatchInput): IntegrationKind | null => {
   const imageName = extractContainerImageName(container.image);
   const fromImage = matchIntegrationKind(imageName);
-  if (fromImage && !notDockerDiscoverable.has(fromImage)) return fromImage;
+  if (fromImage && getIntegrationDockerMetadata(fromImage).discoverable) return fromImage;
 
   const fromName = matchIntegrationKind(container.name);
-  if (fromName && !notDockerDiscoverable.has(fromName)) return fromName;
+  if (fromName && getIntegrationDockerMetadata(fromName).discoverable) return fromName;
 
   return null;
 };

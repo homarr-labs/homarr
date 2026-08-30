@@ -5,7 +5,6 @@ import { z } from "zod";
 
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
-import { withTimeoutAsync } from "@homarr/core/infrastructure/http/timeout";
 
 import { createWidgetRequestHandler } from "./lib/widget-request-handler";
 
@@ -15,7 +14,10 @@ dayjs.extend(timezone);
 const HOURLY_FORECAST_LENGTH = 24;
 const DAILY_FORECAST_LENGTH = 7;
 
-const requestWeatherAsync = async (input: { latitude: number; longitude: number }): Promise<Weather> => {
+const requestWeatherAsync = async (
+  input: { latitude: number; longitude: number },
+  signal: AbortSignal,
+): Promise<Weather> => {
   const url = new URL("https://api.open-meteo.com/v1/forecast");
   url.searchParams.set("latitude", input.latitude.toString());
   url.searchParams.set("longitude", input.longitude.toString());
@@ -68,9 +70,7 @@ const requestWeatherAsync = async (input: { latitude: number; longitude: number 
   url.searchParams.set("forecast_hours", HOURLY_FORECAST_LENGTH.toString());
   url.searchParams.set("forecast_days", DAILY_FORECAST_LENGTH.toString());
 
-  const res = await withTimeoutAsync(async (signal) => {
-    return await fetchWithTrustedCertificatesAsync(url.toString(), { signal });
-  });
+  const res = await fetchWithTrustedCertificatesAsync(url.toString(), { signal });
   if (!res.ok) throw new ResponseError(res);
 
   const json: unknown = await res.json();
@@ -140,7 +140,9 @@ const requestWeatherAsync = async (input: { latitude: number; longitude: number 
 };
 
 export const weatherRequestHandler = createWidgetRequestHandler({
+  // Coordinates are a public, continuous key space. Keep this cache process-local and bounded.
   cacheTtlMs: 5 * 60 * 1000,
+  requestTimeoutMs: 10_000,
   requestAsync: requestWeatherAsync,
 });
 

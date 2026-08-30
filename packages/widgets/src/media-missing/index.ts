@@ -1,6 +1,6 @@
 import { IconMovie } from "@tabler/icons-react";
 
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition, matchesWidgetRuntimeQuery } from "../definition";
 import { optionsBuilder } from "../options";
@@ -25,5 +25,5 @@ export const { componentLoader, definition } = createWidgetDefinition("mediaMiss
       }),
     }));
   },
-  supportedIntegrations: getIntegrationKindsByCategory("mediaOrganizer"),
+  ...getWidgetIntegrationConfig("mediaMissing"),
 }).withDynamicImport(() => import("./component"));

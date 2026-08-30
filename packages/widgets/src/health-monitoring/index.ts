@@ -1,6 +1,6 @@
 import { IconHeartRateMonitor, IconServerOff } from "@tabler/icons-react";
 
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
@@ -114,9 +114,7 @@ export const { definition, componentLoader } = createWidgetDefinition("healthMon
       },
     );
   },
-  supportedIntegrations: getIntegrationKindsByCategory("healthMonitoring").filter(
-    (kind) => kind !== "patchmon" && kind !== "wud",
-  ),
+  ...getWidgetIntegrationConfig("healthMonitoring"),
   errors: {
     INTERNAL_SERVER_ERROR: {
       icon: IconServerOff,

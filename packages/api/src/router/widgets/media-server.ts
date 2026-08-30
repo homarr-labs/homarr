@@ -1,15 +1,10 @@
 import { z } from "zod/v4";
 
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { mediaServerRequestHandler } from "@homarr/request-handler/media-server";
 
-import type { IntegrationAction } from "../../middlewares/integration";
-import { createManyIntegrationMiddleware } from "../../middlewares/integration";
+import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { PUBLIC_INTEGRATION_ERROR, settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
-
-const createMediaServerIntegrationMiddleware = (action: IntegrationAction) =>
-  createManyIntegrationMiddleware(action, ...getIntegrationKindsByCategory("mediaService"));
 
 export const mediaServerRouter = createTRPCRouter({
   getCurrentStreams: publicProcedure
@@ -20,7 +15,7 @@ export const mediaServerRouter = createTRPCRouter({
           "Get currently active streams from Plex/Jellyfin/Emby/Navidrome media servers. REQUIRED: integrationIds (array of media server integration IDs from integration_all), showOnlyPlaying (boolean — true to filter to actively playing streams only)",
       },
     })
-    .concat(createMediaServerIntegrationMiddleware("query"))
+    .concat(createManyWidgetIntegrationMiddleware("query", "mediaServer"))
     .input(z.object({ showOnlyPlaying: z.boolean() }))
     .query(async ({ ctx, input }) => {
       return await settleIntegrationQueries(
@@ -34,7 +29,7 @@ export const mediaServerRouter = createTRPCRouter({
             integrationName: integration.name,
             integrationKind: integration.kind,
             sessions: data,
-            error: undefined as string | undefined,
+            error: undefined,
           };
         },
         {

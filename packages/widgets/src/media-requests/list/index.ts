@@ -1,7 +1,7 @@
 import { IconSearch, IconZoomQuestion } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
 import { openMediaRequestSearch } from "@homarr/spotlight";
 
 import { createWidgetDefinition, widgetQueryInputMatches } from "../../definition";
@@ -50,5 +50,5 @@ export const { componentLoader, definition } = createWidgetDefinition("mediaRequ
       },
     },
   ],
-  supportedIntegrations: getIntegrationKindsByCategory("mediaRequest"),
+  ...getWidgetIntegrationConfig("mediaRequests-requestList"),
 }).withDynamicImport(() => import("./component"));

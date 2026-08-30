@@ -1,6 +1,6 @@
 import { IconShieldLock } from "@tabler/icons-react";
 
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
@@ -12,5 +12,5 @@ export const { componentLoader, definition } = createWidgetDefinition("vpn", {
   createOptions() {
     return optionsBuilder.from(() => ({}));
   },
-  supportedIntegrations: [...getIntegrationKindsByCategory("vpn"), "mock"],
+  ...getWidgetIntegrationConfig("vpn"),
 }).withDynamicImport(() => import("./component"));

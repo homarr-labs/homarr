@@ -1,5 +1,5 @@
-import { TablerIcon } from "@tabler/icons-react";
-import { ReactNode } from "react";
+import type { TablerIcon } from "@tabler/icons-react";
+import type { ReactNode } from "react";
 
 export interface IntegrationDefinition {
   name: string;

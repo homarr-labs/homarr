@@ -1,4 +1,4 @@
-import type { AnyRootTypes, Router, RouterRecord } from "@trpc/server/unstable-core-do-not-import";
+import type { AnyProcedure, AnyRootTypes, Router, RouterRecord } from "@trpc/server/unstable-core-do-not-import";
 import { z } from "zod/v4";
 
 export interface McpMeta {
@@ -12,6 +12,7 @@ export interface McpMeta {
 export interface McpTool {
   name: string;
   description: string;
+  type: "query" | "mutation";
   pathInRouter: string[];
   inputSchema: z.core.JSONSchema.JSONSchema;
   inputValidator: z.ZodObject;
@@ -19,13 +20,54 @@ export interface McpTool {
 
 const emptyInput = z.object({});
 
+const isProcedure = (value: AnyProcedure | RouterRecord): value is AnyProcedure => typeof value === "function";
+
 const mergeInputs = (inputs: z.ZodObject[]) => inputs.reduce((merged, input) => merged.extend(input.shape), emptyInput);
 
+const getObjectInput = (input: z.ZodType) => {
+  if (input instanceof z.ZodObject) return input;
+
+  if (input instanceof z.ZodOptional) {
+    const unwrappedInput = input.unwrap();
+    if (unwrappedInput instanceof z.ZodObject) return unwrappedInput;
+  }
+
+  return null;
+};
+
+const getMcpMetadata = (meta: unknown): McpMeta["mcp"] => {
+  if (!meta || typeof meta !== "object" || !("mcp" in meta)) return undefined;
+
+  const metadata = meta.mcp;
+  if (!metadata || typeof metadata !== "object" || !("enabled" in metadata)) return undefined;
+  if (typeof metadata.enabled !== "boolean") return undefined;
+
+  const result: NonNullable<McpMeta["mcp"]> = { enabled: metadata.enabled };
+  if ("name" in metadata && typeof metadata.name === "string") result.name = metadata.name;
+  if ("description" in metadata && typeof metadata.description === "string") {
+    result.description = metadata.description;
+  }
+  return result;
+};
+
+const getProcedureInput = (inputs: z.ZodType[]) => {
+  if (inputs.length === 0) return emptyInput;
+  if (inputs.length === 1) {
+    const input = inputs[0] ?? emptyInput;
+    return getObjectInput(input) ?? input;
+  }
+
+  const objectInputs = inputs.map(getObjectInput);
+  if (objectInputs.every((input): input is z.ZodObject => input !== null)) return mergeInputs(objectInputs);
+  return null;
+};
+
 const normalizeJsonSchema = (schema: z.core.JSONSchema.JSONSchema): z.core.JSONSchema.JSONSchema => {
-  const properties = (schema.properties ?? {}) as Record<string, Record<string, unknown>>;
-  const required = ((schema.required as string[] | undefined) ?? []).filter(
-    (key) => !("default" in (properties[key] ?? {})),
-  );
+  const properties = schema.properties ?? {};
+  const required = (schema.required ?? []).filter((key) => {
+    const property = properties[key];
+    return !property || typeof property !== "object" || !("default" in property);
+  });
 
   return {
     ...schema,
@@ -41,22 +83,15 @@ export function extractMcpToolsFromProcedures<TRoot extends AnyRootTypes, TRecor
   const tools: McpTool[] = [];
 
   for (const [path, procedure] of Object.entries(router["_def"].procedures)) {
-    const definition = procedure["_def"] as unknown as {
-      inputs?: z.ZodType[];
-      meta?: McpMeta;
-    };
-    const metadata = definition.meta?.mcp;
+    if (!isProcedure(procedure)) continue;
+    const definition = procedure["_def"];
+    if (definition.type === "subscription") continue;
+
+    const metadata = getMcpMetadata(definition.meta);
     if (!metadata?.enabled) continue;
 
-    const inputs = (definition.inputs ?? []).filter((input): input is z.ZodType => input !== undefined);
-    const procedureInput =
-      inputs.length === 0
-        ? emptyInput
-        : inputs.length === 1
-          ? (inputs[0] ?? emptyInput)
-          : inputs.every((input): input is z.ZodObject => input instanceof z.ZodObject)
-            ? mergeInputs(inputs)
-            : null;
+    const inputs = definition.inputs.filter((input): input is z.ZodType => input instanceof z.ZodType);
+    const procedureInput = getProcedureInput(inputs);
 
     if (
       procedureInput === null ||
@@ -69,6 +104,7 @@ export function extractMcpToolsFromProcedures<TRoot extends AnyRootTypes, TRecor
     tools.push({
       name: metadata.name ?? path.replaceAll(".", "_"),
       description: metadata.description ?? "",
+      type: definition.type,
       pathInRouter: path.split("."),
       inputValidator,
       inputSchema: normalizeJsonSchema(

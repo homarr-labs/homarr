@@ -1,6 +1,6 @@
 import { IconServerOff, IconTable } from "@tabler/icons-react";
 
-import { invariantTechnicalLabels } from "@homarr/definitions";
+import { getWidgetIntegrationConfig, invariantTechnicalLabels } from "@homarr/definitions";
 
 import { createWidgetDefinition, matchesWidgetRuntimeQuery, widgetQueryInputMatches } from "../definition";
 import type { SelectOption } from "../_inputs/widget-select-input";
@@ -33,8 +33,7 @@ export const { definition, componentLoader } = createWidgetDefinition("beszelSys
     query.path.at(-1) === "getSystems"
       ? widgetQueryInputMatches(query.input, { integrationIds: scope.integrationIds })
       : matchesWidgetRuntimeQuery(query, scope),
-  supportedIntegrations: ["beszel", "mock"],
-  integrationsRequired: true,
+  ...getWidgetIntegrationConfig("beszelSystemTable"),
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({

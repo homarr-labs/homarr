@@ -1,10 +1,9 @@
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { IntegrationKind } from "@homarr/definitions";
 import { mockWidgetData } from "@homarr/integrations";
 import type { VpnSummary } from "@homarr/integrations/types";
 import { vpnSummaryHandler } from "@homarr/request-handler/vpn";
 
-import { createManyIntegrationMiddleware } from "../../middlewares/integration";
+import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { settleIntegrationQueries, toPublicIntegrationError } from "../../settle-integrations";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
@@ -16,7 +15,7 @@ interface VpnResult {
 
 export const vpnRouter = createTRPCRouter({
   getSummaries: publicProcedure
-    .unstable_concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("vpn"), "mock"))
+    .unstable_concat(createManyWidgetIntegrationMiddleware("query", "vpn"))
     .query(async ({ ctx }) => {
       return await settleIntegrationQueries(
         ctx.integrations,
@@ -43,8 +42,8 @@ export const vpnRouter = createTRPCRouter({
               kind: integration.kind,
               updatedAt: timestamp,
             },
-            summary: data as typeof data | null,
-            error: undefined as string | undefined,
+            summary: data,
+            error: undefined,
           };
         },
         {

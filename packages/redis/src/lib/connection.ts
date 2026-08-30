@@ -1,3 +1,5 @@
+import type { RedisOptions } from "ioredis";
+
 import type { RedisClient } from "@homarr/core/infrastructure/redis";
 import { createRedisClient } from "@homarr/core/infrastructure/redis";
 
@@ -5,11 +7,15 @@ import { createRedisClient } from "@homarr/core/infrastructure/redis";
  * Creates a new Redis connection
  * @returns redis client
  */
-export const createRedisConnection = () => {
+export const createRedisConnection = (options: RedisOptions = {}) => {
   if (Boolean(process.env.CI) || Boolean(process.env.DISABLE_REDIS_LOGS)) {
-    // Return null if we are in CI as we don't want to connect to Redis
-    return null as unknown as RedisClient;
+    return null;
   }
 
-  return createRedisClient();
+  return createRedisClient(options);
+};
+
+export const requireRedisConnection = (client: RedisClient | null): RedisClient => {
+  if (!client) throw new Error("Redis is unavailable in this process");
+  return client;
 };

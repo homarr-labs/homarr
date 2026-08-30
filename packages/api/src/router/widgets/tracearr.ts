@@ -1,13 +1,13 @@
 import { tracearrRequestHandler } from "@homarr/request-handler/tracearr";
 import { mockWidgetData } from "@homarr/integrations";
 
-import { createManyIntegrationMiddleware } from "../../middlewares/integration";
+import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { settleIntegrationQueries, toPublicIntegrationError } from "../../settle-integrations";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const tracearrRouter = createTRPCRouter({
   getDashboard: publicProcedure
-    .concat(createManyIntegrationMiddleware("query", "tracearr", "mock"))
+    .concat(createManyWidgetIntegrationMiddleware("query", "tracearr"))
     .query(async ({ ctx }) => {
       return await settleIntegrationQueries(
         ctx.integrations,

@@ -1,5 +1,7 @@
 import { IconActivityHeartbeat, IconServerOff } from "@tabler/icons-react";
 
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
+
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 
@@ -24,7 +26,7 @@ export const { definition, componentLoader } = createWidgetDefinition("tracearr"
       }),
     }));
   },
-  supportedIntegrations: ["tracearr", "mock"],
+  ...getWidgetIntegrationConfig("tracearr"),
   errors: {
     INTERNAL_SERVER_ERROR: {
       icon: IconServerOff,

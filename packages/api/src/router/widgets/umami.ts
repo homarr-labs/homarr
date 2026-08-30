@@ -2,7 +2,8 @@ import { z } from "zod/v4";
 
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
-import { createIntegrationAsync, mockWidgetData } from "@homarr/integrations";
+import { mockWidgetData } from "@homarr/integrations";
+import { createIntegrationAsync } from "@homarr/integrations/factory";
 import {
   umamiActiveVisitorsRequestHandler,
   umamiEventNamesRequestHandler,
@@ -12,25 +13,26 @@ import {
   umamiTopReferrersRequestHandler,
 } from "@homarr/request-handler/umami";
 
-import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
+import {
+  createManyWidgetIntegrationMiddleware,
+  createOneWidgetIntegrationMiddleware,
+} from "../../middlewares/integration";
 import { settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 const logger = createLogger({ module: "umami-router" });
 
 export const umamiRouter = createTRPCRouter({
-  getWebsites: publicProcedure
-    .concat(createOneIntegrationMiddleware("query", "umami", "mock"))
-    .query(async ({ ctx }) => {
-      if (ctx.integration.kind === "mock") return mockWidgetData.umamiWebsites;
-      try {
-        const instance = await createIntegrationAsync({ ...ctx.integration, kind: "umami" });
-        return await instance.getWebsitesAsync();
-      } catch (error) {
-        logger.warn(new Error("Failed to load websites", { cause: error }));
-        return [];
-      }
-    }),
+  getWebsites: publicProcedure.concat(createOneWidgetIntegrationMiddleware("query", "umami")).query(async ({ ctx }) => {
+    if (ctx.integration.kind === "mock") return mockWidgetData.umamiWebsites;
+    try {
+      const instance = await createIntegrationAsync({ ...ctx.integration, kind: "umami" });
+      return await instance.getWebsitesAsync();
+    } catch (error) {
+      logger.warn(new Error("Failed to load websites", { cause: error }));
+      return [];
+    }
+  }),
 
   getVisitorStats: publicProcedure
     .input(
@@ -40,7 +42,7 @@ export const umamiRouter = createTRPCRouter({
         eventName: z.string().optional(),
       }),
     )
-    .concat(createManyIntegrationMiddleware("query", "umami", "mock"))
+    .concat(createManyWidgetIntegrationMiddleware("query", "umami"))
     .query(async ({ ctx, input }) => {
       return await settleIntegrationQueries(ctx.integrations, async (integration) => {
         if (integration.kind === "mock") {
@@ -74,7 +76,7 @@ export const umamiRouter = createTRPCRouter({
 
   getEventNames: publicProcedure
     .input(z.object({ websiteId: z.string() }))
-    .concat(createOneIntegrationMiddleware("query", "umami", "mock"))
+    .concat(createOneWidgetIntegrationMiddleware("query", "umami"))
     .query(async ({ ctx, input }) => {
       if (ctx.integration.kind === "mock") return mockWidgetData.umamiEventNames;
       try {
@@ -102,7 +104,7 @@ export const umamiRouter = createTRPCRouter({
         limit: z.number().int().min(1).max(500),
       }),
     )
-    .concat(createOneIntegrationMiddleware("query", "umami", "mock"))
+    .concat(createOneWidgetIntegrationMiddleware("query", "umami"))
     .query(async ({ ctx, input }) => {
       if (ctx.integration.kind === "mock") return mockWidgetData.umamiTopPages.slice(0, input.limit);
       try {
@@ -136,7 +138,7 @@ export const umamiRouter = createTRPCRouter({
         limit: z.number().int().min(1).max(500),
       }),
     )
-    .concat(createOneIntegrationMiddleware("query", "umami", "mock"))
+    .concat(createOneWidgetIntegrationMiddleware("query", "umami"))
     .query(async ({ ctx, input }) => {
       if (ctx.integration.kind === "mock") return mockWidgetData.umamiTopReferrers.slice(0, input.limit);
       try {
@@ -170,7 +172,7 @@ export const umamiRouter = createTRPCRouter({
         eventNames: z.array(z.string()),
       }),
     )
-    .concat(createOneIntegrationMiddleware("query", "umami", "mock"))
+    .concat(createOneWidgetIntegrationMiddleware("query", "umami"))
     .query(async ({ ctx, input }) => {
       if (ctx.integration.kind === "mock") {
         return mockWidgetData.umamiEventSeries.filter((series) => input.eventNames.includes(series.eventName));
@@ -201,7 +203,7 @@ export const umamiRouter = createTRPCRouter({
 
   getActiveVisitors: publicProcedure
     .input(z.object({ websiteId: z.string() }))
-    .concat(createOneIntegrationMiddleware("query", "umami", "mock"))
+    .concat(createOneWidgetIntegrationMiddleware("query", "umami"))
     .query(async ({ ctx, input }) => {
       if (ctx.integration.kind === "mock") return 7;
       try {

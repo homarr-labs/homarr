@@ -1,17 +1,12 @@
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { notificationsRequestHandler } from "@homarr/request-handler/notifications";
 
-import type { IntegrationAction } from "../../middlewares/integration";
-import { createManyIntegrationMiddleware } from "../../middlewares/integration";
+import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { settleIntegrationQueries, toPublicIntegrationError } from "../../settle-integrations";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
-const createNotificationsIntegrationMiddleware = (action: IntegrationAction) =>
-  createManyIntegrationMiddleware(action, ...getIntegrationKindsByCategory("notifications"));
-
 export const notificationsRouter = createTRPCRouter({
   getNotifications: publicProcedure
-    .unstable_concat(createNotificationsIntegrationMiddleware("query"))
+    .unstable_concat(createManyWidgetIntegrationMiddleware("query", "notifications"))
     .query(async ({ ctx }) => {
       return await settleIntegrationQueries(
         ctx.integrations,
@@ -27,7 +22,7 @@ export const notificationsRouter = createTRPCRouter({
               updatedAt: timestamp,
             },
             data,
-            error: undefined as string | undefined,
+            error: undefined,
           };
         },
         {

@@ -1,6 +1,6 @@
 import { IconChartBar, IconSearch } from "@tabler/icons-react";
 
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
 import { openMediaRequestSearch } from "@homarr/spotlight";
 
 import { createWidgetDefinition } from "../../definition";
@@ -22,5 +22,5 @@ export const { componentLoader, definition } = createWidgetDefinition("mediaRequ
       },
     },
   ],
-  supportedIntegrations: getIntegrationKindsByCategory("mediaRequest"),
+  ...getWidgetIntegrationConfig("mediaRequests-requestStats"),
 }).withDynamicImport(() => import("./component"));

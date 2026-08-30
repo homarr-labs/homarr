@@ -470,9 +470,11 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
               ...generalWidgets,
               ...discoveredIntegrations.filter((integration) => selectedSourceIds.has(integration.sourceId)),
               ...appsToCreate,
-            ].flatMap((selection) =>
-              typeof selection === "string" ? [selection] : selection.widgetKind ? [selection.widgetKind] : [],
-            ),
+            ].flatMap((selection) => {
+              if (typeof selection === "string") return [selection];
+              if (!selection.widgetKind) return [];
+              return [selection.widgetKind];
+            }),
           ),
         ],
       });
@@ -1922,7 +1924,10 @@ const getPreviewWidgetKinds = (props: StudioSectionProps) => [
     ...props.drafts.filter(isIntegrationDraftComplete).flatMap((draft) => getWidgetKindsForIntegration(draft.kind)),
     ...props.discoveredApps
       .filter((app) => props.selectedAppIds.includes(app.sourceId))
-      .flatMap((app) => (app.widgetKind ? [app.widgetKind] : [])),
+      .flatMap((app) => {
+        if (!app.widgetKind) return [];
+        return [app.widgetKind];
+      }),
   ]),
 ];
 

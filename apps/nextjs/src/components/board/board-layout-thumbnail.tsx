@@ -4,7 +4,7 @@ import { IconLayoutGrid } from "@tabler/icons-react";
 import type { BoardPreviewData } from "@homarr/boards/layout-preview";
 import { projectBoardLayout } from "@homarr/boards/layout-preview";
 import { boardLanes, getBoardLaneColumnCount, getRootSectionLane } from "@homarr/definitions";
-import { widgetCatalogIcons } from "@homarr/widgets/catalog";
+import { widgetCatalogIcons } from "@homarr/ui/widget-icons";
 
 import classes from "./board-layout-thumbnail.module.css";
 

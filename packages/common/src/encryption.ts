@@ -7,6 +7,7 @@ const algorithm = "aes-256-cbc"; //Using AES encryption
 // We fallback to a key of 0s if the key was not provided because env validation was skipped
 // This should only be the case in CI
 const key = Buffer.from(env.SECRET_ENCRYPTION_KEY || "0".repeat(64), "hex");
+const fingerprintKey = crypto.createHmac("sha256", key).update("homarr-keyed-fingerprint-v1").digest();
 
 export function encryptSecret(text: string): `${string}.${string}` {
   const initializationVector = crypto.randomBytes(16);
@@ -28,4 +29,15 @@ export function decryptSecretWithKey(value: `${string}.${string}`, key: Buffer) 
   let decrypted = decipher.update(encryptedText);
   decrypted = Buffer.concat([decrypted, decipher.final()]);
   return decrypted.toString();
+}
+
+export function createKeyedFingerprint(value: string) {
+  return crypto.createHmac("sha256", fingerprintKey).update(value).digest("hex");
+}
+
+export function verifyKeyedFingerprint(value: string, fingerprint: string) {
+  const expected = Buffer.from(createKeyedFingerprint(value), "hex");
+  const actual = Buffer.from(fingerprint, "hex");
+  if (expected.length !== actual.length) return false;
+  return crypto.timingSafeEqual(expected, actual);
 }

@@ -1,6 +1,7 @@
 import { IconChartAreaLine, IconServerOff } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition, matchesWidgetRuntimeQuery, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
@@ -40,8 +41,7 @@ export const { definition, componentLoader } = createWidgetDefinition("beszelSys
       (dockerEnabled && widgetQueryInputMatches(query.input, { ...expected, includeDocker: true }))
     );
   },
-  supportedIntegrations: ["beszel", "mock"],
-  integrationsRequired: true,
+  ...getWidgetIntegrationConfig("beszelSystemStats"),
   createOptions() {
     return optionsBuilder.from((factory) => ({
       systemId: factory.integrationSelect({

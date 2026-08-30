@@ -1,6 +1,8 @@
 import { IconBell, IconServerOff } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
+
 import { createWidgetDefinition, matchesWidgetRuntimeQuery, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
 
@@ -17,8 +19,7 @@ export const { definition, componentLoader } = createWidgetDefinition("beszelAle
       maxHistoryItems: scope.options.maxHistoryItems,
     });
   },
-  supportedIntegrations: ["beszel", "mock"],
-  integrationsRequired: true,
+  ...getWidgetIntegrationConfig("beszelAlerts"),
   createOptions() {
     return optionsBuilder.from((factory) => ({
       showHistory: factory.switch({ defaultValue: true }),

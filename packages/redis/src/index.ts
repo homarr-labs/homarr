@@ -16,9 +16,15 @@ export {
   handshakeAsync,
   createSubPubChannel,
   createGetSetChannel,
+  getIntegrationSessionStoreKey,
   createLockChannel,
+  getIntegrationCacheGenerationAsync,
+  getWidgetCacheGenerationAsync,
   invalidateIntegrationCacheAsync,
+  invalidateIntegrationResponseCacheAsync,
+  invalidateWidgetCache,
 } from "./lib/channel";
+export type { IntegrationCacheGeneration, WidgetCacheGeneration } from "./lib/channel";
 
 export const pingChannel = createSubPubChannel<
   { url: string; statusCode: number; durationMs: number } | { url: string; error: string }

@@ -1,8 +1,7 @@
 import { z } from "zod/v4";
 
 import type { IntegrationKindByCategory } from "@homarr/definitions";
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
-import { createIntegrationAsync } from "@homarr/integrations";
+import { createIntegrationAsync } from "@homarr/integrations/factory";
 import type { MediaRequest, MediaRequestStats } from "@homarr/integrations/types";
 import { mediaRequestStatusConfiguration } from "@homarr/integrations/types";
 import {
@@ -11,7 +10,10 @@ import {
 } from "@homarr/request-handler/media-request-list";
 import { mediaRequestStatsRequestHandler } from "@homarr/request-handler/media-request-stats";
 
-import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
+import {
+  createManyWidgetIntegrationMiddleware,
+  createOneWidgetIntegrationMiddleware,
+} from "../../middlewares/integration";
 import { PUBLIC_INTEGRATION_ERROR, settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 
@@ -30,7 +32,7 @@ export const mediaRequestsRouter = createTRPCRouter({
           "Get latest media requests from Overseerr/Jellyseerr with their status (pending, approved, declined, failed, completed). REQUIRED: integrationIds (array of Overseerr/Jellyseerr integration IDs from integration_all). OPTIONAL: statuses (array of statuses to include, must be non-empty) and recentDays (number 0-365; 0 disables the time filter).",
       },
     })
-    .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("mediaRequest")))
+    .concat(createManyWidgetIntegrationMiddleware("query", "mediaRequests-requestList"))
     .input(mediaRequestListInputSchema)
     .query(async ({ ctx, input }) => {
       const results: IntegrationQueryResult<MediaRequest[]>[] = await settleIntegrationQueries(
@@ -40,7 +42,7 @@ export const mediaRequestsRouter = createTRPCRouter({
           return {
             integration: { id: integration.id, name: integration.name, kind: integration.kind },
             data,
-            error: undefined as string | undefined,
+            error: undefined,
           };
         },
         {
@@ -85,7 +87,7 @@ export const mediaRequestsRouter = createTRPCRouter({
           "Get media request statistics including total counts and top requesters. REQUIRED: integrationIds (array of Overseerr/Jellyseerr integration IDs from integration_all)",
       },
     })
-    .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("mediaRequest")))
+    .concat(createManyWidgetIntegrationMiddleware("query", "mediaRequests-requestStats"))
     .query(async ({ ctx }) => {
       const results: IntegrationQueryResult<{
         stats: MediaRequestStats["stats"] | null;
@@ -96,8 +98,8 @@ export const mediaRequestsRouter = createTRPCRouter({
           const { data } = await mediaRequestStatsRequestHandler.handler(integration, {}).getDataAsync();
           return {
             integration: { id: integration.id, name: integration.name, kind: integration.kind },
-            data: { ...data, stats: data.stats as typeof data.stats | null },
-            error: undefined as string | undefined,
+            data,
+            error: undefined,
           };
         },
         {
@@ -134,7 +136,7 @@ export const mediaRequestsRouter = createTRPCRouter({
           "Approve or decline a pending media request. REQUIRED: integrationId (single Overseerr/Jellyseerr integration ID), requestId (number from getLatestRequests), answer ('approve' or 'decline')",
       },
     })
-    .concat(createOneIntegrationMiddleware("interact", ...getIntegrationKindsByCategory("mediaRequest")))
+    .concat(createOneWidgetIntegrationMiddleware("interact", "mediaRequests-requestList"))
     .input(
       z.object({
         requestId: z.number(),
@@ -150,6 +152,8 @@ export const mediaRequestsRouter = createTRPCRouter({
       } as const;
 
       await answerActions[input.answer](input.requestId);
+      mediaRequestListRequestHandler.invalidateCache();
+      await mediaRequestStatsRequestHandler.invalidateCacheAsync([integration.id]);
       return { success: true };
     }),
 });

@@ -1,6 +1,6 @@
 import { IconBatteryCharging, IconBatteryOff } from "@tabler/icons-react";
 
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
@@ -21,7 +21,7 @@ export const { definition, componentLoader } = createWidgetDefinition("ups", {
       }),
     }));
   },
-  supportedIntegrations: getIntegrationKindsByCategory("ups"),
+  ...getWidgetIntegrationConfig("ups"),
   errors: {
     INTERNAL_SERVER_ERROR: {
       icon: IconBatteryOff,

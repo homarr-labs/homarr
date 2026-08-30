@@ -1,7 +1,7 @@
 import type { QueryKey } from "@tanstack/react-query";
 import { describe, expect, it } from "vitest";
 
-import { widgetIntegrationSupport, widgetKinds as definedWidgetKinds } from "@homarr/definitions";
+import { widgetIntegrationSupport, widgetKinds as declaredWidgetKinds } from "@homarr/definitions";
 
 import {
   createRetryableLoader,
@@ -14,10 +14,16 @@ import {
   widgetKinds,
 } from "./manifest";
 import { widgetQueryRefetchIntervals } from "./refetch-intervals";
-import { widgetCatalogIcons } from "./catalog";
+import { widgetCatalogIcons } from "@homarr/ui/widget-icons";
 import { getWidgetQueryKeys } from "./definition";
 
-const serializePollingPolicy = (entry: { queryKey: QueryKey; intervalSeconds: number | null }) => JSON.stringify(entry);
+const serializePollingPolicy = ({
+  queryKey,
+  intervalSeconds,
+}: {
+  queryKey: QueryKey;
+  intervalSeconds: number | null;
+}) => JSON.stringify({ queryKey, intervalSeconds });
 
 describe("widget manifest promise stability", () => {
   it("returns the same module promise for every render", () => {
@@ -58,7 +64,7 @@ describe("widget manifest promise stability", () => {
   });
 
   it("covers every declared widget kind", () => {
-    expect(new Set(widgetKinds)).toEqual(new Set(definedWidgetKinds));
+    expect(new Set(widgetKinds)).toEqual(new Set(declaredWidgetKinds));
   });
 
   it("loads matching definitions and component loaders for every widget", async () => {
@@ -70,6 +76,7 @@ describe("widget manifest promise stability", () => {
         const canonicalComponent = await module.componentLoader();
         const component = await loadWidgetComponent(kind);
         const resources = await loadWidgetResources(kind);
+        expect(module.definition.kind).toBe(kind);
         expect(definitions.get(kind)).toBe(module.definition);
         expect(component.default).toBe(canonicalComponent.default);
         expect(component.default).toBeDefined();
@@ -98,7 +105,8 @@ describe("widget manifest promise stability", () => {
       const definition = definitions.get(kind);
       const supportedIntegrations =
         definition && "supportedIntegrations" in definition ? (definition.supportedIntegrations ?? []) : [];
-      expect([...(widgetIntegrationSupport[kind] ?? [])].toSorted()).toEqual([...supportedIntegrations].toSorted());
+      const expectedIntegrations = widgetIntegrationSupport[kind] ?? [];
+      expect(expectedIntegrations.toSorted()).toEqual([...supportedIntegrations].toSorted());
     }
   });
 

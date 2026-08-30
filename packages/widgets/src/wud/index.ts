@@ -1,5 +1,7 @@
 import { IconBrandDocker } from "@tabler/icons-react";
 
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
+
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 
@@ -7,9 +9,7 @@ export const { definition, componentLoader } = createWidgetDefinition("wud", {
   icon: IconBrandDocker,
   supportsAdvancedFocus: true,
   refetchInterval: null,
-  supportedIntegrations: ["wud", "mock"],
-  integrationsRequired: true,
-  maxIntegrations: 1,
+  ...getWidgetIntegrationConfig("wud"),
   createOptions() {
     return optionsBuilder.from((factory) => ({
       showTitle: factory.switch({ defaultValue: true }),

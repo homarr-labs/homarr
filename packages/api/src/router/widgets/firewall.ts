@@ -1,5 +1,3 @@
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
-import type { IntegrationKind } from "@homarr/definitions";
 import { mockWidgetData } from "@homarr/integrations";
 import {
   firewallCpuRequestHandler,
@@ -8,36 +6,37 @@ import {
   firewallVersionRequestHandler,
 } from "@homarr/request-handler/firewall";
 
-import { createManyIntegrationMiddleware } from "../../middlewares/integration";
+import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { settleIntegrationQueries, toPublicIntegrationError } from "../../settle-integrations";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
-const firewallMiddleware = createManyIntegrationMiddleware(
-  "query",
-  ...getIntegrationKindsByCategory("firewall"),
-  "mock",
-);
+const firewallMiddleware = createManyWidgetIntegrationMiddleware("query", "firewall");
 
-interface FirewallResult<TSummary> {
-  integration: { id: string; name: string; kind: IntegrationKind; updatedAt: Date };
-  summary: TSummary;
-  error?: string;
+type FirewallIntegration = Parameters<typeof firewallCpuRequestHandler.handler>[0];
+
+interface FirewallHandler<TData> {
+  handler: (
+    integration: FirewallIntegration,
+    input: Record<string, never>,
+  ) => { getDataAsync: () => Promise<{ data: TData; timestamp: Date }> };
 }
 
-const queryFirewall = <TSummary>(
-  handler: {
-    handler: (
-      integration: any,
-      input: Record<string, never>,
-    ) => { getDataAsync: () => Promise<{ data: TSummary; timestamp: Date }> };
-  },
-  createFallback: () => TSummary,
-  getMockData: () => TSummary,
-) =>
+interface FirewallQueryResult<TData> {
+  integration: {
+    id: string;
+    name: string;
+    kind: FirewallIntegration["kind"] | "mock";
+    updatedAt: Date;
+  };
+  summary: TData;
+  error: string | undefined;
+}
+
+const queryFirewall = <TData>(handler: FirewallHandler<TData>, createFallback: () => TData, getMockData: () => TData) =>
   publicProcedure.concat(firewallMiddleware).query(async ({ ctx }) =>
     settleIntegrationQueries(
       ctx.integrations,
-      async (integration): Promise<FirewallResult<TSummary>> => {
+      async (integration): Promise<FirewallQueryResult<TData>> => {
         if (integration.kind === "mock") {
           return {
             integration: {
@@ -58,7 +57,7 @@ const queryFirewall = <TSummary>(
         };
       },
       {
-        fallback: (integration, error): FirewallResult<TSummary> => ({
+        fallback: (integration, error): FirewallQueryResult<TData> => ({
           integration: { id: integration.id, name: integration.name, kind: integration.kind, updatedAt: new Date(0) },
           summary: createFallback(),
           error: toPublicIntegrationError(error),

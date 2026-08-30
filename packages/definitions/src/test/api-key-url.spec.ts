@@ -1,12 +1,14 @@
 import { describe, expect, it } from "vitest";
 
-import { getIntegrationApiKeyUrl, integrationDefs } from "../integration";
+import { objectEntries } from "@homarr/common";
+
+import { getIntegrationApiKeyUrl, getIntegrationDocumentationUrl, integrationDefs } from "../integration";
 
 describe("getIntegrationApiKeyUrl", () => {
   it("links every user-facing integration to its Homarr setup guide", () => {
     expect(
-      Object.entries(integrationDefs)
-        .filter(([kind, definition]) => kind !== "mock" && !definition.documentationUrl)
+      objectEntries(integrationDefs)
+        .filter(([kind]) => kind !== "mock" && !getIntegrationDocumentationUrl(kind))
         .map(([kind]) => kind),
     ).toEqual([]);
   });

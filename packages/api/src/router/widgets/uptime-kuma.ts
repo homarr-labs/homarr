@@ -1,13 +1,13 @@
 import { uptimeKumaRequestHandler } from "@homarr/request-handler/uptime-kuma";
 import { mockWidgetData } from "@homarr/integrations";
 
-import { createManyIntegrationMiddleware } from "../../middlewares/integration";
+import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { settleIntegrationQueries, toPublicIntegrationError } from "../../settle-integrations";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const uptimeKumaRouter = createTRPCRouter({
   getDashboard: publicProcedure
-    .concat(createManyIntegrationMiddleware("query", "uptimeKuma", "mock"))
+    .concat(createManyWidgetIntegrationMiddleware("query", "uptimeKuma"))
     .query(async ({ ctx }) => {
       return await settleIntegrationQueries(
         ctx.integrations,
@@ -29,9 +29,9 @@ export const uptimeKumaRouter = createTRPCRouter({
             integrationId: integration.id,
             integrationName: integration.name,
             integrationUrl: integration.url,
-            dashboard: data as typeof data | null,
+            dashboard: data,
             updatedAt: timestamp,
-            error: undefined as string | undefined,
+            error: undefined,
           };
         },
         {

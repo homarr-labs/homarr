@@ -8,8 +8,13 @@ import { getDirectBookmarkUrl } from "./bookmark-item";
 
 const logger = createLogger({ module: "bookmarksWidgetPrefetch" });
 
-const prefetchAllAsync: Prefetch<"bookmarks"> = async (queryClient, items) => {
-  const appIds = items.flatMap((item) => item.options.items.filter((value) => !getDirectBookmarkUrl(value)));
+const getAppIds = (options: Record<string, unknown>) => {
+  if (!Array.isArray(options.items)) return [];
+  return options.items.filter((value): value is string => typeof value === "string" && !getDirectBookmarkUrl(value));
+};
+
+const prefetchAllAsync: Prefetch = async (queryClient, items) => {
+  const appIds = items.flatMap((item) => getAppIds(item.options));
   const distinctAppIds = [...new Set(appIds)];
 
   const dbApps = await db.query.apps.findMany({
@@ -17,7 +22,7 @@ const prefetchAllAsync: Prefetch<"bookmarks"> = async (queryClient, items) => {
   });
 
   for (const item of items) {
-    const itemAppIds = item.options.items.filter((value) => !getDirectBookmarkUrl(value));
+    const itemAppIds = getAppIds(item.options);
     if (itemAppIds.length === 0) {
       continue;
     }

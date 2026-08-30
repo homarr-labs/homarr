@@ -207,6 +207,7 @@ const demoDockerEndpoint = {
 } satisfies DockerEndpointStatus;
 
 export const dockerContainersRequestHandler = createWidgetRequestHandler({
+  cacheNamespace: "docker-containers",
   async requestAsync({ endpointIds }: { endpointIds?: string[] }) {
     if (isDemoMode()) {
       const includesDemoEndpoint =
