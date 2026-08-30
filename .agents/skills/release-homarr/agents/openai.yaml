@@ -1,4 +1,0 @@
-interface:
-  display_name: "Release Homarr"
-  short_description: "Safely prepare and publish Homarr releases"
-  default_prompt: "Use $release-homarr to verify and publish a Homarr release."

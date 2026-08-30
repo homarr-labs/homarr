@@ -103,4 +103,3 @@ Portable skills live in `.agents/skills/`. Read the relevant `SKILL.md` before w
 - `mcp-integration` — safe tRPC-to-MCP exposure
 - `datatable-migration` — Mantine DataTable migration patterns
 - `homarr-custom-widget` — safe Custom JSX v2 authoring
-- `release-homarr` — release preparation, publication, and recovery
