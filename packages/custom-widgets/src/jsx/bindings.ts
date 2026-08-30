@@ -96,6 +96,12 @@ const safeMath = Object.freeze(
   }),
 );
 
+const formatLocaleDateTime = (value: string | number, locale = "en-US", timeZone?: string) => {
+  const options: Intl.DateTimeFormatOptions = { dateStyle: "medium", timeStyle: "short" };
+  if (timeZone) options.timeZone = timeZone;
+  return new Intl.DateTimeFormat(locale, options).format(new Date(value));
+};
+
 const safeDate = Object.freeze(
   Object.assign(Object.create(null) as Record<string, unknown>, {
     now: createSafeCallable(() => Date.now()),
@@ -109,6 +115,7 @@ const safeDate = Object.freeze(
     toLocaleTimeString: createSafeCallable((value: string | number, locale?: string) =>
       new Date(value).toLocaleTimeString(locale ?? "en-US"),
     ),
+    toLocaleString: createSafeCallable(formatLocaleDateTime),
     getTime: createSafeCallable((value: string | number) => new Date(value).getTime()),
     getYear: createSafeCallable((value: string | number) => new Date(value).getFullYear()),
     getMonth: createSafeCallable((value: string | number) => new Date(value).getMonth()),

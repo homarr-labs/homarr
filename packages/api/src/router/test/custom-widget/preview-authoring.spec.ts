@@ -91,4 +91,52 @@ describe("custom widget agent preview workflow", () => {
     });
     expect(mocks.executeRequest).not.toHaveBeenCalled();
   });
+
+  test("revises a preview template without resending or changing its manifest", async () => {
+    const db = createDb();
+    const userId = createId();
+    await db.insert(users).values({ id: userId });
+    const session = {
+      user: { id: userId, permissions: ["admin"], colorScheme: "light" },
+      expires: new Date(Date.now() + 60_000).toISOString(),
+    } satisfies Session;
+    const caller = customWidgetRouter.createCaller({ db, deviceType: undefined, session });
+    const { template, ...definition } = CUSTOM_WIDGET_STARTER;
+    const preview = await caller.previewCreate({
+      definition: {
+        ...definition,
+        requests: { fixtures: { path: "/fixtures" } },
+        templateLines: template.split("\n"),
+      },
+      secrets: [],
+    });
+    const revisedTemplate = '<Stack><Text>{data.fixtures?.name}</Text><Badge>Ready</Badge></Stack>';
+
+    const revised = await caller.previewReviseTemplate({
+      sessionId: preview.previewSession.id,
+      expectedRevision: 0,
+      templateLines: revisedTemplate.split("\n"),
+    });
+
+    expect(revised).toMatchObject({
+      success: true,
+      evidenceReset: true,
+      previewSession: { id: preview.previewSession.id, revision: 1 },
+      queries: [expect.objectContaining({ requestId: "fixtures" })],
+    });
+    expect(revised).not.toHaveProperty("definition");
+    expect(revised).not.toHaveProperty("template");
+    await expect(caller.previewGet({ sessionId: preview.previewSession.id })).resolves.toMatchObject({
+      revision: 1,
+      template: revisedTemplate,
+      requests: [expect.objectContaining({ id: "fixtures" })],
+    });
+    await expect(
+      caller.previewReviseTemplate({
+        sessionId: preview.previewSession.id,
+        expectedRevision: 1,
+        templateLines: ['<ActionButton requestId="missing">Run</ActionButton>'],
+      }),
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+  });
 });

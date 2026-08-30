@@ -46,8 +46,14 @@ add Homarr items as context, `/` for shortcuts, and the paperclip for supported 
 
 Use **Conversations** to search, switch, rename, export, or delete threads.
 
-Each request includes the user's name, current page and board, home board, server time, browser time zone, and a small
-summary of accessible Homarr resources. Live status is fetched only when needed.
+Each request includes the user's name, current page and board, home board, server time, browser time zone, and only
+explicitly mentioned Homarr entities. Live status is fetched only when needed. The full Homarr tool catalog remains
+available server-side, while the model receives a small relevant subset and can discover another capability on demand.
+
+When web search is enabled, Assistant uses bounded search context and prefers primary documentation. Custom Widget
+authoring starts with a compact skill and template validator, then discovers schema, preview, reference, and component
+tools only when the task needs them. A response-driven JSX correction revises the existing preview without resending
+its manifest; Homarr then requires fresh query and simulated-action evidence for that preview revision before saving.
 
 ## Permissions and privacy
 

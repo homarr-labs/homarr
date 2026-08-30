@@ -12,6 +12,8 @@ import { iconsRouter } from "./router/icons";
 import { infoRouter } from "./router/info";
 import { integrationRouter } from "./router/integration/integration-router";
 import { inviteRouter } from "./router/invite";
+import { kubernetesMcpRouter } from "./router/kubernetes/mcp-router";
+import { searchEngineRouter } from "./router/search-engine/search-engine-router";
 import { airQualityRouter } from "./router/widgets/air-quality";
 import { bazarrRouter } from "./router/widgets/bazarr";
 import { serverSettingsRouter } from "./router/serverSettings";
@@ -22,9 +24,13 @@ import { downloadsRouter } from "./router/widgets/downloads";
 import { healthMonitoringRouter } from "./router/widgets/health-monitoring";
 import { mediaRequestsRouter } from "./router/widgets/media-requests";
 import { mediaServerRouter } from "./router/widgets/media-server";
+import { mediaOrganizerRouter } from "./router/widgets/media-organizer";
 import { patchmonRouter } from "./router/widgets/patchmon";
 import { smartHomeRouter } from "./router/widgets/smart-home";
+import { traefikRouter } from "./router/widgets/traefik";
+import { userRouter } from "./router/user";
 import { widgetSecretsRouter } from "./router/widgets/widget-secrets";
+import { wudRouter } from "./router/widgets/wud";
 
 export const mcpRouter = createTRPCRouter({
   app: appRouterForApps,
@@ -36,6 +42,9 @@ export const mcpRouter = createTRPCRouter({
   info: infoRouter,
   integration: integrationRouter,
   invite: inviteRouter,
+  kubernetes: kubernetesMcpRouter,
+  searchEngine: searchEngineRouter,
+  user: userRouter,
   airQuality: airQualityRouter,
   bazarr: bazarrRouter,
   serverSettings: serverSettingsRouter,
@@ -46,7 +55,10 @@ export const mcpRouter = createTRPCRouter({
   healthMonitoring: healthMonitoringRouter,
   mediaRequests: mediaRequestsRouter,
   mediaServer: mediaServerRouter,
+  mediaOrganizer: mediaOrganizerRouter,
   patchmon: patchmonRouter,
   smartHome: smartHomeRouter,
+  traefik: traefikRouter,
   widgetSecrets: widgetSecretsRouter,
+  wud: wudRouter,
 });

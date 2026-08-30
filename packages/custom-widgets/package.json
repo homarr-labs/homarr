@@ -69,6 +69,7 @@
     "jsdom": "catalog:",
     "react-dom": "catalog:",
     "typescript": "catalog:",
+    "typescript-compiler-api": "npm:typescript@6.0.2",
     "vitest": "catalog:"
   }
 }

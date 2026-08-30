@@ -67,6 +67,22 @@ describe("shared Custom JSX policy", () => {
     expect(validateCustomJsxTemplate('<Text>{"b".localeCompare("a")}</Text>')).toEqual([]);
   });
 
+  test("formats an absolute date and time in an explicit safe timezone", () => {
+    const template = '<Text>{Date.toLocaleString(data.createdAt, "en-US", "UTC")} UTC</Text>';
+
+    expect(validateCustomJsxTemplate(template)).toEqual([]);
+    const rendered = renderSafeJsx({
+      template,
+      components: {
+        Text: ((props: { children?: unknown }) => createElement("span", null, props.children as never)) as never,
+      },
+      bindings: createCustomJsxBindings({ createdAt: "2026-08-28T19:22:00.000Z" }),
+    });
+    const html = renderToStaticMarkup(rendered.node);
+    expect(html).toContain("Aug 28, 2026");
+    expect(html).toContain("7:22 PM UTC");
+  });
+
   test.each([...CUSTOM_JSX_BLOCKED_PROPERTIES])(
     "blocks reflective property %s in diagnostics and runtime",
     (property) => {
@@ -257,6 +273,41 @@ describe("shared Custom JSX policy", () => {
     ).toBe(false);
   });
 
+  test.each(["SubFetch", "ActionButton", "ToggleSwitch"])(
+    "requires a literal requestId on %s during independent JSX validation",
+    (component) => {
+      expect(validateCustomJsxTemplate(`<${component} requestId="known" />`)).toEqual([]);
+      for (const template of [`<${component} />`, `<${component} requestId={data.requestId} />`]) {
+        expect(validateCustomJsxTemplate(template)).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              severity: "error",
+              message: `${component} must use a literal requestId`,
+            }),
+          ]),
+        );
+      }
+    },
+  );
+
+  test("accepts only scalar reset dependencies for bindable controls", () => {
+    expect(
+      validateCustomJsxTemplate(
+        '<Pagination bind="page" resetKey={inputs.search} defaultValue={1} total={5} />',
+      ).filter(({ severity }) => severity === "error"),
+    ).toEqual([]);
+    expect(
+      validateCustomJsxTemplate('<Pagination bind="page" resetKey={{ search: inputs.search }} total={5} />'),
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ severity: "error", message: expect.stringContaining("resetKey must resolve") }),
+      ]),
+    );
+    expect(sanitizeCustomJsxProps({ resetKey: { search: "unsafe" }, total: 5 }, "Pagination")).toEqual({
+      total: 5,
+    });
+  });
+
   test("rejects bind values introduced by JSX spreads at the emitter boundary", () => {
     expect(() =>
       renderSafeJsx({
@@ -336,6 +387,20 @@ describe("shared Custom JSX policy", () => {
       bindings: { data: { items: [{ name: "Bulbasaur", visible: true }] } },
     });
     expect(renderToStaticMarkup(rendered.node)).toContain("BULBASAUR");
+  });
+
+  test("supports compact indexed literal labels for numeric API enums", () => {
+    const template =
+      '<Text>{["Unknown", "Pending", "Processing", "Partially Available", "Available", "Blocklisted", "Deleted"][(data.item?.status ?? 1) - 1] ?? "Unknown"}</Text>';
+    expect(validateCustomJsxTemplate(template).filter(({ severity }) => severity === "error")).toEqual([]);
+    const rendered = renderSafeJsx({
+      template,
+      components: {
+        Text: ((props: { children?: unknown }) => createElement("span", null, props.children as never)) as never,
+      },
+      bindings: { data: { item: { status: 4 } } },
+    });
+    expect(renderToStaticMarkup(rendered.node)).toContain("Partially Available");
   });
 
   test("supports bounded regex string operations", () => {

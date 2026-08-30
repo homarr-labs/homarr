@@ -212,6 +212,88 @@ describe("custom widget definition persistence", () => {
     });
   });
 
+  test("requires current-revision query and action evidence after a template-only preview revision", async () => {
+    const db = await prepareDatabase();
+    const caller = createCaller(db);
+    const definition = customWidgetDefinitionSchema.parse({
+      $schema: "homarr-custom-widget-v2",
+      name: "Request queue",
+      sources: {
+        default: { baseUrl: "https://example.com", networkScope: "public", auth: "none" },
+      },
+      requests: {
+        queue: { path: "/requests" },
+        approve: {
+          kind: "action",
+          method: "POST",
+          path: "/requests/{param:id}/approve",
+          confirmation: "Approve this request?",
+          invalidates: ["queue"],
+        },
+      },
+      options: {},
+      template:
+        '<Stack><Text>{data.queue?.length ?? 0} requests</Text><ActionButton requestId="approve" params={{ id: 1 }}>Approve</ActionButton></Stack>',
+    });
+    const preview = await caller.previewCreate({ definition, secrets: [] });
+    const createInput = { previewSessionId: preview.previewSession.id };
+    const initialSession = await getPreviewSession(preview.previewSession.id, userId);
+    await appendPreviewJournal(initialSession, {
+      requestId: "queue",
+      kind: "query",
+      method: "GET",
+      path: "/requests",
+      status: 200,
+      durationMs: 1,
+      simulated: false,
+    });
+
+    await expect(caller.createFromPreview(createInput)).rejects.toThrow(
+      "Test every final preview action before creating the widget: approve",
+    );
+    await appendPreviewJournal(initialSession, {
+      requestId: "approve",
+      kind: "action",
+      method: "POST",
+      path: "/requests/{param:id}/approve",
+      status: null,
+      durationMs: 0,
+      simulated: true,
+    });
+    const revisedTemplate = definition.template.replace("requests</Text>", "pending requests</Text>");
+    await caller.previewReviseTemplate({
+      sessionId: initialSession.id,
+      expectedRevision: initialSession.revision,
+      template: revisedTemplate,
+    });
+
+    await expect(caller.createFromPreview(createInput)).rejects.toThrow(
+      "Test every final preview query successfully before creating the widget: queue",
+    );
+    const revisedSession = await getPreviewSession(preview.previewSession.id, userId);
+    await appendPreviewJournal(revisedSession, {
+      requestId: "queue",
+      kind: "query",
+      method: "GET",
+      path: "/requests",
+      status: 200,
+      durationMs: 1,
+      simulated: false,
+    });
+    await appendPreviewJournal(revisedSession, {
+      requestId: "approve",
+      kind: "action",
+      method: "POST",
+      path: "/requests/{param:id}/approve",
+      status: null,
+      durationMs: 0,
+      simulated: true,
+    });
+
+    const created = await caller.createFromPreview(createInput);
+    await expect(caller.get({ id: created.id })).resolves.toMatchObject({ template: revisedTemplate });
+  });
+
   test("updates a saved widget with MCP-friendly multiline templateLines", async () => {
     const db = await prepareDatabase();
     const caller = createCaller(db);

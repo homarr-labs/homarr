@@ -9,6 +9,7 @@ import {
 } from "../core";
 import type { CustomJsxRequest, CustomWidgetOptions, CustomWidgetSource } from "../core";
 import { CustomWidgetDomainError } from "./errors";
+import { validatePreviewTemplateRevision } from "./preview-session-template";
 
 const SESSION_TTL_MS = 10 * 60_000;
 const MAX_JOURNAL_ENTRIES = 50;
@@ -119,7 +120,7 @@ export class CustomWidgetPreviewSessionService {
       liveActions: false,
     };
     await this.save(session);
-    return { id: session.id, expiresAt: session.expiresAt, liveActions: false as const };
+    return { id: session.id, revision: session.revision, expiresAt: session.expiresAt, liveActions: false as const };
   }
 
   public async get(id: string, userId: string): Promise<CustomWidgetPreviewSession> {
@@ -139,6 +140,22 @@ export class CustomWidgetPreviewSessionService {
   public async setLiveActions(id: string, userId: string, enabled: boolean) {
     const session = await this.update(id, userId, (current) => ({ ...current, liveActions: enabled }));
     return { id, expiresAt: session.expiresAt, liveActions: enabled };
+  }
+
+  public async reviseTemplate(id: string, userId: string, template: string, expectedRevision?: number) {
+    const session = await this.update(
+      id,
+      userId,
+      (current) => ({ ...current, template: validatePreviewTemplateRevision(current, template) }),
+      expectedRevision,
+    );
+    return {
+      id: session.id,
+      revision: session.revision,
+      expiresAt: session.expiresAt,
+      liveActions: session.liveActions,
+      evidenceReset: true as const,
+    };
   }
 
   public async appendJournal(
@@ -231,9 +248,16 @@ export class CustomWidgetPreviewSessionService {
     id: string,
     userId: string,
     mutate: (session: CustomWidgetPreviewSession) => CustomWidgetPreviewSession,
+    expectedRevision?: number,
   ) {
     for (let attempt = 0; attempt < MAX_UPDATE_ATTEMPTS; attempt += 1) {
       const current = await this.get(id, userId);
+      if (expectedRevision !== undefined && current.revision !== expectedRevision) {
+        throw new CustomWidgetDomainError({
+          code: "CONFLICT",
+          message: `Preview session revision changed from ${expectedRevision} to ${current.revision}`,
+        });
+      }
       const next = { ...mutate(current), revision: current.revision + 1 };
       const ttlMs = Math.max(0, next.expiresAt - this.now());
       if (!ttlMs) throw new CustomWidgetDomainError({ code: "NOT_FOUND", message: "Preview session expired" });

@@ -48,6 +48,13 @@ export function getCustomJsxComponentProps(name: string): ResolvedCustomJsxPropD
       source: "component",
       description: `Temporary in-memory ${component.bind.type} input binding initialized by ${component.bind.initialProp}.`,
     });
+    props.set(component.bind.resetProp, {
+      name: component.bind.resetProp,
+      type: "string | number | boolean | null",
+      required: false,
+      source: "component",
+      description: "Resets this binding to its declared default when the scalar value changes.",
+    });
   }
   return [...props.values()];
 }

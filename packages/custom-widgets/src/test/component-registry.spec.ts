@@ -249,6 +249,13 @@ describe("customJsxComponentRegistry", () => {
     expect(getCustomJsxBindingType(component)).toBe(type);
   });
 
+  test("advertises resetKey only for declaratively bindable controls", () => {
+    expect(customJsxComponentByName.get("Pagination")?.supportedProps).toEqual(
+      expect.arrayContaining(["bind", "resetKey"]),
+    );
+    expect(customJsxComponentByName.get("Text")?.supportedProps).not.toContain("resetKey");
+  });
+
   test("infers range and multiple date controls from their authored props", () => {
     for (const component of [
       "DatePicker",

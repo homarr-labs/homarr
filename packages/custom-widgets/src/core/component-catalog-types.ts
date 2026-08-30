@@ -23,6 +23,7 @@ export interface CustomJsxPropDescriptor {
 export interface CustomJsxBindingDescriptor {
   type: CustomJsxCatalogBindingType;
   initialProp: "defaultValue" | "defaultChecked";
+  resetProp: "resetKey";
 }
 
 export interface CustomJsxBlockedCapability {

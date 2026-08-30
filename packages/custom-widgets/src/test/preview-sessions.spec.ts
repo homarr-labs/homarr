@@ -194,4 +194,57 @@ describe("preview sessions", () => {
     expect(service.getSecrets(session, "default")).toEqual([{ kind: "apiKey", value: "token" }]);
     expect(service.getSecrets(session, "secondary")).toEqual([{ kind: "username", value: "operator" }]);
   });
+
+  it("revises only the template with optimistic concurrency and resets evidence by revision", async () => {
+    const service = new CustomWidgetPreviewSessionService({
+      createId: () => "session",
+      encrypt: String,
+      decrypt: String,
+    });
+    await service.create({
+      userId: "owner",
+      sources: definition.sources,
+      requests: definition.requests,
+      name: definition.name,
+      template: definition.template,
+      optionDefinitions: definition.options,
+      options: { limit: 10 },
+      secrets: [],
+    });
+    const original = await service.get("session", "owner");
+    await service.appendJournal(original, {
+      requestId: "data",
+      kind: "query",
+      method: "GET",
+      path: "/data",
+      status: 200,
+      durationMs: 1,
+      simulated: false,
+      sessionRevision: original.revision,
+    });
+
+    const revised = await service.reviseTemplate(
+      "session",
+      "owner",
+      '<Stack><Text>{data.data?.name}</Text><Badge>Ready</Badge></Stack>',
+      0,
+    );
+    const session = await service.get("session", "owner");
+
+    expect(revised).toMatchObject({ id: "session", revision: 1, evidenceReset: true });
+    expect(session.template).toContain("<Badge>Ready</Badge>");
+    expect(session.sources).toEqual(original.sources);
+    expect(session.requests).toEqual(original.requests);
+    expect(session.optionDefinitions).toEqual(original.optionDefinitions);
+    expect(await service.getJournal("session", "owner")).toEqual([
+      expect.objectContaining({ sessionRevision: 0 }),
+    ]);
+    await expect(service.reviseTemplate("session", "owner", session.template, 1)).rejects.toThrow("unchanged");
+    await expect(
+      service.reviseTemplate("session", "owner", "<Text>Stale edit</Text>", 0),
+    ).rejects.toMatchObject({ code: "CONFLICT" });
+    await expect(
+      service.reviseTemplate("session", "owner", '<ActionButton requestId="missing">Run</ActionButton>', 1),
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+  });
 });

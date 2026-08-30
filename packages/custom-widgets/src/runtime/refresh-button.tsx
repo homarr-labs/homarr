@@ -7,23 +7,26 @@ import { IconRefresh } from "@tabler/icons-react";
 import { useCustomWidgetRuntime } from "./context";
 
 export interface RefreshButtonProps {
+  requestId?: string;
   label?: string;
   color?: string;
   variant?: string;
   size?: string;
 }
 
-export function RefreshButton({ label, color = "gray", variant = "subtle", size = "sm" }: RefreshButtonProps) {
+export function RefreshButton({ requestId, label, color = "gray", variant = "subtle", size = "sm" }: RefreshButtonProps) {
   const runtime = useCustomWidgetRuntime();
   const [loading, setLoading] = useState(false);
   const refresh = async () => {
     if (!runtime.itemId && !runtime.previewSessionId) return;
     setLoading(true);
     try {
+      let targets = ["parent", "*"];
+      if (requestId) targets = [requestId];
       await runtime.port.invalidate({
         itemId: runtime.itemId,
         previewSessionId: runtime.previewSessionId,
-        targets: ["parent", "*"],
+        targets,
       });
     } finally {
       setLoading(false);

@@ -44,6 +44,9 @@ const (
 	maxChatResponseBytes   = 8 << 20
 	maxWebSearchResults    = 5
 	maxWebSearchUses       = 3
+	maxWebSearchTotal      = 10
+	maxWebSearchCharacters = 2500
+	webSearchContextSize   = "low"
 	maxUserInFlight        = 2
 	maxGlobalInFlight      = 100
 	openRouterDefaultURL   = "https://openrouter.ai/api/v1"
@@ -408,8 +411,11 @@ func sanitizeProviderPayload(payload map[string]any, upstreamModelID string) err
 					sanitizedTools = append(sanitizedTools, map[string]any{
 						"type": "openrouter:web_search",
 						"parameters": map[string]any{
-							"max_results": maxWebSearchResults,
-							"max_uses":    maxWebSearchUses,
+							"max_results":         maxWebSearchResults,
+							"max_uses":            maxWebSearchUses,
+							"max_total_results":   maxWebSearchTotal,
+							"max_characters":      maxWebSearchCharacters,
+							"search_context_size": webSearchContextSize,
 						},
 					})
 					webSearchAdded = true

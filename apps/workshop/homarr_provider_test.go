@@ -81,7 +81,11 @@ func TestSanitizeProviderPayload(t *testing.T) {
 	}
 	webSearch := tools[1].(map[string]any)
 	parameters := webSearch["parameters"].(map[string]any)
-	if parameters["max_results"] != maxWebSearchResults || parameters["max_uses"] != maxWebSearchUses {
+	if parameters["max_results"] != maxWebSearchResults ||
+		parameters["max_uses"] != maxWebSearchUses ||
+		parameters["max_total_results"] != maxWebSearchTotal ||
+		parameters["max_characters"] != maxWebSearchCharacters ||
+		parameters["search_context_size"] != webSearchContextSize {
 		t.Fatalf("web search limits were not enforced: %#v", parameters)
 	}
 	usage, err := json.Marshal(payload["usage"])

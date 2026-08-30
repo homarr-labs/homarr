@@ -42,16 +42,23 @@ export const MAX_REFRESH_INTERVAL_MS = MAX_REFRESH_INTERVAL_SECONDS * 1_000;
 export function SubFetch(props: SubFetchProps) {
   const { itemId, previewSessionId, queryCacheKey, queriesDisabled, port, messages, setQueryState } =
     useCustomWidgetRuntime();
-  const [manualRun, setManualRun] = useState(false);
+  const [manualRunKey, setManualRunKey] = useState<string | null>(null);
   const params = useMemo(() => normalizeParams(props.params), [props.params]);
   const paramsKey = useMemo(() => JSON.stringify(params), [params]);
-  useEffect(() => setManualRun(false), [paramsKey, props.requestId, props.trigger]);
+  const manualRequestKey = JSON.stringify([
+    itemId,
+    previewSessionId,
+    queryCacheKey,
+    props.requestId,
+    props.trigger,
+    paramsKey,
+  ]);
   const enabled = Boolean(
     !queriesDisabled &&
     (itemId || previewSessionId) &&
     props.requestId &&
     params &&
-    (props.trigger !== "manual" || manualRun),
+    (props.trigger !== "manual" || manualRunKey === manualRequestKey),
   );
   const refreshMs = normalizeRefreshInterval(props.refreshInterval);
   const scope = itemId ? "item" : "preview";
@@ -101,14 +108,14 @@ export function SubFetch(props: SubFetchProps) {
       ? props.triggerContent
       : (props.fallback ?? <Text c="dimmed">{messages.unsavedPreview}</Text>);
   if (!params) return <RequestAlert message={messages.invalidParams} />;
-  if (props.trigger === "manual" && !manualRun) {
+  if (props.trigger === "manual" && manualRunKey !== manualRequestKey) {
     if (props.triggerContent) {
       return (
         <Box
           component="button"
           type="button"
           aria-label={props.triggerAriaLabel ?? messages.loadRequest}
-          onClick={() => setManualRun(true)}
+          onClick={() => setManualRunKey(manualRequestKey)}
           style={{
             appearance: "none",
             background: "transparent",
@@ -126,7 +133,7 @@ export function SubFetch(props: SubFetchProps) {
       );
     }
     return (
-      <Button size="compact-sm" variant="light" onClick={() => setManualRun(true)}>
+      <Button size="compact-sm" variant="light" onClick={() => setManualRunKey(manualRequestKey)}>
         {messages.loadRequest}
       </Button>
     );

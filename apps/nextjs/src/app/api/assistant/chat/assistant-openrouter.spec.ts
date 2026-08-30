@@ -18,7 +18,16 @@ describe("withOpenRouterWebSearch", () => {
     ).toMatchObject({
       tools: [
         { type: "function", function: { name: "board_addItem" } },
-        { type: "openrouter:web_search", parameters: { max_results: 5, max_uses: 3 } },
+        {
+          type: "openrouter:web_search",
+          parameters: {
+            max_results: 5,
+            max_uses: 3,
+            max_total_results: 10,
+            max_characters: 2_500,
+            search_context_size: "low",
+          },
+        },
       ],
     });
   });

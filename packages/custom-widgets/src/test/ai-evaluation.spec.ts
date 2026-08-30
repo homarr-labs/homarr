@@ -11,6 +11,8 @@ import {
   getAiProviderChatCompletionsUrl,
   getDeterministicEvaluationIssues,
   getEvaluationResponseFixtureText,
+  getExpectedWidgetCase,
+  getAiEvaluationMaxOutputTokens,
   getJudgeResponseFormat,
   judgePasses,
   parseJudgeResult,
@@ -52,9 +54,15 @@ const makeJudgeResult = (score: number) => ({
 });
 
 describe("AI authoring evaluation", () => {
+  it("allows bounded output reservations for low-credit live judges without changing defaults", () => {
+    expect(getAiEvaluationMaxOutputTokens("judge", undefined)).toBe(8_000);
+    expect(getAiEvaluationMaxOutputTokens("judge", "3000")).toBe(3_000);
+    expect(getAiEvaluationMaxOutputTokens("generation", "1000")).toBe(4_096);
+    expect(getAiEvaluationMaxOutputTokens("generation", "invalid")).toBe(20_000);
+  });
   it("defines distinct complex and public-API scenarios", () => {
-    expect(CUSTOM_WIDGET_AI_EVALUATION_CASES).toHaveLength(9);
-    expect(new Set(CUSTOM_WIDGET_AI_EVALUATION_CASES.map((entry) => entry.id)).size).toBe(9);
+    expect(CUSTOM_WIDGET_AI_EVALUATION_CASES).toHaveLength(10);
+    expect(new Set(CUSTOM_WIDGET_AI_EVALUATION_CASES.map((entry) => entry.id)).size).toBe(10);
     expect(CUSTOM_WIDGET_AI_EVALUATION_CASES.map(({ id }) => id)).toEqual(
       expect.arrayContaining([
         "pokedex",
@@ -62,8 +70,100 @@ describe("AI authoring evaluation", () => {
         "coinmarketcap-keyless",
         "bored-activity",
         "agify-name",
+        "seerr-media-workflows",
       ]),
     );
+    const advancedCase = CUSTOM_WIDGET_AI_EVALUATION_CASES.find(({ id }) => id === "seerr-media-workflows");
+    expect(advancedCase?.expectedWidgets?.every(({ expectations }) => !("maximumRequests" in expectations))).toBe(true);
+    expect(advancedCase?.research).toMatchObject({
+      requiredReferences: ["schema", "runtime", "security"],
+      allowedReferences: ["schema", "runtime", "security"],
+    });
+    expect(advancedCase?.request).toContain("voteAverage");
+    expect(advancedCase?.request).toContain("functional pagination");
+    expect(advancedCase?.request).toContain("responsive SimpleGrid");
+    expect(advancedCase?.request).toContain("createdAt");
+    expect(advancedCase?.request).toContain("prefers backdropPath");
+    expect(advancedCase?.request).toContain("approve and decline");
+    expect(advancedCase?.request).toContain("TMDB 603 · Request #91");
+    expect(advancedCase?.request).toContain("Rating label only when voteAverage is present");
+    expect(advancedCase?.request).toContain("without redundant outer or per-item chrome");
+    expect(advancedCase?.request).toContain("relies on native loading/error/retry");
+    expect(advancedCase?.request).toContain("query/page/total-results summary");
+    expect(advancedCase?.request).toContain("Not provided");
+    expect(advancedCase?.request).toContain("Media profile");
+    expect(advancedCase?.request).toContain("when only its sibling request fails");
+    expect(advancedCase?.request).toContain("compact thumbnail beside content at base");
+    expect(advancedCase?.request).toContain("Avatar imageProps.alt");
+    expect(advancedCase?.request).toContain("Pagination only when totalPages is greater than 1");
+    expect(advancedCase?.apiNotes).toContain("render the array at response.results");
+    expect(advancedCase?.apiNotes).toContain("/request/{param:requestId}/approve");
+    const operationsExpectations = advancedCase?.expectedWidgets?.find(
+      ({ id }) => id === "request-operations",
+    )?.expectations;
+    expect(operationsExpectations?.requests).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ kind: "query", requiresStatusBinding: true }),
+        expect.objectContaining({ kind: "action", pathIncludes: "/request/{param:requestId}/approve" }),
+        expect.objectContaining({ kind: "action", pathIncludes: "/request/{param:requestId}/decline" }),
+      ]),
+    );
+    expect(operationsExpectations?.templateIncludes).toEqual(
+      expect.arrayContaining([
+        "processing",
+        "declined",
+        "tmdbId",
+        "status4k",
+        "Failed",
+        "Completed",
+        "Not provided",
+        "imageProps",
+      ]),
+    );
+    expect(operationsExpectations?.templateIncludesAny).toEqual(
+      expect.arrayContaining([
+        ["TMDB", "Tmdb"],
+        ["Request #", "Request ID"],
+        ["UTC", "utc"],
+      ]),
+    );
+    const mediaExpectations = advancedCase?.expectedWidgets?.find(({ id }) => id === "media-research")?.expectations;
+    expect(mediaExpectations?.templateIncludes).toEqual(
+      expect.arrayContaining([
+        ".results",
+        "backdropPath",
+        "https://image.tmdb.org/t/p/",
+        "w780",
+        "inputs.page ?? 1",
+        "status4k",
+        'trigger="manual"',
+        "lineClamp",
+      ]),
+    );
+    expect(mediaExpectations?.templateIncludesAny).not.toContainEqual(["SimpleGrid", "Grid"]);
+    expect(mediaExpectations?.templateIncludesAny).toContainEqual(["Rating", "★", "/10"]);
+    expect(mediaExpectations?.templateIncludesAny).toContainEqual(["Partially Available", "Partially available"]);
+  });
+
+  it("scopes multi-widget judging to each requested capability and its exact fixtures", () => {
+    const testCase = CUSTOM_WIDGET_AI_EVALUATION_CASES.find(({ id }) => id === "seerr-media-workflows");
+    const expectedWidgets = testCase?.expectedWidgets;
+    if (!testCase || !expectedWidgets) throw new Error("Advanced Seerr expectations are missing");
+    const expectedOperations = expectedWidgets.find(({ id }) => id === "request-operations");
+    const expectedResearch = expectedWidgets.find(({ id }) => id === "media-research");
+    if (!expectedOperations || !expectedResearch) throw new Error("Scoped Seerr expectations are missing");
+    const operations = getExpectedWidgetCase(testCase, expectedOperations);
+    const research = getExpectedWidgetCase(testCase, expectedResearch);
+
+    expect(operations.apiNotes).not.toContain("GET /search");
+    expect(operations.previewResponses?.map(({ pathIncludes }) => pathIncludes)).toEqual([
+      "/request/count",
+      "/request",
+      "/request/{param:requestId}/approve",
+      "/request/{param:requestId}/decline",
+    ]);
+    expect(research.apiNotes).not.toContain("GET /request/count");
+    expect(research.previewResponses?.map(({ pathIncludes }) => pathIncludes)).toEqual(["/search", "/request"]);
   });
 
   it("grounds fixture-backed scenarios in verified routes and authentication", () => {
@@ -141,6 +241,246 @@ describe("AI authoring evaluation", () => {
         requests: { prices: { ...widget.requests.prices, query: { id: "1,1027", convert: "USD" } } },
       }),
     ).toContainEqual(expect.objectContaining({ path: ["requests"] }));
+
+    expect(
+      getDeterministicEvaluationIssues(testCase, {
+        ...widget,
+        requests: {
+          prices: {
+            ...widget.requests.prices,
+            query: { id: { $option: "symbols" }, convert: "USD" },
+          },
+        },
+        options: {
+          symbols: { label: "Symbols", control: "text", default: "1,1027,5426" },
+        },
+      }),
+    ).toEqual([]);
+  });
+
+  it("accepts equivalent empty-state wording from an allowed semantic group", () => {
+    const baseCase = CUSTOM_WIDGET_AI_EVALUATION_CASES.find(({ id }) => id === "fake-service-health");
+    if (!baseCase?.expectations) throw new Error("Fake service-health expectations are missing");
+    const testCase = {
+      ...baseCase,
+      expectations: {
+        ...baseCase.expectations,
+        templateIncludesAny: [["No matching services", "No services found", "Nothing to show"]],
+      },
+    };
+    const widget = {
+      $schema: "homarr-custom-widget-v2" as const,
+      name: "Health",
+      sources: {
+        default: { baseUrl: "https://status.example.test", networkScope: "public" as const, auth: "none" as const },
+      },
+      requests: {
+        health: {
+          source: "default",
+          kind: "query" as const,
+          method: "GET" as const,
+          path: "/v1/health",
+          trigger: "load" as const,
+          auth: "inherit" as const,
+          permission: "view" as const,
+        },
+      },
+      options: {},
+      template:
+        "<Stack><RefreshButton /><Text>status openIncidents latencyMs checkedAt services</Text><Text>No services found</Text></Stack>",
+    };
+
+    expect(getDeterministicEvaluationIssues(testCase, widget)).toEqual([]);
+    expect(
+      getDeterministicEvaluationIssues(testCase, {
+        ...widget,
+        template: widget.template.replace("No services found", "All services loaded"),
+      }),
+    ).toContainEqual(expect.objectContaining({ path: ["template"] }));
+  });
+
+  it("rejects a wrapped response rendered as an array and unwired pagination", () => {
+    const testCase = CUSTOM_WIDGET_AI_EVALUATION_CASES.find(({ id }) => id === "seerr-media-workflows");
+    if (!testCase?.expectedWidgets) throw new Error("Advanced Seerr expectations are missing");
+    const mediaCase = {
+      ...testCase,
+      expectations: testCase.expectedWidgets.find(({ id }) => id === "media-research")?.expectations,
+      expectedWidgets: undefined,
+    };
+    const operationsCase = {
+      ...testCase,
+      expectations: testCase.expectedWidgets.find(({ id }) => id === "request-operations")?.expectations,
+      expectedWidgets: undefined,
+    };
+    const validMedia = {
+      $schema: "homarr-custom-widget-v2" as const,
+      name: "Seerr research",
+      sources: {
+        default: {
+          baseUrl: "http://seerr.local:5055/api/v1",
+          networkScope: "private" as const,
+          auth: { type: "apiKeyHeader" as const, name: "X-Api-Key" },
+        },
+      },
+      requests: {
+        search: {
+          source: "default",
+          kind: "query" as const,
+          method: "GET" as const,
+          path: "/search",
+          trigger: "manual" as const,
+          query: { query: { $param: "query" }, page: { $param: "page" } },
+          auth: "inherit" as const,
+          permission: "view" as const,
+        },
+        requestMovie: {
+          source: "default",
+          kind: "action" as const,
+          method: "POST" as const,
+          path: "/request",
+          trigger: "manual" as const,
+          body: { mediaType: "movie", mediaId: { $param: "id" } },
+          auth: "inherit" as const,
+          permission: "modify" as const,
+          confirmation: "Request movie?",
+          invalidates: ["search"],
+        },
+        requestSeries: {
+          source: "default",
+          kind: "action" as const,
+          method: "POST" as const,
+          path: "/request",
+          trigger: "manual" as const,
+          body: { mediaType: "tv", mediaId: { $param: "id" }, seasons: "all" },
+          auth: "inherit" as const,
+          permission: "modify" as const,
+          confirmation: "Request series?",
+          invalidates: ["search"],
+        },
+      },
+      options: {},
+      template:
+        '<Stack><TextInput bind="query" /><SubFetch requestId="search" trigger="manual" params={{ query: inputs.query, page: inputs.page ?? 1 }}>{(response) => <Stack><Group><Text>{response.totalResults}</Text><RefreshButton requestId="search" label="Run again" /></Group><SimpleGrid>{response.results.map(item => <Stack key={item.id}><Image src={`https://image.tmdb.org/t/p/w780${item.backdropPath ?? item.posterPath}`} alt={item.title} /><Text lineClamp={2}>{item.overview}</Text></Stack>)}</SimpleGrid><Pagination bind="page" defaultValue={1} resetKey={inputs.query} total={response.totalPages} /></Stack>}</SubFetch><Text>overview voteAverage ★ mediaInfo status4k Unknown Pending Processing Partially available Available Blocklisted Deleted No results</Text><ActionButton requestId="requestMovie" /><ActionButton requestId="requestSeries" /></Stack>'.repeat(
+          4,
+        ),
+    };
+    const brokenMedia = {
+      ...validMedia,
+      template: validMedia.template.replaceAll("response.results", "response"),
+    };
+    expect(getDeterministicEvaluationIssues(mediaCase, validMedia)).toEqual([]);
+    const missingSearchInvalidation = {
+      ...validMedia,
+      requests: {
+        ...validMedia.requests,
+        requestMovie: { ...validMedia.requests.requestMovie, invalidates: [] },
+      },
+    };
+    expect(getDeterministicEvaluationIssues(mediaCase, missingSearchInvalidation)).toContainEqual(
+      expect.objectContaining({
+        path: ["requests"],
+        message: expect.stringMatching(/invalidates.*\/search/u),
+      }),
+    );
+    const actionIssue = getDeterministicEvaluationIssues(mediaCase, missingSearchInvalidation).find(
+      (issue) => issue.path?.[0] === "requests",
+    );
+    expect(actionIssue?.message).toContain('mediaType="movie" or any $param binding');
+    expect(actionIssue?.message).not.toContain('["movie","$param:*"]');
+    const boundActionValues = {
+      ...validMedia,
+      requests: {
+        ...validMedia.requests,
+        requestMovie: {
+          ...validMedia.requests.requestMovie,
+          body: { mediaType: { $param: "mediaType" }, mediaId: { $param: "id" } },
+        },
+        requestSeries: {
+          ...validMedia.requests.requestSeries,
+          body: {
+            mediaType: { $param: "mediaType" },
+            mediaId: { $param: "id" },
+            seasons: { $param: "seasons" },
+          },
+        },
+      },
+    };
+    expect(getDeterministicEvaluationIssues(mediaCase, boundActionValues)).toEqual([]);
+    expect(
+      getDeterministicEvaluationIssues(mediaCase, {
+        ...boundActionValues,
+        requests: {
+          ...boundActionValues.requests,
+          requestSeries: { ...boundActionValues.requests.requestSeries, body: { mediaType: "tv" } },
+        },
+      }),
+    ).toContainEqual(expect.objectContaining({ path: ["requests"] }));
+    expect(getDeterministicEvaluationIssues(mediaCase, brokenMedia)).toContainEqual(
+      expect.objectContaining({ message: expect.stringContaining("'.results'") }),
+    );
+
+    const operationsWidget = {
+      $schema: "homarr-custom-widget-v2" as const,
+      name: "Seerr operations",
+      sources: validMedia.sources,
+      requests: {
+        counts: {
+          source: "default",
+          kind: "query" as const,
+          method: "GET" as const,
+          path: "/request/count",
+          trigger: "load" as const,
+          auth: "inherit" as const,
+          permission: "view" as const,
+        },
+        recent: {
+          source: "default",
+          kind: "query" as const,
+          method: "GET" as const,
+          path: "/request",
+          trigger: "load" as const,
+          query: { take: 10, skip: 0, sort: "added", sortDirection: "desc" },
+          auth: "inherit" as const,
+          permission: "view" as const,
+        },
+        approvePending: {
+          source: "default",
+          kind: "action" as const,
+          method: "POST" as const,
+          path: "/request/{param:requestId}/approve",
+          trigger: "manual" as const,
+          auth: "inherit" as const,
+          permission: "modify" as const,
+          confirmation: "Approve request?",
+          invalidates: ["counts", "recent"],
+        },
+        declinePending: {
+          source: "default",
+          kind: "action" as const,
+          method: "POST" as const,
+          path: "/request/{param:requestId}/decline",
+          trigger: "manual" as const,
+          auth: "inherit" as const,
+          permission: "modify" as const,
+          confirmation: "Decline request?",
+          invalidates: ["counts", "recent"],
+        },
+      },
+      options: {},
+      template:
+        '<Stack><RefreshButton /><SimpleGrid><Text>pending approved available processing declined status.</Text></SimpleGrid><Text>{status.counts.loading} {status.recent.error} {data.recent.results} {data.recent.pageInfo} {data.recent.createdAt} UTC TMDB {data.recent.tmdbId} {data.recent.mediaType} {data.recent.status4k} Request #</Text><ActionButton requestId="approvePending" /><ActionButton requestId="declinePending" /><Pagination total={5} /></Stack>'.repeat(
+          8,
+        ),
+    };
+    const operationIssues = getDeterministicEvaluationIssues(operationsCase, operationsWidget);
+    expect(operationIssues.filter((issue) => issue.path?.[0] === "requests")).toEqual([]);
+    expect(operationIssues).toContainEqual(expect.objectContaining({ message: expect.stringContaining("Pagination") }));
+    expect(
+      getDeterministicEvaluationIssues(operationsCase, {
+        ...operationsWidget,
+        template: operationsWidget.template.replaceAll("status.counts", "status").replaceAll("status.recent", "status"),
+      }),
+    ).toContainEqual(expect.objectContaining({ message: expect.stringContaining("no global status.loading") }));
   });
 
   it("includes every path-specific Pokédex fixture in generator and judge context", () => {
@@ -278,20 +618,22 @@ describe("AI authoring evaluation", () => {
 
     expect(prompt).toContain("status.<requestId> with loading/ok/status/error fields");
     expect(prompt).toContain("RefreshButton is an installed runtime helper");
+    expect(prompt).toContain("cannot display stale results under edited inputs");
+    expect(prompt).toContain("do not penalize a repeated short literal label array");
     expect(prompt).toContain(JSON.stringify(testCase.sampleResponse, null, 2));
-    expect(prompt).toContain("# Bundled file: references/runtime.md");
+    expect(prompt).toContain("# Runtime");
+    expect(prompt).not.toContain("# Bundled file:");
     expect(prompt).toContain("does not prove API correctness, visual quality, usefulness, or accessibility");
     expect(prompt).toContain(
       "verified API notes and representative response fixtures are authoritative for endpoint paths, authentication requirements, and response shapes",
     );
     expect(prompt).toContain("Do not invent external endpoint or authentication objections from outside assumptions");
+    expect(prompt).toContain("an endpoint mentioned in broader API notes is available, not automatically required");
     expect(prompt).toContain(
       "Decorative icons paired with equivalent adjacent visible status text need no separate aria-label",
     );
     expect(prompt).toContain("A Badge containing explicit visible status text is not color-only");
-    expect(prompt).toContain(
-      "A readable absolute UTC date and time is valid; do not require relative or localized time without a documented safe helper",
-    );
+    expect(prompt).toContain('Date.toLocaleString(value, "en-US", "UTC") is an installed safe static helper');
     expect(prompt).toContain(
       'A pass requires a weighted total of at least 85, every category at least 75, goalFulfillment at least 85, complexityDiscipline at least 80, no fatal problem, and dailyUseDecision="would-use-daily"',
     );
@@ -322,7 +664,10 @@ describe("AI authoring evaluation", () => {
 
   it("normalizes a prose 'none' entry out of an otherwise empty fatal-problem list", () => {
     const parsed = parseJudgeResult(
-      JSON.stringify({ ...makeJudgeResult(90), fatalProblems: ["None: all requested capabilities are present."] }),
+      JSON.stringify({
+        ...makeJudgeResult(90),
+        fatalProblems: ["None: all requested capabilities are present.", "No fatal issues."],
+      }),
     );
     expect(parsed.fatalProblems).toEqual([]);
     expect(parsed.verdict).toBe("pass");

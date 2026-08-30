@@ -16,22 +16,28 @@ const requestedCase = process.argv.find((value) => value.startsWith("--case="))?
 const assistantMode = process.argv.includes("--assistant");
 const configuredLoops = Number(process.env.CUSTOM_WIDGET_AI_MAX_LOOPS ?? 10);
 const maxLoops = Number.isInteger(configuredLoops) && configuredLoops > 0 ? Math.min(configuredLoops, 10) : 10;
-let selectableCases = CUSTOM_WIDGET_AI_EVALUATION_CASES;
+let selectableCases = CUSTOM_WIDGET_AI_EVALUATION_CASES.filter((testCase) => !testCase.expectedWidgets?.length);
 if (assistantMode) {
   selectableCases = CUSTOM_WIDGET_AI_EVALUATION_CASES.filter(
     (testCase) =>
       (testCase.sampleResponse !== undefined || testCase.previewResponses?.length) &&
-      testCase.expectations !== undefined,
+      (testCase.expectations !== undefined || testCase.expectedWidgets?.length),
   );
 }
 let selectedCases = selectableCases;
-if (requestedCase)
-  selectedCases = CUSTOM_WIDGET_AI_EVALUATION_CASES.filter((testCase) => testCase.id === requestedCase);
+if (requestedCase) selectedCases = selectableCases.filter((testCase) => testCase.id === requestedCase);
 if (selectedCases.length === 0) throw new Error(`Unknown AI evaluation case '${requestedCase}'`);
 
 const runId = new Date().toISOString().replaceAll(/[:.]/gu, "-");
 const outputRoot = path.resolve(process.cwd(), ".ai-evaluations", runId);
 await mkdir(outputRoot, { recursive: true });
+
+function getResultScoreFloor(result: AiEvaluationResult | CustomWidgetAssistantEvaluationResult) {
+  if ("judges" in result && result.judges.length > 0) {
+    return Math.min(...result.judges.map((judge) => judge.total));
+  }
+  return result.judge?.total ?? null;
+}
 
 const results: Array<AiEvaluationResult | CustomWidgetAssistantEvaluationResult> = [];
 for (const testCase of selectedCases) {
@@ -60,7 +66,12 @@ for (const testCase of selectedCases) {
   }
   results.push(result);
   if (result.judge) {
-    process.stdout.write(`  ${result.judge.total}/100 after ${result.attempts} attempt(s)\n`);
+    const widgetCount = "widgets" in result ? result.widgets.length : 1;
+    const scoreFloor = getResultScoreFloor(result);
+    const status = result.judge.verdict === "pass" ? "passed" : "failed";
+    process.stdout.write(
+      `  ${scoreFloor}/100 floor across ${widgetCount} widget(s), ${status} after ${result.attempts} attempt(s)\n`,
+    );
   } else {
     process.stdout.write(`  failed after ${result.attempts} attempt(s)\n`);
   }
@@ -75,11 +86,14 @@ const summary = {
   results: results.map((result) => ({
     caseId: result.caseId,
     attempts: result.attempts,
-    score: result.judge?.total ?? null,
+    score: getResultScoreFloor(result),
     verdict: result.judge?.verdict ?? "fail",
     categories: result.judge?.categories ?? null,
     errors: result.errors,
     calledTools: "calledTools" in result ? result.calledTools : undefined,
+    widgets: "widgets" in result ? result.widgets.length : 1,
+    widgetScores: "judges" in result ? result.judges.map((judge) => judge.total) : undefined,
+    efficiency: "efficiency" in result ? result.efficiency : undefined,
     outputDirectory: path.relative(process.cwd(), result.outputDirectory),
   })),
 };

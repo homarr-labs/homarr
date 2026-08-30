@@ -3,19 +3,48 @@ import { z } from "zod/v4";
 
 import { CUSTOM_WIDGET_MCP_AUTHORING_PROMPT } from "@homarr/custom-widgets/authoring-prompt";
 import {
+  CUSTOM_WIDGET_SKILL_REFERENCE_NAMES,
+  findCustomWidgetComponents,
   getCustomWidgetComponent,
   getCustomWidgetComponentCatalog,
+  getCustomWidgetComponents,
   getCustomWidgetExample,
   getCustomWidgetSharedProps,
-  getCustomWidgetSkill,
+  getCustomWidgetSkillEntrypoint,
+  getCustomWidgetSkillReference,
 } from "@homarr/custom-widgets/authoring-resources";
 import {
   customWidgetAuthoringDefinitionSchema,
   getCustomWidgetJsonSchema,
+  normalizeCustomJsxAuthoringTemplate,
   normalizeCustomWidgetAuthoringDefinition,
 } from "@homarr/custom-widgets/core";
+import { addCustomJsxDiagnosticSourceExcerpts, validateCustomJsxTemplate } from "@homarr/custom-widgets/jsx";
 
 import { permissionRequiredProcedure } from "../../trpc";
+
+const customWidgetTemplateMaxLength = 50_000;
+const customWidgetTemplateValidationInputSchema = z
+  .strictObject({
+    template: z.string().min(1).max(customWidgetTemplateMaxLength).optional(),
+    templateLines: z.array(z.string().max(10_000)).min(1).max(2_000).optional(),
+  })
+  .superRefine((input, ctx) => {
+    if (input.template === undefined && input.templateLines === undefined) {
+      ctx.addIssue({ code: "custom", message: "Provide template or templateLines" });
+    }
+    if (input.template !== undefined && input.templateLines !== undefined) {
+      ctx.addIssue({ code: "custom", path: ["templateLines"], message: "Provide only one template format" });
+    }
+    const joinedLength = input.templateLines?.reduce((length, line) => length + line.length + 1, 0) ?? 0;
+    if (joinedLength > customWidgetTemplateMaxLength) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["templateLines"],
+        message: `The JSX template must contain at most ${customWidgetTemplateMaxLength} characters`,
+      });
+    }
+  });
 
 export const metadataProcedures = {
   schema: permissionRequiredProcedure
@@ -33,8 +62,14 @@ export const metadataProcedures = {
         "homarr://custom-widgets/schema",
         "homarr://custom-widgets/components",
         "homarr://custom-widgets/skill",
+        "homarr://custom-widgets/references/{schema|runtime|security}",
       ],
-      httpResources: ["/api/custom-widgets/schema", "/api/custom-widgets/components", "/api/custom-widgets/skill"],
+      httpResources: [
+        "/api/custom-widgets/schema",
+        "/api/custom-widgets/components",
+        "/api/custom-widgets/skill",
+        "/api/custom-widgets/reference-{schema|runtime|security}",
+      ],
     })),
 
   getSkill: permissionRequiredProcedure
@@ -43,10 +78,22 @@ export const metadataProcedures = {
       mcp: {
         enabled: true,
         description:
-          "Load the complete Homarr Custom Widget authoring skill in one response, including SKILL.md and every bundled reference. Call this before authoring, repairing, validating, previewing, or creating a custom widget.",
+          "Load the compact Homarr Custom Widget authoring entrypoint and its reference index. Fetch only a named reference needed by the current design with customWidget_getReference.",
       },
     })
-    .query(() => getCustomWidgetSkill()),
+    .query(() => getCustomWidgetSkillEntrypoint()),
+
+  getReference: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Load one named Custom Widget authoring reference. Use schema for manifest syntax, runtime for interactions, or security for authentication and interpreter constraints.",
+      },
+    })
+    .input(z.object({ name: z.enum(CUSTOM_WIDGET_SKILL_REFERENCE_NAMES) }))
+    .query(({ input }) => getCustomWidgetSkillReference(input.name)),
 
   getComponentCatalog: permissionRequiredProcedure
     .requiresPermission("admin")
@@ -59,13 +106,36 @@ export const metadataProcedures = {
     })
     .query(() => getCustomWidgetComponentCatalog()),
 
+  findComponents: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Find a small release-matched Custom JSX component subset by name or capability. Prefer this over loading the complete catalog when the intended UI is already known.",
+      },
+    })
+    .input(
+      z.object({
+        query: z.string().trim().min(2).max(240),
+        limit: z
+          .number()
+          .int()
+          .min(1)
+          .max(16)
+          .default(16)
+          .describe("Maximum matches. Search again for a different capability when needed."),
+      }),
+    )
+    .query(({ input }) => findCustomWidgetComponents(input.query, input.limit)),
+
   getComponent: permissionRequiredProcedure
     .requiresPermission("admin")
     .meta({
       mcp: {
         enabled: true,
         description:
-          "Get the installed Custom JSX documentation, allowed props, blocked props, and accessibility requirements for one named component.",
+          "Get one installed Custom JSX component document to resolve a concrete repair. Prefer customWidget_getComponents for a planned set.",
       },
     })
     .input(z.object({ name: z.string().trim().min(1).max(128).describe("A component name from the catalog.") }))
@@ -74,6 +144,26 @@ export const metadataProcedures = {
       if (!component) throw new TRPCError({ code: "NOT_FOUND", message: "Custom JSX component not found" });
       return component;
     }),
+
+  getComponents: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Get compact installed documentation for up to eight selected Custom JSX components in one batch. Full single-component details remain available for a concrete unresolved prop or repair.",
+      },
+    })
+    .input(
+      z.object({
+        names: z
+          .array(z.string().trim().min(1).max(128))
+          .min(1)
+          .max(8)
+          .describe("Selected component names from customWidget_findComponents."),
+      }),
+    )
+    .query(({ input }) => getCustomWidgetComponents(input.names)),
 
   getSharedProps: permissionRequiredProcedure
     .requiresPermission("admin")
@@ -110,6 +200,44 @@ export const metadataProcedures = {
       if (!example) throw new TRPCError({ code: "NOT_FOUND", message: "Custom JSX example not found" });
       const { template, ...widget } = example.widget;
       return { ...example, widget: { ...widget, templateLines: template.split("\n") } };
+    }),
+
+  validateTemplate: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Validate only a Custom JSX template for parser, component, interpreter, and safety issues. Prefer templateLines and never pass both formats. Use this inexpensive check while drafting so the complete manifest is sent only once to preview creation.",
+      },
+    })
+    .input(customWidgetTemplateValidationInputSchema)
+    .query(({ input }) => {
+      const rawTemplate = input.template ?? input.templateLines?.join("\n") ?? "";
+      const template = normalizeCustomJsxAuthoringTemplate(rawTemplate);
+      const diagnostics = addCustomJsxDiagnosticSourceExcerpts(template, validateCustomJsxTemplate(template));
+      const valid = diagnostics.every((diagnostic) => diagnostic.severity !== "error");
+      const hasUnknownProp = diagnostics.some((diagnostic) =>
+        diagnostic.message.startsWith("UNKNOWN_MANTINE_PROP"),
+      );
+      let nextStep =
+        "After the manifest and template agree, send the complete definition once to customWidget_previewCreate for full validation and a testable preview.";
+      if (!valid) {
+        nextStep = "Repair the reported JSX errors, then revalidate only the corrected template before previewing.";
+      } else if (hasUnknownProp) {
+        nextStep =
+          "Repair unknown component props before previewing; they may be ignored by the installed release. Revalidate the corrected JSX only.";
+      }
+      return {
+        valid,
+        normalizedCharacters: rawTemplate.length - template.length,
+        diagnostics,
+        summary: {
+          characters: template.length,
+          lines: template.split("\n").length,
+        },
+        nextStep,
+      };
     }),
 
   validate: permissionRequiredProcedure

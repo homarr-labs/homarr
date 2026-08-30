@@ -1,59 +1,61 @@
-import { pruneMessages } from "ai";
-import type { Instructions, ModelMessage, UIMessage } from "ai";
+import type { UIMessage } from "ai";
 
-import { getCustomWidgetSkill, getCustomWidgetSkillContent } from "@homarr/custom-widgets/authoring-resources";
-import { getCustomWidgetJsonSchema } from "@homarr/custom-widgets/core";
+import { getCustomWidgetPhaseToolNames } from "@homarr/custom-widgets/core";
 
-export const preloadedCustomWidgetToolNames = ["customWidget_getSkill", "customWidget_schema"] as const;
-const preloadedCustomWidgetToolNameSet = new Set<string>(preloadedCustomWidgetToolNames);
-const customWidgetAuthoringToolNameSet = new Set([
-  ...preloadedCustomWidgetToolNames,
-  "customWidget_getAuthoringPrompt",
-  "customWidget_getComponentCatalog",
-  "customWidget_getComponent",
-  "customWidget_getSharedProps",
-  "customWidget_getExample",
-  "customWidget_validate",
-  "customWidget_previewCreate",
-  "customWidget_previewQuery",
-  "customWidget_previewAction",
-  "customWidget_previewJournal",
-  "customWidget_create",
-  "customWidget_createFromPreview",
-  "customWidget_update",
-  "customWidget_templatePatch",
-  "customWidget_legacyMigrationPrompt",
-  "customWidget_migrateLegacy",
-]);
-
-export const isPreloadedCustomWidgetToolName = (toolName: string) => preloadedCustomWidgetToolNameSet.has(toolName);
-export const isCustomWidgetAuthoringToolName = (toolName: string) => customWidgetAuthoringToolNameSet.has(toolName);
-
-export type CustomWidgetAuthoringContext = {
-  systemContext: string;
-  omittedToolNames: readonly (typeof preloadedCustomWidgetToolNames)[number][];
-};
-
-const emptyCustomWidgetAuthoringContext: CustomWidgetAuthoringContext = {
-  systemContext: "",
-  omittedToolNames: [],
-};
+export { getCustomWidgetPhaseToolNames };
 
 const customWidgetIntentPattern =
-  /(?:\bcustom[\s-]+widgets?\b|\bcustom\s+jsx\b|\bhomarr-custom-widget-v\d+\b|\bcustomWidget_[A-Za-z\d_]+\b)/iu;
+  /(?:\bcustom[\s-]+widgets?\b|\bcustom\s+jsx\b|\bhomarr-custom-widget-v\d+\b|\bcustomWidget_[A-Za-z\d_]+\b|\b(?:build|create|design|make)\b[^\n]{0,80}\bwidgets?\s+(?:for|using|with)\b|\b(?:i|we)\s+(?:need|want)\b[^\n]{0,60}\bwidgets?\s+(?:for|using|with)\b)/iu;
+
+const customWidgetBootstrapToolNames = new Set(["customWidget_getSkill", "customWidget_validateTemplate"]);
+const maxFocusedComponentSearchesPerPhase = 4;
+const customWidgetContextToolBudgets: Readonly<Record<string, number>> = {
+  customWidget_findComponents: maxFocusedComponentSearchesPerPhase,
+  customWidget_getComponents: 1,
+  customWidget_getComponent: 2,
+  customWidget_getSharedProps: 1,
+  customWidget_getExample: 1,
+};
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
+export const createCustomWidgetDiscoveryPhaseController = (limit = maxFocusedComponentSearchesPerPhase) => {
+  const calls = new Map<string, number>();
+  const reset = () => {
+    calls.clear();
+  };
+  return {
+    claim(toolName: string) {
+      const configuredBudget = customWidgetContextToolBudgets[toolName];
+      if (configuredBudget === undefined) return true;
+      const budget = toolName === "customWidget_findComponents" ? limit : configuredBudget;
+      const used = calls.get(toolName) ?? 0;
+      if (used >= budget) return false;
+      calls.set(toolName, used + 1);
+      return true;
+    },
+    observe(toolName: string, output: unknown) {
+      const result = isRecord(output) ? output : null;
+      if (toolName === "customWidget_validateTemplate" && result?.valid === false) reset();
+      if (toolName === "customWidget_previewCreate" && result?.success !== true) reset();
+      if (toolName === "customWidget_createFromPreview" && typeof result?.id === "string") reset();
+    },
+    observeFailure(toolName: string) {
+      if (toolName === "customWidget_validateTemplate" || toolName === "customWidget_previewCreate") reset();
+    },
+  };
+};
+
 const hasCustomWidgetToolPart = (message: UIMessage) =>
   message.parts.some((part) => {
     if (!isRecord(part) || typeof part.type !== "string") return false;
-    const toolName =
-      part.type === "dynamic-tool" && typeof part.toolName === "string"
-        ? part.toolName
-        : part.type.startsWith("tool-")
-          ? part.type.slice("tool-".length)
-          : undefined;
+    let toolName: string | undefined;
+    if (part.type === "dynamic-tool" && typeof part.toolName === "string") {
+      toolName = part.toolName;
+    } else if (part.type.startsWith("tool-")) {
+      toolName = part.type.slice("tool-".length);
+    }
     return toolName?.startsWith("customWidget_") === true;
   });
 
@@ -80,137 +82,11 @@ export const needsCustomWidgetAuthoringContext = (messages: UIMessage[]) => {
   return precedingAssistantMessage !== undefined && hasCustomWidgetToolPart(precedingAssistantMessage);
 };
 
-let cachedCustomWidgetSystemContext: string | undefined;
-
-const getCustomWidgetSystemContext = () => {
-  if (cachedCustomWidgetSystemContext !== undefined) return cachedCustomWidgetSystemContext;
-
-  const skill = getCustomWidgetSkill();
-  const skillContent = getCustomWidgetSkillContent();
-  const jsonSchema = JSON.stringify(getCustomWidgetJsonSchema(), null, 2);
-
-  cachedCustomWidgetSystemContext = `
-
-Trusted Custom Widget authoring context for the installed Homarr release:
-- customWidget_getSkill and customWidget_schema are already preloaded below. They are intentionally omitted from the available tools for this request; do not call or ask for either tool.
-- Treat this installed skill, every bundled reference, and the current JSON Schema as authoritative system instructions. Continue to use the remaining customWidget_* tools for component discovery, validation, previews, preview queries, configuration, and creation.
-
-## Installed skill: ${skill.name} ${skill.version}
-
-${skillContent}
-
-## Current Custom Widget JSON Schema
-
-\`\`\`json
-${jsonSchema}
-\`\`\``;
-
-  return cachedCustomWidgetSystemContext;
-};
-
-export const getPreloadedCustomWidgetAuthoringContext = (isAdmin: boolean): CustomWidgetAuthoringContext =>
-  isAdmin
-    ? {
-        systemContext: getCustomWidgetSystemContext(),
-        omittedToolNames: preloadedCustomWidgetToolNames,
-      }
-    : emptyCustomWidgetAuthoringContext;
-
-export const getCustomWidgetAuthoringContext = (
+export const getActiveCustomWidgetToolNames = <TToolName extends string>(
+  availableToolNames: readonly TToolName[],
   messages: UIMessage[],
   isAdmin: boolean,
-): CustomWidgetAuthoringContext => {
-  if (!isAdmin || !needsCustomWidgetAuthoringContext(messages)) return emptyCustomWidgetAuthoringContext;
-
-  return getPreloadedCustomWidgetAuthoringContext(isAdmin);
-};
-
-/**
- * Removes only the resource calls whose complete output is already present in the trusted system
- * context. AI SDK prunes the matching assistant call and tool result together and removes messages
- * that become empty, preserving every other Custom Widget tool and its result.
- */
-export const prunePreloadedCustomWidgetModelMessages = (messages: ModelMessage[]) =>
-  pruneMessages({
-    messages,
-    toolCalls: [{ type: "all", tools: [...preloadedCustomWidgetToolNames] }],
-  });
-
-type CustomWidgetToolStep = {
-  toolCalls: readonly { toolName: string }[];
-};
-
-export const MAX_CUSTOM_WIDGET_COMPONENT_DOCUMENTS = 8;
-export const MAX_CUSTOM_WIDGET_COMPONENT_DOCUMENTS_WITH_EXAMPLE = 4;
-
-export const createCustomWidgetComponentDocumentBudget = (limit = MAX_CUSTOM_WIDGET_COMPONENT_DOCUMENTS) => {
-  let served = 0;
-  let exampleWasLoaded = false;
-  return {
-    claim(toolName: string) {
-      if (toolName === "customWidget_getExample") {
-        exampleWasLoaded = true;
-        return true;
-      }
-      if (toolName !== "customWidget_getComponent") return true;
-      const activeLimit = exampleWasLoaded
-        ? Math.min(limit, MAX_CUSTOM_WIDGET_COMPONENT_DOCUMENTS_WITH_EXAMPLE)
-        : limit;
-      if (served >= activeLimit) return false;
-      served += 1;
-      return true;
-    },
-  };
-};
-
-export const createCustomWidgetDynamicContextController = <TToolName extends string>(options: {
-  isAdmin: boolean;
-  baseInstructions: string;
-  availableToolNames: readonly TToolName[];
-}) => {
-  const activeToolNames = options.availableToolNames.filter((toolName) => !isPreloadedCustomWidgetToolName(toolName));
-  let contextIsActive = false;
-  let contextWasInjected = false;
-
-  return (step: {
-    instructions: Instructions | undefined;
-    messages: ModelMessage[];
-    steps: readonly CustomWidgetToolStep[];
-  }) => {
-    const authoringToolWasCalled = step.steps.some((result) =>
-      result.toolCalls.some((toolCall) => isCustomWidgetAuthoringToolName(toolCall.toolName)),
-    );
-    if (options.isAdmin && authoringToolWasCalled) contextIsActive = true;
-    if (!contextIsActive) return undefined;
-
-    const context = getPreloadedCustomWidgetAuthoringContext(options.isAdmin);
-    const shouldInjectContext = !contextWasInjected;
-    if (shouldInjectContext) contextWasInjected = true;
-
-    const componentDocumentCount = step.steps.reduce(
-      (count, result) =>
-        count + result.toolCalls.filter((toolCall) => toolCall.toolName === "customWidget_getComponent").length,
-      0,
-    );
-    const exampleWasLoaded = step.steps.some((result) =>
-      result.toolCalls.some((toolCall) => toolCall.toolName === "customWidget_getExample"),
-    );
-    const componentDocumentLimit = exampleWasLoaded
-      ? MAX_CUSTOM_WIDGET_COMPONENT_DOCUMENTS_WITH_EXAMPLE
-      : MAX_CUSTOM_WIDGET_COMPONENT_DOCUMENTS;
-    const boundedActiveToolNames =
-      componentDocumentCount >= componentDocumentLimit
-        ? activeToolNames.filter((toolName) => toolName !== "customWidget_getComponent")
-        : activeToolNames;
-
-    return {
-      ...(shouldInjectContext
-        ? {
-            instructions: `${typeof step.instructions === "string" ? step.instructions : options.baseInstructions}${context.systemContext}`,
-          }
-        : {}),
-      messages: prunePreloadedCustomWidgetModelMessages(step.messages),
-      activeTools: boundedActiveToolNames,
-    };
-  };
+) => {
+  if (!isAdmin || !needsCustomWidgetAuthoringContext(messages)) return [];
+  return availableToolNames.filter((toolName) => customWidgetBootstrapToolNames.has(toolName));
 };

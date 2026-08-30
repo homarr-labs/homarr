@@ -5,18 +5,21 @@ import { decryptSecret } from "@homarr/common/server";
 import {
   collectCustomWidgetRequestReferences,
   customWidgetAuthoringDefinitionSchema,
+  customJsxTemplateSchema,
   customWidgetSecretsInputSchema,
+  customWidgetTemplateLinesSchema,
   getCustomWidgetConfirmation,
   getCustomWidgetDefaultOptions,
   normalizeCustomWidgetAuthoringDefinition,
   validateCustomWidgetOptions,
 } from "@homarr/custom-widgets/core";
+import type { CustomJsxRequest } from "@homarr/custom-widgets/core";
 import { eq } from "@homarr/db";
 import { customWidgetDefinitions } from "@homarr/db/schema";
 
 import { permissionRequiredProcedure } from "../../trpc";
 import { parseCustomWidgetAuthoringInput } from "./authoring-validation";
-import { createPreviewSession, getPreviewSession } from "./preview-sessions";
+import { createPreviewSession, getPreviewSession, revisePreviewSessionTemplate } from "./preview-sessions";
 import { hasSameSecretBinding, requiredSecretKinds } from "./secret-policy";
 import { parseStoredCustomWidgetDefinition } from "./stored-definition";
 
@@ -27,13 +30,61 @@ const previewCreateInputSchema = z.object({
   options: z.record(z.string(), z.unknown()).optional(),
 });
 
+const previewReviseTemplateInputSchema = z
+  .strictObject({
+    sessionId: z.string().min(1),
+    expectedRevision: z.number().int().nonnegative().optional(),
+    template: customJsxTemplateSchema.optional(),
+    templateLines: customWidgetTemplateLinesSchema.optional(),
+  })
+  .superRefine((input, ctx) => {
+    if (input.template === undefined && input.templateLines === undefined) {
+      ctx.addIssue({ code: "custom", path: ["template"], message: "Provide template or templateLines" });
+    }
+    if (input.template !== undefined && input.templateLines !== undefined) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["templateLines"],
+        message: "Provide template or templateLines, not both",
+      });
+    }
+  });
+
+const getPreviewEvidenceChecklist = (requests: Record<string, CustomJsxRequest>, sessionId: string) => ({
+  queries: Object.entries(requests).flatMap(([requestId, request]) => {
+    if (request.kind !== "query") return [];
+    return [
+      {
+        requestId,
+        trigger: request.trigger,
+        parameterNames: [...collectCustomWidgetRequestReferences(request).params],
+        nextStep: `Call customWidget_previewQuery with sessionId '${sessionId}' and requestId '${requestId}'.`,
+      },
+    ];
+  }),
+  actions: Object.entries(requests).flatMap(([requestId, request]) => {
+    if (request.kind !== "action") return [];
+    return [
+      {
+        requestId,
+        method: request.method,
+        parameterNames: [...collectCustomWidgetRequestReferences(request).params],
+        minimumBoardPermission: request.permission,
+        confirmation: getCustomWidgetConfirmation(request),
+        invalidates: request.invalidates ?? [],
+        nextStep: `Call customWidget_previewAction with sessionId '${sessionId}' and requestId '${requestId}'. Actions are simulated unless live preview actions were explicitly enabled.`,
+      },
+    ];
+  }),
+});
+
 const previewCreateProcedure = permissionRequiredProcedure
   .requiresPermission("admin")
   .meta({
     mcp: {
       enabled: true,
       description:
-        "Create a short-lived preview for an unsaved custom widget after validation. Prefer templateLines for multiline JSX. The result lists every query that must be tested with customWidget_previewQuery before saving.",
+        "Fully validate a complete Custom JSX definition and create a short-lived preview in one call. Pass definition directly as an object, never serialized JSON. Prefer templateLines for multiline JSX. The result lists every query and action that needs evidence before saving.",
     },
   })
   .input(previewCreateInputSchema)
@@ -123,22 +174,49 @@ const previewCreateProcedure = permissionRequiredProcedure
       previewSession,
       previewPath,
       previewUrl: new URL(previewPath, ctx.baseUrl ?? "http://localhost").toString(),
-      queries: Object.entries(definition.requests).flatMap(([requestId, request]) => {
-        if (request.kind !== "query") return [];
-        return [
-          {
-            requestId,
-            trigger: request.trigger,
-            parameterNames: [...collectCustomWidgetRequestReferences(request).params],
-            nextStep: `Call customWidget_previewQuery with sessionId '${previewSession.id}' and requestId '${requestId}'.`,
-          },
-        ];
-      }),
+      ...getPreviewEvidenceChecklist(definition.requests, previewSession.id),
     };
   });
 
 export const previewBaseProcedures = {
   previewCreate: previewCreateProcedure,
+  previewReviseTemplate: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Replace only the JSX template in an existing preview after a response-driven correction. The inherited sources, requests, options, and secrets are fully revalidated without resending them. Prior evidence becomes stale, so rerun every returned query and action before persistence.",
+      },
+    })
+    .input(previewReviseTemplateInputSchema)
+    .mutation(async ({ ctx, input }) => {
+      const template = input.template ?? input.templateLines?.join("\n");
+      if (template === undefined) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "Provide template or templateLines" });
+      }
+      const revised = await revisePreviewSessionTemplate(
+        input.sessionId,
+        ctx.session.user.id,
+        template,
+        input.expectedRevision,
+      );
+      const session = await getPreviewSession(revised.id, ctx.session.user.id);
+      const previewPath = `/manage/custom-widgets/preview/${session.id}`;
+      return {
+        success: true as const,
+        evidenceReset: true as const,
+        previewSession: {
+          id: session.id,
+          revision: session.revision,
+          expiresAt: session.expiresAt,
+          liveActions: session.liveActions,
+        },
+        previewPath,
+        previewUrl: new URL(previewPath, ctx.baseUrl ?? "http://localhost").toString(),
+        ...getPreviewEvidenceChecklist(session.requests, session.id),
+      };
+    }),
   previewGet: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(z.object({ sessionId: z.string() }))
@@ -146,6 +224,7 @@ export const previewBaseProcedures = {
       const session = await getPreviewSession(input.sessionId, ctx.session.user.id);
       return {
         id: session.id,
+        revision: session.revision,
         name: session.name,
         description: session.description,
         iconUrl: session.iconUrl,

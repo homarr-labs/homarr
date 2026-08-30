@@ -170,12 +170,27 @@ Gutter columns are reserved from the layout's total column count, and changing t
 
 ## Get Custom Widget authoring resources
 
-Custom JSX v2 provides four HTTP discovery endpoints:
+Custom JSX v2 provides focused HTTP discovery endpoints:
 
 - `GET /api/custom-widgets/authoring-prompt` returns the current prompt plus MCP and HTTP resource identifiers.
 - `GET /api/custom-widgets/schema` returns the canonical widget JSON Schema.
 - `GET /api/custom-widgets/components` returns the release-matched static component catalog.
-- `GET /api/custom-widgets/skill` returns the concise live `SKILL.md` plus skills.sh, source, and install metadata. Retrieve the schema, component catalog, and examples through their dedicated resources only when needed.
+- `GET /api/custom-widgets/skill` returns the concise live `SKILL.md`, a named-reference index, and installation metadata.
+- `GET /api/custom-widgets/reference-schema`, `/reference-runtime`, and `/reference-security` return one authoring
+  reference at a time.
+
+Retrieve the schema, component catalog, references, and examples only when needed. Preview creation returns separate
+`queries` and `actions` evidence lists. Each action includes its HTTP method, invocation parameters, minimum board
+permission, confirmation, and invalidated query IDs so clients can simulate and verify mutations before persistence.
+
+For an evidence-driven JSX correction, `customWidget_previewReviseTemplate` accepts only the preview session,
+optional expected revision, and `template` or `templateLines`. It inherits and fully revalidates the manifest, advances
+the session revision, and returns fresh query/action lists without echoing sources, requests, options, or secrets.
+`customWidget_createFromPreview` requires current-revision evidence for every query and action; simulated action checks
+count as evidence without executing the mutation.
+
+MCP clients can call `customWidget_findComponents` with a capability query for a small release-matched component subset
+instead of retrieving the complete component catalog.
 
 Call `customWidget_configurationRequestUser` to create a temporary API source setup URL where the user can confirm their server URL and enter credentials. Do not construct or save this URL.
 

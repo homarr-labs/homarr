@@ -7,20 +7,10 @@ import { renderSafeJsx } from "../jsx/interpreter";
 import { CustomJsxInputsProvider } from "../jsx/runtime-components";
 import type { WidgetInputType, WidgetInputValue } from "../jsx/runtime-components";
 import { sameInputRecord, sameStringArray, sameTypeRecord } from "./input-state-utils";
-import type { CustomJsxRequestCapability } from "./types";
+
+export { CUSTOM_JSX_METHOD_COLORS, parseRequestCapabilities } from "./request-capabilities";
 
 const EMPTY_RECORD: Record<string, never> = {};
-
-const methodColors: Readonly<Record<string, string>> = {
-  GET: "blue",
-  POST: "orange",
-  PUT: "yellow",
-  DELETE: "red",
-  PATCH: "grape",
-};
-const methods = new Set(["GET", "POST", "PUT", "PATCH", "DELETE"]);
-const kinds = new Set(["query", "action"]);
-const permissions = new Set(["view", "modify", "full"]);
 
 export interface CustomJsxRendererMessages {
   noTemplate: string;
@@ -36,42 +26,6 @@ export interface CustomJsxRendererProps {
   components: Readonly<Record<string, ComponentType<never>>>;
   createBindings(data: unknown): Readonly<Record<string, unknown>>;
   messages: CustomJsxRendererMessages;
-}
-
-export const CUSTOM_JSX_METHOD_COLORS = methodColors;
-
-export function parseRequestCapabilities(value: unknown): CustomJsxRequestCapability[] {
-  if (!Array.isArray(value)) return [];
-  return value.flatMap((candidate) => {
-    if (!candidate || typeof candidate !== "object") return [];
-    const record = candidate as Record<string, unknown>;
-    if (
-      typeof record.id !== "string" ||
-      typeof record.kind !== "string" ||
-      !kinds.has(record.kind) ||
-      typeof record.method !== "string" ||
-      !methods.has(record.method) ||
-      typeof record.minimumBoardPermission !== "string" ||
-      !permissions.has(record.minimumBoardPermission)
-    )
-      return [];
-    return [
-      {
-        id: record.id,
-        kind: record.kind,
-        method: record.method,
-        trigger: record.trigger === "load" ? "load" : "manual",
-        minimumBoardPermission: record.minimumBoardPermission,
-        confirmation:
-          record.confirmation && typeof record.confirmation === "object"
-            ? (record.confirmation as CustomJsxRequestCapability["confirmation"])
-            : undefined,
-        invalidates: Array.isArray(record.invalidates)
-          ? record.invalidates.filter((entry): entry is string => typeof entry === "string")
-          : [],
-      } as CustomJsxRequestCapability,
-    ];
-  });
 }
 
 class RendererErrorBoundary extends Component<
@@ -216,6 +170,21 @@ function CustomJsxRendererSession({
       };
     });
   }, []);
+  const resetInput = useCallback((name: string, type: WidgetInputType) => {
+    let activeRegistration: InputRegistration | undefined;
+    for (const registration of registrations.current.values()) {
+      if (registration.name !== name) continue;
+      activeRegistration = registration;
+      break;
+    }
+    if (!activeRegistration || activeRegistration.type !== type) return;
+    setInputState((current) => {
+      if (current.types[name] !== type || Object.is(current.values[name], activeRegistration.initialValue)) {
+        return current;
+      }
+      return { ...current, values: { ...current.values, [name]: activeRegistration.initialValue } };
+    });
+  }, []);
   const rendered = useMemo(() => {
     try {
       const bindings = { ...createBindings(data), status, options, inputs };
@@ -259,6 +228,7 @@ function CustomJsxRendererSession({
             inputTypes={inputTypes}
             registerInput={registerInput}
             setInputValue={setInputValue}
+            resetInput={resetInput}
           >
             <RendererErrorBoundary resetKey={rendered.boundaryKey} onError={handleError}>
               {rendered.node}

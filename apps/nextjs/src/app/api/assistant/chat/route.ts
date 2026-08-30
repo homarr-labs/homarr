@@ -10,7 +10,7 @@ import { z } from "zod/v4";
 import { createTRPCContext, mcpRouter } from "@homarr/api/mcp";
 import {
   createAssistantGenerationAccessToken,
-  getAssistantContextEntitiesAsync,
+  getAssistantRequestContextEntitiesAsync,
   getSelectedModelDetailsAsync,
 } from "@homarr/api/assistant";
 import { auth } from "@homarr/auth/next";
@@ -30,6 +30,8 @@ import type { SupportedLanguage } from "@homarr/translation";
 import { fallbackLocale, isLocaleSupported } from "@homarr/translation";
 import { getI18n } from "@homarr/translation/server";
 import { resolveHomarrUrlConfig } from "@homarr/workshop/schema";
+import { getCustomWidgetContextRequestKey } from "@homarr/custom-widgets/authoring-resources";
+import { normalizeCustomWidgetLifecycleToolInput } from "@homarr/custom-widgets/core";
 
 import { browserToolContracts } from "~/components/assistant/assistant-tool-contracts";
 import { env as appEnv } from "~/env";
@@ -41,9 +43,16 @@ import type {
 } from "~/components/assistant/assistant-message-metadata";
 
 import { extractMcpTools } from "../../mcp/_extract-tools";
-import { buildAssistantRequestContext, sanitizeAttachmentFilename } from "./assistant-chat-input";
+import {
+  buildAssistantRequestContext,
+  getRequestedMentionIds,
+  sanitizeAttachmentFilename,
+} from "./assistant-chat-input";
 import { getAssistantModelLookupStatus } from "./assistant-model-lookup";
-import { convertAssistantMessagesToModelMessages } from "./assistant-message-conversion";
+import {
+  compactAssistantStepMessages,
+  convertAssistantMessagesToModelMessages,
+} from "./assistant-message-conversion";
 import {
   getOpenRouterWebSearchRequests,
   getOpenRouterWebSearchSources,
@@ -52,21 +61,30 @@ import {
   withOpenRouterWebSearch,
 } from "./assistant-openrouter";
 import { resolveHomarrProviderToken, toProviderOptionsKey } from "./assistant-provider-options";
-import { assistantExecutionPolicy } from "./assistant-execution-policy";
+import {
+  appendActiveCustomWidgetToolInstruction,
+  assistantExecutionPolicy,
+  createCustomWidgetToolStepGate,
+} from "./assistant-execution-policy";
 import { getAssistantStreamErrorMessage } from "./assistant-stream-error";
 import { getSafeAssistantToolError } from "./assistant-tool-error";
 import { repairAssistantToolInput } from "./assistant-tool-input-repair";
-import { customWidgetPreviewQueryOutputMaxCharacters, toAssistantToolOutput } from "./assistant-tool-output";
+import { getAssistantToolOutputMaxCharacters, toAssistantToolOutput } from "./assistant-tool-output";
+import { getAssistantToolInputSchema } from "./assistant-tool-schema";
 import {
-  createCustomWidgetComponentDocumentBudget,
-  createCustomWidgetDynamicContextController,
-  getCustomWidgetAuthoringContext,
-  prunePreloadedCustomWidgetModelMessages,
+  createCustomWidgetDiscoveryPhaseController,
+  getActiveCustomWidgetToolNames,
+  getCustomWidgetPhaseToolNames,
+  needsCustomWidgetAuthoringContext,
 } from "./custom-widget-authoring-context";
+import {
+  filterAssistantMcpToolMatches,
+  findAssistantMcpTools,
+  getLatestAssistantUserText,
+} from "./assistant-tool-discovery";
 import {
   customWidgetAssistantInstructions,
   getForcedAssistantToolName,
-  getRequiredAssistantToolNames,
   withAssistantToolPolicy,
 } from "./assistant-tool-policy";
 
@@ -139,39 +157,30 @@ const requestSchema = z.object({
     .optional(),
 });
 
+const assistantToolDiscoverySchema = z.object({
+  query: z
+    .string()
+    .trim()
+    .min(2)
+    .max(240)
+    .describe("A concise Homarr capability or action, such as 'search media requests' or 'list Kubernetes pods'."),
+});
+
+const assistantToolDiscoveryName = "homarr_findTools";
+
 const assistantInstructions = `You are Homarr Assistant, embedded in the user's self-hosted Homarr dashboard.
 
-Use the available Homarr tools whenever live instance data is needed. Never invent integrations, boards, apps, users, media, system status, or action results.
+Use Homarr tools for live instance data or actions; never invent resources, IDs, state, or results. Only a small relevant tool set is initially visible. Call ${assistantToolDiscoveryName} with a concise capability when a needed Homarr tool is not visible, then use the activated tool. Follow each tool's description and use integration IDs returned by discovery tools.
 
-Homarr concepts:
-- Integrations connect Homarr to services such as Sonarr, Radarr, Plex, Jellyfin, Home Assistant, download clients, DNS filters, and monitoring systems.
-- Boards are customizable dashboards. Apps are visual links on boards. Widgets show live integration data.
-- Tool inputs that require an integrationId must use an id returned by an integration discovery tool.
-- Existing Homarr permissions are authoritative. If a tool denies access, explain that the current user lacks permission without suggesting a bypass.
+Homarr permissions are authoritative. Explain denied access without suggesting a bypass. Read before changing when current state matters. Mutations use Homarr's native approval UI: when inputs are sufficient, call the mutation immediately and never ask for duplicate prose confirmation or retry a denial. Use ask_user only when a missing choice blocks the next action; do not end with a prose question expecting a reply.
 
-Action rules:
-- Prefer read-only tools before actions.
-- Whenever you need an answer from the user before choosing the next action, call ask_user. Never use ask_user to confirm a board settings or custom CSS change before configure_board_settings, or to confirm another change whose inputs are already sufficient for its native review form or mutating tool. Never end a prose response with a question that expects the user to type a reply. Offer distinct choices, categorize agreement or proceeding as affirmative, refusal as negative, and unrelated selections as alternative, then leave the freeform Other answer enabled. A confirmation question must have exactly one affirmative option. Purely rhetorical questions and open-ended conversation that does not block an action may remain prose, but optional next steps should be stated declaratively instead of phrased as a question.
-- Mutating Homarr tools already pause for native user approval. Calling a mutation only proposes the action; it cannot execute until the user selects Approve and run. Once the requested change is sufficiently specified, call the mutation immediately so the approval UI appears.
-- A prose response such as "Please confirm if you would like me to proceed", "Would you like me to proceed?", or a parameter summary that asks for confirmation is incorrect. Never ask for a second textual confirmation before an approval-gated tool call.
-- Do not retry a denied action.
-- Before creating an app, call configure_app with the app name and every useful default you can infer, including its description, href, pingUrl, and an icon URL returned by icon_findIcons. The user reviews Homarr's native app form. Its icon picker searches Homarr's local icon repository. Use the returned values for app_create. If the user asked to place it on a board, call configure_widget afterward with kind "app" and options { appId: the returned appId }.
-- Before changing a board's custom CSS or visual and behavior settings, call board_getBoardSettings to read the current values, then immediately call configure_board_settings with only the requested proposed changes. For a custom CSS request, include the complete resulting stylesheet in changes.customCss so the native form is prefilled and previews the proposed CSS. The native form is the user's review and confirmation step, so never insert ask_user between these calls when the requested change is known. Use the form's returned flat object for board_savePartialBoardSettings, which then shows the mutation approval. Never overwrite existing CSS rules unless the user explicitly requests replacement.
-- Before adding any widget to a board, call configure_widget with the target board, widget kind, proposed options, and any integration IDs selected from integration_all. Homarr's native widget editor applies defaults, validates the options, and restricts the picker to compatible integrations the user can access. Use the returned boardId, kind, options, and integrationIds exactly as the input to board_addItem. If configure_widget returns cancelled, do not add the widget.
-- To create a formatted note on a dashboard, call configure_widget with kind "notebook". Put valid Tiptap-compatible HTML in options.content and set options.showToolbar and options.allowReadOnlyCheck when useful. Use semantic paragraphs, headings, lists, task lists, blockquotes, tables, links, emphasis, and images as appropriate. Never include scripts, styles, iframes, event handlers, or unsafe URL protocols.
-- When choosing an app icon without configure_app, call the Homarr icon findIcons tool first and use one of its returned local icon URLs. Never invent a third-party icon CDN URL.
-- When a Homarr tool returns a usable image or icon URL and a visual summary helps, embed that exact URL with Markdown image syntax. App summary tables must use an Icon column such as ![Discord icon](exact-returned-url). Never replace an available returned icon with emoji, and never invent or transform image URLs.
-- Complete batch requests in the same run. Perform independent read-only calls in sequence, reuse results, continue calling tools until every requested item has been attempted, and summarize only after the batch is complete. Do not stop after a partial batch or ask the user to type "Continue".
-- Browser tools can navigate within Homarr, open existing Homarr UI, or refresh the active view after a completed change. Never navigate to an arbitrary external URL and never refresh before a mutation finishes.
-- Keep responses concise and lead with the result. Summarize tool output instead of dumping JSON.
-- Use well-formed GitHub-flavored Markdown. Put each list item on its own line and leave a blank line before lists.
-- If configuration or a service is unavailable, say what the user or administrator can do next.
+Use configure_app, configure_board_settings, and configure_widget as the native review step before their matching mutations. Preserve existing board CSS unless replacement was requested. Use Homarr icon results rather than invented icon URLs. Browser tools are same-origin only and may refresh after a completed mutation.
 
-Critical approval protocol: when a mutation's inputs are known, your next response must contain the mutation tool call, not a confirmation question. Homarr itself obtains approval after the tool call and before execution.`;
+Complete requested batches before summarizing. Keep responses concise, lead with the result, summarize tool output instead of dumping JSON, and use well-formed GitHub-flavored Markdown. If a service is unavailable, state the concrete next action.`;
 
 const webSearchInstructions = `
 
-OpenRouter web search is enabled for this request. When the user asks for live research or current external information, use the openrouter:web_search server tool. Ground the answer in its results and preserve useful source links in the response or generated note. Do not claim web search is unavailable.`;
+OpenRouter web search is available. Use it only when current external information or unsupplied API documentation is needed. Prefer primary documentation, keep the search focused, and cite the sources that support the answer or generated artifact.`;
 
 const asRecord = (value: unknown): Record<string, unknown> | null =>
   typeof value === "object" && value !== null && !Array.isArray(value) ? (value as Record<string, unknown>) : null;
@@ -439,12 +448,13 @@ export async function POST(request: Request) {
   const requestStartedAt = Date.now();
   const requestId = crypto.randomUUID();
   const requestedModelId = parsed.data.modelId ?? configuration.modelId;
+  const requestedMentions = getRequestedMentionIds(parsed.data.messages);
   const [modelLookup, contextEntities] = await Promise.all([
     getSelectedModelDetailsAsync(configuration, requestedModelId).then(
       (model) => ({ model, error: null }),
       (error: unknown) => ({ model: null, error }),
     ),
-    getAssistantContextEntitiesAsync(context).catch((error: unknown) => {
+    getAssistantRequestContextEntitiesAsync(context, requestedMentions).catch((error: unknown) => {
       logger.warn("Assistant request context could not be loaded", {
         requestId,
         errorType: getAssistantLogErrorType(error),
@@ -501,11 +511,14 @@ export async function POST(request: Request) {
     return Response.json({ error: "The selected model does not support image input." }, { status: 400 });
   }
   const canAuthorCustomWidgets = session.user.permissions.includes("admin");
-  const customWidgetAuthoringContext = getCustomWidgetAuthoringContext(incomingMessages, canAuthorCustomWidgets);
+  const customWidgetAuthoringActive = canAuthorCustomWidgets && needsCustomWidgetAuthoringContext(incomingMessages);
+  const customWidgetDiscoveryPhase = createCustomWidgetDiscoveryPhaseController();
+  const customWidgetToolStepGate = createCustomWidgetToolStepGate();
+  const loadedCustomWidgetContextRequests = new Set<string>();
   const caller = mcpRouter.createCaller(context);
-  const omittedCustomWidgetTools = new Set<string>(customWidgetAuthoringContext.omittedToolNames);
-  const mcpTools = extractMcpTools().filter((mcpTool) => !omittedCustomWidgetTools.has(mcpTool.name));
-  const customWidgetComponentDocumentBudget = createCustomWidgetComponentDocumentBudget();
+  const mcpTools = extractMcpTools().filter(
+    (mcpTool) => canAuthorCustomWidgets || !mcpTool.name.startsWith("customWidget_"),
+  );
 
   const homarrTools = Object.fromEntries(
     mcpTools.map((mcpTool) => {
@@ -515,15 +528,46 @@ export async function POST(request: Request) {
         tool({
           description: withAssistantToolPolicy(mcpTool.description, requiresApproval),
           inputSchema: jsonSchema(
-            (mcpTool.inputSchema ?? { type: "object", properties: {} }) as Parameters<typeof jsonSchema>[0],
+            getAssistantToolInputSchema(
+              mcpTool.name,
+              mcpTool.inputSchema ?? { type: "object", properties: {} },
+            ) as Parameters<typeof jsonSchema>[0],
           ),
           execute: async (input) => {
-            if (!customWidgetComponentDocumentBudget.claim(mcpTool.name)) {
+            if (customWidgetAuthoringActive && !customWidgetToolStepGate.claim(mcpTool.name)) {
               return {
                 error:
-                  "The targeted component-document budget is exhausted. Continue with validation and fetch another component only in a new repair turn if a concrete issue requires it.",
+                  "A Custom Widget tool must run in its own model step. Use that result before calling another tool.",
               };
             }
+            let executionInput = input;
+            if (
+              mcpTool.name.startsWith("customWidget_") &&
+              typeof input === "object" &&
+              input !== null &&
+              !Array.isArray(input)
+            ) {
+              executionInput = normalizeCustomWidgetLifecycleToolInput(
+                mcpTool.name,
+                input as Record<string, unknown>,
+              );
+            }
+            const contextRequestKey = getCustomWidgetContextRequestKey(mcpTool.name, executionInput);
+            if (contextRequestKey !== null && loadedCustomWidgetContextRequests.has(contextRequestKey)) {
+              return {
+                contextAlreadyLoaded: true,
+                nextStep: "Reuse the earlier result for this exact context request.",
+              };
+            }
+            if (customWidgetAuthoringActive && !customWidgetDiscoveryPhase.claim(mcpTool.name)) {
+              return {
+                phaseComplete: true,
+                components: [],
+                nextStep:
+                  "Focused discovery is complete for this phase. Use the accumulated component names, batch selected docs with customWidget_getComponents, then call customWidget_validateTemplate. A failed validation reopens focused discovery.",
+              };
+            }
+            if (contextRequestKey !== null) loadedCustomWidgetContextRequests.add(contextRequestKey);
             try {
               const procedure = mcpTool.pathInRouter.reduce<unknown>(
                 (current, segment) =>
@@ -536,15 +580,15 @@ export async function POST(request: Request) {
                 throw new Error("Procedure not callable");
               }
               const result = await (procedure as (value: unknown) => Promise<unknown>)(
-                input && Object.keys(input as object).length > 0 ? input : undefined,
+                executionInput && Object.keys(executionInput as object).length > 0 ? executionInput : undefined,
               );
-              return toAssistantToolOutput(
-                result,
-                mcpTool.name === "customWidget_previewQuery"
-                  ? { maxCharacters: customWidgetPreviewQueryOutputMaxCharacters }
-                  : undefined,
-              );
+              customWidgetDiscoveryPhase.observe(mcpTool.name, result);
+              return toAssistantToolOutput(result, {
+                maxCharacters: getAssistantToolOutputMaxCharacters(mcpTool.name),
+              });
             } catch (error) {
+              if (contextRequestKey !== null) loadedCustomWidgetContextRequests.delete(contextRequestKey);
+              customWidgetDiscoveryPhase.observeFailure(mcpTool.name);
               logger.error("Assistant tool call failed", {
                 toolName: mcpTool.name,
                 errorType: getAssistantLogErrorType(error),
@@ -577,7 +621,64 @@ export async function POST(request: Request) {
       ];
     }),
   ) satisfies ToolSet;
-  const availableTools = { ...homarrTools, ...frontendTools };
+  const discoveredToolNames = new Set<string>();
+  const latestUserText = getLatestAssistantUserText(incomingMessages);
+  const automaticToolCandidates = customWidgetAuthoringActive
+    ? mcpTools.filter((mcpTool) => !mcpTool.name.startsWith("customWidget_"))
+    : mcpTools;
+  const automaticallySelectedTools = findAssistantMcpTools(automaticToolCandidates, latestUserText, 6).map(
+    ({ name }) => name,
+  );
+  const toolDiscovery = tool({
+    description:
+      "Find Homarr tools by capability without loading the complete tool catalog. Matching tools become callable on the next step. Use a focused query and call again with a different capability when needed.",
+    inputSchema: jsonSchema(z.toJSONSchema(assistantToolDiscoverySchema) as Parameters<typeof jsonSchema>[0]),
+    execute: (value) => {
+      if (customWidgetAuthoringActive && !customWidgetToolStepGate.claim(assistantToolDiscoveryName)) {
+        return {
+          error:
+            "A Custom Widget tool must run in its own model step. Use that result before calling another tool.",
+        };
+      }
+      const input = assistantToolDiscoverySchema.parse(value);
+      const matches = filterAssistantMcpToolMatches(
+        findAssistantMcpTools(mcpTools, input.query),
+        input.query,
+        customWidgetAuthoringActive,
+      );
+      for (const match of matches) discoveredToolNames.add(match.name);
+      return {
+        query: input.query,
+        matches: matches.map((match) => ({ name: match.name, description: match.description })),
+        nextStep:
+          matches.length > 0
+            ? "Use one or more matching tools now. Search again only for a different capability."
+            : "No matching Homarr tool was found. Refine the capability or explain that it is unavailable.",
+      };
+    },
+  });
+  const availableTools: ToolSet = {
+    ...homarrTools,
+    [assistantToolDiscoveryName]: toolDiscovery,
+    ...frontendTools,
+  };
+  const frontendToolNames = Object.keys(frontendTools);
+  const activeCustomWidgetToolNames = getActiveCustomWidgetToolNames(
+    Object.keys(homarrTools),
+    incomingMessages,
+    canAuthorCustomWidgets,
+  );
+  const getActiveToolNames = (steps: Parameters<typeof getCustomWidgetPhaseToolNames>[1] = []) => {
+    const phaseToolNames = customWidgetAuthoringActive
+      ? getCustomWidgetPhaseToolNames(Object.keys(homarrTools), steps)
+      : null;
+    if (phaseToolNames) return [...frontendToolNames, ...phaseToolNames];
+    return [
+      assistantToolDiscoveryName,
+      ...frontendToolNames,
+      ...new Set([...automaticallySelectedTools, ...discoveredToolNames, ...activeCustomWidgetToolNames]),
+    ];
+  };
   const forcedToolName = getForcedAssistantToolName(incomingMessages);
   const openRouterServerToolsEnabled =
     configuration.webSearchEnabled && assistantProviderCanUseOpenRouterServerTools(configuration.provider);
@@ -627,38 +728,31 @@ export async function POST(request: Request) {
     const initialModelMessages = await convertAssistantMessagesToModelMessages(
       prepareMessagesForModel(incomingMessages),
     );
-    const modelMessages =
-      customWidgetAuthoringContext.systemContext.length > 0
-        ? prunePreloadedCustomWidgetModelMessages(initialModelMessages)
-        : initialModelMessages;
-    const baseInstructions = `${assistantInstructions}${customWidgetAssistantInstructions}${openRouterServerToolsEnabled ? webSearchInstructions : ""}${requestContext}${customWidgetAuthoringContext.systemContext}`;
-    const prepareDynamicCustomWidgetContext = createCustomWidgetDynamicContextController({
-      isAdmin: canAuthorCustomWidgets,
-      baseInstructions,
-      availableToolNames: Object.keys(availableTools),
-    });
+    const baseInstructions = `${assistantInstructions}${customWidgetAuthoringActive ? customWidgetAssistantInstructions : ""}${openRouterServerToolsEnabled ? webSearchInstructions : ""}${requestContext}`;
+    const getStepInstructions = (activeToolNames: readonly string[]) => {
+      if (!customWidgetAuthoringActive) return undefined;
+      return appendActiveCustomWidgetToolInstruction(baseInstructions, activeToolNames);
+    };
     const result = streamText({
       model: provider(modelId),
       instructions: baseInstructions,
-      messages: modelMessages,
+      messages: initialModelMessages,
       tools: availableTools,
-      prepareStep: ({ instructions, messages, stepNumber, steps, responseMessages }) => {
-        const dynamicStepOverrides = prepareDynamicCustomWidgetContext({ instructions, messages, steps });
-        const stepOverrides = dynamicStepOverrides ?? {};
+      prepareStep: ({ messages, stepNumber, steps }) => {
+        customWidgetToolStepGate.begin(stepNumber);
         if (stepNumber === 0 && forcedToolName !== undefined && forcedToolName in availableTools) {
           return {
-            ...stepOverrides,
             activeTools: [forcedToolName],
+            instructions: getStepInstructions([forcedToolName]),
             toolChoice: { type: "tool", toolName: forcedToolName },
           };
         }
-        const requiredToolNames = getRequiredAssistantToolNames(incomingMessages, steps, responseMessages).filter(
-          (toolName) => toolName in availableTools,
-        );
-        if (requiredToolNames.length > 0) {
-          return { ...stepOverrides, activeTools: requiredToolNames, toolChoice: "required" };
-        }
-        return dynamicStepOverrides;
+        const activeTools = getActiveToolNames(steps);
+        return {
+          activeTools,
+          instructions: getStepInstructions(activeTools),
+          messages: compactAssistantStepMessages(messages),
+        };
       },
       stopWhen: stepCountIs(assistantExecutionPolicy.maxSteps),
       abortSignal: request.signal,

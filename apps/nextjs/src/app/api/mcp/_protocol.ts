@@ -2,6 +2,8 @@ import { createMcpHandler, McpServer } from "@modelcontextprotocol/server";
 
 import type { McpTool } from "@homarr/api/mcp";
 
+import { toAssistantToolOutput } from "../assistant/chat/assistant-tool-output";
+
 interface CreateMcpProtocolHandlerOptions {
   caller: unknown;
   tools: McpTool[];
@@ -65,7 +67,12 @@ export const createMcpProtocolHandler = ({
               const input = Object.keys(args).length > 0 ? args : undefined;
               const result = await (procedure as (value: unknown) => Promise<unknown>)(input);
               return {
-                content: [{ type: "text" as const, text: JSON.stringify(result) }],
+                content: [
+                  {
+                    type: "text" as const,
+                    text: JSON.stringify(toAssistantToolOutput(result)),
+                  },
+                ],
               };
             } catch (error) {
               onToolError?.(tool.name, error);

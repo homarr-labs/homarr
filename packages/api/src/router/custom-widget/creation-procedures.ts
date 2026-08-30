@@ -37,7 +37,7 @@ export const creationProcedures = {
       mcp: {
         enabled: true,
         description:
-          "Create a Custom JSX widget only after customWidget_validate, customWidget_previewCreate, and every returned preview query succeed. Prefer templateLines for multiline JSX. Returns a client-navigable edit link.",
+          "Create a Custom JSX widget without reusing a preview. Prefer customWidget_createFromPreview after full preview validation and query checks so the definition is not streamed again.",
       },
     })
     .input(customWidgetCreateSchema)
@@ -56,7 +56,7 @@ export const creationProcedures = {
       mcp: {
         enabled: true,
         description:
-          "Persist the exact tested definition from a customWidget_previewCreate session. Prefer this over resending a large widget to customWidget_create. Every query in the final preview must have a successful customWidget_previewQuery journal entry.",
+          "Persist the exact tested definition from a customWidget_previewCreate or customWidget_previewReviseTemplate session. Prefer this over resending a large widget to customWidget_create. Every query and action in the final preview revision must have current evidence.",
       },
     })
     .input(z.object({ previewSessionId: z.string().min(1), targetBoardId: z.string().min(1).optional() }))
@@ -80,6 +80,27 @@ export const creationProcedures = {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: `Test every final preview query successfully before creating the widget: ${unverifiedQueryIds.join(", ")}`,
+        });
+      }
+      const unverifiedActionIds = Object.entries(session.requests).flatMap(([requestId, request]) => {
+        if (request.kind !== "action") return [];
+        const verified = journal.some((entry) => {
+          if (
+            entry.kind !== "action" ||
+            entry.requestId !== requestId ||
+            entry.sessionRevision !== session.revision
+          ) {
+            return false;
+          }
+          if (entry.simulated) return true;
+          return entry.status !== null && entry.status >= 200 && entry.status < 300;
+        });
+        return verified ? [] : [requestId];
+      });
+      if (unverifiedActionIds.length > 0) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: `Test every final preview action before creating the widget: ${unverifiedActionIds.join(", ")}`,
         });
       }
 

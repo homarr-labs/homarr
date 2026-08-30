@@ -29,11 +29,13 @@ vi.mock("@homarr/core/infrastructure/logs", () => ({
 }));
 vi.mock("@homarr/custom-widgets/authoring-prompt", () => ({ buildCustomWidgetMcpPrompt: mocks.buildPrompt }));
 vi.mock("@homarr/custom-widgets/authoring-resources", () => ({
+  CUSTOM_WIDGET_SKILL_REFERENCE_NAMES: ["schema", "runtime", "security"],
   getCustomWidgetComponent: mocks.getComponent,
   getCustomWidgetComponentCatalog: () => ({ components: [{ name: "Text Input" }] }),
   getCustomWidgetExample: (name: string) =>
     name === "status-card" ? { id: "status-card", title: "Status card", template: "<Text>Status</Text>" } : null,
-  getCustomWidgetSkillContent: () => "# Custom Widget Skill",
+  getCustomWidgetSkillEntrypoint: () => ({ skillMd: "# Custom Widget Skill" }),
+  getCustomWidgetSkillReference: (name: string) => ({ content: `# ${name} reference` }),
 }));
 vi.mock("@homarr/custom-widgets/core", () => ({
   customJsxExamples: [{ id: "status-card", title: "Status card", template: "<Text>Status</Text>" }],
@@ -136,7 +138,7 @@ describe("authenticated MCP prompt protocol", () => {
       prompts: [
         {
           name: "homarr-custom-widget-author",
-          description: "Author and iterate on one Homarr Custom JSX v2 widget.",
+          description: "Author and iterate on one or more Homarr Custom JSX v2 widgets.",
           arguments: [
             { name: "request", description: "The widget the user wants.", required: false },
             { name: "documentationUrl", description: "External API documentation URL.", required: false },
@@ -174,6 +176,21 @@ describe("authenticated MCP resource protocol", () => {
         { uri: "homarr://custom-widgets/components", name: "Custom Widget components", mimeType: "application/json" },
         { uri: "homarr://custom-widgets/skill", name: "Custom Widget skill", mimeType: "text/markdown" },
         {
+          uri: "homarr://custom-widgets/references/schema",
+          name: "Custom Widget reference: schema",
+          mimeType: "text/markdown",
+        },
+        {
+          uri: "homarr://custom-widgets/references/runtime",
+          name: "Custom Widget reference: runtime",
+          mimeType: "text/markdown",
+        },
+        {
+          uri: "homarr://custom-widgets/references/security",
+          name: "Custom Widget reference: security",
+          mimeType: "text/markdown",
+        },
+        {
           uri: "homarr://custom-widgets/examples/status-card",
           name: "Custom Widget example: Status card",
           mimeType: "application/json",
@@ -200,6 +217,9 @@ describe("authenticated MCP resource protocol", () => {
     ["homarr://custom-widgets/schema", "application/schema+json", { type: "object", title: "Custom Widget" }],
     ["homarr://custom-widgets/components", "application/json", { components: [{ name: "Text Input" }] }],
     ["homarr://custom-widgets/skill", "text/markdown", "# Custom Widget Skill"],
+    ["homarr://custom-widgets/references/schema", "text/markdown", "# schema reference"],
+    ["homarr://custom-widgets/references/runtime", "text/markdown", "# runtime reference"],
+    ["homarr://custom-widgets/references/security", "text/markdown", "# security reference"],
     [
       "homarr://custom-widgets/examples/status-card",
       "application/json",

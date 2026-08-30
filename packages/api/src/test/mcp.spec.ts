@@ -28,7 +28,10 @@ const MCP_TOOL_ALLOWLIST = {
     "customWidget_getAuthoringPrompt",
     "customWidget_getComponent",
     "customWidget_getComponentCatalog",
+    "customWidget_getComponents",
+    "customWidget_findComponents",
     "customWidget_getExample",
+    "customWidget_getReference",
     "customWidget_getSharedProps",
     "customWidget_getSkill",
     "customWidget_legacyMigrationPrompt",
@@ -37,6 +40,7 @@ const MCP_TOOL_ALLOWLIST = {
     "customWidget_previewQuery",
     "customWidget_schema",
     "customWidget_validate",
+    "customWidget_validateTemplate",
     "customWidget_workshopGet",
     "customWidget_workshopSearch",
     "dnsHole_summary",
@@ -60,15 +64,24 @@ const MCP_TOOL_ALLOWLIST = {
     "integration_searchInIntegration",
     "integration_searchMediaRequests",
     "invite_getAll",
+    "kubernetes_contexts_getContexts",
+    "kubernetes_ingresses_getIngresses",
+    "kubernetes_pods_getPods",
+    "mediaOrganizer_getData",
     "mediaRequests_getLatestRequests",
     "mediaRequests_getStats",
     "mediaServer_getCurrentStreams",
     "patchmon_getStats",
     "serverSettings_getBoardSettings",
     "serverSettings_getBranding",
+    "searchEngine_catalog",
     "smartHome_entityDetails",
     "smartHome_entityState",
+    "traefik_getDashboard",
+    "user_getAll",
+    "user_getById",
     "widgetSecrets_getConfiguredKinds",
+    "wud_getStats",
   ],
   mutation: [
     "app_create",
@@ -86,6 +99,7 @@ const MCP_TOOL_ALLOWLIST = {
     "board_setMobileHomeBoard",
     "customWidget_delete",
     "customWidget_previewAction",
+    "customWidget_previewReviseTemplate",
     "customWidget_templatePatch",
     "dnsHole_disable",
     "dnsHole_enable",
@@ -105,6 +119,8 @@ const MCP_TOOL_ALLOWLIST = {
     "serverSettings_updateBoardSettings",
     "smartHome_executeAutomation",
     "smartHome_switchEntity",
+    "user_changeHeaderPreferences",
+    "user_delete",
   ],
   secret: [
     "apiKeys_create",
@@ -118,6 +134,7 @@ const MCP_TOOL_ALLOWLIST = {
     "customWidget_sourceConfigure",
     "customWidget_update",
     "customWidget_workshopInstall",
+    "user_create",
     "widgetSecrets_deleteSecret",
     "widgetSecrets_setSecret",
   ],
@@ -200,13 +217,20 @@ describe("custom widget authoring procedure access", () => {
       unauthenticatedCaller.customWidget.schema(),
       unauthenticatedCaller.customWidget.getAuthoringPrompt(),
       unauthenticatedCaller.customWidget.getComponentCatalog(),
+      unauthenticatedCaller.customWidget.findComponents({ query: "search input" }),
       unauthenticatedCaller.customWidget.getComponent({ name: "Stack" }),
       unauthenticatedCaller.customWidget.getExample({ name: "service-dashboard" }),
+      unauthenticatedCaller.customWidget.getReference({ name: "runtime" }),
       unauthenticatedCaller.customWidget.getSharedProps({ names: ["p"] }),
       unauthenticatedCaller.customWidget.getSkill(),
       unauthenticatedCaller.customWidget.list(),
       unauthenticatedCaller.customWidget.validate({ widget: {} }),
+      unauthenticatedCaller.customWidget.validateTemplate({ template: "<Text>Hi</Text>" }),
       unauthenticatedCaller.customWidget.createFromPreview({ previewSessionId: "preview" }),
+      unauthenticatedCaller.customWidget.previewReviseTemplate({
+        sessionId: "preview",
+        template: "<Text>Hi</Text>",
+      }),
       unauthenticatedCaller.customWidget.secretSet({
         definitionId: "widget",
         secret: { sourceId: "default", kind: "apiKey", value: "secret" },
@@ -227,11 +251,18 @@ describe("custom widget authoring procedure access", () => {
       nonAdminCaller.customWidget.schema(),
       nonAdminCaller.customWidget.getAuthoringPrompt(),
       nonAdminCaller.customWidget.getComponentCatalog(),
+      nonAdminCaller.customWidget.findComponents({ query: "search input" }),
       nonAdminCaller.customWidget.getComponent({ name: "Stack" }),
       nonAdminCaller.customWidget.getExample({ name: "service-dashboard" }),
+      nonAdminCaller.customWidget.getReference({ name: "runtime" }),
       nonAdminCaller.customWidget.getSharedProps({ names: ["p"] }),
       nonAdminCaller.customWidget.getSkill(),
+      nonAdminCaller.customWidget.validateTemplate({ template: "<Text>Hi</Text>" }),
       nonAdminCaller.customWidget.createFromPreview({ previewSessionId: "preview" }),
+      nonAdminCaller.customWidget.previewReviseTemplate({
+        sessionId: "preview",
+        template: "<Text>Hi</Text>",
+      }),
       nonAdminCaller.customWidget.secretSet({
         definitionId: "widget",
         secret: { sourceId: "default", kind: "apiKey", value: "secret" },
@@ -256,9 +287,32 @@ describe("custom widget authoring procedure access", () => {
     await expect(adminCaller.customWidget.getSkill()).resolves.toMatchObject({
       name: expect.any(String),
     });
+    await expect(adminCaller.customWidget.getReference({ name: "runtime" })).resolves.toMatchObject({
+      name: "runtime",
+      content: expect.stringContaining("SubFetch"),
+    });
+    await expect(adminCaller.customWidget.validateTemplate({ template: "<Text>Hi</Text>" })).resolves.toMatchObject({
+      valid: true,
+    });
+    await expect(
+      adminCaller.customWidget.validateTemplate({
+        template:
+          '<Stack><SubFetch requestId="search" params={{ query: inputs.search }}}>{(result) => <Text>{result.totalResults}</Text>}</SubFetch></Stack>',
+      }),
+    ).resolves.toMatchObject({
+      valid: false,
+      diagnostics: [expect.objectContaining({ sourceExcerpt: expect.stringContaining("}}>") })],
+      nextStep: expect.stringContaining("Repair the reported JSX errors"),
+    });
     await expect(adminCaller.customWidget.getComponentCatalog()).resolves.toMatchObject({
       components: expect.arrayContaining([expect.objectContaining({ name: "Stack" })]),
       examples: expect.arrayContaining([expect.objectContaining({ id: "service-dashboard" })]),
+    });
+    await expect(adminCaller.customWidget.findComponents({ query: "TextInput SubFetch" })).resolves.toMatchObject({
+      components: expect.arrayContaining([
+        expect.objectContaining({ name: "TextInput" }),
+        expect.objectContaining({ name: "SubFetch" }),
+      ]),
     });
     await expect(adminCaller.customWidget.getComponent({ name: "Stack" })).resolves.toMatchObject({
       name: "Stack",

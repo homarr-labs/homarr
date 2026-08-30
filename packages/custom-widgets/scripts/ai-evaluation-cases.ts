@@ -1,3 +1,26 @@
+export interface CustomWidgetAiExpectation {
+  sourceBaseUrl: string;
+  sourceNetworkScope?: "public" | "private" | "loopback";
+  sourceAuth: "none" | "bearer" | "basic" | "apiKeyHeader" | "apiKeyQuery";
+  sourceAuthName?: string;
+  minimumTemplateCharacters?: number;
+  requests: Array<{
+    kind: "query" | "action";
+    method: "GET" | "POST";
+    pathIncludes: string;
+    trigger?: "load" | "manual";
+    permission?: "view" | "modify" | "full";
+    queryIncludes?: Record<string, string | readonly string[]>;
+    bodyIncludes?: Record<string, string | readonly string[]>;
+    invalidates?: string[];
+    invalidatesPaths?: string[];
+    requiresConfirmation?: boolean;
+    requiresStatusBinding?: boolean;
+  }>;
+  templateIncludes?: string[];
+  templateIncludesAny?: string[][];
+}
+
 export interface CustomWidgetAiEvaluationCase {
   id: string;
   request: string;
@@ -6,23 +29,33 @@ export interface CustomWidgetAiEvaluationCase {
   sampleResponse?: unknown;
   previewResponses?: Array<{
     pathIncludes: string;
+    kind?: "query" | "action";
+    method?: "GET" | "POST";
     response: unknown;
   }>;
   minimumPreviewCycles?: number;
-  expectations?: {
-    sourceBaseUrl: string;
-    sourceAuth: "none" | "apiKeyQuery";
-    sourceAuthName?: string;
-    requests: Array<{
-      kind: "query" | "action";
-      method: "GET" | "POST";
-      pathIncludes: string;
-      trigger?: "load" | "manual";
-      queryIncludes?: Record<string, string>;
-    }>;
-    templateIncludes?: string[];
+  expectations?: CustomWidgetAiExpectation;
+  expectedWidgets?: Array<{
+    id: string;
+    request: string;
+    apiNotes?: string;
+    expectations: CustomWidgetAiExpectation;
+  }>;
+  research?: {
+    query: string;
+    requiredReferences: Array<"schema" | "runtime" | "security">;
+    allowedReferences?: Array<"schema" | "runtime" | "security">;
   };
 }
+
+const seerrSourceApiNotes =
+  "Use the suggested self-hosted source http://seerr.local:5055/api/v1 with private network scope and X-Api-Key header authentication.";
+const seerrRequestOperationsApiNotes =
+  "GET /request/count returns total, movie, tv, pending, approved, declined, processing, available, and completed counts. GET /request accepts take, skip, filter, sort, sortDirection, requestedBy, and mediaType; use fixed primitives take=10, skip=0, sort=added, and sortDirection=desc. Its response has pageInfo.pages/pageSize/results/page and a results array whose entries include id, type, numeric status, createdAt, profileName, requestedBy.displayName, and media.tmdbId/mediaType/status/status4k. Request status values are 1 Pending, 2 Approved, 3 Declined, 4 Failed, and 5 Completed. For managers, POST /request/{param:requestId}/approve and POST /request/{param:requestId}/decline change a pending request's status without a body; show them only for status 1, confirm both, and invalidate the count and list queries. This scoped widget intentionally uses text pageInfo context and does not require media-title joins, search requests, or interactive pagination.";
+const seerrMediaResearchApiNotes =
+  "GET /search requires query and accepts optional page. Its entire response is an envelope with page, totalPages, totalResults, and results; mixed result entries include id, mediaType, title or name, overview, posterPath, backdropPath, voteAverage, releaseDate or firstAirDate, and mediaInfo.status/status4k, so render the array at response.results rather than mapping the envelope. TMDB artwork paths are relative: build a full https://image.tmdb.org/t/p/w780 URL from backdropPath with posterPath fallback. POST /request requires mediaType and mediaId; TV requests can use seasons='all'. Both request actions need modify permission, confirmation, and must invalidate the search query after success. This scoped widget intentionally does not require request counts, a request queue, status filters, or sorting.";
+const seerrMediaStatusApiNotes =
+  "Both media.status and mediaInfo.status/status4k use 1 Unknown, 2 Pending, 3 Processing, 4 Partially Available, 5 Available, 6 Blocklisted, and 7 Deleted. Render readable labels rather than raw codes.";
 
 export const CUSTOM_WIDGET_AI_EVALUATION_CASES: readonly CustomWidgetAiEvaluationCase[] = [
   {
@@ -257,5 +290,272 @@ export const CUSTOM_WIDGET_AI_EVALUATION_CASES: readonly CustomWidgetAiEvaluatio
       ],
       templateIncludes: ["TextInput", "SubFetch", "age", "count"],
     },
+  },
+  {
+    id: "seerr-media-workflows",
+    documentationUrl: "https://github.com/seerr-team/seerr/blob/develop/seerr-api.yml",
+    request:
+      "Research Seerr's current API once, then create two coordinated but independent Custom Widgets in this run. The first is a polished request-operations widget: prioritize total, pending, approved, and available in a responsive SimpleGrid, with Pending as the primary visual accent, Total as the strong anchor, and Approved/Available quieter; add compact processing and declined context, then show a recent queue with a two-level row hierarchy and strong identity such as Movie · TMDB 603 · Request #91. Give pending rows a restrained theme-aware accent. Keep requester and actions primary without repeating media type; use requestedBy.avatar only when present, set Avatar imageProps.alt from displayName, label profileName accurately as Media profile, and show missing data neutrally as Not provided. Separate identity from compact Created/Profile and Media/4K metadata groups plus a wrapping status/action row for narrow tiles. Show readable request/media/4K states, createdAt as clearly labeled UTC time, truthful pageInfo including total results, refresh, and safe confirmed approve and decline for pending requests. Preserve usable counts or queue when only its sibling request fails, and show subtle in-place refresh context when cached data remains. Give it resilient loading, empty, error, and success states. The second is an advanced media-research widget: use a bound search input and a manual SubFetch submit that never searches while typing and relies on native loading/error/retry, with functional pagination through bound request parameters. Reset pagination to page 1 when the query changes before the next manual run, keep a result-local control to rerun the same search, and render Pagination only when totalPages is greater than 1. Show exactly one concise active query/page/total-results summary. Keep its header to one compact line without explanatory copy. Render compact responsive results without redundant outer or per-item chrome; Image prefers backdropPath with posterPath fallback and uses a compact thumbnail beside content at base, widening only above xs without stacking a small capped image in a full-width slot. Clamp overview text, include release metadata, an explicit Rating label only when voteAverage is present, and compact readable mediaInfo plus 4K status badges, with resilient loading/no-results/error states and safe confirmed movie/full-series requests per result. Both must be excellent in narrow and wide tiles, independently validated and preview-tested, and persisted from their exact tested previews.",
+    apiNotes: `${seerrSourceApiNotes} ${seerrRequestOperationsApiNotes} ${seerrMediaResearchApiNotes} ${seerrMediaStatusApiNotes}`,
+    previewResponses: [
+      {
+        pathIncludes: "/request/count",
+        kind: "query",
+        method: "GET",
+        response: {
+          total: 42,
+          movie: 25,
+          tv: 17,
+          pending: 4,
+          approved: 9,
+          declined: 2,
+          processing: 6,
+          available: 20,
+          completed: 21,
+        },
+      },
+      {
+        pathIncludes: "/request",
+        kind: "query",
+        method: "GET",
+        response: {
+          pageInfo: { pages: 5, pageSize: 10, results: 42, page: 1 },
+          results: [
+            {
+              id: 91,
+              type: "movie",
+              status: 2,
+              createdAt: "2026-08-28T19:22:00.000Z",
+              profileName: "HD-1080p",
+              requestedBy: { id: 7, displayName: "Alex", avatar: "/avatar/alex" },
+              media: { tmdbId: 603, mediaType: "movie", status: 3, status4k: 1 },
+            },
+            {
+              id: 92,
+              type: "tv",
+              status: 1,
+              createdAt: "2026-08-29T08:05:00.000Z",
+              requestedBy: { id: 8, displayName: "Sam", avatar: "/avatar/sam" },
+              media: { tmdbId: 1399, mediaType: "tv", status: 2, status4k: 1 },
+            },
+          ],
+        },
+      },
+      {
+        pathIncludes: "/search",
+        kind: "query",
+        method: "GET",
+        response: {
+          page: 1,
+          totalPages: 1,
+          totalResults: 2,
+          results: [
+            {
+              id: 603,
+              mediaType: "movie",
+              title: "The Matrix",
+              overview: "A hacker discovers the world is a simulated reality.",
+              posterPath: "/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg",
+              backdropPath: "/icmmSD4vTTDKOq2vvdulafOGw93.jpg",
+              voteAverage: 8.2,
+              releaseDate: "1999-03-30",
+              mediaInfo: { status: 3, status4k: 1 },
+            },
+            {
+              id: 1399,
+              mediaType: "tv",
+              name: "Game of Thrones",
+              overview: "Noble families compete for control of the realm.",
+              posterPath: "/1XS1oqL89opfnbLl8WnZY1O1uJx.jpg",
+              backdropPath: "/2OMB0ynKlyIenMJWI2Dy9IWT4c.jpg",
+              voteAverage: 8.5,
+              firstAirDate: "2011-04-17",
+              mediaInfo: { status: 2, status4k: 1 },
+            },
+          ],
+        },
+      },
+      {
+        pathIncludes: "/request",
+        kind: "action",
+        method: "POST",
+        response: { id: 93, status: 1, type: "movie", media: { tmdbId: 603, mediaType: "movie" } },
+      },
+      {
+        pathIncludes: "/request/{param:requestId}/approve",
+        kind: "action",
+        method: "POST",
+        response: { id: 91, status: 2, type: "movie", modifiedBy: { displayName: "Admin" } },
+      },
+      {
+        pathIncludes: "/request/{param:requestId}/decline",
+        kind: "action",
+        method: "POST",
+        response: { id: 91, status: 3, type: "movie", modifiedBy: { displayName: "Admin" } },
+      },
+    ],
+    research: {
+      query: "Seerr API search media create request get requests X-Api-Key",
+      requiredReferences: ["schema", "runtime", "security"],
+      allowedReferences: ["schema", "runtime", "security"],
+    },
+    expectedWidgets: [
+      {
+        id: "request-operations",
+        request:
+          "A Seerr request-operations widget with asymmetric Total/Pending priority plus quieter Approved/Available and processing/declined context, independently recoverable count/queue failures, subtle cached refresh context, divider-based rows with a pending accent, a narrow-first two-level queue, non-duplicated request/media identity, accessible requester/avatar and Media profile context, compact Created/Profile and Media/4K groups, readable request state, UTC time, truthful total-results page context, refresh, confirmed approve/decline for pending requests, and complete loading, empty, error, and success states.",
+        apiNotes: `${seerrSourceApiNotes} ${seerrRequestOperationsApiNotes} ${seerrMediaStatusApiNotes}`,
+        expectations: {
+          sourceBaseUrl: "http://seerr.local:5055/api/v1",
+          sourceNetworkScope: "private",
+          sourceAuth: "apiKeyHeader",
+          sourceAuthName: "X-Api-Key",
+          minimumTemplateCharacters: 900,
+          requests: [
+            {
+              kind: "query",
+              method: "GET",
+              pathIncludes: "/request/count",
+              trigger: "load",
+              requiresStatusBinding: true,
+            },
+            {
+              kind: "query",
+              method: "GET",
+              pathIncludes: "/request",
+              trigger: "load",
+              queryIncludes: { take: "10", skip: "0", sort: "added", sortDirection: "desc" },
+              requiresStatusBinding: true,
+            },
+            {
+              kind: "action",
+              method: "POST",
+              pathIncludes: "/request/{param:requestId}/approve",
+              trigger: "manual",
+              permission: "modify",
+              invalidatesPaths: ["/request/count", "/request"],
+              requiresConfirmation: true,
+            },
+            {
+              kind: "action",
+              method: "POST",
+              pathIncludes: "/request/{param:requestId}/decline",
+              trigger: "manual",
+              permission: "modify",
+              invalidatesPaths: ["/request/count", "/request"],
+              requiresConfirmation: true,
+            },
+          ],
+          templateIncludes: [
+            "RefreshButton",
+            "ActionButton",
+            "SimpleGrid",
+            "pageInfo",
+            "results",
+            "pending",
+            "approved",
+            "available",
+            "processing",
+            "declined",
+            "createdAt",
+            "Date.toLocaleString",
+            "tmdbId",
+            "status4k",
+            "status.",
+            "Failed",
+            "Completed",
+            "Not provided",
+            "imageProps",
+          ],
+          templateIncludesAny: [
+            ["TMDB", "Tmdb"],
+            ["Request #", "Request ID"],
+            ["UTC", "utc"],
+          ],
+        },
+      },
+      {
+        id: "media-research",
+        request:
+          "A compact Seerr media-research widget with manual bound search/pagination that resets to page 1 when the query changes, native SubFetch failure/retry, a result-local same-query rerun, conditional multi-page Pagination, one active query/page/total-results summary, a one-line header, a compact base thumbnail beside content that widens above xs, clamped overview, an explicit conditional Rating label, compact readable normal and 4K status badges, and confirmed direct requests for movies and full TV series.",
+        apiNotes: `${seerrSourceApiNotes} ${seerrMediaResearchApiNotes} ${seerrMediaStatusApiNotes}`,
+        expectations: {
+          sourceBaseUrl: "http://seerr.local:5055/api/v1",
+          sourceNetworkScope: "private",
+          sourceAuth: "apiKeyHeader",
+          sourceAuthName: "X-Api-Key",
+          minimumTemplateCharacters: 900,
+          requests: [
+            {
+              kind: "query",
+              method: "GET",
+              pathIncludes: "/search",
+              trigger: "manual",
+              queryIncludes: { query: "$param:query", page: "$param:page" },
+            },
+            {
+              kind: "action",
+              method: "POST",
+              pathIncludes: "/request",
+              trigger: "manual",
+              permission: "modify",
+              bodyIncludes: { mediaType: ["movie", "$param:*"], mediaId: "$param:*" },
+              invalidatesPaths: ["/search"],
+              requiresConfirmation: true,
+            },
+            {
+              kind: "action",
+              method: "POST",
+              pathIncludes: "/request",
+              trigger: "manual",
+              permission: "modify",
+              bodyIncludes: {
+                mediaType: ["tv", "$param:*"],
+                mediaId: "$param:*",
+                seasons: ["all", "$param:*"],
+              },
+              invalidatesPaths: ["/search"],
+              requiresConfirmation: true,
+            },
+          ],
+          templateIncludes: [
+            "TextInput",
+            "SubFetch",
+            'trigger="manual"',
+            "RefreshButton",
+            'requestId="search"',
+            "ActionButton",
+            "Image",
+            "Pagination",
+            "defaultValue={1}",
+            "resetKey",
+            "inputs.page ?? 1",
+            ".results",
+            "posterPath",
+            "backdropPath",
+            "https://image.tmdb.org/t/p/",
+            "w780",
+            "totalResults",
+            "overview",
+            "lineClamp",
+            "voteAverage",
+            "mediaInfo",
+            "status4k",
+            "Unknown",
+            "Pending",
+            "Processing",
+            "Available",
+            "Blocklisted",
+            "Deleted",
+          ],
+          templateIncludesAny: [
+            ["resetKey={inputs.query}", "resetKey={inputs.search}"],
+            ["Rating", "★", "/10"],
+            ["Partially Available", "Partially available"],
+            ["No matching", "No results", "No media", "Nothing found"],
+          ],
+        },
+      },
+    ],
   },
 ] as const;
