@@ -26,6 +26,13 @@ describe("Custom Widget authoring context", () => {
     expect(needsCustomWidgetAuthoringContext([userMessage(text)])).toBe(true);
   });
 
+  test.each(["List my custom widgets", "Delete a custom widget", "Explain custom widgets"])(
+    "leaves management intent to the general Custom Widget MCP group: %s",
+    (text) => {
+      expect(needsCustomWidgetAuthoringContext([userMessage(text)])).toBe(false);
+    },
+  );
+
   test("continues after a Custom Widget tool call", () => {
     const messages: UIMessage[] = [
       userMessage("Continue"),
@@ -68,6 +75,8 @@ describe("Custom Widget authoring context", () => {
       "customWidget_schema",
       "customWidget_getComponentCatalog",
       "customWidget_getReference",
+      "customWidget_findComponents",
+      "customWidget_getComponents",
       "customWidget_getComponent",
       "customWidget_getSharedProps",
       "customWidget_getExample",
@@ -78,7 +87,6 @@ describe("Custom Widget authoring context", () => {
 
     expect(getActiveCustomWidgetToolNames(tools, [userMessage("Create two custom widgets")], true)).toEqual([
       "customWidget_getSkill",
-      "customWidget_validateTemplate",
     ]);
     expect(getActiveCustomWidgetToolNames(tools, [userMessage("Create a custom widget")], false)).toEqual([]);
   });
@@ -100,11 +108,7 @@ describe("Custom Widget authoring context", () => {
       getCustomWidgetPhaseToolNames(tools, [
         { toolResults: [{ toolName: "customWidget_validateTemplate", output: { valid: true } }] },
       ]),
-    ).toEqual([
-      "customWidget_validateTemplate",
-      "customWidget_previewCreate",
-      "customWidget_previewReviseTemplate",
-    ]);
+    ).toEqual(["customWidget_validateTemplate", "customWidget_previewCreate", "customWidget_previewReviseTemplate"]);
     expect(
       getCustomWidgetPhaseToolNames(tools, [
         { toolResults: [{ toolName: "customWidget_previewCreate", output: { success: true } }] },
@@ -133,6 +137,30 @@ describe("Custom Widget authoring context", () => {
         },
       ]),
     ).toBeNull();
+  });
+
+  test("exposes focused context tools only after the skill entrypoint is loaded", () => {
+    const tools = [
+      "customWidget_getSkill",
+      "customWidget_getReference",
+      "customWidget_findComponents",
+      "customWidget_getComponents",
+      "customWidget_getExample",
+      "customWidget_validateTemplate",
+      "customWidget_previewCreate",
+    ];
+
+    expect(
+      getCustomWidgetPhaseToolNames(tools, [
+        { toolResults: [{ toolName: "customWidget_getSkill", output: { content: "skill" } }] },
+      ]),
+    ).toEqual([
+      "customWidget_getReference",
+      "customWidget_findComponents",
+      "customWidget_getComponents",
+      "customWidget_getExample",
+      "customWidget_validateTemplate",
+    ]);
   });
 
   test("keeps one concrete component repair path open for validation warnings", () => {
@@ -179,16 +207,10 @@ describe("Custom Widget authoring context", () => {
           ],
         },
         {
-          toolResults: [
-            { toolName: "customWidget_getComponent", output: { name: "RefreshButton", props: [] } },
-          ],
+          toolResults: [{ toolName: "customWidget_getComponent", output: { name: "RefreshButton", props: [] } }],
         },
       ]),
-    ).toEqual([
-      "customWidget_validateTemplate",
-      "customWidget_previewCreate",
-      "customWidget_previewReviseTemplate",
-    ]);
+    ).toEqual(["customWidget_validateTemplate", "customWidget_previewCreate", "customWidget_previewReviseTemplate"]);
   });
 
   test("keeps evidence tools until every preview request succeeds, then allows correction or persistence", () => {
@@ -257,11 +279,7 @@ describe("Custom Widget authoring context", () => {
         ...completeEvidence,
         { toolResults: [{ toolName: "customWidget_validateTemplate", output: { valid: true } }] },
       ]),
-    ).toEqual([
-      "customWidget_validateTemplate",
-      "customWidget_previewCreate",
-      "customWidget_previewReviseTemplate",
-    ]);
+    ).toEqual(["customWidget_validateTemplate", "customWidget_previewCreate", "customWidget_previewReviseTemplate"]);
 
     const revisedPreview = [
       ...completeEvidence,
@@ -310,9 +328,7 @@ describe("Custom Widget authoring context", () => {
         ],
       },
     ];
-    expect(getCustomWidgetPhaseToolNames(tools, completeRevisedEvidence)).toEqual([
-      "customWidget_createFromPreview",
-    ]);
+    expect(getCustomWidgetPhaseToolNames(tools, completeRevisedEvidence)).toEqual(["customWidget_createFromPreview"]);
   });
 
   test("closes focused discovery after four searches until validation", () => {

@@ -5,7 +5,7 @@ import {
   buildCustomWidgetMcpPrompt,
   CUSTOM_WIDGET_ASSISTANT_POLICY,
   CUSTOM_WIDGET_FINAL_OUTPUT_INSTRUCTION,
-  CUSTOM_WIDGET_LAZY_TOOL_DISCOVERY_INSTRUCTION,
+  CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION,
   CUSTOM_WIDGET_MCP_AUTHORING_PROMPT,
 } from "../core/ai-prompt";
 
@@ -54,8 +54,8 @@ describe("AI prompt", () => {
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("change the active phase");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("customWidget_getComponents");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Do not load the full catalog");
-    expect(CUSTOM_WIDGET_LAZY_TOOL_DISCOVERY_INSTRUCTION).toContain("homarr_findTools");
-    expect(CUSTOM_WIDGET_LAZY_TOOL_DISCOVERY_INSTRUCTION).toContain("task-needed");
+    expect(CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION).toContain("staged by the authoring lifecycle");
+    expect(CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION).toContain("task-needed");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Reuse loaded context");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("no arbitrary documentation or creativity cap");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("one focused component search per widget job");

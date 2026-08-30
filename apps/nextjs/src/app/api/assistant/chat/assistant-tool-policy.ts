@@ -3,13 +3,13 @@ import type { UIMessage } from "ai";
 
 import {
   CUSTOM_WIDGET_ASSISTANT_POLICY,
-  CUSTOM_WIDGET_LAZY_TOOL_DISCOVERY_INSTRUCTION,
+  CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION,
 } from "@homarr/custom-widgets/authoring-prompt";
 
 const mutationApprovalInstruction =
   "Uses Homarr's native approval UI; call when inputs are ready without separate prose confirmation.";
 
-export const customWidgetAssistantInstructions = `\n\n${CUSTOM_WIDGET_LAZY_TOOL_DISCOVERY_INSTRUCTION}\n\n${CUSTOM_WIDGET_ASSISTANT_POLICY}`;
+export const customWidgetAssistantInstructions = `\n\n${CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION}\n\n${CUSTOM_WIDGET_ASSISTANT_POLICY}`;
 
 export const withAssistantToolPolicy = (description: string | undefined, requiresApproval: boolean) => {
   if (!requiresApproval) return description;

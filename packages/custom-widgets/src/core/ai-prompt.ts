@@ -110,8 +110,8 @@ Use customWidget_validateTemplate for focused JSX repair without resending the m
 
 export const CUSTOM_WIDGET_AUTHORING_PROMPT = AUTHORING_PROMPT;
 
-export const CUSTOM_WIDGET_LAZY_TOOL_DISCOVERY_INSTRUCTION =
-  "Use homarr_findTools for task-needed component, reference, lifecycle, configuration, or placement tools; external MCP keeps live schema and Assistant context compact.";
+export const CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION =
+  "Custom Widget tools are staged by the authoring lifecycle. Use only visible task-needed tools; successful phases expose the next typed tools without loading the full catalog.";
 
 export const CUSTOM_WIDGET_ASSISTANT_POLICY = `Custom Widget work:
 - Use customWidget tools; never substitute prose.

@@ -5,9 +5,9 @@ import { getCustomWidgetPhaseToolNames } from "@homarr/custom-widgets/core";
 export { getCustomWidgetPhaseToolNames };
 
 const customWidgetIntentPattern =
-  /(?:\bcustom[\s-]+widgets?\b|\bcustom\s+jsx\b|\bhomarr-custom-widget-v\d+\b|\bcustomWidget_[A-Za-z\d_]+\b|\b(?:build|create|design|make)\b[^\n]{0,80}\bwidgets?\s+(?:for|using|with)\b|\b(?:i|we)\s+(?:need|want)\b[^\n]{0,60}\bwidgets?\s+(?:for|using|with)\b)/iu;
+  /(?:\bcustom\s+jsx\b|\bhomarr-custom-widget-v\d+\b|\b(?:build|create|design|edit|fix|make|repair|update|validate)\b[^\n]{0,80}\bcustom[\s-]+widgets?\b|\b(?:build|create|design|make)\b[^\n]{0,80}\bwidgets?\s+(?:for|using|with)\b|\b(?:i|we)\s+(?:need|want)\b[^\n]{0,60}\bwidgets?\s+(?:for|using|with)\b)/iu;
 
-const customWidgetBootstrapToolNames = new Set(["customWidget_getSkill", "customWidget_validateTemplate"]);
+const customWidgetBootstrapToolNames = new Set(["customWidget_getSkill"]);
 const maxFocusedComponentSearchesPerPhase = 4;
 const customWidgetContextToolBudgets: Readonly<Record<string, number>> = {
   customWidget_findComponents: maxFocusedComponentSearchesPerPhase,

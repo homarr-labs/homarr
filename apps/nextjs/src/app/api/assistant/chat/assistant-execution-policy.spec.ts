@@ -22,7 +22,7 @@ describe("createCustomWidgetToolStepGate", () => {
     gate.begin(0);
     expect(gate.claim("customWidget_getSkill")).toBe(true);
     expect(gate.claim("web_search")).toBe(true);
-    expect(gate.claim("homarr_findTools")).toBe(true);
+    expect(gate.claim("homarr_enableToolGroups")).toBe(true);
     expect(gate.claim("customWidget_getReference")).toBe(true);
     expect(gate.claim("customWidget_getComponent")).toBe(true);
     expect(gate.claim("customWidget_getComponent")).toBe(false);
@@ -30,7 +30,7 @@ describe("createCustomWidgetToolStepGate", () => {
 
     gate.begin(1);
     expect(gate.claim("customWidget_validateTemplate")).toBe(true);
-    expect(gate.claim("homarr_findTools")).toBe(false);
+    expect(gate.claim("homarr_enableToolGroups")).toBe(false);
     expect(gate.claim("customWidget_previewCreate")).toBe(false);
 
     gate.begin(2);

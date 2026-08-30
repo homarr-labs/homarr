@@ -27,7 +27,7 @@ import {
   selectSequentialCustomWidgetToolCalls,
 } from "../src/core/assistant-tool-step";
 import type { HomarrCustomWidgetV2 } from "../src/core/custom-jsx-schema";
-import { CUSTOM_WIDGET_ASSISTANT_POLICY, CUSTOM_WIDGET_LAZY_TOOL_DISCOVERY_INSTRUCTION } from "../src/core/ai-prompt";
+import { CUSTOM_WIDGET_ASSISTANT_POLICY, CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION } from "../src/core/ai-prompt";
 import { getCustomWidgetJsonSchema } from "../src/core/schema";
 import { addCustomJsxDiagnosticSourceExcerpts, validateCustomJsxTemplate } from "../src/jsx";
 import type { CustomWidgetAiEvaluationCase } from "./ai-evaluation-cases";
@@ -76,7 +76,6 @@ type OpenRouterMessage =
 
 const assistantEvaluationContextMaxCharacters = 48_000;
 const reloadableEvaluationToolNames = new Set([
-  "homarr_findTools",
   "customWidget_schema",
   "customWidget_getComponentCatalog",
   "customWidget_findComponents",
@@ -210,7 +209,6 @@ interface AssistantEvaluationToolCall {
 export interface AssistantAttemptState {
   calledTools: string[];
   toolCalls: AssistantEvaluationToolCall[];
-  activatedTools: Set<string>;
   validatedTemplates: Set<string>;
   previews: Map<string, PreviewState>;
   completedPreviewSignatures: Set<string>;
@@ -253,15 +251,6 @@ const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
 export const customWidgetAssistantEvaluationToolDefinitions: ToolDefinition[] = [
-  {
-    type: "function",
-    function: {
-      name: "homarr_findTools",
-      description:
-        "Find Homarr tools by capability without loading every tool schema. Matching tools become callable on the next step.",
-      parameters: objectSchema({ query: { type: "string", minLength: 2, maxLength: 240 } }, ["query"]),
-    },
-  },
   {
     type: "function",
     function: {
@@ -453,12 +442,7 @@ export const customWidgetAssistantEvaluationToolDefinitions: ToolDefinition[] = 
   },
 ];
 
-const initiallyActiveAssistantEvaluationTools = new Set([
-  "homarr_findTools",
-  "web_search",
-  "customWidget_getSkill",
-  "customWidget_validateTemplate",
-]);
+const initiallyActiveAssistantEvaluationTools = new Set(["web_search", "customWidget_getSkill"]);
 const maxFocusedComponentSearchesPerPhase = 4;
 const customWidgetContextToolBudgets: Readonly<Record<string, number>> = {
   customWidget_findComponents: maxFocusedComponentSearchesPerPhase,
@@ -466,46 +450,6 @@ const customWidgetContextToolBudgets: Readonly<Record<string, number>> = {
   customWidget_getComponent: 2,
   customWidget_getSharedProps: 1,
   customWidget_getExample: 1,
-};
-
-const normalizeToolSearchText = (value: string) =>
-  value
-    .replaceAll(/([a-z\d])([A-Z])/gu, "$1 $2")
-    .toLowerCase()
-    .replaceAll(/[^a-z\d]+/gu, " ")
-    .trim();
-
-const findAssistantEvaluationTools = (query: string) => {
-  const terms = [
-    ...new Set(
-      normalizeToolSearchText(query)
-        .split(" ")
-        .filter((term) => term.length > 2),
-    ),
-  ];
-  const normalizedQuery = normalizeToolSearchText(query);
-  const requestsCompleteCatalog =
-    normalizedQuery.includes("all components") ||
-    normalizedQuery.includes("full component catalog") ||
-    normalizedQuery.includes("complete component catalog");
-  return customWidgetAssistantEvaluationToolDefinitions
-    .filter(({ function: definition }) => !initiallyActiveAssistantEvaluationTools.has(definition.name))
-    .filter(({ function: definition }) => {
-      if (definition.name === "customWidget_getComponentCatalog") return requestsCompleteCatalog;
-      if (definition.name === "customWidget_schema") return false;
-      return true;
-    })
-    .map((tool) => {
-      const searchable = normalizeToolSearchText(`${tool.function.name} ${tool.function.description}`);
-      const score = terms.reduce((total, term) => total + (searchable.includes(term) ? 1 : 0), 0);
-      return { tool, score };
-    })
-    .filter(({ score }) => score > 0)
-    .toSorted(
-      (left, right) => right.score - left.score || left.tool.function.name.localeCompare(right.tool.function.name),
-    )
-    .slice(0, 8)
-    .map(({ tool }) => tool);
 };
 
 export const getActiveAssistantEvaluationToolDefinitions = (state: AssistantAttemptState) => {
@@ -516,7 +460,7 @@ export const getActiveAssistantEvaluationToolDefinitions = (state: AssistantAtte
     toolResults: [{ toolName: toolCall.name, output: toolCall.output }],
   }));
   const phaseToolNames = getCustomWidgetPhaseToolNames(availableNames, steps);
-  const activeToolNames = new Set(phaseToolNames ?? state.activatedTools);
+  const activeToolNames = new Set(phaseToolNames ?? initiallyActiveAssistantEvaluationTools);
   return customWidgetAssistantEvaluationToolDefinitions.filter(({ function: definition }) =>
     activeToolNames.has(definition.name),
   );
@@ -692,22 +636,6 @@ const executeAssistantEvaluationToolCore = (
   const contextBudget = customWidgetContextToolBudgets[name];
   if (contextBudget !== undefined && getContextToolCallsInCurrentPhase(state, name) >= contextBudget) {
     return getContextPhaseCompleteOutput(name);
-  }
-  if (name === "homarr_findTools") {
-    const query = typeof input.query === "string" ? input.query : "";
-    const matches = findAssistantEvaluationTools(query);
-    for (const match of matches) state.activatedTools.add(match.function.name);
-    return {
-      query,
-      matches: matches.map(({ function: definition }) => ({
-        name: definition.name,
-        description: definition.description,
-      })),
-      nextStep:
-        matches.length > 0
-          ? "Use the matching tools now. Search again only for a different capability."
-          : "No matching Homarr tool was found. Refine the capability.",
-    };
   }
   if (name === "web_search") {
     return {
@@ -1067,7 +995,7 @@ export function getAssistantEvaluationEfficiencyIssues(
   if (skillCall && skillCall.outputCharacters > 10_000) {
     issues.push(`The compact skill entrypoint used ${skillCall.outputCharacters} output characters.`);
   }
-  const otherReusableContextTools = new Set(["homarr_findTools", "web_search"]);
+  const otherReusableContextTools = new Set(["web_search"]);
   const seenContextCalls = new Set<string>();
   for (const toolCall of state.toolCalls) {
     if (toolCall.phaseLimited) continue;
@@ -1154,7 +1082,6 @@ export function createAssistantEvaluationState(): AssistantAttemptState {
   return {
     calledTools: [],
     toolCalls: [],
-    activatedTools: new Set(initiallyActiveAssistantEvaluationTools),
     validatedTemplates: new Set(),
     previews: new Map(),
     completedPreviewSignatures: new Set(),
@@ -1260,7 +1187,7 @@ async function runAssistantAttempt(args: {
   const messages: OpenRouterMessage[] = [
     {
       role: "system",
-      content: `${CUSTOM_WIDGET_LAZY_TOOL_DISCOVERY_INSTRUCTION}\n\n${CUSTOM_WIDGET_ASSISTANT_POLICY}\n\nThis is an unassisted tool-use evaluation. No tool will be forced for you. Complete and persist all ${getExpectedWidgetCount(args.testCase)} requested widget jobs before returning prose.`,
+      content: `${CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION}\n\n${CUSTOM_WIDGET_ASSISTANT_POLICY}\n\nThis is an unassisted tool-use evaluation. No tool will be forced for you. Complete and persist all ${getExpectedWidgetCount(args.testCase)} requested widget jobs before returning prose.`,
     },
     { role: "user", content: buildAssistantPrompt(args.testCase, args.feedback) },
   ];

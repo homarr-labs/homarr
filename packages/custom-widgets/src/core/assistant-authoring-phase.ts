@@ -31,6 +31,15 @@ const customWidgetDraftPhaseToolNames = new Set([
   "customWidget_getSharedProps",
   "customWidget_validateTemplate",
 ]);
+const customWidgetContextPhaseToolNames = new Set([
+  "customWidget_getReference",
+  "customWidget_findComponents",
+  "customWidget_getComponents",
+  "customWidget_getComponent",
+  "customWidget_getSharedProps",
+  "customWidget_getExample",
+  "customWidget_validateTemplate",
+]);
 const maxFocusedComponentSearchesPerPhase = 4;
 
 export interface CustomWidgetToolStep {
@@ -181,6 +190,12 @@ export const getCustomWidgetPhaseToolNames = <TToolName extends string>(
   }
   if (focusedSearches >= maxFocusedComponentSearchesPerPhase) {
     return availableToolNames.filter((toolName) => customWidgetDraftPhaseToolNames.has(toolName));
+  }
+  const skillLoaded = steps.some((step) =>
+    step.toolResults.some((result) => result.toolName === "customWidget_getSkill"),
+  );
+  if (skillLoaded) {
+    return availableToolNames.filter((toolName) => customWidgetContextPhaseToolNames.has(toolName));
   }
   return null;
 };

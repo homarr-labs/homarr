@@ -30,7 +30,7 @@ describe("customWidgetAssistantInstructions", () => {
   test("loads authoring resources lazily and verifies every final preview", () => {
     expect(customWidgetAssistantInstructions.length).toBeLessThan(4_100);
     expect(customWidgetAssistantInstructions).toContain("customWidget_getSkill");
-    expect(customWidgetAssistantInstructions).toContain("homarr_findTools");
+    expect(customWidgetAssistantInstructions).toContain("staged by the authoring lifecycle");
     expect(customWidgetAssistantInstructions).toContain("task-needed");
     expect(customWidgetAssistantInstructions).toContain("Reuse loaded context");
     expect(customWidgetAssistantInstructions).toContain("customWidget_findComponents");

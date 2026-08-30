@@ -201,8 +201,8 @@ Load the installed skill before authoring. `customWidget_getSkill` returns its c
 reference index. Load a named schema, runtime, or security reference with `customWidget_getReference` only when the
 design needs it. Read the live JSON Schema or component resources when their detail is required by the design.
 
-1. Call `customWidget_getSkill`. In Homarr Assistant, use `homarr_findTools` to activate later authoring tools only when
-   they are needed.
+1. Call `customWidget_getSkill`. Homarr Assistant stages the next typed authoring tools automatically as the widget
+   moves through context, validation, preview, evidence, and persistence phases.
 2. Load the live schema and applicable named references on demand. Prefer `customWidget_findComponents` for a small
    release-matched result set; reserve the full catalog for broad exploration. Fetch only relevant installed component
    documentation with `customWidget_getComponents` (or `customWidget_getComponent` for one repair) and, when useful,

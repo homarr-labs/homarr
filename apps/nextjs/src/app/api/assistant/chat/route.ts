@@ -49,10 +49,7 @@ import {
   sanitizeAttachmentFilename,
 } from "./assistant-chat-input";
 import { getAssistantModelLookupStatus } from "./assistant-model-lookup";
-import {
-  compactAssistantStepMessages,
-  convertAssistantMessagesToModelMessages,
-} from "./assistant-message-conversion";
+import { compactAssistantStepMessages, convertAssistantMessagesToModelMessages } from "./assistant-message-conversion";
 import {
   getOpenRouterWebSearchRequests,
   getOpenRouterWebSearchSources,
@@ -77,11 +74,7 @@ import {
   getCustomWidgetPhaseToolNames,
   needsCustomWidgetAuthoringContext,
 } from "./custom-widget-authoring-context";
-import {
-  filterAssistantMcpToolMatches,
-  findAssistantMcpTools,
-  getLatestAssistantUserText,
-} from "./assistant-tool-discovery";
+import { createAssistantMcpToolGroups } from "./assistant-tool-groups";
 import {
   customWidgetAssistantInstructions,
   getForcedAssistantToolName,
@@ -157,20 +150,12 @@ const requestSchema = z.object({
     .optional(),
 });
 
-const assistantToolDiscoverySchema = z.object({
-  query: z
-    .string()
-    .trim()
-    .min(2)
-    .max(240)
-    .describe("A concise Homarr capability or action, such as 'search media requests' or 'list Kubernetes pods'."),
-});
-
-const assistantToolDiscoveryName = "homarr_findTools";
+const assistantToolGroupActivationName = "homarr_enableToolGroups";
+const maxAssistantToolGroupsPerActivation = 4;
 
 const assistantInstructions = `You are Homarr Assistant, embedded in the user's self-hosted Homarr dashboard.
 
-Use Homarr tools for live instance data or actions; never invent resources, IDs, state, or results. Only a small relevant tool set is initially visible. Call ${assistantToolDiscoveryName} with a concise capability when a needed Homarr tool is not visible, then use the activated tool. Follow each tool's description and use integration IDs returned by discovery tools.
+Use Homarr tools for live instance data or actions; never invent resources, IDs, state, or results. Homarr tools are grouped by their MCP router namespace. Call ${assistantToolGroupActivationName} with the task-needed group when its typed tools are not visible, then use the activated tool. Follow each tool's description and use integration IDs returned by Homarr tools.
 
 Homarr permissions are authoritative. Explain denied access without suggesting a bypass. Read before changing when current state matters. Mutations use Homarr's native approval UI: when inputs are sufficient, call the mutation immediately and never ask for duplicate prose confirmation or retry a denial. Use ask_user only when a missing choice blocks the next action; do not end with a prose question expecting a reply.
 
@@ -547,10 +532,7 @@ export async function POST(request: Request) {
               input !== null &&
               !Array.isArray(input)
             ) {
-              executionInput = normalizeCustomWidgetLifecycleToolInput(
-                mcpTool.name,
-                input as Record<string, unknown>,
-              );
+              executionInput = normalizeCustomWidgetLifecycleToolInput(mcpTool.name, input as Record<string, unknown>);
             }
             const contextRequestKey = getCustomWidgetContextRequestKey(mcpTool.name, executionInput);
             if (contextRequestKey !== null && loadedCustomWidgetContextRequests.has(contextRequestKey)) {
@@ -621,45 +603,41 @@ export async function POST(request: Request) {
       ];
     }),
   ) satisfies ToolSet;
-  const discoveredToolNames = new Set<string>();
-  const latestUserText = getLatestAssistantUserText(incomingMessages);
-  const automaticToolCandidates = customWidgetAuthoringActive
+  const groupedToolCandidates = customWidgetAuthoringActive
     ? mcpTools.filter((mcpTool) => !mcpTool.name.startsWith("customWidget_"))
     : mcpTools;
-  const automaticallySelectedTools = findAssistantMcpTools(automaticToolCandidates, latestUserText, 6).map(
-    ({ name }) => name,
-  );
-  const toolDiscovery = tool({
+  const assistantToolGroups = createAssistantMcpToolGroups(groupedToolCandidates);
+  const assistantToolGroupIds = assistantToolGroups.ids as [string, ...string[]];
+  const assistantToolGroupActivationSchema = z.object({
+    groups: z
+      .array(z.enum(assistantToolGroupIds))
+      .min(1)
+      .max(maxAssistantToolGroupsPerActivation)
+      .describe("MCP router groups whose typed Homarr tools are needed for the current task."),
+  });
+  const enabledToolGroupIds = new Set<string>();
+  const toolGroupActivation = tool({
     description:
-      "Find Homarr tools by capability without loading the complete tool catalog. Matching tools become callable on the next step. Use a focused query and call again with a different capability when needed.",
-    inputSchema: jsonSchema(z.toJSONSchema(assistantToolDiscoverySchema) as Parameters<typeof jsonSchema>[0]),
+      "Enable task-needed typed Homarr tools by MCP router group. Enabled groups remain available on later steps.",
+    inputSchema: jsonSchema(z.toJSONSchema(assistantToolGroupActivationSchema) as Parameters<typeof jsonSchema>[0]),
     execute: (value) => {
-      if (customWidgetAuthoringActive && !customWidgetToolStepGate.claim(assistantToolDiscoveryName)) {
+      if (customWidgetAuthoringActive && !customWidgetToolStepGate.claim(assistantToolGroupActivationName)) {
         return {
-          error:
-            "A Custom Widget tool must run in its own model step. Use that result before calling another tool.",
+          error: "A Custom Widget tool must run in its own model step. Use that result before calling another tool.",
         };
       }
-      const input = assistantToolDiscoverySchema.parse(value);
-      const matches = filterAssistantMcpToolMatches(
-        findAssistantMcpTools(mcpTools, input.query),
-        input.query,
-        customWidgetAuthoringActive,
-      );
-      for (const match of matches) discoveredToolNames.add(match.name);
+      const input = assistantToolGroupActivationSchema.parse(value);
+      const groups = assistantToolGroups.resolve(input.groups);
+      for (const group of groups) enabledToolGroupIds.add(group.id);
       return {
-        query: input.query,
-        matches: matches.map((match) => ({ name: match.name, description: match.description })),
-        nextStep:
-          matches.length > 0
-            ? "Use one or more matching tools now. Search again only for a different capability."
-            : "No matching Homarr tool was found. Refine the capability or explain that it is unavailable.",
+        enabledGroups: groups.map(({ id }) => id),
+        nextStep: "Use one or more enabled typed tools now. Enable another group only when the task needs it.",
       };
     },
   });
   const availableTools: ToolSet = {
     ...homarrTools,
-    [assistantToolDiscoveryName]: toolDiscovery,
+    [assistantToolGroupActivationName]: toolGroupActivation,
     ...frontendTools,
   };
   const frontendToolNames = Object.keys(frontendTools);
@@ -669,14 +647,17 @@ export async function POST(request: Request) {
     canAuthorCustomWidgets,
   );
   const getActiveToolNames = (steps: Parameters<typeof getCustomWidgetPhaseToolNames>[1] = []) => {
+    const enabledToolNames = assistantToolGroups
+      .resolve([...enabledToolGroupIds])
+      .flatMap((group) => group.tools.map(({ name }) => name));
     const phaseToolNames = customWidgetAuthoringActive
       ? getCustomWidgetPhaseToolNames(Object.keys(homarrTools), steps)
       : null;
-    if (phaseToolNames) return [...frontendToolNames, ...phaseToolNames];
+    if (phaseToolNames) return [...frontendToolNames, ...enabledToolNames, ...phaseToolNames];
     return [
-      assistantToolDiscoveryName,
+      assistantToolGroupActivationName,
       ...frontendToolNames,
-      ...new Set([...automaticallySelectedTools, ...discoveredToolNames, ...activeCustomWidgetToolNames]),
+      ...new Set([...enabledToolNames, ...activeCustomWidgetToolNames]),
     ];
   };
   const forcedToolName = getForcedAssistantToolName(incomingMessages);

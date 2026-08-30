@@ -1,10 +1,7 @@
 import { describe, expect, test } from "vitest";
 import type { ModelMessage, UIMessage } from "ai";
 
-import {
-  compactAssistantStepMessages,
-  convertAssistantMessagesToModelMessages,
-} from "./assistant-message-conversion";
+import { compactAssistantStepMessages, convertAssistantMessagesToModelMessages } from "./assistant-message-conversion";
 
 describe("convertAssistantMessagesToModelMessages", () => {
   test("drops an interrupted tool call while preserving completed tool results", async () => {
@@ -205,8 +202,8 @@ describe("convertAssistantMessagesToModelMessages", () => {
           {
             type: "tool-call",
             toolCallId: "regular-tool",
-            toolName: "homarr_findTools",
-            input: { query: "boards" },
+            toolName: "homarr_enableToolGroups",
+            input: { groups: ["board"] },
           },
         ],
       },
@@ -228,8 +225,8 @@ describe("convertAssistantMessagesToModelMessages", () => {
           {
             type: "tool-result",
             toolCallId: "regular-tool",
-            toolName: "homarr_findTools",
-            output: { type: "json", value: { matches: [] } },
+            toolName: "homarr_enableToolGroups",
+            output: { type: "json", value: { enabledGroups: ["board"] } },
           },
         ],
       },

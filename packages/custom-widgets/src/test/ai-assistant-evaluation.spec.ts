@@ -336,50 +336,38 @@ describe("Custom Widget assistant live evaluation harness", () => {
     expect(names).not.toContain("customWidget_validate");
   });
 
-  it("starts with only the authoring bootstrap and discovers later lifecycle tools on demand", () => {
+  it("starts with compact authoring context tools and stages later lifecycle tools by phase", () => {
     const testCase = getCase("seerr-media-workflows");
     const state = createAssistantEvaluationState();
     const getActiveNames = () =>
       getActiveAssistantEvaluationToolDefinitions(state).map(({ function: definition }) => definition.name);
 
+    expect(getActiveNames()).toEqual(["web_search", "customWidget_getSkill"]);
+    executeAssistantEvaluationTool(testCase, state, "customWidget_getSkill", {});
     expect(getActiveNames()).toEqual([
-      "homarr_findTools",
-      "web_search",
-      "customWidget_getSkill",
+      "customWidget_getReference",
+      "customWidget_findComponents",
+      "customWidget_getComponents",
+      "customWidget_getComponent",
+      "customWidget_getSharedProps",
+      "customWidget_getExample",
       "customWidget_validateTemplate",
     ]);
-    expect(
-      executeAssistantEvaluationTool(testCase, state, "homarr_findTools", {
-        query: "preview create revise template query action persist journal",
-      }),
-    ).toMatchObject({
-      matches: expect.arrayContaining([
-        expect.objectContaining({ name: "customWidget_previewCreate" }),
-        expect.objectContaining({ name: "customWidget_previewReviseTemplate" }),
-        expect.objectContaining({ name: "customWidget_previewQuery" }),
-        expect.objectContaining({ name: "customWidget_previewAction" }),
-        expect.objectContaining({ name: "customWidget_createFromPreview" }),
-      ]),
-    });
-    expect(getActiveNames()).toEqual(
-      expect.arrayContaining([
-        "customWidget_previewCreate",
-        "customWidget_previewReviseTemplate",
-        "customWidget_previewQuery",
-        "customWidget_previewAction",
-        "customWidget_createFromPreview",
-      ]),
+    expect(getActiveNames()).not.toEqual(
+      expect.arrayContaining(["customWidget_previewCreate", "customWidget_createFromPreview"]),
     );
-    expect(
-      executeAssistantEvaluationTool(testCase, state, "homarr_findTools", {
-        query: "customWidget_findComponents focused component search and selected component documentation batch",
-      }),
-    ).toMatchObject({
-      matches: expect.arrayContaining([
-        expect.objectContaining({ name: "customWidget_findComponents" }),
-        expect.objectContaining({ name: "customWidget_getComponents" }),
-      ]),
+
+    executeAssistantEvaluationTool(testCase, state, "customWidget_getComponents", {
+      names: ["Stack", "TextInput", "Button"],
     });
+    expect(getActiveNames()).toEqual(["customWidget_getReference", "customWidget_validateTemplate"]);
+
+    validateTemplate(testCase, state, mediaResearchWidget);
+    expect(getActiveNames()).toEqual([
+      "customWidget_validateTemplate",
+      "customWidget_previewCreate",
+      "customWidget_previewReviseTemplate",
+    ]);
   });
 
   it("compacts obsolete documentation and validation calls but retains the current preview", () => {
@@ -855,9 +843,7 @@ describe("Custom Widget assistant live evaluation harness", () => {
     const testCase = getCase("fake-service-health");
     const state = createAssistantEvaluationState();
 
-    executeAssistantEvaluationTool(testCase, state, "homarr_findTools", {
-      query: "focused component search and selected component documentation batch",
-    });
+    executeAssistantEvaluationTool(testCase, state, "customWidget_getSkill", {});
     executeAssistantEvaluationTool(testCase, state, "customWidget_findComponents", {
       query: "health status layout",
     });
