@@ -150,9 +150,9 @@ short factual reason. Do not create a speculative implementation.
 5. Implement the smallest complete change. Preserve package boundaries, permissions, translations, schema/runtime
    alignment, and documentation requirements. Update `apps/docs/docs` only when the user-facing behavior changed.
 6. Validate only the affected surface. Use the closest workspace filter and existing focused test file. Typical commands
-   are `pnpm --filter <workspace> lint`, `pnpm --filter <workspace> typecheck`, a focused Vitest invocation, or `go test
-   ./...` from the changed Go module. Do not add tests unless the issue explicitly asks for them. Do not run every
-   monorepo test, build, Docker, or E2E job for a focused change.
+   include `pnpm --filter <workspace> lint`, `pnpm --filter <workspace> typecheck`, a focused Vitest invocation, or
+   `go test ./...` from the changed Go module. Do not add tests unless the issue explicitly asks for them. Do not run
+   every monorepo test, build, Docker, or E2E job for a focused change.
 7. Start the relevant local demo and use `playwright-cli` to exercise the reporter's scenario after the change. Verify
    the actual outcome, not merely HTTP 200. Capture the route, interaction, and observed result in the final summary.
    If meaningful browser verification is impossible, call `noop` and explain the missing prerequisite.
