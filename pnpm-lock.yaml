@@ -1238,9 +1238,6 @@ importers:
       posthog-js:
         specifier: 'catalog:'
         version: 1.399.2(preact-render-to-string@6.5.11)
-      prismjs:
-        specifier: 'catalog:'
-        version: 1.30.0
       react:
         specifier: 'catalog:'
         version: 19.2.7
@@ -1253,9 +1250,6 @@ importers:
       react-shiki:
         specifier: 'catalog:'
         version: 0.11.0(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(supports-color@10.2.2)
-      react-simple-code-editor:
-        specifier: 'catalog:'
-        version: 0.14.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       remark-breaks:
         specifier: 'catalog:'
         version: 4.0.0
@@ -1299,9 +1293,6 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 24.13.3
-      '@types/prismjs':
-        specifier: 'catalog:'
-        version: 1.26.6
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.17

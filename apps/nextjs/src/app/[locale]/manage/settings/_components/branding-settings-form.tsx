@@ -110,7 +110,7 @@ export const BrandingSettingsForm = ({ form }: BrandingSettingsFormProps) => {
             description={t("customCss.description")}
             actions={
               <WorkshopCssImportButton
-                size="compact-sm"
+                size="compact-xs"
                 onImport={(css) => form.setFieldValue("branding.customCss", css)}
               />
             }

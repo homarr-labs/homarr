@@ -54,6 +54,7 @@ export function CodeEditorToolbar({
         </Text>
       </Group>
       <Group gap={6}>
+        {props.actions}
         {!props.readOnly && (
           <>
             <Button
