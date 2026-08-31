@@ -359,7 +359,7 @@ const SubmissionCard = ({ submission, backend, userVote, onVote }: SubmissionCar
       <CardHeader className="flex flex-col gap-2 sm:grid">
         <div className="flex items-center gap-2">
           <a href={`/workshop/${submission.id}/`} className="min-w-0 hover:underline" title={submission.title}>
-            <CardTitle className="truncate">{submission.title}</CardTitle>
+            <CardTitle className="line-clamp-2">{submission.title}</CardTitle>
           </a>
           {!hasScreenshots && (
             <Badge variant="secondary" className="shrink-0 gap-1.5 px-2">
