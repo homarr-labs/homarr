@@ -65,6 +65,20 @@ export default defineConfig({
       {
         extends: true,
         test: {
+          name: "translation-node",
+          environment: "node",
+          setupFiles: ["./vitest.setup.ts", "./vitest.setup.node.ts"],
+          include: ["packages/translation/**/*.spec.ts"],
+          server: {
+            deps: {
+              inline: ["next-intl"],
+            },
+          },
+        },
+      },
+      {
+        extends: true,
+        test: {
           name: "dom",
           environment: "jsdom",
           include: ["**/*.spec.{ts,tsx}"],
@@ -76,6 +90,7 @@ export default defineConfig({
             "packages/db/**",
             "packages/docker/**",
             "packages/request-handler/**",
+            "packages/translation/**",
             "e2e/**",
           ],
         },

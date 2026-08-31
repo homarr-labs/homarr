@@ -1,0 +1,922 @@
+{
+  "schemaVersion": 1,
+  "browser": "Chromium",
+  "artifactRoot": ".screenshots/release-v2",
+  "statuses": ["passed", "failed", "blocked", "not-reached"],
+  "severities": ["P0", "P1", "P2", "P3"],
+  "pullRequests": [
+    { "number": 6356, "label": "Custom Widgets" },
+    { "number": 6503, "label": "dnd-kit grid" },
+    { "number": 6502, "label": "widget modernization" },
+    { "number": 6450, "label": "responsive layouts" },
+    { "number": 6482, "label": "Assistant" },
+    { "number": 6555, "label": "widget performance" },
+    { "number": 6569, "label": "onboarding" },
+    { "number": 6545, "label": "release-v2 rollup" }
+  ],
+  "viewports": [
+    { "id": "mobile-320", "width": 320, "height": 568 },
+    { "id": "mobile-375", "width": 375, "height": 812 },
+    { "id": "boundary-767", "width": 767, "height": 900 },
+    { "id": "boundary-768", "width": 768, "height": 900 },
+    { "id": "tablet-1024", "width": 1024, "height": 768 },
+    { "id": "boundary-1279", "width": 1279, "height": 900 },
+    { "id": "desktop-1280", "width": 1280, "height": 900 },
+    { "id": "desktop-1440", "width": 1440, "height": 900 },
+    { "id": "desktop-1920", "width": 1920, "height": 1080 }
+  ],
+  "zooms": [80, 100, 125, 200],
+  "inputs": ["mouse", "touch", "keyboard"],
+  "profiles": [
+    { "id": "main-writable", "description": "Authenticated writable release candidate" },
+    { "id": "main-readonly", "description": "Authenticated read-only release candidate" },
+    { "id": "onboarding-fresh", "description": "Fresh installation at onboarding" },
+    { "id": "degraded", "description": "Fixture-backed error, empty, and latency states" }
+  ],
+  "personas": [
+    "Avery Admin",
+    "Rowan Owner",
+    "Eden Editor",
+    "Vivian Viewer",
+    "Nolan Outsider",
+    "Morgan Mobile",
+    "Casey Chaos",
+    "Ingrid Infra",
+    "Maya Media",
+    "Brooke Minimalist",
+    "Cora Creator",
+    "Ash Assistant",
+    "Kira Keyboard",
+    "Nora Newcomer"
+  ],
+  "boards": [
+    { "id": "qa-grid-24", "handle": "grid-24" },
+    { "id": "qa-scroll-lab", "handle": "scroll" },
+    { "id": "qa-dense-collisions", "handle": "dense-collisions" },
+    { "id": "qa-nested-containers", "handle": "nested-containers" },
+    { "id": "qa-layout-boundaries", "handle": "layout-boundaries" },
+    { "id": "qa-icons-bookmarks", "handle": "icons-bookmarks" },
+    { "id": "qa-widgets-01", "handle": "widgets-01" },
+    { "id": "qa-widgets-02", "handle": "widgets-02" },
+    { "id": "qa-widgets-03", "handle": "widgets-03" },
+    { "id": "qa-widgets-04", "handle": "widgets-04" },
+    { "id": "qa-widgets-05", "handle": "widgets-05" },
+    { "id": "qa-widgets-06", "handle": "widgets-06" },
+    { "id": "qa-widgets-07", "handle": "widgets-07" },
+    { "id": "qa-widgets-08", "handle": "widgets-08" },
+    { "id": "qa-widgets-09", "handle": "widgets-09" },
+    { "id": "qa-widgets-10", "handle": "widgets-10" },
+    { "id": "qa-widgets-11", "handle": "widgets-11" },
+    { "id": "qa-widgets-12", "handle": "widgets-12" },
+    { "id": "qa-custom-widget-assistant", "handle": "custom-widget-assistant" },
+    { "id": "qa-permissions-public", "handle": "permissions-public" },
+    { "id": "qa-download-upload", "handle": "download-upload" }
+  ],
+  "wavePacketCounts": { "preflight": 3, "board": 9, "widgets": 12, "core-v2": 8, "whole-product": 9, "performance": 4 },
+  "caseDimensions": {
+    "preflight": [
+      {
+        "id": "ENVIRONMENT",
+        "expected": "Verify candidate identity, Chromium session, runtime health, fixture reachability, and clean console/network baselines."
+      },
+      {
+        "id": "ACCESS",
+        "expected": "Verify assigned profiles, personas, boards, permissions, and read-only boundaries before mutations."
+      },
+      {
+        "id": "EVIDENCE",
+        "expected": "Capture timestamped viewport/input/zoom evidence and confirm artifacts contain no secrets."
+      }
+    ],
+    "board": [
+      {
+        "id": "THRESHOLDS",
+        "expected": "Exercise every assigned viewport, zoom, and input, including breakpoint and dense-layout stress."
+      },
+      {
+        "id": "MUTATION",
+        "expected": "Exercise create, move, resize, reorder, collapse, and delete paths that apply to this packet."
+      },
+      {
+        "id": "PERSISTENCE",
+        "expected": "Reload, switch layouts or sessions, and verify saved and reset state remains correct."
+      },
+      {
+        "id": "ACCESS-RECOVERY",
+        "expected": "Verify Owner, Editor, Viewer, outsider, read-only, keyboard, cancellation, error, and recovery behavior that applies."
+      }
+    ],
+    "widgets": [
+      {
+        "id": "RENDER-SIZE",
+        "expected": "Render every assigned widget kind at every assigned viewport and exercise default, minimum, maximum, and compact sizes where supported."
+      },
+      {
+        "id": "STATES-RECOVERY",
+        "expected": "Verify loading, populated, empty, error, stale, retry, and recovered states for every assigned widget kind."
+      },
+      {
+        "id": "OPTIONS-PERSISTENCE",
+        "expected": "Mutate meaningful options, save, reload, reset, and confirm each assigned widget kind persists correctly."
+      },
+      {
+        "id": "ACCESS-READONLY",
+        "expected": "Verify Owner, Editor, Viewer, missing-integration, permission-denied, and global read-only behavior for every assigned widget kind."
+      },
+      {
+        "id": "EVIDENCE",
+        "expected": "Capture screenshot, console, network, overflow, clipping, focus, and cleanup evidence for every kind and viewport row."
+      }
+    ],
+    "core-v2": [
+      {
+        "id": "HAPPY-PATH",
+        "expected": "Complete the primary flow using every assigned viewport, zoom, input, persona, profile, and board that applies."
+      },
+      {
+        "id": "MUTATION-PERSISTENCE",
+        "expected": "Exercise applicable create, edit, save, reload, reset, cancel, and destructive actions."
+      },
+      {
+        "id": "ACCESSIBILITY-ACCESS",
+        "expected": "Verify keyboard/focus behavior, labels, permissions, outsider boundaries, and read-only enforcement."
+      },
+      {
+        "id": "DEGRADED-RECOVERY",
+        "expected": "Verify empty, loading, failure, retry, recovery, console, network, evidence, and cleanup behavior."
+      }
+    ],
+    "whole-product": [
+      {
+        "id": "JOURNEY",
+        "expected": "Complete the persona journey across all assigned boards and profiles without bypassing product navigation."
+      },
+      {
+        "id": "THRESHOLDS",
+        "expected": "Repeat critical steps across every assigned viewport, zoom, and input and inspect clipping, overflow, and focus."
+      },
+      {
+        "id": "PERSISTENCE-ACCESS",
+        "expected": "Verify mutations persist and role, outsider, permission, and read-only boundaries remain intact."
+      },
+      {
+        "id": "FAILURE-EVIDENCE",
+        "expected": "Exercise applicable cancellation, degraded, retry, cleanup, console, network, and timestamped artifact evidence."
+      }
+    ],
+    "performance": [
+      {
+        "id": "BASELINE",
+        "expected": "Capture repeatable cold and warm timing, request, render, memory, and console baselines with candidate metadata."
+      },
+      {
+        "id": "THRESHOLD",
+        "expected": "Measure the packet at every assigned viewport, zoom, input, board, and profile against the documented threshold."
+      },
+      {
+        "id": "STRESS",
+        "expected": "Exercise dense data, repeated interaction, long-session, latency, and failure stress that applies."
+      },
+      {
+        "id": "RECOVERY-EVIDENCE",
+        "expected": "Verify recovery after stress and link trace, screenshot, network, memory, and cleanup artifacts."
+      }
+    ]
+  },
+  "packets": [
+    {
+      "id": "preflight-01",
+      "wave": "preflight",
+      "title": "Candidate identity and services",
+      "prRefs": [6545],
+      "personas": ["Avery Admin"],
+      "boards": [],
+      "profiles": ["main-writable", "main-readonly", "onboarding-fresh", "degraded"],
+      "viewports": ["desktop-1440"],
+      "zooms": [100],
+      "inputs": ["mouse", "keyboard"],
+      "cases": ["PF-001"]
+    },
+    {
+      "id": "preflight-02",
+      "wave": "preflight",
+      "title": "Fixture and persona access",
+      "prRefs": [6545],
+      "personas": ["Avery Admin", "Rowan Owner", "Vivian Viewer", "Nolan Outsider"],
+      "boards": ["qa-grid-24", "qa-permissions-public"],
+      "profiles": ["main-writable", "main-readonly"],
+      "viewports": ["desktop-1440"],
+      "zooms": [100],
+      "inputs": ["mouse", "keyboard"],
+      "cases": ["PF-002"]
+    },
+    {
+      "id": "preflight-03",
+      "wave": "preflight",
+      "title": "Browser evidence hygiene",
+      "prRefs": [6545],
+      "personas": ["Casey Chaos"],
+      "boards": [],
+      "profiles": ["main-writable"],
+      "viewports": ["mobile-320", "desktop-1920"],
+      "zooms": [80, 100, 125, 200],
+      "inputs": ["mouse", "touch", "keyboard"],
+      "cases": ["PF-003"]
+    },
+
+    {
+      "id": "board-01",
+      "wave": "board",
+      "title": "24-column placement and resize",
+      "prRefs": [6503],
+      "personas": ["Rowan Owner"],
+      "boards": ["qa-grid-24"],
+      "profiles": ["main-writable"],
+      "viewports": ["desktop-1440", "desktop-1920"],
+      "zooms": [80, 100, 125],
+      "inputs": ["mouse", "keyboard"],
+      "cases": ["BD-001"]
+    },
+    {
+      "id": "board-02",
+      "wave": "board",
+      "title": "Scrollable canvas and collapse states",
+      "prRefs": [6503],
+      "personas": ["Eden Editor"],
+      "boards": ["qa-scroll-lab"],
+      "profiles": ["main-writable"],
+      "viewports": ["mobile-375", "desktop-1280"],
+      "zooms": [100, 200],
+      "inputs": ["mouse", "touch"],
+      "cases": ["BD-002"]
+    },
+    {
+      "id": "board-03",
+      "wave": "board",
+      "title": "Dense collision handling",
+      "prRefs": [6503],
+      "personas": ["Casey Chaos"],
+      "boards": ["qa-dense-collisions"],
+      "profiles": ["main-writable"],
+      "viewports": ["tablet-1024", "desktop-1440"],
+      "zooms": [100, 125],
+      "inputs": ["mouse", "touch", "keyboard"],
+      "cases": ["BD-003"]
+    },
+    {
+      "id": "board-04",
+      "wave": "board",
+      "title": "Nested containers",
+      "prRefs": [6503],
+      "personas": ["Rowan Owner"],
+      "boards": ["qa-nested-containers"],
+      "profiles": ["main-writable"],
+      "viewports": ["mobile-320", "desktop-1440"],
+      "zooms": [100, 200],
+      "inputs": ["mouse", "touch"],
+      "cases": ["BD-004"]
+    },
+    {
+      "id": "board-05",
+      "wave": "board",
+      "title": "Responsive layout boundaries",
+      "prRefs": [6450],
+      "personas": ["Morgan Mobile"],
+      "boards": ["qa-layout-boundaries"],
+      "profiles": ["main-writable"],
+      "viewports": ["boundary-767", "boundary-768", "boundary-1279", "desktop-1280"],
+      "zooms": [100],
+      "inputs": ["touch", "keyboard"],
+      "cases": ["BD-005"]
+    },
+    {
+      "id": "board-06",
+      "wave": "board",
+      "title": "Icons, bookmarks, and compact layout",
+      "prRefs": [6502],
+      "personas": ["Brooke Minimalist"],
+      "boards": ["qa-icons-bookmarks"],
+      "profiles": ["main-writable"],
+      "viewports": ["mobile-375", "desktop-1440"],
+      "zooms": [80, 100, 125],
+      "inputs": ["mouse", "touch"],
+      "cases": ["BD-006"]
+    },
+    {
+      "id": "board-07",
+      "wave": "board",
+      "title": "Permission-aware editing",
+      "prRefs": [6503, 6545],
+      "personas": ["Rowan Owner", "Eden Editor", "Vivian Viewer", "Nolan Outsider"],
+      "boards": ["qa-permissions-public"],
+      "profiles": ["main-writable", "main-readonly"],
+      "viewports": ["desktop-1440"],
+      "zooms": [100],
+      "inputs": ["mouse", "keyboard"],
+      "cases": ["BD-007"]
+    },
+    {
+      "id": "board-08",
+      "wave": "board",
+      "title": "Board import and export",
+      "prRefs": [6545],
+      "personas": ["Avery Admin"],
+      "boards": ["qa-download-upload"],
+      "profiles": ["main-writable"],
+      "viewports": ["desktop-1280"],
+      "zooms": [100],
+      "inputs": ["mouse", "keyboard"],
+      "cases": ["BD-008"]
+    },
+    {
+      "id": "board-09",
+      "wave": "board",
+      "title": "Keyboard-only grid operation",
+      "prRefs": [6503, 6450],
+      "personas": ["Kira Keyboard"],
+      "boards": ["qa-grid-24"],
+      "profiles": ["main-writable"],
+      "viewports": ["mobile-320", "desktop-1440"],
+      "zooms": [100, 200],
+      "inputs": ["keyboard"],
+      "cases": ["BD-009"]
+    },
+
+    {
+      "id": "widgets-01",
+      "wave": "widgets",
+      "title": "Time and environment",
+      "prRefs": [6502, 6555],
+      "personas": ["Brooke Minimalist"],
+      "boards": ["qa-widgets-01"],
+      "profiles": ["main-writable", "degraded"],
+      "viewports": [
+        "mobile-320",
+        "mobile-375",
+        "boundary-767",
+        "boundary-768",
+        "tablet-1024",
+        "boundary-1279",
+        "desktop-1280",
+        "desktop-1440",
+        "desktop-1920"
+      ],
+      "zooms": [100, 125],
+      "inputs": ["mouse", "touch", "keyboard"],
+      "widgetKinds": ["clock", "weather", "airQuality", "countdown", "timer"],
+      "cases": ["WG-001"]
+    },
+    {
+      "id": "widgets-02",
+      "wave": "widgets",
+      "title": "Apps, embeds, video, game status, and stocks",
+      "prRefs": [6502, 6555],
+      "personas": ["Cora Creator"],
+      "boards": ["qa-widgets-02"],
+      "profiles": ["main-writable", "degraded"],
+      "viewports": [
+        "mobile-320",
+        "mobile-375",
+        "boundary-767",
+        "boundary-768",
+        "tablet-1024",
+        "boundary-1279",
+        "desktop-1280",
+        "desktop-1440",
+        "desktop-1920"
+      ],
+      "zooms": [100, 200],
+      "inputs": ["mouse", "touch", "keyboard"],
+      "widgetKinds": ["app", "iframe", "video", "minecraftServerStatus", "stockPrice"],
+      "cases": ["WG-002"]
+    },
+    {
+      "id": "widgets-03",
+      "wave": "widgets",
+      "title": "Notes, bookmarks, feeds, and timetable",
+      "prRefs": [6502, 6555],
+      "personas": ["Cora Creator"],
+      "boards": ["qa-widgets-03"],
+      "profiles": ["main-writable", "degraded"],
+      "viewports": [
+        "mobile-320",
+        "mobile-375",
+        "boundary-767",
+        "boundary-768",
+        "tablet-1024",
+        "boundary-1279",
+        "desktop-1280",
+        "desktop-1440",
+        "desktop-1920"
+      ],
+      "zooms": [80, 100, 125],
+      "inputs": ["mouse", "touch", "keyboard"],
+      "widgetKinds": ["notebook", "anchorNote", "bookmarks", "rssFeed", "timetable"],
+      "cases": ["WG-003"]
+    },
+    {
+      "id": "widgets-04",
+      "wave": "widgets",
+      "title": "Downloads, containers, indexers, and DNS",
+      "prRefs": [6502, 6555],
+      "personas": ["Ingrid Infra"],
+      "boards": ["qa-widgets-04"],
+      "profiles": ["main-writable", "degraded"],
+      "viewports": [
+        "mobile-320",
+        "mobile-375",
+        "boundary-767",
+        "boundary-768",
+        "tablet-1024",
+        "boundary-1279",
+        "desktop-1280",
+        "desktop-1440",
+        "desktop-1920"
+      ],
+      "zooms": [100, 125],
+      "inputs": ["mouse", "touch", "keyboard"],
+      "widgetKinds": ["downloads", "dockerContainers", "indexerManager", "dnsHoleSummary", "dnsHoleControls"],
+      "cases": ["WG-004"]
+    },
+    {
+      "id": "widgets-05",
+      "wave": "widgets",
+      "title": "Smart home, health, and system telemetry",
+      "prRefs": [6502, 6555],
+      "personas": ["Ingrid Infra"],
+      "boards": ["qa-widgets-05"],
+      "profiles": ["main-writable", "degraded"],
+      "viewports": [
+        "mobile-320",
+        "mobile-375",
+        "boundary-767",
+        "boundary-768",
+        "tablet-1024",
+        "boundary-1279",
+        "desktop-1280",
+        "desktop-1440",
+        "desktop-1920"
+      ],
+      "zooms": [100, 200],
+      "inputs": ["mouse", "touch", "keyboard"],
+      "widgetKinds": [
+        "smartHome-entityState",
+        "smartHome-executeAutomation",
+        "healthMonitoring",
+        "systemResources",
+        "systemDisks"
+      ],
+      "cases": ["WG-005"]
+    },
+    {
+      "id": "widgets-06",
+      "wave": "widgets",
+      "title": "Network availability and operations",
+      "prRefs": [6502, 6555],
+      "personas": ["Ingrid Infra"],
+      "boards": ["qa-widgets-06"],
+      "profiles": ["main-writable", "degraded"],
+      "viewports": [
+        "mobile-320",
+        "mobile-375",
+        "boundary-767",
+        "boundary-768",
+        "tablet-1024",
+        "boundary-1279",
+        "desktop-1280",
+        "desktop-1440",
+        "desktop-1920"
+      ],
+      "zooms": [80, 100, 125],
+      "inputs": ["mouse", "touch", "keyboard"],
+      "widgetKinds": ["firewall", "notifications", "networkControllerSummary", "networkControllerStatus", "uptimeKuma"],
+      "cases": ["WG-006"]
+    },
+    {
+      "id": "widgets-07",
+      "wave": "widgets",
+      "title": "Beszel and update monitoring",
+      "prRefs": [6502, 6555],
+      "personas": ["Ingrid Infra"],
+      "boards": ["qa-widgets-07"],
+      "profiles": ["main-writable", "degraded"],
+      "viewports": [
+        "mobile-320",
+        "mobile-375",
+        "boundary-767",
+        "boundary-768",
+        "tablet-1024",
+        "boundary-1279",
+        "desktop-1280",
+        "desktop-1440",
+        "desktop-1920"
+      ],
+      "zooms": [100, 125],
+      "inputs": ["mouse", "touch", "keyboard"],
+      "widgetKinds": ["beszelSystemTable", "beszelSystemGrid", "beszelAlerts", "beszelSystemStats", "wud"],
+      "cases": ["WG-007"]
+    },
+    {
+      "id": "widgets-08",
+      "wave": "widgets",
+      "title": "Power, VPN, speed, routing, and analytics",
+      "prRefs": [6502, 6555],
+      "personas": ["Ingrid Infra"],
+      "boards": ["qa-widgets-08"],
+      "profiles": ["main-writable", "degraded"],
+      "viewports": [
+        "mobile-320",
+        "mobile-375",
+        "boundary-767",
+        "boundary-768",
+        "tablet-1024",
+        "boundary-1279",
+        "desktop-1280",
+        "desktop-1440",
+        "desktop-1920"
+      ],
+      "zooms": [100, 200],
+      "inputs": ["mouse", "touch", "keyboard"],
+      "widgetKinds": ["ups", "vpn", "speedtestTracker", "traefik", "umami"],
+      "cases": ["WG-008"]
+    },
+    {
+      "id": "widgets-09",
+      "wave": "widgets",
+      "title": "Media overview and requests",
+      "prRefs": [6502, 6555],
+      "personas": ["Maya Media"],
+      "boards": ["qa-widgets-09"],
+      "profiles": ["main-writable", "degraded"],
+      "viewports": [
+        "mobile-320",
+        "mobile-375",
+        "boundary-767",
+        "boundary-768",
+        "tablet-1024",
+        "boundary-1279",
+        "desktop-1280",
+        "desktop-1440",
+        "desktop-1920"
+      ],
+      "zooms": [80, 100, 125],
+      "inputs": ["mouse", "touch", "keyboard"],
+      "widgetKinds": [
+        "calendar",
+        "mediaServer",
+        "mediaRequests-requestList",
+        "mediaRequests-requestStats",
+        "mediaMissing"
+      ],
+      "cases": ["WG-009"]
+    },
+    {
+      "id": "widgets-10",
+      "wave": "widgets",
+      "title": "Media activity, Immich, and audio",
+      "prRefs": [6502, 6555],
+      "personas": ["Maya Media"],
+      "boards": ["qa-widgets-10"],
+      "profiles": ["main-writable", "degraded"],
+      "viewports": [
+        "mobile-320",
+        "mobile-375",
+        "boundary-767",
+        "boundary-768",
+        "tablet-1024",
+        "boundary-1279",
+        "desktop-1280",
+        "desktop-1440",
+        "desktop-1920"
+      ],
+      "zooms": [100, 125],
+      "inputs": ["mouse", "touch", "keyboard"],
+      "widgetKinds": ["mediaReleases", "mediaTranscoding", "immich-serverStats", "immich-albumCarousel", "audioStats"],
+      "cases": ["WG-010"]
+    },
+    {
+      "id": "widgets-11",
+      "wave": "widgets",
+      "title": "Documents, patching, media services, and releases",
+      "prRefs": [6502, 6555],
+      "personas": ["Ingrid Infra"],
+      "boards": ["qa-widgets-11"],
+      "profiles": ["main-writable", "degraded"],
+      "viewports": [
+        "mobile-320",
+        "mobile-375",
+        "boundary-767",
+        "boundary-768",
+        "tablet-1024",
+        "boundary-1279",
+        "desktop-1280",
+        "desktop-1440",
+        "desktop-1920"
+      ],
+      "zooms": [100, 200],
+      "inputs": ["mouse", "touch", "keyboard"],
+      "widgetKinds": ["paperlessNgx", "patchmon", "bazarr", "tracearr", "releases"],
+      "cases": ["WG-011"]
+    },
+    {
+      "id": "widgets-12",
+      "wave": "widgets",
+      "title": "Coolify, ArchiveTeam, Custom API, and Assistant",
+      "prRefs": [6502, 6482, 6555],
+      "personas": ["Ash Assistant", "Cora Creator"],
+      "boards": ["qa-widgets-12", "qa-custom-widget-assistant"],
+      "profiles": ["main-writable", "degraded"],
+      "viewports": [
+        "mobile-320",
+        "mobile-375",
+        "boundary-767",
+        "boundary-768",
+        "tablet-1024",
+        "boundary-1279",
+        "desktop-1280",
+        "desktop-1440",
+        "desktop-1920"
+      ],
+      "zooms": [80, 100, 125, 200],
+      "inputs": ["mouse", "touch", "keyboard"],
+      "widgetKinds": ["coolify", "archiveTeamWarrior", "customApi", "assistant"],
+      "cases": ["WG-012"]
+    },
+
+    {
+      "id": "core-v2-01",
+      "wave": "core-v2",
+      "title": "Custom widget authoring",
+      "prRefs": [6356],
+      "personas": ["Cora Creator"],
+      "boards": ["qa-custom-widget-assistant"],
+      "profiles": ["main-writable", "degraded"],
+      "viewports": ["desktop-1440"],
+      "zooms": [100],
+      "inputs": ["mouse", "keyboard"],
+      "cases": ["CV-001"]
+    },
+    {
+      "id": "core-v2-02",
+      "wave": "core-v2",
+      "title": "Assistant tool flow",
+      "prRefs": [6482],
+      "personas": ["Ash Assistant"],
+      "boards": ["qa-custom-widget-assistant"],
+      "profiles": ["main-writable", "degraded"],
+      "viewports": ["mobile-375", "desktop-1440"],
+      "zooms": [100, 125],
+      "inputs": ["mouse", "touch", "keyboard"],
+      "cases": ["CV-002"]
+    },
+    {
+      "id": "core-v2-03",
+      "wave": "core-v2",
+      "title": "Onboarding happy path",
+      "prRefs": [6569],
+      "personas": ["Nora Newcomer"],
+      "boards": [],
+      "profiles": ["onboarding-fresh"],
+      "viewports": ["mobile-320", "desktop-1440"],
+      "zooms": [100],
+      "inputs": ["mouse", "touch", "keyboard"],
+      "cases": ["CV-003"]
+    },
+    {
+      "id": "core-v2-04",
+      "wave": "core-v2",
+      "title": "Authentication and session transitions",
+      "prRefs": [6545, 6569],
+      "personas": ["Avery Admin", "Nolan Outsider"],
+      "boards": ["qa-permissions-public"],
+      "profiles": ["main-writable", "main-readonly", "onboarding-fresh"],
+      "viewports": ["mobile-375", "desktop-1280"],
+      "zooms": [100],
+      "inputs": ["mouse", "touch", "keyboard"],
+      "cases": ["CV-004"]
+    },
+    {
+      "id": "core-v2-05",
+      "wave": "core-v2",
+      "title": "Integration management",
+      "prRefs": [6502, 6545],
+      "personas": ["Ingrid Infra"],
+      "boards": ["qa-widgets-07"],
+      "profiles": ["main-writable", "degraded"],
+      "viewports": ["desktop-1440"],
+      "zooms": [100, 125],
+      "inputs": ["mouse", "keyboard"],
+      "cases": ["CV-005"]
+    },
+    {
+      "id": "core-v2-06",
+      "wave": "core-v2",
+      "title": "Search, menus, and dialogs",
+      "prRefs": [6545],
+      "personas": ["Kira Keyboard"],
+      "boards": ["qa-grid-24"],
+      "profiles": ["main-writable"],
+      "viewports": ["mobile-320", "desktop-1440"],
+      "zooms": [100, 200],
+      "inputs": ["mouse", "touch", "keyboard"],
+      "cases": ["CV-006"]
+    },
+    {
+      "id": "core-v2-07",
+      "wave": "core-v2",
+      "title": "Read-only enforcement",
+      "prRefs": [6356, 6482, 6545],
+      "personas": ["Vivian Viewer"],
+      "boards": ["qa-custom-widget-assistant", "qa-permissions-public"],
+      "profiles": ["main-readonly"],
+      "viewports": ["mobile-375", "desktop-1280"],
+      "zooms": [100],
+      "inputs": ["mouse", "touch", "keyboard"],
+      "cases": ["CV-007"]
+    },
+    {
+      "id": "core-v2-08",
+      "wave": "core-v2",
+      "title": "Failure and recovery states",
+      "prRefs": [6356, 6482, 6502, 6545],
+      "personas": ["Casey Chaos"],
+      "boards": ["qa-custom-widget-assistant", "qa-widgets-12"],
+      "profiles": ["degraded"],
+      "viewports": ["mobile-320", "desktop-1440"],
+      "zooms": [100, 125],
+      "inputs": ["mouse", "touch", "keyboard"],
+      "cases": ["CV-008"]
+    },
+
+    {
+      "id": "whole-product-01",
+      "wave": "whole-product",
+      "title": "Admin day-one journey",
+      "prRefs": [6545, 6569],
+      "personas": ["Avery Admin", "Nora Newcomer"],
+      "boards": ["qa-grid-24"],
+      "profiles": ["onboarding-fresh", "main-writable"],
+      "viewports": ["desktop-1440"],
+      "zooms": [100],
+      "inputs": ["mouse", "keyboard"],
+      "cases": ["WP-001"]
+    },
+    {
+      "id": "whole-product-02",
+      "wave": "whole-product",
+      "title": "Owner customization journey",
+      "prRefs": [6356, 6503, 6502],
+      "personas": ["Rowan Owner"],
+      "boards": ["qa-grid-24", "qa-custom-widget-assistant"],
+      "profiles": ["main-writable"],
+      "viewports": ["desktop-1920"],
+      "zooms": [80, 100, 125],
+      "inputs": ["mouse", "keyboard"],
+      "cases": ["WP-002"]
+    },
+    {
+      "id": "whole-product-03",
+      "wave": "whole-product",
+      "title": "Editor daily journey",
+      "prRefs": [6503, 6502, 6450],
+      "personas": ["Eden Editor"],
+      "boards": ["qa-scroll-lab", "qa-layout-boundaries"],
+      "profiles": ["main-writable"],
+      "viewports": ["tablet-1024", "desktop-1280"],
+      "zooms": [100],
+      "inputs": ["mouse", "touch", "keyboard"],
+      "cases": ["WP-003"]
+    },
+    {
+      "id": "whole-product-04",
+      "wave": "whole-product",
+      "title": "Viewer and outsider boundaries",
+      "prRefs": [6545],
+      "personas": ["Vivian Viewer", "Nolan Outsider"],
+      "boards": ["qa-permissions-public"],
+      "profiles": ["main-writable", "main-readonly"],
+      "viewports": ["mobile-375", "desktop-1440"],
+      "zooms": [100],
+      "inputs": ["mouse", "touch", "keyboard"],
+      "cases": ["WP-004"]
+    },
+    {
+      "id": "whole-product-05",
+      "wave": "whole-product",
+      "title": "Mobile journey",
+      "prRefs": [6450, 6503, 6502],
+      "personas": ["Morgan Mobile"],
+      "boards": ["qa-layout-boundaries", "qa-widgets-01"],
+      "profiles": ["main-writable"],
+      "viewports": ["mobile-320", "mobile-375", "boundary-767", "boundary-768"],
+      "zooms": [100, 200],
+      "inputs": ["touch", "keyboard"],
+      "cases": ["WP-005"]
+    },
+    {
+      "id": "whole-product-06",
+      "wave": "whole-product",
+      "title": "Media operator journey",
+      "prRefs": [6502, 6555],
+      "personas": ["Maya Media"],
+      "boards": ["qa-widgets-04", "qa-widgets-05"],
+      "profiles": ["main-writable", "degraded"],
+      "viewports": ["desktop-1440"],
+      "zooms": [100],
+      "inputs": ["mouse", "keyboard"],
+      "cases": ["WP-006"]
+    },
+    {
+      "id": "whole-product-07",
+      "wave": "whole-product",
+      "title": "Infrastructure operator journey",
+      "prRefs": [6502, 6555],
+      "personas": ["Ingrid Infra"],
+      "boards": ["qa-widgets-07", "qa-widgets-08", "qa-widgets-09", "qa-widgets-10", "qa-widgets-11"],
+      "profiles": ["main-writable", "degraded"],
+      "viewports": ["desktop-1920"],
+      "zooms": [80, 100, 125],
+      "inputs": ["mouse", "keyboard"],
+      "cases": ["WP-007"]
+    },
+    {
+      "id": "whole-product-08",
+      "wave": "whole-product",
+      "title": "Creator and Assistant journey",
+      "prRefs": [6356, 6482],
+      "personas": ["Cora Creator", "Ash Assistant"],
+      "boards": ["qa-custom-widget-assistant"],
+      "profiles": ["main-writable", "degraded"],
+      "viewports": ["mobile-375", "desktop-1440"],
+      "zooms": [100, 125],
+      "inputs": ["mouse", "touch", "keyboard"],
+      "cases": ["WP-008"]
+    },
+    {
+      "id": "whole-product-09",
+      "wave": "whole-product",
+      "title": "Accessibility and destructive-action pass",
+      "prRefs": [6356, 6503, 6502, 6450, 6482, 6569, 6545],
+      "personas": ["Kira Keyboard", "Casey Chaos"],
+      "boards": ["qa-grid-24", "qa-download-upload", "qa-custom-widget-assistant"],
+      "profiles": ["main-writable", "main-readonly", "degraded"],
+      "viewports": ["mobile-320", "desktop-1440"],
+      "zooms": [100, 200],
+      "inputs": ["keyboard"],
+      "cases": ["WP-009"]
+    },
+
+    {
+      "id": "performance-01",
+      "wave": "performance",
+      "title": "Cold and warm board load",
+      "prRefs": [6555, 6545],
+      "personas": ["Avery Admin"],
+      "boards": ["qa-grid-24", "qa-widgets-12"],
+      "profiles": ["main-writable"],
+      "viewports": ["mobile-375", "desktop-1440"],
+      "zooms": [100],
+      "inputs": ["mouse"],
+      "cases": ["PE-001"]
+    },
+    {
+      "id": "performance-02",
+      "wave": "performance",
+      "title": "Grid interaction responsiveness",
+      "prRefs": [6503, 6555],
+      "personas": ["Rowan Owner"],
+      "boards": ["qa-dense-collisions", "qa-nested-containers"],
+      "profiles": ["main-writable"],
+      "viewports": ["tablet-1024", "desktop-1920"],
+      "zooms": [80, 100, 125],
+      "inputs": ["mouse", "touch", "keyboard"],
+      "cases": ["PE-002"]
+    },
+    {
+      "id": "performance-03",
+      "wave": "performance",
+      "title": "Widget network and render budget",
+      "prRefs": [6502, 6555],
+      "personas": ["Ingrid Infra", "Maya Media"],
+      "boards": ["qa-widgets-04", "qa-widgets-07", "qa-widgets-12"],
+      "profiles": ["main-writable", "degraded"],
+      "viewports": ["mobile-320", "desktop-1440"],
+      "zooms": [100],
+      "inputs": ["mouse", "touch"],
+      "cases": ["PE-003"]
+    },
+    {
+      "id": "performance-04",
+      "wave": "performance",
+      "title": "Long-session stability",
+      "prRefs": [6356, 6503, 6502, 6482, 6555, 6545],
+      "personas": ["Casey Chaos"],
+      "boards": ["qa-grid-24", "qa-custom-widget-assistant", "qa-widgets-12"],
+      "profiles": ["main-writable", "degraded"],
+      "viewports": ["mobile-375", "desktop-1920"],
+      "zooms": [100, 125],
+      "inputs": ["mouse", "touch", "keyboard"],
+      "cases": ["PE-004"]
+    }
+  ]
+}

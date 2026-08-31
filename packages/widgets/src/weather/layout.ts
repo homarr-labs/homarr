@@ -21,9 +21,17 @@ export const getCompactWeatherLayout = (
   height: number,
   hasForecast: boolean,
   configuredDays: number,
+  displayScale = 1,
 ): CompactWeatherLayout => {
+  let responsiveWidth = width;
+  let responsiveHeight = height;
+  if (Number.isFinite(displayScale) && displayScale > 0) {
+    responsiveWidth *= displayScale;
+    responsiveHeight *= displayScale;
+  }
+
   const breakpoint = compactWeatherBreakpoints.find(
-    ({ minHeight, minWidth }) => width >= minWidth && height >= minHeight,
+    ({ minHeight, minWidth }) => responsiveWidth >= minWidth && responsiveHeight >= minHeight,
   );
   const tier = breakpoint?.tier ?? "micro";
 
@@ -41,15 +49,15 @@ export const getCompactWeatherLayout = (
   if (tier === "compact") {
     return {
       tier: "compact",
-      forecastDays: hasForecast ? Math.min(configuredDays, Math.max(1, Math.floor(width / 92))) : 0,
-      showCity: width >= 220,
+      forecastDays: hasForecast ? Math.min(configuredDays, Math.max(1, Math.floor(responsiveWidth / 92))) : 0,
+      showCity: responsiveWidth >= 220,
       showCondition: true,
       showHighLow: true,
       showSecondary: false,
     };
   }
 
-  const availableForecastWidth = Math.max(0, width - 24);
+  const availableForecastWidth = Math.max(0, responsiveWidth - 24);
   return {
     tier,
     forecastDays: hasForecast ? Math.min(configuredDays, Math.max(1, Math.floor(availableForecastWidth / 64))) : 0,

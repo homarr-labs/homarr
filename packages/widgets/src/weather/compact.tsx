@@ -15,6 +15,7 @@ import { formatWeatherDate, WeatherDescription } from "./icon";
 import { getCompactWeatherLayout } from "./layout";
 
 interface CompactWeatherProps {
+  displayScale: number;
   height: number;
   isEditMode: boolean;
   options: WidgetProps<"weather">["options"];
@@ -22,13 +23,13 @@ interface CompactWeatherProps {
   width: number;
 }
 
-export const CompactWeather = ({ height, isEditMode, options, weather, width }: CompactWeatherProps) => {
+export const CompactWeather = ({ displayScale, height, isEditMode, options, weather, width }: CompactWeatherProps) => {
   const locale = useCurrentIntlLocale();
   const t = useI18n("widget.weather");
   const tCommon = useI18n("common");
   const layout = useMemo(
-    () => getCompactWeatherLayout(width, height, options.hasForecast, options.forecastDayCount),
-    [height, options.forecastDayCount, options.hasForecast, width],
+    () => getCompactWeatherLayout(width, height, options.hasForecast, options.forecastDayCount, displayScale),
+    [displayScale, height, options.forecastDayCount, options.hasForecast, width],
   );
   const today = weather.daily[0];
   const speedUnit = options.useImperialSpeed

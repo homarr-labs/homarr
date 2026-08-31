@@ -53,6 +53,18 @@ describe("weather layout", () => {
     expect(getCompactWeatherLayout(640, 360, false, 7).forecastDays).toBe(0);
   });
 
+  it("uses the rendered dimensions when a responsive board scales the widget", () => {
+    expect(getCompactWeatherLayout(320, 180, true, 7).tier).toBe("standard");
+    expect(getCompactWeatherLayout(320, 180, true, 7, 0.5)).toEqual({
+      tier: "micro",
+      forecastDays: 0,
+      showCity: false,
+      showCondition: false,
+      showHighLow: false,
+      showSecondary: false,
+    });
+  });
+
   it("adapts the advanced view to mobile and desktop surfaces", () => {
     expect(getAdvancedWeatherLayout(374, 624)).toMatchObject({
       dailyColumns: 2,

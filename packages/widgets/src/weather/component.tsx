@@ -18,6 +18,7 @@ export default function WeatherWidget({
   width,
   height,
   displayMode,
+  displayScale = 1,
 }: WidgetComponentProps<"weather">) {
   const input = {
     latitude: options.location.latitude,
@@ -35,7 +36,14 @@ export default function WeatherWidget({
         {displayMode === "advanced" ? (
           <AdvancedWeather height={height} options={options} weather={weather} width={width} />
         ) : (
-          <CompactWeather height={height} isEditMode={isEditMode} options={options} weather={weather} width={width} />
+          <CompactWeather
+            displayScale={displayScale}
+            height={height}
+            isEditMode={isEditMode}
+            options={options}
+            weather={weather}
+            width={width}
+          />
         )}
       </Box>
     </Box>

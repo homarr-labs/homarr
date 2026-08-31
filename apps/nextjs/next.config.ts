@@ -26,10 +26,21 @@ const getDevelopmentServiceAliases = () => {
   };
 };
 
+const getDistDir = () => {
+  const qaDistDir = process.env.HOMARR_QA_NEXT_DIST_DIR;
+  if (!qaDistDir) return ".next";
+  if (!/^\.next-qa\/slot-[1-3]$/u.test(qaDistDir)) {
+    throw new Error("HOMARR_QA_NEXT_DIST_DIR must identify .next-qa/slot-1, slot-2, or slot-3");
+  }
+  return qaDistDir;
+};
+
 const nextConfig: NextConfig = {
   // Next previews otherwise create agent instruction files in the application
   // directory during development.
   agentRules: false,
+  // Release-v2 QA runs multiple isolated development servers from one worktree.
+  distDir: getDistDir(),
   env: {
     HOMARR_VERSION: process.env.HOMARR_VERSION ?? "unknown",
   },

@@ -1,0 +1,420 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-08-31T18:42:05.188Z",
+  "packetStatuses": {
+    "preflight-01": {
+      "status": "failed",
+      "cases": {
+        "PF-001-ENVIRONMENT": "failed",
+        "PF-001-ACCESS": "blocked",
+        "PF-001-EVIDENCE": "passed"
+      }
+    },
+    "preflight-02": {
+      "status": "failed",
+      "cases": {
+        "PF-002-ENVIRONMENT": "failed",
+        "PF-002-ACCESS": "blocked",
+        "PF-002-EVIDENCE": "passed"
+      }
+    },
+    "preflight-03": {
+      "status": "failed",
+      "cases": {
+        "PF-003-ENVIRONMENT": "failed",
+        "PF-003-ACCESS": "blocked",
+        "PF-003-EVIDENCE": "passed"
+      }
+    },
+    "board-01": {
+      "status": "blocked",
+      "cases": {
+        "BD-001-THRESHOLDS": "blocked",
+        "BD-001-MUTATION": "blocked",
+        "BD-001-PERSISTENCE": "blocked",
+        "BD-001-ACCESS-RECOVERY": "blocked"
+      }
+    },
+    "board-02": {
+      "status": "blocked",
+      "cases": {
+        "BD-002-THRESHOLDS": "blocked",
+        "BD-002-MUTATION": "blocked",
+        "BD-002-PERSISTENCE": "blocked",
+        "BD-002-ACCESS-RECOVERY": "blocked"
+      }
+    },
+    "board-03": {
+      "status": "blocked",
+      "cases": {
+        "BD-003-THRESHOLDS": "blocked",
+        "BD-003-MUTATION": "blocked",
+        "BD-003-PERSISTENCE": "blocked",
+        "BD-003-ACCESS-RECOVERY": "blocked"
+      }
+    },
+    "board-04": {
+      "status": "blocked",
+      "cases": {
+        "BD-004-THRESHOLDS": "blocked",
+        "BD-004-MUTATION": "blocked",
+        "BD-004-PERSISTENCE": "blocked",
+        "BD-004-ACCESS-RECOVERY": "blocked"
+      }
+    },
+    "board-05": {
+      "status": "blocked",
+      "cases": {
+        "BD-005-THRESHOLDS": "blocked",
+        "BD-005-MUTATION": "blocked",
+        "BD-005-PERSISTENCE": "blocked",
+        "BD-005-ACCESS-RECOVERY": "blocked"
+      }
+    },
+    "board-06": {
+      "status": "blocked",
+      "cases": {
+        "BD-006-THRESHOLDS": "blocked",
+        "BD-006-MUTATION": "blocked",
+        "BD-006-PERSISTENCE": "blocked",
+        "BD-006-ACCESS-RECOVERY": "blocked"
+      }
+    },
+    "board-07": {
+      "status": "blocked",
+      "cases": {
+        "BD-007-THRESHOLDS": "blocked",
+        "BD-007-MUTATION": "blocked",
+        "BD-007-PERSISTENCE": "blocked",
+        "BD-007-ACCESS-RECOVERY": "blocked"
+      }
+    },
+    "board-08": {
+      "status": "blocked",
+      "cases": {
+        "BD-008-THRESHOLDS": "blocked",
+        "BD-008-MUTATION": "blocked",
+        "BD-008-PERSISTENCE": "blocked",
+        "BD-008-ACCESS-RECOVERY": "blocked"
+      }
+    },
+    "board-09": {
+      "status": "blocked",
+      "cases": {
+        "BD-009-THRESHOLDS": "blocked",
+        "BD-009-MUTATION": "blocked",
+        "BD-009-PERSISTENCE": "blocked",
+        "BD-009-ACCESS-RECOVERY": "blocked"
+      }
+    },
+    "widgets-01": {
+      "status": "blocked",
+      "cases": {
+        "WG-001-RENDER-SIZE": "blocked",
+        "WG-001-STATES-RECOVERY": "blocked",
+        "WG-001-OPTIONS-PERSISTENCE": "blocked",
+        "WG-001-ACCESS-READONLY": "blocked",
+        "WG-001-EVIDENCE": "blocked"
+      }
+    },
+    "widgets-02": {
+      "status": "blocked",
+      "cases": {
+        "WG-002-RENDER-SIZE": "blocked",
+        "WG-002-STATES-RECOVERY": "blocked",
+        "WG-002-OPTIONS-PERSISTENCE": "blocked",
+        "WG-002-ACCESS-READONLY": "blocked",
+        "WG-002-EVIDENCE": "blocked"
+      }
+    },
+    "widgets-03": {
+      "status": "blocked",
+      "cases": {
+        "WG-003-RENDER-SIZE": "blocked",
+        "WG-003-STATES-RECOVERY": "blocked",
+        "WG-003-OPTIONS-PERSISTENCE": "blocked",
+        "WG-003-ACCESS-READONLY": "blocked",
+        "WG-003-EVIDENCE": "blocked"
+      }
+    },
+    "widgets-04": {
+      "status": "blocked",
+      "cases": {
+        "WG-004-RENDER-SIZE": "blocked",
+        "WG-004-STATES-RECOVERY": "blocked",
+        "WG-004-OPTIONS-PERSISTENCE": "blocked",
+        "WG-004-ACCESS-READONLY": "blocked",
+        "WG-004-EVIDENCE": "blocked"
+      }
+    },
+    "widgets-05": {
+      "status": "blocked",
+      "cases": {
+        "WG-005-RENDER-SIZE": "blocked",
+        "WG-005-STATES-RECOVERY": "blocked",
+        "WG-005-OPTIONS-PERSISTENCE": "blocked",
+        "WG-005-ACCESS-READONLY": "blocked",
+        "WG-005-EVIDENCE": "blocked"
+      }
+    },
+    "widgets-06": {
+      "status": "blocked",
+      "cases": {
+        "WG-006-RENDER-SIZE": "blocked",
+        "WG-006-STATES-RECOVERY": "blocked",
+        "WG-006-OPTIONS-PERSISTENCE": "blocked",
+        "WG-006-ACCESS-READONLY": "blocked",
+        "WG-006-EVIDENCE": "blocked"
+      }
+    },
+    "widgets-07": {
+      "status": "blocked",
+      "cases": {
+        "WG-007-RENDER-SIZE": "blocked",
+        "WG-007-STATES-RECOVERY": "blocked",
+        "WG-007-OPTIONS-PERSISTENCE": "blocked",
+        "WG-007-ACCESS-READONLY": "blocked",
+        "WG-007-EVIDENCE": "blocked"
+      }
+    },
+    "widgets-08": {
+      "status": "blocked",
+      "cases": {
+        "WG-008-RENDER-SIZE": "blocked",
+        "WG-008-STATES-RECOVERY": "blocked",
+        "WG-008-OPTIONS-PERSISTENCE": "blocked",
+        "WG-008-ACCESS-READONLY": "blocked",
+        "WG-008-EVIDENCE": "blocked"
+      }
+    },
+    "widgets-09": {
+      "status": "blocked",
+      "cases": {
+        "WG-009-RENDER-SIZE": "blocked",
+        "WG-009-STATES-RECOVERY": "blocked",
+        "WG-009-OPTIONS-PERSISTENCE": "blocked",
+        "WG-009-ACCESS-READONLY": "blocked",
+        "WG-009-EVIDENCE": "blocked"
+      }
+    },
+    "widgets-10": {
+      "status": "blocked",
+      "cases": {
+        "WG-010-RENDER-SIZE": "blocked",
+        "WG-010-STATES-RECOVERY": "blocked",
+        "WG-010-OPTIONS-PERSISTENCE": "blocked",
+        "WG-010-ACCESS-READONLY": "blocked",
+        "WG-010-EVIDENCE": "blocked"
+      }
+    },
+    "widgets-11": {
+      "status": "blocked",
+      "cases": {
+        "WG-011-RENDER-SIZE": "blocked",
+        "WG-011-STATES-RECOVERY": "blocked",
+        "WG-011-OPTIONS-PERSISTENCE": "blocked",
+        "WG-011-ACCESS-READONLY": "blocked",
+        "WG-011-EVIDENCE": "blocked"
+      }
+    },
+    "widgets-12": {
+      "status": "blocked",
+      "cases": {
+        "WG-012-RENDER-SIZE": "blocked",
+        "WG-012-STATES-RECOVERY": "blocked",
+        "WG-012-OPTIONS-PERSISTENCE": "blocked",
+        "WG-012-ACCESS-READONLY": "blocked",
+        "WG-012-EVIDENCE": "blocked"
+      }
+    },
+    "core-v2-01": {
+      "status": "blocked",
+      "cases": {
+        "CV-001-HAPPY-PATH": "blocked",
+        "CV-001-MUTATION-PERSISTENCE": "blocked",
+        "CV-001-ACCESSIBILITY-ACCESS": "blocked",
+        "CV-001-DEGRADED-RECOVERY": "blocked"
+      }
+    },
+    "core-v2-02": {
+      "status": "blocked",
+      "cases": {
+        "CV-002-HAPPY-PATH": "blocked",
+        "CV-002-MUTATION-PERSISTENCE": "blocked",
+        "CV-002-ACCESSIBILITY-ACCESS": "blocked",
+        "CV-002-DEGRADED-RECOVERY": "blocked"
+      }
+    },
+    "core-v2-03": {
+      "status": "blocked",
+      "cases": {
+        "CV-003-HAPPY-PATH": "blocked",
+        "CV-003-MUTATION-PERSISTENCE": "blocked",
+        "CV-003-ACCESSIBILITY-ACCESS": "blocked",
+        "CV-003-DEGRADED-RECOVERY": "blocked"
+      }
+    },
+    "core-v2-04": {
+      "status": "blocked",
+      "cases": {
+        "CV-004-HAPPY-PATH": "blocked",
+        "CV-004-MUTATION-PERSISTENCE": "blocked",
+        "CV-004-ACCESSIBILITY-ACCESS": "blocked",
+        "CV-004-DEGRADED-RECOVERY": "blocked"
+      }
+    },
+    "core-v2-05": {
+      "status": "blocked",
+      "cases": {
+        "CV-005-HAPPY-PATH": "blocked",
+        "CV-005-MUTATION-PERSISTENCE": "blocked",
+        "CV-005-ACCESSIBILITY-ACCESS": "blocked",
+        "CV-005-DEGRADED-RECOVERY": "blocked"
+      }
+    },
+    "core-v2-06": {
+      "status": "blocked",
+      "cases": {
+        "CV-006-HAPPY-PATH": "blocked",
+        "CV-006-MUTATION-PERSISTENCE": "blocked",
+        "CV-006-ACCESSIBILITY-ACCESS": "blocked",
+        "CV-006-DEGRADED-RECOVERY": "blocked"
+      }
+    },
+    "core-v2-07": {
+      "status": "blocked",
+      "cases": {
+        "CV-007-HAPPY-PATH": "blocked",
+        "CV-007-MUTATION-PERSISTENCE": "blocked",
+        "CV-007-ACCESSIBILITY-ACCESS": "blocked",
+        "CV-007-DEGRADED-RECOVERY": "blocked"
+      }
+    },
+    "core-v2-08": {
+      "status": "blocked",
+      "cases": {
+        "CV-008-HAPPY-PATH": "blocked",
+        "CV-008-MUTATION-PERSISTENCE": "blocked",
+        "CV-008-ACCESSIBILITY-ACCESS": "blocked",
+        "CV-008-DEGRADED-RECOVERY": "blocked"
+      }
+    },
+    "whole-product-01": {
+      "status": "blocked",
+      "cases": {
+        "WP-001-JOURNEY": "blocked",
+        "WP-001-THRESHOLDS": "blocked",
+        "WP-001-PERSISTENCE-ACCESS": "blocked",
+        "WP-001-FAILURE-EVIDENCE": "blocked"
+      }
+    },
+    "whole-product-02": {
+      "status": "blocked",
+      "cases": {
+        "WP-002-JOURNEY": "blocked",
+        "WP-002-THRESHOLDS": "blocked",
+        "WP-002-PERSISTENCE-ACCESS": "blocked",
+        "WP-002-FAILURE-EVIDENCE": "blocked"
+      }
+    },
+    "whole-product-03": {
+      "status": "blocked",
+      "cases": {
+        "WP-003-JOURNEY": "blocked",
+        "WP-003-THRESHOLDS": "blocked",
+        "WP-003-PERSISTENCE-ACCESS": "blocked",
+        "WP-003-FAILURE-EVIDENCE": "blocked"
+      }
+    },
+    "whole-product-04": {
+      "status": "blocked",
+      "cases": {
+        "WP-004-JOURNEY": "blocked",
+        "WP-004-THRESHOLDS": "blocked",
+        "WP-004-PERSISTENCE-ACCESS": "blocked",
+        "WP-004-FAILURE-EVIDENCE": "blocked"
+      }
+    },
+    "whole-product-05": {
+      "status": "blocked",
+      "cases": {
+        "WP-005-JOURNEY": "blocked",
+        "WP-005-THRESHOLDS": "blocked",
+        "WP-005-PERSISTENCE-ACCESS": "blocked",
+        "WP-005-FAILURE-EVIDENCE": "blocked"
+      }
+    },
+    "whole-product-06": {
+      "status": "blocked",
+      "cases": {
+        "WP-006-JOURNEY": "blocked",
+        "WP-006-THRESHOLDS": "blocked",
+        "WP-006-PERSISTENCE-ACCESS": "blocked",
+        "WP-006-FAILURE-EVIDENCE": "blocked"
+      }
+    },
+    "whole-product-07": {
+      "status": "blocked",
+      "cases": {
+        "WP-007-JOURNEY": "blocked",
+        "WP-007-THRESHOLDS": "blocked",
+        "WP-007-PERSISTENCE-ACCESS": "blocked",
+        "WP-007-FAILURE-EVIDENCE": "blocked"
+      }
+    },
+    "whole-product-08": {
+      "status": "blocked",
+      "cases": {
+        "WP-008-JOURNEY": "blocked",
+        "WP-008-THRESHOLDS": "blocked",
+        "WP-008-PERSISTENCE-ACCESS": "blocked",
+        "WP-008-FAILURE-EVIDENCE": "blocked"
+      }
+    },
+    "whole-product-09": {
+      "status": "blocked",
+      "cases": {
+        "WP-009-JOURNEY": "blocked",
+        "WP-009-THRESHOLDS": "blocked",
+        "WP-009-PERSISTENCE-ACCESS": "blocked",
+        "WP-009-FAILURE-EVIDENCE": "blocked"
+      }
+    },
+    "performance-01": {
+      "status": "blocked",
+      "cases": {
+        "PE-001-BASELINE": "blocked",
+        "PE-001-THRESHOLD": "blocked",
+        "PE-001-STRESS": "blocked",
+        "PE-001-RECOVERY-EVIDENCE": "blocked"
+      }
+    },
+    "performance-02": {
+      "status": "blocked",
+      "cases": {
+        "PE-002-BASELINE": "blocked",
+        "PE-002-THRESHOLD": "blocked",
+        "PE-002-STRESS": "blocked",
+        "PE-002-RECOVERY-EVIDENCE": "blocked"
+      }
+    },
+    "performance-03": {
+      "status": "blocked",
+      "cases": {
+        "PE-003-BASELINE": "blocked",
+        "PE-003-THRESHOLD": "blocked",
+        "PE-003-STRESS": "blocked",
+        "PE-003-RECOVERY-EVIDENCE": "blocked"
+      }
+    },
+    "performance-04": {
+      "status": "blocked",
+      "cases": {
+        "PE-004-BASELINE": "blocked",
+        "PE-004-THRESHOLD": "blocked",
+        "PE-004-STRESS": "blocked",
+        "PE-004-RECOVERY-EVIDENCE": "blocked"
+      }
+    }
+  }
+}

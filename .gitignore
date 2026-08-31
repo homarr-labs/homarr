@@ -12,6 +12,7 @@ coverage
 
 # next.js
 .next/
+.next-qa/
 out/
 next-env.d.ts
 
