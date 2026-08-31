@@ -51,6 +51,7 @@ export const brandingServerSettingsSchema = z.object({
   signInBackgroundOverlay: z.number().min(0).max(0.9),
   authBranding: authBrandingSchema,
   defaultRadius: z.enum(brandingRadiusOptions),
+  customCss: z.string().max(16_384),
 });
 
 export type BrandingSettings = z.infer<typeof brandingServerSettingsSchema>;
@@ -71,6 +72,7 @@ export const defaultBrandingSettings: BrandingSettings = {
     showGreeting: true,
   },
   defaultRadius: "md",
+  customCss: "",
 };
 
 const hasDefaultBrandingColors = (branding: Pick<BrandingSettings, "primaryColor" | "secondaryColor">) =>

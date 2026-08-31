@@ -57,4 +57,5 @@ export interface CustomWidgetCodeEditorProps {
   readOnly?: boolean;
   reference?: CustomWidgetSchemaReferenceData;
   height?: string;
+  actions?: ReactNode;
 }

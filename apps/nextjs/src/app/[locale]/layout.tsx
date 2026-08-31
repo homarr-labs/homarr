@@ -199,6 +199,7 @@ export default async function Layout(props: {
         ) : null}
         <SearchEngineOptimization />
         <CrowdinLiveTranslation locale={locale} />
+        <style data-homarr-global-custom-css>{serverSettings.branding.customCss}</style>
       </head>
       <body className={[fontSans.className, fontSans.variable].join(" ")} suppressHydrationWarning>
         <Analytics enabled={serverSettings.analytics.enableGeneral} />
