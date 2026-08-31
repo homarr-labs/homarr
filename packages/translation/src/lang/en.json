@@ -5972,6 +5972,7 @@
             "groups": {
               "identity": "Identity",
               "appearance": "Appearance",
+              "customCss": "Custom CSS",
               "authentication": "Authentication"
             },
             "identity": {
@@ -6017,6 +6018,10 @@
                 "lg": "Rounded",
                 "xl": "Soft"
               }
+            },
+            "customCss": {
+              "label": "Global custom CSS",
+              "description": "Applied to every page. Board custom CSS can override it."
             },
             "authVisibility": {
               "description": "Choose what appears on every authentication page.",

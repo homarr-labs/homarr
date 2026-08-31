@@ -20,7 +20,9 @@ import type { UseFormReturnType } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
 import { BoardColorInput, CornerStylePicker, cornerStyleValues } from "@homarr/ui";
 
+import { CustomCssEditor } from "~/components/custom-css/custom-css-editor";
 import { SectionCard } from "~/components/manage/section-card";
+import { WorkshopCssImportButton } from "~/components/workshop/workshop-css-import-button";
 import type { FormValues } from "./settings-form";
 
 interface BrandingSettingsFormProps {
@@ -99,6 +101,21 @@ export const BrandingSettingsForm = ({ form }: BrandingSettingsFormProps) => {
               onChange={(cornerStyle) => form.setFieldValue("branding.defaultRadius", cornerStyle)}
             />
           </SimpleGrid>
+        </Fieldset>
+
+        <Fieldset legend={t("groups.customCss")} p="sm">
+          <CustomCssEditor
+            id="global-custom-css"
+            label={t("customCss.label")}
+            description={t("customCss.description")}
+            actions={
+              <WorkshopCssImportButton
+                size="compact-sm"
+                onImport={(css) => form.setFieldValue("branding.customCss", css)}
+              />
+            }
+            {...form.getInputProps("branding.customCss")}
+          />
         </Fieldset>
 
         <Fieldset legend={t("groups.authentication")} p="sm">

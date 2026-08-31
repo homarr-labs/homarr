@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button, Stack } from "@mantine/core";
 import { z } from "zod/v4";
 
@@ -70,6 +71,7 @@ interface SettingsFormProps {
 export const SettingsForm = ({ initialData, selectableBoards, selectableSearchEngines }: SettingsFormProps) => {
   const tCommon = useI18n("common");
   const tSettings = useI18n("management.page.settings");
+  const router = useRouter();
 
   const initialValues = buildInitialValues(initialData);
   const initialValuesRef = useRef(initialValues);
@@ -164,6 +166,7 @@ export const SettingsForm = ({ initialData, selectableBoards, selectableSearchEn
       form.setInitialValues(values);
       form.resetDirty();
       await revalidatePathActionAsync("/manage/settings");
+      router.refresh();
       showSuccessNotification({
         title: tCommon("notification.update.success"),
         message: tSettings("notification.success.message"),

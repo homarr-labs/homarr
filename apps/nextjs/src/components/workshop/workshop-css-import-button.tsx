@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import type { ButtonProps } from "@mantine/core";
 import { ActionIcon, Button, Group, Loader, Modal, Pagination, Stack, Text, TextInput, Tooltip } from "@mantine/core";
 import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
 import { IconDownload, IconExternalLink, IconSearch } from "@tabler/icons-react";
@@ -21,15 +22,27 @@ import { WorkshopVoteControl } from "./workshop-vote-control";
 /**
  * Picks a community CSS theme in a single surface: browse, confirm, done.
  * The imported rules land in the editor below and are only persisted when the
- * board settings themselves are saved, so there is nothing to preview twice.
+ * settings themselves are saved, so there is nothing to preview twice.
  */
-export function WorkshopCssImportButton({ onImport }: { onImport(css: string): void }) {
+export function WorkshopCssImportButton({
+  onImport,
+  size,
+}: {
+  onImport(css: string): void;
+  size?: ButtonProps["size"];
+}) {
   const t = useI18n("workshop");
   const [opened, controls] = useDisclosure(false);
 
   return (
     <>
-      <Button type="button" variant="light" leftSection={<IconDownload size={16} />} onClick={controls.open}>
+      <Button
+        type="button"
+        size={size}
+        variant="light"
+        leftSection={<IconDownload size={16} />}
+        onClick={controls.open}
+      >
         {t("importCss")}
       </Button>
       <Modal opened={opened} onClose={controls.close} title={t("importCss")} size={modalSizeSelect} radius="md">

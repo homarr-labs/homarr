@@ -1,0 +1,13 @@
+.root {
+  overflow: auto;
+  margin-top: 4px;
+  border: 1px solid light-dark(var(--mantine-color-gray-4), var(--mantine-color-dark-4));
+  border-radius: var(--mantine-radius-sm);
+}
+
+.editor {
+  min-height: 15.625rem;
+  background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-6));
+  font-family: "Fira code", "Fira Mono", monospace;
+  font-size: var(--mantine-font-size-xs);
+}
