@@ -8,7 +8,6 @@ import { useEditMode } from "@homarr/boards/edit-mode";
 import { useI18n } from "@homarr/translation/client";
 
 import type { ContainerSectionItem } from "~/app/[locale]/boards/_types";
-import { COLLAPSED_SECTION_ROW_COUNT } from "~/components/board/layout";
 import { SectionGrid } from "./grid/section-grid";
 import { useSectionCollapse } from "./section-collapse";
 import { useOpenSectionApps } from "./use-open-section-apps";
@@ -150,13 +149,7 @@ export const BoardContainerSection = ({ section }: Props) => {
           aria-hidden={isVisuallyCollapsed}
           inert={isVisuallyCollapsed}
         >
-          <SectionGrid
-            section={section}
-            columnCount={section.width}
-            requestedRowCount={section.height}
-            viewportRowCountOverride={isVisuallyCollapsed ? COLLAPSED_SECTION_ROW_COUNT : undefined}
-            label={label}
-          />
+          <SectionGrid section={section} columnCount={section.width} requestedRowCount={section.height} label={label} />
         </Box>
       </Card>
       {isEditMode && <BoardContainerMenu section={section} />}

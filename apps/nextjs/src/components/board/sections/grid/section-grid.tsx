@@ -33,7 +33,6 @@ interface SectionGridProps {
   section: Exclude<Section, { kind: "container" }> | ContainerSectionItem;
   columnCount: number;
   requestedRowCount?: number;
-  viewportRowCountOverride?: number;
   label: string;
   railPlacement?: "main" | "left" | "right";
   className?: string;
@@ -43,7 +42,6 @@ export const SectionGrid = ({
   section,
   columnCount,
   requestedRowCount = 0,
-  viewportRowCountOverride,
   label,
   railPlacement = "main",
   className,
@@ -69,8 +67,6 @@ export const SectionGrid = ({
     () =>
       [...items, ...innerSections].map((item): SectionGridPlacement => {
         const minimum = item.type === "section" ? minimumBySectionId.get(item.id) : undefined;
-        const isNonScrollableContainer = item.type === "section" && !item.options.scrollable;
-        const height = isNonScrollableContainer && minimum ? Math.max(item.height, minimum.height) : item.height;
         return normalizeGridPlacement(
           {
             id: item.id,
@@ -78,7 +74,7 @@ export const SectionGrid = ({
             x: item.xOffset,
             y: item.yOffset,
             w: item.width,
-            h: height,
+            h: item.height,
             minW: minimum?.width,
             minH: minimum?.height,
           },
@@ -141,8 +137,7 @@ export const SectionGrid = ({
   // A scrollable container isn't forced to grow with its content - it scrolls internally instead
   // of expanding to fit every widget, so its viewport height is capped independently of rowCount.
   const isScrollableContainer = section.kind === "container" && section.options.scrollable;
-  const viewportRowCount =
-    viewportRowCountOverride ?? (isScrollableContainer ? Math.max(requestedRowCount, 1) : rowCount);
+  const viewportRowCount = isScrollableContainer ? Math.max(requestedRowCount, 1) : rowCount;
   // A container's own visible card is inset from its allocated board cell by the board's
   // standard per-item gap (see the base, non-container `.staticItem[data-type="item"] >
   // .contentMount` rule in section-grid.module.css - a container is placed as an "item" like
@@ -164,9 +159,14 @@ export const SectionGrid = ({
   // all, the header bar covers the first row of the container's content instead of sitting
   // above it. Only the vertical axis is affected - the toggle spans the full width already.
   const collapsibleHeaderInset =
-    section.kind === "container" && section.options.collapsible ? CONTAINER_HEADER_HEIGHT / effectiveCanvasScale : 0;
+    section.kind === "container" && section.options.collapsible
+      ? CONTAINER_HEADER_HEIGHT / effectiveCanvasScale
+      : 0;
   const logicalWidth = getLogicalGridSize(columnCount) - outerCardInset;
-  const viewportHeight = Math.max(1, getLogicalGridSize(viewportRowCount) - outerCardInset - collapsibleHeaderInset);
+  const viewportHeight = Math.max(
+    1,
+    getLogicalGridSize(viewportRowCount) - outerCardInset - collapsibleHeaderInset,
+  );
   // Items are positioned in a coordinate space sized to the *un-inset* column/row count
   // (fullGridWidth/Height below - see getLogicalItemStyle), but logicalWidth/Height above are
   // deliberately smaller by outerCardInset to match the container's actual visible card size.
