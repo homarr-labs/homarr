@@ -6,6 +6,16 @@ import { fileURLToPath } from "node:url";
 import type { LayoutRole } from "../../packages/definitions/index.ts";
 import { boardNameSchema } from "../../packages/validation/src/board.ts";
 import { findFixtureGeometryErrors } from "./geometry.mts";
+import {
+  getReleaseV2QaExpectedBoardAccess,
+  releaseV2QaPacketBoardAccess,
+  validateReleaseV2QaPacketBoardAccess,
+} from "./permissions.mts";
+import type {
+  ReleaseV2QaBoardAccess,
+  ReleaseV2QaCoverageAccessManifest,
+  ReleaseV2QaPacketBoardAccess,
+} from "./permissions.mts";
 import { resolveCheckoutCandidateSha } from "./provenance.mts";
 import { collectHumanWidgetStatusErrors, normalizeReportMetadata } from "./report-integrity.mts";
 import { assertSafeReportPath, readSafeReportFile, validateResolvedArtifactPath } from "./report-path-integrity.mts";
@@ -137,6 +147,8 @@ interface FixtureManifest {
   boards: { id: string; handle: string; name: string; label: string; layouts: string[]; flags: { shared: boolean } }[];
   layouts: { id: string; boardId: string; columnCount: number }[];
   expectedBoardPermissions: Record<string, string>;
+  packetBoardAccess: ReleaseV2QaPacketBoardAccess;
+  expectedBoardAccess: Record<string, Record<string, ReleaseV2QaBoardAccess>>;
   counts: Record<string, number>;
   flags: {
     demoMode: boolean;
@@ -201,6 +213,7 @@ const expectedProfileFlags: Record<string, string[]> = {
   "onboarding-fresh": ["DEMO_MODE=false", "DEMO_READ_ONLY=false", "UNSAFE_ENABLE_MOCK_INTEGRATION=true"],
   degraded: ["DEMO_MODE=true", "DEMO_READ_ONLY=false", "UNSAFE_ENABLE_MOCK_INTEGRATION=true"],
 };
+const expectedBoardAccess = getReleaseV2QaExpectedBoardAccess(releaseV2QaPacketBoardAccess);
 const errors: string[] = [];
 
 const parseOptions = (): VerifyOptions => {
@@ -382,6 +395,12 @@ const validateFixtureManifest = async (
     if (JSON.stringify(fixture.expectedBoardPermissions) !== JSON.stringify(expectedPermissions)) {
       errors.push(`${label}: expected board permissions are incorrect`);
     }
+    if (JSON.stringify(fixture.packetBoardAccess) !== JSON.stringify(releaseV2QaPacketBoardAccess)) {
+      errors.push(`${label}: packet board access differs from the campaign assignment`);
+    }
+    if (JSON.stringify(fixture.expectedBoardAccess) !== JSON.stringify(expectedBoardAccess)) {
+      errors.push(`${label}: effective assigned board access differs from the campaign assignment`);
+    }
   } else {
     const emptyFixtureCounts = [
       "personas",
@@ -404,6 +423,9 @@ const validateFixtureManifest = async (
       fixture.flags.allWidgetKindsCovered
     ) {
       errors.push(`${label}: onboarding-fresh must not contain populated QA fixtures`);
+    }
+    if (Object.keys(fixture.expectedBoardAccess ?? {}).length > 0) {
+      errors.push(`${label}: onboarding-fresh must not declare seeded board access`);
     }
   }
 
@@ -486,9 +508,12 @@ const validateSqliteState = async (runtime: RuntimeManifest, fixture: FixtureMan
       }
     }
 
-    const qaBoards = database.prepare(`select id, name from board where id like 'qa-v2-board-%'`).all() as {
+    const qaBoards = database
+      .prepare(`select id, name, creator_id as creatorId from board where id like 'qa-v2-board-%'`)
+      .all() as {
       id: string;
       name: string;
+      creatorId: string | null;
     }[];
     const boardNameById = new Map(fixture.boards.map((board) => [board.id, board.name]));
     if (duplicateValues(qaBoards.map((board) => board.name)).length > 0) {
@@ -593,25 +618,106 @@ const validateSqliteState = async (runtime: RuntimeManifest, fixture: FixtureMan
         errors.push(`${label}: widget gallery does not contain every canonical widget kind exactly once`);
       }
 
-      for (const board of fixture.boards.filter((candidate) => candidate.flags.shared)) {
-        for (const [handle, permission] of Object.entries(fixture.expectedBoardPermissions)) {
-          const permissionCount = count(
-            `select count(*) as count from boardUserPermission where board_id = ? and user_id = ? and permission = ?`,
-            board.id,
-            `qa-v2-user-${handle}`,
-            permission,
-          );
+      const personaHandleByName = new Map(fixture.personas.map((persona) => [persona.name, persona.handle]));
+      const boardByName = new Map(fixture.boards.map((board) => [board.name, board]));
+      const creatorByBoardId = new Map(qaBoards.map((board) => [board.id, board.creatorId]));
+      const expectedDirectPermissions: string[] = [];
+      for (const [personaName, assignedBoards] of Object.entries(fixture.expectedBoardAccess)) {
+        const personaHandle = personaHandleByName.get(personaName);
+        if (!personaHandle) {
+          errors.push(`${label}: assigned board access references unknown persona ${personaName}`);
+          continue;
+        }
+        const currentUserId = `qa-v2-user-${personaHandle}`;
+        for (const [boardName, permission] of Object.entries(assignedBoards)) {
+          const board = boardByName.get(boardName);
+          if (!board) {
+            errors.push(`${label}: assigned board access references unknown board ${boardName}`);
+            continue;
+          }
+          const isAdmin = personaHandle === "avery-admin";
+          const isOwner = creatorByBoardId.get(board.id) === currentUserId;
           if (permission === "none") {
             const anyPermissionCount = count(
               `select count(*) as count from boardUserPermission where board_id = ? and user_id = ?`,
               board.id,
-              `qa-v2-user-${handle}`,
+              currentUserId,
             );
-            if (anyPermissionCount !== 0) errors.push(`${label}: ${handle} unexpectedly has access to ${board.handle}`);
+            if (anyPermissionCount !== 0 || isAdmin || isOwner) {
+              errors.push(`${label}: ${personaHandle} unexpectedly has assigned access to ${board.handle}`);
+            }
             continue;
           }
-          if (permissionCount !== 1) errors.push(`${label}: ${handle} lacks ${permission} access to ${board.handle}`);
+          if (isAdmin || isOwner) {
+            if (permission !== "full") {
+              errors.push(
+                `${label}: ${personaHandle} has implicit full access but ${permission} was declared for ${board.handle}`,
+              );
+            }
+            continue;
+          }
+          expectedDirectPermissions.push(`${board.id}\t${currentUserId}\t${permission}`);
         }
+      }
+
+      const actualDirectPermissions = database
+        .prepare(
+          `select board_id as boardId, user_id as userId, permission
+           from boardUserPermission
+           where board_id like 'qa-v2-board-%' and user_id like 'qa-v2-user-%'
+           order by board_id, user_id, permission`,
+        )
+        .all()
+        .map((row) => {
+          const permission = row as { boardId: string; userId: string; permission: string };
+          return `${permission.boardId}\t${permission.userId}\t${permission.permission}`;
+        });
+      if (JSON.stringify(actualDirectPermissions) !== JSON.stringify(expectedDirectPermissions.toSorted())) {
+        errors.push(`${label}: direct QA board permission rows differ from the packet access assignment`);
+      }
+
+      const averyAdminPermissionCount = count(
+        `select count(*) as count
+         from groupMember gm
+         join groupPermission gp on gp.group_id = gm.group_id
+         where gm.user_id = ? and gp.permission = 'admin'`,
+        "qa-v2-user-avery-admin",
+      );
+      if (averyAdminPermissionCount !== 1) errors.push(`${label}: Avery Admin lacks the admin fixture role`);
+
+      const nolanSharedBoardAccess = count(
+        `select count(*) as count
+         from boardUserPermission bup
+         join board b on b.id = bup.board_id
+         where bup.user_id = ? and b.id not like 'qa-v2-board-home-%'`,
+        "qa-v2-user-nolan-outsider",
+      );
+      const nolanGlobalBoardAccess = count(
+        `select count(*) as count
+         from groupMember gm
+         join groupPermission gp on gp.group_id = gm.group_id
+         where gm.user_id = ? and (gp.permission = 'admin' or gp.permission like 'board-%')`,
+        "qa-v2-user-nolan-outsider",
+      );
+      if (nolanSharedBoardAccess !== 0 || nolanGlobalBoardAccess !== 0) {
+        errors.push(`${label}: Nolan Outsider has protected fixture board access`);
+      }
+
+      const vivianEditAccess = count(
+        `select count(*) as count
+         from boardUserPermission
+         where user_id = ? and permission in ('modify', 'full')`,
+        "qa-v2-user-vivian-viewer",
+      );
+      const vivianGlobalEditAccess = count(
+        `select count(*) as count
+         from groupMember gm
+         join groupPermission gp on gp.group_id = gm.group_id
+         where gm.user_id = ? and gp.permission in ('admin', 'board-modify-all', 'board-full-all')`,
+        "qa-v2-user-vivian-viewer",
+      );
+      if (vivianEditAccess !== 0 || vivianGlobalEditAccess !== 0) {
+        errors.push(`${label}: Vivian Viewer has board edit access`);
       }
     }
   } finally {
@@ -795,6 +901,12 @@ const validateRequestedRuntime = async (
 const main = async (): Promise<void> => {
   const options = parseOptions();
   const manifest = await readJson<Manifest>(join(qaRoot, "coverage-manifest.json"));
+  errors.push(
+    ...validateReleaseV2QaPacketBoardAccess(
+      manifest as Manifest & ReleaseV2QaCoverageAccessManifest,
+      releaseV2QaPacketBoardAccess,
+    ),
+  );
   const ledgerPath = join(qaRoot, "ledger.json");
   await assertSafeReportPath(qaRoot, ledgerPath, "release-v2 QA ledger path");
   await assertSafeReportPath(qaRoot, join(qaRoot, "master-report.md"), "release-v2 QA master report path");

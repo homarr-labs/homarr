@@ -41,6 +41,12 @@ import { boardNameSchema } from "../../packages/validation/src/board.ts";
 
 import { findFixtureGeometryErrors } from "./geometry.mts";
 import {
+  getReleaseV2QaExpectedBoardAccess,
+  releaseV2QaPacketBoardAccess,
+  validateReleaseV2QaPacketBoardAccess,
+} from "./permissions.mts";
+import type { ReleaseV2QaCoverageAccessManifest } from "./permissions.mts";
+import {
   assertReleaseV2QaProfileEnvironment,
   releaseV2QaProfiles,
   resolveCheckoutCandidateSha,
@@ -294,6 +300,7 @@ const disabledCustomDefinitionId = "qa-v2-custom-widget-disabled";
 const missingSecretCustomDefinitionId = "qa-v2-custom-widget-missing-secret";
 const customDefinitionIds = [customDefinitionId, disabledCustomDefinitionId, missingSecretCustomDefinitionId];
 const iconRepositoryId = "qa-v2-icon-repository";
+const expectedBoardAccess = getReleaseV2QaExpectedBoardAccess(releaseV2QaPacketBoardAccess);
 
 const parseCli = (): CliOptions => {
   const options: CliOptions = { reset: false };
@@ -1107,20 +1114,20 @@ const seedBoardsAsync = async (optionsByKind: Map<WidgetKind, string>) => {
   await db.delete(boardUserPermissions).where(inArray(boardUserPermissions.boardId, qaBoardIds));
   await db.delete(boardGroupPermissions).where(inArray(boardGroupPermissions.boardId, qaBoardIds));
   const permissionRows: Array<{ boardId: string; userId: string; permission: BoardPermission }> = [];
-  for (const board of sharedBoards) {
-    permissionRows.push(
-      { boardId: boardId(board.handle), userId: userId("rowan-owner"), permission: "full" },
-      { boardId: boardId(board.handle), userId: userId("eden-editor"), permission: "modify" },
-      { boardId: boardId(board.handle), userId: userId("vivian-viewer"), permission: "view" },
-    );
-    for (const persona of personas) {
-      if (["avery-admin", "rowan-owner", "eden-editor", "vivian-viewer", "nolan-outsider"].includes(persona.handle)) {
+  const personaByName = new Map(personas.map((persona) => [persona.name, persona]));
+  const boardByName = new Map(sharedBoards.map((board) => [boardName(board.handle), board]));
+  for (const [personaName, boardAccess] of Object.entries(expectedBoardAccess)) {
+    const persona = personaByName.get(personaName);
+    if (!persona) throw new Error(`Unknown QA persona in board access assignment: ${personaName}`);
+    for (const [name, permission] of Object.entries(boardAccess)) {
+      const board = boardByName.get(name);
+      if (!board) throw new Error(`Unknown QA board in access assignment: ${name}`);
+      if (permission === "none" || persona.permissions.includes("admin") || board.ownerHandle === persona.handle)
         continue;
-      }
-      permissionRows.push({ boardId: boardId(board.handle), userId: userId(persona.handle), permission: "view" });
+      permissionRows.push({ boardId: boardId(board.handle), userId: userId(persona.handle), permission });
     }
   }
-  await db.insert(boardUserPermissions).values(permissionRows);
+  if (permissionRows.length > 0) await db.insert(boardUserPermissions).values(permissionRows);
 
   for (const persona of personas) {
     await db
@@ -1195,6 +1202,8 @@ const createManifest = (
       "vivian-viewer": "view",
       "nolan-outsider": "none",
     },
+    packetBoardAccess: releaseV2QaPacketBoardAccess,
+    expectedBoardAccess: seeded ? expectedBoardAccess : {},
     counts: {
       personas: seeded ? personas.length : 0,
       boards: boardEntries.length,
@@ -1235,6 +1244,11 @@ const createManifest = (
 const main = async () => {
   const options = parseCli();
   validateQaBoardDefinitions();
+  const coverageManifest = JSON.parse(
+    await readFile(resolve(repoRoot, "qa/release-v2/coverage-manifest.json"), "utf8"),
+  ) as ReleaseV2QaCoverageAccessManifest;
+  const accessErrors = validateReleaseV2QaPacketBoardAccess(coverageManifest, releaseV2QaPacketBoardAccess);
+  if (accessErrors.length > 0) throw new Error(`Invalid QA packet board access: ${accessErrors.join("; ")}`);
   const galleryKinds = widgetGalleryGroups.flat();
   if (
     galleryKinds.length !== widgetKinds.length ||
