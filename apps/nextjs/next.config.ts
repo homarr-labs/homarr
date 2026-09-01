@@ -15,15 +15,14 @@ const withNextIntl = createNextIntlPlugin({
   requestConfig: "../../packages/translation/src/request.ts",
 });
 
-const getDevelopmentServiceAliases = () => {
+const developmentServicePackages = ["@homarr/tasks", "@homarr/websocket"] as const;
+
+const getDevelopmentServiceAliases = (target: string) => {
   if (process.env.NODE_ENV !== "development") {
     return undefined;
   }
 
-  return {
-    "@homarr/tasks": "./src/instrumentation-noop.ts",
-    "@homarr/websocket": "./src/instrumentation-noop.ts",
-  };
+  return Object.fromEntries(developmentServicePackages.map((packageName) => [packageName, target]));
 };
 
 const getDistDir = () => {
@@ -65,7 +64,21 @@ const nextConfig: NextConfig = {
     root: path.resolve(import.meta.dirname, "../.."),
     // Development runs tasks and WebSocket as separate processes. These aliases
     // keep their production-only instrumentation imports out of the dev graph.
-    resolveAlias: getDevelopmentServiceAliases(),
+    resolveAlias: getDevelopmentServiceAliases("./src/instrumentation-noop.ts"),
+  },
+  webpack(config, { dev, isServer }) {
+    if (!dev || !isServer) return config;
+
+    const instrumentationNoopPath = path.resolve(import.meta.dirname, "src/instrumentation-noop.ts");
+    const aliases = getDevelopmentServiceAliases(instrumentationNoopPath);
+    if (!aliases) return config;
+
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      ...aliases,
+      "./instrumentation-node": instrumentationNoopPath,
+    };
+    return config;
   },
   transpilePackages: ["@homarr/ui", "@homarr/notifications", "@homarr/modals", "@homarr/spotlight", "@homarr/widgets"],
   images: {
