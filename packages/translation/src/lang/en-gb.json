@@ -3179,7 +3179,7 @@
           "detailsTitle": ""
         },
         "downSpeed": {
-          "columnTitle": "",
+          "columnTitle": "Down",
           "detailsTitle": ""
         },
         "index": {
@@ -3194,10 +3194,10 @@
           "columnTitle": ""
         },
         "name": {
-          "columnTitle": ""
+          "columnTitle": "Job name"
         },
         "progress": {
-          "columnTitle": "",
+          "columnTitle": "Progress",
           "detailsTitle": ""
         },
         "ratio": {
@@ -3217,7 +3217,7 @@
           "detailsTitle": ""
         },
         "state": {
-          "columnTitle": "",
+          "columnTitle": "State",
           "detailsTitle": ""
         },
         "time": {
@@ -3315,7 +3315,7 @@
       }
     },
     "mediaRequests-requestList": {
-      "name": "",
+      "name": "Media Requests List",
       "description": "",
       "option": {
         "linksTargetNewTab": {
@@ -3337,15 +3337,15 @@
         "unknown": "",
         "pending": "",
         "processing": "",
-        "requested": "",
+        "requested": "Requested",
         "partiallyAvailable": "",
         "available": "",
-        "blacklisted": "",
+        "blacklisted": "Blacklisted",
         "deleted": ""
       },
       "status": {
         "pending": "",
-        "approved": "",
+        "approved": "Approved",
         "declined": "",
         "failed": "",
         "completed": ""
@@ -3358,7 +3358,7 @@
       "option": {},
       "titles": {
         "stats": {
-          "main": "",
+          "main": "Media Stats",
           "approved": "",
           "pending": "",
           "processing": "",
@@ -3402,15 +3402,15 @@
       "panel": {
         "statistics": {
           "empty": "",
-          "transcodes": "",
+          "transcodes": "Transcodes",
           "transcodesCount": "",
           "healthChecksCount": "",
           "filesCount": "",
           "savedSpace": "",
-          "healthChecks": "",
-          "videoCodecs": "",
-          "videoContainers": "",
-          "videoResolutions": ""
+          "healthChecks": "Health checks",
+          "videoCodecs": "Codecs",
+          "videoContainers": "Containers",
+          "videoResolutions": "Resolutions"
         },
         "workers": {
           "empty": "",
@@ -3620,7 +3620,7 @@
       "option": {},
       "card": {
         "vpn": {
-          "countConnected": ""
+          "countConnected": "{count} connected"
         }
       },
       "error": {
@@ -3637,14 +3637,14 @@
             "name": ""
           },
           "wifi": {
-            "name": ""
+            "name": "Wi-Fi"
           }
         },
         "users": {
           "label": ""
         },
         "guests": {
-          "label": ""
+          "label": "Guests"
         }
       },
       "option": {
@@ -3890,7 +3890,7 @@
           "option": {
             "cpu": "",
             "memory": "",
-            "gpu": "",
+            "gpu": "GPU",
             "network": ""
           }
         },
@@ -3908,7 +3908,7 @@
         "cpu": "",
         "memory": "",
         "gpu": "",
-        "network": "",
+        "network": "NET",
         "up": "",
         "down": ""
       }
@@ -4956,7 +4956,7 @@
           "title": "",
           "status": {
             "idle": "",
-            "running": "",
+            "running": "Running",
             "error": "",
             "disabled": ""
           },
@@ -5858,7 +5858,7 @@
     }
   },
   "search": {
-    "placeholder": "",
+    "placeholder": "Search for anything",
     "nothingFound": "",
     "error": {
       "fetch": ""

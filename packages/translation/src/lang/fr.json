@@ -604,7 +604,7 @@
     }
   },
   "app": {
-    "search": "Trouver une application",
+    "search": "Trouver une app",
     "page": {
       "list": {
         "title": "Applications",
@@ -3358,7 +3358,7 @@
       "option": {},
       "titles": {
         "stats": {
-          "main": "Statistiques des médias",
+          "main": "Stats des médias",
           "approved": "Déjà approuvé",
           "pending": "En attente de validation",
           "processing": "En cours de traitement",
@@ -4118,7 +4118,7 @@
         "internalServerError": ""
       },
       "history": "Historique",
-      "resolved": "Résolut",
+      "resolved": "Résolu",
       "status": {
         "triggered": "",
         "ok": ""
@@ -4173,12 +4173,12 @@
       "chart": {
         "cpu": {
           "title": "",
-          "subtitle": "",
+          "subtitle": "Utilisation moyenne du CPU à l'échelle du système",
           "series": "CPU"
         },
         "memory": {
           "title": "Utilisation Mémoire",
-          "subtitle": "",
+          "subtitle": "Utilisation précise au moment enregistré",
           "series": "",
           "cache": ""
         },
@@ -4189,7 +4189,7 @@
         },
         "diskIO": {
           "title": "",
-          "subtitle": "",
+          "subtitle": "Débit du système de fichiers root",
           "read": "",
           "write": ""
         },
@@ -5766,7 +5766,7 @@
         "label": "Médias"
       },
       "apps": {
-        "label": "Applications",
+        "label": "Apps",
         "new": {
           "label": "Nouveau"
         },
