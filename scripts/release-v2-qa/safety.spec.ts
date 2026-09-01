@@ -6,6 +6,7 @@ import path from "node:path";
 import { afterEach, describe, expect, test } from "vitest";
 
 import {
+  acquireBuildLease,
   acquireSlotLease,
   assertSafeContainedPath,
   assertSafeRunRoot,
@@ -114,6 +115,17 @@ describe("release-v2 QA harness safety", () => {
 
     await expect(acquireSlotLease(runRoot, 1, "second-start")).rejects.toThrow(/slot 1 is busy.*first-start/u);
     await lease.release();
+  });
+
+  test("serializes the shared candidate build independently of slot leases", async () => {
+    const runRoot = path.join(tmpdir(), uniqueName("build-lease"));
+    const buildLease = await acquireBuildLease(runRoot, "first-build");
+    const slotLease = await acquireSlotLease(runRoot, 1, "slot-start");
+    temporaryPaths.push(buildLease.path, slotLease.path);
+
+    await expect(acquireBuildLease(runRoot, "second-build")).rejects.toThrow(/candidate build is busy.*first-build/u);
+    await buildLease.release();
+    await slotLease.release();
   });
 
   test("recovers a stale lease with a dead owner PID", async () => {

@@ -1,6 +1,6 @@
 import { randomBytes } from "node:crypto";
 import { closeSync, constants, existsSync, openSync } from "node:fs";
-import { chmod, mkdir, open, readFile, rename, rm, stat } from "node:fs/promises";
+import { chmod, cp, mkdir, open, readFile, rename, rm, stat } from "node:fs/promises";
 import { createServer } from "node:net";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -8,6 +8,7 @@ import { spawn, spawnSync } from "node:child_process";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 import {
+  acquireBuildLease,
   acquireSlotLease,
   assertSafeContainedPath,
   assertSafeRunRoot,
@@ -19,8 +20,9 @@ import {
 const repoRoot = path.resolve(import.meta.dirname, "../..");
 const defaultRunRoot = path.join(tmpdir(), "homarr-release-v2-qa");
 const markerName = ".homarr-release-v2-qa-root.json";
-const watchpackPollingIntervalMs = 1_000;
+const runtimeMode = "production-standalone" as const;
 const runtimeBundler = "webpack" as const;
+const candidateBuildHeapLimitMb = 16_384;
 const profiles = ["main-writable", "main-readonly", "onboarding-fresh", "degraded"] as const;
 
 type Profile = (typeof profiles)[number];
@@ -32,50 +34,65 @@ export const assertRuntimeCommandPlatform = (command: RuntimeCommand, platform: 
 };
 
 interface RuntimeExecutionContract {
+  runtimeMode: typeof runtimeMode;
   bundler: typeof runtimeBundler;
-  watcher: { watchpackPollingIntervalMs: number };
+  watcher: null;
 }
 
 export const createRuntimeExecutionContract = (): RuntimeExecutionContract => ({
+  runtimeMode,
   bundler: runtimeBundler,
-  watcher: { watchpackPollingIntervalMs },
+  watcher: null,
 });
 
 export const validateRuntimeExecutionContract = (value: {
+  runtimeMode?: unknown;
   bundler?: unknown;
-  watcher?: { watchpackPollingIntervalMs?: unknown };
+  watcher?: unknown;
 }): string[] => {
   const contractErrors: string[] = [];
+  if (value.runtimeMode !== runtimeMode) contractErrors.push("runtime mode must be production-standalone");
   if (value.bundler !== runtimeBundler) contractErrors.push("bundler must be webpack");
-  if (value.watcher?.watchpackPollingIntervalMs !== watchpackPollingIntervalMs) {
-    contractErrors.push("Watchpack polling interval must be 1000ms");
+  if (value.watcher !== null && value.watcher !== undefined) {
+    contractErrors.push("standalone runtimes must not use a filesystem watcher");
   }
   return contractErrors;
 };
 
 export const createAppLaunchCommand = (
-  appPort: number,
-  options: { platform?: NodeJS.Platform; prlimitAvailable?: boolean } = {},
+  serverPath: string,
+  options: { platform?: NodeJS.Platform; prlimitAvailable?: boolean; nodeExecutable?: string } = {},
 ) => {
   const platform = options.platform ?? process.platform;
   const prlimitAvailable = options.prlimitAvailable ?? existsSync("/usr/bin/prlimit");
-  const pnpmArguments = [
-    "--filter",
-    "@homarr/nextjs",
-    "dev",
-    "--webpack",
-    "--hostname",
-    "127.0.0.1",
-    "--port",
-    String(appPort),
-  ];
+  const nodeExecutable = options.nodeExecutable ?? process.execPath;
   if (platform === "linux" && prlimitAvailable) {
     return {
       command: "/usr/bin/prlimit",
-      arguments: ["--nofile=65536:1048576", "--", "pnpm", ...pnpmArguments],
+      arguments: ["--nofile=65536:1048576", "--", nodeExecutable, serverPath],
     };
   }
-  return { command: "pnpm", arguments: pnpmArguments };
+  return { command: nodeExecutable, arguments: [serverPath] };
+};
+
+export const createCandidateBuildPaths = (candidateSha: string) => {
+  if (!/^[0-9a-f]{40}$/u.test(candidateSha)) {
+    throw new Error("Candidate build requires a 40-character lowercase commit SHA");
+  }
+  const appRoot = path.join(repoRoot, "apps/nextjs");
+  const distDirName = `.next-qa/release-v2-${candidateSha}`;
+  const buildDir = path.join(appRoot, distDirName);
+  const standaloneRoot = path.join(buildDir, "standalone");
+  const standaloneAppDir = path.join(standaloneRoot, "apps/nextjs");
+  return {
+    appRoot,
+    distDirName,
+    buildDir,
+    standaloneRoot,
+    standaloneAppDir,
+    serverPath: path.join(standaloneAppDir, "server.js"),
+    markerPath: path.join(buildDir, "qa-build-manifest.json"),
+  };
 };
 
 interface Options {
@@ -107,8 +124,10 @@ interface RuntimeManifest {
   fixtureUrl: string;
   ports: { app: number; fixture: number; redis: number };
   flags: { demoMode: boolean; demoReadOnly: boolean; unsafeMockIntegration: boolean };
+  runtimeMode: typeof runtimeMode;
   bundler: typeof runtimeBundler;
-  watcher: { watchpackPollingIntervalMs: number };
+  watcher: null;
+  build: { candidateSha: string; serverPath: string };
   processes: {
     app: { pid: number; logPath: string };
     fixture: { pid: number; logPath: string };
@@ -325,14 +344,20 @@ interface SpawnedProcess {
   exited: Promise<number | null>;
 }
 
-const spawnLogged = (command: string, args: string[], logPath: string, env: NodeJS.ProcessEnv): SpawnedProcess => {
+const spawnLogged = (
+  command: string,
+  args: string[],
+  logPath: string,
+  env: NodeJS.ProcessEnv,
+  options: { cwd?: string } = {},
+): SpawnedProcess => {
   const output = openSync(
     logPath,
     constants.O_CREAT | constants.O_APPEND | constants.O_WRONLY | constants.O_NOFOLLOW,
     0o600,
   );
   const child = spawn(command, args, {
-    cwd: repoRoot,
+    cwd: options.cwd ?? repoRoot,
     detached: true,
     env,
     stdio: ["ignore", output, output],
@@ -350,6 +375,75 @@ const runForeground = (command: string, args: string[], env: NodeJS.ProcessEnv) 
   const result = spawnSync(command, args, { cwd: repoRoot, env, stdio: "inherit" });
   if (result.status !== 0)
     throw new Error(`${command} ${args.join(" ")} failed with exit ${result.status ?? "unknown"}`);
+};
+
+const candidateBuildIsReady = async (candidateSha: string) => {
+  const buildPaths = createCandidateBuildPaths(candidateSha);
+  try {
+    const marker = JSON.parse(await readFile(buildPaths.markerPath, "utf8")) as {
+      schemaVersion?: number;
+      candidateSha?: string;
+      runtimeMode?: string;
+      bundler?: string;
+    };
+    const serverStats = await stat(buildPaths.serverPath);
+    const staticStats = await stat(path.join(buildPaths.standaloneAppDir, ".next/static"));
+    const publicStats = await stat(path.join(buildPaths.standaloneAppDir, "public"));
+    return (
+      marker.schemaVersion === 1 &&
+      marker.candidateSha === candidateSha &&
+      marker.runtimeMode === runtimeMode &&
+      marker.bundler === runtimeBundler &&
+      serverStats.isFile() &&
+      staticStats.isDirectory() &&
+      publicStats.isDirectory()
+    );
+  } catch {
+    return false;
+  }
+};
+
+const ensureCandidateBuild = async (runRoot: string, candidateSha: string) => {
+  const buildPaths = createCandidateBuildPaths(candidateSha);
+  if (await candidateBuildIsReady(candidateSha)) return buildPaths;
+
+  const buildLease = await acquireBuildLease(runRoot, `build:${candidateSha}`);
+  try {
+    if (await candidateBuildIsReady(candidateSha)) return buildPaths;
+    await assertSafeContainedPath(buildPaths.appRoot, buildPaths.buildDir, "QA candidate build directory");
+    await rm(buildPaths.buildDir, { recursive: true, force: true });
+    await assertSafeContainedPath(buildPaths.appRoot, buildPaths.buildDir, "QA candidate build directory");
+
+    runForeground("pnpm", ["--filter", "@homarr/nextjs", "with-env", "next", "build", "--webpack"], {
+      ...sanitizeAppEnvironment(process.env),
+      CI: "true",
+      DISABLE_REDIS_LOGS: "true",
+      HOMARR_QA_NEXT_DIST_DIR: buildPaths.distDirName,
+      HOMARR_QA_STANDALONE_BUILD: "true",
+      HOMARR_VERSION: candidateSha.slice(0, 12),
+      NEXT_TELEMETRY_DISABLED: "1",
+      NODE_OPTIONS: `--max-old-space-size=${candidateBuildHeapLimitMb}`,
+      SKIP_ENV_VALIDATION: "true",
+    });
+
+    const staticTarget = path.join(buildPaths.standaloneAppDir, ".next/static");
+    const publicTarget = path.join(buildPaths.standaloneAppDir, "public");
+    await mkdir(path.dirname(staticTarget), { recursive: true });
+    await cp(path.join(buildPaths.buildDir, "static"), staticTarget, { recursive: true, force: true });
+    await cp(path.join(buildPaths.appRoot, "public"), publicTarget, { recursive: true, force: true });
+    const serverStats = await stat(buildPaths.serverPath);
+    if (!serverStats.isFile()) throw new Error(`Standalone server is missing after build: ${buildPaths.serverPath}`);
+    await writeJsonAtomic(buildPaths.markerPath, {
+      schemaVersion: 1,
+      candidateSha,
+      runtimeMode,
+      bundler: runtimeBundler,
+      builtAt: new Date().toISOString(),
+    });
+    return buildPaths;
+  } finally {
+    await buildLease.release();
+  }
 };
 
 const isProcessRunning = (pid: number) => {
@@ -503,6 +597,7 @@ const startWithLease = async (options: Options) => {
   } else {
     await assertRunRootMarker(options.runRoot);
   }
+  const candidateBuild = await ensureCandidateBuild(options.runRoot, candidateSha);
 
   const slotsRoot = path.join(options.runRoot, "slots");
   await assertSafeContainedPath(options.runRoot, slotsRoot, "QA slots directory");
@@ -525,11 +620,19 @@ const startWithLease = async (options: Options) => {
     await rm(slotDir, { recursive: true });
     await assertSafeContainedPath(options.runRoot, slotDir, "QA slot reset target");
   }
-  const nextDistDir = path.join(repoRoot, "apps/nextjs/.next-qa", `slot-${options.slot}`);
+  const legacyNextDistDir = path.join(repoRoot, "apps/nextjs/.next-qa", `slot-${options.slot}`);
   if (options.reset) {
-    await assertSafeContainedPath(path.join(repoRoot, "apps/nextjs"), nextDistDir, "QA Next cache reset target");
-    await rm(nextDistDir, { recursive: true, force: true });
-    await assertSafeContainedPath(path.join(repoRoot, "apps/nextjs"), nextDistDir, "QA Next cache reset target");
+    await assertSafeContainedPath(
+      path.join(repoRoot, "apps/nextjs"),
+      legacyNextDistDir,
+      "legacy QA Next cache reset target",
+    );
+    await rm(legacyNextDistDir, { recursive: true, force: true });
+    await assertSafeContainedPath(
+      path.join(repoRoot, "apps/nextjs"),
+      legacyNextDistDir,
+      "legacy QA Next cache reset target",
+    );
   }
   await assertSafeContainedPath(options.runRoot, slotDir, "QA slot creation target");
   await mkdir(slotDir, { mode: 0o700 });
@@ -619,7 +722,7 @@ const startWithLease = async (options: Options) => {
       HOMARR_WEBSITE_URL: url,
       WORKSHOP_API_URL: fixtureReady.url,
       WORKSHOP_WEB_URL: `${fixtureReady.url}/iframe`,
-      HOMARR_QA_NEXT_DIST_DIR: `.next-qa/slot-${options.slot}`,
+      HOMARR_QA_NEXT_DIST_DIR: candidateBuild.distDirName,
       HOMARR_VERSION: candidateSha.slice(0, 12),
       NEXT_TELEMETRY_DISABLED: "1",
     };
@@ -631,24 +734,30 @@ const startWithLease = async (options: Options) => {
     runForeground("pnpm", ["qa:release-v2:seed", "--", "--profile", options.profile, "--output", slotDir], environment);
     await assertSafeContainedPath(options.runRoot, fixtureManifestPath, "QA fixture manifest");
 
-    const appEnvironment = {
-      ...sanitizeAppEnvironment(environment),
-      WATCHPACK_POLLING: String(watchpackPollingIntervalMs),
-    };
+    const appEnvironment = sanitizeAppEnvironment(environment);
     await assertSafeContainedPath(options.runRoot, appLogPath, "QA app log");
     const launchedApp = await launchWithPortRetry<{ pid: number; port: number; url: string }>(
       async (attemptPort) => {
         appPort = attemptPort;
         url = `http://127.0.0.1:${appPort}`;
-        const appLaunch = createAppLaunchCommand(appPort);
+        const appLaunch = createAppLaunchCommand(candidateBuild.serverPath);
         const logOffset = await stat(appLogPath)
           .then((stats) => stats.size)
           .catch(() => 0);
         await assertSafeContainedPath(options.runRoot, appLogPath, "QA app log");
-        const spawned = spawnLogged(appLaunch.command, appLaunch.arguments, appLogPath, {
-          ...appEnvironment,
-          HOMARR_WEBSITE_URL: url,
-        });
+        const spawned = spawnLogged(
+          appLaunch.command,
+          appLaunch.arguments,
+          appLogPath,
+          {
+            ...appEnvironment,
+            HOSTNAME: "127.0.0.1",
+            HOMARR_WEBSITE_URL: url,
+            NODE_ENV: "production",
+            PORT: String(appPort),
+          },
+          { cwd: candidateBuild.standaloneRoot },
+        );
         appPid = spawned.pid;
         const outcome = await waitForAppAttempt(spawned, url, appLogPath, logOffset, 300_000);
         if (outcome === "address-in-use") {
@@ -678,12 +787,13 @@ const startWithLease = async (options: Options) => {
       slotDir,
       dbPath,
       fixtureManifestPath,
-      nextDistDir,
+      nextDistDir: candidateBuild.buildDir,
       url,
       fixtureUrl: fixtureReady.url,
       ports: { app: appPort, fixture: fixtureReady.port, redis: redisPort },
       flags,
       ...createRuntimeExecutionContract(),
+      build: { candidateSha, serverPath: candidateBuild.serverPath },
       processes: {
         app: { pid: appPid, logPath: appLogPath },
         fixture: { pid: fixturePid, logPath: fixtureLogPath },

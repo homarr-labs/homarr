@@ -179,6 +179,12 @@ export const getSlotLeasePath = async (runRoot: string, slot: number) => {
   return path.join(canonicalParent, `.${path.basename(canonicalRunRoot)}.slot-${slot}.lease`);
 };
 
+export const getBuildLeasePath = async (runRoot: string) => {
+  const canonicalRunRoot = await assertSafeRunRoot(runRoot, { allowMissing: true });
+  const canonicalParent = await canonicalTemporaryParent();
+  return path.join(canonicalParent, `.${path.basename(canonicalRunRoot)}.candidate-build.lease`);
+};
+
 const readLeaseSnapshot = async (leasePath: string): Promise<LeaseSnapshot> => {
   const stats = await lstat(leasePath, { bigint: true });
   if (stats.isSymbolicLink() || !stats.isFile()) {
@@ -234,16 +240,16 @@ const recoverStaleLease = async (leasePath: string, snapshot: LeaseSnapshot) => 
   await unlink(leasePath);
 };
 
-export const acquireSlotLease = async (
+const acquireLease = async (
   runRoot: string,
   slot: number,
   operation: string,
+  leasePath: string,
+  resourceLabel: string,
   platform: NodeJS.Platform = process.platform,
 ): Promise<SlotLease> => {
   assertSupportedRuntimePlatform(platform);
-  if (![1, 2, 3].includes(slot)) throw new Error("QA slot lease requires slot 1, 2, or 3");
   const canonicalRunRoot = await assertSafeRunRoot(runRoot, { allowMissing: true });
-  const leasePath = await getSlotLeasePath(canonicalRunRoot, slot);
   const owner: SlotLeaseOwner = {
     schemaVersion: leaseSchemaVersion,
     pid: process.pid,
@@ -271,7 +277,7 @@ export const acquireSlotLease = async (
         release: async () => {
           const snapshot = await readLeaseSnapshot(leasePath);
           if (!isValidLeaseOwner(snapshot.owner, canonicalRunRoot, slot) || snapshot.owner?.token !== owner.token) {
-            throw new Error(`Refusing to release a QA slot lease owned by another process: ${leasePath}`);
+            throw new Error(`Refusing to release a QA ${resourceLabel} lease owned by another process: ${leasePath}`);
           }
           await recoverStaleLease(leasePath, snapshot);
         },
@@ -282,21 +288,44 @@ export const acquireSlotLease = async (
       const existingOwner = snapshot.owner;
       if (!isValidLeaseOwner(existingOwner, canonicalRunRoot, slot)) {
         if (Date.now() - snapshot.modifiedMs < incompleteLeaseGraceMs) {
-          throw new Error(`QA slot ${slot} lease is being initialized by another operation`, { cause: error });
+          throw new Error(`QA ${resourceLabel} lease is being initialized by another operation`, { cause: error });
         }
         await recoverStaleLease(leasePath, snapshot);
         continue;
       }
       if (await processMatchesLeaseOwner(existingOwner)) {
-        throw new Error(`QA slot ${slot} is busy with ${existingOwner.operation} owned by PID ${existingOwner.pid}`, {
-          cause: error,
-        });
+        throw new Error(
+          `QA ${resourceLabel} is busy with ${existingOwner.operation} owned by PID ${existingOwner.pid}`,
+          {
+            cause: error,
+          },
+        );
       }
       await recoverStaleLease(leasePath, snapshot);
     }
   }
 
-  throw new Error(`Unable to acquire QA slot ${slot} lease after stale recovery`);
+  throw new Error(`Unable to acquire QA ${resourceLabel} lease after stale recovery`);
+};
+
+export const acquireSlotLease = async (
+  runRoot: string,
+  slot: number,
+  operation: string,
+  platform: NodeJS.Platform = process.platform,
+) => {
+  if (![1, 2, 3].includes(slot)) throw new Error("QA slot lease requires slot 1, 2, or 3");
+  const leasePath = await getSlotLeasePath(runRoot, slot);
+  return await acquireLease(runRoot, slot, operation, leasePath, `slot ${slot}`, platform);
+};
+
+export const acquireBuildLease = async (
+  runRoot: string,
+  operation: string,
+  platform: NodeJS.Platform = process.platform,
+) => {
+  const leasePath = await getBuildLeasePath(runRoot);
+  return await acquireLease(runRoot, 0, operation, leasePath, "candidate build", platform);
 };
 
 const normalizedHost = (host: string) => {

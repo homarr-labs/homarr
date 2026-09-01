@@ -16,9 +16,10 @@ const withNextIntl = createNextIntlPlugin({
 });
 
 const developmentServicePackages = ["@homarr/tasks", "@homarr/websocket"] as const;
+const isQaStandaloneBuild = process.env.HOMARR_QA_STANDALONE_BUILD === "true";
 
 const getDevelopmentServiceAliases = (target: string) => {
-  if (process.env.NODE_ENV !== "development") {
+  if (process.env.NODE_ENV !== "development" && !isQaStandaloneBuild) {
     return undefined;
   }
 
@@ -28,8 +29,8 @@ const getDevelopmentServiceAliases = (target: string) => {
 const getDistDir = () => {
   const qaDistDir = process.env.HOMARR_QA_NEXT_DIST_DIR;
   if (!qaDistDir) return ".next";
-  if (!/^\.next-qa\/slot-[1-3]$/u.test(qaDistDir)) {
-    throw new Error("HOMARR_QA_NEXT_DIST_DIR must identify .next-qa/slot-1, slot-2, or slot-3");
+  if (!/^\.next-qa\/(?:slot-[1-3]|release-v2-[0-9a-f]{40})$/u.test(qaDistDir)) {
+    throw new Error("HOMARR_QA_NEXT_DIST_DIR must identify a QA slot or candidate-pinned release-v2 build");
   }
   return qaDistDir;
 };
@@ -62,12 +63,12 @@ const nextConfig: NextConfig = {
   },
   turbopack: {
     root: path.resolve(import.meta.dirname, "../.."),
-    // Development runs tasks and WebSocket as separate processes. These aliases
-    // keep their production-only instrumentation imports out of the dev graph.
+    // Development and the isolated QA standalone build do not embed tasks or WebSocket.
+    // These aliases keep their production-only instrumentation imports out of those graphs.
     resolveAlias: getDevelopmentServiceAliases("./src/instrumentation-noop.ts"),
   },
   webpack(config, { dev, isServer }) {
-    if (!dev || !isServer) return config;
+    if ((!dev && !isQaStandaloneBuild) || !isServer) return config;
 
     const instrumentationNoopPath = path.resolve(import.meta.dirname, "src/instrumentation-noop.ts");
     const aliases = getDevelopmentServiceAliases(instrumentationNoopPath);

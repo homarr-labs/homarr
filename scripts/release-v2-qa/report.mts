@@ -144,9 +144,9 @@ const reportsRoot = join(qaRoot, "reports");
 const campaignCandidateSha = resolveCheckoutCandidateSha(repoRoot);
 const runtimeExecutionContract = createRuntimeExecutionContract();
 export const hostRuntimeLimitation =
-  `The host's fs.inotify.max_user_instances=128 is too low for concurrent native Watchpack watchers. ` +
-  `Spawned QA apps use the ${runtimeExecutionContract.bundler} bundler with ${runtimeExecutionContract.watcher.watchpackPollingIntervalMs}ms Watchpack polling; ` +
-  "filesystem changes can take up to one polling interval to reach HMR.";
+  `The host's fs.inotify.max_user_instances=128 is too low for concurrent development watchers. ` +
+  `QA apps use ${runtimeExecutionContract.runtimeMode} from a single candidate-pinned build produced by the ${runtimeExecutionContract.bundler} bundler. ` +
+  "Source changes require a new committed candidate build before browser evidence is valid.";
 const expectedProfileFlags: Record<string, string[]> = {
   "main-writable": ["DEMO_MODE=true", "DEMO_READ_ONLY=false", "UNSAFE_ENABLE_MOCK_INTEGRATION=true"],
   "main-readonly": ["DEMO_MODE=true", "DEMO_READ_ONLY=true", "UNSAFE_ENABLE_MOCK_INTEGRATION=true"],

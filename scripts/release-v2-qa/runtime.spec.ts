@@ -7,6 +7,7 @@ import { afterEach, describe, expect, test } from "vitest";
 import {
   assertRuntimeCommandPlatform,
   createAppLaunchCommand,
+  createCandidateBuildPaths,
   createRuntimeExecutionContract,
   launchWithPortRetry,
   reserveLoopbackPort,
@@ -88,44 +89,58 @@ describe("release-v2 QA runtime platform boundary", () => {
 });
 
 describe("release-v2 QA app execution contract", () => {
-  test("uses Webpack dev while preserving the Linux file-descriptor wrapper", () => {
-    const launch = createAppLaunchCommand(31_337, { platform: "linux", prlimitAvailable: true });
-    const launchWithoutPrlimit = createAppLaunchCommand(31_337, { platform: "linux", prlimitAvailable: false });
+  test("uses the candidate standalone server while preserving the Linux file-descriptor wrapper", () => {
+    const serverPath = "/tmp/release-v2-build/standalone/apps/nextjs/server.js";
+    const launch = createAppLaunchCommand(serverPath, {
+      platform: "linux",
+      prlimitAvailable: true,
+      nodeExecutable: "/usr/bin/node",
+    });
+    const launchWithoutPrlimit = createAppLaunchCommand(serverPath, {
+      platform: "linux",
+      prlimitAvailable: false,
+      nodeExecutable: "/usr/bin/node",
+    });
 
     expect(launch).toEqual({
       command: "/usr/bin/prlimit",
-      arguments: [
-        "--nofile=65536:1048576",
-        "--",
-        "pnpm",
-        "--filter",
-        "@homarr/nextjs",
-        "dev",
-        "--webpack",
-        "--hostname",
-        "127.0.0.1",
-        "--port",
-        "31337",
-      ],
+      arguments: ["--nofile=65536:1048576", "--", "/usr/bin/node", serverPath],
     });
-    expect(launchWithoutPrlimit.command).toBe("pnpm");
-    expect(launchWithoutPrlimit.arguments).toContain("--webpack");
+    expect(launchWithoutPrlimit).toEqual({ command: "/usr/bin/node", arguments: [serverPath] });
   });
 
-  test("records and validates the deterministic bundler and watcher settings", () => {
+  test("records and validates the deterministic standalone build settings", () => {
     const execution = createRuntimeExecutionContract();
 
     expect(execution).toEqual({
+      runtimeMode: "production-standalone",
       bundler: "webpack",
-      watcher: { watchpackPollingIntervalMs: 1_000 },
+      watcher: null,
     });
     expect(validateRuntimeExecutionContract(execution)).toEqual([]);
     expect(
       validateRuntimeExecutionContract({
+        runtimeMode: "development",
         bundler: "turbopack",
         watcher: { watchpackPollingIntervalMs: 500 },
       }),
-    ).toEqual(["bundler must be webpack", "Watchpack polling interval must be 1000ms"]);
-    expect(validateRuntimeExecutionContract({ watcher: execution.watcher })).toEqual(["bundler must be webpack"]);
+    ).toEqual([
+      "runtime mode must be production-standalone",
+      "bundler must be webpack",
+      "standalone runtimes must not use a filesystem watcher",
+    ]);
+    expect(validateRuntimeExecutionContract({ watcher: execution.watcher })).toEqual([
+      "runtime mode must be production-standalone",
+      "bundler must be webpack",
+    ]);
+  });
+
+  test("derives one candidate-pinned build shared by every runtime slot", () => {
+    const paths = createCandidateBuildPaths("0123456789abcdef0123456789abcdef01234567");
+
+    expect(paths.distDirName).toBe(".next-qa/release-v2-0123456789abcdef0123456789abcdef01234567");
+    expect(paths.serverPath).toBe(`${paths.buildDir}/standalone/apps/nextjs/server.js`);
+    expect(paths.standaloneRoot).toBe(`${paths.buildDir}/standalone`);
+    expect(() => createCandidateBuildPaths("not-a-commit")).toThrow(/40-character lowercase commit SHA/u);
   });
 });

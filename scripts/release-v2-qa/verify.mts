@@ -9,7 +9,7 @@ import { findFixtureGeometryErrors } from "./geometry.mts";
 import { resolveCheckoutCandidateSha } from "./provenance.mts";
 import { collectHumanWidgetStatusErrors, normalizeReportMetadata } from "./report-integrity.mts";
 import { assertSafeReportPath, readSafeReportFile, validateResolvedArtifactPath } from "./report-path-integrity.mts";
-import { validateRuntimeExecutionContract } from "./runtime.mts";
+import { createCandidateBuildPaths, validateRuntimeExecutionContract } from "./runtime.mts";
 
 import { assertSafeRunRoot, isPathWithin, validateFixtureUrl } from "./safety.mts";
 
@@ -118,8 +118,10 @@ interface RuntimeManifest {
   fixtureUrl: string;
   ports: { app: number; fixture: number; redis: number };
   flags: { demoMode: boolean; demoReadOnly: boolean; unsafeMockIntegration: boolean };
+  runtimeMode: string;
   bundler: string;
-  watcher: { watchpackPollingIntervalMs: number };
+  watcher: unknown;
+  build: { candidateSha: string; serverPath: string };
   processes: {
     app: { pid: number; logPath: string };
     fixture: { pid: number; logPath: string };
@@ -645,7 +647,7 @@ const validateRuntimeManifest = async (
   const expectedManifestPath = join(expectedSlotDir, "runtime-manifest.json");
   const expectedDbPath = join(expectedSlotDir, "db.sqlite");
   const expectedFixtureManifestPath = join(expectedSlotDir, "fixture-manifest.json");
-  const expectedNextDistDir = join(repoRoot, "apps/nextjs/.next-qa", `slot-${runtime.slot}`);
+  const expectedBuild = createCandidateBuildPaths(campaignCandidateSha);
   if (resolve(runtime.slotDir) !== resolve(expectedSlotDir))
     errors.push(`${label}: slotDir is outside the selected slot`);
   if (resolve(manifestPath) !== resolve(expectedManifestPath))
@@ -654,8 +656,14 @@ const validateRuntimeManifest = async (
   if (resolve(runtime.fixtureManifestPath) !== resolve(expectedFixtureManifestPath)) {
     errors.push(`${label}: fixture manifest path is outside the selected slot`);
   }
-  if (resolve(runtime.nextDistDir) !== resolve(expectedNextDistDir)) {
-    errors.push(`${label}: Next dist directory is not isolated to the selected slot`);
+  if (resolve(runtime.nextDistDir) !== resolve(expectedBuild.buildDir)) {
+    errors.push(`${label}: Next dist directory is not the candidate-pinned shared build`);
+  }
+  if (
+    runtime.build?.candidateSha !== campaignCandidateSha ||
+    resolve(runtime.build?.serverPath ?? "") !== resolve(expectedBuild.serverPath)
+  ) {
+    errors.push(`${label}: standalone build metadata does not match the campaign candidate`);
   }
   for (const processRecord of Object.values(runtime.processes ?? {})) {
     if (!isPathWithin(expectedSlotDir, resolve(processRecord.logPath))) {

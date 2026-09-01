@@ -21,13 +21,13 @@ const candidateSha = resolveCheckoutCandidateSha(repoRoot);
 const blockerFingerprint = "release-v2-auth-locale-redirect-loop";
 
 describe("release-v2 QA report runtime limitation", () => {
-  it("describes the bundler and polling interval from the runtime contract", () => {
+  it("describes the shared standalone runtime contract", () => {
     const runtimeExecutionContract = createRuntimeExecutionContract();
 
     expect(hostRuntimeLimitation).toContain(`the ${runtimeExecutionContract.bundler} bundler`);
-    expect(hostRuntimeLimitation).toContain(
-      `${runtimeExecutionContract.watcher.watchpackPollingIntervalMs}ms Watchpack polling`,
-    );
+    expect(hostRuntimeLimitation).toContain(runtimeExecutionContract.runtimeMode);
+    expect(hostRuntimeLimitation).toContain("single candidate-pinned build");
+    expect(hostRuntimeLimitation).not.toContain("Watchpack polling");
     expect(hostRuntimeLimitation).not.toContain("Turbopack");
   });
 });
