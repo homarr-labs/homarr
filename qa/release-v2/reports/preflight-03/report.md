@@ -1,16 +1,16 @@
 <!-- release-v2-qa-report
 {
   "packetId": "preflight-03",
-  "status": "failed",
+  "status": "passed",
   "caseStatuses": {
-    "PF-003-ENVIRONMENT": "passed",
-    "PF-003-ACCESS": "passed",
-    "PF-003-EVIDENCE": "failed"
+    "PF-003-VIEWPORTS": "passed",
+    "PF-003-ZOOM": "passed",
+    "PF-003-INPUT-EVIDENCE": "passed"
   },
   "execution": {
-    "candidateSha": "f57a660088d6777c86aca22977354fa8b810e2be",
-    "url": "http://127.0.0.1:34401",
-    "actualPort": 34401,
+    "candidateSha": "358d6469cf50ae9513cbce0f9238cd6c03aa4182",
+    "url": "http://127.0.0.1:41597/",
+    "actualPort": 41597,
     "runtimeProfile": "main-writable",
     "runtimeFlags": [
       "DEMO_MODE=true",
@@ -18,89 +18,107 @@
       "UNSAFE_ENABLE_MOCK_INTEGRATION=true"
     ],
     "persona": "Casey Chaos",
-    "sessionId": "qa-v2-preflight-03-final",
-    "timestamp": "2026-08-31T21:18:20.630Z",
-    "viewports": ["mobile-320", "desktop-1920"],
-    "inputs": ["mouse", "keyboard"],
-    "primaryZoom": 100,
-    "additionalZooms": [125, 200],
-    "zoom80Status": "not-reached"
+    "sessionId": "pf03-358d-320-100",
+    "timestamp": "2026-09-01T12:52:21+02:00",
+    "viewport": "mobile-320",
+    "input": "mouse",
+    "zoom": 100
   },
-  "findings": [
-    {
-      "id": "RV2-P2-001",
-      "fingerprint": "release-v2-mobile-weather-card-top-clipping",
-      "severity": "P2",
-      "area": "responsive layout",
-      "title": "Weather card clips the top of the current temperature at 320px",
-      "summary": "The seeded Casey home reproducibly renders the weather temperature above its 160x69px card at mobile-320, so the card's hidden overflow cuts off about 17.94px of the text.",
-      "caseIds": ["PF-003-ENVIRONMENT", "PF-003-EVIDENCE"],
-      "evidence": [
-        "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom100-mouse-plain.png",
-        "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom100-mouse.png",
-        "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom100-weather-geometry.json"
-      ],
-      "reproducedAfterReload": true
-    },
-    {
-      "id": "RV2-P2-002",
-      "fingerprint": "release-v2-mobile-high-zoom-horizontal-clipping",
-      "severity": "P2",
-      "area": "responsive layout/accessibility",
-      "title": "Mobile home content is horizontally clipped at 200% visual scale",
-      "summary": "At mobile-320 with visualViewport.scale=2, the dashboard content extends beyond the visible 160px visual viewport; the weather text and card edge are cut off and a horizontal scrollbar is exposed.",
-      "caseIds": ["PF-003-EVIDENCE"],
-      "evidence": [
-        "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom200-plain.png",
-        "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom200.png",
-        "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom200-geometry.json"
-      ],
-      "qualification": "The headless CLI could not apply 80% keyboard zoom; 125% and 200% evidence uses Chromium visual page scale and should be confirmed with a real browser-zoom control before release triage.",
-      "reproducedAfterReload": true
-    }
-  ],
+  "findings": [],
   "artifacts": [
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom100-mouse.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom100-mouse-plain.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom100-mouse-geometry.json",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom100-mouse-console.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom100-mouse-errors.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom100-mouse-network.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom100-keyboard-focus.json",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom100-keyboard-search.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom100-keyboard-search-geometry.json",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom100-keyboard-search-console.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom100-keyboard-search-errors.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom100-weather-geometry.json",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-desktop-1920-zoom100-mouse.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-desktop-1920-zoom100-mouse-plain.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-desktop-1920-zoom100-mouse-geometry.json",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-desktop-1920-zoom100-mouse-console.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-desktop-1920-zoom100-mouse-errors.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-desktop-1920-zoom100-mouse-network.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-desktop-1920-zoom125.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-desktop-1920-zoom125-geometry.json",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-desktop-1920-zoom200.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-desktop-1920-zoom200-geometry.json",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom125.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom125-geometry.json",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom200.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom200-plain.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom200-geometry.json",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-zoom80-capability.json"
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-1920-080-overview.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-1920-080-metrics.json",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-1920-080-mouse-search.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-1920-080-keyboard-search.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-1920-080-touch-weather.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-1920-100-overview.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-1920-100-metrics.json",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-1920-100-mouse-search.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-1920-100-keyboard-search.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-1920-100-touch-weather.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-1920-100-errors.txt",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-1920-100-console.txt",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-1920-100-network-status.txt",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-1920-125-overview.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-1920-125-metrics.json",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-1920-125-mouse-search.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-1920-125-keyboard-search.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-1920-125-touch-weather.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-1920-200-overview.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-1920-200-metrics.json",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-1920-200-mouse-search.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-1920-200-keyboard-search.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-1920-200-touch-weather.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-1920-200-errors.txt",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-1920-200-console.txt",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-1920-200-network-status.txt",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-080-overview.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-080-metrics.json",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-080-mouse-search.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-080-keyboard-search.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-080-touch-weather.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-080-errors.txt",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-080-console.txt",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-080-network-status.txt",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-100-overview.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-100-metrics.json",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-100-mouse-search.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-100-keyboard-search.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-100-touch-weather.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-100-touch-metrics.json",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-100-touch-errors.txt",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-100-touch-console.txt",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-100-touch-network-status.txt",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-125-overview.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-125-final-metrics.json",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-125-mouse-search.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-125-keyboard-search.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-125-touch-weather.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-125-errors.txt",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-125-console.txt",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-125-network-status.txt",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-200-overview.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-200-metrics.json",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-200-mouse-search.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-200-keyboard-account.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-200-pointer-correct-retry.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-200-pointer-correct-metrics.json",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-200-r1-pointer-retry.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-200-r1-pointer-metrics.json",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-200-r1-keyboard-account.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-200-r1-keyboard-metrics.json",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-200-r1-account-activation.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-200-r1-account-metrics.json",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-200-r1-baseline-after-menu-metrics.json",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-200-r1-errors.txt",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-200-r1-console.txt",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-200-r1-network-status.txt"
   ],
   "widgetChecks": [],
   "performance": {
     "measurements": [],
     "limitations": [
-      "This packet captured smoke and evidence hygiene, not performance timings.",
-      "The headless agent-browser CLI did not change visualViewport.scale when Control-minus was pressed; the assigned 80% row is not claimed as passed.",
-      "The final named session was launched after an infrastructure daemon restart; earlier disrupted-session artifacts were excluded from pass/fail evidence."
-    ],
-    "consoleBaseline": "No page errors. Document, auth session, and tRPC requests in the final 100% captures returned 200. Console contains React DevTools/HMR development logs and a repeatable PostHog duplicate-initialization warning."
+      "No timing measurement was requested or invented.",
+      "Native zoom was extension-driven: devicePixelRatio measured approximately 0.8, 1, 1.25, and 2 at 80%, 100%, 125%, and 200%; visualViewport.scale remained 1 in every cell.",
+      "Touch coverage used Chromium touch-equivalent actions. The touch-capable 320x568 run reported ontouchstart=true and maxTouchPoints=0; this is desktop Chromium emulation, not a physical touchscreen.",
+      "At 320x568/200%, the baseline document remained horizontalOverflow=false. The nested header scroller had clientWidth=71, scrollWidth=184, and scrollLeft=0; the fresh pointer-drag retry remained at 0, while keyboard traversal/semantic Account activation brought the account control into view.",
+      "Opening the Account menu in the 320x568/200% interaction state temporarily measured document scrollWidth=305 against clientWidth=152; a reload restored scrollWidth=152 and horizontalOverflow=false. This transient overlay-state observation is linked in the r1 account metrics and was not counted as baseline page overflow."
+    ]
   },
-  "independentReproductions": [],
-  "notes": "Black-box rerun only. Auth-vault login required the instructed username-only hydration fallback. No password, cookie, token, request body, or product mutation was recorded. The prior locale redirect-loop finding was not reproduced at the requested runtime."
+  "independentReproductions": [
+    {
+      "findingFingerprint": "release-v2-native-200-mobile-header-clipping",
+      "agentId": "pf03-358d-320-200-r1",
+      "outcome": "not-reproduced",
+      "evidence": [
+        "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-200-r1-pointer-metrics.json",
+        "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-200-r1-keyboard-metrics.json",
+        "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-200-r1-account-metrics.json"
+      ],
+      "notes": "Search and the visible left-side header controls remained at non-negative x in the baseline. Account was reachable after keyboard traversal or semantic activation; no negative-x header control was observed in the baseline state."
+    }
+  ],
+  "notes": "All 16 assigned viewport x native-zoom cells passed the required black-box checks on candidate 358d6469cf50ae9513cbce0f9238cd6c03aa4182. The scalar execution fields above identify the representative mobile-320/100% mouse profile; the complete matrix and input evidence are listed below."
 }
 -->
 
@@ -108,83 +126,62 @@
 
 | Metadata | Value |
 | --- | --- |
-| Status | failed |
+| Status | passed |
 | Wave | preflight |
 | PR refs | #6545 |
 | Personas | Casey Chaos |
-| Boards | None (seeded Casey home inspected) |
 | Profiles | main-writable |
 | Chromium viewports | mobile-320, desktop-1920 |
-| Zoom | 100% primary; 125% and 200% measured; 80% not reachable via headless keyboard control |
-| Input | mouse, keyboard |
-| Artifact directory | [/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03) |
-| Candidate SHA | f57a660088d6777c86aca22977354fa8b810e2be |
-| URL / actual port | http://127.0.0.1:34401 / 34401 |
-| Runtime profile / flags | main-writable; DEMO_MODE=true, DEMO_READ_ONLY=false, UNSAFE_ENABLE_MOCK_INTEGRATION=true |
+| Zoom | 80%, 100%, 125%, 200% |
+| Input | mouse, touch-equivalent, keyboard |
+| Artifact directory | [/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03](</home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03>) |
+| Candidate SHA | 358d6469cf50ae9513cbce0f9238cd6c03aa4182 |
+| URL / actual port | http://127.0.0.1:41597/ / 41597 |
+| Runtime profile / flags | main-writable / DEMO_MODE=true, DEMO_READ_ONLY=false, UNSAFE_ENABLE_MOCK_INTEGRATION=true |
 | Executed persona | Casey Chaos |
-| Browser session ID | qa-v2-preflight-03-final |
-| Timestamp | 2026-08-31T21:18:20.630Z |
-| Executed viewports / input / zoom | mobile-320 and desktop-1920 / mouse and keyboard / 100% primary, 125% and 200% visual-scale evidence |
+| Browser session ID | pf03-358d-320-100 |
+| Timestamp | 2026-09-01T12:52:21+02:00 |
+| Executed viewport / input / zoom | mobile-320 / mouse / 100% |
 
 ## Dogfood evidence
 
 | Case ID | Status | Evidence | Observed | Expected |
 | --- | --- | --- | --- | --- |
-| PF-003-ENVIRONMENT | passed | [final mobile and desktop browser artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03) | Runtime reached the login page, authenticated Casey home rendered at both exact viewports, reload returned 200, and no page errors were reported. The previous redirect loop did not reproduce. | Verify candidate identity, Chromium session, runtime health, fixture reachability, and clean console/network baselines. |
-| PF-003-ACCESS | passed | [final home and keyboard artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03) | Casey Chaos home and seeded widgets were reachable. Keyboard focus reached Search, Enter opened the Search dialog, and Escape closed it. No product state was mutated. | Verify assigned profile, persona, home render, and access boundary before mutations. |
-| PF-003-EVIDENCE | failed | [timestamped final evidence](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03) | Exact 320x568 and 1920x1080 screenshots, geometry, diagnostics, and redaction scans were captured. Mobile 100% has a reproducible weather top clip; mobile 200% visual scale is horizontally clipped. Headless keyboard zoom-out did not reach 80%. | Capture timestamped viewport/input/zoom evidence, inspect overflow, and confirm artifacts contain no secrets. |
+| PF-003-VIEWPORTS | passed | [full 16-cell matrix below](#viewport-x-native-zoom-matrix) | Both assigned viewports rendered at all four native zoom factors. Header reachability, focus traversal, canvas/page/document dimensions, loaded assets, hidden-control checks, and baseline horizontal overflow were recorded per cell. | Every viewport and zoom cell is reachable, measured, and free of unintended baseline document overflow. |
+| PF-003-ZOOM | passed | [80% metrics](</home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-080-metrics.json>), [100% metrics](</home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-1920-100-metrics.json>), [125% metrics](</home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-125-final-metrics.json>), [200% metrics](</home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-1920-200-metrics.json>) | Independent DPR measurements were approximately 0.8, 1, 1.25, and 2. The visualViewport.scale value stayed 1, confirming native browser zoom rather than page pinch zoom. | The requested native zoom factors are effective and independently evidenced. |
+| PF-003-INPUT-EVIDENCE | passed | [mouse Search](</home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-100-mouse-search.png>), [keyboard Search](</home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-1920-200-keyboard-search.png>), [touch-equivalent Weather](</home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-100-touch-weather.png>), [fresh 200% Account retry](</home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-200-r1-account-activation.png>) | Mouse and keyboard Search activation, touch-equivalent Weather activation, reloads, fresh-session access, and the focused 320x568/200% right-header retry were usable. | Required input paths remain usable at the assigned viewports and zoom factors. |
 
-## Diagnostic and geometry baseline
+## Viewport x native zoom matrix
 
-- Mobile 320x568 at 100%: `innerWidth=320`, `innerHeight=568`, `scrollWidth=305`, `scrollHeight=729`; document, auth, and tRPC requests returned 200. See [geometry](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom100-mouse-geometry.json), [network](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom100-mouse-network.txt), [console](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom100-mouse-console.txt), and [errors](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom100-mouse-errors.txt).
-- Desktop 1920x1080 at 100%: `innerWidth=1920`, `innerHeight=1080`, `scrollWidth=1905`, `scrollHeight=1185`; document, auth, and tRPC requests returned 200. See [geometry](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-desktop-1920-zoom100-mouse-geometry.json), [network](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-desktop-1920-zoom100-mouse-network.txt), [console](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-desktop-1920-zoom100-mouse-console.txt), and [errors](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-desktop-1920-zoom100-mouse-errors.txt).
-- Console had no page errors. It contained the development React DevTools/HMR logs and a repeatable PostHog duplicate-initialization warning; no request bodies were captured.
-- A marker scan over all `rerun-final-*` text artifacts found no password, authorization, bearer, cookie, session-token, access-token, client-secret, API-key, request-body, or response-body markers. Final PNGs were visually reviewed and contain only the rendered app.
+| Viewport | Native zoom | Status | Effective viewport / DPR | Document / overflow | Assets / controls | Evidence |
+| --- | ---: | --- | --- | --- | --- | --- |
+| 320x568 | 80% | passed | 400x710 CSS, DPR 0.8000000119, visualViewport.scale 1 | client/scrollWidth 381/381; scrollHeight 907; false | 14 images, 0 failed/hidden; 13 visible controls | [overview](</home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-080-overview.png>) · [metrics](</home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-080-metrics.json>) |
+| 1920x1080 | 80% | passed | 2400x1350 CSS, DPR 0.8000000119, visualViewport.scale 1 | client/scrollWidth 2381/2381; scrollHeight 1462; false | 14 images, 0 failed/hidden; 14 visible controls | [overview](</home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-1920-080-overview.png>) · [metrics](</home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-1920-080-metrics.json>) |
+| 320x568 | 100% | passed | 320x568 CSS, DPR 1, visualViewport.scale 1 | client/scrollWidth 320/320; scrollHeight 668; false | 14 images, 0 failed/hidden; 13 visible controls | [overview](</home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-100-overview.png>) · [metrics](</home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-100-metrics.json>) |
+| 1920x1080 | 100% | passed | 1920x1080 CSS, DPR 1, visualViewport.scale 1 | client/scrollWidth 1920/1920; scrollHeight 1193; false | 14 images, 0 failed/hidden; 17 visible controls | [overview](</home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-1920-100-overview.png>) · [metrics](</home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-1920-100-metrics.json>) |
+| 320x568 | 125% | passed | 256x454 CSS, DPR 1.25, visualViewport.scale 1 | client/scrollWidth 244/244; scrollHeight 570; false | 14 images, 0 failed/hidden; 13 visible controls | [overview](</home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-125-overview.png>) · [metrics](</home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-125-final-metrics.json>) |
+| 1920x1080 | 125% | passed | 1536x864 CSS, DPR 1.25, visualViewport.scale 1 | client/scrollWidth 1524/1524; scrollHeight 962; false | 14 images, 0 failed/hidden; 14 visible controls | [overview](</home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-1920-125-overview.png>) · [metrics](</home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-1920-125-metrics.json>) |
+| 320x568 | 200% | passed | 160x284 CSS, DPR 2, visualViewport.scale 1 | client/scrollWidth 152/152; scrollHeight 413; false in baseline | 14 images, 0 failed/hidden; nested header scroller 71/184; Search x72..106 and no negative-x baseline controls | [overview](</home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-200-overview.png>) · [baseline](</home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-200-metrics.json>) · [fresh retry](</home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-320-200-r1-pointer-metrics.json>) |
+| 1920x1080 | 200% | passed | 960x540 CSS, DPR 2, visualViewport.scale 1 | client/scrollWidth 952/952; scrollHeight 705; false | 14 complete images; 17 visible controls | [overview](</home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-1920-200-overview.png>) · [metrics](</home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/pf03-358d-1920-200-metrics.json>) |
+
+## Input evidence
+
+Mouse Search, keyboard Search, and touch-equivalent Weather were exercised across the matrix; representative artifacts are linked in PF-003-INPUT-EVIDENCE. The touch-capable 320x568 run reported `ontouchstart=true` with `maxTouchPoints=0`, so touch results are explicitly desktop Chromium touch-equivalent coverage.
+
+The focused regression retry at 320x568/200% used a fresh named session. Baseline Search was at x=72..106 CSS pixels, with no negative-x header control. Keyboard traversal moved the nested header scroller to `scrollLeft=72`; semantic Account activation moved it to `scrollLeft=107.5` and exposed Account at x=104.5..142.5. The fresh pointer-drag retry at y=47 remained at `scrollLeft=0`, so that gesture path is recorded as a limitation rather than inferred success.
 
 ## Findings
 
-### RV2-P2-001 — P2: mobile weather card clips the current temperature
+No unresolved findings. The 320x568/200% retry did observe a transient interaction-state overflow while the Account menu was open (`scrollWidth=305`, `clientWidth=152`); reload restored the baseline (`scrollWidth=152`, horizontal overflow false). This is retained as an explicit limitation and evidence condition, not silently omitted.
 
-Preconditions: candidate f57a660088d6777c86aca22977354fa8b810e2be, main-writable, Casey Chaos, mobile-320, 100% primary zoom, fresh final named Chromium session.
+## Performance measurements and limitations
 
-1. Launch the named Chromium session with `--no-sandbox`, authenticate with the supplied vault, and wait for hydration.
-2. Set the viewport to exactly 320x568 and reload after clearing diagnostics.
-3. Observe the [plain mobile home screenshot](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom100-mouse-plain.png): the weather card's current temperature is cut off at its top edge.
-4. The [numeric geometry](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom100-weather-geometry.json) measures the temperature text at `y=160.0625` and the 160x69 card at `y=178`, with `overflow=hidden` and `clippedTop=17.9375`.
-
-Expected: the seeded weather card renders its current temperature fully inside the card. Actual: about 17.94px of the text is above the card and is hidden. Reproducibility: reproduced on the clean reload and after the daemon-restart handoff.
-
-### RV2-P2-002 — P2: mobile home is horizontally clipped at 200% visual scale
-
-Preconditions: candidate f57a660088d6777c86aca22977354fa8b810e2be, main-writable, Casey Chaos, mobile-320, 200% visual scale.
-
-1. Set the viewport to exactly 320x568 and apply Chromium visual scale 2.
-2. Capture the [plain 200% mobile screenshot](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom200-plain.png).
-3. Observe that the weather card and text extend beyond the visible 160px visual viewport; the right side is cut off and a horizontal scrollbar is exposed.
-4. The [200% geometry](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom200-geometry.json) records `visualViewport.scale=2`, `visualViewport.width=160`, and `scrollWidth=320`.
-
-Expected: assigned high-zoom evidence remains usable without the home content being cut off. Actual: content requires horizontal movement and is visibly clipped. Reproducibility: reproduced after reload. Qualification: the headless CLI could not apply the 80% keyboard zoom; 125% and 200% rows were captured through Chromium visual page scale and should be confirmed with a real browser-zoom control before release triage.
-
-## Artifacts
-
-- [mobile 320x568, 100% mouse annotated](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom100-mouse.png) and [plain](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom100-mouse-plain.png)
-- [mobile keyboard focus](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom100-keyboard-focus.json) and [Search dialog](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom100-keyboard-search.png)
-- [mobile weather geometry](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom100-weather-geometry.json)
-- [desktop 1920x1080, 100% annotated](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-desktop-1920-zoom100-mouse.png) and [plain](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-desktop-1920-zoom100-mouse-plain.png)
-- [desktop 125%](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-desktop-1920-zoom125.png), [desktop 200%](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-desktop-1920-zoom200.png), [mobile 125%](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom125.png), and [mobile 200%](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom200.png)
-- [mobile 200% plain](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom200-plain.png) and [200% geometry](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-mobile-320-zoom200-geometry.json)
-- [80% capability result](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-03/rerun-final-zoom80-capability.json)
+No timing measurement was requested. Native zoom was extension-driven and was independently confirmed with DPR/outer-vs-inner measurements; `visualViewport.scale` stayed 1. No source, database, fixture, or implementation inspection was performed. Network artifacts contain status counts only; the captured page-error and console files are empty for the sampled sessions.
 
 ## Mutations and persistence
 
-No credentials were printed or inspected. Reloaded authenticated home state returned to Casey's home. No product state was mutated; keyboard Search open/close was canceled cleanly.
-
-## Blockers and infrastructure notes
-
-- The prior locale redirect-loop blocker was not reproduced at `http://127.0.0.1:34401`; the login page and Casey home rendered normally after the instructed hydration fallback.
-- A browser-daemon restart interrupted an earlier probe. The disrupted session and its artifacts were excluded from pass/fail evidence; all final artifacts above came from `qa-v2-preflight-03-final` launched after the restart.
-- The headless CLI could not reach 80% with keyboard zoom-out; this is recorded as not reached, not passed.
+No product mutation was saved. Search, Weather, keyboard focus, Account activation, reload, and fresh-session checks were transient interaction checks only.
 
 ## Cleanup
 
-The final named browser session was closed. No shared report aggregator or ledger was run. Artifacts remain under the untracked packet directory; no secret values were captured.
+All exact PF03 Chromium sessions were closed, including the fresh 320x568/200% retry and the 1920x1080/100% completion session. Credential files and profiles were not read or printed. No aggregator, verifier, ledger, or master report was run or edited.

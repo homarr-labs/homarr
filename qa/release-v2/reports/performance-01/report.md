@@ -1,76 +1,35 @@
 <!-- release-v2-qa-report
 {
   "packetId": "performance-01",
-  "status": "blocked",
+  "status": "not-reached",
   "caseStatuses": {
-    "PE-001-BASELINE": "blocked",
-    "PE-001-THRESHOLD": "blocked",
-    "PE-001-STRESS": "blocked",
-    "PE-001-RECOVERY-EVIDENCE": "blocked"
+    "PE-001-BASELINE": "not-reached",
+    "PE-001-THRESHOLD": "not-reached",
+    "PE-001-STRESS": "not-reached",
+    "PE-001-RECOVERY-EVIDENCE": "not-reached"
   },
   "execution": {
-    "candidateSha": "f57a660088d6777c86aca22977354fa8b810e2be",
-    "url": "http://127.0.0.1:37137",
-    "actualPort": 37137,
-    "runtimeProfile": "main-writable",
-    "runtimeFlags": [
-      "DEMO_MODE=true",
-      "DEMO_READ_ONLY=false",
-      "UNSAFE_ENABLE_MOCK_INTEGRATION=true"
-    ],
-    "persona": "Avery Admin",
-    "sessionId": "qa-v2-performance-01",
-    "timestamp": "2026-08-31T18:17:56.112Z",
-    "viewport": "mobile-375",
-    "input": "mouse",
-    "zoom": 100
+    "candidateSha": "2d5edf46513b96c8b9f973d4a121b396d688e9bb",
+    "url": null,
+    "actualPort": null,
+    "runtimeProfile": null,
+    "runtimeFlags": [],
+    "persona": null,
+    "sessionId": null,
+    "timestamp": null,
+    "viewport": null,
+    "input": null,
+    "zoom": null
   },
-  "findings": [
-    {
-      "id": "RV2-P1-001",
-      "fingerprint": "release-v2-auth-locale-redirect-loop",
-      "severity": "P1",
-      "area": "routing/authentication",
-      "title": "Locale rewrite causes an infinite browser redirect before the application renders",
-      "summary": "Chromium repeatedly requests the same entry route and ends on ERR_TOO_MANY_REDIRECTS, preventing the assigned browser flow.",
-      "caseIds": [
-        "PE-001-BASELINE",
-        "PE-001-THRESHOLD",
-        "PE-001-STRESS",
-        "PE-001-RECOVERY-EVIDENCE"
-      ],
-      "evidence": [
-        "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/performance-01/cold-375-entry.png",
-        "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/performance-01/network-cold-375.json"
-      ]
-    }
-  ],
-  "artifacts": [
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/performance-01/cold-375-entry.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/performance-01/console-cold-375.json",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/performance-01/errors-cold-375.json",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/performance-01/network-cold-375.json",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/performance-01/snapshot-cold-375.txt"
-  ],
+  "findings": [],
+  "artifacts": [],
   "widgetChecks": [],
   "performance": {
     "measurements": [],
-    "limitations": [
-      "The application never rendered, so assigned feature, mutation, persistence, permission, viewport, and performance checks were blocked.",
-      "No credentials were submitted and no product state was mutated.",
-      "The packet's retry did not produce a separate artifact; the same finding has independent reproductions in the preflight reports."
-    ]
+    "limitations": []
   },
-  "independentReproductions": [
-    {
-      "findingFingerprint": "release-v2-auth-locale-redirect-loop",
-      "agentId": "qa-v2-preflight-01",
-      "outcome": "reproduced",
-      "evidence": [],
-      "notes": "See preflight-01 for an independent Luna Max reproduction."
-    }
-  ],
-  "notes": "Report-only black-box run. No defect was fixed and no secret was recorded."
+  "independentReproductions": [],
+  "notes": "Not executed."
 }
 -->
 
@@ -78,7 +37,7 @@
 
 | Metadata | Value |
 | --- | --- |
-| Status | blocked |
+| Status | not-reached |
 | Wave | performance |
 | PR refs | #6555, #6545 |
 | Personas | Avery Admin |
@@ -89,61 +48,39 @@
 | Input | mouse |
 | Widget kinds | None |
 | Artifact directory | [/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/performance-01](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/performance-01) |
-| Candidate SHA | f57a660088d6777c86aca22977354fa8b810e2be |
-| URL / actual port | http://127.0.0.1:37137 / 37137 |
-| Runtime profile / flags | main-writable; DEMO_MODE=true, DEMO_READ_ONLY=false, UNSAFE_ENABLE_MOCK_INTEGRATION=true |
-| Executed persona | Avery Admin |
-| Browser session ID | qa-v2-performance-01 |
-| Timestamp | 2026-08-31T18:17:56.112Z |
-| Executed viewport / input / zoom | mobile-375 / mouse / 100% |
+| Candidate SHA | 2d5edf46513b96c8b9f973d4a121b396d688e9bb |
+| URL / actual port | not-recorded |
+| Runtime profile / flags | not-recorded |
+| Executed persona | not-recorded |
+| Browser session ID | not-recorded |
+| Timestamp | not-recorded |
+| Executed viewport / input / zoom | not-recorded |
 
 ## Dogfood evidence
 
 | Case ID | Status | Evidence | Observed | Expected |
 | --- | --- | --- | --- | --- |
-| PE-001-BASELINE | blocked | [browser artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/performance-01) | The application entry repeated redirects until Chromium stopped navigation; the assigned flow was not reachable. | Capture repeatable cold and warm timing, request, render, memory, and console baselines with candidate metadata. |
-| PE-001-THRESHOLD | blocked | [browser artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/performance-01) | The application entry repeated redirects until Chromium stopped navigation; the assigned flow was not reachable. | Measure the packet at every assigned viewport, zoom, input, board, and profile against the documented threshold. |
-| PE-001-STRESS | blocked | [browser artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/performance-01) | The application entry repeated redirects until Chromium stopped navigation; the assigned flow was not reachable. | Exercise dense data, repeated interaction, long-session, latency, and failure stress that applies. |
-| PE-001-RECOVERY-EVIDENCE | blocked | [browser artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/performance-01) | The application entry repeated redirects until Chromium stopped navigation; the assigned flow was not reachable. | Verify recovery after stress and link trace, screenshot, network, memory, and cleanup artifacts. |
+| PE-001-BASELINE | not-reached | [planned screenshot](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/performance-01/PE-001-BASELINE.png) | Not executed | Capture repeatable cold and warm timing, request, render, memory, and console baselines with candidate metadata. |
+| PE-001-THRESHOLD | not-reached | [planned screenshot](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/performance-01/PE-001-THRESHOLD.png) | Not executed | Measure the packet at every assigned viewport, zoom, input, board, and profile against the documented threshold. |
+| PE-001-STRESS | not-reached | [planned screenshot](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/performance-01/PE-001-STRESS.png) | Not executed | Exercise dense data, repeated interaction, long-session, latency, and failure stress that applies. |
+| PE-001-RECOVERY-EVIDENCE | not-reached | [planned screenshot](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/performance-01/PE-001-RECOVERY-EVIDENCE.png) | Not executed | Verify recovery after stress and link trace, screenshot, network, memory, and cleanup artifacts. |
 
 ## Performance measurements and limitations
 
-No valid feature timing could be recorded because no application document rendered. Cold/warm, polling, rendering, memory, and recovery measurements remain blocked.
+Record structured measurements in `performance.measurements` with units, thresholds, status, and evidence. Record every environmental or tooling limitation in `performance.limitations`; leave measurements empty instead of inventing a result.
 
 ## Independent reproductions
 
-The common routing failure was independently reproduced by qa-v2-preflight-01; the corresponding tracked packet contains its own browser evidence.
+Record a second agent's result in `independentReproductions` with the finding fingerprint, agent ID, outcome, evidence, and notes. An unattempted reproduction remains `not-reached`.
 
 ## Findings
 
-### RV2-P1-001 — P1: locale rewrite causes an infinite browser redirect
-
-Preconditions: candidate f57a660088d6777c86aca22977354fa8b810e2be, main-writable, mobile-375, 100% zoom, mouse, fresh named Chromium session qa-v2-performance-01.
-
-1. Launch a fresh Chromium context with the Chromium argument --no-sandbox.
-2. Set the assigned viewport and open http://127.0.0.1:37137 or its authentication entry.
-3. Observe repeated document requests to the same route.
-4. Wait until Chromium displays ERR_TOO_MANY_REDIRECTS or chrome-error://chromewebdata/.
-5. Compare the result with the independently reproduced preflight evidence.
-
-Expected: the application renders the assigned entry, permitting authentication and the packet flow. Actual: the redirect loop prevents the application from rendering. Reproducibility: reproduced independently by the preflight agents. Console output was empty; network and visual evidence are linked below.
-
-## Artifacts
-
-- [cold-375-entry.png](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/performance-01/cold-375-entry.png)
-- [console-cold-375.json](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/performance-01/console-cold-375.json)
-- [errors-cold-375.json](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/performance-01/errors-cold-375.json)
-- [network-cold-375.json](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/performance-01/network-cold-375.json)
-- [snapshot-cold-375.txt](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/performance-01/snapshot-cold-375.txt)
-
-## Mutations and persistence
-
-No credentials were submitted and no product mutation occurred. Reload and fresh-session retries reproduced the routing failure, so application persistence was not reachable.
+No findings recorded. Add structured findings to the metadata block and mirror them here.
 
 ## Blockers and gaps
 
-Every non-evidence case listed as blocked remains untested beyond the routing entry. No blocked cell is treated as passed.
+Not executed.
 
 ## Cleanup
 
-The named browser session was closed by the browser agent. Artifacts remain under the untracked packet directory; no secret values were captured.
+Record created resources, cleanup outcome, console errors, and network failures. Never include secret values.

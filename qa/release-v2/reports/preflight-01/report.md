@@ -8,17 +8,18 @@
     "PF-001-EVIDENCE": "passed"
   },
   "execution": {
-    "url": "http://127.0.0.1:34401",
-    "actualPort": 34401,
+    "url": "http://127.0.0.1:34499",
+    "actualPort": 34499,
     "runtimeProfile": "main-writable",
     "runtimeFlags": ["DEMO_MODE=true", "DEMO_READ_ONLY=false", "UNSAFE_ENABLE_MOCK_INTEGRATION=true"],
-    "fixtureUrl": "http://127.0.0.1:37273",
-    "fixtureHealthUrl": "http://127.0.0.1:37273/health",
-    "candidateSha": "f57a660088d6777c86aca22977354fa8b810e2be",
+    "fixtureUrl": "http://127.0.0.1:37357",
+    "fixtureHealthUrl": "http://127.0.0.1:37357/health",
+    "candidateSha": "d3e7cd45a303bcd2c06757ead05306d334836074",
     "persona": "Avery Admin",
-    "sessionId": "qa-v2-preflight-01-rerun-writable-1440",
-    "timestamp": "2026-08-31T22:57:16+02:00",
-    "completedAt": "2026-08-31T22:57:16+02:00",
+    "sessionId": "pf01-main-writable-d3e7",
+    "sessionIds": ["pf01-main-writable-d3e7", "pf01-main-writable-d3e7-fresh"],
+    "timestamp": "2026-09-01T10:37:30+02:00",
+    "completedAt": "2026-09-01T10:37:30+02:00",
     "viewport": "desktop-1440",
     "viewportPx": "1440x900",
     "input": "mouse",
@@ -27,16 +28,18 @@
     "profiles": [
       {
         "runtimeProfile": "main-writable",
-        "appUrl": "http://127.0.0.1:34401",
-        "fixtureUrl": "http://127.0.0.1:37273",
-        "fixtureHealthUrl": "http://127.0.0.1:37273/health",
+        "appUrl": "http://127.0.0.1:34499",
+        "fixtureUrl": "http://127.0.0.1:37357",
+        "fixtureHealthUrl": "http://127.0.0.1:37357/health",
         "flags": ["DEMO_MODE=true", "DEMO_READ_ONLY=false", "UNSAFE_ENABLE_MOCK_INTEGRATION=true"],
-        "sessionId": "qa-v2-preflight-01-rerun-writable-1440",
+        "sessionId": "pf01-main-writable-d3e7",
+        "sessionIds": ["pf01-main-writable-d3e7", "pf01-main-writable-d3e7-fresh"],
         "viewport": "desktop-1440",
         "viewportPx": "1440x900",
         "input": ["mouse", "keyboard"],
         "zoom": 100,
         "result": "passed",
+        "visibleBoundaryNote": "Avery reached the seeded home and healthy Weather details. Reload, Board settings away/back, fresh-session access, and Ctrl+K/Escape passed without product mutation.",
         "caseCoverage": {
           "PF-001-ENVIRONMENT": "passed",
           "PF-001-ACCESS": "passed",
@@ -45,17 +48,18 @@
       },
       {
         "runtimeProfile": "main-readonly",
-        "appUrl": "http://127.0.0.1:41589",
-        "fixtureUrl": "http://127.0.0.1:44267",
-        "fixtureHealthUrl": "http://127.0.0.1:44267/health",
+        "appUrl": "http://127.0.0.1:44129",
+        "fixtureUrl": "http://127.0.0.1:46609",
+        "fixtureHealthUrl": "http://127.0.0.1:46609/health",
         "flags": ["DEMO_MODE=true", "DEMO_READ_ONLY=true", "UNSAFE_ENABLE_MOCK_INTEGRATION=true"],
-        "sessionId": "qa-v2-preflight-01-rerun-readonly-1440",
+        "sessionId": "pf01-main-readonly-d3e7",
+        "sessionIds": ["pf01-main-readonly-d3e7", "pf01-main-readonly-d3e7-fresh"],
         "viewport": "desktop-1440",
         "viewportPx": "1440x900",
         "input": ["mouse", "keyboard"],
         "zoom": 100,
         "result": "passed",
-        "visibleBoundaryNote": "Edit board and Add board content remained visible; the save/mutation boundary was not exercised in this preflight run.",
+        "visibleBoundaryNote": "The seeded home, Weather details, Edit board boundary, and Add widget picker rendered. The picker was dismissed; no save or product mutation was attempted.",
         "caseCoverage": {
           "PF-001-ENVIRONMENT": "passed",
           "PF-001-ACCESS": "passed",
@@ -64,18 +68,18 @@
       },
       {
         "runtimeProfile": "onboarding-fresh",
-        "appUrl": "http://127.0.0.1:41775",
-        "fixtureUrl": "http://127.0.0.1:33549",
-        "fixtureHealthUrl": "http://127.0.0.1:33549/health",
+        "appUrl": "http://127.0.0.1:40295",
+        "fixtureUrl": "http://127.0.0.1:33189",
+        "fixtureHealthUrl": "http://127.0.0.1:33189/health",
         "flags": ["DEMO_MODE=false", "DEMO_READ_ONLY=false", "UNSAFE_ENABLE_MOCK_INTEGRATION=true"],
-        "sessionId": "qa-v2-preflight-01-rerun-onboarding-1440",
-        "newSessionId": "qa-v2-preflight-01-rerun-onboarding-new-1440",
+        "sessionId": "pf01-onboarding-d3e7",
+        "sessionIds": ["pf01-onboarding-d3e7", "onb-d3e7-fresh"],
         "viewport": "desktop-1440",
         "viewportPx": "1440x900",
         "input": ["mouse", "keyboard"],
         "zoom": 100,
         "result": "passed",
-        "visibleBoundaryNote": "The fresh slot rendered the first-board onboarding landing at /init and a normal empty login form at /auth/login. No user or QA board was visible; onboarding completion and user creation were intentionally not attempted.",
+        "visibleBoundaryNote": "Anonymous root access redirected once and stably to /init. Get started and Restore backup rendered; no seeded user or QA board was visible, and onboarding completion was not attempted.",
         "caseCoverage": {
           "PF-001-ENVIRONMENT": "passed",
           "PF-001-ACCESS": "passed",
@@ -84,16 +88,18 @@
       },
       {
         "runtimeProfile": "degraded",
-        "appUrl": "http://127.0.0.1:43903",
-        "fixtureUrl": "http://127.0.0.1:39181",
-        "fixtureHealthUrl": "http://127.0.0.1:39181/health",
+        "appUrl": "http://127.0.0.1:44059",
+        "fixtureUrl": "http://127.0.0.1:43513",
+        "fixtureHealthUrl": "http://127.0.0.1:43513/health",
         "flags": ["DEMO_MODE=true", "DEMO_READ_ONLY=false", "UNSAFE_ENABLE_MOCK_INTEGRATION=true"],
-        "sessionId": "qa-v2-preflight-01-rerun-degraded-1440",
+        "sessionId": "degr-d3e7",
+        "sessionIds": ["degr-d3e7", "degr-fresh"],
         "viewport": "desktop-1440",
         "viewportPx": "1440x900",
         "input": ["mouse", "keyboard"],
         "zoom": 100,
         "result": "passed",
+        "visibleBoundaryNote": "Avery reached the seeded home and healthy Weather details. Fixture status modes and a fixture-only slow abort were exercised; route removal restored the fixture and app.",
         "caseCoverage": {
           "PF-001-ENVIRONMENT": "passed",
           "PF-001-ACCESS": "passed",
@@ -103,18 +109,33 @@
     ],
     "onboardingFresh": {
       "status": "passed",
-      "appUrl": "http://127.0.0.1:41775",
-      "fixtureUrl": "http://127.0.0.1:33549",
-      "fixtureHealthUrl": "http://127.0.0.1:33549/health",
+      "appUrl": "http://127.0.0.1:40295",
+      "fixtureUrl": "http://127.0.0.1:33189",
+      "fixtureHealthUrl": "http://127.0.0.1:33189/health",
       "flags": ["DEMO_MODE=false", "DEMO_READ_ONLY=false", "UNSAFE_ENABLE_MOCK_INTEGRATION=true"],
-      "sessionIds": ["qa-v2-preflight-01-rerun-onboarding-1440", "qa-v2-preflight-01-rerun-onboarding-new-1440"],
+      "sessionIds": ["pf01-onboarding-d3e7", "onb-d3e7-fresh"],
       "viewport": "desktop-1440",
       "viewportPx": "1440x900",
-      "routes": ["/ -> /init", "/auth/login -> /auth/login"],
-      "fixtureHealth": "{\"status\":\"ok\",\"fixture\":\"release-v2-qa\"}",
+      "routes": ["/ -> /init", "/auth/login -> /auth/login", "back from /auth/login -> /init", "fresh / -> /init"],
+      "fixtureHealth": "HTTP 200; response body omitted",
       "noSeededUserOrQABoardObserved": true,
       "completionAttempted": false,
-      "reason": "The fresh slot has no seeded user or QA board; reaching the first-board onboarding boundary is the expected PF-001 access result. Onboarding completion and user creation are covered by later onboarding packets and were intentionally not attempted here."
+      "reason": "The anonymous slot reached the expected first-board boundary. Completion and user creation were intentionally outside this preflight run."
+    },
+    "degraded": {
+      "status": "passed",
+      "appUrl": "http://127.0.0.1:44059",
+      "fixtureUrl": "http://127.0.0.1:43513",
+      "fixtureHealthUrl": "http://127.0.0.1:43513/health",
+      "fixtureStatuses": {
+        "health": 200,
+        "slow": 200,
+        "empty": 204,
+        "malformed": 200,
+        "error": 503
+      },
+      "slowAbort": "Fixture-only slow route aborted with no response status; route removed; slow endpoint recovered to HTTP 200; app reload and Weather recovered.",
+      "completionAttempted": false
     }
   },
   "profileCoverage": {
@@ -126,88 +147,65 @@
   "findings": [],
   "independentReproductions": [],
   "artifacts": [
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-writable-desktop-1440-auth-login.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-writable-desktop-1440-auth-login-console.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-writable-desktop-1440-auth-login-errors.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-writable-desktop-1440-auth-login-network.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-writable-desktop-1440-home.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-writable-desktop-1440-home-console.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-writable-desktop-1440-home-errors.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-writable-desktop-1440-home-network.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-writable-desktop-1440-home-reload.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-writable-desktop-1440-home-reload-console.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-writable-desktop-1440-home-reload-errors.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-writable-desktop-1440-home-reload-network.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-writable-desktop-1440-fixture-health.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-writable-desktop-1440-fixture-health-console.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-writable-desktop-1440-fixture-health-errors.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-writable-desktop-1440-fixture-health-network.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-readonly-desktop-1440-auth-login.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-readonly-desktop-1440-auth-login-console.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-readonly-desktop-1440-auth-login-errors.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-readonly-desktop-1440-auth-login-network.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-readonly-desktop-1440-home.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-readonly-desktop-1440-home-console.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-readonly-desktop-1440-home-errors.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-readonly-desktop-1440-home-network.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-readonly-desktop-1440-home-reload.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-readonly-desktop-1440-home-reload-console.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-readonly-desktop-1440-home-reload-errors.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-readonly-desktop-1440-home-reload-network.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-readonly-desktop-1440-edit-boundary.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-readonly-desktop-1440-add-widget-boundary.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-readonly-desktop-1440-fixture-health.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-readonly-desktop-1440-fixture-health-console.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-readonly-desktop-1440-fixture-health-errors.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-readonly-desktop-1440-fixture-health-network.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-degraded-desktop-1440-auth-login.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-degraded-desktop-1440-auth-login-console.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-degraded-desktop-1440-auth-login-errors.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-degraded-desktop-1440-auth-login-network.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-degraded-desktop-1440-home.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-degraded-desktop-1440-home-console.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-degraded-desktop-1440-home-errors.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-degraded-desktop-1440-home-network.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-degraded-desktop-1440-home-reload.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-degraded-desktop-1440-home-reload-console.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-degraded-desktop-1440-home-reload-errors.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-degraded-desktop-1440-home-reload-network.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-degraded-desktop-1440-fixture-health.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-degraded-desktop-1440-fixture-health-console.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-degraded-desktop-1440-fixture-health-errors.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-degraded-desktop-1440-fixture-health-network.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-onboarding-desktop-1440-init.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-onboarding-desktop-1440-init-reload.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-onboarding-desktop-1440-init-reload-snapshot.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-onboarding-desktop-1440-auth-login.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-onboarding-desktop-1440-auth-login-snapshot.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-onboarding-desktop-1440-fixture-health.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-onboarding-desktop-1440-fixture-health-snapshot.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-onboarding-desktop-1440-console.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-onboarding-desktop-1440-errors.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-onboarding-desktop-1440-network.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-onboarding-new-desktop-1440-init.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-onboarding-new-desktop-1440-init-snapshot.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-onboarding-new-desktop-1440-console.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-onboarding-new-desktop-1440-errors.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-onboarding-new-desktop-1440-network.txt"
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-writable-home.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-writable-weather.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-writable-reload.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-writable-away-settings.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-writable-back-home.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-writable-fresh.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-writable-search-open.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-writable-search-escape.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-writable-fixture-health-status.txt",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-writable-diagnostics.txt",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-readonly-home.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-readonly-weather.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-readonly-reload.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-readonly-away-settings.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-readonly-back-home.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-readonly-edit-boundary.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-readonly-fresh.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-readonly-search-open.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-readonly-search-escape.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-readonly-fixture-health-status.txt",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-readonly-diagnostics.txt",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-onboarding-init.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-onboarding-restore-expanded.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-onboarding-auth-login.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-onboarding-auth-login-reload.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-onboarding-back-init.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-onboarding-fresh.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-onboarding-final-init.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-onboarding-fixture-health-status.txt",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-onboarding-diagnostics.txt",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-degraded-home.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-degraded-weather.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-degraded-away-settings.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-degraded-back-home.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-degraded-recovery.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-degraded-recovery-weather.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-degraded-fresh.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-degraded-search-open.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-degraded-search-escape.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-degraded-fixture-status.txt",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-degraded-diagnostics.txt"
   ],
   "widgetChecks": [],
   "diagnostics": {
-    "consoleErrors": "None reported by the errors artifacts for any profile.",
-    "consoleWarnings": "Development-only HMR/React DevTools messages plus repeated PostHog already-initialized warnings; no uncaught application error observed.",
-    "network": "All four assigned profiles rendered their app entry and fixture health page in browser metadata. The three seeded profiles also rendered auth/home/reload; onboarding rendered /init, /auth/login, and /init after reload/new session. Metadata includes normal 200/304 responses and non-blocking dev-only 404s for a Next static chunk/favicon; no redirect loop was observed. Request bodies were not inspected.",
-    "artifactHygiene": "Screenshots were reviewed for visible secrets; text diagnostics were sanitized for data URIs, query strings, and credential-like fields. No password, cookie, bearer value, request body, or unredacted credential-like value was recorded."
+    "consoleErrors": "No page errors were captured in the clean app sessions or after degraded fixture recovery.",
+    "consoleWarnings": "No actionable browser console error was observed. Console and error diagnostics were reduced to sanitized counts.",
+    "network": "All four app profiles reached their assigned entry and fixture health endpoint. Degraded fixture status-only evidence recorded health 200, slow 200, empty 204, malformed 200, and error 503. A fixture-only slow abort produced no response status; removing the route restored slow 200. App recovery recorded no app 4xx/5xx or static-missing signal.",
+    "artifactHygiene": "All current-candidate text artifacts contain status/path-classification counts only. No password, cookie, bearer value, token, request header, request/response body, query value, or secret was retained. Fixture response bodies were discarded."
   },
   "performance": {
     "measurements": [],
     "limitations": [
-      "This packet verifies candidate identity and services only; no performance timing was requested or recorded.",
-      "Onboarding-fresh was exercised through initial routing, fixture health, login/init rendering, reload, and a fresh session; onboarding completion and user creation were intentionally not reached.",
-      "No product mutation was made. The read-only add-widget dialog was opened and cancelled solely to observe its visible boundary."
+      "No performance timing was requested or recorded.",
+      "Visual checks were performed at 1440x900, zoom 100%, with mouse and keyboard input.",
+      "Onboarding completion and user creation were intentionally not attempted.",
+      "No product state was changed; the only network interception was a local fixture slow-path abort that was removed before final app recovery."
     ]
   },
-  "notes": "Successful retest: the prior release-v2-auth-locale-redirect-loop was not reproduced in fresh named Chromium sessions for main-writable, main-readonly, or degraded. Each /auth/login entry and / home rendered, Avery reached the seeded home board, reload preserved the home, and each assigned seeded fixture /health rendered status ok for release-v2-qa. The rotated onboarding-fresh app at http://127.0.0.1:41775 routed / to /init without a loop, its fixture at http://127.0.0.1:33549/health rendered status ok, /auth/login rendered a normal empty login form, reload and a new named session returned to /init, and no user or QA board was observed. The fresh /init boundary is the expected PF-001 access result; onboarding completion and user creation are outside this packet and were intentionally not attempted."
+  "notes": "Candidate d3e7cd45a303bcd2c06757ead05306d334836074 passed PF-001-ENVIRONMENT, PF-001-ACCESS, and PF-001-EVIDENCE across main-writable, main-readonly, onboarding-fresh, and degraded profiles at 1440x900, zoom 100%, with mouse and keyboard. Avery reached the seeded home and healthy Weather details on all authenticated profiles; reload, away/back, fresh sessions, and Ctrl+K/Escape passed. The anonymous profile reached /init without a loop and showed no seeded persona or board. Deterministic degraded fixture modes and scoped slow abort/recovery behaved as expected."
 }
 -->
 
@@ -218,67 +216,62 @@
 | Status | passed |
 | Wave | preflight |
 | PR refs | #6545 |
-| Personas | Avery Admin |
-| Boards | None |
+| Candidate SHA | d3e7cd45a303bcd2c06757ead05306d334836074 |
 | Profiles | main-writable, main-readonly, onboarding-fresh, degraded |
-| Primary execution URL | http://127.0.0.1:34401 |
-| Primary execution port | 34401 |
-| Primary execution profile | main-writable |
-| Primary runtime flags | DEMO_MODE=true; DEMO_READ_ONLY=false; UNSAFE_ENABLE_MOCK_INTEGRATION=true |
-| Primary fixture health | http://127.0.0.1:37273/health |
-| Chromium viewport | desktop-1440 (1440×900) |
-| Zoom | 100% |
-| Input | mouse, keyboard |
+| Primary execution | `http://127.0.0.1:34499` (main-writable) |
+| Primary fixture health | `http://127.0.0.1:37357/health` |
+| Runtime flags | `DEMO_MODE=true`, `DEMO_READ_ONLY=false`, `UNSAFE_ENABLE_MOCK_INTEGRATION=true` |
+| Persona | Avery Admin |
+| Primary sessions | `pf01-main-writable-d3e7`; fresh `pf01-main-writable-d3e7-fresh` |
+| Viewport / input | 1440x900, zoom 100%, mouse and keyboard |
 | Artifact directory | [/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01) |
-| Candidate SHA | f57a660088d6777c86aca22977354fa8b810e2be |
-| Corrected rerun completed | 2026-08-31T22:57:16+02:00 |
-| Auth | Auth-vault profiles used for seeded profiles; no password value read or recorded |
+| Completed | 2026-09-01T10:37:30+02:00 |
+| Auth | Auth-vault profiles used for seeded profiles; no password value was read or recorded |
 
 ## Dogfood evidence
 
 | Case ID | Status | Evidence | Observed | Expected |
 | --- | --- | --- | --- | --- |
-| PF-001-ENVIRONMENT | passed | [all-profile runtime and fixture artifacts](#artifacts) | main-writable (34401/37273), main-readonly (41589/44267), onboarding-fresh (41775/33549), and degraded (43903/39181) all rendered in named Chromium at 1440×900. Each fixture `/health` rendered `{"status":"ok","fixture":"release-v2-qa"}`; `/` routed to `/auth/login` for the seeded profiles and `/init` for onboarding-fresh without a loop. | Verify candidate identity, Chromium session, runtime health, fixture reachability, and clean console/network baselines. |
-| PF-001-ACCESS | passed | [profile matrix](#profile-matrix) and [onboarding artifacts](#artifacts) | Avery reached the seeded home on main-writable, main-readonly, and degraded. Read-only Edit board/Add board content remained visibly available and no save/mutation was attempted. The fresh slot reached the expected first-board onboarding boundary with no seeded user or QA board and a normal `/auth/login` form; onboarding completion/user creation is outside PF-001 scope. | Verify assigned profiles, personas, boards, permissions, and read-only boundaries before mutations. |
-| PF-001-EVIDENCE | passed | [timestamped screenshots, snapshots, and diagnostics](#artifacts) | All four profiles have rendered screenshot evidence plus console/errors/network metadata at the assigned 1440×900 viewport. The onboarding run includes initial `/init`, explicit `/auth/login`, fixture health, reload, and a second fresh named session; diagnostics were sanitized and contain no secrets. | Capture timestamped viewport/input/zoom evidence and confirm artifacts contain no secrets. |
+| PF-001-ENVIRONMENT | passed | [profile matrix](#profile-matrix) and [fixture artifacts](#artifacts) | All four assigned app/fixture pairs rendered in named Chromium at the required desktop viewport. App entries and fixture health endpoints were reachable; the anonymous root reached `/init` once without a locale loop. | Candidate identity, runtime flags, browser setup, fixture reachability, and a clean app baseline. |
+| PF-001-ACCESS | passed | [profile matrix](#profile-matrix) and [Weather/reload artifacts](#artifacts) | Avery reached seeded home and healthy Weather details on main-writable, main-readonly, and degraded. The anonymous profile reached the expected first-board boundary with no seeded persona or QA board. | Assigned persona, seeded access, onboarding boundary, reload behavior, and read-only boundary. |
+| PF-001-EVIDENCE | passed | [sanitized diagnostics](#console-network-and-artifact-hygiene) and [artifacts](#artifacts) | Screenshots cover home, Weather, reload, away/back, fresh sessions, keyboard search, onboarding controls, read-only boundary, fixture statuses, and degraded recovery. Text evidence contains status/path counts only. | Timestamped viewport/input/zoom evidence with no secrets, bodies, or credential material. |
 
 ## Profile matrix
 
-| Profile | Status | App entry | Fixture health | Persona/access | Reload/session | Visible boundary |
-| --- | --- | --- | --- | --- | --- | --- |
-| main-writable | passed | `/auth/login` → `/` | `{"status":"ok","fixture":"release-v2-qa"}` | `QA v2 · Home · avery-admin` with Edit board, Board settings, and three seeded widgets | passed | Writable affordances visible |
-| main-readonly | passed | `/auth/login` → `/` | `{"status":"ok","fixture":"release-v2-qa"}` | `QA v2 · Home · avery-admin` with three seeded widgets | passed | Edit board/Add board content remained visible; mutation/save boundary not exercised |
-| onboarding-fresh | passed | `/` → `/init`; explicit `/auth/login` stayed on `/auth/login` | `{"status":"ok","fixture":"release-v2-qa"}` | Expected first-board onboarding boundary rendered; no seeded user or QA board was visible, and no seeded persona/home access was assigned | Reload returned `/init`; second named session also returned `/init` | Get started/Restore backup visible; completion/user creation is outside PF-001 and was not attempted |
-| degraded | passed | `/auth/login` → `/` | `{"status":"ok","fixture":"release-v2-qa"}` | `QA v2 · Home · avery-admin` with three rendered widgets | passed | Degraded profile entry and home rendered; no fixture health failure |
+| Profile | App / fixture | Flags | Result | Evidence and boundary |
+| --- | --- | --- | --- | --- |
+| main-writable | `34499 / 37357` | `DEMO_MODE=true`, `DEMO_READ_ONLY=false`, mock integration true | passed | Authenticated `QA v2 · Home · avery-admin`; Weather details rendered `Clear`; reload and Board settings away/back passed; fresh named session and Ctrl+K/Escape passed. |
+| main-readonly | `44129 / 46609` | `DEMO_MODE=true`, `DEMO_READ_ONLY=true`, mock integration true | passed | Authenticated home and Weather rendered; Edit board and Add widget boundary were inspected and dismissed without save or mutation; reload, away/back, fresh session, and Ctrl+K/Escape passed. |
+| onboarding-fresh | `40295 / 33189` | `DEMO_MODE=false`, `DEMO_READ_ONLY=false`, mock integration true | passed | Anonymous `/` → `/init` once and stably; Get started/Restore backup visible; `/auth/login` stable through reload; back returned to `/init`; no seeded user or QA board visible; completion not attempted. |
+| degraded | `44059 / 43513` | `DEMO_MODE=true`, `DEMO_READ_ONLY=false`, mock integration true | passed | Authenticated home and healthy Weather rendered; reload and Board settings away/back passed; fixture health/slow/empty/malformed/error statuses matched expected classes; scoped slow abort was removed and app/fixture recovered; fresh session and Ctrl+K/Escape passed. |
 
 ## Console, network, and artifact hygiene
 
-The browser `errors` captures were empty for all corrected runs, including both onboarding sessions. Console captures contain development HMR/React DevTools information and repeated PostHog initialization warnings, but no uncaught application error. Network metadata shows successful app/auth/home/health responses for the seeded profiles and `/init`, `/auth/login`, `/health`, reload, and new-session responses for onboarding-fresh. Non-blocking dev-only 404s for a Next static chunk/favicon were observed; no redirect loop occurred.
+Clean app and post-recovery diagnostics recorded zero page-error lines and zero console lines. No app 4xx/5xx, static-missing, locale-loop, appdata, or EACCES signal was observed. The degraded fixture’s intentional error endpoint returned 503, empty returned 204, malformed returned 200, and the fixture-only slow abort produced no response status until its route was removed; these are fixture exercise outcomes, not product findings.
 
-No password, cookies, bearer values, request bodies, or unredacted credential-like values were inspected or recorded. The read-only add-widget dialog was opened and cancelled without submitting a widget or changing product state. Onboarding controls were not submitted, so no user or board was created.
+All current-candidate text artifacts were normalized to status/path-classification counts. Fixture response bodies were discarded. No password, cookie, bearer value, token, request header, request/response body, query value, or secret was retained.
 
 ## Performance measurements and limitations
 
-No performance timings were requested for PF-001. Onboarding-fresh was verified at its expected initial `/init` access boundary; completion and user creation are outside PF-001 and were intentionally not attempted. Current authenticated-profile access and all assigned evidence checks were run.
+No performance timings were requested. Visual checks used 1440x900, zoom 100%, with mouse and keyboard input. Onboarding completion and user creation were intentionally not attempted. No product state was changed; the only network interception was a fixture-only slow-path abort that was removed before final app recovery.
 
 ## Findings
 
-No tracked finding remains after the successful retest. The previous `RV2-P1-001` locale/auth redirect-loop finding was removed because it was not reproduced in fresh sessions for main-writable, main-readonly, or degraded, and onboarding-fresh also showed no redirect loop. The successful retest is recorded in the structured notes above.
+No product finding was opened. The observed fixture 503, 204, malformed response, and scoped route-abort behavior were deterministic fixture exercises and the degraded app remained healthy after recovery.
 
 ## Mutations and persistence
 
-No product mutation occurred. Login, fixture navigation, clean reloads, opening/cancelling the read-only add-widget dialog, and exiting edit mode all completed without saving board changes. Avery’s seeded home remained available after reload for all three current authenticated profiles. The onboarding-fresh Get started/Restore backup controls were left untouched; no user or QA board was created.
+No product mutation occurred. Login, fixture status checks, Weather expansion, reloads, away/back navigation, keyboard search open/close, and read-only boundary inspection did not save board changes. The onboarding controls were not submitted. The fixture was not stopped, and the temporary slow route was removed before final app recovery verification.
 
 ## Artifacts
 
-Corrected desktop-1440 evidence is under the [preflight-01 artifact directory](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01). The structured artifact list above is canonical for this report.
+All evidence is under the [preflight-01 artifact directory](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01). All paths below are absolute current-candidate artifacts.
 
-- main-writable: [login screenshot](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-writable-desktop-1440-auth-login.png), [home screenshot](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-writable-desktop-1440-home.png), [reload screenshot](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-writable-desktop-1440-home-reload.png), [fixture health screenshot](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-writable-desktop-1440-fixture-health.png), and paired `-console.txt`, `-errors.txt`, and `-network.txt` diagnostics.
-- main-readonly: [login screenshot](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-readonly-desktop-1440-auth-login.png), [home screenshot](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-readonly-desktop-1440-home.png), [reload screenshot](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-readonly-desktop-1440-home-reload.png), [edit-boundary screenshot](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-readonly-desktop-1440-edit-boundary.png), [add-widget-boundary screenshot](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-readonly-desktop-1440-add-widget-boundary.png), [fixture health screenshot](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-main-readonly-desktop-1440-fixture-health.png), and paired diagnostics for login/home/reload/fixture health.
-- degraded: [login screenshot](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-degraded-desktop-1440-auth-login.png), [home screenshot](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-degraded-desktop-1440-home.png), [reload screenshot](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-degraded-desktop-1440-home-reload.png), [fixture health screenshot](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-degraded-desktop-1440-fixture-health.png), and paired `-console.txt`, `-errors.txt`, and `-network.txt` diagnostics.
-- onboarding-fresh: [initial `/init` screenshot](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-onboarding-desktop-1440-init.png), [explicit login screenshot](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-onboarding-desktop-1440-auth-login.png), [fixture health screenshot](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-onboarding-desktop-1440-fixture-health.png), [reload screenshot](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-onboarding-desktop-1440-init-reload.png), rendered snapshots (`-snapshot.txt`), and sanitized [console](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-onboarding-desktop-1440-console.txt), [errors](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-onboarding-desktop-1440-errors.txt), and [network metadata](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-onboarding-desktop-1440-network.txt).
-- onboarding-fresh new session: [new-session `/init` screenshot](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-onboarding-new-desktop-1440-init.png), rendered [snapshot](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-onboarding-new-desktop-1440-init-snapshot.txt), and sanitized [console](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-onboarding-new-desktop-1440-console.txt), [errors](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-onboarding-new-desktop-1440-errors.txt), and [network metadata](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/rerun-onboarding-new-desktop-1440-network.txt).
+- Main-writable: [home](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-writable-home.png), [Weather](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-writable-weather.png), [reload](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-writable-reload.png), [away/settings](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-writable-away-settings.png), [back home](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-writable-back-home.png), [fresh session](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-writable-fresh.png), [Ctrl+K open](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-writable-search-open.png), [Escape home](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-writable-search-escape.png), [fixture health status](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-writable-fixture-health-status.txt), and [sanitized diagnostics](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-writable-diagnostics.txt).
+- Main-readonly: [home](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-readonly-home.png), [Weather](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-readonly-weather.png), [reload](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-readonly-reload.png), [away/settings](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-readonly-away-settings.png), [back home](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-readonly-back-home.png), [edit boundary](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-readonly-edit-boundary.png), [fresh session](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-readonly-fresh.png), [Ctrl+K open](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-readonly-search-open.png), [Escape home](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-readonly-search-escape.png), [fixture health status](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-readonly-fixture-health-status.txt), and [sanitized diagnostics](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-main-readonly-diagnostics.txt).
+- Onboarding-fresh: [initial /init](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-onboarding-init.png), [Restore expanded](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-onboarding-restore-expanded.png), [/auth/login](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-onboarding-auth-login.png), [/auth/login reload](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-onboarding-auth-login-reload.png), [back /init](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-onboarding-back-init.png), [fresh /init](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-onboarding-fresh.png), [final /init](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-onboarding-final-init.png), [fixture health status](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-onboarding-fixture-health-status.txt), and [sanitized diagnostics](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-onboarding-diagnostics.txt).
+- Degraded app: [home](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-degraded-home.png), [Weather](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-degraded-weather.png), [away/settings](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-degraded-away-settings.png), [back home](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-degraded-back-home.png), [app recovery](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-degraded-recovery.png), [Weather recovery](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-degraded-recovery-weather.png), [fresh session](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-degraded-fresh.png), [Ctrl+K open](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-degraded-search-open.png), [Escape home](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-degraded-search-escape.png), [fixture status-only evidence](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-degraded-fixture-status.txt), and [sanitized diagnostics](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-01/d3e7-degraded-diagnostics.txt).
 
 ## Cleanup
 
-The named sessions `qa-v2-preflight-01-rerun-onboarding-1440` and `qa-v2-preflight-01-rerun-onboarding-new-1440` were closed after capture; earlier seeded-profile rerun sessions were also closed. Existing packet artifacts were preserved. No shared report aggregator or ledger was run.
+All exact named sessions used in this four-profile replay were closed after evidence capture. The artifact directory was preserved. No source, build, test, or shared report aggregator was run.

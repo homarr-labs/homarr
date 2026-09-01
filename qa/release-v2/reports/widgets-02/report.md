@@ -1,348 +1,307 @@
 <!-- release-v2-qa-report
 {
   "packetId": "widgets-02",
-  "status": "blocked",
+  "status": "not-reached",
   "caseStatuses": {
-    "WG-002-RENDER-SIZE": "blocked",
-    "WG-002-STATES-RECOVERY": "blocked",
-    "WG-002-OPTIONS-PERSISTENCE": "blocked",
-    "WG-002-ACCESS-READONLY": "blocked",
-    "WG-002-EVIDENCE": "blocked"
+    "WG-002-RENDER-SIZE": "not-reached",
+    "WG-002-STATES-RECOVERY": "not-reached",
+    "WG-002-OPTIONS-PERSISTENCE": "not-reached",
+    "WG-002-ACCESS-READONLY": "not-reached",
+    "WG-002-EVIDENCE": "not-reached"
   },
   "execution": {
-    "candidateSha": "f57a660088d6777c86aca22977354fa8b810e2be",
-    "url": "http://127.0.0.1:37137",
-    "actualPort": 37137,
-    "runtimeProfile": "main-writable",
-    "runtimeFlags": [
-      "DEMO_MODE=true",
-      "DEMO_READ_ONLY=false",
-      "UNSAFE_ENABLE_MOCK_INTEGRATION=true"
-    ],
-    "persona": "Cora Creator",
-    "sessionId": "qa-v2-widgets-02",
-    "timestamp": "2026-08-31T15:58:22.521Z",
-    "viewport": "mobile-320",
-    "input": "mouse",
-    "zoom": 100
+    "candidateSha": "2d5edf46513b96c8b9f973d4a121b396d688e9bb",
+    "url": null,
+    "actualPort": null,
+    "runtimeProfile": null,
+    "runtimeFlags": [],
+    "persona": null,
+    "sessionId": null,
+    "timestamp": null,
+    "viewport": null,
+    "input": null,
+    "zoom": null
   },
-  "findings": [
-    {
-      "id": "RV2-P1-001",
-      "fingerprint": "release-v2-auth-locale-redirect-loop",
-      "severity": "P1",
-      "area": "routing/authentication",
-      "title": "Locale rewrite causes an infinite browser redirect before the application renders",
-      "summary": "A fresh Chromium session repeatedly requests the same entry route and ends on ERR_TOO_MANY_REDIRECTS, preventing the assigned browser flow.",
-      "caseIds": [
-        "WG-002-RENDER-SIZE",
-        "WG-002-STATES-RECOVERY",
-        "WG-002-OPTIONS-PERSISTENCE",
-        "WG-002-ACCESS-READONLY",
-        "WG-002-EVIDENCE"
-      ],
-      "evidence": [
-        "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/screenshots/redirect-initial-320x568.png",
-        "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/screenshots/redirect-retry-320x568.png",
-        "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/videos/redirect-retry-320x568.webm"
-      ]
-    }
-  ],
-  "artifacts": [
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/screenshots/redirect-initial-320x568.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/screenshots/redirect-retry-320x568.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/videos/redirect-retry-320x568.webm"
-  ],
+  "findings": [],
+  "artifacts": [],
   "widgetChecks": [
     {
       "widgetKind": "app",
       "viewport": "mobile-320",
       "sizeRequirement": "minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "app",
       "viewport": "mobile-375",
       "sizeRequirement": "minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "app",
       "viewport": "boundary-767",
       "sizeRequirement": "minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "app",
       "viewport": "boundary-768",
       "sizeRequirement": "minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "app",
       "viewport": "tablet-1024",
       "sizeRequirement": "minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "app",
       "viewport": "boundary-1279",
       "sizeRequirement": "minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "app",
       "viewport": "desktop-1280",
       "sizeRequirement": "minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "app",
       "viewport": "desktop-1440",
       "sizeRequirement": "minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "app",
       "viewport": "desktop-1920",
       "sizeRequirement": "minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "iframe",
       "viewport": "mobile-320",
       "sizeRequirement": "every width 1-24 × every height 1-6",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "iframe",
       "viewport": "mobile-375",
       "sizeRequirement": "every width 1-24 × every height 1-6",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "iframe",
       "viewport": "boundary-767",
       "sizeRequirement": "every width 1-24 × every height 1-6",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "iframe",
       "viewport": "boundary-768",
       "sizeRequirement": "every width 1-24 × every height 1-6",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "iframe",
       "viewport": "tablet-1024",
       "sizeRequirement": "every width 1-24 × every height 1-6",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "iframe",
       "viewport": "boundary-1279",
       "sizeRequirement": "every width 1-24 × every height 1-6",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "iframe",
       "viewport": "desktop-1280",
       "sizeRequirement": "every width 1-24 × every height 1-6",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "iframe",
       "viewport": "desktop-1440",
       "sizeRequirement": "every width 1-24 × every height 1-6",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "iframe",
       "viewport": "desktop-1920",
       "sizeRequirement": "every width 1-24 × every height 1-6",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "video",
       "viewport": "mobile-320",
       "sizeRequirement": "minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "video",
       "viewport": "mobile-375",
       "sizeRequirement": "minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "video",
       "viewport": "boundary-767",
       "sizeRequirement": "minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "video",
       "viewport": "boundary-768",
       "sizeRequirement": "minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "video",
       "viewport": "tablet-1024",
       "sizeRequirement": "minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "video",
       "viewport": "boundary-1279",
       "sizeRequirement": "minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "video",
       "viewport": "desktop-1280",
       "sizeRequirement": "minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "video",
       "viewport": "desktop-1440",
       "sizeRequirement": "minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "video",
       "viewport": "desktop-1920",
       "sizeRequirement": "minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "minecraftServerStatus",
       "viewport": "mobile-320",
       "sizeRequirement": "minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "minecraftServerStatus",
       "viewport": "mobile-375",
       "sizeRequirement": "minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "minecraftServerStatus",
       "viewport": "boundary-767",
       "sizeRequirement": "minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "minecraftServerStatus",
       "viewport": "boundary-768",
       "sizeRequirement": "minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "minecraftServerStatus",
       "viewport": "tablet-1024",
       "sizeRequirement": "minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "minecraftServerStatus",
       "viewport": "boundary-1279",
       "sizeRequirement": "minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "minecraftServerStatus",
       "viewport": "desktop-1280",
       "sizeRequirement": "minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "minecraftServerStatus",
       "viewport": "desktop-1440",
       "sizeRequirement": "minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "minecraftServerStatus",
       "viewport": "desktop-1920",
       "sizeRequirement": "minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "stockPrice",
       "viewport": "mobile-320",
       "sizeRequirement": "minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "stockPrice",
       "viewport": "mobile-375",
       "sizeRequirement": "minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "stockPrice",
       "viewport": "boundary-767",
       "sizeRequirement": "minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "stockPrice",
       "viewport": "boundary-768",
       "sizeRequirement": "minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "stockPrice",
       "viewport": "tablet-1024",
       "sizeRequirement": "minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "stockPrice",
       "viewport": "boundary-1279",
       "sizeRequirement": "minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "stockPrice",
       "viewport": "desktop-1280",
       "sizeRequirement": "minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "stockPrice",
       "viewport": "desktop-1440",
       "sizeRequirement": "minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds",
-      "status": "blocked"
+      "status": "not-reached"
     },
     {
       "widgetKind": "stockPrice",
       "viewport": "desktop-1920",
       "sizeRequirement": "minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds",
-      "status": "blocked"
+      "status": "not-reached"
     }
   ],
   "performance": {
     "measurements": [],
-    "limitations": [
-      "The application never rendered, so assigned feature, mutation, persistence, permission, viewport, and performance checks were blocked.",
-      "No credentials were submitted and no product state was mutated.",
-      "The finding was retried in a fresh Chromium context; console output was empty while document requests repeated until Chromium stopped the loop."
-    ]
+    "limitations": []
   },
-  "independentReproductions": [
-    {
-      "findingFingerprint": "release-v2-auth-locale-redirect-loop",
-      "agentId": "qa-v2-preflight-01",
-      "outcome": "reproduced",
-      "evidence": [],
-      "notes": "See preflight-01 for an independent Luna Max reproduction."
-    }
-  ],
-  "notes": "Report-only black-box run. No defect was fixed and no secret was recorded."
+  "independentReproductions": [],
+  "notes": "Not executed."
 }
 -->
 
@@ -350,7 +309,7 @@
 
 | Metadata | Value |
 | --- | --- |
-| Status | blocked |
+| Status | not-reached |
 | Wave | widgets |
 | PR refs | #6502, #6555 |
 | Personas | Cora Creator |
@@ -361,110 +320,90 @@
 | Input | mouse, touch, keyboard |
 | Widget kinds | app, iframe, video, minecraftServerStatus, stockPrice |
 | Artifact directory | [/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) |
-| Candidate SHA | f57a660088d6777c86aca22977354fa8b810e2be |
-| URL / actual port | http://127.0.0.1:37137 / 37137 |
-| Runtime profile / flags | main-writable; DEMO_MODE=true, DEMO_READ_ONLY=false, UNSAFE_ENABLE_MOCK_INTEGRATION=true |
-| Executed persona | Cora Creator |
-| Browser session ID | qa-v2-widgets-02 |
-| Timestamp | 2026-08-31T15:58:22.521Z |
-| Executed viewport / input / zoom | mobile-320 / mouse / 100% |
+| Candidate SHA | 2d5edf46513b96c8b9f973d4a121b396d688e9bb |
+| URL / actual port | not-recorded |
+| Runtime profile / flags | not-recorded |
+| Executed persona | not-recorded |
+| Browser session ID | not-recorded |
+| Timestamp | not-recorded |
+| Executed viewport / input / zoom | not-recorded |
 
 ## Dogfood evidence
 
 | Case ID | Status | Evidence | Observed | Expected |
 | --- | --- | --- | --- | --- |
-| WG-002-RENDER-SIZE | blocked | [browser artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | The application entry repeated redirects until Chromium stopped navigation; the assigned flow was not reachable. | Render every assigned widget kind at every assigned viewport and exercise default, minimum, maximum, and compact sizes where supported. |
-| WG-002-STATES-RECOVERY | blocked | [browser artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | The application entry repeated redirects until Chromium stopped navigation; the assigned flow was not reachable. | Verify loading, populated, empty, error, stale, retry, and recovered states for every assigned widget kind. |
-| WG-002-OPTIONS-PERSISTENCE | blocked | [browser artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | The application entry repeated redirects until Chromium stopped navigation; the assigned flow was not reachable. | Mutate meaningful options, save, reload, reset, and confirm each assigned widget kind persists correctly. |
-| WG-002-ACCESS-READONLY | blocked | [browser artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | The application entry repeated redirects until Chromium stopped navigation; the assigned flow was not reachable. | Verify Owner, Editor, Viewer, missing-integration, permission-denied, and global read-only behavior for every assigned widget kind. |
-| WG-002-EVIDENCE | blocked | [browser artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | The application entry repeated redirects until Chromium stopped navigation; the assigned flow was not reachable. | Capture screenshot, console, network, overflow, clipping, focus, and cleanup evidence for every kind and viewport row. |
+| WG-002-RENDER-SIZE | not-reached | [planned screenshot](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/WG-002-RENDER-SIZE.png) | Not executed | Render every assigned widget kind at every assigned viewport and exercise default, minimum, maximum, and compact sizes where supported. |
+| WG-002-STATES-RECOVERY | not-reached | [planned screenshot](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/WG-002-STATES-RECOVERY.png) | Not executed | Verify loading, populated, empty, error, stale, retry, and recovered states for every assigned widget kind. |
+| WG-002-OPTIONS-PERSISTENCE | not-reached | [planned screenshot](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/WG-002-OPTIONS-PERSISTENCE.png) | Not executed | Mutate meaningful options, save, reload, reset, and confirm each assigned widget kind persists correctly. |
+| WG-002-ACCESS-READONLY | not-reached | [planned screenshot](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/WG-002-ACCESS-READONLY.png) | Not executed | Verify Owner, Editor, Viewer, missing-integration, permission-denied, and global read-only behavior for every assigned widget kind. |
+| WG-002-EVIDENCE | not-reached | [planned screenshot](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/WG-002-EVIDENCE.png) | Not executed | Capture screenshot, console, network, overflow, clipping, focus, and cleanup evidence for every kind and viewport row. |
 
 ## Widget kind × viewport checklist
 
 | Widget kind | Viewport | Size | States | Permission/read-only | Options/persistence | Recovery | Evidence | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| app | mobile-320 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| app | mobile-375 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| app | boundary-767 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| app | boundary-768 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| app | tablet-1024 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| app | boundary-1279 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| app | desktop-1280 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| app | desktop-1440 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| app | desktop-1920 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| iframe | mobile-320 | every width 1-24 × every height 1-6 | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| iframe | mobile-375 | every width 1-24 × every height 1-6 | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| iframe | boundary-767 | every width 1-24 × every height 1-6 | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| iframe | boundary-768 | every width 1-24 × every height 1-6 | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| iframe | tablet-1024 | every width 1-24 × every height 1-6 | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| iframe | boundary-1279 | every width 1-24 × every height 1-6 | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| iframe | desktop-1280 | every width 1-24 × every height 1-6 | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| iframe | desktop-1440 | every width 1-24 × every height 1-6 | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| iframe | desktop-1920 | every width 1-24 × every height 1-6 | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| video | mobile-320 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| video | mobile-375 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| video | boundary-767 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| video | boundary-768 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| video | tablet-1024 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| video | boundary-1279 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| video | desktop-1280 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| video | desktop-1440 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| video | desktop-1920 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| minecraftServerStatus | mobile-320 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| minecraftServerStatus | mobile-375 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| minecraftServerStatus | boundary-767 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| minecraftServerStatus | boundary-768 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| minecraftServerStatus | tablet-1024 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| minecraftServerStatus | boundary-1279 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| minecraftServerStatus | desktop-1280 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| minecraftServerStatus | desktop-1440 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| minecraftServerStatus | desktop-1920 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| stockPrice | mobile-320 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| stockPrice | mobile-375 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| stockPrice | boundary-767 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| stockPrice | boundary-768 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| stockPrice | tablet-1024 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| stockPrice | boundary-1279 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| stockPrice | desktop-1280 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| stockPrice | desktop-1440 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
-| stockPrice | desktop-1920 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | blocked before render | blocked before authentication | not reached | redirect retry reproduced | [artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02) | blocked |
+| app | mobile-320 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/app-mobile-320.png) | not-reached |
+| app | mobile-375 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/app-mobile-375.png) | not-reached |
+| app | boundary-767 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/app-boundary-767.png) | not-reached |
+| app | boundary-768 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/app-boundary-768.png) | not-reached |
+| app | tablet-1024 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/app-tablet-1024.png) | not-reached |
+| app | boundary-1279 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/app-boundary-1279.png) | not-reached |
+| app | desktop-1280 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/app-desktop-1280.png) | not-reached |
+| app | desktop-1440 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/app-desktop-1440.png) | not-reached |
+| app | desktop-1920 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/app-desktop-1920.png) | not-reached |
+| iframe | mobile-320 | every width 1-24 × every height 1-6 | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/iframe-mobile-320.png) | not-reached |
+| iframe | mobile-375 | every width 1-24 × every height 1-6 | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/iframe-mobile-375.png) | not-reached |
+| iframe | boundary-767 | every width 1-24 × every height 1-6 | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/iframe-boundary-767.png) | not-reached |
+| iframe | boundary-768 | every width 1-24 × every height 1-6 | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/iframe-boundary-768.png) | not-reached |
+| iframe | tablet-1024 | every width 1-24 × every height 1-6 | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/iframe-tablet-1024.png) | not-reached |
+| iframe | boundary-1279 | every width 1-24 × every height 1-6 | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/iframe-boundary-1279.png) | not-reached |
+| iframe | desktop-1280 | every width 1-24 × every height 1-6 | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/iframe-desktop-1280.png) | not-reached |
+| iframe | desktop-1440 | every width 1-24 × every height 1-6 | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/iframe-desktop-1440.png) | not-reached |
+| iframe | desktop-1920 | every width 1-24 × every height 1-6 | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/iframe-desktop-1920.png) | not-reached |
+| video | mobile-320 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/video-mobile-320.png) | not-reached |
+| video | mobile-375 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/video-mobile-375.png) | not-reached |
+| video | boundary-767 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/video-boundary-767.png) | not-reached |
+| video | boundary-768 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/video-boundary-768.png) | not-reached |
+| video | tablet-1024 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/video-tablet-1024.png) | not-reached |
+| video | boundary-1279 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/video-boundary-1279.png) | not-reached |
+| video | desktop-1280 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/video-desktop-1280.png) | not-reached |
+| video | desktop-1440 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/video-desktop-1440.png) | not-reached |
+| video | desktop-1920 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/video-desktop-1920.png) | not-reached |
+| minecraftServerStatus | mobile-320 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/minecraftServerStatus-mobile-320.png) | not-reached |
+| minecraftServerStatus | mobile-375 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/minecraftServerStatus-mobile-375.png) | not-reached |
+| minecraftServerStatus | boundary-767 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/minecraftServerStatus-boundary-767.png) | not-reached |
+| minecraftServerStatus | boundary-768 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/minecraftServerStatus-boundary-768.png) | not-reached |
+| minecraftServerStatus | tablet-1024 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/minecraftServerStatus-tablet-1024.png) | not-reached |
+| minecraftServerStatus | boundary-1279 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/minecraftServerStatus-boundary-1279.png) | not-reached |
+| minecraftServerStatus | desktop-1280 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/minecraftServerStatus-desktop-1280.png) | not-reached |
+| minecraftServerStatus | desktop-1440 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/minecraftServerStatus-desktop-1440.png) | not-reached |
+| minecraftServerStatus | desktop-1920 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/minecraftServerStatus-desktop-1920.png) | not-reached |
+| stockPrice | mobile-320 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/stockPrice-mobile-320.png) | not-reached |
+| stockPrice | mobile-375 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/stockPrice-mobile-375.png) | not-reached |
+| stockPrice | boundary-767 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/stockPrice-boundary-767.png) | not-reached |
+| stockPrice | boundary-768 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/stockPrice-boundary-768.png) | not-reached |
+| stockPrice | tablet-1024 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/stockPrice-tablet-1024.png) | not-reached |
+| stockPrice | boundary-1279 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/stockPrice-boundary-1279.png) | not-reached |
+| stockPrice | desktop-1280 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/stockPrice-desktop-1280.png) | not-reached |
+| stockPrice | desktop-1440 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/stockPrice-desktop-1440.png) | not-reached |
+| stockPrice | desktop-1920 | minimum / canonical / wide / tall / maximum / overflow / behavior-changing thresholds | loading / populated / empty / error | Owner / Editor / Viewer / read-only | mutate / save / reload / reset | fail / retry / healthy | [planned artifact](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/stockPrice-desktop-1920.png) | not-reached |
 
 ## Performance measurements and limitations
 
-No valid feature timing could be recorded because no application document rendered. Cold/warm, polling, rendering, memory, and recovery measurements remain blocked.
+Record structured measurements in `performance.measurements` with units, thresholds, status, and evidence. Record every environmental or tooling limitation in `performance.limitations`; leave measurements empty instead of inventing a result.
 
 ## Independent reproductions
 
-The common routing failure was independently reproduced by qa-v2-preflight-01; the corresponding tracked packet contains its own browser evidence.
+Record a second agent's result in `independentReproductions` with the finding fingerprint, agent ID, outcome, evidence, and notes. An unattempted reproduction remains `not-reached`.
 
 ## Findings
 
-### RV2-P1-001 — P1: locale rewrite causes an infinite browser redirect
-
-Preconditions: candidate f57a660088d6777c86aca22977354fa8b810e2be, main-writable, mobile-320, 100% zoom, mouse, fresh named Chromium session qa-v2-widgets-02.
-
-1. Launch a fresh Chromium context with the Chromium argument --no-sandbox.
-2. Set the assigned viewport and open http://127.0.0.1:37137 or its authentication entry.
-3. Observe repeated document requests to the same route.
-4. Wait until Chromium displays ERR_TOO_MANY_REDIRECTS or chrome-error://chromewebdata/.
-5. Close the context, retry in a fresh context, and observe the same result.
-
-Expected: the application renders the assigned entry, permitting authentication and the packet flow. Actual: the redirect loop prevents the application from rendering. Reproducibility: reproduced on retry and independently by another Luna Max preflight agent. Console output was empty; network and visual evidence are linked below.
-
-## Artifacts
-
-- [redirect-initial-320x568.png](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/screenshots/redirect-initial-320x568.png)
-- [redirect-retry-320x568.png](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/screenshots/redirect-retry-320x568.png)
-- [redirect-retry-320x568.webm](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/widgets-02/videos/redirect-retry-320x568.webm)
-
-## Mutations and persistence
-
-No credentials were submitted and no product mutation occurred. Reload and fresh-session retries reproduced the routing failure, so application persistence was not reachable.
+No findings recorded. Add structured findings to the metadata block and mirror them here.
 
 ## Blockers and gaps
 
-Every non-evidence case listed as blocked remains untested beyond the routing entry. No blocked cell is treated as passed.
+Not executed.
 
 ## Cleanup
 
-The named browser session was closed by the browser agent. Artifacts remain under the untracked packet directory; no secret values were captured.
+Record created resources, cleanup outcome, console errors, and network failures. Never include secret values.

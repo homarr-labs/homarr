@@ -1,16 +1,16 @@
 <!-- release-v2-qa-report
 {
   "packetId": "preflight-02",
-  "status": "failed",
+  "status": "passed",
   "caseStatuses": {
-    "PF-002-ENVIRONMENT": "failed",
-    "PF-002-ACCESS": "failed",
+    "PF-002-ENVIRONMENT": "passed",
+    "PF-002-ACCESS": "passed",
     "PF-002-EVIDENCE": "passed"
   },
   "execution": {
-    "candidateSha": "f57a660088d6777c86aca22977354fa8b810e2be",
-    "url": "http://127.0.0.1:34401",
-    "actualPort": 34401,
+    "candidateSha": "358d6469cf50ae9513cbce0f9238cd6c03aa4182",
+    "url": "http://127.0.0.1:41597/boards/qa-grid-24",
+    "actualPort": 41597,
     "runtimeProfile": "main-writable",
     "runtimeFlags": [
       "DEMO_MODE=true",
@@ -18,263 +18,199 @@
       "UNSAFE_ENABLE_MOCK_INTEGRATION=true"
     ],
     "persona": "Avery Admin",
-    "sessionId": "p02-rerun-main-avery-r2",
-    "timestamp": "2026-08-31T20:58:30.000Z",
+    "sessionId": "pf02-358d-main-avery",
+    "timestamp": "2026-09-01T12:14:46+02:00",
     "viewport": "desktop-1440",
-    "input": "mouse, keyboard",
+    "input": "mouse",
     "zoom": 100
   },
-  "findings": [
-    {
-      "id": "RV2-P1-001",
-      "fingerprint": "release-v2-readonly-edit-affordance",
-      "severity": "P1",
-      "area": "authorization/read-only",
-      "title": "Main-readonly privileged sessions expose board and item mutation UI",
-      "summary": "Fresh main-readonly Avery and Rowan sessions show Edit board on the private shared board. Avery opened Edit item, Move / resize item, Duplicate item, and Remove item actions; the Edit item dialog had an enabled Save changes control. An unchanged save was submitted and reload retained 24 items; no changed value was submitted.",
-      "caseIds": [
-        "PF-002-ACCESS"
-      ],
-      "evidence": [
-        "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-readonly-step-1-view.png",
-        "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-readonly-step-2-edit-mode.png",
-        "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-readonly-step-3-item-menu.png",
-        "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-readonly-step-4-edit-dialog.png",
-        "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-readonly-avery-grid-edit-menu.png",
-        "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-readonly-avery-edit-dialog.png",
-        "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-rowan-readonly-edit-mode.png"
-      ]
-    },
-    {
-      "id": "RV2-P2-002",
-      "fingerprint": "release-v2-static-chunk-404",
-      "severity": "P2",
-      "area": "runtime/network",
-      "title": "Authenticated readonly page requests a missing Next.js static chunk",
-      "summary": "After clearing and reloading a fresh authenticated readonly session, the browser reported GET /_next/static/chunks/_1wsmiab._.js [Script] 404 while the board still rendered. Request bodies, headers, cookies, tokens, and query strings were not inspected.",
-      "caseIds": [
-        "PF-002-ENVIRONMENT"
-      ],
-      "evidence": [
-        "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-rowan-readonly-network-status.txt"
-      ]
-    },
-    {
-      "id": "RV2-P2-003",
-      "fingerprint": "release-v2-posthog-duplicate-init-warning",
-      "severity": "P2",
-      "area": "runtime/console",
-      "title": "Authenticated pages emit a duplicate PostHog initialization warning",
-      "summary": "Fresh reload baselines for readonly Rowan and main-writable Vivian both emitted the PostHog duplicate-initialization warning. React DevTools and HMR messages were also present; neither session captured a page error.",
-      "caseIds": [
-        "PF-002-ENVIRONMENT"
-      ],
-      "evidence": [
-        "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-rowan-readonly-console.txt",
-        "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-vivian-main-console.txt",
-        "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-rowan-readonly-errors.txt",
-        "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-vivian-main-errors.txt"
-      ]
-    }
-  ],
+  "findings": [],
   "artifacts": [
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-auth-summary.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-avery-main-authenticated-home.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-avery-main-grid-24.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-avery-main-grid-edit.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-avery-main-permissions-public.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-rowan-main-grid-24.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-rowan-main-permissions-public.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-vivian-main-grid-24.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-vivian-main-permissions-public.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-nolan-main-grid-24-denied.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-nolan-main-permissions-public.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-readonly-avery-grid-edit-menu.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-readonly-avery-edit-dialog.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-readonly-avery-permissions-public.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-readonly-step-1-view.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-readonly-step-2-edit-mode.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-readonly-step-3-item-menu.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-readonly-step-4-edit-dialog.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-rowan-readonly-grid-24.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-rowan-readonly-permissions-public.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-rowan-readonly-edit-mode.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-vivian-readonly-grid-24.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-vivian-readonly-permissions-public.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-nolan-readonly-grid-24-denied.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-nolan-readonly-permissions-public.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-rowan-readonly-console.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-rowan-readonly-errors.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-rowan-readonly-network-status.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-vivian-main-console.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-vivian-main-errors.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-vivian-main-network-status.txt"
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-environment-status.txt",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-avery-home.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-avery-private.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-avery-public.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-avery-settings.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-avery-inherited-groups.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-avery-edit-mode.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-avery-item-menu.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-avery-edit-dialog.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-avery-edit-dialog-before.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-avery-mutated-before-save.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-avery-mutated-saved.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-avery-after-save.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-avery-after-reload.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-avery-after-away-back.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-avery-second.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-avery-restored-final.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-avery-restored-reload.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-rowan-private.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-rowan-public.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-vivian-private.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-vivian-public.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-nolan-private.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-nolan-public.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-replay.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-replay-viewport.json",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-replay-assets.json",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-replay-network-status.txt",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-replay-console-status.txt",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-replay-errors-status.txt",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-avery-private.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-avery-public.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-avery-edit-mode.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-avery-item-menu.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-avery-edit-dialog-before.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-avery-sandbox-after-save.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-avery-sandbox-exit.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-avery-sandbox-reload.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-avery-sandbox-away-back.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-avery-second.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-rowan-private.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-rowan-public.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-vivian-private.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-vivian-public.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-nolan-private.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-nolan-public.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-replay.png",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-replay-viewport.json",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-replay-assets.json",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-replay-network-status.txt",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-replay-console-status.txt",
+    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-replay-errors-status.txt"
   ],
   "widgetChecks": [],
   "performance": {
-    "measurements": [],
+    "measurements": [
+      {
+        "name": "writable fresh replay HTTP 200 responses observed",
+        "value": 296,
+        "unit": "responses",
+        "threshold": "no observed 4xx or 5xx statuses; status-only replay aggregate",
+        "status": "passed",
+        "evidence": [
+          "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-replay-network-status.txt"
+        ]
+      },
+      {
+        "name": "readonly fresh replay HTTP 200 responses observed",
+        "value": 146,
+        "unit": "responses",
+        "threshold": "no observed 4xx or 5xx statuses; status-only replay aggregate",
+        "status": "passed",
+        "evidence": [
+          "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-replay-network-status.txt"
+        ]
+      },
+      {
+        "name": "writable fresh replay rendered assets",
+        "value": 14,
+        "unit": "images loaded",
+        "threshold": "all discovered images complete with naturalWidth > 0; zero broken",
+        "status": "passed",
+        "evidence": [
+          "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-replay-assets.json"
+        ]
+      },
+      {
+        "name": "readonly fresh replay rendered assets",
+        "value": 14,
+        "unit": "images loaded",
+        "threshold": "all discovered images complete with naturalWidth > 0; zero broken",
+        "status": "passed",
+        "evidence": [
+          "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-replay-assets.json"
+        ]
+      },
+      {
+        "name": "fixture health responses",
+        "value": 2,
+        "unit": "HTTP 200 health responses",
+        "threshold": "both supplied fixture /health endpoints respond HTTP 200",
+        "status": "passed",
+        "evidence": [
+          "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-environment-status.txt"
+        ]
+      }
+    ],
     "limitations": [
-      "This was a focused black-box preflight rerun; no widget or performance measurement was in scope.",
-      "The readonly guard was exercised without changing a field or submitting a changed board value; reload retained 24 private-board items.",
-      "The interactive video recorder stop hung and produced an unusable zero-byte rerun-readonly-edit-affordance.webm; annotated step screenshots are the relied-upon evidence.",
-      "Main-writable Vivian's fresh reload did not capture a matching _1wsmiab chunk request; the 404 finding is based on the direct readonly Rowan observation."
+      "Network evidence is status/path-class counts only; fresh writable replay had 8 no-status entries and fresh readonly replay had 4 no-status entries; no 4xx or 5xx was observed.",
+      "Each fixture health navigation also requested an incidental favicon returning HTTP 404; the supplied /health endpoint itself returned HTTP 200.",
+      "No response bodies, headers, cookies, request bodies, credentials, or tokens were collected or retained."
     ]
   },
-  "independentReproductions": [
-    {
-      "findingFingerprint": "release-v2-readonly-edit-affordance",
-      "agentId": "p02-rerun-ro-avery",
-      "outcome": "reproduced",
-      "evidence": [
-        "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-readonly-avery-grid-edit-menu.png",
-        "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-readonly-avery-edit-dialog.png"
-      ],
-      "notes": "Rowan readonly independently entered edit mode; no changed value was submitted."
-    },
-    {
-      "findingFingerprint": "release-v2-static-chunk-404",
-      "agentId": "p02-rerun-ro-rowan",
-      "outcome": "observed",
-      "evidence": [
-        "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-rowan-readonly-network-status.txt"
-      ],
-      "notes": "Fresh reload captured the missing static chunk status while the board rendered."
-    }
-  ],
-  "notes": "Report-only black-box rerun for candidate f57a660088d6777c86aca22977354fa8b810e2be. The former stale-port redirect-blocked result is replaced by this run. No secret values were recorded, no changed fixture value was submitted, and the shared report aggregator/ledger was not run."
+  "independentReproductions": [],
+  "notes": "Passed on the assigned candidate SHA 358d6469cf50ae9513cbce0f9238cd6c03aa4182. Fresh named main-writable and main-readonly sessions used all supplied auth profiles at 1440x900, native zoom 100%, with mouse and keyboard. Private/public access, owner/editor/viewer/outsider boundaries, inherited groups, writable marker persistence and restoration, readonly disposable sandbox behavior, reload/away-back/fresh-second-session checks, loaded assets, console, page errors, and status-only network checks were verified. Readonly Save changes updated only the local sandbox; Exit edit mode discarded it and no persistent Save board control was exposed. The writable marker was removed and the original untitled Date and time widget was verified after final reload. No source inspection, automated tests, response-body capture, header capture, cookie capture, request-body capture, or credential/token retention occurred."
 }
 -->
-
-# preflight-02: fixture and persona access
+# preflight-02: Fixture and persona access
 
 | Metadata | Value |
-| --- | --- |
-| Status | failed |
-| Wave | preflight |
-| PR refs | #6545 |
-| Personas | Avery Admin, Rowan Owner, Vivian Viewer, Nolan Outsider |
-| Boards | qa-grid-24, qa-permissions-public |
-| Profiles | main-writable, main-readonly |
-| Chromium viewports | desktop-1440 |
-| Zoom | 100% |
-| Input | mouse, keyboard |
-| Widget kinds | None |
+|---|---|
+| Status | passed |
+| Candidate SHA | 358d6469cf50ae9513cbce0f9238cd6c03aa4182 |
+| Report timestamp | 2026-09-01T12:14:46+02:00 |
 | Artifact directory | [/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02) |
-| Candidate SHA | f57a660088d6777c86aca22977354fa8b810e2be |
-| URL / actual ports | http://127.0.0.1:34401 / 34401; http://127.0.0.1:41589 / 41589 |
-| Runtime profiles / flags | main-writable and main-readonly; DEMO_MODE=true, DEMO_READ_ONLY=false, UNSAFE_ENABLE_MOCK_INTEGRATION=true |
-| Executed personas | Avery Admin, Rowan Owner, Vivian Viewer, Nolan Outsider |
-| Browser session IDs | p02-rerun-main-avery-r2, p02-rerun-main-rowan, p02-rerun-main-vivian, p02-rerun-main-nolan, p02-rerun-ro-avery, p02-rerun-ro-rowan, p02-rerun-ro-vivian, p02-rerun-ro-nolan |
-| Timestamp | 2026-08-31T22:58:30+02:00 |
-| Executed viewport / input / zoom | desktop-1440 / mouse, keyboard / 100% |
+| Main-writable runtime | http://127.0.0.1:41597; DEMO_MODE=true, DEMO_READ_ONLY=false, UNSAFE_ENABLE_MOCK_INTEGRATION=true |
+| Main-readonly runtime | http://127.0.0.1:41951; DEMO_MODE=true, DEMO_READ_ONLY=true, UNSAFE_ENABLE_MOCK_INTEGRATION=true |
+| Fixture endpoints | writable http://127.0.0.1:41915/health; readonly http://127.0.0.1:34381/health |
+| Boards | /boards/qa-grid-24; /boards/qa-permissions-public |
+| Viewport / input / zoom | desktop-1440 (1440x900) / mouse + keyboard / 100% native |
+| Auth profiles | qa-v2-main-358d-{avery,rowan,vivian,nolan}; qa-v2-ro-358d-{avery,rowan,vivian,nolan} |
 
 ## Dogfood evidence
 
 | Case ID | Status | Evidence | Observed | Expected |
-| --- | --- | --- | --- | --- |
-| PF-002-ENVIRONMENT | failed | [runtime artifacts](#artifacts) | Both local profiles rendered the app and assigned boards. The readonly Rowan baseline captured a missing static chunk (404) and both sampled profiles emitted a duplicate PostHog initialization warning; page-error buffers were empty. | Verify candidate identity, Chromium session, runtime health, fixture reachability, and clean console/network baselines. |
-| PF-002-ACCESS | failed | [access matrix](#access-matrix), [readonly steps](#findings) | Authentication and direct board access worked for all personas. Shared-board role boundaries held, but privileged users in main-readonly could enter edit mode and reach enabled item-save UI. | Verify assigned profiles, personas, boards, permissions, and readonly boundaries before mutations. |
-| PF-002-EVIDENCE | passed | [artifacts](#artifacts) | Fresh named Chromium sessions covered both profiles, all four personas, both boards, reload persistence, and a retry of the readonly interactive path. No secret values were recorded. | Capture timestamped viewport/input/zoom evidence and confirm artifacts contain no secrets. |
+|---|---|---|---|---|
+| PF-002-ENVIRONMENT | passed | [environment status](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-environment-status.txt), [writable viewport](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-replay-viewport.json), [readonly viewport](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-replay-viewport.json) | The assigned candidate SHA is recorded exactly; both supplied app roots and both fixture `/health` paths returned HTTP 200; fresh replays reported 1440x900, devicePixelRatio 1, visual scale 1, native zoom 100%, and clean diagnostics. | Candidate/runtime health, fixture health, viewport, and clean browser baseline are valid. |
+| PF-002-ACCESS | passed | [access matrix](#access-matrix), [writable mutation](#writable-mutation-persistence-and-restoration), [readonly guard](#readonly-mutation-guard) | All supplied personas reached assigned boards according to role; private outsider denial and public view-only behavior matched; writable mutation persisted then was restored; readonly mutation remained disposable. | Assigned profile/persona/board permissions and writable/read-only boundaries match the fixture. |
+| PF-002-EVIDENCE | passed | [diagnostics and assets](#environment-assets-and-diagnostics), [artifact list](#artifacts) | All discovered images loaded; fresh replay status aggregates contained no observed 4xx or 5xx; mouse and keyboard Escape were exercised; no secrets were retained. | Evidence is assignment-complete, timestamped, and safe to retain. |
 
 ## Access matrix
 
-Observed UI on the private shared board (`qa-grid-24`) and public board (`qa-permissions-public`):
+`Edit board` present means the expected modify affordance. `Edit board` absent means view-only. In the read-only runtime, `Edit board` opens a disposable sandbox with `Exit edit mode`; it does not provide persistent board writes. `Board not found` is the expected private outsider denial.
 
-| Profile | Persona | Private shared board | Public board |
-| --- | --- | --- | --- |
-| main-writable | Avery Admin | Edit board and Board settings; 24 items | Edit board and Board settings; 2 items |
-| main-writable | Rowan Owner | Edit board and Board settings; 24 items | Edit board and Board settings; 2 items |
-| main-writable | Vivian Viewer | View only; 24 items | View only; 2 items |
-| main-writable | Nolan Outsider | Denied with Board not found | View only; 2 items |
-| main-readonly | Avery Admin | Edit board and item mutation UI; 24 items | Edit board; 2 items |
-| main-readonly | Rowan Owner | Edit board and edit mode; 24 items | Edit board; 2 items |
-| main-readonly | Vivian Viewer | View only; 24 items | View only; 2 items |
-| main-readonly | Nolan Outsider | Denied with Board not found | View only; 2 items |
+| Runtime / profile | Persona / session | Private `/boards/qa-grid-24` | Public `/boards/qa-permissions-public` | Evidence |
+|---|---|---|---|---|
+| main-writable / qa-v2-main-358d-avery | Avery Admin / pf02-358d-main-avery | Access; Edit board present | Access; Edit board present | [private](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-avery-private.png), [public](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-avery-public.png) |
+| main-writable / qa-v2-main-358d-rowan | Rowan Owner / pf02-358d-main-rowan | Access; Edit board present | Access; Edit board present | [private](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-rowan-private.png), [public](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-rowan-public.png) |
+| main-writable / qa-v2-main-358d-vivian | Vivian Viewer / pf02-358d-main-vivian | Access; Edit board absent | Access; Edit board absent | [private](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-vivian-private.png), [public](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-vivian-public.png) |
+| main-writable / qa-v2-main-358d-nolan | Nolan Outsider / pf02-358d-main-nolan | Board not found; Edit board absent | Access; Edit board absent | [private](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-nolan-private.png), [public](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-nolan-public.png) |
+| main-readonly / qa-v2-ro-358d-avery | Avery Admin / pf02-358d-ro-avery | Access; disposable Edit board sandbox | Access; disposable Edit board sandbox | [private](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-avery-private.png), [public](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-avery-public.png) |
+| main-readonly / qa-v2-ro-358d-rowan | Rowan Owner / pf02-358d-ro-rowan | Access; disposable Edit board sandbox | Access; disposable Edit board sandbox | [private](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-rowan-private.png), [public](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-rowan-public.png) |
+| main-readonly / qa-v2-ro-358d-vivian | Vivian Viewer / pf02-358d-ro-vivian | Access; Edit board absent | Access; Edit board absent | [private](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-vivian-private.png), [public](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-vivian-public.png) |
+| main-readonly / qa-v2-ro-358d-nolan | Nolan Outsider / pf02-358d-ro-nolan | Board not found; Edit board absent | Access; Edit board absent | [private](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-nolan-private.png), [public](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-nolan-public.png) |
 
-Public-board behavior is recorded from the browser, not inferred from the fixture manifest. The main-readonly profile did not show Board settings in the privileged public-board views, but it still showed Edit board.
+## Group inheritance and board settings
 
-## Runtime baseline
+As Avery Admin on the writable private board, settings showed `Users 6`, `Groups 0`, and `Inherited groups 2`. The inherited groups were `credentials-admin` and `QA v2 role · avery-admin`, each with Full access. See [settings](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-avery-settings.png) and [inherited groups](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-avery-inherited-groups.png).
 
-- Authentication completed for all eight persona/profile combinations. Avery and Nolan required a hydration retry in their respective sessions; only the non-secret username was re-filled.
-- No page errors were captured in the fresh reload baselines for Rowan readonly or Vivian main-writable.
-- Rowan readonly captured `GET /_next/static/chunks/_1wsmiab._.js [Script] 404` after reload. The matching main-writable Vivian filter captured no request.
-- Rowan readonly and Vivian main-writable both emitted the duplicate PostHog initialization warning. React DevTools and HMR messages were also present as development-runtime messages.
+## Writable mutation, persistence, and restoration
+
+In `pf02-358d-main-avery`, the first Date and time widget received the harmless custom title marker `PF02-358D-MUTATION`. The marker was saved through the writable UI, remained visible after reload, remained visible after navigating to the public board and back, and appeared in the fresh second session `pf02-358d-main-avery-second`. The marker was then removed by disabling Custom Title, the board was saved, and a final reload showed the original untitled Date and time widget restored.
+
+Evidence: [edit dialog](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-avery-edit-dialog.png), [saved marker](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-avery-mutated-saved.png), [after reload](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-avery-after-reload.png), [after away/back](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-avery-after-away-back.png), [second session](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-avery-second.png), [restored final](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-avery-restored-final.png), [restored reload](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-avery-restored-reload.png).
+
+## Readonly mutation guard
+
+In `pf02-358d-ro-avery`, the first widget editor accepted the harmless marker `PF02-358D-RO-SANDBOX` only inside the disposable read-only edit sandbox. Read-only `Save changes` updated local sandbox state, and the runtime exposed `Exit edit mode` rather than a persistent `Save board`. Exiting edit mode discarded the marker. It was absent after reload, private/public away-and-back navigation, and the fresh second session `pf02-358d-ro-avery-second`. The shared fixture therefore remained unchanged.
+
+Evidence: [private access](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-avery-private.png), [edit mode](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-avery-edit-mode.png), [edit dialog](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-avery-edit-dialog-before.png), [sandbox after save](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-avery-sandbox-after-save.png), [after exit](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-avery-sandbox-exit.png), [after reload](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-avery-sandbox-reload.png), [after away/back](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-avery-sandbox-away-back.png), [fresh second session](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-avery-second.png).
+
+## Environment, assets, and diagnostics
+
+The supplied app roots returned HTTP 200. Both supplied fixture `/health` endpoints returned HTTP 200; each health navigation also produced an incidental favicon HTTP 404, which did not affect the health path. The fresh writable replay reported 1440x900, devicePixelRatio 1, visual scale 1, and native zoom 100%; it found 14 images, all 14 complete with zero broken and zero canvases. The fresh readonly replay reported the same viewport and found 14 images, all 14 complete with zero broken and zero canvases. Fresh replay diagnostics recorded `console_messages 0` and `page_errors 0` in both profiles.
+
+Status-only network summaries recorded writable `HTTP 200 x296` plus `no-status x8`, and readonly `HTTP 200 x146` plus `no-status x4`; no 4xx or 5xx was observed. See [writable network](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-replay-network-status.txt), [readonly network](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-replay-network-status.txt), [writable assets](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-replay-assets.json), [readonly assets](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-replay-assets.json), [writable diagnostics](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-main-replay-console-status.txt), and [readonly diagnostics](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/pf02-358d-ro-replay-console-status.txt).
 
 ## Findings
 
-### RV2-P1-001 — P1: main-readonly privileged sessions expose mutation UI
-
-Preconditions: candidate `f57a660088d6777c86aca22977354fa8b810e2be`, main-readonly at `http://127.0.0.1:41589`, desktop-1440, 100% zoom, fresh named sessions.
-
-1. Authenticate as Avery Admin in `p02-rerun-ro-avery` and open `/boards/qa-grid-24`.
-2. Observe `Edit board`, enter edit mode, open an item settings menu, and observe Edit item, Move / resize item, Duplicate item, and Remove item.
-3. Open Edit item and observe the enabled Save changes control.
-4. Submit Save changes without changing a value, leave edit mode, reload, and verify the private board still has 24 items.
-5. Repeat the board/edit-mode path as Rowan Owner in `p02-rerun-ro-rowan`.
-
-Expected: main-readonly prevents board and item mutation affordances and save submission. Actual: Avery and Rowan can enter edit mode; Avery can reach the item mutation menu and enabled save control. The unchanged save did not alter fixture content, so this rerun does not claim a changed-value write. Reproducibility: reproduced across Avery and Rowan readonly sessions.
-
-Evidence: [step 1](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-readonly-step-1-view.png), [step 2](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-readonly-step-2-edit-mode.png), [step 3](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-readonly-step-3-item-menu.png), [step 4](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-readonly-step-4-edit-dialog.png), [Avery menu](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-readonly-avery-grid-edit-menu.png), [Avery dialog](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-readonly-avery-edit-dialog.png), [Rowan edit mode](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-rowan-readonly-edit-mode.png).
-
-### RV2-P2-002 — P2: authenticated readonly page requests a missing static chunk
-
-Preconditions: candidate `f57a660088d6777c86aca22977354fa8b810e2be`, authenticated Rowan readonly session, fresh reload.
-
-After clearing the request log and reloading `qa-grid-24`, the browser reported `GET /_next/static/chunks/_1wsmiab._.js [Script] 404` while the board rendered. Request bodies, headers, cookies, tokens, and query strings were not inspected. The sanitized status capture is [rerun-rowan-readonly-network-status.txt](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-rowan-readonly-network-status.txt).
-
-### RV2-P2-003 — P2: authenticated pages emit duplicate PostHog initialization warning
-
-Fresh reload console baselines for Rowan readonly and Vivian main-writable both emitted `[warning] [PostHog.js] You have already initialized PostHog! Re-initializing is a no-op`. No page errors were captured in either paired errors baseline. See [Rowan console](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-rowan-readonly-console.txt), [Vivian console](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-vivian-main-console.txt), and the corresponding [Rowan errors](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-rowan-readonly-errors.txt) and [Vivian errors](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-vivian-main-errors.txt) captures.
-
-## Persistence and mutation
-
-- Avery main-writable entered edit mode, performed an unchanged Save board action, reloaded, and retained the private-board title and 24 items.
-- Avery main-readonly opened the item edit dialog and submitted Save changes without changing a value; reload retained 24 items. This confirms no changed fixture value was introduced while demonstrating that the readonly save path is enabled.
-- Rowan main-readonly entered and exited edit mode without a mutation.
-- No other mutation was attempted because the packet’s purpose was permission and readonly-guard coverage.
-
-## Limitations and hygiene
-
-- This was a focused black-box browser rerun. No source files, network bodies, response bodies, headers, cookies, tokens, or password values were inspected or recorded.
-- The interactive recorder stop hung and left `rerun-readonly-edit-affordance.webm` at zero bytes; the annotated step screenshots are the relied-upon retry evidence.
-- Main-writable Vivian's matching chunk filter had no request after reload; the 404 finding is based on the direct Rowan readonly observation.
-- No widget or performance measurements were in scope.
-- The shared report aggregator and ledger were not run.
+No reproducible defects found in the assigned PF02 matrix.
 
 ## Artifacts
 
-- [rerun-auth-summary.txt](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-auth-summary.txt)
-- [rerun-avery-main-authenticated-home.png](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-avery-main-authenticated-home.png)
-- [rerun-avery-main-grid-24.png](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-avery-main-grid-24.png)
-- [rerun-avery-main-grid-edit.png](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-avery-main-grid-edit.png)
-- [rerun-avery-main-permissions-public.png](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-avery-main-permissions-public.png)
-- [rerun-rowan-main-grid-24.png](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-rowan-main-grid-24.png)
-- [rerun-rowan-main-permissions-public.png](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-rowan-main-permissions-public.png)
-- [rerun-vivian-main-grid-24.png](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-vivian-main-grid-24.png)
-- [rerun-vivian-main-permissions-public.png](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-vivian-main-permissions-public.png)
-- [rerun-nolan-main-grid-24-denied.png](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-nolan-main-grid-24-denied.png)
-- [rerun-nolan-main-permissions-public.png](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-nolan-main-permissions-public.png)
-- [rerun-readonly-step-1-view.png](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-readonly-step-1-view.png)
-- [rerun-readonly-step-2-edit-mode.png](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-readonly-step-2-edit-mode.png)
-- [rerun-readonly-step-3-item-menu.png](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-readonly-step-3-item-menu.png)
-- [rerun-readonly-step-4-edit-dialog.png](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-readonly-step-4-edit-dialog.png)
-- [rerun-readonly-avery-grid-edit-menu.png](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-readonly-avery-grid-edit-menu.png)
-- [rerun-readonly-avery-edit-dialog.png](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-readonly-avery-edit-dialog.png)
-- [rerun-readonly-avery-permissions-public.png](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-readonly-avery-permissions-public.png)
-- [rerun-rowan-readonly-grid-24.png](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-rowan-readonly-grid-24.png)
-- [rerun-rowan-readonly-edit-mode.png](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-rowan-readonly-edit-mode.png)
-- [rerun-rowan-readonly-permissions-public.png](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-rowan-readonly-permissions-public.png)
-- [rerun-vivian-readonly-grid-24.png](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-vivian-readonly-grid-24.png)
-- [rerun-vivian-readonly-permissions-public.png](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-vivian-readonly-permissions-public.png)
-- [rerun-nolan-readonly-grid-24-denied.png](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-nolan-readonly-grid-24-denied.png)
-- [rerun-nolan-readonly-permissions-public.png](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-nolan-readonly-permissions-public.png)
-- [rerun-rowan-readonly-console.txt](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-rowan-readonly-console.txt)
-- [rerun-rowan-readonly-errors.txt](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-rowan-readonly-errors.txt)
-- [rerun-rowan-readonly-network-status.txt](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-rowan-readonly-network-status.txt)
-- [rerun-vivian-main-console.txt](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-vivian-main-console.txt)
-- [rerun-vivian-main-errors.txt](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-vivian-main-errors.txt)
-- [rerun-vivian-main-network-status.txt](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/rerun-vivian-main-network-status.txt)
+All current evidence is under `/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/preflight-02/` and uses the `pf02-358d-` prefix. Screenshots cover each persona/runtime board boundary, inherited groups, writable mutation and cleanup, read-only sandbox disposal, reload/away-back/second-session checks, and fresh replay baselines. Text/JSON artifacts contain only exact metadata, aggregate status classifications, asset counts, or zero diagnostic counts.
 
 ## Cleanup
 
-All rerun sessions were targeted for closure after evidence capture. The zero-byte recorder artifact was retained as produced; no browser secrets or product fixture values were written to the workspace.
+The writable marker was removed, the board was saved, and final reload showed the original untitled widget. The read-only marker was discarded on exit and remained absent in reload, away/back, and fresh-session checks. All exact named browser sessions were closed after evidence capture; saved auth profiles were used only for the isolated browser sessions and no password value was read or retained. No source inspection, automated tests, response-body capture, header capture, cookie capture, request-body capture, or credential/token retention occurred.

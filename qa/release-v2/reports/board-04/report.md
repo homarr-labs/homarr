@@ -1,77 +1,35 @@
 <!-- release-v2-qa-report
 {
   "packetId": "board-04",
-  "status": "blocked",
+  "status": "not-reached",
   "caseStatuses": {
-    "BD-004-THRESHOLDS": "blocked",
-    "BD-004-MUTATION": "blocked",
-    "BD-004-PERSISTENCE": "blocked",
-    "BD-004-ACCESS-RECOVERY": "blocked"
+    "BD-004-THRESHOLDS": "not-reached",
+    "BD-004-MUTATION": "not-reached",
+    "BD-004-PERSISTENCE": "not-reached",
+    "BD-004-ACCESS-RECOVERY": "not-reached"
   },
   "execution": {
-    "candidateSha": "f57a660088d6777c86aca22977354fa8b810e2be",
-    "url": "http://127.0.0.1:37137",
-    "actualPort": 37137,
-    "runtimeProfile": "main-writable",
-    "runtimeFlags": [
-      "DEMO_MODE=true",
-      "DEMO_READ_ONLY=false",
-      "UNSAFE_ENABLE_MOCK_INTEGRATION=true"
-    ],
-    "persona": "Rowan Owner",
-    "sessionId": "qa-v2-board-04",
-    "timestamp": "2026-08-31T15:37:09.712Z",
-    "viewport": "mobile-320",
-    "input": "mouse",
-    "zoom": 100
+    "candidateSha": "2d5edf46513b96c8b9f973d4a121b396d688e9bb",
+    "url": null,
+    "actualPort": null,
+    "runtimeProfile": null,
+    "runtimeFlags": [],
+    "persona": null,
+    "sessionId": null,
+    "timestamp": null,
+    "viewport": null,
+    "input": null,
+    "zoom": null
   },
-  "findings": [
-    {
-      "id": "RV2-P1-001",
-      "fingerprint": "release-v2-auth-locale-redirect-loop",
-      "severity": "P1",
-      "area": "routing/authentication",
-      "title": "Locale rewrite causes an infinite browser redirect before the application renders",
-      "summary": "A fresh Chromium session repeatedly requests the same entry route and ends on ERR_TOO_MANY_REDIRECTS, preventing the assigned browser flow.",
-      "caseIds": [
-        "BD-004-THRESHOLDS",
-        "BD-004-MUTATION",
-        "BD-004-PERSISTENCE",
-        "BD-004-ACCESS-RECOVERY"
-      ],
-      "evidence": [
-        "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/board-04/BD-004-network-document.txt",
-        "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/board-04/screenshots/BD-004-redirect-result.png",
-        "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/board-04/videos/BD-004-redirect-retry.webm"
-      ]
-    }
-  ],
-  "artifacts": [
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/board-04/BD-004-console.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/board-04/BD-004-errors.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/board-04/BD-004-network-document.txt",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/board-04/screenshots/BD-004-redirect-result.png",
-    "/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/board-04/videos/BD-004-redirect-retry.webm"
-  ],
+  "findings": [],
+  "artifacts": [],
   "widgetChecks": [],
   "performance": {
     "measurements": [],
-    "limitations": [
-      "The application never rendered, so assigned feature, mutation, persistence, permission, viewport, and performance checks were blocked.",
-      "No credentials were submitted and no product state was mutated.",
-      "The finding was retried in a fresh Chromium context; console output was empty while document requests repeated until Chromium stopped the loop."
-    ]
+    "limitations": []
   },
-  "independentReproductions": [
-    {
-      "findingFingerprint": "release-v2-auth-locale-redirect-loop",
-      "agentId": "qa-v2-preflight-01",
-      "outcome": "reproduced",
-      "evidence": [],
-      "notes": "See preflight-01 for an independent Luna Max reproduction."
-    }
-  ],
-  "notes": "Report-only black-box run. No defect was fixed and no secret was recorded."
+  "independentReproductions": [],
+  "notes": "Not executed."
 }
 -->
 
@@ -79,7 +37,7 @@
 
 | Metadata | Value |
 | --- | --- |
-| Status | blocked |
+| Status | not-reached |
 | Wave | board |
 | PR refs | #6503 |
 | Personas | Rowan Owner |
@@ -90,61 +48,39 @@
 | Input | mouse, touch |
 | Widget kinds | None |
 | Artifact directory | [/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/board-04](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/board-04) |
-| Candidate SHA | f57a660088d6777c86aca22977354fa8b810e2be |
-| URL / actual port | http://127.0.0.1:37137 / 37137 |
-| Runtime profile / flags | main-writable; DEMO_MODE=true, DEMO_READ_ONLY=false, UNSAFE_ENABLE_MOCK_INTEGRATION=true |
-| Executed persona | Rowan Owner |
-| Browser session ID | qa-v2-board-04 |
-| Timestamp | 2026-08-31T15:37:09.712Z |
-| Executed viewport / input / zoom | mobile-320 / mouse / 100% |
+| Candidate SHA | 2d5edf46513b96c8b9f973d4a121b396d688e9bb |
+| URL / actual port | not-recorded |
+| Runtime profile / flags | not-recorded |
+| Executed persona | not-recorded |
+| Browser session ID | not-recorded |
+| Timestamp | not-recorded |
+| Executed viewport / input / zoom | not-recorded |
 
 ## Dogfood evidence
 
 | Case ID | Status | Evidence | Observed | Expected |
 | --- | --- | --- | --- | --- |
-| BD-004-THRESHOLDS | blocked | [browser artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/board-04) | The application entry repeated redirects until Chromium stopped navigation; the assigned flow was not reachable. | Exercise every assigned viewport, zoom, and input, including breakpoint and dense-layout stress. |
-| BD-004-MUTATION | blocked | [browser artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/board-04) | The application entry repeated redirects until Chromium stopped navigation; the assigned flow was not reachable. | Exercise create, move, resize, reorder, collapse, and delete paths that apply to this packet. |
-| BD-004-PERSISTENCE | blocked | [browser artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/board-04) | The application entry repeated redirects until Chromium stopped navigation; the assigned flow was not reachable. | Reload, switch layouts or sessions, and verify saved and reset state remains correct. |
-| BD-004-ACCESS-RECOVERY | blocked | [browser artifacts](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/board-04) | The application entry repeated redirects until Chromium stopped navigation; the assigned flow was not reachable. | Verify Owner, Editor, Viewer, outsider, read-only, keyboard, cancellation, error, and recovery behavior that applies. |
+| BD-004-THRESHOLDS | not-reached | [planned screenshot](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/board-04/BD-004-THRESHOLDS.png) | Not executed | Exercise every assigned viewport, zoom, and input, including breakpoint and dense-layout stress. |
+| BD-004-MUTATION | not-reached | [planned screenshot](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/board-04/BD-004-MUTATION.png) | Not executed | Exercise create, move, resize, reorder, collapse, and delete paths that apply to this packet. |
+| BD-004-PERSISTENCE | not-reached | [planned screenshot](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/board-04/BD-004-PERSISTENCE.png) | Not executed | Reload, switch layouts or sessions, and verify saved and reset state remains correct. |
+| BD-004-ACCESS-RECOVERY | not-reached | [planned screenshot](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/board-04/BD-004-ACCESS-RECOVERY.png) | Not executed | Verify Owner, Editor, Viewer, outsider, read-only, keyboard, cancellation, error, and recovery behavior that applies. |
 
 ## Performance measurements and limitations
 
-No valid feature timing could be recorded because no application document rendered. Cold/warm, polling, rendering, memory, and recovery measurements remain blocked.
+Record structured measurements in `performance.measurements` with units, thresholds, status, and evidence. Record every environmental or tooling limitation in `performance.limitations`; leave measurements empty instead of inventing a result.
 
 ## Independent reproductions
 
-The common routing failure was independently reproduced by qa-v2-preflight-01; the corresponding tracked packet contains its own browser evidence.
+Record a second agent's result in `independentReproductions` with the finding fingerprint, agent ID, outcome, evidence, and notes. An unattempted reproduction remains `not-reached`.
 
 ## Findings
 
-### RV2-P1-001 — P1: locale rewrite causes an infinite browser redirect
-
-Preconditions: candidate f57a660088d6777c86aca22977354fa8b810e2be, main-writable, mobile-320, 100% zoom, mouse, fresh named Chromium session qa-v2-board-04.
-
-1. Launch a fresh Chromium context with the Chromium argument --no-sandbox.
-2. Set the assigned viewport and open http://127.0.0.1:37137 or its authentication entry.
-3. Observe repeated document requests to the same route.
-4. Wait until Chromium displays ERR_TOO_MANY_REDIRECTS or chrome-error://chromewebdata/.
-5. Close the context, retry in a fresh context, and observe the same result.
-
-Expected: the application renders the assigned entry, permitting authentication and the packet flow. Actual: the redirect loop prevents the application from rendering. Reproducibility: reproduced on retry and independently by another Luna Max preflight agent. Console output was empty; network and visual evidence are linked below.
-
-## Artifacts
-
-- [BD-004-console.txt](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/board-04/BD-004-console.txt)
-- [BD-004-errors.txt](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/board-04/BD-004-errors.txt)
-- [BD-004-network-document.txt](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/board-04/BD-004-network-document.txt)
-- [BD-004-redirect-result.png](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/board-04/screenshots/BD-004-redirect-result.png)
-- [BD-004-redirect-retry.webm](/home/habs/.codex/worktrees/8ba8/homarr/.screenshots/release-v2/board-04/videos/BD-004-redirect-retry.webm)
-
-## Mutations and persistence
-
-No credentials were submitted and no product mutation occurred. Reload and fresh-session retries reproduced the routing failure, so application persistence was not reachable.
+No findings recorded. Add structured findings to the metadata block and mirror them here.
 
 ## Blockers and gaps
 
-Every non-evidence case listed as blocked remains untested beyond the routing entry. No blocked cell is treated as passed.
+Not executed.
 
 ## Cleanup
 
-The named browser session was closed by the browser agent. Artifacts remain under the untracked packet directory; no secret values were captured.
+Record created resources, cleanup outcome, console errors, and network failures. Never include secret values.
