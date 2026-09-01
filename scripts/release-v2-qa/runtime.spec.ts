@@ -139,7 +139,8 @@ describe("release-v2 QA app execution contract", () => {
     const paths = createCandidateBuildPaths("0123456789abcdef0123456789abcdef01234567");
 
     expect(paths.distDirName).toBe(".next-qa/release-v2-0123456789abcdef0123456789abcdef01234567");
-    expect(paths.serverPath).toBe(`${paths.buildDir}/standalone/apps/nextjs/server.js`);
+    expect(paths.generatedServerPath).toBe(`${paths.buildDir}/standalone/apps/nextjs/server.js`);
+    expect(paths.serverPath).toBe(`${paths.buildDir}/standalone/apps/nextjs/server.cjs`);
     expect(paths.standaloneRoot).toBe(`${paths.buildDir}/standalone`);
     expect(() => createCandidateBuildPaths("not-a-commit")).toThrow(/40-character lowercase commit SHA/u);
   });

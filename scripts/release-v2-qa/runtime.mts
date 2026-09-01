@@ -90,7 +90,8 @@ export const createCandidateBuildPaths = (candidateSha: string) => {
     buildDir,
     standaloneRoot,
     standaloneAppDir,
-    serverPath: path.join(standaloneAppDir, "server.js"),
+    generatedServerPath: path.join(standaloneAppDir, "server.js"),
+    serverPath: path.join(standaloneAppDir, "server.cjs"),
     markerPath: path.join(buildDir, "qa-build-manifest.json"),
   };
 };
@@ -431,6 +432,9 @@ const ensureCandidateBuild = async (runRoot: string, candidateSha: string) => {
     await mkdir(path.dirname(staticTarget), { recursive: true });
     await cp(path.join(buildPaths.buildDir, "static"), staticTarget, { recursive: true, force: true });
     await cp(path.join(buildPaths.appRoot, "public"), publicTarget, { recursive: true, force: true });
+    // The app package is ESM, while Next emits a CommonJS standalone launcher.
+    // Give the generated launcher an explicit CommonJS extension before executing it.
+    await rename(buildPaths.generatedServerPath, buildPaths.serverPath);
     const serverStats = await stat(buildPaths.serverPath);
     if (!serverStats.isFile()) throw new Error(`Standalone server is missing after build: ${buildPaths.serverPath}`);
     await writeJsonAtomic(buildPaths.markerPath, {
