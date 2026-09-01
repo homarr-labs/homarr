@@ -23,6 +23,7 @@ const markerName = ".homarr-release-v2-qa-root.json";
 const runtimeMode = "production-standalone" as const;
 const runtimeBundler = "webpack" as const;
 const candidateBuildHeapLimitMb = 16_384;
+const candidateBuildManifestSchemaVersion = 2;
 const profiles = ["main-writable", "main-readonly", "onboarding-fresh", "degraded"] as const;
 
 type Profile = (typeof profiles)[number];
@@ -84,12 +85,15 @@ export const createCandidateBuildPaths = (candidateSha: string) => {
   const buildDir = path.join(appRoot, distDirName);
   const standaloneRoot = path.join(buildDir, "standalone");
   const standaloneAppDir = path.join(standaloneRoot, "apps/nextjs");
+  const standaloneStaticDir = path.join(standaloneAppDir, distDirName, "static");
   return {
     appRoot,
     distDirName,
     buildDir,
     standaloneRoot,
     standaloneAppDir,
+    standaloneStaticDir,
+    standaloneStaticChunksDir: path.join(standaloneStaticDir, "chunks"),
     generatedServerPath: path.join(standaloneAppDir, "server.js"),
     serverPath: path.join(standaloneAppDir, "server.cjs"),
     markerPath: path.join(buildDir, "qa-build-manifest.json"),
@@ -388,15 +392,17 @@ const candidateBuildIsReady = async (candidateSha: string) => {
       bundler?: string;
     };
     const serverStats = await stat(buildPaths.serverPath);
-    const staticStats = await stat(path.join(buildPaths.standaloneAppDir, ".next/static"));
+    const staticStats = await stat(buildPaths.standaloneStaticDir);
+    const staticChunksStats = await stat(buildPaths.standaloneStaticChunksDir);
     const publicStats = await stat(path.join(buildPaths.standaloneAppDir, "public"));
     return (
-      marker.schemaVersion === 1 &&
+      marker.schemaVersion === candidateBuildManifestSchemaVersion &&
       marker.candidateSha === candidateSha &&
       marker.runtimeMode === runtimeMode &&
       marker.bundler === runtimeBundler &&
       serverStats.isFile() &&
       staticStats.isDirectory() &&
+      staticChunksStats.isDirectory() &&
       publicStats.isDirectory()
     );
   } catch {
@@ -427,18 +433,29 @@ const ensureCandidateBuild = async (runRoot: string, candidateSha: string) => {
       SKIP_ENV_VALIDATION: "true",
     });
 
-    const staticTarget = path.join(buildPaths.standaloneAppDir, ".next/static");
     const publicTarget = path.join(buildPaths.standaloneAppDir, "public");
-    await mkdir(path.dirname(staticTarget), { recursive: true });
-    await cp(path.join(buildPaths.buildDir, "static"), staticTarget, { recursive: true, force: true });
+    await assertSafeContainedPath(
+      buildPaths.standaloneAppDir,
+      buildPaths.standaloneStaticDir,
+      "QA standalone static directory",
+    );
+    await mkdir(path.dirname(buildPaths.standaloneStaticDir), { recursive: true });
+    await cp(path.join(buildPaths.buildDir, "static"), buildPaths.standaloneStaticDir, {
+      recursive: true,
+      force: true,
+    });
     await cp(path.join(buildPaths.appRoot, "public"), publicTarget, { recursive: true, force: true });
     // The app package is ESM, while Next emits a CommonJS standalone launcher.
     // Give the generated launcher an explicit CommonJS extension before executing it.
     await rename(buildPaths.generatedServerPath, buildPaths.serverPath);
     const serverStats = await stat(buildPaths.serverPath);
     if (!serverStats.isFile()) throw new Error(`Standalone server is missing after build: ${buildPaths.serverPath}`);
+    const staticChunksStats = await stat(buildPaths.standaloneStaticChunksDir);
+    if (!staticChunksStats.isDirectory()) {
+      throw new Error(`Standalone static chunks are missing after build: ${buildPaths.standaloneStaticChunksDir}`);
+    }
     await writeJsonAtomic(buildPaths.markerPath, {
-      schemaVersion: 1,
+      schemaVersion: candidateBuildManifestSchemaVersion,
       candidateSha,
       runtimeMode,
       bundler: runtimeBundler,
