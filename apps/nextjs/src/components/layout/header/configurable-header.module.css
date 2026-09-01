@@ -80,7 +80,7 @@
 
 .mobileContent {
   display: none;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: max-content minmax(0, 1fr);
   align-items: center;
   gap: var(--mantine-spacing-xs);
   width: 100%;
@@ -103,8 +103,20 @@
 }
 
 .mobileZone[data-zone="right"] {
-  justify-content: flex-start;
-  max-width: 72vw;
+  justify-content: safe flex-end;
+  width: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: var(--mantine-color-dimmed) transparent;
+}
+
+.mobileZone[data-zone="right"]::-webkit-scrollbar {
+  display: block;
+  height: rem(6px);
+}
+
+.mobileZone[data-zone="right"]::-webkit-scrollbar-thumb {
+  border-radius: var(--mantine-radius-xl);
+  background: var(--mantine-color-dimmed);
 }
 
 .floatingControls {
