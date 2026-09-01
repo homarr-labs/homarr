@@ -1,6 +1,6 @@
-import { mkdir, readFile } from "node:fs/promises";
+import { mkdir, readFile, stat } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 import {
   aggregateQaFindings,
@@ -17,6 +17,7 @@ import {
   writeSafeReportFile,
 } from "./report-path-integrity.mts";
 import { resolveCheckoutCandidateSha } from "./provenance.mts";
+import { createRuntimeExecutionContract } from "./runtime.mts";
 
 type Status = "passed" | "failed" | "blocked" | "not-reached";
 type Severity = "P0" | "P1" | "P2" | "P3";
@@ -105,12 +106,47 @@ interface IndependentReproduction {
   notes: string;
 }
 
+interface PlaceholderRefreshOptions<T> {
+  read: (entry: T) => Promise<string>;
+  isSafePlaceholder: (content: string, entry: T) => boolean;
+  render: (entry: T) => string;
+  write: (entry: T, content: string) => Promise<void>;
+}
+
+interface PlaceholderRefreshCounts {
+  refreshed: number;
+  skipped: number;
+}
+
+interface ReportSnapshot {
+  content: string;
+  mtimeMs: number;
+  size: number;
+}
+
+interface ResolvedBlockerRolloverOptions<T, TSnapshot extends { content: string }> {
+  read: (entry: T) => Promise<TSnapshot>;
+  isEligible: (content: string, entry: T) => boolean;
+  isUnchanged: (entry: T, snapshot: TSnapshot) => Promise<boolean>;
+  render: (entry: T) => string;
+  write: (entry: T, content: string) => Promise<void>;
+}
+
+interface ResolvedBlockerRolloverCounts {
+  reset: number;
+  skipped: number;
+  concurrentlyChanged: number;
+}
+
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const qaRoot = join(repoRoot, "qa/release-v2");
 const reportsRoot = join(qaRoot, "reports");
 const campaignCandidateSha = resolveCheckoutCandidateSha(repoRoot);
-const hostRuntimeLimitation =
-  "The host's fs.inotify.max_user_instances=128 is too low for concurrent native Watchpack watchers. Spawned QA apps keep Turbopack and use 1000ms Watchpack polling; filesystem changes can take up to one polling interval to reach HMR.";
+const runtimeExecutionContract = createRuntimeExecutionContract();
+export const hostRuntimeLimitation =
+  `The host's fs.inotify.max_user_instances=128 is too low for concurrent native Watchpack watchers. ` +
+  `Spawned QA apps use the ${runtimeExecutionContract.bundler} bundler with ${runtimeExecutionContract.watcher.watchpackPollingIntervalMs}ms Watchpack polling; ` +
+  "filesystem changes can take up to one polling interval to reach HMR.";
 const expectedProfileFlags: Record<string, string[]> = {
   "main-writable": ["DEMO_MODE=true", "DEMO_READ_ONLY=false", "UNSAFE_ENABLE_MOCK_INTEGRATION=true"],
   "main-readonly": ["DEMO_MODE=true", "DEMO_READ_ONLY=true", "UNSAFE_ENABLE_MOCK_INTEGRATION=true"],
@@ -139,9 +175,20 @@ const exhaustiveSizeWidgetKinds = new Set([
 const manifest = JSON.parse(await readFile(join(qaRoot, "coverage-manifest.json"), "utf8")) as Manifest;
 const init = process.argv.includes("--init");
 const refresh = process.argv.includes("--refresh-placeholders");
+const rolloverFlag = "--rollover-resolved-blocker";
+const rolloverFlagIndex = process.argv.indexOf(rolloverFlag);
+const rolloverResolvedBlocker = rolloverFlagIndex === -1 ? null : (process.argv[rolloverFlagIndex + 1] ?? null);
+
+if (rolloverFlagIndex !== -1 && (!rolloverResolvedBlocker || rolloverResolvedBlocker.startsWith("--"))) {
+  throw new Error(`${rolloverFlag} requires a finding fingerprint`);
+}
+if ([init, refresh, rolloverResolvedBlocker !== null].filter(Boolean).length > 1) {
+  throw new Error("Use only one of --init, --refresh-placeholders, or --rollover-resolved-blocker");
+}
 
 const escapeCell = (value: string): string => value.replaceAll("|", "\\|").replaceAll("\n", " ");
 const list = (values: (string | number)[]): string => (values.length === 0 ? "None" : values.join(", "));
+const isBlockedOrNotReached = (status: Status): boolean => status === "blocked" || status === "not-reached";
 
 const expandedCases = (packet: Packet): { id: string; expected: string }[] => {
   const dimensions = manifest.caseDimensions[packet.wave] ?? [];
@@ -215,7 +262,7 @@ const renderPacketReportBase = (packet: Packet): string => {
   return `<!-- release-v2-qa-report\n${JSON.stringify(metadata, null, 2)}\n-->\n\n# ${packet.id}: ${packet.title}\n\n| Metadata | Value |\n| --- | --- |\n| Status | not-reached |\n| Wave | ${packet.wave} |\n| PR refs | ${packet.prRefs.map((number) => `#${number}`).join(", ")} |\n| Personas | ${list(packet.personas)} |\n| Boards | ${list(packet.boards)} |\n| Profiles | ${list(packet.profiles)} |\n| Chromium viewports | ${list(packet.viewports)} |\n| Zoom | ${list(packet.zooms.map((zoom) => `${zoom}%`))} |\n| Input | ${list(packet.inputs)} |\n| Widget kinds | ${list(packet.widgetKinds ?? [])} |\n| Artifact directory | [${artifactDirectory}](${artifactDirectory}) |\n| Candidate SHA | not-recorded |\n| URL / actual port | not-recorded |\n| Runtime profile / flags | not-recorded |\n| Executed persona | not-recorded |\n| Browser session ID | not-recorded |\n| Timestamp | not-recorded |\n| Executed viewport / input / zoom | not-recorded |\n\n## Dogfood evidence\n\n| Case ID | Status | Evidence | Observed | Expected |\n| --- | --- | --- | --- | --- |\n${cases}\n${widgetSection}\n## Findings\n\nNo findings recorded. Add structured findings to the metadata block and mirror them here.\n\n## Blockers and gaps\n\nNot executed.\n\n## Cleanup\n\nRecord created resources, cleanup outcome, console errors, and network failures. Never include secret values.\n`;
 };
 
-const renderPacketReport = (packet: Packet): string =>
+export const renderPacketReport = (packet: Packet): string =>
   renderPacketReportBase(packet)
     .replace("| Candidate SHA | not-recorded |", `| Candidate SHA | ${campaignCandidateSha} |`)
     .replace(
@@ -245,6 +292,104 @@ const parseMetadata = (content: string, packet: Packet): { metadata: ReportMetad
     metadata: normalized.metadata as ReportMetadata,
     errors: [...parseErrors, ...normalized.errors],
   };
+};
+
+export const reportMetadataHasEvidence = (metadata: ReportMetadata): boolean => {
+  const execution = metadata.execution;
+  const hasExecutionMetadata =
+    execution.url !== null ||
+    execution.actualPort !== null ||
+    execution.runtimeProfile !== null ||
+    execution.runtimeFlags.length > 0 ||
+    execution.persona !== null ||
+    execution.sessionId !== null ||
+    execution.timestamp !== null ||
+    execution.viewport !== null ||
+    execution.input !== null ||
+    execution.zoom !== null;
+
+  return (
+    metadata.status !== "not-reached" ||
+    Object.values(metadata.caseStatuses).some((status) => status !== "not-reached") ||
+    metadata.widgetChecks.some((check) => check.status !== "not-reached") ||
+    metadata.findings.length > 0 ||
+    metadata.artifacts.length > 0 ||
+    metadata.performance.measurements.length > 0 ||
+    metadata.performance.limitations.length > 0 ||
+    metadata.independentReproductions.length > 0 ||
+    hasExecutionMetadata
+  );
+};
+
+export const reportIsOnlyBlockedBy = (metadata: ReportMetadata, findingFingerprint: string): boolean => {
+  if (!isBlockedOrNotReached(metadata.status)) return false;
+  if (!Object.values(metadata.caseStatuses).every(isBlockedOrNotReached)) return false;
+  if (!metadata.widgetChecks.every((check) => isBlockedOrNotReached(check.status))) return false;
+  if (metadata.performance.measurements.length > 0) return false;
+  if (metadata.findings.length === 0) return false;
+  if (metadata.findings.some((finding) => finding.fingerprint !== findingFingerprint)) return false;
+  if (metadata.independentReproductions.some((reproduction) => reproduction.findingFingerprint !== findingFingerprint))
+    return false;
+  return true;
+};
+
+export const reportContentIsOnlyBlockedBy = (content: string, packet: Packet, findingFingerprint: string): boolean => {
+  const parsed = parseMetadata(content, packet);
+  return parsed.errors.length === 0 && reportIsOnlyBlockedBy(parsed.metadata, findingFingerprint);
+};
+
+export const rolloverResolvedBlockerReports = async <T, TSnapshot extends { content: string }>(
+  entries: T[],
+  options: ResolvedBlockerRolloverOptions<T, TSnapshot>,
+): Promise<ResolvedBlockerRolloverCounts> => {
+  const counts: ResolvedBlockerRolloverCounts = { reset: 0, skipped: 0, concurrentlyChanged: 0 };
+  for (const entry of entries) {
+    let snapshot: TSnapshot;
+    try {
+      snapshot = await options.read(entry);
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+      counts.skipped += 1;
+      continue;
+    }
+
+    if (!options.isEligible(snapshot.content, entry)) {
+      counts.skipped += 1;
+      continue;
+    }
+    if (!(await options.isUnchanged(entry, snapshot))) {
+      counts.concurrentlyChanged += 1;
+      continue;
+    }
+
+    await options.write(entry, options.render(entry));
+    counts.reset += 1;
+  }
+  return counts;
+};
+
+export const refreshPlaceholderReports = async <T,>(
+  entries: T[],
+  options: PlaceholderRefreshOptions<T>,
+): Promise<PlaceholderRefreshCounts> => {
+  const counts: PlaceholderRefreshCounts = { refreshed: 0, skipped: 0 };
+  for (const entry of entries) {
+    let existingContent: string | null = null;
+    try {
+      existingContent = await options.read(entry);
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+    }
+
+    if (existingContent !== null && !options.isSafePlaceholder(existingContent, entry)) {
+      counts.skipped += 1;
+      continue;
+    }
+
+    await options.write(entry, options.render(entry));
+    counts.refreshed += 1;
+  }
+  return counts;
 };
 
 const collectHumanReportErrors = (content: string, packet: Packet, metadata: ReportMetadata): string[] => {
@@ -323,33 +468,72 @@ const collectArtifactErrors = async (packet: Packet, metadata: ReportMetadata): 
 };
 
 const ensureReports = async (): Promise<void> => {
+  if (refresh || rolloverResolvedBlocker) {
+    for (const packet of manifest.packets) {
+      const packetDirectory = join(reportsRoot, packet.id);
+      const reportPath = join(packetDirectory, "report.md");
+      await assertSafeReportPath(qaRoot, reportPath, `${packet.id} report path`);
+      await mkdir(packetDirectory, { recursive: true });
+      await assertSafeReportPath(qaRoot, reportPath, `${packet.id} report path`);
+    }
+  }
+
+  if (rolloverResolvedBlocker) {
+    const reportSnapshot = async (packet: Packet): Promise<ReportSnapshot> => {
+      const reportPath = join(reportsRoot, packet.id, "report.md");
+      const content = await readSafeReportFile(qaRoot, reportPath, `${packet.id} report path`);
+      const metadata = await stat(reportPath);
+      return { content, mtimeMs: metadata.mtimeMs, size: metadata.size };
+    };
+    const counts = await rolloverResolvedBlockerReports(manifest.packets, {
+      read: reportSnapshot,
+      isEligible: (content, packet) => reportContentIsOnlyBlockedBy(content, packet, rolloverResolvedBlocker),
+      isUnchanged: async (packet, snapshot) => {
+        const current = await reportSnapshot(packet);
+        return (
+          current.content === snapshot.content && current.mtimeMs === snapshot.mtimeMs && current.size === snapshot.size
+        );
+      },
+      render: renderPacketReport,
+      write: async (packet, content) => {
+        const reportPath = join(reportsRoot, packet.id, "report.md");
+        await writeSafeReportFile(qaRoot, reportPath, content, `${packet.id} report path`);
+      },
+    });
+    console.log(
+      `release-v2 QA resolved-blocker rollover (${rolloverResolvedBlocker}): ${counts.reset} reset; ${counts.skipped} protected report(s) skipped; ${counts.concurrentlyChanged} concurrently changed report(s) skipped`,
+    );
+    return;
+  }
+
+  if (refresh) {
+    const counts = await refreshPlaceholderReports(manifest.packets, {
+      read: async (packet) => {
+        const reportPath = join(reportsRoot, packet.id, "report.md");
+        return readSafeReportFile(qaRoot, reportPath, `${packet.id} report path`);
+      },
+      isSafePlaceholder: (content, packet) => {
+        const parsed = parseMetadata(content, packet);
+        return parsed.errors.length === 0 && !reportMetadataHasEvidence(parsed.metadata);
+      },
+      render: renderPacketReport,
+      write: async (packet, content) => {
+        const reportPath = join(reportsRoot, packet.id, "report.md");
+        await writeSafeReportFile(qaRoot, reportPath, content, `${packet.id} report path`);
+      },
+    });
+    console.log(
+      `release-v2 QA placeholder refresh: ${counts.refreshed} refreshed; ${counts.skipped} protected report(s) skipped`,
+    );
+    return;
+  }
+
   for (const packet of manifest.packets) {
     const packetDirectory = join(reportsRoot, packet.id);
     const reportPath = join(packetDirectory, "report.md");
     await assertSafeReportPath(qaRoot, reportPath, `${packet.id} report path`);
     await mkdir(packetDirectory, { recursive: true });
     await assertSafeReportPath(qaRoot, reportPath, `${packet.id} report path`);
-    if (refresh) {
-      try {
-        const parsed = parseMetadata(await readSafeReportFile(qaRoot, reportPath, `${packet.id} report path`), packet);
-        if (parsed.errors.length > 0) throw new Error(parsed.errors.join("; "));
-        const existing = parsed.metadata;
-        const hasExecution =
-          existing.status !== "not-reached" ||
-          Object.values(existing.caseStatuses).some((status) => status !== "not-reached") ||
-          existing.findings.length > 0 ||
-          existing.artifacts.length > 0 ||
-          (existing.widgetChecks ?? []).some((check) => check.status !== "not-reached") ||
-          (existing.performance?.measurements.length ?? 0) > 0 ||
-          (existing.performance?.limitations.length ?? 0) > 0 ||
-          (existing.independentReproductions?.length ?? 0) > 0;
-        if (hasExecution) throw new Error(`${packet.id}: refusing to replace a report containing execution results`);
-      } catch (error) {
-        if (!(error instanceof Error) || !error.message.includes("ENOENT")) throw error;
-      }
-      await writeSafeReportFile(qaRoot, reportPath, renderPacketReport(packet), `${packet.id} report path`);
-      continue;
-    }
     try {
       await readSafeReportFile(qaRoot, reportPath, `${packet.id} report path`);
     } catch (error) {
@@ -402,7 +586,7 @@ const coverageTable = (assignments: CoverageAssignment[], labelHeading: string) 
 };
 
 const main = async (): Promise<void> => {
-  if (init || refresh) await ensureReports();
+  if (init || refresh || rolloverResolvedBlocker) await ensureReports();
 
   const reports: { packet: Packet; metadata: ReportMetadata; metadataErrors: string[] }[] = [];
   for (const packet of manifest.packets) {
@@ -627,4 +811,5 @@ const main = async (): Promise<void> => {
   }
 };
 
-await main();
+const entrypoint = process.argv[1] ? pathToFileURL(resolve(process.argv[1])).href : null;
+if (entrypoint === import.meta.url) await main();

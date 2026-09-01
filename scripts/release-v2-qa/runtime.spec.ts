@@ -4,7 +4,14 @@ import { createServer } from "node:net";
 import type { Server } from "node:net";
 import { afterEach, describe, expect, test } from "vitest";
 
-import { assertRuntimeCommandPlatform, launchWithPortRetry, reserveLoopbackPort } from "./runtime.mts";
+import {
+  assertRuntimeCommandPlatform,
+  createAppLaunchCommand,
+  createRuntimeExecutionContract,
+  launchWithPortRetry,
+  reserveLoopbackPort,
+  validateRuntimeExecutionContract,
+} from "./runtime.mts";
 
 const openServers: Server[] = [];
 
@@ -77,5 +84,48 @@ describe("release-v2 QA runtime platform boundary", () => {
 
   test.each(["start", "status", "stop"] as const)("allows %s on Linux", (command) => {
     expect(() => assertRuntimeCommandPlatform(command, "linux")).not.toThrow();
+  });
+});
+
+describe("release-v2 QA app execution contract", () => {
+  test("uses Webpack dev while preserving the Linux file-descriptor wrapper", () => {
+    const launch = createAppLaunchCommand(31_337, { platform: "linux", prlimitAvailable: true });
+    const launchWithoutPrlimit = createAppLaunchCommand(31_337, { platform: "linux", prlimitAvailable: false });
+
+    expect(launch).toEqual({
+      command: "/usr/bin/prlimit",
+      arguments: [
+        "--nofile=65536:1048576",
+        "--",
+        "pnpm",
+        "--filter",
+        "@homarr/nextjs",
+        "dev",
+        "--webpack",
+        "--hostname",
+        "127.0.0.1",
+        "--port",
+        "31337",
+      ],
+    });
+    expect(launchWithoutPrlimit.command).toBe("pnpm");
+    expect(launchWithoutPrlimit.arguments).toContain("--webpack");
+  });
+
+  test("records and validates the deterministic bundler and watcher settings", () => {
+    const execution = createRuntimeExecutionContract();
+
+    expect(execution).toEqual({
+      bundler: "webpack",
+      watcher: { watchpackPollingIntervalMs: 1_000 },
+    });
+    expect(validateRuntimeExecutionContract(execution)).toEqual([]);
+    expect(
+      validateRuntimeExecutionContract({
+        bundler: "turbopack",
+        watcher: { watchpackPollingIntervalMs: 500 },
+      }),
+    ).toEqual(["bundler must be webpack", "Watchpack polling interval must be 1000ms"]);
+    expect(validateRuntimeExecutionContract({ watcher: execution.watcher })).toEqual(["bundler must be webpack"]);
   });
 });

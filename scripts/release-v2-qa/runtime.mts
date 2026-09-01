@@ -20,6 +20,7 @@ const repoRoot = path.resolve(import.meta.dirname, "../..");
 const defaultRunRoot = path.join(tmpdir(), "homarr-release-v2-qa");
 const markerName = ".homarr-release-v2-qa-root.json";
 const watchpackPollingIntervalMs = 1_000;
+const runtimeBundler = "webpack" as const;
 const profiles = ["main-writable", "main-readonly", "onboarding-fresh", "degraded"] as const;
 
 type Profile = (typeof profiles)[number];
@@ -28,6 +29,53 @@ export type RuntimeCommand = "start" | "status" | "stop";
 export const assertRuntimeCommandPlatform = (command: RuntimeCommand, platform: NodeJS.Platform = process.platform) => {
   if (command === "status") return;
   assertSupportedRuntimePlatform(platform);
+};
+
+interface RuntimeExecutionContract {
+  bundler: typeof runtimeBundler;
+  watcher: { watchpackPollingIntervalMs: number };
+}
+
+export const createRuntimeExecutionContract = (): RuntimeExecutionContract => ({
+  bundler: runtimeBundler,
+  watcher: { watchpackPollingIntervalMs },
+});
+
+export const validateRuntimeExecutionContract = (value: {
+  bundler?: unknown;
+  watcher?: { watchpackPollingIntervalMs?: unknown };
+}): string[] => {
+  const contractErrors: string[] = [];
+  if (value.bundler !== runtimeBundler) contractErrors.push("bundler must be webpack");
+  if (value.watcher?.watchpackPollingIntervalMs !== watchpackPollingIntervalMs) {
+    contractErrors.push("Watchpack polling interval must be 1000ms");
+  }
+  return contractErrors;
+};
+
+export const createAppLaunchCommand = (
+  appPort: number,
+  options: { platform?: NodeJS.Platform; prlimitAvailable?: boolean } = {},
+) => {
+  const platform = options.platform ?? process.platform;
+  const prlimitAvailable = options.prlimitAvailable ?? existsSync("/usr/bin/prlimit");
+  const pnpmArguments = [
+    "--filter",
+    "@homarr/nextjs",
+    "dev",
+    "--webpack",
+    "--hostname",
+    "127.0.0.1",
+    "--port",
+    String(appPort),
+  ];
+  if (platform === "linux" && prlimitAvailable) {
+    return {
+      command: "/usr/bin/prlimit",
+      arguments: ["--nofile=65536:1048576", "--", "pnpm", ...pnpmArguments],
+    };
+  }
+  return { command: "pnpm", arguments: pnpmArguments };
 };
 
 interface Options {
@@ -59,6 +107,7 @@ interface RuntimeManifest {
   fixtureUrl: string;
   ports: { app: number; fixture: number; redis: number };
   flags: { demoMode: boolean; demoReadOnly: boolean; unsafeMockIntegration: boolean };
+  bundler: typeof runtimeBundler;
   watcher: { watchpackPollingIntervalMs: number };
   processes: {
     app: { pid: number; logPath: string };
@@ -582,7 +631,6 @@ const startWithLease = async (options: Options) => {
     runForeground("pnpm", ["qa:release-v2:seed", "--", "--profile", options.profile, "--output", slotDir], environment);
     await assertSafeContainedPath(options.runRoot, fixtureManifestPath, "QA fixture manifest");
 
-    let appCommand = "pnpm";
     const appEnvironment = {
       ...sanitizeAppEnvironment(environment),
       WATCHPACK_POLLING: String(watchpackPollingIntervalMs),
@@ -592,18 +640,12 @@ const startWithLease = async (options: Options) => {
       async (attemptPort) => {
         appPort = attemptPort;
         url = `http://127.0.0.1:${appPort}`;
-        let appArguments = ["--filter", "@homarr/nextjs", "dev", "--hostname", "127.0.0.1", "--port", String(appPort)];
-        if (process.platform === "linux" && existsSync("/usr/bin/prlimit")) {
-          appCommand = "/usr/bin/prlimit";
-          appArguments = ["--nofile=65536:1048576", "--", "pnpm", ...appArguments];
-        } else {
-          appCommand = "pnpm";
-        }
+        const appLaunch = createAppLaunchCommand(appPort);
         const logOffset = await stat(appLogPath)
           .then((stats) => stats.size)
           .catch(() => 0);
         await assertSafeContainedPath(options.runRoot, appLogPath, "QA app log");
-        const spawned = spawnLogged(appCommand, appArguments, appLogPath, {
+        const spawned = spawnLogged(appLaunch.command, appLaunch.arguments, appLogPath, {
           ...appEnvironment,
           HOMARR_WEBSITE_URL: url,
         });
@@ -641,7 +683,7 @@ const startWithLease = async (options: Options) => {
       fixtureUrl: fixtureReady.url,
       ports: { app: appPort, fixture: fixtureReady.port, redis: redisPort },
       flags,
-      watcher: { watchpackPollingIntervalMs },
+      ...createRuntimeExecutionContract(),
       processes: {
         app: { pid: appPid, logPath: appLogPath },
         fixture: { pid: fixturePid, logPath: fixtureLogPath },

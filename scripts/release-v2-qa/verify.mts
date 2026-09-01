@@ -9,6 +9,7 @@ import { findFixtureGeometryErrors } from "./geometry.mts";
 import { resolveCheckoutCandidateSha } from "./provenance.mts";
 import { collectHumanWidgetStatusErrors, normalizeReportMetadata } from "./report-integrity.mts";
 import { assertSafeReportPath, readSafeReportFile, validateResolvedArtifactPath } from "./report-path-integrity.mts";
+import { validateRuntimeExecutionContract } from "./runtime.mts";
 
 import { assertSafeRunRoot, isPathWithin, validateFixtureUrl } from "./safety.mts";
 
@@ -117,6 +118,7 @@ interface RuntimeManifest {
   fixtureUrl: string;
   ports: { app: number; fixture: number; redis: number };
   flags: { demoMode: boolean; demoReadOnly: boolean; unsafeMockIntegration: boolean };
+  bundler: string;
   watcher: { watchpackPollingIntervalMs: number };
   processes: {
     app: { pid: number; logPath: string };
@@ -629,8 +631,8 @@ const validateRuntimeManifest = async (
   if (JSON.stringify(runtime.flags) !== JSON.stringify(expectedFlags)) {
     errors.push(`${label}: runtime flags do not match profile ${runtime.profile}`);
   }
-  if (runtime.watcher?.watchpackPollingIntervalMs !== 1_000) {
-    errors.push(`${label}: Watchpack polling interval must be 1000ms`);
+  for (const executionError of validateRuntimeExecutionContract(runtime)) {
+    errors.push(`${label}: ${executionError}`);
   }
   if (resolve(runtime.repoRoot) !== repoRoot) errors.push(`${label}: repoRoot does not match this checkout`);
   try {

@@ -22,7 +22,9 @@ Each populated fixture manifest keeps the human-readable persona label in `perso
 
 Generated placements are validated before the seed transaction commits. Root items and containers must fit the active main/left/right lane after gutters, nested containers must fit their parent content grid without cycles, and every item must fit its selected root or container in every layout. `qa-grid-24` includes a dedicated unguttered 24-column custom layout that preserves exact width coverage `1–24`; its guttered Base layout and all narrower layouts keep lane-valid projected widths.
 
-Use `report -- --init` to create missing agent reports. Use `report -- --refresh-placeholders` only after changing manifest templates; it refuses to overwrite reports with execution results, widget results, measurements, limitations, or reproduction data.
+Use `report -- --init` to create missing agent reports. Use `report -- --refresh-placeholders` after changing manifest templates or rolling the checkout candidate. It refreshes only safe, untouched `not-reached` placeholders, reports refreshed and protected-skip counts, and preserves reports with execution or case results, widget results, findings, artifacts, measurements, limitations, or reproduction data byte-for-byte. Malformed reports are protected skips rather than overwrite candidates.
+
+When a release-blocking defect has been fixed and downstream packets contain no feature result beyond that one blocker, explicitly roll only those reports to fresh `not-reached` templates with `report -- --rollover-resolved-blocker <finding-fingerprint>`. The rollover rejects reports with another finding, passed or failed feature cases or widgets, performance measurements, malformed metadata, or a concurrent content/mtime change. It never scans report directories outside the 45 manifest packets, so independent reproducer reports remain untouched.
 
 ## Managed runtime
 
@@ -44,7 +46,7 @@ The selected app port remains bound by a temporary loopback reservation through 
 
 `--reset` is intentionally narrow: after validating the QA run-root marker, it stops only the selected running manifest, removes only that slot directory, and clears only that slot's `.next-qa` cache. The run root must be a direct child of the canonical operating-system temporary directory returned by Node, its basename must be `homarr-release-v2-qa` or start with `homarr-release-v2-qa-`, and only safe suffix characters are accepted. Temporary-directory aliases are canonicalized before containment checks. Existing run roots and slot paths must not be symlinks or contain symlink components, and destructive paths are rechecked immediately before mutation. The Linux default `/tmp/homarr-release-v2-qa` remains unchanged.
 
-This host's `fs.inotify.max_user_instances=128` is too low for concurrent native Watchpack watchers. Spawned QA apps keep Turbopack and set `WATCHPACK_POLLING=1000`, avoiding reliance on another inotify instance while keeping all three isolated slots available. Filesystem changes can take up to one polling interval to reach HMR. This is Watchpack's watcher mode, not a switch to the Webpack bundler.
+This host's `fs.inotify.max_user_instances=128` is too low for concurrent native Watchpack watchers. Spawned QA apps use Next.js Webpack development mode (`--webpack`) and set `WATCHPACK_POLLING=1000`, avoiding reliance on another inotify instance while keeping all three isolated slots available. Webpack also gives clean browser sessions a deterministic development chunk graph instead of retaining stale Turbopack chunk URLs. Filesystem changes can take up to one polling interval to reach HMR. The runtime manifest records `bundler: "webpack"`, and live verification rejects another bundler. Existing slots must be restarted before they satisfy this contract.
 
 ## Profiles
 
