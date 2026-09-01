@@ -44,6 +44,8 @@
     "lint:fix": "turbo lint --continue -- --fix",
     "lint:ws": "pnpm dlx sherif@latest",
     "qa:browser-agent:ux": "bash scripts/browser-agent/ux-coherence-happy-paths.sh",
+    "qa:release-v2:fixtures": "tsx scripts/release-v2-qa/fixture-server.mts",
+    "qa:release-v2:seed": "tsx scripts/release-v2-qa/seed.mts",
     "release": "semantic-release",
     "scripts:update-bug-report-template": "tsx ./scripts/update-bug-report-template.mts",
     "scripts:update-readme-integrations": "tsx ./scripts/update-integration-list.mts",
