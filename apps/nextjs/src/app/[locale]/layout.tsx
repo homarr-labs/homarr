@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 
 import "@gfazioli/mantine-onboarding-tour/styles.css";
 import "@homarr/notifications/styles.css";
+import "@mantine/lightbox/styles.css";
 import "@homarr/spotlight/styles.css";
 import "@homarr/ui/styles.css";
 import "flag-icons/css/flag-icons.min.css";

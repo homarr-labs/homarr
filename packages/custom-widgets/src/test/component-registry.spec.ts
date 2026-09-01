@@ -6,7 +6,7 @@ import {
   getCustomJsxBindingType,
 } from "../core/component-registry";
 
-const mantineCore941ComponentExports = [
+const mantineCore960ComponentExports = [
   "RemoveScroll",
   "Collapse",
   "ScrollArea",
@@ -25,6 +25,7 @@ const mantineCore941ComponentExports = [
   "Flex",
   "FloatingIndicator",
   "Accordion",
+  "ActionBar",
   "Affix",
   "Alert",
   "Anchor",
@@ -40,6 +41,7 @@ const mantineCore941ComponentExports = [
   "Burger",
   "Button",
   "Card",
+  "Cascader",
   "Center",
   "Checkbox",
   "Chip",
@@ -124,7 +126,7 @@ const mantineCore941ComponentExports = [
   "Typography",
 ] as const;
 
-const mantineCharts941ComponentExports = [
+const mantineCharts960ComponentExports = [
   "ChartTooltip",
   "ChartLegend",
   "AreaChart",
@@ -143,9 +145,16 @@ const mantineCharts941ComponentExports = [
   "BarsList",
   "Treemap",
   "SankeyChart",
+  "BulletChart",
+  "CandlestickChart",
+  "ChartBrush",
+  "GaugeChart",
+  "MatrixChart",
+  "SunburstChart",
+  "WaffleChart",
 ] as const;
 
-const mantineDates941ComponentExports = [
+const mantineDates960ComponentExports = [
   "DatesProvider",
   "HiddenDatesInput",
   "TimeInput",
@@ -195,6 +204,9 @@ describe("customJsxComponentRegistry", () => {
     ["TextInput", "wrapped"],
     ["ModalRoot", "denied"],
     ["AppShellMain", "denied"],
+    ["ActionBar", "denied"],
+    ["ActionBar.Divider", "denied"],
+    ["GaugeChart", "wrapped"],
   ] as const)("classifies %s as %s", (name, safety) => {
     expect(customJsxComponentByName.get(name)?.safety).toBe(safety);
   });
@@ -227,10 +239,10 @@ describe("customJsxComponentRegistry", () => {
   });
 
   test.each([
-    ...mantineCore941ComponentExports,
-    ...mantineCharts941ComponentExports,
-    ...mantineDates941ComponentExports,
-  ])("classifies the Mantine 9.4.1 export %s", (name) => {
+    ...mantineCore960ComponentExports,
+    ...mantineCharts960ComponentExports,
+    ...mantineDates960ComponentExports,
+  ])("classifies the Mantine 9.6.0 export %s", (name) => {
     expect(customJsxComponentByName.has(name), `${name} is not classified`).toBe(true);
   });
 

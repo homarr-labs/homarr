@@ -72,6 +72,7 @@
     "@rexa-developer/tiks": "catalog:",
     "@tabler/icons-react": "catalog:",
     "@tiptap/extension-color": "catalog:",
+    "@tiptap/extension-details": "catalog:",
     "@tiptap/extension-highlight": "catalog:",
     "@tiptap/extension-image": "catalog:",
     "@tiptap/extension-link": "catalog:",

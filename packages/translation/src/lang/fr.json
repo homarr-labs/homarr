@@ -1828,6 +1828,9 @@
         "directionRtl": "",
         "blockquote": "Citation",
         "horizontalLine": "Ligne horizontale",
+        "details": "Afficher ou masquer la section repliable",
+        "expandDetails": "Déplier la section repliable",
+        "collapseDetails": "Replier la section repliable",
         "bulletList": "Liste à puces",
         "orderedList": "Liste numérotée",
         "checkList": "Liste à coche",
@@ -1836,16 +1839,20 @@
         "link": "Lien",
         "unlink": "Supprimer le lien",
         "image": "Intégrer une image",
-        "addTable": "Ajouter un tableau",
+        "insertTable": "Insérer un tableau",
+        "insertTableSize": "Insérer un tableau de {columns} × {rows}",
         "deleteTable": "Supprimer le tableau",
         "colorCell": "Colorer la case",
-        "mergeCell": "Activer/désactiver la fusion des cases",
+        "mergeCells": "Fusionner les cellules",
+        "splitCell": "Scinder la cellule",
         "addColumnLeft": "Ajouter une colonne avant",
         "addColumnRight": "Ajouter une colonne après",
         "deleteColumn": "Supprimer la colonne",
         "addRowTop": "Ajouter une ligne avant",
         "addRowBelow": "Ajouter une ligne après",
-        "deleteRow": "Supprimer la ligne"
+        "deleteRow": "Supprimer la ligne",
+        "toggleHeaderRow": "Activer ou désactiver la ligne d’en-tête",
+        "toggleHeaderColumn": "Activer ou désactiver la colonne d’en-tête"
       },
       "align": {
         "left": "Gauche",
@@ -1856,8 +1863,6 @@
         "clearColor": "Enlever la couleur",
         "source": "Source",
         "widthPlaceholder": "Valeur en % ou en pixels",
-        "columns": "Colonnes",
-        "rows": "Lignes",
         "width": "Largeur",
         "height": "Hauteur"
       },
@@ -2203,6 +2208,12 @@
         "used": "Utilisé ",
         "available": "Disponible",
         "lastSeen": "Dernière mise à jour de statut : {lastSeen}"
+      },
+      "gauge": {
+        "cpuUsage": "Utilisation du processeur",
+        "cpuTemperature": "Température du processeur",
+        "memoryUsage": "Utilisation de la mémoire",
+        "gpuUsage": "Utilisation du GPU {name}"
       },
       "memory": {},
       "error": {

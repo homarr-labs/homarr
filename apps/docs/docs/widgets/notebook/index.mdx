@@ -86,6 +86,10 @@ Puts the current line in a quoting block.
 
 Adds a line that goes from the far right to the far left as a separator.
 
+##### Collapsible section
+
+Wraps the current block in a collapsible section with a summary. Use the same control again while inside the section to remove it. Collapsible sections are saved as part of the notebook content and continue to work in read-only mode.
+
 #### Lists
 
 ##### Bullet lists
@@ -135,11 +139,11 @@ You can provide a value in a plain number or you can also use percents to have y
 
 #### Table
 
-This last control allows you to add a table, for which you can determine the number of columns and row before inserting it.
+The insert-table control opens a grid. Move across the grid to choose the number of columns and rows, then select a cell to insert the table.
 
 ![](./img/notebook-table-modal.webp)
 
-Clicking that button while in a table will delete it.
+Use the delete-table control while the cursor is in a table to remove the entire table.
 
 ##### Table controls
 
@@ -149,13 +153,15 @@ While in a table, further controls will appear to help edit the table.
 
 The first one will color the background of the selected cells.
 
-The second will merge selected cells.
+The remaining controls edit the table structure:
 
-All the following ones are for editing the wize of the table:
+- Add a column before or after the current column
+- Delete the current column
+- Add a row before or after the current row
+- Delete the current row
+- Toggle the first row as a header row
+- Toggle the first column as a header column
+- Merge selected cells
+- Split the current merged cell
 
-- Add column on the right
-- Add column on the left
-- Delete Column
-- Add row on top
-- Add row below
-- Delete Row
+Tables remain resizable by dragging their column boundaries.

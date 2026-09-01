@@ -48,7 +48,13 @@ export const TablePagination = ({ total }: TablePaginationProps) => {
   );
 
   return (
-    <Pagination total={total} getItemProps={getItemProps} getControlProps={getControlProps} onChange={handleChange} />
+    <Pagination
+      total={total}
+      layout="responsive"
+      getItemProps={getItemProps}
+      getControlProps={getControlProps}
+      onChange={handleChange}
+    />
   );
 };
 

@@ -9,7 +9,6 @@ import {
   ColorPicker,
   ColorSwatch,
   Group,
-  NumberInput,
   Popover,
   ScrollArea,
   Stack,
@@ -24,9 +23,6 @@ import { Link, RichTextEditor, useRichTextEditorContext } from "@mantine/tiptap"
 import {
   IconCheck,
   IconCircleOff,
-  IconColumnInsertLeft,
-  IconColumnInsertRight,
-  IconColumnRemove,
   IconDeviceFloppy,
   IconEdit,
   IconHighlight,
@@ -36,16 +32,12 @@ import {
   IconLetterA,
   IconListCheck,
   IconPhoto,
-  IconRowInsertBottom,
-  IconRowInsertTop,
-  IconRowRemove,
-  IconTableOff,
-  IconTablePlus,
   IconTextDirectionLtr,
   IconTextDirectionRtl,
   IconX,
 } from "@tabler/icons-react";
 import { Color } from "@tiptap/extension-color";
+import { Details, DetailsContent, DetailsSummary } from "@tiptap/extension-details";
 import { Highlight } from "@tiptap/extension-highlight";
 import { Image } from "@tiptap/extension-image";
 import { Placeholder } from "@tiptap/extension-placeholder";
@@ -56,14 +48,12 @@ import { TableRow } from "@tiptap/extension-table-row";
 import { TaskList } from "@tiptap/extension-task-list";
 import { TextAlign } from "@tiptap/extension-text-align";
 import { TextStyle } from "@tiptap/extension-text-style";
-import type { Editor } from "@tiptap/react";
 import { useEditor } from "@tiptap/react";
 import { BubbleMenu } from "@tiptap/react/menus";
 import { StarterKit } from "@tiptap/starter-kit";
 
 import { clientApi } from "@homarr/api/client";
 import { useForm } from "@homarr/form";
-import type { TranslationObject } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 import { InlineConfirmActionIcon } from "@homarr/ui";
@@ -164,6 +154,13 @@ export function Notebook({
           placeholder: `${t("placeholder")}…`,
         }),
         Color,
+        Details.configure({
+          renderToggleButton: ({ element, isOpen }) => {
+            element.setAttribute("aria-label", tControls(isOpen ? "collapseDetails" : "expandDetails"));
+          },
+        }),
+        DetailsSummary,
+        DetailsContent,
         Highlight.configure({ multicolor: true }),
         Image.extend({
           addAttributes() {
@@ -347,6 +344,23 @@ export function Notebook({
           isEditing && !isSaving ? getHotkeyHandler([[hotkeys.saveNotebook, () => void handleEditToggle()]]) : undefined
         }
         editor={editor}
+        labels={{
+          detailsControlLabel: tControls("details"),
+          tableInsertControlLabel: tControls("insertTable"),
+          tableInsertLabel: (columns, rows) =>
+            tControls("insertTableSize", { columns: columns.toString(), rows: rows.toString() }),
+          tableDeleteControlLabel: tControls("deleteTable"),
+          tableColumnBeforeControlLabel: tControls("addColumnLeft"),
+          tableColumnAfterControlLabel: tControls("addColumnRight"),
+          tableColumnDeleteControlLabel: tControls("deleteColumn"),
+          tableRowBeforeControlLabel: tControls("addRowTop"),
+          tableRowAfterControlLabel: tControls("addRowBelow"),
+          tableRowDeleteControlLabel: tControls("deleteRow"),
+          tableToggleHeaderRowControlLabel: tControls("toggleHeaderRow"),
+          tableToggleHeaderColumnControlLabel: tControls("toggleHeaderColumn"),
+          tableMergeCellsControlLabel: tControls("mergeCells"),
+          tableSplitCellControlLabel: tControls("splitCell"),
+        }}
         styles={() => ({
           root: {
             backgroundColor: "transparent",
@@ -433,6 +447,7 @@ export function Notebook({
           <RichTextEditor.ControlsGroup className="homarr-notebook-toolbar-group">
             <RichTextEditor.Blockquote title={tControls("blockquote")} />
             <RichTextEditor.Hr title={tControls("horizontalLine")} />
+            <RichTextEditor.Details title={tControls("details")} />
           </RichTextEditor.ControlsGroup>
 
           <RichTextEditor.ControlsGroup className="homarr-notebook-toolbar-group">
@@ -456,18 +471,23 @@ export function Notebook({
           </RichTextEditor.ControlsGroup>
 
           <RichTextEditor.ControlsGroup className="homarr-notebook-toolbar-group">
-            <TableToggle />
-            {editor?.isActive("table") && (
+            {editor?.isActive("table") ? (
               <>
+                <RichTextEditor.TableDelete title={tControls("deleteTable")} />
                 <ColorCellControl />
-                <TableToggleMerge />
-                <TableAddColumnBefore />
-                <TableAddColumnAfter />
-                <TableRemoveColumn />
-                <TableAddRowBefore />
-                <TableAddRowAfter />
-                <TableRemoveRow />
+                <RichTextEditor.TableColumnBefore title={tControls("addColumnLeft")} />
+                <RichTextEditor.TableColumnAfter title={tControls("addColumnRight")} />
+                <RichTextEditor.TableColumnDelete title={tControls("deleteColumn")} />
+                <RichTextEditor.TableRowBefore title={tControls("addRowTop")} />
+                <RichTextEditor.TableRowAfter title={tControls("addRowBelow")} />
+                <RichTextEditor.TableRowDelete title={tControls("deleteRow")} />
+                <RichTextEditor.TableToggleHeaderRow title={tControls("toggleHeaderRow")} />
+                <RichTextEditor.TableToggleHeaderColumn title={tControls("toggleHeaderColumn")} />
+                <RichTextEditor.TableMergeCells title={tControls("mergeCells")} />
+                <RichTextEditor.TableSplitCell title={tControls("splitCell")} />
               </>
+            ) : (
+              <RichTextEditor.TableInsert title={tControls("insertTable")} withHeaderRow={false} />
             )}
           </RichTextEditor.ControlsGroup>
 
@@ -914,176 +934,5 @@ function ListIndentDecrease() {
     >
       <IconIndentDecrease stroke={1.5} size="1rem" />
     </RichTextEditor.Control>
-  );
-}
-
-const handleAddColumnBefore = (editor: Editor) => {
-  editor.commands.addColumnBefore();
-};
-
-const TableAddColumnBefore = () => (
-  <TableControl title="addColumnLeft" onClick={handleAddColumnBefore} icon={IconColumnInsertLeft} />
-);
-
-const handleAddColumnAfter = (editor: Editor) => {
-  editor.commands.addColumnAfter();
-};
-
-const TableAddColumnAfter = () => (
-  <TableControl title="addColumnRight" onClick={handleAddColumnAfter} icon={IconColumnInsertRight} />
-);
-
-const handleRemoveColumn = (editor: Editor) => {
-  editor.commands.deleteColumn();
-};
-
-const TableRemoveColumn = () => (
-  <TableControl title="deleteColumn" onClick={handleRemoveColumn} icon={IconColumnRemove} />
-);
-
-const handleAddRowBefore = (editor: Editor) => {
-  editor.commands.addRowBefore();
-};
-
-const TableAddRowBefore = () => <TableControl title="addRowTop" onClick={handleAddRowBefore} icon={IconRowInsertTop} />;
-
-const handleAddRowAfter = (editor: Editor) => {
-  editor.commands.addRowAfter();
-};
-
-const TableAddRowAfter = () => (
-  <TableControl title="addRowBelow" onClick={handleAddRowAfter} icon={IconRowInsertBottom} />
-);
-
-const handleRemoveRow = (editor: Editor) => {
-  editor.commands.deleteRow();
-};
-
-const TableRemoveRow = () => <TableControl title="deleteRow" onClick={handleRemoveRow} icon={IconRowRemove} />;
-
-interface TableControlProps {
-  title: Exclude<keyof TranslationObject["widget"]["notebook"]["controls"], "align" | "heading">;
-  onClick: (editor: Editor) => void;
-  icon: TablerIcon;
-}
-
-const TableControl = ({ title, onClick, icon: Icon }: TableControlProps) => {
-  const { editor } = useRichTextEditorContext();
-  const tControls = useI18n("widget.notebook.controls");
-  const handleControlClick = useCallback(() => {
-    if (!editor) return;
-    onClick(editor);
-  }, [editor, onClick]);
-
-  return (
-    <RichTextEditor.Control title={tControls(title)} onClick={handleControlClick}>
-      <Icon {...controlIconProps} />
-    </RichTextEditor.Control>
-  );
-};
-
-function TableToggleMerge() {
-  const { editor } = useRichTextEditorContext();
-  const tControls = useI18n("widget.notebook.controls");
-  const handleToggleMerge = useCallback(() => {
-    editor?.commands.mergeOrSplit();
-  }, [editor]);
-
-  return (
-    <RichTextEditor.Control
-      title={tControls("mergeCell")}
-      onClick={handleToggleMerge}
-      active={editor?.getAttributes("tableCell").colspan > 1}
-    >
-      <svg
-        height="1.25rem"
-        width="1.25rem"
-        strokeWidth="0.1"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        {/* No existing icon from tabler, taken from https://icon-sets.iconify.design/fluent/table-cells-merge-24-regular/ */}
-        <path
-          fill="currentColor"
-          d="M15.58 11.25H8.42l.89-1.002a.75.75 0 0 0-1.12-.996l-2 2.25a.75.75 0 0 0 0 .996l2 2.25a.75.75 0 1 0 1.12-.996l-.89-1.002h7.16l-.89 1.002a.75.75 0 0 0 1.12.996l2-2.25l.011-.012a.746.746 0 0 0-.013-.987l-1.997-2.247a.75.75 0 0 0-1.121.996l.89 1.002ZM6.25 3A3.25 3.25 0 0 0 3 6.25v11.5A3.25 3.25 0 0 0 6.25 21h11.5A3.25 3.25 0 0 0 21 17.75V6.25A3.25 3.25 0 0 0 17.75 3H6.25ZM4.5 6.25c0-.966.784-1.75 1.75-1.75h11.5c.966 0 1.75.784 1.75 1.75v.25h-15v-.25ZM4.5 8h15v8h-15V8Zm15 9.5v.25a1.75 1.75 0 0 1-1.75 1.75H6.25a1.75 1.75 0 0 1-1.75-1.75v-.25h15Z"
-        />
-      </svg>
-    </RichTextEditor.Control>
-  );
-}
-
-function TableToggle() {
-  const { editor } = useRichTextEditorContext();
-  const isActive = editor?.isActive("table");
-
-  const { colors, white } = useMantineTheme();
-  const { colorScheme } = useMantineColorScheme();
-
-  const [opened, { open, close, toggle }] = useDisclosure(false);
-  const t = useI18n("widget.notebook");
-  const tCommon = useI18n("common");
-  const tControls = useI18n("widget.notebook.controls");
-  const form = useForm({
-    initialValues: {
-      cols: 3,
-      rows: 3,
-    },
-  });
-
-  const handleOpen = useCallback(() => {
-    form.reset();
-    open();
-  }, [form, open]);
-
-  const handleSubmit = useCallback(
-    (values: { rows: number; cols: number }) => {
-      editor?.commands.insertTable({ ...values, withHeaderRow: false });
-      close();
-    },
-    [editor, close],
-  );
-
-  const handleControlClick = useCallback(() => {
-    if (isActive) {
-      editor?.commands.deleteTable();
-    } else {
-      toggle();
-    }
-  }, [isActive, editor, toggle]);
-
-  return (
-    <Popover
-      opened={opened}
-      onOpen={handleOpen}
-      onClose={close}
-      styles={{
-        dropdown: {
-          backgroundColor: colorScheme === "dark" ? colors.dark[7] : white,
-        },
-      }}
-      trapFocus
-    >
-      <Popover.Target>
-        <RichTextEditor.Control
-          title={tControls(isActive ? "deleteTable" : "addTable")}
-          active={isActive}
-          onClick={handleControlClick}
-        >
-          {isActive ? <IconTableOff stroke={1.5} size="1rem" /> : <IconTablePlus stroke={1.5} size="1rem" />}
-        </RichTextEditor.Control>
-      </Popover.Target>
-      <Popover.Dropdown>
-        <form onSubmit={form.onSubmit(handleSubmit)}>
-          <Stack gap={5}>
-            <NumberInput label={t("popover.columns")} min={1} {...form.getInputProps("cols")} />
-            <NumberInput label={t("popover.rows")} min={1} {...form.getInputProps("rows")} />
-            <Button type="submit" variant="default" mt={10} mb={5}>
-              {tCommon("action.insert")}
-            </Button>
-          </Stack>
-        </form>
-      </Popover.Dropdown>
-    </Popover>
   );
 }

@@ -14,7 +14,7 @@ const exactDeniedComponentReasons = new Map<string, string>([
 
 const deniedComponentFamilies: ReadonlyArray<[RegExp, string]> = [
   [
-    /^(?:AppShell|Drawer|FloatingWindow|Modal|RemoveScroll)/u,
+    /^(?:ActionBar|AppShell|Drawer|FloatingWindow|Modal|RemoveScroll)/u,
     "Escapes or replaces the widget layout, focus, scrolling, or overlay boundary",
   ],
   [
