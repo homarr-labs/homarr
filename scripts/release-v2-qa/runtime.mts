@@ -123,6 +123,7 @@ interface RuntimeManifest {
   runRoot: string;
   slotDir: string;
   dbPath: string;
+  trustedCertificatePath: string;
   fixtureManifestPath: string;
   nextDistDir: string;
   url: string;
@@ -139,6 +140,16 @@ interface RuntimeManifest {
   };
   docker: { redisContainer: string };
 }
+
+export const createSlotTrustedCertificateDirectory = async (runRoot: string, slotDir: string) => {
+  await assertSafeContainedPath(runRoot, slotDir, "QA slot directory");
+  const trustedCertificatePath = path.join(slotDir, "trusted-certificates");
+  await assertSafeContainedPath(slotDir, trustedCertificatePath, "QA trusted certificate directory");
+  await mkdir(trustedCertificatePath, { mode: 0o700 });
+  await assertSafeContainedPath(slotDir, trustedCertificatePath, "QA trusted certificate directory");
+  await chmod(trustedCertificatePath, 0o700);
+  return trustedCertificatePath;
+};
 
 const usage = () => {
   console.log(
@@ -664,6 +675,7 @@ const startWithLease = async (options: Options) => {
   const runId = `release-v2-${candidateSha.slice(0, 8)}-s${options.slot}-${Date.now()}`;
   const redisContainer = `homarr-release-v2-qa-redis-s${options.slot}-${candidateSha.slice(0, 8)}-${Date.now().toString(36)}`;
   const dbPath = path.join(slotDir, "db.sqlite");
+  const trustedCertificatePath = await createSlotTrustedCertificateDirectory(options.runRoot, slotDir);
   const fixtureReadyPath = path.join(slotDir, "fixture-ready.json");
   const fixtureManifestPath = path.join(slotDir, "fixture-manifest.json");
   const fixtureLogPath = path.join(slotDir, "fixture.log");
@@ -725,6 +737,7 @@ const startWithLease = async (options: Options) => {
       AUTH_COOKIE_PREFIX: `homarr_qa_s${options.slot}`,
       DB_DRIVER: "better-sqlite3",
       DB_URL: dbPath,
+      LOCAL_CERTIFICATE_PATH: trustedCertificatePath,
       DEMO_MODE: String(flags.demoMode),
       DEMO_READ_ONLY: String(flags.demoReadOnly),
       UNSAFE_ENABLE_MOCK_INTEGRATION: String(flags.unsafeMockIntegration),
@@ -807,6 +820,7 @@ const startWithLease = async (options: Options) => {
       runRoot: options.runRoot,
       slotDir,
       dbPath,
+      trustedCertificatePath,
       fixtureManifestPath,
       nextDistDir: candidateBuild.buildDir,
       url,

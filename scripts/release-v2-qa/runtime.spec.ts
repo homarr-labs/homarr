@@ -1,7 +1,10 @@
 // @vitest-environment node
 
+import { mkdtemp, mkdir, rm, stat } from "node:fs/promises";
 import { createServer } from "node:net";
 import type { Server } from "node:net";
+import { tmpdir } from "node:os";
+import path from "node:path";
 import { afterEach, describe, expect, test } from "vitest";
 
 import {
@@ -9,12 +12,14 @@ import {
   createAppLaunchCommand,
   createCandidateBuildPaths,
   createRuntimeExecutionContract,
+  createSlotTrustedCertificateDirectory,
   launchWithPortRetry,
   reserveLoopbackPort,
   validateRuntimeExecutionContract,
 } from "./runtime.mts";
 
 const openServers: Server[] = [];
+const temporaryDirectories: string[] = [];
 
 const listen = async (server: Server, port: number) =>
   await new Promise<void>((resolve, reject) => {
@@ -36,6 +41,31 @@ afterEach(async () => {
       if (server.listening) await close(server);
     }),
   );
+  await Promise.all(temporaryDirectories.splice(0).map(async (directory) => await rm(directory, { recursive: true })));
+});
+
+describe("release-v2 QA slot storage", () => {
+  test("creates a restrictive slot-local trusted certificate directory", async () => {
+    const runRoot = await mkdtemp(path.join(tmpdir(), "homarr-release-v2-qa-runtime-spec-"));
+    temporaryDirectories.push(runRoot);
+    const slotDir = path.join(runRoot, "slots", "1");
+    await mkdir(slotDir, { recursive: true, mode: 0o700 });
+
+    const trustedCertificatePath = await createSlotTrustedCertificateDirectory(runRoot, slotDir);
+    const directoryStats = await stat(trustedCertificatePath);
+
+    expect(trustedCertificatePath).toBe(path.join(slotDir, "trusted-certificates"));
+    expect(directoryStats.isDirectory()).toBe(true);
+    expect(directoryStats.mode & 0o777).toBe(0o700);
+  });
+
+  test("refuses a trusted certificate directory outside the approved run root", async () => {
+    const runRoot = await mkdtemp(path.join(tmpdir(), "homarr-release-v2-qa-runtime-spec-"));
+    const outsideRoot = await mkdtemp(path.join(tmpdir(), "homarr-release-v2-qa-runtime-outside-"));
+    temporaryDirectories.push(runRoot, outsideRoot);
+
+    await expect(createSlotTrustedCertificateDirectory(runRoot, outsideRoot)).rejects.toThrow(/escapes/u);
+  });
 });
 
 describe("release-v2 QA runtime port startup", () => {

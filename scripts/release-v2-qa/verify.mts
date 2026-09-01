@@ -112,6 +112,7 @@ interface RuntimeManifest {
   runRoot: string;
   slotDir: string;
   dbPath: string;
+  trustedCertificatePath: string;
   fixtureManifestPath: string;
   nextDistDir: string;
   url: string;
@@ -646,6 +647,7 @@ const validateRuntimeManifest = async (
   const expectedSlotDir = join(runtime.runRoot, "slots", String(runtime.slot));
   const expectedManifestPath = join(expectedSlotDir, "runtime-manifest.json");
   const expectedDbPath = join(expectedSlotDir, "db.sqlite");
+  const expectedTrustedCertificatePath = join(expectedSlotDir, "trusted-certificates");
   const expectedFixtureManifestPath = join(expectedSlotDir, "fixture-manifest.json");
   const expectedBuild = createCandidateBuildPaths(campaignCandidateSha);
   if (resolve(runtime.slotDir) !== resolve(expectedSlotDir))
@@ -653,6 +655,9 @@ const validateRuntimeManifest = async (
   if (resolve(manifestPath) !== resolve(expectedManifestPath))
     errors.push(`${label}: runtime manifest is outside the selected slot`);
   if (resolve(runtime.dbPath) !== resolve(expectedDbPath)) errors.push(`${label}: dbPath is outside the selected slot`);
+  if (resolve(runtime.trustedCertificatePath ?? "") !== resolve(expectedTrustedCertificatePath)) {
+    errors.push(`${label}: trusted certificate path is outside the selected slot`);
+  }
   if (resolve(runtime.fixtureManifestPath) !== resolve(expectedFixtureManifestPath)) {
     errors.push(`${label}: fixture manifest path is outside the selected slot`);
   }
@@ -675,8 +680,11 @@ const validateRuntimeManifest = async (
       errors.push(`${label}: runRoot must not be a symlink`);
     if ((await realpath(runtime.slotDir)) !== resolve(runtime.slotDir))
       errors.push(`${label}: slotDir must not be a symlink`);
+    if ((await realpath(runtime.trustedCertificatePath)) !== resolve(runtime.trustedCertificatePath)) {
+      errors.push(`${label}: trusted certificate path must exist inside the selected slot and must not be a symlink`);
+    }
   } catch {
-    errors.push(`${label}: runRoot or slotDir is missing`);
+    errors.push(`${label}: runRoot, slotDir, or trusted certificate path is missing`);
   }
 
   let appUrl: URL | undefined;
