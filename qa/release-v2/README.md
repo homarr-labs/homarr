@@ -80,7 +80,7 @@ Screenshots and traces stay untracked under `.screenshots/release-v2/<agent-id>/
 
 The decision is `GO` only when there are no P0/P1 findings and no critical gaps; otherwise it is `NO-GO`. The report command itself treats missing, null, malformed, wrong-candidate, incomplete, assignment-inconsistent, or case-rollup-inconsistent metadata as an explicit critical metadata gap. It does not depend on a separate verification run to force `NO-GO`.
 
-Aggregation refuses symlinked packet reports, `ledger.json`, and `master-report.md`. Artifact and evidence paths must exist, be absolute, and ultimately resolve inside the assigned `.screenshots/release-v2/<agent-id>/` directory; a lexically contained symlink that resolves outside is rejected.
+Aggregation refuses symlinked packet reports, `ledger.json`, and `master-report.md`. Primary report artifacts plus finding and performance evidence must be existing regular files under the packet's assigned `.screenshots/release-v2/<agent-id>/` directory. Independent reproduction evidence may use an existing regular file from any agent directory under the canonical `.screenshots/release-v2/` root. Every artifact path must be absolute and symlink-free; paths that escape the applicable root are rejected.
 
 ## Native browser zoom
 

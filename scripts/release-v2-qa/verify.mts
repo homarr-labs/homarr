@@ -18,7 +18,12 @@ import type {
 } from "./permissions.mts";
 import { resolveCheckoutCandidateSha } from "./provenance.mts";
 import { collectHumanWidgetStatusErrors, normalizeReportMetadata } from "./report-integrity.mts";
-import { assertSafeReportPath, readSafeReportFile, validateResolvedArtifactPath } from "./report-path-integrity.mts";
+import {
+  assertSafeReportPath,
+  readSafeReportFile,
+  validateResolvedArtifactPath,
+  validateResolvedReproductionEvidencePath,
+} from "./report-path-integrity.mts";
 import { createCandidateBuildPaths, validateRuntimeExecutionContract } from "./runtime.mts";
 
 import { assertSafeRunRoot, isPathWithin, validateFixtureUrl } from "./safety.mts";
@@ -1152,8 +1157,8 @@ const main = async (): Promise<void> => {
           errors.push(`${packet.id}: independent reproduction has invalid outcome`);
         }
         for (const evidence of reproduction.evidence ?? []) {
-          const artifactError = await validateResolvedArtifactPath(
-            resolve(repoRoot, ".screenshots/release-v2", packet.id),
+          const artifactError = await validateResolvedReproductionEvidencePath(
+            resolve(repoRoot, ".screenshots/release-v2"),
             evidence,
             `${packet.id}: reproduction evidence`,
           );

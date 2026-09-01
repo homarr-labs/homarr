@@ -670,6 +670,48 @@ const packPositions = (itemDefinitions: ItemDefinition[], board: BoardDefinition
   });
 };
 
+const denseCollisionPlacementGeometry = (columnCount: number) => {
+  if (columnCount < 3) throw new Error("The dense collision fixture requires at least three columns");
+  if (columnCount === 3) {
+    return [
+      { xOffset: 0, yOffset: 0, width: 1, height: 2 },
+      { xOffset: 1, yOffset: 0, width: 2, height: 1 },
+      { xOffset: 1, yOffset: 1, width: 1, height: 1 },
+      { xOffset: 0, yOffset: 2, width: 2, height: 1 },
+      { xOffset: 2, yOffset: 2, width: 1, height: 2 },
+      { xOffset: 0, yOffset: 3, width: 1, height: 1 },
+      { xOffset: 0, yOffset: 4, width: 3, height: 1 },
+      { xOffset: 0, yOffset: 5, width: 1, height: 2 },
+      { xOffset: 1, yOffset: 5, width: 1, height: 1 },
+      { xOffset: 2, yOffset: 5, width: 1, height: 2 },
+      { xOffset: 1, yOffset: 6, width: 1, height: 1 },
+      { xOffset: 0, yOffset: 7, width: 2, height: 2 },
+    ];
+  }
+
+  const laneBoundary = (lane: number) => Math.floor((columnCount * lane) / 4);
+  const fromLanes = (startLane: number, endLane: number, yOffset: number, height: number) => ({
+    xOffset: laneBoundary(startLane),
+    yOffset,
+    width: laneBoundary(endLane) - laneBoundary(startLane),
+    height,
+  });
+  return [
+    fromLanes(0, 1, 0, 2),
+    fromLanes(1, 3, 0, 1),
+    fromLanes(3, 4, 0, 2),
+    fromLanes(1, 2, 1, 1),
+    fromLanes(0, 2, 2, 1),
+    fromLanes(2, 3, 2, 2),
+    fromLanes(3, 4, 2, 1),
+    fromLanes(0, 1, 3, 2),
+    fromLanes(1, 2, 3, 1),
+    fromLanes(3, 4, 3, 2),
+    fromLanes(1, 3, 4, 1),
+    fromLanes(0, 3, 5, 2),
+  ];
+};
+
 const itemForKind = (
   boardHandle: string,
   handle: string,
@@ -1062,22 +1104,23 @@ const seedBoardsAsync = async (optionsByKind: Map<WidgetKind, string>) => {
     }
     if (board.handle === "dense-collisions") {
       positionRows.push(
-        ...boardLayouts(board).flatMap((layout) =>
-          boardItems.map((item, index) => {
-            const columnCount = mainLaneColumnCount(layout);
-            const width = Math.min(columnCount, 2 + (index % 3));
+        ...boardLayouts(board).flatMap((layout) => {
+          const placements = denseCollisionPlacementGeometry(mainLaneColumnCount(layout));
+          if (placements.length !== boardItems.length) {
+            throw new Error(`Dense collision placement count does not match the item count in layout ${layout.handle}`);
+          }
+          return boardItems.map((item, index) => {
+            const placement = placements.at(index);
+            if (!placement) throw new Error(`Missing dense collision placement ${index + 1}`);
             return {
               boardHandle: board.handle,
               itemHandle: item.handle,
               layoutHandle: layout.handle,
               sectionHandle: "root",
-              xOffset: Math.min(index % 3, columnCount - width),
-              yOffset: index % 2,
-              width,
-              height: 2 + (index % 2),
+              ...placement,
             };
-          }),
-        ),
+          });
+        }),
       );
     } else {
       positionRows.push(...packPositions(boardItems, board));

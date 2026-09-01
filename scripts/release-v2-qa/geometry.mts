@@ -52,11 +52,31 @@ const placementIsValid = (placement: GeometryPlacement) =>
   placement.width >= 1 &&
   placement.height >= 1;
 
+const placementsOverlap = (first: GeometryPlacement, second: GeometryPlacement) =>
+  first.xOffset < second.xOffset + second.width &&
+  second.xOffset < first.xOffset + first.width &&
+  first.yOffset < second.yOffset + second.height &&
+  second.yOffset < first.yOffset + first.height;
+
+const compareItemLayouts = (first: GeometryItemLayout, second: GeometryItemLayout) => {
+  if (first.itemId < second.itemId) return -1;
+  if (first.itemId > second.itemId) return 1;
+  return 0;
+};
+
 export const findFixtureGeometryErrors = (geometry: FixtureGeometry) => {
   const errors: string[] = [];
   const layoutsById = new Map(geometry.layouts.map((layout) => [layout.id, layout]));
   const sectionsById = new Map(geometry.sections.map((section) => [section.id, section]));
   const sectionLayoutsByKey = new Map<string, GeometrySectionLayout>();
+  const itemsByDomain = new Map<string, GeometryItemLayout[]>();
+
+  const addItemLayout = (itemLayout: GeometryItemLayout) => {
+    const key = `${itemLayout.layoutId}\0${itemLayout.sectionId}`;
+    const itemLayouts = itemsByDomain.get(key) ?? [];
+    itemLayouts.push(itemLayout);
+    itemsByDomain.set(key, itemLayouts);
+  };
 
   for (const sectionLayout of geometry.sectionLayouts) {
     const key = `${sectionLayout.layoutId}\0${sectionLayout.sectionId}`;
@@ -145,6 +165,26 @@ export const findFixtureGeometryErrors = (geometry: FixtureGeometry) => {
       errors.push(
         `item ${itemLayout.itemId} in layout ${layout.id} exceeds its ${capacity.columns}-column parent ${capacity.kind}`,
       );
+      continue;
+    }
+    addItemLayout(itemLayout);
+  }
+
+  const sortedDomains = [...itemsByDomain.entries()].toSorted(([first], [second]) => {
+    if (first < second) return -1;
+    if (first > second) return 1;
+    return 0;
+  });
+  for (const [domain, itemLayouts] of sortedDomains) {
+    const separatorIndex = domain.indexOf("\0");
+    const layoutId = domain.slice(0, separatorIndex);
+    const sectionId = domain.slice(separatorIndex + 1);
+    const sortedItemLayouts = itemLayouts.toSorted(compareItemLayouts);
+    for (const [index, first] of sortedItemLayouts.entries()) {
+      for (const second of sortedItemLayouts.slice(index + 1)) {
+        if (!placementsOverlap(first, second)) continue;
+        errors.push(`item ${first.itemId} overlaps item ${second.itemId} in layout ${layoutId} section ${sectionId}`);
+      }
     }
   }
 

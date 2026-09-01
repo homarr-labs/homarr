@@ -66,6 +66,149 @@ const baseGeometry = (): FixtureGeometry => ({
 });
 
 describe("release-v2 QA fixture geometry", () => {
+  test("rejects exact duplicate item placements in the same section", () => {
+    const geometry = baseGeometry();
+    geometry.itemLayouts.push({
+      itemId: "duplicate-item",
+      boardId: "board",
+      sectionId: "level-3",
+      layoutId: "layout-mobile",
+      xOffset: 0,
+      yOffset: 0,
+      width: 1,
+      height: 2,
+    });
+
+    expect(findFixtureGeometryErrors(geometry)).toContain(
+      "item duplicate-item overlaps item nested-item in layout layout-mobile section level-3",
+    );
+  });
+
+  test("rejects partial item overlaps in the same section", () => {
+    const geometry = baseGeometry();
+    geometry.sections = [{ id: "root", boardId: "board", kind: "empty", xOffset: 0 }];
+    geometry.sectionLayouts = [];
+    geometry.itemLayouts = [
+      {
+        itemId: "first-item",
+        boardId: "board",
+        sectionId: "root",
+        layoutId: "layout-mobile",
+        xOffset: 0,
+        yOffset: 0,
+        width: 2,
+        height: 2,
+      },
+      {
+        itemId: "second-item",
+        boardId: "board",
+        sectionId: "root",
+        layoutId: "layout-mobile",
+        xOffset: 1,
+        yOffset: 1,
+        width: 2,
+        height: 2,
+      },
+    ];
+
+    expect(findFixtureGeometryErrors(geometry)).toContain(
+      "item first-item overlaps item second-item in layout layout-mobile section root",
+    );
+  });
+
+  test("accepts tightly packed items that only share edges", () => {
+    const geometry = baseGeometry();
+    geometry.sections = [{ id: "root", boardId: "board", kind: "empty", xOffset: 0 }];
+    geometry.sectionLayouts = [];
+    geometry.itemLayouts = [
+      {
+        itemId: "top-left",
+        boardId: "board",
+        sectionId: "root",
+        layoutId: "layout-mobile",
+        xOffset: 0,
+        yOffset: 0,
+        width: 1,
+        height: 2,
+      },
+      {
+        itemId: "top-right",
+        boardId: "board",
+        sectionId: "root",
+        layoutId: "layout-mobile",
+        xOffset: 1,
+        yOffset: 0,
+        width: 2,
+        height: 2,
+      },
+      {
+        itemId: "bottom",
+        boardId: "board",
+        sectionId: "root",
+        layoutId: "layout-mobile",
+        xOffset: 0,
+        yOffset: 2,
+        width: 3,
+        height: 1,
+      },
+    ];
+
+    expect(findFixtureGeometryErrors(geometry)).toEqual([]);
+  });
+
+  test("does not compare local coordinates from different parent sections", () => {
+    const geometry = baseGeometry();
+    geometry.sections = [
+      { id: "root", boardId: "board", kind: "empty", xOffset: 0 },
+      { id: "left-container", boardId: "board", kind: "container", xOffset: null },
+      { id: "right-container", boardId: "board", kind: "container", xOffset: null },
+    ];
+    geometry.sectionLayouts = [
+      {
+        sectionId: "left-container",
+        layoutId: "layout-mobile",
+        parentSectionId: "root",
+        xOffset: 0,
+        yOffset: 0,
+        width: 1,
+        height: 2,
+      },
+      {
+        sectionId: "right-container",
+        layoutId: "layout-mobile",
+        parentSectionId: "root",
+        xOffset: 1,
+        yOffset: 0,
+        width: 2,
+        height: 2,
+      },
+    ];
+    geometry.itemLayouts = [
+      {
+        itemId: "left-item",
+        boardId: "board",
+        sectionId: "left-container",
+        layoutId: "layout-mobile",
+        xOffset: 0,
+        yOffset: 0,
+        width: 1,
+        height: 1,
+      },
+      {
+        itemId: "right-item",
+        boardId: "board",
+        sectionId: "right-container",
+        layoutId: "layout-mobile",
+        xOffset: 0,
+        yOffset: 0,
+        width: 1,
+        height: 1,
+      },
+    ];
+
+    expect(findFixtureGeometryErrors(geometry)).toEqual([]);
+  });
+
   test("rejects an item that fits total columns but overflows the gutter-reduced main lane", () => {
     const geometry = baseGeometry();
     geometry.layouts[0] = {

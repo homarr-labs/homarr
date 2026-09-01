@@ -14,6 +14,7 @@ import {
   assertSafeReportPath,
   readSafeReportFile,
   validateResolvedArtifactPath,
+  validateResolvedReproductionEvidencePath,
   writeSafeReportFile,
 } from "./report-path-integrity.mts";
 import { resolveCheckoutCandidateSha } from "./provenance.mts";
@@ -436,8 +437,9 @@ const collectHumanReportErrors = (content: string, packet: Packet, metadata: Rep
 };
 
 const collectArtifactErrors = async (packet: Packet, metadata: ReportMetadata): Promise<string[]> => {
-  const packetArtifactDirectory = resolve(repoRoot, ".screenshots/release-v2", packet.id);
-  const artifacts = [
+  const releaseArtifactDirectory = resolve(repoRoot, ".screenshots/release-v2");
+  const packetArtifactDirectory = resolve(releaseArtifactDirectory, packet.id);
+  const packetArtifacts = [
     ...metadata.artifacts.map((artifact) => ({ artifact, label: `${packet.id}: artifact` })),
     ...metadata.findings.flatMap((finding, findingIndex) =>
       (finding.evidence ?? []).map((artifact) => ({
@@ -451,18 +453,22 @@ const collectArtifactErrors = async (packet: Packet, metadata: ReportMetadata): 
         label: `${packet.id}: performance.measurements[${measurementIndex}] evidence`,
       })),
     ),
-    ...metadata.independentReproductions.flatMap((reproduction, reproductionIndex) =>
-      reproduction.evidence.map((artifact) => ({
-        artifact,
-        label: `${packet.id}: independentReproductions[${reproductionIndex}] evidence`,
-      })),
-    ),
   ];
 
   const errors: string[] = [];
-  for (const { artifact, label } of artifacts) {
+  for (const { artifact, label } of packetArtifacts) {
     const error = await validateResolvedArtifactPath(packetArtifactDirectory, artifact, label);
     if (error) errors.push(error);
+  }
+  for (const [reproductionIndex, reproduction] of metadata.independentReproductions.entries()) {
+    for (const artifact of reproduction.evidence) {
+      const error = await validateResolvedReproductionEvidencePath(
+        releaseArtifactDirectory,
+        artifact,
+        `${packet.id}: independentReproductions[${reproductionIndex}] evidence`,
+      );
+      if (error) errors.push(error);
+    }
   }
   return errors;
 };

@@ -35,23 +35,39 @@ export const writeSafeReportFile = async (
   }
 };
 
-export const validateResolvedArtifactPath = async (
-  expectedPacketDirectory: string,
+interface ArtifactDirectoryMessages {
+  absolutePathRequirement: string;
+  directoryName: string;
+}
+
+const packetArtifactDirectoryMessages: ArtifactDirectoryMessages = {
+  absolutePathRequirement: "the packet's absolute artifact directory",
+  directoryName: "packet artifact directory",
+};
+
+const reproductionArtifactDirectoryMessages: ArtifactDirectoryMessages = {
+  absolutePathRequirement: "the absolute release-v2 artifact directory",
+  directoryName: "release-v2 artifact directory",
+};
+
+const validateResolvedArtifactPathWithin = async (
+  expectedDirectory: string,
   artifactPath: string,
   label: string,
+  messages: ArtifactDirectoryMessages,
 ): Promise<string | null> => {
-  if (!path.isAbsolute(artifactPath) || !isPathWithin(expectedPacketDirectory, artifactPath)) {
-    return `${label} must use the packet's absolute artifact directory`;
+  if (!path.isAbsolute(artifactPath) || !isPathWithin(expectedDirectory, artifactPath)) {
+    return `${label} must use ${messages.absolutePathRequirement}`;
   }
 
-  let resolvedPacketDirectory: string;
+  let resolvedExpectedDirectory: string;
   try {
-    resolvedPacketDirectory = await realpath(expectedPacketDirectory);
+    resolvedExpectedDirectory = await realpath(expectedDirectory);
   } catch (error) {
-    return `${label} packet artifact directory does not resolve (${errorCode(error) ?? "unknown error"})`;
+    return `${label} ${messages.directoryName} does not resolve (${errorCode(error) ?? "unknown error"})`;
   }
-  if (resolvedPacketDirectory !== path.resolve(expectedPacketDirectory)) {
-    return `${label} packet artifact directory must not contain symlinks`;
+  if (resolvedExpectedDirectory !== path.resolve(expectedDirectory)) {
+    return `${label} ${messages.directoryName} must not contain symlinks`;
   }
 
   let resolvedArtifact: string;
@@ -60,11 +76,11 @@ export const validateResolvedArtifactPath = async (
   } catch (error) {
     return `${label} does not resolve (${errorCode(error) ?? "unknown error"})`;
   }
-  if (!isPathWithin(resolvedPacketDirectory, resolvedArtifact)) {
-    return `${label} resolves outside the packet artifact directory`;
+  if (!isPathWithin(resolvedExpectedDirectory, resolvedArtifact)) {
+    return `${label} resolves outside the ${messages.directoryName}`;
   }
   try {
-    await assertSafeContainedPath(resolvedPacketDirectory, artifactPath, label);
+    await assertSafeContainedPath(resolvedExpectedDirectory, artifactPath, label);
     const artifactStats = await lstat(artifactPath);
     if (!artifactStats.isFile()) return `${label} must resolve to an existing regular file`;
   } catch (error) {
@@ -72,3 +88,22 @@ export const validateResolvedArtifactPath = async (
   }
   return null;
 };
+
+export const validateResolvedArtifactPath = async (
+  expectedPacketDirectory: string,
+  artifactPath: string,
+  label: string,
+): Promise<string | null> =>
+  validateResolvedArtifactPathWithin(expectedPacketDirectory, artifactPath, label, packetArtifactDirectoryMessages);
+
+export const validateResolvedReproductionEvidencePath = async (
+  releaseArtifactDirectory: string,
+  artifactPath: string,
+  label: string,
+): Promise<string | null> =>
+  validateResolvedArtifactPathWithin(
+    releaseArtifactDirectory,
+    artifactPath,
+    label,
+    reproductionArtifactDirectoryMessages,
+  );
