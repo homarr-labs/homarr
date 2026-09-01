@@ -165,7 +165,7 @@ export default function MediaMissingWidget({
   );
   if (isAdvanced) {
     return (
-      <Stack h="100%" gap={0}>
+      <Stack className={classes.root} h="100%" gap={0}>
         {partialFailures}
         <SimpleGrid cols={enabledPanelCount} spacing="sm" p="sm" style={{ flex: 1, minHeight: 0 }}>
           {showMissing && (
@@ -197,6 +197,7 @@ export default function MediaMissingWidget({
 
   return (
     <Tabs
+      className={classes.root}
       value={activeTab}
       keepMounted={false}
       onChange={(value) => {
