@@ -236,23 +236,26 @@ const SystemCharts = ({
   const labelDisplayMode = isAdvanced ? "textWithIcon" : options.labelDisplayMode;
   const chartCount = visibleCharts.length;
   const chartColumns = useMemo(() => (isAdvanced ? getAdvancedChartColumns(width) : 1), [isAdvanced, width]);
-  const compactChartGap = 8;
-  const compactRowHeight = 56;
-  const chartHeight = isAdvanced
-    ? 110
-    : Math.max(
-        28,
-        Math.min(compactRowHeight, (height - Math.max(0, chartCount - 1) * compactChartGap) / Math.max(1, chartCount)),
-      );
+  const chartGap = isAdvanced ? "xs" : 8;
 
   return (
-    <Stack gap={isAdvanced ? "xs" : compactChartGap} h="auto" miw={0}>
+    // style={{height}}, not h={height} or h={`${height}px`} - Mantine's h prop runs numbers
+    // (and even pixel *strings*, since its rem() converter strips a "px" suffix before checking
+    // whether the remainder is a parseable number) through rem() * var(--mantine-scale), which
+    // silently rescales the value again on top of the board's own zoom. Only calc()/percentage/
+    // non-numeric strings skip that path (why h="100%" below is safe) - a literal style.height
+    // is the only way to set an exact pixel value that isn't run through it.
+    <Stack gap={chartGap} style={{ height: `${height}px` }} miw={0}>
       {showTitle && (
         <Text size="sm" fw={600} truncate="end">
           {integrationName}
         </Text>
       )}
-      <SimpleGrid cols={chartColumns} spacing={isAdvanced ? "xs" : compactChartGap}>
+      {/* Divide the available height evenly across however many rows chartColumns wraps the
+          charts into via CSS grid-auto-rows: 1fr, rather than computing a per-chart pixel height
+          in JS - keeps every chart's own sizing untouched (still h="100%" of its grid cell) and
+          needs no board-zoom-aware math of its own. */}
+      <SimpleGrid cols={chartColumns} spacing={chartGap} style={{ flex: 1, minHeight: 0, gridAutoRows: "1fr" }}>
         {chartCount === 0 && (
           <Center h="100%">
             <Text size="sm" c="dimmed">
@@ -261,7 +264,7 @@ const SystemCharts = ({
           </Center>
         )}
         {visibleCharts.includes("cpu") && (
-          <Box h={chartHeight}>
+          <Box h="100%">
             <SystemResourceCPUChart
               cpuUsageOverTime={items.map((item) => item.cpu)}
               hasShadow={options.hasShadow}
@@ -271,7 +274,7 @@ const SystemCharts = ({
           </Box>
         )}
         {visibleCharts.includes("memory") && (
-          <Box h={chartHeight}>
+          <Box h="100%">
             <SystemResourceMemoryChart
               memoryUsageOverTime={items.map((item) => item.memory)}
               totalCapacityInBytes={memoryCapacityInBytes}
@@ -282,7 +285,7 @@ const SystemCharts = ({
           </Box>
         )}
         {visibleCharts.includes("gpu") && (
-          <Box h={chartHeight}>
+          <Box h="100%">
             <SystemResourceGPUChart
               gpuUsageOverTime={items.map((item) => item.gpu)}
               hasShadow={options.hasShadow}
@@ -293,7 +296,7 @@ const SystemCharts = ({
         )}
         {showNetwork &&
           (width >= 300 ? (
-            <Group h={chartHeight} gap="xs" grow wrap="nowrap">
+            <Group h="100%" gap="xs" grow wrap="nowrap">
               <NetworkTrafficChart
                 usageOverTime={networkItems.map((network) => network.down)}
                 isUp={false}
@@ -310,7 +313,7 @@ const SystemCharts = ({
               />
             </Group>
           ) : (
-            <Box h={chartHeight}>
+            <Box h="100%">
               <CombinedNetworkTrafficChart
                 usageOverTime={networkItems}
                 hasShadow={options.hasShadow}
