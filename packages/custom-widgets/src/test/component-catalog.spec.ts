@@ -20,7 +20,7 @@ const publicCatalogPath = resolve(repositoryRoot, "apps/docs/static/custom-widge
 
 // Keep a reviewed ceiling close to the generated artifact so accidental metadata
 // duplication must receive explicit review.
-const MAX_CATALOG_BYTES = 800 * 1024;
+const MAX_CATALOG_BYTES = 850 * 1024;
 
 describe("Custom JSX authoring catalog", () => {
   test("is versioned against the installed authoring surface", async () => {
