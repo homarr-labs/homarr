@@ -11,150 +11,57 @@ tags:
 
 # Workshop operator guide
 
-Workshop is powered by [PocketBase](https://pocketbase.io). The production image compiles the current Docusaurus site
-and serves it together with the API from one origin. The deployment lives in `apps/workshop/` with a Dockerfile,
-Compose configuration, version-controlled migrations, hooks, a smoke test, and ACT-local workflow instructions.
-
-Submission links include Open Graph and X/Twitter metadata for the submission title, description, and type. The first
-uploaded screenshot is used as the social preview image; submissions without screenshots use the Homarr logo.
-
-Run `pnpm docker:workshop` for PocketBase on port 8090, then run
-`WORKSHOP_API_URL=http://127.0.0.1:8090 pnpm dev:docs` for Docusaurus on port 3003. `pnpm docker:docs` builds the
-combined production layout. Normal start and stop commands retain data; `down --volumes` is an intentional,
-irreversible development reset. See [Workshop development](./development) for the complete local setup.
-
-## Authentication and notifications
-
-GitHub needs only the central callback `https://<workshop-host>/api/oauth2-redirect`. Keep PocketBase origins
-unrestricted unless every self-hosted Homarr caller is explicitly listed. Configure both `GITHUB_CLIENT_ID` and
-`GITHUB_CLIENT_SECRET`; supplying only one is a startup error. Set `WORKSHOP_PUBLIC_ORIGIN` in production so generated
-links and email use the public host. Workshop stores only the OAuth provider username in `users.name`, and users cannot
-rename it. Map **OAuth2 username** to `name`; leave OAuth2 id, full name, and avatar mappings empty. Profile and avatar
-URLs are derived from `https://github.com/<username>` and `https://github.com/<username>.png`, so PocketBase does not
-store duplicate profile metadata or avatar files. Configure SMTP for comment, report, and removal notices.
+Workshop uses PocketBase. The production image serves the Workshop website and API from one origin and stores state in
+`/pb_data`.
 
 ## Environment variables
 
-The public URL contract and Workshop-only server configuration are:
+| Variable                               | Purpose                                      | Default                        |
+| -------------------------------------- | -------------------------------------------- | ------------------------------ |
+| `HOMARR_WEBSITE_URL`                   | Documentation/site base used by Homarr links | `https://homarr.dev`           |
+| `WORKSHOP_API_URL`                     | PocketBase API used by Homarr and docs       | `HOMARR_WEBSITE_URL`           |
+| `WORKSHOP_WEB_URL`                     | Public Workshop URL                          | `HOMARR_WEBSITE_URL/workshop`  |
+| `WORKSHOP_PUBLIC_ORIGIN`               | PocketBase-generated links and email         | Required in production         |
+| `PB_ALLOWED_ORIGINS`                   | Allowed browser origins                      | `*`                            |
+| `GITHUB_CLIENT_ID`                     | GitHub OAuth application ID                  | —                              |
+| `GITHUB_CLIENT_SECRET`                 | GitHub OAuth application secret              | —                              |
+| `OPENROUTER_API_KEY`                   | Enables the Homarr Assistant provider        | Provider disabled when empty   |
+| `HOMARR_AI_DAILY_REQUEST_LIMIT`        | Per-user daily request allowance             | `50`                           |
+| `HOMARR_AI_GLOBAL_DAILY_REQUEST_LIMIT` | Shared daily request ceiling                 | `10000`                        |
+| `HOMARR_AI_OPENROUTER_BASE_URL`        | OpenRouter-compatible upstream               | `https://openrouter.ai/api/v1` |
+| `HOMARR_AI_OPENROUTER_MODEL`           | Upstream model behind `homarr/model`         | Selected by the Homarr team    |
 
-| Variable                               | Purpose                                       | Default                        |
-| -------------------------------------- | --------------------------------------------- | ------------------------------ |
-| `HOMARR_WEBSITE_URL`                   | Documentation/site base used by Homarr links  | `https://homarr.dev`           |
-| `WORKSHOP_API_URL`                     | PocketBase API used by Homarr and docs        | `HOMARR_WEBSITE_URL`           |
-| `WORKSHOP_WEB_URL`                     | Public Workshop links in Homarr               | `HOMARR_WEBSITE_URL/workshop`  |
-| `WORKSHOP_PUBLIC_ORIGIN`               | PocketBase-generated links and email          | Required in production         |
-| `PB_ALLOWED_ORIGINS`                   | PocketBase browser origins                    | `*` for the central community  |
-| `OPENROUTER_API_KEY`                   | Server-only key for the Homarr provider proxy | Provider disabled when empty   |
-| `HOMARR_AI_DAILY_REQUEST_LIMIT`        | Per-user daily provider allowance             | `50`                           |
-| `HOMARR_AI_GLOBAL_DAILY_REQUEST_LIMIT` | Shared daily ceiling across all users         | `10000`                        |
-| `HOMARR_AI_OPENROUTER_BASE_URL`        | OpenRouter-compatible proxy upstream          | `https://openrouter.ai/api/v1` |
-| `HOMARR_AI_OPENROUTER_MODEL`           | Server-selected upstream model                | Selected by the Homarr team    |
+Public URL variables accept HTTP(S) origins without embedded credentials, query strings, or fragments. Restart the
+container after changing runtime configuration.
 
-All public URL variables reject non-HTTP protocols, embedded credentials, query strings, and fragments, and normalize
-trailing slashes when Homarr or Docusaurus starts. The deprecated docs-only `WORKSHOP_URL` alias remains for one
-release; `WORKSHOP_API_URL` takes precedence for API calls and `WORKSHOP_WEB_URL` takes precedence for public Workshop
-links. The combined Workshop image writes the public URLs into its browser
-runtime configuration whenever the container starts; the Docker build arguments remain fallbacks. Restart the
-container after changing these values, without rebuilding it.
+## Authentication and email
 
-### Homarr provider proxy
+Configure both GitHub OAuth variables and use `https://<workshop-host>/api/oauth2-redirect` as the callback. Supplying
+only one OAuth variable is a startup error. Configure SMTP for comment, report, and removal notifications.
 
-The [Homarr provider](./homarr-provider) proxy is part of the Workshop image. `OPENROUTER_API_KEY` enables the proxy,
-`HOMARR_AI_OPENROUTER_BASE_URL` selects its OpenRouter-compatible upstream, `HOMARR_AI_OPENROUTER_MODEL` selects the
-private upstream model behind the stable `homarr/model` alias, and the two allowance variables provide per-user and
-shared request ceilings. Lowering either allowance takes effect for existing users. The upstream URL cannot contain
-embedded credentials, a query, or a fragment and must use HTTPS. Tests can explicitly opt into an insecure local mock
-with `HOMARR_AI_ALLOW_INSECURE_UPSTREAM=true`; do not use that setting with a real API key.
+For the central community, `PB_ALLOWED_ORIGINS=*` permits requests from self-hosted Homarr origins. A private deployment
+can use a comma-separated allowlist.
 
-The proxy overwrites client routing and generation limits. It requires OpenRouter zero-data-retention routing, denies
-data-collecting providers, limits responses to 32,768 completion tokens, and does not retain prompts, responses, or
-per-request telemetry. It accepts only uploaded image data, conservatively bounds text to the advertised context, and
-allows at most two concurrent requests per user and 100 across the service. Keep an OpenRouter account-level credit
-limit as the final monetary backstop because request quotas are not dollar accounting.
+## Homarr provider
 
-PocketBase stores one `assistant_quotas` record per user and active UTC day. Workshop superusers can use this private
-collection for a daily usage breakdown; regular users cannot list or view its records.
+`OPENROUTER_API_KEY` enables the [Homarr provider](./homarr-provider). The Workshop server chooses the upstream model and
+enforces per-user and global daily limits. It requests zero-data-retention routing, disables data-collecting providers,
+and does not retain prompts or responses.
 
-Run `pnpm test:workshop` to test authentication, streaming, UTC reset, atomic per-user and global quota enforcement,
-failed-request accounting, identity attribution, server-selected model routing, function tools, input and output
-controls, privacy routing, spoofing resistance, absence of request logs, and migration rollback.
+Keep an OpenRouter account-level credit limit as the monetary backstop; request limits are not cost limits.
 
-An operator can explicitly smoke-test a deployed Workshop against its real configured upstream with a dedicated,
-low-quota test user:
+## Deployment
 
-```sh
-HOMARR_AI_LIVE_SMOKE=1 \
-WORKSHOP_LIVE_TEST_URL=https://workshop.example.com \
-WORKSHOP_LIVE_TEST_TOKEN=<temporary-pocketbase-user-token> \
-pnpm test:workshop-live-provider
-```
+The v2 image is `ghcr.io/homarr-labs/workshop:v2`; immutable `sha-<commit>` tags are preferable for promotion. The
+service listens on port 8090.
 
-This optional check consumes one provider request. The test client needs neither the OpenRouter key nor the private
-upstream model ID. Do not run it in CI or with a normal user's Workshop token.
+When using a reverse proxy, forward the complete hostname, including `/api`, `/_/`, and
+`/workshop-runtime-config.js`. Use a dedicated hostname when Homarr already occupies the intended origin.
 
-## Staging and demo deployment
-
-Use `apps/workshop/docker-compose.staging.yml` with the published `ghcr.io/homarr-labs/workshop:v2` image for a v2
-preview. Copy `apps/workshop/.env.staging.example` to `.env.staging`; its default public contract is:
-
-```dotenv
-HOMARR_WEBSITE_URL=https://v2.preview.homarr.dev
-WORKSHOP_API_URL=https://v2.preview.homarr.dev
-WORKSHOP_PUBLIC_ORIGIN=https://v2.preview.homarr.dev
-PB_ALLOWED_ORIGINS=*
-```
-
-Start or update it from the repository root:
-
-```sh
-docker compose --env-file apps/workshop/.env.staging \
-  -f apps/workshop/docker-compose.staging.yml pull
-docker compose --env-file apps/workshop/.env.staging \
-  -f apps/workshop/docker-compose.staging.yml up --detach
-curl --fail http://127.0.0.1:8090/api/health
-```
-
-The service binds to `127.0.0.1:8090`. Terminate TLS at a reverse proxy and forward the **entire hostname**, including
-`/api`, `/_/`, and `/workshop-runtime-config.js`; forwarding only `/workshop` breaks PocketBase and runtime URL loading.
-This combined image serves both the documentation site and PocketBase, so use a dedicated Workshop hostname if the
-chosen hostname already serves Homarr itself. In that case, replace the hostname in all three URL values. Homarr
-derives the public Workshop page by appending `/workshop` to `HOMARR_WEBSITE_URL`.
-
-The Compose volume preserves PocketBase data across pulls and container recreation. The mutable `v2` tag is suitable
-for previews; use the `sha-<commit>` tag for promotion. For the public central Workshop, `PB_ALLOWED_ORIGINS=*` allows
-self-hosted Homarr origins to use the API and OAuth. A private demo may use a comma-separated origin allowlist instead.
-GitHub OAuth requires both credentials and the callback `https://v2.preview.homarr.dev/api/oauth2-redirect`. Restart
-after changing environment values, then verify the health endpoint, `/workshop`, a public listing request, GitHub
-sign-in, and an installation from the Homarr preview.
+Verify `/api/health`, the Workshop page, a public listing request, GitHub sign-in, and one installation after deployment.
 
 ## Backup and restore
 
-PocketBase data lives in `/pb_data`. Stop writes and copy it to a new, empty backup directory:
-
-```sh
-docker compose --env-file apps/workshop/.env.staging \
-  -f apps/workshop/docker-compose.staging.yml stop workshop
-docker compose --env-file apps/workshop/.env.staging \
-  -f apps/workshop/docker-compose.staging.yml cp workshop:/pb_data/. ./workshop-backup
-docker compose --env-file apps/workshop/.env.staging \
-  -f apps/workshop/docker-compose.staging.yml start workshop
-```
-
-Restore only after preserving the current volume and confirming the backup contains `data.db`:
-
-```sh
-test -f ./workshop-backup/data.db
-docker compose --env-file apps/workshop/.env.staging \
-  -f apps/workshop/docker-compose.staging.yml stop workshop
-docker compose --env-file apps/workshop/.env.staging \
-  -f apps/workshop/docker-compose.staging.yml run --rm --no-deps --entrypoint sh workshop \
-  -c 'find /pb_data -mindepth 1 -maxdepth 1 -exec rm -rf {} +'
-docker compose --env-file apps/workshop/.env.staging \
-  -f apps/workshop/docker-compose.staging.yml cp ./workshop-backup/. workshop:/pb_data
-docker compose --env-file apps/workshop/.env.staging \
-  -f apps/workshop/docker-compose.staging.yml start workshop
-curl --fail http://127.0.0.1:8090/api/health
-```
-
-The restore empties the selected volume. Rehearse it in staging, then verify sign-in and one installation. Publish by
-immutable digest, validate that exact digest in staging, and promote the same digest.
+Stop writes and copy `/pb_data` for a consistent backup. A restore replaces the selected PocketBase data directory, so
+preserve the current volume and verify that the backup contains `data.db` first. Rehearse the restore outside production
+and verify sign-in and one installation afterward.

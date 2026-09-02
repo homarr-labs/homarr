@@ -1,10 +1,8 @@
 ---
 title: "Custom API"
-description: "Displays data from a custom API endpoint using configurable display types and optional JSX templates."
+description: "Displays data from a custom API using a safe JSX template."
 hide_title: true
 ---
-
-import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
 
 import { WidgetHeader } from "@site/src/components/widgets/header";
 import { AddingWidget } from "@site/src/components/widgets/adding";
@@ -12,52 +10,25 @@ import { customApiWidget } from ".";
 
 <WidgetHeader widget={customApiWidget} categories={["Custom", "API"]} />
 
-A definition contains API sources, named requests, a widget options schema, and one safe JSX template.
-
-Temporary inputs exist only while the tile is mounted. Homarr encrypts source credentials separately.
-
-Homarr does not send these credentials to the browser. Homarr does not include them in an export.
-
-<WidgetInteractionGuide advancedView={false} />
+A Custom API widget renders a saved [Custom Widget definition](/docs/management/custom-widgets). The definition provides
+API sources, named requests, widget options, and safe JSX. Credentials remain encrypted on the server.
 
 ### Adding the widget
 
 <AddingWidget />
 
-Select a definition from the searchable picker. Configure its generated widget options.
-
-Select a refresh interval. The board item stores the definition ID and the validated widget option values.
-
-Credentials remain on the server.
+Select a definition, configure its generated options, and choose a refresh interval.
 
 :::note
-Custom API widgets must first be created in **Management → Custom Widgets** before they appear in the widget picker.
-Action buttons require the request's minimum board permission, which is `modify` by default. Anonymous viewers cannot run
-mutations. DELETE additionally requires full permission and confirmation.
+Custom Widgets must be created under **Management → Custom Widgets** before they appear in the widget picker.
 :::
 
-### Permissions and actions
+### Permissions and requests
 
-Each named request declares its minimum board permission. This permission does not depend on the HTTP method.
+Each request declares its minimum board permission. Public boards may run queries for anonymous viewers, but actions
+require authentication. DELETE actions require full board permission and confirmation.
 
-Anonymous visitors can load queries from a Custom API widget on a public board. Definitions placed only on private
-boards remain unavailable to them.
+The refresh interval reruns load queries. Manual queries run through `SubFetch`; successful actions can invalidate their
+declared queries.
 
-Queries and actions can use GET, POST, PUT, or PATCH. DELETE is valid only for actions so it can never run
-automatically while a board loads. The `kind` value controls the remaining runtime behavior.
-
-A DELETE request requires full board permission and confirmation. An anonymous viewer cannot run an action.
-
-Homarr disables interactive controls in board edit mode. An action runs only after a user action.
-
-Mounting, refresh polling, and automatic retries do not run actions. An authoring preview simulates actions by default.
-
-An administrator can enable live actions for the short preview session.
-
-### Refresh behavior
-
-The refresh interval runs load queries again. `SubFetch` runs manual queries.
-
-Each query can declare a cache duration. A successful action can invalidate only its declared queries.
-
-Read [Custom Widgets management](/docs/management/custom-widgets) for authoring, widget options, named requests, Mantine, network scopes, and security limits.
+See [Custom Widgets](/docs/management/custom-widgets) for authoring, network scopes, and security limits.

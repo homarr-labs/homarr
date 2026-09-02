@@ -6,78 +6,32 @@ tags:
   - Data
 ---
 
-# Backup & Restore
+# Backup and restore
 
-Homarr provides a built-in backup and restore system for **SQLite** instances. You can export your entire database - including apps, integrations, boards, users, and encryption keys - as a ZIP archive, and restore it on the same or a different Homarr instance.
+Administrators using SQLite can export and restore the complete Homarr database under
+**Management → Tools → Backup**. MySQL and PostgreSQL installations must use their database-native backup tools.
 
-:::warning
+## Export
 
-Backup and restore is only available when using the **SQLite** database driver. MySQL and PostgreSQL instances do not show this page.
+The ZIP contains:
 
-:::
+| File            | Contents                                                    |
+| --------------- | ----------------------------------------------------------- |
+| `db.sqlite`     | Apps, integrations, boards, users, settings, and other data |
+| `metadata.json` | Homarr version, backup timestamp, and encryption metadata   |
 
-## Accessing the Backup Page
+Export requires typing `I understand`. Store the ZIP as sensitive data: it contains the database and the material
+needed to restore encrypted integration credentials.
 
-Navigate to `Management` → `Tools` → `Backup`. You must have **admin** permissions to access this page.
+## Restore
 
-## Exporting a Backup
+Select a Homarr backup ZIP. The browser previews entity counts, board names, and required database migrations before
+the archive is uploaded.
 
-![Export database card with the Download Backup action](/img/backup/export-database.png)
+Restoring replaces the current SQLite database and cannot be undone. After a successful restore, the Next.js process
+restarts and the page reloads when Homarr is ready.
 
-Click the **Export** button in the export card. You'll be prompted to type `I understand` to confirm. Once confirmed, a ZIP file downloads containing:
+A backup can be restored on another Homarr instance. When its `SECRET_ENCRYPTION_KEY` differs, Homarr re-encrypts stored
+integration secrets for the target instance. Version metadata is used to apply compatible migrations.
 
-| File            | Description                                                         |
-| --------------- | ------------------------------------------------------------------- |
-| `db.sqlite`     | Full SQLite database with all entities                              |
-| `metadata.json` | Backup metadata: Homarr version, creation timestamp, encryption key |
-
-The backup contains the complete database. It includes Custom Widgets and all other Homarr configuration.
-
-## Restoring a Backup
-
-![Restore database card with the backup ZIP drop zone](/img/backup/restore-database.png)
-
-### 1. Upload
-
-Drag and drop or select a `.zip` backup file. The import card validates that the file contains a valid `db.sqlite` and metadata.
-
-### 2. Preview
-
-Before restoring, Homarr uses **sql.js WASM** to analyze the backup directly in your browser. You'll see:
-
-- **Entity counts** - how many apps, integrations, boards, users, etc. are in the backup
-- **Board names** - which boards will be restored
-- **Migration status** - Drizzle migrations are applied in-browser with a visual timeline showing each migration step
-
-### 3. Confirm
-
-Type `I understand` to acknowledge that restoring will replace your current database. This cannot be undone.
-
-During first-run onboarding, the database is still empty, so the restore preview goes directly to **Restore Database**
-without the extra typed confirmation. After Homarr restarts, onboarding opens the restored default home board.
-
-### 4. Restore
-
-The backup ZIP is sent to the server, validated, and applied. After a successful restore:
-
-- **The Next.js server restarts automatically** to reload the new database state
-- Nginx and Redis (if running in Docker) stay up - only the Next.js process restarts
-- The page reloads once the server is ready
-
-## Cross-Instance Restore
-
-You can restore a backup from one Homarr instance onto another. Homarr handles:
-
-- **Encryption key re-encryption** - If the target instance has a different `SECRET_ENCRYPTION_KEY`, integration secrets are decrypted with the old key and re-encrypted with the new one during import
-- **Version compatibility** - Backups include the Homarr version they were created with. Backward compatibility is maintained for older backup formats
-
-## Backup During Onboarding
-
-When setting up a new SQLite Homarr instance, the onboarding flow includes a **Restore from SQLite backup** step. You can upload a backup ZIP directly during onboarding to skip manual setup.
-
-## Security
-
-- Export requires admin permissions
-- The `I understand` confirmation dialog prevents accidental exports and overwrites
-- Backups contain encrypted integration secrets - they cannot be read without the `SECRET_ENCRYPTION_KEY`
-- Import only works on SQLite instances - the API routes refuse requests from MySQL/PostgreSQL instances
+The same restore flow is available during first-run onboarding, before the target database contains user data.

@@ -4,15 +4,10 @@ description: "Control Pi-hole, AdGuard Home, or Technitium DNS from your dashboa
 hide_title: true
 ---
 
-import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
-
 import { WidgetHeader } from "@site/src/components/widgets/header";
 import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
 import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
-import { IconAd } from "@tabler/icons-react";
-import Tabs from "@theme/Tabs";
-import TabItem from "@theme/TabItem";
 import { dnsHoleControlsWidget } from ".";
 import { adguardHomeIntegration } from "@site/docs/integrations/adguard-home";
 import { piHoleIntegration } from "@site/docs/integrations/pi-hole";
@@ -20,9 +15,8 @@ import { technitiumDnsIntegration } from "@site/docs/integrations/technitium-dns
 
 <WidgetHeader widget={dnsHoleControlsWidget} categories={["DNS Hole"]} />
 
-When several DNS integrations are selected, Homarr keeps healthy controls available if one source fails and shows a warning identifying the unavailable integration.
-
-This widget lets permitted users enable, disable, or temporarily pause one or more DNS services. It shares the summary query and cache with DNS Hole Summary. Every selected source stays available in the normal scrollable view, with its familiar textual status control retained at compact heights. Bulk actions keep successful results visible and report the number of failures.
+The DNS Hole Controls widget enables, disables, or temporarily pauses one or more DNS services. Actions require Interact
+access. Healthy controls remain available when another selected integration fails.
 
 ### Screenshots
 
@@ -54,8 +48,6 @@ import smallSize from "./img/small.png";
 - Temporarily disable one service with the clock action.
 - Apply an action to all available services from the top action row. Homarr keeps successful results visible and reports how many sources failed.
 - Interaction controls only appear when the current user has permission for that integration.
-
-<WidgetInteractionGuide advancedView={false} />
 
 ### Adding the widget
 

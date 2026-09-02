@@ -1,6 +1,6 @@
 ---
 title: "Download Client"
-description: "Allows you to view and manage your Downloads from both Torrent and Usenet clients."
+description: "View and manage downloads from Torrent and Usenet clients."
 hide_title: true
 ---
 
@@ -21,124 +21,32 @@ import { downloadsWidget } from ".";
 
 <WidgetHeader widget={downloadsWidget} categories={["Torrent client", "Usenet client", "Downloads"]} />
 
-This widget displays torrent, Usenet, and miscellaneous download jobs, along with their progress and other relevant information. It supports 7 download client integrations and provides a rich, responsive table interface.
+The Download Client widget combines active jobs from supported Torrent, Usenet, and other download clients. Rows can be
+sorted, filtered, expanded, and configured by column. Advanced view adds queue statistics and the complete selected
+column set.
 
-### Screenshots
+Pause, resume, and delete actions require Interact access to the source integration. `slskd` is list-only. If one source
+fails, jobs from healthy integrations remain available.
 
-import downloadsCard from "./img/screenshot.png";
-import contextMenuImg from "./img/context-menu.png";
-import advancedViewImg from "./img/advanced-view.png";
-import filterPanelImg from "./img/filter-panel.png";
-
-<div>
-  <img src={downloadsCard} alt="Downloads widget showing torrent and usenet items" width={128 * 4} />
-</div>
-
-#### Download-row context menu
-
-<div>
-  <img src={contextMenuImg} alt="Downloads row context menu with pause, delete, and copy actions" width={128 * 4} />
-</div>
-
-#### Advanced view
-
-<div>
-  <img
-    src={advancedViewImg}
-    alt="Downloads widget in advanced view with stats, sortable columns, and expanded details"
-    width={128 * 6}
-  />
-</div>
-
-#### Advanced filter panel
-
-<div>
-  <img src={filterPanelImg} alt="Downloads advanced view with the status filter panel open" width={128 * 6} />
-</div>
-
-### Features
-
-- **Responsive compact table** — in compact mode, selected columns use the established width breakpoints; widget height does not remove configured columns or the footer
-- **Sortable columns** — click any sortable column header to sort the current view; the configured default controls the initial column and direction
-- **Column customization** — choose which columns to display, then hover a header to reveal its grab handle for reordering or drag its edge to resize it; layouts save automatically per widget
-- **Download-row context menu** — copy a download name or ID from any row; pause, resume, and delete actions appear when you have Interact access to that integration
-- **Row expansion** — click any row to see full details inline without opening a separate modal
-- **Hover tooltips** — hover a download name to see size, speeds, ETA, ratio, and category; open tooltips close when switching between compact and advanced mode
-- **Global stats bar** — show queue progress, downloaded/total size, transfer speeds, global torrent ratio, and per-state counts in compact mode; advanced view always includes it
-- **Client filtering** — filter downloads by integration or status using the footer filter panel
-- **Global controls** — pause/resume actionable queues from the footer bar, limited to selected integrations where you have Interact access
-- **Status indicators** — color-coded badges show download state at a glance
-- **Speed overview** — total download and upload speeds for the selected clients are displayed in the footer
-
-:::note
-
-Compact layouts use their established width breakpoints: below 500px wide, speed columns are hidden; below 300px wide,
-the ETA and state columns are hidden too. Height does not remove configured columns or the footer. Advanced view bypasses
-the compact width reductions, keeps the selected column set, and always includes the stats bar and footer controls, with
-the filter panel available from the footer.
-
-The filter panel changes the visible rows. Its client/status filters also change the stats bar's progress, size, and
-state counts, while transfer-speed totals summarize the selected clients and the global torrent ratio summarizes the
-selected torrent clients. The configured category/label filter can optionally be applied to the global torrent ratio
-through **Use category filter for global torrent ratio**; footer client/status filters do not change that ratio.
-
-The per-item **Ratio** is sent bytes divided by the item's total size. **Global Ratio** is total uploaded bytes divided
-by total downloaded bytes.
-
-Mutation controls depend on the integration's Interact permission. Users without that permission can still view rows and
-use the row menu's copy actions. `slskd` is list-only: its pause, resume, and delete operations are no-ops, so those
-controls have no effect for that client even when Interact permission exposes them.
-
-The screenshot above is a Downloads row menu, separate from the shared widget context menu. When board right-click menus
-are enabled, the shared menu provides widget-level actions such as advanced view, widget options, refresh, and settings.
-
-:::
-
-### Supported Integrations
+### Supported integrations
 
 <WidgetIntegrations
   items={[
-    {
-      integration: sabnzbdIntegration,
-      note: "Usenet client",
-    },
-    {
-      integration: nzbgetIntegration,
-      note: "Usenet client",
-    },
-    {
-      integration: delugeIntegration,
-      note: "Torrent client",
-    },
-    {
-      integration: transmissionIntegration,
-      note: "Torrent client",
-    },
-    {
-      integration: qBittorentIntegration,
-      note: "Torrent client",
-    },
-    {
-      integration: aria2Integration,
-      note: "Multi-protocol download client",
-    },
-    {
-      integration: slskdIntegration,
-      note: "Soulseek client (list-only; mutation controls are no-ops)",
-    },
+    { integration: sabnzbdIntegration, note: "Usenet client" },
+    { integration: nzbgetIntegration, note: "Usenet client" },
+    { integration: delugeIntegration, note: "Torrent client" },
+    { integration: transmissionIntegration, note: "Torrent client" },
+    { integration: qBittorentIntegration, note: "Torrent client" },
+    { integration: aria2Integration, note: "Multi-protocol download client" },
+    { integration: slskdIntegration, note: "Soulseek client; list-only" },
   ]}
 />
 
 ### Interactions
 
-- **Right-click** any download to copy its name or ID; pause, resume, and delete are available only with Interact access
-- **Click** any row to expand it and see full download details inline
-- **Hover** a download name for a quick stats tooltip
-- **Stats toggle** — show or hide the global stats bar in compact mode; advanced view always shows the stats bar without
-  changing the compact choice
-- **Pause / Resume** actionable queues using the footer controls
-- **Filter** rows by integration or status using the filter button in the footer
-- **Sort** by clicking sortable column headers; the default sort is configured per widget, while header changes apply to the current view
+- Select a row to expand its details.
+- Right-click a row to copy identifiers or run permitted actions.
+- Use the footer to filter clients and states, show statistics, or pause and resume actionable queues.
 
 <WidgetInteractionGuide />
 

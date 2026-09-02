@@ -1,153 +1,45 @@
-# Use agents and skills.sh
+# Connect an agent
 
-An external agent can create one widget or a coordinated set with the Homarr MCP server. For a set, it researches a
-service once, divides distinct user jobs into useful widgets, and validates every definition independently.
+An MCP-connected agent can validate, preview, test, and save Custom Widgets. The API key owner must be a Homarr
+administrator.
 
-For example, a request for a Seerr widget can become a coordinated library/request-status widget and an interactive
-media-search widget that submits requests, when the service's documented API and the user's permissions support those
-flows.
-
-The MCP API key must belong to a Homarr administrator. Non-administrator keys do not list Custom Widget tools, prompts,
-or resources. The same administrator requirement applies to the matching HTTP authoring endpoints.
-
-<a className="button button--primary" href="https://www.skills.sh/homarr-labs/homarr/homarr-custom-widget">
-  View the Custom Widget Skill on skills.sh
-</a>
-
-Install the Agent Skill from the verified Homarr repository:
+Install the official skill:
 
 ```sh
 npx skills add https://github.com/homarr-labs/homarr --skill homarr-custom-widget
 ```
 
-The portable skill gives concise authoring guidance. For connected agents, Homarr returns a compact `SKILL.md` and a
-reference index. The agent loads only the named schema, runtime, or security reference and component documentation the
-current design needs.
+The skill routes the agent to the release-matched schema, runtime, security, examples, and component metadata. It keeps
+those references separate so the agent loads only what the current widget needs.
 
-The workbench's **Copy AI prompt** action is separate. It creates a self-contained prompt below 12,000 characters for an ordinary ChatGPT or Claude conversation. It includes the lean contract, bindings, recommended components, and two polished examples. It never tells an offline model to call MCP tools.
-
-The source is in [`.agents/skills/homarr-custom-widget`](https://github.com/homarr-labs/homarr/tree/HEAD/.agents/skills/homarr-custom-widget). `HEAD` follows the repository default branch, so the link is not tied to an unreleased feature branch. Homarr does not provide a ZIP archive.
-
-After publication, run the installation command once. This action registers installation activity.
-
-Then, verify the skills.sh page. Request official maker attribution for `homarr-labs` from skills.sh.
-
-Repository code cannot give this attribution.
-
-## Get MCP resources
+## MCP resources
 
 - Prompt: `homarr-custom-widget-author`
-- Resources: `homarr://custom-widgets/schema`, `components`, `components/{name}`, `examples/{name}`, `skill`, and
-  `references/{schema|runtime|security}`
-- HTTP: `GET /api/custom-widgets/authoring-prompt`, `schema`, `components`, `skill`, and
-  `reference-{schema|runtime|security}`
+- Skill: `homarr://custom-widgets/skill`
+- References: `homarr://custom-widgets/references/{schema|runtime|security}`
+- Schema: `homarr://custom-widgets/schema`
+- Components: `homarr://custom-widgets/components` and `components/{name}`
+- Examples: `homarr://custom-widgets/examples/{name}`
 
-The authoring-prompt tool description contains one sentence. The prompt contains the workflow instructions and resource links.
+Equivalent HTTP resources are available under `/api/custom-widgets/` for authenticated administrators.
 
-`GET /api/custom-widgets/skill` and `customWidget_getSkill` return a compact structured skill payload:
+## Authoring lifecycle
 
-```ts
-{
-  name: "homarr-custom-widget";
-  version: string;
-  skillMd: string;
-  references: Array<{
-    name: "schema" | "runtime" | "security";
-    tool: "customWidget_getReference";
-    toolInput: { name: string };
-    resource: string;
-    httpResource: string;
-  }>;
-  skillsShUrl: string;
-  sourceUrl: string;
-  installCommand: string;
-}
-```
+1. Load the skill and only the references needed for the design.
+2. Read the external API documentation and build the definition.
+3. Validate the JSX, then create a preview from the complete definition.
+4. Run every returned query and simulate every relevant action against the current preview revision.
+5. Inspect the preview and redacted journal. Revise the existing preview for JSX-only changes.
+6. Save from the final tested preview.
+7. Configure deployment-specific source URLs and credentials, then preview the saved definition again.
 
-The `homarr://custom-widgets/skill` MCP resource returns only the entrypoint Markdown. Named references remain separate
-so clients do not pay for unrelated material.
+Use `templateLines` for multiline JSX tool input. A preview must have current evidence for every query and action before
+it can be saved. Simulation counts as action evidence without performing the mutation.
 
-The component catalog is a compact index of names, categories, safety levels, shared prop names, policies, and example
-IDs. Per-component results contain only component-specific props and a reference to shared prop documentation. Use
-`customWidget_getSharedProps` once with only the shared prop names needed across the selected components. This avoids
-repeating hundreds of global props in every tool result. The catalog and detailed references are deliberately not
-embedded in the skill or clipboard prompt.
+If the agent does not have a source URL or credential, it can request a short-lived Homarr configuration URL. An
+authenticated administrator completes it in Homarr; the agent receives the status, never the plaintext credential.
 
-These interfaces do not return an archive URL or archive hash.
+Agents can also search, inspect, install, and configure existing Workshop widgets instead of regenerating them.
 
-## Create a Custom Widget with MCP
-
-Independent read-only discovery and reference calls can run together. Validation, preview, evidence, revision, and
-persistence calls run alone because each changes the active authoring phase.
-
-1. Load `customWidget_getSkill`. Use its routing index to fetch only applicable named references with
-   `customWidget_getReference`.
-2. For a new manifest, load the compact `schema` reference once; skip it when repairing a supplied valid v2 draft.
-   Load the heavyweight live schema only when its extra detail is needed. Prefer `customWidget_findComponents` for a focused release-matched
-   subset and reserve the full catalog for broad exploration, followed by `customWidget_getComponent` for only relevant
-   installed components and `customWidget_getExample` when one example matches the interaction pattern. Fetch whatever
-   named documentation the intended design requires without walking the whole catalog. If shared props are needed,
-   collect their catalog names and call `customWidget_getSharedProps` once for that set.
-3. Read the external API documentation.
-4. Build each definition, using `templateLines` for multiline JSX tool input. Call `customWidget_validateTemplate`
-   while drafting to repair JSX without resending the complete manifest. A valid template with an unknown-prop warning
-   keeps one concrete `customWidget_getComponent` repair lookup active; otherwise proceed directly to preview. Homarr
-   Assistant exposes only `templateLines` for validation and revision to prevent duplicate JSX tokens; direct MCP clients
-   may send exactly one of `template` or `templateLines`.
-5. Send the coherent complete definition once to `customWidget_previewCreate`. It performs full validation and creates
-   the preview session.
-6. Run `customWidget_previewQuery` for every query returned by the preview and inspect its actual status and data shape. Assistant conversations retain a bounded response preview so large APIs cannot exhaust the model context. Use
-   `{}` for load queries; manual queries require exactly the returned primitive `parameterNames`.
-7. Test every relevant action returned by the preview in simulation mode. Verify its method, parameters, minimum board
-   permission, confirmation, and invalidated queries before persistence.
-8. Open the returned preview path with browser tools.
-9. Inspect the redacted journal. For a JSX-only correction, validate the replacement template, then call
-   `customWidget_previewReviseTemplate` with the session ID. Direct MCP clients may also pass the returned current revision
-   for optimistic concurrency. It inherits sources, requests, options, and secrets without resending them, increments the
-   revision, and returns fresh evidence lists. Use a new
-   `customWidget_previewCreate` session only when sources, requests, or options change.
-10. Retest every returned query and action for the current revision. Earlier evidence remains in the journal but cannot
-    satisfy persistence.
-11. Create the widget from that final tested preview with `customWidget_createFromPreview`. The preview session already carries
-    the source URLs and encrypted credentials supplied during preview; the create call accepts only its session ID plus an
-    optional target board and persists that tested preview only after every query and action has current evidence.
-12. Open its returned management path, and use a structured question when the user must choose whether to place it on a board.
-13. Otherwise, ask the user to configure the saved definition with the ten-minute Homarr source-setup URL.
-14. Create a final preview with the saved definition ID so Homarr loads its stored credentials, then test it again.
-15. Update the saved definition if the final verification finds a problem. `customWidget_update` also accepts
-    `templateLines` for multiline JSX without resetting omitted options.
-16. Repeat the independent preview and persistence lifecycle for every widget in the requested set.
-
-Template validation returns focused diagnostics. Preview creation and template revision return session metadata plus
-query/action checklists without echoing the definition. Keep the candidate locally and reuse the preview session for
-persistence.
-
-For numeric API enums, prefer a guarded indexed literal label array in JSX over repeating a long ternary chain. The
-interpreter validates this pattern independently, and it keeps generated templates and repair calls substantially
-smaller while still rendering readable statuses.
-
-A manual `SubFetch` returns to its trigger immediately when its request ID, parameters, or effective definition
-changes. Homarr hides the earlier result and does not fetch the new parameters until the user triggers it again, so
-bound search and pagination edits cannot silently relabel stale results.
-
-Dependent bound controls can reset declaratively: `<Pagination bind="page" defaultValue={1} resetKey={inputs.search} />`
-returns to page 1 whenever the scalar search value changes. The reset remains local and does not execute a request.
-
-After a successful manual query, a result-local `<RefreshButton requestId="search" label="Run again" />` reruns that
-query with unchanged parameters without adding another request definition or raw event handler.
-
-Each source-configuration URL applies to one definition or preview and one source. It is short-lived, single-use, and
-can only be opened and completed by an authenticated Homarr administrator. The administrator confirms the server URL,
-network scope, and required credential fields directly in Homarr. The agent receives only request status and never
-receives plaintext credentials. Preview-scoped values expire with that preview; definition-scoped values persist.
-
-Agents can install existing widgets without regenerating them:
-
-1. Search with `customWidget_workshopSearch`.
-2. Inspect and validate a result with `customWidget_workshopGet`.
-3. Install it with `customWidget_workshopInstall`.
-4. Configure deployment-specific URLs and supplied credentials with `customWidget_sourceConfigure`.
-5. If the agent does not have those values, call `customWidget_configurationRequestUser` and wait for completion.
-6. Test the installed definition, then use `board_addItem` with kind `customApi` and the returned definition ID.
-
-Homarr encrypts the plaintext immediately. Homarr does not return the plaintext.
+See [MCP](/docs/management/mcp) for client configuration and [requests and security](./requests-and-security) for the
+runtime limits.

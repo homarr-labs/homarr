@@ -1,6 +1,6 @@
 ---
 title: "Media server streams"
-description: "Show the current streams on your media servers"
+description: "Show active sessions on media servers."
 hide_title: true
 ---
 
@@ -10,9 +10,6 @@ import { WidgetHeader } from "@site/src/components/widgets/header";
 import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
 import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
-import { IconAd } from "@tabler/icons-react";
-import Tabs from "@theme/Tabs";
-import TabItem from "@theme/TabItem";
 import { mediaServerWidget } from ".";
 import { embyIntegration } from "@site/docs/integrations/emby";
 import { jellyfinIntegration } from "@site/docs/integrations/jellyfin";
@@ -21,43 +18,24 @@ import { plexIntegration } from "@site/docs/integrations/plex";
 
 <WidgetHeader widget={mediaServerWidget} categories={["Media server"]} />
 
-The media server widget shows active sessions across your media servers.
-It shows playback progress, pause state, time remaining, the streaming resolution (e.g. `1080p`), and whether each session is direct play, direct stream, or transcoding audio or video. Location and bitrate can be toggled independently. Compact mode keeps the user, currently playing, and status columns together with the stream summary and integration names.
+The Media server streams widget combines active sessions from selected servers. It shows playback progress, resolution,
+bitrate, location, and direct-play or transcoding state according to the widget configuration. Advanced view adds search,
+sorting, and session metadata.
 
-Select a session to inspect its media metadata in an anchored popover. Advanced mode adds search, sorting, location, bitrate, and a summary of playing and transcoding sessions while keeping separate integration instances identifiable. Compact visibility switches do not hide location or bitrate from the complete advanced session view.
-If one selected server is unavailable, a warning indicator identifies the degraded result while sessions from healthy servers remain usable.
-Sessions without user metadata remain visible and are labeled as an unknown user.
+Healthy integrations remain available when another source fails. Navidrome and Plex return currently playing sessions
+rather than every connected session.
 
-### Screenshots
-
-import mediaTable from "./img/table.png";
-import mediaAdvancedView from "./img/advanced-view.png";
-
-<div className="flex flex-col gap-1">
-  <img src={mediaTable} alt="Media server compact streams table" width={303} height={198} />
-  <img src={mediaAdvancedView} alt="Media server advanced view with stream summary" width={800} height={484} />
-</div>
-
-### Supported Integrations
+### Supported integrations
 
 <WidgetIntegrations
   items={[
-    {
-      integration: embyIntegration,
-    },
-    {
-      integration: jellyfinIntegration,
-    },
-    {
-      integration: navidromeIntegration,
-      note: "Will always show only currently playing audio streams, not all active sessions.",
-    },
-    {
-      integration: plexIntegration,
-      note: "Will always show only currently playing streams, not all active sessions.",
-    },
+    { integration: embyIntegration },
+    { integration: jellyfinIntegration },
+    { integration: navidromeIntegration, note: "Currently playing audio only" },
+    { integration: plexIntegration, note: "Currently playing streams only" },
   ]}
 />
+
 <WidgetInteractionGuide />
 
 ### Adding the widget

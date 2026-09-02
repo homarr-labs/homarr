@@ -8,285 +8,79 @@ tags:
 
 # Model Context Protocol (MCP)
 
-Homarr exposes a [Model Context Protocol](https://modelcontextprotocol.io) server at `/api/mcp`, enabling AI assistants like Claude, Cursor, VS Code Copilot, and Claude Code to interact with your Homarr instance using natural language.
+Homarr exposes a stateless [Model Context Protocol](https://modelcontextprotocol.io) server at `/api/mcp`. It maps the
+current Homarr API to tools for compatible AI clients.
 
-The endpoint implements the stateless MCP 2026-07-28 protocol and accepts 2025 Streamable HTTP clients through a
-stateless compatibility path. It does not create protocol sessions or require sticky sessions. Homarr creates the
-server and extracts its tools only after an authenticated request reaches the route. The previous `/api/mcp/mcp` URL
-remains available as a compatibility alias, but new clients should always use `/api/mcp`.
+The endpoint implements MCP `2026-07-28` and accepts 2025 Streamable HTTP clients through a compatibility path. The old
+`/api/mcp/mcp` route remains as an alias; use `/api/mcp` for new clients.
 
-With MCP, you can ask your AI assistant to manage apps, integrations, users, boards, Docker and Kubernetes resources,
-media servers, DNS settings, and more through Homarr's existing tRPC API.
+## Configure a client
 
-The optional [Assistant](./assistant) uses this same complete tool catalog internally, but sends only a relevant subset
-of schemas to the model at each step. It uses the current Homarr session directly and asks for in-conversation approval
-before running mutating procedures.
-
-## Getting Started
-
-The MCP endpoint lives under the **API** page at `Management` → `Tools` → `API` → **AI / MCP** tab.
-
-![AI / MCP tab showing the endpoint, API-key warning, and client configuration](./api/img/mcp-instructions.png)
-
-### 1. Create an API Key
-
-Navigate to the **Authentication** tab in the API page and create an API key. API keys follow the format `<id>.<token>`.
-You can also create one directly from the MCP tab if you don't have any keys yet.
-
-### 2. Choose a Transport
-
-| Transport           | Best For                                                     | Requirements                   |
-| ------------------- | ------------------------------------------------------------ | ------------------------------ |
-| **Streamable HTTP** | Cursor, Claude Desktop, VS Code Copilot, Claude Code         | Direct HTTP access to Homarr   |
-| **STDIO**           | Firewall-restricted environments, offline-compatible clients | `npx` and `mcp-remote` package |
-
-**Streamable HTTP** is recommended for most setups. It works with all major AI clients.
-
-### 3. Configure Your Client
-
-Add the following to your client's MCP configuration file:
-
-**Streamable HTTP** (recommended):
+Create an API key under **Management → Tools → API → Authentication**, then add the endpoint and header to the client's
+MCP configuration:
 
 ```json
 {
   "mcpServers": {
     "homarr": {
-      "url": "https://your-homarr-instance.com/api/mcp",
+      "url": "https://homarr.example.com/api/mcp",
       "headers": {
-        "ApiKey": "<your-api-key>"
+        "ApiKey": "<id>.<token>"
       }
     }
   }
 }
 ```
 
-Where to place this config:
-
-| Client          | Config File                                     |
-| --------------- | ----------------------------------------------- |
-| Cursor          | `.cursor/mcp.json`                              |
-| Claude Desktop  | `claude_desktop_config.json`                    |
-| Claude Code     | `.claude/mcp.json` (or `claude mcp add homarr`) |
-| VS Code Copilot | `.vscode/mcp.json`                              |
-
-:::warning
-
-Replace `<your-api-key>` with your actual API key. Never commit API keys to version control.
-
-:::
-
-**STDIO** (alternative):
+Clients without Streamable HTTP support can use `mcp-remote` over STDIO:
 
 ```json
 {
   "mcpServers": {
     "homarr": {
       "command": "npx",
-      "args": ["-y", "mcp-remote", "https://your-homarr-instance.com/api/mcp", "--header", "ApiKey:<your-api-key>"]
+      "args": ["-y", "mcp-remote", "https://homarr.example.com/api/mcp", "--header", "ApiKey:<id>.<token>"]
     }
   }
 }
 ```
 
-This option tunnels MCP communication through STDIO using the `mcp-remote` package. Useful when the AI client cannot make HTTP requests directly.
+The **AI / MCP** tab on Homarr's API page shows the current endpoint, configuration, and generated tool catalog.
 
-## Authentication
+## Authentication and permissions
 
-MCP supports two authentication methods:
+MCP supports API keys and OAuth 2.1 with PKCE. API keys are simpler for direct client configuration; OAuth is available
+for clients that support dynamic authorization.
 
-| Method               | Description                                           | Best For                                                         |
-| -------------------- | ----------------------------------------------------- | ---------------------------------------------------------------- |
-| **API Key**          | Include `ApiKey: <id>.<token>` header in all requests | Scripts, CI/CD, direct client configs                            |
-| **OAuth 2.1 + PKCE** | Full OAuth flow with dynamic client registration      | MCP clients with OAuth support (e.g. `opencode mcp auth homarr`) |
+Tools use the permissions of the API key owner or authorized user. Creating a key does not grant additional access.
+Custom Widget and Workshop authoring tools, prompts, and resources are visible only to administrators.
 
-API key authentication is simpler and recommended for most setups. The API key inherits the permissions of the user who created it. Tools that require higher privileges will return permission errors if the key lacks access.
+Use HTTPS when the endpoint crosses an untrusted network.
 
-Custom Widget and Workshop authoring are different: their tools, prompts, and resources are exposed only when the API
-key owner is a Homarr administrator. Non-administrator keys cannot discover or invoke those capabilities. Creating an
-API key never elevates the owner.
+## Verify the endpoint
 
-OAuth authorization and token requests bind issued credentials to the canonical `/api/mcp` resource. Dynamic client
-registration remains available for compatibility with current MCP clients while the ecosystem transitions toward
-pre-registered clients and Client ID Metadata Documents.
+The 2025 compatibility path accepts a compact `tools/list` request:
 
-## Testing the Connection
-
-Verify your MCP endpoint is working:
-
-```bash
-curl -s -X POST \
-  -H "Content-Type: application/json" \
-  -H "Accept: application/json" \
-  -H "ApiKey: <your-api-key>" \
-  -H "Mcp-Method: server/discover" \
-  -H "Mcp-Name: homarr" \
-  -d '{"jsonrpc":"2.0","method":"server/discover","params":{"_meta":{"io.modelcontextprotocol/protocolVersion":"2026-07-28","io.modelcontextprotocol/clientInfo":{"name":"test","version":"1.0"},"io.modelcontextprotocol/clientCapabilities":{}}},"id":1}' \
-  https://your-homarr-instance.com/api/mcp
-```
-
-A successful response includes the supported protocol versions and server capabilities. Use `tools/list` to see all
-available tools. MCP v2 clients add the per-request metadata and `Mcp-Method` / `Mcp-Name` headers automatically; the
-abbreviated request below uses the stateless 2025 compatibility path for readability:
-
-```bash
-curl -s -X POST \
-  -H "Content-Type: application/json" \
-  -H "Accept: application/json, text/event-stream" \
-  -H "ApiKey: <your-api-key>" \
+```sh
+curl -X POST \
+  -H 'Content-Type: application/json' \
+  -H 'Accept: application/json, text/event-stream' \
+  -H 'ApiKey: <id>.<token>' \
   -d '{"jsonrpc":"2.0","method":"tools/list","id":1}' \
-  https://your-homarr-instance.com/api/mcp
+  https://homarr.example.com/api/mcp
 ```
 
-Tool catalogs are returned in deterministic order and may be cached privately by the client for five minutes. The
-removed HTTP+SSE `/sse` and `/message` transports return `410 Gone`; use the single Streamable HTTP endpoint instead.
+The removed HTTP+SSE `/sse` and `/message` transports return `410 Gone`.
 
-## Available Tools
+## Tools and resources
 
-Homarr exposes 50+ tools organized by namespace. Each tool is either a **query** (GET, read-only) or **mutation** (POST, write action).
+The generated catalog includes available board, app, integration, Docker, Kubernetes, media, DNS, download, and other
+Homarr procedures. Queries are read-only; mutations change state. The exact catalog depends on the release and current
+user permissions, so inspect `tools/list` or the table in Homarr instead of relying on a static list.
 
-| Namespace          | Example Tools                                              | Type       |
-| ------------------ | ---------------------------------------------------------- | ---------- |
-| `app`              | List all apps, get app by ID, create/update/delete app     | GET + POST |
-| `apiKeys`          | List API keys                                              | GET        |
-| `beszel`           | Systems status, alerts, historical system metrics          | GET        |
-| `board`            | List boards, read settings/CSS, create/update/delete board | GET + POST |
-| `docker`           | List containers, inspect container, start/stop/restart     | GET + POST |
-| `icon`             | Search icons                                               | GET        |
-| `info`             | Server health, version info                                | GET        |
-| `integration`      | List integrations, test connection, delete integration     | GET + POST |
-| `invite`           | List invitations, delete invite                            | GET + POST |
-| `calendar`         | Calendar events from media servers                         | GET        |
-| `customWidget`     | Validate, preview, create, and iteratively update widgets  | GET + POST |
-| `dnsHole`          | DNS hole summary, toggle blocking                          | GET + POST |
-| `downloads`        | Active downloads, pause/resume/delete                      | GET + POST |
-| `healthMonitoring` | Resource usage stats                                       | GET        |
-| `patchmon`         | Host patch and security update statistics                  | GET        |
-| `mediaRequests`    | Approve/decline media requests                             | GET + POST |
-| `mediaServer`      | Media server sessions and stats                            | GET        |
-| `smartHome`        | Execute automations, device states                         | GET + POST |
+For Custom Widgets, install the official skill and follow the preview-and-evidence workflow described in
+[Connect an agent](./custom-widgets/agent-authoring). Secret values are configured in Homarr and are never returned
+through MCP.
 
-The tools table on the MCP tab is dynamically generated - it always reflects the latest available procedures from your Homarr instance.
-
-## Security
-
-- API keys are required for authentication - unauthenticated requests are rejected
-- Tools inherit the permissions of the API key's owner
-- OAuth endpoints are rate-limited to prevent abuse
-- Tool execution errors are contained - a failing tool call does not crash the MCP server
-- Custom-widget MCP actions are simulation-only; live preview actions must be enabled explicitly in the browser workbench
-- Custom-widget secret values are never returned through MCP
-- All communication uses HTTPS (configure HTTP → HTTPS redirects on your reverse proxy)
-
-## Use Cases
-
-- **"Show me all apps on my Homarr dashboard"** - AI lists all apps with their names and URLs
-- **"Restart the Plex Docker container"** - AI finds and restarts the container via Docker integration
-- **"What's downloading right now?"** - AI fetches active download status across all download integrations
-- **"Create a new app pointing to my Grafana instance"** - AI creates an app with the correct icon and URL
-- **"How many users are on my Homarr instance?"** - AI lists all users (admin only)
-- **"Toggle Pi-hole blocking for 5 minutes"** - AI interacts with DNS controls
-- **"How are my servers doing?"** - AI fetches Beszel system stats including CPU, memory, disk, and alerts
-- **"Build two Custom Widgets for this API"** - AI researches once, then validates and previews each definition before saving it
-
-## Create a Custom Widget with an AI agent
-
-An agent can create one `homarr-custom-widget-v2` definition or a coordinated set. Start with the native prompt
-`homarr-custom-widget-author`.
-
-The API key owner must be a Homarr administrator. The same rule applies to management, import, migration, preview,
-secrets, publication, Workshop installation, and the HTTP authoring resources.
-
-Load the installed skill before authoring. `customWidget_getSkill` returns its compact `SKILL.md` entrypoint and a
-reference index. Load a named schema, runtime, or security reference with `customWidget_getReference` only when the
-design needs it. Read the live JSON Schema or component resources when their detail is required by the design.
-
-1. Call `customWidget_getSkill`. Homarr Assistant stages the next typed authoring tools automatically as the widget
-   moves through context, validation, preview, evidence, and persistence phases.
-2. Load the live schema and applicable named references on demand. Prefer `customWidget_findComponents` for a small
-   release-matched result set; reserve the full catalog for broad exploration. Fetch only relevant installed component
-   documentation with `customWidget_getComponents` (or `customWidget_getComponent` for one repair) and, when useful,
-   one interaction example with `customWidget_getExample`. Component results contain component-specific props; collect
-   any needed shared prop names from the compact catalog and fetch them together once with `customWidget_getSharedProps`.
-3. Build each Custom Widget definition. Use `templateLines` for generated multiline JSX and
-   `customWidget_validateTemplate` for focused JSX diagnostics without resending the complete manifest.
-4. Send the coherent complete definition once to `customWidget_previewCreate`; preview creation performs full
-   validation and creates the testable preview.
-5. Call `customWidget_previewQuery` for every entry in the returned `queries` list. Supply the listed invocation
-   parameters for manual queries and inspect the real HTTP status and response shape before binding template fields.
-6. Test every relevant entry in the returned `actions` list with `customWidget_previewAction` in simulation mode. The
-   list exposes each action's method, parameters, minimum board permission, confirmation, and invalidated queries.
-7. Open the returned `previewPath` or `previewUrl`.
-8. Examine `customWidget_previewJournal`.
-9. For a JSX-only evidence correction, validate it and call `customWidget_previewReviseTemplate` with the session ID
-   and revision. It inherits the manifest and returns fresh evidence lists without resending sources, requests, or
-   options. Create another preview only when those manifest sections change.
-10. Retest every returned query and action for the current revision, then call `customWidget_createFromPreview` with
-    the session ID so the definition is not streamed again.
-11. Open the returned `managementPath` to review the exact saved definition.
-12. If the user must enter the source URL or credentials, call `customWidget_configurationRequestUser` with the new definition ID and wait for completion.
-13. Create a final preview with that definition ID so Homarr loads its stored credentials, then test it again.
-14. Use `customWidget_update` or `customWidget_templatePatch` for any final saved-definition corrections.
-15. Repeat the independent preview and persistence lifecycle for every definition in the requested set.
-
-Validation, preview creation, and template revision return compact lifecycle metadata. They do not echo the submitted
-widget or duplicate its template as both a string and line array; the agent should retain and reuse its local candidate.
-
-The agent receives the configuration-request status. The agent does not receive plaintext credentials. A preview-scoped setup URL configures only that temporary preview; use a definition-scoped URL when the values must persist.
-
-Discovery resources:
-
-- `homarr://custom-widgets/schema`
-- `homarr://custom-widgets/components`
-- `homarr://custom-widgets/components/{name}`
-- `homarr://custom-widgets/examples/{name}`
-- `homarr://custom-widgets/skill`
-- `homarr://custom-widgets/references/{schema|runtime|security}`
-
-An authenticated administrator can use the matching `/api/custom-widgets/authoring-prompt`, `/schema`, `/components`,
-and `/skill` endpoints instead of MCP resource URIs. These endpoints are not public schema downloads.
-
-The Custom Widget tools are:
-
-- `customWidget_schema`
-- `customWidget_validate`
-- `customWidget_validateTemplate`
-- `customWidget_list`
-- `customWidget_get`
-- `customWidget_create`
-- `customWidget_createFromPreview`
-- `customWidget_update`
-- `customWidget_delete`
-- `customWidget_templatePatch`
-- `customWidget_previewCreate`
-- `customWidget_previewReviseTemplate`
-- `customWidget_previewQuery`
-- `customWidget_previewAction`
-- `customWidget_previewJournal`
-- `customWidget_secretSet`
-- `customWidget_sourceConfigure`
-- `customWidget_configurationRequestUser`
-- `customWidget_workshopSearch`
-- `customWidget_workshopGet`
-- `customWidget_workshopInstall`
-- `customWidget_getAuthoringPrompt`
-- `customWidget_getComponentCatalog`
-- `customWidget_findComponents`
-- `customWidget_getComponents`
-- `customWidget_getComponent`
-- `customWidget_getSharedProps`
-- `customWidget_getExample`
-- `customWidget_getSkill`
-- `customWidget_getReference`
-
-Custom Widget permissions are not assignable group capabilities. Administrator status is required for the complete
-authoring surface. A source-configuration URL is short-lived and single-use, requires the same logged-in administrator
-to open and complete it, and never returns plaintext credentials to the agent.
-
-Adding a `customApi` item through `board_addItem`, changing its definition or options, and duplicating a board that
-contains one also require an administrator with board-modify access. Existing placements continue to render and run
-authorized requests according to normal board permissions.
-
-Homarr applies its request security controls during request execution. These controls include SSRF, DNS, redirect, size, timeout, rate, and permission controls.
-
-Read [Use agents and skills.sh](./custom-widgets/agent-authoring) for the complete procedure and the portable Agent Skill.
+The built-in [Assistant](./assistant) uses the same tool catalog with the current Homarr session and asks for approval
+before mutations by default.

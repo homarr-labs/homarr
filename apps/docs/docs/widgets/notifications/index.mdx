@@ -4,15 +4,10 @@ description: "Display notification history from an integration"
 hide_title: true
 ---
 
-import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
-
 import { WidgetHeader } from "@site/src/components/widgets/header";
 import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
 import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
-import { IconAd } from "@tabler/icons-react";
-import Tabs from "@theme/Tabs";
-import TabItem from "@theme/TabItem";
 import { notificationsWidget } from ".";
 import { ntfyIntegration } from "@site/docs/integrations/ntfy";
 import { nextcloudIntegration } from "@site/docs/integrations/nextcloud";
@@ -20,23 +15,14 @@ import { gotifyIntegration } from "@site/docs/integrations/gotify";
 
 <WidgetHeader widget={notificationsWidget} categories={["Notifications", "Messaging"]} />
 
-The notifications widget allows you to display notifications from various integrations in a unified view. Compact mode presents them as a vertical list of padded notification cards.
-
-### Screenshots
-
-import notificationsScreenshot from "./img/notifications.png";
-
-<img src={notificationsScreenshot} alt="notifications" width={256} height={256} />
+Displays notification history from the configured integration. Advanced view shows full message bodies, sources, and
+available service icons.
 
 ### Supported Integrations
 
 <WidgetIntegrations
   items={[{ integration: ntfyIntegration }, { integration: nextcloudIntegration }, { integration: gotifyIntegration }]}
 />
-
-Advanced view always shows available notification logos and sources and removes the compact body line limit. External notification links retain the same safe new-tab behavior.
-
-<WidgetInteractionGuide advancedView />
 
 ### Adding the widget
 

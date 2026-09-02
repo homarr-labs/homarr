@@ -13,20 +13,11 @@ import { timerWidget } from ".";
 
 <WidgetHeader widget={timerWidget} categories={["Productivity", "Time"]} />
 
-The Timer / Pomodoro widget runs in your browser and does not require an integration. A running timer uses a saved
-deadline, so reopening the board or returning from a background tab restores the correct remaining time.
+The Timer / Pomodoro widget runs in the browser without an integration. Timer mode uses one duration; Pomodoro mode
+alternates configurable focus, short-break, and long-break phases.
 
-Timer mode uses one configured duration. Pomodoro mode starts with a focus session, follows most completed focus
-sessions with a short break, and uses a long break after the configured number of focus sessions. Automatic break and
-focus starts are separate options and are disabled by default. When automatic starts are enabled, elapsed phases are
-reconciled from their original deadlines after the board returns to the foreground.
-
-Advanced view shows the sequence, durations, and local alert preferences. Sounds are enabled by default, while browser
-notifications are requested only after you enable them. Progress and alert preferences are stored per board and widget
-in the current browser; clearing site data resets them, and widget previews do not persist timer state.
-
-Alerts can fire while Homarr is open, but browser or operating-system settings may suppress notifications. Reduced-motion
-and forced-colors preferences replace the animated completion effect with a static border.
+Progress and alert preferences are stored per board and widget in the current browser. Notifications can fire only
+while Homarr is open.
 
 <WidgetInteractionGuide />
 
