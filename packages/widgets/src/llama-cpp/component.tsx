@@ -62,12 +62,15 @@ function LlamacppContent({ integrationId, options, width }: LlamacppContentProps
   );
 
   const speedTps = stats.metrics.generationSpeedTps;
+  const avgSpeedTps = stats.metrics.avgGenerationSpeedTps;
   const requestsProcessing = stats.metrics.requestsProcessing;
   const isBusy = requestsProcessing !== null && requestsProcessing > 0;
   const contextUsage = stats.contextUsage;
   const contextUsageLabel = contextUsage
     ? `${formatNumber(contextUsage.usedTokens, 0)} / ${formatNumber(contextUsage.contextSize, 0)} (${contextUsage.percent}%)`
     : null;
+  const displayedSpeed = isBusy && speedTps !== null && speedTps > 0 ? speedTps : avgSpeedTps;
+  const speedIsAverage = !isBusy && (avgSpeedTps !== null || speedTps === null || speedTps <= 0);
 
   return (
     <Stack p="xs" gap="xs" h="100%">
@@ -108,9 +111,16 @@ function LlamacppContent({ integrationId, options, width }: LlamacppContentProps
             >
               <Stack gap={2} align="center">
                 <IconGauge size={isBusy ? 28 : 24} color={isBusy ? "blue" : "dimmed"} />
-                <Text size="xs" fw={700}>
-                  {speedTps !== null && speedTps > 0 ? `${formatNumber(speedTps, 1)} t/s` : "—"}
-                </Text>
+                <Tooltip
+                  label={speedIsAverage ? t("speedTooltip.average") : t("speedTooltip.current")}
+                  withArrow
+                >
+                  <Text size="xs" fw={700}>
+                    {displayedSpeed !== null && displayedSpeed > 0
+                      ? `${formatNumber(displayedSpeed, 1)} t/s`
+                      : "—"}
+                  </Text>
+                </Tooltip>
               </Stack>
             </Center>
 

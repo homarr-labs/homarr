@@ -74,6 +74,8 @@ export interface LlamacppStats {
   metrics: {
     generationSpeedTps: number | null;
     promptSpeedTps: number | null;
+    avgGenerationSpeedTps: number | null;
+    avgPromptSpeedTps: number | null;
     requestsProcessing: number | null;
     requestsDeferred: number | null;
     tokensProcessed: number | null;
@@ -99,6 +101,13 @@ export const mapLlamacppModel = (model: z.infer<typeof llamacppModelSchema>): Ll
 
 export const getMetricValue = (metrics: readonly { name: string; value: number }[], name: string): number | null =>
   metrics.find((metric) => metric.name === name)?.value ?? null;
+
+/**
+ * Averages cumulative counters (tokens ÷ seconds) so a stable number is available while
+ * the server is idle, mirroring how llama-monitor derives its always-on speeds.
+ */
+export const avgTokensPerSecond = (tokens: number | null, seconds: number | null): number | null =>
+  tokens !== null && seconds !== null && seconds > 0 ? tokens / seconds : null;
 
 interface LlamacppSlot {
   n_ctx?: number;
@@ -179,6 +188,14 @@ export const mapLlamacppStats = (
     metrics: {
       generationSpeedTps: getMetricValue(metrics, "llamacpp:predicted_tokens_seconds"),
       promptSpeedTps: getMetricValue(metrics, "llamacpp:prompt_tokens_seconds"),
+      avgGenerationSpeedTps: avgTokensPerSecond(
+        getMetricValue(metrics, "llamacpp:tokens_predicted_total"),
+        getMetricValue(metrics, "llamacpp:tokens_predicted_seconds_total"),
+      ),
+      avgPromptSpeedTps: avgTokensPerSecond(
+        getMetricValue(metrics, "llamacpp:prompt_tokens_total"),
+        getMetricValue(metrics, "llamacpp:prompt_seconds_total"),
+      ),
       requestsProcessing: getMetricValue(metrics, "llamacpp:requests_processing"),
       requestsDeferred: getMetricValue(metrics, "llamacpp:requests_deferred"),
       tokensProcessed: getMetricValue(metrics, "llamacpp:prompt_tokens_total"),

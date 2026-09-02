@@ -4232,6 +4232,10 @@
         "unhealthy": "异常 ({status})"
       },
       "idle": "空闲",
+      "speedTooltip": {
+        "current": "当前生成速度",
+        "average": "启动以来的平均生成速度"
+      },
       "busy": "{count, plural, other {# 个请求处理中}}",
       "modelInfo": {
         "context": "上下文",

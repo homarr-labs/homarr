@@ -12,7 +12,12 @@ import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/h
 
 import type { IntegrationSecret } from "../../base/types";
 import { LlamacppIntegration } from "../llamacpp-integration";
-import { mapContextUsage, mapLlamacppModel, parsePrometheusMetrics } from "../llamacpp-types";
+import {
+  avgTokensPerSecond,
+  mapContextUsage,
+  mapLlamacppModel,
+  parsePrometheusMetrics,
+} from "../llamacpp-types";
 
 vi.mock("@homarr/core/infrastructure/http", () => ({
   fetchWithTrustedCertificatesAsync: vi.fn(),
@@ -39,8 +44,10 @@ const sampleMetricsText = [
   "# HELP llamacpp:prompt_tokens_total Total number of tokens processed",
   "# TYPE llamacpp:prompt_tokens_total counter",
   "llamacpp:prompt_tokens_total 69834",
+  "llamacpp:prompt_seconds_total 23278",
   "llamacpp:prompt_tokens_cached_total 12000",
   "llamacpp:tokens_predicted_total 12161",
+  "llamacpp:tokens_predicted_seconds_total 380.03125",
   "llamacpp:requests_processing 1",
   "llamacpp:requests_deferred 0",
   "llamacpp:predicted_tokens_seconds 32.8472",
@@ -107,8 +114,10 @@ describe("parsePrometheusMetrics", () => {
 
     expect(metrics).toStrictEqual([
       { name: "llamacpp:prompt_tokens_total", value: 69834 },
+      { name: "llamacpp:prompt_seconds_total", value: 23278 },
       { name: "llamacpp:prompt_tokens_cached_total", value: 12000 },
       { name: "llamacpp:tokens_predicted_total", value: 12161 },
+      { name: "llamacpp:tokens_predicted_seconds_total", value: 380.03125 },
       { name: "llamacpp:requests_processing", value: 1 },
       { name: "llamacpp:requests_deferred", value: 0 },
       { name: "llamacpp:predicted_tokens_seconds", value: 32.8472 },
@@ -187,6 +196,18 @@ describe("mapContextUsage", () => {
   });
 });
 
+describe("avgTokensPerSecond", () => {
+  test("divides cumulative counters", () => {
+    expect(avgTokensPerSecond(12161, 380.03125)).toBe(32);
+  });
+
+  test("returns null when either counter is missing or seconds are zero", () => {
+    expect(avgTokensPerSecond(null, 5)).toBeNull();
+    expect(avgTokensPerSecond(10, null)).toBeNull();
+    expect(avgTokensPerSecond(10, 0)).toBeNull();
+  });
+});
+
 describe("LlamacppIntegration getStatsAsync", () => {
   test("fetches health, models, metrics and slots and maps them into stats", async () => {
     mockAllEndpoints();
@@ -211,6 +232,8 @@ describe("LlamacppIntegration getStatsAsync", () => {
       metrics: {
         generationSpeedTps: 32.8472,
         promptSpeedTps: 1500.5,
+        avgGenerationSpeedTps: 32,
+        avgPromptSpeedTps: 3,
         requestsProcessing: 1,
         requestsDeferred: 0,
         tokensProcessed: 69834,
@@ -268,6 +291,8 @@ describe("LlamacppIntegration getStatsAsync", () => {
     expect(stats.metrics).toStrictEqual({
       generationSpeedTps: null,
       promptSpeedTps: null,
+      avgGenerationSpeedTps: null,
+      avgPromptSpeedTps: null,
       requestsProcessing: null,
       requestsDeferred: null,
       tokensProcessed: null,
