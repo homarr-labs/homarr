@@ -7,7 +7,6 @@ import { IconBrain, IconCircleCheck, IconCircleX, IconCpu, IconGauge, IconServer
 
 import { clientApi } from "@homarr/api/client";
 import { formatBytes, formatNumber } from "@homarr/common";
-import { requestSpeedTps } from "@homarr/integrations";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
@@ -55,7 +54,11 @@ function LlamacppContent({ integrationId, options, width }: LlamacppContentProps
 
     const elapsedSeconds = (nowMs - current.baseTimeMs) / 1000;
     const deltaTokens = decoded - current.baseTokens;
-    return requestSpeedTps(deltaTokens, elapsedSeconds);
+    if (elapsedSeconds <= 0 || deltaTokens < 0) {
+      return null;
+    }
+    const speed = deltaTokens / elapsedSeconds;
+    return Number.isFinite(speed) && speed > 0 ? speed : null;
   }, [data]);
 
   if (isError) {

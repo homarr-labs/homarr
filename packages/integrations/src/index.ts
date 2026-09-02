@@ -2,7 +2,6 @@
 export { ArchiveTeamWarriorIntegration } from "./archive-team-warrior/archive-team-warrior-integration";
 export { WudIntegration } from "./wud/wud-integration";
 export { LlamacppIntegration } from "./llama-cpp/llamacpp-integration";
-export { requestSpeedTps } from "./llama-cpp/llamacpp-types";
 export { AdGuardHomeIntegration } from "./adguard-home/adguard-home-integration";
 export { TechnitiumDnsIntegration } from "./technitium/technitium-integration";
 export { AnchorIntegration } from "./anchor/anchor-integration";
