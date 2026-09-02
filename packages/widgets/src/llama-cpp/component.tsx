@@ -1,10 +1,13 @@
 "use client";
 
+import { useMemo, useRef } from "react";
+
 import { Badge, Card, Center, Group, Progress, Stack, Text, Tooltip } from "@mantine/core";
 import { IconBrain, IconCircleCheck, IconCircleX, IconCpu, IconGauge, IconServer } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { formatBytes, formatNumber } from "@homarr/common";
+import { requestSpeedTps } from "@homarr/integrations";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
@@ -29,6 +32,31 @@ interface LlamacppContentProps {
 function LlamacppContent({ integrationId, options, width }: LlamacppContentProps) {
   const t = useScopedI18n("widget.llamacpp");
   const { data, isError } = clientApi.widget.llamacpp.getStats.useQuery({ integrationId });
+
+  // Tracks the in-flight request across polls so the widget can show the average
+  // speed since that request started: /slots reports the request id (taskId) and how
+  // many tokens it has generated so far (requestDecodedTokens). The server resets that
+  // counter to 0 when a new request starts, so a fresh taskId means a fresh request.
+  const requestRef = useRef<{ taskId: number; baseTokens: number; baseTimeMs: number } | null>(null);
+  const perRequestSpeedTps = useMemo(() => {
+    const taskId = data?.stats.metrics.taskId ?? null;
+    const decoded = data?.stats.metrics.requestDecodedTokens ?? null;
+    if (taskId === null || decoded === null) {
+      requestRef.current = null;
+      return null;
+    }
+
+    const nowMs = Date.now();
+    const current = requestRef.current;
+    if (current === null || current.taskId !== taskId) {
+      requestRef.current = { taskId, baseTokens: decoded, baseTimeMs: nowMs };
+      return null;
+    }
+
+    const elapsedSeconds = (nowMs - current.baseTimeMs) / 1000;
+    const deltaTokens = decoded - current.baseTokens;
+    return requestSpeedTps(deltaTokens, elapsedSeconds);
+  }, [data]);
 
   if (isError) {
     return (
@@ -69,8 +97,25 @@ function LlamacppContent({ integrationId, options, width }: LlamacppContentProps
   const contextUsageLabel = contextUsage
     ? `${formatNumber(contextUsage.usedTokens, 0)} / ${formatNumber(contextUsage.contextSize, 0)} (${contextUsage.percent}%)`
     : null;
-  const displayedSpeed = isBusy && speedTps !== null && speedTps > 0 ? speedTps : avgSpeedTps;
-  const speedIsAverage = !isBusy && (avgSpeedTps !== null || speedTps === null || speedTps <= 0);
+
+  let displayedSpeed: number | null;
+  let speedMode: "request" | "live" | "average";
+  if (isBusy && perRequestSpeedTps !== null) {
+    displayedSpeed = perRequestSpeedTps;
+    speedMode = "request";
+  } else if (isBusy && speedTps !== null && speedTps > 0) {
+    displayedSpeed = speedTps;
+    speedMode = "live";
+  } else {
+    displayedSpeed = avgSpeedTps;
+    speedMode = "average";
+  }
+  const speedTooltip =
+    speedMode === "request"
+      ? t("speedTooltip.request")
+      : speedMode === "live"
+        ? t("speedTooltip.current")
+        : t("speedTooltip.average");
 
   return (
     <Stack p="xs" gap="xs" h="100%">
@@ -111,14 +156,9 @@ function LlamacppContent({ integrationId, options, width }: LlamacppContentProps
             >
               <Stack gap={2} align="center">
                 <IconGauge size={isBusy ? 28 : 24} color={isBusy ? "blue" : "dimmed"} />
-                <Tooltip
-                  label={speedIsAverage ? t("speedTooltip.average") : t("speedTooltip.current")}
-                  withArrow
-                >
+                <Tooltip label={speedTooltip} withArrow>
                   <Text size="xs" fw={700}>
-                    {displayedSpeed !== null && displayedSpeed > 0
-                      ? `${formatNumber(displayedSpeed, 1)} t/s`
-                      : "—"}
+                    {displayedSpeed !== null && displayedSpeed > 0 ? `${formatNumber(displayedSpeed, 1)} t/s` : "—"}
                   </Text>
                 </Tooltip>
               </Stack>

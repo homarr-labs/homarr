@@ -67,6 +67,11 @@ export interface LlamacppModel {
   quantization: string | null;
 }
 
+export interface LlamacppPerRequest {
+  taskId: number | null;
+  decodedTokens: number | null;
+}
+
 export interface LlamacppStats {
   health: string;
   model: LlamacppModel | null;
@@ -81,6 +86,8 @@ export interface LlamacppStats {
     tokensProcessed: number | null;
     tokensGenerated: number | null;
     promptCacheHitRate: number | null;
+    requestDecodedTokens: number | null;
+    taskId: number | null;
   };
 }
 
@@ -112,6 +119,9 @@ export const avgTokensPerSecond = (tokens: number | null, seconds: number | null
 interface LlamacppSlot {
   n_ctx?: number;
   n_prompt_tokens?: number;
+  id_task?: number;
+  is_processing?: boolean;
+  next_token?: { n_decoded?: number }[];
 }
 
 export interface LlamacppContextUsage {
@@ -152,6 +162,46 @@ export const mapContextUsage = (slots: readonly unknown[] | null): LlamacppConte
   return null;
 };
 
+/**
+ * Extracts the active request's identity and generated-token count from /slots. `id_task`
+ * identifies the in-flight request (llama.cpp task IDs are monotonically increasing and
+ * never reused) and `next_token[0].n_decoded` is `stats.n_gen`, the tokens this request has
+ * generated so far, which the server resets to 0 whenever a new generation starts. The widget
+ * takes deltas between polls to derive the per-request average speed.
+ */
+export const mapLlamacppPerRequest = (slots: readonly unknown[] | null): LlamacppPerRequest => {
+  if (!Array.isArray(slots)) {
+    return { taskId: null, decodedTokens: null };
+  }
+
+  for (const slot of slots) {
+    if (typeof slot !== "object" || slot === null) {
+      continue;
+    }
+
+    const record = slot as LlamacppSlot;
+    if (record.is_processing !== true) {
+      continue;
+    }
+
+    const taskId = typeof record.id_task === "number" ? record.id_task : null;
+    const nextToken = record.next_token?.[0];
+    const decodedTokens = typeof nextToken?.n_decoded === "number" ? nextToken.n_decoded : null;
+
+    return { taskId, decodedTokens };
+  }
+
+  return { taskId: null, decodedTokens: null };
+};
+
+export const requestSpeedTps = (tokens: number | null, elapsedSeconds: number | null): number | null => {
+  if (tokens === null || elapsedSeconds === null || elapsedSeconds <= 0) {
+    return null;
+  }
+  const speed = tokens / elapsedSeconds;
+  return Number.isFinite(speed) && speed > 0 ? speed : null;
+};
+
 export const parseLlamacppSlotsAsync = async (response: {
   json: () => Promise<unknown>;
 }): Promise<unknown[] | null> => {
@@ -172,6 +222,7 @@ export const mapLlamacppStats = (
   model: LlamacppModel | null,
   metrics: readonly { name: string; value: number }[],
   contextUsage: LlamacppContextUsage | null,
+  perRequest: LlamacppPerRequest,
 ): LlamacppStats => {
   const promptTokens = getMetricValue(metrics, "llamacpp:prompt_tokens_total");
   const cachedTokens = getMetricValue(metrics, "llamacpp:prompt_tokens_cached_total");
@@ -201,6 +252,8 @@ export const mapLlamacppStats = (
       tokensProcessed: getMetricValue(metrics, "llamacpp:prompt_tokens_total"),
       tokensGenerated: getMetricValue(metrics, "llamacpp:tokens_predicted_total"),
       promptCacheHitRate,
+      requestDecodedTokens: perRequest.decodedTokens,
+      taskId: perRequest.taskId,
     },
   };
 };

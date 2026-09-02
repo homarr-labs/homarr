@@ -4234,7 +4234,8 @@
       "idle": "Idle",
       "speedTooltip": {
         "current": "Current generation speed",
-        "average": "Average generation speed since startup"
+        "average": "Average generation speed since startup",
+        "request": "Average speed since this request started"
       },
       "busy": "{count, plural, one {# request running} other {# requests running}}",
       "modelInfo": {

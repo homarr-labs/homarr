@@ -10,6 +10,7 @@ import type { LlamacppStats } from "./llamacpp-types";
 import {
   mapContextUsage,
   mapLlamacppModel,
+  mapLlamacppPerRequest,
   mapLlamacppStats,
   parseLlamacppHealthAsync,
   parseLlamacppMetricsAsync,
@@ -70,7 +71,8 @@ export class LlamacppIntegration extends Integration {
 
     const firstModel = models.data[0] ? mapLlamacppModel(models.data[0]) : null;
     const contextUsage = mapContextUsage(slots);
+    const perRequest = mapLlamacppPerRequest(slots);
 
-    return mapLlamacppStats(health, firstModel, metrics, contextUsage);
+    return mapLlamacppStats(health, firstModel, metrics, contextUsage, perRequest);
   }
 }

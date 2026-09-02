@@ -16,7 +16,9 @@ import {
   avgTokensPerSecond,
   mapContextUsage,
   mapLlamacppModel,
+  mapLlamacppPerRequest,
   parsePrometheusMetrics,
+  requestSpeedTps,
 } from "../llamacpp-types";
 
 vi.mock("@homarr/core/infrastructure/http", () => ({
@@ -59,7 +61,9 @@ const sampleSlotsResponse = [
     id: 0,
     n_ctx: 131072,
     n_prompt_tokens: 101076,
-    is_processing: false,
+    is_processing: true,
+    id_task: 7,
+    next_token: [{ n_decoded: 42, n_remain: 100, has_next_token: true, has_new_line: false }],
   },
 ];
 
@@ -208,6 +212,44 @@ describe("avgTokensPerSecond", () => {
   });
 });
 
+describe("mapLlamacppPerRequest", () => {
+  test("returns the active request id and decoded tokens from the processing slot", () => {
+    expect(mapLlamacppPerRequest(sampleSlotsResponse)).toStrictEqual({ taskId: 7, decodedTokens: 42 });
+  });
+
+  test("skips idle slots and returns nulls", () => {
+    expect(
+      mapLlamacppPerRequest([{ is_processing: false, id_task: 3, next_token: [{ n_decoded: 10 }] }]),
+    ).toStrictEqual({ taskId: null, decodedTokens: null });
+  });
+
+  test("returns nulls for missing, empty, or malformed slots", () => {
+    expect(mapLlamacppPerRequest(null)).toStrictEqual({ taskId: null, decodedTokens: null });
+    expect(mapLlamacppPerRequest([])).toStrictEqual({ taskId: null, decodedTokens: null });
+    expect(mapLlamacppPerRequest(["nope", null])).toStrictEqual({ taskId: null, decodedTokens: null });
+  });
+
+  test("handles a processing slot missing the per-request fields", () => {
+    expect(mapLlamacppPerRequest([{ is_processing: true }])).toStrictEqual({
+      taskId: null,
+      decodedTokens: null,
+    });
+  });
+});
+
+describe("requestSpeedTps", () => {
+  test("divides token delta by elapsed seconds", () => {
+    expect(requestSpeedTps(128, 4)).toBe(32);
+  });
+
+  test("returns null for missing values, non-positive, or negative elapsed", () => {
+    expect(requestSpeedTps(null, 4)).toBeNull();
+    expect(requestSpeedTps(10, null)).toBeNull();
+    expect(requestSpeedTps(10, 0)).toBeNull();
+    expect(requestSpeedTps(10, -2)).toBeNull();
+  });
+});
+
 describe("LlamacppIntegration getStatsAsync", () => {
   test("fetches health, models, metrics and slots and maps them into stats", async () => {
     mockAllEndpoints();
@@ -239,6 +281,8 @@ describe("LlamacppIntegration getStatsAsync", () => {
         tokensProcessed: 69834,
         tokensGenerated: 12161,
         promptCacheHitRate: 15,
+        requestDecodedTokens: 42,
+        taskId: 7,
       },
     });
 
@@ -298,6 +342,8 @@ describe("LlamacppIntegration getStatsAsync", () => {
       tokensProcessed: null,
       tokensGenerated: null,
       promptCacheHitRate: null,
+      requestDecodedTokens: null,
+      taskId: null,
     });
   });
 

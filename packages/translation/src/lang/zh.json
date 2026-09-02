@@ -4234,7 +4234,8 @@
       "idle": "閒置",
       "speedTooltip": {
         "current": "目前生成速度",
-        "average": "啟動以來的平均生成速度"
+        "average": "啟動以來的平均生成速度",
+        "request": "本次請求開始以來的平均速度"
       },
       "busy": "{count, plural, other {# 個請求處理中}}",
       "modelInfo": {
