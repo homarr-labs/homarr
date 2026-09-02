@@ -64,6 +64,10 @@ function LlamacppContent({ integrationId, options, width }: LlamacppContentProps
   const speedTps = stats.metrics.generationSpeedTps;
   const requestsProcessing = stats.metrics.requestsProcessing;
   const isBusy = requestsProcessing !== null && requestsProcessing > 0;
+  const contextUsage = stats.contextUsage;
+  const contextUsageLabel = contextUsage
+    ? `${formatNumber(contextUsage.usedTokens, 0)} / ${formatNumber(contextUsage.contextSize, 0)} (${contextUsage.percent}%)`
+    : null;
 
   return (
     <Stack p="xs" gap="xs" h="100%">
@@ -105,7 +109,7 @@ function LlamacppContent({ integrationId, options, width }: LlamacppContentProps
               <Stack gap={2} align="center">
                 <IconGauge size={isBusy ? 28 : 24} color={isBusy ? "blue" : "dimmed"} />
                 <Text size="xs" fw={700}>
-                  {speedTps !== null ? `${formatNumber(speedTps, 1)} t/s` : "—"}
+                  {speedTps !== null && speedTps > 0 ? `${formatNumber(speedTps, 1)} t/s` : "—"}
                 </Text>
               </Stack>
             </Center>
@@ -149,6 +153,25 @@ function LlamacppContent({ integrationId, options, width }: LlamacppContentProps
                   value={formatNumber(stats.model.parameterCount / 1e9, 2) + "B"}
                 />
               )}
+            </Stack>
+          )}
+
+          {options.showContextUsage && contextUsage && !isTiny && (
+            <Stack gap={4}>
+              <Group justify="space-between" wrap="nowrap" miw={0}>
+                <Text size="xs" c="dimmed">
+                  {t("stats.contextUsage")}
+                </Text>
+                <Text size="xs" fw={600}>
+                  {contextUsageLabel}
+                </Text>
+              </Group>
+              <Progress
+                value={contextUsage.percent}
+                size="xs"
+                radius="xs"
+                color={contextUsage.percent > 90 ? "red" : contextUsage.percent > 75 ? "yellow" : "blue"}
+              />
             </Stack>
           )}
 

@@ -12,7 +12,7 @@ import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/h
 
 import type { IntegrationSecret } from "../../base/types";
 import { LlamacppIntegration } from "../llamacpp-integration";
-import { mapLlamacppModel, parsePrometheusMetrics } from "../llamacpp-types";
+import { mapContextUsage, mapLlamacppModel, parsePrometheusMetrics } from "../llamacpp-types";
 
 vi.mock("@homarr/core/infrastructure/http", () => ({
   fetchWithTrustedCertificatesAsync: vi.fn(),
@@ -47,6 +47,15 @@ const sampleMetricsText = [
   "llamacpp:prompt_tokens_seconds 1500.5",
 ].join("\n");
 
+const sampleSlotsResponse = [
+  {
+    id: 0,
+    n_ctx: 131072,
+    n_prompt_tokens: 101076,
+    is_processing: false,
+  },
+];
+
 const jsonResponse = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {
     status,
@@ -80,6 +89,9 @@ const mockAllEndpoints = () => {
     }
     if (url.includes("/metrics")) {
       return textResponse(sampleMetricsText);
+    }
+    if (url.includes("/slots")) {
+      return jsonResponse(sampleSlotsResponse);
     }
     return textResponse("not found", 404);
   }) as typeof fetchWithTrustedCertificatesAsync);
@@ -150,8 +162,33 @@ describe("mapLlamacppModel", () => {
   });
 });
 
+describe("mapContextUsage", () => {
+  test("computes percent from the first slot with valid n_ctx and n_prompt_tokens", () => {
+    expect(mapContextUsage(sampleSlotsResponse)).toStrictEqual({
+      usedTokens: 101076,
+      contextSize: 131072,
+      percent: 77.1,
+    });
+  });
+
+  test("returns null for missing, non-array, or malformed slots", () => {
+    expect(mapContextUsage(null)).toBeNull();
+    expect(mapContextUsage([{ n_ctx: 0, n_prompt_tokens: 10 }])).toBeNull();
+    expect(mapContextUsage([{ n_prompt_tokens: 10 }])).toBeNull();
+    expect(mapContextUsage(["not-an-object", null])).toBeNull();
+  });
+
+  test("clamps the percentage to 100", () => {
+    expect(mapContextUsage([{ n_ctx: 10, n_prompt_tokens: 50 }])).toStrictEqual({
+      usedTokens: 50,
+      contextSize: 10,
+      percent: 100,
+    });
+  });
+});
+
 describe("LlamacppIntegration getStatsAsync", () => {
-  test("fetches health, models and metrics and maps them into stats", async () => {
+  test("fetches health, models, metrics and slots and maps them into stats", async () => {
     mockAllEndpoints();
 
     const stats = await createIntegration().getStatsAsync();
@@ -166,6 +203,11 @@ describe("LlamacppIntegration getStatsAsync", () => {
         fileSizeBytes: 17912397824,
         quantization: "Q4_K - Small",
       },
+      contextUsage: {
+        usedTokens: 101076,
+        contextSize: 131072,
+        percent: 77.1,
+      },
       metrics: {
         generationSpeedTps: 32.8472,
         promptSpeedTps: 1500.5,
@@ -179,7 +221,7 @@ describe("LlamacppIntegration getStatsAsync", () => {
 
     const requestedUrls = mockFetch.mock.calls.map((call) => String(call[0])).toSorted();
     expect(requestedUrls).toStrictEqual(
-      [`${TEST_URL}/health`, `${TEST_URL}/metrics`, `${TEST_URL}/v1/models`].toSorted(),
+      [`${TEST_URL}/health`, `${TEST_URL}/metrics`, `${TEST_URL}/slots`, `${TEST_URL}/v1/models`].toSorted(),
     );
   });
 
@@ -192,6 +234,9 @@ describe("LlamacppIntegration getStatsAsync", () => {
       }
       if (url.includes("/health")) {
         return jsonResponse({ status: "ok" });
+      }
+      if (url.includes("/slots")) {
+        return jsonResponse([]);
       }
       return textResponse(sampleMetricsText);
     }) as typeof fetchWithTrustedCertificatesAsync);
@@ -211,6 +256,9 @@ describe("LlamacppIntegration getStatsAsync", () => {
       }
       if (url.includes("/v1/models")) {
         return jsonResponse({ data: [] });
+      }
+      if (url.includes("/slots")) {
+        return jsonResponse([]);
       }
       return textResponse("");
     }) as typeof fetchWithTrustedCertificatesAsync);
@@ -250,6 +298,9 @@ describe("LlamacppIntegration getStatsAsync", () => {
       }
       if (url.includes("/health")) {
         return jsonResponse({ status: "ok" });
+      }
+      if (url.includes("/slots")) {
+        return jsonResponse([]);
       }
       return textResponse(sampleMetricsText);
     }) as typeof fetchWithTrustedCertificatesAsync);

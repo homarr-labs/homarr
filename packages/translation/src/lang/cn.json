@@ -4239,22 +4239,26 @@
         "parameters": "参数量"
       },
       "stats": {
-        "tokensProcessed": "已处理 Token",
-        "cacheHitRate": "提示缓存命中率"
+          "tokensProcessed": "已处理 Token",
+          "contextUsage": "上下文 / KV 占用",
+          "cacheHitRate": "提示缓存命中率"
       },
       "error": {
         "unreachable": "无法连接 llama-server"
       },
       "option": {
-        "showTitle": {
-          "label": "显示标题"
-        },
-        "showModelInfo": {
-          "label": "显示模型信息"
-        },
-        "showCacheHitRate": {
-          "label": "显示缓存命中率"
-        }
+          "showTitle": {
+              "label": "显示标题"
+          },
+          "showModelInfo": {
+              "label": "显示模型信息"
+          },
+          "showContextUsage": {
+              "label": "显示上下文占用"
+          },
+          "showCacheHitRate": {
+              "label": "显示缓存命中率"
+          }
       }
     }
   },

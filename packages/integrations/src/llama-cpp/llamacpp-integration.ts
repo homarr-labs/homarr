@@ -8,11 +8,13 @@ import type { TestingResult } from "../base/test-connection/test-connection-serv
 
 import type { LlamacppStats } from "./llamacpp-types";
 import {
+  mapContextUsage,
   mapLlamacppModel,
   mapLlamacppStats,
   parseLlamacppHealthAsync,
   parseLlamacppMetricsAsync,
   parseLlamacppModelsAsync,
+  parseLlamacppSlotsAsync,
 } from "./llamacpp-types";
 
 const LLMACPP_REQUEST_TIMEOUT_MS = 10_000;
@@ -41,10 +43,12 @@ export class LlamacppIntegration extends Integration {
   }
 
   public async getStatsAsync(): Promise<LlamacppStats> {
-    const [healthResponse, modelsResponse, metricsResponse] = await Promise.all([
+    const [healthResponse, modelsResponse, metricsResponse, slotsResponse] = await Promise.all([
       fetchWithTrustedCertificatesAsync(this.url("/health"), { timeout: LLMACPP_REQUEST_TIMEOUT_MS }),
       fetchWithTrustedCertificatesAsync(this.url("/v1/models"), { timeout: LLMACPP_REQUEST_TIMEOUT_MS }),
       fetchWithTrustedCertificatesAsync(this.url("/metrics"), { timeout: LLMACPP_REQUEST_TIMEOUT_MS }),
+      // /slots is not present on every build; a missing endpoint degrades to no context usage.
+      fetchWithTrustedCertificatesAsync(this.url("/slots"), { timeout: LLMACPP_REQUEST_TIMEOUT_MS }).catch(() => null),
     ]);
 
     if (!healthResponse.ok) {
@@ -57,14 +61,16 @@ export class LlamacppIntegration extends Integration {
       throw new ResponseError(metricsResponse);
     }
 
-    const [health, models, metrics] = await Promise.all([
+    const [health, models, metrics, slots] = await Promise.all([
       parseLlamacppHealthAsync(healthResponse),
       parseLlamacppModelsAsync(modelsResponse),
       parseLlamacppMetricsAsync(metricsResponse),
+      slotsResponse?.ok ? parseLlamacppSlotsAsync(slotsResponse) : Promise.resolve(null),
     ]);
 
     const firstModel = models.data[0] ? mapLlamacppModel(models.data[0]) : null;
+    const contextUsage = mapContextUsage(slots);
 
-    return mapLlamacppStats(health, firstModel, metrics);
+    return mapLlamacppStats(health, firstModel, metrics, contextUsage);
   }
 }

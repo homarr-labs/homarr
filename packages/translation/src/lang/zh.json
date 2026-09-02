@@ -4239,22 +4239,26 @@
         "parameters": "參數量"
       },
       "stats": {
-        "tokensProcessed": "已處理 Token",
-        "cacheHitRate": "提示快取命中率"
+          "tokensProcessed": "已處理 Token",
+          "contextUsage": "上下文 / KV 佔用",
+          "cacheHitRate": "提示快取命中率"
       },
       "error": {
         "unreachable": "無法連接 llama-server"
       },
       "option": {
-        "showTitle": {
-          "label": "顯示標題"
-        },
-        "showModelInfo": {
-          "label": "顯示模型資訊"
-        },
-        "showCacheHitRate": {
-          "label": "顯示快取命中率"
-        }
+          "showTitle": {
+              "label": "顯示標題"
+          },
+          "showModelInfo": {
+              "label": "顯示模型資訊"
+          },
+          "showContextUsage": {
+              "label": "顯示上下文佔用"
+          },
+          "showCacheHitRate": {
+              "label": "顯示快取命中率"
+          }
       }
     }
   },

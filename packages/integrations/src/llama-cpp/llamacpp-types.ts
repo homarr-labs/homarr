@@ -70,6 +70,7 @@ export interface LlamacppModel {
 export interface LlamacppStats {
   health: string;
   model: LlamacppModel | null;
+  contextUsage: LlamacppContextUsage | null;
   metrics: {
     generationSpeedTps: number | null;
     promptSpeedTps: number | null;
@@ -99,10 +100,69 @@ export const mapLlamacppModel = (model: z.infer<typeof llamacppModelSchema>): Ll
 export const getMetricValue = (metrics: readonly { name: string; value: number }[], name: string): number | null =>
   metrics.find((metric) => metric.name === name)?.value ?? null;
 
+interface LlamacppSlot {
+  n_ctx?: number;
+  n_prompt_tokens?: number;
+}
+
+export interface LlamacppContextUsage {
+  usedTokens: number;
+  contextSize: number;
+  percent: number;
+}
+
+const clampPercent = (value: number): number => Math.min(100, Math.max(0, value));
+
+/**
+ * Computes context (KV) usage from the /slots endpoint. The /metrics endpoint has no
+ * KV metrics, so the largest used prompt tokens over the slot context size is used.
+ */
+export const mapContextUsage = (slots: readonly unknown[] | null): LlamacppContextUsage | null => {
+  if (!Array.isArray(slots)) {
+    return null;
+  }
+
+  for (const slot of slots) {
+    if (typeof slot !== "object" || slot === null) {
+      continue;
+    }
+
+    const record = slot as Partial<LlamacppSlot>;
+    const contextSize = record.n_ctx;
+    const usedTokens = record.n_prompt_tokens;
+
+    if (typeof contextSize === "number" && contextSize > 0 && typeof usedTokens === "number" && usedTokens >= 0) {
+      return {
+        usedTokens,
+        contextSize,
+        percent: clampPercent(Math.round((usedTokens / contextSize) * 1000) / 10),
+      };
+    }
+  }
+
+  return null;
+};
+
+export const parseLlamacppSlotsAsync = async (response: {
+  json: () => Promise<unknown>;
+}): Promise<unknown[] | null> => {
+  let json: unknown;
+  try {
+    json = await response.json();
+  } catch (error) {
+    throw new ParseError("Invalid llama.cpp /slots response", {
+      cause: error instanceof Error ? error : new Error(String(error)),
+    });
+  }
+
+  return Array.isArray(json) ? json : null;
+};
+
 export const mapLlamacppStats = (
   health: z.infer<typeof llamacppHealthSchema>,
   model: LlamacppModel | null,
   metrics: readonly { name: string; value: number }[],
+  contextUsage: LlamacppContextUsage | null,
 ): LlamacppStats => {
   const promptTokens = getMetricValue(metrics, "llamacpp:prompt_tokens_total");
   const cachedTokens = getMetricValue(metrics, "llamacpp:prompt_tokens_cached_total");
@@ -115,6 +175,7 @@ export const mapLlamacppStats = (
   return {
     health: health.status,
     model,
+    contextUsage,
     metrics: {
       generationSpeedTps: getMetricValue(metrics, "llamacpp:predicted_tokens_seconds"),
       promptSpeedTps: getMetricValue(metrics, "llamacpp:prompt_tokens_seconds"),

@@ -11,6 +11,7 @@ export const { definition, componentLoader } = createWidgetDefinition("llamacpp"
     return optionsBuilder.from((factory) => ({
       showTitle: factory.switch({ defaultValue: true }),
       showModelInfo: factory.switch({ defaultValue: true }),
+      showContextUsage: factory.switch({ defaultValue: true }),
       showCacheHitRate: factory.switch({ defaultValue: true }),
     }));
   },

@@ -4239,22 +4239,26 @@
         "parameters": "Parameters"
       },
       "stats": {
-        "tokensProcessed": "Tokens processed",
-        "cacheHitRate": "Prompt cache hit rate"
+          "tokensProcessed": "Tokens processed",
+          "contextUsage": "Context / KV usage",
+          "cacheHitRate": "Prompt cache hit rate"
       },
       "error": {
         "unreachable": "llama-server is not reachable"
       },
       "option": {
-        "showTitle": {
-          "label": "Show title"
-        },
-        "showModelInfo": {
-          "label": "Show model info"
-        },
-        "showCacheHitRate": {
-          "label": "Show cache hit rate"
-        }
+          "showTitle": {
+              "label": "Show title"
+          },
+          "showModelInfo": {
+              "label": "Show model info"
+          },
+          "showContextUsage": {
+              "label": "Show context usage"
+          },
+          "showCacheHitRate": {
+              "label": "Show cache hit rate"
+          }
       }
     }
   },
