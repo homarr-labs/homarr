@@ -54,6 +54,7 @@ export const widgetKinds = [
   "traefik",
   "customApi",
   "wud",
+  "llamacpp",
 ] as const;
 export type WidgetKind = (typeof widgetKinds)[number];
 

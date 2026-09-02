@@ -45,4 +45,5 @@ export const widgetRouter = createTRPCRouter({
   customApi: lazy(() => import("./custom-api").then((mod) => mod.customApiRouter)),
   secrets: lazy(() => import("./widget-secrets").then((mod) => mod.widgetSecretsRouter)),
   wud: lazy(() => import("./wud").then((mod) => mod.wudRouter)),
+  llamacpp: lazy(() => import("./llamacpp").then((mod) => mod.llamacppRouter)),
 });

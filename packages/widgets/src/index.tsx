@@ -65,6 +65,7 @@ import * as video from "./video";
 import * as weather from "./weather";
 import * as customApi from "./custom-api";
 import * as wud from "./wud";
+import * as llamacpp from "./llama-cpp";
 
 export type {
   WidgetDefinition,
@@ -131,6 +132,7 @@ export const widgetImports = {
   traefik,
   customApi,
   wud,
+  llamacpp,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;

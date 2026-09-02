@@ -1,0 +1,51 @@
+---
+title: "llama.cpp"
+description: "Connect Homarr to a llama.cpp llama-server to monitor your local LLM: health, loaded model, generation speed and request status."
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { llamacppIntegration } from ".";
+import { llamacppWidget } from "@site/docs/widgets/llama-cpp";
+
+<IntegrationHeader integration={llamacppIntegration} categories={["AI"]} />
+
+The llama.cpp integration lets Homarr connect to a [llama-server](https://github.com/ggml-org/llama.cpp) instance so you can see the health of your local LLM, which model is loaded, and how fast it is generating — all from your dashboard.
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites items={[{ widget: llamacppWidget }]} />
+
+### Adding the integration
+
+<AddingIntegration />
+
+:::info URL configuration
+Use the root URL of your `llama-server`, for example `http://192.168.1.50:8080`. Homarr calls the `/health`, `/v1/models` and `/metrics` endpoints under that URL automatically.
+:::
+
+:::tip Metrics
+Generation speed and token counters are read from the Prometheus endpoint at `/metrics`. Start `llama-server` with the `--metrics` flag so these values are available:
+
+```shell
+llama-server --model /path/to/model.gguf --metrics
+```
+
+Without `--metrics` the widget still shows health and model information, but the throughput and token stats stay empty.
+:::
+
+### Secrets
+
+llama-server does not require authentication by default. The integration only needs the URL of your server.
+
+<IntegrationSecrets
+  secrets={[
+    {
+      credentials: [],
+      steps: [],
+    },
+  ]}
+/>

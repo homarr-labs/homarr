@@ -27,4 +27,5 @@ export const widgetQueryRefetchIntervals = [
   { queryKey: [["widget", "umami"]], intervalSeconds: null },
   { queryKey: [["widget", "vpn"]], intervalSeconds: null },
   { queryKey: [["widget", "wud"]], intervalSeconds: null },
+  { queryKey: [["widget", "llamacpp"]], intervalSeconds: 5 },
 ] as const;

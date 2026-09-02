@@ -1,6 +1,7 @@
 // General integrations
 export { ArchiveTeamWarriorIntegration } from "./archive-team-warrior/archive-team-warrior-integration";
 export { WudIntegration } from "./wud/wud-integration";
+export { LlamacppIntegration } from "./llama-cpp/llamacpp-integration";
 export { AdGuardHomeIntegration } from "./adguard-home/adguard-home-integration";
 export { TechnitiumDnsIntegration } from "./technitium/technitium-integration";
 export { AnchorIntegration } from "./anchor/anchor-integration";
@@ -93,6 +94,7 @@ export type {
   ArchiveTeamWarriorStatus,
 } from "./archive-team-warrior/archive-team-warrior-types";
 export type { WudStats, WudContainerUpdate } from "./wud/wud-types";
+export type { LlamacppStats, LlamacppModel } from "./llama-cpp/llamacpp-types";
 
 // Schemas
 export { anchorNotesListInputSchema } from "./anchor/anchor-types";

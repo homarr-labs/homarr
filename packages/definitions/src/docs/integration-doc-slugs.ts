@@ -55,5 +55,6 @@ export const integrationDocSlugs: Record<IntegrationKind, string | null> = {
   traefik: "traefik",
   archiveTeamWarrior: null,
   wud: "whats-up-docker",
+  llamacpp: "llama-cpp",
   mock: null,
 };

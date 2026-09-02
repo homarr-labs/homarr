@@ -53,6 +53,7 @@ export const widgetIntegrationSupport: Partial<Record<WidgetKind, readonly Integ
   anchorNote: ["anchor"],
   traefik: ["traefik"],
   wud: ["wud"],
+  llamacpp: ["llamacpp"],
 };
 
 export const getWidgetKindsForIntegration = (integrationKind: IntegrationKind): WidgetKind[] => {

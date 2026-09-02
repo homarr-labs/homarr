@@ -56,4 +56,5 @@ export const widgetDocSlugs: Record<WidgetKind, string | null> = {
   traefik: "traefik",
   customApi: "custom-api",
   wud: "whats-up-docker",
+  llamacpp: "llama-cpp",
 };

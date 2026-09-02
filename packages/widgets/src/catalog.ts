@@ -19,6 +19,7 @@ import {
   IconChartBar,
   IconClock,
   IconCloud,
+  IconCpu,
   IconDeviceCctv,
   IconDeviceGamepad,
   IconDownload,
@@ -108,4 +109,5 @@ export const widgetCatalogIcons: Record<WidgetKind, TablerIcon> = {
   traefik: IconRoute,
   customApi: IconApi,
   wud: IconBrandDocker,
+  llamacpp: IconCpu,
 };

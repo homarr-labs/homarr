@@ -1027,7 +1027,8 @@
       "analytics": "Analytics",
       "vpn": "VPN",
       "mediaLibrary": "Media Library",
-      "uptimeMonitoring": "Uptime Monitoring"
+      "uptimeMonitoring": "Uptime Monitoring",
+      "ai": "AI"
     },
     "testConnection": {
       "action": {
@@ -1359,6 +1360,10 @@
     "bazarr": {
       "name": "Bazarr",
       "description": "Companion application to Sonarr and Radarr that manages and downloads subtitles"
+    },
+    "llamacpp": {
+      "name": "llama.cpp",
+      "description": "Monitor a local llama.cpp llama-server: health, model and generation metrics"
     }
   },
   "media": {
@@ -4215,6 +4220,40 @@
         "dockerNetwork": {
           "title": "Docker Network I/O",
           "subtitle": "Network traffic of docker containers"
+        }
+      }
+    },
+    "llamacpp": {
+      "name": "llama.cpp",
+      "description": "Show the health, loaded model and generation speed of your local llama.cpp server.",
+      "title": "llama.cpp",
+      "status": {
+        "online": "Online",
+        "unhealthy": "Unhealthy ({status})"
+      },
+      "idle": "Idle",
+      "busy": "{count, plural, one {# request running} other {# requests running}}",
+      "modelInfo": {
+        "context": "Context",
+        "size": "File size",
+        "parameters": "Parameters"
+      },
+      "stats": {
+        "tokensProcessed": "Tokens processed",
+        "cacheHitRate": "Prompt cache hit rate"
+      },
+      "error": {
+        "unreachable": "llama-server is not reachable"
+      },
+      "option": {
+        "showTitle": {
+          "label": "Show title"
+        },
+        "showModelInfo": {
+          "label": "Show model info"
+        },
+        "showCacheHitRate": {
+          "label": "Show cache hit rate"
         }
       }
     }

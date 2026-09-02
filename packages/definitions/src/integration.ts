@@ -476,6 +476,14 @@ export const integrationDefs = {
     documentationUrl: createDocumentationLink("/docs/integrations/whats-up-docker"),
     defaultPort: 3000,
   },
+  llamacpp: {
+    name: "llama.cpp",
+    secretKinds: [[]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/llama-cpp.svg",
+    category: ["ai"],
+    documentationUrl: createDocumentationLink("/docs/integrations/llama-cpp"),
+    defaultPort: 8080,
+  },
   // This integration only returns mock data, it is used during development (but can also be used in production by directly going to the create page)
   mock: {
     name: "Mock",
@@ -593,6 +601,7 @@ export const integrationCategories = [
   "uptimeMonitoring",
   "subtitleManager",
   "reverseProxy",
+  "ai",
 ] as const;
 
 export type IntegrationCategory = (typeof integrationCategories)[number];
