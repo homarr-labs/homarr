@@ -18,11 +18,21 @@ import { radarrIntegration } from "@site/docs/integrations/radarr";
 import { readarrIntegration } from "@site/docs/integrations/readarr";
 import { sonarrIntegration } from "@site/docs/integrations/sonarr";
 import { icalIntegration } from "@site/docs/integrations/ical";
+import currentView from "./img/current-view.png";
+import advancedView from "./img/advanced-view.png";
 
 <WidgetHeader widget={calendarWidget} categories={["Media manager", "Servarr"]} />
 
 The Calendar widget combines events and upcoming releases in a month view. Advanced view shows a grouped event list with
 source, title, location, and description. Healthy integrations remain visible when another source fails.
+
+### Month view
+
+<img src={currentView} alt="Calendar month view with marked events" />
+
+### Advanced view
+
+<img src={advancedView} alt="Calendar advanced view with grouped events" />
 
 ### Supported integrations
 

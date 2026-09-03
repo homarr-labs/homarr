@@ -8,6 +8,8 @@ import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
 import { WidgetHeader } from "@site/src/components/widgets/header";
 import { notebookWidget } from ".";
+import normalView from "./img/normal.png";
+import editView from "./img/edit.png";
 
 <WidgetHeader widget={notebookWidget} categories={["Notes"]} />
 
@@ -16,6 +18,14 @@ text direction, and alignment.
 
 Select the edit action or double-click the document to edit it. Save or cancel from the same action area. Editing follows
 the board's permissions.
+
+### View mode
+
+<img src={normalView} alt="Notebook widget showing a saved note" width={550} />
+
+### Editing
+
+<img src={editView} alt="Notebook editor with its formatting toolbar" width={550} />
 
 ### Adding the widget
 

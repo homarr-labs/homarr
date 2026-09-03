@@ -18,6 +18,8 @@ import { WidgetConfig } from "@site/src/components/widgets/configuration";
 import { WidgetHeader } from "@site/src/components/widgets/header";
 import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
 import { downloadsWidget } from ".";
+import advancedView from "./img/advanced-view.png";
+import filterPanel from "./img/filter-panel.png";
 
 <WidgetHeader widget={downloadsWidget} categories={["Torrent client", "Usenet client", "Downloads"]} />
 
@@ -27,6 +29,14 @@ column set.
 
 Pause, resume, and delete actions require Interact access to the source integration. `slskd` is list-only. If one source
 fails, jobs from healthy integrations remain available.
+
+### Advanced view
+
+<img src={advancedView} alt="Downloads advanced view with queue statistics and expanded job details" />
+
+### Filtering
+
+<img src={filterPanel} alt="Downloads advanced view filtered by client and state" />
 
 ### Supported integrations
 
