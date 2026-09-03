@@ -141,6 +141,7 @@ export const mapContextUsage = (slots: readonly unknown[] | null): LlamacppConte
     return null;
   }
 
+  let largest: LlamacppContextUsage | null = null;
   for (const slot of slots) {
     if (typeof slot !== "object" || slot === null) {
       continue;
@@ -151,15 +152,18 @@ export const mapContextUsage = (slots: readonly unknown[] | null): LlamacppConte
     const usedTokens = record.n_prompt_tokens;
 
     if (typeof contextSize === "number" && contextSize > 0 && typeof usedTokens === "number" && usedTokens >= 0) {
-      return {
+      const usage: LlamacppContextUsage = {
         usedTokens,
         contextSize,
         percent: clampPercent(Math.round((usedTokens / contextSize) * 1000) / 10),
       };
+      if (largest === null || usage.usedTokens > largest.usedTokens) {
+        largest = usage;
+      }
     }
   }
 
-  return null;
+  return largest;
 };
 
 /**

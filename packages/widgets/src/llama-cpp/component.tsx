@@ -161,7 +161,9 @@ function LlamacppContent({ integrationId, options, width }: LlamacppContentProps
                 <IconGauge size={isBusy ? 28 : 24} color={isBusy ? "blue" : "dimmed"} />
                 <Tooltip label={speedTooltip} withArrow>
                   <Text size="xs" fw={700}>
-                    {displayedSpeed !== null && displayedSpeed > 0 ? `${formatNumber(displayedSpeed, 1)} t/s` : "—"}
+                    {displayedSpeed !== null && displayedSpeed > 0
+                      ? t("unit.speed", { value: formatNumber(displayedSpeed, 1) })
+                      : t("unit.none")}
                   </Text>
                 </Tooltip>
               </Stack>
@@ -203,7 +205,7 @@ function LlamacppContent({ integrationId, options, width }: LlamacppContentProps
               {stats.model.parameterCount !== null && (
                 <ModelInfoRow
                   label={t("modelInfo.parameters")}
-                  value={formatNumber(stats.model.parameterCount / 1e9, 2) + "B"}
+                  value={t("unit.parameters", { value: formatNumber(stats.model.parameterCount / 1e9, 2) })}
                 />
               )}
             </Stack>

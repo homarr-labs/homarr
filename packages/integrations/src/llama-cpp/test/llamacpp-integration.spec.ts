@@ -11,6 +11,7 @@ vi.hoisted(() => {
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
 import type { IntegrationSecret } from "../../base/types";
+import { IntegrationParseError } from "../../base/errors/parse/integration-parse-error";
 import { LlamacppIntegration } from "../llamacpp-integration";
 import {
   avgTokensPerSecond,
@@ -176,11 +177,25 @@ describe("mapLlamacppModel", () => {
 });
 
 describe("mapContextUsage", () => {
-  test("computes percent from the first slot with valid n_ctx and n_prompt_tokens", () => {
+  test("computes percent from a slot with valid n_ctx and n_prompt_tokens", () => {
     expect(mapContextUsage(sampleSlotsResponse)).toStrictEqual({
       usedTokens: 101076,
       contextSize: 131072,
       percent: 77.1,
+    });
+  });
+
+  test("returns the slot with the greatest used tokens, not the first valid slot", () => {
+    expect(
+      mapContextUsage([
+        { n_ctx: 1000, n_prompt_tokens: 100 },
+        { n_ctx: 8192, n_prompt_tokens: 6000 },
+        { n_ctx: 4096, n_prompt_tokens: 3000 },
+      ]),
+    ).toStrictEqual({
+      usedTokens: 6000,
+      contextSize: 8192,
+      percent: 73.2,
     });
   });
 
@@ -360,6 +375,49 @@ describe("LlamacppIntegration getStatsAsync", () => {
     await expect(createIntegration().getStatsAsync()).rejects.toThrow();
   });
 
+  test("degrades to null metrics when /metrics is not available (501) but keeps health and model data", async () => {
+    mockAllEndpoints();
+    mockFetch.mockImplementation((async (input) => {
+      const url = String(input);
+      if (url.includes("/metrics")) {
+        return textResponse("Not Implemented", 501);
+      }
+      if (url.includes("/health")) {
+        return jsonResponse({ status: "ok" });
+      }
+      if (url.includes("/v1/models")) {
+        return jsonResponse(sampleModelsResponse);
+      }
+      if (url.includes("/slots")) {
+        return jsonResponse(sampleSlotsResponse);
+      }
+      return textResponse("not found", 404);
+    }) as typeof fetchWithTrustedCertificatesAsync);
+
+    const stats = await createIntegration().getStatsAsync();
+
+    expect(stats.health).toBe("ok");
+    expect(stats.model?.name).toBe("Qwen3.8-27B-UD-Q4_K_XL");
+    expect(stats.contextUsage).toStrictEqual({
+      usedTokens: 101076,
+      contextSize: 131072,
+      percent: 77.1,
+    });
+    expect(stats.metrics).toStrictEqual({
+      generationSpeedTps: null,
+      promptSpeedTps: null,
+      avgGenerationSpeedTps: null,
+      avgPromptSpeedTps: null,
+      requestsProcessing: null,
+      requestsDeferred: null,
+      tokensProcessed: null,
+      tokensGenerated: null,
+      promptCacheHitRate: null,
+      requestDecodedTokens: 42,
+      taskId: 7,
+    });
+  });
+
   test("throws a parse error when /v1/models is not valid JSON", async () => {
     mockAllEndpoints();
     mockFetch.mockImplementation((async (input) => {
@@ -377,7 +435,7 @@ describe("LlamacppIntegration getStatsAsync", () => {
     }) as typeof fetchWithTrustedCertificatesAsync);
 
     await expect(createIntegration().getStatsAsync()).rejects.toSatisfy((error) => {
-      if (!(error instanceof Error)) return false;
+      if (!(error instanceof IntegrationParseError)) return false;
       const cause = error.cause;
       return cause instanceof ParseError && cause.message.includes("Invalid llama.cpp /v1/models response");
     });

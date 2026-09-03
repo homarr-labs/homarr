@@ -24,7 +24,7 @@ The llama.cpp integration lets Homarr connect to a [llama-server](https://github
 <AddingIntegration />
 
 :::info URL configuration
-Use the root URL of your `llama-server`, for example `http://192.168.1.50:8080`. Homarr calls the `/health`, `/v1/models` and `/metrics` endpoints under that URL automatically.
+Use the root URL of your `llama-server`, for example `http://192.168.1.50:8080`. Homarr calls the `/health`, `/v1/models`, `/metrics` and `/slots` endpoints under that URL automatically.
 :::
 
 :::tip Metrics
@@ -35,6 +35,10 @@ llama-server --model /path/to/model.gguf --metrics
 ```
 
 Without `--metrics` the widget still shows health and model information, but the throughput and token stats stay empty.
+:::
+
+:::info Context and per-request speed
+Context (KV cache) usage and the in-flight request data are read from the `/slots` endpoint, which is available on every recent llama-server build and requires no extra flags. The per-request generation speed shown while a request is running is derived by tracking the request's decoded token count across polls, so it reflects the average speed of the request that is currently being generated.
 :::
 
 ### Secrets

@@ -30,14 +30,15 @@ export class LlamacppIntegration extends Integration {
       return TestConnectionError.StatusResult(response);
     }
 
+    // Validate the health payload shape, not just that it is parseable JSON: an
+    // unrelated JSON body must not pass connection testing.
     try {
-      await response.json();
+      await parseLlamacppHealthAsync(response);
     } catch (error) {
-      return TestConnectionError.ParseResult(
-        new ParseError("Invalid llama.cpp /health response", {
-          cause: error instanceof Error ? error : new Error(String(error)),
-        }),
-      );
+      if (error instanceof ParseError) {
+        return TestConnectionError.ParseResult(error);
+      }
+      return TestConnectionError.UnknownResult(error);
     }
 
     return { success: true };
@@ -58,14 +59,16 @@ export class LlamacppIntegration extends Integration {
     if (!modelsResponse.ok) {
       throw new ResponseError(modelsResponse);
     }
-    if (!metricsResponse.ok) {
-      throw new ResponseError(metricsResponse);
-    }
+
+    // /metrics only exists when llama-server was started with --metrics; a non-OK
+    // response (typically 501 Not Implemented) degrades to no rate counters instead
+    // of dropping the health and model data that the other endpoints still provide.
+    const metricsAvailable = metricsResponse.ok;
 
     const [health, models, metrics, slots] = await Promise.all([
       parseLlamacppHealthAsync(healthResponse),
       parseLlamacppModelsAsync(modelsResponse),
-      parseLlamacppMetricsAsync(metricsResponse),
+      metricsAvailable ? parseLlamacppMetricsAsync(metricsResponse) : Promise.resolve([]),
       slotsResponse?.ok ? parseLlamacppSlotsAsync(slotsResponse) : Promise.resolve(null),
     ]);
 

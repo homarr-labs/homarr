@@ -4251,6 +4251,11 @@
       "error": {
         "unreachable": "无法连接 llama-server"
       },
+      "unit": {
+        "speed": "{value} t/s",
+        "parameters": "{value}B",
+        "none": "—"
+      },
       "option": {
           "showTitle": {
               "label": "显示标题"

@@ -4251,6 +4251,11 @@
       "error": {
         "unreachable": "llama-server is not reachable"
       },
+      "unit": {
+        "speed": "{value} t/s",
+        "parameters": "{value}B",
+        "none": "—"
+      },
       "option": {
           "showTitle": {
               "label": "Show title"
