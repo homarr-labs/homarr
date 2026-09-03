@@ -6,7 +6,8 @@ import { zoomCompensatedSize } from "@homarr/ui";
 
 import { progressColor } from "../system-health";
 
-const maxCpuTemperature = 100;
+const CPU_TEMPERATURE_MIN_CELSIUS = 0;
+const CPU_TEMPERATURE_MAX_CELSIUS = 100;
 
 export const CpuTempRing = ({
   fahrenheit,
@@ -23,8 +24,10 @@ export const CpuTempRing = ({
     return null;
   }
 
-  const temperature = Math.min(Math.max(cpuTemp, 0), maxCpuTemperature);
-  const temperatureDisplay = fahrenheit ? `${(temperature * 1.8 + 32).toFixed(1)}°F` : `${temperature.toFixed(1)}°C`;
+  const normalizedCpuTemp = Math.max(CPU_TEMPERATURE_MIN_CELSIUS, Math.min(CPU_TEMPERATURE_MAX_CELSIUS, cpuTemp));
+  const formatTemperature = (value: number) =>
+    fahrenheit ? `${(value * 1.8 + 32).toFixed(1)}°F` : `${value.toFixed(1)}°C`;
+  const temperatureDisplay = formatTemperature(normalizedCpuTemp);
 
   return (
     <GaugeChart
@@ -35,10 +38,11 @@ export const CpuTempRing = ({
       thickness={isTiny ? 4 : 8}
       startAngle={0}
       endAngle={360}
-      value={temperature}
-      max={maxCpuTemperature}
-      valueFormatter={() => temperatureDisplay}
-      filledColor={progressColor(temperature)}
+      min={CPU_TEMPERATURE_MIN_CELSIUS}
+      max={CPU_TEMPERATURE_MAX_CELSIUS}
+      value={normalizedCpuTemp}
+      valueFormatter={formatTemperature}
+      filledColor={progressColor(normalizedCpuTemp)}
       label={
         <Center style={{ flexDirection: "column" }}>
           <Text className="health-monitoring-cpu-temp-value" size={isTiny ? "8px" : "xs"}>

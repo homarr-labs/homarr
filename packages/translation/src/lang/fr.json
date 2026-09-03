@@ -1253,7 +1253,6 @@
     "success": "Succès",
     "beta": "Bêta",
     "error": "Erreur",
-    "pagination": "Page {page} sur {totalPages}",
     "action": {
       "add": "Ajouter",
       "apply": "Appliquer",
@@ -1282,6 +1281,9 @@
       "loading": "Chargement",
       "show": "Afficher",
       "hide": "Masquer"
+    },
+    "pagination": {
+      "pageOf": "Page {page} sur {totalPages}"
     },
     "here": "ici",
     "iconPicker": {

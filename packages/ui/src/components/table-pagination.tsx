@@ -13,11 +13,11 @@ interface TablePaginationProps {
 }
 
 export const TablePagination = ({ total }: TablePaginationProps) => {
-  const t = useI18n("common");
   // eslint-disable-next-line @typescript-eslint/unbound-method
   const { replace } = useRouter();
   const pathName = usePathname();
   const searchParams = useSearchParams();
+  const t = useI18n("common.pagination");
   const current = Number(searchParams.get("page")) || 1;
 
   const getItemProps = useCallback(
@@ -54,7 +54,7 @@ export const TablePagination = ({ total }: TablePaginationProps) => {
       total={total}
       value={current}
       layout="responsive"
-      formatLabel={({ page, totalPages }) => t("pagination", { page, totalPages })}
+      formatLabel={({ page, totalPages }) => t("pageOf", { page, totalPages })}
       getItemProps={getItemProps}
       getControlProps={getControlProps}
       onChange={handleChange}
