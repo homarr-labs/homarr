@@ -1,17 +1,11 @@
 import type { ReactNode } from "react";
 
 import Link from "@docusaurus/Link";
-import {
-  IconArrowRight,
-  IconCalendarEvent,
-  IconDownload,
-  IconGripVertical,
-  IconLayoutBoard,
-  IconPlugConnected,
-} from "@tabler/icons-react";
+import { IconCalendarEvent, IconDownload, IconGripVertical, IconPlugConnected } from "@tabler/icons-react";
 
 import { qBittorentIntegration } from "@site/docs/integrations/q-bittorent";
 import { sonarrIntegration } from "@site/docs/integrations/sonarr";
+import { FlowConnector } from "@site/src/components/ui/flow-connector";
 
 import styles from "./concept-flow.module.css";
 
@@ -66,7 +60,7 @@ export function ConceptFlow() {
           </div>
         </Stage>
 
-        <FlowArrow />
+        <FlowConnector />
 
         <Stage number="2" title="Integration" detail="Server-side connection" href="/docs/management/integrations">
           <div className={styles.integration}>
@@ -76,7 +70,7 @@ export function ConceptFlow() {
           </div>
         </Stage>
 
-        <FlowArrow />
+        <FlowConnector animationDelay={350} />
 
         <Stage number="3" title="Widget" detail="Data and actions" href="/docs/category/widgets">
           <div className={styles.widgetList}>
@@ -92,7 +86,7 @@ export function ConceptFlow() {
           </div>
         </Stage>
 
-        <FlowArrow />
+        <FlowConnector animationDelay={700} />
 
         <Stage number="4" title="Board" detail="Placed in the grid" href="/docs/management/boards">
           <div className={styles.board} aria-hidden="true">
@@ -147,13 +141,5 @@ function Stage({
       )}
       {children}
     </section>
-  );
-}
-
-function FlowArrow() {
-  return (
-    <span className={styles.arrow} aria-hidden="true">
-      <IconArrowRight size={20} stroke={2.5} />
-    </span>
   );
 }

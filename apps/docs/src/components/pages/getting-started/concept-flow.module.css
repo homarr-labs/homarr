@@ -13,7 +13,7 @@
 
 .lane {
   display: grid;
-  grid-template-columns: minmax(8.5rem, 1.1fr) 2rem minmax(8.5rem, 1fr) 2rem minmax(8.5rem, 1fr) 2rem minmax(
+  grid-template-columns: minmax(8.5rem, 1.1fr) 2.75rem minmax(8.5rem, 1fr) 2.75rem minmax(8.5rem, 1fr) 2.75rem minmax(
       8.5rem,
       1fr
     );
@@ -29,6 +29,7 @@
   padding: 0.7rem;
   border: 1px solid var(--diagram-line);
   border-radius: 0.55rem;
+  margin: 0;
   background: var(--ifm-background-color);
 }
 
@@ -191,37 +192,9 @@ a.stageHeading:hover {
   color: var(--diagram-muted);
 }
 
-.arrow {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  color: var(--diagram-ink);
-}
-
-.arrow::before {
-  width: 100%;
-  height: 2px;
-  background: currentcolor;
-  content: "";
-}
-
-.arrow svg {
-  position: absolute;
-  right: -0.25rem;
-  background: var(--diagram-panel);
-}
-
 @media (max-width: 900px) {
   .lane {
     grid-template-columns: minmax(0, 1fr);
-  }
-
-  .arrow {
-    width: 2.5rem;
-    height: 1.75rem;
-    justify-self: center;
-    transform: rotate(90deg);
   }
 
   .serviceList,

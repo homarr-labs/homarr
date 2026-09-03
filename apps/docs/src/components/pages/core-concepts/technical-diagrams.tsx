@@ -3,8 +3,6 @@ import type { ReactNode } from "react";
 import Link from "@docusaurus/Link";
 import {
   IconApi,
-  IconArrowDown,
-  IconArrowRight,
   IconBox,
   IconBraces,
   IconBrowser,
@@ -25,6 +23,7 @@ import {
 } from "@tabler/icons-react";
 
 import { sonarrIntegration } from "@site/docs/integrations/sonarr";
+import { FlowConnector } from "@site/src/components/ui/flow-connector";
 
 import styles from "./technical-diagrams.module.css";
 
@@ -42,9 +41,9 @@ export function AppFlowDiagram() {
             <span>Ping URL · optional</span>
           </div>
         </DiagramNode>
-        <FlowArrow label="place" />
+        <FlowConnector label="place" />
         <DiagramNode icon={<IconLayoutBoard size={19} />} title="Board" detail="App tile or Bookmarks widget" />
-        <FlowArrow label="click" />
+        <FlowConnector label="click" animationDelay={350} />
         <DiagramNode icon={<IconBrowser size={19} />} title="Browser" detail="Opens the app URL directly" />
       </div>
 
@@ -63,11 +62,11 @@ export function IntegrationRoutesDiagram() {
         <RouteHeading icon={<IconBrowser size={16} />} title="Open the service" detail="Browser route" />
         <div className={styles.threeStepLane}>
           <DiagramNode icon={<IconLayoutBoard size={19} />} title="App tile" detail="Click from a board" />
-          <FlowArrow label="opens" />
+          <FlowConnector label="opens" />
           <DiagramNode icon={<IconWorld size={19} />} title="App URL" detail="Browser-facing address">
             <code>https://sonarr.example.com</code>
           </DiagramNode>
-          <FlowArrow />
+          <FlowConnector animationDelay={350} />
           <DiagramNode
             icon={<img src={sonarrIconUrl} alt="" />}
             title="Sonarr UI"
@@ -81,7 +80,7 @@ export function IntegrationRoutesDiagram() {
         <RouteHeading icon={<IconServer size={16} />} title="Use service data" detail="Server route" />
         <div className={styles.threeStepLane}>
           <DiagramNode icon={<IconApi size={19} />} title="Widget" detail="Requests data or an action" />
-          <FlowArrow label="Homarr" />
+          <FlowConnector label="Homarr" />
           <DiagramNode
             icon={<IconPlugConnected size={19} />}
             title="Integration"
@@ -90,7 +89,7 @@ export function IntegrationRoutesDiagram() {
           >
             <code>http://sonarr:8989</code>
           </DiagramNode>
-          <FlowArrow label="API" />
+          <FlowConnector label="API" animationDelay={350} />
           <DiagramNode
             icon={<img src={sonarrIconUrl} alt="" />}
             title="Sonarr API"
@@ -120,10 +119,7 @@ export function BoardLayoutsDiagram() {
         </span>
       </div>
 
-      <div className={styles.branchSelector} aria-hidden="true">
-        <span>highest matching breakpoint</span>
-        <IconArrowDown size={18} />
-      </div>
+      <FlowConnector label="highest matching breakpoint" orientation="vertical" />
 
       <div className={styles.layoutGrid}>
         <LayoutCard
@@ -161,13 +157,13 @@ export function AssistantFlowDiagram() {
         <RouteHeading icon={<IconMessages size={16} />} title="Conversation" detail="Every request" />
         <div className={styles.threeStepLane}>
           <DiagramNode icon={<IconUser size={19} />} title="You" detail="Prompt, attachment, or @ reference" />
-          <FlowArrow />
+          <FlowConnector />
           <DiagramNode
             icon={<IconRobot size={19} />}
             title="Assistant server"
             detail="Loads live context and tool definitions"
           />
-          <FlowArrow />
+          <FlowConnector animationDelay={350} />
           <DiagramNode
             icon={<IconWorld size={19} />}
             title="Provider + model"
@@ -187,13 +183,13 @@ export function AssistantFlowDiagram() {
         <RouteHeading icon={<IconTool size={16} />} title="When the model calls a tool" detail="Only when needed" />
         <div className={styles.threeStepLane}>
           <DiagramNode icon={<IconTool size={19} />} title="Tool request" detail="Read data or make a change" />
-          <FlowArrow />
+          <FlowConnector />
           <DiagramNode
             icon={<IconShieldCheck size={19} />}
             title="Permission boundary"
             detail="Current user; approval for changes by default"
           />
-          <FlowArrow />
+          <FlowConnector animationDelay={350} />
           <DiagramNode
             icon={<IconLayoutBoard size={19} />}
             title="Homarr resources"
@@ -216,16 +212,16 @@ export function HomarrProviderDiagram() {
     <figure className={styles.diagram} aria-label="How the Homarr Assistant provider routes model requests">
       <div className={styles.fourStepLane}>
         <DiagramNode icon={<IconMessages size={19} />} title="Assistant" detail="Per-user conversation" />
-        <FlowArrow label="request" />
+        <FlowConnector label="request" />
         <DiagramNode icon={<IconServer size={19} />} title="Homarr server" detail="Context, permissions, and tools" />
-        <FlowArrow label="token" />
+        <FlowConnector label="token" animationDelay={350} />
         <DiagramNode
           icon={<IconBuildingStore size={19} />}
           title="Workshop provider"
           detail="Quota and homarr/model routing"
           href="/docs/workshop"
         />
-        <FlowArrow label="model" />
+        <FlowConnector label="model" animationDelay={700} />
         <DiagramNode icon={<IconWorld size={19} />} title="Upstream model" detail="OpenRouter-compatible endpoint" />
       </div>
 
@@ -258,20 +254,20 @@ export function WorkshopFlowDiagram() {
             <span>Custom CSS</span>
           </div>
         </DiagramNode>
-        <FlowArrow label="publish" />
+        <FlowConnector label="publish" />
         <DiagramNode
           icon={<IconBuildingStore size={19} />}
           title="Workshop"
           detail="Source, screenshots, and revision"
           href="pathname:///workshop"
         />
-        <FlowArrow label="inspect" />
+        <FlowConnector label="inspect" animationDelay={350} />
         <DiagramNode
           icon={<IconShieldCheck size={19} />}
           title="Review + import"
           detail="Validate source and requested access"
         />
-        <FlowArrow label="local" />
+        <FlowConnector label="local" animationDelay={700} />
         <DiagramNode icon={<IconLayoutBoard size={19} />} title="Your Homarr" detail="Configure and place on a board">
           <div className={styles.localDetails}>
             <span>Widget → local URLs + secrets</span>
@@ -309,14 +305,14 @@ export function CustomWidgetFlowDiagram() {
             </span>
           </div>
         </DiagramNode>
-        <FlowArrow label="validate" />
+        <FlowConnector label="validate" />
         <DiagramNode
           icon={<IconServer size={19} />}
           title="Homarr runtime"
           detail="Requests on the server; JSX in a restricted renderer"
           href="/docs/management/custom-widgets/requests-and-security"
         />
-        <FlowArrow label="render" />
+        <FlowConnector label="render" animationDelay={350} />
         <DiagramNode icon={<IconLayoutBoard size={19} />} title="Board tile" detail="Live data and declared actions" />
       </div>
 
@@ -372,18 +368,6 @@ function DiagramNode({
   }
 
   return <div className={styles.node}>{content}</div>;
-}
-
-function FlowArrow({ label }: { label?: string }) {
-  return (
-    <span className={styles.flowArrow}>
-      {label && <small>{label}</small>}
-      {!label && <span className={styles.visuallyHidden}>then</span>}
-      <span className={styles.arrowLine} aria-hidden="true">
-        <IconArrowRight size={18} stroke={2.5} />
-      </span>
-    </span>
-  );
 }
 
 function LayoutCard({

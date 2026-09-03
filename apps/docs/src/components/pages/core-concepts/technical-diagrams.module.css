@@ -14,18 +14,6 @@
   background: var(--diagram-panel);
 }
 
-.visuallyHidden {
-  position: absolute;
-  overflow: hidden;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  border: 0;
-  margin: -1px;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-}
-
 .routeBlock {
   display: grid;
   gap: 0.55rem;
@@ -67,11 +55,11 @@
 }
 
 .threeStepLane {
-  grid-template-columns: minmax(0, 1fr) 2.6rem minmax(0, 1fr) 2.6rem minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) 3.25rem minmax(0, 1fr) 3.25rem minmax(0, 1fr);
 }
 
 .fourStepLane {
-  grid-template-columns: minmax(0, 1fr) 2.25rem minmax(0, 1fr) 2.25rem minmax(0, 1fr) 2.25rem minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) 3.1rem minmax(0, 1fr) 3.1rem minmax(0, 1fr) 3.1rem minmax(0, 1fr);
 }
 
 .node {
@@ -156,43 +144,6 @@
   font-size: 0.53rem;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.flowArrow {
-  display: grid;
-  align-content: center;
-  justify-items: center;
-  min-width: 0;
-  color: var(--diagram-ink);
-}
-
-.flowArrow > small {
-  color: var(--diagram-muted);
-  font-family: var(--font-mono);
-  font-size: 0.48rem;
-  line-height: 1;
-}
-
-.arrowLine {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  width: 100%;
-  min-height: 1.15rem;
-}
-
-.arrowLine::before {
-  width: 100%;
-  height: 2px;
-  background: currentcolor;
-  content: "";
-}
-
-.arrowLine svg {
-  position: absolute;
-  right: -0.15rem;
-  background: var(--diagram-panel);
 }
 
 .pillList {
@@ -304,22 +255,6 @@
   font-size: 0.59rem;
 }
 
-.branchSelector {
-  display: grid;
-  justify-items: center;
-  gap: 0.2rem;
-  color: var(--diagram-muted);
-}
-
-.branchSelector span {
-  font-family: var(--font-mono);
-  font-size: 0.55rem;
-}
-
-.branchSelector svg {
-  color: var(--diagram-ink);
-}
-
 .layoutGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -333,6 +268,7 @@
   padding: 0.65rem;
   border: 1px solid var(--diagram-line);
   border-radius: 0.55rem;
+  margin: 0;
   background: var(--diagram-surface);
 }
 
@@ -443,21 +379,10 @@
   grid-column: span 2;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 900px) {
   .threeStepLane,
   .fourStepLane {
     grid-template-columns: minmax(0, 1fr);
-  }
-
-  .flowArrow {
-    gap: 0.1rem;
-    width: 3rem;
-    min-height: 1.8rem;
-    justify-self: center;
-  }
-
-  .arrowLine {
-    transform: rotate(90deg);
   }
 
   .node {

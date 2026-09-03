@@ -1,0 +1,236 @@
+.connector {
+  --flow-accent: var(--ifm-color-primary);
+  --flow-coral: #f17865;
+  --flow-head: var(--diagram-ink, var(--ifm-font-color-base));
+  --flow-line: var(--diagram-line, var(--ifm-color-emphasis-300));
+  --flow-rail: color-mix(in srgb, var(--flow-line) 68%, var(--flow-head));
+  position: relative;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 0.22rem;
+  min-width: 0;
+  color: var(--flow-head);
+}
+
+.label {
+  z-index: 1;
+  max-width: 100%;
+  padding: 0.17rem 0.36rem;
+  border: 1px solid color-mix(in srgb, var(--flow-accent) 32%, var(--flow-line));
+  border-radius: 999px;
+  color: var(--diagram-muted, var(--ifm-color-emphasis-700));
+  background: var(--diagram-panel, var(--ifm-background-surface-color));
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  font-weight: 650;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.track {
+  position: relative;
+  overflow: hidden;
+  display: block;
+  width: calc(100% + 0.5rem);
+  height: 1.1rem;
+  margin-inline: -0.25rem;
+}
+
+.rail {
+  position: absolute;
+  top: 50%;
+  right: 0.38rem;
+  left: 0.18rem;
+  height: 2px;
+  background: var(--flow-rail);
+  transform: translateY(-50%);
+}
+
+.origin {
+  position: absolute;
+  top: 50%;
+  left: 0.1rem;
+  width: 0.32rem;
+  height: 0.32rem;
+  border: 0;
+  border-radius: 50%;
+  background: var(--flow-accent);
+  box-shadow:
+    0 0 0 2px var(--diagram-panel, var(--ifm-background-surface-color)),
+    0 0 0.4rem color-mix(in srgb, var(--flow-accent) 32%, transparent);
+  transform: translateY(-50%);
+}
+
+.beam {
+  position: absolute;
+  top: calc(50% - 1.5px);
+  left: 0.23rem;
+  width: 48%;
+  height: 3px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, var(--flow-coral) 34%, var(--flow-accent) 68%, transparent);
+  filter: drop-shadow(0 0 0.28rem color-mix(in srgb, var(--flow-accent) 48%, transparent));
+  animation: flow-beam-horizontal 2.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation-delay: var(--flow-delay);
+}
+
+.arrowhead {
+  position: absolute;
+  top: 50%;
+  right: 0.02rem;
+  width: 0.54rem;
+  height: 0.68rem;
+  background: var(--flow-accent);
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+  filter: drop-shadow(0 0 0.18rem color-mix(in srgb, var(--flow-accent) 35%, transparent));
+  transform: translateY(-50%);
+}
+
+.vertical {
+  min-height: 3rem;
+}
+
+.vertical .track {
+  width: 1.1rem;
+  height: 2.6rem;
+  margin-inline: 0;
+}
+
+.vertical .rail {
+  top: 0.16rem;
+  right: auto;
+  bottom: 0.34rem;
+  left: 50%;
+  width: 2px;
+  height: auto;
+  transform: translateX(-50%);
+}
+
+.vertical .origin {
+  top: 0.08rem;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.vertical .beam {
+  top: 0.23rem;
+  left: calc(50% - 1.5px);
+  width: 3px;
+  height: 48%;
+  background: linear-gradient(180deg, transparent, var(--flow-coral) 46%, var(--flow-accent));
+  animation-name: flow-beam-vertical;
+}
+
+.vertical .arrowhead {
+  top: auto;
+  right: auto;
+  bottom: 0.02rem;
+  left: 50%;
+  width: 0.68rem;
+  height: 0.54rem;
+  clip-path: polygon(0 0, 50% 100%, 100% 0);
+  transform: translateX(-50%);
+}
+
+.visuallyHidden {
+  position: absolute;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  border: 0;
+  margin: -1px;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@keyframes flow-beam-horizontal {
+  0% {
+    opacity: 0;
+    transform: translateX(-35%);
+  }
+
+  18%,
+  72% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(155%);
+  }
+}
+
+@keyframes flow-beam-vertical {
+  0% {
+    opacity: 0;
+    transform: translateY(-35%);
+  }
+
+  18%,
+  72% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(155%);
+  }
+}
+
+@media (max-width: 900px) {
+  .connector:not(.vertical) {
+    min-height: 3rem;
+  }
+
+  .connector:not(.vertical) .track {
+    width: 1.1rem;
+    height: 2.6rem;
+    margin-inline: 0;
+  }
+
+  .connector:not(.vertical) .rail {
+    top: 0.16rem;
+    right: auto;
+    bottom: 0.34rem;
+    left: 50%;
+    width: 2px;
+    height: auto;
+    transform: translateX(-50%);
+  }
+
+  .connector:not(.vertical) .origin {
+    top: 0.08rem;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .connector:not(.vertical) .beam {
+    top: 0.23rem;
+    left: calc(50% - 1.5px);
+    width: 3px;
+    height: 48%;
+    background: linear-gradient(180deg, transparent, var(--flow-coral) 46%, var(--flow-accent));
+    animation-name: flow-beam-vertical;
+  }
+
+  .connector:not(.vertical) .arrowhead {
+    top: auto;
+    right: auto;
+    bottom: 0.02rem;
+    left: 50%;
+    width: 0.68rem;
+    height: 0.54rem;
+    clip-path: polygon(0 0, 50% 100%, 100% 0);
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .beam {
+    opacity: 1;
+    animation: none;
+  }
+}
