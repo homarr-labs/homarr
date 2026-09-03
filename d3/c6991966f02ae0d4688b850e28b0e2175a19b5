@@ -1,0 +1,194 @@
+apps/docs/docs/advanced/development/workshop-operator.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 1-67
+packages/widgets/src/health-monitoring/rings/cpu-temp-ring.tsx
+  s_84730523e7324e::t_f7d20b7174384d 9-10,22,26,38-39,41
+  s_84730523e7324e::t_662afce56952ac 27
+apps/docs/docs/management/backup.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 9,11-12,14,16,18,20-23,25-26,28,30-31,33-34,36-37,39
+apps/docs/docs/advanced/styling/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 3,5-6,8,12-13,17,19-20,22,24,26,28-29,36-37
+apps/docs/docs/integrations/docker/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 3,14,16,18,20,22,24,29,33,36-37,40,42-43,45,47-49,52-53,55,57,65,67,69,71,74-96,99-100,102-106,108,110,112-113,115-117,119-120,122,124-125,127-129,131-132
+apps/docs/docs/widgets/coolify/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 18,30-31,51
+apps/docs/docs/workshop/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 10-11,14,18,22,24,26-27,29,31-32,34,36,38-39,41-43,45-46
+apps/docs/docs/widgets/bookmarks/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 16-17
+apps/docs/docs/widgets/smart-home-entity-state/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 18-19,56,58,62
+apps/docs/docs/workshop/homarr-provider.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 11,15-16,18,20,22,24-27,29,31,33-35,37-38
+apps/docs/docs/widgets/media-missing/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 19-20
+apps/docs/src/declarations.d.ts
+  s_84730523e7324e::t_b43f87c3633c5a 6-15
+apps/docs/src/components/pages/getting-started/getting-started-overview.module.css
+  s_84730523e7324e::t_b43f87c3633c5a 1-232
+apps/docs/docs/integrations/immich/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 3,17,27-39
+apps/docs/docs/getting-started/installation/qnap.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 5-7,9-11
+apps/docs/docs/integrations/pi-hole/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 46
+apps/docs/docs/advanced/development/workshop.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 1-41
+apps/docs/docs/widgets/clock/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 16-17
+apps/docs/docs/advanced/environment-variables/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 41
+apps/docs/docs/integrations/opnsense/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 3,16,18,26-27,31,34-37
+apps/docs/docs/widgets/dns-hole-summary/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 15-16
+apps/docs/docs/management/assistant.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 9,11,13-14,16,18,20,22,24-25,27-28,30-31,33,35-36,38-39,41,43,45-48,50-51,55,57-58
+apps/docs/docs/getting-started/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 2,9-12,14,16,18-21,23,25,27,29-31
+apps/docs/docs/management/api/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 9-10,12,16,18,20-21,24-25,27-28,30,32-33,35-36,38-39,41,43-44,46-48,50,52,54,62-63,65,67,69-71,73,75-76,78-79
+apps/docs/docs/management/integrations/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 8,10,12-13,15,17-18,20,22,24,26-27,29-30,32-33,35,37-38,40,42-46,48,50-51,53,55,57-60,62
+apps/docs/docs/advanced/development/getting-started.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 61
+apps/docs/docs/widgets/countdown/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 16-17,19-20
+apps/docs/docs/integrations/ical/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 41-42
+apps/docs/docs/widgets/media-releases/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 20-21
+apps/docs/src/components/integrations/adding.tsx
+  s_84730523e7324e::t_b43f87c3633c5a 4-5
+apps/docs/src/components/widgets/adding.tsx
+  s_84730523e7324e::t_b43f87c3633c5a 4
+apps/docs/docs/widgets/patchmon/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 3,18-19,21,23-24,26,28
+apps/docs/src/components/ui/flow-connector.tsx
+  s_84730523e7324e::t_b43f87c3633c5a 1-28
+apps/docs/docs/management/boards/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 12,14-15,17,19-20,22,24,26-28,30-32,36-37,39-40,42,44-45,47-51,53,55,57,59-64,66,68-69,71,73,75-79,81-82,84,86,88-89,91-92,94
+apps/docs/docs/widgets/weather/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 3,16-17,31-32,34-35
+apps/docs/src/components/pages/core-concepts/technical-diagrams.tsx
+  s_84730523e7324e::t_b43f87c3633c5a 1-423
+apps/docs/docs/getting-started/after-the-installation.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 9-10,12-13,15,17,19-20,22,24,26,28-29,31,33,35,37-38,40,42-43,45,47-48,50,52,54,56-57,59,61,63,65-66,68,70,72,74-79,81
+apps/docs/docs/widgets/notebook/index.mdx
+  s_84730523e7324e::t_92e98ca0a25161 3,11-12,16-20,22-23,25,27-29,31
+packages/ui/src/components/table-pagination.tsx
+  s_84730523e7324e::t_f7d20b7174384d 8,16,55,57
+apps/docs/docs/widgets/dns-hole-controls/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 18-19
+apps/docs/src/components/pages/core-concepts/technical-diagrams.module.css
+  s_84730523e7324e::t_b43f87c3633c5a 1-400
+apps/docs/docs/integrations/proxmox/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 3,16,26-28,34-36,39-42
+apps/docs/docs/management/logs/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 13-14
+apps/docs/docs/widgets/assistant/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 3,13-14,16-17
+apps/docs/docs/management/custom-widgets/agent-authoring.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 1,3-4,6,12-13,15,18-22,24,26,28-34,36-37,39-40,42,44-45
+apps/docs/src/components/pages/getting-started/concept-flow.tsx
+  s_84730523e7324e::t_b43f87c3633c5a 1-154
+apps/docs/src/components/ui/flow-connector.module.css
+  s_84730523e7324e::t_b43f87c3633c5a 1-175
+packages/translation/src/lang/en.json
+  s_84730523e7324e::t_f7d20b7174384d 1758
+apps/docs/docs/widgets/calendar/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 3,21-22,26-27,29,31-33,35,37,41-47,53-54
+apps/docs/docs/management/custom-widgets/authoring.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 3-4,6,8-12,14-15,17-18,20-21,23,25-27,29
+apps/docs/docs/getting-started/glossary.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 5-20
+apps/docs/docs/management/users/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 12-13,15-17,19,23-24,26,28-29,31,33,35-43,45-46,48-49,51-52,54-55,57,59-60,62-63,65,67,69-70,72-73
+packages/translation/src/lang/fr.json
+  s_84730523e7324e::t_f7d20b7174384d 1256
+apps/docs/docs/widgets/timer/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 16-17,19-20
+apps/docs/docs/widgets/tracearr/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 18-19
+apps/docs/docs/integrations/kubernetes/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 3,13-14,16,18,25-26,28,30,41-42,44
+apps/docs/docs/management/certificates/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 18-19
+apps/docs/docs/widgets/notifications/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 18-19
+apps/docs/docs/widgets/archive-team-warrior/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 17-18
+apps/docs/docs/getting-started/installation/portainer.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 3,5,25-26,30
+apps/docs/docs/widgets/ups/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 18-19
+apps/docs/docs/management/settings/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 13-14,16,18-19,21-22,24,26,28,30,32,34-35,37,39,41,43,45,47,49,51-53,55,57,59,61-62,64,66,68,70-71,73,75,77,79,81,83,85-88,90,92,94,96-97,99-101,103-104,106-107,109
+apps/docs/docs/widgets/media-server/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 3,21-23,25-26,28,32-35,38
+apps/docs/docs/community/donate.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 11,13-14
+apps/docs/docs/management/mcp.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 11-12,14,16-17,19,21-22,28,30,37,44,50,52,54-55,57-58,60,62,64,66-70,72,75,77,79-81,83-85,87-88
+apps/docs/docs/getting-started/installation/runtipi.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 3,5,7,9-10,12
+apps/docs/docs/management/media/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 15-16
+apps/docs/docs/widgets/air-quality/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 16-17,31-32
+apps/docs/docs/widgets/custom-api/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 3,13-14,20,23,26,28-29,31-32,34
+apps/docs/docs/widgets/network-controller-status/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 18-19
+apps/docs/docs/advanced/command-line/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 3-4,6,8,10,12-15,17,19,23-25,31-32,38,46
+apps/docs/docs/management/custom-widgets/troubleshooting.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 1,3,5-10,12-13,15,17,19-25,27,29,31-32,34,36-37,39,41-43,47,49,51-52
+apps/docs/docs/widgets/network-controller-summary/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 17-18,36
+apps/docs/docs/advanced/proxy/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 146
+apps/docs/docs/widgets/smart-home-execute-automation/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 18-19
+apps/docs/docs/community/get-in-touch.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 2-3,9,11,13,17-20,22-23
+apps/docs/docs/community/faq.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 8,10-11,13,15,17,19-20,22,24-26,28,30-31,33-34,36,38-40,42,44-45,47,49-50
+apps/docs/docs/community/translations.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 8,10-11,13,15-16,18-19,23-28
+apps/docs/docs/getting-started/installation/docker.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 5-7,9,13,15-17,19-20,22-23,25,27-30,32,34-35,37,39,41-42,47,52-53
+apps/docs/docs/widgets/app/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 14-15
+apps/docs/src/components/pages/getting-started/concept-flow.module.css
+  s_84730523e7324e::t_b43f87c3633c5a 1-245
+apps/docs/src/components/pages/getting-started/getting-started-overview.tsx
+  s_84730523e7324e::t_b43f87c3633c5a 1-119
+apps/docs/docs/widgets/docker-containers/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 14-15,18,29
+apps/docs/docs/management/apps/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 10,12-13,15,17,19,21,23,25-31,33-34,36,38,40-43,45
+apps/docs/docs/management/custom-widgets/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 7,13,18-19,21-22,24,26,28,30-31,33-34,36,38-43,45-46,48,50-52,54-56,58-59
+apps/docs/docs/management/tasks/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 10-11,13,15-18,20,22
+apps/docs/docs/widgets/downloads/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 3,21-22,26-28,30-31,33,35,37,39,41,45-51,57-59
+apps/docs/docs/management/search-engines/index.mdx
+  s_84730523e7324e::t_b43f87c3633c5a 17-18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "d3c6991966f02ae0d4688b850e28b0e2175a19b5",
+  "prompts": {},
+  "sessions": {
+    "s_84730523e7324e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a067be-4c11-7601-80a3-882cb02ea6f1",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
