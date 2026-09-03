@@ -48,6 +48,7 @@ describe("widget integration config", () => {
       archiveTeamWarrior: 1,
       anchorNote: 1,
       wud: 1,
+      llamacpp: 1,
     });
   });
 });

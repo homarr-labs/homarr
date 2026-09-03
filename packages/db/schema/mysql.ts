@@ -502,6 +502,7 @@ export const assistantConfigurations = mysqlTable("assistant_configuration", {
       | "together"
       | "ollama"
       | "lm-studio"
+      | "llama-cpp"
       | "custom"
     >()
     .notNull()

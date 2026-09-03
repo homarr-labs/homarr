@@ -58,6 +58,7 @@ export const widgetKinds = [
   "customApi",
   "assistant",
   "wud",
+  "llamacpp",
 ] as const;
 
 export type WidgetKind = (typeof widgetKinds)[number];

@@ -1409,7 +1409,8 @@
       "vpn": "VPN",
       "mediaLibrary": "Media Library",
       "uptimeMonitoring": "Uptime Monitoring",
-      "beszel": "Beszel"
+      "beszel": "Beszel",
+      "ai": "AI"
     },
     "testConnection": {
       "action": {
@@ -1701,6 +1702,10 @@
       "use": "Select integrations in items",
       "interact": "Interact with integrations",
       "full": "Full integration access"
+    },
+    "llamacpp": {
+      "name": "llama.cpp",
+      "description": "Monitor a local llama.cpp llama-server: health, model and generation metrics"
     }
   },
   "media": {
@@ -5170,6 +5175,54 @@
         "battery": "Bat",
         "uptime": "Uptime",
         "agent": "Agent"
+      }
+    },
+    "llamacpp": {
+      "name": "llama.cpp",
+      "description": "Show the health, loaded model and generation speed of your local llama.cpp server.",
+      "title": "llama.cpp",
+      "status": {
+        "online": "Online",
+        "unhealthy": "Unhealthy ({status})"
+      },
+      "idle": "Idle",
+      "speedTooltip": {
+        "current": "Current generation speed",
+        "average": "Average generation speed since startup",
+        "request": "Average speed since this request started"
+      },
+      "busy": "{count, plural, one {# request running} other {# requests running}}",
+      "modelInfo": {
+        "context": "Context",
+        "size": "File size",
+        "parameters": "Parameters"
+      },
+      "stats": {
+        "tokensProcessed": "Tokens processed",
+        "contextUsage": "Context / KV usage",
+        "cacheHitRate": "Prompt cache hit rate"
+      },
+      "error": {
+        "unreachable": "llama-server is not reachable"
+      },
+      "unit": {
+        "speed": "{value} t/s",
+        "parameters": "{value}B",
+        "none": "—"
+      },
+      "option": {
+        "showTitle": {
+          "label": "Show title"
+        },
+        "showModelInfo": {
+          "label": "Show model info"
+        },
+        "showContextUsage": {
+          "label": "Show context usage"
+        },
+        "showCacheHitRate": {
+          "label": "Show cache hit rate"
+        }
       }
     }
   },

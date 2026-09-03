@@ -87,6 +87,7 @@ export const widgetIntegrationConfigs = {
   anchorNote: { supportedIntegrations: ["anchor", "mock"], maxIntegrations: 1 },
   traefik: { supportedIntegrations: ["traefik", "mock"] },
   wud: { supportedIntegrations: ["wud", "mock"], maxIntegrations: 1 },
+  llamacpp: { supportedIntegrations: ["llamacpp", "mock"], maxIntegrations: 1 },
 } satisfies Partial<Record<WidgetKind, WidgetIntegrationConfig>>;
 
 export type WidgetKindWithIntegration = keyof typeof widgetIntegrationConfigs;

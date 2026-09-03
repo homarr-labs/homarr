@@ -822,7 +822,8 @@
       "analytics": "分析",
       "vpn": "VPN",
       "mediaLibrary": "媒體庫",
-      "uptimeMonitoring": "運作時間監控"
+      "uptimeMonitoring": "運作時間監控",
+      "ai": "AI"
     },
     "testConnection": {
       "action": {
@@ -1150,6 +1151,10 @@
     "bazarr": {
       "name": "Bazarr",
       "description": "Sonarr 和 Radarr 的配套應用程式，管理和下載字幕"
+    },
+    "llamacpp": {
+      "name": "llama.cpp",
+      "description": "監控本地 llama.cpp llama-server：健康狀態、模型與生成指標"
     }
   },
   "media": {
@@ -3945,6 +3950,54 @@
       },
       "error": {
         "internalServerError": "無法擷取 Traefik 資料"
+      }
+    },
+    "llamacpp": {
+      "name": "llama.cpp",
+      "description": "顯示本地 llama.cpp 伺服器的健康狀態、載入模型與生成速度。",
+      "title": "llama.cpp",
+      "status": {
+        "online": "線上",
+        "unhealthy": "異常 ({status})"
+      },
+      "idle": "閒置",
+      "speedTooltip": {
+        "current": "目前生成速度",
+        "average": "啟動以來的平均生成速度",
+        "request": "本次請求開始以來的平均速度"
+      },
+      "busy": "{count, plural, other {# 個請求處理中}}",
+      "modelInfo": {
+        "context": "上下文",
+        "size": "檔案大小",
+        "parameters": "參數量"
+      },
+      "stats": {
+        "tokensProcessed": "已處理 Token",
+        "contextUsage": "上下文 / KV 佔用",
+        "cacheHitRate": "提示快取命中率"
+      },
+      "error": {
+        "unreachable": "無法連接 llama-server"
+      },
+      "unit": {
+        "speed": "{value} t/s",
+        "parameters": "{value}B",
+        "none": "—"
+      },
+      "option": {
+        "showTitle": {
+          "label": "顯示標題"
+        },
+        "showModelInfo": {
+          "label": "顯示模型資訊"
+        },
+        "showContextUsage": {
+          "label": "顯示上下文佔用"
+        },
+        "showCacheHitRate": {
+          "label": "顯示快取命中率"
+        }
       }
     }
   },
