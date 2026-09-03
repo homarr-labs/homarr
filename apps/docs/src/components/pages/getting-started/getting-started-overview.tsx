@@ -5,6 +5,7 @@ import addItem from "@site/docs/getting-started/img/manage-board-header-choose-i
 import moveItem from "@site/docs/getting-started/img/move-item.gif";
 import resizeItem from "@site/docs/getting-started/img/resize-item.gif";
 
+import { AssistantFlowDiagram, WorkshopFlowDiagram } from "../core-concepts/technical-diagrams";
 import { ConceptFlow } from "./concept-flow";
 import styles from "./getting-started-overview.module.css";
 
@@ -69,6 +70,46 @@ export function GettingStartedOverview() {
             </li>
           ))}
         </ol>
+      </section>
+
+      <section className={styles.extendedConcepts} aria-labelledby="extended-concepts-title">
+        <header className={styles.extendedIntro}>
+          <h2 id="extended-concepts-title">Assistant, providers, and Workshop</h2>
+          <p>Optional systems that sit beside the board, integration, and widget model.</p>
+        </header>
+
+        <section className={styles.extendedConcept} aria-labelledby="assistant-concept-title">
+          <div className={styles.extendedHeading}>
+            <div>
+              <h3 id="assistant-concept-title">Assistant and providers</h3>
+              <p>The provider selects the model API. Homarr still owns context, permissions, approvals, and tools.</p>
+            </div>
+            <div className={styles.extendedLinks}>
+              <Link to="/docs/management/assistant">
+                Assistant <IconArrowRight size={15} aria-hidden="true" />
+              </Link>
+              <Link to="/docs/workshop/homarr-provider">
+                Homarr provider <IconArrowRight size={15} aria-hidden="true" />
+              </Link>
+            </div>
+          </div>
+          <AssistantFlowDiagram />
+        </section>
+
+        <section className={styles.extendedConcept} aria-labelledby="workshop-concept-title">
+          <div className={styles.extendedHeading}>
+            <div>
+              <h3 id="workshop-concept-title">Community Workshop</h3>
+              <p>Shareable Custom Widget and CSS definitions move through Workshop; deployment values stay local.</p>
+            </div>
+            <div className={styles.extendedLinks}>
+              <Link to="/docs/workshop">
+                Workshop <IconArrowRight size={15} aria-hidden="true" />
+              </Link>
+            </div>
+          </div>
+          <WorkshopFlowDiagram />
+        </section>
       </section>
     </section>
   );

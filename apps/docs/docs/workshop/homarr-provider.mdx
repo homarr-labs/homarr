@@ -8,12 +8,16 @@ tags:
   - Community
 ---
 
+import { HomarrProviderDiagram } from "@site/src/components/pages/core-concepts/technical-diagrams";
+
 # Homarr provider
 
 The Homarr provider gives Community Workshop users access to a server-selected model without configuring an Assistant
 API key.
 
 Select **Homarr** under **Management → Assistant**, enable Assistant, then sign in to the Workshop when prompted.
+
+<HomarrProviderDiagram />
 
 ## Allowance
 
@@ -22,7 +26,7 @@ Select **Homarr** under **Management → Assistant**, enable Assistant, then sig
 - Forwarded requests count even when the upstream model fails.
 - A shared daily service limit also applies.
 
-The model selector shows the remaining allowance and reset time.
+Assistant shows the remaining allowance and reset time beside the model control.
 
 ## Data handling
 

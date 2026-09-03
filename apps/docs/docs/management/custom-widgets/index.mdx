@@ -4,6 +4,8 @@ sidebar_label: Overview
 tags: [Custom Widgets, API, JSX, MCP]
 ---
 
+import { CustomWidgetFlowDiagram } from "@site/src/components/pages/core-concepts/technical-diagrams";
+
 # Custom Widgets
 
 :::warning Experimental feature
@@ -13,15 +15,13 @@ Custom Widgets may change during the v2 release cycle. Share feedback in the
 
 :::
 
-A **Custom Widget** is a validated `homarr-custom-widget-v2` definition containing:
-
-- one or more API sources;
-- named queries and actions;
-- optional widget settings;
-- a safe JSX template.
+A **Custom Widget** is a validated `homarr-custom-widget-v2` definition containing API sources, queries and actions,
+optional settings, and a safe JSX template.
 
 Homarr executes requests on the server and renders the template in a restricted runtime. Source credentials are
 encrypted separately and are not included in exports, prompts, browser data, or Workshop submissions.
+
+<CustomWidgetFlowDiagram />
 
 ![The Custom Widgets management page](../img/custom-widgets.png)
 

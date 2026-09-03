@@ -1,0 +1,475 @@
+.diagram {
+  --diagram-ink: var(--ifm-font-color-base);
+  --diagram-muted: var(--ifm-color-emphasis-700);
+  --diagram-panel: var(--ifm-background-surface-color);
+  --diagram-surface: var(--ifm-background-color);
+  --diagram-line: var(--ifm-color-emphasis-300);
+  display: grid;
+  gap: 0.9rem;
+  margin: 1.25rem 0 1.75rem;
+  padding: 1rem;
+  border: 1px solid var(--diagram-line);
+  border-radius: 0.75rem;
+  color: var(--diagram-ink);
+  background: var(--diagram-panel);
+}
+
+.visuallyHidden {
+  position: absolute;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  border: 0;
+  margin: -1px;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.routeBlock {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.routeBlock + .routeBlock {
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--diagram-line);
+}
+
+.routeHeading {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.routeHeading > span {
+  display: grid;
+  place-items: center;
+  color: var(--ifm-color-primary);
+}
+
+.routeHeading strong {
+  font-size: 0.74rem;
+}
+
+.routeHeading small {
+  color: var(--diagram-muted);
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+}
+
+.threeStepLane,
+.fourStepLane {
+  display: grid;
+  align-items: stretch;
+  gap: 0.35rem;
+}
+
+.threeStepLane {
+  grid-template-columns: minmax(0, 1fr) 2.6rem minmax(0, 1fr) 2.6rem minmax(0, 1fr);
+}
+
+.fourStepLane {
+  grid-template-columns: minmax(0, 1fr) 2.25rem minmax(0, 1fr) 2.25rem minmax(0, 1fr) 2.25rem minmax(0, 1fr);
+}
+
+.node {
+  display: grid;
+  align-content: start;
+  gap: 0.65rem;
+  min-width: 0;
+  min-height: 6.25rem;
+  padding: 0.7rem;
+  border: 1px solid var(--diagram-line);
+  border-radius: 0.55rem;
+  color: var(--diagram-ink);
+  background: var(--diagram-surface);
+  text-decoration: none;
+}
+
+.nodeLink:hover {
+  border-color: var(--ifm-color-primary);
+  color: var(--diagram-ink);
+  text-decoration: none;
+}
+
+.nodeHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.nodeIcon,
+.largeIcon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  border: 1px solid var(--diagram-line);
+  color: var(--ifm-color-primary);
+  background: var(--diagram-panel);
+}
+
+.nodeIcon {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 0.45rem;
+}
+
+.nodeIcon img {
+  width: 1.15rem;
+  height: 1.15rem;
+  object-fit: contain;
+}
+
+.nodeCopy {
+  display: grid;
+  min-width: 0;
+}
+
+.nodeCopy strong {
+  font-size: 0.72rem;
+  line-height: 1.25;
+}
+
+.nodeCopy small {
+  color: var(--diagram-muted);
+  font-size: 0.59rem;
+  line-height: 1.35;
+}
+
+.nodeBody {
+  display: grid;
+  align-content: start;
+  min-width: 0;
+}
+
+.nodeBody code {
+  overflow: hidden;
+  display: block;
+  padding: 0.25rem 0.35rem;
+  border: 1px solid var(--diagram-line);
+  border-radius: 0.3rem;
+  color: var(--diagram-muted);
+  background: var(--diagram-panel);
+  font-size: 0.53rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.flowArrow {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  min-width: 0;
+  color: var(--diagram-ink);
+}
+
+.flowArrow > small {
+  color: var(--diagram-muted);
+  font-family: var(--font-mono);
+  font-size: 0.48rem;
+  line-height: 1;
+}
+
+.arrowLine {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  min-height: 1.15rem;
+}
+
+.arrowLine::before {
+  width: 100%;
+  height: 2px;
+  background: currentcolor;
+  content: "";
+}
+
+.arrowLine svg {
+  position: absolute;
+  right: -0.15rem;
+  background: var(--diagram-panel);
+}
+
+.pillList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.pillList span,
+.pillList a {
+  padding: 0.15rem 0.3rem;
+  border: 1px solid var(--diagram-line);
+  border-radius: 999px;
+  color: var(--diagram-muted);
+  background: var(--diagram-panel);
+  font-size: 0.5rem;
+  line-height: 1.25;
+  text-decoration: none;
+}
+
+.pillList a:hover {
+  border-color: var(--ifm-color-primary);
+  color: var(--ifm-color-primary);
+  text-decoration: none;
+}
+
+.localDetails,
+.definitionParts {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.localDetails span,
+.definitionParts span {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--diagram-muted);
+  font-size: 0.53rem;
+  line-height: 1.3;
+}
+
+.definitionParts svg {
+  flex: none;
+  color: var(--ifm-color-primary);
+}
+
+.diagramNote {
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--diagram-line);
+  color: var(--diagram-muted);
+  font-size: 0.68rem;
+  line-height: 1.45;
+}
+
+.factList {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.4rem;
+}
+
+.factList span {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+  padding: 0.45rem;
+  border: 1px solid var(--diagram-line);
+  border-radius: 0.4rem;
+  color: var(--diagram-muted);
+  background: var(--diagram-surface);
+  font-size: 0.56rem;
+  line-height: 1.3;
+}
+
+.factList svg {
+  flex: none;
+  color: var(--ifm-color-primary);
+}
+
+.boardSource {
+  display: flex;
+  align-items: center;
+  justify-self: center;
+  gap: 0.55rem;
+  min-width: 14rem;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid var(--diagram-line);
+  border-radius: 0.55rem;
+  background: var(--diagram-surface);
+}
+
+.largeIcon {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.5rem;
+}
+
+.boardSource > span:last-child {
+  display: grid;
+}
+
+.boardSource strong {
+  font-size: 0.78rem;
+}
+
+.boardSource small {
+  color: var(--diagram-muted);
+  font-size: 0.59rem;
+}
+
+.branchSelector {
+  display: grid;
+  justify-items: center;
+  gap: 0.2rem;
+  color: var(--diagram-muted);
+}
+
+.branchSelector span {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+}
+
+.branchSelector svg {
+  color: var(--diagram-ink);
+}
+
+.layoutGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.layoutCard {
+  display: grid;
+  gap: 0.55rem;
+  min-width: 0;
+  padding: 0.65rem;
+  border: 1px solid var(--diagram-line);
+  border-radius: 0.55rem;
+  background: var(--diagram-surface);
+}
+
+.layoutHeading {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.layoutHeading > span:first-child {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 1.65rem;
+  height: 1.65rem;
+  border: 1px solid var(--diagram-line);
+  border-radius: 0.4rem;
+  color: var(--ifm-color-primary);
+  background: var(--diagram-panel);
+}
+
+.layoutHeading > span:last-child {
+  display: grid;
+  min-width: 0;
+}
+
+.layoutHeading strong {
+  font-size: 0.7rem;
+}
+
+.layoutHeading code {
+  padding: 0;
+  border: 0;
+  color: var(--diagram-muted);
+  background: transparent;
+  font-size: 0.54rem;
+  white-space: normal;
+}
+
+.layoutCard > small {
+  color: var(--diagram-muted);
+  font-size: 0.55rem;
+}
+
+.miniBoard {
+  display: grid;
+  grid-auto-rows: 1.2rem;
+  gap: 0.22rem;
+  min-height: 4.25rem;
+  padding: 0.35rem;
+  border: 1px dashed var(--diagram-line);
+  border-radius: 0.35rem;
+  background: var(--diagram-panel);
+}
+
+.miniTile,
+.miniRail {
+  display: block;
+  border: 1px solid var(--diagram-line);
+  border-radius: 0.22rem;
+  background: var(--diagram-surface);
+}
+
+.miniTile:nth-child(2) {
+  border-color: var(--ifm-color-primary);
+}
+
+.mobileBoard {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.mobileBoard .miniRail {
+  display: none;
+}
+
+.mobileBoard .miniTile:nth-child(3),
+.mobileBoard .miniTile:nth-child(5) {
+  grid-column: span 2;
+}
+
+.baseBoard {
+  grid-template-columns: 0.7fr repeat(4, minmax(0, 1fr));
+}
+
+.baseBoard .miniRail {
+  grid-row: 1 / span 3;
+}
+
+.baseBoard .miniTile:nth-child(3),
+.baseBoard .miniTile:nth-child(4) {
+  grid-column: span 2;
+}
+
+.customBoard {
+  grid-template-columns: repeat(5, minmax(0, 1fr)) 0.7fr;
+}
+
+.customBoard .miniRail {
+  grid-column: 6;
+  grid-row: 1 / span 3;
+}
+
+.customBoard .miniTile:nth-child(3) {
+  grid-column: span 3;
+}
+
+.customBoard .miniTile:nth-child(5) {
+  grid-column: span 2;
+}
+
+@media (max-width: 800px) {
+  .threeStepLane,
+  .fourStepLane {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .flowArrow {
+    gap: 0.1rem;
+    width: 3rem;
+    min-height: 1.8rem;
+    justify-self: center;
+  }
+
+  .arrowLine {
+    transform: rotate(90deg);
+  }
+
+  .node {
+    min-height: auto;
+  }
+
+  .factList,
+  .layoutGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .miniBoard {
+    min-height: 5rem;
+  }
+}

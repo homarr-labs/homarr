@@ -5,6 +5,8 @@ tags:
   - Connections
 ---
 
+import { IntegrationRoutesDiagram } from "@site/src/components/pages/core-concepts/technical-diagrams";
+
 # Integrations
 
 An **integration** is a server-side connection from Homarr to a supported service. Integrations provide data and
@@ -14,6 +16,10 @@ actions to widgets and can be linked to apps.
 
 See the [integration catalog](/docs/category/integrations) for service-specific URLs, credentials, and supported
 widgets.
+
+## Browser and server routes
+
+<IntegrationRoutesDiagram />
 
 ## Configuration
 
@@ -26,6 +32,8 @@ root rather than a settings or API subpage.
 Credentials are encrypted and used only by the server. Linking an app is optional; it provides the browser-facing URL
 used by widgets that open the service.
 
+![Creating an integration with a server URL, API key, and linked app](./img/form-create-integration.png)
+
 Integrations can also be created while adding content to a board. Editing a connection from a widget updates that
 integration everywhere it is used.
 
@@ -36,6 +44,8 @@ integration everywhere it is used.
 | Use      | Select the integration and read its data                 |
 | Interact | Run supported actions, such as pausing a download        |
 | Full     | Change the URL, credentials, permissions, and linked app |
+
+![Per-integration access for users and groups](./img/integration-permissions.png)
 
 Global integration permissions apply to every integration. Resource access can instead be granted to specific users
 or groups. Lists are filtered on the server and only include connections the current user can manage.

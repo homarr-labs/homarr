@@ -9,6 +9,8 @@ tags:
   - Layout
 ---
 
+import { BoardLayoutsDiagram } from "@site/src/components/pages/core-concepts/technical-diagrams";
+
 A **board** is a dashboard page containing apps, widgets, and Containers. Its name is unique and forms the board URL.
 Boards can be public or restricted to users and groups.
 
@@ -19,13 +21,11 @@ board switcher.
 
 ## Responsive layouts
 
-Every board has two protected layouts:
+<BoardLayoutsDiagram />
 
-- **Mobile** starts at `0px`, has no fixed rails, and uses three columns on new boards.
-- **Base** starts at `768px` and uses the column count selected when the board is created.
-
-Additional layouts can be added at unique breakpoints. Homarr selects the layout with the highest breakpoint that fits
-the current viewport. Each layout stores its own positions and sizes; editing one does not change the others.
+Mobile and Base are protected layouts. New boards use three Mobile columns; Base uses the column count selected at
+creation. Additional layouts use unique breakpoints. Homarr selects the layout with the highest breakpoint that fits
+the current viewport.
 
 Tiles use fixed `200 × 200` logical-pixel cells with a `24px` gap. Homarr scales the complete layout to the available
 width instead of changing each widget's proportions. **Reset from Base** regenerates a Mobile or custom layout from the
