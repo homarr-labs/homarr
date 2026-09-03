@@ -32,69 +32,6 @@
   padding-top: 0.25rem;
 }
 
-.extendedConcepts {
-  display: grid;
-  gap: 1.5rem;
-  padding-top: 0.5rem;
-  border-top: 1px solid var(--start-line);
-}
-
-.extendedIntro {
-  padding-left: 1rem;
-  border-left: 3px solid var(--ifm-color-primary);
-}
-
-.extendedIntro h2 {
-  margin: 0 0 0.35rem;
-  font-size: 1.35rem;
-}
-
-.extendedIntro p {
-  margin: 0;
-  color: var(--start-muted);
-  font-size: 0.84rem;
-}
-
-.extendedConcept {
-  display: grid;
-  gap: 0.15rem;
-}
-
-.extendedHeading {
-  display: flex;
-  align-items: end;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
-.extendedHeading h3 {
-  margin: 0 0 0.25rem;
-  font-size: 1.1rem;
-}
-
-.extendedHeading p {
-  margin: 0;
-  color: var(--start-muted);
-  font-size: 0.84rem;
-}
-
-.extendedLinks {
-  display: flex;
-  flex: none;
-  flex-wrap: wrap;
-  justify-content: end;
-  gap: 0.6rem;
-}
-
-.extendedLinks a {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  font-size: 0.72rem;
-  font-weight: 700;
-  white-space: nowrap;
-}
-
 .editorHeading {
   display: flex;
   align-items: end;
@@ -269,14 +206,6 @@
 @media (max-width: 800px) {
   .editorHeading {
     align-items: start;
-  }
-
-  .extendedHeading {
-    display: grid;
-  }
-
-  .extendedLinks {
-    justify-content: start;
   }
 
   .editorSteps {
