@@ -1,37 +1,76 @@
 import Link from "@docusaurus/Link";
-import { IconArrowRight, IconLayoutBoard, IconPlugConnected, IconServer, IconSparkles } from "@tabler/icons-react";
+import { IconArrowRight } from "@tabler/icons-react";
+
+import addItem from "@site/docs/getting-started/img/manage-board-header-choose-item.png";
+import moveItem from "@site/docs/getting-started/img/move-item.gif";
+import resizeItem from "@site/docs/getting-started/img/resize-item.gif";
 
 import { ConceptFlow } from "./concept-flow";
 import styles from "./getting-started-overview.module.css";
 
+const editingSteps = [
+  {
+    title: "Add",
+    description: "Choose an app, widget, or container.",
+    image: addItem,
+    alt: "Add item menu in board edit mode",
+    fit: "cover",
+  },
+  {
+    title: "Move",
+    description: "Drag the item to another grid position.",
+    image: moveItem,
+    alt: "Dragging an app tile on a board",
+    fit: "contain",
+  },
+  {
+    title: "Resize",
+    description: "Drag the resize handle to change its grid area.",
+    image: resizeItem,
+    alt: "Resizing an app tile on a board",
+    fit: "contain",
+  },
+];
+
 export function GettingStartedOverview() {
   return (
-    <div className={styles.overview}>
-      <section className={styles.intro} aria-labelledby="getting-started-intro">
-        <div className={styles.introCopy}>
-          <p className={styles.eyebrow}>Before you install</p>
-          <h2 id="getting-started-intro">Homarr is the front door to your self-hosted stack.</h2>
-          <p>
-            It can be a clean page of shortcuts, a live view of connected services, or both. You build boards in the
-            browser; YAML is not part of the normal configuration flow.
-          </p>
-          <Link to="/docs/getting-started/installation/docker">
-            Docker installation <IconArrowRight size={16} aria-hidden="true" />
-          </Link>
-        </div>
-        <div className={styles.summary}>
-          <SummaryItem icon={IconServer} label="Your services" />
-          <span aria-hidden="true" />
-          <SummaryItem icon={IconPlugConnected} label="Connections" />
-          <span aria-hidden="true" />
-          <SummaryItem icon={IconSparkles} label="Live widgets" />
-          <span aria-hidden="true" />
-          <SummaryItem icon={IconLayoutBoard} label="Boards" />
-        </div>
-      </section>
+    <section className={styles.overview} aria-labelledby="getting-started-overview-title">
+      <header className={styles.intro}>
+        <h2 id="getting-started-overview-title">How Homarr works</h2>
+        <p>Services expose data, integrations connect to them, widgets use the data, and boards arrange the widgets.</p>
+      </header>
 
       <ConceptFlow />
-    </div>
+
+      <section className={styles.editor} aria-labelledby="board-editor-title">
+        <div className={styles.editorHeading}>
+          <div>
+            <h3 id="board-editor-title">Board edit mode</h3>
+            <p>Add items, move them, and resize them on the grid. Each viewport can have its own layout.</p>
+          </div>
+          <Link to="/docs/management/boards">
+            Board docs <IconArrowRight size={15} aria-hidden="true" />
+          </Link>
+        </div>
+
+        <ol className={styles.editorSteps}>
+          {editingSteps.map((step, index) => (
+            <li className={styles.editorStep} key={step.title}>
+              <div className={styles.stepCopy}>
+                <span>{index + 1}</span>
+                <div>
+                  <strong>{step.title}</strong>
+                  <small>{step.description}</small>
+                </div>
+              </div>
+              <div className={styles.stepMedia}>
+                <img src={step.image} alt={step.alt} data-fit={step.fit} loading="lazy" />
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+    </section>
   );
 }
 
@@ -75,15 +114,6 @@ export function InstallationPaths() {
           </Link>
         );
       })}
-    </div>
-  );
-}
-
-function SummaryItem({ icon: Icon, label }: { icon: typeof IconServer; label: string }) {
-  return (
-    <div className={styles.summaryItem}>
-      <Icon size={18} aria-hidden="true" />
-      <strong>{label}</strong>
     </div>
   );
 }
