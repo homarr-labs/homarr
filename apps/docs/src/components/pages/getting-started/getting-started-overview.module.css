@@ -1,0 +1,222 @@
+.overview {
+  --start-ink: var(--ifm-font-color-base);
+  --start-muted: var(--ifm-color-emphasis-700);
+  --start-panel: var(--ifm-background-surface-color);
+  --start-line: var(--ifm-color-emphasis-200);
+  --start-coral: #fa5252;
+  display: grid;
+  gap: 3rem;
+  margin: 1.5rem 0 3rem;
+}
+
+.intro {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(16rem, 0.8fr);
+  align-items: center;
+  gap: 2rem;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  border: 1px solid var(--start-line);
+  border-radius: 1.2rem;
+  background:
+    radial-gradient(circle at 90% 10%, rgb(250 82 82 / 14%), transparent 18rem),
+    linear-gradient(145deg, color-mix(in srgb, var(--start-panel) 92%, transparent), var(--ifm-background-color));
+}
+
+.intro::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  opacity: 0.34;
+  background-image:
+    linear-gradient(var(--start-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--start-line) 1px, transparent 1px);
+  background-size: 34px 34px;
+  mask-image: linear-gradient(90deg, transparent, black);
+  content: "";
+}
+
+.introCopy {
+  max-width: 38rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.75rem;
+  color: #c92f2f;
+  font-size: 0.68rem;
+  font-weight: 750;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+:global([data-theme="dark"]) .eyebrow {
+  color: #ff8b8b;
+}
+
+.intro h2 {
+  margin: 0 0 1rem;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  letter-spacing: -0.05em;
+  line-height: 1;
+  text-wrap: balance;
+}
+
+.introCopy > p:not(.eyebrow) {
+  margin-bottom: 1.25rem;
+  color: var(--start-muted);
+  font-size: 1.02rem;
+  line-height: 1.6;
+}
+
+.introCopy > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 700;
+}
+
+.summary {
+  position: relative;
+  display: grid;
+  gap: 0.4rem;
+  padding: 1rem;
+  border: 1px solid var(--start-line);
+  border-radius: 1rem;
+  background: color-mix(in srgb, var(--start-panel) 82%, transparent);
+  box-shadow: 0 18px 45px rgb(20 25 35 / 10%);
+  backdrop-filter: blur(14px);
+}
+
+.summary > span {
+  width: 1px;
+  height: 0.65rem;
+  margin-left: 1.8rem;
+  background: linear-gradient(var(--start-line), var(--start-coral));
+}
+
+.summaryItem {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.65rem;
+  border: 1px solid var(--start-line);
+  border-radius: 0.7rem;
+  background: var(--start-panel);
+  font-size: 0.78rem;
+}
+
+.summaryItem svg {
+  color: var(--start-coral);
+}
+
+.installPaths {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem;
+  margin: 1rem 0 1.5rem;
+}
+
+.installPath {
+  position: relative;
+  display: grid;
+  gap: 0.45rem;
+  min-height: 10rem;
+  padding: 1.1rem;
+  border: 1px solid var(--start-line);
+  border-radius: 0.9rem;
+  color: var(--start-ink);
+  background: var(--start-panel);
+  text-decoration: none;
+  transition:
+    border-color 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.installPath:hover {
+  border-color: rgb(250 82 82 / 55%);
+  color: var(--start-ink);
+  text-decoration: none;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgb(20 25 35 / 8%);
+}
+
+.installPath > span {
+  color: #c92f2f;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+:global([data-theme="dark"]) .installPath > span {
+  color: var(--ifm-color-primary-light);
+}
+
+.installPath strong {
+  font-size: 1rem;
+}
+
+.installPath small {
+  color: var(--start-muted);
+  line-height: 1.45;
+}
+
+.installPath > svg {
+  position: absolute;
+  right: 0.9rem;
+  bottom: 0.9rem;
+  color: var(--start-coral);
+}
+
+.recommendedPath {
+  border-color: rgb(250 82 82 / 32%);
+  background: radial-gradient(circle at 100% 0%, rgb(250 82 82 / 12%), transparent 9rem), var(--start-panel);
+}
+
+@media (max-width: 800px) {
+  .intro {
+    grid-template-columns: 1fr;
+  }
+
+  .summary {
+    grid-template-columns: repeat(7, auto);
+    align-items: center;
+  }
+
+  .summary > span {
+    width: 0.65rem;
+    height: 1px;
+    margin: 0;
+    background: linear-gradient(90deg, var(--start-line), var(--start-coral));
+  }
+
+  .summaryItem {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+  }
+}
+
+@media (max-width: 640px) {
+  .summary {
+    display: none;
+  }
+
+  .installPaths {
+    grid-template-columns: 1fr;
+  }
+
+  .installPath {
+    min-height: 8rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .installPath {
+    transition: none;
+  }
+}

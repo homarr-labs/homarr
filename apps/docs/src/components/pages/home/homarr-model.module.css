@@ -1,0 +1,272 @@
+.model {
+  --model-ink: #17191f;
+  --model-muted: #68707d;
+  --model-panel: #fff;
+  --model-soft: #f7f5f3;
+  --model-line: rgb(23 25 31 / 11%);
+  --model-coral: #fa5252;
+  color: var(--model-ink);
+}
+
+:global([data-theme="dark"]) .model {
+  --model-ink: #f4f5f7;
+  --model-muted: #a6acb8;
+  --model-panel: #202229;
+  --model-soft: #17191f;
+  --model-line: rgb(255 255 255 / 11%);
+}
+
+.heading {
+  max-width: 46rem;
+  margin-bottom: 2.5rem;
+}
+
+.eyebrow {
+  margin: 0 0 1rem;
+  color: #c92f2f;
+  font-size: 0.75rem;
+  font-weight: 750;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+:global([data-theme="dark"]) .eyebrow {
+  color: #ff8b8b;
+}
+
+.heading h2 {
+  margin: 0 0 1rem;
+  font-size: clamp(2.3rem, 4.5vw, 4.35rem);
+  letter-spacing: -0.055em;
+  line-height: 1;
+  text-wrap: balance;
+}
+
+.heading > p:last-child {
+  max-width: 43rem;
+  margin: 0;
+  color: var(--model-muted);
+  font-size: 1.05rem;
+  line-height: 1.65;
+}
+
+.flow {
+  position: relative;
+  overflow: hidden;
+  margin: 0;
+  padding: clamp(1rem, 3vw, 2rem);
+  border: 1px solid var(--model-line);
+  border-radius: 1.3rem;
+  background:
+    linear-gradient(var(--model-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--model-line) 1px, transparent 1px), var(--model-soft);
+  background-size: 36px 36px;
+  box-shadow: 0 20px 55px rgb(20 25 35 / 7%);
+}
+
+.flow::before {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgb(250 82 82 / 12%), transparent 42%);
+  content: "";
+  pointer-events: none;
+}
+
+.flowLabels {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(8.5rem, 1fr) minmax(25rem, 2.6fr) minmax(8.5rem, 1fr);
+  gap: 2.2rem;
+  margin-bottom: 0.65rem;
+  color: var(--model-muted);
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.flowLabels span:nth-child(2) {
+  text-align: center;
+}
+
+.flowLabels span:last-child {
+  text-align: right;
+}
+
+.lane {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: stretch;
+  gap: 0.55rem;
+  padding: 0.7rem 0;
+}
+
+.node {
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 8.5rem;
+  padding: 0.8rem;
+  border: 1px solid var(--model-line);
+  border-radius: 0.85rem;
+  color: var(--model-ink);
+  background: color-mix(in srgb, var(--model-panel) 88%, transparent);
+  box-shadow: 0 8px 24px rgb(20 25 35 / 6%);
+  backdrop-filter: blur(12px);
+}
+
+a.node {
+  text-decoration: none;
+  transition:
+    border-color 160ms ease,
+    transform 160ms ease;
+}
+
+a.node:hover {
+  border-color: rgb(250 82 82 / 50%);
+  color: var(--model-ink);
+  text-decoration: none;
+  transform: translateY(-2px);
+}
+
+.node[data-tone="source"] {
+  background: color-mix(in srgb, var(--model-panel) 72%, transparent);
+}
+
+.node[data-tone="destination"] {
+  border-color: rgb(250 82 82 / 30%);
+  background: color-mix(in srgb, var(--model-coral) 8%, var(--model-panel));
+}
+
+.nodeIcon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 0.65rem;
+  color: var(--model-coral);
+  background: rgb(250 82 82 / 10%);
+}
+
+.node > span:last-child {
+  display: grid;
+  min-width: 0;
+}
+
+.node strong {
+  font-size: 0.78rem;
+}
+
+.node small {
+  color: var(--model-muted);
+  font-size: 0.61rem;
+  line-height: 1.3;
+}
+
+.arrow {
+  position: relative;
+  display: flex;
+  flex: 0 0 2.4rem;
+  align-items: center;
+  color: var(--model-muted);
+}
+
+.arrow i {
+  position: absolute;
+  left: 0;
+  overflow: hidden;
+  width: 100%;
+  height: 1px;
+  background: var(--model-line);
+}
+
+.arrow i::after {
+  display: block;
+  width: 45%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, var(--model-coral), transparent);
+  content: "";
+  animation: signal 2.8s ease-in-out infinite;
+}
+
+.arrow svg {
+  position: absolute;
+  right: -0.2rem;
+}
+
+.flow figcaption {
+  position: relative;
+  z-index: 1;
+  margin-top: 0.75rem;
+  color: var(--model-muted);
+  font-size: 0.72rem;
+  text-align: center;
+}
+
+.flow figcaption a {
+  font-weight: 650;
+}
+
+.compact .heading {
+  margin-bottom: 1.5rem;
+}
+
+.compact .heading h2 {
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+}
+
+.compact .flow {
+  box-shadow: none;
+}
+
+@keyframes signal {
+  from {
+    transform: translateX(-120%);
+  }
+
+  to {
+    transform: translateX(240%);
+  }
+}
+
+@media (max-width: 900px) {
+  .flowLabels {
+    display: none;
+  }
+
+  .lane {
+    display: grid;
+    grid-template-columns: 1fr;
+    padding: 1rem 0;
+  }
+
+  .lane + .lane {
+    border-top: 1px solid var(--model-line);
+  }
+
+  .node {
+    min-width: 0;
+  }
+
+  .arrow {
+    width: 1px;
+    height: 1.5rem;
+    margin-inline: 1.8rem;
+    transform: rotate(90deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arrow i::after {
+    animation: none;
+  }
+
+  a.node {
+    transition: none;
+  }
+}
