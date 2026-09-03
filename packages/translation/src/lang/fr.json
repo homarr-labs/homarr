@@ -1282,6 +1282,9 @@
       "show": "Afficher",
       "hide": "Masquer"
     },
+    "pagination": {
+      "pageOf": "Page {page} sur {totalPages}"
+    },
     "here": "ici",
     "iconPicker": {
       "label": "URL de l'icône :",

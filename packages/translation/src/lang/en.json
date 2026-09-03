@@ -1791,6 +1791,9 @@
       "copied": "Copied",
       "refresh": "Refresh"
     },
+    "pagination": {
+      "pageOf": "Page {page} of {totalPages}"
+    },
     "here": "here",
     "serviceUrlTemplate": {
       "serverTitle": "Usual server address",
