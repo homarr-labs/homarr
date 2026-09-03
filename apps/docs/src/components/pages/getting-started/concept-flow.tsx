@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
 import Link from "@docusaurus/Link";
-import { IconPlugConnected } from "@tabler/icons-react";
+import { IconCalendar, IconDownload, IconPlugConnected } from "@tabler/icons-react";
 
 import { qBittorentIntegration } from "@site/docs/integrations/q-bittorent";
 import { sonarrIntegration } from "@site/docs/integrations/sonarr";
@@ -27,13 +27,18 @@ const services = [
 const widgets = [
   {
     name: "Calendar",
+    icon: IconCalendar,
     href: "/docs/widgets/calendar",
   },
   {
     name: "Downloads",
+    icon: IconDownload,
     href: "/docs/widgets/downloads",
   },
 ];
+
+const calendarDays = Array.from({ length: 14 }, (_, index) => index + 1);
+const calendarEventDays = new Set([3, 8, 12]);
 
 function getIconUrl(iconUrl: typeof sonarrIntegration.iconUrl) {
   if (typeof iconUrl === "string") return iconUrl;
@@ -72,17 +77,40 @@ export function ConceptFlow() {
 
         <Stage number="3" title="Widget" detail="Data and actions" href="/docs/category/widgets">
           <div className={styles.widgetList}>
-            {widgets.map((widget) => (
-              <Link className={styles.widget} to={widget.href} key={widget.name}>
-                <span>{widget.name}</span>
-              </Link>
-            ))}
+            {widgets.map((widget) => {
+              const Icon = widget.icon;
+              return (
+                <Link className={styles.widget} to={widget.href} key={widget.name}>
+                  <Icon size={17} aria-hidden="true" />
+                  <span>{widget.name}</span>
+                </Link>
+              );
+            })}
           </div>
         </Stage>
 
         <FlowConnector animationDelay={700} />
 
-        <Stage number="4" title="Board" detail="Placed in the grid" href="/docs/management/boards" />
+        <Stage number="4" title="Board" detail="Placed in the grid" href="/docs/management/boards">
+          <div className={styles.boardCalendar} aria-hidden="true">
+            <div className={styles.calendarHeader}>
+              <strong>September</strong>
+              <span>3 events</span>
+            </div>
+            <div className={styles.calendarWeekdays}>
+              {["M", "T", "W", "T", "F", "S", "S"].map((day, index) => (
+                <span key={`${day}-${index}`}>{day}</span>
+              ))}
+            </div>
+            <div className={styles.calendarDays}>
+              {calendarDays.map((day) => (
+                <span data-event={calendarEventDays.has(day) || undefined} key={day}>
+                  {day}
+                </span>
+              ))}
+            </div>
+          </div>
+        </Stage>
       </div>
     </figure>
   );

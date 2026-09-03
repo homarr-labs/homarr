@@ -109,6 +109,11 @@ a.stageHeading:hover {
   height: 1.25rem;
 }
 
+.widget svg {
+  flex: none;
+  color: var(--diagram-muted);
+}
+
 .service > span {
   display: grid;
   min-width: 0;
@@ -149,6 +154,76 @@ a.stageHeading:hover {
   color: var(--diagram-muted);
   font-size: 0.61rem;
   line-height: 1.35;
+}
+
+.boardCalendar {
+  display: grid;
+  align-content: center;
+  gap: 0.28rem;
+  min-height: 5rem;
+  padding: 0.42rem;
+  border: 1px solid var(--diagram-line);
+  border-radius: 0.4rem;
+  background: var(--diagram-panel);
+}
+
+.calendarHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.3rem;
+}
+
+.calendarHeader strong {
+  font-size: 0.58rem;
+}
+
+.calendarHeader span {
+  color: var(--diagram-muted);
+  font-size: 0.44rem;
+}
+
+.calendarWeekdays,
+.calendarDays {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.12rem;
+}
+
+.calendarWeekdays span {
+  color: var(--diagram-muted);
+  font-family: var(--font-mono);
+  font-size: 0.38rem;
+  text-align: center;
+}
+
+.calendarDays span {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  aspect-ratio: 1;
+  border-radius: 0.18rem;
+  color: var(--diagram-muted);
+  background: color-mix(in srgb, var(--diagram-line) 28%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.42rem;
+}
+
+.calendarDays span[data-event] {
+  color: var(--diagram-ink);
+  background: color-mix(in srgb, var(--diagram-line) 62%, transparent);
+  font-weight: 700;
+}
+
+.calendarDays span[data-event]::after {
+  position: absolute;
+  bottom: 0.08rem;
+  width: 0.12rem;
+  height: 0.12rem;
+  border-radius: 50%;
+  background: var(--diagram-muted);
+  content: "";
 }
 
 @media (max-width: 900px) {
