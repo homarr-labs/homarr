@@ -15,7 +15,7 @@ import { coolifyIntegration } from "@site/docs/integrations/coolify";
 
 <WidgetHeader widget={coolifyWidget} categories={["System monitoring", "Deployment"]} />
 
-The Coolify widget displays a compact overview of your Coolify instance. It can show servers, applications, and services with status indicators, project and environment context, direct links to Coolify, and the installed Coolify version. Compact resource badges and footer details remain visible without height-based hiding.
+The Coolify widget shows servers, applications, and services with their status, project, environment, and Coolify links.
 
 ### Supported Integrations
 
@@ -27,9 +27,8 @@ The Coolify widget displays a compact overview of your Coolify instance. It can 
   ]}
 />
 
-Advanced view opens the Servers, Applications, and Services sections regardless of their compact visibility switches. It identifies each Coolify integration, shows server `is_reachable` and `is_usable` values, and lists applications nested in services when the API provides them. Healthy integrations remain visible if another source fails, with the failed source identified by a warning.
-
-IP addresses remain masked in advanced view until you explicitly use the eye control. Public resource, Coolify dashboard, and log links retain the widget's safe new-tab handling.
+Advanced view shows all sections, source integrations, reachability fields, and nested applications. IP addresses remain
+masked until revealed. Healthy integrations remain visible when another source fails.
 
 <WidgetInteractionGuide advancedView />
 
@@ -49,8 +48,4 @@ IP addresses remain masked in advanced view until you explicitly use the eye con
 | **Applications** | Lists applications with runtime status, project and environment context, public URL links, Coolify dashboard links, and log links. |
 | **Services**     | Lists services with runtime status, project and environment context, public URL links, Coolify dashboard links, and log links.     |
 
-### Notes
-
-- The widget supports one or more Coolify integrations. With multiple integrations, each instance is shown as a separate card.
-- The Coolify API token is team-scoped. Homarr only shows resources available to the team where the token was created.
-- Data is cached for 30 seconds and refreshed in the background.
+The Coolify API token is team-scoped; Homarr shows only resources available to that team.

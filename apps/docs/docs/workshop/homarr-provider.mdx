@@ -8,46 +8,31 @@ tags:
   - Community
 ---
 
-import { OpenCollectiveLink } from "@site/src/components/assistant-provider/open-collective-link";
+import { HomarrProviderDiagram } from "@site/src/components/pages/core-concepts/technical-diagrams";
 
 # Homarr provider
 
-The Homarr provider gives Community Workshop users access to the **Homarr model** without an administrator API key.
-The Homarr team chooses the upstream model based on quality, reliability, and cost.
+The Homarr provider gives Community Workshop users access to a server-selected model without configuring an Assistant
+API key.
 
-## Set it up
+Select **Homarr** under **Management → Assistant**, enable Assistant, then sign in to the Workshop when prompted.
 
-1. Open **Management → Assistant**.
-2. Select **Homarr** as the provider.
-3. Save the provider connection.
-4. Select the available model, enable the assistant, and save.
-5. Open the assistant and sign in to the Workshop when asked.
+<HomarrProviderDiagram />
 
-## Daily allowance
+## Allowance
 
-- Each user gets **50 request units per UTC day**.
-- Each model request uses one unit. A tool loop can use several units.
-- Forwarded requests count even if the model later fails.
-- Allowances reset at 00:00 UTC. A shared daily limit also applies.
+- Each user receives 50 request units per UTC day.
+- Each model request consumes one unit; a tool loop can consume several.
+- Forwarded requests count even when the upstream model fails.
+- A shared daily service limit also applies.
 
-The battery beside the model selector shows the remaining allowance and reset time. Workshop enforces all limits on
-its server; changing the browser clock cannot bypass them.
+Assistant shows the remaining allowance and reset time beside the model control.
 
-## Privacy
+## Data handling
 
-Workshop keeps the OpenRouter API key on its server. Homarr and the browser never receive it.
+Prompts, attachments, tools, and tool results pass through Workshop and OpenRouter. Workshop does not retain request or
+response content; it stores the user, UTC day, and counters required for limits. OpenRouter is configured for zero data
+retention with data collection disabled.
 
-Prompts, attachments, tools, and tool results pass through Workshop and OpenRouter. Workshop does not retain this
-content or the responses. It stores only the user, UTC day, and counters needed to enforce allowances. Each active day
-has a separate quota record so Workshop operators can inspect per-user daily usage without seeing request content.
-OpenRouter is configured for zero data retention with data collection disabled. Homarr does not use this content to
-train models.
-
-We would rather become millionaires in a more ethical manner.
-
-The community pays for these requests. Donations help cover the cost.
-
-<OpenCollectiveLink />
-
-Workshop operators can change the upstream model, per-user allowance, global allowance, and security limits in the
-[Workshop operator guide](./operator#homarr-provider-proxy).
+Operators configure the model, limits, and upstream key; see the
+[Workshop operator guide](/docs/advanced/development/workshop-operator#homarr-provider).

@@ -8,17 +8,14 @@ import { WidgetInteractionGuide } from "@site/src/components/widgets/interaction
 
 import { unifiControllerIntegration } from "@site/docs/integrations/unifi-controller";
 import { AddingWidget } from "@site/src/components/widgets/adding";
-import { WidgetConfig } from "@site/src/components/widgets/configuration";
 import { WidgetHeader } from "@site/src/components/widgets/header";
 import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
-import { IconAd } from "@tabler/icons-react";
-import TabItem from "@theme/TabItem";
-import Tabs from "@theme/Tabs";
 import { networkControllerSummaryWidget } from ".";
 
 <WidgetHeader widget={networkControllerSummaryWidget} categories={["Network controller"]} />
 
-Shows whether your WAN, internet, Wi-Fi, and VPN are available. The compact board view keeps the familiar status list, including internet latency and the connected VPN-user count.
+The Network Controller Summary widget shows WAN, internet, Wi-Fi, and VPN status, including latency and connected-user
+counts.
 
 ### Screenshots
 
@@ -36,7 +33,7 @@ import summaryCard from "./img/summary.png";
   ]}
 />
 
-In advanced view, each controller gets its own information matrix showing source, last update, WAN and web status, latency, ping, web uptime, separate Wi-Fi and LAN user and guest counts, and connected VPN users.
+Advanced view separates status and user counts by controller.
 
 <WidgetInteractionGuide />
 

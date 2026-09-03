@@ -1,6 +1,6 @@
 ---
 title: "Calendar"
-description: "Display events from your integrations in a calendar view within a certain relative time period"
+description: "Display calendar events and upcoming media releases."
 hide_title: true
 ---
 
@@ -10,9 +10,6 @@ import { WidgetHeader } from "@site/src/components/widgets/header";
 import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
 import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
-import { IconAd } from "@tabler/icons-react";
-import Tabs from "@theme/Tabs";
-import TabItem from "@theme/TabItem";
 import { calendarWidget } from ".";
 import { lidarrIntegration } from "@site/docs/integrations/lidarr";
 import { nextcloudIntegration } from "@site/docs/integrations/nextcloud";
@@ -21,58 +18,40 @@ import { radarrIntegration } from "@site/docs/integrations/radarr";
 import { readarrIntegration } from "@site/docs/integrations/readarr";
 import { sonarrIntegration } from "@site/docs/integrations/sonarr";
 import { icalIntegration } from "@site/docs/integrations/ical";
-
-<WidgetHeader widget={calendarWidget} categories={["Media manager", "Servarr"]} />
-
-The calendar widget shows a month view of events from different integrations.
-It allows you to view calendar events or upcoming releases from your media managers.
-Calendar requests use normal human month numbers (`1` for January through `12` for December), including when
-the same data is requested through Homarr's MCP or Assistant tools.
-
-### Screenshots
-
 import currentView from "./img/current-view.png";
 import advancedView from "./img/advanced-view.png";
 
-<div className="flex flex-col gap-1">
-  <img src={currentView} alt="Calendar month view with marked events" width={513} height={303} />
-  <img src={advancedView} alt="Calendar advanced view with grouped events" width={800} height={484} />
-</div>
+<WidgetHeader widget={calendarWidget} categories={["Media manager", "Servarr"]} />
 
-### Supported Integrations
+The Calendar widget combines events and upcoming releases in a month view. Advanced view shows a grouped event list with
+source, title, location, and description. Healthy integrations remain visible when another source fails.
+
+### Month view
+
+<img src={currentView} alt="Calendar month view with marked events" />
+
+### Advanced view
+
+<img src={advancedView} alt="Calendar advanced view with grouped events" />
+
+### Supported integrations
 
 <WidgetIntegrations
   items={[
-    {
-      integration: nextcloudIntegration,
-    },
-    {
-      integration: lidarrIntegration,
-    },
-    {
-      integration: radarrIntegration,
-    },
-    {
-      integration: readarrIntegration,
-    },
-    {
-      integration: sonarrIntegration,
-    },
-    {
-      integration: icalIntegration,
-    },
-    {
-      integration: homeAssistantIntegration,
-    },
+    { integration: nextcloudIntegration },
+    { integration: lidarrIntegration },
+    { integration: radarrIntegration },
+    { integration: readarrIntegration },
+    { integration: sonarrIntegration },
+    { integration: icalIntegration },
+    { integration: homeAssistantIntegration },
   ]}
 />
 
 ### Interactions
 
-- Colored dots directly below a date mark its events. They scale with the widget and are hidden when the calendar is too short.
-- Hover over a marked date to preview its events in a popover.
-- The advanced view replaces the month grid with a grouped event list, keeps every event attributed to its source integration, and expands titles, locations, and descriptions. Use its previous and next controls to change months.
-- If one selected integration is unavailable, its warning indicator remains visible while events from healthy integrations continue to load.
+- Hover or select a marked date to inspect its events.
+- Use advanced view to browse grouped events by month.
 
 <WidgetInteractionGuide />
 

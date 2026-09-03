@@ -1755,6 +1755,7 @@
     "success": "Success",
     "beta": "Beta",
     "error": "Error",
+    "pagination": "Page {page} of {totalPages}",
     "analyticsError": "Setup analytics could not be recorded.",
     "action": {
       "add": "Add",

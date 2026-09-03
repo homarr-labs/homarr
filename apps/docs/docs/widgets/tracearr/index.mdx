@@ -15,9 +15,8 @@ import { tracearrIntegration } from "@site/docs/integrations/tracearr";
 
 <WidgetHeader widget={tracearrWidget} categories={["Media Monitoring"]} />
 
-The Tracearr widget provides a real-time monitoring dashboard for your media server activity. It displays active streams, user statistics, recent watching history, and policy violations. Compact mode renders every enabled section in that familiar order without hiding or truncating sections based on widget height.
-
-When multiple Tracearr integrations are selected, every stream, violation, and activity row keeps its source identity and an integration-scoped key. Data from healthy sources remains visible if another source fails, and a warning identifies each unavailable integration without exposing private request details. If every selected integration fails, the widget reports an error; if cached data remains visible after a later total failure, a stale-data warning is shown.
+The Tracearr widget shows active streams, user statistics, recent activity, and policy violations. Rows identify their
+source integration, and healthy sources remain visible when another source fails.
 
 ### Sections
 
@@ -27,16 +26,6 @@ When multiple Tracearr integrations are selected, every stream, violation, and a
 | **Active Streams**  | Shows currently playing media with poster art, user info, progress bar, resolution, and transcoding status (Direct Play or Transcode). |
 | **Recent Activity** | A paginated list of watching history with user avatars and watched status.                                                             |
 | **Violations**      | Alerts for policy violations (e.g., concurrent stream limits) with severity levels.                                                    |
-
-### Screenshots
-
-import widgetOverview from "./img/widget-overview.png";
-import streamsAndStats from "./img/streams-and-stats.png";
-
-<div className="flex flex-col gap-2">
-  <img src={widgetOverview} alt="tracearr-widget-overview" width={128 * 4} />
-  <img src={streamsAndStats} alt="tracearr-streams-and-stats" width={128 * 4} />
-</div>
 
 <WidgetInteractionGuide />
 

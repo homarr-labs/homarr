@@ -1,0 +1,67 @@
+---
+title: Workshop operator guide
+sidebar_label: Operator guide
+sidebar_position: 3
+tags:
+  - Workshop
+  - Deployment
+  - Environment variables
+  - PocketBase
+---
+
+# Workshop operator guide
+
+Workshop uses PocketBase. The production image serves the Workshop website and API from one origin and stores state in
+`/pb_data`.
+
+## Environment variables
+
+| Variable                               | Purpose                                      | Default                        |
+| -------------------------------------- | -------------------------------------------- | ------------------------------ |
+| `HOMARR_WEBSITE_URL`                   | Documentation/site base used by Homarr links | `https://homarr.dev`           |
+| `WORKSHOP_API_URL`                     | PocketBase API used by Homarr and docs       | `HOMARR_WEBSITE_URL`           |
+| `WORKSHOP_WEB_URL`                     | Public Workshop URL                          | `HOMARR_WEBSITE_URL/workshop`  |
+| `WORKSHOP_PUBLIC_ORIGIN`               | PocketBase-generated links and email         | Required in production         |
+| `PB_ALLOWED_ORIGINS`                   | Allowed browser origins                      | `*`                            |
+| `GITHUB_CLIENT_ID`                     | GitHub OAuth application ID                  | —                              |
+| `GITHUB_CLIENT_SECRET`                 | GitHub OAuth application secret              | —                              |
+| `OPENROUTER_API_KEY`                   | Enables the Homarr Assistant provider        | Provider disabled when empty   |
+| `HOMARR_AI_DAILY_REQUEST_LIMIT`        | Per-user daily request allowance             | `50`                           |
+| `HOMARR_AI_GLOBAL_DAILY_REQUEST_LIMIT` | Shared daily request ceiling                 | `10000`                        |
+| `HOMARR_AI_OPENROUTER_BASE_URL`        | OpenRouter-compatible upstream               | `https://openrouter.ai/api/v1` |
+| `HOMARR_AI_OPENROUTER_MODEL`           | Upstream model behind `homarr/model`         | Selected by the Homarr team    |
+
+Public URL variables accept HTTP(S) origins without embedded credentials, query strings, or fragments. Restart the
+container after changing runtime configuration.
+
+## Authentication and email
+
+Configure both GitHub OAuth variables and use `https://<workshop-host>/api/oauth2-redirect` as the callback. Supplying
+only one OAuth variable is a startup error. Configure SMTP for comment, report, and removal notifications.
+
+For the central community, `PB_ALLOWED_ORIGINS=*` permits requests from self-hosted Homarr origins. A private deployment
+can use a comma-separated allowlist.
+
+## Homarr provider
+
+`OPENROUTER_API_KEY` enables the [Homarr provider](/docs/workshop/homarr-provider). The Workshop server chooses the upstream model and
+enforces per-user and global daily limits. It requests zero-data-retention routing, disables data-collecting providers,
+and does not retain prompts or responses.
+
+Keep an OpenRouter account-level credit limit as the monetary backstop; request limits are not cost limits.
+
+## Deployment
+
+The v2 image is `ghcr.io/homarr-labs/workshop:v2`; immutable `sha-<commit>` tags are preferable for promotion. The
+service listens on port 8090.
+
+When using a reverse proxy, forward the complete hostname, including `/api`, `/_/`, and
+`/workshop-runtime-config.js`. Use a dedicated hostname when Homarr already occupies the intended origin.
+
+Verify `/api/health`, the Workshop page, a public listing request, GitHub sign-in, and one installation after deployment.
+
+## Backup and restore
+
+Stop writes and copy `/pb_data` for a consistent backup. A restore replaces the selected PocketBase data directory, so
+preserve the current volume and verify that the backup contains `data.db` first. Rehearse the restore outside production
+and verify sign-in and one installation afterward.

@@ -1,14 +1,8 @@
 # Portainer
 
-## Portainer Stacks
+## Install with a stack
 
-### Prerequisites
-
-- [Portainer Stacks](https://www.portainer.io/blog/stacks-docker-compose-the-portainer-way)
-
-### Installing
-
-To install Homarr using Portainer Stacks, simply create a new stack and paste the following code into it.
+Create a Portainer stack with this Compose file:
 
 ```yml title="docker-compose.yml"
 #---------------------------------------------------------------------#
@@ -28,21 +22,12 @@ services:
       - "7575:7575"
 ```
 
-:::note
-Portainer will mount the files to your host machine. Please make sure to replace `<your-path>` from the docker run command with your desired storage location. The path must be absolute.
-:::
-
-Then, click on `Deploy the stack` and wait until the container has started.
-
-:::tip
-
-If you're unsure how to create a stack, checkout the [Portainer Documentation](https://docs.portainer.io/user/docker/stacks/add).
-
-:::
+Replace `<your-path>` with an absolute host path, generate `SECRET_ENCRYPTION_KEY`, then deploy the stack. See
+[Portainer's stack documentation](https://docs.portainer.io/user/docker/stacks/add) for Portainer-specific options.
 
 ### Updating
 
-To update Homarr using Docker Compose or Portainer Stacks, simply pull the latest image and restart the container.
+Pull the current image and redeploy the stack:
 
 1. Run `docker pull ghcr.io/homarr-labs/homarr:latest` to pull the latest image.
 2. Re-run `docker-compose up -d` or re-deploy the stack in Portainer.

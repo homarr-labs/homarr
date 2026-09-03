@@ -1,0 +1,232 @@
+.overview {
+  --start-ink: var(--ifm-font-color-base);
+  --start-muted: var(--ifm-color-emphasis-700);
+  --start-panel: var(--ifm-background-surface-color);
+  --start-line: var(--ifm-color-emphasis-300);
+  --start-coral: #fa5252;
+  display: grid;
+  gap: 1.5rem;
+  margin: 1.5rem 0 3rem;
+}
+
+.intro {
+  padding-left: 1rem;
+  border-left: 3px solid var(--ifm-color-primary);
+}
+
+.intro h2 {
+  margin: 0 0 0.4rem;
+  font-size: 1.5rem;
+}
+
+.intro p {
+  max-width: 48rem;
+  margin: 0;
+  color: var(--start-muted);
+  line-height: 1.55;
+}
+
+.editor {
+  display: grid;
+  gap: 0.9rem;
+  padding-top: 0.25rem;
+}
+
+.editorHeading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.editorHeading h3 {
+  margin: 0 0 0.25rem;
+  font-size: 1.1rem;
+}
+
+.editorHeading p {
+  margin: 0;
+  color: var(--start-muted);
+  font-size: 0.84rem;
+}
+
+.editorHeading > a {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.editorSteps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.editorStep {
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-width: 0;
+  border: 1px solid var(--start-line);
+  border-radius: 0.65rem;
+  background: var(--start-panel);
+}
+
+.stepCopy {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.65rem;
+}
+
+.stepCopy > span {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  border: 1px solid var(--start-line);
+  border-radius: 50%;
+  color: var(--start-muted);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+}
+
+.stepCopy > div {
+  display: grid;
+  min-width: 0;
+}
+
+.stepCopy strong {
+  font-size: 0.78rem;
+}
+
+.stepCopy small {
+  color: var(--start-muted);
+  font-size: 0.64rem;
+  line-height: 1.35;
+}
+
+.stepMedia {
+  display: grid;
+  place-items: center;
+  min-height: 9rem;
+  padding: 0.4rem;
+  border-top: 1px solid var(--start-line);
+  background: #202020;
+}
+
+.stepMedia img {
+  display: block;
+  width: 100%;
+  max-height: 12rem;
+  object-fit: contain;
+}
+
+.stepMedia img[data-fit="cover"] {
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+
+.installPaths {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem;
+  margin: 1rem 0 1.5rem;
+}
+
+.installPath {
+  position: relative;
+  display: grid;
+  gap: 0.45rem;
+  min-height: 10rem;
+  padding: 1.1rem;
+  border: 1px solid var(--ifm-color-emphasis-400);
+  border-radius: 0.9rem;
+  color: var(--start-ink);
+  background: var(--start-panel);
+  box-shadow: 0 3px 10px rgb(20 25 35 / 8%);
+  text-decoration: none;
+  transition:
+    border-color 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.installPath:hover {
+  border-color: rgb(250 82 82 / 55%);
+  color: var(--start-ink);
+  text-decoration: none;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgb(20 25 35 / 8%);
+}
+
+.installPath > span {
+  color: #c92f2f;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+:global([data-theme="dark"]) .installPath > span {
+  color: var(--ifm-color-primary-light);
+}
+
+.installPath strong {
+  font-size: 1rem;
+}
+
+.installPath small {
+  color: var(--start-muted);
+  line-height: 1.45;
+}
+
+.installPath > svg {
+  position: absolute;
+  right: 0.9rem;
+  bottom: 0.9rem;
+  color: var(--start-coral);
+}
+
+.recommendedPath {
+  border-color: var(--ifm-color-primary);
+  background: var(--start-panel);
+}
+
+@media (max-width: 800px) {
+  .editorHeading {
+    align-items: start;
+  }
+
+  .editorSteps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .stepMedia img {
+    max-height: 18rem;
+  }
+
+  .installPaths {
+    grid-template-columns: 1fr;
+  }
+
+  .installPath {
+    min-height: 8rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .installPath {
+    transition: none;
+  }
+}

@@ -10,17 +10,13 @@ import { WidgetHeader } from "@site/src/components/widgets/header";
 import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
 import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
-import { IconAd } from "@tabler/icons-react";
-import Tabs from "@theme/Tabs";
-import TabItem from "@theme/TabItem";
 import { smartHomeExecuteAutomationWidget } from ".";
 import { homeAssistantIntegration } from "@site/docs/integrations/home-assistant";
 
 <WidgetHeader widget={smartHomeExecuteAutomationWidget} categories={["Automation"]} />
 
-The execute automation widget allows you to trigger an automation with one click.
-
-Advanced view shows the automation ID, interaction permission, last successful run in the current browser session, and the latest action error together. Session-only history is not presented as Home Assistant history.
+The Execute Automation widget triggers a Home Assistant automation. Advanced view shows the automation ID, permission,
+latest error, and last successful run in the current browser session.
 
 ### Screenshots
 
@@ -46,10 +42,6 @@ import withDisplayname from "./img/with-displayname.png";
     },
   ]}
 />
-
-### Interactions
-
-- Trigger the automation by clicking on the widget.
 
 <WidgetInteractionGuide />
 

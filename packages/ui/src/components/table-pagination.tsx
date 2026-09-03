@@ -5,6 +5,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { PaginationProps } from "@mantine/core";
 import { Pagination } from "@mantine/core";
 
+import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
 interface TablePaginationProps {
@@ -12,6 +13,7 @@ interface TablePaginationProps {
 }
 
 export const TablePagination = ({ total }: TablePaginationProps) => {
+  const t = useI18n("common");
   // eslint-disable-next-line @typescript-eslint/unbound-method
   const { replace } = useRouter();
   const pathName = usePathname();
@@ -50,7 +52,9 @@ export const TablePagination = ({ total }: TablePaginationProps) => {
   return (
     <Pagination
       total={total}
+      value={current}
       layout="responsive"
+      formatLabel={({ page, totalPages }) => t("pagination", { page, totalPages })}
       getItemProps={getItemProps}
       getControlProps={getControlProps}
       onChange={handleChange}

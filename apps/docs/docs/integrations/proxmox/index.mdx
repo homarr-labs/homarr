@@ -1,6 +1,6 @@
 ---
 title: "Proxmox"
-description: "Proxmox is a powerful open-source virtualization platform that allows you to run virtual machines and containers."
+description: "Virtual machines and containers managed by Proxmox VE."
 hide_title: true
 ---
 
@@ -8,15 +8,12 @@ import { IntegrationHeader } from "@site/src/components/integrations/header";
 import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
 import { AddingIntegration } from "@site/src/components/integrations/adding";
 import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
-import { IconHeartRateMonitor } from "@tabler/icons-react";
 import { proxmoxIntegration } from ".";
-import Alert from "@theme/Admonition";
 import { healthMonitoringWidget } from "@site/docs/widgets/health-monitoring";
-import { systemResourcesWidget } from "@site/docs/widgets/system-resources";
 
 <IntegrationHeader integration={proxmoxIntegration} categories={["System monitoring"]} />
 
-### Widgets & Capabilities
+### Widgets and capabilities
 
 <IntegrationCapabilites items={[{ widget: healthMonitoringWidget }]} />
 
@@ -26,81 +23,23 @@ import { systemResourcesWidget } from "@site/docs/widgets/system-resources";
 
 ### Secrets
 
+Use a Proxmox VE (`pve`) user and API token with the `PVEAuditor` role at `/` and **Propagate** enabled. PAM
+authentication may not work with the API.
+
 <IntegrationSecrets
   secrets={[
     {
-      header: (
-        <Alert type="caution">
-          The Proxmox API may not work with Linux PAM standard authentication. It is strongly recommended to use the
-          Proxmox VE authentication server realm when creating your API user.
-        </Alert>
-      ),
       credentials: ["username", "tokenId", "realm", "apiKey"],
       steps: [
-        "Navigate to the Proxmox portal, click on Datacenter",
-        "Expand Permissions, click on Groups",
-        "Click the Create button",
-        "Name the group something informative, like api-users",
-        "Click on the Permissions 'folder'",
-        <>
-          Click Add {"->"} Group Permission
-          <ul>
-            <li>Path: /</li>
-            <li>Group: group from Step 4 above</li>
-            <li>Role: PVEAuditor</li>
-            <li>Propagate: Checked</li>
-          </ul>
-        </>,
-        "Expand Permissions, click on Users",
-        <>
-          Click the Add button
-          <ul>
-            <li>User name: something informative like api</li>
-            <li>Realm: Proxmox VE authentication server</li>
-            <li>Password: create a secure password for the user</li>
-            <li>Confirm Password: re-enter the password</li>
-            <li>Group: group from Step 4 above</li>
-          </ul>
-        </>,
-        "Expand Permissions, click on API Tokens",
-        <>
-          Click the Add button
-          <ul>
-            <li>User: user from Step 8 above</li>
-            <li>Token ID: something informative like the application or purpose like homarr</li>
-            <li>Privilege Separation: unchecked</li>
-          </ul>
-        </>,
-        "Copy the Secret that is shown in Step 10 because it is only shown once",
-        "Go back to the 'Permissions' menu",
-        <>
-          Click Add {"->"} API Token Permission
-          <ul>
-            <li>Path: /</li>
-            <li>API Token: select the API token created in Step 10</li>
-            <li>Role: PVE Auditor</li>
-            <li>Propagate: Checked</li>
-          </ul>
-        </>,
+        "Create a Proxmox VE user or group and grant PVEAuditor at / with Propagate enabled.",
+        "Create an API token for that user. Disable privilege separation to inherit the user permission, or grant the token the same PVEAuditor permission.",
+        "Copy the token secret when Proxmox displays it and enter the user, realm, token ID, and secret in Homarr.",
       ],
       body: (
-        <>
-          <span>
-            Sometimes you'll also find the <code>api@pve!homarr</code> format, within Homarr you'll have to split it up
-            into:
-          </span>
-          <ul>
-            <li>
-              <b>Username:</b> api
-            </li>
-            <li>
-              <b>Realm:</b> pve
-            </li>
-            <li>
-              <b>Token ID:</b> homarr
-            </li>
-          </ul>
-        </>
+        <p>
+          For <code>api@pve!homarr</code>, use username <code>api</code>, realm <code>pve</code>, and token ID{" "}
+          <code>homarr</code>.
+        </p>
       ),
     },
   ]}

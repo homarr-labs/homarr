@@ -1,36 +1,21 @@
 ---
 title: "Assistant"
-description: "Have a complete assistant conversation directly on a board."
+description: "Have an Assistant conversation directly on a board."
 hide_title: true
 ---
 
 import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetHeader } from "@site/src/components/widgets/header";
 import { assistantWidget } from ".";
-import assistantWidgetImage from "../../management/img/assistant-widget.png";
 
 <WidgetHeader widget={assistantWidget} categories={["Productivity"]} />
 
-The Assistant widget puts the app-wide assistant on a board. It uses the same active conversation as the user-menu and
-command-menu surfaces, so messages and approvals stay synchronized.
+The Assistant widget provides the same active conversation as the app-wide Assistant. Messages, tool calls, and
+approvals stay synchronized between surfaces.
 
-An administrator must first configure and enable Assistant in **Management → Assistant**. Signed-out users are prompted
-to sign in, while an incomplete or disabled configuration shows an unavailable state.
-
-<img
-  src={assistantWidgetImage}
-  alt="Assistant widget embedded on a dashboard with its conversation header, automatic approvals control, model selector, and composer"
-  style={{ maxWidth: "100%" }}
-/>
+An administrator must first configure [Assistant](/docs/management/assistant). Short widget layouts show an action to
+open the full Assistant instead of compressing the conversation.
 
 ### Adding the widget
 
 <AddingWidget />
-
-The default size is ten columns by four rows and shrinks to fit narrower boards. Short layouts show an **Open
-assistant** action instead of compressing the conversation controls; increase the widget height to keep the complete
-conversation inline.
-
-Responses continue when the widget leaves the viewport. Drafts and attachments remain local to each visible Assistant
-surface, and private conversation data is never stored in board settings. Normal Homarr permissions and approval rules
-still apply to every action.

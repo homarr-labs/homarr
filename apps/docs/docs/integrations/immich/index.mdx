@@ -1,6 +1,6 @@
 ---
 title: "Immich"
-description: "Self-hosted photo and video management solution"
+description: "Self-hosted photo and video management."
 hide_title: true
 ---
 
@@ -14,7 +14,7 @@ import { immichServerStatsWidget } from "../../widgets/immich-server-stats";
 
 <IntegrationHeader integration={immichIntegration} categories={["Photo server"]} />
 
-### Widgets & Capabilities
+### Widgets and capabilities
 
 <IntegrationCapabilites items={[{ widget: immichAlbumCarouselWidget }, { widget: immichServerStatsWidget }]} />
 
@@ -24,34 +24,16 @@ import { immichServerStatsWidget } from "../../widgets/immich-server-stats";
 
 ### Secrets
 
-<IntegrationSecrets secrets={[{
-  credentials: ['apiKey'],
-  steps: [
-    'Navigate to your Immich instance', 
-    'Open your account settings or navigate to https://YOUR_IMMICH/user-settings', 
-    'Scroll down to "API Keys"', 
-    'Click "New API Key"', 
-    'Enter a name, e.g. "Homarr"', 
-(
+Create an API key under **Immich user settings → API Keys** with these permissions:
 
-  <span>
+`album.statistics`, `album.read`, `album.create`, `user.read`, `user.update`, `asset.read`, `asset.view`,
+`asset.download`, `asset.statistics`, `server.statistics`, and `server.about`.
 
-    Select the following permissions:{" "}
-    <code>album.statistics</code>,{" "}
-    <code>album.read</code>,{" "}
-    <code>album.create</code>,{" "}
-    <code>user.read</code>,{" "}
-    <code>user.update</code>,{" "}
-    <code>asset.read</code>,{" "}
-    <code>asset.view</code>,{" "}
-    <code>asset.download</code>,{" "}
-    <code>asset.statistics</code>,{" "}
-    <code>server.statistics</code>,{" "}
-    <code>server.about</code>.
-
-  </span>
-
-),
-'Create the integration in Homarr and copy the API key to there'
-]
-}]} />
+<IntegrationSecrets
+  secrets={[
+    {
+      credentials: ["apiKey"],
+      steps: ["Create the API key in Immich and copy its value into the Homarr integration."],
+    },
+  ]}
+/>

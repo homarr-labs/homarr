@@ -11,25 +11,8 @@ import { appWidget } from ".";
 
 <WidgetHeader widget={appWidget} categories={["Links", "Apps"]} />
 
-The app widget allows you to add a link to an application or a website that you want to access quickly from your Homarr board. Compact tiles retain the familiar title, optional description, and centered app icon proportions.
-It also supports a status check to indicate whether Homarr can reach the application or website.
-
-### Screenshots
-
-import githubApp from "./img/github.png";
-import jellyseerrApp from "./img/jellyseerr-description-tooltip.png";
-import piHoleApp from "./img/pi-hole-ping-icon.png";
-
-<div className="flex gap-1">
-  <img src={githubApp} alt="app github with-status-check" width={128 * 1.5} height={128 * 1.5} />
-  <img src={piHoleApp} alt="app pi-hole with-status-check status-check-icon" width={128 * 1.5} height={128 * 1.5} />
-  <img src={jellyseerrApp} alt="app jellyseerr with-description-tooltip" height={128 * 1.5} />
-</div>
-
-### Interactions
-
-App tiles stay compact and open their configured destination directly. They do not use the shared widget context menu;
-configure the app and its status check from the tile's edit actions.
+The App widget opens an application or website and can show whether Homarr can reach it. Configure the target and status
+check from the tile's edit actions.
 
 ### Adding the widget
 
