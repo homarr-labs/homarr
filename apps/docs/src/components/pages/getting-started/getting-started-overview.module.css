@@ -126,10 +126,11 @@
   gap: 0.45rem;
   min-height: 10rem;
   padding: 1.1rem;
-  border: 1px solid var(--start-line);
+  border: 1px solid var(--ifm-color-emphasis-400);
   border-radius: 0.9rem;
   color: var(--start-ink);
   background: var(--start-panel);
+  box-shadow: 0 3px 10px rgb(20 25 35 / 8%);
   text-decoration: none;
   transition:
     border-color 160ms ease,
@@ -175,7 +176,7 @@
 }
 
 .recommendedPath {
-  border-color: rgb(250 82 82 / 32%);
+  border-color: var(--ifm-color-primary);
   background: var(--start-panel);
 }
 
