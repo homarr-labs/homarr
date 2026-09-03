@@ -9,7 +9,7 @@
           "scratch": "Kezdjük a legelejétől",
           "importOldmarr": "Importálás Homarr 1.0 előtti verzióból",
           "restoreSqlite": "Visszaállítás SQLite-mentésből",
-          "restoreSqliteDescription": "Tölts fel egy teljes SQLite adatbázis biztonsági mentést egy korábbi Homarr példányból. Ez visszaállítja az összes táblát, felhasználót, alkalmazást, integrációt és beállítást.",
+          "restoreSqliteDescription": "Tölts fel egy korábbi Homarr-példányból származó teljes SQLite-adatbázis-mentést. Ezzel visszaállítod az összes táblát, felhasználót, alkalmazást, integrációt és beállítást.",
           "backToOptions": "← Vissza a beállítási lehetőségekhez"
         }
       },
@@ -31,14 +31,14 @@
         },
         "boardSelection": {
           "title": "Talált {count} táblák",
-          "description": "Válassza ki az összes olyan méretű táblát, amelyet importálni szeretne",
+          "description": "Válaszd ki az importálni kívánt táblákat és azok méretét",
           "action": {
             "selectAll": "Összes kijelölése",
             "unselectAll": "Kijelölés megszüntetése"
           }
         },
         "summary": {
-          "title": "Import összefoglaló",
+          "title": "Importálás összegzése",
           "description": "Az alábbi összefoglalóban láthatja, hogy mi lesz importálva",
           "action": {
             "import": "Importálás megerősítése és folytatás"
@@ -51,11 +51,11 @@
           }
         },
         "tokenModal": {
-          "title": "Import token megadása",
+          "title": "Importálási token megadása",
           "field": {
             "token": {
               "label": "Token",
-              "description": "Írja be a megjelenített import tokent az előző homarr példányból"
+              "description": "Írd be az előző Homarr-példányban megjelenített importálási tokent"
             }
           },
           "notification": {
@@ -68,7 +68,7 @@
       },
       "user": {
         "title": "Admin felhasználó",
-        "subtitle": "Adja meg a rendszergazda felhasználó hitelesítő adatait.",
+        "subtitle": "Add meg a rendszergazdai felhasználó hitelesítő adatait.",
         "notification": {
           "success": {
             "title": "Létrejött a felhasználó",
@@ -81,7 +81,7 @@
       },
       "group": {
         "title": "Külső csoport",
-        "subtitle": "Adja meg a külső felhasználók számára használandó csoportot.",
+        "subtitle": "Add meg a külső felhasználókhoz használandó csoportot.",
         "form": {
           "name": {
             "label": "Csoportnév",
@@ -117,7 +117,7 @@
         "urlTemplate": {
           "label": "Alap URL",
           "placeholder": "homelab.local vagy 192.168.1.1",
-          "hint": "Add meg az alap domain-t vagy IP-t az integrációs URL-ek automatikus kitöltéséhez",
+          "hint": "Add meg az alaptartományt vagy IP-címet az integrációs URL-ek automatikus kitöltéséhez",
           "warning": "Az alap URL megadásával most automatikusan kitöltődik az összes integrációs URL, időt takarítva meg a beállítás során",
           "preview": "pl. {example}",
           "mode": {
@@ -155,7 +155,7 @@
     "page": {
       "login": {
         "title": "Jelentkezzen be a fiókjába",
-        "subtitle": "Üdvözöljük újra! Kérjük, adja meg hitelesítő adatait"
+        "subtitle": "Üdv újra! Add meg a hitelesítő adataidat"
       },
       "invite": {
         "title": "Csatlakozz Homarrhoz",
@@ -164,7 +164,7 @@
       },
       "init": {
         "title": "Új Homarr telepítés",
-        "subtitle": "Kérjük, hozza létre a kezdeti rendszergazda felhasználót"
+        "subtitle": "Hozd létre a kezdeti rendszergazdai felhasználót"
       }
     },
     "field": {
@@ -199,14 +199,14 @@
         "label": "Ikonok használata a pingekhez"
       },
       "enableRightClickOnWidgets": {
-        "label": "",
-        "description": ""
+        "label": "A jobb egérgomb használatának engedélyezése a widgeteken",
+        "description": "A Homarr helyi menüjének megjelenítése, amikor a jobb egérgombbal kattintasz egy widgetre. Kapcsold ki, ha a böngésző alapértelmezett menüjét szeretnéd használni (például „Hivatkozás megnyitása új lapon”)."
       },
       "defaultSearchEngine": {
         "label": "Alapértelmezett kereső"
       },
       "openSearchInNewTab": {
-        "label": "Nyissa meg a keresési eredményeket új ablakban"
+        "label": "Keresési eredmények megnyitása új lapon"
       },
       "ddgBangs": {
         "label": "DuckDuckGo parancsok engedélyezése"
@@ -239,7 +239,7 @@
         "notification": {
           "success": {
             "title": "Fiók létrehozva",
-            "message": "Kérjük, jelentkezzen be a folytatáshoz"
+            "message": "Jelentkezz be a folytatáshoz"
           },
           "error": {
             "title": "Fiók létrehozása sikertelen",
@@ -351,14 +351,14 @@
       "delete": {
         "label": "Felhasználó végleges törlése",
         "description": "Törli ezt a felhasználót, beleértve a beállításait. Nem töröl egyetlen táblát sem. A felhasználó nem kap értesítést.",
-        "confirm": "Biztos benne, hogy törli a {username} felhasználót a beállításaival együtt?"
+        "confirm": "Biztosan törölni szeretnéd {username} felhasználót a beállításaival együtt?"
       },
       "select": {
         "label": "Felhasználó kiválasztása",
         "notFound": "Felhasználó nem található"
       },
       "transfer": {
-        "label": "Válasszon új tulajdonost"
+        "label": "Válassz új tulajdonost"
       }
     }
   },
@@ -438,7 +438,7 @@
             "description": "A tagok integrációkat hozhatnak létre"
           },
           "use-all": {
-            "label": "Használja az összes integrációt",
+            "label": "Összes integráció használata",
             "description": "Lehetővé teszi a tagok számára, hogy bármilyen integrációt hozzáadjanak a tábláikhoz"
           },
           "interact-all": {
@@ -456,11 +456,11 @@
         "item": {
           "upload": {
             "label": "Média feltöltése",
-            "description": "Engedélyezze a tagok számára a médiák feltöltését"
+            "description": "A tagok médiafájlokat tölthetnek fel"
           },
           "view-all": {
             "label": "Az összes média megtekintése",
-            "description": "Engedélyezze a tagok számára az összes média megtekintését"
+            "description": "A tagok minden médiafájlt megtekinthetnek"
           },
           "full-all": {
             "label": "Teljes médiahozzáférés",
@@ -536,8 +536,8 @@
       },
       "delete": {
         "label": "Csoport törlése",
-        "description": "Ha töröl egy csoportot, az végleges. Kérjük, legyen biztos benne.",
-        "confirm": "Biztosan törli a {name} csoportot?",
+        "description": "A csoport törlése nem vonható vissza. Biztosan folytatod?",
+        "confirm": "Biztosan törölni szeretnéd a(z) {name} csoportot?",
         "notification": {
           "success": {
             "message": "A {name} csoport sikeresen törölve"
@@ -610,7 +610,7 @@
         "title": "Alkalmazások",
         "noResults": {
           "title": "Még nincsenek alkalmazások",
-          "action": "Hozza létre első alkalmazását"
+          "action": "Első alkalmazás létrehozása"
         }
       },
       "create": {
@@ -640,8 +640,8 @@
         }
       },
       "delete": {
-        "title": "Törölje az alkalmazást",
-        "message": "Biztosan törli a {name} alkalmazást?",
+        "title": "Alkalmazás törlés",
+        "message": "Biztosan törölni szeretnéd a(z) {name} alkalmazást?",
         "notification": {
           "success": {
             "title": "Sikeres törlés",
@@ -678,7 +678,7 @@
         "search": "Alkalmazás keresése",
         "noResults": "Nincs találat",
         "action": "Kiválasztás {app}",
-        "title": "Válassz egy programot az oldalhoz adáshoz"
+        "title": "Válassz egy, a táblához hozzáadni kívánt alkalmazást"
       },
       "create": {
         "title": "Új alkalmazás készítése",
@@ -719,7 +719,7 @@
       "removeItem": "Elem eltávolítása",
       "addBar": "Sáv hozzáadása",
       "duplicate": "Duplikálás",
-      "copyAiPrompt": "AI prompt másolása",
+      "copyAiPrompt": "AI-utasítás másolása",
       "enable": "Engedélyezés",
       "disable": "Letiltás",
       "menu": "Műveletek"
@@ -834,7 +834,7 @@
     "authType": {
       "none": "Nincs",
       "bearer": "Bearer token",
-      "basic": "Basic Auth",
+      "basic": "Alapszintű hitelesítés",
       "apiKeyHeader": "API-kulcs (fejléc)",
       "apiKeyQuery": "API-kulcs (lekérdezés)"
     },
@@ -851,7 +851,7 @@
       "customJsx": "Egyéni JSX"
     },
     "secret": {
-      "apiKey": "API kulcs / token",
+      "apiKey": "API-kulcs / token",
       "username": "Felhasználónév",
       "password": "Jelszó",
       "savedPlaceholder": "••••••• (mentve, üresen hagyva megtartja)"
@@ -866,12 +866,12 @@
       "created": "\"{name}\" widget sikeresen létrehozva.",
       "updated": "\"{name}\" widget sikeresen frissítve.",
       "deleted": "\"{name}\" widget törölve.",
-      "imported": "",
-      "aiPromptCopied": "AI prompt a vágólapra másolva",
+      "imported": "A widget importálása sikerült.",
+      "aiPromptCopied": "AI-utasítás a vágólapra másolva",
       "aiPromptDescription": "Másolj egy előre elkészített promptot bármelyik AI chatbotba (ChatGPT, Claude, Gemini...). Tartalmazza a teljes widget sémát és az API választ, így az AI generálhat egy importálásra kész JSON konfigurációt.",
       "aiPromptCopy": "Másolás a vágólapra",
-      "aiPromptNoResponse": "Tipp: Futtass egy tesztet először, hogy az API válasz is bekerüljön a promptba a jobb eredmények érdekében.",
-      "aiPromptCopyError": "A prompt vágólapra másolása sikertelen. Előfordulhat, hogy a böngésződ nem támogatja ezt a funkciót.",
+      "aiPromptNoResponse": "Tipp: Előbb futtass egy tesztet, hogy az API-válasz is bekerüljön az utasításba a jobb eredmény érdekében.",
+      "aiPromptCopyError": "Az utasítást nem sikerült a vágólapra másolni. Lehet, hogy a böngésződ nem támogatja ezt a funkciót.",
       "createError": "A widget létrehozása sikertelen. Ellenőrizd, hogy az API végpont elérhető-e.",
       "updateError": "A widget frissítése sikertelen. A módosításaid nem lettek mentve.",
       "importError": "A widget importálása sikertelen. Ellenőrizd, hogy a fájl érvényes egyéni widget JSON export-e.",
@@ -946,13 +946,13 @@
           "action": {
             "add": "Alkalmazás megtalálása",
             "remove": "Leválasztás",
-            "select": "Válasszon ki egy alkalmazást a hivatkozáshoz"
+            "select": "Válassz csatolandó alkalmazást"
           }
         }
       },
       "delete": {
         "title": "Integráció törlése",
-        "message": "Biztosan törli a {name} integrációt?",
+        "message": "Biztosan törölni szeretnéd a(z) {name} integrációt?",
         "notification": {
           "success": {
             "title": "Sikeres törlés",
@@ -974,7 +974,7 @@
       },
       "attemptSearchEngineCreation": {
         "label": "Keresőmotor létrehozása",
-        "description": "A \"{kind}\" integráció használható a keresőmotorokkal. Jelölje be ezt a jelölőnégyzetet, ha automatikusan szeretné konfigurálni a keresőmotort."
+        "description": "A(z) „{kind}” integráció keresőmotorokkal is használható. Jelöld be ezt a lehetőséget a keresőmotor automatikus beállításához."
       },
       "app": {
         "sectionTitle": "Hivattkozott alkalmazás"
@@ -987,7 +987,7 @@
         "placeholder": "Egyéni alkalmazás URL"
       },
       "apiKeySettings": {
-        "label": "API kulcs beszerzése"
+        "label": "API-kulcs beszerzése"
       }
     },
     "action": {
@@ -1025,7 +1025,7 @@
       "mediaMonitoring": "Figyelés",
       "speedtest": "Sebességteszt",
       "analytics": "Analitika",
-      "vpn": "",
+      "vpn": "VPN",
       "mediaLibrary": "Médiatár",
       "uptimeMonitoring": "Üzemidő Figyelés"
     },
@@ -1042,20 +1042,20 @@
         },
         "unknown": {
           "title": "Ismeretlen hiba",
-          "description": "Egy ismeretlen hiba történt, nyissa meg a részleteket alul, hogy többet megtudjon"
+          "description": "Ismeretlen hiba történt. További információért nyisd meg alább a részleteket."
         },
         "parse": {
           "title": "Elemzési hiba",
-          "description": "A válasz nem volt elemezhető. Kérjük, ellenőrizze, hogy az URL a szolgáltatás alap URL-jére mutat-e."
+          "description": "A válasz nem értelmezhető. Ellenőrizd, hogy az URL a szolgáltatás alap-URL-jére mutat-e."
         },
         "authorization": {
           "title": "Hitelesítési hiba",
-          "description": "A kérés nem volt engedélyezett. Kérjük, ellenőrizze, hogy a hitelesítő adatok helyesek-e, és hogy a megfelelő engedélyekkel vannak-e beállítva."
+          "description": "A kérés hitelesítése sikertelen. Ellenőrizd a hitelesítő adatokat és azt, hogy rendelkeznek-e a szükséges jogosultságokkal."
         },
         "statusCode": {
           "title": "Válaszhiba",
-          "description": "Váratlan {statusCode} ({reason}) választ kapott a <url></url> címen. Kérjük, ellenőrizze, hogy az URL az integráció alap URL-jére mutat-e.",
-          "otherDescription": "Váratlan {statusCode} választ kapott a <url></url> címen. Kérjük, ellenőrizze, hogy az URL az integráció alap URL-jére mutat-e.",
+          "description": "Váratlan {statusCode} ({reason}) válasz érkezett innen: <url></url>. Ellenőrizd, hogy az URL az integráció alap-URL-jére mutat-e.",
+          "otherDescription": "Váratlan {statusCode} válasz érkezett innen: <url></url>. Ellenőrizd, hogy az URL az integráció alap-URL-jére mutat-e.",
           "reason": {
             "badRequest": "Hibás kérés",
             "notFound": "Nem található",
@@ -1076,15 +1076,15 @@
           "alert": {
             "permission": {
               "title": "Nincsenek megfelelő engedélyek",
-              "message": "Önnek nincs joga tanúsítványokat megbízhatónak nyilvánítani vagy feltölteni. Kérjük, lépjen kapcsolatba a rendszergazdájával, hogy feltölthesse a szükséges gyökér tanúsítványt."
+              "message": "Nincs jogosultságod tanúsítványok megbízhatónak jelöléséhez vagy feltöltéséhez. Kérd meg a rendszergazdát a szükséges gyökértanúsítvány feltöltésére."
             },
             "hostnameMismatch": {
               "title": "Állomásnév eltérés",
-              "message": "A tanúsítványban szereplő hosztnév nem egyezik meg azzal a hosztnévvel, amelyhez kapcsolódik. Ez biztonsági kockázatot jelezhet, de mégis dönthet úgy, hogy megbízik ebben a tanúsítványban."
+              "message": "A tanúsítványban szereplő állomásnév nem egyezik azzal, amelyhez csatlakozol. Ez biztonsági kockázatot jelezhet. Csak akkor jelöld megbízhatónak a tanúsítványt, ha ellenőrizted annak azonosságát."
             },
             "extract": {
               "title": "A tanúsító hatóság (CA) tanúsítványának kinyerése sikertelen",
-              "message": "Csak a lánc nélküli, önaláírt tanúsítványok tölthetők le automatikusan. Ha önaláírt tanúsítványt használ, kérjük, feltétlenül töltse fel manuálisan a tanúsító hatóság (CA) tanúsítványát. Az ehhez szükséges lépések leírását itt találja: <docsLink></docsLink>."
+              "message": "Csak a tanúsítványlánc nélküli, önaláírt tanúsítványok kérhetők le automatikusan. Önaláírt tanúsítvány használatakor töltsd fel kézzel a hitelesítésszolgáltató (CA) tanúsítványát. Az ehhez szükséges útmutatót itt találod: <docsLink></docsLink>."
             }
           },
           "action": {
@@ -1101,7 +1101,7 @@
           "hostnameMismatch": {
             "confirm": {
               "title": "Megbízható gépnév nem egyezik",
-              "message": "Biztosan megbízik a tanúsítványban, ha a gazdagépnév nem egyezik?"
+              "message": "Biztosan megbízhatónak jelölöd a tanúsítványt annak ellenére, hogy az állomásnév nem egyezik?"
             },
             "notification": {
               "success": {
@@ -1117,7 +1117,7 @@
           "selfSigned": {
             "confirm": {
               "title": "Önaláírt tanúsítvány megbízhatósága",
-              "message": "Biztosan megbízik ebben az önaláírt tanúsítványban?"
+              "message": "Biztosan megbízhatónak jelölöd ezt az önaláírt tanúsítványt?"
             },
             "notification": {
               "success": {
@@ -1132,7 +1132,7 @@
           },
           "details": {
             "title": "Részletek",
-            "description": "Mielőtt megbízik a tanúsítványban, ellenőrizze annak adatait.",
+            "description": "Mielőtt megbízhatónak jelölöd a tanúsítványt, ellenőrizd az adatait.",
             "content": {
               "action": "Tartalom megjelenítése",
               "title": "PEM tanúsítvány"
@@ -1144,18 +1144,18 @@
           "description": {
             "connection": {
               "hostUnreachable": "A szerver nem érhető el. Ez általában azt jelenti, hogy a szerver nincs online, vagy a hálózatodról nem érhető el.",
-              "networkUnreachable": "A hálózat nem érhető el. Kérjük, ellenőrizze az internetkapcsolatát vagy a hálózati beállításokat.",
+              "networkUnreachable": "A hálózat nem érhető el. Ellenőrizd az internetkapcsolatot vagy a hálózati beállításokat.",
               "refused": "A szerver elutasította a kapcsolatot. Lehet, hogy nem fut, vagy elutasítja a megadott porton érkező kéréseket.",
               "reset": "A kapcsolatot a szerver váratlanul megszakította. Ez akkor fordulhat elő, ha a szerver instabil, vagy újraindult."
             },
             "dns": {
-              "notFound": "A szerver címe nem található. Kérjük, ellenőrizze, hogy az URL-címben nincs-e elírás vagy érvénytelen domainnév.",
-              "timeout": "A DNS-lekérdezés időtúllépése történt. Ez átmeneti probléma lehet – kérjük, próbálja meg újra néhány perc múlva.",
+              "notFound": "A kiszolgáló címe nem található. Ellenőrizd, hogy nincs-e elírás vagy érvénytelen tartománynév az URL-ben.",
+              "timeout": "A DNS-lekérdezés túllépte az időkorlátot. Ez átmeneti hiba lehet – próbáld újra néhány perc múlva.",
               "noAnswer": "A DNS-kiszolgáló nem adott érvényes választ. Lehet, hogy a domain létezik, de nincsenek érvényes bejegyzései."
             },
             "timeout": {
               "aborted": "A kérés még befejezése előtt megszakadt. Ennek oka lehet egy felhasználói művelet vagy a rendszer időtúllépése.",
-              "timeout": "A kérés feldolgozása túl sokáig tartott, ezért a rendszer időtúllépést jelezett. Ellenőrizze a hálózati kapcsolatot, vagy próbálja meg később újra."
+              "timeout": "A kérés túllépte az időkorlátot. Ellenőrizd a hálózati kapcsolatot, vagy próbáld újra később."
             }
           }
         }
@@ -1242,7 +1242,7 @@
       "secureNotice": "Ezt a titkot a létrehozás után nem lehet visszakeresni",
       "reset": {
         "title": "Titok visszaállítása",
-        "message": "Biztosan valaphelyzetbe állítja ezt a titkot?"
+        "message": "Biztosan alaphelyzetbe szeretnéd állítani ezt a titkos értéket?"
       },
       "noSecretsRequired": {
         "segmentTitle": "Nincsenek titkok",
@@ -1254,16 +1254,16 @@
           "newLabel": "Új felhasználónév"
         },
         "apiKey": {
-          "label": "API Kulcs",
-          "newLabel": "Új API kulcs"
+          "label": "API-kulcs",
+          "newLabel": "Új API-kulcs"
         },
         "password": {
           "label": "Jelszó",
           "newLabel": "Új jelszó"
         },
         "tokenId": {
-          "label": "Token azonosító",
-          "newLabel": "Új token azonosító"
+          "label": "Tokenazonosító",
+          "newLabel": "Új tokenazonosító"
         },
         "realm": {
           "label": "Tartomány",
@@ -1287,15 +1287,15 @@
         },
         "opnsenseApiSecret": {
           "label": "Api Kulcs (Titkos)",
-          "newLabel": "Új API Kulcs (Titkos)"
+          "newLabel": "Új API-kulcs (titkos érték)"
         },
         "patchmonApiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "API-kulcs",
+          "newLabel": "Új API-kulcs"
         },
         "patchmonApiSecret": {
-          "label": "",
-          "newLabel": ""
+          "label": "API-titok",
+          "newLabel": "Új API-titok"
         },
         "githubAppId": {
           "label": "App Azonosító",
@@ -1316,7 +1316,7 @@
       }
     },
     "permission": {
-      "use": "Válassza ki az integrációkat az elemekben",
+      "use": "Integrációk kiválasztása az elemekben",
       "interact": "Interakció az integrációkkal",
       "full": "Teljes integrációs hozzáférés"
     },
@@ -1341,8 +1341,8 @@
       }
     },
     "traefik": {
-      "name": "",
-      "description": ""
+      "name": "Traefik",
+      "description": "Felhőnatív fordított proxy és terheléselosztó"
     },
     "wud": {
       "name": "What's Up Docker",
@@ -1353,12 +1353,12 @@
       "description": "Dokumentumkezelő rendszer beolvasott dokumentumok archiválására és rendszerezésére"
     },
     "patchmon": {
-      "name": "",
-      "description": ""
+      "name": "PatchMon",
+      "description": "Linux-gépek javításkezelése és felügyelete"
     },
     "bazarr": {
-      "name": "",
-      "description": ""
+      "name": "Bazarr",
+      "description": "A Sonarr és a Radarr kiegészítő alkalmazása feliratok kezeléséhez és letöltéséhez"
     }
   },
   "media": {
@@ -1384,7 +1384,7 @@
       },
       "delete": {
         "label": "Média törlése",
-        "description": "Biztos, hogy törölni akarja a médiát <bName></bName>?",
+        "description": "Biztosan törölni szeretnéd ezt a médiafájlt: <bName></bName>?",
         "notification": {
           "success": {
             "message": "A média sikeresen törölve"
@@ -1432,8 +1432,8 @@
       "previous": "Előző",
       "next": "Következő",
       "checkoutDocs": "Tekintse meg a dokumentációt",
-      "checkLogs": "További részletekért ellenőrizze a naplókat",
-      "tryAgain": "Próbálja újra",
+      "checkLogs": "További részletekért ellenőrizd a naplókat",
+      "tryAgain": "Próbáld újra",
       "loading": "Töltés",
       "show": "Mutat",
       "hide": "Elrejt"
@@ -1447,14 +1447,14 @@
       "clear": "Kép törlése",
       "uploadImage": "Kép feltöltése",
       "results": "Képkeresés eredményei",
-      "localImages": "Az Ön képei",
+      "localImages": "Saját képek",
       "svgIcons": "SVG ikonok",
       "otherImages": "Egyéb képek",
       "urlLoading": "Kép ellenőrzése…",
       "urlReady": "A kép használatra kész.",
-      "urlError": "A kép nem tölthető be. Ellenőrizze az URL-t, és próbálja újra.",
-      "noResults": "",
-      "error": ""
+      "urlError": "A kép nem tölthető be. Ellenőrizd az URL-t, majd próbáld újra.",
+      "noResults": "Nincs a(z) „{search}” keresésnek megfelelő ikon.",
+      "error": "Az ikonok betöltése nem sikerült."
     },
     "colorScheme": {
       "options": {
@@ -1489,7 +1489,7 @@
       }
     },
     "multiSelect": {
-      "placeholder": "Válasszon ki egy vagy több értéket"
+      "placeholder": "Válassz egy vagy több értéket"
     },
     "multiText": {
       "placeholder": "További értékek hozzáadása",
@@ -1506,7 +1506,7 @@
         "switchToDarkMode": "Váltás sötét módba",
         "switchToLightMode": "Váltás világos módra",
         "management": "Kezelés",
-        "docker": "",
+        "docker": "Docker",
         "preferences": "Saját preferenciák",
         "logout": "Kijelentkezés",
         "login": "Bejelentkezés",
@@ -1581,7 +1581,7 @@
       },
       "remove": {
         "title": "Dinamikus szakasz eltávolítása",
-        "message": "Biztosan el akarja távolítani ezt a dinamikus részt? Az elemek a szülő rész ugyanazon helyére kerülnek át."
+        "message": "Biztosan el szeretnéd távolítani ezt a dinamikus szakaszt? Az elemek a szülőszakasz azonos helyére kerülnek."
       }
     },
     "category": {
@@ -1606,7 +1606,7 @@
       },
       "remove": {
         "title": "Kategória eltávolítása",
-        "message": "Biztosan el akarja távolítani a {name} kategóriát?"
+        "message": "Biztosan el szeretnéd távolítani a(z) {name} kategóriát?"
       },
       "edit": {
         "title": "Kategória átnevezése",
@@ -1621,7 +1621,7 @@
       },
       "openAllInNewTabs": {
         "title": "Mindet lapokban megnyitni",
-        "text": "Bizonyos böngészők biztonsági okokból megakadályozhatják a lapok tömeges megnyitását. A Homarr nem tudta megnyitni az összes ablakot, mert a böngészője letiltotta ezt a műveletet. Kérjük, engedélyezze a „Felugró ablakok megnyitása” opciót, majd próbálja meg újra."
+        "text": "Egyes böngészők biztonsági okokból letilthatják több lap egyidejű megnyitását. A Homarr nem tudta megnyitni az összes lapot, mert a böngésződ letiltotta a műveletet. Engedélyezd az előugró ablakokat, majd próbáld újra."
       }
     }
   },
@@ -1637,19 +1637,19 @@
     "menu": {
       "label": {
         "settings": "Beállítások",
-        "refresh": "",
-        "options": "",
-        "actions": ""
+        "refresh": "Frissítés",
+        "options": "Beállítások",
+        "actions": "Műveletek"
       },
       "status": {
-        "success": "",
-        "error": "",
-        "loading": "",
-        "idle": ""
+        "success": "OK",
+        "error": "Hiba",
+        "loading": "Betöltés",
+        "idle": "Tétlen"
       }
     },
     "create": {
-      "title": "Válassza ki a hozzáadni kívánt elemet",
+      "title": "Válaszd ki a hozzáadandó elemet",
       "search": "Elemek szűrése",
       "addToBoard": "Hozzáadás a táblához"
     },
@@ -1700,23 +1700,23 @@
     },
     "remove": {
       "title": "Elem eltávolítása",
-      "message": "Biztosan eltávolítja ezt az elemet?"
+      "message": "Biztosan eltávolítod ezt az elemet?"
     }
   },
   "widget": {
     "integrationSelect": {
-      "configureIntegrationFirst": "",
-      "loading": "",
-      "placeholder": "",
-      "noResults": "",
-      "loadError": ""
+      "configureIntegrationFirst": "Előbb csatlakoztass egy integrációt",
+      "loading": "Betöltés…",
+      "placeholder": "Válassz egy lehetőséget",
+      "noResults": "Nincs találat",
+      "loadError": "A lehetőségek betöltése nem sikerült"
     },
     "app": {
       "name": "Alkalmazás",
       "description": "Alkalmazást ágyaz be a táblába.",
       "option": {
         "appId": {
-          "label": "Válasszon alkalmazást"
+          "label": "Alkalmazás"
         },
         "openInNewTab": {
           "label": "Megnyitás új lapon"
@@ -1738,7 +1738,7 @@
         },
         "descriptionDisplayMode": {
           "label": "Leírás megjelenítési mód",
-          "description": "Válassza ki, hogyan jelenjen meg az alkalmazás leírása",
+          "description": "Válaszd ki, hogyan jelenjen meg az alkalmazás leírása",
           "option": {
             "normal": "A widgeten belül",
             "tooltip": "Eszköztippként",
@@ -1799,11 +1799,11 @@
       }
     },
     "archiveTeamWarrior": {
-      "name": "",
-      "description": "",
+      "name": "ArchiveTeam Warrior",
+      "description": "Az ArchiveTeam Warrior állapotának, projektjeinek és aktív archiválási feladatainak figyelése.",
       "option": {
         "showBroadcastMessage": {
-          "label": ""
+          "label": "Közlemények megjelenítése"
         }
       }
     },
@@ -1935,7 +1935,7 @@
         },
         "timezone": {
           "label": "Időzóna",
-          "description": "Válassza ki az IANA szabványnak megfelelő időzónát"
+          "description": "Válassz az IANA-szabványnak megfelelő időzónát"
         },
         "showDate": {
           "label": "Mutasd a dátumot"
@@ -1946,21 +1946,21 @@
         },
         "customTimeFormat": {
           "label": "Egyéni időformátum",
-          "description": "Az idő formázásához használja az ISO 8601 szabványt (ez felülírja az egyéb beállításokat)"
+          "description": "Az idő formázásához használd az ISO 8601 szabványt (ez felülírja a többi beállítást)"
         },
         "customDateFormat": {
           "label": "Egyedi dátumformátum",
-          "description": "A dátum formázásához használja az ISO 8601 szabványt (ez felülírja az egyéb beállításokat)"
+          "description": "A dátum formázásához használd az ISO 8601 szabványt (ez felülírja a többi beállítást)"
         },
         "showWeather": {
-          "label": "",
-          "description": ""
+          "label": "Időjárás megjelenítése",
+          "description": "Kis animált időjárásikon és a hőmérséklet megjelenítése a kártya sarkában"
         },
         "weatherLocation": {
-          "label": ""
+          "label": "Időjárási helyszín"
         },
         "isWeatherFormatFahrenheit": {
-          "label": ""
+          "label": "Fahrenheit használata"
         }
       }
     },
@@ -1990,7 +1990,7 @@
       "noStation": "Nincs kiválasztott állomás",
       "option": {
         "baseUrl": {
-          "label": ""
+          "label": "Search.ch URL"
         },
         "station": {
           "label": "Állomás"
@@ -1999,7 +1999,7 @@
     },
     "notebook": {
       "name": "Jegyzettömb",
-      "description": "Egy egyszerű notebook widget, amely támogatja a leértékelést",
+      "description": "Egyszerű jegyzettömbwidget Markdown-formázási támogatással",
       "option": {
         "showToolbar": {
           "label": "A markdown írást segítő eszköztár megjelenítése"
@@ -2022,8 +2022,8 @@
         "clear": "Formázás törlése",
         "heading": "Címsor {level}",
         "align": "Szöveg igazítása: {position}",
-        "directionLtr": "",
-        "directionRtl": "",
+        "directionLtr": "Szövegirány beállítása balról jobbra",
+        "directionRtl": "Szövegirány beállítása jobbról balra",
         "blockquote": "Idézet",
         "horizontalLine": "Vízszintes vonal",
         "bulletList": "Lista",
@@ -2037,7 +2037,7 @@
         "addTable": "Táblázat hozzáadása",
         "deleteTable": "Táblázat törlése",
         "colorCell": "Színes cella",
-        "mergeCell": "Cellák összevonása",
+        "mergeCell": "Cellák egyesítése",
         "addColumnLeft": "Oszlop hozzáadása előtte",
         "addColumnRight": "Oszlop hozzáadása utána",
         "deleteColumn": "Oszlop törlése",
@@ -2062,7 +2062,7 @@
       "placeholder": "Kezdd el írni a jegyzeteidet",
       "dismiss": {
         "title": "Elveted a módosításokat?",
-        "message": "A jegyzetfüzetben vannak mentetlen módosítások. Biztosan el akarja vetni őket?",
+        "message": "A jegyzetfüzet mentetlen módosításokat tartalmaz. Biztosan elveted őket?",
         "action": {
           "discard": "Változtatások elvetése",
           "keepEditing": "Szerkesztés folytatása"
@@ -2083,7 +2083,7 @@
           "label": "Utolsó frissítés megjelenítése"
         }
       },
-      "empty": "Válasszon ki egy jegyzetet a megjelenítéshez",
+      "empty": "Válassz egy megjelenítendő jegyzetet",
       "emptyContent": "Ez a jegyzet nem tartalmaz szöveget",
       "notFound": "Jegyzet nem található",
       "noNotes": "Nem található jegyzet",
@@ -2094,8 +2094,8 @@
       "save": "Mentés",
       "cancel": "Mégse",
       "readOnlyViewer": "Ehhez a jegyzethez olvasói hozzáférésed van. A szerkesztés le van tiltva.",
-      "saveForbidden": "You do not have permission to edit this note.",
-      "saveFailed": "A jegyzet mentése nem sikerült. Kérjük, próbálja meg újra."
+      "saveForbidden": "Nincs jogosultságod a jegyzet szerkesztéséhez.",
+      "saveFailed": "Nem sikerült menteni a jegyzetet. Próbáld újra."
     },
     "iframe": {
       "name": "Beágyazott keret (iFrame)",
@@ -2108,7 +2108,7 @@
           "label": "Teljes képernyő engedélyezése"
         },
         "allowTransparency": {
-          "label": "Engedélyezze az átláthatóságot"
+          "label": "Átlátszóság engedélyezése"
         },
         "allowScrolling": {
           "label": "Görgetés engedélyezése"
@@ -2135,7 +2135,7 @@
       "error": {
         "noUrl": "Nincs megadva iFrame URL",
         "unsupportedProtocol": "A megadott URL nem támogatott protokollt használ. Kérjük, válasszon egyet a ({supportedProtocols}) közül",
-        "noBrowerSupport": "Az Ön böngészője nem támogatja a beágyazott kereteket. Kérjük, frissítse böngészőjét."
+        "noBrowerSupport": "A böngésződ nem támogatja a beágyazott kereteket. Frissítsd a böngészőt."
       }
     },
     "smartHome-entityState": {
@@ -2288,7 +2288,7 @@
           "description": "Csak az aktuális időjárásról"
         },
         "useImperialSpeed": {
-          "label": "A szélsebességet mérföld/órában (mph) adja meg"
+          "label": "Szélsebesség mph-ban"
         },
         "location": {
           "label": "Időjárás helye"
@@ -2314,7 +2314,7 @@
         "sunset": "Naplemente",
         "maxWindSpeed": "Legnagyobb szélsebesség: {maxWindSpeed} {unit}",
         "maxWindGusts": "Legerősebb széllökés: {maxWindGusts} {unit}",
-        "humidity": ""
+        "humidity": "Páratartalom: {humidity}%"
       },
       "kind": {
         "clear": "Tiszta",
@@ -2374,9 +2374,9 @@
           "label": "Fájlrendszer-információk megjelenítése"
         },
         "visibleStorageVolumes": {
-          "label": "",
-          "description": "",
-          "placeholder": ""
+          "label": "Látható tárolókötetek",
+          "description": "Csak akkor érhető el, ha minden kiválasztott integráció Synology-integráció. Hagyd üresen, ha az összes észlelt tárolókötetet szeretnéd megjeleníteni.",
+          "placeholder": "Válassz tárolóköteteket"
         },
         "defaultTab": {
           "label": "Alapértelmezett fül"
@@ -2427,7 +2427,7 @@
         },
         "popover": {
           "rightSection": {
-            "node": "Node",
+            "node": "Gép",
             "vmId": "VM ID",
             "plugin": "Bővítmény"
           },
@@ -2448,7 +2448,7 @@
             "name": "Név",
             "cpu": "CPU",
             "memory": "Memória",
-            "node": "Node"
+            "node": "Gép"
           }
         }
       }
@@ -2458,7 +2458,7 @@
       "description": "A konténereid statisztikái (Ezt a widgetet csak rendszergazdai jogosultsággal lehet hozzáadni)",
       "option": {
         "columns": {
-          "label": ""
+          "label": "Megjelenítendő oszlopok"
         },
         "enableRowSorting": {
           "label": "Az elemek rendezésének engedélyezése"
@@ -2476,19 +2476,19 @@
           "label": "Fordított rendezés"
         },
         "columnOrder": {
-          "label": ""
+          "label": "Oszlopsorrend"
         },
         "columnWidths": {
-          "label": ""
+          "label": "Oszlopszélességek"
         }
       },
       "error": {
         "internalServerError": "A konténerek statisztikáinak lekérése sikertelen",
-        "layoutSaveTitle": "",
-        "layoutSaveMessage": ""
+        "layoutSaveTitle": "A táblázat elrendezése nincs mentve",
+        "layoutSaveMessage": "A Docker-táblázat elrendezését nem sikerült menteni. Próbáld újra áthelyezni vagy átméretezni az oszlopot."
       },
       "empty": {
-        "noContainers": ""
+        "noContainers": "Nem található konténer"
       }
     },
     "coolify": {
@@ -2525,9 +2525,9 @@
       }
     },
     "vpn": {
-      "name": "",
-      "description": "",
-      "serviceUnavailable": "",
+      "name": "VPN",
+      "description": "VPN-kapcsolataid áttekintése",
+      "serviceUnavailable": "A VPN nem érhető el",
       "option": {}
     },
     "ups": {
@@ -2629,7 +2629,7 @@
         "websiteId": {
           "label": "Honlap",
           "description": "Válasszon ki egy olyan webhelyet, amelyet az Ön Umami-példánya követ",
-          "placeholder": "Válasszon ki egy weboldalt",
+          "placeholder": "Válassz webhelyet",
           "loading": "Weboldalak betöltése...",
           "noWebsites": "Nem található weboldal",
           "configureIntegrationFirst": "Először csatlakoztassa az Umami integrációt"
@@ -2649,11 +2649,11 @@
         "eventName": {
           "label": "Esemény",
           "description": "Egy adott esemény összes előfordulásának megjelenítése",
-          "placeholder": "Válasszon ki egy eseményt",
+          "placeholder": "Válassz eseményt",
           "loading": "Események betöltése...",
           "noEvents": "Nem található esemény",
           "none": "Nincs esemény",
-          "configureWebsiteFirst": "Először válasszon ki egy weboldalt az események betöltéséhez"
+          "configureWebsiteFirst": "Az események betöltéséhez először válassz webhelyet"
         },
         "chartType": {
           "label": "Diagramtípus",
@@ -2683,14 +2683,14 @@
         },
         "eventNames": {
           "label": "Események",
-          "description": "Válasszon ki egy vagy több eseményt a grafikonhoz",
+          "description": "Válassz egy vagy több, a diagramon megjelenítendő eseményt",
           "placeholder": "Események kiválasztása...",
           "loading": "Események betöltése...",
           "noEvents": "Nem található esemény",
-          "configureWebsiteFirst": "Először válasszon ki egy weboldalt az események betöltéséhez"
+          "configureWebsiteFirst": "Az események betöltéséhez először válassz webhelyet"
         },
         "topCount": {
-          "label": "Items to show",
+          "label": "Megjelenítendő elemek",
           "description": "Megjelenítendő legnépszerűbb elemek száma (max. 500)"
         }
       },
@@ -2705,7 +2705,7 @@
         "direct": "Közvetlen"
       },
       "events": {
-        "selectPrompt": "Válassza ki a grafikonra felveendő eseményeket"
+        "selectPrompt": "Válaszd ki a diagramon megjelenítendő eseményeket"
       },
       "error": {
         "noIntegration": "Nincs beállítva az Umami-integráció",
@@ -2739,11 +2739,11 @@
       },
       "integration": {
         "noData": "Nem találtam integrációt",
-        "description": "Kattintson <here></here> egy új integráció létrehozásához"
+        "description": "Új integráció létrehozásához kattints <here></here>"
       },
       "app": {
         "noData": "Nem található alkalmazás",
-        "description": "Kattintson <here></here> egy új alkalmazás létrehozásához",
+        "description": "Új alkalmazás létrehozásához kattints <here></here>",
         "quickCreate": "Alkalmazás létrehozása pillanatok alatt"
       },
       "error": {
@@ -2784,31 +2784,31 @@
           "description": "Ennek letiltása a Plex esetében nem fog működni"
         },
         "showBitrate": {
-          "label": "",
-          "description": ""
+          "label": "Bitráta megjelenítése",
+          "description": "Az aktuális lejátszási bitráta megjelenítése a hely mellett"
         },
         "showLocation": {
-          "label": "",
-          "description": ""
+          "label": "Hely megjelenítése",
+          "description": "Annak megjelenítése, hogy az adatfolyam a LAN-on vagy a WAN-on van-e"
         }
       },
       "footer": {
-        "streams": "",
-        "totalBitrate": ""
+        "streams": "{count, plural, one {# aktív adatfolyam} other {# aktív adatfolyam}}",
+        "totalBitrate": "Összesen: {bitrate}"
       },
       "items": {
         "currentlyPlaying": "Jelenleg lejátszás alatt",
         "user": "Felhasználó",
         "name": "Név",
         "id": "Azonosító",
-        "status": "",
-        "directPlay": "",
-        "directStream": "",
-        "transcodeVideo": "",
-        "transcodeAudio": "",
-        "transcoding": "",
-        "paused": "",
-        "remaining": "",
+        "status": "Állapot",
+        "directPlay": "Közvetlen lejátszás",
+        "directStream": "Közvetlen adatfolyam",
+        "transcodeVideo": "Videó átkódolása",
+        "transcodeAudio": "Hang átkódolása",
+        "transcoding": "Átkódolás",
+        "paused": "Szüneteltetve",
+        "remaining": "{minutes} perc van hátra",
         "metadata": {
           "title": "Statisztikák a rajongóknak",
           "video": {
@@ -2875,190 +2875,190 @@
       }
     },
     "patchmon": {
-      "name": "",
-      "description": "",
-      "title": "",
-      "totalHosts": "",
-      "hostsNeedingUpdates": "",
-      "securityUpdates": "",
-      "upToDateHosts": "",
-      "hostsWithSecurityUpdates": "",
-      "recentUpdates24h": "",
-      "totalOutdatedPackages": "",
-      "totalRepos": "",
-      "osDistribution": "",
-      "compliance": "",
-      "complianceRatio": "",
-      "lastUpdated": "",
+      "name": "PatchMon",
+      "description": "A gépek javítási állapotának áttekintése a PatchMonból",
+      "title": "PatchMon-statisztikák",
+      "totalHosts": "Összes gép",
+      "hostsNeedingUpdates": "Frissítést igénylő gépek",
+      "securityUpdates": "Biztonsági frissítések",
+      "upToDateHosts": "Naprakész gépek",
+      "hostsWithSecurityUpdates": "Biztonsági frissítést igénylő gépek",
+      "recentUpdates24h": "Frissítések (24 óra)",
+      "totalOutdatedPackages": "Elavult csomagok",
+      "totalRepos": "Szoftvertárolók",
+      "osDistribution": "Operációs rendszerek megoszlása",
+      "compliance": "Frissítési megfelelőség",
+      "complianceRatio": "{upToDate} / {total}",
+      "lastUpdated": "Frissítve: {time}",
       "option": {
         "showTotalHosts": {
-          "label": "",
-          "description": ""
+          "label": "Gépek számának megjelenítése",
+          "description": "A felügyelt gépek számának megjelenítése"
         },
         "showHostsNeedingUpdates": {
-          "label": "",
-          "description": ""
+          "label": "Frissítést igénylő gépek megjelenítése",
+          "description": "A legalább egy elavult csomaggal rendelkező gépek megjelenítése"
         },
         "showSecurityUpdates": {
-          "label": "",
-          "description": ""
+          "label": "Biztonsági frissítések megjelenítése",
+          "description": "Az elérhető biztonsági frissítések számának megjelenítése"
         },
         "showUpToDateHosts": {
-          "label": "",
-          "description": ""
+          "label": "Naprakész gépek megjelenítése",
+          "description": "Az elavult csomag nélküli gépek megjelenítése"
         },
         "showHostsWithSecurityUpdates": {
-          "label": "",
-          "description": ""
+          "label": "Biztonsági frissítést igénylő gépek megjelenítése",
+          "description": "A biztonsági javítást igénylő gépek megjelenítése"
         },
         "showRecentUpdates24h": {
-          "label": "",
-          "description": ""
+          "label": "Legutóbbi frissítések megjelenítése (24 óra)",
+          "description": "Az elmúlt 24 órában alkalmazott frissítések számának megjelenítése"
         },
         "showTotalOutdatedPackages": {
-          "label": "",
-          "description": ""
+          "label": "Elavult csomagok megjelenítése",
+          "description": "Az elavult csomagok teljes számának megjelenítése az összes gépen"
         },
         "showTotalRepos": {
-          "label": "",
-          "description": ""
+          "label": "Szoftvertárolók megjelenítése",
+          "description": "A felügyelt aktív szoftvertárolók számának megjelenítése"
         },
         "enableThresholdColors": {
-          "label": "",
-          "description": ""
+          "label": "Küszöbérték szerinti színezés engedélyezése",
+          "description": "A statisztikai értékek színezése zöldre, sárgára vagy pirosra a súlyossági beállítások alapján"
         },
         "useCustomThresholds": {
-          "label": "",
-          "description": ""
+          "label": "Speciális küszöbértékek",
+          "description": "A figyelmeztetési és kritikus küszöbértékek testreszabása statisztikánként, abszolút számmal vagy az összes gép százalékában"
         },
         "thresholdMode": {
           "option": {
-            "absolute": "",
-            "percent": ""
+            "absolute": "Abszolút szám",
+            "percent": "Az összes gép százaléka"
           }
         },
         "hostsNeedingUpdatesThresholdMode": {
-          "label": "",
-          "description": ""
+          "label": "Frissítést igénylő gépek küszöbértékének módja",
+          "description": "A frissítést igénylő gépek számának összehasonlítása abszolút értékként vagy az összes gép százalékában"
         },
         "hostsNeedingUpdatesWarningAt": {
-          "label": "",
-          "description": ""
+          "label": "Frissítési igény figyelmeztetési küszöbértéke",
+          "description": "Az érték sárgára vált e küszöb elérésekor"
         },
         "hostsNeedingUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": "Frissítési igény kritikus küszöbértéke",
+          "description": "Az érték pirosra vált e küszöb elérésekor"
         },
         "securityUpdatesThresholdMode": {
-          "label": "",
-          "description": ""
+          "label": "Biztonsági frissítések küszöbértékének módja",
+          "description": "A biztonsági frissítések számának összehasonlítása abszolút értékként vagy az összes gép százalékában"
         },
         "securityUpdatesWarningAt": {
-          "label": "",
-          "description": ""
+          "label": "Biztonsági frissítések figyelmeztetési küszöbértéke",
+          "description": "Az érték sárgára vált e küszöb elérésekor"
         },
         "securityUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": "Biztonsági frissítések kritikus küszöbértéke",
+          "description": "Az érték pirosra vált e küszöb elérésekor"
         },
         "hostsWithSecurityUpdatesThresholdMode": {
-          "label": "",
-          "description": ""
+          "label": "Biztonsági frissítést igénylő gépek küszöbértékének módja",
+          "description": "A gépek számának összehasonlítása abszolút értékként vagy az összes gép százalékában"
         },
         "hostsWithSecurityUpdatesWarningAt": {
-          "label": "",
-          "description": ""
+          "label": "Biztonsági frissítést igénylő gépek figyelmeztetési küszöbértéke",
+          "description": "Az érték sárgára vált e küszöb elérésekor"
         },
         "hostsWithSecurityUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": "Biztonsági frissítést igénylő gépek kritikus küszöbértéke",
+          "description": "Az érték pirosra vált e küszöb elérésekor"
         },
         "upToDateHostsThresholdMode": {
-          "label": "",
-          "description": ""
+          "label": "Naprakész gépek küszöbértékének módja",
+          "description": "A naprakész gépek számának összehasonlítása abszolút értékként vagy az összes gép százalékában"
         },
         "upToDateHostsWarningAt": {
-          "label": "",
-          "description": ""
+          "label": "Naprakész gépek figyelmeztetési küszöbértéke",
+          "description": "Az érték sárgára vált, ha eléri vagy meghaladja ezt a küszöböt, de még nincs teljes lefedettség"
         },
         "upToDateHostsCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": "Naprakész gépek kritikus küszöbértéke",
+          "description": "Az érték pirosra vált, ha e küszöb alá esik"
         },
         "totalOutdatedPackagesThresholdMode": {
-          "label": "",
-          "description": ""
+          "label": "Elavult csomagok küszöbértékének módja",
+          "description": "Az elavult csomagok számának összehasonlítása abszolút értékként vagy az összes gép százalékában"
         },
         "totalOutdatedPackagesWarningAt": {
-          "label": "",
-          "description": ""
+          "label": "Elavult csomagok figyelmeztetési küszöbértéke",
+          "description": "Az érték sárgára vált e küszöb elérésekor"
         },
         "totalOutdatedPackagesCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": "Elavult csomagok kritikus küszöbértéke",
+          "description": "Az érték pirosra vált e küszöb elérésekor"
         },
         "showOsDistribution": {
-          "label": "",
-          "description": ""
+          "label": "Operációs rendszerek megoszlásának megjelenítése",
+          "description": "A felügyelt gépek operációs rendszer szerinti bontásának megjelenítése"
         },
         "osDistributionLimit": {
-          "label": "",
-          "description": "",
+          "label": "Megjelenített operációs rendszerek száma",
+          "description": "A megjelenítendő operációs rendszerek legnagyobb száma",
           "option": {
-            "3": "",
-            "5": "",
-            "10": "",
-            "all": ""
+            "3": "3 leggyakoribb",
+            "5": "5 leggyakoribb",
+            "10": "10 leggyakoribb",
+            "all": "Összes"
           }
         },
         "showOsVersion": {
-          "label": "",
-          "description": ""
+          "label": "Operációs rendszer verziójának megjelenítése",
+          "description": "Az operációsrendszer-verzió hozzáadása az egyes címkékhez, ha elérhető"
         },
         "showComplianceHero": {
-          "label": "",
-          "description": ""
+          "label": "Kiemelt megfelelőségi mutató megjelenítése",
+          "description": "A naprakész gépek százalékát jelző megfelelőségi gyűrű megjelenítése"
         },
         "osDisplayMode": {
-          "label": "",
-          "description": "",
+          "label": "Operációs rendszer megjelenítési módja",
+          "description": "Válaszd ki az operációs rendszerek megoszlásának megjelenítési módját",
           "option": {
-            "bars": "",
-            "donut": ""
+            "bars": "Vízszintes sávok",
+            "donut": "Gyűrűdiagram"
           }
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "A PatchMon-adatok lekérése nem sikerült"
       }
     },
     "bazarr": {
-      "name": "",
-      "description": "",
-      "episodes": "",
-      "movies": "",
-      "providers": "",
-      "status": "",
+      "name": "Bazarr",
+      "description": "A hiányzó feliratok és az állapot áttekintése a Bazarr-példányodból",
+      "episodes": "Hiányzó epizódok",
+      "movies": "Hiányzó filmek",
+      "providers": "Szolgáltatói problémák",
+      "status": "Állapotproblémák",
       "option": {
         "showMissingEpisodes": {
-          "label": "",
-          "description": ""
+          "label": "Hiányzó epizódok megjelenítése",
+          "description": "A hiányzó felirattal rendelkező epizódok számának megjelenítése"
         },
         "showMissingMovies": {
-          "label": "",
-          "description": ""
+          "label": "Hiányzó filmek megjelenítése",
+          "description": "A hiányzó felirattal rendelkező filmek számának megjelenítése"
         },
         "showProviderIssues": {
-          "label": "",
-          "description": ""
+          "label": "Szolgáltatói problémák megjelenítése",
+          "description": "A problémás feliratszolgáltatók számának megjelenítése"
         },
         "showHealthIssues": {
-          "label": "",
-          "description": ""
+          "label": "Állapotproblémák megjelenítése",
+          "description": "A Bazarr állapotproblémáinak számának megjelenítése"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "A Bazarr-adatok lekérése nem sikerült"
       }
     },
     "immich-serverStats": {
@@ -3088,11 +3088,11 @@
       "storage": "Felhasznált tárhely"
     },
     "immich-albumCarousel": {
-      "name": "Immich Album",
-      "allPhotos": "",
+      "name": "Immich-album",
+      "allPhotos": "Összes fénykép",
       "option": {
         "albumId": {
-          "label": "Album ID",
+          "label": "Album",
           "description": "Ez az Immich-albumodra utaló egyedi azonosító. Az azonosítót úgy találhatod meg, hogy megnyitsz egy albumot, és lemásolod az URL-ből az egyedi karakterláncot, például: „a21aca09-9f05-47dc-b1a1-7b53c547226e”."
         },
         "rotationIntervalSeconds": {
@@ -3104,8 +3104,8 @@
           "description": "Kép dátumának és az aktuális indexszámnak a megjelenítése a diavetítés alján"
         },
         "randomizePhotos": {
-          "label": "",
-          "description": ""
+          "label": "Fényképek véletlenszerű sorrendje",
+          "description": "A fényképek véletlenszerű sorrendben jelenjenek meg ahelyett, hogy mindig ugyanazzal az albumsorrenddel kezdődnének."
         }
       },
       "description": "Képek diavetítése az Immich-albumodból",
@@ -3146,25 +3146,25 @@
           "label": "Szűrés fehérlistával"
         },
         "applyFilterToRatio": {
-          "label": "Használja a szűrőt az arány kiszámításához"
+          "label": "Szűrő használata az arány kiszámításához"
         },
         "limitPerIntegration": {
           "label": "Elemek száma integrációnként",
           "description": "Ez az egyes integrációkhoz tartozó elemek számát korlátozza, nem pedig általánosan"
         },
         "columnOrder": {
-          "label": ""
+          "label": "Oszlopsorrend"
         },
         "columnWidths": {
-          "label": ""
+          "label": "Oszlopszélességek"
         }
       },
       "errors": {
         "noColumns": "Oszlopok kiválasztása az elemek között",
         "noCommunications": "Nem sikerül betölteni az adatokat az integrációból",
-        "noItems": "",
-        "actionFailed": "",
-        "actionFailedMessage": ""
+        "noItems": "Nem található letöltés",
+        "actionFailed": "A művelet nem sikerült",
+        "actionFailedMessage": "A műveletet nem sikerült befejezni. Próbáld újra."
       },
       "items": {
         "actions": {
@@ -3188,7 +3188,7 @@
         },
         "id": {
           "columnTitle": "Azonosító",
-          "detailsTitle": ""
+          "detailsTitle": "Elem azonosítója"
         },
         "integration": {
           "columnTitle": "Integráció"
@@ -3223,7 +3223,7 @@
         "time": {
           "columnTitle": "Befejezési idő",
           "detailsTitle": "A befejezésig hátralévő idő",
-          "eta": ""
+          "eta": "Becsült hátralévő idő"
         },
         "type": {
           "columnTitle": "Típus",
@@ -3261,29 +3261,29 @@
           "resume": "Elem folytatása",
           "delete": {
             "title": "Elem törlése",
-            "modalTitle": "Biztosan törli ezt a feladatot?",
+            "modalTitle": "Biztosan törölni szeretnéd ezt a feladatot?",
             "entry": "Bejegyzés törlése",
-            "entryAndFiles": "Bejegyzés és file(ok) törlése"
+            "entryAndFiles": "Bejegyzés és fájl(ok) törlése"
           }
         }
       },
       "globalRatio": "Összes arány",
       "contextMenu": {
-        "copyName": "",
-        "copyId": "",
-        "clearFilters": ""
+        "copyName": "Név másolása",
+        "copyId": "Azonosító másolása",
+        "clearFilters": "Szűrők törlése"
       },
       "footer": {
-        "filter": ""
+        "filter": "Letöltések szűrése"
       },
       "stats": {
-        "show": "",
-        "hide": "",
-        "overallProgress": "",
-        "totalSize": "",
-        "clients": ""
+        "show": "Globális statisztikák megjelenítése",
+        "hide": "Globális statisztikák elrejtése",
+        "overallProgress": "Várólista teljes előrehaladása",
+        "totalSize": "Várólista teljes mérete",
+        "clients": "{count, plural, one {# kliens} other {# kliens}}"
       },
-      "disconnected": ""
+      "disconnected": "(nincs kapcsolat)"
     },
     "mediaReleases": {
       "name": "Sajtóközlemények",
@@ -3322,10 +3322,10 @@
           "label": "Linkek megnyitása új fülön"
         },
         "statusFilter": {
-          "label": ""
+          "label": "Megjelenítendő állapotok"
         },
         "recentDays": {
-          "label": ""
+          "label": "Csak a legutóbbi kérések megjelenítése"
         }
       },
       "pending": {
@@ -3350,11 +3350,11 @@
         "failed": "Sikertelen",
         "completed": "Befejezett"
       },
-      "toBeDetermined": "TBD"
+      "toBeDetermined": "Később"
     },
     "mediaRequests-requestStats": {
       "name": "Médiakérések állapota",
-      "description": "Statisztikák az Ön médiakéréseiről",
+      "description": "A médiakéréseid statisztikái",
       "option": {},
       "titles": {
         "stats": {
@@ -3434,33 +3434,33 @@
       }
     },
     "mediaMissing": {
-      "name": "",
-      "description": "",
+      "name": "Hiányzó és várólistán lévő média",
+      "description": "A Radarr és a Sonarr hiányzó és várólistán lévő filmjeinek és epizódjainak megjelenítése",
       "option": {
         "showMissing": {
-          "label": ""
+          "label": "Hiányzó elemek megjelenítése"
         },
         "showQueued": {
-          "label": ""
+          "label": "Várólistán lévő elemek megjelenítése"
         },
         "pageSize": {
-          "label": ""
+          "label": "Oldalankénti elemek száma"
         }
       },
       "tab": {
-        "missing": "",
-        "queued": ""
+        "missing": "Hiányzó",
+        "queued": "Várólistán"
       },
       "type": {
-        "movie": "",
-        "episode": ""
+        "movie": "Film",
+        "episode": "Epizód"
       },
       "empty": {
-        "missing": "",
-        "queued": "",
-        "noTabsEnabled": ""
+        "missing": "Nincs hiányzó elem",
+        "queued": "Nincs várólistán lévő elem",
+        "noTabsEnabled": "Engedélyezz legalább egy lapot a widget beállításaiban"
       },
-      "timeLeft": ""
+      "timeLeft": "Hátralévő idő"
     },
     "rssFeed": {
       "name": "RSS feedek",
@@ -3492,11 +3492,11 @@
       "option": {
         "newReleaseWithin": {
           "label": "Új kiadás a",
-          "description": "Használati példa: 1w (1 hét), 10M (10 hónap). Elfogadott mértékegységek: h (óra), d (nap), w (hét), M (hónap), y (év). Ha nem szeretné, hogy az új kiadások kiemelve jelenjenek meg, hagyja üresen."
+          "description": "Használati példa: 1w (1 hét), 10M (10 hónap). Elfogadott mértékegységek: h (óra), d (nap), w (hét), M (hónap), y (év). Hagyd üresen, ha nem szeretnéd kiemelni az új kiadásokat."
         },
         "staleReleaseWithin": {
           "label": "Elavult kiadás",
-          "description": "Használati példa: 1w (1 hét), 10M (10 hónap). Elfogadott mértékegységek: h (óra), d (nap), w (hét), M (hónap), y (év). Ha nem szeretné, hogy a régi kiadások ki legyenek emelve, hagyja üresen."
+          "description": "Használati példa: 1w (1 hét), 10M (10 hónap). Elfogadott mértékegységek: h (óra), d (nap), w (hét), M (hónap), y (év). Hagyd üresen, ha nem szeretnéd kiemelni a régi kiadásokat."
         },
         "showOnlyHighlighted": {
           "label": "Csak a kiemelt elemeket mutasd",
@@ -3532,7 +3532,7 @@
             "label": "Szolgáltató"
           },
           "providerUrl": {
-            "label": ""
+            "label": "Szolgáltató URL-je"
           },
           "identifier": {
             "label": "Azonosító",
@@ -3577,17 +3577,17 @@
           "example": {
             "label": "Példa"
           },
-          "invalid": "A tároló meghatározása érvénytelen, kérjük, ellenőrizze az értékeket",
+          "invalid": "A tároló meghatározása érvénytelen. Ellenőrizd az értékeket.",
           "noProvider": {
             "label": "Nincs Szolgáltató",
-            "tooltip": "A szolgáltató adatai nem értelmezhetők; kérjük, az importálás után állítsa be azokat manuálisan"
+            "tooltip": "A szolgáltató adatai nem értelmezhetők; az importálás után állítsd be őket kézzel."
           },
           "tokens": {
-            "label": "",
-            "token": "",
-            "configured": "",
-            "notConfigured": "",
-            "save": ""
+            "label": "Szolgáltatói tokenek",
+            "token": "Token",
+            "configured": "Token beállítva",
+            "notConfigured": "Nincs beállítva token",
+            "save": "Mentés"
           }
         }
       },
@@ -3610,9 +3610,9 @@
           "invalidIdentifier": "Érvénytelen azonosító",
           "noMatchingVersion": "Nem található megfelelő verzió",
           "noReleasesFound": "Nem találhatók kiadások",
-          "noProviderSelected": "",
+          "noProviderSelected": "Nincs kiválasztva szolgáltató",
           "noProviderResponse": "Nincs válasz a szolgáltatótól",
-          "unexpected": ""
+          "unexpected": "Váratlan szolgáltatói hiba"
         }
       }
     },
@@ -3707,7 +3707,7 @@
       "noItems": "Nincs megjelenítendő üzenet.",
       "option": {
         "hideLogos": {
-          "label": ""
+          "label": "Logók elrejtése"
         }
       }
     },
@@ -3791,37 +3791,37 @@
       }
     },
     "traefik": {
-      "name": "",
-      "description": "",
+      "name": "Traefik",
+      "description": "A Traefik útválasztóinak, szolgáltatásainak, köztes rétegeinek és belépési pontjainak áttekintése",
       "option": {
         "showTcp": {
-          "label": ""
+          "label": "TCP megjelenítése"
         },
         "showUdp": {
-          "label": ""
+          "label": "UDP megjelenítése"
         },
         "showEntryPoints": {
-          "label": ""
+          "label": "Belépési pontok megjelenítése"
         }
       },
-      "instances": "",
-      "versionUnknown": "",
+      "instances": "Traefik-példányok",
+      "versionUnknown": "Ismeretlen verzió",
       "summary": {
-        "routers": "",
-        "entryPoints": ""
+        "routers": "Útválasztók",
+        "entryPoints": "Belépési pontok"
       },
       "resource": {
-        "routers": "",
-        "services": "",
-        "middlewares": ""
+        "routers": "Útválasztók",
+        "services": "Szolgáltatások",
+        "middlewares": "Köztes rétegek"
       },
       "status": {
-        "healthy": "",
-        "errors": "",
-        "warnings": ""
+        "healthy": "Rendben",
+        "errors": "{count} hiba",
+        "warnings": "{count} figyelmeztetés"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "A Traefik-adatok lekérése nem sikerült"
       }
     },
     "audioStats": {
@@ -3886,7 +3886,7 @@
         },
         "visibleCharts": {
           "label": "Látható diagramok",
-          "description": "Válassza ki azokat a diagramokat, amelyeket meg szeretne jeleníteni.",
+          "description": "Válaszd ki a megjelenítendő diagramokat.",
           "option": {
             "cpu": "CPU",
             "memory": "Memória",
@@ -3908,7 +3908,7 @@
         "cpu": "CPU",
         "memory": "RAM",
         "gpu": "GPU",
-        "network": "NET",
+        "network": "Háló",
         "up": "FÖNN",
         "down": "LENN"
       }
@@ -3938,9 +3938,9 @@
           "label": "Háttérhasználati sáv megjelenítése"
         },
         "visibleStorageVolumes": {
-          "label": "",
-          "description": "",
-          "placeholder": ""
+          "label": "Látható tárolókötetek",
+          "description": "Csak akkor érhető el, ha minden kiválasztott integráció Synology-integráció. Hagyd üresen, ha az összes észlelt tárolókötetet szeretnéd megjeleníteni.",
+          "placeholder": "Válassz tárolóköteteket"
         }
       },
       "status": {
@@ -4011,20 +4011,20 @@
           "label": "Üzemidő mutatása"
         },
         "showAgent": {
-          "label": "Agent verzió mutatása"
+          "label": "Agentverzió megjelenítése"
         },
         "columnOrder": {
-          "label": ""
+          "label": "Oszlopsorrend"
         },
         "columnWidths": {
-          "label": ""
+          "label": "Oszlopszélességek"
         }
       },
       "noRecords": "Nincsenek rendszerek",
       "error": {
-        "internalServerError": "",
-        "layoutSaveTitle": "",
-        "layoutSaveMessage": ""
+        "internalServerError": "Nem sikerült kapcsolódni a Beszelhez. Ellenőrizd az integráció beállításait.",
+        "layoutSaveTitle": "Nem sikerült menteni a táblázatelrendezést",
+        "layoutSaveMessage": "Az oszlopsorrendet vagy az oszlopszélességeket nem sikerült menteni. Próbáld újra."
       },
       "column": {
         "system": "Rendszer",
@@ -4079,14 +4079,14 @@
           "label": "Üzemidő mutatása"
         },
         "showAgent": {
-          "label": "Agent verzió mutatása"
+          "label": "Agentverzió megjelenítése"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Nem sikerült kapcsolódni a Beszelhez. Ellenőrizd az integráció beállításait."
       },
       "empty": {
-        "noSystems": ""
+        "noSystems": "Nem található rendszer"
       },
       "metric": {
         "cpu": "CPU",
@@ -4115,7 +4115,7 @@
       },
       "empty": "Nincsenek riasztások konfigurálva",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Nem sikerült kapcsolódni a Beszelhez. Ellenőrizd az integráció beállításait."
       },
       "history": "Előzmények",
       "resolved": "Megoldva",
@@ -4129,8 +4129,8 @@
       "description": "Idősoros diagramok CPU, memória, lemez, hálózat és Docker konténer metrikákhoz",
       "option": {
         "systemId": {
-          "label": "",
-          "description": ""
+          "label": "Rendszer",
+          "description": "Válassz egy Beszel-rendszert a statisztikák megjelenítéséhez"
         },
         "timePeriod": {
           "label": "Időszak"
@@ -4162,13 +4162,13 @@
       },
       "selectSystem": "Rendszer kiválasztása",
       "empty": {
-        "noSystems": ""
+        "noSystems": "Nem található rendszer"
       },
       "error": {
-        "internalServerError": "",
-        "liveConnectionFailed": "",
-        "switchToHistorical": "",
-        "systemNotFound": ""
+        "internalServerError": "Nem sikerült kapcsolódni a Beszelhez. Ellenőrizd az integráció beállításait.",
+        "liveConnectionFailed": "Az élő kapcsolat nem sikerült. Lehet, hogy a Beszel-példányod nem támogatja a valós idejű adatfolyamot.",
+        "switchToHistorical": "Váltás előzménynézetre",
+        "systemNotFound": "A kiválasztott rendszer nem található. Válassz másik rendszert."
       },
       "chart": {
         "cpu": {
@@ -4184,8 +4184,8 @@
         },
         "disk": {
           "title": "Lemez Használat",
-          "subtitle": "",
-          "series": ""
+          "subtitle": "Használat fájlrendszerenként",
+          "series": "Gyökérfájlrendszer"
         },
         "diskIO": {
           "title": "Lemez I/O",
@@ -4194,9 +4194,9 @@
           "write": "Írás"
         },
         "storage": {
-          "title": "",
-          "subtitle": "",
-          "series": ""
+          "title": "Tárhely",
+          "subtitle": "Lemezhasználat fájlrendszerenként",
+          "series": "Használt"
         },
         "network": {
           "title": "Sávszélesség",
@@ -4231,16 +4231,16 @@
   "board": {
     "action": {
       "duplicate": {
-        "title": "Tábla duplikálása",
+        "title": "Tábla másolása",
         "message": "Ezzel a {name} tábla teljes tartalmával együtt duplikálódik. Ha a widgetek olyan integrációkra hivatkoznak, amelyek használata nem engedélyezett, azok eltávolításra kerülnek.",
         "notification": {
           "success": {
-            "title": "Tábla duplikálva",
-            "message": "A tábla sikeresen duplikálódott"
+            "title": "Tábla lemásolva",
+            "message": "A tábla másolása sikerült"
           },
           "error": {
-            "title": "Nem lehet duplikálni a táblát",
-            "message": "Nem tudtam duplikálni a táblát"
+            "title": "Nem sikerült lemásolni a táblát",
+            "message": "A táblát nem sikerült lemásolni"
           }
         }
       },
@@ -4257,7 +4257,7 @@
         },
         "confirmLeave": {
           "title": "Mentetlen változtatások",
-          "message": "Nem mentett változtatásai vannak, biztosan el akarja hagyni az oldalt?"
+          "message": "Mentetlen módosításaid vannak. Biztosan elhagyod az oldalt?"
         }
       },
       "oldImport": {
@@ -4285,7 +4285,7 @@
             },
             "onlyImportApps": {
               "label": "Csak alkalmazások importálása",
-              "description": "Csak az alkalmazásokat adja hozzá, a táblát manuálisan kell újra létrehozni"
+              "description": "Csak az alkalmazásokat importálja; a táblát kézzel kell újra létrehozni."
             }
           },
           "name": {
@@ -4331,7 +4331,7 @@
         "label": "Meta cím"
       },
       "logoImageUrl": {
-        "label": "Logo kép URL"
+        "label": "Logókép URL-je"
       },
       "faviconImageUrl": {
         "label": "A favicon képének URL-címe"
@@ -4515,14 +4515,14 @@
                 },
                 "private": {
                   "title": "Nyilvános tábla készítése",
-                  "description": "Biztosan nyilvánossá szeretnéd tenni ezt a fórumot? Ezzel a fórum mindenki számára elérhetővé válik."
+                  "description": "Biztosan nyilvánossá szeretnéd tenni ezt a táblát? Ezzel a tábla mindenki számára elérhetővé válik."
                 }
               }
             },
             "delete": {
-              "label": "Törölje ezt a táblát",
-              "description": "Ha egyszer törölsz egy táblát, nincs visszaút. Légy biztos benne.",
-              "button": "Törölje ezt a táblát",
+              "label": "Tábla törlése",
+              "description": "A tábla törlése nem vonható vissza. Biztosan folytatod?",
+              "button": "Tábla törlése",
               "confirm": {
                 "title": "Tábla törlése",
                 "description": "Biztosan törölni szeretnéd ezt a táblát? Ez véglegesen törli a táblát és annak összes tartalmát."
@@ -4543,7 +4543,7 @@
         "title": "A tábla nem található",
         "description": "A megadott tábla vagy nem található, vagy nincs hozzáférése hozzá.",
         "link": "Az összes tábla megtekintése",
-        "notice": "Ellenőrizze a hivatkozást, vagy lépjen kapcsolatba egy adminisztrátorral, ha úgy gondolja, hogy elérhetőnek kellene lennie"
+        "notice": "Ellenőrizd a hivatkozást, vagy fordulj egy rendszergazdához, ha úgy gondolod, hogy az oldalnak elérhetőnek kellene lennie."
       },
       "homeBoard": {
         "title": "Nincs kezdőlap tábla",
@@ -4591,9 +4591,9 @@
       "text": "A kért erőforrás nem található"
     },
     "error": {
-      "title": "",
-      "text": "",
-      "digest": ""
+      "title": "Az oldal nem tölthető be",
+      "text": "Váratlan hiba történt az oldal betöltésekor. A navigáció továbbra is elérhető — próbáld újratölteni az oldalt, vagy válassz egy másik részt az oldalsávon.",
+      "digest": "Hibaazonosító: {digest}"
     },
     "navbar": {
       "items": {
@@ -4601,7 +4601,7 @@
         "boards": "Táblák",
         "apps": "Alkalmazások",
         "integrations": "Integrációk",
-        "customWidgets": "",
+        "customWidgets": "Egyéni widgetek",
         "searchEngies": "Keresőmotorok",
         "medias": "Média",
         "users": {
@@ -4661,7 +4661,7 @@
         }
       },
       "board": {
-        "title": "Az Ön táblái",
+        "title": "Saját táblák",
         "action": {
           "new": {
             "label": "Új tábla"
@@ -4687,7 +4687,7 @@
             }
           },
           "duplicate": {
-            "label": "Tábla duplikálása"
+            "label": "Tábla másolása"
           },
           "delete": {
             "label": "Végleges törlés",
@@ -4807,13 +4807,13 @@
             },
             "copy": {
               "title": "Meghívó másolása",
-              "description": "A meghívód létrejött. A modális ablak bezárása után <b>ezt a linket többé nem tudod lemásolni.</b> Ha már nem szeretnéd meghívni az illetőt, bármikor törölheted ezt a meghívót.",
+              "description": "A meghívód létrejött. A párbeszédablak bezárása után <b>ezt a hivatkozást többé nem tudod kimásolni.</b> Ha mégsem szeretnéd meghívni az illetőt, bármikor törölheted a meghívót.",
               "link": "Meghívó link",
               "button": "Másolás és bezárás"
             },
             "delete": {
               "title": "Meghívó törlése",
-              "description": "Biztos, hogy törölni szeretné ezt a meghívót? Az ezzel a linkkel rendelkező felhasználók többé nem tudnak fiókot létrehozni a link használatával."
+              "description": "Biztosan törölni szeretnéd ezt a meghívót? A hivatkozással ezután már nem lehet fiókot létrehozni."
             }
           },
           "field": {
@@ -4875,7 +4875,7 @@
           "analytics": {
             "title": "Analitika",
             "general": {
-              "title": "",
+              "title": "Segíts fejleszteni a Homarrt",
               "text": "A Homarr az Umami nevű nyílt forráskódú szoftver segítségével névtelen elemzési adatokat küld. Ha ez az opció engedélyezve van, a következő adatokat gyűjtjük: a Homarr verziója, az adatbázis típusa (MySQL/PostgreSQL/SQLite), a Docker/Kubernetes állapota, az engedélyezett hitelesítési módszerek, valamint az egyes funkciók száma. Minden adat névtelen és összesített formában kerül rögzítésre – személyes adatokat, URL-eket, neveket vagy bármilyen azonosítható adatot soha nem gyűjtünk. Ez segít nyílt forráskódú fejlesztői csapatunknak a használati szokások megértésében és a fejlesztési feladatok fontossági sorrendjének meghatározásában."
             }
           },
@@ -4914,7 +4914,7 @@
               },
               "forceDisableStatus": {
                 "label": "Állapot kényszerített letiltása",
-                "description": "Az alkalmazások állapota le lesz tiltva minden felhasználó számára, és nem engedélyezhető"
+                "description": "Az alkalmazások állapotjelzése minden felhasználónál le lesz tiltva, és nem kapcsolható be."
               }
             }
           },
@@ -4972,9 +4972,9 @@
             }
           },
           "interval": {
-            "seconds": "Minden {interval, plural, =1 {másodperc} one {másodperc} other {# másodperc}}",
-            "minutes": "Minden {interval, plural, =1 {perc} one {perc} other {# perc}}",
-            "hours": "Minden {interval, plural, =1 {óra} one {óra} other {# óra}}",
+            "seconds": "Minden {interval, plural, =1 {másodperc} other {# másodperc}}",
+            "minutes": "Minden {interval, plural, =1 {perc} other {# perc}}",
+            "hours": "Minden {interval, plural, =1 {óra} other {# óra}}",
             "midnight": "Minden nap éjfélkor",
             "weeklyMonday": "Minden héten hétfőn",
             "update": {
@@ -5048,7 +5048,7 @@
           "modal": {
             "createApiToken": {
               "title": "API token létrehozva",
-              "description": "Az API token létrejött. Vigyázz, ez a token titkosítva van az adatbázisban, és soha többé nem kerül átadásra. Ha elveszíted, nem tudod visszaszerezni ezt a tokent.",
+              "description": "Az API-token létrejött. Másold ki és tárold biztonságos helyen: a token titkosítva kerül az adatbázisba, és később nem jeleníthető meg újra. Ha elveszíted, újat kell létrehoznod.",
               "button": "Másolás és bezárás"
             }
           },
@@ -5065,7 +5065,7 @@
               "modal": {
                 "delete": {
                   "title": "API token törlése",
-                  "text": "Ez véglegesen törli az API tokent. Az ezt a tokent használó API kliensek többé nem tudnak hitelesíteni és API kéréseket végrehajtani. Ez a művelet nem vonható vissza."
+                  "text": "Ezzel véglegesen törlöd az API-tokent. Az ezt használó API-kliensek többé nem tudnak hitelesíteni vagy API-kéréseket végrehajtani. A művelet nem vonható vissza."
                 }
               },
               "table": {
@@ -5178,7 +5178,7 @@
             "confirm": {
               "title": "Érzékeny adatok exportálása",
               "warningTitle": "Ez az export tartalmazza a teljes adatbázist.",
-              "warningBody": "A biztonsági mentés tartalmazza az összes felhasználót, integrációs titkot (titkosítva), API kulcsokat, tábla konfigurációkat és alkalmazásadatokat. Az exportált fájlt biztonságosan tárold, és ne oszd meg.",
+              "warningBody": "A biztonsági mentés az összes felhasználót, a titkosított integrációs titkokat, az API-kulcsokat, a táblák beállításait és az alkalmazásadatokat is tartalmazza. Tárold biztonságos helyen az exportált fájlt, és ne oszd meg másokkal.",
               "typePrompt": "Írd be, hogy \"{phrase}\" a folytatáshoz",
               "submit": "Adatbázis exportálása",
               "cancel": "Mégse"
@@ -5248,8 +5248,8 @@
               },
               "migrationsApplied": "{count} migráció alkalmazva",
               "migrationsAppliedPlural": "{count} migráció alkalmazva",
-              "migrationsOlderVersion": "Ez a biztonsági mentés egy régebbi Homarr verzióból származik. {count} séma migráció lett alkalmazva a naprakész állapothoz.",
-              "migrationsOlderVersionPlural": "Ez a biztonsági mentés egy régebbi Homarr verzióból származik. {count} séma migráció lett alkalmazva a naprakész állapothoz.",
+              "migrationsOlderVersion": "Ez a biztonsági mentés egy régebbi Homarr-verzióból származik. A rendszer {count} sémamigrációt alkalmazott a frissítéséhez.",
+              "migrationsOlderVersionPlural": "Ez a biztonsági mentés egy régebbi Homarr-verzióból származik. A rendszer {count} sémamigrációt alkalmazott a frissítéséhez.",
               "migrationsUpToDate": "Az adatbázis séma naprakész ({count} migráció alkalmazva)",
               "upToDate": "Naprakész",
               "migrationsPending": "{count} függőben"
@@ -5331,13 +5331,13 @@
     "table": {
       "updated": "Frissítve: {when}",
       "refresh": {
-        "lastUpdated": ""
+        "lastUpdated": "Legutóbbi frissítés: {when}"
       },
       "search": "Keresés {count} konténer között",
       "selected": "{selectCount} / {totalCount} konténer kiválasztva",
       "footer": "Összesen {count} konténer",
-      "totalCpu": "",
-      "totalMemory": ""
+      "totalCpu": "Teljes CPU: {cpu}%",
+      "totalMemory": "Teljes memória: {memory}"
     },
     "field": {
       "name": {
@@ -5422,7 +5422,7 @@
       },
       "remove": {
         "label": "Eltávolítás",
-        "confirm": "",
+        "confirm": "Kattints újra a végleges eltávolításhoz",
         "notification": {
           "success": {
             "title": "Konténerek eltávolítva",
@@ -5466,7 +5466,7 @@
     },
     "error": {
       "internalServerError": "Nem sikerült lekérni a Docker konténereket",
-      "noColumns": ""
+      "noColumns": "Válassz legalább egy oszlopot a widget beállításaiban"
     }
   },
   "kubernetes": {
@@ -5775,14 +5775,14 @@
         }
       },
       "custom-widgets": {
-        "label": "",
+        "label": "Egyéni widgetek",
         "new": {
-          "label": ""
+          "label": "Új"
         },
         "edit": {
-          "label": "",
+          "label": "Szerkesztés",
           "flow": {
-            "label": ""
+            "label": "Folyamat"
           }
         }
       },
@@ -5964,14 +5964,14 @@
             "title": "Preferenciák",
             "children": {
               "detail": {
-                "title": "Válassz egy preferenciát a módosításhoz",
+                "title": "Válassz egy módosítandó beállítást",
                 "backHint": "Nyomj Backspace-t vagy használd a vissza gombot a visszalépéshez",
                 "backAction": "Vissza"
               }
             },
             "notification": {
               "error": {
-                "message": "Nem sikerült frissíteni a preferenciát"
+                "message": "Nem sikerült frissíteni a beállítást"
               }
             },
             "option": {
@@ -6063,10 +6063,10 @@
                 }
               },
               "enableRightClickOnWidgets": {
-                "label": "",
+                "label": "A jobb egérgomb használatának engedélyezése a widgeteken",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "A jobb egérgomb használatának engedélyezése a widgeteken"
                   }
                 }
               },
@@ -6357,7 +6357,7 @@
         },
         "delete": {
           "title": "Keresőmotor törlése",
-          "message": "Biztosan törli a {name} keresőmotort?",
+          "message": "Biztosan törölni szeretnéd a(z) {name} keresőmotort?",
           "notification": {
             "success": {
               "title": "Keresőmotor törölve",
@@ -6432,7 +6432,7 @@
       },
       "hostnames": {
         "title": "Megbízható tanúsítvány-gazdagépnevek",
-        "description": "Egyes tanúsítványok nem engedélyezik azt a domain-t, amelyet a Homarr használ a lekérésükhöz, ezért az összes megbízható gazdagépnév és a tanúsítvány ujjlenyomatuk a korlátozások megkerülésére szolgál.",
+        "description": "Egyes tanúsítványok nem tartalmazzák azt a tartománynevet, amelyen keresztül a Homarr lekéri őket. A Homarr a megbízható állomásneveket és a hozzájuk tartozó tanúsítvány-ujjlenyomatokat használja e korlátozás megkerüléséhez.",
         "noResults": {
           "title": "Még nincsenek gazdagépnevek"
         },
@@ -6469,15 +6469,15 @@
       },
       "removeHostname": {
         "label": "Megbízható gazdagépnév eltávolítása",
-        "confirm": "Biztosan eltávolítja ezt a megbízható gazdagépnevet? Emiatt egyes integrációk leállhatnak.",
+        "confirm": "Biztosan eltávolítod ezt a megbízható állomásnevet? Emiatt egyes integrációk működése leállhat.",
         "notification": {
           "success": {
             "title": "Gazdagépnév eltávolítva",
-            "message": "A gazdagépnév sikeresen eltávolításra került"
+            "message": "Az állomásnév eltávolítása sikerült"
           },
           "error": {
-            "title": "Gazdagépnév nem lett eltávolítva",
-            "message": "A gazdagépnév nem távolítható el"
+            "title": "Az állomásnév nem lett eltávolítva",
+            "message": "Az állomásnevet nem sikerült eltávolítani"
           }
         }
       }
