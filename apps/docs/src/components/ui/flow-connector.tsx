@@ -21,9 +21,7 @@ export function FlowConnector({ label, animationDelay = 0, orientation = "respon
       {accessibleLabel}
       <span className={styles.track} aria-hidden="true">
         <span className={styles.rail} />
-        <span className={styles.origin} />
         <span className={styles.beam} />
-        <span className={styles.arrowhead} />
       </span>
     </span>
   );

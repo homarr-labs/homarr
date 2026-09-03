@@ -132,11 +132,6 @@ a.stageHeading:hover {
   white-space: nowrap;
 }
 
-.widget svg {
-  flex: none;
-  color: var(--ifm-color-primary);
-}
-
 .integration {
   display: grid;
   align-content: center;
@@ -147,49 +142,13 @@ a.stageHeading:hover {
 }
 
 .integration > svg {
-  color: var(--ifm-color-primary);
+  color: var(--diagram-muted);
 }
 
 .integration > span {
   color: var(--diagram-muted);
   font-size: 0.61rem;
   line-height: 1.35;
-}
-
-.board {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  align-content: center;
-  gap: 0.3rem;
-  min-height: 5rem;
-  padding: 0.4rem;
-  border: 1px dashed var(--diagram-line);
-  border-radius: 0.4rem;
-}
-
-.boardTile {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 0.25rem;
-  min-width: 0;
-  padding: 0.4rem;
-  border: 1px solid var(--diagram-line);
-  border-radius: 0.3rem;
-  background: var(--diagram-panel);
-  font-size: 0.55rem;
-}
-
-.boardTileWide {
-  grid-column: 1 / -1;
-}
-
-.boardTile svg:first-child {
-  color: var(--ifm-color-primary);
-}
-
-.boardTile svg:last-child {
-  color: var(--diagram-muted);
 }
 
 @media (max-width: 900px) {

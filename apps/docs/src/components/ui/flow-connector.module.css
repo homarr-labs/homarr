@@ -41,25 +41,10 @@
 .rail {
   position: absolute;
   top: 50%;
-  right: 0.38rem;
+  right: 0.18rem;
   left: 0.18rem;
   height: 2px;
   background: var(--flow-rail);
-  transform: translateY(-50%);
-}
-
-.origin {
-  position: absolute;
-  top: 50%;
-  left: 0.1rem;
-  width: 0.32rem;
-  height: 0.32rem;
-  border: 0;
-  border-radius: 50%;
-  background: var(--flow-accent);
-  box-shadow:
-    0 0 0 2px var(--diagram-panel, var(--ifm-background-surface-color)),
-    0 0 0.4rem color-mix(in srgb, var(--flow-accent) 32%, transparent);
   transform: translateY(-50%);
 }
 
@@ -76,18 +61,6 @@
   animation-delay: var(--flow-delay);
 }
 
-.arrowhead {
-  position: absolute;
-  top: 50%;
-  right: 0.02rem;
-  width: 0.54rem;
-  height: 0.68rem;
-  background: var(--flow-accent);
-  clip-path: polygon(0 0, 100% 50%, 0 100%);
-  filter: drop-shadow(0 0 0.18rem color-mix(in srgb, var(--flow-accent) 35%, transparent));
-  transform: translateY(-50%);
-}
-
 .vertical {
   min-height: 3rem;
 }
@@ -101,16 +74,10 @@
 .vertical .rail {
   top: 0.16rem;
   right: auto;
-  bottom: 0.34rem;
+  bottom: 0.16rem;
   left: 50%;
   width: 2px;
   height: auto;
-  transform: translateX(-50%);
-}
-
-.vertical .origin {
-  top: 0.08rem;
-  left: 50%;
   transform: translateX(-50%);
 }
 
@@ -121,17 +88,6 @@
   height: 48%;
   background: linear-gradient(180deg, transparent, var(--flow-coral) 46%, var(--flow-accent));
   animation-name: flow-beam-vertical;
-}
-
-.vertical .arrowhead {
-  top: auto;
-  right: auto;
-  bottom: 0.02rem;
-  left: 50%;
-  width: 0.68rem;
-  height: 0.54rem;
-  clip-path: polygon(0 0, 50% 100%, 100% 0);
-  transform: translateX(-50%);
 }
 
 .visuallyHidden {
@@ -194,16 +150,10 @@
   .connector:not(.vertical) .rail {
     top: 0.16rem;
     right: auto;
-    bottom: 0.34rem;
+    bottom: 0.16rem;
     left: 50%;
     width: 2px;
     height: auto;
-    transform: translateX(-50%);
-  }
-
-  .connector:not(.vertical) .origin {
-    top: 0.08rem;
-    left: 50%;
     transform: translateX(-50%);
   }
 
@@ -214,17 +164,6 @@
     height: 48%;
     background: linear-gradient(180deg, transparent, var(--flow-coral) 46%, var(--flow-accent));
     animation-name: flow-beam-vertical;
-  }
-
-  .connector:not(.vertical) .arrowhead {
-    top: auto;
-    right: auto;
-    bottom: 0.02rem;
-    left: 50%;
-    width: 0.68rem;
-    height: 0.54rem;
-    clip-path: polygon(0 0, 50% 100%, 100% 0);
-    transform: translateX(-50%);
   }
 }
 

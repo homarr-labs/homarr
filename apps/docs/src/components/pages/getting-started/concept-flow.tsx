@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
 import Link from "@docusaurus/Link";
-import { IconCalendarEvent, IconDownload, IconGripVertical, IconPlugConnected } from "@tabler/icons-react";
+import { IconPlugConnected } from "@tabler/icons-react";
 
 import { qBittorentIntegration } from "@site/docs/integrations/q-bittorent";
 import { sonarrIntegration } from "@site/docs/integrations/sonarr";
@@ -27,12 +27,10 @@ const services = [
 const widgets = [
   {
     name: "Calendar",
-    icon: IconCalendarEvent,
     href: "/docs/widgets/calendar",
   },
   {
     name: "Downloads",
-    icon: IconDownload,
     href: "/docs/widgets/downloads",
   },
 ];
@@ -74,34 +72,17 @@ export function ConceptFlow() {
 
         <Stage number="3" title="Widget" detail="Data and actions" href="/docs/category/widgets">
           <div className={styles.widgetList}>
-            {widgets.map((widget) => {
-              const Icon = widget.icon;
-              return (
-                <Link className={styles.widget} to={widget.href} key={widget.name}>
-                  <Icon size={17} aria-hidden="true" />
-                  <span>{widget.name}</span>
-                </Link>
-              );
-            })}
+            {widgets.map((widget) => (
+              <Link className={styles.widget} to={widget.href} key={widget.name}>
+                <span>{widget.name}</span>
+              </Link>
+            ))}
           </div>
         </Stage>
 
         <FlowConnector animationDelay={700} />
 
-        <Stage number="4" title="Board" detail="Placed in the grid" href="/docs/management/boards">
-          <div className={styles.board} aria-hidden="true">
-            <span className={styles.boardTile}>
-              <IconCalendarEvent size={14} />
-              Calendar
-              <IconGripVertical size={13} />
-            </span>
-            <span className={`${styles.boardTile} ${styles.boardTileWide}`}>
-              <IconDownload size={14} />
-              Downloads
-              <IconGripVertical size={13} />
-            </span>
-          </div>
-        </Stage>
+        <Stage number="4" title="Board" detail="Placed in the grid" href="/docs/management/boards" />
       </div>
     </figure>
   );
@@ -118,7 +99,7 @@ function Stage({
   title: string;
   detail: string;
   href?: string;
-  children: ReactNode;
+  children?: ReactNode;
 }) {
   const heading = (
     <>
