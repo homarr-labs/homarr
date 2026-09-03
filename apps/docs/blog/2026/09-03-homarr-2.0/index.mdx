@@ -1,0 +1,219 @@
+---
+title: "Homarr 2.0.0: our biggest upgrade yet"
+authors:
+  - ajnart
+  - manuel-rw
+  - tagashi
+  - meierschlumpf
+tags: [homarr, update, version, assistant, custom widgets, dashboards, docker]
+draft: true
+---
+
+Homarr 2.0 is our biggest upgrade so far. It keeps the same job: put your apps, services, and status on one dashboard.
+
+We rebuilt the parts that had become difficult to extend: boards, Custom Widgets, Docker discovery, Assistant, and MCP.
+
+![A populated Homarr 2.0 dashboard with compact widgets, an Assistant, and an application rail](./img/homarr-v2-dashboard.webp)
+
+<!-- truncate -->
+
+:::warning Back up before upgrading
+
+Create a [Homarr backup](/docs/management/backup) and copy your application data before starting 2.0. Do not test a prerelease image on the only copy of your production volume. Backups are boring. Restores are worse.
+
+:::
+
+## Boards
+
+### Brand new drag and drop
+
+We re-thought drag and drop from the ground up and switched to [`dnd-kit`](https://dndkit.com/). Moves and eight-direction resizes are transactional: Homarr calculates a preview, checks collisions, and commits only a valid layout.
+
+Invalid or cancelled moves roll back. The same engine handles the main grid, rails, and nested Containers with pointer, touch, or keyboard input.
+
+![A Calendar tile moving across the rebuilt Homarr 2.0 board grid](./img/drag-and-drop.gif)
+
+### Goodbye Groups and sections, welcome Containers
+
+Groups and dynamic sections overlapped. Containers replace both with one model for apps, widgets, and nested Containers. They can be moved, resized, collapsed, scrolled, labeled, or configured to open their apps together.
+
+### Move multiple items at once
+
+Hold <kbd>Ctrl</kbd> on Windows or Linux, or <kbd>Command</kbd> on macOS, to select several items. Copy, delete, or move the selection to the main grid, a rail, or a Container. The move is saved only when every item fits.
+
+![Three selected board items with the batch Move menu offering the main canvas and right rail](./img/batch-move.webp)
+
+### Responsive layouts for the same board
+
+Each board has protected Base and Mobile layouts, with optional breakpoints between them. Homarr selects the highest matching breakpoint and scales the complete layout instead of changing widget proportions.
+
+**Reset from Base** generates a Mobile starting point without duplicating the board. Desktop layouts can reserve one to three columns as rails; Mobile places those items back in the main flow.
+
+![The responsive layout editor beside the same Homarr board rendered at a mobile viewport](./img/responsive-layouts.webp)
+
+### A visual board switcher
+
+The board switcher is now a searchable gallery with keyboard navigation. Open it from the header or press <kbd>Shift</kbd> + <kbd>C</kbd>.
+
+![A visual board card inside the searchable Homarr board switcher](./img/board-switcher.webp)
+
+### Configure your header
+
+The Header studio arranges built-in controls across left, center, and right areas. Logo, search, board, Assistant, Docker, editing, settings, theme, and account controls are available. A recovery control remains when the normal header is hidden.
+
+![The Header studio showing left, center, and right zones plus available controls](./img/header-studio.webp)
+
+### Add content without leaving the board
+
+The board menu creates widgets, apps, integrations, and Containers without opening a management page. Compatible integrations stay in the same flow, apps have Quick Add, and Workshop sits beside Custom Widgets.
+
+![The board's Add content menu offering a widget, app, integration, or Container](./img/add-content-menu.webp)
+
+Small destructive actions can use a second click for confirmation; higher-risk actions keep a full dialog.
+
+Read the [board guide](/docs/management/boards) for layout rules, rails, Containers, and keyboard controls.
+
+## Search, Assistant, and MCP
+
+### One command menu
+
+Press <kbd>Cmd</kbd>/<kbd>Ctrl</kbd> + <kbd>K</kbd> to search Homarr resources, pages, settings, users, groups, and commands. Assistant, media, and web providers can add results. Homarr results rank first, and create actions follow your permissions.
+
+![The Homarr 2.0 command menu opening and returning mixed results for an Assistant query](./img/command-menu.gif)
+
+### Assistant inside Homarr
+
+Assistant is available from boards, the command menu, and the user menu. It reads live Homarr data and uses tools for boards, apps, integrations, widgets, Docker, and supported services.
+
+Tool calls use the signed-in user's permissions. Read-only calls can run automatically; changes require approval by default. Provider credentials stay encrypted on the server. Providers, models, attachments, mentions, sources, usage, and private history are supported. Workshop also provides a community-funded provider.
+
+![The Homarr Assistant expanded over a live dashboard with health, exploration, media, and board actions](./img/assistant-control-surface.webp)
+
+### Connect external clients with MCP
+
+Homarr now exposes a stateless MCP server at `/api/mcp`. It implements MCP `2026-07-28` and accepts 2025 Streamable HTTP clients. The older `/api/mcp/mcp` path remains as an alias; the removed HTTP+SSE routes return `410 Gone`.
+
+Authenticate with an API key or OAuth 2.1 with PKCE. Tools cover boards, apps, integrations, Docker, Kubernetes, media, downloads, DNS, and Custom Widget authoring. The catalog returned by `tools/list` follows the current release and the authenticated user's permissions; confirmations still apply to changes.
+
+![Homarr's AI and MCP management page with authentication and Streamable HTTP client configuration](./img/mcp-management.webp)
+
+See [Assistant setup](/docs/management/assistant) and the [MCP guide](/docs/management/mcp).
+
+## Custom Widgets v2
+
+### A proper workbench
+
+We rebuilt the editor around the `homarr-custom-widget-v2` schema. API sources, requests, options, JSX, validation, and preview now share one workspace. Explicit preview generation prevents stale requests from replacing newer work, with three sizes and Live, Loading, Empty, and Error states.
+
+![The Custom Widget v2 workbench after a live exchange-rate request successfully renders its preview](./img/custom-widget-workbench.webp)
+
+### Server-side requests and actions
+
+A widget can use several fixed-origin API sources with separately encrypted credentials. Load requests support caching and manual or automatic refreshes. `ActionButton` and `ToggleSwitch` can run GET, POST, PUT, PATCH, and DELETE actions with confirmation, feedback, rollback, and query invalidation.
+
+![A Custom Widget v2 request configured as a permission-checked POST action with body and refresh controls](./img/custom-widget-post-action.webp)
+
+Widgets can expose saved controls for text, numbers, toggles, selections, sliders, dates, colors, icons, URLs, time zones, and JSON. Values feed request paths, query parameters, and nested JSON bodies, while select choices can come from another request.
+
+Host validation, redirect checks, timeouts, response limits, request budgets, permissions, and rate limits constrain requests. Custom Widgets remain **Beta** in 2.0.
+
+### Share through Workshop
+
+Workshop lets you publish, install, update, vote on, report, and share Custom Widgets and CSS. Submission screenshots now open in a keyboard-accessible viewer with thumbnails and zoom.
+
+The workbench can also generate a credential-free prompt for AI-assisted authoring. Deployment URLs and credentials stay in your Homarr instance.
+
+![The Community Workshop catalog inside Custom Widget management](./img/community-workshop.webp)
+
+Read the [Custom Widgets guide](/docs/management/custom-widgets) and [request security reference](/docs/management/custom-widgets/requests-and-security).
+
+## Widgets
+
+### Advanced views without larger tiles
+
+Supported widgets expand by Shift-hover, keyboard, or context menu. Preview the advanced view or pin it while the board becomes inactive. Widgets opt in explicitly, so compact tiles remain the default elsewhere.
+
+![The Download Client advanced view with transfer totals, filters, status, and per-item detail](./img/advanced-downloads.webp)
+
+### Settings with a live preview
+
+Widget settings now combine live preview, grouped options, and in-place app or integration editing. Weather and Clock were redesigned; Air Quality, Countdown, and Timer were added.
+
+Notebook gained collapsible sections and table controls for rows, columns, headers, cell colors, merging, and splitting. Health Monitoring now renders CPU usage, CPU temperature, memory, and GPU utilization as threshold-colored gauges.
+
+## Setup, sign-in, and Docker
+
+### One onboarding flow
+
+The six-stage setup studio discovers Docker-compatible services, prepares app and integration drafts, and creates the first board in one transaction.
+
+![The Homarr 2.0 setup studio on its Essentials step, with all six setup stages shown](./img/onboarding-studio.webp)
+
+### Branded sign-in and better external authentication
+
+Login pages use the name, logo, background, greeting, colors, and corner style configured for the instance.
+
+![The upgraded Homarr login page with a branded backdrop and centered account card](./img/new-login.webp)
+
+LDAP can provision a Homarr user on first sign-in. OIDC uses its Auth.js adapter, can link a verified email to an existing credentials account when enabled, and can synchronize external membership into existing Homarr groups. Exact behavior depends on the provider.
+
+### Multiple Docker and Podman endpoints
+
+`DOCKER_ENDPOINTS` defines Docker or Podman hosts with separate transports and capabilities. Healthy endpoint inventory remains available when another endpoint fails. Assisted setup compares containers with existing resources, suggests apps and integrations, and derives likely URLs.
+
+![Assisted Docker setup listing discovered services that can become apps or integrations](./img/docker-assisted-setup.webp)
+
+### Create Homarr content from container labels
+
+`homarr.name` and `homarr.href` identify a service. Optional `homarr.*` labels add integrations, place content in Containers, select widgets, set icons and health checks, keep stable IDs, and target a board.
+
+When `homarr.name` is absent, Homarr can use Homepage's `name`, `href`, `group`, `icon`, and `description` labels. Both `homepage.name` and `homepage.href` are required, and Homarr does not combine partial metadata from the two formats.
+
+See the [Docker label reference](/docs/integrations/docker-labels) for the exact fields and required combinations.
+
+## Permissions and appearance
+
+### Permissions you can inspect
+
+Group permissions now use a matrix with Viewer, Editor, and Admin presets. Access levels and create permissions are separate, with inherited and effective permissions shown before saving.
+
+![The Editor permission preset showing explicit board, app, integration, search, media, and administration scopes](./img/permission-matrix.webp)
+
+App, integration, and home-stat data are filtered on the server. Management navigation, API procedures, Assistant, and MCP use the same permission model.
+
+### Instance branding and global CSS
+
+Server branding now covers the application name, logo, favicon, colors, board accent behavior, and corner styles.
+
+![Instance branding controls for application identity, palette, corner style, and global CSS](./img/instance-branding.webp)
+
+Authentication pages add background, overlay, greeting, and visibility controls. Global CSS applies across the instance; board CSS is more specific and wins later in the cascade.
+
+![The global CSS editor, authentication appearance controls, and current branding summary](./img/global-css-and-auth.webp)
+
+Global CSS is not a security sandbox. Only trusted administrators should control it. See [Styling](/docs/advanced/styling) and [Server settings](/docs/management/settings).
+
+## Less waiting and duplicate work
+
+Board startup now runs independent session, layout, and widget-prefetch work in parallel. Spotlight, editors, media, and other heavy surfaces load only when opened. Drag previews and Custom Widget analysis update without re-rendering the complete page.
+
+Identical integration requests share in-flight work. Bounded in-process and Redis-backed caches coordinate responses and refresh locks across processes, while stale data can remain visible during a temporary upstream failure. Eligible public widget data can also return from the session cache while it refreshes.
+
+For release hardening, we also applied the current Auth.js, `protobufjs`, and production dependency security patches.
+
+## Before upgrading
+
+- Keep a backup and use the final release image, not a prerelease tag.
+- Legacy Custom JSX definitions enter an explicit migration state. Homarr keeps encrypted credentials and an archived copy until the v2 definition validates.
+- Mobile layouts place rail content in the main flow instead of displaying rails.
+- Custom Widgets remain Beta.
+- Assistant and MCP never bypass user, API-key, integration, or Docker endpoint permissions.
+
+## Links
+
+- Try the [Homarr 2.0 preview](https://app-v2.preview.homarr.dev).
+- Follow the [v2 release pull request](https://github.com/homarr-labs/homarr/pull/6545) and [public beta thread](https://github.com/homarr-labs/homarr/issues/6600).
+- Compare [v1.76.2 with the release/v2 branch](https://github.com/homarr-labs/homarr/compare/v1.76.2...release/v2).
+- Read the guides for [Boards](/docs/management/boards), [Custom Widgets](/docs/management/custom-widgets), [Assistant](/docs/management/assistant), [MCP](/docs/management/mcp), and [Docker labels](/docs/integrations/docker-labels).
+
+{/* Editorial release gate: set draft to false, update the dated path if needed, replace the branch comparison with the v2.0.0 tag, and verify the production image and migration notes before publishing. */}
