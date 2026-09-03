@@ -157,10 +157,7 @@ export const SystemHealthMonitoring = ({
                     onClick={() => setOpenedIntegrationId(integrationId)}
                     aria-label={t("popover.information")}
                   >
-                    <IconInfoCircle
-                      className="health-monitoring-information-icon"
-                      style={zoomCompensatedSize(30)}
-                    />
+                    <IconInfoCircle className="health-monitoring-information-icon" style={zoomCompensatedSize(30)} />
                   </ActionIcon>
                 </Indicator>
                 <Modal
@@ -177,20 +174,34 @@ export const SystemHealthMonitoring = ({
                 </Modal>
               </Box>
               <Flex className="health-monitoring-information-card-elements" justify="center" align="center" wrap="wrap">
-                {showCpu && <CpuRing cpuUtilization={healthInfo.cpuUtilization} isTiny={isTiny} />}
                 {showCpu && (
-                  <CpuTempRing fahrenheit={options.fahrenheit} cpuTemp={healthInfo.cpuTemp} isTiny={isTiny} />
+                  <CpuRing cpuUtilization={healthInfo.cpuUtilization} isTiny={isTiny} ariaLabel={t("gauge.cpuUsage")} />
+                )}
+                {showCpu && (
+                  <CpuTempRing
+                    fahrenheit={options.fahrenheit}
+                    cpuTemp={healthInfo.cpuTemp}
+                    isTiny={isTiny}
+                    ariaLabel={t("gauge.cpuTemperature")}
+                  />
                 )}
                 {showMemory && (
                   <MemoryRing
                     available={healthInfo.memAvailableInBytes}
                     used={healthInfo.memUsedInBytes}
                     isTiny={isTiny}
+                    ariaLabel={t("gauge.memoryUsage")}
                   />
                 )}
                 {showGpu &&
                   healthInfo.gpu.map((gpu) => (
-                    <GpuRing key={gpu.gpuId} gpu={gpu} isTiny={isTiny} fahrenheit={options.fahrenheit} />
+                    <GpuRing
+                      key={gpu.gpuId}
+                      gpu={gpu}
+                      isTiny={isTiny}
+                      fahrenheit={options.fahrenheit}
+                      ariaLabel={t("gauge.gpuUsage", { name: gpu.name })}
+                    />
                   ))}
               </Flex>
               {isAdvanced && (

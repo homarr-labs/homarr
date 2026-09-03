@@ -1,4 +1,5 @@
-import { Center, RingProgress, Stack, Text, Tooltip } from "@mantine/core";
+import { GaugeChart } from "@mantine/charts";
+import { Center, Stack, Text, Tooltip } from "@mantine/core";
 import { IconDeviceDesktop } from "@tabler/icons-react";
 
 import { zoomCompensatedSize } from "@homarr/ui";
@@ -16,9 +17,10 @@ interface GpuRingProps {
   };
   isTiny: boolean;
   fahrenheit: boolean;
+  ariaLabel: string;
 }
 
-export const GpuRing = ({ gpu, isTiny, fahrenheit }: GpuRingProps) => {
+export const GpuRing = ({ gpu, isTiny, fahrenheit, ariaLabel }: GpuRingProps) => {
   const tempDisplay =
     gpu.temperature != null
       ? fahrenheit
@@ -40,11 +42,17 @@ export const GpuRing = ({ gpu, isTiny, fahrenheit }: GpuRingProps) => {
       }
       multiline
     >
-      <RingProgress
+      <GaugeChart
         className={`health-monitoring-gpu health-monitoring-gpu-${gpu.gpuId}`}
+        aria-label={ariaLabel}
         roundCaps
         size={isTiny ? 50 : 100}
         thickness={isTiny ? 4 : 8}
+        startAngle={0}
+        endAngle={360}
+        value={Number(gpu.processorUtilization.toFixed(2))}
+        valueFormatter={(value) => `${value.toFixed(0)}%`}
+        filledColor={progressColor(Number(gpu.processorUtilization.toFixed(2)))}
         label={
           <Center style={{ flexDirection: "column" }}>
             <Text
@@ -57,12 +65,6 @@ export const GpuRing = ({ gpu, isTiny, fahrenheit }: GpuRingProps) => {
             />
           </Center>
         }
-        sections={[
-          {
-            value: Number(gpu.processorUtilization.toFixed(2)),
-            color: progressColor(Number(gpu.processorUtilization.toFixed(2))),
-          },
-        ]}
       />
     </Tooltip>
   );

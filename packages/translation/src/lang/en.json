@@ -1204,9 +1204,14 @@
     "importCss": "Import CSS from Workshop",
     "importCssConfirm": "Replace the current custom CSS with \"{title}\"? Nothing is saved until you save the board settings.",
     "screenshotAlt": "{title} screenshot {count, number}",
+    "screenshotViewer": "{title} screenshot viewer",
+    "screenshotsLabel": "{title} screenshots",
     "zoomScreenshot": "View full size",
     "previousScreenshot": "Previous screenshot",
     "nextScreenshot": "Next screenshot",
+    "showScreenshotThumbnails": "Show screenshot thumbnails",
+    "hideScreenshotThumbnails": "Hide screenshot thumbnails",
+    "closeScreenshotViewer": "Close screenshot viewer",
     "technicalDetails": "Technical details",
     "sourceCode": "Workshop entry",
     "export": "Export",
@@ -1785,6 +1790,9 @@
       "copy": "Copy",
       "copied": "Copied",
       "refresh": "Refresh"
+    },
+    "pagination": {
+      "pageOf": "Page {page} of {totalPages}"
     },
     "here": "here",
     "serviceUrlTemplate": {
@@ -2776,6 +2784,9 @@
         "directionRtl": "Set text direction right to left",
         "blockquote": "Blockquote",
         "horizontalLine": "Horizontal line",
+        "details": "Toggle collapsible section",
+        "expandDetails": "Expand collapsible section",
+        "collapseDetails": "Collapse collapsible section",
         "bulletList": "Bullet list",
         "orderedList": "Ordered list",
         "checkList": "Check list",
@@ -2784,16 +2795,20 @@
         "link": "Link",
         "unlink": "Remove link",
         "image": "Embed Image",
-        "addTable": "Add table",
-        "deleteTable": "Delete Table",
+        "insertTable": "Insert table",
+        "insertTableSize": "Insert {columns} × {rows} table",
+        "deleteTable": "Delete table",
         "colorCell": "Color Cell",
-        "mergeCell": "Toggle cell merging",
+        "mergeCells": "Merge cells",
+        "splitCell": "Split cell",
         "addColumnLeft": "Add column before",
         "addColumnRight": "Add column after",
         "deleteColumn": "Delete column",
         "addRowTop": "Add row before",
         "addRowBelow": "Add row after",
-        "deleteRow": "Delete row"
+        "deleteRow": "Delete row",
+        "toggleHeaderRow": "Toggle header row",
+        "toggleHeaderColumn": "Toggle header column"
       },
       "align": {
         "left": "Left",
@@ -2804,8 +2819,6 @@
         "clearColor": "Clear color",
         "source": "Source",
         "widthPlaceholder": "Value in % or pixels",
-        "columns": "Columns",
-        "rows": "Rows",
         "width": "Width",
         "height": "Height"
       },
@@ -3249,6 +3262,12 @@
         "updatesAvailable": "{count, plural, one {# update available} other {# updates available}}",
         "rebootRequired": "Reboot required",
         "rebootNotRequired": "No reboot required"
+      },
+      "gauge": {
+        "cpuUsage": "CPU usage",
+        "cpuTemperature": "CPU temperature",
+        "memoryUsage": "Memory usage",
+        "gpuUsage": "{name} GPU usage"
       },
       "error": {
         "internalServerError": "Failed to fetch health status"

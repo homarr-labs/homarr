@@ -1,21 +1,19 @@
 "use client";
 
 import {
-  ActionIcon,
+  ActionBar,
   Avatar,
   Button,
-  Divider,
   Group,
   HoverCard,
   Menu,
-  Paper,
   ScrollArea,
   Stack,
   Text,
   Tooltip,
   UnstyledButton,
 } from "@mantine/core";
-import { IconCheck, IconClipboard, IconCopy, IconFolderShare, IconTrash, IconX } from "@tabler/icons-react";
+import { IconCheck, IconClipboard, IconCopy, IconFolderShare, IconTrash } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
@@ -129,24 +127,29 @@ export const BoardSelectionToolbar = () => {
   ];
 
   return (
-    <Paper
+    <ActionBar
+      opened
+      onClose={clearSelection}
+      closeOnEscape
       withBorder
       shadow="xl"
       radius="xl"
       p="xs"
+      position={{ bottom: 28, left: 0, right: 0 }}
+      zIndex={1000}
+      aria-label={tSelection("summary", { count: sortedSelectedItems.length })}
       bg="light-dark(var(--mantine-color-body), var(--mantine-color-dark-7))"
       style={{
-        position: "fixed",
-        bottom: 28,
-        left: "50%",
-        transform: "translateX(-50%)",
-        zIndex: 1000,
         width: "max-content",
         maxWidth: "calc(100vw - 1rem)",
         boxShadow: "0 12px 40px rgba(0, 0, 0, 0.28)",
         backdropFilter: "blur(14px)",
         border: "1px solid var(--mantine-color-default-border)",
-        animation: "slideUp 200ms cubic-bezier(0.4, 0, 0.2, 1) forwards",
+      }}
+      transitionProps={{
+        transition: "slide-up",
+        duration: 200,
+        timingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
       }}
     >
       <Group gap="xs" wrap="nowrap">
@@ -220,7 +223,7 @@ export const BoardSelectionToolbar = () => {
           </HoverCard.Dropdown>
         </HoverCard>
 
-        <Divider orientation="vertical" />
+        <ActionBar.Divider />
 
         {/* Actions */}
         <Group gap="xs" wrap="nowrap" style={{ flexShrink: 0 }}>
@@ -279,18 +282,10 @@ export const BoardSelectionToolbar = () => {
           </Button>
 
           <Tooltip label={tSelection("clearShortcut")} withArrow>
-            <ActionIcon
-              size="sm"
-              variant="subtle"
-              color="gray"
-              onClick={clearSelection}
-              aria-label={tSelection("clear")}
-            >
-              <IconX size={14} />
-            </ActionIcon>
+            <ActionBar.CloseButton size="sm" variant="subtle" aria-label={tSelection("clear")} />
           </Tooltip>
         </Group>
       </Group>
-    </Paper>
+    </ActionBar>
   );
 };

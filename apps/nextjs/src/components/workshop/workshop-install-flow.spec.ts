@@ -94,6 +94,11 @@ describe("Workshop widget install flow", () => {
 
     expect(screenshots).toContain("1200x800");
     expect(screenshots).toContain("zoomScreenshot");
+    expect(screenshots).toContain('import { Lightbox } from "@mantine/lightbox"');
+    expect(screenshots).toContain("withThumbnails");
+    expect(screenshots).toContain("withZoom");
+    expect(screenshots).toContain("withKeyboardEvents");
+    expect(screenshots).not.toMatch(/<Modal\b/u);
     expect(detail).toContain("WorkshopScreenshots");
   });
 

@@ -65,6 +65,7 @@
     "@mantine/dropzone": "catalog:",
     "@mantine/form": "catalog:",
     "@mantine/hooks": "catalog:",
+    "@mantine/lightbox": "catalog:",
     "@mantine/modals": "catalog:",
     "@mantine/notifications": "catalog:",
     "@mantine/tiptap": "catalog:",

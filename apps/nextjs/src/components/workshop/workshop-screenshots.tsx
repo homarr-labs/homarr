@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { ActionIcon, Box, Group, Image, Modal, Paper, Tooltip, UnstyledButton } from "@mantine/core";
+import { ActionIcon, Box, Group, Image, Paper, Tooltip, UnstyledButton } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { Lightbox } from "@mantine/lightbox";
 import { IconChevronLeft, IconChevronRight, IconZoomIn } from "@tabler/icons-react";
 
 import { useI18n } from "@homarr/translation/client";
@@ -26,11 +27,18 @@ export function WorkshopScreenshots({ client, submissionId, title, screenshots }
 
   if (screenshots.length === 0) return null;
 
-  const active = screenshots[Math.min(index, screenshots.length - 1)];
+  const currentIndex = Math.min(index, screenshots.length - 1);
+  const active = screenshots[currentIndex];
   if (!active) return null;
 
   const alt = (position: number) => t("screenshotAlt", { title, count: position + 1 });
   const step = (delta: number) => setIndex((current) => (current + delta + screenshots.length) % screenshots.length);
+  const slides = screenshots.map((file, position) => ({
+    src: client.fileUrl(submissionId, file),
+    thumbSrc: client.fileUrl(submissionId, file, "192x128"),
+    alt: alt(position),
+    caption: alt(position),
+  }));
 
   return (
     <>
@@ -38,7 +46,7 @@ export function WorkshopScreenshots({ client, submissionId, title, screenshots }
         <UnstyledButton onClick={zoomControls.open} w="100%" aria-label={t("zoomScreenshot")}>
           <Image
             src={client.fileUrl(submissionId, active, "1200x800")}
-            alt={alt(index)}
+            alt={alt(currentIndex)}
             fit="contain"
             h={{ base: 220, sm: 380 }}
             bg="var(--mantine-color-default-hover)"
@@ -97,7 +105,7 @@ export function WorkshopScreenshots({ client, submissionId, title, screenshots }
               key={file}
               onClick={() => setIndex(position)}
               aria-label={alt(position)}
-              aria-pressed={position === index}
+              aria-pressed={position === currentIndex}
             >
               <Box
                 w={96}
@@ -106,10 +114,10 @@ export function WorkshopScreenshots({ client, submissionId, title, screenshots }
                   overflow: "hidden",
                   borderRadius: "var(--mantine-radius-sm)",
                   outline:
-                    position === index
+                    position === currentIndex
                       ? "2px solid var(--mantine-primary-color-filled)"
                       : "1px solid var(--mantine-color-default-border)",
-                  opacity: position === index ? 1 : 0.65,
+                  opacity: position === currentIndex ? 1 : 0.65,
                 }}
               >
                 <Image src={client.fileUrl(submissionId, file, "192x128")} alt="" h={64} w={96} fit="cover" />
@@ -119,23 +127,30 @@ export function WorkshopScreenshots({ client, submissionId, title, screenshots }
         </Group>
       )}
 
-      <Modal
+      <Lightbox
         opened={zoomOpened}
         onClose={zoomControls.close}
-        size="auto"
-        centered
-        padding="xs"
-        title={alt(index)}
-        styles={{ body: { display: "flex", justifyContent: "center" } }}
-      >
-        <Image
-          src={client.fileUrl(submissionId, active)}
-          alt={alt(index)}
-          fit="contain"
-          mah="80dvh"
-          style={{ maxWidth: "min(90vw, 1400px)" }}
-        />
-      </Modal>
+        slides={slides}
+        currentIndex={currentIndex}
+        onIndexChange={setIndex}
+        withNavigation={screenshots.length > 1}
+        withThumbnails={screenshots.length > 1}
+        withZoom
+        withKeyboardEvents
+        returnFocus
+        loop={screenshots.length > 1}
+        labels={{
+          lightboxLabel: t("screenshotViewer", { title }),
+          slideLabel: (position) => alt(position - 1),
+          slidesLabel: t("screenshotsLabel", { title }),
+          thumbnailLabel: (position) => alt(position - 1),
+          previousSlideLabel: t("previousScreenshot"),
+          nextSlideLabel: t("nextScreenshot"),
+          showThumbnailsLabel: t("showScreenshotThumbnails"),
+          hideThumbnailsLabel: t("hideScreenshotThumbnails"),
+          closeLabel: t("closeScreenshotViewer"),
+        }}
+      />
     </>
   );
 }

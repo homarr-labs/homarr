@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { AreaChart, ChartTooltip } from "@mantine/charts";
 import { Stack, useMantineTheme } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
-import { ReferenceLine, XAxis } from "recharts";
+import { XAxis } from "recharts";
 
 import { useRequiredBoard } from "@homarr/boards/context";
 import type { SpeedtestTrackerResult } from "@homarr/integrations/types";
@@ -237,6 +237,13 @@ function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResul
         width: 50,
         tick: { fontSize: 10 },
       }}
+      referenceLines={xTicks.map((tickTs) => ({
+        x: tickTs,
+        yAxisId: "left",
+        stroke: "var(--mantine-color-dimmed)",
+        strokeDasharray: "3 3",
+        strokeOpacity: 0.35,
+      }))}
       tooltipProps={{
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         content: (props: any) => {
@@ -269,16 +276,6 @@ function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResul
         tickLine={false}
         interval={0}
       />
-      {xTicks.map((tickTs) => (
-        <ReferenceLine
-          key={tickTs}
-          x={tickTs}
-          yAxisId="left"
-          stroke="var(--mantine-color-dimmed)"
-          strokeDasharray="3 3"
-          strokeOpacity={0.35}
-        />
-      ))}
     </AreaChart>
   );
 }
@@ -349,6 +346,13 @@ function PingHistoryChart({ results, height }: { results: SpeedtestTrackerResult
         width: 50,
         tick: { fontSize: 10 },
       }}
+      referenceLines={xTicks.map((tickTs) => ({
+        x: tickTs,
+        yAxisId: "left",
+        stroke: "var(--mantine-color-dimmed)",
+        strokeDasharray: "3 3",
+        strokeOpacity: 0.35,
+      }))}
       tooltipProps={{
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         content: (props: any) => {
@@ -367,17 +371,6 @@ function PingHistoryChart({ results, height }: { results: SpeedtestTrackerResult
           );
         },
       }}
-    >
-      {xTicks.map((tickTs) => (
-        <ReferenceLine
-          key={tickTs}
-          x={tickTs}
-          yAxisId="left"
-          stroke="var(--mantine-color-dimmed)"
-          strokeDasharray="3 3"
-          strokeOpacity={0.35}
-        />
-      ))}
-    </AreaChart>
+    />
   );
 }
