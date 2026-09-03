@@ -6,72 +6,53 @@ tags:
   - Administration
 ---
 
+import { AssistantFlowDiagram } from "@site/src/components/pages/core-concepts/technical-diagrams";
+
 # Assistant
 
-Assistant can answer questions and manage Homarr for you. It uses the signed-in user's permissions and asks for
-approval before making changes.
+Assistant answers questions and operates Homarr through the signed-in user's permissions. Read-only tools can run
+automatically; changes require approval by default.
 
-![Assistant conversation with suggested prompts](/img/assistant/conversation.png)
+![The Assistant management page](./img/assistant.png)
 
-## Set it up
+## Request flow
 
-Open **Management → Assistant**.
+<AssistantFlowDiagram />
 
-![Assistant provider, credentials, and model configuration](/img/assistant/configuration.png)
+## Configuration
 
-1. Select a provider and check its API URL.
-2. Enter an API key when required, then save the connection.
-3. Refresh the model list and select a model.
-4. Enable the assistant and save.
+Under **Management → Assistant**, select a provider, configure its API URL and key when required, select the default
+model, and enable Assistant. Users can choose another available model for a conversation.
 
-Choose a provider preset or use **Custom endpoint** with an OpenAI-compatible Chat Completions API. The
-[Homarr provider](../workshop/homarr-provider) is the default and needs no administrator API key. The Homarr team pays
-for a limited number of Assistant uses for each user every day; users sign in to the Community Workshop to use them.
+Provider presets cover common APIs. **Custom endpoint** accepts an OpenAI-compatible Chat Completions API. For a model
+server outside the Homarr container, use a hostname that the container can resolve instead of `localhost`.
 
-:::info Local model servers
+The [Homarr provider](../workshop/homarr-provider) is available through the Community Workshop without an administrator
+API key and has a daily request allowance.
 
-Inside a container, `localhost` means the Homarr container. Use the model server's container name, local DNS name, or
-host gateway address.
+## Access
 
-:::
+Open Assistant from the user menu, with `Shift+A`, from search with `Cmd/Ctrl+/`, or through the
+[Assistant widget](../widgets/assistant).
 
-## Use it
+Assistant can work with boards, apps, integrations, widgets, Custom Widgets, and supported connected services. Mention
+Homarr resources with `@`; the model loads additional live context only when needed.
 
-- Select **Assistant** in the user menu or press `Shift + A`.
-- Press `Cmd/Ctrl + /` to ask from search, or use `Cmd/Ctrl + K` and choose the Assistant fallback.
-- Add the [Assistant widget](../widgets/assistant) to a board.
+Conversations are stored per user and can be searched, renamed, exported, or deleted.
 
-The assistant can work with boards, apps, integrations, widgets, Custom Widgets, and connected services. Use `@` to
-add Homarr items as context, `/` for shortcuts, and the paperclip for supported files.
+## Permissions and data
 
-Use **Conversations** to search, switch, rename, export, or delete threads.
+- Every tool call uses the current user's Homarr permissions.
+- Automatic approvals apply only to the current conversation and reset when switching conversations.
+- Provider keys and custom headers are encrypted and are not returned to the browser.
+- Prompts, attachments, tool definitions, and tool results are sent to the selected model provider.
 
-Each request includes the user's name, current page and board, home board, server time, browser time zone, and only
-explicitly mentioned Homarr entities. Live status is fetched only when needed. The full Homarr tool catalog remains
-available server-side, while the model receives a small relevant subset and can discover another capability on demand.
-
-When web search is enabled, Assistant uses bounded search context and prefers primary documentation. Custom Widget
-authoring starts with a compact skill and template validator, then discovers schema, preview, reference, and component
-tools only when the task needs them. A response-driven JSX correction revises the existing preview without resending
-its manifest; Homarr then requires fresh query and simulated-action evidence for that preview revision before saving.
-
-## Permissions and privacy
-
-- Read-only actions can run automatically. Changes require approval by default. Automatic approvals apply only to the
-  current conversation, turn off when you switch conversations, and never answer questions for you.
-- Homarr permissions apply to every tool call and mentioned item.
-- API keys and custom headers are encrypted and never returned to the browser.
-- Conversations are stored per user and can be exported or deleted.
-
-Prompts, attachments, tool definitions, and tool results are sent to the selected model provider. Review that
-provider's privacy policy before enabling the assistant.
+See [MCP](./mcp) to connect an external AI client and
+[Custom Widget agent authoring](./custom-widgets/agent-authoring) for widget generation.
 
 ## Troubleshooting
 
-- **No models found:** check the base URL, model discovery path, and API key. You can enter a model ID manually.
+- **No models found:** check the API URL, discovery path, and API key, or enter a model ID manually.
 - **Assistant is unavailable:** enable it and save the configuration.
-- **Tool calls stop:** select a model that supports streaming and tool calls.
-- **Local endpoint is unreachable:** check container networking and the server's listen address.
-
-See [MCP](./mcp) for external AI clients and [Custom Widget agent authoring](./custom-widgets/agent-authoring) for the
-widget authoring workflow.
+- **Tool calls stop:** use a model that supports streaming and tool calls.
+- **Local endpoint is unreachable:** check container DNS, routing, and the model server's listen address.

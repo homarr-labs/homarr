@@ -6,134 +6,52 @@ tags:
   - Interface
 ---
 
-Using the Homarr API, you can interface with the application with your own code and business logic.
-It enables you to trigger almost all actions that you can perform from the Homarr UI.
-With the API, you can build resilient systems that automatically update Homarr with data - for example syncing it with
-your deployments in a cluster or dynamically adding integrations depending on how many replicas you run.
+Homarr exposes OpenAPI and tRPC endpoints for automation. Open the generated specification under
+**Management → Tools → API** or use the [interactive API reference](/api-reference).
 
-This page is language-neutral, and you must implement the API on your own in your desired language.
-It requires you to know your programming language well and have a basic understanding of HTTP, JSON and networking.
-You can test out API endpoints using any OpenAPI client - for example [Yaak](https://yaak.app/).
-
-## Opening the API specification
-
-The specification is implemented according to the OpenAPI standard.
-To access the documentation, you'll need to spin up an instance of Homarr.
-Navigate to `Management` > `Tools` > `API`.
-You can copy the JSON url into your OpenAPI client or try out the endpoints directly from your browser.
-
-Alternatively, you can [open the full interactive API reference](/api-reference) directly in your browser.
+![Homarr's API documentation page](../img/api.png)
 
 ## Authentication
 
-Many endpoints will require you to authenticate. At the top of the API reference, you'll find a button to authenticate yourself with an API key.
-You can obtain API keys from the "Authentication" tab at the top of the page.
-API keys will not expire and can be used indefinitely.
-When you create a key, its one-time value is shown inline above the key table. Copy it before closing the notice; the
-creation action remains disabled until the value has been acknowledged. Deletion uses a two-click inline confirmation
-instead of opening a separate dialog.
+Create an API key from the **Authentication** tab. Its value has the form `<id>.<token>` and is shown once.
 
-### API Key Format
+Send it in the `ApiKey` header:
 
-API keys are provided in the format `<id>.<token>`. When making requests, include the key in the `ApiKey` header:
-
-```
-ApiKey: abc123def456.xyz789tokenvalue...
+```sh
+curl -H 'ApiKey: <id>.<token>' https://homarr.example.com/api/health/live
 ```
 
-### Supported Endpoints
+The same header authenticates tRPC requests under `/api/trpc`. Without a key, browser requests can use the Homarr
+session cookie.
 
-API key authentication works with both endpoint types:
+API keys do not expire automatically and act as the user that created them. Every request uses that user's group and
+resource permissions.
 
-| Endpoint Type | Path Pattern    | API Key Support |
-| ------------- | --------------- | --------------- |
-| OpenAPI       | `/api/...`      | ✅ Supported    |
-| tRPC          | `/api/trpc/...` | ✅ Supported    |
+## Permission behavior
 
-If no API key is provided, Homarr falls back to session cookie authentication (for browser-based access).
+Unauthorized operations return `FORBIDDEN`. List endpoints filter records on the server when resource-specific access
+applies.
 
-### Usage Examples
+App catalog endpoints such as `app.all`, `app.getPaginated`, and `app.search` require **Modify all apps** because they
+include internal URLs. Use `app.selectable` for the reduced board-picker fields.
 
-**OpenAPI endpoint:**
+Integration list and search endpoints return only integrations the key owner can access. Check each integration's
+`hasUseAccess` and `hasInteractAccess` fields before reading data or invoking actions.
 
-```bash
-curl -H 'ApiKey: <id>.<token>' http://localhost:7575/api/health/live
-```
+## Board automation
 
-**tRPC endpoint:**
+The API can create, duplicate, rename, delete, and configure boards; manage board content; and set desktop or mobile home
+boards.
 
-```bash
-curl -H 'ApiKey: <id>.<token>' http://localhost:7575/api/trpc/app.all
-```
+Each board has exactly one Mobile and one Base layout. Mobile uses breakpoint `0`; all breakpoints are unique. Custom
+layouts can use any other breakpoint, and Homarr selects the highest breakpoint that fits the viewport. Preserve layout
+roles and use the canonical layouts returned by save operations, including generated IDs.
 
-### Use Cases
+Creating or changing an integration-backed widget requires use access to each newly selected integration.
 
-API key authentication enables programmatic access for:
+## Docker targets
 
-- Automation scripts and CI/CD pipelines
-- Third-party integrations
-- Custom dashboards and monitoring tools
-- Container orchestration systems that need to sync app definitions
-
-## Permissions
-
-API keys act as the user that created them, so every request is subject to that user's group
-permissions. A call that the user is not allowed to make returns `FORBIDDEN`, and list endpoints
-return only the records the user may see rather than failing.
-
-### App endpoints require app management access
-
-`GET /api/apps`, `GET /api/apps/paginated` and `GET /api/apps/search` (tRPC `app.all`,
-`app.getPaginated`, `app.search`) require the **modify all apps** permission. They previously
-returned the full app catalogue — including internal URLs — to any authenticated user.
-
-If a script that used to work now returns `FORBIDDEN`, grant **modify all apps** to a group the key
-owner belongs to, or switch to `GET /api/apps/selectable`, which returns the reduced fields used by
-board pickers.
-
-### Integration endpoints are filtered per key
-
-`integration.all`, `integration.allThatSupportSearch`, `integration.allOfGivenCategory` and
-`integration.search` filter server side. Without a global integration permission, a key only
-receives the integrations its owner has been granted access to, so responses may contain fewer
-records than before rather than returning an error. `integration.search` applies its `limit` after
-filtering, so a scoped key still receives a full page of results.
-
-Each returned integration carries a `permissions` object — check `hasUseAccess` before reading data
-and `hasInteractAccess` before performing actions; `false` means the key owner lacks that level for
-that integration, not that the call failed.
-
-## Board Automation
-
-The OpenAPI and MCP APIs include board management endpoints for common automation workflows:
-
-- Create, duplicate, rename and delete boards
-- Change board visibility
-- Update board visual and behavior settings
-- Set desktop and mobile home boards for the current user
-- Configure global board defaults such as public home boards and status behavior
-
-Creating, duplicating, or reconfiguring a widget validates its integration selection on the server. The caller needs
-use access for each newly linked integration; unchanged links remain editable through normal board permissions.
-
-Board layout responses identify each layout with a `mobile`, `base`, or `custom` role. Mobile and Base are protected. Layout-saving clients must preserve existing roles, keep Mobile at breakpoint `0`, keep Base as the highest breakpoint, and use unique custom breakpoints between them. The layout save operation returns the canonical saved layouts, including server-generated IDs for new custom layouts. A non-Base layout can be regenerated from Base with the protected reset operation.
-
-The internal `board.getManageOverview` tRPC query returns compact board previews limited to 12 layout rows by default. Callers may provide `previewRowLimit` from 1 through 48; `fullPreview: true` requests the server's 48-row maximum.
-
-Use the interactive API reference to inspect the exact request body for each endpoint under the `boards` and `settings` tags.
-
-## Docker action payload migration
-
-Docker lifecycle and removal actions now identify each container with both its Docker endpoint and container ID. This is a
-breaking change for tRPC and MCP clients that previously sent an `ids` array to the start, stop, restart, or remove action.
-
-Replace the old payload:
-
-```json
-{ "ids": ["container-id"] }
-```
-
-with endpoint-qualified targets:
+Docker actions identify both the configured endpoint and the container:
 
 ```json
 {
@@ -141,57 +59,21 @@ with endpoint-qualified targets:
 }
 ```
 
-Read `endpointId` and `id` from `docker.getContainers` (MCP tool `docker_getContainers`) immediately before the action.
-Pass those pairs unchanged to `docker.startAll`, `docker.stopAll`, `docker.restartAll`, or `docker.removeAll`; their MCP tool
-names use underscores, such as `docker_restartAll`. Endpoint qualification prevents identical container IDs on different
-Docker or Podman endpoints from targeting the wrong service.
+Read both values from `docker.getContainers` immediately before calling `docker.startAll`, `stopAll`, `restartAll`, or
+`removeAll`. The endpoint ID prevents collisions between Docker or Podman hosts.
 
-`docker.getContainers` also accepts an optional `endpointIds` array. Omit it or pass an empty array to query every configured
-Docker environment, or pass one or more IDs returned by `docker.getEndpoints` to query only those Dockerode clients. The
-Docker widget uses the same behavior for its environment selector.
+`docker.getContainers` accepts optional `endpointIds`. Omit it or pass an empty array for every configured endpoint.
 
-## Partial integration failures
+## Partial upstream failures
 
-Multi-integration widget queries keep data from integrations that remain available. Calendar and media-server results include
-an optional `error` on a failed integration; media-request responses expose a `failedIntegrations` array, and the latest
-requests endpoint returns its items in `requests`. When every selected integration fails, the query returns an error instead
-of a partial response.
+Queries that combine several integrations can return healthy data alongside failure metadata. The exact response shape
+depends on the endpoint; inspect the generated schema instead of assuming a common `error` field. When every selected
+integration fails, the query returns an error.
 
-Other widgets use the same settlement pattern with endpoint-specific shapes: a failed integration may appear as a named
-fallback row, in a failure array, or be omitted while healthy results remain. Widget pages should identify the shape they
-render rather than assuming every query exposes an `error` field.
+## Custom Widget resources
 
-### Saving dashboard layouts
+Authenticated administrators can retrieve the current Custom Widget authoring prompt, schema, component catalog, skill,
+and focused references under `/api/custom-widgets/`.
 
-The dashboard editor saves item positions and sections as one board update.
-Canvas height follows its content automatically and does not require a separate API setting.
-Responsive layouts store optional left and right gutter widths from zero to three columns.
-Gutter columns are reserved from the layout's total column count, and changing them reflows affected items.
-
-## Get Custom Widget authoring resources
-
-Custom JSX v2 provides focused HTTP discovery endpoints:
-
-- `GET /api/custom-widgets/authoring-prompt` returns the current prompt plus MCP and HTTP resource identifiers.
-- `GET /api/custom-widgets/schema` returns the canonical widget JSON Schema.
-- `GET /api/custom-widgets/components` returns the release-matched static component catalog.
-- `GET /api/custom-widgets/skill` returns the concise live `SKILL.md`, a named-reference index, and installation metadata.
-- `GET /api/custom-widgets/reference-schema`, `/reference-runtime`, and `/reference-security` return one authoring
-  reference at a time.
-
-Retrieve the schema, component catalog, references, and examples only when needed. Preview creation returns separate
-`queries` and `actions` evidence lists. Each action includes its HTTP method, invocation parameters, minimum board
-permission, confirmation, and invalidated query IDs so clients can simulate and verify mutations before persistence.
-
-For an evidence-driven JSX correction, `customWidget_previewReviseTemplate` accepts only the preview session,
-optional expected revision, and `template` or `templateLines`. It inherits and fully revalidates the manifest, advances
-the session revision, and returns fresh query/action lists without echoing sources, requests, options, or secrets.
-`customWidget_createFromPreview` requires current-revision evidence for every query and action; simulated action checks
-count as evidence without executing the mutation.
-
-MCP clients can call `customWidget_findComponents` with a capability query for a small release-matched component subset
-instead of retrieving the complete component catalog.
-
-Call `customWidget_configurationRequestUser` to create a temporary API source setup URL where the user can confirm their server URL and enter credentials. Do not construct or save this URL.
-
-Authenticated tRPC and MCP procedures support definition management, validation, previews, template patches, and credential writes. An exported definition does not contain credentials.
+Use [Custom Widget agent authoring](../custom-widgets/agent-authoring) for the lifecycle and
+[MCP](../mcp) when the client supports Model Context Protocol.

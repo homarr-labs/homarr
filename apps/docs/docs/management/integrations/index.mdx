@@ -5,137 +5,58 @@ tags:
   - Connections
 ---
 
+import { IntegrationRoutesDiagram } from "@site/src/components/pages/core-concepts/technical-diagrams";
+
 # Integrations
 
-Integrations are connections to supported third party applications.
-This page will describe the process of managing integrations but the process may vary depending on your specific integration.
-Check [the available integrations](/docs/category/integrations) for further information.
+An **integration** is a server-side connection from Homarr to a supported service. Integrations provide data and
+actions to widgets and can be linked to apps.
 
-## Create an integration
+![The integration catalog](../img/integrations-catalog.png)
 
-To create an integration, choose **New integration** and select the supported application from the searchable grid. The grid groups related services visually and shows which widgets each integration supports.
+See the [integration catalog](/docs/category/integrations) for service-specific URLs, credentials, and supported
+widgets.
 
-The integrations management page uses a searchable list. Each row shows the integration type and URL, with the actions you have permission to use.
+## Browser and server routes
 
-### Accessing the page
+<IntegrationRoutesDiagram />
 
-The `/manage/integrations` page is reachable when at least one of the following applies:
+## Configuration
 
-- you can manage all integrations (global `integration-full-all`),
-- you can create integrations (`integration-create`), or
-- you have been granted full access to at least one specific integration.
+Create and manage integrations under **Management → Integrations**. Select a service, provide its base URL and required
+credentials, then test the connection. Homarr does not save a new integration until the test succeeds.
 
-What the page shows depends on the case:
+Use a URL reachable from the Homarr server or container. Unless an integration page says otherwise, provide the service
+root rather than a settings or API subpage.
 
-- **Manage all (`integration-full-all`)**: the full list of integrations is shown.
-- **Create only (`integration-create`)**: the page shows an empty "create an integration" state instead of the list, with the create action still available.
-- **Delegated (full access on one or more)**: only the integrations you have full access to are listed, above a note making clear that the view is scoped to what you can manage.
-- **None**: the page is not reachable and returns a not-found page.
+Credentials are encrypted and used only by the server. Linking an app is optional; it provides the browser-facing URL
+used by widgets that open the service.
 
-Where you have a mix of access, the list combines the integrations you can manage. Integration lists are filtered
-server side, so a user never receives data about integrations they lack access to.
+![Creating an integration with a server URL, API key, and linked app](./img/form-create-integration.png)
 
-Next, you'll need to fill out the required fields to configure the integration:
+Integrations can also be created while adding content to a board. Editing a connection from a widget updates that
+integration everywhere it is used.
 
-![](./img/form-create-integration.png)
+## Permissions
 
-### Name
+| Level    | Allows                                                   |
+| -------- | -------------------------------------------------------- |
+| Use      | Select the integration and read its data                 |
+| Interact | Run supported actions, such as pausing a download        |
+| Full     | Change the URL, credentials, permissions, and linked app |
 
-Must be at least 1 character long, can be chosen freely.
+![Per-integration access for users and groups](./img/integration-permissions.png)
 
-### Url
+Global integration permissions apply to every integration. Resource access can instead be granted to specific users
+or groups. Lists are filtered on the server and only include connections the current user can manage.
 
-This must be the base URL of the application where Homarr should connect to.
-A few examples for this field include:
+## Connection problems
 
-- http://sabnzbd.example.com
-- https://example.com/sabnzbd
+If a connection test fails:
 
-You must not append any path after the base URL. Some examples for incorrect usage:
+1. Check the integration page for the required base URL and credentials.
+2. Test name resolution and HTTP access from the Homarr container or pod, not only from the host or browser.
+3. Check Homarr and upstream-service logs, then any reverse proxy, firewall, VLAN, VPN, or DNS between them.
+4. For a self-signed certificate, add the expected certificate under [Certificates](../certificates).
 
-- http://sabnzbd.example.com/settings
-- https://example.com/sabnzbd/settings
-
-### Secrets
-
-An integration may or may not require secrets to function.
-To process to obtain them is usually [documented in the integration pages](/docs/category/integrations).
-Secrets are encrypted using a symmetric encryption and stored in the database.
-To improve security, they will never be passed to the client and requests to the integrations are performed from the host where Homarr is running on.
-
-### Linking applications
-
-During the creation of an integration you can choose to add / link an application to the integration.
-If you want to add one, you can simply specify the app url which will be used for opening the application from Homarr.
-The linked application will also be used for any links the integration widget contains.
-If you already have an application created, you can also link it to the integration by selecting it from the dropdown.
-On the edit page you can always change or remove the linked application.
-
-### Testing and saving integration
-
-It is not allowed to create an integration without passing the test.
-This is to ensure that you minimize the amount of broken applications on your Homarr instance.
-The test and create button will perform a network request to the application and authenticate if required.
-
-When you connect a service from a board, Homarr keeps you in the same setup flow. After the connection succeeds, it
-confirms whether an application shortcut was linked and offers the widgets that support the new integration. Selecting a
-widget returns to its settings with the new integration already selected.
-
-Users with full access can also test and update a selected integration directly in the **Edit widget → Edit integration**
-tab on a board. Failed tests keep the editor open and show the same connection diagnostics as the management page.
-Successful changes apply to every app and widget that uses the integration.
-
-When app creation is not permitted, the setup form offers linking an existing accessible app instead of attempting to
-create one.
-
-When the connection unlocks useful widgets that are not on the current board yet, the confirmation also shows up to
-three explainable recommendations. A recommendation is based only on the services you can use and the widget kinds
-already present on that board. You can open the existing widget picker prefiltered to the recommendation, or dismiss
-recommendations for that service on that board.
-
-## Managing permissions
-
-On the edit page of an integration, you can manage which users / groups can
-
-- **Select the integration in items:** Allows users to select the integration and showing data on their board.
-- **Interact with the integration:** Allows users to perform actions on the integration, such as pausing a download.
-- **Full control over the integration:** Allows users to modify the integration properties, including the URL and secrets.
-
-![](./img/integration-permissions.png)
-
-## Troubleshooting connection
-
-The connection to your integrations can fail due to many factors. Most of the time it should show you the reason why it failed.
-If it doesn't, you can follow these steps to troubleshoot the issue:
-
-1. Check whether you are using the correct URL and secrets.
-   - The URL must be the base URL of the application, **without any paths**.
-   - The secrets must be correct and have the correct permissions.
-2. If you use https to connect to the application, check the chapter below about [certificate issues](#certificate-issues).
-3. Check whether you followed the Homarr documentation and didn't skip any steps.
-   This is the most often mistake that create many noisy support requests and following all steps will often resolve the problems.
-4. Check Homarr's logs for more information. As we have no control over breaking changes in upstream APIs and third party software,
-   they can break without notice in unexpected ways which can also lead to errors within Homarr. In such case, these occurrences must be reported
-   and fixed within the source code of Homarr.
-5. Check whether the host can reach the destination hostname / IP using `ping` and `curl` or `wget` afterward.
-   Execute this command on the host machine, not inside containers, to check whether it can connect or not.
-6. Check whether the container / pod can reach the destination hostname / IP. Execute the same commands in the shell inside the container / pod.
-7. Check your reverse proxy / authentication proxy logs for failures / hints
-8. Check your security log of tunnels and VPNs
-9. Check your router for security events
-10. Check your VLAN configuration and firewall rules
-11. Check your DNS settings for the host machine and the containers / pods and whether they can resolve the hostnames
-12. Check throughput and stability of your network connection using `iperf3`
-13. Check syslog / drivers of your OS for hints
-14. Check logs of your destination applications (eg. SABnzbd)
-15. Attempt to disable CSRF / tamper protections when absolutely no other workaround available -> this comes with some security implications - be careful!
-    Re-enable if this didn't fix the issue.
-
-If none of these troubleshooting steps worked, you can request support from our team in Discord or GitHub.
-
-### Certificate issues
-
-If you are using a self-signed certificate you'll need to add it to the [trusted certificates](../certificates) in Homarr.
-Most of the time you should also get a button to add the certificate automatically when you try to connect to the integration.
-Please check that the certificate is the one you are expecting to prevent Man in the Middle attacks.
-For some integrations, you can find a guide on how to retrieve the certificate [here](../certificates/#obtaining-certificates).
+Do not disable upstream security controls as a general troubleshooting step.

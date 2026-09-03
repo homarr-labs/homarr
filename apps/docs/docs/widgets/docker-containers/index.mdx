@@ -7,15 +7,15 @@ hide_title: true
 import { WidgetHeader } from "@site/src/components/widgets/header";
 import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
-import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
 import { dockerContainersWidget } from ".";
 
 <WidgetHeader widget={dockerContainersWidget} categories={["Containers"]} />
 
-This widget displays the resource usage of your Docker containers and allows you to manage them. Compact mode keeps every configured table column and shows the complete CPU and memory totals whenever the footer is available.
+Displays container resource usage and management actions for Docker environments configured through environment
+variables.
 
 :::info
-This widget reads the Docker environments configured through environment variables. You do not need to create a Docker integration under **Management → Integrations**. The widget can only be used with administrator privileges.
+This widget does not use an integration from **Management → Integrations** and is restricted to administrators.
 :::
 
 ### Screenshots
@@ -26,7 +26,7 @@ import dockerTable from "./img/table.png";
 
 ### Interactions
 
-Hover a column header to reveal its grab handle, then drag it to reorder the table or drag the header's edge to resize it. The layout is saved automatically for each widget instance and restored after a reload. These controls are disabled while the board is in edit mode.
+Column order and width are saved per widget. These controls are unavailable while the board is in edit mode.
 
 Each container row has an action menu, accessible via the three-dot icon or by right-clicking the row, with the following options:
 
@@ -34,8 +34,6 @@ Each container row has an action menu, accessible via the three-dot icon or by r
 - **Start** / **Stop** / **Restart** - manage the container's state
 - **Remove** - permanently remove the container after a second confirmation click
 - **Add to Homarr** - create a bookmark app from the container
-
-<WidgetInteractionGuide advancedView={false} />
 
 ### Adding the widget
 

@@ -8,7 +8,6 @@ import { IntegrationHeader } from "@site/src/components/integrations/header";
 import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
 import { AddingIntegration } from "@site/src/components/integrations/adding";
 import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
-import { IconAd, IconDeviceGamepad } from "@tabler/icons-react";
 import Alert from "@theme/Admonition";
 import { dnsHoleSummaryWidget } from "@site/docs/widgets/dns-hole-summary";
 import { dnsHoleControlsWidget } from "@site/docs/widgets/dns-hole-controls";
@@ -44,7 +43,7 @@ import { piHoleIntegration } from ".";
     {
       credentials: ["apiKey"],
       steps: [],
-      body: "Please note, that in v6 of Pi-hole you no longer specify an API key, but instead either a password or application password. We suggest to use the application password when possible.",
+      body: "Pi-hole v6 uses a password or application password instead of an API key. Prefer an application password.",
     },
     {
       credentials: [],

@@ -1,0 +1,41 @@
+---
+title: Workshop development
+sidebar_position: 4
+tags:
+  - Workshop
+  - Developer
+  - Docusaurus
+  - PocketBase
+---
+
+# Workshop development
+
+See the [main development guide](./getting-started) for repository prerequisites.
+
+Start PocketBase:
+
+```sh
+cp apps/workshop/.env.example apps/workshop/.env
+docker compose --env-file apps/workshop/.env -f apps/workshop/docker-compose.yml up --build workshop
+```
+
+Start Docusaurus in another terminal:
+
+```sh
+WORKSHOP_API_URL=http://127.0.0.1:8090 pnpm dev:docs
+```
+
+PocketBase runs at `http://127.0.0.1:8090`; create the first superuser under `/_/`. Workshop is available at
+`http://127.0.0.1:3003/workshop`.
+
+To connect a local Homarr instance, set:
+
+```dotenv
+HOMARR_WEBSITE_URL=http://127.0.0.1:3003
+WORKSHOP_API_URL=http://127.0.0.1:8090
+WORKSHOP_WEB_URL=http://127.0.0.1:3003/workshop
+```
+
+Restart the affected development process after changing these variables. See
+[`apps/workshop/README.md`](https://github.com/homarr-labs/homarr/blob/HEAD/apps/workshop/README.md) for OAuth,
+moderation, tests, and service maintenance.

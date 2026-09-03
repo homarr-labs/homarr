@@ -11,16 +11,12 @@ import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
 import { WidgetHeader } from "@site/src/components/widgets/header";
 import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
-import { IconAd } from "@tabler/icons-react";
-import TabItem from "@theme/TabItem";
-import Tabs from "@theme/Tabs";
 import { networkControllerStatusWidget } from ".";
 
 <WidgetHeader widget={networkControllerStatusWidget} categories={["Network controller"]} />
 
-Shows connected users and connected guest devices on wired or wireless networks.
-
-Compact view aggregates the configured controllers into one familiar card for the selected Wi-Fi or wired total. A failed refresh is shown as a small warning instead of replacing the totals card. Advanced view shows both totals separately for every controller, preserving each integration's name, type, and exact update time while keeping partial-source and stale-data warnings visible.
+The Network Status widget shows connected users and guests on wired or wireless networks. Advanced view separates totals
+by controller. Healthy controllers remain visible when another source fails.
 
 ### Screenshots
 

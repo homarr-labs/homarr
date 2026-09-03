@@ -5,106 +5,46 @@ tags:
   - Help
 ---
 
-import Tabs from "@theme/Tabs";
-import TabItem from "@theme/TabItem";
+### Can Homarr run on a Raspberry Pi?
 
-### Can I install Homarr on a Raspberry Pi?
+Yes, when the device uses a supported `linux/arm64` operating system. `linux/arm/v7` is not supported. See
+[Prerequisites](/docs/getting-started).
 
-Yes, Homarr is compatible with the architecture of the Raspberry Pi. Have a look in our <a href="/docs/category/installation-1">installation guide</a> on how to do so.
+### Can I use custom app icons?
 
-### I have a suggestion / idea for improvement or want to report a bug
+Yes. Use a direct image URL, one of Homarr's icon sources, or upload an image. See [Icons](/docs/advanced/icons).
 
-You can report issues, suggestions, or ideas for improvements <a href="https://github.com/homarr-labs/homarr/issues/new/choose">here</a>.
+### Can I create widgets?
 
-### Can I use my own custom icons for apps?
+Yes. [Custom Widgets](/docs/management/custom-widgets) use server-side API requests and safe JSX. They can be written in
+the workbench or created with an MCP-connected agent.
 
-Yes, check out our guide on <a href="/docs/advanced/customizations/icons">how to add your custom icons</a>.
+### Can Homarr be exposed to the internet?
 
-### Some of my online icons are not working (anymore)
+Homarr supports authenticated and public deployments. Terminate HTTPS at a reverse proxy, keep Homarr updated, and grant
+public board access only when anonymous viewing is intended. See [Board access control](/docs/management/boards#access-control)
+and [Single sign-on](/docs/advanced/single-sign-on).
 
-It seems the `cdn.jsdelivr.net` database of icon sometimes appear in the lists for DNS-Holes (PiHole, AdGuard Home...). <br />
-So make sure to manually whitelist this address.
+### Where are the logs?
 
-### Can I add my own widgets? Do I need programming skills?
+Use **Management → Tools → Logs** for retained and live application logs. Container startup failures and older events are
+available through the deployment platform, for example `docker container logs homarr`.
 
-Yes. A [Custom Widget](/docs/management/custom-widgets) can read a public or private HTTP API.
+Use the browser developer console only for client-side failures. Review logs before sharing them because URLs and other
+deployment details may be present.
 
-It can show responsive Mantine JSX. It can also use widget options and actions with board permission checks.
+### Why can Homarr not reach a service behind Gluetun?
 
-Custom JSX v2 is the only Custom Widget format. Write the JSON and JSX in the workbench.
+Gluetun's firewall blocks traffic that is not explicitly allowed. Configure its
+[`FIREWALL_OUTBOUND_SUBNETS`](https://github.com/qdm12/gluetun-wiki/blob/main/setup/options/firewall.md) for the relevant
+LAN or Docker subnet, and use an address reachable from the Homarr container.
 
-You can also use the AI copy prompt. An MCP agent can validate and preview a definition before it saves the definition.
+### Where do I report a bug or request a feature?
 
-The workbench reads a pasted AI response. It shows request capabilities and redacted diagnostics.
+Use the [GitHub issue templates](https://github.com/homarr-labs/homarr/issues/new/choose). For community support, see
+[Get in touch](/docs/community/get-in-touch).
 
-A template cannot import packages or run arbitrary JavaScript. It cannot call browser `fetch`.
+### Can Homarr be used commercially?
 
-Named requests use the Homarr server. The server applies board permissions and the network policy.
-
-Before installation, examine the origins, methods, permissions, and actions. Use the same review before publication.
-
-### Is it secure to expose Homarr to the web?
-
-Yes, since v0.14.0, we are confident that Homarr is secure enough to be exposed to the web.
-Make sure to enable the "allow anonymous access" [option in the settings](/docs/management/boards#access-control), if you want to allow people without an account to be able to see your dashboard (not edit)
-
-### How do I open the console / log?
-
-There are two different sources of information:
-
-- console: This is your client (browser). It can tell us, if there is an issue on the client (crash, bug, ...).
-- log: This is your server. It will tell us, if there are issues with connections for the integrations, crashes and errors.
-
-Both variants _can_ contain personal data. It's recommended, that you don't post them publicly or remove personal data from it.
-
-<Tabs>
-  <TabItem value="apple" label="Read console" default>
-
-> Note: This will not work on most mobile browsers.
-
-Open your browser and ensure, that Homarr is your current tab.
-Press `CTRL` + `SHIFT` + `I` on your keyboard. If this shortcut doesn't work, please use one of the alternatives: https://developer.chrome.com/docs/devtools/open/.
-Click on `Console` in the new window, that opened. There, you should see white, orange and sometimes red messages. You can use the Windows Snip & Sketch tool (or your respective tool on Linux / MacOS) to screenshot those messages.
-
-> Please never execute any commands in the console. Scammers are using the console to let you execute harmful commands. If you want to resolve an issue in Homarr, **you'll never have to execute any commands here**
-
-  </TabItem>
-  <TabItem value="orange" label="Read log">
-
-This depends on your installation method. If you use Unraid, you can simply click on the App and on `Log`. If you have a bare Docker install, use `docker container logs homarr`. If you used a different name than `homarr` for your container, you need to replace said argument. Here is some additional information about the command: https://geekflare.com/check-docker-logs/.
-
-  </TabItem>
-</Tabs>
-
-### How do I post logs?
-
-Please check [the section above](#how-do-i-open-the-console--log), on how to obtain logs. Logs should always be posted to https://pastebin.com/ or https://rentry.co/.
-
-### Can I use Homarr at my company?
-
-Yes, you can! But please consider a donation, if our work has been useful to you.
-
-### I think I found a bug. What can I do?
-
-If you think, that you found a bug, please create an issue <a href="https://github.com/homarr-labs/homarr/issues/new/choose">here</a>.
-
-### Why can't I use my custom icons?
-
-You need to restart the Homarr Docker container after adding icons.
-
-### Why can't homarr see/ping containers running locally behind GluetunVPN?
-
-This is because GluetunVPN, and many other docker VPN services, secure their VPN connections with strict firewalls. These firewalls often block access to local containers, even on the same docker network. The workaround for <a href="https://github.com/qdm12/gluetun-wiki/blob/main/setup/options/firewall.md">GluetunVPN</a> is to add "- FIREWALL_OUTBOUND_SUBNETS=192.168.1.0/24" into the environmental variables of the docker compose file. If you are using a firewall on your system, you will need to add a rule that allows requests from ip's in the range of 192.168.xxx.xxx . If you are using UFW the command would be "sudo ufw allow from 192.168.0.0/16".
-Tip: If you are running your torrent client behind a VPN, and running Sonarr (or something similar) normally, make sure to open your torrent client's port in your firewall. If you don't, Sonarr will not be able to see it. Furthermore, use your machines IP (192.168.x.x) rather then 127.0.0.1 or localhost.
-
-### Can I get in touch with you?
-
-Yes, go <a href="/docs/community/get-in-touch">here</a> to get with us in touch.
-
-<hr />
-
-:::tip
-
-Haven't found the solution to your problem / question? We are eager to help you on [our Discord](/docs/community/get-in-touch#discord) or in a [GitHub Issue](https://github.com/homarr-labs/homarr/issues/new/choose).
-
-:::
+Yes. Homarr is licensed under the [Apache License 2.0](/docs/community/license). Commercial users can support development
+through [OpenCollective](/docs/community/donate).
