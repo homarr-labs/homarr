@@ -1,0 +1,107 @@
+.model {
+  --model-ink: var(--ifm-font-color-base);
+  --model-muted: var(--ifm-color-emphasis-700);
+  --model-panel: var(--ifm-background-surface-color);
+  --model-line: var(--ifm-color-emphasis-300);
+  color: var(--model-ink);
+}
+
+.flow {
+  margin: 0;
+  padding: clamp(0.85rem, 2vw, 1.25rem);
+  border: 1px solid var(--model-line);
+  border-radius: 1rem;
+  background: var(--model-panel);
+}
+
+.lane {
+  display: grid;
+  grid-template-columns: minmax(8.5rem, 1fr) 2.5rem minmax(8.5rem, 1fr) 2.5rem minmax(8.5rem, 1fr) 2.5rem minmax(
+      8.5rem,
+      1fr
+    );
+  align-items: stretch;
+  gap: 0.4rem;
+}
+
+.node {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 0;
+  padding: 0.8rem;
+  border: 1px solid var(--model-line);
+  border-radius: 0.75rem;
+  color: var(--model-ink);
+  background: var(--ifm-background-color);
+}
+
+a.node {
+  text-decoration: none;
+}
+
+a.node:hover {
+  border-color: var(--ifm-color-primary);
+  color: var(--model-ink);
+  text-decoration: none;
+}
+
+.nodeIcon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 0.6rem;
+  color: var(--ifm-color-primary);
+  background: var(--ifm-color-emphasis-100);
+}
+
+.node > span:last-child {
+  display: grid;
+  min-width: 0;
+}
+
+.node strong {
+  font-size: 0.8rem;
+}
+
+.node small {
+  color: var(--model-muted);
+  font-size: 0.68rem;
+  line-height: 1.35;
+}
+
+.arrow {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  color: var(--model-ink);
+}
+
+.arrow::before {
+  width: 100%;
+  height: 2px;
+  background: currentcolor;
+  content: "";
+}
+
+.arrow svg {
+  position: absolute;
+  right: -0.25rem;
+  background: var(--model-panel);
+}
+
+@media (max-width: 900px) {
+  .lane {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .arrow {
+    width: 2.5rem;
+    height: 1.75rem;
+    justify-self: center;
+    transform: rotate(90deg);
+  }
+}

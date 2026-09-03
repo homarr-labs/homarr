@@ -1,7 +1,7 @@
 import Link from "@docusaurus/Link";
 import { IconArrowRight, IconLayoutBoard, IconPlugConnected, IconServer, IconSparkles } from "@tabler/icons-react";
 
-import { HomarrModel } from "../home/homarr-model";
+import { ConceptFlow } from "./concept-flow";
 import styles from "./getting-started-overview.module.css";
 
 export function GettingStartedOverview() {
@@ -30,7 +30,7 @@ export function GettingStartedOverview() {
         </div>
       </section>
 
-      <HomarrModel compact />
+      <ConceptFlow />
     </div>
   );
 }

@@ -20,9 +20,11 @@
   padding: clamp(1.5rem, 4vw, 3rem);
   border: 1px solid var(--start-line);
   border-radius: 1.2rem;
-  background:
-    radial-gradient(circle at 90% 10%, rgb(250 82 82 / 14%), transparent 18rem),
-    linear-gradient(145deg, color-mix(in srgb, var(--start-panel) 92%, transparent), var(--ifm-background-color));
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--start-panel) 92%, transparent),
+    var(--ifm-background-color)
+  );
 }
 
 .intro::before {
@@ -174,7 +176,7 @@
 
 .recommendedPath {
   border-color: rgb(250 82 82 / 32%);
-  background: radial-gradient(circle at 100% 0%, rgb(250 82 82 / 12%), transparent 9rem), var(--start-panel);
+  background: var(--start-panel);
 }
 
 @media (max-width: 800px) {
