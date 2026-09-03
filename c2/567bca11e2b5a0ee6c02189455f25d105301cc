@@ -1,0 +1,27 @@
+packages/widgets/src/health-monitoring/rings/cpu-temp-ring.tsx
+  s_84730523e7324e::t_1b00f8e8c5ceb8 9-10,27-30,41-45
+packages/ui/src/components/table-pagination.tsx
+  s_84730523e7324e::t_1b00f8e8c5ceb8 20,57
+packages/widgets/src/health-monitoring/rings/cpu-temp-ring.spec.tsx
+  s_84730523e7324e::t_1b00f8e8c5ceb8 1-66
+packages/translation/src/lang/en.json
+  s_84730523e7324e::t_1b00f8e8c5ceb8 1794-1796
+packages/translation/src/lang/fr.json
+  s_84730523e7324e::t_1b00f8e8c5ceb8 1285-1287
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "c2567bca11e2b5a0ee6c02189455f25d105301cc",
+  "prompts": {},
+  "sessions": {
+    "s_84730523e7324e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a067be-4c11-7601-80a3-882cb02ea6f1",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
