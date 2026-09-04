@@ -5,7 +5,11 @@ import { parse } from "@babel/parser";
 
 export const getRuntimeModuleSpecifiers = (sourceText: string, fileName: string) => {
   try {
-    const ast = parse(sourceText, { sourceFilename: fileName, sourceType: "module", plugins: ["typescript", "jsx"] });
+    const ast = parse(sourceText, {
+      sourceFilename: fileName,
+      sourceType: "module",
+      plugins: ["typescript", ...(fileName.endsWith(".tsx") || fileName.endsWith(".jsx") ? ["jsx"] : [])],
+    });
     return ast.program.body.flatMap((statement) => {
       if (statement.type === "ImportDeclaration") {
         if (statement.importKind === "type" || statement.importKind === "typeof") return [];
