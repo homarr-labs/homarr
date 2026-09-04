@@ -32,6 +32,7 @@ export const widgetKinds = [
   "notifications",
   "systemResources",
   "coolify",
+  "hermesAgent",
   "systemDisks",
   "timetable",
   "immich-serverStats",
