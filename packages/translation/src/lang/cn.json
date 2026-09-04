@@ -1027,7 +1027,8 @@
       "analytics": "分析",
       "vpn": "VPN",
       "mediaLibrary": "媒体库",
-      "uptimeMonitoring": "运行时间监控"
+      "uptimeMonitoring": "运行时间监控",
+      "systemMonitoring": "系统监控"
     },
     "testConnection": {
       "action": {
@@ -1355,6 +1356,10 @@
     "bazarr": {
       "name": "Bazarr",
       "description": "Sonarr 和 Radarr 的配套应用，用于管理和下载字幕"
+    },
+    "llamacpp": {
+      "name": "llama.cpp",
+      "description": "监控本地 llama.cpp llama-server：健康状态、模型与生成指标"
     }
   },
   "media": {
@@ -4169,6 +4174,54 @@
         "dockerNetwork": {
           "title": "Docker 网络 I/O",
           "subtitle": "Docker 容器的网络流量"
+        }
+      }
+    },
+    "llamacpp": {
+      "name": "llama.cpp",
+      "description": "显示本地 llama.cpp 服务器的健康状态、加载模型和生成速度。",
+      "title": "llama.cpp",
+      "status": {
+        "online": "在线",
+        "unhealthy": "异常 ({status})"
+      },
+      "idle": "空闲",
+      "speedTooltip": {
+        "current": "当前生成速度",
+        "average": "启动以来的平均生成速度",
+        "request": "本次请求开始以来的平均速度"
+      },
+      "busy": "{count, plural, other {# 个请求处理中}}",
+      "modelInfo": {
+        "context": "上下文",
+        "size": "文件大小",
+        "parameters": "参数量"
+      },
+      "stats": {
+        "tokensProcessed": "已处理 Token",
+        "contextUsage": "上下文 / KV 占用",
+        "cacheHitRate": "提示缓存命中率"
+      },
+      "error": {
+        "unreachable": "无法连接 llama-server"
+      },
+      "unit": {
+        "speed": "{value} t/s",
+        "parameters": "{value}B",
+        "none": "—"
+      },
+      "option": {
+        "showTitle": {
+          "label": "显示标题"
+        },
+        "showModelInfo": {
+          "label": "显示模型信息"
+        },
+        "showContextUsage": {
+          "label": "显示上下文占用"
+        },
+        "showCacheHitRate": {
+          "label": "显示缓存命中率"
         }
       }
     }

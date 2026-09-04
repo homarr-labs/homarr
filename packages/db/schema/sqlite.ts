@@ -485,6 +485,7 @@ export const assistantConfigurations = sqliteTable("assistant_configuration", {
       | "together"
       | "ollama"
       | "lm-studio"
+      | "llama-cpp"
       | "custom"
     >()
     .notNull()

@@ -11,6 +11,7 @@ export const assistantProviderIds = [
   "together",
   "ollama",
   "lm-studio",
+  "llama-cpp",
   "custom",
 ] as const;
 
@@ -155,6 +156,15 @@ export const assistantProviderPresets = {
     category: "local",
     discoveryAuthentication: "bearer",
     iconUrl: `${providerIconBaseUrl}/lmstudio.svg`,
+  },
+  "llama-cpp": {
+    label: "llama.cpp",
+    baseUrl: "http://localhost:8080/v1",
+    modelDiscoveryPath: "/models",
+    requiresApiKey: false,
+    category: "local",
+    discoveryAuthentication: "bearer",
+    iconUrl: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/llama-cpp.svg",
   },
   custom: {
     label: undefined,

@@ -60,4 +60,5 @@ export const widgetDocSlugs = {
   customApi: "custom-api",
   assistant: "assistant",
   wud: "whats-up-docker",
+  llamacpp: "llama-cpp",
 } satisfies Record<WidgetKind, string | null>;

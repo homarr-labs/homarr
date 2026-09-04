@@ -11,6 +11,7 @@ import type { TracearrDashboardData } from "../tracearr/tracearr-types";
 import type { TraefikDashboardData } from "../traefik/traefik-types";
 import type { UmamiEventSeries, UmamiMetricItem, UmamiVisitorStats, UmamiWebsite } from "../umami/umami-types";
 import type { UptimeKumaDashboardData } from "../uptime-kuma/uptime-kuma-types";
+import type { LlamacppStats } from "../llama-cpp/llamacpp-types";
 import type { WudStats } from "../wud/wud-types";
 import type {
   FirewallCpuSummary,
@@ -352,4 +353,29 @@ export const mockWidgetData = {
       { id: "redis", name: "Redis", currentVersion: "8.0.2", newVersion: "8.0.3", link: null },
     ],
   } satisfies WudStats,
+  llamacpp: {
+    health: "ok",
+    model: {
+      id: "unsloth/Qwen3.8-27B-UD-Q4_K_XL.gguf",
+      name: "Qwen3.8-27B-UD-Q4_K_XL",
+      contextSize: 32768,
+      parameterCount: 27_347_098_624,
+      fileSizeBytes: 16_842_776_576,
+      quantization: "Q4_K_XL",
+    },
+    contextUsage: { usedTokens: 8192, contextSize: 32768, percent: 25 },
+    metrics: {
+      generationSpeedTps: 42.5,
+      promptSpeedTps: 1840.2,
+      avgGenerationSpeedTps: 39.8,
+      avgPromptSpeedTps: 2104.6,
+      requestsProcessing: 1,
+      requestsDeferred: 0,
+      tokensProcessed: 12_483,
+      tokensGenerated: 1_024,
+      promptCacheHitRate: 62,
+      requestDecodedTokens: 96,
+      taskId: 1042,
+    },
+  } satisfies LlamacppStats,
 } as const;
