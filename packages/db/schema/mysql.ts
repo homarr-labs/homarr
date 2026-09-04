@@ -72,6 +72,7 @@ export const users = mysqlTable("user", {
   image: text(),
   password: text(),
   provider: varchar({ length: 64 }).$type<SupportedAuthProvider>().default("credentials").notNull(),
+  disabled: boolean().default(false).notNull(),
   homeBoardId: varchar({ length: 64 }).references((): AnyMySqlColumn => boards.id, {
     onDelete: "set null",
   }),
