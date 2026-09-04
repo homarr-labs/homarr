@@ -549,8 +549,8 @@ export const integrationDefs = {
     name: "llama.cpp",
     secretKinds: [[]],
     iconUrl: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/llama-cpp.svg",
-    category: ["ai"],
-    documentationSlug: null,
+    category: ["systemMonitoring"],
+    documentationSlug: "llama-cpp",
     defaultPort: 8080,
   },
   // This integration only returns mock data, it is used during development (but can also be used in production by directly going to the create page)
@@ -721,7 +721,7 @@ export const integrationCategories = [
   "uptimeMonitoring",
   "subtitleManager",
   "reverseProxy",
-  "ai",
+  "systemMonitoring",
 ] as const;
 
 export type IntegrationCategory = (typeof integrationCategories)[number];

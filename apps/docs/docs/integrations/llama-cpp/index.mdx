@@ -11,7 +11,7 @@ import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
 import { llamacppIntegration } from ".";
 import { llamacppWidget } from "@site/docs/widgets/llama-cpp";
 
-<IntegrationHeader integration={llamacppIntegration} categories={["AI"]} />
+<IntegrationHeader integration={llamacppIntegration} categories={["System Monitoring"]} />
 
 The llama.cpp integration lets Homarr connect to a [llama-server](https://github.com/ggml-org/llama.cpp) instance so you can see the health of your local LLM, which model is loaded, and how fast it is generating — all from your dashboard.
 
@@ -34,7 +34,7 @@ Generation speed and token counters are read from the Prometheus endpoint at `/m
 llama-server --model /path/to/model.gguf --metrics
 ```
 
-Without `--metrics` the widget still shows health and model information, but the throughput and token stats stay empty.
+Without `--metrics` the widget still shows health, model information, and active-request speed from `/slots`; metrics-backed counters and aggregate speed stay empty.
 :::
 
 :::info Context and per-request speed

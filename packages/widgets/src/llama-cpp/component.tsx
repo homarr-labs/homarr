@@ -13,6 +13,14 @@ import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
 import { NoIntegrationSelectedError } from "../errors/no-integration-selected";
 
+const layoutBreakpoints = [
+  { tier: "standard", minWidth: 256 },
+  { tier: "tiny", minWidth: 0 },
+] as const;
+
+const getLayoutTier = (width: number): "standard" | "tiny" =>
+  layoutBreakpoints.find(({ minWidth }) => width >= minWidth)?.tier ?? "tiny";
+
 export default function LlamacppWidget({ integrationIds, options, width }: WidgetComponentProps<"llamacpp">) {
   const integrationId = integrationIds[0];
   if (!integrationId) {
@@ -61,6 +69,9 @@ function LlamacppContent({ integrationId, options, width }: LlamacppContentProps
     return Number.isFinite(speed) && speed > 0 ? speed : null;
   }, [data]);
 
+  // Derive the responsive layout tier from a breakpoint table (memoized on width).
+  const isTiny = useMemo(() => getLayoutTier(width) === "tiny", [width]);
+
   if (isError) {
     return (
       <Center h="100%" w="100%" p="sm">
@@ -79,7 +90,6 @@ function LlamacppContent({ integrationId, options, width }: LlamacppContentProps
   }
 
   const stats = data.stats;
-  const isTiny = width < 256;
   const isHealthy = stats.health === "ok";
 
   const statusBadge = isHealthy ? (

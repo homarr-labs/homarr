@@ -1028,7 +1028,7 @@
       "vpn": "VPN",
       "mediaLibrary": "媒体库",
       "uptimeMonitoring": "运行时间监控",
-      "ai": "AI"
+      "systemMonitoring": "系统监控"
     },
     "testConnection": {
       "action": {

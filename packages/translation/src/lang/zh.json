@@ -823,7 +823,7 @@
       "vpn": "VPN",
       "mediaLibrary": "媒體庫",
       "uptimeMonitoring": "運作時間監控",
-      "ai": "AI"
+      "systemMonitoring": "系統監控"
     },
     "testConnection": {
       "action": {

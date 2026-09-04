@@ -26,6 +26,12 @@ export const llamacppWidget: WidgetDefinition = {
         values: { type: "boolean" },
         defaultValue: "yes",
       },
+      {
+        name: "Show context usage",
+        description: "Displays the context (KV cache) token usage as a progress bar",
+        values: { type: "boolean" },
+        defaultValue: "yes",
+      },
     ],
   },
 };

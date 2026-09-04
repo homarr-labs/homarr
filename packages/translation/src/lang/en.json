@@ -1410,7 +1410,7 @@
       "mediaLibrary": "Media Library",
       "uptimeMonitoring": "Uptime Monitoring",
       "beszel": "Beszel",
-      "ai": "AI"
+      "systemMonitoring": "System Monitoring"
     },
     "testConnection": {
       "action": {
