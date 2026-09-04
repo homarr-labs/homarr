@@ -12,9 +12,13 @@ import { auth } from "@homarr/auth/next";
 import { env } from "@homarr/common/env";
 import { DB_CASING } from "@homarr/core/infrastructure/db/constants";
 import { dbEnv } from "@homarr/core/infrastructure/db/env";
+import { createLogger } from "@homarr/core/infrastructure/logs";
+import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { db } from "@homarr/db";
 
 import { findMigrationsFolder } from "../shared";
+
+const logger = createLogger({ module: "backupImportRoute" });
 
 const REQUIRED_ZIP_ENTRIES = ["db.sqlite", "metadata.json"] as const;
 const ALGORITHM = "aes-256-cbc";
@@ -174,22 +178,26 @@ export async function POST(req: Request) {
         const sidecar = `${dbPath}${suffix}`;
         if (fs.existsSync(sidecar)) fs.unlinkSync(sidecar);
       } catch (cleanupErr) {
-        console.error(`Failed to remove ${suffix} file:`, cleanupErr);
+        logger.warn("Failed to remove SQLite sidecar file after restore", { suffix, dbPath, cause: cleanupErr });
       }
     }
 
     setTimeout(() => {
-      console.log("Database restored, restarting server...");
+      logger.info("Database restored, restarting server...");
       process.exit(0);
     }, 500);
 
     return NextResponse.json({ success: true, message: "Database restored. Server is restarting..." });
   } catch (error) {
-    console.error("[backup/import] Restore failed:", error);
+    logger.error(new ErrorWithMetadata("Backup restore failed", { dbPath }, { cause: error }));
     const message = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json({ error: `Restore failed: ${message}` }, { status: 500 });
   } finally {
-    tempDb?.close();
+    try {
+      tempDb?.close();
+    } catch (closeErr) {
+      logger.warn("Failed to close temporary database after restore", { cause: closeErr });
+    }
     if (fs.existsSync(tempPath)) {
       try {
         fs.unlinkSync(tempPath);

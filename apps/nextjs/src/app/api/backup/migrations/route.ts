@@ -3,7 +3,12 @@ import path from "path";
 
 import { NextResponse } from "next/server";
 
+import { createLogger } from "@homarr/core/infrastructure/logs";
+import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
+
 import { findMigrationsFolder } from "../shared";
+
+const logger = createLogger({ module: "backupMigrationsRoute" });
 
 interface JournalEntry {
   idx: number;
@@ -56,7 +61,7 @@ export async function GET() {
       },
     );
   } catch (error) {
-    console.error("[backup/migrations] Failed to read migrations:", error);
+    logger.error(new ErrorWithMetadata("Failed to read migration files", {}, { cause: error }));
     const message = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json({ error: `Failed to read migrations: ${message}` }, { status: 500 });
   }
