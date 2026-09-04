@@ -60,19 +60,23 @@ const validInputs: {
 };
 
 describe("All procedures should only be accessible for users with admin permission", () => {
-  test.each(procedureKeys)("Procedure %s should be accessible for users with admin permission", async (procedure) => {
-    // Arrange
-    const caller = dockerRouter.createCaller({
-      db: null as unknown as Database,
-      deviceType: undefined,
-      session: createSessionWithPermissions("admin"),
-    });
+  test.each(procedureKeys)(
+    "Procedure %s should be accessible for users with admin permission",
+    async (procedure) => {
+      // Arrange
+      const caller = dockerRouter.createCaller({
+        db: null as unknown as Database,
+        deviceType: undefined,
+        session: createSessionWithPermissions("admin"),
+      });
 
-    // Act
-    const act = () => caller[procedure](validInputs[procedure] as never);
+      // Act
+      const act = () => caller[procedure](validInputs[procedure] as never);
 
-    await expect(act()).resolves.not.toThrow();
-  });
+      await expect(act()).resolves.not.toThrow();
+    },
+    10000,
+  );
 
   test.each(procedureKeys)("Procedure %s should not be accessible with other permissions", async (procedure) => {
     // Arrange

@@ -1577,6 +1577,10 @@
         },
         "borderColor": {
           "label": "Border color"
+        },
+        "scrollable": {
+          "label": "Scrollable",
+          "description": "Allow the section content to scroll instead of shrinking to fit"
         }
       },
       "remove": {
@@ -2809,6 +2813,7 @@
         "transcoding": "Transcoding",
         "paused": "Paused",
         "remaining": "{minutes} min left",
+        "seasonEpisode": "S{season} E{episode}",
         "metadata": {
           "title": "Stats for nerds",
           "video": {

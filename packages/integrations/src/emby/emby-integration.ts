@@ -20,7 +20,9 @@ const sessionSchema = z.object({
       SeriesName: z.string().nullish(),
       Name: z.string().nullish(),
       SeasonName: z.string().nullish(),
+      ParentIndexNumber: z.number().nullish(),
       EpisodeTitle: z.string().nullish(),
+      IndexNumber: z.number().nullish(),
       Album: z.string().nullish(),
       EpisodeCount: z.number().nullish(),
     })
@@ -110,11 +112,15 @@ export class EmbyIntegration extends Integration implements IMediaServerIntegrat
         let currentlyPlaying: StreamSession["currentlyPlaying"] | null = null;
 
         if (sessionInfo.NowPlayingItem) {
+          const isEpisode = sessionInfo.NowPlayingItem.Type === BaseItemKind.Episode;
+
           currentlyPlaying = {
             type: convertJellyfinType(sessionInfo.NowPlayingItem.Type),
             name: sessionInfo.NowPlayingItem.SeriesName ?? sessionInfo.NowPlayingItem.Name ?? "",
             seasonName: sessionInfo.NowPlayingItem.SeasonName ?? "",
-            episodeName: sessionInfo.NowPlayingItem.EpisodeTitle,
+            seasonNumber: isEpisode ? (sessionInfo.NowPlayingItem.ParentIndexNumber ?? null) : null,
+            episodeName: isEpisode ? sessionInfo.NowPlayingItem.EpisodeTitle : null,
+            episodeNumber: isEpisode ? (sessionInfo.NowPlayingItem.IndexNumber ?? null) : null,
             albumName: sessionInfo.NowPlayingItem.Album ?? "",
             episodeCount: sessionInfo.NowPlayingItem.EpisodeCount,
             playback: {

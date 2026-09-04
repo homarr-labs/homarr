@@ -26,6 +26,7 @@ export const GridStack = ({ section, ...props }: Props) => {
         {...props}
         data-kind={section.kind}
         data-section-id={section.id}
+        data-scrollable={section.kind === "dynamic" ? section.options.scrollable : undefined}
         className={combineClasses(`grid-stack grid-stack-${section.kind}`, props.className)}
         ref={refs.wrapper}
       >

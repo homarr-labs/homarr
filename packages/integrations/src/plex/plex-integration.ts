@@ -115,9 +115,11 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
             type: mediaElement.$.live === "1" ? "tv" : PlexIntegration.getCurrentlyPlayingType(mediaElement.$.type),
             name: mediaElement.$.grandparentTitle ?? mediaElement.$.title ?? "Unknown",
             seasonName: mediaElement.$.parentTitle,
-            episodeName: mediaElement.$.title ?? null,
+            seasonNumber: mediaElement.$.type === "episode" ? parseOptionalNumber(mediaElement.$.parentIndex) : null,
+            episodeName: mediaElement.$.type === "episode" ? (mediaElement.$.title ?? null) : null,
+            episodeNumber: mediaElement.$.type === "episode" ? parseOptionalNumber(mediaElement.$.index) : null,
             albumName: mediaElement.$.type === "track" ? (mediaElement.$.parentTitle ?? null) : null,
-            episodeCount: mediaElement.$.index ?? null,
+            episodeCount: parseOptionalNumber(mediaElement.$.index),
             playback: {
               state: playbackState,
               positionMs,

@@ -3,7 +3,7 @@ import type { RefObject } from "react";
 import type { GridItemHTMLElement } from "@homarr/gridstack";
 import { GridStack } from "@homarr/gridstack";
 
-import type { Section } from "~/app/[locale]/boards/_types";
+import type { DynamicSection, Section } from "~/app/[locale]/boards/_types";
 
 interface InitializeGridstackProps {
   section: Omit<Section, "items">;
@@ -20,6 +20,16 @@ export const initializeGridstack = ({ section, itemIds, refs, sectionColumnCount
   if (!refs.wrapper.current) return false;
   // initialize gridstack
   const newGrid = refs.gridstack;
+  const isDynamic = section.kind === "dynamic";
+  const isScrollable = isDynamic && (section as DynamicSection).options.scrollable;
+  // Scrollable dynamic sections aren't limited to the visible section height,
+  // so items can be placed below the fold and reached by scrolling.
+  const maxRow = isDynamic && "height" in section && !isScrollable ? (section.height as number) : 0;
+  // A scrollable section's visible viewport is already bounded by the outer overflow-y:auto
+  // container (see dynamic-section.tsx), so its content shouldn't also be floored at the full
+  // resized box height -- that forces empty trailing rows whenever there's less content than
+  // the box has room for, showing up as a lopsided gap under the last row of items.
+  const minRow = isDynamic && "height" in section && !isScrollable ? (section.height as number) : 1;
   newGrid.current = GridStack.init(
     {
       column: sectionColumnCount,
@@ -29,8 +39,8 @@ export const initializeGridstack = ({ section, itemIds, refs, sectionColumnCount
       alwaysShowResizeHandle: true,
       acceptWidgets: true,
       staticGrid: true,
-      minRow: section.kind === "dynamic" && "height" in section ? (section.height as number) : 1,
-      maxRow: section.kind === "dynamic" && "height" in section ? (section.height as number) : 0,
+      minRow,
+      maxRow,
       animate: false,
       styleInHead: true,
       disableRemoveNodeOnDrop: true,
@@ -39,9 +49,18 @@ export const initializeGridstack = ({ section, itemIds, refs, sectionColumnCount
     `.grid-stack-${section.kind}[data-section-id='${section.id}']`,
   );
   const grid = newGrid.current;
+  // GridStack.init() also ignores the column above when reusing an existing instance (see
+  // below), so this reflects the grid's actual current column count, not sectionColumnCount.
+  const previousColumn = grid.getColumn();
 
-  // Must be used to update the column count after the initialization
-  grid.column(sectionColumnCount, "none");
+  // GridStack.init() reuses the cached instance for an already-initialized element and
+  // silently ignores the new options object above -- including minRow/maxRow. Its engine also
+  // keeps its own separate copy of maxRow (set once when first constructed) that collision/
+  // accept checks actually read, so that one has to be synced explicitly too, not just on
+  // grid.opts (minRow isn't read from the engine anywhere, so grid.opts alone covers it).
+  grid.opts.minRow = minRow;
+  grid.opts.maxRow = maxRow;
+  if (grid.engine) grid.engine.maxRow = maxRow;
 
   grid.batchUpdate();
   grid.removeAll(false);
@@ -52,5 +71,23 @@ export const initializeGridstack = ({ section, itemIds, refs, sectionColumnCount
     grid.makeWidget(ref);
   });
   grid.batchUpdate(false);
+
+  // Must be used to update the column count after the initialization. Has to run after the
+  // removeAll/makeWidget rebuild above, not before: calling it first works when checked in
+  // isolation, but makeWidget re-registers each item from its DOM ref right afterward and
+  // does not preserve that reflow, undoing it and leaving items overlapping.
+  // A dynamic section's column count changes continuously as its outer box is resized
+  // (unlike other sections, which only change column count between board layouts that
+  // already store their own explicit item positions), so its items need to be reflowed
+  // to fit the new column count instead of keeping their old, now out-of-bounds offsets.
+  // "list" re-adds each item with auto-placement (in original order), so GridStack's own
+  // collision handling finds each one a clear slot -- "move"/"moveScale" assign explicit
+  // positions directly, which can make that collision pass thrash and leave items overlapping.
+  // Only actually reflow when the column count changed though: this effect also re-runs when
+  // just the scrollable option is toggled (see use-gridstack.ts), and "list" auto-places every
+  // item by order regardless, which would rearrange an untouched section on every such toggle.
+  const columnChanged = sectionColumnCount !== previousColumn;
+  grid.column(sectionColumnCount, isDynamic && columnChanged ? "list" : "none");
+
   return true;
 };

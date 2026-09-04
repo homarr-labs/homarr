@@ -88,6 +88,10 @@ const Item = ({ item, innerRef, integrations }: ItemProps) => {
 const useMinSize = (item: DynamicSectionItem | SectionItem, direction: "x" | "y") => {
   const { items, innerSections } = useSectionItems(item.id);
   if (item.type === "item") return undefined;
+  // Scrollable dynamic sections let their content overflow and scroll, so they shouldn't be
+  // forced to stay wide/tall enough to fit every item inside them. Narrowing one reflows its
+  // items into more rows (see init-gridstack.ts "moveScale"), which the scroll then reveals.
+  if (item.options.scrollable) return undefined;
 
   const size = direction === "x" ? "width" : "height";
   return Math.max(
