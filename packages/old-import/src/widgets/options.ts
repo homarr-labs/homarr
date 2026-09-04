@@ -85,6 +85,8 @@ const optionMapping: OptionMapping = {
     showCompletedUsenet: () => true,
     showCompletedHttp: () => true,
     limitPerIntegration: () => undefined,
+    includeArchivedHistory: () => undefined,
+    historyWindowDays: () => undefined,
     columnOrder: () => undefined,
     columnWidths: () => undefined,
   },
