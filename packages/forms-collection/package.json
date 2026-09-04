@@ -30,11 +30,19 @@
     "@homarr/ui": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "@mantine/core": "catalog:",
+    "@mantine/hooks": "catalog:",
+    "@tabler/icons-react": "catalog:",
+    "@trpc/server": "catalog:",
+    "next": "catalog:",
     "react": "catalog:",
+    "react-dom": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "typescript": "catalog:"
   }
 }

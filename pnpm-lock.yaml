@@ -96,6 +96,9 @@ catalogs:
     '@modelcontextprotocol/sdk':
       specifier: 1.29.0
       version: 1.29.0
+    '@octokit/plugin-rest-endpoint-methods':
+      specifier: ^17.0.0
+      version: 17.0.0
     '@paralleldrive/cuid2':
       specifier: ^3.3.0
       version: 3.3.0
@@ -105,6 +108,9 @@ catalogs:
     '@scalar/api-reference-react':
       specifier: ^0.9.54
       version: 0.9.54
+    '@scalar/types':
+      specifier: ^0.16.2
+      version: 0.16.2
     '@semantic-release/changelog':
       specifier: ^7.0.0
       version: 7.0.0
@@ -129,6 +135,9 @@ catalogs:
     '@tabler/icons-react':
       specifier: ^3.44.0
       version: 3.44.0
+    '@tanstack/query-core':
+      specifier: ^5.101.2
+      version: 5.101.2
     '@tanstack/react-devtools':
       specifier: ^0.10.8
       version: 0.10.9
@@ -243,6 +252,9 @@ catalogs:
     '@types/node':
       specifier: ^24.13.3
       version: 24.13.3
+    '@types/node-fetch':
+      specifier: ^2.6.13
+      version: 2.6.13
     '@types/node-unifi':
       specifier: ^2.5.1
       version: 2.5.1
@@ -288,6 +300,9 @@ catalogs:
     adm-zip:
       specifier: 0.5.18
       version: 0.5.18
+    axios:
+      specifier: ^1.15.0
+      version: 1.15.0
     babel-plugin-react-compiler:
       specifier: ^1.0.0
       version: 1.0.0
@@ -324,6 +339,9 @@ catalogs:
     crypto-js:
       specifier: ^4.2.0
       version: 4.2.0
+    csstype:
+      specifier: ^3.2.3
+      version: 3.2.3
     dayjs:
       specifier: ^1.11.21
       version: 1.11.21
@@ -366,6 +384,9 @@ catalogs:
     glob:
       specifier: ^13.0.6
       version: 13.0.6
+    http-cookie-agent:
+      specifier: ^6.0.8
+      version: 6.0.8
     ical.js:
       specifier: ^2.2.1
       version: 2.2.1
@@ -423,12 +444,18 @@ catalogs:
     next-intl:
       specifier: 4.13.1
       version: 4.13.1
+    node-fetch:
+      specifier: ^2.7.0
+      version: 2.7.0
     node-loader:
       specifier: ^2.1.0
       version: 2.1.0
     octokit:
       specifier: ^5.0.5
       version: 5.0.5
+    ofetch:
+      specifier: ^1.5.1
+      version: 1.5.1
     oxfmt:
       specifier: ^0.58.0
       version: 0.58.0
@@ -441,6 +468,9 @@ catalogs:
     postcss-preset-mantine:
       specifier: ^1.18.0
       version: 1.18.0
+    postcss-simple-vars:
+      specifier: ^7.0.1
+      version: 7.0.1
     posthog-js:
       specifier: ^1.399.1
       version: 1.399.2
@@ -450,6 +480,9 @@ catalogs:
     prismjs:
       specifier: ^1.30.0
       version: 1.30.0
+    prosemirror-model:
+      specifier: ^1.25.10
+      version: 1.25.10
     proxmox-api:
       specifier: 1.1.1
       version: 1.1.1
@@ -540,6 +573,9 @@ catalogs:
     winston:
       specifier: 3.19.0
       version: 3.19.0
+    winston-transport:
+      specifier: ^4.9.0
+      version: 4.9.0
     ws:
       specifier: ^8.21.0
       version: 8.21.0
@@ -622,6 +658,9 @@ importers:
       '@turbo/gen':
         specifier: 'catalog:'
         version: 2.10.4(@types/node@24.13.3)
+      '@types/node-unifi':
+        specifier: 'catalog:'
+        version: 2.5.1(patch_hash=5e6ae51e2a17a7f9729bfa30b0eb3d0842a5810ac6db47603ab4a6efa1ed84c5)
       '@vitejs/plugin-react':
         specifier: 'catalog:'
         version: 6.0.3(babel-plugin-react-compiler@1.0.0)(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.101.0)(sugarss@5.0.0(postcss@8.5.16))(terser@5.46.1)(tsx@4.20.4)(yaml@2.9.0))
@@ -637,6 +676,9 @@ importers:
       cross-env:
         specifier: 'catalog:'
         version: 10.1.0
+      dotenv-cli:
+        specifier: 'catalog:'
+        version: 11.0.0
       jsdom:
         specifier: 'catalog:'
         version: 29.1.1(@noble/hashes@2.0.1)
@@ -709,6 +751,9 @@ importers:
       '@scalar/api-reference-react':
         specifier: 'catalog:'
         version: 0.9.54(nprogress@0.2.0)(react@19.2.7)(supports-color@10.2.2)(tailwindcss@4.3.2)(typescript@7.0.2)(zod@4.4.3)
+      '@scalar/types':
+        specifier: 'catalog:'
+        version: 0.16.2
       '@signalwire/docusaurus-plugin-llms-txt':
         specifier: ^1.2.2
         version: 1.2.2(@docusaurus/core@3.10.1(@docusaurus/faster@3.10.1(@docusaurus/types@3.10.1(@swc/core@1.15.3)(@swc/html@1.15.40)(clean-css@5.3.3)(cssnano@6.1.2(postcss@8.5.16))(csso@5.0.5)(esbuild@0.28.1)(html-minifier-terser@7.2.0)(lightningcss@1.32.0)(postcss@8.5.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(supports-color@10.2.2)(uglify-js@3.19.3))(clean-css@5.3.3)(cssnano@6.1.2(postcss@8.5.16))(csso@5.0.5)(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)(uglify-js@3.19.3))(@mdx-js/react@3.1.1(@types/react@19.2.17)(react@19.2.7))(@rspack/core@1.7.11)(@swc/core@1.15.3)(@swc/html@1.15.40)(clean-css@5.3.3)(cssnano@6.1.2(postcss@8.5.16))(csso@5.0.5)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(html-minifier-terser@7.2.0)(lightningcss@1.32.0)(postcss@8.5.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(supports-color@10.2.2)(typescript@7.0.2)(uglify-js@3.19.3))(supports-color@10.2.2)
@@ -770,6 +815,9 @@ importers:
       '@tsconfig/docusaurus':
         specifier: ^2.0.9
         version: 2.0.9
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.17
@@ -896,12 +944,18 @@ importers:
       '@homarr/widgets':
         specifier: workspace:^0.1.0
         version: link:../../packages/widgets
+      '@mantine/charts':
+        specifier: 'catalog:'
+        version: 9.4.1(@mantine/core@9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.4.1(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(recharts@3.9.1(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(redux@5.0.1))
       '@mantine/colors-generator':
         specifier: 'catalog:'
         version: 9.4.1(chroma-js@3.2.0)
       '@mantine/core':
         specifier: 'catalog:'
         version: 9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@mantine/dates':
+        specifier: 'catalog:'
+        version: 9.4.1(@mantine/core@9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.4.1(react@19.2.7))(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@mantine/dropzone':
         specifier: 'catalog:'
         version: 9.4.1(@mantine/core@9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.4.1(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -1010,9 +1064,15 @@ importers:
       next:
         specifier: 'catalog:'
         version: 16.3.0-preview.9(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(@types/node@24.13.3)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0)
+      next-intl:
+        specifier: 'catalog:'
+        version: 4.13.1(next@16.3.0-preview.9(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(@types/node@24.13.3)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0))(react@19.2.7)(typescript@7.0.2)
       postcss-preset-mantine:
         specifier: 'catalog:'
         version: 1.18.0(postcss@8.5.16)
+      postcss-simple-vars:
+        specifier: 'catalog:'
+        version: 7.0.1(postcss@8.5.16)
       posthog-js:
         specifier: 'catalog:'
         version: 1.399.2(preact-render-to-string@6.5.11)
@@ -1043,6 +1103,9 @@ importers:
       trpc-to-mcp:
         specifier: 'catalog:'
         version: 1.3.2(7c45d4095abf7cef4938a6fc2cc62863)
+      trpc-to-openapi:
+        specifier: 'catalog:'
+        version: 3.3.0(patch_hash=2ca3c16af0fcca0c736697ad4fe553a14f794524fa9ce0d5c3e8ee4aea76090c)(@trpc/server@11.18.0(typescript@7.0.2))(zod-openapi@5.4.6(zod@4.4.3))(zod@4.4.3)
       use-deep-compare-effect:
         specifier: 'catalog:'
         version: 1.8.1(react@19.2.7)
@@ -1201,6 +1264,9 @@ importers:
       '@homarr/validation':
         specifier: workspace:^0.1.0
         version: link:../../packages/validation
+      '@trpc/server':
+        specifier: 'catalog:'
+        version: 11.18.0(typescript@7.0.2)
       dotenv:
         specifier: 'catalog:'
         version: 17.4.2
@@ -1214,6 +1280,9 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
       '@types/ws':
         specifier: 'catalog:'
         version: 8.18.1
@@ -1248,6 +1317,9 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -1314,9 +1386,15 @@ importers:
       '@kubernetes/client-node':
         specifier: 'catalog:'
         version: 1.4.0(supports-color@10.2.2)
+      '@paralleldrive/cuid2':
+        specifier: 'catalog:'
+        version: 3.3.0
       '@tanstack/react-query':
         specifier: 'catalog:'
         version: 5.101.2(react@19.2.7)
+      '@tiptap/react':
+        specifier: 'catalog:'
+        version: 3.27.3(@floating-ui/dom@1.7.6)(@tiptap/core@3.27.3(@tiptap/pm@3.27.3))(@tiptap/pm@3.27.3)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@trpc/client':
         specifier: 'catalog:'
         version: 11.18.0(@trpc/server@11.18.0(typescript@7.0.2))(typescript@7.0.2)
@@ -1329,6 +1407,9 @@ importers:
       '@trpc/tanstack-react-query':
         specifier: 'catalog:'
         version: 11.18.0(@tanstack/react-query@5.101.2(react@19.2.7))(@trpc/client@11.18.0(@trpc/server@11.18.0(typescript@7.0.2))(typescript@7.0.2))(@trpc/server@11.18.0(typescript@7.0.2))(react@19.2.7)(typescript@7.0.2)
+      drizzle-orm:
+        specifier: 'catalog:'
+        version: 0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.11.1)(gel@2.0.0(supports-color@10.2.2))(kysely@0.29.2)(mysql2@3.22.6(@types/node@24.13.3))(pg@8.22.0)(sql.js@1.14.1)
       jsonpath-plus:
         specifier: 'catalog:'
         version: 10.4.0
@@ -1338,6 +1419,9 @@ importers:
       next:
         specifier: 'catalog:'
         version: 16.3.0-preview.9(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(@types/node@24.13.3)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0)
+      pg:
+        specifier: 'catalog:'
+        version: 8.22.0
       react:
         specifier: 'catalog:'
         version: 19.2.7
@@ -1356,10 +1440,22 @@ importers:
       zod:
         specifier: 'catalog:'
         version: 4.4.3
+      zod-form-data:
+        specifier: 'catalog:'
+        version: 3.0.2(zod@4.4.3)
     devDependencies:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
+      '@types/pg':
+        specifier: 'catalog:'
+        version: 8.20.0
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.2.17
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -1393,6 +1489,9 @@ importers:
       cookies:
         specifier: 'catalog:'
         version: 0.9.1
+      dayjs:
+        specifier: 'catalog:'
+        version: 1.11.21
       ldapts:
         specifier: 'catalog:'
         version: 8.1.8
@@ -1421,6 +1520,12 @@ importers:
       '@types/cookies':
         specifier: 'catalog:'
         version: 0.9.2
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.2.17
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -1430,6 +1535,12 @@ importers:
       '@homarr/api':
         specifier: workspace:^0.1.0
         version: link:../api
+      '@mantine/hooks':
+        specifier: 'catalog:'
+        version: 9.4.1(react@19.2.7)
+      next:
+        specifier: 'catalog:'
+        version: 16.3.0-preview.9(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(@types/node@24.13.3)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0)
       react:
         specifier: 'catalog:'
         version: 19.2.7
@@ -1440,6 +1551,15 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.2.17
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 19.2.3(@types/react@19.2.17)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -1468,6 +1588,9 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
       esbuild:
         specifier: 'catalog:'
         version: 0.28.0
@@ -1480,9 +1603,21 @@ importers:
       '@homarr/core':
         specifier: workspace:^0.1.0
         version: link:../core
+      '@mantine/core':
+        specifier: 'catalog:'
+        version: 9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@paralleldrive/cuid2':
         specifier: 'catalog:'
         version: 3.3.0
+      '@tanstack/query-core':
+        specifier: 'catalog:'
+        version: 5.101.2
+      '@types/node-fetch':
+        specifier: 'catalog:'
+        version: 2.6.13
+      axios:
+        specifier: 'catalog:'
+        version: 1.15.0(debug@4.4.3(supports-color@10.2.2))
       cookie:
         specifier: 'catalog:'
         version: 2.0.1
@@ -1492,9 +1627,15 @@ importers:
       next:
         specifier: 'catalog:'
         version: 16.3.0-preview.9(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(@types/node@24.13.3)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0)
+      node-fetch:
+        specifier: 'catalog:'
+        version: 2.7.0
       octokit:
         specifier: 'catalog:'
         version: 5.0.5
+      ofetch:
+        specifier: 'catalog:'
+        version: 1.5.1
       react:
         specifier: 'catalog:'
         version: 19.2.7
@@ -1514,6 +1655,15 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.2.17
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 19.2.3(@types/react@19.2.17)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -1523,6 +1673,9 @@ importers:
       '@t3-oss/env-nextjs':
         specifier: 'catalog:'
         version: 0.13.11(arktype@2.1.20)(typescript@7.0.2)(zod@4.4.3)
+      axios:
+        specifier: 'catalog:'
+        version: 1.15.0(debug@4.4.3(supports-color@10.2.2))
       better-sqlite3:
         specifier: 'catalog:'
         version: 12.11.1
@@ -1544,9 +1697,15 @@ importers:
       superjson:
         specifier: 'catalog:'
         version: 2.2.6
+      undici:
+        specifier: 'catalog:'
+        version: 7.28.0
       winston:
         specifier: 'catalog:'
         version: 3.19.0
+      winston-transport:
+        specifier: 'catalog:'
+        version: 4.9.0
       zod:
         specifier: 'catalog:'
         version: 4.4.3
@@ -1557,6 +1716,9 @@ importers:
       '@types/better-sqlite3':
         specifier: 'catalog:'
         version: 7.6.13
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
       '@types/pg':
         specifier: 'catalog:'
         version: 8.20.0
@@ -1573,6 +1735,9 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -1627,6 +1792,15 @@ importers:
       '@homarr/validation':
         specifier: workspace:^0.1.0
         version: link:../validation
+      croner:
+        specifier: 'catalog:'
+        version: 10.0.1
+      drizzle-orm:
+        specifier: 'catalog:'
+        version: 0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.11.1)(gel@2.0.0(supports-color@10.2.2))(kysely@0.29.2)(mysql2@3.22.6(@types/node@24.13.3))(pg@8.22.0)(sql.js@1.14.1)
+      pg:
+        specifier: 'catalog:'
+        version: 8.22.0
       semver-parser:
         specifier: 'catalog:'
         version: 4.2.1
@@ -1637,6 +1811,12 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
+      '@types/pg':
+        specifier: 'catalog:'
+        version: 8.20.0
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -1659,6 +1839,9 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -1686,6 +1869,9 @@ importers:
       '@mantine/core':
         specifier: 'catalog:'
         version: 9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@mantine/dates':
+        specifier: 'catalog:'
+        version: 9.4.1(@mantine/core@9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.4.1(react@19.2.7))(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@paralleldrive/cuid2':
         specifier: 'catalog:'
         version: 3.3.0
@@ -1726,6 +1912,9 @@ importers:
       '@types/better-sqlite3':
         specifier: 'catalog:'
         version: 7.6.13
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
       '@types/pg':
         specifier: 'catalog:'
         version: 8.20.0
@@ -1757,6 +1946,9 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
       tsx:
         specifier: 'catalog:'
         version: 4.20.4
@@ -1772,9 +1964,15 @@ importers:
       '@homarr/core':
         specifier: workspace:^0.1.0
         version: link:../core
+      '@mantine/core':
+        specifier: 'catalog:'
+        version: 9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       dockerode:
         specifier: 'catalog:'
         version: 5.0.1(supports-color@10.2.2)
+      zod:
+        specifier: 'catalog:'
+        version: 4.4.3
     devDependencies:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
@@ -1782,6 +1980,9 @@ importers:
       '@types/dockerode':
         specifier: 'catalog:'
         version: 4.0.1
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -1800,6 +2001,9 @@ importers:
       '@mantine/form':
         specifier: 'catalog:'
         version: 9.4.1(react@19.2.7)
+      react:
+        specifier: 'catalog:'
+        version: 19.2.7
       zod:
         specifier: 'catalog:'
         version: 4.4.3
@@ -1807,6 +2011,12 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.2.17
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -1840,9 +2050,24 @@ importers:
       '@mantine/core':
         specifier: 'catalog:'
         version: 9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@mantine/hooks':
+        specifier: 'catalog:'
+        version: 9.4.1(react@19.2.7)
+      '@tabler/icons-react':
+        specifier: 'catalog:'
+        version: 3.44.0(react@19.2.7)
+      '@trpc/server':
+        specifier: 'catalog:'
+        version: 11.18.0(typescript@7.0.2)
+      next:
+        specifier: 'catalog:'
+        version: 16.3.0-preview.9(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(@types/node@24.13.3)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0)
       react:
         specifier: 'catalog:'
         version: 19.2.7
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.2.7(react@19.2.7)
       zod:
         specifier: 'catalog:'
         version: 4.4.3
@@ -1850,6 +2075,15 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.2.17
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 19.2.3(@types/react@19.2.17)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -1869,6 +2103,9 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -1894,6 +2131,9 @@ importers:
       '@types/bcrypt':
         specifier: 'catalog:'
         version: 6.0.0
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -1942,18 +2182,36 @@ importers:
       '@jellyfin/sdk':
         specifier: 'catalog:'
         version: 0.13.0(axios@1.15.0(debug@4.4.3(supports-color@10.2.2)))
+      '@mantine/core':
+        specifier: 'catalog:'
+        version: 9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      axios:
+        specifier: 'catalog:'
+        version: 1.15.0(debug@4.4.3(supports-color@10.2.2))
+      dayjs:
+        specifier: 'catalog:'
+        version: 1.11.21
+      http-cookie-agent:
+        specifier: 'catalog:'
+        version: 6.0.8(tough-cookie@5.1.2)(undici@7.28.0)
       ical.js:
         specifier: 'catalog:'
         version: 2.2.1
       maria2:
         specifier: 'catalog:'
         version: 0.4.1
+      node-fetch:
+        specifier: 'catalog:'
+        version: 2.7.0
       octokit:
         specifier: 'catalog:'
         version: 5.0.5
       proxmox-api:
         specifier: 'catalog:'
         version: 1.1.1
+      superjson:
+        specifier: 'catalog:'
+        version: 2.2.6
       timezones-ical-library:
         specifier: 'catalog:'
         version: 2.2.1
@@ -1976,6 +2234,12 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
+      '@types/node-fetch':
+        specifier: 'catalog:'
+        version: 2.6.13
       '@types/node-unifi':
         specifier: 'catalog:'
         version: 2.5.1(patch_hash=5e6ae51e2a17a7f9729bfa30b0eb3d0842a5810ac6db47603ab4a6efa1ed84c5)
@@ -2010,6 +2274,12 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.2.17
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -2052,12 +2322,21 @@ importers:
       '@mantine/core':
         specifier: 'catalog:'
         version: 9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@mantine/dates':
+        specifier: 'catalog:'
+        version: 9.4.1(@mantine/core@9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.4.1(react@19.2.7))(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@mantine/hooks':
+        specifier: 'catalog:'
+        version: 9.4.1(react@19.2.7)
       '@tabler/icons-react':
         specifier: 'catalog:'
         version: 3.44.0(react@19.2.7)
       dayjs:
         specifier: 'catalog:'
         version: 1.11.21
+      mantine-react-table:
+        specifier: 'catalog:'
+        version: mantine-react-table-open@9.0.3(@mantine/core@9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/dates@9.4.1(@mantine/core@9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.4.1(react@19.2.7))(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.4.1(react@19.2.7))(@tabler/icons-react@3.44.0(react@19.2.7))(clsx@2.1.1)(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       next:
         specifier: 'catalog:'
         version: 16.3.0-preview.9(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(@types/node@24.13.3)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0)
@@ -2074,6 +2353,15 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.2.17
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 19.2.3(@types/react@19.2.17)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -2093,6 +2381,9 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -2166,6 +2457,15 @@ importers:
       '@types/adm-zip':
         specifier: 'catalog:'
         version: 0.5.8
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.2.17
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 19.2.3(@types/react@19.2.17)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -2182,6 +2482,9 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -2194,10 +2497,16 @@ importers:
       '@homarr/core':
         specifier: workspace:^0.1.0
         version: link:../core
+      undici:
+        specifier: 'catalog:'
+        version: 7.28.0
     devDependencies:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -2226,6 +2535,9 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -2256,12 +2568,21 @@ importers:
       '@homarr/redis':
         specifier: workspace:^0.1.0
         version: link:../redis
+      '@octokit/plugin-rest-endpoint-methods':
+        specifier: 'catalog:'
+        version: 17.0.0(@octokit/core@7.0.6)
       dayjs:
         specifier: 'catalog:'
         version: 1.11.21
+      dockerode:
+        specifier: 'catalog:'
+        version: 5.0.1(supports-color@10.2.2)
       octokit:
         specifier: 'catalog:'
         version: 5.0.5
+      semver-parser:
+        specifier: 'catalog:'
+        version: 4.2.1
       superjson:
         specifier: 'catalog:'
         version: 2.2.6
@@ -2275,6 +2596,12 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/dockerode':
+        specifier: 'catalog:'
+        version: 4.0.1
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -2291,6 +2618,9 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -2319,6 +2649,15 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.2.17
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 19.2.3(@types/react@19.2.17)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -2361,6 +2700,9 @@ importers:
       '@mantine/core':
         specifier: 'catalog:'
         version: 9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@mantine/dates':
+        specifier: 'catalog:'
+        version: 9.4.1(@mantine/core@9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.4.1(react@19.2.7))(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@mantine/hooks':
         specifier: 'catalog:'
         version: 9.4.1(react@19.2.7)
@@ -2370,6 +2712,12 @@ importers:
       '@tabler/icons-react':
         specifier: 'catalog:'
         version: 3.44.0(react@19.2.7)
+      '@tanstack/react-query':
+        specifier: 'catalog:'
+        version: 5.101.2(react@19.2.7)
+      dayjs:
+        specifier: 'catalog:'
+        version: 1.11.21
       jotai:
         specifier: 'catalog:'
         version: 2.20.1(@babel/core@7.29.0(supports-color@10.2.2))(@babel/template@7.29.7)(@types/react@19.2.17)(react@19.2.7)
@@ -2389,6 +2737,15 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.2.17
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 19.2.3(@types/react@19.2.17)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -2426,12 +2783,24 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.2.17
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 19.2.3(@types/react@19.2.17)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
 
   packages/ui:
     dependencies:
+      '@gfazioli/mantine-onboarding-tour':
+        specifier: 'catalog:'
+        version: 4.0.6(@mantine/core@9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.4.1(react@19.2.7))(@tabler/icons-react@3.44.0(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
@@ -2447,6 +2816,9 @@ importers:
       '@homarr/validation':
         specifier: workspace:^0.1.0
         version: link:../validation
+      '@mantine/charts':
+        specifier: 'catalog:'
+        version: 9.4.1(@mantine/core@9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.4.1(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(recharts@3.9.1(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(redux@5.0.1))
       '@mantine/core':
         specifier: 'catalog:'
         version: 9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -2459,9 +2831,18 @@ importers:
       '@tabler/icons-react':
         specifier: 'catalog:'
         version: 3.44.0(react@19.2.7)
+      '@tanstack/react-query':
+        specifier: 'catalog:'
+        version: 5.101.2(react@19.2.7)
+      clsx:
+        specifier: 'catalog:'
+        version: 2.1.1
       crypto-js:
         specifier: 'catalog:'
         version: 4.2.0
+      csstype:
+        specifier: 'catalog:'
+        version: 3.2.3
       mantine-react-table:
         specifier: 'catalog:'
         version: mantine-react-table-open@9.0.3(@mantine/core@9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/dates@9.4.1(@mantine/core@9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.4.1(react@19.2.7))(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.4.1(react@19.2.7))(@tabler/icons-react@3.44.0(react@19.2.7))(clsx@2.1.1)(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -2487,6 +2868,15 @@ importers:
       '@types/css-modules':
         specifier: 'catalog:'
         version: 1.0.5
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.2.17
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 19.2.3(@types/react@19.2.17)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -2499,6 +2889,9 @@ importers:
       '@homarr/translation':
         specifier: workspace:^0.1.0
         version: link:../translation
+      '@mantine/dates':
+        specifier: 'catalog:'
+        version: 9.4.1(@mantine/core@9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.4.1(react@19.2.7))(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       zod:
         specifier: 'catalog:'
         version: 4.4.3
@@ -2509,6 +2902,9 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -2590,15 +2986,24 @@ importers:
       '@mantine/core':
         specifier: 'catalog:'
         version: 9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@mantine/dates':
+        specifier: 'catalog:'
+        version: 9.4.1(@mantine/core@9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.4.1(react@19.2.7))(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@mantine/form':
         specifier: 'catalog:'
         version: 9.4.1(react@19.2.7)
       '@mantine/hooks':
         specifier: 'catalog:'
         version: 9.4.1(react@19.2.7)
+      '@mantine/tiptap':
+        specifier: 'catalog:'
+        version: 9.4.1(@mantine/core@9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.4.1(react@19.2.7))(@tiptap/extension-link@3.27.3(@tiptap/core@3.27.3(@tiptap/pm@3.27.3))(@tiptap/pm@3.27.3))(@tiptap/react@3.27.3(@floating-ui/dom@1.7.6)(@tiptap/core@3.27.3(@tiptap/pm@3.27.3))(@tiptap/pm@3.27.3)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@tabler/icons-react':
         specifier: 'catalog:'
         version: 3.44.0(react@19.2.7)
+      '@tanstack/react-query':
+        specifier: 'catalog:'
+        version: 5.101.2(react@19.2.7)
       '@tiptap/extension-color':
         specifier: 'catalog:'
         version: 3.27.3(@tiptap/extension-text-style@3.27.3(@tiptap/core@3.27.3(@tiptap/pm@3.27.3)))
@@ -2647,6 +3052,12 @@ importers:
       '@tiptap/starter-kit':
         specifier: 'catalog:'
         version: 3.27.3
+      '@trpc/client':
+        specifier: 'catalog:'
+        version: 11.18.0(@trpc/server@11.18.0(typescript@7.0.2))(typescript@7.0.2)
+      '@trpc/server':
+        specifier: 'catalog:'
+        version: 11.18.0(typescript@7.0.2)
       clsx:
         specifier: 'catalog:'
         version: 2.1.1
@@ -2668,6 +3079,12 @@ importers:
       next:
         specifier: 'catalog:'
         version: 16.3.0-preview.9(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(@types/node@24.13.3)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0)
+      next-intl:
+        specifier: 'catalog:'
+        version: 4.13.1(next@16.3.0-preview.9(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(@types/node@24.13.3)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0))(react@19.2.7)(typescript@7.0.2)
+      prosemirror-model:
+        specifier: 'catalog:'
+        version: 1.25.10
       react:
         specifier: 'catalog:'
         version: 19.2.7
@@ -2696,6 +3113,15 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.2.17
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 19.2.3(@types/react@19.2.17)
       '@types/video.js':
         specifier: 'catalog:'
         version: 7.3.58
@@ -7947,9 +8373,6 @@ packages:
   '@types/node@18.19.50':
     resolution: {integrity: sha512-xonK+NRrMBRtkL1hVCc3G+uXtjh1Al4opBLjqVmipe5ZAaBYWW6cNAiBVZ1BvmkBhep698rP3UM3aRAdSALuhg==}
 
-  '@types/node@24.13.2':
-    resolution: {integrity: sha512-fRa09kZTgu8o71KFcDjUFuc7F+dEbZYZmkI0mg5YBTRs0yMKjYHsq/c0urDKeDb+D5qVgXOdFcuu+DZPKOITwA==}
-
   '@types/node@24.13.3':
     resolution: {integrity: sha512-Dh8vAsV36ig5wa9OX4pXvMc9D3Veibfw2wix0CUwYODLD8nkj9UsLjASr49nPg+2eKzxhBV+v7L8pXvT4e639Q==}
 
@@ -9407,6 +9830,7 @@ packages:
 
   crypto-js@4.2.0:
     resolution: {integrity: sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==}
+    deprecated: Active development of CryptoJS has been discontinued. This library is no longer maintained.
 
   crypto-random-string@4.0.0:
     resolution: {integrity: sha512-x8dy3RnvYdlUcPOjkEHqozhiwzKNSq7GcPuXFbnyMOCHxX8V3OgIg/pYuabl2sbUPfIJaeAQB7PMOK8DFIdoRA==}
@@ -11050,9 +11474,6 @@ packages:
 
   immediate@3.0.6:
     resolution: {integrity: sha512-XXOFtyqDjNDAQxVfYxuF7g9Il/IbWmmlQg2MYKOH8ExIT1qg6xc4zyS3HaEEATgs1btfzxq15ciUiY7gjSXRGQ==}
-
-  immer@11.1.4:
-    resolution: {integrity: sha512-XREFCPo6ksxVzP4E0ekD5aMdf8WMwmdNaz6vuvxgI40UaEiu6q3p8X52aU6GdyvLY3XXX/8R7JOTXStz/nBbRw==}
 
   immer@11.1.9:
     resolution: {integrity: sha512-sc/z0Cyti70bZa0ZU4sWfAElfovFb9Ni8tArJZLuklYWxegPiK3pDOql1Rq5H0FIRAW9LSQRG6OX4KqBldbhBA==}
@@ -13874,9 +14295,6 @@ packages:
 
   requires-port@1.0.0:
     resolution: {integrity: sha512-KigOCHcocU3XODJxsu8i/j8T9tzT4adHiecwORRQ0ZZFcp7ahwXuRU1m+yuO90C5ZUyGeGfocHDI14M3L3yDAQ==}
-
-  reselect@5.1.1:
-    resolution: {integrity: sha512-K/BG6eIky/SBpzfHZv/dd+9JBFiS4SWV7FIujVyJRux6e45+73RaUHXLmIR1f7WOMaQ0U1km6qwklRQxpJJY0w==}
 
   reselect@5.2.0:
     resolution: {integrity: sha512-AgZ3UOZm3YndfrJ4OYjgrT7bmCm/1iqkjvEfH/oYjzh6PD2qw4QuT3jjnXIrpdt4MTpMXclMT3lXbmRY+XRakw==}
@@ -18995,7 +19413,7 @@ snapshots:
       '@jest/schemas': 29.6.3
       '@types/istanbul-lib-coverage': 2.0.6
       '@types/istanbul-reports': 3.0.4
-      '@types/node': 24.13.2
+      '@types/node': 24.13.3
       '@types/yargs': 17.0.35
       chalk: 4.1.2
 
@@ -19163,7 +19581,7 @@ snapshots:
   '@kubernetes/client-node@1.4.0(supports-color@10.2.2)':
     dependencies:
       '@types/js-yaml': 4.0.9
-      '@types/node': 24.13.2
+      '@types/node': 24.13.3
       '@types/node-fetch': 2.6.13
       '@types/stream-buffers': 3.0.7
       form-data: 4.0.6
@@ -20226,10 +20644,10 @@ snapshots:
     dependencies:
       '@standard-schema/spec': 1.1.0
       '@standard-schema/utils': 0.3.0
-      immer: 11.1.4
+      immer: 11.1.9
       redux: 5.0.1
       redux-thunk: 3.1.0(redux@5.0.1)
-      reselect: 5.1.1
+      reselect: 5.2.0
     optionalDependencies:
       react: 19.2.7
       react-redux: 9.2.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1)
@@ -20570,7 +20988,7 @@ snapshots:
   '@scalar/icons@0.7.3(typescript@7.0.2)':
     dependencies:
       '@phosphor-icons/core': 2.1.1
-      '@types/node': 24.13.2
+      '@types/node': 24.13.3
       chalk: 5.6.2
       vue: 3.5.35(typescript@7.0.2)
     transitivePeerDependencies:
@@ -21602,7 +22020,7 @@ snapshots:
 
   '@types/bcrypt@6.0.0':
     dependencies:
-      '@types/node': 24.13.2
+      '@types/node': 24.13.3
 
   '@types/better-sqlite3@7.6.13':
     dependencies:
@@ -21611,11 +22029,11 @@ snapshots:
   '@types/body-parser@1.19.5':
     dependencies:
       '@types/connect': 3.4.38
-      '@types/node': 24.13.2
+      '@types/node': 24.13.3
 
   '@types/bonjour@3.5.13':
     dependencies:
-      '@types/node': 24.13.2
+      '@types/node': 24.13.3
 
   '@types/chai@5.2.2':
     dependencies:
@@ -21626,18 +22044,18 @@ snapshots:
   '@types/connect-history-api-fallback@1.5.4':
     dependencies:
       '@types/express-serve-static-core': 4.19.5
-      '@types/node': 24.13.2
+      '@types/node': 24.13.3
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 24.13.2
+      '@types/node': 24.13.3
 
   '@types/cookies@0.9.2':
     dependencies:
       '@types/connect': 3.4.38
       '@types/express': 4.17.25
       '@types/keygrip': 1.0.6
-      '@types/node': 24.13.2
+      '@types/node': 24.13.3
 
   '@types/crypto-js@4.2.2': {}
 
@@ -21776,13 +22194,13 @@ snapshots:
 
   '@types/docker-modem@3.0.6':
     dependencies:
-      '@types/node': 24.13.2
+      '@types/node': 24.13.3
       '@types/ssh2': 1.15.1
 
   '@types/dockerode@4.0.1':
     dependencies:
       '@types/docker-modem': 3.0.6
-      '@types/node': 24.13.2
+      '@types/node': 24.13.3
       '@types/ssh2': 1.15.1
 
   '@types/estree-jsx@1.0.5':
@@ -21793,7 +22211,7 @@ snapshots:
 
   '@types/express-serve-static-core@4.19.5':
     dependencies:
-      '@types/node': 24.13.2
+      '@types/node': 24.13.3
       '@types/qs': 6.9.16
       '@types/range-parser': 1.2.7
       '@types/send': 0.17.4
@@ -21825,7 +22243,7 @@ snapshots:
 
   '@types/http-proxy@1.17.17':
     dependencies:
-      '@types/node': 24.13.2
+      '@types/node': 24.13.3
 
   '@types/istanbul-lib-coverage@2.0.6': {}
 
@@ -21855,7 +22273,7 @@ snapshots:
 
   '@types/node-fetch@2.6.13':
     dependencies:
-      '@types/node': 24.13.2
+      '@types/node': 24.13.3
       form-data: 4.0.6
 
   '@types/node-unifi@2.5.1(patch_hash=5e6ae51e2a17a7f9729bfa30b0eb3d0842a5810ac6db47603ab4a6efa1ed84c5)':
@@ -21867,10 +22285,6 @@ snapshots:
   '@types/node@18.19.50':
     dependencies:
       undici-types: 5.26.5
-
-  '@types/node@24.13.2':
-    dependencies:
-      undici-types: 7.18.2
 
   '@types/node@24.13.3':
     dependencies:
@@ -21933,14 +22347,14 @@ snapshots:
 
   '@types/sax@1.2.7':
     dependencies:
-      '@types/node': 24.13.2
+      '@types/node': 24.13.3
 
   '@types/semver@7.5.8': {}
 
   '@types/send@0.17.4':
     dependencies:
       '@types/mime': 1.3.5
-      '@types/node': 24.13.2
+      '@types/node': 24.13.3
 
   '@types/serve-index@1.9.4':
     dependencies:
@@ -21949,7 +22363,7 @@ snapshots:
   '@types/serve-static@1.15.7':
     dependencies:
       '@types/http-errors': 2.0.4
-      '@types/node': 24.13.2
+      '@types/node': 24.13.3
       '@types/send': 0.17.4
 
   '@types/set-cookie-parser@2.4.10':
@@ -21959,15 +22373,15 @@ snapshots:
 
   '@types/sockjs@0.3.36':
     dependencies:
-      '@types/node': 24.13.2
+      '@types/node': 24.13.3
 
   '@types/ssh2-streams@0.1.12':
     dependencies:
-      '@types/node': 24.13.2
+      '@types/node': 24.13.3
 
   '@types/ssh2@0.5.52':
     dependencies:
-      '@types/node': 24.13.2
+      '@types/node': 24.13.3
       '@types/ssh2-streams': 0.1.12
 
   '@types/ssh2@1.15.1':
@@ -21979,7 +22393,7 @@ snapshots:
 
   '@types/stream-buffers@3.0.7':
     dependencies:
-      '@types/node': 24.13.2
+      '@types/node': 24.13.3
 
   '@types/triple-beam@1.3.5': {}
 
@@ -22000,11 +22414,11 @@ snapshots:
 
   '@types/ws@8.18.1':
     dependencies:
-      '@types/node': 24.13.2
+      '@types/node': 24.13.3
 
   '@types/xml2js@0.4.14':
     dependencies:
-      '@types/node': 24.13.2
+      '@types/node': 24.13.3
 
   '@types/yargs-parser@21.0.3': {}
 
@@ -24310,7 +24724,7 @@ snapshots:
 
   eval@0.1.8:
     dependencies:
-      '@types/node': 24.13.2
+      '@types/node': 24.13.3
       require-like: 0.1.2
 
   event-target-shim@5.0.1: {}
@@ -25382,8 +25796,6 @@ snapshots:
 
   immediate@3.0.6: {}
 
-  immer@11.1.4: {}
-
   immer@11.1.9: {}
 
   immutable@5.1.5: {}
@@ -25641,7 +26053,7 @@ snapshots:
   jest-util@29.7.0:
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 24.13.2
+      '@types/node': 24.13.3
       chalk: 4.1.2
       ci-info: 3.9.0
       graceful-fs: 4.2.11
@@ -25655,7 +26067,7 @@ snapshots:
 
   jest-worker@29.7.0:
     dependencies:
-      '@types/node': 24.13.2
+      '@types/node': 24.13.3
       jest-util: 29.7.0
       merge-stream: 2.0.0
       supports-color: 8.1.1
@@ -28046,7 +28458,7 @@ snapshots:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
-      '@types/node': 24.13.2
+      '@types/node': 24.13.3
       long: 5.3.2
 
   proxmox-api@1.1.1:
@@ -28322,14 +28734,14 @@ snapshots:
     dependencies:
       find-up-simple: 1.0.1
       read-pkg: 10.0.0
-      type-fest: 5.6.0
+      type-fest: 5.7.0
 
   read-pkg@10.0.0:
     dependencies:
       '@types/normalize-package-data': 2.4.4
       normalize-package-data: 8.0.0
       parse-json: 8.3.0
-      type-fest: 5.6.0
+      type-fest: 5.7.0
       unicorn-magic: 0.3.0
 
   read-pkg@9.0.1:
@@ -28623,8 +29035,6 @@ snapshots:
   require-like@0.1.2: {}
 
   requires-port@1.0.0: {}
-
-  reselect@5.1.1: {}
 
   reselect@5.2.0: {}
 

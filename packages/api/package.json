@@ -47,23 +47,31 @@
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "@kubernetes/client-node": "catalog:",
+    "@paralleldrive/cuid2": "catalog:",
     "@tanstack/react-query": "catalog:",
+    "@tiptap/react": "catalog:",
     "@trpc/client": "catalog:",
     "@trpc/react-query": "catalog:",
     "@trpc/server": "catalog:",
     "@trpc/tanstack-react-query": "catalog:",
+    "drizzle-orm": "catalog:",
     "jsonpath-plus": "catalog:",
     "lodash.clonedeep": "catalog:",
     "next": "catalog:",
+    "pg": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "superjson": "catalog:",
     "trpc-to-mcp": "catalog:",
     "trpc-to-openapi": "catalog:",
-    "zod": "catalog:"
+    "zod": "catalog:",
+    "zod-form-data": "catalog:"
   },
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",
+    "@types/node": "catalog:",
+    "@types/pg": "catalog:",
+    "@types/react": "catalog:",
     "typescript": "catalog:"
   }
 }

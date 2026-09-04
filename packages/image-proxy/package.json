@@ -29,6 +29,7 @@
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/bcrypt": "catalog:",
+    "@types/node": "catalog:",
     "typescript": "catalog:"
   }
 }
