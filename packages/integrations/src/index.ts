@@ -18,6 +18,7 @@ export { LidarrIntegration } from "./media-organizer/lidarr/lidarr-integration";
 export { RadarrIntegration } from "./media-organizer/radarr/radarr-integration";
 export { ReadarrIntegration } from "./media-organizer/readarr/readarr-integration";
 export { SonarrIntegration } from "./media-organizer/sonarr/sonarr-integration";
+export { SportarrIntegration } from "./media-organizer/sportarr/sportarr-integration";
 export { NextcloudIntegration } from "./nextcloud/nextcloud.integration";
 export { GotifyIntegration } from "./gotify/gotify-integration";
 export { NTFYIntegration } from "./ntfy/ntfy-integration";

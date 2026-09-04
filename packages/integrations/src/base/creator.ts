@@ -27,6 +27,7 @@ import { LidarrIntegration } from "../media-organizer/lidarr/lidarr-integration"
 import { RadarrIntegration } from "../media-organizer/radarr/radarr-integration";
 import { ReadarrIntegration } from "../media-organizer/readarr/readarr-integration";
 import { SonarrIntegration } from "../media-organizer/sonarr/sonarr-integration";
+import { SportarrIntegration } from "../media-organizer/sportarr/sportarr-integration";
 import { TdarrIntegration } from "../media-transcoding/tdarr-integration";
 import { MockIntegration } from "../mock/mock-integration";
 import { NavidromeIntegration } from "../navidrome/navidrome-integration";
@@ -88,6 +89,7 @@ export const integrationCreators = {
   jellyfin: JellyfinIntegration,
   plex: PlexIntegration,
   sonarr: SonarrIntegration,
+  sportarr: SportarrIntegration,
   radarr: RadarrIntegration,
   sabNzbd: SabnzbdIntegration,
   nzbGet: NzbGetIntegration,
