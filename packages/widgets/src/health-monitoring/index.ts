@@ -3,6 +3,7 @@ import { IconHeartRateMonitor, IconServerOff } from "@tabler/icons-react";
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
+import { supportsStorageVolumeSelection } from "../filter-storage-volumes";
 import { optionsBuilder } from "../options";
 import { createStorageVolumeMultiSelectOptions } from "../storage-volume-options";
 
@@ -83,7 +84,7 @@ export const { definition, componentLoader } = createWidgetDefinition("healthMon
         },
         visibleStorageVolumes: {
           shouldHide(_, integrationKinds) {
-            return integrationKinds.length === 0 || !integrationKinds.every((kind) => kind === "synology");
+            return !supportsStorageVolumeSelection(integrationKinds);
           },
         },
         showUptime: {

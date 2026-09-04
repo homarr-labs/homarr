@@ -1,5 +1,4 @@
-import { createIntegrationAsync } from "@homarr/integrations";
-import { SynologyIntegration } from "@homarr/integrations";
+import { createIntegrationAsync, OpenMediaVaultIntegration, SynologyIntegration } from "@homarr/integrations";
 import { clusterInfoRequestHandler, systemInfoRequestHandler } from "@homarr/request-handler/health-monitoring";
 
 import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
@@ -42,14 +41,17 @@ export const healthMonitoringRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "List storage volumes from a Synology DiskStation integration for widget configuration. REQUIRED: integrationId from integration_all (Synology integration only)",
+          "List storage volumes from a Synology DiskStation or OpenMediaVault integration for widget configuration. REQUIRED: integrationId from integration_all (Synology or OpenMediaVault integration only). The caller needs query permission for that integration.",
       },
     })
-    .concat(createOneIntegrationMiddleware("query", "synology"))
+    .concat(createOneIntegrationMiddleware("query", "synology", "openmediavault"))
     .query(async ({ ctx }) => {
       const integrationInstance = await createIntegrationAsync(ctx.integration);
-      if (!(integrationInstance instanceof SynologyIntegration)) {
-        throw new Error("Expected Synology integration");
+      if (
+        !(integrationInstance instanceof SynologyIntegration) &&
+        !(integrationInstance instanceof OpenMediaVaultIntegration)
+      ) {
+        throw new Error("Expected storage volume integration");
       }
 
       return await integrationInstance.listStorageVolumesAsync();
