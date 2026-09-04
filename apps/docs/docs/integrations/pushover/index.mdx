@@ -1,0 +1,42 @@
+---
+title: 'Pushover'
+description: "Pushover is a service for receiving real-time push notifications on your Android, iPhone, iPad, and Desktop devices."
+hide_title: true
+---
+
+import { notificationsWidget } from '@site/docs/widgets/notifications';
+import { AddingIntegration } from '@site/src/components/integrations/adding';
+import { IntegrationHeader } from '@site/src/components/integrations/header';
+import { IntegrationSecrets } from '@site/src/components/integrations/secrets';
+import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
+import { pushoverIntegration } from '.';
+
+<IntegrationHeader
+    integration={pushoverIntegration}
+    categories={['Notifications', 'Messaging']}
+/>
+
+### Widgets & Capabilities
+<IntegrationCapabilites
+    items={[{
+        widget: notificationsWidget
+    }]}
+/>
+
+### Adding the integration
+<AddingIntegration />
+
+### Secrets
+<IntegrationSecrets secrets={[{
+    credentials: ['apiKey', 'userKey'],
+    steps: [
+        {
+            title: 'API Token (Application Key)',
+            description: 'Register your application on the [Pushover website](https://pushover.net/apps) and copy the API token/application key.'
+        },
+        {
+            title: 'User Key',
+            description: 'Your user key is viewable on the [Pushover dashboard](https://pushover.net/) when logged in. It is a 30-character string (e.g. `uQiRzpo4DXghDmr9QzzfQu27cmVRsG`).'
+        }
+    ]
+}]} />
