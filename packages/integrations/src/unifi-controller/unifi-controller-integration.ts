@@ -66,7 +66,7 @@ export class UnifiControllerIntegration extends Integration implements NetworkCo
       checkServerIdentity: createCustomCheckServerIdentity(await getTrustedCertificateHostnamesAsync()),
     };
 
-    // ponytail: node-unifi always connects over HTTPS, regardless of the protocol in the
+    // node-unifi always connects over HTTPS, regardless of the protocol in the
     // integration URL. UniFi OS consoles use port 443 while self-hosted controllers normally
     // use 8443. If no port was provided, try both without hiding authentication errors.
     const ports = url.port ? [Number(url.port)] : [443, 8443];
