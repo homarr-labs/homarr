@@ -7,7 +7,6 @@ import {
   Alert,
   Box,
   Button,
-  CopyButton,
   Group,
   Paper,
   SimpleGrid,
@@ -22,8 +21,6 @@ import {
   IconBrandCss3,
   IconBrandDiscord,
   IconBrandGithub,
-  IconCheck,
-  IconCopy,
   IconDatabaseExport,
   IconExternalLink,
   IconHeartHandshake,
@@ -71,21 +68,6 @@ const composeDiffLines = [
   { kind: "context", value: " volumes:" },
   { kind: "context", value: "   homarr-v2:" },
 ] as const;
-
-const v2ComposeFile = `services:
-  homarr:
-    image: ghcr.io/homarr-labs/homarr-test:v2
-    ports:
-      - "7575:7575"
-    volumes:
-      - homarr-v2:/appdata
-    environment:
-      SECRET_ENCRYPTION_KEY: <SECRET_KEY>
-      WORKSHOP_API_URL: https://v2.preview.homarr.dev/ # Only during the beta
-
-volumes:
-  homarr-v2:
-`;
 
 interface V2BetaAnnouncementProps {
   canExportBackup: boolean;
@@ -143,14 +125,15 @@ const V2BetaAnnouncementModal = createModal<V2BetaAnnouncementModalProps>(({ inn
         <Stack gap="sm" maw={760}>
           <Title order={2}>Help us get Homarr v2 ready</Title>
           <Text>
-            There is no release date yet. Homarr v2 will become the default when it is ready, and we need you to test it
-            and share feedback before we can be confident enough to make that switch.
+            We&apos;ve been working on Homarr&apos;s biggest update for a while now. There is no fixed release date yet,
+            it will be ready when it&apos;s ready, and we need your help and feedback to help us become confident enough
+            to make the switch for everyone.
           </Text>
         </Stack>
       </Paper>
 
       <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
-        <FeatureCard icon={<IconBrandCss3 size={21} />} title="Homarr Workshop">
+        <FeatureCard icon={<IconBrandCss3 size={21} />} title="Workshop">
           Share and discover Custom Widgets and CSS made by the Homarr community.
         </FeatureCard>
         <FeatureCard icon={<IconArrowsMove size={21} />} title="Complete drag-and-drop rewrite">
@@ -159,9 +142,9 @@ const V2BetaAnnouncementModal = createModal<V2BetaAnnouncementModalProps>(({ inn
         <FeatureCard icon={<IconWand size={21} />} title="Custom Widgets v2">
           We think you can make almost any widget with live previews, API requests, options, actions, and validation.
         </FeatureCard>
-        <FeatureCard icon={<IconRobot size={21} />} title="Homarr Assistant">
-          Homarr Assistant can directly make a Custom Widget for you. Try giving it the API docs for your latest
-          selfhosted tool and asking it to build a custom widget for it.
+        <FeatureCard icon={<IconRobot size={21} />} title="Assistant">
+          Assistant can directly make a Custom Widget for you. Try giving it the API docs for your latest selfhosted
+          tool and asking it to build a custom widget for it.
         </FeatureCard>
       </SimpleGrid>
 
@@ -186,18 +169,6 @@ const V2BetaAnnouncementModal = createModal<V2BetaAnnouncementModalProps>(({ inn
             <V2BetaInstallInstructions canExportBackup={innerProps.canExportBackup} />
           </Accordion.Panel>
         </Accordion.Item>
-        <FaqAccordionItem value="current-data" title="Can I use my current Homarr data?">
-          Use the separate <code>homarr-v2</code> volume shown in the example. Keep your current volume untouched so you
-          can return to your current Homarr instance.
-        </FaqAccordionItem>
-        <FaqAccordionItem value="release-date" title="When will Homarr v2 be released?">
-          There is no release date yet. V2 will become the default when it is ready, after enough testing and feedback
-          gives us confidence in the release.
-        </FaqAccordionItem>
-        <FaqAccordionItem value="feedback" title="What makes a useful feedback report?">
-          Tell us exactly what happened and what you expected instead. Add screenshots or a recording, your resolution
-          and browser zoom, board column count, device, browser, and exact reproduction steps whenever possible.
-        </FaqAccordionItem>
       </Accordion>
 
       <Alert variant="light" color="red" icon={<IconHeartHandshake size={22} />} title="Your testing is essential">
@@ -225,7 +196,7 @@ const V2BetaAnnouncementModal = createModal<V2BetaAnnouncementModalProps>(({ inn
           size="md"
           leftSection={<IconBrandCss3 size={18} />}
         >
-          Open Homarr Workshop
+          Open Workshop
         </Button>
         <Button
           component="a"
@@ -322,32 +293,16 @@ const V2BetaInstallInstructions = ({ canExportBackup }: V2BetaInstallInstruction
     <Stack gap="xs">
       <Title order={3}>Update your Docker Compose file</Title>
       <Text c="dimmed" size="sm">
-        Replace the current image and add the beta-only Workshop URL. The complete example below can be copied as a
-        starting point.
+        Replace the current image and add the beta-only Workshop URL. Use the example below as a starting point.
       </Text>
     </Stack>
 
     <Paper withBorder radius="md" className={classes.diffViewer}>
-      <Group justify="space-between" px="md" py="sm" className={classes.diffHeader}>
-        <Group gap="xs">
-          <IconTerminal2 size={17} />
-          <Text fw={700} size="sm">
-            docker-compose.yml
-          </Text>
-        </Group>
-        <CopyButton value={v2ComposeFile} timeout={2000}>
-          {({ copied, copy }) => (
-            <Button
-              variant="subtle"
-              color="gray"
-              size="compact-sm"
-              leftSection={copied ? <IconCheck size={15} /> : <IconCopy size={15} />}
-              onClick={copy}
-            >
-              {copied ? "Copied" : "Copy file"}
-            </Button>
-          )}
-        </CopyButton>
+      <Group gap="xs" px="md" py="sm" className={classes.diffHeader}>
+        <IconTerminal2 size={17} />
+        <Text fw={700} size="sm">
+          docker-compose.yml
+        </Text>
       </Group>
       <Box component="pre" className={classes.diffCode} aria-label="Docker Compose changes for Homarr v2 beta">
         {composeDiffLines.map((line, index) => (
@@ -387,25 +342,4 @@ const FeatureCard = ({ icon, title, children }: FeatureCardProps) => (
       </Box>
     </Group>
   </Paper>
-);
-
-interface FaqAccordionItemProps {
-  value: string;
-  title: string;
-  children: ReactNode;
-}
-
-const FaqAccordionItem = ({ value, title, children }: FaqAccordionItemProps) => (
-  <Accordion.Item value={value}>
-    <Accordion.Control aria-label={title}>
-      <Text fw={700} size="sm">
-        {title}
-      </Text>
-    </Accordion.Control>
-    <Accordion.Panel>
-      <Text c="dimmed" size="sm">
-        {children}
-      </Text>
-    </Accordion.Panel>
-  </Accordion.Item>
 );
