@@ -39,7 +39,7 @@ This was partly inspired by [Google's upcoming Create My Widget feature](https:/
 
 A `homarr-custom-widget-v2` definition can use several fixed-origin API sources. Credentials are encrypted separately and stay out of exports and Workshop submissions. Actions support `GET`, `POST`, `PUT`, `PATCH` and `DELETE`; requests have host checks, timeouts, size limits, permissions and rate limits. Custom Widgets remain **Beta** in 2.0.
 
-**Workshop is the other half.** Publish and install Custom Widgets or Custom CSS, then update, vote on, comment on and report submissions. Deployment URLs and credentials stay on your Homarr instance.
+**Workshop is the other half.** Publish and install Custom Widgets, then update, vote on, comment on and report submissions. Workshop is not only for widgets: you can share your **Custom CSS** there too. Deployment URLs and credentials stay on your Homarr instance.
 
 ![The Community Workshop catalog inside Custom Widget management](./img/community-workshop.webp)
 
@@ -49,7 +49,7 @@ AI makes widgets easy to produce. It does not make the first thing it coughs up 
 
 :::
 
-This is why we have called it the **"last Homarr update"**. We are not disappearing. It means every new service or widget idea no longer needs a full Homarr release; the community can build and share it instead.
+We have called this the **"ultimate Homarr update"**. Not because work stops, but because every new service or widget idea no longer needs a full Homarr release; the community can build and share it instead.
 
 ## Drag and drop, rebuilt
 
@@ -57,7 +57,7 @@ We threw out the old drag-and-drop system and rebuilt it on [`dnd-kit`](https://
 
 ![A Calendar tile moving across the rebuilt Homarr 2.0 board grid](./img/drag-and-drop.gif)
 
-### Goodbye Groups and sections, welcome Containers
+### Goodbye Groups and sections, bonjour Containers
 
 Groups and dynamic sections did nearly the same job, so **Containers replace both**. They hold apps, widgets and other Containers. Hold <kbd>Ctrl</kbd> or <kbd>Command</kbd> to move several items at once.
 
@@ -73,9 +73,9 @@ Open it with <kbd>Shift</kbd> + <kbd>A</kbd>. <kbd>Cmd</kbd>/<kbd>Ctrl</kbd> + <
 
 :::note About the Homarr provider
 
-The built-in Homarr provider is a social experiment. I (Ajnart) pay its upstream bill.
+Assistant ships with a **"Homarr provider"**. It is free, will never offer paid plans, and is paid for by [Ajnart](https://github.com/ajnart) using the ad revenue from this website.
 
-This is not free AI forever. If I stop feeling like paying—or the bill gets silly—it may be limited, disabled, replaced or made obsolete. Bring an OpenAI-compatible provider if you want long-term control. That is the deal.
+It only uses zero-data-retention (ZDR) providers. [The provider is open source](https://github.com/homarr-labs/homarr/blob/release/v2/apps/workshop/homarr_provider.go), and neither prompts nor responses are logged. We are not selling your data. Pinky promise.
 
 :::
 
