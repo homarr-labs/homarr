@@ -133,9 +133,10 @@ External redis is currently not supported with Proxmox Community Scripts
 The advanced deployments environment variables should only be used if you know what you are doing.
 :::
 
-| Environment Variable     | Description                                         |
-| ------------------------ | --------------------------------------------------- |
-| `DB_MIGRATIONS_DISABLED` | Disable db migrations. For example for helm charts. |
+| Environment Variable             | Description                                                                                                    | Default |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------- | ------- |
+| `DB_MIGRATIONS_DISABLED`         | Disable database migrations. For example, when migrations are managed separately in Helm deployments.          | `false` |
+| `UNSAFE_ENABLE_MOCK_INTEGRATION` | Enable the development-only Mock integration. This exposes fabricated data and must not be used in production. | `false` |
 
 All public URL variables reject non-HTTP protocols, embedded credentials, query strings, and fragments, and normalize
 trailing slashes when Homarr or Docusaurus starts.

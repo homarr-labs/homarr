@@ -321,6 +321,13 @@ export const onboardRouter = createTRPCRouter({
     .requiresStep("setup")
     .input(onboardingCompleteSetupSchema)
     .mutation(async ({ ctx, input }) => {
+      if (
+        !env.UNSAFE_ENABLE_MOCK_INTEGRATION &&
+        input.integrations.some((integration) => integration.kind === "mock")
+      ) {
+        throw new TRPCError({ code: "FORBIDDEN", message: "Mock integrations are disabled" });
+      }
+
       const boardList = await ctx.db.query.boards.findMany({
         with: {
           sections: { with: { layouts: true } },

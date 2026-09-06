@@ -19,6 +19,7 @@ const publicHttpUrl = (variableName: string) =>
 export const env = createEnv({
   server: {
     KUBERNETES_SERVICE_ACCOUNT_NAME: z.string().optional(),
+    UNSAFE_ENABLE_MOCK_INTEGRATION: createBooleanSchema(false),
     DEMO_MODE: createBooleanSchema(false),
     DEMO_READ_ONLY: createBooleanSchema(true),
     HOMARR_WEBSITE_URL: publicHttpUrl("HOMARR_WEBSITE_URL").default("https://homarr.dev"),
@@ -27,6 +28,7 @@ export const env = createEnv({
   },
   runtimeEnv: {
     KUBERNETES_SERVICE_ACCOUNT_NAME: process.env.KUBERNETES_SERVICE_ACCOUNT_NAME,
+    UNSAFE_ENABLE_MOCK_INTEGRATION: process.env.UNSAFE_ENABLE_MOCK_INTEGRATION,
     DEMO_MODE: process.env.DEMO_MODE,
     DEMO_READ_ONLY: process.env.DEMO_READ_ONLY,
     HOMARR_WEBSITE_URL: process.env.HOMARR_WEBSITE_URL,

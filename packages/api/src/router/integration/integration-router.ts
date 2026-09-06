@@ -18,7 +18,12 @@ import {
   integrationSecrets,
   integrationUserPermissions,
 } from "@homarr/db/schema";
-import type { GroupPermissionKey, IntegrationPermission, IntegrationSecretKind } from "@homarr/definitions";
+import type {
+  GroupPermissionKey,
+  IntegrationKind,
+  IntegrationPermission,
+  IntegrationSecretKind,
+} from "@homarr/definitions";
 import {
   getIntegrationKindsByCategory,
   getPermissionsWithParents,
@@ -39,6 +44,7 @@ import {
 } from "@homarr/validation/integration";
 import { mediaRequestOptionsSchema, mediaRequestRequestSchema } from "@homarr/validation/widgets/media-request";
 
+import { env } from "../../env";
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "./integration-access";
@@ -47,6 +53,15 @@ import { mapTestConnectionError } from "./map-test-connection-error";
 
 const logger = createLogger({ module: "integrationRouter" });
 const mediaRequestSearchKinds = getIntegrationKindsByCategory("mediaSearch");
+
+const throwIfMockIntegrationIsDisabled = (kind: IntegrationKind) => {
+  if (kind !== "mock" || env.UNSAFE_ENABLE_MOCK_INTEGRATION) return;
+
+  throw new TRPCError({
+    code: "FORBIDDEN",
+    message: "Mock integrations are disabled",
+  });
+};
 
 export const integrationRouter = createTRPCRouter({
   getKinds: publicProcedure
@@ -58,12 +73,14 @@ export const integrationRouter = createTRPCRouter({
       },
     })
     .query(() => {
-      return objectEntries(integrationDefs).map(([kind, def]) => ({
-        kind,
-        name: def.name,
-        category: def.category,
-        requiredSecrets: def.secretKinds,
-      }));
+      return objectEntries(integrationDefs)
+        .filter(([kind]) => kind !== "mock" || env.UNSAFE_ENABLE_MOCK_INTEGRATION)
+        .map(([kind, def]) => ({
+          kind,
+          name: def.name,
+          category: def.category,
+          requiredSecrets: def.secretKinds,
+        }));
     }),
   all: protectedProcedure
     .meta({
@@ -229,6 +246,8 @@ export const integrationRouter = createTRPCRouter({
     })
     .input(integrationCreateSchema)
     .mutation(async ({ ctx, input }) => {
+      throwIfMockIntegrationIsDisabled(input.kind);
+
       logger.info("Creating integration", {
         name: input.name,
         kind: input.kind,

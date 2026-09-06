@@ -47,6 +47,9 @@ export default async function IntegrationsNewPage(props: NewIntegrationPageProps
   const tCreate = await getI18n("integration.page.create");
 
   const currentKind = result.data;
+  if (currentKind === "mock" && !env.UNSAFE_ENABLE_MOCK_INTEGRATION) {
+    notFound();
+  }
 
   return (
     <>
