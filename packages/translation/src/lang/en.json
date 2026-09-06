@@ -6456,7 +6456,8 @@
             },
             "progress": {
               "title": "Restoring database...",
-              "restarting": "Restarting server"
+              "restarting": "Restarting server",
+              "relogin": "Restoring the database invalidated your current session. Homarr will send you to sign in when the server is ready."
             },
             "timeout": {
               "title": "Server did not come back online",

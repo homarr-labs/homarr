@@ -11,11 +11,18 @@ export type RestoreProgressStatus = "restoring" | "restarting" | "timedOut";
 interface RestoreProgressPanelProps {
   active: boolean;
   status: RestoreProgressStatus;
+  reloginRequired?: boolean;
   onRetry: () => void;
   onReload: () => void;
 }
 
-export const RestoreProgressPanel = ({ active, status, onRetry, onReload }: RestoreProgressPanelProps) => {
+export const RestoreProgressPanel = ({
+  active,
+  status,
+  reloginRequired = false,
+  onRetry,
+  onReload,
+}: RestoreProgressPanelProps) => {
   const t = useI18n("management.page.tool.backup.restore");
   const tCommon = useI18n("common");
   const reduceMotion = useReducedMotion();
@@ -62,6 +69,12 @@ export const RestoreProgressPanel = ({ active, status, onRetry, onReload }: Rest
             </Text>
           </div>
         </Group>
+
+        {reloginRequired && !isRestoring ? (
+          <Text size="sm" c="dimmed">
+            {t("progress.relogin")}
+          </Text>
+        ) : null}
 
         {isTimedOut ? (
           <Group>

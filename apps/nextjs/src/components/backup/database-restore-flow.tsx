@@ -204,8 +204,12 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
     }
 
     onRestoreComplete?.();
-    const destination =
-      variant === "standalone" && homeBoardName ? `/boards/${encodeURIComponent(homeBoardName)}` : null;
+    let destination: string | null = null;
+    if (variant === "standalone" && homeBoardName) {
+      destination = `/boards/${encodeURIComponent(homeBoardName)}`;
+    } else if (variant === "card") {
+      destination = "/auth/login";
+    }
     startReadinessCheck(restartAfterMs, destination);
   }, [file, onRestoreComplete, startReadinessCheck, t, variant]);
 
@@ -317,6 +321,7 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
       <RestoreProgressPanel
         active
         status={restoreStatus}
+        reloginRequired={variant === "card"}
         onRetry={() => startReadinessCheck(0)}
         onReload={() => window.location.reload()}
       />
