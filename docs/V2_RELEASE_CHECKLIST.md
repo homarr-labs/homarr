@@ -1,6 +1,8 @@
 # Homarr v2 GA release checklist
 
-Last audited: 2026-09-06 12:30 CEST (Europe/Berlin)
+Initial full audit: 2026-09-06 12:30 CEST (Europe/Berlin)
+
+Merge batch updated: 2026-09-06 15:41 CEST (Europe/Berlin)
 
 This is the working go/no-go checklist for the full Homarr v2 release. Do not mark an item complete from an old
 preview, PR run, or verbal confirmation. Add the final SHA, run URL, screenshot, issue, or written risk acceptance next
@@ -76,57 +78,75 @@ These facts are time-sensitive and must be refreshed at the start of the release
 - [ ] The `v2.0.0` milestone is still open but contains zero open issues and only one closed issue. It is not an
       adequate source of release truth.
 
+### Merge batch update
+
+- [x] `origin/release/v2` is `f1c898efe2da2fd55b26e2a674d7f67420acefee` after the release-readiness merge batch.
+- [x] PR #6770 and PRs #6772 through #6789 are merged into `release/v2`; every merge commit was verified as an
+      ancestor of the remote branch.
+- [x] PR #6771 was closed by the release owner and was not merged.
+- [x] PR #6780 was rebased after the batch. Its environment-documentation conflict preserves both the public
+      `BASE_URL` entry and the `NO_EXTERNAL_CONNECTION` location-search behavior.
+- [x] PR #6789 is limited to the Homarr 2.0 release article and its 20 media files.
+- [x] The v1-to-v2 guide tells users to export a backup from **Management → Tools → Backup** and keep the downloaded
+      file somewhere safe before starting v2.
+- [ ] No combined final-candidate CI or test result is recorded for `f1c898efe`; per-PR checks were intentionally not
+      followed during the merge batch. Run the final validation once the candidate is frozen.
+- [ ] PR #6765 is the only remaining open PR targeting `release/v2`. It is an external new integration/widget and was
+      intentionally excluded from this maintainer release-cleanup batch.
+
 ### Readiness fixes opened from this audit
 
-These are fixes, not completed release gates. Merge them into `release/v2`, carry them through the reviewed
-`release/v2 -> dev` integration, and repeat the final-candidate checks before changing the related items to `[x]`.
+These statuses record whether each fix reached `release/v2`; they are not final release sign-offs. Carry the merged
+changes through the reviewed `release/v2 -> dev` integration and repeat the final-candidate checks.
 
-- [ ] [#6770](https://github.com/homarr-labs/homarr/pull/6770) — restore weekly release no-op behavior and scheduled
+- [x] [#6770](https://github.com/homarr-labs/homarr/pull/6770) — restore weekly release no-op behavior and scheduled
       Discord notifications, repair GitHub App token inputs, extend the merge timeout, and remove the obsolete release
       dispatch to the archived documentation repository.
-- [ ] [#6771](https://github.com/homarr-labs/homarr/pull/6771) — make mock integrations opt-in and enforce the unsafe
-      flag in server-side creation, onboarding and direct-page paths.
-- [ ] [#6772](https://github.com/homarr-labs/homarr/pull/6772) — generate valid integration documentation links and
+- [x] **CLOSED, NOT MERGED** [#6771](https://github.com/homarr-labs/homarr/pull/6771) — proposed making mock
+      integrations opt-in and enforcing the unsafe flag in server-side creation, onboarding and direct-page paths.
+- [x] [#6772](https://github.com/homarr-labs/homarr/pull/6772) — generate valid integration documentation links and
       remove committed/generated `null` URLs.
-- [ ] [#6773](https://github.com/homarr-labs/homarr/pull/6773) — point contributor guidance at the monorepo docs and
+- [x] [#6773](https://github.com/homarr-labs/homarr/pull/6773) — point contributor guidance at the monorepo docs and
       current v2 branch flow.
-- [ ] [#6774](https://github.com/homarr-labs/homarr/pull/6774) — add the canonical v1-to-v2 upgrade, migration,
-      backup and rollback guide.
-- [ ] [#6775](https://github.com/homarr-labs/homarr/pull/6775) — patch the critical Auth.js fail-open and email
+- [x] [#6774](https://github.com/homarr-labs/homarr/pull/6774) — add the canonical v1-to-v2 upgrade guide with concise
+      Backup-tool guidance.
+- [x] [#6775](https://github.com/homarr-labs/homarr/pull/6775) — patch the critical Auth.js fail-open and email
       normalization advisories; 131 focused auth/proxy tests and affected typechecks pass.
-- [ ] [#6776](https://github.com/homarr-labs/homarr/pull/6776) — patch the critical `protobufjs` path while staying on
+- [x] [#6776](https://github.com/homarr-labs/homarr/pull/6776) — patch the critical `protobufjs` path while staying on
       compatible 7.x; 24 Docker tests and affected typechecks pass.
-- [ ] [#6777](https://github.com/homarr-labs/homarr/pull/6777) — replace the SQLite database placeholder with a
+- [x] [#6777](https://github.com/homarr-labs/homarr/pull/6777) — replace the SQLite database placeholder with a
       safe ignored local path, remove copy-pastable weak secrets and delete the obsolete source-install
       `CRON_JOB_API_KEY` instruction. It also makes SSO key/credential replacement explicit and removes obsolete
-      `BASE_URL` / `NEXTAUTH_URL` entries. The production docs build and hosted Fast gate, amd64/arm64 preview builds,
-      container/E2E tests and multi-platform preview publication all pass.
-- [ ] [#6778](https://github.com/homarr-labs/homarr/pull/6778) — port the focused database-restore re-login and error
+      legacy URL entries; #6779 adds the current public `BASE_URL` contract. The production docs build and hosted Fast
+      gate, amd64/arm64 preview builds, container/E2E tests and multi-platform preview publication all pass.
+- [x] [#6778](https://github.com/homarr-labs/homarr/pull/6778) — port the focused database-restore re-login and error
       reporting fix from #6624 without unrelated branch drift.
-- [ ] [#6779](https://github.com/homarr-labs/homarr/pull/6779) — make MCP OAuth discovery, resource validation,
+- [x] [#6779](https://github.com/homarr-labs/homarr/pull/6779) — make MCP OAuth discovery, resource validation,
       authentication challenges and login redirects honor the public origin and supported MCP route aliases. Sixteen
       route tests, Next.js typecheck/build, docs build and production-server route smokes pass.
-- [ ] [#6780](https://github.com/homarr-labs/homarr/pull/6780) — enforce `NO_EXTERNAL_CONNECTION` before weather
+- [x] [#6780](https://github.com/homarr-labs/homarr/pull/6780) — enforce `NO_EXTERNAL_CONNECTION` before weather
       location search makes an outbound request and show the disabled state. Fifteen focused tests and affected
       typechecks pass.
-- [ ] [#6781](https://github.com/homarr-labs/homarr/pull/6781) — use Unraid's byte-based memory metrics and clamp
+- [x] [#6781](https://github.com/homarr-labs/homarr/pull/6781) — use Unraid's byte-based memory metrics and clamp
       inconsistent values instead of using layout metadata.
-- [ ] [#6782](https://github.com/homarr-labs/homarr/pull/6782) — report Docker container CPU as a 0–100 percent share
+- [x] [#6782](https://github.com/homarr-labs/homarr/pull/6782) — report Docker container CPU as a 0–100 percent share
       of the whole machine while retaining one-shot/Podman fallback behavior. Twenty focused tests pass.
-- [ ] [#6783](https://github.com/homarr-labs/homarr/pull/6783) — sync the committed Helm page to live chart 8.28.2 /
+- [x] [#6783](https://github.com/homarr-labs/homarr/pull/6783) — sync the committed Helm page to live chart 8.28.2 /
       app v1.76.2. Regenerate it again from the v2 chart after that chart is published.
-- [ ] [#6784](https://github.com/homarr-labs/homarr/pull/6784) — give the Downloads name column a stable default width
+- [x] [#6784](https://github.com/homarr-labs/homarr/pull/6784) — give the Downloads name column a stable default width
       without changing user-resizable persisted state.
-- [ ] [#6785](https://github.com/homarr-labs/homarr/pull/6785) — support nested OIDC group/name claim paths while
+- [x] [#6785](https://github.com/homarr-labs/homarr/pull/6785) — support nested OIDC group/name claim paths while
       preserving v2's provider and verified-email linking safeguards. Twenty-three focused Auth tests pass.
-- [ ] [#6786](https://github.com/homarr-labs/homarr/pull/6786) — preserve reverse-proxy subpaths in Nextcloud CalDAV
+- [x] [#6786](https://github.com/homarr-labs/homarr/pull/6786) — preserve reverse-proxy subpaths in Nextcloud CalDAV
       discovery. Five focused Nextcloud tests pass.
-- [ ] [#6787](https://github.com/homarr-labs/homarr/pull/6787) — use valid UniFi HTTPS default ports, preserve explicit
+- [x] [#6787](https://github.com/homarr-labs/homarr/pull/6787) — use valid UniFi HTTPS default ports, preserve explicit
       ports and avoid hiding authentication failures. Six focused tests pass.
-- [ ] [#6788](https://github.com/homarr-labs/homarr/pull/6788) — patch every published, fixable high-severity
+- [x] [#6788](https://github.com/homarr-labs/homarr/pull/6788) — patch every published, fixable high-severity
       production dependency path found by the audit with exact catalog versions and range-scoped overrides. All
       workspace typechecks, the production docs build and 18 focused backup/ZIP tests pass. Its hosted Fast gate,
       amd64/arm64 preview builds, container/E2E tests and multi-platform preview publication all pass.
+- [x] [#6789](https://github.com/homarr-labs/homarr/pull/6789) — add the draft Homarr 2.0 release article and its 20
+      referenced media files.
 - [x] A temporary combined audit of `origin/release/v2` plus #6775, #6776 and #6788 reports 0 critical, 2 high, 20
       moderate and 9 low production advisories. Both remaining high findings are Docusaurus build-time paths to
       `image-size@2.0.2`; the registry still reports 2.0.2 as latest while both advisories require `>=2.0.3`.
@@ -139,16 +159,19 @@ These are fixes, not completed release gates. Merge them into `release/v2`, carr
 
 - [ ] Merge #6769 early so the team works from this checklist; continue updating its evidence in the release tracking
       issue if the file itself is frozen.
-- [ ] Review the release-control and production-default fixes first: #6770, #6771, #6772, #6773, #6774 and #6777.
-- [ ] Merge the lockfile security chain in this order: #6775, rebase/re-audit #6776, then rebase/re-audit #6788. Do not
+- [x] Merge the release-control and documentation fixes: #6770, #6772, #6773, #6774 and #6777. #6771 was closed by
+      the release owner without merging.
+- [x] Merge the lockfile security chain in this order: #6775, rebase/re-audit #6776, then rebase/re-audit #6788. Do not
       resolve their shared lockfile conflicts by choosing one side wholesale.
-- [ ] Review the backup, public-origin, privacy, authentication and integration correctness fixes next: #6778, #6779,
+- [x] Merge the backup, public-origin, privacy, authentication and integration correctness fixes: #6778, #6779,
       #6780, #6785, #6786 and #6787.
-- [ ] Review the isolated display/metric fixes next: #6781, #6782 and #6784.
-- [ ] Review #6783 against the chart actually available to GA users; regenerate it after the v2 chart is published.
+- [x] Merge the isolated display/metric fixes: #6781, #6782 and #6784.
+- [x] Merge #6783 with the current chart metadata.
+- [ ] Regenerate the Helm documentation after the v2 chart is published.
 - [ ] Decide #6765 explicitly before freeze. It is not ready to merge on the current evidence.
-- [ ] After every merge wave, update the remaining PRs from the new `release/v2` head and rerun affected checks. Their
-      current green results are based on the same pre-integration release SHA and are not final-candidate evidence.
+- [x] Merge #6789 with the draft Homarr 2.0 article and its 20 media files.
+- [ ] Run combined checks on the frozen `release/v2` candidate. Per-PR CI was intentionally not followed during this
+      merge batch and is not final-candidate evidence.
 
 ### Current merge conflicts
 
@@ -201,19 +224,19 @@ These are fixes, not completed release gates. Merge them into `release/v2`, carr
       conflicts without dropping either branch's behavior.
 - [ ] **BLOCKER — production dependency audit:** the baseline `mise exec -- pnpm audit --prod --audit-level high`
       reported 141 findings: 4 critical, 65 high, 62 moderate and 10 low. The isolated combined graph with #6775,
-      #6776 and #6788 has 0 critical, 2 high, 20 moderate and 9 low. Merge the two critical fixes first, rebase #6788,
-      repeat the audit on that exact lockfile, and explicitly accept or wait for a published `image-size` fix.
-- [ ] **BLOCKER — direct authentication advisories:** merge and review #6775, then revalidate every authentication
-      provider on the combined candidate. The isolated PR removes the critical `next-auth` and `@auth/core` findings.
-- [ ] **BLOCKER — weekly promotion automation:** merge #6770 and prove its success, failure and no-release paths in
-      controlled workflow runs. It turns the observed no-version-bump failure into a successful no-op.
-- [ ] **BLOCKER — scheduled notifications:** merge #6770 and prove scheduled start, success, major and failure notices
+      #6776 and #6788 has 0 critical, 2 high, 20 moderate and 9 low. Those fixes are merged; repeat the audit on the
+      exact frozen candidate and explicitly accept or wait for a published `image-size` fix.
+- [ ] **BLOCKER — direct authentication advisories:** #6775 is merged. Revalidate every authentication provider on the
+      combined candidate and confirm the critical `next-auth` and `@auth/core` findings remain absent.
+- [ ] **BLOCKER — weekly promotion automation:** #6770 is merged. Prove its success, failure and no-release paths in
+      controlled workflow runs.
+- [ ] **BLOCKER — scheduled notifications:** #6770 is merged. Prove scheduled start, success, major and failure notices
       in a non-public Discord channel.
-- [ ] **BLOCKER — MCP public origin:** merge #6779 and repeat discovery/login/401 challenges through the actual
+- [ ] **BLOCKER — MCP public origin:** #6779 is merged. Repeat discovery/login/401 challenges through the actual
       production reverse proxy and subpath before publishing MCP as GA-ready.
-- [ ] **BLOCKER — documentation release:** merge #6770, which removes the false handoff to the archived
-      `homarr-labs/documentation` repository. Confirm the authoritative monorepo GitHub Pages workflow deploys `apps/docs`
-      when the v2 docs reach `dev`, then verify the public site and Algolia recrawl.
+- [ ] **BLOCKER — documentation release:** #6770 removed the false handoff to the archived
+      `homarr-labs/documentation` repository. Confirm the authoritative monorepo GitHub Pages workflow deploys
+      `apps/docs` when the v2 docs reach `dev`, then verify the public site and Algolia recrawl.
 - [ ] **BLOCKER — branch rules:** the strong `v2 release` ruleset targets the legacy `refs/heads/v2`, not
       `refs/heads/release/v2`. The active release branch does not receive those required checks.
 - [ ] **BLOCKER — production deployment guard:** the release workflow publishes after a `main` push without a
@@ -221,13 +244,13 @@ These are fixes, not completed release gates. Merge them into `release/v2`, carr
       human approval/check boundary before the release window.
 - [ ] **BLOCKER — final upgrade rehearsal:** perform backup, migration, restore and rollback rehearsals from real
       `v1.76.2` installations for SQLite, MySQL and PostgreSQL.
-- [ ] **BLOCKER — upgrade guide:** review and merge #6774, then verify the canonical guide against all three real
-      upgrade rehearsals and the final image/tag.
+- [ ] **BLOCKER — upgrade guide:** #6774 is merged with the concise Backup-tool instruction. Verify the guide against
+      real upgrade and restore rehearsals and the final image/tag.
 - [ ] **BLOCKER — beta feedback:** reproduce or close every unresolved report in the public v2 beta issue.
 - [ ] **BLOCKER — release scope:** explicitly include or defer the open llama.cpp PR and every release-sensitive fix
       listed below before feature freeze.
-- [ ] **BLOCKER — production defaults:** review and merge #6771, then repeat the disabled/enabled API and UI smoke on
-      the combined candidate.
+- [ ] **BLOCKER — production defaults:** #6771 was closed without merging. Confirm that decision against the combined
+      candidate's mock-integration API/UI behavior or record explicit risk acceptance.
 - [ ] **BLOCKER — final immutable candidate:** nominate one SHA, freeze it, and repeat all mandatory checks on that
       exact SHA after it is in `dev`.
 
