@@ -1,6 +1,8 @@
+import { createHash } from "node:crypto";
+
 import type { JSX, PropsWithChildren } from "react";
 import { notFound, redirect } from "next/navigation";
-import { AppShellMain } from "@mantine/core";
+import { cookies } from "next/headers";
 import { TRPCError } from "@trpc/server";
 
 import { getRscUserSettingsAsync } from "@homarr/api/user-server";
@@ -8,10 +10,11 @@ import { auth } from "@homarr/auth/next";
 import { BoardProvider } from "@homarr/boards/context";
 import { EditModeProvider } from "@homarr/boards/edit-mode";
 import { createLogger } from "@homarr/core/infrastructure/logs";
+import { v2BetaAnnouncementCookieKey } from "@homarr/definitions";
 
-import { MainHeader } from "~/components/layout/header";
+import { MainHeaderContent } from "~/components/layout/header";
 import { BoardLogoWithTitle } from "~/components/layout/logo/board-logo";
-import { ClientShell } from "~/components/layout/shell";
+import { V2BetaDashboardShell } from "~/components/layout/v2-beta-announcement/v2-beta-dashboard-shell";
 import { BoardTourGate } from "~/components/onboarding/board-tour-gate";
 import { env } from "~/env";
 import { getCurrentColorSchemeAsync } from "~/theme/color-scheme";
@@ -42,6 +45,7 @@ export const createBoardLayout = <TParams extends Params>({
   }>) => {
     const resolvedParams = await params;
     const sessionPromise = auth();
+    const cookiesPromise = cookies();
     const initialBoardPromise = getInitialBoard(resolvedParams).then(
       (board) => ({ status: "fulfilled", board }) as const,
       (error: unknown) => ({ status: "rejected", error }) as const,
@@ -58,11 +62,12 @@ export const createBoardLayout = <TParams extends Params>({
         return false;
       }
     });
-    const [session, initialBoardResult, colorScheme, shouldRunBoardTour] = await Promise.all([
+    const [session, initialBoardResult, colorScheme, shouldRunBoardTour, cookieStore] = await Promise.all([
       sessionPromise,
       initialBoardPromise,
       colorSchemePromise,
       shouldRunBoardTourPromise,
+      cookiesPromise,
     ]);
     if (initialBoardResult.status === "rejected") {
       const { error } = initialBoardResult;
@@ -83,6 +88,10 @@ export const createBoardLayout = <TParams extends Params>({
       throw error;
     }
     const initialBoard = initialBoardResult.board;
+    const viewerIdentity = session?.user.id ?? "anonymous";
+    const viewerHash = createHash("sha256").update(viewerIdentity).digest("hex").slice(0, 16);
+    const dismissalCookieName = `${v2BetaAnnouncementCookieKey}.${viewerHash}`;
+    const isAnnouncementDismissed = cookieStore.get(dismissalCookieName)?.value === "dismissed";
 
     return (
       <BoardProvider initialBoard={initialBoard}>
@@ -91,14 +100,19 @@ export const createBoardLayout = <TParams extends Params>({
             <BoardMantineProvider defaultColorScheme={colorScheme}>
               <CustomCss />
               <BoardTourGate enabled={shouldRunBoardTour}>
-                <ClientShell hasNavigation={false}>
-                  <MainHeader
-                    logo={<BoardLogoWithTitle size="md" hideTitleOnMobile />}
-                    actions={headerActions}
-                    hasNavigation={false}
-                  />
-                  <AppShellMain>{children}</AppShellMain>
-                </ClientShell>
+                <V2BetaDashboardShell
+                  dismissalCookieName={dismissalCookieName}
+                  initiallyDismissed={isAnnouncementDismissed}
+                  header={
+                    <MainHeaderContent
+                      logo={<BoardLogoWithTitle size="md" hideTitleOnMobile />}
+                      actions={headerActions}
+                      hasNavigation={false}
+                    />
+                  }
+                >
+                  {children}
+                </V2BetaDashboardShell>
               </BoardTourGate>
             </BoardMantineProvider>
           </EditModeProvider>

@@ -1,0 +1,61 @@
+name: Homarr v2 beta feedback
+description: Tell us what works, what breaks, or what could be clearer in the Homarr v2 beta
+title: "feedback(v2): "
+labels: ["needs triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for testing Homarr v2. It will become the default when it is ready, and every report helps us get there.
+
+  - type: dropdown
+    id: feedback-type
+    attributes:
+      label: Feedback type
+      options:
+        - Bug
+        - Upgrade or migration
+        - Usability or design
+        - Performance
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Homarr v2 version or image tag
+      description: You can find the version in the About page or provide the Docker image tag you tested.
+      placeholder: ghcr.io/homarr-labs/homarr-test:v2
+    validations:
+      required: true
+
+  - type: textarea
+    id: feedback
+    attributes:
+      label: What did you find?
+      description: Describe what happened, what you expected, or what you think could be improved.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: For bugs, list the shortest steps that consistently reproduce the problem.
+
+  - type: textarea
+    id: additional-information
+    attributes:
+      label: Additional information
+      description: Add screenshots, logs, browser details, or anything else that may help. Remove secrets and personal information first.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched the existing issues for the same feedback.
+          required: true
+        - label: I removed passwords, API keys, tokens, and other private information.
+          required: true
