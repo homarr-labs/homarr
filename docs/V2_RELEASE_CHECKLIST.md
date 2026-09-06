@@ -44,22 +44,48 @@ These facts are time-sensitive and must be refreshed at the start of the release
 - [x] The `dev...release/v2` change spans 2,473 files, 243,111 insertions and 59,966 deletions.
 - [x] A clean `git merge-tree --write-tree origin/dev origin/release/v2` rehearsal reports 11 content conflicts.
 - [x] The exact `release/v2` SHA has successful Fast gate, Container and E2E, CodeQL, Workshop validation and
-  amd64/arm64 preview publication checks.
+      amd64/arm64 preview publication checks.
 - [x] The latest `dev` deployment workflow at `da32acb4f0ba9d8fa8e9667f56a54f85ca497865` is successful. An earlier
-  arm64 offline-install failure was superseded by this green run.
+      arm64 offline-install failure was superseded by this green run.
 - [x] The Homarr preview manifest exists for amd64 and arm64:
-  `ghcr.io/homarr-labs/homarr-test:v2@sha256:9055880e1d04ee78f2ff171ad8ff5ccd0b225e67e0a7635f4158669c40a8d7a0`.
+      `ghcr.io/homarr-labs/homarr-test:v2@sha256:9055880e1d04ee78f2ff171ad8ff5ccd0b225e67e0a7635f4158669c40a8d7a0`.
 - [x] The Workshop preview manifest exists for amd64 and arm64:
-  `ghcr.io/homarr-labs/workshop:v2@sha256:1578c7e68955395a533ea9a3afad1168331cb783bb98b0255c3ded5c0cd927f5`.
+      `ghcr.io/homarr-labs/workshop:v2@sha256:1578c7e68955395a533ea9a3afad1168331cb783bb98b0255c3ded5c0cd927f5`.
 - [x] PR [#6760](https://github.com/homarr-labs/homarr/pull/6760) merged the streamlined v2 documentation and
-  passed its hosted checks.
+      passed its hosted checks.
 - [x] GitHub currently reports zero open CodeQL alerts and zero open secret-scanning alerts.
 - [ ] GitHub Dependabot currently reports 168 open repository-wide alerts: 5 critical, 64 high, 82 medium and 17 low.
-  These are based on the repository's default-branch dependency view and must be reconciled with the candidate-specific
-  `pnpm audit` results.
+      These are based on the repository's default-branch dependency view and must be reconciled with the candidate-specific
+      `pnpm audit` results.
 - [ ] No `v2.0.0` tag or production GitHub release exists yet. The latest production release is `v1.76.2`.
 - [ ] The `v2.0.0` milestone is still open but contains zero open issues and only one closed issue. It is not an
-  adequate source of release truth.
+      adequate source of release truth.
+
+### Readiness fixes opened from this audit
+
+These are fixes, not completed release gates. Merge them into `release/v2`, carry them through the reviewed
+`release/v2 -> dev` integration, and repeat the final-candidate checks before changing the related items to `[x]`.
+
+- [ ] [#6770](https://github.com/homarr-labs/homarr/pull/6770) — restore weekly release no-op behavior and scheduled
+      Discord notifications, repair GitHub App token inputs, extend the merge timeout, and remove the obsolete release
+      dispatch to the archived documentation repository.
+- [ ] [#6771](https://github.com/homarr-labs/homarr/pull/6771) — make mock integrations opt-in and enforce the unsafe
+      flag in server-side creation, onboarding and direct-page paths.
+- [ ] [#6772](https://github.com/homarr-labs/homarr/pull/6772) — generate valid integration documentation links and
+      remove committed/generated `null` URLs.
+- [ ] [#6773](https://github.com/homarr-labs/homarr/pull/6773) — point contributor guidance at the monorepo docs and
+      current v2 branch flow.
+- [ ] [#6774](https://github.com/homarr-labs/homarr/pull/6774) — add the canonical v1-to-v2 upgrade, migration,
+      backup and rollback guide.
+- [ ] [#6775](https://github.com/homarr-labs/homarr/pull/6775) — patch the critical Auth.js fail-open and email
+      normalization advisories; 131 focused auth/proxy tests and affected typechecks pass.
+- [ ] [#6776](https://github.com/homarr-labs/homarr/pull/6776) — patch the critical `protobufjs` path while staying on
+      compatible 7.x; 24 Docker tests and affected typechecks pass.
+- [x] A temporary combined audit of `origin/release/v2` plus #6775 and #6776 reports zero critical production
+      advisories. The remaining result is 58 high, 54 moderate and 10 low advisories, so the full risk triage remains open.
+- [x] The five repository-wide critical Dependabot alerts were reconciled: three runtime Auth.js alerts are addressed
+      by #6775, `protobufjs` is addressed by #6776, and the remaining `handlebars` alert is development-scoped and is not
+      present in the candidate's production audit.
 
 ### Current merge conflicts
 
@@ -78,31 +104,32 @@ These facts are time-sensitive and must be refreshed at the start of the release
 ## Current hard blockers
 
 - [ ] **BLOCKER — integrate histories:** reconcile all 54 `dev`-only commits and resolve the 11 current merge
-  conflicts without dropping either branch's behavior.
-- [ ] **BLOCKER — production dependency audit:** `mise exec -- pnpm audit --prod --audit-level high` currently exits
-  with 141 findings: 4 critical, 65 high, 62 moderate and 10 low.
-- [ ] **BLOCKER — direct authentication advisories:** upgrade or explicitly accept the critical `next-auth` and
-  `@auth/core` findings. The candidate currently resolves `next-auth@5.0.0-beta.31` and `@auth/core@0.41.2`.
-- [ ] **BLOCKER — weekly promotion automation:** the last two scheduled weekly release runs failed in `Get Next
-  Version` with `No commit resulted in a version bump since last release!`. Make the no-release case a clean skip.
-- [ ] **BLOCKER — scheduled notifications:** scheduled weekly notifications and the failure notification are skipped
-  because they depend on `github.event.inputs.send-notifications`, which is absent for schedule events.
-- [ ] **BLOCKER — documentation release:** Homarr's release workflow dispatches `homarr-labs/documentation`, but that
-  repository's active release workflow only installs dependencies and echoes that it acknowledged the tag. It does not
-  build or deploy documentation.
+      conflicts without dropping either branch's behavior.
+- [ ] **BLOCKER — production dependency audit:** the baseline `mise exec -- pnpm audit --prod --audit-level high`
+      reported 141 findings: 4 critical, 65 high, 62 moderate and 10 low. PRs #6775 and #6776 address every critical
+      candidate-specific finding; merge both and repeat the full audit/risk triage on the combined final candidate.
+- [ ] **BLOCKER — direct authentication advisories:** merge and review #6775, then revalidate every authentication
+      provider on the combined candidate. The isolated PR removes the critical `next-auth` and `@auth/core` findings.
+- [ ] **BLOCKER — weekly promotion automation:** merge #6770 and prove its success, failure and no-release paths in
+      controlled workflow runs. It turns the observed no-version-bump failure into a successful no-op.
+- [ ] **BLOCKER — scheduled notifications:** merge #6770 and prove scheduled start, success, major and failure notices
+      in a non-public Discord channel.
+- [ ] **BLOCKER — documentation release:** merge #6770, which removes the false handoff to the archived
+      `homarr-labs/documentation` repository. Confirm the authoritative monorepo GitHub Pages workflow deploys `apps/docs`
+      when the v2 docs reach `dev`, then verify the public site and Algolia recrawl.
 - [ ] **BLOCKER — branch rules:** the strong `v2 release` ruleset targets the legacy `refs/heads/v2`, not
-  `refs/heads/release/v2`. The active release branch does not receive those required checks.
+      `refs/heads/release/v2`. The active release branch does not receive those required checks.
 - [ ] **BLOCKER — final upgrade rehearsal:** perform backup, migration, restore and rollback rehearsals from real
-  `v1.76.2` installations for SQLite, MySQL and PostgreSQL.
-- [ ] **BLOCKER — upgrade guide:** publish one canonical v1-to-v2 guide covering breaking changes, backups,
-  migrations, rollback limits, changed configuration and supported installation paths.
+      `v1.76.2` installations for SQLite, MySQL and PostgreSQL.
+- [ ] **BLOCKER — upgrade guide:** review and merge #6774, then verify the canonical guide against all three real
+      upgrade rehearsals and the final image/tag.
 - [ ] **BLOCKER — beta feedback:** reproduce or close every unresolved report in the public v2 beta issue.
 - [ ] **BLOCKER — release scope:** explicitly include or defer the open llama.cpp PR and every release-sensitive fix
-  listed below before feature freeze.
-- [ ] **BLOCKER — production defaults:** disable mock integrations in `.env.example` and verify server-side creation
-  cannot bypass `UNSAFE_ENABLE_MOCK_INTEGRATION`.
+      listed below before feature freeze.
+- [ ] **BLOCKER — production defaults:** review and merge #6771, then repeat the disabled/enabled API and UI smoke on
+      the combined candidate.
 - [ ] **BLOCKER — final immutable candidate:** nominate one SHA, freeze it, and repeat all mandatory checks on that
-  exact SHA after it is in `dev`.
+      exact SHA after it is in `dev`.
 
 ## 1. Ownership and release control
 
@@ -127,7 +154,7 @@ These facts are time-sensitive and must be refreshed at the start of the release
 - [ ] Create a temporary integration branch from the current `origin/dev`.
 - [ ] Merge `origin/release/v2` into that integration branch.
 - [ ] Resolve every conflict semantically; do not choose an entire side for translations, migrations, docs or APIs
-  without reviewing both changes.
+      without reviewing both changes.
 - [ ] Re-run the merge rehearsal and confirm zero unresolved entries.
 - [ ] Review every `dev`-only commit and mark it as preserved, superseded or intentionally rejected.
 - [ ] Specifically preserve or reconcile current `dev` changes for:
@@ -143,7 +170,7 @@ These facts are time-sensitive and must be refreshed at the start of the release
   - [ ] all Crowdin translation updates
 - [ ] Confirm root `package.json` remains version `2.0.0`.
 - [ ] Confirm the final promotion commit/PR contains a breaking Conventional Commit signal such as
-  `feat!: release Homarr v2`.
+      `feat!: release Homarr v2`.
 - [ ] Regenerate the lockfile only after dependency and conflict decisions are final.
 - [ ] Open the reviewed integration branch as the actual promotion PR into `dev`.
 - [ ] Require human review and resolve every thread.
@@ -157,25 +184,25 @@ defer once the release is frozen.
 ### Release-sensitive decisions
 
 - [ ] [#6765 llama.cpp integration and widget](https://github.com/homarr-labs/homarr/pull/6765) — currently targets
-  `release/v2`, is unstable, has no approval, lacks full CI on its newest head, and has requested responsive/advanced
-  mode work. Finish it completely or defer it before integration.
+      `release/v2`, is unstable, has no approval, lacks full CI on its newest head, and has requested responsive/advanced
+      mode work. Finish it completely or defer it before integration.
 - [ ] [#6624 backup restore re-login](https://github.com/homarr-labs/homarr/pull/6624) — verify whether the final v2
-  candidate already contains the intended redirect and user warning. Port the minimal fix if not; do not merge its
-  unrelated branch drift wholesale.
+      candidate already contains the intended redirect and user warning. Port the minimal fix if not; do not merge its
+      unrelated branch drift wholesale.
 - [ ] [#6631 MCP OAuth base URL](https://github.com/homarr-labs/homarr/pull/6631) — security and reverse-proxy
-  relevance; include/port or document why it is safe to defer.
+      relevance; include/port or document why it is safe to defer.
 - [ ] [#6662 board access-control form](https://github.com/homarr-labs/homarr/pull/6662) — permission correctness;
-  include/port or explicitly defer.
+      include/port or explicitly defer.
 - [ ] [#6674 weather and `NO_EXTERNAL_CONNECTION`](https://github.com/homarr-labs/homarr/pull/6674) — offline/privacy
-  contract; include/port or explicitly defer.
+      contract; include/port or explicitly defer.
 - [ ] [#6749 Unraid memory utilization](https://github.com/homarr-labs/homarr/pull/6749) — validate against the v2
-  system widgets and include/port or defer.
+      system widgets and include/port or defer.
 - [ ] [#6250 container CPU utilization](https://github.com/homarr-labs/homarr/pull/6250) — recently updated and
-  potentially user-visible for v2 Docker widgets; include/port or defer.
+      potentially user-visible for v2 Docker widgets; include/port or defer.
 - [ ] [#6733 Helm documentation](https://github.com/homarr-labs/homarr/pull/6733) — reconcile with the v2 Helm
-  conflict and current chart; do not ship competing instructions.
+      conflict and current chart; do not ship competing instructions.
 - [ ] [#6601 broad dependency update](https://github.com/homarr-labs/homarr/pull/6601) — do not merge wholesale just
-  to clear advisories; create a focused security upgrade if this PR is too broad or stale.
+      to clear advisories; create a focused security upgrade if this PR is too broad or stale.
 
 ### Feature/UI candidates to include or defer explicitly
 
@@ -202,7 +229,7 @@ defer once the release is frozen.
 
 - [ ] Close or reframe #6545 after the real promotion PR exists.
 - [ ] Close internal stack PRs #6569, #6555, #6503, #6502, #6482, #6450 and #6356 after confirming their commits
-  are present in `release/v2`.
+      are present in `release/v2`.
 - [ ] Resolve/close #6549, whose head and base are both `dev`.
 - [ ] Close superseded duplicate PRs such as the older Downloads-width and path-only URL variants.
 - [ ] Move all accepted deferred work to a `v2.0.x` or `v2.1` milestone.
@@ -212,24 +239,26 @@ defer once the release is frozen.
 
 - [x] PR #6760 is merged into `release/v2`.
 - [ ] Rebase `origin/feat/homarr-v2-release-blog` onto current `release/v2`; it is currently two commits behind and
-  nine ahead.
+      nine ahead.
 - [ ] Review and merge the Homarr 2.0 blog, screenshots/GIFs, and GitHub/Reddit/Discord announcement variants from
-  that branch.
+      that branch.
 - [ ] Confirm no release-research scratch material is published unintentionally.
 
 ## 4. Security and privacy gate
 
 - [ ] Re-run `mise exec -- pnpm audit --prod --audit-level high` on the final candidate.
 - [ ] Reduce all critical production-reachable findings to zero.
-- [ ] Upgrade `@auth/core` to a patched release and validate every authentication provider.
-- [ ] Upgrade `next-auth` to a patched release and validate failure-open, email normalization and session behavior.
-- [ ] Resolve or accept the critical `protobufjs` path after separating runtime use from testcontainer tooling.
-- [ ] Resolve or accept the critical `handlebars` path after identifying whether it enters any production artifact.
+- [ ] Merge #6775's patched `@auth/core` release and validate every authentication provider on the final candidate.
+- [ ] Merge #6775's patched `next-auth` release and validate failure-open, email normalization and session behavior on
+      the final candidate.
+- [ ] Merge #6776's patched `protobufjs` 7.x resolution and rerun the audit on the final candidate.
+- [ ] Resolve the repository-wide development-scoped `handlebars` alert separately or record why it does not block
+      production; it is not present in the candidate's production dependency audit.
 - [ ] Triage high findings including `undici`, `adm-zip`, `fast-xml-parser`, `axios`, `hono`, `postcss`,
-  `serialize-javascript`, `image-size`, `fast-uri`, `js-yaml`, `brace-expansion`, `find-my-way`, `immutable`, `svgo`,
-  `shell-quote`, `@xmldom/xmldom`, `protobufjs` and `handlebars`.
+      `serialize-javascript`, `image-size`, `fast-uri`, `js-yaml`, `brace-expansion`, `find-my-way`, `immutable`, `svgo`,
+      `shell-quote`, `@xmldom/xmldom`, `protobufjs` and `handlebars`.
 - [ ] For every accepted advisory, record package path, runtime reachability, mitigating controls, owner and target
-  patch release.
+      patch release.
 - [ ] Confirm CodeQL has no open alert on the final SHA.
 - [ ] Confirm secret scanning has no open alert on the final SHA.
 - [ ] Review authentication, API keys, session invalidation, CSRF and authorization boundaries.
@@ -241,7 +270,7 @@ defer once the release is frozen.
 - [ ] Verify MCP destructive tools are permission-checked and clearly described.
 - [ ] Review GitHub Actions permissions; repository workflows currently default to write and can approve PRs.
 - [ ] Decide whether release workflows must pin third-party actions to immutable SHAs. SHA pinning is not currently
-  required.
+      required.
 
 ## 5. Database migration, backup and rollback
 
@@ -262,7 +291,7 @@ preferences/branding to SQLite, MySQL and PostgreSQL, plus the custom section/gu
 ### Real upgrade rehearsal — repeat for every driver
 
 - [ ] Use a representative `v1.76.2` installation with users, groups, boards, apps, integrations, secrets, media,
-  tasks and Custom Widgets.
+      tasks and Custom Widgets.
 - [ ] Record source version, database driver, architecture, image digest and backup checksum.
 - [ ] Back up the database, `/appdata`, certificates and exact `SECRET_ENCRYPTION_KEY`.
 - [ ] Upgrade using the exact final-candidate image digest.
@@ -279,7 +308,7 @@ preferences/branding to SQLite, MySQL and PostgreSQL, plus the custom section/gu
 - [ ] Test a corrupt, incomplete, oversized and wrong-driver backup.
 - [ ] Restore the original v1 backup as the rollback rehearsal.
 - [ ] State clearly whether v1 can open a v2-migrated database. If unsupported, prohibit rollback with the migrated
-  database and require restoration of the pre-upgrade backup.
+      database and require restoration of the pre-upgrade backup.
 
 ## 6. Product acceptance matrix
 
@@ -396,7 +425,7 @@ or a linked issue and explicit defer decision.
 
 ### User documentation
 
-- [ ] Publish a canonical `Upgrade from v1 to v2` page.
+- [ ] Review and merge #6774's canonical `Upgrade from v1 to v2` page.
 - [ ] Cover backup prerequisites, database migrations, changed environment variables and rollback limitations.
 - [ ] Cover Custom Widget v1-to-v2 migration and archived definitions.
 - [ ] Cover Workshop data/volume backup and restore.
@@ -412,20 +441,20 @@ or a linked issue and explicit defer decision.
 
 ### Repository and placeholder cleanup
 
-- [ ] Update `.github/pull_request_template.md`; it still tells contributors to open documentation changes in the
-  separate `homarr-labs/documentation` repository even though docs live in this monorepo.
+- [ ] Review and merge #6773's `.github/pull_request_template.md` update; it points documentation changes at the
+      monorepo and describes the current v2 branch flow.
 - [ ] Decide whether to restore a root `README.md`. Only `docs/README.md` currently exists.
-- [ ] Fix the seven generated `href="null"` integration links in `docs/README.md` and make the generator omit or
-  safely handle integrations without a documentation URL.
+- [ ] Review and merge #6772; it replaces the seven committed `href="null"` integration links and makes the generator
+      use canonical integration documentation URLs.
 - [ ] Replace `.env.example`'s `DB_URL='FULL_PATH_TO_YOUR_SQLITE_DB_FILE'` with a safe runnable example or clearly
-  commented unset value.
-- [ ] Set `UNSAFE_ENABLE_MOCK_INTEGRATION=false` or comment it out in `.env.example`.
-- [ ] Verify direct URLs/API calls cannot create a mock integration when the unsafe flag is disabled.
+      commented unset value.
+- [ ] Review and merge #6771; it comments out `UNSAFE_ENABLE_MOCK_INTEGRATION` in `.env.example`.
+- [ ] Repeat #6771's disabled/enabled direct URL, API creation and onboarding smoke on the final candidate.
 - [ ] Review sample `AUTH_SECRET` and encryption keys so no example can be mistaken for production-safe material.
 - [ ] Keep intentional UI input placeholders, test-domain `example.com` values, the Workshop password replacement
-  example and media-year `TBD`; these are not unfinished product copy.
+      example and media-year `TBD`; these are not unfinished product copy.
 - [ ] Run another focused scan for TODO, TBD, lorem ipsum, coming soon, `href="null"`, fake URLs, temporary files,
-  screenshots from previews and beta-only wording.
+      screenshots from previews and beta-only wording.
 
 ### Release article and notes
 
@@ -433,7 +462,7 @@ or a linked issue and explicit defer decision.
 - [ ] Ensure article claims about performance, privacy, features and compatibility have current evidence.
 - [ ] Curate release notes; autogenerated notes from 562 release-branch commits are not sufficient by themselves.
 - [ ] Run Semantic Release in dry-run mode from a faithful final-candidate branch and inspect the proposed version and
-  changelog.
+      changelog.
 - [ ] Ensure the draft GitHub release body stays below GitHub limits and links to the upgrade guide.
 
 ## 9. Workshop production readiness
@@ -453,20 +482,20 @@ or a linked issue and explicit defer decision.
 
 ### Fix before promotion
 
-- [ ] Make the weekly workflow exit successfully with a clear `no releasable change` result when Semantic Versioning
-  finds no bump.
-- [ ] Fix notification conditions so scheduled runs notify by default and manual runs respect the checkbox.
+- [ ] Merge #6770, then prove the weekly workflow exits successfully with a clear `no releasable change` result when
+      Semantic Versioning finds no bump.
+- [ ] Merge #6770, then prove scheduled runs notify by default and manual runs respect the notification checkbox.
 - [ ] Prove weekly success, failure and major-release/manual-merge paths in controlled runs.
 - [ ] Correct the `v2 release` ruleset target or remove the stale legacy branch/rule after preserving required checks.
 - [ ] Add required final checks to `main`; its current productive ruleset requires review but no status checks.
 - [ ] Require at least one human approval, resolved threads, stale-approval dismissal and no force push/deletion for the
-  final promotion.
+      final promotion.
 - [ ] Review ruleset bypass actors and limit release bypasses to the necessary bots/owners.
-- [ ] Replace the downstream documentation acknowledgement workflow with an actual build/deploy or remove the false
-  release handoff and make monorepo docs deployment authoritative.
+- [ ] Merge #6770's removal of the false archived-repository handoff and verify the monorepo `dev` docs deployment is
+      authoritative.
 - [ ] Add an explicit production deployment failure notification.
 - [ ] Remove `continue-on-error` from post-release `dev` synchronization, or add a mandatory job that verifies `dev`
-  contains the Semantic Release commit and fails loudly otherwise.
+      contains the Semantic Release commit and fails loudly otherwise.
 - [ ] Decide whether the absent `beta` branch is intentional. Remove dead beta logic or create/test a real RC path.
 - [ ] Verify a manual dispatch redeploys the latest existing release and cannot create an unintended tag.
 
@@ -512,7 +541,7 @@ or a linked issue and explicit defer decision.
 - [ ] Prepare FAQ responses for permissions, layouts, Custom Widgets, Workshop, Assistant, MCP and databases.
 - [ ] Prepare success, delay, workflow-failure and rollback messages.
 - [ ] Review the prepared Discord copy in `apps/docs/release-announcements/2.0.0/discord.md` after merging the release
-  article branch.
+      article branch.
 - [ ] Prepare GitHub, Reddit and other community variants from the same verified claims.
 - [ ] Pin/update the relevant Discord channels and remove beta-only install instructions after GA.
 - [ ] Assign people to monitor Discord and GitHub for at least the first 24–48 hours.
@@ -563,12 +592,12 @@ or a linked issue and explicit defer decision.
 - [ ] Verify Discord/community announcements.
 - [ ] Verify post-release synchronization puts the Semantic Release commit back into `dev`.
 - [ ] Run a production smoke: sign-in, board load, widget query, integration query, WebSocket update, task, backup and
-  Workshop browse/install.
+      Workshop browse/install.
 
 ## 14. Rollback triggers and execution
 
 - [ ] Define rollback thresholds for startup failure, migration failure, authentication lockout, widespread blank
-  boards, data loss, image failure and critical security regression.
+      boards, data loss, image failure and critical security regression.
 - [ ] Stop new writes if data integrity is uncertain.
 - [ ] Capture logs, exact image digest and database state before rollback.
 - [ ] Re-point `latest` only if the release owner invokes rollback.
@@ -589,7 +618,7 @@ or a linked issue and explicit defer decision.
 - [ ] Close/repurpose the `v2.0.0` milestone.
 - [ ] Close obsolete stack branches and PRs after preserving history.
 - [ ] Hold a short retrospective covering integration drift, security backlog, CI failures, docs handoff and beta
-  feedback.
+      feedback.
 
 ## Refresh commands
 
