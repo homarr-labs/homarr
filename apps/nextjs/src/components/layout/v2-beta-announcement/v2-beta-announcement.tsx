@@ -1,8 +1,10 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { useState } from "react";
 import {
   ActionIcon,
+  Accordion,
   Alert,
   Box,
   Button,
@@ -22,6 +24,7 @@ import {
   IconBrandGithub,
   IconCheck,
   IconCopy,
+  IconDatabaseExport,
   IconExternalLink,
   IconHeartHandshake,
   IconRobot,
@@ -34,6 +37,7 @@ import {
 import { setClientCookie } from "@homarr/common";
 import { createModal, useModalAction } from "@homarr/modals";
 
+import { BackupExportButton } from "~/components/backup";
 import { discordInviteUrl, v2BetaBlogUrl, v2BetaDiscussionUrl, v2BetaFeedbackUrl, v2BetaPreviewUrl } from "./constants";
 import classes from "./v2-beta-announcement.module.css";
 
@@ -54,7 +58,7 @@ const composeDiffLines = [
   { kind: "context", value: "       - homarr-v2:/appdata" },
   { kind: "context", value: "     environment:" },
   { kind: "context", value: "       SECRET_ENCRYPTION_KEY: <SECRET_KEY>" },
-  { kind: "context", value: "       WORKSHOP_API_URL: https://v2.preview.homarr.dev/ # Only during the beta" },
+  { kind: "added", value: "+      WORKSHOP_API_URL: https://v2.preview.homarr.dev/ # Only during the beta" },
   { kind: "context", value: "" },
   { kind: "context", value: " volumes:" },
   { kind: "context", value: "   homarr-v2:" },
@@ -76,11 +80,12 @@ volumes:
 `;
 
 interface V2BetaAnnouncementProps {
+  canExportBackup: boolean;
   dismissalCookieName: string;
   onDismiss: () => void;
 }
 
-export const V2BetaAnnouncement = ({ dismissalCookieName, onDismiss }: V2BetaAnnouncementProps) => {
+export const V2BetaAnnouncement = ({ canExportBackup, dismissalCookieName, onDismiss }: V2BetaAnnouncementProps) => {
   const { openModal } = useModalAction(V2BetaAnnouncementModal);
 
   const dismiss = () => {
@@ -107,7 +112,7 @@ export const V2BetaAnnouncement = ({ dismissalCookieName, onDismiss }: V2BetaAnn
         </Box>
 
         <Group gap={6} wrap="nowrap">
-          <Button variant="white" color="red" size="compact-sm" onClick={() => openModal(undefined)}>
+          <Button variant="white" color="red" size="compact-sm" onClick={() => openModal({ canExportBackup })}>
             Explore v2
           </Button>
           <ActionIcon variant="subtle" color="white" onClick={dismiss} aria-label="Dismiss the v2 beta announcement">
@@ -119,8 +124,12 @@ export const V2BetaAnnouncement = ({ dismissalCookieName, onDismiss }: V2BetaAnn
   );
 };
 
-const V2BetaAnnouncementModal = createModal<void>(() => {
-  const { openModal: openInstallModal } = useModalAction(V2BetaInstallModal);
+interface V2BetaAnnouncementModalProps {
+  canExportBackup: boolean;
+}
+
+const V2BetaAnnouncementModal = createModal<V2BetaAnnouncementModalProps>(({ innerProps }) => {
+  const [openedSection, setOpenedSection] = useState<string | null>("workshop");
 
   return (
     <Stack gap="lg">
@@ -134,27 +143,51 @@ const V2BetaAnnouncementModal = createModal<void>(() => {
         </Stack>
       </Paper>
 
-      <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
-        <FeatureCard icon={<IconBrandCss3 size={21} />} title="Homarr Workshop">
+      <Accordion variant="separated" radius="md" value={openedSection} onChange={setOpenedSection}>
+        <FeatureAccordionItem value="workshop" icon={<IconBrandCss3 size={20} />} title="Homarr Workshop">
           Share and discover Custom Widgets and CSS made by the Homarr community.
-        </FeatureCard>
-        <FeatureCard icon={<IconArrowsMove size={21} />} title="Complete drag-and-drop rewrite">
+        </FeatureAccordionItem>
+        <FeatureAccordionItem
+          value="drag-and-drop"
+          icon={<IconArrowsMove size={20} />}
+          title="Complete drag-and-drop rewrite"
+        >
           Move, resize, multi-select, and arrange your dashboard with a board editor rebuilt from the ground up.
-        </FeatureCard>
-        <FeatureCard icon={<IconWand size={21} />} title="Custom Widgets v2">
+        </FeatureAccordionItem>
+        <FeatureAccordionItem value="custom-widgets" icon={<IconWand size={20} />} title="Custom Widgets v2">
           We think you can make almost any widget with live previews, API requests, options, actions, and validation.
-        </FeatureCard>
-        <FeatureCard icon={<IconRobot size={21} />} title="Homarr Assistant">
+        </FeatureAccordionItem>
+        <FeatureAccordionItem value="assistant" icon={<IconRobot size={20} />} title="Homarr Assistant">
           Ask questions, find what you need, and manage Homarr through permission-aware tools.
-        </FeatureCard>
-      </SimpleGrid>
+        </FeatureAccordionItem>
+        <Accordion.Item value="installation">
+          <Accordion.Control
+            icon={
+              <ThemeIcon variant="light" color="red" radius="md" size="lg">
+                <IconTerminal2 size={20} />
+              </ThemeIcon>
+            }
+            aria-label="Test Homarr v2 on your server"
+          >
+            <Box>
+              <Text fw={750}>Test Homarr v2 on your server</Text>
+              <Text c="dimmed" size="xs">
+                Back up this instance, then update your Docker Compose file.
+              </Text>
+            </Box>
+          </Accordion.Control>
+          <Accordion.Panel>
+            <V2BetaInstallInstructions canExportBackup={innerProps.canExportBackup} />
+          </Accordion.Panel>
+        </Accordion.Item>
+      </Accordion>
 
       <Alert variant="light" color="red" icon={<IconHeartHandshake size={22} />} title="Your testing is essential">
         Everyone uses Homarr in a different way. We’re counting on you to tell us anything that breaks or doesn’t feel
         right with this new version. Every report matters.
       </Alert>
 
-      <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
+      <SimpleGrid cols={{ base: 1, sm: 3 }} spacing="sm">
         <Button
           component="a"
           href={v2BetaPreviewUrl}
@@ -164,14 +197,6 @@ const V2BetaAnnouncementModal = createModal<void>(() => {
           leftSection={<IconRocket size={18} />}
         >
           Try the hosted preview
-        </Button>
-        <Button
-          variant="light"
-          size="md"
-          leftSection={<IconTerminal2 size={18} />}
-          onClick={() => openInstallModal(undefined)}
-        >
-          Test v2 on your server
         </Button>
         <Button
           component="a"
@@ -234,12 +259,36 @@ const V2BetaAnnouncementModal = createModal<void>(() => {
   centered: true,
 });
 
-const V2BetaInstallModal = createModal<void>(() => (
+interface V2BetaInstallInstructionsProps {
+  canExportBackup: boolean;
+}
+
+const V2BetaInstallInstructions = ({ canExportBackup }: V2BetaInstallInstructionsProps) => (
   <Stack gap="lg">
     <Alert color="yellow" title="Keep your current Homarr data safe">
       Run the beta with the separate <code>homarr-v2</code> volume shown below. Keep a backup, and do not point this
       prerelease image at the only copy of your production data.
     </Alert>
+
+    {canExportBackup ? (
+      <Paper withBorder p="md" radius="md">
+        <Stack gap="sm">
+          <Group gap="sm">
+            <IconDatabaseExport size={22} />
+            <Title order={4}>Back up this Homarr instance</Title>
+          </Group>
+          <Text c="dimmed" size="sm">
+            Download a full backup before testing v2. The archive contains sensitive data, so keep it somewhere safe.
+          </Text>
+          <BackupExportButton />
+        </Stack>
+      </Paper>
+    ) : (
+      <Alert color="blue" title="Back up your database before continuing">
+        Direct backup downloads are available here to Homarr administrators using SQLite. If you use MySQL or
+        PostgreSQL, back up the database with its own tools before testing v2.
+      </Alert>
+    )}
 
     <Stack gap="xs">
       <Title order={3}>Update your Docker Compose file</Title>
@@ -285,32 +334,33 @@ const V2BetaInstallModal = createModal<void>(() => (
       the beta uses the preview Workshop.
     </Text>
   </Stack>
-)).withOptions({
-  defaultTitle: "Test Homarr v2 on your server",
-  size: 900,
-  centered: true,
-});
+);
 
-interface FeatureCardProps {
+interface FeatureAccordionItemProps {
+  value: string;
   icon: ReactNode;
   title: string;
   children: ReactNode;
 }
 
-const FeatureCard = ({ icon, title, children }: FeatureCardProps) => (
-  <Paper className={classes.featureCard} withBorder p="md" radius="md">
-    <Group gap="sm" align="flex-start" wrap="nowrap">
-      <ThemeIcon variant="light" color="red" radius="md" size="lg">
-        {icon}
-      </ThemeIcon>
-      <Box>
-        <Text fw={750} size="sm">
-          {title}
-        </Text>
+const FeatureAccordionItem = ({ value, icon, title, children }: FeatureAccordionItemProps) => (
+  <Accordion.Item value={value}>
+    <Accordion.Control
+      icon={
+        <ThemeIcon variant="light" color="red" radius="md" size="lg">
+          {icon}
+        </ThemeIcon>
+      }
+      aria-label={title}
+    >
+      <Text fw={750}>{title}</Text>
+    </Accordion.Control>
+    <Accordion.Panel>
+      <Box pl={48}>
         <Text c="dimmed" size="sm">
           {children}
         </Text>
       </Box>
-    </Group>
-  </Paper>
+    </Accordion.Panel>
+  </Accordion.Item>
 );

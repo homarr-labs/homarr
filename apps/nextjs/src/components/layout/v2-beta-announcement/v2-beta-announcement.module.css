@@ -50,11 +50,6 @@
   transform: rotate(5deg);
 }
 
-.featureCard {
-  height: 100%;
-  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
-}
-
 .diffViewer {
   overflow: hidden;
 }

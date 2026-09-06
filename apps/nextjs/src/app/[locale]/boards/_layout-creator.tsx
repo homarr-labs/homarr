@@ -9,6 +9,7 @@ import { getRscUserSettingsAsync } from "@homarr/api/user-server";
 import { auth } from "@homarr/auth/next";
 import { BoardProvider } from "@homarr/boards/context";
 import { EditModeProvider } from "@homarr/boards/edit-mode";
+import { dbEnv } from "@homarr/core/infrastructure/db/env";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { v2BetaAnnouncementCookieKey } from "@homarr/definitions";
 
@@ -92,6 +93,7 @@ export const createBoardLayout = <TParams extends Params>({
     const viewerHash = createHash("sha256").update(viewerIdentity).digest("hex").slice(0, 16);
     const dismissalCookieName = `${v2BetaAnnouncementCookieKey}.${viewerHash}`;
     const isAnnouncementDismissed = cookieStore.get(dismissalCookieName)?.value === "dismissed";
+    const canExportBackup = dbEnv.DRIVER === "better-sqlite3" && Boolean(session?.user.permissions.includes("admin"));
 
     return (
       <BoardProvider initialBoard={initialBoard}>
@@ -101,6 +103,7 @@ export const createBoardLayout = <TParams extends Params>({
               <CustomCss />
               <BoardTourGate enabled={shouldRunBoardTour}>
                 <V2BetaDashboardShell
+                  canExportBackup={canExportBackup}
                   dismissalCookieName={dismissalCookieName}
                   initiallyDismissed={isAnnouncementDismissed}
                   header={
