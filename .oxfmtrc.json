@@ -10,7 +10,11 @@
     "CHANGELOG.md",
     "apps/docs/.docusaurus/**",
     "apps/docs/build/**",
-    "apps/docs/blog/**",
+    "apps/docs/blog/2022/**",
+    "apps/docs/blog/2023/**",
+    "apps/docs/blog/2024/**",
+    "apps/docs/blog/2025/**",
+    "apps/docs/blog/authors.yml",
     "packages/custom-widgets/src/core/component-catalog.generated.json",
     "apps/docs/static/custom-widgets/component-catalog-v1.json"
   ]
