@@ -4,14 +4,14 @@
   <h3>Homarr</h3>
 </div>
 
-**Thank you for your contribution. Please ensure that your pull request meets the following pull request:**
+**Thank you for your contribution. Please ensure that your pull request meets the following requirements:**
 
-- [ ] Builds without warnings or errors (`pnpm build`, autofix with `pnpm format:fix`)
-- [ ] Pull request targets `dev` branch
+- [ ] Relevant checks pass without warnings or errors
+- [ ] Pull request targets the intended base branch (`dev` by default; `release/v2` for v2 release work)
 - [ ] Commits follow the [conventional commits guideline](https://www.conventionalcommits.org/en/v1.0.0/)
-- [ ] No shorthand variable names are used (eg. `x`, `y`, `i` or any abbrevation)
-- [ ] Documentation is up to date. Create a pull request [here](https://github.com/homarr-labs/documentation/).
-- [ ] When using AI; No temp files are checked in, the code style follows the rest of the project
+- [ ] No shorthand variable names are used (for example, `x`, `y`, `i`, or abbreviations)
+- [ ] User-facing changes include matching documentation updates under `apps/docs`
+- [ ] When using AI, no temporary files are checked in and the code style follows the rest of the project
 
 **When contributing a new integration or widget:**
 
