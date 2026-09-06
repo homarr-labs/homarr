@@ -30,8 +30,9 @@ needed to restore encrypted integration credentials.
 Select a Homarr backup ZIP. The browser previews entity counts, board names, and required database migrations before
 the archive is uploaded.
 
-Restoring replaces the current SQLite database and cannot be undone. After a successful restore, the Next.js process
-restarts and the page reloads when Homarr is ready.
+Restoring replaces the current SQLite database and cannot be undone. It also invalidates the current database session.
+After a successful management restore, Homarr waits for the restarted server and sends the administrator to sign in
+again. The first-run onboarding restore keeps its existing board destination.
 
 A backup can be restored on another Homarr instance. When its `SECRET_ENCRYPTION_KEY` differs, Homarr re-encrypts stored
 integration secrets for the target instance. Version metadata is used to apply compatible migrations.
