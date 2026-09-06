@@ -1,10 +1,10 @@
 "use client";
 
-import { Box } from "@mantine/core";
+import { Box, Center, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
+import { useI18n } from "@homarr/translation/client";
 
-import { WidgetEmptyState } from "../common/empty-state";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
 import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
@@ -19,6 +19,7 @@ export default function WeatherWidget({
   height,
   displayMode,
 }: WidgetComponentProps<"weather">) {
+  const t = useI18n("widget.weather");
   const input = {
     latitude: options.location.latitude,
     longitude: options.location.longitude,
@@ -27,7 +28,15 @@ export default function WeatherWidget({
   const weather = getUsableWidgetQueryData(weatherQuery);
 
   if (isInitialWidgetQueryPending(weatherQuery)) return <WidgetQueryLoadingState />;
-  if (!weather) return <WidgetEmptyState />;
+  if (!weather) {
+    return (
+      <Center h="100%" w="100%" p="sm">
+        <Text c="dimmed" size="sm" ta="center">
+          {t("disabled")}
+        </Text>
+      </Center>
+    );
+  }
 
   return (
     <Box className={classes.weatherSurface} h="100%" w="100%" pos="relative">
