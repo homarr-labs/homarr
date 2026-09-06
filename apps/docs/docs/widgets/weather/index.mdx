@@ -31,5 +31,6 @@ adds hourly temperature and precipitation charts and the complete seven-day fore
 Weather and location data come from Open-Meteo. Active weather refreshes every ten minutes; identical location requests
 can reuse a server response for five minutes. Failed refreshes keep the last successful data with an error indicator.
 
-Set `NO_EXTERNAL_CONNECTION=true` to disable this and other internet-backed requests. Allowlist
-`https://open-meteo.com` when outbound access is restricted.
+Set `NO_EXTERNAL_CONNECTION=true` to disable this and other internet-backed requests. Weather data and the city search
+inside the widget configuration are unavailable while it is enabled. Allowlist `https://open-meteo.com` when outbound
+access is restricted.
