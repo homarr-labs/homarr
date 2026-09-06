@@ -13,26 +13,10 @@ Homarr v2 upgrades the existing v1 database in place. Keep the same data storage
 
 :::danger Back up before starting v2
 
-The v2 database and board migrations are forward-only. Do not point a v1 container at a database that v2 has already
-migrated. Rolling back requires the pre-upgrade database backup.
+In Homarr v1, go to **Management → Tools → Backup**, export a backup, and keep the downloaded file somewhere safe
+before starting v2. See [Backup and restore](/docs/management/backup) for details.
 
 :::
-
-## Before the upgrade
-
-1. Upgrade to the latest v1 release and confirm that it starts without migration errors.
-2. Record the current image tag, deployment configuration, database driver, and `SECRET_ENCRYPTION_KEY` location.
-3. Stop every Homarr replica.
-4. Create a consistent backup:
-   - **SQLite:** export a ZIP from **Management → Tools → Backup**, then copy the complete `/appdata` volume while
-     Homarr is stopped.
-   - **MySQL or PostgreSQL:** create a database-native backup. Also copy `/appdata` for trusted certificates and other
-     persisted files.
-5. Confirm that the backup can be read and store it separately from the live Homarr volume.
-6. Ensure `DB_MIGRATIONS_DISABLED` is unset or `false`. If migrations are managed by a separate Helm job, confirm that
-   job is enabled for the upgrade.
-
-See [Backup and restore](/docs/management/backup) for the SQLite export contents and restore behavior.
 
 ## Upgrade
 
@@ -86,10 +70,5 @@ removing the archived v1 version. See [Custom Widgets: Import and Workshop](/doc
 
 ## Roll back
 
-1. Stop every v2 replica.
-2. Restore the complete pre-upgrade SQLite `/appdata` copy, or restore the pre-upgrade MySQL/PostgreSQL backup and the
-   saved `/appdata` files.
-3. Restore the original v1 image tag, deployment configuration, and `SECRET_ENCRYPTION_KEY`.
-4. Start one v1 replica and verify its logs and critical boards before scaling it back out.
-
-Never try to roll back by changing only the image tag while retaining the migrated v2 database.
+Use the backup exported before the upgrade if you need to restore your v1 installation. Do not reuse a database that
+v2 has already migrated with v1.
