@@ -54,6 +54,10 @@ The **AI / MCP** tab on Homarr's API page shows the current endpoint, configurat
 MCP supports API keys and OAuth 2.1 with PKCE. API keys are simpler for direct client configuration; OAuth is available
 for clients that support dynamic authorization.
 
+When Homarr is behind a reverse proxy that does not preserve the public host and protocol, set `BASE_URL` to the exact
+public origin, for example `https://homarr.example.com`. Do not include a path. OAuth clients discover the authorization
+server and protected resource through Homarr's `/.well-known/` routes.
+
 Tools use the permissions of the API key owner or authorized user. Creating a key does not grant additional access.
 Custom Widget and Workshop authoring tools, prompts, and resources are visible only to administrators.
 

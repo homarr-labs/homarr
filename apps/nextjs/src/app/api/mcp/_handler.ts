@@ -7,7 +7,7 @@ import { z } from "zod/v4";
 import type { McpTool } from "@homarr/api/mcp";
 import { createTRPCContext, mcpRouter } from "@homarr/api/mcp";
 import { API_KEY_HEADER_NAME, getSessionFromApiKeyAsync } from "@homarr/auth/api-key";
-import { extractBaseUrlFromHeaders } from "@homarr/common";
+import { removeTrailingSlash } from "@homarr/common";
 import { ipAddressFromHeaders } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { buildCustomWidgetMcpPrompt } from "@homarr/custom-widgets/authoring-prompt";
@@ -24,6 +24,7 @@ import { db } from "@homarr/db";
 
 import { getPackageVersion } from "~/versions/package-reader";
 import { getSafeAssistantToolError } from "../assistant/chat/assistant-tool-error";
+import { getMcpBaseUrl } from "./_base-url";
 import { extractMcpTools } from "./_extract-tools";
 import { createMcpProtocolHandler } from "./_protocol";
 
@@ -246,6 +247,12 @@ function jsonErrorResponse(status: number, body: Record<string, string>, extraHe
   });
 }
 
+const getOAuthChallenge = (req: NextRequest) => {
+  const baseUrl = getMcpBaseUrl(req.headers);
+  const resourcePath = removeTrailingSlash(new URL(req.url).pathname);
+  return `Bearer resource_metadata="${baseUrl}/.well-known/oauth-protected-resource${resourcePath}"`;
+};
+
 export const handleMcpRequest = async (req: NextRequest) => {
   const pathname = new URL(req.url).pathname;
   if (pathname.endsWith("/sse") || pathname.endsWith("/message")) {
@@ -269,30 +276,37 @@ export const handleMcpRequest = async (req: NextRequest) => {
 
   if (!apiKeyValue) {
     recordAuthFailure(ipAddress);
-    const baseUrl = extractBaseUrlFromHeaders(req.headers);
     return jsonErrorResponse(
       401,
       {
         error: "unauthorized",
         hint: "Authenticate with an ApiKey header or via OAuth at /.well-known/oauth-authorization-server",
       },
-      { "WWW-Authenticate": `Bearer resource_metadata="${baseUrl}/.well-known/oauth-protected-resource"` },
+      { "WWW-Authenticate": getOAuthChallenge(req) },
     );
   }
 
   if (!apiKeyValue.includes(".")) {
     recordAuthFailure(ipAddress);
-    return jsonErrorResponse(401, { error: "invalid_token", hint: "The token must be in the format '<id>.<token>'." });
+    return jsonErrorResponse(
+      401,
+      { error: "invalid_token", hint: "The token must be in the format '<id>.<token>'." },
+      { "WWW-Authenticate": getOAuthChallenge(req) },
+    );
   }
 
   const session = await getSessionFromApiKeyAsync(db, apiKeyValue, ipAddress, ua);
 
   if (!session) {
     recordAuthFailure(ipAddress);
-    return jsonErrorResponse(401, {
-      error: "invalid_token",
-      hint: "The API key was not found or the token is incorrect.",
-    });
+    return jsonErrorResponse(
+      401,
+      {
+        error: "invalid_token",
+        hint: "The API key was not found or the token is incorrect.",
+      },
+      { "WWW-Authenticate": getOAuthChallenge(req) },
+    );
   }
 
   clearAuthFailures(ipAddress);

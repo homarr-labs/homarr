@@ -16,8 +16,15 @@ const publicHttpUrl = (variableName: string) =>
     }
   });
 
+const publicHttpOrigin = (variableName: string) =>
+  publicHttpUrl(variableName).refine(
+    (value) => value === new URL(value).origin,
+    `${variableName} must be an HTTP(S) origin without a path`,
+  );
+
 export const env = createEnv({
   server: {
+    BASE_URL: publicHttpOrigin("BASE_URL").optional(),
     UNSAFE_ENABLE_MOCK_INTEGRATION: createBooleanSchema(false),
     DEMO_MODE: createBooleanSchema(false),
     DEMO_READ_ONLY: createBooleanSchema(true),

@@ -1,8 +1,8 @@
 import type { NextRequest } from "next/server";
 
 import { auth } from "@homarr/auth/next";
-import { extractBaseUrlFromHeaders } from "@homarr/common";
 
+import { getMcpBaseUrl } from "../../_base-url";
 import { consumePendingAuth, createAuthCode, getClient, storePendingAuth } from "../_store";
 
 export async function GET(req: NextRequest) {
@@ -83,8 +83,9 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  const expectedResource = `${extractBaseUrlFromHeaders(req.headers)}/api/mcp`;
-  if (resource && resource !== expectedResource) {
+  const baseUrl = getMcpBaseUrl(req.headers);
+  const allowedResources = new Set([`${baseUrl}/api/mcp`, `${baseUrl}/api/mcp/mcp`]);
+  if (resource && !allowedResources.has(resource)) {
     return Response.json(
       {
         error: "invalid_target",
@@ -152,7 +153,7 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  const loginUrl = new URL("/auth/login", url.origin);
+  const loginUrl = new URL("/auth/login", baseUrl);
   loginUrl.searchParams.set("callbackUrl", `/api/mcp/oauth/authorize?pending=${id}`);
   return Response.redirect(loginUrl.toString());
 }

@@ -22,7 +22,10 @@ vi.mock("@homarr/auth/api-key", () => ({
   API_KEY_HEADER_NAME: "ApiKey",
   getSessionFromApiKeyAsync: mocks.authenticate,
 }));
-vi.mock("@homarr/common", () => ({ extractBaseUrlFromHeaders: () => "http://localhost" }));
+vi.mock("@homarr/common", () => ({
+  extractBaseUrlFromHeaders: () => "http://localhost",
+  removeTrailingSlash: (value: string) => value.replace(/\/+$/u, ""),
+}));
 vi.mock("@homarr/common/server", () => ({ ipAddressFromHeaders: mocks.ipAddress }));
 vi.mock("@homarr/core/infrastructure/logs", () => ({
   createLogger: () => ({ info: vi.fn(), warn: mocks.loggerWarn, error: vi.fn() }),
@@ -42,6 +45,7 @@ vi.mock("@homarr/custom-widgets/core", () => ({
   getCustomWidgetJsonSchema: () => ({ type: "object", title: "Custom Widget" }),
 }));
 vi.mock("@homarr/db", () => ({ db: {} }));
+vi.mock("~/env", () => ({ env: { BASE_URL: undefined } }));
 vi.mock("~/versions/package-reader", () => ({ getPackageVersion: () => "test-version" }));
 vi.mock("../_extract-tools", () => ({
   extractMcpTools: () => [
