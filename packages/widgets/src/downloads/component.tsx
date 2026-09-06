@@ -493,6 +493,7 @@ export default function DownloadClientsWidget({
         title: t("items.name.columnTitle"),
         sortable: true,
         ellipsis: true,
+        width: 240,
         render: (record) => (
           <Tooltip
             key={displayMode}
