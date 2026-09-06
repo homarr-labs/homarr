@@ -162,7 +162,7 @@ describe("createSignInEventHandler should create signInEventHandler", () => {
       // Arrange
       mockEnv.AUTH_OIDC_GROUPS_ATTRIBUTE = "resource_access.homarr.roles";
       const db = createDb();
-      await createUserAsync(db);
+      await createUserAsync(db, "oidc");
       await createGroupAsync(db);
       const eventHandler = createSignInEventHandler(db);
 
