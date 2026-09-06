@@ -1,5 +1,5 @@
 ---
-title: "Homarr 2.0.0: our biggest upgrade yet"
+title: "Homarr 2.0.0: Workshop, Custom Widgets and a rebuilt board"
 authors:
   - ajnart
   - manuel-rw
@@ -9,20 +9,13 @@ tags: [homarr, update, version, assistant, custom widgets, dashboards, docker]
 draft: false
 ---
 
-Before getting into v2, thank you.
+First, thank you.
 
-A lot of you used the v2 demo while it was still rough, reported bugs, explained what felt wrong, and came back to try the next build. Thanks as well to everyone who keeps using Homarr, helps other users, translates it, contributes code, or simply sticks around. Homarr would not be here without that time and patience.
+Many of you used the v2 demo when it was still rough, found bugs and came back to test the next build. Others translated Homarr, answered questions, contributed code or simply kept using it. We would not be shipping this without you.
 
-We are planning a small run of limited-edition Homarr merch. It will be free and will go to some Workshop contributors and a few randomly selected people from the community. We are not opening a merch store, and this is not being made for profit. It is just one way for us to give something back.
+We are also planning a small batch of **free, limited-edition Homarr swag** for Workshop contributors and a few randomly picked community members. It is not for sale and it is not for profit. No Homarr merch empire, sorry.
 
-Version 2.0 changes a lot, but these are the parts worth paying attention to:
-
-- Custom Widgets v2 and Workshop let people create and share widgets and Custom CSS.
-- The board drag-and-drop system was completely rebuilt.
-- Assistant can work with live Homarr data and help create Custom Widgets.
-- Onboarding, board switching, shortcuts, branding, header controls, and many smaller parts were reworked.
-
-The rest of this post explains what changed and how it works.
+Homarr 2.0 is an upgrade, not a brand-new app wearing the same logo. Here is what actually changed.
 
 ![A populated Homarr 2.0 dashboard with compact widgets, an Assistant, and an application rail](./img/homarr-v2-dashboard.webp)
 
@@ -30,205 +23,107 @@ The rest of this post explains what changed and how it works.
 
 :::warning Back up before upgrading
 
-Create a [Homarr backup](/docs/management/backup) and copy your application data before starting 2.0. Do not test a prerelease image on the only copy of your production volume. Backups are boring. Restores are worse.
+Create a [Homarr backup](/docs/management/backup) first. Do not test a prerelease image on your only production volume. Backups are boring. Restores are worse.
 
 :::
 
 ## Custom Widgets v2 and Workshop
 
-### The "last Homarr update"
+**This is the big one.** We think it is the most important Homarr update we have made.
 
-Not literally. We will keep working on Homarr.
+Custom Widgets v2 lets you build widgets from JSX, API requests, actions and typed settings. Write one yourself or describe it to Assistant, then test it in the workbench. We think this is enough to make almost any dashboard widget—even that oddly specific component only three people need. Those three people no longer have to wait for us.
 
-We use that phrase because Custom Widgets v2 changes who can extend it. A niche widget no longer has to wait for the Homarr team to design, build, review, and maintain it in the main application. You can describe what you need to Assistant or another compatible agent, test the result in Homarr, and share it through Workshop.
-
-Within the safe runtime and request limits, we think almost any dashboard widget can be built this way. That includes components for services we do not use, private APIs we cannot access, and very specific ideas that would never make sense as built-in widgets. You do not need prior coding knowledge, although understanding the API you connect to still helps.
-
-We were inspired by [Google's Create My Widget announcement](https://blog.google/products-and-platforms/platforms/android/gemini-intelligence/). Its idea is simple: describe a personalized Android or Wear OS widget in natural language and let AI build it. Homarr applies a similar idea to self-hosted dashboards, then adds a workbench, validation, server-side requests, permissions, and a community catalog.
-
-### How it works
-
-1. Start in the workbench or ask Assistant or an MCP-connected agent to create the widget.
-2. Configure API sources, queries, actions, options, and JSX.
-3. Run the requests, simulate actions, and inspect Live, Loading, Empty, and Error states.
-4. Save the tested definition and configure instance-specific URLs and credentials.
-5. Publish the widget to Workshop, or keep it private.
+This was partly inspired by [Google's upcoming Create My Widget feature](https://blog.google/products-and-platforms/platforms/android/gemini-intelligence/): describe a widget in normal language and let AI make it. Coding knowledge is optional. Knowing what the API does still helps; AI has not fixed bad documentation. Yet.
 
 ![The Custom Widget v2 workbench after a live exchange-rate request successfully renders its preview](./img/custom-widget-workbench.webp)
 
-A `homarr-custom-widget-v2` definition can use several fixed-origin API sources. Credentials are encrypted separately and do not appear in exports, prompts, browser data, or Workshop submissions.
+A `homarr-custom-widget-v2` definition can use several fixed-origin API sources. Credentials are encrypted separately and stay out of exports and Workshop submissions. Actions support `GET`, `POST`, `PUT`, `PATCH` and `DELETE`; requests have host checks, timeouts, size limits, permissions and rate limits. Custom Widgets remain **Beta** in 2.0.
 
-Load requests support caching and manual or automatic refresh. `ActionButton` and `ToggleSwitch` can run GET, POST, PUT, PATCH, and DELETE actions with confirmation, feedback, rollback, and query invalidation.
-
-![A Custom Widget v2 request configured as a permission-checked POST action with body and refresh controls](./img/custom-widget-post-action.webp)
-
-Widgets can expose saved settings for text, numbers, toggles, selections, sliders, dates, colors, icons, URLs, time zones, and JSON. Host validation, redirect checks, timeouts, response limits, request budgets, permissions, and rate limits constrain requests. Custom Widgets remain **Beta** in 2.0.
-
-### Share widgets and CSS through Workshop
-
-Workshop is the community catalog for Custom Widgets and Custom CSS. You can publish, install, update, vote on, comment on, report, and share submissions. Deployment URLs and credentials stay in each Homarr instance.
+**Workshop is the other half.** Publish and install Custom Widgets or Custom CSS, then update, vote on, comment on and report submissions. Deployment URLs and credentials stay on your Homarr instance.
 
 ![The Community Workshop catalog inside Custom Widget management](./img/community-workshop.webp)
 
 :::warning Workshop is moderated
 
-AI makes it easy to produce a widget. It does not make every result worth publishing. Do not dump untested slop into Workshop.
-
-Submissions can be reported, and Workshop moderators can remove unsafe, malicious, spammy, copied, misleading, or outdated content. Test your requests and actions, add useful screenshots, and explain the required configuration before sharing.
+AI makes widgets easy to produce. It does not make the first thing it coughs up worth publishing. **Do not dump untested slop into Workshop.** Test it, add a useful screenshot and explain its setup. Workshop is moderated.
 
 :::
 
-Read the [Custom Widgets guide](/docs/management/custom-widgets), [agent authoring guide](/docs/management/custom-widgets/agent-authoring), and [request security reference](/docs/management/custom-widgets/requests-and-security).
+This is why we have called it the **"last Homarr update"**. We are not disappearing. It means every new service or widget idea no longer needs a full Homarr release; the community can build and share it instead.
 
 ## Drag and drop, rebuilt
 
-We re-thought drag and drop from the ground up and switched to [`dnd-kit`](https://dndkit.com/). Moves and eight-direction resizes are transactional: Homarr calculates a preview, checks collisions, and commits only a valid layout.
-
-Invalid or cancelled moves roll back. The same engine handles the main grid, rails, and nested Containers with pointer, touch, or keyboard input.
+We threw out the old drag-and-drop system and rebuilt it on [`dnd-kit`](https://dndkit.com/). Moves and eight-direction resizes are transactional: Homarr previews the result, checks collisions and only saves a valid layout. Bad moves roll back instead of wrecking the board. In short: less fighting with your own dashboard.
 
 ![A Calendar tile moving across the rebuilt Homarr 2.0 board grid](./img/drag-and-drop.gif)
 
 ### Goodbye Groups and sections, welcome Containers
 
-Groups and dynamic sections overlapped. Containers replace both with one model for apps, widgets, and nested Containers. They can be moved, resized, collapsed, scrolled, labeled, or configured to open their apps together.
+Groups and dynamic sections did nearly the same job, so **Containers replace both**. They hold apps, widgets and other Containers. Hold <kbd>Ctrl</kbd> or <kbd>Command</kbd> to move several items at once.
 
-### Move multiple items at once
-
-Hold <kbd>Ctrl</kbd> on Windows or Linux, or <kbd>Command</kbd> on macOS, to select several items. Copy, delete, or move the selection to the main grid, a rail, or a Container. The move is saved only when every item fits.
-
-![Three selected board items with the batch Move menu offering the main canvas and right rail](./img/batch-move.webp)
-
-### One board, several layouts
-
-Each board has protected Base and Mobile layouts, with optional breakpoints between them. Homarr selects the highest matching breakpoint and scales the complete layout instead of changing widget proportions.
-
-**Reset from Base** generates a Mobile starting point without duplicating the board. Desktop layouts can reserve one to three columns as rails; Mobile places those items back in the main flow.
-
-![The responsive layout editor beside the same Homarr board rendered at a mobile viewport](./img/responsive-layouts.webp)
-
-Read the [board guide](/docs/management/boards) for layout rules, rails, Containers, and keyboard controls.
+Boards also have Base and Mobile layouts, plus optional breakpoints. **Reset from Base** creates a Mobile starting point without duplicating the board.
 
 ## Homarr Assistant
 
-Assistant is built into Homarr rather than bolted onto a separate chat page. It reads live Homarr data and uses tools for boards, apps, integrations, widgets, Custom Widgets, Docker, and supported services.
-
-Tool calls use the signed-in user's permissions. Read-only calls can run automatically; changes require approval by default. Provider credentials stay encrypted on the server. Providers, models, attachments, mentions, sources, usage, and private conversation history are supported.
+Assistant reads live Homarr data and has tools for boards, apps, integrations, widgets, Docker and supported services. It can answer questions, make approved changes and build Custom Widgets. It follows your permissions: reads can run automatically, while changes require approval by default.
 
 ![The Homarr Assistant expanded over a live dashboard with health, exploration, media, and board actions](./img/assistant-control-surface.webp)
 
-Open Assistant with <kbd>Shift</kbd> + <kbd>A</kbd>. <kbd>Cmd</kbd>/<kbd>Ctrl</kbd> + <kbd>/</kbd> opens Assistant search. Assistant and compatible agents can also help create, validate, preview, and revise Custom Widgets using the exact schema and component catalog from your Homarr version.
+Open it with <kbd>Shift</kbd> + <kbd>A</kbd>. <kbd>Cmd</kbd>/<kbd>Ctrl</kbd> + <kbd>/</kbd> searches it.
 
 :::note About the Homarr provider
 
-The built-in Homarr provider is a social experiment. At launch, Ajnart pays its upstream bill and Workshop applies per-user and shared daily limits.
+The built-in Homarr provider is a social experiment. I (Ajnart) pay its upstream bill.
 
-It is not a promise of free AI forever. If paying for it stops making sense, the provider may be limited, disabled, replaced, or made obsolete. Use your own OpenAI-compatible provider if you need a setup you control long term. Yes, that is the honest version.
+This is not free AI forever. If I stop feeling like paying—or the bill gets silly—it may be limited, disabled, replaced or made obsolete. Bring an OpenAI-compatible provider if you want long-term control. That is the deal.
 
 :::
 
-Prompts, attachments, tools, and tool results sent through the Homarr provider pass through Workshop and OpenRouter. Workshop does not retain request or response content, and OpenRouter is configured for zero-data-retention routing with data collection disabled. Read [Assistant setup](/docs/management/assistant) and [Homarr provider details](/docs/workshop/homarr-provider).
+External assistants can use the same permission-checked tools through `/api/mcp`, with an API key or OAuth 2.1 with PKCE.
 
-### External assistants through MCP
+## The rest (there is a lot)
 
-Homarr exposes a stateless MCP server at `/api/mcp`, authenticated with an API key or OAuth 2.1 with PKCE. External clients receive the tools allowed by the authenticated user's permissions; confirmations still apply to changes.
-
-![Homarr's AI and MCP management page with authentication and Streamable HTTP client configuration](./img/mcp-management.webp)
-
-See the [MCP guide](/docs/management/mcp) for client configuration.
-
-## Quality-of-life changes
-
-### Brand new onboarding
-
-The six-stage setup studio handles the first administrator, core settings, Docker-compatible service discovery, app and integration drafts, and the first board in one flow.
+**Onboarding:** A six-stage setup studio handles the first admin, core settings, Docker discovery, apps, integrations and the first board.
 
 ![The Homarr 2.0 setup studio on its Essentials step, with all six setup stages shown](./img/onboarding-studio.webp)
 
-### Switch boards without hunting through menus
-
-The board switcher is now a searchable gallery with keyboard navigation. Open it from the header or press <kbd>Shift</kbd> + <kbd>C</kbd>.
+**Board switcher:** Boards now live in a searchable gallery with keyboard navigation. Open it from the header or press <kbd>Shift</kbd> + <kbd>C</kbd>.
 
 ![A visual board card inside the searchable Homarr board switcher](./img/board-switcher.webp)
 
-### One command menu and more shortcuts
+**Command menu:** <kbd>Cmd</kbd>/<kbd>Ctrl</kbd> + <kbd>K</kbd> finds resources, pages, settings, users, groups and commands. More keybinds cover Assistant, editing, selection and advanced widget views.
 
-Press <kbd>Cmd</kbd>/<kbd>Ctrl</kbd> + <kbd>K</kbd> to search Homarr resources, pages, settings, users, groups, and commands. Assistant, media, and web providers can add results. Homarr results rank first, and create actions follow your permissions.
-
-![The Homarr 2.0 command menu opening and returning mixed results for an Assistant query](./img/command-menu.gif)
-
-Shortcuts also cover Assistant, board switching, editing, item selection, advanced widget views, and other common actions. They are listed under **Management → About**.
-
-### Put the header controls where you want them
-
-The Header studio arranges built-in controls across left, center, and right areas. Choose the buttons you want and their order: logo, search, boards, Assistant, Docker, editing, settings, theme, account, and more.
+**Header:** Pick which buttons appear, put them on the left, center or right, and change their order.
 
 ![The Header studio showing left, center, and right zones plus available controls](./img/header-studio.webp)
 
-### Brand the complete instance
-
-Instance branding now covers the application name, logo, favicon, colors, board accent behavior, and corner styles. Authentication pages add a custom background, overlay, greeting, and visibility controls.
+**Branding:** Change the name, logo, favicon, colors, corner styles and login page. Global CSS applies instance-wide; board CSS can override it. Only give that power to admins you trust. CSS remains CSS.
 
 ![Instance branding controls for application identity, palette, corner style, and global CSS](./img/instance-branding.webp)
 
-Global CSS applies across the instance; board CSS is more specific and wins later in the cascade. Only trusted administrators should control it.
+**Widgets:** Add content without leaving the board. Settings have live previews, and supported widgets have advanced views. Weather and Clock were redesigned; Air Quality, Countdown and Timer are new.
 
-![The global CSS editor, authentication appearance controls, and current branding summary](./img/global-css-and-auth.webp)
-
-The login page uses the configured identity and authentication appearance instead of a fixed Homarr screen.
-
-![The upgraded Homarr login page with a branded backdrop and centered account card](./img/new-login.webp)
-
-## And a lot more
-
-### Add content without leaving the board
-
-Create widgets, apps, integrations, and Containers from the board menu. Compatible integrations stay in the same flow, apps have Quick Add, and Workshop sits beside Custom Widgets.
-
-![The board's Add content menu offering a widget, app, integration, or Container](./img/add-content-menu.webp)
-
-### Better widget views and settings
-
-Supported widgets can expand by Shift-hover, keyboard, or context menu. Preview the advanced view or pin it while the board becomes inactive.
-
-![The Download Client advanced view with transfer totals, filters, status, and per-item detail](./img/advanced-downloads.webp)
-
-Widget settings now combine live preview, grouped options, and in-place app or integration editing. Weather and Clock were redesigned; Air Quality, Countdown, and Timer were added. Notebook gained collapsible sections and richer table controls. Health Monitoring now uses threshold-colored gauges for CPU usage, CPU temperature, memory, and GPU utilization.
-
-### Better Docker and Podman discovery
-
-`DOCKER_ENDPOINTS` defines several Docker or Podman hosts with separate transports and capabilities. Assisted setup compares containers with existing resources, suggests apps and integrations, and derives likely URLs.
+**Docker and Podman:** `DOCKER_ENDPOINTS` supports several hosts. Assisted setup and container labels can create apps, integrations, Containers, widgets and health checks.
 
 ![Assisted Docker setup listing discovered services that can become apps or integrations](./img/docker-assisted-setup.webp)
 
-Container labels can create Homarr apps, integrations, Containers, widgets, icons, health checks, and stable IDs. Homarr also supports the compatible Homepage label fields. See the [Docker label reference](/docs/integrations/docker-labels).
+Homepage-compatible labels work too.
 
-### Clearer permissions
+**Permissions:** Groups use a new Viewer, Editor and Admin matrix. The API, Assistant and MCP follow the same rules. LDAP can create users on first sign-in; OIDC can link verified accounts and synchronize groups.
 
-Group permissions now use a matrix with Viewer, Editor, and Admin presets. Access levels and create permissions are separate, with inherited and effective permissions shown before saving.
-
-![The Editor permission preset showing explicit board, app, integration, search, media, and administration scopes](./img/permission-matrix.webp)
-
-App, integration, and home-stat data are filtered on the server. Management navigation, API procedures, Assistant, and MCP use the same permission model.
-
-LDAP can provision a Homarr user on first sign-in. OIDC can link a verified email to an existing credentials account when enabled and synchronize external membership into existing Homarr groups.
-
-### Less waiting and duplicate work
-
-Board startup runs independent session, layout, and widget-prefetch work in parallel. Heavy surfaces load when opened. Identical integration requests share in-flight work, while bounded in-process and Redis-backed caches coordinate responses and refresh locks across processes.
-
-We also updated Auth.js, `protobufjs`, and other production dependencies as part of the release hardening.
+**Performance:** Board startup work runs in parallel, heavy screens load when opened, and identical integration requests share work instead of doing it twice.
 
 ## Before upgrading
 
 - Keep a backup and use the final release image, not a prerelease tag.
-- Legacy Custom JSX definitions enter an explicit migration state. Homarr keeps encrypted credentials and an archived copy until the v2 definition validates.
+- Legacy Custom JSX definitions enter a migration state. Homarr keeps encrypted credentials and an archived copy until the v2 definition validates.
 - Mobile layouts place rail content in the main flow instead of displaying rails.
 - Custom Widgets remain Beta.
-- Assistant and MCP never bypass user, API-key, integration, or Docker endpoint permissions.
+- Assistant and MCP do not bypass permissions.
 
 ## Links
 
 - Try the [Homarr 2.0 preview](https://app-v2.preview.homarr.dev).
 - Follow the [v2 release pull request](https://github.com/homarr-labs/homarr/pull/6545) and [public beta thread](https://github.com/homarr-labs/homarr/issues/6600).
 - Compare [v1.76.2 with the release/v2 branch](https://github.com/homarr-labs/homarr/compare/v1.76.2...release/v2).
-- Read the guides for [Boards](/docs/management/boards), [Custom Widgets](/docs/management/custom-widgets), [Assistant](/docs/management/assistant), [MCP](/docs/management/mcp), and [Docker labels](/docs/integrations/docker-labels).
+- Read the guides for [Boards](/docs/management/boards), [Custom Widgets](/docs/management/custom-widgets), [Assistant](/docs/management/assistant), [MCP](/docs/management/mcp) and [Docker labels](/docs/integrations/docker-labels).
