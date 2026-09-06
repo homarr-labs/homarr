@@ -1,0 +1,95 @@
+---
+title: Upgrade from v1 to v2
+sidebar_position: 2
+tags:
+  - Getting started
+  - Upgrade
+  - Migration
+  - Backup
+---
+
+Homarr v2 upgrades the existing v1 database in place. Keep the same data storage, database configuration, and
+`SECRET_ENCRYPTION_KEY`; only change the Homarr image or package version for the first start.
+
+:::danger Back up before starting v2
+
+The v2 database and board migrations are forward-only. Do not point a v1 container at a database that v2 has already
+migrated. Rolling back requires the pre-upgrade database backup.
+
+:::
+
+## Before the upgrade
+
+1. Upgrade to the latest v1 release and confirm that it starts without migration errors.
+2. Record the current image tag, deployment configuration, database driver, and `SECRET_ENCRYPTION_KEY` location.
+3. Stop every Homarr replica.
+4. Create a consistent backup:
+   - **SQLite:** export a ZIP from **Management → Tools → Backup**, then copy the complete `/appdata` volume while
+     Homarr is stopped.
+   - **MySQL or PostgreSQL:** create a database-native backup. Also copy `/appdata` for trusted certificates and other
+     persisted files.
+5. Confirm that the backup can be read and store it separately from the live Homarr volume.
+6. Ensure `DB_MIGRATIONS_DISABLED` is unset or `false`. If migrations are managed by a separate Helm job, confirm that
+   job is enabled for the upgrade.
+
+See [Backup and restore](/docs/management/backup) for the SQLite export contents and restore behavior.
+
+## Upgrade
+
+1. Pin the Homarr image to `ghcr.io/homarr-labs/homarr:v2.0.0` for the first v2 start.
+2. Keep the existing `/appdata` mount, database variables, Redis configuration, and `SECRET_ENCRYPTION_KEY` unchanged.
+3. Start one Homarr replica and follow its logs. Startup must reach `Migration complete`; Homarr aborts startup when a
+   database migration fails.
+4. Open Homarr and sign in. Confirm **Management → About** reports v2 before starting additional replicas.
+5. After validation, keep the version pinned or return to your normal stable release policy.
+
+For Docker Compose, the change is limited to the image tag before the usual update:
+
+```yaml
+services:
+  homarr:
+    image: ghcr.io/homarr-labs/homarr:v2.0.0
+```
+
+```sh
+docker compose pull
+docker compose up -d
+docker compose logs --follow homarr
+```
+
+Do not add `-v` when stopping the Compose deployment; that can remove named volumes.
+
+## What v2 migrates
+
+The startup migration:
+
+- creates the Custom Widget v2, Assistant, header preference, and branding storage;
+- adds Base/Mobile layout roles and left/right board gutters;
+- converts legacy Categories and dynamic sections into Containers and rails;
+- preserves legacy Custom Widget definitions, encrypted secrets, and board references for explicit migration.
+
+Legacy Custom Widgets are not silently rewritten. In **Management → Custom Widgets**, entries marked
+**Migration required** provide a credential-free migration prompt. Review and test the resulting v2 definition before
+removing the archived v1 version. See [Custom Widgets: Import and Workshop](/docs/management/custom-widgets#import-and-workshop).
+
+## Verify the upgraded instance
+
+- Sign in with each enabled authentication method and verify administrator access.
+- Open every important board on desktop and mobile. Check Containers, former Categories, rails, item placement, and
+  home-board assignments.
+- Test at least one read and one permitted action for each critical integration. Recheck integration and board access
+  for representative Viewer, Editor, and Admin groups.
+- Check Docker or Podman endpoints, search engines, uploaded media, trusted certificates, scheduled tasks, WebSockets,
+  and external Redis when used.
+- Review every legacy Custom Widget and migrate it only after its v2 preview and requests work.
+- Restart Homarr once more and confirm the logs contain no migration, database, Redis, authentication, or task errors.
+
+## Roll back
+
+1. Stop every v2 replica.
+2. Restore the complete pre-upgrade SQLite `/appdata` copy, or restore the pre-upgrade MySQL/PostgreSQL backup and the
+   saved `/appdata` files.
+3. Restore the original v1 image tag, deployment configuration, and `SECRET_ENCRYPTION_KEY`.
+4. Start one v1 replica and verify its logs and critical boards before scaling it back out.
+
+Never try to roll back by changing only the image tag while retaining the migrated v2 database.
