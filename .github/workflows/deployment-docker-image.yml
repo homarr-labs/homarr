@@ -40,6 +40,7 @@ jobs:
       version: ${{ steps.read-semver.outputs.version || steps.version-fallback.outputs.version }}
       git_ref: ${{ steps.read-git-ref.outputs.ref || steps.read-semver.outputs.version || github.ref }}
       skipped: ${{ env.SKIP_RELEASE }}
+      upstream_sync: ${{ steps.update-upstream.outcome }}
     steps:
       - run: echo "Manual dispatch redeploys the latest existing release without creating a new one"
         if: env.SKIP_RELEASE == 'true'
@@ -54,7 +55,7 @@ jobs:
         uses: actions/create-github-app-token@v3
         with:
           private-key: ${{ secrets.RENOVATE_MERGE_PRIVATE_KEY }}
-          client-id: ${{ secrets.RENOVATE_MERGE_APP_ID }}
+          app-id: ${{ secrets.RENOVATE_MERGE_APP_ID }}
           permission-contents: write # required to commit package.json & changelog changes, merge them to dev / next and publish the release
 
       - uses: actions/checkout@v7
@@ -115,8 +116,10 @@ jobs:
         run: |
           echo "ref=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
       - name: Update dev / next branch
+        id: update-upstream
         if: env.SKIP_RELEASE == 'false'
-        continue-on-error: true # Prevent pipeline from failing when merge fails
+        # Finish publishing the already-created release, then fail in the publish job if synchronization did not work.
+        continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
           UPSTREAM_BRANCH: ${{ github.ref_name == 'main' && 'dev' || 'next' }}
@@ -274,7 +277,7 @@ jobs:
         uses: actions/create-github-app-token@v3
         with:
           private-key: ${{ secrets.RENOVATE_MERGE_PRIVATE_KEY }}
-          client-id: ${{ secrets.RENOVATE_MERGE_APP_ID }}
+          app-id: ${{ secrets.RENOVATE_MERGE_APP_ID }}
           permission-contents: write # required to publish the release
 
       - name: Log in to the Container registry
@@ -311,6 +314,12 @@ jobs:
         run: |
           gh release edit --repo ${{ github.repository }} ${{ needs.release.outputs.version }} --draft=false
 
+      - name: Verify dev / next synchronization
+        if: needs.release.outputs.skipped == 'false' && needs.release.outputs.upstream_sync != 'success'
+        run: |
+          echo "::error::The released commit was not synchronized back to the upstream development branch."
+          exit 1
+
       - name: Discord notification
         if: github.event_name != 'workflow_dispatch' || inputs['send-notifications']
         env:
@@ -318,3 +327,17 @@ jobs:
         uses: Ilshidur/action-discord@0.4.0
         with:
           args: "Successfully deployed images for branch **${{ github.ref_name }}**. Tagged as **${{env.NEXT_VERSION}}**."
+
+  notify-failure:
+    name: Notify deployment failure
+    if: ${{ always() && (failure() || cancelled()) && (github.event_name != 'workflow_dispatch' || inputs['send-notifications']) }}
+    needs: [release, build-amd64, build-arm64, extract-asset-amd64, extract-asset-arm64, publish]
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Discord failure notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@0.4.0
+        with:
+          args: "The deployment for branch **${{ github.ref_name }}** failed or was cancelled: [run ${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
