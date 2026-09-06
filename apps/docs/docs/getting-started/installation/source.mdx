@@ -43,9 +43,9 @@ This method is only useful, when you want to develop on Homarr or extend it with
     `DB_URL='/home/username/homarr/db.sqlite'` if you want to store the database elsewhere.
   </li>
   <li>
-    Replace `AUTH_SECRET` and `SECRET_ENCRYPTION_KEY` both with a secure random string by using `openssl rand -hex 32`
+    Run `openssl rand -hex 32` twice and set `AUTH_SECRET` and `SECRET_ENCRYPTION_KEY` to the two different generated
+    values. Keep both values secret and preserve `SECRET_ENCRYPTION_KEY` with your backups.
   </li>
-  <li>Replace `CRON_JOB_API_KEY` with a secure random string by using `openssl rand -base64 32`</li>
   <li>Run `pnpm run db:migration:sqlite:run` and wait that it completes</li>
   <li>Build the source using `pnpm build`</li>
   <li>
