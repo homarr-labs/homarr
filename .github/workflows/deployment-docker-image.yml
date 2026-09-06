@@ -68,8 +68,6 @@ jobs:
         with:
           node-version: 24.18.0
           package-manager-cache: false
-      - run: npm i -g pnpm
-        if: env.SKIP_RELEASE == 'false'
       - name: Install dependencies
         if: env.SKIP_RELEASE == 'false'
         run: |
