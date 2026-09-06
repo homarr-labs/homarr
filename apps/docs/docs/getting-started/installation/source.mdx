@@ -38,8 +38,9 @@ This method is only useful, when you want to develop on Homarr or extend it with
     Install all dependencies using <code>pnpm install</code>
   </li>
   <li>
-    Copy the `.env.example` file to `.env` and replace `DB_URL` with the full path you want to use for the sqlite
-    database file. For example `DB_URL='/home/username/homarr/db.sqlite`
+    Copy the `.env.example` file to `.env`. Its `DB_URL='./db.sqlite'` value is ready for local use and stores the
+    database in the cloned repository. Replace it with an absolute writable path such as
+    `DB_URL='/home/username/homarr/db.sqlite'` if you want to store the database elsewhere.
   </li>
   <li>
     Replace `AUTH_SECRET` and `SECRET_ENCRYPTION_KEY` both with a secure random string by using `openssl rand -hex 32`
