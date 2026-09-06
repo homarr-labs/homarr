@@ -481,13 +481,14 @@ export function calculateCpuUsage(stats: ContainerStats): number {
     return 0;
   }
 
-  const numberOfCpus = stats.cpu_stats.online_cpus;
-  const usage = stats.cpu_stats.system_cpu_usage;
-  if (!usage || usage === 0) {
+  const cpuDelta = stats.cpu_stats.cpu_usage.total_usage - (stats.precpu_stats?.cpu_usage?.total_usage ?? 0);
+  const systemDelta = (stats.cpu_stats.system_cpu_usage ?? 0) - (stats.precpu_stats?.system_cpu_usage ?? 0);
+
+  if (systemDelta <= 0 || cpuDelta < 0) {
     return 0;
   }
 
-  return (stats.cpu_stats.cpu_usage.total_usage / usage) * numberOfCpus * 100;
+  return (cpuDelta / systemDelta) * 100;
 }
 
 export function calculateMemoryUsage(stats: ContainerStats): number {

@@ -72,16 +72,16 @@ describe("calculateCpuUsage", () => {
     const stats = createStats({
       cpu_stats: { online_cpus: 4, cpu_usage: { total_usage: 2000 }, system_cpu_usage: 10000 },
     });
-    // (2000 / 10000) * 4 * 100 = 80
-    expect(calculateCpuUsage(stats)).toBe(80);
+    // (2000 / 10000) * 100 = 20
+    expect(calculateCpuUsage(stats)).toBe(20);
   });
 
   test("should handle fractional CPU usage", () => {
     const stats = createStats({
       cpu_stats: { online_cpus: 2, cpu_usage: { total_usage: 500 }, system_cpu_usage: 100000 },
     });
-    // (500 / 100000) * 2 * 100 = 1
-    expect(calculateCpuUsage(stats)).toBe(1);
+    // (500 / 100000) * 100 = 0.5
+    expect(calculateCpuUsage(stats)).toBe(0.5);
   });
 });
 
