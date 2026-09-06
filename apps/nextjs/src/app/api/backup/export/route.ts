@@ -52,7 +52,7 @@ export async function GET() {
     const date = new Date().toISOString().split("T")[0];
     const filename = `homarr-backup-${date}.zip`;
 
-    return new NextResponse(zipBuffer, {
+    return new NextResponse(new Uint8Array(zipBuffer), {
       status: 200,
       headers: {
         "Content-Type": "application/zip",
