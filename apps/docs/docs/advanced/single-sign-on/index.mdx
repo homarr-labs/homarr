@@ -244,6 +244,9 @@ Homarr supports multiple authentication options, from internal userbase (credent
         - Create a group (e.g., `homarr-admins`) and assign users who require admin access.
 
         **2. Example .env file:**
+
+        Generate `SECRET_ENCRYPTION_KEY` with `openssl rand -hex 32`; do not copy an example key between installs.
+
         ```env
         OIDC_CLIENT_ID=identificationid #OIDC client ID
         OIDC_CLIENT_SECRET=secretsecretsecret #OIDC client secret
@@ -251,11 +254,11 @@ Homarr supports multiple authentication options, from internal userbase (credent
         AUTH_DOMAIN=auth.example.com #Authentik FQDN
         ADMIN_GROUP=homarr-admins #Authentik group for Homarr admins
         HOMARR_FQDN=homarr.example.com #Homarr FQDN
-        SECRET_ENCRYPTION_KEY=encryptencryptencrypt #Homarr encryption key
+        SECRET_ENCRYPTION_KEY=<REPLACE_WITH_64_HEX_CHARACTERS>
         ```
 
         **3. Example Docker Compose configuration:**
-        ```yaml {14-26}
+        ```yaml {14-24}
         services:
           homarr:
             image: ghcr.io/homarr-labs/homarr:latest
@@ -269,8 +272,6 @@ Homarr supports multiple authentication options, from internal userbase (credent
             environment:
               - TZ=America/Los_Angeles
               - SECRET_ENCRYPTION_KEY=${SECRET_ENCRYPTION_KEY}
-              - BASE_URL=https://${HOMARR_FQDN}
-              - NEXTAUTH_URL=https://${HOMARR_FQDN}
               - AUTH_PROVIDERS=oidc #(optional: include ',credentials' to keep local accounts as fallback)
               - AUTH_OIDC_CLIENT_ID=${OIDC_CLIENT_ID}
               - AUTH_OIDC_CLIENT_SECRET=${OIDC_CLIENT_SECRET}
@@ -322,15 +323,18 @@ Homarr supports multiple authentication options, from internal userbase (credent
         - Record the `Client-ID` and `Client Key` (secret).
 
         **2. Example .env file (Homarr):**
+
+        Generate `SECRET_ENCRYPTION_KEY` with `openssl rand -hex 32`; do not copy an example key between installs.
+
         ```env
         OIDC_CLIENT_ID=identificationid #Google Client-ID
         OIDC_CLIENT_SECRET=secretsecretsecret #Google Client Key (secret)
         HOMARR_FQDN=homarr.example.com #Homarr FQDN
-        SECRET_ENCRYPTION_KEY=encryptencryptencrypt #Homarr encryption key
+        SECRET_ENCRYPTION_KEY=<REPLACE_WITH_64_HEX_CHARACTERS>
         ```
 
         **3. Example Docker Compose configuration (Homarr):**
-        ```yaml {16-22}
+        ```yaml {14-20}
         services:
           homarr:
             image: ghcr.io/homarr-labs/homarr:latest
@@ -344,8 +348,6 @@ Homarr supports multiple authentication options, from internal userbase (credent
             environment:
               - TZ=Europe/Berlin
               - SECRET_ENCRYPTION_KEY=${SECRET_ENCRYPTION_KEY}
-              - BASE_URL=https://${HOMARR_FQDN}
-              - NEXTAUTH_URL=https://${HOMARR_FQDN}
               - AUTH_PROVIDERS=oidc #(optional: include ',credentials' to keep local accounts as fallback)
               - AUTH_OIDC_CLIENT_ID=${OIDC_CLIENT_ID}
               - AUTH_OIDC_CLIENT_SECRET=${OIDC_CLIENT_SECRET}
