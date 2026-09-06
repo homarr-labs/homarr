@@ -1,0 +1,94 @@
+.banner {
+  position: relative;
+  isolation: isolate;
+  height: 52px;
+  overflow: hidden;
+  color: var(--mantine-color-white);
+  background: var(--mantine-color-red-9);
+  border-bottom: 1px solid rgb(255 255 255 / 18%);
+}
+
+.banner::after {
+  position: absolute;
+  z-index: -1;
+  right: -0.35rem;
+  bottom: -1.75rem;
+  color: rgb(255 255 255 / 9%);
+  font-size: 5.5rem;
+  font-weight: 900;
+  line-height: 1;
+  content: "v2";
+}
+
+.copy {
+  min-width: 0;
+}
+
+.subtitle {
+  opacity: 0.86;
+}
+
+.modalHero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  color: var(--mantine-color-white);
+  background: var(--mantine-color-red-9);
+}
+
+.modalHero::after {
+  position: absolute;
+  z-index: -1;
+  right: -0.75rem;
+  bottom: -1.5rem;
+  color: rgb(255 255 255 / 8%);
+  font-size: 12rem;
+  font-weight: 900;
+  line-height: 1;
+  content: "v2";
+}
+
+.featureCard {
+  height: 100%;
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+}
+
+.diffViewer {
+  overflow: hidden;
+}
+
+.diffHeader {
+  background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-7));
+  border-bottom: 1px solid var(--mantine-color-default-border);
+}
+
+.diffCode {
+  margin: 0;
+  padding-block: var(--mantine-spacing-sm);
+  overflow-x: auto;
+  color: light-dark(var(--mantine-color-dark-8), var(--mantine-color-gray-2));
+  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-9));
+  font-family: var(--mantine-font-family-monospace);
+  font-size: var(--mantine-font-size-sm);
+  line-height: 1.6;
+}
+
+.diffLine_context,
+.diffLine_added,
+.diffLine_removed {
+  display: block;
+  width: max-content;
+  min-width: 100%;
+  padding-inline: var(--mantine-spacing-md);
+  white-space: pre;
+}
+
+.diffLine_added {
+  color: light-dark(var(--mantine-color-green-9), var(--mantine-color-green-3));
+  background: light-dark(var(--mantine-color-green-0), rgb(47 158 68 / 15%));
+}
+
+.diffLine_removed {
+  color: light-dark(var(--mantine-color-red-9), var(--mantine-color-red-3));
+  background: light-dark(var(--mantine-color-red-0), rgb(250 82 82 / 15%));
+}
