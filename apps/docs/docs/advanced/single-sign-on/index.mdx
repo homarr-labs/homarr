@@ -248,8 +248,8 @@ Homarr supports multiple authentication options, from internal userbase (credent
         Generate `SECRET_ENCRYPTION_KEY` with `openssl rand -hex 32`; do not copy an example key between installs.
 
         ```env
-        OIDC_CLIENT_ID=identificationid #OIDC client ID
-        OIDC_CLIENT_SECRET=secretsecretsecret #OIDC client secret
+        OIDC_CLIENT_ID=<REPLACE_WITH_OIDC_CLIENT_ID>
+        OIDC_CLIENT_SECRET=<REPLACE_WITH_OIDC_CLIENT_SECRET>
         OIDC_SLUG=homarr #Application slug in Authentik
         AUTH_DOMAIN=auth.example.com #Authentik FQDN
         ADMIN_GROUP=homarr-admins #Authentik group for Homarr admins
@@ -327,8 +327,8 @@ Homarr supports multiple authentication options, from internal userbase (credent
         Generate `SECRET_ENCRYPTION_KEY` with `openssl rand -hex 32`; do not copy an example key between installs.
 
         ```env
-        OIDC_CLIENT_ID=identificationid #Google Client-ID
-        OIDC_CLIENT_SECRET=secretsecretsecret #Google Client Key (secret)
+        OIDC_CLIENT_ID=<REPLACE_WITH_GOOGLE_CLIENT_ID>
+        OIDC_CLIENT_SECRET=<REPLACE_WITH_GOOGLE_CLIENT_SECRET>
         HOMARR_FQDN=homarr.example.com #Homarr FQDN
         SECRET_ENCRYPTION_KEY=<REPLACE_WITH_64_HEX_CHARACTERS>
         ```
