@@ -4,7 +4,6 @@ import type { ReactNode } from "react";
 import {
   ActionIcon,
   Alert,
-  Badge,
   Box,
   Button,
   CopyButton,
@@ -27,7 +26,6 @@ import {
   IconHeartHandshake,
   IconRobot,
   IconRocket,
-  IconSparkles,
   IconTerminal2,
   IconWand,
   IconX,
@@ -98,19 +96,15 @@ export const V2BetaAnnouncement = ({ dismissalCookieName, onDismiss }: V2BetaAnn
   return (
     <Box component="aside" className={classes.banner} aria-label="Homarr v2 beta announcement">
       <Group h="100%" justify="space-between" gap="sm" wrap="nowrap" px="md">
-        <Group gap="sm" wrap="nowrap" className={classes.copy}>
-          <ThemeIcon variant="white" color="red" radius="xl" size="md">
-            <IconSparkles size={18} />
-          </ThemeIcon>
-          <Box className={classes.copy}>
-            <Text fw={750} size="sm" truncate>
-              Homarr v2 beta is here
-            </Text>
-            <Text className={classes.subtitle} visibleFrom="sm" size="xs" truncate>
-              Test it with us and help make v2 ready for everyone.
-            </Text>
-          </Box>
-        </Group>
+        <Box className={classes.copy}>
+          <Text fw={750} size="sm" truncate>
+            We&apos;ve been cooking, Homarr v2 beta is here
+          </Text>
+          <Text className={classes.subtitle} visibleFrom="sm" size="xs" truncate>
+            Custom Widgets &amp; CSS workshop, new drag-and-drop, new container system, side-bars are back, new widgets
+            and so much more, come check it out and help us make v2 ready for everyone
+          </Text>
+        </Box>
 
         <Group gap={6} wrap="nowrap">
           <Button variant="white" color="red" size="compact-sm" onClick={() => openModal(undefined)}>
@@ -132,9 +126,6 @@ const V2BetaAnnouncementModal = createModal<void>(() => {
     <Stack gap="lg">
       <Paper className={classes.modalHero} p={{ base: "lg", sm: "xl" }} radius="md">
         <Stack gap="sm" maw={760}>
-          <Badge variant="white" color="red" size="lg" w="fit-content">
-            Public beta
-          </Badge>
           <Title order={2}>Help us get Homarr v2 ready</Title>
           <Text>
             There is no release date yet. Homarr v2 will become the default when it is ready—and we need you to test it
@@ -157,23 +148,6 @@ const V2BetaAnnouncementModal = createModal<void>(() => {
           Ask questions, find what you need, and manage Homarr through permission-aware tools.
         </FeatureCard>
       </SimpleGrid>
-
-      <Paper withBorder p="md" radius="md" className={classes.qolCard}>
-        <Stack gap="sm">
-          <Text fw={750}>And so much more</Text>
-          <Text c="dimmed" size="sm">
-            Hundreds of quality-of-life improvements, including:
-          </Text>
-          <Group gap="xs">
-            <Badge variant="light">Brand-new onboarding</Badge>
-            <Badge variant="light">Visual board switcher</Badge>
-            <Badge variant="light">Keyboard shortcuts</Badge>
-            <Badge variant="light">Instance branding</Badge>
-            <Badge variant="light">Custom header buttons</Badge>
-            <Badge variant="light">Custom header order</Badge>
-          </Group>
-        </Stack>
-      </Paper>
 
       <Alert variant="light" color="red" icon={<IconHeartHandshake size={22} />} title="Your testing is essential">
         Everyone uses Homarr in a different way. We’re counting on you to tell us anything that breaks or doesn’t feel

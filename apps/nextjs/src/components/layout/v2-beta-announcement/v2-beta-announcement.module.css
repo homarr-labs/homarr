@@ -55,10 +55,6 @@
   background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
 }
 
-.qolCard {
-  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8));
-}
-
 .diffViewer {
   overflow: hidden;
 }
