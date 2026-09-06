@@ -5,6 +5,7 @@ import {
   ActionIcon,
   Accordion,
   Alert,
+  Anchor,
   Box,
   Button,
   Group,
@@ -80,7 +81,7 @@ export const V2BetaAnnouncement = ({ canExportBackup, dismissalCookieName, onDis
 
   const dismiss = () => {
     setClientCookie(dismissalCookieName, "dismissed", {
-      maxAge: 60 * 60 * 24 * 365,
+      maxAge: 60 * 60 * 24 * 7,
       path: "/",
       sameSite: "lax",
       secure: window.location.protocol === "https:",
@@ -172,8 +173,34 @@ const V2BetaAnnouncementModal = createModal<V2BetaAnnouncementModalProps>(({ inn
       </Accordion>
 
       <Alert variant="light" color="red" icon={<IconHeartHandshake size={22} />} title="Your testing is essential">
-        Everyone uses Homarr in a different way. We’re counting on you to tell us anything that breaks or doesn’t feel
-        right with this new version. Every report matters.
+        <Text size="sm">
+          Everyone uses Homarr in a different way. If anything breaks or does not feel right, the easiest way to get it
+          fixed as soon as possible is to{" "}
+          <Anchor
+            href={discordInviteUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            c="inherit"
+            fz="sm"
+            fw={700}
+            underline="always"
+          >
+            tell us about it on Discord
+          </Anchor>{" "}
+          in our dedicated v2 channel. You can also{" "}
+          <Anchor
+            href={v2BetaFeedbackUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            c="inherit"
+            fz="sm"
+            fw={700}
+            underline="always"
+          >
+            open a dedicated GitHub issue
+          </Anchor>
+          {"."} Every report matters.
+        </Text>
       </Alert>
 
       <SimpleGrid cols={{ base: 1, sm: 3 }} spacing="sm">
