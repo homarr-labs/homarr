@@ -20,7 +20,7 @@ jobs:
         uses: actions/create-github-app-token@v3
         with:
           private-key: ${{ secrets.RENOVATE_APPROVE_PRIVATE_KEY }}
-          app-id: ${{ secrets.RENOVATE_APPROVE_APP_ID }}
+          client-id: ${{ vars.RENOVATE_APPROVE_CLIENT_ID }}
           permission-pull-requests: write # required to enable auto-merge
 
       - name: Install GitHub CLI

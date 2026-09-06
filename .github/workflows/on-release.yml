@@ -15,7 +15,7 @@ jobs:
         uses: actions/create-github-app-token@v3
         with:
           private-key: ${{ secrets.RENOVATE_MERGE_PRIVATE_KEY }}
-          app-id: ${{ secrets.RENOVATE_MERGE_APP_ID }}
+          client-id: ${{ vars.RENOVATE_MERGE_CLIENT_ID }}
           permission-contents: write # required to commit to branch
           permission-pull-requests: write # required to create pr & enable automerge
       - name: Checkout code
