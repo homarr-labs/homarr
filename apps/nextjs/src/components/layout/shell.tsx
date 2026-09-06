@@ -10,11 +10,13 @@ import { navigationCollapsedAtom } from "./header/burger";
 interface ClientShellProps {
   hasHeader?: boolean;
   hasNavigation?: boolean;
+  headerHeight?: number;
 }
 
 export const ClientShell = ({
   hasHeader = true,
   hasNavigation = true,
+  headerHeight = 60,
   children,
 }: PropsWithChildren<ClientShellProps>) => {
   const collapsed = useAtomValue(navigationCollapsedAtom);
@@ -23,7 +25,7 @@ export const ClientShell = ({
   return (
     <AppShell
       {...backgroundProps}
-      header={hasHeader ? { height: 60 } : undefined}
+      header={hasHeader ? { height: headerHeight } : undefined}
       navbar={
         hasNavigation
           ? {

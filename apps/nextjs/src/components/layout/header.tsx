@@ -19,25 +19,31 @@ interface Props {
 export const MainHeader = ({ logo, actions, hasNavigation = true }: Props) => {
   return (
     <AppShellHeader maw="100vw" zIndex={201} style={{ overflowX: "hidden" }}>
-      <Group h="100%" gap="xl" px="md" justify="apart" wrap="nowrap">
-        <Group h="100%" align="center" style={{ flex: 1 }} wrap="nowrap">
-          {hasNavigation && <ClientBurger />}
-          <UnstyledButton component={Link} href="/">
-            {logo ?? <HomarrLogoWithTitle size="md" />}
-          </UnstyledButton>
-        </Group>
-        <TourTarget id="board-search">
-          <DesktopSearchInput />
-        </TourTarget>
-        <Group h="100%" align="center" justify="end" style={{ flex: 1 }} wrap="nowrap">
-          {actions}
-          <MobileSearchButton />
-          <TourTarget id="board-user-menu">
-            <UserButton />
-          </TourTarget>
-        </Group>
-      </Group>
-      <LazySpotlight />
+      <MainHeaderContent logo={logo} actions={actions} hasNavigation={hasNavigation} />
     </AppShellHeader>
   );
 };
+
+export const MainHeaderContent = ({ logo, actions, hasNavigation = true }: Props) => (
+  <>
+    <Group h={60} gap="xl" px="md" justify="apart" wrap="nowrap">
+      <Group h="100%" align="center" style={{ flex: 1 }} wrap="nowrap">
+        {hasNavigation && <ClientBurger />}
+        <UnstyledButton component={Link} href="/">
+          {logo ?? <HomarrLogoWithTitle size="md" />}
+        </UnstyledButton>
+      </Group>
+      <TourTarget id="board-search">
+        <DesktopSearchInput />
+      </TourTarget>
+      <Group h="100%" align="center" justify="end" style={{ flex: 1 }} wrap="nowrap">
+        {actions}
+        <MobileSearchButton />
+        <TourTarget id="board-user-menu">
+          <UserButton />
+        </TourTarget>
+      </Group>
+    </Group>
+    <LazySpotlight />
+  </>
+);
