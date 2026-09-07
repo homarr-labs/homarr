@@ -213,6 +213,9 @@ func selectRequestedVolumes(available []docker.Volume, names []string) ([]docker
 }
 
 func volumeOwnerContainer(name string) (string, error) {
+	if name == "homarr" {
+		return "homarr", nil
+	}
 	if !strings.HasSuffix(name, "_data") {
 		return "", fmt.Errorf("volume %q is not a Homarr instance data volume", name)
 	}
