@@ -14,6 +14,7 @@ import {
   getSelectedModelDetailsAsync,
 } from "@homarr/api/assistant";
 import { auth } from "@homarr/auth/next";
+import { isRecord } from "@homarr/common";
 import { env } from "@homarr/common/env";
 import { decryptSecret } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -168,8 +169,7 @@ const webSearchInstructions = `
 
 OpenRouter web search is available. Use it only when current external information or unsupplied API documentation is needed. Prefer primary documentation, keep the search focused, and cite the sources that support the answer or generated artifact.`;
 
-const asRecord = (value: unknown): Record<string, unknown> | null =>
-  typeof value === "object" && value !== null && !Array.isArray(value) ? (value as Record<string, unknown>) : null;
+const asRecord = (value: unknown): Record<string, unknown> | null => (isRecord(value) ? value : null);
 
 const asFiniteNumber = (value: unknown) => {
   const number = typeof value === "number" ? value : typeof value === "string" ? Number(value) : Number.NaN;
@@ -527,13 +527,8 @@ export async function POST(request: Request) {
               };
             }
             let executionInput = input;
-            if (
-              mcpTool.name.startsWith("customWidget_") &&
-              typeof input === "object" &&
-              input !== null &&
-              !Array.isArray(input)
-            ) {
-              executionInput = normalizeCustomWidgetLifecycleToolInput(mcpTool.name, input as Record<string, unknown>);
+            if (mcpTool.name.startsWith("customWidget_") && isRecord(input)) {
+              executionInput = normalizeCustomWidgetLifecycleToolInput(mcpTool.name, input);
             }
             const contextRequestKey = getCustomWidgetContextRequestKey(mcpTool.name, executionInput);
             if (contextRequestKey !== null && loadedCustomWidgetContextRequests.has(contextRequestKey)) {

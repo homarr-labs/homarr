@@ -31,7 +31,7 @@ import {
 } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
-import { objectEntries } from "@homarr/common";
+import { formatBitRate, objectEntries } from "@homarr/common";
 import { getIconUrl } from "@homarr/definitions";
 import type { StreamSession } from "@homarr/integrations";
 import { useI18n } from "@homarr/translation/client";
@@ -74,7 +74,7 @@ const playbackStatusColorMap = {
 
 function formatBitrate(bitrateKbps: number | null | undefined): string | null {
   if (!bitrateKbps || bitrateKbps <= 0) return null;
-  return bitrateKbps >= 1000 ? `${(bitrateKbps / 1000).toFixed(1)} Mbps` : `${Math.round(bitrateKbps)} kbps`;
+  return formatBitRate(bitrateKbps * 1000);
 }
 
 const RESOLUTION_TIER_HEIGHTS = [4320, 2160, 1440, 1080, 720, 480, 360, 240] as const;

@@ -1,3 +1,4 @@
+import { isRecord } from "@homarr/common";
 import { normalizeCustomWidgetLifecycleToolInput } from "@homarr/custom-widgets/core";
 
 interface AssistantToolCallInput {
@@ -97,7 +98,7 @@ const repairMultilineToolInput = <T extends AssistantToolCallInput>(toolCall: T)
   if (customWidgetNoInputToolNames.has(toolCall.toolName)) {
     try {
       const input = JSON.parse(toolCall.input) as unknown;
-      if (typeof input === "object" && input !== null && !Array.isArray(input) && Object.keys(input).length === 0) {
+      if (isRecord(input) && Object.keys(input).length === 0) {
         return null;
       }
     } catch {
@@ -124,8 +125,8 @@ const repairCustomWidgetLifecycleInput = <T extends AssistantToolCallInput>(tool
   } catch {
     return null;
   }
-  if (typeof input !== "object" || input === null || Array.isArray(input)) return null;
-  const normalized = normalizeCustomWidgetLifecycleToolInput(toolCall.toolName, input as Record<string, unknown>);
+  if (!isRecord(input)) return null;
+  const normalized = normalizeCustomWidgetLifecycleToolInput(toolCall.toolName, input);
   if (normalized === input) return null;
   return { ...toolCall, input: JSON.stringify(normalized) };
 };

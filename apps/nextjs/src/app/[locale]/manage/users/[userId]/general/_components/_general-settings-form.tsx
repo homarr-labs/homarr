@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { useMemo, useRef } from "react";
+import { useRouter } from "next/navigation";
 import {
   Box,
   Button,
@@ -32,6 +33,7 @@ import { useI18n } from "@homarr/translation/client";
 import {
   headerPreferencesSchema,
   parseHeaderPreferences,
+  userByteUnitSystemSchema,
   userChangeHomeBoardsSchema,
   userChangeSearchPreferencesSchema,
   userEditProfileSchema,
@@ -55,6 +57,7 @@ const userGeneralSettingsSchema = z.object({
   defaultSearchEngineId: userChangeSearchPreferencesSchema.shape.defaultSearchEngineId,
   openInNewTab: userChangeSearchPreferencesSchema.shape.openInNewTab,
   ddgBangsEnabled: userChangeSearchPreferencesSchema.shape.ddgBangsEnabled,
+  byteUnitSystem: userByteUnitSystemSchema.shape.byteUnitSystem,
   firstDayOfWeek: userFirstDayOfWeekSchema.shape.firstDayOfWeek,
   pingIconsEnabled: userPingIconsEnabledSchema.shape.pingIconsEnabled,
   enableRightClickOnWidgets: userEnableRightClickOnWidgetsSchema.shape.enableRightClickOnWidgets,
@@ -85,6 +88,7 @@ const buildInitialValues = (user: RouterOutputs["user"]["getById"]): FormValues 
   defaultSearchEngineId: user.defaultSearchEngineId,
   openInNewTab: user.openSearchInNewTab,
   ddgBangsEnabled: user.ddgBangs,
+  byteUnitSystem: user.byteUnitSystem,
   firstDayOfWeek: user.firstDayOfWeek as DayOfWeek,
   pingIconsEnabled: user.pingIconsEnabled,
   enableRightClickOnWidgets: user.enableRightClickOnWidgets,
@@ -102,11 +106,13 @@ export const UserGeneralSettingsForm = ({
   const tCommon = useI18n("common");
   const tUserManagement = useI18n("management.page.user");
   const tGeneral = useI18n("management.page.user.setting.general");
+  const router = useRouter();
   const isCredentialsUser = user.provider === "credentials";
 
   const editProfileMutation = clientApi.user.editProfile.useMutation();
   const changeHomeBoardsMutation = clientApi.user.changeHomeBoards.useMutation();
   const changeSearchPreferencesMutation = clientApi.user.changeSearchPreferences.useMutation();
+  const changeByteUnitSystemMutation = clientApi.user.changeByteUnitSystem.useMutation();
   const changeFirstDayOfWeekMutation = clientApi.user.changeFirstDayOfWeek.useMutation();
   const changePingIconsEnabledMutation = clientApi.user.changePingIconsEnabled.useMutation();
   const changeEnableRightClickOnWidgetsMutation = clientApi.user.changeEnableRightClickOnWidgets.useMutation();
@@ -127,6 +133,7 @@ export const UserGeneralSettingsForm = ({
     editProfileMutation,
     changeHomeBoardsMutation,
     changeSearchPreferencesMutation,
+    changeByteUnitSystemMutation,
     changeFirstDayOfWeekMutation,
     changePingIconsEnabledMutation,
     changeEnableRightClickOnWidgetsMutation,
@@ -168,6 +175,14 @@ export const UserGeneralSettingsForm = ({
           }),
       },
       {
+        when: changed("byteUnitSystem"),
+        action: () =>
+          changeByteUnitSystemMutation.mutateAsync({
+            id: user.id,
+            byteUnitSystem: parsed.data.byteUnitSystem,
+          }),
+      },
+      {
         when: changed("firstDayOfWeek"),
         action: () =>
           changeFirstDayOfWeekMutation.mutateAsync({ id: user.id, firstDayOfWeek: parsed.data.firstDayOfWeek }),
@@ -205,6 +220,7 @@ export const UserGeneralSettingsForm = ({
       form.setInitialValues(newValues);
       form.resetDirty();
       await revalidatePathActionAsync(`/manage/users/${user.id}`);
+      router.refresh();
       showSuccessNotification({
         title: tCommon("notification.update.success"),
         message: tCommon("notification.update.success"),
@@ -333,6 +349,24 @@ export const UserGeneralSettingsForm = ({
                         ))}
                       </Group>
                     </Radio.Group>
+                    <Divider my="xs" />
+                    <Select
+                      label={tUser("field.byteUnitSystem.label")}
+                      description={tUser("field.byteUnitSystem.description")}
+                      data={[
+                        {
+                          value: "binary",
+                          label: tUser("field.byteUnitSystem.options.binary"),
+                        },
+                        {
+                          value: "decimal",
+                          label: tUser("field.byteUnitSystem.options.decimal"),
+                        },
+                      ]}
+                      allowDeselect={false}
+                      comboboxProps={{ withinPortal: true }}
+                      {...form.getInputProps("byteUnitSystem")}
+                    />
                     <Divider my="xs" />
                     <Title order={4}>{tGeneral("item.accessibility")}</Title>
                     <Switch

@@ -21,10 +21,10 @@ import { useSession } from "@homarr/auth/client";
 import { zoomCompensatedSize } from "@homarr/ui";
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import { useOptionalBoard } from "@homarr/boards/context";
-import { formatBytes } from "@homarr/common";
 import { invariantTechnicalLabels } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import { showErrorNotification } from "@homarr/notifications";
+import { useByteFormatter } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
@@ -33,14 +33,7 @@ import { getUsableWidgetQueryData } from "../common/query-state";
 import { usePersistedTableLayout, useTableLayoutPersistence } from "../common/use-persisted-table-layout";
 import type { BeszelSystemRow } from "../beszel/_shared/types";
 import { loadAvgColor, statusColorMap, thresholdColor } from "../beszel/_shared/colors";
-import {
-  formatByteRate,
-  formatLoadAvg,
-  formatPercent,
-  formatTemp,
-  formatUptime,
-  getProgressTrackSize,
-} from "../beszel/_shared/format";
+import { formatLoadAvg, formatPercent, formatTemp, formatUptime, getProgressTrackSize } from "../beszel/_shared/format";
 import { useBeszelFilteredSystems } from "../beszel/_shared/hooks";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { BeszelSystemStatsModal } from "../beszel/_shared/system-stats-modal";
@@ -131,6 +124,7 @@ export default function BeszelSystemTableWidget({
   const { openModal } = useModalAction(BeszelSystemStatsModal);
   const board = useOptionalBoard();
   const { data: session } = useSession();
+  const { formatByteRate, formatBytes } = useByteFormatter();
   const hasChangeAccess = board ? constructBoardPermissions(board, session).hasChangeAccess : false;
   const systemsQuery = clientApi.widget.beszel.getSystems.useQuery({ integrationIds });
   const systemsData = getUsableWidgetQueryData(systemsQuery);
@@ -421,7 +415,7 @@ export default function BeszelSystemTableWidget({
     ];
 
     return cols.filter(Boolean) as DataTableColumn<SystemRowWithKey>[];
-  }, [tBeszel, tCommon, size, visibleMetricKeys, isAdvanced]);
+  }, [formatByteRate, formatBytes, tBeszel, tCommon, size, visibleMetricKeys, isAdvanced]);
 
   const { effectiveColumns, storeKey } = usePersistedTableLayout({
     columns,

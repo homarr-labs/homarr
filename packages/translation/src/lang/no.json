@@ -2140,8 +2140,8 @@
       "popover": {
         "information": "Informasjon",
         "processor": "Prosessor: {cpuModelName}",
-        "memory": "Minne: {memory}GiB",
-        "memoryAvailable": "Tilgjengelig: {memoryAvailable}GiB ({percent}%)",
+        "memory": "Minne: {memory}",
+        "memoryAvailable": "Tilgjengelig: {memoryAvailable} ({percent}%)",
         "version": "Versjon: {version}",
         "uptime": "Oppetid: {months} Måneder, {days} Dager, {hours} Timer, {minutes} Minutter",
         "loadAverage": "Gjennomsnittsbelastning:",
@@ -3676,7 +3676,7 @@
               "label": "Prosentandel (f.eks. 76%)"
             },
             "absolute": {
-              "label": "Absolutte verdier (f.eks. 800GB / 1TB)"
+              "label": "Absolutte verdier"
             },
             "free": {
               "label": "Prosentandel ledig plass (f.eks. 24% ledig)"

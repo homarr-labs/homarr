@@ -2192,8 +2192,8 @@
       "popover": {
         "information": "Informação",
         "processor": "Processador: {cpuModelName}",
-        "memory": "Memória: {memory}GiB",
-        "memoryAvailable": "Disponível: {memoryAvailable}GiB ({percent}%)",
+        "memory": "Memória: {memory}",
+        "memoryAvailable": "Disponível: {memoryAvailable} ({percent}%)",
         "version": "Versão {version}",
         "uptime": "Tempo de atividade: {months} mês(es), {days} dias, {hours} horas, {minutes} minutos",
         "loadAverage": "Média de carga:",
@@ -3478,7 +3478,7 @@
               "label": "Porcentagem (ex: 76%)"
             },
             "absolute": {
-              "label": "Valores absolutos (ex: 800GB / 1TB)"
+              "label": "Valores absolutos"
             },
             "free": {
               "label": "Porcentagem de espaço livre (ex: 24% livre)"
@@ -5005,7 +5005,7 @@
           "restore": {
             "dropzone": {
               "title": "Solte seu arquivo ZIP de backup aqui",
-              "description": "Aceita arquivos .zip de um backup SQLite do Homarr (máx. 256 MB)"
+              "description": "Aceita arquivos .zip de um backup SQLite do Homarr (máx. 256 MiB)"
             },
             "analyzing": "Analisando backup...",
             "changeFile": "Alterar arquivo",

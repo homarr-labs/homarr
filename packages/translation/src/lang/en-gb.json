@@ -2165,8 +2165,8 @@
       "popover": {
         "information": "Information",
         "processor": "Processor: {cpuModelName}",
-        "memory": "Memory: {memory}GiB",
-        "memoryAvailable": "Available: {memoryAvailable}GiB ({percent}%)",
+        "memory": "Memory: {memory}",
+        "memoryAvailable": "Available: {memoryAvailable} ({percent}%)",
         "version": "Version: {version}",
         "uptime": "Uptime: {months} Months, {days} Days, {hours} Hours, {minutes} Minutes",
         "loadAverage": "Load average:",
@@ -4978,7 +4978,7 @@
           "restore": {
             "dropzone": {
               "title": "Drop your backup ZIP here",
-              "description": "Accepts .zip files from a Homarr SQLite backup (max 256 MB)"
+              "description": "Accepts .zip files from a Homarr SQLite backup (max 256 MiB)"
             },
             "analyzing": "Analyzing backup...",
             "changeFile": "Change file",

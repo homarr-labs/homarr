@@ -1,3 +1,4 @@
+import { isRecord } from "@homarr/common";
 import { ResponseError } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
@@ -66,7 +67,7 @@ export const normalizeRealtimeSnapshot = (
   const id = `realtime-${receivedAt.getTime()}`;
   const events: LiveStatsEvent[] = [];
 
-  if (payload.stats && typeof payload.stats === "object" && !Array.isArray(payload.stats)) {
+  if (isRecord(payload.stats)) {
     events.push({
       type: "system_stats",
       record: { id, system: systemId, stats: payload.stats, type: "1m", created, updated: created },

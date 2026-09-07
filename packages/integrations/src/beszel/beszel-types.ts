@@ -40,7 +40,7 @@ export interface BeszelSystemInfo {
   dp: number;
   /** battery [level%, charging state] */
   bat?: [number, number];
-  /** bandwidth — public interface (Mbps, legacy). Use bb when available */
+  /** bandwidth — public interface (MiB/s, legacy). Use bb when available */
   b?: number;
   /** bandwidth — public interface (bytes/s, newer format). Preferred over b */
   bb?: number;
@@ -94,9 +94,9 @@ export interface BeszelSystemDetails {
  *
  * Units:
  * - CPU/GPU/memory/disk percentages: 0–100
- * - Memory/disk absolute values (mu, du, m, d, etc.): GB
- * - Disk I/O (dr, dw): MB/s
- * - Network (ns, nr): bytes/s — all interfaces (including loopback, docker bridges)
+ * - Memory/disk absolute values (mu, du, m, d, etc.): GiB
+ * - Disk I/O (dr, dw): MiB/s
+ * - Legacy network (ns, nr): MiB/s — all interfaces (including loopback, docker bridges)
  * - Bandwidth (b): bytes/s [sent, recv] — public interfaces only. Prefer b over ns/nr for user-facing charts
  */
 export interface BeszelSystemStats {
@@ -110,49 +110,49 @@ export interface BeszelSystemStats {
   cpus?: number[];
   /** load average [1m, 5m, 15m] */
   la?: [number, number, number];
-  /** total memory (GB) */
+  /** total memory (GiB) */
   m: number;
-  /** memory used (GB) */
+  /** memory used (GiB) */
   mu: number;
   /** memory usage (%) */
   mp: number;
-  /** memory buffer/cache (GB) */
+  /** memory buffer/cache (GiB) */
   mb: number;
-  /** memory max used (GB) */
+  /** memory max used (GiB) */
   mm?: number;
-  /** memory zfs arc (GB) */
+  /** memory zfs arc (GiB) */
   mz?: number;
-  /** total swap (GB) */
+  /** total swap (GiB) */
   s: number;
-  /** swap used (GB) */
+  /** swap used (GiB) */
   su: number;
-  /** total disk (GB) */
+  /** total disk (GiB) */
   d: number;
-  /** disk used (GB) */
+  /** disk used (GiB) */
   du: number;
   /** disk usage (%) */
   dp: number;
-  /** disk read (MB/s) */
+  /** disk read (MiB/s) */
   dr?: number;
-  /** disk write (MB/s) */
+  /** disk write (MiB/s) */
   dw?: number;
-  /** disk read max (MB/s) */
+  /** disk read max (MiB/s) */
   drm?: number;
-  /** disk write max (MB/s) */
+  /** disk write max (MiB/s) */
   dwm?: number;
   /** disk IOPS [read, write] */
   dio?: [number, number];
   /** disk IOPS max [read, write] */
   diom?: [number, number];
-  /** network sent — all interfaces (bytes/s) */
+  /** legacy network sent — all interfaces (MiB/s) */
   ns?: number;
-  /** network received — all interfaces (bytes/s) */
+  /** legacy network received — all interfaces (MiB/s) */
   nr?: number;
   /** bandwidth — public interfaces only (bytes/s) [sent, recv]. Prefer over ns/nr */
   b?: [number, number];
-  /** network sent max (bytes/s) */
+  /** legacy network sent max (MiB/s) */
   nsm?: number;
-  /** network received max (bytes/s) */
+  /** legacy network received max (MiB/s) */
   nrm?: number;
   /** bandwidth max [sent, recv] (bytes/s) */
   bm?: [number, number];
@@ -236,18 +236,18 @@ export interface BeszelContainer {
  * One entry per container in a BeszelContainerStatsRecord.
  *
  * Network fields: b (bandwidth) is preferred when available; fall back to ns/nr.
- * Units: m = MB, c = %, b/ns/nr = bytes/s
+ * Units: m/ns/nr = MiB or MiB/s, c = %, b = bytes/s
  */
 export interface BeszelContainerStats {
   /** container name */
   n: string;
   /** CPU usage (%) */
   c: number;
-  /** memory usage (MB) */
+  /** memory usage (MiB) */
   m: number;
-  /** network sent (bytes/s) — legacy, use b when available */
+  /** network sent (MiB/s) — legacy, use b when available */
   ns?: number;
-  /** network received (bytes/s) — legacy, use b when available */
+  /** network received (MiB/s) — legacy, use b when available */
   nr?: number;
   /** network bandwidth [sent, recv] (bytes/s) — preferred over ns/nr */
   b?: [number, number];
@@ -388,7 +388,7 @@ export interface BeszelSystemRow {
   gpu: number;
   /** load average [1m, 5m, 15m] */
   loadAvg: [number, number, number] | null;
-  /** public interface bandwidth (bytes/s). From info.bb or info.b * 1M */
+  /** public interface bandwidth (bytes/s). From info.bb or legacy info.b normalized from MiB/s */
   netBytes: number;
   /** temperature (°C) */
   temp: number | null;

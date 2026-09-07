@@ -28,6 +28,7 @@ import type {
   SupportedAuthProvider,
   WidgetKind,
 } from "@homarr/definitions";
+import type { ByteUnitSystem } from "@homarr/common";
 import type { CustomWidgetSecretKind } from "@homarr/custom-widgets/core";
 import { defaultHeaderPreferencesSerialized } from "@homarr/validation/header-preferences";
 
@@ -63,6 +64,7 @@ export const users = sqliteTable("user", {
   openSearchInNewTab: int({ mode: "boolean" }).default(true).notNull(),
   ddgBangs: int({ mode: "boolean" }).default(true).notNull(),
   colorScheme: text().$type<ColorScheme>().default("dark").notNull(),
+  byteUnitSystem: text().$type<ByteUnitSystem>().default("binary").notNull(),
   firstDayOfWeek: int().$type<DayOfWeek>().default(1).notNull(), // Defaults to Monday
   pingIconsEnabled: int({ mode: "boolean" }).default(false).notNull(),
   enableRightClickOnWidgets: int({ mode: "boolean" }).default(true).notNull(),

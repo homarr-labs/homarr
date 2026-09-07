@@ -1,6 +1,8 @@
 import { describe, expect, test } from "vitest";
 
-import { calculateBandwidth, formatBitsPerSec } from "./bandwidth";
+import { formatBitRate } from "@homarr/common";
+
+import { calculateBandwidth } from "./bandwidth";
 
 describe("calculateBandwidth", () => {
   test("sorts samples before calculating a rate", () => {
@@ -32,9 +34,9 @@ describe("calculateBandwidth", () => {
   });
 });
 
-describe("formatBitsPerSec", () => {
+describe("formatBitRate", () => {
   test("handles invalid and negative rates", () => {
-    expect(formatBitsPerSec(Number.NaN, 2)).toBe("0 b/s");
-    expect(formatBitsPerSec(-1, 2)).toBe("0 b/s");
+    expect(formatBitRate(Number.NaN)).toBe("0 bps");
+    expect(formatBitRate(-1)).toBe("0 bps");
   });
 });

@@ -10,6 +10,7 @@ import type { TestingResult } from "../base/test-connection/test-connection-serv
 import type { ISystemHealthMonitoringIntegration } from "../interfaces/health-monitoring/health-monitoring-integration";
 import type { SystemHealthMonitoring } from "../interfaces/health-monitoring/health-monitoring-types";
 import { SynologyClient } from "./synology-client";
+import { parseSynologyNumber } from "./synology-types";
 import type { SynologyDiskRecord, SynologyVolumeRecord } from "./synology-types";
 import type { synologySystemInfoDataSchema, synologyUtilizationDataSchema } from "./synology-types";
 
@@ -125,16 +126,16 @@ function mapVersion(systemInfo: z.infer<typeof synologySystemInfoDataSchema>): s
 }
 
 function mapCpuUtilization(utilization: z.infer<typeof synologyUtilizationDataSchema>): number {
-  const userLoad = parseNumericValue(utilization.cpu?.user_load) ?? 0;
-  const systemLoad = parseNumericValue(utilization.cpu?.system_load) ?? 0;
+  const userLoad = parseSynologyNumber(utilization.cpu?.user_load) ?? 0;
+  const systemLoad = parseSynologyNumber(utilization.cpu?.system_load) ?? 0;
   const totalLoad = userLoad + systemLoad;
   return Math.min(totalLoad, 100);
 }
 
 function mapMemoryBytes(utilization: z.infer<typeof synologyUtilizationDataSchema>) {
   const memory = utilization.memory;
-  const totalRealKib = parseNumericValue(memory?.total_real);
-  const realUsagePercent = parseNumericValue(memory?.real_usage);
+  const totalRealKib = parseSynologyNumber(memory?.total_real);
+  const realUsagePercent = parseSynologyNumber(memory?.real_usage);
 
   // DSM utilization API reports memory sizes in KiB, not bytes.
   if (totalRealKib !== null && realUsagePercent !== null) {
@@ -146,8 +147,8 @@ function mapMemoryBytes(utilization: z.infer<typeof synologyUtilizationDataSchem
     };
   }
 
-  const availableKib = parseNumericValue(memory?.avail_real) ?? 0;
-  const cachedKib = parseNumericValue(memory?.cached) ?? 0;
+  const availableKib = parseSynologyNumber(memory?.avail_real) ?? 0;
+  const cachedKib = parseSynologyNumber(memory?.cached) ?? 0;
   const totalKib = totalRealKib ?? availableKib + cachedKib;
   const usedKib = Math.max(totalKib - availableKib, 0);
 
@@ -163,8 +164,8 @@ function mapNetworkTraffic(utilization: z.infer<typeof synologyUtilizationDataSc
     return null;
   }
 
-  const received = parseNumericValue(totalNetwork.rx);
-  const transmitted = parseNumericValue(totalNetwork.tx);
+  const received = parseSynologyNumber(totalNetwork.rx);
+  const transmitted = parseSynologyNumber(totalNetwork.tx);
   if (received === null || transmitted === null) {
     return null;
   }
@@ -176,9 +177,9 @@ function mapNetworkTraffic(utilization: z.infer<typeof synologyUtilizationDataSc
 }
 
 function mapLoadAverage(utilization: z.infer<typeof synologyUtilizationDataSchema>) {
-  const oneMinute = parseNumericValue(utilization.cpu?.["1min_load"]);
-  const fiveMinute = parseNumericValue(utilization.cpu?.["5min_load"]);
-  const fifteenMinute = parseNumericValue(utilization.cpu?.["15min_load"]);
+  const oneMinute = parseSynologyNumber(utilization.cpu?.["1min_load"]);
+  const fiveMinute = parseSynologyNumber(utilization.cpu?.["5min_load"]);
+  const fifteenMinute = parseSynologyNumber(utilization.cpu?.["15min_load"]);
 
   if (oneMinute === null && fiveMinute === null && fifteenMinute === null) {
     return null;
@@ -210,7 +211,7 @@ function mapUptimeSeconds(systemInfo: z.infer<typeof synologySystemInfoDataSchem
 }
 
 function mapCpuTemperature(systemInfo: z.infer<typeof synologySystemInfoDataSchema>): number | undefined {
-  const temperature = parseNumericValue(systemInfo.sys_temp ?? systemInfo.temperature);
+  const temperature = parseSynologyNumber(systemInfo.sys_temp ?? systemInfo.temperature);
   return temperature === null ? undefined : temperature;
 }
 
@@ -312,12 +313,4 @@ function isHealthyStatus(status: string | undefined): boolean {
   return !["crash", "degraded", "fail", "failed", "warning", "error", "critical"].some((unhealthyToken) =>
     normalizedStatus.includes(unhealthyToken),
   );
-}
-
-function parseNumericValue(value: number | string | undefined): number | null {
-  if (value === undefined) {
-    return null;
-  }
-  const parsed = typeof value === "number" ? value : Number.parseFloat(value);
-  return Number.isFinite(parsed) ? parsed : null;
 }

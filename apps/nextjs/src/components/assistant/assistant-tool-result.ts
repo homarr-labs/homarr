@@ -1,3 +1,5 @@
+import { isRecord } from "@homarr/common";
+
 const collectionKeys = [
   "items",
   "results",
@@ -86,8 +88,7 @@ interface ToolResultPresentationOptions {
   toolName?: string;
 }
 
-const asRecord = (value: unknown): Record<string, unknown> | undefined =>
-  typeof value === "object" && value !== null && !Array.isArray(value) ? (value as Record<string, unknown>) : undefined;
+const asRecord = (value: unknown): Record<string, unknown> | undefined => (isRecord(value) ? value : undefined);
 
 const toDisplayValue = (value: unknown): ToolResultPrimitive | undefined => {
   if (typeof value === "string") {

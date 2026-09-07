@@ -19,8 +19,10 @@ import { z } from "zod/v4";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
+import { getRscUserSettingsAsync } from "@homarr/api/user-server";
 import { auth } from "@homarr/auth/next";
 import { formatBytes } from "@homarr/common";
+import type { ByteUnitSystem } from "@homarr/common";
 import type { inferSearchParamsFromSchema } from "@homarr/common/types";
 import { createLocalImageUrl } from "@homarr/icons/local";
 import { getI18n } from "@homarr/translation/server";
@@ -69,7 +71,10 @@ export default async function MediaListPage(props: MediaListPageProps) {
   const tMedia = await getI18n("media");
   const [tCommon, tEntities] = await Promise.all([getI18n("common"), getI18n("common.entity")]);
   const searchParams = searchParamsSchema.parse(await props.searchParams);
-  const { items: medias, totalCount } = await api.media.getPaginated(searchParams);
+  const [{ items: medias, totalCount }, userSettings] = await Promise.all([
+    api.media.getPaginated(searchParams),
+    getRscUserSettingsAsync(session.user.id),
+  ]);
   const totalPages = Math.ceil(totalCount / searchParams.pageSize);
 
   if (totalPages > 0 && searchParams.page > totalPages) {
@@ -123,7 +128,7 @@ export default async function MediaListPage(props: MediaListPageProps) {
             </TableThead>
             <TableTbody>
               {medias.map((media) => (
-                <Row key={media.id} media={media} />
+                <Row key={media.id} media={media} byteUnitSystem={userSettings?.byteUnitSystem ?? "binary"} />
               ))}
             </TableTbody>
           </Table>
@@ -135,9 +140,10 @@ export default async function MediaListPage(props: MediaListPageProps) {
 
 interface RowProps {
   media: RouterOutputs["media"]["getPaginated"]["items"][number];
+  byteUnitSystem: ByteUnitSystem;
 }
 
-const Row = async ({ media }: RowProps) => {
+const Row = async ({ media, byteUnitSystem }: RowProps) => {
   const session = await auth();
   const tMedia = await getI18n("media");
   const canDelete = media.creatorId === session?.user.id || session?.user.permissions.includes("media-full-all");
@@ -155,7 +161,7 @@ const Row = async ({ media }: RowProps) => {
         />
       </TableTd>
       <TableTh scope="row">{media.name}</TableTh>
-      <TableTd>{formatBytes(media.size)}</TableTd>
+      <TableTd>{formatBytes(media.size, { unit: byteUnitSystem })}</TableTd>
       <TableTd>
         {media.creator ? (
           <Group gap="sm">

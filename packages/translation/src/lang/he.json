@@ -2140,8 +2140,8 @@
       "popover": {
         "information": "מידע",
         "processor": "מעבד: {cpuModelName}",
-        "memory": "זיכרון: {memory}GiB",
-        "memoryAvailable": "זמין: {memoryAvailable}GiB ({percent}%)",
+        "memory": "זיכרון: {memory}",
+        "memoryAvailable": "זמין: {memoryAvailable} ({percent}%)",
         "version": "גרסה: {version}",
         "uptime": "זמן פעילות: {months} חודשים, {days} ימים, {hours} שעות, {minutes} דקות",
         "loadAverage": "ממוצע עומס:",
@@ -3676,7 +3676,7 @@
               "label": "אחוז (לדוגמה, 76%)"
             },
             "absolute": {
-              "label": "ערכים מוחלטים (לדוגמה, 800GB / 1TB)"
+              "label": "ערכים מוחלטים"
             },
             "free": {
               "label": "אחוז שטח פנוי (לדוגמה, 24% פנוי)"

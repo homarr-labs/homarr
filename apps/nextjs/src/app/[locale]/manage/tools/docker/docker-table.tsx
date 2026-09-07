@@ -19,13 +19,14 @@ import { MantineReactTable } from "mantine-react-table";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { formatBytes, useTimeAgo } from "@homarr/common";
+import { useTimeAgo } from "@homarr/common";
 import { invariantTechnicalLabels } from "@homarr/definitions";
 import type { ContainerState, DockerEndpointCapability } from "@homarr/docker";
 import { containerStateColorMap, cpuUsageColor, memoryUsageColor, safeValue } from "@homarr/docker/shared";
 import { useModalAction } from "@homarr/modals";
 import { AddDockerAppToHomarr, useDockerContainerRemovalConfirmation } from "@homarr/modals-collection";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
+import { useByteFormatter } from "@homarr/settings";
 import type { ScopedTranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
@@ -72,6 +73,7 @@ const showContainerActionResult = (
 const createColumns = (
   tDocker: ScopedTranslationFunction<"docker">,
   tCommon: ScopedTranslationFunction<"common">,
+  formatBytes: (bytes: number) => string,
 ): MRT_ColumnDef<DockerContainer>[] => [
   {
     accessorKey: "name",
@@ -194,6 +196,7 @@ export function DockerTable({ initialData }: DockerTableProps) {
   const tDocker = useI18n("docker");
   const tCommon = useI18n("common");
   const utils = clientApi.useUtils();
+  const { formatBytes } = useByteFormatter();
   const { data, isFetching } = clientApi.docker.getContainers.useQuery(undefined, {
     initialData,
     refetchOnMount: false,
@@ -282,7 +285,7 @@ export function DockerTable({ initialData }: DockerTableProps) {
       );
     },
 
-    columns: createColumns(tDocker, tCommon),
+    columns: createColumns(tDocker, tCommon, formatBytes),
   });
 
   return (

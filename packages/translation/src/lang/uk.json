@@ -2150,8 +2150,8 @@
       "popover": {
         "information": "Інформація",
         "processor": "Процесор: {cpuModelName}",
-        "memory": "Пам'ять: {memory} ГБ",
-        "memoryAvailable": "Доступно: {memoryAvailable} ГБ ({percent}%)",
+        "memory": "Пам'ять: {memory}",
+        "memoryAvailable": "Доступно: {memoryAvailable} ({percent}%)",
         "version": "Версія: {version}",
         "uptime": "Час безперебійної роботи: {months} ​​Місяців, {days} Днів, {hours} Годин, {minutes} Хвилин",
         "loadAverage": "Середнє навантаження:",
@@ -3436,7 +3436,7 @@
               "label": "Відсоток (напр., 76%)"
             },
             "absolute": {
-              "label": "Абсолютні значення (напр., 800GB / 1TB)"
+              "label": "Абсолютні значення"
             },
             "free": {
               "label": "Відсоток вільного простору (напр., 24% вільно)"

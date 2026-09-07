@@ -1,3 +1,5 @@
+import { isRecord } from "@homarr/common";
+
 export const dockerEndpointCapabilities = ["inventory", "logs", "lifecycle", "remove"] as const;
 export type DockerEndpointCapability = (typeof dockerEndpointCapabilities)[number];
 
@@ -101,8 +103,8 @@ const parseCapabilities = (value: unknown, index: number): DockerEndpointCapabil
 };
 
 const getRecord = (value: unknown, path: string): Record<string, unknown> => {
-  if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error(`${path} must be an object`);
-  return value as Record<string, unknown>;
+  if (!isRecord(value)) throw new Error(`${path} must be an object`);
+  return value;
 };
 
 const getNonEmptyString = (value: unknown, path: string) => {

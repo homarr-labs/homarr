@@ -10,8 +10,9 @@ import type {
   LiveStatsEvent,
 } from "../../beszel/beszel-types";
 
-const GB = 1024 * 1024 * 1024;
-const KB = 1024;
+const KIBIBYTE = 1024;
+const MEBIBYTE = 1024 * KIBIBYTE;
+const GIBIBYTE = 1024 * MEBIBYTE;
 
 interface MockSystemDef {
   name: string;
@@ -34,7 +35,7 @@ const mockSystems: MockSystemDef[] = [
     os: "Ubuntu 24.04",
     cpu: "AMD Ryzen 9 7950X",
     cores: 16,
-    mem: 64 * GB,
+    mem: 64 * GIBIBYTE,
     arch: "amd64",
     baseCpu: 35,
     baseMem: 55,
@@ -47,7 +48,7 @@ const mockSystems: MockSystemDef[] = [
     os: "Debian 12",
     cpu: "Intel Xeon E-2388G",
     cores: 8,
-    mem: 32 * GB,
+    mem: 32 * GIBIBYTE,
     arch: "amd64",
     baseCpu: 12,
     baseMem: 70,
@@ -60,7 +61,7 @@ const mockSystems: MockSystemDef[] = [
     os: "Raspberry Pi OS",
     cpu: "ARM Cortex-A76",
     cores: 4,
-    mem: 8 * GB,
+    mem: 8 * GIBIBYTE,
     arch: "aarch64",
     baseCpu: 45,
     baseMem: 82,
@@ -73,7 +74,7 @@ const mockSystems: MockSystemDef[] = [
     os: "Proxmox VE 8.2",
     cpu: "Intel i7-13700K",
     cores: 16,
-    mem: 128 * GB,
+    mem: 128 * GIBIBYTE,
     arch: "amd64",
     baseCpu: 22,
     baseMem: 48,
@@ -86,7 +87,7 @@ const mockSystems: MockSystemDef[] = [
     os: "TrueNAS SCALE",
     cpu: "Intel Xeon E5-2680",
     cores: 12,
-    mem: 48 * GB,
+    mem: 48 * GIBIBYTE,
     arch: "amd64",
     baseCpu: 8,
     baseMem: 30,
@@ -95,15 +96,15 @@ const mockSystems: MockSystemDef[] = [
   },
 ];
 
-const containerProfiles: { name: string; cpuBase: number; memMB: number; netKB: number }[] = [
-  { name: "nginx", cpuBase: 2, memMB: 120, netKB: 800 },
-  { name: "postgres", cpuBase: 8, memMB: 450, netKB: 200 },
-  { name: "redis", cpuBase: 3, memMB: 180, netKB: 500 },
-  { name: "grafana", cpuBase: 5, memMB: 280, netKB: 150 },
-  { name: "prometheus", cpuBase: 6, memMB: 350, netKB: 300 },
-  { name: "traefik", cpuBase: 4, memMB: 90, netKB: 1200 },
-  { name: "minio", cpuBase: 3, memMB: 200, netKB: 600 },
-  { name: "gitea", cpuBase: 4, memMB: 250, netKB: 100 },
+const containerProfiles: { name: string; cpuBase: number; memMiB: number; netKiB: number }[] = [
+  { name: "nginx", cpuBase: 2, memMiB: 120, netKiB: 800 },
+  { name: "postgres", cpuBase: 8, memMiB: 450, netKiB: 200 },
+  { name: "redis", cpuBase: 3, memMiB: 180, netKiB: 500 },
+  { name: "grafana", cpuBase: 5, memMiB: 280, netKiB: 150 },
+  { name: "prometheus", cpuBase: 6, memMiB: 350, netKiB: 300 },
+  { name: "traefik", cpuBase: 4, memMiB: 90, netKiB: 1200 },
+  { name: "minio", cpuBase: 3, memMiB: 200, netKiB: 600 },
+  { name: "gitea", cpuBase: 4, memMiB: 250, netKiB: 100 },
 ];
 
 const rand = (min: number, max: number) => min + Math.random() * (max - min);
@@ -144,30 +145,30 @@ function generateSystemStatsSeries(count: number, sys: MockSystemDef): BeszelSys
   const netSendWalk = smoothWalk(500, 200, count, 10, 8000);
   const netRecvWalk = smoothWalk(800, 300, count, 10, 12000);
 
-  const diskTotal = rand(200, 2000) * GB;
+  const diskTotal = rand(200, 2000) * GIBIBYTE;
 
   return cpuWalk.map((cpu, i) => {
     const memPct = memPctWalk[i] ?? sys.baseMem;
     const diskPct = diskPctWalk[i] ?? sys.baseDisk;
-    const memTotalGB = sys.mem / GB;
-    const diskTotalGB = diskTotal / GB;
+    const memTotalGiB = sys.mem / GIBIBYTE;
+    const diskTotalGiB = diskTotal / GIBIBYTE;
     return {
       cpu,
       la: [cpu / 20 + rand(0, 0.5), cpu / 25 + rand(0, 0.3), cpu / 30 + rand(0, 0.2)] as [number, number, number],
-      m: memTotalGB,
-      mu: (memTotalGB * memPct) / 100,
+      m: memTotalGiB,
+      mu: (memTotalGiB * memPct) / 100,
       mp: memPct,
       mb: rand(0.5, 4),
       s: 4,
       su: rand(0, 2),
-      d: diskTotalGB,
-      du: (diskTotalGB * diskPct) / 100,
+      d: diskTotalGiB,
+      du: (diskTotalGiB * diskPct) / 100,
       dp: diskPct,
       dr: diskReadWalk[i] ?? 5,
       dw: diskWriteWalk[i] ?? 3,
-      ns: (netSendWalk[i] ?? 500) * KB,
-      nr: (netRecvWalk[i] ?? 800) * KB,
-      b: [(netSendWalk[i] ?? 500) * KB * 0.7, (netRecvWalk[i] ?? 800) * KB * 0.7] as [number, number],
+      ns: ((netSendWalk[i] ?? 500) * KIBIBYTE) / MEBIBYTE,
+      nr: ((netRecvWalk[i] ?? 800) * KIBIBYTE) / MEBIBYTE,
+      b: [(netSendWalk[i] ?? 500) * KIBIBYTE * 0.7, (netRecvWalk[i] ?? 800) * KIBIBYTE * 0.7] as [number, number],
     };
   });
 }
@@ -176,16 +177,19 @@ function generateContainerStatsSeries(count: number, profiles: typeof containerP
   const walks = profiles.map((p) => ({
     profile: p,
     cpuWalk: smoothWalk(p.cpuBase, 1.5, count, 0, 50),
-    memWalk: smoothWalk(p.memMB, p.memMB * 0.1, count, p.memMB * 0.5, p.memMB * 2),
-    netWalk: smoothWalk(p.netKB, p.netKB * 0.3, count, 0, p.netKB * 4),
+    memWalk: smoothWalk(p.memMiB, p.memMiB * 0.1, count, p.memMiB * 0.5, p.memMiB * 2),
+    netWalk: smoothWalk(p.netKiB, p.netKiB * 0.3, count, 0, p.netKiB * 4),
   }));
 
   return Array.from({ length: count }, (_, i) =>
     walks.map(({ profile, cpuWalk, memWalk, netWalk }) => ({
       n: profile.name,
       c: cpuWalk[i] ?? profile.cpuBase,
-      m: memWalk[i] ?? profile.memMB,
-      b: [(netWalk[i] ?? profile.netKB) * KB * 0.4, (netWalk[i] ?? profile.netKB) * KB * 0.6] as [number, number],
+      m: memWalk[i] ?? profile.memMiB,
+      b: [(netWalk[i] ?? profile.netKiB) * KIBIBYTE * 0.4, (netWalk[i] ?? profile.netKiB) * KIBIBYTE * 0.6] as [
+        number,
+        number,
+      ],
     })),
   );
 }
@@ -227,7 +231,7 @@ export class BeszelMockService {
         mp: clamp(sys.baseMem + rand(-5, 5), 0, 100),
         dp: clamp(sys.baseDisk + rand(-2, 2), 0, 100),
         efs: i === 0 ? { "/mnt/sda": 86.9, "/mnt/sdb": 70.5, "/mnt/sdc": 42.7 } : undefined,
-        bb: rand(200, 3000) * KB,
+        bb: rand(200, 3000) * KIBIBYTE,
         v: "0.8.2",
         g: i === 3 ? rand(15, 45) : 0,
         dt: rand(32, 58),

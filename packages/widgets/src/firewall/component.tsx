@@ -19,13 +19,14 @@ import { useLocalStorage } from "@mantine/hooks";
 import { IconArrowBarDown, IconArrowBarUp, IconBrain, IconCpu, IconTopologyBus } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { formatBitRate } from "@homarr/common";
 import { invariantTechnicalLabels } from "@homarr/definitions";
 import type { FirewallInterfacesSummary } from "@homarr/integrations";
 import { useI18n } from "@homarr/translation/client";
 import { zoomCompensatedSize } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
-import { calculateBandwidth, formatBitsPerSec } from "./bandwidth";
+import { calculateBandwidth } from "./bandwidth";
 import { FirewallMenu } from "./firewall-menu";
 import { FirewallVersion, formatVersion } from "./firewall-version";
 import classes from "./firewall.module.css";
@@ -409,7 +410,7 @@ const InterfacesPanel = ({
                     color="light-dark(var(--mantine-color-green-8), var(--mantine-color-green-3))"
                   />
                   <Text size="xs" c="light-dark(var(--mantine-color-green-8), var(--mantine-color-green-3))">
-                    {formatBitsPerSec(transmit, 2)}
+                    {formatBitRate(transmit)}
                   </Text>
                 </Group>
                 <Group gap={4} wrap="nowrap">
@@ -418,7 +419,7 @@ const InterfacesPanel = ({
                     color="light-dark(var(--mantine-color-yellow-9), var(--mantine-color-yellow-3))"
                   />
                   <Text size="xs" c="light-dark(var(--mantine-color-yellow-9), var(--mantine-color-yellow-3))">
-                    {formatBitsPerSec(receive, 2)}
+                    {formatBitRate(receive)}
                   </Text>
                 </Group>
               </Group>

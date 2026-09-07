@@ -1,3 +1,5 @@
+import { isRecord } from "@homarr/common";
+
 export type TimerMode = "timer" | "pomodoro";
 export type TimerPhase = "timer" | "focus" | "shortBreak" | "longBreak";
 export type TimerStatus = "idle" | "running" | "paused";
@@ -280,8 +282,5 @@ const isTimerHistoryEntry = (value: unknown): value is TimerHistoryEntry => {
   if (!isRecord(value) || typeof value.id !== "string" || !isTimerPhase(value.phase)) return false;
   return isFiniteNumber(value.completedAt) && isFiniteNumber(value.durationMs) && value.durationMs > 0;
 };
-
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-  typeof value === "object" && value !== null && !Array.isArray(value);
 
 const isFiniteNumber = (value: unknown): value is number => typeof value === "number" && Number.isFinite(value);

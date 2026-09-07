@@ -22,6 +22,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@homarr/common": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",

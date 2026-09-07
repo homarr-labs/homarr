@@ -2140,8 +2140,8 @@
       "popover": {
         "information": "Informacije",
         "processor": "Procesor: {cpuModelName}",
-        "memory": "Memorija: {memory}GiB",
-        "memoryAvailable": "Dostupno: {memoryAvailable}GiB ({percent}%)",
+        "memory": "Memorija: {memory}",
+        "memoryAvailable": "Dostupno: {memoryAvailable} ({percent}%)",
         "version": "Verzija: {version}",
         "uptime": "",
         "loadAverage": "Prosječno opterećenje:",
@@ -4953,7 +4953,7 @@
           "restore": {
             "dropzone": {
               "title": "Ovdje ispustite svoju ZIP sigurnosnu kopiju",
-              "description": "Prihvaća .zip datoteke iz Homarr SQLite sigurnosne kopije (maks. 256 MB)"
+              "description": "Prihvaća .zip datoteke iz Homarr SQLite sigurnosne kopije (maks. 256 MiB)"
             },
             "analyzing": "Analiziranje sigurnosne kopije...",
             "changeFile": "Promijeni datoteku",

@@ -8,6 +8,7 @@ import { IconAlertTriangle, IconArrowRight, IconFileZip, IconUpload, IconX } fro
 
 import "@mantine/dropzone/styles.css"; // oxlint-disable-line import/no-unassigned-import
 
+import { useByteFormatter } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 
 import type { RestoreStep } from "./types";
@@ -105,6 +106,7 @@ export const waitForServerReadinessAsync = async ({
 export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: DatabaseRestoreFlowProps) => {
   const t = useI18n("management.page.tool.backup.restore");
   const tCommon = useI18n("common");
+  const { formatBytes } = useByteFormatter();
   const [file, setFile] = useState<FileWithPath | null>(null);
   const [step, setStep] = useState<RestoreStep>("upload");
   const [importError, setImportError] = useState<string | null>(null);
@@ -264,7 +266,7 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
                 {file?.name}
               </Text>
               <Text size="xs" c="dimmed" style={{ whiteSpace: "nowrap" }}>
-                {file ? `${(file.size / 1024 / 1024).toFixed(2)} MB` : ""}
+                {file ? formatBytes(file.size) : ""}
               </Text>
             </Group>
           </Group>

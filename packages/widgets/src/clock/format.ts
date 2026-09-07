@@ -1,4 +1,13 @@
+import type { TimeOfDayPhase } from "./world-clock";
+
 export const automaticTimeFormat = "automatic";
+
+export const getTimeOfDayPhaseColor = (phase: TimeOfDayPhase) => {
+  if (phase === "night") return "indigo";
+  if (phase === "dawn") return "orange";
+  if (phase === "day") return "cyan";
+  return "grape";
+};
 
 export const resolveClockTimeFormat = (format: string, legacyIs24HourFormat: boolean) => {
   if (format && format !== automaticTimeFormat) return format;

@@ -17,6 +17,7 @@ import {
   IconUpload,
 } from "@tabler/icons-react";
 
+import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { formatCustomWidgetImportIssues, parseCustomWidgetClipboardDetailed } from "@homarr/custom-widgets/core";
@@ -30,13 +31,8 @@ import { downloadJson } from "~/components/custom-widgets/download";
 
 const iconProps = { size: 16, stroke: 1.5 };
 
-interface WidgetRef {
-  id: string;
-  name: string;
-  enabled: boolean;
-  valid: boolean;
-  migrationRequired: boolean;
-}
+type WidgetListItem = RouterOutputs["customWidget"]["list"][number];
+type WidgetRef = Pick<WidgetListItem, "id" | "name" | "enabled" | "valid" | "migrationRequired">;
 
 interface CustomWidgetRowActionsProps {
   widget: WidgetRef;

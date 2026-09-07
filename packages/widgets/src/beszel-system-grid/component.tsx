@@ -31,9 +31,9 @@ import { IconServerOff } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
-import { formatBytes } from "@homarr/common";
 import { invariantTechnicalLabels } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
+import { useByteFormatter } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 import { zoomCompensatedSize } from "@homarr/ui";
 
@@ -42,14 +42,7 @@ import classes from "./component.module.css";
 import type { WidgetComponentProps } from "../definition";
 import type { BeszelSystemRow } from "../beszel/_shared/types";
 import { statusColorMap, thresholdColor } from "../beszel/_shared/colors";
-import {
-  formatByteRate,
-  formatLoadAvg,
-  formatPercent,
-  formatTemp,
-  formatUptime,
-  getProgressTrackSize,
-} from "../beszel/_shared/format";
+import { formatLoadAvg, formatPercent, formatTemp, formatUptime, getProgressTrackSize } from "../beszel/_shared/format";
 import { useBeszelFilteredSystems } from "../beszel/_shared/hooks";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { getUsableWidgetQueryData } from "../common/query-state";
@@ -198,6 +191,7 @@ type BeszelMetricRenderer = {
     t: SystemCardProps["t"],
     size: SizeConfig,
     tCommon: SystemCardProps["tCommon"],
+    formatByteRate: (bytes: number) => string,
   ) => React.ReactNode;
   visible: (system: BeszelSystemRow, options: SystemCardProps["options"], advanced: boolean) => boolean;
 };
@@ -278,7 +272,13 @@ const metricRenderers: BeszelMetricRenderer[] = [
   },
   {
     key: "showNet",
-    render: (s: BeszelSystemRow, t: SystemCardProps["t"], sz: SizeConfig) => (
+    render: (
+      s: BeszelSystemRow,
+      t: SystemCardProps["t"],
+      sz: SizeConfig,
+      _tCommon: SystemCardProps["tCommon"],
+      formatByteRate: (bytes: number) => string,
+    ) => (
       <MetricRow
         key="net"
         icon={<Network style={zoomCompensatedSize(sz.iconSize)} />}
@@ -378,6 +378,7 @@ const SystemCard = ({
   isAdvanced,
   onClick,
 }: SystemCardProps) => {
+  const { formatByteRate, formatBytes } = useByteFormatter();
   const enabledMetrics = metricRenderers.filter((metric) => metric.visible(system, options, isAdvanced));
   const visibleMetrics = enabledMetrics.slice(0, maxMetrics);
   const hiddenMetricCount = enabledMetrics.length - visibleMetrics.length;
@@ -429,7 +430,7 @@ const SystemCard = ({
       )}
 
       <Stack gap={0} style={{ flex: 1 }} justify="space-evenly">
-        {visibleMetrics.map((m) => m.render(system, t, size, tCommon))}
+        {visibleMetrics.map((m) => m.render(system, t, size, tCommon, formatByteRate))}
       </Stack>
       {hiddenMetricCount > 0 && (
         <Text size="xs" c="dimmed" ta="right">

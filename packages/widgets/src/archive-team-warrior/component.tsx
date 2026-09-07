@@ -3,8 +3,8 @@
 import { Avatar, Badge, Card, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
-import { formatByteRate } from "@homarr/common";
 import { getIconUrl } from "@homarr/definitions";
+import { useByteFormatter } from "@homarr/settings";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
@@ -49,6 +49,7 @@ const ArchiveTeamWarriorWidgetContent = ({
   const t = useI18n("widget.archiveTeamWarrior");
   const tWidgetCommon = useI18n("widget.common");
   const locale = useCurrentIntlLocale();
+  const { formatByteRate } = useByteFormatter();
   const [data] = clientApi.widget.archiveTeamWarrior.getStatus.useSuspenseQuery({ integrationId });
 
   const status = data.status;
@@ -61,6 +62,7 @@ const ArchiveTeamWarriorWidgetContent = ({
     { label: t("metric.failed"), value: status.counts.failed },
     ...(layout.showSecondaryCounts ? [{ label: t("metric.canceled"), value: status.counts.canceled }] : []),
   ];
+  const formatBandwidth = (value?: number) => formatByteRate(Math.round(value ?? 0));
 
   return (
     <Stack p="xs" gap={layout.gap} h="100%" style={{ overflow: "hidden" }}>
@@ -141,13 +143,7 @@ const ArchiveTeamWarriorWidgetContent = ({
               {status.items.map((item) => {
                 const itemStatusKey = getStatusKey(item.status);
                 return (
-                  <Card
-                    key={item.id}
-                    withBorder
-                    p="xs"
-                    bg="transparent"
-                    style={{ borderColor: neutralSurfaceBorder }}
-                  >
+                  <Card key={item.id} withBorder p="xs" bg="transparent" style={{ borderColor: neutralSurfaceBorder }}>
                     <Group justify="space-between" wrap="nowrap">
                       <Stack gap={0} miw={0}>
                         <Text size="sm" fw={600} lineClamp={1}>
@@ -203,10 +199,7 @@ export const getArchiveCompactLayout = (width: number, height: number, isAdvance
   } as const;
 };
 
-const formatBandwidth = (value?: number) => formatByteRate(Math.round(value ?? 0));
-
-const neutralSurfaceBorder =
-  "rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45))";
+const neutralSurfaceBorder = "rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45))";
 
 type WarriorStatusKey = "running" | "completed" | "failed" | "canceled" | "stopped" | "idle" | "unknown";
 

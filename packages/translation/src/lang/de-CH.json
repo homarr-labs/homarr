@@ -2140,8 +2140,8 @@
       "popover": {
         "information": "Informationen",
         "processor": "Prozessor: {cpuModelName}",
-        "memory": "Speicher: {memory}GiB",
-        "memoryAvailable": "Verfügbar: {memoryAvailable} GiB ({percent}%)",
+        "memory": "Speicher: {memory}",
+        "memoryAvailable": "Verfügbar: {memoryAvailable} ({percent}%)",
         "version": "",
         "uptime": "Laufzeit: {months} Monate, {days} Tage, {hours} Stunden, {minutes} Minuten",
         "loadAverage": "Durchschnittliche Last:",

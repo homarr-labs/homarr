@@ -2140,8 +2140,8 @@
       "popover": {
         "information": "訊息",
         "processor": "處理器：{cpuModelName}",
-        "memory": "記憶體：{memory} GiB",
-        "memoryAvailable": "可用：{memoryAvailable} Gib ({percent}%)",
+        "memory": "記憶體：{memory}",
+        "memoryAvailable": "可用：{memoryAvailable} ({percent}%)",
         "version": "版本：{version}",
         "uptime": "運行時間：{months} 月，{days} 天，{hours} 時，{minutes} 分",
         "loadAverage": "平均負載：",
@@ -4953,7 +4953,7 @@
           "restore": {
             "dropzone": {
               "title": "將備份 ZIP 拖曳至此處",
-              "description": "接受來自 Homarr SQLite 備份的 .zip 檔案（最大 256 MB）"
+              "description": "接受來自 Homarr SQLite 備份的 .zip 檔案（最大 256 MiB）"
             },
             "analyzing": "正在分析備份……",
             "changeFile": "更換檔案",

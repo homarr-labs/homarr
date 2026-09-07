@@ -2201,8 +2201,8 @@
       "popover": {
         "information": "Information",
         "processor": "Processeur : {cpuModelName}",
-        "memory": "Mémoire : {memory}GiB",
-        "memoryAvailable": "Disponible : {memoryAvailable}GiB ({percent}%)",
+        "memory": "Mémoire : {memory}",
+        "memoryAvailable": "Disponible : {memoryAvailable} ({percent}%)",
         "version": "Version : {version}",
         "uptime": "Disponibilité : {months} Mois, {days} Jours, {hours} Heures, {minutes} Minutes",
         "loadAverage": "Charge moyenne :",
@@ -3493,7 +3493,7 @@
               "label": "Pourcentage (ex : 76%)"
             },
             "absolute": {
-              "label": "Valeurs absolues (ex. : 800 Go / 1 To)"
+              "label": "Valeurs absolues"
             },
             "free": {
               "label": "Pourcentage d'espace libre (ex. : 24 % libre)"

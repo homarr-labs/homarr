@@ -2140,8 +2140,8 @@
       "popover": {
         "information": "Információ",
         "processor": "Processzor: {cpuModelName}",
-        "memory": "Memória: {memory} GiB",
-        "memoryAvailable": "Rendelkezésre álló: {memoryAvailable}GiB ({percent}%)",
+        "memory": "Memória: {memory}",
+        "memoryAvailable": "Rendelkezésre álló: {memoryAvailable} ({percent}%)",
         "version": "Verzió: {version}",
         "uptime": "Üzemidő: {months} hónap, {days} nap, {hours} óra, {minutes} perc",
         "loadAverage": "Átlagos terhelés:",
@@ -4953,7 +4953,7 @@
           "restore": {
             "dropzone": {
               "title": "Húzd ide a biztonsági mentés ZIP fájlt",
-              "description": "Homarr SQLite biztonsági mentésből származó .zip fájlok fogadhatók el (max 256 MB)"
+              "description": "Homarr SQLite biztonsági mentésből származó .zip fájlok fogadhatók el (max 256 MiB)"
             },
             "analyzing": "Biztonsági mentés elemzése...",
             "changeFile": "Fájl módosítása",

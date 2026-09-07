@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 
 import { serialize } from "superjson";
 
+import { isRecord } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import {
@@ -23,9 +24,6 @@ const SHARED_CACHE_ENVELOPE_VERSION = 2;
 const DEFAULT_HANDLER_CACHE_VERSION = "v1";
 const namespacePattern = /^[a-z0-9][a-z0-9:-]*$/;
 const cacheVersionPattern = /^[a-z0-9][a-z0-9._-]*$/;
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-  value !== null && typeof value === "object" && !Array.isArray(value);
-
 const canonicalize = (value: unknown): unknown => {
   if (Array.isArray(value)) return value.map(canonicalize);
   if (!isRecord(value)) return value;

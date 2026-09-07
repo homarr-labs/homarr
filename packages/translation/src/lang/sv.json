@@ -4953,7 +4953,7 @@
           "restore": {
             "dropzone": {
               "title": "Släpp din säkerhetskopia ZIP här",
-              "description": "Accepterar .zip-filer från en Homarr SQLite-säkerhetskopia (max 256 MB)"
+              "description": "Accepterar .zip-filer från en Homarr SQLite-säkerhetskopia (max 256 MiB)"
             },
             "analyzing": "Analyserar säkerhetskopia...",
             "changeFile": "Byt fil",

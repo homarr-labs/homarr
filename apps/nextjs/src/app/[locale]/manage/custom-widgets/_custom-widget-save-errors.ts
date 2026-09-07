@@ -1,3 +1,5 @@
+import { isRecord } from "@homarr/common";
+
 export interface CustomWidgetSaveIssue {
   path?: string;
   message: string;
@@ -58,7 +60,5 @@ function uniqueIssues(issues: CustomWidgetSaveIssue[]) {
 }
 
 function asRecord(value: unknown): Record<string, unknown> | null {
-  return value !== null && typeof value === "object" && !Array.isArray(value)
-    ? (value as Record<string, unknown>)
-    : null;
+  return isRecord(value) ? value : null;
 }

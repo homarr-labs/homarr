@@ -16,44 +16,6 @@ export const formatNumber = (value: number, decimalPlaces: number) => {
   return value.toFixed(decimalPlaces);
 };
 
-export const randomInt = (min: number, max: number) => {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-};
-
-/**
- *  Number of bytes to a human-readable string using binary (KiB) suffixes.
- *  Does not accept floats; size in bytes should be an integer.
- *  Will return "NaI" and log a warning if a float is passed.
- *  `concat` is appended after the unit so it is omitted when the returned
- *  value is "NaI" or "∞". Returns "∞" if the size is too large to be
- *  represented in the current format.
- *
- *  @deprecated Use `formatBytes` for single values, `formatBytesPair` for
- *  paired "used / total" displays, and `formatByteRate` for byte-per-second
- *  rates. This function is kept for backwards compatibility but should not
- *  be used in new code.
- */
-export const humanFileSize = (size: number, concat = ""): string => {
-  //64bit limit for Number stops at EiB
-  const siRanges = ["B", "kiB", "MiB", "GiB", "TiB", "PiB", "EiB"];
-  if (!Number.isInteger(size)) {
-    console.warn(
-      "Invalid use of the humanFileSize function with a float, please report this and what integration this is impacting.",
-    );
-    //Not an Integer
-    return "NaI";
-  }
-  let count = 0;
-  while (count < siRanges.length) {
-    const tempSize = size / Math.pow(1024, count);
-    if (tempSize < 1024) {
-      return tempSize.toFixed(Math.min(count, 1)) + siRanges[count] + concat;
-    }
-    count++;
-  }
-  return "∞";
-};
-
 const BINARY_UNITS = ["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB"] as const;
 const DECIMAL_UNITS = ["B", "KB", "MB", "GB", "TB", "PB", "EB"] as const;
 
@@ -92,7 +54,7 @@ const resolveUnitConfig = (options: FormatBytesOptions) => {
  * Format a byte value as a human-readable string with a unit suffix.
  *
  * Picks the largest unit that keeps the scaled value below the base. Use
- * `formatBytesPair` when two related values (e.g. used and available) should
+ * `formatBytesPair` when two related values (e.g. used and total) should
  * share a common unit.
  *
  * @example
@@ -110,27 +72,27 @@ export const formatBytes = (bytes: number, options: FormatBytesOptions = {}): st
 };
 
 /**
- * Format two related byte values (typically `used` and `available`) with a
- * shared unit. The unit is picked from the sum of the two values so the
- * combined display stays consistent.
+ * Format two related byte values (typically `used` and `total`) with a shared
+ * unit. The unit is picked from the larger displayed value so the pair stays
+ * consistent without promoting both values before either crosses a boundary.
  *
  * @example
  * formatBytesPair(985828802560, 2858736793190);
- * // { used: "0.9 TiB", available: "2.6 TiB" }
+ * // { used: "0.9 TiB", total: "2.6 TiB" }
  */
 export const formatBytesPair = (
   used: number,
-  available: number,
+  total: number,
   options: FormatBytesOptions = {},
-): { used: string; available: string } => {
+): { used: string; total: string } => {
   const { units, base } = resolveUnitConfig(options);
   const safeUsed = sanitizeBytes(used);
-  const safeAvailable = sanitizeBytes(available);
-  const index = pickUnitIndex(safeUsed + safeAvailable, base, units.length - 1);
+  const safeTotal = sanitizeBytes(total);
+  const index = pickUnitIndex(Math.max(safeUsed, safeTotal), base, units.length - 1);
   const suffix = units[index];
   return {
     used: `${(safeUsed / base ** index).toFixed(1)} ${suffix}`,
-    available: `${(safeAvailable / base ** index).toFixed(1)} ${suffix}`,
+    total: `${(safeTotal / base ** index).toFixed(1)} ${suffix}`,
   };
 };
 
@@ -147,7 +109,34 @@ export const formatBytesPair = (
 export const formatByteRate = (bytes: number, options: FormatBytesOptions = {}): string =>
   `${formatBytes(bytes, options)}/s`;
 
+const BIT_RATE_UNITS = ["bps", "kbps", "Mbps", "Gbps", "Tbps", "Pbps", "Ebps"] as const;
+
+export interface FormatBitRateOptions {
+  /** Maximum number of fractional digits. Trailing zeroes are omitted. Defaults to 1. */
+  maximumFractionDigits?: number;
+}
+
+/**
+ * Format a bit-per-second rate using decimal SI units.
+ *
+ * Inputs are always bits per second. Callers whose upstream contract uses
+ * kilobits must normalize explicitly before calling this function.
+ *
+ * @example
+ * formatBitRate(999);       // "999 bps"
+ * formatBitRate(1_000);     // "1 kbps"
+ * formatBitRate(1_500_000); // "1.5 Mbps"
+ */
+export const formatBitRate = (bitsPerSecond: number, options: FormatBitRateOptions = {}): string => {
+  const safeRate = Number.isFinite(bitsPerSecond) && bitsPerSecond > 0 ? bitsPerSecond : 0;
+  const index = pickUnitIndex(safeRate, 1000, BIT_RATE_UNITS.length - 1);
+  const scaled = safeRate / 1000 ** index;
+  const requestedDigits = options.maximumFractionDigits ?? 1;
+  const maximumFractionDigits = Math.max(0, Math.min(20, Math.trunc(requestedDigits)));
+  const formatted = Number(scaled.toFixed(maximumFractionDigits)).toString();
+  return `${formatted} ${BIT_RATE_UNITS[index]}`;
+};
+
 const IMPERIAL_MULTIPLIER = 1.609344;
 
 export const metricToImperial = (metricValue: number) => metricValue / IMPERIAL_MULTIPLIER;
-export const imperialToMetric = (imperialValue: number) => imperialValue * IMPERIAL_MULTIPLIER;

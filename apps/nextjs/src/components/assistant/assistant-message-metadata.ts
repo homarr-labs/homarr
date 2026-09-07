@@ -1,5 +1,7 @@
 import type { UIMessage } from "ai";
 
+import { isRecord } from "@homarr/common";
+
 export type AssistantUsage = {
   inputTokens?: number;
   outputTokens?: number;
@@ -140,12 +142,11 @@ const getWebSearchSources = (value: unknown): AssistantWebSearchSource[] => {
   if (!Array.isArray(value)) return [];
   const sources = new Map<string, AssistantWebSearchSource>();
   for (const item of value) {
-    if (!item || typeof item !== "object" || Array.isArray(item)) continue;
-    const candidate = item as Record<string, unknown>;
-    if (typeof candidate.url !== "string" || !URL.canParse(candidate.url)) continue;
-    const url = new URL(candidate.url);
+    if (!isRecord(item)) continue;
+    if (typeof item.url !== "string" || !URL.canParse(item.url)) continue;
+    const url = new URL(item.url);
     if ((url.protocol !== "http:" && url.protocol !== "https:") || url.username || url.password) continue;
-    const title = typeof candidate.title === "string" ? candidate.title.trim().slice(0, 200) : "";
+    const title = typeof item.title === "string" ? item.title.trim().slice(0, 200) : "";
     if (!sources.has(url.href)) sources.set(url.href, { url: url.href, ...(title ? { title } : {}) });
     if (sources.size >= 12) break;
   }
@@ -153,10 +154,10 @@ const getWebSearchSources = (value: unknown): AssistantWebSearchSource[] => {
 };
 
 export const getAssistantUsage = (metadata: unknown): AssistantUsage | null => {
-  if (!metadata || typeof metadata !== "object" || Array.isArray(metadata) || !("usage" in metadata)) return null;
+  if (!isRecord(metadata) || !("usage" in metadata)) return null;
   const usage = metadata.usage;
-  if (!usage || typeof usage !== "object" || Array.isArray(usage)) return null;
-  const value = usage as Record<string, unknown>;
+  if (!isRecord(usage)) return null;
+  const value = usage;
   return {
     ...(getFiniteNonNegativeNumber(value.inputTokens) !== undefined
       ? { inputTokens: getFiniteNonNegativeNumber(value.inputTokens) }
@@ -180,11 +181,11 @@ export const getAssistantUsage = (metadata: unknown): AssistantUsage | null => {
 };
 
 export const getAssistantTelemetry = (metadata: unknown): AssistantRequestTelemetry | null => {
-  if (!metadata || typeof metadata !== "object" || Array.isArray(metadata)) return null;
-  const custom = (metadata as { custom?: unknown }).custom;
-  if (!custom || typeof custom !== "object" || Array.isArray(custom)) return null;
-  const telemetry = (custom as { telemetry?: unknown }).telemetry;
-  if (!telemetry || typeof telemetry !== "object" || Array.isArray(telemetry)) return null;
+  if (!isRecord(metadata)) return null;
+  const custom = metadata.custom;
+  if (!isRecord(custom)) return null;
+  const telemetry = custom.telemetry;
+  if (!isRecord(telemetry)) return null;
   const value = telemetry as Partial<AssistantRequestTelemetry>;
   if (
     typeof value.requestId !== "string" ||
@@ -196,8 +197,8 @@ export const getAssistantTelemetry = (metadata: unknown): AssistantRequestTeleme
   }
   const steps = Array.isArray(value.steps)
     ? value.steps.flatMap((step): AssistantRequestStep[] => {
-        if (!step || typeof step !== "object" || Array.isArray(step)) return [];
-        const candidate = step as Record<string, unknown>;
+        if (!isRecord(step)) return [];
+        const candidate = step;
         const index = getFiniteNonNegativeNumber(candidate.index);
         const durationMs = getFiniteNonNegativeNumber(candidate.durationMs);
         const modelDurationMs = getFiniteNonNegativeNumber(candidate.modelDurationMs);

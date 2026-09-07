@@ -37,7 +37,7 @@ import duration from "dayjs/plugin/duration";
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
-import { formatBytes } from "@homarr/common";
+import { useByteFormatter } from "@homarr/settings";
 import type { ScopedTranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import { zoomCompensatedSize } from "@homarr/ui";
@@ -72,6 +72,7 @@ export const SystemHealthMonitoring = ({
   );
   const [openedIntegrationId, setOpenedIntegrationId] = useState<string | null>(null);
   const board = useRequiredBoard();
+  const { formatBytes, formatBytesPair } = useByteFormatter();
 
   const isAdvanced = displayMode === "advanced";
   const isTiny = !isAdvanced && width < 256;
@@ -113,7 +114,12 @@ export const SystemHealthMonitoring = ({
           );
           const filteredSmart = filterStorageVolumes(healthInfo.smart, options.visibleStorageVolumes, integrationId);
           const disksData = matchFileSystemAndSmart(filteredFileSystem, filteredSmart);
-          const memoryUsage = formatMemoryUsage(healthInfo.memAvailableInBytes, healthInfo.memUsedInBytes);
+          const memoryUsage = formatMemoryUsage(
+            healthInfo.memAvailableInBytes,
+            healthInfo.memUsedInBytes,
+            formatBytes,
+            formatBytesPair,
+          );
           const hasAttentionState = healthInfo.rebootRequired || healthInfo.availablePkgUpdates > 0;
           return (
             <Stack
@@ -211,6 +217,7 @@ export const SystemHealthMonitoring = ({
               )}
               {showFileSystem &&
                 disksData.map((disk) => {
+                  const sizes = formatFileSizePair(disk.used, disk.available, formatBytes, formatBytesPair);
                   return (
                     <Card
                       className={combineClasses(
@@ -267,10 +274,10 @@ export const SystemHealthMonitoring = ({
                         </Progress.Root>
                         <Group justify="space-between" gap={8} wrap="nowrap">
                           <Text className="health-monitoring-disk-use-value" size="xs" c="dimmed">
-                            {t("popover.used")} {formatFileSize(disk.used)}
+                            {t("popover.used")} {sizes.used}
                           </Text>
                           <Text className="health-monitoring-disk-available-value" size="xs" c="dimmed">
-                            {formatFileSize(disk.available)} {t("popover.available")}
+                            {sizes.available} {t("popover.available")}
                           </Text>
                         </Group>
                       </Stack>
@@ -322,14 +329,14 @@ const SystemInformationList = ({
         className="health-monitoring-information-memory"
         icon={<IconBrain size={iconSizeProp} style={iconStyle} />}
       >
-        {t("popover.memory", { memory: memoryUsage.memTotal.GB })}
+        {t("popover.memory", { memory: memoryUsage.memTotal.formatted })}
       </List.Item>
       <List.Item
         className="health-monitoring-information-memory"
         icon={<IconBrain size={iconSizeProp} style={iconStyle} />}
       >
         {t("popover.memoryAvailable", {
-          memoryAvailable: memoryUsage.memFree.GB,
+          memoryAvailable: memoryUsage.memFree.formatted,
           percent: String(memoryUsage.memFree.percent),
         })}
       </List.Item>
@@ -394,9 +401,31 @@ export const progressColor = (percentage: number) => {
 
 // Some integrations report file sizes as raw bytes (e.g. TrueNAS, Glances) while others pre-format
 // them (e.g. Unraid, dashdot). Format the former and pass the latter through untouched.
-const formatFileSize = (value: string) => {
+const formatFileSize = (value: string, formatBytes: (bytes: number) => string) => {
   const bytes = Number(value);
   return Number.isFinite(bytes) ? formatBytes(Math.round(bytes)) : value;
+};
+
+const formatFileSizePair = (
+  usedValue: string,
+  availableValue: string,
+  formatBytes: (bytes: number) => string,
+  formatBytesPair: (used: number, total: number) => { used: string; total: string },
+) => {
+  const used = Number(usedValue);
+  const available = Number(availableValue);
+  if (!Number.isFinite(used) || !Number.isFinite(available)) {
+    return {
+      used: formatFileSize(usedValue, formatBytes),
+      available: formatFileSize(availableValue, formatBytes),
+    };
+  }
+
+  const total = Math.round(used + available);
+  return {
+    used: formatBytesPair(Math.round(used), total).used,
+    available: formatBytesPair(Math.round(available), total).used,
+  };
 };
 
 interface FileSystem {

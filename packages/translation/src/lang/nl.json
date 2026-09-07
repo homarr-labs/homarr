@@ -2140,8 +2140,8 @@
       "popover": {
         "information": "Informatie",
         "processor": "Processor: {cpuModelName}",
-        "memory": "Geheugen: {memory}GiB",
-        "memoryAvailable": "Beschikbaar: {memoryAvailable}GiB ({percent}%)",
+        "memory": "Geheugen: {memory}",
+        "memoryAvailable": "Beschikbaar: {memoryAvailable} ({percent}%)",
         "version": "Versie: {version}",
         "uptime": "Uptime: {months} maanden, {days} dagen, {hours} uren, {minutes} minuten",
         "loadAverage": "Gemiddelde belasting:",
@@ -3676,7 +3676,7 @@
               "label": "Percentage (bijv. 76%)"
             },
             "absolute": {
-              "label": "Absolute waarden (bijv. 800GB / 1TB)"
+              "label": "Absolute waarden"
             },
             "free": {
               "label": "Vrije ruimte percentage (bijv. 24% vrij)"
@@ -4953,7 +4953,7 @@
           "restore": {
             "dropzone": {
               "title": "Sleep je back-up ZIP hierheen",
-              "description": "Accepteert .zip-bestanden van een Homarr SQLite-back-up (max 256 MB)"
+              "description": "Accepteert .zip-bestanden van een Homarr SQLite-back-up (max 256 MiB)"
             },
             "analyzing": "Back-up analyseren...",
             "changeFile": "Bestand wijzigen",

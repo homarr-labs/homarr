@@ -1,5 +1,6 @@
-const asErrorRecord = (value: unknown): Record<string, unknown> | undefined =>
-  typeof value === "object" && value !== null && !Array.isArray(value) ? (value as Record<string, unknown>) : undefined;
+import { isRecord } from "@homarr/common";
+
+const asErrorRecord = (value: unknown): Record<string, unknown> | undefined => (isRecord(value) ? value : undefined);
 
 const getErrorChain = (error: unknown) => {
   const chain: Record<string, unknown>[] = [];

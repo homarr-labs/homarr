@@ -2,6 +2,7 @@ import { GaugeChart } from "@mantine/charts";
 import { Center, Text, Tooltip } from "@mantine/core";
 import { IconBrain } from "@tabler/icons-react";
 
+import { useByteFormatter } from "@homarr/settings";
 import { zoomCompensatedSize } from "@homarr/ui";
 
 import { progressColor } from "../system-health";
@@ -17,7 +18,8 @@ export const MemoryRing = ({
   isTiny: boolean;
   ariaLabel: string;
 }) => {
-  const memoryUsage = formatMemoryUsage(available, used);
+  const { formatBytes, formatBytesPair } = useByteFormatter();
+  const memoryUsage = formatMemoryUsage(available, used, formatBytes, formatBytesPair);
 
   return (
     <Tooltip label={`${memoryUsage.memUsed.percent}%`}>
@@ -35,7 +37,7 @@ export const MemoryRing = ({
         label={
           <Center style={{ flexDirection: "column" }}>
             <Text className="health-monitoring-memory-value" size={isTiny ? "8px" : "xs"}>
-              {memoryUsage.memUsed.GB}GiB
+              {memoryUsage.memUsed.formatted}
             </Text>
             <IconBrain className="health-monitoring-memory-icon" style={zoomCompensatedSize(isTiny ? 8 : 16)} />
           </Center>
@@ -45,17 +47,20 @@ export const MemoryRing = ({
   );
 };
 
-export const formatMemoryUsage = (memFree: number, memUsed: number) => {
+export const formatMemoryUsage = (
+  memFree: number,
+  memUsed: number,
+  formatBytes: (bytes: number) => string,
+  formatBytesPair: (used: number, total: number) => { used: string; total: string },
+) => {
   const totalMemory = memFree + memUsed;
-  const memFreeGB = (memFree / 1024 ** 3).toFixed(2);
-  const memUsedGB = (memUsed / 1024 ** 3).toFixed(2);
   const memFreePercent = Math.round((memFree / totalMemory) * 100);
   const memUsedPercent = Math.round((memUsed / totalMemory) * 100);
-  const memTotalGB = (totalMemory / 1024 ** 3).toFixed(2);
+  const { used: formattedFree, total: formattedTotal } = formatBytesPair(memFree, totalMemory);
 
   return {
-    memFree: { percent: memFreePercent, GB: memFreeGB },
-    memUsed: { percent: memUsedPercent, GB: memUsedGB },
-    memTotal: { GB: memTotalGB },
+    memFree: { percent: memFreePercent, formatted: formattedFree },
+    memUsed: { percent: memUsedPercent, formatted: formatBytes(memUsed) },
+    memTotal: { formatted: formattedTotal },
   };
 };

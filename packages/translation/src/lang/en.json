@@ -283,6 +283,14 @@
       "pingIconsEnabled": {
         "label": "Use icons for pings"
       },
+      "byteUnitSystem": {
+        "label": "Data size units",
+        "description": "Choose how Homarr displays storage and byte rates.",
+        "options": {
+          "binary": "Binary (KiB, MiB, GiB)",
+          "decimal": "Decimal (KB, MB, GB)"
+        }
+      },
       "enableRightClickOnWidgets": {
         "label": "Enable right-click on widgets",
         "description": "Show Homarr's context menu when right-clicking a widget. Disable to use the browser's default menu (e.g. \"Open link in new tab\")."
@@ -1252,7 +1260,7 @@
       "screenshots": "Screenshots",
       "screenshotsDescription": "Up to five PNG, JPEG, or WebP images",
       "screenshotsPlaceholder": "Choose screenshots",
-      "invalidScreenshot": "Use PNG, JPEG, or WebP images no larger than 5 MB each.",
+      "invalidScreenshot": "Use PNG, JPEG, or WebP images no larger than 5 MiB each.",
       "privateSourceWarning": "This widget contains private source URLs for: {sources}. Replace personal hosts or IP addresses with safe service placeholders before publishing.",
       "reviewSourcesTitle": "Review private source URLs",
       "privateSourceConfirmation": "I reviewed these source URLs and they do not expose private infrastructure details",
@@ -3256,8 +3264,8 @@
       "popover": {
         "information": "Information",
         "processor": "Processor: {cpuModelName}",
-        "memory": "Memory: {memory}GiB",
-        "memoryAvailable": "Available: {memoryAvailable}GiB ({percent}%)",
+        "memory": "Memory: {memory}",
+        "memoryAvailable": "Available: {memoryAvailable} ({percent}%)",
         "version": "Version: {version}",
         "uptime": "Uptime: {months} Months, {days} Days, {hours} Hours, {minutes} Minutes",
         "loadAverage": "Load average:",
@@ -4083,7 +4091,7 @@
           "label": "Show Miscellaneous entries marked as completed"
         },
         "activeTorrentThreshold": {
-          "label": "Hide completed torrent under this threshold (in kiB/s)"
+          "label": "Hide completed torrent under this threshold (in KiB/s)"
         },
         "categoryFilter": {
           "label": "Categories/labels to filter"
@@ -4900,7 +4908,7 @@
               "label": "Percentage (e.g., 76%)"
             },
             "absolute": {
-              "label": "Absolute values (e.g., 800GB / 1TB)"
+              "label": "Absolute values"
             },
             "free": {
               "label": "Free space percentage (e.g., 24% free)"
@@ -6441,7 +6449,7 @@
           "restore": {
             "dropzone": {
               "title": "Drop your backup ZIP here",
-              "description": "Accepts .zip files from a Homarr SQLite backup (max 256 MB)"
+              "description": "Accepts .zip files from a Homarr SQLite backup (max 256 MiB)"
             },
             "analyzing": "Analyzing backup...",
             "changeFile": "Change file",

@@ -2140,8 +2140,8 @@
       "popover": {
         "information": "Informacija",
         "processor": "Procesorius: {cpuModelName}",
-        "memory": "Atmintis: {memory}GiB",
-        "memoryAvailable": "Prieinama: {memoryAvailable}GiB ({percent}%)",
+        "memory": "Atmintis: {memory}",
+        "memoryAvailable": "Prieinama: {memoryAvailable} ({percent}%)",
         "version": "Versija: {version}",
         "uptime": "",
         "loadAverage": "Vidutinė apkrova:",
@@ -4953,7 +4953,7 @@
           "restore": {
             "dropzone": {
               "title": "Numeskite atsarginės kopijos ZIP failą čia",
-              "description": "Priima .zip failus iš Homarr SQLite atsarginės kopijos (maks. 256 MB)"
+              "description": "Priima .zip failus iš Homarr SQLite atsarginės kopijos (maks. 256 MiB)"
             },
             "analyzing": "Analizuojama atsarginė kopija...",
             "changeFile": "Pakeisti failą",

@@ -1,5 +1,6 @@
 import type { legacyCustomWidgetDefinitions } from "@homarr/db/schema";
 import { buildCustomWidgetAiPrompt } from "@homarr/custom-widgets/authoring-prompt";
+import { isRecord } from "@homarr/common";
 
 type LegacyCustomWidgetDefinition = typeof legacyCustomWidgetDefinitions.$inferSelect;
 
@@ -65,7 +66,7 @@ function redactLegacyRequestBody(value: string | null) {
 
 function redactAllValues(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(redactAllValues);
-  if (value !== null && typeof value === "object")
+  if (isRecord(value))
     return Object.fromEntries(Object.entries(value).map(([key, child]) => [key, redactAllValues(child)]));
   if (value === null) return null;
   return "[REDACTED VALUE]";

@@ -1,3 +1,4 @@
+import { isRecord } from "@homarr/common";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
 const generationTelemetryCache = new Map<string, { expiresAt: number; value: OpenRouterGenerationTelemetry }>();
@@ -31,8 +32,7 @@ export type OpenRouterGenerationTelemetry = {
   cancelled?: boolean;
 };
 
-const asRecord = (value: unknown): Record<string, unknown> | null =>
-  typeof value === "object" && value !== null && !Array.isArray(value) ? (value as Record<string, unknown>) : null;
+const asRecord = (value: unknown): Record<string, unknown> | null => (isRecord(value) ? value : null);
 
 const asFiniteNonNegativeNumber = (value: unknown) => {
   const number = typeof value === "number" ? value : typeof value === "string" ? Number(value) : Number.NaN;

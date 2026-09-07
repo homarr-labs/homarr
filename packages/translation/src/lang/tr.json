@@ -2140,8 +2140,8 @@
       "popover": {
         "information": "Bilgi",
         "processor": "İşlemci: {cpuModelName}",
-        "memory": "Bellek: {memory}GiB",
-        "memoryAvailable": "Kullanılabilir: {memoryAvailable} GiB ({percent}%)",
+        "memory": "Bellek: {memory}",
+        "memoryAvailable": "Kullanılabilir: {memoryAvailable} ({percent}%)",
         "version": "Sürüm: {version}",
         "uptime": "Çalışma süresi: {months} Ay, {days} Gün, {hours} Saat, {minutes} Dakika",
         "loadAverage": "Ortalama yük:",
@@ -3426,7 +3426,7 @@
               "label": "Yüzde (ör. %76)"
             },
             "absolute": {
-              "label": "Mutlak değerler (ör. 800 GB / 1 TB)"
+              "label": "Mutlak değerler"
             },
             "free": {
               "label": "Boş alan yüzdesi (ör. %24 boş)"
@@ -4953,7 +4953,7 @@
           "restore": {
             "dropzone": {
               "title": "Yedekleme ZIP dosyanızı buraya bırakın",
-              "description": "Homarr SQLite yedeklemesinden .zip dosyalarını kabul eder (maks 256 MB)"
+              "description": "Homarr SQLite yedeklemesinden .zip dosyalarını kabul eder (maks 256 MiB)"
             },
             "analyzing": "Yedekleme analiz ediliyor...",
             "changeFile": "Dosyayı değiştir",

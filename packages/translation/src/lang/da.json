@@ -2140,8 +2140,8 @@
       "popover": {
         "information": "Information",
         "processor": "Processor: {cpuModelName}",
-        "memory": "Memory: {memory}GiB",
-        "memoryAvailable": "Tilgængelig: {memoryAvailable}GiB ({percent}%)",
+        "memory": "Memory: {memory}",
+        "memoryAvailable": "Tilgængelig: {memoryAvailable} ({percent}%)",
         "version": "Version: {version}",
         "uptime": "Oppetid: {months} Måneder, {days} Dage, {hours} Timer, {minutes} Minutter",
         "loadAverage": "Belastningsgennemsnit:",
@@ -3676,7 +3676,7 @@
               "label": "Procentdel (f.eks. 76 %)"
             },
             "absolute": {
-              "label": "Absolutte værdier (f.eks. 800GB / 1TB)"
+              "label": "Absolutte værdier"
             },
             "free": {
               "label": "Fri pladsprocent (fx, 24% fri)"
@@ -4953,7 +4953,7 @@
           "restore": {
             "dropzone": {
               "title": "Slip din backup-ZIP her",
-              "description": "Accepterer .zip-filer fra en Homarr SQLite-backup (maks 256 MB)"
+              "description": "Accepterer .zip-filer fra en Homarr SQLite-backup (maks 256 MiB)"
             },
             "analyzing": "Analyserer backup...",
             "changeFile": "Skift fil",

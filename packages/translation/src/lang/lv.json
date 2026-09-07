@@ -2150,8 +2150,8 @@
       "popover": {
         "information": "Informācija",
         "processor": "Procesors: {cpuModelName}",
-        "memory": "Atmiņa: {memory} GiB",
-        "memoryAvailable": "Pieejams: {memoryAvailable} GiB ({percent}%)",
+        "memory": "Atmiņa: {memory}",
+        "memoryAvailable": "Pieejams: {memoryAvailable} ({percent}%)",
         "version": "Versija: {version}",
         "uptime": "",
         "loadAverage": "Vidējā slodze:",
@@ -4963,7 +4963,7 @@
           "restore": {
             "dropzone": {
               "title": "Iemetiet savu dublējuma ZIP šeit",
-              "description": "Pieņem .zip failus no Homarr SQLite dublējuma (maks. 256 MB)"
+              "description": "Pieņem .zip failus no Homarr SQLite dublējuma (maks. 256 MiB)"
             },
             "analyzing": "Notiek dublējuma analīze...",
             "changeFile": "Mainīt failu",

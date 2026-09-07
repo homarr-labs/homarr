@@ -2140,8 +2140,8 @@
       "popover": {
         "information": "Информация",
         "processor": "Процессор: {cpuModelName}",
-        "memory": "Память: {memory}GiB",
-        "memoryAvailable": "Доступно: {memoryAvailable}GiB ({percent}%)",
+        "memory": "Память: {memory}",
+        "memoryAvailable": "Доступно: {memoryAvailable} ({percent}%)",
         "version": "Версия: {version}",
         "uptime": "Время работы: {months} мес., {days} дн., {hours} ч., {minutes} мин.",
         "loadAverage": "Средняя нагрузка:",
@@ -3676,7 +3676,7 @@
               "label": "В процентах (например, 76%)"
             },
             "absolute": {
-              "label": "Абсолютные значения (например, 800 ГБ / 1 ТБ)"
+              "label": "Абсолютные значения"
             },
             "free": {
               "label": "Процент свободного места (например, 24% свободно)"

@@ -20,7 +20,12 @@ import { iconSizes } from "@homarr/ui";
 
 import { formatLocalizedDate, formatLocalizedTime } from "../common/locale";
 import type { WidgetComponentProps } from "../definition";
-import { clockTimeFormatShowsSeconds, clockTimeFormatUses12Hours, resolveClockTimeFormat } from "./format";
+import {
+  clockTimeFormatShowsSeconds,
+  clockTimeFormatUses12Hours,
+  getTimeOfDayPhaseColor,
+  resolveClockTimeFormat,
+} from "./format";
 import { TimeOfDayBar } from "./time-of-day-bar";
 import { ClockWeatherSummary } from "./weather-summary";
 import {
@@ -31,7 +36,7 @@ import {
   humanizeTimeZone,
   maximumWorldClockCities,
 } from "./world-clock";
-import type { TimeOfDayPhase, WorldClockTime } from "./world-clock";
+import type { WorldClockTime } from "./world-clock";
 
 interface AdvancedClockViewProps {
   now: Date;
@@ -66,11 +71,7 @@ export const AdvancedClockView = ({
     .map((city) => createWorldClockTime({ city, now, primaryTime }));
 
   return (
-    <ScrollArea
-      h="100%"
-      w="100%"
-      aria-label={t("worldClock.advancedLabel")}
-    >
+    <ScrollArea h="100%" w="100%" aria-label={t("worldClock.advancedLabel")}>
       <Stack gap="md" p={{ base: "sm", sm: "md" }}>
         {primaryTimeZoneInvalid && (
           <Alert icon={<IconAlertTriangle />} color="yellow" title={t("worldClock.unsupportedPrimaryTitle")}>
@@ -102,7 +103,7 @@ const PrimaryClock = ({ now, options, primary }: Pick<ModeProps, "now" | "option
       <Group justify="space-between" align="flex-start" gap="lg" wrap="wrap">
         <Stack gap={5} miw={0}>
           <Group gap="xs" wrap="nowrap">
-            <ThemeIcon color={getPhaseColor(primary.phase)} variant="light" radius="xl" size="md">
+            <ThemeIcon color={getTimeOfDayPhaseColor(primary.phase)} variant="light" radius="xl" size="md">
               <IconClock style={iconSizes.md} />
             </ThemeIcon>
             <Title order={2} size="h4" fw={600}>
@@ -320,11 +321,4 @@ const getPrimaryLabel = (options: ModeProps["options"], t: ScopedClockTranslator
   if (options.customTitleToggle) return options.customTitle || t("worldClock.primary");
   if (options.useCustomTimezone) return humanizeTimeZone(options.timezone);
   return t("worldClock.local");
-};
-
-const getPhaseColor = (phase: TimeOfDayPhase) => {
-  if (phase === "night") return "indigo";
-  if (phase === "dawn") return "orange";
-  if (phase === "day") return "cyan";
-  return "grape";
 };

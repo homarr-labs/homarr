@@ -1,5 +1,6 @@
 import type { QueryKey } from "@tanstack/react-query";
 
+import { isRecord } from "@homarr/common";
 import type { WidgetQueryMatcher, WidgetQueryMatcherScope } from "@homarr/widgets/definition";
 import { normalizeWidgetQuery, widgetQueryValueEquals } from "@homarr/widgets/definition";
 
@@ -78,6 +79,3 @@ const containsValue = (container: unknown, expected: unknown, seen = new WeakSet
 
   return Object.values(container).some((value) => containsValue(value, expected, seen));
 };
-
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-  value !== null && typeof value === "object" && !Array.isArray(value);

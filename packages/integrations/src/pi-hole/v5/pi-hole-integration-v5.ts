@@ -1,3 +1,4 @@
+import { isRecord } from "@homarr/common";
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
@@ -38,7 +39,7 @@ export class PiHoleIntegrationV5 extends Integration implements DnsHoleSummaryIn
     const data = await response.json();
 
     // Pi-hole v5 returned an empty array if the API key is wrong
-    if (typeof data !== "object" || Array.isArray(data)) {
+    if (!isRecord(data)) {
       return TestConnectionError.UnauthorizedResult(401);
     }
 

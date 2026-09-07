@@ -2194,8 +2194,8 @@
       "popover": {
         "information": "정보",
         "processor": "프로세서: {cpuModelName}",
-        "memory": "메모리: {memory}GiB",
-        "memoryAvailable": "사용 가능: {memoryAvailable}GiB ({percent}%)",
+        "memory": "메모리: {memory}",
+        "memoryAvailable": "사용 가능: {memoryAvailable} ({percent}%)",
         "version": "버전: {version}",
         "uptime": "작동 시간: {months}개월 {days}일 {hours}시간 {minutes}분",
         "loadAverage": "평균 부하량:",
@@ -3480,7 +3480,7 @@
               "label": "퍼센트 (예: 76%)"
             },
             "absolute": {
-              "label": "절대값 (예: 800GB / 1TB)"
+              "label": "절대값"
             },
             "free": {
               "label": "여유 공간 퍼센트 (예: 24% 남음)"
@@ -5007,7 +5007,7 @@
           "restore": {
             "dropzone": {
               "title": "여기에 백업 ZIP 놓기",
-              "description": "Homarr SQLite 백업에서는 .zip 파일을 허용합니다(최대 256MB)"
+              "description": "Homarr SQLite 백업에서는 .zip 파일을 허용합니다(최대 256 MiB)"
             },
             "analyzing": "백업 분석 중...",
             "changeFile": "파일 변경",

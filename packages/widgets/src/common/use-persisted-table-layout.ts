@@ -4,6 +4,8 @@ import { useCallback, useEffect, useMemo, useRef } from "react";
 import type { DataTableColumn } from "mantine-datatable";
 import { useDataTableColumns } from "mantine-datatable";
 
+import { isRecord } from "@homarr/common";
+
 interface TableLayoutOptions extends Record<string, unknown> {
   columnOrder?: string;
   columnWidths?: string;
@@ -93,7 +95,7 @@ export const parseColumnWidths = (value: string, columnAccessors: readonly strin
   if (!value) return {};
   try {
     const parsed: unknown = JSON.parse(value);
-    if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) return {};
+    if (!isRecord(parsed)) return {};
 
     const allowed = new Set(columnAccessors);
     return Object.fromEntries(
@@ -107,7 +109,7 @@ export const parseColumnWidths = (value: string, columnAccessors: readonly strin
   }
 };
 
-export const usePersistedTableLayout = <T,>({
+export const usePersistedTableLayout = <T>({
   columns,
   columnAccessors,
   columnOrder,

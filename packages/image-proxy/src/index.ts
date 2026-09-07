@@ -1,6 +1,6 @@
 import { createHmac, hkdfSync } from "node:crypto";
 
-import { createId } from "@homarr/common";
+import { createId, formatBytes } from "@homarr/common";
 import { env } from "@homarr/common/env";
 import { decryptSecret, encryptSecret } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
@@ -100,7 +100,7 @@ export class ImageProxy {
       url: this.redactUrl(urlAndHeaders.url),
       headers: this.redactHeaders(urlAndHeaders.headers),
       proxyUrl,
-      size: `${(arrayBuffer.byteLength / 1024).toFixed(1)}KB`,
+      size: formatBytes(arrayBuffer.byteLength),
     });
 
     return { image: arrayBuffer, contentType: response.headers.get("content-type") };

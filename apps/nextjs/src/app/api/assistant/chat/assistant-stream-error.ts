@@ -1,5 +1,6 @@
-const asRecord = (value: unknown): Record<string, unknown> | null =>
-  typeof value === "object" && value !== null && !Array.isArray(value) ? (value as Record<string, unknown>) : null;
+import { isRecord } from "@homarr/common";
+
+const asRecord = (value: unknown): Record<string, unknown> | null => (isRecord(value) ? value : null);
 
 const getStatusCode = (error: unknown): number | undefined => {
   const record = asRecord(error);

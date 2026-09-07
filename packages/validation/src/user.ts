@@ -154,6 +154,10 @@ export const userChangeColorSchemeSchema = z.object({
   colorScheme: zodEnumFromArray(colorSchemes),
 });
 
+export const userByteUnitSystemSchema = z.object({
+  byteUnitSystem: z.enum(["binary", "decimal"]),
+});
+
 export const userFirstDayOfWeekSchema = z.object({
   firstDayOfWeek: z
     .number()

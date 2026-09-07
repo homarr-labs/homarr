@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 
+import { isRecord } from "@homarr/common";
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -39,8 +40,8 @@ const pad = (number: number) => String(number).padStart(2, "0");
 
 const extractDataArray = (json: unknown): unknown[] => {
   if (Array.isArray(json)) return json;
-  if (json && typeof json === "object" && "data" in json && Array.isArray((json as { data: unknown }).data)) {
-    return (json as { data: unknown[] }).data;
+  if (isRecord(json) && Array.isArray(json.data)) {
+    return json.data;
   }
   return [];
 };

@@ -2194,8 +2194,8 @@
       "popover": {
         "information": "Informacja",
         "processor": "Procesor: {cpuModelName}",
-        "memory": "Pamięć: {memory}GiB",
-        "memoryAvailable": "Dostępna pamięć {memoryAvailable} GB ({percent}%)",
+        "memory": "Pamięć: {memory}",
+        "memoryAvailable": "Dostępna pamięć {memoryAvailable} ({percent}%)",
         "version": "Wersja: {version}",
         "uptime": "Czas pracy: {months} mies., {days} dni, {hours} godzin, {minutes} minut",
         "loadAverage": "Średnie obciążenie",
@@ -3730,7 +3730,7 @@
               "label": "Procentowo (np. 76%)"
             },
             "absolute": {
-              "label": "Wartości bezwzględne (np. 800 GB / 1 TB)"
+              "label": "Wartości bezwzględne"
             },
             "free": {
               "label": "Procent wolnego miejsca (np. 24% wolne)"
@@ -5023,7 +5023,7 @@
           "restore": {
             "dropzone": {
               "title": "Upuść tutaj kopię zapasową ZIP",
-              "description": "Akceptuje pliki .zip z kopii zapasowej Homarr SQLite (maksymalnie 256 MB)"
+              "description": "Akceptuje pliki .zip z kopii zapasowej Homarr SQLite (maksymalnie 256 MiB)"
             },
             "analyzing": "Analizowanie kopii zapasowej...",
             "changeFile": "Zmień plik",

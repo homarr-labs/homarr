@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
+import { isRecord } from "@homarr/common";
 import { ResponseError } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { mockWidgetData } from "@homarr/integrations";
@@ -26,7 +27,7 @@ const assertMockNoteExists = (noteId: string) => {
 const isJsonDeltaString = (value: string) => {
   try {
     const parsed: unknown = JSON.parse(value);
-    return typeof parsed === "object" && parsed !== null && Array.isArray((parsed as { ops?: unknown }).ops);
+    return isRecord(parsed) && Array.isArray(parsed.ops);
   } catch {
     return false;
   }

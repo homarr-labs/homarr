@@ -52,7 +52,7 @@ export const UserProfileAvatarForm = ({ user }: UserProfileAvatarForm) => {
             if (error.shape?.data.code === "BAD_REQUEST") {
               showErrorNotification({
                 title: tManageAvatar("changeImage.notification.toLarge.title"),
-                message: tManageAvatar("changeImage.notification.toLarge.message", { size: "256KB" }),
+                message: tManageAvatar("changeImage.notification.toLarge.message", { size: "256 KiB" }),
               });
             } else {
               showErrorNotification({

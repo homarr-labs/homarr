@@ -158,6 +158,8 @@ homarr data rm homarr_feature_data --force
 homarr prune --force
 ```
 
+Forced data deletion removes the derived owner container only when it mounts the exact selected volume. A same-named container that does not own that volume stops the operation.
+
 ### Instance Operations & Diagnostics
 
 ```bash

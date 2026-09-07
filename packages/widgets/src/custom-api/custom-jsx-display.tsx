@@ -2,6 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 
+import { isRecord } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";
 import type { CustomJsxRendererMessages, CustomWidgetPublishedQueryState } from "@homarr/custom-widgets/runtime";
 import { CustomJsxRenderer, parseRequestCapabilities } from "@homarr/custom-widgets/runtime";
@@ -117,8 +118,4 @@ function sameStatus(left: CustomWidgetPublishedQueryState["status"], right: Cust
     left.statusText === right.statusText &&
     left.error === right.error
   );
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return value !== null && typeof value === "object" && !Array.isArray(value);
 }

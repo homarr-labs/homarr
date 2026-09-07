@@ -1,7 +1,8 @@
+import { isRecord } from "@homarr/common";
+
 const compactTemplateToolNames = new Set(["customWidget_validateTemplate", "customWidget_previewReviseTemplate"]);
 
-const asRecord = (value: unknown): Record<string, unknown> | null =>
-  typeof value === "object" && value !== null && !Array.isArray(value) ? (value as Record<string, unknown>) : null;
+const asRecord = (value: unknown): Record<string, unknown> | null => (isRecord(value) ? value : null);
 
 export const getAssistantToolInputSchema = (toolName: string, inputSchema: Record<string, unknown>) => {
   if (!compactTemplateToolNames.has(toolName)) return inputSchema;

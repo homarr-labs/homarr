@@ -2140,8 +2140,8 @@
       "popover": {
         "information": "Informació",
         "processor": "Processador: {cpuModelName}",
-        "memory": "Memòria: {memory}GiB",
-        "memoryAvailable": "Disponible: {memoryAvailable}GiB ({percent}%)",
+        "memory": "Memòria: {memory}",
+        "memoryAvailable": "Disponible: {memoryAvailable} ({percent}%)",
         "version": "Versió: {version}",
         "uptime": "Temps d'activitat: {months} Mesos, {days} Dies, {hours} Hores, {minutes} Minuts",
         "loadAverage": "Càrrega mitjana:",

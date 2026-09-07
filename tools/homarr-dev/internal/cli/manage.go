@@ -161,8 +161,17 @@ func (a *App) dataCommand() *cobra.Command {
 				if err != nil {
 					return err
 				}
-				if err := docker.RemoveContext(ctx, owner); err != nil && !docker.IsContainerNotFound(err) {
-					return fmt.Errorf("remove owning container %s: %w", owner, err)
+				containerID, mountsVolume, err := docker.InspectContainerVolumeMount(ctx, owner, volume.Name)
+				if err != nil && !docker.IsContainerNotFound(err) {
+					return fmt.Errorf("verify owning container %s: %w", owner, err)
+				}
+				if err == nil {
+					if !mountsVolume {
+						return fmt.Errorf("refusing to remove container %s: it does not mount volume %s", owner, volume.Name)
+					}
+					if err := docker.RemoveContext(ctx, containerID); err != nil && !docker.IsContainerNotFound(err) {
+						return fmt.Errorf("remove owning container %s: %w", owner, err)
+					}
 				}
 				if err := docker.RemoveVolume(ctx, volume.Name); err != nil {
 					return err

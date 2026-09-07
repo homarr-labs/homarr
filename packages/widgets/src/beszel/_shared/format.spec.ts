@@ -1,17 +1,20 @@
 import { describe, expect, test } from "vitest";
 
-import { chartAxisFormatters, formatGB, getProgressTrackSize } from "./format";
+import { formatByteRate, formatBytes } from "@homarr/common";
+
+import { createByteChartAxisFormatters, getProgressTrackSize } from "./format";
+
+const GIBIBYTE = 1024 ** 3;
+const binaryAxisFormatters = createByteChartAxisFormatters(formatBytes, formatByteRate);
 
 describe("Beszel storage formatting", () => {
-  test("keeps smaller values in GB", () => {
-    expect(formatGB(455.81)).toBe("455.81 GB");
-    expect(chartAxisFormatters.gb(455.81)).toBe("456G");
+  test("formats canonical byte values with shared binary units", () => {
+    expect(binaryAxisFormatters.bytes(455.81 * GIBIBYTE)).toBe("455.8GiB");
   });
 
-  test("promotes large GiB values to TB", () => {
-    expect(formatGB(3323)).toBe("3.25 TB");
-    expect(formatGB(3936.86)).toBe("3.84 TB");
-    expect(chartAxisFormatters.gb(3323)).toBe("3.2T");
+  test("promotes large canonical byte values to TiB", () => {
+    expect(binaryAxisFormatters.bytes(3323 * GIBIBYTE)).toBe("3.2TiB");
+    expect(binaryAxisFormatters.bytes(3936.86 * GIBIBYTE)).toBe("3.8TiB");
   });
 
   test("maps progress sizes consistently", () => {

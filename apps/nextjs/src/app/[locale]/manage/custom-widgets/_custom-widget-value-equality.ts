@@ -1,3 +1,5 @@
+import { isRecord } from "@homarr/common";
+
 export function areCustomWidgetValuesEqual(left: unknown, right: unknown): boolean {
   if (Object.is(left, right)) return true;
 
@@ -11,8 +13,4 @@ export function areCustomWidgetValuesEqual(left: unknown, right: unknown): boole
   const rightKeys = Object.keys(right);
   if (leftKeys.length !== rightKeys.length) return false;
   return leftKeys.every((key) => Object.hasOwn(right, key) && areCustomWidgetValuesEqual(left[key], right[key]));
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return value !== null && typeof value === "object" && !Array.isArray(value);
 }

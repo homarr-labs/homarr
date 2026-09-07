@@ -48,7 +48,7 @@ const readBoundedRequestBodyAsync = async (request: Request): Promise<Uint8Array
       throw new Error("Invalid Content-Length header");
     }
     if (parsedLength > MAX_MULTIPART_REQUEST_BYTES) {
-      throw new BackupTooLargeError("Backup upload exceeds the 256 MB limit");
+      throw new BackupTooLargeError("Backup upload exceeds the 256 MiB limit");
     }
   }
 
@@ -66,7 +66,7 @@ const readBoundedRequestBodyAsync = async (request: Request): Promise<Uint8Array
       totalBytes += value.byteLength;
       if (totalBytes > MAX_MULTIPART_REQUEST_BYTES) {
         await reader.cancel();
-        throw new BackupTooLargeError("Backup upload exceeds the 256 MB limit");
+        throw new BackupTooLargeError("Backup upload exceeds the 256 MiB limit");
       }
       chunks.push(value);
     }
@@ -103,18 +103,18 @@ const assertArchiveSizeLimits = (zip: AdmZip) => {
     }
     totalSize += entrySize;
     if (totalSize > MAX_UNCOMPRESSED_ARCHIVE_BYTES) {
-      throw new BackupTooLargeError("Uncompressed backup archive exceeds the 514 MB limit");
+      throw new BackupTooLargeError("Uncompressed backup archive exceeds the 514 MiB limit");
     }
   }
 
   const dbEntry = zip.getEntry("db.sqlite");
   if (dbEntry && dbEntry.header.size > MAX_UNCOMPRESSED_DATABASE_BYTES) {
-    throw new BackupTooLargeError("Uncompressed SQLite database exceeds the 512 MB limit");
+    throw new BackupTooLargeError("Uncompressed SQLite database exceeds the 512 MiB limit");
   }
 
   const metadataEntry = zip.getEntry("metadata.json");
   if (metadataEntry && metadataEntry.header.size > MAX_METADATA_BYTES) {
-    throw new BackupTooLargeError("Backup metadata exceeds the 1 MB limit");
+    throw new BackupTooLargeError("Backup metadata exceeds the 1 MiB limit");
   }
 
   const encryptionKeyEntry = zip.getEntry("encryption-key.txt");
@@ -255,7 +255,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
     if (file.size > MAX_COMPRESSED_BACKUP_BYTES) {
-      return NextResponse.json({ error: "Backup upload exceeds the 256 MB limit" }, { status: 413 });
+      return NextResponse.json({ error: "Backup upload exceeds the 256 MiB limit" }, { status: 413 });
     }
 
     let zip: AdmZip;

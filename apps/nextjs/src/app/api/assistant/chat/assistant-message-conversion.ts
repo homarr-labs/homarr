@@ -1,12 +1,10 @@
 import { convertToModelMessages, pruneMessages } from "ai";
 import type { ModelMessage, UIMessage } from "ai";
 
+import { isRecord } from "@homarr/common";
 import { isCustomWidgetToolName } from "@homarr/custom-widgets/core";
 
 import { getAssistantToolOutputMaxCharacters, toAssistantToolOutput } from "./assistant-tool-output";
-
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-  typeof value === "object" && value !== null && !Array.isArray(value);
 
 const reloadableCustomWidgetResourceToolNames = [
   "customWidget_getSkill",

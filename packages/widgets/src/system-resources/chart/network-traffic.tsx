@@ -1,6 +1,6 @@
 import { IconArrowDown, IconArrowUp } from "@tabler/icons-react";
 
-import { formatByteRate } from "@homarr/common";
+import { useByteFormatter } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 
 import type { LabelDisplayModeOption } from "..";
@@ -21,6 +21,7 @@ export const NetworkTrafficChart = ({
 }) => {
   const chartData = usageOverTime.map((usage, index) => ({ index, usage }));
   const t = useI18n("widget.systemResources.card");
+  const { formatByteRate } = useByteFormatter();
 
   const max = Math.max(...usageOverTime);
   const upperBound = max + max * 0.2;
@@ -38,9 +39,7 @@ export const NetworkTrafficChart = ({
       chartType={hasShadow ? "area" : "line"}
       labelDisplayMode={labelDisplayMode}
       advanced={advanced}
-      tooltipLabel={(index) =>
-        formatByteRate(Math.round(usageOverTime[index] ?? 0))
-      }
+      tooltipLabel={(index) => formatByteRate(Math.round(usageOverTime[index] ?? 0))}
     />
   );
 };

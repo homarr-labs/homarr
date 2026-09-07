@@ -2,7 +2,9 @@ import { describe, expect, test } from "vitest";
 
 import type { BeszelSystemStatsRecord } from "@homarr/integrations/types";
 
-import { buildDiskChartData, padLiveTimeGrid } from "./chart";
+import { buildDiskChartData, normalizeBeszelByteRate, padLiveTimeGrid } from "./chart";
+
+const GIBIBYTE = 1024 ** 3;
 
 const record = (
   created: string,
@@ -30,7 +32,7 @@ const record = (
 });
 
 describe("buildDiskChartData", () => {
-  test("keeps root and extra filesystem usage in GiB without stacking or byte conversion", () => {
+  test("normalizes root and extra filesystem usage to bytes without stacking", () => {
     const data = buildDiskChartData(
       [
         record("2026-07-11T13:46:00.000Z", 455.81, {
@@ -45,7 +47,12 @@ describe("buildDiskChartData", () => {
     );
 
     expect(data).toHaveLength(1);
-    expect(data[0]).toMatchObject({ Root: 455.81, sda: 1656.45, sdb: 3936.86, sdc: 1589.84 });
+    expect(data[0]).toMatchObject({
+      Root: 455.81 * GIBIBYTE,
+      sda: 1656.45 * GIBIBYTE,
+      sdb: 3936.86 * GIBIBYTE,
+      sdc: 1589.84 * GIBIBYTE,
+    });
   });
 
   test("uses zero for a filesystem missing from an individual sample and orders historical records oldest first", () => {
@@ -60,9 +67,20 @@ describe("buildDiskChartData", () => {
     );
 
     expect(data.map((point) => ({ Root: point.Root, sda: point.sda }))).toEqual([
-      { Root: 1, sda: 0 },
-      { Root: 2, sda: 4 },
+      { Root: GIBIBYTE, sda: 0 },
+      { Root: 2 * GIBIBYTE, sda: 4 * GIBIBYTE },
     ]);
+  });
+});
+
+describe("normalizeBeszelByteRate", () => {
+  test("converts legacy MiB/s values to bytes/s", () => {
+    expect(normalizeBeszelByteRate(undefined, 1.5)).toBe(1.5 * 1024 ** 2);
+  });
+
+  test("keeps the preferred bytes/s value authoritative, including zero", () => {
+    expect(normalizeBeszelByteRate(0, 1.5)).toBe(0);
+    expect(normalizeBeszelByteRate(1_500_000, 1.5)).toBe(1_500_000);
   });
 });
 

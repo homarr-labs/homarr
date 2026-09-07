@@ -20,6 +20,7 @@ import {
 import { IconCheck, IconChevronDown, IconLink, IconRobot, IconX } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 
+import { isRecord } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";
 
 import classes from "./assistant-panel.module.css";
@@ -154,9 +155,9 @@ const ToolResultPresentation = ({ result, toolName }: { result: unknown; toolNam
 };
 
 const getToolResultNavigation = (result: unknown) => {
-  if (typeof result !== "object" || result === null || Array.isArray(result)) return [];
+  if (!isRecord(result)) return [];
 
-  const record = result as Record<string, unknown>;
+  const record = result;
   const candidates = [
     { href: record.previewPath, translationKey: "toolNavigation.openPreview" as const },
     { href: record.managementPath, translationKey: "toolNavigation.openWidget" as const },

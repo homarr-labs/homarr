@@ -1,5 +1,7 @@
 import { serialize } from "superjson";
 
+import { isRecord } from "@homarr/common";
+
 export const customWidgetPreviewQueryOutputMaxCharacters = 8_000;
 export const assistantToolOutputMaxCharacters = 24_000;
 const customWidgetAuthoringResourceOutputMaxCharacters = 60_000;
@@ -38,10 +40,7 @@ export const toAssistantToolOutput = (value: unknown, options: AssistantToolOutp
   const serialized = JSON.stringify(output);
   if (serialized === undefined || serialized.length <= options.maxCharacters) return output;
 
-  const outputRecord =
-    typeof output === "object" && output !== null && !Array.isArray(output)
-      ? (output as Record<string, unknown>)
-      : undefined;
+  const outputRecord = isRecord(output) ? output : undefined;
   const metadata = outputRecord
     ? Object.fromEntries(
         ["ok", "status", "statusText", "error"].flatMap((key) =>

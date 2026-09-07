@@ -11,6 +11,7 @@ export type SettingsContextProps = Omit<
     | "defaultSearchEngineId"
     | "homeBoardId"
     | "mobileHomeBoardId"
+    | "byteUnitSystem"
     | "openSearchInNewTab"
     | "ddgBangs"
     | "pingIconsEnabled"
@@ -42,6 +43,7 @@ export type UserSettings = Pick<
   | "defaultSearchEngineId"
   | "homeBoardId"
   | "mobileHomeBoardId"
+  | "byteUnitSystem"
   | "openSearchInNewTab"
   | "ddgBangs"
   | "pingIconsEnabled"
@@ -59,6 +61,7 @@ export const createSettings = ({
   defaultSearchEngineId: user?.defaultSearchEngineId ?? serverSettings.search.defaultSearchEngineId,
   openSearchInNewTab: user?.openSearchInNewTab ?? true,
   ddgBangs: user?.ddgBangs ?? true,
+  byteUnitSystem: user?.byteUnitSystem ?? "binary",
   firstDayOfWeek: user?.firstDayOfWeek ?? (1 as const),
   homeBoardId: user?.homeBoardId ?? serverSettings.board.homeBoardId,
   mobileHomeBoardId: user?.mobileHomeBoardId ?? serverSettings.board.mobileHomeBoardId,

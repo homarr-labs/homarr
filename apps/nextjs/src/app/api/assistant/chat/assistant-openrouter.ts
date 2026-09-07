@@ -1,3 +1,5 @@
+import { isRecord } from "@homarr/common";
+
 const openRouterWebSearchTool = {
   type: "openrouter:web_search",
   parameters: {
@@ -16,8 +18,7 @@ export interface OpenRouterWebSearchSource {
 
 const maximumWebSearchSources = 12;
 
-const asRecord = (value: unknown): Record<string, unknown> | undefined =>
-  typeof value === "object" && value !== null && !Array.isArray(value) ? (value as Record<string, unknown>) : undefined;
+const asRecord = (value: unknown): Record<string, unknown> | undefined => (isRecord(value) ? value : undefined);
 
 const getSafeWebSourceUrl = (value: unknown) => {
   if (typeof value !== "string" || !URL.canParse(value)) return undefined;
@@ -100,7 +101,7 @@ export const withOpenRouterToolRequestOptions = (
 });
 
 export const getOpenRouterWebSearchRequests = (value: unknown) => {
-  if (typeof value !== "object" || value === null || Array.isArray(value)) return undefined;
+  if (!isRecord(value)) return undefined;
   const usage = "usage" in value && typeof value.usage === "object" && value.usage !== null ? value.usage : undefined;
   const serverToolUse =
     usage && "server_tool_use" in usage && typeof usage.server_tool_use === "object" && usage.server_tool_use !== null

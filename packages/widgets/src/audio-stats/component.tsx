@@ -4,8 +4,9 @@ import { Badge, Box, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine
 import { getQueryKey } from "@trpc/react-query";
 
 import { clientApi } from "@homarr/api/client";
-import { formatBytes, formatDuration } from "@homarr/common";
+import { formatDuration } from "@homarr/common";
 import type { AudiobookshelfDashboardData } from "@homarr/integrations/types";
+import { useByteFormatter } from "@homarr/settings";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
@@ -22,6 +23,7 @@ export default function AudioStatsWidget({
   displayMode = "compact",
   widgetRuntimeRef,
 }: WidgetComponentProps<"audioStats">) {
+  const { formatBytes } = useByteFormatter();
   const statsInput = { integrationId: integrationIds[0] ?? "" };
   const { data: response, error: statsError } = clientApi.widget.audioStats.getStats.useQuery(statsInput);
   const streamsInput = { integrationIds: [statsInput.integrationId], showOnlyPlaying: true };
