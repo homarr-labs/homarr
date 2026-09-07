@@ -324,6 +324,7 @@ export const getBookmarkDisplayPlan = ({
   if (layout === "grid") {
     showHostname = showHostname && densitySettings.showHostname;
     showTitle = showTitle && densitySettings.showTitle;
+    if (!showHostname && !showTitle) orientation = "icon";
   }
 
   return {
