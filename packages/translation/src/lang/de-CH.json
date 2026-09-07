@@ -2140,8 +2140,8 @@
       "popover": {
         "information": "Informationen",
         "processor": "Prozessor: {cpuModelName}",
-        "memory": "Speicher: {memory}GiB",
-        "memoryAvailable": "Verfügbar: {memoryAvailable} GiB ({percent}%)",
+        "memory": "Speicher: {memory}",
+        "memoryAvailable": "Verfügbar: {memoryAvailable} ({percent}%)",
         "version": "",
         "uptime": "Laufzeit: {months} Monate, {days} Tage, {hours} Stunden, {minutes} Minuten",
         "loadAverage": "Durchschnittliche Last:",
@@ -2886,7 +2886,7 @@
           "label": ""
         },
         "activeTorrentThreshold": {
-          "label": "Abgeschlossene Torrents unter diesem Schwellenwert ausblenden (in kiB/s)"
+          "label": "Abgeschlossene Torrents unter diesem Schwellenwert ausblenden"
         },
         "categoryFilter": {
           "label": "Kategorien/Labels zum Filtern"

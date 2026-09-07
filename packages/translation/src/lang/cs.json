@@ -4953,7 +4953,7 @@
           "restore": {
             "dropzone": {
               "title": "Sem přetáhněte ZIP se zálohou",
-              "description": "Přijímá soubory .zip ze zálohy Homarr SQLite (max. 256 MB)"
+              "description": "Přijímá soubory .zip ze zálohy Homarr SQLite (max. {maxSize})"
             },
             "analyzing": "Analýza zálohy...",
             "changeFile": "Změnit soubor",

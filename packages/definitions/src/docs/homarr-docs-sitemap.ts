@@ -37,7 +37,6 @@ export type HomarrDocumentationPath =
   | "/blog/tags/update"
   | "/blog/tags/version"
   | "/blog/translations"
-  | "/carbon-test"
   | "/search"
   | "/docs/tags"
   | "/docs/tags/active-directory"

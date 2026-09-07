@@ -2194,8 +2194,8 @@
       "popover": {
         "information": "Informationen",
         "processor": "Prozessor: {cpuModelName}",
-        "memory": "Speicher: {memory}GiB",
-        "memoryAvailable": "Verfügbar: {memoryAvailable} GiB ({percent}%)",
+        "memory": "Speicher: {memory}",
+        "memoryAvailable": "Verfügbar: {memoryAvailable} ({percent}%)",
         "version": "Version: {version}",
         "uptime": "Laufzeit: {months} Monate, {days} Tage, {hours} Stunden, {minutes} Minuten",
         "loadAverage": "Durchschnittliche Last:",
@@ -2940,7 +2940,7 @@
           "label": "Andere Einträge als abgeschlossen anzeigen"
         },
         "activeTorrentThreshold": {
-          "label": "Abgeschlossene Torrents unter diesem Schwellenwert ausblenden (in kiB/s)"
+          "label": "Abgeschlossene Torrents unter diesem Schwellenwert ausblenden"
         },
         "categoryFilter": {
           "label": "Kategorien/Labels zum Filtern"
@@ -3730,7 +3730,7 @@
               "label": "Prozentsatz (z.B. 76%)"
             },
             "absolute": {
-              "label": "Absolute Werte (z.B. 800GB / 1TB)"
+              "label": "Absolute Werte"
             },
             "free": {
               "label": "Prozentsatz freier Speicherplatz (z. B. 24% frei)"
@@ -5022,7 +5022,7 @@
           "restore": {
             "dropzone": {
               "title": "Backup-ZIP hierher ziehen",
-              "description": "Akzeptiert .zip-Dateien von einem Homarr SQLite-Backup (max. 256 MB)"
+              "description": "Akzeptiert .zip-Dateien von einem Homarr SQLite-Backup (max. {maxSize})"
             },
             "analyzing": "Analysiere Backup-Datei...",
             "changeFile": "Datei ändern",

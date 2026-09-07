@@ -18,7 +18,7 @@ Create an API key from the **Authentication** tab. Its value has the form `<id>.
 Send it in the `ApiKey` header:
 
 ```sh
-curl -H 'ApiKey: <id>.<token>' https://homarr.example.com/api/health/live
+curl -H 'ApiKey: <id>.<token>' https://homarr.example.com/api/info
 ```
 
 The same header authenticates tRPC requests under `/api/trpc`. Without a key, browser requests can use the Homarr
@@ -26,6 +26,21 @@ session cookie.
 
 API keys do not expire automatically and act as the user that created them. Every request uses that user's group and
 resource permissions.
+
+## Health probes
+
+The liveness endpoint does not require authentication:
+
+```sh
+curl https://homarr.example.com/api/health/live
+```
+
+It returns JSON with overall and per-component status and latency. HTTP `200` means every dependency is healthy; HTTP
+`500` identifies an unhealthy component without exposing its internal error. Health responses are not cached.
+
+## Pagination
+
+General paginated endpoints accept at most 100 records per page, and shared search endpoints accept a limit of at most 100. Request subsequent pages instead of using a larger value.
 
 ## Permission behavior
 

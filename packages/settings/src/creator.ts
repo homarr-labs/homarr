@@ -1,4 +1,5 @@
 import type { User } from "@homarr/db/schema";
+import { defaultByteUnitSystem } from "@homarr/common";
 import type { ServerSettings } from "@homarr/server-settings";
 import { parseBrandingSettings } from "@homarr/server-settings";
 import type { HeaderPreferences } from "@homarr/validation/user";
@@ -11,6 +12,7 @@ export type SettingsContextProps = Omit<
     | "defaultSearchEngineId"
     | "homeBoardId"
     | "mobileHomeBoardId"
+    | "byteUnitSystem"
     | "openSearchInNewTab"
     | "ddgBangs"
     | "pingIconsEnabled"
@@ -42,6 +44,7 @@ export type UserSettings = Pick<
   | "defaultSearchEngineId"
   | "homeBoardId"
   | "mobileHomeBoardId"
+  | "byteUnitSystem"
   | "openSearchInNewTab"
   | "ddgBangs"
   | "pingIconsEnabled"
@@ -59,6 +62,7 @@ export const createSettings = ({
   defaultSearchEngineId: user?.defaultSearchEngineId ?? serverSettings.search.defaultSearchEngineId,
   openSearchInNewTab: user?.openSearchInNewTab ?? true,
   ddgBangs: user?.ddgBangs ?? true,
+  byteUnitSystem: user?.byteUnitSystem ?? defaultByteUnitSystem,
   firstDayOfWeek: user?.firstDayOfWeek ?? (1 as const),
   homeBoardId: user?.homeBoardId ?? serverSettings.board.homeBoardId,
   mobileHomeBoardId: user?.mobileHomeBoardId ?? serverSettings.board.mobileHomeBoardId,

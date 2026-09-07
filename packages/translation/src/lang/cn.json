@@ -2345,8 +2345,8 @@
       "popover": {
         "information": "信息",
         "processor": "处理器：{cpuModelName}",
-        "memory": "内存：{memory} GiB",
-        "memoryAvailable": "可用：{memoryAvailable}GiB ({percent}%)",
+        "memory": "内存：{memory}",
+        "memoryAvailable": "可用：{memoryAvailable} ({percent}%)",
         "version": "版本：{version}",
         "uptime": "运行时间：{months} 月，{days} 天，{hours} 时，{minutes} 分",
         "loadAverage": "平均负载：",
@@ -3091,7 +3091,7 @@
           "label": "显示标记为已完成的杂项"
         },
         "activeTorrentThreshold": {
-          "label": "隐藏在此阈值下已完成的 Torrent (kiB/s)"
+          "label": "隐藏在此阈值下已完成的 Torrent"
         },
         "categoryFilter": {
           "label": "要过滤的分类/标签"
@@ -3881,7 +3881,7 @@
               "label": "百分比 (例如76%)"
             },
             "absolute": {
-              "label": "绝对值 (例如，800GB / 1TB)"
+              "label": "绝对值"
             },
             "free": {
               "label": "空闲空间百分比(例如24%空闲)"
@@ -5178,7 +5178,7 @@
           "restore": {
             "dropzone": {
               "title": "将备份 ZIP 拖到此处",
-              "description": "接受 Homarr SQLite 备份的 .zip 文件（最大 256 MB）"
+              "description": "接受 Homarr SQLite 备份的 .zip 文件（最大 {maxSize}）"
             },
             "analyzing": "正在分析备份……",
             "changeFile": "更改文件",

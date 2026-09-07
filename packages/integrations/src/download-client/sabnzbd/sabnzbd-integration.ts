@@ -37,7 +37,8 @@ export class SabnzbdIntegration extends Integration implements IDownloadClientIn
     const { history } = historyResult;
     const status: DownloadClientStatus = {
       paused: queue.paused,
-      rates: { down: Math.floor(Number(queue.kbpersec) * 1024) }, //Actually rounded kiBps ()
+      // SABnzbd's legacy kbpersec field is kibibytes per second; normalize it to bytes per second.
+      rates: { down: Math.floor(Number(queue.kbpersec) * 1024) },
       types: [type],
     };
     const items = queue.slots

@@ -2140,8 +2140,8 @@
       "popover": {
         "information": "Informácie",
         "processor": "Procesor: {cpuModelName}",
-        "memory": "Pamäť: {memory}GiB",
-        "memoryAvailable": "K dispozícii: {memoryAvailable}GiB ({percent}%)",
+        "memory": "Pamäť: {memory}",
+        "memoryAvailable": "K dispozícii: {memoryAvailable} ({percent}%)",
         "version": "Verzia: {version}",
         "uptime": "Doba prevádzky: {days} dní, {hours} hodín, {minutes} minút",
         "loadAverage": "Priemerné zaťaženie:",
@@ -2699,7 +2699,7 @@
           "label": "Zobraziť rôzne položky označené ako dokončené"
         },
         "activeTorrentThreshold": {
-          "label": "Skryť dokončený torrent pod touto hranicou (v kiB/s)"
+          "label": "Skryť dokončený torrent pod touto hranicou"
         },
         "categoryFilter": {
           "label": "Kategórie/značky na filtrovanie"
@@ -4953,7 +4953,7 @@
           "restore": {
             "dropzone": {
               "title": "Sem presuňte svoju zálohu ZIP",
-              "description": "Prijímajú sa súbory .zip zo zálohy SQLite Homarr (max. 256 MB)"
+              "description": "Prijímajú sa súbory .zip zo zálohy SQLite Homarr (max. {maxSize})"
             },
             "analyzing": "Analyzuje sa záloha...",
             "changeFile": "Zmeniť súbor",

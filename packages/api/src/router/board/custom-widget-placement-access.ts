@@ -2,6 +2,8 @@ import { isDeepStrictEqual } from "node:util";
 
 import { TRPCError } from "@trpc/server";
 
+import { isRecord } from "@homarr/common";
+
 interface BoardPlacement {
   id: string;
   kind: string;
@@ -70,12 +72,7 @@ export const throwIfCustomWidgetBoardDuplicationForbidden = (
 function normalizeCustomWidgetOptions(options: Record<string, unknown>) {
   return {
     ...options,
-    configuration:
-      options.configuration !== null &&
-      typeof options.configuration === "object" &&
-      !Array.isArray(options.configuration)
-        ? options.configuration
-        : {},
+    configuration: isRecord(options.configuration) ? options.configuration : {},
     configurationVersion:
       typeof options.configurationVersion === "number" && Number.isInteger(options.configurationVersion)
         ? options.configurationVersion

@@ -101,6 +101,7 @@ function CustomWidgetRow({ widget }: { widget: WidgetDef }) {
               </Button>
             )}
             <CustomWidgetRowActions
+              onConfigureSources={sourceSetupControls.open}
               widget={{
                 id: widget.id,
                 name: widget.name,

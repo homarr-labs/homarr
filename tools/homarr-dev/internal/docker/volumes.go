@@ -132,6 +132,41 @@ func volumesInUse(ctx context.Context) map[string]bool {
 	return inUse
 }
 
+// InspectContainerVolumeMount verifies that a container with the expected owner
+// name uses the selected data volume and returns its immutable ID for removal.
+func InspectContainerVolumeMount(ctx context.Context, containerName, volumeName string) (string, bool, error) {
+	out, err := exec.CommandContext(
+		ctx,
+		"docker",
+		"container",
+		"inspect",
+		"--format",
+		`{"id":{{json .Id}},"mounts":{{json .Mounts}}}`,
+		containerName,
+	).CombinedOutput()
+	if err != nil {
+		return "", false, fmt.Errorf("inspect container %s: %w: %s", containerName, err, strings.TrimSpace(string(out)))
+	}
+	var inspected struct {
+		ID     string `json:"id"`
+		Mounts []struct {
+			Name string `json:"Name"`
+		} `json:"mounts"`
+	}
+	if err := json.Unmarshal(out, &inspected); err != nil {
+		return "", false, fmt.Errorf("parse mounts for container %s: %w", containerName, err)
+	}
+	if inspected.ID == "" {
+		return "", false, fmt.Errorf("inspect container %s: Docker returned an empty container ID", containerName)
+	}
+	for _, mount := range inspected.Mounts {
+		if mount.Name == volumeName {
+			return inspected.ID, true, nil
+		}
+	}
+	return inspected.ID, false, nil
+}
+
 // RemoveVolume deletes a volume and the instance data it holds.
 func RemoveVolume(ctx context.Context, name string) error {
 	out, err := exec.CommandContext(ctx, "docker", "volume", "rm", name).CombinedOutput()

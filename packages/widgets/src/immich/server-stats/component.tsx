@@ -6,8 +6,8 @@ import { IconDatabase, IconPhoto, IconUsers, IconVideo } from "@tabler/icons-rea
 import { getQueryKey } from "@trpc/react-query";
 
 import { clientApi } from "@homarr/api/client";
-import { formatBytes } from "@homarr/common";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
+import { useByteFormatter } from "@homarr/settings";
 import { zoomCompensatedSize } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../../common/empty-state";
@@ -28,6 +28,7 @@ export default function ImmichServerStatsWidget({
   widgetRuntimeRef,
 }: WidgetComponentProps<"immich-serverStats">) {
   const t = useI18n("widget.immich-serverStats");
+  const { formatBytes } = useByteFormatter();
   const locale = useCurrentIntlLocale();
   const input = { integrationId: integrationIds[0] ?? "" };
   const albumsInput = { ...input, limit: MAX_ADVANCED_ALBUMS };

@@ -5,7 +5,8 @@ import { Box, Card, Group, ScrollArea, SimpleGrid, Text, Tooltip, useComputedCol
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
-import { formatBytesPair } from "@homarr/common";
+import { formatBytesPair as formatBytesPairDefault } from "@homarr/common";
+import { useByteFormatter } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
@@ -52,6 +53,7 @@ export const getDisplayText = (
   item: { used: string; available: string; percentage: number },
   displayMode: DiskDisplayMode,
   translatedFreeText?: string,
+  formatBytesPair: typeof formatBytesPairDefault = formatBytesPairDefault,
 ) => {
   switch (displayMode) {
     case "percentage":
@@ -60,7 +62,7 @@ export const getDisplayText = (
       const usedInBytes = Number(item.used);
       const availableInBytes = Number(item.available);
       if (Number.isFinite(usedInBytes) && Number.isFinite(availableInBytes)) {
-        const { used, available: total } = formatBytesPair(usedInBytes, usedInBytes + availableInBytes);
+        const { used, total } = formatBytesPair(usedInBytes, usedInBytes + availableInBytes);
         return `${used} / ${total}`;
       }
       return `${item.used} / ${item.available}`;
@@ -75,9 +77,10 @@ export const getDisplayText = (
 export const getAdvancedDisplayTexts = (
   item: { used: string; available: string; percentage: number },
   translatedFreeText?: string,
+  formatBytesPair: typeof formatBytesPairDefault = formatBytesPairDefault,
 ) => ({
   percentage: getDisplayText(item, "percentage"),
-  absolute: getDisplayText(item, "absolute"),
+  absolute: getDisplayText(item, "absolute", undefined, formatBytesPair),
   free: getDisplayText(item, "free", translatedFreeText),
 });
 
@@ -234,6 +237,7 @@ export default function SystemResources({
   displayMode,
 }: WidgetComponentProps<"systemDisks">) {
   const t = useI18n("widget.systemDisks");
+  const { formatBytesPair } = useByteFormatter();
   const queryInput = { integrationIds };
   const healthQuery = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery(queryInput);
   const results = getUsableWidgetQueryData(healthQuery) ?? [];
@@ -294,7 +298,7 @@ export default function SystemResources({
             const freeText = t("status.free", {
               percentage: String(Math.round(100 - clampPercentage(item.percentage))),
             });
-            const advancedDisplayTexts = getAdvancedDisplayTexts(item, freeText);
+            const advancedDisplayTexts = getAdvancedDisplayTexts(item, freeText, formatBytesPair);
 
             return (
               <SystemDiskCard
@@ -302,7 +306,9 @@ export default function SystemResources({
                 deviceName={item.deviceName}
                 percentage={item.percentage}
                 displayText={
-                  isAdvanced ? advancedDisplayTexts.percentage : getDisplayText(item, options.displayMode, freeText)
+                  isAdvanced
+                    ? advancedDisplayTexts.percentage
+                    : getDisplayText(item, options.displayMode, freeText, formatBytesPair)
                 }
                 temperature={isAdvanced || options.showTemperatureIfAvailable ? smartItem?.temperature : undefined}
                 healthy={smartItem?.healthy ?? true} // fall back to healthy if no information is available

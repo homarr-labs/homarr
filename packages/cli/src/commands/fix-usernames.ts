@@ -9,8 +9,7 @@ export const fixUsernames = command({
   // eslint-disable-next-line no-restricted-syntax
   handler: async () => {
     if (!process.env.AUTH_PROVIDERS?.toLowerCase().includes("credentials")) {
-      console.error("Credentials provider is not enabled");
-      return;
+      throw new Error("Credentials provider is not enabled");
     }
 
     const credentialUsers = await db.query.users.findMany({

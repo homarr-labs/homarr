@@ -2140,8 +2140,8 @@
       "popover": {
         "information": "情報",
         "processor": "プロセッサー: {cpuModelName}",
-        "memory": "メモリ: {memory} GiB",
-        "memoryAvailable": "利用可能: {memoryAvailable} GiB ({percent}%)",
+        "memory": "メモリ: {memory}",
+        "memoryAvailable": "利用可能: {memoryAvailable} ({percent}%)",
         "version": "Version: {version}",
         "uptime": "稼働時間: {months} ヶ月 {days} 日 {hours} 時間 {minutes} 分",
         "loadAverage": "平均負荷：",
@@ -2886,7 +2886,7 @@
           "label": "完了とマークされたその他の項目を表示"
         },
         "activeTorrentThreshold": {
-          "label": "このしきい値より低速で完了したトレントを非表示にします (KiB/s)"
+          "label": "このしきい値より低速で完了したトレントを非表示にします"
         },
         "categoryFilter": {
           "label": "フィルターするカテゴリ/ラベル"
@@ -3676,7 +3676,7 @@
               "label": "割合 (例 76%)"
             },
             "absolute": {
-              "label": "絶対値（例：800GB / 1TB）"
+              "label": "絶対値"
             },
             "free": {
               "label": "空き領域の割合（例：24%空き）"

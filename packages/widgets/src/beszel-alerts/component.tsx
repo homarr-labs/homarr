@@ -10,6 +10,7 @@ import type { LucideIcon } from "lucide-react";
 import { Activity, Battery, Cpu, HardDrive, MemoryStick, Monitor, Network, Server, Thermometer } from "lucide-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useByteFormatter } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
@@ -244,7 +245,6 @@ const unitSuffixMap: Record<string, string> = {
   GPU: "%",
   Battery: "%",
   Temperature: "°",
-  Bandwidth: " MB/s",
   "Load Average": "",
   LoadAvg1: "",
   LoadAvg5: "",
@@ -254,9 +254,14 @@ const unitSuffixMap: Record<string, string> = {
 
 function AlertRow({ name, value, min, systemName, integrationName, triggered, isAdvanced }: AlertRowProps) {
   const t = useI18n("widget.beszelAlerts");
+  const { formatByteRate } = useByteFormatter();
   const Icon = alertIconMap[name] ?? Server;
   const suffix = unitSuffixMap[name] ?? "";
-  let description = t("alertDescription.threshold", { value: `${value}${suffix}`, minutes: min });
+  let formattedValue = `${value}${suffix}`;
+  if (name === "Bandwidth") {
+    formattedValue = formatByteRate(value * 1024 ** 2);
+  }
+  let description = t("alertDescription.threshold", { value: formattedValue, minutes: min });
   if (name === "Status") {
     description = t("alertDescription.statusDuration", { minutes: min });
   }

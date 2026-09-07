@@ -95,6 +95,7 @@ func (a *App) imagesCommand() *cobra.Command {
 }
 
 func (a *App) dataCommand() *cobra.Command {
+	var force bool
 	data := &cobra.Command{
 		Use:     "data",
 		Aliases: []string{"volumes", "volume"},
@@ -124,25 +125,105 @@ func (a *App) dataCommand() *cobra.Command {
 			return writer.Flush()
 		},
 	}
-	data.AddCommand(&cobra.Command{
+	remove := &cobra.Command{
 		Use:     "rm <volume>...",
 		Aliases: []string{"remove", "delete"},
-		Short:   "Delete instance data, removing the owning container first",
+		Short:   "Preview instance data deletion; use --force to apply",
 		Args:    cobra.MinimumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			for _, name := range args {
+			ctx := cmd.Context()
+			available, err := docker.ListVolumes(ctx, false)
+			if err != nil {
+				return err
+			}
+			requested, err := selectRequestedVolumes(available, args)
+			if err != nil {
+				return err
+			}
+
+			if !force {
+				fmt.Printf("Would permanently delete %d Homarr data volume(s) and remove their owning containers:\n", len(requested))
+				for _, volume := range requested {
+					owner, err := volumeOwnerContainer(volume.Name)
+					if err != nil {
+						return err
+					}
+					fmt.Printf("  %s (container: %s)\n", volume.Name, owner)
+				}
+				fmt.Println("\nRe-run with --force to delete this data.")
+				return nil
+			}
+
+			for _, volume := range requested {
 				// Docker refuses to delete an attached volume, and the data is
 				// going away regardless, so the container goes first.
-				_ = docker.Remove(strings.TrimSuffix(name, "_data"))
-				if err := docker.RemoveVolume(cmd.Context(), name); err != nil {
+				owner, err := volumeOwnerContainer(volume.Name)
+				if err != nil {
 					return err
 				}
-				fmt.Println("removed " + name)
+				containerID, mountsVolume, err := docker.InspectContainerVolumeMount(ctx, owner, volume.Name)
+				if err != nil && !docker.IsContainerNotFound(err) {
+					return fmt.Errorf("verify owning container %s: %w", owner, err)
+				}
+				if err == nil {
+					if !mountsVolume {
+						return fmt.Errorf("refusing to remove container %s: it does not mount volume %s", owner, volume.Name)
+					}
+					if err := docker.RemoveContext(ctx, containerID); err != nil && !docker.IsContainerNotFound(err) {
+						return fmt.Errorf("remove owning container %s: %w", owner, err)
+					}
+				}
+				if err := docker.RemoveVolume(ctx, volume.Name); err != nil {
+					return err
+				}
+				fmt.Println("removed " + volume.Name)
 			}
 			return nil
 		},
-	})
+	}
+	remove.Flags().BoolVarP(&force, "force", "f", false, "Permanently delete the data volumes")
+	data.AddCommand(remove)
 	return data
+}
+
+func selectRequestedVolumes(available []docker.Volume, names []string) ([]docker.Volume, error) {
+	availableByName := make(map[string]docker.Volume, len(available))
+	for _, volume := range available {
+		availableByName[volume.Name] = volume
+	}
+
+	requested := make([]docker.Volume, 0, len(names))
+	seen := make(map[string]bool, len(names))
+	for _, name := range names {
+		if seen[name] {
+			return nil, fmt.Errorf("volume %q was requested more than once", name)
+		}
+		seen[name] = true
+
+		volume, found := availableByName[name]
+		if !found {
+			return nil, fmt.Errorf("Homarr data volume %q was not found", name)
+		}
+		if _, err := volumeOwnerContainer(volume.Name); err != nil {
+			return nil, err
+		}
+		requested = append(requested, volume)
+	}
+	return requested, nil
+}
+
+func volumeOwnerContainer(name string) (string, error) {
+	if name == "homarr" {
+		return "homarr", nil
+	}
+	if !strings.HasSuffix(name, "_data") {
+		return "", fmt.Errorf("volume %q is not a Homarr instance data volume", name)
+	}
+	owner := strings.TrimSuffix(name, "_data")
+	if owner == "" {
+		return "", fmt.Errorf("volume %q has no owning container name", name)
+	}
+	return owner, nil
 }
 
 func (a *App) pruneCommand() *cobra.Command {

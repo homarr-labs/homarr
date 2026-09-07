@@ -20,6 +20,7 @@ import {
   getHeaderItems,
   headerPreferencesMutationSchema,
   parseHeaderPreferences,
+  userByteUnitSystemSchema,
   userChangeColorSchemeSchema,
   userChangeHomeBoardsSchema,
   userChangePasswordApiSchema,
@@ -212,7 +213,7 @@ export const userRouter = createTRPCRouter({
         image: z
           .string()
           .regex(/^data:image\/(png|jpeg|gif|webp);base64,[A-Za-z0-9/+]+=*$/g)
-          .max(350000) // approximately 256KB in base64 (256 * 1024 * 4 / 3 + prefixes)
+          .max(350000) // approximately 256 KiB in base64 (256 * 1024 * 4 / 3 + prefixes)
           .nullable(),
       }),
     )
@@ -370,6 +371,7 @@ export const userRouter = createTRPCRouter({
         provider: true,
         homeBoardId: true,
         mobileHomeBoardId: true,
+        byteUnitSystem: true,
         firstDayOfWeek: true,
         pingIconsEnabled: true,
         enableRightClickOnWidgets: true,
@@ -408,6 +410,7 @@ export const userRouter = createTRPCRouter({
           provider: true,
           homeBoardId: true,
           mobileHomeBoardId: true,
+          byteUnitSystem: true,
           firstDayOfWeek: true,
           pingIconsEnabled: true,
           enableRightClickOnWidgets: true,
@@ -681,6 +684,38 @@ export const userRouter = createTRPCRouter({
           colorScheme: input.colorScheme,
         })
         .where(eq(users.id, ctx.session.user.id));
+    }),
+  changeByteUnitSystem: protectedProcedure
+    .input(userByteUnitSystemSchema.and(byIdSchema))
+    .output(z.void())
+    .mutation(async ({ input, ctx }) => {
+      if (!ctx.session.user.permissions.includes("admin") && ctx.session.user.id !== input.id) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      const dbUser = await ctx.db.query.users.findFirst({
+        columns: {
+          id: true,
+        },
+        where: eq(users.id, input.id),
+      });
+
+      if (!dbUser) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      await ctx.db
+        .update(users)
+        .set({
+          byteUnitSystem: input.byteUnitSystem,
+        })
+        .where(eq(users.id, input.id));
     }),
   changeEnableRightClickOnWidgets: protectedProcedure
     .meta({

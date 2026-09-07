@@ -2140,8 +2140,8 @@
       "popover": {
         "information": "Teave",
         "processor": "Protsessor: {cpuModelName}",
-        "memory": "Mälu: {memory} GiB",
-        "memoryAvailable": "Saadaval: {memoryAvailable} GiB ({percent}%)",
+        "memory": "Mälu: {memory}",
+        "memoryAvailable": "Saadaval: {memoryAvailable} ({percent}%)",
         "version": "Versioon: {version}",
         "uptime": "",
         "loadAverage": "Keskmine koormus:",
@@ -2699,7 +2699,7 @@
           "label": ""
         },
         "activeTorrentThreshold": {
-          "label": "Peida lõpetatud torrent alla selle läve (kiB/s)"
+          "label": "Peida lõpetatud torrent alla selle läve"
         },
         "categoryFilter": {
           "label": "Filtreeritavad kategooriad/sildid"

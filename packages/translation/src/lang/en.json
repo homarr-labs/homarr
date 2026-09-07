@@ -283,6 +283,14 @@
       "pingIconsEnabled": {
         "label": "Use icons for pings"
       },
+      "byteUnitSystem": {
+        "label": "Data size units",
+        "description": "Choose how Homarr displays byte sizes and byte rates. Bit rates always use decimal units.",
+        "options": {
+          "binary": "Binary",
+          "decimal": "Decimal"
+        }
+      },
       "enableRightClickOnWidgets": {
         "label": "Enable right-click on widgets",
         "description": "Show Homarr's context menu when right-clicking a widget. Disable to use the browser's default menu (e.g. \"Open link in new tab\")."
@@ -738,6 +746,8 @@
         "multiple": "Add {count}",
         "selectedCount": "{count, plural, one {# selected} other {# selected}}",
         "appsSelected": "{count, plural, one {# app selected} other {# apps selected}}",
+        "selectMultiple": "Select multiple",
+        "cancelMultiple": "Exit multi-select",
         "customApplication": "Custom application",
         "application": "Application"
       },
@@ -1250,7 +1260,7 @@
       "screenshots": "Screenshots",
       "screenshotsDescription": "Up to five PNG, JPEG, or WebP images",
       "screenshotsPlaceholder": "Choose screenshots",
-      "invalidScreenshot": "Use PNG, JPEG, or WebP images no larger than 5 MB each.",
+      "invalidScreenshot": "Use PNG, JPEG, or WebP images no larger than {maxSize} each.",
       "privateSourceWarning": "This widget contains private source URLs for: {sources}. Replace personal hosts or IP addresses with safe service placeholders before publishing.",
       "reviewSourcesTitle": "Review private source URLs",
       "privateSourceConfirmation": "I reviewed these source URLs and they do not expose private infrastructure details",
@@ -1712,8 +1722,10 @@
     "plural": "Medias",
     "search": "Find a media",
     "field": {
+      "preview": "Preview",
       "size": "Size",
-      "creator": "Creator"
+      "creator": "Creator",
+      "actions": "Actions"
     },
     "action": {
       "upload": {
@@ -1741,10 +1753,12 @@
         }
       },
       "copy": {
-        "label": "Copy URL"
+        "label": "Copy URL",
+        "labelNamed": "Copy URL for {name}"
       },
       "open": {
-        "label": "Open media"
+        "label": "Open media",
+        "labelNamed": "Open {name}"
       }
     },
     "noResults": {
@@ -3250,8 +3264,8 @@
       "popover": {
         "information": "Information",
         "processor": "Processor: {cpuModelName}",
-        "memory": "Memory: {memory}GiB",
-        "memoryAvailable": "Available: {memoryAvailable}GiB ({percent}%)",
+        "memory": "Memory: {memory}",
+        "memoryAvailable": "Available: {memoryAvailable} ({percent}%)",
         "version": "Version: {version}",
         "uptime": "Uptime: {months} Months, {days} Days, {hours} Hours, {minutes} Minutes",
         "loadAverage": "Load average:",
@@ -4077,7 +4091,7 @@
           "label": "Show Miscellaneous entries marked as completed"
         },
         "activeTorrentThreshold": {
-          "label": "Hide completed torrent under this threshold (in kiB/s)"
+          "label": "Hide completed torrent under this threshold"
         },
         "categoryFilter": {
           "label": "Categories/labels to filter"
@@ -4894,7 +4908,7 @@
               "label": "Percentage (e.g., 76%)"
             },
             "absolute": {
-              "label": "Absolute values (e.g., 800GB / 1TB)"
+              "label": "Absolute values"
             },
             "free": {
               "label": "Free space percentage (e.g., 24% free)"
@@ -6256,6 +6270,11 @@
               "label": "Pings"
             }
           },
+          "action": {
+            "run": "Run {name} now",
+            "enable": "Enable {name}",
+            "disable": "Disable {name}"
+          },
           "interval": {
             "seconds": "Every {interval, plural, =1 {second} other {# seconds}}",
             "minutes": "Every {interval, plural, =1 {minute} other {# minutes}}",
@@ -6397,7 +6416,13 @@
               },
               "availableTools": {
                 "title": "Available Tools",
-                "description": "{count} tools available. Expand a category to see individual tools and their descriptions."
+                "description": "{count} tools available. Expand a category to see individual tools and their descriptions.",
+                "filteredDescription": "{count} matching tools across expanded categories.",
+                "search": "Search tools",
+                "noResults": {
+                  "title": "No tools match this search",
+                  "description": "No MCP tool matches \"{search}\". Try a namespace, tool name, or description."
+                }
               }
             }
           }
@@ -6424,7 +6449,7 @@
           "restore": {
             "dropzone": {
               "title": "Drop your backup ZIP here",
-              "description": "Accepts .zip files from a Homarr SQLite backup (max 256 MB)"
+              "description": "Accepts .zip files from a Homarr SQLite backup (max {maxSize})"
             },
             "analyzing": "Analyzing backup...",
             "changeFile": "Change file",
@@ -7188,6 +7213,13 @@
                 "children": {
                   "detail": {
                     "title": "Select the first day of the week"
+                  }
+                }
+              },
+              "byteUnitSystem": {
+                "children": {
+                  "detail": {
+                    "title": "Select your data size units"
                   }
                 }
               },

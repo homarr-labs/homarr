@@ -2140,8 +2140,8 @@
       "popover": {
         "information": "Informacije",
         "processor": "Procesor: {cpuModelName}",
-        "memory": "Pomnilnik: {memory}GiB",
-        "memoryAvailable": "Na voljo: {memoryAvailable}GiB ({percent}%)",
+        "memory": "Pomnilnik: {memory}",
+        "memoryAvailable": "Na voljo: {memoryAvailable} ({percent}%)",
         "version": "Različica: {version}",
         "uptime": "",
         "loadAverage": "Povprečna obremenitev:",
@@ -2886,7 +2886,7 @@
           "label": ""
         },
         "activeTorrentThreshold": {
-          "label": "Skrij dokončane torrente pod tem pragom (v kiB/s)"
+          "label": "Skrij dokončane torrente pod tem pragom"
         },
         "categoryFilter": {
           "label": "Kategorije/oznake za filtriranje"
@@ -4953,7 +4953,7 @@
           "restore": {
             "dropzone": {
               "title": "Spustite svojo varnostno kopijo ZIP tukaj",
-              "description": "Sprejema datoteke .zip iz varnostne kopije SQLite Homarr (največ 256 MB)"
+              "description": "Sprejema datoteke .zip iz varnostne kopije SQLite Homarr (največ {maxSize})"
             },
             "analyzing": "Analiziranje varnostne kopije ...",
             "changeFile": "Spremeni datoteko",

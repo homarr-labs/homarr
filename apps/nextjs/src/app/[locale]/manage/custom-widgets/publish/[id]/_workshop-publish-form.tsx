@@ -26,10 +26,11 @@ import {
 } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useByteFormatter } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 import { useWorkshopCreateMutation } from "@homarr/workshop/backend";
-import { workshopScreenshotsSchema } from "@homarr/workshop/schema";
+import { MAX_WORKSHOP_SCREENSHOT_BYTES, workshopScreenshotsSchema } from "@homarr/workshop/schema";
 
 import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import { ManageStickyFooter } from "~/components/manage/manage-sticky-footer";
@@ -47,6 +48,7 @@ const listHref = "/manage/custom-widgets";
 export function WorkshopPublishForm({ widget }: { widget: { id: string; name: string } }) {
   const t = useI18n("workshop");
   const tCommon = useI18n("common");
+  const { formatBytes } = useByteFormatter();
   const session = useWorkshopSession();
   const [title, setTitle] = useState(widget.name);
   const [description, setDescription] = useState("");
@@ -70,7 +72,9 @@ export function WorkshopPublishForm({ widget }: { widget: { id: string; name: st
     setError(null);
     try {
       if (!definition.data) throw new Error(t("publish.error"));
-      if (!workshopScreenshotsSchema.safeParse(screenshots).success) throw new Error(t("publish.invalidScreenshot"));
+      if (!workshopScreenshotsSchema.safeParse(screenshots).success) {
+        throw new Error(t("publish.invalidScreenshot", { maxSize: formatBytes(MAX_WORKSHOP_SCREENSHOT_BYTES) }));
+      }
 
       let submissionId: string | null = null;
       const result = await publishWorkshopDefinition({

@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { parse as parseSuperJson } from "superjson";
 import { z } from "zod/v4";
 
+import { isRecord } from "@homarr/common";
 import { decryptSecret } from "@homarr/common/server";
 import { eq } from "@homarr/db";
 import { boards, customWidgetDefinitions, items, legacyCustomWidgetDefinitions } from "@homarr/db/schema";
@@ -49,12 +50,7 @@ const parseItemOptions = (raw: string): CustomWidgetItemOptions => {
     if (typeof options.definitionId !== "string" || options.definitionId.length === 0) throw new Error();
     return {
       definitionId: options.definitionId,
-      configuration:
-        options.configuration !== null &&
-        typeof options.configuration === "object" &&
-        !Array.isArray(options.configuration)
-          ? (options.configuration as Record<string, unknown>)
-          : {},
+      configuration: isRecord(options.configuration) ? options.configuration : {},
       configurationVersion:
         typeof options.configurationVersion === "number" && Number.isInteger(options.configurationVersion)
           ? options.configurationVersion

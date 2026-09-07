@@ -17,7 +17,7 @@ describe("system disk display", () => {
       getAdvancedDisplayTexts({ used: `${5 * 1024 ** 3}`, available: `${5 * 1024 ** 3}`, percentage: 50 }),
     ).toEqual({
       percentage: "50%",
-      absolute: "5.0 GiB / 10.0 GiB",
+      absolute: "5.4 GB / 10.7 GB",
       free: "50% free",
     });
   });

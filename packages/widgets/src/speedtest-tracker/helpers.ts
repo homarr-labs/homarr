@@ -1,4 +1,4 @@
-import { formatNumber } from "@homarr/common";
+import { formatBitRate } from "@homarr/common";
 import type {
   SpeedtestTrackerDashboardData,
   SpeedtestTrackerResult,
@@ -80,17 +80,15 @@ export const combineSpeedtestDashboards = (
     { latestResult: null, stats: null, recentResults: [] },
   );
 
-export const formatBitsPerSec = (bps: number): string => `${formatNumber(bps, 2)}bps`;
-
 export const formatResultSpeed = (result: SpeedtestTrackerResult, dir: "download" | "upload"): string => {
   const bits = dir === "download" ? result.download_bits : result.upload_bits;
-  if (bits != null) return formatBitsPerSec(bits);
+  if (bits != null) return formatBitRate(bits);
   return "—";
 };
 
 export const formatStatsSpeed = (band: SpeedtestTrackerStats["download"]): string => {
-  if (band.avg_bits != null) return formatBitsPerSec(band.avg_bits);
-  return formatBitsPerSec(band.avg * 8);
+  if (band.avg_bits != null) return formatBitRate(band.avg_bits);
+  return formatBitRate(band.avg * 8);
 };
 
 type CompactSection = "latest" | "chart" | "averages";

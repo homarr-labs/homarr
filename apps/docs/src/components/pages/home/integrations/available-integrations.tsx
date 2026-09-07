@@ -24,7 +24,7 @@ export const AvailableIntegrations = () => {
               with tons of users, making Homarr reliable in big scale deployments too.
             </p>
           </div>
-          <div className={"rotate-12 w-1/2 hidden md:block argos-ignore"}>
+          <div className={"rotate-12 w-1/2 hidden md:block argos-ignore"} aria-hidden="true">
             <div className={"grid gap-12 grid-cols-3"}>
               {Array(countIconGroups)
                 .fill(0)
@@ -41,6 +41,7 @@ export const AvailableIntegrations = () => {
                           className={"rounded"}
                           key={`grid-column-${columnIndex}-scroll-1-${index}`}
                           src={icon}
+                          alt=""
                           width={50}
                           height={50}
                         />
@@ -52,6 +53,7 @@ export const AvailableIntegrations = () => {
                           className={"rounded"}
                           key={`grid-column-${columnIndex}-scroll-2-${index}`}
                           src={icon}
+                          alt=""
                           width={50}
                           height={50}
                         />

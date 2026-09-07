@@ -13,11 +13,11 @@ export const containerStateColorMap = {
 } satisfies Record<ContainerState, MantineColor>;
 
 export const memoryUsageColor = (number: number, state: string): MantineColor => {
-  const mbUsage = number / 1024 / 1024;
-  if (mbUsage === 0 && state !== "running") return "red";
-  if (mbUsage < 128) return "green";
-  if (mbUsage < 256) return "yellow";
-  if (mbUsage < 512) return "orange";
+  const mebibyteUsage = number / 1024 / 1024;
+  if (mebibyteUsage === 0 && state !== "running") return "red";
+  if (mebibyteUsage < 128) return "green";
+  if (mebibyteUsage < 256) return "yellow";
+  if (mebibyteUsage < 512) return "orange";
   return "red";
 };
 

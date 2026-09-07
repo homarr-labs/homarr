@@ -330,6 +330,13 @@
       "when": 1787556956665,
       "tag": "0046_add_header_preferences_and_branding",
       "breakpoints": true
+    },
+    {
+      "idx": 47,
+      "version": "6",
+      "when": 1788763848930,
+      "tag": "0047_add_byte_unit_system",
+      "breakpoints": true
     }
   ]
 }

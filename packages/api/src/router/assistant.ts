@@ -3,7 +3,7 @@ import { parse, stringify } from "superjson";
 import { z } from "zod/v4";
 
 import { constructIntegrationPermissions } from "@homarr/auth/shared";
-import { createId } from "@homarr/common";
+import { createId, isRecord } from "@homarr/common";
 import { decryptSecret, encryptSecret } from "@homarr/common/server";
 import { and, asc, desc, eq, handleTransactionsAsync, inArray } from "@homarr/db";
 import type { Database } from "@homarr/db";
@@ -175,20 +175,20 @@ const getProviderHeaders = (configuration: AssistantConfiguration) => {
 };
 
 const getGenerationIdsFromMessageContent = (content: unknown) => {
-  if (!content || typeof content !== "object" || Array.isArray(content)) return [];
-  const metadata = (content as { metadata?: unknown }).metadata;
-  if (!metadata || typeof metadata !== "object" || Array.isArray(metadata)) return [];
-  const custom = (metadata as { custom?: unknown }).custom;
-  if (!custom || typeof custom !== "object" || Array.isArray(custom)) return [];
-  const telemetry = (custom as { telemetry?: unknown }).telemetry;
-  if (!telemetry || typeof telemetry !== "object" || Array.isArray(telemetry)) return [];
-  const steps = (telemetry as { steps?: unknown }).steps;
+  if (!isRecord(content)) return [];
+  const metadata = content.metadata;
+  if (!isRecord(metadata)) return [];
+  const custom = metadata.custom;
+  if (!isRecord(custom)) return [];
+  const telemetry = custom.telemetry;
+  if (!isRecord(telemetry)) return [];
+  const steps = telemetry.steps;
   if (!Array.isArray(steps)) return [];
   return steps
     .flatMap((step) => {
-      if (!step || typeof step !== "object" || Array.isArray(step)) return [];
-      const generationId = (step as { generationId?: unknown }).generationId;
-      const accessToken = (step as { generationAccessToken?: unknown }).generationAccessToken;
+      if (!isRecord(step)) return [];
+      const generationId = step.generationId;
+      const accessToken = step.generationAccessToken;
       return typeof generationId === "string" &&
         /^gen-[A-Za-z0-9_-]{1,128}$/.test(generationId) &&
         typeof accessToken === "string" &&
@@ -541,16 +541,10 @@ const addFeedbackToMessageContent = (serializedContent: string, type: "positive"
   } catch {
     throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "The stored message is invalid." });
   }
-  if (!content || typeof content !== "object" || Array.isArray(content)) {
+  if (!isRecord(content)) {
     throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "The stored message is invalid." });
   }
-  const metadata =
-    "metadata" in content &&
-    content.metadata &&
-    typeof content.metadata === "object" &&
-    !Array.isArray(content.metadata)
-      ? content.metadata
-      : {};
+  const metadata = isRecord(content.metadata) ? content.metadata : {};
   return stringify({
     ...content,
     metadata: { ...metadata, submittedFeedback: { type } },

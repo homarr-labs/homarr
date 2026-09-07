@@ -1,7 +1,8 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useEffect, useMemo, useRef } from "react";
+import { useMemo, useRef } from "react";
+import { useRouter } from "next/navigation";
 import {
   Box,
   Button,
@@ -26,13 +27,13 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import type { BoardPreviewData } from "@homarr/boards/layout-preview";
 import { revalidatePathActionAsync } from "@homarr/common/client";
-import { env } from "@homarr/common/env";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import {
   headerPreferencesSchema,
   parseHeaderPreferences,
+  userByteUnitSystemSchema,
   userChangeHomeBoardsSchema,
   userChangeSearchPreferencesSchema,
   userEditProfileSchema,
@@ -43,6 +44,7 @@ import {
 
 import { BoardSelect } from "~/components/board/board-select";
 import { CurrentLanguageCombobox } from "~/components/language/current-language-combobox";
+import { useUnsavedChangesGuard } from "~/components/manage/use-unsaved-changes-guard";
 import { HeaderComposer } from "./header-composer";
 
 dayjs.extend(localeData);
@@ -55,6 +57,7 @@ const userGeneralSettingsSchema = z.object({
   defaultSearchEngineId: userChangeSearchPreferencesSchema.shape.defaultSearchEngineId,
   openInNewTab: userChangeSearchPreferencesSchema.shape.openInNewTab,
   ddgBangsEnabled: userChangeSearchPreferencesSchema.shape.ddgBangsEnabled,
+  byteUnitSystem: userByteUnitSystemSchema.shape.byteUnitSystem,
   firstDayOfWeek: userFirstDayOfWeekSchema.shape.firstDayOfWeek,
   pingIconsEnabled: userPingIconsEnabledSchema.shape.pingIconsEnabled,
   enableRightClickOnWidgets: userEnableRightClickOnWidgetsSchema.shape.enableRightClickOnWidgets,
@@ -85,6 +88,7 @@ const buildInitialValues = (user: RouterOutputs["user"]["getById"]): FormValues 
   defaultSearchEngineId: user.defaultSearchEngineId,
   openInNewTab: user.openSearchInNewTab,
   ddgBangsEnabled: user.ddgBangs,
+  byteUnitSystem: user.byteUnitSystem,
   firstDayOfWeek: user.firstDayOfWeek as DayOfWeek,
   pingIconsEnabled: user.pingIconsEnabled,
   enableRightClickOnWidgets: user.enableRightClickOnWidgets,
@@ -102,11 +106,13 @@ export const UserGeneralSettingsForm = ({
   const tCommon = useI18n("common");
   const tUserManagement = useI18n("management.page.user");
   const tGeneral = useI18n("management.page.user.setting.general");
+  const router = useRouter();
   const isCredentialsUser = user.provider === "credentials";
 
   const editProfileMutation = clientApi.user.editProfile.useMutation();
   const changeHomeBoardsMutation = clientApi.user.changeHomeBoards.useMutation();
   const changeSearchPreferencesMutation = clientApi.user.changeSearchPreferences.useMutation();
+  const changeByteUnitSystemMutation = clientApi.user.changeByteUnitSystem.useMutation();
   const changeFirstDayOfWeekMutation = clientApi.user.changeFirstDayOfWeek.useMutation();
   const changePingIconsEnabledMutation = clientApi.user.changePingIconsEnabled.useMutation();
   const changeEnableRightClickOnWidgetsMutation = clientApi.user.changeEnableRightClickOnWidgets.useMutation();
@@ -119,8 +125,7 @@ export const UserGeneralSettingsForm = ({
     initialValues,
   });
 
-  const isDirtyRef = useRef(false);
-  isDirtyRef.current = form.isDirty();
+  useUnsavedChangesGuard(form.isDirty());
 
   const weekDays = useMemo(() => dayjs.weekdays(false), []);
 
@@ -128,21 +133,13 @@ export const UserGeneralSettingsForm = ({
     editProfileMutation,
     changeHomeBoardsMutation,
     changeSearchPreferencesMutation,
+    changeByteUnitSystemMutation,
     changeFirstDayOfWeekMutation,
     changePingIconsEnabledMutation,
     changeEnableRightClickOnWidgetsMutation,
     changeHeaderPreferencesMutation,
   ];
   const isPending = mutations.some((m) => m.isPending);
-
-  useEffect(() => {
-    const handler = (e: BeforeUnloadEvent) => {
-      if (env.NODE_ENV === "development") return;
-      if (isDirtyRef.current) e.preventDefault();
-    };
-    window.addEventListener("beforeunload", handler);
-    return () => window.removeEventListener("beforeunload", handler);
-  }, []);
 
   const handleSubmitAsync = async (values: FormValues) => {
     const parsed = userGeneralSettingsSchema.safeParse(values);
@@ -175,6 +172,14 @@ export const UserGeneralSettingsForm = ({
             defaultSearchEngineId: parsed.data.defaultSearchEngineId,
             openInNewTab: parsed.data.openInNewTab,
             ddgBangsEnabled: parsed.data.ddgBangsEnabled,
+          }),
+      },
+      {
+        when: changed("byteUnitSystem"),
+        action: () =>
+          changeByteUnitSystemMutation.mutateAsync({
+            id: user.id,
+            byteUnitSystem: parsed.data.byteUnitSystem,
           }),
       },
       {
@@ -215,6 +220,7 @@ export const UserGeneralSettingsForm = ({
       form.setInitialValues(newValues);
       form.resetDirty();
       await revalidatePathActionAsync(`/manage/users/${user.id}`);
+      router.refresh();
       showSuccessNotification({
         title: tCommon("notification.update.success"),
         message: tCommon("notification.update.success"),
@@ -343,6 +349,24 @@ export const UserGeneralSettingsForm = ({
                         ))}
                       </Group>
                     </Radio.Group>
+                    <Divider my="xs" />
+                    <Select
+                      label={tUser("field.byteUnitSystem.label")}
+                      description={tUser("field.byteUnitSystem.description")}
+                      data={[
+                        {
+                          value: "decimal",
+                          label: `${tUser("field.byteUnitSystem.options.decimal")} (KB, MB, GB)`,
+                        },
+                        {
+                          value: "binary",
+                          label: `${tUser("field.byteUnitSystem.options.binary")} (KiB, MiB, GiB)`,
+                        },
+                      ]}
+                      allowDeselect={false}
+                      comboboxProps={{ withinPortal: true }}
+                      {...form.getInputProps("byteUnitSystem")}
+                    />
                     <Divider my="xs" />
                     <Title order={4}>{tGeneral("item.accessibility")}</Title>
                     <Switch

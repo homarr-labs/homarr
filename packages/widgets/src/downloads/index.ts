@@ -66,6 +66,7 @@ export const { definition, componentLoader } = createWidgetDefinition("downloads
           validate: z.number().min(0),
           defaultValue: 0,
           step: 1,
+          storedUnit: "kibibytesPerSecond",
         }),
         categoryFilter: factory.multiText({
           defaultValue: [] as string[],

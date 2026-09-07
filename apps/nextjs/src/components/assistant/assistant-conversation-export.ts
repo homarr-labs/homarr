@@ -1,3 +1,5 @@
+import { isRecord } from "@homarr/common";
+
 export interface AssistantConversationExportMessage {
   id: string;
   parentId: string | null;
@@ -25,8 +27,7 @@ const bearerTokenPattern = /\bBearer\s+[A-Za-z0-9._~+/-]{16,}=*/giu;
 const commonApiKeyPattern = /\bsk-(?:or-v1-)?[A-Za-z0-9_-]{16,}\b/giu;
 const maxDebugStringLength = 12_000;
 
-const asRecord = (value: unknown): Record<string, unknown> | null =>
-  typeof value === "object" && value !== null && !Array.isArray(value) ? (value as Record<string, unknown>) : null;
+const asRecord = (value: unknown): Record<string, unknown> | null => (isRecord(value) ? value : null);
 
 const redactDebugValue = (value: unknown, key?: string): unknown => {
   if (key && sensitiveKeyPattern.test(key)) return "[redacted]";

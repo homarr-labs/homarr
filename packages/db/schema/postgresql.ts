@@ -40,6 +40,8 @@ import type {
   SupportedAuthProvider,
   WidgetKind,
 } from "@homarr/definitions";
+import { defaultByteUnitSystem } from "@homarr/common";
+import type { ByteUnitSystem } from "@homarr/common";
 import type { CustomWidgetSecretKind } from "@homarr/custom-widgets/core";
 import { defaultHeaderPreferencesSerialized } from "@homarr/validation/header-preferences";
 
@@ -81,6 +83,7 @@ export const users = pgTable("user", {
   openSearchInNewTab: boolean().default(false).notNull(),
   ddgBangs: boolean().default(true).notNull(),
   colorScheme: varchar({ length: 5 }).$type<ColorScheme>().default("dark").notNull(),
+  byteUnitSystem: varchar({ length: 7 }).$type<ByteUnitSystem>().default(defaultByteUnitSystem).notNull(),
   firstDayOfWeek: smallint().$type<DayOfWeek>().default(1).notNull(), // Defaults to Monday
   pingIconsEnabled: boolean().default(false).notNull(),
   enableRightClickOnWidgets: boolean().default(true).notNull(),

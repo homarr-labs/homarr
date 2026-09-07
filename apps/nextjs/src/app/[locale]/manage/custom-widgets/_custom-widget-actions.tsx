@@ -11,11 +11,13 @@ import {
   IconDownload,
   IconPlayerPause,
   IconPlayerPlay,
+  IconPlugConnected,
   IconSparkles,
   IconTrash,
   IconUpload,
 } from "@tabler/icons-react";
 
+import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { formatCustomWidgetImportIssues, parseCustomWidgetClipboardDetailed } from "@homarr/custom-widgets/core";
@@ -29,15 +31,15 @@ import { downloadJson } from "~/components/custom-widgets/download";
 
 const iconProps = { size: 16, stroke: 1.5 };
 
-interface WidgetRef {
-  id: string;
-  name: string;
-  enabled: boolean;
-  valid: boolean;
-  migrationRequired: boolean;
+type WidgetListItem = RouterOutputs["customWidget"]["list"][number];
+type WidgetRef = Pick<WidgetListItem, "id" | "name" | "enabled" | "valid" | "migrationRequired">;
+
+interface CustomWidgetRowActionsProps {
+  widget: WidgetRef;
+  onConfigureSources(): void;
 }
 
-export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
+export const CustomWidgetRowActions = ({ widget, onConfigureSources }: CustomWidgetRowActionsProps) => {
   const t = useI18n("customWidget");
   const tCommon = useI18n("common");
   const deleteMutation = clientApi.customWidget.delete.useMutation();
@@ -209,6 +211,9 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
                 disabled={toggleMutation.isPending}
               >
                 {widget.enabled ? t("action.disable") : t("action.enable")}
+              </Menu.Item>
+              <Menu.Item onClick={onConfigureSources} leftSection={<IconPlugConnected {...iconProps} />}>
+                {t("action.configureSources")}
               </Menu.Item>
               <Menu.Divider />
               <Menu.Item

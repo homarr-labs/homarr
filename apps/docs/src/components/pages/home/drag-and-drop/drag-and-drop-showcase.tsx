@@ -18,7 +18,16 @@ export const DragAndDropShowcase = () => {
           className={"rounded-3xl overflow-hidden border-8 border-red-500 border-solid"}
           style={{ aspectRatio: "17.6/9" }}
         >
-          <video className={"w-full"} src={video} autoPlay loop muted />
+          <video
+            className={"w-full"}
+            src={video}
+            controls
+            playsInline
+            preload="metadata"
+            aria-label="Silent demonstration of moving and resizing Homarr dashboard widgets"
+          >
+            <track kind="captions" src="/media/homepage-drag-and-drop.vtt" srcLang="en" label="English" />
+          </video>
         </div>
       </SectionContainer>
     </div>

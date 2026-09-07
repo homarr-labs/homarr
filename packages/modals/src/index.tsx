@@ -160,6 +160,7 @@ export const useConfirmModal = () => {
   const { openModal } = useModalAction(ConfirmModal);
 
   return {
-    openConfirmModal: (props: ConfirmModalProps) => openModal(props, { title: props.title }),
+    openConfirmModal: (props: ConfirmModalProps, options?: Pick<OpenModalOptions, "onClose">) =>
+      openModal(props, { title: props.title, onClose: options?.onClose }),
   };
 };

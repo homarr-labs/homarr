@@ -2140,8 +2140,8 @@
       "popover": {
         "information": "Thông tin",
         "processor": "Bộ xử lý: {cpuModelName}",
-        "memory": "Bộ nhớ: {memory}GiB",
-        "memoryAvailable": "Khả dụng: {memoryAvailable}GiB ({percent}%)",
+        "memory": "Bộ nhớ: {memory}",
+        "memoryAvailable": "Khả dụng: {memoryAvailable} ({percent}%)",
         "version": "Phiên bản: {version}",
         "uptime": "",
         "loadAverage": "Tải trung bình:",
@@ -2886,7 +2886,7 @@
           "label": ""
         },
         "activeTorrentThreshold": {
-          "label": "Ẩn torrent đã hoàn thành dưới ngưỡng này (kiB/s)"
+          "label": "Ẩn torrent đã hoàn thành dưới ngưỡng này"
         },
         "categoryFilter": {
           "label": "Danh mục/nhãn để lọc"
@@ -4953,7 +4953,7 @@
           "restore": {
             "dropzone": {
               "title": "Kéo tệp ZIP sao lưu vào đây",
-              "description": "Chấp nhận tệp .zip từ bản sao lưu SQLite của Homarr (tối đa 256 MB)"
+              "description": "Chấp nhận tệp .zip từ bản sao lưu SQLite của Homarr (tối đa {maxSize})"
             },
             "analyzing": "Đang phân tích bản sao lưu...",
             "changeFile": "Thay đổi tập tin",

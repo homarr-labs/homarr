@@ -14,8 +14,8 @@ import {
 } from "@mantine/core";
 import { IconHeartbeat, IconTransform } from "@tabler/icons-react";
 
-import { formatBytes } from "@homarr/common";
 import type { TdarrQueue } from "@homarr/integrations";
+import { useByteFormatter } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 
 interface QueuePanelProps {
@@ -24,6 +24,7 @@ interface QueuePanelProps {
 
 export function QueuePanel(props: QueuePanelProps) {
   const { queue } = props;
+  const { formatBytes } = useByteFormatter();
 
   const t = useI18n("widget.mediaTranscoding.panel.queue");
   const tCommon = useI18n("widget.mediaTranscoding.panel.common");

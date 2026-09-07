@@ -16,7 +16,9 @@
     "/api/apps/paginated": {
       "get": {
         "operationId": "appRouter-getPaginated",
-        "tags": ["apps"],
+        "tags": [
+          "apps"
+        ],
         "security": [
           {
             "apikey": []
@@ -37,7 +39,7 @@
               "default": 10,
               "type": "integer",
               "exclusiveMinimum": 0,
-              "maximum": 9007199254740991
+              "maximum": 100
             }
           },
           {
@@ -104,7 +106,14 @@
                             ]
                           }
                         },
-                        "required": ["id", "name", "description", "iconUrl", "href", "pingUrl"],
+                        "required": [
+                          "id",
+                          "name",
+                          "description",
+                          "iconUrl",
+                          "href",
+                          "pingUrl"
+                        ],
                         "additionalProperties": false
                       }
                     },
@@ -112,7 +121,10 @@
                       "type": "number"
                     }
                   },
-                  "required": ["items", "totalCount"],
+                  "required": [
+                    "items",
+                    "totalCount"
+                  ],
                   "additionalProperties": false
                 }
               }
@@ -174,7 +186,9 @@
     "/api/apps": {
       "get": {
         "operationId": "appRouter-all",
-        "tags": ["apps"],
+        "tags": [
+          "apps"
+        ],
         "security": [
           {
             "apikey": []
@@ -230,7 +244,14 @@
                         ]
                       }
                     },
-                    "required": ["id", "name", "description", "iconUrl", "href", "pingUrl"],
+                    "required": [
+                      "id",
+                      "name",
+                      "description",
+                      "iconUrl",
+                      "href",
+                      "pingUrl"
+                    ],
                     "additionalProperties": false
                   }
                 }
@@ -271,7 +292,9 @@
       },
       "post": {
         "operationId": "appRouter-create",
-        "tags": ["apps"],
+        "tags": [
+          "apps"
+        ],
         "security": [
           {
             "apikey": []
@@ -343,7 +366,13 @@
                     ]
                   }
                 },
-                "required": ["name", "description", "iconUrl", "href", "pingUrl"]
+                "required": [
+                  "name",
+                  "description",
+                  "iconUrl",
+                  "href",
+                  "pingUrl"
+                ]
               }
             }
           }
@@ -362,7 +391,9 @@
                           "type": "string"
                         }
                       },
-                      "required": ["appId"],
+                      "required": [
+                        "appId"
+                      ],
                       "additionalProperties": false
                     },
                     {
@@ -408,7 +439,14 @@
                           ]
                         }
                       },
-                      "required": ["id", "name", "description", "iconUrl", "href", "pingUrl"],
+                      "required": [
+                        "id",
+                        "name",
+                        "description",
+                        "iconUrl",
+                        "href",
+                        "pingUrl"
+                      ],
                       "additionalProperties": false
                     }
                   ]
@@ -462,7 +500,9 @@
     "/api/apps/search": {
       "get": {
         "operationId": "appRouter-search",
-        "tags": ["apps"],
+        "tags": [
+          "apps"
+        ],
         "security": [
           {
             "apikey": []
@@ -538,7 +578,14 @@
                         ]
                       }
                     },
-                    "required": ["id", "name", "description", "iconUrl", "href", "pingUrl"],
+                    "required": [
+                      "id",
+                      "name",
+                      "description",
+                      "iconUrl",
+                      "href",
+                      "pingUrl"
+                    ],
                     "additionalProperties": false
                   }
                 }
@@ -601,7 +648,9 @@
     "/api/apps/selectable": {
       "get": {
         "operationId": "appRouter-selectable",
-        "tags": ["apps"],
+        "tags": [
+          "apps"
+        ],
         "security": [
           {
             "apikey": []
@@ -657,7 +706,14 @@
                         ]
                       }
                     },
-                    "required": ["id", "name", "iconUrl", "href", "pingUrl", "description"],
+                    "required": [
+                      "id",
+                      "name",
+                      "iconUrl",
+                      "href",
+                      "pingUrl",
+                      "description"
+                    ],
                     "additionalProperties": false
                   }
                 }
@@ -700,7 +756,9 @@
     "/api/apps/{id}": {
       "get": {
         "operationId": "appRouter-byId",
-        "tags": ["apps"],
+        "tags": [
+          "apps"
+        ],
         "security": [
           {
             "apikey": []
@@ -764,7 +822,14 @@
                       ]
                     }
                   },
-                  "required": ["id", "name", "description", "iconUrl", "href", "pingUrl"],
+                  "required": [
+                    "id",
+                    "name",
+                    "description",
+                    "iconUrl",
+                    "href",
+                    "pingUrl"
+                  ],
                   "additionalProperties": false
                 }
               }
@@ -824,7 +889,9 @@
       },
       "patch": {
         "operationId": "appRouter-update",
-        "tags": ["apps"],
+        "tags": [
+          "apps"
+        ],
         "security": [
           {
             "apikey": []
@@ -905,7 +972,13 @@
                     ]
                   }
                 },
-                "required": ["name", "description", "iconUrl", "href", "pingUrl"]
+                "required": [
+                  "name",
+                  "description",
+                  "iconUrl",
+                  "href",
+                  "pingUrl"
+                ]
               }
             }
           }
@@ -973,7 +1046,9 @@
       },
       "delete": {
         "operationId": "appRouter-delete",
-        "tags": ["apps"],
+        "tags": [
+          "apps"
+        ],
         "security": [
           {
             "apikey": []
@@ -1054,7 +1129,9 @@
     "/api/boards": {
       "get": {
         "operationId": "boardRouter-getAllBoards",
-        "tags": ["boards"],
+        "tags": [
+          "boards"
+        ],
         "security": [
           {
             "apikey": []
@@ -1128,7 +1205,12 @@
                                 ]
                               }
                             },
-                            "required": ["id", "name", "image", "email"],
+                            "required": [
+                              "id",
+                              "name",
+                              "image",
+                              "email"
+                            ],
                             "additionalProperties": false
                           },
                           {
@@ -1149,10 +1231,16 @@
                           "properties": {
                             "permission": {
                               "type": "string",
-                              "enum": ["view", "modify", "full"]
+                              "enum": [
+                                "view",
+                                "modify",
+                                "full"
+                              ]
                             }
                           },
-                          "required": ["permission"],
+                          "required": [
+                            "permission"
+                          ],
                           "additionalProperties": false
                         }
                       },
@@ -1163,10 +1251,16 @@
                           "properties": {
                             "permission": {
                               "type": "string",
-                              "enum": ["view", "modify", "full"]
+                              "enum": [
+                                "view",
+                                "modify",
+                                "full"
+                              ]
                             }
                           },
-                          "required": ["permission"],
+                          "required": [
+                            "permission"
+                          ],
                           "additionalProperties": false
                         }
                       }
@@ -1222,7 +1316,9 @@
       },
       "post": {
         "operationId": "boardRouter-createBoard",
-        "tags": ["boards"],
+        "tags": [
+          "boards"
+        ],
         "security": [
           {
             "apikey": []
@@ -1251,7 +1347,11 @@
                     "type": "boolean"
                   }
                 },
-                "required": ["name", "columnCount", "isPublic"]
+                "required": [
+                  "name",
+                  "columnCount",
+                  "isPublic"
+                ]
               }
             }
           }
@@ -1274,7 +1374,11 @@
                       "type": "string"
                     }
                   },
-                  "required": ["boardId", "name", "layoutId"],
+                  "required": [
+                    "boardId",
+                    "name",
+                    "layoutId"
+                  ],
                   "additionalProperties": false
                 }
               }
@@ -1326,7 +1430,9 @@
     "/api/boards/{id}/duplicate": {
       "post": {
         "operationId": "boardRouter-duplicateBoard",
-        "tags": ["boards"],
+        "tags": [
+          "boards"
+        ],
         "security": [
           {
             "apikey": []
@@ -1356,7 +1462,9 @@
                     "pattern": "^[A-Za-z0-9-_]*$"
                   }
                 },
-                "required": ["name"]
+                "required": [
+                  "name"
+                ]
               }
             }
           }
@@ -1373,7 +1481,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["boardId"],
+                  "required": [
+                    "boardId"
+                  ],
                   "additionalProperties": false
                 }
               }
@@ -1425,7 +1535,9 @@
     "/api/boards/{id}/name": {
       "patch": {
         "operationId": "boardRouter-renameBoard",
-        "tags": ["boards"],
+        "tags": [
+          "boards"
+        ],
         "security": [
           {
             "apikey": []
@@ -1455,7 +1567,9 @@
                     "pattern": "^[A-Za-z0-9-_]*$"
                   }
                 },
-                "required": ["name"]
+                "required": [
+                  "name"
+                ]
               }
             }
           }
@@ -1525,7 +1639,9 @@
     "/api/boards/{id}/visibility": {
       "patch": {
         "operationId": "boardRouter-changeBoardVisibility",
-        "tags": ["boards"],
+        "tags": [
+          "boards"
+        ],
         "security": [
           {
             "apikey": []
@@ -1550,10 +1666,15 @@
                 "properties": {
                   "visibility": {
                     "type": "string",
-                    "enum": ["public", "private"]
+                    "enum": [
+                      "public",
+                      "private"
+                    ]
                   }
                 },
-                "required": ["visibility"]
+                "required": [
+                  "visibility"
+                ]
               }
             }
           }
@@ -1623,7 +1744,9 @@
     "/api/boards/{id}": {
       "delete": {
         "operationId": "boardRouter-deleteBoard",
-        "tags": ["boards"],
+        "tags": [
+          "boards"
+        ],
         "security": [
           {
             "apikey": []
@@ -1704,7 +1827,9 @@
     "/api/boards/{id}/home": {
       "patch": {
         "operationId": "boardRouter-setHomeBoard",
-        "tags": ["boards"],
+        "tags": [
+          "boards"
+        ],
         "security": [
           {
             "apikey": []
@@ -1785,7 +1910,9 @@
     "/api/boards/{id}/mobile-home": {
       "patch": {
         "operationId": "boardRouter-setMobileHomeBoard",
-        "tags": ["boards"],
+        "tags": [
+          "boards"
+        ],
         "security": [
           {
             "apikey": []
@@ -1866,7 +1993,9 @@
     "/api/boards/{id}/settings": {
       "patch": {
         "operationId": "boardRouter-savePartialBoardSettings",
-        "tags": ["boards"],
+        "tags": [
+          "boards"
+        ],
         "security": [
           {
             "apikey": []
@@ -1941,15 +2070,26 @@
                   },
                   "backgroundImageAttachment": {
                     "type": "string",
-                    "enum": ["fixed", "scroll"]
+                    "enum": [
+                      "fixed",
+                      "scroll"
+                    ]
                   },
                   "backgroundImageRepeat": {
                     "type": "string",
-                    "enum": ["repeat", "repeat-x", "repeat-y", "no-repeat"]
+                    "enum": [
+                      "repeat",
+                      "repeat-x",
+                      "repeat-y",
+                      "no-repeat"
+                    ]
                   },
                   "backgroundImageSize": {
                     "type": "string",
-                    "enum": ["cover", "contain"]
+                    "enum": [
+                      "cover",
+                      "contain"
+                    ]
                   },
                   "primaryColor": {
                     "type": "string",
@@ -2084,7 +2224,9 @@
     "/api/boards/items": {
       "post": {
         "operationId": "boardRouter-addItem",
-        "tags": ["boards"],
+        "tags": [
+          "boards"
+        ],
         "security": [
           {
             "apikey": []
@@ -2182,7 +2324,10 @@
                     }
                   }
                 },
-                "required": ["boardId", "kind"]
+                "required": [
+                  "boardId",
+                  "kind"
+                ]
               }
             }
           }
@@ -2199,7 +2344,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["itemId"],
+                  "required": [
+                    "itemId"
+                  ],
                   "additionalProperties": false
                 }
               }
@@ -2251,7 +2398,9 @@
     "/api/info": {
       "get": {
         "operationId": "infoRouter-getInfo",
-        "tags": ["info"],
+        "tags": [
+          "info"
+        ],
         "security": [
           {
             "apikey": []
@@ -2269,7 +2418,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["version"],
+                  "required": [
+                    "version"
+                  ],
                   "additionalProperties": false
                 }
               }
@@ -2311,7 +2462,9 @@
     "/api/invites": {
       "get": {
         "operationId": "inviteRouter-getAll",
-        "tags": ["invites"],
+        "tags": [
+          "invites"
+        ],
         "security": [
           {
             "apikey": []
@@ -2350,11 +2503,18 @@
                             "type": "string"
                           }
                         },
-                        "required": ["name", "id"],
+                        "required": [
+                          "name",
+                          "id"
+                        ],
                         "additionalProperties": false
                       }
                     },
-                    "required": ["id", "expirationDate", "creator"],
+                    "required": [
+                      "id",
+                      "expirationDate",
+                      "creator"
+                    ],
                     "additionalProperties": false
                   }
                 }
@@ -2395,7 +2555,9 @@
       },
       "post": {
         "operationId": "inviteRouter-createInvite",
-        "tags": ["invites"],
+        "tags": [
+          "invites"
+        ],
         "security": [
           {
             "apikey": []
@@ -2413,7 +2575,9 @@
                     "type": "string"
                   }
                 },
-                "required": ["expirationDate"]
+                "required": [
+                  "expirationDate"
+                ]
               }
             }
           }
@@ -2433,7 +2597,10 @@
                       "type": "string"
                     }
                   },
-                  "required": ["id", "token"],
+                  "required": [
+                    "id",
+                    "token"
+                  ],
                   "additionalProperties": false
                 }
               }
@@ -2485,7 +2652,9 @@
     "/api/invites/{id}": {
       "delete": {
         "operationId": "inviteRouter-deleteInvite",
-        "tags": ["invites"],
+        "tags": [
+          "invites"
+        ],
         "security": [
           {
             "apikey": []
@@ -2568,7 +2737,9 @@
     "/api/settings/board": {
       "get": {
         "operationId": "serverSettingsRouter-getBoardSettings",
-        "tags": ["settings"],
+        "tags": [
+          "settings"
+        ],
         "security": [
           {
             "apikey": []
@@ -2609,7 +2780,12 @@
                       "type": "boolean"
                     }
                   },
-                  "required": ["homeBoardId", "mobileHomeBoardId", "enableStatusByDefault", "forceDisableStatus"],
+                  "required": [
+                    "homeBoardId",
+                    "mobileHomeBoardId",
+                    "enableStatusByDefault",
+                    "forceDisableStatus"
+                  ],
                   "additionalProperties": false
                 }
               }
@@ -2649,7 +2825,9 @@
       },
       "patch": {
         "operationId": "serverSettingsRouter-updateBoardSettings",
-        "tags": ["settings"],
+        "tags": [
+          "settings"
+        ],
         "security": [
           {
             "apikey": []
@@ -2729,7 +2907,12 @@
                       "type": "boolean"
                     }
                   },
-                  "required": ["homeBoardId", "mobileHomeBoardId", "enableStatusByDefault", "forceDisableStatus"],
+                  "required": [
+                    "homeBoardId",
+                    "mobileHomeBoardId",
+                    "enableStatusByDefault",
+                    "forceDisableStatus"
+                  ],
                   "additionalProperties": false
                 }
               }
@@ -2791,7 +2974,9 @@
     "/api/users": {
       "post": {
         "operationId": "userRouter-create",
-        "tags": ["users"],
+        "tags": [
+          "users"
+        ],
         "security": [
           {
             "apikey": []
@@ -2839,7 +3024,12 @@
                     }
                   }
                 },
-                "required": ["username", "password", "confirmPassword", "groupIds"]
+                "required": [
+                  "username",
+                  "password",
+                  "confirmPassword",
+                  "groupIds"
+                ]
               }
             }
           }
@@ -2897,7 +3087,9 @@
       },
       "get": {
         "operationId": "userRouter-getAll",
-        "tags": ["users"],
+        "tags": [
+          "users"
+        ],
         "security": [
           {
             "apikey": []
@@ -2957,7 +3149,13 @@
                         ]
                       }
                     },
-                    "required": ["id", "name", "email", "emailVerified", "image"],
+                    "required": [
+                      "id",
+                      "name",
+                      "email",
+                      "emailVerified",
+                      "image"
+                    ],
                     "additionalProperties": false
                   }
                 }
@@ -3000,7 +3198,9 @@
     "/api/users/profileImage": {
       "put": {
         "operationId": "userRouter-setProfileImage",
-        "tags": ["users"],
+        "tags": [
+          "users"
+        ],
         "security": [
           {
             "apikey": []
@@ -3030,7 +3230,10 @@
                     ]
                   }
                 },
-                "required": ["userId", "image"]
+                "required": [
+                  "userId",
+                  "image"
+                ]
               }
             }
           }
@@ -3100,7 +3303,9 @@
     "/api/users/selectable": {
       "get": {
         "operationId": "userRouter-selectable",
-        "tags": ["users"],
+        "tags": [
+          "users"
+        ],
         "security": [
           {
             "apikey": []
@@ -3114,7 +3319,11 @@
               "type": "array",
               "items": {
                 "type": "string",
-                "enum": ["credentials", "oidc", "ldap"]
+                "enum": [
+                  "credentials",
+                  "oidc",
+                  "ldap"
+                ]
               }
             }
           }
@@ -3163,7 +3372,12 @@
                         ]
                       }
                     },
-                    "required": ["id", "name", "image", "email"],
+                    "required": [
+                      "id",
+                      "name",
+                      "image",
+                      "email"
+                    ],
                     "additionalProperties": false
                   }
                 }
@@ -3226,7 +3440,9 @@
     "/api/users/search": {
       "post": {
         "operationId": "userRouter-search",
-        "tags": ["users"],
+        "tags": [
+          "users"
+        ],
         "security": [
           {
             "apikey": []
@@ -3250,7 +3466,9 @@
                     "maximum": 100
                   }
                 },
-                "required": ["query"]
+                "required": [
+                  "query"
+                ]
               }
             }
           }
@@ -3299,7 +3517,12 @@
                         ]
                       }
                     },
-                    "required": ["id", "name", "image", "email"],
+                    "required": [
+                      "id",
+                      "name",
+                      "image",
+                      "email"
+                    ],
                     "additionalProperties": false
                   }
                 }
@@ -3352,7 +3575,9 @@
     "/api/users/{userId}": {
       "get": {
         "operationId": "userRouter-getById",
-        "tags": ["users"],
+        "tags": [
+          "users"
+        ],
         "security": [
           {
             "apikey": []
@@ -3442,6 +3667,13 @@
                         }
                       ]
                     },
+                    "byteUnitSystem": {
+                      "type": "string",
+                      "enum": [
+                        "binary",
+                        "decimal"
+                      ]
+                    },
                     "firstDayOfWeek": {
                       "type": "integer",
                       "minimum": -9007199254740991,
@@ -3488,6 +3720,7 @@
                     "provider",
                     "homeBoardId",
                     "mobileHomeBoardId",
+                    "byteUnitSystem",
                     "firstDayOfWeek",
                     "pingIconsEnabled",
                     "enableRightClickOnWidgets",
@@ -3557,7 +3790,9 @@
       },
       "delete": {
         "operationId": "userRouter-delete",
-        "tags": ["users"],
+        "tags": [
+          "users"
+        ],
         "security": [
           {
             "apikey": []
@@ -3638,7 +3873,9 @@
     "/api/users/profile": {
       "put": {
         "operationId": "userRouter-editProfile",
-        "tags": ["users"],
+        "tags": [
+          "users"
+        ],
         "security": [
           {
             "apikey": []
@@ -3681,7 +3918,10 @@
                     ]
                   }
                 },
-                "required": ["id", "name"]
+                "required": [
+                  "id",
+                  "name"
+                ]
               }
             }
           }
@@ -3751,7 +3991,9 @@
     "/api/users/{userId}/changePassword": {
       "patch": {
         "operationId": "userRouter-changePassword",
-        "tags": ["users"],
+        "tags": [
+          "users"
+        ],
         "security": [
           {
             "apikey": []
@@ -3787,7 +4029,11 @@
                     "type": "string"
                   }
                 },
-                "required": ["previousPassword", "password", "confirmPassword"]
+                "required": [
+                  "previousPassword",
+                  "password",
+                  "confirmPassword"
+                ]
               }
             }
           }
@@ -3857,7 +4103,9 @@
     "/api/users/changeHome": {
       "patch": {
         "operationId": "userRouter-changeHomeBoards",
-        "tags": ["users"],
+        "tags": [
+          "users"
+        ],
         "security": [
           {
             "apikey": []
@@ -3895,7 +4143,11 @@
                     "type": "string"
                   }
                 },
-                "required": ["homeBoardId", "mobileHomeBoardId", "userId"]
+                "required": [
+                  "homeBoardId",
+                  "mobileHomeBoardId",
+                  "userId"
+                ]
               }
             }
           }
@@ -3965,7 +4217,9 @@
     "/api/users/changeSearchEngine": {
       "patch": {
         "operationId": "userRouter-changeDefaultSearchEngine",
-        "tags": ["users"],
+        "tags": [
+          "users"
+        ],
         "security": [
           {
             "apikey": []
@@ -3998,7 +4252,11 @@
                     "type": "string"
                   }
                 },
-                "required": ["defaultSearchEngineId", "ddgBangsEnabled", "userId"]
+                "required": [
+                  "defaultSearchEngineId",
+                  "ddgBangsEnabled",
+                  "userId"
+                ]
               }
             }
           }
@@ -4068,7 +4326,9 @@
     "/api/users/search-preferences": {
       "patch": {
         "operationId": "userRouter-changeSearchPreferences",
-        "tags": ["users"],
+        "tags": [
+          "users"
+        ],
         "security": [
           {
             "apikey": []
@@ -4103,7 +4363,12 @@
                     "type": "string"
                   }
                 },
-                "required": ["defaultSearchEngineId", "openInNewTab", "ddgBangsEnabled", "userId"]
+                "required": [
+                  "defaultSearchEngineId",
+                  "openInNewTab",
+                  "ddgBangsEnabled",
+                  "userId"
+                ]
               }
             }
           }
@@ -4173,7 +4438,9 @@
     "/api/users/changeScheme": {
       "patch": {
         "operationId": "userRouter-changeColorScheme",
-        "tags": ["users"],
+        "tags": [
+          "users"
+        ],
         "security": [
           {
             "apikey": []
@@ -4189,10 +4456,16 @@
                 "properties": {
                   "colorScheme": {
                     "type": "string",
-                    "enum": ["auto", "light", "dark"]
+                    "enum": [
+                      "auto",
+                      "light",
+                      "dark"
+                    ]
                   }
                 },
-                "required": ["colorScheme"]
+                "required": [
+                  "colorScheme"
+                ]
               }
             }
           }
@@ -4262,7 +4535,9 @@
     "/api/users/right-click-widgets": {
       "patch": {
         "operationId": "userRouter-changeEnableRightClickOnWidgets",
-        "tags": ["users"],
+        "tags": [
+          "users"
+        ],
         "security": [
           {
             "apikey": []
@@ -4283,7 +4558,10 @@
                     "type": "string"
                   }
                 },
-                "required": ["enableRightClickOnWidgets", "id"]
+                "required": [
+                  "enableRightClickOnWidgets",
+                  "id"
+                ]
               }
             }
           }
@@ -4353,7 +4631,9 @@
     "/api/users/header-preferences": {
       "patch": {
         "operationId": "userRouter-changeHeaderPreferences",
-        "tags": ["users"],
+        "tags": [
+          "users"
+        ],
         "security": [
           {
             "apikey": []
@@ -4384,12 +4664,18 @@
                           },
                           "searchDisplay": {
                             "type": "string",
-                            "enum": ["input", "icon"]
+                            "enum": [
+                              "input",
+                              "icon"
+                            ]
                           },
                           "logoDisplay": {
                             "default": "logoAndText",
                             "type": "string",
-                            "enum": ["logo", "logoAndText"]
+                            "enum": [
+                              "logo",
+                              "logoAndText"
+                            ]
                           },
                           "zones": {
                             "type": "object",
@@ -4423,7 +4709,10 @@
                                           ]
                                         }
                                       },
-                                      "required": ["type", "id"],
+                                      "required": [
+                                        "type",
+                                        "id"
+                                      ],
                                       "additionalProperties": false
                                     },
                                     {
@@ -4439,7 +4728,10 @@
                                           "maxLength": 255
                                         }
                                       },
-                                      "required": ["type", "boardId"],
+                                      "required": [
+                                        "type",
+                                        "boardId"
+                                      ],
                                       "additionalProperties": false
                                     }
                                   ],
@@ -4475,7 +4767,10 @@
                                           ]
                                         }
                                       },
-                                      "required": ["type", "id"],
+                                      "required": [
+                                        "type",
+                                        "id"
+                                      ],
                                       "additionalProperties": false
                                     },
                                     {
@@ -4491,7 +4786,10 @@
                                           "maxLength": 255
                                         }
                                       },
-                                      "required": ["type", "boardId"],
+                                      "required": [
+                                        "type",
+                                        "boardId"
+                                      ],
                                       "additionalProperties": false
                                     }
                                   ],
@@ -4527,7 +4825,10 @@
                                           ]
                                         }
                                       },
-                                      "required": ["type", "id"],
+                                      "required": [
+                                        "type",
+                                        "id"
+                                      ],
                                       "additionalProperties": false
                                     },
                                     {
@@ -4543,7 +4844,10 @@
                                           "maxLength": 255
                                         }
                                       },
-                                      "required": ["type", "boardId"],
+                                      "required": [
+                                        "type",
+                                        "boardId"
+                                      ],
                                       "additionalProperties": false
                                     }
                                   ],
@@ -4551,11 +4855,20 @@
                                 }
                               }
                             },
-                            "required": ["left", "center", "right"],
+                            "required": [
+                              "left",
+                              "center",
+                              "right"
+                            ],
                             "additionalProperties": false
                           }
                         },
-                        "required": ["version", "visible", "searchDisplay", "zones"],
+                        "required": [
+                          "version",
+                          "visible",
+                          "searchDisplay",
+                          "zones"
+                        ],
                         "additionalProperties": false
                       },
                       {
@@ -4574,11 +4887,22 @@
                             "type": "array",
                             "items": {
                               "type": "string",
-                              "enum": ["logo", "search", "boardSwitcher", "assistant", "docker", "user"]
+                              "enum": [
+                                "logo",
+                                "search",
+                                "boardSwitcher",
+                                "assistant",
+                                "docker",
+                                "user"
+                              ]
                             }
                           }
                         },
-                        "required": ["version", "visible", "items"],
+                        "required": [
+                          "version",
+                          "visible",
+                          "items"
+                        ],
                         "additionalProperties": false
                       },
                       {
@@ -4599,7 +4923,14 @@
                                 "type": "array",
                                 "items": {
                                   "type": "string",
-                                  "enum": ["logo", "search", "boardSwitcher", "assistant", "docker", "user"]
+                                  "enum": [
+                                    "logo",
+                                    "search",
+                                    "boardSwitcher",
+                                    "assistant",
+                                    "docker",
+                                    "user"
+                                  ]
                                 }
                               },
                               "center": {
@@ -4607,7 +4938,14 @@
                                 "type": "array",
                                 "items": {
                                   "type": "string",
-                                  "enum": ["logo", "search", "boardSwitcher", "assistant", "docker", "user"]
+                                  "enum": [
+                                    "logo",
+                                    "search",
+                                    "boardSwitcher",
+                                    "assistant",
+                                    "docker",
+                                    "user"
+                                  ]
                                 }
                               },
                               "right": {
@@ -4615,22 +4953,40 @@
                                 "type": "array",
                                 "items": {
                                   "type": "string",
-                                  "enum": ["logo", "search", "boardSwitcher", "assistant", "docker", "user"]
+                                  "enum": [
+                                    "logo",
+                                    "search",
+                                    "boardSwitcher",
+                                    "assistant",
+                                    "docker",
+                                    "user"
+                                  ]
                                 }
                               }
                             },
-                            "required": ["left", "center", "right"],
+                            "required": [
+                              "left",
+                              "center",
+                              "right"
+                            ],
                             "additionalProperties": false
                           }
                         },
-                        "required": ["version", "visible", "zones"],
+                        "required": [
+                          "version",
+                          "visible",
+                          "zones"
+                        ],
                         "additionalProperties": false
                       }
                     ],
                     "type": "object"
                   }
                 },
-                "required": ["id", "headerPreferences"]
+                "required": [
+                  "id",
+                  "headerPreferences"
+                ]
               }
             }
           }
@@ -4700,7 +5056,9 @@
     "/api/users/ddg-bangs": {
       "patch": {
         "operationId": "userRouter-changeDdgBangs",
-        "tags": ["users"],
+        "tags": [
+          "users"
+        ],
         "security": [
           {
             "apikey": []
@@ -4722,7 +5080,10 @@
                     "type": "string"
                   }
                 },
-                "required": ["ddgBangs", "id"]
+                "required": [
+                  "ddgBangs",
+                  "id"
+                ]
               }
             }
           }
@@ -4792,7 +5153,9 @@
     "/api/users/firstDayOfWeek": {
       "patch": {
         "operationId": "userRouter-changeFirstDayOfWeek",
-        "tags": ["users"],
+        "tags": [
+          "users"
+        ],
         "security": [
           {
             "apikey": []
@@ -4815,7 +5178,10 @@
                     "type": "string"
                   }
                 },
-                "required": ["firstDayOfWeek", "id"]
+                "required": [
+                  "firstDayOfWeek",
+                  "id"
+                ]
               }
             }
           }
@@ -4909,12 +5275,17 @@
                   "type": "string"
                 }
               },
-              "required": ["message"],
+              "required": [
+                "message"
+              ],
               "additionalProperties": false
             }
           }
         },
-        "required": ["message", "code"],
+        "required": [
+          "message",
+          "code"
+        ],
         "additionalProperties": false,
         "title": "Invalid input data error (400)",
         "description": "The error information",
@@ -4948,12 +5319,17 @@
                   "type": "string"
                 }
               },
-              "required": ["message"],
+              "required": [
+                "message"
+              ],
               "additionalProperties": false
             }
           }
         },
-        "required": ["message", "code"],
+        "required": [
+          "message",
+          "code"
+        ],
         "additionalProperties": false,
         "title": "Authorization not provided error (401)",
         "description": "The error information",
@@ -4987,12 +5363,17 @@
                   "type": "string"
                 }
               },
-              "required": ["message"],
+              "required": [
+                "message"
+              ],
               "additionalProperties": false
             }
           }
         },
-        "required": ["message", "code"],
+        "required": [
+          "message",
+          "code"
+        ],
         "additionalProperties": false,
         "title": "Insufficient access error (403)",
         "description": "The error information",
@@ -5026,12 +5407,17 @@
                   "type": "string"
                 }
               },
-              "required": ["message"],
+              "required": [
+                "message"
+              ],
               "additionalProperties": false
             }
           }
         },
-        "required": ["message", "code"],
+        "required": [
+          "message",
+          "code"
+        ],
         "additionalProperties": false,
         "title": "Not found error (404)",
         "description": "The error information",
@@ -5065,12 +5451,17 @@
                   "type": "string"
                 }
               },
-              "required": ["message"],
+              "required": [
+                "message"
+              ],
               "additionalProperties": false
             }
           }
         },
-        "required": ["message", "code"],
+        "required": [
+          "message",
+          "code"
+        ],
         "additionalProperties": false,
         "title": "Internal server error error (500)",
         "description": "The error information",

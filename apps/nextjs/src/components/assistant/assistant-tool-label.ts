@@ -1,5 +1,6 @@
-const asRecord = (value: unknown): Record<string, unknown> | null =>
-  typeof value === "object" && value !== null && !Array.isArray(value) ? (value as Record<string, unknown>) : null;
+import { isRecord } from "@homarr/common";
+
+const asRecord = (value: unknown): Record<string, unknown> | null => (isRecord(value) ? value : null);
 
 export const getAssistantIconSearchQuery = (toolName: string, args: unknown) => {
   if (toolName !== "icon_findIcons") return null;

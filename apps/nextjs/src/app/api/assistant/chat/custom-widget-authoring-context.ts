@@ -1,5 +1,6 @@
 import type { UIMessage } from "ai";
 
+import { isRecord } from "@homarr/common";
 import { getCustomWidgetPhaseToolNames } from "@homarr/custom-widgets/core";
 
 export { getCustomWidgetPhaseToolNames };
@@ -16,9 +17,6 @@ const customWidgetContextToolBudgets: Readonly<Record<string, number>> = {
   customWidget_getSharedProps: 1,
   customWidget_getExample: 1,
 };
-
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-  typeof value === "object" && value !== null && !Array.isArray(value);
 
 export const createCustomWidgetDiscoveryPhaseController = (limit = maxFocusedComponentSearchesPerPhase) => {
   const calls = new Map<string, number>();

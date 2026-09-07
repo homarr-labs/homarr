@@ -36,12 +36,13 @@ import { invariantTechnicalLabels } from "@homarr/definitions";
 import { useSession } from "@homarr/auth/client";
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import { useOptionalBoard } from "@homarr/boards/context";
-import { formatBytes, useTimeAgo } from "@homarr/common";
+import { useTimeAgo } from "@homarr/common";
 import type { ContainerState, DockerEndpointCapability } from "@homarr/docker";
 import { containerStateColorMap, cpuUsageColor, memoryUsageColor, safeValue } from "@homarr/docker/shared";
 import { useModalAction } from "@homarr/modals";
 import { AddDockerAppToHomarr, useDockerContainerRemovalConfirmation } from "@homarr/modals-collection";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
+import { useByteFormatter } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 import { zoomCompensatedSize } from "@homarr/ui";
 
@@ -115,6 +116,7 @@ const createColumns = (
   tCommon: ReturnType<typeof useI18n<"common">>,
   handlers: ContainerActionHandlers,
   sortingEnabled: boolean,
+  formatBytes: (bytes: number) => string,
 ): DataTableColumn<DockerContainer>[] => [
   {
     accessor: "name",
@@ -253,6 +255,7 @@ export default function DockerWidget({
   const confirmRemoval = useDockerContainerRemovalConfirmation();
   const board = useOptionalBoard();
   const { data: session } = useSession();
+  const { formatBytes } = useByteFormatter();
   const hasChangeAccess = board ? constructBoardPermissions(board, session).hasChangeAccess : false;
   const isAdvanced = displayMode === "advanced";
 
@@ -365,10 +368,10 @@ export default function DockerWidget({
   );
   const columns = useMemo(() => {
     const sortingEnabled = (isAdvanced || options.enableRowSorting) && !isEditMode;
-    return createColumns(t, tCommon, actionHandlers, sortingEnabled).filter(
+    return createColumns(t, tCommon, actionHandlers, sortingEnabled, formatBytes).filter(
       ({ accessor }) => columnVisibility[String(accessor) as keyof typeof columnVisibility],
     );
-  }, [actionHandlers, columnVisibility, isAdvanced, isEditMode, options.enableRowSorting, t, tCommon]);
+  }, [actionHandlers, columnVisibility, formatBytes, isAdvanced, isEditMode, options.enableRowSorting, t, tCommon]);
   const { effectiveColumns, storeKey } = usePersistedTableLayout({
     columns,
     columnAccessors,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Stack } from "@mantine/core";
 import { z } from "zod/v4";
@@ -8,7 +8,6 @@ import { z } from "zod/v4";
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
-import { env } from "@homarr/common/env";
 import { colorSchemes } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
@@ -17,6 +16,7 @@ import { brandingServerSettingsSchema } from "@homarr/server-settings";
 import { useI18n } from "@homarr/translation/client";
 
 import { UnsavedChangesBar } from "~/components/manage/unsaved-changes-bar";
+import { useUnsavedChangesGuard } from "~/components/manage/use-unsaved-changes-guard";
 import { AnalyticsSettings } from "./analytics.settings";
 import { AppearanceSettingsForm } from "./appearance-settings-form";
 import { BoardSettingsForm } from "./board-settings-form";
@@ -80,8 +80,7 @@ export const SettingsForm = ({ initialData, selectableBoards, selectableSearchEn
     initialValues,
   });
 
-  const isDirtyRef = useRef(false);
-  isDirtyRef.current = form.isDirty();
+  useUnsavedChangesGuard(form.isDirty());
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -90,15 +89,6 @@ export const SettingsForm = ({ initialData, selectableBoards, selectableSearchEn
       showErrorNotification({ title: tCommon("notification.update.error"), message: error.message });
     },
   });
-
-  useEffect(() => {
-    const handler = (event: BeforeUnloadEvent) => {
-      if (env.NODE_ENV === "development") return;
-      if (isDirtyRef.current) event.preventDefault();
-    };
-    window.addEventListener("beforeunload", handler);
-    return () => window.removeEventListener("beforeunload", handler);
-  }, []);
 
   const handleSubmitAsync = async (values: FormValues) => {
     const defaults = initialValuesRef.current;

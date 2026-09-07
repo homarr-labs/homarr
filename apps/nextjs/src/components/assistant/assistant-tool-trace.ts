@@ -1,8 +1,10 @@
+import { isRecord } from "@homarr/common";
+
 const targetKeys = ["name", "title", "query", "searchText", "appName", "widgetName"] as const;
 
 export const getAssistantToolTraceTarget = (args: unknown): string | null => {
-  if (!args || typeof args !== "object" || Array.isArray(args)) return null;
-  const record = args as Record<string, unknown>;
+  if (!isRecord(args)) return null;
+  const record = args;
 
   for (const key of targetKeys) {
     const value = record[key];

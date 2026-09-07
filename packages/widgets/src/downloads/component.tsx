@@ -46,10 +46,11 @@ import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess, useSession } from "@homarr/auth/client";
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import { useOptionalBoard } from "@homarr/boards/context";
-import { formatByteRate, formatBytes, useIntegrationConnected } from "@homarr/common";
+import { useIntegrationConnected } from "@homarr/common";
 import { getIconUrl, getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { ExtendedClientStatus, ExtendedDownloadClientItem } from "@homarr/integrations";
 import { showErrorNotification } from "@homarr/notifications";
+import { useByteFormatter } from "@homarr/settings";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
@@ -200,6 +201,15 @@ function formatRatio(ratio: number): string {
   return ratio.toFixed(2);
 }
 
+function formatSizePair(
+  used: number,
+  total: number,
+  formatBytesPair: (used: number, total: number) => { used: string; total: string },
+): string {
+  const formatted = formatBytesPair(used, total);
+  return `${formatted.used} / ${formatted.total}`;
+}
+
 function showCompletedItem(
   item: Pick<ExtendedDownloadClientItem, "type" | "progress" | "upSpeed">,
   options: WidgetComponentProps<"downloads">["options"],
@@ -252,8 +262,12 @@ function compareSortValues(
   return 0;
 }
 
-function buildProgressTooltip(record: ExtendedDownloadClientItem): string {
-  const parts = [`${formatBytes(record.received)} / ${formatBytes(record.size)}`];
+function buildProgressTooltip(
+  record: ExtendedDownloadClientItem,
+  formatBytesPair: (used: number, total: number) => { used: string; total: string },
+  formatByteRate: (bytes: number) => string,
+): string {
+  const parts = [formatSizePair(record.received, record.size, formatBytesPair)];
   if (record.downSpeed) parts.push(`↓ ${formatByteRate(record.downSpeed)}`);
   if (record.time !== 0) parts.push(`ETA: ${dayjs().add(record.time, "milliseconds").fromNow(true)}`);
   return parts.join(" · ");
@@ -268,6 +282,7 @@ function SpeedCell({
   fontSize: SizeConfig["fontSize"];
   direction: keyof typeof speedColumnConfig;
 }) {
+  const { formatByteRate } = useByteFormatter();
   if (!speed) return null;
   const { Icon, color } = speedColumnConfig[direction];
   return (
@@ -291,6 +306,7 @@ export default function DownloadClientsWidget({
   height,
   displayMode,
 }: WidgetComponentProps<"downloads">) {
+  const { formatByteRate, formatBytes, formatBytesPair } = useByteFormatter();
   const board = useOptionalBoard();
   const { data: session } = useSession();
   const hasChangeAccess = board ? constructBoardPermissions(board, session).hasChangeAccess : false;
@@ -497,7 +513,7 @@ export default function DownloadClientsWidget({
         render: (record) => (
           <Tooltip
             key={displayMode}
-            label={buildHoverTooltip(record, t)}
+            label={buildHoverTooltip(record, t, formatBytesPair, formatByteRate)}
             multiline
             w={280}
             withArrow
@@ -533,7 +549,7 @@ export default function DownloadClientsWidget({
           return (
             <Tooltip
               key={displayMode}
-              label={buildProgressTooltip(record)}
+              label={buildProgressTooltip(record, formatBytesPair, formatByteRate)}
               withArrow
               openDelay={300}
               position="top"
@@ -679,7 +695,7 @@ export default function DownloadClientsWidget({
       },
     ];
     return cols.filter(Boolean) as DataTableColumn<ExtendedDownloadClientItem>[];
-  }, [columnContext, t, size, progressColumnWidth, displayMode]);
+  }, [columnContext, displayMode, formatByteRate, formatBytes, formatBytesPair, progressColumnWidth, size, t]);
 
   const { effectiveColumns, storeKey } = usePersistedTableLayout({
     columns,
@@ -818,9 +834,14 @@ export default function DownloadClientsWidget({
   );
 }
 
-function buildHoverTooltip(record: ExtendedDownloadClientItem, t: DownloadsT): React.ReactNode {
+function buildHoverTooltip(
+  record: ExtendedDownloadClientItem,
+  t: DownloadsT,
+  formatBytesPair: (used: number, total: number) => { used: string; total: string },
+  formatByteRate: (bytes: number) => string,
+): React.ReactNode {
   const lines: { label: string; value: string }[] = [
-    { label: t("items.size.detailsTitle"), value: `${formatBytes(record.received)} / ${formatBytes(record.size)}` },
+    { label: t("items.size.detailsTitle"), value: formatSizePair(record.received, record.size, formatBytesPair) },
     { label: t("items.state.detailsTitle"), value: t(`states.${record.state}`) },
   ];
 
@@ -864,6 +885,7 @@ function buildHoverTooltip(record: ExtendedDownloadClientItem, t: DownloadsT): R
 function ExpandedRow({ item, collapse }: { item: ExtendedDownloadClientItem; collapse: () => void }) {
   const t = useI18n("widget.downloads");
   const locale = useCurrentIntlLocale();
+  const { formatByteRate, formatBytes, formatBytesPair } = useByteFormatter();
   const progressPercent = Math.floor(item.progress * 100);
   const categoryDisplay = formatCategoryDisplay(item.category);
 
@@ -900,7 +922,7 @@ function ExpandedRow({ item, collapse }: { item: ExtendedDownloadClientItem; col
           <SimpleGrid cols={3} spacing="xs" verticalSpacing={4} style={{ minWidth: 0 }}>
             <DetailPair
               label={t("items.size.detailsTitle")}
-              value={`${formatBytes(item.received)} / ${formatBytes(item.size)}`}
+              value={formatSizePair(item.received, item.size, formatBytesPair)}
             />
             {item.downSpeed !== undefined && item.downSpeed > 0 && (
               <DetailPair
@@ -979,6 +1001,7 @@ function GlobalStatsBar({
   clients: ExtendedClientStatus[];
 }) {
   const t = useI18n("widget.downloads");
+  const { formatByteRate, formatBytesPair } = useByteFormatter();
 
   let overallProgress = 0;
   if (queueStats.totalSize > 0) overallProgress = queueStats.completedSize / queueStats.totalSize;
@@ -998,7 +1021,7 @@ function GlobalStatsBar({
           <Tooltip label={t("stats.totalSize")} withArrow>
             <Group gap={4}>
               <IconDatabase size="var(--mantine-font-size-xs)" style={{ opacity: 0.6 }} />
-              <Text size="xs">{`${formatBytes(queueStats.completedSize)} / ${formatBytes(queueStats.totalSize)}`}</Text>
+              <Text size="xs">{formatSizePair(queueStats.completedSize, queueStats.totalSize, formatBytesPair)}</Text>
             </Group>
           </Tooltip>
         </Group>
@@ -1199,6 +1222,7 @@ function WidgetFooter({
   toggleStats,
 }: WidgetFooterProps) {
   const t = useI18n("widget.downloads");
+  const { formatByteRate } = useByteFormatter();
   const [filterOpen, { toggle: toggleFilter }] = useDisclosure(false);
   const someInteract = clients.some(({ interact }) => interact);
   const hasActiveFilter = clientFilter.length > 0 || statusFilter.length > 0;

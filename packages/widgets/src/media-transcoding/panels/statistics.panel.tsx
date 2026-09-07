@@ -3,8 +3,8 @@ import { Card, Center, Group, RingProgress, ScrollArea, Stack, Text, Title, Tool
 import { IconDatabaseHeart, IconFileDescription, IconHeartbeat, IconTransform } from "@tabler/icons-react";
 
 import { useRequiredBoard } from "@homarr/boards/context";
-import { formatBytes } from "@homarr/common";
 import type { TdarrPieSegment, TdarrStatistics } from "@homarr/integrations";
+import { useByteFormatter } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
@@ -17,6 +17,7 @@ interface StatisticsPanelProps {
 export function StatisticsPanel(props: StatisticsPanelProps) {
   const t = useI18n("widget.mediaTranscoding.panel.statistics");
   const tCommon = useI18n("widget.mediaTranscoding.panel.common");
+  const { formatBytes } = useByteFormatter();
 
   const allLibs = props.statistics;
 

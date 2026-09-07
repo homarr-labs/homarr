@@ -13,6 +13,7 @@ import type {
 import { createIntegrationRequestHandler } from "./lib/integration-request-handler";
 
 const logger = createLogger({ module: "beszelRequestHandler" });
+const MEBIBYTE = 1024 ** 2;
 
 export type { BeszelSystemRow } from "@homarr/integrations/types";
 
@@ -22,7 +23,7 @@ export type { BeszelSystemRow } from "@homarr/integrations/types";
  *
  * BeszelSystemInfo uses short field names (see beszel-types.ts for full docs):
  * cpu=CPU%, mp=memory%, dp=disk%, g=GPU%, la=loadAvg, u=uptime(s), v=version,
- * bb=bandwidth(bytes/s), b=bandwidth(Mbps legacy), dt=disk temp, bat=battery,
+ * bb=bandwidth(bytes/s), b=bandwidth(MiB/s legacy), dt=disk temp, bat=battery,
  * sv=[running,total] services, h=hostname, m=CPU model, c=cores, ct=threads
  */
 function mapToSystemRow(system: BeszelSystem, details: BeszelSystemDetails | null): BeszelSystemRow {
@@ -37,8 +38,8 @@ function mapToSystemRow(system: BeszelSystem, details: BeszelSystemDetails | nul
     extraFilesystems: info.efs ?? {},
     gpu: info.g ?? 0,
     loadAvg: info.la ?? null,
-    // bb = bytes/s (newer), b = Mbps (legacy, multiply to get bytes/s)
-    netBytes: info.bb ?? (info.b ?? 0) * 1_000_000,
+    // bb = bytes/s (newer), b = MiB/s (legacy, normalize to bytes/s)
+    netBytes: info.bb ?? (info.b ?? 0) * MEBIBYTE,
     temp: info.dt ?? null,
     battery: info.bat ?? null,
     services: info.sv?.[0] ?? 0,

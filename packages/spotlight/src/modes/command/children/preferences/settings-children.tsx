@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 import localeData from "dayjs/plugin/localeData";
 
 import { useSession } from "@homarr/auth/client";
+import type { ByteUnitSystem } from "@homarr/common";
 import type { ColorScheme } from "@homarr/definitions";
 import { visiblePreferenceDefinitions } from "@homarr/settings";
 import { localeConfigurations } from "@homarr/translation";
@@ -75,11 +76,16 @@ const SELECT_KINDS = new Set(["select", "searchEngine", "board"]);
 export const useSettingsActions = (_: Record<string, unknown>, query: string): SettingsAction[] => {
   const t = useI18n("search.mode.command.group.preferences.option");
   const tUserField = useI18n("user.field");
+  const tByteUnit = useI18n("user.field.byteUnitSystem.options");
   const tColorScheme = useI18n("common.colorScheme.options");
   const { data: session } = useSession();
   const isAuthenticated = Boolean(session?.user);
   const normalizedQuery = query.trim().toLowerCase();
   const preferences = useUserPreferences();
+  const byteUnitLabels: Record<ByteUnitSystem, string> = {
+    decimal: `${tByteUnit("decimal")} (KB, MB, GB)`,
+    binary: `${tByteUnit("binary")} (KiB, MiB, GiB)`,
+  };
 
   const valueLabelResolvers: Record<string, () => string> = {
     colorScheme: () => tColorScheme(preferences.getPreference("colorScheme").value as ColorScheme),
@@ -88,6 +94,7 @@ export const useSettingsActions = (_: Record<string, unknown>, query: string): S
       return localeConfigurations[val as keyof typeof localeConfigurations]?.name ?? String(val);
     },
     firstDayOfWeek: () => dayjs.weekdays(false)[preferences.getPreference("firstDayOfWeek").value as DayOfWeek] ?? "",
+    byteUnitSystem: () => byteUnitLabels[preferences.getPreference("byteUnitSystem").value as ByteUnitSystem],
   };
 
   return visiblePreferenceDefinitions(isAuthenticated)

@@ -105,7 +105,7 @@ export const ScreenshotEditor = ({
           </span>
           <span className="min-w-0">
             <span className="block text-sm font-medium">{title}</span>
-            <span className="block text-xs text-muted-foreground">PNG, JPG, or WebP · up to 5 MB each</span>
+            <span className="block text-xs text-muted-foreground">PNG, JPG, or WebP · up to 5 MiB each</span>
           </span>
           <input
             type="file"

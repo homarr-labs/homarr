@@ -1,3 +1,5 @@
+import { isRecord } from "@homarr/common";
+
 export function getDependentRequestIds(requestsJson: string, sourceId: string) {
   const requests = parseRequestRecord(requestsJson);
   return Object.entries(requests).flatMap(([requestId, request]) =>
@@ -20,8 +22,4 @@ function parseRequestRecord(requestsJson: string): Record<string, unknown> {
   } catch {
     return {};
   }
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return value !== null && typeof value === "object" && !Array.isArray(value);
 }

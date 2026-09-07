@@ -20,6 +20,7 @@ import { IconAlertTriangle } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useOptionalBoard } from "@homarr/boards/context";
+import { isRecord } from "@homarr/common";
 import type { CustomWidgetOption } from "@homarr/custom-widgets/core";
 import { normalizeCustomWidgetOptions, validateCustomWidgetOptions } from "@homarr/custom-widgets/core";
 import { CustomWidgetCodeEditor } from "@homarr/custom-widgets/workbench";
@@ -354,8 +355,4 @@ function getByPath(value: unknown, path: string): unknown {
     .split(".")
     .filter(Boolean)
     .reduce<unknown>((current, segment) => (isRecord(current) ? current[segment] : undefined), value);
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return value !== null && typeof value === "object" && !Array.isArray(value);
 }

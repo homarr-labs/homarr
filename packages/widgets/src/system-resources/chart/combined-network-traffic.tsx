@@ -1,7 +1,7 @@
 import { Box, Group, Stack, Text } from "@mantine/core";
 import { IconNetwork } from "@tabler/icons-react";
 
-import { formatByteRate } from "@homarr/common";
+import { useByteFormatter } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 
 import type { LabelDisplayModeOption } from "..";
@@ -27,29 +27,20 @@ export const CombinedNetworkTrafficChart = ({
     down: usage.down,
   }));
   const t = useI18n("widget.systemResources.card");
+  const { formatByteRate } = useByteFormatter();
 
   const tooltipLabel = (index: number) => {
     const point = usageOverTime[index];
     return (
       <Stack gap={2}>
         <Group gap={4} wrap="nowrap">
-          <Box
-            bg="orange.5"
-            w={8}
-            h={8}
-            style={{ borderRadius: 99, flexShrink: 0 }}
-          />
+          <Box bg="orange.5" w={8} h={8} style={{ borderRadius: 99, flexShrink: 0 }} />
           <Text size="xs">
             {t("up")}: {formatByteRate(Math.round(point?.up ?? 0))}
           </Text>
         </Group>
         <Group gap={4} wrap="nowrap">
-          <Box
-            bg="yellow.5"
-            w={8}
-            h={8}
-            style={{ borderRadius: 99, flexShrink: 0 }}
-          />
+          <Box bg="yellow.5" w={8} h={8} style={{ borderRadius: 99, flexShrink: 0 }} />
           <Text size="xs">
             {t("down")}: {formatByteRate(Math.round(point?.down ?? 0))}
           </Text>

@@ -6,20 +6,17 @@ import { db } from "@homarr/db";
 import { handshakeAsync } from "@homarr/redis";
 
 const logger = createLogger({ module: "healthLiveRoute" });
+const noStoreHeaders = { "Cache-Control": "no-store" };
+const healthStatusCodes = { healthy: 200, unhealthy: 500 } as const;
 
 export async function GET() {
   const timeBeforeHealthCheck = performance.now();
   const response = await executeAndAggregateAllHealthChecksAsync();
-  logger.info("Completed healthcheck", { elapsed: `${performance.now() - timeBeforeHealthCheck}ms` });
+  logger.debug("Completed healthcheck", { elapsed: `${performance.now() - timeBeforeHealthCheck}ms` });
 
-  if (response.status === "healthy") {
-    return new Response(JSON.stringify(response), {
-      status: 200,
-    });
-  }
-
-  return new Response(JSON.stringify(response), {
-    status: 500,
+  return Response.json(response, {
+    status: healthStatusCodes[response.status],
+    headers: noStoreHeaders,
   });
 }
 
@@ -63,8 +60,8 @@ const executeHealthCheckSafelyAsync = async (
   name: string,
   callback: () => Promise<object>,
 ): Promise<HealthCheckResult> => {
+  const currentTimeBeforeCallback = performance.now();
   try {
-    const currentTimeBeforeCallback = performance.now();
     const values = await callback();
     return {
       name,
@@ -79,7 +76,7 @@ const executeHealthCheckSafelyAsync = async (
     return {
       status: "unhealthy",
       values: {
-        error,
+        latency: performance.now() - currentTimeBeforeCallback,
       },
       name,
     };

@@ -1,9 +1,8 @@
 import type { UIMessage } from "ai";
 
-const inlineAttachmentUrlPattern = /^data:[^,]+;base64,/u;
+import { isRecord } from "@homarr/common";
 
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-  typeof value === "object" && value !== null && !Array.isArray(value);
+const inlineAttachmentUrlPattern = /^data:[^,]+;base64,/u;
 
 const isFilePart = (value: unknown): value is Record<string, unknown> & { type: "file" } =>
   isRecord(value) && value.type === "file";

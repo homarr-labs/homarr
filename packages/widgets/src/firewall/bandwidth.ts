@@ -1,15 +1,5 @@
 import type { FirewallInterface, FirewallInterfacesSummary } from "@homarr/integrations";
 
-export function formatBitsPerSec(bitsPerSecond: number, decimals: number): string {
-  if (!Number.isFinite(bitsPerSecond) || bitsPerSecond <= 0) return "0 b/s";
-
-  const unitSize = 1024;
-  const sizes = ["b/s", "kb/s", "Mb/s", "Gb/s", "Tb/s", "Pb/s", "Eb/s", "Zb/s", "Yb/s"];
-  const unitIndex = Math.min(Math.floor(Math.log(bitsPerSecond) / Math.log(unitSize)), sizes.length - 1);
-
-  return `${parseFloat((bitsPerSecond / Math.pow(unitSize, unitIndex)).toFixed(decimals))} ${sizes[unitIndex]}`;
-}
-
 export function calculateBandwidth(data: FirewallInterfacesSummary[]): { data: FirewallInterface[] } {
   const samples = data
     .filter((sample) => Number.isFinite(new Date(sample.timestamp).getTime()))

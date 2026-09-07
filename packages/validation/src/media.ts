@@ -27,7 +27,7 @@ export const mediaUploadSchema = zfd.formData({
             code: "custom",
             params: createCustomErrorParams({
               key: "fileTooLarge",
-              params: { maxSize: "32 MB" },
+              params: { maxSize: "32 MiB" },
             }),
             input: context.value.size,
           });

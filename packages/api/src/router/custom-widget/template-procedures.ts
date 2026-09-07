@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
+import { isRecord } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { customWidgetDefinitionSchema } from "@homarr/custom-widgets/core";
 import { and, eq } from "@homarr/db";
@@ -143,7 +144,7 @@ export const templateProcedures = {
 
 function getAffectedRowCount(result: unknown): number {
   if (Array.isArray(result)) return getAffectedRowCount(result[0]);
-  if (!result || typeof result !== "object") return 0;
+  if (!isRecord(result)) return 0;
   if ("affectedRows" in result && typeof result.affectedRows === "number") return result.affectedRows;
   if ("rowCount" in result && typeof result.rowCount === "number") return result.rowCount;
   if ("changes" in result && typeof result.changes === "number") return result.changes;

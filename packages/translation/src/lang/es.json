@@ -2140,8 +2140,8 @@
       "popover": {
         "information": "Información",
         "processor": "Procesador: {cpuModelName}",
-        "memory": "Memoria: {memory} GiB",
-        "memoryAvailable": "Disponible: {memoryAvailable} GiB ({percent} %)",
+        "memory": "Memoria: {memory}",
+        "memoryAvailable": "Disponible: {memoryAvailable} ({percent} %)",
         "version": "Versión: {version}",
         "uptime": "Tiempo de actividad: {months} Meses, {days} Días, {hours} Horas, {minutes} Minutos",
         "loadAverage": "Carga promedio:",
@@ -2886,7 +2886,7 @@
           "label": "Mostrar entradas variadas marcadas como completadas"
         },
         "activeTorrentThreshold": {
-          "label": "Ocultar Torrent completado bajo este umbral (en kiB/s)"
+          "label": "Ocultar Torrent completado bajo este umbral"
         },
         "categoryFilter": {
           "label": "Categorías/etiquetas para filtrar"
@@ -3676,7 +3676,7 @@
               "label": "Porcentaje (e.g., 76 %)"
             },
             "absolute": {
-              "label": "Valores absolutos (e.g., 800 GB / 1 TB)"
+              "label": "Valores absolutos"
             },
             "free": {
               "label": "Porcentaje de espacio libre (e.g., 24 % libre)"

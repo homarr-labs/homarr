@@ -1,31 +1,32 @@
 ---
 title: Frequently Asked Questions
+description: Answers to common Homarr questions about installation, customization, connectivity, support, and commercial use.
 tags:
   - Community
   - Help
 ---
 
-### Can Homarr run on a Raspberry Pi?
+## Can Homarr run on a Raspberry Pi?
 
 Yes, when the device uses a supported `linux/arm64` operating system. `linux/arm/v7` is not supported. See
 [Prerequisites](/docs/getting-started).
 
-### Can I use custom app icons?
+## Can I use custom app icons?
 
 Yes. Use a direct image URL, one of Homarr's icon sources, or upload an image. See [Icons](/docs/advanced/icons).
 
-### Can I create widgets?
+## Can I create widgets?
 
 Yes. [Custom Widgets](/docs/management/custom-widgets) use server-side API requests and safe JSX. They can be written in
 the workbench or created with an MCP-connected agent.
 
-### Can Homarr be exposed to the internet?
+## Can Homarr be exposed to the internet?
 
 Homarr supports authenticated and public deployments. Terminate HTTPS at a reverse proxy, keep Homarr updated, and grant
 public board access only when anonymous viewing is intended. See [Board access control](/docs/management/boards#access-control)
 and [Single sign-on](/docs/advanced/single-sign-on).
 
-### Where are the logs?
+## Where are the logs?
 
 Use **Management → Tools → Logs** for retained and live application logs. Container startup failures and older events are
 available through the deployment platform, for example `docker container logs homarr`.
@@ -33,18 +34,18 @@ available through the deployment platform, for example `docker container logs ho
 Use the browser developer console only for client-side failures. Review logs before sharing them because URLs and other
 deployment details may be present.
 
-### Why can Homarr not reach a service behind Gluetun?
+## Why can Homarr not reach a service behind Gluetun?
 
 Gluetun's firewall blocks traffic that is not explicitly allowed. Configure its
 [`FIREWALL_OUTBOUND_SUBNETS`](https://github.com/qdm12/gluetun-wiki/blob/main/setup/options/firewall.md) for the relevant
 LAN or Docker subnet, and use an address reachable from the Homarr container.
 
-### Where do I report a bug or request a feature?
+## Where do I report a bug or request a feature?
 
 Use the [GitHub issue templates](https://github.com/homarr-labs/homarr/issues/new/choose). For community support, see
 [Get in touch](/docs/community/get-in-touch).
 
-### Can Homarr be used commercially?
+## Can Homarr be used commercially?
 
 Yes. Homarr is licensed under the [Apache License 2.0](/docs/community/license). Commercial users can support development
 through [OpenCollective](/docs/community/donate).

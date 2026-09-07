@@ -361,7 +361,7 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
     const accepted = supported.slice(0, Math.max(0, available));
 
     if (supported.length !== selected.length)
-      setEditScreenshotError("Use PNG, JPG, or WebP images no larger than 5 MB each.");
+      setEditScreenshotError("Use PNG, JPG, or WebP images no larger than 5 MiB each.");
     else if (accepted.length !== selected.length)
       setEditScreenshotError(`A submission can have up to ${MAX_WORKSHOP_SCREENSHOTS} screenshots.`);
     else setEditScreenshotError(null);

@@ -2,6 +2,7 @@ import { Badge, Box, Group, Progress, Stack, Text } from "@mantine/core";
 
 import { useI18n } from "@homarr/translation/client";
 
+import { getTimeOfDayPhaseColor } from "./format";
 import type { TimeOfDayPhase } from "./world-clock";
 
 interface TimeOfDayBarProps {
@@ -45,7 +46,7 @@ export const TimeOfDayBar = ({
   return (
     <Stack component="figure" gap={6} m={0} aria-label={label}>
       <Group justify="space-between" align="center" gap="xs" wrap="nowrap">
-        <Badge color={getPhaseColor(phase)} variant="dot" size="sm">
+        <Badge color={getTimeOfDayPhaseColor(phase)} variant="dot" size="sm">
           {t(`worldClock.phase.${phase}`)}
         </Badge>
         <Text size="xs" c="dimmed" ta="right">
@@ -98,11 +99,4 @@ export const TimeOfDayBar = ({
       )}
     </Stack>
   );
-};
-
-const getPhaseColor = (phase: TimeOfDayPhase) => {
-  if (phase === "night") return "indigo";
-  if (phase === "dawn") return "orange";
-  if (phase === "day") return "cyan";
-  return "grape";
 };

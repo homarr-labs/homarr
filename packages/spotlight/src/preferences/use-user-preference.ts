@@ -7,6 +7,7 @@ import type { DayOfWeek } from "@mantine/dates";
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
+import type { ByteUnitSystem } from "@homarr/common";
 import type { ColorScheme } from "@homarr/definitions";
 import { showErrorNotification } from "@homarr/notifications";
 import type { SettingsContextProps } from "@homarr/settings/creator";
@@ -92,6 +93,7 @@ export const useUserPreferences = () => {
   const searchMutation = clientApi.user.changeSearchPreferences.useMutation({ onSuccess: refresh });
   const homeBoardsMutation = clientApi.user.changeHomeBoards.useMutation({ onSuccess: refresh });
   const firstDayMutation = clientApi.user.changeFirstDayOfWeek.useMutation({ onSuccess: refresh });
+  const byteUnitSystemMutation = clientApi.user.changeByteUnitSystem.useMutation({ onSuccess: refresh });
   const pingMutation = clientApi.user.changePingIconsEnabled.useMutation({ onSuccess: refresh });
   const rightClickMutation = clientApi.user.changeEnableRightClickOnWidgets.useMutation({ onSuccess: refresh });
 
@@ -116,6 +118,8 @@ export const useUserPreferences = () => {
         mobileHomeBoardId: pick("mobileHomeBoardId", key, value) as string | null,
       }),
     firstDayOfWeek: (uid, _key, value) => firstDayMutation.mutateAsync({ id: uid, firstDayOfWeek: value as DayOfWeek }),
+    byteUnitSystem: (uid, _key, value) =>
+      byteUnitSystemMutation.mutateAsync({ id: uid, byteUnitSystem: value as ByteUnitSystem }),
     pingIconsEnabled: (uid, _key, value) => pingMutation.mutateAsync({ id: uid, pingIconsEnabled: value as boolean }),
     enableRightClickOnWidgets: (uid, _key, value) =>
       rightClickMutation.mutateAsync({ id: uid, enableRightClickOnWidgets: value as boolean }),
@@ -125,6 +129,7 @@ export const useUserPreferences = () => {
     searchPreferences: searchMutation.isPending,
     homeBoards: homeBoardsMutation.isPending,
     firstDayOfWeek: firstDayMutation.isPending,
+    byteUnitSystem: byteUnitSystemMutation.isPending,
     pingIconsEnabled: pingMutation.isPending,
     enableRightClickOnWidgets: rightClickMutation.isPending,
   };

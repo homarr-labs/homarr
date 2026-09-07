@@ -4953,7 +4953,7 @@
           "restore": {
             "dropzone": {
               "title": "Trage aici fișierul ZIP al copiei de rezervă",
-              "description": "Acceptă fișiere .zip de la o copie de rezervă SQLite Homarr (max 256 MB)"
+              "description": "Acceptă fișiere .zip de la o copie de rezervă SQLite Homarr (max {maxSize})"
             },
             "analyzing": "Se analizează copia de rezervă...",
             "changeFile": "Schimbă fișierul",
