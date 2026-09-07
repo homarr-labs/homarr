@@ -18,6 +18,7 @@ import {
   mapContextUsage,
   mapLlamacppModel,
   mapLlamacppPerRequest,
+  mapSlotsSummary,
   parsePrometheusMetrics,
   requestSpeedTps,
 } from "../llamacpp-types";
@@ -55,6 +56,9 @@ const sampleMetricsText = [
   "llamacpp:requests_deferred 0",
   "llamacpp:predicted_tokens_seconds 32.8472",
   "llamacpp:prompt_tokens_seconds 1500.5",
+  "llamacpp:spec_decode_num_draft_tokens_total 128",
+  "llamacpp:spec_decode_num_accepted_tokens_total 96",
+  "llamacpp:spec_decode_num_drafts_total 16",
 ].join("\n");
 
 const sampleSlotsResponse = [
@@ -63,6 +67,7 @@ const sampleSlotsResponse = [
     n_ctx: 131072,
     n_prompt_tokens: 101076,
     is_processing: true,
+    speculative: false,
     id_task: 7,
     next_token: [{ n_decoded: 42, n_remain: 100, has_next_token: true, has_new_line: false }],
   },
@@ -127,6 +132,9 @@ describe("parsePrometheusMetrics", () => {
       { name: "llamacpp:requests_deferred", value: 0 },
       { name: "llamacpp:predicted_tokens_seconds", value: 32.8472 },
       { name: "llamacpp:prompt_tokens_seconds", value: 1500.5 },
+      { name: "llamacpp:spec_decode_num_draft_tokens_total", value: 128 },
+      { name: "llamacpp:spec_decode_num_accepted_tokens_total", value: 96 },
+      { name: "llamacpp:spec_decode_num_drafts_total", value: 16 },
     ]);
   });
 
@@ -252,6 +260,33 @@ describe("mapLlamacppPerRequest", () => {
   });
 });
 
+describe("mapSlotsSummary", () => {
+  test("counts slots, processing slots, decoding slots and speculative flags", () => {
+    expect(
+      mapSlotsSummary([
+        { is_processing: true, next_token: [{ n_decoded: 4 }], speculative: false },
+        { is_processing: false, speculative: true },
+        { is_processing: true, next_token: [], speculative: false },
+      ]),
+    ).toStrictEqual({ total: 3, processing: 2, decoding: 1, speculative: true });
+  });
+
+  test("treats an empty next_token list as not decoding", () => {
+    expect(mapSlotsSummary([{ is_processing: true, next_token: [] }, { is_processing: false }])).toStrictEqual({
+      total: 2,
+      processing: 1,
+      decoding: 0,
+      speculative: null,
+    });
+  });
+
+  test("returns null for missing, empty, or malformed slot lists", () => {
+    expect(mapSlotsSummary(null)).toBeNull();
+    expect(mapSlotsSummary([])).toBeNull();
+    expect(mapSlotsSummary(["not-an-object", null])).toBeNull();
+  });
+});
+
 describe("requestSpeedTps", () => {
   test("divides token delta by elapsed seconds", () => {
     expect(requestSpeedTps(128, 4)).toBe(32);
@@ -286,6 +321,7 @@ describe("LlamacppIntegration getStatsAsync", () => {
         contextSize: 131072,
         percent: 77.1,
       },
+      slots: { total: 1, processing: 1, decoding: 1, speculative: false },
       metrics: {
         generationSpeedTps: 32.8472,
         promptSpeedTps: 1500.5,
@@ -298,6 +334,9 @@ describe("LlamacppIntegration getStatsAsync", () => {
         promptCacheHitRate: 15,
         requestDecodedTokens: 42,
         taskId: 7,
+        specDraftTokens: 128,
+        specAcceptedTokens: 96,
+        specDrafts: 16,
       },
     });
 
@@ -359,6 +398,9 @@ describe("LlamacppIntegration getStatsAsync", () => {
       promptCacheHitRate: null,
       requestDecodedTokens: null,
       taskId: null,
+      specDraftTokens: null,
+      specAcceptedTokens: null,
+      specDrafts: null,
     });
   });
 
@@ -403,6 +445,7 @@ describe("LlamacppIntegration getStatsAsync", () => {
       contextSize: 131072,
       percent: 77.1,
     });
+    expect(stats.slots).toStrictEqual({ total: 1, processing: 1, decoding: 1, speculative: false });
     expect(stats.metrics).toStrictEqual({
       generationSpeedTps: null,
       promptSpeedTps: null,
@@ -415,6 +458,9 @@ describe("LlamacppIntegration getStatsAsync", () => {
       promptCacheHitRate: null,
       requestDecodedTokens: 42,
       taskId: 7,
+      specDraftTokens: null,
+      specAcceptedTokens: null,
+      specDrafts: null,
     });
   });
 

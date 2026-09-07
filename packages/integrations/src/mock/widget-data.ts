@@ -364,6 +364,7 @@ export const mockWidgetData = {
       quantization: "Q4_K_XL",
     },
     contextUsage: { usedTokens: 8192, contextSize: 32768, percent: 25 },
+    slots: { total: 2, processing: 1, decoding: 1, speculative: false },
     metrics: {
       generationSpeedTps: 42.5,
       promptSpeedTps: 1840.2,
@@ -376,6 +377,9 @@ export const mockWidgetData = {
       promptCacheHitRate: 62,
       requestDecodedTokens: 96,
       taskId: 1042,
+      specDraftTokens: 48,
+      specAcceptedTokens: 12,
+      specDrafts: 8,
     },
   } satisfies LlamacppStats,
 } as const;

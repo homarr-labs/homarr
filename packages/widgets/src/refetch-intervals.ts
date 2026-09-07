@@ -14,6 +14,7 @@ export const widgetQueryRefetchIntervals = [
   },
   { queryKey: [["widget", "firewall"]], intervalSeconds: 10 },
   { queryKey: [["widget", "healthMonitoring"]], intervalSeconds: 10 },
+  { queryKey: [["widget", "llamacpp"]], intervalSeconds: 5 },
   { queryKey: [["widget", "mediaServer", "getCurrentStreams"]], intervalSeconds: 10 },
   { queryKey: [["widget", "tracearr"]], intervalSeconds: 10 },
   {

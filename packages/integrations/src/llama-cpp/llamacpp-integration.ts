@@ -12,6 +12,7 @@ import {
   mapLlamacppModel,
   mapLlamacppPerRequest,
   mapLlamacppStats,
+  mapSlotsSummary,
   parseLlamacppHealthAsync,
   parseLlamacppMetricsAsync,
   parseLlamacppModelsAsync,
@@ -74,8 +75,9 @@ export class LlamacppIntegration extends Integration {
 
     const firstModel = models.data[0] ? mapLlamacppModel(models.data[0]) : null;
     const contextUsage = mapContextUsage(slots);
+    const slotsSummary = mapSlotsSummary(slots);
     const perRequest = mapLlamacppPerRequest(slots);
 
-    return mapLlamacppStats(health, firstModel, metrics, contextUsage, perRequest);
+    return mapLlamacppStats(health, firstModel, metrics, contextUsage, slotsSummary, perRequest);
   }
 }

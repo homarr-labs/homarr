@@ -5182,7 +5182,6 @@
       "description": "Show the health, loaded model and generation speed of your local llama.cpp server.",
       "title": "llama.cpp",
       "status": {
-        "online": "Online",
         "unhealthy": "Unhealthy ({status})"
       },
       "idle": "Idle",
@@ -5195,12 +5194,15 @@
       "modelInfo": {
         "context": "Context",
         "size": "File size",
-        "parameters": "Parameters"
+        "parameters": "Parameters",
+        "model": "Model",
+        "quantization": "Quantization"
       },
       "stats": {
         "tokensProcessed": "Tokens processed",
         "contextUsage": "Context / KV usage",
-        "cacheHitRate": "Prompt cache hit rate"
+        "cacheHitRate": "Prompt cache hit rate",
+        "tokensGenerated": "Tokens generated"
       },
       "error": {
         "unreachable": "llama-server is not reachable"
@@ -5208,7 +5210,8 @@
       "unit": {
         "speed": "{value} t/s",
         "parameters": "{value}B",
-        "none": "—"
+        "none": "—",
+        "speedShort": "t/s"
       },
       "option": {
         "showTitle": {
@@ -5222,7 +5225,31 @@
         },
         "showCacheHitRate": {
           "label": "Show cache hit rate"
+        },
+        "showSpeedStats": {
+          "label": "Show speed stats"
+        },
+        "showRequests": {
+          "label": "Show request load"
+        },
+        "showTokenStats": {
+          "label": "Show token totals"
+        },
+        "showSpeculative": {
+          "label": "Show speculative decoding"
         }
+      },
+      "advanced": {
+        "promptSpeed": "Prompt speed",
+        "avgSpeed": "Avg generation",
+        "requests": "Requests",
+        "deferred": "Deferred",
+        "slots": "{processing}/{total} slots busy",
+        "speculative": "Speculative decoding",
+        "avgPrompt": "Avg prompt",
+        "specDrafts": "Spec. drafts",
+        "specAccepted": "Spec. accepted tokens",
+        "specDraftTokens": "Spec. draft tokens"
       }
     }
   },

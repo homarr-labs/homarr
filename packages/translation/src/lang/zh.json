@@ -3957,7 +3957,6 @@
       "description": "顯示本地 llama.cpp 伺服器的健康狀態、載入模型與生成速度。",
       "title": "llama.cpp",
       "status": {
-        "online": "線上",
         "unhealthy": "異常 ({status})"
       },
       "idle": "閒置",
@@ -3970,12 +3969,15 @@
       "modelInfo": {
         "context": "上下文",
         "size": "檔案大小",
-        "parameters": "參數量"
+        "parameters": "參數量",
+        "model": "模型",
+        "quantization": "量化"
       },
       "stats": {
         "tokensProcessed": "已處理 Token",
         "contextUsage": "上下文 / KV 佔用",
-        "cacheHitRate": "提示快取命中率"
+        "cacheHitRate": "提示快取命中率",
+        "tokensGenerated": "已生成 Token"
       },
       "error": {
         "unreachable": "無法連接 llama-server"
@@ -3983,7 +3985,8 @@
       "unit": {
         "speed": "{value} t/s",
         "parameters": "{value}B",
-        "none": "—"
+        "none": "—",
+        "speedShort": "t/s"
       },
       "option": {
         "showTitle": {
@@ -3997,7 +4000,31 @@
         },
         "showCacheHitRate": {
           "label": "顯示快取命中率"
+        },
+        "showSpeedStats": {
+          "label": "顯示速度統計"
+        },
+        "showRequests": {
+          "label": "顯示請求負載"
+        },
+        "showTokenStats": {
+          "label": "顯示 Token 總量"
+        },
+        "showSpeculative": {
+          "label": "顯示投機解碼"
         }
+      },
+      "advanced": {
+        "promptSpeed": "Prompt 速度",
+        "avgSpeed": "平均生成速度",
+        "requests": "請求數",
+        "deferred": "排隊中",
+        "slots": "Slot 佔用 {processing}/{total}",
+        "speculative": "投機解碼",
+        "avgPrompt": "平均 Prompt 速度",
+        "specDrafts": "投機草稿數",
+        "specAccepted": "投機接受 Token",
+        "specDraftTokens": "投機草稿 Token"
       }
     }
   },

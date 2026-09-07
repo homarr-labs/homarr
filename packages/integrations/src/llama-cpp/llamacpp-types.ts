@@ -72,10 +72,18 @@ export interface LlamacppPerRequest {
   decodedTokens: number | null;
 }
 
+export interface LlamacppSlotsSummary {
+  total: number;
+  processing: number;
+  decoding: number;
+  speculative: boolean | null;
+}
+
 export interface LlamacppStats {
   health: string;
   model: LlamacppModel | null;
   contextUsage: LlamacppContextUsage | null;
+  slots: LlamacppSlotsSummary | null;
   metrics: {
     generationSpeedTps: number | null;
     promptSpeedTps: number | null;
@@ -88,6 +96,9 @@ export interface LlamacppStats {
     promptCacheHitRate: number | null;
     requestDecodedTokens: number | null;
     taskId: number | null;
+    specDraftTokens: number | null;
+    specAcceptedTokens: number | null;
+    specDrafts: number | null;
   };
 }
 
@@ -121,6 +132,7 @@ interface LlamacppSlot {
   n_prompt_tokens?: number;
   id_task?: number;
   is_processing?: boolean;
+  speculative?: boolean;
   next_token?: { n_decoded?: number }[];
 }
 
@@ -164,6 +176,52 @@ export const mapContextUsage = (slots: readonly unknown[] | null): LlamacppConte
   }
 
   return largest;
+};
+
+/**
+ * Summarizes the /slots endpoint: total slot count, how many are currently
+ * processing, how many are actively decoding, and whether any slot has
+ * speculative decoding enabled. Null when /slots is unavailable.
+ */
+export const mapSlotsSummary = (slots: readonly unknown[] | null): LlamacppSlotsSummary | null => {
+  if (!Array.isArray(slots) || slots.length === 0) {
+    return null;
+  }
+
+  let total = 0;
+  let processing = 0;
+  let decoding = 0;
+  let speculative: boolean | null = null;
+
+  for (const slot of slots) {
+    if (typeof slot !== "object" || slot === null) {
+      continue;
+    }
+
+    total += 1;
+
+    const record = slot as Partial<LlamacppSlot>;
+    if (record.is_processing === true) {
+      processing += 1;
+      if (Array.isArray(record.next_token) && record.next_token.length > 0) {
+        decoding += 1;
+      }
+    }
+    if (record.speculative === true) {
+      speculative = true;
+    } else if (typeof record.speculative === "boolean" && speculative !== true) {
+      speculative = record.speculative;
+    }
+  }
+
+  return total > 0
+    ? {
+        total,
+        processing,
+        decoding,
+        speculative,
+      }
+    : null;
 };
 
 /**
@@ -226,6 +284,7 @@ export const mapLlamacppStats = (
   model: LlamacppModel | null,
   metrics: readonly { name: string; value: number }[],
   contextUsage: LlamacppContextUsage | null,
+  slotsSummary: LlamacppSlotsSummary | null,
   perRequest: LlamacppPerRequest,
 ): LlamacppStats => {
   const promptTokens = getMetricValue(metrics, "llamacpp:prompt_tokens_total");
@@ -240,6 +299,7 @@ export const mapLlamacppStats = (
     health: health.status,
     model,
     contextUsage,
+    slots: slotsSummary,
     metrics: {
       generationSpeedTps: getMetricValue(metrics, "llamacpp:predicted_tokens_seconds"),
       promptSpeedTps: getMetricValue(metrics, "llamacpp:prompt_tokens_seconds"),
@@ -258,6 +318,9 @@ export const mapLlamacppStats = (
       promptCacheHitRate,
       requestDecodedTokens: perRequest.decodedTokens,
       taskId: perRequest.taskId,
+      specDraftTokens: getMetricValue(metrics, "llamacpp:spec_decode_num_draft_tokens_total"),
+      specAcceptedTokens: getMetricValue(metrics, "llamacpp:spec_decode_num_accepted_tokens_total"),
+      specDrafts: getMetricValue(metrics, "llamacpp:spec_decode_num_drafts_total"),
     },
   };
 };
