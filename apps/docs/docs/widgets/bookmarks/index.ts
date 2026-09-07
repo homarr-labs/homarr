@@ -16,7 +16,8 @@ export const bookmarksWidget: WidgetDefinition = {
       },
       {
         name: "Layout",
-        description: "How bookmarks use the available widget space.",
+        description:
+          "How bookmarks use the available widget space. Layouts stay compact and reduce card size when needed.",
         values: { type: "select", options: ["Adaptive", "Vertical", "Horizontal", "Grid", "Compact grid", "Icons"] },
         defaultValue: "Adaptive",
       },
@@ -28,7 +29,7 @@ export const bookmarksWidget: WidgetDefinition = {
       },
       {
         name: "Card spacing",
-        description: "Space between bookmark cards.",
+        description: "Space between bookmark cards. Horizontal, compact-grid, and icon-only layouts cap larger gaps.",
         values: { type: "select", options: ["Extra small", "Small", "Medium", "Large", "Extra large"] },
         defaultValue: "Extra small",
       },
