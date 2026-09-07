@@ -4963,7 +4963,7 @@
           "restore": {
             "dropzone": {
               "title": "Iemetiet savu dublējuma ZIP šeit",
-              "description": "Pieņem .zip failus no Homarr SQLite dublējuma (maks. 256 MiB)"
+              "description": "Pieņem .zip failus no Homarr SQLite dublējuma (maks. {maxSize})"
             },
             "analyzing": "Notiek dublējuma analīze...",
             "changeFile": "Mainīt failu",

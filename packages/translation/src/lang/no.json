@@ -2886,7 +2886,7 @@
           "label": "Vis diverse oppføringer merket som fullført"
         },
         "activeTorrentThreshold": {
-          "label": "Skjul fullført torrent under denne terskelen (i kiB/s)"
+          "label": "Skjul fullført torrent under denne terskelen"
         },
         "categoryFilter": {
           "label": "Kategorier/merker for filtrering"

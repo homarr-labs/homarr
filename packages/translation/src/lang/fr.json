@@ -2766,7 +2766,7 @@
           "label": "Afficher les entrées diverses marquées comme terminées"
         },
         "activeTorrentThreshold": {
-          "label": "Masquer les Torrents terminés sous ce seuil (en kiB/s)"
+          "label": "Masquer les Torrents terminés sous ce seuil"
         },
         "categoryFilter": {
           "label": "Catégories/étiquettes à filtrer"

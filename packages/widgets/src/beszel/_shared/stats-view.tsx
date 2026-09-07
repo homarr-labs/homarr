@@ -122,9 +122,9 @@ export function BeszelStatsView({
         [t("chart.memory.series")]: s.mu * GIBIBYTE,
         [t("chart.memory.cache")]: (s.mb ?? 0) * GIBIBYTE,
       }),
-      diskIO: (s: { dr?: number; dw?: number }) => ({
-        [t("chart.diskIO.read")]: (s.dr ?? 0) * MEBIBYTE,
-        [t("chart.diskIO.write")]: (s.dw ?? 0) * MEBIBYTE,
+      diskIO: (s: { dr?: number; dw?: number; dio?: [number, number] }) => ({
+        [t("chart.diskIO.read")]: normalizeBeszelByteRate(s.dio?.[0], s.dr),
+        [t("chart.diskIO.write")]: normalizeBeszelByteRate(s.dio?.[1], s.dw),
       }),
       network: (s: { ns?: number; nr?: number; b?: [number, number] }) => ({
         [t("chart.network.sent")]: normalizeBeszelByteRate(s.b?.[0], s.ns),

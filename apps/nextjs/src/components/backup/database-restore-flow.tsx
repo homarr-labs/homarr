@@ -27,6 +27,7 @@ const DEFAULT_RESTART_DELAY_MS = 500;
 const RESTART_READINESS_TIMEOUT_MS = 45_000;
 const RESTART_POLL_INTERVAL_MS = 750;
 const RESTART_REQUEST_TIMEOUT_MS = 5_000;
+const MAX_BACKUP_FILE_BYTES = 256 * 1024 * 1024;
 
 export type ServerReadinessResult = "ready" | "timedOut" | "aborted";
 
@@ -223,7 +224,7 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
         rejectColor="red.6"
         accept={[MIME_TYPES.zip, "application/x-zip-compressed"]}
         multiple={false}
-        maxSize={1024 * 1024 * 256}
+        maxSize={MAX_BACKUP_FILE_BYTES}
         radius="md"
       >
         <Group justify="center" gap="xl" mih={variant === "standalone" ? 200 : 160} style={{ pointerEvents: "none" }}>
@@ -247,7 +248,7 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
               {t("dropzone.title")}
             </Text>
             <Text size="sm" c="dimmed" inline mt={7}>
-              {t("dropzone.description")}
+              {t("dropzone.description", { maxSize: formatBytes(MAX_BACKUP_FILE_BYTES) })}
             </Text>
           </div>
         </Group>

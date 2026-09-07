@@ -2886,7 +2886,7 @@
           "label": ""
         },
         "activeTorrentThreshold": {
-          "label": "Abgeschlossene Torrents unter diesem Schwellenwert ausblenden (in kiB/s)"
+          "label": "Abgeschlossene Torrents unter diesem Schwellenwert ausblenden"
         },
         "categoryFilter": {
           "label": "Kategorien/Labels zum Filtern"

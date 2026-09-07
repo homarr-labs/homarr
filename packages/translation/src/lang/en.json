@@ -285,10 +285,10 @@
       },
       "byteUnitSystem": {
         "label": "Data size units",
-        "description": "Choose how Homarr displays storage and byte rates.",
+        "description": "Choose how Homarr displays byte sizes and byte rates. Bit rates always use decimal units.",
         "options": {
-          "binary": "Binary (KiB, MiB, GiB)",
-          "decimal": "Decimal (KB, MB, GB)"
+          "binary": "Binary",
+          "decimal": "Decimal"
         }
       },
       "enableRightClickOnWidgets": {
@@ -1260,7 +1260,7 @@
       "screenshots": "Screenshots",
       "screenshotsDescription": "Up to five PNG, JPEG, or WebP images",
       "screenshotsPlaceholder": "Choose screenshots",
-      "invalidScreenshot": "Use PNG, JPEG, or WebP images no larger than 5 MiB each.",
+      "invalidScreenshot": "Use PNG, JPEG, or WebP images no larger than {maxSize} each.",
       "privateSourceWarning": "This widget contains private source URLs for: {sources}. Replace personal hosts or IP addresses with safe service placeholders before publishing.",
       "reviewSourcesTitle": "Review private source URLs",
       "privateSourceConfirmation": "I reviewed these source URLs and they do not expose private infrastructure details",
@@ -4091,7 +4091,7 @@
           "label": "Show Miscellaneous entries marked as completed"
         },
         "activeTorrentThreshold": {
-          "label": "Hide completed torrent under this threshold (in KiB/s)"
+          "label": "Hide completed torrent under this threshold"
         },
         "categoryFilter": {
           "label": "Categories/labels to filter"
@@ -6449,7 +6449,7 @@
           "restore": {
             "dropzone": {
               "title": "Drop your backup ZIP here",
-              "description": "Accepts .zip files from a Homarr SQLite backup (max 256 MiB)"
+              "description": "Accepts .zip files from a Homarr SQLite backup (max {maxSize})"
             },
             "analyzing": "Analyzing backup...",
             "changeFile": "Change file",

@@ -2699,7 +2699,7 @@
           "label": ""
         },
         "activeTorrentThreshold": {
-          "label": "Amaga els torrents completats sota aquest llindar (en kiB/s)"
+          "label": "Amaga els torrents completats sota aquest llindar"
         },
         "categoryFilter": {
           "label": "Categories/etiquetes per filtrar"

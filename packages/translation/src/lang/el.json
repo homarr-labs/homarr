@@ -4953,7 +4953,7 @@
           "restore": {
             "dropzone": {
               "title": "Αποθέστε το αντίγραφο ασφαλείας ZIP εδώ",
-              "description": "Δέχεται αρχεία .zip από αντίγραφο ασφαλείας Homarr SQLite (μέγιστο 256 MiB)"
+              "description": "Δέχεται αρχεία .zip από αντίγραφο ασφαλείας Homarr SQLite (μέγιστο {maxSize})"
             },
             "analyzing": "Ανάλυση αντιγράφου ασφαλείας...",
             "changeFile": "Αλλαγή αρχείου",

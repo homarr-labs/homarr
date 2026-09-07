@@ -140,9 +140,9 @@ export interface BeszelSystemStats {
   drm?: number;
   /** disk write max (MiB/s) */
   dwm?: number;
-  /** disk IOPS [read, write] */
+  /** disk throughput [read bytes/s, write bytes/s]. Prefer over dr/dw */
   dio?: [number, number];
-  /** disk IOPS max [read, write] */
+  /** disk throughput max [read bytes/s, write bytes/s] */
   diom?: [number, number];
   /** legacy network sent — all interfaces (MiB/s) */
   ns?: number;
@@ -173,21 +173,21 @@ export interface BeszelExtraFsStats {
   d: number;
   /** disk used (GiB) */
   du: number;
-  /** read (bytes/s) */
+  /** legacy disk read (MiB/s) */
   r: number;
-  /** write (bytes/s) */
+  /** legacy disk write (MiB/s) */
   w: number;
-  /** read max (bytes/s) */
+  /** legacy disk read max (MiB/s) */
   rm?: number;
-  /** write max (bytes/s) */
+  /** legacy disk write max (MiB/s) */
   wm?: number;
-  /** read (IOPS) */
+  /** disk read (bytes/s) */
   rb?: number;
-  /** write (IOPS) */
+  /** disk write (bytes/s) */
   wb?: number;
-  /** read max (IOPS) */
+  /** disk read max (bytes/s) */
   rbm?: number;
-  /** write max (IOPS) */
+  /** disk write max (bytes/s) */
   wbm?: number;
 }
 

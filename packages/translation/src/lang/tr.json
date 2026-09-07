@@ -2699,7 +2699,7 @@
           "label": "Tamamlanmış olarak işaretlenmiş çeşitli girişleri göster"
         },
         "activeTorrentThreshold": {
-          "label": "Tamamlanan torrent'i bu eşik değerinin altına gizle (kiB/s cinsinden)"
+          "label": "Tamamlanan torrent'i bu eşik değerinin altına gizle"
         },
         "categoryFilter": {
           "label": "Filtrelenecek kategoriler/etiketler"
@@ -4953,7 +4953,7 @@
           "restore": {
             "dropzone": {
               "title": "Yedekleme ZIP dosyanızı buraya bırakın",
-              "description": "Homarr SQLite yedeklemesinden .zip dosyalarını kabul eder (maks 256 MiB)"
+              "description": "Homarr SQLite yedeklemesinden .zip dosyalarını kabul eder (maks {maxSize})"
             },
             "analyzing": "Yedekleme analiz ediliyor...",
             "changeFile": "Dosyayı değiştir",

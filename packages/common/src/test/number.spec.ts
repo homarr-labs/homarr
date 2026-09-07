@@ -97,18 +97,18 @@ describe("formatByteRate", () => {
 
 describe("formatBitRate", () => {
   it("uses decimal SI units with one optional fractional digit", () => {
-    expect(formatBitRate(999)).toBe("999 bps");
-    expect(formatBitRate(1_000)).toBe("1 kbps");
-    expect(formatBitRate(1_000_000)).toBe("1 Mbps");
-    expect(formatBitRate(1_500_000)).toBe("1.5 Mbps");
-    expect(formatBitRate(1_000_000_000)).toBe("1 Gbps");
-    expect(formatBitRate(1_234_567)).toBe("1.2 Mbps");
+    expect(formatBitRate(999)).toBe("999 b/s");
+    expect(formatBitRate(1_000)).toBe("1 Kb/s");
+    expect(formatBitRate(1_000_000)).toBe("1 Mb/s");
+    expect(formatBitRate(1_500_000)).toBe("1.5 Mb/s");
+    expect(formatBitRate(1_000_000_000)).toBe("1 Gb/s");
+    expect(formatBitRate(1_234_567)).toBe("1.2 Mb/s");
   });
 
   it("returns zero for non-positive or non-finite rates", () => {
-    expect(formatBitRate(0)).toBe("0 bps");
-    expect(formatBitRate(-1)).toBe("0 bps");
-    expect(formatBitRate(Number.NaN)).toBe("0 bps");
-    expect(formatBitRate(Number.POSITIVE_INFINITY)).toBe("0 bps");
+    expect(formatBitRate(0)).toBe("0 b/s");
+    expect(formatBitRate(-1)).toBe("0 b/s");
+    expect(formatBitRate(Number.NaN)).toBe("0 b/s");
+    expect(formatBitRate(Number.POSITIVE_INFINITY)).toBe("0 b/s");
   });
 });

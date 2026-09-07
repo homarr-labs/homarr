@@ -2940,7 +2940,7 @@
           "label": "Andere Einträge als abgeschlossen anzeigen"
         },
         "activeTorrentThreshold": {
-          "label": "Abgeschlossene Torrents unter diesem Schwellenwert ausblenden (in kiB/s)"
+          "label": "Abgeschlossene Torrents unter diesem Schwellenwert ausblenden"
         },
         "categoryFilter": {
           "label": "Kategorien/Labels zum Filtern"
@@ -5022,7 +5022,7 @@
           "restore": {
             "dropzone": {
               "title": "Backup-ZIP hierher ziehen",
-              "description": "Akzeptiert .zip-Dateien von einem Homarr SQLite-Backup (max. 256 MiB)"
+              "description": "Akzeptiert .zip-Dateien von einem Homarr SQLite-Backup (max. {maxSize})"
             },
             "analyzing": "Analysiere Backup-Datei...",
             "changeFile": "Datei ändern",

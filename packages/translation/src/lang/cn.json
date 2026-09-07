@@ -3091,7 +3091,7 @@
           "label": "显示标记为已完成的杂项"
         },
         "activeTorrentThreshold": {
-          "label": "隐藏在此阈值下已完成的 Torrent (kiB/s)"
+          "label": "隐藏在此阈值下已完成的 Torrent"
         },
         "categoryFilter": {
           "label": "要过滤的分类/标签"
@@ -5178,7 +5178,7 @@
           "restore": {
             "dropzone": {
               "title": "将备份 ZIP 拖到此处",
-              "description": "接受 Homarr SQLite 备份的 .zip 文件（最大 256 MiB）"
+              "description": "接受 Homarr SQLite 备份的 .zip 文件（最大 {maxSize}）"
             },
             "analyzing": "正在分析备份……",
             "changeFile": "更改文件",

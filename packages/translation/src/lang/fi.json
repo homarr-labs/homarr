@@ -2699,7 +2699,7 @@
           "label": ""
         },
         "activeTorrentThreshold": {
-          "label": "Piilota tämän kynnysarvon alle jäävät valmistuneet torrentit (kiB/s)"
+          "label": "Piilota tämän kynnysarvon alle jäävät valmistuneet torrentit"
         },
         "categoryFilter": {
           "label": "Kategorioiden/tunnisteiden suodatus"

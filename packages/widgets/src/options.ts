@@ -104,6 +104,7 @@ interface IntegrationMultiSelectInput extends CommonInput<string[]> {
 interface NumberInput extends CommonInput<number> {
   validate: z.ZodNumber;
   step?: number;
+  storedUnit?: "kibibytesPerSecond";
 }
 
 interface SliderInput extends CommonInput<number> {
@@ -201,6 +202,7 @@ const optionsFactory = {
     type: "number" as const,
     defaultValue: input.defaultValue ?? 0,
     step: input.step,
+    storedUnit: input.storedUnit,
     withDescription: input.withDescription ?? false,
     validate: input.validate,
   }),

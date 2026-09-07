@@ -2886,7 +2886,7 @@
           "label": "Diverse items gemarkeerd als voltooid weergeven"
         },
         "activeTorrentThreshold": {
-          "label": "Voltooide torrent verbergen onder deze drempel (in kiB/s)"
+          "label": "Voltooide torrent verbergen onder deze drempel"
         },
         "categoryFilter": {
           "label": "Categorieën/labels om te filteren"
@@ -4953,7 +4953,7 @@
           "restore": {
             "dropzone": {
               "title": "Sleep je back-up ZIP hierheen",
-              "description": "Accepteert .zip-bestanden van een Homarr SQLite-back-up (max 256 MiB)"
+              "description": "Accepteert .zip-bestanden van een Homarr SQLite-back-up (max {maxSize})"
             },
             "analyzing": "Back-up analyseren...",
             "changeFile": "Bestand wijzigen",

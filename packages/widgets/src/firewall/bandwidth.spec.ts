@@ -36,7 +36,7 @@ describe("calculateBandwidth", () => {
 
 describe("formatBitRate", () => {
   test("handles invalid and negative rates", () => {
-    expect(formatBitRate(Number.NaN)).toBe("0 bps");
-    expect(formatBitRate(-1)).toBe("0 bps");
+    expect(formatBitRate(Number.NaN)).toBe("0 b/s");
+    expect(formatBitRate(-1)).toBe("0 b/s");
   });
 });

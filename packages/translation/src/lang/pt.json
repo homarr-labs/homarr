@@ -2699,7 +2699,7 @@
           "label": ""
         },
         "activeTorrentThreshold": {
-          "label": "Ocultar torrents concluídos abaixo deste limite (em kiB/s)"
+          "label": "Ocultar torrents concluídos abaixo deste limite"
         },
         "categoryFilter": {
           "label": "Categorias/rótulos para filtrar"
@@ -4953,7 +4953,7 @@
           "restore": {
             "dropzone": {
               "title": "Solte seu backup ZIP aqui",
-              "description": "Aceita arquivos .zip de um backup SQLite do Homarr (máx. 256 MiB)"
+              "description": "Aceita arquivos .zip de um backup SQLite do Homarr (máx. {maxSize})"
             },
             "analyzing": "Analisando backup...",
             "changeFile": "Alterar arquivo",

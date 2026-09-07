@@ -2886,7 +2886,7 @@
           "label": ""
         },
         "activeTorrentThreshold": {
-          "label": "Ẩn torrent đã hoàn thành dưới ngưỡng này (kiB/s)"
+          "label": "Ẩn torrent đã hoàn thành dưới ngưỡng này"
         },
         "categoryFilter": {
           "label": "Danh mục/nhãn để lọc"
@@ -4953,7 +4953,7 @@
           "restore": {
             "dropzone": {
               "title": "Kéo tệp ZIP sao lưu vào đây",
-              "description": "Chấp nhận tệp .zip từ bản sao lưu SQLite của Homarr (tối đa 256 MiB)"
+              "description": "Chấp nhận tệp .zip từ bản sao lưu SQLite của Homarr (tối đa {maxSize})"
             },
             "analyzing": "Đang phân tích bản sao lưu...",
             "changeFile": "Thay đổi tập tin",

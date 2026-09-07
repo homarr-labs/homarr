@@ -49,7 +49,7 @@ const ArchiveTeamWarriorWidgetContent = ({
   const t = useI18n("widget.archiveTeamWarrior");
   const tWidgetCommon = useI18n("widget.common");
   const locale = useCurrentIntlLocale();
-  const { formatByteRate } = useByteFormatter();
+  const { formatBytes, formatByteRate } = useByteFormatter();
   const [data] = clientApi.widget.archiveTeamWarrior.getStatus.useSuspenseQuery({ integrationId });
 
   const status = data.status;
@@ -119,12 +119,12 @@ const ArchiveTeamWarriorWidgetContent = ({
             )}
             {status.bandwidth?.received !== undefined && (
               <Text size="xs" c="dimmed">
-                {t("sessionReceived", { value: formatBandwidth(status.bandwidth.received) })}
+                {t("sessionReceived", { value: formatBytes(Math.round(status.bandwidth.received)) })}
               </Text>
             )}
             {status.bandwidth?.sent !== undefined && (
               <Text size="xs" c="dimmed">
-                {t("sessionSent", { value: formatBandwidth(status.bandwidth.sent) })}
+                {t("sessionSent", { value: formatBytes(Math.round(status.bandwidth.sent)) })}
               </Text>
             )}
             {status.bandwidth?.session_id && (

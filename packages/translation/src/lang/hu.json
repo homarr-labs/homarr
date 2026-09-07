@@ -2699,7 +2699,7 @@
           "label": "Mutassa a befejezettként megjelölt Vegyes bejegyzéseket"
         },
         "activeTorrentThreshold": {
-          "label": "A küszöbérték alatt lévő befejezett torrenteket elrejtés (kiB/s-ban)"
+          "label": "A küszöbérték alatt lévő befejezett torrenteket elrejtés"
         },
         "categoryFilter": {
           "label": "Szűrhető kategóriák/címkék"
@@ -3426,7 +3426,7 @@
               "label": "Százalék (pl: 76%)"
             },
             "absolute": {
-              "label": "Abszolút értékek (pl. 800 Gb / 1 Tb)"
+              "label": "Abszolút értékek"
             },
             "free": {
               "label": "A szabad hely aránya (pl. 24% szabad)"
@@ -4953,7 +4953,7 @@
           "restore": {
             "dropzone": {
               "title": "Húzd ide a biztonsági mentés ZIP fájlt",
-              "description": "Homarr SQLite biztonsági mentésből származó .zip fájlok fogadhatók el (max 256 MiB)"
+              "description": "Homarr SQLite biztonsági mentésből származó .zip fájlok fogadhatók el (max {maxSize})"
             },
             "analyzing": "Biztonsági mentés elemzése...",
             "changeFile": "Fájl módosítása",

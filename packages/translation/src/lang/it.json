@@ -2940,7 +2940,7 @@
           "label": "Mostra voci varie contrassegnate come completate"
         },
         "activeTorrentThreshold": {
-          "label": "Nascondi il torrent completato sotto questa soglia (in kiB/s)"
+          "label": "Nascondi il torrent completato sotto questa soglia"
         },
         "categoryFilter": {
           "label": "Categorie/etichette da filtrare"
@@ -5023,7 +5023,7 @@
           "restore": {
             "dropzone": {
               "title": "Rilascia qui il tuo ZIP di backup",
-              "description": "Accetta file .zip da un backup SQLite di Homarr (max 256 MiB)"
+              "description": "Accetta file .zip da un backup SQLite di Homarr (max {maxSize})"
             },
             "analyzing": "Analisi del backup in corso...",
             "changeFile": "Cambia file",

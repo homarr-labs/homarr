@@ -2886,7 +2886,7 @@
           "label": "Mostrar entradas variadas marcadas como completadas"
         },
         "activeTorrentThreshold": {
-          "label": "Ocultar Torrent completado bajo este umbral (en kiB/s)"
+          "label": "Ocultar Torrent completado bajo este umbral"
         },
         "categoryFilter": {
           "label": "Categorías/etiquetas para filtrar"

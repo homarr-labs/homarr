@@ -40,6 +40,13 @@ const pickUnitIndex = (bytes: number, base: number, lastIndex: number): number =
   return index;
 };
 
+const pickRoundedUnitIndex = (value: number, base: number, lastIndex: number, fractionDigits: number): number => {
+  const index = pickUnitIndex(value, base, lastIndex);
+  if (index >= lastIndex) return index;
+  const scaled = value / base ** index;
+  return Number(scaled.toFixed(fractionDigits)) >= base ? index + 1 : index;
+};
+
 const sanitizeBytes = (bytes: number): number => (Number.isFinite(bytes) && bytes > 0 ? bytes : 0);
 
 const resolveUnitConfig = (options: FormatBytesOptions) => {
@@ -66,7 +73,7 @@ const resolveUnitConfig = (options: FormatBytesOptions) => {
 export const formatBytes = (bytes: number, options: FormatBytesOptions = {}): string => {
   const { units, base } = resolveUnitConfig(options);
   const safe = sanitizeBytes(bytes);
-  const index = pickUnitIndex(safe, base, units.length - 1);
+  const index = pickRoundedUnitIndex(safe, base, units.length - 1, 1);
   const scaled = safe / base ** index;
   return `${scaled.toFixed(1)} ${units[index]}`;
 };
@@ -88,7 +95,7 @@ export const formatBytesPair = (
   const { units, base } = resolveUnitConfig(options);
   const safeUsed = sanitizeBytes(used);
   const safeTotal = sanitizeBytes(total);
-  const index = pickUnitIndex(Math.max(safeUsed, safeTotal), base, units.length - 1);
+  const index = pickRoundedUnitIndex(Math.max(safeUsed, safeTotal), base, units.length - 1, 1);
   const suffix = units[index];
   return {
     used: `${(safeUsed / base ** index).toFixed(1)} ${suffix}`,
@@ -109,7 +116,7 @@ export const formatBytesPair = (
 export const formatByteRate = (bytes: number, options: FormatBytesOptions = {}): string =>
   `${formatBytes(bytes, options)}/s`;
 
-const BIT_RATE_UNITS = ["bps", "kbps", "Mbps", "Gbps", "Tbps", "Pbps", "Ebps"] as const;
+const BIT_RATE_UNITS = ["b/s", "Kb/s", "Mb/s", "Gb/s", "Tb/s", "Pb/s", "Eb/s"] as const;
 
 export interface FormatBitRateOptions {
   /** Maximum number of fractional digits. Trailing zeroes are omitted. Defaults to 1. */
@@ -123,16 +130,16 @@ export interface FormatBitRateOptions {
  * kilobits must normalize explicitly before calling this function.
  *
  * @example
- * formatBitRate(999);       // "999 bps"
- * formatBitRate(1_000);     // "1 kbps"
- * formatBitRate(1_500_000); // "1.5 Mbps"
+ * formatBitRate(999);       // "999 b/s"
+ * formatBitRate(1_000);     // "1 Kb/s"
+ * formatBitRate(1_500_000); // "1.5 Mb/s"
  */
 export const formatBitRate = (bitsPerSecond: number, options: FormatBitRateOptions = {}): string => {
   const safeRate = Number.isFinite(bitsPerSecond) && bitsPerSecond > 0 ? bitsPerSecond : 0;
-  const index = pickUnitIndex(safeRate, 1000, BIT_RATE_UNITS.length - 1);
-  const scaled = safeRate / 1000 ** index;
   const requestedDigits = options.maximumFractionDigits ?? 1;
   const maximumFractionDigits = Math.max(0, Math.min(20, Math.trunc(requestedDigits)));
+  const index = pickRoundedUnitIndex(safeRate, 1000, BIT_RATE_UNITS.length - 1, maximumFractionDigits);
+  const scaled = safeRate / 1000 ** index;
   const formatted = Number(scaled.toFixed(maximumFractionDigits)).toString();
   return `${formatted} ${BIT_RATE_UNITS[index]}`;
 };

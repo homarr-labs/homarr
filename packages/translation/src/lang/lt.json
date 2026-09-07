@@ -2699,7 +2699,7 @@
           "label": ""
         },
         "activeTorrentThreshold": {
-          "label": "Slėpti baigtus torrent žemiau šios ribos (kiB/s)"
+          "label": "Slėpti baigtus torrent žemiau šios ribos"
         },
         "categoryFilter": {
           "label": "Kategorijos/žymos filtruoti"
@@ -4953,7 +4953,7 @@
           "restore": {
             "dropzone": {
               "title": "Numeskite atsarginės kopijos ZIP failą čia",
-              "description": "Priima .zip failus iš Homarr SQLite atsarginės kopijos (maks. 256 MiB)"
+              "description": "Priima .zip failus iš Homarr SQLite atsarginės kopijos (maks. {maxSize})"
             },
             "analyzing": "Analizuojama atsarginė kopija...",
             "changeFile": "Pakeisti failą",

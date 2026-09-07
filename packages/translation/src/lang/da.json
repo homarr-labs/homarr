@@ -2886,7 +2886,7 @@
           "label": "Vis Diverse poster markeret som færdige"
         },
         "activeTorrentThreshold": {
-          "label": "Skjul afsluttet torrent under denne tærskel (i kiB/s)"
+          "label": "Skjul afsluttet torrent under denne tærskel"
         },
         "categoryFilter": {
           "label": "Kategorier/etiketter der skal filtreres"
@@ -4953,7 +4953,7 @@
           "restore": {
             "dropzone": {
               "title": "Slip din backup-ZIP her",
-              "description": "Accepterer .zip-filer fra en Homarr SQLite-backup (maks 256 MiB)"
+              "description": "Accepterer .zip-filer fra en Homarr SQLite-backup (maks {maxSize})"
             },
             "analyzing": "Analyserer backup...",
             "changeFile": "Skift fil",

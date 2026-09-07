@@ -2940,7 +2940,7 @@
           "label": "Pokaż różne wpisy oznaczone jako ukończone"
         },
         "activeTorrentThreshold": {
-          "label": "Ukryj ukończony torrent poniżej tego progu (w kiB/s)"
+          "label": "Ukryj ukończony torrent poniżej tego progu"
         },
         "categoryFilter": {
           "label": "Kategorie/etykiety do filtrowania"
@@ -5023,7 +5023,7 @@
           "restore": {
             "dropzone": {
               "title": "Upuść tutaj kopię zapasową ZIP",
-              "description": "Akceptuje pliki .zip z kopii zapasowej Homarr SQLite (maksymalnie 256 MiB)"
+              "description": "Akceptuje pliki .zip z kopii zapasowej Homarr SQLite (maksymalnie {maxSize})"
             },
             "analyzing": "Analizowanie kopii zapasowej...",
             "changeFile": "Zmień plik",
