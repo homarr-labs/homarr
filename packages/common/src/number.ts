@@ -147,6 +147,25 @@ export const formatBytesPair = (
 export const formatByteRate = (bytes: number, options: FormatBytesOptions = {}): string =>
   `${formatBytes(bytes, options)}/s`;
 
+const BIT_RATE_UNITS = ["bps", "kbps", "Mbps", "Gbps", "Tbps"] as const;
+
+/**
+ * Format a byte-per-second rate as SI bits per second (bps, kbps, Mbps).
+ *
+ * Integrations report byte/s. This converts to bits (`× 8`) then scales by 1000.
+ *
+ * @example
+ * formatBitRate(0);       // "0.0 bps"
+ * formatBitRate(125);     // "1.0 kbps"
+ * formatBitRate(125_000); // "1.0 Mbps"
+ */
+export const formatBitRate = (bytesPerSecond: number): string => {
+  const bits = sanitizeBytes(bytesPerSecond) * 8;
+  const index = pickUnitIndex(bits, 1000, BIT_RATE_UNITS.length - 1);
+  const scaled = bits / 1000 ** index;
+  return `${scaled.toFixed(1)} ${BIT_RATE_UNITS[index]}`;
+};
+
 const IMPERIAL_MULTIPLIER = 1.609344;
 
 export const metricToImperial = (metricValue: number) => metricValue / IMPERIAL_MULTIPLIER;

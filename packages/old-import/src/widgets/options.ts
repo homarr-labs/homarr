@@ -82,6 +82,7 @@ const optionMapping: OptionMapping = {
     columns: () => ["integration", "name", "progress", "time", "state"],
     defaultSort: () => "progress",
     descendingDefaultSort: () => false,
+    speedUnit: () => undefined,
     showCompletedUsenet: () => true,
     showCompletedHttp: () => true,
     limitPerIntegration: () => undefined,

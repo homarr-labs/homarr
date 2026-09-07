@@ -64,6 +64,14 @@ export const { definition, componentLoader } = createWidgetDefinition("downloads
         descendingDefaultSort: factory.switch({
           defaultValue: false,
         }),
+        speedUnit: factory.select({
+          options: [
+            { value: "bytes", label: (t) => t("widget.downloads.option.speedUnit.option.bytes") },
+            { value: "bits", label: (t) => t("widget.downloads.option.speedUnit.option.bits") },
+          ] as const,
+          defaultValue: "bytes",
+          withDescription: true,
+        }),
         showCompletedUsenet: factory.switch({
           defaultValue: true,
         }),

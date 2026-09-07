@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { formatByteRate, formatBytes, formatBytesPair } from "../number";
+import { formatBitRate, formatByteRate, formatBytes, formatBytesPair } from "../number";
 
 describe("formatBytes", () => {
   it("returns bytes for small values", () => {
@@ -86,5 +86,20 @@ describe("formatByteRate", () => {
   it("returns zero for invalid input", () => {
     expect(formatByteRate(-1)).toBe("0.0 B/s");
     expect(formatByteRate(Number.NaN)).toBe("0.0 B/s");
+  });
+});
+
+describe("formatBitRate", () => {
+  it("converts byte/s to SI bit/s", () => {
+    expect(formatBitRate(0)).toBe("0.0 bps");
+    expect(formatBitRate(1)).toBe("8.0 bps");
+    expect(formatBitRate(125)).toBe("1.0 kbps");
+    expect(formatBitRate(125_000)).toBe("1.0 Mbps");
+    expect(formatBitRate(125_000_000)).toBe("1.0 Gbps");
+  });
+
+  it("returns zero for invalid input", () => {
+    expect(formatBitRate(-1)).toBe("0.0 bps");
+    expect(formatBitRate(Number.NaN)).toBe("0.0 bps");
   });
 });

@@ -46,7 +46,7 @@ import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess, useSession } from "@homarr/auth/client";
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import { useOptionalBoard } from "@homarr/boards/context";
-import { formatByteRate, formatBytes, useIntegrationConnected } from "@homarr/common";
+import { formatBitRate, formatByteRate, formatBytes, useIntegrationConnected } from "@homarr/common";
 import { getIconUrl, getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { ExtendedClientStatus, ExtendedDownloadClientItem } from "@homarr/integrations";
 import { showErrorNotification } from "@homarr/notifications";
@@ -57,6 +57,15 @@ import { HomarrDataTable } from "../common/homarr-data-table";
 import { usePersistedTableLayout, useTableLayoutPersistence } from "../common/use-persisted-table-layout";
 
 dayjs.extend(relativeTime);
+
+type DownloadSpeedUnit = WidgetComponentProps<"downloads">["options"]["speedUnit"];
+
+function formatDownloadSpeed(bytesPerSecond: number, unit: DownloadSpeedUnit): string {
+  if (unit === "bits") {
+    return formatBitRate(bytesPerSecond);
+  }
+  return formatByteRate(bytesPerSecond);
+}
 
 type DownloadsT = ReturnType<typeof useScopedI18n<"widget.downloads">>;
 type DownloadState = ExtendedDownloadClientItem["state"];
@@ -262,9 +271,9 @@ function compareSortValues(
   return 0;
 }
 
-function buildProgressTooltip(record: ExtendedDownloadClientItem): string {
+function buildProgressTooltip(record: ExtendedDownloadClientItem, speedUnit: DownloadSpeedUnit): string {
   const parts = [`${formatBytes(record.received)} / ${formatBytes(record.size)}`];
-  if (record.downSpeed) parts.push(`↓ ${formatByteRate(record.downSpeed)}`);
+  if (record.downSpeed) parts.push(`↓ ${formatDownloadSpeed(record.downSpeed, speedUnit)}`);
   if (record.time !== 0) parts.push(`ETA: ${dayjs().add(record.time, "milliseconds").fromNow(true)}`);
   return parts.join(" · ");
 }
@@ -273,10 +282,12 @@ function SpeedCell({
   speed,
   fontSize,
   direction,
+  speedUnit,
 }: {
   speed: number | undefined;
   fontSize: SizeConfig["fontSize"];
   direction: keyof typeof speedColumnConfig;
+  speedUnit: DownloadSpeedUnit;
 }) {
   if (!speed) return null;
   const { Icon, color } = speedColumnConfig[direction];
@@ -284,7 +295,7 @@ function SpeedCell({
     <Group gap={4} wrap="nowrap">
       <Icon size={12} style={{ flexShrink: 0, opacity: 0.5 }} />
       <Text size={fontSize} c={color}>
-        {formatByteRate(speed)}
+        {formatDownloadSpeed(speed, speedUnit)}
       </Text>
     </Group>
   );
@@ -491,7 +502,7 @@ export default function DownloadClientsWidget({
         ellipsis: true,
         render: (record) => (
           <Tooltip
-            label={buildHoverTooltip(record, t)}
+            label={buildHoverTooltip(record, t, options.speedUnit)}
             multiline
             w={280}
             withArrow
@@ -525,7 +536,13 @@ export default function DownloadClientsWidget({
         render: (record) => {
           const pct = Math.floor(record.progress * 100);
           return (
-            <Tooltip label={buildProgressTooltip(record)} withArrow openDelay={300} position="top" color="dark">
+            <Tooltip
+              label={buildProgressTooltip(record, options.speedUnit)}
+              withArrow
+              openDelay={300}
+              position="top"
+              color="dark"
+            >
               <Group gap={4} wrap="nowrap" style={{ flex: 1 }}>
                 <Text size="xs" fw={500} w={36} ta="right" style={{ flexShrink: 0 }}>
                   {`${pct}%`}
@@ -555,7 +572,9 @@ export default function DownloadClientsWidget({
         sortable: true,
         width: 90,
         noWrap: true,
-        render: (record) => <SpeedCell speed={record.downSpeed} fontSize={size.fontSize} direction="down" />,
+        render: (record) => (
+          <SpeedCell speed={record.downSpeed} fontSize={size.fontSize} direction="down" speedUnit={options.speedUnit} />
+        ),
       },
       includeColumn("upSpeed") && {
         accessor: "upSpeed",
@@ -563,7 +582,9 @@ export default function DownloadClientsWidget({
         sortable: true,
         width: 90,
         noWrap: true,
-        render: (record) => <SpeedCell speed={record.upSpeed} fontSize={size.fontSize} direction="up" />,
+        render: (record) => (
+          <SpeedCell speed={record.upSpeed} fontSize={size.fontSize} direction="up" speedUnit={options.speedUnit} />
+        ),
       },
       includeColumn("time") && {
         accessor: "time",
@@ -666,7 +687,7 @@ export default function DownloadClientsWidget({
       },
     ];
     return cols.filter(Boolean) as DataTableColumn<ExtendedDownloadClientItem>[];
-  }, [columnContext, t, size, progressColumnWidth]);
+  }, [columnContext, t, size, progressColumnWidth, options.speedUnit]);
 
   const { effectiveColumns, storeKey } = usePersistedTableLayout({
     columns,
@@ -744,6 +765,7 @@ export default function DownloadClientsWidget({
           globalRatio={globalRatio}
           hasTorrents={hasTorrents}
           clients={clients}
+          speedUnit={options.speedUnit}
         />
       )}
 
@@ -772,7 +794,9 @@ export default function DownloadClientsWidget({
               animateOpacity: true,
               transitionTimingFunction: "ease-out",
             },
-            content: ({ record, collapse }) => <ExpandedRow item={record} collapse={collapse} />,
+            content: ({ record, collapse }) => (
+              <ExpandedRow item={record} collapse={collapse} speedUnit={options.speedUnit} />
+            ),
           }}
           onScroll={() => {
             if (contextMenu) closeContextMenu();
@@ -795,6 +819,7 @@ export default function DownloadClientsWidget({
         resumeQueue={mutateResumeQueue}
         showStats={showStats}
         toggleStats={toggleStats}
+        speedUnit={options.speedUnit}
       />
 
       {contextMenu && <RowContextMenu state={contextMenu} onClose={closeContextMenu} t={t} />}
@@ -802,17 +827,24 @@ export default function DownloadClientsWidget({
   );
 }
 
-function buildHoverTooltip(record: ExtendedDownloadClientItem, t: DownloadsT): React.ReactNode {
+function buildHoverTooltip(
+  record: ExtendedDownloadClientItem,
+  t: DownloadsT,
+  speedUnit: DownloadSpeedUnit,
+): React.ReactNode {
   const lines: { label: string; value: string }[] = [
     { label: t("items.size.detailsTitle"), value: `${formatBytes(record.received)} / ${formatBytes(record.size)}` },
     { label: t("items.state.detailsTitle"), value: t(`states.${record.state}`) },
   ];
 
   if (record.downSpeed) {
-    lines.push({ label: t("items.downSpeed.detailsTitle"), value: formatByteRate(record.downSpeed) });
+    lines.push({
+      label: t("items.downSpeed.detailsTitle"),
+      value: formatDownloadSpeed(record.downSpeed, speedUnit),
+    });
   }
   if (record.upSpeed) {
-    lines.push({ label: t("items.upSpeed.detailsTitle"), value: formatByteRate(record.upSpeed) });
+    lines.push({ label: t("items.upSpeed.detailsTitle"), value: formatDownloadSpeed(record.upSpeed, speedUnit) });
   }
   if (record.time !== 0) {
     lines.push({ label: t("items.time.eta"), value: dayjs().add(record.time, "milliseconds").fromNow() });
@@ -845,7 +877,15 @@ function buildHoverTooltip(record: ExtendedDownloadClientItem, t: DownloadsT): R
   );
 }
 
-function ExpandedRow({ item, collapse }: { item: ExtendedDownloadClientItem; collapse: () => void }) {
+function ExpandedRow({
+  item,
+  collapse,
+  speedUnit,
+}: {
+  item: ExtendedDownloadClientItem;
+  collapse: () => void;
+  speedUnit: DownloadSpeedUnit;
+}) {
   const t = useScopedI18n("widget.downloads");
   const progressPercent = Math.floor(item.progress * 100);
   const categoryDisplay = formatCategoryDisplay(item.category);
@@ -888,7 +928,7 @@ function ExpandedRow({ item, collapse }: { item: ExtendedDownloadClientItem; col
             {item.downSpeed !== undefined && item.downSpeed > 0 && (
               <DetailPair
                 label={t("items.downSpeed.detailsTitle")}
-                value={formatByteRate(item.downSpeed)}
+                value={formatDownloadSpeed(item.downSpeed, speedUnit)}
                 icon={<IconDownload size={10} />}
                 color="blue"
               />
@@ -896,7 +936,7 @@ function ExpandedRow({ item, collapse }: { item: ExtendedDownloadClientItem; col
             {item.upSpeed !== undefined && item.upSpeed > 0 && (
               <DetailPair
                 label={t("items.upSpeed.detailsTitle")}
-                value={formatByteRate(item.upSpeed)}
+                value={formatDownloadSpeed(item.upSpeed, speedUnit)}
                 icon={<IconUpload size={10} />}
                 color="green"
               />
@@ -953,6 +993,7 @@ function GlobalStatsBar({
   globalRatio,
   hasTorrents,
   clients,
+  speedUnit,
 }: {
   queueStats: { stateCounts: Record<string, number>; totalSize: number; completedSize: number; totalItems: number };
   totalSpeed: number;
@@ -960,6 +1001,7 @@ function GlobalStatsBar({
   globalRatio: number;
   hasTorrents: boolean;
   clients: ExtendedClientStatus[];
+  speedUnit: DownloadSpeedUnit;
 }) {
   const t = useScopedI18n("widget.downloads");
 
@@ -990,14 +1032,14 @@ function GlobalStatsBar({
           <Group gap={4}>
             <IconDownload size={12} style={{ opacity: 0.6 }} />
             <Text size="xs" fw={600} c="blue">
-              {formatByteRate(totalSpeed)}
+              {formatDownloadSpeed(totalSpeed, speedUnit)}
             </Text>
           </Group>
           {totalUpSpeed > 0 && (
             <Group gap={4}>
               <IconUpload size={12} style={{ opacity: 0.6 }} />
               <Text size="xs" fw={600} c="green">
-                {formatByteRate(totalUpSpeed)}
+                {formatDownloadSpeed(totalUpSpeed, speedUnit)}
               </Text>
             </Group>
           )}
@@ -1163,6 +1205,7 @@ interface WidgetFooterProps {
   resumeQueue: (args: { integrationIds: string[] }) => void;
   showStats: boolean;
   toggleStats: () => void;
+  speedUnit: DownloadSpeedUnit;
 }
 
 function WidgetFooter({
@@ -1180,6 +1223,7 @@ function WidgetFooter({
   resumeQueue,
   showStats,
   toggleStats,
+  speedUnit,
 }: WidgetFooterProps) {
   const t = useScopedI18n("widget.downloads");
   const [filterOpen, { toggle: toggleFilter }] = useDisclosure(false);
@@ -1338,12 +1382,12 @@ function WidgetFooter({
               <Group gap={2}>
                 <Text size="xs" fw={600} c="blue">
                   <IconDownload size={10} style={{ verticalAlign: "middle", marginRight: 2 }} />
-                  {formatByteRate(totalSpeed)}
+                  {formatDownloadSpeed(totalSpeed, speedUnit)}
                 </Text>
                 {totalUpSpeed > 0 && (
                   <Text size="xs" fw={600} c="green">
                     <IconUpload size={10} style={{ verticalAlign: "middle", marginRight: 2 }} />
-                    {formatByteRate(totalUpSpeed)}
+                    {formatDownloadSpeed(totalUpSpeed, speedUnit)}
                   </Text>
                 )}
               </Group>

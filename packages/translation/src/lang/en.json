@@ -3127,6 +3127,14 @@
         "descendingDefaultSort": {
           "label": "Invert sorting"
         },
+        "speedUnit": {
+          "label": "Speed unit",
+          "description": "How download and upload rates are displayed. Bits use SI prefixes (kbps, Mbps).",
+          "option": {
+            "bytes": "Bytes per second (KiB/s, MiB/s)",
+            "bits": "Bits per second (kbps, Mbps)"
+          }
+        },
         "showCompletedUsenet": {
           "label": "Show usenet entries marked as completed"
         },

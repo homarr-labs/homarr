@@ -47,6 +47,13 @@ export const downloadsWidget: WidgetDefinition = {
         defaultValue: "no",
       },
       {
+        name: "Speed unit",
+        description:
+          "How download and upload rates are displayed. Bits convert byte/s from the client to SI kilobits/megabits (kbps, Mbps).",
+        values: "bytes (KiB/s, MiB/s) or bits (kbps, Mbps)",
+        defaultValue: "bytes",
+      },
+      {
         name: "Show usenet entries marked as completed",
         description: "This will show entries that have been completed in your Usenet client.",
         values: { type: "boolean" },
