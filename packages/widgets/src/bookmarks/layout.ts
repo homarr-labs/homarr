@@ -6,6 +6,7 @@ export type BookmarkOrientation = "horizontal" | "vertical" | "icon";
 export interface BookmarkDisplayPlan {
   columns: number;
   horizontalScroll: boolean;
+  itemGap: number;
   itemHeight: number;
   itemWidth: number;
   orientation: BookmarkOrientation;
@@ -108,6 +109,18 @@ const widthBreakpoints = [
     showTitle: true,
   },
   {
+    minWidth: 180,
+    adaptiveColumns: 1,
+    advancedColumns: 1,
+    compactColumns: 1,
+    gridColumns: 1,
+    iconColumns: 3,
+    rowItemWidth: 136,
+    adaptiveOrientation: "horizontal",
+    showHostname: false,
+    showTitle: true,
+  },
+  {
     minWidth: 0,
     adaptiveColumns: 1,
     advancedColumns: 1,
@@ -160,10 +173,19 @@ const heightBreakpoints = [
     showTitle: true,
   },
   {
-    minHeight: 0,
+    minHeight: 60,
     columnItemHeight: 48,
-    itemHeight: 56,
+    itemHeight: 48,
     rowItemHeight: 56,
+    orientation: "icon",
+    showHostname: false,
+    showTitle: false,
+  },
+  {
+    minHeight: 0,
+    columnItemHeight: 32,
+    itemHeight: 32,
+    rowItemHeight: 40,
     orientation: "icon",
     showHostname: false,
     showTitle: false,
@@ -172,12 +194,14 @@ const heightBreakpoints = [
 
 export const getBookmarkDisplayPlan = ({
   advanced,
+  gap = 0,
   height,
   itemCount,
   layout,
   width,
 }: {
   advanced: boolean;
+  gap?: number;
   height: number;
   itemCount: number;
   layout: BookmarkLayout;
@@ -194,6 +218,7 @@ export const getBookmarkDisplayPlan = ({
     return {
       columns: Math.min(count, widthSettings.advancedColumns),
       horizontalScroll: false,
+      itemGap: gap,
       itemHeight: 104,
       itemWidth: 260,
       orientation: "horizontal",
@@ -203,27 +228,40 @@ export const getBookmarkDisplayPlan = ({
   }
 
   if (layout === "row") {
-    let orientation: BookmarkOrientation = "vertical";
-    if (!heightSettings.showTitle) orientation = "icon";
+    let orientation: BookmarkOrientation = "horizontal";
+    if (!widthSettings.showTitle) orientation = "icon";
+    let itemWidth: number = widthSettings.rowItemWidth;
+    if (heightSettings.rowItemHeight <= 56) itemWidth = 112;
+    if (heightSettings.rowItemHeight <= 40) itemWidth = 96;
     return {
       columns: count,
       horizontalScroll: true,
-      itemHeight: heightSettings.rowItemHeight,
-      itemWidth: widthSettings.rowItemWidth,
+      itemGap: Math.min(gap, 8),
+      itemHeight: Math.min(heightSettings.rowItemHeight, 64),
+      itemWidth,
       orientation,
       showHostname: widthSettings.showHostname && heightSettings.showHostname,
-      showTitle: widthSettings.showTitle && heightSettings.showTitle,
+      showTitle: widthSettings.showTitle,
     };
   }
 
   if (layout === "column") {
+    const densitySettings = getBookmarkDensitySettings({
+      columns: 1,
+      gap,
+      height: normalizedHeight,
+      heightProperty: "columnItemHeight",
+      itemCount: count,
+      preferredSettings: heightSettings,
+    });
     return {
       columns: 1,
       horizontalScroll: false,
-      itemHeight: heightSettings.columnItemHeight,
+      itemGap: getBookmarkDensityGap(gap, densitySettings),
+      itemHeight: densitySettings.columnItemHeight,
       itemWidth: width,
       orientation: "horizontal",
-      showHostname: widthSettings.showHostname && heightSettings.showHostname,
+      showHostname: widthSettings.showHostname && densitySettings.showHostname,
       showTitle: widthSettings.showTitle && heightSettings.showTitle,
     };
   }
@@ -232,6 +270,7 @@ export const getBookmarkDisplayPlan = ({
     return {
       columns: Math.min(count, widthSettings.iconColumns),
       horizontalScroll: false,
+      itemGap: Math.min(gap, 8),
       itemHeight: 56,
       itemWidth: 56,
       orientation: "icon",
@@ -244,6 +283,7 @@ export const getBookmarkDisplayPlan = ({
     return {
       columns: Math.min(count, widthSettings.compactColumns),
       horizontalScroll: false,
+      itemGap: Math.min(gap, 8),
       itemHeight: 56,
       itemWidth: widthSettings.rowItemWidth,
       orientation: "horizontal",
@@ -265,13 +305,68 @@ export const getBookmarkDisplayPlan = ({
     if (heightSettings.orientation === "horizontal" && orientation === "vertical") orientation = "horizontal";
   }
 
+  const visibleColumns = Math.min(count, columns);
+  const densitySettings = getBookmarkDensitySettings({
+    columns: visibleColumns,
+    gap,
+    height: normalizedHeight,
+    heightProperty: "itemHeight",
+    itemCount: count,
+    preferredSettings: heightSettings,
+  });
+  if (layout === "adaptive" && densitySettings.itemHeight < 80 && orientation === "vertical") {
+    orientation = "horizontal";
+  }
+
+  let showHostname =
+    orientation !== "icon" && widthSettings.showHostname && heightSettings.showHostname && densitySettings.showHostname;
+  let showTitle = orientation !== "icon" && widthSettings.showTitle && heightSettings.showTitle;
+  if (layout === "grid") {
+    showHostname = showHostname && densitySettings.showHostname;
+    showTitle = showTitle && densitySettings.showTitle;
+  }
+
   return {
-    columns: Math.min(count, columns),
+    columns: visibleColumns,
     horizontalScroll: false,
-    itemHeight: heightSettings.itemHeight,
+    itemGap: getBookmarkDensityGap(gap, densitySettings),
+    itemHeight: densitySettings.itemHeight,
     itemWidth: widthSettings.rowItemWidth,
     orientation,
-    showHostname: orientation !== "icon" && widthSettings.showHostname && heightSettings.showHostname,
-    showTitle: orientation !== "icon" && widthSettings.showTitle && heightSettings.showTitle,
+    showHostname,
+    showTitle,
   };
+};
+
+type BookmarkHeightProperty = "columnItemHeight" | "itemHeight";
+type BookmarkHeightSettings = (typeof heightBreakpoints)[number];
+
+const getBookmarkDensitySettings = ({
+  columns,
+  gap,
+  height,
+  heightProperty,
+  itemCount,
+  preferredSettings,
+}: {
+  columns: number;
+  gap: number;
+  height: number;
+  heightProperty: BookmarkHeightProperty;
+  itemCount: number;
+  preferredSettings: BookmarkHeightSettings;
+}): BookmarkHeightSettings => {
+  const rowCount = Math.ceil(itemCount / Math.max(1, columns));
+  const totalGap = Math.max(0, rowCount - 1) * Math.max(0, gap);
+  const preferredIndex = heightBreakpoints.indexOf(preferredSettings);
+  const matchingSettings = heightBreakpoints
+    .slice(preferredIndex)
+    .find((settings) => rowCount * settings[heightProperty] + totalGap <= height);
+
+  return matchingSettings ?? heightBreakpoints[4];
+};
+
+const getBookmarkDensityGap = (gap: number, settings: BookmarkHeightSettings) => {
+  if (settings.itemHeight > 32 && settings.columnItemHeight > 32) return gap;
+  return Math.min(gap, 4);
 };
