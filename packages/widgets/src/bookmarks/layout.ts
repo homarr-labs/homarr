@@ -262,7 +262,7 @@ export const getBookmarkDisplayPlan = ({
       itemWidth: width,
       orientation: "horizontal",
       showHostname: widthSettings.showHostname && densitySettings.showHostname,
-      showTitle: widthSettings.showTitle && heightSettings.showTitle,
+      showTitle: widthSettings.showTitle && densitySettings.showTitle,
     };
   }
 
