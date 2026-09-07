@@ -36,6 +36,10 @@ vi.mock("@homarr/translation/client", () => ({
   useI18n: () => (key: string) => key,
 }));
 
+vi.mock("@homarr/settings", () => ({
+  useByteFormatter: () => ({ formatBytes: (bytes: number) => `${bytes} B` }),
+}));
+
 describe("Immich album queries", () => {
   let host: HTMLDivElement | undefined;
   let root: ReturnType<typeof createRoot> | undefined;

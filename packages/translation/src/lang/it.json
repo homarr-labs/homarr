@@ -2194,7 +2194,7 @@
       "popover": {
         "information": "Informazioni",
         "processor": "Processore: {cpuModelName}",
-        "memory": "Memory: {memory}",
+        "memory": "Memoria: {memory}",
         "memoryAvailable": "Disponibile: {memoryAvailable} ({percent}%)",
         "version": "Versione: {version}",
         "uptime": "Uptime: {months} Mesi, {days} Giorni, {hours} Ore, {minutes} Minuti",

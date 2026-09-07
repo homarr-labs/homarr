@@ -696,6 +696,20 @@ export const userRouter = createTRPCRouter({
         });
       }
 
+      const dbUser = await ctx.db.query.users.findFirst({
+        columns: {
+          id: true,
+        },
+        where: eq(users.id, input.id),
+      });
+
+      if (!dbUser) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
       await ctx.db
         .update(users)
         .set({
