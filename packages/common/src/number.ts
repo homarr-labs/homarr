@@ -19,12 +19,14 @@ export const formatNumber = (value: number, decimalPlaces: number) => {
 const BINARY_UNITS = ["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB"] as const;
 const DECIMAL_UNITS = ["B", "KB", "MB", "GB", "TB", "PB", "EB"] as const;
 
+export const defaultByteUnitSystem = "decimal" as const;
+
 export type ByteUnitSystem = "binary" | "decimal";
 
 export interface FormatBytesOptions {
   /**
    * Unit system to use. "binary" uses 1024 as the base and KiB/MiB/GiB/TiB suffixes,
-   * "decimal" uses 1000 as the base and KB/MB/GB/TB suffixes. Defaults to "binary".
+   * "decimal" uses 1000 as the base and KB/MB/GB/TB suffixes. Defaults to "decimal".
    */
   unit?: ByteUnitSystem;
 }
@@ -50,7 +52,7 @@ const pickRoundedUnitIndex = (value: number, base: number, lastIndex: number, fr
 const sanitizeBytes = (bytes: number): number => (Number.isFinite(bytes) && bytes > 0 ? bytes : 0);
 
 const resolveUnitConfig = (options: FormatBytesOptions) => {
-  const { unit = "binary" } = options;
+  const { unit = defaultByteUnitSystem } = options;
   return {
     units: unit === "binary" ? BINARY_UNITS : DECIMAL_UNITS,
     base: unit === "binary" ? 1024 : 1000,
@@ -66,9 +68,9 @@ const resolveUnitConfig = (options: FormatBytesOptions) => {
  *
  * @example
  * formatBytes(0);                          // "0.0 B"
- * formatBytes(1024);                       // "1.0 KiB"
- * formatBytes(985828802560);               // "918.1 GiB"
- * formatBytes(985828802560, { unit: "decimal" }); // "985.8 GB"
+ * formatBytes(1000);                       // "1.0 KB"
+ * formatBytes(985828802560);               // "985.8 GB"
+ * formatBytes(985828802560, { unit: "binary" }); // "918.1 GiB"
  */
 export const formatBytes = (bytes: number, options: FormatBytesOptions = {}): string => {
   const { units, base } = resolveUnitConfig(options);
@@ -85,7 +87,7 @@ export const formatBytes = (bytes: number, options: FormatBytesOptions = {}): st
  *
  * @example
  * formatBytesPair(985828802560, 2858736793190);
- * // { used: "0.9 TiB", total: "2.6 TiB" }
+ * // { used: "1.0 TB", total: "2.9 TB" }
  */
 export const formatBytesPair = (
   used: number,
@@ -110,8 +112,8 @@ export const formatBytesPair = (
  *
  * @example
  * formatByteRate(0);                          // "0.0 B/s"
- * formatByteRate(1024);                       // "1.0 KiB/s"
- * formatByteRate(985828802560, { unit: "decimal" }); // "985.8 GB/s"
+ * formatByteRate(1000);                       // "1.0 KB/s"
+ * formatByteRate(985828802560, { unit: "binary" }); // "918.1 GiB/s"
  */
 export const formatByteRate = (bytes: number, options: FormatBytesOptions = {}): string =>
   `${formatBytes(bytes, options)}/s`;

@@ -2575,7 +2575,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "'binary'"
+          "default": "'decimal'"
         }
       },
       "indexes": {},

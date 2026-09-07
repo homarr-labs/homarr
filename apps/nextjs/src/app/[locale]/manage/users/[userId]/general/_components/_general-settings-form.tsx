@@ -355,12 +355,12 @@ export const UserGeneralSettingsForm = ({
                       description={tUser("field.byteUnitSystem.description")}
                       data={[
                         {
-                          value: "binary",
-                          label: `${tUser("field.byteUnitSystem.options.binary")} (KiB, MiB, GiB)`,
-                        },
-                        {
                           value: "decimal",
                           label: `${tUser("field.byteUnitSystem.options.decimal")} (KB, MB, GB)`,
+                        },
+                        {
+                          value: "binary",
+                          label: `${tUser("field.byteUnitSystem.options.binary")} (KiB, MiB, GiB)`,
                         },
                       ]}
                       allowDeselect={false}

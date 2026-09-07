@@ -9,6 +9,7 @@ import {
   IconHome,
   IconLanguage,
   IconLayoutBoard,
+  IconRulerMeasure,
   IconSearch,
   IconSettings,
   IconWorldWww,
@@ -41,6 +42,7 @@ export type UserFieldPreferenceKey =
   | "defaultSearchEngine"
   | "openSearchInNewTab"
   | "ddgBangs"
+  | "byteUnitSystem"
   | "pingIconsEnabled"
   | "enableRightClickOnWidgets";
 
@@ -48,6 +50,7 @@ export const userFieldPreferenceLabels: Partial<Record<UserPreferenceKey, UserFi
   defaultSearchEngineId: "defaultSearchEngine",
   openSearchInNewTab: "openSearchInNewTab",
   ddgBangs: "ddgBangs",
+  byteUnitSystem: "byteUnitSystem",
   pingIconsEnabled: "pingIconsEnabled",
   enableRightClickOnWidgets: "enableRightClickOnWidgets",
 } satisfies Partial<Record<UserPreferenceKey, UserFieldPreferenceKey>>;
@@ -59,6 +62,7 @@ export const preferenceIcons: Record<UserPreferenceKey, TablerIcon> = {
   openSearchInNewTab: IconExternalLink,
   ddgBangs: IconWorldWww,
   firstDayOfWeek: IconCalendarWeek,
+  byteUnitSystem: IconRulerMeasure,
   homeBoardId: IconHome,
   mobileHomeBoardId: IconLayoutBoard,
   pingIconsEnabled: IconActivity,
@@ -136,6 +140,13 @@ export const preferenceChildrenOptionsByKey: Partial<Record<UserPreferenceKey, C
       value: day,
     })),
   ),
+  byteUnitSystem: createStaticChildren("byteUnitSystem", () => {
+    const t = useI18n("user.field.byteUnitSystem.options");
+    return [
+      { key: "decimal", label: `${t("decimal")} (KB, MB, GB)`, value: "decimal" },
+      { key: "binary", label: `${t("binary")} (KiB, MiB, GiB)`, value: "binary" },
+    ];
+  }),
   homeBoardId: createAsyncSelectableChildren(
     "homeBoardId",
     () => clientApi.board.getAllBoards.useQuery(),

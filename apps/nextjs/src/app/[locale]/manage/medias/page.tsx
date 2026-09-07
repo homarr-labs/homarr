@@ -21,7 +21,7 @@ import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
 import { getRscUserSettingsAsync } from "@homarr/api/user-server";
 import { auth } from "@homarr/auth/next";
-import { formatBytes } from "@homarr/common";
+import { defaultByteUnitSystem, formatBytes } from "@homarr/common";
 import type { ByteUnitSystem } from "@homarr/common";
 import type { inferSearchParamsFromSchema } from "@homarr/common/types";
 import { createLocalImageUrl } from "@homarr/icons/local";
@@ -128,7 +128,11 @@ export default async function MediaListPage(props: MediaListPageProps) {
             </TableThead>
             <TableTbody>
               {medias.map((media) => (
-                <Row key={media.id} media={media} byteUnitSystem={userSettings?.byteUnitSystem ?? "binary"} />
+                <Row
+                  key={media.id}
+                  media={media}
+                  byteUnitSystem={userSettings?.byteUnitSystem ?? defaultByteUnitSystem}
+                />
               ))}
             </TableTbody>
           </Table>

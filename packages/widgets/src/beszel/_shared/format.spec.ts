@@ -5,7 +5,10 @@ import { formatByteRate, formatBytes } from "@homarr/common";
 import { createByteChartAxisFormatters, getProgressTrackSize } from "./format";
 
 const GIBIBYTE = 1024 ** 3;
-const binaryAxisFormatters = createByteChartAxisFormatters(formatBytes, formatByteRate);
+const binaryAxisFormatters = createByteChartAxisFormatters(
+  (bytes) => formatBytes(bytes, { unit: "binary" }),
+  (bytes) => formatByteRate(bytes, { unit: "binary" }),
+);
 
 describe("Beszel storage formatting", () => {
   test("formats canonical byte values with shared binary units", () => {

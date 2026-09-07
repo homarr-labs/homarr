@@ -7216,6 +7216,13 @@
                   }
                 }
               },
+              "byteUnitSystem": {
+                "children": {
+                  "detail": {
+                    "title": "Select your data size units"
+                  }
+                }
+              },
               "homeBoardId": {
                 "label": "Home board",
                 "children": {
