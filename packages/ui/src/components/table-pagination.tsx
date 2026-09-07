@@ -18,7 +18,7 @@ export const TablePagination = ({ total }: TablePaginationProps) => {
   const pathName = usePathname();
   const searchParams = useSearchParams();
   const t = useI18n("common.pagination");
-  const current = Number(searchParams.get("page")) || 1;
+  const current = parsePage(searchParams.getAll("page"));
 
   const getItemProps = useCallback(
     (page: number) => {
@@ -60,6 +60,18 @@ export const TablePagination = ({ total }: TablePaginationProps) => {
       onChange={handleChange}
     />
   );
+};
+
+const parsePage = (pageValues: string[]) => {
+  if (pageValues.length !== 1) return 1;
+
+  const [pageValue] = pageValues;
+  if (!pageValue || !/^[1-9]\d*$/u.test(pageValue)) return 1;
+
+  const page = Number(pageValue);
+  if (!Number.isSafeInteger(page)) return 1;
+
+  return page;
 };
 
 type ControlType = Parameters<Exclude<PaginationProps["getControlProps"], undefined>>[0];

@@ -59,7 +59,7 @@ function FeatureComponent(props: Feature) {
           <props.icon size={40} />
         </div>
         <div>
-          <h3 className="text-2xl font-extrabold text-gray-700 dark:text-gray-300 m-0">{props.title}</h3>
+          <h2 className="text-2xl font-extrabold text-gray-700 dark:text-gray-300 m-0">{props.title}</h2>
           <p className="mb-0 text-base text-gray-500 dark:text-gray-400">{props.content}</p>
         </div>
       </div>

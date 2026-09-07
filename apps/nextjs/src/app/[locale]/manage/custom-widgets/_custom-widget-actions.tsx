@@ -11,6 +11,7 @@ import {
   IconDownload,
   IconPlayerPause,
   IconPlayerPlay,
+  IconPlugConnected,
   IconSparkles,
   IconTrash,
   IconUpload,
@@ -37,7 +38,12 @@ interface WidgetRef {
   migrationRequired: boolean;
 }
 
-export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
+interface CustomWidgetRowActionsProps {
+  widget: WidgetRef;
+  onConfigureSources(): void;
+}
+
+export const CustomWidgetRowActions = ({ widget, onConfigureSources }: CustomWidgetRowActionsProps) => {
   const t = useI18n("customWidget");
   const tCommon = useI18n("common");
   const deleteMutation = clientApi.customWidget.delete.useMutation();
@@ -209,6 +215,9 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
                 disabled={toggleMutation.isPending}
               >
                 {widget.enabled ? t("action.disable") : t("action.enable")}
+              </Menu.Item>
+              <Menu.Item onClick={onConfigureSources} leftSection={<IconPlugConnected {...iconProps} />}>
+                {t("action.configureSources")}
               </Menu.Item>
               <Menu.Divider />
               <Menu.Item

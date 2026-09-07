@@ -58,6 +58,7 @@ homarr build --pr <number> Build a PR locally from a temporary checkout
 homarr rebuild <name>      Rebuild from recorded provenance
 homarr images              List local images with build provenance
 homarr data                List instance data volumes
+homarr data rm <volume>    Preview permanent data deletion; add --force to confirm
 homarr prune               Remove stopped instances
 homarr list                Script-friendly instance list
 homarr logs <container>    Follow logs

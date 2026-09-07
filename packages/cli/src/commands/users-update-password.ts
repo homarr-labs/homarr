@@ -15,13 +15,15 @@ export const usersUpdatePassword = command({
   // eslint-disable-next-line no-restricted-syntax
   handler: async (options) => {
     if (!process.env.AUTH_PROVIDERS?.toLowerCase().includes("credentials")) {
-      console.error("Credentials provider is not enabled");
-      return;
+      throw new Error("Credentials provider is not enabled");
     }
 
     if (!options.id && !options.username) {
-      console.error("Either --id or --username must be provided");
-      return;
+      throw new Error("Either --id or --username must be provided");
+    }
+
+    if (options.id && options.username) {
+      throw new Error("Use either --id or --username, not both");
     }
 
     const user = await db.query.users.findFirst({
@@ -30,8 +32,7 @@ export const usersUpdatePassword = command({
     });
 
     if (!user?.password) {
-      console.error("User not found or has no credentials record");
-      return;
+      throw new Error("User not found or has no credentials record");
     }
 
     await db

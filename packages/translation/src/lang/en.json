@@ -738,6 +738,8 @@
         "multiple": "Add {count}",
         "selectedCount": "{count, plural, one {# selected} other {# selected}}",
         "appsSelected": "{count, plural, one {# app selected} other {# apps selected}}",
+        "selectMultiple": "Select multiple",
+        "cancelMultiple": "Exit multi-select",
         "customApplication": "Custom application",
         "application": "Application"
       },
@@ -1712,8 +1714,10 @@
     "plural": "Medias",
     "search": "Find a media",
     "field": {
+      "preview": "Preview",
       "size": "Size",
-      "creator": "Creator"
+      "creator": "Creator",
+      "actions": "Actions"
     },
     "action": {
       "upload": {
@@ -1741,10 +1745,12 @@
         }
       },
       "copy": {
-        "label": "Copy URL"
+        "label": "Copy URL",
+        "labelNamed": "Copy URL for {name}"
       },
       "open": {
-        "label": "Open media"
+        "label": "Open media",
+        "labelNamed": "Open {name}"
       }
     },
     "noResults": {
@@ -6256,6 +6262,11 @@
               "label": "Pings"
             }
           },
+          "action": {
+            "run": "Run {name} now",
+            "enable": "Enable {name}",
+            "disable": "Disable {name}"
+          },
           "interval": {
             "seconds": "Every {interval, plural, =1 {second} other {# seconds}}",
             "minutes": "Every {interval, plural, =1 {minute} other {# minutes}}",
@@ -6397,7 +6408,13 @@
               },
               "availableTools": {
                 "title": "Available Tools",
-                "description": "{count} tools available. Expand a category to see individual tools and their descriptions."
+                "description": "{count} tools available. Expand a category to see individual tools and their descriptions.",
+                "filteredDescription": "{count} matching tools across expanded categories.",
+                "search": "Search tools",
+                "noResults": {
+                  "title": "No tools match this search",
+                  "description": "No MCP tool matches \"{search}\". Try a namespace, tool name, or description."
+                }
               }
             }
           }

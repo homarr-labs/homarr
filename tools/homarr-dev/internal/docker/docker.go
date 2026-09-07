@@ -378,6 +378,13 @@ func IsPortConflict(err error) bool {
 		strings.Contains(message, "failed programming external connectivity")
 }
 
+func IsContainerNotFound(err error) bool {
+	if err == nil {
+		return false
+	}
+	return strings.Contains(strings.ToLower(err.Error()), "no such container")
+}
+
 func Stop(name string) error { return StopContext(context.Background(), name) }
 
 func Restart(name string) error { return RestartContext(context.Background(), name) }

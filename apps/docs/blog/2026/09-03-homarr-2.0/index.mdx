@@ -2,6 +2,8 @@
 authors:
   - ajnart
 tags: [homarr, update, version, assistant, custom widgets, dashboards, docker]
+description: Homarr 2.0 introduces Custom Widgets and Workshop, rebuilt board editing, Assistant tooling, responsive layouts, onboarding, and more.
+image: ./img/homarr-v2-dashboard.webp
 draft: false
 ---
 
@@ -21,7 +23,9 @@ Homarr 2.0 is an upgrade, not a brand-new app wearing the same logo. Here is wha
 
 :::warning Back up before upgrading
 
-Create a [Homarr backup](/docs/management/backup) first. Do not test a prerelease image on your only production volume. Backups are boring. Restores are worse.
+Follow the [v1 to v2 upgrade guide](/docs/getting-started/upgrade-v2) and create a
+[Homarr backup](/docs/management/backup) first. Do not test a prerelease image on your only production volume.
+Backups are boring. Restores are worse.
 
 :::
 
@@ -61,7 +65,7 @@ We have called this the **"ultimate Homarr update"**. Not because work stops, bu
 
 We threw out the old drag-and-drop system and rebuilt it on [`dnd-kit`](https://dndkit.com/). Moves and eight-direction resizes are transactional: Homarr previews the result, checks collisions and only saves a valid layout. Bad moves roll back instead of wrecking the board. In short: less fighting with your own dashboard.
 
-![A Calendar tile moving across the rebuilt Homarr 2.0 board grid](./img/drag-and-drop.gif)
+![A Calendar tile repositioned between widgets on the rebuilt Homarr 2.0 board grid](./img/drag-and-drop-still.webp)
 
 ### Goodbye Groups and sections, bonjour Containers
 
@@ -157,6 +161,7 @@ Board startup work runs in parallel, heavy screens load when opened, and identic
 ## Links
 
 - Try the [Homarr 2.0 preview](https://app-v2.preview.homarr.dev).
+- Follow the [v1 to v2 upgrade guide](/docs/getting-started/upgrade-v2).
 - Follow the [v2 release pull request](https://github.com/homarr-labs/homarr/pull/6545) and [public beta thread](https://github.com/homarr-labs/homarr/issues/6600).
 - Compare [v1.76.2 with the release/v2 branch](https://github.com/homarr-labs/homarr/compare/v1.76.2...release/v2).
 - Read the guides for [Boards](/docs/management/boards), [Custom Widgets](/docs/management/custom-widgets), [Assistant](/docs/management/assistant), [MCP](/docs/management/mcp) and [Docker labels](/docs/integrations/docker-labels).

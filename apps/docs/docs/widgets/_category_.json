@@ -5,7 +5,7 @@
   "link": {
     "type": "generated-index",
     "title": "Widgets",
-    "description": "Widgets allow you to show data on your board or control applications. Click on one of the widgets below for further information:",
-    "image": "/img/docusaurus.png"
+    "description": "Widgets display data or provide actions on a board. Choose a widget to see its configuration, supported integrations, and limitations.",
+    "image": "/img/pictures/widgets/widget-dark.jpg"
   }
 }

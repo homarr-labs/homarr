@@ -18,8 +18,18 @@ import { SearchEngineDeleteButton } from "./_search-engine-delete-button";
 
 const searchParamsSchema = z.object({
   search: z.string().optional(),
-  pageSize: z.string().regex(/\d+/).transform(Number).catch(10),
-  page: z.string().regex(/\d+/).transform(Number).catch(1),
+  pageSize: z
+    .string()
+    .regex(/^[1-9]\d*$/u)
+    .transform(Number)
+    .pipe(z.number().int().positive().max(100))
+    .catch(10),
+  page: z
+    .string()
+    .regex(/^[1-9]\d*$/u)
+    .transform(Number)
+    .pipe(z.number().int().positive())
+    .catch(1),
 });
 
 interface SearchEnginesPageProps {
@@ -32,6 +42,13 @@ export default async function SearchEnginesPage(props: SearchEnginesPageProps) {
 
   const searchParams = searchParamsSchema.parse(await props.searchParams);
   const { items: searchEngines, totalCount } = await api.searchEngine.getPaginated(searchParams);
+  const totalPages = Math.ceil(totalCount / searchParams.pageSize);
+
+  if (totalPages > 0 && searchParams.page > totalPages) {
+    const params = createPaginationSearchParams(searchParams.search, searchParams.pageSize, totalPages);
+    redirect(`/manage/search-engines?${params.toString()}`);
+  }
+
   const t = await getI18n("search.engine");
   const tCommon = await getI18n("common");
   const canCreate = session.user.permissions.includes("search-engine-create");
@@ -80,11 +97,7 @@ export default async function SearchEnginesPage(props: SearchEnginesPageProps) {
           flexExpand
         />
       }
-      footer={
-        totalCount > searchParams.pageSize ? (
-          <TablePagination total={Math.ceil(totalCount / searchParams.pageSize)} />
-        ) : undefined
-      }
+      footer={totalPages > 1 ? <TablePagination total={totalPages} /> : undefined}
       floatingPrimaryAction={canCreate}
     >
       {searchEngines.map((searchEngine) => (
@@ -171,4 +184,13 @@ const SearchEngineItem = async ({ searchEngine, canModify, canDelete }: SearchEn
       }
     />
   );
+};
+
+const createPaginationSearchParams = (search: string | undefined, pageSize: number, page: number) => {
+  const params = new URLSearchParams({ page: page.toString() });
+
+  if (search) params.set("search", search);
+  if (pageSize !== 10) params.set("pageSize", pageSize.toString());
+
+  return params;
 };

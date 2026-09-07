@@ -148,8 +148,11 @@ homarr images rm feature
 # List data volumes with owner PR/tag and in-use status
 homarr data
 
-# Delete data volume (safely stops and removes owning container first)
+# Preview deleting a data volume and its owning container
 homarr data rm homarr_feature_data
+
+# Permanently delete the data after reviewing the preview
+homarr data rm homarr_feature_data --force
 
 # Remove stopped containers (prompts without --force)
 homarr prune --force

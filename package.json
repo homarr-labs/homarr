@@ -46,6 +46,7 @@
     "qa:browser-agent:ux": "bash scripts/browser-agent/ux-coherence-happy-paths.sh",
     "release": "semantic-release",
     "scripts:update-bug-report-template": "tsx ./scripts/update-bug-report-template.mts",
+    "scripts:update-openapi": "tsx ./scripts/check-openapi-schema.mts --write",
     "scripts:update-readme-integrations": "tsx ./scripts/update-integration-list.mts",
     "start": "pnpm -F nextjs start",
     "test": "cross-env NODE_ENV=development CI=true vitest run --project \"!e2e\" --retry 2 --coverage.enabled ",

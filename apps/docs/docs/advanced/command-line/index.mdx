@@ -4,6 +4,7 @@ The Homarr image includes a recovery CLI for operations that cannot be completed
 application API; use the [API](/docs/management/api) or [MCP endpoint](/docs/management/mcp) for automation.
 
 Back up the database and stop Homarr before running a command that changes data.
+Failed commands print an error and return a non-zero exit code, so shell scripts can stop safely.
 
 ## Run the recovery CLI
 

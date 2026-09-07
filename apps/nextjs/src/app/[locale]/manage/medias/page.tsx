@@ -1,16 +1,18 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import {
   ActionIcon,
   Anchor,
   Group,
   Image,
   Table,
+  TableScrollContainer,
   TableTbody,
   TableTd,
   TableTh,
   TableThead,
   TableTr,
   Tooltip,
+  VisuallyHidden,
 } from "@mantine/core";
 import { IconExternalLink, IconPhoto } from "@tabler/icons-react";
 import { z } from "zod/v4";
@@ -36,11 +38,21 @@ const searchParamsSchema = z.object({
   search: z.string().optional(),
   includeFromAllUsers: z
     .string()
-    .regex(/true|false/)
+    .regex(/^(?:true|false)$/u)
     .catch("false")
     .transform((value) => value === "true"),
-  pageSize: z.string().regex(/\d+/).transform(Number).catch(10),
-  page: z.string().regex(/\d+/).transform(Number).catch(1),
+  pageSize: z
+    .string()
+    .regex(/^[1-9]\d*$/u)
+    .transform(Number)
+    .pipe(z.number().int().positive().max(100))
+    .catch(10),
+  page: z
+    .string()
+    .regex(/^[1-9]\d*$/u)
+    .transform(Number)
+    .pipe(z.number().int().positive())
+    .catch(1),
 });
 
 interface MediaListPageProps {
@@ -58,6 +70,13 @@ export default async function MediaListPage(props: MediaListPageProps) {
   const [tCommon, tEntities] = await Promise.all([getI18n("common"), getI18n("common.entity")]);
   const searchParams = searchParamsSchema.parse(await props.searchParams);
   const { items: medias, totalCount } = await api.media.getPaginated(searchParams);
+  const totalPages = Math.ceil(totalCount / searchParams.pageSize);
+
+  if (totalPages > 0 && searchParams.page > totalPages) {
+    const params = createPaginationSearchParams(searchParams, totalPages);
+    redirect(`/manage/medias?${params.toString()}`);
+  }
+
   const canUpload = session.user.permissions.includes("media-upload");
 
   return (
@@ -82,27 +101,33 @@ export default async function MediaListPage(props: MediaListPageProps) {
           )}
         </Group>
       }
-      footer={<TablePagination total={Math.ceil(totalCount / searchParams.pageSize)} />}
+      footer={totalPages > 1 ? <TablePagination total={totalPages} /> : undefined}
       floatingPrimaryAction={canUpload}
     >
       {medias.length === 0 && <NoResults icon={IconPhoto} title={tMedia("noResults.title")} />}
       {medias.length > 0 && (
-        <Table striped highlightOnHover>
-          <TableThead>
-            <TableTr>
-              <TableTh></TableTh>
-              <TableTh>{tCommon("field.name")}</TableTh>
-              <TableTh>{tMedia("field.size")}</TableTh>
-              <TableTh>{tMedia("field.creator")}</TableTh>
-              <TableTh></TableTh>
-            </TableTr>
-          </TableThead>
-          <TableTbody>
-            {medias.map((media) => (
-              <Row key={media.id} media={media} />
-            ))}
-          </TableTbody>
-        </Table>
+        <TableScrollContainer minWidth={680}>
+          <Table striped highlightOnHover>
+            <TableThead>
+              <TableTr>
+                <TableTh>
+                  <VisuallyHidden>{tMedia("field.preview")}</VisuallyHidden>
+                </TableTh>
+                <TableTh>{tCommon("field.name")}</TableTh>
+                <TableTh>{tMedia("field.size")}</TableTh>
+                <TableTh>{tMedia("field.creator")}</TableTh>
+                <TableTh>
+                  <VisuallyHidden>{tMedia("field.actions")}</VisuallyHidden>
+                </TableTh>
+              </TableTr>
+            </TableThead>
+            <TableTbody>
+              {medias.map((media) => (
+                <Row key={media.id} media={media} />
+              ))}
+            </TableTbody>
+          </Table>
+        </TableScrollContainer>
       )}
     </ManagePageLayout>
   );
@@ -129,7 +154,7 @@ const Row = async ({ media }: RowProps) => {
           fit="contain"
         />
       </TableTd>
-      <TableTd>{media.name}</TableTd>
+      <TableTh scope="row">{media.name}</TableTh>
       <TableTd>{formatBytes(media.size)}</TableTd>
       <TableTd>
         {media.creator ? (
@@ -146,11 +171,13 @@ const Row = async ({ media }: RowProps) => {
       <TableTd w={64}>
         <Group wrap="nowrap" gap="xs">
           <CopyMedia media={media} />
-          <Tooltip label={tMedia("action.open.label")} openDelay={500}>
+          <Tooltip label={tMedia("action.open.labelNamed", { name: media.name })} openDelay={500}>
             <ActionIcon
+              aria-label={tMedia("action.open.labelNamed", { name: media.name })}
               component="a"
               href={createLocalImageUrl(media.id)}
               target="_blank"
+              rel="noopener noreferrer"
               color="gray"
               variant="subtle"
             >
@@ -162,4 +189,14 @@ const Row = async ({ media }: RowProps) => {
       </TableTd>
     </TableTr>
   );
+};
+
+const createPaginationSearchParams = (searchParams: z.infer<typeof searchParamsSchema>, page: number) => {
+  const params = new URLSearchParams({ page: page.toString() });
+
+  if (searchParams.search) params.set("search", searchParams.search);
+  if (searchParams.includeFromAllUsers) params.set("includeFromAllUsers", "true");
+  if (searchParams.pageSize !== 10) params.set("pageSize", searchParams.pageSize.toString());
+
+  return params;
 };

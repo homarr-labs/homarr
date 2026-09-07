@@ -25,7 +25,7 @@ const searchParamsSchema = z.object({
     .string()
     .regex(/^[1-9]\d*$/u)
     .transform(Number)
-    .pipe(z.number().int().positive())
+    .pipe(z.number().int().positive().max(100))
     .catch(10),
   page: z
     .string()
@@ -52,6 +52,13 @@ export default async function AppsPage(props: AppsPageProps) {
   const { items: apps, totalCount } = canManageAll
     ? await api.app.getPaginated(searchParams)
     : { items: [], totalCount: 0 };
+  const totalPages = Math.ceil(totalCount / searchParams.pageSize);
+
+  if (totalPages > 0 && searchParams.page > totalPages) {
+    const params = createPaginationSearchParams(searchParams.search, searchParams.pageSize, totalPages);
+    redirect(`/manage/apps?${params.toString()}`);
+  }
+
   const t = await getI18n("app");
   const tCommon = await getI18n("common");
   const hasSearch = canManageAll && Boolean(searchParams.search?.trim());
@@ -104,11 +111,7 @@ export default async function AppsPage(props: AppsPageProps) {
           />
         ) : undefined
       }
-      footer={
-        totalCount > searchParams.pageSize ? (
-          <TablePagination total={Math.ceil(totalCount / searchParams.pageSize)} />
-        ) : undefined
-      }
+      footer={totalPages > 1 ? <TablePagination total={totalPages} /> : undefined}
       floatingPrimaryAction={canCreate}
     >
       {apps.map((app) => (
@@ -186,4 +189,13 @@ const AppItem = ({ app, canDelete, editLabel }: AppItemProps) => {
       }
     />
   );
+};
+
+const createPaginationSearchParams = (search: string | undefined, pageSize: number, page: number) => {
+  const params = new URLSearchParams({ page: page.toString() });
+
+  if (search) params.set("search", search);
+  if (pageSize !== 10) params.set("pageSize", pageSize.toString());
+
+  return params;
 };

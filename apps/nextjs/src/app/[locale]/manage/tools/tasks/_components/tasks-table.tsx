@@ -1,6 +1,6 @@
 "use client";
 
-import { ActionIcon, Badge, Button, Group, Select, Text } from "@mantine/core";
+import { ActionIcon, Badge, Button, Group, Select, Text, Tooltip } from "@mantine/core";
 import { useMap } from "@mantine/hooks";
 import { IconPlayerPlay, IconPower, IconRefresh } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
@@ -84,6 +84,34 @@ type JobData = RouterOutputs["cronJobs"]["getJobs"][number] & {
   lastExecutionTime?: string;
 };
 
+type TaskControl = "interval" | "toggle" | "trigger";
+
+const restoreTaskControlFocus = (jobName: string, action: TaskControl, originalControl: HTMLElement | null) => {
+  const focusWhenEnabled = (attemptsRemaining: number) => {
+    if (document.activeElement && document.activeElement !== document.body) return;
+
+    let control: HTMLElement | null = null;
+    if (originalControl?.isConnected && originalControl !== document.body) control = originalControl;
+    if (!control) {
+      const controls = document.querySelectorAll<HTMLElement>(`[data-task-action="${action}"]`);
+      for (const candidate of controls) {
+        if (candidate.dataset.taskName !== jobName) continue;
+        control = candidate;
+        break;
+      }
+    }
+
+    if (control && !control.matches(":disabled")) {
+      control.focus();
+      return;
+    }
+    if (attemptsRemaining <= 0) return;
+    window.setTimeout(() => focusWhenEnabled(attemptsRemaining - 1), 100);
+  };
+
+  window.setTimeout(() => focusWhenEnabled(50), 0);
+};
+
 const createColumns = (
   tCommon: ScopedTranslationFunction<"common">,
   tTasks: ScopedTranslationFunction<"management.page.tool.tasks">,
@@ -119,7 +147,7 @@ const createColumns = (
     Cell({ row }) {
       if (row.original.preventCustomInterval) return null;
 
-      const handleIntervalChange = (newCron: string | null) => {
+      const handleIntervalChange = async (newCron: string | null, originalControl: HTMLElement | null) => {
         if (!newCron || newCron === row.original.cron) return;
 
         const currentStates = loadingStates.get(row.original.name) ?? {
@@ -133,10 +161,12 @@ const createColumns = (
         });
 
         try {
-          updateIntervalMutation.mutate({
+          await updateIntervalMutation.mutateAsync({
             name: row.original.name,
             cron: newCron,
           });
+        } catch {
+          // The mutation callback displays the error notification.
         } finally {
           const updatedStates = loadingStates.get(row.original.name) ?? {
             toggle: false,
@@ -147,17 +177,24 @@ const createColumns = (
             ...updatedStates,
             interval: false,
           });
+          restoreTaskControlFocus(row.original.name, "interval", originalControl);
         }
       };
 
       return (
         <Select
           value={row.original.cron}
-          onChange={handleIntervalChange}
+          onChange={(newCron) => {
+            let originalControl: HTMLElement | null = null;
+            if (document.activeElement instanceof HTMLElement) originalControl = document.activeElement;
+            void handleIntervalChange(newCron, originalControl);
+          }}
           data={cronExpressions.map(({ value, label }) => ({
             value,
             label: label(tTasks),
           }))}
+          data-task-action="interval"
+          data-task-name={row.original.name}
           size="sm"
           disabled={loadingStates.get(row.original.name)?.interval ?? false}
           style={{ minWidth: 180 }}
@@ -188,8 +225,14 @@ const createColumns = (
     enableSorting: false,
     Cell({ row }) {
       const status = jobStatusMap.get(row.original.name);
+      const jobLabel = tTasks(`job.${row.original.name}.label`);
+      const triggerPending = loadingStates.get(row.original.name)?.trigger ?? false;
+      const togglePending = loadingStates.get(row.original.name)?.toggle ?? false;
+      const triggerLabel = tTasks("action.run", { name: jobLabel });
+      let toggleLabel = tTasks("action.enable", { name: jobLabel });
+      if (row.original.isEnabled) toggleLabel = tTasks("action.disable", { name: jobLabel });
 
-      const handleToggleEnabled = () => {
+      const handleToggleEnabled = async (originalControl: HTMLButtonElement) => {
         const currentStates = loadingStates.get(row.original.name) ?? {
           toggle: false,
           trigger: false,
@@ -201,10 +244,12 @@ const createColumns = (
         });
         try {
           if (row.original.isEnabled) {
-            disableMutation.mutate(row.original.name);
+            await disableMutation.mutateAsync(row.original.name);
           } else {
-            enableMutation.mutate(row.original.name);
+            await enableMutation.mutateAsync(row.original.name);
           }
+        } catch {
+          // The mutation callback displays the error notification.
         } finally {
           const updatedStates = loadingStates.get(row.original.name) ?? {
             toggle: false,
@@ -215,11 +260,12 @@ const createColumns = (
             ...updatedStates,
             toggle: false,
           });
+          restoreTaskControlFocus(row.original.name, "toggle", originalControl);
         }
       };
 
-      const handleTrigger = () => {
-        if (status?.status === "running") return;
+      const handleTrigger = async (originalControl: HTMLButtonElement) => {
+        if (status?.status === "running" || triggerPending) return;
 
         const currentStates = loadingStates.get(row.original.name) ?? {
           toggle: false,
@@ -231,7 +277,9 @@ const createColumns = (
           trigger: true,
         });
         try {
-          triggerMutation.mutate(row.original.name);
+          await triggerMutation.mutateAsync(row.original.name);
+        } catch {
+          // The mutation callback displays the error notification.
         } finally {
           const updatedStates = loadingStates.get(row.original.name) ?? {
             toggle: false,
@@ -242,32 +290,44 @@ const createColumns = (
             ...updatedStates,
             trigger: false,
           });
+          restoreTaskControlFocus(row.original.name, "trigger", originalControl);
         }
       };
 
       return (
         <Group gap="xs">
           {!row.original.preventManualExecution && (
+            <Tooltip label={triggerLabel} openDelay={500}>
+              <ActionIcon
+                aria-label={triggerLabel}
+                onClick={(event) => void handleTrigger(event.currentTarget)}
+                data-task-action="trigger"
+                data-task-name={row.original.name}
+                disabled={status?.status === "running" || triggerPending}
+                loading={triggerPending}
+                variant="light"
+                color="green"
+                size="md"
+              >
+                <IconPlayerPlay size={16} />
+              </ActionIcon>
+            </Tooltip>
+          )}
+          <Tooltip label={toggleLabel} openDelay={500}>
             <ActionIcon
-              onClick={handleTrigger}
-              disabled={status?.status === "running"}
-              loading={loadingStates.get(row.original.name)?.trigger ?? false}
+              aria-label={toggleLabel}
+              onClick={(event) => void handleToggleEnabled(event.currentTarget)}
+              data-task-action="toggle"
+              data-task-name={row.original.name}
+              disabled={togglePending}
+              loading={togglePending}
               variant="light"
-              color="green"
+              color={row.original.isEnabled ? "green" : "gray"}
               size="md"
             >
-              <IconPlayerPlay size={16} />
+              {row.original.isEnabled ? <IconPower size={16} /> : <IconPowerOff size={16} />}
             </ActionIcon>
-          )}
-          <ActionIcon
-            onClick={handleToggleEnabled}
-            loading={loadingStates.get(row.original.name)?.toggle ?? false}
-            variant="light"
-            color={row.original.isEnabled ? "green" : "gray"}
-            size="md"
-          >
-            {row.original.isEnabled ? <IconPower size={16} /> : <IconPowerOff size={16} />}
-          </ActionIcon>
+          </Tooltip>
         </Group>
       );
     },

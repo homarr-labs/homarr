@@ -20,10 +20,10 @@ import {
 import { getCustomWidgetDefaultOptions } from "@homarr/custom-widgets/core";
 import { useI18n } from "@homarr/translation/client";
 
+import { useUnsavedChangesGuard } from "~/components/manage/use-unsaved-changes-guard";
 import { useCustomWidgetFormDocumentDirty } from "./_custom-widget-form-state";
 import { areCustomWidgetValuesEqual } from "./_custom-widget-value-equality";
 import { useCustomWidgetFormAnalysisField } from "./_use-custom-widget-form-analysis";
-import { useUnsavedChangesGuard } from "./_use-unsaved-changes-guard";
 import classes from "./_custom-widget-form.module.css";
 
 const sectionLinks = [
