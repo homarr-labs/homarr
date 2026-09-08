@@ -17,7 +17,7 @@ export const bookmarksWidget: WidgetDefinition = {
       {
         name: "Layout",
         description:
-          "How bookmarks use the available widget space. Layouts stay compact and reduce card size when needed.",
+          "How bookmarks use the available widget space. Vertical keeps compact rows and stable title visibility.",
         values: { type: "select", options: ["Adaptive", "Vertical", "Horizontal", "Grid", "Compact grid", "Icons"] },
         defaultValue: "Adaptive",
       },
