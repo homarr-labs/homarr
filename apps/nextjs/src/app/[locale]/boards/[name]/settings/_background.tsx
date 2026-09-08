@@ -1,7 +1,7 @@
 "use client";
 
 import { startTransition } from "react";
-import { ActionIcon, Autocomplete, Center, Grid, Group, Popover, Stack, Text } from "@mantine/core";
+import { ActionIcon, Autocomplete, Grid, Group, Popover, Stack, Text } from "@mantine/core";
 import { useDebouncedValue } from "@mantine/hooks";
 import { IconPhotoOff, IconUpload } from "@tabler/icons-react";
 
@@ -24,6 +24,7 @@ interface Props {
 
 export const BackgroundSettingsContent = ({ form }: Props) => {
   const tBoard = useI18n("board");
+  const tMedia = useI18n("media");
   const { data: session } = useSession();
 
   const [debouncedSearch] = useDebouncedValue(form.values.backgroundImageUrl ?? "", 200);
@@ -50,14 +51,15 @@ export const BackgroundSettingsContent = ({ form }: Props) => {
           <Group wrap="nowrap" gap="xs" w="100%" align="start">
             <Autocomplete
               flex={1}
+              leftSectionPointerEvents="all"
               leftSection={
                 form.values.backgroundImageUrl &&
                 form.values.backgroundImageUrl.trim().length >= 2 && (
                   <Popover width={300} withArrow>
                     <Popover.Target>
-                      <Center h="100%">
+                      <ActionIcon type="button" variant="subtle" aria-label={tMedia("field.preview")}>
                         <ImagePreview src={form.values.backgroundImageUrl} w={20} h={20} />
-                      </Center>
+                      </ActionIcon>
                     </Popover.Target>
                     <Popover.Dropdown>
                       <ImagePreview src={form.values.backgroundImageUrl} w="100%" />
@@ -113,7 +115,15 @@ export const BackgroundSettingsContent = ({ form }: Props) => {
                 }}
               >
                 {({ onClick, loading }) => (
-                  <ActionIcon onClick={onClick} loading={loading} mt={24} size={36} variant="default">
+                  <ActionIcon
+                    type="button"
+                    aria-label={tMedia("action.upload.label")}
+                    onClick={onClick}
+                    loading={loading}
+                    mt={24}
+                    size={36}
+                    variant="default"
+                  >
                     <IconUpload size={16} stroke={1.5} />
                   </ActionIcon>
                 )}

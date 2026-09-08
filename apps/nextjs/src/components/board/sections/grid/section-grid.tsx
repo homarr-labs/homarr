@@ -19,11 +19,8 @@ import {
   getReadonlyCanvasAttributes,
   normalizeGridPlacement,
 } from "~/components/board/layout";
-import {
-  calculateBoardUiScale,
-  useBoardCanvasScale,
-  useBoardCanvasViewportHeight,
-} from "~/components/board/layout/scaled-board-canvas";
+import { useBoardCanvasScale, useBoardCanvasViewportHeight } from "~/components/board/layout/scaled-board-canvas";
+import { calculateBoardUiScale } from "~/components/board/layout/scaling";
 import { useGridEditorRuntimeStatus } from "./grid-editor-runtime";
 import { createGridEntryElementStore, useGridEditorRegistry } from "./grid-editor-registry";
 import type { SectionGridPlacement } from "./use-grid-layout-actions";

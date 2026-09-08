@@ -15,6 +15,24 @@ card size and keeps the canvas centered while it fits; otherwise the board's
 named canvas region scrolls on both axes. Every root lane keeps at least one
 viewport of height, and edit-mode previews extend it downward as needed.
 
+## Sizing policy and previews
+
+`scaling.ts` owns the explicit `BoardScaling` union and pure canvas metrics.
+`getBoardScaling` is the adapter from the persisted boolean/size settings. Both
+the live renderer and settings thumbnail consume the same metrics; neither
+should add viewport fitting outside this module. Fixed sizing uses CSS pixels
+and never compensates for browser zoom or device-pixel ratio.
+
+`canvas-geometry.ts` owns lane offsets, widths, and gaps for both renderers.
+The settings thumbnail applies a separate miniature transform after calculating
+board geometry at a representative layout width. That display transform must never feed
+back into the board sizing policy.
+
+To retire responsive sizing, migrate the persisted default/settings, remove
+the responsive policy branch and its UI option, then remove the responsive
+viewport styles. Placement geometry and the fixed renderer do not need a
+second conversion. Nested Container fitting is a separate layout concern.
+
 The read-only renderer should:
 
 1. convert persisted `xOffset/yOffset/width/height` values to `x/y/w/h`;

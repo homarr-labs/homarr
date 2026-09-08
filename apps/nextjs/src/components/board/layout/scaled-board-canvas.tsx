@@ -1,12 +1,17 @@
 "use client";
 
 import type { CSSProperties, PropsWithChildren } from "react";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { Box } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 
-import { BOARD_GRID_ITEM_INSET, LOGICAL_GRID_PITCH } from "./constants";
+import { BOARD_GRID_ITEM_INSET } from "./constants";
+import type { BoardScaling } from "./scaling";
+import { calculateBoardUiScale, getBoardCanvasMetrics } from "./scaling";
+import { useCanvasViewportSize } from "./use-canvas-viewport-size";
 import classes from "./scaled-board-canvas.module.css";
+import appearanceClasses from "./canvas-appearance.module.css";
+import scrollbarClasses from "./canvas-scrollbar.module.css";
 
 const BoardCanvasScaleContext = createContext(1);
 const BoardCanvasViewportHeightContext = createContext<number | null>(null);
@@ -14,32 +19,11 @@ const BoardCanvasViewportHeightContext = createContext<number | null>(null);
 export const useBoardCanvasScale = () => useContext(BoardCanvasScaleContext);
 export const useBoardCanvasViewportHeight = () => useContext(BoardCanvasViewportHeightContext);
 
-export const calculateBoardCanvasScale = (availableWidth: number, logicalWidth: number) => {
-  if (!Number.isFinite(availableWidth) || !Number.isFinite(logicalWidth)) return 1;
-  if (availableWidth <= 0 || logicalWidth <= 0) return 1;
-
-  return availableWidth / logicalWidth;
-};
-
-export const calculateFixedBoardCanvasScale = (fixedItemSize: number) => {
-  if (!Number.isFinite(fixedItemSize) || fixedItemSize <= 0) return 1;
-
-  // The configured size is the painted card, after the two fixed physical insets
-  // have been removed from its scaled logical grid footprint.
-  return (fixedItemSize + 2 * BOARD_GRID_ITEM_INSET) / LOGICAL_GRID_PITCH;
-};
-
-export const calculateBoardUiScale = (canvasScale: number) => {
-  if (!Number.isFinite(canvasScale) || canvasScale <= 0) return 1;
-
-  return canvasScale < 1 ? 1 / canvasScale : 1;
-};
-
 interface ScaledBoardCanvasProps {
   logicalWidth: number;
   initialLogicalHeight: number;
   initialAvailableWidth: number;
-  fixedItemSize?: number;
+  scaling: BoardScaling;
   label: string;
 }
 
@@ -52,11 +36,11 @@ export const ScaledBoardCanvas = ({
   logicalWidth,
   initialLogicalHeight,
   initialAvailableWidth,
-  fixedItemSize,
+  scaling,
   label,
   children,
 }: PropsWithChildren<ScaledBoardCanvasProps>) => {
-  const { ref: viewportRef, width: availableWidth, height: viewportHeight } = useElementSize<HTMLDivElement>();
+  const { ref: viewportRef, width: availableWidth, height: viewportHeight } = useCanvasViewportSize();
   const { ref: canvasRef, height: logicalHeight } = useElementSize<HTMLDivElement>();
   const [isHydrated, setIsHydrated] = useState(false);
 
@@ -66,29 +50,27 @@ export const ScaledBoardCanvas = ({
 
   const resolvedAvailableWidth = availableWidth > 0 ? availableWidth : initialAvailableWidth;
   const resolvedLogicalHeight = logicalHeight > 0 ? logicalHeight : initialLogicalHeight;
-  const isFixedScaling = fixedItemSize !== undefined;
-  const scale = useMemo(() => {
-    if (fixedItemSize !== undefined) return calculateFixedBoardCanvasScale(fixedItemSize);
-
-    return calculateBoardCanvasScale(resolvedAvailableWidth, logicalWidth);
-  }, [fixedItemSize, logicalWidth, resolvedAvailableWidth]);
+  const isFixedScaling = scaling.mode === "fixed";
+  const {
+    scale,
+    width: visualWidth,
+    centered,
+    overflows,
+  } = getBoardCanvasMetrics(scaling, resolvedAvailableWidth, logicalWidth);
   const uiScale = calculateBoardUiScale(scale);
   const inverseScale = scale > 0 ? 1 / scale : 1;
-  const visualWidth = logicalWidth * scale;
-  const hasHorizontalOverflow = resolvedAvailableWidth > 0 && visualWidth - resolvedAvailableWidth > 0.5;
-  const shouldCenterCanvas = isFixedScaling && visualWidth <= resolvedAvailableWidth;
 
   return (
     <Box
       component="section"
       ref={viewportRef}
-      className={classes.viewport}
+      className={`${classes.viewport} ${isFixedScaling ? scrollbarClasses.scrollbar : ""}`}
       data-testid="board-canvas"
       data-board-hydrated={isHydrated ? "true" : "false"}
-      data-canvas-scaling={isFixedScaling ? "fixed" : "responsive"}
+      data-canvas-scaling={scaling.mode}
       data-canvas-scale={scale}
-      data-canvas-overflow={hasHorizontalOverflow ? "true" : "false"}
-      data-canvas-centered={shouldCenterCanvas ? "true" : undefined}
+      data-canvas-overflow={overflows ? "true" : "false"}
+      data-canvas-centered={centered ? "true" : undefined}
       data-canvas-initial-height={initialLogicalHeight}
       data-canvas-initial-width={initialAvailableWidth}
       aria-label={label}
@@ -106,7 +88,7 @@ export const ScaledBoardCanvas = ({
       >
         <Box
           ref={canvasRef}
-          className={classes.canvas}
+          className={`${classes.canvas} ${appearanceClasses.appearance}`}
           style={{
             "--board-grid-card-inset": `${BOARD_GRID_ITEM_INSET}px`,
             "--board-canvas-inverse-scale": inverseScale,

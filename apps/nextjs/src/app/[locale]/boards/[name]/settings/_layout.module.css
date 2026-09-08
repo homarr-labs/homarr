@@ -1,29 +1,53 @@
-.scalingSettings,
 .gutterSettings {
   background: color-mix(in srgb, var(--mantine-color-default) 55%, transparent);
 }
 
+.scalingSettings {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 0.6fr);
+  gap: var(--mantine-spacing-xl);
+  padding: var(--mantine-spacing-lg);
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+  background: var(--mantine-color-body);
+}
+
+.scalingControls {
+  align-self: center;
+  min-width: 0;
+}
+
 .fixedItemSizePreview {
   display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: var(--mantine-spacing-md);
   margin: 0;
-  min-width: 12rem;
+  min-width: 0;
+  min-height: 200px;
 }
 
 .fixedItemSizePreviewTile {
   display: grid;
   flex: 0 0 auto;
   place-items: center;
-  min-width: 1.5rem;
-  min-height: 1.5rem;
   color: var(--mantine-primary-color-contrast);
   background: var(--mantine-primary-color-filled);
   border: 1px solid var(--mantine-primary-color-filled-hover);
   border-radius: var(--mantine-radius-md);
-  transition:
-    width 180ms ease-out,
-    height 180ms ease-out;
+}
+
+@media (max-width: 48em) {
+  .scalingSettings {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 62em) {
+  .layoutPreview {
+    order: -1;
+  }
 }
 
 .gutterPreview {

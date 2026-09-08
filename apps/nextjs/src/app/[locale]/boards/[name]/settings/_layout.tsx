@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Badge,
@@ -12,6 +12,8 @@ import {
   Input,
   NumberInput,
   Paper,
+  Select,
+  Alert,
   Slider,
   Stack,
   Switch,
@@ -21,8 +23,8 @@ import {
 import { IconEdit, IconRefresh } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import type { RouterOutputs } from "@homarr/api";
 import { createId } from "@homarr/common";
-import { BOARD_FIXED_ITEM_SIZE_MAX, BOARD_FIXED_ITEM_SIZE_MIN } from "@homarr/definitions";
 import type { UseFormReturnType } from "@homarr/form";
 import { showErrorNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
@@ -31,6 +33,7 @@ import { InlineConfirmButton } from "@homarr/ui";
 import { SectionCard } from "~/components/manage/section-card";
 import type { Board } from "../../_types";
 import { LayoutPreview } from "./_layout-preview";
+import { ScalingSettings } from "./_scaling";
 import type { FormValues } from "./_settings-form";
 import classes from "./_layout.module.css";
 
@@ -39,11 +42,22 @@ interface Props {
   form: UseFormReturnType<FormValues>;
   isSaving: boolean;
   saveSettingsAsync: () => Promise<FormValues | null>;
+  selectedLayoutId: string | null;
+  setSelectedLayoutId: (value: string | null) => void;
+  apps: RouterOutputs["app"]["byIds"];
 }
 
 const layoutRoleOrder = { base: 0, custom: 1, mobile: 2 } as const;
 
-export const LayoutSettingsContent = ({ board, form, isSaving, saveSettingsAsync }: Props) => {
+export const LayoutSettingsContent = ({
+  board,
+  form,
+  isSaving,
+  saveSettingsAsync,
+  selectedLayoutId,
+  setSelectedLayoutId,
+  apps,
+}: Props) => {
   const tBoard = useI18n("board");
   const tLayout = useI18n("layout");
   const tCommon = useI18n("common");
@@ -59,18 +73,6 @@ export const LayoutSettingsContent = ({ board, form, isSaving, saveSettingsAsync
       });
     },
   });
-  const appIds = useMemo(
-    () =>
-      Array.from(
-        new Set(
-          board.items.flatMap((item) =>
-            item.kind === "app" && typeof item.options.appId === "string" ? [item.options.appId] : [],
-          ),
-        ),
-      ),
-    [board.items],
-  );
-  const { data: apps = [] } = clientApi.app.byIds.useQuery(appIds, { enabled: appIds.length > 0 });
 
   const openLayoutEditorAsync = async (layout: FormValues["layouts"][number]) => {
     setEditingLayoutId(layout.id);
@@ -107,54 +109,13 @@ export const LayoutSettingsContent = ({ board, form, isSaving, saveSettingsAsync
   const displayedLayouts = form.values.layouts
     .map((layout, index) => ({ layout, index }))
     .toSorted((first, second) => layoutRoleOrder[first.layout.role] - layoutRoleOrder[second.layout.role]);
-  const fixedItemPreviewSize =
-    Math.min(BOARD_FIXED_ITEM_SIZE_MAX, Math.max(BOARD_FIXED_ITEM_SIZE_MIN, form.values.fixedItemSize)) / 4;
+  const activeLayoutId =
+    displayedLayouts.find(({ layout }) => layout.id === selectedLayoutId)?.layout.id ?? baseLayout?.id;
 
   return (
     <SectionCard title={tBoard("setting.section.layout.title")}>
       <Stack gap="lg">
-        <Paper className={classes.scalingSettings} p="md" withBorder>
-          <Stack gap="md">
-            <Text fw={600}>{tBoard("setting.section.layout.scaling.title")}</Text>
-            <Switch
-              label={tBoard("field.fixedScaling.label")}
-              description={tBoard("field.fixedScaling.description")}
-              {...form.getInputProps("fixedScaling", { type: "checkbox" })}
-            />
-            <Group align="center" justify="space-between" gap="xl" wrap="wrap">
-              <NumberInput
-                label={tBoard("field.fixedItemSize.label")}
-                description={tBoard("field.fixedItemSize.description")}
-                min={BOARD_FIXED_ITEM_SIZE_MIN}
-                max={BOARD_FIXED_ITEM_SIZE_MAX}
-                step={10}
-                allowDecimal={false}
-                suffix=" px"
-                w={{ base: "100%", sm: 240 }}
-                {...form.getInputProps("fixedItemSize")}
-              />
-              <Box
-                component="figure"
-                className={classes.fixedItemSizePreview}
-                aria-label={tBoard("field.fixedItemSize.previewLabel", { size: form.values.fixedItemSize })}
-              >
-                <Box
-                  className={classes.fixedItemSizePreviewTile}
-                  w={fixedItemPreviewSize}
-                  h={fixedItemPreviewSize}
-                  aria-hidden="true"
-                >
-                  <Text size="xs" fw={600}>
-                    1 × 1
-                  </Text>
-                </Box>
-                <Text size="sm" fw={500}>
-                  {tBoard("field.fixedItemSize.previewValue", { size: form.values.fixedItemSize })}
-                </Text>
-              </Box>
-            </Group>
-          </Stack>
-        </Paper>
+        <ScalingSettings form={form} />
 
         <Group justify="space-between" align="flex-start" wrap="wrap">
           <Stack gap={2} maw="52rem">
@@ -179,144 +140,169 @@ export const LayoutSettingsContent = ({ board, form, isSaving, saveSettingsAsync
               let insertionIndex = form.values.layouts.findIndex((layout) => layout.breakpoint > nextBreakpoint);
               if (insertionIndex === -1) insertionIndex = form.values.layouts.length;
               form.insertListItem("layouts", newLayout, insertionIndex);
+              setSelectedLayoutId(newLayout.id);
             }}
           >
             {tBoard("setting.section.layout.responsive.action.add")}
           </Button>
         </Group>
 
-        {displayedLayouts.map(({ layout, index }) => {
-          const persistedLayout = board.layouts.find((candidate) => candidate.id === layout.id);
-          const sourceLayout = persistedLayout ?? board.layouts.find((candidate) => candidate.role === "base");
+        <Select
+          label={tBoard("setting.section.layout.preview.layout")}
+          value={activeLayoutId}
+          onChange={setSelectedLayoutId}
+          allowDeselect={false}
+          error={form.errors.layouts}
+          data={displayedLayouts.map(({ layout, index }) => ({
+            value: layout.id,
+            label: `${layout.name || tBoard(`setting.section.layout.role.${layout.role}` as never)} · ${layout.columnCount} ${tBoard("setting.section.layout.preview.columns")}${Object.keys(form.errors).some((key) => key.startsWith(`layouts.${index}.`)) ? " ⚠" : ""}`,
+          }))}
+        />
 
-          return (
-            <Fieldset
-              key={layout.id}
-              legend={
-                <Group gap="xs">
-                  <Text>{layout.name || tBoard(`setting.section.layout.role.${layout.role}` as never)}</Text>
-                  <Badge size="sm" variant="default">
-                    {tBoard(`setting.section.layout.role.${layout.role}` as never)}
-                  </Badge>
-                </Group>
-              }
-              bg="transparent"
-            >
-              <Grid gap={{ base: "lg", xl: "xl" }} align="flex-start">
-                <Grid.Col span={{ base: 12, md: 6, lg: 4 }}>
-                  <Stack gap="md">
-                    <TextInput {...form.getInputProps(`layouts.${index}.name`)} label={tCommon("field.name")} />
-                    <Input.Wrapper
-                      label={tLayout("field.columnCount.label")}
-                      description={tLayout("field.columnCount.description")}
-                    >
-                      <Slider
-                        thumbLabel={`${tLayout("field.columnCount.label")} — ${layout.name}`}
-                        mt="xs"
-                        min={1}
-                        max={24}
-                        step={1}
-                        marks={[1, 6, 12, 18, 24].map((value) => ({ value, label: String(value) }))}
-                        styles={{
-                          markLabel: { color: "light-dark(var(--mantine-color-black), var(--mantine-color-white))" },
-                        }}
-                        value={layout.columnCount}
-                        onChange={(columnCount) => {
-                          const left = Math.min(layout.leftGutterColumnCount, Math.max(0, columnCount - 1));
-                          const right = Math.min(layout.rightGutterColumnCount, Math.max(0, columnCount - left - 1));
-                          form.setFieldValue(`layouts.${index}.columnCount`, columnCount);
-                          form.setFieldValue(`layouts.${index}.leftGutterColumnCount`, left);
-                          form.setFieldValue(`layouts.${index}.rightGutterColumnCount`, right);
-                        }}
+        {Object.entries(form.errors)
+          .filter(([key]) => key.startsWith("layouts."))
+          .map(([key, error]) => (
+            <Alert key={key} color="red">
+              {error}
+            </Alert>
+          ))}
+        {displayedLayouts
+          .filter(({ layout }) => layout.id === activeLayoutId)
+          .map(({ layout, index }) => {
+            const persistedLayout = board.layouts.find((candidate) => candidate.id === layout.id);
+            const sourceLayout = persistedLayout ?? board.layouts.find((candidate) => candidate.role === "base");
+
+            return (
+              <Fieldset
+                key={layout.id}
+                legend={
+                  <Group gap="xs">
+                    <Text>{layout.name || tBoard(`setting.section.layout.role.${layout.role}` as never)}</Text>
+                    <Badge size="sm" variant="default">
+                      {tBoard(`setting.section.layout.role.${layout.role}` as never)}
+                    </Badge>
+                  </Group>
+                }
+                bg="transparent"
+              >
+                <Grid gap="xl" align="flex-start">
+                  <Grid.Col span={{ base: 12, md: 4 }}>
+                    <Stack gap="md">
+                      <TextInput {...form.getInputProps(`layouts.${index}.name`)} label={tCommon("field.name")} />
+                      <Input.Wrapper
+                        label={tLayout("field.columnCount.label")}
+                        description={tLayout("field.columnCount.description")}
+                      >
+                        <Slider
+                          thumbLabel={`${tLayout("field.columnCount.label")} — ${layout.name}`}
+                          mt="xs"
+                          mb="lg"
+                          min={1}
+                          max={24}
+                          step={1}
+                          marks={[1, 6, 12, 18, 24].map((value) => ({ value, label: String(value) }))}
+                          styles={{
+                            markLabel: { color: "light-dark(var(--mantine-color-black), var(--mantine-color-white))" },
+                          }}
+                          value={layout.columnCount}
+                          onChange={(columnCount) => {
+                            const left = Math.min(layout.leftGutterColumnCount, Math.max(0, columnCount - 1));
+                            const right = Math.min(layout.rightGutterColumnCount, Math.max(0, columnCount - left - 1));
+                            form.setFieldValue(`layouts.${index}.columnCount`, columnCount);
+                            form.setFieldValue(`layouts.${index}.leftGutterColumnCount`, left);
+                            form.setFieldValue(`layouts.${index}.rightGutterColumnCount`, right);
+                          }}
+                        />
+                      </Input.Wrapper>
+                      <NumberInput
+                        {...form.getInputProps(`layouts.${index}.breakpoint`)}
+                        label={tLayout("field.breakpoint.label")}
+                        description={
+                          layout.role === "mobile"
+                            ? tBoard("setting.section.layout.mobile.breakpointDescription")
+                            : tLayout("field.breakpoint.description")
+                        }
+                        disabled={layout.role === "mobile"}
+                        styles={{ description: { color: "var(--mantine-color-text)" } }}
+                        min={layout.role === "mobile" ? 0 : 1}
+                        max={32767}
+                        allowDecimal={false}
                       />
-                    </Input.Wrapper>
-                    <NumberInput
-                      {...form.getInputProps(`layouts.${index}.breakpoint`)}
-                      label={tLayout("field.breakpoint.label")}
-                      description={
-                        layout.role === "mobile"
-                          ? tBoard("setting.section.layout.mobile.breakpointDescription")
-                          : tLayout("field.breakpoint.description")
-                      }
-                      disabled={layout.role === "mobile"}
-                      styles={{ description: { color: "var(--mantine-color-text)" } }}
-                      min={layout.role === "mobile" ? 0 : 1}
-                      max={32767}
-                    />
-                  </Stack>
-                </Grid.Col>
-                <Grid.Col span={{ base: 12, md: 6, lg: 4 }}>
-                  {sourceLayout && (
-                    <LayoutPreview
-                      board={board}
-                      layout={layout}
-                      layouts={form.values.layouts}
-                      sourceLayout={sourceLayout}
-                      apps={apps}
-                    />
-                  )}
-                </Grid.Col>
-                {layout.role !== "mobile" && (
-                  <Grid.Col span={{ base: 12, lg: 4 }}>
-                    <GutterSettings
-                      left={layout.leftGutterColumnCount}
-                      right={layout.rightGutterColumnCount}
-                      columnCount={layout.columnCount}
-                      onLeftChange={(value) => form.setFieldValue(`layouts.${index}.leftGutterColumnCount`, value)}
-                      onRightChange={(value) => form.setFieldValue(`layouts.${index}.rightGutterColumnCount`, value)}
-                    />
+                      {layout.role !== "mobile" && (
+                        <GutterSettings
+                          left={layout.leftGutterColumnCount}
+                          right={layout.rightGutterColumnCount}
+                          columnCount={layout.columnCount}
+                          onLeftChange={(value) => form.setFieldValue(`layouts.${index}.leftGutterColumnCount`, value)}
+                          onRightChange={(value) =>
+                            form.setFieldValue(`layouts.${index}.rightGutterColumnCount`, value)
+                          }
+                        />
+                      )}
+                    </Stack>
                   </Grid.Col>
-                )}
-              </Grid>
+                  <Grid.Col span={{ base: 12, md: 8 }} className={classes.layoutPreview}>
+                    {sourceLayout && (
+                      <LayoutPreview
+                        board={board}
+                        layout={layout}
+                        layouts={form.values.layouts}
+                        sourceLayout={sourceLayout}
+                        apps={apps}
+                        settings={form.values}
+                      />
+                    )}
+                  </Grid.Col>
+                </Grid>
 
-              <Group justify="space-between" mt="lg" gap="sm" wrap="wrap">
-                <Group gap="xs">
-                  {layout.role !== "base" && persistedLayout && (
-                    <InlineConfirmButton
-                      type="button"
-                      variant="default"
-                      leftSection={<IconRefresh size={16} color="var(--mantine-color-red-5)" />}
-                      loading={resettingLayoutId === layout.id}
-                      disabled={isSaving}
-                      onConfirm={() => handleReset(layout)}
-                      confirmLabel={tCommon("action.confirm")}
-                    >
-                      {tBoard("setting.section.layout.reset.action")}
-                    </InlineConfirmButton>
-                  )}
-                  {layout.role === "custom" && (
-                    <Button
-                      type="button"
-                      variant="subtle"
-                      color="red"
-                      disabled={isSaving}
-                      onClick={() => {
-                        form.setFieldValue(
-                          "layouts",
-                          form.values.layouts.filter((candidate) => candidate.id !== layout.id),
-                        );
-                      }}
-                    >
-                      {tCommon("action.remove")}
-                    </Button>
-                  )}
+                <Group justify="space-between" mt="lg" gap="sm" wrap="wrap">
+                  <Group gap="xs">
+                    {layout.role !== "base" && persistedLayout && (
+                      <InlineConfirmButton
+                        type="button"
+                        variant="default"
+                        leftSection={<IconRefresh size={16} color="var(--mantine-color-red-5)" />}
+                        loading={resettingLayoutId === layout.id}
+                        disabled={isSaving}
+                        onConfirm={() => handleReset(layout)}
+                        confirmLabel={tCommon("action.confirm")}
+                      >
+                        {tBoard("setting.section.layout.reset.action")}
+                      </InlineConfirmButton>
+                    )}
+                    {layout.role === "custom" && (
+                      <Button
+                        type="button"
+                        variant="subtle"
+                        color="red"
+                        disabled={isSaving}
+                        onClick={() => {
+                          form.setFieldValue(
+                            "layouts",
+                            form.values.layouts.filter((candidate) => candidate.id !== layout.id),
+                          );
+                        }}
+                      >
+                        {tCommon("action.remove")}
+                      </Button>
+                    )}
+                  </Group>
+                  <Button
+                    type="button"
+                    variant="default"
+                    leftSection={<IconEdit size={16} color="var(--mantine-color-red-5)" />}
+                    loading={editingLayoutId === layout.id}
+                    disabled={isSaving || !form.isValid()}
+                    onClick={() => void openLayoutEditorAsync(layout)}
+                  >
+                    {form.isDirty() || !persistedLayout
+                      ? tBoard("setting.section.layout.edit.saveAndEdit")
+                      : tBoard("setting.section.layout.edit.action")}
+                  </Button>
                 </Group>
-                <Button
-                  type="button"
-                  variant="default"
-                  leftSection={<IconEdit size={16} color="var(--mantine-color-red-5)" />}
-                  loading={editingLayoutId === layout.id}
-                  disabled={isSaving || !form.isValid()}
-                  onClick={() => void openLayoutEditorAsync(layout)}
-                >
-                  {form.isDirty() || !persistedLayout
-                    ? tBoard("setting.section.layout.edit.saveAndEdit")
-                    : tBoard("setting.section.layout.edit.action")}
-                </Button>
-              </Group>
-            </Fieldset>
-          );
-        })}
+              </Fieldset>
+            );
+          })}
       </Stack>
     </SectionCard>
   );

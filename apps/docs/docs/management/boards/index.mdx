@@ -28,7 +28,7 @@ creation. Additional layouts use unique breakpoints. Homarr selects the layout w
 the current viewport.
 
 By default, Homarr fits the complete fixed-proportion tile grid to the available width. Enable **Fixed scaling** in the
-board's Layout settings to render every `1 × 1` tile at the exact configured pixel size instead. A fixed dashboard is
+board's Layout settings to render each top-level `1 × 1` tile at the configured CSS-pixel size instead. A fixed dashboard is
 centred when it fits and scrolls both horizontally and vertically when it does not.
 
 The column count is the maximum total for that layout, including any fixed sidebars. For example, a Base layout with
@@ -60,14 +60,29 @@ click remains available as a shortcut.
 
 ## Board settings
 
-Board settings cover:
+Settings are organized into tabs, with one **Save changes** action for the whole board. Switching tabs retains your
+draft; **Discard** restores the saved settings.
 
-- **General:** page title, browser title, logo, and favicon.
-- **Layout:** fitted or fixed scaling, tile size, responsive layouts, breakpoints, maximum columns, and rails.
-- **Background:** image, attachment, size, and repeat behavior.
-- **Appearance:** colors, opacity, icon color, and item radius.
-- **Custom CSS:** styles applied only to the current board.
-- **Behaviour:** app status and widget context-menu behavior.
+- **Layout:** tile sizing, responsive layouts, breakpoints, maximum columns, and rails.
+- **Appearance:** colors, opacity, icon color, item radius, and background image settings beside a live layout preview.
+- **General:** page title, browser title, logo, favicon, and app status.
+- **Advanced:** custom CSS applied only to this board.
+- **Access control:** permissions, visibility, renaming, and deletion (requires full access).
+
+### Try a layout before saving
+
+Choose **Fixed scaling** or **Fit to screen** under **Tile sizing**. Fixed sizing accepts **100–400 px**; its square
+sample is shown at half size with the configured dimensions underneath. The size is retained when you switch modes.
+
+Select a layout to edit its columns, breakpoint, and side rails beside the compact **Board preview**. It uses the
+familiar Boards thumbnail, with the board's actual grid proportions and rails aligned beside the main canvas.
+The indicated screen width represents the selected layout. The miniature stays contained, centres fixed grids that
+fit, and scrolls when needed. Changes to sizing and appearance appear immediately, before saving.
+
+In fixed mode, browser `Cmd`/`Ctrl` + `+` or `-` zoom works naturally: a 200 × 200 CSS-pixel tile keeps those dimensions
+while its physical screen size changes with zoom. Homarr does not shrink the tile to cancel the browser's zoom.
+Your live board can still select a different saved layout when its viewport crosses a breakpoint. Nested Containers
+fit their inner grids into their own frames; the configured tile size describes the top-level board grid.
 
 See [Styling](/docs/advanced/styling) for board and global CSS.
 

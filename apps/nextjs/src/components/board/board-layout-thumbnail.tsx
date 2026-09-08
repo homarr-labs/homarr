@@ -6,6 +6,8 @@ import { projectBoardLayout } from "@homarr/boards/layout-preview";
 import { boardLanes, getBoardLaneColumnCount, getRootSectionLane } from "@homarr/definitions";
 import { widgetCatalogIcons } from "@homarr/ui/widget-icons";
 
+import { BoardLayoutThumbnailCanvas } from "./board-layout-thumbnail-canvas";
+import type { BoardLayoutThumbnailCanvasProps } from "./board-layout-thumbnail-canvas";
 import classes from "./board-layout-thumbnail.module.css";
 
 interface BoardLayoutThumbnailProps {
@@ -13,6 +15,7 @@ interface BoardLayoutThumbnailProps {
   label: string;
   previewRowLimit?: number;
   className?: string;
+  canvas?: BoardLayoutThumbnailCanvasProps["canvas"];
 }
 
 const compactBoardLayoutThumbnailRows = 12;
@@ -23,7 +26,11 @@ export const BoardLayoutThumbnail = ({
   label,
   previewRowLimit = compactBoardLayoutThumbnailRows,
   className,
+  canvas,
 }: BoardLayoutThumbnailProps) => {
+  if (preview && canvas) {
+    return <BoardLayoutThumbnailCanvas preview={preview} label={label} canvas={canvas} className={className} />;
+  }
   const canvasClassName = [classes.canvas, className].filter(Boolean).join(" ");
   const layout = preview?.layouts.find((candidate) => candidate.role === "base") ?? preview?.layouts.at(0);
   if (!preview || !layout) {

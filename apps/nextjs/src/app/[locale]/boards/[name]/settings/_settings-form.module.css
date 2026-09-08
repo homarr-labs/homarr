@@ -1,0 +1,43 @@
+.settings {
+  --mantine-color-dimmed: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-1));
+}
+
+.tabs {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.tabs > button {
+  flex-shrink: 0;
+}
+
+.panel {
+  padding-top: var(--mantine-spacing-lg);
+  padding-bottom: 5rem;
+  min-width: 0;
+}
+
+.appearance {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: start;
+  gap: var(--mantine-spacing-lg);
+}
+
+.appearancePreview {
+  position: sticky;
+  top: calc(var(--app-shell-header-offset, 0px) + var(--mantine-spacing-md));
+  min-width: 0;
+}
+
+@media (max-width: 62em) {
+  .appearance {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .appearancePreview {
+    position: static;
+    grid-row: 1;
+  }
+}

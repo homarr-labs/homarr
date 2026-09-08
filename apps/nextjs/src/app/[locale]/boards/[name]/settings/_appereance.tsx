@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Anchor,
   Button,
   Collapse,
   ColorInput,
@@ -39,7 +38,6 @@ const progressPercentageLabel = (value: number) => `${value}%`;
 export const ColorSettingsContent = ({ form }: Props) => {
   const [showPreview, { toggle }] = useDisclosure(false);
   const tBoard = useI18n("board");
-  const tCommon = useI18n("common");
   const theme = useMantineTheme();
   const { branding } = useSettings();
 
@@ -50,6 +48,11 @@ export const ColorSettingsContent = ({ form }: Props) => {
           <Stack gap="xs">
             <BoardColorInput
               label={tBoard("field.primaryColor.label")}
+              eyeDropperButtonProps={{
+                "aria-label": tBoard("setting.section.appearance.pickColor", {
+                  label: tBoard("field.primaryColor.label"),
+                }),
+              }}
               description={branding.lockPrimaryColor ? tBoard("field.primaryColor.locked") : undefined}
               disabled={branding.lockPrimaryColor}
               {...form.getInputProps("primaryColor")}
@@ -57,10 +60,22 @@ export const ColorSettingsContent = ({ form }: Props) => {
           </Stack>
         </Grid.Col>
         <Grid.Col span={{ sm: 12, md: 6 }}>
-          <BoardColorInput label={tBoard("field.secondaryColor.label")} {...form.getInputProps("secondaryColor")} />
+          <BoardColorInput
+            label={tBoard("field.secondaryColor.label")}
+            eyeDropperButtonProps={{
+              "aria-label": tBoard("setting.section.appearance.pickColor", {
+                label: tBoard("field.secondaryColor.label"),
+              }),
+            }}
+            {...form.getInputProps("secondaryColor")}
+          />
         </Grid.Col>
         <Grid.Col span={12}>
-          <Anchor onClick={toggle}>{showPreview ? tCommon("preview.hide") : tCommon("preview.show")}</Anchor>
+          <Button type="button" variant="subtle" size="compact-sm" onClick={toggle} aria-expanded={showPreview}>
+            {showPreview
+              ? tBoard("setting.section.appearance.hideShades")
+              : tBoard("setting.section.appearance.showShades")}
+          </Button>
         </Grid.Col>
         <Grid.Col span={12}>
           <Collapse expanded={showPreview}>
@@ -73,6 +88,7 @@ export const ColorSettingsContent = ({ form }: Props) => {
         <Grid.Col span={{ sm: 12, md: 6 }}>
           <InputWrapper label={tBoard("field.opacity.label")}>
             <Slider
+              thumbLabel={tBoard("field.opacity.label")}
               my={6}
               min={0}
               max={100}
@@ -86,6 +102,11 @@ export const ColorSettingsContent = ({ form }: Props) => {
           <Group align="end">
             <ColorInput
               label={tBoard("field.iconColor.label")}
+              eyeDropperButtonProps={{
+                "aria-label": tBoard("setting.section.appearance.pickColor", {
+                  label: tBoard("field.iconColor.label"),
+                }),
+              }}
               format="hex"
               swatches={Object.values(theme.colors).map((color) => color[6])}
               flex={1}

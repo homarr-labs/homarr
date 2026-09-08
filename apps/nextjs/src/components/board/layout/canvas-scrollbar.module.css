@@ -1,0 +1,35 @@
+.scrollbar::-webkit-scrollbar {
+  width: 2px;
+  height: 2px;
+}
+
+.scrollbar::-webkit-scrollbar-track,
+.scrollbar::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: transparent;
+}
+
+.scrollbar:hover::-webkit-scrollbar-thumb,
+.scrollbar:focus-visible::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--mantine-color-dimmed) 45%, transparent);
+}
+
+.scrollbar::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--mantine-color-dimmed) 70%, transparent);
+}
+
+@supports (-moz-appearance: none) {
+  .scrollbar {
+    scrollbar-color: transparent transparent;
+    scrollbar-width: thin;
+  }
+
+  .scrollbar:hover,
+  .scrollbar:focus-visible {
+    scrollbar-color: color-mix(in srgb, var(--mantine-color-dimmed) 45%, transparent) transparent;
+  }
+}

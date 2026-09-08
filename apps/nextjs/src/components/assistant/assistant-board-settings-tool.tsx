@@ -51,6 +51,7 @@ import {
 import { useZodForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
 import { boardSavePartialSettingsSchema } from "@homarr/validation/board";
+import { normalizeFixedItemSize } from "~/components/board/layout/scaling";
 
 import {
   getAssistantBoardSettingsResult,
@@ -359,6 +360,9 @@ const BoardSettingsForm = ({
                 allowDecimal={false}
                 suffix=" px"
                 {...form.getInputProps("fixedItemSize")}
+                onBlur={() =>
+                  form.setFieldValue("fixedItemSize", normalizeFixedItemSize(form.getValues().fixedItemSize))
+                }
               />
             </Stack>
           </Tabs.Panel>

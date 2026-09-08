@@ -17,10 +17,11 @@ import { BoardSetupChecklist } from "~/components/board/board-setup-checklist";
 import {
   getBoardLaneColumnCount,
   getInitialBoardLogicalHeight,
-  getLogicalGridSize,
   getRootSectionForLane,
 } from "~/components/board/layout";
 import { ScaledBoardCanvas } from "~/components/board/layout/scaled-board-canvas";
+import { BOARD_LANE_GAP, getBoardCanvasGeometry } from "~/components/board/layout/canvas-geometry";
+import { getBoardScaling } from "~/components/board/layout/scaling";
 import { BoardEmptySection } from "~/components/board/sections/empty-section";
 import { BoardGridEditorBoundary } from "~/components/board/sections/grid/board-grid-editor-boundary";
 import { GridEditorRegistryProvider } from "~/components/board/sections/grid/grid-editor-registry";
@@ -32,7 +33,6 @@ import { BoardSelectionToolbar } from "~/components/board/selection/board-select
 import classes from "./_client.module.css";
 
 const APP_SHELL_INLINE_PADDING = 32;
-const BOARD_LANE_GAP = 24;
 
 const BoardSelectionGridProvider = ({ children }: PropsWithChildren) => (
   <GridEditorRegistryProvider>
@@ -60,21 +60,10 @@ export const ClientBoard = () => {
   const leftColumnCount = getBoardLaneColumnCount(currentLayout, "left");
   const mainColumnCount = getBoardLaneColumnCount(currentLayout, "main");
   const rightColumnCount = getBoardLaneColumnCount(currentLayout, "right");
-  const laneWidths = [leftColumnCount, mainColumnCount, rightColumnCount]
-    .filter((columnCount) => columnCount > 0)
-    .map(getLogicalGridSize);
-  const logicalWidth = laneWidths.reduce((total, width) => total + width, 0) + (laneWidths.length - 1) * BOARD_LANE_GAP;
+  const { width: logicalWidth, gridTemplateColumns } = getBoardCanvasGeometry(currentLayout);
   const initialLogicalHeight = getInitialBoardLogicalHeight(board, currentLayoutId);
   const representativeWidth = layoutOverrideId ? getRepresentativeLayoutWidth(currentLayout, board.layouts) : null;
   const initialAvailableWidth = Math.max(1, (representativeWidth ?? initialViewportWidth) - APP_SHELL_INLINE_PADDING);
-  const fixedItemSize = board.fixedScaling ? board.fixedItemSize : undefined;
-  const gridTemplateColumns = [
-    leftColumnCount > 0 ? `${getLogicalGridSize(leftColumnCount)}px` : null,
-    `${getLogicalGridSize(mainColumnCount)}px`,
-    rightColumnCount > 0 ? `${getLogicalGridSize(rightColumnCount)}px` : null,
-  ]
-    .filter((value) => value !== null)
-    .join(" ");
 
   const content = (
     <BoardSelectionGridProvider>
@@ -90,7 +79,7 @@ export const ClientBoard = () => {
                 logicalWidth={logicalWidth}
                 initialLogicalHeight={initialLogicalHeight}
                 initialAvailableWidth={initialAvailableWidth}
-                fixedItemSize={fixedItemSize}
+                scaling={getBoardScaling(board)}
                 label={board.name}
               >
                 <BoardGridEditorBoundary key={currentLayoutId}>

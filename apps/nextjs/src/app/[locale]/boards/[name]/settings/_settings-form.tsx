@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { Button, Stack } from "@mantine/core";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Alert, Button, Stack, Tabs, VisuallyHidden } from "@mantine/core";
+import { IconAdjustments, IconCode, IconLayoutGrid, IconPalette, IconUsers } from "@tabler/icons-react";
 import type { z } from "zod/v4";
 
 import type { RouterOutputs } from "@homarr/api";
+import { clientApi } from "@homarr/api/client";
 import { useUpdateBoard } from "@homarr/boards/updater";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { env } from "@homarr/common/env";
@@ -21,8 +23,7 @@ import { UnsavedChangesBar } from "~/components/manage/unsaved-changes-bar";
 import { useUnsavedChangesGuard } from "~/components/manage/use-unsaved-changes-guard";
 
 import type { Board } from "../../_types";
-import { ColorSettingsContent } from "./_appereance";
-import { BackgroundSettingsContent } from "./_background";
+import { AppearancePlayground } from "./_appearance-playground";
 import { BehaviorSettingsContent } from "./_behavior";
 import { BoardAccessSettings } from "./_board-access";
 import { CustomCssSettingsContent } from "./_customCss";
@@ -30,6 +31,7 @@ import { DangerZoneSettingsContent } from "./_danger";
 import { GeneralSettingsContent } from "./_general";
 import { LayoutSettingsContent } from "./_layout";
 import { useSaveLayoutsMutation, useSavePartialSettingsMutation } from "./_shared";
+import classes from "./_settings-form.module.css";
 
 const boardSettingsFormSchema = boardSavePartialSettingsSchema
   .extend({
@@ -99,6 +101,21 @@ export const BoardSettingsForm = ({ board, permissions, hasFullAccess, hideVisib
   const { updateBoard } = useUpdateBoard();
   const savePartialSettings = useSavePartialSettingsMutation(board);
   const saveLayouts = useSaveLayoutsMutation(board);
+  const [activeTab, setActiveTab] = useState<string | null>("layout");
+  const [selectedLayoutId, setSelectedLayoutId] = useState<string | null>(null);
+  const appIds = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          board.items.flatMap((item) => {
+            if (item.kind === "app" && typeof item.options.appId === "string") return [item.options.appId];
+            return [];
+          }),
+        ),
+      ),
+    [board.items],
+  );
+  const { data: apps = [] } = clientApi.app.byIds.useQuery(appIds, { enabled: appIds.length > 0 });
 
   const form = useZodForm(boardSettingsFormSchema, {
     initialValues: buildInitialValues(board),
@@ -125,7 +142,22 @@ export const BoardSettingsForm = ({ board, permissions, hasFullAccess, hideVisib
     };
   }, [updateBoard]);
 
+  const revealValidationErrors = (errors: typeof form.errors) => {
+    const firstField = Object.keys(errors)[0];
+    if (firstField) setActiveTab(getSettingsTabForField(firstField));
+    const layoutField = Object.keys(errors).find((field) => /^layouts\.\d+\./.test(field));
+    if (layoutField) {
+      const layout = form.values.layouts[Number(layoutField.split(".")[1])];
+      if (layout) setSelectedLayoutId(layout.id);
+    }
+  };
+
   const saveSettingsAsync = async (values: FormValues): Promise<FormValues | null> => {
+    const validation = form.validate();
+    if (validation.hasErrors) {
+      revealValidationErrors(validation.errors);
+      return null;
+    }
     const defaults = initialValuesRef.current;
     const changed = <TKey extends keyof FormValues>(...fields: TKey[]) =>
       fields.some((field) => values[field] !== defaults[field]);
@@ -170,6 +202,7 @@ export const BoardSettingsForm = ({ board, permissions, hasFullAccess, hideVisib
   };
 
   const handleDiscard = () => {
+    form.clearErrors();
     form.setValues(initialValuesRef.current);
     form.resetDirty();
     updateBoard((previous) => ({
@@ -182,43 +215,99 @@ export const BoardSettingsForm = ({ board, permissions, hasFullAccess, hideVisib
   const isPending = savePartialSettings.isPending || saveLayouts.isPending;
 
   return (
-    <Stack gap="xl">
-      <form onSubmit={form.onSubmit((values) => void saveSettingsAsync(values))}>
-        <Stack gap="xl">
-          <GeneralSettingsContent board={board} form={form} />
+    <Tabs
+      value={activeTab}
+      onChange={setActiveTab}
+      keepMounted={false}
+      classNames={{ root: classes.settings, list: classes.tabs, panel: classes.panel }}
+    >
+      <VisuallyHidden>
+        <h2>{tSection("navigation")}</h2>
+      </VisuallyHidden>
+      <Tabs.List aria-label={tSection("navigation")}>
+        <Tabs.Tab value="layout" leftSection={<IconLayoutGrid size={16} />}>
+          {tSection("layout.title")}
+        </Tabs.Tab>
+        <Tabs.Tab value="appearance" leftSection={<IconPalette size={16} />}>
+          {tSection("appearance.title")}
+        </Tabs.Tab>
+        <Tabs.Tab value="general" leftSection={<IconAdjustments size={16} />}>
+          {tSection("general.title")}
+        </Tabs.Tab>
+        <Tabs.Tab value="advanced" leftSection={<IconCode size={16} />}>
+          {tSection("advanced")}
+        </Tabs.Tab>
+        {hasFullAccess && (
+          <Tabs.Tab value="access" leftSection={<IconUsers size={16} />}>
+            {tSection("access.title")}
+          </Tabs.Tab>
+        )}
+      </Tabs.List>
+      <form onSubmit={form.onSubmit((values) => void saveSettingsAsync(values), revealValidationErrors)}>
+        {Object.keys(form.errors).length > 0 && (
+          <Alert color="red" mt="md">
+            {tSection("validationError")}
+          </Alert>
+        )}
+        <Tabs.Panel value="layout">
           <LayoutSettingsContent
             board={board}
             form={form}
             isSaving={isPending}
             saveSettingsAsync={() => saveSettingsAsync(form.values)}
+            selectedLayoutId={selectedLayoutId}
+            setSelectedLayoutId={setSelectedLayoutId}
+            apps={apps}
           />
-          <BackgroundSettingsContent form={form} />
-          <ColorSettingsContent form={form} />
+        </Tabs.Panel>
+        <Tabs.Panel value="appearance">
+          <AppearancePlayground board={board} form={form} apps={apps} selectedLayoutId={selectedLayoutId} />
+        </Tabs.Panel>
+        <Tabs.Panel value="general">
+          <Stack gap="lg">
+            <GeneralSettingsContent board={board} form={form} />
+            <BehaviorSettingsContent form={form} />
+          </Stack>
+        </Tabs.Panel>
+        <Tabs.Panel value="advanced">
           <CustomCssSettingsContent form={form} />
-          <BehaviorSettingsContent form={form} />
+        </Tabs.Panel>
 
-          {form.isDirty() && (
-            <UnsavedChangesBar>
-              <Button type="button" disabled={isPending} variant="default" onClick={handleDiscard}>
-                {t("action.discard")}
-              </Button>
-              <Button loading={isPending} type="submit" disabled={!form.isValid()}>
-                {t("action.saveChanges")}
-              </Button>
-            </UnsavedChangesBar>
-          )}
-        </Stack>
+        {form.isDirty() && (
+          <UnsavedChangesBar>
+            <Button type="button" disabled={isPending} variant="default" onClick={handleDiscard}>
+              {t("action.discard")}
+            </Button>
+            <Button loading={isPending} type="submit">
+              {t("action.saveChanges")}
+            </Button>
+          </UnsavedChangesBar>
+        )}
       </form>
 
       {hasFullAccess && (
-        <SectionCard title={tSection("access.title")}>
-          <BoardAccessSettings board={board} initialPermissions={permissions} />
-        </SectionCard>
+        <Tabs.Panel value="access">
+          <Stack gap="lg">
+            <SectionCard title={tSection("access.title")}>
+              <BoardAccessSettings board={board} initialPermissions={permissions} />
+            </SectionCard>
+            <DangerZoneSettingsContent hideVisibility={hideVisibility} />
+          </Stack>
+        </Tabs.Panel>
       )}
-
-      {hasFullAccess && <DangerZoneSettingsContent hideVisibility={hideVisibility} />}
-    </Stack>
+    </Tabs>
   );
+};
+
+const getSettingsTabForField = (field: string) => {
+  if (field.startsWith("layouts") || field === "fixedScaling" || field === "fixedItemSize") return "layout";
+  if (field === "customCss") return "advanced";
+  if (
+    field.startsWith("background") ||
+    ["primaryColor", "secondaryColor", "opacity", "iconColor", "itemRadius"].includes(field)
+  )
+    return "appearance";
+  return "general";
 };
 
 // Previously part of the general settings section; applied on the unified save

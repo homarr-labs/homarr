@@ -5,11 +5,7 @@
   overflow: hidden;
   color: var(--mantine-color-dimmed);
   background:
-    linear-gradient(
-      to top,
-      color-mix(in srgb, var(--mantine-primary-color-filled) 12%, transparent),
-      transparent 55%
-    ),
+    linear-gradient(to top, color-mix(in srgb, var(--mantine-primary-color-filled) 12%, transparent), transparent 55%),
     var(--mantine-color-body);
 }
 
@@ -83,4 +79,61 @@
   display: grid;
   gap: rem(1px);
   overflow: hidden;
+}
+
+.exactCanvas {
+  position: relative;
+  max-height: min(18rem, 38dvh);
+  overflow: hidden;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+}
+
+.thumbnailViewport {
+  position: absolute;
+  inset: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.thumbnailViewport:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: -2px;
+}
+
+.scaledSurface {
+  position: absolute;
+  inset: 0 auto auto 0;
+  transform-origin: top left;
+}
+
+.scaledLane,
+.scaledTile {
+  position: absolute;
+}
+
+.scaledSurface .tile {
+  border-radius: var(--preview-radius);
+  background: rgb(
+    from light-dark(var(--mantine-color-white), var(--mantine-color-dark-6)) r g b / var(--preview-opacity, 1)
+  );
+  border-color: rgb(
+    from light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4)) r g b / var(--preview-opacity, 1)
+  );
+}
+
+.scaledTile[data-type="section"] {
+  border-style: dashed;
+}
+
+.scaledItemIcon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: calc(32px * var(--board-canvas-ui-scale, 1));
+  height: calc(32px * var(--board-canvas-ui-scale, 1));
+  max-width: 55%;
+  max-height: 55%;
+  object-fit: contain;
+  transform: translate(-50%, -50%);
 }
