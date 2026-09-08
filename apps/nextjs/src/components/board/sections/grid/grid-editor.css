@@ -1,9 +1,11 @@
 .board-grid-editor {
   position: absolute;
-  inset: 0 auto auto 0;
+  inset: 0 0 auto;
+  margin: 0 auto;
   overflow: visible;
   border-radius: var(--mantine-radius-md);
   pointer-events: none;
+  zoom: var(--board-grid-content-scale, 1);
 }
 
 .board-grid-entry {
