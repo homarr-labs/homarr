@@ -8,6 +8,7 @@ import { z } from "zod/v4";
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
+import { env } from "@homarr/common/env";
 import { colorSchemes } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
@@ -80,7 +81,7 @@ export const SettingsForm = ({ initialData, selectableBoards, selectableSearchEn
     initialValues,
   });
 
-  useUnsavedChangesGuard(form.isDirty());
+  useUnsavedChangesGuard(form.isDirty(), { guardBeforeUnload: env.NODE_ENV !== "development" });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 

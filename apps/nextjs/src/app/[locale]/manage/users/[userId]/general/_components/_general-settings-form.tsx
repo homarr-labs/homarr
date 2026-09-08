@@ -27,6 +27,7 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import type { BoardPreviewData } from "@homarr/boards/layout-preview";
 import { revalidatePathActionAsync } from "@homarr/common/client";
+import { env } from "@homarr/common/env";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
@@ -125,7 +126,7 @@ export const UserGeneralSettingsForm = ({
     initialValues,
   });
 
-  useUnsavedChangesGuard(form.isDirty());
+  useUnsavedChangesGuard(form.isDirty(), { guardBeforeUnload: env.NODE_ENV !== "development" });
 
   const weekDays = useMemo(() => dayjs.weekdays(false), []);
 
