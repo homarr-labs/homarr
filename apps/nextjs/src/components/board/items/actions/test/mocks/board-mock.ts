@@ -1,4 +1,5 @@
 import { createId } from "@homarr/common";
+import { BOARD_FIXED_ITEM_SIZE_DEFAULT } from "@homarr/definitions";
 
 import type { Board, ContainerSection, EmptySection, Item, Section } from "~/app/[locale]/boards/_types";
 import { ContainerSectionMockBuilder } from "./container-section-mock";
@@ -27,6 +28,8 @@ export class BoardMockBuilder {
       name: "board",
       opacity: 100,
       isPublic: true,
+      fixedScaling: false,
+      fixedItemSize: BOARD_FIXED_ITEM_SIZE_DEFAULT,
       disableStatus: false,
       customCss: "",
       creatorId: createId(),

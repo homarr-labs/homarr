@@ -5430,6 +5430,16 @@
         "label": "Disable app status",
         "description": "Disables the status check for all apps on this board"
       },
+      "fixedScaling": {
+        "label": "Fixed scaling",
+        "description": "Keep every tile at the selected size. The dashboard is centred when it fits and scrolls when it does not."
+      },
+      "fixedItemSize": {
+        "label": "1 × 1 tile size",
+        "description": "Set the exact visible width and height used for a 1 × 1 tile when fixed scaling is enabled.",
+        "previewLabel": "1 by 1 tile preview at {size} by {size} pixels",
+        "previewValue": "{size} x {size} px"
+      },
       "columnCount": {
         "label": "Column count"
       },
@@ -5461,6 +5471,9 @@
         },
         "layout": {
           "title": "Layout",
+          "scaling": {
+            "title": "Scaling"
+          },
           "responsive": {
             "title": "Responsive layouts",
             "description": "Each layout keeps its own widget positions and sizes. Mobile and Base are always available; add custom layouts at any additional breakpoint.",
@@ -5607,7 +5620,8 @@
   "layout": {
     "field": {
       "columnCount": {
-        "label": "Column count"
+        "label": "Column count",
+        "description": "Maximum total columns in this layout, including fixed sidebars."
       },
       "breakpoint": {
         "label": "Breakpoint",
@@ -8032,6 +8046,7 @@
       "resetAll": "Reset all changes",
       "tabs": {
         "css": "Custom CSS",
+        "layout": "Layout",
         "appearance": "Appearance",
         "background": "Background",
         "general": "General"

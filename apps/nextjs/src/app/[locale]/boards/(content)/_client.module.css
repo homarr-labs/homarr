@@ -1,7 +1,6 @@
 .columns {
   display: grid;
   align-items: start;
-  gap: 24px;
 }
 
 .lane {
@@ -26,4 +25,11 @@
   outline: 0.0625rem solid var(--mantine-color-default-border);
   outline-offset: -0.0625rem;
   border-radius: var(--mantine-radius-md);
+}
+
+:global([data-canvas-scaling="fixed"]) .gutter {
+  --board-gutter-sticky-top: 0px;
+  --board-gutter-viewport-height: calc(
+    var(--board-canvas-fixed-viewport-height) * var(--board-canvas-inverse-scale, 1)
+  );
 }

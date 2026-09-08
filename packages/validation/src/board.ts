@@ -6,6 +6,8 @@ import {
   backgroundImageSizes,
   boardPermissions,
   layoutRoles,
+  BOARD_FIXED_ITEM_SIZE_MAX,
+  BOARD_FIXED_ITEM_SIZE_MIN,
   widgetKinds,
 } from "@homarr/definitions";
 
@@ -68,6 +70,8 @@ export const boardSavePartialSettingsSchema = z
     customCss: z.string().max(16384),
     iconColor: hexColorNullableSchema,
     itemRadius: z.union([z.literal("xs"), z.literal("sm"), z.literal("md"), z.literal("lg"), z.literal("xl")]),
+    fixedScaling: z.boolean(),
+    fixedItemSize: z.number().int().min(BOARD_FIXED_ITEM_SIZE_MIN).max(BOARD_FIXED_ITEM_SIZE_MAX),
     disableStatus: z.boolean(),
   })
   .partial();

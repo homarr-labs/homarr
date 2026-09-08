@@ -10,6 +10,76 @@
   overflow: clip;
 }
 
+.viewport[data-canvas-scaling="fixed"] {
+  --board-canvas-fixed-viewport-height: calc(
+    100dvh - var(--app-shell-header-offset, 0px) - var(--app-shell-padding, 1rem) -
+      var(--app-shell-footer-offset, 0px) - var(--app-shell-padding, 1rem)
+  );
+
+  height: var(--board-canvas-fixed-viewport-height);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.viewport[data-canvas-scaling="fixed"]::-webkit-scrollbar {
+  width: 2px;
+  height: 2px;
+}
+
+.viewport[data-canvas-scaling="fixed"]::-webkit-scrollbar-track,
+.viewport[data-canvas-scaling="fixed"]::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+.viewport[data-canvas-scaling="fixed"]::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: transparent;
+}
+
+.viewport[data-canvas-scaling="fixed"]:hover::-webkit-scrollbar-thumb,
+.viewport[data-canvas-scaling="fixed"]:focus-visible::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--mantine-color-dimmed) 45%, transparent);
+}
+
+.viewport[data-canvas-scaling="fixed"]::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--mantine-color-dimmed) 70%, transparent);
+}
+
+@supports (-moz-appearance: none) {
+  .viewport[data-canvas-scaling="fixed"] {
+    scrollbar-color: transparent transparent;
+    scrollbar-width: thin;
+  }
+
+  .viewport[data-canvas-scaling="fixed"]:hover,
+  .viewport[data-canvas-scaling="fixed"]:focus-visible {
+    scrollbar-color: color-mix(in srgb, var(--mantine-color-dimmed) 45%, transparent) transparent;
+  }
+}
+
+.viewport[data-canvas-scaling="fixed"]:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: -2px;
+}
+
+.viewport[data-canvas-scaling="fixed"][data-canvas-centered="true"] .sizer {
+  margin-inline: auto;
+}
+
+.viewport[data-canvas-scaling="fixed"] .sizer {
+  /* Leave room for edit labels and controls that intentionally sit above first-row tiles. */
+  margin-block-start: calc(2rem * var(--board-canvas-scale, 1));
+}
+
+.viewport[data-canvas-scaling="fixed"] .canvas {
+  /* Fixed size describes every painted tile, including container sections. */
+  --board-grid-item-inset: calc(var(--board-grid-card-inset, 10px) * var(--board-canvas-inverse-scale, 1));
+}
+
+.viewport[data-canvas-scaling="fixed"][data-board-hydrated="false"] {
+  overflow: clip;
+}
+
 .sizer {
   position: relative;
 }

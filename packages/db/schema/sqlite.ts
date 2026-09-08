@@ -9,6 +9,7 @@ import {
   backgroundImageAttachments,
   backgroundImageRepeats,
   backgroundImageSizes,
+  BOARD_FIXED_ITEM_SIZE_DEFAULT,
   emptySuperJSON,
 } from "@homarr/definitions";
 import type {
@@ -284,6 +285,8 @@ export const boards = sqliteTable("board", {
   customCss: text(),
   iconColor: text(),
   itemRadius: text().$type<MantineSize>().default("lg").notNull(),
+  fixedScaling: int({ mode: "boolean" }).default(false).notNull(),
+  fixedItemSize: int().default(BOARD_FIXED_ITEM_SIZE_DEFAULT).notNull(),
   disableStatus: int({ mode: "boolean" }).default(false).notNull(),
 });
 

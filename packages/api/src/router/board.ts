@@ -42,6 +42,8 @@ import {
   getWidgetIntegrationIssueMessage,
   getPermissionsWithChildren,
   getPermissionsWithParents,
+  BOARD_FIXED_ITEM_SIZE_MAX,
+  BOARD_FIXED_ITEM_SIZE_MIN,
   normalizeBoardLayoutRoles,
   rootSectionOffsets,
   widgetDefaultSizes,
@@ -1142,8 +1144,7 @@ export const boardRouter = createTRPCRouter({
     .meta({
       mcp: {
         enabled: true,
-        description:
-          "Read the editable visual and behavior settings for one board, including its current custom CSS. Requires modify permission. REQUIRED: id (board ID). Call this before proposing board settings or custom CSS changes",
+        description: `Read the editable visual and behavior settings for one board, including its current custom CSS and board scaling settings. fixedScaling keeps each 1x1 grid item at fixedItemSize pixels instead of fitting the board to the viewport; fixedItemSize is ${BOARD_FIXED_ITEM_SIZE_MIN}-${BOARD_FIXED_ITEM_SIZE_MAX}. Requires modify permission. REQUIRED: id (board ID). Call this before proposing board settings or custom CSS changes`,
       },
     })
     .input(z.object({ id: z.string() }))
@@ -1170,6 +1171,8 @@ export const boardRouter = createTRPCRouter({
           customCss: true,
           iconColor: true,
           itemRadius: true,
+          fixedScaling: true,
+          fixedItemSize: true,
           disableStatus: true,
         },
         where: boardWhere,
@@ -1526,8 +1529,7 @@ export const boardRouter = createTRPCRouter({
       openapi: { method: "PATCH", path: "/api/boards/{id}/settings", tags: ["boards"], protect: true },
       mcp: {
         enabled: true,
-        description:
-          "Update visual and behavior settings for a board. Requires modify permission. REQUIRED: id (board ID). Optional fields include pageTitle, metaTitle, logoImageUrl, faviconImageUrl, backgroundImageUrl, colors, opacity, customCss, itemRadius, and disableStatus",
+        description: `Update visual and behavior settings for a board. Set fixedScaling to true to keep each 1x1 grid item at fixedItemSize pixels instead of fitting the board to the viewport; fixedItemSize must be ${BOARD_FIXED_ITEM_SIZE_MIN}-${BOARD_FIXED_ITEM_SIZE_MAX}. Requires modify permission. REQUIRED: id (board ID). Optional fields include pageTitle, metaTitle, logoImageUrl, faviconImageUrl, backgroundImageUrl, colors, opacity, customCss, itemRadius, fixedScaling, fixedItemSize, and disableStatus`,
       },
     })
     .input(boardSavePartialSettingsSchema.extend({ id: z.string() }))
@@ -1556,6 +1558,10 @@ export const boardRouter = createTRPCRouter({
           opacity: input.opacity,
           iconColor: input.iconColor,
           itemRadius: input.itemRadius,
+
+          // scaling settings
+          fixedScaling: input.fixedScaling,
+          fixedItemSize: input.fixedItemSize,
 
           // custom css
           customCss: input.customCss,

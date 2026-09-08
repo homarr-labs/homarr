@@ -27,9 +27,13 @@ Mobile and Base are protected layouts. New boards use three Mobile columns; Base
 creation. Additional layouts use unique breakpoints. Homarr selects the layout with the highest breakpoint that fits
 the current viewport.
 
-Tiles use fixed `200 × 200` logical-pixel cells with a `24px` gap. Homarr scales the complete layout to the available
-width instead of changing each widget's proportions. **Reset from Base** regenerates a Mobile or custom layout from the
-current Base layout.
+By default, Homarr fits the complete fixed-proportion tile grid to the available width. Enable **Fixed scaling** in the
+board's Layout settings to render every `1 × 1` tile at the exact configured pixel size instead. A fixed dashboard is
+centred when it fits and scrolls both horizontally and vertically when it does not.
+
+The column count is the maximum total for that layout, including any fixed sidebars. For example, a Base layout with
+five columns and no sidebars remains a centred five-column dashboard on an ultrawide screen. **Reset from Base**
+regenerates a Mobile or custom layout from the current Base layout.
 
 ### Containers and rails
 
@@ -59,7 +63,7 @@ click remains available as a shortcut.
 Board settings cover:
 
 - **General:** page title, browser title, logo, and favicon.
-- **Layout:** responsive layouts, breakpoints, columns, and rails.
+- **Layout:** fitted or fixed scaling, tile size, responsive layouts, breakpoints, maximum columns, and rails.
 - **Background:** image, attachment, size, and repeat behavior.
 - **Appearance:** colors, opacity, icon color, and item radius.
 - **Custom CSS:** styles applied only to the current board.

@@ -2151,6 +2151,14 @@
                       }
                     ]
                   },
+                  "fixedScaling": {
+                    "type": "boolean"
+                  },
+                  "fixedItemSize": {
+                    "type": "integer",
+                    "minimum": 100,
+                    "maximum": 400
+                  },
                   "disableStatus": {
                     "type": "boolean"
                   }

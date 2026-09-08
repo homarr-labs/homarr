@@ -5,5 +5,7 @@
 export const LOGICAL_GRID_CELL_SIZE = 200;
 export const LOGICAL_GRID_GAP = 12;
 export const LOGICAL_GRID_PITCH = LOGICAL_GRID_CELL_SIZE + LOGICAL_GRID_GAP;
+/** Physical inset between a grid footprint and each edge of its painted tile. */
+export const BOARD_GRID_ITEM_INSET = 10;
 
 export const COLLAPSED_SECTION_ROW_COUNT = 0.5;

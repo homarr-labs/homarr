@@ -5,13 +5,15 @@ The board uses fixed logical units:
 - one grid track has a `212 × 212` logical-pixel footprint;
 - cards are inset by `10` visual pixels on every side, matching the legacy GridStack gutter;
 - multi-cell items occupy complete track footprints (`2 × 1` is `424 × 212` before the card inset);
-- the canvas is zoomed once with one uniform scale derived from its available width.
+- the canvas is zoomed once with one uniform scale.
 
 Grid footprints keep the same logical dimensions at every viewport. Widget cards
 use a scale-compensated inset so their painted size and content measurements
-match the legacy responsive grid. The visual canvas always fits the available
-width, every root lane keeps at least one viewport of height, and edit-mode
-previews extend it downward as needed.
+match the legacy responsive grid. Responsive scaling derives the zoom from the
+available width. Fixed scaling derives it from the configured painted `1 x 1`
+card size and keeps the canvas centered while it fits; otherwise the board's
+named canvas region scrolls on both axes. Every root lane keeps at least one
+viewport of height, and edit-mode previews extend it downward as needed.
 
 The read-only renderer should:
 

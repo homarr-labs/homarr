@@ -21,6 +21,7 @@ import {
   backgroundImageAttachments,
   backgroundImageRepeats,
   backgroundImageSizes,
+  BOARD_FIXED_ITEM_SIZE_DEFAULT,
   emptySuperJSON,
 } from "@homarr/definitions";
 import type {
@@ -299,6 +300,8 @@ export const boards = pgTable("board", {
   customCss: text(),
   iconColor: text(),
   itemRadius: text().$type<MantineSize>().default("lg").notNull(),
+  fixedScaling: boolean().default(false).notNull(),
+  fixedItemSize: smallint().default(BOARD_FIXED_ITEM_SIZE_DEFAULT).notNull(),
   disableStatus: boolean().default(false).notNull(),
 });
 

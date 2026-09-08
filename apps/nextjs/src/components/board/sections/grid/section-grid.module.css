@@ -64,7 +64,7 @@
 }
 
 .staticItem[data-type="item"] > .contentMount {
-  inset: calc(10px * var(--board-canvas-inverse-scale, 1));
+  inset: calc(var(--board-grid-card-inset, 10px) * var(--board-canvas-inverse-scale, 1));
 }
 
 .staticItem:has([data-board-container-label]) {

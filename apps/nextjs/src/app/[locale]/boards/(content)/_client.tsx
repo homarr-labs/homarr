@@ -18,7 +18,6 @@ import {
   getBoardLaneColumnCount,
   getInitialBoardLogicalHeight,
   getLogicalGridSize,
-  LOGICAL_GRID_GAP,
   getRootSectionForLane,
 } from "~/components/board/layout";
 import { ScaledBoardCanvas } from "~/components/board/layout/scaled-board-canvas";
@@ -33,6 +32,7 @@ import { BoardSelectionToolbar } from "~/components/board/selection/board-select
 import classes from "./_client.module.css";
 
 const APP_SHELL_INLINE_PADDING = 32;
+const BOARD_LANE_GAP = 24;
 
 const BoardSelectionGridProvider = ({ children }: PropsWithChildren) => (
   <GridEditorRegistryProvider>
@@ -63,11 +63,11 @@ export const ClientBoard = () => {
   const laneWidths = [leftColumnCount, mainColumnCount, rightColumnCount]
     .filter((columnCount) => columnCount > 0)
     .map(getLogicalGridSize);
-  const logicalWidth =
-    laneWidths.reduce((total, width) => total + width, 0) + (laneWidths.length - 1) * LOGICAL_GRID_GAP;
+  const logicalWidth = laneWidths.reduce((total, width) => total + width, 0) + (laneWidths.length - 1) * BOARD_LANE_GAP;
   const initialLogicalHeight = getInitialBoardLogicalHeight(board, currentLayoutId);
   const representativeWidth = layoutOverrideId ? getRepresentativeLayoutWidth(currentLayout, board.layouts) : null;
   const initialAvailableWidth = Math.max(1, (representativeWidth ?? initialViewportWidth) - APP_SHELL_INLINE_PADDING);
+  const fixedItemSize = board.fixedScaling ? board.fixedItemSize : undefined;
   const gridTemplateColumns = [
     leftColumnCount > 0 ? `${getLogicalGridSize(leftColumnCount)}px` : null,
     `${getLogicalGridSize(mainColumnCount)}px`,
@@ -90,10 +90,11 @@ export const ClientBoard = () => {
                 logicalWidth={logicalWidth}
                 initialLogicalHeight={initialLogicalHeight}
                 initialAvailableWidth={initialAvailableWidth}
+                fixedItemSize={fixedItemSize}
                 label={board.name}
               >
                 <BoardGridEditorBoundary key={currentLayoutId}>
-                  <div className={classes.columns} style={{ gridTemplateColumns }}>
+                  <div className={classes.columns} style={{ gap: BOARD_LANE_GAP, gridTemplateColumns }}>
                     {leftColumnCount > 0 && leftSection && (
                       <aside
                         className={`${classes.lane} ${classes.gutter}`}

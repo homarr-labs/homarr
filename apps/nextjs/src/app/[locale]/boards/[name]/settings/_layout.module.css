@@ -1,5 +1,29 @@
+.scalingSettings,
 .gutterSettings {
   background: color-mix(in srgb, var(--mantine-color-default) 55%, transparent);
+}
+
+.fixedItemSizePreview {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-md);
+  margin: 0;
+  min-width: 12rem;
+}
+
+.fixedItemSizePreviewTile {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  min-width: 1.5rem;
+  min-height: 1.5rem;
+  color: var(--mantine-primary-color-contrast);
+  background: var(--mantine-primary-color-filled);
+  border: 1px solid var(--mantine-primary-color-filled-hover);
+  border-radius: var(--mantine-radius-md);
+  transition:
+    width 180ms ease-out,
+    height 180ms ease-out;
 }
 
 .gutterPreview {
@@ -41,6 +65,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .fixedItemSizePreviewTile,
   .gutterPreview {
     transition: none;
   }

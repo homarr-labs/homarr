@@ -29,6 +29,7 @@ import {
   serverSettings,
 } from "@homarr/db/schema";
 import {
+  BOARD_FIXED_ITEM_SIZE_DEFAULT,
   emptySuperJSON,
   everyoneGroup,
   extractContainerImageName,
@@ -388,6 +389,8 @@ export const onboardRouter = createTRPCRouter({
               customCss: null,
               iconColor: null,
               itemRadius: input.board.itemRadius,
+              fixedScaling: false,
+              fixedItemSize: BOARD_FIXED_ITEM_SIZE_DEFAULT,
               disableStatus: false,
               sections: [],
               layouts: pendingLayouts,

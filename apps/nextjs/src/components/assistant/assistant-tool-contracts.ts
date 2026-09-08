@@ -1,6 +1,8 @@
 import { z } from "zod/v4";
 
 import {
+  BOARD_FIXED_ITEM_SIZE_MAX,
+  BOARD_FIXED_ITEM_SIZE_MIN,
   backgroundImageAttachments,
   backgroundImageRepeats,
   backgroundImageSizes,
@@ -48,6 +50,17 @@ export const assistantBoardSettingsChangesSchema = z
     iconColor: boardColorSchema.nullable().optional(),
     itemRadius: z.enum(["xs", "sm", "md", "lg", "xl"]).optional(),
     disableStatus: z.boolean().optional(),
+    fixedScaling: z
+      .boolean()
+      .optional()
+      .describe("Keep board tiles at a configured size instead of fitting the complete layout to the viewport."),
+    fixedItemSize: z
+      .number()
+      .int()
+      .min(BOARD_FIXED_ITEM_SIZE_MIN)
+      .max(BOARD_FIXED_ITEM_SIZE_MAX)
+      .optional()
+      .describe("Visible pixel width and height of a 1 by 1 tile when fixedScaling is enabled."),
   })
   .describe("Only the board fields the user asked to change.");
 

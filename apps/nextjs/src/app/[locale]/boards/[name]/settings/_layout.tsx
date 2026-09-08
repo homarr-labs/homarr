@@ -22,6 +22,7 @@ import { IconEdit, IconRefresh } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { createId } from "@homarr/common";
+import { BOARD_FIXED_ITEM_SIZE_MAX, BOARD_FIXED_ITEM_SIZE_MIN } from "@homarr/definitions";
 import type { UseFormReturnType } from "@homarr/form";
 import { showErrorNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
@@ -106,10 +107,55 @@ export const LayoutSettingsContent = ({ board, form, isSaving, saveSettingsAsync
   const displayedLayouts = form.values.layouts
     .map((layout, index) => ({ layout, index }))
     .toSorted((first, second) => layoutRoleOrder[first.layout.role] - layoutRoleOrder[second.layout.role]);
+  const fixedItemPreviewSize =
+    Math.min(BOARD_FIXED_ITEM_SIZE_MAX, Math.max(BOARD_FIXED_ITEM_SIZE_MIN, form.values.fixedItemSize)) / 4;
 
   return (
     <SectionCard title={tBoard("setting.section.layout.title")}>
       <Stack gap="lg">
+        <Paper className={classes.scalingSettings} p="md" withBorder>
+          <Stack gap="md">
+            <Text fw={600}>{tBoard("setting.section.layout.scaling.title")}</Text>
+            <Switch
+              label={tBoard("field.fixedScaling.label")}
+              description={tBoard("field.fixedScaling.description")}
+              {...form.getInputProps("fixedScaling", { type: "checkbox" })}
+            />
+            <Group align="center" justify="space-between" gap="xl" wrap="wrap">
+              <NumberInput
+                label={tBoard("field.fixedItemSize.label")}
+                description={tBoard("field.fixedItemSize.description")}
+                min={BOARD_FIXED_ITEM_SIZE_MIN}
+                max={BOARD_FIXED_ITEM_SIZE_MAX}
+                step={10}
+                allowDecimal={false}
+                suffix=" px"
+                w={{ base: "100%", sm: 240 }}
+                {...form.getInputProps("fixedItemSize")}
+              />
+              <Box
+                component="figure"
+                className={classes.fixedItemSizePreview}
+                aria-label={tBoard("field.fixedItemSize.previewLabel", { size: form.values.fixedItemSize })}
+              >
+                <Box
+                  className={classes.fixedItemSizePreviewTile}
+                  w={fixedItemPreviewSize}
+                  h={fixedItemPreviewSize}
+                  aria-hidden="true"
+                >
+                  <Text size="xs" fw={600}>
+                    1 × 1
+                  </Text>
+                </Box>
+                <Text size="sm" fw={500}>
+                  {tBoard("field.fixedItemSize.previewValue", { size: form.values.fixedItemSize })}
+                </Text>
+              </Box>
+            </Group>
+          </Stack>
+        </Paper>
+
         <Group justify="space-between" align="flex-start" wrap="wrap">
           <Stack gap={2} maw="52rem">
             <Text fw={500}>{tBoard("setting.section.layout.responsive.title")}</Text>
@@ -160,7 +206,10 @@ export const LayoutSettingsContent = ({ board, form, isSaving, saveSettingsAsync
                 <Grid.Col span={{ base: 12, md: 6, lg: 4 }}>
                   <Stack gap="md">
                     <TextInput {...form.getInputProps(`layouts.${index}.name`)} label={tCommon("field.name")} />
-                    <Input.Wrapper label={tLayout("field.columnCount.label")}>
+                    <Input.Wrapper
+                      label={tLayout("field.columnCount.label")}
+                      description={tLayout("field.columnCount.description")}
+                    >
                       <Slider
                         thumbLabel={`${tLayout("field.columnCount.label")} — ${layout.name}`}
                         mt="xs"

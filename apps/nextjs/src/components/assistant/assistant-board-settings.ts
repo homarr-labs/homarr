@@ -16,6 +16,8 @@ export const assistantBoardSettingKeys = [
   "iconColor",
   "itemRadius",
   "disableStatus",
+  "fixedScaling",
+  "fixedItemSize",
 ] as const satisfies readonly (keyof AssistantBoardSettingsChanges)[];
 
 const comparableValue = (value: unknown) => (value === null ? "" : value);
@@ -54,12 +56,14 @@ const backgroundKeys = new Set<keyof AssistantBoardSettingsChanges>([
   "backgroundImageRepeat",
   "backgroundImageSize",
 ]);
+const layoutKeys = new Set<keyof AssistantBoardSettingsChanges>(["fixedScaling", "fixedItemSize"]);
 
 export const getAssistantBoardSettingsDefaultTab = (
   changes: AssistantBoardSettingsChanges,
-): "general" | "appearance" | "background" | "css" => {
+): "general" | "layout" | "appearance" | "background" | "css" => {
   if (changes.customCss !== undefined) return "css";
   const keys = Object.keys(changes) as (keyof AssistantBoardSettingsChanges)[];
+  if (keys.some((key) => layoutKeys.has(key))) return "layout";
   if (keys.some((key) => appearanceKeys.has(key))) return "appearance";
   if (keys.some((key) => backgroundKeys.has(key))) return "background";
   return "general";

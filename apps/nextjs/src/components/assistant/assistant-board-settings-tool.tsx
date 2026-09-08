@@ -11,6 +11,7 @@ import {
   CopyButton,
   Group,
   InputWrapper,
+  NumberInput,
   Select,
   SimpleGrid,
   Skeleton,
@@ -29,6 +30,7 @@ import {
   IconCheck,
   IconCopy,
   IconFileTypeCss,
+  IconLayoutGrid,
   IconPalette,
   IconPhoto,
   IconRefresh,
@@ -38,7 +40,14 @@ import type { z } from "zod/v4";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { backgroundImageAttachments, backgroundImageRepeats, backgroundImageSizes } from "@homarr/definitions";
+import {
+  BOARD_FIXED_ITEM_SIZE_DEFAULT,
+  BOARD_FIXED_ITEM_SIZE_MAX,
+  BOARD_FIXED_ITEM_SIZE_MIN,
+  backgroundImageAttachments,
+  backgroundImageRepeats,
+  backgroundImageSizes,
+} from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
 import { boardSavePartialSettingsSchema } from "@homarr/validation/board";
@@ -85,6 +94,8 @@ const normalizeFormValues = (
     iconColor: values.iconColor ?? "",
     itemRadius: values.itemRadius,
     disableStatus: values.disableStatus,
+    fixedScaling: values.fixedScaling ?? false,
+    fixedItemSize: values.fixedItemSize ?? BOARD_FIXED_ITEM_SIZE_DEFAULT,
   };
 };
 
@@ -263,6 +274,9 @@ const BoardSettingsForm = ({
             <Tabs.Tab value="css" leftSection={<IconFileTypeCss size={15} />}>
               {t("tabs.css")}
             </Tabs.Tab>
+            <Tabs.Tab value="layout" leftSection={<IconLayoutGrid size={15} />}>
+              {t("tabs.layout")}
+            </Tabs.Tab>
             <Tabs.Tab value="appearance" leftSection={<IconPalette size={15} />}>
               {t("tabs.appearance")}
             </Tabs.Tab>
@@ -326,6 +340,26 @@ const BoardSettingsForm = ({
                   {t("remoteCssDescription")}
                 </Alert>
               )}
+            </Stack>
+          </Tabs.Panel>
+
+          <Tabs.Panel value="layout" pt="md">
+            <Stack gap="md">
+              <Switch
+                label={boardT("board.field.fixedScaling.label")}
+                description={boardT("board.field.fixedScaling.description")}
+                {...form.getInputProps("fixedScaling", { type: "checkbox" })}
+              />
+              <NumberInput
+                label={boardT("board.field.fixedItemSize.label")}
+                description={boardT("board.field.fixedItemSize.description")}
+                min={BOARD_FIXED_ITEM_SIZE_MIN}
+                max={BOARD_FIXED_ITEM_SIZE_MAX}
+                step={10}
+                allowDecimal={false}
+                suffix=" px"
+                {...form.getInputProps("fixedItemSize")}
+              />
             </Stack>
           </Tabs.Panel>
 

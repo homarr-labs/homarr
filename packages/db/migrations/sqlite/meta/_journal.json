@@ -337,6 +337,13 @@
       "when": 1788763848930,
       "tag": "0047_add_byte_unit_system",
       "breakpoints": true
+    },
+    {
+      "idx": 48,
+      "version": "6",
+      "when": 1788845055278,
+      "tag": "0048_add_fixed_board_scaling",
+      "breakpoints": true
     }
   ]
 }

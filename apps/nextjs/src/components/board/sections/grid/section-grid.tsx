@@ -10,6 +10,7 @@ import { useEditMode } from "@homarr/boards/edit-mode";
 
 import type { ContainerSectionItem, Section } from "~/app/[locale]/boards/_types";
 import {
+  BOARD_GRID_ITEM_INSET,
   getCollapsedDisplayLayout,
   getEditableCanvasAttributes,
   getGridRowCountForVisualHeight,
@@ -18,7 +19,11 @@ import {
   getReadonlyCanvasAttributes,
   normalizeGridPlacement,
 } from "~/components/board/layout";
-import { calculateBoardUiScale, useBoardCanvasScale } from "~/components/board/layout/scaled-board-canvas";
+import {
+  calculateBoardUiScale,
+  useBoardCanvasScale,
+  useBoardCanvasViewportHeight,
+} from "~/components/board/layout/scaled-board-canvas";
 import { useGridEditorRuntimeStatus } from "./grid-editor-runtime";
 import { createGridEntryElementStore, useGridEditorRegistry } from "./grid-editor-registry";
 import type { SectionGridPlacement } from "./use-grid-layout-actions";
@@ -50,6 +55,7 @@ export const SectionGrid = ({
 }: SectionGridProps) => {
   const [isEditMode] = useEditMode();
   const canvasScale = useBoardCanvasScale();
+  const canvasViewportHeight = useBoardCanvasViewportHeight();
   const editorRuntimeStatus = useGridEditorRuntimeStatus();
   const editorRegistry = useGridEditorRegistry();
   const editorHostRef = useRef<HTMLDivElement>(null);
@@ -130,7 +136,11 @@ export const SectionGrid = ({
     () => innerSections.map((item) => withPlacement(item, placementById.get(item.id))),
     [innerSections, placementById],
   );
-  const minimumViewportRowCount = useMinimumViewportRowCount(section.kind === "empty", canvasScale);
+  const minimumViewportRowCount = useMinimumViewportRowCount(
+    section.kind === "empty",
+    canvasScale,
+    canvasViewportHeight,
+  );
   const contentRowCount = Math.max(1, getLayoutRowCount(displayPlacements));
   const rowCount = Math.max(contentRowCount, requestedRowCount, minimumViewportRowCount);
   const maxRowCount = section.kind === "container" || railPlacement !== "main" ? rowCount : null;
@@ -150,9 +160,9 @@ export const SectionGrid = ({
   // card ends up being, but this SectionGrid instead computes its own fixed pixel size from
   // the same column/row counts used to allocate the *outer*, uninset cell - so without
   // subtracting that gap back out here, a container's inner grid renders larger than its own
-  // card and visually spills past its right/bottom edges. 10 must match that CSS rule's inset.
+  // card and visually spills past its right/bottom edges.
   const effectiveCanvasScale = Number.isFinite(canvasScale) && canvasScale > 0 ? canvasScale : 1;
-  const outerCardInset = section.kind === "container" ? (2 * 10) / effectiveCanvasScale : 0;
+  const outerCardInset = section.kind === "container" ? (2 * BOARD_GRID_ITEM_INSET) / effectiveCanvasScale : 0;
   // A collapsible container's toggle bar (see the `containerToggle` Button in
   // container-section.tsx) is an absolutely positioned overlay sitting on top of this grid.
   // Its height comes from a Mantine size prop, which - like spacing/font-size - is compensated
@@ -342,11 +352,11 @@ const INTERACTIVE_GRID_SELECTOR =
   'a,button,input,textarea,select,option,[contenteditable="true"],[role="button"],[data-grid-no-drag]';
 const EDIT_ACTIVATION_KEYS = new Set(["Enter", " ", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"]);
 
-const useMinimumViewportRowCount = (enabled: boolean, canvasScale: number) => {
+const useMinimumViewportRowCount = (enabled: boolean, canvasScale: number, canvasViewportHeight: number | null) => {
   const [visualHeight, setVisualHeight] = useState(0);
 
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabled || canvasViewportHeight !== null) return;
     const update = () => setVisualHeight(window.visualViewport?.height ?? window.innerHeight);
     update();
     window.addEventListener("resize", update, { passive: true });
@@ -355,9 +365,10 @@ const useMinimumViewportRowCount = (enabled: boolean, canvasScale: number) => {
       window.removeEventListener("resize", update);
       window.visualViewport?.removeEventListener("resize", update);
     };
-  }, [enabled]);
+  }, [canvasViewportHeight, enabled]);
 
-  return enabled ? getGridRowCountForVisualHeight(visualHeight, canvasScale) : 0;
+  const resolvedVisualHeight = canvasViewportHeight ?? visualHeight;
+  return enabled ? getGridRowCountForVisualHeight(resolvedVisualHeight, canvasScale) : 0;
 };
 
 const containerMinimumSizeCache = new WeakMap<
