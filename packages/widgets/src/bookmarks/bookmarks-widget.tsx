@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import { useMemo, useState } from "react";
 import {
   Avatar,
@@ -144,9 +145,21 @@ export default function BookmarksWidget({
   if (appIds.length > 0 && isInitialWidgetQueryPending(appsQuery)) return <WidgetQueryLoadingState />;
 
   const isTight = responsiveHeight < 120;
+  let compactStyle: CSSProperties | undefined;
+  if (!advanced && Number.isFinite(displayScale) && displayScale > 1) {
+    // Low-column boards zoom the canvas above 100%. Keep bookmark controls at their intended physical size.
+    // The spacing and font tokens are rebound here because their inherited values resolve at the canvas level.
+    compactStyle = {
+      "--board-canvas-ui-scale": 1 / displayScale,
+      "--mantine-scale": 1 / displayScale,
+      "--mantine-font-size-xxs": "calc(0.6875rem * var(--board-canvas-ui-scale))",
+      "--mantine-spacing-sm": "calc(0.75rem * var(--board-canvas-ui-scale))",
+      "--mantine-spacing-xs": "calc(0.625rem * var(--board-canvas-ui-scale))",
+    } as CSSProperties;
+  }
 
   return (
-    <Stack h="100%" mih={0} gap={isTight ? 6 : "sm"} p={isTight ? 6 : "sm"}>
+    <Stack h="100%" mih={0} gap={isTight ? 6 : "sm"} p={isTight ? 6 : "sm"} style={compactStyle}>
       {options.title.length > 0 ? (
         <Text fz={11} fw={600} px={2} lh={1.2} lineClamp={1}>
           {options.title}

@@ -246,23 +246,15 @@ export const getBookmarkDisplayPlan = ({
   }
 
   if (layout === "column") {
-    const densitySettings = getBookmarkDensitySettings({
-      columns: 1,
-      gap,
-      height: normalizedHeight,
-      heightProperty: "columnItemHeight",
-      itemCount: count,
-      preferredSettings: heightSettings,
-    });
     return {
       columns: 1,
       horizontalScroll: false,
-      itemGap: getBookmarkDensityGap(gap, densitySettings),
-      itemHeight: densitySettings.columnItemHeight,
+      itemGap: Math.min(gap, 4),
+      itemHeight: 32,
       itemWidth: width,
       orientation: "horizontal",
-      showHostname: widthSettings.showHostname && densitySettings.showHostname,
-      showTitle: widthSettings.showTitle && densitySettings.showTitle,
+      showHostname: widthSettings.showHostname,
+      showTitle: widthSettings.showTitle,
     };
   }
 
