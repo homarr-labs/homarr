@@ -57,8 +57,7 @@ export const BoardLayoutThumbnailCanvas = ({ preview, label, canvas, className }
   const pitch = LOGICAL_GRID_PITCH * metrics.scale;
   const canvasOffset = Math.max(0, (screenWidth - 32 - metrics.width) / 2);
   const contentWidth = Math.max(screenWidth, metrics.width + 32);
-  let canvasTop = 16;
-  if (settings.fixedScaling) canvasTop += 32 * metrics.scale;
+  const canvasTop = 16;
   const contentHeight = rowCount * pitch + canvasTop + 16;
   const itemsById = new Map(preview.items.map((item) => [item.id, item]));
   const stationaryBackground = settings.fixedScaling || settings.backgroundImageAttachment === "fixed";

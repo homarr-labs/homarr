@@ -18,6 +18,11 @@
   transform: translateY(calc(-100% - 8px));
 }
 
+/* Keep first-row labels inside the scrollport without adding space above the board. */
+:global([data-canvas-scaling="fixed"] [data-grid-y="0"] > .board-grid-content-mount) > .wrapper {
+  transform: translateY(8px);
+}
+
 .panel {
   @mixin dark {
     --background-color: rgb(from var(--mantine-color-dark-7) r g b / 0.96);

@@ -31,11 +31,6 @@
   margin-inline: auto;
 }
 
-.viewport[data-canvas-scaling="fixed"] .sizer {
-  /* Leave room for edit labels and controls that intentionally sit above first-row tiles. */
-  margin-block-start: calc(2rem * var(--board-canvas-scale, 1));
-}
-
 .viewport[data-canvas-scaling="fixed"] .canvas {
   /* Fixed size describes every painted tile, including container sections. */
   --board-grid-item-inset: calc(var(--board-grid-card-inset, 10px) * var(--board-canvas-inverse-scale, 1));
