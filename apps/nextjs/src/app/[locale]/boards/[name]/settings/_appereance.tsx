@@ -9,7 +9,6 @@ import {
   Group,
   InputWrapper,
   isLightColor,
-  Select,
   Slider,
   Stack,
   Text,
@@ -20,7 +19,7 @@ import { IconX } from "@tabler/icons-react";
 
 import type { UseFormReturnType } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
-import { BoardColorInput } from "@homarr/ui";
+import { BoardColorInput, CornerStylePicker, cornerStyleValues } from "@homarr/ui";
 import { useSettings } from "@homarr/settings";
 
 import { SectionCard } from "~/components/manage/section-card";
@@ -123,18 +122,18 @@ export const ColorSettingsContent = ({ form }: Props) => {
             </Button>
           </Group>
         </Grid.Col>
-        <Grid.Col span={{ sm: 12, md: 6 }}>
-          <Select
+        <Grid.Col span={12}>
+          <CornerStylePicker
+            compact
             label={tBoard("field.itemRadius.label")}
             description={tBoard("field.itemRadius.description")}
-            data={[
-              { label: tBoard("field.itemRadius.option.xs"), value: "xs" },
-              { label: tBoard("field.itemRadius.option.sm"), value: "sm" },
-              { label: tBoard("field.itemRadius.option.md"), value: "md" },
-              { label: tBoard("field.itemRadius.option.lg"), value: "lg" },
-              { label: tBoard("field.itemRadius.option.xl"), value: "xl" },
-            ]}
-            {...form.getInputProps("itemRadius")}
+            value={form.values.itemRadius}
+            labels={
+              Object.fromEntries(
+                cornerStyleValues.map((cornerStyle) => [cornerStyle, tBoard(`field.itemRadius.option.${cornerStyle}`)]),
+              ) as Record<(typeof cornerStyleValues)[number], string>
+            }
+            onChange={(cornerStyle) => form.setFieldValue("itemRadius", cornerStyle)}
           />
         </Grid.Col>
       </Grid>
