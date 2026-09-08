@@ -40,7 +40,8 @@ export const getBookmarkCardDisplay = ({
     orientation = "horizontal";
     showTitle = true;
   }
-  const showHostname = advanced || (!hideHostname && plan.showHostname);
+  let showHostname = advanced || (!hideHostname && plan.showHostname);
+  if (!advanced && plan.itemHeight <= 32 && showTitle) showHostname = false;
   const showIcon = advanced || !hideIcon || (!showTitle && !showHostname);
 
   return { orientation, showHostname, showIcon, showTitle };
@@ -253,7 +254,7 @@ export const getBookmarkDisplayPlan = ({
       itemHeight: 32,
       itemWidth: width,
       orientation: "horizontal",
-      showHostname: false,
+      showHostname: widthSettings.showHostname,
       showTitle: widthSettings.showTitle,
     };
   }
