@@ -13,6 +13,7 @@ import { FloatingTip } from "@homarr/ui";
 import { BoardAdvancedFocusProvider } from "~/components/board/advanced-focus/context";
 import { BoardAppsSpotlightRegistrar } from "~/components/board/board-apps-spotlight-registrar";
 import { BoardEmptyState } from "~/components/board/board-empty-state";
+import { BoardContextMenu } from "~/components/board/board-context-menu";
 import { BoardSetupChecklist } from "~/components/board/board-setup-checklist";
 import {
   getBoardLaneColumnCount,
@@ -68,81 +69,83 @@ export const ClientBoard = () => {
   const content = (
     <BoardSelectionGridProvider>
       <BoardAdvancedFocusProvider>
-        <Box h="100%" pos="relative" data-homarr-dev-benchmark-board>
-          <BoardAppsSpotlightRegistrar />
-          <BoardBackgroundVideo />
-          <BoardEmptyState />
-          <BoardSetupChecklist />
-          <BoardSectionCollapseProvider>
-            <BoardGridPortalHost>
-              <ScaledBoardCanvas
-                logicalWidth={logicalWidth}
-                initialLogicalHeight={initialLogicalHeight}
-                initialAvailableWidth={initialAvailableWidth}
-                scaling={getBoardScaling(board)}
-                label={board.name}
-              >
-                <BoardGridEditorBoundary key={currentLayoutId}>
-                  <div className={classes.columns} style={{ gap: BOARD_LANE_GAP, gridTemplateColumns }}>
-                    {leftColumnCount > 0 && leftSection && (
-                      <aside
-                        className={`${classes.lane} ${classes.gutter}`}
-                        aria-label={t("leftRail")}
-                        data-board-gutter="left"
-                        data-board-editing={isEditMode ? "true" : undefined}
-                      >
-                        <BoardEmptySection
-                          key={`${currentLayoutId}-${leftSection.id}`}
-                          section={leftSection}
-                          columnCount={leftColumnCount}
-                          requestedRowCount={0}
-                          railPlacement="left"
-                        />
-                      </aside>
-                    )}
+        <BoardContextMenu>
+          <Box h="100%" pos="relative" data-homarr-dev-benchmark-board>
+            <BoardAppsSpotlightRegistrar />
+            <BoardBackgroundVideo />
+            <BoardEmptyState />
+            <BoardSetupChecklist />
+            <BoardSectionCollapseProvider>
+              <BoardGridPortalHost>
+                <ScaledBoardCanvas
+                  logicalWidth={logicalWidth}
+                  initialLogicalHeight={initialLogicalHeight}
+                  initialAvailableWidth={initialAvailableWidth}
+                  scaling={getBoardScaling(board)}
+                  label={board.name}
+                >
+                  <BoardGridEditorBoundary key={currentLayoutId}>
+                    <div className={classes.columns} style={{ gap: BOARD_LANE_GAP, gridTemplateColumns }}>
+                      {leftColumnCount > 0 && leftSection && (
+                        <aside
+                          className={`${classes.lane} ${classes.gutter}`}
+                          aria-label={t("leftRail")}
+                          data-board-gutter="left"
+                          data-board-editing={isEditMode ? "true" : undefined}
+                        >
+                          <BoardEmptySection
+                            key={`${currentLayoutId}-${leftSection.id}`}
+                            section={leftSection}
+                            columnCount={leftColumnCount}
+                            requestedRowCount={0}
+                            railPlacement="left"
+                          />
+                        </aside>
+                      )}
 
-                    <section className={classes.lane} aria-label={t("canvas")}>
-                      <BoardEmptySection
-                        key={`${currentLayoutId}-${mainSection.id}`}
-                        section={mainSection}
-                        columnCount={mainColumnCount}
-                        requestedRowCount={0}
-                      />
-                    </section>
-
-                    {rightColumnCount > 0 && rightSection && (
-                      <aside
-                        className={`${classes.lane} ${classes.gutter}`}
-                        aria-label={t("rightRail")}
-                        data-board-gutter="right"
-                        data-board-editing={isEditMode ? "true" : undefined}
-                      >
+                      <section className={classes.lane} aria-label={t("canvas")}>
                         <BoardEmptySection
-                          key={`${currentLayoutId}-${rightSection.id}`}
-                          section={rightSection}
-                          columnCount={rightColumnCount}
+                          key={`${currentLayoutId}-${mainSection.id}`}
+                          section={mainSection}
+                          columnCount={mainColumnCount}
                           requestedRowCount={0}
-                          railPlacement="right"
                         />
-                      </aside>
-                    )}
-                  </div>
-                </BoardGridEditorBoundary>
-              </ScaledBoardCanvas>
-            </BoardGridPortalHost>
-          </BoardSectionCollapseProvider>
-          <BoardSelectionToolbar />
-          <FloatingTip
-            opened={isEditMode}
-            showDelay={2_000}
-            dismissAfter={3_000}
-            transitionDuration={200}
-            closable={false}
-            alertProps={{ color: "primaryColor", icon: <IconBulb size={18} />, variant: "light" }}
-          >
-            {tTips("multiSelectApps")}
-          </FloatingTip>
-        </Box>
+                      </section>
+
+                      {rightColumnCount > 0 && rightSection && (
+                        <aside
+                          className={`${classes.lane} ${classes.gutter}`}
+                          aria-label={t("rightRail")}
+                          data-board-gutter="right"
+                          data-board-editing={isEditMode ? "true" : undefined}
+                        >
+                          <BoardEmptySection
+                            key={`${currentLayoutId}-${rightSection.id}`}
+                            section={rightSection}
+                            columnCount={rightColumnCount}
+                            requestedRowCount={0}
+                            railPlacement="right"
+                          />
+                        </aside>
+                      )}
+                    </div>
+                  </BoardGridEditorBoundary>
+                </ScaledBoardCanvas>
+              </BoardGridPortalHost>
+            </BoardSectionCollapseProvider>
+            <BoardSelectionToolbar />
+            <FloatingTip
+              opened={isEditMode}
+              showDelay={2_000}
+              dismissAfter={3_000}
+              transitionDuration={200}
+              closable={false}
+              alertProps={{ color: "primaryColor", icon: <IconBulb size={18} />, variant: "light" }}
+            >
+              {tTips("multiSelectApps")}
+            </FloatingTip>
+          </Box>
+        </BoardContextMenu>
       </BoardAdvancedFocusProvider>
     </BoardSelectionGridProvider>
   );

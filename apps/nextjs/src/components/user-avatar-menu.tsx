@@ -13,6 +13,8 @@ import {
   IconSettings,
   IconRobot,
   IconTool,
+  IconPencil,
+  IconDeviceFloppy,
 } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -25,6 +27,7 @@ import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
 import { useAuthContext } from "~/app/[locale]/_client-providers/session";
+import { useOptionalBoardEditing } from "~/app/[locale]/boards/(content)/_editing-provider";
 import { useOptionalHomarrAssistant } from "./assistant/assistant-context";
 import type { BoardSwitcherControls } from "./board/board-switcher";
 import { CurrentColorSchemeCombobox } from "./color-scheme/current-color-scheme-combobox";
@@ -50,6 +53,7 @@ export const UserAvatarMenu = ({ children, availableUpdates, isDockerEnabled, bo
   const tBoard = useI18n("board");
   const session = useSession();
   const board = useOptionalBoard();
+  const editing = useOptionalBoardEditing();
   const boardPermissions = board && constructBoardPermissions(board, session.data ?? null);
 
   const { logoutUrl } = useAuthContext();
@@ -79,6 +83,18 @@ export const UserAvatarMenu = ({ children, availableUpdates, isDockerEnabled, bo
             leftSection={<IconLayoutDashboard size="1rem" />}
           >
             {tBoard("action.settings")}
+          </Menu.Item>
+        )}
+        {editing?.hasChangeAccess && (
+          <Menu.Item
+            leftSection={editing.isEditMode ? <IconDeviceFloppy size="1rem" /> : <IconPencil size="1rem" />}
+            rightSection={<Kbd size="xs">{formatHotkeyLabel(hotkeys.toggleBoardEdit, t("modifier"))}</Kbd>}
+            disabled={editing.isPending || editing.isEnteringEditMode}
+            onClick={() => void editing.toggle()}
+            onFocus={editing.prewarmEditor}
+            onPointerEnter={editing.prewarmEditor}
+          >
+            {editing.label}
           </Menu.Item>
         )}
         <Menu.Item

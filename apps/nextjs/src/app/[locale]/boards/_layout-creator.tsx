@@ -20,6 +20,7 @@ import { env } from "~/env";
 import { getCurrentColorSchemeAsync } from "~/theme/color-scheme";
 import type { Board } from "./_types";
 import { BoardProviders } from "./_providers";
+import { BoardEditingProvider } from "./(content)/_editing-provider";
 import type { Params } from "./(content)/_creator";
 import { CustomCss } from "./(content)/_custom-css";
 import { BoardReadyProvider } from "./(content)/_ready-context";
@@ -106,20 +107,25 @@ export const createBoardLayout = <TParams extends Params>({
         <BoardReadyProvider>
           <BoardMantineProvider defaultColorScheme={colorScheme}>
             <ModalProvider>
-              <CustomCss />
-              <BoardTourGate enabled={shouldRunBoardTour}>
-                <ClientShell hasNavigation={false}>
-                  <MainHeader
-                    logo={<BoardLogo size={appShellLogoHeight} />}
-                    logoWithTitle={<BoardLogoWithTitle size="md" />}
-                    actions={headerActions}
-                    boardEditAction={headerBoardEditAction}
-                    boardSettingsAction={headerBoardSettingsAction}
-                    hasNavigation={false}
-                  />
-                  <AppShellMain data-advanced-focus-background>{children}</AppShellMain>
-                </ClientShell>
-              </BoardTourGate>
+              <BoardEditingProvider
+                enabled={Boolean(headerBoardEditAction) && hasChangeAccess}
+                demoReadOnly={env.DEMO_MODE && env.DEMO_READ_ONLY}
+              >
+                <CustomCss />
+                <BoardTourGate enabled={shouldRunBoardTour}>
+                  <ClientShell hasNavigation={false}>
+                    <MainHeader
+                      logo={<BoardLogo size={appShellLogoHeight} />}
+                      logoWithTitle={<BoardLogoWithTitle size="md" />}
+                      actions={headerActions}
+                      boardEditAction={headerBoardEditAction}
+                      boardSettingsAction={headerBoardSettingsAction}
+                      hasNavigation={false}
+                    />
+                    <AppShellMain data-advanced-focus-background>{children}</AppShellMain>
+                  </ClientShell>
+                </BoardTourGate>
+              </BoardEditingProvider>
             </ModalProvider>
           </BoardMantineProvider>
         </BoardReadyProvider>

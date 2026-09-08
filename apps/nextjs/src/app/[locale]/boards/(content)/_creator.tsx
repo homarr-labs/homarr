@@ -36,7 +36,7 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
 }: Props<TParams>) => {
   return {
     layout: createBoardLayout({
-      headerBoardEditAction: <BoardContentEditAction demoReadOnly={env.DEMO_MODE && env.DEMO_READ_ONLY} />,
+      headerBoardEditAction: <BoardContentEditAction />,
       headerBoardSettingsAction: <BoardContentSettingsAction demoReadOnly={env.DEMO_MODE && env.DEMO_READ_ONLY} />,
       getInitialBoardAsync: getInitialBoard,
       withTour: true,
