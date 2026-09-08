@@ -12,7 +12,7 @@ import {
   Text,
   ThemeIcon,
 } from "@mantine/core";
-import { IconBulb, IconPlus, IconSearch } from "@tabler/icons-react";
+import { IconBulb, IconListCheck, IconPlus, IconSearch } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -34,10 +34,11 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
   const [search, setSearch] = useState("");
   const [selectedAppIds, setSelectedAppIds] = useState<Set<string>>(new Set());
   const [createdApps, setCreatedApps] = useState<SelectableApp[]>([]);
+  const [multiSelectActive, setMultiSelectActive] = useState(false);
   const t = useI18n();
   const { data: apps = [], isPending } = clientApi.app.selectable.useQuery();
   const { openModal: openQuickAddAppModal } = useModalAction(QuickAddAppModal);
-  const multiSelect = Boolean(innerProps.onSelectMany);
+  const multiSelectAvailable = Boolean(innerProps.onSelectMany);
 
   const selectableApps = useMemo(
     () => [...apps, ...createdApps.filter((createdApp) => !apps.some((app) => app.id === createdApp.id))],
@@ -57,14 +58,18 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
     [selectableApps, selectedAppIds],
   );
 
-  const handleSelect = (app: SelectableApp) => {
-    if (!multiSelect) {
-      innerProps.onSelect?.(app);
+  const handleSelect = (app: SelectableApp, event?: React.MouseEvent) => {
+    const isModifierPressed = multiSelectAvailable && Boolean(event?.shiftKey || event?.ctrlKey || event?.metaKey);
+
+    if (!multiSelectActive && !isModifierPressed) {
+      if (innerProps.onSelect) innerProps.onSelect(app);
+      else innerProps.onSelectMany?.([app]);
       actions.closeModal();
       return;
     }
 
-    if (multiSelect) {
+    if (multiSelectAvailable) {
+      setMultiSelectActive(true);
       setSelectedAppIds((current) => {
         const next = new Set(current);
         if (next.has(app.id)) next.delete(app.id);
@@ -77,12 +82,13 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
   const handleAddNewApp = () => {
     openQuickAddAppModal({
       onClose(app) {
-        if (multiSelect) {
+        if (multiSelectActive) {
           setCreatedApps((current) => [...current, app]);
           setSelectedAppIds((current) => new Set(current).add(app.id));
           return;
         }
-        innerProps.onSelect?.(app);
+        if (innerProps.onSelect) innerProps.onSelect(app);
+        else innerProps.onSelectMany?.([app]);
         actions.closeModal();
       },
     });
@@ -93,10 +99,15 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
     actions.closeModal();
   };
 
+  const handleMultiSelectToggle = () => {
+    if (multiSelectActive) setSelectedAppIds(new Set());
+    setMultiSelectActive((current) => !current);
+  };
+
   return (
     <Stack gap="md">
       <FloatingTip
-        opened={multiSelect}
+        opened={multiSelectAvailable}
         showDelay={2_000}
         dismissAfter={3_000}
         transitionDuration={200}
@@ -121,6 +132,19 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
             }
           }}
         />
+        {multiSelectAvailable && (
+          <Group justify="flex-end">
+            <Button
+              size="compact-sm"
+              variant={multiSelectActive ? "light" : "subtle"}
+              leftSection={<IconListCheck size={16} />}
+              aria-pressed={multiSelectActive}
+              onClick={handleMultiSelectToggle}
+            >
+              {multiSelectActive ? t("app.action.select.cancelMultiple") : t("app.action.select.selectMultiple")}
+            </Button>
+          </Group>
+        )}
       </Stack>
 
       {/* Scrollable Container with App Cards */}
@@ -151,7 +175,7 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
                 key={app.id}
                 app={app}
                 isSelected={selectedAppIds.has(app.id)}
-                multiSelect={multiSelect}
+                multiSelectActive={multiSelectActive}
                 onSelect={handleSelect}
               />
             ))}
@@ -166,17 +190,22 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
       </ScrollArea.Autosize>
 
       {/* Multi-Select Action Footer */}
-      {multiSelect && selectedApps.length > 0 && (
+      {multiSelectActive && (
         <Paper withBorder p="xs" radius="md" bg="light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8))">
           <Group justify="space-between" align="center">
             <Text size="sm" fw={600}>
               {t("app.action.select.appsSelected", { count: selectedApps.length })}
             </Text>
             <Group gap="xs">
-              <Button variant="default" size="xs" onClick={() => setSelectedAppIds(new Set())}>
+              <Button
+                variant="default"
+                size="xs"
+                disabled={selectedApps.length === 0}
+                onClick={() => setSelectedAppIds(new Set())}
+              >
                 {t("common.action.discard")}
               </Button>
-              <Button color="primaryColor" size="xs" onClick={handleMultiSubmit}>
+              <Button color="primaryColor" size="xs" disabled={selectedApps.length === 0} onClick={handleMultiSubmit}>
                 {t("common.action.add")} ({selectedApps.length})
               </Button>
             </Group>
@@ -196,19 +225,19 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
 const AppCard = ({
   app,
   isSelected,
-  multiSelect,
+  multiSelectActive,
   onSelect,
 }: {
   app: SelectableApp;
   isSelected: boolean;
-  multiSelect: boolean;
-  onSelect: (app: SelectableApp) => void;
+  multiSelectActive: boolean;
+  onSelect: (app: SelectableApp, event?: React.MouseEvent) => void;
 }) => {
   const t = useI18n();
 
   return (
     <SelectableCard
-      onClick={() => onSelect(app)}
+      onClick={(event) => onSelect(app, event)}
       aria-label={app.name}
       selected={isSelected}
       icon={<Image src={app.iconUrl} alt={app.name} w={28} h={28} fit="contain" style={{ flexShrink: 0 }} />}
@@ -216,7 +245,7 @@ const AppCard = ({
       description={app.description}
       footerLeft={
         <Text size="xs" c="dimmed">
-          {multiSelect && isSelected ? t("app.action.select.selected") : t("app.action.select.application")}
+          {multiSelectActive && isSelected ? t("app.action.select.selected") : t("app.action.select.application")}
         </Text>
       }
     />

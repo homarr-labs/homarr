@@ -746,6 +746,8 @@
         "multiple": "Add {count}",
         "selectedCount": "{count, plural, one {# selected} other {# selected}}",
         "appsSelected": "{count, plural, one {# app selected} other {# apps selected}}",
+        "selectMultiple": "Select multiple",
+        "cancelMultiple": "Exit multi-select",
         "customApplication": "Custom application",
         "application": "Application"
       },
