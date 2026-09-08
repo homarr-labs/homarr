@@ -27,11 +27,11 @@
         "review": "Review"
       },
       "welcome": {
-        "title": "Make home feel organized.",
+        "title": "Welcome home.",
         "description": "Welcome to Homarr v{version}. We’ll guide you through the essentials and help you build your first board.",
         "start": "Get started",
         "restore": "Restore backup",
-        "restoreTitle": "Restore this Homarr",
+        "restoreTitle": "Restore from backup",
         "restoreDescription": "A full SQLite backup restores boards, people, apps, integrations, and settings. Homarr validates it before replacing anything.",
         "errorTitle": "Setup could not start",
         "errorDescription": "Your setup choices are still here. Try again, or reload the page if this continues."
@@ -746,8 +746,6 @@
         "multiple": "Add {count}",
         "selectedCount": "{count, plural, one {# selected} other {# selected}}",
         "appsSelected": "{count, plural, one {# app selected} other {# apps selected}}",
-        "selectMultiple": "Select multiple",
-        "cancelMultiple": "Exit multi-select",
         "customApplication": "Custom application",
         "application": "Application"
       },

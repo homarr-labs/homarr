@@ -16,7 +16,11 @@ export function registerUnsavedChangesGuard({ isDirty, confirmNavigation }: Unsa
     const destination = new URL(anchor.href, window.location.href);
     const current = new URL(window.location.href);
     if (destination.origin !== current.origin) return;
-    if (destination.pathname === current.pathname && destination.search === current.search) {
+    if (
+      destination.pathname === current.pathname &&
+      destination.search === current.search &&
+      destination.hash !== current.hash
+    ) {
       return;
     }
 
@@ -35,14 +39,6 @@ export function registerUnsavedChangesGuard({ isDirty, confirmNavigation }: Unsa
       currentHref = destination;
       return;
     }
-
-    const destinationUrl = new URL(destination, window.location.origin);
-    const currentUrl = new URL(currentHref, window.location.origin);
-    if (destinationUrl.pathname === currentUrl.pathname && destinationUrl.search === currentUrl.search) {
-      currentHref = destination;
-      return;
-    }
-
     window.history.pushState(window.history.state, "", currentHref);
     confirmNavigation(destination);
   };

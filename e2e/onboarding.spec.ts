@@ -89,7 +89,7 @@ describe("Onboarding", () => {
 
       try {
         await page.goto(`http://${homarrContainer.getHost()}:${homarrContainer.getMappedPort(7575)}/init`);
-        await page.getByRole("heading", { name: "Make home feel organized." }).waitFor();
+        await page.getByRole("heading", { name: "Welcome home." }).waitFor();
         const start = page.getByRole("button", { name: "Get started" });
         await start.focus();
         await start.press("Enter");
@@ -356,7 +356,7 @@ describe("Onboarding", () => {
       );
 
       await loginAsync({ page, baseUrl, credentials, destination: "/init" });
-      await page.getByRole("heading", { name: "Make home feel organized." }).waitFor();
+      await page.getByRole("heading", { name: "Welcome home." }).waitFor();
       await page.getByRole("button", { name: "Get started" }).click();
       await page.getByRole("heading", { name: "Start with familiar defaults" }).waitFor();
       expect(await page.getByRole("heading", { name: "Create your administrator" }).count()).toBe(0);

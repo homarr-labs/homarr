@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 import {
   Box,
@@ -27,6 +27,7 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import type { BoardPreviewData } from "@homarr/boards/layout-preview";
 import { revalidatePathActionAsync } from "@homarr/common/client";
+import { env } from "@homarr/common/env";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
@@ -44,7 +45,6 @@ import {
 
 import { BoardSelect } from "~/components/board/board-select";
 import { CurrentLanguageCombobox } from "~/components/language/current-language-combobox";
-import { useUnsavedChangesGuard } from "~/components/manage/use-unsaved-changes-guard";
 import { HeaderComposer } from "./header-composer";
 
 dayjs.extend(localeData);
@@ -125,7 +125,8 @@ export const UserGeneralSettingsForm = ({
     initialValues,
   });
 
-  useUnsavedChangesGuard(form.isDirty());
+  const isDirtyRef = useRef(false);
+  isDirtyRef.current = form.isDirty();
 
   const weekDays = useMemo(() => dayjs.weekdays(false), []);
 
@@ -140,6 +141,15 @@ export const UserGeneralSettingsForm = ({
     changeHeaderPreferencesMutation,
   ];
   const isPending = mutations.some((m) => m.isPending);
+
+  useEffect(() => {
+    const handler = (event: BeforeUnloadEvent) => {
+      if (env.NODE_ENV === "development") return;
+      if (isDirtyRef.current) event.preventDefault();
+    };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, []);
 
   const handleSubmitAsync = async (values: FormValues) => {
     const parsed = userGeneralSettingsSchema.safeParse(values);
