@@ -57,11 +57,9 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
     [selectableApps, selectedAppIds],
   );
 
-  const handleSelect = (app: SelectableApp, event?: React.MouseEvent) => {
-    const isModifierPressed = multiSelect && Boolean(event?.shiftKey || event?.ctrlKey || event?.metaKey);
-
-    if (innerProps.onSelect && !isModifierPressed && selectedAppIds.size === 0) {
-      innerProps.onSelect(app);
+  const handleSelect = (app: SelectableApp) => {
+    if (!multiSelect) {
+      innerProps.onSelect?.(app);
       actions.closeModal();
       return;
     }
@@ -204,13 +202,13 @@ const AppCard = ({
   app: SelectableApp;
   isSelected: boolean;
   multiSelect: boolean;
-  onSelect: (app: SelectableApp, event?: React.MouseEvent) => void;
+  onSelect: (app: SelectableApp) => void;
 }) => {
   const t = useI18n();
 
   return (
     <SelectableCard
-      onClick={(event) => onSelect(app, event)}
+      onClick={() => onSelect(app)}
       aria-label={app.name}
       selected={isSelected}
       icon={<Image src={app.iconUrl} alt={app.name} w={28} h={28} fit="contain" style={{ flexShrink: 0 }} />}

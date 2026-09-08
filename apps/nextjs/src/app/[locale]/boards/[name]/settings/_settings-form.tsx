@@ -17,6 +17,7 @@ import { boardSaveLayoutsSchema, boardSavePartialSettingsSchema } from "@homarr/
 import { homarrLogoPath } from "~/components/layout/logo/constants";
 import { SectionCard } from "~/components/manage/section-card";
 import { UnsavedChangesBar } from "~/components/manage/unsaved-changes-bar";
+import { useUnsavedChangesGuard } from "~/components/manage/use-unsaved-changes-guard";
 
 import type { Board } from "../../_types";
 import { ColorSettingsContent } from "./_appereance";
@@ -107,8 +108,7 @@ export const BoardSettingsForm = ({ board, permissions, hasFullAccess, hideVisib
   const initialValuesRef = useRef(buildInitialValues(board));
   const lastSavedRef = useRef({ pageTitle: board.pageTitle, logoImageUrl: board.logoImageUrl });
 
-  const isDirtyRef = useRef(false);
-  isDirtyRef.current = form.isDirty();
+  useUnsavedChangesGuard(form.isDirty(), { guardBeforeUnload: env.NODE_ENV !== "development" });
 
   useEffect(() => {
     return () => {
@@ -119,15 +119,6 @@ export const BoardSettingsForm = ({ board, permissions, hasFullAccess, hideVisib
       }));
     };
   }, [updateBoard]);
-
-  useEffect(() => {
-    const handler = (event: BeforeUnloadEvent) => {
-      if (env.NODE_ENV === "development") return;
-      if (isDirtyRef.current) event.preventDefault();
-    };
-    window.addEventListener("beforeunload", handler);
-    return () => window.removeEventListener("beforeunload", handler);
-  }, []);
 
   const saveSettingsAsync = async (values: FormValues): Promise<FormValues | null> => {
     const defaults = initialValuesRef.current;

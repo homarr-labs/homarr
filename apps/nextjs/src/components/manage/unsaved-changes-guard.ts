@@ -1,9 +1,14 @@
 interface UnsavedChangesGuardOptions {
   isDirty(): boolean;
   confirmNavigation(href: string): void;
+  guardBeforeUnload?: boolean;
 }
 
-export function registerUnsavedChangesGuard({ isDirty, confirmNavigation }: UnsavedChangesGuardOptions) {
+export function registerUnsavedChangesGuard({
+  isDirty,
+  confirmNavigation,
+  guardBeforeUnload = true,
+}: UnsavedChangesGuardOptions) {
   let currentHref = `${window.location.pathname}${window.location.search}${window.location.hash}`;
   const handleClick = (event: MouseEvent) => {
     if (!isDirty() || event.defaultPrevented || event.button !== 0) return;
@@ -17,6 +22,7 @@ export function registerUnsavedChangesGuard({ isDirty, confirmNavigation }: Unsa
     const current = new URL(window.location.href);
     if (destination.origin !== current.origin) return;
     if (destination.pathname === current.pathname && destination.search === current.search) {
+      currentHref = `${destination.pathname}${destination.search}${destination.hash}`;
       return;
     }
 
@@ -48,11 +54,11 @@ export function registerUnsavedChangesGuard({ isDirty, confirmNavigation }: Unsa
   };
 
   document.addEventListener("click", handleClick, true);
-  window.addEventListener("beforeunload", handleBeforeUnload);
+  if (guardBeforeUnload) window.addEventListener("beforeunload", handleBeforeUnload);
   window.addEventListener("popstate", handlePopState);
   return () => {
     document.removeEventListener("click", handleClick, true);
-    window.removeEventListener("beforeunload", handleBeforeUnload);
+    if (guardBeforeUnload) window.removeEventListener("beforeunload", handleBeforeUnload);
     window.removeEventListener("popstate", handlePopState);
   };
 }

@@ -2,7 +2,7 @@
 
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { registerUnsavedChangesGuard } from "./_unsaved-changes-guard";
+import { registerUnsavedChangesGuard } from "~/components/manage/unsaved-changes-guard";
 
 const cleanups: Array<() => void> = [];
 

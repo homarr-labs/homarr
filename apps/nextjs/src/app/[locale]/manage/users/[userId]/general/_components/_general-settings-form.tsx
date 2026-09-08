@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useEffect, useMemo, useRef } from "react";
+import { useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 import {
   Box,
@@ -45,6 +45,7 @@ import {
 
 import { BoardSelect } from "~/components/board/board-select";
 import { CurrentLanguageCombobox } from "~/components/language/current-language-combobox";
+import { useUnsavedChangesGuard } from "~/components/manage/use-unsaved-changes-guard";
 import { HeaderComposer } from "./header-composer";
 
 dayjs.extend(localeData);
@@ -125,8 +126,7 @@ export const UserGeneralSettingsForm = ({
     initialValues,
   });
 
-  const isDirtyRef = useRef(false);
-  isDirtyRef.current = form.isDirty();
+  useUnsavedChangesGuard(form.isDirty(), { guardBeforeUnload: env.NODE_ENV !== "development" });
 
   const weekDays = useMemo(() => dayjs.weekdays(false), []);
 
@@ -141,15 +141,6 @@ export const UserGeneralSettingsForm = ({
     changeHeaderPreferencesMutation,
   ];
   const isPending = mutations.some((m) => m.isPending);
-
-  useEffect(() => {
-    const handler = (event: BeforeUnloadEvent) => {
-      if (env.NODE_ENV === "development") return;
-      if (isDirtyRef.current) event.preventDefault();
-    };
-    window.addEventListener("beforeunload", handler);
-    return () => window.removeEventListener("beforeunload", handler);
-  }, []);
 
   const handleSubmitAsync = async (values: FormValues) => {
     const parsed = userGeneralSettingsSchema.safeParse(values);
