@@ -1,8 +1,7 @@
 "use client";
 
 /* eslint-disable react/no-unstable-nested-components -- TimerPopover uses render props to wire controlled targets. */
-/* eslint-disable import/no-unassigned-import { getWidgetLayoutSize } from "../../common/widget-layout-size";
-import -- The shared widget stylesheet is loaded for its side effects. */
+/* eslint-disable import/no-unassigned-import -- The shared widget stylesheet is loaded for its side effects. */
 
 import "../../widgets-common.css";
 
@@ -39,6 +38,7 @@ import type { WidgetComponentProps } from "../../definition";
 import { IntegrationErrorIndicator } from "../../common/integration-error-indicator";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../../common/query-state";
 import { WidgetQueryLoadingState } from "../../common/query-state-indicator";
+import { getWidgetLayoutSize } from "../../common/widget-layout-size";
 import actionTargetClasses from "../../common/action-target.module.css";
 import classes from "./component.module.css";
 import TimerPopover from "./timer-popover";
