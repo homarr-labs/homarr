@@ -1,13 +1,21 @@
 ---
 name: documentation-sync
-description: Keep Homarr's Docusaurus documentation aligned with user-facing code. Use when adding or changing integrations, widgets, APIs, environment variables, CLI commands, authentication, permissions, cron jobs, settings, or UI behavior that users must understand.
+description: Keep Homarr's Docusaurus documentation useful and accurate. Use when a change affects what users need to know to configure, use, or troubleshoot Homarr, or makes existing guidance inaccurate.
 ---
 
 # Documentation Sync
 
-Update `apps/docs/` in the same change as user-facing behavior. Inspect adjacent pages and the docs types before copying a pattern; the source and docs evolve together.
+Update `apps/docs/` when users need new or corrected guidance to configure, use, or troubleshoot Homarr. Keep documentation straight to the point.
 
-## Map the change
+## Decide whether documentation is needed
+
+Identify the user action, decision, prerequisite, limitation, or troubleshooting step that changes. Update the relevant docs when that information is missing or inaccurate. If nothing users need to know changes, leave the docs untouched.
+
+Routine visual fixes such as icon sizing, spacing, alignment, responsive layout, and animation usually need no documentation. Describe them in the PR when useful for review. Document a visual change only when it changes a user workflow, setting, or meaningful limitation.
+
+Write the minimum information needed to complete the user's task. Inspect adjacent pages and the docs types before editing.
+
+## Map changes that need documentation
 
 | Code change                         | Documentation target                                                 |
 | ----------------------------------- | -------------------------------------------------------------------- |
@@ -44,8 +52,8 @@ For a widget:
 
 ## Completion criteria
 
-1. Describe the shipped behavior, not an implementation plan.
+1. Every addition helps a user configure, use, or troubleshoot Homarr; omit incidental rendering and implementation details.
 2. Keep names, defaults, paths, screenshots, links, and prerequisites consistent with code.
-3. Update every affected page and remove superseded guidance.
+3. Correct affected guidance and remove superseded instructions. A code change alone does not require a docs edit.
 4. Run the narrowest useful docs validation. Use `pnpm turbo build --filter=@homarr/docs` when links, MDX, generated definitions, or navigation can fail; otherwise run the docs package formatter on touched files.
 5. Treat broken links and anchors as failures; Docusaurus checks them strictly.

@@ -1,4 +1,4 @@
 interface:
   display_name: "Homarr Documentation Sync"
-  short_description: "Keep user-facing docs aligned with code"
-  default_prompt: "Use $documentation-sync to map this Homarr code change to the required documentation updates."
+  short_description: "Keep user docs concise, useful, and accurate"
+  default_prompt: "Use $documentation-sync to decide whether this Homarr change needs user guidance and update only what users need to know."

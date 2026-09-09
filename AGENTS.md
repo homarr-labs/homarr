@@ -59,7 +59,7 @@ homarr/
 
 The documentation site lives at `apps/docs/` (Docusaurus 3, `@homarr/docs`).
 
-When modifying user-facing code, you MUST also update the corresponding documentation:
+Update documentation when a change affects what users need to know to configure, use, or troubleshoot Homarr, or makes existing guidance inaccurate. Follow `.agents/skills/documentation-sync/SKILL.md` to decide whether an update is needed and keep it concise. For changes that need documentation:
 
 - New integration → `apps/docs/docs/integrations/<slug>/index.mdx` + `index.ts`
 - New widget → `apps/docs/docs/widgets/<slug>/index.mdx` + `index.ts`
@@ -99,6 +99,6 @@ When modifying user-facing code, you MUST also update the corresponding document
 Portable skills live in `.agents/skills/`. Read the relevant `SKILL.md` before working in that domain; detailed references are loaded only when needed. Claude-compatible discovery is provided through `.claude/skills`.
 
 - `codebase-context` — architecture, package boundaries, and shared utilities
-- `documentation-sync` — required user-facing documentation updates
+- `documentation-sync` — concise, relevant user guidance
 - `mcp-integration` — safe tRPC-to-MCP exposure
 - `homarr-custom-widget` — safe Custom JSX v2 authoring
