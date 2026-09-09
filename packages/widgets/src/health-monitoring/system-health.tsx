@@ -61,6 +61,8 @@ export const SystemHealthMonitoring = ({
   options,
   integrationIds,
   width,
+  height,
+  displayScale = 1,
   displayMode,
   withScrollArea = true,
 }: WidgetComponentProps<"healthMonitoring"> & { withScrollArea?: boolean }) => {
@@ -75,7 +77,9 @@ export const SystemHealthMonitoring = ({
   const { formatBytes, formatBytesPair } = useByteFormatter();
 
   const isAdvanced = displayMode === "advanced";
-  const isTiny = !isAdvanced && width < 256;
+  let scale = 1;
+  if (!isAdvanced && Number.isFinite(displayScale) && displayScale > 0) scale = displayScale;
+  const isTiny = !isAdvanced && (width * scale < 256 || height * scale < 160);
   const showCpu = isAdvanced || options.cpu;
   const showMemory = isAdvanced || options.memory;
   const showGpu = isAdvanced || options.gpu;

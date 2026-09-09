@@ -33,3 +33,12 @@
     transition: none;
   }
 }
+
+/* Gauge labels live inside an SVG foreignObject. The SVG already scales its
+ * coordinate system to the compensated gauge size; compensating again makes
+ * the label grow as the board shrinks. */
+.gaugeLabel {
+  --mantine-scale: 1;
+  --board-canvas-ui-scale: 1;
+  --mantine-font-size-xs: 0.75rem;
+}

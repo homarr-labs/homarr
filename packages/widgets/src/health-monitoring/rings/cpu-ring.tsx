@@ -5,6 +5,7 @@ import { IconCpu } from "@tabler/icons-react";
 import { zoomCompensatedSize } from "@homarr/ui";
 
 import { progressColor } from "../system-health";
+import classes from "../system-health.module.css";
 
 export const CpuRing = ({
   cpuUtilization,
@@ -17,6 +18,7 @@ export const CpuRing = ({
 }) => {
   return (
     <GaugeChart
+      classNames={{ label: classes.gaugeLabel }}
       className="health-monitoring-cpu"
       aria-label={ariaLabel}
       roundCaps

@@ -6,6 +6,7 @@ import { useByteFormatter } from "@homarr/settings";
 import { zoomCompensatedSize } from "@homarr/ui";
 
 import { progressColor } from "../system-health";
+import classes from "../system-health.module.css";
 
 export const MemoryRing = ({
   available,
@@ -24,6 +25,7 @@ export const MemoryRing = ({
   return (
     <Tooltip label={`${memoryUsage.memUsed.percent}%`}>
       <GaugeChart
+        classNames={{ label: classes.gaugeLabel }}
         className="health-monitoring-memory"
         aria-label={ariaLabel}
         roundCaps

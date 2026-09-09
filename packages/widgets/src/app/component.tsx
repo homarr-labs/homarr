@@ -2,7 +2,7 @@
 
 import type { PropsWithChildren } from "react";
 import { Fragment, Suspense } from "react";
-import { Box, Flex, rem, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
+import { Box, Flex, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
 import { IconMinus } from "@tabler/icons-react";
 import combineClasses from "clsx";
 
@@ -21,7 +21,13 @@ import classes from "./app.module.css";
 import { PingDot } from "./ping/ping-dot";
 import { PingIndicator } from "./ping/ping-indicator";
 
-export default function AppWidget({ options, isEditMode, height, width }: WidgetComponentProps<"app">) {
+export default function AppWidget({
+  options,
+  isEditMode,
+  height,
+  width,
+  displayScale = 1,
+}: WidgetComponentProps<"app">) {
   const tCommon = useI18n("common");
   const settings = useSettings();
   const board = useRequiredBoard();
@@ -33,7 +39,13 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
   if (isInitialWidgetQueryPending(appQuery)) return <WidgetQueryLoadingState />;
   if (!app) return <WidgetEmptyState />;
 
-  const isTiny = height < 100 || width < 100;
+  // Readable board tokens stay fixed on screen, but must yield space to the icon
+  // when the tile itself becomes small. Below 100px, scale the whole composition.
+  let scale = 1;
+  if (Number.isFinite(displayScale) && displayScale > 0) scale = displayScale;
+  const contentScale = Math.min(1 / Math.min(scale, 1), Math.min(width, height) / 100);
+  const textSize = `${14 * contentScale}px`;
+  const spacing = 12 * contentScale;
   const isColumnLayout = options.layout.startsWith("column");
 
   return (
@@ -44,22 +56,26 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
           enabled={options.descriptionDisplayMode === "tooltip" && Boolean(app.description) && !isEditMode}
         >
           <Flex
-            p={isTiny ? 4 : "sm"}
             className={combineClasses("app-flex-wrapper", app.name, app.id, href && classes.appWithUrl)}
             h="100%"
             w="100%"
             direction={options.layout}
             justify="center"
             align="center"
-            gap={isColumnLayout ? 0 : "sm"}
+            style={{ padding: spacing, gap: isColumnLayout ? 0 : spacing / 2 }}
             onContextMenu={isEditMode ? (e) => e.preventDefault() : undefined}
           >
-            <Stack gap={0}>
+            <Stack
+              gap={0}
+              className={classes.appText}
+              style={{ maxWidth: isColumnLayout ? "100%" : "50%", maxHeight: isColumnLayout ? "50%" : "100%" }}
+            >
               {options.showTitle && (
                 <Text
                   className="app-title"
                   fw={700}
-                  size={isTiny ? rem(8) : "sm"}
+                  lineClamp={2}
+                  style={{ fontSize: textSize }}
                   ta={isColumnLayout ? "center" : undefined}
                 >
                   {app.name}
@@ -68,10 +84,10 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
               {options.descriptionDisplayMode === "normal" && (
                 <Text
                   className="app-description"
-                  size={isTiny ? rem(8) : "sm"}
+                  style={{ fontSize: textSize }}
                   ta={isColumnLayout ? "center" : undefined}
                   c="dimmed"
-                  lineClamp={4}
+                  lineClamp={2}
                 >
                   {app.description?.split("\n").map((line, index) => (
                     <Fragment key={index}>
@@ -88,9 +104,11 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
               alt={app.name}
               className={combineClasses(classes.appIcon, "app-icon")}
               style={{
+                flex: isColumnLayout ? undefined : "0 0 50%",
                 height: "100%",
                 width: "100%",
-                minWidth: "20%",
+                minWidth: 0,
+                minHeight: 0,
                 maxWidth: isColumnLayout ? undefined : "50%",
               }}
             />

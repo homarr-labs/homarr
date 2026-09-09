@@ -5,6 +5,7 @@ import { IconCpu } from "@tabler/icons-react";
 import { zoomCompensatedSize } from "@homarr/ui";
 
 import { progressColor } from "../system-health";
+import classes from "../system-health.module.css";
 
 const CPU_TEMPERATURE_MIN_CELSIUS = 0;
 const CPU_TEMPERATURE_MAX_CELSIUS = 100;
@@ -31,6 +32,7 @@ export const CpuTempRing = ({
 
   return (
     <GaugeChart
+      classNames={{ label: classes.gaugeLabel }}
       className="health-monitoring-cpu-temperature"
       aria-label={ariaLabel}
       roundCaps

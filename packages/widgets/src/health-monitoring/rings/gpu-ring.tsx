@@ -5,6 +5,7 @@ import { IconDeviceDesktop } from "@tabler/icons-react";
 import { zoomCompensatedSize } from "@homarr/ui";
 
 import { progressColor } from "../system-health";
+import classes from "../system-health.module.css";
 
 interface GpuRingProps {
   gpu: {
@@ -43,6 +44,7 @@ export const GpuRing = ({ gpu, isTiny, fahrenheit, ariaLabel }: GpuRingProps) =>
       multiline
     >
       <GaugeChart
+        classNames={{ label: classes.gaugeLabel }}
         className={`health-monitoring-gpu health-monitoring-gpu-${gpu.gpuId}`}
         aria-label={ariaLabel}
         roundCaps
