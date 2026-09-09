@@ -1,5 +1,5 @@
 ---
-title: Upgrade from v1 to v2
+title: Try the v2 beta
 sidebar_position: 2
 tags:
   - Getting started
@@ -8,8 +8,20 @@ tags:
   - Backup
 ---
 
-Homarr v2 upgrades the existing v1 database in place. Keep the same data storage, database configuration, and
-`SECRET_ENCRYPTION_KEY`; only change the Homarr image or package version for the first start.
+This page covers the temporary Homarr v2 public beta. Try the [live demo](https://app-v2.preview.homarr.dev/)
+without installing anything, or run the beta image published in the
+[public beta announcement](https://github.com/homarr-labs/homarr/issues/6600):
+
+```sh
+docker pull ghcr.io/homarr-labs/homarr-test:v2
+```
+
+For a fresh beta installation, follow the [Docker installation guide](/docs/getting-started/installation/docker),
+use `ghcr.io/homarr-labs/homarr-test:v2` as the image, and use a separate `/appdata` volume.
+Set `WORKSHOP_API_URL=https://v2.preview.homarr.dev` to use the preview Workshop.
+
+Homarr runs database migrations automatically at startup; no manual database migration command is needed.
+Once v2 is released, existing installations can use their normal update process. The beta image below is temporary.
 
 :::danger Back up before starting v2
 
@@ -18,21 +30,23 @@ before starting v2. See [Backup and restore](/docs/management/backup) for detail
 
 :::
 
-## Upgrade
+## Try the beta with existing v1 data
 
-1. Pin the Homarr image to `ghcr.io/homarr-labs/homarr:v2.0.0` for the first v2 start.
+1. Change the Homarr image to `ghcr.io/homarr-labs/homarr-test:v2`.
 2. Keep the existing `/appdata` mount, database variables, Redis configuration, and `SECRET_ENCRYPTION_KEY` unchanged.
 3. Start one Homarr replica and follow its logs. Startup must reach `Migration complete`; Homarr aborts startup when a
    database migration fails.
 4. Open Homarr and sign in. Confirm **Management → About** reports v2 before starting additional replicas.
-5. After validation, keep the version pinned or return to your normal stable release policy.
+5. Keep using the beta image for beta updates. To return to v1, restore the pre-beta backup as described below.
 
-For Docker Compose, the change is limited to the image tag before the usual update:
+Keep your other existing Compose settings, including environment variables. For Docker Compose, update the image and preview Workshop URL before the usual update:
 
 ```yaml
 services:
   homarr:
-    image: ghcr.io/homarr-labs/homarr:v2.0.0
+    image: ghcr.io/homarr-labs/homarr-test:v2
+    environment:
+      WORKSHOP_API_URL: https://v2.preview.homarr.dev
 ```
 
 ```sh
