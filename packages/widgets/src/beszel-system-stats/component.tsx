@@ -13,6 +13,7 @@ import { showErrorNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { iconSizes, zoomCompensatedSize } from "@homarr/ui";
 
+import { getWidgetLayoutSize } from "../common/widget-layout-size";
 import classes from "./component.module.css";
 
 import type { WidgetComponentProps } from "../definition";
@@ -33,6 +34,7 @@ export default function BeszelSystemStatsWidget({
   width,
   height,
   displayScale = 1,
+  displayMode,
   boardId,
   itemId,
   setOptions,
@@ -71,12 +73,12 @@ export default function BeszelSystemStatsWidget({
     { value: "1w", label: t("period.oneWeek") },
     { value: "30d", label: t("period.thirtyDays") },
   ];
-  let responsiveWidth = width;
-  let responsiveHeight = height;
-  if (Number.isFinite(displayScale) && displayScale > 0) {
-    responsiveWidth *= displayScale;
-    responsiveHeight *= displayScale;
-  }
+  const { width: responsiveWidth, height: responsiveHeight } = getWidgetLayoutSize({
+    width,
+    height,
+    displayScale,
+    displayMode,
+  });
   useWidgetRuntimeQueries(
     widgetRuntimeRef,
     selectedSystem && options.timePeriod !== "1m"

@@ -6,6 +6,7 @@ import { Box, Group, Stack, Text } from "@mantine/core";
 import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
 
+import { getWidgetDisplayScale, getWidgetLayoutSize } from "../common/widget-layout-size";
 import type { WidgetComponentProps } from "../definition";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { getUsableWidgetQueryData } from "../common/query-state";
@@ -20,8 +21,13 @@ const emptyDashboardData = [] as const;
 export default function SpeedtestTrackerWidget({
   options,
   integrationIds,
-  width,
+  width: logicalWidth,
+
+  height: logicalHeight,
+  displayScale,
+  displayMode,
 }: WidgetComponentProps<"speedtestTracker">) {
+  const { width } = getWidgetLayoutSize({ width: logicalWidth, height: logicalHeight, displayScale, displayMode });
   const t = useI18n("widget.speedtestTracker");
   const dashboardQuery = clientApi.widget.speedtestTracker.getDashboard.useQuery({ integrationIds });
   const dashboardData = getUsableWidgetQueryData(dashboardQuery) ?? emptyDashboardData;
@@ -44,10 +50,20 @@ export default function SpeedtestTrackerWidget({
   const noSectionsEnabled = !options.showLatestResult && !options.showStats && !options.showRecentResults;
 
   const latest = showLatestResult && combined.latestResult && (
-    <LatestResultSection result={combined.latestResult} width={width} compactSurface />
+    <LatestResultSection
+      result={combined.latestResult}
+      width={width}
+      displayScale={getWidgetDisplayScale({ displayScale, displayMode })}
+      compactSurface
+    />
   );
   const averages = showStats && combined.stats && (
-    <AveragesSection stats={combined.stats} width={width} compactSurface />
+    <AveragesSection
+      stats={combined.stats}
+      width={width}
+      displayScale={getWidgetDisplayScale({ displayScale, displayMode })}
+      compactSurface
+    />
   );
 
   return (

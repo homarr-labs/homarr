@@ -175,8 +175,10 @@ export type WidgetComponentProps<TKind extends WidgetKind> = WidgetProps<TKind> 
   isEditMode: boolean;
   displayMode?: "compact" | "advanced";
   setOptions: ({ newOptions }: { newOptions: Partial<inferOptionsFromCreator<WidgetOptionsRecordOf<TKind>>> }) => void;
+  /** Logical pixels for rendering geometry. Use getWidgetLayoutSize for responsive decisions. */
   width: number;
   height: number;
+  /** Board scale; advanced surfaces render outside the board at scale 1. */
   displayScale?: number;
   widgetRuntimeRef?: WidgetRuntimeRef;
   widgetStateRef?: React.MutableRefObject<Record<string, unknown> | null>;

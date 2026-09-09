@@ -38,6 +38,7 @@ import { useI18n } from "@homarr/translation/client";
 import { zoomCompensatedSize } from "@homarr/ui";
 import type { TablerIcon } from "@homarr/ui";
 
+import { getWidgetLayoutSize } from "../common/widget-layout-size";
 import type { WidgetComponentProps } from "../definition";
 import { getUsableWidgetQueryData } from "../common/query-state";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
@@ -169,10 +170,13 @@ function StreamTableHeader({
 export default function MediaServerWidget({
   options,
   integrationIds,
-  width,
+  width: logicalWidth,
   isEditMode,
   displayMode,
+  height: logicalHeight,
+  displayScale,
 }: WidgetComponentProps<"mediaServer">) {
+  const { width } = getWidgetLayoutSize({ width: logicalWidth, height: logicalHeight, displayScale, displayMode });
   const currentStreamsQuery = clientApi.widget.mediaServer.getCurrentStreams.useQuery({
     integrationIds,
     showOnlyPlaying: options.showOnlyPlaying,

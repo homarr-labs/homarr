@@ -5,6 +5,7 @@ import { Badge, Box, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine
 import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
 
+import { getWidgetLayoutSize } from "../common/widget-layout-size";
 import { getUsableWidgetQueryData } from "../common/query-state";
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
@@ -16,9 +17,13 @@ import type { InstanceData } from "./types";
 export default function CoolifyWidget({
   options,
   integrationIds,
-  width,
+  width: logicalWidth,
   displayMode,
+
+  height: logicalHeight,
+  displayScale,
 }: WidgetComponentProps<"coolify">) {
+  const { width } = getWidgetLayoutSize({ width: logicalWidth, height: logicalHeight, displayScale, displayMode });
   const t = useI18n("widget.coolify");
 
   if (integrationIds.length === 0) {

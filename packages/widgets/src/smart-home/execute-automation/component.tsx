@@ -21,6 +21,7 @@ import { useRegisterSpotlightContextActions } from "@homarr/spotlight";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 import { zoomCompensatedSize } from "@homarr/ui";
 
+import { getWidgetLayoutSize } from "../../common/widget-layout-size";
 import type { WidgetComponentProps } from "../../definition";
 import { isSmartHomeTiny } from "../layout";
 
@@ -28,10 +29,17 @@ export default function SmartHomeTriggerAutomationWidget({
   options,
   integrationIds,
   isEditMode,
-  width,
-  height,
+  width: logicalWidth,
+  height: logicalHeight,
   displayMode,
+  displayScale,
 }: WidgetComponentProps<"smartHome-executeAutomation">) {
+  const { width, height } = getWidgetLayoutSize({
+    width: logicalWidth,
+    height: logicalHeight,
+    displayScale,
+    displayMode,
+  });
   const integrationId = integrationIds[0];
   const canInteract = useIntegrationsWithInteractAccess().some(({ id }) => id === integrationId);
   const [lastExecutedAt, setLastExecutedAt] = React.useState<Date | null>(null);

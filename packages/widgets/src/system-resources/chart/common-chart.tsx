@@ -1,22 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type {
-  CSSProperties,
-  PointerEvent as ReactPointerEvent,
-  ReactNode,
-} from "react";
+import type { CSSProperties, PointerEvent as ReactPointerEvent, ReactNode } from "react";
 import { useState } from "react";
 import type { AreaChartSeries } from "@mantine/charts";
 import { AreaChart, LineChart } from "@mantine/charts";
-import {
-  Card,
-  Center,
-  Group,
-  Stack,
-  Text,
-  Tooltip,
-  useComputedColorScheme,
-  useMantineTheme,
-} from "@mantine/core";
+import { Card, Center, Group, Stack, Text, Tooltip, useComputedColorScheme, useMantineTheme } from "@mantine/core";
 import { useElementSize, useHover, useMergedRef } from "@mantine/hooks";
 import type { YAxisProps } from "recharts";
 
@@ -24,6 +11,7 @@ import { useRequiredBoard } from "@homarr/boards/context";
 import { zoomCompensatedSize } from "@homarr/ui";
 import type { TablerIcon } from "@homarr/ui";
 
+import { getWidgetDisplayScale } from "../../common/widget-layout-size";
 import type { LabelDisplayModeOption } from "..";
 
 export const CommonChart = ({
@@ -38,6 +26,7 @@ export const CommonChart = ({
   lastValue,
   chartType = "line",
   advanced = false,
+  displayScale,
 }: {
   data: Record<string, any>[];
   dataKey: string;
@@ -53,8 +42,11 @@ export const CommonChart = ({
   lastValue?: string;
   chartType?: "line" | "area";
   advanced?: boolean;
+  displayScale?: number;
 }) => {
-  const { ref: elementSizeRef, height } = useElementSize();
+  const { ref: elementSizeRef, height: logicalHeight } = useElementSize();
+  const height =
+    logicalHeight * getWidgetDisplayScale({ displayScale, displayMode: advanced ? "advanced" : "compact" });
   const theme = useMantineTheme();
   const colorScheme = useComputedColorScheme("light");
   const board = useRequiredBoard();
@@ -62,28 +54,22 @@ export const CommonChart = ({
   const ref = useMergedRef(elementSizeRef, hoverRef);
 
   const opacity = board.opacity / 100;
-  let backgroundColor =
-    colorScheme === "dark"
-      ? `rgba(57, 57, 57, ${opacity})`
-      : `rgba(246, 247, 248, ${opacity})`;
+  let backgroundColor = colorScheme === "dark" ? `rgba(57, 57, 57, ${opacity})` : `rgba(246, 247, 248, ${opacity})`;
   const cardStyle: CSSProperties = { overflow: "hidden" };
   const chartRootStyle: CSSProperties = {
     padding: 5,
     borderRadius: theme.radius[board.itemRadius],
   };
   if (advanced) {
-    backgroundColor =
-      "rgb(from var(--mantine-color-primaryColor-filled) r g b / calc(var(--opacity, 1) * 0.12))";
+    backgroundColor = "rgb(from var(--mantine-color-primaryColor-filled) r g b / calc(var(--opacity, 1) * 0.12))";
     cardStyle.border =
       "1px solid rgb(from var(--mantine-color-secondaryColor-filled) r g b / calc(var(--opacity, 1) * 0.45))";
     chartRootStyle.backgroundColor = backgroundColor;
   }
 
   const ChartComponent = chartType === "line" ? LineChart : AreaChart;
-  const showIcon =
-    labelDisplayMode === "icon" || labelDisplayMode === "textWithIcon";
-  const showText =
-    labelDisplayMode === "text" || labelDisplayMode === "textWithIcon";
+  const showIcon = labelDisplayMode === "icon" || labelDisplayMode === "textWithIcon";
+  const showText = labelDisplayMode === "text" || labelDisplayMode === "textWithIcon";
 
   // Track which data point the cursor is over so the tooltip can reflect that point
   // instead of always showing the latest value while scrubbing across the chart.
@@ -100,20 +86,12 @@ export const CommonChart = ({
   // Clamp on read rather than syncing via an effect - handles data growing/shrinking
   // between renders (e.g. history resetting on integration change) without ever
   // handing a stale or out-of-range index to tooltipLabel.
-  const clampedHoveredIndex = Math.max(
-    0,
-    Math.min(hoveredIndex, data.length - 1),
-  );
+  const clampedHoveredIndex = Math.max(0, Math.min(hoveredIndex, data.length - 1));
   const resolvedTooltipLabel =
-    typeof tooltipLabel === "function"
-      ? tooltipLabel(clampedHoveredIndex)
-      : (tooltipLabel ?? lastValue);
+    typeof tooltipLabel === "function" ? tooltipLabel(clampedHoveredIndex) : (tooltipLabel ?? lastValue);
 
   return (
-    <Tooltip.Floating
-      label={resolvedTooltipLabel}
-      disabled={data.length <= 1 || !resolvedTooltipLabel}
-    >
+    <Tooltip.Floating label={resolvedTooltipLabel} disabled={data.length <= 1 || !resolvedTooltipLabel}>
       <Card
         ref={ref}
         h={"100%"}
@@ -149,33 +127,19 @@ export const CommonChart = ({
               </Text>
             )}
             {lastValue && (
-              <Text
-                c={"dimmed"}
-                size={height > 100 ? "md" : "xs"}
-                lineClamp={1}
-              >
+              <Text c={"dimmed"} size={height > 100 ? "md" : "xs"} lineClamp={1}>
                 {lastValue}
               </Text>
             )}
           </Group>
         )}
-        {advanced &&
-          data.length > 1 &&
-          height > 0 &&
-          height <= 40 &&
-          lastValue &&
-          !hovered && (
-            <Center
-              pos="absolute"
-              w="100%"
-              h="100%"
-              style={{ zIndex: 2, pointerEvents: "none" }}
-            >
-              <Text size="xs" fw={600}>
-                {lastValue}
-              </Text>
-            </Center>
-          )}
+        {advanced && data.length > 1 && height > 0 && height <= 40 && lastValue && !hovered && (
+          <Center pos="absolute" w="100%" h="100%" style={{ zIndex: 2, pointerEvents: "none" }}>
+            <Text size="xs" fw={600}>
+              {lastValue}
+            </Text>
+          </Center>
+        )}
         {data.length <= 1 ? (
           <Center pos="absolute" w="100%" h="100%">
             <Stack px={"xs"} align={"center"} gap={4}>
@@ -187,12 +151,7 @@ export const CommonChart = ({
                 />
               )}
               {showText && (
-                <Text
-                  c={"dimmed"}
-                  size={height > 100 ? "md" : "xs"}
-                  fw={"bold"}
-                  ta="center"
-                >
+                <Text c={"dimmed"} size={height > 100 ? "md" : "xs"} fw={"bold"} ta="center">
                   {title}
                 </Text>
               )}

@@ -29,6 +29,7 @@ import { useI18n } from "@homarr/translation/client";
 import { zoomCompensatedSize } from "@homarr/ui";
 import type { TablerIcon } from "@homarr/ui";
 
+import { getWidgetDisplayScale, getWidgetLayoutSize } from "../../common/widget-layout-size";
 import type { widgetKind } from ".";
 import type { WidgetComponentProps, WidgetProps } from "../../definition";
 import { IntegrationErrorIndicator } from "../../common/integration-error-indicator";
@@ -38,9 +39,18 @@ import { WidgetQueryLoadingState } from "../../common/query-state-indicator";
 export default function DnsHoleSummaryWidget({
   options,
   integrationIds,
-  width,
-  height,
+  width: logicalWidth,
+  height: logicalHeight,
+  displayScale,
+  displayMode,
 }: WidgetComponentProps<typeof widgetKind>) {
+  const scale = getWidgetDisplayScale({ displayScale, displayMode });
+  const { width, height } = getWidgetLayoutSize({
+    width: logicalWidth,
+    height: logicalHeight,
+    displayScale,
+    displayMode,
+  });
   const summaryQuery = clientApi.widget.dnsHole.summary.useQuery({
     integrationIds,
   });
@@ -67,7 +77,14 @@ export default function DnsHoleSummaryWidget({
       <SimpleGrid cols={2} spacing="xs" p="xs" {...layoutProps} style={{ ...layoutProps.style, flex: 1, minHeight: 0 }}>
         {data.length > 0 ? (
           stats.map((item) => (
-            <StatCard key={item.color} item={item} usePiHoleColors={options.usePiHoleColors} data={data} t={t} />
+            <StatCard
+              displayScale={scale}
+              key={item.color}
+              item={item}
+              usePiHoleColors={options.usePiHoleColors}
+              data={data}
+              t={t}
+            />
           ))
         ) : (
           <Stack
@@ -171,13 +188,15 @@ interface StatItem {
 }
 
 interface StatCardProps {
+  displayScale: number;
   item: StatItem;
   data: DnsHoleSummary[];
   usePiHoleColors: boolean;
   t: TranslationFunction;
 }
-const StatCard = ({ item, data, usePiHoleColors, t }: StatCardProps) => {
-  const { ref, height, width } = useElementSize();
+const StatCard = ({ item, data, usePiHoleColors, t, displayScale }: StatCardProps) => {
+  const { ref, height: logicalHeight, width: logicalWidth } = useElementSize();
+  const { width, height } = getWidgetLayoutSize({ width: logicalWidth, height: logicalHeight, displayScale });
   const isLong = width > height + 20;
   const canStackText = height > 32;
   const hideLabel = (height <= 32 && width <= 256) || (height <= 64 && width <= 92);

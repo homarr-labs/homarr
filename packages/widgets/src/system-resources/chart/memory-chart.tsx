@@ -12,12 +12,14 @@ export const SystemResourceMemoryChart = ({
   hasShadow,
   labelDisplayMode,
   advanced = false,
+  displayScale,
 }: {
   memoryUsageOverTime: number[];
   totalCapacityInBytes: number;
   hasShadow: boolean;
   labelDisplayMode: LabelDisplayModeOption;
   advanced?: boolean;
+  displayScale?: number;
 }) => {
   const chartData = memoryUsageOverTime.map((usage, index) => ({
     index,
@@ -45,6 +47,7 @@ export const SystemResourceMemoryChart = ({
 
   return (
     <CommonChart
+      displayScale={displayScale}
       data={chartData}
       dataKey={"index"}
       series={[{ name: "usage", color: "red.6" }]}

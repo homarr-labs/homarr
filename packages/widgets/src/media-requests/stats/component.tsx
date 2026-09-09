@@ -21,6 +21,7 @@ import type { RequestStats } from "@homarr/integrations/types";
 import { openMediaRequestSearch } from "@homarr/spotlight";
 import { useI18n } from "@homarr/translation/client";
 
+import { getWidgetLayoutSize } from "../../common/widget-layout-size";
 import { WidgetEmptyState } from "../../common/empty-state";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../../common/application-url";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../../common/query-state";
@@ -38,9 +39,18 @@ const JELLYSEERR_COLOR = "#6677CC";
 export default function MediaServerWidget({
   integrationIds,
   isEditMode,
-  width,
-  height,
+  width: logicalWidth,
+  height: logicalHeight,
+
+  displayScale,
+  displayMode,
 }: WidgetComponentProps<"mediaRequests-requestStats">) {
+  const { width, height } = getWidgetLayoutSize({
+    width: logicalWidth,
+    height: logicalHeight,
+    displayScale,
+    displayMode,
+  });
   const t = useI18n("widget.mediaRequests-requestStats");
   const tCommon = useI18n("common");
   const requestStatsQuery = clientApi.widget.mediaRequests.getStats.useQuery({ integrationIds });

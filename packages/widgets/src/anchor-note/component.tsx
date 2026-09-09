@@ -11,6 +11,7 @@ import { useTimeAgo } from "@homarr/common";
 import type { AnchorNotePermission } from "@homarr/integrations";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
+import { getWidgetLayoutSize } from "../common/widget-layout-size";
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
 import { getUsableWidgetQueryData } from "../common/query-state";
@@ -37,10 +38,18 @@ const isForbiddenError = (error: unknown): boolean => {
 export default function AnchorNoteWidget({
   options,
   integrationIds,
-  width,
-  height,
+  width: logicalWidth,
+  height: logicalHeight,
   displayMode,
+
+  displayScale,
 }: WidgetComponentProps<"anchorNote">) {
+  const { width, height } = getWidgetLayoutSize({
+    width: logicalWidth,
+    height: logicalHeight,
+    displayScale,
+    displayMode,
+  });
   const t = useI18n("widget.anchorNote");
   const noteId = options.noteId.trim();
   if (!noteId) {

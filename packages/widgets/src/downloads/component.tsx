@@ -53,6 +53,7 @@ import { showErrorNotification } from "@homarr/notifications";
 import { useByteFormatter } from "@homarr/settings";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
+import { getWidgetLayoutSize } from "../common/widget-layout-size";
 import type { WidgetComponentProps } from "../definition";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
@@ -302,10 +303,18 @@ export default function DownloadClientsWidget({
   setOptions,
   boardId,
   itemId,
-  width,
-  height,
+  width: logicalWidth,
+  height: logicalHeight,
   displayMode,
+
+  displayScale,
 }: WidgetComponentProps<"downloads">) {
+  const { width, height } = getWidgetLayoutSize({
+    width: logicalWidth,
+    height: logicalHeight,
+    displayScale,
+    displayMode,
+  });
   const { formatByteRate, formatBytes, formatBytesPair } = useByteFormatter();
   const board = useOptionalBoard();
   const { data: session } = useSession();

@@ -27,7 +27,7 @@ import { WidgetCardShell, WidgetTitleBadge } from "@homarr/widgets/widget-card-s
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
 import { getLogicalTrackSize } from "~/components/board/layout";
-import { useBoardCanvasScale } from "~/components/board/layout/scaled-board-canvas";
+import { useBoardContentScale } from "~/components/board/layout/scaled-board-canvas";
 import advancedFocusClasses from "../advanced-focus/advanced-focus.module.css";
 import { useAdvancedFocus } from "../advanced-focus/context";
 import { startAdvancedFocusEntrance } from "../advanced-focus/entrance";
@@ -148,7 +148,7 @@ const LoadedBoardItemContent = ({
   const cardRef = useRef<HTMLDivElement>(null);
   const previewEntranceFrameRef = useRef<number | null>(null);
   const board = useRequiredBoard();
-  const boardCanvasScale = useBoardCanvasScale();
+  const boardContentScale = useBoardContentScale();
   const t = useI18n();
   const [isEditMode] = useEditMode();
   const settings = useSettings();
@@ -163,8 +163,8 @@ const LoadedBoardItemContent = ({
   const supportsAdvancedFocus = definitionSupportsAdvancedFocus(definition);
   const widgetName = getWidgetName(item.kind, t);
   const previewDimensions = useMemo(
-    () => ({ width, height, scale: boardCanvasScale }),
-    [boardCanvasScale, height, width],
+    () => ({ width, height, scale: boardContentScale }),
+    [boardContentScale, height, width],
   );
   const advancedViewLabel = t("item.advancedFocus.label", { widget: widgetName });
   const advancedViewId = `advanced-focus-${item.id}`;
@@ -314,7 +314,7 @@ const LoadedBoardItemContent = ({
             item={item}
             width={width}
             height={height}
-            displayScale={boardCanvasScale}
+            displayScale={boardContentScale}
             widgetStateRef={widgetStateRef}
             widgetRuntimeRef={widgetRuntimeRef}
             displayMode={isAdvanced ? "advanced" : "compact"}

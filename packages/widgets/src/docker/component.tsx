@@ -46,6 +46,7 @@ import { useByteFormatter } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 import { zoomCompensatedSize } from "@homarr/ui";
 
+import { getWidgetLayoutSize } from "../common/widget-layout-size";
 import type { WidgetComponentProps } from "../definition";
 import { getUsableWidgetQueryData } from "../common/query-state";
 import actionTargetClasses from "../common/action-target.module.css";
@@ -241,13 +242,17 @@ const useContainerAction = (action: ContainerAction) => {
 
 export default function DockerWidget({
   options,
-  width,
+  width: logicalWidth,
   isEditMode,
   displayMode,
   boardId,
   itemId,
   setOptions,
+
+  height: logicalHeight,
+  displayScale,
 }: WidgetComponentProps<"dockerContainers">) {
+  const { width } = getWidgetLayoutSize({ width: logicalWidth, height: logicalHeight, displayScale, displayMode });
   const t = useI18n("docker");
   const tCommon = useI18n("common");
   const tWidget = useI18n("widget.dockerContainers");

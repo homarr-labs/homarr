@@ -14,10 +14,12 @@ export function AveragesSection({
   stats,
   width = 500,
   compactSurface = false,
+  displayScale,
 }: {
   stats: SpeedtestTrackerStats;
   width?: number;
   compactSurface?: boolean;
+  displayScale?: number;
 }) {
   const t = useI18n("widget.speedtestTracker");
 
@@ -28,6 +30,7 @@ export function AveragesSection({
       </SectionLabel>
       <SimpleGrid cols={width < 220 ? 1 : 3} spacing="xs" style={{ flex: 1, gridTemplateRows: "1fr" }}>
         <SpeedStatCard
+          displayScale={displayScale}
           icon={IconArrowDown}
           color="blue"
           value={formatStatsSpeed(stats.download)}
@@ -36,6 +39,7 @@ export function AveragesSection({
           legacySurface={compactSurface}
         />
         <SpeedStatCard
+          displayScale={displayScale}
           icon={IconArrowUp}
           color="teal"
           value={formatStatsSpeed(stats.upload)}
@@ -44,6 +48,7 @@ export function AveragesSection({
           legacySurface={compactSurface}
         />
         <SpeedStatCard
+          displayScale={displayScale}
           icon={IconWaveSine}
           color="orange"
           value={`${stats.ping.avg.toFixed(1)} ms`}

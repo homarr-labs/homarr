@@ -29,6 +29,7 @@ import {
   requestBrowserNotificationPermission,
   showBrowserNotification,
 } from "../common/browser-alert";
+import { getWidgetLayoutSize } from "../common/widget-layout-size";
 import { useLocalWidgetState } from "../common/use-local-widget-state";
 import { useWidgetNow } from "../common/use-widget-now";
 import type { WidgetComponentProps } from "../definition";
@@ -52,12 +53,20 @@ const completionSoundIntervalMs = 300;
 export default function TimerWidget({
   boardId,
   displayMode,
-  height,
+  height: logicalHeight,
   isEditMode,
   itemId,
   options,
-  width,
+  width: logicalWidth,
+
+  displayScale,
 }: WidgetComponentProps<"timer">) {
+  const { width, height } = getWidgetLayoutSize({
+    width: logicalWidth,
+    height: logicalHeight,
+    displayScale,
+    displayMode,
+  });
   const now = useWidgetNow("second");
   const t = useI18n("widget.timer");
   const reducedMotion = useReducedMotion();

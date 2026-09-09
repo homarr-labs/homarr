@@ -12,6 +12,7 @@ export const CombinedNetworkTrafficChart = ({
   hasShadow,
   labelDisplayMode,
   advanced = false,
+  displayScale,
 }: {
   usageOverTime: {
     up: number;
@@ -20,6 +21,7 @@ export const CombinedNetworkTrafficChart = ({
   hasShadow: boolean;
   labelDisplayMode: LabelDisplayModeOption;
   advanced?: boolean;
+  displayScale?: number;
 }) => {
   const chartData = usageOverTime.map((usage, index) => ({
     index,
@@ -51,6 +53,7 @@ export const CombinedNetworkTrafficChart = ({
 
   return (
     <CommonChart
+      displayScale={displayScale}
       data={chartData}
       dataKey={"index"}
       series={[

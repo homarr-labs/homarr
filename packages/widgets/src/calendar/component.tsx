@@ -13,6 +13,7 @@ import { useRequiredBoard } from "@homarr/boards/context";
 import { useSettings } from "@homarr/settings";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
+import { getWidgetLayoutSize } from "../common/widget-layout-size";
 import actionTargetClasses from "../common/action-target.module.css";
 import type { WidgetComponentProps } from "../definition";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
@@ -68,7 +69,15 @@ interface FetchCalendarProps extends WidgetComponentProps<"calendar"> {
   setMonth: (date: Date) => void;
 }
 
-const FetchCalendar = ({ month, setMonth, isEditMode, integrationIds, options, displayMode }: FetchCalendarProps) => {
+const FetchCalendar = ({
+  month,
+  setMonth,
+  isEditMode,
+  integrationIds,
+  options,
+  displayMode,
+  displayScale,
+}: FetchCalendarProps) => {
   const input = {
     integrationIds,
     month: month.getMonth() + 1,
@@ -111,11 +120,13 @@ const FetchCalendar = ({ month, setMonth, isEditMode, integrationIds, options, d
       setMonth={setMonth}
       options={options}
       displayMode={displayMode}
+      displayScale={displayScale}
     />
   );
 };
 
 interface CalendarBaseProps {
+  displayScale?: number;
   isEditMode: boolean;
   events: CalendarEventWithSource[];
   failedIntegrations: { integrationId: string; integrationName: string; error: string }[];
@@ -135,13 +146,20 @@ const CalendarBase = ({
   setMonth,
   options,
   displayMode,
+  displayScale,
 }: CalendarBaseProps) => {
   const locale = useCurrentIntlLocale();
   const { firstDayOfWeek } = useSettings();
   const board = useRequiredBoard();
   const mantineTheme = useMantineTheme();
   const actualItemRadius = mantineTheme.radius[board.itemRadius];
-  const { ref, width, height } = useElementSize();
+  const { ref, width: logicalWidth, height: logicalHeight } = useElementSize();
+  const { width, height } = getWidgetLayoutSize({
+    width: logicalWidth,
+    height: logicalHeight,
+    displayScale,
+    displayMode,
+  });
   const isSmall = width < 256;
 
   const normalizedEvents = useMemo(

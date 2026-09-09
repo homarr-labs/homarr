@@ -10,6 +10,7 @@ import { showErrorNotification } from "@homarr/notifications";
 import { useRegisterSpotlightContextActions } from "@homarr/spotlight";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
+import { getWidgetLayoutSize } from "../../common/widget-layout-size";
 import type { WidgetComponentProps } from "../../definition";
 import { isSmartHomeTiny } from "../layout";
 import { getEntityStateLabel } from "./state";
@@ -18,10 +19,18 @@ export default function SmartHomeEntityStateWidget({
   options,
   integrationIds,
   isEditMode,
-  width,
-  height,
+  width: logicalWidth,
+  height: logicalHeight,
   displayMode,
+
+  displayScale,
 }: WidgetComponentProps<"smartHome-entityState">) {
+  const { width, height } = getWidgetLayoutSize({
+    width: logicalWidth,
+    height: logicalHeight,
+    displayScale,
+    displayMode,
+  });
   const t = useI18n("widget.smartHome-entityState");
   const tWidgetCommon = useI18n("widget.common");
   const tCommon = useI18n("common");

@@ -9,6 +9,7 @@ import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
 import { zoomCompensatedSize } from "@homarr/ui";
 
+import { getWidgetLayoutSize } from "../common/widget-layout-size";
 import { getCompactStatLayout } from "../common/compact-stat-layout";
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
@@ -149,12 +150,12 @@ export default function PaperlessNgxWidget({
     .map(([, statKey]) => statKey)
     .filter((statKey) => !(showHero && gridHiddenWhenHeroShown.has(statKey)));
 
-  let responsiveWidth = width;
-  let responsiveHeight = height;
-  if (displayMode === "compact" && Number.isFinite(displayScale) && displayScale > 0) {
-    responsiveWidth *= displayScale;
-    responsiveHeight *= displayScale;
-  }
+  const { width: responsiveWidth, height: responsiveHeight } = getWidgetLayoutSize({
+    width,
+    height,
+    displayScale,
+    displayMode,
+  });
   const advanced = displayMode === "advanced";
   const layout = getCompactStatLayout({
     width: responsiveWidth,

@@ -5,11 +5,25 @@ import { Center, Flex, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core
 import { clientApi } from "@homarr/api/client";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
+import { getWidgetLayoutSize } from "../common/widget-layout-size";
 import type { WidgetComponentProps } from "../definition";
 import { getUsableWidgetQueryData } from "../common/query-state";
 import { VpnIntegrationCard } from "./vpn-card";
 
-export default function VpnWidget({ options, integrationIds, width, height }: WidgetComponentProps<"vpn">) {
+export default function VpnWidget({
+  options,
+  integrationIds,
+  width: logicalWidth,
+  height: logicalHeight,
+  displayScale,
+  displayMode,
+}: WidgetComponentProps<"vpn">) {
+  const { width, height } = getWidgetLayoutSize({
+    width: logicalWidth,
+    height: logicalHeight,
+    displayScale,
+    displayMode,
+  });
   const summariesQuery = clientApi.widget.vpn.getSummaries.useQuery({
     ...options,
     integrationIds,

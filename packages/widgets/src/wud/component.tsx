@@ -11,12 +11,21 @@ import type { WudContainerUpdate } from "@homarr/integrations";
 import { useI18n } from "@homarr/translation/client";
 import { zoomCompensatedSize } from "@homarr/ui";
 
+import { getWidgetLayoutSize } from "../common/widget-layout-size";
 import { WidgetEmptyState } from "../common/empty-state";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.css";
 
-export default function WudWidget({ integrationIds, options, width, displayMode }: WidgetComponentProps<"wud">) {
+export default function WudWidget({
+  integrationIds,
+  options,
+  width: logicalWidth,
+  displayMode,
+  height: logicalHeight,
+  displayScale,
+}: WidgetComponentProps<"wud">) {
+  const { width } = getWidgetLayoutSize({ width: logicalWidth, height: logicalHeight, displayScale, displayMode });
   const integrationId = integrationIds[0];
   if (!integrationId) return null;
   return (
@@ -208,13 +217,7 @@ const UpdateCard = ({
   const showVersionTooltip = versionText !== null && !isDigestUpdate && versionText !== fullVersionText;
 
   return (
-    <Card
-      className={combineClasses(className)}
-      radius={radius}
-      p="xs"
-      bg="transparent"
-      style={{ overflow: "visible" }}
-    >
+    <Card className={combineClasses(className)} radius={radius} p="xs" bg="transparent" style={{ overflow: "visible" }}>
       <Group justify="space-between" wrap="nowrap" gap="xs" miw={0}>
         <Text size="xs" fw={500} lineClamp={1} miw={0}>
           {update.name}

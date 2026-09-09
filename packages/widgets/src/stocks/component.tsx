@@ -7,6 +7,7 @@ import { IconMinus, IconTrendingDown, IconTrendingUp } from "@tabler/icons-react
 import { clientApi } from "@homarr/api/client";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
+import { getWidgetLayoutSize } from "../common/widget-layout-size";
 import { WidgetEmptyState } from "../common/empty-state";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
 import { WidgetQueryLoadingState } from "../common/query-state-indicator";
@@ -71,10 +72,17 @@ export function getStockSummary(priceHistory: number[], previousClose: number): 
 
 export default function StockPriceWidget({
   options,
-  width,
-  height,
+  width: logicalWidth,
+  height: logicalHeight,
   displayMode = "compact",
+  displayScale,
 }: WidgetComponentProps<"stockPrice">) {
+  const { width, height } = getWidgetLayoutSize({
+    width: logicalWidth,
+    height: logicalHeight,
+    displayScale,
+    displayMode,
+  });
   const t = useI18n("widget.stockPrice");
   const tCommon = useI18n("common");
   const locale = useCurrentIntlLocale();

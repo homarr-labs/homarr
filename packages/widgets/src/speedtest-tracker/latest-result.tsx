@@ -14,10 +14,12 @@ export function LatestResultSection({
   result,
   width = 500,
   compactSurface = false,
+  displayScale,
 }: {
   result: SpeedtestTrackerResult;
   width?: number;
   compactSurface?: boolean;
+  displayScale?: number;
 }) {
   const t = useI18n("widget.speedtestTracker");
   const locale = useCurrentIntlLocale();
@@ -40,6 +42,7 @@ export function LatestResultSection({
       </Group>
       <SimpleGrid cols={cols} spacing="xs" style={{ flex: 1, gridTemplateRows: "1fr" }}>
         <SpeedStatCard
+          displayScale={displayScale}
           icon={IconArrowDown}
           color="blue"
           value={formatResultSpeed(result, "download")}
@@ -47,6 +50,7 @@ export function LatestResultSection({
           legacySurface={compactSurface}
         />
         <SpeedStatCard
+          displayScale={displayScale}
           icon={IconArrowUp}
           color="teal"
           value={formatResultSpeed(result, "upload")}
@@ -54,6 +58,7 @@ export function LatestResultSection({
           legacySurface={compactSurface}
         />
         <SpeedStatCard
+          displayScale={displayScale}
           icon={IconWaveSine}
           color="orange"
           value={result.ping !== null ? `${result.ping.toFixed(1)} ms` : "—"}
@@ -62,6 +67,7 @@ export function LatestResultSection({
         />
         {result.healthy !== null && (
           <SpeedStatCard
+            displayScale={displayScale}
             icon={result.healthy ? IconCircleCheck : IconCircleX}
             color={result.healthy ? "green" : "red"}
             value={result.healthy ? t("healthy") : t("unhealthy")}

@@ -4,6 +4,7 @@ import { Box, Center, Stack, Text, Title } from "@mantine/core";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
 
+import { getWidgetLayoutSize } from "../common/widget-layout-size";
 import type { WidgetComponentProps } from "../definition";
 import { AdvancedClockView } from "./advanced-view";
 import { clockTimeFormatShowsSeconds, resolveClockTimeFormat } from "./format";
@@ -13,7 +14,19 @@ import { getResolvedLocalTimeZone, isTimeZoneSupported } from "./world-clock";
 
 dayjs.extend(advancedFormat);
 
-export default function ClockWidget({ options, width, height, displayMode }: WidgetComponentProps<"clock">) {
+export default function ClockWidget({
+  options,
+  width: logicalWidth,
+  height: logicalHeight,
+  displayMode,
+  displayScale,
+}: WidgetComponentProps<"clock">) {
+  const { width, height } = getWidgetLayoutSize({
+    width: logicalWidth,
+    height: logicalHeight,
+    displayScale,
+    displayMode,
+  });
   const isAdvanced = displayMode === "advanced";
   const showSeconds = clockTimeFormatShowsSeconds(options.customTimeFormat);
   const time = useCurrentTime({ showSeconds });

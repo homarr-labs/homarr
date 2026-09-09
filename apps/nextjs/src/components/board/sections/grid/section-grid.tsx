@@ -18,7 +18,12 @@ import {
   getReadonlyCanvasAttributes,
   normalizeGridPlacement,
 } from "~/components/board/layout";
-import { calculateBoardUiScale, useBoardCanvasScale } from "~/components/board/layout/scaled-board-canvas";
+import {
+  BoardContentScaleProvider,
+  calculateBoardUiScale,
+  useBoardCanvasScale,
+  useBoardContentScale,
+} from "~/components/board/layout/scaled-board-canvas";
 import { useGridEditorRuntimeStatus } from "./grid-editor-runtime";
 import { createGridEntryElementStore, useGridEditorRegistry } from "./grid-editor-registry";
 import type { SectionGridPlacement } from "./use-grid-layout-actions";
@@ -50,6 +55,7 @@ export const SectionGrid = ({
 }: SectionGridProps) => {
   const [isEditMode] = useEditMode();
   const canvasScale = useBoardCanvasScale();
+  const parentContentScale = useBoardContentScale();
   const editorRuntimeStatus = useGridEditorRuntimeStatus();
   const editorRegistry = useGridEditorRegistry();
   const editorHostRef = useRef<HTMLDivElement>(null);
@@ -327,7 +333,9 @@ export const SectionGrid = ({
           data-kind={section.kind}
           data-grid-editor-error={isEditMode && editorRuntimeStatus === "error" ? "true" : undefined}
         >
-          <SectionContent />
+          <BoardContentScaleProvider value={parentContentScale * containerContentScale}>
+            <SectionContent />
+          </BoardContentScaleProvider>
         </Box>
         <div ref={editorHostRef} className={classes.editorPortalHost} />
       </Box>

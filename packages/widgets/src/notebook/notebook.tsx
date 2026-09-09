@@ -58,6 +58,7 @@ import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 import { InlineConfirmActionIcon } from "@homarr/ui";
 
+import { getWidgetLayoutSize } from "../common/widget-layout-size";
 import type { WidgetComponentProps } from "../definition";
 import actionTargetClasses from "../common/action-target.module.css";
 import { createReadOnlyTaskItemTransaction, ReadOnlyTaskItem } from "./read-only-task-item";
@@ -88,9 +89,13 @@ export function Notebook({
   isEditMode,
   boardId,
   itemId,
-  height,
+  height: logicalHeight,
   displayMode = "compact",
+
+  width: logicalWidth,
+  displayScale,
 }: WidgetComponentProps<"notebook">) {
+  const { height } = getWidgetLayoutSize({ width: logicalWidth, height: logicalHeight, displayScale, displayMode });
   const [content, setContent] = useState(options.content);
   const previousContentRef = useRef(options.content);
   const [saveError, setSaveError] = useState<string | null>(null);

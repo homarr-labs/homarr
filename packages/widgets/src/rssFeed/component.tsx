@@ -9,6 +9,7 @@ import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useI18n } from "@homarr/translation/client";
 
+import { getWidgetLayoutSize } from "../common/widget-layout-size";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
 import { WidgetEmptyState } from "../common/empty-state";
 import { WidgetQueryLoadingState } from "../common/query-state-indicator";
@@ -43,7 +44,19 @@ const useLiveFeed = (input: RouterInputs["widget"]["rssFeed"]["getFeeds"]) => {
   };
 };
 
-export default function RssFeed({ options, width, height, displayMode }: WidgetComponentProps<"rssFeed">) {
+export default function RssFeed({
+  options,
+  width: logicalWidth,
+  height: logicalHeight,
+  displayMode,
+  displayScale,
+}: WidgetComponentProps<"rssFeed">) {
+  const { width, height } = getWidgetLayoutSize({
+    width: logicalWidth,
+    height: logicalHeight,
+    displayScale,
+    displayMode,
+  });
   const feed = useLiveFeed({
     urls: options.feedUrls,
     maximumAmountPosts: typeof options.maximumAmountPosts === "number" ? options.maximumAmountPosts : 100,

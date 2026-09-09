@@ -9,14 +9,22 @@ import { useI18n } from "@homarr/translation/client";
 import { zoomCompensatedSize } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../../common/empty-state";
+import { getWidgetLayoutSize } from "../../common/widget-layout-size";
 import type { WidgetComponentProps } from "../../definition";
 
 export default function MinecraftServerStatusWidget({
   options,
-  width,
-  height,
+  width: logicalWidth,
+  height: logicalHeight,
   displayMode,
+  displayScale,
 }: WidgetComponentProps<"minecraftServerStatus">) {
+  const { width, height } = getWidgetLayoutSize({
+    width: logicalWidth,
+    height: logicalHeight,
+    displayScale,
+    displayMode,
+  });
   const { data: result, isPending, error } = clientApi.widget.minecraft.getServerStatus.useQuery(options);
   const t = useI18n("widget.minecraftServerStatus");
   const tCommon = useI18n("common");

@@ -37,6 +37,7 @@ import { useByteFormatter } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 import { zoomCompensatedSize } from "@homarr/ui";
 
+import { getWidgetDisplayScale, getWidgetLayoutSize } from "../common/widget-layout-size";
 import classes from "./component.module.css";
 
 import type { WidgetComponentProps } from "../definition";
@@ -456,10 +457,17 @@ export default function BeszelSystemGridWidget({
   options,
   integrationIds,
   isEditMode,
-  width,
-  height,
+  width: logicalWidth,
+  height: logicalHeight,
   displayMode,
+  displayScale,
 }: WidgetComponentProps<"beszelSystemGrid">) {
+  const { width, height } = getWidgetLayoutSize({
+    width: logicalWidth,
+    height: logicalHeight,
+    displayScale,
+    displayMode,
+  });
   const t = useI18n("widget.beszel");
   const tCommon = useI18n("common");
   const board = useRequiredBoard();
@@ -520,7 +528,9 @@ export default function BeszelSystemGridWidget({
         style={{
           display: "grid",
           gridTemplateColumns: `repeat(${cols}, 1fr)`,
-          gridTemplateRows: scrollEnabled ? `repeat(${rows}, ${minimumCellHeight}px)` : `repeat(${rows}, 1fr)`,
+          gridTemplateRows: scrollEnabled
+            ? `repeat(${rows}, ${minimumCellHeight / getWidgetDisplayScale({ displayScale, displayMode })}px)`
+            : `repeat(${rows}, 1fr)`,
           gap: size.gap,
           overflow: scrollEnabled ? "auto" : "hidden",
         }}

@@ -12,6 +12,7 @@ import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
+import { getWidgetDisplayScale } from "../common/widget-layout-size";
 import { WidgetEmptyState } from "../common/empty-state";
 import { getSafeAppHref, SAFE_NEW_TAB_REL } from "../common/application-url";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
@@ -27,6 +28,7 @@ export default function AppWidget({
   height,
   width,
   displayScale = 1,
+  displayMode,
 }: WidgetComponentProps<"app">) {
   const tCommon = useI18n("common");
   const settings = useSettings();
@@ -41,8 +43,7 @@ export default function AppWidget({
 
   // Readable board tokens stay fixed on screen, but must yield space to the icon
   // when the tile itself becomes small. Below 100px, scale the whole composition.
-  let scale = 1;
-  if (Number.isFinite(displayScale) && displayScale > 0) scale = displayScale;
+  const scale = getWidgetDisplayScale({ displayScale, displayMode });
   const contentScale = Math.min(1 / Math.min(scale, 1), Math.min(width, height) / 100);
   const textSize = `${14 * contentScale}px`;
   const spacing = 12 * contentScale;

@@ -6,6 +6,7 @@ import { clientApi } from "@homarr/api/client";
 import type { TracearrDashboardData } from "@homarr/integrations/types";
 import { useI18n } from "@homarr/translation/client";
 
+import { getWidgetLayoutSize } from "../common/widget-layout-size";
 import type { WidgetComponentProps } from "../definition";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { getUsableWidgetQueryData } from "../common/query-state";
@@ -36,9 +37,13 @@ export const getTracearrSectionVisibility = (options: TracearrSectionOptions, is
 export default function TracearrWidget({
   options,
   integrationIds,
-  width,
+  width: logicalWidth,
   displayMode = "compact",
+
+  height: logicalHeight,
+  displayScale,
 }: WidgetComponentProps<"tracearr">) {
+  const { width } = getWidgetLayoutSize({ width: logicalWidth, height: logicalHeight, displayScale, displayMode });
   if (integrationIds.length === 0) {
     throw new NoIntegrationDataError();
   }

@@ -25,6 +25,7 @@ import type { FirewallInterfacesSummary } from "@homarr/integrations";
 import { useI18n } from "@homarr/translation/client";
 import { zoomCompensatedSize } from "@homarr/ui";
 
+import { getWidgetLayoutSize } from "../common/widget-layout-size";
 import type { WidgetComponentProps } from "../definition";
 import { calculateBandwidth } from "./bandwidth";
 import { FirewallMenu } from "./firewall-menu";
@@ -60,11 +61,19 @@ export const hasFirewallPartialFailure = (firewallId: string, queries: readonly 
 
 export default function FirewallWidget({
   integrationIds,
-  width,
-  height,
+  width: logicalWidth,
+  height: logicalHeight,
   itemId,
   displayMode,
+
+  displayScale,
 }: WidgetComponentProps<"firewall">) {
+  const { width, height } = getWidgetLayoutSize({
+    width: logicalWidth,
+    height: logicalHeight,
+    displayScale,
+    displayMode,
+  });
   const [selectedFirewall, setSelectedFirewall] = useState("");
   const isAdvanced = displayMode === "advanced";
   const isTiny = !isAdvanced && (width < 256 || height < 180);

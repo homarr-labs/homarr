@@ -7,15 +7,24 @@ import { getIconUrl } from "@homarr/definitions";
 import { useByteFormatter } from "@homarr/settings";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
+import { getWidgetLayoutSize } from "../common/widget-layout-size";
 import type { WidgetComponentProps } from "../definition";
 
 export default function ArchiveTeamWarriorWidget({
   integrationIds,
   options,
-  width,
-  height,
+  width: logicalWidth,
+  height: logicalHeight,
   displayMode,
+
+  displayScale,
 }: WidgetComponentProps<"archiveTeamWarrior">) {
+  const { width, height } = getWidgetLayoutSize({
+    width: logicalWidth,
+    height: logicalHeight,
+    displayScale,
+    displayMode,
+  });
   const integrationId = integrationIds[0];
 
   if (!integrationId) {

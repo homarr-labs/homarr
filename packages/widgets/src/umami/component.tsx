@@ -6,6 +6,7 @@ import { getQueryKey } from "@trpc/react-query";
 import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
 
+import { getWidgetLayoutSize } from "../common/widget-layout-size";
 import type { WidgetComponentProps } from "../definition";
 import { useWidgetRuntimeQueries } from "../runtime-hooks";
 import { UmamiContent } from "./umami-content";
@@ -13,11 +14,18 @@ import { UmamiContent } from "./umami-content";
 export default function UmamiWidget({
   options,
   integrationIds,
-  width,
-  height,
+  width: logicalWidth,
+  height: logicalHeight,
   displayMode = "compact",
   widgetRuntimeRef,
+  displayScale,
 }: WidgetComponentProps<"umami">) {
+  const { width, height } = getWidgetLayoutSize({
+    width: logicalWidth,
+    height: logicalHeight,
+    displayScale,
+    displayMode,
+  });
   const integrationId = integrationIds[0] ?? "";
   const commonTopInput = {
     integrationId,

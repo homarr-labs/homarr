@@ -26,6 +26,7 @@ import type { MissingMediaItem, QueuedMediaItem } from "@homarr/integrations/typ
 import { useI18n } from "@homarr/translation/client";
 import { zoomCompensatedSize } from "@homarr/ui";
 
+import { getWidgetLayoutSize } from "../common/widget-layout-size";
 import { WidgetEmptyState } from "../common/empty-state";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
 import { getUsableWidgetQueryData } from "../common/query-state";
@@ -66,10 +67,13 @@ const getMediaMissingDensity = (contentWidth: number, columns: number, isThin: b
 export default function MediaMissingWidget({
   integrationIds,
   options,
-  width,
+  width: logicalWidth,
   displayMode,
   widgetRuntimeRef,
+  height: logicalHeight,
+  displayScale,
 }: WidgetComponentProps<"mediaMissing">) {
+  const { width } = getWidgetLayoutSize({ width: logicalWidth, height: logicalHeight, displayScale, displayMode });
   const t = useI18n("widget.mediaMissing");
   const isAdvanced = displayMode === "advanced";
   const showMissing = isAdvanced || options.showMissing;

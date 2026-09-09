@@ -1,7 +1,8 @@
 "use client";
 
 /* eslint-disable react/no-unstable-nested-components -- TimerPopover uses render props to wire controlled targets. */
-/* eslint-disable import/no-unassigned-import -- The shared widget stylesheet is loaded for its side effects. */
+/* eslint-disable import/no-unassigned-import { getWidgetLayoutSize } from "../../common/widget-layout-size";
+import -- The shared widget stylesheet is loaded for its side effects. */
 
 import "../../widgets-common.css";
 
@@ -58,9 +59,12 @@ export default function DnsHoleControlsWidget({
   options,
   integrationIds,
   isEditMode,
-  width,
+  width: logicalWidth,
   displayMode,
+  height: logicalHeight,
+  displayScale,
 }: WidgetComponentProps<typeof widgetKind>) {
+  const { width } = getWidgetLayoutSize({ width: logicalWidth, height: logicalHeight, displayScale, displayMode });
   const board = useRequiredBoard();
   // DnsHole integrations with interaction permissions
   const integrationsWithInteractions = useIntegrationsWithInteractAccess()

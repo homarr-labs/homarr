@@ -13,6 +13,7 @@ import { mediaAvailabilityConfiguration, mediaRequestStatusConfiguration } from 
 import { openMediaRequestSearch } from "@homarr/spotlight";
 import { useI18n } from "@homarr/translation/client";
 
+import { getWidgetLayoutSize } from "../../common/widget-layout-size";
 import { WidgetEmptyState } from "../../common/empty-state";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../../common/application-url";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../../common/query-state";
@@ -28,8 +29,13 @@ export default function MediaServerWidget({
   integrationIds,
   isEditMode,
   options,
-  width,
+  width: logicalWidth,
+
+  height: logicalHeight,
+  displayScale,
+  displayMode,
 }: WidgetComponentProps<"mediaRequests-requestList">) {
+  const { width } = getWidgetLayoutSize({ width: logicalWidth, height: logicalHeight, displayScale, displayMode });
   const t = useI18n("widget.mediaRequests-requestList");
   const interactIntegrationIds = new Set(
     useIntegrationsWithInteractAccess()

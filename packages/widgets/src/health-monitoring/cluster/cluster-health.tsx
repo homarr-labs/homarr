@@ -8,6 +8,7 @@ import type { Resource } from "@homarr/integrations/types";
 import { useI18n } from "@homarr/translation/client";
 import { zoomCompensatedSize } from "@homarr/ui";
 
+import { getWidgetLayoutSize } from "../../common/widget-layout-size";
 import { WidgetEmptyState } from "../../common/empty-state";
 import { getUsableWidgetQueryData } from "../../common/query-state";
 import type { WidgetComponentProps } from "../../definition";
@@ -38,6 +39,8 @@ export const ClusterHealthMonitoring = ({
   integrationId,
   options,
   width,
+  height,
+  displayScale,
   displayMode,
 }: WidgetComponentProps<"healthMonitoring"> & { integrationId: string }) => {
   const t = useI18n("widget.healthMonitoring");
@@ -68,7 +71,8 @@ export const ClusterHealthMonitoring = ({
   const cpuPercent = maxCpu ? (usedCpu / maxCpu) * 100 : 0;
   const memPercent = maxMem ? (usedMem / maxMem) * 100 : 0;
   const isAdvanced = displayMode === "advanced";
-  const isTiny = displayMode !== "advanced" && width < 256;
+  const { width: responsiveWidth } = getWidgetLayoutSize({ width, height, displayScale, displayMode });
+  const isTiny = displayMode !== "advanced" && responsiveWidth < 256;
   return (
     <Stack h={isAdvanced ? "auto" : "100%"} p="xs" gap={isTiny ? "xs" : "md"} pos="relative">
       {(isAdvanced || options.showUptime) && !isTiny && (

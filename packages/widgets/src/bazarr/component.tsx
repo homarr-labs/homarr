@@ -9,6 +9,7 @@ import { getIntegrationName } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 import { zoomCompensatedSize } from "@homarr/ui";
 
+import { getWidgetLayoutSize } from "../common/widget-layout-size";
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.css";
@@ -58,10 +59,18 @@ const iconSizeByWidth = [
 export default function BazarrWidget({
   integrationIds,
   options,
-  width,
-  height,
+  width: logicalWidth,
+  height: logicalHeight,
   displayMode,
+
+  displayScale,
 }: WidgetComponentProps<"bazarr">) {
+  const { width, height } = getWidgetLayoutSize({
+    width: logicalWidth,
+    height: logicalHeight,
+    displayScale,
+    displayMode,
+  });
   const t = useI18n("widget.bazarr");
   const { data: badges, error } = clientApi.widget.bazarr.getBadges.useQuery(
     { integrationId: integrationIds[0] ?? "" },

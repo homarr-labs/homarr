@@ -10,6 +10,7 @@ import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
+import { getWidgetLayoutSize } from "../common/widget-layout-size";
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
 import { getUsableWidgetQueryData } from "../common/query-state";
@@ -51,11 +52,19 @@ const getTranscodingWidthLayout = (width: number) =>
 export default function MediaTranscodingWidget({
   integrationIds,
   options,
-  width,
-  height,
+  width: logicalWidth,
+  height: logicalHeight,
   displayMode,
   widgetRuntimeRef,
+
+  displayScale,
 }: WidgetComponentProps<"mediaTranscoding">) {
+  const { width, height } = getWidgetLayoutSize({
+    width: logicalWidth,
+    height: logicalHeight,
+    displayScale,
+    displayMode,
+  });
   const isAdvanced = displayMode === "advanced";
   const queuePageSize = getQueuePageSize(height, isAdvanced);
   const [queuePagination, setQueuePagination] = useState<QueuePaginationState>(() => ({

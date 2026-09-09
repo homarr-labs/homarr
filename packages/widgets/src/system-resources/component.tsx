@@ -5,6 +5,7 @@ import { Box, Center, Group, Loader, ScrollArea, SimpleGrid, Stack, Text } from 
 
 import { clientApi } from "@homarr/api/client";
 
+import { getWidgetLayoutSize } from "../common/widget-layout-size";
 import { WidgetEmptyState } from "../common/empty-state";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import type { WidgetComponentProps } from "../definition";
@@ -89,6 +90,7 @@ export default function SystemResources({
   options,
   width,
   height,
+  displayScale,
   displayMode,
 }: WidgetComponentProps<"systemResources">) {
   const healthQuery = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery({ integrationIds });
@@ -150,6 +152,7 @@ export default function SystemResources({
         width={availableWidth}
         height={availableHeight}
         isAdvanced={isAdvanced}
+        displayScale={displayScale}
         showTitle={isAdvanced || data.length > 1}
       />
     );
@@ -211,6 +214,7 @@ interface SystemChartsProps {
   height: number;
   isAdvanced: boolean;
   showTitle: boolean;
+  displayScale?: number;
 }
 
 const SystemCharts = ({
@@ -223,13 +227,20 @@ const SystemCharts = ({
   height,
   isAdvanced,
   showTitle,
+  displayScale,
 }: SystemChartsProps) => {
+  const { width: responsiveWidth, height: responsiveHeight } = getWidgetLayoutSize({
+    width,
+    height,
+    displayScale,
+    displayMode: isAdvanced ? "advanced" : "compact",
+  });
   const networkItems = getNetworkHistory(items);
   const visibleCharts = getVisibleSystemCharts({
     configuredCharts: options.visibleCharts,
     hasGpu,
     hasNetwork: networkItems.length > 0,
-    height,
+    height: responsiveHeight,
     isAdvanced,
   });
   const showNetwork = visibleCharts.includes("network");
@@ -270,6 +281,7 @@ const SystemCharts = ({
               hasShadow={options.hasShadow}
               labelDisplayMode={labelDisplayMode}
               advanced={isAdvanced}
+              displayScale={displayScale}
             />
           </Box>
         )}
@@ -281,6 +293,7 @@ const SystemCharts = ({
               hasShadow={options.hasShadow}
               labelDisplayMode={labelDisplayMode}
               advanced={isAdvanced}
+              displayScale={displayScale}
             />
           </Box>
         )}
@@ -291,11 +304,12 @@ const SystemCharts = ({
               hasShadow={options.hasShadow}
               labelDisplayMode={labelDisplayMode}
               advanced={isAdvanced}
+              displayScale={displayScale}
             />
           </Box>
         )}
         {showNetwork &&
-          (width >= 300 ? (
+          (responsiveWidth >= 300 ? (
             <Group h="100%" gap="xs" grow wrap="nowrap">
               <NetworkTrafficChart
                 usageOverTime={networkItems.map((network) => network.down)}
@@ -303,6 +317,7 @@ const SystemCharts = ({
                 hasShadow={options.hasShadow}
                 labelDisplayMode={labelDisplayMode}
                 advanced={isAdvanced}
+                displayScale={displayScale}
               />
               <NetworkTrafficChart
                 usageOverTime={networkItems.map((network) => network.up)}
@@ -310,6 +325,7 @@ const SystemCharts = ({
                 hasShadow={options.hasShadow}
                 labelDisplayMode={labelDisplayMode}
                 advanced={isAdvanced}
+                displayScale={displayScale}
               />
             </Group>
           ) : (
@@ -319,6 +335,7 @@ const SystemCharts = ({
                 hasShadow={options.hasShadow}
                 labelDisplayMode={labelDisplayMode}
                 advanced={isAdvanced}
+                displayScale={displayScale}
               />
             </Box>
           ))}

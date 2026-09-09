@@ -42,6 +42,7 @@ import type { ScopedTranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import { zoomCompensatedSize } from "@homarr/ui";
 
+import { getWidgetLayoutSize } from "../common/widget-layout-size";
 import { filterStorageVolumes, normalizeStorageDeviceName } from "../filter-storage-volumes";
 import { WidgetEmptyState } from "../common/empty-state";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
@@ -77,9 +78,13 @@ export const SystemHealthMonitoring = ({
   const { formatBytes, formatBytesPair } = useByteFormatter();
 
   const isAdvanced = displayMode === "advanced";
-  let scale = 1;
-  if (!isAdvanced && Number.isFinite(displayScale) && displayScale > 0) scale = displayScale;
-  const isTiny = !isAdvanced && (width * scale < 256 || height * scale < 160);
+  const { width: responsiveWidth, height: responsiveHeight } = getWidgetLayoutSize({
+    width,
+    height,
+    displayScale,
+    displayMode,
+  });
+  const isTiny = !isAdvanced && (responsiveWidth < 256 || responsiveHeight < 160);
   const showCpu = isAdvanced || options.cpu;
   const showMemory = isAdvanced || options.memory;
   const showGpu = isAdvanced || options.gpu;

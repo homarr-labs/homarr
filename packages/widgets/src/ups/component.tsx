@@ -20,6 +20,7 @@ import type { UpsStatus, UpsSummary } from "@homarr/integrations/types";
 import type { ScopedTranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 
+import { getWidgetLayoutSize } from "../common/widget-layout-size";
 import { WidgetEmptyState } from "../common/empty-state";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import type { WidgetComponentProps } from "../definition";
@@ -34,20 +35,26 @@ const statusColors: Record<UpsStatus, string> = {
   unknown: "gray",
 };
 
-const neutralSurfaceBackground =
-  "rgb(from var(--mantine-color-default-hover) r g b / calc(var(--opacity, 1) * 0.12))";
-const neutralSurfaceBorder =
-  "rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45))";
+const neutralSurfaceBackground = "rgb(from var(--mantine-color-default-hover) r g b / calc(var(--opacity, 1) * 0.12))";
+const neutralSurfaceBorder = "rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45))";
 
 type UpsLayout = "mini" | "compact" | "full";
 
 export default function UpsWidget({
   options,
   integrationIds,
-  width,
-  height,
+  width: logicalWidth,
+  height: logicalHeight,
   displayMode = "compact",
+
+  displayScale,
 }: WidgetComponentProps<"ups">) {
+  const { width, height } = getWidgetLayoutSize({
+    width: logicalWidth,
+    height: logicalHeight,
+    displayScale,
+    displayMode,
+  });
   if (integrationIds.length === 0) {
     throw new NoIntegrationSelectedError();
   }

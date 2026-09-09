@@ -16,6 +16,7 @@ import type { TraefikDashboardData, TraefikProtocolSummary, TraefikResourceSumma
 import { useI18n } from "@homarr/translation/client";
 import { zoomCompensatedSize } from "@homarr/ui";
 
+import { getWidgetLayoutSize } from "../common/widget-layout-size";
 import { WidgetEmptyState } from "../common/empty-state";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import type { WidgetComponentProps } from "../definition";
@@ -103,9 +104,12 @@ export default function TraefikWidget(props: WidgetComponentProps<"traefik">) {
 function TraefikWidgetContent({
   integrationIds,
   options,
-  width,
+  width: logicalWidth,
   displayMode = "compact",
+  height: logicalHeight,
+  displayScale,
 }: WidgetComponentProps<"traefik">) {
+  const { width } = getWidgetLayoutSize({ width: logicalWidth, height: logicalHeight, displayScale, displayMode });
   const t = useI18n("widget.traefik");
   const tCommon = useI18n("common");
   const dashboardQuery = clientApi.widget.traefik.getDashboard.useQuery({ integrationIds });

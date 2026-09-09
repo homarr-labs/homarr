@@ -4,6 +4,7 @@ import { IconAlertTriangle } from "@tabler/icons-react";
 import { clientApi } from "@homarr/api/client";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
+import { getWidgetLayoutSize } from "../common/widget-layout-size";
 import type { DynamicSelectOption } from "../_inputs/widget-dynamic-select-input";
 import { formatLocalizedTime } from "../common/locale";
 import type { WidgetComponentProps } from "../definition";
@@ -11,10 +12,18 @@ import type { WidgetComponentProps } from "../definition";
 export default function TimetableWidget({
   options,
   displayMode = "compact",
-  width,
-  height,
+  width: logicalWidth,
+  height: logicalHeight,
   itemId,
+
+  displayScale,
 }: WidgetComponentProps<"timetable">) {
+  const { width, height } = getWidgetLayoutSize({
+    width: logicalWidth,
+    height: logicalHeight,
+    displayScale,
+    displayMode,
+  });
   const t = useI18n("widget.timetable");
 
   if (!options.station) {

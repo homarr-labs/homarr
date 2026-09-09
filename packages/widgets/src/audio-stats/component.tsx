@@ -8,6 +8,7 @@ import { formatDuration } from "@homarr/common";
 import type { AudiobookshelfDashboardData } from "@homarr/integrations/types";
 import { useByteFormatter } from "@homarr/settings";
 
+import { getWidgetLayoutSize } from "../common/widget-layout-size";
 import { WidgetEmptyState } from "../common/empty-state";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import type { WidgetComponentProps } from "../definition";
@@ -42,12 +43,12 @@ export default function AudioStatsWidget({
   const currentStreams = streamResults ?? [];
   if (!response) return <WidgetEmptyState />;
 
-  let responsiveWidth = width;
-  let responsiveHeight = height;
-  if (displayMode === "compact" && Number.isFinite(displayScale) && displayScale > 0) {
-    responsiveWidth *= displayScale;
-    responsiveHeight *= displayScale;
-  }
+  const { width: responsiveWidth, height: responsiveHeight } = getWidgetLayoutSize({
+    width,
+    height,
+    displayScale,
+    displayMode,
+  });
 
   const summary = (
     <AudioStatsContent

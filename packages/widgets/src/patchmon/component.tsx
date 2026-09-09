@@ -20,6 +20,7 @@ import { useI18n } from "@homarr/translation/client";
 import { iconSizes, zoomCompensatedSize } from "@homarr/ui";
 import type { TablerIcon } from "@homarr/ui";
 
+import { getWidgetLayoutSize } from "../common/widget-layout-size";
 import { WidgetEmptyState } from "../common/empty-state";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
 import { WidgetQueryLoadingState } from "../common/query-state-indicator";
@@ -70,10 +71,18 @@ const getLayoutMode = (width: number, height: number): LayoutMode => {
 export default function PatchMonWidget({
   integrationIds,
   options,
-  width,
-  height,
+  width: logicalWidth,
+  height: logicalHeight,
   displayMode,
+
+  displayScale,
 }: WidgetComponentProps<"patchmon">) {
+  const { width, height } = getWidgetLayoutSize({
+    width: logicalWidth,
+    height: logicalHeight,
+    displayScale,
+    displayMode,
+  });
   const t = useI18n("widget.patchmon");
   const integrationId = integrationIds[0] ?? "";
   const statsQuery = clientApi.widget.patchmon.getStats.useQuery({ integrationId }, { staleTime: 60 * 1000 });

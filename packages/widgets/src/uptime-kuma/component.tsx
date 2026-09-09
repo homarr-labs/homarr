@@ -9,6 +9,7 @@ import { formatNumber } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";
 import { zoomCompensatedSize } from "@homarr/ui";
 
+import { getWidgetLayoutSize } from "../common/widget-layout-size";
 import { WidgetEmptyState } from "../common/empty-state";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import type { WidgetComponentProps } from "../definition";
@@ -82,10 +83,17 @@ const heroVariantByRing = {
 export default function UptimeKumaWidget({
   integrationIds,
   options,
-  width,
-  height,
+  width: logicalWidth,
+  height: logicalHeight,
   displayMode = "compact",
+  displayScale,
 }: WidgetComponentProps<"uptimeKuma">) {
+  const { width, height } = getWidgetLayoutSize({
+    width: logicalWidth,
+    height: logicalHeight,
+    displayScale,
+    displayMode,
+  });
   if (integrationIds.length === 0) {
     throw new NoIntegrationDataError();
   }

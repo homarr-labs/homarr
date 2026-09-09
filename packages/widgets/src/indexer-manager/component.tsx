@@ -27,6 +27,7 @@ import { showErrorNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { iconSizes } from "@homarr/ui";
 
+import { getWidgetLayoutSize } from "../common/widget-layout-size";
 import type { WidgetComponentProps } from "../definition";
 import { useWidgetRuntimeActions } from "../runtime-hooks";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
@@ -45,12 +46,20 @@ const statusPresentation = {
 export default function IndexerManagerWidget({
   options,
   integrationIds,
-  width,
-  height,
+  width: logicalWidth,
+  height: logicalHeight,
   isEditMode,
   widgetRuntimeRef,
   displayMode,
+
+  displayScale,
 }: WidgetComponentProps<"indexerManager">) {
+  const { width, height } = getWidgetLayoutSize({
+    width: logicalWidth,
+    height: logicalHeight,
+    displayScale,
+    displayMode,
+  });
   const t = useI18n("widget.indexerManager");
   const tCommon = useI18n("common");
   const indexersQuery = clientApi.widget.indexerManager.getIndexersStatus.useQuery({ integrationIds });

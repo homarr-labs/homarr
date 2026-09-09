@@ -8,6 +8,7 @@ import { IconMapPin } from "@tabler/icons-react";
 import { clientApi } from "@homarr/api/client";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
+import { getWidgetLayoutSize } from "../common/widget-layout-size";
 import { WidgetEmptyState } from "../common/empty-state";
 import { formatLocalizedDate, formatLocalizedTime } from "../common/locale";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
@@ -27,7 +28,19 @@ import {
   getUvCategory,
 } from "./display";
 
-export default function AirQualityWidget({ options, width, height, displayMode }: WidgetComponentProps<"airQuality">) {
+export default function AirQualityWidget({
+  options,
+  width: logicalWidth,
+  height: logicalHeight,
+  displayMode,
+  displayScale,
+}: WidgetComponentProps<"airQuality">) {
+  const { width, height } = getWidgetLayoutSize({
+    width: logicalWidth,
+    height: logicalHeight,
+    displayScale,
+    displayMode,
+  });
   const query = clientApi.widget.airQuality.atLocation.useQuery({
     latitude: options.location.latitude,
     longitude: options.location.longitude,

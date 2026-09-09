@@ -25,6 +25,7 @@ import { useRegisterSpotlightContextResults } from "@homarr/spotlight";
 import { useI18n } from "@homarr/translation/client";
 import { iconSizes, zoomCompensatedSize } from "@homarr/ui";
 
+import { getWidgetLayoutSize } from "../common/widget-layout-size";
 import { getSafeAppHref, SAFE_NEW_TAB_REL } from "../common/application-url";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
 import { WidgetQueryLoadingState } from "../common/query-state-indicator";
@@ -68,12 +69,12 @@ export default function BookmarksWidget({
   });
   const data = [...configuredItems, ...legacyItems];
 
-  let responsiveWidth = width;
-  let responsiveHeight = height;
-  if (!advanced && Number.isFinite(displayScale) && displayScale > 0) {
-    responsiveWidth *= displayScale;
-    responsiveHeight *= displayScale;
-  }
+  const { width: responsiveWidth, height: responsiveHeight } = getWidgetLayoutSize({
+    width,
+    height,
+    displayScale,
+    displayMode,
+  });
   const contentHeight = Math.max(0, responsiveHeight - (options.title.length > 0 ? 36 : 0));
   let layoutWidth = responsiveWidth;
   if (options.layout === "gridHorizontal") layoutWidth = width;

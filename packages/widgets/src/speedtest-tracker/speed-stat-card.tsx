@@ -1,5 +1,6 @@
 "use client";
 
+import { getWidgetLayoutSize } from "../common/widget-layout-size";
 import { Card, Flex, Text, Tooltip, VisuallyHidden } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 
@@ -14,6 +15,7 @@ export interface SpeedStatCardProps {
   label: string;
   compact?: boolean;
   legacySurface?: boolean;
+  displayScale?: number;
 }
 
 export function SpeedStatCard({
@@ -23,8 +25,10 @@ export function SpeedStatCard({
   label,
   compact = false,
   legacySurface = false,
+  displayScale,
 }: SpeedStatCardProps) {
-  const { ref, height, width } = useElementSize<HTMLDivElement>();
+  const { ref, height: logicalHeight, width: logicalWidth } = useElementSize<HTMLDivElement>();
+  const { width, height } = getWidgetLayoutSize({ width: logicalWidth, height: logicalHeight, displayScale });
   const board = useRequiredBoard();
   const isWide = width > height + 20;
   const hideLabel = height > 0 && height <= 38;

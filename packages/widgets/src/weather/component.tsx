@@ -5,6 +5,7 @@ import { Box, Center, Text } from "@mantine/core";
 import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
 
+import { getWidgetLayoutSize } from "../common/widget-layout-size";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
 import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
@@ -15,10 +16,17 @@ import { CompactWeather } from "./compact";
 export default function WeatherWidget({
   isEditMode,
   options,
-  width,
-  height,
+  width: logicalWidth,
+  height: logicalHeight,
   displayMode,
+  displayScale,
 }: WidgetComponentProps<"weather">) {
+  const { width, height } = getWidgetLayoutSize({
+    width: logicalWidth,
+    height: logicalHeight,
+    displayScale,
+    displayMode,
+  });
   const t = useI18n("widget.weather");
   const input = {
     latitude: options.location.latitude,

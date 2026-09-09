@@ -8,6 +8,10 @@ import { useElementSize } from "@mantine/hooks";
 import classes from "./scaled-board-canvas.module.css";
 
 const BoardCanvasScaleContext = createContext(1);
+// Widget content can also be scaled by containers inside the board canvas.
+const BoardContentScaleContext = createContext(1);
+export const BoardContentScaleProvider = BoardContentScaleContext.Provider;
+export const useBoardContentScale = () => useContext(BoardContentScaleContext);
 
 export const useBoardCanvasScale = () => useContext(BoardCanvasScaleContext);
 
@@ -86,7 +90,9 @@ export const ScaledBoardCanvas = ({
             zoom: scale,
           }}
         >
-          <BoardCanvasScaleContext.Provider value={scale}>{children}</BoardCanvasScaleContext.Provider>
+          <BoardCanvasScaleContext.Provider value={scale}>
+            <BoardContentScaleProvider value={scale}>{children}</BoardContentScaleProvider>
+          </BoardCanvasScaleContext.Provider>
         </Box>
       </Box>
     </Box>

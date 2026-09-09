@@ -10,16 +10,19 @@ export const SystemResourceGPUChart = ({
   hasShadow,
   labelDisplayMode,
   advanced = false,
+  displayScale,
 }: {
   gpuUsageOverTime: number[];
   hasShadow: boolean;
   labelDisplayMode: LabelDisplayModeOption;
   advanced?: boolean;
+  displayScale?: number;
 }) => {
   const chartData = gpuUsageOverTime.map((usage, index) => ({ index, usage }));
 
   return (
     <CommonChart
+      displayScale={displayScale}
       data={chartData}
       dataKey={"index"}
       series={[{ name: "usage", color: "grape.5" }]}

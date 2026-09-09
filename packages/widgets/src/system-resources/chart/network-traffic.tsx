@@ -12,12 +12,14 @@ export const NetworkTrafficChart = ({
   hasShadow,
   labelDisplayMode,
   advanced = false,
+  displayScale,
 }: {
   usageOverTime: number[];
   isUp: boolean;
   hasShadow: boolean;
   labelDisplayMode: LabelDisplayModeOption;
   advanced?: boolean;
+  displayScale?: number;
 }) => {
   const chartData = usageOverTime.map((usage, index) => ({ index, usage }));
   const t = useI18n("widget.systemResources.card");
@@ -29,6 +31,7 @@ export const NetworkTrafficChart = ({
 
   return (
     <CommonChart
+      displayScale={displayScale}
       data={chartData}
       dataKey={"index"}
       series={[{ name: "usage", color: "yellow.5" }]}

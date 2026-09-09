@@ -5,6 +5,7 @@ import { Badge, Box, Card, Center, Group, ScrollArea, SimpleGrid, Stack, Text } 
 import { clientApi } from "@homarr/api/client";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
+import { getWidgetLayoutSize } from "../../common/widget-layout-size";
 import type { WidgetComponentProps } from "../../definition";
 import { IntegrationErrorIndicator } from "../../common/integration-error-indicator";
 import { getUsableWidgetQueryData } from "../../common/query-state";
@@ -41,12 +42,12 @@ export default function NetworkControllerNetworkStatusWidget({
   const countWifiUsers = summaries.reduce((sum, { summary }) => sum + summary.wifi.users, 0);
   const countLanGuests = summaries.reduce((sum, { summary }) => sum + summary.lan.guests, 0);
   const countLanUsers = summaries.reduce((sum, { summary }) => sum + summary.lan.users, 0);
-  let responsiveWidth = width;
-  let responsiveHeight = height;
-  if (!isAdvanced && Number.isFinite(displayScale) && displayScale > 0) {
-    responsiveWidth *= displayScale;
-    responsiveHeight *= displayScale;
-  }
+  const { width: responsiveWidth, height: responsiveHeight } = getWidgetLayoutSize({
+    width,
+    height,
+    displayScale,
+    displayMode,
+  });
   const layout = getNetworkControllerStatusLayout({
     width: responsiveWidth,
     height: responsiveHeight,

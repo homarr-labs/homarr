@@ -27,6 +27,7 @@ import { showErrorNotification } from "@homarr/notifications";
 import { useByteFormatter } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 
+import { getWidgetLayoutSize } from "../common/widget-layout-size";
 import type { WidgetComponentProps } from "../definition";
 import { HomarrDataTable } from "../common/homarr-data-table";
 import { getUsableWidgetQueryData } from "../common/query-state";
@@ -112,12 +113,16 @@ export default function BeszelSystemTableWidget({
   options,
   integrationIds,
   isEditMode,
-  width,
+  width: logicalWidth,
   boardId,
   itemId,
   setOptions,
   displayMode,
+
+  height: logicalHeight,
+  displayScale,
 }: WidgetComponentProps<"beszelSystemTable">) {
+  const { width } = getWidgetLayoutSize({ width: logicalWidth, height: logicalHeight, displayScale, displayMode });
   const t = useI18n("widget.beszelSystemTable");
   const tBeszel = useI18n("widget.beszel");
   const tCommon = useI18n("common");

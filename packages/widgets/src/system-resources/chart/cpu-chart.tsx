@@ -10,16 +10,19 @@ export const SystemResourceCPUChart = ({
   hasShadow,
   labelDisplayMode,
   advanced = false,
+  displayScale,
 }: {
   cpuUsageOverTime: number[];
   hasShadow: boolean;
   labelDisplayMode: LabelDisplayModeOption;
   advanced?: boolean;
+  displayScale?: number;
 }) => {
   const chartData = cpuUsageOverTime.map((usage, index) => ({ index, usage }));
 
   return (
     <CommonChart
+      displayScale={displayScale}
       data={chartData}
       dataKey={"index"}
       series={[{ name: "usage", color: "blue.5" }]}
