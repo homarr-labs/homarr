@@ -415,7 +415,11 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
         sectionId: grid.id,
         placements: grid.placements,
       }));
-      commitSectionGrids(snapshots);
+      const hasChanges = commitSectionGrids(snapshots);
+      if (!hasChanges) {
+        clearInteraction();
+        return;
+      }
 
       const placement = state.grids
         .flatMap((grid) => grid.placements)
@@ -429,7 +433,9 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
           )} ${placement.h}`,
         );
       }
-      clearInteraction();
+      // Cache subscribers receive the committed board asynchronously. Keep the preview until
+      // the board-change layout effect clears it, so displaced items never flash at their old positions.
+      activeRef.current = null;
     },
     [announce, clearInteraction, commitSectionGrids, currentLayoutId, t],
   );

@@ -33,8 +33,8 @@ export const useGridLayoutActions = () => {
           placements.map((placement) => [`${layoutId}:${placement.id}`, { layoutId, sectionId, placement }] as const),
         ),
       );
+      let hasChanges = false;
       updateBoard((previous) => {
-        let hasChanges = false;
         const items = previous.items.map((item) => {
           const layouts = item.layouts.map((layout) => {
             const resolved = byId.get(`${layout.layoutId}:${item.id}`);
@@ -97,6 +97,7 @@ export const useGridLayoutActions = () => {
 
         return hasChanges ? { ...previous, items, sections } : previous;
       });
+      return hasChanges;
     },
     [updateBoard],
   );
