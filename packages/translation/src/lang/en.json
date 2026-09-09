@@ -6203,6 +6203,9 @@
                 "lm-studio": {
                   "description": "An LM Studio local server with OpenAI compatibility enabled."
                 },
+                "llama-cpp": {
+                  "description": "A local or network llama.cpp server using its OpenAI-compatible API."
+                },
                 "custom": {
                   "label": "Custom endpoint",
                   "description": "Any other endpoint compatible with OpenAI Chat Completions."
