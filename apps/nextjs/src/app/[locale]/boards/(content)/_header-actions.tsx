@@ -5,7 +5,7 @@ import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useI18n } from "@homarr/translation/client";
 import { useBoardPermissions } from "~/components/board/permissions/client";
-import { useOptionalBoardEditing } from "./_editing-provider";
+import { useOptionalBoardEditing } from "~/components/board/board-editing-context";
 import { HeaderButton } from "~/components/layout/header/button";
 import { TourTarget } from "~/components/layout/header/tour-target";
 const BoardEditActions = dynamic(() => import("./_edit-actions"), { ssr: false });

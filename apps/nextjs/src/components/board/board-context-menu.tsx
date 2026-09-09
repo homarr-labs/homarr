@@ -4,7 +4,7 @@ import type { PropsWithChildren, MouseEvent } from "react";
 import { useEffect, useState } from "react";
 import { Box, Menu } from "@mantine/core";
 import dynamic from "next/dynamic";
-import { useOptionalBoardEditing } from "~/app/[locale]/boards/(content)/_editing-provider";
+import { useOptionalBoardEditing } from "./board-editing-context";
 
 const BoardAddMenuItems = dynamic(() => import("./board-add-menu-items").then((module) => module.BoardAddMenuItems));
 const occupiedSpaceSelector =

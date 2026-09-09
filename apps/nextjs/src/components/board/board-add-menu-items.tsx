@@ -4,7 +4,7 @@ import { Menu } from "@mantine/core";
 import { IconBox, IconLayoutGridAdd, IconPlug, IconResize } from "@tabler/icons-react";
 import { useI18n } from "@homarr/translation/client";
 import { useBoardAddActions } from "./use-board-add-actions";
-import { useOptionalBoardEditing } from "~/app/[locale]/boards/(content)/_editing-provider";
+import { useOptionalBoardEditing } from "./board-editing-context";
 
 export const BoardAddMenuItems = () => {
   const editing = useOptionalBoardEditing();

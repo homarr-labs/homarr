@@ -27,7 +27,7 @@ import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
 import { useAuthContext } from "~/app/[locale]/_client-providers/session";
-import { useOptionalBoardEditing } from "~/app/[locale]/boards/(content)/_editing-provider";
+import { useOptionalBoardEditing } from "./board/board-editing-context";
 import { useOptionalHomarrAssistant } from "./assistant/assistant-context";
 import type { BoardSwitcherControls } from "./board/board-switcher";
 import { CurrentColorSchemeCombobox } from "./color-scheme/current-color-scheme-combobox";

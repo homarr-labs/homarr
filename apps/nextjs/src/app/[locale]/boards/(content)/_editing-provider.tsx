@@ -1,7 +1,7 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { createContext, useContext, useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useHotkeys } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
@@ -18,6 +18,7 @@ import { useI18n } from "@homarr/translation/client";
 import { useBoardPermissions } from "~/components/board/permissions/client";
 import { loadGridEditorAsync, scheduleGridEditorWarmup } from "~/components/board/sections/grid/grid-editor-loader";
 import type * as EditActionsModule from "./_edit-actions";
+import { BoardEditingContext } from "~/components/board/board-editing-context";
 
 let editActionsModulePromise: Promise<typeof EditActionsModule> | undefined;
 const loadEditActionsAsync = () => {
@@ -35,8 +36,7 @@ const loadBoardEditorAsync = async () =>
     import("~/components/board/sections/container/container-menu"),
   ]);
 
-const BoardEditingContext = createContext<ReturnType<typeof useBoardEditingController> | null>(null);
-export const useOptionalBoardEditing = () => useContext(BoardEditingContext);
+export type BoardEditingControls = ReturnType<typeof useBoardEditingController>;
 
 export const BoardEditingProvider = ({
   children,
