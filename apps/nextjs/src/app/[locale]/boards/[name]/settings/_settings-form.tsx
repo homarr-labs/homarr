@@ -10,7 +10,7 @@ import { clientApi } from "@homarr/api/client";
 import { useUpdateBoard } from "@homarr/boards/updater";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { env } from "@homarr/common/env";
-import { BOARD_FIXED_ITEM_SIZE_DEFAULT } from "@homarr/definitions";
+import { normalizeFixedItemSize } from "~/components/board/layout/scaling";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useSettings } from "@homarr/settings";
@@ -83,7 +83,7 @@ const buildInitialValues = (board: Board): FormValues => ({
   customCss: board.customCss ?? "",
   disableStatus: board.disableStatus,
   fixedScaling: board.fixedScaling ?? false,
-  fixedItemSize: board.fixedItemSize ?? BOARD_FIXED_ITEM_SIZE_DEFAULT,
+  fixedItemSize: normalizeFixedItemSize(board.fixedItemSize ?? ""),
   layouts: normalizeMobileLayoutGutters(board.layouts),
 });
 

@@ -2156,8 +2156,8 @@
                   },
                   "fixedItemSize": {
                     "type": "integer",
-                    "minimum": 100,
-                    "maximum": 400
+                    "minimum": 40,
+                    "maximum": 200
                   },
                   "disableStatus": {
                     "type": "boolean"

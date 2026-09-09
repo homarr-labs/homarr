@@ -11,8 +11,8 @@ export const backgroundImageSizes = createDefinition(["cover", "contain"], {
 export const layoutRoles = createDefinition(["mobile", "base", "custom"], { defaultValue: "custom" });
 
 export const BOARD_FIXED_ITEM_SIZE_DEFAULT = 200;
-export const BOARD_FIXED_ITEM_SIZE_MIN = 100;
-export const BOARD_FIXED_ITEM_SIZE_MAX = 400;
+export const BOARD_FIXED_ITEM_SIZE_MIN = 40;
+export const BOARD_FIXED_ITEM_SIZE_MAX = 200;
 
 export type BackgroundImageAttachment = inferDefinitionType<typeof backgroundImageAttachments>;
 export type BackgroundImageRepeat = inferDefinitionType<typeof backgroundImageRepeats>;

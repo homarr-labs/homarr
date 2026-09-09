@@ -41,7 +41,6 @@ import type { z } from "zod/v4";
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import {
-  BOARD_FIXED_ITEM_SIZE_DEFAULT,
   BOARD_FIXED_ITEM_SIZE_MAX,
   BOARD_FIXED_ITEM_SIZE_MIN,
   backgroundImageAttachments,
@@ -96,7 +95,7 @@ const normalizeFormValues = (
     itemRadius: values.itemRadius,
     disableStatus: values.disableStatus,
     fixedScaling: values.fixedScaling ?? false,
-    fixedItemSize: values.fixedItemSize ?? BOARD_FIXED_ITEM_SIZE_DEFAULT,
+    fixedItemSize: normalizeFixedItemSize(values.fixedItemSize ?? ""),
   };
 };
 

@@ -14,7 +14,7 @@ import {
 } from "../scaling";
 
 describe("board canvas scale policy", () => {
-  test.each([100, 150, 200, 400])("renders an exact %s CSS-pixel fixed tile", (itemSize) => {
+  test.each([40, 80, 100, 200])("renders an exact %s CSS-pixel fixed tile", (itemSize) => {
     const scale = calculateFixedBoardCanvasScale(itemSize);
     expect(LOGICAL_GRID_PITCH * scale - 2 * BOARD_GRID_ITEM_INSET).toBeCloseTo(itemSize);
   });
@@ -27,9 +27,9 @@ describe("board canvas scale policy", () => {
   );
 
   test("clamps and rounds the configured fixed size", () => {
-    expect(normalizeFixedItemSize(20)).toBe(100);
-    expect(normalizeFixedItemSize(700)).toBe(400);
-    expect(normalizeFixedItemSize(200.7)).toBe(201);
+    expect(normalizeFixedItemSize(20)).toBe(40);
+    expect(normalizeFixedItemSize(400)).toBe(200);
+    expect(normalizeFixedItemSize(100.7)).toBe(101);
   });
 
   test.each([0.75, 1, 1.25, 1.5, 2])("preserves fixed CSS dimensions at browser zoom %s", (zoom) => {
