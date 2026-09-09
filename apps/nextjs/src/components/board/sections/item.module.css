@@ -21,6 +21,9 @@
   --border-color: rgb(
     from var(--container-border-color, var(--container-default-border-color)) r g b / var(--opacity, 1)
   );
+  /* Keep the border visual without letting it shrink the square-cell grid's content box. */
+  border-width: 0;
+  box-shadow: inset 0 0 0 calc(1px * var(--board-canvas-inverse-scale, 1)) var(--border-color);
 }
 
 .itemCard:global(.iframe-wrapper) {
