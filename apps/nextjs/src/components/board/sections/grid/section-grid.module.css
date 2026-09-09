@@ -46,7 +46,6 @@
 
 .editorGrid {
   position: absolute;
-  inset: 0 auto auto 0;
 }
 
 .editorPortalHost {
@@ -61,6 +60,11 @@
   position: absolute;
   inset: var(--board-grid-item-inset, 0px);
   overflow: visible;
+}
+
+/* Containers provide their own inner item gap, so their card must keep the full grid aspect ratio. */
+.staticItem[data-type="section"] > .contentMount {
+  inset: 0;
 }
 
 .staticItem[data-type="item"] > .contentMount {
