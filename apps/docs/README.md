@@ -22,10 +22,12 @@ WORKSHOP_API_URL=http://127.0.0.1:8090 pnpm dev:docs
 pnpm --filter @homarr/docs typecheck
 pnpm --filter @homarr/docs build
 pnpm --filter @homarr/docs validate:links
+pnpm --filter @homarr/docs verify:search
 ```
 
 The static export is written to `out/`. The build validates that every registered integration and widget has a docs
-page. The link check validates internal Markdown and MDX links against that export.
+page. The link check validates internal Markdown and MDX links and rendered anchors against that export.
+The search check exercises the exported index with title, heading, and body queries and verifies result destinations.
 
 ## Write content
 
@@ -49,4 +51,27 @@ When a user-facing change affects setup or behavior, update the matching page in
 - `/blog/rss.xml` — RSS feed for project posts
 
 Every docs page and blog post includes copy-Markdown and view-source actions. Search is generated at build time and
-runs locally in the browser; it does not depend on an external crawler.
+runs locally in the browser; it does not depend on an external crawler. Markdown exports and search resolve
+integration credentials and widget defaults from the same typed metadata used by the pages.
+
+## Kapa AI
+
+The **Ask AI** launcher uses Homarr's existing public Kapa Website ID. The root layout loads the widget once across
+client-side navigation. **Search** and `Ctrl+K` / `Cmd+K` always use Fumadocs search, including when Kapa is unavailable.
+
+Set `KAPA_WEBSITE_ID` at build time to use a different Kapa Website Widget integration. An explicitly empty value
+disables the widget, for example `KAPA_WEBSITE_ID= pnpm --filter @homarr/docs build`. This is a public integration ID
+included in exported pages, not a Kapa API key. Rebuild the static export after changing it.
+
+In the Kapa dashboard, confirm the integration is live and enable the production and preview domains. Restoring the
+script does not verify that the historical integration is still active. Follow the
+[Kapa widget setup](https://docs.kapa.ai/integrations/website-widget/quickstart) for domain restrictions and CSP settings.
+
+After changing the documentation structure, review the Website Crawl source in Kapa: use the deployed `/docs` URL as
+the start URL and preview `main` as the content selector. Replace any old Docusaurus-specific selector and check that
+titles, headings, code samples, and integration details appear in the extracted Markdown. Docs are exported as HTML;
+the site also publishes `/sitemap.xml` and permits crawling in `/robots.txt`. The `/llms.txt` exports do not configure
+Kapa ingestion automatically. See [Kapa source setup](https://docs.kapa.ai/getting-started/index-your-first-source).
+
+Before publishing, check that Ask AI opens after navigating between pages, ask a documentation question, and verify
+its citations point to the current docs. In a separate check, block `widget.kapa.ai` and confirm search still works.

@@ -34,6 +34,21 @@ Workshop uses PocketBase. The production image serves the Workshop website and A
 Public URL variables accept HTTP(S) origins without embedded credentials, query strings, or fragments. Restart the
 container after changing runtime configuration.
 
+## Documentation search and AI
+
+The documentation uses Fumadocs search with an index generated during the website build. Search runs in the browser
+and needs no hosted search credentials or crawler.
+
+The **Ask AI** launcher connects to Kapa separately. `KAPA_WEBSITE_ID` is a public website integration ID, read when
+building the documentation. The default uses Homarr's integration. For a private deployment, pass your own ID or
+an empty value to disable it: `docker build --build-arg KAPA_WEBSITE_ID= -f apps/workshop/Dockerfile .`.
+Changing this value requires rebuilding the image; setting it on an already-built container has no effect.
+
+For your own Kapa integration, enable the deployment domain in Kapa and configure a Website Crawl source for your
+published docs. Preview the `main` content selector and verify extracted headings, code, and integration details.
+After a migration, refresh the source and check answer citations. `/llms.txt` alone does not configure Kapa ingestion.
+See the [Kapa website widget guide](https://docs.kapa.ai/integrations/website-widget/quickstart).
+
 ## Authentication and email
 
 Configure both GitHub OAuth variables and use `https://<workshop-host>/api/oauth2-redirect` as the callback. Supplying

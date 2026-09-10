@@ -36,6 +36,7 @@
       "outputs": ["migrations/sqlite/migrate.cjs", "migrations/mysql/migrate.cjs", "migrations/postgresql/migrate.cjs"]
     },
     "@homarr/docs#build": {
+      "env": ["TURBO_PLATFORM", "HOMARR_WEBSITE_URL", "WORKSHOP_API_URL", "WORKSHOP_WEB_URL", "KAPA_WEBSITE_ID"],
       "inputs": ["$TURBO_DEFAULT$", "../../packages/definitions/src/docs/**"],
       "outputs": [".next/**", "!.next/cache/**", "out/**", "next-env.d.ts"]
     },

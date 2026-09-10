@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { usePathname } from "next/navigation";
 
 import {
   IconArrowLeft,
@@ -82,13 +81,6 @@ interface PendingScreenshot {
   file: File;
   previewUrl: string;
 }
-
-const parseSubmissionId = (pathname: string) => {
-  const segments = pathname.split("/").filter(Boolean);
-  const last = segments[segments.length - 1];
-  if (!last || last === "workshop") return null;
-  return last;
-};
 
 const isNotFound = (caught: unknown) =>
   typeof caught === "object" && caught !== null && "status" in caught && (caught as ClientResponseError).status === 404;
@@ -180,9 +172,7 @@ const WidgetSafetySummary = ({ widget }: { widget: HomarrCustomWidgetV2 }) => {
   );
 };
 
-const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
-  const pathname = usePathname();
-  const submissionId = parseSubmissionId(pathname ?? "");
+const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string; submissionId: string }) => {
   const backend = useMemo(() => getWorkshopBackend(workshopUrl), [workshopUrl]);
 
   const [submission, setSubmission] = useState<WorkshopSubmission | null>(null);
@@ -1014,7 +1004,13 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
   );
 };
 
-export default function MarketplaceDetailPage({ configuredWorkshopUrl = "" }: { configuredWorkshopUrl?: string }) {
+export default function MarketplaceDetailPage({
+  configuredWorkshopUrl = "",
+  submissionId,
+}: {
+  configuredWorkshopUrl?: string;
+  submissionId: string;
+}) {
   useEffect(() => {
     document.documentElement.removeAttribute("data-workshop-detail-loading");
   }, []);
@@ -1022,7 +1018,7 @@ export default function MarketplaceDetailPage({ configuredWorkshopUrl = "" }: { 
   return (
     <main className="marketplace min-h-[80vh] bg-background text-foreground">
       <WorkshopErrorBoundary>
-        <MarketplaceDetail workshopUrl={getRuntimeWorkshopApiUrl(configuredWorkshopUrl)} />
+        <MarketplaceDetail workshopUrl={getRuntimeWorkshopApiUrl(configuredWorkshopUrl)} submissionId={submissionId} />
       </WorkshopErrorBoundary>
     </main>
   );

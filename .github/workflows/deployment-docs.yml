@@ -37,6 +37,10 @@ jobs:
         run: pnpm turbo build --filter=@homarr/docs
         env:
           CI: "true"
+      - name: Validate exported links and search
+        run: |
+          pnpm --filter @homarr/docs validate:links
+          pnpm --filter @homarr/docs verify:search
       - name: Setup Pages
         uses: actions/configure-pages@v6
       - name: Upload pages artifact
