@@ -8,7 +8,6 @@ import {
   Anchor,
   Box,
   Button,
-  getDefaultZIndex,
   Group,
   Paper,
   SimpleGrid,
@@ -290,7 +289,6 @@ const V2BetaAnnouncementModal = createModal<V2BetaAnnouncementModalProps>(({ inn
   defaultTitle: "Homarr v2 beta",
   size: 1000,
   centered: true,
-  zIndex: getDefaultZIndex("modal") + 2,
 });
 
 interface V2BetaInstallInstructionsProps {
