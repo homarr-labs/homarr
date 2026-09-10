@@ -333,6 +333,7 @@ export type HomarrDocumentationPath =
   | "/docs/integrations/traefik"
   | "/docs/integrations/archiveteam-warrior"
   | "/docs/integrations/whats-up-docker"
+  | "/docs/integrations/llama-cpp"
   | "/docs/widgets/clock"
   | "/docs/widgets/weather"
   | "/docs/widgets/air-quality"
@@ -390,4 +391,5 @@ export type HomarrDocumentationPath =
   | "/docs/widgets/traefik"
   | "/docs/widgets/custom-api"
   | "/docs/widgets/assistant"
-  | "/docs/widgets/whats-up-docker";
+  | "/docs/widgets/whats-up-docker"
+  | "/docs/widgets/llama-cpp";

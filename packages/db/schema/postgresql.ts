@@ -503,6 +503,7 @@ export const assistantConfigurations = pgTable("assistant_configuration", {
       | "together"
       | "ollama"
       | "lm-studio"
+      | "llama-cpp"
       | "custom"
     >()
     .notNull()
