@@ -16,6 +16,10 @@ current Homarr API to tools for compatible AI clients.
 The endpoint implements MCP `2026-07-28` and accepts 2025 Streamable HTTP clients through a compatibility path. The old
 `/api/mcp/mcp` route remains as an alias; use `/api/mcp` for new clients.
 
+Each HTTP request authenticates independently and uses a fresh MCP server instance. Neither protocol path requires an
+MCP session ID or server affinity. Homarr still checks the authenticated user’s permissions for every tool call;
+stateless MCP does not remove authentication or the storage used by OAuth authorization flows.
+
 ## Configure a client
 
 Create an API key under **Management → Tools → API → Authentication**, then add the endpoint and header to the client's
@@ -92,6 +96,20 @@ not resolve that error. Update Homarr to a release containing the invitation dat
 The generated catalog includes available board, app, integration, Docker, Kubernetes, media, DNS, download, and other
 Homarr procedures. Queries are read-only; mutations change state. The exact catalog depends on the release and current
 user permissions, so inspect `tools/list` or the table in Homarr instead of relying on a static list.
+
+If a tool cannot be represented by a valid JSON input schema, Homarr omits it while keeping the rest of the catalog
+available. Duplicate tool names are also omitted rather than replacing one another. The Assistant uses the same
+filtered catalog. Check server logs for `MCP tool omitted from catalog`, which includes the tool name, procedure path,
+and one of these reasons:
+
+- `unsupported_input`: the procedure does not declare supported object inputs or a no-input schema.
+- `invalid_schema`: input schema conversion or JSON Schema validation failed.
+- `duplicate_name`: multiple enabled procedures resolve to the same tool name.
+- `invalid_name`: the tool name does not meet MCP naming requirements.
+
+Diagnostics are logged once when each server process builds its catalog. They describe server-side tool definitions;
+changing credentials will not repair them. Report the diagnostic and Homarr version without including API keys.
+Catalog validation in CI rejects these diagnostics before release.
 
 The `invite_createInvite` tool accepts `expirationDate` as an ISO 8601 timestamp with a timezone, such as
 `2026-12-01T18:00:00Z` or `2026-12-01T19:00:00+01:00`.

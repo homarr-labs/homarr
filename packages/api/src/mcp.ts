@@ -1,5 +1,5 @@
 export { createTRPCContext } from "./trpc";
-export { extractMcpToolsFromProcedures } from "./mcp-tools";
+export { callMcpTool, extractMcpToolsFromProcedures } from "./mcp-tools";
 export type { McpTool } from "./mcp-tools";
 
 import { createTRPCRouter } from "./trpc";

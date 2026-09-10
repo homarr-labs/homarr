@@ -2,8 +2,11 @@
 
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
+import type * as CatalogModule from "../_extract-tools";
+
 const mocks = vi.hoisted(() => ({
   authenticate: vi.fn(),
+  extractCatalog: vi.fn(),
   ipAddress: vi.fn(() => "127.0.0.1"),
   toolProcedure: vi.fn(),
   loggerWarn: vi.fn(),
@@ -14,7 +17,9 @@ const mocks = vi.hoisted(() => ({
 }));
 
 vi.mock("next/server", () => ({ userAgent: () => ({ ua: "MCP route test" }) }));
-vi.mock("@homarr/api/mcp", () => ({
+vi.mock("@homarr/api/mcp", async () => ({
+  callMcpTool: (await import("../../../../../../../packages/api/src/mcp-tools")).callMcpTool,
+  extractMcpToolsFromProcedures: mocks.extractCatalog,
   createTRPCContext: vi.fn(() => ({})),
   mcpRouter: { createCaller: vi.fn(() => ({ board: { getAllBoards: mocks.toolProcedure } })) },
 }));
@@ -54,6 +59,7 @@ vi.mock("../_extract-tools", () => ({
       description: "List boards",
       type: "query",
       pathInRouter: ["board", "getAllBoards"],
+      inputMode: "none",
       inputSchema: { type: "object", properties: {} },
     },
     {
@@ -61,6 +67,7 @@ vi.mock("../_extract-tools", () => ({
       description: "List Custom Widgets",
       type: "query",
       pathInRouter: ["customWidget", "list"],
+      inputMode: "none",
       inputSchema: { type: "object", properties: {} },
     },
     {
@@ -68,6 +75,7 @@ vi.mock("../_extract-tools", () => ({
       description: "Search Workshop",
       type: "query",
       pathInRouter: ["customWidget", "workshopSearch"],
+      inputMode: "none",
       inputSchema: { type: "object", properties: {} },
     },
   ],
@@ -304,4 +312,22 @@ describe("MCP protocol errors", () => {
     expect(metadata).not.toHaveProperty("error");
     expect(metadata).not.toHaveProperty("message");
   });
+});
+
+test("logs catalog omissions only when the shared catalog is first built", async () => {
+  const diagnostic = { name: "broken", path: "broken", reason: "invalid_schema" };
+  const tools = [{ name: "valid" }];
+  mocks.extractCatalog.mockReturnValue({ tools, diagnostics: [diagnostic] });
+  const { extractMcpTools } = await vi.importActual<typeof CatalogModule>("../_extract-tools");
+  expect(extractMcpTools()).toBe(tools);
+  expect(extractMcpTools()).toBe(tools);
+  expect(mocks.extractCatalog).toHaveBeenCalledTimes(1);
+  expect(mocks.loggerWarn).toHaveBeenCalledExactlyOnceWith("MCP tool omitted from catalog", diagnostic);
+});
+
+test("rejects unauthenticated tool calls before execution", async () => {
+  mocks.authenticate.mockResolvedValue(null);
+  const { response } = await callMcp("tools/call", { name: "board_getAllBoards", arguments: {} });
+  expect(response.status).toBe(401);
+  expect(mocks.toolProcedure).not.toHaveBeenCalled();
 });

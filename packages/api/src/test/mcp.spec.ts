@@ -1,9 +1,12 @@
+import { initTRPC } from "@trpc/server";
 import type { TRPCError } from "@trpc/server";
 import { describe, expect, test, vi } from "vitest";
 import { z } from "zod/v4";
 
 import { mcpRouter } from "../mcp";
-import { extractMcpToolsFromProcedures } from "../mcp-tools";
+import type { McpMeta } from "../mcp-tools";
+import { createMcpProtocolHandler } from "../../../../apps/nextjs/src/app/api/mcp/_protocol";
+import { callMcpTool, extractMcpToolsFromProcedures } from "../mcp-tools";
 
 vi.mock("@homarr/auth", () => ({}));
 
@@ -157,7 +160,7 @@ function actualToolInventory() {
     { _def?: { type?: "query" | "mutation" } }
   >;
   return extractMcpToolsFromProcedures(mcpRouter)
-    .map((tool) => {
+    .tools.map((tool) => {
       const procedure = procedures[tool.pathInRouter.join(".")];
       const type = procedure?.["_def"]?.type;
       if (type !== "query" && type !== "mutation") throw new Error(`Unable to classify MCP tool '${tool.name}'`);
@@ -175,7 +178,7 @@ describe("production MCP router", () => {
   });
 
   test("keeps every secret-bearing tool behind a mutation procedure", () => {
-    const tools = extractMcpToolsFromProcedures(mcpRouter);
+    const tools = extractMcpToolsFromProcedures(mcpRouter).tools;
     const procedures = mcpRouter["_def"].procedures as unknown as Record<
       string,
       { _def?: { type?: "query" | "mutation" } }
@@ -189,7 +192,7 @@ describe("production MCP router", () => {
   });
 
   test("gives every production tool a description", () => {
-    const tools = extractMcpToolsFromProcedures(mcpRouter);
+    const tools = extractMcpToolsFromProcedures(mcpRouter).tools;
     for (const tool of tools) expect(tool.description, `Tool ${tool.name} should have a description`).toBeTruthy();
     expect(tools.find((tool) => tool.name === "customWidget_getAuthoringPrompt")?.description).toBe(
       "Get the current Custom Widget authoring instructions.",
@@ -197,16 +200,17 @@ describe("production MCP router", () => {
   });
 });
 
-test("MCP tools are deterministically ordered and retain executable schemas", () => {
-  const tools = extractMcpToolsFromProcedures(mcpRouter);
+test("MCP tools are deterministically ordered and have valid production schemas", () => {
+  expect(extractMcpToolsFromProcedures(mcpRouter).diagnostics).toEqual([]);
+  const tools = extractMcpToolsFromProcedures(mcpRouter).tools;
   const toolNames = tools.map((tool) => tool.name);
 
   expect(toolNames).toEqual(toolNames.toSorted((left, right) => left.localeCompare(right)));
-  expect(tools.every((tool) => tool.inputValidator instanceof z.ZodObject)).toBe(true);
+  expect(tools.every((tool) => tool.inputSchema.type === "object")).toBe(true);
 });
 
 test("publishes both Custom Widget template input formats", () => {
-  const tool = extractMcpToolsFromProcedures(mcpRouter).find(
+  const tool = extractMcpToolsFromProcedures(mcpRouter).tools.find(
     (candidate) => candidate.name === "customWidget_validateTemplate",
   );
 
@@ -355,3 +359,119 @@ describe("custom widget authoring procedure access", () => {
     );
   });
 });
+
+describe("MCP catalog diagnostics", () => {
+  const trpc = initTRPC.meta<McpMeta>().create();
+  const exposed = trpc.procedure.meta({ mcp: { enabled: true } });
+
+  test("omits unsupported parsers and malformed schemas without losing valid tools", () => {
+    const router = trpc.router({
+      good: exposed.input(z.object({ name: z.string() })).query(() => "ok"),
+      date: exposed.input(z.object({ date: z.date() })).query(() => "unused"),
+      scalar: exposed.input(z.string()).query(() => "unused"),
+      parser: exposed.input({ parse: (value: unknown) => value }).query(() => "unused"),
+      malformed: exposed
+        .input(z.object({ value: z.string().meta({ type: "invalid-json-type" }) }))
+        .query(() => "unused"),
+    });
+    const catalog = extractMcpToolsFromProcedures(router);
+    expect(catalog.tools.map((tool) => tool.name)).toEqual(["good"]);
+    expect(catalog.diagnostics).toEqual([
+      { name: "date", path: "date", reason: "invalid_schema" },
+      { name: "malformed", path: "malformed", reason: "invalid_schema" },
+      { name: "parser", path: "parser", reason: "unsupported_input" },
+      { name: "scalar", path: "scalar", reason: "unsupported_input" },
+    ]);
+  });
+
+  test("omits all duplicate names even when one procedure has an invalid schema", () => {
+    const shared = trpc.procedure.meta({ mcp: { enabled: true, name: "shared" } });
+    const catalog = extractMcpToolsFromProcedures(
+      trpc.router({
+        first: shared.query(() => "first"),
+        second: shared.input(z.object({ date: z.date() })).query(() => "second"),
+        good: exposed.query(() => "good"),
+        invalidName: trpc.procedure.meta({ mcp: { enabled: true, name: "bad name" } }).query(() => "unused"),
+      }),
+    );
+    expect(catalog.tools.map((tool) => tool.name)).toEqual(["good"]);
+    expect(catalog.diagnostics.filter((diagnostic) => diagnostic.reason === "duplicate_name")).toEqual([
+      { name: "shared", path: "first", reason: "duplicate_name" },
+      { name: "shared", path: "second", reason: "duplicate_name" },
+    ]);
+    expect(catalog.diagnostics).toContainEqual({ name: "bad name", path: "invalidName", reason: "invalid_name" });
+  });
+
+  test("distinguishes empty object input from no input for shared Assistant dispatch", async () => {
+    const router = trpc.router({
+      none: exposed.query(({ input }) => input),
+      explicitNone: exposed.input(z.undefined()).query(({ input }) => input),
+      object: exposed.input(z.object({ value: z.string().default("default") })).query(({ input }) => input),
+      optional: exposed
+        .input(z.object({ value: z.string().default("default") }).optional())
+        .query(({ input }) => input),
+    });
+    const catalog = extractMcpToolsFromProcedures(router);
+    expect(catalog.diagnostics).toEqual([]);
+    for (const tool of catalog.tools) {
+      const result = await callMcpTool(router.createCaller({}), tool, {});
+      if (tool.inputMode === "none") expect(result).toBeUndefined();
+      else expect(result).toEqual({ value: "default" });
+    }
+  });
+});
+
+test.each([false, true])(
+  "production catalog registers through the real protocol handler (modern=%s)",
+  async (modern) => {
+    const { tools, diagnostics } = extractMcpToolsFromProcedures(mcpRouter);
+    expect(diagnostics).toEqual([]);
+    const handler = createMcpProtocolHandler({
+      caller: {},
+      tools,
+      version: "test",
+      instructions: "test",
+      formatToolError: () => "Tool failed",
+    });
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+      Accept: "application/json, text/event-stream",
+    };
+    const params: Record<string, unknown> = {};
+    if (modern) {
+      headers["Mcp-Method"] = "tools/list";
+      headers["Mcp-Name"] = "homarr";
+      params["_meta"] = {
+        "io.modelcontextprotocol/protocolVersion": "2026-07-28",
+        "io.modelcontextprotocol/clientInfo": { name: "catalog-test", version: "1" },
+        "io.modelcontextprotocol/clientCapabilities": {},
+      };
+    }
+    const response = await handler.fetch(
+      new Request("http://homarr.test/api/mcp", {
+        method: "POST",
+        headers,
+        body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/list", params }),
+      }),
+    );
+    expect(response.status).toBe(200);
+    expect(response.headers.has("Mcp-Session-Id")).toBe(false);
+    const body = await response.text();
+    let payload = body;
+    if (response.headers.get("Content-Type")?.includes("text/event-stream")) {
+      payload =
+        body
+          .split("\n")
+          .find((line) => line.startsWith("data: "))
+          ?.slice(6) ?? "";
+    }
+    const result = JSON.parse(payload) as {
+      error?: unknown;
+      result: { tools: { name: string; inputSchema: unknown }[] };
+    };
+    expect(result.error).toBeUndefined();
+    expect(result.result.tools.map((tool) => ({ name: tool.name, inputSchema: tool.inputSchema }))).toEqual(
+      tools.map((tool) => ({ name: tool.name, inputSchema: tool.inputSchema })),
+    );
+  },
+);
