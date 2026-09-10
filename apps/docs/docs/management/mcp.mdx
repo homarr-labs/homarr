@@ -55,6 +55,9 @@ the catalog by namespace, tool name, or description; matching categories expand 
 MCP supports API keys and OAuth 2.1 with PKCE. API keys are simpler for direct client configuration; OAuth is available
 for clients that support dynamic authorization.
 
+Copy the complete generated API key, including both parts and the dot: `<id>.<token>`. Sending only the ID or token
+returns `invalid_token`. Keep the full key private when sharing client configuration or diagnostics.
+
 When Homarr is behind a reverse proxy that does not preserve the public host and protocol, set `BASE_URL` to the exact
 public origin, for example `https://homarr.example.com`. Do not include a path. OAuth clients discover the authorization
 server and protected resource through Homarr's `/.well-known/` routes.
@@ -79,11 +82,19 @@ curl -X POST \
 
 The removed HTTP+SSE `/sse` and `/message` transports return `410 Gone`.
 
+Successful `server/discover` or `initialize` responses confirm connectivity, but do not validate the tool catalog.
+Use `tools/list` above to check that the client can discover tools. If it returns
+`Date cannot be represented in JSON Schema`, the server failed to generate a tool schema; changing the API key will
+not resolve that error. Update Homarr to a release containing the invitation date schema fix.
+
 ## Tools and resources
 
 The generated catalog includes available board, app, integration, Docker, Kubernetes, media, DNS, download, and other
 Homarr procedures. Queries are read-only; mutations change state. The exact catalog depends on the release and current
 user permissions, so inspect `tools/list` or the table in Homarr instead of relying on a static list.
+
+The `invite_createInvite` tool accepts `expirationDate` as an ISO 8601 timestamp with a timezone, such as
+`2026-12-01T18:00:00Z` or `2026-12-01T19:00:00+01:00`.
 
 For Custom Widgets, install the official skill and follow the preview-and-evidence workflow described in
 [Connect an agent](./custom-widgets/agent-authoring). Secret values are configured in Homarr and are never returned

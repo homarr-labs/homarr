@@ -109,6 +109,7 @@ export function extractMcpToolsFromProcedures<TRoot extends AnyRootTypes, TRecor
       inputValidator,
       inputSchema: normalizeJsonSchema(
         z.toJSONSchema(inputValidator, {
+          io: "input",
           unrepresentable: "any",
         }),
       ),
