@@ -1,0 +1,21 @@
+---
+title: Integrations
+description: Connect Homarr to the applications and infrastructure you operate.
+---
+
+import { DocsDirectory } from "@/components/docs/docs-directory";
+
+An integration stores the connection and authentication details Homarr needs to communicate with another service. Widgets and management tools can then reuse that connection.
+
+Each guide identifies the required URL and credentials, supported capabilities, and the widgets that use the integration.
+
+<DocsDirectory section="integrations" />
+
+## Before you connect a service
+
+1. Confirm that Homarr can reach the service from its own network.
+2. Create the least-privileged account, token, or API key supported by the service.
+3. Add the integration in **Manage → Integrations**.
+4. Test the connection before adding dependent widgets.
+
+See [Manage integrations](/docs/management/integrations) for the shared workflow.

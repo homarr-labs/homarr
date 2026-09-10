@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   IconAlertCircle,
@@ -26,7 +28,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { Progress, ProgressLabel, ProgressValue } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn, errorMessage } from "@/lib/utils";
 
 import type { SubmitInput } from "./useWorkshop";
@@ -38,11 +43,8 @@ interface Props {
 }
 
 const steps = ["Type", "Details", "Media"] as const;
-const navDirection = [-1, 1];
-const stepAnimClass = ["submit-step-from-left", "submit-step-from-right"];
 const backLabels = ["Cancel", "Back"];
 const submitLabels = ["Publish submission", "Publishing…"];
-const connectorClass = ["bg-border", "bg-primary"];
 const dropOverlayClass = ["pointer-events-none opacity-0", "opacity-100"];
 
 const placeholders: Record<SubmissionType, string> = {
@@ -66,7 +68,6 @@ const parseJsonObject = (json: string): Record<string, unknown> | null => {
 
 export const SubmitForm = ({ onClose, onSubmit }: Props) => {
   const [step, setStep] = useState(0);
-  const [direction, setDirection] = useState(1);
   const [type, setType] = useState<SubmissionType | null>(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -81,13 +82,7 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
 
   const canAdvance = [type !== null, title.trim().length >= 3 && content.trim().length > 0, true];
 
-  const goTo = useCallback(
-    (next: number) => {
-      setDirection(navDirection[Number(next > step)]);
-      setStep(next);
-    },
-    [step],
-  );
+  const goTo = useCallback((next: number) => setStep(next), []);
 
   const setContentAndAutofill = useCallback((json: string, currentTitle: string, currentDesc: string) => {
     setContent(json);
@@ -220,30 +215,10 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
           <DialogDescription>Submit a custom CSS theme or widget to the Workshop.</DialogDescription>
         </DialogHeader>
 
-        <div className="flex items-center gap-2">
-          {steps.map((label, i) => (
-            <React.Fragment key={label}>
-              {i > 0 && <div className={cn("h-px flex-1 transition-colors", connectorClass[Number(i <= step)])} />}
-              <button
-                type="button"
-                onClick={() => {
-                  if (i < step) goTo(i);
-                }}
-                disabled={i > step}
-                aria-current={i === step ? "step" : undefined}
-                className={cn(
-                  "flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-all",
-                  i === step && "bg-primary text-primary-foreground shadow-sm",
-                  i < step && "bg-primary/10 text-primary cursor-pointer hover:bg-primary/20",
-                  i > step && "bg-muted text-muted-foreground disabled:cursor-default",
-                )}
-              >
-                {i < step ? <IconCheck size={12} /> : <span className="tabular-nums">{i + 1}</span>}
-                {label}
-              </button>
-            </React.Fragment>
-          ))}
-        </div>
+        <Progress value={((step + 1) / steps.length) * 100}>
+          <ProgressLabel>{steps[step]}</ProgressLabel>
+          <ProgressValue>{() => `Step ${step + 1} of ${steps.length}`}</ProgressValue>
+        </Progress>
 
         {error && (
           <Alert variant="destructive">
@@ -253,8 +228,8 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
           </Alert>
         )}
 
-        <div className="relative min-h-[280px] overflow-hidden">
-          <div key={step} className={cn("submit-step-enter", stepAnimClass[Number(direction > 0)])}>
+        <div className="relative min-h-[280px]">
+          <div key={step}>
             {step === 0 && <StepType value={type} onChange={setType} onJsonDrop={handleJsonFileDrop} />}
             {step === 1 && type && (
               <StepDetails
@@ -282,6 +257,7 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
         <DialogFooter className="sm:justify-between">
           <Button
             variant="ghost"
+            className="w-full sm:w-auto"
             onClick={() => {
               if (step === 0) onClose();
               else goTo(step - 1);
@@ -290,14 +266,18 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
           >
             <IconChevronLeft size={14} /> {backLabels[Math.min(step, 1)]}
           </Button>
-          <div className="flex items-center gap-2">
+          <div className="flex w-full items-center gap-2 sm:w-auto">
             {step < 2 && (
-              <Button onClick={() => goTo(step + 1)} disabled={!canAdvance[step]}>
+              <Button className="w-full sm:w-auto" onClick={() => goTo(step + 1)} disabled={!canAdvance[step]}>
                 Next <IconChevronRight size={14} />
               </Button>
             )}
             {step >= 2 && (
-              <Button onClick={() => void handleSubmit()} disabled={pending || !canAdvance[1]}>
+              <Button
+                className="w-full sm:w-auto"
+                onClick={() => void handleSubmit()}
+                disabled={pending || !canAdvance[1]}
+              >
                 {pending && <IconLoader2 size={14} className="animate-spin" />}
                 {submitLabels[Number(pending)]}
               </Button>
@@ -337,40 +317,48 @@ const StepType = ({
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="grid grid-cols-2 gap-3">
+      <ToggleGroup
+        value={value ? [value] : []}
+        onValueChange={(values) => {
+          const selected = values[0] as SubmissionType | undefined;
+          if (selected) onChange(selected);
+        }}
+        spacing={12}
+        className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2"
+        aria-label="Submission type"
+      >
         {typeCards.map(({ type, icon: Icon, label, desc }) => (
-          <button
-            type="button"
+          <ToggleGroupItem
             key={type}
-            onClick={() => onChange(type)}
-            aria-pressed={value === type}
+            value={type}
+            aria-label={`${label}: ${desc}`}
             className={cn(
-              "group relative flex min-h-48 flex-col items-center justify-center gap-3 rounded-xl border-2 p-6 text-center transition-colors hover:border-primary/50 hover:bg-primary/5",
-              value === type ? "border-primary bg-primary/10 ring-1 ring-primary/20" : "border-border bg-card",
+              "group relative h-auto min-h-36 w-full flex-col items-start justify-start gap-3 rounded-xl border p-4 text-left whitespace-normal transition-colors hover:border-primary/50 hover:bg-primary/5 sm:min-h-40",
+              "data-pressed:border-primary data-pressed:bg-primary/10 data-pressed:text-foreground data-pressed:ring-1 data-pressed:ring-primary/20",
             )}
           >
             <div
               className={cn(
-                "flex size-12 items-center justify-center rounded-xl transition-colors",
+                "flex size-10 items-center justify-center rounded-lg transition-colors",
                 value === type
                   ? "bg-primary text-primary-foreground"
                   : "bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary",
               )}
             >
-              <Icon size={24} />
+              <Icon size={20} />
             </div>
             <div>
               <p className="font-heading text-sm font-semibold">{label}</p>
-              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{desc}</p>
+              <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{desc}</p>
             </div>
             {value === type && (
-              <div className="absolute top-3 right-3 flex size-5 items-center justify-center rounded-full bg-primary text-primary-foreground">
+              <div className="absolute top-3 right-3 flex size-6 items-center justify-center rounded-full bg-primary text-primary-foreground">
                 <IconCheck size={12} />
               </div>
             )}
-          </button>
+          </ToggleGroupItem>
         ))}
-      </div>
+      </ToggleGroup>
 
       {/* oxlint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
       <label
@@ -452,11 +440,11 @@ const StepDetails = ({
         }
       />
     </div>
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor="submit-title" className="text-xs font-medium text-muted-foreground">
-          Title *
-        </label>
+    <FieldGroup className="gap-4">
+      <Field>
+        <FieldLabel htmlFor="submit-title">
+          Title <span aria-hidden="true">*</span>
+        </FieldLabel>
         <Input
           id="submit-title"
           value={title}
@@ -466,11 +454,9 @@ const StepDetails = ({
           maxLength={100}
           placeholder="My awesome theme"
         />
-      </div>
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor="submit-description" className="text-xs font-medium text-muted-foreground">
-          Description
-        </label>
+      </Field>
+      <Field>
+        <FieldLabel htmlFor="submit-description">Description</FieldLabel>
         <Textarea
           id="submit-description"
           value={description}
@@ -479,11 +465,9 @@ const StepDetails = ({
           rows={5}
           placeholder="A brief description of what this does"
         />
-      </div>
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor="submit-changelog" className="text-xs font-medium text-muted-foreground">
-          Changelog
-        </label>
+      </Field>
+      <Field>
+        <FieldLabel htmlFor="submit-changelog">Changelog</FieldLabel>
         <Textarea
           id="submit-changelog"
           value={changelog}
@@ -492,7 +476,7 @@ const StepDetails = ({
           rows={4}
           placeholder="What is included in this revision?"
         />
-      </div>
-    </div>
+      </Field>
+    </FieldGroup>
   </div>
 );

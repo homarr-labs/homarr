@@ -21,11 +21,11 @@ import { traefikWidget } from "../../widgets/traefik";
 
 <AddingIntegration />
 
-:::info URL configuration
+:::info[URL configuration]
 Use the URL where Traefik exposes its dashboard/API, for example `http://traefik:8080` or `https://traefik.example.com`. Homarr calls Traefik endpoints under `/api` automatically.
 :::
 
-:::warning API requirement
+:::warning[API requirement]
 Traefik must have the API enabled. For local or internal setups this is commonly exposed through `api.insecure=true`; for production setups, expose the `api@internal` service through an authenticated router.
 :::
 

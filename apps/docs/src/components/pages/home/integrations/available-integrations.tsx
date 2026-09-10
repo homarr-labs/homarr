@@ -1,70 +1,44 @@
-import { splitToNChunks } from "@site/src/tools/array";
-import classes from "./available-integrations.module.css";
-import { SectionContainer } from "@site/src/components/pages/home/container/section-container";
-import { supportedIntegrations } from "@site/src/constants/supported-integrations";
+import { IconArrowRight } from "@tabler/icons-react";
+import Link from "next/link";
 
-const countIconGroups = 3;
-const animationDurationInSeconds = 12;
+import { SectionContainer } from "@/components/pages/home/container/section-container";
+import { supportedIntegrations } from "@/constants/supported-integrations";
 
 export const AvailableIntegrations = () => {
-  const arrayInChunks = splitToNChunks(
-    supportedIntegrations.map((integration) => integration.iconUrl),
-    countIconGroups,
-  );
+  const featuredIntegrations = supportedIntegrations.filter(({ name }) => name !== "Homarr").slice(0, 12);
 
   return (
-    <SectionContainer className={"my-24"}>
-      <div className={"md:h-80 w-full dark:bg-neutral-900 p-10 rounded-3xl overflow-hidden relative"}>
-        <div className={"flex gap-10 flex-nowrap"}>
-          <div className={"md:w-1/2 w-full"}>
-            <h2 className={"lg:text-5xl text-3xl font-extrabold "}>Many integrations built in</h2>
-            <p className={"text-xl text-gray-500 dark:text-gray-400"}>
-              Homarr has support for tons of your favourite applications, tools and websites. It integrates seamlessly
-              and tests proper connectivity and configuration for you. Using the tasks system, it scales efficiently
-              with tons of users, making Homarr reliable in big scale deployments too.
+    <SectionContainer className="my-16 sm:my-20">
+      <section className="border bg-fd-card p-6 sm:p-8" aria-labelledby="integrations-title">
+        <div className="grid items-center gap-8 md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
+          <div>
+            <h2 id="integrations-title" className="m-0 text-3xl font-bold tracking-tight sm:text-4xl">
+              Many integrations built in
+            </h2>
+            <p className="mb-0 mt-4 leading-7 text-fd-muted-foreground">
+              Browse supported integrations and their setup instructions.
             </p>
+            <Link
+              className="mt-5 inline-flex w-fit items-center gap-2 text-sm font-semibold text-fd-primary hover:underline"
+              href="/docs/integrations"
+            >
+              Browse supported integrations
+              <IconArrowRight aria-hidden="true" size={18} />
+            </Link>
           </div>
-          <div className={"rotate-12 w-1/2 hidden md:block argos-ignore"} aria-hidden="true">
-            <div className={"grid gap-12 grid-cols-3"}>
-              {Array(countIconGroups)
-                .fill(0)
-                .map((_, columnIndex) => (
-                  <div key={`grid-column-${columnIndex}`} style={{ width: 50 }}>
-                    <div
-                      className={classes.scrollAnimationContainer}
-                      style={{
-                        animationDuration: `${animationDurationInSeconds - columnIndex}s`,
-                      }}
-                    >
-                      {arrayInChunks[columnIndex]?.map((icon, index) => (
-                        <img
-                          className={"rounded"}
-                          key={`grid-column-${columnIndex}-scroll-1-${index}`}
-                          src={icon}
-                          alt=""
-                          width={50}
-                          height={50}
-                        />
-                      ))}
-
-                      {/* This is used for making the animation seem seamless */}
-                      {arrayInChunks[columnIndex]?.map((icon, index) => (
-                        <img
-                          className={"rounded"}
-                          key={`grid-column-${columnIndex}-scroll-2-${index}`}
-                          src={icon}
-                          alt=""
-                          width={50}
-                          height={50}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                ))}
-            </div>
+          <div className="grid grid-cols-6 gap-2" aria-label="Examples of supported integrations">
+            {featuredIntegrations.map(({ name, iconUrl }) => (
+              <div
+                key={name}
+                className="flex aspect-square items-center justify-center border bg-fd-muted/35 p-2 sm:p-3"
+                title={name}
+              >
+                <img className="size-7 object-contain sm:size-10" src={iconUrl} alt={name} width={40} height={40} />
+              </div>
+            ))}
           </div>
         </div>
-      </div>
+      </section>
     </SectionContainer>
   );
 };

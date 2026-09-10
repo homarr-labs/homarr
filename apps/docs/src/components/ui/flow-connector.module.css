@@ -1,8 +1,8 @@
 .connector {
-  --flow-accent: var(--ifm-color-primary);
+  --flow-accent: var(--color-fd-primary);
   --flow-coral: #f17865;
-  --flow-head: var(--diagram-ink, var(--ifm-font-color-base));
-  --flow-line: var(--diagram-line, var(--ifm-color-emphasis-300));
+  --flow-head: var(--diagram-ink, var(--color-fd-foreground));
+  --flow-line: var(--diagram-line, var(--color-fd-border));
   --flow-rail: color-mix(in srgb, var(--flow-line) 68%, var(--flow-head));
   position: relative;
   display: grid;
@@ -19,8 +19,8 @@
   padding: 0.17rem 0.36rem;
   border: 1px solid color-mix(in srgb, var(--flow-accent) 32%, var(--flow-line));
   border-radius: 999px;
-  color: var(--diagram-muted, var(--ifm-color-emphasis-700));
-  background: var(--diagram-panel, var(--ifm-background-surface-color));
+  color: var(--diagram-muted, var(--color-fd-muted-foreground));
+  background: var(--diagram-panel, var(--color-fd-card));
   font-family: var(--font-mono);
   font-size: 0.5rem;
   font-weight: 650;

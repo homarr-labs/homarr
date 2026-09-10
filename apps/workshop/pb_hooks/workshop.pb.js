@@ -21,7 +21,7 @@ const workshopDetailPage = (event) => {
   const id = event.request.pathValue("id");
   if (id === "admin") return event.fileFS($os.dirFS("/pb_public"), "workshop/admin/index.html");
 
-  const indexHtml = toString($os.readFile("/pb_public/index.html"));
+  const indexHtml = toString($os.readFile("/pb_public/404.html"));
   try {
     const { renderWorkshopSocialHtml } = require(`${__hooks}/workshop-utils.js`);
     const submission = event.app.findRecordById("submissions", id);

@@ -4,8 +4,13 @@ import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { CommonWidgetProps, WidgetCard } from "./card";
 
+const initialStockTrend = Array.from({ length: 100 }, (_, x) => ({
+  x,
+  y: Number((100 + x * 0.16 + Math.sin(x / 7) * 4).toFixed(2)),
+}));
+
 export const StockWidget = ({ className }: CommonWidgetProps) => {
-  const [stockTrend, setStockTrend] = useState<{ x: number; y: number }[]>(generateStockTrend());
+  const [stockTrend, setStockTrend] = useState<{ x: number; y: number }[]>(initialStockTrend);
 
   useEffect(() => {
     const interval = setInterval(() => {
