@@ -150,21 +150,13 @@ Create a CSS file alongside the component:
 
 /* Hover: translucent instead of opaque */
 .my-table .mantine-datatable-table tbody tr:hover {
-  background-color: color-mix(
-    in srgb,
-    var(--mantine-color-default-hover) 40%,
-    transparent
-  ) !important;
+  background-color: color-mix(in srgb, var(--mantine-color-default-hover) 40%, transparent) !important;
 }
 
 /* Headers: frosted glass effect */
 .my-table th {
   white-space: nowrap;
-  background-color: color-mix(
-    in srgb,
-    var(--mantine-color-body) 60%,
-    transparent
-  ) !important;
+  background-color: color-mix(in srgb, var(--mantine-color-body) 60%, transparent) !important;
   backdrop-filter: blur(8px);
 }
 
@@ -186,11 +178,7 @@ Create a CSS file alongside the component:
 
 /* Row expansion area */
 .my-table .mantine-datatable-row-expansion-cell {
-  background-color: color-mix(
-    in srgb,
-    var(--mantine-color-body) 40%,
-    transparent
-  ) !important;
+  background-color: color-mix(in srgb, var(--mantine-color-body) 40%, transparent) !important;
 }
 ```
 
@@ -258,9 +246,7 @@ const size = useMemo(() => getSizeConfig(width), [width]);
 Then use a visibility check lookup table for columns:
 
 ```typescript
-const columnVisibilityChecks: Partial<
-  Record<string, (ctx: ColumnContext) => boolean>
-> = {
+const columnVisibilityChecks: Partial<Record<string, (ctx: ColumnContext) => boolean>> = {
   upSpeed: (ctx) => ctx.hasTorrents && ctx.size.showSpeedColumns,
   downSpeed: (ctx) => ctx.size.showSpeedColumns,
   time: (ctx) => ctx.size.showTimeColumn,
@@ -319,13 +305,8 @@ const storeKey = `mytable-${itemId ?? "preview"}-${[...options.columns].toSorted
 On mount, seed `useDataTableColumns` with server-persisted values. Use a `hydrated` ref to prevent the persist effect from immediately writing defaults back:
 
 ```typescript
-const {
-  effectiveColumns,
-  columnsOrder,
-  columnsWidth,
-  setColumnsOrder,
-  setMultipleColumnWidths,
-} = useDataTableColumns<MyRow>({ key: storeKey, columns });
+const { effectiveColumns, columnsOrder, columnsWidth, setColumnsOrder, setMultipleColumnWidths } =
+  useDataTableColumns<MyRow>({ key: storeKey, columns });
 
 const lastStoreKey = useRef(storeKey);
 const hydrated = useRef(false);
@@ -348,13 +329,7 @@ useEffect(() => {
   requestAnimationFrame(() => {
     hydrated.current = true;
   });
-}, [
-  storeKey,
-  savedOrder,
-  savedWidths,
-  setColumnsOrder,
-  setMultipleColumnWidths,
-]);
+}, [storeKey, savedOrder, savedWidths, setColumnsOrder, setMultipleColumnWidths]);
 ```
 
 ### Persist localStorage → server
@@ -367,17 +342,14 @@ const prevWidths = useRef(columnsWidth);
 
 useEffect(() => {
   if (!hydrated.current) return;
-  const orderChanged =
-    JSON.stringify(columnsOrder) !== JSON.stringify(prevOrder.current);
-  const widthsChanged =
-    JSON.stringify(columnsWidth) !== JSON.stringify(prevWidths.current);
+  const orderChanged = JSON.stringify(columnsOrder) !== JSON.stringify(prevOrder.current);
+  const widthsChanged = JSON.stringify(columnsWidth) !== JSON.stringify(prevWidths.current);
   prevOrder.current = columnsOrder;
   prevWidths.current = columnsWidth;
 
   if (!orderChanged && !widthsChanged) return;
 
-  if (orderChanged)
-    persistOption({ columnOrder: JSON.stringify(columnsOrder) });
+  if (orderChanged) persistOption({ columnOrder: JSON.stringify(columnsOrder) });
   if (widthsChanged) {
     const widthMap: Record<string, number> = {};
     for (const entry of columnsWidth) {
@@ -385,8 +357,7 @@ useEffect(() => {
       if (!key) continue;
       const v = entry[key as keyof typeof entry];
       if (typeof v === "number") widthMap[key] = v;
-      else if (typeof v === "string" && v.endsWith("px"))
-        widthMap[key] = parseInt(v, 10);
+      else if (typeof v === "string" && v.endsWith("px")) widthMap[key] = parseInt(v, 10);
     }
     persistOption({ columnWidths: JSON.stringify(widthMap) });
   }
@@ -426,22 +397,10 @@ const handleContextMenu = useCallback(
 The menu component uses `Portal` for correct z-index:
 
 ```tsx
-function RowContextMenu({
-  state,
-  onClose,
-}: {
-  state: ContextMenuState;
-  onClose: () => void;
-}) {
+function RowContextMenu({ state, onClose }: { state: ContextMenuState; onClose: () => void }) {
   return (
     <Portal>
-      <Menu
-        opened
-        onClose={onClose}
-        closeOnItemClick={false}
-        position="right-start"
-        offset={0}
-      >
+      <Menu opened onClose={onClose} closeOnItemClick={false} position="right-start" offset={0}>
         <Menu.Target>
           <Box
             style={{
