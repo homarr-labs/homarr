@@ -16,6 +16,7 @@ out/
 next-env.d.ts
 
 # artifacts
+.ai-evaluations/
 packages/db/migrations/*/migrate.cjs
 
 # nitro
