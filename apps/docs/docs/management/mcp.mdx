@@ -8,20 +8,17 @@ tags:
 
 # Model Context Protocol (MCP)
 
-Homarr exposes a stateless [Model Context Protocol](https://modelcontextprotocol.io) server at `/api/mcp`. It maps the
-current Homarr API to tools for compatible AI clients.
+Connect an AI client to Homarr to manage boards, apps, integrations, and other services through MCP tools.
+
+Homarr uses MCP v2 (protocol `2026-07-28`) at `/api/mcp`, with compatibility for 2025 Streamable HTTP clients.
+Requests are stateless: each request authenticates independently, without an MCP session ID.
 
 ![The AI / MCP management tab](./img/mcp.png)
 
-The endpoint implements MCP `2026-07-28` and accepts 2025 Streamable HTTP clients through a compatibility path. The old
-`/api/mcp/mcp` route remains as an alias; use `/api/mcp` for new clients.
+## Connect a client
 
-Requests authenticate independently; no MCP session ID or server affinity is required.
-
-## Configure a client
-
-Create an API key under **Management → Tools → API → Authentication**, then add the endpoint and header to the client's
-MCP configuration:
+Create an API key under **Management → Tools → API → Authentication**. Add this configuration to your client,
+replacing the URL and API key:
 
 ```json
 {
@@ -36,7 +33,10 @@ MCP configuration:
 }
 ```
 
-Clients without Streamable HTTP support can use `mcp-remote` over STDIO:
+Use the complete key, including the ID, dot, and token. Keep it private and use HTTPS for remote connections.
+The **AI / MCP** tab on Homarr's API page provides your endpoint, configuration, and available tools.
+
+For clients that only support STDIO, use `mcp-remote`:
 
 ```json
 {
@@ -49,29 +49,29 @@ Clients without Streamable HTTP support can use `mcp-remote` over STDIO:
 }
 ```
 
-The **AI / MCP** tab on Homarr's API page shows the current endpoint, configuration, and generated tool catalog. Filter
-the catalog by namespace, tool name, or description; matching categories expand automatically.
+### OAuth
 
-## Authentication and permissions
+Clients with OAuth support can authorize through OAuth 2.1 with PKCE instead of an API key.
+Homarr publishes discovery metadata under `/.well-known/`.
 
-MCP supports API keys and OAuth 2.1 with PKCE. API keys are simpler for direct client configuration; OAuth is available
-for clients that support dynamic authorization.
+If your reverse proxy does not preserve the public host and protocol, set `BASE_URL` to your public origin,
+such as `https://homarr.example.com`, without a path.
 
-Copy the complete generated API key, including both parts and the dot: `<id>.<token>`. Sending only the ID or token
-returns `invalid_token`. Keep the full key private when sharing client configuration or diagnostics.
+## Permissions and tools
 
-When Homarr is behind a reverse proxy that does not preserve the public host and protocol, set `BASE_URL` to the exact
-public origin, for example `https://homarr.example.com`. Do not include a path. OAuth clients discover the authorization
-server and protected resource through Homarr's `/.well-known/` routes.
+Tools use the permissions of the API key owner or OAuth user. Queries read data; mutations change it.
+Inspect the **AI / MCP** tab or your client's tool list for available actions.
 
-Tools use the permissions of the API key owner or authorized user. Creating a key does not grant additional access.
-Custom Widget and Workshop authoring tools, prompts, and resources are visible only to administrators.
+Custom Widget and Workshop authoring tools, prompts, and resources require administrator access.
+For Custom Widgets, follow [Connect an agent](./custom-widgets/agent-authoring).
+Secret values are configured in Homarr and are never returned through MCP.
 
-Use HTTPS when the endpoint crosses an untrusted network.
+The built-in [Assistant](./assistant) shares the MCP tool catalog, uses your Homarr session, and asks for approval
+before mutations by default.
 
-## Verify the endpoint
+## Verify the connection
 
-The 2025 compatibility path accepts a compact `tools/list` request:
+This request lists tools through the older-client compatibility path. It checks authentication and tool discovery:
 
 ```sh
 curl -X POST \
@@ -82,20 +82,14 @@ curl -X POST \
   https://homarr.example.com/api/mcp
 ```
 
-The removed HTTP+SSE `/sse` and `/message` transports return `410 Gone`.
+A successful discovery or initialization response alone does not verify that tools can be listed.
 
-## Tools and resources
+## Troubleshooting
 
-The generated catalog includes available board, app, integration, Docker, Kubernetes, media, DNS, download, and other
-Homarr procedures. Queries are read-only; mutations change state. The exact catalog depends on the release and current
-user permissions, so inspect `tools/list` or the table in Homarr instead of relying on a static list.
-
-Invalid schemas and duplicate tool names are omitted from both MCP and the Assistant. For missing tools, check server
-logs for `MCP tool omitted from catalog` and report the diagnostic with your Homarr version. Never include API keys.
-
-For Custom Widgets, install the official skill and follow the preview-and-evidence workflow described in
-[Connect an agent](./custom-widgets/agent-authoring). Secret values are configured in Homarr and are never returned
-through MCP.
-
-The built-in [Assistant](./assistant) uses the same tool catalog with the current Homarr session and asks for approval
-before mutations by default.
+- **`invalid_token`**: copy the complete API key in `<id>.<token>` format.
+- **Missing tools**: check the user's permissions. Invalid tool schemas and duplicate names are omitted; check server
+  logs for `MCP tool omitted from catalog` and report the diagnostic with your Homarr version. Exclude API keys.
+- **`Date cannot be represented in JSON Schema`**: update Homarr. Older versions could fail to list all tools because
+  of an unsupported date schema.
+- **`410 Gone` on `/sse` or `/message`**: use `/api/mcp` with a Streamable HTTP client. The old `/api/mcp/mcp` URL remains
+  an alias.
