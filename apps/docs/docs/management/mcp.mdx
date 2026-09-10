@@ -111,6 +111,10 @@ Diagnostics are logged once when each server process builds its catalog. They de
 changing credentials will not repair them. Report the diagnostic and Homarr version without including API keys.
 Catalog validation in CI rejects these diagnostics before release.
 
+Tool calls preserve raw JSON arguments until tRPC validates and normalizes them. String constraints that depend on
+trimming or case normalization are enforced by tRPC after normalization. ISO timestamps use the declared input
+pattern, including minute precision when supported.
+
 The `invite_createInvite` tool accepts `expirationDate` as an ISO 8601 timestamp with a timezone, such as
 `2026-12-01T18:00:00Z` or `2026-12-01T19:00:00+01:00`.
 

@@ -103,7 +103,24 @@ export function extractMcpToolsFromProcedures<TRoot extends AnyRootTypes, TRecor
         input = objects[0] ?? emptyInput;
         for (const object of objects.slice(1)) input = z.intersection(input, object);
       }
-      const inputSchema = z.toJSONSchema(input, { io: "input" });
+      const inputSchema = z.toJSONSchema(input, {
+        io: "input",
+        override: ({ zodSchema, jsonSchema }) => {
+          if (zodSchema["_zod"].def.type !== "string") return;
+          if (zodSchema["_zod"].def.checks?.some((check) => check["_zod"].def.check === "overwrite")) {
+            // trim/case normalization runs before these checks in tRPC. They cannot constrain raw JSON.
+            delete jsonSchema.minLength;
+            delete jsonSchema.maxLength;
+            delete jsonSchema.pattern;
+            delete jsonSchema.allOf;
+            delete jsonSchema.format;
+          }
+          // Zod's ISO regex permits minute precision; JSON Schema date-time requires seconds.
+          if (jsonSchema.format === "date-time" && typeof jsonSchema.pattern === "string") {
+            delete jsonSchema.format;
+          }
+        },
+      });
       // Chained tRPC object inputs produce allOf; MCP requires an explicit object root.
       if (inputSchema.type !== undefined && inputSchema.type !== "object") throw new Error("Invalid root");
       inputSchema.type = "object";

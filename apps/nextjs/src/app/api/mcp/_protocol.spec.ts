@@ -5,6 +5,7 @@ import { describe, expect, test, vi } from "vitest";
 import { z } from "zod/v4";
 
 import type { McpTool } from "@homarr/api/mcp";
+import { appManageSchema } from "@homarr/validation/app";
 import { extractMcpToolsFromProcedures } from "@homarr/api/mcp";
 import type { McpMeta } from "../../../../../../packages/api/src/mcp-tools";
 
@@ -260,6 +261,63 @@ describe.each([false, true])("MCP argument dispatch (modern=%s)", (modern) => {
     expect(execution).toHaveBeenCalledWith({ count: 3 });
     expect((await call(handler, "defaults", {})).content).toEqual([{ type: "text", text: '{"count":3}' }]);
     expect((await call(handler, "none", {})).content).toEqual([{ type: "text", text: '{"absent":true}' }]);
+  });
+
+  test("accepts app inputs that tRPC normalizes before checking constraints", async () => {
+    const mutation = vi.fn((input: unknown) => input);
+    const router = trpc.router({ create: exposed.input(appManageSchema).mutation(({ input }) => mutation(input)) });
+    const { tools, diagnostics } = extractMcpToolsFromProcedures(router);
+    expect(diagnostics).toEqual([]);
+    const handler = createMcpProtocolHandler({
+      caller: router.createCaller({ user: "admin" }),
+      tools,
+      version: "test",
+      instructions: "test",
+      formatToolError: () => "Invalid input",
+    });
+    const argumentsValue = {
+      name: `${" ".repeat(64)}App `,
+      description: " description ",
+      iconUrl: " icon ",
+      href: null,
+      pingUrl: " https://example.com ",
+    };
+    expect((await call(handler, "create", argumentsValue)).isError).not.toBe(true);
+    expect(mutation).toHaveBeenCalledExactlyOnceWith({
+      name: "App",
+      description: "description",
+      iconUrl: "icon",
+      href: null,
+      pingUrl: "https://example.com",
+    });
+    expect((await call(handler, "create", { ...argumentsValue, pingUrl: " javascript:alert(1) " })).isError).toBe(true);
+    expect(mutation).toHaveBeenCalledTimes(1);
+  });
+
+  test("accepts Zod ISO timestamps without seconds while rejecting invalid dates", async () => {
+    const mutation = vi.fn((input: unknown) => input);
+    const router = trpc.router({
+      invite: exposed
+        .input(z.object({ expirationDate: z.iso.datetime({ offset: true }) }))
+        .mutation(({ input }) => mutation(input)),
+    });
+    const { tools, diagnostics } = extractMcpToolsFromProcedures(router);
+    expect(diagnostics).toEqual([]);
+    const handler = createMcpProtocolHandler({
+      caller: router.createCaller({ user: "admin" }),
+      tools,
+      version: "test",
+      instructions: "test",
+      formatToolError: () => "Invalid input",
+    });
+    for (const expirationDate of ["2026-12-01T18:00Z", "2026-12-01T19:00+01:00"]) {
+      expect((await call(handler, "invite", { expirationDate })).isError).not.toBe(true);
+      expect(mutation).toHaveBeenLastCalledWith({ expirationDate });
+    }
+    for (const expirationDate of ["2026-02-30T18:00Z", "not-a-date"]) {
+      expect((await call(handler, "invite", { expirationDate })).isError).toBe(true);
+    }
+    expect(mutation).toHaveBeenCalledTimes(2);
   });
 
   test("enforces tRPC permissions before executing mutations", async () => {
