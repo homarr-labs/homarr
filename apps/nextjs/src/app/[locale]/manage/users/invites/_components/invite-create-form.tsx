@@ -45,7 +45,7 @@ export const InviteCreateForm = ({ onClose }: InviteCreateFormProps) => {
       onSubmit={form.onSubmit((values) => {
         mutate(
           {
-            expirationDate: new Date(values.expirationDate),
+            expirationDate: new Date(values.expirationDate).toISOString(),
           },
           {
             onSuccess: (result) => {

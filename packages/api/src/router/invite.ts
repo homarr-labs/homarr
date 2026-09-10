@@ -56,7 +56,7 @@ export const inviteRouter = createTRPCRouter({
     .requiresPermission("admin")
     .input(
       z.object({
-        expirationDate: z.date(),
+        expirationDate: z.iso.datetime({ offset: true }),
       }),
     )
     .output(z.object({ id: z.string(), token: z.string() }))
@@ -80,7 +80,7 @@ export const inviteRouter = createTRPCRouter({
 
       await ctx.db.insert(invites).values({
         id,
-        expirationDate: input.expirationDate,
+        expirationDate: new Date(input.expirationDate),
         creatorId: ctx.session.user.id,
         token,
       });
