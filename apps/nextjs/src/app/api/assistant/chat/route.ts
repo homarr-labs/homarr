@@ -7,7 +7,7 @@ import { createUIMessageStream, createUIMessageStreamResponse, jsonSchema, stepC
 import { cookies } from "next/headers";
 import { z } from "zod/v4";
 
-import { createTRPCContext, mcpRouter } from "@homarr/api/mcp";
+import { callMcpTool, createTRPCContext, mcpRouter } from "@homarr/api/mcp";
 import {
   createAssistantGenerationAccessToken,
   getAssistantRequestContextEntitiesAsync,
@@ -547,19 +547,7 @@ export async function POST(request: Request) {
             }
             if (contextRequestKey !== null) loadedCustomWidgetContextRequests.add(contextRequestKey);
             try {
-              const procedure = mcpTool.pathInRouter.reduce<unknown>(
-                (current, segment) =>
-                  (typeof current === "object" || typeof current === "function") && current !== null
-                    ? (current as Record<string, unknown>)[segment]
-                    : undefined,
-                caller,
-              );
-              if (typeof procedure !== "function") {
-                throw new Error("Procedure not callable");
-              }
-              const result = await (procedure as (value: unknown) => Promise<unknown>)(
-                executionInput && Object.keys(executionInput as object).length > 0 ? executionInput : undefined,
-              );
+              const result = await callMcpTool(caller, mcpTool, executionInput);
               customWidgetDiscoveryPhase.observe(mcpTool.name, result);
               return toAssistantToolOutput(result, {
                 maxCharacters: getAssistantToolOutputMaxCharacters(mcpTool.name),

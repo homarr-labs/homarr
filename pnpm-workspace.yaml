@@ -123,6 +123,7 @@ catalog:
   adm-zip: 0.6.0
   acorn: ^8.16.0
   acorn-jsx: ^5.3.2
+  ajv: 8.18.0
   jszip: ^3.10.1
   sql.js: ^1.14.1
   babel-plugin-react-compiler: ^1.0.0
