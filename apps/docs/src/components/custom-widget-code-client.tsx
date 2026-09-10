@@ -1,5 +1,6 @@
+"use client";
+
 import { useState } from "react";
-import { useColorMode } from "@docusaurus/theme-common";
 import { MantineProvider, Select, Stack, Text } from "@mantine/core";
 /* oxlint-disable import/no-unassigned-import -- Mantine component styles intentionally load for side effects. */
 import "@mantine/core/styles.layer.css";
@@ -12,6 +13,7 @@ import {
 } from "@homarr/custom-widgets/core";
 import type { CustomWidgetEditorMessages } from "@homarr/custom-widgets/workbench";
 import { CustomWidgetCodeEditor, ReadOnlyCustomWidgetCode } from "@homarr/custom-widgets/workbench";
+import { useColorMode } from "@/hooks/use-color-mode";
 
 import type {
   CanonicalCustomWidgetExampleProps,

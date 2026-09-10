@@ -37,7 +37,7 @@
     },
     "@homarr/docs#build": {
       "inputs": ["$TURBO_DEFAULT$", "../../packages/definitions/src/docs/**"],
-      "outputs": ["build/**", ".docusaurus/**"]
+      "outputs": [".next/**", "!.next/cache/**", "out/**", "next-env.d.ts"]
     },
     "dev": {
       "persistent": true,

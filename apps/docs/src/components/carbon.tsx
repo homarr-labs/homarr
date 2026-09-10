@@ -1,9 +1,11 @@
-import { useLocation } from "@docusaurus/router";
+"use client";
+
+import { usePathname } from "next/navigation";
 import React, { useEffect } from "react";
 
 export function Carbon() {
   const ref = React.useRef<HTMLDivElement>(null!);
-  const location = useLocation();
+  const location = usePathname();
   if (process.env.NODE_ENV === "development") {
     return null;
   }

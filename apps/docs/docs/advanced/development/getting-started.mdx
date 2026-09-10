@@ -75,8 +75,8 @@ pnpm --filter @homarr/websocket dev
 The WebSocket service listens on port 3001. Production startup embeds both services, so these extra commands are
 only needed for development.
 
-Workshop contributors can set up PocketBase and Docusaurus with the dedicated
-[Workshop development guide](./workshop).
+Workshop contributors can set up PocketBase and Fumadocs with the dedicated
+[Workshop development guide](/docs/advanced/development/workshop).
 
 ### Useful commands
 
@@ -87,7 +87,7 @@ Workshop contributors can set up PocketBase and Docusaurus with the dedicated
 - `pnpm dev:cli -- build --pr <number>` — build a pull request from a temporary checkout.
 - `pnpm dev:cli -- rebuild <name>` — rebuild an image from its recorded checkout or pull request.
 - `pnpm dev:cli:install` — optionally install the developer CLI as a `homarr` binary.
-- `pnpm dev:docs` — Docusaurus only on port 3003.
+- `pnpm dev:docs` — Fumadocs on port 3003.
 - `pnpm docker:dev:up` — Redis development service in the background.
 - `pnpm cli` — Homarr operations CLI.
 - `pnpm db:migration:sqlite:run` — create or update a SQLite database.

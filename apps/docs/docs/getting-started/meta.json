@@ -1,0 +1,5 @@
+{
+  "title": "Getting started",
+  "defaultOpen": false,
+  "pages": ["index", "installation", "after-the-installation", "upgrade-v2", "glossary"]
+}

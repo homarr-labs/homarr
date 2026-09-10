@@ -1,0 +1,158 @@
+.section {
+  padding-block: clamp(3.5rem, 6vw, 5rem);
+  background: var(--muted);
+}
+
+.heading {
+  max-width: 46rem;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.heading h2 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+
+.map {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: clamp(4rem, 10vw, 9rem);
+  max-width: 50rem;
+  min-height: 16rem;
+  margin: 3rem auto 0;
+}
+
+.connections {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: 2.5;
+  stroke-dasharray: 8 10;
+  stroke-linecap: round;
+  animation: integration-flow 12s linear infinite;
+  opacity: 0.72;
+}
+
+.serviceColumn {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.service {
+  display: flex;
+  min-width: 8.5rem;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--card);
+  color: var(--foreground);
+  font-size: 0.8125rem;
+  font-weight: 650;
+}
+
+.leftColumn .service:last-child,
+.leftColumn .service:first-child {
+  transform: translateX(1.5rem);
+}
+
+.rightColumn .service:last-child,
+.rightColumn .service:first-child {
+  transform: translateX(-1.5rem);
+}
+
+.service img {
+  width: 2.5rem;
+  height: 2.5rem;
+  object-fit: contain;
+}
+
+.homarrNode {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  justify-items: center;
+  gap: 0.75rem;
+  font-size: 0.9375rem;
+}
+
+.logoShell {
+  display: grid;
+  width: 6.5rem;
+  height: 6.5rem;
+  place-items: center;
+  border: 2px solid color-mix(in srgb, var(--primary) 45%, var(--border));
+  border-radius: 1.5rem;
+  background: var(--card);
+  box-shadow: 0 0 0 0.5rem color-mix(in srgb, var(--primary) 9%, transparent);
+}
+
+@keyframes integration-flow {
+  to {
+    stroke-dashoffset: -72;
+  }
+}
+
+@media (max-width: 640px) {
+  .map {
+    gap: 1.5rem;
+    min-height: 15rem;
+    margin-top: 2.5rem;
+  }
+
+  .serviceColumn {
+    gap: 1.5rem;
+  }
+
+  .service {
+    min-width: 0;
+    justify-content: center;
+    padding: 0.625rem;
+  }
+
+  .service span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+
+  .leftColumn .service:first-child,
+  .leftColumn .service:last-child,
+  .rightColumn .service:first-child,
+  .rightColumn .service:last-child {
+    transform: none;
+  }
+
+  .logoShell {
+    width: 4.75rem;
+    height: 4.75rem;
+  }
+
+  .logoShell img {
+    width: 3.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .connections {
+    animation: none;
+  }
+}

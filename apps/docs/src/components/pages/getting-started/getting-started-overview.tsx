@@ -1,4 +1,4 @@
-import Link from "@docusaurus/Link";
+import Link from "next/link";
 import { IconArrowRight } from "@tabler/icons-react";
 
 import addItem from "@site/docs/getting-started/img/manage-board-header-choose-item.png";
@@ -34,13 +34,15 @@ const editingSteps = [
 
 export function GettingStartedOverview() {
   return (
-    <section className={styles.overview} aria-labelledby="getting-started-overview-title">
-      <header className={styles.intro}>
-        <h2 id="getting-started-overview-title">How Homarr works</h2>
-        <p>Services expose data, integrations connect to them, widgets use the data, and boards arrange the widgets.</p>
-      </header>
+    <div className={styles.overview}>
+      <section className={styles.conceptCard} aria-labelledby="getting-started-overview-title">
+        <div className={styles.intro}>
+          <h2 id="getting-started-overview-title">How Homarr works</h2>
+          <p>Services expose data, integrations connect to them, widgets use the data, and boards arrange the widgets.</p>
+        </div>
 
-      <ConceptFlow />
+        <ConceptFlow />
+      </section>
 
       <section className={styles.editor} aria-labelledby="board-editor-title">
         <div className={styles.editorHeading}>
@@ -48,7 +50,7 @@ export function GettingStartedOverview() {
             <h3 id="board-editor-title">Board edit mode</h3>
             <p>Add items, move them, and resize them on the grid. Each viewport can have its own layout.</p>
           </div>
-          <Link to="/docs/management/boards">
+          <Link href="/docs/management/boards">
             Board docs <IconArrowRight size={15} aria-hidden="true" />
           </Link>
         </div>
@@ -64,13 +66,13 @@ export function GettingStartedOverview() {
                 </div>
               </div>
               <div className={styles.stepMedia}>
-                <img src={step.image} alt={step.alt} data-fit={step.fit} loading="lazy" />
+                <img src={step.image.src} alt={step.alt} data-fit={step.fit} loading="lazy" />
               </div>
             </li>
           ))}
         </ol>
       </section>
-    </section>
+    </div>
   );
 }
 
@@ -93,7 +95,7 @@ const installationPaths = [
     eyebrow: "Platforms",
     title: "NAS and hosting guides",
     description: "Unraid, TrueNAS, Synology, Portainer, Proxmox, and more.",
-    href: "/docs/category/installation-1",
+    href: "/docs/getting-started/installation",
     recommended: false,
   },
 ];
@@ -106,7 +108,7 @@ export function InstallationPaths() {
         if (path.recommended) className = `${className} ${styles.recommendedPath}`;
 
         return (
-          <Link className={className} to={path.href} key={path.href}>
+          <Link className={className} href={path.href} key={path.href}>
             <span>{path.eyebrow}</span>
             <strong>{path.title}</strong>
             <small>{path.description}</small>
