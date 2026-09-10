@@ -17,7 +17,10 @@
 .canvas {
   position: absolute;
   inset: 0 auto auto 0;
+}
 
+.canvas,
+.contentScale {
   /*
    * Keep dashboard UI at its normal readable density while the fixed canvas
    * is fitted below 100%. Above 100%, the canvas still behaves like browser

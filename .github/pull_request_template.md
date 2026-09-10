@@ -10,7 +10,7 @@
 - [ ] Pull request targets the intended base branch (`dev` by default; `release/v2` for v2 release work)
 - [ ] Commits follow the [conventional commits guideline](https://www.conventionalcommits.org/en/v1.0.0/)
 - [ ] No shorthand variable names are used (for example, `x`, `y`, `i`, or abbreviations)
-- [ ] Changes to setup, usage, troubleshooting, or existing guidance include relevant documentation updates under `apps/docs` when needed
+- [ ] User-facing changes include matching documentation updates under `apps/docs`
 - [ ] When using AI, no temporary files are checked in and the code style follows the rest of the project
 
 **When contributing a new integration or widget:**

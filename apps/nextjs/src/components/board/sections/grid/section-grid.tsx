@@ -24,6 +24,7 @@ import {
   useBoardCanvasScale,
   useBoardContentScale,
 } from "~/components/board/layout/scaled-board-canvas";
+import canvasClasses from "~/components/board/layout/scaled-board-canvas.module.css";
 import { useGridEditorRuntimeStatus } from "./grid-editor-runtime";
 import { createGridEntryElementStore, useGridEditorRegistry } from "./grid-editor-registry";
 import type { SectionGridPlacement } from "./use-grid-layout-actions";
@@ -150,10 +151,16 @@ export const SectionGrid = ({
   const viewportRowCount =
     viewportRowCountOverride ?? (isScrollableContainer ? Math.max(requestedRowCount, 1) : rowCount);
   const effectiveCanvasScale = Number.isFinite(canvasScale) && canvasScale > 0 ? canvasScale : 1;
-  // The collapsible label keeps a fixed physical height while the grid uses logical canvas pixels.
-  // Convert that height so the label reserves the same space at every board scale.
+  let effectiveParentContentScale = effectiveCanvasScale;
+  if (Number.isFinite(parentContentScale) && parentContentScale > 0) {
+    effectiveParentContentScale = parentContentScale;
+  }
+  // Compensate every ancestor container while retaining the board's enlargement above 100%.
+  const parentUiScale =
+    (calculateBoardUiScale(effectiveCanvasScale) * effectiveCanvasScale) / effectiveParentContentScale;
+  // Match the label's Mantine height in its parent's logical coordinate system.
   const collapsibleHeaderInset =
-    section.kind === "container" && section.options.collapsible ? CONTAINER_HEADER_HEIGHT / effectiveCanvasScale : 0;
+    section.kind === "container" && section.options.collapsible ? CONTAINER_HEADER_HEIGHT * parentUiScale : 0;
   const fullGridWidth = getLogicalGridSize(columnCount);
   const fullGridHeight = getLogicalGridSize(rowCount);
   const logicalWidth = fullGridWidth;
@@ -178,7 +185,8 @@ export const SectionGrid = ({
   // both reads and writes --board-canvas-ui-scale (even indirectly, through another property)
   // is a circular reference - CSS invalidates the whole group rather than using "the old value",
   // silently breaking every icon/text/custom-CSS size that compensates off it for descendants.
-  const combinedUiScale = calculateBoardUiScale(canvasScale) / containerContentScale;
+  const combinedUiScale = parentUiScale / containerContentScale;
+  const contentScale = effectiveParentContentScale * containerContentScale;
   // A collapsed container's compact coordinates are display-only. Its own
   // nested grid stays inactive until an explicit edit interaction expands it.
   const isInteractionDisabled = section.kind === "container" && collapsedSectionIds.has(section.id);
@@ -288,21 +296,21 @@ export const SectionGrid = ({
         onKeyDownCapture={expandCollapsedSectionsForKeyboardEdit}
       >
         <Box
-          className={classes.staticGrid}
+          className={combineClasses(classes.staticGrid, canvasClasses.contentScale)}
           style={
             {
               width: fullGridWidth,
               height: fullGridHeight,
               zoom: containerContentScale,
               margin: containerContentScale < 1 ? "0 auto" : undefined,
-              ...(containerContentScale < 1 ? { "--board-canvas-ui-scale": combinedUiScale } : {}),
+              "--board-canvas-ui-scale": combinedUiScale,
             } as CSSProperties
           }
           data-grid-section-id={section.id}
           data-kind={section.kind}
           data-grid-editor-error={isEditMode && editorRuntimeStatus === "error" ? "true" : undefined}
         >
-          <BoardContentScaleProvider value={parentContentScale * containerContentScale}>
+          <BoardContentScaleProvider value={contentScale}>
             <SectionContent />
           </BoardContentScaleProvider>
         </Box>

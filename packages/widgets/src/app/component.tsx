@@ -1,6 +1,6 @@
 "use client";
 
-import type { PropsWithChildren } from "react";
+import type { CSSProperties, PropsWithChildren } from "react";
 import { Fragment, Suspense } from "react";
 import { Box, Flex, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
 import { IconMinus } from "@tabler/icons-react";
@@ -48,6 +48,22 @@ export default function AppWidget({
   const textSize = `${14 * contentScale}px`;
   const spacing = 12 * contentScale;
   const isColumnLayout = options.layout.startsWith("column");
+  const isTiny = Math.min(width, height) * scale < 100;
+  const textStyle: CSSProperties = {};
+  let titleLineClamp: number | undefined;
+  let descriptionLineClamp = 4;
+  if (isColumnLayout) textStyle.flexShrink = 0;
+  if (isTiny) {
+    titleLineClamp = 2;
+    descriptionLineClamp = 2;
+    textStyle.flexShrink = 1;
+    textStyle.maxWidth = "50%";
+    textStyle.maxHeight = "100%";
+    if (isColumnLayout) {
+      textStyle.maxWidth = "100%";
+      textStyle.maxHeight = "50%";
+    }
+  }
 
   return (
     <Box h="100%" w="100%" pos="relative">
@@ -66,16 +82,12 @@ export default function AppWidget({
             style={{ padding: spacing, gap: isColumnLayout ? 0 : spacing / 2 }}
             onContextMenu={isEditMode ? (e) => e.preventDefault() : undefined}
           >
-            <Stack
-              gap={0}
-              className={classes.appText}
-              style={{ maxWidth: isColumnLayout ? "100%" : "50%", maxHeight: isColumnLayout ? "50%" : "100%" }}
-            >
+            <Stack gap={0} className={classes.appText} style={textStyle}>
               {options.showTitle && (
                 <Text
                   className="app-title"
                   fw={700}
-                  lineClamp={2}
+                  lineClamp={titleLineClamp}
                   style={{ fontSize: textSize }}
                   ta={isColumnLayout ? "center" : undefined}
                 >
@@ -88,7 +100,7 @@ export default function AppWidget({
                   style={{ fontSize: textSize }}
                   ta={isColumnLayout ? "center" : undefined}
                   c="dimmed"
-                  lineClamp={2}
+                  lineClamp={descriptionLineClamp}
                 >
                   {app.description?.split("\n").map((line, index) => (
                     <Fragment key={index}>

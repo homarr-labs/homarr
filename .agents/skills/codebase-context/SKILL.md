@@ -37,4 +37,4 @@ Orient from the current checkout before editing. Treat package manifests, export
 - Cron jobs: `packages/cron-jobs/src/jobs/`
 - App routes: `apps/nextjs/src/app/[locale]/`
 
-When a change affects setup, usage, troubleshooting, or the accuracy of existing docs, invoke `documentation-sync`. When exposing tRPC through MCP, invoke `mcp-integration`.
+When a code change affects users, invoke `documentation-sync`. When exposing tRPC through MCP, invoke `mcp-integration`.

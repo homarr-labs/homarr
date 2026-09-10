@@ -31,6 +31,9 @@ Tiles use fixed `200 × 200` logical-pixel cells with a `24px` gap. Homarr scale
 width instead of changing each widget's proportions. **Reset from Base** regenerates a Mobile or custom layout from the
 current Base layout.
 
+Widgets choose compact layouts from their visible size, including scaling inside nested Containers. Text and controls
+retain readable sizing as the board shrinks; opening a widget's advanced view uses the available space in that view.
+
 ### Containers and rails
 
 A **Container** groups apps, widgets, and nested Containers. It can have a label, collapse control, app-opening action,
