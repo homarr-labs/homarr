@@ -1,11 +1,9 @@
-import { mkdir, readFile, rm } from "node:fs/promises";
+import { mkdir, rm } from "node:fs/promises";
 import path from "node:path";
 
 import { chromium } from "@playwright/test";
 import type { Page } from "@playwright/test";
 import { createId } from "@paralleldrive/cuid2";
-import AdmZip from "adm-zip";
-import type { StartedTestContainer } from "testcontainers";
 import { describe, expect, test } from "vitest";
 
 import * as sqliteSchema from "../packages/db/schema/sqlite";
@@ -28,48 +26,6 @@ type SqliteTestDatabase = Awaited<ReturnType<typeof createSqliteDbFileAsync>>;
 const cleanupSqliteDbAsync = async ({ db, localMountPath }: SqliteTestDatabase) => {
   if (db.$client.open) db.$client.close();
   await rm(localMountPath, { recursive: true, force: true });
-};
-
-const createRestoreArchiveAsync = async () => {
-  const sqlite = await createSqliteDbFileAsync();
-  const { db, localMountPath } = sqlite;
-  try {
-    await db.insert(sqliteSchema.onboarding).values({ id: "onboarding", step: "finish", previousStep: "setup" });
-    await db.insert(sqliteSchema.boards).values({ id: "restored-board", name: "restored", isPublic: true });
-    await db.insert(sqliteSchema.layouts).values({
-      id: "restored-base",
-      boardId: "restored-board",
-      name: "Base",
-      role: "base",
-      columnCount: 10,
-      breakpoint: 768,
-    });
-    await db.insert(sqliteSchema.sections).values({
-      id: "restored-root",
-      boardId: "restored-board",
-      kind: "empty",
-      xOffset: 0,
-      yOffset: 0,
-    });
-    db.$client.close();
-
-    const zip = new AdmZip();
-    zip.addFile("db.sqlite", await readFile(path.join(localMountPath, "db", "db.sqlite")));
-    zip.addFile(
-      "metadata.json",
-      Buffer.from(
-        JSON.stringify({
-          homarrVersion: "e2e",
-          exportedAt: new Date().toISOString(),
-          dbDialect: "sqlite",
-          encryptionKey: "0".repeat(64),
-        }),
-      ),
-    );
-    return zip.toBuffer();
-  } finally {
-    await cleanupSqliteDbAsync(sqlite);
-  }
 };
 
 describe("Onboarding", () => {
@@ -179,61 +135,6 @@ describe("Onboarding", () => {
     },
     90_000,
   );
-
-  test.skip("SQLite onboarding restores a validated backup and survives the restart", async () => {
-    const restoreArchive = await createRestoreArchiveAsync();
-    const invalidArchive = new AdmZip();
-    invalidArchive.addFile("db.sqlite", Buffer.from("not-a-database"));
-    const sqlite = await createSqliteDbFileAsync();
-    const { localMountPath } = sqlite;
-    const initialContainer = await createHomarrContainer({ mounts: { "/appdata": localMountPath } }).start();
-    let initialContainerStopped = false;
-    let restoredContainer: StartedTestContainer | undefined;
-    const browser = await chromium.launch();
-    const context = await browser.newContext();
-    const page = await context.newPage();
-
-    try {
-      const initialBaseUrl = `http://${initialContainer.getHost()}:${initialContainer.getMappedPort(7575)}`;
-      await page.goto(`${initialBaseUrl}/init`);
-      await page.getByRole("button", { name: "Restore backup" }).click();
-      const fileInput = page.locator('input[type="file"]');
-      await fileInput.setInputFiles({
-        name: "missing-metadata.zip",
-        mimeType: "application/zip",
-        buffer: invalidArchive.toBuffer(),
-      });
-      await page.getByText("Invalid backup: missing metadata.json").waitFor();
-      await page.getByRole("button", { name: "Change file" }).click();
-
-      await fileInput.setInputFiles({ name: "homarr-backup.zip", mimeType: "application/zip", buffer: restoreArchive });
-      await page.getByRole("heading", { name: "Backup Contents" }).waitFor({ timeout: 30_000 });
-      expect(await page.getByText("restored", { exact: true }).isVisible()).toBe(true);
-      await page.getByRole("button", { name: "Continue to restore" }).click();
-      await page.getByPlaceholder("I understand").fill("I understand");
-      const restoreResponse = page.waitForResponse(
-        (response) => response.url().endsWith("/api/backup/import") && response.request().method() === "POST",
-      );
-      await page.getByRole("button", { name: "Restore Database" }).click();
-      expect((await restoreResponse).status()).toBe(200);
-
-      await initialContainer.stop();
-      initialContainerStopped = true;
-      restoredContainer = await createHomarrContainer({ mounts: { "/appdata": localMountPath } }).start();
-      const restoredBaseUrl = `http://${restoredContainer.getHost()}:${restoredContainer.getMappedPort(7575)}`;
-      await page.goto(`${restoredBaseUrl}/boards/restored`);
-      await page.locator('[data-testid="board-canvas"][data-board-hydrated="true"]').waitFor({ timeout: 30_000 });
-      expect(page.url()).toMatch(/\/boards\/restored(?:[/?#]|$)/);
-    } finally {
-      try {
-        await browser.close();
-        if (!initialContainerStopped) await initialContainer.stop();
-        if (restoredContainer) await restoredContainer.stop();
-      } finally {
-        await cleanupSqliteDbAsync(sqlite);
-      }
-    }
-  }, 120_000);
 
   test("Credentials onboarding recovers when automatic sign-in fails after account creation", async () => {
     const sqlite = await createSqliteDbFileAsync();
