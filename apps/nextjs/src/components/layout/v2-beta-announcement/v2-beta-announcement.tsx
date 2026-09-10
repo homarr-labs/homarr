@@ -127,12 +127,9 @@ const V2BetaAnnouncementModal = createModal<V2BetaAnnouncementModalProps>(({ inn
         <Stack gap="sm" maw={760}>
           <Title order={2}>Help us get Homarr v2 ready</Title>
           <Text>
-            We&apos;ve been working on Homarr&apos;s v2 update for a while now. There is no fixed release date yet, it
-            will be ready when it&apos;s ready. We{" "}
-            <Text span inherit fw={700}>
-              need your help
-            </Text>{" "}
-            and feedback to help us become confident enough to release it for everyone.
+            We&apos;ve been working on Homarr&apos;s biggest update for a while now. There is no fixed release date yet,
+            it will be ready when it&apos;s ready, and we need your help and feedback to help us become confident enough
+            to make the switch for everyone.
           </Text>
         </Stack>
       </Paper>
