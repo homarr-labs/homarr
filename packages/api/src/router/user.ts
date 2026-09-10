@@ -497,6 +497,13 @@ export const userRouter = createTRPCRouter({
       mcp: { enabled: true, description: "Delete a user by ID. REQUIRED: userId (string)" },
     })
     .mutation(async ({ input, ctx }) => {
+      if (isDemoMode) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "User deletion is disabled in demo mode",
+        });
+      }
+
       // Only admins and user itself can delete a user
       if (ctx.session.user.id !== input.userId && !ctx.session.user.permissions.includes("admin")) {
         throw new TRPCError({
@@ -519,6 +526,13 @@ export const userRouter = createTRPCRouter({
       },
     })
     .mutation(async ({ ctx, input }) => {
+      if (isDemoMode) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Password changes are disabled in demo mode",
+        });
+      }
+
       const user = ctx.session.user;
       // Only admins can change other users' passwords
       if (!user.permissions.includes("admin") && user.id !== input.userId) {
