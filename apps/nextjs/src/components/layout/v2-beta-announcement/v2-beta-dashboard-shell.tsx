@@ -8,14 +8,12 @@ import { ClientShell } from "../shell";
 import { V2BetaAnnouncement } from "./v2-beta-announcement";
 
 interface V2BetaDashboardShellProps {
-  canExportBackup: boolean;
   dismissalCookieName: string;
   initiallyDismissed: boolean;
   header: ReactNode;
 }
 
 export const V2BetaDashboardShell = ({
-  canExportBackup,
   dismissalCookieName,
   initiallyDismissed,
   header,
@@ -29,7 +27,6 @@ export const V2BetaDashboardShell = ({
       <AppShellHeader maw="100vw" zIndex={201} style={{ overflowX: "hidden" }}>
         {isAnnouncementVisible && (
           <V2BetaAnnouncement
-            canExportBackup={canExportBackup}
             dismissalCookieName={dismissalCookieName}
             onDismiss={() => setIsAnnouncementVisible(false)}
           />
