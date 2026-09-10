@@ -43,7 +43,7 @@ async function importCookiesAsync() {
 
 function getBaseUrl() {
   if (typeof window !== "undefined") return window.location.origin;
-  return `http://${process.env.HOSTNAME ?? "localhost"}:3000`;
+  return "http://127.0.0.1:3000";
 }
 
 export const trpcPath = "/api/trpc";

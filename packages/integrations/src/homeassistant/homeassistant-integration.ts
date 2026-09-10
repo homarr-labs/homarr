@@ -134,7 +134,10 @@ export class HomeAssistantIntegration extends Integration implements ISmartHomeI
    */
   private async postAsync(path: `/api/${string}`, body: Record<string, string>) {
     return await fetchWithTrustedCertificatesAsync(this.url(path), {
-      headers: this.getAuthHeaders(),
+      headers: {
+        ...this.getAuthHeaders(),
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(body),
       method: "POST",
     });

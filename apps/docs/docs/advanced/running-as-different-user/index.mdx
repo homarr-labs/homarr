@@ -13,7 +13,8 @@ You can change the user and group by using the `PUID` and `PGID` environment var
 Important to note is, that you'll also need to change the permissions for the mounted directories accordingly.
 
 :::info
-When starting up an updated version of the container it will have about **10 seconds longer to start** as it has to change the permissions of the app directories
+At startup, Homarr updates ownership of its data directories and runtime caches for the selected user and group.
+Startup time depends on the amount of persistent data; application code and dependencies do not need ownership changes.
 :::
 
 ## Without mounted Docker socket

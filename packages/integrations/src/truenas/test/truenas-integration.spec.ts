@@ -158,6 +158,8 @@ const happyResponder = (method: string) => {
       ];
     case "pool.query":
       return [{ name: "tank", status: "ONLINE", healthy: true, free: 500, size: 1000, allocated: 500 }];
+    case "pool.dataset.query":
+      return [{ id: "tank", used: { parsed: 500 }, available: { parsed: 500 } }];
     case "interface.query":
       return [{ id: "eth0", name: "eth0" }];
     case "reporting.netdata_get_data":
@@ -214,7 +216,7 @@ describe("TrueNasIntegration", () => {
       loadAverage: null,
       gpu: [],
       network: { up: 20_000, down: 10_000 },
-      // `available` is the free space left on the pool (free = 500), not its total size.
+      // `available` is the usable free space of the root dataset, not the total pool size.
       fileSystem: [{ deviceName: "tank", available: "500", used: "500", percentage: 50 }],
       smart: [{ deviceName: "tank", healthy: true, overallStatus: "ONLINE", temperature: null }],
     });
@@ -236,9 +238,13 @@ describe("TrueNasIntegration", () => {
       expect([...gates.keys()]).toEqual(["system.info", "reporting.get_data", "pool.query", "interface.query"]);
     });
     expect(gates.has("reporting.netdata_get_data")).toBe(false);
+    expect(gates.has("pool.dataset.query")).toBe(false);
 
     gates.get("interface.query")?.resolve(happyResponder("interface.query"));
     await vi.waitFor(() => expect(gates.has("reporting.netdata_get_data")).toBe(true));
+
+    gates.get("pool.query")?.resolve(happyResponder("pool.query"));
+    await vi.waitFor(() => expect(gates.has("pool.dataset.query")).toBe(true));
 
     for (const [method, gate] of gates) gate.resolve(happyResponder(method));
 
