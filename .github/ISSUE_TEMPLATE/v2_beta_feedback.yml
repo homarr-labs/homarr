@@ -41,7 +41,7 @@ body:
     attributes:
       label: Affected page, feature, or widget
       description: Name the exact page, widget, integration, container, sidebar, or action involved.
-      placeholder: "Board editor: moving a widget into a container"
+      placeholder: Board editor — moving a widget into a container
     validations:
       required: true
 

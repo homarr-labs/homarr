@@ -11,13 +11,14 @@
 .banner::after {
   position: absolute;
   z-index: -1;
-  right: -0.35rem;
-  bottom: -1.75rem;
+  top: -1.75rem;
+  right: 12%;
   color: rgb(255 255 255 / 9%);
   font-size: 5.5rem;
   font-weight: 900;
   line-height: 1;
   content: "v2";
+  transform: rotate(5deg);
 }
 
 .copy {
@@ -39,18 +40,14 @@
 .modalHero::after {
   position: absolute;
   z-index: -1;
-  right: -0.75rem;
-  bottom: -3.25rem;
+  top: -3.5rem;
+  right: 1.5rem;
   color: rgb(255 255 255 / 8%);
   font-size: 12rem;
   font-weight: 900;
   line-height: 1;
   content: "v2";
-}
-
-.featureCard {
-  height: 100%;
-  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+  transform: rotate(5deg);
 }
 
 .diffViewer {
@@ -91,4 +88,14 @@
 .diffLine_removed {
   color: light-dark(var(--mantine-color-red-9), var(--mantine-color-red-3));
   background: light-dark(var(--mantine-color-red-0), rgb(250 82 82 / 15%));
+}
+
+@media (max-width: $mantine-breakpoint-xs) {
+  .banner::after {
+    right: 35%;
+  }
+
+  .modalHero::after {
+    right: -2rem;
+  }
 }

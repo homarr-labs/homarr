@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { useState } from "react";
 import {
   ActionIcon,
   Accordion,
@@ -18,7 +19,6 @@ import {
 } from "@mantine/core";
 import {
   IconArrowsMove,
-  IconBook2,
   IconBrandCss3,
   IconBrandDiscord,
   IconBrandGithub,
@@ -38,15 +38,7 @@ import { setClientCookie } from "@homarr/common";
 import { createModal, useModalAction } from "@homarr/modals";
 
 import { BackupExportButton } from "~/components/backup";
-import {
-  discordInviteUrl,
-  v2BetaBlogUrl,
-  v2BetaDiscussionUrl,
-  v2BetaDocsUrl,
-  v2BetaFeedbackUrl,
-  v2BetaPreviewUrl,
-  v2BetaWorkshopUrl,
-} from "./constants";
+import { discordInviteUrl, v2BetaBlogUrl, v2BetaDiscussionUrl, v2BetaFeedbackUrl, v2BetaPreviewUrl } from "./constants";
 import classes from "./v2-beta-announcement.module.css";
 
 const diffLineClassNames = {
@@ -137,35 +129,37 @@ interface V2BetaAnnouncementModalProps {
 }
 
 const V2BetaAnnouncementModal = createModal<V2BetaAnnouncementModalProps>(({ innerProps }) => {
+  const [openedSection, setOpenedSection] = useState<string | null>("workshop");
+
   return (
     <Stack gap="lg">
       <Paper className={classes.modalHero} p={{ base: "lg", sm: "xl" }} radius="md">
         <Stack gap="sm" maw={760}>
           <Title order={2}>Help us get Homarr v2 ready</Title>
           <Text>
-            There is no release date yet. Homarr v2 will become the default when it is ready, and we need you to test it
+            There is no release date yet. Homarr v2 will become the default when it is ready—and we need you to test it
             and share feedback before we can be confident enough to make that switch.
           </Text>
         </Stack>
       </Paper>
 
-      <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
-        <FeatureCard icon={<IconBrandCss3 size={21} />} title="Homarr Workshop">
+      <Accordion variant="separated" radius="md" value={openedSection} onChange={setOpenedSection}>
+        <FeatureAccordionItem value="workshop" icon={<IconBrandCss3 size={20} />} title="Homarr Workshop">
           Share and discover Custom Widgets and CSS made by the Homarr community.
-        </FeatureCard>
-        <FeatureCard icon={<IconArrowsMove size={21} />} title="Complete drag-and-drop rewrite">
+        </FeatureAccordionItem>
+        <FeatureAccordionItem
+          value="drag-and-drop"
+          icon={<IconArrowsMove size={20} />}
+          title="Complete drag-and-drop rewrite"
+        >
           Move, resize, multi-select, and arrange your dashboard with a board editor rebuilt from the ground up.
-        </FeatureCard>
-        <FeatureCard icon={<IconWand size={21} />} title="Custom Widgets v2">
+        </FeatureAccordionItem>
+        <FeatureAccordionItem value="custom-widgets" icon={<IconWand size={20} />} title="Custom Widgets v2">
           We think you can make almost any widget with live previews, API requests, options, actions, and validation.
-        </FeatureCard>
-        <FeatureCard icon={<IconRobot size={21} />} title="Homarr Assistant">
-          Homarr Assistant can directly make a Custom Widget for you. Try giving it the API docs for your latest
-          selfhosted tool and asking it to build a custom widget for it.
-        </FeatureCard>
-      </SimpleGrid>
-
-      <Accordion variant="separated" radius="md">
+        </FeatureAccordionItem>
+        <FeatureAccordionItem value="assistant" icon={<IconRobot size={20} />} title="Homarr Assistant">
+          Ask questions, find what you need, and manage Homarr through permission-aware tools.
+        </FeatureAccordionItem>
         <Accordion.Item value="installation">
           <Accordion.Control
             icon={
@@ -186,18 +180,6 @@ const V2BetaAnnouncementModal = createModal<V2BetaAnnouncementModalProps>(({ inn
             <V2BetaInstallInstructions canExportBackup={innerProps.canExportBackup} />
           </Accordion.Panel>
         </Accordion.Item>
-        <FaqAccordionItem value="current-data" title="Can I use my current Homarr data?">
-          Use the separate <code>homarr-v2</code> volume shown in the example. Keep your current volume untouched so you
-          can return to your current Homarr instance.
-        </FaqAccordionItem>
-        <FaqAccordionItem value="release-date" title="When will Homarr v2 be released?">
-          There is no release date yet. V2 will become the default when it is ready, after enough testing and feedback
-          gives us confidence in the release.
-        </FaqAccordionItem>
-        <FaqAccordionItem value="feedback" title="What makes a useful feedback report?">
-          Tell us exactly what happened and what you expected instead. Add screenshots or a recording, your resolution
-          and browser zoom, board column count, device, browser, and exact reproduction steps whenever possible.
-        </FaqAccordionItem>
       </Accordion>
 
       <Alert variant="light" color="red" icon={<IconHeartHandshake size={22} />} title="Your testing is essential">
@@ -215,28 +197,6 @@ const V2BetaAnnouncementModal = createModal<V2BetaAnnouncementModalProps>(({ inn
           leftSection={<IconRocket size={18} />}
         >
           Try the hosted preview
-        </Button>
-        <Button
-          component="a"
-          href={v2BetaWorkshopUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          variant="light"
-          size="md"
-          leftSection={<IconBrandCss3 size={18} />}
-        >
-          Open Homarr Workshop
-        </Button>
-        <Button
-          component="a"
-          href={v2BetaDocsUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          variant="default"
-          size="md"
-          leftSection={<IconBook2 size={18} />}
-        >
-          Read the v2 docs
         </Button>
         <Button
           component="a"
@@ -260,17 +220,6 @@ const V2BetaAnnouncementModal = createModal<V2BetaAnnouncementModalProps>(({ inn
         >
           Join us on Discord
         </Button>
-        <Button
-          component="a"
-          href={v2BetaDiscussionUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          variant="default"
-          size="md"
-          rightSection={<IconExternalLink size={15} />}
-        >
-          Follow v2 development
-        </Button>
       </SimpleGrid>
 
       <Button
@@ -285,6 +234,23 @@ const V2BetaAnnouncementModal = createModal<V2BetaAnnouncementModalProps>(({ inn
       >
         Report anything that breaks or feels wrong
       </Button>
+
+      <Group justify="space-between" align="center">
+        <Text c="dimmed" size="xs" maw={720}>
+          Please use a separate volume for the beta and keep a backup of your current Homarr data.
+        </Text>
+        <Button
+          component="a"
+          href={v2BetaDiscussionUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          variant="subtle"
+          size="compact-sm"
+          rightSection={<IconExternalLink size={15} />}
+        >
+          Follow v2 development
+        </Button>
+      </Group>
     </Stack>
   );
 }).withOptions({
@@ -299,6 +265,11 @@ interface V2BetaInstallInstructionsProps {
 
 const V2BetaInstallInstructions = ({ canExportBackup }: V2BetaInstallInstructionsProps) => (
   <Stack gap="lg">
+    <Alert color="yellow" title="Keep your current Homarr data safe">
+      Run the beta with the separate <code>homarr-v2</code> volume shown below. Keep a backup, and do not point this
+      prerelease image at the only copy of your production data.
+    </Alert>
+
     {canExportBackup ? (
       <Paper withBorder p="md" radius="md">
         <Stack gap="sm">
@@ -365,47 +336,31 @@ const V2BetaInstallInstructions = ({ canExportBackup }: V2BetaInstallInstruction
   </Stack>
 );
 
-interface FeatureCardProps {
+interface FeatureAccordionItemProps {
+  value: string;
   icon: ReactNode;
   title: string;
   children: ReactNode;
 }
 
-const FeatureCard = ({ icon, title, children }: FeatureCardProps) => (
-  <Paper className={classes.featureCard} withBorder p="md" radius="md">
-    <Group gap="sm" align="flex-start" wrap="nowrap">
-      <ThemeIcon variant="light" color="red" radius="md" size="lg">
-        {icon}
-      </ThemeIcon>
-      <Box>
-        <Text fw={750} size="sm">
-          {title}
-        </Text>
+const FeatureAccordionItem = ({ value, icon, title, children }: FeatureAccordionItemProps) => (
+  <Accordion.Item value={value}>
+    <Accordion.Control
+      icon={
+        <ThemeIcon variant="light" color="red" radius="md" size="lg">
+          {icon}
+        </ThemeIcon>
+      }
+      aria-label={title}
+    >
+      <Text fw={750}>{title}</Text>
+    </Accordion.Control>
+    <Accordion.Panel>
+      <Box pl={48}>
         <Text c="dimmed" size="sm">
           {children}
         </Text>
       </Box>
-    </Group>
-  </Paper>
-);
-
-interface FaqAccordionItemProps {
-  value: string;
-  title: string;
-  children: ReactNode;
-}
-
-const FaqAccordionItem = ({ value, title, children }: FaqAccordionItemProps) => (
-  <Accordion.Item value={value}>
-    <Accordion.Control aria-label={title}>
-      <Text fw={700} size="sm">
-        {title}
-      </Text>
-    </Accordion.Control>
-    <Accordion.Panel>
-      <Text c="dimmed" size="sm">
-        {children}
-      </Text>
     </Accordion.Panel>
   </Accordion.Item>
 );
