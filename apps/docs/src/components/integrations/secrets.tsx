@@ -1,8 +1,7 @@
 import { IconCode, IconKey, IconKeyOff, IconLink, IconPassword, IconPlug, IconUser } from "@tabler/icons-react";
-import TabItem from "@theme/TabItem";
-import Tabs from "@theme/Tabs";
 import { ReactNode } from "react";
-import Alert from "@theme/Admonition";
+import Alert from "@/components/mdx/admonition";
+import Tabs, { TabItem } from "@/components/mdx/legacy-tabs";
 
 const secretKinds = {
   apiKey: {
@@ -98,8 +97,8 @@ export const IntegrationSecrets = ({ secrets }: IntegrationSecretsProps) => {
     <div className="flex flex-col gap-4 mt-6 w-full">
       <div className="flex gap-6 rounded-xl border border-solid dark:border-[#333] border-[#e5e7eb] shadow-sm w-full items-center justify-between [&>*]:w-full">
         <Tabs className="[&>li]:w-full [&>li]:justify-center">
-          {secrets.map((secret) => {
-            const key = secret.credentials.join("-");
+          {secrets.map((secret, index) => {
+            const key = secret.credentials.join("-") || `no-authentication-${index}`;
             const Icon =
               secret.credentials.map((value) => secretKinds[value]).find((value) => "icon" in value)?.icon ||
               IconKeyOff;

@@ -1,0 +1,4 @@
+{
+  "title": "Command line interface",
+  "pages": ["index", "users", "integrations", "password-recovery", "fix-usernames", "development"]
+}

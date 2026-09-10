@@ -1,5 +1,5 @@
-import BrowserOnly from "@docusaurus/BrowserOnly";
-import useBaseUrl from "@docusaurus/useBaseUrl";
+"use client";
+
 import { useEffect, useMemo, useState } from "react";
 
 import { buildCustomJsxComponentUsageExample } from "@homarr/custom-widgets/catalog-example";
@@ -19,9 +19,7 @@ type CatalogProp = CustomJsxPropDescriptor;
 const PAGE_SIZE = 40;
 
 export function CustomJsxComponentReference() {
-  return (
-    <BrowserOnly fallback={<ComponentReferenceFallback />}>{() => <CustomJsxComponentReferenceClient />}</BrowserOnly>
-  );
+  return <CustomJsxComponentReferenceClient />;
 }
 
 function ComponentReferenceFallback() {
@@ -33,7 +31,7 @@ function ComponentReferenceFallback() {
 }
 
 function CustomJsxComponentReferenceClient() {
-  const catalogUrl = useBaseUrl("/custom-widgets/component-catalog-v1.json");
+  const catalogUrl = "/custom-widgets/component-catalog-v1.json";
   const [catalog, setCatalog] = useState<ComponentCatalog | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [query, setQuery] = useState("");

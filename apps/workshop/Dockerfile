@@ -20,6 +20,7 @@ RUN mkdir -p /corepack && corepack enable pnpm && corepack install --global pnpm
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json turbo.json ./
 COPY patches ./patches
 COPY apps/docs ./apps/docs
+COPY packages/common ./packages/common
 COPY packages/custom-widgets ./packages/custom-widgets
 COPY packages/definitions ./packages/definitions
 COPY packages/workshop ./packages/workshop
@@ -55,7 +56,7 @@ ARG WORKSHOP_WEB_URL=https://homarr.dev/workshop
 ENV HOMARR_WEBSITE_URL=$HOMARR_WEBSITE_URL
 ENV WORKSHOP_API_URL=$WORKSHOP_API_URL
 ENV WORKSHOP_WEB_URL=$WORKSHOP_WEB_URL
-COPY --from=website /app/apps/docs/build /pb_public
+COPY --from=website /app/apps/docs/out /pb_public
 COPY apps/workshop/pb_migrations /pb_migrations
 COPY apps/workshop/pb_hooks /pb_hooks
 RUN chown -R pocketbase:pocketbase /pb_hooks /pb_migrations /pb_public

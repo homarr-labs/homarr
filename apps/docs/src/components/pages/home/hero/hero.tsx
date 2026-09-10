@@ -1,67 +1,55 @@
-import Link from "@docusaurus/Link";
-import { translate } from "@docusaurus/Translate";
 import { IconDownload, IconExternalLink } from "@tabler/icons-react";
 import clsx from "clsx";
+import Link from "@/components/mdx/link";
 import styles from "../../../../pages/index.module.css";
 import { HeroCards } from "./hero-cards";
 
 export default function HomeHero() {
   return (
-    <header className={clsx("hero hero--primary", styles.heroBanner, styles.hero)}>
+    <header className={clsx(styles.heroBanner, styles.hero)}>
       <div className={styles.heroContent}>
         <div className={styles.heroCopy}>
-          <h1 className={clsx("font-extrabold lg:text-7xl text-3xl", styles.heroTitle)}>
+          <h1 className={styles.heroTitle}>
             A simple, yet
             <br />
             powerful dashboard
             <br />
             for your server.
           </h1>
-          <p className={"lg:text-2xl text-base"}>
+          <p className={styles.heroDescription}>
             A sleek, modern dashboard that puts all of your apps and services at your fingertips. Control everything in
             one convenient location. Seamlessly integrates with the apps you've added, providing you with valuable
             information.
           </p>
 
           <div className={styles.heroActions}>
-            <Link
-              data-attr="Install button"
-              className={"button button--secondary button--lg rounded-3xl dark:border-zinc-600 dark:bg-zinc-800"}
-              to="/docs/getting-started"
-            >
-              <div className={"flex items-center gap-3"}>
-                <span className={"dark:text-gray-200"}>Install</span>
-                <IconDownload className={"dark:text-gray-200"} size={20} />
-              </div>
+            <Link data-attr="Install button" className={styles.heroButton} to="/docs/getting-started">
+              <span>Install</span>
+              <IconDownload aria-hidden="true" size={20} />
             </Link>
             <Link
               data-attr="Try demo button"
-              className={"button button--secondary button--lg rounded-3xl dark:border-zinc-600 dark:bg-zinc-800"}
+              className={styles.heroButton}
               to="https://demo.homarr.dev/"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <div className={"flex items-center gap-3"}>
-                <span className={"dark:text-gray-200"}>Try Demo</span>
-                <IconExternalLink className={"dark:text-gray-200"} size={20} />
-              </div>
+              <span>Try Demo</span>
+              <IconExternalLink aria-hidden="true" size={20} />
             </Link>
             <Link
               data-attr="Redirect to PikaPods"
-              className={`button bg-neutral-900 button--lg rounded-3xl dark:border-zinc-600 dark:bg-zinc-800`}
+              className={clsx(styles.heroButton, styles.partnerButton)}
               to="https://www.pikapods.com/pods?run=homarr-v1"
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              <div className={"flex items-center gap-5"}>
-                <img src={"/img/pictures/partner/pika-pods.svg"} alt={"Pika Pods logo"} height={20} />
-                <span className={"dark:text-gray-200"}>Host from $2.3/month</span>
-              </div>
+              <img src="/img/pictures/partner/pika-pods.svg" alt="PikaPods" height={20} />
+              <span>Host from $2.3/month</span>
             </Link>
           </div>
         </div>
-        <section
-          className={clsx(styles.heroPreview, "hover-animation")}
-          aria-label={translate({ id: "homepage.preview.label", message: "Example Homarr dashboard" })}
-        >
+        <section className={clsx(styles.heroPreview, "hover-animation")} aria-label="Example Homarr dashboard">
           <HeroCards />
         </section>
       </div>

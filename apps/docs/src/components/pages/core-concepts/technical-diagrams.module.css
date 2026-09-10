@@ -1,9 +1,9 @@
 .diagram {
-  --diagram-ink: var(--ifm-font-color-base);
-  --diagram-muted: var(--ifm-color-emphasis-700);
-  --diagram-panel: var(--ifm-background-surface-color);
-  --diagram-surface: var(--ifm-background-color);
-  --diagram-line: var(--ifm-color-emphasis-300);
+  --diagram-ink: var(--color-fd-foreground);
+  --diagram-muted: var(--color-fd-muted-foreground);
+  --diagram-panel: var(--color-fd-card);
+  --diagram-surface: var(--color-fd-background);
+  --diagram-line: var(--color-fd-border);
   display: grid;
   gap: 0.9rem;
   margin: 1.25rem 0 1.75rem;
@@ -34,7 +34,7 @@
 .routeHeading > span {
   display: grid;
   place-items: center;
-  color: var(--ifm-color-primary);
+  color: var(--color-fd-primary);
 }
 
 .routeHeading strong {
@@ -77,7 +77,7 @@
 }
 
 .nodeLink:hover {
-  border-color: var(--ifm-color-primary);
+  border-color: var(--color-fd-primary);
   color: var(--diagram-ink);
   text-decoration: none;
 }
@@ -95,7 +95,7 @@
   flex: none;
   place-items: center;
   border: 1px solid var(--diagram-line);
-  color: var(--ifm-color-primary);
+  color: var(--color-fd-primary);
   background: var(--diagram-panel);
 }
 
@@ -165,8 +165,8 @@
 }
 
 .pillList a:hover {
-  border-color: var(--ifm-color-primary);
-  color: var(--ifm-color-primary);
+  border-color: var(--color-fd-primary);
+  color: var(--color-fd-primary);
   text-decoration: none;
 }
 
@@ -188,7 +188,7 @@
 
 .definitionParts svg {
   flex: none;
-  color: var(--ifm-color-primary);
+  color: var(--color-fd-primary);
 }
 
 .diagramNote {
@@ -221,7 +221,7 @@
 
 .factList svg {
   flex: none;
-  color: var(--ifm-color-primary);
+  color: var(--color-fd-primary);
 }
 
 .boardSource {
@@ -286,7 +286,7 @@
   height: 1.65rem;
   border: 1px solid var(--diagram-line);
   border-radius: 0.4rem;
-  color: var(--ifm-color-primary);
+  color: var(--color-fd-primary);
   background: var(--diagram-panel);
 }
 
@@ -333,7 +333,7 @@
 }
 
 .miniTile:nth-child(2) {
-  border-color: var(--ifm-color-primary);
+  border-color: var(--color-fd-primary);
 }
 
 .mobileBoard {

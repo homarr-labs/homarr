@@ -1,0 +1,25 @@
+{
+  "title": "Management",
+  "defaultOpen": false,
+  "pages": [
+    "index",
+    "---Everyday configuration---",
+    "boards",
+    "apps",
+    "integrations",
+    "users",
+    "settings",
+    "---Content and extensions---",
+    "search-engines",
+    "media",
+    "custom-widgets",
+    "assistant",
+    "---Operations---",
+    "api",
+    "mcp",
+    "tasks",
+    "logs",
+    "certificates",
+    "backup"
+  ]
+}

@@ -6,7 +6,7 @@
 homarr/
 ├── apps/
 │   ├── nextjs/          # Main Next.js application (port 3000)
-│   ├── docs/            # Docusaurus 3 documentation site (@homarr/docs)
+│   ├── docs/            # Next.js + Fumadocs documentation site (@homarr/docs)
 │   ├── tasks/           # Cron-job initialization and scheduling runtime
 │   ├── websocket/       # Standalone tRPC WebSocket server (port 3001)
 │   └── workshop/        # Go/PocketBase Workshop service
@@ -57,7 +57,7 @@ homarr/
 
 ## Documentation Sync
 
-The documentation site lives at `apps/docs/` (Docusaurus 3, `@homarr/docs`).
+The documentation site lives at `apps/docs/` (Next.js + Fumadocs, `@homarr/docs`).
 
 When modifying user-facing code, you MUST also update the corresponding documentation:
 
@@ -75,7 +75,7 @@ When modifying user-facing code, you MUST also update the corresponding document
 - `pnpm dev:cli -- dev` — run the developer CLI without installing a global binary
 - `pnpm db:seed` — seed default database data explicitly
 - `pnpm docker:dev:up` — start the Redis development service in the background
-- `pnpm dev:docs` — Docusaurus docs site only
+- `pnpm dev:docs` — Fumadocs site only
 - `pnpm turbo build` — build all packages
 - `pnpm turbo build --filter=@homarr/docs` — build docs only
 - `pnpm turbo typecheck` — typecheck all packages

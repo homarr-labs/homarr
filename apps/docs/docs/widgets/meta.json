@@ -1,0 +1,5 @@
+{
+  "title": "Widgets",
+  "defaultOpen": false,
+  "pages": ["index", "..."]
+}

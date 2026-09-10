@@ -16,7 +16,7 @@ import { customJsxComponentRegistry } from "../core/component-registry";
 
 const repositoryRoot = resolve(import.meta.dirname, "../../../..");
 const catalogPath = resolve(repositoryRoot, "packages/custom-widgets/src/core/component-catalog.generated.json");
-const publicCatalogPath = resolve(repositoryRoot, "apps/docs/static/custom-widgets/component-catalog-v1.json");
+const publicCatalogPath = resolve(repositoryRoot, "apps/docs/public/custom-widgets/component-catalog-v1.json");
 
 // Keep a reviewed ceiling close to the generated artifact so accidental metadata
 // duplication must receive explicit review.

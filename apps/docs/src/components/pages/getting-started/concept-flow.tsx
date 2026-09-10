@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import Link from "@docusaurus/Link";
+import Link from "next/link";
 import { IconCalendar, IconDownload, IconPlugConnected } from "@tabler/icons-react";
 
 import { qBittorentIntegration } from "@site/docs/integrations/q-bittorent";
@@ -52,7 +52,7 @@ export function ConceptFlow() {
         <Stage number="1" title="Service" detail="API endpoint">
           <div className={styles.serviceList}>
             {services.map((service) => (
-              <Link className={styles.service} to={service.href} key={service.name}>
+              <Link className={styles.service} href={service.href} key={service.name}>
                 <img src={service.iconUrl} alt="" />
                 <span>
                   <strong>{service.name}</strong>
@@ -75,12 +75,12 @@ export function ConceptFlow() {
 
         <FlowConnector animationDelay={350} />
 
-        <Stage number="3" title="Widget" detail="Data and actions" href="/docs/category/widgets">
+        <Stage number="3" title="Widget" detail="Data and actions" href="/docs/widgets">
           <div className={styles.widgetList}>
             {widgets.map((widget) => {
               const Icon = widget.icon;
               return (
-                <Link className={styles.widget} to={widget.href} key={widget.name}>
+                <Link className={styles.widget} href={widget.href} key={widget.name}>
                   <Icon size={17} aria-hidden="true" />
                   <span>{widget.name}</span>
                 </Link>
@@ -142,7 +142,7 @@ function Stage({
   return (
     <section className={styles.stage}>
       {href ? (
-        <Link className={styles.stageHeading} to={href}>
+        <Link className={styles.stageHeading} href={href}>
           {heading}
         </Link>
       ) : (

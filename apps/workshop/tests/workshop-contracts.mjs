@@ -128,14 +128,15 @@ if (!entrypoint.includes("/pb_public/workshop-runtime-config.js") || !entrypoint
   throw new Error("Workshop must publish its API URL when the container starts");
 }
 
-const docsConfig = await read("apps/docs/docusaurus.config.ts");
-if (!docsConfig.includes('scripts: [{ src: "/workshop-runtime-config.js" }]')) {
+const docsLayout = await read("apps/docs/src/app/layout.tsx");
+if (!docsLayout.includes('<Script src="/workshop-runtime-config.js" strategy="beforeInteractive" />')) {
   throw new Error("Workshop must load the container runtime configuration before the documentation bundle");
 }
-if (!docsConfig.includes('path: "/workshop/:id"') || !docsConfig.includes("priority: -1")) {
+const docsFallback = await read("apps/docs/src/components/workshop/WorkshopNotFoundRouter.tsx");
+if (!docsFallback.includes("isWorkshopDetail") || !docsFallback.includes("workshop\\/admin")) {
   throw new Error("Workshop submission routes must not capture the moderation page");
 }
-await access(resolve("apps/docs/static/workshop-runtime-config.js"));
-await access(resolve("apps/docs/src/pages/workshop/admin/index.tsx"));
+await access(resolve("apps/docs/public/workshop-runtime-config.js"));
+await access(resolve("apps/docs/src/app/(home)/workshop/admin/page.tsx"));
 
 console.log("Workshop static contracts passed");

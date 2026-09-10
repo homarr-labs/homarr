@@ -1,0 +1,5 @@
+{
+  "title": "Workshop",
+  "defaultOpen": false,
+  "pages": ["index", "homarr-provider"]
+}

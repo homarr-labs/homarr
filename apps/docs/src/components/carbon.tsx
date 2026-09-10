@@ -1,9 +1,11 @@
-import { useLocation } from "@docusaurus/router";
+"use client";
+
+import { usePathname } from "next/navigation";
 import React, { useEffect } from "react";
 
 export function Carbon() {
   const ref = React.useRef<HTMLDivElement>(null!);
-  const location = useLocation();
+  const location = usePathname();
   if (process.env.NODE_ENV === "development") {
     return null;
   }
@@ -28,7 +30,7 @@ export function Carbon() {
 // Variant 1: Strict re-initialization – remove prior scripts and injected nodes, then load cover
 export function CarbonCoverStrict() {
   const ref = React.useRef<HTMLDivElement>(null!);
-  const location = useLocation();
+  const location = usePathname();
   if (process.env.NODE_ENV === "development") {
     return null;
   }
@@ -81,7 +83,7 @@ export function CarbonCoverStrict() {
 // Variant 2: Observer – load cover then keep only the latest injected ad node
 export function CarbonCoverObserver() {
   const ref = React.useRef<HTMLDivElement>(null!);
-  const location = useLocation();
+  const location = usePathname();
   if (process.env.NODE_ENV === "development") {
     return null;
   }
@@ -135,7 +137,7 @@ export function CarbonCoverObserver() {
 // Variant 3: CSS-only – hide the first instance so only the second (cover) remains visible
 export function CarbonCoverCssOnlySecond() {
   const ref = React.useRef<HTMLDivElement>(null!);
-  const location = useLocation();
+  const location = usePathname();
   if (process.env.NODE_ENV === "development") {
     return null;
   }
