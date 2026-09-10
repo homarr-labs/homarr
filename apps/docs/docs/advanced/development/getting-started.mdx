@@ -82,3 +82,25 @@ Workshop contributors can set up PocketBase and Docusaurus with the dedicated
 - `pnpm build` — production monorepo build.
 - `docker build -t homarr .` — build a production Docker image.
 - `docker run -p 7575:7575 -e SECRET_ENCRYPTION_KEY='your_64_character_hex_string' homarr:<name>` — run it.
+
+## CI and focused validation
+
+The main CI workflow runs lint, typechecking, affected workspace builds, workspace configuration checks, OpenAPI validation, and Custom Widget architecture and bundle checks. Unit and E2E suites do not run in CI. Preview images publish after the Fast gate and both architecture builds succeed; browser tests do not block publication. The container job builds an amd64 image when no preview image was built.
+
+Workshop CI runs only when its workflow or Docker build inputs change. It validates Compose configuration and publishes production images on its configured release branches. Its Docker integration and image tests are manual; workspace typechecks run in the main Fast gate.
+
+Choose the smallest relevant suite when changing behavior:
+
+| Command                                           | Scope                                                          | Requirements                                                          |
+| ------------------------------------------------- | -------------------------------------------------------------- | --------------------------------------------------------------------- |
+| `pnpm test <file>`                                | Focused unit or contract tests                                 | Workspace dependencies                                                |
+| `pnpm test`                                       | All unit and contract tests, without Docker integration suites | Workspace dependencies                                                |
+| `pnpm test:coverage`                              | Unit and contract tests with coverage                          | Workspace dependencies                                                |
+| `pnpm test:integration <file>`                    | Docker-backed service and database compatibility tests         | Docker                                                                |
+| `pnpm test:e2e <file>`                            | Browser and container scenarios                                | Docker; Playwright Chromium and system dependencies for browser tests |
+| `pnpm test:docs-screenshots`                      | Regenerate Assistant documentation screenshots                 | Same browser prerequisites                                            |
+| `pnpm test:workshop` / `pnpm test:workshop-image` | Workshop integration / production-image validation             | Docker                                                                |
+
+Omit `<file>` to run all tests in that command's scope. E2E and screenshot commands use a local image tagged `homarr-e2e`, or an image selected with `HOMARR_E2E_IMAGE`. The default commands run once without automatic retries; coverage is opt-in. The screenshot generator is excluded from both unit and E2E commands.
+
+Keep behavioral coverage for authorization, migrations, persistence, and widget execution. Avoid tests that only search source code for particular component names, JSX, CSS, or documentation wording.

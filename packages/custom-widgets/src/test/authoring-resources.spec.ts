@@ -37,12 +37,6 @@ describe("authoring resources", () => {
       expect(bundledContent).toContain(content.trim());
     }
     expect(bundledContent).toContain(skill.skillMd.trim());
-    expect(bundledContent).toContain("coordinated set of widgets");
-    expect(bundledContent).toContain("customWidget_validateTemplate");
-    expect(bundledContent).toContain("customWidget_findComponents");
-    expect(bundledContent).toContain("Batch selected non-obvious binding or interaction documentation");
-    expect(bundledContent).not.toContain("at most eight named component documents");
-    expect(bundledContent).toContain("Do not use an unlabeled decorative icon as an empty state");
     expect(Buffer.byteLength(JSON.stringify(skill), "utf8")).toBeLessThan(12_000);
 
     const entrypoint = getCustomWidgetSkillEntrypoint();
@@ -50,36 +44,7 @@ describe("authoring resources", () => {
       expect.arrayContaining([expect.objectContaining({ name: "runtime", tool: "customWidget_getReference" })]),
     );
     expect(JSON.stringify(entrypoint)).not.toContain("# Runtime");
-    expect(entrypoint.skillMd).toContain("Context routing");
-    expect(entrypoint.skillMd).toContain("customWidget_validateTemplate");
-    expect(entrypoint.skillMd).toContain("customWidget_previewReviseTemplate");
-    expect(entrypoint.skillMd).toContain("map every requested capability");
-    expect(entrypoint.skillMd).toContain("purpose-specific visual signature");
-    expect(entrypoint.skillMd).toContain("asymmetric priority metric/action");
-    expect(entrypoint.skillMd).toContain("new manifest");
-    expect(entrypoint.skillMd).not.toContain("To install an existing widget");
-    expect(getCustomWidgetSkillReference("runtime").content).toContain("SubFetch");
-    expect(getCustomWidgetSkillReference("runtime").content).toContain(
-      'require `trigger: "manual"` on request and `SubFetch`',
-    );
-    expect(getCustomWidgetSkillReference("runtime").content).toContain("RefreshButton");
-    expect(getCustomWidgetSkillReference("runtime").content).toContain("owns loading/error/retry");
-    expect(getCustomWidgetSkillReference("runtime").content).toContain("need literal `requestId`");
-    expect(getCustomWidgetSkillReference("runtime").content).toContain('requestId="search" label="Run again"');
-    expect(getCustomWidgetSkillReference("runtime").content).toContain("Render load queries directly");
-    expect(getCustomWidgetSkillReference("runtime").content).toContain("entire JSON response");
-    expect(getCustomWidgetSkillReference("runtime").content).toContain("never map the envelope itself");
-    expect(getCustomWidgetSkillReference("runtime").content).toContain("immediately hides its prior result");
-    expect(getCustomWidgetSkillReference("runtime").content).toContain("Every stateful control must use `bind`");
-    expect(getCustomWidgetSkillReference("runtime").content).toContain("resetKey={inputs.search}");
-    expect(getCustomWidgetSkillReference("runtime").content).toContain('Date.toLocaleString(value, "en-US", "UTC")');
-    expect(getCustomWidgetSkillReference("runtime").content).toContain("Never invent a formatter component");
     const schemaReference = getCustomWidgetSkillReference("schema").content;
-    expect(schemaReference).toContain('"default": {');
-    expect(schemaReference).toContain('"trigger": "manual"');
-    expect(schemaReference).toContain('"kind": "action"');
-    expect(schemaReference).toContain('"apiKeyHeader"');
-    expect(schemaReference).toContain("is the required source ID");
     expect(Buffer.byteLength(schemaReference, "utf8")).toBeLessThan(4_000);
     expect(Buffer.byteLength(JSON.stringify(entrypoint), "utf8")).toBeLessThan(3_000);
     expect(Buffer.byteLength(JSON.stringify(entrypoint), "utf8")).toBeLessThan(
@@ -107,8 +72,6 @@ describe("authoring resources", () => {
     const serviceDashboard = getCustomWidgetExample("service-dashboard");
     if (!serviceDashboard) throw new Error("Service dashboard example is missing");
     expect(validateCustomJsxTemplate(serviceDashboard.widget.template)).toEqual([]);
-    expect(serviceDashboard.widget.template.match(/<Paper/gu)).toHaveLength(1);
-    expect(serviceDashboard.widget.template).toContain('RefreshButton label="Refresh service health"');
     expect(Buffer.byteLength(JSON.stringify(pokedex), "utf8")).toBeLessThan(16_000);
     expect(catalog.sharedProps).toMatchObject({
       count: expect.any(Number),

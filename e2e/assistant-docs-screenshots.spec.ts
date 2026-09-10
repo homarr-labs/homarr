@@ -16,8 +16,7 @@ const adminCredentials = {
   password: "Comp(exP4sswOrd",
 };
 
-// This is an opt-in documentation asset generator, not part of the normal E2E gate.
-// Run it explicitly with UPDATE_DOCS_SCREENSHOTS=true when the documented UI changes.
+// Run this opt-in asset generator with pnpm test:docs-screenshots when the documented UI changes.
 describe.skipIf(process.env.UPDATE_DOCS_SCREENSHOTS !== "true")("Assistant documentation screenshots", () => {
   test("captures the management page and conversation panel", async () => {
     const { db, localMountPath } = await createSqliteDbFileAsync();
