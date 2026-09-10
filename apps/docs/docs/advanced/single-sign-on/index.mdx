@@ -14,7 +14,7 @@ tags:
 
 Homarr supports multiple authentication options, from internal userbase (credentials), to LDAP (with Active directory support), and OIDC.
 
-### Auth configuration common variables
+## Common configuration
 
 | Environment Variable     | Description                                                                                                                                                                                                                                                                                                             | Default Value |
 | ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
@@ -23,198 +23,193 @@ Homarr supports multiple authentication options, from internal userbase (credent
 | AUTH_SESSION_EXPIRY_TIME | Time for the session to time out. Can be set as pure number, which will automatically be used in seconds, or followed by s, m, h or d for seconds, minutes, hours or days. (ex: "30m")                                                                                                                                  | "30d"         |
 | AUTH_COOKIE_PREFIX       | Prefix used for all authentication cookies (session, csrf, callback, pkce, state, nonce). Change this if you run another Auth.js/NextAuth app on the same hostname as Homarr (browsers scope cookies by host, not by port) to avoid cookie name collisions. Only letters, numbers, hyphens and underscores are allowed. | `homarr`      |
 
-<Tabs>
-  <TabItem value="credentials" label="Credentials Provider" default>
+## Credentials provider
 
-    This is the default provider.
+This is the default provider.
 
-    First user is created using the onboarding process and the rest can be created by this user (see [user management](/docs/management/users))
+First user is created using the onboarding process and the rest can be created by this user (see [user management](/docs/management/users))
 
-  </TabItem>
-  <TabItem value="ldap" label="LDAP provider">
+## LDAP provider
 
-    This provider authenticates against an LDAP server.
+This provider authenticates against an LDAP server.
 
-    Any user in LDAP server that signs in gets created in Homarr database.
+Any user in LDAP server that signs in gets created in Homarr database.
 
-    Roles are fetched from LDAP groups. Groups with the same name of Homarr will be used to synchronize them.
+Roles are fetched from LDAP groups. Groups with the same name of Homarr will be used to synchronize them.
 
 
 
 
-    <details>
-      <summary>
-        Example Setup
-      </summary>
-      <div>
+<details>
+  <summary>
+    Example Setup
+  </summary>
+  <div>
 
-        In this setup we are using [lldap](https://github.com/lldap/lldap). Install your server using docker or [as a service](https://github.com/lldap/lldap/blob/main/example_configs/lldap.service).
+    In this setup we are using [lldap](https://github.com/lldap/lldap). Install your server using docker or [as a service](https://github.com/lldap/lldap/blob/main/example_configs/lldap.service).
 
-        Minimal configuration requires 4 env variables, LDAP URI, base, user and password for querying data.
+    Minimal configuration requires 4 env variables, LDAP URI, base, user and password for querying data.
 
-        There's more variables, but all have defaults corresponding to lldap defaults. These might need to be changed if you have different LDAP provider.
-        ```
-        docker run ...
-        AUTH_PROVIDERS="ldap"
-        AUTH_LDAP_URI="ldap://example.com:3890"
-        AUTH_LDAP_BASE="dc=example,dc=com" // Same as LLDAP_LDAP_BASE_DN
-        AUTH_LDAP_BIND_DN="uid=admin,ou=People,dc=example,dc=com"
-        AUTH_LDAP_BIND_PASSWORD="adminpass" // Same as LLDAP_LDAP_USER_PASS
-        ```
-        ```
-        #Docker compose
-        version: x
-        services:
-          homarr:
-            environment:
-              AUTH_PROVIDERS: ldap
-              AUTH_LDAP_URI: ldap://example.com:3890
-              AUTH_LDAP_BASE: dc=example,dc=com #Same as LLDAP_LDAP_BASE_DN
-              AUTH_LDAP_BIND_DN: uid=admin,ou=People,dc=example,dc=com
-              AUTH_LDAP_BIND_PASSWORD: adminpass #Same as LLDAP_LDAP_USER_PASS
-        ```
+    There's more variables, but all have defaults corresponding to lldap defaults. These might need to be changed if you have different LDAP provider.
+    ```
+    docker run ...
+    AUTH_PROVIDERS="ldap"
+    AUTH_LDAP_URI="ldap://example.com:3890"
+    AUTH_LDAP_BASE="dc=example,dc=com" // Same as LLDAP_LDAP_BASE_DN
+    AUTH_LDAP_BIND_DN="uid=admin,ou=People,dc=example,dc=com"
+    AUTH_LDAP_BIND_PASSWORD="adminpass" // Same as LLDAP_LDAP_USER_PASS
+    ```
+    ```
+    #Docker compose
+    version: x
+    services:
+      homarr:
+        environment:
+          AUTH_PROVIDERS: ldap
+          AUTH_LDAP_URI: ldap://example.com:3890
+          AUTH_LDAP_BASE: dc=example,dc=com #Same as LLDAP_LDAP_BASE_DN
+          AUTH_LDAP_BIND_DN: uid=admin,ou=People,dc=example,dc=com
+          AUTH_LDAP_BIND_PASSWORD: adminpass #Same as LLDAP_LDAP_USER_PASS
+    ```
 
-        In lldap, create a user and admin group, assign this user to the external admin group configured during onboarding. You can log in using this user and he will be in the group.
+    In lldap, create a user and admin group, assign this user to the external admin group configured during onboarding. You can log in using this user and he will be in the group.
 
-        Here is another example for Active Directory:
+    Here is another example for Active Directory:
 
-        ```
-        AUTH_LDAP_URI="ldap://ldap.abc.xyz:389
-        AUTH_LDAP_BASE="DC=abc,DC=xyz"
-        AUTH_LDAP_BIND_DN="CN=Administrator,CN=Users,DC=abc,DC=xyz"
-        AUTH_LDAP_BIND_PASSWORD="YourAdministratorPassword"
-        AUTH_LDAP_USERNAME_ATTRIBUTE="sAMAccountName"
-        AUTH_LDAP_USER_MAIL_ATTRIBUTE="userPrincipalName"
-        AUTH_LDAP_GROUP_CLASS="group"
-        AUTH_LDAP_GROUP_MEMBER_ATTRIBUTE="member"
-        AUTH_LDAP_GROUP_MEMBER_USER_ATTRIBUTE="dn"
-        AUTH_LDAP_SEARCH_SCOPE="sub"
-        AUTH_LDAP_USERNAME_FILTER_EXTRA_ARG="(sAMAccountType=805306368)"
-        ```
-        User mail attribute is set to userPrincipalName as it follows the right schema, but it is recommended to use real emails and the default 'mail' value.
+    ```
+    AUTH_LDAP_URI="ldap://ldap.abc.xyz:389
+    AUTH_LDAP_BASE="DC=abc,DC=xyz"
+    AUTH_LDAP_BIND_DN="CN=Administrator,CN=Users,DC=abc,DC=xyz"
+    AUTH_LDAP_BIND_PASSWORD="YourAdministratorPassword"
+    AUTH_LDAP_USERNAME_ATTRIBUTE="sAMAccountName"
+    AUTH_LDAP_USER_MAIL_ATTRIBUTE="userPrincipalName"
+    AUTH_LDAP_GROUP_CLASS="group"
+    AUTH_LDAP_GROUP_MEMBER_ATTRIBUTE="member"
+    AUTH_LDAP_GROUP_MEMBER_USER_ATTRIBUTE="dn"
+    AUTH_LDAP_SEARCH_SCOPE="sub"
+    AUTH_LDAP_USERNAME_FILTER_EXTRA_ARG="(sAMAccountType=805306368)"
+    ```
+    User mail attribute is set to userPrincipalName as it follows the right schema, but it is recommended to use real emails and the default 'mail' value.
 
-      </div>
-    </details>
-
-
-    ### Configuration
-
-    | Environment Variable                      | Description                                               | Default value       |
-    |-------------------------------------------|-----------------------------------------------------------|---------------------|
-    | ``AUTH_LDAP_URI``                         | URI of your LDAP server                                   | ---                 |
-    | ``AUTH_LDAP_BASE``                        | Base dn of your LDAP server                               | ---                 |
-    | ``AUTH_LDAP_BIND_DN``                     | User used for finding users and groups                    | ---                 |
-    | ``AUTH_LDAP_BIND_PASSWORD``               | Password for bind user                                    | ---                 |
-    | ``AUTH_LDAP_USERNAME_ATTRIBUTE``          | Attribute used for username                               | uid                 |
-    | ``AUTH_LDAP_USER_MAIL_ATTRIBUTE``         | Attribute used for mail field                             | mail                |
-    | ``AUTH_LDAP_GROUP_CLASS``                 | Class used for querying groups                            | groupOfUniqueNames  |
-    | ``AUTH_LDAP_GROUP_MEMBER_ATTRIBUTE``      | Attribute used for querying group member                  | member              |
-    | ``AUTH_LDAP_GROUP_MEMBER_USER_ATTRIBUTE`` | User attribute used for comparing with group member       | dn                  |
-    | ``AUTH_LDAP_SEARCH_SCOPE``                | Serach scopes between base, one and sub                   | base                |
-    | ``AUTH_LDAP_USERNAME_FILTER_EXTRA_ARG``   | Extra arguments for user search filter (& based)          | ---                 |
-    | ``AUTH_LDAP_GROUP_FILTER_EXTRA_ARG``      | Extra arguments for user's groups search filter (& based) | ---                 |
-
-  </TabItem>
-  <TabItem value="oidc" label="OIDC provider">
-
-    This provider authenticates using OIDC protocol.
-
-    Users signed in using OIDC are created in Homarr.
-
-    Roles are fetched from group claims. This can also be changed to roles for example added to a azure app registration by using the `AUTH_OIDC_GROUPS_ATTRIBUTE`.
-
-    If you'd rather manage group memberships for OIDC users locally (instead of via the IdP), set `AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT=true`. While enabled, Homarr stops syncing OIDC users' group memberships from the groups claim, and admins can add/remove OIDC users on a group's members page. If you turn this back to `false`, the next login of each user resumes the regular sync and reconciles their groups with the IdP's claim again, which may remove memberships that were added manually while local management was enabled.
-
-    To let an existing credentials user also sign in with OIDC, set `AUTH_OIDC_ENABLE_DANGEROUS_CREDENTIALS_LINKING=true`. On the first OIDC sign-in, Homarr links a credentials user with the same email address instead of creating a second user. The user keeps their password login, local username and profile, groups, permissions, boards, settings, and API keys. OIDC profile and group claims do not overwrite the credentials-owned data. Homarr requires the OIDC profile to contain `email_verified: true` while this option is enabled. Only enable this when your OIDC provider verifies email addresses, because a matching email could otherwise be used to take over an existing account.
-
-    <details>
-      <summary>
-        Example Setup
-      </summary>
-      <div>
-
-        In this example we will be using [Authelia](https://github.com/authelia/authelia).
-
-        You can use any setup, but the simplest is [local](https://github.com/authelia/authelia/blob/master/examples/compose/local/authelia/configuration.yml).
-
-        You also have to [enable OIDC in Authelia](https://www.authelia.com/configuration/identity-providers/open-id-connect/).
-
-        Create a client for homarr. To generate client secret you can [use authelia](https://www.authelia.com/integration/openid-connect/frequently-asked-questions/#how-do-i-generate-client-secrets). This is an example config:
-
-        ```yaml
-        identity_providers:
-        oidc:
-        ...
-        clients:
-        - id: homarr
-        secret: <secret_hash>
-        public: false
-        authorization_policy: one_factor
-        redirect_uris:
-        - https://example.com/api/auth/callback/oidc
-        - http://localhost:3000/api/auth/callback/oidc
-        scopes:
-        - openid
-        - groups
-        - profile
-        - email
-        userinfo_signing_algorithm: none
-        consent_mode: implicit # self hosted
-        ```
-
-        In Homarr use following env variables.
-
-        ```
-        AUTH_PROVIDERS="oidc"
-        AUTH_OIDC_ISSUER="https://auth.example.com"
-        AUTH_OIDC_CLIENT_SECRET="client_secret"
-        AUTH_OIDC_CLIENT_ID="homarr"
-        AUTH_OIDC_CLIENT_NAME="Authelia"
-        AUTH_OIDC_FORCE_USERINFO="true" --> from v4.39 of authelia and above this is required
-        ```
-
-        For an azure app registration the setup could look like this:
-
-        ```
-        AUTH_PROVIDERS="oidc"
-        AUTH_OIDC_ISSUER="https://login.microsoftonline.com/<teanant-id>/v2.0"
-        AUTH_OIDC_CLIENT_SECRET="<client-secret>"
-        AUTH_OIDC_CLIENT_ID="<client-id>"
-        AUTH_OIDC_CLIENT_NAME="Azure"
-        AUTH_OIDC_SCOPE_OVERWRITE="openid email profile" # Groups scope does not exist in azure
-        AUTH_OIDC_GROUPS_ATTRIBUTE="roles" # We use the roles of the app registration so that we don't need to use uuids as our groups
-        ```
-
-      </div>
-    </details>
+  </div>
+</details>
 
 
-    ### Configuration
+### LDAP configuration
 
-    | Environment Variable        | Description                                                | Default value |
-    |-----------------------------|------------------------------------------------------------|---------------|
-    | ``AUTH_OIDC_ISSUER``        | Issuer URI of OIDC provider. This has generally to be **without trailing slash** except for **Authentik** | ---           |
-    | ``AUTH_OIDC_CLIENT_ID``     | ID of OIDC client (application)                            | ---           |
-    | ``AUTH_OIDC_CLIENT_SECRET`` | Secret of OIDC client (application)                        | ---           |
-    | ``AUTH_OIDC_CLIENT_NAME``   | Display name of provider (in login screen)                 | OIDC          |
-    | ``AUTH_OIDC_AUTO_LOGIN``    | Automatically redirect to OIDC login                       | false         |
-    | ``AUTH_OIDC_SCOPE_OVERWRITE`` | Overwrite default scopes (openid, profile, email)        | openid email profile groups           |
-    | ``AUTH_OIDC_GROUPS_ATTRIBUTE`` | Attribute used for groups (roles) claim. Dot-separated paths such as `resource_access.homarr.roles` are supported. | groups        |
-    | ``AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT`` | Stop syncing group memberships of OIDC users from the groups claim and manage them locally via the group members page instead | false |
-    | ``AUTH_OIDC_NAME_ATTRIBUTE_OVERWRITE`` | Overwrite name attribute. Dot-separated paths are supported. By default it will use preferred_username if it does not contain a `@` and otherwise name. | ---          |
-    | ``AUTH_OIDC_FORCE_USERINFO`` | Force userinfo endpoint to be used for user information.    | false         |
-    | ``AUTH_OIDC_ENABLE_DANGEROUS_ACCOUNT_LINKING`` | Enable account linking for OIDC provider. This will link the OIDC accounts by email. Be sure that you have verified emails to prevent stealing accounts. | false |
-    | ``AUTH_OIDC_ENABLE_DANGEROUS_CREDENTIALS_LINKING`` | Link an OIDC identity to an existing credentials user with the same email. The credentials login and existing user data are preserved. Requires the OIDC profile to contain `email_verified: true`. | false |
-    | ``AUTH_OIDC_TOKEN_ENDPOINT_AUTH_METHOD`` | Override method for the token endpoint authentication. Supported values are `client_secret_basic`, `client_secret_post`, `client_secret_jwt` and `none`. | client_secret_basic |
+| Environment Variable                      | Description                                               | Default value       |
+|-------------------------------------------|-----------------------------------------------------------|---------------------|
+| ``AUTH_LDAP_URI``                         | URI of your LDAP server                                   | ---                 |
+| ``AUTH_LDAP_BASE``                        | Base dn of your LDAP server                               | ---                 |
+| ``AUTH_LDAP_BIND_DN``                     | User used for finding users and groups                    | ---                 |
+| ``AUTH_LDAP_BIND_PASSWORD``               | Password for bind user                                    | ---                 |
+| ``AUTH_LDAP_USERNAME_ATTRIBUTE``          | Attribute used for username                               | uid                 |
+| ``AUTH_LDAP_USER_MAIL_ATTRIBUTE``         | Attribute used for mail field                             | mail                |
+| ``AUTH_LDAP_GROUP_CLASS``                 | Class used for querying groups                            | groupOfUniqueNames  |
+| ``AUTH_LDAP_GROUP_MEMBER_ATTRIBUTE``      | Attribute used for querying group member                  | member              |
+| ``AUTH_LDAP_GROUP_MEMBER_USER_ATTRIBUTE`` | User attribute used for comparing with group member       | dn                  |
+| ``AUTH_LDAP_SEARCH_SCOPE``                | Serach scopes between base, one and sub                   | base                |
+| ``AUTH_LDAP_USERNAME_FILTER_EXTRA_ARG``   | Extra arguments for user search filter (& based)          | ---                 |
+| ``AUTH_LDAP_GROUP_FILTER_EXTRA_ARG``      | Extra arguments for user's groups search filter (& based) | ---                 |
 
-    ### Permission System
+## OIDC provider
 
-    To give a user special permissions, first create a new group in homarr and assign the permission desired.
-    For example if the group on homarr is called `homarr-admins` a new group on the oidc provider, for example authentik needs to be created with the same name, that would be `homarr-admins`.
-    After assigning the group on the oidc provider to the user, and logging again into homarr, the user should automatically get placed in that group and inherit the permissions defined.
+This provider authenticates using OIDC protocol.
 
-  </TabItem>
-</Tabs>
+Users signed in using OIDC are created in Homarr.
+
+Roles are fetched from group claims. This can also be changed to roles for example added to a azure app registration by using the `AUTH_OIDC_GROUPS_ATTRIBUTE`.
+
+If you'd rather manage group memberships for OIDC users locally (instead of via the IdP), set `AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT=true`. While enabled, Homarr stops syncing OIDC users' group memberships from the groups claim, and admins can add/remove OIDC users on a group's members page. If you turn this back to `false`, the next login of each user resumes the regular sync and reconciles their groups with the IdP's claim again, which may remove memberships that were added manually while local management was enabled.
+
+To let an existing credentials user also sign in with OIDC, set `AUTH_OIDC_ENABLE_DANGEROUS_CREDENTIALS_LINKING=true`. On the first OIDC sign-in, Homarr links a credentials user with the same email address instead of creating a second user. The user keeps their password login, local username and profile, groups, permissions, boards, settings, and API keys. OIDC profile and group claims do not overwrite the credentials-owned data. Homarr requires the OIDC profile to contain `email_verified: true` while this option is enabled. Only enable this when your OIDC provider verifies email addresses, because a matching email could otherwise be used to take over an existing account.
+
+<details>
+  <summary>
+    Example Setup
+  </summary>
+  <div>
+
+    In this example we will be using [Authelia](https://github.com/authelia/authelia).
+
+    You can use any setup, but the simplest is [local](https://github.com/authelia/authelia/blob/master/examples/compose/local/authelia/configuration.yml).
+
+    You also have to [enable OIDC in Authelia](https://www.authelia.com/configuration/identity-providers/open-id-connect/).
+
+    Create a client for homarr. To generate client secret you can [use authelia](https://www.authelia.com/integration/openid-connect/frequently-asked-questions/#how-do-i-generate-client-secrets). This is an example config:
+
+    ```yaml
+    identity_providers:
+    oidc:
+    ...
+    clients:
+    - id: homarr
+    secret: <secret_hash>
+    public: false
+    authorization_policy: one_factor
+    redirect_uris:
+    - https://example.com/api/auth/callback/oidc
+    - http://localhost:3000/api/auth/callback/oidc
+    scopes:
+    - openid
+    - groups
+    - profile
+    - email
+    userinfo_signing_algorithm: none
+    consent_mode: implicit # self hosted
+    ```
+
+    In Homarr use following env variables.
+
+    ```
+    AUTH_PROVIDERS="oidc"
+    AUTH_OIDC_ISSUER="https://auth.example.com"
+    AUTH_OIDC_CLIENT_SECRET="client_secret"
+    AUTH_OIDC_CLIENT_ID="homarr"
+    AUTH_OIDC_CLIENT_NAME="Authelia"
+    AUTH_OIDC_FORCE_USERINFO="true" --> from v4.39 of authelia and above this is required
+    ```
+
+    For an azure app registration the setup could look like this:
+
+    ```
+    AUTH_PROVIDERS="oidc"
+    AUTH_OIDC_ISSUER="https://login.microsoftonline.com/<teanant-id>/v2.0"
+    AUTH_OIDC_CLIENT_SECRET="<client-secret>"
+    AUTH_OIDC_CLIENT_ID="<client-id>"
+    AUTH_OIDC_CLIENT_NAME="Azure"
+    AUTH_OIDC_SCOPE_OVERWRITE="openid email profile" # Groups scope does not exist in azure
+    AUTH_OIDC_GROUPS_ATTRIBUTE="roles" # We use the roles of the app registration so that we don't need to use uuids as our groups
+    ```
+
+  </div>
+</details>
+
+
+### OIDC configuration
+
+| Environment Variable        | Description                                                | Default value |
+|-----------------------------|------------------------------------------------------------|---------------|
+| ``AUTH_OIDC_ISSUER``        | Issuer URI of OIDC provider. This has generally to be **without trailing slash** except for **Authentik** | ---           |
+| ``AUTH_OIDC_CLIENT_ID``     | ID of OIDC client (application)                            | ---           |
+| ``AUTH_OIDC_CLIENT_SECRET`` | Secret of OIDC client (application)                        | ---           |
+| ``AUTH_OIDC_CLIENT_NAME``   | Display name of provider (in login screen)                 | OIDC          |
+| ``AUTH_OIDC_AUTO_LOGIN``    | Automatically redirect to OIDC login                       | false         |
+| ``AUTH_OIDC_SCOPE_OVERWRITE`` | Overwrite default scopes (openid, profile, email)        | openid email profile groups           |
+| ``AUTH_OIDC_GROUPS_ATTRIBUTE`` | Attribute used for groups (roles) claim. Dot-separated paths such as `resource_access.homarr.roles` are supported. | groups        |
+| ``AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT`` | Stop syncing group memberships of OIDC users from the groups claim and manage them locally via the group members page instead | false |
+| ``AUTH_OIDC_NAME_ATTRIBUTE_OVERWRITE`` | Overwrite name attribute. Dot-separated paths are supported. By default it will use preferred_username if it does not contain a `@` and otherwise name. | ---          |
+| ``AUTH_OIDC_FORCE_USERINFO`` | Force userinfo endpoint to be used for user information.    | false         |
+| ``AUTH_OIDC_ENABLE_DANGEROUS_ACCOUNT_LINKING`` | Enable account linking for OIDC provider. This will link the OIDC accounts by email. Be sure that you have verified emails to prevent stealing accounts. | false |
+| ``AUTH_OIDC_ENABLE_DANGEROUS_CREDENTIALS_LINKING`` | Link an OIDC identity to an existing credentials user with the same email. The credentials login and existing user data are preserved. Requires the OIDC profile to contain `email_verified: true`. | false |
+| ``AUTH_OIDC_TOKEN_ENDPOINT_AUTH_METHOD`` | Override method for the token endpoint authentication. Supported values are `client_secret_basic`, `client_secret_post`, `client_secret_jwt` and `none`. | client_secret_basic |
+
+### OIDC permissions
+
+To give a user special permissions, first create a new group in homarr and assign the permission desired.
+For example if the group on homarr is called `homarr-admins` a new group on the oidc provider, for example authentik needs to be created with the same name, that would be `homarr-admins`.
+After assigning the group on the oidc provider to the user, and logging again into homarr, the user should automatically get placed in that group and inherit the permissions defined.
+
 
 ## Example setups
 
@@ -295,7 +290,7 @@ Homarr supports multiple authentication options, from internal userbase (credent
       </div>
     </details>
 
-    Additional OIDC configuration options are described in the OIDC tab above.
+    See [OIDC configuration](#oidc-configuration) for additional options.
 
   </TabItem>
   <TabItem value="google" label="Google (OIDC) Example" default>
@@ -361,7 +356,7 @@ Homarr supports multiple authentication options, from internal userbase (credent
       </div>
     </details>
 
-    Additional OIDC configuration options are described in the OIDC tab above.
+    See [OIDC configuration](#oidc-configuration) for additional options.
 
   </TabItem>
 </Tabs>

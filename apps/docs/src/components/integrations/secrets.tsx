@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 import Alert from "@/components/mdx/admonition";
 import Tabs, { TabItem } from "@/components/mdx/legacy-tabs";
 
-const secretKinds = {
+export const secretKinds = {
   apiKey: {
     name: "API Key",
     description: "API Key from the service for authentication.",

@@ -28,6 +28,8 @@ COPY tooling/typescript ./tooling/typescript
 RUN --mount=type=cache,id=workshop-pnpm-store,target=/pnpm/store pnpm config set store-dir /pnpm/store && pnpm install --filter @homarr/docs... --frozen-lockfile
 
 FROM dependencies AS website
+ARG KAPA_WEBSITE_ID=1e4656f4-abeb-4343-bbae-1d8626f52378
+ENV KAPA_WEBSITE_ID=$KAPA_WEBSITE_ID
 ARG HOMARR_WEBSITE_URL=https://homarr.dev
 ARG WORKSHOP_API_URL=https://homarr.dev
 ARG WORKSHOP_WEB_URL=https://homarr.dev/workshop

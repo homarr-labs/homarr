@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { IconBook, IconPackage } from "@tabler/icons-react";
 
 import { Button } from "@/components/ui/button";
@@ -9,10 +10,17 @@ import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTi
 import MarketplaceDetailPage from "./DetailPage";
 
 export function WorkshopNotFoundRouter({ configuredWorkshopUrl }: { configuredWorkshopUrl: string }) {
-  const pathname = usePathname() ?? "";
-  const isWorkshopDetail = /^\/workshop\/[^/]+\/?$/.test(pathname) && !/^\/workshop\/admin\/?$/.test(pathname);
+  const routerPathname = usePathname();
+  const [pathname, setPathname] = useState("");
+  useEffect(() => {
+    // The static 404 shell carries its build-time route, not the requested Workshop URL.
+    setPathname(window.location.pathname);
+  }, [routerPathname]);
+  const submissionId = /^\/workshop\/([^/]+)\/?$/.exec(pathname)?.[1];
 
-  if (isWorkshopDetail) return <MarketplaceDetailPage configuredWorkshopUrl={configuredWorkshopUrl} />;
+  if (submissionId && submissionId !== "admin") {
+    return <MarketplaceDetailPage configuredWorkshopUrl={configuredWorkshopUrl} submissionId={submissionId} />;
+  }
 
   return (
     <main>

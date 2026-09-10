@@ -2,6 +2,7 @@ import { loader } from "fumadocs-core/source";
 import { metaSchema, pageSchema } from "fumadocs-core/source/schema";
 import { defineCollections, defineDocs } from "fumadocs-mdx/macro";
 import { z } from "zod";
+import { metadataMarkdownComponents } from "@/components/mdx/metadata-markdown";
 
 const titleFromSource = (source: string, path: string) => {
   const heading = /^#\s+(.+)$/m
@@ -35,7 +36,7 @@ const docs = defineDocs({
         .transform((data) => ({ ...data, title: data.title ?? titleFromSource(source, path) })),
     postprocess: {
       extractLinkReferences: true,
-      includeProcessedMarkdown: true,
+      includeProcessedMarkdown: { output: "function" },
     },
   },
   meta: {
@@ -77,10 +78,14 @@ export function getPageMarkdownUrl(page: (typeof source)["$inferPage"]) {
 }
 
 export async function getLLMText(page: (typeof source)["$inferPage"]) {
-  const processed = await page.data.getText("processed");
+  const processed = await getPageMarkdown(page);
   const body = processed.replace(/^\s*#\s+[^\n]+\n+/, "");
 
   return `# ${page.data.title} (${page.url})\n\n${body}`;
+}
+
+export function getPageMarkdown(page: (typeof source)["$inferPage"]) {
+  return page.data.getText("processed", { components: metadataMarkdownComponents });
 }
 
 export type BlogPost = (typeof posts.entries)[number];
