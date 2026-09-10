@@ -27,6 +27,12 @@ session cookie.
 API keys do not expire automatically and act as the user that created them. Every request uses that user's group and
 resource permissions.
 
+## Invitation dates
+
+`POST /api/invites` and the tRPC `invite.createInvite` procedure accept `expirationDate` as an ISO 8601 timestamp with a
+timezone, for example `2026-12-01T18:00:00Z`. Homarr validates the timestamp and stores it as a date. tRPC callers should
+send the ISO string rather than a JavaScript `Date` object.
+
 ## Health probes
 
 The liveness endpoint does not require authentication:

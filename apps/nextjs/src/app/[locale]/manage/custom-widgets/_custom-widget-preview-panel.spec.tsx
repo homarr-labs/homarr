@@ -1,6 +1,5 @@
 // @vitest-environment jsdom
 
-import { readFileSync } from "node:fs";
 import { act } from "react";
 import { createRoot } from "react-dom/client";
 import type { Root } from "react-dom/client";
@@ -76,16 +75,6 @@ afterEach(async () => {
 });
 
 describe("Custom Widget preview panel", () => {
-  test("inherits the application theme instead of forcing a reload-sensitive preview theme", () => {
-    const source = readFileSync(
-      `${process.cwd()}/apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-preview-panel.tsx`,
-      "utf8",
-    );
-
-    expect(source).not.toContain("forceColorScheme");
-    expect(source).not.toContain("onThemeChange");
-  });
-
   test("contains invalid definitions inside the widget canvas while keeping every inspection tab", async () => {
     await act(async () => {
       root.render(

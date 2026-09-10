@@ -1,11 +1,17 @@
 // @vitest-environment node
 
+import { initTRPC, TRPCError } from "@trpc/server";
 import { describe, expect, test, vi } from "vitest";
 import { z } from "zod/v4";
 
 import type { McpTool } from "@homarr/api/mcp";
+import { appManageSchema } from "@homarr/validation/app";
+import { extractMcpToolsFromProcedures } from "@homarr/api/mcp";
+import type { McpMeta } from "../../../../../../packages/api/src/mcp-tools";
 
 import { createMcpProtocolHandler } from "./_protocol";
+
+vi.mock("@homarr/api/mcp", async () => import("../../../../../../packages/api/src/mcp-tools"));
 
 const modernMetadata = {
   "io.modelcontextprotocol/protocolVersion": "2026-07-28",
@@ -52,7 +58,7 @@ const echoTool: McpTool = {
   description: "Echo a message",
   type: "query",
   pathInRouter: ["echo"],
-  inputValidator: echoValidator,
+  inputMode: "object",
   inputSchema: z.toJSONSchema(echoValidator),
 };
 
@@ -161,5 +167,199 @@ describe("MCP v2 protocol", () => {
     );
     expect(listResponse.headers.has("Mcp-Session-Id")).toBe(false);
     expect((await parseResponse(listResponse)).result.tools).toEqual([expect.objectContaining({ name: "echo" })]);
+  });
+});
+
+describe.each([false, true])("MCP argument dispatch (modern=%s)", (modern) => {
+  const trpc = initTRPC.context<{ user: string }>().meta<McpMeta>().create();
+  const exposed = trpc.procedure.meta({ mcp: { enabled: true } });
+
+  const call = async (
+    handler: ReturnType<typeof createMcpProtocolHandler>,
+    name: string,
+    argumentsValue: Record<string, unknown>,
+  ) => {
+    let request = createRequest("tools/call", { name, arguments: argumentsValue }, name);
+    if (!modern) {
+      request = new Request("http://homarr.test/api/mcp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json, text/event-stream" },
+        body: JSON.stringify({
+          jsonrpc: "2.0",
+          id: 1,
+          method: "tools/call",
+          params: { name, arguments: argumentsValue },
+        }),
+      });
+    }
+    const response = await handler.fetch(request);
+    expect(response.headers.has("Mcp-Session-Id")).toBe(false);
+    return (await parseResponse(response)).result;
+  };
+
+  test("transforms once and does not coerce, insert defaults, or remove properties before tRPC", async () => {
+    const transform = vi.fn((value: string) => `${value}!`);
+    const execution = vi.fn((input: unknown) => input);
+    const router = trpc.router({
+      update: exposed
+        .input(
+          z.looseObject({
+            name: z.string().transform(transform),
+            limit: z.number().default(7),
+          }),
+        )
+        .mutation(({ input }) => execution(input)),
+    });
+    const catalog = extractMcpToolsFromProcedures(router);
+    expect(catalog.diagnostics).toEqual([]);
+    const realCaller = router.createCaller({ user: "one" });
+    const dispatch = vi.fn(realCaller.update);
+    const handler = createMcpProtocolHandler({
+      caller: { update: dispatch },
+      tools: catalog.tools,
+      version: "test",
+      instructions: "test",
+      formatToolError: () => "Invalid input",
+    });
+    const argumentsValue = { name: "hello", extra: "preserved" };
+    const result = await call(handler, "update", argumentsValue);
+    expect(result.isError).not.toBe(true);
+    expect(dispatch).toHaveBeenCalledWith(argumentsValue);
+    expect(transform).toHaveBeenCalledTimes(1);
+    expect(execution).toHaveBeenCalledWith({ name: "hello!", limit: 7, extra: "preserved" });
+    await call(handler, "update", { name: "hello", limit: "7" });
+    expect(dispatch).toHaveBeenCalledTimes(1);
+    expect(execution).toHaveBeenCalledTimes(1);
+  });
+
+  test("retains overlapping chained constraints, refinements, and empty object defaults", async () => {
+    const execution = vi.fn((input: unknown) => input);
+    const router = trpc.router({
+      bounded: exposed
+        .input(z.object({ count: z.number().min(2) }))
+        .input(z.object({ count: z.number().max(5) }))
+        .mutation(({ input }) => execution(input)),
+      refined: exposed
+        .input(z.object({ value: z.string().refine((value) => value !== "blocked") }))
+        .mutation(({ input }) => execution(input)),
+      defaults: exposed.input(z.object({ count: z.number().default(3) })).query(({ input }) => input),
+      none: exposed.query(({ input }) => ({ absent: input === undefined })),
+    });
+    const catalog = extractMcpToolsFromProcedures(router);
+    expect(catalog.diagnostics).toEqual([]);
+    const handler = createMcpProtocolHandler({
+      caller: router.createCaller({ user: "one" }),
+      tools: catalog.tools,
+      version: "test",
+      instructions: "test",
+      formatToolError: () => "Invalid input",
+    });
+    for (const count of [1, 6]) expect((await call(handler, "bounded", { count })).isError).toBe(true);
+    expect((await call(handler, "refined", { value: "blocked" })).isError).toBe(true);
+    expect(execution).not.toHaveBeenCalled();
+    expect((await call(handler, "bounded", { count: 3 })).isError).not.toBe(true);
+    expect(execution).toHaveBeenCalledWith({ count: 3 });
+    expect((await call(handler, "defaults", {})).content).toEqual([{ type: "text", text: '{"count":3}' }]);
+    expect((await call(handler, "none", {})).content).toEqual([{ type: "text", text: '{"absent":true}' }]);
+  });
+
+  test("accepts app inputs that tRPC normalizes before checking constraints", async () => {
+    const mutation = vi.fn((input: unknown) => input);
+    const router = trpc.router({ create: exposed.input(appManageSchema).mutation(({ input }) => mutation(input)) });
+    const { tools, diagnostics } = extractMcpToolsFromProcedures(router);
+    expect(diagnostics).toEqual([]);
+    const handler = createMcpProtocolHandler({
+      caller: router.createCaller({ user: "admin" }),
+      tools,
+      version: "test",
+      instructions: "test",
+      formatToolError: () => "Invalid input",
+    });
+    const argumentsValue = {
+      name: `${" ".repeat(64)}App `,
+      description: " description ",
+      iconUrl: " icon ",
+      href: null,
+      pingUrl: " https://example.com ",
+    };
+    expect((await call(handler, "create", argumentsValue)).isError).not.toBe(true);
+    expect(mutation).toHaveBeenCalledExactlyOnceWith({
+      name: "App",
+      description: "description",
+      iconUrl: "icon",
+      href: null,
+      pingUrl: "https://example.com",
+    });
+    expect((await call(handler, "create", { ...argumentsValue, pingUrl: " javascript:alert(1) " })).isError).toBe(true);
+    expect(mutation).toHaveBeenCalledTimes(1);
+  });
+
+  test("accepts Zod ISO timestamps without seconds while rejecting invalid dates", async () => {
+    const mutation = vi.fn((input: unknown) => input);
+    const router = trpc.router({
+      invite: exposed
+        .input(z.object({ expirationDate: z.iso.datetime({ offset: true }) }))
+        .mutation(({ input }) => mutation(input)),
+    });
+    const { tools, diagnostics } = extractMcpToolsFromProcedures(router);
+    expect(diagnostics).toEqual([]);
+    const handler = createMcpProtocolHandler({
+      caller: router.createCaller({ user: "admin" }),
+      tools,
+      version: "test",
+      instructions: "test",
+      formatToolError: () => "Invalid input",
+    });
+    for (const expirationDate of ["2026-12-01T18:00Z", "2026-12-01T19:00+01:00"]) {
+      expect((await call(handler, "invite", { expirationDate })).isError).not.toBe(true);
+      expect(mutation).toHaveBeenLastCalledWith({ expirationDate });
+    }
+    for (const expirationDate of ["2026-02-30T18:00Z", "not-a-date"]) {
+      expect((await call(handler, "invite", { expirationDate })).isError).toBe(true);
+    }
+    expect(mutation).toHaveBeenCalledTimes(2);
+  });
+
+  test("enforces tRPC permissions before executing mutations", async () => {
+    const mutation = vi.fn(() => "changed");
+    const router = trpc.router({
+      restricted: exposed
+        .use(({ ctx, next }) => {
+          if (ctx.user !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+          return next();
+        })
+        .input(z.object({}))
+        .mutation(mutation),
+    });
+    const { tools, diagnostics } = extractMcpToolsFromProcedures(router);
+    expect(diagnostics).toEqual([]);
+    const handler = createMcpProtocolHandler({
+      caller: router.createCaller({ user: "guest" }),
+      tools,
+      version: "test",
+      instructions: "test",
+      formatToolError: () => "Forbidden",
+    });
+    expect((await call(handler, "restricted", {})).isError).toBe(true);
+    expect(mutation).not.toHaveBeenCalled();
+  });
+
+  test("isolates authenticated callers when reusing catalog schemas", async () => {
+    const router = trpc.router({ who: exposed.query(({ ctx }) => ctx.user) });
+    const { tools } = extractMcpToolsFromProcedures(router);
+    const handlers = ["alice", "bob"].map((user) =>
+      createMcpProtocolHandler({
+        caller: router.createCaller({ user }),
+        tools,
+        version: "test",
+        instructions: "test",
+        formatToolError: () => "Failed",
+      }),
+    );
+    const results = await Promise.all(handlers.map((handler) => call(handler, "who", {})));
+    expect(results.map((result) => result.content)).toEqual([
+      [{ type: "text", text: '"alice"' }],
+      [{ type: "text", text: '"bob"' }],
+    ]);
   });
 });

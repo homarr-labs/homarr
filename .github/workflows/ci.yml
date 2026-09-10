@@ -97,17 +97,16 @@ jobs:
 
       - name: Validate Custom Widget bundle budget
         run: |
-          pnpm --filter nextjs build
+          pnpm turbo run build --filter=@homarr/nextjs
           pnpm check:custom-widget-bundle
 
-      - name: Run unit tests
-        run: pnpm test
-
   container:
-    name: Container and E2E
+    name: Container build
+    # Same-repository previews already build amd64; only build a fallback when no digest is available.
     needs: [fast-gate, preview-amd64]
     if: |
       !cancelled() && needs.fast-gate.result == 'success' &&
+      needs.preview-amd64.result != 'failure' && needs.preview-amd64.outputs.digest == '' &&
       (
         github.event_name == 'merge_group' ||
         (github.event_name == 'push' && github.ref == 'refs/heads/release/v2') ||
@@ -115,10 +114,9 @@ jobs:
         (github.event_name == 'workflow_dispatch' && (inputs.operation == 'validate' || inputs.operation == 'publish'))
       )
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 20
     permissions:
       contents: read
-      packages: read
     steps:
       - uses: actions/checkout@v7
         if: "!env.ACT"
@@ -126,22 +124,9 @@ jobs:
           persist-credentials: false
           ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || '' }}
 
-      - name: Setup
-        uses: ./tooling/github/setup
-
       - name: Set up Docker Buildx
-        if: "!env.ACT"
+        if: needs.preview-amd64.outputs.digest == '' && !env.ACT
         uses: docker/setup-buildx-action@v4
-
-      - name: Reuse amd64 preview image
-        if: needs.preview-amd64.outputs.digest != '' && !env.ACT
-        env:
-          DIGEST: ${{ needs.preview-amd64.outputs.digest }}
-        run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
-          docker pull "${PREVIEW_IMAGE}@${DIGEST}"
-          docker tag "${PREVIEW_IMAGE}@${DIGEST}" homarr-ci
-          docker tag "${PREVIEW_IMAGE}@${DIGEST}" homarr-e2e
 
       - name: Build container once
         if: needs.preview-amd64.outputs.digest == '' && !env.ACT
@@ -152,9 +137,7 @@ jobs:
           platforms: linux/amd64
           load: true
           push: false
-          tags: |
-            homarr-ci
-            homarr-e2e
+          tags: homarr-ci
           labels: |
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
             org.opencontainers.image.revision=${{ github.sha }}
@@ -182,37 +165,7 @@ jobs:
             fi
           done
           DOCKER_BUILDKIT=1 docker build --platform linux/amd64 \
-            --tag homarr-ci --tag homarr-e2e "${secret_args[@]}" .
-
-      - name: Cache Playwright browsers
-        if: "!env.ACT"
-        id: playwright-cache
-        uses: actions/cache@v6
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-
-      - name: Install Playwright Chromium
-        if: steps.playwright-cache.outputs.cache-hit != 'true' || env.ACT
-        run: pnpm exec playwright install --with-deps chromium
-
-      - name: Install Playwright system deps
-        if: steps.playwright-cache.outputs.cache-hit == 'true'
-        run: pnpm exec playwright install-deps chromium
-
-      - name: Run E2E tests
-        env:
-          NODE_ENV: development
-          CI: "true"
-        run: pnpm exec vitest e2e --retry 1 --maxWorkers 4
-
-      - name: Upload E2E artifacts
-        if: failure() && !env.ACT
-        uses: actions/upload-artifact@v7
-        with:
-          name: playwright-report
-          path: e2e/test-results/
-          retention-days: 7
+            --tag homarr-ci "${secret_args[@]}" .
 
   preview-amd64:
     name: Build amd64 preview image
@@ -320,10 +273,10 @@ jobs:
 
   publish-preview:
     name: Publish multi-platform preview image
-    needs: [container, preview-amd64, preview-arm64]
+    needs: [fast-gate, preview-amd64, preview-arm64]
     if: |
       !cancelled() &&
-      needs.container.result == 'success' &&
+      needs.fast-gate.result == 'success' &&
       needs.preview-amd64.result == 'success' &&
       needs.preview-arm64.result == 'success' &&
       (

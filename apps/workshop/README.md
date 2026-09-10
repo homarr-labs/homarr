@@ -77,7 +77,7 @@ pnpm --filter @homarr/docs typecheck
 ```
 
 The integration suite uses a disposable Compose project. `pnpm test:workshop-image` additionally builds and smoke-tests
-the combined production image.
+the combined production image. Both commands are manual and do not run in CI. Workshop CI validates Compose configuration only when its workflow or Docker build inputs change, then publishes images on release branches. The main Fast gate owns workspace typechecking.
 
 ## Data safety
 
