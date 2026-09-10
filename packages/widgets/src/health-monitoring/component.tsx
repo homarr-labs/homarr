@@ -18,16 +18,18 @@ const isClusterIntegration = (integration: { kind: IntegrationKind }) =>
   integration.kind === "proxmox" || integration.kind === "mock";
 
 export default function HealthMonitoringWidget(props: WidgetComponentProps<"healthMonitoring">) {
-  const { data: integrations = [] } = clientApi.integration.byIds.useQuery(props.integrationIds);
+  const { data: integrations, isPending, isError } = clientApi.integration.byIds.useQuery(props.integrationIds);
   const t = useI18n();
 
-  const clusterIntegrationId = integrations.find(isClusterIntegration)?.id;
+  if (isPending || isError) return null;
+
+  const clusterIntegrationId = integrations?.find(isClusterIntegration)?.id;
 
   if (!clusterIntegrationId) {
     return <SystemHealthMonitoring {...props} />;
   }
 
-  const otherIntegrationIds = integrations
+  const otherIntegrationIds = (integrations ?? [])
     // We want to have the mock integration also in the system tab, so we use it for both
     .filter((integration) => integration.kind !== "proxmox")
     .map((integration) => integration.id);

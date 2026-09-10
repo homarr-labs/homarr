@@ -13,7 +13,6 @@ import { UndiciHttpAgent } from "@homarr/core/infrastructure/http";
 
 import type { TrustedCertificateHostname } from "../certificates/hostnames";
 import { withTimeoutAsync } from "./timeout";
-
 export const createCustomCheckServerIdentity = (
   trustedHostnames: TrustedCertificateHostname[],
 ): typeof checkServerIdentity => {

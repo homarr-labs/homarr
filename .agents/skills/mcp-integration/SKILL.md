@@ -1,12 +1,13 @@
 ---
-description: How to expose tRPC procedures as MCP tools for AI clients
-globs: packages/api/src/router/**/*.ts
-alwaysApply: false
+name: mcp-integration
+description: Expose tRPC procedures as MCP tools for AI clients. Use when modifying procedures in packages/api/src/router, adding a new tRPC procedure or router, or deciding what to expose via Homarr's MCP interface. Covers .meta({ mcp }), router registration in packages/api/src/mcp.ts, input schema rules, and what to expose vs skip.
 ---
 
-# MCP Integration Guide
+# MCP Integration
 
 Every new tRPC procedure that provides useful functionality should be exposed as an MCP tool so AI assistants (Claude, Cursor, etc.) can use it. This is a first-class feature of Homarr.
+
+Exposing a procedure makes it callable by any AI client with an API key. Before adding `.meta({ mcp })`, review what the tool exposes: authorization requirements, sensitive data, tenant isolation, auditability, and whether the action is destructive. Prefer exposing read-only queries over mutations unless the mutation is safe and permission-scoped. When in doubt, ask for a security review before shipping a new MCP tool.
 
 ## Adding MCP to a procedure
 
@@ -16,7 +17,7 @@ Add `.meta({ mcp: { enabled: true, description: "..." } })` to the procedure cha
 // Read-only tool (query)
 myProcedure: protectedProcedure
   .meta({ mcp: { enabled: true, description: "Get all items with their status and metadata" } })
-  .input(z.object({ limit: z.number().default(50) }))
+  .input(z.object({ limit: z.number().default(10) }))
   .query(async ({ ctx, input }) => { ... })
 
 // Write tool (mutation)
@@ -38,23 +39,27 @@ The `.meta()` call must come **before** `.input()` and `.query()`/`.mutation()` 
 The description is the **only thing** an AI sees to decide when and how to use the tool. Write it like you're explaining to a colleague who has never used Homarr.
 
 **Must include:**
+
 - What the tool returns or does
 - Which integrations/services it works with (if applicable)
 - How to get required IDs (e.g., "Use integration_all to get the integrationId")
 - Permission requirements (if non-obvious)
 
 **Good:**
-```
+
+```text
 "Get calendar events for upcoming and recent media releases. Fetches from all connected Sonarr (TV), Radarr (movies), Lidarr (music), and Readarr (books) integrations. Requires integrationIds from integration_all"
 ```
 
 **Bad:**
-```
+
+```text
 "Get calendar events"
 ```
 
 **For tools that return permission fields**, explain what they mean:
-```
+
+```text
 "List all integrations. Returns permissions.hasUseAccess (read) and permissions.hasInteractAccess (actions) — false means the API key lacks that permission, not an error"
 ```
 
@@ -77,11 +82,13 @@ export const mcpRouter = createTRPCRouter({
 ## What to expose vs. what to skip
 
 **Expose:**
+
 - Data queries (list, search, get by ID)
 - Actions users would ask an AI to do (toggle, create, delete, approve)
 - Status checks (health, stats, summaries)
 
 **Skip:**
+
 - Subscriptions (WebSocket-only, not supported by MCP)
 - Internal procedures (session management, onboarding steps)
 - File upload/download procedures

@@ -16,7 +16,6 @@ out/
 next-env.d.ts
 
 # artifacts
-.ai-evaluations/
 packages/db/migrations/*/migrate.cjs
 
 # nitro
@@ -74,9 +73,6 @@ apps/nextjs/public/images/background.png
 .opencode
 .agents/*
 !.agents/skills/
-.agents/skills/*
-!.agents/skills/homarr-custom-widget/
-!.agents/skills/homarr-custom-widget/**
 skills-lock.json
 
 # docusaurus

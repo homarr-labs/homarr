@@ -8,9 +8,9 @@
         "action": {
           "scratch": "Empezar de cero",
           "importOldmarr": "Importar desde una versión anterior a Homarr 1.0",
-          "restoreSqlite": "",
-          "restoreSqliteDescription": "",
-          "backToOptions": ""
+          "restoreSqlite": "Restaurar desde una copia de seguridad de SQLite",
+          "restoreSqliteDescription": "Suba una copia de seguridad completa de la base de datos SQLite de una instancia anterior de Homarr. Esto restaurará todos los tableros, usuarios, aplicaciones, integraciones y ajustes.",
+          "backToOptions": "← Volver a las opciones de configuración"
         }
       },
       "import": {
@@ -94,45 +94,45 @@
         "subtitle": "Configurar ajustes del servidor."
       },
       "integrations": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Integraciones",
+        "subtitle": "Seleccione los servicios que utiliza.",
+        "description": "Elija las integraciones que le gustaría conectar. Configuraremos tu tablero con los widgets que coincidan automáticamente.",
         "action": {
-          "continue": "",
-          "skip": ""
+          "continue": "Continuar",
+          "skip": "Saltar por ahora"
         },
         "configure": {
-          "progress": "",
-          "skip": "",
-          "finishing": "",
+          "progress": "{current} de {total}",
+          "skip": "Saltar esta integración",
+          "finishing": "Configurando su tablero...",
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Configuración fallida",
+            "message": "Algo salió mal al configurar su tablero. Por favor, inténtelo de nuevo."
           },
           "helpers": {
-            "tooltip": "",
-            "description": ""
+            "tooltip": "Asistentes de URL",
+            "description": "Estos asistentes tratan de adivinar la URL de tus servicios. Si no funciona, escriba la dirección manualmente."
           }
         },
         "urlTemplate": {
-          "label": "",
-          "placeholder": "",
-          "hint": "",
-          "warning": "",
-          "preview": "",
+          "label": "URL base",
+          "placeholder": "homelab.local o 192.168.1.1",
+          "hint": "Introduzca su dominio base o IP para autocompletar las URLs de integración",
+          "warning": "Configurando la URL base ahora autorrellenarán todas las URLs de las integraciones, ahorrando tiempo durante la configuración",
+          "preview": "ej. {example}",
           "mode": {
-            "subdomain": "",
-            "hostPort": ""
+            "subdomain": "Subdominio",
+            "hostPort": "Host:Puerto"
           }
         },
         "docker": {
-          "detected": "",
-          "detectedBreakdown": "",
-          "summary": "",
-          "appBadge": "",
-          "appSectionLabel": "",
-          "scanning": "",
-          "scanningDescription": ""
+          "detected": "Docker detectó {count} servicios",
+          "detectedBreakdown": "{integrations} integraciones · {apps} aplicaciones",
+          "summary": "Homarr detectó {apps} aplicaciones, de las cuales {integrations} tienen integraciones integradas",
+          "appBadge": "Aplicación",
+          "appSectionLabel": "Aplicaciones para añadir al tablero ({count} seleccionadas)",
+          "scanning": "Escaneando Docker...",
+          "scanningDescription": "Buscando contenedores en su sistema"
         }
       },
       "finish": {
@@ -177,7 +177,7 @@
       },
       "password": {
         "label": "Contraseña",
-        "suggestionsTitle": "",
+        "suggestionsTitle": "Sugerencias de contraseña",
         "suggestion": {
           "length": "Incluye al menos 8 caracteres",
           "lowercase": "Incluye al menos una letra minúscula",
@@ -199,8 +199,8 @@
         "label": "Usar iconos para pings"
       },
       "enableRightClickOnWidgets": {
-        "label": "",
-        "description": ""
+        "label": "Habilitar clic derecho en widgets",
+        "description": "Mostrar el menú contextual de Homarr al hacer clic derecho en un widget. Desactiva para usar el menú predeterminado del navegador (p. ej., \"Abrir enlace en una pestaña nueva\")."
       },
       "defaultSearchEngine": {
         "label": "Motor de búsqueda predeterminado"
@@ -209,7 +209,7 @@
         "label": "Abrir resultados de búsqueda en una nueva pestaña"
       },
       "ddgBangs": {
-        "label": ""
+        "label": "Habilitar los bangs de DuckDuckGo"
       }
     },
     "error": {
@@ -302,10 +302,10 @@
       "changeDdgBangs": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "El estado de los bangs de DuckDuckGo ha cambiado con éxito"
           },
           "error": {
-            "message": ""
+            "message": "No se pudo cambiar el estado de los bangs de DuckDuckGo"
           }
         }
       },
@@ -719,7 +719,7 @@
               "title": "Nueva",
               "url": {
                 "label": "URL de aplicación",
-                "description": "La URL que abrirá la aplicación cuando se acceda desde el panel de control"
+                "description": "La URL que abrirá la aplicación cuando se acceda desde el tablero"
               }
             }
           }
@@ -782,47 +782,47 @@
         "placeholder": "URL personalizada de aplicación"
       },
       "apiKeySettings": {
-        "label": ""
+        "label": "Obtener Clave de API"
       }
     },
     "action": {
       "create": "Nueva integración"
     },
     "grid": {
-      "widgetCount": "",
-      "noWidgets": "",
-      "detected": ""
+      "widgetCount": "{count} widgets",
+      "noWidgets": "No hay widgets",
+      "detected": "Detectado a través de Docker"
     },
     "category": {
-      "dnsHole": "",
-      "mediaService": "",
-      "calendar": "",
-      "mediaSearch": "",
+      "dnsHole": "DNS",
+      "mediaService": "Multimedia",
+      "calendar": "Calendario",
+      "mediaSearch": "Búsqueda",
       "mediaRelease": "",
-      "mediaRequest": "",
-      "downloadClient": "",
-      "usenet": "",
-      "torrent": "",
-      "miscellaneous": "",
-      "smartHomeServer": "",
-      "indexerManager": "",
-      "healthMonitoring": "",
+      "mediaRequest": "Solicitudes",
+      "downloadClient": "Descargas",
+      "usenet": "Usenet",
+      "torrent": "Torrente",
+      "miscellaneous": "Misc",
+      "smartHomeServer": "Domótica",
+      "indexerManager": "Indexador",
+      "healthMonitoring": "Salud",
       "search": "",
-      "mediaTranscoding": "",
-      "networkController": "",
+      "mediaTranscoding": "Transcodificación",
+      "networkController": "Red",
       "releasesProvider": "",
-      "notifications": "",
-      "firewall": "",
-      "timetable": "",
-      "photoService": "",
-      "documents": "",
-      "notes": "",
-      "mediaMonitoring": "",
-      "speedtest": "",
-      "analytics": "",
-      "vpn": "",
-      "mediaLibrary": "",
-      "uptimeMonitoring": ""
+      "notifications": "Notificaciones",
+      "firewall": "Cortafuegos",
+      "timetable": "Horario",
+      "photoService": "Fotos",
+      "documents": "Documentos",
+      "notes": "Notas",
+      "mediaMonitoring": "Monitoreo",
+      "speedtest": "Prueba de velocidad",
+      "analytics": "Analíticas",
+      "vpn": "VPN",
+      "mediaLibrary": "Biblioteca multimedia",
+      "uptimeMonitoring": "Monitoreo de disponibilidad"
     },
     "testConnection": {
       "action": {
@@ -1085,12 +1085,12 @@
           "newLabel": "Nueva clave API (Credencial)"
         },
         "patchmonApiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "Clave de API",
+          "newLabel": "Nueva clave de API"
         },
         "patchmonApiSecret": {
-          "label": "",
-          "newLabel": ""
+          "label": "Secreto de API",
+          "newLabel": "Nuevo secreto de API"
         },
         "githubAppId": {
           "label": "ID de aplicación",
@@ -1105,7 +1105,7 @@
           "newLabel": "Nueva clave privada"
         },
         "slug": {
-          "label": "",
+          "label": "Slug de página de estado",
           "newLabel": ""
         }
       }
@@ -1116,15 +1116,15 @@
       "full": "Acceso completo a la integración"
     },
     "audiobookshelf": {
-      "name": "",
+      "name": "Audiobookshelf",
       "description": ""
     },
     "navidrome": {
-      "name": "",
+      "name": "Navidrome",
       "description": ""
     },
     "uptimeKuma": {
-      "name": "",
+      "name": "Uptime Kuma",
       "description": "",
       "secret": {
         "slug": {
@@ -1136,19 +1136,23 @@
       }
     },
     "traefik": {
-      "name": "",
+      "name": "Traefik",
       "description": ""
     },
+    "wud": {
+      "name": "Qué hay de nuevo Docker",
+      "description": "Controlar cuál de sus contenedores Docker tiene actualizaciones de imagen disponibles"
+    },
     "paperlessNgx": {
-      "name": "",
+      "name": "Paperless-ngx",
       "description": ""
     },
     "patchmon": {
-      "name": "",
+      "name": "PatchMon",
       "description": ""
     },
     "bazarr": {
-      "name": "",
+      "name": "Bazarr",
       "description": ""
     }
   },
@@ -1193,7 +1197,7 @@
       }
     },
     "noResults": {
-      "title": ""
+      "title": "No hay multimedia subida"
     }
   },
   "common": {
@@ -1204,7 +1208,7 @@
       "add": "Añadir",
       "apply": "Aplicar",
       "backToOverview": "Volver a la vista general",
-      "skip": "",
+      "skip": "Saltar",
       "change": "Modificar",
       "create": "Crear",
       "createAnother": "Crear e iniciar de nuevo",
@@ -1226,20 +1230,30 @@
       "checkLogs": "Comprueba los registros para más detalles",
       "tryAgain": "Intentar de nuevo",
       "loading": "Cargando",
-      "show": "",
-      "hide": ""
+      "show": "Mostrar",
+      "hide": "Ocultar"
     },
     "here": "aquí",
     "iconPicker": {
       "label": "URL del icono",
-      "header": "Escribe nombre u objetos para filtrar iconos... Homarr buscará a través de iconos {countIcons} por ti.",
-      "headerLoading": "",
-      "noResults": "",
-      "error": ""
+      "description": "Busca en la biblioteca, pega una URL de imagen o sube un archivo.",
+      "header": "Buscar imágenes {countIcons} por nombre",
+      "headerLoading": "Buscar imágenes por nombre",
+      "clear": "Borrar imagen",
+      "uploadImage": "Subir imagen",
+      "results": "Resultados de búsqueda de imágenes",
+      "localImages": "Tus imágenes",
+      "svgIcons": "Iconos SVG",
+      "otherImages": "Otras imágenes",
+      "urlLoading": "Comprobando imagen…",
+      "urlReady": "La imagen está lista para usar",
+      "urlError": "Esta imagen no se pudo cargar. Compruebe la URL e inténtelo de nuevo.",
+      "noResults": "No hay iconos que coincidan con \"{search}\".",
+      "error": "No se pudieron cargar los iconos."
     },
     "colorScheme": {
       "options": {
-        "auto": "",
+        "auto": "Automático",
         "light": "Claro",
         "dark": "Oscuro"
       }
@@ -1287,7 +1301,7 @@
         "switchToDarkMode": "Cambiar a modo oscuro",
         "switchToLightMode": "Cambiar a modo claro",
         "management": "Administración",
-        "docker": "",
+        "docker": "Docker",
         "preferences": "Tus preferencias",
         "logout": "Cerrar sesión",
         "login": "Iniciar sesión",
@@ -1397,7 +1411,7 @@
         "label": {
           "create": "Nueva Categoría",
           "changePosition": "Cambiar posición",
-          "settings": ""
+          "settings": "Ajustes"
         }
       },
       "openAllInNewTabs": {
@@ -1418,14 +1432,14 @@
     "menu": {
       "label": {
         "settings": "Ajustes",
-        "refresh": "",
-        "options": "",
-        "actions": ""
+        "refresh": "Actualizar",
+        "options": "Opciones",
+        "actions": "Acciones"
       },
       "status": {
-        "success": "",
-        "error": "",
-        "loading": "",
+        "success": "Ok",
+        "error": "Error",
+        "loading": "Cargando",
         "idle": ""
       }
     },
@@ -1454,11 +1468,11 @@
     "edit": {
       "title": "Editar elemento",
       "tab": {
-        "widget": "",
-        "app": ""
+        "widget": "Editar widget",
+        "app": "Editar aplicación"
       },
       "app": {
-        "propagationNotice": ""
+        "propagationNotice": "Los cambios a esta aplicación se aplicarán en cualquier lugar donde se utilice en todos los tableros."
       },
       "advancedOptions": {
         "label": "Opciones avanzadas",
@@ -1486,11 +1500,11 @@
   },
   "widget": {
     "integrationSelect": {
-      "configureIntegrationFirst": "",
-      "loading": "",
-      "placeholder": "",
-      "noResults": "",
-      "loadError": ""
+      "configureIntegrationFirst": "Conecte primero una integración",
+      "loading": "Cargando...",
+      "placeholder": "Seleccione una opción",
+      "noResults": "No se encontraron resultados",
+      "loadError": "Error al cargar las opciones"
     },
     "app": {
       "name": "Aplicación",
@@ -1571,7 +1585,7 @@
           "label": "Abrir en una nueva pestaña"
         },
         "withBorder": {
-          "label": ""
+          "label": "Mostrar borde"
         },
         "items": {
           "label": "Marcadores",
@@ -1580,7 +1594,7 @@
       }
     },
     "archiveTeamWarrior": {
-      "name": "",
+      "name": "ArchiveTeam Warrior",
       "description": "",
       "option": {
         "showBroadcastMessage": {
@@ -1624,7 +1638,7 @@
     },
     "dnsHoleControls": {
       "name": "Controles de agujero DNS",
-      "description": "Controla Pihole o AdGuard desde tu panel",
+      "description": "Controla Pihole o AdGuard desde tu tablero",
       "option": {
         "layout": {
           "label": "Diseño",
@@ -1702,14 +1716,14 @@
           "description": "Usar ISO 8601 para dar formato a la hora (esto anulará otras opciones)"
         },
         "showWeather": {
-          "label": "",
-          "description": ""
+          "label": "Mostrar el clima",
+          "description": "Mostrar un pequeño icono de clima animado y la temperatura en la esquina de la tarjeta"
         },
         "weatherLocation": {
-          "label": ""
+          "label": "Ubicación para el clima"
         },
         "isWeatherFormatFahrenheit": {
-          "label": ""
+          "label": "Usar Fahrenheit"
         }
       }
     },
@@ -1771,8 +1785,8 @@
         "clear": "Borrar formato",
         "heading": "Encabezado {level}",
         "align": "Alinear texto: {position}",
-        "directionLtr": "",
-        "directionRtl": "",
+        "directionLtr": "Establecer dirección de texto de izquierda a derecha",
+        "directionRtl": "Establecer dirección de texto derecha a izquierda",
         "blockquote": "Cita",
         "horizontalLine": "Línea horizontal",
         "bulletList": "Lista sin ordenar",
@@ -2063,7 +2077,7 @@
         "sunset": "Atardecer",
         "maxWindSpeed": "Velocidad máxima del viento: {maxWindSpeed} {unit}",
         "maxWindGusts": "Máximas ráfagas de viento: {maxWindGusts} {unit}",
-        "humidity": ""
+        "humidity": "Humedad: {humidity}%"
       },
       "kind": {
         "clear": "Despejado",
@@ -2123,7 +2137,7 @@
           "label": "Mostrar información del sistema de archivos"
         },
         "visibleStorageVolumes": {
-          "label": "",
+          "label": "Volúmenes de almacenamiento visibles",
           "description": "",
           "placeholder": ""
         },
@@ -2207,7 +2221,7 @@
       "description": "Estadísticas de tus contenedores (Este widget sólo puede ser añadido con privilegios de administrador)",
       "option": {
         "columns": {
-          "label": ""
+          "label": "Columnas a mostrar"
         },
         "enableRowSorting": {
           "label": "Habilitar ordenar elementos"
@@ -2225,10 +2239,10 @@
           "label": "Invertir orden"
         },
         "columnOrder": {
-          "label": ""
+          "label": "Orden de columnas"
         },
         "columnWidths": {
-          "label": ""
+          "label": "Ancho de columnas"
         }
       },
       "error": {
@@ -2274,40 +2288,40 @@
       }
     },
     "vpn": {
-      "name": "",
+      "name": "VPN",
       "description": "",
-      "serviceUnavailable": "",
+      "serviceUnavailable": "VPN no disponible",
       "option": {}
     },
     "ups": {
-      "name": "",
-      "description": "",
+      "name": "SAI",
+      "description": "Monitorear el estado de sus dispositivos SAI a través de un servidor NUT",
       "option": {
         "showBattery": {
-          "label": ""
+          "label": "Mostrar nivel de batería"
         },
         "showLoad": {
-          "label": ""
+          "label": "Mostrar carga"
         },
         "showVoltage": {
-          "label": ""
+          "label": "Mostrar voltaje"
         }
       },
       "status": {
-        "online": "",
-        "onBattery": "",
-        "lowBattery": "",
-        "charging": "",
-        "unknown": ""
+        "online": "En línea",
+        "onBattery": "En batería",
+        "lowBattery": "Batería baja",
+        "charging": "Cargando",
+        "unknown": "Desconocido"
       },
       "field": {
         "runtime": "",
-        "load": "",
-        "input": "",
-        "output": ""
+        "load": "Carga",
+        "input": "Entrada",
+        "output": "Salida"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Error al obtener los datos del SAI"
       }
     },
     "tracearr": {
@@ -2390,30 +2404,30 @@
             "today": "Hoy",
             "24h": "Últimas 24 horas",
             "7d": "Últimos 7 días",
-            "30d": "",
-            "month": "",
-            "lastMonth": ""
+            "30d": "Últimos 30 días",
+            "month": "Este mes",
+            "lastMonth": "Mes pasado"
           }
         },
         "eventName": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noEvents": "",
-          "none": "",
-          "configureWebsiteFirst": ""
+          "label": "Evento",
+          "description": "Mostrar ocurrencias totales de un evento específico",
+          "placeholder": "Seleccione un evento",
+          "loading": "Cargando eventos...",
+          "noEvents": "No se encontraron eventos",
+          "none": "Ningún evento",
+          "configureWebsiteFirst": "Seleccione un sitio web primero para cargar eventos"
         },
         "chartType": {
-          "label": "",
-          "description": "",
+          "label": "Tipo de gráfico",
+          "description": "Estilo de visualización del gráfico",
           "option": {
-            "bar": "",
-            "sparkline": ""
+            "bar": "Gráfico de barras",
+            "sparkline": "Minigráfico de pulso"
           }
         },
         "chartStyle": {
-          "label": "",
+          "label": "Estilo de gráfico",
           "description": "",
           "option": {
             "grouped": "",
@@ -2533,31 +2547,31 @@
           "description": "Desactivar esta opción no funcionará para plex"
         },
         "showBitrate": {
-          "label": "",
+          "label": "Mostrar tasa de bits",
           "description": ""
         },
         "showLocation": {
-          "label": "",
-          "description": ""
+          "label": "Mostrar ubicación",
+          "description": "Mostrar si la retransmisión está en su LAN o WAN"
         }
       },
       "footer": {
-        "streams": "",
-        "totalBitrate": ""
+        "streams": "{count, plural, one {# retrasmisión activa} other {# retrasmisiones activas}}",
+        "totalBitrate": "Total: {bitrate}"
       },
       "items": {
         "currentlyPlaying": "Reproducción en curso",
         "user": "Usuario",
         "name": "Nombre",
         "id": "ID",
-        "status": "",
-        "directPlay": "",
-        "directStream": "",
-        "transcodeVideo": "",
-        "transcodeAudio": "",
-        "transcoding": "",
-        "paused": "",
-        "remaining": "",
+        "status": "Estado",
+        "directPlay": "Reproducción directa",
+        "directStream": "Retransmisión directa",
+        "transcodeVideo": "Transcodificando video",
+        "transcodeAudio": "Transcodificando audio",
+        "transcoding": "Transcodificando",
+        "paused": "En pausa",
+        "remaining": "{minutes} min restantes",
         "metadata": {
           "title": "Estadísticas",
           "video": {
@@ -2579,16 +2593,16 @@
       }
     },
     "paperlessNgx": {
-      "name": "",
-      "description": "",
-      "documentsTotal": "",
-      "documentsInbox": "",
+      "name": "Paperless-ngx",
+      "description": "Resumen de su archivo de documentos Paperless-ngx",
+      "documentsTotal": "Total de documentos",
+      "documentsInbox": "Bandeja de entrada",
       "correspondents": "",
-      "tags": "",
-      "documentTypes": "",
+      "tags": "Etiquetas",
+      "documentTypes": "Tipos de documento",
       "inboxRatio": "",
       "inbox": "",
-      "total": "",
+      "total": "total",
       "option": {
         "showInboxRatio": {
           "label": "",
@@ -2624,18 +2638,18 @@
       }
     },
     "patchmon": {
-      "name": "",
+      "name": "PatchMon",
       "description": "",
-      "title": "",
+      "title": "Estadísticas de PatchMon",
       "totalHosts": "",
-      "hostsNeedingUpdates": "",
-      "securityUpdates": "",
+      "hostsNeedingUpdates": "Necesita actualizaciones",
+      "securityUpdates": "Actualizaciones de seguridad",
       "upToDateHosts": "",
       "hostsWithSecurityUpdates": "",
       "recentUpdates24h": "",
-      "totalOutdatedPackages": "",
-      "totalRepos": "",
-      "osDistribution": "",
+      "totalOutdatedPackages": "Paquetes obsoletos",
+      "totalRepos": "Repositorios",
+      "osDistribution": "Distribución de SSOO",
       "compliance": "",
       "complianceRatio": "",
       "lastUpdated": "",
@@ -2754,14 +2768,14 @@
           "label": "",
           "description": "",
           "option": {
-            "3": "",
-            "5": "",
-            "10": "",
+            "3": "Top 3",
+            "5": "Top 5",
+            "10": "Top 10",
             "all": ""
           }
         },
         "showOsVersion": {
-          "label": "",
+          "label": "Mostrar versión del SO",
           "description": ""
         },
         "showComplianceHero": {
@@ -2782,10 +2796,10 @@
       }
     },
     "bazarr": {
-      "name": "",
+      "name": "Bazarr",
       "description": "",
       "episodes": "",
-      "movies": "",
+      "movies": "Películas restantes",
       "providers": "",
       "status": "",
       "option": {
@@ -2842,7 +2856,7 @@
       "option": {
         "albumId": {
           "label": "ID de álbum",
-          "description": "Este es un identificador único que se refiere a un álbum de Immich. Puedes encontrarlo abriendo un álbum y copiando el ID que se muestra en la URL. Como por ejemplo: 'a21aca09-9f05-47dc-b1a1-7b53c547226e'"
+          "description": "Este es un identificador único que se refiere a un álbum de Immich. Puedes encontrarlo abriendo un álbum y copiando el ID que se muestra en la URL. Como por ejemplo: 'a21aca09-9f05-47dc-b1a1-7b53c547226e'."
         },
         "rotationIntervalSeconds": {
           "label": "Intervalo de actualización en segundos",
@@ -2912,8 +2926,8 @@
         "noColumns": "Seleccionar Columnas en Artículos",
         "noCommunications": "No se pueden cargar los datos desde la integración",
         "noItems": "",
-        "actionFailed": "",
-        "actionFailedMessage": ""
+        "actionFailed": "Acción fallida",
+        "actionFailedMessage": "No se pudo completar la acción. Por favor inténtalo de nuevo."
       },
       "items": {
         "actions": {
@@ -2972,7 +2986,7 @@
         "time": {
           "columnTitle": "Hora de finalización",
           "detailsTitle": "Tiempo desde/hasta la finalización",
-          "eta": ""
+          "eta": "Tiempo estimado"
         },
         "type": {
           "columnTitle": "Tipo",
@@ -3018,21 +3032,21 @@
       },
       "globalRatio": "Relación global",
       "contextMenu": {
-        "copyName": "",
-        "copyId": "",
-        "clearFilters": ""
+        "copyName": "Copiar nombre",
+        "copyId": "Copiar ID",
+        "clearFilters": "Limpiar filtros"
       },
       "footer": {
-        "filter": ""
+        "filter": "Filtrar descargas"
       },
       "stats": {
-        "show": "",
-        "hide": "",
-        "overallProgress": "",
-        "totalSize": "",
-        "clients": ""
+        "show": "Mostrar estadísticas globales",
+        "hide": "Ocultar estadísticas globales",
+        "overallProgress": "Progreso total de la cola",
+        "totalSize": "Tamaño total de la cola",
+        "clients": "{count, plural, one {# cliente} other {# clientes}}"
       },
-      "disconnected": ""
+      "disconnected": "(desconectado)"
     },
     "mediaReleases": {
       "name": "Lanzamientos de medios",
@@ -3071,7 +3085,7 @@
           "label": "Abrir enlaces en una pestaña nueva"
         },
         "statusFilter": {
-          "label": ""
+          "label": "Estados a mostrar"
         },
         "recentDays": {
           "label": ""
@@ -3201,8 +3215,8 @@
         "queued": ""
       },
       "type": {
-        "movie": "",
-        "episode": ""
+        "movie": "Película",
+        "episode": "Episodio"
       },
       "empty": {
         "missing": "",
@@ -3561,7 +3575,7 @@
       },
       "resource": {
         "routers": "",
-        "services": "",
+        "services": "Servicios",
         "middlewares": ""
       },
       "status": {
@@ -3819,7 +3833,7 @@
       },
       "metric": {
         "cpu": "",
-        "memory": "",
+        "memory": "Memoria",
         "disk": "",
         "gpu": "",
         "loadAvg": "",
@@ -3846,7 +3860,7 @@
       "error": {
         "internalServerError": ""
       },
-      "history": "",
+      "history": "Historial",
       "resolved": "",
       "status": {
         "triggered": "",
@@ -3903,11 +3917,11 @@
         "cpu": {
           "title": "",
           "subtitle": "",
-          "series": ""
+          "series": "CPU"
         },
         "memory": {
-          "title": "",
-          "subtitle": "",
+          "title": "Uso de memoria",
+          "subtitle": "Utilización precisa en el momento registrado",
           "series": "",
           "cache": ""
         },
@@ -3944,6 +3958,38 @@
         "dockerNetwork": {
           "title": "",
           "subtitle": ""
+        }
+      }
+    },
+    "wud": {
+      "name": "Qué hay de nuevo Docker",
+      "description": "Mostrar cuántos contenedores vistos tienen actualizaciones disponibles.",
+      "title": "Qué hay de nuevo Docker",
+      "monitored": "Monitoreado",
+      "updatesAvailable": "{count, plural, one {# actualización disponible} other {# actualizaciones disponibles}}",
+      "updateAvailable": "Actualización disponible",
+      "openReleaseNotes": "Notas de la versión abierta",
+      "option": {
+        "showTitle": {
+          "label": "Mostrar título"
+        },
+        "showRing": {
+          "label": "Mostrar anillo de actualización"
+        },
+        "layout": {
+          "label": "Diseño",
+          "option": {
+            "horizontal": {
+              "label": "Horizontal"
+            },
+            "vertical": {
+              "label": "Vertical"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Mostrar lista de actualización del contenedor",
+          "description": "Lista cada contenedor supervisado que tiene una actualización de imagen disponible"
         }
       }
     }
@@ -4264,7 +4310,7 @@
     "error": {
       "noBoard": {
         "title": "Bienvenido a Homarr",
-        "description": "Un panel moderno y elegante que pone todas tus aplicaciones y servicios al alcance de la mano.",
+        "description": "Un tablero moderno y elegante que pone todas tus aplicaciones y servicios al alcance de la mano.",
         "link": "Crea tu primer tablero",
         "notice": "Para que esta página desaparezca, crea un tablero y establecelo como el tablero de inicio"
       },
@@ -4350,7 +4396,7 @@
             "api": "API",
             "certificates": "Certificados",
             "tasks": "Tareas",
-            "backup": ""
+            "backup": "Copias de seguridad"
           }
         },
         "settings": "Ajustes",
@@ -4465,9 +4511,9 @@
               "firstDayOfWeek": "Primer día de la semana",
               "accessibility": "Accesibilidad",
               "onboardingTours": {
-                "title": "",
+                "title": "Tours de introducción",
                 "description": "",
-                "reset": "",
+                "reset": "Resetear los tours de introducción",
                 "resetSuccess": {
                   "title": "",
                   "message": ""
@@ -4806,7 +4852,7 @@
               }
             },
             "mcp": {
-              "label": "",
+              "label": "AI / MCP",
               "title": "",
               "subtitle": "",
               "description": "",
@@ -4897,11 +4943,11 @@
           }
         },
         "backup": {
-          "title": "",
+          "title": "Copia de seguridad completa de la base de datos",
           "metaTitle": "",
           "export": {
-            "title": "",
-            "description": "",
+            "title": "Exportar base de datos",
+            "description": "Descargue una copia de seguridad completa de su base de datos SQLite incluyendo todos los ajustes, usuarios, tableros y secretos de integración cifrados. La copia de seguridad se empaqueta como un archivo ZIP con la clave de cifrado y metadatos.",
             "button": "",
             "error": "",
             "confirm": {
@@ -4914,8 +4960,8 @@
             }
           },
           "import": {
-            "title": "",
-            "description": "",
+            "title": "Restaurar base de datos",
+            "description": "Sube una copia de seguridad ZIP previamente exportada para restaurar tu base de datos. Esto reemplazará a toda tu base de datos. Si la copia de seguridad se creó con una clave de cifrado diferente, los secretos se volverán a cifrar automáticamente.",
             "warning": "",
             "dropzone": {
               "title": "",
@@ -4952,8 +4998,8 @@
           },
           "restore": {
             "dropzone": {
-              "title": "",
-              "description": ""
+              "title": "Arrastra tu ZIP de copia de seguridad aquí",
+              "description": "Acepta archivos .zip desde una copia de seguridad de SQLite de Homarr (máx. 256 MB)"
             },
             "analyzing": "",
             "changeFile": "",
@@ -5681,11 +5727,11 @@
             }
           },
           "preferences": {
-            "title": "",
+            "title": "Preferencias",
             "children": {
               "detail": {
                 "title": "",
-                "backHint": "",
+                "backHint": "Presione retroceso o utilice el botón de atrás para volver atrás",
                 "backAction": ""
               }
             },
@@ -5711,7 +5757,7 @@
                 "unavailable": ""
               },
               "colorScheme": {
-                "label": "",
+                "label": "Esquema de colores",
                 "children": {
                   "detail": {
                     "title": ""
@@ -5719,7 +5765,7 @@
                 }
               },
               "locale": {
-                "label": "",
+                "label": "Idioma",
                 "children": {
                   "detail": {
                     "title": ""
@@ -5738,7 +5784,7 @@
                 "label": "",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Abrir resultados de búsqueda en una nueva pestaña"
                   }
                 }
               },
@@ -5746,7 +5792,7 @@
                 "label": "",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Activar bangs de DuckDuckGo"
                   }
                 }
               },
@@ -5767,7 +5813,7 @@
                 }
               },
               "mobileHomeBoardId": {
-                "label": "",
+                "label": "Tablero móvil",
                 "children": {
                   "detail": {
                     "title": ""
@@ -5783,7 +5829,7 @@
                 }
               },
               "enableRightClickOnWidgets": {
-                "label": "",
+                "label": "Habilitar clic derecho en widgets",
                 "children": {
                   "detail": {
                     "title": ""
@@ -5791,7 +5837,7 @@
                 }
               },
               "fullPreferencesPage": {
-                "label": ""
+                "label": "Abrir página de preferencias completa"
               }
             }
           }
@@ -5816,7 +5862,7 @@
           }
         },
         "availability": {
-          "available": "",
+          "available": "Disponible",
           "partiallyAvailable": "",
           "processing": "",
           "requested": "",
@@ -6098,7 +6144,7 @@
               "header": {
                 "season": "Temporada",
                 "episodes": "Episodios",
-                "status": ""
+                "status": "Estado"
               },
               "status": {
                 "requested": ""
@@ -6214,19 +6260,19 @@
     }
   },
   "onboardingTour": {
-    "learnMore": "",
-    "next": "",
+    "learnMore": "Leer la documentación",
+    "next": "Siguiente",
     "prev": "",
     "done": "",
-    "skip": "",
+    "skip": "Saltar tour",
     "manage": {
       "welcome": {
-        "title": "",
-        "description": ""
+        "title": "¡Bienvenido a Homarr!",
+        "description": "Este es tu centro de control. Desde aquí puede administrar tableros, aplicaciones, integraciones, usuarios y ajustes del servidor. Hagamos un recorrido por cada sección."
       },
       "boardsList": {
-        "title": "",
-        "description": ""
+        "title": "Tus tableros",
+        "description": "Aquí están todos tus tableros. Cada tablero tiene su propia configuración, fondo y configuración de acceso. Usted puede ver quién creó cada uno y si es público o privado."
       },
       "boardsCreate": {
         "title": "",
@@ -6237,7 +6283,7 @@
         "description": ""
       },
       "appsCreate": {
-        "title": "",
+        "title": "Añadir una aplicación",
         "description": ""
       },
       "integrationsList": {

@@ -36,7 +36,7 @@ import { formatBytes } from "@homarr/common";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 
-import { filterStorageVolumes, normalizeStorageDeviceName } from "../filter-storage-volumes";
+import { filterStorageVolumes, storageDeviceNamesMatch } from "../filter-storage-volumes";
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
 import { CpuRing } from "./rings/cpu-ring";
@@ -296,12 +296,7 @@ interface SmartData {
 export const matchFileSystemAndSmart = (fileSystems: FileSystem[], smartData: SmartData[]) => {
   return fileSystems
     .map((fileSystem) => {
-      const normalizedFileSystemName = normalizeStorageDeviceName(fileSystem.deviceName);
-      const smartDisk = smartData.find(
-        (smart) =>
-          smart.deviceName === fileSystem.deviceName ||
-          normalizeStorageDeviceName(smart.deviceName) === normalizedFileSystemName,
-      );
+      const smartDisk = smartData.find((smart) => storageDeviceNamesMatch(smart.deviceName, fileSystem.deviceName));
 
       return {
         deviceName: smartDisk?.deviceName ?? fileSystem.deviceName,

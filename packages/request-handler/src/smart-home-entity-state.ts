@@ -18,4 +18,6 @@ export const smartHomeEntityStateRequestHandler = createIntegrationRequestHandle
 
     return result.data.state;
   },
+  // The widget already polls every 30 seconds and refetches after toggles.
+  cacheTtlMs: 0,
 });

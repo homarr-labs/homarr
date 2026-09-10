@@ -1,6 +1,6 @@
 ---
-description: Comprehensive Homarr codebase architecture and conventions reference
-alwaysApply: true
+name: codebase-context
+description: Comprehensive Homarr codebase architecture and conventions reference. Use when orienting in the monorepo, understanding package dependency layers, the three runtime services and ports, tRPC router structure, multi-database support, widget/integration/cron system architecture, routing, auth providers, env vars, or key patterns before writing code.
 ---
 
 # Homarr Codebase Context
@@ -27,7 +27,7 @@ Homarr is an open-source, self-hosted dashboard for managing homelab services. I
 
 ## Repository Structure
 
-```
+```text
 homarr/
 ├── apps/
 │   ├── nextjs/          # Main Next.js application (port 3000)
@@ -66,8 +66,6 @@ homarr/
 │   ├── analytics/       # Server-side analytics (Umami)
 │   ├── server-settings/ # Server setting keys/types
 │   ├── settings/        # User-facing settings UI context
-│   ├── old-import/      # Legacy Homarr import
-│   ├── old-schema/      # Legacy Homarr zod schemas
 │   └── cli/             # Node CLI for ops (brocli)
 ├── tooling/
 │   ├── typescript/      # Base tsconfig
@@ -79,11 +77,11 @@ homarr/
 
 ## Three Runtime Services
 
-| Service | Port | Role |
-|---------|------|------|
-| Next.js | 3000 | Main web app (SSR + API routes) |
-| WebSocket | 3001 | tRPC subscriptions via `ws` |
-| Tasks | 3002 | Cron job runner + management API via Fastify |
+| Service   | Port | Role                                         |
+| --------- | ---- | -------------------------------------------- |
+| Next.js   | 3000 | Main web app (SSR + API routes)              |
+| WebSocket | 3001 | tRPC subscriptions via `ws`                  |
+| Tasks     | 3002 | Cron job runner + management API via Fastify |
 
 In Docker, nginx listens on **7575** and proxies to all three. The tasks service authenticates via `CRON_JOB_API_KEY` header.
 
@@ -112,6 +110,7 @@ In Docker, nginx listens on **7575** and proxies to all three. The tasks service
 ### Multi-Database Support
 
 Drizzle schemas exist in three parallel implementations:
+
 - `packages/db/schema/sqlite.ts`
 - `packages/db/schema/mysql.ts`
 - `packages/db/schema/postgresql.ts`
@@ -121,6 +120,7 @@ Selected at runtime via `DB_DRIVER` env (`better-sqlite3` | `mysql2` | `node-pos
 ### Widget System
 
 Widgets are registered in `packages/widgets/src/index.tsx` as `widgetImports` (must satisfy `Record<WidgetKind, ...>`). Each widget:
+
 - Has a `definition` created via `createWidgetDefinition(kind, { icon, createOptions, supportedIntegrations? })`
 - Uses `optionsBuilder.from(factory => ({ ... }))` for typed options
 - Loads dynamically via `next/dynamic`
@@ -133,6 +133,7 @@ Integrations are defined in `packages/definitions/src/integration.ts` (`integrat
 ### Cron Job System
 
 Jobs defined in `packages/cron-jobs/src/jobs/`. Each job:
+
 - Uses `createCronJob` with a cron expression
 - Publishes results to Redis channels
 - Widget subscriptions consume those channels via tRPC subscriptions
@@ -160,6 +161,7 @@ Configured via `AUTH_PROVIDERS` env. Supports: `credentials` (local), `ldap`, `o
 ## Environment Variables
 
 Key env vars (from `.env.example`):
+
 - `DB_DRIVER`: `better-sqlite3` | `mysql2` | `node-postgres`
 - `DB_URL`: Database connection string
 - `AUTH_SECRET`: NextAuth secret
@@ -191,16 +193,3 @@ Key env vars (from `.env.example`):
 - Drag-and-drop via `@dnd-kit/*`
 - `typescript.ignoreBuildErrors: true` in next.config (types checked separately via `typecheck`)
 - `serverExternalPackages`: `dockerode`, `isomorphic-dompurify`, `jsdom`
-
-## Documentation (`apps/docs`)
-
-Docusaurus 3 site at `apps/docs/`, package name `@homarr/docs`.
-
-- Run with `pnpm dev:docs` from root
-- Build with `pnpm turbo build --filter=@homarr/docs`
-- Uses Tailwind CSS 3 for custom pages (not Mantine)
-- Imports `@homarr/definitions` for type-safe integration/widget metadata
-- When adding or modifying widgets, integrations, cron jobs, API routes, env vars, or user-facing features, you MUST also update corresponding docs in `apps/docs/docs/`
-- Integration docs: `apps/docs/docs/integrations/<slug>/index.mdx` + `index.ts`
-- Widget docs: `apps/docs/docs/widgets/<slug>/index.mdx` + `index.ts`
-- Strict link checking: broken links/anchors cause build failure
