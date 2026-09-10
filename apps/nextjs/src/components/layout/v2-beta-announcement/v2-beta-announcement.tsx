@@ -292,7 +292,7 @@ const V2BetaAnnouncementModal = createModal<V2BetaAnnouncementModalProps>(({ inn
 }).withOptions({
   defaultTitle: "Homarr v2 beta",
   size: 1000,
-  yOffset: 128,
+  centered: true,
   zIndex: getDefaultZIndex("modal") + 2,
 });
 
