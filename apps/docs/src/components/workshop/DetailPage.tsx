@@ -1,20 +1,14 @@
+"use client";
+
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import BrowserOnly from "@docusaurus/BrowserOnly";
-import Head from "@docusaurus/Head";
-import Link from "@docusaurus/Link";
-import { useLocation } from "@docusaurus/router";
-import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
-import Layout from "@theme/Layout";
 
 import {
-  IconArrowBigDown,
-  IconArrowBigUp,
   IconArrowLeft,
+  IconArrowRight,
   IconBrandGithub,
   IconCheck,
   IconCopy,
   IconDownload,
-  IconExternalLink,
   IconFlag,
   IconInfoCircle,
   IconKey,
@@ -54,10 +48,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Toaster } from "@/components/ui/sonner";
+import Link from "@/components/mdx/link";
 import { CustomWidgetCodeExample, CustomWidgetCodeInput } from "../custom-widget-code";
 import { validateSubmissionContent } from "@site/src/lib/workshop-schema";
 import { cn, errorMessage, oauthErrorMessage } from "@site/src/lib/utils";
@@ -67,6 +64,7 @@ import { CodeBlock, DeleteConfirmButton, DetailSkeleton, ScreenshotGallery } fro
 import { formatRelativeTime } from "./format";
 import { ScreenshotEditor } from "./ScreenshotEditor";
 import { WorkshopErrorBoundary } from "./WorkshopErrorBoundary";
+import { WorkshopVoteControl } from "./WorkshopVoteControl";
 import { downloadSubmissionJson, voteAndReconcile } from "./workshop-utils";
 
 const typeLabels: Record<SubmissionType, string> = { customCss: "CSS", customWidget: "Widget" };
@@ -83,13 +81,6 @@ interface PendingScreenshot {
   file: File;
   previewUrl: string;
 }
-
-const parseSubmissionId = (pathname: string) => {
-  const segments = pathname.split("/").filter(Boolean);
-  const last = segments[segments.length - 1];
-  if (!last || last === "workshop") return null;
-  return last;
-};
 
 const isNotFound = (caught: unknown) =>
   typeof caught === "object" && caught !== null && "status" in caught && (caught as ClientResponseError).status === 404;
@@ -181,9 +172,7 @@ const WidgetSafetySummary = ({ widget }: { widget: HomarrCustomWidgetV2 }) => {
   );
 };
 
-const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
-  const location = useLocation();
-  const submissionId = parseSubmissionId(location.pathname);
+const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string; submissionId: string }) => {
   const backend = useMemo(() => getWorkshopBackend(workshopUrl), [workshopUrl]);
 
   const [submission, setSubmission] = useState<WorkshopSubmission | null>(null);
@@ -488,38 +477,39 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
 
   if (error && !submission) {
     return (
-      <div className="mx-auto flex min-h-[50vh] max-w-xl flex-col items-center justify-center gap-4 px-4 text-center">
-        <div className="flex size-11 items-center justify-center rounded-xl bg-destructive/10 text-destructive">
-          <IconX size={22} />
-        </div>
-        <div>
-          <h1 className="text-xl font-semibold">Submission could not be loaded</h1>
-          <p className="mt-1 text-sm text-muted-foreground">Check the Workshop service and try again.</p>
-        </div>
-        <div className="flex flex-wrap justify-center gap-2">
+      <Empty className="mx-auto min-h-[50vh] max-w-xl px-4">
+        <EmptyHeader>
+          <EmptyMedia className="flex size-11 items-center justify-center rounded-xl bg-destructive/10 text-destructive">
+            <IconX size={22} />
+          </EmptyMedia>
+          <EmptyTitle className="text-xl">Submission could not be loaded</EmptyTitle>
+          <EmptyDescription>Check the Workshop service and try again.</EmptyDescription>
+        </EmptyHeader>
+        <EmptyContent className="flex-row justify-center">
           <Button variant="outline" onClick={() => setReloadKey((value) => value + 1)}>
             <IconRefresh size={15} /> Try loading again
           </Button>
           <Button variant="ghost" nativeButton={false} render={<Link to="/workshop" />}>
             Back to Workshop
           </Button>
-        </div>
-      </div>
+        </EmptyContent>
+      </Empty>
     );
   }
 
   if (notFound || !submission) {
     return (
-      <div className="mx-auto max-w-4xl px-4 py-16 text-center">
-        <p className="text-lg font-medium">Submission not found</p>
-        <p className="mt-1 text-sm text-muted-foreground">This listing may have been removed or the link is invalid.</p>
-        <Link
-          to="/workshop"
-          className="mt-6 inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
-        >
-          <IconArrowLeft size={14} /> Back to Workshop
-        </Link>
-      </div>
+      <Empty className="mx-auto min-h-[50vh] max-w-xl px-4">
+        <EmptyHeader>
+          <EmptyTitle className="text-xl">Submission not found</EmptyTitle>
+          <EmptyDescription>This listing may have been removed or the link is invalid.</EmptyDescription>
+        </EmptyHeader>
+        <EmptyContent>
+          <Button variant="outline" nativeButton={false} render={<Link to="/workshop" />}>
+            <IconArrowLeft /> Back to Workshop
+          </Button>
+        </EmptyContent>
+      </Empty>
     );
   }
 
@@ -545,7 +535,7 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
 
   return (
     <div className="mx-auto max-w-[90rem] px-4 pb-20 pt-8 sm:px-6 lg:px-8">
-      <Head>
+      <>
         <title>{socialTitle}</title>
         <meta name="description" content={socialDescription} />
         <link rel="canonical" href={socialUrl} />
@@ -562,7 +552,7 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
         <meta name="twitter:description" content={socialDescription} />
         <meta name="twitter:image" content={socialImage} />
         <meta name="twitter:image:alt" content={`${submission.title} preview`} />
-      </Head>
+      </>
       <Toaster position="bottom-right" richColors />
       <Link
         to="/workshop"
@@ -626,38 +616,11 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-px rounded-lg border border-border bg-muted/40 p-1">
-                <button
-                  type="button"
-                  onClick={() => void handleVote(1)}
-                  aria-label="Upvote"
-                  aria-pressed={userVote?.value === 1}
-                  className={cn(
-                    "flex size-9 items-center justify-center rounded-md transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring/50",
-                    userVote?.value === 1 && "bg-primary/15 text-primary",
-                  )}
-                >
-                  <IconArrowBigUp size={18} />
-                </button>
-                <span
-                  aria-live="polite"
-                  className="min-w-7 text-center text-sm font-semibold tabular-nums text-foreground"
-                >
-                  {score}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => void handleVote(-1)}
-                  aria-label="Downvote"
-                  aria-pressed={userVote?.value === -1}
-                  className={cn(
-                    "flex size-9 items-center justify-center rounded-md transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring/50",
-                    userVote?.value === -1 && "bg-primary/15 text-primary",
-                  )}
-                >
-                  <IconArrowBigDown size={18} />
-                </button>
-              </div>
+              <WorkshopVoteControl
+                score={score}
+                userVote={userVote?.value}
+                onVote={(value) => void handleVote(value)}
+              />
             </div>
 
             {widgetDefinition && <WidgetSafetySummary widget={widgetDefinition} />}
@@ -704,8 +667,8 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
           )}
 
           {submission.changelog && (
-            <section className="mt-8 border-l-2 border-primary/50 pl-4">
-              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">What changed</p>
+            <section className="mt-8 rounded-lg bg-muted/50 px-4 py-3">
+              <h2 className="text-sm font-semibold">What changed</h2>
               <p className="mt-1 text-sm leading-relaxed">{submission.changelog}</p>
             </section>
           )}
@@ -743,7 +706,7 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
         </main>
 
         <aside className="space-y-6 xl:sticky xl:top-24">
-          <section className="rounded-xl border border-border bg-card p-5 shadow-sm">
+          <section className="rounded-xl border border-border bg-card p-5">
             <div className="flex items-start gap-3">
               <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
                 <IconDownload size={17} />
@@ -761,18 +724,18 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
               to="/docs/workshop/"
               className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
             >
-              Installation guide <IconExternalLink size={13} />
+              Installation guide <IconArrowRight size={13} />
             </Link>
           </section>
 
           {widgetDefinition && (
-            <section className="rounded-xl border border-border bg-card p-5 shadow-sm">
+            <section className="rounded-xl border border-border bg-card p-5">
               <h2 className="font-semibold">Widget details</h2>
               <div className="mt-5 space-y-5">
                 <div>
-                  <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  <h3 className="mb-2 flex items-center gap-2 text-sm font-medium">
                     <IconServer size={14} /> API sources
-                  </div>
+                  </h3>
                   <div className="space-y-2.5">
                     {sources.map(([id, source]) => (
                       <div key={id} className="min-w-0">
@@ -790,9 +753,9 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
                 </div>
 
                 <div className="border-t border-border pt-4">
-                  <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  <h3 className="mb-2 flex items-center gap-2 text-sm font-medium">
                     <IconSettings size={14} /> Capabilities
-                  </div>
+                  </h3>
                   <div className="flex flex-wrap gap-1.5">
                     <Badge variant="secondary">
                       {requests.filter(([, request]) => request.kind === "query").length} queries
@@ -819,9 +782,9 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
 
                 {options.length > 0 && (
                   <div className="border-t border-border pt-4">
-                    <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                    <h3 className="mb-2 flex items-center gap-2 text-sm font-medium">
                       <IconSettings size={14} /> Configurable options
-                    </div>
+                    </h3>
                     <div className="space-y-2">
                       {options.slice(0, 6).map(([id, option]) => (
                         <div key={id} className="flex items-start justify-between gap-3 text-xs">
@@ -837,9 +800,9 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
                 )}
 
                 <div className="border-t border-border pt-4">
-                  <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  <h3 className="mb-2 flex items-center gap-2 text-sm font-medium">
                     <IconKey size={14} /> Credentials
-                  </div>
+                  </h3>
                   {protectedSources.length > 0 ? (
                     <>
                       <p className="text-sm">
@@ -860,9 +823,7 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
 
           {canManage && (
             <section className="border-t border-border pt-5">
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                Manage submission
-              </p>
+              <h2 className="mb-2 text-sm font-semibold">Manage submission</h2>
               <div className="grid gap-1">
                 {canEdit && (
                   <Button variant="ghost" size="sm" className="justify-start" onClick={openEdit}>
@@ -900,33 +861,35 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
               <AlertDescription>{reportError}</AlertDescription>
             </Alert>
           )}
-          <label htmlFor="workshop-report-category" className="grid gap-1.5 text-sm">
-            Category
-            <Select value={reportCategory} onValueChange={(value) => setReportCategory(value as string)}>
-              <SelectTrigger id="workshop-report-category" className="h-10 w-full">
-                <SelectValue>{(value) => String(value).replace(/^./u, (letter) => letter.toUpperCase())}</SelectValue>
-              </SelectTrigger>
-              <SelectContent align="start">
-                <SelectItem value="outdated">Outdated or no longer working</SelectItem>
-                <SelectItem value="malicious">Malicious</SelectItem>
-                <SelectItem value="spam">Spam</SelectItem>
-                <SelectItem value="copyright">Copyright</SelectItem>
-                <SelectItem value="inappropriate">Inappropriate</SelectItem>
-                <SelectItem value="other">Other</SelectItem>
-              </SelectContent>
-            </Select>
-          </label>
-          <label htmlFor="workshop-report-explanation" className="grid gap-1.5 text-sm">
-            Explanation
-            <Textarea
-              id="workshop-report-explanation"
-              value={reportExplanation}
-              onChange={(event) => setReportExplanation(event.target.value)}
-              placeholder="Explain what should be reviewed"
-              maxLength={1000}
-              rows={5}
-            />
-          </label>
+          <FieldGroup className="gap-4">
+            <Field>
+              <FieldLabel htmlFor="workshop-report-category">Category</FieldLabel>
+              <Select value={reportCategory} onValueChange={(value) => setReportCategory(value as string)}>
+                <SelectTrigger id="workshop-report-category" className="h-10 w-full">
+                  <SelectValue>{(value) => String(value).replace(/^./u, (letter) => letter.toUpperCase())}</SelectValue>
+                </SelectTrigger>
+                <SelectContent align="start">
+                  <SelectItem value="outdated">Outdated or no longer working</SelectItem>
+                  <SelectItem value="malicious">Malicious</SelectItem>
+                  <SelectItem value="spam">Spam</SelectItem>
+                  <SelectItem value="copyright">Copyright</SelectItem>
+                  <SelectItem value="inappropriate">Inappropriate</SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="workshop-report-explanation">Explanation</FieldLabel>
+              <Textarea
+                id="workshop-report-explanation"
+                value={reportExplanation}
+                onChange={(event) => setReportExplanation(event.target.value)}
+                placeholder="Explain what should be reviewed"
+                maxLength={1000}
+                rows={5}
+              />
+            </Field>
+          </FieldGroup>
           <DialogFooter>
             <Button variant="ghost" onClick={() => setReportOpen(false)} disabled={reportPending}>
               Cancel
@@ -972,26 +935,26 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
               height="min(46vh, 460px)"
               required
             />
-            <div className="flex flex-col gap-4">
-              <label htmlFor="workshop-edit-title" className="grid gap-1.5 text-sm">
-                Title
+            <FieldGroup className="gap-4">
+              <Field>
+                <FieldLabel htmlFor="workshop-edit-title">Title</FieldLabel>
                 <Input
                   id="workshop-edit-title"
                   value={editTitle}
                   onChange={(event) => setEditTitle(event.target.value)}
                 />
-              </label>
-              <label htmlFor="workshop-edit-description" className="grid gap-1.5 text-sm">
-                Description
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="workshop-edit-description">Description</FieldLabel>
                 <Textarea
                   id="workshop-edit-description"
                   value={editDescription}
                   onChange={(event) => setEditDescription(event.target.value)}
                   rows={5}
                 />
-              </label>
-              <label htmlFor="workshop-edit-changelog" className="grid gap-1.5 text-sm">
-                Changelog
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="workshop-edit-changelog">Changelog</FieldLabel>
                 <Textarea
                   id="workshop-edit-changelog"
                   value={editChangelog}
@@ -999,8 +962,8 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
                   placeholder="What changed?"
                   rows={4}
                 />
-              </label>
-            </div>
+              </Field>
+            </FieldGroup>
           </div>
           <div className="border-t border-border pt-5">
             <ScreenshotEditor
@@ -1041,25 +1004,22 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
   );
 };
 
-export default function MarketplaceDetailPage() {
-  const { siteConfig } = useDocusaurusContext();
-  const configuredWorkshopUrl = (siteConfig.customFields?.workshopUrl as string | undefined) ?? "";
-
+export default function MarketplaceDetailPage({
+  configuredWorkshopUrl = "",
+  submissionId,
+}: {
+  configuredWorkshopUrl?: string;
+  submissionId: string;
+}) {
   useEffect(() => {
     document.documentElement.removeAttribute("data-workshop-detail-loading");
   }, []);
 
   return (
-    <Layout title="Workshop" description="Community custom CSS and custom widgets for Homarr">
-      <main className="marketplace bg-background text-foreground min-h-[80vh]">
-        <BrowserOnly fallback={<DetailSkeleton />}>
-          {() => (
-            <WorkshopErrorBoundary>
-              <MarketplaceDetail workshopUrl={getRuntimeWorkshopApiUrl(configuredWorkshopUrl)} />
-            </WorkshopErrorBoundary>
-          )}
-        </BrowserOnly>
-      </main>
-    </Layout>
+    <main className="marketplace min-h-[80vh] bg-background text-foreground">
+      <WorkshopErrorBoundary>
+        <MarketplaceDetail workshopUrl={getRuntimeWorkshopApiUrl(configuredWorkshopUrl)} submissionId={submissionId} />
+      </WorkshopErrorBoundary>
+    </main>
   );
 }

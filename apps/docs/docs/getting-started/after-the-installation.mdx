@@ -6,11 +6,68 @@ tags:
   - Configuration
 ---
 
-On first launch, onboarding creates the administrator, connects optional services, and builds the first board. A
-compatible SQLite backup can also be restored from the welcome screen.
+import {
+  IconAdjustments,
+  IconChecklist,
+  IconLayoutDashboard,
+  IconPlugConnected,
+  IconSearch,
+  IconSparkles,
+} from "@tabler/icons-react";
 
-If onboarding returns after a restart, check that `/appdata` is writable and persisted. See the
-[Docker installation guide](/docs/getting-started/installation/docker).
+import onboardingWelcome from "./img/onboarding-v2-welcome.png";
+import onboardingBoard from "./img/onboarding-v2-board.png";
+import onboardingReview from "./img/onboarding-v2-review.png";
+
+After Homarr starts, open its URL. An unfinished installation redirects to the onboarding screen at `/init`. Choose
+**Get started** for a new installation or **Restore backup** to import a compatible SQLite backup.
+
+<Callout type="info" title="Persist /appdata before you continue">
+  Onboarding writes the administrator and board configuration to the database. If onboarding returns after a restart,
+  check that `/appdata` is writable and persisted. See the
+  [Docker installation guide](/docs/getting-started/installation/docker).
+</Callout>
+
+## Complete onboarding
+
+Onboarding is split into six short sections. Integrations, Workshop, Assistant, and MCP are optional; skip them when you
+only need a working board.
+
+<Cards>
+  <Card icon={<IconAdjustments />} title="1. Essentials">
+    Choose the language, theme, usual server address, and anonymous analytics preference.
+  </Card>
+  <Card icon={<IconSearch />} title="2. Discover">
+    Review the database, Docker, Kubernetes, Assistant, and Workshop capabilities Homarr can reach.
+  </Card>
+  <Card icon={<IconPlugConnected />} title="3. Connect">
+    Import detected services or add integrations manually. Unfinished integrations can be skipped.
+  </Card>
+  <Card icon={<IconLayoutDashboard />} title="4. Board">
+    Set the board name, colors, corner radius, column count, and optional sidebars.
+  </Card>
+  <Card icon={<IconSparkles />} title="5. Extend">
+    Optionally connect the Workshop, configure an Assistant provider, or review the MCP endpoint.
+  </Card>
+  <Card icon={<IconChecklist />} title="6. Review">
+    Check the final summary, then build the board. Homarr opens the exact board it configured.
+  </Card>
+</Cards>
+
+The final screen links directly to the new board and the management area. Board layout, integrations, apps, and
+appearance can all be changed later.
+
+<Cards>
+  <Card title="Start or restore">
+    <img src={onboardingWelcome.src} alt="Homarr onboarding welcome screen with Get started and Restore backup actions" />
+  </Card>
+  <Card title="Configure the board">
+    <img src={onboardingBoard.src} alt="Board onboarding section for colors, columns, corner radius, and sidebars" />
+  </Card>
+  <Card title="Review before building">
+    <img src={onboardingReview.src} alt="Onboarding review showing the board settings Homarr will create" />
+  </Card>
+</Cards>
 
 ## Core concepts
 
@@ -40,7 +97,7 @@ Docker. Integrations provide data and actions to widgets. They can also be linke
 ![Integration catalog with compatible widgets](./img/after-installation-integrations.webp)
 
 See [Managing integrations](/docs/management/integrations) and the
-[integration catalog](/docs/category/integrations).
+[integration catalog](/docs/integrations).
 
 ### Widgets
 
@@ -49,7 +106,7 @@ supported integrations, and non-obvious limitations are documented on each widge
 
 ![Board in edit mode with the add-content menu](./img/after-installation-widgets.webp)
 
-See the [widget catalog](/docs/category/widgets).
+See the [widget catalog](/docs/widgets).
 
 ### Containers and rails
 

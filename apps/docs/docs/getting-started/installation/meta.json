@@ -1,0 +1,24 @@
+{
+  "title": "Installation",
+  "defaultOpen": false,
+  "pages": [
+    "index",
+    "---Recommended---",
+    "docker",
+    "helm",
+    "source",
+    "---Self-hosting platforms---",
+    "unraid",
+    "synology",
+    "proxmox",
+    "home-assistant",
+    "portainer",
+    "qnap",
+    "runtipi",
+    "---Managed and app platforms---",
+    "easy-panel",
+    "railway",
+    "pika-pods",
+    "saltbox"
+  ]
+}

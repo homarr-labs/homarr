@@ -1,8 +1,8 @@
+"use client";
+
 import React, { useMemo, useState } from "react";
 import {
   IconAlertCircle,
-  IconArrowBigDown,
-  IconArrowBigUp,
   IconBrandCss3,
   IconBrandGithub,
   IconChevronLeft,
@@ -35,6 +35,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -45,6 +46,7 @@ import { cn } from "@/lib/utils";
 
 import { SubmitForm } from "./SubmitForm";
 import { WorkshopAccountMenu } from "./WorkshopAccountMenu";
+import { WorkshopVoteControl } from "./WorkshopVoteControl";
 import { formatRelativeTime } from "./format";
 import type { SortKey, TypeFilter } from "./useWorkshop";
 import { useWorkshop } from "./useWorkshop";
@@ -73,11 +75,6 @@ const sortOptions: { value: SortKey; label: string }[] = [
   { value: "recent", label: "Recently updated" },
   { value: "discussed", label: "Most discussed" },
 ];
-
-const stopCardNavigation = (event: React.MouseEvent<HTMLButtonElement>) => {
-  event.preventDefault();
-  event.stopPropagation();
-};
 
 const avatarFallback = (name: string) => name.trim().slice(0, 1).toUpperCase() || "?";
 
@@ -165,13 +162,16 @@ export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
       </div>
 
       {workshop.submissions.length > 0 && (
-        <div className="mb-6 flex flex-col gap-3 rounded-lg border border-border bg-card p-3 sm:flex-row sm:items-center sm:justify-between">
+        <section
+          aria-label="Filter Workshop submissions"
+          className="mb-6 flex flex-col gap-3 rounded-lg border border-border bg-card p-3 sm:flex-row sm:items-center sm:justify-between"
+        >
           <InputGroup className="order-first h-11 w-full sm:order-last sm:h-9 sm:w-64">
             <InputGroupAddon>
               <IconSearch size={16} />
             </InputGroupAddon>
             <InputGroupInput
-              placeholder="Search"
+              placeholder="Search Workshop"
               aria-label="Search submissions"
               value={search}
               onChange={(event) => setSearch(event.target.value)}
@@ -221,7 +221,7 @@ export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
               </Label>
             </div>
           </div>
-        </div>
+        </section>
       )}
 
       <p className="sr-only" aria-live="polite">
@@ -229,20 +229,20 @@ export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
       </p>
 
       {initialLoadFailed && (
-        <div className="flex min-h-80 flex-col items-center justify-center gap-4 rounded-xl border border-border bg-card px-6 py-12 text-center">
-          <div className="flex size-11 items-center justify-center rounded-xl bg-destructive/10 text-destructive">
-            <IconAlertCircle size={22} />
-          </div>
-          <div>
-            <h2 className="text-base font-semibold">Workshop listings could not be loaded</h2>
-            <p className="mt-1 max-w-md text-sm text-muted-foreground">
-              Check the Workshop service and your connection, then try again.
-            </p>
-          </div>
-          <Button variant="outline" onClick={() => void workshop.refresh()}>
-            <IconRefresh size={15} /> Try loading again
-          </Button>
-        </div>
+        <Empty className="min-h-80 border border-border bg-card">
+          <EmptyHeader>
+            <EmptyMedia className="flex size-11 items-center justify-center rounded-xl bg-destructive/10 text-destructive">
+              <IconAlertCircle size={22} />
+            </EmptyMedia>
+            <EmptyTitle>Workshop listings could not be loaded</EmptyTitle>
+            <EmptyDescription>Check the Workshop service and your connection, then try again.</EmptyDescription>
+          </EmptyHeader>
+          <EmptyContent>
+            <Button variant="outline" onClick={() => void workshop.refresh()}>
+              <IconRefresh size={15} /> Try loading again
+            </Button>
+          </EmptyContent>
+        </Empty>
       )}
 
       {workshop.error && workshop.submissions.length > 0 && (
@@ -267,31 +267,36 @@ export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
       )}
 
       {!workshop.loading && !workshop.error && visible.length === 0 && (
-        <div className="flex flex-col items-center gap-3 rounded-lg border border-dashed border-border py-16">
-          <IconPackage size={28} stroke={1.5} className="text-muted-foreground" />
-          <div className="text-center">
-            <p className="text-sm font-medium">{empty.title}</p>
-            <p className="mt-0.5 text-xs text-muted-foreground">{empty.hint}</p>
-          </div>
-          {workshop.submissions.length > 0 && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                setTypeFilter("all");
-                setSearch("");
-                setIncludeOutdated(true);
-              }}
-            >
-              Clear filters
-            </Button>
-          )}
-          {workshop.user && workshop.submissions.length === 0 && (
-            <Button size="sm" onClick={() => setShowSubmit(true)}>
-              <IconPlus size={14} /> Create submission
-            </Button>
-          )}
-        </div>
+        <Empty className="border border-border">
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <IconPackage />
+            </EmptyMedia>
+            <EmptyTitle>{empty.title}</EmptyTitle>
+            <EmptyDescription>{empty.hint}</EmptyDescription>
+          </EmptyHeader>
+          <EmptyContent>
+            {workshop.submissions.length > 0 && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setTypeFilter("all");
+                  setSearch("");
+                  setIncludeOutdated(true);
+                }}
+              >
+                Clear filters
+              </Button>
+            )}
+            {workshop.submissions.length === 0 && (
+              <Button size="sm" onClick={() => (workshop.user ? setShowSubmit(true) : void workshop.login())}>
+                {workshop.user ? <IconPlus /> : <IconBrandGithub />}
+                {workshop.user ? "Create submission" : "Sign in to share"}
+              </Button>
+            )}
+          </EmptyContent>
+        </Empty>
       )}
 
       <div className="grid auto-rows-fr grid-cols-1 items-stretch gap-4 lg:grid-cols-2 xl:grid-cols-3">
@@ -337,24 +342,24 @@ const SubmissionCard = ({ submission, backend, userVote, onVote }: SubmissionCar
 
   return (
     <Card className="relative flex h-full min-w-0 w-full flex-col">
-      <a href={`/workshop/${submission.id}/`} className="block shrink-0">
-        {hasScreenshots ? (
-          <div className="relative">
-            <Badge
-              variant="secondary"
-              className="absolute left-2 top-2 z-10 gap-1.5 bg-background/80 px-2 backdrop-blur-sm"
-            >
-              <span className={cn("size-2 rounded-full", typeDotColors[submission.type])} />
-              {typeLabels[submission.type]}
-            </Badge>
-            <ScreenshotGallery urls={screenshotUrls} title={submission.title} />
-          </div>
-        ) : (
+      {hasScreenshots ? (
+        <div className="relative shrink-0">
+          <Badge
+            variant="secondary"
+            className="absolute left-2 top-2 z-10 gap-1.5 bg-background/80 px-2 backdrop-blur-sm"
+          >
+            <span className={cn("size-2 rounded-full", typeDotColors[submission.type])} />
+            {typeLabels[submission.type]}
+          </Badge>
+          <ScreenshotGallery urls={screenshotUrls} title={submission.title} href={`/workshop/${submission.id}/`} />
+        </div>
+      ) : (
+        <a href={`/workshop/${submission.id}/`} className="block shrink-0" aria-label={`View ${submission.title}`}>
           <div className={cn(cardMediaClassName, "flex items-center justify-center", typeBgColors[submission.type])}>
             <TypeIcon size={32} className="text-muted-foreground/20" />
           </div>
-        )}
-      </a>
+        </a>
+      )}
 
       <CardHeader className="flex flex-col gap-2 sm:grid">
         <div className="flex items-center gap-2">
@@ -386,35 +391,12 @@ const SubmissionCard = ({ submission, backend, userVote, onVote }: SubmissionCar
           </span>
         </CardDescription>
         <CardAction className="col-start-auto row-span-1 row-start-auto self-auto justify-self-start sm:col-start-2 sm:row-span-2 sm:row-start-1 sm:self-start sm:justify-self-end">
-          <div className="flex items-center gap-px rounded-md border border-border bg-muted/40 p-px">
-            <button
-              type="button"
-              onClick={() => void onVote(submission.id, 1)}
-              aria-label="Upvote"
-              aria-pressed={userVote === 1}
-              className={cn(
-                "flex size-10 items-center justify-center rounded-[5px] transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring/50 sm:size-8",
-                userVote === 1 && "bg-primary/15 text-primary",
-              )}
-            >
-              <IconArrowBigUp size={14} />
-            </button>
-            <span aria-live="polite" className="min-w-5 text-center text-xs font-semibold tabular-nums text-foreground">
-              {score}
-            </span>
-            <button
-              type="button"
-              onClick={() => void onVote(submission.id, -1)}
-              aria-label="Downvote"
-              aria-pressed={userVote === -1}
-              className={cn(
-                "flex size-10 items-center justify-center rounded-[5px] transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring/50 sm:size-8",
-                userVote === -1 && "bg-primary/15 text-primary",
-              )}
-            >
-              <IconArrowBigDown size={14} />
-            </button>
-          </div>
+          <WorkshopVoteControl
+            score={score}
+            userVote={userVote}
+            compact
+            onVote={(value) => void onVote(submission.id, value)}
+          />
         </CardAction>
       </CardHeader>
 
@@ -499,59 +481,56 @@ export const WorkshopListingFallback = () => (
   </div>
 );
 
-const ScreenshotGallery = ({ urls, title }: { urls: string[]; title: string }) => {
+const ScreenshotGallery = ({ urls, title, href }: { urls: string[]; title: string; href: string }) => {
   const [idx, setIdx] = useState(0);
   const dotClass = ["bg-white/40", "bg-white"];
 
   return (
     <div className="group/gallery relative">
-      <div className={cardMediaClassName}>
+      <a href={href} className={cn("block", cardMediaClassName)} aria-label={`View ${title}`}>
         <img
           className="h-full w-full object-cover"
           src={urls[idx]}
           alt={`${title} screenshot ${idx + 1}`}
           loading="lazy"
         />
-      </div>
+      </a>
       {urls.length > 1 && (
         <>
-          <button
+          <Button
             type="button"
-            className="absolute left-2 top-1/2 flex size-10 -translate-y-1/2 items-center justify-center rounded-lg bg-background/85 opacity-80 shadow-sm transition-opacity hover:opacity-100 sm:size-8"
-            onClick={(event) => {
-              stopCardNavigation(event);
-              setIdx((i) => (i - 1 + urls.length) % urls.length);
-            }}
+            variant="secondary"
+            size="icon"
+            className="absolute left-2 top-1/2 -translate-y-1/2 bg-background/90 opacity-85 shadow-sm hover:opacity-100 sm:size-8"
+            onClick={() => setIdx((i) => (i - 1 + urls.length) % urls.length)}
             aria-label="Previous screenshot"
           >
             <IconChevronLeft size={14} />
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
-            className="absolute right-2 top-1/2 flex size-10 -translate-y-1/2 items-center justify-center rounded-lg bg-background/85 opacity-80 shadow-sm transition-opacity hover:opacity-100 sm:size-8"
-            onClick={(event) => {
-              stopCardNavigation(event);
-              setIdx((i) => (i + 1) % urls.length);
-            }}
+            variant="secondary"
+            size="icon"
+            className="absolute right-2 top-1/2 -translate-y-1/2 bg-background/90 opacity-85 shadow-sm hover:opacity-100 sm:size-8"
+            onClick={() => setIdx((i) => (i + 1) % urls.length)}
             aria-label="Next screenshot"
           >
             <IconChevronRight size={14} />
-          </button>
+          </Button>
           <div className="absolute bottom-2 left-1/2 flex -translate-x-1/2 rounded-full bg-black/60 px-1 py-0.5">
             {urls.map((_, i) => (
-              <button
+              <Button
                 type="button"
+                variant="ghost"
+                size="icon"
                 key={i}
-                onClick={(event) => {
-                  stopCardNavigation(event);
-                  setIdx(i);
-                }}
+                onClick={() => setIdx(i)}
                 aria-label={`Screenshot ${i + 1}`}
                 aria-current={i === idx ? "true" : undefined}
-                className="flex size-8 items-center justify-center rounded-full focus-visible:ring-2 focus-visible:ring-white"
+                className="size-8 rounded-full hover:bg-white/10 focus-visible:ring-white"
               >
                 <span className={cn("size-1.5 rounded-full transition-colors", dotClass[Number(i === idx)])} />
-              </button>
+              </Button>
             ))}
           </div>
         </>

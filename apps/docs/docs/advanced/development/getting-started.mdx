@@ -57,8 +57,8 @@ Homarr becomes the instance administrator.
 Use `pnpm docker:dev:up` instead when you only need Redis in the background. Running the migration also seeds the
 default data; use `pnpm db:seed` to seed it explicitly later.
 
-Workshop contributors can set up PocketBase and Docusaurus with the dedicated
-[Workshop development guide](./workshop).
+Workshop contributors can set up PocketBase and Fumadocs with the dedicated
+[Workshop development guide](/docs/advanced/development/workshop).
 
 ### Useful commands
 
@@ -69,7 +69,7 @@ Workshop contributors can set up PocketBase and Docusaurus with the dedicated
 - `pnpm dev:cli -- build --pr <number>` — build a pull request from a temporary checkout.
 - `pnpm dev:cli -- rebuild <name>` — rebuild an image from its recorded checkout or pull request.
 - `pnpm dev:cli:install` — optionally install the developer CLI as a `homarr` binary.
-- `pnpm dev:docs` — Docusaurus only on port 3003.
+- `pnpm dev:docs` — Fumadocs on port 3003.
 - `pnpm docker:dev:up` — Redis development service in the background.
 - `pnpm cli` — Homarr operations CLI.
 - `pnpm db:migration:sqlite:run` — create or update a SQLite database.
@@ -104,3 +104,21 @@ Choose the smallest relevant suite when changing behavior:
 Omit `<file>` to run all tests in that command's scope. E2E and screenshot commands use a local image tagged `homarr-e2e`, or an image selected with `HOMARR_E2E_IMAGE`. The default commands run once without automatic retries; coverage is opt-in. The screenshot generator is excluded from both unit and E2E commands.
 
 Keep behavioral coverage for authorization, migrations, persistence, and widget execution. Avoid tests that only search source code for particular component names, JSX, CSS, or documentation wording.
+
+## Documentation development
+
+Run `pnpm dev:docs` to open the Next.js and Fumadocs site at `http://127.0.0.1:3003`. Content lives in
+`apps/docs/docs/`; the nearest `meta.json` controls navigation. Keep integration and widget setup metadata in their
+typed `index.ts` files alongside the page.
+
+After changing content, navigation, or shared MDX components, run:
+
+```sh
+pnpm --filter @homarr/docs build
+pnpm --filter @homarr/docs validate:links
+pnpm --filter @homarr/docs verify:search
+```
+
+The build writes a static site to `apps/docs/out/`. Check heading links, search results, and the page's Markdown export
+when changing shared components. The [Fumadocs documentation](https://fumadocs.dev/docs) describes supported components
+and source APIs; match examples to the versions installed in this repository.

@@ -9,14 +9,14 @@ tags:
   - Security
 ---
 
-import Tabs from "@theme/Tabs";
-import TabItem from "@theme/TabItem";
+import Tabs from "@/components/mdx/legacy-tabs";
+import { TabItem } from "@/components/mdx/legacy-tabs";
 
 ## Allowing self-signed certificates
 
 Some users may come across a barrier, where they're unable to receive a 200 response from the Ping widget for some apps, while using self-signed certificates or a local certificate authory.
 
-:::note What's going on?
+:::note[What's going on?]
 
 Homarr is trying to communicate to your apps via the integrations.
 It usually doesn't matter if Homarr is running on `http` or `https`.

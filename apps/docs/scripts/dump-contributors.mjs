@@ -89,10 +89,10 @@ const distinctGithubContributors = githubContributors
   .sort((a, b) => b.contributions - a.contributions)
   .map(({ contributions, ...props }) => props)
   .filter((contributor) => !contributor.login.includes("[bot]"));
-await fs.writeFile("./static/data/contributions.json", JSON.stringify(distinctGithubContributors));
+await fs.writeFile("./public/data/contributions.json", JSON.stringify(distinctGithubContributors));
 
 for (const { projectId, tokenName } of sources.crowdin) {
   crowdinContributors.push(...(await fetchCrowdinMembers(projectId, tokenName)));
 }
 const distinctCrowdinContributors = crowdinContributors.filter(distinctBy((contributor) => contributor.username));
-await fs.writeFile("./static/data/translation-contributions.json", JSON.stringify(distinctCrowdinContributors));
+await fs.writeFile("./public/data/translation-contributions.json", JSON.stringify(distinctCrowdinContributors));

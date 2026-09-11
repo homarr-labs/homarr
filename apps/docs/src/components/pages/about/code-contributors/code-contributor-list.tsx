@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 
 type Contributor = {
@@ -21,8 +23,14 @@ export const CodeContributorList = () => {
   return (
     <div className={"flex flex-wrap gap-3 argos-ignore"}>
       {contributors.map((contributor: Contributor) => (
-        <div className={"flex flex-col items-center w-24"}>
-          <img className={"w-24 h-24 aspect-square rounded mb-2"} src={contributor.avatar_url} alt={""} />
+        <div key={contributor.login} className={"flex flex-col items-center w-24"}>
+          <img
+            className={"mb-2 aspect-square h-24 w-24 rounded"}
+            src={contributor.avatar_url}
+            alt={""}
+            loading="lazy"
+            decoding="async"
+          />
           <h6 className={"truncate text-nowrap max-w-full"}>{contributor.login}</h6>
         </div>
       ))}

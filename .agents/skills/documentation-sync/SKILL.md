@@ -1,6 +1,6 @@
 ---
 name: documentation-sync
-description: Keep Homarr's Docusaurus documentation aligned with user-facing code. Use when adding or changing integrations, widgets, APIs, environment variables, CLI commands, authentication, permissions, cron jobs, settings, or UI behavior that users must understand.
+description: Keep Homarr's Fumadocs documentation aligned with user-facing code. Use when adding or changing integrations, widgets, APIs, environment variables, CLI commands, authentication, permissions, cron jobs, settings, or UI behavior that users must understand.
 ---
 
 # Documentation Sync
@@ -48,4 +48,4 @@ For a widget:
 2. Keep names, defaults, paths, screenshots, links, and prerequisites consistent with code.
 3. Update every affected page and remove superseded guidance.
 4. Run the narrowest useful docs validation. Use `pnpm turbo build --filter=@homarr/docs` when links, MDX, generated definitions, or navigation can fail; otherwise run the docs package formatter on touched files.
-5. Treat broken links and anchors as failures; Docusaurus checks them strictly.
+5. Treat broken links and anchors as failures; run `pnpm --filter @homarr/docs validate:links` after the static build.

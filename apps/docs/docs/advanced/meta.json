@@ -1,0 +1,19 @@
+{
+  "title": "Advanced",
+  "defaultOpen": false,
+  "pages": [
+    "index",
+    "---Deploy and secure---",
+    "environment-variables",
+    "single-sign-on",
+    "proxy",
+    "running-as-different-user",
+    "---Customize---",
+    "styling",
+    "icons",
+    "keyboard-shortcuts",
+    "---Develop and automate---",
+    "command-line",
+    "development"
+  ]
+}

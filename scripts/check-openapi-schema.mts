@@ -4,7 +4,7 @@ import { readFile, writeFile } from "node:fs/promises";
 import { openApiDocument } from "../packages/api/src/open-api";
 
 const baseUrl = "http://localhost:3000";
-const schemaPath = "apps/docs/static/api/open-api-schema.json";
+const schemaPath = "apps/docs/public/api/open-api-schema.json";
 const writeMode = process.argv.slice(2).includes("--write");
 const serialized = `${JSON.stringify(openApiDocument(baseUrl), null, 2)}\n`;
 const generated = JSON.parse(serialized) as unknown;
@@ -34,7 +34,7 @@ try {
   assert.deepStrictEqual(checkedIn, generated);
 } catch {
   console.error(
-    "The checked-in OpenAPI schema is stale. Regenerate it from openApiDocument and update apps/docs/static/api/open-api-schema.json.",
+    "The checked-in OpenAPI schema is stale. Regenerate it from openApiDocument and update apps/docs/public/api/open-api-schema.json.",
   );
   process.exit(1);
 }

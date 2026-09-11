@@ -154,7 +154,7 @@ async function generateCatalog() {
   const serialized = `${JSON.stringify(catalog)}\n`;
   await Promise.all([
     writeFile(resolve(packageRoot, "src/core/component-catalog.generated.json"), serialized),
-    writeFile(resolve(repositoryRoot, "apps/docs/static/custom-widgets/component-catalog-v1.json"), serialized),
+    writeFile(resolve(repositoryRoot, "apps/docs/public/custom-widgets/component-catalog-v1.json"), serialized),
   ]);
 }
 

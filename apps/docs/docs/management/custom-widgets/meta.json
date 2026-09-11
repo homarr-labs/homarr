@@ -1,0 +1,12 @@
+{
+  "title": "Custom Widgets",
+  "pages": [
+    "index",
+    "authoring",
+    "agent-authoring",
+    "custom-jsx",
+    "component-reference",
+    "requests-and-security",
+    "troubleshooting"
+  ]
+}

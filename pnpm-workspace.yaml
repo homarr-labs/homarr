@@ -107,6 +107,7 @@ catalog:
   "@types/react": 19.2.17
   "@types/react-dom": 19.2.3
   "@scalar/api-reference-react": ^0.9.54
+  "@scalar/api-client-react": 2.0.43
   "@shadcn/react": ^0.2.1
   "@types/video.js": ^7.3.58
   "@types/ws": ^8.18.1
@@ -154,7 +155,12 @@ catalog:
   esbuild: ^0.28.0
   fast-xml-parser: ^5.10.1
   fastify: ^5.9.0
+  feed: ^6.0.0
   flag-icons: ^7.5.0
+  fumadocs-core: 16.15.4
+  fumadocs-mdx: 15.4.0
+  fumadocs-openapi: 11.3.5
+  fumadocs-ui: 16.15.4
   glob: ^13.0.6
   ical.js: ^2.2.1
   input-otp: ^1.4.2
@@ -163,6 +169,7 @@ catalog:
   jotai: ^2.20.1
   jsdom: ^29.1.1
   json5: ^2.2.3
+  json-schema-typed: 8.0.2
   jsonpath-plus: ^10.4.0
   ldapts: 8.1.8
   lodash.clonedeep: ^4.5.0
@@ -198,6 +205,8 @@ catalog:
   sass: ^1.101.0
   semantic-release: ^25.0.5
   semver-parser: ^4.2.1
+  serve: ^14.2.6
+  shiki: ^4.4.3
   sonner: ^2.0.7
   superjson: 2.2.6
   svgson: ^5.3.1
@@ -234,6 +243,7 @@ catalog:
   react-shiki: ^0.11.0
   canvas-confetti: ^1.9.4
   "@types/canvas-confetti": ^1.9.0
+  "@types/mdx": ^2.0.14
   "@rexa-developer/tiks": ^0.3.0
 
 catalogMode: strict
