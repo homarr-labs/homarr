@@ -18,8 +18,9 @@ password. Decimal units are the default. Change them from the user form or **Com
 Preferences → Data size units**. Byte rates follow the same preference; bit rates stay decimal and use labels such as
 Mb/s. Deleting a user does not delete boards they created.
 
-In demo mode (`DEMO_MODE=true`), user deletion and password changes are disabled for everyone, including administrators,
-even when `DEMO_READ_ONLY=false` allows other changes. This applies to the UI and API.
+In demo mode (`DEMO_MODE=true`), user deletion, password changes, and local username changes are disabled for everyone,
+including administrators, even when `DEMO_READ_ONLY=false` allows other changes. With demo editing enabled, other
+profile preferences remain editable. This applies to the UI and API.
 
 ![The Users management page](../img/users.png)
 

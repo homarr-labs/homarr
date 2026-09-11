@@ -16,10 +16,10 @@ permissions:
 jobs:
   create-and-merge-pr:
     runs-on: ubuntu-latest
-    timeout-minutes: 2
+    timeout-minutes: 10
     steps:
       - name: Discord notification
-        if: ${{ github.event.inputs.send-notifications }}
+        if: ${{ inputs.send-notifications }}
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@0.4.0
@@ -37,11 +37,22 @@ jobs:
           branch: next
       - name: Create pull request
         id: create-pull-request
-        run: 'gh pr create --title "chore(release): release ${{ steps.semver.outputs.next }}-beta" --body "Detected change to be ``${{ steps.semver.outputs.bump }}``<br/>Bump version from ``${{ steps.semver.outputs.current }}`` to ``${{ steps.semver.outputs.next }}-beta``" --base beta --head next --label automerge'
+        run: |
+          pr_url="$(gh pr list --base beta --head next --state open --json url --jq '.[0].url // empty')"
+          if [[ -z "$pr_url" ]]; then
+            pr_url="$(gh pr create \
+              --title "chore(release): release ${{ steps.semver.outputs.next }}-beta" \
+              --body "Detected change to be ${{ steps.semver.outputs.bump }}<br/>Bump version from ${{ steps.semver.outputs.current }} to ${{ steps.semver.outputs.next }}-beta" \
+              --base beta \
+              --head next \
+              --label automerge)"
+          fi
+          echo "url=$pr_url" >> "$GITHUB_OUTPUT"
+          echo "pr_number=${pr_url##*/}" >> "$GITHUB_OUTPUT"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
       - name: Discord notification
-        if: ${{ github.event.inputs.send-notifications }}
+        if: ${{ inputs.send-notifications }}
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@0.4.0
@@ -58,7 +69,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ steps.obtainApprovalToken.outputs.token }}
         run: |
-          gh pr review --approve --body "Automatically approved by GitHub Action"
+          gh pr review "${{ steps.create-pull-request.outputs.url }}" --approve --body "Automatically approved by GitHub Action"
       - name: Obtain token
         id: obtainMergeToken
         uses: actions/create-github-app-token@v3
@@ -82,21 +93,21 @@ jobs:
           MERGE_REQUIRED_APPROVALS: 0 # do not require approvals
 
       - name: Merged Discord notification
-        if: ${{ steps.automerge.outputs.mergeResult == 'merged' && github.event.inputs.send-notifications }}
+        if: ${{ steps.automerge.outputs.mergeResult == 'merged' && inputs.send-notifications }}
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@0.4.0
         with:
           args: "Merged PR ${{ steps.create-pull-request.outputs.url }} for release ${{ steps.semver.outputs.next }}-beta"
       - name: Major Bump Discord notification
-        if: ${{ steps.semver.outputs.bump == 'major' && github.event.inputs.send-notifications }}
+        if: ${{ steps.semver.outputs.bump == 'major' && inputs.send-notifications }}
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@0.4.0
         with:
           args: "The release PR must be manually merged because the next version is a major version: ${{ steps.create-pull-request.outputs.url }} for release ${{ steps.semver.outputs.next }}-beta"
       - name: Discord Fail Notification
-        if: failure() && github.event.inputs.send-notifications
+        if: ${{ failure() && inputs.send-notifications }}
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@0.4.0

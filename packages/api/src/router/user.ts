@@ -454,7 +454,7 @@ export const userRouter = createTRPCRouter({
       }
 
       const user = await ctx.db.query.users.findFirst({
-        columns: { email: true, provider: true },
+        columns: { name: true, email: true, provider: true },
         where: eq(users.id, input.id),
       });
 
@@ -469,6 +469,13 @@ export const userRouter = createTRPCRouter({
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "Username and email can not be changed for users with external providers",
+        });
+      }
+
+      if (isDemoMode && input.name !== user.name) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Username changes are disabled in demo mode",
         });
       }
 

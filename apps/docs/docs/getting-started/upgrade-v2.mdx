@@ -18,15 +18,21 @@ docker pull ghcr.io/homarr-labs/homarr-test:v2
 
 For a fresh beta installation, follow the [Docker installation guide](/docs/getting-started/installation/docker),
 use `ghcr.io/homarr-labs/homarr-test:v2` as the image, and use a separate `/appdata` volume.
-Set `WORKSHOP_API_URL=https://v2.preview.homarr.dev` to use the preview Workshop.
+Set `WORKSHOP_API_URL=https://v2.preview.homarr.dev` and
+`WORKSHOP_WEB_URL=https://v2.preview.homarr.dev/workshop` so Workshop requests and links both use the preview.
 
 Homarr runs database migrations automatically at startup; no manual database migration command is needed.
 Once v2 is released, existing installations can use their normal update process. The beta image below is temporary.
 
 :::danger Back up before starting v2
 
-In Homarr v1, go to **Management → Tools → Backup**, export a backup, and keep the downloaded file somewhere safe
-before starting v2. See [Backup and restore](/docs/management/backup) for details.
+Back up the v1 database before starting v2:
+
+- **SQLite:** go to **Management → Tools → Backup**, export a backup, and keep the downloaded ZIP somewhere safe.
+- **MySQL or PostgreSQL:** use your database's native backup tools. Homarr's backup page supports SQLite only.
+
+Keep your deployment configuration and `SECRET_ENCRYPTION_KEY` with the backup. See
+[Backup and restore](/docs/management/backup) for the SQLite workflow.
 
 :::
 
@@ -47,6 +53,7 @@ services:
     image: ghcr.io/homarr-labs/homarr-test:v2
     environment:
       WORKSHOP_API_URL: https://v2.preview.homarr.dev
+      WORKSHOP_WEB_URL: https://v2.preview.homarr.dev/workshop
 ```
 
 ```sh
@@ -84,5 +91,8 @@ removing the archived v1 version. See [Custom Widgets: Import and Workshop](/doc
 
 ## Roll back
 
-Use the backup exported before the upgrade if you need to restore your v1 installation. Do not reuse a database that
-v2 has already migrated with v1.
+Stop v2 before restoring the pre-upgrade backup. For SQLite, restore the Homarr backup into a v1 instance. For MySQL
+or PostgreSQL, restore the native database backup and reconnect the v1 instance with the original database settings
+and `SECRET_ENCRYPTION_KEY`. Use the v1 image version you ran before the upgrade.
+
+Do not point v1 at a database that v2 has already migrated.
