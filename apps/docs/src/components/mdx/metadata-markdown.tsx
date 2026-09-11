@@ -9,8 +9,10 @@ import { AddingWidget } from "@/components/widgets/adding";
 import type { WidgetHeader } from "@/components/widgets/header";
 import type { WidgetIntegrations } from "@/components/widgets/integrations";
 import { WidgetInteractionGuide } from "@/components/widgets/interactions";
+import { GettingStartedOverview, InstallationPaths } from "@/components/pages/getting-started/getting-started-overview";
 import { getDocsHref } from "@/lib/docs-path";
 import type { WidgetConfiguration } from "@/types";
+import { ComponentCatalogMarkdown } from "./component-catalog-markdown";
 
 // Fumadocs supplies the original MDX props, including typed metadata and JSX steps.
 function markdown<Props>(component: (props: Props) => ReactNode) {
@@ -47,6 +49,9 @@ function configuration({ items }: WidgetConfiguration): ReactNode {
 }
 
 export const metadataMarkdownComponents = {
+  CustomJsxComponentReference: markdown(ComponentCatalogMarkdown),
+  GettingStartedOverview: markdown(GettingStartedOverview),
+  InstallationPaths: markdown(InstallationPaths),
   AddingIntegration: markdown(AddingIntegration),
   AddingWidget: markdown(AddingWidget),
   WidgetInteractionGuide: markdown(WidgetInteractionGuide),
