@@ -53,6 +53,13 @@ When a user-facing change affects setup or behavior, update the matching page in
 Every docs page and blog post includes copy-Markdown and view-source actions. Search is generated at build time and
 runs locally in the browser; it does not depend on an external crawler. Markdown exports and search resolve
 integration credentials and widget defaults from the same typed metadata used by the pages.
+The getting-started overview and complete Custom JSX component catalog are also included, with property types,
+binding contracts, and blocked capabilities taken from the published catalog JSON.
+
+Published Docusaurus `/docs/category/...` addresses remain available as static compatibility pages. They forward to
+the corresponding overview or developer setup guide, preserving query strings and anchors, and provide a direct
+link when JavaScript is disabled. Their canonical metadata points to the destination; compatibility pages are
+excluded from search and the sitemap.
 
 ## Kapa AI
 
