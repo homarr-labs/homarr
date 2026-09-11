@@ -44,9 +44,12 @@ export default function AppWidget({
   // Readable board tokens stay fixed on screen, but must yield space to the icon
   // when the tile itself becomes small. Below 100px, scale the whole composition.
   const scale = getWidgetDisplayScale({ displayScale, displayMode });
-  const contentScale = Math.min(1 / Math.min(scale, 1), Math.min(width, height) / 100);
-  const textSize = `${14 * contentScale}px`;
-  const spacing = 12 * contentScale;
+  const maximumContentScale = Math.min(width, height) / 100;
+  let uiScale = "var(--board-canvas-ui-scale, 1)";
+  if (displayMode === "advanced") uiScale = "1";
+  const textSize = `min(calc(14px * ${uiScale}), ${14 * maximumContentScale}px)`;
+  const spacing = `min(calc(12px * ${uiScale}), ${12 * maximumContentScale}px)`;
+  const rowGap = `min(calc(6px * ${uiScale}), ${6 * maximumContentScale}px)`;
   const isColumnLayout = options.layout.startsWith("column");
   const isTiny = Math.min(width, height) * scale < 100;
   const textStyle: CSSProperties = {};
@@ -79,7 +82,7 @@ export default function AppWidget({
             direction={options.layout}
             justify="center"
             align="center"
-            style={{ padding: spacing, gap: isColumnLayout ? 0 : spacing / 2 }}
+            style={{ padding: spacing, gap: isColumnLayout ? 0 : rowGap }}
             onContextMenu={isEditMode ? (e) => e.preventDefault() : undefined}
           >
             <Stack gap={0} className={classes.appText} style={textStyle}>
