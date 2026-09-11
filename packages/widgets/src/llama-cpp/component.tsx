@@ -20,11 +20,11 @@ import { formatBytes, formatNumber } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
+import { getWidgetLayoutSize } from "../common/widget-layout-size";
 import type { WidgetComponentProps } from "../definition";
 import { NoIntegrationSelectedError } from "../errors/no-integration-selected";
 
-// Board grid: a widget N cells wide is N*200 + (N-1)*12 px (1→200, 2→412, 3→624, 4→836).
-// Width drives how much info fits side-by-side; height only matters for the
+// Visible width drives how much info fits side-by-side; height only matters for the
 // single-row (short) case where the widget must drop down to essentials.
 const isNarrowWidth = (width: number) => width < 300; // 1 cell (200px)
 const isWideWidth = (width: number) => width >= 550; // 3+ cells (624px+)
@@ -43,9 +43,11 @@ export default function LlamacppWidget({
   options,
   width,
   height,
+  displayScale,
   displayMode = "compact",
 }: WidgetComponentProps<"llamacpp">) {
   const integrationId = integrationIds[0];
+  const layoutSize = getWidgetLayoutSize({ width, height, displayScale, displayMode });
   if (!integrationId) {
     throw new NoIntegrationSelectedError();
   }
@@ -54,8 +56,8 @@ export default function LlamacppWidget({
     <LlamacppContent
       integrationId={integrationId}
       options={options}
-      width={width}
-      height={height}
+      width={layoutSize.width}
+      height={layoutSize.height}
       displayMode={displayMode}
     />
   );

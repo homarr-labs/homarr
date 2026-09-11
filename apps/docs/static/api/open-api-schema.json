@@ -67,7 +67,8 @@
                         "type": "object",
                         "properties": {
                           "id": {
-                            "type": "string"
+                            "type": "string",
+                            "maxLength": 64
                           },
                           "name": {
                             "type": "string"
@@ -205,7 +206,8 @@
                     "type": "object",
                     "properties": {
                       "id": {
-                        "type": "string"
+                        "type": "string",
+                        "maxLength": 64
                       },
                       "name": {
                         "type": "string"
@@ -400,7 +402,8 @@
                       "type": "object",
                       "properties": {
                         "id": {
-                          "type": "string"
+                          "type": "string",
+                          "maxLength": 64
                         },
                         "name": {
                           "type": "string"
@@ -539,7 +542,8 @@
                     "type": "object",
                     "properties": {
                       "id": {
-                        "type": "string"
+                        "type": "string",
+                        "maxLength": 64
                       },
                       "name": {
                         "type": "string"
@@ -667,7 +671,8 @@
                     "type": "object",
                     "properties": {
                       "id": {
-                        "type": "string"
+                        "type": "string",
+                        "maxLength": 64
                       },
                       "name": {
                         "type": "string"
@@ -783,7 +788,8 @@
                   "type": "object",
                   "properties": {
                     "id": {
-                      "type": "string"
+                      "type": "string",
+                      "maxLength": 64
                     },
                     "name": {
                       "type": "string"
@@ -2304,7 +2310,8 @@
                       "traefik",
                       "customApi",
                       "assistant",
-                      "wud"
+                      "wud",
+                      "llamacpp"
                     ]
                   },
                   "options": {
@@ -2481,7 +2488,8 @@
                     "type": "object",
                     "properties": {
                       "id": {
-                        "type": "string"
+                        "type": "string",
+                        "maxLength": 64
                       },
                       "expirationDate": {
                         "type": "string"
@@ -3108,7 +3116,8 @@
                     "type": "object",
                     "properties": {
                       "id": {
-                        "type": "string"
+                        "type": "string",
+                        "maxLength": 64
                       },
                       "name": {
                         "anyOf": [
@@ -3341,7 +3350,8 @@
                     "type": "object",
                     "properties": {
                       "id": {
-                        "type": "string"
+                        "type": "string",
+                        "maxLength": 64
                       },
                       "name": {
                         "anyOf": [
@@ -3486,7 +3496,8 @@
                     "type": "object",
                     "properties": {
                       "id": {
-                        "type": "string"
+                        "type": "string",
+                        "maxLength": 64
                       },
                       "name": {
                         "anyOf": [
@@ -3604,7 +3615,8 @@
                   "type": "object",
                   "properties": {
                     "id": {
-                      "type": "string"
+                      "type": "string",
+                      "maxLength": 64
                     },
                     "name": {
                       "anyOf": [
@@ -3647,12 +3659,14 @@
                       ]
                     },
                     "provider": {
-                      "type": "string"
+                      "type": "string",
+                      "maxLength": 64
                     },
                     "homeBoardId": {
                       "anyOf": [
                         {
-                          "type": "string"
+                          "type": "string",
+                          "maxLength": 64
                         },
                         {
                           "type": "null"
@@ -3662,7 +3676,8 @@
                     "mobileHomeBoardId": {
                       "anyOf": [
                         {
-                          "type": "string"
+                          "type": "string",
+                          "maxLength": 64
                         },
                         {
                           "type": "null"
@@ -3678,8 +3693,8 @@
                     },
                     "firstDayOfWeek": {
                       "type": "integer",
-                      "minimum": -9007199254740991,
-                      "maximum": 9007199254740991
+                      "minimum": -32768,
+                      "maximum": 32767
                     },
                     "pingIconsEnabled": {
                       "type": "boolean"
@@ -3693,7 +3708,8 @@
                     "defaultSearchEngineId": {
                       "anyOf": [
                         {
-                          "type": "string"
+                          "type": "string",
+                          "maxLength": 64
                         },
                         {
                           "type": "null"
