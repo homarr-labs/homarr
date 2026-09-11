@@ -55,7 +55,6 @@ export default function AppWidget({
   const textStyle: CSSProperties = {};
   let titleLineClamp: number | undefined;
   let descriptionLineClamp = 4;
-  if (isColumnLayout) textStyle.flexShrink = 0;
   if (isTiny) {
     titleLineClamp = 2;
     descriptionLineClamp = 2;
@@ -120,7 +119,7 @@ export default function AppWidget({
               alt={app.name}
               className={combineClasses(classes.appIcon, "app-icon")}
               style={{
-                flex: isColumnLayout ? undefined : "0 0 50%",
+                flex: isColumnLayout ? "1 0 25%" : "0 0 50%",
                 height: "100%",
                 width: "100%",
                 minWidth: 0,
