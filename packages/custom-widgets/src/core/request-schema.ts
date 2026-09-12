@@ -57,7 +57,24 @@ export const customWidgetHttpSourceSchema = z.strictObject({
   networkScope: z.enum(customJsxNetworkScopes),
   auth: authSchema.default("none"),
 });
-export const customWidgetIntegrationKinds = ["sonarr", "radarr"] as const;
+export const customWidgetIntegrationKinds = [
+  "sonarr",
+  "radarr",
+  "lidarr",
+  "readarr",
+  "prowlarr",
+  "overseerr",
+  "jellyseerr",
+  "seerr",
+  "immich",
+  "slskd",
+  "homeAssistant",
+  "coolify",
+  "audiobookshelf",
+  "speedtestTracker",
+  "adGuardHome",
+  "nextcloud",
+] as const;
 export const customWidgetIntegrationSourceSchema = z.strictObject({
   type: z.literal("integration"),
   name: z.string().trim().min(1).max(128).optional(),

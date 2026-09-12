@@ -39,3 +39,7 @@ export {
   resolveCustomWidgetRequestValues,
 } from "./request-manifest";
 export type { CustomJsxRuntimeParams } from "./request-manifest";
+
+export { redactResponseSecrets } from "./response-redaction";
+
+export { assertCustomWidgetPathScope } from "./network-policy";

@@ -1,4 +1,4 @@
-import { resolveCustomWidgetSource } from "../custom-widget/source-resolver";
+import { getCustomWidgetIntegrationCacheVersions, resolveCustomWidgetSource } from "../custom-widget/source-resolver";
 import { TRPCError } from "@trpc/server";
 import { parse as parseSuperJson } from "superjson";
 import { z } from "zod/v4";
@@ -173,7 +173,7 @@ const executeRequest = async (
       cacheTtlSeconds: request.cacheSeconds,
     }),
   );
-  return { ...response, connectionCacheVersion: connection.cacheVersion };
+  return response;
 };
 
 export const customApiRouter = createTRPCRouter({
@@ -186,6 +186,7 @@ export const customApiRouter = createTRPCRouter({
 
   getData: publicProcedure.input(itemInputSchema).query(async ({ ctx, input }) => {
     const resolved = await resolvePlacedDefinitionAsync(ctx, input.itemId);
+    const integrationVersions = await getCustomWidgetIntegrationCacheVersions(ctx, resolved.definition.sources);
     const loadRequests = Object.entries(resolved.definition.requests).filter(
       ([, request]) => request.kind === "query" && request.trigger === "load",
     );
@@ -197,7 +198,6 @@ export const customApiRouter = createTRPCRouter({
             requestId,
             {
               data: response.data,
-              connectionCacheVersion: response.connectionCacheVersion,
               status: {
                 loading: false,
                 ok: response.ok,
@@ -212,7 +212,6 @@ export const customApiRouter = createTRPCRouter({
             requestId,
             {
               data: null,
-              connectionCacheVersion: "",
               status: {
                 loading: false,
                 ok: false,
@@ -228,7 +227,7 @@ export const customApiRouter = createTRPCRouter({
     return {
       type: "customJsx" as const,
       template: resolved.definition.template,
-      queryCacheKey: `${getCustomWidgetCacheVersion(resolved.stored)}:${hashRuntimeParams(resolved.configuration)}:${entries.map(([, result]) => result.connectionCacheVersion).join(":")}`,
+      queryCacheKey: `${getCustomWidgetCacheVersion(resolved.stored)}:${hashRuntimeParams(resolved.configuration)}:${integrationVersions.join(":")}`,
       data: Object.fromEntries(entries.map(([id, result]) => [id, result.data])),
       status: Object.fromEntries(entries.map(([id, result]) => [id, result.status])),
       options: resolved.configuration,

@@ -9,7 +9,7 @@ request to a different origin.
 
 ## Existing integrations
 
-Sonarr and Radarr sources can reuse a configured integration:
+Sources can reuse configured Sonarr, Radarr, Lidarr, Readarr, Prowlarr, Overseerr, Jellyseerr, Seerr, Immich, slskd, Home Assistant, Coolify, Audiobookshelf, Speedtest Tracker, AdGuard Home, and Nextcloud integrations:
 
 ```json
 {
@@ -23,9 +23,7 @@ paths append to the saved URL, including reverse-proxy subpaths. Changing the in
 Deleting it leaves the widget unconfigured until another instance is selected. The binding is shared by every placement
 of that widget definition. Exports and Workshop submissions retain the required type and omit the local integration ID.
 
-Integration requests require integration `use` access for GET queries, `interact` for actions, and `full` for DELETE,
-in addition to the request's board permission. Board access alone does not grant integration access. Methods other than
-GET must be manual actions. Requests and redirects must stay within the configured integration's URL path.
+Arbitrary integration requests require integration `full` access, including GET requests: service APIs can expose credentials or change state through reads. Board permissions still apply separately. Saved credentials are redacted from upstream responses. Non-GET integration requests must be actions. Requests and redirects stay within the configured URL path.
 
 ## Named requests
 

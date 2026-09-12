@@ -1024,7 +1024,7 @@
         "selectIntegration": "Configured integration",
         "noIntegrations": "No matching integrations available",
         "integrationUnavailable": "The selected integration is no longer available. Select another integration.",
-        "integrationDescription": "Uses the saved integration URL and credentials. Changes to that integration apply automatically."
+        "integrationDescription": "Uses the saved integration URL and credentials. Changes apply automatically. Full integration access is required to run requests."
       },
       "ai": {
         "title": "Create or fix with any AI",
