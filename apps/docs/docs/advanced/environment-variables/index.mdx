@@ -143,10 +143,10 @@ trailing slashes when Homarr or Docusaurus starts.
 
 ## Trusted widget packages
 
-| Variable | Purpose | Default |
-| --- | --- | --- |
-| `CUSTOM_WIDGET_PACKAGE_PATH` | Persistent build and runtime artifact cache. Activated browser/server artifacts and their source are also retained in the database. | `/appdata/custom-widgets` in production; `./appdata/custom-widgets` in development |
-| `CUSTOM_WIDGET_MAX_SERVER_PROCESSES` | Maximum active trusted widget server artifacts per Homarr process, from 1 to 128. Source-free packages do not start a server process. | `16` |
+| Variable                             | Purpose                                                                                                                               | Default                                                                            |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `CUSTOM_WIDGET_PACKAGE_PATH`         | Persistent build and runtime artifact cache. Activated browser/server artifacts and their source are also retained in the database.   | `/appdata/custom-widgets` in production; `./appdata/custom-widgets` in development |
+| `CUSTOM_WIDGET_MAX_SERVER_PROCESSES` | Maximum active trusted widget server artifacts per Homarr process, from 1 to 128. Source-free packages do not start a server process. | `16`                                                                               |
 
 Each replica materializes an authorized installed artifact from the database into its own cache. Dashboard requests do
 not install npm dependencies. Package dependencies are resolved and bundled when an owner previews or activates a new

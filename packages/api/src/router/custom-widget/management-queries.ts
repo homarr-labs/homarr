@@ -3,7 +3,12 @@ import { z } from "zod/v4";
 
 import { decryptSecret } from "@homarr/common/server";
 import { eq, or } from "@homarr/db";
-import { boards, customWidgetDefinitions, legacyCustomWidgetDefinitions, customWidgetInstallations } from "@homarr/db/schema";
+import {
+  boards,
+  customWidgetDefinitions,
+  legacyCustomWidgetDefinitions,
+  customWidgetInstallations,
+} from "@homarr/db/schema";
 import { collectCustomWidgetRequestReferences, getCustomWidgetDefaultOptions } from "@homarr/custom-widgets/core";
 
 import { getArtifact, parseBindings } from "./package/records";
@@ -118,16 +123,32 @@ export const managementQueryProcedures = {
           ? or(eq(customWidgetInstallations.enabled, true), eq(customWidgetInstallations.id, input.currentId))
           : eq(customWidgetInstallations.enabled, true),
       });
-      const packages = await Promise.all(installations.flatMap((installation) => {
-        if (!installation.activeArtifactId) return [];
-        return [getArtifact(ctx, installation.activeArtifactId).then(({ source }) => ({
-          id: installation.id, name: installation.name, description: source.manifest.description ?? null,
-          iconUrl: source.manifest.icon ?? null, options: source.options, defaultOptions: getCustomWidgetDefaultOptions(source.options),
-          template: "", sources: [], requestCapabilities: [], optionRequests: [], updatedAt: installation.updatedAt,
-          migrationRequired: false as const, packageVersion: 3 as const, connections: source.connections,
-          installationBindings: parseBindings(installation.bindings),
-        })).catch(() => null)];
-      }));
+      const packages = await Promise.all(
+        installations.flatMap((installation) => {
+          if (!installation.activeArtifactId) return [];
+          return [
+            getArtifact(ctx, installation.activeArtifactId)
+              .then(({ source }) => ({
+                id: installation.id,
+                name: installation.name,
+                description: source.manifest.description ?? null,
+                iconUrl: source.manifest.icon ?? null,
+                options: source.options,
+                defaultOptions: getCustomWidgetDefaultOptions(source.options),
+                template: "",
+                sources: [],
+                requestCapabilities: [],
+                optionRequests: [],
+                updatedAt: installation.updatedAt,
+                migrationRequired: false as const,
+                packageVersion: 3 as const,
+                connections: source.connections,
+                installationBindings: parseBindings(installation.bindings),
+              }))
+              .catch(() => null),
+          ];
+        }),
+      );
       const result = [...available, ...packages.filter((entry) => entry !== null)];
       if (!input.currentId || result.some(({ id }) => id === input.currentId)) return result;
       const legacy = await ctx.db.query.legacyCustomWidgetDefinitions.findFirst({

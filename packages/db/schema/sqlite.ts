@@ -657,7 +657,9 @@ export const customWidgetConnections = sqliteTable("custom_widget_connection", {
 
 export const customWidgetStorage = sqliteTable("custom_widget_storage", {
   id: text().notNull().primaryKey(),
-  installationId: text().notNull().references(() => customWidgetInstallations.id, { onDelete: "cascade" }),
+  installationId: text()
+    .notNull()
+    .references(() => customWidgetInstallations.id, { onDelete: "cascade" }),
   scope: text().notNull(),
   ownerKey: text().notNull(),
   key: text().notNull(),
@@ -667,7 +669,9 @@ export const customWidgetStorage = sqliteTable("custom_widget_storage", {
 
 export const customWidgetGuestGrants = sqliteTable("custom_widget_guest_grant", {
   id: text().notNull().primaryKey(),
-  itemId: text().notNull().references(() => items.id, { onDelete: "cascade" }),
+  itemId: text()
+    .notNull()
+    .references(() => items.id, { onDelete: "cascade" }),
   handler: text().notNull(),
   artifactDigest: text().notNull(),
   bindingsDigest: text().notNull(),
@@ -677,7 +681,9 @@ export const customWidgetGuestGrants = sqliteTable("custom_widget_guest_grant", 
 
 export const customWidgetActivity = sqliteTable("custom_widget_activity", {
   id: text().notNull().primaryKey(),
-  installationId: text().notNull().references(() => customWidgetInstallations.id, { onDelete: "cascade" }),
+  installationId: text()
+    .notNull()
+    .references(() => customWidgetInstallations.id, { onDelete: "cascade" }),
   itemId: text(),
   userId: text(),
   handler: text().notNull(),

@@ -215,39 +215,37 @@ export const customApiRouter = createTRPCRouter({
     const loadRequests = Object.entries(resolved.definition.requests).filter(
       ([, request]) => request.kind === "query" && request.trigger === "load",
     );
-    const entries = await mapCustomWidgetRequests(
-      loadRequests, 4, async ([requestId, request]) => {
-        try {
-          const response = await executeRequest(ctx, resolved, { id: requestId, ...request }, {});
-          return [
-            requestId,
-            {
-              data: response.data,
-              status: {
-                loading: false,
-                ok: response.ok,
-                status: response.status,
-                statusText: response.statusText,
-                error: response.ok ? undefined : `HTTP ${response.status}: ${response.statusText}`,
-              },
+    const entries = await mapCustomWidgetRequests(loadRequests, 4, async ([requestId, request]) => {
+      try {
+        const response = await executeRequest(ctx, resolved, { id: requestId, ...request }, {});
+        return [
+          requestId,
+          {
+            data: response.data,
+            status: {
+              loading: false,
+              ok: response.ok,
+              status: response.status,
+              statusText: response.statusText,
+              error: response.ok ? undefined : `HTTP ${response.status}: ${response.statusText}`,
             },
-          ] as const;
-        } catch (error) {
-          return [
-            requestId,
-            {
-              data: null,
-              status: {
-                loading: false,
-                ok: false,
-                status: 0,
-                error: error instanceof Error ? error.message : "Request failed",
-              },
+          },
+        ] as const;
+      } catch (error) {
+        return [
+          requestId,
+          {
+            data: null,
+            status: {
+              loading: false,
+              ok: false,
+              status: 0,
+              error: error instanceof Error ? error.message : "Request failed",
             },
-          ] as const;
-        }
-      },
-    );
+          },
+        ] as const;
+      }
+    });
 
     return {
       type: "customJsx" as const,

@@ -18,16 +18,11 @@
         "inputSchema": {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "connection"
-          ],
+          "required": ["connection"],
           "properties": {
             "connection": {
               "type": "string",
-              "enum": [
-                "client",
-                "secondary"
-              ]
+              "enum": ["client", "secondary"]
             }
           }
         }
@@ -38,27 +33,15 @@
         "inputSchema": {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "connection",
-            "operation"
-          ],
+          "required": ["connection", "operation"],
           "properties": {
             "connection": {
               "type": "string",
-              "enum": [
-                "client",
-                "secondary"
-              ]
+              "enum": ["client", "secondary"]
             },
             "operation": {
               "type": "string",
-              "enum": [
-                "pause",
-                "resume",
-                "pauseItem",
-                "resumeItem",
-                "deleteItem"
-              ]
+              "enum": ["pause", "resume", "pauseItem", "resumeItem", "deleteItem"]
             },
             "itemId": {
               "type": "string",
@@ -79,10 +62,7 @@
         "inputSchema": {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "connections",
-            "operation"
-          ],
+          "required": ["connections", "operation"],
           "properties": {
             "connections": {
               "type": "array",
@@ -91,18 +71,12 @@
               "uniqueItems": true,
               "items": {
                 "type": "string",
-                "enum": [
-                  "client",
-                  "secondary"
-                ]
+                "enum": ["client", "secondary"]
               }
             },
             "operation": {
               "type": "string",
-              "enum": [
-                "pause",
-                "resume"
-              ]
+              "enum": ["pause", "resume"]
             }
           }
         }
