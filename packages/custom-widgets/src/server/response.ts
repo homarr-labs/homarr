@@ -45,7 +45,7 @@ async function readLimitedBody(response: Response): Promise<string> {
   return new TextDecoder("utf-8", { fatal: true }).decode(bytes);
 }
 
-export async function parseResponseBody(response: Response): Promise<unknown> {
+export async function parseResponseBody(response: Response, textFallback = false): Promise<unknown> {
   const text = await readLimitedBody(response);
   if (!text) return null;
   try {
@@ -54,7 +54,7 @@ export async function parseResponseBody(response: Response): Promise<unknown> {
     return json;
   } catch (error) {
     if (error instanceof CustomWidgetDomainError) throw error;
-    if (response.headers.get("content-type")?.toLowerCase().includes("json")) {
+    if (!textFallback && response.headers.get("content-type")?.toLowerCase().includes("json")) {
       throw new CustomWidgetDomainError({ code: "BAD_REQUEST", message: "Upstream returned invalid JSON" });
     }
     return text;
