@@ -14,7 +14,7 @@ const CONTAINERS_REQUEST_TIMEOUT_MS = 10_000;
 
 export class WudIntegration extends Integration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
-    const response = await input.fetchAsync(this.url("/api/app"), {
+    const response = await input.fetchAsync(this.url("/api/containers"), {
       headers: this.getAuthHeaders(),
     });
 
@@ -23,10 +23,10 @@ export class WudIntegration extends Integration {
     }
 
     try {
-      await response.json();
+      await parseWudContainersResponseAsync(response);
     } catch (error) {
       return TestConnectionError.ParseResult(
-        new ParseError("Invalid WUD app response", {
+        new ParseError("Invalid WUD containers response", {
           cause: error instanceof Error ? error : new Error(String(error)),
         }),
       );
@@ -52,10 +52,6 @@ export class WudIntegration extends Integration {
 
   private getAuthHeaders(): Record<string, string> | undefined {
     if (!this.hasSecretValue("username") || !this.hasSecretValue("password")) {
-      return undefined;
-    }
-
-    if (this.url("/api/app").protocol !== "https:") {
       return undefined;
     }
 
