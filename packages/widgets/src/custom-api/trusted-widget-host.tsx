@@ -147,13 +147,16 @@ export function TrustedWidgetHost({
             resolve(false);
             return;
           }
-          openConfirmModal({
-            title,
-            children: message,
-            confirmProps: { color: destructive ? "red" : undefined },
-            onConfirm: () => resolve(true),
-            onCancel: () => resolve(false),
-          });
+          openConfirmModal(
+            {
+              title,
+              children: message,
+              confirmProps: { color: destructive ? "red" : undefined },
+              onConfirm: () => resolve(true),
+              onCancel: () => resolve(false),
+            },
+            { onClose: () => resolve(false) },
+          );
         }),
     }),
     [

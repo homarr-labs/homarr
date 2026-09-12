@@ -53,6 +53,11 @@ export function WidgetScope({
 }>) {
   const runtime = useWidgetRuntime();
   const parent = runtime.services;
+  const registerParentCommands = parent.registerCommands;
+  const registerCommands = useCallback<WidgetHostServices["registerCommands"]>(
+    (commands) => registerParentCommands(commands.map((command) => ({ ...command, id: `${name}:${command.id}` }))),
+    [name, registerParentCommands],
+  );
   const services = useMemo<WidgetHostServices>(() => {
     const operation = (input: Parameters<WidgetHostServices["transport"]["query"]>[0]) => ({
       ...input,
@@ -65,8 +70,7 @@ export function WidgetScope({
         set: (key, value) => parent.state.set(`${name}:${key}`, value),
         subscribe: parent.state.subscribe,
       },
-      registerCommands: (commands) =>
-        parent.registerCommands(commands.map((command) => ({ ...command, id: `${name}:${command.id}` }))),
+      registerCommands,
       transport: {
         query: (input, signal) => parent.transport.query(operation(input), signal),
         action: (input) => parent.transport.action(operation(input)),
@@ -75,7 +79,7 @@ export function WidgetScope({
         storageSet: (input) => parent.transport.storageSet({ ...input, key: `${name}:${input.key}` }),
       },
     };
-  }, [handlerPrefix, name, parent]);
+  }, [handlerPrefix, name, parent, registerCommands]);
   const scope = `${runtime.context.scope ?? ""}/${name}`;
   return (
     <WidgetContext.Provider
