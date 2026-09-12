@@ -12,7 +12,7 @@ import {
   Text,
   ThemeIcon,
 } from "@mantine/core";
-import { IconBulb, IconListCheck, IconPlus, IconSearch } from "@tabler/icons-react";
+import { IconBulb, IconPlus, IconSearch } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -99,11 +99,6 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
     actions.closeModal();
   };
 
-  const handleMultiSelectToggle = () => {
-    if (multiSelectActive) setSelectedAppIds(new Set());
-    setMultiSelectActive((current) => !current);
-  };
-
   return (
     <Stack gap="md">
       <FloatingTip
@@ -132,19 +127,6 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
             }
           }}
         />
-        {multiSelectAvailable && (
-          <Group justify="flex-end">
-            <Button
-              size="compact-sm"
-              variant={multiSelectActive ? "light" : "subtle"}
-              leftSection={<IconListCheck size={16} />}
-              aria-pressed={multiSelectActive}
-              onClick={handleMultiSelectToggle}
-            >
-              {multiSelectActive ? t("app.action.select.cancelMultiple") : t("app.action.select.selectMultiple")}
-            </Button>
-          </Group>
-        )}
       </Stack>
 
       {/* Scrollable Container with App Cards */}
