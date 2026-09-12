@@ -1150,6 +1150,10 @@
     "bazarr": {
       "name": "",
       "description": ""
+    },
+    "wud": {
+      "name": "Hvad Er Opad Docker",
+      "description": "Overvåg hvilke af dine Docker-containere der er tilgængelige billedopdateringer"
     }
   },
   "media": {
@@ -1232,10 +1236,20 @@
     "here": "her",
     "iconPicker": {
       "label": "Ikon-URL",
-      "header": "Indtast navn eller objekter for at filtrere for ikoner... Homarr vil søge gennem {countIcons} ikoner for dig.",
-      "headerLoading": "",
+      "header": "Søg efter {countIcons} billeder efter navn",
+      "headerLoading": "Søg billeder efter navn",
       "noResults": "",
-      "error": ""
+      "error": "",
+      "description": "Søg i biblioteket, indsæt en billed-URL, eller upload en fil.",
+      "clear": "Ryd billede",
+      "uploadImage": "Upload billede",
+      "results": "Billede søgeresultater",
+      "localImages": "Dine billeder",
+      "svgIcons": "SVG ikoner",
+      "otherImages": "Andre billeder",
+      "urlLoading": "Kontrollerer billede…",
+      "urlReady": "Billedet er klar til brug",
+      "urlError": "Dette billede kunne ikke indlæses. Tjek URL'en og prøv igen."
     },
     "colorScheme": {
       "options": {
@@ -2842,7 +2856,7 @@
       "option": {
         "albumId": {
           "label": "Album ID",
-          "description": "Dette er et unikt ID som refererer til dit Immich album. Du kan finde dette id ved at åbne et album og kopiere den unikke streng fra URL, for eksempel 'a21aca09-9f05-47dc-b1a1-7b53c547226e'"
+          "description": "Dette er et unikt ID som refererer til dit Immich album. Du kan finde dette id ved at åbne et album og kopiere den unikke streng fra URL, for eksempel 'a21aca09-9f05-47dc-b1a1-7b53c547226e'."
         },
         "rotationIntervalSeconds": {
           "label": "Interval i sekunder",
@@ -3944,6 +3958,38 @@
         "dockerNetwork": {
           "title": "Docker netværks-I/O",
           "subtitle": "Netværkstrafik af Docker-containere"
+        }
+      }
+    },
+    "wud": {
+      "name": "Hvad Er Opad Docker",
+      "description": "Vis hvor mange overvågede containere der er tilgængelige opdateringer.",
+      "title": "Hvad Er Opad Docker",
+      "monitored": "Overvåget",
+      "updatesAvailable": "{count, plural, one {# opdatering tilgængelig} other {# opdateringer tilgængelige}}",
+      "updateAvailable": "Opdatering tilgængelig",
+      "openReleaseNotes": "Åbn udgivelsesnoter",
+      "option": {
+        "showTitle": {
+          "label": "Vis titel"
+        },
+        "showRing": {
+          "label": "Vis opdateringsring"
+        },
+        "layout": {
+          "label": "Layout",
+          "option": {
+            "horizontal": {
+              "label": "Horisontal"
+            },
+            "vertical": {
+              "label": "Vertikal"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Vis liste over container-opdatering",
+          "description": "Lister hver overvåget beholder, der har en billedopdatering tilgængelig"
         }
       }
     }

@@ -4,6 +4,7 @@ import { callMcpTool } from "@homarr/api/mcp";
 import type { McpTool } from "@homarr/api/mcp";
 
 import { toAssistantToolOutput } from "../assistant/chat/assistant-tool-output";
+import { serializeMcpToolResult } from "./_serialize-result";
 
 interface CreateMcpProtocolHandlerOptions {
   caller: unknown;
@@ -53,7 +54,7 @@ export const createMcpProtocolHandler = ({
                 content: [
                   {
                     type: "text" as const,
-                    text: JSON.stringify(toAssistantToolOutput(result)),
+                    text: serializeMcpToolResult(toAssistantToolOutput(result)),
                   },
                 ],
               };

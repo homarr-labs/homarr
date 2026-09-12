@@ -129,7 +129,7 @@ export default function FirewallWidget({
   }
 
   return (
-    <ScrollArea h="100%">
+    <ScrollArea h="100%" style={{ minHeight: 0 }}>
       <Stack gap="xs" p={isAdvanced ? "xs" : 0}>
         {!isAdvanced && (
           <Group justify="space-between" w="100%" p="xs">

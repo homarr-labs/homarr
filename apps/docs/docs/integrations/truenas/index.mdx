@@ -20,7 +20,7 @@ import Alert from "@theme/Admonition";
 <IntegrationCapabilites items={[{ widget: healthMonitoringWidget }, { widget: systemResourcesWidget }]} />
 
 Disk space uses each pool's root dataset to account for RAIDZ parity and dataset limits. If dataset space is unavailable,
-Homarr falls back to physical pool space and keeps reporting pool health.
+Homarr falls back to physical pool space, which reads higher on RAIDZ, and keeps reporting pool health.
 
 ### Adding the integration
 

@@ -92,13 +92,17 @@ When documentation is needed, use these locations:
 - Lint: oxlint (not ESLint)
 - Format: oxfmt (not Prettier)
 - UI: Mantine (not Tailwind) — Tailwind is only used in docs app
-- Mantine: use the project-scoped MCP server in `.mcp.json` for current v9 APIs, and check `packages/ui/` before creating a new primitive.
+- Mantine: use the `mantine` MCP server in `.mcp.json` for current v9 APIs before writing component code. Prefer built-in primitives (`Combobox`/`useCombobox`, the polymorphic `component` prop, `@mantine/hooks`) and check `packages/ui/` for existing conventions first.
 - Icons: @tabler/icons-react
 - Docs app can import from `@homarr/definitions` for shared types
 - Run `pnpm dev:cli -- dev` to browse local `homarr:*` images and remote PR images.
 - Run `pnpm dev:cli -- build <name>` from a Homarr checkout to build `homarr:<name>` with rebuild provenance.
 - Run `pnpm dev:cli -- build --pr <number>` to build a PR locally from a temporary checkout.
 - Run Go checks from `tools/homarr-dev` with `go test ./...` and `go vet ./...`.
+
+## MCP servers
+
+`.mcp.json` declares project-scoped MCP servers. Keep only keyless definitions there; credentials belong in local dotfiles. See [Mantine LLM tooling](https://mantine.dev/guides/llms/) for client-specific setup.
 
 ## Agent Skills
 

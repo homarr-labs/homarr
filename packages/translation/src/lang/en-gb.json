@@ -91,7 +91,7 @@
       },
       "settings": {
         "title": "Settings",
-        "subtitle": "Configure server settings"
+        "subtitle": "Configure server settings."
       },
       "integrations": {
         "title": "Integrations",
@@ -351,7 +351,7 @@
       "delete": {
         "label": "Permanently delete user",
         "description": "This deletes this user, including their preferences. This will not delete any boards. The user will not be notified.",
-        "confirm": "Are you sure that you want to delete the user {username}, as well as their preferences"
+        "confirm": "Are you sure that you want to delete the user {username}, as well as their preferences?"
       },
       "select": {
         "label": "Select a user",
@@ -517,7 +517,7 @@
       "transfer": {
         "label": "Transfer group ownership",
         "description": "Transfer ownership of this group to another user.",
-        "confirm": "Are you want to transfer the ownership of the group, {name} to {username}",
+        "confirm": "Are you want to transfer the ownership of the group, {name} to {username}?",
         "notification": {
           "success": {
             "message": "Successfully transferred group {group} to {user}"
@@ -536,7 +536,7 @@
       },
       "delete": {
         "label": "Delete group",
-        "description": "Once you delete this group, you can not revert the change. Please be careful",
+        "description": "Once you delete this group, you can not revert the change. Please be careful.",
         "confirm": "Are you sure you want to delete the group, {name}?",
         "notification": {
           "success": {
@@ -1175,6 +1175,10 @@
     "bazarr": {
       "name": "Bazarr",
       "description": "Companion application to Sonarr and Radarr that manages and downloads subtitles"
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Monitor which of your Docker containers have image updates available"
     }
   },
   "media": {
@@ -1257,10 +1261,20 @@
     "here": "here",
     "iconPicker": {
       "label": "Icon URL",
-      "header": "Please enter a name or object to filter for the icon. Homarr will search throughout {countIcons} different icons to find the right one.",
-      "headerLoading": "Type to search icons…",
+      "header": "Please enter a name or object to filter for the icon. Homarr will search throughout {countIcons} different icons to find the right one",
+      "headerLoading": "Type to search icons",
       "noResults": "No icons match \"{search}\".",
-      "error": "Couldn't load icons."
+      "error": "Couldn't load icons.",
+      "description": "Search the library, paste an image URL, or upload a file.",
+      "clear": "Clear image",
+      "uploadImage": "Upload image",
+      "results": "Image search results",
+      "localImages": "Your images",
+      "svgIcons": "SVG icons",
+      "otherImages": "Other images",
+      "urlLoading": "Checking image…",
+      "urlReady": "Image is ready to use",
+      "urlError": "This image could not be loaded. Check the URL and try again."
     },
     "colorScheme": {
       "options": {
@@ -1318,7 +1332,7 @@
         "login": "Log-in",
         "homeBoard": "Your home board",
         "loggedOut": "Logged out",
-        "updateAvailable": "New update available: {tag}"
+        "updateAvailable": "{countUpdates} updates available: {tag}"
       }
     },
     "dangerZone": "Danger zone",
@@ -1705,7 +1719,7 @@
           "label": "Display seconds"
         },
         "useCustomTimezone": {
-          "label": " "
+          "label": "Use a fixed timezone"
         },
         "timezone": {
           "label": "Time zone",
@@ -2250,19 +2264,19 @@
           "label": "Invert sorting"
         },
         "columnOrder": {
-          "label": ""
+          "label": "Column order"
         },
         "columnWidths": {
-          "label": ""
+          "label": "Column widths"
         }
       },
       "error": {
         "internalServerError": "Failed to fetch containers stats",
-        "layoutSaveTitle": "",
-        "layoutSaveMessage": ""
+        "layoutSaveTitle": "Table layout not saved",
+        "layoutSaveMessage": "The Docker table layout could not be saved. Try moving or resizing the column again."
       },
       "empty": {
-        "noContainers": ""
+        "noContainers": "No containers found"
       }
     },
     "coolify": {
@@ -2558,17 +2572,17 @@
           "description": "Disabling this will not work for Plex"
         },
         "showBitrate": {
-          "label": "",
-          "description": ""
+          "label": "Show bitrate",
+          "description": "Show the current playback bitrate next to the location"
         },
         "showLocation": {
-          "label": "",
-          "description": ""
+          "label": "Show location",
+          "description": "Show whether the stream is on your LAN or WAN"
         }
       },
       "footer": {
         "streams": "{count, plural, one {# active stream} other {# active streams}}",
-        "totalBitrate": ""
+        "totalBitrate": "Total: {bitrate}"
       },
       "items": {
         "currentlyPlaying": "Currently playing",
@@ -2577,9 +2591,9 @@
         "id": "Id",
         "status": "Status",
         "directPlay": "Direct play",
-        "directStream": "",
-        "transcodeVideo": "",
-        "transcodeAudio": "",
+        "directStream": "Direct stream",
+        "transcodeVideo": "Transcoding video",
+        "transcodeAudio": "Transcoding audio",
         "transcoding": "Transcoding",
         "paused": "Paused",
         "remaining": "{minutes} min left",
@@ -2680,7 +2694,7 @@
       "option": {
         "albumId": {
           "label": "Album ID",
-          "description": "This is a unique ID which refers to your Immich album. You can find this id by opening an album and copying the unique string from the URL, for example 'a21aca09-9f05-47dc-b1a1-7b53c547226e'"
+          "description": "This is a unique ID which refers to your Immich album. You can find this id by opening an album and copying the unique string from the URL, for example 'a21aca09-9f05-47dc-b1a1-7b53c547226e'."
         },
         "rotationIntervalSeconds": {
           "label": "Interval in seconds",
@@ -2740,18 +2754,18 @@
           "description": ""
         },
         "columnOrder": {
-          "label": ""
+          "label": "Column order"
         },
         "columnWidths": {
-          "label": ""
+          "label": "Column widths"
         }
       },
       "errors": {
         "noColumns": "",
         "noCommunications": "",
-        "noItems": "",
-        "actionFailed": "",
-        "actionFailedMessage": ""
+        "noItems": "No downloads found",
+        "actionFailed": "Action failed",
+        "actionFailedMessage": "The action could not be completed. Please try again."
       },
       "items": {
         "actions": {
@@ -2766,7 +2780,7 @@
           "detailsTitle": ""
         },
         "downSpeed": {
-          "columnTitle": "",
+          "columnTitle": "Down",
           "detailsTitle": ""
         },
         "index": {
@@ -2775,16 +2789,16 @@
         },
         "id": {
           "columnTitle": "",
-          "detailsTitle": ""
+          "detailsTitle": "Item ID"
         },
         "integration": {
           "columnTitle": ""
         },
         "name": {
-          "columnTitle": ""
+          "columnTitle": "Job name"
         },
         "progress": {
-          "columnTitle": "",
+          "columnTitle": "Progress",
           "detailsTitle": ""
         },
         "ratio": {
@@ -2804,13 +2818,13 @@
           "detailsTitle": ""
         },
         "state": {
-          "columnTitle": "",
+          "columnTitle": "State",
           "detailsTitle": ""
         },
         "time": {
           "columnTitle": "",
           "detailsTitle": "",
-          "eta": ""
+          "eta": "ETA"
         },
         "type": {
           "columnTitle": "",
@@ -2856,21 +2870,21 @@
       },
       "globalRatio": "",
       "contextMenu": {
-        "copyName": "",
-        "copyId": "",
-        "clearFilters": ""
+        "copyName": "Copy name",
+        "copyId": "Copy ID",
+        "clearFilters": "Clear filters"
       },
       "footer": {
-        "filter": ""
+        "filter": "Filter downloads"
       },
       "stats": {
-        "show": "",
-        "hide": "",
-        "overallProgress": "",
-        "totalSize": "",
-        "clients": ""
+        "show": "Show global stats",
+        "hide": "Hide global stats",
+        "overallProgress": "Overall queue progress",
+        "totalSize": "Total queue size",
+        "clients": "{count, plural, one {# client} other {# clients}}"
       },
-      "disconnected": ""
+      "disconnected": "(disconnected)"
     },
     "mediaReleases": {
       "name": "",
@@ -2902,7 +2916,7 @@
       }
     },
     "mediaRequests-requestList": {
-      "name": "",
+      "name": "Media Requests List",
       "description": "",
       "option": {
         "linksTargetNewTab": {
@@ -2924,15 +2938,15 @@
         "unknown": "",
         "pending": "",
         "processing": "",
-        "requested": "",
+        "requested": "Requested",
         "partiallyAvailable": "",
         "available": "",
-        "blacklisted": "",
+        "blacklisted": "Blacklisted",
         "deleted": ""
       },
       "status": {
         "pending": "",
-        "approved": "",
+        "approved": "Approved",
         "declined": "",
         "failed": "",
         "completed": ""
@@ -2945,7 +2959,7 @@
       "option": {},
       "titles": {
         "stats": {
-          "main": "",
+          "main": "Media Stats",
           "approved": "",
           "pending": "",
           "processing": "",
@@ -2989,15 +3003,15 @@
       "panel": {
         "statistics": {
           "empty": "",
-          "transcodes": "",
+          "transcodes": "Transcodes",
           "transcodesCount": "",
           "healthChecksCount": "",
           "filesCount": "",
           "savedSpace": "",
-          "healthChecks": "",
-          "videoCodecs": "",
-          "videoContainers": "",
-          "videoResolutions": ""
+          "healthChecks": "Health checks",
+          "videoCodecs": "Codecs",
+          "videoContainers": "Containers",
+          "videoResolutions": "Resolutions"
         },
         "workers": {
           "empty": "",
@@ -3178,7 +3192,7 @@
       "option": {},
       "card": {
         "vpn": {
-          "countConnected": ""
+          "countConnected": "{count} connected"
         }
       },
       "error": {
@@ -3195,14 +3209,14 @@
             "name": ""
           },
           "wifi": {
-            "name": ""
+            "name": "Wi-Fi"
           }
         },
         "users": {
           "label": ""
         },
         "guests": {
-          "label": ""
+          "label": "Guests"
         }
       },
       "option": {
@@ -3414,7 +3428,7 @@
           "option": {
             "cpu": "",
             "memory": "",
-            "gpu": "",
+            "gpu": "GPU",
             "network": ""
           }
         },
@@ -3432,7 +3446,7 @@
         "cpu": "",
         "memory": "",
         "gpu": "",
-        "network": "",
+        "network": "NET",
         "up": "",
         "down": ""
       }
@@ -3518,17 +3532,17 @@
           "label": "Show agent version"
         },
         "columnOrder": {
-          "label": ""
+          "label": "Column order"
         },
         "columnWidths": {
-          "label": ""
+          "label": "Column widths"
         }
       },
       "noRecords": "No systems found",
       "error": {
         "internalServerError": "Unable to connect to Beszel. Check your integration settings.",
-        "layoutSaveTitle": "",
-        "layoutSaveMessage": ""
+        "layoutSaveTitle": "Unable to save table layout",
+        "layoutSaveMessage": "Your column order or widths could not be saved. Please try again."
       },
       "column": {
         "system": "System",
@@ -3970,6 +3984,38 @@
       },
       "error": {
         "internalServerError": "Failed to fetch Traefik data"
+      }
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Show how many watched containers have updates available.",
+      "title": "What's Up Docker",
+      "monitored": "Monitored",
+      "updatesAvailable": "{count, plural, one {# update available} other {# updates available}}",
+      "updateAvailable": "Update available",
+      "openReleaseNotes": "Open release notes",
+      "option": {
+        "showTitle": {
+          "label": "Show title"
+        },
+        "showRing": {
+          "label": "Show update ring"
+        },
+        "layout": {
+          "label": "Layout",
+          "option": {
+            "horizontal": {
+              "label": "Horizontal"
+            },
+            "vertical": {
+              "label": "Vertical"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Show container update list",
+          "description": "Lists each monitored container that has an image update available"
+        }
       }
     }
   },
@@ -4710,7 +4756,7 @@
           "title": "",
           "status": {
             "idle": "",
-            "running": "",
+            "running": "Running",
             "error": "",
             "disabled": ""
           },
@@ -5176,7 +5222,7 @@
       },
       "remove": {
         "label": "",
-        "confirm": "",
+        "confirm": "Click again to remove permanently",
         "notification": {
           "success": {
             "title": "",
@@ -5603,7 +5649,7 @@
     }
   },
   "search": {
-    "placeholder": "",
+    "placeholder": "Search for anything",
     "nothingFound": "",
     "error": {
       "fetch": ""
