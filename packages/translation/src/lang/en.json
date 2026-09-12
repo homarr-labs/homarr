@@ -5415,6 +5415,7 @@
         "advancedOptions": "Advanced options",
         "invalidJson": "Invalid JSON",
         "connectionDefault": "Use installation connection ({name})",
+        "useInstallationConnections": "Use installation connections",
         "connectionUnbound": "Choose a connection",
         "connectionMissing": "This required connection is not bound.",
         "connectionUnavailable": "Saved connection is unavailable",

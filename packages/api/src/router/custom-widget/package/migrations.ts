@@ -1,4 +1,8 @@
-import { getWidgetConnectionBindingNames, isWidgetConnectionCompatible } from "@homarr/custom-widgets/package";
+import {
+  getWidgetConnectionBindingNames,
+  isWidgetConnectionCompatible,
+  mergeWidgetConnectionBindings,
+} from "@homarr/custom-widgets/package";
 import { TRPCError } from "@trpc/server";
 import { parse, stringify } from "superjson";
 import { z } from "zod/v4";
@@ -58,7 +62,11 @@ export async function prepareWidgetMigration(
     const issues = validateCustomWidgetOptions(source.options, configuration);
     if (issues.length)
       throw new TRPCError({ code: "PRECONDITION_FAILED", message: `Placement ${placement.id}: ${issues[0]?.message}` });
-    const mergedBindings = { ...bindings, ...placement.packageOptions.connectionBindings };
+    const mergedBindings = mergeWidgetConnectionBindings(
+      source.connections,
+      bindings,
+      placement.packageOptions.connectionBindings,
+    );
     for (const [name, requirement] of Object.entries(source.connections)) {
       const names = getWidgetConnectionBindingNames(name, requirement, mergedBindings);
       if (!names.length && !requirement.optional)

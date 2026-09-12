@@ -26,8 +26,8 @@ export function ConnectionEditor({ onSaved, connection }: { onSaved(): void; con
   const t = useI18n("customWidget.package");
   const integrations = clientApi.integration.all.useQuery();
   const save = clientApi.customWidget.package.saveConnection.useMutation();
-  const configuration = isRecord(connection?.configuration) ? connection.configuration : {};
-  const tls = isRecord(configuration.tls) ? configuration.tls : {};
+  const configuration: Record<string, unknown> = connection?.configuration ?? {};
+  const tls: Record<string, unknown> = isRecord(configuration.tls) ? configuration.tls : {};
   let initialAuth: Authentication = "none";
   if (typeof configuration.auth === "string" && authKinds.includes(configuration.auth))
     initialAuth = configuration.auth as Authentication;

@@ -1,11 +1,15 @@
 "use client";
 
-import { Alert, Select, Stack } from "@mantine/core";
+import { Alert, Button, MultiSelect, Select, Stack } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { isRecord } from "@homarr/common";
-import { isWidgetConnectionCompatible } from "@homarr/custom-widgets/package";
+import {
+  getWidgetConnectionBindingNames,
+  isWidgetConnectionCompatible,
+  mergeWidgetConnectionBindings,
+} from "@homarr/custom-widgets/package";
 import type { CustomWidgetPackage } from "@homarr/custom-widgets/package";
 import { useI18n } from "@homarr/translation/client";
 
@@ -27,6 +31,7 @@ export function PackageConnectionBindings({
     enabled: isAdmin && Object.keys(connections).length > 0,
   });
   if (!isAdmin) return null;
+  const effectiveBindings = mergeWidgetConnectionBindings(connections, installationBindings, value);
   return (
     <Stack gap="sm">
       {local.isError && <Alert color="red">{t("connectionsError")}</Alert>}
@@ -34,6 +39,52 @@ export function PackageConnectionBindings({
         const candidates = (local.data ?? []).filter(
           (row) => isRecord(row.configuration) && isWidgetConnectionCompatible(connection, row.configuration),
         );
+        if (connection.multiple) {
+          const names = getWidgetConnectionBindingNames(name, connection, effectiveBindings);
+          const selected = [...new Set(names.map((key) => effectiveBindings[key]!))];
+          const choices = candidates.map((row) => ({ value: row.id, label: row.name }));
+          for (const id of selected) {
+            if (!choices.some((choice) => choice.value === id))
+              choices.push({ value: id, label: t("connectionUnavailable") });
+          }
+          const overrideKeys = Object.keys(value).filter((key) => key === name || key.startsWith(`${name}:`));
+          const withoutOverride = () => {
+            const bindings = { ...value };
+            for (const key of overrideKeys) delete bindings[key];
+            return bindings;
+          };
+          let error: string | undefined;
+          if (local.data && !connection.optional && !selected.length) error = t("connectionMissing");
+          if (local.data && selected.some((id) => !candidates.some((row) => row.id === id)))
+            error = t("connectionUnavailable");
+          return (
+            <Stack key={name} gap="xs">
+              <MultiSelect
+                label={connection.label}
+                description={connection.description}
+                required={!connection.optional}
+                placeholder={t("connectionUnbound")}
+                clearable
+                searchable
+                data={choices}
+                value={selected}
+                error={error}
+                disabled={local.isLoading}
+                onChange={(ids) => {
+                  const bindings = withoutOverride();
+                  bindings[name] = ids[0] ?? "";
+                  for (const id of ids.slice(1)) bindings[`${name}:${id}`] = id;
+                  onChange(bindings);
+                }}
+              />
+              {overrideKeys.length > 0 && (
+                <Button variant="subtle" size="compact-xs" onClick={() => onChange(withoutOverride())}>
+                  {t("useInstallationConnections")}
+                </Button>
+              )}
+            </Stack>
+          );
+        }
         const defaults = candidates.find((row) => row.id === installationBindings[name]);
         const selected = value[name];
         const choices = candidates.map((row) => ({ value: row.id, label: row.name }));

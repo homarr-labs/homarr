@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Accordion, Alert, Button, Paper, Select, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
@@ -20,7 +20,15 @@ export function WorkshopPackageReview({ submissionId }: { submissionId: string }
     { enabled: Boolean(releaseId) },
   );
   const [bindings, setBindings] = useState<Record<string, string>>({});
+  const [pendingConnections, setPendingConnections] = useState(0);
+  const connectionPreparationChanged = useCallback((pending: boolean) => {
+    setPendingConnections((current) => {
+      if (pending) return current + 1;
+      return current - 1;
+    });
+  }, []);
   const install = clientApi.customWidget.package.installWorkshop.useMutation();
+  const busy = install.isPending || pendingConnections > 0;
   return (
     <Paper withBorder p="md">
       <Stack>
@@ -33,6 +41,7 @@ export function WorkshopPackageReview({ submissionId }: { submissionId: string }
             label: `${entry.version} · ${entry.created}`,
           }))}
           value={releaseId || null}
+          disabled={busy}
           onChange={(value) => {
             setSelected(value);
             setBindings({});
@@ -76,13 +85,15 @@ export function WorkshopPackageReview({ submissionId }: { submissionId: string }
               requirements={release.data.source.connections}
               bindings={bindings}
               onChange={setBindings}
-              saving={false}
+              onPendingChange={connectionPreparationChanged}
+              saving={busy}
             />
             <Text size="sm" c="dimmed">
               {t("installDisabled")}
             </Text>
             <Button
               loading={install.isPending}
+              disabled={busy}
               onClick={() =>
                 install.mutate(
                   { releaseId, bindings },

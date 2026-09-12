@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import { Alert, MultiSelect, Select, Stack } from "@mantine/core";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -9,22 +10,39 @@ import { getWidgetConnectionBindingNames, isWidgetConnectionCompatible } from "@
 import type { CustomWidgetPackage } from "@homarr/custom-widgets/package";
 import { useI18n } from "@homarr/translation/client";
 
-export function PackageBindingPicker({ name, requirement, connections, integrations, bindings, onChange }: {
+export function PackageBindingPicker({
+  name,
+  requirement,
+  connections,
+  integrations,
+  bindings,
+  onChange,
+  onPendingChange,
+  disabled,
+}: {
   name: string;
   requirement: CustomWidgetPackage["connections"][string];
   connections: RouterOutputs["customWidget"]["package"]["connections"];
   integrations: RouterOutputs["integration"]["all"];
   bindings: Record<string, string>;
-  onChange(bindings: Record<string, string>): void;
+  onChange: Dispatch<SetStateAction<Record<string, string>>>;
+  onPendingChange(pending: boolean): void;
+  disabled: boolean;
 }) {
   const t = useI18n("customWidget.package");
   const utils = clientApi.useUtils();
   const saveConnection = clientApi.customWidget.package.saveConnection.useMutation();
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
-  const currentBindings = useRef(bindings);
-  currentBindings.current = bindings;
-  const ids = getWidgetConnectionBindingNames(name, requirement, bindings).map((key) => bindings[key]!);
+  const preparing = useRef(false);
+  const mounted = useRef(true);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
+  const ids = [...new Set(getWidgetConnectionBindingNames(name, requirement, bindings).map((key) => bindings[key]!))];
   const compatible = connections.filter((connection) => isWidgetConnectionCompatible(requirement, connection.configuration));
   const choices = compatible.map((connection) => ({ value: connection.id, label: connection.name }));
   if (requirement.kind === "integration") {
@@ -40,8 +58,10 @@ export function PackageBindingPicker({ name, requirement, connections, integrati
       choices.push({ value: id, label: connections.find((connection) => connection.id === id)?.name ?? t("unavailableConnection") });
   }
   const change = async (values: string[]) => {
-    if (pending) return;
+    if (preparing.current || disabled) return;
+    preparing.current = true;
     setPending(true);
+    onPendingChange(true);
     setError("");
     try {
       const nextIds: string[] = [];
@@ -59,19 +79,26 @@ export function PackageBindingPicker({ name, requirement, connections, integrati
         });
         nextIds.push(result.id);
       }
-      await utils.customWidget.package.connections.invalidate();
-      const next = { ...currentBindings.current };
-      for (const key of getWidgetConnectionBindingNames(name, requirement, next)) delete next[key];
-      for (const [index, id] of nextIds.entries()) {
-        let key = name;
-        if (index > 0) key = `${name}:${id}`;
-        next[key] = id;
-      }
-      onChange(next);
+      if (!mounted.current) return;
+      onChange((current) => {
+        const next = { ...current };
+        for (const key of getWidgetConnectionBindingNames(name, requirement, next)) delete next[key];
+        for (const [index, id] of nextIds.entries()) {
+          let key = name;
+          if (index > 0) key = `${name}:${id}`;
+          next[key] = id;
+        }
+        return next;
+      });
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : String(cause));
+      if (mounted.current) setError(cause instanceof Error ? cause.message : String(cause));
     } finally {
-      setPending(false);
+      // Refresh the list independently; a failed refetch must not discard a selection.
+      if (values.some((value) => value.startsWith("integration:")))
+        void utils.customWidget.package.connections.invalidate();
+      preparing.current = false;
+      if (mounted.current) setPending(false);
+      onPendingChange(false);
     }
   };
   const common = {
@@ -81,7 +108,7 @@ export function PackageBindingPicker({ name, requirement, connections, integrati
     required: !requirement.optional,
     searchable: true,
     clearable: true,
-    disabled: pending,
+    disabled: pending || disabled,
     data: choices,
     nothingFoundMessage: t("noCompatibleConnections"),
   };

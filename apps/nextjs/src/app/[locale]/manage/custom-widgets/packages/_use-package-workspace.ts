@@ -27,7 +27,14 @@ export function usePackageWorkspace(
   });
   const [installationId, setInstallationId] = useState(installation?.id);
   const [bindings, setBindings] = useState(installation?.bindings ?? initialBindings ?? {});
-  const [savedBindings, setSavedBindings] = useState(bindings);
+  const [savedBindings, setSavedBindings] = useState(installation?.bindings ?? {});
+  const [pendingConnections, setPendingConnections] = useState(0);
+  const connectionPreparationChanged = useCallback((pending: boolean) => {
+    setPendingConnections((current) => {
+      if (pending) return current + 1;
+      return current - 1;
+    });
+  }, []);
   const bindingsDirty =
     JSON.stringify(Object.entries(bindings).toSorted()) !== JSON.stringify(Object.entries(savedBindings).toSorted());
   const editor = usePackageDocument(initial, userId, installationId, bindingsDirty);
@@ -69,7 +76,7 @@ export function usePackageWorkspace(
   const discard = clientApi.customWidget.package.discardPreview.useMutation();
   const saveBindings = clientApi.customWidget.package.setBindings.useMutation();
   const discardPreview = discard.mutate;
-  const busy = save.isPending || saveBindings.isPending || previewMutation.isPending;
+  const busy = save.isPending || saveBindings.isPending || previewMutation.isPending || pendingConnections > 0;
   const resetExecution = useCallback(() => {
     generation.current += 1;
     if (previewId.current) setStale(true);
@@ -98,6 +105,7 @@ export function usePackageWorkspace(
   );
 
   const saveDraft = async () => {
+    if (busy) return;
     setError("");
     setMessage("");
     const submitted = document;
@@ -209,6 +217,7 @@ export function usePackageWorkspace(
   if (parsed.success && parsed.data.manifest.entrypoints.configuration)
     surfaceChoices.push({ value: "configuration", label: t("configuration") });
   const saveLocalBindings = () => {
+    if (busy) return;
     if (!installationId) {
       void saveDraft();
       return;
@@ -265,6 +274,7 @@ export function usePackageWorkspace(
     setMessage,
     bindings,
     bindingsDirty,
+    connectionPreparationChanged,
     setBindings,
     options,
     setOptions,

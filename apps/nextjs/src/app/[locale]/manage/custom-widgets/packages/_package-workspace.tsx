@@ -31,6 +31,11 @@ import { PackageTransfer } from "./_package-transfer";
 import { usePackageWorkspace } from "./_use-package-workspace";
 import type { Installation } from "./_use-package-workspace";
 import classes from "./_package-workspace.module.css";
+
+const workspaceTabs = ["source", "connections", "options", "installation", "workshop"] as const;
+type WorkspaceTab = (typeof workspaceTabs)[number];
+const isWorkspaceTab = (value: string | null): value is WorkspaceTab => workspaceTabs.some((tab) => tab === value);
+
 export function PackageWorkspace({
   installation,
   userId,
@@ -48,7 +53,17 @@ export function PackageWorkspace({
 }) {
   const t = useI18n("customWidget.package");
   const searchParams = useSearchParams();
-  const [tab, setTab] = useState(searchParams.get("tab") ?? "source");
+  const [tab, setTab] = useState<WorkspaceTab>(() => {
+    const requested = searchParams.get("tab");
+    if (isWorkspaceTab(requested)) return requested;
+    return "source";
+  });
+  const [visitedTabs, setVisitedTabs] = useState(() => new Set([tab]));
+  const selectTab = (value: string | null) => {
+    if (!isWorkspaceTab(value)) return;
+    setVisitedTabs((current) => new Set(current).add(value));
+    setTab(value);
+  };
   const workspace = usePackageWorkspace(
     installation,
     userId,
@@ -74,7 +89,6 @@ export function PackageWorkspace({
     parsed,
     effectiveOptions,
     save,
-    previewMutation,
     saveBindings,
     busy,
     saveDraft,
@@ -120,12 +134,12 @@ export function PackageWorkspace({
           <Button
             variant="default"
             loading={save.isPending}
-            disabled={!document.name.trim() || previewMutation.isPending || saveBindings.isPending}
+            disabled={!document.name.trim() || busy}
             onClick={() => void saveDraft()}
           >
             {t("saveDraft")}
           </Button>
-          <Button onClick={() => { setTab("installation"); setPane("edit"); }}>
+          <Button onClick={() => { selectTab("installation"); setPane("edit"); }}>
             {t("installation")}
           </Button>
         </Group>
@@ -153,7 +167,7 @@ export function PackageWorkspace({
         <Alert color="yellow">
           <Group justify="space-between">
             <Text size="sm">{t("connectionsUnsaved")}</Text>
-            <Button size="xs" loading={saveBindings.isPending || save.isPending} onClick={saveLocalBindings}>
+            <Button size="xs" loading={saveBindings.isPending || save.isPending} disabled={busy} onClick={saveLocalBindings}>
               {t("saveBindings")}
             </Button>
           </Group>
@@ -218,7 +232,7 @@ export function PackageWorkspace({
         preview={<PackagePreview state={workspace} />}
       >
         <Stack className={classes.authoring}>
-          <Tabs value={tab} onChange={(value) => { if (value) setTab(value); }} keepMounted={false}>
+          <Tabs value={tab} onChange={selectTab}>
             <Tabs.List>
               <Tabs.Tab value="source">{t("code")}</Tabs.Tab>
               <Tabs.Tab value="connections">{t("connections")}</Tabs.Tab>
@@ -226,51 +240,68 @@ export function PackageWorkspace({
               <Tabs.Tab value="installation">{t("installation")}</Tabs.Tab>
               <Tabs.Tab value="workshop">{t("workshopTab")}</Tabs.Tab>
             </Tabs.List>
-            <PackageSourceEditor state={workspace} existing={Boolean(workspace.installationId)} />
+            {visitedTabs.has("source") && (
+              <PackageSourceEditor state={workspace} existing={Boolean(workspace.installationId)} />
+            )}
             <Tabs.Panel value="connections" pt="md">
-              <PackageConnections
-                requirements={parsed.success ? parsed.data.connections : {}}
-                bindings={bindings}
-                onChange={setBindings}
-                onSave={saveLocalBindings}
-                saving={saveBindings.isPending}
-                onConnectionSaved={workspace.connectionChanged}
-              />
+              {visitedTabs.has("connections") && (
+                <PackageConnections
+                  requirements={parsed.success ? parsed.data.connections : {}}
+                  bindings={bindings}
+                  onChange={setBindings}
+                  onPendingChange={workspace.connectionPreparationChanged}
+                  onSave={saveLocalBindings}
+                  saving={busy}
+                  onConnectionSaved={workspace.connectionChanged}
+                />
+              )}
             </Tabs.Panel>
             <Tabs.Panel value="options" pt="md">
-              <Stack>
-                <Text size="sm" c="dimmed">{t("optionsDescription")}</Text>
-                {parsed.success && <PackageOptionFields schema={parsed.data.options} value={effectiveOptions} onChange={setOptions} />}
-                {parsed.success && Object.keys(parsed.data.options).length === 0 && <Alert>{t("noOptions")}</Alert>}
-                <Button variant="subtle" onClick={() => setOptions({})}>{t("resetOptions")}</Button>
-              </Stack>
+              {visitedTabs.has("options") && (
+                <Stack>
+                  <Text size="sm" c="dimmed">{t("optionsDescription")}</Text>
+                  {parsed.success && <PackageOptionFields schema={parsed.data.options} value={effectiveOptions} onChange={setOptions} />}
+                  {parsed.success && Object.keys(parsed.data.options).length === 0 && <Alert>{t("noOptions")}</Alert>}
+                  <Button variant="subtle" onClick={() => setOptions({})}>{t("resetOptions")}</Button>
+                </Stack>
+              )}
             </Tabs.Panel>
             <Tabs.Panel value="installation" pt="md">
-              <PackageOperations
-                installation={current}
-                initialBoardId={initialBoardId}
-                source={parsed.success ? parsed.data : undefined}
-                options={effectiveOptions}
-                dirty={editor.dirty}
-                trusted={trusted}
-                connectionsDirty={workspace.bindingsDirty}
-                onTrustChange={workspace.setTrusted}
-                onSave={() => void saveDraft()}
-                saving={save.isPending}
-                onError={setError}
-                onMessage={setMessage}
-              />
+              {visitedTabs.has("installation") && (
+                <PackageOperations
+                  installation={current}
+                  initialBoardId={initialBoardId}
+                  source={parsed.success ? parsed.data : undefined}
+                  options={effectiveOptions}
+                  dirty={editor.dirty}
+                  trusted={trusted}
+                  connectionsDirty={workspace.bindingsDirty || busy}
+                  onTrustChange={workspace.setTrusted}
+                  onSave={() => void saveDraft()}
+                  saving={busy}
+                  onError={setError}
+                  onMessage={setMessage}
+                />
+              )}
             </Tabs.Panel>
             <Tabs.Panel value="workshop" pt="md">
-              <Stack>
-                <Text size="sm" c="dimmed">{t("workshopDescription")}</Text>
-                {current ? (
-                  <>
-                    <PackageWorkshop id={current.id} dirty={editor.dirty || workspace.bindingsDirty} />
-                    <PackageTransfer id={current.id} name={current.name} active={Boolean(current.activeArtifactId)} dirty={editor.dirty || workspace.bindingsDirty} onError={setError} />
-                  </>
-                ) : <Button onClick={() => void saveDraft()} loading={save.isPending}>{t("saveDraft")}</Button>}
-              </Stack>
+              {visitedTabs.has("workshop") && (
+                <Stack>
+                  <Text size="sm" c="dimmed">{t("workshopDescription")}</Text>
+                  {current ? (
+                    <>
+                      <PackageWorkshop id={current.id} dirty={editor.dirty || workspace.bindingsDirty || busy} />
+                      <PackageTransfer
+                        id={current.id}
+                        name={current.name}
+                        active={Boolean(current.activeArtifactId)}
+                        dirty={editor.dirty || workspace.bindingsDirty || busy}
+                        onError={setError}
+                      />
+                    </>
+                  ) : <Button onClick={() => void saveDraft()} loading={busy}>{t("saveDraft")}</Button>}
+                </Stack>
+              )}
             </Tabs.Panel>
           </Tabs>
         </Stack>

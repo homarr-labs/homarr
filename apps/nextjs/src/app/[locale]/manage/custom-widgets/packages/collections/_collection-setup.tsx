@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Accordion, Alert, Badge, Button, Checkbox, Group, Paper, Select, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
@@ -19,6 +19,13 @@ export function PackageCollectionSetup({ initialData }: { initialData: WidgetCol
   const boards = clientApi.board.getAllBoards.useQuery();
   const saveBindings = clientApi.customWidget.package.setCollectionBindings.useMutation();
   const [bindings, setBindings] = useState(initialData.bindings);
+  const [pendingConnections, setPendingConnections] = useState(0);
+  const connectionPreparationChanged = useCallback((pending: boolean) => {
+    setPendingConnections((current) => {
+      if (pending) return current + 1;
+      return current - 1;
+    });
+  }, []);
   const [configuration, setConfiguration] = useState<CollectionConfiguration>({});
   const [selected, setSelected] = useState(initialData.entries.map((entry) => entry.id));
   const [boardId, setBoardId] = useState<string | null>(null);
@@ -33,7 +40,7 @@ export function PackageCollectionSetup({ initialData }: { initialData: WidgetCol
   };
   const [error, setError] = useState("");
   const progress = useCollectionPlacement(collection);
-  const busy = progress.busy || saveBindings.isPending;
+  const busy = progress.busy || saveBindings.isPending || pendingConnections > 0;
   const board = boards.data?.find((candidate) => candidate.id === boardId);
   const requiredSlots = new Set(
     collection.entries
@@ -46,6 +53,7 @@ export function PackageCollectionSetup({ initialData }: { initialData: WidgetCol
   );
   const missing = Object.entries(collection.connections).filter(([name]) => requiredSlots.has(name) && !bindings[name]);
   const save = () => {
+    if (busy) return;
     setError("");
     saveBindings.mutate(
       { importId: collection.importId, bindings },
@@ -86,6 +94,7 @@ export function PackageCollectionSetup({ initialData }: { initialData: WidgetCol
               requirements={collection.connections}
               bindings={bindings}
               onChange={setBindings}
+              onPendingChange={connectionPreparationChanged}
               onSave={save}
               saving={busy}
               onConnectionSaved={() => setTrusted(false)}
@@ -177,7 +186,7 @@ export function PackageCollectionSetup({ initialData }: { initialData: WidgetCol
           <Group>
             <Button
               loading={progress.busy}
-              disabled={!board || !trusted || !selected.length || missing.length > 0 || saveBindings.isPending}
+              disabled={!board || !trusted || !selected.length || missing.length > 0 || busy}
               onClick={() => {
                 if (board) void progress.run(board, selected, bindings, configuration);
               }}

@@ -5,6 +5,7 @@ import { PackageConnectionDiagnostic } from "./_package-connection-diagnostic";
 import { PackageBindingPicker } from "./_package-binding-picker";
 import type { RouterOutputs } from "@homarr/api";
 import { useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import { Alert, Button, Group, Paper, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
@@ -17,13 +18,15 @@ export function PackageConnections({
   requirements,
   bindings,
   onChange,
+  onPendingChange,
   onSave,
   saving,
   onConnectionSaved,
 }: {
   requirements: CustomWidgetPackage["connections"];
   bindings: Record<string, string>;
-  onChange(bindings: Record<string, string>): void;
+  onChange: Dispatch<SetStateAction<Record<string, string>>>;
+  onPendingChange(pending: boolean): void;
   onSave?(): void;
   saving: boolean;
   onConnectionSaved?(): void;
@@ -55,6 +58,8 @@ export function PackageConnections({
               integrations={integrations.data ?? []}
               bindings={bindings}
               onChange={onChange}
+              onPendingChange={onPendingChange}
+              disabled={saving}
             />
             {getWidgetConnectionBindingNames(name, requirement, bindings).map((bindingName) => (
               <Group key={bindingName} gap="xs">

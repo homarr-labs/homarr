@@ -6,7 +6,11 @@ import { isRecord } from "@homarr/common";
 import { eq } from "@homarr/db";
 import { boards, customWidgetArtifacts, customWidgetInstallations, items } from "@homarr/db/schema";
 import { getCustomWidgetDefaultOptions, validateCustomWidgetOptions } from "@homarr/custom-widgets/core";
-import { customWidgetArtifactSchema, customWidgetPackageSchema } from "@homarr/custom-widgets/package";
+import {
+  customWidgetArtifactSchema,
+  customWidgetPackageSchema,
+  mergeWidgetConnectionBindings,
+} from "@homarr/custom-widgets/package";
 import type { CustomWidgetArtifact, CustomWidgetPackage } from "@homarr/custom-widgets/package";
 
 import { throwIfActionForbiddenAsync } from "../../board/board-access";
@@ -105,7 +109,11 @@ export async function resolvePackagePlacement(ctx: PackageContext, itemId: strin
   const issues = validateCustomWidgetOptions(source.options, configuration);
   if (issues.length > 0)
     throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Widget configuration needs repair" });
-  const bindings = { ...parseBindings(installation.bindings), ...options.connectionBindings };
+  const bindings = mergeWidgetConnectionBindings(
+    source.connections,
+    parseBindings(installation.bindings),
+    options.connectionBindings,
+  );
   return { item, installation, artifact, source, configuration, bindings };
 }
 

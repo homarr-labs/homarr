@@ -115,6 +115,24 @@ export function getWidgetConnectionBindingNames(
   );
 }
 
+/** A placement selects an entire group; inherited members must not leak into its selection. */
+export function mergeWidgetConnectionBindings(
+  requirements: Record<string, { multiple?: boolean }>,
+  defaults: Record<string, string>,
+  overrides: Record<string, string>,
+) {
+  const bindings = { ...defaults };
+  for (const [name, requirement] of Object.entries(requirements)) {
+    if (!requirement.multiple) continue;
+    const belongsToGroup = (key: string) => key === name || key.startsWith(`${name}:`);
+    if (!Object.keys(overrides).some(belongsToGroup)) continue;
+    for (const key of Object.keys(bindings).filter(belongsToGroup)) delete bindings[key];
+  }
+  const merged = { ...bindings, ...overrides };
+  // An explicit empty group is stored as an empty base binding to distinguish it from inheritance.
+  return Object.fromEntries(Object.entries(merged).filter(([, id]) => Boolean(id)));
+}
+
 export function getWidgetConnectionRequirement<T extends { multiple?: boolean }>(
   requirements: Record<string, T>,
   name: string,
