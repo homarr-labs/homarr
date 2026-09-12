@@ -3,18 +3,19 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
 import { createId } from "@homarr/common";
-import { customWidgetPackageSchema } from "@homarr/custom-widgets/package";
+import { customWidgetPackageSchema, widgetPackageManifestSchema } from "@homarr/custom-widgets/package";
 import type { CustomWidgetArtifact } from "@homarr/custom-widgets/package";
 import { and, eq } from "@homarr/db";
 import { customWidgetInstallations } from "@homarr/db/schema";
-import { preserveWidgetCollectionOrigin } from "./portable-collection-origin";
+import { preserveWidgetCollectionOrigin, readPortableWidgetOrigin } from "./portable-collection-origin";
 
 import { persistPackageArtifact } from "./preview-store";
 import { withWidgetInstallationLock } from "./coordination";
 import { withWidgetArtifactReferenceLock } from "./artifact-references";
-import { getArtifact, getInstallation, packageDigest } from "./records";
+import { getArtifact, getInstallation, packageDigest, readPackageDraft } from "./records";
 import {
   authenticatedWidgetWorkshop,
+  describeWidgetWorkshopRelease,
   getWidgetWorkshopRelease,
   readWidgetWorkshopOrigin,
   widgetWorkshop,
@@ -91,7 +92,7 @@ export const packageWorkshopProcedures = {
         widgetWorkshop.packages.list(origin.submissionId, AbortSignal.timeout(15_000)),
       );
       const latest = releases[0];
-      const draft = customWidgetPackageSchema.safeParse(JSON.parse(installation.draft));
+      const draft = customWidgetPackageSchema.safeParse(readPackageDraft(installation.draft));
       let activeVersion: string | null = null;
       if (installation.activeArtifactId)
         activeVersion = (await getArtifact(ctx, installation.activeArtifactId)).source.manifest.version;
@@ -153,7 +154,11 @@ export const packageWorkshopProcedures = {
     .input(
       idInput.extend({
         token: z.string().min(1).max(20_000),
-        mode: z.enum(["new", "update", "fork"]),
+        mode: z.enum(["auto", "new", "update", "fork"]).default("auto"),
+        title: z.string().trim().min(3).max(100).optional(),
+        description: z.string().max(2048).optional(),
+        version: widgetPackageManifestSchema.shape.version.optional(),
+        expectedDraftDigest: z.string().min(1).optional(),
         submissionId: z.string().optional(),
         expectedRevision: z.number().int().positive().optional(),
         forkedFrom: z.string().optional(),
@@ -161,56 +166,89 @@ export const packageWorkshopProcedures = {
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const installation = await getInstallation(ctx, input.id);
-      const source = customWidgetPackageSchema.parse(JSON.parse(installation.draft));
-      const origin = readWidgetWorkshopOrigin(installation.origin);
-      let submissionId: string | undefined;
-      let forkedFrom: string | undefined;
-      if (input.mode === "update") {
-        submissionId = input.submissionId ?? origin?.submissionId;
-        if (!submissionId || !input.expectedRevision)
-          throw new TRPCError({
-            code: "BAD_REQUEST",
-            message: "An update requires its Workshop submission and current revision",
-          });
-      } else if (input.mode === "fork") {
-        forkedFrom = input.forkedFrom ?? origin?.releaseId;
-        if (!forkedFrom)
-          throw new TRPCError({ code: "BAD_REQUEST", message: "Choose the original release to publish a fork" });
-        const original = await getWidgetWorkshopRelease(forkedFrom);
-        if (original.source.manifest.id === source.manifest.id)
-          throw new TRPCError({ code: "BAD_REQUEST", message: "A fork must have its own package identity" });
-      }
-      let artifact: CustomWidgetArtifact | undefined;
-      if (installation.activeArtifactId) {
-        const active = await getArtifact(ctx, installation.activeArtifactId);
-        if (packageDigest(active.source) === packageDigest(source)) artifact = active.artifact;
-      }
-      const release = await withWorkshopError(() =>
-        authenticatedWidgetWorkshop(input.token).packages.publish({
-          source,
-          artifact,
-          submissionId,
-          expectedRevision: input.expectedRevision,
-          forkedFrom,
-          changelog: input.changelog,
-          title: installation.name,
-          description: source.manifest.description,
-        }),
-      );
-      const published = await getWidgetWorkshopRelease(release.id);
-      await ctx.db
-        .update(customWidgetInstallations)
-        .set({
-          origin: JSON.stringify(preserveWidgetCollectionOrigin(installation.origin, published.origin)),
-          updatedAt: new Date(),
-        })
-        .where(eq(customWidgetInstallations.id, input.id));
-      return {
-        releaseId: release.id,
-        submissionId: release.submission,
-        version: release.version,
-        workshopUrl: published.workshopUrl,
-      };
+      return withWidgetInstallationLock(input.id, async () => {
+        const installation = await getInstallation(ctx, input.id);
+        if (input.expectedDraftDigest && packageDigest(installation.draft) !== input.expectedDraftDigest)
+          throw new TRPCError({ code: "CONFLICT", message: "The saved draft changed. Reload it before publishing." });
+        const source = customWidgetPackageSchema.parse(readPackageDraft(installation.draft));
+        const origin = readWidgetWorkshopOrigin(installation.origin);
+        const backend = authenticatedWidgetWorkshop(input.token);
+        const user = await withWorkshopError(() => backend.refreshAuth());
+        if (!user) throw new TRPCError({ code: "UNAUTHORIZED", message: "Sign in to Workshop before publishing." });
+        let submissionId: string | undefined;
+        let forkedFrom: string | undefined;
+        let expectedRevision = input.expectedRevision;
+        if (input.mode === "auto") {
+          if (!input.expectedDraftDigest)
+            throw new TRPCError({ code: "BAD_REQUEST", message: "Review the saved draft before publishing." });
+          const portable = readPortableWidgetOrigin(installation.origin);
+          if (origin?.author === user.id) {
+            const listing = await withWorkshopError(() => backend.get(origin.submissionId));
+            submissionId = listing.id;
+            expectedRevision = listing.revision;
+          } else if (origin) {
+            forkedFrom = origin.releaseId;
+          } else if (portable?.kind === "fork" && portable.upstream) {
+            const upstream = readWidgetWorkshopOrigin(JSON.stringify(portable.upstream));
+            forkedFrom = upstream?.releaseId;
+          }
+          if (forkedFrom) {
+            const original = await getWidgetWorkshopRelease(forkedFrom);
+            if (original.source.manifest.id === source.manifest.id) source.manifest.id = `widget-${createId()}`;
+          }
+          source.manifest.author = user.name;
+          source.manifest.name = input.title ?? installation.name;
+          source.manifest.description = input.description ?? source.manifest.description;
+          source.manifest.version = input.version ?? source.manifest.version;
+        } else if (input.mode === "update") {
+          submissionId = input.submissionId ?? origin?.submissionId;
+          if (!submissionId || !expectedRevision)
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              message: "An update requires its Workshop submission and current revision",
+            });
+        } else if (input.mode === "fork") {
+          forkedFrom = input.forkedFrom ?? origin?.releaseId;
+          if (!forkedFrom)
+            throw new TRPCError({ code: "BAD_REQUEST", message: "Choose the original release to publish a fork" });
+          const original = await getWidgetWorkshopRelease(forkedFrom);
+          if (original.source.manifest.id === source.manifest.id)
+            throw new TRPCError({ code: "BAD_REQUEST", message: "A fork must have its own package identity" });
+        }
+        let artifact: CustomWidgetArtifact | undefined;
+        if (installation.activeArtifactId) {
+          const active = await getArtifact(ctx, installation.activeArtifactId);
+          if (packageDigest(active.source) === packageDigest(source)) artifact = active.artifact;
+        }
+        const release = await withWorkshopError(() =>
+          backend.packages.publish({
+            source,
+            artifact,
+            submissionId,
+            expectedRevision,
+            forkedFrom,
+            changelog: input.changelog,
+            title: input.title ?? installation.name,
+            description: input.description ?? source.manifest.description,
+          }),
+        );
+        const published = describeWidgetWorkshopRelease(release);
+        await ctx.db
+          .update(customWidgetInstallations)
+          .set({
+            origin: JSON.stringify(
+              preserveWidgetCollectionOrigin(installation.origin, { ...published.origin, authorName: user.name }),
+            ),
+            draft: JSON.stringify(source),
+            updatedAt: new Date(),
+          })
+          .where(eq(customWidgetInstallations.id, input.id));
+        return {
+          releaseId: release.id,
+          submissionId: release.submission,
+          version: release.version,
+          workshopUrl: published.workshopUrl,
+        };
+      });
     }),
 };

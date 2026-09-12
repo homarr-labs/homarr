@@ -37,7 +37,7 @@ export const widgetPortableWorkshopOriginSchema = z.strictObject({
   releaseId: z.string().max(128),
   version: z.string().max(128),
   sourceDigest: digest,
-  artifactDigest: digest,
+  artifactDigest: digest.or(z.literal("")),
   author: z.string().max(256),
   forkedFrom: z.string().max(128),
 });

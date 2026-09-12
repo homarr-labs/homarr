@@ -13,6 +13,7 @@ import {
   Text,
   TextInput,
   Tooltip,
+  Title,
   ActionIcon,
   Paper,
 } from "@mantine/core";
@@ -115,6 +116,7 @@ export function PackageWorkspace({
         else editor.undo();
       }}
     >
+      <Title order={1} size="h2">{t("workbenchTitle")}</Title>
       <Group justify="space-between" align="end" data-package-document>
         <TextInput
           flex={1}
@@ -292,7 +294,6 @@ export function PackageWorkspace({
                       <PackageWorkshop id={current.id} dirty={editor.dirty || workspace.bindingsDirty || busy} />
                       <PackageTransfer
                         id={current.id}
-                        name={current.name}
                         active={Boolean(current.activeArtifactId)}
                         dirty={editor.dirty || workspace.bindingsDirty || busy}
                         onError={setError}

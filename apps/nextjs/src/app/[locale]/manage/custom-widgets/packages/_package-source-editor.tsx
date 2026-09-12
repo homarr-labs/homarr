@@ -72,7 +72,7 @@ export function PackageSourceEditor({
               <Button size="compact-xs" variant="subtle" onClick={() => setManageFiles((value) => !value)} aria-expanded={manageFiles}>
                 {t("manageFiles")}
               </Button>
-              <Collapse in={manageFiles}>
+              <Collapse expanded={manageFiles}>
                 <Stack gap="xs">
                 <TextInput
                   aria-label={t("filePath")}

@@ -466,6 +466,18 @@ export class WorkshopBackend {
     }
   }
 
+  public async addScreenshots(id: string, screenshots: File[]) {
+    workshopScreenshotsSchema.parse(screenshots);
+    if (screenshots.length === 0) return;
+    const current = await this.get(id);
+    if (current.screenshots.length + screenshots.length > MAX_WORKSHOP_SCREENSHOTS)
+      throw new Error(`A submission can have up to ${MAX_WORKSHOP_SCREENSHOTS} screenshots`);
+    await this.pocketBase.collection("submissions").update(id, {
+      "screenshots+": screenshots,
+      expectedRevision: current.revision,
+    });
+  }
+
   public async update(id: string, input: WorkshopSubmissionInput, screenshotChanges: WorkshopScreenshotChanges = {}) {
     const parsed = workshopSubmissionInputSchema.parse(input);
     const additions = screenshotChanges.additions ?? [];

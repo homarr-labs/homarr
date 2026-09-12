@@ -8,8 +8,8 @@ import { packagePreviewProcedures } from "./preview-procedures";
 import { z } from "zod/v4";
 
 import { createId } from "@homarr/common";
-import { eq } from "@homarr/db";
-import { customWidgetInstallations, items } from "@homarr/db/schema";
+import { eq, inArray } from "@homarr/db";
+import { customWidgetArtifacts, customWidgetInstallations, items } from "@homarr/db/schema";
 import { customWidgetPackageSchema } from "@homarr/custom-widgets/package";
 
 import { createTRPCRouter } from "../../../trpc";
@@ -30,6 +30,7 @@ import { getOrBuildWidgetArtifact, packageTransferProcedures } from "./transfer"
 import { withWidgetInstallationLock } from "./coordination";
 import { publishWidgetPackageChange } from "./events";
 import { packageWorkshopProcedures } from "./workshop";
+import { getWidgetWorkshopUrl, readWidgetWorkshopOrigin } from "./workshop-client";
 import { setWidgetPackageEnabled } from "./enabled";
 import { packageWebhookProcedures } from "./webhook-procedures";
 import { packageArtifactReviewProcedures } from "./artifact-review";
@@ -67,7 +68,7 @@ export const customWidgetPackageRouter = createTRPCRouter({
     })
     .query(async ({ ctx }) => {
       const [rows, placements] = await Promise.all([
-        ctx.db.query.customWidgetInstallations.findMany({ columns: { draft: false, previousSnapshot: false } }),
+        ctx.db.query.customWidgetInstallations.findMany({ columns: { previousSnapshot: false } }),
         ctx.db.query.items.findMany({ where: eq(items.kind, "customApi"), columns: { options: true } }),
       ]);
       const counts = new Map<string, number>();
@@ -75,11 +76,30 @@ export const customWidgetPackageRouter = createTRPCRouter({
         const options = parsePackagePlacement(placement.options);
         if (options) counts.set(options.definitionId, (counts.get(options.definitionId) ?? 0) + 1);
       }
-      return rows.map((row) => ({
-        ...row,
-        bindings: parseBindings(row.bindings),
-        placementCount: counts.get(row.id) ?? 0,
-      }));
+      const artifactIds = rows.flatMap((row) => (row.activeArtifactId ? [row.activeArtifactId] : []));
+      const artifacts =
+        artifactIds.length > 0
+          ? await ctx.db.query.customWidgetArtifacts.findMany({
+              where: inArray(customWidgetArtifacts.id, artifactIds),
+              columns: { id: true, version: true },
+            })
+          : [];
+      const versions = new Map(artifacts.map((artifact) => [artifact.id, artifact.version]));
+      return rows.map(({ draft, ...row }) => {
+        const source = customWidgetPackageSchema.safeParse(readPackageDraft(draft));
+        const origin = readWidgetWorkshopOrigin(row.origin);
+        return {
+          ...row,
+          bindings: parseBindings(row.bindings),
+          placementCount: counts.get(row.id) ?? 0,
+          activeVersion: versions.get(row.activeArtifactId ?? "") ?? null,
+          draftVersion: source.data?.manifest.version ?? null,
+          description: source.data?.manifest.description ?? "",
+          author: origin?.authorName || source.data?.manifest.author || "",
+          workshop: origin,
+          workshopUrl: origin ? getWidgetWorkshopUrl(origin.submissionId) : null,
+        };
+      });
     }),
   get: admin
     .meta({
@@ -95,6 +115,7 @@ export const customWidgetPackageRouter = createTRPCRouter({
       const { previousSnapshot: _snapshot, draft: _draft, ...installation } = row;
       return {
         ...installation,
+        workshop: readWidgetWorkshopOrigin(row.origin),
         source: readPackageDraft(row.draft),
         draftDigest: packageDigest(row.draft),
         bindings: parseBindings(row.bindings),

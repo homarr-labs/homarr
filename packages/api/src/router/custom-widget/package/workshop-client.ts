@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
 import { assertWidgetArtifactIntegrity } from "@homarr/custom-widgets/package/server";
+import type { WorkshopPackageRelease } from "@homarr/workshop/package-releases";
 import { parseWorkshopPackageRelease } from "@homarr/workshop/package-releases";
 import { WorkshopBackend } from "@homarr/workshop/backend";
 import { resolveHomarrUrlConfig } from "@homarr/workshop/schema";
@@ -24,8 +25,12 @@ export const widgetWorkshopOriginSchema = z.object({
   sourceDigest: z.string(),
   artifactDigest: z.string(),
   author: z.string(),
+  authorName: z.string().optional(),
   forkedFrom: z.string(),
 });
+
+export const getWidgetWorkshopUrl = (submissionId: string) =>
+  `${urls.workshopWebUrl}/${encodeURIComponent(submissionId)}`;
 
 export function readWidgetWorkshopOrigin(raw: string | null) {
   if (!raw) return null;
@@ -41,25 +46,29 @@ export function readWidgetWorkshopOrigin(raw: string | null) {
 export async function getWidgetWorkshopRelease(releaseId: string) {
   return withWorkshopError(async () => {
     const release = await widgetWorkshop.packages.get(releaseId, AbortSignal.timeout(15_000));
-    const parsed = parseWorkshopPackageRelease(release);
-    if (
-      packageDigest(parsed.source) !== release.sourceDigest ||
-      parsed.source.manifest.id !== release.packageId ||
-      parsed.source.manifest.version !== release.version
-    ) {
-      throw new TRPCError({ code: "BAD_REQUEST", message: "Workshop release metadata does not match its package" });
-    }
-    if (parsed.artifact) {
-      assertWidgetArtifactIntegrity(parsed.artifact, parsed.source);
-      if (parsed.artifact.digest !== release.artifactDigest) throw new Error("Release artifact checksum mismatch");
-    }
-    return {
-      ...parsed,
-      release,
-      origin: { kind: "workshop" as const, workshopApiUrl: urls.workshopApiUrl, ...parsed.origin },
-      workshopUrl: `${urls.workshopWebUrl}/${encodeURIComponent(release.submission)}`,
-    };
+    return describeWidgetWorkshopRelease(release);
   });
+}
+
+export function describeWidgetWorkshopRelease(release: WorkshopPackageRelease) {
+  const parsed = parseWorkshopPackageRelease(release);
+  if (
+    packageDigest(parsed.source) !== release.sourceDigest ||
+    parsed.source.manifest.id !== release.packageId ||
+    parsed.source.manifest.version !== release.version
+  ) {
+    throw new TRPCError({ code: "BAD_REQUEST", message: "Workshop release metadata does not match its package" });
+  }
+  if (parsed.artifact) {
+    assertWidgetArtifactIntegrity(parsed.artifact, parsed.source);
+    if (parsed.artifact.digest !== release.artifactDigest) throw new Error("Release artifact checksum mismatch");
+  }
+  return {
+    ...parsed,
+    release,
+    origin: { kind: "workshop" as const, workshopApiUrl: urls.workshopApiUrl, ...parsed.origin },
+    workshopUrl: getWidgetWorkshopUrl(release.submission),
+  };
 }
 
 export function authenticatedWidgetWorkshop(token: string) {

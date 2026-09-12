@@ -333,14 +333,20 @@ In Workshop, select a release, inspect source files and dependencies, and option
 **Import for review** opens the package workspace with a disabled local installation. Preview and activate it after
 reviewing trust, then add it to a board.
 
-The workspace's Workshop section checks for newer releases and reports local source changes. Staging an update
-requires acknowledging replacement of the saved draft; the active release continues running until activation.
-Fork or export local changes you want to keep before replacing the draft.
+The **Packages** library shows each installation’s version, author, and **View on Workshop** link. Choose
+**Check for updates**, then **Review update** to load a release into the editor. If your saved draft has local
+changes, confirm its replacement first. The active release continues running until you activate the reviewed draft.
+Use **Duplicate** or export local changes you want to keep before replacing them.
 
-Publishing requires a Workshop account and an explicit review of the saved source for secrets, local information,
-and permission to share the code and dependencies. Publish a new package, an immutable release of a package you own,
-or an attributed fork. Give each release a new version in the manifest and describe its changes. Local bindings and
-credentials remain on the Homarr installation.
+Choose **Publish to Workshop** from the package’s action menu or its editor. Packages and Custom JSX widgets use the
+same publishing form: sign in, add a title, description, and optional screenshots, then publish. The signed-in Workshop
+account receives attribution. Homarr updates your existing listing or creates an attributed copy of another author’s
+package automatically. **Release details** contains the version and optional release notes; updates suggest the next
+patch version. Review source, dependencies, and fixtures before publishing. Local bindings and credentials remain
+on the Homarr installation.
+
+The management sidebar can collapse to icons using its toggle. It collapses automatically in the package editor to
+leave more room for code and preview; expand it whenever you need the full labels. On mobile, use the header menu.
 
 ## Reference packages with local services
 

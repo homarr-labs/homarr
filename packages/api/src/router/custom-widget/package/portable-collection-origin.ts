@@ -48,16 +48,19 @@ export function preserveWidgetCollectionOrigin(raw: string | null, nextOrigin: o
 export function readPortableWidgetOrigin(raw: string | null): WidgetPortableOrigin | undefined {
   const value = readOrigin(raw);
   if (!value) return undefined;
-  const { collection: _collection, ...origin } = value;
+  const { collection: _collection, authorName: _authorName, ...origin } = value;
   const direct = widgetPortableOriginSchema.safeParse(origin);
   if (direct.success) return direct.data;
-  if (typeof value.forkedFrom !== "string") return undefined;
+  if (value.kind !== undefined || typeof value.forkedFrom !== "string") return undefined;
   const upstream = readPortableWidgetOrigin(typeof value.origin === "string" ? value.origin : null);
+  let workshopUpstream;
+  if (upstream?.kind === "workshop") workshopUpstream = upstream;
+  if (upstream?.kind === "fork") workshopUpstream = upstream.upstream;
   const parsed = widgetPortableOriginSchema.safeParse({
     kind: "fork",
     packageId: value.forkedFrom,
     artifactDigest: value.artifact ?? undefined,
-    upstream: upstream?.kind === "workshop" ? upstream : undefined,
+    upstream: workshopUpstream,
   });
   if (parsed.success) return parsed.data;
   return undefined;
