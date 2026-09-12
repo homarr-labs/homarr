@@ -116,7 +116,9 @@ export function PackageWorkspace({
         else editor.undo();
       }}
     >
-      <Title order={1} size="h2">{t("workbenchTitle")}</Title>
+      <Title order={1} size="h2">
+        {t("workbenchTitle")}
+      </Title>
       <Group justify="space-between" align="end" data-package-document>
         <TextInput
           flex={1}
@@ -131,7 +133,9 @@ export function PackageWorkspace({
             {t("library")}
           </Button>
           <Badge variant="light">{status}</Badge>
-          <Text size="xs" c="dimmed">{draftStatus}</Text>
+          <Text size="xs" c="dimmed">
+            {draftStatus}
+          </Text>
           <Button
             variant="default"
             loading={save.isPending}
@@ -140,7 +144,12 @@ export function PackageWorkspace({
           >
             {t("saveDraft")}
           </Button>
-          <Button onClick={() => { selectTab("installation"); setPane("edit"); }}>
+          <Button
+            onClick={() => {
+              selectTab("installation");
+              setPane("edit");
+            }}
+          >
             {t("installation")}
           </Button>
         </Group>
@@ -149,7 +158,9 @@ export function PackageWorkspace({
         <Paper withBorder p="md">
           <Stack gap="xs">
             <Text fw={600}>{t("gettingStarted")}</Text>
-            <Text size="sm" c="dimmed">{t("gettingStartedDescription")}</Text>
+            <Text size="sm" c="dimmed">
+              {t("gettingStartedDescription")}
+            </Text>
             <Text size="sm">{t("manualSteps")}</Text>
           </Stack>
         </Paper>
@@ -168,7 +179,12 @@ export function PackageWorkspace({
         <Alert color="yellow">
           <Group justify="space-between">
             <Text size="sm">{t("connectionsUnsaved")}</Text>
-            <Button size="xs" loading={saveBindings.isPending || save.isPending} disabled={busy} onClick={saveLocalBindings}>
+            <Button
+              size="xs"
+              loading={saveBindings.isPending || save.isPending}
+              disabled={busy}
+              onClick={saveLocalBindings}
+            >
               {t("saveBindings")}
             </Button>
           </Group>
@@ -227,11 +243,7 @@ export function PackageWorkspace({
           { value: "preview", label: t("previewPane") },
         ]}
       />
-      <PackageSplit
-        userId={userId}
-        pane={pane}
-        preview={<PackagePreview state={workspace} />}
-      >
+      <PackageSplit userId={userId} pane={pane} preview={<PackagePreview state={workspace} />}>
         <Stack className={classes.authoring}>
           <Tabs value={tab} onChange={selectTab}>
             <Tabs.List>
@@ -260,10 +272,16 @@ export function PackageWorkspace({
             <Tabs.Panel value="options" pt="md">
               {visitedTabs.has("options") && (
                 <Stack>
-                  <Text size="sm" c="dimmed">{t("optionsDescription")}</Text>
-                  {parsed.success && <PackageOptionFields schema={parsed.data.options} value={effectiveOptions} onChange={setOptions} />}
+                  <Text size="sm" c="dimmed">
+                    {t("optionsDescription")}
+                  </Text>
+                  {parsed.success && (
+                    <PackageOptionFields schema={parsed.data.options} value={effectiveOptions} onChange={setOptions} />
+                  )}
                   {parsed.success && Object.keys(parsed.data.options).length === 0 && <Alert>{t("noOptions")}</Alert>}
-                  <Button variant="subtle" onClick={() => setOptions({})}>{t("resetOptions")}</Button>
+                  <Button variant="subtle" onClick={() => setOptions({})}>
+                    {t("resetOptions")}
+                  </Button>
                 </Stack>
               )}
             </Tabs.Panel>
@@ -288,7 +306,9 @@ export function PackageWorkspace({
             <Tabs.Panel value="workshop" pt="md">
               {visitedTabs.has("workshop") && (
                 <Stack>
-                  <Text size="sm" c="dimmed">{t("workshopDescription")}</Text>
+                  <Text size="sm" c="dimmed">
+                    {t("workshopDescription")}
+                  </Text>
                   {current ? (
                     <>
                       <PackageWorkshop id={current.id} dirty={editor.dirty || workspace.bindingsDirty || busy} />
@@ -299,7 +319,11 @@ export function PackageWorkspace({
                         onError={setError}
                       />
                     </>
-                  ) : <Button onClick={() => void saveDraft()} loading={busy}>{t("saveDraft")}</Button>}
+                  ) : (
+                    <Button onClick={() => void saveDraft()} loading={busy}>
+                      {t("saveDraft")}
+                    </Button>
+                  )}
                 </Stack>
               )}
             </Tabs.Panel>
@@ -311,9 +335,6 @@ export function PackageWorkspace({
 }
 
 /* oxlint-disable jsx-a11y/prefer-tag-over-role -- A focusable window splitter is an interactive separator, not a thematic break. */
-
-
-
 
 const defaultWidth = 60;
 const clampWidth = (value: number, maximum = 75) => Math.min(maximum, Math.max(30, value));

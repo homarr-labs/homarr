@@ -62,7 +62,9 @@ export function PackageConnections({
             />
             {getWidgetConnectionBindingNames(name, requirement, bindings).map((bindingName) => (
               <Group key={bindingName} gap="xs">
-                <Text size="sm" flex={1}>{connections.data?.find((entry) => entry.id === bindings[bindingName])?.name ?? bindingName}</Text>
+                <Text size="sm" flex={1}>
+                  {connections.data?.find((entry) => entry.id === bindings[bindingName])?.name ?? bindingName}
+                </Text>
                 <Button
                   variant="default"
                   size="xs"
@@ -104,11 +106,23 @@ export function PackageConnections({
       {integrations.error && <Alert color="red">{integrations.error.message}</Alert>}
       <Group>
         {Object.values(requirements).some((requirement) => requirement.kind === "integration") && (
-          <Button component={Link} href="/manage/integrations/new" target="_blank" rel="noopener noreferrer" variant="light">
+          <Button
+            component={Link}
+            href="/manage/integrations/new"
+            target="_blank"
+            rel="noopener noreferrer"
+            variant="light"
+          >
             {t("createIntegration")}
           </Button>
         )}
-        <Button variant="subtle" onClick={() => { void connections.refetch(); void integrations.refetch(); }}>
+        <Button
+          variant="subtle"
+          onClick={() => {
+            void connections.refetch();
+            void integrations.refetch();
+          }}
+        >
           {t("refresh")}
         </Button>
         <Button
@@ -176,8 +190,16 @@ function PackageBindingPicker({
       mounted.current = false;
     };
   }, []);
-  const ids = [...new Set(getWidgetConnectionBindingNames(name, requirement, bindings).map((key) => bindings[key]!))];
-  const compatible = connections.filter((connection) => isWidgetConnectionCompatible(requirement, connection.configuration));
+  const ids = [
+    ...new Set(
+      getWidgetConnectionBindingNames(name, requirement, bindings)
+        .map((key) => bindings[key])
+        .filter((id) => typeof id === "string"),
+    ),
+  ];
+  const compatible = connections.filter((connection) =>
+    isWidgetConnectionCompatible(requirement, connection.configuration),
+  );
   const choices = compatible.map((connection) => ({ value: connection.id, label: connection.name }));
   if (requirement.kind === "integration") {
     for (const integration of integrations) {
@@ -189,7 +211,10 @@ function PackageBindingPicker({
   // Keep unavailable bindings visible so a removed integration can be diagnosed or replaced.
   for (const id of ids) {
     if (!choices.some((choice) => choice.value === id))
-      choices.push({ value: id, label: connections.find((connection) => connection.id === id)?.name ?? t("unavailableConnection") });
+      choices.push({
+        value: id,
+        label: connections.find((connection) => connection.id === id)?.name ?? t("unavailableConnection"),
+      });
   }
   const change = async (values: string[]) => {
     if (preparing.current || disabled) return;

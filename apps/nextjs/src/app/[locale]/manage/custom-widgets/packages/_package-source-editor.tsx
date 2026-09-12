@@ -69,47 +69,52 @@ export function PackageSourceEditor({
           {filesOpen && (
             <Stack gap="xs" className={classes.files}>
               <PackageFileTree files={document.files} selected={selected} onSelect={setSelected} />
-              <Button size="compact-xs" variant="subtle" onClick={() => setManageFiles((value) => !value)} aria-expanded={manageFiles}>
+              <Button
+                size="compact-xs"
+                variant="subtle"
+                onClick={() => setManageFiles((value) => !value)}
+                aria-expanded={manageFiles}
+              >
                 {t("manageFiles")}
               </Button>
               <Collapse expanded={manageFiles}>
                 <Stack gap="xs">
-                <TextInput
-                  aria-label={t("filePath")}
-                  placeholder={t("filePathExample")}
-                  value={path}
-                  onChange={(event) => setPath(event.currentTarget.value)}
-                  disabled={busy}
-                />
-                <Group gap={4}>
-                  <Button
-                    size="compact-xs"
-                    variant="subtle"
-                    leftSection={<IconPlus size={12} />}
-                    onClick={addFile}
-                    disabled={busy || !path.trim()}
-                  >
-                    {t("addFile")}
-                  </Button>
-                  <Button
-                    size="compact-xs"
-                    variant="subtle"
-                    onClick={renameFile}
-                    disabled={busy || !path.trim() || selected === "/widget.json"}
-                  >
-                    {t("renameFile")}
-                  </Button>
-                  <Button
-                    size="compact-xs"
-                    color="red"
-                    variant="subtle"
-                    leftSection={<IconTrash size={12} />}
-                    onClick={removeFile}
-                    disabled={busy || selected === "/widget.json"}
-                  >
-                    {t("removeFile")}
-                  </Button>
-                </Group>
+                  <TextInput
+                    aria-label={t("filePath")}
+                    placeholder={t("filePathExample")}
+                    value={path}
+                    onChange={(event) => setPath(event.currentTarget.value)}
+                    disabled={busy}
+                  />
+                  <Group gap={4}>
+                    <Button
+                      size="compact-xs"
+                      variant="subtle"
+                      leftSection={<IconPlus size={12} />}
+                      onClick={addFile}
+                      disabled={busy || !path.trim()}
+                    >
+                      {t("addFile")}
+                    </Button>
+                    <Button
+                      size="compact-xs"
+                      variant="subtle"
+                      onClick={renameFile}
+                      disabled={busy || !path.trim() || selected === "/widget.json"}
+                    >
+                      {t("renameFile")}
+                    </Button>
+                    <Button
+                      size="compact-xs"
+                      color="red"
+                      variant="subtle"
+                      leftSection={<IconTrash size={12} />}
+                      onClick={removeFile}
+                      disabled={busy || selected === "/widget.json"}
+                    >
+                      {t("removeFile")}
+                    </Button>
+                  </Group>
                 </Stack>
               </Collapse>
             </Stack>
@@ -131,7 +136,11 @@ export function PackageSourceEditor({
   );
 }
 
-function PackageFileTree({ files, selected, onSelect }: {
+function PackageFileTree({
+  files,
+  selected,
+  onSelect,
+}: {
   files: Record<string, string>;
   selected: string;
   onSelect(path: string): void;

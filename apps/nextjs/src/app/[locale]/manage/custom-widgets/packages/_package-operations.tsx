@@ -91,12 +91,16 @@ export function PackageOperations({
   };
   return (
     <Stack>
-      <Text size="sm" c="dimmed">{t("useDescription")}</Text>
+      <Text size="sm" c="dimmed">
+        {t("useDescription")}
+      </Text>
       {!current && (
         <Paper withBorder p="md">
           <Stack>
             <Text>{t("saveFirst")}</Text>
-            <Button onClick={onSave} loading={saving}>{t("saveDraft")}</Button>
+            <Button onClick={onSave} loading={saving}>
+              {t("saveDraft")}
+            </Button>
           </Stack>
         </Paper>
       )}
@@ -110,12 +114,18 @@ export function PackageOperations({
                 <Alert color="yellow">
                   <Stack gap="xs">
                     <Text size="sm">{t("saveBeforeActivate")}</Text>
-                    <Button size="xs" onClick={onSave} loading={saving}>{t("saveDraft")}</Button>
+                    <Button size="xs" onClick={onSave} loading={saving}>
+                      {t("saveDraft")}
+                    </Button>
                   </Stack>
                 </Alert>
               )}
               {!dirty && !matchesReviewedSource && <Alert color="yellow">{t("savedSourceChanged")}</Alert>}
-              <Checkbox checked={trusted} onChange={(event) => onTrustChange(event.currentTarget.checked)} label={t("trustAcknowledgement")} />
+              <Checkbox
+                checked={trusted}
+                onChange={(event) => onTrustChange(event.currentTarget.checked)}
+                label={t("trustAcknowledgement")}
+              />
               <Group>
                 <Button
                   disabled={dirty || connectionsDirty || !trusted || !source || !matchesReviewedSource}
@@ -151,7 +161,10 @@ export function PackageOperations({
                             variant="default"
                             loading={enable.isPending}
                             onClick={() =>
-                              void run(() => enable.mutateAsync({ id: current.id, enabled: !current.enabled }), t("stateSaved"))
+                              void run(
+                                () => enable.mutateAsync({ id: current.id, enabled: !current.enabled }),
+                                t("stateSaved"),
+                              )
                             }
                           >
                             {current.enabled ? t("disable") : t("enable")}

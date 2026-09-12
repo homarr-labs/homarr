@@ -21,10 +21,7 @@
         "permission": "modify",
         "inputSchema": {
           "type": "object",
-          "required": [
-            "connection",
-            "episodeIds"
-          ],
+          "required": ["connection", "episodeIds"],
           "additionalProperties": false,
           "properties": {
             "connection": {

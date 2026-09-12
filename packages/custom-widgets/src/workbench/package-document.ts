@@ -57,11 +57,7 @@ export function downloadPackage(name: string, value: unknown) {
 const maximumHistoryBytes = 2_000_000;
 const maximumRecoveryBytes = 1_000_000;
 
-export function usePackageDocument(
-  initial: PackageDocument,
-  userId: string,
-  installationId?: string,
-) {
+export function usePackageDocument(initial: PackageDocument, userId: string, installationId?: string) {
   const [document, setDocument] = useState(initial);
   const [saved, setSaved] = useState(initial);
   const [recovery, setRecovery] = useState<PackageDocument | null>(null);

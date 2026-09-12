@@ -41,7 +41,9 @@ export function PackageConnectionBindings({
         );
         if (connection.multiple) {
           const names = getWidgetConnectionBindingNames(name, connection, effectiveBindings);
-          const selected = [...new Set(names.map((key) => effectiveBindings[key]!))];
+          const selected = [
+            ...new Set(names.map((key) => effectiveBindings[key]).filter((id) => typeof id === "string")),
+          ];
           const choices = candidates.map((row) => ({ value: row.id, label: row.name }));
           for (const id of selected) {
             if (!choices.some((choice) => choice.value === id))

@@ -8,7 +8,11 @@ import type {
   WidgetCollectionContents,
   WidgetCollectionManifest,
 } from "@homarr/custom-widgets/package";
-import { getWidgetConnectionBindingNames, getWidgetConnectionRequirement, isWidgetConnectionCompatible } from "@homarr/custom-widgets/package";
+import {
+  getWidgetConnectionBindingNames,
+  getWidgetConnectionRequirement,
+  isWidgetConnectionCompatible,
+} from "@homarr/custom-widgets/package";
 import { createWidgetCollectionArchive, validateWidgetCollectionArchive } from "@homarr/custom-widgets/package/server";
 
 import { withWidgetArtifactReferenceLock } from "./artifact-references";
@@ -145,8 +149,16 @@ export async function exportWidgetCollection(ctx: PackageContext, manifest: Widg
       const bindings = parseBindings(row.bindings);
       const mapping: Record<string, string> = {};
       for (const [name, requirement] of Object.entries(source.connections)) {
-        const members = getWidgetConnectionBindingNames(name, requirement, bindings).map((key) => bindings[key]).toSorted();
-        const identity = JSON.stringify([requirement.kind, requirement.serviceType, requirement.integrationKind, requirement.multiple, members.length ? members : [id, name]]);
+        const members = getWidgetConnectionBindingNames(name, requirement, bindings)
+          .map((key) => bindings[key])
+          .toSorted();
+        const identity = JSON.stringify([
+          requirement.kind,
+          requirement.serviceType,
+          requirement.integrationKind,
+          requirement.multiple,
+          members.length ? members : [id, name],
+        ]);
         let slot = shared.get(identity);
         if (!slot) {
           slot = `connection${shared.size + 1}`;

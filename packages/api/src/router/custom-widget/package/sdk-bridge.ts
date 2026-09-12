@@ -6,7 +6,13 @@ import { constructIntegrationPermissions } from "@homarr/auth/shared";
 import { decryptSecret } from "@homarr/common/server";
 import { createId } from "@homarr/common";
 import { eq, inArray } from "@homarr/db";
-import { customWidgetConnections, groupMembers, integrationGroupPermissions, integrations, integrationUserPermissions } from "@homarr/db/schema";
+import {
+  customWidgetConnections,
+  groupMembers,
+  integrationGroupPermissions,
+  integrations,
+  integrationUserPermissions,
+} from "@homarr/db/schema";
 import type { WidgetSdkInvocation } from "@homarr/custom-widgets/package/server";
 
 import { readPackageHistory, widgetHistoryInputSchema } from "./history";
@@ -69,7 +75,9 @@ export function createWidgetSdkBridge(
       return {
         options: resolved.configuration,
         bindingNames: Object.keys(resolved.bindings),
-        bindingLabels: Object.fromEntries(Object.entries(resolved.bindings).map(([name, id]) => [name, labels.get(id) ?? name])),
+        bindingLabels: Object.fromEntries(
+          Object.entries(resolved.bindings).map(([name, id]) => [name, labels.get(id) ?? name]),
+        ),
         installationId: resolved.installation.id,
         isPreview: Boolean(resolved.preview),
       };

@@ -176,7 +176,11 @@ export function PackagePreview({ state }: { state: ReturnType<typeof usePackageW
               <Badge variant="light">{buildStatus}</Badge>
               {previewMutation.error && <Alert color="red">{previewMutation.error.message}</Alert>}
               <Text size="sm">{t("browserExecution")}</Text>
-              <Text size="sm">{parsed.success && parsed.data.manifest.entrypoints.server ? t("serverExecution") : t("browserOnlyExecution")}</Text>
+              <Text size="sm">
+                {parsed.success && parsed.data.manifest.entrypoints.server
+                  ? t("serverExecution")
+                  : t("browserOnlyExecution")}
+              </Text>
               <Text size="sm">{t("trustedCode")}</Text>
               <Text size="sm">{t("runtimeLogs")}</Text>
               {detailsOpen && state.installationId && <PackageRuntimeStatus id={state.installationId} />}
@@ -227,7 +231,9 @@ function PackagePreviewControls({ state }: { state: ReturnType<typeof usePackage
           <Accordion.Control>{t("customViewport")}</Accordion.Control>
           <Accordion.Panel>
             <Stack gap="xs">
-              <Text size="xs" c="dimmed">{t("customViewportDescription")}</Text>
+              <Text size="xs" c="dimmed">
+                {t("customViewportDescription")}
+              </Text>
               <Group gap="xs" grow>
                 <NumberInput
                   size="xs"
@@ -276,22 +282,38 @@ function PackageRuntimeStatus({ id }: { id: string }) {
   const data = status.data;
   return (
     <Stack gap="xs">
-      <Text size="sm" fw={600}>{t("title")}</Text>
-      <Text size="xs" c="dimmed">{t("description")}</Text>
+      <Text size="sm" fw={600}>
+        {t("title")}
+      </Text>
+      <Text size="xs" c="dimmed">
+        {t("description")}
+      </Text>
       <Group>
         {data && <Badge variant="light">{t(data.state)}</Badge>}
-        <Button variant="subtle" size="xs" loading={status.isFetching} onClick={() => void status.refetch()}>{t("refresh")}</Button>
+        <Button variant="subtle" size="xs" loading={status.isFetching} onClick={() => void status.refetch()}>
+          {t("refresh")}
+        </Button>
       </Group>
       {data && "pid" in data && (
-        <Text size="xs">{t("process", { pid: data.pid ?? "—", active: data.activeRequests, queued: data.queuedRequests })}</Text>
+        <Text size="xs">
+          {t("process", { pid: data.pid ?? "—", active: data.activeRequests, queued: data.queuedRequests })}
+        </Text>
       )}
       {data && "error" in data && <Alert color="red">{data.error}</Alert>}
       {status.error && <Alert color="red">{status.error.message}</Alert>}
-      <Button component={Link} href="/manage/tools/logs" target="_blank" rel="noopener noreferrer" variant="default" size="xs">{t("logs")}</Button>
+      <Button
+        component={Link}
+        href="/manage/tools/logs"
+        target="_blank"
+        rel="noopener noreferrer"
+        variant="default"
+        size="xs"
+      >
+        {t("logs")}
+      </Button>
     </Stack>
   );
 }
-
 
 export function PackageSessionPreview({ previewId }: { previewId: string }) {
   const t = useI18n("customWidget.package");

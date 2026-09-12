@@ -61,13 +61,19 @@ export function PackageAssistant() {
             <Button component={Link} href="/manage/assistant" variant="light" size="xs">
               {t("setup")}
             </Button>
-            <Text size="xs" c="dimmed">{t("manual")}</Text>
+            <Text size="xs" c="dimmed">
+              {t("manual")}
+            </Text>
           </Stack>
         )}
         {assistant?.enabled && (
           <>
             {assistant.isRunning && <Alert mb="xs">{t("busy")}</Alert>}
-            {sendFailed && <Alert color="yellow" mb="xs">{t("sendFailed")}</Alert>}
+            {sendFailed && (
+              <Alert color="yellow" mb="xs">
+                {t("sendFailed")}
+              </Alert>
+            )}
             <Text size="xs" c="dimmed" mb="xs">
               {t("context")}
             </Text>
@@ -87,16 +93,40 @@ export function PackageAssistant() {
             </Group>
             <Divider my="xs" />
             <Stack gap={4}>
-              <Button variant="subtle" size="xs" justify="start" disabled={assistant.isRunning} onClick={() => send(t("createPrompt"))}>
+              <Button
+                variant="subtle"
+                size="xs"
+                justify="start"
+                disabled={assistant.isRunning}
+                onClick={() => send(t("createPrompt"))}
+              >
                 {t("create")}
               </Button>
-              <Button variant="subtle" size="xs" justify="start" disabled={assistant.isRunning} onClick={() => send(t("improvePrompt"))}>
+              <Button
+                variant="subtle"
+                size="xs"
+                justify="start"
+                disabled={assistant.isRunning}
+                onClick={() => send(t("improvePrompt"))}
+              >
                 {t("improve")}
               </Button>
-              <Button variant="subtle" size="xs" justify="start" disabled={assistant.isRunning} onClick={() => send(t("advancedPrompt"))}>
+              <Button
+                variant="subtle"
+                size="xs"
+                justify="start"
+                disabled={assistant.isRunning}
+                onClick={() => send(t("advancedPrompt"))}
+              >
                 {t("advanced")}
               </Button>
-              <Button variant="subtle" size="xs" justify="start" disabled={assistant.isRunning} onClick={() => send(t("fixPrompt"))}>
+              <Button
+                variant="subtle"
+                size="xs"
+                justify="start"
+                disabled={assistant.isRunning}
+                onClick={() => send(t("fixPrompt"))}
+              >
                 {t("fix")}
               </Button>
             </Stack>

@@ -24,7 +24,11 @@ import classes from "./modals/widget-edit-modal.module.css";
 type Size = { width: number; height: number };
 
 /** The same board grid controls and fitted canvas used by Edit Widget and package authoring. */
-export function WidgetPreviewFrame({ dimensions, resize, children }: {
+export function WidgetPreviewFrame({
+  dimensions,
+  resize,
+  children,
+}: {
   dimensions: Size & { scale?: number };
   resize?: { size: Size; maximumSize: Size; onChange(size: Size): void };
   children(dimensions: Size & { scale: number }): ReactNode;
@@ -39,17 +43,26 @@ export function WidgetPreviewFrame({ dimensions, resize, children }: {
   if (width > 0 && height > 0) scale = Math.min(width / sourceWidth, height / sourceHeight, scale);
   const change = (dimension: keyof Size, value: string | number) => {
     if (!resize || typeof value !== "number" || !Number.isFinite(value)) return;
-    resize.onChange({ ...resize.size, [dimension]: Math.max(1, Math.min(Math.round(value), resize.maximumSize[dimension])) });
+    resize.onChange({
+      ...resize.size,
+      [dimension]: Math.max(1, Math.min(Math.round(value), resize.maximumSize[dimension])),
+    });
   };
   return (
     <Stack className={classes.previewPanel} gap={0}>
       <Center ref={ref} className={classes.previewCanvas}>
         {resize && (
           <Group className={classes.previewSizeControls} gap={6} wrap="nowrap">
-            <Text size="xs" fw={600} c="dimmed">{t("item.edit.preview.size")}</Text>
+            <Text size="xs" fw={600} c="dimmed">
+              {t("item.edit.preview.size")}
+            </Text>
             {(["width", "height"] as const).map((dimension) => (
               <Group key={dimension} gap={6} wrap="nowrap">
-                {dimension === "height" && <Text size="xs" c="dimmed" aria-hidden>×</Text>}
+                {dimension === "height" && (
+                  <Text size="xs" c="dimmed" aria-hidden>
+                    ×
+                  </Text>
+                )}
                 <Tooltip label={t(`item.moveResize.field.${dimension}.label`)}>
                   <NumberInput
                     className={classes.previewSizeInput}
