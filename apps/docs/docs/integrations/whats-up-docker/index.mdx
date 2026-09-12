@@ -24,12 +24,14 @@ The What's Up Docker integration lets Homarr connect to your [WUD](https://githu
 <AddingIntegration />
 
 :::info URL configuration
-Use the root URL of your WUD instance, for example `https://wud.example.com`. Homarr calls the `/api/app` and `/api/containers` endpoints under that URL automatically.
+Use the root URL of your WUD instance, for example `https://wud.example.com`. Homarr uses `/api/containers` under that URL for both connection testing and widget data.
 :::
 
 ### Secrets
 
-WUD does not require authentication by default. If your instance is protected with [Basic Authentication](https://github.com/getwud/wud/blob/main/docs/configuration/authentications/basic/README.md), you can provide a username and password.
+WUD 9 requires authentication. Enter your WUD username and password in Homarr; the initial admin credentials configured with `WUD_AUTH_ADMIN_USER` and `WUD_AUTH_ADMIN_PASSWORD` work with Basic authentication. Older WUD versions without authentication can leave both fields empty.
+
+Credentials are sent to the configured URL over HTTP or HTTPS. Use HTTPS outside a trusted internal network.
 
 <IntegrationSecrets
   secrets={[
@@ -40,7 +42,7 @@ WUD does not require authentication by default. If your instance is protected wi
     {
       credentials: ["username", "password"],
       steps: [
-        "Open your WUD instance's configuration and configure a WUD_AUTH_BASIC_* user as described in the WUD documentation",
+        "Use your WUD account credentials; older versions can use a configured WUD_AUTH_BASIC_* user",
         "Enter that username and password in Homarr — Basic authentication is handled automatically",
       ],
     },
