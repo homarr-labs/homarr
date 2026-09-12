@@ -4,6 +4,7 @@ import { customWidgetIdentifierSchema } from "./request-schema";
 
 export const customWidgetOptionControls = [
   "text",
+  "integration",
   "textarea",
   "number",
   "switch",
@@ -40,6 +41,7 @@ export const customWidgetOptionSchema = z
     label: z.string().trim().min(1).max(128),
     description: z.string().max(512).optional(),
     control: z.enum(customWidgetOptionControls),
+    integrationKinds: z.array(z.string().min(1).max(64)).min(1).max(64).optional(),
     default: z.json(),
     choices: z.array(choiceSchema).min(1).max(100).optional(),
     choicesFrom: choicesFromSchema.optional(),

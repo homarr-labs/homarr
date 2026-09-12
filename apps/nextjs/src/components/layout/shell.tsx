@@ -8,6 +8,7 @@ import { useSettings } from "@homarr/settings";
 import { useOptionalBackgroundProps } from "./background";
 import { appShellHeaderHeight } from "./constants";
 import { navigationCollapsedAtom } from "./header/burger";
+import { useManagementNavigation } from "./navigation-context";
 
 interface ClientShellProps {
   hasHeader?: boolean;
@@ -20,6 +21,7 @@ export const ClientShell = ({
   children,
 }: PropsWithChildren<ClientShellProps>) => {
   const collapsed = useAtomValue(navigationCollapsedAtom);
+  const managementNavigation = useManagementNavigation();
   const backgroundProps = useOptionalBackgroundProps();
   const { headerPreferences } = useSettings();
   const headerHeight = headerPreferences.visible ? appShellHeaderHeight : 0;
@@ -37,7 +39,7 @@ export const ClientShell = ({
       navbar={
         hasNavigation
           ? {
-              width: 300,
+              width: managementNavigation?.desktopWidth ?? 300,
               breakpoint: "sm",
               collapsed: { mobile: collapsed },
             }

@@ -24,10 +24,12 @@ import { extractCustomWidgetSaveIssues } from "./_custom-widget-save-errors";
 import type { CustomWidgetSaveIssue } from "./_custom-widget-save-errors";
 import { clearSaveIssues, reportSaveIssues } from "./_custom-widget-save-issue-utils";
 import type { CustomWidgetFormDocumentStore } from "./_custom-widget-form-state";
+import { getSourceSecretRenames, markSourceSecretsSaved } from "./_custom-widget-saved-secrets";
 
 interface FormActionsInput {
   mode: "create" | "edit";
   definitionId?: string;
+  savedRevision?: string;
   form: UseFormReturnType<CustomWidgetFormValues>;
   documentStore: CustomWidgetFormDocumentStore;
   setPreview: Dispatch<SetStateAction<PreviewState>>;
@@ -60,7 +62,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
         Object.keys(preview.status).length === 0
       )
         return preview;
-      return { data: {}, status: {}, session: null, outcome: "idle" };
+      return { ...preview, session: null, outcome: "idle", stale: true };
     });
   }, [setPreview]);
   useLayoutEffect(() => {
@@ -77,6 +79,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
   let actionLabel = tCommon("action.save");
   if (input.mode === "create") actionLabel = tCommon("action.create");
 
+  const savedRevision = useRef(input.savedRevision);
   const save = input.form.onSubmit(async (values) => {
     clearSaveIssues(input.form, saveIssues);
     setSaveIssues([]);
@@ -92,33 +95,59 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
       return;
     }
     const changedSecrets = getChangedSecrets(values);
+    const savedLayout = input.documentStore.getLayout();
+    const savedSourceBindings = input.documentStore.getSourceBindings();
+    const savedRequestBindings = input.documentStore.getRequestBindings();
     try {
       if (input.mode === "create") {
-        const result = await createMutation.mutateAsync({ ...definition.data, secrets: changedSecrets });
+        const result = await createMutation.mutateAsync({
+          ...definition.data,
+          secrets: changedSecrets,
+          editorLayout: savedLayout,
+        });
+        const savedValues = { ...values, secrets: markSourceSecretsSaved(values.secrets, values.secrets) };
         await utils.customWidget.list.invalidate();
         showSuccessNotification({
           title: tCommon("action.create"),
           message: t("notification.created", { name: values.name }),
         });
-        input.form.setInitialValues(values);
+        input.form.setValues({
+          secrets: markSourceSecretsSaved(values.secrets, input.documentStore.getValues().secrets),
+        });
+        input.form.setInitialValues(savedValues);
         input.form.resetDirty();
-        input.documentStore.markSaved(values);
+        input.documentStore.markSaved(savedValues, savedLayout, savedSourceBindings, savedRequestBindings);
         await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
         window.location.assign(result.managementPath);
       } else if (input.definitionId) {
-        await updateMutation.mutateAsync({
+        const updated = await updateMutation.mutateAsync({
+          expectedSavedRevision: savedRevision.current,
           id: input.definitionId,
+          sourceRenames: getSourceSecretRenames(values.secrets),
+          editorLayout: savedLayout,
           ...definition.data,
           secrets: changedSecrets.length ? changedSecrets : undefined,
         });
+        savedRevision.current = updated.savedRevision;
+        const savedValues = {
+          ...values,
+          secrets: markSourceSecretsSaved(values.secrets, values.secrets, updated.secretPresence),
+        };
         await Promise.all([
           utils.customWidget.list.invalidate(),
           utils.customWidget.get.invalidate({ id: input.definitionId }),
           utils.widget.customApi.getData.invalidate(),
         ]);
-        input.form.setInitialValues(values);
+        input.form.setValues({
+          secrets: markSourceSecretsSaved(
+            values.secrets,
+            input.documentStore.getValues().secrets,
+            updated.secretPresence,
+          ),
+        });
+        input.form.setInitialValues(savedValues);
         input.form.resetDirty();
-        input.documentStore.markSaved(values);
+        input.documentStore.markSaved(savedValues, savedLayout, savedSourceBindings, savedRequestBindings);
         showSuccessNotification({
           title: tCommon("action.save"),
           message: t("notification.updated", { name: values.name }),
@@ -161,12 +190,13 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
     activePreviewGeneration.current = generation;
     const isCurrent = () => previewGeneration.current === generation;
     input.setMobilePane("preview");
-    input.setPreview({ data: {}, status: {}, session: null, outcome: "loading" });
+    input.setPreview((current) => ({ ...current, session: null, outcome: "loading" }));
     setPreviewPending(true);
     try {
       const created = await previewMutation.mutateAsync({
         definition: candidateAtStart.data,
         definitionId: input.definitionId,
+        sourceRenames: getSourceSecretRenames(valuesAtStart.secrets),
         options: optionsAtStart,
         secrets: secretsAtStart,
       });
@@ -187,15 +217,8 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
             failed,
           }),
         });
-      } else {
-        showSuccessNotification({
-          title: w("preview.result.success.title"),
-          message: w("preview.result.success.description", {
-            succeeded: Object.keys(snapshot.status).length,
-            failed: 0,
-          }),
-        });
       }
+      return { success: failed === 0, status: snapshot.status, sessionId: created.previewSession.id };
     } catch {
       if (!isCurrent()) return;
       input.setPreview((current) => ({ ...current, outcome: "error" }));
@@ -204,7 +227,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
       if (activePreviewGeneration.current === generation) {
         activePreviewGeneration.current = null;
         setPreviewPending(false);
-        if (!isCurrent()) setPreview({ data: {}, status: {}, session: null, outcome: "idle" });
+        if (!isCurrent()) setPreview((current) => ({ ...current, session: null, outcome: "idle", stale: true }));
       }
     }
   };

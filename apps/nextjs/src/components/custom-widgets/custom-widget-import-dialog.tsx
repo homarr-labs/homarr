@@ -3,10 +3,11 @@
 import type { ModalProps } from "@mantine/core";
 
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
-import { CustomWidgetSourceSetupPanel, ImportReviewDialog } from "@homarr/custom-widgets/workbench";
+import { ImportReviewDialog } from "@homarr/custom-widgets/workbench";
 import { useI18n } from "@homarr/translation/client";
 
 import { useCustomWidgetImport } from "./use-custom-widget-import";
+import { CustomWidgetImportSetupPanel } from "./import-setup-panel";
 
 interface CustomWidgetImportDialogProps {
   opened: boolean;
@@ -67,12 +68,7 @@ export function CustomWidgetImportDialog({
         confirm: legacyId ? t("importReview.confirmMigration") : (labels?.confirm ?? t("importReview.confirm")),
       }}
     >
-      <CustomWidgetSourceSetupPanel
-        setups={importer.setups}
-        values={importer.values}
-        onChange={importer.setValue}
-        messages={importer.setupMessages}
-      />
+      <CustomWidgetImportSetupPanel importer={importer} />
     </ImportReviewDialog>
   );
 }

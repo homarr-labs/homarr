@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import { useCallback } from "react";
-import { Badge, Indicator, Kbd, Loader, Menu, Text } from "@mantine/core";
+import { Badge, Indicator, Kbd, Loader, Menu, Text, UnstyledButton } from "@mantine/core";
 import {
   IconBrandDocker,
   IconHome,
@@ -154,26 +154,28 @@ export const UserAvatarMenu = ({ children, availableUpdates, isDockerEnabled, bo
         )}
       </Menu.Dropdown>
       <Menu.Target>
-        <Indicator
-          inline
-          disabled={!assistant?.isRunning && !assistant?.unreadCount}
-          color="red"
-          size={20}
-          offset={4}
-          label={
-            assistant?.isRunning ? (
-              <Loader type="bars" color="white" size={10} />
-            ) : assistant?.unreadCount ? (
-              assistant.unreadCount > 99 ? (
-                "99+"
-              ) : (
-                assistant.unreadCount
-              )
-            ) : undefined
-          }
-        >
-          {children}
-        </Indicator>
+        <UnstyledButton aria-label={t("open")}>
+          <Indicator
+            inline
+            disabled={!assistant?.isRunning && !assistant?.unreadCount}
+            color="red"
+            size={20}
+            offset={4}
+            label={
+              assistant?.isRunning ? (
+                <Loader type="bars" color="white" size={10} />
+              ) : assistant?.unreadCount ? (
+                assistant.unreadCount > 99 ? (
+                  "99+"
+                ) : (
+                  assistant.unreadCount
+                )
+              ) : undefined
+            }
+          >
+            {children}
+          </Indicator>
+        </UnstyledButton>
       </Menu.Target>
     </Menu>
   );

@@ -55,7 +55,7 @@ describe("Mysql Migration", () => {
     const [customWidgetTables] = await connection
       .promise()
       .query<mysql.RowDataPacket[]>("SHOW TABLES LIKE 'custom_widget%'");
-    expect(customWidgetTables).toHaveLength(4);
+    expect(customWidgetTables).toHaveLength(5);
 
     // A single base64 image attachment already exceeds the 64KB that `text` holds on MySQL, so
     // `assistant_message.content` has to be `mediumtext`. Everything below 64KB passes either way.

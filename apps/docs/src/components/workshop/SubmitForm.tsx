@@ -50,7 +50,7 @@ const placeholders: Record<SubmissionType, string> = {
   customCss: ".grid-stack-item-content {\n  border-radius: 16px;\n}",
 };
 const contentLabels: Record<SubmissionType, string> = {
-  customWidget: "Widget JSON (homarr-custom-widget-v2)",
+  customWidget: "Widget JSON (homarr-custom-widget-v2 or v3)",
   customCss: "Custom CSS",
 };
 
@@ -314,7 +314,7 @@ const typeCards: { type: SubmissionType; icon: typeof IconBraces; label: string;
     type: "customWidget",
     icon: IconBraces,
     label: "Custom Widget",
-    desc: "A JSON-based widget using the homarr-custom-widget-v2 schema",
+    desc: "A JSON-based widget using the homarr-custom-widget-v2 or v3 schema",
   },
   {
     type: "customCss",

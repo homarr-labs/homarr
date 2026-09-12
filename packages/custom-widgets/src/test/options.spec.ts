@@ -11,6 +11,7 @@ import {
 
 const defaultsByControl: Record<(typeof customWidgetOptionControls)[number], unknown> = {
   text: "value",
+  integration: "local-integration",
   textarea: "long value",
   number: 2,
   switch: true,

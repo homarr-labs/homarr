@@ -3,6 +3,10 @@ import type { ComponentType, ReactNode } from "react";
 import type { AstNode, Budget, Environment, InterpreterCallback } from "./interpreter-foundation";
 
 export interface JsxEmitterContext {
+  scopeId?: string;
+  template?: string;
+  captureSourceLocations?: boolean;
+  fragments?: Readonly<Record<string, string>>;
   components: Readonly<Record<string, ComponentType<never>>>;
   budget: Budget;
   warnings: Set<string>;

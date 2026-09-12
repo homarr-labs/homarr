@@ -1,18 +1,11 @@
 import { TRPCError } from "@trpc/server";
-import { parse as parseSuperJson } from "superjson";
 import { z } from "zod/v4";
 
-import { isRecord } from "@homarr/common";
 import { decryptSecret } from "@homarr/common/server";
 import { eq } from "@homarr/db";
-import { boards, customWidgetDefinitions, items, legacyCustomWidgetDefinitions } from "@homarr/db/schema";
+import { boards } from "@homarr/db/schema";
 import type { BoardPermission } from "@homarr/definitions";
-import {
-  getCustomWidgetConfirmation,
-  getCustomWidgetDefaultOptions,
-  normalizeCustomWidgetOptions,
-  validateCustomWidgetOptions,
-} from "@homarr/custom-widgets/core";
+import { getCustomWidgetConfirmation } from "@homarr/custom-widgets/core";
 import type { CustomJsxRequest, CustomWidgetSource } from "@homarr/custom-widgets/core";
 
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
@@ -26,7 +19,8 @@ import {
 } from "../custom-widget/request-manifest";
 import { acquireCustomWidgetRequestLimit } from "../custom-widget/request-limits";
 import { getCustomWidgetCacheVersion } from "../custom-widget/cache-version";
-import { parseStoredCustomWidgetDefinition } from "../custom-widget/stored-definition";
+import { resolvePlacedDefinitionAsync } from "../custom-widget/placed-definition";
+import { executeNative } from "../custom-widget/native-execution";
 
 const runtimeParamsSchema = z.record(z.string(), z.union([z.string(), z.number(), z.boolean()]));
 const itemInputSchema = z.object({ itemId: z.string().min(1) });
@@ -34,78 +28,8 @@ const namedRequestInputSchema = itemInputSchema.extend({
   requestId: z.string().min(1).max(64),
   params: runtimeParamsSchema.default({}),
 });
-interface CustomWidgetItemOptions {
-  definitionId: string;
-  configuration: Record<string, unknown>;
-  configurationVersion: number;
-  refreshInterval?: number;
-}
-
 type RouterContext = Parameters<typeof throwIfActionForbiddenAsync>[0];
 type ResolvedDefinition = Awaited<ReturnType<typeof resolvePlacedDefinitionAsync>>;
-
-const parseItemOptions = (raw: string): CustomWidgetItemOptions => {
-  try {
-    const options = parseSuperJson(raw) as Record<string, unknown>;
-    if (typeof options.definitionId !== "string" || options.definitionId.length === 0) throw new Error();
-    return {
-      definitionId: options.definitionId,
-      configuration: isRecord(options.configuration) ? options.configuration : {},
-      configurationVersion:
-        typeof options.configurationVersion === "number" && Number.isInteger(options.configurationVersion)
-          ? options.configurationVersion
-          : 1,
-      refreshInterval: typeof options.refreshInterval === "number" ? options.refreshInterval : undefined,
-    };
-  } catch {
-    throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget item not found" });
-  }
-};
-
-async function resolvePlacedDefinitionAsync(ctx: RouterContext, itemId: string) {
-  const item = await ctx.db.query.items.findFirst({
-    where: eq(items.id, itemId),
-    columns: { id: true, boardId: true, kind: true, options: true },
-  });
-  if (!item || item.kind !== "customApi") {
-    throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget item not found" });
-  }
-
-  await throwIfActionForbiddenAsync(ctx, eq(boards.id, item.boardId), "view");
-  const itemOptions = parseItemOptions(item.options);
-  const stored = await ctx.db.query.customWidgetDefinitions.findFirst({
-    where: eq(customWidgetDefinitions.id, itemOptions.definitionId),
-    with: { secrets: true },
-  });
-  if (!stored) {
-    const legacy = await ctx.db.query.legacyCustomWidgetDefinitions.findFirst({
-      where: eq(legacyCustomWidgetDefinitions.id, itemOptions.definitionId),
-      columns: { id: true },
-    });
-    if (legacy) {
-      throw new TRPCError({
-        code: "PRECONDITION_FAILED",
-        message: "LEGACY_CUSTOM_WIDGET_MIGRATION_REQUIRED",
-      });
-    }
-    throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget unavailable" });
-  }
-  if (!stored.enabled) throw new TRPCError({ code: "FORBIDDEN", message: "Widget is disabled" });
-
-  const definition = parseStoredCustomWidgetDefinition(stored);
-  const configuration =
-    itemOptions.configurationVersion === stored.updatedAt.getTime()
-      ? { ...getCustomWidgetDefaultOptions(definition.options), ...itemOptions.configuration }
-      : normalizeCustomWidgetOptions(definition.options, itemOptions.configuration);
-  const issues = validateCustomWidgetOptions(definition.options, configuration);
-  if (issues.length > 0) {
-    throw new TRPCError({
-      code: "PRECONDITION_FAILED",
-      message: `Custom widget configuration needs repair: ${issues[0]?.path} ${issues[0]?.message}`,
-    });
-  }
-  return { item, stored, definition, itemOptions, configuration };
-}
 
 const findRequest = (resolved: ResolvedDefinition, requestId: string, kind: "query" | "action") => {
   const request = resolved.definition.requests[requestId];
@@ -236,9 +160,56 @@ export const customApiRouter = createTRPCRouter({
       }),
     );
 
+    const nativeRequests = Object.entries(resolved.definition.extensions?.native ?? {}).filter(
+      ([, entry]) => entry.kind === "query" && entry.trigger === "load",
+    );
+    let nextNativeIndex = 0;
+    const nativeEntries: typeof entries = [];
+    await Promise.all(
+      Array.from({ length: Math.min(4, nativeRequests.length) }, async () => {
+        while (true) {
+          const index = nextNativeIndex++;
+          const entry = nativeRequests[index];
+          if (!entry) return;
+          const [nativeId] = entry;
+          try {
+            const response = await executeNative(ctx, { itemId: input.itemId, nativeId, params: {} }, "query");
+            nativeEntries[index] = [
+              nativeId,
+              {
+                data: response.data,
+                status: {
+                  loading: false,
+                  ok: response.ok,
+                  status: response.status,
+                  statusText: "",
+                  error: response.ok ? undefined : response.error,
+                },
+              },
+            ];
+          } catch (error) {
+            nativeEntries[index] = [
+              nativeId,
+              {
+                data: null,
+                status: {
+                  loading: false,
+                  ok: false,
+                  status: 0,
+                  error: error instanceof Error ? error.message : "Native query failed",
+                },
+              },
+            ];
+          }
+        }
+      }),
+    );
+    entries.push(...nativeEntries);
+
     return {
       type: "customJsx" as const,
       template: resolved.definition.template,
+      extensions: resolved.definition.extensions,
       queryCacheKey: `${getCustomWidgetCacheVersion(resolved.stored)}:${hashRuntimeParams(resolved.configuration)}`,
       data: Object.fromEntries(entries.map(([id, result]) => [id, result.data])),
       status: Object.fromEntries(entries.map(([id, result]) => [id, result.status])),

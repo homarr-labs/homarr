@@ -15,8 +15,9 @@ Custom Widgets may change during the v2 release cycle. Share feedback in the
 
 :::
 
-A **Custom Widget** is a validated `homarr-custom-widget-v2` definition containing API sources, queries and actions,
-optional settings, and a safe JSX template.
+A **Custom Widget** is a validated definition with a safe JSX template, optional settings, and optional HTTP sources,
+queries and actions. Existing definitions use `homarr-custom-widget-v2`; advanced composition and native capabilities use
+`homarr-custom-widget-v3`. Static widgets need no API source.
 
 Homarr executes requests on the server and renders the template in a restricted runtime. Source credentials are
 encrypted separately and are not included in exports, prompts, browser data, or Workshop submissions.
@@ -49,7 +50,7 @@ and simulate relevant actions before saving. Live preview actions are opt-in bec
 
 ## Import and Workshop
 
-Use **Import from Workshop** while adding board content or import a v2 JSON definition directly. Review the source,
+Use **Import from Workshop** while adding board content or import a supported v2 or v3 JSON definition directly. Review the source,
 requested permissions, API hosts, and actions before installation, then configure deployment-specific URLs and
 credentials in Homarr.
 

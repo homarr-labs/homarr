@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useMemo } from "react";
+import { useMemo, useRef, useState } from "react";
 import {
   Accordion,
   Alert,
@@ -20,16 +20,16 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { IconAlertTriangle, IconArrowLeft, IconDownload, IconExternalLink, IconFlag } from "@tabler/icons-react";
 
-import { CUSTOM_WIDGET_SCHEMA } from "@homarr/custom-widgets/core";
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
-import { CustomWidgetSourceSetupPanel, ImportReviewContent } from "@homarr/custom-widgets/workbench";
+import { ImportReviewContent } from "@homarr/custom-widgets/workbench";
 import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 import { useWorkshopReportSummariesQuery, useWorkshopSubmissionQuery } from "@homarr/workshop/backend";
-import type { WorkshopSubmissionDetail } from "@homarr/workshop/schema";
-import { validateWorkshopWidget, workshopExportFilename } from "@homarr/workshop/schema";
+import { validateWorkshopWidget } from "@homarr/workshop/schema";
 
 import { useCustomWidgetImport } from "~/components/custom-widgets/use-custom-widget-import";
+import { CustomWidgetImportSetupPanel } from "~/components/custom-widgets/import-setup-panel";
+import { CustomWidgetInstallCompletion } from "~/components/custom-widgets/install-completion";
 import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import { ManageStickyFooter } from "~/components/manage/manage-sticky-footer";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
@@ -39,13 +39,16 @@ import { WorkshopReportForm } from "~/components/workshop/workshop-report-form";
 import { WorkshopScreenshots } from "~/components/workshop/workshop-screenshots";
 import { useWorkshopSession } from "~/components/workshop/workshop-session";
 import { WorkshopVoteControl } from "~/components/workshop/workshop-vote-control";
+import { downloadWorkshopSubmission } from "~/components/workshop/workshop-download";
 
 const browseHref = "/manage/custom-widgets/workshop";
-const installedHref = "/manage/custom-widgets";
 
 export function WorkshopDetail({ id }: { id: string }) {
   const t = useI18n("workshop");
   const router = useRouter();
+  const remix = useRef(false);
+  const [installedId, setInstalledId] = useState<string>();
+  const flowT = useI18n("customWidget.flow");
   const session = useWorkshopSession();
   const [reportOpened, reportControls] = useDisclosure(false);
 
@@ -59,18 +62,29 @@ export function WorkshopDetail({ id }: { id: string }) {
     [validation],
   );
   const compatible =
-    detail.data?.type === "customWidget" && widget !== null && detail.data.widgetSchema === CUSTOM_WIDGET_SCHEMA;
+    detail.data?.type === "customWidget" && widget !== null && detail.data.widgetSchema === widget.$schema;
 
   const importer = useCustomWidgetImport({
     widget: compatible ? widget : null,
-    // Straight back to the installed list: the edit form is heavy to load and the
-    // widget is usable as-is once its sources are configured here.
-    onImported: () => router.push(installedHref),
+    workshop: detail.data ? { submissionId: id, revision: detail.data.revision } : undefined,
+    // Ordinary installation does not load the workbench.
+    onImported: (result) => {
+      if (remix.current) router.push(`/manage/custom-widgets/edit/${result.id}`);
+      else setInstalledId(result.id);
+    },
   });
 
   const breadcrumb = (
     <DynamicBreadcrumb dynamicMappings={detail.data ? new Map([[id, detail.data.title]]) : undefined} />
   );
+
+  if (installedId) {
+    return (
+      <ManagePageLayout title={detail.data?.title ?? t("title")} breadcrumb={breadcrumb}>
+        <CustomWidgetInstallCompletion definitionId={installedId} />
+      </ManagePageLayout>
+    );
+  }
 
   if (detail.isPending) {
     return (
@@ -190,12 +204,7 @@ export function WorkshopDetail({ id }: { id: string }) {
                 </Text>
               </Box>
               <ImportReviewContent review={importer.review} messages={importer.reviewMessages}>
-                <CustomWidgetSourceSetupPanel
-                  setups={importer.setups}
-                  values={importer.values}
-                  onChange={importer.setValue}
-                  messages={importer.setupMessages}
-                />
+                <CustomWidgetImportSetupPanel importer={importer} />
               </ImportReviewContent>
             </Stack>
           </Paper>
@@ -234,7 +243,7 @@ export function WorkshopDetail({ id }: { id: string }) {
                 color="gray"
                 size="compact-sm"
                 leftSection={<IconDownload size={16} />}
-                onClick={() => downloadSubmission(submission)}
+                onClick={() => downloadWorkshopSubmission(submission)}
               >
                 {t("export")}
               </Button>
@@ -259,10 +268,23 @@ export function WorkshopDetail({ id }: { id: string }) {
           }
         >
           <Button
+            variant="default"
+            disabled={!compatible || !importer.ready || importer.pending || importer.succeeded}
+            onClick={() => {
+              remix.current = true;
+              importer.importWidget();
+            }}
+          >
+            {flowT("remix")}
+          </Button>
+          <Button
             size="md"
             loading={importer.pending || importer.succeeded}
             disabled={!compatible || !importer.ready || importer.succeeded}
-            onClick={importer.importWidget}
+            onClick={() => {
+              remix.current = false;
+              importer.importWidget();
+            }}
           >
             {t("install")}
           </Button>
@@ -270,17 +292,4 @@ export function WorkshopDetail({ id }: { id: string }) {
       </Stack>
     </ManagePageLayout>
   );
-}
-
-function downloadSubmission(submission: WorkshopSubmissionDetail) {
-  const url = URL.createObjectURL(
-    new Blob([submission.content], {
-      type: submission.type === "customCss" ? "text/css" : "application/json",
-    }),
-  );
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = workshopExportFilename(submission.title, submission.type);
-  link.click();
-  URL.revokeObjectURL(url);
 }

@@ -1,0 +1,11 @@
+.compactLink {
+  display: flex;
+  width: 40px;
+  height: 40px;
+  margin-bottom: 4px;
+}
+
+.navigationLink[data-active] {
+  color: var(--mantine-color-text);
+  font-weight: 600;
+}

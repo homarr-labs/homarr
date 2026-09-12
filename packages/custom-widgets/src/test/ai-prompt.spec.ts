@@ -61,12 +61,12 @@ describe("AI prompt", () => {
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("one focused component search per widget job");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("presentation components exist");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Load the compact schema reference once for a new manifest");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("skip it for a supplied valid v2 draft");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("skip it for a supplied valid draft");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("validate one response-driven correction");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("customWidget_previewReviseTemplate");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("it inherits the manifest and resets evidence");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain(
-      "fresh previewCreate only when sources, requests, or options change",
+      "fresh previewCreate only when sources, requests, options, or extensions change",
     );
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Do not reopen discovery or add optional polish");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("byte-identical template");

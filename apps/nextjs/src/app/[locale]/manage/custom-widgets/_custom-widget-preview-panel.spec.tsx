@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 
 import { act } from "react";
+import type { ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 import type { Root } from "react-dom/client";
 import { MantineProvider } from "@mantine/core";
@@ -37,6 +38,9 @@ vi.mock("./_code-editor", () => ({
     codeEditorProps(props);
     return <div>{props.label}</div>;
   },
+}));
+vi.mock("./_flow/preview-theme", () => ({
+  WorkbenchPreviewSurface: ({ children }: { children: ReactNode }) => children,
 }));
 vi.mock("./_custom-widget-preview-action", () => ({ PreviewActionControl: () => <div>action-control</div> }));
 
@@ -105,21 +109,21 @@ describe("Custom Widget preview panel", () => {
     await act(async () => dataTab?.click());
     expect(host.textContent).toContain("requestData");
     expect(codeEditorProps).toHaveBeenCalledWith(expect.objectContaining({ label: "requestData", readOnly: true }));
-    expect(host.textContent).not.toContain("invalid");
+    expect(previewCanvas?.closest<HTMLElement>('[role="tabpanel"]')?.style.display).toBe("none");
 
     const optionsTab = [...host.querySelectorAll<HTMLElement>('[role="tab"]')].find((element) =>
       element.textContent?.includes("tab.options"),
     );
     await act(async () => optionsTab?.click());
     expect(host.textContent).toContain("instanceOptions");
-    expect(host.textContent).not.toContain("invalid");
+    expect(previewCanvas?.closest<HTMLElement>('[role="tabpanel"]')?.style.display).toBe("none");
 
     const actionsTab = [...host.querySelectorAll<HTMLElement>('[role="tab"]')].find((element) =>
       element.textContent?.includes("tab.actions"),
     );
     await act(async () => actionsTab?.click());
     expect(host.textContent).toContain("liveActions");
-    expect(host.textContent).not.toContain("invalid");
+    expect(previewCanvas?.closest<HTMLElement>('[role="tabpanel"]')?.style.display).toBe("none");
 
     const diagnosticsTab = [...host.querySelectorAll<HTMLElement>('[role="tab"]')].find((element) =>
       element.textContent?.includes("tab.diagnostics"),

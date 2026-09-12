@@ -1,8 +1,17 @@
-import type { ComponentType, ErrorInfo, ReactNode } from "react";
-import { Component, useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
+import type { ComponentType } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { Alert, Box, Stack, Text } from "@mantine/core";
-import { IconAlertTriangle } from "@tabler/icons-react";
+import { RendererErrorBoundary, ErrorAlert, createBoundaryKey } from "./renderer-boundary";
 
+import { compileCustomWidgetStyles } from "../core/scoped-styles";
+import type { CustomWidgetExtensions } from "../core/extensions-schema";
+import { inspectCustomWidgetSource } from "./source-inspection";
+import type { CustomWidgetSourceLocation } from "./source-inspection";
+import { WidgetDetailProvider } from "./detail-views";
+import { WidgetOverlayProvider } from "./overlay-scope";
+import { WidgetContentContext, useCustomWidgetContent } from "./shared-content";
+import { WidgetPreferencesContext, useCustomWidgetPreferences } from "./preferences";
+import { useCustomWidgetEnvironment } from "./extension-environment";
 import { renderSafeJsx } from "../jsx/interpreter";
 import { CustomJsxInputsProvider } from "../jsx/runtime-components";
 import type { WidgetInputType, WidgetInputValue } from "../jsx/runtime-components";
@@ -14,51 +23,23 @@ const EMPTY_RECORD: Record<string, never> = {};
 
 export interface CustomJsxRendererMessages {
   noTemplate: string;
+  close?: string;
   templateWarnings(count: number): string;
   bindingTypeConflict(name: string, firstType: WidgetInputType, secondType: WidgetInputType): string;
 }
 
 export interface CustomJsxRendererProps {
   template: string;
+  extensions?: CustomWidgetExtensions;
+  preferenceStorageKey?: string;
+  inspect?: boolean;
+  onInspect?(location: CustomWidgetSourceLocation): void;
   data: unknown;
   status?: Record<string, unknown>;
   options?: Record<string, unknown>;
   components: Readonly<Record<string, ComponentType<never>>>;
   createBindings(data: unknown): Readonly<Record<string, unknown>>;
   messages: CustomJsxRendererMessages;
-}
-
-class RendererErrorBoundary extends Component<
-  { children: ReactNode; resetKey: string; onError(error: Error): void },
-  { error: Error | null; resetKey: string }
-> {
-  public state = { error: null, resetKey: "" } as { error: Error | null; resetKey: string };
-  public static getDerivedStateFromProps(
-    props: Readonly<{ resetKey: string }>,
-    state: Readonly<{ error: Error | null; resetKey: string }>,
-  ) {
-    return props.resetKey === state.resetKey ? null : { error: null, resetKey: props.resetKey };
-  }
-  public static getDerivedStateFromError(error: Error) {
-    return { error };
-  }
-  public componentDidCatch(error: Error, _info: ErrorInfo) {
-    this.props.onError(error);
-  }
-  public render() {
-    return this.state.error ? <ErrorAlert error={this.state.error} /> : this.props.children;
-  }
-}
-
-function ErrorAlert({ error }: { error: Error }) {
-  return (
-    <Alert color="red" variant="light" icon={<IconAlertTriangle size={16} />} p="xs">
-      <Text size="xs" fw={700}>
-        RUNTIME_RENDER_ERROR
-      </Text>
-      <Text size="xs">{error.message}</Text>
-    </Alert>
-  );
 }
 
 export function CustomJsxRenderer(props: CustomJsxRendererProps) {
@@ -87,6 +68,10 @@ interface InputState {
 
 function CustomJsxRendererSession({
   template,
+  extensions,
+  preferenceStorageKey,
+  inspect,
+  onInspect,
   data,
   status = EMPTY_RECORD,
   options = EMPTY_RECORD,
@@ -95,6 +80,18 @@ function CustomJsxRendererSession({
   messages,
 }: CustomJsxRendererProps) {
   const inputScopeId = useId();
+  const scopeId = inputScopeId.replace(/[^a-zA-Z0-9_-]/gu, "");
+  const preferences = useCustomWidgetPreferences(extensions?.preferences, preferenceStorageKey);
+  const content = useCustomWidgetContent(extensions?.content);
+  const environment = useCustomWidgetEnvironment();
+  const stylesheet = useMemo(() => {
+    if (!extensions?.stylesheet) return "";
+    try {
+      return compileCustomWidgetStyles(extensions.stylesheet, scopeId);
+    } catch {
+      return "";
+    }
+  }, [extensions?.stylesheet, scopeId]);
   const [parseErrors, setParseErrors] = useState<string[]>([]);
   const [bindingErrors, setBindingErrors] = useState<string[]>([]);
   const [inputState, setInputState] = useState<InputState>({ values: {}, types: {} });
@@ -187,10 +184,28 @@ function CustomJsxRendererSession({
   }, []);
   const rendered = useMemo(() => {
     try {
-      const bindings = { ...createBindings(data), status, options, inputs };
+      const bindings = {
+        ...createBindings(data),
+        status,
+        options,
+        inputs,
+        preferences: preferences.values,
+        content: content.values,
+        contentStatus: content.status,
+        theme: environment.theme,
+        container: environment.container,
+        props: {},
+      };
       return {
-        ...renderSafeJsx({ template, components, bindings }),
-        boundaryKey: createBoundaryKey(template, bindings),
+        ...renderSafeJsx({
+          template,
+          components,
+          bindings,
+          scopeId,
+          fragments: extensions?.fragments,
+          captureSourceLocations: inspect,
+        }),
+        boundaryKey: createBoundaryKey(template, bindings, extensions?.fragments),
         error: null,
       };
     } catch (error) {
@@ -201,7 +216,23 @@ function CustomJsxRendererSession({
         error: error instanceof Error ? error : new Error(String(error)),
       };
     }
-  }, [components, createBindings, data, inputs, options, status, template]);
+  }, [
+    components,
+    createBindings,
+    data,
+    inputs,
+    options,
+    status,
+    template,
+    scopeId,
+    extensions?.fragments,
+    preferences.values,
+    environment.theme,
+    environment.container,
+    inspect,
+    content.values,
+    content.status,
+  ]);
   useEffect(() => setParseErrors([]), [rendered.boundaryKey, template]);
   const handleError = useCallback(
     (error: Error) =>
@@ -218,23 +249,38 @@ function CustomJsxRendererSession({
 
   return (
     <Stack gap={0} h="100%">
-      <Box h="100%" style={{ contain: "layout paint style", isolation: "isolate", overflow: "auto", minHeight: 0 }}>
-        {rendered.error ? (
-          <ErrorAlert error={rendered.error} />
-        ) : (
-          <CustomJsxInputsProvider
-            scopeId={inputScopeId}
-            inputs={inputs}
-            inputTypes={inputTypes}
-            registerInput={registerInput}
-            setInputValue={setInputValue}
-            resetInput={resetInput}
-          >
-            <RendererErrorBoundary resetKey={rendered.boundaryKey} onError={handleError}>
-              {rendered.node}
-            </RendererErrorBoundary>
-          </CustomJsxInputsProvider>
-        )}
+      <Box
+        onClickCapture={inspect ? (event) => inspectCustomWidgetSource(event, onInspect) : undefined}
+        ref={environment.ref}
+        data-cw-scope={scopeId}
+        h="100%"
+        style={{ contain: "layout paint style", isolation: "isolate", overflow: "auto", minHeight: 0 }}
+      >
+        {stylesheet && <style>{stylesheet}</style>}
+        <WidgetOverlayProvider scopeId={scopeId}>
+          <WidgetDetailProvider closeLabel={messages.close}>
+            <WidgetPreferencesContext.Provider value={preferences}>
+              <WidgetContentContext.Provider value={content}>
+                {rendered.error ? (
+                  <ErrorAlert error={rendered.error} />
+                ) : (
+                  <CustomJsxInputsProvider
+                    scopeId={inputScopeId}
+                    inputs={inputs}
+                    inputTypes={inputTypes}
+                    registerInput={registerInput}
+                    setInputValue={setInputValue}
+                    resetInput={resetInput}
+                  >
+                    <RendererErrorBoundary resetKey={rendered.boundaryKey} onError={handleError}>
+                      {rendered.node}
+                    </RendererErrorBoundary>
+                  </CustomJsxInputsProvider>
+                )}
+              </WidgetContentContext.Provider>
+            </WidgetPreferencesContext.Provider>
+          </WidgetDetailProvider>
+        </WidgetOverlayProvider>
       </Box>
       {[...parseErrors, ...bindingErrors].length > 0 && (
         <Alert color="yellow" variant="light" p="xs" mt="xs">
@@ -250,11 +296,4 @@ function CustomJsxRendererSession({
       )}
     </Stack>
   );
-}
-
-function createBoundaryKey(template: string, bindings: Readonly<Record<string, unknown>>) {
-  let hash = 0;
-  const value = `${template}\0${JSON.stringify(bindings)}`;
-  for (let index = 0; index < value.length; index += 1) hash = (hash * 31 + value.charCodeAt(index)) | 0;
-  return `${template.length}:${hash}`;
 }

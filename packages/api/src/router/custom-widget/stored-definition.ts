@@ -6,7 +6,7 @@ import type { CustomWidgetDefinition } from "@homarr/db/schema";
 
 type StoredCustomWidgetDefinition = Pick<
   CustomWidgetDefinition,
-  "name" | "description" | "iconUrl" | "sources" | "requests" | "options" | "template"
+  "name" | "description" | "iconUrl" | "sources" | "requests" | "options" | "template" | "extensions"
 >;
 
 export interface StoredCustomWidgetIssue {
@@ -27,12 +27,14 @@ export function serializeCustomWidgetDefinition(definition: HomarrCustomWidgetV2
     requests: stringifySuperJson(definition.requests),
     options: stringifySuperJson(definition.options),
     template: definition.template,
+    extensions: definition.$schema === "homarr-custom-widget-v3" ? JSON.stringify(definition.extensions ?? {}) : null,
   };
 }
 
 export function parseStoredCustomWidgetDefinition(definition: StoredCustomWidgetDefinition): HomarrCustomWidgetV2 {
   return customWidgetDefinitionSchema.parse({
-    $schema: "homarr-custom-widget-v2",
+    $schema: definition.extensions != null ? "homarr-custom-widget-v3" : "homarr-custom-widget-v2",
+    ...(definition.extensions != null ? { extensions: JSON.parse(definition.extensions) } : {}),
     name: definition.name,
     description: definition.description ?? undefined,
     iconUrl: definition.iconUrl ?? undefined,

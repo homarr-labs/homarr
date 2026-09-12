@@ -10,6 +10,7 @@ import {
   index,
   int,
   mediumtext,
+  longtext,
   mysqlTable,
   primaryKey,
   smallint,
@@ -637,6 +638,10 @@ export const customWidgetDefinitions = mysqlTable("custom_widget_v2_definition",
   requests: text().notNull(),
   options: text().notNull(),
   template: text().notNull(),
+  extensions: longtext(),
+  editorLayout: longtext(),
+  workshopOrigin: longtext(),
+  previousPackage: longtext(),
   enabled: boolean().notNull().default(true),
   createdAt: timestamp({ mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp({ mode: "date" }).notNull().defaultNow(),
@@ -662,6 +667,29 @@ export const customWidgetSecrets = mysqlTable(
       columns: [table.definitionId],
       foreignColumns: [customWidgetDefinitions.id],
       name: "custom_widget_v2_secret_definition_id_fk",
+    }).onDelete("cascade"),
+  }),
+);
+
+export const customWidgetContent = mysqlTable(
+  "custom_widget_content",
+  {
+    itemId: varchar({ length: 64 })
+      .notNull()
+      .references(() => items.id, { onDelete: "cascade" }),
+    definitionId: varchar({ length: 64 }).notNull(),
+    key: varchar({ length: 64 }).notNull(),
+    name: varchar({ length: 64 }).notNull(),
+    value: longtext().notNull(),
+    revision: int().notNull(),
+    updatedAt: timestamp({ mode: "date" }).notNull().defaultNow(),
+  },
+  (table) => ({
+    compoundKey: primaryKey({ columns: [table.itemId, table.definitionId, table.key] }),
+    definitionFk: foreignKey({
+      columns: [table.definitionId],
+      foreignColumns: [customWidgetDefinitions.id],
+      name: "custom_widget_content_definition_id_fk",
     }).onDelete("cascade"),
   }),
 );

@@ -16,7 +16,8 @@ export interface SubFetchMetadata {
   status: number;
   statusText?: string;
   loading: false;
-  error?: undefined;
+  error?: string;
+  stale?: boolean;
 }
 
 export interface SubFetchProps {
@@ -40,8 +41,17 @@ export const MAX_REFRESH_INTERVAL_SECONDS = 2_147_483;
 export const MAX_REFRESH_INTERVAL_MS = MAX_REFRESH_INTERVAL_SECONDS * 1_000;
 
 export function SubFetch(props: SubFetchProps) {
-  const { itemId, previewSessionId, queryCacheKey, queriesDisabled, port, messages, setQueryState } =
-    useCustomWidgetRuntime();
+  const {
+    itemId,
+    previewSessionId,
+    queryCacheKey,
+    queriesDisabled,
+    queryFixtures,
+    requestCapabilities,
+    port,
+    messages,
+    setQueryState,
+  } = useCustomWidgetRuntime();
   const [manualRunKey, setManualRunKey] = useState<string | null>(null);
   const params = useMemo(() => normalizeParams(props.params), [props.params]);
   const paramsKey = useMemo(() => JSON.stringify(params), [params]);
@@ -63,11 +73,26 @@ export function SubFetch(props: SubFetchProps) {
   const refreshMs = normalizeRefreshInterval(props.refreshInterval);
   const scope = itemId ? "item" : "preview";
   const scopeId = itemId ?? previewSessionId;
+  const fixture = queryFixtures?.[props.requestId ?? ""];
+  const eager = requestCapabilities.some((entry) => entry.id === props.requestId && entry.trigger === "load");
+  let initialData: Awaited<ReturnType<typeof port.query>> | undefined;
+  if (eager && fixture && !fixture.status.loading && typeof fixture.status.ok === "boolean") {
+    initialData = {
+      ok: fixture.status.ok,
+      data: fixture.data,
+      status: fixture.status.status ?? 0,
+      statusText: fixture.status.statusText,
+      error: fixture.status.error,
+    };
+  }
   const query = useQuery({
     queryKey: ["custom-widget", scope, scopeId, props.requestId, paramsKey, queryCacheKey],
     queryFn: ({ signal }) =>
       port.query({ itemId, previewSessionId, requestId: props.requestId ?? "", params: params ?? {} }, signal),
     enabled,
+    initialData,
+    // Reuse the host's just-fetched load result instead of immediately repeating it in a wrapper.
+    staleTime: initialData ? 1000 : 0,
     retry: 2,
     refetchInterval: refreshMs,
   });

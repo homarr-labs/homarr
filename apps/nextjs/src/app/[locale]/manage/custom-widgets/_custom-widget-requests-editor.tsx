@@ -1,5 +1,10 @@
 "use client";
 
+import { useConfirmModal } from "@homarr/modals";
+import { projectWidgetGraph } from "./_flow/graph";
+import { useCustomWidgetFormDocumentStore } from "./_custom-widget-form-state";
+import { useWorkbenchSelection } from "./_flow/selection";
+
 import { ActionIcon, Button, Fieldset, Group, Select, Stack, Switch, Text, TextInput } from "@mantine/core";
 import { IconArrowDown, IconArrowUp, IconPlus, IconTrash } from "@tabler/icons-react";
 
@@ -20,6 +25,10 @@ export function CustomWidgetRequestsEditor({
   form: CustomWidgetWorkbenchForm;
   onRename(currentId: string, nextId: string): void;
 }) {
+  const selection = useWorkbenchSelection();
+  const store = useCustomWidgetFormDocumentStore();
+  const flowT = useI18n("customWidget.flow");
+  const { openConfirmModal } = useConfirmModal();
   const t = useI18n("customWidget.workbench.builder");
   const parsed = parseJson(form.values.requests);
   const entries = isRecord(parsed) ? Object.entries(parsed) : [];
@@ -32,7 +41,24 @@ export function CustomWidgetRequestsEditor({
     form.setFieldValue("requests", JSON.stringify(Object.fromEntries(next), null, 2));
   const update = (index: number, id: string, request: Record<string, unknown>) =>
     commit(entries.map((entry, i) => (i === index ? [id, request] : entry)));
-  const remove = (index: number) => commit(entries.filter((_, i) => i !== index));
+  const remove = (index: number) => {
+    const id = entries[index]?.[0];
+    const graph = projectWidgetGraph(form.values, store.getLayout());
+    const references = graph.edges
+      .filter((edge) => edge.source === `request:${id}` || edge.target === `request:${id}`)
+      .filter((edge) => edge.data?.relationship !== "source")
+      .map((edge) => (edge.source === `request:${id}` ? edge.target : edge.source));
+    const apply = () => store.transaction(() => commit(entries.filter((_, i) => i !== index)));
+    if (!references.length) {
+      apply();
+      return;
+    }
+    openConfirmModal({
+      title: flowT("removeReferenced"),
+      children: flowT("removeReferencedDescription", { references: [...new Set(references)].join(", ") }),
+      onConfirm: apply,
+    });
+  };
   const move = (index: number, direction: -1 | 1) => {
     const next = [...entries];
     const target = index + direction;
@@ -49,13 +75,14 @@ export function CustomWidgetRequestsEditor({
   return (
     <Stack gap="sm">
       {entries.map(([id, rawRequest], index) => {
+        if (selection && selection !== `request:${id}`) return null;
         const request = isRecord(rawRequest) ? rawRequest : {};
         const kind = request.kind === "action" ? "action" : "query";
         const trigger = request.trigger === "manual" ? "manual" : "load";
         return (
-          <Fieldset key={id} legend={id || t("request", { count: index + 1 })}>
+          <Fieldset key={id} legend={id || t("request", { count: index + 1 })} data-workbench-request={id}>
             <Stack gap="sm">
-              <Group grow align="start">
+              <Group grow align="start" data-workbench-request-row>
                 <CustomWidgetIdentifierInput
                   label={t("requestId")}
                   value={id}
@@ -89,7 +116,7 @@ export function CustomWidgetRequestsEditor({
                   }
                 />
               </Group>
-              <Group grow align="start">
+              <Group grow align="start" data-workbench-request-row>
                 <Select
                   label={t("source")}
                   data={sourceIds}
@@ -121,6 +148,7 @@ export function CustomWidgetRequestsEditor({
               </Group>
               <TextInput
                 label={t("path")}
+                data-workbench-request-path
                 description={t("pathDescription")}
                 descriptionProps={{
                   style: { color: "light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-4))" },

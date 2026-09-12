@@ -12,7 +12,7 @@
 
     button {
       cursor: pointer;
-      color: var(--mantine-color-placeholder);
+      color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-1));
     }
   }
 

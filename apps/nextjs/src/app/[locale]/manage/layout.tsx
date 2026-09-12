@@ -41,6 +41,7 @@ import { MainHeader } from "~/components/layout/header";
 import { homarrLogoPath } from "~/components/layout/logo/constants";
 import type { NavigationLink } from "~/components/layout/navigation";
 import { MainNavigation } from "~/components/layout/navigation";
+import { ManagementNavigationProvider } from "~/components/layout/navigation-context";
 import { ClientShell } from "~/components/layout/shell";
 import { ManageTourGate } from "~/components/onboarding/manage-tour-gate";
 import { env as nextEnv } from "~/env";
@@ -250,11 +251,13 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
   const isAdmin = session?.user.permissions.includes("admin") ?? false;
 
   const shell = (
-    <ClientShell hasNavigation>
-      <MainHeader></MainHeader>
-      <MainNavigation links={navigationLinks}></MainNavigation>
-      <AppShellMain>{children}</AppShellMain>
-    </ClientShell>
+    <ManagementNavigationProvider>
+      <ClientShell hasNavigation>
+        <MainHeader></MainHeader>
+        <MainNavigation links={navigationLinks}></MainNavigation>
+        <AppShellMain>{children}</AppShellMain>
+      </ClientShell>
+    </ManagementNavigationProvider>
   );
 
   return (

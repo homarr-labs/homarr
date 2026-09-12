@@ -155,6 +155,8 @@ export function getImportReview(value: unknown): ImportReview | null {
   const parsed = customWidgetImportSchema.safeParse(value);
   if (!parsed.success) return null;
   const widget = parsed.data;
+  const native = Object.values(widget.extensions?.native ?? {});
+  const content = Object.values(widget.extensions?.content ?? {});
   return {
     name: widget.name,
     origins: Object.values(widget.sources).map((source) => new URL(source.baseUrl).origin),
@@ -167,7 +169,10 @@ export function getImportReview(value: unknown): ImportReview | null {
     ],
     networkScopes: [...new Set(Object.values(widget.sources).map((source) => source.networkScope))],
     methods: [...new Set(Object.values(widget.requests).map((request) => request.method))],
-    permissions: [...new Set(Object.values(widget.requests).map((request) => request.permission))],
-    hasActions: Object.values(widget.requests).some((request) => request.kind === "action"),
+    permissions: [
+      ...new Set([...Object.values(widget.requests), ...native, ...content].map((request) => request.permission)),
+    ],
+    hasActions:
+      content.length > 0 || [...Object.values(widget.requests), ...native].some((request) => request.kind === "action"),
   };
 }

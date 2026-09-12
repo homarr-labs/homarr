@@ -58,8 +58,7 @@ export type CustomWidgetSource = z.infer<typeof customWidgetSourceSchema>;
 
 export const customWidgetSourcesSchema = z
   .record(customWidgetIdentifierSchema, customWidgetSourceSchema)
-  .refine((sources) => Object.keys(sources).length <= 8, "A widget can use at most 8 API sources")
-  .refine((sources) => Object.hasOwn(sources, "default"), "A widget must define a default API source");
+  .refine((sources) => Object.keys(sources).length <= 8, "A widget can use at most 8 API sources");
 
 export const optionReferenceSchema = z.strictObject({ $option: customWidgetIdentifierSchema });
 export const parameterReferenceSchema = z.strictObject({ $param: customWidgetIdentifierSchema });

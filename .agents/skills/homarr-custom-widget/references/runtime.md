@@ -12,7 +12,7 @@ Templates read `data.requestId`, `status.requestId`, `options.name`, and tempora
 </SubFetch>
 ```
 
-Manual queries require `trigger: "manual"` on request and `SubFetch`; otherwise they run automatically. `triggerContent` with `triggerAriaLabel` makes custom content the launcher. `SubFetch` owns loading/error/retry; its child receives success plus `{ ok, status, statusText, loading: false }`. Never author `onClick` or fetch callbacks.
+Manual queries require `trigger: "manual"` on request and `SubFetch`. Use `triggerContent` and `triggerAriaLabel` for a custom launcher. `SubFetch` owns loading/error/retry; its child receives success plus `{ ok, status, statusText, loading: false }`.
 
 `SubFetch`, `ActionButton`, and `ToggleSwitch` need literal `requestId`; validation rejects missing/computed IDs.
 
@@ -35,3 +35,5 @@ Every stateful control must use `bind`, and its `inputs.<name>` value must feed 
 Callback parameters must not shadow the reserved roots `data`, `status`, `options`, or `inputs`. Use `<Icon name="refresh" />` or `<TablerIcon name="refresh" />`; never invent components such as `<IconFoo />`.
 
 Use expression callbacks for supported collections and trusted slots. No callback blocks, IIFEs, authored recursion, or raw events. Regex is limited to safe string operations.
+
+V3 adds scoped `className` styles, `View` fragments, `WidgetModal`, `WidgetDrawer`, and `AppEmbed`. Bound controls use `persist` for declared browser preferences or `content` for shared drafts saved with `ContentSaveButton`. `NativeQuery` and `NativeActionButton` invoke declared native IDs; actions retain preview simulation and integration permissions. Fetch component contracts before using these helpers.
