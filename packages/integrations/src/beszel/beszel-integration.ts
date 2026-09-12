@@ -125,6 +125,12 @@ export const isSessionExpired = (session: BeszelSession, now = Date.now()) =>
   session.expiresAt !== undefined && session.expiresAt - sessionExpiryLeewayMs <= now;
 
 export class BeszelIntegration extends Integration {
+  public async getHttpAuthenticationAsync(refresh = false) {
+    if (refresh) await this.sessionStore.clearAsync();
+    const session = await this.authenticateAsync();
+    return { headers: { Authorization: session.token } };
+  }
+
   private readonly sessionStore: SessionStore<BeszelSession>;
 
   constructor(integration: IntegrationInput) {

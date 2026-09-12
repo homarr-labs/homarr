@@ -1,3 +1,4 @@
+import type { IntegrationHttpAuthentication } from "../http-auth";
 import type { Headers, HeadersInit, fetch as undiciFetch, Response as UndiciResponse } from "undici";
 
 import { ResponseError } from "@homarr/common/server";
@@ -20,6 +21,18 @@ type SessionStoreValue =
   | { type: "cookie"; loginToken: string; sessionId: string };
 
 export class OpenMediaVaultIntegration extends Integration implements ISystemHealthMonitoringIntegration {
+  public async getHttpAuthenticationAsync(refresh = false): Promise<IntegrationHttpAuthentication> {
+    if (refresh) await this.sessionStore.clearAsync();
+    let session = await this.sessionStore.getAsync();
+    if (!session) {
+      session = await this.getSessionAsync();
+      await this.sessionStore.setAsync(session);
+    }
+    if (session.type === "cookie")
+      return { headers: { Cookie: `${session.loginToken.split(";")[0]}; ${session.sessionId.split(";")[0]}` } };
+    return { headers: { "X-OPENMEDIAVAULT-SESSIONID": session.sessionId } };
+  }
+
   private readonly sessionStore: SessionStore<SessionStoreValue>;
 
   constructor(integration: IntegrationInput) {

@@ -60,6 +60,11 @@ export function parseLocation(remoteEndPoint: string | null | undefined): "lan" 
 
 @HandleIntegrationErrors([integrationAxiosHttpErrorHandler])
 export class JellyfinIntegration extends Integration implements IMediaServerIntegration, IMediaReleasesIntegration {
+  public async getHttpAuthenticationAsync() {
+    const api = await this.getApiAsync();
+    return { headers: { "X-Emby-Token": api.accessToken } };
+  }
+
   private readonly jellyfin: Jellyfin = new Jellyfin({
     clientInfo: {
       name: "Homarr",

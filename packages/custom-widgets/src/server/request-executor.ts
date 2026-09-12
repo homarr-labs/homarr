@@ -4,7 +4,7 @@ import { Headers, Response } from "undici";
 
 import type { CustomWidgetHttpRequest, CustomWidgetHttpResponse } from "./request-types";
 export type { CustomWidgetAuthConfig, CustomWidgetHttpRequest, CustomWidgetHttpResponse } from "./request-types";
-import { applyAuth } from "./auth";
+import { applyAuth, performAuthenticatedRequest } from "./auth";
 import { CustomWidgetDomainError } from "./errors";
 import {
   assertSafeStaticHeaders,
@@ -16,7 +16,7 @@ import {
 } from "./network-policy";
 import { closeDispatcher } from "./request-dispatcher-lifecycle";
 import { parseResponseBody } from "./response";
-import { redactResponseSecrets } from "./response-redaction";
+import { redactResponseSecrets } from "./response";
 
 export {
   assertSafeStaticHeaders,
@@ -52,7 +52,8 @@ async function performRequest(input: CustomWidgetHttpRequest): Promise<CustomWid
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), MAX_REQUEST_DURATION_MS);
   try {
-    return await performRequestWithinDeadline(input, controller.signal);
+    assertRequest(input);
+    return await performAuthenticatedRequest(input, controller.signal, performRequestWithinDeadline);
   } catch (error) {
     if (controller.signal.aborted) {
       throw new CustomWidgetDomainError({
@@ -84,9 +85,12 @@ async function performRequestWithinDeadline(
   const baseUrl = validateCustomWidgetUrl(input.baseUrl);
   let currentUrl = resolveSameOriginTarget(input.baseUrl, input.targetUrl);
   let currentMethod = input.method;
-  let currentBody = input.body;
+  let currentBody = input.auth?.transformBody ? input.auth.transformBody(input.body) : input.body;
+  assertRequest({ ...input, body: currentBody });
   const maxRedirects = input.kind === "query" ? MAX_QUERY_REDIRECTS : 0;
   for (let redirects = 0; ; redirects += 1) {
+    input.auth?.transformUrl?.(currentUrl);
+    resolveSameOriginTarget(input.baseUrl, currentUrl);
     if (input.pathPrefix !== undefined) assertCustomWidgetPathScope(currentUrl, input.pathPrefix);
     const dispatcher = createPinnedAgent(
       await resolveAndValidateHost(currentUrl.hostname, input.networkScope, { signal: deadlineSignal }),
@@ -114,15 +118,22 @@ async function performRequestWithinDeadline(
           statusText: STATUS_CODES[responseData.statusCode] ?? "",
           headers: normalizeResponseHeaders(responseData.headers),
         });
-        result = {
-          kind: "response",
-          response: {
-            ok: response.ok,
-            status: response.status,
-            statusText: response.statusText,
-            data: redactResponseSecrets(await parseResponseBody(response), input.redactSecrets ?? []),
-          },
+        const parsed = {
+          ok: response.ok,
+          status: response.status,
+          statusText: response.statusText,
+          data: await parseResponseBody(response),
         };
+        if (input.auth?.isExpired?.(parsed)) {
+          parsed.ok = false;
+          parsed.status = 401;
+          parsed.statusText = "Integration session expired";
+        }
+        parsed.data = redactResponseSecrets(parsed.data, [
+          ...(input.redactSecrets ?? []),
+          ...(input.auth?.secrets ?? []),
+        ]);
+        result = { kind: "response", response: parsed };
       } else {
         await responseData.body.dump();
         result = {
@@ -227,6 +238,8 @@ function buildHeaders(input: CustomWidgetHttpRequest, url: URL, body: string | u
   if (input.auth) {
     if (input.auth.type === "apiKeyHeader") assertSafeStaticHeaders({ [input.auth.headerName ?? "X-API-Key"]: "" });
     applyAuth(headers, url, input.auth.type, input.auth.secrets, input.auth.headerName);
+    for (const [name, value] of Object.entries(input.auth.headers ?? {})) headers.set(name, value);
+    for (const [name, value] of Object.entries(input.auth.query ?? {})) url.searchParams.set(name, value);
   }
   return headers;
 }

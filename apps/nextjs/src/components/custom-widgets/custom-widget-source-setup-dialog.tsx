@@ -1,6 +1,6 @@
 "use client";
 
-import { SourceSetupPanel } from "~/components/custom-widgets/source-setup-panel";
+import { SourceSetupPanel } from "~/components/custom-widgets/integration-source-select";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { Button, Center, Group, Loader, Modal, Stack, Text } from "@mantine/core";

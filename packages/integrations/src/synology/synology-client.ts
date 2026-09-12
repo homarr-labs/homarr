@@ -51,6 +51,25 @@ type SynologyClientOptions = {
 const apiDefinitionCache = new Map<string, ApiDefinition>();
 
 export class SynologyClient {
+  public async getHttpAuthenticationAsync(refresh = false) {
+    if (refresh) await this.sessionStore.clearAsync();
+    let session = await this.sessionStore.getAsync();
+    if (!session) {
+      session = await this.loginAsync();
+      await this.sessionStore.setAsync(session);
+    }
+    return {
+      headers: { Cookie: session.cookieHeader },
+      isExpired(response: { status: number; data: unknown }) {
+        const payload = synologyEnvelopeSchema.safeParse(response.data);
+        return (
+          response.status === 401 ||
+          (payload.success && payload.data.success === false && SESSION_ERROR_CODES.has(payload.data.error?.code ?? 0))
+        );
+      },
+    };
+  }
+
   private readonly integrationId: string;
   private readonly baseUrl: string;
   private readonly username: string;

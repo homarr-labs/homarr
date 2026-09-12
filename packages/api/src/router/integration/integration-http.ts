@@ -9,11 +9,13 @@ import {
   getTrustedCertificateHostnamesAsync,
 } from "@homarr/core/infrastructure/certificates";
 import { createCustomCheckServerIdentity } from "@homarr/core/infrastructure/http";
-import type { CustomWidgetHttpRequest } from "@homarr/custom-widgets/server";
+import { CustomWidgetDomainError } from "@homarr/custom-widgets/server";
+import type { CustomWidgetAuthConfig, CustomWidgetHttpRequest } from "@homarr/custom-widgets/server";
 import type { Database } from "@homarr/db";
 import { eq, inArray } from "@homarr/db";
 import { groupMembers, integrations, integrationGroupPermissions, integrationUserPermissions } from "@homarr/db/schema";
-import { IntegrationHttpAuthError, resolveIntegrationHttpAuth } from "@homarr/integrations/http-auth";
+import { getIntegrationHttpAuthenticationAsync } from "@homarr/integrations/factory";
+import type { IntegrationHttpAuthentication } from "@homarr/integrations/factory";
 
 export interface IntegrationHttpContext {
   db: Database;
@@ -53,32 +55,72 @@ export function getIntegrationHttpCacheVersion(integration: HttpIntegration) {
     .slice(0, 16);
 }
 
-export async function getIntegrationHttpConnection(integration: HttpIntegration) {
+export async function getIntegrationHttpConnection(integration: HttpIntegration, authenticate = true) {
   try {
     const secrets = integration.secrets.map(({ kind, value }) => ({ kind, value: decryptSecret(value) }));
-    const auth = resolveIntegrationHttpAuth(integration.kind, secrets);
-    const url = new URL(integration.url);
-    let tls: CustomWidgetHttpRequest["tls"];
-    if (url.protocol === "https:") {
-      const [ca, hostnames] = await Promise.all([
-        getAllTrustedCertificatesAsync(),
-        getTrustedCertificateHostnamesAsync(),
-      ]);
-      tls = { ca, checkServerIdentity: createCustomCheckServerIdentity(hostnames) };
-    }
+    let baseUrl = integration.url;
+    if (integration.kind === "ical") baseUrl = secrets.find(({ kind }) => kind === "url")?.value ?? "";
     return {
-      baseUrl: integration.url,
-      auth,
-      tls,
+      baseUrl,
       networkScope: "loopback" as const,
-      pathPrefix: url.pathname,
+      pathPrefix: new URL(baseUrl).pathname,
       redactSecrets: secrets,
       cacheVersion: getIntegrationHttpCacheVersion(integration),
+      resolveConnectionAsync: async () => {
+        try {
+          let authentication: IntegrationHttpAuthentication = {};
+          if (authenticate) {
+            authentication = await getIntegrationHttpAuthenticationAsync({
+              ...integration,
+              externalUrl: null,
+              decryptedSecrets: secrets,
+            });
+          }
+          const auth = toWidgetAuth(authentication, secrets);
+          const url = new URL(authentication.baseUrl ?? baseUrl);
+          let tls: CustomWidgetHttpRequest["tls"];
+          if (url.protocol === "https:") {
+            const [ca, hostnames] = await Promise.all([
+              getAllTrustedCertificatesAsync(),
+              getTrustedCertificateHostnamesAsync(),
+            ]);
+            tls = { ca, checkServerIdentity: createCustomCheckServerIdentity(hostnames) };
+          }
+          return { baseUrl: url.href, auth, tls, pathPrefix: url.pathname, redactSecrets: auth.secrets };
+        } catch {
+          throw new CustomWidgetDomainError({
+            code: "BAD_GATEWAY",
+            message: "Integration connection could not be resolved",
+          });
+        }
+      },
     };
-  } catch (error) {
-    if (error instanceof IntegrationHttpAuthError) {
-      throw new TRPCError({ code: error.code, message: error.message });
-    }
+  } catch {
     throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Integration connection could not be resolved" });
   }
+}
+
+function toWidgetAuth(
+  authentication: IntegrationHttpAuthentication,
+  secrets: CustomWidgetAuthConfig["secrets"],
+): CustomWidgetAuthConfig {
+  const authSecrets = [...secrets, ...(authentication.redactValues ?? []).map((value) => ({ kind: "session", value }))];
+  const refresh = authentication.refreshAsync;
+  return {
+    ...authentication,
+    type: "integration",
+    secrets: authSecrets,
+    refreshAsync:
+      refresh &&
+      (async () => {
+        try {
+          return toWidgetAuth(await refresh(), secrets);
+        } catch {
+          throw new CustomWidgetDomainError({
+            code: "BAD_GATEWAY",
+            message: "Integration session could not be refreshed",
+          });
+        }
+      }),
+  };
 }

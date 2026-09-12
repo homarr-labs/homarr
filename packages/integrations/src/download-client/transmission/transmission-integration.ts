@@ -16,6 +16,20 @@ import type { DownloadClientStatus } from "../../interfaces/downloads/download-c
 
 @HandleIntegrationErrors([integrationOFetchHttpErrorHandler])
 export class TransmissionIntegration extends Integration implements IDownloadClientIntegration {
+  public async getHttpAuthenticationAsync() {
+    const client = await this.getClientAsync();
+    await client.getSession();
+    const session = client.exportState().auth?.sessionId;
+    if (!session) throw new Error("Integration authentication did not return a session");
+    const credentials = Buffer.from(`${this.getSecretValue("username")}:${this.getSecretValue("password")}`).toString(
+      "base64",
+    );
+    return {
+      headers: { Authorization: `Basic ${credentials}`, "X-Transmission-Session-Id": session },
+      isExpired: (response: { status: number }) => response.status === 409,
+    };
+  }
+
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const client = await this.getClientAsync(input.dispatcher);
     await client.getSession();

@@ -1,9 +1,9 @@
 import { TRPCError } from "@trpc/server";
 
 import type { CustomJsxRequest, CustomWidgetSource } from "@homarr/custom-widgets/core";
-import { customWidgetIntegrationKinds, getCustomWidgetSourceAuthType } from "@homarr/custom-widgets/core";
+import { getCustomWidgetSourceAuthType } from "@homarr/custom-widgets/core";
 import type { CustomWidgetHttpRequest } from "@homarr/custom-widgets/server";
-import type { integrationHttpAuth } from "@homarr/integrations/http-auth";
+import { isHttpIntegrationKind } from "@homarr/definitions";
 
 import type { IntegrationHttpContext } from "../integration/integration-http";
 import {
@@ -11,9 +11,6 @@ import {
   getIntegrationHttpCacheVersion,
   getIntegrationHttpConnection,
 } from "../integration/integration-http";
-
-// Keep the portable schema's supported types within the server authentication adapters.
-customWidgetIntegrationKinds satisfies readonly (keyof typeof integrationHttpAuth)[];
 
 export async function assertCustomWidgetIntegrationBindings(
   ctx: IntegrationHttpContext,
@@ -36,7 +33,7 @@ async function resolveIntegration(
     });
   }
   const integration = await getIntegrationForHttpRequest(ctx, source.integrationId);
-  if (!integration || integration.kind !== source.integrationKind) {
+  if (!isHttpIntegrationKind(integration.kind) || integration.kind !== source.integrationKind) {
     throw new TRPCError({
       code: "PRECONDITION_FAILED",
       message: "The selected integration is unavailable or has a different type",
@@ -51,7 +48,10 @@ export async function resolveCustomWidgetSource(
   request: Pick<CustomJsxRequest, "kind" | "method" | "auth">,
   getSecrets: () => Array<{ kind: string; value: string }>,
 ): Promise<
-  Pick<CustomWidgetHttpRequest, "baseUrl" | "networkScope" | "auth" | "tls" | "pathPrefix" | "redactSecrets"> & {
+  Pick<
+    CustomWidgetHttpRequest,
+    "baseUrl" | "networkScope" | "auth" | "tls" | "pathPrefix" | "redactSecrets" | "resolveConnectionAsync"
+  > & {
     cacheVersion: string;
   }
 > {
@@ -65,11 +65,7 @@ export async function resolveCustomWidgetSource(
     return { baseUrl: source.baseUrl, networkScope: source.networkScope, auth, cacheVersion: "" };
   }
   const integration = await resolveIntegration(ctx, source);
-  const connection = await getIntegrationHttpConnection(integration);
-  return {
-    ...connection,
-    auth: request.auth === "none" ? undefined : connection.auth,
-  };
+  return getIntegrationHttpConnection(integration, request.auth !== "none");
 }
 
 export async function getCustomWidgetIntegrationCacheVersions(

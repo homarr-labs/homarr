@@ -32,7 +32,7 @@ import type { WorkshopSubmission, WorkshopVote } from "@site/src/lib/pocketbase"
 import { getWorkshopBackend } from "@site/src/lib/pocketbase";
 import { getRuntimeWorkshopApiUrl } from "@site/src/lib/runtime-config";
 import type { SubmissionType } from "@site/src/lib/workshop-schema";
-import { integrationDefs } from "@homarr/definitions";
+import { integrationDefs, isHttpIntegrationKind } from "@homarr/definitions";
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 import {
   githubAvatarUrl,
@@ -100,7 +100,11 @@ const avatarFallback = (name: string) => name.trim().slice(0, 1).toUpperCase() |
 type WidgetSource = HomarrCustomWidgetV2["sources"][string];
 
 const sourceHost = (source: WidgetSource) => {
-  if (source.type === "integration") return `${integrationDefs[source.integrationKind].name} integration`;
+  if (source.type === "integration") {
+    if (isHttpIntegrationKind(source.integrationKind))
+      return `${integrationDefs[source.integrationKind].name} integration`;
+    return `${source.integrationKind} integration`;
+  }
   const { baseUrl } = source;
   try {
     return new URL(baseUrl).host;

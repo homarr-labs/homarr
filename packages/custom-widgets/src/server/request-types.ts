@@ -3,12 +3,22 @@ import type { ConnectionOptions } from "node:tls";
 import type { CustomJsxNetworkScope, CustomWidgetMethod } from "../core";
 
 export interface CustomWidgetAuthConfig {
+  baseUrl?: string;
   type: string;
   secrets: Array<{ kind: string; value: string }>;
   headerName?: string | null;
+  headers?: Record<string, string>;
+  query?: Record<string, string>;
+  transformUrl?(url: URL): void;
+  transformBody?(body: string | undefined): string;
+  isExpired?(response: CustomWidgetHttpResponse): boolean;
+  refreshAsync?(): Promise<CustomWidgetAuthConfig>;
 }
 
 export interface CustomWidgetHttpRequest {
+  resolveConnectionAsync?(): Promise<
+    Pick<CustomWidgetHttpRequest, "baseUrl" | "auth" | "tls" | "pathPrefix" | "redactSecrets">
+  >;
   tls?: Pick<ConnectionOptions, "ca" | "checkServerIdentity">;
   pathPrefix?: string;
   redactSecrets?: CustomWidgetAuthConfig["secrets"];

@@ -22,6 +22,10 @@ type StoredSession = {
 
 @HandleIntegrationErrors([])
 export class SynologyIntegration extends Integration implements ISystemHealthMonitoringIntegration {
+  public async getHttpAuthenticationAsync(refresh = false) {
+    return this.getClient().getHttpAuthenticationAsync(refresh);
+  }
+
   private readonly sessionStore = createSessionStore<StoredSession>(this.integration);
   private client?: SynologyClient;
 

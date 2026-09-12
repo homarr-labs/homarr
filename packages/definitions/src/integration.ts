@@ -725,3 +725,8 @@ export const integrationCategories = [
 ] as const;
 
 export type IntegrationCategory = (typeof integrationCategories)[number];
+
+/** Integrations whose configured connection can serve HTTP requests. */
+export function isHttpIntegrationKind(kind: string): kind is Exclude<IntegrationKind, "truenas" | "mock"> {
+  return Object.hasOwn(integrationDefs, kind) && kind !== "truenas" && kind !== "mock";
+}

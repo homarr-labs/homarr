@@ -47,6 +47,10 @@ const extractDataArray = (json: unknown): unknown[] => {
 };
 
 export class UmamiIntegration extends Integration {
+  public async getHttpAuthenticationAsync() {
+    return { headers: await this.getAuthHeadersAsync() };
+  }
+
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const authHeaders = await this.getAuthHeadersAsync();
     const url = this.url("/websites");

@@ -17,6 +17,15 @@ import type { DownloadClientStatus } from "../../interfaces/downloads/download-c
 
 @HandleIntegrationErrors([integrationOFetchHttpErrorHandler])
 export class DelugeIntegration extends Integration implements IDownloadClientIntegration {
+  public async getHttpAuthenticationAsync() {
+    const client = await this.getClientAsync();
+    await client.login();
+    if (!(await client.connected())) await client.connect();
+    const cookie = client.exportState().auth.cookieHeader;
+    if (!cookie) throw new Error("Integration authentication did not return a session");
+    return { headers: { Cookie: cookie } };
+  }
+
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const client = await this.getClientAsync(input.dispatcher);
     const isSuccess = await client.login();

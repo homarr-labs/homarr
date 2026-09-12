@@ -26,6 +26,26 @@ import type { StoredSession, TechnitiumVersion } from "./technitium-types";
 const logger = createLogger({ module: "technitiumDnsIntegration" });
 
 export class TechnitiumDnsIntegration extends Integration implements DnsHoleSummaryIntegration {
+  public async getHttpAuthenticationAsync(refresh = false) {
+    if (refresh) await this.sessionStore.clearAsync();
+    const token = await this.acquireTokenAsync();
+    const headers: Record<string, string> = {};
+    const query: Record<string, string> = {};
+    if (token) {
+      if (this.version === "v15") headers.Authorization = `Bearer ${token}`;
+      else query.token = token;
+    }
+    return {
+      headers,
+      query,
+      isExpired: (response: { data: unknown }) =>
+        response.data !== null &&
+        typeof response.data === "object" &&
+        "status" in response.data &&
+        response.data.status === "invalid-token",
+    };
+  }
+
   // Mutable: updated when a login response or session cache reveals the server's auth version.
   private version: TechnitiumVersion;
   private readonly sessionStore: SessionStore<StoredSession>;

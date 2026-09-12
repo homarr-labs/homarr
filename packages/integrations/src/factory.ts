@@ -1,1 +1,3 @@
-export { createIntegrationAsync } from "./base/creator";
+export { createIntegrationAsync, getIntegrationHttpAuthenticationAsync } from "./base/creator";
+
+export type { IntegrationHttpAuthentication } from "./http-auth";

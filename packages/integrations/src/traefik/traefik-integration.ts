@@ -29,6 +29,10 @@ type ResourcePath =
 const MAX_RESOURCE_DETAILS = 200;
 
 export class TraefikIntegration extends Integration {
+  public async getHttpAuthenticationAsync() {
+    return { headers: this.getAuthHeaders() };
+  }
+
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await input.fetchAsync(this.url("/api/version"), { headers: this.getAuthHeaders() });
 

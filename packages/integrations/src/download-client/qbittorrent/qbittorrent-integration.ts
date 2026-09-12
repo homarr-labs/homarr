@@ -1,3 +1,4 @@
+import type { IntegrationHttpAuthentication } from "../../http-auth";
 import { QBittorrent } from "@ctrl/qbittorrent";
 import dayjs from "dayjs";
 import type { Dispatcher } from "undici";
@@ -17,6 +18,17 @@ import type { DownloadClientStatus } from "../../interfaces/downloads/download-c
 
 @HandleIntegrationErrors([integrationOFetchHttpErrorHandler])
 export class QBitTorrentIntegration extends Integration implements IDownloadClientIntegration {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    if (this.hasSecretValue("apiKey")) return { headers: { Authorization: `Bearer ${this.getSecretValue("apiKey")}` } };
+    const client = await this.getClientAsync();
+    const auth = client.exportState().auth;
+    if (!auth) return {};
+    return {
+      headers: { Cookie: `${auth.cookieName ?? "SID"}=${auth.sid}` },
+      isExpired: ({ status }) => status === 403,
+    };
+  }
+
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const client = await this.getClientAsync(input.dispatcher);
     const isSuccess = await client.login();

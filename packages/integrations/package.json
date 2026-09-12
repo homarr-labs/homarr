@@ -12,7 +12,6 @@
     }
   },
   "exports": {
-    "./http-auth": "./src/http-auth.ts",
     ".": "./index.ts",
     "./anchor": "./src/anchor/anchor-types.ts",
     "./downloads": "./src/interfaces/downloads/download-client-items.ts",

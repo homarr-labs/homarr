@@ -17,6 +17,19 @@ import { dnsBlockingGetSchema, sessionResponseSchema, statsSummaryGetSchema } fr
 const logger = createLogger({ module: "piHoleIntegration", version: "v6" });
 
 export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIntegration {
+  public async getHttpAuthenticationAsync(refresh = false) {
+    if (!this.hasSecretValue("apiKey")) return { headers: {} as Record<string, string> };
+    if (refresh) await this.sessionStore.clearAsync();
+    let session = await this.sessionStore.getAsync();
+    if (!session) {
+      session = { sid: await this.getSessionAsync() };
+      await this.sessionStore.setAsync(session);
+    }
+    const headers: Record<string, string> = {};
+    if (session.sid) headers.sid = session.sid;
+    return { headers };
+  }
+
   private readonly sessionStore: SessionStore<{ sid: string | null }>;
 
   constructor(integration: IntegrationInput) {

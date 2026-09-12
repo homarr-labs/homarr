@@ -21,6 +21,14 @@ import type { HealthSubsystem } from "./unifi-controller-types";
 
 @HandleIntegrationErrors([integrationAxiosHttpErrorHandler])
 export class UnifiControllerIntegration extends Integration implements NetworkControllerSummaryIntegration {
+  private httpAuthentication?: () => Promise<{ headers: Record<string, string>; baseUrl: string }>;
+
+  public async getHttpAuthenticationAsync() {
+    await this.createControllerClientAsync();
+    if (!this.httpAuthentication) throw new Error("Integration authentication did not return a session");
+    return this.httpAuthentication();
+  }
+
   public async getNetworkSummaryAsync(): Promise<NetworkControllerSummary> {
     const client = await this.createControllerClientAsync();
     const stats = await client.getSitesStats();
@@ -71,13 +79,17 @@ export class UnifiControllerIntegration extends Integration implements NetworkCo
     // use 8443. If no port was provided, try both without hiding authentication errors.
     const ports = url.port ? [Number(url.port)] : [443, 8443];
     const createClientForPortAsync = async (port: number) => {
+      let readAuthentication: typeof this.httpAuthentication;
+      const baseUrl = new URL(this.integration.url);
+      baseUrl.protocol = "https:";
+      baseUrl.port = String(port);
       const client = new Unifi.Controller({
         host: url.hostname,
         port,
         username: this.getSecretValue("username"),
         password: this.getSecretValue("password"),
         createAxiosInstance({ cookies }) {
-          return axios.create({
+          const instance = axios.create({
             adapter: "http",
             httpAgent: new HttpCookieAgent({ cookies }),
             httpsAgent: new HttpsCookieAgent({
@@ -86,10 +98,18 @@ export class UnifiControllerIntegration extends Integration implements NetworkCo
               ...certificateOptions,
             }),
           });
+          readAuthentication = async () => {
+            const headers: Record<string, string> = { Cookie: await cookies.jar.getCookieString(baseUrl.href) };
+            const csrf = instance.defaults.headers.common["x-csrf-token"];
+            if (typeof csrf === "string") headers["x-csrf-token"] = csrf;
+            return { headers, baseUrl: baseUrl.href };
+          };
+          return instance;
         },
       });
 
       await client.login(this.getSecretValue("username"), this.getSecretValue("password"), null);
+      this.httpAuthentication = readAuthentication;
       return client;
     };
 

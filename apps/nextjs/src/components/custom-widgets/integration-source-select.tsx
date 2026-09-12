@@ -2,11 +2,15 @@
 
 import { Alert, Select, Stack, Text } from "@mantine/core";
 
+import { CustomWidgetSourceSetupPanel } from "@homarr/custom-widgets/workbench";
+import type { CustomWidgetSourceSetupPanelProps } from "@homarr/custom-widgets/workbench";
+
 import { clientApi } from "@homarr/api/client";
 import type { CustomWidgetIntegrationSource } from "@homarr/custom-widgets/core";
-import { customWidgetIntegrationKinds } from "@homarr/custom-widgets/core";
-import { integrationDefs } from "@homarr/definitions";
+import { integrationDefs, integrationKinds, isHttpIntegrationKind } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
+
+const httpIntegrationKinds = integrationKinds.filter(isHttpIntegrationKind);
 
 interface IntegrationSourceSelectProps {
   kind: CustomWidgetIntegrationSource["integrationKind"];
@@ -27,18 +31,18 @@ export function IntegrationSourceSelect({ kind, integrationId, onChange, onKindC
       {onKindChange && (
         <Select
           label={t("integrationType")}
-          data={customWidgetIntegrationKinds.map((value) => ({ value, label: integrationDefs[value].name }))}
+          data={httpIntegrationKinds.map((value) => ({ value, label: integrationDefs[value].name }))}
           value={kind}
           allowDeselect={false}
           onChange={(value) => {
-            const selected = customWidgetIntegrationKinds.find((candidate) => candidate === value);
+            const selected = httpIntegrationKinds.find((candidate) => candidate === value);
             if (selected) onKindChange(selected);
           }}
         />
       )}
       <Select
         label={t("selectIntegration")}
-        description={integrationDefs[kind].name}
+        description={isHttpIntegrationKind(kind) ? integrationDefs[kind].name : kind}
         data={integrations.map(({ id, name }) => ({ value: id, label: name }))}
         value={integrationId ?? null}
         searchable
@@ -53,5 +57,24 @@ export function IntegrationSourceSelect({ kind, integrationId, onChange, onKindC
         {t("integrationDescription")}
       </Text>
     </Stack>
+  );
+}
+
+export function SourceSetupPanel(props: CustomWidgetSourceSetupPanelProps) {
+  return (
+    <CustomWidgetSourceSetupPanel
+      {...props}
+      renderIntegrationSource={(setup, value) => {
+        const kind = httpIntegrationKinds.find((candidate) => candidate === setup.integrationKind);
+        if (!kind) return null;
+        return (
+          <IntegrationSourceSelect
+            kind={kind}
+            integrationId={value.integrationId}
+            onChange={(integrationId) => props.onChange(setup.sourceId, { ...value, integrationId })}
+          />
+        );
+      }}
+    />
   );
 }

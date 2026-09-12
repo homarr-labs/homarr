@@ -1,6 +1,6 @@
 "use client";
 
-import { SourceSetupPanel } from "~/components/custom-widgets/source-setup-panel";
+import { SourceSetupPanel } from "~/components/custom-widgets/integration-source-select";
 import type { ModalProps } from "@mantine/core";
 
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";

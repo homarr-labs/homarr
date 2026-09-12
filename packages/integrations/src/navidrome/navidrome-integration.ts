@@ -25,6 +25,10 @@ const asArray = <TValue>(value: TValue | TValue[] | undefined): TValue[] =>
   [value].flat().filter((item): item is TValue => item !== undefined);
 
 export class NavidromeIntegration extends Integration implements IMediaServerIntegration {
+  public async getHttpAuthenticationAsync() {
+    return { query: this.getAuthParams(), redactValues: [] };
+  }
+
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const url = this.url("/rest/ping.view", this.getAuthParams());
     const response = await input.fetchAsync(url);
