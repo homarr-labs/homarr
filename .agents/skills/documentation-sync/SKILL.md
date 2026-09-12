@@ -1,13 +1,15 @@
 ---
 name: documentation-sync
-description: Keep Homarr's Docusaurus documentation aligned with user-facing code. Use when adding or changing integrations, widgets, APIs, environment variables, CLI commands, authentication, permissions, cron jobs, settings, or UI behavior that users must understand.
+description: Update Homarr documentation when users need setup, configuration, migration, or non-obvious behavior explained, or existing guidance becomes inaccurate. Skip routine bug fixes and self-explanatory UI changes.
 ---
 
 # Documentation Sync
 
-Update `apps/docs/` in the same change as user-facing behavior. Inspect adjacent pages and the docs types before copying a pattern; the source and docs evolve together.
+Apply the Documentation Sync criteria in `AGENTS.md` first. Only update `apps/docs/` when users need the information or existing guidance becomes inaccurate. Standard actions such as deleting an item and confirming deletion need no explanation merely because their UI changed.
 
-## Map the change
+When an update is warranted, inspect adjacent pages and the docs types before copying a pattern; the source and docs evolve together.
+
+## Locate a needed update
 
 | Code change                         | Documentation target                                                 |
 | ----------------------------------- | -------------------------------------------------------------------- |
