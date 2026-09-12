@@ -15,7 +15,8 @@ type CustomWidgetSecretInput = CustomWidgetCreateInput["secrets"][number];
 type ConfigureCustomWidgetSourceInput = {
   definitionId: string;
   sourceId: string;
-  baseUrl: string;
+  baseUrl?: string;
+  integrationId?: string;
   networkScope?: CustomWidgetSource["networkScope"];
   secrets: CustomWidgetCreateInput["secrets"];
   expectedSource?: CustomWidgetSource;
@@ -220,11 +221,17 @@ function prepareSourceUpdate(
   if (input.expectedSource && !hasSameCustomWidgetSourceAuthentication(previousSource, input.expectedSource)) {
     throw new SourceConfigurationError("binding-changed");
   }
-  const source = customWidgetSourceSchema.parse({
-    ...previousSource,
-    baseUrl: input.baseUrl,
-    networkScope: input.networkScope ?? previousSource.networkScope,
-  });
+  let configuration: unknown;
+  if (previousSource.type === "integration") {
+    configuration = { ...previousSource, integrationId: input.integrationId };
+  } else {
+    configuration = {
+      ...previousSource,
+      baseUrl: input.baseUrl,
+      networkScope: input.networkScope ?? previousSource.networkScope,
+    };
+  }
+  const source = customWidgetSourceSchema.parse(configuration);
   assertSecretSources({ [input.sourceId]: source }, input.secrets);
   return {
     source,

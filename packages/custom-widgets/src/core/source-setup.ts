@@ -1,4 +1,5 @@
-import type { CustomWidgetSource } from "./request-schema";
+import { getCustomWidgetSourceAuthType } from "./request-schema";
+import type { CustomJsxNetworkScope, CustomWidgetSource } from "./request-schema";
 import { getCustomWidgetSourceUrlIssue } from "./request-schema";
 import type { CustomWidgetSecretKind } from "./schema-types";
 import { getCustomWidgetSecretRequirements } from "./secret-requirements";
@@ -15,7 +16,9 @@ export interface CustomWidgetSourceSetup {
   sourceName: string;
   suggestedBaseUrl: string;
   baseUrl: string;
-  networkScope: CustomWidgetSource["networkScope"];
+  networkScope: CustomJsxNetworkScope;
+  integrationKind?: string;
+  integrationId?: string;
   authType: "none" | "bearer" | "basic" | "apiKeyHeader" | "apiKeyQuery";
   credentialFields: Array<{
     kind: CustomWidgetSecretKind;
@@ -40,10 +43,18 @@ export function isCustomWidgetSourceUrlPlaceholder(baseUrl: string) {
 }
 
 export function customWidgetSourceRequiresUrlConfirmation(source: CustomWidgetSource) {
+  if (source.type === "integration") return !source.integrationId;
   return source.networkScope !== "public" || isCustomWidgetSourceUrlPlaceholder(source.baseUrl);
 }
 
 export function hasSameCustomWidgetSourceAuthentication(left: CustomWidgetSource, right: CustomWidgetSource) {
+  if (left.type === "integration" || right.type === "integration") {
+    return (
+      left.type === right.type &&
+      left.integrationKind === right.integrationKind &&
+      left.integrationId === right.integrationId
+    );
+  }
   if (typeof left.auth === "string" || typeof right.auth === "string") return left.auth === right.auth;
   return left.auth.type === right.auth.type && left.auth.name === right.auth.name;
 }
@@ -54,13 +65,15 @@ export function getCustomWidgetSourceSetups(
 ): CustomWidgetSourceSetup[] {
   const requirements = getCustomWidgetSecretRequirements(sources);
   return Object.entries(sources).map(([sourceId, source]) => {
-    const authType = typeof source.auth === "string" ? source.auth : source.auth.type;
+    const authType = getCustomWidgetSourceAuthType(source);
     return {
       sourceId,
       sourceName: source.name ?? sourceId,
-      suggestedBaseUrl: source.baseUrl,
-      baseUrl: source.baseUrl,
-      networkScope: source.networkScope,
+      suggestedBaseUrl: source.baseUrl ?? "",
+      baseUrl: source.baseUrl ?? "",
+      networkScope: source.networkScope ?? "private",
+      integrationKind: source.integrationKind,
+      integrationId: source.integrationId,
       authType,
       credentialFields: requirements
         .filter((requirement) => requirement.sourceId === sourceId)
@@ -81,12 +94,23 @@ export function getCustomWidgetSourceSetups(
 
 export function applyCustomWidgetSourceSetup(
   sources: Record<string, CustomWidgetSource>,
-  setup: Record<string, Pick<CustomWidgetSource, "baseUrl" | "networkScope">>,
+  setup: Record<string, { baseUrl?: string; networkScope?: CustomJsxNetworkScope; integrationId?: string }>,
 ) {
   return Object.fromEntries(
     Object.entries(sources).map(([sourceId, source]) => {
       const configured = setup[sourceId];
-      return [sourceId, configured ? { ...source, ...configured } : source];
+      if (!configured) return [sourceId, source];
+      if (source.type === "integration") {
+        return [sourceId, { ...source, integrationId: configured.integrationId }];
+      }
+      return [
+        sourceId,
+        {
+          ...source,
+          baseUrl: configured.baseUrl ?? source.baseUrl,
+          networkScope: configured.networkScope ?? source.networkScope,
+        },
+      ];
     }),
   );
 }

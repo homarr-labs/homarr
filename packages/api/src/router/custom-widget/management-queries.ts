@@ -1,3 +1,4 @@
+import { resolveCustomWidgetSource } from "./source-resolver";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
@@ -153,31 +154,19 @@ export const managementQueryProcedures = {
       });
       try {
         const values = resolveOptionRequestValues(request, input.params);
-        const authType = typeof source.auth === "string" ? source.auth : source.auth.type;
+        const connection = await resolveCustomWidgetSource(ctx, source, request, () =>
+          stored.secrets
+            .filter((secret) => secret.sourceId === request.source)
+            .map((secret) => ({ kind: secret.kind, value: decryptSecret(secret.encryptedValue) })),
+        );
         const response = await executeCustomWidgetRequest({
-          baseUrl: source.baseUrl,
-          targetUrl: renderRequestTarget(source.baseUrl, request, values),
+          ...connection,
+          targetUrl: renderRequestTarget(connection.baseUrl, request, values),
           method: request.method,
           body: renderRequestBody(request, values),
           staticHeaders: request.headers,
-          auth:
-            request.auth === "none" || authType === "none"
-              ? undefined
-              : {
-                  type: authType,
-                  secrets: stored.secrets
-                    .filter((secret) => secret.sourceId === request.source)
-                    .map((secret) => ({ kind: secret.kind, value: decryptSecret(secret.encryptedValue) })),
-                  headerName:
-                    typeof source.auth === "object" && source.auth.type === "apiKeyHeader"
-                      ? source.auth.name
-                      : typeof source.auth === "object" && source.auth.type === "apiKeyQuery"
-                        ? source.auth.name
-                        : undefined,
-                },
-          networkScope: source.networkScope,
           kind: "query",
-          cacheKey: `custom-widget:options:${input.definitionId}:${getCustomWidgetCacheVersion(stored)}:${request.id}:${hashRuntimeParams(values)}`,
+          cacheKey: `custom-widget:options:${input.definitionId}:${getCustomWidgetCacheVersion(stored)}:${request.id}:${hashRuntimeParams(values)}:${connection.cacheVersion}`,
           cacheTtlSeconds: request.cacheSeconds ?? 30,
         });
         return {

@@ -60,7 +60,7 @@ export function useCustomWidgetImport({ widget, legacyId, onImported }: UseCusto
         Object.fromEntries(
           Object.entries(values).map(([sourceId, value]) => [
             sourceId,
-            { baseUrl: value.baseUrl, networkScope: value.networkScope },
+            { baseUrl: value.baseUrl, networkScope: value.networkScope, integrationId: value.integrationId },
           ]),
         ),
       ),

@@ -1,3 +1,4 @@
+import { resolveCustomWidgetSource } from "../custom-widget/source-resolver";
 import { TRPCError } from "@trpc/server";
 import { parse as parseSuperJson } from "superjson";
 import { z } from "zod/v4";
@@ -13,7 +14,7 @@ import {
   normalizeCustomWidgetOptions,
   validateCustomWidgetOptions,
 } from "@homarr/custom-widgets/core";
-import type { CustomJsxRequest, CustomWidgetSource } from "@homarr/custom-widgets/core";
+import type { CustomJsxRequest } from "@homarr/custom-widgets/core";
 
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "../board/board-access";
@@ -121,25 +122,6 @@ const findSource = (resolved: ResolvedDefinition, sourceId: string) => {
 };
 
 type IdentifiedRequest = CustomJsxRequest & { id: string };
-type IdentifiedSource = CustomWidgetSource & { id: string };
-
-const getAuth = (resolved: ResolvedDefinition, source: IdentifiedSource, mode: "inherit" | "none") => {
-  const authType = typeof source.auth === "string" ? source.auth : source.auth.type;
-  if (mode === "none" || authType === "none") return undefined;
-  const secrets = resolved.stored.secrets
-    .filter((secret) => secret.sourceId === source.id)
-    .map((secret) => ({ kind: secret.kind, value: decryptSecret(secret.encryptedValue) }));
-  return {
-    type: authType,
-    secrets,
-    headerName:
-      typeof source.auth === "object" && source.auth.type === "apiKeyHeader"
-        ? source.auth.name
-        : typeof source.auth === "object" && source.auth.type === "apiKeyQuery"
-          ? source.auth.name
-          : undefined,
-  };
-};
 
 const withRequestLimit = async <T>(
   ctx: RouterContext,
@@ -172,21 +154,26 @@ const executeRequest = async (
   await throwIfActionForbiddenAsync(ctx, eq(boards.id, resolved.item.boardId), request.permission as BoardPermission);
   const source = findSource(resolved, request.source);
   const values = resolveCustomWidgetRequestValues(request, resolved.configuration, params);
-  const targetUrl = renderRequestTarget(source.baseUrl, request, values);
-  return withRequestLimit(ctx, resolved, request, () =>
+  const connection = await resolveCustomWidgetSource(ctx, source, request, () =>
+    resolved.stored.secrets
+      .filter((secret) => secret.sourceId === source.id)
+      .map((secret) => ({ kind: secret.kind, value: decryptSecret(secret.encryptedValue) })),
+  );
+  const targetUrl = renderRequestTarget(connection.baseUrl, request, values);
+  const response = await withRequestLimit(ctx, resolved, request, () =>
     executeCustomWidgetRequest({
-      baseUrl: source.baseUrl,
+      ...connection,
       targetUrl,
       method: request.method,
       body: renderRequestBody(request, values),
       staticHeaders: request.headers,
-      auth: getAuth(resolved, source, request.auth),
-      networkScope: source.networkScope,
       kind: request.kind,
-      cacheKey: request.kind === "query" ? getCacheKey(resolved, request, values) : undefined,
+      cacheKey:
+        request.kind === "query" ? `${getCacheKey(resolved, request, values)}:${connection.cacheVersion}` : undefined,
       cacheTtlSeconds: request.cacheSeconds,
     }),
   );
+  return { ...response, connectionCacheVersion: connection.cacheVersion };
 };
 
 export const customApiRouter = createTRPCRouter({
@@ -210,6 +197,7 @@ export const customApiRouter = createTRPCRouter({
             requestId,
             {
               data: response.data,
+              connectionCacheVersion: response.connectionCacheVersion,
               status: {
                 loading: false,
                 ok: response.ok,
@@ -224,6 +212,7 @@ export const customApiRouter = createTRPCRouter({
             requestId,
             {
               data: null,
+              connectionCacheVersion: "",
               status: {
                 loading: false,
                 ok: false,
@@ -239,7 +228,7 @@ export const customApiRouter = createTRPCRouter({
     return {
       type: "customJsx" as const,
       template: resolved.definition.template,
-      queryCacheKey: `${getCustomWidgetCacheVersion(resolved.stored)}:${hashRuntimeParams(resolved.configuration)}`,
+      queryCacheKey: `${getCustomWidgetCacheVersion(resolved.stored)}:${hashRuntimeParams(resolved.configuration)}:${entries.map(([, result]) => result.connectionCacheVersion).join(":")}`,
       data: Object.fromEntries(entries.map(([id, result]) => [id, result.data])),
       status: Object.fromEntries(entries.map(([id, result]) => [id, result.status])),
       options: resolved.configuration,

@@ -1,3 +1,4 @@
+import { hasSameCustomWidgetSourceAuthentication } from "../core";
 import { customWidgetDefinitionSchema } from "../core";
 import type { CustomJsxRequest, CustomWidgetOptions, CustomWidgetSource } from "../core";
 import { CustomWidgetDomainError } from "./errors";
@@ -35,4 +36,10 @@ export function validatePreviewTemplateRevision(current: PreviewTemplateContext,
     throw new CustomWidgetDomainError({ code: "BAD_REQUEST", message: "Revised preview template is unchanged" });
   }
   return parsed.data.template;
+}
+
+export function canConfigurePreviewSource(current: CustomWidgetSource, source: CustomWidgetSource) {
+  if (current.type === "integration" && source.type === "integration")
+    return current.integrationKind === source.integrationKind;
+  return hasSameCustomWidgetSourceAuthentication(current, source);
 }

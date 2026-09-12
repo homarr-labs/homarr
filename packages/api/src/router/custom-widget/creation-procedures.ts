@@ -1,3 +1,4 @@
+import { assertCustomWidgetIntegrationBindings } from "./source-resolver";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
@@ -44,6 +45,7 @@ export const creationProcedures = {
     .mutation(async ({ ctx, input }) => {
       const { secrets, ...candidate } = input;
       const definition = parseCustomWidgetAuthoringInput(() => normalizeCustomWidgetAuthoringDefinition(candidate));
+      await assertCustomWidgetIntegrationBindings(ctx, definition.sources);
       assertSecretSources(definition.sources, secrets);
       const id = await insertCustomWidgetDefinition(ctx.db, definition, ctx.session.user.id, secrets);
       logger.info("Created custom widget definition", { id, name: definition.name });
@@ -115,6 +117,7 @@ export const creationProcedures = {
       const secrets = Object.keys(session.sources).flatMap((sourceId) =>
         getPreviewSessionSecrets(session, sourceId).map((secret) => ({ sourceId, ...secret })),
       );
+      await assertCustomWidgetIntegrationBindings(ctx, definition.sources);
       assertSecretSources(definition.sources, secrets);
       const id = await insertCustomWidgetDefinition(ctx.db, definition, ctx.session.user.id, secrets);
       logger.info("Created custom widget definition from tested preview", {

@@ -28,6 +28,12 @@ export function CustomWidgetSourcesEditor({
   const clearSecretMutation = clientApi.customWidget.secretClear.useMutation();
   const sources = parseSources(form.values.sources);
   const update = (index: number, changes: Partial<CustomWidgetSource> & { id?: string }) => {
+    if (changes.type) {
+      form.setFieldValue(
+        "secrets",
+        form.values.secrets.filter((secret) => secret.sourceId !== sources[index]?.id),
+      );
+    }
     const previousId = sources[index]?.id;
     const nextId = changes.id ?? previousId;
     if (nextId && sources.some((source, sourceIndex) => sourceIndex !== index && source.id === nextId)) {
@@ -42,7 +48,7 @@ export function CustomWidgetSourcesEditor({
         Object.fromEntries(
           sourceEntries.map(([id, source], i) => [
             i === index ? nextId : id,
-            i === index ? { ...source, ...changes, id: undefined } : source,
+            i === index ? { ...(changes.type ? { name: source.name } : source), ...changes, id: undefined } : source,
           ]),
         ),
         null,

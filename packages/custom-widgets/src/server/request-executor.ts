@@ -1,5 +1,6 @@
 import { Buffer } from "node:buffer";
 import { STATUS_CODES } from "node:http";
+import type { ConnectionOptions } from "node:tls";
 import { Headers, Response } from "undici";
 
 import type { CustomJsxNetworkScope, CustomWidgetMethod } from "../core";
@@ -7,6 +8,7 @@ import { applyAuth } from "./auth";
 import { CustomWidgetDomainError } from "./errors";
 import {
   assertSafeStaticHeaders,
+  assertCustomWidgetPathScope,
   createPinnedAgent,
   resolveAndValidateHost,
   resolveSameOriginTarget,
@@ -44,6 +46,8 @@ export interface CustomWidgetAuthConfig {
 }
 
 export interface CustomWidgetHttpRequest {
+  tls?: Pick<ConnectionOptions, "ca" | "checkServerIdentity">;
+  pathPrefix?: string;
   baseUrl: string;
   targetUrl?: string | URL;
   method: CustomWidgetMethod;
@@ -110,9 +114,11 @@ async function performRequestWithinDeadline(
   let currentBody = input.body;
   const maxRedirects = input.kind === "query" ? MAX_QUERY_REDIRECTS : 0;
   for (let redirects = 0; ; redirects += 1) {
+    if (input.pathPrefix !== undefined) assertCustomWidgetPathScope(currentUrl, input.pathPrefix);
     const dispatcher = createPinnedAgent(
       await resolveAndValidateHost(currentUrl.hostname, input.networkScope, { signal: deadlineSignal }),
       REQUEST_TIMEOUT_MS,
+      input.tls,
     );
     const headers = buildHeaders(input, currentUrl, currentBody);
     const controller = new AbortController();

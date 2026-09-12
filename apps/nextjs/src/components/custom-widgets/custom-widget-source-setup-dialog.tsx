@@ -1,5 +1,6 @@
 "use client";
 
+import { SourceSetupPanel } from "~/components/custom-widgets/source-setup-panel";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { Button, Center, Group, Loader, Modal, Stack, Text } from "@mantine/core";
@@ -8,11 +9,7 @@ import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { getCustomWidgetSourceSetups } from "@homarr/custom-widgets/core";
 import type { CustomWidgetSecretKind } from "@homarr/custom-widgets/core";
-import {
-  createCustomWidgetSourceSetupValues,
-  CustomWidgetSourceSetupPanel,
-  isCustomWidgetSourceSetupReady,
-} from "@homarr/custom-widgets/workbench";
+import { createCustomWidgetSourceSetupValues, isCustomWidgetSourceSetupReady } from "@homarr/custom-widgets/workbench";
 import type { CustomWidgetSourceSetupMessages, CustomWidgetSourceSetupValue } from "@homarr/custom-widgets/workbench";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
@@ -68,6 +65,14 @@ export function CustomWidgetSourceSetupDialog({ definitionId, opened, onClose }:
         const secrets = Object.entries(value.secrets).flatMap(([kind, secret]) =>
           secret?.trim() ? [{ sourceId: setup.sourceId, kind: kind as CustomWidgetSecretKind, value: secret }] : [],
         );
+        if (setup.integrationKind) {
+          await configureMutation.mutateAsync({
+            definitionId,
+            sourceId: setup.sourceId,
+            integrationId: value.integrationId,
+          });
+          continue;
+        }
         await configureMutation.mutateAsync({
           definitionId,
           sourceId: setup.sourceId,
@@ -109,7 +114,7 @@ export function CustomWidgetSourceSetupDialog({ definitionId, opened, onClose }:
         </Text>
       ) : (
         <Stack gap="md">
-          <CustomWidgetSourceSetupPanel
+          <SourceSetupPanel
             setups={setups}
             values={values}
             messages={messages}

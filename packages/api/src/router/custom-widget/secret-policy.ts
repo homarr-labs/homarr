@@ -16,6 +16,7 @@ export function requiredSecretKinds(authType: string) {
  * origin, while the network scope and auth destination are part of the binding.
  */
 export function hasSameSecretBinding(left: CustomWidgetSource, right: CustomWidgetSource) {
+  if (left.type === "integration" || right.type === "integration") return false;
   return (
     new URL(left.baseUrl).origin === new URL(right.baseUrl).origin &&
     left.networkScope === right.networkScope &&
@@ -24,12 +25,12 @@ export function hasSameSecretBinding(left: CustomWidgetSource, right: CustomWidg
 }
 
 export function assertSecretSources(
-  sources: Record<string, { auth: string | { type: string } }>,
+  sources: Record<string, { auth?: string | { type: string }; type?: string }>,
   secrets: readonly { sourceId: string; kind: "apiKey" | "username" | "password" }[],
 ) {
   const invalid = secrets.find((secret) => {
     const source = sources[secret.sourceId];
-    const authType = typeof source?.auth === "string" ? source.auth : source?.auth.type;
+    const authType = typeof source?.auth === "string" ? source.auth : source?.auth?.type;
     return !source || !authType || !new Set<string>(requiredSecretKinds(authType)).has(secret.kind);
   });
   if (invalid) {

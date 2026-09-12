@@ -13,7 +13,7 @@ interface HomarrCustomWidgetV2 {
 }
 ```
 
-The object key `default` is the required source ID; `default` is not a property on a source. Source properties are `name?`, `baseUrl`, `networkScope`, and `auth?`:
+`sources.default` is required. HTTP source properties: `name?`, `baseUrl`, `networkScope`, and `auth?`:
 
 ```json
 {
@@ -40,10 +40,12 @@ The object key `default` is the required source ID; `default` is not a property 
 }
 ```
 
-Auth is `none`, `bearer`, `basic`, `{ "type": "apiKeyHeader", "name": "X-Api-Key" }`, or `{ "type": "apiKeyQuery", "name": "api_key" }`. A request defaults to source `default`, kind `query`, method `GET`, trigger `load`, inherited auth, and view permission. Set `trigger: "manual"` for a parameterized query. An action defaults to manual and modify permission. DELETE uses full permission and confirmation. Do not use `load: false`.
+Integration sources use `{"type":"integration","integrationKind":"sonarr"}` (Sonarr or Radarr). Bind a local `integrationId` from `integration_all`; exports omit it. Omit URL/auth fields. Paths append to the integration URL; non-GET requests must be actions.
 
-Use stable real URLs for public APIs and clear suggested URLs for self-hosted services. Homarr collects the installer's server URL, network scope, and credentials as source setup; credentials remain outside the manifest.
+Auth: `none`, `bearer`, `basic`, `{ "type": "apiKeyHeader", "name": "X-Api-Key" }`, or `{ "type": "apiKeyQuery", "name": "api_key" }`. Requests default to source `default`, kind `query`, method `GET`, trigger `load`, inherited auth, and view permission. Parameterized queries need `trigger: "manual"`. Actions default to manual/modify; DELETE requires full permission and confirmation. Do not use `load: false`.
 
-Paths use `{option:name}` and `{param:name}`; query/body references use `{ "$option": "name" }` and `{ "$param": "name" }`. Constants stay primitive (`take: 10`); `$param` is only for manual helpers, never load queries. Names and types are inferred.
+HTTP sources declare public URLs or self-hosted suggestions; installers configure their URL, network scope, and credentials separately.
 
-Every option has `label`, `control`, and `default`. Optional fields are `description`, `choices`, `choicesFrom`, `min`, `max`, `step`, `advanced`, and `group`.
+Paths bind `{option:name}` and `{param:name}`; query/body references bind `{ "$option": "name" }` and `{ "$param": "name" }`. Use primitive constants (`take: 10`). `$param` is only for manual requests.
+
+Options require `label`, `control`, and `default`. Optional fields: `description`, `choices`, `choicesFrom`, `min`, `max`, `step`, `advanced`, `group`.

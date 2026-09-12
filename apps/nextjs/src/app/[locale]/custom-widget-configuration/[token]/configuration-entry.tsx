@@ -16,6 +16,9 @@ import {
 } from "@mantine/core";
 import { IconCheck, IconKey, IconLock } from "@tabler/icons-react";
 
+import type { CustomWidgetSource } from "@homarr/custom-widgets/core";
+import { IntegrationSourceSelect } from "~/components/custom-widgets/integration-source-select";
+
 import { useI18n } from "@homarr/translation/client";
 
 interface RequestDetails {
@@ -24,10 +27,7 @@ interface RequestDetails {
   kinds: Array<"apiKey" | "username" | "password">;
   expiresAt: number;
   status: "pending" | "completed";
-  source: {
-    baseUrl: string;
-    networkScope: "public" | "private" | "loopback";
-  };
+  source: CustomWidgetSource;
 }
 
 export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
@@ -35,6 +35,7 @@ export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
   const tSecret = useI18n("customWidget.secret");
   const [details, setDetails] = useState<RequestDetails | null>(null);
   const [values, setValues] = useState<Record<string, string>>({});
+  const [integrationId, setIntegrationId] = useState<string>();
   const [baseUrl, setBaseUrl] = useState("");
   const [networkScope, setNetworkScope] = useState<"public" | "private" | "loopback">("public");
   const [error, setError] = useState<string | null>(null);
@@ -47,8 +48,9 @@ export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
         const body = (await response.json()) as RequestDetails | { error: string };
         if (!response.ok || "error" in body) throw new Error("error" in body ? body.error : t("unavailable"));
         setDetails(body);
-        setBaseUrl(body.source.baseUrl);
-        setNetworkScope(body.source.networkScope);
+        setBaseUrl(body.source.baseUrl ?? "");
+        setNetworkScope(body.source.networkScope ?? "public");
+        setIntegrationId(body.source.integrationId);
       })
       .catch((cause: unknown) => setError(cause instanceof Error ? cause.message : t("unavailable")))
       .finally(() => setLoading(false));
@@ -58,10 +60,12 @@ export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
     setSaving(true);
     setError(null);
     try {
+      let configuration: unknown = { baseUrl, networkScope, secrets: values };
+      if (details?.source.type === "integration") configuration = { integrationId, secrets: {} };
       const response = await fetch(`/api/custom-widgets/configuration-request/${encodeURIComponent(token)}`, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ baseUrl, networkScope, secrets: values }),
+        body: JSON.stringify(configuration),
       });
       const body = (await response.json()) as { status?: string; error?: string };
       if (!response.ok) throw new Error(body.error ?? t("saveError"));
@@ -102,20 +106,31 @@ export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
                   {t("source", { name: details.sourceName })}
                 </Text>
               </Card>
-              <TextInput
-                label={t("baseUrl")}
-                type="url"
-                value={baseUrl}
-                onChange={(event) => setBaseUrl(event.currentTarget.value)}
-                required
-              />
-              <Select
-                label={t("networkScope")}
-                data={["public", "private", "loopback"]}
-                value={networkScope}
-                allowDeselect={false}
-                onChange={(value) => value && setNetworkScope(value as typeof networkScope)}
-              />
+              {details.source.type === "integration" && (
+                <IntegrationSourceSelect
+                  kind={details.source.integrationKind}
+                  integrationId={integrationId}
+                  onChange={setIntegrationId}
+                />
+              )}
+              {details.source.type !== "integration" && (
+                <>
+                  <TextInput
+                    label={t("baseUrl")}
+                    type="url"
+                    value={baseUrl}
+                    onChange={(event) => setBaseUrl(event.currentTarget.value)}
+                    required
+                  />
+                  <Select
+                    label={t("networkScope")}
+                    data={["public", "private", "loopback"]}
+                    value={networkScope}
+                    allowDeselect={false}
+                    onChange={(value) => value && setNetworkScope(value as typeof networkScope)}
+                  />
+                </>
+              )}
               {details.kinds.map((kind) => {
                 const Input = kind === "username" ? TextInput : PasswordInput;
                 return (
@@ -132,7 +147,10 @@ export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
               })}
               <Button
                 loading={saving}
-                disabled={!URL.canParse(baseUrl) || details.kinds.some((kind) => !values[kind])}
+                disabled={
+                  (details.source.type === "integration" ? !integrationId : !URL.canParse(baseUrl)) ||
+                  details.kinds.some((kind) => !values[kind])
+                }
                 onClick={() => void submit()}
               >
                 {t("save")}

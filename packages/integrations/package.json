@@ -12,6 +12,7 @@
     }
   },
   "exports": {
+    "./custom-widget-source": "./src/custom-widget-source.ts",
     ".": "./index.ts",
     "./anchor": "./src/anchor/anchor-types.ts",
     "./downloads": "./src/interfaces/downloads/download-client-items.ts",

@@ -1,9 +1,10 @@
+import type { ReactNode } from "react";
 import { Alert, Badge, Checkbox, Group, PasswordInput, Select, Stack, Text, TextInput } from "@mantine/core";
 import { IconCheck, IconKey, IconServer, IconX } from "@tabler/icons-react";
 
 import type {
   CustomWidgetSecretKind,
-  CustomWidgetSource,
+  CustomJsxNetworkScope,
   CustomWidgetSourceSetup,
   CustomWidgetSourceUrlIssue,
 } from "../core";
@@ -11,7 +12,8 @@ import { getCustomWidgetSourceSetupIssue } from "../core";
 
 export interface CustomWidgetSourceSetupValue {
   baseUrl: string;
-  networkScope: CustomWidgetSource["networkScope"];
+  networkScope: CustomJsxNetworkScope;
+  integrationId?: string;
   urlConfirmed: boolean;
   secrets: Partial<Record<CustomWidgetSecretKind, string>>;
 }
@@ -38,6 +40,7 @@ export interface CustomWidgetSourceSetupPanelProps {
   values: Record<string, CustomWidgetSourceSetupValue>;
   messages: CustomWidgetSourceSetupMessages;
   onChange(sourceId: string, value: CustomWidgetSourceSetupValue): void;
+  renderIntegrationSource?(setup: CustomWidgetSourceSetup, value: CustomWidgetSourceSetupValue): ReactNode;
 }
 
 export function createCustomWidgetSourceSetupValues(
@@ -48,6 +51,7 @@ export function createCustomWidgetSourceSetupValues(
       setup.sourceId,
       {
         baseUrl: setup.baseUrl,
+        integrationId: setup.integrationId,
         networkScope: setup.networkScope,
         urlConfirmed: !setup.requiresUrlConfirmation,
         secrets: {} as Partial<Record<CustomWidgetSecretKind, string>>,
@@ -62,6 +66,7 @@ export function isCustomWidgetSourceSetupReady(
 ) {
   return setups.every((setup) => {
     const value = values[setup.sourceId];
+    if (setup.integrationKind) return Boolean(value?.integrationId);
     return Boolean(value && !getCustomWidgetSourceSetupIssue(value) && value.urlConfirmed);
   });
 }
@@ -71,6 +76,7 @@ export function CustomWidgetSourceSetupPanel({
   values,
   messages,
   onChange,
+  renderIntegrationSource,
 }: CustomWidgetSourceSetupPanelProps) {
   if (setups.length === 0) return null;
   return (
@@ -84,6 +90,14 @@ export function CustomWidgetSourceSetupPanel({
       {setups.map((setup) => {
         const value = values[setup.sourceId] ?? createCustomWidgetSourceSetupValues([setup])[setup.sourceId];
         if (!value) return null;
+        if (setup.integrationKind) {
+          return (
+            <Stack key={setup.sourceId} gap="sm">
+              <Text fw={600}>{setup.sourceName}</Text>
+              {renderIntegrationSource?.(setup, value)}
+            </Stack>
+          );
+        }
         const issue = getCustomWidgetSourceSetupIssue(value);
         const missingCredentials = setup.credentialFields.filter(
           (field) => !field.configured && !value.secrets[field.kind]?.trim(),
@@ -143,7 +157,7 @@ export function CustomWidgetSourceSetupPanel({
                   networkScope &&
                   onChange(setup.sourceId, {
                     ...value,
-                    networkScope: networkScope as CustomWidgetSource["networkScope"],
+                    networkScope: networkScope as CustomJsxNetworkScope,
                   })
                 }
               />

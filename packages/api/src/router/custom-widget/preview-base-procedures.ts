@@ -1,3 +1,5 @@
+import { assertCustomWidgetIntegrationBindings } from "./source-resolver";
+import { getCustomWidgetSourceAuthType } from "@homarr/custom-widgets/core";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
@@ -92,6 +94,7 @@ const previewCreateProcedure = permissionRequiredProcedure
     const definition = parseCustomWidgetAuthoringInput(() =>
       normalizeCustomWidgetAuthoringDefinition(input.definition),
     );
+    await assertCustomWidgetIntegrationBindings(ctx, definition.sources);
     const options = input.options ?? getCustomWidgetDefaultOptions(definition.options);
     const optionIssues = validateCustomWidgetOptions(definition.options, options);
     if (optionIssues.length > 0) {
@@ -115,7 +118,7 @@ const previewCreateProcedure = permissionRequiredProcedure
         const hasStoredSecrets = existing.secrets.some((secret) => secret.sourceId === sourceId);
         if (!submittedSource || !hasStoredSecrets || hasSameSecretBinding(existingSource, submittedSource)) continue;
 
-        const authType = typeof submittedSource.auth === "string" ? submittedSource.auth : submittedSource.auth.type;
+        const authType = getCustomWidgetSourceAuthType(submittedSource);
         const missingReplacement = requiredSecretKinds(authType).some(
           (kind) => !secrets.some((secret) => secret.sourceId === sourceId && secret.kind === kind),
         );
@@ -142,7 +145,7 @@ const previewCreateProcedure = permissionRequiredProcedure
 
     const invalid = secrets.find((secret) => {
       const source = definition.sources[secret.sourceId];
-      const authType = typeof source?.auth === "string" ? source.auth : source?.auth.type;
+      const authType = getCustomWidgetSourceAuthType(source);
       const kinds =
         authType === "basic"
           ? ["username", "password"]

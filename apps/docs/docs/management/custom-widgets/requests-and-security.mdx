@@ -3,9 +3,29 @@
 Most widgets use a single source named `default`; the manifest must contain it. Extra keyed sources are available for widgets
 that combine APIs. Source IDs are case-insensitively unique. Base URLs must use HTTP(S), contain no embedded credentials,
 query string, or fragment, and sources can be `public`, `private`, or `loopback`. Authentication is `none`, `bearer`,
-`basic`, an API-key header, or an API-key query parameter. Credentials belong to the widget but remain outside its manifest.
+`basic`, an API-key header, or an API-key query parameter. HTTP source credentials belong to the widget but remain outside its manifest.
 Source origins are fixed by the definition and source-setup flow; widget options and invocation parameters cannot redirect a
 request to a different origin.
+
+## Existing integrations
+
+Sonarr and Radarr sources can reuse a configured integration:
+
+```json
+{
+  "sources": { "default": { "type": "integration", "integrationKind": "sonarr" } },
+  "requests": { "queue": { "path": "/api/v3/queue" } }
+}
+```
+
+Select the local instance during source setup. Homarr uses its current URL, API key, and trusted certificates;
+paths append to the saved URL, including reverse-proxy subpaths. Changing the integration updates all sources bound to it.
+Deleting it leaves the widget unconfigured until another instance is selected. The binding is shared by every placement
+of that widget definition. Exports and Workshop submissions retain the required type and omit the local integration ID.
+
+Integration requests require integration `use` access for GET queries, `interact` for actions, and `full` for DELETE,
+in addition to the request's board permission. Board access alone does not grant integration access. Methods other than
+GET must be manual actions. Requests and redirects must stay within the configured integration's URL path.
 
 ## Named requests
 

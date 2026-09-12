@@ -1016,7 +1016,15 @@
         "clear": "Clear",
         "remove": "Remove source and its requests",
         "advanced": "Advanced",
-        "add": "Add another API source"
+        "add": "Add another API source",
+        "sourceType": "Source",
+        "manualSource": "HTTP API",
+        "existingIntegration": "Existing integration",
+        "integrationType": "Integration type",
+        "selectIntegration": "Configured integration",
+        "noIntegrations": "No matching integrations available",
+        "integrationUnavailable": "The selected integration is no longer available. Select another integration.",
+        "integrationDescription": "Uses the saved integration URL and credentials. Changes to that integration apply automatically."
       },
       "ai": {
         "title": "Create or fix with any AI",

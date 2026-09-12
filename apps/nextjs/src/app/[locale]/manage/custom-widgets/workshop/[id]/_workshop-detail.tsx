@@ -1,5 +1,6 @@
 "use client";
 
+import { SourceSetupPanel } from "~/components/custom-widgets/source-setup-panel";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import {
@@ -22,7 +23,7 @@ import { IconAlertTriangle, IconArrowLeft, IconDownload, IconExternalLink, IconF
 
 import { CUSTOM_WIDGET_SCHEMA } from "@homarr/custom-widgets/core";
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
-import { CustomWidgetSourceSetupPanel, ImportReviewContent } from "@homarr/custom-widgets/workbench";
+import { ImportReviewContent } from "@homarr/custom-widgets/workbench";
 import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 import { useWorkshopReportSummariesQuery, useWorkshopSubmissionQuery } from "@homarr/workshop/backend";
@@ -190,7 +191,7 @@ export function WorkshopDetail({ id }: { id: string }) {
                 </Text>
               </Box>
               <ImportReviewContent review={importer.review} messages={importer.reviewMessages}>
-                <CustomWidgetSourceSetupPanel
+                <SourceSetupPanel
                   setups={importer.setups}
                   values={importer.values}
                   onChange={importer.setValue}

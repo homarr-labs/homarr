@@ -1,3 +1,5 @@
+import { exportCustomWidgetDefinition } from "@homarr/custom-widgets/core";
+import { assertCustomWidgetIntegrationBindings } from "./source-resolver";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
@@ -56,7 +58,7 @@ async function getWorkshopWidget(submissionId: string) {
     if (!validation.success) {
       throw new TRPCError({ code: "BAD_REQUEST", message: validation.error });
     }
-    return { submission, widget: validation.data };
+    return { submission, widget: exportCustomWidgetDefinition(validation.data) };
   } catch (error) {
     if (error instanceof TRPCError) throw error;
     throwWorkshopUnavailable("Workshop widget lookup failed", "workshop_widget_lookup_failed");
@@ -72,7 +74,8 @@ const workshopSearchInputSchema = z.object({
 const sourceOverridesSchema = z.record(
   customWidgetIdentifierSchema,
   z.strictObject({
-    baseUrl: z.string(),
+    baseUrl: z.string().optional(),
+    integrationId: z.string().min(1).max(100).optional(),
     networkScope: z.enum(["public", "private", "loopback"]).optional(),
   }),
 );
@@ -165,12 +168,14 @@ export const workshopProcedures = {
               sourceId,
               {
                 baseUrl: source.baseUrl,
+                integrationId: source.integrationId,
                 networkScope: source.networkScope ?? widget.sources[sourceId]?.networkScope ?? "public",
               },
             ]),
           ),
         ),
       });
+      await assertCustomWidgetIntegrationBindings(ctx, configured.sources);
       assertSecretSources(configured.sources, input.secrets);
       const id = await insertCustomWidgetDefinition(ctx.db, configured, ctx.session.user.id, input.secrets);
       const configuredSecrets = new Set(input.secrets.map((secret) => `${secret.sourceId}:${secret.kind}`));

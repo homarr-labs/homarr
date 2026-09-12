@@ -1,3 +1,4 @@
+import { getCustomWidgetSourceAuthType } from "../src/core/request-schema";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 
@@ -279,7 +280,7 @@ export function getDeterministicEvaluationIssues(
       message: `Use the verified source URL ${expectations.sourceBaseUrl}.`,
     });
   }
-  const authType = typeof source?.auth === "string" ? source.auth : source?.auth.type;
+  const authType = getCustomWidgetSourceAuthType(source);
   if (authType !== expectations.sourceAuth) {
     issues.push({
       path: ["sources", "default", "auth"],
@@ -467,7 +468,7 @@ const getJudgeRuntimeContext = (widget: HomarrCustomWidgetV2) => {
   const sections = [getCustomWidgetSkillReference("runtime").content];
   const hasMutation = Object.values(widget.requests).some((request) => request.kind === "action");
   const hasProtectedSource = Object.values(widget.sources).some((source) => {
-    const authType = typeof source.auth === "string" ? source.auth : source.auth.type;
+    const authType = getCustomWidgetSourceAuthType(source);
     return authType !== "none";
   });
   if (hasMutation || hasProtectedSource) sections.push(getCustomWidgetSkillReference("security").content);

@@ -1,3 +1,5 @@
+import { exportCustomWidgetDefinition } from "@homarr/custom-widgets/core";
+import { assertCustomWidgetIntegrationBindings } from "./source-resolver";
 import { TRPCError } from "@trpc/server";
 import { parse as parseSuperJson } from "superjson";
 import { z } from "zod/v4";
@@ -24,7 +26,7 @@ export const transferProcedures = {
         where: eq(customWidgetDefinitions.id, input.id),
       });
       if (!definition) throw new TRPCError({ code: "NOT_FOUND" });
-      return parseStoredCustomWidgetDefinition(definition);
+      return exportCustomWidgetDefinition(parseStoredCustomWidgetDefinition(definition));
     }),
 
   exportLegacy: permissionRequiredProcedure
@@ -57,6 +59,7 @@ export const transferProcedures = {
     .requiresPermission("admin")
     .input(z.object({ widget: customWidgetImportSchema, secrets: customWidgetSecretsInputSchema.default([]) }))
     .mutation(async ({ ctx, input }) => {
+      await assertCustomWidgetIntegrationBindings(ctx, input.widget.sources);
       assertSecretSources(input.widget.sources, input.secrets);
       const id = await insertCustomWidgetDefinition(ctx.db, input.widget, ctx.session.user.id, input.secrets);
       logger.info("Imported custom widget definition", { id, name: input.widget.name });
@@ -80,6 +83,7 @@ export const transferProcedures = {
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      await assertCustomWidgetIntegrationBindings(ctx, input.widget.sources);
       assertSecretSources(input.widget.sources, input.secrets);
       const [legacy, current] = await Promise.all([
         ctx.db.query.legacyCustomWidgetDefinitions.findFirst({
@@ -157,7 +161,7 @@ function canPreserveLegacySecrets(
   widget: z.infer<typeof customWidgetImportSchema>,
 ) {
   const source = widget.sources.default;
-  if (!source || getAuthType(source.auth) !== legacy.authType) return false;
+  if (!source || source.type === "integration" || getAuthType(source.auth) !== legacy.authType) return false;
   if (getOrigin(source.baseUrl) !== getOrigin(legacy.url)) return false;
   const headerName = typeof source.auth === "object" && "name" in source.auth ? source.auth.name : undefined;
   return headerName === (legacy.headerName ?? undefined);

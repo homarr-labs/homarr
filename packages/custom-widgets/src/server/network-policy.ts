@@ -1,4 +1,5 @@
 import { lookup } from "node:dns/promises";
+import type { ConnectionOptions } from "node:tls";
 import { BlockList, isIP } from "node:net";
 import type { LookupFunction } from "node:net";
 import { Agent } from "undici";
@@ -191,7 +192,11 @@ export function assertSafeStaticHeaders(headers: Record<string, string> | undefi
   }
 }
 
-export function createPinnedAgent(addresses: ResolvedAddress[], timeoutMs: number) {
+export function createPinnedAgent(
+  addresses: ResolvedAddress[],
+  timeoutMs: number,
+  tls?: Pick<ConnectionOptions, "ca" | "checkServerIdentity">,
+) {
   const customLookup: LookupFunction = (_hostname, options, callback) => {
     const family = options.family === 4 || options.family === 6 ? options.family : undefined;
     const candidates = family ? addresses.filter((entry) => entry.family === family) : addresses;
@@ -204,10 +209,42 @@ export function createPinnedAgent(addresses: ResolvedAddress[], timeoutMs: numbe
     else callback(null, selected.address, selected.family);
   };
   return new Agent({
-    connect: { lookup: customLookup },
+    connect: { ...tls, lookup: customLookup },
     connectTimeout: timeoutMs,
     headersTimeout: timeoutMs,
     bodyTimeout: timeoutMs,
     maxResponseSize: MAX_RESPONSE_BODY_BYTES,
   });
+}
+
+export function assertCustomWidgetPathScope(url: URL, pathPrefix: string) {
+  const prefix = decodePath(pathPrefix).replace(/\/+$/u, "");
+  const path = decodePath(url.pathname);
+  if (
+    path.includes("\\") ||
+    path.split("/").some((segment) => segment === "." || segment === "..") ||
+    (prefix && path !== prefix && !path.startsWith(`${prefix}/`))
+  ) {
+    throw new CustomWidgetDomainError({
+      code: "FORBIDDEN",
+      message: "Request must remain within the selected integration URL",
+    });
+  }
+}
+
+function decodePath(value: string) {
+  let path = value;
+  for (let pass = 0; pass < 4; pass += 1) {
+    let decoded: string;
+    try {
+      decoded = decodeURIComponent(path);
+    } catch {
+      return path;
+    }
+    if (decoded === path) return path;
+    path = decoded;
+  }
+  if (/%[0-9a-f]{2}/iu.test(path))
+    throw new CustomWidgetDomainError({ code: "FORBIDDEN", message: "Request path is excessively encoded" });
+  return path;
 }

@@ -41,7 +41,10 @@ const sourceUrlIssueMessages: Record<CustomWidgetSourceUrlIssue, string> = {
   queryOrFragment: "API source URLs cannot contain a query string or fragment",
 };
 
-export const customWidgetSourceSchema = z.strictObject({
+export const customWidgetHttpSourceSchema = z.strictObject({
+  type: z.literal("http").optional(),
+  integrationKind: z.never().optional(),
+  integrationId: z.never().optional(),
   name: z.string().trim().min(1).max(128).optional(),
   baseUrl: z
     .string()
@@ -54,7 +57,26 @@ export const customWidgetSourceSchema = z.strictObject({
   networkScope: z.enum(customJsxNetworkScopes),
   auth: authSchema.default("none"),
 });
+export const customWidgetIntegrationKinds = ["sonarr", "radarr"] as const;
+export const customWidgetIntegrationSourceSchema = z.strictObject({
+  type: z.literal("integration"),
+  name: z.string().trim().min(1).max(128).optional(),
+  integrationKind: z.enum(customWidgetIntegrationKinds),
+  integrationId: z.string().min(1).max(100).optional(),
+  baseUrl: z.never().optional(),
+  networkScope: z.never().optional(),
+  auth: z.never().optional(),
+});
+export const customWidgetSourceSchema = z.union([customWidgetHttpSourceSchema, customWidgetIntegrationSourceSchema]);
 export type CustomWidgetSource = z.infer<typeof customWidgetSourceSchema>;
+export type CustomWidgetHttpSource = z.infer<typeof customWidgetHttpSourceSchema>;
+export type CustomWidgetIntegrationSource = z.infer<typeof customWidgetIntegrationSourceSchema>;
+
+export function getCustomWidgetSourceAuthType(source: { auth?: CustomWidgetHttpSource["auth"] } | undefined) {
+  if (!source?.auth) return "none" as const;
+  if (typeof source.auth === "string") return source.auth;
+  return source.auth.type;
+}
 
 export const customWidgetSourcesSchema = z
   .record(customWidgetIdentifierSchema, customWidgetSourceSchema)

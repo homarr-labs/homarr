@@ -4,8 +4,14 @@ import { Button, Fieldset, Group, PasswordInput, Select, Stack, TextInput } from
 import { IconKey, IconTrash } from "@tabler/icons-react";
 
 import { getCustomWidgetSourceUrlIssue } from "@homarr/custom-widgets/core";
-import type { CustomWidgetSource, CustomWidgetSourceUrlIssue } from "@homarr/custom-widgets/core";
+import type {
+  CustomWidgetHttpSource,
+  CustomWidgetSource,
+  CustomWidgetSourceUrlIssue,
+} from "@homarr/custom-widgets/core";
 import { useI18n } from "@homarr/translation/client";
+
+import { IntegrationSourceSelect } from "~/components/custom-widgets/integration-source-select";
 
 import type { CustomWidgetWorkbenchForm } from "./_custom-widget-form-utils";
 import { CustomWidgetIdentifierInput } from "./_custom-widget-identifier-input";
@@ -52,9 +58,6 @@ export function CustomWidgetSourceField({
   onRemove,
 }: CustomWidgetSourceFieldProps) {
   const t = useI18n("customWidget.workbench.sources");
-  const tSecret = useI18n("customWidget.secret");
-  const baseUrlIssue = getCustomWidgetSourceUrlIssue(source.baseUrl);
-  const authType = typeof source.auth === "string" ? source.auth : source.auth.type;
 
   return (
     <Fieldset legend={index === 0 ? t("primary") : source.name}>
@@ -73,72 +76,41 @@ export function CustomWidgetSourceField({
             onChange={(event) => onUpdate(index, { name: event.currentTarget.value })}
           />
         </Group>
-        <TextInput
-          label={t("baseUrl")}
-          type="url"
-          value={source.baseUrl}
-          error={baseUrlIssue ? t(sourceUrlErrorKeys[baseUrlIssue]) : undefined}
-          onChange={(event) => onUpdate(index, { baseUrl: event.currentTarget.value })}
+        <Select
+          label={t("sourceType")}
+          data={[
+            { value: "http", label: t("manualSource") },
+            { value: "integration", label: t("existingIntegration") },
+          ]}
+          value={source.type ?? "http"}
+          allowDeselect={false}
+          onChange={(type) => {
+            if (type === "integration") onUpdate(index, { type, integrationKind: "sonarr" });
+            else if (type === "http")
+              onUpdate(index, { type, baseUrl: "https://example.com", networkScope: "public", auth: "none" });
+          }}
         />
-        <Group grow align="start">
-          <Select
-            label={t("networkScope")}
-            data={["public", "private", "loopback"]}
-            value={source.networkScope}
-            onChange={(value) =>
-              value && onUpdate(index, { networkScope: value as CustomWidgetSource["networkScope"] })
-            }
-            allowDeselect={false}
-          />
-          <Select
-            label={t("authentication")}
-            data={["none", "bearer", "basic", "apiKeyHeader", "apiKeyQuery"]}
-            value={authType}
-            onChange={(value) => onSetAuthentication(index, value ?? "none")}
-            allowDeselect={false}
-          />
-        </Group>
-        {typeof source.auth === "object" && source.auth.type === "apiKeyHeader" && (
-          <TextInput
-            label={t("headerName")}
-            value={source.auth.name}
-            onChange={(event) => onUpdate(index, { auth: { type: "apiKeyHeader", name: event.currentTarget.value } })}
+        {source.type === "integration" && (
+          <IntegrationSourceSelect
+            kind={source.integrationKind}
+            integrationId={source.integrationId}
+            onChange={(integrationId) => onUpdate(index, { integrationId })}
+            onKindChange={(integrationKind) => onUpdate(index, { integrationKind, integrationId: undefined })}
           />
         )}
-        {typeof source.auth === "object" && source.auth.type === "apiKeyQuery" && (
-          <TextInput
-            label={t("queryParameter")}
-            value={source.auth.name}
-            onChange={(event) => onUpdate(index, { auth: { type: "apiKeyQuery", name: event.currentTarget.value } })}
+        {source.type !== "integration" && (
+          <CustomWidgetHttpSourceFields
+            source={source}
+            index={index}
+            form={form}
+            definitionId={definitionId}
+            clearSecretPending={clearSecretPending}
+            onUpdate={onUpdate}
+            onSetAuthentication={onSetAuthentication}
+            onSetSecret={onSetSecret}
+            onClearSecret={onClearSecret}
           />
         )}
-        {(secretFields[authType] ?? []).map(({ kind }) => {
-          const secret = form.values.secrets.find((entry) => entry.sourceId === source.id && entry.kind === kind);
-          const Input = kind === "username" ? TextInput : PasswordInput;
-          return (
-            <Group key={kind} align="end" wrap="nowrap">
-              <Input
-                style={{ flex: 1 }}
-                label={tSecret(kind)}
-                value={secret?.value ?? ""}
-                placeholder={secret?.hasValue ? t("configured") : undefined}
-                leftSection={<IconKey size={15} />}
-                onChange={(event) => onSetSecret(source.id, kind, event.currentTarget.value)}
-              />
-              {definitionId && secret?.hasValue && (
-                <Button
-                  type="button"
-                  color="red"
-                  variant="subtle"
-                  loading={clearSecretPending}
-                  onClick={() => void onClearSecret(source.id, kind)}
-                >
-                  {t("clear")}
-                </Button>
-              )}
-            </Group>
-          );
-        })}
         {index > 0 && (
           <Button
             type="button"
@@ -152,5 +124,90 @@ export function CustomWidgetSourceField({
         )}
       </Stack>
     </Fieldset>
+  );
+}
+
+function CustomWidgetHttpSourceFields({
+  source,
+  index,
+  form,
+  definitionId,
+  clearSecretPending,
+  onUpdate,
+  onSetAuthentication,
+  onSetSecret,
+  onClearSecret,
+}: Omit<CustomWidgetSourceFieldProps, "source" | "onRemove"> & { source: CustomWidgetHttpSource & { id: string } }) {
+  const t = useI18n("customWidget.workbench.sources");
+  const tSecret = useI18n("customWidget.secret");
+  const baseUrlIssue = getCustomWidgetSourceUrlIssue(source.baseUrl);
+  const authType = typeof source.auth === "string" ? source.auth : source.auth.type;
+  return (
+    <>
+      <TextInput
+        label={t("baseUrl")}
+        type="url"
+        value={source.baseUrl}
+        error={baseUrlIssue ? t(sourceUrlErrorKeys[baseUrlIssue]) : undefined}
+        onChange={(event) => onUpdate(index, { baseUrl: event.currentTarget.value })}
+      />
+      <Group grow align="start">
+        <Select
+          label={t("networkScope")}
+          data={["public", "private", "loopback"]}
+          value={source.networkScope}
+          onChange={(value) => value && onUpdate(index, { networkScope: value as CustomWidgetSource["networkScope"] })}
+          allowDeselect={false}
+        />
+        <Select
+          label={t("authentication")}
+          data={["none", "bearer", "basic", "apiKeyHeader", "apiKeyQuery"]}
+          value={authType}
+          onChange={(value) => onSetAuthentication(index, value ?? "none")}
+          allowDeselect={false}
+        />
+      </Group>
+      {typeof source.auth === "object" && source.auth.type === "apiKeyHeader" && (
+        <TextInput
+          label={t("headerName")}
+          value={source.auth.name}
+          onChange={(event) => onUpdate(index, { auth: { type: "apiKeyHeader", name: event.currentTarget.value } })}
+        />
+      )}
+      {typeof source.auth === "object" && source.auth.type === "apiKeyQuery" && (
+        <TextInput
+          label={t("queryParameter")}
+          value={source.auth.name}
+          onChange={(event) => onUpdate(index, { auth: { type: "apiKeyQuery", name: event.currentTarget.value } })}
+        />
+      )}
+      {(secretFields[authType] ?? []).map(({ kind }) => {
+        const secret = form.values.secrets.find((entry) => entry.sourceId === source.id && entry.kind === kind);
+        const Input = kind === "username" ? TextInput : PasswordInput;
+        return (
+          <Group key={kind} align="end" wrap="nowrap">
+            <Input
+              style={{ flex: 1 }}
+              label={tSecret(kind)}
+              value={secret?.value ?? ""}
+              placeholder={secret?.hasValue ? t("configured") : undefined}
+              leftSection={<IconKey size={15} />}
+              onChange={(event) => onSetSecret(source.id, kind, event.currentTarget.value)}
+            />
+            {definitionId && secret?.hasValue && (
+              <Button
+                type="button"
+                color="red"
+                variant="subtle"
+                loading={clearSecretPending}
+                onClick={() => void onClearSecret(source.id, kind)}
+              >
+                {t("clear")}
+              </Button>
+            )}
+          </Group>
+        );
+      })}
+    </>
   );
 }
