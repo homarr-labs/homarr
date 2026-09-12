@@ -1,13 +1,15 @@
 ---
 name: documentation-sync
-description: Update Homarr documentation when users need setup, configuration, migration, or non-obvious behavior explained, or existing guidance becomes inaccurate. Skip routine bug fixes and self-explanatory UI changes.
+description: Write concise Homarr docs for advanced users, covering only hidden capabilities and information not evident from the UI. Use when that information changes or existing guidance becomes inaccurate; skip obvious controls and routine fixes.
 ---
 
 # Documentation Sync
 
-Apply the Documentation Sync criteria in `AGENTS.md` first. Only update `apps/docs/` when users need the information or existing guidance becomes inaccurate. Standard actions such as deleting an item and confirming deletion need no explanation merely because their UI changed.
+Apply the audience and scope rules in `AGENTS.md` first. Before adding a passage, identify what an advanced user could not learn directly from the interface. If there is no such information, omit it.
 
-When an update is warranted, inspect adjacent pages and the docs types before copying a pattern; the source and docs evolve together.
+For hidden capabilities such as the advanced widget feature, explain discovery, activation, and non-obvious behavior. For visible standard controls such as Delete, omit narration of what the label already conveys. Use the shortest explanation that preserves necessary technical detail; remove redundant prose in the passage being edited.
+
+When an update is warranted, inspect adjacent pages for structure and types, not as a verbosity target. The mappings below locate needed information; they do not require a page for every feature or code change.
 
 ## Locate a needed update
 
@@ -42,11 +44,11 @@ For a widget:
 
 - Add or update `apps/docs/docs/widgets/<slug>/index.ts` with the local `WidgetDefinition` pattern.
 - Add or update `index.mdx` with the established `WidgetHeader`, `WidgetConfig`, and `AddingWidget` components as applicable.
-- Document options, required integrations, permissions, empty states, and changed behavior that affect setup or use.
+- Explain only non-obvious option semantics, integration prerequisites, permission constraints, or behavior that the interface does not make clear.
 
 ## Completion criteria
 
-1. Describe the shipped behavior, not an implementation plan.
+1. Every passage adds information an advanced user cannot reasonably infer from the interface. Remove obvious, repetitive, or unnecessary prose.
 2. Keep names, defaults, paths, screenshots, links, and prerequisites consistent with code.
 3. Update every affected page and remove superseded guidance.
 4. Run the narrowest useful docs validation. Use `pnpm turbo build --filter=@homarr/docs` when links, MDX, generated definitions, or navigation can fail; otherwise run the docs package formatter on touched files.

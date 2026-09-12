@@ -37,4 +37,4 @@ Orient from the current checkout before editing. Treat package manifests, export
 - Cron jobs: `packages/cron-jobs/src/jobs/`
 - App routes: `apps/nextjs/src/app/[locale]/`
 
-Invoke `documentation-sync` when users need the change explained or existing documentation becomes inaccurate; follow the Documentation Sync criteria in `AGENTS.md`. When exposing tRPC through MCP, invoke `mcp-integration`.
+Invoke `documentation-sync` when hidden capabilities or information not evident to an advanced user change, or existing guidance becomes inaccurate; follow the Documentation Sync criteria in `AGENTS.md`. When exposing tRPC through MCP, invoke `mcp-integration`.
