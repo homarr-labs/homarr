@@ -24,6 +24,10 @@ see [Managing integrations](/docs/management/integrations#configuration).
 
 ### Update
 
+Update the image and recreate the container with the same configuration. Homarr runs database migrations automatically
+at startup, including when moving from v1 to v2; no separate upgrade procedure is needed. Keep the `/appdata` mount and
+`SECRET_ENCRYPTION_KEY` unchanged. Workshop connects to the production service by default.
+
 ```sh
 docker compose pull
 docker compose up -d

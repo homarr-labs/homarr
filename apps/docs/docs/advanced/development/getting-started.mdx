@@ -31,9 +31,13 @@ pnpm install --frozen-lockfile
 ### Run the Homarr application
 
 1. Copy `.env.example` to `.env`.
-2. Set `DB_URL` to an absolute writable SQLite file path.
-3. Keep Redis and the optional local databases running in one terminal.
-4. Apply migrations and start Next.js in another terminal.
+2. Run `openssl rand -hex 32` twice. Set `AUTH_SECRET` and `SECRET_ENCRYPTION_KEY` to the two different generated
+   values in `.env`; the example leaves both empty. Keep this file private and preserve `SECRET_ENCRYPTION_KEY`
+   when reusing a database.
+3. Set `DB_URL` to an absolute writable SQLite file path. Migration and application commands run from different
+   workspace directories, so a relative path can point them at different databases.
+4. Keep Redis and the optional local databases running in one terminal.
+5. Apply migrations and start Next.js in another terminal.
 
 ```sh
 cp .env.example .env
@@ -56,6 +60,20 @@ The infrastructure command remains in the foreground. Open `http://127.0.0.1:300
 Homarr becomes the instance administrator.
 Use `pnpm docker:dev:up` instead when you only need Redis in the background. Running the migration also seeds the
 default data; use `pnpm db:seed` to seed it explicitly later.
+
+`pnpm dev` starts only Next.js. When your work needs scheduled tasks or live subscriptions, run the relevant service
+in a separate terminal alongside it:
+
+```sh
+pnpm --filter @homarr/tasks dev
+```
+
+```sh
+pnpm --filter @homarr/websocket dev
+```
+
+The WebSocket service listens on port 3001. Production startup embeds both services, so these extra commands are
+only needed for development.
 
 Workshop contributors can set up PocketBase and Docusaurus with the dedicated
 [Workshop development guide](./workshop).
@@ -80,8 +98,8 @@ Workshop contributors can set up PocketBase and Docusaurus with the dedicated
 - `pnpm typecheck` — typecheck all workspaces.
 - `pnpm test` — unit and contract suites.
 - `pnpm build` — production monorepo build.
-- `docker build -t homarr .` — build a production Docker image.
-- `docker run -p 7575:7575 -e SECRET_ENCRYPTION_KEY='your_64_character_hex_string' homarr:<name>` — run it.
+- `docker build -t homarr:local .` — build a production Docker image.
+- `docker run -p 7575:7575 -e SECRET_ENCRYPTION_KEY='your_64_character_hex_string' homarr:local` — run it.
 
 ## CI and focused validation
 

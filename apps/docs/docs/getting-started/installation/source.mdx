@@ -21,8 +21,8 @@ This method is only useful, when you want to develop on Homarr or extend it with
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/en/download/)
-- [pnpm](https://pnpm.io/installation)
+- [Node.js](https://nodejs.org/en/download/) 24.18 or newer
+- [pnpm](https://pnpm.io/installation) at the version pinned in the repository's `package.json`
 - [Redis](https://redis.io/download)
 
 ## Steps
@@ -38,9 +38,9 @@ This method is only useful, when you want to develop on Homarr or extend it with
     Install all dependencies using <code>pnpm install</code>
   </li>
   <li>
-    Copy the `.env.example` file to `.env`. Its `DB_URL='./db.sqlite'` value is ready for local use and stores the
-    database in the cloned repository. Replace it with an absolute writable path such as
-    `DB_URL='/home/username/homarr/db.sqlite'` if you want to store the database elsewhere.
+    Copy `.env.example` to `.env` and set `DB_URL` to an absolute writable path, such as
+    `DB_URL='/home/username/homarr/db.sqlite'`. Migration and application commands run from different workspace
+    directories, so a relative path can point them at different databases.
   </li>
   <li>
     Run `openssl rand -hex 32` twice and set `AUTH_SECRET` and `SECRET_ENCRYPTION_KEY` to the two different generated

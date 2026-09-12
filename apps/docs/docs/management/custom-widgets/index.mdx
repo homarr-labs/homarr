@@ -57,5 +57,5 @@ Legacy definitions show **Migration required**. The migration prompt excludes cr
 describe the visible behavior separately, import the returned v2 definition, and verify it before removing the archived
 version.
 
-Back up the database and `SECRET_ENCRYPTION_KEY` before upgrading or rolling back. Multi-replica installations must use
-the same Redis service so cached responses invalidate consistently.
+Keep `SECRET_ENCRYPTION_KEY` unchanged when updating Homarr so existing credentials remain readable. Multi-replica
+installations must use the same Redis service so cached responses invalidate consistently.
