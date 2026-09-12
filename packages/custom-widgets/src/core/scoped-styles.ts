@@ -1,4 +1,13 @@
-import { generate, ident, parse, walk } from "css-tree";
+// Consumers compile this source directly and need the modular export declarations.
+// oxlint-disable-next-line typescript/triple-slash-reference
+/// <reference path="../css-tree.d.ts" />
+
+import generate from "css-tree/generator";
+import parse from "css-tree/parser";
+import { ident } from "css-tree/utils";
+import walk from "css-tree/walker";
+
+// The full entrypoint loads lexer data through import.meta.url, which cannot run in bundled CJS migrations.
 
 const allowedAtRules = new Set(["media", "supports", "container", "keyframes", "-webkit-keyframes"]);
 const animationKeywords = new Set([
