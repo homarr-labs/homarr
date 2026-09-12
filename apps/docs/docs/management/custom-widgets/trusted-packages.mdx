@@ -77,6 +77,10 @@ Homarr provides React, Mantine, and `@homarr/widget-sdk` as shared host modules.
 from Homarr's installed version, which is recorded in the artifact lock. The reference packages show how to use the SDK for host dimensions, theme and locale, options, state, commands, data queries, and advanced
 views. Put additional dependencies in the package's dependency map rather than copying Homarr's internal source tree.
 
+Production images include the widget compiler's JavaScript, native esbuild executable, and bundled icon sources.
+When customizing Homarr's standalone build, retain these runtime assets and scope tracing includes to their files;
+whole-package recursive globs can fail on pnpm dependency directory symlinks.
+
 Use `WidgetScope` to compose components with independent state and command IDs. Commands registered through
 `useWidgetCommands` remain registered across unrelated host updates and are removed when their component unmounts.
 `useWidgetServices().confirm(...)` resolves to `true` on confirmation and `false` on cancellation or dismissal,

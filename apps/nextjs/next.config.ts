@@ -47,9 +47,10 @@ const nextConfig: NextConfig = {
   outputFileTracingRoot: path.resolve(import.meta.dirname, "../.."),
   outputFileTracingIncludes: {
     "/*": [
-      "../../node_modules/esbuild/**/*",
-      "../../node_modules/@esbuild/**/*",
-      "../../node_modules/@tabler/icons-react/**/*",
+      // esbuild is automatically traced as an external, preserving its platform binary links.
+      // Recursive package globs instead trace pnpm dependency directory symlinks as files.
+      "../../node_modules/@tabler/icons-react/package.json",
+      "../../node_modules/@tabler/icons-react/dist/**/*",
       "../../packages/widget-sdk/package.json",
       "../../packages/widget-sdk/src/**/*",
     ],
