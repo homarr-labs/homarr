@@ -30,6 +30,7 @@ import { getLogicalTrackSize } from "~/components/board/layout";
 import { useBoardCanvasScale } from "~/components/board/layout/scaled-board-canvas";
 import advancedFocusClasses from "../advanced-focus/advanced-focus.module.css";
 import { useAdvancedFocus } from "../advanced-focus/context";
+import { useWidgetAdvancedDeepLink } from "../advanced-focus/deep-link";
 import { startAdvancedFocusEntrance } from "../advanced-focus/entrance";
 import { getAdvancedFocusClosePosition, getAdvancedFocusRect } from "../advanced-focus/geometry";
 import { AdvancedFocusManualSurface } from "../advanced-focus/manual-surface";
@@ -187,14 +188,16 @@ const LoadedBoardItemContent = ({
 
   useEffect(() => () => dismiss(item.id), [dismiss, item.id]);
 
-  const openAdvancedView = () => {
+  const openAdvancedView = useCallback(() => {
     if (sourceRef.current)
       open(item.id, sourceRef.current, {
         activation: "manual",
         autofocusClose: true,
         restoreFocusTarget: advancedFocusTriggerRef.current ?? sourceRef.current,
       });
-  };
+  }, [item.id, open]);
+
+  useWidgetAdvancedDeepLink(item.id, supportsAdvancedFocus && !isEditMode, openAdvancedView);
 
   useEffect(() => {
     const surface = isManual ? manualSurface : cardRef.current;
@@ -318,6 +321,8 @@ const LoadedBoardItemContent = ({
             widgetStateRef={widgetStateRef}
             widgetRuntimeRef={widgetRuntimeRef}
             displayMode={isAdvanced ? "advanced" : "compact"}
+            openAdvancedFocus={openAdvancedView}
+            closeAdvancedFocus={close}
             definition={definition}
             Component={Component}
           />
@@ -417,6 +422,8 @@ interface InnerContentProps {
   widgetStateRef: MutableRefObject<Record<string, unknown> | null>;
   widgetRuntimeRef: WidgetRuntimeRef;
   displayMode: "compact" | "advanced";
+  openAdvancedFocus: () => void;
+  closeAdvancedFocus: () => void;
   definition: WidgetDefinition;
   Component: ComponentType<WidgetComponentProps<SectionItem["kind"]>>;
 }

@@ -11,6 +11,7 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trp
 import { throwIfActionForbiddenAsync } from "../board/board-access";
 import { validateTimetableOptionsChangeAsync } from "./timetable";
 import { throwIfCustomWidgetPlacementChangeForbidden } from "../board/custom-widget-placement-access";
+import { withWidgetPlacementChange } from "../custom-widget/package/placement-coordination";
 
 export const optionsRouter = createTRPCRouter({
   getWidgetOptionSettings: publicProcedure.query(async ({ ctx }): Promise<WidgetOptionsSettings> => {
@@ -36,30 +37,37 @@ export const optionsRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
 
-      const item = await ctx.db.query.items.findFirst({
-        where: eq(items.id, input.itemId),
-      });
+      return withWidgetPlacementChange(
+        ctx,
+        { itemId: input.itemId, submittedItems: [{ kind: "customApi", options: input.newOptions }] },
+        async (signal) => {
+          const item = await ctx.db.query.items.findFirst({
+            where: eq(items.id, input.itemId),
+          });
 
-      if (item?.boardId !== input.boardId) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Specified item was not found",
-        });
-      }
+          if (item?.boardId !== input.boardId) {
+            throw new TRPCError({
+              code: "NOT_FOUND",
+              message: "Specified item was not found",
+            });
+          }
 
-      const previousOptions = SuperJSON.parse<Record<string, unknown>>(item.options);
-      const updatedOptions = { ...previousOptions, ...input.newOptions };
-      if (item.kind === "timetable") {
-        await validateTimetableOptionsChangeAsync(updatedOptions, previousOptions);
-      }
-      throwIfCustomWidgetPlacementChangeForbidden({
-        isAdmin: ctx.session.user.permissions.includes("admin"),
-        submittedItems: [{ id: item.id, kind: item.kind, options: updatedOptions }],
-        storedItems: [{ id: item.id, kind: item.kind, options: previousOptions }],
-      });
-      await ctx.db
-        .update(items)
-        .set({ options: SuperJSON.stringify(updatedOptions) })
-        .where(eq(items.id, input.itemId));
+          const previousOptions = SuperJSON.parse<Record<string, unknown>>(item.options);
+          const updatedOptions = { ...previousOptions, ...input.newOptions };
+          if (item.kind === "timetable") {
+            await validateTimetableOptionsChangeAsync(updatedOptions, previousOptions);
+          }
+          throwIfCustomWidgetPlacementChangeForbidden({
+            isAdmin: ctx.session.user.permissions.includes("admin"),
+            submittedItems: [{ id: item.id, kind: item.kind, options: updatedOptions }],
+            storedItems: [{ id: item.id, kind: item.kind, options: previousOptions }],
+          });
+          signal.throwIfAborted();
+          await ctx.db
+            .update(items)
+            .set({ options: SuperJSON.stringify(updatedOptions) })
+            .where(eq(items.id, input.itemId));
+        },
+      );
     }),
 });

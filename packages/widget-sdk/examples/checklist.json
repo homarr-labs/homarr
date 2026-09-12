@@ -1,0 +1,46 @@
+{
+  "$schema": "homarr-widget-package-v3",
+  "manifest": {
+    "id": "homarr.reference.checklist",
+    "version": "1.0.0",
+    "sdkVersion": "1",
+    "name": "Shared maintenance checklist",
+    "description": "A persistent dashboard checklist with user, placement, or installation storage and host-native commands.",
+    "entrypoints": {
+      "tile": "widget.tsx",
+      "advanced": "widget.tsx"
+    },
+    "handlers": {}
+  },
+  "files": {
+    "widget.tsx": "import type { FormEvent } from \"react\";\nimport type { WidgetStorageScope } from \"@homarr/widget-sdk\";\ntype ChecklistItem = {id:string;label:string;done:boolean};\nimport { Alert, Button, Checkbox, Group, Stack, Text, TextInput } from \"@mantine/core\";\nimport { useWidgetCommands, useWidgetHost, useWidgetOptions, useWidgetState, useWidgetStorage } from \"@homarr/widget-sdk\";\nexport default function Checklist() {\n  const host = useWidgetHost();\n  const options = useWidgetOptions<{title:string;scope:WidgetStorageScope}>();\n  const [draft, setDraft] = useWidgetState(\"draft\", \"\");\n  const stored = useWidgetStorage<ChecklistItem[]>(options.scope, \"checklist-v1\", []);\n  const items = Array.isArray(stored.data) ? stored.data : [];\n  const locked = host.isEditMode || stored.isPending || stored.saving;\n  const save = (value:ChecklistItem[]) => { void stored.set(value).catch(() => undefined); };\n  useWidgetCommands([{ id: \"clear-completed\", label: \"Clear completed items\", disabled: locked || !items.some((item) => item.done), run: () => save(items.filter((item) => !item.done)) }]);\n  const add = (event:FormEvent<HTMLFormElement>) => { event.preventDefault(); if (!draft.trim() || locked) return; save([...items, { id: crypto.randomUUID(), label: draft.trim(), done: false }]); setDraft(\"\"); };\n  return <Stack p=\"md\" gap=\"sm\" h=\"100%\" style={{ overflow: \"auto\" }}>\n    <Group justify=\"space-between\"><Text fw={600}>{options.title}</Text><Text size=\"sm\" c=\"dimmed\">{items.filter((item) => item.done).length}/{items.length}</Text></Group>\n    {(stored.error || stored.saveError) && <Alert color=\"red\">{stored.error?.message ?? stored.saveError?.message}</Alert>}\n    {items.map((item) => <Checkbox key={item.id} label={item.label} checked={item.done} disabled={locked} onChange={() => save(items.map((row) => row.id === item.id ? { ...row, done: !row.done } : row))} />)}\n    {!items.length && !stored.isPending && <Text c=\"dimmed\" size=\"sm\">Add your first maintenance task.</Text>}\n    <form onSubmit={add}><Group wrap=\"nowrap\"><TextInput aria-label=\"New task\" placeholder=\"New task\" value={draft} onChange={(event) => setDraft(event.currentTarget.value)} style={{ flex: 1 }} /><Button type=\"submit\" disabled={locked || !draft.trim()}>Add</Button></Group></form>\n    {host.displayMode === \"advanced\" && <Text size=\"xs\" c=\"dimmed\">Changes are saved to Homarr. The selected storage scope controls whether this checklist belongs to you, this tile, or every placement of this installation.</Text>}\n  </Stack>;\n}"
+  },
+  "dependencies": {},
+  "connections": {},
+  "options": {
+    "title": {
+      "control": "text",
+      "label": "Title",
+      "default": "Maintenance"
+    },
+    "scope": {
+      "control": "select",
+      "label": "Storage scope",
+      "default": "instance",
+      "choices": [
+        {
+          "label": "This tile",
+          "value": "instance"
+        },
+        {
+          "label": "My checklist",
+          "value": "user"
+        },
+        {
+          "label": "All installation placements",
+          "value": "installation"
+        }
+      ]
+    }
+  }
+}

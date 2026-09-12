@@ -1,5 +1,5 @@
 const LEGACY_MIGRATION_ERROR = "LEGACY_CUSTOM_WIDGET_MIGRATION_REQUIRED";
-const TERMINAL_DEFINITION_CODES = new Set(["NOT_FOUND", "FORBIDDEN", "PRECONDITION_FAILED"]);
+const TERMINAL_DEFINITION_CODES = new Set(["NOT_FOUND", "FORBIDDEN", "UNAUTHORIZED", "PRECONDITION_FAILED"]);
 
 export function isLegacyCustomWidgetMigrationError(error: unknown): boolean {
   return Boolean(error && typeof error === "object" && "message" in error && error.message === LEGACY_MIGRATION_ERROR);

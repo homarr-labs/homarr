@@ -21,6 +21,9 @@
     "./assistant": "./src/assistant.ts",
     "./onboarding-step": "./src/onboarding-step.ts",
     "./custom-widget/display-data": "./src/router/custom-widget/display-data.ts",
+    "./custom-widget/collections": "./src/router/custom-widget/package/collection-worker.ts",
+    "./custom-widget/packages": "./src/router/custom-widget/package/artifact-response.ts",
+    "./custom-widget/webhooks": "./src/router/custom-widget/package/webhook-response.ts",
     "./mcp": "./src/mcp.ts",
     "./custom-widget-configuration": "./src/custom-widget-configuration.ts"
   },
@@ -49,6 +52,7 @@
     "@homarr/server-settings": "workspace:^0.1.0",
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
+    "@homarr/widget-sdk": "workspace:^0.1.0",
     "@homarr/workshop": "workspace:^0.1.0",
     "@kubernetes/client-node": "catalog:",
     "@modelcontextprotocol/server": "catalog:",

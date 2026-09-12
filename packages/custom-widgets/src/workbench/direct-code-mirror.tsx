@@ -20,9 +20,10 @@ import type { EditorDiagnostic } from "./analyzer";
 
 interface DirectCodeMirrorProps {
   value: string;
-  language: "jsx" | "json" | "css";
+  language: "jsx" | "tsx" | "json" | "css";
   diagnostics: EditorDiagnostic[];
   completions: Completion[];
+  extensions?: Extension;
   id: string;
   label: string;
   labelledBy: string;
@@ -51,6 +52,7 @@ interface EditorCompartments {
   placeholder: Compartment;
   height: Compartment;
   theme: Compartment;
+  additional: Compartment;
 }
 
 const editorViews = new Map<string, EditorView>();
@@ -141,6 +143,9 @@ export default function DirectCodeMirror(props: DirectCodeMirrorProps) {
   useEffect(() => {
     reconfigure(instanceId, compartments.theme, createThemeExtension(props.theme));
   }, [compartments.theme, instanceId, props.theme]);
+  useEffect(() => {
+    reconfigure(instanceId, compartments.additional, props.extensions ?? []);
+  }, [compartments.additional, instanceId, props.extensions]);
 
   return <div ref={containerRef} />;
 }
@@ -154,6 +159,7 @@ function createEditorCompartments(): EditorCompartments {
     placeholder: new Compartment(),
     height: new Compartment(),
     theme: new Compartment(),
+    additional: new Compartment(),
   };
 }
 
@@ -175,6 +181,7 @@ function createExtensions(instanceId: string, props: DirectCodeMirrorProps, comp
     compartments.placeholder.of(createPlaceholderExtension(props.placeholder)),
     compartments.height.of(createHeightExtension(props.height)),
     compartments.theme.of(createThemeExtension(props.theme)),
+    compartments.additional.of(props.extensions ?? []),
     EditorView.updateListener.of((update) => {
       const callbacks = editorCallbacks.get(instanceId);
       if (!callbacks) return;
@@ -195,6 +202,7 @@ function createLanguageExtension(language: DirectCodeMirrorProps["language"], co
       customJsxComponentHover,
     ];
   }
+  if (language === "tsx") return javascript({ jsx: true, typescript: true });
   if (language === "css") return css();
   return json();
 }

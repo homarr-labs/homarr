@@ -7,26 +7,21 @@ import type { ComponentType, FormEvent, PropsWithChildren } from "react";
 import {
   Accordion,
   Alert,
-  Badge,
   Box,
   Button,
-  Center,
   CloseButton,
   ColorInput,
   Divider,
   Group,
   Input as MantineInput,
-  NumberInput,
   SimpleGrid,
   Stack,
   Tabs,
   Text,
   TextInput,
-  Tooltip,
   useMantineTheme,
 } from "@mantine/core";
 import { schemaResolver } from "@mantine/form";
-import { useElementSize } from "@mantine/hooks";
 import { IconArrowLeft, IconEye, IconPencil, IconSettings } from "@tabler/icons-react";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import { ErrorBoundary } from "react-error-boundary";
@@ -56,6 +51,7 @@ import { WidgetCardShell, WidgetTitleBadge } from "../widget-card-shell";
 import type { EmbeddedAppEditFormHandle } from "./embedded-app-edit-form";
 import { EmbeddedAppEditForm } from "./embedded-app-edit-form";
 import classes from "./widget-edit-modal.module.css";
+import { WidgetPreviewFrame } from "../widget-preview";
 
 export interface WidgetEditModalState {
   options: Record<string, unknown>;
@@ -152,23 +148,9 @@ const WidgetEditPreview = ({
   resize,
   PreviewWrapper,
 }: WidgetEditPreviewProps) => {
-  const t = useI18n();
   const tItem = useI18n("item.edit");
   const board = useOptionalBoard();
   const generatedPreviewId = useId().replaceAll(":", "");
-  const { ref, width: availableWidth, height: availableHeight } = useElementSize<HTMLDivElement>();
-  const sourceWidth = Math.max(dimensions.width, 1);
-  const sourceHeight = Math.max(dimensions.height, 1);
-  let maximumScale = dimensions.scale ?? 0.9;
-  if (!Number.isFinite(maximumScale) || maximumScale <= 0) maximumScale = 0.9;
-  maximumScale = Math.min(maximumScale, 0.9);
-  let previewScale = maximumScale;
-  if (availableWidth > 0 && availableHeight > 0) {
-    previewScale = Math.min(availableWidth / sourceWidth, availableHeight / sourceHeight, maximumScale);
-  }
-  const previewWidth = sourceWidth * previewScale;
-  const previewHeight = sourceHeight * previewScale;
-
   const hasIntegrationSupport = "supportedIntegrations" in definition;
   const integrationRequired = hasIntegrationSupport && definition.integrationsRequired !== false;
   const isMissingIntegration = integrationRequired && state.integrationIds.length === 0;
@@ -188,129 +170,71 @@ const WidgetEditPreview = ({
   }
   const isPendingCustomWidget = kind === "customApi" && !itemId;
   const previewOpacity = (board?.opacity ?? 100) / 100;
-  const handleResizeValue = (dimension: keyof WidgetEditModalSize, value: string | number) => {
-    if (typeof value !== "number" || !Number.isFinite(value) || !resize) return;
-    resize.onChange(
-      normalizePreviewSize(
-        {
-          ...resize.size,
-          [dimension]: value,
-        },
-        resize.maximumSize,
-      ),
-    );
-  };
-
   return (
-    <Stack className={classes.previewPanel} gap={0}>
-      <Center ref={ref} className={classes.previewCanvas}>
-        {resize && (
-          <Group className={classes.previewSizeControls} gap={6} wrap="nowrap">
-            <Text size="xs" fw={600} c="dimmed">
-              {tItem("preview.size")}
-            </Text>
-            <Tooltip label={t("item.moveResize.field.width.label")}>
-              <NumberInput
-                className={classes.previewSizeInput}
-                aria-label={t("item.moveResize.field.width.label")}
-                value={resize.size.width}
-                onChange={(value) => handleResizeValue("width", value)}
-                min={1}
-                max={resize.maximumSize.width}
-                step={1}
-                allowDecimal={false}
-                allowNegative={false}
-                clampBehavior="strict"
-                size="xs"
-                leftSection={t("item.moveResize.field.width.shortLabel")}
-                leftSectionPointerEvents="none"
-              />
-            </Tooltip>
-            <Text size="xs" c="dimmed" aria-hidden>
-              ×
-            </Text>
-            <Tooltip label={t("item.moveResize.field.height.label")}>
-              <NumberInput
-                className={classes.previewSizeInput}
-                aria-label={t("item.moveResize.field.height.label")}
-                value={resize.size.height}
-                onChange={(value) => handleResizeValue("height", value)}
-                min={1}
-                max={resize.maximumSize.height}
-                step={1}
-                allowDecimal={false}
-                allowNegative={false}
-                clampBehavior="strict"
-                size="xs"
-                leftSection={t("item.moveResize.field.height.shortLabel")}
-                leftSectionPointerEvents="none"
-              />
-            </Tooltip>
-          </Group>
-        )}
-        <Badge className={classes.previewDimensions} size="xs" variant="light" color="gray">
-          {Math.round(sourceWidth)} × {Math.round(sourceHeight)}
-        </Badge>
-        {isMissingIntegration ? (
-          <Alert color="gray" variant="light" icon={<IconEye size={18} />} maw={320}>
-            {tItem("preview.integrationRequired")}
-          </Alert>
-        ) : (
-          <Box className={classes.previewViewport} w={previewWidth} h={previewHeight}>
-            <WidgetCardShell
-              className={classes.previewWidget}
-              kind={kind}
-              advancedOptions={state.advancedOptions}
-              opacity={previewOpacity}
-              radius={board?.itemRadius}
-              w={sourceWidth}
-              h={sourceHeight}
-              p={0}
-              data-grid-item-content
-              style={{ transform: `scale(${previewScale})` }}
-            >
-              <WidgetTitleBadge
+    <WidgetPreviewFrame dimensions={dimensions} resize={resize}>
+      {({ width: sourceWidth, height: sourceHeight, scale: previewScale }) => (
+        <>
+          {isMissingIntegration ? (
+            <Alert color="gray" variant="light" icon={<IconEye size={18} />} maw={320}>
+              {tItem("preview.integrationRequired")}
+            </Alert>
+          ) : (
+            <Box className={classes.previewViewport} w={sourceWidth * previewScale} h={sourceHeight * previewScale}>
+              <WidgetCardShell
+                className={classes.previewWidget}
+                kind={kind}
                 advancedOptions={state.advancedOptions}
                 opacity={previewOpacity}
                 radius={board?.itemRadius}
-              />
-              <QueryErrorResetBoundary>
-                {({ reset }) => (
-                  <ErrorBoundary
-                    onReset={reset}
-                    resetKeys={[state.options, state.integrationIds]}
-                    fallbackRender={({ resetErrorBoundary, error }) => (
-                      <WidgetError definition={definition} error={error} resetErrorBoundary={resetErrorBoundary} />
-                    )}
-                  >
-                    <PreviewRuntimeBoundary Wrapper={PreviewWrapper}>
-                      <SpotlightProvider>
-                        <IntegrationProvider integrations={previewIntegrations}>
-                          <div className={classes.previewContent} inert>
-                            <Component
-                              options={state.options as never}
-                              integrationIds={state.integrationIds}
-                              width={sourceWidth}
-                              height={sourceHeight}
-                              displayScale={previewScale}
-                              isEditMode={isPendingCustomWidget}
-                              displayMode="compact"
-                              boardId={boardId}
-                              itemId={componentItemId}
-                              setOptions={({ newOptions }) => onChangeOptions(newOptions as Record<string, unknown>)}
-                            />
-                          </div>
-                        </IntegrationProvider>
-                      </SpotlightProvider>
-                    </PreviewRuntimeBoundary>
-                  </ErrorBoundary>
-                )}
-              </QueryErrorResetBoundary>
-            </WidgetCardShell>
-          </Box>
-        )}
-      </Center>
-    </Stack>
+                w={sourceWidth}
+                h={sourceHeight}
+                p={0}
+                data-grid-item-content
+                style={{ transform: `scale(${previewScale})` }}
+              >
+                <WidgetTitleBadge
+                  advancedOptions={state.advancedOptions}
+                  opacity={previewOpacity}
+                  radius={board?.itemRadius}
+                />
+                <QueryErrorResetBoundary>
+                  {({ reset }) => (
+                    <ErrorBoundary
+                      onReset={reset}
+                      resetKeys={[state.options, state.integrationIds]}
+                      fallbackRender={({ resetErrorBoundary, error }) => (
+                        <WidgetError definition={definition} error={error} resetErrorBoundary={resetErrorBoundary} />
+                      )}
+                    >
+                      <PreviewRuntimeBoundary Wrapper={PreviewWrapper}>
+                        <SpotlightProvider>
+                          <IntegrationProvider integrations={previewIntegrations}>
+                            <div className={classes.previewContent} inert>
+                              <Component
+                                options={state.options as never}
+                                integrationIds={state.integrationIds}
+                                width={sourceWidth}
+                                height={sourceHeight}
+                                displayScale={previewScale}
+                                isEditMode={isPendingCustomWidget}
+                                displayMode="compact"
+                                boardId={boardId}
+                                itemId={componentItemId}
+                                setOptions={({ newOptions }) => onChangeOptions(newOptions as Record<string, unknown>)}
+                              />
+                            </div>
+                          </IntegrationProvider>
+                        </SpotlightProvider>
+                      </PreviewRuntimeBoundary>
+                    </ErrorBoundary>
+                  )}
+                </QueryErrorResetBoundary>
+              </WidgetCardShell>
+            </Box>
+          )}
+        </>
+      )}
+    </WidgetPreviewFrame>
   );
 };
 

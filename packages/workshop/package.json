@@ -15,7 +15,8 @@
     ".": "./src/index.ts",
     "./client": "./src/client.ts",
     "./backend": "./src/backend.ts",
-    "./schema": "./src/schema.ts"
+    "./schema": "./src/schema.ts",
+    "./package-releases": "./src/package-releases.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",

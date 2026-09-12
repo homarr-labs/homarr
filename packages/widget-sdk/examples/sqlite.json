@@ -1,0 +1,64 @@
+{
+  "$schema": "homarr-widget-package-v3",
+  "manifest": {
+    "id": "homarr.reference.sqlite",
+    "version": "1.0.0",
+    "sdkVersion": "1",
+    "name": "SQLite and local status",
+    "description": "Read-only named SQLite queries, rich data tables and optional local JSON status. No HTTP API required.",
+    "entrypoints": {
+      "tile": "widget.tsx",
+      "advanced": "widget.tsx",
+      "server": "server.ts"
+    },
+    "handlers": {
+      "catalog": {
+        "kind": "query",
+        "permission": "view"
+      },
+      "rows": {
+        "kind": "query",
+        "permission": "view"
+      },
+      "status": {
+        "kind": "query",
+        "permission": "view"
+      }
+    }
+  },
+  "files": {
+    "server.ts": "import type { WidgetServerContext } from \"@homarr/widget-sdk/server\";\ntype NamedQuery = {name:string;label?:string;sql:string};\ntype Cell = null|string|number;\nimport { DatabaseSync } from \"node:sqlite\";\nimport { open } from \"node:fs/promises\";\nimport { defineWidgetServer, getWidgetConnection, getWidgetServerContext } from \"@homarr/widget-sdk/server\";\n\nconst databaseSettings = async (context:WidgetServerContext) => {\n  const {configuration} = await getWidgetConnection(context,{connection:\"database\",serviceType:\"sqlite\"});\n  const settings = configuration.settings ?? {};\n  if (typeof settings.path !== \"string\" || !settings.path.trim()) throw new Error(\"Set path on the SQLite service connection to a mounted database file\");\n  if (!Array.isArray(settings.queries) || !settings.queries.length) throw new Error(\"Configure named queries on the SQLite service: queries:[{name,label,sql}]\");\n  const queries = settings.queries.filter((query:unknown): query is NamedQuery => Boolean(query && typeof query === \"object\" && \"name\" in query && typeof query.name === \"string\" && \"sql\" in query && typeof query.sql === \"string\" && (!(\"label\" in query) || typeof query.label === \"string\")));\n  if (!queries.length) throw new Error(\"At least one named SQL query is required\");\n  return {path:settings.path,queries};\n};\nconst jsonValue = (value:null|string|number|bigint|Uint8Array):Cell => {\n  if (typeof value === \"bigint\") return String(value);\n  if (value instanceof Uint8Array) return `[${value.byteLength} binary bytes]`;\n  return value;\n};\nexport default defineWidgetServer({\n  catalog: async (_input,context) => {\n    const settings = await databaseSettings(context);\n    return settings.queries.map((query) => ({value:query.name,label:query.label || query.name}));\n  },\n  rows: async (input:{name?:string},context) => {\n    const settings = await databaseSettings(context);\n    const query = settings.queries.find((query) => query.name === input?.name);\n    if (!query) throw new Error(\"Choose a configured query\");\n    const {options} = await getWidgetServerContext(context);\n    const limit = Math.max(1,Math.min(200,Number(options.rowLimit)||100));\n    const database = new DatabaseSync(settings.path,{readOnly:true,timeout:1000,allowExtension:false});\n    try {\n      const statement = database.prepare(query.sql);\n      statement.setReadBigInts(true);\n      const rows: Record<string,Cell>[] = [];\n      let truncated = false;\n      for (const row of statement.iterate()) {\n        context.signal.throwIfAborted();\n        if (rows.length >= limit) { truncated = true; break; }\n        rows.push(Object.fromEntries(Object.entries(row).map(([key,value]) => [key,jsonValue(value)])));\n      }\n      return {rows,columns:statement.columns().map((column) => column.name),truncated,updatedAt:new Date().toISOString()};\n    } finally { database.close(); }\n  },\n  status: async (_input,context) => {\n    const {bindingNames} = await getWidgetServerContext(context);\n    if (!bindingNames.includes(\"status\")) return {configured:false};\n    const {configuration} = await getWidgetConnection(context,{connection:\"status\",serviceType:\"file\"});\n    const path = configuration.settings?.path;\n    if (typeof path !== \"string\") throw new Error(\"Set path on the local file connection\");\n    const file = await open(path,\"r\");\n    try {\n      const stat = await file.stat();\n      if (!stat.isFile() || stat.size > 524288) throw new Error(\"Choose a regular JSON status file under 512 KiB\");\n      const bytes = Buffer.alloc(524289);\n      const {bytesRead} = await file.read(bytes,0,bytes.length,0);\n      if (bytesRead > 524288) throw new Error(\"The status file exceeds 512 KiB\");\n      return {configured:true,value:JSON.parse(bytes.subarray(0,bytesRead).toString(\"utf8\")),updatedAt:stat.mtime.toISOString()};\n    } finally { await file.close(); }\n  },\n});\n",
+    "README.md": "# SQLite and local status\n\nCreate a Service connection with serviceType `sqlite`. Nonsecret settings:\n\n```json\n{\"path\":\"/data/app.sqlite\",\"queries\":[{\"name\":\"recent\",\"label\":\"Recent jobs\",\"sql\":\"SELECT id, status, created_at FROM jobs ORDER BY created_at DESC LIMIT 100\"}]}\n```\n\nThe path is resolved inside the Homarr process/container. Mount the application's database (and SQLite WAL/SHM companions when applicable) read-only and ensure the Homarr user can read them. Prefer an application-supported backup/snapshot for a busy database. This adapter uses Node 24's built-in node:sqlite; no npm or HTTP connection is needed. Each invocation opens read-only and closes its own connection. Only owner-configured named queries are accepted from viewers, and results are bounded. Add an indexed LIMIT to expensive queries; the worker deadline cancels excessively slow handlers.\n\nOptionally bind a serviceType `file` connection to status with settings {\"path\":\"/data/status.json\"}. It reads bounded JSON, checks the file size, and closes the descriptor. The files and SQL remain local connection settings and are not exported with the widget.\n\nDiagnose checks file readability. Run preview to verify SQLite format, SQL and JSON parsing. Source: https://nodejs.org/docs/latest-v24.x/api/sqlite.html\n",
+    "widget.tsx": "type Row = Record<string,null|string|number> & {__row:number};\nimport type server from \"./server\";\nimport { Alert, Badge, Button, Group, Select, Stack, Text } from \"@mantine/core\";\nimport { useWidgetHost, useWidgetServices, useWidgetOptions, useWidgetQuery, useWidgetState } from \"@homarr/widget-sdk\";\nimport { HomarrDataTable } from \"@homarr/widget-sdk/ui\";\nexport default function DatabaseDashboard() {\n  const host = useWidgetHost();\n  const services = useWidgetServices();\n  const options = useWidgetOptions<{title:string;rowLimit:number}>();\n  const [selected,setSelected] = useWidgetState(\"query\",\"\");\n  const catalog = useWidgetQuery<Awaited<ReturnType<typeof server.catalog>>>(\"catalog\",{}, {staleTime:60000});\n  const name = selected || catalog.data?.[0]?.value || \"\";\n  const rows = useWidgetQuery<Awaited<ReturnType<typeof server.rows>>>(\"rows\",{name},{enabled:Boolean(name),refetchInterval:30000});\n  const status = useWidgetQuery<Awaited<ReturnType<typeof server.status>>>(\"status\",{}, {refetchInterval:30000});\n  const error = catalog.error || rows.error;\n  const records:Row[] = (rows.data?.rows ?? []).map((row,index) => ({...row,__row:index}));\n  let visible = records.slice(0,10);\n  if (host.displayMode === \"advanced\") visible = records;\n  return <Stack h=\"100%\" gap=\"xs\" p=\"sm\">\n    <Group justify=\"space-between\"><Text fw={600}>{options.title}</Text><Badge variant=\"light\">Read only</Badge></Group>\n    <Select aria-label=\"Configured database query\" data={catalog.data ?? []} value={name || null} onChange={(value) => setSelected(value || \"\")} />\n    {error && <Alert color=\"red\">{error.message}</Alert>}\n    <div style={{flex:1,minHeight:0}}><HomarrDataTable<Row> isEditMode={host.isEditMode} cellPadding=\"6px\" idAccessor=\"__row\" records={visible} fetching={rows.isFetching} minHeight={100} columns={(rows.data?.columns ?? []).map((key) => ({accessor:key,title:key,resizable:true,render:(row:Row) => <Text size=\"xs\" lineClamp={2}>{String(row[key] ?? \"\u2014\")}</Text>}))} noRecordsText=\"This query has no rows\" /></div>\n    <Group justify=\"space-between\"><Text size=\"xs\" c=\"dimmed\">{records.length} rows{rows.data?.truncated ? \" \u00b7 row limit reached\" : \"\"}</Text>{host.displayMode !== \"advanced\" && <Button size=\"compact-xs\" variant=\"subtle\" onClick={() => services.openAdvanced()}>Explore rows</Button>}</Group>\n    {status.error && <Alert color=\"yellow\">Status file: {status.error.message}</Alert>}\n    {status.data?.configured && <Text component=\"pre\" size=\"xs\" style={{whiteSpace:\"pre-wrap\",maxHeight:100,overflow:\"auto\"}}>{JSON.stringify(status.data.value,null,2).slice(0,4000)}</Text>}\n  </Stack>;\n}\n"
+  },
+  "dependencies": {},
+  "connections": {
+    "database": {
+      "kind": "service",
+      "serviceType": "sqlite",
+      "label": "SQLite database",
+      "description": "Local settings: path and queries:[{name,label,sql}]. The database opens read-only."
+    },
+    "status": {
+      "kind": "service",
+      "serviceType": "file",
+      "label": "Local JSON status file",
+      "description": "Local settings: path to a JSON file mounted in the Homarr container.",
+      "optional": true
+    }
+  },
+  "options": {
+    "title": {
+      "control": "text",
+      "label": "Title",
+      "default": "Application database"
+    },
+    "rowLimit": {
+      "control": "number",
+      "label": "Maximum rows",
+      "default": 100,
+      "min": 1,
+      "max": 200
+    }
+  }
+}

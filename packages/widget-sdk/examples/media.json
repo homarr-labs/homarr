@@ -1,0 +1,107 @@
+{
+  "$schema": "homarr-widget-package-v3",
+  "manifest": {
+    "id": "homarr.reference.media",
+    "version": "1.1.0",
+    "sdkVersion": "1",
+    "name": "Media and camera wall",
+    "description": "Native playing sessions plus optional authenticated camera snapshots and an Immich gallery, with responsive tiles and shared advanced image selection.",
+    "entrypoints": {
+      "tile": "widget.tsx",
+      "advanced": "widget.tsx",
+      "server": "server.ts"
+    },
+    "handlers": {
+      "sessions": {
+        "kind": "query",
+        "permission": "view"
+      },
+      "gallery": {
+        "kind": "query",
+        "permission": "view"
+      },
+      "image": {
+        "kind": "query",
+        "permission": "view",
+        "inputSchema": {
+          "type": "object",
+          "required": ["kind", "id"],
+          "properties": {
+            "kind": {
+              "enum": ["camera", "immich"]
+            },
+            "id": {
+              "type": "string",
+              "maxLength": 128
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "files": {
+    "widget.tsx": "import type { MediaOptions, GalleryItem } from \"./types\";\nimport { Alert, Badge, Button, Card, Group, Image, Loader, SimpleGrid, Stack, Text, UnstyledButton } from \"@mantine/core\";\nimport { useWidgetHost, useWidgetOptions, useWidgetQuery, useWidgetServices, useWidgetState } from \"@homarr/widget-sdk\";\nimport Sessions from \"./sessions\";\nexport default function MediaWall() {\n  const host = useWidgetHost(); const options = useWidgetOptions<MediaOptions>(); const services = useWidgetServices();\n  const [selected,setSelected] = useWidgetState<GalleryItem|null>(\"selectedImage\",null);\n  const gallery = useWidgetQuery<{items:GalleryItem[];errors:string[];configured:boolean}>(\"gallery\",{}, {refetchInterval:60000});\n  const columns = Math.max(1,Math.floor(host.visibleWidth/220));\n  return <Stack p=\"sm\" h=\"100%\" gap=\"sm\" style={{overflow:\"auto\"}}>\n    <Group justify=\"space-between\"><Text fw={600}>{options.title}</Text><Button size=\"compact-xs\" variant=\"subtle\" onClick={() => void gallery.refetch()}>Refresh gallery</Button></Group>\n    {gallery.error && <Alert color=\"red\">{gallery.error.message}</Alert>}\n    {(gallery.data?.errors ?? []).map((error,index) => <Alert key={index} color=\"yellow\">{error}</Alert>)}\n    {host.displayMode === \"advanced\" && selected && <Card withBorder><Stack gap=\"xs\"><Group justify=\"space-between\"><Text fw={600}>{selected.name}</Text><Button size=\"compact-xs\" variant=\"subtle\" onClick={() => setSelected(null)}>Close image</Button></Group><Snapshot item={selected} large /></Stack></Card>}\n    <SimpleGrid cols={columns}>{(gallery.data?.items ?? []).map((item) => <Card key={`${item.kind}:${item.id}`} withBorder p=\"xs\"><UnstyledButton onClick={() => {setSelected(item);services.openAdvanced();}}><Stack gap={4}><Snapshot item={item} /><Group justify=\"space-between\"><Text size=\"sm\">{item.name}</Text><Badge size=\"xs\" variant=\"light\">{item.kind}</Badge></Group>{item.takenAt && <Text size=\"xs\" c=\"dimmed\">{new Date(item.takenAt).toLocaleDateString(host.locale)}</Text>}</Stack></UnstyledButton></Card>)}</SimpleGrid>\n    {gallery.data && !gallery.data.configured && <Text size=\"sm\" c=\"dimmed\">Bind a camera or Immich connection to add authenticated images.</Text>}\n    {gallery.data?.configured && !gallery.data.items.length && <Text size=\"sm\" c=\"dimmed\">No configured snapshots or matching Immich images.</Text>}\n    {options.showSessions && <Sessions />}\n  </Stack>;\n}\nfunction Snapshot({item,large=false}:{item:GalleryItem;large?:boolean}) {\n  const options = useWidgetOptions<MediaOptions>();\n  const image = useWidgetQuery<{dataUrl:string;updatedAt:string}>(\"image\",{kind:item.kind,id:item.id},{refetchInterval:item.kind === \"camera\" ? Math.max(5,Number(options.snapshotInterval)||15)*1000 : 300000,staleTime:5000});\n  if (image.isPending) return <Stack h={160} justify=\"center\" align=\"center\"><Loader size=\"sm\" /></Stack>;\n  if (image.error) return <Alert color=\"yellow\">{image.error.message}</Alert>;\n  return <Image src={image.data?.dataUrl} alt={item.name} h={large ? 420 : 160} fit={large ? \"contain\" : \"cover\"} radius=\"sm\" />;\n}\n",
+    "server.ts": "import type { Camera, MediaOptions, GalleryItem, GalleryImageInput, ImmichAsset, MediaSessions } from \"./types\";\nimport { callWidgetIntegration, defineWidgetServer, fetchWidgetConnection, getWidgetServerContext } from \"@homarr/widget-sdk/server\";\nconst cameras = (options:MediaOptions):Camera[] => Array.isArray(options.cameras) ? options.cameras.slice(0,8).filter((item) => item && typeof item.name === \"string\" && typeof item.path === \"string\") : [];\nexport default defineWidgetServer({\n  sessions: async (_input,context) => {\n    const {bindingNames} = await getWidgetServerContext<MediaOptions>(context);\n    if (!bindingNames.includes(\"media\")) return {data:[],configured:false};\n    return callWidgetIntegration<MediaSessions>(context,{connection:\"media\",capability:\"media.sessions\",input:{showOnlyPlaying:false}});\n  },\n  gallery: async (_input,context) => {\n    const {bindingNames,options} = await getWidgetServerContext<MediaOptions>(context);\n    const items:GalleryItem[] = []; const errors:string[] = [];\n    if (bindingNames.includes(\"camera\")) items.push(...cameras(options).map<GalleryItem>((camera,index) => ({kind:\"camera\",id:String(index),name:camera.name})));\n    if (bindingNames.includes(\"immich\")) {\n      try {\n        const response = await fetchWidgetConnection<{assets?:{items?:ImmichAsset[]}}>(context,{connection:\"immich\",path:\"/api/search/metadata\",method:\"POST\",body:{type:\"IMAGE\",size:Math.max(1,Math.min(12,Number(options.imageCount)||8))}});\n        if (!response.ok) throw new Error(`Immich returned HTTP ${response.status}`);\n        const assets = response.data?.assets?.items;\n        if (!Array.isArray(assets)) throw new Error(\"Immich search returned an unexpected result\");\n        items.push(...assets.slice(0,12).map<GalleryItem>((asset) => ({kind:\"immich\",id:asset.id,name:asset.originalFileName ?? \"Photo\",takenAt:asset.localDateTime ?? asset.fileCreatedAt})));\n      } catch (error) { errors.push(error instanceof Error ? error.message : String(error)); }\n    }\n    return {items,errors,configured:bindingNames.includes(\"camera\") || bindingNames.includes(\"immich\")};\n  },\n  image: async (input:GalleryImageInput,context) => {\n    const {options,bindingNames} = await getWidgetServerContext<MediaOptions>(context);\n    let path; let connection;\n    if (input?.kind === \"camera\") {\n      const camera = cameras(options).find((_camera,index) => String(index) === input.id);\n      if (!camera) throw new Error(\"Choose a configured camera snapshot\");\n      path = camera.path; connection = \"camera\";\n    } else if (input?.kind === \"immich\" && typeof input.id === \"string\" && /^[0-9a-f-]{36}$/i.test(input.id)) {\n      path = `/api/assets/${encodeURIComponent(input.id)}/thumbnail?size=thumbnail`; connection = \"immich\";\n    } else throw new Error(\"Unknown gallery image\");\n    if (!bindingNames.includes(connection)) throw new Error(\"The image connection is not bound\");\n    const response = await fetchWidgetConnection(context,{connection,path,responseType:\"base64\"});\n    if (!response.ok) throw new Error(`Image returned HTTP ${response.status}. Check the configured endpoint and image permissions.`);\n    const mime = response.contentType?.split(\";\")[0]?.trim().toLowerCase() ?? \"\";\n    if (![\"image/jpeg\",\"image/png\",\"image/webp\",\"image/gif\",\"image/avif\"].includes(mime)) throw new Error(\"The endpoint must return a JPEG, PNG, WebP, GIF or AVIF snapshot\");\n    if (typeof response.data !== \"string\" || response.data.length > 900000) throw new Error(\"Use a smaller snapshot or thumbnail (under 675 KiB)\");\n    return {dataUrl:`data:${mime};base64,${response.data}`,updatedAt:response.updatedAt};\n  },\n});\n",
+    "sessions.tsx": "import type { MediaSessions } from \"./types\";\nimport { Alert, Badge, Button, Card, Group, Progress, SimpleGrid, Stack, Text } from \"@mantine/core\";\nimport { useWidgetHost, useWidgetQuery, useWidgetServices } from \"@homarr/widget-sdk\";\nexport default function Sessions() {\n  const host = useWidgetHost();\n  const services = useWidgetServices();\n  const query = useWidgetQuery<MediaSessions>(\"sessions\", {}, { refetchInterval: 10000 });\n  const rows = query.data?.data ?? [];\n  const columns = Math.max(1, Math.floor(host.visibleWidth / 240));\n  return <Stack p=\"md\"  style={{overflow:\"auto\"}}><Text fw={600}>Now playing · {rows.length}</Text>\n    {query.error && <Alert color=\"red\">{query.error.message}<Button variant=\"subtle\" size=\"xs\" onClick={() => void query.refetch()}>Retry</Button></Alert>}\n    <SimpleGrid cols={columns}>{rows.map((session) => { const playing = session.currentlyPlaying; const playback = playing?.playback; return <Card key={session.sessionId} withBorder padding=\"sm\"><Stack gap=\"xs\"><Group justify=\"space-between\"><Text size=\"sm\" fw={600}>{session.user.username}</Text><Badge size=\"xs\">{playback?.state ?? \"idle\"}</Badge></Group><Text>{playing?.name ?? session.sessionName}</Text>{playing?.episodeName && <Text size=\"xs\" c=\"dimmed\">{playing.episodeName}</Text>}{typeof playback?.durationMs === \"number\" && playback.durationMs > 0 && <Progress aria-label=\"Playback progress\" value={100 * (playback.positionMs ?? 0) / playback.durationMs} />}<Button size=\"compact-xs\" variant=\"light\" onClick={() => services.openDetail({title: session.sessionName, content: <Stack><Text>{session.user.username}</Text><Text>{playing?.name}</Text><Text size=\"sm\">{playing?.location ?? \"Unknown network\"} · {playing?.metadata?.bitrateKbps ?? \"Unknown\"} kbps</Text><Text size=\"sm\">Video direct: {String(playing?.metadata?.transcoding?.isVideoDirect ?? \"unknown\")}</Text><Text size=\"sm\">Audio direct: {String(playing?.metadata?.transcoding?.isAudioDirect ?? \"unknown\")}</Text></Stack>})}>Session details</Button></Stack></Card>; })}</SimpleGrid>\n    {!query.isPending && !query.error && query.data?.configured !== false && rows.length === 0 && <Text c=\"dimmed\">No active media sessions.</Text>}\n    {query.data?.configured === false && <Text c=\"dimmed\" size=\"sm\">Bind a media server integration to show now-playing sessions.</Text>}\n  </Stack>;\n}",
+    "README.md": "# Media and camera wall\nAll connections are optional. Bind an existing Plex/Jellyfin/Emby-compatible integration for native now-playing sessions. Bind an HTTP camera snapshot server and configure up to eight name/path entries for authenticated JPEG/PNG/WebP/GIF/AVIF still images. This is snapshot polling, not RTSP or continuous video streaming.\n\nFor Immich, bind the server root URL and keep `x-api-key` in the local connection's secret headers. The key needs asset.read and asset.view. The package lists recent image assets through POST /api/search/metadata and retrieves each thumbnail through GET /api/assets/:id/thumbnail?size=thumbnail. Each image is fetched server-side; credentials are never sent to the browser. Each image is limited to 675 KiB before base64 encoding. If an endpoint redirects, configure a direct image endpoint supported by your service.\n\nTile and advanced views share the selected image. Clicking a thumbnail opens the advanced view; the media session panel retains playback progress and native session details. Images refresh independently, so one failed camera does not hide the others. The package does not promise lossless full-resolution originals or real-time video.\n\nOfficial API sources: https://github.com/immich-app/immich/blob/main/server/src/controllers/search.controller.ts and https://github.com/immich-app/immich/blob/main/server/src/controllers/asset-media.controller.ts\n",
+    "types.ts": "export type Camera = {name:string;path:string};\nexport type MediaOptions = {title:string;showSessions:boolean;cameras:Camera[];imageCount:number;snapshotInterval:number};\nexport interface GalleryItem {kind:\"camera\"|\"immich\";id:string;name:string;takenAt?:string;}\nexport type GalleryImageInput = Pick<GalleryItem,\"kind\"|\"id\">;\nexport interface ImmichAsset {id:string;originalFileName?:string;localDateTime?:string;fileCreatedAt?:string;}\nexport interface MediaSession {sessionId:string;sessionName:string;user:{username:string};currentlyPlaying:{name:string;episodeName?:string|null;location:\"lan\"|\"wan\"|null;playback:{state:\"playing\"|\"paused\"|\"buffering\"|null;positionMs:number|null;durationMs:number|null};metadata:{bitrateKbps:number|null;transcoding:{isVideoDirect:boolean;isAudioDirect:boolean}}|null}|null;}\nexport interface MediaSessions {data:MediaSession[];configured?:boolean;}\n"
+  },
+  "dependencies": {},
+  "connections": {
+    "media": {
+      "kind": "integration",
+      "label": "Media server",
+      "optional": true
+    },
+    "camera": {
+      "kind": "http",
+      "label": "Camera snapshot server",
+      "optional": true,
+      "description": "Basic, bearer or header authentication stays in this local connection."
+    },
+    "immich": {
+      "kind": "http",
+      "label": "Immich server",
+      "optional": true,
+      "description": "Use a secret x-api-key header with asset.read and asset.view permissions."
+    }
+  },
+  "options": {
+    "title": {
+      "control": "text",
+      "label": "Title",
+      "default": "Media wall"
+    },
+    "showSessions": {
+      "control": "switch",
+      "label": "Show media sessions",
+      "default": true
+    },
+    "cameras": {
+      "control": "json",
+      "label": "Camera snapshots",
+      "description": "Array of name/path objects on the camera connection. Up to eight snapshots. Paths stay on that connection’s origin.",
+      "default": [
+        {
+          "name": "Front door",
+          "path": "/snapshot.jpg"
+        }
+      ]
+    },
+    "imageCount": {
+      "control": "number",
+      "label": "Immich image count",
+      "default": 8,
+      "min": 1,
+      "max": 12
+    },
+    "snapshotInterval": {
+      "control": "number",
+      "label": "Snapshot refresh seconds",
+      "default": 15,
+      "min": 5,
+      "max": 3600
+    }
+  }
+}

@@ -3,6 +3,8 @@
 import type { PropsWithChildren } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
+import { readAssistantPackageDraft } from "./assistant-package-draft-registry";
 import type {
   AttachmentAdapter,
   MessageFormatAdapter,
@@ -68,6 +70,9 @@ import { initialAssistantNotificationState, updateAssistantNotificationState } f
 import { AssistantViewRefreshProvider, useAssistantViewRefresh } from "./assistant-view-refresh";
 import { AssistantBoardWidget } from "./assistant-widget";
 
+const AssistantPackageChangesTool = dynamic(() =>
+  import("./assistant-package-changes-tool").then((module) => module.AssistantPackageChangesTool),
+);
 const ignoreUnsupportedArchiveAction = () => Promise.resolve();
 const assistantImageAttachmentTypes = ["image/gif", "image/jpeg", "image/png", "image/webp"];
 const assistantDocumentAttachmentTypes = [
@@ -537,6 +542,7 @@ const AssistantThreadRuntime = () => {
 };
 
 const AssistantRuntime = ({ children }: PropsWithChildren) => {
+  const packageT = useI18n("customWidget.package.assistant");
   const router = useRouter();
   const { refreshCurrentView } = useAssistantViewRefresh();
   const runtime = useRemoteThreadListRuntime({
@@ -558,6 +564,18 @@ const AssistantRuntime = ({ children }: PropsWithChildren) => {
   const toolkit = useMemo(
     () =>
       defineToolkit({
+        read_widget_package_draft: {
+          type: "frontend",
+          ...browserToolContracts.read_widget_package_draft,
+          execute: readAssistantPackageDraft,
+          renderText: { running: packageT("reading"), complete: packageT("read") },
+        },
+        propose_widget_package_changes: {
+          type: "human",
+          display: "standalone",
+          ...browserToolContracts.propose_widget_package_changes,
+          render: AssistantPackageChangesTool,
+        },
         ask_user: {
           type: "human",
           display: "standalone",
@@ -610,7 +628,7 @@ const AssistantRuntime = ({ children }: PropsWithChildren) => {
           renderText: { running: "Refreshing current view…", complete: "Current view refreshed" },
         },
       }) as Toolkit,
-    [browserToolExecutors],
+    [browserToolExecutors, packageT],
   );
   return (
     <AssistantRuntimeProviderWithTools runtime={runtime} toolkit={toolkit}>

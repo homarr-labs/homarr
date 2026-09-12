@@ -15,7 +15,10 @@ Custom Widgets may change during the v2 release cycle. Share feedback in the
 
 :::
 
-A **Custom Widget** is a validated `homarr-custom-widget-v2` definition containing API sources, queries and actions,
+Custom Widgets supports [trusted widget packages](./trusted-packages) with full TSX, CSS, modules, optional Node
+handlers, and advanced views, alongside the restricted v2 authoring format. Both can work without an API.
+
+A **v2 Custom Widget** is a validated `homarr-custom-widget-v2` definition containing optional API sources, queries and actions,
 optional settings, and a safe JSX template.
 
 Homarr executes requests on the server and renders the template in a restricted runtime. Source credentials are
@@ -36,6 +39,8 @@ Once placed, normal board permissions control rendering and requests. Queries ca
 boards; actions require authentication and the permission declared by the request.
 
 ## Authoring
+
+- [Build a trusted widget package](./trusted-packages), configure local connections, and manage its Workshop releases.
 
 - [Create a Custom Widget](./authoring) in the workbench or from a copied AI prompt.
 - [Use the safe JSX runtime](./custom-jsx) for data bindings, temporary inputs, and components.

@@ -9,6 +9,7 @@ import type { ServerSettings } from "@homarr/server-settings";
 import type { SettingsContextProps } from "@homarr/settings/creator";
 import type { stringOrTranslation } from "@homarr/translation";
 import type { TablerIcon } from "@homarr/ui";
+import type { WidgetCommand } from "@homarr/widget-sdk/shared";
 
 import type { WidgetImports } from "./registry";
 import type { inferOptionsFromCreator, WidgetOptionsRecord } from "./options";
@@ -41,6 +42,8 @@ export interface WidgetRuntimeActions {
 export interface WidgetRuntimeState {
   queries: readonly NormalizedWidgetQuery[];
   actions: WidgetRuntimeActions;
+  commands?: readonly WidgetCommand[];
+  refresh?: () => Promise<void>;
 }
 
 export type WidgetRuntimeRef = React.MutableRefObject<WidgetRuntimeState>;
@@ -174,6 +177,8 @@ export type WidgetComponentProps<TKind extends WidgetKind> = WidgetProps<TKind> 
   boardId: string | undefined; // undefined when in preview mode
   isEditMode: boolean;
   displayMode?: "compact" | "advanced";
+  openAdvancedFocus?: () => void;
+  closeAdvancedFocus?: () => void;
   setOptions: ({ newOptions }: { newOptions: Partial<inferOptionsFromCreator<WidgetOptionsRecordOf<TKind>>> }) => void;
   width: number;
   height: number;

@@ -27,6 +27,9 @@ import {
 import { acquireCustomWidgetRequestLimit } from "../custom-widget/request-limits";
 import { getCustomWidgetCacheVersion } from "../custom-widget/cache-version";
 import { parseStoredCustomWidgetDefinition } from "../custom-widget/stored-definition";
+import { mapCustomWidgetRequests } from "../custom-widget/request-queue";
+import { getPackageDisplayData, resolvePackagePlacement } from "../custom-widget/package/records";
+import { packageWidgetProcedures } from "../custom-widget/package/widget-procedures";
 
 const runtimeParamsSchema = z.record(z.string(), z.union([z.string(), z.number(), z.boolean()]));
 const itemInputSchema = z.object({ itemId: z.string().min(1) });
@@ -190,6 +193,7 @@ const executeRequest = async (
 };
 
 export const customApiRouter = createTRPCRouter({
+  ...packageWidgetProcedures,
   refresh: publicProcedure.input(itemInputSchema).mutation(async ({ ctx, input }) => {
     const resolved = await resolvePlacedDefinitionAsync(ctx, input.itemId);
     invalidateCustomWidgetResponseCache([
@@ -198,46 +202,54 @@ export const customApiRouter = createTRPCRouter({
   }),
 
   getData: publicProcedure.input(itemInputSchema).query(async ({ ctx, input }) => {
+    const packageItem = await ctx.db.query.items.findFirst({ where: eq(items.id, input.itemId) });
+    if (packageItem?.kind === "customApi") {
+      const packageOptions = parseItemOptions(packageItem.options);
+      const installation = await ctx.db.query.customWidgetInstallations.findFirst({
+        where: (table, { eq }) => eq(table.id, packageOptions.definitionId),
+        columns: { id: true },
+      });
+      if (installation) return getPackageDisplayData(await resolvePackagePlacement(ctx, input.itemId));
+    }
     const resolved = await resolvePlacedDefinitionAsync(ctx, input.itemId);
     const loadRequests = Object.entries(resolved.definition.requests).filter(
       ([, request]) => request.kind === "query" && request.trigger === "load",
     );
-    const entries = await Promise.all(
-      loadRequests.map(async ([requestId, request]) => {
-        try {
-          const response = await executeRequest(ctx, resolved, { id: requestId, ...request }, {});
-          return [
-            requestId,
-            {
-              data: response.data,
-              status: {
-                loading: false,
-                ok: response.ok,
-                status: response.status,
-                statusText: response.statusText,
-                error: response.ok ? undefined : `HTTP ${response.status}: ${response.statusText}`,
-              },
+    const entries = await mapCustomWidgetRequests(loadRequests, 4, async ([requestId, request]) => {
+      try {
+        const response = await executeRequest(ctx, resolved, { id: requestId, ...request }, {});
+        return [
+          requestId,
+          {
+            data: response.data,
+            status: {
+              loading: false,
+              ok: response.ok,
+              status: response.status,
+              statusText: response.statusText,
+              error: response.ok ? undefined : `HTTP ${response.status}: ${response.statusText}`,
             },
-          ] as const;
-        } catch (error) {
-          return [
-            requestId,
-            {
-              data: null,
-              status: {
-                loading: false,
-                ok: false,
-                status: 0,
-                error: error instanceof Error ? error.message : "Request failed",
-              },
+          },
+        ] as const;
+      } catch (error) {
+        return [
+          requestId,
+          {
+            data: null,
+            status: {
+              loading: false,
+              ok: false,
+              status: 0,
+              error: error instanceof Error ? error.message : "Request failed",
             },
-          ] as const;
-        }
-      }),
-    );
+          },
+        ] as const;
+      }
+    });
 
     return {
       type: "customJsx" as const,
+      hasLoadQueries: loadRequests.length > 0,
       template: resolved.definition.template,
       queryCacheKey: `${getCustomWidgetCacheVersion(resolved.stored)}:${hashRuntimeParams(resolved.configuration)}`,
       data: Object.fromEntries(entries.map(([id, result]) => [id, result.data])),

@@ -250,7 +250,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
   const isAdmin = session?.user.permissions.includes("admin") ?? false;
 
   const shell = (
-    <ClientShell hasNavigation>
+    <ClientShell hasNavigation management>
       <MainHeader></MainHeader>
       <MainNavigation links={navigationLinks}></MainNavigation>
       <AppShellMain>{children}</AppShellMain>

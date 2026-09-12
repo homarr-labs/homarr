@@ -1,5 +1,6 @@
 import crypto from "crypto";
 import fs from "fs";
+import { countEncryptedWidgetValues, reencryptWidgetValues } from "../widget-secrets";
 import path from "path";
 
 import { NextResponse } from "next/server";
@@ -133,6 +134,7 @@ const reEncryptSecrets = (tempDb: InstanceType<typeof BetterSqlite3>, importedKe
 
   const oldKey = Buffer.from(importedKeyHex, "hex");
   const newKey = Buffer.from(currentKeyHex, "hex");
+  reencryptWidgetValues(tempDb, oldKey, newKey);
 
   const rows = tempDb.prepare('SELECT "integration_id", "kind", "value" FROM "integrationSecret"').all() as {
     integration_id: string;
@@ -305,7 +307,7 @@ export async function POST(req: Request) {
     const secretCount = (tempDb.prepare('SELECT COUNT(*) as count FROM "integrationSecret"').get() as { count: number })
       .count;
 
-    if (secretCount > 0 && !importedKey) {
+    if (secretCount + countEncryptedWidgetValues(tempDb) > 0 && !importedKey) {
       throw new Error(
         "Backup contains integration secrets but no encryption key. " +
           "Cannot restore without the original SECRET_ENCRYPTION_KEY.",

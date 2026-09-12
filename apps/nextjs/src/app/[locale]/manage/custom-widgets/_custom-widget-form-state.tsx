@@ -13,10 +13,17 @@ import {
 import type { ReactNode } from "react";
 import type { UseFormReturnType } from "@mantine/form";
 
+import {
+  customWidgetSourcesSchema,
+  getCustomWidgetRequiredSecretKinds,
+  hasSameCustomWidgetSourceBinding,
+} from "@homarr/custom-widgets/core";
 import { customWidgetFormSchema } from "@homarr/custom-widgets/workbench";
 import type { CustomWidgetFormValues } from "@homarr/custom-widgets/workbench";
 
 import { areCustomWidgetValuesEqual } from "./_custom-widget-value-equality";
+import { createCustomWidgetDocumentHistory, getCustomWidgetDocumentContent } from "./_custom-widget-document-history";
+import type { CustomWidgetDocumentContent, CustomWidgetDocumentHistoryState } from "./_custom-widget-document-history";
 
 export interface CustomWidgetFormDocumentStore {
   getValues(): CustomWidgetFormValues;
@@ -24,6 +31,10 @@ export interface CustomWidgetFormDocumentStore {
   getDirty(): boolean;
   subscribe(listener: () => void): () => void;
   markSaved(values: CustomWidgetFormValues): void;
+  getHistory(): CustomWidgetDocumentHistoryState;
+  undo(): CustomWidgetFormValues | null;
+  redo(): CustomWidgetFormValues | null;
+  resetToSaved(): CustomWidgetFormValues;
 }
 
 const documentValueKeys = customWidgetFormSchema.keyof().options;
@@ -42,19 +53,58 @@ export function createCustomWidgetFormDocumentStore(
   let values = initialValues;
   let persistedValues = initialValues;
   let dirty = false;
+  const history = createCustomWidgetDocumentHistory(initialValues);
   const listeners = new Set<() => void>();
 
   const notify = () => listeners.forEach((listener) => listener());
+  const restore = (content: CustomWidgetDocumentContent | null): CustomWidgetFormValues | null => {
+    if (!content) return null;
+    let secrets: CustomWidgetFormValues["secrets"] = [];
+    try {
+      const sources = customWidgetSourcesSchema.parse(JSON.parse(content.sources));
+      const currentSources = customWidgetSourcesSchema.parse(JSON.parse(values.sources));
+      secrets = values.secrets.filter((secret) => {
+        const source = sources[secret.sourceId];
+        const currentSource = currentSources[secret.sourceId];
+        if (!source || !currentSource || !hasSameCustomWidgetSourceBinding(source, currentSource)) return false;
+        const auth = typeof source.auth === "string" ? source.auth : source.auth.type;
+        return getCustomWidgetRequiredSecretKinds(auth).some((kind) => kind === secret.kind);
+      });
+    } catch {
+      // An unfinished source document cannot safely retain credential bindings.
+    }
+    const restored = { ...content, secrets };
+    values = restored;
+    dirty = !areDocumentValuesEqual(restored, persistedValues);
+    notify();
+    return restored;
+  };
 
   return {
     getValues: () => values,
     setValues: (nextValues) => {
       if (Object.is(values, nextValues)) return;
+      history.record(nextValues);
       values = nextValues;
       dirty = !areDocumentValuesEqual(nextValues, persistedValues);
       notify();
     },
     getDirty: () => dirty,
+    getHistory: history.getState,
+    undo: () => restore(history.undo()),
+    redo: () => restore(history.redo()),
+    resetToSaved: () => {
+      history.stopCoalescing();
+      const restored = {
+        ...getCustomWidgetDocumentContent(persistedValues),
+        secrets: persistedValues.secrets.map((secret) => ({ ...secret, value: "" })),
+      };
+      history.record(restored);
+      values = restored;
+      dirty = !areDocumentValuesEqual(restored, persistedValues);
+      notify();
+      return restored;
+    },
     subscribe: (listener) => {
       listeners.add(listener);
       return () => listeners.delete(listener);
@@ -62,6 +112,7 @@ export function createCustomWidgetFormDocumentStore(
     markSaved: (savedValues) => {
       const wasDirty = dirty;
       persistedValues = savedValues;
+      history.stopCoalescing();
       dirty = !areDocumentValuesEqual(values, persistedValues);
       if (wasDirty !== dirty) notify();
     },

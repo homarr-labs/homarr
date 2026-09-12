@@ -36,7 +36,7 @@ const INACTIVE_PORT: CustomWidgetRuntimePort = {
   notify: () => undefined,
 };
 
-const useRuntimeMessages = (): CustomWidgetRuntimeMessages => {
+export const useRuntimeMessages = (): CustomWidgetRuntimeMessages => {
   const t = useI18n("widget.customApi.customJsx");
   const actionT = useI18n("common.action");
   return {

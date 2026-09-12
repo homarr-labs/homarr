@@ -32,7 +32,6 @@ const RESERVED_HEADERS = new Set([
 const blocked = new BlockList();
 for (const [address, prefix] of [
   ["0.0.0.0", 8],
-  ["100.64.0.0", 10],
   ["169.254.0.0", 16],
   ["192.0.0.0", 24],
   ["192.0.2.0", 24],
@@ -56,6 +55,8 @@ for (const [address, prefix] of [
 blocked.addAddress("fd00:ec2::254", "ipv6");
 
 const privateAddresses = new BlockList();
+// Carrier-grade NAT includes Tailscale's IPv4 addresses; access still requires a private source.
+privateAddresses.addSubnet("100.64.0.0", 10, "ipv4");
 privateAddresses.addSubnet("10.0.0.0", 8, "ipv4");
 privateAddresses.addSubnet("172.16.0.0", 12, "ipv4");
 privateAddresses.addSubnet("192.168.0.0", 16, "ipv4");

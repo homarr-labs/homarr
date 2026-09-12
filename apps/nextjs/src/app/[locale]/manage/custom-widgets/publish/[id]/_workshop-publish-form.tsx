@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
+  Accordion,
   Alert,
+  Badge,
   Box,
   Button,
   Checkbox,
@@ -25,12 +27,19 @@ import {
   IconShieldCheck,
 } from "@tabler/icons-react";
 
+import { customWidgetPackageSchema } from "@homarr/custom-widgets/package";
+import { extractErrorMessage } from "@homarr/common";
+
 import { clientApi } from "@homarr/api/client";
 import { useByteFormatter } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 import { useWorkshopCreateMutation } from "@homarr/workshop/backend";
-import { MAX_WORKSHOP_SCREENSHOT_BYTES, workshopScreenshotsSchema } from "@homarr/workshop/schema";
+import {
+  MAX_WORKSHOP_SCREENSHOTS,
+  MAX_WORKSHOP_SCREENSHOT_BYTES,
+  workshopScreenshotsSchema,
+} from "@homarr/workshop/schema";
 
 import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import { ManageStickyFooter } from "~/components/manage/manage-sticky-footer";
@@ -43,24 +52,43 @@ import {
 } from "~/components/workshop/workshop-publish-definition";
 import { WorkshopAccountButton, useWorkshopSession } from "~/components/workshop/workshop-session";
 
-const listHref = "/manage/custom-widgets";
-
-export function WorkshopPublishForm({ widget }: { widget: { id: string; name: string } }) {
+export function WorkshopPublishForm({
+  widget,
+  kind = "definition",
+}: {
+  widget: { id: string; name: string; description?: string; version?: string };
+  kind?: "definition" | "package";
+}) {
+  const isPackage = kind === "package";
+  const listHref = isPackage ? "/manage/custom-widgets/packages" : "/manage/custom-widgets";
   const t = useI18n("workshop");
   const tCommon = useI18n("common");
   const { formatBytes } = useByteFormatter();
   const session = useWorkshopSession();
-  const [title, setTitle] = useState(widget.name);
-  const [description, setDescription] = useState("");
+  const utils = clientApi.useUtils();
+  const [title, setTitle] = useState(widget.name.slice(0, 100));
+  const [description, setDescription] = useState(widget.description ?? "");
+  const [version, setVersion] = useState(widget.version ?? "1.0.0");
+  const [changelog, setChangelog] = useState("");
+  const [publishing, setPublishing] = useState(false);
+  const inFlight = useRef(false);
+  const [screenshotError, setScreenshotError] = useState<string | null>(null);
   const [screenshots, setScreenshots] = useState<File[]>([]);
   const [sourceUrlsReviewed, setSourceUrlsReviewed] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [publishedSubmissionId, setPublishedSubmissionId] = useState<string | null>(null);
 
   const createSubmission = useWorkshopCreateMutation(session.client);
-  const definition = clientApi.customWidget.export.useQuery({ id: widget.id });
+  const definition = clientApi.customWidget.export.useQuery({ id: widget.id }, { enabled: !isPackage });
+  const packageDraft = clientApi.customWidget.package.get.useQuery({ id: widget.id }, { enabled: isPackage });
+  const publishPackage = clientApi.customWidget.package.publishWorkshop.useMutation();
+  const packageSource = customWidgetPackageSchema.safeParse(packageDraft.data?.source);
+  const inspectedDefinition = isPackage ? packageDraft.data?.source : definition.data;
+  const loadError = isPackage ? packageDraft.isError : definition.isError;
+  const origin = packageDraft.data?.workshop;
+  const updating = Boolean(isPackage && session.user && origin?.author === session.user.id);
   const privateSourceNames = getPrivateWorkshopSourceNames(definition.data);
-  const definitionFingerprint = definition.data ? serializeWorkshopDefinition(definition.data) : null;
+  const definitionFingerprint = inspectedDefinition ? serializeWorkshopDefinition(inspectedDefinition) : null;
   useEffect(() => setSourceUrlsReviewed(false), [definitionFingerprint]);
 
   const breadcrumb = <DynamicBreadcrumb dynamicMappings={new Map([[widget.id, widget.name]])} />;
@@ -68,17 +96,48 @@ export function WorkshopPublishForm({ widget }: { widget: { id: string; name: st
   const publish = async () => {
     // Publishing is immediate and public; a second in-flight call would create a
     // duplicate listing.
-    if (createSubmission.isPending) return;
+    if (inFlight.current) return;
+    inFlight.current = true;
+    setPublishing(true);
     setError(null);
     try {
-      if (!definition.data) throw new Error(t("publish.error"));
+      if (!inspectedDefinition) throw new Error(t("publish.error"));
       if (!workshopScreenshotsSchema.safeParse(screenshots).success) {
         throw new Error(t("publish.invalidScreenshot", { maxSize: formatBytes(MAX_WORKSHOP_SCREENSHOT_BYTES) }));
       }
 
+      if (isPackage) {
+        const token = session.client.authToken;
+        if (!token || !packageDraft.data || !packageSource.success) throw new Error(t("publish.error"));
+        if (updating && origin && screenshots.length > 0) {
+          const listing = await session.client.get(origin.submissionId);
+          if (listing.screenshots.length + screenshots.length > MAX_WORKSHOP_SCREENSHOTS)
+            throw new Error(t("publish.screenshotLimit"));
+        }
+        const result = await publishPackage.mutateAsync({
+          id: widget.id,
+          token,
+          mode: "auto",
+          title,
+          description,
+          version,
+          changelog,
+          expectedDraftDigest: packageDraft.data.draftDigest,
+        });
+        // A release is already public here. Screenshot failure must not invite a duplicate publication.
+        try {
+          await session.client.addScreenshots(result.submissionId, screenshots);
+        } catch (cause) {
+          setScreenshotError(extractErrorMessage(cause));
+        }
+        void utils.customWidget.package.list.invalidate();
+        void utils.customWidget.package.get.invalidate({ id: widget.id });
+        setPublishedSubmissionId(result.submissionId);
+        return;
+      }
       let submissionId: string | null = null;
       const result = await publishWorkshopDefinition({
-        inspectedDefinition: definition.data,
+        inspectedDefinition,
         refetchDefinition: async () => (await definition.refetch()).data,
         publish: async (content) => {
           const submission = await createSubmission.mutateAsync({
@@ -98,6 +157,9 @@ export function WorkshopPublishForm({ widget }: { widget: { id: string; name: st
       setPublishedSubmissionId(submissionId);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : t("publish.error"));
+    } finally {
+      inFlight.current = false;
+      setPublishing(false);
     }
   };
 
@@ -115,6 +177,11 @@ export function WorkshopPublishForm({ widget }: { widget: { id: string; name: st
             <Text c="dimmed" size="sm" ta="center" maw={520}>
               {t("publish.manageDescription")}
             </Text>
+            {screenshotError && (
+              <Alert color="yellow">
+                {t("publish.screenshotUploadFailed")} {screenshotError}
+              </Alert>
+            )}
             <Group gap="sm">
               <Button component={Link} href={listHref} variant="default" leftSection={<IconArrowLeft size={16} />}>
                 {t("publish.done")}
@@ -137,9 +204,10 @@ export function WorkshopPublishForm({ widget }: { widget: { id: string; name: st
 
   const blocked =
     !session.user ||
-    createSubmission.isPending ||
-    !definition.data ||
-    definition.isError ||
+    publishing ||
+    !inspectedDefinition ||
+    loadError ||
+    (isPackage && !packageSource.success) ||
     title.trim().length < 3 ||
     (privateSourceNames.length > 0 && !sourceUrlsReviewed);
 
@@ -165,13 +233,20 @@ export function WorkshopPublishForm({ widget }: { widget: { id: string; name: st
             <Box>
               <Text fw={600}>{t("publish.introTitle")}</Text>
               <Text c="dimmed" size="sm" mt={2}>
-                {t("publish.introDescription")}
+                {isPackage ? t("publish.packageDescription") : t("publish.introDescription")}
               </Text>
             </Box>
           </Group>
         </Paper>
 
         {!session.user && <Alert color="blue">{t("publish.signInHint")}</Alert>}
+        {session.user && (
+          <Alert color="blue">
+            <Text size="sm">{t("publish.publishingAs", { name: session.user.name })}</Text>
+            {updating && <Text size="sm">{t("publish.updatingListing")}</Text>}
+            {isPackage && origin && !updating && <Text size="sm">{t("publish.attributedCopy")}</Text>}
+          </Alert>
+        )}
 
         <Paper withBorder radius="md" p="md">
           <Stack gap="md">
@@ -185,6 +260,7 @@ export function WorkshopPublishForm({ widget }: { widget: { id: string; name: st
             </Box>
             <TextInput
               label={t("publish.titleField")}
+              maxLength={100}
               value={title}
               onChange={(event) => setTitle(event.currentTarget.value)}
               required
@@ -211,6 +287,38 @@ export function WorkshopPublishForm({ widget }: { widget: { id: string; name: st
           </Stack>
         </Paper>
 
+        {isPackage && (
+          <Accordion variant="contained">
+            <Accordion.Item value="release">
+              <Accordion.Control>
+                <Group gap="xs">
+                  {t("publish.releaseDetails")}
+                  <Badge variant="light">v{version}</Badge>
+                </Group>
+              </Accordion.Control>
+              <Accordion.Panel>
+                <Stack>
+                  <TextInput
+                    label={t("publish.version")}
+                    value={version}
+                    onChange={(event) => setVersion(event.currentTarget.value)}
+                    required
+                  />
+                  <Textarea
+                    label={t("publish.releaseNotes")}
+                    description={t("publish.releaseNotesDescription")}
+                    value={changelog}
+                    onChange={(event) => setChangelog(event.currentTarget.value)}
+                    autosize
+                    minRows={2}
+                    maxLength={2000}
+                  />
+                </Stack>
+              </Accordion.Panel>
+            </Accordion.Item>
+          </Accordion>
+        )}
+
         {privateSourceNames.length > 0 && (
           <Alert color="yellow" icon={<IconShieldCheck size={18} />} title={t("publish.reviewSourcesTitle")}>
             {t("publish.privateSourceWarning", {
@@ -225,7 +333,15 @@ export function WorkshopPublishForm({ widget }: { widget: { id: string; name: st
           </Alert>
         )}
 
-        {definition.isError && <Alert color="red">{t("publish.error")}</Alert>}
+        {isPackage && packageDraft.data && !packageSource.success && (
+          <Alert color="yellow">
+            <Text size="sm">{t("publish.packageInvalid")}</Text>
+            <Button component={Link} href={`/manage/custom-widgets/packages/${widget.id}`} variant="subtle" size="xs">
+              {tCommon("action.edit")}
+            </Button>
+          </Alert>
+        )}
+        {loadError && <Alert color="red">{t("publish.error")}</Alert>}
         {error && <Alert color="red">{error}</Alert>}
 
         <ManageStickyFooter
@@ -238,13 +354,8 @@ export function WorkshopPublishForm({ widget }: { widget: { id: string; name: st
           <Button component={Link} href={listHref} variant="default">
             {tCommon("action.cancel")}
           </Button>
-          <Button
-            size="md"
-            loading={createSubmission.isPending || definition.isFetching}
-            disabled={blocked}
-            onClick={() => void publish()}
-          >
-            {t("publish.action")}
+          <Button size="md" loading={publishing} disabled={blocked} onClick={() => void publish()}>
+            {updating ? t("publish.updateAction") : t("publish.action")}
           </Button>
         </ManageStickyFooter>
       </Stack>

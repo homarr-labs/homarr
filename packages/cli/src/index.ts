@@ -2,6 +2,7 @@ import { run } from "@drizzle-team/brocli";
 import type { Command } from "@drizzle-team/brocli";
 
 import { harnessRoot, normalizeHarnessEnvironmentArgs } from "./commands/harness";
+import { widgetsRoot } from "./commands/widgets";
 
 const harnessCommandNames = new Set(["harness", "local-harness"]);
 
@@ -16,6 +17,8 @@ async function main(): Promise<void> {
 
   if (harnessInvocation) {
     commands = [harnessRoot];
+  } else if (process.argv[2] === "widgets") {
+    commands = [widgetsRoot];
   } else {
     const [{ fixUsernames }, { integrationsRoot }, { recreateAdmin }, { resetPassword }, { usersRoot }] =
       await Promise.all([
@@ -25,7 +28,7 @@ async function main(): Promise<void> {
         import("./commands/reset-password"),
         import("./commands/users"),
       ]);
-    commands = [usersRoot, integrationsRoot, resetPassword, fixUsernames, recreateAdmin, harnessRoot];
+    commands = [usersRoot, integrationsRoot, resetPassword, fixUsernames, recreateAdmin, harnessRoot, widgetsRoot];
   }
 
   let argSource = process.argv;

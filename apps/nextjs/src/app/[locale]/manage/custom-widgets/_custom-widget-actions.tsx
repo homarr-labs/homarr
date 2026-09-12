@@ -27,7 +27,7 @@ import { useI18n } from "@homarr/translation/client";
 import { InlineConfirmMenuItem, Link } from "@homarr/ui";
 
 import { CustomWidgetImportDialog } from "~/components/custom-widgets/custom-widget-import-dialog";
-import { downloadJson } from "~/components/custom-widgets/download";
+import { downloadJson } from "@homarr/common";
 
 const iconProps = { size: 16, stroke: 1.5 };
 

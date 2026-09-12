@@ -44,6 +44,7 @@ export interface CustomWidgetAuthConfig {
 }
 
 export interface CustomWidgetHttpRequest {
+  signal?: AbortSignal;
   baseUrl: string;
   targetUrl?: string | URL;
   method: CustomWidgetMethod;
@@ -75,8 +76,11 @@ async function performRequest(input: CustomWidgetHttpRequest): Promise<CustomWid
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), MAX_REQUEST_DURATION_MS);
   try {
-    return await performRequestWithinDeadline(input, controller.signal);
+    input.signal?.throwIfAborted();
+    const signal = input.signal ? AbortSignal.any([input.signal, controller.signal]) : controller.signal;
+    return await performRequestWithinDeadline(input, signal);
   } catch (error) {
+    if (input.signal?.aborted) throw input.signal.reason;
     if (controller.signal.aborted) {
       throw new CustomWidgetDomainError({
         code: "BAD_GATEWAY",

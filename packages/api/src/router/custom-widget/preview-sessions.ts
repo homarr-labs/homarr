@@ -49,7 +49,7 @@ class RedisPreviewSessionStore implements PreviewSessionStore {
     );
   }
   public async deleteSession(id: string) {
-    await this.redis.del(`${SESSION_PREFIX}${id}`);
+    await this.redis.del(`${SESSION_PREFIX}${id}`, `${JOURNAL_PREFIX}${id}`, `${EVIDENCE_PREFIX}${id}`);
   }
 
   public async appendJournal(id: string, value: unknown, maxEntries: number, ttlMs: number) {
@@ -99,6 +99,7 @@ export type { CreatePreviewSessionInput, CustomWidgetPreviewJournalEntry, Custom
 
 export const createPreviewSession = (input: CreatePreviewSessionInput) => call(() => getService().create(input));
 export const getPreviewSession = (id: string, userId: string) => call(() => getService().get(id, userId));
+export const discardPreviewSession = (id: string, userId: string) => call(() => getService().discard(id, userId));
 export const setPreviewSessionLiveActions = (id: string, userId: string, enabled: boolean) =>
   call(() => getService().setLiveActions(id, userId, enabled));
 export const revisePreviewSessionTemplate = (id: string, userId: string, template: string, expectedRevision?: number) =>

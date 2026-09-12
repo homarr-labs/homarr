@@ -12,3 +12,4 @@ export * from "./error";
 export * from "./theme";
 export * from "./function";
 export * from "./grid-algorithm";
+export * from "./browser";

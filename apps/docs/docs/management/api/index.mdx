@@ -98,3 +98,41 @@ and focused references under `/api/custom-widgets/`.
 
 Use [Custom Widget agent authoring](../custom-widgets/agent-authoring) for the lifecycle and
 [MCP](../mcp) when the client supports Model Context Protocol.
+
+## Trusted widget package lifecycle
+
+The `customWidget.package` tRPC namespace separates authoring from activation. Administrators can save incomplete
+source with `saveDraft`, inspect `draftChanges`, run `preview`, and call `activate` after acknowledging trusted code.
+`getRaw` and `repair` on `customWidget` recover existing v2 definitions without rendering their code.
+
+The package API also manages named local connections, per-placement guest grants, retained collectors, immutable
+archive import/export, forks, Workshop releases, staged updates, and rollback. `get` and `list` return management data
+without evaluating submitted package modules. Connection secret values are accepted separately by `saveConnection`
+and are not returned by connection listing or package export.
+For an existing connection, `secretUpdates` patches only supplied credential keys while retaining the others;
+`secrets` replaces the complete credential map. Supply only one. Credential patches require the saved connection
+kind and authentication method to match the submitted configuration.
+
+`previewStorageGet` and `previewStorageSet` use the owning administrator's preview session and the same temporary
+store as its server handlers. They accept `previewId`, `scope`, and `key`; writes also accept `value`.
+Expired, discarded, and other users' sessions cannot read or write preview storage.
+
+Connection configuration accepts `kind: "http" | "integration" | "service"`. A service connection supplies a
+`serviceType` and a JSON `settings` object without requiring a URL; encrypted `secrets` remain a separate input.
+Package requirements match both `kind` and `serviceType`. Server handlers access these settings through
+`getWidgetConnection` in `@homarr/widget-sdk/server`. Service diagnostics distinguish file readability, TCP
+reachability and settings-only checks; preview runs the adapter's actual database or protocol operation.
+
+Installed widgets use `widget.customApi.packageQuery`, `packageAction`, `packageSubscription`, `packageStorageGet`,
+and `packageStorageSet`. Each invocation is bound to an existing board item and a manifest-declared handler; the host
+checks the current board and integration permissions. A public board does not grant action access automatically.
+Guest grants name a handler and exact allowed inputs, and are invalidated by changes to server behavior, dependencies,
+connection identity, or resource-selecting options.
+
+Compiled surfaces are served through `/api/custom-widgets/artifacts/{itemId}/{digest}/{surface}` after board access
+checks. The optional `?asset=css` selects the corresponding stylesheet. Preview surfaces use
+`/api/custom-widgets/previews/{previewId}/{surface}` and require the administrator who created the preview.
+These routes do not expose server source or connection credentials.
+
+The full package format, SDK examples, trust boundary, and activation behavior are described in
+[trusted widget packages](../custom-widgets/trusted-packages).

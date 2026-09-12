@@ -1,4 +1,5 @@
 import type { Completion } from "@codemirror/autocomplete";
+import type { Extension } from "@codemirror/state";
 import type { ReactNode } from "react";
 
 import type { EditorDiagnostic } from "./analyzer";
@@ -43,7 +44,7 @@ export interface CustomWidgetCodeEditorProps {
   messages: CustomWidgetEditorMessages;
   description?: string;
   placeholder?: string;
-  language: "jsx" | "json" | "css";
+  language: "jsx" | "tsx" | "json" | "css";
   diagnostics?: EditorDiagnostic[];
   error?: ReactNode;
   required?: boolean;
@@ -51,11 +52,16 @@ export interface CustomWidgetCodeEditorProps {
   starter?: string;
   completions?: Completion[];
   revealText?: string;
+  revealRange?: { from: number; to: number };
   revealKey?: number;
   insertText?: string;
   insertKey?: number;
   readOnly?: boolean;
+  hideHistoryActions?: boolean;
   reference?: CustomWidgetSchemaReferenceData;
   height?: string;
   actions?: ReactNode;
+  status?: ReactNode;
+  extensions?: Extension;
+  onFormat?(): void;
 }

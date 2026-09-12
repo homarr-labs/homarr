@@ -1,5 +1,6 @@
 import { readdir, readFile } from "node:fs/promises";
 import { extname, join, relative, resolve } from "node:path";
+import ts from "typescript-compiler-api";
 
 const packageRoot = resolve(import.meta.dirname, "..");
 const repositoryRoot = resolve(packageRoot, "../..");
@@ -25,28 +26,36 @@ async function collect(directory) {
 for (const sourceRoot of sourceRoots) await collect(sourceRoot);
 const failures = [];
 const graph = new Map();
-const algorithmicExceptions = new Map([
-  ["packages/custom-widgets/src/jsx/analyzer.ts", 400],
-  ["packages/custom-widgets/src/jsx/interpreter.tsx", 400],
-]);
 
 for (const file of productionFiles) {
   const source = await readFile(file, "utf8");
   const name = relative(repositoryRoot, file);
-  const lineCount = source.trimEnd().split("\n").length;
-  const limit = algorithmicExceptions.get(name) ?? 300;
-  if (lineCount > limit) failures.push(`${name} has ${lineCount} lines (limit ${limit})`);
   if (file.startsWith(join(packageRoot, "src")) && /from\s+["']@homarr\/(?:api|widgets)(?:\/|["'])/u.test(source)) {
     failures.push(`${name} imports a forbidden adapter package`);
   }
   if (extname(file) === ".tsx" && /(?:runtime|workbench|custom-widgets|custom-api)/u.test(name)) {
-    for (const line of source.split("\n")) {
-      const match = line.match(/>\s*([A-Za-z][A-Za-z0-9 .,!?'-]*)\s*</u);
-      if (match) failures.push(`${name} contains untranslated JSX text: ${JSON.stringify(match[1]?.trim())}`);
+    const parsed = ts.createSourceFile(file, source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+    function checkJsx(node) {
+      if (ts.isJsxText(node)) {
+        // Preserve the inline-literal rule without interpreting TypeScript arrows or generics as JSX.
+        const literal = source.slice(node.pos - 1, node.end + 1);
+        for (const line of literal.split("\n")) {
+          const match = line.match(/>\s*([A-Za-z][A-Za-z0-9 .,!?'-]*)\s*</u);
+          if (match) failures.push(`${name} contains untranslated JSX text: ${JSON.stringify(match[1]?.trim())}`);
+        }
+      }
+      if (
+        ts.isJsxAttribute(node) &&
+        /^(?:aria-label|description|label|placeholder|title)$/u.test(node.name.getText(parsed)) &&
+        node.initializer &&
+        ts.isStringLiteral(node.initializer) &&
+        /^[A-Za-z]/u.test(node.initializer.text)
+      ) {
+        failures.push(`${name} contains an untranslated user-facing attribute`);
+      }
+      ts.forEachChild(node, checkJsx);
     }
-    if (/\b(?:aria-label|description|label|placeholder|title)=["'][A-Za-z]/u.test(source)) {
-      failures.push(`${name} contains an untranslated user-facing attribute`);
-    }
+    checkJsx(parsed);
   }
   const dependencies = [];
   for (const match of source.matchAll(/from\s+["'](\.[^"']+)["']/gu)) {

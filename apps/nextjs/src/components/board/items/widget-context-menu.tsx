@@ -3,7 +3,14 @@
 import type { MutableRefObject, ReactNode, RefObject } from "react";
 import { useCallback, useMemo, useState } from "react";
 import { Drawer, Group, Loader, Menu, Text, Tooltip } from "@mantine/core";
-import { IconAlertTriangle, IconCircleCheck, IconMaximize, IconRefresh, IconSettings } from "@tabler/icons-react";
+import {
+  IconAlertTriangle,
+  IconCircleCheck,
+  IconCode,
+  IconMaximize,
+  IconRefresh,
+  IconSettings,
+} from "@tabler/icons-react";
 import type { QueryClient, QueryKey } from "@tanstack/react-query";
 import { useIsFetching, useQueryClient } from "@tanstack/react-query";
 
@@ -21,9 +28,11 @@ import { translateIfNecessary } from "@homarr/translation";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import { useIsMobile } from "@homarr/ui/hooks";
+import { Link } from "@homarr/ui";
 import type { WidgetDefinition, WidgetRuntimeRef } from "@homarr/widgets/definition";
 import { getWidgetQueryKeys, getWidgetRuntimeQueries, supportsAdvancedFocus } from "@homarr/widgets/definition";
 import { reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
+import { getNativeWidgetReferenceStarter } from "@homarr/widgets/native-reference-starters";
 import { getWidgetOptionTranslationNamespace } from "@homarr/widgets/option-translation";
 import type { WidgetPreviewDimensions } from "@homarr/widgets/modals";
 
@@ -75,6 +84,13 @@ export const WidgetContextMenu = ({
   const canConfigureWidget =
     hasChangeAccess && (item.kind !== "customApi" || (session?.user.permissions.includes("admin") ?? false));
   const canOpenAdvancedFocus = supportsAdvancedFocus(definition);
+  const referenceStarter = getNativeWidgetReferenceStarter(
+    item.kind,
+    integrationData
+      .filter((integration) => item.integrationIds.includes(integration.id))
+      .map((integration) => integration.kind),
+  );
+  const canCustomizeWidget = Boolean(referenceStarter) && (session?.user.permissions.includes("admin") ?? false);
   const queryClient = useQueryClient();
   const { open: openAdvancedFocus } = useAdvancedFocus();
   const integrationsWithInteractAccess = useIntegrationsWithInteractAccess();
@@ -101,6 +117,7 @@ export const WidgetContextMenu = ({
   const widgetQueryKeys = useMemo(() => getWidgetQueryKeys(definition, item.kind), [definition, item.kind]);
   const matchesWidgetQuery = useCallback(
     (queryKey: QueryKey) =>
+      (item.kind === "customApi" && queryKey[0] === "custom-widget-sdk" && queryKey[2] === item.id) ||
       matchesWidgetItemQuery(
         queryKey,
         widgetQueryKeys,
@@ -113,7 +130,16 @@ export const WidgetContextMenu = ({
         },
         definition.queryMatcher,
       ),
-    [board.id, definition.queryMatcher, item.id, item.integrationIds, options, widgetQueryKeys, widgetRuntimeRef],
+    [
+      board.id,
+      definition.queryMatcher,
+      item.id,
+      item.kind,
+      item.integrationIds,
+      options,
+      widgetQueryKeys,
+      widgetRuntimeRef,
+    ],
   );
   const isWidgetFetching =
     useIsFetching({
@@ -336,6 +362,16 @@ export const WidgetContextMenu = ({
         >
           {tMenu("settings")}
         </Menu.Item>
+        {canCustomizeWidget && (
+          <Menu.Item
+            component={Link}
+            closeMenuOnClick
+            leftSection={<IconCode size={16} />}
+            href={`/manage/custom-widgets/packages/new?starter=${referenceStarter}&sourceItemId=${encodeURIComponent(item.id)}`}
+          >
+            {tMenu("customize")}
+          </Menu.Item>
+        )}
       </WidgetContextMenuDropdown>
     </Menu>
   );

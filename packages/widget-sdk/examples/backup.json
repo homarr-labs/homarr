@@ -1,0 +1,71 @@
+{
+  "$schema": "homarr-widget-package-v3",
+  "manifest": {
+    "id": "homarr.reference.backup",
+    "version": "1.1.0",
+    "sdkVersion": "1",
+    "name": "Filesystem backup monitor",
+    "description": "Read backup files and a JSON status/history report without an API, with an optional owner-configured backup executable.",
+    "entrypoints": {
+      "tile": "widget.tsx",
+      "advanced": "widget.tsx",
+      "server": "server.ts"
+    },
+    "handlers": {
+      "files": {
+        "kind": "query",
+        "permission": "view"
+      },
+      "runBackup": {
+        "kind": "action",
+        "permission": "full",
+        "timeoutMs": 300000,
+        "inputSchema": {
+          "type": "object",
+          "properties": {},
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "files": {
+    "widget.tsx": "import type { BackupOptions, BackupSnapshot, BackupRunResult } from \"./types\";\nimport { Alert, Badge, Button, Group, Loader, Stack, Table, Text } from \"@mantine/core\";\nimport { useWidgetAction, useWidgetClock, useWidgetHost, useWidgetOptions, useWidgetQuery, useWidgetServices } from \"@homarr/widget-sdk\";\nexport default function Backups() {\n  const host = useWidgetHost();\n  const services = useWidgetServices();\n  const options = useWidgetOptions<BackupOptions>();\n  const now = useWidgetClock(60000);\n  const query = useWidgetQuery<BackupSnapshot>(\"files\", {}, {refetchInterval:60000});\n  const run = useWidgetAction<BackupRunResult,Record<string,never>>(\"runBackup\");\n  const files = query.data?.files ?? [];\n  const latest = files[0];\n  const status = query.data?.status;\n  const finishedAt = status?.finishedAt ?? latest?.modifiedAt;\n  const overdue = finishedAt && now !== null && now - finishedAt > options.maximumAgeHours * 3600000;\n  let label = \"No backup report\";\n  let color = \"gray\";\n  if (finishedAt) { label = \"Recent backup activity\"; color = \"teal\"; }\n  if (status?.status === \"success\") label = \"Backup succeeded\";\n  if (overdue) { label = \"Backup overdue\"; color = \"orange\"; }\n  if (status?.status === \"failure\") { label = \"Backup failed\"; color = \"red\"; }\n  if (query.data?.running || run.isPending || status?.status === \"running\") { label = \"Backup running\"; color = \"blue\"; }\n  const execute = async () => {\n    if (await services.confirm({title:\"Run backup now?\",message:\"Run the owner-configured backup executable on the Homarr server?\"})) run.mutate({});\n  };\n  return <Stack p=\"md\" h=\"100%\" gap=\"sm\" style={{overflow:\"auto\"}}>\n    <Group justify=\"space-between\"><Text fw={600}>{options.title}</Text><Badge color={color}>{label}</Badge></Group>\n    {query.isPending && <Loader size=\"sm\" />}\n    {query.error && <Alert color=\"red\">{query.error.message}</Alert>}\n    {(query.data?.errors ?? []).map((error,index) => <Alert key={index} color=\"yellow\">{error}</Alert>)}\n    {status?.message && <Text size=\"sm\">{status.message}</Text>}\n    {finishedAt && <Text size=\"sm\">{new Date(finishedAt).toLocaleString(host.locale)}</Text>}\n    {latest && <Text size=\"xs\" c=\"dimmed\">{latest.name} · {(latest.bytes/1048576).toFixed(1)} MiB</Text>}\n    {status?.durationSeconds != null && <Text size=\"xs\">Last duration: {status.durationSeconds}s</Text>}\n    <Group><Button size=\"xs\" variant=\"light\" onClick={() => void query.refetch()}>Refresh</Button>\n      {host.displayMode === \"compact\" && <Button size=\"xs\" variant=\"subtle\" onClick={services.openAdvanced}>History and files</Button>}\n      {query.data?.commandConfigured && <Button size=\"xs\" disabled={host.isEditMode || query.data.running} loading={run.isPending} onClick={() => void execute()}>Run backup</Button>}\n    </Group>\n    {run.error && <Alert color=\"red\">{run.error.message}</Alert>}\n    {run.data?.completed && <Text size=\"xs\" c=\"teal\">Command completed in {run.data.durationSeconds}s. Refresh to read its status report.</Text>}\n    {host.displayMode === \"advanced\" && <>\n      <Text fw={600}>Run history</Text>\n      {!(query.data?.history?.length) && <Text c=\"dimmed\" size=\"sm\">Add history entries to the configured JSON status report.</Text>}\n      <Table><Table.Thead><Table.Tr><Table.Th>Finished</Table.Th><Table.Th>Status</Table.Th><Table.Th>Duration</Table.Th></Table.Tr></Table.Thead><Table.Tbody>{(query.data?.history ?? []).map((entry,index) => <Table.Tr key={index}><Table.Td>{entry.finishedAt ? new Date(entry.finishedAt).toLocaleString(host.locale) : \"Unknown\"}</Table.Td><Table.Td>{entry.status}</Table.Td><Table.Td>{entry.durationSeconds ?? \"—\"}s</Table.Td></Table.Tr>)}</Table.Tbody></Table>\n      <Text fw={600}>Backup files</Text>\n      <Table><Table.Thead><Table.Tr><Table.Th>File</Table.Th><Table.Th>Modified</Table.Th><Table.Th>MiB</Table.Th></Table.Tr></Table.Thead><Table.Tbody>{files.map((file) => <Table.Tr key={file.name}><Table.Td>{file.name}</Table.Td><Table.Td>{new Date(file.modifiedAt).toLocaleString(host.locale)}</Table.Td><Table.Td>{(file.bytes/1048576).toFixed(1)}</Table.Td></Table.Tr>)}</Table.Tbody></Table>\n    </>}\n    <Text size=\"xs\" c=\"dimmed\">Activity reports do not verify restore integrity. Test restores separately.</Text>\n  </Stack>;\n}\n",
+    "server.ts": "import type { BackupOptions, BackupFile, BackupRecord } from \"./types\";\nimport { readdir, readFile, stat } from \"node:fs/promises\";\nimport { join, isAbsolute } from \"node:path\";\nimport { execFile } from \"node:child_process\";\nimport { promisify } from \"node:util\";\nimport { defineWidgetServer, getWidgetServerContext } from \"@homarr/widget-sdk/server\";\nimport { backupCommand } from \"./command\";\nconst execute = promisify(execFile);\nlet running = false;\nconst timestamp = (value:unknown):number|null => { let next=NaN; if(typeof value===\"number\") next=value; else if(typeof value===\"string\") next=Date.parse(value); return Number.isFinite(next) ? next : null; };\nconst record = (input:unknown):BackupRecord => {\n  const value = input && typeof input === \"object\" ? input as Record<string,unknown> : {};\n  const status = value.status;\n  return {\n    status: status === \"success\" || status === \"failure\" || status === \"running\" ? status : \"unknown\",\n    finishedAt: timestamp(value.finishedAt),\n    durationSeconds: typeof value.durationSeconds === \"number\" ? value.durationSeconds : null,\n    bytes: typeof value.bytes === \"number\" ? value.bytes : null,\n    message: typeof value.message === \"string\" ? value.message.slice(0,500) : \"\",\n  };\n};\nexport default defineWidgetServer({\n  files: async (_input, context) => {\n    const { options } = await getWidgetServerContext<BackupOptions>(context);\n    const errors = [];\n    const files:BackupFile[] = [];\n    let status:BackupRecord|null = null;\n    let history:BackupRecord[] = [];\n    try {\n      if (typeof options.directory !== \"string\" || !isAbsolute(options.directory)) throw new Error(\"Choose an absolute backup directory inside Homarr\");\n      const entries = await readdir(options.directory, {withFileTypes:true});\n      const matches = entries.filter((entry) => entry.isFile() && (!options.suffix || entry.name.endsWith(options.suffix)));\n      if (matches.length > 1000) errors.push(\"The directory has over 1,000 matching files; narrow the suffix to inspect the full set.\");\n      for (const entry of matches.slice(0, 1000)) {\n        context.signal.throwIfAborted();\n        const info = await stat(join(options.directory, entry.name));\n        files.push({name:entry.name, bytes:info.size, modifiedAt:info.mtimeMs});\n      }\n      files.sort((a,b) => b.modifiedAt - a.modifiedAt);\n    } catch (error) { errors.push(error instanceof Error ? error.message : String(error)); }\n    if (options.statusFile) {\n      try {\n        if (typeof options.statusFile !== \"string\" || !isAbsolute(options.statusFile)) throw new Error(\"Status file must use an absolute container path\");\n        if ((await stat(options.statusFile)).size > 1048576) throw new Error(\"Status report exceeds 1 MiB\");\n        const report:unknown = JSON.parse(await readFile(options.statusFile, \"utf8\"));\n        status = record(report);\n        if (report && typeof report === \"object\" && \"history\" in report && Array.isArray(report.history)) history = report.history.slice(-100).map(record).sort((a,b) => (b.finishedAt ?? 0) - (a.finishedAt ?? 0));\n      } catch (error) { errors.push(error instanceof Error ? error.message : String(error)); }\n    }\n    return {files:files.slice(0,100),status,history,errors,running,commandConfigured:Boolean(backupCommand.executable)};\n  },\n  runBackup: async (_input, context) => {\n    const {isPreview} = await getWidgetServerContext(context);\n    if (isPreview) return {simulated:true};\n    if (!backupCommand.executable || !isAbsolute(backupCommand.executable)) throw new Error(\"Configure an absolute executable in command.ts and activate the package first\");\n    if (running) throw new Error(\"A backup command is already running\");\n    running = true;\n    const started = Date.now();\n    try {\n      await execute(backupCommand.executable, backupCommand.args, {shell:false,timeout:backupCommand.timeoutMs,maxBuffer:524288,signal:context.signal});\n      return {completed:true,durationSeconds:Math.round((Date.now()-started)/1000)};\n    } catch (error) {\n      const code = error && typeof error === \"object\" && \"code\" in error ? error.code : \"unknown\";\n      throw new Error(`The configured backup command failed (${code}). Check the backup service logs.`);\n    } finally { running = false; }\n  },\n});\n",
+    "command.ts": "// Owner configuration: edit this source file deliberately, then preview and activate.\n// The dashboard cannot supply executable paths or arguments. No shell is used.\nexport const backupCommand = {\n  executable: \"\", // Example: \"/usr/local/bin/run-backup\"\n  args: [] as string[],\n  timeoutMs: 240000,\n};\n",
+    "README.md": "# Filesystem backup monitor\nMount your backup directory and optional status JSON into Homarr. No API connection is required.\n\nThe optional status file is written by your backup system. Example:\n```json\n{\"status\":\"success\",\"finishedAt\":\"2026-09-12T01:00:00Z\",\"durationSeconds\":92,\"bytes\":1048576,\"message\":\"Nightly backup completed\",\"history\":[{\"status\":\"success\",\"finishedAt\":\"2026-09-11T01:00:00Z\",\"durationSeconds\":88}]}\n```\n`status` is success, failure, running, or unknown. `finishedAt` accepts ISO timestamps or epoch milliseconds. The widget reads at most 1 MiB and 100 history records. File timestamps alone report activity, not backup success or restore integrity.\n\nTo enable Run backup, deliberately edit `command.ts` with an absolute executable and fixed argument array. The executable must exist inside Homarr. Activate the reviewed change. The browser supplies no command text; the named full-permission action uses execFile without a shell, bounded output and a timeout. It never runs from a query or in preview. stdout/stderr are not returned to dashboard viewers. The configured program should update the status report itself.\n",
+    "types.ts": "export type BackupOptions = {title:string;directory:string;suffix:string;maximumAgeHours:number;statusFile:string};\nexport interface BackupRecord {status:\"success\"|\"failure\"|\"running\"|\"unknown\";finishedAt:number|null;durationSeconds:number|null;bytes:number|null;message:string;}\nexport interface BackupFile {name:string;bytes:number;modifiedAt:number;}\nexport interface BackupSnapshot {files:BackupFile[];status:BackupRecord|null;history:BackupRecord[];errors:string[];running:boolean;commandConfigured:boolean;}\nexport interface BackupRunResult {simulated?:boolean;completed?:boolean;durationSeconds?:number;}\n"
+  },
+  "dependencies": {},
+  "connections": {},
+  "options": {
+    "title": {
+      "control": "text",
+      "label": "Title",
+      "default": "Backups"
+    },
+    "directory": {
+      "control": "text",
+      "label": "Directory in the Homarr container",
+      "description": "Mount the backup directory into Homarr and enter its absolute container path.",
+      "default": "/backups"
+    },
+    "suffix": {
+      "control": "text",
+      "label": "Filename suffix",
+      "default": ".gz"
+    },
+    "maximumAgeHours": {
+      "control": "number",
+      "label": "Maximum backup age (hours)",
+      "default": 24,
+      "min": 1,
+      "max": 8760
+    },
+    "statusFile": {
+      "control": "text",
+      "label": "Status report JSON file",
+      "description": "Optional absolute path to a backup status report inside Homarr. See README.md for the format.",
+      "default": ""
+    }
+  }
+}

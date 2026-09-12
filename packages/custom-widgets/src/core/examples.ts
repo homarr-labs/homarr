@@ -22,6 +22,21 @@ export const CUSTOM_WIDGET_STARTER: HomarrCustomWidgetV2Input = {
   template: CUSTOM_JSX_STARTER,
 };
 
+export const CUSTOM_STATIC_JSX_STARTER = `<Stack gap="sm" p="sm">
+  <Text fw={700}>{options.title}</Text>
+  <Text size="sm">Make this space your own. Add a source when you need live data.</Text>
+</Stack>`;
+
+export const CUSTOM_WIDGET_STATIC_STARTER: HomarrCustomWidgetV2Input = {
+  $schema: "homarr-custom-widget-v2",
+  name: "New custom widget",
+  description: "",
+  sources: {},
+  requests: {},
+  options: { title: { label: "Title", control: "text", default: "My widget" } },
+  template: CUSTOM_STATIC_JSX_STARTER,
+};
+
 export const customJsxExamples: readonly CustomJsxExample[] = [
   {
     id: "service-dashboard",

@@ -1,4 +1,6 @@
 import { CUSTOM_WIDGET_SCHEMA, customWidgetImportSchema } from "@homarr/custom-widgets/core";
+import { CUSTOM_WIDGET_PACKAGE_SCHEMA, customWidgetPackageSchema } from "@homarr/custom-widgets/package";
+import type { CustomWidgetPackage } from "@homarr/custom-widgets/package";
 import { z } from "zod/v4";
 
 export const HOMARR_WEBSITE_URL = "https://homarr.dev";
@@ -10,7 +12,7 @@ export const WORKSHOP_SCHEMA_BY_TYPE = {
   customCss: WORKSHOP_CSS_SCHEMA,
 } as const;
 export const MAX_WORKSHOP_CSS_LENGTH = 16_384;
-export const MAX_WORKSHOP_CONTENT_LENGTH = 1_000_000;
+export const MAX_WORKSHOP_CONTENT_LENGTH = 20_000_000;
 export const MAX_WORKSHOP_SCREENSHOTS = 5;
 export const MAX_WORKSHOP_SCREENSHOT_BYTES = 5 * 1024 * 1024;
 export const WORKSHOP_REQUEST_TIMEOUT_MS = 8_000;
@@ -115,7 +117,10 @@ const normalizeWorkshopSubmissionRecord = (value: unknown) => {
   const record = value as Record<string, unknown>;
   if (record.type === "customWidget" || record.type === "customCss") return value;
   if (record.widgetSchema === WORKSHOP_CSS_SCHEMA) return { ...record, type: "customCss" };
-  if (typeof record.widgetSchema === "string" && record.widgetSchema.startsWith("homarr-custom-widget-"))
+  if (
+    record.widgetSchema === CUSTOM_WIDGET_PACKAGE_SCHEMA ||
+    (typeof record.widgetSchema === "string" && record.widgetSchema.startsWith("homarr-custom-widget-"))
+  )
     return { ...record, type: "customWidget" };
   return value;
 };
@@ -223,7 +228,7 @@ export type WorkshopWidgetValidationResult =
   | { success: true; data: z.infer<typeof customWidgetImportSchema> }
   | { success: false; error: string };
 export type WorkshopValidationResult =
-  | { success: true; data: z.infer<typeof customWidgetImportSchema> | string }
+  | { success: true; data: z.infer<typeof customWidgetImportSchema> | CustomWidgetPackage | string }
   | { success: false; error: string };
 
 export function validateWorkshopContent(type: WorkshopSubmissionType, content: string): WorkshopValidationResult {
@@ -234,6 +239,27 @@ export function validateWorkshopContent(type: WorkshopSubmissionType, content: s
     return { success: true, data: content };
   }
 
+  try {
+    const candidate: unknown = JSON.parse(content);
+    if (
+      candidate &&
+      typeof candidate === "object" &&
+      "$schema" in candidate &&
+      candidate.$schema === CUSTOM_WIDGET_PACKAGE_SCHEMA
+    ) {
+      const result = customWidgetPackageSchema.safeParse(candidate);
+      if (result.success) return { success: true, data: result.data };
+      return {
+        success: false,
+        error: result.error.issues
+          .slice(0, 5)
+          .map((issue) => `${issue.path.join(".")}: ${issue.message}`)
+          .join("\n"),
+      };
+    }
+  } catch {
+    return { success: false, error: "Widget content is not valid JSON" };
+  }
   return validateWorkshopWidget(content);
 }
 
