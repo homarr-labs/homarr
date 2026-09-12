@@ -25,6 +25,18 @@ body:
     attributes:
       label: Additional information
       description: Add any other information related to the bug here, screenshots if applicable.
+  - type: input
+    id: exactBuild
+    attributes:
+      label: Exact build or image
+      description: For preview or development builds, include the commit SHA or image digest. A moving tag such as v2 is not enough to identify the build.
+      placeholder: "Commit SHA, image digest, or release version"
+  - type: input
+    id: lastWorkingVersion
+    attributes:
+      label: Last working version
+      description: If this worked before, include the last version or build where you tried the same action. Leave blank if unknown.
+      placeholder: "Version or commit SHA"
   - type: dropdown
     id: version
     attributes:
@@ -33,6 +45,7 @@ body:
       options:
         # The below comment is used to insert a new version with on-release.yml
         #NEXT_VERSION#
+        - 1.77.0
         - 1.76.2
         - 1.76.1
         - 1.76.0

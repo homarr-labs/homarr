@@ -1150,6 +1150,10 @@
     "bazarr": {
       "name": "",
       "description": ""
+    },
+    "wud": {
+      "name": "Wat is er een Docker",
+      "description": "Controleer welke van uw Docker containers afbeeldingen updates beschikbaar hebben"
     }
   },
   "media": {
@@ -1232,10 +1236,20 @@
     "here": "hier",
     "iconPicker": {
       "label": "Icoon-URL",
-      "header": "Typ naam of objecten om te filteren op iconen… Homarr doorzoekt {countIcons} iconen voor je.",
-      "headerLoading": "",
+      "header": "Zoek {countIcons} afbeeldingen op naam",
+      "headerLoading": "Afbeeldingen zoeken op naam",
       "noResults": "",
-      "error": ""
+      "error": "",
+      "description": "Zoek in de bibliotheek, plak een afbeelding-URL of upload een bestand.",
+      "clear": "Verwijder afbeelding",
+      "uploadImage": "Afbeelding uploaden",
+      "results": "Zoekresultaten afbeeldingen",
+      "localImages": "Jouw afbeeldingen",
+      "svgIcons": "SVG iconen",
+      "otherImages": "Andere afbeeldingen",
+      "urlLoading": "Controleren van afbeelding…",
+      "urlReady": "Afbeelding is klaar voor gebruik",
+      "urlError": "Deze afbeelding kan niet worden geladen. Controleer de URL en probeer het opnieuw."
     },
     "colorScheme": {
       "options": {
@@ -3201,7 +3215,7 @@
         "queued": ""
       },
       "type": {
-        "movie": "",
+        "movie": "Film",
         "episode": ""
       },
       "empty": {
@@ -3944,6 +3958,38 @@
         "dockerNetwork": {
           "title": "Docker netwerk I/O",
           "subtitle": "Netwerkverkeer van Docker-containers"
+        }
+      }
+    },
+    "wud": {
+      "name": "Wat is er een Docker",
+      "description": "Laat zien hoeveel containers er updates beschikbaar hebben.",
+      "title": "Wat is er een Docker",
+      "monitored": "Gecontroleerd",
+      "updatesAvailable": "{count, plural, one {# update beschikbaar} other {# updates zijn beschikbaar}}",
+      "updateAvailable": "Update beschikbaar",
+      "openReleaseNotes": "Open release notities",
+      "option": {
+        "showTitle": {
+          "label": "Toon titel"
+        },
+        "showRing": {
+          "label": "Update ring tonen"
+        },
+        "layout": {
+          "label": "Lay-out",
+          "option": {
+            "horizontal": {
+              "label": "Horizontaal"
+            },
+            "vertical": {
+              "label": "Verticaal"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Toon container update lijst",
+          "description": "Lijst van alle gemonitorde container met een afbeelding update beschikbaar"
         }
       }
     }

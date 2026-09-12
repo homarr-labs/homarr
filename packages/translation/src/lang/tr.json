@@ -1150,6 +1150,10 @@
     "bazarr": {
       "name": "Bazarr",
       "description": "Altyazıları yöneten ve indiren Sonarr ve Radarr yardımcı uygulaması"
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Docker konteynerlerinizden hangilerinde imaj güncellemeleri olduğunu izleyin"
     }
   },
   "media": {
@@ -1232,10 +1236,20 @@
     "here": "buraya",
     "iconPicker": {
       "label": "Simge URL'si",
-      "header": "Simgeleri filtrelemek için isim veya nesne yazın... Homarr sizin için {countIcons} simge arasında arama yapacaktır.",
-      "headerLoading": "Simge aramak için yazın…",
+      "header": "Simgeleri filtrelemek için isim veya nesne yazın... Homarr sizin için {countIcons} simge arasında arama yapacaktır",
+      "headerLoading": "Simge aramak için yazın",
       "noResults": "“{search}” aramasıyla eşleşen simge yok.",
-      "error": "Simgeler yüklenemedi."
+      "error": "Simgeler yüklenemedi.",
+      "description": "Kütüphanede arayın, bir görsel URL'si yapıştırın veya bir dosya yükleyin.",
+      "clear": "Görseli temizle",
+      "uploadImage": "Görsel yükle",
+      "results": "Görsel arama sonuçları",
+      "localImages": "Görselleriniz",
+      "svgIcons": "SVG simgeleri",
+      "otherImages": "Diğer görseller",
+      "urlLoading": "Görsel kontrol ediliyor…",
+      "urlReady": "Görsel kullanıma hazır",
+      "urlError": "Bu görsel yüklenemedi. URL'yi kontrol edip yeniden deneyin."
     },
     "colorScheme": {
       "options": {
@@ -3945,6 +3959,38 @@
       },
       "error": {
         "internalServerError": "Traefik verileri alınamadı"
+      }
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "İzlenen konteynerlerin kaçında güncelleme mevcut olduğunu gösterir.",
+      "title": "What's Up Docker",
+      "monitored": "İzlenen",
+      "updatesAvailable": "{count, plural, one {# güncelleme mevcut} other {# güncelleme mevcut}}",
+      "updateAvailable": "Güncelleme mevcut",
+      "openReleaseNotes": "Sürüm notlarını aç",
+      "option": {
+        "showTitle": {
+          "label": "Başlığı göster"
+        },
+        "showRing": {
+          "label": "Güncelleme halkasını göster"
+        },
+        "layout": {
+          "label": "Düzen",
+          "option": {
+            "horizontal": {
+              "label": "Yatay"
+            },
+            "vertical": {
+              "label": "Dikey"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Konteyner güncelleme listesini göster",
+          "description": "İmaj güncellemesi mevcut olan her izlenen konteyneri listeler"
+        }
       }
     }
   },

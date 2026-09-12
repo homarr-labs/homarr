@@ -682,7 +682,7 @@
       },
       "create": {
         "title": "Criar aplicativo",
-        "description": "Criar um aplicativo",
+        "description": "Criar um novo aplicativo ",
         "action": "Abrir criação de aplicativo"
       },
       "add": "Adicione um aplicativo"
@@ -723,15 +723,15 @@
     },
     "notification": {
       "created": "Widget \"{name}\" criado com sucesso.",
-      "updated": "Widget \"{name}atualizado com sucesso.",
-      "deleted": "Widget \"{name}excluído.",
+      "updated": "Widget \"{name}\" atualizado com sucesso.",
+      "deleted": "Widget \"{name}\" excluído.",
       "imported": "Widget importado com sucesso.",
       "aiPromptCopyError": "Falha ao copiar prompt para área de transferência. O seu navegador pode não suportar este recurso.",
       "createError": "Falha ao criar widget. Verifique se o endpoint API está acessível.",
       "updateError": "Falha ao atualizar o widget. Suas alterações não foram salvas.",
       "importError": "Falha ao importar o widget. Certifique-se de que o arquivo seja um widget personalizado válido exportado em JSON.",
       "exportError": "Falha ao exportar o widget.",
-      "duplicated": "Widget \"{name}duplicado.",
+      "duplicated": "Widget \"{name}\" duplicado.",
       "duplicateError": "Falha ao duplicar o widget.",
       "toggleError": "Falha ao alternar o status do widget.",
       "deleteError": "Falha ao excluir o widget.",
@@ -1202,6 +1202,10 @@
     "bazarr": {
       "name": "",
       "description": ""
+    },
+    "wud": {
+      "name": "O Docker",
+      "description": "Monitora qual dos seus contêineres Docker tem atualizações de imagem disponíveis"
     }
   },
   "media": {
@@ -1284,10 +1288,20 @@
     "here": "aqui",
     "iconPicker": {
       "label": "URL do ícone",
-      "header": "Digite o nome ou os objetos para filtrar os ícones... O Homarr pesquisará {countIcons} ícones para você.",
-      "headerLoading": "Digite para pesquisar ícones…",
+      "header": "Digite o nome ou os objetos para filtrar os ícones... O Homarr pesquisará {countIcons} ícones para você",
+      "headerLoading": "Digite para pesquisar ícones",
       "noResults": "Nenhum ícone corresponde a \"{search}\".",
-      "error": "Não foi possível carregar os ícones."
+      "error": "Não foi possível carregar os ícones.",
+      "description": "Procure na biblioteca, cole uma URL da imagem ou envie um arquivo.",
+      "clear": "Limpar imagem",
+      "uploadImage": "Upload de imagem",
+      "results": "Resultados da busca por imagem",
+      "localImages": "Suas imagens",
+      "svgIcons": "Ícones SVG",
+      "otherImages": "Outras imagens",
+      "urlLoading": "Verificando imagem…",
+      "urlReady": "A imagem está pronta para uso",
+      "urlError": "Esta imagem não pôde ser carregada. Verifique a URL e tente novamente."
     },
     "colorScheme": {
       "options": {
@@ -2364,7 +2378,7 @@
     },
     "tracearr": {
       "name": "Tracearr",
-      "description": "Monitoramento avançado de servidor de mídia com dados detalhados de transmissão e transcodificação\n",
+      "description": "Monitoramento avançado de servidor de mídia com dados detalhados de transmissão e transcodificação",
       "option": {
         "showStreams": {
           "label": "Exibir transmissões ativas"
@@ -2540,7 +2554,7 @@
       },
       "integration": {
         "noData": "Nenhuma integração encontrada",
-        "description": "Clique <here></here< para criar uma nova integração"
+        "description": "Clique <here></here> para criar uma nova integração"
       },
       "app": {
         "noData": "Nenhum aplicativo encontrado",
@@ -2573,7 +2587,7 @@
       },
       "error": {
         "noUrl": "Nenhum URL de vídeo fornecido",
-        "forYoutubeUseIframe": "Para vídeos do Youtube, use a opção de iFrame"
+        "forYoutubeUseIframe": "Para vídeos do Youtube, use a opção de iframe"
       }
     },
     "mediaServer": {
@@ -2707,7 +2721,7 @@
       "option": {
         "albumId": {
           "label": "ID do Álbum",
-          "description": "Esta é uma identificação única que se refere ao seu álbum Immich. Você pode encontrar essa identificação abrindo um álbum e copiando a string única da URL, por exemplo 'a21aca09-9f05-47dc-b1a1-7b53c547226e'"
+          "description": "Esta é uma identificação única que se refere ao seu álbum Immich. Você pode encontrar essa identificação abrindo um álbum e copiando a string única da URL, por exemplo 'a21aca09-9f05-47dc-b1a1-7b53c547226e'."
         },
         "rotationIntervalSeconds": {
           "label": "Intervalo em segundos",
@@ -3997,6 +4011,38 @@
       },
       "error": {
         "internalServerError": ""
+      }
+    },
+    "wud": {
+      "name": "O Docker",
+      "description": "Mostrar quantos contêineres assistidos possuem atualizações disponíveis.",
+      "title": "O Docker",
+      "monitored": "Monitorado",
+      "updatesAvailable": "{count, plural, one {# atualização disponível} other {# atualizações disponíveis}}",
+      "updateAvailable": "Atualização disponível",
+      "openReleaseNotes": "Abrir notas de lançamento",
+      "option": {
+        "showTitle": {
+          "label": "Mostrar título"
+        },
+        "showRing": {
+          "label": "Mostrar atualização de toque"
+        },
+        "layout": {
+          "label": "Layout",
+          "option": {
+            "horizontal": {
+              "label": "Horizontal"
+            },
+            "vertical": {
+              "label": "Vertical"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Mostrar lista de atualização do recipiente",
+          "description": "Lista cada container monitorado que tem uma atualização de imagem disponível"
+        }
       }
     }
   },

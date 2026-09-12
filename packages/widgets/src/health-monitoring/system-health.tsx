@@ -42,7 +42,7 @@ import type { ScopedTranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import { zoomCompensatedSize } from "@homarr/ui";
 
-import { filterStorageVolumes, normalizeStorageDeviceName } from "../filter-storage-volumes";
+import { filterStorageVolumes, storageDeviceNamesMatch } from "../filter-storage-volumes";
 import { WidgetEmptyState } from "../common/empty-state";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
@@ -444,12 +444,7 @@ interface SmartData {
 export const matchFileSystemAndSmart = (fileSystems: FileSystem[], smartData: SmartData[]) => {
   return fileSystems
     .map((fileSystem) => {
-      const normalizedFileSystemName = normalizeStorageDeviceName(fileSystem.deviceName);
-      const smartDisk = smartData.find(
-        (smart) =>
-          smart.deviceName === fileSystem.deviceName ||
-          normalizeStorageDeviceName(smart.deviceName) === normalizedFileSystemName,
-      );
+      const smartDisk = smartData.find((smart) => storageDeviceNamesMatch(smart.deviceName, fileSystem.deviceName));
 
       return {
         deviceName: smartDisk?.deviceName ?? fileSystem.deviceName,

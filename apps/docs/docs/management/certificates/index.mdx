@@ -64,3 +64,8 @@ Below you can find instructions for some of the integrations.
 Since version 6 of Pi-hole, the web interface can be accessed through HTTPS.
 The certificate can be found in the path `/etc/pihole/tls_ca.crt`. To add the certificate, this file needs to be copied and uploaded to Homarr.
 You can find more details regarding SSL / TLS for Pi-hole [here](https://docs.pi-hole.net/api/tls/).
+
+### Proxmox
+
+For the default Proxmox VE cluster certificates, trust the cluster CA from `/etc/pve/pve-root-ca.pem` on any node.
+See [Proxmox certificate management](https://pve.proxmox.com/wiki/Certificate_Management).

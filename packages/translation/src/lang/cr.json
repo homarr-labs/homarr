@@ -1204,6 +1204,10 @@
     "bazarr": {
       "name": "crwdns5799:0crwdne5799:0",
       "description": "crwdns5801:0crwdne5801:0"
+    },
+    "wud": {
+      "name": "crwdns6193:0crwdne6193:0",
+      "description": "crwdns6195:0crwdne6195:0"
     }
   },
   "media": {
@@ -1286,10 +1290,20 @@
     "here": "crwdns552:0crwdne552:0",
     "iconPicker": {
       "label": "crwdns554:0crwdne554:0",
-      "header": "crwdns556:0{countIcons}crwdne556:0",
-      "headerLoading": "crwdns5681:0crwdne5681:0",
+      "header": "crwdns6227:0{countIcons}crwdne6227:0",
+      "headerLoading": "crwdns6229:0crwdne6229:0",
       "noResults": "crwdns5683:0{search}crwdne5683:0",
-      "error": "crwdns5685:0crwdne5685:0"
+      "error": "crwdns5685:0crwdne5685:0",
+      "description": "crwdns6225:0crwdne6225:0",
+      "clear": "crwdns6231:0crwdne6231:0",
+      "uploadImage": "crwdns6233:0crwdne6233:0",
+      "results": "crwdns6235:0crwdne6235:0",
+      "localImages": "crwdns6237:0crwdne6237:0",
+      "svgIcons": "crwdns6239:0crwdne6239:0",
+      "otherImages": "crwdns6241:0crwdne6241:0",
+      "urlLoading": "crwdns6243:0crwdne6243:0",
+      "urlReady": "crwdns6245:0crwdne6245:0",
+      "urlError": "crwdns6247:0crwdne6247:0"
     },
     "colorScheme": {
       "options": {
@@ -4013,6 +4027,38 @@
         "dockerNetwork": {
           "title": "crwdns4973:0crwdne4973:0",
           "subtitle": "crwdns4975:0crwdne4975:0"
+        }
+      }
+    },
+    "wud": {
+      "name": "crwdns6197:0crwdne6197:0",
+      "description": "crwdns6199:0crwdne6199:0",
+      "title": "crwdns6201:0crwdne6201:0",
+      "monitored": "crwdns6203:0crwdne6203:0",
+      "updatesAvailable": "crwdns6205:0count={count}crwdne6205:0",
+      "updateAvailable": "crwdns6207:0crwdne6207:0",
+      "openReleaseNotes": "crwdns6209:0crwdne6209:0",
+      "option": {
+        "showTitle": {
+          "label": "crwdns6211:0crwdne6211:0"
+        },
+        "showRing": {
+          "label": "crwdns6213:0crwdne6213:0"
+        },
+        "layout": {
+          "label": "crwdns6215:0crwdne6215:0",
+          "option": {
+            "horizontal": {
+              "label": "crwdns6217:0crwdne6217:0"
+            },
+            "vertical": {
+              "label": "crwdns6219:0crwdne6219:0"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "crwdns6221:0crwdne6221:0",
+          "description": "crwdns6223:0crwdne6223:0"
         }
       }
     }

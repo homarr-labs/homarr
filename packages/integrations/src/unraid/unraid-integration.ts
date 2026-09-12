@@ -37,7 +37,11 @@ export class UnraidIntegration extends Integration implements ISystemHealthMonit
     const systemInfo = await this.getSystemInformationAsync();
 
     const cpuUtilization = systemInfo.metrics.cpu.cpus.reduce((acc, val) => acc + val.percentTotal, 0);
-    const cpuCount = systemInfo.info.cpu.cores;
+    const cpuCount = systemInfo.metrics.cpu.cpus.length;
+    let cpuUtilizationNormalized = 0;
+    if (cpuCount > 0) {
+      cpuUtilizationNormalized = cpuUtilization / cpuCount;
+    }
 
     const totalMemory = systemInfo.metrics.memory.total;
     const usedMemory = Math.max(totalMemory - systemInfo.metrics.memory.available, 0);
@@ -46,7 +50,7 @@ export class UnraidIntegration extends Integration implements ISystemHealthMonit
     return {
       version: systemInfo.info.os.release,
       cpuModelName: systemInfo.info.cpu.brand,
-      cpuUtilization: cpuUtilization / cpuCount,
+      cpuUtilization: cpuUtilizationNormalized,
       memUsedInBytes: usedMemory,
       memAvailableInBytes: totalMemory - usedMemory,
       uptime: dayjs().diff(uptime, "seconds"),

@@ -14,7 +14,7 @@ import { IntegrationErrorIndicator } from "../common/integration-error-indicator
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
 import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
-import { filterStorageVolumes, normalizeStorageDeviceName } from "../filter-storage-volumes";
+import { filterStorageVolumes, storageDeviceNamesMatch } from "../filter-storage-volumes";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
 
 type DiskDisplayMode = WidgetComponentProps<"systemDisks">["options"]["displayMode"];
@@ -255,9 +255,7 @@ export default function SystemResources({
       integrationId: entry.integrationId,
       integrationName: entry.integrationName,
       item,
-      smartItem: smart.find(
-        (candidate) => normalizeStorageDeviceName(candidate.deviceName) === normalizeStorageDeviceName(item.deviceName),
-      ),
+      smartItem: smart.find((candidate) => storageDeviceNamesMatch(candidate.deviceName, item.deviceName)),
     }));
   });
   const isAdvanced = displayMode === "advanced";

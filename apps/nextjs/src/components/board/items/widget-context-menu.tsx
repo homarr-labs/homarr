@@ -244,7 +244,13 @@ export const WidgetContextMenu = ({
     setMenuOpened(false);
   }, []);
 
-  if (!session || !settings.enableRightClickOnWidgets || isEditMode || item.kind === "app") {
+  if (
+    !session ||
+    !settings.enableRightClickOnWidgets ||
+    isEditMode ||
+    item.kind === "app" ||
+    item.kind === "bookmarks"
+  ) {
     return <>{children}</>;
   }
 

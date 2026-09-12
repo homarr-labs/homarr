@@ -1204,6 +1204,10 @@
     "bazarr": {
       "name": "Bazarr",
       "description": "Applicazione complementare a Sonarr e Radarr che gestisce e scarica i sottotitoli"
+    },
+    "wud": {
+      "name": "Cos'è Il Docker",
+      "description": "Monitora quali dei tuoi contenitori Docker sono disponibili aggiornamenti delle immagini"
     }
   },
   "media": {
@@ -1286,10 +1290,20 @@
     "here": "qui",
     "iconPicker": {
       "label": "Icona URL",
-      "header": "Digita il nome o gli oggetti da filtrare per le icone... Homarr cercherà tra le icone {countIcons} per te.",
-      "headerLoading": "Digita per cercare icone…",
+      "header": "Digita il nome o gli oggetti da filtrare per le icone... Homarr cercherà tra le icone {countIcons} per te",
+      "headerLoading": "Digita per cercare icone",
       "noResults": "Nessuna icona corrisponde a \"{search}\".",
-      "error": "Impossibile caricare le icone."
+      "error": "Impossibile caricare le icone.",
+      "description": "Cerca nella libreria, incolla un URL di immagine, o carica un file.",
+      "clear": "Cancella immagine",
+      "uploadImage": "Carica immagine",
+      "results": "Risultati della ricerca immagini",
+      "localImages": "Le tue immagini",
+      "svgIcons": "Icone SVG",
+      "otherImages": "Altre immagini",
+      "urlLoading": "Controllo immagine…",
+      "urlReady": "L'immagine è pronta per l'uso",
+      "urlError": "Questa immagine non può essere caricata. Controlla l'URL e riprova."
     },
     "colorScheme": {
       "options": {
@@ -1873,7 +1887,7 @@
       }
     },
     "anchorNote": {
-      "name": "Nota Anchor",
+      "name": "Ancora Nota",
       "description": "Visualizza una nota selezionata da Ancoraggio",
       "option": {
         "noteId": {
@@ -2111,12 +2125,12 @@
           "description": "Come dovrebbe apparire la data"
         }
       },
-      "currentWindSpeed": "{currentWindSpeed} km/h",
+      "currentWindSpeed": "{currentWindSpeed} {unit}",
       "dailyForecast": {
         "sunrise": "Alba",
         "sunset": "Tramonto",
-        "maxWindSpeed": "Max velocità vento: {maxWindSpeed} km/h",
-        "maxWindGusts": "Max raffiche di vento: {maxWindGusts} km/h",
+        "maxWindSpeed": "Velocità massima del vento: {maxWindSpeed} {unit}",
+        "maxWindGusts": "Raffiche di vento massime: {maxWindGusts} {unit}",
         "humidity": "Umidità: {humidity}%"
       },
       "kind": {
@@ -2896,7 +2910,7 @@
       "option": {
         "albumId": {
           "label": "ID Album",
-          "description": "Si tratta di un ID univoco che si riferisce al tuo album Immich. Puoi trovare questo id aprendo un album e copiando la stringa univoca dall'URL, ad esempio 'a21aca09-9f05-47dc-b1a1-7b53c547226e'"
+          "description": "Si tratta di un ID univoco che si riferisce al tuo album Immich. Puoi trovare questo id aprendo un album e copiando la stringa univoca dall'URL, ad esempio 'a21aca09-9f05-47dc-b1a1-7b53c547226e'."
         },
         "rotationIntervalSeconds": {
           "label": "Intervallo in secondi",
@@ -3057,7 +3071,7 @@
         },
         "client": {
           "pause": "Metti in pausa il client",
-          "resume": "Ripristina il client"
+          "resume": "Riprendi il client"
         },
         "item": {
           "pause": "Metti in pausa l'elemento",
@@ -4013,6 +4027,38 @@
         "dockerNetwork": {
           "title": "I/O Rete Docker",
           "subtitle": "Traffico di rete dei container docker"
+        }
+      }
+    },
+    "wud": {
+      "name": "Cos'è Il Docker",
+      "description": "Mostra quanti contenitori visti hanno aggiornamenti disponibili.",
+      "title": "Cos'è Il Docker",
+      "monitored": "Monitorato",
+      "updatesAvailable": "{count, plural, one {# aggiornamento disponibile} other {# aggiornamenti disponibili}}",
+      "updateAvailable": "Aggiornamento disponibile",
+      "openReleaseNotes": "Apri note di rilascio",
+      "option": {
+        "showTitle": {
+          "label": "Mostra titolo"
+        },
+        "showRing": {
+          "label": "Mostra anello di aggiornamento"
+        },
+        "layout": {
+          "label": "Layout",
+          "option": {
+            "horizontal": {
+              "label": "Orizzontale"
+            },
+            "vertical": {
+              "label": "Verticale"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Mostra elenco aggiornamenti container",
+          "description": "Elenca ogni contenitore monitorato che ha un aggiornamento dell'immagine disponibile"
         }
       }
     }
@@ -5197,7 +5243,7 @@
         "label": "Arresta",
         "notification": {
           "success": {
-            "title": "Containers arrestati",
+            "title": "Containers fermati",
             "message": "I containers sono stati arrestati con successo"
           },
           "error": {
