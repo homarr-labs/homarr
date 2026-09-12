@@ -454,7 +454,7 @@ export const userRouter = createTRPCRouter({
       }
 
       const user = await ctx.db.query.users.findFirst({
-        columns: { email: true, provider: true },
+        columns: { name: true, email: true, provider: true },
         where: eq(users.id, input.id),
       });
 
@@ -469,6 +469,13 @@ export const userRouter = createTRPCRouter({
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "Username and email can not be changed for users with external providers",
+        });
+      }
+
+      if (isDemoMode && input.name !== user.name) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Username changes are disabled in demo mode",
         });
       }
 
@@ -497,6 +504,13 @@ export const userRouter = createTRPCRouter({
       mcp: { enabled: true, description: "Delete a user by ID. REQUIRED: userId (string)" },
     })
     .mutation(async ({ input, ctx }) => {
+      if (isDemoMode) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "User deletion is disabled in demo mode",
+        });
+      }
+
       // Only admins and user itself can delete a user
       if (ctx.session.user.id !== input.userId && !ctx.session.user.permissions.includes("admin")) {
         throw new TRPCError({
@@ -519,6 +533,13 @@ export const userRouter = createTRPCRouter({
       },
     })
     .mutation(async ({ ctx, input }) => {
+      if (isDemoMode) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Password changes are disabled in demo mode",
+        });
+      }
+
       const user = ctx.session.user;
       // Only admins can change other users' passwords
       if (!user.permissions.includes("admin") && user.id !== input.userId) {

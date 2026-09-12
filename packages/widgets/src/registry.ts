@@ -59,6 +59,7 @@ import type * as video from "./video";
 import type * as vpn from "./vpn";
 import type * as weather from "./weather";
 import type * as wud from "./wud";
+import type * as llamacpp from "./llama-cpp";
 
 // Keep these imports explicit so Next.js and Turbopack can discover every widget
 // module without loading any widget definition or component eagerly.
@@ -122,6 +123,7 @@ export const widgetModuleLoaders = {
   customApi: () => import("./custom-api"),
   weather: () => import("./weather"),
   wud: () => import("./wud"),
+  llamacpp: () => import("./llama-cpp"),
 } satisfies { [TKind in WidgetKind]: () => Promise<WidgetImports[TKind]> };
 
 export type WidgetImports = {
@@ -184,6 +186,7 @@ export type WidgetImports = {
   customApi: typeof customApi;
   weather: typeof weather;
   wud: typeof wud;
+  llamacpp: typeof llamacpp;
 };
 
 type WidgetComponentLoaders = {
@@ -253,6 +256,7 @@ export const widgetComponentLoaders = {
   customApi: () => import("./custom-api/component"),
   weather: () => import("./weather/component"),
   wud: () => import("./wud/component"),
+  llamacpp: () => import("./llama-cpp/component"),
 } satisfies WidgetComponentLoaders;
 
 export type WidgetImportKey = keyof WidgetImports;

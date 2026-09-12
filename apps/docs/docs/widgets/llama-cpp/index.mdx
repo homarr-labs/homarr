@@ -1,0 +1,43 @@
+---
+title: "llama.cpp"
+description: "Displays the health, loaded model and generation speed of a local llama.cpp llama-server."
+hide_title: true
+---
+
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
+import { llamacppWidget } from ".";
+import { llamacppIntegration } from "@site/docs/integrations/llama-cpp";
+
+<WidgetHeader widget={llamacppWidget} categories={["System Monitoring"]} />
+
+This widget shows the live status of your local [llama.cpp](https://github.com/ggml-org/llama.cpp) `llama-server`: whether it is online, which model is loaded (with quantization, context size, file size and parameter count), the generation speed in tokens per second, and how many requests are being processed. When the server is started with `--metrics`, it also reports total token counts and the prompt cache hit rate.
+
+### Generation speed
+
+The widget picks the most meaningful speed for the current state (hover the speed for an explanation of which one is shown):
+
+- **While a request is being generated** — the average speed of that request since it started, derived from the token count reported by `/slots`.
+- **While the server is busy but the per-request data is unavailable** — the live speed from the `/metrics` rate gauge.
+- **While the server is idle** — the average generation speed since the server started (cumulative tokens ÷ seconds), so the value stays meaningful instead of dropping to zero.
+
+### Supported Integrations
+
+<WidgetIntegrations
+  items={[
+    {
+      integration: llamacppIntegration,
+      note: "Displays health, model details, generation speed and request status",
+    },
+  ]}
+/>
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+
+<WidgetConfig configuration={llamacppWidget.configuration} />

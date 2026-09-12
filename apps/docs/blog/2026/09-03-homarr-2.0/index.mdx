@@ -15,19 +15,13 @@ Many of you used the v2 demo when it was still rough, found bugs and came back t
 
 We are also planning a small batch of **free, limited-edition Homarr swag** for Workshop contributors and a few randomly picked community members. It is not for sale and it is not for profit. No Homarr merch empire, sorry.
 
-Homarr 2.0 is an upgrade, not a brand-new app wearing the same logo. Here is what actually changed.
+Homarr 2.0 builds on the dashboard you already use. Here is what changed.
 
 ![A populated Homarr 2.0 dashboard with compact widgets, an Assistant, and an application rail](./img/homarr-v2-dashboard.webp)
 
 <!-- truncate -->
 
-:::warning Back up before upgrading
-
-Database migrations run automatically when Homarr starts. Create a
-[Homarr backup](/docs/management/backup) first. Do not test a prerelease image on your only production volume.
-Backups are boring. Restores are worse.
-
-:::
+Update your Homarr image as usual. Homarr runs database migrations automatically when the updated container starts; no manual database migration or separate v2 upgrade procedure is needed. Workshop uses the production service by default, with no preview URL configuration required.
 
 ## Custom Widgets v2 and Workshop
 
@@ -150,9 +144,8 @@ Groups use a new Viewer, Editor and Admin matrix. The API, Assistant and MCP fol
 
 Board startup work runs in parallel, heavy screens load when opened, and identical integration requests share work instead of doing it twice.
 
-## Before upgrading
+## Compatibility notes
 
-- Keep a backup and use the final release image, not a prerelease tag.
 - Legacy Custom JSX definitions enter a migration state. Homarr keeps encrypted credentials and an archived copy until the v2 definition validates.
 - Mobile layouts place rail content in the main flow instead of displaying rails.
 - Custom Widgets remain Beta.
@@ -160,8 +153,7 @@ Board startup work runs in parallel, heavy screens load when opened, and identic
 
 ## Links
 
-- Try the [Homarr 2.0 preview](https://app-v2.preview.homarr.dev).
-- Follow the [v2 beta setup guide](/docs/getting-started/upgrade-v2).
-- Follow the [v2 release pull request](https://github.com/homarr-labs/homarr/pull/6545) and [public beta thread](https://github.com/homarr-labs/homarr/issues/6600).
-- Compare [v1.76.2 with the release/v2 branch](https://github.com/homarr-labs/homarr/compare/v1.76.2...release/v2).
+- Try the [live demo](https://demo.homarr.dev/).
+- See [installation and update instructions](/docs/getting-started/installation/docker).
+- Browse [Workshop](https://homarr.dev/workshop).
 - Read the guides for [Boards](/docs/management/boards), [Custom Widgets](/docs/management/custom-widgets), [Assistant](/docs/management/assistant), [MCP](/docs/management/mcp) and [Docker labels](/docs/integrations/docker-labels).
