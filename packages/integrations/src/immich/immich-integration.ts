@@ -17,6 +17,8 @@ import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/h
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ImageProxy } from "@homarr/image-proxy";
 
+import type { IntegrationHttpAuthentication } from "../http-auth";
+import { apiKeyAuth } from "../http-auth";
 import type { IntegrationInput, IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
@@ -48,6 +50,10 @@ const logger = createLogger({ module: "immich-integration" });
 const carouselPhotoCount = 50;
 
 export class ImmichIntegration extends Integration {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    return apiKeyAuth(this.integration);
+  }
+
   constructor(integration: IntegrationInput) {
     super(integration);
   }

@@ -3,6 +3,8 @@ import { z } from "zod/v4";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
+import type { IntegrationHttpAuthentication } from "../../http-auth";
+import { apiKeyAuth } from "../../http-auth";
 import { Integration } from "../../base/integration";
 import type { IntegrationTestingInput } from "../../base/integration";
 import { TestConnectionError } from "../../base/test-connection/test-connection-error";
@@ -14,9 +16,13 @@ import { mediaOrganizerPriorities } from "../media-organizer";
 const logger = createLogger({ module: "readarrIntegration" });
 
 export class ReadarrIntegration extends Integration implements ICalendarIntegration {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    return apiKeyAuth(this.integration);
+  }
+
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await input.fetchAsync(this.url("/api"), {
-      headers: { "X-Api-Key": super.getSecretValue("apiKey") },
+      headers: (await this.getHttpAuthenticationAsync()).headers,
     });
 
     if (!response.ok) return TestConnectionError.StatusResult(response);
@@ -45,9 +51,7 @@ export class ReadarrIntegration extends Integration implements ICalendarIntegrat
     });
 
     const response = await fetchWithTrustedCertificatesAsync(url, {
-      headers: {
-        "X-Api-Key": super.getSecretValue("apiKey"),
-      },
+      headers: (await this.getHttpAuthenticationAsync()).headers,
     });
     const readarrCalendarEvents = await z.array(readarrCalendarEventSchema).parseAsync(await response.json());
 

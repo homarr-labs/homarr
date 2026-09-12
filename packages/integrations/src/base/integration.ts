@@ -7,6 +7,7 @@ import { removeTrailingSlash } from "@homarr/common";
 import { createAxiosCertificateInstanceAsync, createCertificateAgentAsync } from "@homarr/core/infrastructure/http";
 import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
 
+import type { IntegrationHttpAuthentication } from "../http-auth";
 import { HandleIntegrationErrors } from "./errors/decorator";
 import { TestConnectionError } from "./test-connection/test-connection-error";
 import type { TestingResult } from "./test-connection/test-connection-service";
@@ -35,6 +36,8 @@ export interface IntegrationTestingInput {
 @HandleIntegrationErrors([])
 export abstract class Integration {
   constructor(protected integration: IntegrationInput) {}
+
+  public abstract getHttpAuthenticationAsync(refresh?: boolean): Promise<IntegrationHttpAuthentication>;
 
   public get publicIntegration() {
     return {

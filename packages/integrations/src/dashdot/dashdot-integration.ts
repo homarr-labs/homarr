@@ -5,6 +5,7 @@ import { z } from "zod/v4";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
+import type { IntegrationHttpAuthentication } from "../http-auth";
 import { createChannelEventHistoryOld } from "../../../redis/src/lib/channel";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
@@ -14,6 +15,10 @@ import type { ISystemHealthMonitoringIntegration } from "../interfaces/health-mo
 import type { SystemHealthMonitoring } from "../interfaces/health-monitoring/health-monitoring-types";
 
 export class DashDotIntegration extends Integration implements ISystemHealthMonitoringIntegration {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    return {};
+  }
+
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await input.fetchAsync(this.url("/info"));
     if (!response.ok) return TestConnectionError.StatusResult(response);

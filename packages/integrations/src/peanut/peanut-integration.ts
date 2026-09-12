@@ -1,6 +1,7 @@
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
+import type { IntegrationHttpAuthentication } from "../http-auth";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
@@ -11,6 +12,10 @@ import type { PeaNutDevice } from "./peanut-types";
 import { peaNutDevicesSchema } from "./peanut-types";
 
 export class PeaNutIntegration extends Integration implements IUpsSummaryIntegration {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    return { headers: this.getAuthHeaders() };
+  }
+
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await input.fetchAsync(this.url("/api/v1/devices"), {
       headers: this.getAuthHeaders(),

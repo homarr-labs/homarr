@@ -1,6 +1,7 @@
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
+import type { IntegrationHttpAuthentication } from "../http-auth";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
@@ -16,6 +17,10 @@ import {
 import type { GluetunDnsStatus, GluetunPublicIp, GluetunVpnSettings, GluetunVpnStatus } from "./gluetun-types";
 
 export class GluetunIntegration extends Integration implements VpnSummaryIntegration {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    return { headers: this.getAuthHeaders() };
+  }
+
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const authHeaders = this.getAuthHeaders();
     const url = this.url("/v1/vpn/status");

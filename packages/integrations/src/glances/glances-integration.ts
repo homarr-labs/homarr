@@ -4,6 +4,7 @@ import { z } from "zod/v4";
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
+import type { IntegrationHttpAuthentication } from "../http-auth";
 import type { IntegrationInput, IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import type { SessionStore } from "../base/session-store";
@@ -14,6 +15,10 @@ import type { ISystemHealthMonitoringIntegration } from "../interfaces/health-mo
 import type { SystemHealthMonitoring } from "../types";
 
 export class GlancesIntegration extends Integration implements ISystemHealthMonitoringIntegration {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    return {};
+  }
+
   private readonly sessionStore: SessionStore<{ version: string }>;
 
   constructor(integration: IntegrationInput) {

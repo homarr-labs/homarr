@@ -1,6 +1,7 @@
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
+import type { IntegrationHttpAuthentication } from "../http-auth";
 import { Integration } from "../base/integration";
 import type { IntegrationTestingInput } from "../base/integration";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
@@ -9,6 +10,10 @@ import type { INotificationsIntegration } from "../interfaces/notifications/noti
 import { ntfyNotificationSchema } from "./ntfy-schema";
 
 export class NTFYIntegration extends Integration implements INotificationsIntegration {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    return { headers: this.getHeaders() };
+  }
+
   public async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     await input.fetchAsync(this.url("/v1/account"), { headers: this.getHeaders() });
     return { success: true };
@@ -17,7 +22,7 @@ export class NTFYIntegration extends Integration implements INotificationsIntegr
   private getTopicURL() {
     return this.url(`/${encodeURIComponent(super.getSecretValue("topic"))}/json`, { poll: 1 });
   }
-  private getHeaders() {
+  private getHeaders(): Record<string, string> {
     return this.hasSecretValue("apiKey") ? { Authorization: `Bearer ${super.getSecretValue("apiKey")}` } : {};
   }
 

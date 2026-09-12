@@ -3,6 +3,7 @@ import z from "zod";
 
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
+import type { IntegrationHttpAuthentication } from "../http-auth";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
@@ -32,6 +33,10 @@ const describeRequestError = (error: unknown) => {
 };
 
 export class TrueNasIntegration extends Integration implements ISystemHealthMonitoringIntegration {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    throw new Error("This integration does not use HTTP");
+  }
+
   private client?: TrueNasClient;
 
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {

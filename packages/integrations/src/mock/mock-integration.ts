@@ -1,3 +1,4 @@
+import type { IntegrationHttpAuthentication } from "../http-auth";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
@@ -52,6 +53,10 @@ export class MockIntegration
     ISmartHomeIntegration,
     IUpsSummaryIntegration
 {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    throw new Error("This integration does not use HTTP");
+  }
+
   private static readonly dnsHole = new DnsHoleMockService();
   private static readonly calendar = new CalendarMockService();
   private static readonly downloadClient = new DownloadClientMockService();

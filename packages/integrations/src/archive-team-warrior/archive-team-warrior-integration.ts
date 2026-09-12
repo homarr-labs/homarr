@@ -6,6 +6,7 @@ import { z } from "zod/v4";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
+import type { IntegrationHttpAuthentication } from "../http-auth";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
@@ -36,6 +37,10 @@ interface WarriorSnapshotState {
 }
 
 export class ArchiveTeamWarriorIntegration extends Integration {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    return { headers: this.createAuthHeaders() };
+  }
+
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await input.fetchAsync(this.url("/index.html"), {
       headers: this.createAuthHeaders(),

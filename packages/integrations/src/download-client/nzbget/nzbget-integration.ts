@@ -4,6 +4,8 @@ import type { fetch as undiciFetch } from "undici";
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
+import type { IntegrationHttpAuthentication } from "../../http-auth";
+import { basicAuth } from "../../http-auth";
 import { Integration } from "../../base/integration";
 import type { IntegrationTestingInput } from "../../base/integration";
 import type { TestingResult } from "../../base/test-connection/test-connection-service";
@@ -14,6 +16,10 @@ import type { DownloadClientStatus } from "../../interfaces/downloads/download-c
 import type { NzbGetClient } from "./nzbget-types";
 
 export class NzbGetIntegration extends Integration implements IDownloadClientIntegration {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    return basicAuth()(this.integration);
+  }
+
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     await this.nzbGetApiCallWithCustomFetchAsync(input.fetchAsync, "version");
     return {

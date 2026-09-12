@@ -2,6 +2,8 @@ import { z } from "zod/v4";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
+import type { IntegrationHttpAuthentication } from "../http-auth";
+import { apiKeyAuth } from "../http-auth";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
@@ -11,6 +13,10 @@ import type { Indexer } from "../interfaces/indexer-manager/indexer-manager-type
 import { indexerResponseSchema, statusResponseSchema } from "./prowlarr-types";
 
 export class ProwlarrIntegration extends Integration implements IIndexerManagerIntegration {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    return apiKeyAuth(this.integration);
+  }
+
   public async getIndexersAsync(): Promise<Indexer[]> {
     const apiKey = super.getSecretValue("apiKey");
 

@@ -4,6 +4,8 @@ import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
+import type { IntegrationHttpAuthentication } from "../http-auth";
+import { bearerAuth } from "../http-auth";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
@@ -14,11 +16,13 @@ import type { AnchorNote, AnchorNotesListInput, AnchorNoteSummary, AnchorNoteUpd
 const logger = createLogger({ module: "anchorIntegration" });
 
 export class AnchorIntegration extends Integration {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    return bearerAuth(this.integration);
+  }
+
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await input.fetchAsync(this.url("/api/notes", { limit: 1 }), {
-      headers: {
-        Authorization: `Bearer ${this.getSecretValue("apiKey")}`,
-      },
+      headers: (await this.getHttpAuthenticationAsync()).headers,
     });
 
     if (!response.ok) return TestConnectionError.StatusResult(response);

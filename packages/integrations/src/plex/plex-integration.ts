@@ -6,6 +6,8 @@ import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/h
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ImageProxy } from "@homarr/image-proxy";
 
+import type { IntegrationHttpAuthentication } from "../http-auth";
+import { headerAuth } from "../http-auth";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
@@ -50,6 +52,10 @@ function isStreamDirect(decision: string | undefined): boolean {
 }
 
 export class PlexIntegration extends Integration implements IMediaServerIntegration, IMediaReleasesIntegration {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    return headerAuth("X-Plex-Token")(this.integration);
+  }
+
   public async getCurrentSessionsAsync(_options: CurrentSessionsInput): Promise<StreamSession[]> {
     const token = super.getSecretValue("apiKey");
 

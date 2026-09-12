@@ -5,6 +5,8 @@ import type { fetch as undiciFetch } from "undici";
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
+import type { IntegrationHttpAuthentication } from "../../http-auth";
+import { queryAuth } from "../../http-auth";
 import { Integration } from "../../base/integration";
 import type { IntegrationTestingInput } from "../../base/integration";
 import type { TestingResult } from "../../base/test-connection/test-connection-service";
@@ -17,6 +19,10 @@ import { historySchema, queueSchema } from "./sabnzbd-schema";
 dayjs.extend(duration);
 
 export class SabnzbdIntegration extends Integration implements IDownloadClientIntegration {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    return queryAuth("apikey")(this.integration);
+  }
+
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     //This is the one call that uses the least amount of data while requiring the api key
     await this.sabNzbApiCallWithCustomFetchAsync(input.fetchAsync, "translate", { value: "ping" });

@@ -45,6 +45,9 @@ describe("Base integration", () => {
 });
 
 class FakeIntegration extends Integration {
+  public async getHttpAuthenticationAsync() {
+    return {};
+  }
   constructor(
     private testingResult?: TestingResult,
     private error?: Error,

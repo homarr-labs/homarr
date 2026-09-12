@@ -5,6 +5,8 @@ import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
+import type { IntegrationHttpAuthentication } from "../http-auth";
+import { apiKeyAuth } from "../http-auth";
 import { HandleIntegrationErrors } from "../base/errors/decorator";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
@@ -18,6 +20,10 @@ const logger = createLogger({ module: "UnraidIntegration" });
 
 @HandleIntegrationErrors([])
 export class UnraidIntegration extends Integration implements ISystemHealthMonitoringIntegration {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    return apiKeyAuth(this.integration);
+  }
+
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     await this.queryGraphQLAsync<{ info: UnraidSystemInfo }>(
       `

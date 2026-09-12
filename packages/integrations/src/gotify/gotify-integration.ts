@@ -2,6 +2,7 @@ import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { ImageProxy } from "@homarr/image-proxy";
 
+import type { IntegrationHttpAuthentication } from "../http-auth";
 import { Integration } from "../base/integration";
 import type { IntegrationTestingInput } from "../base/integration";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
@@ -10,6 +11,10 @@ import type { INotificationsIntegration } from "../interfaces/notifications/noti
 import { gotifyApplicationsResponseSchema, gotifyMessagesResponseSchema } from "./gotify-schema";
 
 export class GotifyIntegration extends Integration implements INotificationsIntegration {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    return { headers: this.getHeaders() };
+  }
+
   public async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     await input.fetchAsync(this.url("/health"), { headers: this.getHeaders() });
     return { success: true };

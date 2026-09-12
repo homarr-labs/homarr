@@ -1,5 +1,7 @@
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
+import type { IntegrationHttpAuthentication } from "../http-auth";
+import { apiKeyAuth } from "../http-auth";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
@@ -9,12 +11,17 @@ import type { TdarrQueue, TdarrStatistics, TdarrWorker } from "../interfaces/med
 import { getNodesResponseSchema, getStatisticsSchema, getStatusTableSchema } from "./tdarr-validation-schemas";
 
 export class TdarrIntegration extends Integration implements IMediaTranscodingIntegration {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    if (!this.hasSecretValue("apiKey") || !this.getSecretValue("apiKey")) return {};
+    return apiKeyAuth(this.integration);
+  }
+
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await input.fetchAsync(this.url("/api/v2/is-server-alive"), {
       method: "POST",
       headers: {
         accept: "application/json",
-        "X-Api-Key": super.hasSecretValue("apiKey") ? super.getSecretValue("apiKey") : "",
+        ...(await this.getHttpAuthenticationAsync()).headers,
       },
     });
 
@@ -30,7 +37,7 @@ export class TdarrIntegration extends Integration implements IMediaTranscodingIn
     const headerParams = {
       accept: "application/json",
       "Content-Type": "application/json",
-      ...(super.hasSecretValue("apiKey") ? { "X-Api-Key": super.getSecretValue("apiKey") } : {}),
+      ...(await this.getHttpAuthenticationAsync()).headers,
     };
 
     const response = await fetchWithTrustedCertificatesAsync(url, {
@@ -76,7 +83,7 @@ export class TdarrIntegration extends Integration implements IMediaTranscodingIn
     const url = this.url("/api/v2/get-nodes");
     const headerParams = {
       "Content-Type": "application/json",
-      ...(super.hasSecretValue("apiKey") ? { "X-Api-Key": super.getSecretValue("apiKey") } : {}),
+      ...(await this.getHttpAuthenticationAsync()).headers,
     };
     const response = await fetchWithTrustedCertificatesAsync(url, {
       method: "GET",
@@ -120,7 +127,7 @@ export class TdarrIntegration extends Integration implements IMediaTranscodingIn
     const url = this.url("/api/v2/client/status-tables");
     const headerParams = {
       "Content-Type": "application/json",
-      ...(super.hasSecretValue("apiKey") ? { "X-Api-Key": super.getSecretValue("apiKey") } : {}),
+      ...(await this.getHttpAuthenticationAsync()).headers,
     };
     const response = await fetchWithTrustedCertificatesAsync(url, {
       method: "POST",
@@ -159,7 +166,7 @@ export class TdarrIntegration extends Integration implements IMediaTranscodingIn
     const url = this.url("/api/v2/client/status-tables");
     const headerParams = {
       "Content-Type": "application/json",
-      ...(super.hasSecretValue("apiKey") ? { "X-Api-Key": super.getSecretValue("apiKey") } : {}),
+      ...(await this.getHttpAuthenticationAsync()).headers,
     };
     const response = await fetchWithTrustedCertificatesAsync(url, {
       method: "POST",

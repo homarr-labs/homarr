@@ -2,6 +2,7 @@ import ICAL from "ical.js";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
+import type { IntegrationHttpAuthentication } from "../http-auth";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
@@ -10,6 +11,20 @@ import type { ICalendarIntegration } from "../interfaces/calendar/calendar-integ
 import type { CalendarEvent } from "../interfaces/calendar/calendar-types";
 
 export class ICalIntegration extends Integration implements ICalendarIntegration {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    const baseUrl = this.getSecretValue("url");
+    const base = new URL(baseUrl);
+    return {
+      baseUrl,
+      redactValues: [...base.searchParams.values()],
+      transformUrl(url) {
+        // The stored feed URL is a complete endpoint, so the root request uses it exactly.
+        if (url.pathname === `${base.pathname}/`) url.pathname = base.pathname;
+        for (const [name, value] of base.searchParams) url.searchParams.set(name, value);
+      },
+    };
+  }
+
   async getCalendarEventsAsync(start: Date, end: Date): Promise<CalendarEvent[]> {
     const response = await fetchWithTrustedCertificatesAsync(super.getSecretValue("url"));
     const result = await response.text();

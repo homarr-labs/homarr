@@ -1,6 +1,7 @@
 import { ParseError, ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
+import type { IntegrationHttpAuthentication } from "../http-auth";
 import { createChannelEventHistoryOld } from "../../../redis/src/lib/channel";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
@@ -22,6 +23,10 @@ import {
 } from "./opnsense-types";
 
 export class OPNsenseIntegration extends Integration implements FirewallSummaryIntegration {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    return { headers: { Authorization: this.getAuthHeaders() } };
+  }
+
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await input.fetchAsync(this.url("/api/diagnostics/system/system_information"), {
       headers: {

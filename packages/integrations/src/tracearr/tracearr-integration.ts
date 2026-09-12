@@ -3,6 +3,7 @@ import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { ImageProxy } from "@homarr/image-proxy";
 
+import type { IntegrationHttpAuthentication } from "../http-auth";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
@@ -17,6 +18,10 @@ import type {
 } from "./tracearr-types";
 
 export class TracearrIntegration extends Integration {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    return { headers: this.getAuthHeaders() };
+  }
+
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const healthUrl = this.url("/api/v1/public/health");
     const healthResponse = await input.fetchAsync(healthUrl, {

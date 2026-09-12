@@ -4,6 +4,7 @@ import type { fetch as undiciFetch } from "undici";
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
+import type { IntegrationHttpAuthentication } from "../../http-auth";
 import { Integration } from "../../base/integration";
 import type { IntegrationTestingInput } from "../../base/integration";
 import type { TestingResult } from "../../base/test-connection/test-connection-service";
@@ -13,6 +14,27 @@ import type { DownloadClientItem } from "../../interfaces/downloads/download-cli
 import type { Aria2Download, Aria2GetClient } from "./aria2-types";
 
 export class Aria2Integration extends Integration implements IDownloadClientIntegration {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    if (!this.hasSecretValue("apiKey") || !this.getSecretValue("apiKey")) return {};
+    return {
+      transformBody: (body) => {
+        const authenticate = (value: unknown): unknown => {
+          if (Array.isArray(value)) return value.map(authenticate);
+          if (!value || typeof value !== "object") throw new Error("Expected a JSON-RPC request body");
+          const request = value as { method?: string; methodName?: string; params?: unknown[] };
+          const method = request.method ?? request.methodName;
+          const params = request.params ?? [];
+          if (!Array.isArray(params)) throw new Error("JSON-RPC params must be an array");
+          if (method === "system.multicall") return { ...request, params: [authenticate(params[0])] };
+          if (method === "system.listMethods" || method === "system.listNotifications") return request;
+          if (typeof params[0] === "string" && params[0].startsWith("token:")) params.shift();
+          return { ...request, params: [`token:${this.getSecretValue("apiKey")}`, ...params] };
+        };
+        return JSON.stringify(authenticate(JSON.parse(body ?? "null")));
+      },
+    };
+  }
+
   public async getClientJobsAndStatusAsync(input: { limit: number }): Promise<DownloadClientJobsAndStatus> {
     const client = this.getClient();
     const keys: (keyof Aria2Download)[] = [

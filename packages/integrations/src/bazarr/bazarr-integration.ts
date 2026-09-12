@@ -1,5 +1,6 @@
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
+import type { IntegrationHttpAuthentication } from "../http-auth";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
@@ -8,6 +9,10 @@ import type { BazarrBadges } from "./bazarr-types";
 import { bazarrBadgesSchema, bazarrSystemStatusSchema } from "./bazarr-types";
 
 export class BazarrIntegration extends Integration {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    return { headers: this.getAuthHeaders(), redactValues: [] };
+  }
+
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await input.fetchAsync(this.url("/api/system/status"), {
       headers: this.getAuthHeaders(),

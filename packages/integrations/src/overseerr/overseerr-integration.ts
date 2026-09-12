@@ -4,6 +4,8 @@ import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
+import type { IntegrationHttpAuthentication } from "../http-auth";
+import { apiKeyAuth } from "../http-auth";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import type { ISearchableIntegration } from "../base/searchable-integration";
@@ -40,11 +42,13 @@ export class OverseerrIntegration
   extends Integration
   implements IMediaRequestIntegration, ISearchableIntegration<OverseerrSearchResult>
 {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    return apiKeyAuth(this.integration);
+  }
+
   public async searchAsync(query: string) {
     const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/search", { query }), {
-      headers: {
-        "X-Api-Key": this.getSecretValue("apiKey"),
-      },
+      headers: (await this.getHttpAuthenticationAsync()).headers,
     });
     const schemaData = await searchSchema.parseAsync(await response.json());
 
@@ -69,9 +73,7 @@ export class OverseerrIntegration
   public async getSeriesInformationAsync(mediaType: "movie" | "tv", id: number) {
     const url = mediaType === "tv" ? this.url(`/api/v1/tv/${id}`) : this.url(`/api/v1/movie/${id}`);
     const response = await fetchWithTrustedCertificatesAsync(url, {
-      headers: {
-        "X-Api-Key": this.getSecretValue("apiKey"),
-      },
+      headers: (await this.getHttpAuthenticationAsync()).headers,
     });
     const data = await mediaInformationSchema.parseAsync(await response.json());
     const requestedSeasons = [
@@ -110,9 +112,7 @@ export class OverseerrIntegration
 
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await input.fetchAsync(this.url("/api/v1/auth/me"), {
-      headers: {
-        "X-Api-Key": this.getSecretValue("apiKey"),
-      },
+      headers: (await this.getHttpAuthenticationAsync()).headers,
     });
 
     if (!response.ok) return TestConnectionError.StatusResult(response);
@@ -126,18 +126,14 @@ export class OverseerrIntegration
     const pendingRequests = await fetchWithTrustedCertificatesAsync(
       this.url("/api/v1/request", { take: 20, filter: "pending" }),
       {
-        headers: {
-          "X-Api-Key": this.getSecretValue("apiKey"),
-        },
+        headers: (await this.getHttpAuthenticationAsync()).headers,
       },
     );
 
     const allRequests = await fetchWithTrustedCertificatesAsync(
       this.url("/api/v1/request", { take: 20, sort: "modified" }),
       {
-        headers: {
-          "X-Api-Key": this.getSecretValue("apiKey"),
-        },
+        headers: (await this.getHttpAuthenticationAsync()).headers,
       },
     );
 
@@ -234,18 +230,14 @@ export class OverseerrIntegration
 
   public async getStatsAsync(): Promise<RequestStats> {
     const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/request/count"), {
-      headers: {
-        "X-Api-Key": this.getSecretValue("apiKey"),
-      },
+      headers: (await this.getHttpAuthenticationAsync()).headers,
     });
     return await getStatsSchema.parseAsync(await response.json());
   }
 
   public async getUsersAsync(): Promise<RequestUser[]> {
     const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/user", { take: 10, sort: "requests" }), {
-      headers: {
-        "X-Api-Key": this.getSecretValue("apiKey"),
-      },
+      headers: (await this.getHttpAuthenticationAsync()).headers,
     });
     const users = (await getUsersSchema.parseAsync(await response.json())).results;
     return users.map((user): RequestUser => {
@@ -261,9 +253,7 @@ export class OverseerrIntegration
     logger.info("Approving media request", { requestId, integration: this.integration.name });
     const response = await fetchWithTrustedCertificatesAsync(this.url(`/api/v1/request/${requestId}/approve`), {
       method: "POST",
-      headers: {
-        "X-Api-Key": this.getSecretValue("apiKey"),
-      },
+      headers: (await this.getHttpAuthenticationAsync()).headers,
     });
     if (!response.ok) throw new ResponseError(response);
     logger.info("Successfully approved media request", { requestId, integration: this.integration.name });
@@ -274,9 +264,7 @@ export class OverseerrIntegration
 
     const response = await fetchWithTrustedCertificatesAsync(this.url(`/api/v1/request/${requestId}/decline`), {
       method: "POST",
-      headers: {
-        "X-Api-Key": this.getSecretValue("apiKey"),
-      },
+      headers: (await this.getHttpAuthenticationAsync()).headers,
     });
     if (!response.ok) throw new ResponseError(response);
     logger.info("Successfully declined media request", { requestId, integration: this.integration.name });
@@ -284,9 +272,7 @@ export class OverseerrIntegration
 
   private async getItemInformationAsync(id: number, type: MediaRequest["type"]): Promise<MediaInformation> {
     const response = await fetchWithTrustedCertificatesAsync(this.url(`/api/v1/${type}/${id}`), {
-      headers: {
-        "X-Api-Key": this.getSecretValue("apiKey"),
-      },
+      headers: (await this.getHttpAuthenticationAsync()).headers,
     });
 
     if (!response.ok) {

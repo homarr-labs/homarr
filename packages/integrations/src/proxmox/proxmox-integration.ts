@@ -4,6 +4,7 @@ import proxmoxApi from "proxmox-api";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
+import type { IntegrationHttpAuthentication } from "../http-auth";
 import { HandleIntegrationErrors } from "../base/errors/decorator";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
@@ -23,6 +24,14 @@ const logger = createLogger({ module: "proxmoxIntegration" });
 
 @HandleIntegrationErrors([new ProxmoxApiErrorHandler()])
 export class ProxmoxIntegration extends Integration implements IClusterHealthMonitoringIntegration {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    return {
+      headers: {
+        Authorization: `PVEAPIToken=${this.getSecretValue("username")}@${this.getSecretValue("realm")}!${this.getSecretValue("tokenId")}=${this.getSecretValue("apiKey")}`,
+      },
+    };
+  }
+
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const proxmox = this.getPromoxApi(input.fetchAsync);
     await proxmox.nodes.$get();

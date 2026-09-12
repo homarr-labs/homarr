@@ -4,6 +4,8 @@ import { z } from "zod/v4";
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
+import type { IntegrationHttpAuthentication } from "../http-auth";
+import { headerAuth } from "../http-auth";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
@@ -90,6 +92,10 @@ const userSchema = z.object({
 });
 
 export class EmbyIntegration extends Integration implements IMediaServerIntegration, IMediaReleasesIntegration {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    return headerAuth("X-Emby-Token")(this.integration);
+  }
+
   private static readonly apiKeyHeader = "X-Emby-Token";
   private static readonly deviceId = "homarr-emby-integration";
   private static readonly authorizationHeaderValue = `Emby Client="Dashboard", Device="Homarr", DeviceId="${EmbyIntegration.deviceId}", Version="0.0.1"`;

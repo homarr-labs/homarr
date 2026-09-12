@@ -1,6 +1,7 @@
 import { ParseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
+import type { IntegrationHttpAuthentication } from "../http-auth";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
@@ -10,6 +11,10 @@ import type { DnsHoleSummary } from "../interfaces/dns-hole-summary/dns-hole-sum
 import { filteringStatusSchema, statsResponseSchema, statusResponseSchema } from "./adguard-home-types";
 
 export class AdGuardHomeIntegration extends Integration implements DnsHoleSummaryIntegration {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    return { headers: { Authorization: `Basic ${this.getAuthorizationHeaderValue()}` } };
+  }
+
   public async getSummaryAsync(): Promise<DnsHoleSummary> {
     const headers = {
       Authorization: `Basic ${this.getAuthorizationHeaderValue()}`,

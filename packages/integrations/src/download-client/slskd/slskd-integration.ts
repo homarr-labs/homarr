@@ -6,6 +6,8 @@ import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/h
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 
+import type { IntegrationHttpAuthentication } from "../../http-auth";
+import { apiKeyAuth } from "../../http-auth";
 import type { IntegrationTestingInput } from "../../base/integration";
 import { Integration } from "../../base/integration";
 import { TestConnectionError } from "../../base/test-connection/test-connection-error";
@@ -49,6 +51,10 @@ const logger = createLogger({ module: "slskd-integration" });
  * Slskd integration cannot pause or stop downloads, it can only list downloads.
  */
 export class SlskdIntegration extends Integration implements IDownloadClientIntegration {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    return apiKeyAuth(this.integration);
+  }
+
   // eslint-disable-next-line no-restricted-syntax
   public pauseQueueAsync(): Promise<void> {
     return Promise.resolve();
@@ -76,9 +82,7 @@ export class SlskdIntegration extends Integration implements IDownloadClientInte
 
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await input.fetchAsync(this.url("/api/v0/server"), {
-      headers: {
-        "X-API-Key": this.getSecretValue("apiKey"),
-      },
+      headers: (await this.getHttpAuthenticationAsync()).headers,
     });
 
     if (!response.ok) {
@@ -148,9 +152,7 @@ export class SlskdIntegration extends Integration implements IDownloadClientInte
   ): Promise<unknown> {
     const response = await fetchWithTrustedCertificatesAsync(this.url(path), {
       ...options,
-      headers: {
-        "X-API-Key": this.getSecretValue("apiKey"),
-      },
+      headers: (await this.getHttpAuthenticationAsync()).headers,
     });
 
     if (!response.ok) {

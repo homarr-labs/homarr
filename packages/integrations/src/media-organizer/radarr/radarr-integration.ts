@@ -3,6 +3,8 @@ import { z } from "zod/v4";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
+import type { IntegrationHttpAuthentication } from "../../http-auth";
+import { apiKeyAuth } from "../../http-auth";
 import type { IntegrationTestingInput } from "../../base/integration";
 import { Integration } from "../../base/integration";
 import { TestConnectionError } from "../../base/test-connection/test-connection-error";
@@ -17,6 +19,10 @@ import { mediaOrganizerPriorities } from "../media-organizer";
 const logger = createLogger({ module: "radarrIntegration" });
 
 export class RadarrIntegration extends Integration implements ICalendarIntegration, IMediaOrganizerIntegration {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    return apiKeyAuth(this.integration);
+  }
+
   /**
    * Gets the events in the Radarr calendar between two dates.
    * @param start The start date
@@ -31,9 +37,7 @@ export class RadarrIntegration extends Integration implements ICalendarIntegrati
     });
 
     const response = await fetchWithTrustedCertificatesAsync(url, {
-      headers: {
-        "X-Api-Key": super.getSecretValue("apiKey"),
-      },
+      headers: (await this.getHttpAuthenticationAsync()).headers,
     });
     const radarrCalendarEvents = await z.array(radarrCalendarEventSchema).parseAsync(await response.json());
 
@@ -122,7 +126,7 @@ export class RadarrIntegration extends Integration implements ICalendarIntegrati
     });
 
     const response = await fetchWithTrustedCertificatesAsync(url, {
-      headers: { "X-Api-Key": super.getSecretValue("apiKey") },
+      headers: (await this.getHttpAuthenticationAsync()).headers,
     });
     const data = await z
       .object({
@@ -154,7 +158,7 @@ export class RadarrIntegration extends Integration implements ICalendarIntegrati
     });
 
     const response = await fetchWithTrustedCertificatesAsync(url, {
-      headers: { "X-Api-Key": super.getSecretValue("apiKey") },
+      headers: (await this.getHttpAuthenticationAsync()).headers,
     });
     const data = await z
       .object({
@@ -188,7 +192,7 @@ export class RadarrIntegration extends Integration implements ICalendarIntegrati
 
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await input.fetchAsync(this.url("/api"), {
-      headers: { "X-Api-Key": super.getSecretValue("apiKey") },
+      headers: (await this.getHttpAuthenticationAsync()).headers,
     });
 
     if (!response.ok) return TestConnectionError.StatusResult(response);
