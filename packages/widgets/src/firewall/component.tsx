@@ -56,7 +56,7 @@ export default function FirewallWidget({ integrationIds, width, itemId }: Widget
   const t = useI18n();
 
   return (
-    <ScrollArea h="100%">
+    <ScrollArea h="100%" style={{ minHeight: 0 }}>
       <Group justify="space-between" w="100%" style={{ padding: "8px" }}>
         <FirewallMenu
           onChange={handleSelect}
