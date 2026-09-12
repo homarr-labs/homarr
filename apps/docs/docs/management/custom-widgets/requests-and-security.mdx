@@ -1,15 +1,21 @@
 # Configure requests and security
 
-Most widgets use a single source named `default`; the manifest must contain it. Extra keyed sources are available for widgets
+Widgets can use empty `sources` and `requests` objects when they do not need an API. Connected widgets may use a source
+named `default` or explicitly name the source on every request. Extra keyed sources are available for widgets
 that combine APIs. Source IDs are case-insensitively unique. Base URLs must use HTTP(S), contain no embedded credentials,
 query string, or fragment, and sources can be `public`, `private`, or `loopback`. Authentication is `none`, `bearer`,
 `basic`, an API-key header, or an API-key query parameter. Credentials belong to the widget but remain outside its manifest.
 Source origins are fixed by the definition and source-setup flow; widget options and invocation parameters cannot redirect a
 request to a different origin.
 
+Use `private` for LAN addresses, Docker service names, and Tailscale's `100.64.0.0/10` range. Use `loopback` for
+`127.0.0.1` or `::1`. Requests run from Homarr: in Docker, loopback addresses point to the Homarr container, while a
+service name such as `http://sonarr:8989` must resolve on its Docker network. Public sources cannot reach private or
+loopback addresses. Cloud metadata, link-local, multicast, and other reserved targets remain blocked.
+
 ## Named requests
 
-Requests are keyed by ID. `source`, `kind`, `method`, `trigger`, `auth`, and `permission` have sensible defaults, so a load query can be as small as:
+Requests are keyed by ID. With a source named `default`, a load query can be as small as:
 
 ```json
 { "status": { "path": "/api/status" } }

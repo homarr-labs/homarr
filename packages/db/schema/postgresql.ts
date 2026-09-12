@@ -624,6 +624,92 @@ export const legacyCustomWidgetSecrets = pgTable(
   }),
 );
 
+export const customWidgetArtifacts = pgTable("custom_widget_artifact", {
+  id: varchar({ length: 128 }).notNull().primaryKey(),
+  packageId: varchar({ length: 128 }).notNull(),
+  version: varchar({ length: 128 }).notNull(),
+  source: text().notNull(),
+  artifact: text().notNull(),
+  createdAt: timestamp().notNull(),
+});
+
+export const customWidgetInstallations = pgTable("custom_widget_installation", {
+  id: varchar({ length: 128 }).notNull().primaryKey(),
+  name: varchar({ length: 128 }).notNull(),
+  draft: text().notNull(),
+  activeArtifactId: varchar({ length: 128 }),
+  previousArtifactId: varchar({ length: 128 }),
+  previousSnapshot: text(),
+  bindings: text().notNull(),
+  origin: text(),
+  enabled: boolean().notNull().default(false),
+  creatorId: varchar({ length: 128 }).references(() => users.id, { onDelete: "set null" }),
+  createdAt: timestamp().notNull(),
+  updatedAt: timestamp().notNull(),
+});
+
+export const customWidgetConnections = pgTable("custom_widget_connection", {
+  id: varchar({ length: 128 }).notNull().primaryKey(),
+  name: varchar({ length: 128 }).notNull(),
+  integrationId: varchar({ length: 128 }).references(() => integrations.id, { onDelete: "set null" }),
+  configuration: text().notNull(),
+  encryptedSecrets: text().notNull(),
+  createdAt: timestamp().notNull(),
+  updatedAt: timestamp().notNull(),
+});
+
+export const customWidgetStorage = pgTable(
+  "custom_widget_storage",
+  {
+    id: varchar({ length: 128 }).notNull().primaryKey(),
+    installationId: varchar({ length: 128 }).notNull(),
+    scope: varchar({ length: 128 }).notNull(),
+    ownerKey: varchar({ length: 128 }).notNull(),
+    key: varchar({ length: 128 }).notNull(),
+    value: text().notNull(),
+    updatedAt: timestamp().notNull(),
+  },
+  (table) => ({
+    installationFk: foreignKey({
+      columns: [table.installationId],
+      foreignColumns: [customWidgetInstallations.id],
+      name: "custom_widget_storage_installation_fk",
+    }).onDelete("cascade"),
+  }),
+);
+
+export const customWidgetGuestGrants = pgTable("custom_widget_guest_grant", {
+  id: varchar({ length: 128 }).notNull().primaryKey(),
+  itemId: varchar({ length: 128 })
+    .notNull()
+    .references(() => items.id, { onDelete: "cascade" }),
+  handler: varchar({ length: 128 }).notNull(),
+  artifactDigest: varchar({ length: 128 }).notNull(),
+  bindingsDigest: varchar({ length: 128 }).notNull(),
+  allowedInputs: text().notNull(),
+  createdAt: timestamp().notNull(),
+});
+
+export const customWidgetActivity = pgTable(
+  "custom_widget_activity",
+  {
+    id: varchar({ length: 128 }).notNull().primaryKey(),
+    installationId: varchar({ length: 128 }).notNull(),
+    itemId: varchar({ length: 128 }),
+    userId: varchar({ length: 128 }),
+    handler: varchar({ length: 128 }).notNull(),
+    status: varchar({ length: 128 }).notNull(),
+    createdAt: timestamp().notNull(),
+  },
+  (table) => ({
+    installationFk: foreignKey({
+      columns: [table.installationId],
+      foreignColumns: [customWidgetInstallations.id],
+      name: "custom_widget_activity_installation_fk",
+    }).onDelete("cascade"),
+  }),
+);
+
 export const customWidgetDefinitions = pgTable("custom_widget_v2_definition", {
   id: varchar({ length: 64 }).notNull().primaryKey(),
   name: varchar({ length: 256 }).notNull(),

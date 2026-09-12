@@ -305,7 +305,9 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
   const widgetDefinition = useMemo<HomarrCustomWidgetV2 | null>(() => {
     if (submission?.type !== "customWidget") return null;
     const result = validateSubmissionContent("customWidget", submission.content);
-    return result.success && typeof result.data === "object" ? result.data : null;
+    if (!result.success || typeof result.data !== "object" || result.data.$schema !== "homarr-custom-widget-v2")
+      return null;
+    return result.data;
   }, [submission]);
 
   const handleVote = async (value: 1 | -1) => {

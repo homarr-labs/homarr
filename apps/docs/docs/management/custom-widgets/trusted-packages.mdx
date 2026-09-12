@@ -1,0 +1,411 @@
+---
+title: Trusted widget packages
+sidebar_position: 2
+tags: [Custom Widgets, JSX, Workshop]
+---
+
+# Trusted widget packages
+
+Trusted packages let administrators write complete React/TSX modules, import CSS and dependencies, and optionally run
+Node server handlers. A package can provide a dashboard tile, an advanced widget view, and a custom configuration
+view. Static content, clocks, interactive local state, and other source-free widgets need no API connection.
+
+Open **Management → Custom Widgets → Packages**. The source-free world clock is the default starter. Thirteen reference starters cover clocks, timers, checklists,
+downloads, Sonarr, racks, backups, household controls, service overview, media, Beszel, SQLite, and MQTT. Each new widget receives
+its own local package identity. The Beszel
+reference package demonstrates a connected widget using Homarr's shared SDK and integration data.
+
+## Trust and execution
+
+Packages are trusted installed code. Browser modules run within Homarr; Node handlers have Homarr's server
+privileges. Review the complete source and dependency list before checking the trust acknowledgement. Both
+**Run preview** and **Activate saved draft** execute package code. An action simulation is not a security sandbox:
+trusted code can make direct network requests and external changes outside the SDK.
+
+Workshop browsing displays screenshots, source text, dependencies, and immutable release metadata. It does not run
+package code. Importing a package creates a disabled draft. Connection credentials are entered separately on your
+Homarr installation.
+
+A supplied archive can include compiled browser and server code. Its digest verifies that those bytes are intact;
+it does not prove they were built from the displayed source. Inspect **Compiled artifact** and the dependency lock
+as well as the source before activating a supplied build. Rebuilding from reviewed source produces a new local
+artifact; dependency installation happens during that build, never while rendering a dashboard.
+
+## Package, installation, and placement
+
+| Concept      | Contains                                                                                                      |
+| ------------ | ------------------------------------------------------------------------------------------------------------- |
+| Package      | Portable manifest, source files, exact dependency versions, named connection requirements, option definitions |
+| Installation | Saved source draft, active compiled release, previous activation, local connection bindings, enabled state    |
+| Placement    | A tile on a board, its option values, connection overrides, board permissions, widget state                   |
+
+One installation can appear on several boards. Activating it updates all its placements. A placement's saved option
+values survive updates; changing package defaults does not overwrite those saved values.
+
+## Customize a native widget
+
+Administrators can choose **Customize as a widget package** from supported native widget menus. Homarr prepares a
+reference package and reuses its existing integration connections. The original native widget remains on the board.
+Save the new package, preview and activate it, then add its placement to the board. The package has its own identity
+and can be edited independently of the native widget.
+
+## Author a package
+
+The workspace has a file explorer, TSX/CSS/JSON editor, a connection panel, activation and board controls, and a
+preview canvas with adjustable width and height. Use `widget.json` to edit package metadata. This is a virtual view
+of the package envelope excluding `files`; each source file is edited separately in the explorer.
+
+Use **Add**, **Rename**, and **Remove** to organize source files. When renaming a file, update its imports and any
+manifest entrypoints that reference the old path. JSX imports and ordinary React hooks are supported by the trusted
+package compiler; the restricted v2 interpreter does not process these files.
+
+The package envelope uses `$schema: "homarr-widget-package-v3"` and contains:
+
+| Field          | Purpose                                                                              |
+| -------------- | ------------------------------------------------------------------------------------ |
+| `manifest`     | Package identity, release version, SDK version, entrypoints, handlers, and metadata  |
+| `files`        | Relative file paths mapped to source text                                            |
+| `dependencies` | Additional npm dependencies pinned to exact versions                                 |
+| `connections`  | Named HTTP, Homarr integration, or service requirements; local bindings are separate |
+| `options`      | Controls, labels, defaults, and constraints for placement settings                   |
+
+`manifest.entrypoints.tile` is required. `advanced`, `configuration`, and `server` are optional. Entrypoints must
+refer to files in the package. A package with named server handlers needs a server entrypoint. The `manifest.id`
+identifies the package across releases; `manifest.version` uses a complete semantic version such as `1.0.0`.
+
+Homarr provides React, Mantine, and `@homarr/widget-sdk` as shared host modules. Referenced Tabler icons are bundled
+from Homarr's installed version, which is recorded in the artifact lock. The reference packages show how to use the SDK for host dimensions, theme and locale, options, state, commands, data queries, and advanced
+views. Put additional dependencies in the package's dependency map rather than copying Homarr's internal source tree.
+
+## Convert an existing Custom JSX widget
+
+Choose **Convert to a widget package** from a valid Custom JSX widget's list row or editor. Conversion uses its saved
+definition and creates a separate disabled package. The original definition and its board placements remain in
+place. Local connections and encrypted credentials are copied on the server, keeping them out of portable source.
+
+The initial package retains a compatible JSX surface and options. Converted dynamic options remain available through
+the authored configuration surface. Extend the package with TSX modules, CSS, or an advanced
+view in the workspace. Review the generated files, preview, and explicitly activate the package before adding it
+to a board. Conversion itself does not execute or replace the original widget. After activation, **Replace an
+existing Custom JSX tile** lets you choose one original placement and explicitly replace it. Position, size, refresh
+interval and configured values are retained; the original definition and other placements stay available. Use
+**Add to board** when you want a separate tile instead.
+
+## Assistant authoring
+
+Choose **Ask Assistant** in the workspace to describe a widget or request changes. Shortcuts help improve the
+current widget, add an advanced view, or fix current errors. This opens Homarr's existing Assistant; it uses the
+visible unsaved draft, public SDK guidance, reference packages, and source validation diagnostics.
+
+The Assistant reads source on demand. Local connection settings, bindings, credential fields, preview option
+values, and runtime response data are excluded. Recognized credential literals are redacted from source context;
+keep secrets in local connections. Files with redacted credentials must be edited directly before the Assistant can
+replace them. Files omitted because a response reached its context budget must be read separately before proposing changes.
+Individual files over 180,000 characters and manifests over 60,000 characters require direct editing.
+
+Proposals display each changed file before and after in the Assistant. **Apply to draft** applies the complete
+proposal as one Undo step. If the draft changes while a proposal is waiting, the Assistant must read it again and
+propose against the new revision. Applying a proposal does not save, trust, preview, activate, or publish it.
+
+Preview evidence identifies only the exact current candidate that compiled and received a preview session.
+Compilation does not prove successful browser rendering or live actions. Source, option, and binding changes
+invalidate that evidence; use the preview canvas to verify the final result before activation.
+
+## Save, preview, and activate
+
+Drag the divider between source and preview to resize the workspace. The divider also supports arrow keys,
+Home/End, and double-click to reset. The preference is saved in your browser. On smaller screens, switch between
+Code and Preview without unmounting the working preview.
+
+The preview offers compact, wide, phone, and tablet viewport presets, independent width/height controls, and a
+25–200% display scale. Scaling changes both the visual surface and the SDK's visible dimensions. Light and dark
+preview modes stay local to the preview; they do not change your Homarr theme. These presentation controls do not
+rebuild code, clear query data, or require another preview session.
+
+The source editor understands the package's TypeScript and TSX files together. Press **Ctrl+Space** for typed
+completions, hover a symbol for its type and documentation, or press **F12** to open its definition. Definitions
+inside the installed SDK or its dependencies open as read-only excerpts. **F2** renames a symbol across package
+files; the complete rename is one Undo operation. **Format** uses TypeScript formatting for TS/TSX files.
+
+Semantic diagnostics appear in the editor and its expandable issue list. They use declarations generated from this
+Homarr installation's actual SDK, React, Mantine, and Node dependencies. Include `.d.ts` files when another package
+needs declarations that are not installed with Homarr. These editor diagnostics do not block saving a draft or
+replace the preview compiler's runtime compatibility checks. Analysis runs in a local browser worker, without
+executing your source or downloading code or types from a CDN.
+
+For Homarr development, `pnpm dev` and the Next.js build regenerate the worker and installed declarations. After
+editing SDK source while the dev server is already running, run `pnpm --filter @homarr/custom-widgets generate:editor`
+and reopen the workspace. Generated assets are included in the standalone image's public directory.
+
+1. **Save draft** persists the current source without building or executing it. Incomplete TSX and metadata JSON can
+   be saved for later repair. Saving a draft leaves the active dashboard release running.
+2. Review the code and dependencies, acknowledge trust, and choose **Run preview**. The preview builds the current
+   editor contents and runs them in a temporary session. Select tile, advanced, or configuration view when provided.
+   **Preview options** controls the configuration used for this session.
+3. Save your final changes, review the activation's placement count, then choose **Activate saved draft**. The server
+   validates and builds the saved source before switching the installation. Activation enables the installation.
+4. Choose a board and configure the new placement under **Activation & boards → Add to board**.
+
+Changing source, options, local preview bindings, or the live-action mode invalidates execution evidence for the previous candidate.
+The last successful view remains visible with a stale label and paused SDK activity while you edit or fix a failed
+build. Its session is released after a replacement loads successfully or the workspace closes. Re-run preview to
+inspect the changed inputs. Pausing SDK activity does not sandbox arbitrary effects inside trusted code. Preview widget storage is temporary:
+frontend storage hooks and server handlers share the same preview-session values, isolated from dashboard storage
+and other preview sessions. Completing an action refreshes queries and managed storage in that preview.
+SDK named actions are simulated by default. Enable **Allow live SDK actions for this preview session** and run
+preview again to operate the real service through SDK actions. The session label shows its mode. Changing source,
+bindings, or connection settings turns this option off. Direct behavior inside trusted code remains the owner's responsibility.
+
+## Synthetic preview scenarios
+
+Authors can include `previewScenarios` in package source to review success, loading and partial failures with
+synthetic data. A scenario maps declared query handler names to JSON results or errors:
+
+```json
+{
+  "previewScenarios": {
+    "partialFailure": {
+      "label": "Storage unavailable",
+      "queries": {
+        "memory": { "data": { "usedPercent": 38 } },
+        "storage": {
+          "error": { "message": "Synthetic storage collector timeout", "code": "TIMEOUT" },
+          "delayMs": 700
+        }
+      }
+    }
+  }
+}
+```
+
+Select a scenario when creating a preview. Its ID and the exact compiled source are stored in that preview session;
+changing the scenario requires a new preview. Required local connections can remain unbound. Fixture queries return
+the authored JSON without starting the package's server module or calling a configured service. A query without a
+fixture fails explicitly; it never falls back to live data. Each handler receives the same fixture regardless of its
+input. Declared input validation still applies.
+
+SDK actions are simulated in fixture mode, and enabling live actions together with a scenario is rejected.
+Subscriptions are unavailable in this bounded query-fixture mode. The SDK capability helper remains available so
+action controls can display their simulated state. Production dashboard queries always execute the active package's
+normal handlers; a preview scenario never changes an installation or its placements.
+
+[Download the complete example](/custom-widgets/preview-scenarios.json) for two independent local metrics with ready,
+delayed and partial-failure scenarios. It needs no API or local connection. Import the source, review trust, and
+preview its named scenarios. Its ordinary handlers read local memory and filesystem metrics when used without a scenario.
+
+Scenarios support up to 16 names, 64 query fixtures each, 2 MiB of total fixture JSON, and delays of up to 30 seconds.
+Errors can use `BAD_REQUEST`, `NOT_FOUND`, `TIMEOUT` or `INTERNAL_SERVER_ERROR`; the latter is the default. Request
+cancellation and discarding the session cancel pending fixture delays.
+
+Fixtures are explicitly authored package source and are included in source exports, offline archives and Workshop
+releases. Homarr does not capture live responses into scenarios. Use invented values and review fixture contents
+before sharing. This is SDK simulation, not a security sandbox: trusted browser code can still make direct requests,
+and compiling uncached dependencies can require registry access. Review source and acknowledge trust as usual.
+
+## Local connections
+
+The **Unified downloads** starter accepts a primary and optional second download integration. Each source has its
+own queue, loading state, error and retry control, so a failed client leaves the other queue usable. Advanced view
+adds filtering, sorting, per-client and per-item controls, and pause/resume for all or selected clients. Batch
+results identify successful and failed clients individually. Per-item actions resolve the current item from the
+selected client, and confirmed removal keeps downloaded files. The composed overview reuses the same modules.
+Controls consult the current viewer's capabilities. Guests need an explicit grant for an exact input such as
+`{"connection":"secondary","operation":"pause"}` on `control`; batch grants additionally list every target in
+`connections`. No guest action is enabled merely by installing the starter.
+
+Choose **Service** for MQTT, SQLite, SSH, local files or another protocol. Service connections require a
+`serviceType` matching the package requirement, arbitrary nonsecret JSON settings, and optional encrypted
+credentials. They do not require an HTTP URL. For example, declare
+`{kind: "service", serviceType: "sqlite", label: "Database"}` in a package and bind a local connection with
+settings such as `{"path":"/data/app.sqlite"}`. MQTT commonly uses `{"url":"mqtt://mosquitto:1883","topics":["sensors/#"]}`;
+put its username and password in the encrypted credentials field. Leave that field blank to keep existing
+credentials, or select **Replace saved credentials** to clear them explicitly.
+
+Server handlers call `getWidgetConnection(context, {connection: "database", serviceType: "sqlite"})` from
+`@homarr/widget-sdk/server` to obtain the local settings and secrets for a Node library. These credentials are
+never returned by the browser connection API. Authors must keep this object server-side and return only the
+data their widget needs. File paths resolve inside Homarr's container/process; mount the required files there
+and give the Homarr process access. Use a remote runner when the adapter must execute on another machine.
+
+Diagnostics report what they actually verify: SQLite/file connections check regular-file readability, and MQTT
+connections check TCP reachability. Neither check claims database-query validity or MQTT authentication. Run
+preview to exercise the real query or authenticated subscription. Other service types report configured settings
+and require their adapter's preview for a protocol check. The **SQLite and local status** and **MQTT live topics**
+starters include complete adapters; MQTT pins its reviewed `mqtt` dependency, while SQLite uses Node's built-in
+module. Their package READMEs document connection settings, limits, cancellation and deployment details.
+
+Declare named requirements in the package and bind them to reusable local connections in **Connections**. A
+connection can point to an existing Homarr integration or an HTTP endpoint. HTTP setup supports a separate server
+and browser URL, Basic authentication, bearer tokens, secret headers or query parameters, cookies, TLS verification, and a timeout.
+
+Server requests originate from Homarr's server or container. Examples include `http://sonarr:8989`,
+`http://192.168.1.20:8080`, and a Tailscale address. `127.0.0.1` addresses the network namespace running Homarr; it does
+not address the dashboard viewer's browser or a different container. Enter full URLs including the protocol. For a bare address such as `sonarr:7573`, the connection form offers an
+explicit **Use http://sonarr:7573** suggestion. Choosing it adds the protocol while preserving the supplied host,
+port, and path; use HTTPS when required by the service.
+
+**Diagnose** shows the reached stage, resolved addresses, HTTP status and timing, and top-level JSON field names
+without response values. The primary result distinguishes name resolution, network, TLS, HTTP and authentication
+failures; expand **Technical details** for the full diagnostic. **Save installation bindings** changes the defaults inherited by every placement.
+Individual placements can override connections in their board configuration. **Edit connection** updates a reusable
+connection for every widget that uses it. Empty credential fields retain stored credentials; changing authentication
+requires entering the credentials for the new method.
+For Basic authentication, you can update the username or password independently: leaving the other field blank
+preserves its saved value. Updating a bearer token, cookie, username, or password also preserves a saved TLS private key.
+
+Connection credentials are encrypted in Homarr's database. Connection forms and their credential fields are not
+included in the package editor's Undo/Redo or browser recovery. Keep credentials out of source files: source files
+are portable and can be exported or published.
+
+## Recovery and operational rollback
+
+Disabling an enabled guest action does not depend on the validity of its edited input JSON. You can revoke access
+immediately from the action's Disable control while repairing those inputs.
+
+Activation also coordinates with widget settings, board saves, additions, and board duplication. If a package
+changes while one of these saves is waiting, Homarr asks you to reload before saving again so an older
+configuration cannot overwrite its migration. Changing a placement's connection overrides invalidates guest
+action approvals tied to the previous bindings.
+
+**Undo/Redo** covers the whole source document: metadata, files, and installation name. History is bounded to 100
+entries and 2 MB in the current editor session. **Reset to saved** restores the saved draft. Homarr keeps one browser
+recovery draft per signed-in owner, up to 1 MB, and offers to restore it when opening the matching package.
+Recognized credential literals are redacted from recovery source; use connection fields for secrets.
+
+Package release history is separate from editor Undo/Redo. **Roll back previous activation** restores the previous
+compiled release and its activation snapshot of local bindings, placement options, and widget data. You must
+acknowledge discarding newer widget data. Calls already made to an external service cannot be reversed by rollback.
+Your source draft remains available for further work.
+
+**Disable installation** stops that installation across all placements. It is independent of saving a source draft.
+
+## Import, export, fork, and update
+
+**Import package** accepts source JSON or a `homarr-widget-archive-v3` archive. Archives contain source plus a compiled
+artifact; compatible matching artifacts can be activated without rebuilding dependencies. Imports create disabled
+drafts for review. **Export source draft** exports current editor contents, including incomplete work.
+**Export active archive** exports the activated release and its compiled artifact. Local connection credentials and
+board placements are not part of these exports.
+
+**Stage archive update** replaces the installation's saved draft after explicit acknowledgement and keeps its active
+release running. **Review saved draft changes** shows changed files before and after, dependency changes, connection
+requirements, and configuration changes. **Fork as a new package** copies saved source to a new disabled installation
+with a new package identity; it does not change the original installation's board placements.
+
+## Portable widget collections
+
+A `homarr-widget-collection-v1` archive groups several independent packages with named shared connection slots.
+Import binds a slot once and fans it out to every member that needs it. All imported packages start as disabled
+drafts; importing does not install dependencies or execute widget code. Each package keeps its own identity,
+activation, updates, settings and dashboard placements.
+
+The complete collection is validated before creating installations. Invalid member code checksums, mismatched
+connection types or invalid portable option defaults reject the import with no new installations. Installation
+records are committed together; immutable artifact cache entries from a database failure may remain until cleanup.
+
+Export uses the selected installations' activated archives. Shared local bindings become named requirements, while
+their connection IDs, URLs and credentials stay local. Export also excludes placement settings and widget storage.
+Only explicit authored defaults belong in the portable blueprint. Workshop and fork attribution is retained, and
+normal package updates retain the collection's membership and connection mapping. Review code literals before
+sharing, since package source is exported verbatim.
+
+From the installed package library, choose **Collections** to export selected active packages or resume an imported
+collection. Import its JSON archive using **Import**. The setup page asks for shared connections once, lets you
+choose widgets and their options, and activates the selected packages after you acknowledge trust. **Activate and
+add missing widgets** places them on the selected board. Each member reports its own result, and retrying skips
+placements already present on that board. You can stop after the current member finishes.
+
+See the [collection CLI commands](../../advanced/command-line/index.mdx#share-several-widgets-as-a-collection) for
+packing, validation and importing through an admin API key. Collections support up to 32 widgets and 128 MiB.
+
+## Workshop lifecycle
+
+In Workshop, select a release, inspect source files and dependencies, and optionally bind its named connections.
+**Import for review** opens the package workspace with a disabled local installation. Preview and activate it after
+reviewing trust, then add it to a board.
+
+The workspace's Workshop section checks for newer releases and reports local source changes. Staging an update
+requires acknowledging replacement of the saved draft; the active release continues running until activation.
+Fork or export local changes you want to keep before replacing the draft.
+
+Publishing requires a Workshop account and an explicit review of the saved source for secrets, local information,
+and permission to share the code and dependencies. Publish a new package, an immutable release of a package you own,
+or an attributed fork. Give each release a new version in the manifest and describe its changes. Local bindings and
+credentials remain on the Homarr installation.
+
+## Reference packages with local services
+
+**Sonarr operations** supports two native Sonarr connections, upcoming and missing episodes, queue progress, source
+filtering, and confirmed episode-search actions. Compact view shows four rows; the advanced view shows all loaded
+rows with text filtering. Each server contributes up to 100 missing or queued episodes. An unavailable second
+server does not hide the primary server's results. Searching requires native integration interaction access and
+submits a Sonarr command; a queued command does not prove an eligible release was found or downloaded.
+
+**Filesystem backup monitor** reads backup metadata and an optional JSON status report mounted into Homarr. Its
+README contains the success/failure/running report format, timestamps, duration, size and retained run history.
+The optional **Run backup** action uses a fixed executable and argument array deliberately configured in
+`command.ts`. It runs through Node `execFile` without a shell, requires full placement permission, and never accepts
+command text from the browser. Preview simulates it. Mount the executable into Homarr, then review and activate its
+configuration. Backup activity and status reports do not verify restore integrity.
+
+**Media and camera wall** combines native media sessions with optional authenticated camera snapshots and an Immich
+image gallery. Camera paths share a bound HTTP connection; its credentials stay on the server. Immich uses a secret
+`x-api-key` header with `asset.read` and `asset.view`. The package fetches images server-side and returns bounded
+image data to the widget. It supports up to eight camera snapshots and twelve Immich thumbnails. Clicking an image
+opens the advanced view with shared selection. Camera snapshots poll; this reference does not stream RTSP or other
+continuous video, and individual images must remain under 675 KiB.
+
+## Optional history collection
+
+A placement’s **History collection** shows its latest retained sample and time. Expand the sampled-point table for
+recent values or **Technical details** for the stored record.
+
+Expand a placement’s **History collection** to select a named query handler, input JSON, value path, unit, sampling
+interval, retention period, and maximum sample count. Collection is disabled by default. Enabling it runs the query
+on Homarr’s server even when the dashboard is closed. Pause it without deleting samples, or explicitly discard
+the collection and its history. The collection panel shows recent samples and request errors; package code can
+consume retained history through the widget SDK.
+
+## Guest actions
+
+A package can declare a named action as available for guest grants. Under a placement's **Guest actions**, the owner
+enables that specific handler for an explicit JSON array of permitted inputs. Other inputs remain denied. Changing
+server code, dependencies, or bound connection configuration invalidates the grant and requires owner renewal.
+Board access and the package's declared permissions still govern normal authenticated usage.
+
+## Repair a v2 widget
+
+The existing restricted v2 workbench remains available from the installed widgets tab. Invalid v2 definitions expose
+**Repair widget**, which shows validation issues and editable source without changing the widget's dashboard ID.
+Save repaired source or export a repair draft. Credentials are retained only when the original source and
+authentication binding remain unchanged; configure credentials again when those bindings change.
+
+## Build cache maintenance
+
+Administrators can call `customWidget.package.cleanupArtifacts` through the authenticated API. Start with
+`{ "dryRun": true }` to inspect candidate artifact IDs and local directories, then call it with `dryRun: false` to
+remove those that are still unused. Cleanup preserves active and previous releases, every valid saved source draft
+(including disabled offline imports), and artifacts leased by recent imports, builds or previews. Unreferenced data
+must be at least seven days old. Preview sessions themselves expire after one hour.
+
+Each call removes at most 100 database artifacts and 20 local directories by default. Adjust `maximumArtifacts`
+(up to 500) and `maximumDirectories` (up to 100), or repeat when the result reports `limited: true`. Directory cleanup
+applies to the current Homarr replica's runtime and dependency cache. Other replicas can clean their own local cache
+through the same procedure. Cleanup coordinates reference changes across replicas and never invokes package code.
+This is explicit maintenance; no automatic build-cache cleanup job is enabled.
+
+For an external editor workflow with normal files, local previews and immutable release publishing, see the
+[widget CLI commands](../../advanced/command-line/index.mdx#build-and-share-custom-widget-packages).
+
+Each server worker runs at most eight handlers concurrently and queues at most 64 more for up to 30 seconds.
+Extra requests receive a capacity error; one failing source does not block successful results from other requests.
+
+## Webhook lifecycle and advanced links
+
+Each placement can issue a separate token for a named action with an input schema. Homarr displays the POST URL and
+bearer token once. Tokens stay outside source drafts, recovery and exports. Code or local binding changes invalidate
+existing tokens; create a new one for the updated placement. Explicitly revoked tokens remain revoked after rollback.
+The webhook accepts JSON matching the action schema, up to 1 MiB, and runs with its owner's current authorization.
+
+A board URL can link directly to an installed widget's advanced view using `#widget=<placementId>`. The viewer still
+needs access to the board and widget. This opens the dashboard widget surface rather than a standalone app route.

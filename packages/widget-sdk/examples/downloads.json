@@ -1,0 +1,143 @@
+{
+  "$schema": "homarr-widget-package-v3",
+  "manifest": {
+    "id": "homarr.reference.downloads",
+    "version": "1.0.0",
+    "sdkVersion": "1",
+    "name": "Unified downloads",
+    "description": "Two independent torrent or Usenet clients with attributable queues, source-specific actions, partial batch results and guest-aware controls.",
+    "entrypoints": {
+      "tile": "widget.tsx",
+      "advanced": "widget.tsx",
+      "server": "server.ts"
+    },
+    "handlers": {
+      "queue": {
+        "kind": "query",
+        "permission": "view",
+        "inputSchema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "connection"
+          ],
+          "properties": {
+            "connection": {
+              "type": "string",
+              "enum": [
+                "client",
+                "secondary"
+              ]
+            }
+          }
+        }
+      },
+      "control": {
+        "kind": "action",
+        "permission": "modify",
+        "inputSchema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "connection",
+            "operation"
+          ],
+          "properties": {
+            "connection": {
+              "type": "string",
+              "enum": [
+                "client",
+                "secondary"
+              ]
+            },
+            "operation": {
+              "type": "string",
+              "enum": [
+                "pause",
+                "resume",
+                "pauseItem",
+                "resumeItem",
+                "deleteItem"
+              ]
+            },
+            "itemId": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "guestAccess": true
+      },
+      "sources": {
+        "kind": "query",
+        "permission": "view"
+      },
+      "controlBatch": {
+        "kind": "action",
+        "permission": "modify",
+        "guestAccess": true,
+        "inputSchema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "connections",
+            "operation"
+          ],
+          "properties": {
+            "connections": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 2,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "client",
+                  "secondary"
+                ]
+              }
+            },
+            "operation": {
+              "type": "string",
+              "enum": [
+                "pause",
+                "resume"
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "files": {
+    "server.ts": "import type { BatchControl, BatchResult, ControlResult, DownloadConnection, DownloadControl, DownloadQueue, DownloadSource, SourceQueue } from \"./download-types\";\nimport type { WidgetServerContext } from \"@homarr/widget-sdk/server\";\nimport { callWidgetIntegration, defineWidgetServer, getWidgetServerContext } from \"@homarr/widget-sdk/server\";\n\nconst declared:DownloadConnection[] = [\"client\",\"secondary\"];\nconst allowed = new Set([\"pause\",\"resume\",\"pauseItem\",\"resumeItem\",\"deleteItem\"]);\nasync function sources(context:WidgetServerContext):Promise<DownloadSource[]> {\n  const {bindingNames,options} = await getWidgetServerContext(context);\n  return declared.filter((connection) => bindingNames.includes(connection)).map((connection) => {\n    let label = options.primaryLabel;\n    if (connection === \"secondary\") label = options.secondaryLabel;\n    if (typeof label !== \"string\" || !label.trim()) label = connection === \"client\" ? \"Primary client\" : \"Second client\";\n    return {connection,label:String(label)};\n  });\n}\nasync function source(context:WidgetServerContext,connection:DownloadConnection) {\n  const result = (await sources(context)).find((candidate) => candidate.connection === connection);\n  if (!result) throw new Error(\"Choose a declared, bound download client\");\n  return result;\n}\nasync function queue(context:WidgetServerContext,connection:DownloadConnection):Promise<SourceQueue> {\n  const selected = await source(context,connection);\n  const result = await callWidgetIntegration<DownloadQueue>(context,{connection,capability:\"downloads.queue\",input:{limit:100}});\n  return {...selected,data:result.data};\n}\nasync function control(context:WidgetServerContext,input:DownloadControl):Promise<ControlResult> {\n  if (!allowed.has(input?.operation)) throw new Error(\"Unknown download operation\");\n  await source(context,input.connection);\n  if (input.operation === \"pause\" || input.operation === \"resume\") {\n    await callWidgetIntegration(context,{connection:input.connection,capability:`downloads.${input.operation}`,input:{}});\n  } else {\n    if (typeof input.itemId !== \"string\" || !input.itemId) throw new Error(\"Choose a download from this client\");\n    const current = await queue(context,input.connection);\n    const item = current.data.items.find((candidate) => candidate.id === input.itemId);\n    if (!item) throw new Error(\"The download is no longer in this client's queue; refresh and try again\");\n    // Resolve the canonical item in the selected client. Never trust a browser-supplied client index or item object.\n    await callWidgetIntegration(context,{connection:input.connection,capability:`downloads.${input.operation}`,input:{item,fromDisk:false}});\n  }\n  return {connection:input.connection,operation:input.operation,ok:true};\n}\nexport default defineWidgetServer({\n  sources: (_input:unknown,context) => sources(context),\n  queue: (input:{connection:DownloadConnection},context) => queue(context,input.connection),\n  control: (input:DownloadControl,context) => control(context,input),\n  controlBatch: async (input:BatchControl,context):Promise<BatchResult> => {\n    if (![\"pause\",\"resume\"].includes(input?.operation)) throw new Error(\"Batch actions support pause or resume only\");\n    if (!Array.isArray(input.connections) || !input.connections.length || input.connections.length > 2 || new Set(input.connections).size !== input.connections.length)\n      throw new Error(\"Choose one or two different download clients\");\n    const available = await sources(context);\n    if (input.connections.some((connection) => !available.some((candidate) => candidate.connection === connection)))\n      throw new Error(\"Every batch target must be a declared, bound client\");\n    const results = await Promise.all(input.connections.map(async (connection):Promise<ControlResult> => {\n      try { return await control(context,{connection,operation:input.operation}); }\n      catch (error) { return {connection,operation:input.operation,ok:false,error:error instanceof Error ? error.message : String(error)}; }\n    }));\n    const succeeded = results.filter((result) => result.ok).length;\n    return {results,succeeded,failed:results.length-succeeded};\n  },\n});\n",
+    "download-source.tsx": "import type { DownloadControl, DownloadItem, DownloadSource, SourceQueue, ControlResult } from \"./download-types\";\nimport { Alert, Badge, Button, Group, Progress, Stack, Text } from \"@mantine/core\";\nimport { useWidgetAction, useWidgetCapabilities, useWidgetHost, useWidgetQuery, useWidgetServices } from \"@homarr/widget-sdk\";\nconst rate = (value:number|undefined) => `${((value ?? 0)/1048576).toFixed(1)} MiB/s`;\nexport function DownloadSourceRegion({source,filter,sort}:{source:DownloadSource;filter:string;sort:string}) {\n  const host = useWidgetHost();\n  const services = useWidgetServices();\n  const capabilities = useWidgetCapabilities();\n  const query = useWidgetQuery<SourceQueue>(\"queue\",{connection:source.connection},{refetchInterval:10000});\n  const action = useWidgetAction<ControlResult,DownloadControl>(\"control\");\n  const status = query.data?.data.status;\n  const error = query.error ?? action.error;\n  const run = (input:DownloadControl) => {void action.mutateAsync(input).catch(() => undefined);};\n  const canRun = (input:DownloadControl) => !host.isEditMode && !action.isPending && capabilities.canRun(\"control\",input);\n  const remove = async (item:DownloadItem) => {\n    const input:DownloadControl = {connection:source.connection,operation:\"deleteItem\",itemId:item.id};\n    if (!canRun(input)) return;\n    if (await services.confirm({title:\"Remove download\",message:`Remove ${item.name} from ${source.label}? Downloaded files will be kept.`,destructive:true})) run(input);\n  };\n  const rows = query.data?.data.items ?? [];\n  let items = rows.filter((item) => item.name.toLocaleLowerCase().includes(filter.toLocaleLowerCase()));\n  if (sort === \"progress\") items = items.toSorted((a,b) => b.progress-a.progress);\n  if (sort === \"name\") items = items.toSorted((a,b) => a.name.localeCompare(b.name));\n  if (host.displayMode === \"compact\") items = items.slice(0,3);\n  const pause:DownloadControl = {connection:source.connection,operation:\"pause\"};\n  const resume:DownloadControl = {connection:source.connection,operation:\"resume\"};\n  return <Stack gap=\"xs\" component=\"section\" aria-label={source.label} style={{border:\"1px solid var(--mantine-color-default-border)\",borderRadius:8,padding:10}}>\n    <Group justify=\"space-between\"><Text size=\"sm\" fw={600}>{source.label} \u00b7 {rows.length}</Text>{status && <Badge color={status.paused ? \"yellow\" : \"blue\"}>{status.paused ? \"Paused\" : rate(status.rates.down)}</Badge>}</Group>\n    {error && <Alert color=\"yellow\" title={source.label}>{error.message}<Button size=\"compact-xs\" variant=\"subtle\" onClick={() => {action.reset();void query.refetch();}}>Retry this client</Button></Alert>}\n    {action.isPending && <Text size=\"xs\" c=\"dimmed\" role=\"status\">Updating this client\u2026</Text>}\n    {query.isPending && <Text size=\"xs\" c=\"dimmed\">Loading this client's queue\u2026</Text>}\n    {host.displayMode === \"advanced\" && <Group gap=\"xs\"><Button size=\"compact-xs\" variant=\"light\" disabled={!canRun(pause)} onClick={() => run(pause)}>Pause this client</Button><Button size=\"compact-xs\" variant=\"light\" disabled={!canRun(resume)} onClick={() => run(resume)}>Resume this client</Button></Group>}\n    {items.map((item) => {\n      const toggle:DownloadControl = {connection:source.connection,operation:item.state === \"paused\" ? \"resumeItem\" : \"pauseItem\",itemId:item.id};\n      const deletion:DownloadControl = {connection:source.connection,operation:\"deleteItem\",itemId:item.id};\n      return <Stack key={`${source.connection}:${item.id}`} gap={4}>\n        <Group justify=\"space-between\" wrap=\"nowrap\"><Text size=\"sm\" truncate>{item.name}</Text><Badge size=\"xs\">{item.state}</Badge></Group>\n        <Progress aria-label={`${source.label}: ${item.name} progress`} value={item.progress*100} />\n        <Group justify=\"space-between\"><Text size=\"xs\" c=\"dimmed\">{Math.round(item.progress*100)}% \u00b7 {rate(item.downSpeed)}</Text>{host.displayMode === \"advanced\" && <Group gap=\"xs\"><Button size=\"compact-xs\" variant=\"subtle\" disabled={!canRun(toggle)} onClick={() => run(toggle)}>{item.state === \"paused\" ? \"Resume\" : \"Pause\"}</Button><Button size=\"compact-xs\" color=\"red\" variant=\"subtle\" disabled={!canRun(deletion)} onClick={() => void remove(item)}>Remove</Button></Group>}</Group>\n      </Stack>;\n    })}\n    {!query.isPending && !query.error && items.length === 0 && <Text size=\"xs\" c=\"dimmed\">No downloads match this client view.</Text>}\n    {action.data?.ok && <Text size=\"xs\" c=\"green\">{source.label}: {action.data.operation} completed</Text>}\n  </Stack>;\n}\n",
+    "download-types.ts": "export type DownloadConnection = \"client\" | \"secondary\";\nexport type DownloadOperation = \"pause\" | \"resume\" | \"pauseItem\" | \"resumeItem\" | \"deleteItem\";\nexport interface DownloadItem {\n  id:string;name:string;state:string;progress:number;downSpeed?:number;\n  index:number;type:\"torrent\"|\"usenet\"|\"miscellaneous\";size:number;time:number;\n}\nexport interface DownloadQueue {data:{items:DownloadItem[];status:{paused:boolean;rates:{down:number;up?:number}}}}\nexport interface DownloadSource {connection:DownloadConnection;label:string}\nexport interface SourceQueue extends DownloadSource {data:DownloadQueue[\"data\"]}\nexport interface DownloadControl {connection:DownloadConnection;operation:DownloadOperation;itemId?:string}\nexport interface BatchControl {connections:DownloadConnection[];operation:\"pause\"|\"resume\"}\nexport interface ControlResult {connection:DownloadConnection;operation:DownloadOperation;ok:boolean;error?:string}\nexport interface BatchResult {results:ControlResult[];succeeded:number;failed:number}\nexport interface DownloadOptions {primaryLabel:string;secondaryLabel:string}\n",
+    "widget.tsx": "import type { BatchControl, BatchResult, DownloadConnection, DownloadSource } from \"./download-types\";\nimport { Alert, Button, Group, MultiSelect, Select, Stack, Text, TextInput } from \"@mantine/core\";\nimport { useWidgetAction, useWidgetCapabilities, useWidgetCommands, useWidgetHost, useWidgetQuery, useWidgetState } from \"@homarr/widget-sdk\";\nimport { DownloadSourceRegion } from \"./download-source\";\nexport default function Downloads() {\n  const host = useWidgetHost();\n  const sources = useWidgetQuery<DownloadSource[]>(\"sources\",{}, {staleTime:60000});\n  const capabilities = useWidgetCapabilities();\n  const batch = useWidgetAction<BatchResult,BatchControl>(\"controlBatch\");\n  const [filter,setFilter] = useWidgetState(\"filter\",\"\");\n  const [sort,setSort] = useWidgetState(\"sort\",\"queue\");\n  const [selection,setSelection] = useWidgetState<DownloadConnection[]>(\"batch-clients\",[]);\n  const available = sources.data ?? [];\n  const targets = selection.filter((name) => available.some((source) => source.connection === name));\n  const all = available.map((source) => source.connection);\n  const canRun = (input:BatchControl) => input.connections.length > 0 && !host.isEditMode && !batch.isPending && capabilities.canRun(\"controlBatch\",input);\n  const run = (input:BatchControl) => {void batch.mutateAsync(input).catch(() => undefined);};\n  const pauseAll:BatchControl = {connections:all,operation:\"pause\"};\n  const resumeAll:BatchControl = {connections:all,operation:\"resume\"};\n  const pauseSelected:BatchControl = {connections:targets,operation:\"pause\"};\n  const resumeSelected:BatchControl = {connections:targets,operation:\"resume\"};\n  useWidgetCommands([{id:\"pause-all\",label:\"Pause all download clients\",disabled:!canRun(pauseAll),run:() => run(pauseAll)},{id:\"resume-all\",label:\"Resume all download clients\",disabled:!canRun(resumeAll),run:() => run(resumeAll)}]);\n  return <Stack p=\"sm\" gap=\"sm\" h=\"100%\" style={{overflow:\"auto\"}}>\n    <Text fw={600}>Downloads \u00b7 {available.length} clients</Text>\n    {sources.error && <Alert color=\"red\">{sources.error.message}<Button size=\"xs\" variant=\"subtle\" onClick={() => void sources.refetch()}>Retry setup</Button></Alert>}\n    {host.displayMode === \"advanced\" && <>\n      <Group><TextInput label=\"Filter downloads\" value={filter} onChange={(event) => setFilter(event.currentTarget.value)} /><Select label=\"Sort\" value={sort} onChange={(value) => setSort(value ?? \"queue\")} data={[{value:\"queue\",label:\"Queue\"},{value:\"progress\",label:\"Progress\"},{value:\"name\",label:\"Name\"}]} /></Group>\n      <Group gap=\"xs\"><Button size=\"compact-xs\" disabled={!canRun(pauseAll)} onClick={() => run(pauseAll)}>Pause all clients</Button><Button size=\"compact-xs\" disabled={!canRun(resumeAll)} onClick={() => run(resumeAll)}>Resume all clients</Button></Group>\n      {available.length > 1 && <Group align=\"end\"><MultiSelect label=\"Batch targets\" data={available.map((source) => ({value:source.connection,label:source.label}))} value={selection} onChange={(values) => setSelection(all.filter((connection) => values.includes(connection)))} /><Button size=\"compact-xs\" variant=\"light\" disabled={!canRun(pauseSelected)} onClick={() => run(pauseSelected)}>Pause selected</Button><Button size=\"compact-xs\" variant=\"light\" disabled={!canRun(resumeSelected)} onClick={() => run(resumeSelected)}>Resume selected</Button></Group>}\n    </>}\n    {batch.isPending && <Text size=\"xs\" c=\"dimmed\" role=\"status\">Updating selected clients\u2026</Text>}\n    {batch.error && <Alert color=\"red\">{batch.error.message}</Alert>}\n    {batch.data && <Alert color={batch.data.failed ? \"yellow\" : \"green\"} title={`${batch.data.succeeded} succeeded \u00b7 ${batch.data.failed} failed`}>\n      {batch.data.results.map((result) => <Text size=\"xs\" key={result.connection}>{available.find((source) => source.connection === result.connection)?.label ?? result.connection}: {result.ok ? `${result.operation} completed` : result.error}</Text>)}\n    </Alert>}\n    {available.map((source) => <DownloadSourceRegion key={source.connection} source={source} filter={filter} sort={sort} />)}\n    {!sources.isPending && !sources.error && available.length === 0 && <Text c=\"dimmed\">Bind a download client to get started.</Text>}\n  </Stack>;\n}\n",
+    "README.md": "# Two download clients\n\nBind client and optionally secondary to existing Homarr download integrations. Set the two display labels in widget options. The tile renders independent queue queries and errors for each source; a failing or slow client does not hide its sibling. The same normalized native download capabilities support torrent and Usenet backends.\n\nEach per-item action includes the connection name and itemId. The server resolves the current item from that connection, preserving the native client index and never accepting a browser-provided item object. Removal asks for confirmation and keeps downloaded files. Per-source pause/resume work independently. Advanced view and commands can pause or resume all configured clients or selected targets. Every batch reports success/failure per client; failures do not roll back completed external actions. Retry only the failed client when needed.\n\nAll control buttons and commands consult useWidgetCapabilities. Guest controls remain disabled until the owner grants the named action and its exact source-qualified input. A narrow example grant is control with {\"connection\":\"secondary\",\"operation\":\"pause\"}. Batch grants explicitly name every target, for example controlBatch with {\"connections\":[\"client\",\"secondary\"],\"operation\":\"resume\"}. Changed bindings/code/resource options invalidate old grants. Native integration action permissions remain authoritative for signed-in users.\n\nFilters, sorting and target selection use shared SDK state across tile/advanced. Composed overview copies these modules and routes them through WidgetScope with the downloads. handler prefix.\n"
+  },
+  "dependencies": {},
+  "connections": {
+    "client": {
+      "kind": "integration",
+      "label": "Primary download client"
+    },
+    "secondary": {
+      "kind": "integration",
+      "label": "Second download client",
+      "optional": true
+    }
+  },
+  "options": {
+    "primaryLabel": {
+      "control": "text",
+      "label": "Primary client label",
+      "default": "Primary client"
+    },
+    "secondaryLabel": {
+      "control": "text",
+      "label": "Second client label",
+      "default": "Second client"
+    }
+  }
+}

@@ -13,7 +13,7 @@ interface HomarrCustomWidgetV2 {
 }
 ```
 
-The object key `default` is the required source ID; `default` is not a property on a source. Source properties are `name?`, `baseUrl`, `networkScope`, and `auth?`:
+Static widgets use empty `sources` and `requests`. Each request must resolve to a defined source; omitting `source` uses `default` only when that ID exists. Source properties are `name?`, `baseUrl`, `networkScope`, and `auth?`:
 
 ```json
 {

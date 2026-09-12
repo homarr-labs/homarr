@@ -621,6 +621,70 @@ export const legacyCustomWidgetSecrets = sqliteTable(
   }),
 );
 
+export const customWidgetArtifacts = sqliteTable("custom_widget_artifact", {
+  id: text().notNull().primaryKey(),
+  packageId: text().notNull(),
+  version: text().notNull(),
+  source: text().notNull(),
+  artifact: text().notNull(),
+  createdAt: int({ mode: "timestamp" }).notNull(),
+});
+
+export const customWidgetInstallations = sqliteTable("custom_widget_installation", {
+  id: text().notNull().primaryKey(),
+  name: text().notNull(),
+  draft: text().notNull(),
+  activeArtifactId: text(),
+  previousArtifactId: text(),
+  previousSnapshot: text(),
+  bindings: text().notNull(),
+  origin: text(),
+  enabled: int({ mode: "boolean" }).notNull().default(false),
+  creatorId: text().references(() => users.id, { onDelete: "set null" }),
+  createdAt: int({ mode: "timestamp" }).notNull(),
+  updatedAt: int({ mode: "timestamp" }).notNull(),
+});
+
+export const customWidgetConnections = sqliteTable("custom_widget_connection", {
+  id: text().notNull().primaryKey(),
+  name: text().notNull(),
+  integrationId: text().references(() => integrations.id, { onDelete: "set null" }),
+  configuration: text().notNull(),
+  encryptedSecrets: text().notNull(),
+  createdAt: int({ mode: "timestamp" }).notNull(),
+  updatedAt: int({ mode: "timestamp" }).notNull(),
+});
+
+export const customWidgetStorage = sqliteTable("custom_widget_storage", {
+  id: text().notNull().primaryKey(),
+  installationId: text().notNull().references(() => customWidgetInstallations.id, { onDelete: "cascade" }),
+  scope: text().notNull(),
+  ownerKey: text().notNull(),
+  key: text().notNull(),
+  value: text().notNull(),
+  updatedAt: int({ mode: "timestamp" }).notNull(),
+});
+
+export const customWidgetGuestGrants = sqliteTable("custom_widget_guest_grant", {
+  id: text().notNull().primaryKey(),
+  itemId: text().notNull().references(() => items.id, { onDelete: "cascade" }),
+  handler: text().notNull(),
+  artifactDigest: text().notNull(),
+  bindingsDigest: text().notNull(),
+  allowedInputs: text().notNull(),
+  createdAt: int({ mode: "timestamp" }).notNull(),
+});
+
+export const customWidgetActivity = sqliteTable("custom_widget_activity", {
+  id: text().notNull().primaryKey(),
+  installationId: text().notNull().references(() => customWidgetInstallations.id, { onDelete: "cascade" }),
+  itemId: text(),
+  userId: text(),
+  handler: text().notNull(),
+  status: text().notNull(),
+  createdAt: int({ mode: "timestamp" }).notNull(),
+});
+
 export const customWidgetDefinitions = sqliteTable("custom_widget_v2_definition", {
   id: text().notNull().primaryKey(),
   name: text().notNull(),

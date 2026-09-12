@@ -43,6 +43,7 @@ interface ApiContext {
   deviceType: DeviceType;
   baseUrl?: `${string}://${string}`;
   onboardingClaimToken?: string;
+  crossSiteRequest?: boolean;
   db: typeof db;
 }
 
@@ -59,6 +60,11 @@ export const createTRPCContext = (opts: { headers: Headers; session: Session | n
   return {
     session,
     deviceType: userAgent(opts.headers).device.type,
+    crossSiteRequest: opts.headers.get("sec-fetch-site") === "cross-site" || (() => {
+      const origin = opts.headers.get("origin");
+      if (!origin) return false;
+      return origin !== extractBaseUrlFromHeaders(opts.headers);
+    })(),
     baseUrl: extractBaseUrlFromHeaders(opts.headers),
     onboardingClaimToken: getOnboardingClaimTokenFromCookieHeader(opts.headers.get("cookie")),
     db,

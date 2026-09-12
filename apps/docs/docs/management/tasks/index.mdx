@@ -20,3 +20,14 @@ Each task exposes:
 ![The scheduled Tasks management page](../img/tasks.png)
 
 Disabling a task stops scheduled runs but does not prevent a manual run.
+## Widget history collectors
+
+Trusted widget installations can opt into background sampling from their **Activation & boards** workspace tab.
+Each collector names a declared query, input, optional response field, interval, and retention limit. Collection is
+separate from viewer refresh; Redis admits one sampling run per interval across serving replicas. New collectors are
+disabled until the owner enables them. The owner must retain administrator access for collection to continue.
+
+The production application schedules enabled collectors while it is running, including when no dashboard is open.
+Each series is bounded by its configured retention/sample count and a 1 MiB managed record limit. Pausing a collector
+stops requests. Removing it explicitly removes its retained series. Application history APIs remain preferable when
+available because Homarr cannot collect observations while it is offline.

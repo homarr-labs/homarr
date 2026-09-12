@@ -58,7 +58,7 @@ interface HomarrCustomWidgetV2 {
 }
 \`\`\`
 
-The object key \`default\` is the required source ID; \`default\` is not a property on a source. Source properties are \`name?\`, \`baseUrl\`, \`networkScope\`, and \`auth?\`:
+Static widgets use empty \`sources\` and \`requests\`. Each request must resolve to a defined source; omitting \`source\` uses \`default\` only when that ID exists. Source properties are \`name?\`, \`baseUrl\`, \`networkScope\`, and \`auth?\`:
 
 \`\`\`json
 {
@@ -133,6 +133,8 @@ Use expression callbacks for supported collections and trusted slots. No callbac
 `,
   "references/security.md": `# Security
 
+Private access includes LAN, Docker DNS, and Tailscale CGNAT addresses. Loopback means the Homarr server or container, not the viewer's browser.
+
 All requests use Homarr's protected server executor. Source origin, network scope, DNS, redirects, SSRF, rate limits, permissions, size limits, timeouts, and encrypted credential injection remain enforced.
 
 The JSX interpreter blocks imports, hooks, refs, raw event callbacks, browser requests, eval, arbitrary functions, prototype access, unsafe URLs, global CSS escape, arbitrary portals, bigint, statement blocks, IIFEs, and recursion. Regex literals must be bounded and reject backreferences, lookbehind, nested quantifiers, excessive length, and unsupported flags.
@@ -143,21 +145,21 @@ Credentials are stored separately and never exported or returned to an agent. A 
 
 export const CUSTOM_WIDGET_SKILL_MD = `---
 name: homarr-custom-widget
-description: Author, validate, preview, test, install, or configure API-backed Homarr Custom JSX v2 widgets.
+description: Author, validate, preview, test, install, or configure static or API-backed Homarr Custom JSX v2 widgets.
 ---
 
 # Homarr Custom Widget
 
-Author one widget or a coordinated set of widgets. Load only needed release-matched context. Run lifecycle tools alone; independent reads may run together. For a set, research once and finish each widget's validation, evidence, and persistence before the next.
+Author one widget or a coordinated set. Load release-matched context on demand. Run lifecycle tools alone; independent reads may run together. Finish each widget's validation, evidence, and persistence before the next.
 
-1. Read primary API documentation. Use web search when documentation is not supplied or may have changed.
-2. Create credential-free definitions with keyed \`sources\`, \`requests\`, optional \`options\`, and safe JSX \`template\`.
+1. For connected widgets, read primary API documentation; use web search when it is missing or may have changed.
+2. Create credential-free definitions with keyed \`sources\`, \`requests\`, optional \`options\`, and safe JSX \`template\`. Static widgets use empty \`sources\` and \`requests\`; an API is optional.
 3. While drafting, use \`customWidget_validateTemplate\` for focused JSX diagnostics without resending the manifest.
 4. Send the definition once to \`customWidget_previewCreate\` and test its queries/actions. For a JSX-only fix, validate, call \`customWidget_previewReviseTemplate\` with its session, and retest; it inherits the manifest and resets evidence. Create a preview only for source/request/option changes.
 5. Configure deployment-specific source URLs and credentials through Homarr; never repeat plaintext.
 6. Persist each exact final tested preview with \`customWidget_createFromPreview\`. Do not resend a large definition through \`customWidget_create\` when a preview session is available.
 
-Treat a supplied sample or successful preview response as the binding contract. Render every core requested field, guard optional arrays and nested values before indexing, and do not silently drop returned items. Humanize numeric enums with indexed literal label arrays, omit absent numeric values instead of inventing zero, and label timestamp timezones. Give recoverable load errors and empty states a clear refresh or retry path.
+Use supplied samples or preview responses as the data contract. Render requested fields and all returned items; guard optional nested values. Humanize numeric enums with label arrays, omit absent numbers, and label timestamp timezones. Give load errors and empty states a refresh or retry path.
 
 Use \`{option:name}\` or \`$option\` for saved options. Use \`{param:name}\` or \`$param\` for values supplied by \`SubFetch\`, \`ActionButton\`, or \`ToggleSwitch\`. Load queries cannot use invocation parameters. Render load queries from \`data\` and \`status\` with \`RefreshButton\`; reserve \`SubFetch\` for manual parameterized queries. Templates read \`data\`, \`status\`, \`options\`, and temporary \`inputs\`.
 
@@ -169,7 +171,7 @@ Plan capabilities. Use one \`customWidget_findComponents\` search per job. Batch
 
 Do not simplify a useful workflow merely because the template is interpreted. Freely compose any supported installed components with multiple sources, requests, options, \`choicesFrom\`, bound filters, charts, responsive detail areas, manual queries, and safe actions when they improve the user's job. Complexity must remain purposeful rather than decorative.
 
-Polish with a divided list or responsive media grid. Make one metric/action asymmetrically primary; keep headers compact, identity/state clear, metadata quiet, and one badge. At base artwork fills its row and caps above xs; never combine full-width media and nowrap.
+Use divided lists or responsive media grids, one primary metric/action, compact headers, quiet metadata, and one badge. Full-width artwork wraps at base and caps above xs.
 
 Make initial states actionable and wrap variable labels/values on narrow tiles. Do not use an unlabeled decorative icon as an empty state.
 
@@ -188,7 +190,7 @@ Repository installations expose these as files under \`references/\`. MCP client
 
 const CUSTOM_WIDGET_SKILL_ENTRYPOINT_MD = `# Homarr Custom Widget authoring index
 
-Use release-matched tools and load only context required by the design. Research primary API documentation once. For each widget, validate JSX independently with \`customWidget_validateTemplate\`, create one coherent preview, test every returned query and simulated action, then persist that exact preview. For a response-driven JSX-only correction, validate it and call \`customWidget_previewReviseTemplate\`; it inherits the manifest, resets evidence, and avoids resending sources, requests, or options. Complete one widget before drafting the next in a coordinated set.
+Use release-matched tools and load only context required by the design. Research API documentation only for connected widgets. For each widget, validate JSX independently with \`customWidget_validateTemplate\`, create one coherent preview, test every returned query and simulated action, then persist that exact preview. For a response-driven JSX-only correction, validate it and call \`customWidget_previewReviseTemplate\`; it inherits the manifest, resets evidence, and avoids resending sources, requests, or options. Complete one widget before drafting the next in a coordinated set.
 
 Before drafting, map every requested capability to a rendered field, bound control, or safe action. Give each widget a purpose-specific visual signature: asymmetric priority metric/action, quieter supporting metrics, compact header, accurate status language, resolved and accessible imagery, responsive details, and actionable initial, loading, empty, error, and success states. Avoid dead controls, raw relative artwork paths, and repetitive nested cards.
 

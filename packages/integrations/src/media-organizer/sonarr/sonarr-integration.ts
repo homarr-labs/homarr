@@ -191,6 +191,18 @@ export class SonarrIntegration extends Integration implements ICalendarIntegrati
     };
   }
 
+  async searchEpisodesAsync(episodeIds: number[], signal?: AbortSignal): Promise<{ id: number; status: string }> {
+    const ids = z.array(z.number().int().positive()).min(1).max(100).parse(episodeIds);
+    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v3/command"), {
+      method: "POST",
+      headers: { "X-Api-Key": super.getSecretValue("apiKey"), "Content-Type": "application/json" },
+      body: JSON.stringify({ name: "EpisodeSearch", episodeIds: [...new Set(ids)] }),
+      signal,
+    });
+    if (!response.ok) throw new Error(`Sonarr episode search returned HTTP ${response.status}`);
+    return z.object({ id: z.number().int(), status: z.string().default("queued") }).parse(await response.json());
+  }
+
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await input.fetchAsync(this.url("/api"), {
       headers: { "X-Api-Key": super.getSecretValue("apiKey") },

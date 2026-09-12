@@ -1,0 +1,86 @@
+{
+  "$schema": "homarr-widget-package-v3",
+  "manifest": {
+    "id": "homarr.reference.sonarr",
+    "version": "1.1.0",
+    "sdkVersion": "1",
+    "name": "Sonarr operations",
+    "description": "Two-server Sonarr operations: upcoming episodes, missing releases, queue progress, filtered advanced views and confirmed episode search through the native adapter.",
+    "entrypoints": {
+      "tile": "widget.tsx",
+      "advanced": "widget.tsx",
+      "server": "server.ts"
+    },
+    "handlers": {
+      "overview": {
+        "kind": "query",
+        "permission": "view"
+      },
+      "searchEpisodes": {
+        "kind": "action",
+        "permission": "modify",
+        "inputSchema": {
+          "type": "object",
+          "required": ["connection", "episodeIds"],
+          "additionalProperties": false,
+          "properties": {
+            "connection": {
+              "enum": ["sonarr", "secondary"]
+            },
+            "episodeIds": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 100,
+              "items": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "files": {
+    "widget.tsx": "import { Alert, Badge, Button, Group, Loader, Progress, SegmentedControl, Select, Stack, Text, TextInput } from \"@mantine/core\";\nimport { useWidgetAction, useWidgetHost, useWidgetOptions, useWidgetQuery, useWidgetServices, useWidgetState } from \"@homarr/widget-sdk\";\nimport type { Connection, Overview, SonarrOptions } from \"./types\";\nexport default function Sonarr() {\n  const host = useWidgetHost(); const services = useWidgetServices(); const options = useWidgetOptions<SonarrOptions>();\n  const [tab,setTab] = useWidgetState(\"tab\",\"calendar\");\n  const [source,setSource] = useWidgetState(\"source\",\"all\");\n  const [filter,setFilter] = useWidgetState(\"filter\",\"\");\n  const query = useWidgetQuery<Overview>(\"overview\",{}, {refetchInterval:60000});\n  const search = useWidgetAction<{id:number;status:string},{connection:Connection;episodeIds:number[]}>(\"searchEpisodes\");\n  const label = (connection:Connection) => connection === \"sonarr\" ? options.primaryName : options.secondaryName;\n  const sources = query.data?.sources ?? [];\n  const rows = sources.filter((entry) => source === \"all\" || source === entry.connection).flatMap((entry) => {\n    let items = entry.calendar;\n    if (tab === \"missing\") items = entry.missing.items;\n    if (tab === \"queue\") items = entry.queue.items;\n    return items.map((item,index) => ({...item,connection:entry.connection,rowKey:`${entry.connection}:${tab}:${item.id ?? index}`}));\n  }).filter((item) => `${item.title} ${item.subTitle ?? item.seriesTitle ?? \"\"}`.toLowerCase().includes(filter.toLowerCase()));\n  const visible = host.displayMode === \"advanced\" ? rows : rows.slice(0,4);\n  const requestSearch = async (connection:Connection,id:number,title:string) => {\n    if (await services.confirm({title:\"Search for this episode?\",message:`Ask ${label(connection)} to find and download an eligible release for ${title}?`})) search.mutate({connection,episodeIds:[id]});\n  };\n  return <Stack h=\"100%\" p=\"md\" gap=\"sm\" style={{overflow:\"auto\"}}>\n    <Group justify=\"space-between\"><Text fw={600}>{options.title}</Text><Badge>{sources.reduce((sum,entry) => sum+entry.queue.totalCount,0)} queued</Badge></Group>\n    <SegmentedControl value={tab} onChange={setTab} data={[{label:\"Upcoming\",value:\"calendar\"},{label:\"Missing\",value:\"missing\"},{label:\"Queue\",value:\"queue\"}]} />\n    {sources.length > 1 && <Select aria-label=\"Sonarr server\" value={source} onChange={(value) => setSource(value ?? \"all\")} data={[{value:\"all\",label:\"All servers\"},...sources.map((entry) => ({value:entry.connection,label:label(entry.connection)}))]} />}\n    {host.displayMode === \"advanced\" && <TextInput aria-label=\"Filter episodes\" placeholder=\"Filter series or episode…\" value={filter} onChange={(event) => setFilter(event.currentTarget.value)} />}\n    {query.isPending && <Loader size=\"sm\" />}\n    {query.error && <Alert color=\"red\">{query.error.message}</Alert>}\n    {sources.filter((entry) => entry.error).map((entry) => <Alert key={entry.connection} color=\"red\" title={label(entry.connection)}>{entry.error}</Alert>)}\n    {search.error && <Alert color=\"red\">{search.error.message}</Alert>}\n    {search.data?.id && <Text size=\"xs\" c=\"teal\">Search command {search.data.id}: {search.data.status}. Sonarr will select an eligible release.</Text>}\n    {visible.map((item) => <Stack key={item.rowKey} gap={4}><Group justify=\"space-between\"><Text fw={500} size=\"sm\">{item.subTitle ?? item.seriesTitle ?? item.title}</Text><Badge size=\"xs\" variant=\"light\">{label(item.connection)}</Badge></Group><Text size=\"xs\" c=\"dimmed\">{item.title}{item.seasonNumber !== undefined && ` · S${item.seasonNumber} E${item.episodeNumber ?? \"?\"}`}</Text>{item.startDate && <Text size=\"xs\">{new Date(item.startDate).toLocaleString(host.locale)}</Text>}{item.percentComplete !== undefined && <Progress value={item.percentComplete} aria-label={`${item.title} download progress`} />}<Group gap=\"xs\">{(item.link || item.links?.[0]?.href) && <Button size=\"compact-xs\" variant=\"subtle\" onClick={() => services.navigate(item.link ?? item.links?.[0]?.href ?? \"\")}>Open in Sonarr</Button>}{tab === \"missing\" && typeof item.id === \"number\" && <Button size=\"compact-xs\" disabled={host.isEditMode || search.isPending} onClick={() => void requestSearch(item.connection,item.id!,item.title)}>Search episode</Button>}</Group></Stack>)}\n    {query.data && !rows.length && <Text c=\"dimmed\">No episodes match this view.</Text>}\n    <Group><Button size=\"xs\" variant=\"light\" onClick={() => void query.refetch()}>Refresh</Button>{host.displayMode === \"compact\" && <Button size=\"xs\" variant=\"subtle\" onClick={services.openAdvanced}>All episodes and filters</Button>}</Group>\n  </Stack>;\n}\n",
+    "server.ts": "import type { Connection, EpisodeRow, SearchInput, SonarrOptions } from \"./types\";\nimport { callWidgetIntegration, defineWidgetServer, getWidgetServerContext } from \"@homarr/widget-sdk/server\";\nconst connections:Connection[] = [\"sonarr\", \"secondary\"];\nexport default defineWidgetServer({\n  overview: async (_input, context) => {\n    const {bindingNames,options} = await getWidgetServerContext<SonarrOptions>(context);\n    const start = new Date();\n    const end = new Date(start.getTime()+Math.max(1,Math.min(90,Number(options.days)||7))*86400000);\n    const names = connections.filter((name) => bindingNames.includes(name));\n    if (!names.length) throw new Error(\"Bind at least one Sonarr integration\");\n    const sources = await Promise.all(names.map(async (connection) => {\n      const call = <T,>(capability:string,input:unknown) => callWidgetIntegration<T>(context,{connection,capability,input});\n      try {\n        const [calendar,missing,queue] = await Promise.all([\n          call<EpisodeRow[]>(\"sonarr.calendar\",{start:start.toISOString(),end:end.toISOString()}),\n          call<{items:EpisodeRow[];totalCount:number}>(\"sonarr.missing\",{limit:100}), call<{items:EpisodeRow[];totalCount:number}>(\"sonarr.queue\",{limit:100}),\n        ]);\n        return {connection,calendar,missing,queue};\n      } catch (error) { return {connection,calendar:[],missing:{items:[],totalCount:0},queue:{items:[],totalCount:0},error:error instanceof Error ? error.message : String(error)}; }\n    }));\n    return {sources};\n  },\n  searchEpisodes: (input:SearchInput,context) => {\n    if (!connections.includes(input?.connection) || !Array.isArray(input?.episodeIds) || !input.episodeIds.length || input.episodeIds.length > 100 || input.episodeIds.some((id) => !Number.isInteger(id) || id < 1)) throw new Error(\"Choose valid episode IDs from a declared Sonarr server\");\n    return callWidgetIntegration(context,{connection:input.connection,capability:\"sonarr.searchEpisodes\",input:{episodeIds:input.episodeIds}});\n  },\n});\n",
+    "types.ts": "export type Connection = \"sonarr\" | \"secondary\";\nexport interface EpisodeRow { id?:number; title:string; subTitle?:string; seriesTitle?:string; startDate?:string; seasonNumber?:number; episodeNumber?:number; percentComplete?:number; status?:string; timeLeft?:string|null; link?:string; links?:{href:string}[]; }\nexport interface Source { connection:Connection; calendar:EpisodeRow[]; missing:{items:EpisodeRow[];totalCount:number}; queue:{items:EpisodeRow[];totalCount:number}; error?:string; }\nexport interface Overview { sources:Source[]; }\nexport type SonarrOptions = {title:string;primaryName:string;secondaryName:string;days:number};\nexport type SearchInput = {connection:Connection;episodeIds:number[]};\n",
+    "README.md": "# Sonarr operations\nBind the primary Sonarr integration and optionally a second one. Existing Homarr native query and interaction permissions apply. Each result retains its connection identity, including when different servers use the same numeric episode ID.\n\nCompact view shows four episodes; advanced view includes all loaded rows, source selection and text filtering. The reference reads up to 100 missing and queued episodes per server. A failure on one server does not hide the other server's result.\n\nSearch episode is a named modify action. It confirms the target server and episode before submitting the native Sonarr EpisodeSearch command. A queued command does not prove a release was found or downloaded. Default previews simulate actions. The integration sends the API key server-side; no key is embedded in portable source.\n\nAPI reference: https://github.com/Sonarr/Sonarr/blob/develop/src/NzbDrone.Core/IndexerSearch/EpisodeSearchCommand.cs and https://github.com/Sonarr/Sonarr/blob/develop/src/Sonarr.Api.V3/Commands/CommandController.cs\n"
+  },
+  "dependencies": {},
+  "connections": {
+    "sonarr": {
+      "kind": "integration",
+      "label": "Sonarr integration"
+    },
+    "secondary": {
+      "kind": "integration",
+      "label": "Second Sonarr integration",
+      "optional": true
+    }
+  },
+  "options": {
+    "title": {
+      "control": "text",
+      "label": "Title",
+      "default": "Sonarr"
+    },
+    "primaryName": {
+      "control": "text",
+      "label": "Primary server label",
+      "default": "Primary"
+    },
+    "secondaryName": {
+      "control": "text",
+      "label": "Second server label",
+      "default": "Secondary"
+    },
+    "days": {
+      "control": "number",
+      "label": "Calendar days",
+      "default": 7,
+      "min": 1,
+      "max": 90
+    }
+  }
+}

@@ -6,8 +6,14 @@ Templates are JSX expressions interpreted inside a widget-local safety and rende
 - `status.requestId` — `{ loading, ok, status, statusText, error }`
 - `options.name` — saved widget configuration
 - `inputs.name` — temporary values from declarative `bind`
+- `host` — the widget's board context, dimensions, scale, and compact or advanced display mode
 
-The v2 manifest requires a `default` source and supports up to eight sources, 64 requests, and 64 options. Source IDs are
+Existing callbacks may still use `host` as their parameter name, such as `data.hosts.map(host => host.name)`.
+Inside that callback, `host` refers to the current item; outside it, `host` refers to the widget context.
+
+The v2 manifest supports empty `sources` and `requests` for widgets that do not need an API. Connected widgets support
+up to eight sources, 64 requests, and 64 options. Each request must reference a defined source; omitting `source` uses
+`default` only when a source with that ID exists. Source IDs are
 case-insensitively unique. Each request allows up to 32 static headers and 32 invalidation targets; a widget can contain
 up to 24 secrets, each up to 8,192 characters, and templates are limited to 50,000 characters. Validation reports the
 exact field when a limit is exceeded.

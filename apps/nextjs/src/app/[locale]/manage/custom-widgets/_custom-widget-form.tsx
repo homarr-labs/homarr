@@ -11,6 +11,7 @@ import { useZodForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
 
 import { CustomWidgetAdvancedManifest } from "./_custom-widget-advanced-manifest";
+import { CustomWidgetDraftControls } from "./_custom-widget-draft-controls";
 import {
   CustomWidgetOptionsSnapshotSync,
   CustomWidgetSaveActions,
@@ -111,19 +112,24 @@ const CustomWidgetFormView = memo(function CustomWidgetFormView(props: CustomWid
     [setMobilePane],
   );
   const handleLiveActionsChange = useCallback(
-    (enabled: boolean) =>
-      setPreview((current) => ({
-        ...current,
-        session: current.session ? { ...current.session, liveActions: enabled } : null,
-      })),
+    (enabled: boolean, sessionId: string) =>
+      setPreview((current) => {
+        if (current.session?.id !== sessionId) return current;
+        return { ...current, session: { ...current.session, liveActions: enabled } };
+      }),
     [setPreview],
   );
 
   return (
     <CustomWidgetFormDocumentProvider store={documentStore}>
       <CustomWidgetFormAnalysisProvider>
-        <form onSubmit={props.onSubmit} className={classes.form}>
+        <form onSubmit={props.onSubmit} className={classes.form} data-custom-widget-workbench>
           <CustomWidgetUnsavedChangesGuard />
+          <CustomWidgetDraftControls
+            form={form}
+            definitionId={props.definitionId}
+            disabled={props.savePending || props.previewPending}
+          />
           <CustomWidgetOptionsSnapshotSync setOptionsSnapshot={props.setOptionsSnapshot} />
           <SegmentedControl
             className={classes.paneSwitcher}

@@ -1,4 +1,5 @@
 import { CUSTOM_WIDGET_SCHEMA, type HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
+import type { CustomWidgetPackage } from "@homarr/custom-widgets/package";
 import {
   MAX_WORKSHOP_CSS_LENGTH,
   type WorkshopSubmissionType,
@@ -12,7 +13,7 @@ export const CSS_SCHEMA_VERSION = WORKSHOP_CSS_SCHEMA;
 export const MAX_CSS_LENGTH = MAX_WORKSHOP_CSS_LENGTH;
 
 export type WorkshopValidationResult =
-  | { success: true; data: HomarrCustomWidgetV2 | string }
+  | { success: true; data: HomarrCustomWidgetV2 | CustomWidgetPackage | string }
   | { success: false; error: string };
 
 export const schemaVersionByType = {

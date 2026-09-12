@@ -19,7 +19,7 @@ import { customWidgetDefinitions } from "@homarr/db/schema";
 
 import { permissionRequiredProcedure } from "../../trpc";
 import { parseCustomWidgetAuthoringInput } from "./authoring-validation";
-import { createPreviewSession, getPreviewSession, revisePreviewSessionTemplate } from "./preview-sessions";
+import { createPreviewSession, discardPreviewSession, getPreviewSession, revisePreviewSessionTemplate } from "./preview-sessions";
 import { hasSameSecretBinding, requiredSecretKinds } from "./secret-policy";
 import { parseStoredCustomWidgetDefinition } from "./stored-definition";
 
@@ -179,6 +179,9 @@ const previewCreateProcedure = permissionRequiredProcedure
   });
 
 export const previewBaseProcedures = {
+  previewDiscard: permissionRequiredProcedure.requiresPermission("admin")
+    .input(z.object({ sessionId: z.string().min(1) }))
+    .mutation(({ ctx, input }) => discardPreviewSession(input.sessionId, ctx.session.user.id)),
   previewCreate: previewCreateProcedure,
   previewReviseTemplate: permissionRequiredProcedure
     .requiresPermission("admin")

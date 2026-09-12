@@ -3,9 +3,10 @@ import { z } from "zod/v4";
 
 import { decryptSecret } from "@homarr/common/server";
 import { eq, or } from "@homarr/db";
-import { boards, customWidgetDefinitions, legacyCustomWidgetDefinitions } from "@homarr/db/schema";
-import { collectCustomWidgetRequestReferences } from "@homarr/custom-widgets/core";
+import { boards, customWidgetDefinitions, legacyCustomWidgetDefinitions, customWidgetInstallations } from "@homarr/db/schema";
+import { collectCustomWidgetRequestReferences, getCustomWidgetDefaultOptions } from "@homarr/custom-widgets/core";
 
+import { getArtifact, parseBindings } from "./package/records";
 import { permissionRequiredProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "../board/board-access";
 import { parseStoredCustomWidgetDefinition } from "./stored-definition";
@@ -112,12 +113,28 @@ export const managementQueryProcedures = {
         orderBy: (table, { asc }) => asc(table.name),
       });
       const available = definitions.flatMap(mapAvailableCustomWidget);
-      if (!input.currentId || available.some(({ id }) => id === input.currentId)) return available;
+      const installations = await ctx.db.query.customWidgetInstallations.findMany({
+        where: input.currentId
+          ? or(eq(customWidgetInstallations.enabled, true), eq(customWidgetInstallations.id, input.currentId))
+          : eq(customWidgetInstallations.enabled, true),
+      });
+      const packages = await Promise.all(installations.flatMap((installation) => {
+        if (!installation.activeArtifactId) return [];
+        return [getArtifact(ctx, installation.activeArtifactId).then(({ source }) => ({
+          id: installation.id, name: installation.name, description: source.manifest.description ?? null,
+          iconUrl: source.manifest.icon ?? null, options: source.options, defaultOptions: getCustomWidgetDefaultOptions(source.options),
+          template: "", sources: [], requestCapabilities: [], optionRequests: [], updatedAt: installation.updatedAt,
+          migrationRequired: false as const, packageVersion: 3 as const, connections: source.connections,
+          installationBindings: parseBindings(installation.bindings),
+        })).catch(() => null)];
+      }));
+      const result = [...available, ...packages.filter((entry) => entry !== null)];
+      if (!input.currentId || result.some(({ id }) => id === input.currentId)) return result;
       const legacy = await ctx.db.query.legacyCustomWidgetDefinitions.findFirst({
         where: eq(legacyCustomWidgetDefinitions.id, input.currentId),
       });
-      if (!legacy) return available;
-      return [...available, mapLegacyAvailableCustomWidget(legacy)];
+      if (!legacy) return result;
+      return [...result, mapLegacyAvailableCustomWidget(legacy)];
     }),
 
   optionRequest: permissionRequiredProcedure

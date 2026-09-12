@@ -4,6 +4,8 @@ import { z } from "zod/v4";
 import { browserToolContracts, normalizeAssistantAppIconUrl } from "./assistant-tool-contracts";
 
 const supportedToolArguments = {
+  read_widget_package_draft: {},
+  propose_widget_package_changes: { revision: "draft-1", summary: "Improve the widget spacing.", files: {} },
   ask_user: {
     question: "How should the app be added?",
     options: [

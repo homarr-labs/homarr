@@ -20,6 +20,8 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { IconAlertTriangle, IconArrowLeft, IconDownload, IconExternalLink, IconFlag } from "@tabler/icons-react";
 
+import { CUSTOM_WIDGET_PACKAGE_SCHEMA } from "@homarr/custom-widgets/package";
+import { WorkshopPackageReview } from "./_package-review";
 import { CUSTOM_WIDGET_SCHEMA } from "@homarr/custom-widgets/core";
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 import { CustomWidgetSourceSetupPanel, ImportReviewContent } from "@homarr/custom-widgets/workbench";
@@ -27,7 +29,7 @@ import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 import { useWorkshopReportSummariesQuery, useWorkshopSubmissionQuery } from "@homarr/workshop/backend";
 import type { WorkshopSubmissionDetail } from "@homarr/workshop/schema";
-import { validateWorkshopWidget, workshopExportFilename } from "@homarr/workshop/schema";
+import { validateWorkshopContent, workshopExportFilename } from "@homarr/workshop/schema";
 
 import { useCustomWidgetImport } from "~/components/custom-widgets/use-custom-widget-import";
 import { ManagePageLayout } from "~/components/manage/manage-page-layout";
@@ -53,11 +55,18 @@ export function WorkshopDetail({ id }: { id: string }) {
   const reportSummaries = useWorkshopReportSummariesQuery(session.client, detail.data?.reportCount ? id : "");
 
   const content = detail.data?.content;
-  const validation = useMemo(() => (content ? validateWorkshopWidget(content) : null), [content]);
+  const validation = useMemo(() => (content ? validateWorkshopContent("customWidget", content) : null), [content]);
   const widget = useMemo<HomarrCustomWidgetV2 | null>(
-    () => (validation?.success && typeof validation.data !== "string" ? validation.data : null),
+    () =>
+      validation?.success && typeof validation.data !== "string" && validation.data.$schema === CUSTOM_WIDGET_SCHEMA
+        ? validation.data
+        : null,
     [validation],
   );
+  const packageCompatible =
+    validation?.success &&
+    typeof validation.data !== "string" &&
+    validation.data.$schema === CUSTOM_WIDGET_PACKAGE_SCHEMA;
   const compatible =
     detail.data?.type === "customWidget" && widget !== null && detail.data.widgetSchema === CUSTOM_WIDGET_SCHEMA;
 
@@ -164,7 +173,7 @@ export function WorkshopDetail({ id }: { id: string }) {
             )}
           </Stack>
         )}
-        {!compatible && (
+        {!compatible && !packageCompatible && (
           <Alert color="red" icon={<IconAlertTriangle size={18} />} title={t("installError")}>
             {t("installErrorDescription")}
             {validation && !validation.success ? ` ${validation.error}` : ""}
@@ -180,6 +189,7 @@ export function WorkshopDetail({ id }: { id: string }) {
           screenshots={submission.screenshots}
         />
 
+        {packageCompatible && <WorkshopPackageReview submissionId={submission.id} />}
         {compatible && importer.review && (
           <Paper withBorder radius="md" p="md">
             <Stack gap="md">
@@ -258,14 +268,16 @@ export function WorkshopDetail({ id }: { id: string }) {
             </>
           }
         >
-          <Button
-            size="md"
-            loading={importer.pending || importer.succeeded}
-            disabled={!compatible || !importer.ready || importer.succeeded}
-            onClick={importer.importWidget}
-          >
-            {t("install")}
-          </Button>
+          {!packageCompatible && (
+            <Button
+              size="md"
+              loading={importer.pending || importer.succeeded}
+              disabled={!compatible || !importer.ready || importer.succeeded}
+              onClick={importer.importWidget}
+            >
+              {t("install")}
+            </Button>
+          )}
         </ManageStickyFooter>
       </Stack>
     </ManagePageLayout>

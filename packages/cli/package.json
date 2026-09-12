@@ -15,7 +15,7 @@
     ".": "./index.ts"
   },
   "scripts": {
-    "build": "esbuild src/index.ts --bundle --platform=node --outfile=cli.cjs --external:bcrypt --external:cpu-features --loader:.html=text --loader:.node=text",
+    "build": "esbuild src/index.ts --bundle --platform=node --define:import.meta.url=__filename --outfile=cli.cjs --external:bcrypt --external:cpu-features --external:esbuild --loader:.html=text --loader:.node=text",
     "clean": "rm -rf .turbo node_modules",
     "format": "oxfmt .",
     "lint": "oxlint",
@@ -25,11 +25,17 @@
   },
   "dependencies": {
     "@drizzle-team/brocli": "catalog:",
+    "@homarr/api": "workspace:^0.1.0",
     "@homarr/auth": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
+    "@homarr/custom-widgets": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "dotenv": "catalog:"
+    "@homarr/widget-sdk": "workspace:^0.1.0",
+    "@trpc/client": "catalog:",
+    "dotenv": "catalog:",
+    "superjson": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",

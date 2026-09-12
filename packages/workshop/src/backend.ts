@@ -10,6 +10,12 @@ import {
 } from "@tanstack/react-query";
 
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
+import {
+  CUSTOM_WIDGET_PACKAGE_SCHEMA,
+  customWidgetPackageSchema,
+  stringifyWidgetJson,
+} from "@homarr/custom-widgets/package";
+import { WorkshopPackageReleases } from "./package-releases";
 
 import type {
   WorkshopComment,
@@ -266,10 +272,12 @@ function workshopError(error: unknown, fallback: string) {
 
 export class WorkshopBackend {
   public readonly pocketBase: TypedWorkshopPocketBase;
+  public readonly packages: WorkshopPackageReleases;
 
   public constructor(public readonly baseUrl = WORKSHOP_API_URL) {
     this.pocketBase = new PocketBase(baseUrl.replace(/\/$/u, "")) as TypedWorkshopPocketBase;
     this.pocketBase.autoCancellation(false);
+    this.packages = new WorkshopPackageReleases(this.pocketBase);
   }
 
   public get currentUser(): WorkshopUser | null {
@@ -429,6 +437,22 @@ export class WorkshopBackend {
   public async create(input: WorkshopSubmissionInput, screenshots: File[] = []) {
     const parsed = workshopSubmissionInputSchema.parse(input);
     workshopScreenshotsSchema.parse(screenshots);
+    if (parsed.type === "customWidget") {
+      const source = customWidgetPackageSchema.safeParse(JSON.parse(parsed.content));
+      if (source.success) {
+        const release = await this.packages.publish({
+          source: source.data,
+          title: parsed.title,
+          description: parsed.description,
+          changelog: parsed.changelog,
+        });
+        if (screenshots.length > 0)
+          await this.pocketBase
+            .collection("submissions")
+            .update(release.submission, { screenshots, expectedRevision: 1 });
+        return this.get(release.submission);
+      }
+    }
     const data = new FormData();
     Object.entries(parsed).forEach(([key, value]) => data.set(key, typeof value === "string" ? value : String(value)));
     data.set("author", this.currentUser?.id ?? "");
@@ -447,16 +471,37 @@ export class WorkshopBackend {
     const additions = screenshotChanges.additions ?? [];
     const removals = screenshotChanges.removals ?? [];
     workshopScreenshotsSchema.parse(additions);
-    const current = await this.get(id);
+    let current = await this.get(id);
     const removalSet = new Set(removals);
-    const retainedCount = current.screenshots.filter((filename) => !removalSet.has(filename)).length;
-    if (retainedCount + additions.length > MAX_WORKSHOP_SCREENSHOTS)
-      throw new Error(`A submission can have up to ${MAX_WORKSHOP_SCREENSHOTS} screenshots`);
+    const validateScreenshotCount = () => {
+      const retainedCount = current.screenshots.filter((filename) => !removalSet.has(filename)).length;
+      if (retainedCount + additions.length > MAX_WORKSHOP_SCREENSHOTS)
+        throw new Error(`A submission can have up to ${MAX_WORKSHOP_SCREENSHOTS} screenshots`);
+    };
+    // Reject invalid edits before publishing a release that cannot be overwritten on retry.
+    validateScreenshotCount();
+    if (current.widgetSchema === CUSTOM_WIDGET_PACKAGE_SCHEMA) {
+      const source = customWidgetPackageSchema.parse(JSON.parse(parsed.content));
+      const previous = customWidgetPackageSchema.parse(JSON.parse(current.content));
+      if (stringifyWidgetJson(source) !== stringifyWidgetJson(previous)) {
+        await this.packages.publish({
+          submissionId: id,
+          expectedRevision: current.revision,
+          source,
+          title: parsed.title,
+          description: parsed.description,
+          changelog: parsed.changelog,
+        });
+        current = await this.get(id);
+      }
+    }
+    validateScreenshotCount();
 
     const data: Record<string, unknown> = {
       ...parsed,
       expectedRevision: current.revision,
     };
+    if (current.widgetSchema === CUSTOM_WIDGET_PACKAGE_SCHEMA) data.content = current.content;
     if (additions.length > 0) data["screenshots+"] = additions;
     if (removals.length > 0) data["screenshots-"] = removals;
     try {

@@ -27,6 +27,9 @@ import {
 import { acquireCustomWidgetRequestLimit } from "../custom-widget/request-limits";
 import { getCustomWidgetCacheVersion } from "../custom-widget/cache-version";
 import { parseStoredCustomWidgetDefinition } from "../custom-widget/stored-definition";
+import { mapCustomWidgetRequests } from "../custom-widget/request-queue";
+import { getPackageDisplayData, resolvePackagePlacement } from "../custom-widget/package/records";
+import { packageWidgetProcedures } from "../custom-widget/package/widget-procedures";
 
 const runtimeParamsSchema = z.record(z.string(), z.union([z.string(), z.number(), z.boolean()]));
 const itemInputSchema = z.object({ itemId: z.string().min(1) });
@@ -190,6 +193,7 @@ const executeRequest = async (
 };
 
 export const customApiRouter = createTRPCRouter({
+  ...packageWidgetProcedures,
   refresh: publicProcedure.input(itemInputSchema).mutation(async ({ ctx, input }) => {
     const resolved = await resolvePlacedDefinitionAsync(ctx, input.itemId);
     invalidateCustomWidgetResponseCache([
@@ -198,12 +202,21 @@ export const customApiRouter = createTRPCRouter({
   }),
 
   getData: publicProcedure.input(itemInputSchema).query(async ({ ctx, input }) => {
+    const packageItem = await ctx.db.query.items.findFirst({ where: eq(items.id, input.itemId) });
+    if (packageItem?.kind === "customApi") {
+      const packageOptions = parseItemOptions(packageItem.options);
+      const installation = await ctx.db.query.customWidgetInstallations.findFirst({
+        where: (table, { eq }) => eq(table.id, packageOptions.definitionId),
+        columns: { id: true },
+      });
+      if (installation) return getPackageDisplayData(await resolvePackagePlacement(ctx, input.itemId));
+    }
     const resolved = await resolvePlacedDefinitionAsync(ctx, input.itemId);
     const loadRequests = Object.entries(resolved.definition.requests).filter(
       ([, request]) => request.kind === "query" && request.trigger === "load",
     );
-    const entries = await Promise.all(
-      loadRequests.map(async ([requestId, request]) => {
+    const entries = await mapCustomWidgetRequests(
+      loadRequests, 4, async ([requestId, request]) => {
         try {
           const response = await executeRequest(ctx, resolved, { id: requestId, ...request }, {});
           return [
@@ -233,11 +246,12 @@ export const customApiRouter = createTRPCRouter({
             },
           ] as const;
         }
-      }),
+      },
     );
 
     return {
       type: "customJsx" as const,
+      hasLoadQueries: loadRequests.length > 0,
       template: resolved.definition.template,
       queryCacheKey: `${getCustomWidgetCacheVersion(resolved.stored)}:${hashRuntimeParams(resolved.configuration)}`,
       data: Object.fromEntries(entries.map(([id, result]) => [id, result.data])),

@@ -77,6 +77,7 @@ export const WidgetCustomWidgetSelectInput = ({
           if (!definition || definition.migrationRequired) return;
           form.setFieldValue(`options.${property}`, val);
           form.setFieldValue("options.configuration", definition?.defaultOptions ?? {});
+          form.setFieldValue("options.connectionBindings", {});
           form.setFieldValue(
             "options.configurationVersion",
             definition?.updatedAt instanceof Date ? definition.updatedAt.getTime() : Date.now(),
@@ -132,12 +133,21 @@ export const WidgetCustomWidgetSelectInput = ({
                             {labels("migrationRequired")}
                           </Badge>
                         )}
-                        <Badge size="xs" variant="light">
-                          {labels("sources", { count: def.sources.length })}
-                        </Badge>
-                        <Badge size="xs" variant="light" color="gray">
-                          {labels("requests", { count: def.requestCapabilities.length })}
-                        </Badge>
+                        {"packageVersion" in def && def.packageVersion === 3 && (
+                          <Badge size="xs" variant="light" color="violet">
+                            {labels("trustedPackage")}
+                          </Badge>
+                        )}
+                        {!("packageVersion" in def) && (
+                          <Badge size="xs" variant="light">
+                            {labels("sources", { count: def.sources.length })}
+                          </Badge>
+                        )}
+                        {!("packageVersion" in def) && (
+                          <Badge size="xs" variant="light" color="gray">
+                            {labels("requests", { count: def.requestCapabilities.length })}
+                          </Badge>
+                        )}
                       </Group>
                     </Stack>
                   </Group>

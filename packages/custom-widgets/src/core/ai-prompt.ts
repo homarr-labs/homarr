@@ -70,7 +70,7 @@ const AUTHORING_GUIDANCE = `You are writing one safe Homarr Custom JSX v2 dashbo
 Manifest contract:
 ${leanShape}
 
-Sources are keyed by name and must include "default". Auth is "none", "bearer", "basic", {"type":"apiKeyHeader","name":"X-Api-Key"}, or {"type":"apiKeyQuery","name":"api_key"}. Use the stable public API URL for public services and a clear suggested URL for self-hosted services; Homarr asks the installer for their own server URL. Never put credentials in the manifest.
+An API is optional: static widgets use empty sources and requests. Each request must reference a defined source; omitting source uses "default" only when that source exists. Auth is "none", "bearer", "basic", {"type":"apiKeyHeader","name":"X-Api-Key"}, or {"type":"apiKeyQuery","name":"api_key"}. Use stable public API URLs or clear suggested self-hosted URLs; Homarr collects local setup and credentials separately.
 
 Requests are keyed by ID. Defaults are source "default", kind "query", method "GET", query trigger "load", inherited auth, and permission "view" for queries or "modify" for actions. Actions are always manual. DELETE is valid only for actions, requires full permission, and receives confirmation automatically. Use {option:name} or {"$option":"name"} for saved options. Use {param:name} or {"$param":"name"} only for invocation-time params supplied by SubFetch, ActionButton, or ToggleSwitch. Load queries cannot use params. Values and primitive types are inferred from references; do not declare parameters or option bindings. Paths and query values must be primitive; JSON bodies may bind structured options.
 

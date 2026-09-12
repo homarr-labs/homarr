@@ -43,7 +43,17 @@ const nextConfig: NextConfig = {
    * dockerode is required in the external server packages because of https://github.com/homarr-labs/homarr/issues/612
    * isomorphic-dompurify and jsdom are required, see https://github.com/kkomelin/isomorphic-dompurify/issues/356
    */
-  serverExternalPackages: ["dockerode", "isomorphic-dompurify", "jsdom", "better-sqlite3"],
+  serverExternalPackages: ["dockerode", "isomorphic-dompurify", "jsdom", "better-sqlite3", "esbuild"],
+  outputFileTracingRoot: path.resolve(import.meta.dirname, "../.."),
+  outputFileTracingIncludes: {
+    "/*": [
+      "../../node_modules/esbuild/**/*",
+      "../../node_modules/@esbuild/**/*",
+      "../../node_modules/@tabler/icons-react/**/*",
+      "../../packages/widget-sdk/package.json",
+      "../../packages/widget-sdk/src/**/*",
+    ],
+  },
   experimental: {
     optimizePackageImports: ["@mantine/core", "@mantine/hooks", "@tabler/icons-react"],
     preloadEntriesOnStart: true,

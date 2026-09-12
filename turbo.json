@@ -27,10 +27,28 @@
         "!**/LICENSE*",
         "!**/*.stories.{ts,tsx}"
       ],
-      "outputs": [".next/**", "!.next/cache/**", "next-env.d.ts", ".output/**", ".vercel/output/**", "build/**"]
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        "next-env.d.ts",
+        ".output/**",
+        ".vercel/output/**",
+        "build/**",
+        "public/__widget-editor/**"
+      ]
     },
     "@homarr/cli#build": {
       "outputs": ["cli.cjs"]
+    },
+    "@homarr/nextjs#build": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "../../packages/widget-sdk/src/**",
+        "../../packages/widget-sdk/package.json",
+        "../../packages/custom-widgets/src/workbench/package-language/**",
+        "../../packages/custom-widgets/scripts/*editor*.ts",
+        "../../pnpm-lock.yaml"
+      ]
     },
     "@homarr/db#build": {
       "outputs": ["migrations/sqlite/migrate.cjs", "migrations/mysql/migrate.cjs", "migrations/postgresql/migrate.cjs"]

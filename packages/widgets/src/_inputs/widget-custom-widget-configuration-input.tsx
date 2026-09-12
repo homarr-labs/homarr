@@ -1,32 +1,21 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  Accordion,
-  Alert,
-  ColorInput,
-  MultiSelect,
-  NumberInput,
-  Select,
-  Slider,
-  Stack,
-  Switch,
-  Text,
-  Textarea,
-  TextInput,
-} from "@mantine/core";
-import { DateInput, TimeInput } from "@mantine/dates";
+import { useEffect, useMemo } from "react";
+import { Accordion, Alert, MultiSelect, Select, Stack, Text } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
+import { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";
 import { useOptionalBoard } from "@homarr/boards/context";
 import { isRecord } from "@homarr/common";
 import type { CustomWidgetOption } from "@homarr/custom-widgets/core";
 import { normalizeCustomWidgetOptions, validateCustomWidgetOptions } from "@homarr/custom-widgets/core";
-import { CustomWidgetCodeEditor } from "@homarr/custom-widgets/workbench";
-import type { CustomWidgetEditorMessages } from "@homarr/custom-widgets/workbench";
-import { IconPicker } from "@homarr/forms-collection";
+import { customWidgetPackageSchema } from "@homarr/custom-widgets/package";
 import { useI18n } from "@homarr/translation/client";
+
+import { PackageOptionField, PackageOptionFields } from "../custom-api/package-option-fields";
+import { PackageConnectionBindings } from "../custom-api/package-connection-bindings";
+export { JsonOption } from "../custom-api/package-json-option";
 
 import type { CommonWidgetInputProps } from "./common";
 import { useFormContext } from "./form";
@@ -46,9 +35,19 @@ export const WidgetCustomWidgetConfigurationInput = ({
   );
   const definition = available.data?.find((candidate) => candidate.id === definitionId);
   const options = isRecord(definition?.options) ? (definition.options as Record<string, CustomWidgetOption>) : null;
+  const packageDefinition = useMemo(() => {
+    const entry: unknown = definition;
+    if (!isRecord(entry) || entry.packageVersion !== 3) return;
+    const connections = customWidgetPackageSchema.shape.connections.safeParse(entry.connections);
+    const bindings = z.record(z.string(), z.string()).safeParse(entry.installationBindings);
+    if (!connections.success || !bindings.success) return;
+    return { connections: connections.data, installationBindings: bindings.data };
+  }, [definition]);
+  const isPackage = Boolean(packageDefinition);
   const definitionVersion = definition?.updatedAt instanceof Date ? definition.updatedAt.getTime() : undefined;
   const configurationVersion = form.values.options.configurationVersion;
-  const needsDefinitionRepair = definitionVersion !== undefined && configurationVersion !== definitionVersion;
+  const needsDefinitionRepair =
+    !isPackage && definitionVersion !== undefined && configurationVersion !== definitionVersion;
   const effectiveConfiguration = useMemo(
     () => (options && needsDefinitionRepair ? normalizeCustomWidgetOptions(options, configuration) : configuration),
     [configuration, needsDefinitionRepair, options],
@@ -71,6 +70,26 @@ export const WidgetCustomWidgetConfigurationInput = ({
   }, [form, issues, property]);
 
   if (!definitionId || !options) return null;
+  if (packageDefinition)
+    return (
+      <Stack gap="md">
+        <PackageConnectionBindings
+          connections={packageDefinition.connections}
+          installationBindings={packageDefinition.installationBindings}
+          value={
+            isRecord(form.values.options.connectionBindings)
+              ? (form.values.options.connectionBindings as Record<string, string>)
+              : {}
+          }
+          onChange={(value) => form.setFieldValue("options.connectionBindings", value)}
+        />
+        <PackageOptionFields
+          schema={options}
+          value={effectiveConfiguration}
+          onChange={(value) => form.setFieldValue(`options.${property}`, value)}
+        />
+      </Stack>
+    );
   const entries = Object.entries(options);
   const regular = entries.filter(([, option]) => !option.advanced);
   const advanced = entries.filter(([, option]) => option.advanced);
@@ -126,70 +145,16 @@ function OptionField({
   definitionId: string;
 }) {
   const form = useFormContext();
-  const input = form.getInputProps(path, { type: option.control === "switch" ? "checkbox" : "input" });
-  const common = { label: option.label, description: option.description };
   if (option.choicesFrom)
     return <DynamicOptionField option={option} path={path} configuration={configuration} definitionId={definitionId} />;
-  if (option.control === "switch") return <Switch {...common} {...input} />;
-  if (["number", "duration"].includes(option.control))
-    return <NumberInput {...common} min={option.min} max={option.max} step={option.step} {...input} />;
-  if (option.control === "slider")
-    return (
-      <Stack gap={4}>
-        <Text size="sm" fw={500}>
-          {option.label}
-        </Text>
-        {option.description && (
-          <Text size="xs" c="dimmed">
-            {option.description}
-          </Text>
-        )}
-        <Slider min={option.min ?? 0} max={option.max ?? 100} step={option.step ?? 1} {...input} />
-      </Stack>
-    );
-  const choices = option.choices?.map((choice) => ({ label: choice.label, value: String(choice.value) })) ?? [];
-  if (option.control === "select")
-    return (
-      <Select
-        {...common}
-        data={choices}
-        value={input.value == null ? null : String(input.value)}
-        onChange={(value) => form.setFieldValue(path, coerceChoice(value, option))}
-      />
-    );
-  if (option.control === "multiSelect")
-    return (
-      <MultiSelect
-        {...common}
-        data={choices}
-        value={Array.isArray(input.value) ? input.value.map(String) : []}
-        onChange={(value) =>
-          form.setFieldValue(
-            path,
-            value.map((entry) => coerceChoice(entry, option)),
-          )
-        }
-      />
-    );
-  if (option.control === "textarea") return <Textarea {...common} autosize minRows={3} {...input} />;
-  if (option.control === "color") return <ColorInput {...common} {...input} />;
-  if (option.control === "date") return <DateInput {...common} valueFormat="YYYY-MM-DD" {...input} />;
-  if (option.control === "time") return <TimeInput {...common} {...input} />;
-  if (option.control === "icon") return <IconPicker withAsterisk={false} {...input} />;
-  if (option.control === "timeZone")
-    return <Select {...common} searchable data={Intl.supportedValuesOf("timeZone")} {...input} />;
-  if (option.control === "json")
-    return (
-      <JsonOption
-        identity={`${definitionId}:${path}`}
-        editorId={`${definitionId}-${path}-json-option`}
-        label={option.label}
-        description={option.description}
-        value={input.value}
-        onChange={(value) => form.setFieldValue(path, value)}
-      />
-    );
-  return <TextInput {...common} type={option.control === "url" ? "url" : "text"} {...input} />;
+  return (
+    <PackageOptionField
+      identity={`${definitionId}:${path}`}
+      option={option}
+      value={form.getInputProps(path).value}
+      onChange={(value) => form.setFieldValue(path, value)}
+    />
+  );
 }
 
 function DynamicOptionField({
@@ -251,84 +216,6 @@ function DynamicOptionField({
       {...common}
       value={input.value == null ? null : String(input.value)}
       onChange={(value) => form.setFieldValue(path, coerceChoice(value, option))}
-    />
-  );
-}
-
-const editorMessages: CustomWidgetEditorMessages = {
-  languageJsx: "JSX",
-  languageJson: "JSON",
-  undo: "Undo",
-  redo: "Redo",
-  components: "Components",
-  componentSearch: "Search components",
-  componentEmpty: "No components",
-  componentCount: (count) => `${count} components`,
-  insertStarter: "Insert starter",
-  format: "Format",
-  copy: "Copy",
-  copied: "Copied",
-  schema: "Schema",
-  schemaTab: "JSON Schema",
-  minimalTab: "Minimal",
-  fullTab: "Full",
-  errors: (count) => `${count} errors`,
-  warnings: (count) => `${count} warnings`,
-  ready: "Ready",
-  position: ({ line, column }) => `Ln ${line}, Col ${column}`,
-  characters: (count, limit) => (limit ? `${count} / ${limit}` : `${count} characters`),
-  diagnosticsTitle: "Diagnostics",
-  diagnostic: (diagnostic) => diagnostic.value ?? diagnostic.code,
-};
-
-export function JsonOption({
-  identity,
-  editorId,
-  label,
-  description,
-  value,
-  onChange,
-}: {
-  identity: string;
-  editorId: string;
-  label: string;
-  description?: string;
-  value: unknown;
-  onChange(value: unknown): void;
-}) {
-  const serializedValue = JSON.stringify(value ?? null, null, 2);
-  const [draft, setDraft] = useState(serializedValue);
-  const [error, setError] = useState<string>();
-  const synchronizedValueRef = useRef(serializedValue);
-  const identityRef = useRef(identity);
-  useEffect(() => {
-    if (identityRef.current === identity && synchronizedValueRef.current === serializedValue) return;
-    identityRef.current = identity;
-    synchronizedValueRef.current = serializedValue;
-    setDraft(serializedValue);
-    setError(undefined);
-  }, [identity, serializedValue]);
-  return (
-    <CustomWidgetCodeEditor
-      id={editorId}
-      label={label}
-      description={description}
-      language="json"
-      value={draft}
-      height="160px"
-      error={error}
-      onChange={(next) => {
-        setDraft(next);
-        try {
-          const parsed = JSON.parse(next) as unknown;
-          synchronizedValueRef.current = JSON.stringify(parsed ?? null, null, 2);
-          onChange(parsed);
-          setError(undefined);
-        } catch (cause) {
-          setError(cause instanceof Error ? cause.message : "Invalid JSON");
-        }
-      }}
-      messages={editorMessages}
     />
   );
 }

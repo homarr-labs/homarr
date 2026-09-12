@@ -75,6 +75,7 @@ import {
   throwIfCustomWidgetPlacementChangeForbidden,
 } from "./board/custom-widget-placement-access";
 import { validateTimetableOptionsChangeAsync } from "./widgets/timetable";
+import { withWidgetPlacementChange } from "./custom-widget/package/placement-coordination";
 
 interface BoardItemPlacementRectangle {
   xOffset: number;
@@ -731,88 +732,66 @@ export const boardRouter = createTRPCRouter({
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "view");
       await noBoardWithSimilarNameAsync(ctx.db, input.name);
 
-      const board = await ctx.db.query.boards.findFirst({
-        where: eq(boards.id, input.id),
-        with: {
-          layouts: true,
-          sections: {
-            with: {
-              collapseStates: true,
-              layouts: true,
+      return withWidgetPlacementChange(ctx, { boardId: input.id }, async (signal) => {
+        const board = await ctx.db.query.boards.findFirst({
+          where: eq(boards.id, input.id),
+          with: {
+            layouts: true,
+            sections: {
+              with: {
+                collapseStates: true,
+                layouts: true,
+              },
+            },
+            items: {
+              with: {
+                layouts: true,
+                integrations: true,
+              },
             },
           },
-          items: {
-            with: {
-              layouts: true,
-              integrations: true,
-            },
-          },
-        },
-      });
-
-      if (!board) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Board not found",
         });
-      }
 
-      const { sections: boardSections, items: boardItems, layouts: boardLayouts, ...boardProps } = board;
-      throwIfCustomWidgetBoardDuplicationForbidden(ctx.session.user.permissions.includes("admin"), boardItems);
-      await validateWidgetConfigurationsAsync(
-        ctx,
-        boardItems.map((item) => ({
-          id: item.id,
-          kind: item.kind,
-          integrationIds: item.integrations.map(({ integrationId }) => integrationId),
-        })),
-      );
+        if (!board) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Board not found",
+          });
+        }
 
-      const newBoardId = createId();
+        const { sections: boardSections, items: boardItems, layouts: boardLayouts, ...boardProps } = board;
+        throwIfCustomWidgetBoardDuplicationForbidden(ctx.session.user.permissions.includes("admin"), boardItems);
+        await validateWidgetConfigurationsAsync(
+          ctx,
+          boardItems.map((item) => ({
+            id: item.id,
+            kind: item.kind,
+            integrationIds: item.integrations.map(({ integrationId }) => integrationId),
+          })),
+        );
 
-      const generatedMobileLayoutId = createId();
-      const generatedMobilePositions =
-        boardLayouts.length === 1 && boardLayouts[0]
-          ? getUpdatedBoardLayout(board, {
-              previous: {
-                layoutId: boardLayouts[0].id,
-                columnCount: boardLayouts[0].columnCount,
-                leftGutterColumnCount: boardLayouts[0].leftGutterColumnCount,
-                rightGutterColumnCount: boardLayouts[0].rightGutterColumnCount,
-              },
-              current: {
-                layoutId: generatedMobileLayoutId,
-                columnCount: 3,
-                leftGutterColumnCount: 0,
-                rightGutterColumnCount: 0,
-              },
-            })
-          : null;
-      const normalizedBoardLayouts =
-        boardLayouts.length === 0
-          ? [
-              {
-                id: generatedMobileLayoutId,
-                name: "Mobile",
-                columnCount: 3,
-                leftGutterColumnCount: 0,
-                rightGutterColumnCount: 0,
-                breakpoint: 0,
-                role: "mobile" as const,
-                boardId: board.id,
-              },
-              {
-                id: createId(),
-                name: "Base",
-                columnCount: 10,
-                leftGutterColumnCount: 0,
-                rightGutterColumnCount: 0,
-                breakpoint: 768,
-                role: "base" as const,
-                boardId: board.id,
-              },
-            ]
-          : boardLayouts.length === 1 && boardLayouts[0]
+        const newBoardId = createId();
+
+        const generatedMobileLayoutId = createId();
+        const generatedMobilePositions =
+          boardLayouts.length === 1 && boardLayouts[0]
+            ? getUpdatedBoardLayout(board, {
+                previous: {
+                  layoutId: boardLayouts[0].id,
+                  columnCount: boardLayouts[0].columnCount,
+                  leftGutterColumnCount: boardLayouts[0].leftGutterColumnCount,
+                  rightGutterColumnCount: boardLayouts[0].rightGutterColumnCount,
+                },
+                current: {
+                  layoutId: generatedMobileLayoutId,
+                  columnCount: 3,
+                  leftGutterColumnCount: 0,
+                  rightGutterColumnCount: 0,
+                },
+              })
+            : null;
+        const normalizedBoardLayouts =
+          boardLayouts.length === 0
             ? [
                 {
                   id: generatedMobileLayoutId,
@@ -824,31 +803,68 @@ export const boardRouter = createTRPCRouter({
                   role: "mobile" as const,
                   boardId: board.id,
                 },
-                { ...boardLayouts[0], breakpoint: 768, role: "base" as const },
+                {
+                  id: createId(),
+                  name: "Base",
+                  columnCount: 10,
+                  leftGutterColumnCount: 0,
+                  rightGutterColumnCount: 0,
+                  breakpoint: 768,
+                  role: "base" as const,
+                  boardId: board.id,
+                },
               ]
-            : normalizeBoardLayoutRoles(boardLayouts);
-      const layoutsMap = new Map<string, string>(normalizedBoardLayouts.map((layout) => [layout.id, createId()]));
-      const layoutsToInsert = normalizedBoardLayouts.map((layout) => ({
-        ...layout,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        id: layoutsMap.get(layout.id)!,
-        boardId: newBoardId,
-      }));
-
-      const sectionMap = new Map<string, string>(boardSections.map((section) => [section.id, createId()]));
-      const sectionsToInsert: InferInsertModel<typeof sections>[] = boardSections.map(
-        ({ collapseStates: _, layouts: _layouts, ...section }) => ({
-          ...section,
+            : boardLayouts.length === 1 && boardLayouts[0]
+              ? [
+                  {
+                    id: generatedMobileLayoutId,
+                    name: "Mobile",
+                    columnCount: 3,
+                    leftGutterColumnCount: 0,
+                    rightGutterColumnCount: 0,
+                    breakpoint: 0,
+                    role: "mobile" as const,
+                    boardId: board.id,
+                  },
+                  { ...boardLayouts[0], breakpoint: 768, role: "base" as const },
+                ]
+              : normalizeBoardLayoutRoles(boardLayouts);
+        const layoutsMap = new Map<string, string>(normalizedBoardLayouts.map((layout) => [layout.id, createId()]));
+        const layoutsToInsert = normalizedBoardLayouts.map((layout) => ({
+          ...layout,
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          id: sectionMap.get(section.id)!,
+          id: layoutsMap.get(layout.id)!,
           boardId: newBoardId,
-        }),
-      );
+        }));
 
-      const sectionLayoutsToInsert: InferInsertModel<typeof sectionLayouts>[] = boardSections
-        .flatMap((section) =>
-          section.layouts.map(
-            (layoutSection): InferInsertModel<typeof sectionLayouts> => ({
+        const sectionMap = new Map<string, string>(boardSections.map((section) => [section.id, createId()]));
+        const sectionsToInsert: InferInsertModel<typeof sections>[] = boardSections.map(
+          ({ collapseStates: _, layouts: _layouts, ...section }) => ({
+            ...section,
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            id: sectionMap.get(section.id)!,
+            boardId: newBoardId,
+          }),
+        );
+
+        const sectionLayoutsToInsert: InferInsertModel<typeof sectionLayouts>[] = boardSections
+          .flatMap((section) =>
+            section.layouts.map(
+              (layoutSection): InferInsertModel<typeof sectionLayouts> => ({
+                ...layoutSection,
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                layoutId: layoutsMap.get(layoutSection.layoutId)!,
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                sectionId: sectionMap.get(layoutSection.sectionId)!,
+                parentSectionId: layoutSection.parentSectionId
+                  ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    sectionMap.get(layoutSection.parentSectionId)!
+                  : layoutSection.parentSectionId,
+              }),
+            ),
+          )
+          .concat(
+            (generatedMobilePositions?.sectionLayouts ?? []).map((layoutSection) => ({
               ...layoutSection,
               // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               layoutId: layoutsMap.get(layoutSection.layoutId)!,
@@ -857,48 +873,46 @@ export const boardRouter = createTRPCRouter({
               parentSectionId: layoutSection.parentSectionId
                 ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                   sectionMap.get(layoutSection.parentSectionId)!
-                : layoutSection.parentSectionId,
-            }),
-          ),
-        )
-        .concat(
-          (generatedMobilePositions?.sectionLayouts ?? []).map((layoutSection) => ({
-            ...layoutSection,
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            layoutId: layoutsMap.get(layoutSection.layoutId)!,
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            sectionId: sectionMap.get(layoutSection.sectionId)!,
-            parentSectionId: layoutSection.parentSectionId
-              ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                sectionMap.get(layoutSection.parentSectionId)!
-              : null,
-          })),
+                : null,
+            })),
+          );
+        const sectionCollapseStatesToInsert: InferInsertModel<typeof sectionCollapseStates>[] = boardSections.flatMap(
+          (section) =>
+            section.collapseStates.map(
+              (collapseState): InferInsertModel<typeof sectionCollapseStates> => ({
+                ...collapseState,
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                sectionId: sectionMap.get(collapseState.sectionId)!,
+              }),
+            ),
         );
-      const sectionCollapseStatesToInsert: InferInsertModel<typeof sectionCollapseStates>[] = boardSections.flatMap(
-        (section) =>
-          section.collapseStates.map(
-            (collapseState): InferInsertModel<typeof sectionCollapseStates> => ({
-              ...collapseState,
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              sectionId: sectionMap.get(collapseState.sectionId)!,
-            }),
-          ),
-      );
 
-      const itemMap = new Map<string, string>(boardItems.map((item) => [item.id, createId()]));
-      const itemsToInsert: InferInsertModel<typeof items>[] = boardItems.map(
-        ({ integrations: _, layouts: _layouts, ...item }) => ({
-          ...item,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          id: itemMap.get(item.id)!,
-          boardId: newBoardId,
-        }),
-      );
+        const itemMap = new Map<string, string>(boardItems.map((item) => [item.id, createId()]));
+        const itemsToInsert: InferInsertModel<typeof items>[] = boardItems.map(
+          ({ integrations: _, layouts: _layouts, ...item }) => ({
+            ...item,
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            id: itemMap.get(item.id)!,
+            boardId: newBoardId,
+          }),
+        );
 
-      const itemLayoutsToInsert: InferInsertModel<typeof itemLayouts>[] = boardItems
-        .flatMap((item) =>
-          item.layouts.map(
-            (layoutSection): InferInsertModel<typeof itemLayouts> => ({
+        const itemLayoutsToInsert: InferInsertModel<typeof itemLayouts>[] = boardItems
+          .flatMap((item) =>
+            item.layouts.map(
+              (layoutSection): InferInsertModel<typeof itemLayouts> => ({
+                ...layoutSection,
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                sectionId: sectionMap.get(layoutSection.sectionId)!,
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                itemId: itemMap.get(layoutSection.itemId)!,
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                layoutId: layoutsMap.get(layoutSection.layoutId)!,
+              }),
+            ),
+          )
+          .concat(
+            (generatedMobilePositions?.itemSectionLayouts ?? []).map((layoutSection) => ({
               ...layoutSection,
               // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               sectionId: sectionMap.get(layoutSection.sectionId)!,
@@ -906,112 +920,102 @@ export const boardRouter = createTRPCRouter({
               itemId: itemMap.get(layoutSection.itemId)!,
               // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               layoutId: layoutsMap.get(layoutSection.layoutId)!,
-            }),
-          ),
-        )
-        .concat(
-          (generatedMobilePositions?.itemSectionLayouts ?? []).map((layoutSection) => ({
-            ...layoutSection,
+            })),
+          );
+
+        const itemIntegrationsToInsert = boardItems.flatMap((item) =>
+          item.integrations.map((integration) => ({
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            sectionId: sectionMap.get(layoutSection.sectionId)!,
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            itemId: itemMap.get(layoutSection.itemId)!,
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            layoutId: layoutsMap.get(layoutSection.layoutId)!,
+            itemId: itemMap.get(item.id)!,
+            integrationId: integration.integrationId,
           })),
         );
 
-      const itemIntegrationsToInsert = boardItems.flatMap((item) =>
-        item.integrations.map((integration) => ({
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          itemId: itemMap.get(item.id)!,
-          integrationId: integration.integrationId,
-        })),
-      );
-
-      await handleTransactionsAsync(ctx.db, {
-        async handleAsync(db, schema) {
-          await db.transaction(async (transaction) => {
-            await transaction.insert(schema.boards).values({
-              ...boardProps,
-              id: newBoardId,
-              name: input.name,
-              creatorId: ctx.session.user.id,
-            });
-
-            if (layoutsToInsert.length > 0) {
-              await transaction.insert(schema.layouts).values(layoutsToInsert);
-            }
-
-            if (sectionsToInsert.length > 0) {
-              await transaction.insert(schema.sections).values(sectionsToInsert);
-            }
-
-            if (sectionLayoutsToInsert.length > 0) {
-              await transaction.insert(schema.sectionLayouts).values(sectionLayoutsToInsert);
-            }
-
-            if (sectionCollapseStatesToInsert.length > 0) {
-              await transaction.insert(schema.sectionCollapseStates).values(sectionCollapseStatesToInsert);
-            }
-
-            if (itemsToInsert.length > 0) {
-              await transaction.insert(schema.items).values(itemsToInsert);
-            }
-
-            if (itemLayoutsToInsert.length > 0) {
-              await transaction.insert(schema.itemLayouts).values(itemLayoutsToInsert);
-            }
-
-            if (itemIntegrationsToInsert.length > 0) {
-              await transaction.insert(schema.integrationItems).values(itemIntegrationsToInsert);
-            }
-          });
-        },
-        handleSync(db) {
-          db.transaction((transaction) => {
-            transaction
-              .insert(boards)
-              .values({
+        signal.throwIfAborted();
+        await handleTransactionsAsync(ctx.db, {
+          async handleAsync(db, schema) {
+            await db.transaction(async (transaction) => {
+              await transaction.insert(schema.boards).values({
                 ...boardProps,
                 id: newBoardId,
                 name: input.name,
                 creatorId: ctx.session.user.id,
-              })
-              .run();
+              });
 
-            if (layoutsToInsert.length > 0) {
-              transaction.insert(layouts).values(layoutsToInsert).run();
-            }
+              if (layoutsToInsert.length > 0) {
+                await transaction.insert(schema.layouts).values(layoutsToInsert);
+              }
 
-            if (sectionsToInsert.length > 0) {
-              transaction.insert(sections).values(sectionsToInsert).run();
-            }
+              if (sectionsToInsert.length > 0) {
+                await transaction.insert(schema.sections).values(sectionsToInsert);
+              }
 
-            if (sectionLayoutsToInsert.length > 0) {
-              transaction.insert(sectionLayouts).values(sectionLayoutsToInsert).run();
-            }
+              if (sectionLayoutsToInsert.length > 0) {
+                await transaction.insert(schema.sectionLayouts).values(sectionLayoutsToInsert);
+              }
 
-            if (sectionCollapseStatesToInsert.length > 0) {
-              transaction.insert(sectionCollapseStates).values(sectionCollapseStatesToInsert).run();
-            }
+              if (sectionCollapseStatesToInsert.length > 0) {
+                await transaction.insert(schema.sectionCollapseStates).values(sectionCollapseStatesToInsert);
+              }
 
-            if (itemsToInsert.length > 0) {
-              transaction.insert(items).values(itemsToInsert).run();
-            }
+              if (itemsToInsert.length > 0) {
+                await transaction.insert(schema.items).values(itemsToInsert);
+              }
 
-            if (itemLayoutsToInsert.length > 0) {
-              transaction.insert(itemLayouts).values(itemLayoutsToInsert).run();
-            }
+              if (itemLayoutsToInsert.length > 0) {
+                await transaction.insert(schema.itemLayouts).values(itemLayoutsToInsert);
+              }
 
-            if (itemIntegrationsToInsert.length > 0) {
-              transaction.insert(integrationItems).values(itemIntegrationsToInsert).run();
-            }
-          });
-        },
+              if (itemIntegrationsToInsert.length > 0) {
+                await transaction.insert(schema.integrationItems).values(itemIntegrationsToInsert);
+              }
+            });
+          },
+          handleSync(db) {
+            db.transaction((transaction) => {
+              transaction
+                .insert(boards)
+                .values({
+                  ...boardProps,
+                  id: newBoardId,
+                  name: input.name,
+                  creatorId: ctx.session.user.id,
+                })
+                .run();
+
+              if (layoutsToInsert.length > 0) {
+                transaction.insert(layouts).values(layoutsToInsert).run();
+              }
+
+              if (sectionsToInsert.length > 0) {
+                transaction.insert(sections).values(sectionsToInsert).run();
+              }
+
+              if (sectionLayoutsToInsert.length > 0) {
+                transaction.insert(sectionLayouts).values(sectionLayoutsToInsert).run();
+              }
+
+              if (sectionCollapseStatesToInsert.length > 0) {
+                transaction.insert(sectionCollapseStates).values(sectionCollapseStatesToInsert).run();
+              }
+
+              if (itemsToInsert.length > 0) {
+                transaction.insert(items).values(itemsToInsert).run();
+              }
+
+              if (itemLayoutsToInsert.length > 0) {
+                transaction.insert(itemLayouts).values(itemLayoutsToInsert).run();
+              }
+
+              if (itemIntegrationsToInsert.length > 0) {
+                transaction.insert(integrationItems).values(itemIntegrationsToInsert).run();
+              }
+            });
+          },
+        });
+
+        return { boardId: newBoardId };
       });
-
-      return { boardId: newBoardId };
     }),
   renameBoard: protectedProcedure
     .meta({
@@ -1568,228 +1572,31 @@ export const boardRouter = createTRPCRouter({
   saveBoard: protectedProcedure.input(boardSaveSchema).mutation(async ({ input, ctx }) => {
     await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "modify");
 
-    const dbBoard = await getFullBoardWithWhereAsync(ctx.db, eq(boards.id, input.id), ctx.session.user.id);
-    await validateWidgetConfigurationsAsync(ctx, input.items, dbBoard.items);
-    throwIfCustomWidgetPlacementChangeForbidden({
-      isAdmin: ctx.session.user.permissions.includes("admin"),
-      submittedItems: input.items,
-      storedItems: dbBoard.items,
-    });
+    return withWidgetPlacementChange(ctx, { boardId: input.id, submittedItems: input.items }, async (signal) => {
+      const dbBoard = await getFullBoardWithWhereAsync(ctx.db, eq(boards.id, input.id), ctx.session.user.id);
+      await validateWidgetConfigurationsAsync(ctx, input.items, dbBoard.items);
+      throwIfCustomWidgetPlacementChangeForbidden({
+        isAdmin: ctx.session.user.permissions.includes("admin"),
+        submittedItems: input.items,
+        storedItems: dbBoard.items,
+      });
 
-    for (const item of input.items) {
-      if (item.kind !== "timetable") continue;
-      const previousItem = dbBoard.items.find((dbItem) => dbItem.id === item.id);
-      let previousOptions: Record<string, unknown> | undefined;
-      if (previousItem?.kind === "timetable") previousOptions = previousItem.options;
-      await validateTimetableOptionsChangeAsync(item.options, previousOptions);
-    }
+      for (const item of input.items) {
+        if (item.kind !== "timetable") continue;
+        const previousItem = dbBoard.items.find((dbItem) => dbItem.id === item.id);
+        let previousOptions: Record<string, unknown> | undefined;
+        if (previousItem?.kind === "timetable") previousOptions = previousItem.options;
+        await validateTimetableOptionsChangeAsync(item.options, previousOptions);
+      }
 
-    await handleTransactionsAsync(ctx.db, {
-      async handleAsync(db, schema) {
-        await db.transaction(async (transaction) => {
-          const addedSections = filterAddedItems(input.sections, dbBoard.sections);
+      signal.throwIfAborted();
+      await handleTransactionsAsync(ctx.db, {
+        async handleAsync(db, schema) {
+          await db.transaction(async (transaction) => {
+            const addedSections = filterAddedItems(input.sections, dbBoard.sections);
 
-          if (addedSections.length > 0) {
-            await transaction.insert(schema.sections).values(
-              addedSections.map((section) => ({
-                id: section.id,
-                kind: section.kind,
-                yOffset: section.kind === "empty" ? section.yOffset : null,
-                xOffset: section.kind === "empty" ? section.xOffset : null,
-                options: section.kind === "empty" ? emptySuperJSON : superjson.stringify(section.options),
-                name: null,
-                boardId: dbBoard.id,
-              })),
-            );
-
-            const sectionLayoutsToInsert = addedSections
-              .filter((section) => section.kind === "container")
-              .flatMap((section) =>
-                section.layouts.map(
-                  (sectionLayout): InferInsertModel<typeof schema.sectionLayouts> => ({
-                    layoutId: sectionLayout.layoutId,
-                    sectionId: section.id,
-                    parentSectionId: sectionLayout.parentSectionId,
-                    height: sectionLayout.height,
-                    width: sectionLayout.width,
-                    xOffset: sectionLayout.xOffset,
-                    yOffset: sectionLayout.yOffset,
-                  }),
-                ),
-              );
-
-            if (sectionLayoutsToInsert.length > 0) {
-              await transaction.insert(schema.sectionLayouts).values(sectionLayoutsToInsert);
-            }
-          }
-
-          const addedItems = filterAddedItems(input.items, dbBoard.items);
-
-          if (addedItems.length > 0) {
-            await transaction.insert(schema.items).values(
-              addedItems.map((item) => ({
-                id: item.id,
-                kind: item.kind,
-                options: superjson.stringify(item.options),
-                advancedOptions: superjson.stringify(item.advancedOptions),
-                boardId: dbBoard.id,
-              })),
-            );
-            await transaction.insert(schema.itemLayouts).values(
-              addedItems.flatMap((item) =>
-                item.layouts.map(
-                  (layoutSection): InferInsertModel<typeof schema.itemLayouts> => ({
-                    layoutId: layoutSection.layoutId,
-                    sectionId: layoutSection.sectionId,
-                    itemId: item.id,
-                    height: layoutSection.height,
-                    width: layoutSection.width,
-                    xOffset: layoutSection.xOffset,
-                    yOffset: layoutSection.yOffset,
-                  }),
-                ),
-              ),
-            );
-          }
-
-          const inputIntegrationRelations = input.items.flatMap(({ integrationIds, id: itemId }) =>
-            integrationIds.map((integrationId) => ({
-              integrationId,
-              itemId,
-            })),
-          );
-          const dbIntegrationRelations = dbBoard.items.flatMap(({ integrationIds, id: itemId }) =>
-            integrationIds.map((integrationId) => ({
-              integrationId,
-              itemId,
-            })),
-          );
-          const addedIntegrationRelations = inputIntegrationRelations.filter(
-            (inputRelation) =>
-              !dbIntegrationRelations.some(
-                (dbRelation) =>
-                  dbRelation.itemId === inputRelation.itemId &&
-                  dbRelation.integrationId === inputRelation.integrationId,
-              ),
-          );
-
-          if (addedIntegrationRelations.length > 0) {
-            await transaction.insert(schema.integrationItems).values(
-              addedIntegrationRelations.map((relation) => ({
-                itemId: relation.itemId,
-                integrationId: relation.integrationId,
-              })),
-            );
-          }
-
-          const updatedItems = filterUpdatedItems(input.items, dbBoard.items);
-
-          for (const item of updatedItems) {
-            await transaction
-              .update(schema.items)
-              .set({
-                kind: item.kind,
-                options: superjson.stringify(item.options),
-                advancedOptions: superjson.stringify(item.advancedOptions),
-              })
-              .where(eq(schema.items.id, item.id));
-
-            for (const itemSectionLayout of item.layouts) {
-              await transaction
-                .update(schema.itemLayouts)
-                .set({
-                  height: itemSectionLayout.height,
-                  width: itemSectionLayout.width,
-                  xOffset: itemSectionLayout.xOffset,
-                  yOffset: itemSectionLayout.yOffset,
-                  sectionId: itemSectionLayout.sectionId,
-                })
-                .where(
-                  and(
-                    eq(schema.itemLayouts.itemId, item.id),
-                    eq(schema.itemLayouts.layoutId, itemSectionLayout.layoutId),
-                  ),
-                );
-            }
-          }
-
-          const updatedSections = filterUpdatedItems(input.sections, dbBoard.sections);
-
-          for (const section of updatedSections) {
-            await transaction
-              .update(schema.sections)
-              .set({
-                yOffset: section.kind === "empty" ? section.yOffset : null,
-                xOffset: section.kind === "empty" ? section.xOffset : null,
-                options: section.kind === "empty" ? emptySuperJSON : superjson.stringify(section.options),
-                name: null,
-              })
-              .where(eq(schema.sections.id, section.id));
-
-            if (section.kind !== "container") continue;
-
-            for (const sectionLayout of section.layouts) {
-              await transaction
-                .update(schema.sectionLayouts)
-                .set({
-                  height: sectionLayout.height,
-                  width: sectionLayout.width,
-                  xOffset: sectionLayout.xOffset,
-                  yOffset: sectionLayout.yOffset,
-                  parentSectionId: sectionLayout.parentSectionId,
-                })
-                .where(
-                  and(
-                    eq(schema.sectionLayouts.sectionId, section.id),
-                    eq(schema.sectionLayouts.layoutId, sectionLayout.layoutId),
-                  ),
-                );
-            }
-          }
-
-          const removedIntegrationRelations = dbIntegrationRelations.filter(
-            (dbRelation) =>
-              !inputIntegrationRelations.some(
-                (inputRelation) =>
-                  dbRelation.itemId === inputRelation.itemId &&
-                  dbRelation.integrationId === inputRelation.integrationId,
-              ),
-          );
-
-          for (const relation of removedIntegrationRelations) {
-            await transaction
-              .delete(schema.integrationItems)
-              .where(
-                and(
-                  eq(integrationItems.itemId, relation.itemId),
-                  eq(integrationItems.integrationId, relation.integrationId),
-                ),
-              );
-          }
-
-          const removedItems = filterRemovedItems(input.items, dbBoard.items);
-
-          const itemIds = removedItems.map((item) => item.id);
-          if (itemIds.length > 0) {
-            await transaction.delete(schema.items).where(inArray(schema.items.id, itemIds));
-          }
-
-          const removedSections = filterRemovedItems(input.sections, dbBoard.sections);
-          const sectionIds = removedSections.map((section) => section.id);
-
-          if (sectionIds.length > 0) {
-            await transaction.delete(schema.sections).where(inArray(schema.sections.id, sectionIds));
-          }
-        });
-      },
-      handleSync(db) {
-        db.transaction((transaction) => {
-          const addedSections = filterAddedItems(input.sections, dbBoard.sections);
-
-          if (addedSections.length > 0) {
-            transaction
-              .insert(sections)
-              .values(
+            if (addedSections.length > 0) {
+              await transaction.insert(schema.sections).values(
                 addedSections.map((section) => ({
                   id: section.id,
                   kind: section.kind,
@@ -1799,36 +1606,33 @@ export const boardRouter = createTRPCRouter({
                   name: null,
                   boardId: dbBoard.id,
                 })),
-              )
-              .run();
-
-            const sectionLayoutsToInsert = addedSections
-              .filter((section) => section.kind === "container")
-              .flatMap((section) =>
-                section.layouts.map(
-                  (sectionLayout): InferInsertModel<typeof sectionLayouts> => ({
-                    layoutId: sectionLayout.layoutId,
-                    sectionId: section.id,
-                    parentSectionId: sectionLayout.parentSectionId,
-                    height: sectionLayout.height,
-                    width: sectionLayout.width,
-                    xOffset: sectionLayout.xOffset,
-                    yOffset: sectionLayout.yOffset,
-                  }),
-                ),
               );
 
-            if (sectionLayoutsToInsert.length > 0) {
-              transaction.insert(sectionLayouts).values(sectionLayoutsToInsert).run();
+              const sectionLayoutsToInsert = addedSections
+                .filter((section) => section.kind === "container")
+                .flatMap((section) =>
+                  section.layouts.map(
+                    (sectionLayout): InferInsertModel<typeof schema.sectionLayouts> => ({
+                      layoutId: sectionLayout.layoutId,
+                      sectionId: section.id,
+                      parentSectionId: sectionLayout.parentSectionId,
+                      height: sectionLayout.height,
+                      width: sectionLayout.width,
+                      xOffset: sectionLayout.xOffset,
+                      yOffset: sectionLayout.yOffset,
+                    }),
+                  ),
+                );
+
+              if (sectionLayoutsToInsert.length > 0) {
+                await transaction.insert(schema.sectionLayouts).values(sectionLayoutsToInsert);
+              }
             }
-          }
 
-          const addedItems = filterAddedItems(input.items, dbBoard.items);
+            const addedItems = filterAddedItems(input.items, dbBoard.items);
 
-          if (addedItems.length > 0) {
-            transaction
-              .insert(items)
-              .values(
+            if (addedItems.length > 0) {
+              await transaction.insert(schema.items).values(
                 addedItems.map((item) => ({
                   id: item.id,
                   kind: item.kind,
@@ -1836,14 +1640,11 @@ export const boardRouter = createTRPCRouter({
                   advancedOptions: superjson.stringify(item.advancedOptions),
                   boardId: dbBoard.id,
                 })),
-              )
-              .run();
-            transaction
-              .insert(itemLayouts)
-              .values(
+              );
+              await transaction.insert(schema.itemLayouts).values(
                 addedItems.flatMap((item) =>
                   item.layouts.map(
-                    (layoutSection): InferInsertModel<typeof itemLayouts> => ({
+                    (layoutSection): InferInsertModel<typeof schema.itemLayouts> => ({
                       layoutId: layoutSection.layoutId,
                       sectionId: layoutSection.sectionId,
                       itemId: item.id,
@@ -1854,140 +1655,346 @@ export const boardRouter = createTRPCRouter({
                     }),
                   ),
                 ),
-              )
-              .run();
-          }
+              );
+            }
 
-          const inputIntegrationRelations = input.items.flatMap(({ integrationIds, id: itemId }) =>
-            integrationIds.map((integrationId) => ({
-              integrationId,
-              itemId,
-            })),
-          );
-          const dbIntegrationRelations = dbBoard.items.flatMap(({ integrationIds, id: itemId }) =>
-            integrationIds.map((integrationId) => ({
-              integrationId,
-              itemId,
-            })),
-          );
-          const addedIntegrationRelations = inputIntegrationRelations.filter(
-            (inputRelation) =>
-              !dbIntegrationRelations.some(
-                (dbRelation) =>
-                  dbRelation.itemId === inputRelation.itemId &&
-                  dbRelation.integrationId === inputRelation.integrationId,
-              ),
-          );
+            const inputIntegrationRelations = input.items.flatMap(({ integrationIds, id: itemId }) =>
+              integrationIds.map((integrationId) => ({
+                integrationId,
+                itemId,
+              })),
+            );
+            const dbIntegrationRelations = dbBoard.items.flatMap(({ integrationIds, id: itemId }) =>
+              integrationIds.map((integrationId) => ({
+                integrationId,
+                itemId,
+              })),
+            );
+            const addedIntegrationRelations = inputIntegrationRelations.filter(
+              (inputRelation) =>
+                !dbIntegrationRelations.some(
+                  (dbRelation) =>
+                    dbRelation.itemId === inputRelation.itemId &&
+                    dbRelation.integrationId === inputRelation.integrationId,
+                ),
+            );
 
-          if (addedIntegrationRelations.length > 0) {
-            transaction
-              .insert(integrationItems)
-              .values(
+            if (addedIntegrationRelations.length > 0) {
+              await transaction.insert(schema.integrationItems).values(
                 addedIntegrationRelations.map((relation) => ({
                   itemId: relation.itemId,
                   integrationId: relation.integrationId,
                 })),
-              )
-              .run();
-          }
-
-          const updatedItems = filterUpdatedItems(input.items, dbBoard.items);
-
-          for (const item of updatedItems) {
-            transaction
-              .update(items)
-              .set({
-                kind: item.kind,
-                options: superjson.stringify(item.options),
-                advancedOptions: superjson.stringify(item.advancedOptions),
-              })
-              .where(eq(items.id, item.id))
-              .run();
-
-            for (const itemSectionLayout of item.layouts) {
-              transaction
-                .update(itemLayouts)
-                .set({
-                  height: itemSectionLayout.height,
-                  width: itemSectionLayout.width,
-                  xOffset: itemSectionLayout.xOffset,
-                  yOffset: itemSectionLayout.yOffset,
-                  sectionId: itemSectionLayout.sectionId,
-                })
-                .where(and(eq(itemLayouts.itemId, item.id), eq(itemLayouts.layoutId, itemSectionLayout.layoutId)))
-                .run();
+              );
             }
-          }
 
-          const updatedSections = filterUpdatedItems(input.sections, dbBoard.sections);
+            const updatedItems = filterUpdatedItems(input.items, dbBoard.items);
 
-          for (const section of updatedSections) {
-            transaction
-              .update(sections)
-              .set({
-                yOffset: section.kind === "empty" ? section.yOffset : null,
-                xOffset: section.kind === "empty" ? section.xOffset : null,
-                options: section.kind === "empty" ? emptySuperJSON : superjson.stringify(section.options),
-                name: null,
-              })
-              .where(eq(sections.id, section.id))
-              .run();
-
-            if (section.kind !== "container") continue;
-
-            for (const sectionLayout of section.layouts) {
-              transaction
-                .update(sectionLayouts)
+            for (const item of updatedItems) {
+              await transaction
+                .update(schema.items)
                 .set({
-                  height: sectionLayout.height,
-                  width: sectionLayout.width,
-                  xOffset: sectionLayout.xOffset,
-                  yOffset: sectionLayout.yOffset,
-                  parentSectionId: sectionLayout.parentSectionId,
+                  kind: item.kind,
+                  options: superjson.stringify(item.options),
+                  advancedOptions: superjson.stringify(item.advancedOptions),
                 })
+                .where(eq(schema.items.id, item.id));
+
+              for (const itemSectionLayout of item.layouts) {
+                await transaction
+                  .update(schema.itemLayouts)
+                  .set({
+                    height: itemSectionLayout.height,
+                    width: itemSectionLayout.width,
+                    xOffset: itemSectionLayout.xOffset,
+                    yOffset: itemSectionLayout.yOffset,
+                    sectionId: itemSectionLayout.sectionId,
+                  })
+                  .where(
+                    and(
+                      eq(schema.itemLayouts.itemId, item.id),
+                      eq(schema.itemLayouts.layoutId, itemSectionLayout.layoutId),
+                    ),
+                  );
+              }
+            }
+
+            const updatedSections = filterUpdatedItems(input.sections, dbBoard.sections);
+
+            for (const section of updatedSections) {
+              await transaction
+                .update(schema.sections)
+                .set({
+                  yOffset: section.kind === "empty" ? section.yOffset : null,
+                  xOffset: section.kind === "empty" ? section.xOffset : null,
+                  options: section.kind === "empty" ? emptySuperJSON : superjson.stringify(section.options),
+                  name: null,
+                })
+                .where(eq(schema.sections.id, section.id));
+
+              if (section.kind !== "container") continue;
+
+              for (const sectionLayout of section.layouts) {
+                await transaction
+                  .update(schema.sectionLayouts)
+                  .set({
+                    height: sectionLayout.height,
+                    width: sectionLayout.width,
+                    xOffset: sectionLayout.xOffset,
+                    yOffset: sectionLayout.yOffset,
+                    parentSectionId: sectionLayout.parentSectionId,
+                  })
+                  .where(
+                    and(
+                      eq(schema.sectionLayouts.sectionId, section.id),
+                      eq(schema.sectionLayouts.layoutId, sectionLayout.layoutId),
+                    ),
+                  );
+              }
+            }
+
+            const removedIntegrationRelations = dbIntegrationRelations.filter(
+              (dbRelation) =>
+                !inputIntegrationRelations.some(
+                  (inputRelation) =>
+                    dbRelation.itemId === inputRelation.itemId &&
+                    dbRelation.integrationId === inputRelation.integrationId,
+                ),
+            );
+
+            for (const relation of removedIntegrationRelations) {
+              await transaction
+                .delete(schema.integrationItems)
                 .where(
-                  and(eq(sectionLayouts.sectionId, section.id), eq(sectionLayouts.layoutId, sectionLayout.layoutId)),
+                  and(
+                    eq(integrationItems.itemId, relation.itemId),
+                    eq(integrationItems.integrationId, relation.integrationId),
+                  ),
+                );
+            }
+
+            const removedItems = filterRemovedItems(input.items, dbBoard.items);
+
+            const itemIds = removedItems.map((item) => item.id);
+            if (itemIds.length > 0) {
+              await transaction.delete(schema.items).where(inArray(schema.items.id, itemIds));
+            }
+
+            const removedSections = filterRemovedItems(input.sections, dbBoard.sections);
+            const sectionIds = removedSections.map((section) => section.id);
+
+            if (sectionIds.length > 0) {
+              await transaction.delete(schema.sections).where(inArray(schema.sections.id, sectionIds));
+            }
+          });
+        },
+        handleSync(db) {
+          db.transaction((transaction) => {
+            const addedSections = filterAddedItems(input.sections, dbBoard.sections);
+
+            if (addedSections.length > 0) {
+              transaction
+                .insert(sections)
+                .values(
+                  addedSections.map((section) => ({
+                    id: section.id,
+                    kind: section.kind,
+                    yOffset: section.kind === "empty" ? section.yOffset : null,
+                    xOffset: section.kind === "empty" ? section.xOffset : null,
+                    options: section.kind === "empty" ? emptySuperJSON : superjson.stringify(section.options),
+                    name: null,
+                    boardId: dbBoard.id,
+                  })),
+                )
+                .run();
+
+              const sectionLayoutsToInsert = addedSections
+                .filter((section) => section.kind === "container")
+                .flatMap((section) =>
+                  section.layouts.map(
+                    (sectionLayout): InferInsertModel<typeof sectionLayouts> => ({
+                      layoutId: sectionLayout.layoutId,
+                      sectionId: section.id,
+                      parentSectionId: sectionLayout.parentSectionId,
+                      height: sectionLayout.height,
+                      width: sectionLayout.width,
+                      xOffset: sectionLayout.xOffset,
+                      yOffset: sectionLayout.yOffset,
+                    }),
+                  ),
+                );
+
+              if (sectionLayoutsToInsert.length > 0) {
+                transaction.insert(sectionLayouts).values(sectionLayoutsToInsert).run();
+              }
+            }
+
+            const addedItems = filterAddedItems(input.items, dbBoard.items);
+
+            if (addedItems.length > 0) {
+              transaction
+                .insert(items)
+                .values(
+                  addedItems.map((item) => ({
+                    id: item.id,
+                    kind: item.kind,
+                    options: superjson.stringify(item.options),
+                    advancedOptions: superjson.stringify(item.advancedOptions),
+                    boardId: dbBoard.id,
+                  })),
+                )
+                .run();
+              transaction
+                .insert(itemLayouts)
+                .values(
+                  addedItems.flatMap((item) =>
+                    item.layouts.map(
+                      (layoutSection): InferInsertModel<typeof itemLayouts> => ({
+                        layoutId: layoutSection.layoutId,
+                        sectionId: layoutSection.sectionId,
+                        itemId: item.id,
+                        height: layoutSection.height,
+                        width: layoutSection.width,
+                        xOffset: layoutSection.xOffset,
+                        yOffset: layoutSection.yOffset,
+                      }),
+                    ),
+                  ),
                 )
                 .run();
             }
-          }
 
-          const removedIntegrationRelations = dbIntegrationRelations.filter(
-            (dbRelation) =>
-              !inputIntegrationRelations.some(
-                (inputRelation) =>
-                  dbRelation.itemId === inputRelation.itemId &&
-                  dbRelation.integrationId === inputRelation.integrationId,
-              ),
-          );
-
-          for (const relation of removedIntegrationRelations) {
-            transaction
-              .delete(integrationItems)
-              .where(
-                and(
-                  eq(integrationItems.itemId, relation.itemId),
-                  eq(integrationItems.integrationId, relation.integrationId),
+            const inputIntegrationRelations = input.items.flatMap(({ integrationIds, id: itemId }) =>
+              integrationIds.map((integrationId) => ({
+                integrationId,
+                itemId,
+              })),
+            );
+            const dbIntegrationRelations = dbBoard.items.flatMap(({ integrationIds, id: itemId }) =>
+              integrationIds.map((integrationId) => ({
+                integrationId,
+                itemId,
+              })),
+            );
+            const addedIntegrationRelations = inputIntegrationRelations.filter(
+              (inputRelation) =>
+                !dbIntegrationRelations.some(
+                  (dbRelation) =>
+                    dbRelation.itemId === inputRelation.itemId &&
+                    dbRelation.integrationId === inputRelation.integrationId,
                 ),
-              )
-              .run();
-          }
+            );
 
-          const removedItems = filterRemovedItems(input.items, dbBoard.items);
+            if (addedIntegrationRelations.length > 0) {
+              transaction
+                .insert(integrationItems)
+                .values(
+                  addedIntegrationRelations.map((relation) => ({
+                    itemId: relation.itemId,
+                    integrationId: relation.integrationId,
+                  })),
+                )
+                .run();
+            }
 
-          const itemIds = removedItems.map((item) => item.id);
-          if (itemIds.length > 0) {
-            transaction.delete(items).where(inArray(items.id, itemIds)).run();
-          }
+            const updatedItems = filterUpdatedItems(input.items, dbBoard.items);
 
-          const removedSections = filterRemovedItems(input.sections, dbBoard.sections);
-          const sectionIds = removedSections.map((section) => section.id);
+            for (const item of updatedItems) {
+              transaction
+                .update(items)
+                .set({
+                  kind: item.kind,
+                  options: superjson.stringify(item.options),
+                  advancedOptions: superjson.stringify(item.advancedOptions),
+                })
+                .where(eq(items.id, item.id))
+                .run();
 
-          if (sectionIds.length > 0) {
-            transaction.delete(sections).where(inArray(sections.id, sectionIds)).run();
-          }
-        });
-      },
+              for (const itemSectionLayout of item.layouts) {
+                transaction
+                  .update(itemLayouts)
+                  .set({
+                    height: itemSectionLayout.height,
+                    width: itemSectionLayout.width,
+                    xOffset: itemSectionLayout.xOffset,
+                    yOffset: itemSectionLayout.yOffset,
+                    sectionId: itemSectionLayout.sectionId,
+                  })
+                  .where(and(eq(itemLayouts.itemId, item.id), eq(itemLayouts.layoutId, itemSectionLayout.layoutId)))
+                  .run();
+              }
+            }
+
+            const updatedSections = filterUpdatedItems(input.sections, dbBoard.sections);
+
+            for (const section of updatedSections) {
+              transaction
+                .update(sections)
+                .set({
+                  yOffset: section.kind === "empty" ? section.yOffset : null,
+                  xOffset: section.kind === "empty" ? section.xOffset : null,
+                  options: section.kind === "empty" ? emptySuperJSON : superjson.stringify(section.options),
+                  name: null,
+                })
+                .where(eq(sections.id, section.id))
+                .run();
+
+              if (section.kind !== "container") continue;
+
+              for (const sectionLayout of section.layouts) {
+                transaction
+                  .update(sectionLayouts)
+                  .set({
+                    height: sectionLayout.height,
+                    width: sectionLayout.width,
+                    xOffset: sectionLayout.xOffset,
+                    yOffset: sectionLayout.yOffset,
+                    parentSectionId: sectionLayout.parentSectionId,
+                  })
+                  .where(
+                    and(eq(sectionLayouts.sectionId, section.id), eq(sectionLayouts.layoutId, sectionLayout.layoutId)),
+                  )
+                  .run();
+              }
+            }
+
+            const removedIntegrationRelations = dbIntegrationRelations.filter(
+              (dbRelation) =>
+                !inputIntegrationRelations.some(
+                  (inputRelation) =>
+                    dbRelation.itemId === inputRelation.itemId &&
+                    dbRelation.integrationId === inputRelation.integrationId,
+                ),
+            );
+
+            for (const relation of removedIntegrationRelations) {
+              transaction
+                .delete(integrationItems)
+                .where(
+                  and(
+                    eq(integrationItems.itemId, relation.itemId),
+                    eq(integrationItems.integrationId, relation.integrationId),
+                  ),
+                )
+                .run();
+            }
+
+            const removedItems = filterRemovedItems(input.items, dbBoard.items);
+
+            const itemIds = removedItems.map((item) => item.id);
+            if (itemIds.length > 0) {
+              transaction.delete(items).where(inArray(items.id, itemIds)).run();
+            }
+
+            const removedSections = filterRemovedItems(input.sections, dbBoard.sections);
+            const sectionIds = removedSections.map((section) => section.id);
+
+            if (sectionIds.length > 0) {
+              transaction.delete(sections).where(inArray(sections.id, sectionIds)).run();
+            }
+          });
+        },
+      });
     });
   }),
   getBoardPermissions: protectedProcedure.input(byIdSchema).query(async ({ input, ctx }) => {
@@ -2156,97 +2163,100 @@ export const boardRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
 
-      await validateWidgetConfigurationsAsync(ctx, [
-        { id: "", kind: input.kind, integrationIds: input.integrationIds },
-      ]);
-      throwIfCustomWidgetPlacementChangeForbidden({
-        isAdmin: ctx.session.user.permissions.includes("admin"),
-        submittedItems: [{ id: "", kind: input.kind, options: input.options }],
-        storedItems: [],
-      });
-
-      if (input.kind === "timetable") {
-        await validateTimetableOptionsChangeAsync(input.options);
-      }
-
-      return await serializeBoardItemPlacementAsync(input.boardId, async () => {
-        const board = await ctx.db.query.boards.findFirst({
-          where: eq(boards.id, input.boardId),
-          with: {
-            sections: { with: { layouts: true } },
-            layouts: true,
-            items: { with: { layouts: true } },
-          },
+      return withWidgetPlacementChange(ctx, { submittedItems: [input] }, async (signal) => {
+        await validateWidgetConfigurationsAsync(ctx, [
+          { id: "", kind: input.kind, integrationIds: input.integrationIds },
+        ]);
+        throwIfCustomWidgetPlacementChangeForbidden({
+          isAdmin: ctx.session.user.permissions.includes("admin"),
+          submittedItems: [{ id: "", kind: input.kind, options: input.options }],
+          storedItems: [],
         });
 
-        if (!board) {
-          throw new TRPCError({ code: "NOT_FOUND", message: "Board not found" });
+        if (input.kind === "timetable") {
+          await validateTimetableOptionsChangeAsync(input.options);
         }
 
-        const emptySection = board.sections
-          .filter((section) => section.kind === "empty" && getRootSectionLane(section.xOffset) === "main")
-          .toSorted(
-            (sectionA, sectionB) =>
-              (sectionA.yOffset ?? 0) - (sectionB.yOffset ?? 0) || sectionA.id.localeCompare(sectionB.id),
-          )[0];
+        return await serializeBoardItemPlacementAsync(input.boardId, async () => {
+          const board = await ctx.db.query.boards.findFirst({
+            where: eq(boards.id, input.boardId),
+            with: {
+              sections: { with: { layouts: true } },
+              layouts: true,
+              items: { with: { layouts: true } },
+            },
+          });
 
-        if (!emptySection) {
-          throw new TRPCError({ code: "BAD_REQUEST", message: "Board has no main section to place items in" });
-        }
-
-        const itemId = createId();
-        const defaultSize = widgetDefaultSizes[input.kind as WidgetKind] ?? { width: 1, height: 1 };
-        const layoutRows: (typeof itemLayouts.$inferInsert)[] = board.layouts.map((layout) => {
-          const columnCount = getBoardLaneColumnCount(layout, getRootSectionLane(emptySection.xOffset));
-          const size = { ...defaultSize, width: Math.min(columnCount, defaultSize.width) };
-          const itemPlacements = board.items
-            .flatMap((item) => item.layouts)
-            .filter((itemLayout) => itemLayout.sectionId === emptySection.id && itemLayout.layoutId === layout.id);
-          const containerPlacements = board.sections
-            .filter((section) => section.kind === "container")
-            .flatMap((section) => section.layouts)
-            .filter(
-              (sectionLayout) =>
-                sectionLayout.parentSectionId === emptySection.id && sectionLayout.layoutId === layout.id,
-            );
-          const position = findFirstAvailableBoardItemPosition(
-            [...itemPlacements, ...containerPlacements],
-            columnCount,
-            size,
-          );
-
-          if (!position) {
-            throw new TRPCError({
-              code: "BAD_REQUEST",
-              message: "Board section is full, no free grid position available",
-            });
+          if (!board) {
+            throw new TRPCError({ code: "NOT_FOUND", message: "Board not found" });
           }
 
-          return {
-            itemId,
-            sectionId: emptySection.id,
-            layoutId: layout.id,
-            ...position,
-            width: size.width,
-            height: size.height,
-          };
-        });
+          const emptySection = board.sections
+            .filter((section) => section.kind === "empty" && getRootSectionLane(section.xOffset) === "main")
+            .toSorted(
+              (sectionA, sectionB) =>
+                (sectionA.yOffset ?? 0) - (sectionB.yOffset ?? 0) || sectionA.id.localeCompare(sectionB.id),
+            )[0];
 
-        await ctx.db.insert(items).values({
-          id: itemId,
-          boardId: input.boardId,
-          kind: input.kind,
-          options: superjson.stringify(input.options),
-          advancedOptions: emptySuperJSON,
-        });
-        if (layoutRows.length > 0) await ctx.db.insert(itemLayouts).values(layoutRows);
-        if (input.integrationIds.length > 0) {
-          await ctx.db
-            .insert(integrationItems)
-            .values(input.integrationIds.map((integrationId) => ({ itemId, integrationId })));
-        }
+          if (!emptySection) {
+            throw new TRPCError({ code: "BAD_REQUEST", message: "Board has no main section to place items in" });
+          }
 
-        return { itemId };
+          const itemId = createId();
+          const defaultSize = widgetDefaultSizes[input.kind as WidgetKind] ?? { width: 1, height: 1 };
+          const layoutRows: (typeof itemLayouts.$inferInsert)[] = board.layouts.map((layout) => {
+            const columnCount = getBoardLaneColumnCount(layout, getRootSectionLane(emptySection.xOffset));
+            const size = { ...defaultSize, width: Math.min(columnCount, defaultSize.width) };
+            const itemPlacements = board.items
+              .flatMap((item) => item.layouts)
+              .filter((itemLayout) => itemLayout.sectionId === emptySection.id && itemLayout.layoutId === layout.id);
+            const containerPlacements = board.sections
+              .filter((section) => section.kind === "container")
+              .flatMap((section) => section.layouts)
+              .filter(
+                (sectionLayout) =>
+                  sectionLayout.parentSectionId === emptySection.id && sectionLayout.layoutId === layout.id,
+              );
+            const position = findFirstAvailableBoardItemPosition(
+              [...itemPlacements, ...containerPlacements],
+              columnCount,
+              size,
+            );
+
+            if (!position) {
+              throw new TRPCError({
+                code: "BAD_REQUEST",
+                message: "Board section is full, no free grid position available",
+              });
+            }
+
+            return {
+              itemId,
+              sectionId: emptySection.id,
+              layoutId: layout.id,
+              ...position,
+              width: size.width,
+              height: size.height,
+            };
+          });
+
+          signal.throwIfAborted();
+          await ctx.db.insert(items).values({
+            id: itemId,
+            boardId: input.boardId,
+            kind: input.kind,
+            options: superjson.stringify(input.options),
+            advancedOptions: emptySuperJSON,
+          });
+          if (layoutRows.length > 0) await ctx.db.insert(itemLayouts).values(layoutRows);
+          if (input.integrationIds.length > 0) {
+            await ctx.db
+              .insert(integrationItems)
+              .values(input.integrationIds.map((integrationId) => ({ itemId, integrationId })));
+          }
+
+          return { itemId };
+        });
       });
     }),
 });
