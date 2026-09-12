@@ -41,6 +41,8 @@
       "outputs": ["cli.cjs"]
     },
     "@homarr/nextjs#build": {
+      "dependsOn": ["^build"],
+      "env": ["TURBO_PLATFORM"],
       "inputs": [
         "$TURBO_DEFAULT$",
         "../../packages/widget-sdk/src/**",
@@ -48,7 +50,8 @@
         "../../packages/custom-widgets/src/workbench/package-language/**",
         "../../packages/custom-widgets/scripts/*editor*.ts",
         "../../pnpm-lock.yaml"
-      ]
+      ],
+      "outputs": [".next/**", "!.next/cache/**", "next-env.d.ts", "public/__widget-editor/**"]
     },
     "@homarr/db#build": {
       "outputs": ["migrations/sqlite/migrate.cjs", "migrations/mysql/migrate.cjs", "migrations/postgresql/migrate.cjs"]
