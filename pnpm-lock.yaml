@@ -1934,6 +1934,9 @@ importers:
       '@codemirror/view':
         specifier: 'catalog:'
         version: 6.43.0
+      '@homarr/common':
+        specifier: workspace:^0.1.0
+        version: link:../common
       '@homarr/widget-sdk':
         specifier: workspace:^0.1.0
         version: link:../widget-sdk

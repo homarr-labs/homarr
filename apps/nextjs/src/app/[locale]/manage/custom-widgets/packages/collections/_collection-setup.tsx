@@ -1,6 +1,8 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { usePendingOperations } from "@homarr/common";
+
+import { useState } from "react";
 import { Accordion, Alert, Badge, Button, Checkbox, Group, Paper, Select, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
@@ -19,13 +21,7 @@ export function PackageCollectionSetup({ initialData }: { initialData: WidgetCol
   const boards = clientApi.board.getAllBoards.useQuery();
   const saveBindings = clientApi.customWidget.package.setCollectionBindings.useMutation();
   const [bindings, setBindings] = useState(initialData.bindings);
-  const [pendingConnections, setPendingConnections] = useState(0);
-  const connectionPreparationChanged = useCallback((pending: boolean) => {
-    setPendingConnections((current) => {
-      if (pending) return current + 1;
-      return current - 1;
-    });
-  }, []);
+  const [connectionsPending, connectionPreparationChanged] = usePendingOperations();
   const [configuration, setConfiguration] = useState<CollectionConfiguration>({});
   const [selected, setSelected] = useState(initialData.entries.map((entry) => entry.id));
   const [boardId, setBoardId] = useState<string | null>(null);
@@ -40,7 +36,7 @@ export function PackageCollectionSetup({ initialData }: { initialData: WidgetCol
   };
   const [error, setError] = useState("");
   const progress = useCollectionPlacement(collection);
-  const busy = progress.busy || saveBindings.isPending || pendingConnections > 0;
+  const busy = progress.busy || saveBindings.isPending || connectionsPending;
   const board = boards.data?.find((candidate) => candidate.id === boardId);
   const requiredSlots = new Set(
     collection.entries

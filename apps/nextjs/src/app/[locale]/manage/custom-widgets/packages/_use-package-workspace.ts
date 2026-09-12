@@ -1,14 +1,22 @@
 "use client";
+
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { extractErrorMessage, usePendingOperations } from "@homarr/common";
 import { getCustomWidgetDefaultOptions } from "@homarr/custom-widgets/core";
 import { customWidgetPackageSchema, widgetPackagePathSchema } from "@homarr/custom-widgets/package";
 import { useI18n } from "@homarr/translation/client";
 import clock from "@homarr/widget-sdk/examples/clock.json";
 import { getLogicalTrackSize } from "~/components/board/layout/geometry";
-import { documentFromSource, documentFromTemplate, documentSource } from "./_package-document";
-import { usePackageDocument } from "./_use-package-document";
+import {
+  documentFromSource,
+  documentFromTemplate,
+  documentSource,
+  usePackageDocument,
+} from "@homarr/custom-widgets/workbench/package";
+import { useUnsavedChangesGuard } from "~/components/manage/use-unsaved-changes-guard";
+
 export type Installation = RouterOutputs["customWidget"]["package"]["get"];
 type Preview = RouterOutputs["customWidget"]["package"]["preview"] & { liveActions: boolean };
 export function usePackageWorkspace(
@@ -28,16 +36,11 @@ export function usePackageWorkspace(
   const [installationId, setInstallationId] = useState(installation?.id);
   const [bindings, setBindings] = useState(installation?.bindings ?? initialBindings ?? {});
   const [savedBindings, setSavedBindings] = useState(installation?.bindings ?? {});
-  const [pendingConnections, setPendingConnections] = useState(0);
-  const connectionPreparationChanged = useCallback((pending: boolean) => {
-    setPendingConnections((current) => {
-      if (pending) return current + 1;
-      return current - 1;
-    });
-  }, []);
+  const [connectionsPending, connectionPreparationChanged] = usePendingOperations();
   const bindingsDirty =
     JSON.stringify(Object.entries(bindings).toSorted()) !== JSON.stringify(Object.entries(savedBindings).toSorted());
-  const editor = usePackageDocument(initial, userId, installationId, bindingsDirty);
+  const editor = usePackageDocument(initial, userId, installationId);
+  useUnsavedChangesGuard(editor.dirty || bindingsDirty, { navigationKey: installationId });
   const { document, edit } = editor;
   const [selected, setSelected] = useState(Object.keys(initial.files)[0] ?? "/widget.json");
   const [path, setPath] = useState("");
@@ -76,7 +79,7 @@ export function usePackageWorkspace(
   const discard = clientApi.customWidget.package.discardPreview.useMutation();
   const saveBindings = clientApi.customWidget.package.setBindings.useMutation();
   const discardPreview = discard.mutate;
-  const busy = save.isPending || saveBindings.isPending || previewMutation.isPending || pendingConnections > 0;
+  const busy = save.isPending || saveBindings.isPending || previewMutation.isPending || connectionsPending;
   const resetExecution = useCallback(() => {
     generation.current += 1;
     if (previewId.current) setStale(true);
@@ -134,7 +137,7 @@ export function usePackageWorkspace(
       setMessage(t("draftSaved"));
       return result.id;
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : String(cause));
+      setError(extractErrorMessage(cause));
     }
   };
   const runPreview = async () => {
@@ -165,7 +168,7 @@ export function usePackageWorkspace(
       setStale(false);
       setPane("preview");
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : String(cause));
+      setError(extractErrorMessage(cause));
     }
   };
   const addFile = () => {

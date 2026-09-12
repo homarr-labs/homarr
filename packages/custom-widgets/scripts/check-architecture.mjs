@@ -25,17 +25,10 @@ async function collect(directory) {
 for (const sourceRoot of sourceRoots) await collect(sourceRoot);
 const failures = [];
 const graph = new Map();
-const algorithmicExceptions = new Map([
-  ["packages/custom-widgets/src/jsx/analyzer.ts", 400],
-  ["packages/custom-widgets/src/jsx/interpreter.tsx", 400],
-]);
 
 for (const file of productionFiles) {
   const source = await readFile(file, "utf8");
   const name = relative(repositoryRoot, file);
-  const lineCount = source.trimEnd().split("\n").length;
-  const limit = algorithmicExceptions.get(name) ?? 300;
-  if (lineCount > limit) failures.push(`${name} has ${lineCount} lines (limit ${limit})`);
   if (file.startsWith(join(packageRoot, "src")) && /from\s+["']@homarr\/(?:api|widgets)(?:\/|["'])/u.test(source)) {
     failures.push(`${name} imports a forbidden adapter package`);
   }

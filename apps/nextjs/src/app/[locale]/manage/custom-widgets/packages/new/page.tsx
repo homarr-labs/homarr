@@ -5,7 +5,7 @@ import { widgetReferencePackages } from "@homarr/widget-sdk/examples";
 import { auth } from "@homarr/auth/next";
 import { getI18n } from "@homarr/translation/server";
 
-import { NativePackageWorkspace } from "../_package-native-workspace";
+import { NativePackageWorkspace } from "../_package-convert";
 import { PackageWorkspace } from "../_package-workspace";
 
 export default async function NewWidgetPackagePage({

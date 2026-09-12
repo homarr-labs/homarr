@@ -1,4 +1,6 @@
 "use client";
+
+import { extractErrorMessage, isRecord, getConnectionUrlSuggestion } from "@homarr/common";
 import { useState } from "react";
 import {
   Alert,
@@ -15,10 +17,8 @@ import {
 } from "@mantine/core";
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { isRecord } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";
 import type { WidgetJson } from "@homarr/widget-sdk/shared";
-import { getConnectionUrlSuggestion } from "./_package-connection-url";
 type Connection = RouterOutputs["customWidget"]["package"]["connections"][number];
 type Authentication = "none" | "basic" | "bearer" | "headers" | "cookie" | "query";
 const authKinds = ["none", "basic", "bearer", "headers", "cookie", "query"];
@@ -129,7 +129,7 @@ export function ConnectionEditor({ onSaved, connection }: { onSaved(): void; con
       setHeaders("{}");
       onSaved();
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : String(cause));
+      setError(extractErrorMessage(cause));
     }
   };
   return (

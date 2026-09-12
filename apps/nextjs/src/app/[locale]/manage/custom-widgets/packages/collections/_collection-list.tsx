@@ -1,15 +1,16 @@
 "use client";
 
-import { Alert, Badge, Button, Stack, Text } from "@mantine/core";
-import { IconLayoutGrid } from "@tabler/icons-react";
+import { extractErrorMessage } from "@homarr/common";
 
+import { Alert, Badge, Button, Stack, Text, Accordion, Group, MultiSelect, TextInput } from "@mantine/core";
+import { IconLayoutGrid } from "@tabler/icons-react";
 import type { RouterOutputs } from "@homarr/api";
-import { clientApi } from "@homarr/api/client";
+import { clientApi, fetchApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
-
 import { ManageCollectionItem, ManageCollectionList } from "~/components/manage/manage-collection";
-import { PackageCollectionExport } from "./_collection-export";
+import { useState } from "react";
+import { downloadPackage } from "@homarr/custom-widgets/workbench/package";
 
 export function PackageCollectionList({
   initialData,
@@ -55,5 +56,81 @@ export function PackageCollectionList({
         ))}
       </ManageCollectionList>
     </Stack>
+  );
+}
+
+export function PackageCollectionExport({
+  installations,
+}: {
+  installations: RouterOutputs["customWidget"]["package"]["list"];
+}) {
+  const t = useI18n("customWidget.package.collections");
+  const [selected, setSelected] = useState<string[]>([]);
+  const [name, setName] = useState("");
+  const [id, setId] = useState("");
+  const [version, setVersion] = useState("1.0.0");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  const exportCollection = async () => {
+    setBusy(true);
+    setError("");
+    try {
+      const archive = await fetchApi.customWidget.package.exportCollection.query({
+        manifest: { id, name, version },
+        installationIds: selected,
+      });
+      downloadPackage(name, archive);
+    } catch (cause) {
+      setError(extractErrorMessage(cause));
+    } finally {
+      setBusy(false);
+    }
+  };
+  return (
+    <Accordion variant="contained">
+      <Accordion.Item value="export">
+        <Accordion.Control>{t("export")}</Accordion.Control>
+        <Accordion.Panel>
+          <Stack>
+            <Text size="sm" c="dimmed">
+              {t("exportDescription")}
+            </Text>
+            <MultiSelect
+              label={t("widgets")}
+              searchable
+              value={selected}
+              onChange={setSelected}
+              maxValues={32}
+              data={installations
+                .filter((entry) => entry.activeArtifactId)
+                .map((entry) => ({ value: entry.id, label: entry.name }))}
+            />
+            <Group grow>
+              <TextInput label={t("name")} value={name} onChange={(event) => setName(event.currentTarget.value)} />
+              <TextInput
+                label={t("identity")}
+                description={t("identityDescription")}
+                placeholder={t("identityPlaceholder")}
+                value={id}
+                onChange={(event) => setId(event.currentTarget.value)}
+              />
+              <TextInput
+                label={t("version")}
+                value={version}
+                onChange={(event) => setVersion(event.currentTarget.value)}
+              />
+            </Group>
+            {error && <Alert color="red">{error}</Alert>}
+            <Button
+              loading={busy}
+              disabled={!selected.length || !name.trim() || !id.trim()}
+              onClick={() => void exportCollection()}
+            >
+              {t("export")}
+            </Button>
+          </Stack>
+        </Accordion.Panel>
+      </Accordion.Item>
+    </Accordion>
   );
 }

@@ -1,5 +1,7 @@
 "use client";
 
+import { extractErrorMessage } from "@homarr/common";
+
 import { useMemo, useState } from "react";
 import { Accordion, Alert, Button, Checkbox, Group, Paper, Stack, Text } from "@mantine/core";
 
@@ -9,11 +11,9 @@ import { customWidgetPackageSchema, stringifyWidgetJson } from "@homarr/custom-w
 import type { CustomWidgetPackage } from "@homarr/custom-widgets/package";
 import { useI18n } from "@homarr/translation/client";
 
-import { AddPackagePlacement, PackagePlacements } from "./_package-placements";
-import type { PackageOperation } from "./_package-document";
-import { PackageArtifactReview } from "./_package-artifact-review";
-import { PackageConvertedPlacements } from "./_package-converted-placements";
-import { downloadPackage } from "./_package-document";
+import { AddPackagePlacement, PackagePlacements, PackageConvertedPlacements } from "./_package-placements";
+import { PackageArtifactReview } from "./_package-workshop";
+import { downloadPackage } from "@homarr/custom-widgets/workbench/package";
 
 type Installation = RouterOutputs["customWidget"]["package"]["get"];
 
@@ -80,13 +80,13 @@ export function PackageOperations({
       utils.widget.customApi.getData.invalidate(),
     ]);
   };
-  const run = async (action: PackageOperation, message: string) => {
+  const run = async (action: () => Promise<unknown>, message: string) => {
     try {
       await action();
       await refresh();
       onMessage(message);
     } catch (error) {
-      onError(error instanceof Error ? error.message : String(error));
+      onError(extractErrorMessage(error));
     }
   };
   return (

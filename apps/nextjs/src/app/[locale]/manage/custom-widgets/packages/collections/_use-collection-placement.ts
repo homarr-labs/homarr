@@ -1,5 +1,7 @@
 "use client";
 
+import { extractErrorMessage } from "@homarr/common";
+
 import { useEffect, useRef, useState } from "react";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -94,12 +96,12 @@ export function useCollectionPlacement(collection: WidgetCollection) {
           report(t("added"));
           added = true;
         } catch (cause) {
-          report(cause instanceof Error ? cause.message : String(cause), true);
+          report(extractErrorMessage(cause), true);
         }
       }
       if (added) setCompletedBoard(board.name);
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : String(cause));
+      setError(extractErrorMessage(cause));
     } finally {
       running.current = false;
       setBusy(false);

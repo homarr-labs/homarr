@@ -2,18 +2,29 @@
 
 import dynamic from "next/dynamic";
 import { useState } from "react";
-import { Accordion, Alert, Badge, Button, Checkbox, Group, Select, Stack, Text } from "@mantine/core";
+import {
+  Accordion,
+  Alert,
+  Badge,
+  Button,
+  Checkbox,
+  Group,
+  Select,
+  Stack,
+  Text,
+  NumberInput,
+  Paper,
+  Skeleton,
+  Title,
+} from "@mantine/core";
 import { IconCode, IconPlayerPlay } from "@tabler/icons-react";
-
 import { useI18n } from "@homarr/translation/client";
-import { WidgetPreviewFrame } from "@homarr/widgets/preview";
-
-import { PackagePreviewViewport } from "./_package-preview-viewport";
-import { PackagePreviewControls } from "./_package-preview-controls";
-import { PackageRuntimeStatus } from "./_package-runtime-status";
-import { downloadPackage } from "./_package-document";
+import { WidgetPreviewFrame, WidgetPreviewViewport } from "@homarr/widgets/preview";
+import { downloadPackage } from "@homarr/custom-widgets/workbench/package";
 import type { usePackageWorkspace } from "./_use-package-workspace";
 import classes from "./_package-workspace.module.css";
+import { clientApi } from "@homarr/api/client";
+import { Link } from "@homarr/ui";
 
 const TrustedWidgetPreview = dynamic(() => import("@homarr/widgets/custom-api/trusted-widget-preview"), { ssr: false });
 
@@ -118,7 +129,7 @@ export function PackagePreview({ state }: { state: ReturnType<typeof usePackageW
         {({ scale: fittedScale }) => (
           <>
             {preview && (
-              <PackagePreviewViewport width={width} height={height} scale={fittedScale} colorScheme={previewTheme}>
+              <WidgetPreviewViewport width={width} height={height} scale={fittedScale} colorScheme={previewTheme}>
                 <TrustedWidgetPreview
                   data={preview.displayData}
                   width={width}
@@ -131,7 +142,7 @@ export function PackagePreview({ state }: { state: ReturnType<typeof usePackageW
                   onReady={previewReady}
                   onLoadError={previewLoadError}
                 />
-              </PackagePreviewViewport>
+              </WidgetPreviewViewport>
             )}
             {!preview && (
               <Stack justify="center" align="center" mih={220} p="sm">
@@ -187,6 +198,182 @@ export function PackagePreview({ state }: { state: ReturnType<typeof usePackageW
           </Accordion.Panel>
         </Accordion.Item>
       </Accordion>
+    </Stack>
+  );
+}
+
+function PackagePreviewControls({ state }: { state: ReturnType<typeof usePackageWorkspace> }) {
+  const t = useI18n("customWidget.package");
+  const { width, height, scale, previewTheme, setWidth, setHeight, setScale, setPreviewTheme } = state;
+  return (
+    <Stack gap="xs">
+      <Group gap="xs" grow>
+        <Select
+          size="xs"
+          label={t("previewTheme")}
+          value={previewTheme}
+          data={[
+            { value: "system", label: t("previewThemeCurrent") },
+            { value: "light", label: t("previewThemeLight") },
+            { value: "dark", label: t("previewThemeDark") },
+          ]}
+          onChange={(value) => {
+            if (value === "system" || value === "light" || value === "dark") setPreviewTheme(value);
+          }}
+        />
+      </Group>
+      <Accordion>
+        <Accordion.Item value="dimensions">
+          <Accordion.Control>{t("customViewport")}</Accordion.Control>
+          <Accordion.Panel>
+            <Stack gap="xs">
+              <Text size="xs" c="dimmed">{t("customViewportDescription")}</Text>
+              <Group gap="xs" grow>
+                <NumberInput
+                  size="xs"
+                  label={t("width")}
+                  min={100}
+                  max={2400}
+                  value={width}
+                  onChange={(value) => {
+                    if (typeof value === "number") setWidth(value);
+                  }}
+                />
+                <NumberInput
+                  size="xs"
+                  label={t("height")}
+                  min={100}
+                  max={1600}
+                  value={height}
+                  onChange={(value) => {
+                    if (typeof value === "number") setHeight(value);
+                  }}
+                />
+                <NumberInput
+                  size="xs"
+                  label={t("previewScale")}
+                  min={25}
+                  max={90}
+                  suffix="%"
+                  step={10}
+                  value={Math.round(scale * 100)}
+                  onChange={(value) => {
+                    if (typeof value === "number") setScale(Math.min(0.9, Math.max(0.25, value / 100)));
+                  }}
+                />
+              </Group>
+            </Stack>
+          </Accordion.Panel>
+        </Accordion.Item>
+      </Accordion>
+    </Stack>
+  );
+}
+
+function PackageRuntimeStatus({ id }: { id: string }) {
+  const t = useI18n("customWidget.package.runtime");
+  const status = clientApi.customWidget.package.runtimeStatus.useQuery({ id });
+  const data = status.data;
+  return (
+    <Stack gap="xs">
+      <Text size="sm" fw={600}>{t("title")}</Text>
+      <Text size="xs" c="dimmed">{t("description")}</Text>
+      <Group>
+        {data && <Badge variant="light">{t(data.state)}</Badge>}
+        <Button variant="subtle" size="xs" loading={status.isFetching} onClick={() => void status.refetch()}>{t("refresh")}</Button>
+      </Group>
+      {data && "pid" in data && (
+        <Text size="xs">{t("process", { pid: data.pid ?? "—", active: data.activeRequests, queued: data.queuedRequests })}</Text>
+      )}
+      {data && "error" in data && <Alert color="red">{data.error}</Alert>}
+      {status.error && <Alert color="red">{status.error.message}</Alert>}
+      <Button component={Link} href="/manage/tools/logs" target="_blank" rel="noopener noreferrer" variant="default" size="xs">{t("logs")}</Button>
+    </Stack>
+  );
+}
+
+
+export function PackageSessionPreview({ previewId }: { previewId: string }) {
+  const t = useI18n("customWidget.package");
+  const { data, error, isLoading } = clientApi.customWidget.package.previewGet.useQuery(
+    { previewId },
+    { retry: false },
+  );
+  const [surface, setSurface] = useState<"tile" | "advanced" | "configuration">("tile");
+  const [width, setWidth] = useState(480);
+  const [height, setHeight] = useState(360);
+  if (isLoading) return <Skeleton height={360} />;
+  if (error || !data)
+    return (
+      <Alert color="yellow" title={t("sessionUnavailable")}>
+        {t("sessionUnavailableDescription")}
+      </Alert>
+    );
+  const choices = [{ value: "tile", label: t("tile") }];
+  if (data.displayData.manifest.entrypoints.advanced) choices.push({ value: "advanced", label: t("advanced") });
+  if (data.displayData.manifest.entrypoints.configuration)
+    choices.push({ value: "configuration", label: t("configuration") });
+  return (
+    <Stack>
+      <Group justify="space-between">
+        <Title order={2}>{data.displayData.manifest.name}</Title>
+        <Button
+          component={Link}
+          href={`/manage/custom-widgets/packages/${data.displayData.installationId}`}
+          variant="subtle"
+        >
+          {t("openWorkspace")}
+        </Button>
+      </Group>
+      <Text size="sm" c="dimmed">
+        {t("sessionDescription")}
+      </Text>
+      {data.displayData.previewScenario && (
+        <Text size="sm" c="dimmed">
+          {t("previewSynthetic", { name: data.displayData.previewScenario.label })}
+        </Text>
+      )}
+      <Group align="end">
+        <Select
+          label={t("surface")}
+          data={choices}
+          value={surface}
+          onChange={(value) => {
+            if (value === "tile" || value === "advanced" || value === "configuration") setSurface(value);
+          }}
+        />
+        <NumberInput
+          w={110}
+          label={t("width")}
+          min={100}
+          max={2400}
+          value={width}
+          onChange={(value) => {
+            if (typeof value === "number") setWidth(value);
+          }}
+        />
+        <NumberInput
+          w={110}
+          label={t("height")}
+          min={100}
+          max={2400}
+          value={height}
+          onChange={(value) => {
+            if (typeof value === "number") setHeight(value);
+          }}
+        />
+      </Group>
+      <Paper withBorder p="sm" style={{ overflow: "auto" }}>
+        <div style={{ width, height }}>
+          <TrustedWidgetPreview
+            data={data.displayData}
+            width={width}
+            height={height}
+            surface={surface}
+            onSurfaceChange={setSurface}
+          />
+        </div>
+      </Paper>
     </Stack>
   );
 }

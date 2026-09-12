@@ -1,6 +1,8 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { usePendingOperations } from "@homarr/common";
+
+import { useState } from "react";
 import { Accordion, Alert, Button, Paper, Select, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
@@ -8,7 +10,7 @@ import { useI18n } from "@homarr/translation/client";
 
 import { CodeEditor } from "~/components/custom-widgets/code-editor";
 import { PackageConnections } from "../../packages/_package-connections";
-import { PackageArtifactReview } from "../../packages/_package-artifact-review";
+import { PackageArtifactReview } from "../../packages/_package-workshop";
 
 export function WorkshopPackageReview({ submissionId }: { submissionId: string }) {
   const t = useI18n("customWidget.package");
@@ -20,15 +22,9 @@ export function WorkshopPackageReview({ submissionId }: { submissionId: string }
     { enabled: Boolean(releaseId) },
   );
   const [bindings, setBindings] = useState<Record<string, string>>({});
-  const [pendingConnections, setPendingConnections] = useState(0);
-  const connectionPreparationChanged = useCallback((pending: boolean) => {
-    setPendingConnections((current) => {
-      if (pending) return current + 1;
-      return current - 1;
-    });
-  }, []);
+  const [connectionsPending, connectionPreparationChanged] = usePendingOperations();
   const install = clientApi.customWidget.package.installWorkshop.useMutation();
-  const busy = install.isPending || pendingConnections > 0;
+  const busy = install.isPending || connectionsPending;
   return (
     <Paper withBorder p="md">
       <Stack>

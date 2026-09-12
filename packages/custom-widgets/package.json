@@ -23,6 +23,7 @@
     "./package/server": "./src/package/server.ts",
     "./runtime": "./src/runtime/index.ts",
     "./server": "./src/server/index.ts",
+    "./workbench/package": "./src/workbench/package-document.ts",
     "./workbench": "./src/workbench/index.ts",
     "./workbench/package-language": "./src/workbench/package-language/index.ts"
   },
@@ -52,6 +53,7 @@
     "@codemirror/state": "catalog:",
     "@codemirror/theme-one-dark": "catalog:",
     "@codemirror/view": "catalog:",
+    "@homarr/common": "workspace:^0.1.0",
     "@homarr/widget-sdk": "workspace:^0.1.0",
     "@mantine/charts": "catalog:",
     "@mantine/core": "catalog:",

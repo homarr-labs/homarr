@@ -1,7 +1,20 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { Badge, Center, Group, NumberInput, Stack, Text, Tooltip } from "@mantine/core";
+import { useId, useMemo, useRef } from "react";
+import type { PropsWithChildren, ReactNode } from "react";
+import {
+  Badge,
+  Center,
+  Group,
+  NumberInput,
+  Stack,
+  Text,
+  Tooltip,
+  MantineProvider,
+  Portal,
+  useComputedColorScheme,
+  useMantineTheme,
+} from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 
 import { useI18n } from "@homarr/translation/client";
@@ -64,5 +77,61 @@ export function WidgetPreviewFrame({ dimensions, resize, children }: {
         {children({ width: sourceWidth, height: sourceHeight, scale })}
       </Center>
     </Stack>
+  );
+}
+
+/** Scope preview colors and portal variables without changing the user's application theme. */
+export function WidgetPreviewViewport({
+  children,
+  colorScheme,
+  width,
+  height,
+  scale,
+}: PropsWithChildren<{
+  colorScheme: "system" | "light" | "dark";
+  width: number;
+  height: number;
+  scale: number;
+}>) {
+  const id = useId().replace(/[^a-zA-Z0-9_-]/gu, "");
+  const root = useRef<HTMLDivElement>(null);
+  const currentScheme = useComputedColorScheme("light");
+  const hostTheme = useMantineTheme();
+  let scheme = currentScheme;
+  if (colorScheme !== "system") scheme = colorScheme;
+  const theme = useMemo(
+    () => ({
+      ...hostTheme,
+      components: {
+        ...hostTheme.components,
+        Portal: Portal.extend({ defaultProps: { target: `#widget-preview-overlays-${id}` } }),
+      },
+    }),
+    [hostTheme, id],
+  );
+  return (
+    <MantineProvider
+      theme={theme}
+      forceColorScheme={scheme}
+      cssVariablesSelector={`[data-widget-preview-theme="${id}"]`}
+      getRootElement={() => root.current ?? undefined}
+      deduplicateCssVariables={false}
+      withGlobalClasses={false}
+    >
+      <div
+        ref={root}
+        data-widget-preview-theme={id}
+        data-mantine-color-scheme={scheme}
+        style={{
+          width: width * scale,
+          height: height * scale,
+          background: "var(--mantine-color-body)",
+          color: "var(--mantine-color-text)",
+        }}
+      >
+        <div style={{ width, height, transform: `scale(${scale})`, transformOrigin: "top left" }}>{children}</div>
+      </div>
+      <div id={`widget-preview-overlays-${id}`} data-widget-preview-theme={id} data-mantine-color-scheme={scheme} />
+    </MantineProvider>
   );
 }

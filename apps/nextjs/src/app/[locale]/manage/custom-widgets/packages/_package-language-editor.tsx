@@ -1,5 +1,7 @@
 "use client";
 
+import { extractErrorMessage } from "@homarr/common";
+
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Accordion, Alert, Button, Group, Stack, Text, TextInput, Tooltip } from "@mantine/core";
 import {
@@ -33,7 +35,7 @@ export default function PackageLanguageEditor({ state }: { state: ReturnType<typ
       setClient(service);
       return () => service.dispose();
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : String(cause));
+      setError(extractErrorMessage(cause));
     }
   }, []);
   useEffect(() => {
@@ -73,7 +75,7 @@ export default function PackageLanguageEditor({ state }: { state: ReturnType<typ
   }, [client, state.language, state.selected]);
   const reportError = (cause: unknown) => {
     if (cause instanceof Error && cause.name === "AbortError") return;
-    setError(cause instanceof Error ? cause.message : String(cause));
+    setError(extractErrorMessage(cause));
   };
   const format = async () => {
     if (!client) return;
