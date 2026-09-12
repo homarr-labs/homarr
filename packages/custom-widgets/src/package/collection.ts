@@ -90,6 +90,8 @@ export const widgetCollectionContentsSchema = z
         else if (!shared) issue(["connections", name], `collection slot '${slot}' is undeclared`);
         else if (!isWidgetConnectionCompatible(requirement, shared))
           issue(["connections", name], `slot '${slot}' requires compatible ${requirement.kind} settings`);
+        else if (Boolean(requirement.multiple) !== Boolean(shared.multiple))
+          issue(["connections", name], `slot '${slot}' must use the same repeatable connection setting`);
         else if (!requirement.optional && shared.optional)
           issue(["connections", name], `slot '${slot}' must be required because this widget requires it`);
       }

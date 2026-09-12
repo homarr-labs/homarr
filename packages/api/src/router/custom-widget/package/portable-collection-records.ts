@@ -78,7 +78,11 @@ export async function getWidgetCollection(ctx: PackageContext, importId: string)
   for (const entry of entries) {
     for (const [name, slot] of Object.entries(entry.mapping)) {
       const bindings = values.get(slot) ?? new Set<string>();
-      bindings.add(entry.bindings[name] ?? "");
+      const members = Object.entries(entry.bindings)
+        .filter(([binding]) => binding === name || binding.startsWith(`${name}:`))
+        .map(([binding, id]) => [binding.slice(name.length), id])
+        .toSorted(([left], [right]) => (left ?? "").localeCompare(right ?? ""));
+      bindings.add(JSON.stringify(members));
       values.set(slot, bindings);
     }
   }
@@ -87,8 +91,8 @@ export async function getWidgetCollection(ctx: PackageContext, importId: string)
   for (const [slot, ids] of values) {
     if (ids.size > 1) bindingConflicts.push(slot);
     else {
-      const id = [...ids][0];
-      if (id) bindings[slot] = id;
+      const members = JSON.parse([...ids][0] ?? "[]") as [string, string][];
+      for (const [suffix, id] of members) bindings[`${slot}${suffix}`] = id;
     }
   }
   return {

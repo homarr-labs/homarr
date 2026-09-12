@@ -6,6 +6,7 @@ import { getCustomWidgetDefaultOptions } from "@homarr/custom-widgets/core";
 import { customWidgetPackageSchema, widgetPackagePathSchema } from "@homarr/custom-widgets/package";
 import { useI18n } from "@homarr/translation/client";
 import clock from "@homarr/widget-sdk/examples/clock.json";
+import { getLogicalTrackSize } from "~/components/board/layout/geometry";
 import { documentFromSource, documentFromTemplate, documentSource } from "./_package-document";
 import { usePackageDocument } from "./_use-package-document";
 export type Installation = RouterOutputs["customWidget"]["package"]["get"];
@@ -24,7 +25,12 @@ export function usePackageWorkspace(
     if (installation) return documentFromSource(installation.name, installation.source);
     return documentFromTemplate(initialName ?? t("newName"), initialSource ?? clock);
   });
-  const editor = usePackageDocument(initial, userId, installation?.id);
+  const [installationId, setInstallationId] = useState(installation?.id);
+  const [bindings, setBindings] = useState(installation?.bindings ?? initialBindings ?? {});
+  const [savedBindings, setSavedBindings] = useState(bindings);
+  const bindingsDirty =
+    JSON.stringify(Object.entries(bindings).toSorted()) !== JSON.stringify(Object.entries(savedBindings).toSorted());
+  const editor = usePackageDocument(initial, userId, installationId, bindingsDirty);
   const { document, edit } = editor;
   const [selected, setSelected] = useState(Object.keys(initial.files)[0] ?? "/widget.json");
   const [path, setPath] = useState("");
@@ -37,16 +43,19 @@ export function usePackageWorkspace(
   const [liveActions, setLiveActions] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
-  const [bindings, setBindings] = useState(installation?.bindings ?? initialBindings ?? {});
-  const savedInstallationId = useRef(installation?.id);
+  const currentInstallation = clientApi.customWidget.package.get.useQuery(
+    { id: installationId ?? "" },
+    { enabled: Boolean(installationId), initialData: installation },
+  );
   const [options, setOptions] = useState<Record<string, unknown>>({});
   const [preview, setPreview] = useState<Preview | null>(null);
   const [previewExecutionKey, setPreviewExecutionKey] = useState("");
   const [stale, setStale] = useState(false);
   const [surface, setSurface] = useState<"tile" | "advanced" | "configuration">("tile");
-  const [width, setWidth] = useState(320);
-  const [height, setHeight] = useState(260);
-  const [scale, setScale] = useState(1);
+  const [gridSize, setGridSize] = useState({ width: 2, height: 2 });
+  const [width, setWidth] = useState(getLogicalTrackSize(2));
+  const [height, setHeight] = useState(getLogicalTrackSize(2));
+  const [scale, setScale] = useState(0.9);
   const [previewTheme, setPreviewTheme] = useState<"system" | "light" | "dark">("system");
   const previewId = useRef<string | null>(null);
   const retiredPreviewIds = useRef(new Set<string>());
@@ -93,11 +102,21 @@ export function usePackageWorkspace(
     setMessage("");
     const submitted = document;
     try {
-      const result = await save.mutateAsync({ id: savedInstallationId.current, name: document.name, source });
-      savedInstallationId.current = result.id;
-      if (!installation && Object.keys(bindings).length > 0)
-        await saveBindings.mutateAsync({ id: result.id, bindings });
+      const result = await save.mutateAsync({ id: installationId, name: document.name, source });
+      setInstallationId(result.id);
       editor.markSaved(submitted);
+      // Stay in the editor: a full navigation can trigger the unsaved-changes guard
+      // and discards selection, trust and the current preview after a successful save.
+      if (!installationId) {
+        const destination = new URL(window.location.href);
+        destination.pathname = destination.pathname.replace(/\/packages\/.*$/u, `/packages/${result.id}`);
+        if (initialBoardId) destination.searchParams.set("boardId", initialBoardId);
+        window.history.replaceState(null, "", destination.pathname + destination.search);
+      }
+      if (!installationId && Object.keys(bindings).length > 0) {
+        await saveBindings.mutateAsync({ id: result.id, bindings });
+        setSavedBindings(bindings);
+      }
       await Promise.all([
         utils.customWidget.package.get.invalidate(),
         utils.customWidget.package.list.invalidate(),
@@ -105,24 +124,21 @@ export function usePackageWorkspace(
         utils.customWidget.package.inspectArtifact.invalidate(),
       ]);
       setMessage(t("draftSaved"));
-      if (!installation) {
-        await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
-        const destination = new URL(result.managementPath, window.location.origin);
-        if (initialBoardId) destination.searchParams.set("boardId", initialBoardId);
-        window.location.assign(destination.pathname + destination.search);
-      }
+      return result.id;
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : String(cause));
     }
   };
   const runPreview = async () => {
-    if (!installation || !trusted || !parsed.success) return;
+    if (!trusted || !parsed.success || busy) return;
+    const id = installationId ?? (await saveDraft());
+    if (!id) return;
     resetExecution();
     setError("");
     const currentGeneration = generation.current;
     try {
       const next = await previewMutation.mutateAsync({
-        id: installation.id,
+        id,
         source,
         options: effectiveOptions,
         bindings,
@@ -193,11 +209,15 @@ export function usePackageWorkspace(
   if (parsed.success && parsed.data.manifest.entrypoints.configuration)
     surfaceChoices.push({ value: "configuration", label: t("configuration") });
   const saveLocalBindings = () => {
-    if (!installation) return;
+    if (!installationId) {
+      void saveDraft();
+      return;
+    }
     saveBindings.mutate(
-      { id: installation.id, bindings },
+      { id: installationId, bindings },
       {
         onSuccess: () => {
+          setSavedBindings(bindings);
           setMessage(t("bindingsSaved"));
           void utils.customWidget.package.get.invalidate();
           void utils.customWidget.package.guestGrants.invalidate();
@@ -222,7 +242,8 @@ export function usePackageWorkspace(
   };
 
   return {
-    installationId: savedInstallationId.current,
+    installationId,
+    installation: currentInstallation.data,
     editor,
     document,
     edit,
@@ -243,6 +264,7 @@ export function usePackageWorkspace(
     message,
     setMessage,
     bindings,
+    bindingsDirty,
     setBindings,
     options,
     setOptions,
@@ -256,6 +278,12 @@ export function usePackageWorkspace(
     setWidth,
     height,
     setHeight,
+    gridSize,
+    setGridSize: (size: { width: number; height: number }) => {
+      setGridSize(size);
+      setWidth(getLogicalTrackSize(size.width));
+      setHeight(getLogicalTrackSize(size.height));
+    },
     scale,
     setScale,
     previewTheme,

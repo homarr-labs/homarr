@@ -16,6 +16,7 @@ export function AddPackagePlacement({
   installation,
   initialBoardId,
   source,
+  initialOptions,
   onAdded,
   onError,
   onMessage,
@@ -23,6 +24,7 @@ export function AddPackagePlacement({
   installation: Installation;
   initialBoardId?: string;
   source: CustomWidgetPackage;
+  initialOptions?: Record<string, unknown>;
   onAdded(): void;
   onError(error: string): void;
   onMessage(message: string): void;
@@ -31,7 +33,7 @@ export function AddPackagePlacement({
   const boards = clientApi.board.getAllBoards.useQuery();
   const add = clientApi.board.addItem.useMutation();
   const [boardId, setBoardId] = useState<string | null>(initialBoardId ?? null);
-  const [configuration, setConfiguration] = useState<Record<string, unknown>>({});
+  const [configuration, setConfiguration] = useState<Record<string, unknown>>(initialOptions ?? {});
   const values = { ...getCustomWidgetDefaultOptions(source.options), ...configuration };
   const missingConnections = Object.entries(source.connections).filter(
     ([name, requirement]) => !requirement.optional && !installation.bindings[name],

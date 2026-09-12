@@ -33,6 +33,7 @@
     "./widget-integration-select": "./src/widget-integration-select.tsx",
     "./modals": "./src/modals/index.ts",
     "./prefetch": "./src/prefetch.ts",
+    "./preview": "./src/widget-preview.tsx",
     "./refetch-intervals": "./src/refetch-intervals.ts",
     "./widget-card-shell": "./src/widget-card-shell.tsx"
   },

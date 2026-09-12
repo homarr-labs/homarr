@@ -6,7 +6,7 @@ import { constructIntegrationPermissions } from "@homarr/auth/shared";
 import { decryptSecret } from "@homarr/common/server";
 import { createId } from "@homarr/common";
 import { eq, inArray } from "@homarr/db";
-import { groupMembers, integrationGroupPermissions, integrations, integrationUserPermissions } from "@homarr/db/schema";
+import { customWidgetConnections, groupMembers, integrationGroupPermissions, integrations, integrationUserPermissions } from "@homarr/db/schema";
 import type { WidgetSdkInvocation } from "@homarr/custom-widgets/package/server";
 
 import { readPackageHistory, widgetHistoryInputSchema } from "./history";
@@ -56,13 +56,24 @@ export function createWidgetSdkBridge(
     }
     signal?.throwIfAborted();
     if (operation === "legacy.request") return invokeLegacyWidgetRequest(ctx, resolved, kind, input, signal);
-    if (operation === "widget.context")
+    if (operation === "widget.context") {
+      const ids = Object.values(resolved.bindings);
+      let labels = new Map<string, string>();
+      if (ids.length) {
+        const rows = await ctx.db.query.customWidgetConnections.findMany({
+          where: inArray(customWidgetConnections.id, ids),
+          columns: { id: true, name: true },
+        });
+        labels = new Map(rows.map((row) => [row.id, row.name]));
+      }
       return {
         options: resolved.configuration,
         bindingNames: Object.keys(resolved.bindings),
+        bindingLabels: Object.fromEntries(Object.entries(resolved.bindings).map(([name, id]) => [name, labels.get(id) ?? name])),
         installationId: resolved.installation.id,
         isPreview: Boolean(resolved.preview),
       };
+    }
     if (operation === "integration.next" || operation === "integration.unsubscribe") {
       const { id } = z.object({ id: z.string() }).parse(input);
       const iterator = subscriptions.get(id);

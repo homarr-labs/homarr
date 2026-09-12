@@ -76,6 +76,17 @@ export class WidgetPackageProcess {
   public get stopped() {
     return this.dead;
   }
+  public inspect() {
+    let state: "running" | "stopped" = "running";
+    if (this.dead) state = "stopped";
+    return {
+      state,
+      pid: this.child.pid ?? null,
+      activeRequests: this.pending.size,
+      queuedRequests: this.queued,
+      lastUsed: this.lastUsed,
+    };
+  }
   public waitUntilReady() {
     return this.ready;
   }

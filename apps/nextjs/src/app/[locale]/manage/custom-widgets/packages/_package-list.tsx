@@ -1,8 +1,8 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Alert, Badge, Button, Stack, Text, TextInput } from "@mantine/core";
-import { IconPackage, IconUpload } from "@tabler/icons-react";
+import { Alert, Avatar, Badge, Button, Group, Stack, Text } from "@mantine/core";
+import { IconPackage, IconPencil, IconUpload } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -12,21 +12,20 @@ import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
 import { ManageCollectionItem, ManageCollectionList } from "~/components/manage/manage-collection";
+import { NoResults } from "~/components/no-results";
+import { PackageRowActions } from "./_package-row-actions";
 
 export function PackageList({ initialData }: { initialData: RouterOutputs["customWidget"]["package"]["list"] }) {
   const t = useI18n("customWidget.package");
+  const tCommon = useI18n("common");
   const installations = clientApi.customWidget.package.list.useQuery(undefined, { initialData });
-  const [filter, setFilter] = useState("");
-  const filtered = (installations.data ?? []).filter((entry) =>
-    entry.name.toLowerCase().includes(filter.toLowerCase()),
-  );
+  const entries = installations.data ?? [];
   return (
     <Stack>
       <Text c="dimmed">{t("libraryDescription")}</Text>
-      <TextInput label={t("search")} value={filter} onChange={(event) => setFilter(event.currentTarget.value)} />
-      {filtered.length === 0 && <Alert>{t("empty")}</Alert>}
+      {entries.length === 0 && <NoResults icon={IconPackage} title={t("empty")} action={{ href: "/manage/custom-widgets/packages/new", label: t("create") }} />}
       <ManageCollectionList ariaLabel={t("title")}>
-        {filtered.map((entry) => {
+        {entries.map((entry) => {
           let status = t("draftOnly");
           let color = "gray";
           if (entry.activeArtifactId) {
@@ -39,7 +38,7 @@ export function PackageList({ initialData }: { initialData: RouterOutputs["custo
           return (
             <ManageCollectionItem
               key={entry.id}
-              leading={<IconPackage size={26} stroke={1.4} />}
+              leading={<Avatar size={40} radius="sm" color="pink"><IconPackage size={20} stroke={1.5} /></Avatar>}
               title={<Text fw={600}>{entry.name}</Text>}
               badges={
                 <Badge color={color} variant="light">
@@ -52,10 +51,14 @@ export function PackageList({ initialData }: { initialData: RouterOutputs["custo
                 </Text>
               }
               actions={
-                <Button component={Link} href={`/manage/custom-widgets/packages/${entry.id}`} variant="default">
-                  {t("openWorkspace")}
+                <Group gap="xs" wrap="nowrap">
+                <Button component={Link} href={`/manage/custom-widgets/packages/${entry.id}`} variant="default" size="sm" leftSection={<IconPencil size={16} stroke={1.5} />}>
+                  {tCommon("action.edit")}
                 </Button>
+                <PackageRowActions entry={entry} />
+                </Group>
               }
+              actionsAlignment="center"
             />
           );
         })}

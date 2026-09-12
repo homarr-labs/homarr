@@ -1,4 +1,6 @@
 "use client";
+import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import {
   Alert,
   Badge,
@@ -11,10 +13,12 @@ import {
   TextInput,
   Tooltip,
   ActionIcon,
+  Paper,
 } from "@mantine/core";
 import { IconArrowBackUp, IconArrowForwardUp, IconInfoCircle } from "@tabler/icons-react";
 import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
+import { PackageOptionFields } from "@homarr/widgets/custom-api/package-option-fields";
 import { PackagePreview } from "./_package-preview";
 import { PackageSplit } from "./_package-split";
 import { PackageAssistant } from "./_package-assistant";
@@ -22,6 +26,8 @@ import { usePackageAssistant } from "./_use-package-assistant";
 import { PackageSourceEditor } from "./_package-source-editor";
 import { PackageConnections } from "./_package-connections";
 import { PackageOperations } from "./_package-operations";
+import { PackageWorkshop } from "./_package-workshop";
+import { PackageTransfer } from "./_package-transfer";
 import { usePackageWorkspace } from "./_use-package-workspace";
 import type { Installation } from "./_use-package-workspace";
 import classes from "./_package-workspace.module.css";
@@ -41,6 +47,8 @@ export function PackageWorkspace({
   initialBoardId?: string;
 }) {
   const t = useI18n("customWidget.package");
+  const searchParams = useSearchParams();
+  const [tab, setTab] = useState(searchParams.get("tab") ?? "source");
   const workspace = usePackageWorkspace(
     installation,
     userId,
@@ -73,6 +81,13 @@ export function PackageWorkspace({
     saveLocalBindings,
   } = workspace;
   usePackageAssistant(workspace);
+  const current = workspace.installation;
+  let status = t("draftOnly");
+  if (current?.activeArtifactId) status = t("disabled");
+  if (current?.activeArtifactId && current.enabled) status = t("active");
+  let draftStatus = t("saved");
+  if (editor.dirty) draftStatus = t("unsaved");
+  if (!workspace.installationId) draftStatus = t("notSaved");
 
   return (
     <Stack
@@ -100,16 +115,30 @@ export function PackageWorkspace({
           <Button variant="subtle" component={Link} href="/manage/custom-widgets/packages">
             {t("library")}
           </Button>
-          <Badge variant="light">{editor.dirty ? t("unsaved") : t("saved")}</Badge>
+          <Badge variant="light">{status}</Badge>
+          <Text size="xs" c="dimmed">{draftStatus}</Text>
           <Button
+            variant="default"
             loading={save.isPending}
-            disabled={!document.name.trim() || previewMutation.isPending}
+            disabled={!document.name.trim() || previewMutation.isPending || saveBindings.isPending}
             onClick={() => void saveDraft()}
           >
             {t("saveDraft")}
           </Button>
+          <Button onClick={() => { setTab("installation"); setPane("edit"); }}>
+            {t("installation")}
+          </Button>
         </Group>
       </Group>
+      {!workspace.installationId && (
+        <Paper withBorder p="md">
+          <Stack gap="xs">
+            <Text fw={600}>{t("gettingStarted")}</Text>
+            <Text size="sm" c="dimmed">{t("gettingStartedDescription")}</Text>
+            <Text size="sm">{t("manualSteps")}</Text>
+          </Stack>
+        </Paper>
+      )}
       {error && (
         <Alert color="red" withCloseButton onClose={() => setError("")}>
           {error}
@@ -118,6 +147,16 @@ export function PackageWorkspace({
       {message && (
         <Alert color="blue" withCloseButton onClose={() => setMessage("")}>
           {message}
+        </Alert>
+      )}
+      {workspace.bindingsDirty && (
+        <Alert color="yellow">
+          <Group justify="space-between">
+            <Text size="sm">{t("connectionsUnsaved")}</Text>
+            <Button size="xs" loading={saveBindings.isPending || save.isPending} onClick={saveLocalBindings}>
+              {t("saveBindings")}
+            </Button>
+          </Group>
         </Alert>
       )}
       {editor.recovery && (
@@ -176,16 +215,18 @@ export function PackageWorkspace({
       <PackageSplit
         userId={userId}
         pane={pane}
-        preview={<PackagePreview state={workspace} existing={Boolean(installation)} />}
+        preview={<PackagePreview state={workspace} />}
       >
         <Stack className={classes.authoring}>
-          <Tabs defaultValue="source">
+          <Tabs value={tab} onChange={(value) => { if (value) setTab(value); }} keepMounted={false}>
             <Tabs.List>
               <Tabs.Tab value="source">{t("code")}</Tabs.Tab>
               <Tabs.Tab value="connections">{t("connections")}</Tabs.Tab>
+              <Tabs.Tab value="options">{t("options")}</Tabs.Tab>
               <Tabs.Tab value="installation">{t("installation")}</Tabs.Tab>
+              <Tabs.Tab value="workshop">{t("workshopTab")}</Tabs.Tab>
             </Tabs.List>
-            <PackageSourceEditor state={workspace} existing={Boolean(installation)} />
+            <PackageSourceEditor state={workspace} existing={Boolean(workspace.installationId)} />
             <Tabs.Panel value="connections" pt="md">
               <PackageConnections
                 requirements={parsed.success ? parsed.data.connections : {}}
@@ -195,24 +236,41 @@ export function PackageWorkspace({
                 saving={saveBindings.isPending}
                 onConnectionSaved={workspace.connectionChanged}
               />
-              {!installation && (
-                <Text size="sm" c="dimmed">
-                  {t("saveFirst")}
-                </Text>
-              )}
+            </Tabs.Panel>
+            <Tabs.Panel value="options" pt="md">
+              <Stack>
+                <Text size="sm" c="dimmed">{t("optionsDescription")}</Text>
+                {parsed.success && <PackageOptionFields schema={parsed.data.options} value={effectiveOptions} onChange={setOptions} />}
+                {parsed.success && Object.keys(parsed.data.options).length === 0 && <Alert>{t("noOptions")}</Alert>}
+                <Button variant="subtle" onClick={() => setOptions({})}>{t("resetOptions")}</Button>
+              </Stack>
             </Tabs.Panel>
             <Tabs.Panel value="installation" pt="md">
               <PackageOperations
-                installation={installation}
+                installation={current}
                 initialBoardId={initialBoardId}
                 source={parsed.success ? parsed.data : undefined}
                 options={effectiveOptions}
-                setOptions={setOptions}
                 dirty={editor.dirty}
                 trusted={trusted}
+                connectionsDirty={workspace.bindingsDirty}
+                onTrustChange={workspace.setTrusted}
+                onSave={() => void saveDraft()}
+                saving={save.isPending}
                 onError={setError}
                 onMessage={setMessage}
               />
+            </Tabs.Panel>
+            <Tabs.Panel value="workshop" pt="md">
+              <Stack>
+                <Text size="sm" c="dimmed">{t("workshopDescription")}</Text>
+                {current ? (
+                  <>
+                    <PackageWorkshop id={current.id} dirty={editor.dirty || workspace.bindingsDirty} />
+                    <PackageTransfer id={current.id} name={current.name} active={Boolean(current.activeArtifactId)} dirty={editor.dirty || workspace.bindingsDirty} onError={setError} />
+                  </>
+                ) : <Button onClick={() => void saveDraft()} loading={save.isPending}>{t("saveDraft")}</Button>}
+              </Stack>
             </Tabs.Panel>
           </Tabs>
         </Stack>

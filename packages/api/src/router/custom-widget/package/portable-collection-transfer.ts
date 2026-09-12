@@ -8,7 +8,7 @@ import type {
   WidgetCollectionContents,
   WidgetCollectionManifest,
 } from "@homarr/custom-widgets/package";
-import { isWidgetConnectionCompatible } from "@homarr/custom-widgets/package";
+import { getWidgetConnectionBindingNames, getWidgetConnectionRequirement, isWidgetConnectionCompatible } from "@homarr/custom-widgets/package";
 import { createWidgetCollectionArchive, validateWidgetCollectionArchive } from "@homarr/custom-widgets/package/server";
 
 import { withWidgetArtifactReferenceLock } from "./artifact-references";
@@ -37,7 +37,7 @@ export async function validateCollectionBindings(
   bindings: Record<string, string>,
 ) {
   for (const [name] of Object.entries(bindings)) {
-    const requirement = collection.connections[name];
+    const requirement = getWidgetConnectionRequirement(collection.connections, name);
     if (!requirement) throw new TRPCError({ code: "BAD_REQUEST", message: `Unknown collection connection '${name}'` });
     try {
       const connection = await getBoundConnection(ctx, bindings, name);
@@ -55,9 +55,9 @@ export async function validateCollectionBindings(
 export function mapCollectionBindings(mapping: Record<string, string>, bindings: Record<string, string>) {
   return Object.fromEntries(
     Object.entries(mapping).flatMap(([name, slot]) => {
-      const id = bindings[slot];
-      if (!id) return [];
-      return [[name, id]];
+      return Object.entries(bindings)
+        .filter(([binding]) => binding === slot || binding.startsWith(`${slot}:`))
+        .map(([binding, id]) => [`${name}${binding.slice(slot.length)}`, id]);
     }),
   );
 }
@@ -145,7 +145,8 @@ export async function exportWidgetCollection(ctx: PackageContext, manifest: Widg
       const bindings = parseBindings(row.bindings);
       const mapping: Record<string, string> = {};
       for (const [name, requirement] of Object.entries(source.connections)) {
-        const identity = `${requirement.kind}:${requirement.serviceType ?? ""}:${bindings[name] ?? `${id}:${name}`}`;
+        const members = getWidgetConnectionBindingNames(name, requirement, bindings).map((key) => bindings[key]).toSorted();
+        const identity = JSON.stringify([requirement.kind, requirement.serviceType, requirement.integrationKind, requirement.multiple, members.length ? members : [id, name]]);
         let slot = shared.get(identity);
         if (!slot) {
           slot = `connection${shared.size + 1}`;

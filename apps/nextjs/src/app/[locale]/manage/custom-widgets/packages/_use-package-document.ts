@@ -11,7 +11,12 @@ import type { PackageDocument } from "./_package-document";
 const maximumHistoryBytes = 2_000_000;
 const maximumRecoveryBytes = 1_000_000;
 
-export function usePackageDocument(initial: PackageDocument, userId: string, installationId?: string) {
+export function usePackageDocument(
+  initial: PackageDocument,
+  userId: string,
+  installationId?: string,
+  connectionsDirty = false,
+) {
   const [document, setDocument] = useState(initial);
   const [saved, setSaved] = useState(initial);
   const [recovery, setRecovery] = useState<PackageDocument | null>(null);
@@ -101,7 +106,7 @@ export function usePackageDocument(initial: PackageDocument, userId: string, ins
     return () => clearTimeout(timer);
   }, [definitionId, dirty, document, key, recovery]);
 
-  useUnsavedChangesGuard(dirty);
+  useUnsavedChangesGuard(dirty || connectionsDirty, { navigationKey: installationId });
 
   const discardRecovery = () => {
     setRecovery(null);

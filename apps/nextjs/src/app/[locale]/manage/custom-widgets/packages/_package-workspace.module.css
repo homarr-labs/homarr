@@ -29,11 +29,13 @@
   min-width: 0;
 }
 .editor[data-files-open="true"] {
-  grid-template-columns: 140px minmax(0, 1fr);
+  grid-template-columns: 190px minmax(0, 1fr);
 }
 .files {
   overflow: auto;
   max-height: 65vh;
+  border-right: 1px solid var(--mantine-color-default-border);
+  padding-right: var(--mantine-spacing-xs);
 }
 .preview {
   position: sticky;

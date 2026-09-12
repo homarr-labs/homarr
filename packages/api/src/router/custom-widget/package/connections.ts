@@ -42,10 +42,13 @@ export async function getBoundConnection(ctx: PackageContext, bindings: Record<s
   const row = await ctx.db.query.customWidgetConnections.findFirst({ where: eq(customWidgetConnections.id, id) });
   if (!row) throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Bound connection is unavailable" });
   const configuration = connectionConfigurationSchema.parse(JSON.parse(row.configuration));
+  const integration = row.integrationId
+    ? await ctx.db.query.integrations.findFirst({ where: eq(integrations.id, row.integrationId) })
+    : undefined;
   const secrets = z
     .record(z.string(), z.string())
     .parse(JSON.parse(decryptSecret(row.encryptedSecrets as `${string}.${string}`)));
-  return { row, configuration, secrets };
+  return { row, configuration: { ...configuration, integrationKind: integration?.kind }, secrets };
 }
 
 export async function getBindingsDigest(ctx: PackageContext, bindings: Record<string, string>) {
@@ -81,9 +84,14 @@ const admin = widgetPackageAdminProcedure;
 export const packageConnectionProcedures = {
   connections: admin.query(async ({ ctx }) => {
     const rows = await ctx.db.query.customWidgetConnections.findMany();
+    const nativeIntegrations = await ctx.db.query.integrations.findMany({ columns: { id: true, kind: true } });
+    const kinds = new Map(nativeIntegrations.map(({ id, kind }) => [id, kind]));
     return rows.map(({ encryptedSecrets: _secrets, ...row }) => ({
       ...row,
-      configuration: JSON.parse(row.configuration) as unknown,
+      configuration: {
+        ...connectionConfigurationSchema.parse(JSON.parse(row.configuration)),
+        integrationKind: row.integrationId ? kinds.get(row.integrationId) : undefined,
+      },
     }));
   }),
   saveConnection: admin

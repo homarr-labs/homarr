@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 
 import { eq, handleTransactionsAsync } from "@homarr/db";
 import { customWidgetInstallations } from "@homarr/db/schema";
-import { isWidgetConnectionCompatible } from "@homarr/custom-widgets/package";
+import { getWidgetConnectionBindingNames, isWidgetConnectionCompatible } from "@homarr/custom-widgets/package";
 
 import { publishWidgetPackageChange } from "./events";
 import { getWidgetCollection } from "./portable-collection-records";
@@ -34,7 +34,11 @@ export async function setWidgetCollectionBindings(
             message: `Widget '${entry.key}' has an invalid source draft. Repair it first.`,
           });
         const nextBindings = { ...entry.bindings };
-        for (const name of Object.keys(entry.mapping)) delete nextBindings[name];
+        for (const name of Object.keys(entry.mapping)) {
+          for (const key of Object.keys(nextBindings)) {
+            if (key === name || key.startsWith(`${name}:`)) delete nextBindings[key];
+          }
+        }
         Object.assign(nextBindings, mapCollectionBindings(entry.mapping, bindings));
         for (const name of Object.keys(entry.mapping)) {
           const requirement = entry.requirements[name];
@@ -43,13 +47,14 @@ export async function setWidgetCollectionBindings(
               code: "PRECONDITION_FAILED",
               message: `Widget '${entry.key}' no longer declares connection '${name}'. Review its package mapping.`,
             });
-          if (!nextBindings[name]) continue;
-          const connection = await getBoundConnection(ctx, nextBindings, name);
-          if (!isWidgetConnectionCompatible(requirement, connection.configuration))
-            throw new TRPCError({
-              code: "BAD_REQUEST",
-              message: `Widget '${entry.key}' connection '${name}' is incompatible with the selected shared connection`,
-            });
+          for (const bindingName of getWidgetConnectionBindingNames(name, requirement, nextBindings)) {
+            const connection = await getBoundConnection(ctx, nextBindings, bindingName);
+            if (!isWidgetConnectionCompatible(requirement, connection.configuration))
+              throw new TRPCError({
+                code: "BAD_REQUEST",
+                message: `Widget '${entry.key}' connection '${name}' is incompatible with the selected shared connection`,
+              });
+          }
         }
         changes.push({
           id: entry.id,

@@ -1,4 +1,4 @@
-import { isWidgetConnectionCompatible } from "@homarr/custom-widgets/package";
+import { getWidgetConnectionBindingNames, isWidgetConnectionCompatible } from "@homarr/custom-widgets/package";
 import { TRPCError } from "@trpc/server";
 import { parse, stringify } from "superjson";
 import { z } from "zod/v4";
@@ -60,13 +60,17 @@ export async function prepareWidgetMigration(
       throw new TRPCError({ code: "PRECONDITION_FAILED", message: `Placement ${placement.id}: ${issues[0]?.message}` });
     const mergedBindings = { ...bindings, ...placement.packageOptions.connectionBindings };
     for (const [name, requirement] of Object.entries(source.connections)) {
-      if (requirement.optional && !mergedBindings[name]) continue;
-      const connection = await getBoundConnection(ctx, mergedBindings, name);
-      if (!isWidgetConnectionCompatible(requirement, connection.configuration))
-        throw new TRPCError({
-          code: "PRECONDITION_FAILED",
-          message: `Connection '${name}' requires ${requirement.serviceType ?? requirement.kind}`,
-        });
+      const names = getWidgetConnectionBindingNames(name, requirement, mergedBindings);
+      if (!names.length && !requirement.optional)
+        throw new TRPCError({ code: "PRECONDITION_FAILED", message: `Connection '${name}' needs setup` });
+      for (const bindingName of names) {
+        const connection = await getBoundConnection(ctx, mergedBindings, bindingName);
+        if (!isWidgetConnectionCompatible(requirement, connection.configuration))
+          throw new TRPCError({
+            code: "PRECONDITION_FAILED",
+            message: `Connection '${name}' requires ${requirement.serviceType ?? requirement.kind}`,
+          });
+      }
     }
     const raw: unknown = parse(placement.options);
     if (!isRecord(raw)) throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Placement options are invalid" });

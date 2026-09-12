@@ -100,6 +100,17 @@ export class CustomWidgetPackageSupervisor {
     if (pending) (await pending.catch(() => undefined))?.stop();
   }
 
+  /** Read only: inspecting an inactive artifact must never start its server. */
+  public async inspect(digest: string) {
+    const pending = this.processes.get(digest);
+    if (!pending) return { state: "idle" as const };
+    try {
+      return (await pending).inspect();
+    } catch (error) {
+      return { state: "failed" as const, error: error instanceof Error ? error.message : String(error) };
+    }
+  }
+
   public async cancelInstances(instanceIds: string[], options: { actions?: boolean } = {}): Promise<void> {
     for (const id of instanceIds) this.instanceGenerations.set(id, (this.instanceGenerations.get(id) ?? 0) + 1);
     const ids = new Set(instanceIds);

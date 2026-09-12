@@ -59,29 +59,34 @@ export const nativeScaffoldProcedures = {
       for (const [name, requirement] of Object.entries(source.connections)) {
         if (requirement.kind !== "integration") continue;
         const accepted = acceptedIntegrationKinds(input.starter, name);
-        const integration = bound.find(
+        const matches = bound.filter(
           (candidate) => accepted.includes(candidate.kind) && !usedIntegrationIds.has(candidate.id),
         );
-        if (!integration) continue;
-        usedIntegrationIds.add(integration.id);
-        let connection = await ctx.db.query.customWidgetConnections.findFirst({
-          where: eq(customWidgetConnections.integrationId, integration.id),
-        });
-        if (!connection) {
-          const id = createId();
-          const row = {
-            id,
-            name: integration.name,
-            integrationId: integration.id,
-            configuration: JSON.stringify(connectionConfigurationSchema.parse({ kind: "integration" })),
-            encryptedSecrets: encryptSecret("{}"),
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          };
-          await ctx.db.insert(customWidgetConnections).values(row);
-          connection = row;
+        let candidates = matches;
+        if (!requirement.multiple) candidates = matches.slice(0, 1);
+        for (const [index, integration] of candidates.entries()) {
+          usedIntegrationIds.add(integration.id);
+          let connection = await ctx.db.query.customWidgetConnections.findFirst({
+            where: eq(customWidgetConnections.integrationId, integration.id),
+          });
+          if (!connection) {
+            const id = createId();
+            const row = {
+              id,
+              name: integration.name,
+              integrationId: integration.id,
+              configuration: JSON.stringify(connectionConfigurationSchema.parse({ kind: "integration" })),
+              encryptedSecrets: encryptSecret("{}"),
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            };
+            await ctx.db.insert(customWidgetConnections).values(row);
+            connection = row;
+          }
+          let bindingName = name;
+          if (index > 0) bindingName = `${name}:${connection.id}`;
+          bindings[bindingName] = connection.id;
         }
-        bindings[name] = connection.id;
       }
       return { name: `${source.manifest.name} (custom)`, source, bindings, sourceBoardId: item.boardId };
     }),

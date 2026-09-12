@@ -7,8 +7,18 @@ import { assertWidgetArtifactIntegrity } from "@homarr/custom-widgets/package/se
 
 import { getArtifact, getInstallation, readPackageDraft } from "./records";
 import { widgetPackageAdminProcedure } from "./procedure";
+import { getWidgetPackageSupervisor } from "./invocations";
 
 export const packageArtifactReviewProcedures = {
+  runtimeStatus: widgetPackageAdminProcedure
+    .input(z.object({ id: z.string().min(1) }))
+    .query(async ({ ctx, input }) => {
+      const installation = await getInstallation(ctx, input.id);
+      if (!installation.activeArtifactId) return { state: "unactivated" as const };
+      const { artifact } = await getArtifact(ctx, installation.activeArtifactId);
+      if (!artifact.server) return { state: "browserOnly" as const };
+      return getWidgetPackageSupervisor().inspect(artifact.digest);
+    }),
   inspectArtifact: widgetPackageAdminProcedure
     .input(z.object({ id: z.string().min(1) }))
     .query(async ({ ctx, input }) => {

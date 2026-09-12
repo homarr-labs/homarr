@@ -8,12 +8,9 @@ import { clientApi } from "@homarr/api/client";
 import { customWidgetPackageSchema, stringifyWidgetJson } from "@homarr/custom-widgets/package";
 import type { CustomWidgetPackage } from "@homarr/custom-widgets/package";
 import { useI18n } from "@homarr/translation/client";
-import { PackageOptionFields } from "@homarr/widgets/custom-api/package-option-fields";
 
 import { AddPackagePlacement, PackagePlacements } from "./_package-placements";
 import type { PackageOperation } from "./_package-document";
-import { PackageWorkshop } from "./_package-workshop";
-import { PackageTransfer } from "./_package-transfer";
 import { PackageArtifactReview } from "./_package-artifact-review";
 import { PackageConvertedPlacements } from "./_package-converted-placements";
 import { downloadPackage } from "./_package-document";
@@ -25,9 +22,12 @@ export function PackageOperations({
   initialBoardId,
   source,
   options,
-  setOptions,
   dirty,
   trusted,
+  connectionsDirty,
+  onTrustChange,
+  onSave,
+  saving,
   onError,
   onMessage,
 }: {
@@ -35,9 +35,12 @@ export function PackageOperations({
   initialBoardId?: string;
   source?: CustomWidgetPackage;
   options: Record<string, unknown>;
-  setOptions(options: Record<string, unknown>): void;
   dirty: boolean;
   trusted: boolean;
+  connectionsDirty: boolean;
+  onTrustChange(trusted: boolean): void;
+  onSave(): void;
+  saving: boolean;
   onError(error: string): void;
   onMessage(message: string): void;
 }) {
@@ -88,32 +91,34 @@ export function PackageOperations({
   };
   return (
     <Stack>
-      <Paper withBorder p="md">
-        <Stack>
-          <Text fw={600}>{t("previewOptions")}</Text>
-          {source && <PackageOptionFields schema={source.options} value={options} onChange={setOptions} />}
-          <Button variant="subtle" onClick={() => setOptions({})}>
-            {t("resetOptions")}
-          </Button>
-        </Stack>
-      </Paper>
-      {!current && <Alert>{t("saveFirst")}</Alert>}
+      <Text size="sm" c="dimmed">{t("useDescription")}</Text>
+      {!current && (
+        <Paper withBorder p="md">
+          <Stack>
+            <Text>{t("saveFirst")}</Text>
+            <Button onClick={onSave} loading={saving}>{t("saveDraft")}</Button>
+          </Stack>
+        </Paper>
+      )}
       {current && (
         <>
           <Paper withBorder p="md">
             <Stack>
               <Text fw={600}>{t("activation")}</Text>
               <Text size="sm">{t("activationDescription", { count: current.placements.length })}</Text>
-              <Text size="xs" ff="monospace" style={{ overflowWrap: "anywhere" }}>
-                {t("activeArtifact")}: {current.activeArtifactId ?? t("none")}
-              </Text>
-              {dirty && <Alert color="yellow">{t("saveBeforeActivate")}</Alert>}
+              {dirty && (
+                <Alert color="yellow">
+                  <Stack gap="xs">
+                    <Text size="sm">{t("saveBeforeActivate")}</Text>
+                    <Button size="xs" onClick={onSave} loading={saving}>{t("saveDraft")}</Button>
+                  </Stack>
+                </Alert>
+              )}
               {!dirty && !matchesReviewedSource && <Alert color="yellow">{t("savedSourceChanged")}</Alert>}
-              {inspected.data?.artifact && <PackageArtifactReview artifact={inspected.data.artifact} />}
-              {inspected.error && <Alert color="red">{inspected.error.message}</Alert>}
+              <Checkbox checked={trusted} onChange={(event) => onTrustChange(event.currentTarget.checked)} label={t("trustAcknowledgement")} />
               <Group>
                 <Button
-                  disabled={dirty || !trusted || !source || !matchesReviewedSource}
+                  disabled={dirty || connectionsDirty || !trusted || !source || !matchesReviewedSource}
                   loading={activate.isPending}
                   onClick={() =>
                     void run(
@@ -129,50 +134,66 @@ export function PackageOperations({
                 >
                   {t("activate")}
                 </Button>
-                {current.activeArtifactId && (
-                  <Button
-                    variant="default"
-                    loading={enable.isPending}
-                    onClick={() =>
-                      void run(() => enable.mutateAsync({ id: current.id, enabled: !current.enabled }), t("stateSaved"))
-                    }
-                  >
-                    {current.enabled ? t("disable") : t("enable")}
-                  </Button>
-                )}
-                <Button
-                  variant="default"
-                  disabled={!exported.data}
-                  onClick={() => {
-                    if (exported.data) downloadPackage(current.name, exported.data);
-                  }}
-                >
-                  {t("exportActive")}
-                </Button>
               </Group>
-              {current.previousArtifactId && (
-                <>
-                  <Checkbox
-                    checked={rollbackConfirmed}
-                    onChange={(event) => setRollbackConfirmed(event.currentTarget.checked)}
-                    label={t("rollbackAcknowledgement")}
-                  />
-                  <Button
-                    variant="light"
-                    color="orange"
-                    disabled={!rollbackConfirmed}
-                    loading={rollback.isPending}
-                    onClick={() =>
-                      void run(
-                        () => rollback.mutateAsync({ id: current.id, discardNewerWidgetData: true }),
-                        t("rolledBack"),
-                      )
-                    }
-                  >
-                    {t("rollback")}
-                  </Button>
-                </>
-              )}
+              <Accordion>
+                <Accordion.Item value="release">
+                  <Accordion.Control>{t("releaseTools")}</Accordion.Control>
+                  <Accordion.Panel>
+                    <Stack>
+                      <Text size="xs" ff="monospace" style={{ overflowWrap: "anywhere" }}>
+                        {t("activeArtifact")}: {current.activeArtifactId ?? t("none")}
+                      </Text>
+                      {inspected.data?.artifact && <PackageArtifactReview artifact={inspected.data.artifact} />}
+                      {inspected.error && <Alert color="red">{inspected.error.message}</Alert>}
+                      <Group>
+                        {current.activeArtifactId && (
+                          <Button
+                            variant="default"
+                            loading={enable.isPending}
+                            onClick={() =>
+                              void run(() => enable.mutateAsync({ id: current.id, enabled: !current.enabled }), t("stateSaved"))
+                            }
+                          >
+                            {current.enabled ? t("disable") : t("enable")}
+                          </Button>
+                        )}
+                        <Button
+                          variant="default"
+                          disabled={!exported.data}
+                          onClick={() => {
+                            if (exported.data) downloadPackage(current.name, exported.data);
+                          }}
+                        >
+                          {t("exportActive")}
+                        </Button>
+                      </Group>
+                      {current.previousArtifactId && (
+                        <>
+                          <Checkbox
+                            checked={rollbackConfirmed}
+                            onChange={(event) => setRollbackConfirmed(event.currentTarget.checked)}
+                            label={t("rollbackAcknowledgement")}
+                          />
+                          <Button
+                            variant="light"
+                            color="orange"
+                            disabled={!rollbackConfirmed}
+                            loading={rollback.isPending}
+                            onClick={() =>
+                              void run(
+                                () => rollback.mutateAsync({ id: current.id, discardNewerWidgetData: true }),
+                                t("rolledBack"),
+                              )
+                            }
+                          >
+                            {t("rollback")}
+                          </Button>
+                        </>
+                      )}
+                    </Stack>
+                  </Accordion.Panel>
+                </Accordion.Item>
+              </Accordion>
             </Stack>
           </Paper>
           <PackageConvertedPlacements
@@ -186,20 +207,13 @@ export function PackageOperations({
               installation={current}
               initialBoardId={initialBoardId}
               source={activeSource.data}
+              initialOptions={options}
               onAdded={() => void refresh()}
               onError={onError}
               onMessage={onMessage}
             />
           )}
           {activeSource.success && <PackagePlacements installation={current} source={activeSource.data} />}
-          <PackageTransfer
-            id={current.id}
-            name={current.name}
-            active={Boolean(current.activeArtifactId)}
-            dirty={dirty}
-            onError={onError}
-          />
-          <PackageWorkshop id={current.id} dirty={dirty} />
           <PackageActivity id={current.id} />
         </>
       )}

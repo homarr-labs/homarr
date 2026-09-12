@@ -1,4 +1,4 @@
-import { isWidgetConnectionCompatible } from "@homarr/custom-widgets/package";
+import { getWidgetConnectionRequirement, isWidgetConnectionCompatible } from "@homarr/custom-widgets/package";
 import { widgetPackageAdminProcedure } from "./procedure";
 import { TRPCError } from "@trpc/server";
 import { nativeScaffoldProcedures } from "./native-scaffold";
@@ -187,7 +187,7 @@ export const customWidgetPackageRouter = createTRPCRouter({
         const draft = customWidgetPackageSchema.safeParse(JSON.parse(installation.draft));
         for (const [name] of Object.entries(input.bindings)) {
           const connection = await getBoundConnection(ctx, input.bindings, name);
-          const requirement = draft.success ? draft.data.connections[name] : undefined;
+          const requirement = draft.success ? getWidgetConnectionRequirement(draft.data.connections, name) : undefined;
           if (requirement && !isWidgetConnectionCompatible(requirement, connection.configuration))
             throw new TRPCError({
               code: "BAD_REQUEST",

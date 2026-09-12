@@ -79,6 +79,9 @@ export const widgetPackageConnectionSchema = z
     label: z.string().trim().min(1).max(128),
     kind: z.enum(["http", "integration", "service"]),
     serviceType: identifier.optional(),
+    integrationKind: identifier.optional(),
+    // Optional fields preserve the digest of existing package archives.
+    multiple: z.boolean().optional(),
     optional: z.boolean().default(false),
     description: z.string().max(2048).optional(),
   })
@@ -89,12 +92,39 @@ export const widgetPackageConnectionSchema = z
 
 /** Shared by binding pickers, activation and portable collection imports. */
 export function isWidgetConnectionCompatible(
-  requirement: { kind: string; serviceType?: string },
-  configuration: { kind?: unknown; serviceType?: unknown },
+  requirement: { kind: string; serviceType?: string; integrationKind?: string },
+  configuration: { kind?: unknown; serviceType?: unknown; integrationKind?: unknown },
 ) {
   if (requirement.kind !== configuration.kind) return false;
   if (requirement.kind === "service") return requirement.serviceType === configuration.serviceType;
+  if (requirement.kind === "integration" && requirement.integrationKind)
+    return requirement.integrationKind === configuration.integrationKind;
   return true;
+}
+
+/** Repeatable connections retain the original named binding and add stable, namespaced members.
+ * A colon cannot appear in a manifest connection name, so groups cannot overlap.
+ */
+export function getWidgetConnectionBindingNames(
+  name: string,
+  requirement: { multiple?: boolean },
+  bindings: Record<string, string>,
+) {
+  return Object.keys(bindings).filter(
+    (key) => Boolean(bindings[key]) && (key === name || (requirement.multiple && key.startsWith(`${name}:`))),
+  );
+}
+
+export function getWidgetConnectionRequirement<T extends { multiple?: boolean }>(
+  requirements: Record<string, T>,
+  name: string,
+) {
+  const exact = requirements[name];
+  if (exact) return exact;
+  const prefix = name.split(":")[0];
+  const group = prefix && requirements[prefix];
+  if (group && group.multiple) return group;
+  return undefined;
 }
 
 export const customWidgetPackageSchema = z

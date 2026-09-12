@@ -87,8 +87,17 @@ export function getWidgetServerContext<TOptions extends Record<string, unknown> 
     options: TOptions;
     installationId: string;
     bindingNames: string[];
+    bindingLabels: Record<string, string>;
     isPreview: boolean;
   }>;
+}
+
+/** Enumerate every member of a repeatable connection requirement, including its original named binding. */
+export async function getWidgetConnectionGroup(context: WidgetServerContext, name: string) {
+  const { bindingNames, bindingLabels } = await getWidgetServerContext(context);
+  return bindingNames
+    .filter((binding) => binding === name || binding.startsWith(`${name}:`))
+    .map((connection) => ({ connection, label: bindingLabels[connection] ?? connection }));
 }
 
 export function callWidgetIntegration<T = unknown>(context: WidgetServerContext, input: WidgetIntegrationInput) {
