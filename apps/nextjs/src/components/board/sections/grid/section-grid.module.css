@@ -10,9 +10,9 @@
    while growing during a drag happening anywhere else on the board - any container (not just
    a scrollable one - a non-scrollable, e.g. collapsible, container is just as capped) sits
    inside that section's DOM tree, so the stray value cascades straight through and silently
-   defeats the `var(--board-grid-drag-height, ...px)` fallback in section-grid.tsx (including
-   its collapsibleHeaderInset adjustment), which only kicks in when the property is entirely
-   unset, not merely inherited. Reset it here so every container can never inherit a stray
+   defeats the `var(--board-grid-drag-height, ...px)` fallback in section-grid.tsx, which only
+   kicks in when the property is entirely unset, not merely inherited. Reset it here so every
+   container can never inherit a stray
    value from anywhere above it, no matter what any ancestor's own drag state is doing.
    https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_cascading_variables#custom_properties_and_inheritance */
 .viewport[data-section-kind="container"] {
@@ -62,9 +62,9 @@
   overflow: visible;
 }
 
-/* Containers provide their own inner item gap, so their card must keep the full grid aspect ratio. */
+/* SectionGrid fits its content to the same inset in both view and edit mode. */
 .staticItem[data-type="section"] > .contentMount {
-  inset: 0;
+  inset: var(--board-container-inset, 0px);
 }
 
 .staticItem[data-type="item"] > .contentMount {

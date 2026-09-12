@@ -1,7 +1,7 @@
 "use client";
 
 import type { CSSProperties, KeyboardEvent, PointerEvent } from "react";
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Box } from "@mantine/core";
 import combineClasses from "clsx";
 
@@ -29,6 +29,9 @@ import { useSectionItems } from "../use-section-items";
 import { useBoardGridPortalHost } from "./grid-portal-host";
 import classes from "./section-grid.module.css";
 
+const GridContentScaleContext = createContext(1);
+const CONTAINER_CARD_INSET = 5;
+
 interface SectionGridProps {
   section: Exclude<Section, { kind: "container" }> | ContainerSectionItem;
   columnCount: number;
@@ -50,6 +53,7 @@ export const SectionGrid = ({
 }: SectionGridProps) => {
   const [isEditMode] = useEditMode();
   const canvasScale = useBoardCanvasScale();
+  const parentContentScale = useContext(GridContentScaleContext);
   const editorRuntimeStatus = useGridEditorRuntimeStatus();
   const editorRegistry = useGridEditorRegistry();
   const editorHostRef = useRef<HTMLDivElement>(null);
@@ -143,36 +147,37 @@ export const SectionGrid = ({
   const isScrollableContainer = section.kind === "container" && section.options.scrollable;
   const viewportRowCount =
     viewportRowCountOverride ?? (isScrollableContainer ? Math.max(requestedRowCount, 1) : rowCount);
-  const effectiveCanvasScale = Number.isFinite(canvasScale) && canvasScale > 0 ? canvasScale : 1;
-  // The collapsible label keeps a fixed physical height while the grid uses logical canvas pixels.
-  // Convert that height so the label reserves the same space at every board scale.
-  const collapsibleHeaderInset =
-    section.kind === "container" && section.options.collapsible ? CONTAINER_HEADER_HEIGHT / effectiveCanvasScale : 0;
+  const parentScale = canvasScale * parentContentScale;
+  const effectiveCanvasScale = Number.isFinite(parentScale) && parentScale > 0 ? parentScale : 1;
+  // Match the card's inset without changing its persisted grid footprint. Include ancestor
+  // container zoom so equally sized nested containers keep distinct borders at every depth.
+  let outerCardInset = 0;
+  if (section.kind === "container") {
+    outerCardInset = (2 * CONTAINER_CARD_INSET) / effectiveCanvasScale;
+  }
   const fullGridWidth = getLogicalGridSize(columnCount);
   const fullGridHeight = getLogicalGridSize(rowCount);
-  const logicalWidth = fullGridWidth;
-  const viewportHeight = Math.max(1, getLogicalGridSize(viewportRowCount) - collapsibleHeaderInset);
-  // For a scrollable container, rowCount covers *all* content rows, not just the visible card -
-  // fullGridHeight grows right along with it, so a ratio built from it drifts toward 1 as content
-  // grows regardless of the (fixed) inset, under-scaling relative to what the actually-visible
-  // viewport needs and clipping the bottom of the visible rows. viewportHeight/viewportRowCount
-  // describe the real visible card size in both cases (they equal the non-scrollable values when
-  // rowCount and viewportRowCount are the same), so use those instead.
   const fullViewportHeight = getLogicalGridSize(viewportRowCount);
-  // A collapsible container reserves a fixed-height label above the square-cell grid. Keep the
-  // nested content uniformly scaled within the remaining height so labels and icons retain their
-  // proportions; ordinary containers use the original unscaled, edge-aligned grid geometry.
-  const containerContentScale =
-    section.kind === "container" && fullGridWidth > 0 && fullViewportHeight > 0
-      ? Math.max(0.01, Math.min(logicalWidth / fullGridWidth, viewportHeight / fullViewportHeight, 1))
-      : 1;
+  const logicalWidth = Math.max(1, fullGridWidth - outerCardInset);
+  const viewportHeight = Math.max(1, fullViewportHeight - outerCardInset);
+  // Fit square cells into the inset card. Scrollable grids use the visible row count,
+  // not their full content height. Collapse controls never change this geometry.
+  let containerContentScale = 1;
+  if (section.kind === "container" && fullGridWidth > 0 && fullViewportHeight > 0) {
+    containerContentScale = Math.max(
+      0.01,
+      Math.min(logicalWidth / fullGridWidth, viewportHeight / fullViewportHeight, 1),
+    );
+  }
+  const contentScale = parentContentScale * containerContentScale;
+  const effectiveContentScale = effectiveCanvasScale * containerContentScale;
   // Compute the combined value in JS rather than a CSS calc() referencing the existing
   // --board-canvas-ui-scale: custom properties declared on the *same* element don't have a
   // sequential/temporal order the way normal variables do, so any calc() on this element that
   // both reads and writes --board-canvas-ui-scale (even indirectly, through another property)
   // is a circular reference - CSS invalidates the whole group rather than using "the old value",
   // silently breaking every icon/text/custom-CSS size that compensates off it for descendants.
-  const combinedUiScale = calculateBoardUiScale(canvasScale) / containerContentScale;
+  const combinedUiScale = calculateBoardUiScale(canvasScale) / contentScale;
   // A collapsed container's compact coordinates are display-only. Its own
   // nested grid stays inactive until an explicit edit interaction expands it.
   const isInteractionDisabled = section.kind === "container" && collapsedSectionIds.has(section.id);
@@ -268,9 +273,9 @@ export const SectionGrid = ({
           {
             width: logicalWidth,
             height: `var(--board-grid-drag-height, ${viewportHeight}px)`,
-            marginTop: collapsibleHeaderInset || undefined,
             "--board-item-radius": `var(--mantine-radius-${board.itemRadius})`,
             "--board-grid-content-scale": containerContentScale,
+            "--board-container-inset": `${CONTAINER_CARD_INSET / effectiveContentScale}px`,
           } as CSSProperties
         }
         data-section-id={section.id}
@@ -289,23 +294,23 @@ export const SectionGrid = ({
               height: fullGridHeight,
               zoom: containerContentScale,
               margin: containerContentScale < 1 ? "0 auto" : undefined,
-              ...(containerContentScale < 1 ? { "--board-canvas-ui-scale": combinedUiScale } : {}),
+              "--board-canvas-inverse-scale": 1 / effectiveContentScale,
+              "--board-canvas-ui-scale": combinedUiScale,
             } as CSSProperties
           }
           data-grid-section-id={section.id}
           data-kind={section.kind}
           data-grid-editor-error={isEditMode && editorRuntimeStatus === "error" ? "true" : undefined}
         >
-          <SectionContent />
+          <GridContentScaleContext.Provider value={contentScale}>
+            <SectionContent />
+          </GridContentScaleContext.Provider>
         </Box>
         <div ref={editorHostRef} className={classes.editorPortalHost} />
       </Box>
     </SectionProvider>
   );
 };
-
-// Matches the collapsible container toggle's h={24} in container-section.tsx.
-const CONTAINER_HEADER_HEIGHT = 24;
 
 const INTERACTIVE_GRID_SELECTOR =
   'a,button,input,textarea,select,option,[contenteditable="true"],[role="button"],[data-grid-no-drag]';

@@ -136,6 +136,7 @@ export const GridPreviewLayer = ({
       style={getLogicalItemStyle(targetPlacement)}
       data-grid-placeholder-for={interaction?.activeId}
       data-grid-placeholder-mode={interaction?.mode}
+      data-grid-placeholder-type={targetPlacement.type}
       data-grid-x={targetPlacement.x}
       data-grid-y={targetPlacement.y}
       data-grid-w={targetPlacement.w}

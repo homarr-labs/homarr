@@ -11,6 +11,7 @@ import type { ContainerSectionItem } from "~/app/[locale]/boards/_types";
 import { COLLAPSED_SECTION_ROW_COUNT } from "~/components/board/layout";
 import { SectionGrid } from "./grid/section-grid";
 import { useSectionCollapse } from "./section-collapse";
+import { useSectionContext } from "./section-context";
 import { useOpenSectionApps } from "./use-open-section-apps";
 import classes from "./item.module.css";
 
@@ -25,6 +26,7 @@ interface Props {
 
 export const BoardContainerSection = ({ section }: Props) => {
   const board = useRequiredBoard();
+  const { section: parentSection } = useSectionContext();
   const [isEditMode] = useEditMode();
   const t = useI18n("section.container");
   const tSection = useI18n("section");
@@ -39,8 +41,26 @@ export const BoardContainerSection = ({ section }: Props) => {
   });
   const label = options.title.trim() || t("untitled");
   const contentId = `board-container-${section.id}-content`;
-  const labelLeft = 8;
-  const labelRight = isEditMode ? 48 : options.showOpenAll ? 40 : 8;
+  let labelLeft = 8;
+  let labelRight = 8;
+  if (isEditMode) {
+    // Match the root/nested menu offsets in BoardContainerMenu, plus its width and gap.
+    labelLeft = 36;
+    if (parentSection.kind === "container") labelLeft = 68;
+  } else if (options.showOpenAll) {
+    labelRight = 40;
+  }
+  // Expanded controls sit on the border like the ordinary label, without reserving a header row.
+  const toggleLayout = isVisuallyCollapsed
+    ? { top: 0, left: 0, w: "100%", h: "100%", maw: "100%" }
+    : {
+        top: "calc(var(--mantine-spacing-xs) * -1)",
+        left: labelLeft,
+        w: "auto",
+        h: 20,
+        maw: `calc(100% - ${labelLeft + labelRight}px)`,
+      };
+  const toggleIcon = isVisuallyCollapsed ? <IconChevronDown size={16} /> : <IconChevronUp size={16} />;
 
   return (
     <Box className="board-grid-item-content" data-grid-item-content w="100%" h="100%" style={{ overflow: "visible" }}>
@@ -68,24 +88,14 @@ export const BoardContainerSection = ({ section }: Props) => {
           <Button
             className={classes.containerToggle}
             pos="absolute"
-            top={0}
-            left={0}
-            w="100%"
-            h={isVisuallyCollapsed ? "100%" : 24}
-            px={12}
-            pe={isEditMode ? 48 : options.showOpenAll ? 40 : 12}
+            {...toggleLayout}
+            px={6}
+            ps={isVisuallyCollapsed ? labelLeft : 6}
+            pe={isVisuallyCollapsed ? labelRight : 6}
             radius="sm"
             variant="default"
             justify={options.showLabel ? "flex-start" : "center"}
-            leftSection={
-              options.showLabel ? (
-                isVisuallyCollapsed ? (
-                  <IconChevronDown size={16} />
-                ) : (
-                  <IconChevronUp size={16} />
-                )
-              ) : undefined
-            }
+            leftSection={options.showLabel && toggleIcon}
             onClick={toggle}
             aria-expanded={!isVisuallyCollapsed}
             aria-controls={contentId}
@@ -94,13 +104,7 @@ export const BoardContainerSection = ({ section }: Props) => {
             data-board-container-label
             title={options.showLabel ? label : undefined}
           >
-            {options.showLabel ? (
-              label
-            ) : isVisuallyCollapsed ? (
-              <IconChevronDown size={16} />
-            ) : (
-              <IconChevronUp size={16} />
-            )}
+            {options.showLabel ? label : toggleIcon}
           </Button>
         )}
         {!isVisuallyCollapsed && !options.collapsible && options.showLabel && options.title && (

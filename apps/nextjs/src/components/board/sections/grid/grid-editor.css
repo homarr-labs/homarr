@@ -133,6 +133,21 @@ body[data-board-grid-interacting="resize"] .board-grid-entry[data-dnd-active="tr
   background: color-mix(in srgb, var(--mantine-primary-color-filled) 10%, transparent);
 }
 
+.board-grid-placeholder[data-grid-placeholder-type="section"] {
+  clip-path: none;
+  background: none;
+  border: 0;
+}
+
+.board-grid-placeholder[data-grid-placeholder-type="section"]::after {
+  position: absolute;
+  inset: var(--board-container-inset, 0px);
+  content: "";
+  background: color-mix(in srgb, var(--mantine-primary-color-filled) 16%, transparent);
+  border: 2px dashed var(--mantine-primary-color-filled);
+  border-radius: inherit;
+}
+
 .board-grid-resize-outline {
   z-index: 1002;
   clip-path: inset(var(--board-grid-item-inset, 0px));
