@@ -2304,7 +2304,8 @@
                       "traefik",
                       "customApi",
                       "assistant",
-                      "wud"
+                      "wud",
+                      "llamacpp"
                     ]
                   },
                   "options": {
