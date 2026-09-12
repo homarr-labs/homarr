@@ -2,7 +2,6 @@ import { Buffer } from "node:buffer";
 import { STATUS_CODES } from "node:http";
 import { Headers, Response } from "undici";
 
-import type { CustomWidgetMethod } from "../core";
 import type { CustomWidgetHttpRequest, CustomWidgetHttpResponse } from "./request-types";
 export type { CustomWidgetAuthConfig, CustomWidgetHttpRequest, CustomWidgetHttpResponse } from "./request-types";
 import { applyAuth } from "./auth";
