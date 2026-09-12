@@ -31,6 +31,7 @@ export function IntegrationSourceSelect({ kind, integrationId, onChange, onKindC
       {onKindChange && (
         <Select
           label={t("integrationType")}
+          searchable
           data={httpIntegrationKinds.map((value) => ({ value, label: integrationDefs[value].name }))}
           value={kind}
           allowDeselect={false}
