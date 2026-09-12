@@ -3,31 +3,22 @@ import { z } from "zod/v4";
 
 import {
   applyCustomWidgetSourceSetup,
-  CUSTOM_WIDGET_SCHEMA,
   customWidgetDefinitionSchema,
   customWidgetIdentifierSchema,
   customWidgetSecretsInputSchema,
   getCustomWidgetSecretRequirements,
   getCustomWidgetSourceSetups,
+  toPortableCustomWidgetDefinition,
 } from "@homarr/custom-widgets/core";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { WorkshopBackend } from "@homarr/workshop/backend";
-import { resolveHomarrUrlConfig, validateWorkshopWidget } from "@homarr/workshop/schema";
-
-import { env } from "../../env";
+import { isSupportedWorkshopWidgetSchema } from "@homarr/workshop/schema";
+import { workshop, getWorkshopSubmissionUrl, getWorkshopWidget, createWorkshopOrigin } from "./workshop-service";
 import { permissionRequiredProcedure } from "../../trpc";
 import { insertCustomWidgetDefinition } from "./definition-insert";
 import { assertSecretSources } from "./secret-policy";
+import { configureWorkshopIntegrations } from "./workshop-integration-setup";
 
 const logger = createLogger({ module: "custom-widget:workshop" });
-const workshopUrls = resolveHomarrUrlConfig({
-  homarrWebsiteUrl: env.HOMARR_WEBSITE_URL,
-  workshopApiUrl: env.WORKSHOP_API_URL,
-  workshopWebUrl: env.WORKSHOP_WEB_URL,
-});
-const workshop = new WorkshopBackend(workshopUrls.workshopApiUrl);
-const getWorkshopSubmissionUrl = (submissionId: string) =>
-  `${workshopUrls.workshopWebUrl}/${encodeURIComponent(submissionId)}`;
 
 function throwWorkshopUnavailable(
   message: string,
@@ -41,26 +32,6 @@ function throwWorkshopUnavailable(
     code: "BAD_GATEWAY",
     message: "Workshop is unavailable",
   });
-}
-
-async function getWorkshopWidget(submissionId: string) {
-  try {
-    const submission = await workshop.get(submissionId);
-    if (submission.type !== "customWidget" || submission.widgetSchema !== CUSTOM_WIDGET_SCHEMA) {
-      throw new TRPCError({
-        code: "BAD_REQUEST",
-        message: "Workshop submission is not a compatible Custom JSX widget",
-      });
-    }
-    const validation = validateWorkshopWidget(submission.content);
-    if (!validation.success) {
-      throw new TRPCError({ code: "BAD_REQUEST", message: validation.error });
-    }
-    return { submission, widget: validation.data };
-  } catch (error) {
-    if (error instanceof TRPCError) throw error;
-    throwWorkshopUnavailable("Workshop widget lookup failed", "workshop_widget_lookup_failed");
-  }
 }
 
 const workshopSearchInputSchema = z.object({
@@ -94,7 +65,7 @@ export const workshopProcedures = {
         });
         return {
           items: result.items
-            .filter((item) => item.widgetSchema === CUSTOM_WIDGET_SCHEMA)
+            .filter((item) => isSupportedWorkshopWidgetSchema(item.widgetSchema))
             .map((item) => ({
               id: item.id,
               url: getWorkshopSubmissionUrl(item.id),
@@ -115,9 +86,10 @@ export const workshopProcedures = {
   workshopGet: permissionRequiredProcedure
     .requiresPermission("admin")
     .meta({ mcp: { enabled: true, description: "Get and validate one Workshop Custom JSX widget." } })
-    .input(z.object({ submissionId: z.string().min(1) }))
+    .input(z.object({ submissionId: z.string().min(1).max(128) }))
     .query(async ({ input }) => {
       const { submission, widget } = await getWorkshopWidget(input.submissionId);
+      const native = Object.values(widget.extensions?.native ?? {});
       return {
         submission: {
           id: submission.id,
@@ -132,9 +104,10 @@ export const workshopProcedures = {
         },
         widget,
         sourceSetup: getCustomWidgetSourceSetups(widget.sources),
-        hasActions: Object.values(widget.requests).some((request) => request.kind === "action"),
+        hasActions: [...Object.values(widget.requests), ...native].some((request) => request.kind === "action"),
         methods: [...new Set(Object.values(widget.requests).map((request) => request.method))],
-        permissions: [...new Set(Object.values(widget.requests).map((request) => request.permission))],
+        permissions: [...new Set([...Object.values(widget.requests), ...native].map((request) => request.permission))],
+        nativeCapabilities: native.map(({ capability, kind, permission }) => ({ capability, kind, permission })),
       };
     }),
 
@@ -143,20 +116,33 @@ export const workshopProcedures = {
     .meta({ mcp: { enabled: true, description: "Install one validated Workshop Custom JSX widget." } })
     .input(
       z.object({
-        submissionId: z.string().min(1),
+        submissionId: z.string().min(1).max(128),
+        expectedRevision: z.number().int().positive().optional(),
         name: z.string().trim().min(1).max(128).optional(),
         sources: sourceOverridesSchema.default({}),
+        integrations: z
+          .record(customWidgetIdentifierSchema, z.string().min(1).max(128))
+          .refine((values) => Object.keys(values).length <= 64)
+          .default({}),
         secrets: customWidgetSecretsInputSchema.default([]),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const { widget } = await getWorkshopWidget(input.submissionId);
+      const { widget, submission } = await getWorkshopWidget(input.submissionId);
+      if (input.expectedRevision !== undefined && submission.revision !== input.expectedRevision) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "Workshop revision changed. Review the current revision before installing.",
+        });
+      }
       const unknownSource = Object.keys(input.sources).find((sourceId) => !widget.sources[sourceId]);
       if (unknownSource) {
         throw new TRPCError({ code: "BAD_REQUEST", message: `Unknown Workshop widget source '${unknownSource}'` });
       }
+      const portable = toPortableCustomWidgetDefinition(widget);
       const configured = customWidgetDefinitionSchema.parse({
-        ...widget,
+        ...portable,
+        options: await configureWorkshopIntegrations(ctx.db, portable, input.integrations),
         name: input.name ?? widget.name,
         sources: applyCustomWidgetSourceSetup(
           widget.sources,
@@ -172,7 +158,14 @@ export const workshopProcedures = {
         ),
       });
       assertSecretSources(configured.sources, input.secrets);
-      const id = await insertCustomWidgetDefinition(ctx.db, configured, ctx.session.user.id, input.secrets);
+      const id = await insertCustomWidgetDefinition(
+        ctx.db,
+        configured,
+        ctx.session.user.id,
+        input.secrets,
+        undefined,
+        createWorkshopOrigin(submission, widget, configured),
+      );
       const configuredSecrets = new Set(input.secrets.map((secret) => `${secret.sourceId}:${secret.kind}`));
       return {
         status: "installed" as const,

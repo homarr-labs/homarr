@@ -27,7 +27,7 @@ import {
   WORKSHOP_API_URL,
   MAX_WORKSHOP_SCREENSHOTS,
   WORKSHOP_REQUEST_TIMEOUT_MS,
-  WORKSHOP_SCHEMA_BY_TYPE,
+  getWorkshopContentSchema,
   workshopCommentSchema,
   workshopAssistantUsageSchema,
   workshopReportSchema,
@@ -432,7 +432,7 @@ export class WorkshopBackend {
     const data = new FormData();
     Object.entries(parsed).forEach(([key, value]) => data.set(key, typeof value === "string" ? value : String(value)));
     data.set("author", this.currentUser?.id ?? "");
-    data.set("widgetSchema", WORKSHOP_SCHEMA_BY_TYPE[parsed.type]);
+    data.set("widgetSchema", getWorkshopContentSchema(parsed.type, parsed.content));
     screenshots.forEach((file) => data.append("screenshots", file));
     try {
       const result = await this.pocketBase.collection("submissions").create(data);
@@ -442,12 +442,20 @@ export class WorkshopBackend {
     }
   }
 
-  public async update(id: string, input: WorkshopSubmissionInput, screenshotChanges: WorkshopScreenshotChanges = {}) {
+  public async update(
+    id: string,
+    input: WorkshopSubmissionInput,
+    screenshotChanges: WorkshopScreenshotChanges = {},
+    expectedRevision?: number,
+  ) {
     const parsed = workshopSubmissionInputSchema.parse(input);
     const additions = screenshotChanges.additions ?? [];
     const removals = screenshotChanges.removals ?? [];
     workshopScreenshotsSchema.parse(additions);
     const current = await this.get(id);
+    if (expectedRevision !== undefined && expectedRevision !== current.revision) {
+      throw new Error("Submission changed since it was reviewed. Reload it before publishing an update.");
+    }
     const removalSet = new Set(removals);
     const retainedCount = current.screenshots.filter((filename) => !removalSet.has(filename)).length;
     if (retainedCount + additions.length > MAX_WORKSHOP_SCREENSHOTS)
@@ -455,8 +463,10 @@ export class WorkshopBackend {
 
     const data: Record<string, unknown> = {
       ...parsed,
-      expectedRevision: current.revision,
+      expectedRevision: expectedRevision ?? current.revision,
     };
+    const contentSchema = getWorkshopContentSchema(parsed.type, parsed.content);
+    if (parsed.type === "customWidget" && contentSchema !== current.widgetSchema) data.widgetSchema = contentSchema;
     if (additions.length > 0) data["screenshots+"] = additions;
     if (removals.length > 0) data["screenshots-"] = removals;
     try {
@@ -712,11 +722,13 @@ export const workshopUpdateMutationOptions = (backend: WorkshopBackend) =>
       id,
       input,
       screenshotChanges,
+      expectedRevision,
     }: {
       id: string;
       input: WorkshopSubmissionInput;
       screenshotChanges?: WorkshopScreenshotChanges;
-    }) => backend.update(id, input, screenshotChanges),
+      expectedRevision?: number;
+    }) => backend.update(id, input, screenshotChanges, expectedRevision),
   });
 
 export const workshopDeleteMutationOptions = (backend: WorkshopBackend) =>

@@ -1,3 +1,4 @@
+import { withCustomWidgetExtensionCatalog } from "../src/core/extension-catalog";
 import { readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
@@ -151,7 +152,7 @@ async function generateCatalog() {
     components,
   };
 
-  const serialized = `${JSON.stringify(catalog)}\n`;
+  const serialized = `${JSON.stringify(withCustomWidgetExtensionCatalog(catalog))}\n`;
   await Promise.all([
     writeFile(resolve(packageRoot, "src/core/component-catalog.generated.json"), serialized),
     writeFile(resolve(repositoryRoot, "apps/docs/static/custom-widgets/component-catalog-v1.json"), serialized),
@@ -312,7 +313,7 @@ function mergeGlobalProp(name: string, candidates: UninternedPropDescriptor[]): 
   const fallback = createFallbackProp(name, "global");
   const type = mostFrequent(candidates.map((candidate) => candidate.type)) ?? fallback.type;
   const descriptions = candidates.flatMap(({ description }) => (description ? [description] : []));
-  const literalValues = uniqueLiterals(candidates.flatMap(({ literalValues }) => literalValues ?? []));
+  const literalValues = uniqueLiterals(candidates.flatMap((candidate) => candidate.literalValues ?? []));
   return {
     name,
     type,

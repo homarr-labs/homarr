@@ -42,10 +42,10 @@ export const creationProcedures = {
     })
     .input(customWidgetCreateSchema)
     .mutation(async ({ ctx, input }) => {
-      const { secrets, ...candidate } = input;
+      const { secrets, editorLayout, ...candidate } = input;
       const definition = parseCustomWidgetAuthoringInput(() => normalizeCustomWidgetAuthoringDefinition(candidate));
       assertSecretSources(definition.sources, secrets);
-      const id = await insertCustomWidgetDefinition(ctx.db, definition, ctx.session.user.id, secrets);
+      const id = await insertCustomWidgetDefinition(ctx.db, definition, ctx.session.user.id, secrets, editorLayout);
       logger.info("Created custom widget definition", { id, name: definition.name });
       return getCreatedCustomWidgetResult(id);
     }),
@@ -100,9 +100,28 @@ export const creationProcedures = {
         });
       }
 
+      const unverifiedNative = Object.entries(session.extensions?.native ?? {})
+        .filter(
+          ([id, capability]) =>
+            !evidence.some(
+              (entry) =>
+                entry.requestId === `native:${id}` &&
+                entry.kind === capability.kind &&
+                entry.sessionRevision === session.revision &&
+                (entry.simulated || (entry.status !== null && entry.status >= 200 && entry.status < 300)),
+            ),
+        )
+        .map(([id]) => id);
+      if (unverifiedNative.length)
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: `Test every native capability before creating the widget: ${unverifiedNative.join(", ")}`,
+        });
+
       const definition = parseCustomWidgetAuthoringInput(() =>
         customWidgetDefinitionSchema.parse({
-          $schema: "homarr-custom-widget-v2",
+          $schema: session.extensions ? "homarr-custom-widget-v3" : "homarr-custom-widget-v2",
+          extensions: session.extensions,
           name: session.name,
           description: session.description,
           iconUrl: session.iconUrl,

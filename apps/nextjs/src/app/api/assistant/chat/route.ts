@@ -114,6 +114,7 @@ const requestSchema = z.object({
   reasoning: z.enum(assistantReasoningModes).default("auto"),
   clientContext: z
     .object({
+      workbenchOpen: z.boolean().optional(),
       pathname: z
         .string()
         .min(1)

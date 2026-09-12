@@ -22,6 +22,9 @@ export interface RenderSafeJsxOptions {
   components: Readonly<Record<string, ComponentType<never>>>;
   bindings: Readonly<Record<string, unknown>>;
   budgets?: SafeJsxBudgets;
+  scopeId?: string;
+  captureSourceLocations?: boolean;
+  fragments?: Readonly<Record<string, string>>;
 }
 
 export interface SafeJsxRenderResult {
@@ -37,6 +40,10 @@ class Interpreter {
     private readonly components: Readonly<Record<string, ComponentType<never>>>,
     private readonly environment: Environment,
     private readonly limits: EvaluationBudgets,
+    private readonly scopeId?: string,
+    private readonly fragments?: Readonly<Record<string, string>>,
+    private readonly template?: string,
+    private readonly captureSourceLocations?: boolean,
   ) {
     this.budget = new Budget(limits);
   }
@@ -125,6 +132,10 @@ class Interpreter {
   private emitterContext(): JsxEmitterContext {
     return {
       components: this.components,
+      scopeId: this.scopeId,
+      template: this.template,
+      captureSourceLocations: this.captureSourceLocations,
+      fragments: this.fragments,
       budget: this.budget,
       warnings: this.warnings,
       evaluate: (node, environment, depth) => this.evaluate(node, environment, depth),
@@ -351,11 +362,27 @@ class Interpreter {
   }
 }
 
-export function renderSafeJsx({ template, components, bindings, budgets }: RenderSafeJsxOptions): SafeJsxRenderResult {
+export function renderSafeJsx({
+  template,
+  components,
+  bindings,
+  budgets,
+  scopeId,
+  fragments,
+  captureSourceLocations,
+}: RenderSafeJsxOptions): SafeJsxRenderResult {
   const limits: EvaluationBudgets = { ...DEFAULT_BUDGETS, ...budgets };
   for (const [name, value] of Object.entries(limits)) {
     if (!Number.isSafeInteger(value) || value <= 0) throw new SafeJsxError(`Invalid interpreter budget: ${name}`);
   }
   const root = parseCustomJsxTemplate(template);
-  return new Interpreter(components, new Environment(bindings), limits).render(root);
+  return new Interpreter(
+    components,
+    new Environment(bindings),
+    limits,
+    scopeId,
+    fragments,
+    template,
+    captureSourceLocations,
+  ).render(root);
 }

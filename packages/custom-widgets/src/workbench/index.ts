@@ -19,3 +19,8 @@ export {
   customWidgetFormSchema,
 } from "./form-schema";
 export type { CustomWidgetFormValues } from "./form-schema";
+
+export * from "./template-references";
+export * from "./template-insertion";
+export * from "./generated-bindings";
+export * from "./generated-binding-edits";

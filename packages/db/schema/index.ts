@@ -54,6 +54,7 @@ export const {
   cronJobConfigurations,
   customWidgetDefinitions,
   customWidgetSecrets,
+  customWidgetContent,
   legacyCustomWidgetDefinitions,
   legacyCustomWidgetSecrets,
   widgetSecrets,

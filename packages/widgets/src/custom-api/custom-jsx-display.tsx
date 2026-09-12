@@ -1,6 +1,10 @@
 "use client";
 
+import type { ComponentProps } from "react";
 import { useCallback, useMemo, useState } from "react";
+
+import { useSession } from "@homarr/auth/client";
+import { customWidgetExtensionsSchema } from "@homarr/custom-widgets/core";
 
 import { isRecord } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";
@@ -19,10 +23,24 @@ interface ScopedQueryState {
   values: Record<string, CustomWidgetPublishedQueryState>;
 }
 
-export default function CustomJsxDisplay({ data }: { data: Record<string, unknown> }) {
+export default function CustomJsxDisplay({
+  data,
+  inspect,
+  onInspect,
+}: {
+  data: Record<string, unknown>;
+  inspect?: boolean;
+  onInspect?: ComponentProps<typeof CustomJsxRenderer>["onInspect"];
+}) {
+  const session = useSession();
   const t = useI18n("widget.customApi.customJsx");
   const actionT = useI18n("common.action");
   const diagnosticsT = useI18n("customWidget.editor.diagnostics");
+  const extensions = useMemo(() => {
+    const parsed = customWidgetExtensionsSchema.safeParse(data.extensions);
+    if (parsed.success) return parsed.data;
+    return undefined;
+  }, [data.extensions]);
   const capabilities = useMemo(() => parseRequestCapabilities(data.requestCapabilities), [data.requestCapabilities]);
   const copyLabel = actionT("copy");
   const copiedLabel = t("copied");
@@ -69,9 +87,24 @@ export default function CustomJsxDisplay({ data }: { data: Record<string, unknow
   );
   const baseData = isRecord(data.data) ? data.data : {};
   const baseStatus = isRecord(data.status) ? data.status : {};
+  const queryFixtures = Object.fromEntries(
+    Object.entries(baseStatus).map(([id, status]) => [
+      id,
+      {
+        data: baseData[id],
+        status: { ...(isRecord(status) ? status : {}), loading: isRecord(status) && status.loading === true },
+      },
+    ]),
+  );
   const renderer = (
     <CustomJsxRenderer
       template={String(data.template ?? "")}
+      extensions={extensions}
+      inspect={inspect}
+      onInspect={onInspect}
+      preferenceStorageKey={
+        itemId ? `homarr:custom-widget:${itemId}:${session.data?.user.id ?? "anonymous"}:preferences` : undefined
+      }
       data={{ ...baseData, ...Object.fromEntries(Object.entries(queryState).map(([id, value]) => [id, value.data])) }}
       status={{
         ...baseStatus,
@@ -81,6 +114,7 @@ export default function CustomJsxDisplay({ data }: { data: Record<string, unknow
       components={components}
       createBindings={SAFE_BINDINGS}
       messages={{
+        close: actionT("close"),
         noTemplate: t("noTemplate"),
         templateWarnings: (count) => t("templateWarnings", { count: String(count) }),
         bindingTypeConflict,
@@ -89,7 +123,12 @@ export default function CustomJsxDisplay({ data }: { data: Record<string, unknow
   );
   if (!itemId && !previewSessionId) {
     return (
-      <InactiveWidgetDefinitionProvider definitionId={definitionId} isEditMode={data.isEditMode === true}>
+      <InactiveWidgetDefinitionProvider
+        definitionId={definitionId}
+        isEditMode={data.isEditMode === true}
+        nativeCapabilities={extensions?.native}
+        queryFixtures={queryFixtures}
+      >
         {renderer}
       </InactiveWidgetDefinitionProvider>
     );
@@ -104,6 +143,8 @@ export default function CustomJsxDisplay({ data }: { data: Record<string, unknow
       queriesDisabled={data.queriesDisabled === true}
       isEditMode={data.isEditMode === true}
       requestCapabilities={capabilities}
+      nativeCapabilities={extensions?.native}
+      queryFixtures={queryFixtures}
       setQueryState={publishQueryState}
     >
       {renderer}

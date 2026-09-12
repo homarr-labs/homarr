@@ -14,6 +14,8 @@ export function CustomWidgetRuntimeProvider({
   return <RuntimeContext.Provider value={value}>{children}</RuntimeContext.Provider>;
 }
 
+export const useOptionalCustomWidgetRuntime = () => useContext(RuntimeContext);
+
 export function useCustomWidgetRuntime(): CustomWidgetRuntimeValue {
   const value = useContext(RuntimeContext);
   if (!value) throw new Error("Custom Widget runtime components require CustomWidgetRuntimeProvider");

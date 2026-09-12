@@ -1,10 +1,11 @@
 import type { JSX } from "react";
-import { AppShellNavbar, AppShellSection, Image, ScrollArea } from "@mantine/core";
+import { AppShellSection, Image, ScrollArea } from "@mantine/core";
 
 import type { TablerIcon, TablerIconProps } from "@homarr/ui";
 
 import type { ClientNavigationLink } from "./navigation-link";
 import { CommonNavLink } from "./navigation-link";
+import { NavigationFrame } from "./navigation-frame";
 
 interface MainNavigationProps {
   headerSection?: JSX.Element;
@@ -14,9 +15,10 @@ interface MainNavigationProps {
 
 export const MainNavigation = ({ headerSection, footerSection, links }: MainNavigationProps) => {
   return (
-    <AppShellNavbar p="md">
+    <NavigationFrame>
       {headerSection && <AppShellSection>{headerSection}</AppShellSection>}
       <AppShellSection
+        id="main-navigation-links"
         grow
         mt={headerSection ? "md" : undefined}
         mb={footerSection ? "md" : undefined}
@@ -30,7 +32,7 @@ export const MainNavigation = ({ headerSection, footerSection, links }: MainNavi
           const { icon: TablerIcon, iconProps, "data-onboarding-tour-id": tourId, ...props } = link;
           const Icon =
             typeof TablerIcon === "string" ? (
-              <Image src={TablerIcon} w={20} h={20} />
+              <Image src={TablerIcon} alt="" w={20} h={20} />
             ) : (
               <TablerIcon size={20} stroke={1.5} {...iconProps} />
             );
@@ -57,7 +59,7 @@ export const MainNavigation = ({ headerSection, footerSection, links }: MainNavi
         })}
       </AppShellSection>
       {footerSection && <AppShellSection>{footerSection}</AppShellSection>}
-    </AppShellNavbar>
+    </NavigationFrame>
   );
 };
 

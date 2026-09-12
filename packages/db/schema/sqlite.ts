@@ -630,6 +630,10 @@ export const customWidgetDefinitions = sqliteTable("custom_widget_v2_definition"
   requests: text().notNull(),
   options: text().notNull(),
   template: text().notNull(),
+  extensions: text(),
+  editorLayout: text(),
+  workshopOrigin: text(),
+  previousPackage: text(),
   enabled: int({ mode: "boolean" }).notNull().default(true),
   createdAt: int({ mode: "timestamp" })
     .notNull()
@@ -661,6 +665,26 @@ export const customWidgetSecrets = sqliteTable(
       name: "custom_widget_v2_secret_definition_id_fk",
     }).onDelete("cascade"),
   }),
+);
+
+export const customWidgetContent = sqliteTable(
+  "custom_widget_content",
+  {
+    itemId: text()
+      .notNull()
+      .references(() => items.id, { onDelete: "cascade" }),
+    definitionId: text()
+      .notNull()
+      .references(() => customWidgetDefinitions.id, { onDelete: "cascade" }),
+    key: text().notNull(),
+    name: text().notNull(),
+    value: text().notNull(),
+    revision: int().notNull(),
+    updatedAt: int({ mode: "timestamp" })
+      .notNull()
+      .default(sql`(unixepoch())`),
+  },
+  (table) => ({ compoundKey: primaryKey({ columns: [table.itemId, table.definitionId, table.key] }) }),
 );
 
 export const widgetSecrets = sqliteTable(

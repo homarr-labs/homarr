@@ -13,7 +13,7 @@ export const CUSTOM_WIDGET_SKILL_SOURCE_URL =
   "https://github.com/homarr-labs/homarr/tree/HEAD/.agents/skills/homarr-custom-widget";
 export const CUSTOM_WIDGET_SKILL_INSTALL_COMMAND =
   "npx skills add https://github.com/homarr-labs/homarr --skill homarr-custom-widget";
-export const CUSTOM_WIDGET_SKILL_VERSION = "2.9.0";
+export const CUSTOM_WIDGET_SKILL_VERSION = "3.0.0";
 export const CUSTOM_WIDGET_SKILL_REFERENCE_NAMES = ["schema", "runtime", "security"] as const;
 export type CustomWidgetSkillReferenceName = (typeof CUSTOM_WIDGET_SKILL_REFERENCE_NAMES)[number];
 
@@ -58,7 +58,7 @@ interface HomarrCustomWidgetV2 {
 }
 \`\`\`
 
-The object key \`default\` is the required source ID; \`default\` is not a property on a source. Source properties are \`name?\`, \`baseUrl\`, \`networkScope\`, and \`auth?\`:
+Sources are keyed by ID. Empty \`sources\` and \`requests\` support static widgets. Each HTTP request must reference an existing source; omitting its source selects \`default\`. Source properties are \`name?\`, \`baseUrl\`, \`networkScope\`, and \`auth?\`:
 
 \`\`\`json
 {
@@ -92,6 +92,8 @@ Use stable real URLs for public APIs and clear suggested URLs for self-hosted se
 Paths use \`{option:name}\` and \`{param:name}\`; query/body references use \`{ "$option": "name" }\` and \`{ "$param": "name" }\`. Constants stay primitive (\`take: 10\`); \`$param\` is only for manual helpers, never load queries. Names and types are inferred.
 
 Every option has \`label\`, \`control\`, and \`default\`. Optional fields are \`description\`, \`choices\`, \`choicesFrom\`, \`min\`, \`max\`, \`step\`, \`advanced\`, and \`group\`.
+
+V3 uses \`$schema: "homarr-custom-widget-v3"\` and optional \`extensions\`: \`stylesheet\`, \`fragments\`, \`preferences\`, \`content\`, and \`native\`. Read \`customWidget_schema\` for their exact shapes. Integration options use \`control: "integration"\`, \`default: ""\`, and optional \`integrationKinds\`; installations choose local integrations. Discover native input schemas through \`customWidget_nativeCapabilities\`. Editor layout is separate from the manifest.
 `,
   "references/runtime.md": `# Runtime
 
@@ -107,7 +109,7 @@ Templates read \`data.requestId\`, \`status.requestId\`, \`options.name\`, and t
 </SubFetch>
 \`\`\`
 
-Manual queries require \`trigger: "manual"\` on request and \`SubFetch\`; otherwise they run automatically. \`triggerContent\` with \`triggerAriaLabel\` makes custom content the launcher. \`SubFetch\` owns loading/error/retry; its child receives success plus \`{ ok, status, statusText, loading: false }\`. Never author \`onClick\` or fetch callbacks.
+Manual queries require \`trigger: "manual"\` on request and \`SubFetch\`. Use \`triggerContent\` and \`triggerAriaLabel\` for a custom launcher. \`SubFetch\` owns loading/error/retry; its child receives success plus \`{ ok, status, statusText, loading: false }\`.
 
 \`SubFetch\`, \`ActionButton\`, and \`ToggleSwitch\` need literal \`requestId\`; validation rejects missing/computed IDs.
 
@@ -130,6 +132,8 @@ Every stateful control must use \`bind\`, and its \`inputs.<name>\` value must f
 Callback parameters must not shadow the reserved roots \`data\`, \`status\`, \`options\`, or \`inputs\`. Use \`<Icon name="refresh" />\` or \`<TablerIcon name="refresh" />\`; never invent components such as \`<IconFoo />\`.
 
 Use expression callbacks for supported collections and trusted slots. No callback blocks, IIFEs, authored recursion, or raw events. Regex is limited to safe string operations.
+
+V3 adds scoped \`className\` styles, \`View\` fragments, \`WidgetModal\`, \`WidgetDrawer\`, and \`AppEmbed\`. Bound controls use \`persist\` for declared browser preferences or \`content\` for shared drafts saved with \`ContentSaveButton\`. \`NativeQuery\` and \`NativeActionButton\` invoke declared native IDs; actions retain preview simulation and integration permissions. Fetch component contracts before using these helpers.
 `,
   "references/security.md": `# Security
 
@@ -137,27 +141,27 @@ All requests use Homarr's protected server executor. Source origin, network scop
 
 The JSX interpreter blocks imports, hooks, refs, raw event callbacks, browser requests, eval, arbitrary functions, prototype access, unsafe URLs, global CSS escape, arbitrary portals, bigint, statement blocks, IIFEs, and recursion. Regex literals must be bounded and reject backreferences, lookbehind, nested quantifiers, excessive length, and unsupported flags.
 
-Credentials are stored separately and never exported or returned to an agent. A published self-hosted source URL is only a suggestion: installers must confirm or replace private and loopback URLs for their own Homarr deployment. Source origins cannot be controlled through widget options.
+Credentials stay local and are never exported. Installers confirm or replace suggested private and loopback URLs for their deployment. Source origins are fixed by configuration.
 `,
 } as const;
 
 export const CUSTOM_WIDGET_SKILL_MD = `---
 name: homarr-custom-widget
-description: Author, validate, preview, test, install, or configure API-backed Homarr Custom JSX v2 widgets.
+description: Author, validate, preview, install, or configure Homarr Custom JSX v2/v3 widgets, including static and native integration widgets.
 ---
 
 # Homarr Custom Widget
 
-Author one widget or a coordinated set of widgets. Load only needed release-matched context. Run lifecycle tools alone; independent reads may run together. For a set, research once and finish each widget's validation, evidence, and persistence before the next.
+Load release-matched context. Run lifecycle tools alone; independent reads may run together. For a set, research once, then validate, preview, and persist each widget before the next.
 
-1. Read primary API documentation. Use web search when documentation is not supplied or may have changed.
+1. For HTTP widgets, read primary API documentation. For native capabilities, discover installed schemas. Static widgets need no service.
 2. Create credential-free definitions with keyed \`sources\`, \`requests\`, optional \`options\`, and safe JSX \`template\`.
 3. While drafting, use \`customWidget_validateTemplate\` for focused JSX diagnostics without resending the manifest.
-4. Send the definition once to \`customWidget_previewCreate\` and test its queries/actions. For a JSX-only fix, validate, call \`customWidget_previewReviseTemplate\` with its session, and retest; it inherits the manifest and resets evidence. Create a preview only for source/request/option changes.
+4. Send the definition once to \`customWidget_previewCreate\` and test its HTTP/native queries and simulated actions. For a JSX-only fix, validate, call \`customWidget_previewReviseTemplate\` with its session, and retest; it inherits the manifest and resets evidence. Other definition changes require a fresh preview.
 5. Configure deployment-specific source URLs and credentials through Homarr; never repeat plaintext.
 6. Persist each exact final tested preview with \`customWidget_createFromPreview\`. Do not resend a large definition through \`customWidget_create\` when a preview session is available.
 
-Treat a supplied sample or successful preview response as the binding contract. Render every core requested field, guard optional arrays and nested values before indexing, and do not silently drop returned items. Humanize numeric enums with indexed literal label arrays, omit absent numeric values instead of inventing zero, and label timestamp timezones. Give recoverable load errors and empty states a clear refresh or retry path.
+Treat sample and preview responses as binding contracts. Render requested fields, guard optional values, humanize enums, and label timezones. Give errors and empty states a retry path.
 
 Use \`{option:name}\` or \`$option\` for saved options. Use \`{param:name}\` or \`$param\` for values supplied by \`SubFetch\`, \`ActionButton\`, or \`ToggleSwitch\`. Load queries cannot use invocation parameters. Render load queries from \`data\` and \`status\` with \`RefreshButton\`; reserve \`SubFetch\` for manual parameterized queries. Templates read \`data\`, \`status\`, \`options\`, and temporary \`inputs\`.
 
@@ -167,11 +171,7 @@ For a bound control that depends on another input, declare its default and set \
 
 Plan capabilities. Use one \`customWidget_findComponents\` search per job. Batch selected non-obvious binding or interaction documentation with \`customWidget_getComponents\`; reserve \`customWidget_getComponent\` for one unknown-prop repair. Failed validation reopens discovery; otherwise search only for a missing capability. The full catalog is for broad exploration; load at most one example. Context never limits composition. Prefer clear hierarchy, responsive grids, divided lists, and aligned actions over nested row cards.
 
-Do not simplify a useful workflow merely because the template is interpreted. Freely compose any supported installed components with multiple sources, requests, options, \`choicesFrom\`, bound filters, charts, responsive detail areas, manual queries, and safe actions when they improve the user's job. Complexity must remain purposeful rather than decorative.
-
-Polish with a divided list or responsive media grid. Make one metric/action asymmetrically primary; keep headers compact, identity/state clear, metadata quiet, and one badge. At base artwork fills its row and caps above xs; never combine full-width media and nowrap.
-
-Make initial states actionable and wrap variable labels/values on narrow tiles. Do not use an unlabeled decorative icon as an empty state.
+Compose installed components freely around the requested workflow. Use responsive layouts, clear hierarchy, quiet metadata, and actionable initial states. Wrap variable labels on narrow tiles and label interactive icons.
 
 Do not use imports, hooks, refs, raw HTML, raw event callbacks, browser requests, arbitrary functions, eval, bigint, npm packages, authored statement blocks, IIFEs, or recursion. Do not pretend MCP tools exist in an offline chat session.
 
@@ -188,7 +188,7 @@ Repository installations expose these as files under \`references/\`. MCP client
 
 const CUSTOM_WIDGET_SKILL_ENTRYPOINT_MD = `# Homarr Custom Widget authoring index
 
-Use release-matched tools and load only context required by the design. Research primary API documentation once. For each widget, validate JSX independently with \`customWidget_validateTemplate\`, create one coherent preview, test every returned query and simulated action, then persist that exact preview. For a response-driven JSX-only correction, validate it and call \`customWidget_previewReviseTemplate\`; it inherits the manifest, resets evidence, and avoids resending sources, requests, or options. Complete one widget before drafting the next in a coordinated set.
+Use release-matched tools and load only context required by the design. Research primary API documentation once. For each widget, validate JSX independently with \`customWidget_validateTemplate\`, create one coherent preview, test every returned query and simulated action, then persist that exact preview. For a response-driven JSX-only correction, validate it and call \`customWidget_previewReviseTemplate\`; it inherits the manifest, resets evidence, and avoids resending the definition. Complete one widget before drafting the next in a coordinated set.
 
 Before drafting, map every requested capability to a rendered field, bound control, or safe action. Give each widget a purpose-specific visual signature: asymmetric priority metric/action, quieter supporting metrics, compact header, accurate status language, resolved and accessible imagery, responsive details, and actionable initial, loading, empty, error, and success states. Avoid dead controls, raw relative artwork paths, and repetitive nested cards.
 

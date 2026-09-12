@@ -1,11 +1,17 @@
 # Configure requests and security
 
-Most widgets use a single source named `default`; the manifest must contain it. Extra keyed sources are available for widgets
-that combine APIs. Source IDs are case-insensitively unique. Base URLs must use HTTP(S), contain no embedded credentials,
+HTTP widgets often use a source named `default`. Every request must reference an existing source; an omitted request source
+resolves to `default`. Static and native-only widgets can use empty `sources` and `requests`. Extra keyed sources let widgets
+combine APIs. Source IDs are case-insensitively unique. Base URLs must use HTTP(S), contain no embedded credentials,
 query string, or fragment, and sources can be `public`, `private`, or `loopback`. Authentication is `none`, `bearer`,
 `basic`, an API-key header, or an API-key query parameter. Credentials belong to the widget but remain outside its manifest.
 Source origins are fixed by the definition and source-setup flow; widget options and invocation parameters cannot redirect a
 request to a different origin.
+
+Source URLs are fetched by the Homarr server. In a container, `127.0.0.1` refers to that container; Docker service names such
+as `sonarr` must resolve from Homarr. LAN addresses and loopback services are supported with the appropriate explicit scope.
+The workbench suggests a likely local scope from the hostname; server DNS and redirect checks remain authoritative.
+Browser navigation and app embeds use browser-reachable URLs instead.
 
 ## Named requests
 

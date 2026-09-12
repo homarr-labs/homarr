@@ -1,9 +1,12 @@
+import { withCustomWidgetExtensionCatalog } from "./extension-catalog";
 import catalog from "./component-catalog.generated.json";
 import type { CustomJsxAuthoringCatalog, CustomJsxPropDescriptor } from "./component-catalog-types";
 
 export type * from "./component-catalog-types";
 
-export const customJsxAuthoringCatalog = catalog as unknown as Readonly<CustomJsxAuthoringCatalog>;
+export const customJsxAuthoringCatalog = withCustomWidgetExtensionCatalog(
+  catalog as unknown as CustomJsxAuthoringCatalog,
+);
 export const customJsxCatalogComponentByName = new Map(
   customJsxAuthoringCatalog.components.map((component) => [component.name, component]),
 );

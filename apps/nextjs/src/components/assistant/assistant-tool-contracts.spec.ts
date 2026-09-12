@@ -4,6 +4,14 @@ import { z } from "zod/v4";
 import { browserToolContracts, normalizeAssistantAppIconUrl } from "./assistant-tool-contracts";
 
 const supportedToolArguments = {
+  workbench_read: {},
+  workbench_preview: { draftId: "12345678-1234-4234-9234-123456789012", revision: 0 },
+  workbench_patch: {
+    draftId: "12345678-1234-4234-9234-123456789012",
+    revision: 0,
+    summary: "Update title",
+    changes: { name: "My widget" },
+  },
   ask_user: {
     question: "How should the app be added?",
     options: [

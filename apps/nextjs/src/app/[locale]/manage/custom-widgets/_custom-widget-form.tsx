@@ -1,8 +1,8 @@
 "use client";
 
-import { memo, useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { customWidgetEditorLayoutSchema, EMPTY_EDITOR_LAYOUT } from "@homarr/custom-widgets/core";
+import { memo, useId, useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { Dispatch, FormEventHandler, SetStateAction } from "react";
-import { Box, Paper, SegmentedControl, Stack } from "@mantine/core";
 
 import type { CustomWidgetAiDraft } from "@homarr/custom-widgets/authoring-prompt";
 import { customWidgetFormSchema, DEFAULT_CUSTOM_WIDGET_FORM_VALUES } from "@homarr/custom-widgets/workbench";
@@ -14,7 +14,6 @@ import { CustomWidgetAdvancedManifest } from "./_custom-widget-advanced-manifest
 import {
   CustomWidgetOptionsSnapshotSync,
   CustomWidgetSaveActions,
-  CustomWidgetSectionNavigation,
   CustomWidgetUnsavedChangesGuard,
 } from "./_custom-widget-form-layout";
 import {
@@ -40,12 +39,15 @@ import type { CustomWidgetSaveIssue } from "./_custom-widget-save-errors";
 import { CustomWidgetSaveIssuesAlert } from "./_custom-widget-save-issues-alert";
 import { useCustomWidgetFormActions } from "./_use-custom-widget-form-actions";
 import { analyzeCustomWidgetAiDiagnostics, CustomWidgetFormAnalysisProvider } from "./_use-custom-widget-form-analysis";
+import { FlowWorkbench } from "./_flow/workbench";
 import classes from "./_custom-widget-form.module.css";
 
 interface CustomWidgetFormProps {
   mode: "create" | "edit";
   initialValues?: Partial<CustomWidgetFormValues>;
   definitionId?: string;
+  editorLayout?: string | null;
+  savedRevision?: string;
 }
 
 type MobilePane = "configure" | "preview";
@@ -69,7 +71,7 @@ interface CustomWidgetFormViewProps {
   savePending: boolean;
   previewPending: boolean;
   onSubmit: FormEventHandler<HTMLFormElement>;
-  onPreview(): void;
+  onPreview(): Promise<unknown>;
   onPasteAiResponse(): void;
 }
 
@@ -81,34 +83,31 @@ function getAiDraft(values: CustomWidgetFormValues): CustomWidgetAiDraft {
     sources: values.sources,
     requests: values.requests,
     options: values.options,
+    extensions: values.extensions,
     template: values.template,
   };
 }
 
 const CustomWidgetFormView = memo(function CustomWidgetFormView(props: CustomWidgetFormViewProps) {
   const w = useI18n("customWidget.workbench");
+  const saveFormId = useId();
   const documentStore = props.documentStore;
   const form = props.form;
-  const setMobilePane = props.setMobilePane;
   const setPreview = props.setPreview;
   const { renameRequest, renameOption } = useMemo(
     () =>
       createCustomWidgetRenameHandlers({
         form,
+        transaction: documentStore.transaction,
+        renameRequestBinding: documentStore.renameRequestBinding,
         invalidWidgetMessage: w("invalidWidget"),
       }),
-    [form, w],
+    [documentStore, form, w],
   );
   const readAiDraft = useCallback(() => getAiDraft(documentStore.getValues()), [documentStore]);
   const readAiDiagnostics = useCallback(
     () => analyzeCustomWidgetAiDiagnostics(documentStore.getValues()),
     [documentStore],
-  );
-  const handleSectionSelect = useCallback(
-    (section: string) => {
-      setMobilePane(section === "preview" ? "preview" : "configure");
-    },
-    [setMobilePane],
   );
   const handleLiveActionsChange = useCallback(
     (enabled: boolean) =>
@@ -122,54 +121,39 @@ const CustomWidgetFormView = memo(function CustomWidgetFormView(props: CustomWid
   return (
     <CustomWidgetFormDocumentProvider store={documentStore}>
       <CustomWidgetFormAnalysisProvider>
-        <form onSubmit={props.onSubmit} className={classes.form}>
+        <div className={classes.form}>
+          <form id={saveFormId} onSubmit={props.onSubmit} />
           <CustomWidgetUnsavedChangesGuard />
           <CustomWidgetOptionsSnapshotSync setOptionsSnapshot={props.setOptionsSnapshot} />
-          <SegmentedControl
-            className={classes.paneSwitcher}
-            fullWidth
-            value={props.mobilePane}
-            onChange={(value) => {
-              if (value === "configure" || value === "preview") props.setMobilePane(value);
-            }}
-            data={[
-              { value: "configure", label: w("configure") },
-              { value: "preview", label: w("section.preview") },
-            ]}
-          />
-          <CustomWidgetSaveIssuesAlert issues={props.saveIssues} />
-          <CustomWidgetSectionNavigation onSelect={handleSectionSelect} />
-          <div className={classes.workbench} data-mobile-pane={props.mobilePane}>
-            <Stack gap="lg" className={classes.configuration}>
+          <FlowWorkbench
+            feedback={<CustomWidgetSaveIssuesAlert issues={props.saveIssues} />}
+            form={form}
+            onPreview={props.onPreview}
+            execution={props.preview}
+            definitionId={props.definitionId}
+            actions={
+              <CustomWidgetSaveActions
+                formId={saveFormId}
+                mode={props.mode}
+                savePending={props.savePending}
+                previewPending={props.previewPending}
+                onPreview={props.onPreview}
+              />
+            }
+            general={<CustomWidgetGeneralSection form={form} formRevision={props.formRevision} mode={props.mode} />}
+            sources={<CustomWidgetSourcesSection form={form} definitionId={props.definitionId} />}
+            requests={<CustomWidgetRequestsSection form={form} onRename={renameRequest} />}
+            options={<CustomWidgetOptionsSection form={form} onRename={renameOption} />}
+            template={<CustomWidgetTemplateSection form={form} />}
+            assistant={
               <CustomWidgetAiSection
                 getDraft={readAiDraft}
                 getDiagnostics={readAiDiagnostics}
                 onPaste={props.onPasteAiResponse}
               />
-              <CustomWidgetAdvancedManifest form={form} />
-              <CustomWidgetGeneralSection form={form} formRevision={props.formRevision} mode={props.mode} />
-              <CustomWidgetSourcesSection form={form} definitionId={props.definitionId} />
-              <CustomWidgetRequestsSection form={form} onRename={renameRequest} />
-              <CustomWidgetOptionsSection form={form} onRename={renameOption} />
-              <CustomWidgetTemplateSection form={form} />
-              <Paper p="md" className={classes.mobileSaveBar} shadow="sm">
-                <CustomWidgetSaveActions
-                  mode={props.mode}
-                  savePending={props.savePending}
-                  previewPending={props.previewPending}
-                  onPreview={props.onPreview}
-                />
-              </Paper>
-            </Stack>
-            <Box id="preview" component="aside" className={classes.previewPane} aria-label={w("widgetPreview")}>
-              <Paper p="md" className={classes.actionBar} shadow="sm">
-                <CustomWidgetSaveActions
-                  mode={props.mode}
-                  savePending={props.savePending}
-                  previewPending={props.previewPending}
-                  onPreview={props.onPreview}
-                />
-              </Paper>
+            }
+            advanced={<CustomWidgetAdvancedManifest form={form} />}
+            preview={
               <CustomWidgetPreviewSection
                 preview={props.preview}
                 size={props.previewSize}
@@ -178,20 +162,32 @@ const CustomWidgetFormView = memo(function CustomWidgetFormView(props: CustomWid
                 onOptionsChange={props.setOptionsSnapshot}
                 onLiveActionsChange={handleLiveActionsChange}
               />
-            </Box>
-          </div>
-        </form>
+            }
+          />
+        </div>
       </CustomWidgetFormAnalysisProvider>
     </CustomWidgetFormDocumentProvider>
   );
 });
 
-export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWidgetFormProps) {
+export function CustomWidgetForm({
+  mode,
+  initialValues,
+  definitionId,
+  editorLayout,
+  savedRevision,
+}: CustomWidgetFormProps) {
+  const flowT = useI18n("customWidget.flow");
   const [formInitialValues] = useState<CustomWidgetFormValues>(() => ({
     ...DEFAULT_CUSTOM_WIDGET_FORM_VALUES,
+    sources: "{}",
+    requests: "{}",
+    template: `<Stack align="center" justify="center" h="100%"><Text size="xl" fw={600}>{${JSON.stringify(flowT("welcomeTemplate"))}}</Text></Stack>`,
     ...initialValues,
   }));
-  const [documentStore] = useState(() => createCustomWidgetFormDocumentStore(formInitialValues));
+  const [documentStore] = useState(() =>
+    createCustomWidgetFormDocumentStore(formInitialValues, parseEditorLayout(editorLayout)),
+  );
   const mantineForm = useZodForm(customWidgetFormSchema, {
     initialValues: formInitialValues,
     mode: "uncontrolled",
@@ -208,6 +204,7 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
     return initialDefinition.success ? getDefinitionDefaults(initialDefinition.data) : {};
   });
   const actions = useCustomWidgetFormActions({
+    savedRevision,
     mode,
     definitionId,
     form,
@@ -222,7 +219,7 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
     latestActions.current = actions;
   }, [actions]);
   const handleSubmit = useCallback<FormEventHandler<HTMLFormElement>>((event) => latestActions.current.save(event), []);
-  const handlePreview = useCallback(() => void latestActions.current.runPreview(), []);
+  const handlePreview = useCallback(() => latestActions.current.runPreview(), []);
   const handlePasteAiResponse = useCallback(() => void latestActions.current.pasteAiResponse(), []);
 
   return (
@@ -249,4 +246,12 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
       onPasteAiResponse={handlePasteAiResponse}
     />
   );
+}
+
+function parseEditorLayout(value?: string | null) {
+  try {
+    return customWidgetEditorLayoutSchema.parse(JSON.parse(value ?? "null"));
+  } catch {
+    return EMPTY_EDITOR_LAYOUT;
+  }
 }

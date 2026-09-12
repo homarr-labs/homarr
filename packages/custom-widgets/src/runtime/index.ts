@@ -10,3 +10,10 @@ export type { SubDataProps } from "./data";
 export type { RefreshButtonProps } from "./refresh-button";
 export type { SubFetchMetadata, SubFetchProps } from "./sub-fetch";
 export type * from "./types";
+export { CustomWidgetExecutionObserverProvider, useCustomWidgetQueryObserver } from "./execution-observer-context";
+export { observeCustomWidgetQueries } from "./execution-observer";
+export type { CustomWidgetQueryExecution, CustomWidgetQueryObserver } from "./execution-observer";
+
+export { NativeQuery, NativeActionButton } from "./native";
+
+export type { CustomWidgetSourceLocation } from "./source-inspection";

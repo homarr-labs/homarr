@@ -19,8 +19,15 @@ export const customWidgetFormSchema = z.object({
   requests: jsonObjectString,
   options: jsonObjectString,
   template: z.string().min(1).max(50_000),
+  extensions: z.union([z.literal(""), jsonObjectString]).default(""),
   secrets: z.array(
-    z.object({ sourceId: z.string(), kind: z.string(), value: z.string(), hasValue: z.boolean().optional() }),
+    z.object({
+      sourceId: z.string(),
+      kind: z.string(),
+      value: z.string(),
+      hasValue: z.boolean().optional(),
+      savedSourceId: z.string().optional(),
+    }),
   ),
 });
 
@@ -48,4 +55,5 @@ export const DEFAULT_CUSTOM_WIDGET_FORM_VALUES: CustomWidgetFormValues = {
   options: JSON.stringify(CUSTOM_WIDGET_STARTER.options, null, 2),
   template: CUSTOM_WIDGET_STARTER.template,
   secrets: [],
+  extensions: "",
 };

@@ -2,13 +2,12 @@
 
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
-import { UnstyledButton, useMantineColorScheme } from "@mantine/core";
+import { useMantineColorScheme } from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { hotkeys } from "@homarr/definitions";
-import { useI18n } from "@homarr/translation/client";
 
 import { UserAvatarMenu } from "~/components/user-avatar-menu";
 import type { BoardSwitcherControls } from "~/components/board/board-switcher";
@@ -23,7 +22,6 @@ interface UserButtonClientProps {
 
 export const UserButtonClient = ({ avatar, isAdmin, isDockerEnabled, boardSwitcher }: UserButtonClientProps) => {
   const [canCheckForUpdates, setCanCheckForUpdates] = useState(false);
-  const t = useI18n("common.userAvatar.menu");
   const session = useSession();
   const { toggleColorScheme } = useMantineColorScheme();
   useHotkeys([[hotkeys.toggleColorScheme, toggleColorScheme]]);
@@ -50,11 +48,9 @@ export const UserButtonClient = ({ avatar, isAdmin, isDockerEnabled, boardSwitch
 
   return (
     <UserAvatarMenu availableUpdates={visibleUpdates} isDockerEnabled={isDockerEnabled} boardSwitcher={boardSwitcher}>
-      <UnstyledButton aria-label={t("open")}>
-        <UpdateIndicator availableUpdates={visibleUpdates} disabled={!isCurrentSessionAdmin}>
-          {avatar}
-        </UpdateIndicator>
-      </UnstyledButton>
+      <UpdateIndicator availableUpdates={visibleUpdates} disabled={!isCurrentSessionAdmin}>
+        {avatar}
+      </UpdateIndicator>
     </UserAvatarMenu>
   );
 };

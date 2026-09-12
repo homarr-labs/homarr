@@ -12,28 +12,41 @@ export default async function CustomWidgetPreviewPage({ params }: { params: Prom
   const preview = await api.customWidget.previewGet({ sessionId: id }).catch(() => null);
   if (!preview) notFound();
 
-  const loadRequests = preview.requests.filter((request) => request.kind === "query" && request.trigger === "load");
-  const results = await Promise.all(
-    loadRequests.map(async (request) => {
-      const result = await api.customWidget
-        .previewQuery({ sessionId: id, requestId: request.id, params: {} })
-        .catch((cause: unknown) => ({
+  const pendingRequests = [
+    ...preview.requests
+      .filter((request) => request.kind === "query" && request.trigger === "load")
+      .map((request) => ({ id: request.id, native: false })),
+    ...Object.entries(preview.extensions?.native ?? {})
+      .filter(([, capability]) => capability.kind === "query" && capability.trigger === "load")
+      .map(([nativeId]) => ({ id: nativeId, native: true })),
+  ];
+  const data: Record<string, unknown> = {};
+  const status: Record<string, unknown> = {};
+  const worker = async () => {
+    while (true) {
+      const request = pendingRequests.shift();
+      if (!request) return;
+      try {
+        let result;
+        if (request.native) {
+          result = await api.customWidget.nativeQuery({ previewSessionId: id, nativeId: request.id, params: {} });
+        } else {
+          result = await api.customWidget.previewQuery({ sessionId: id, requestId: request.id, params: {} });
+        }
+        data[request.id] = result.data;
+        status[request.id] = { loading: false, ok: result.ok, status: result.status, error: result.error };
+      } catch (cause) {
+        data[request.id] = null;
+        status[request.id] = {
+          loading: false,
           ok: false,
           status: 0,
-          statusText: "Error",
-          data: null,
           error: cause instanceof Error ? cause.message : "Request failed",
-        }));
-      return [request.id, result] as const;
-    }),
-  );
-  const data = Object.fromEntries(results.map(([requestId, result]) => [requestId, result.data]));
-  const status = Object.fromEntries(
-    results.map(([requestId, result]) => [
-      requestId,
-      { loading: false, ok: result.ok, status: result.status, error: result.error },
-    ]),
-  );
+        };
+      }
+    }
+  };
+  await Promise.all(Array.from({ length: Math.min(4, pendingRequests.length) }, worker));
 
   return (
     <Container size="xl" py="xl">
@@ -51,6 +64,7 @@ export default async function CustomWidgetPreviewPage({ params }: { params: Prom
           <CustomJsxDisplay
             data={{
               template: preview.template,
+              extensions: preview.extensions,
               data,
               status,
               options: preview.options,

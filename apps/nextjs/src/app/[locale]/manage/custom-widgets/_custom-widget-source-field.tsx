@@ -7,6 +7,8 @@ import { getCustomWidgetSourceUrlIssue } from "@homarr/custom-widgets/core";
 import type { CustomWidgetSource, CustomWidgetSourceUrlIssue } from "@homarr/custom-widgets/core";
 import { useI18n } from "@homarr/translation/client";
 
+import { SourceNetworkHint } from "./_flow/source-network-hint";
+
 import type { CustomWidgetWorkbenchForm } from "./_custom-widget-form-utils";
 import { CustomWidgetIdentifierInput } from "./_custom-widget-identifier-input";
 
@@ -98,6 +100,7 @@ export function CustomWidgetSourceField({
             allowDeselect={false}
           />
         </Group>
+        <SourceNetworkHint source={source} onChange={(networkScope) => onUpdate(index, { networkScope })} />
         {typeof source.auth === "object" && source.auth.type === "apiKeyHeader" && (
           <TextInput
             label={t("headerName")}
@@ -116,7 +119,7 @@ export function CustomWidgetSourceField({
           const secret = form.values.secrets.find((entry) => entry.sourceId === source.id && entry.kind === kind);
           const Input = kind === "username" ? TextInput : PasswordInput;
           return (
-            <Group key={kind} align="end" wrap="nowrap">
+            <Group key={kind} align="end" wrap="nowrap" data-workbench-credential>
               <Input
                 style={{ flex: 1 }}
                 label={tSecret(kind)}
@@ -131,6 +134,7 @@ export function CustomWidgetSourceField({
                   color="red"
                   variant="subtle"
                   loading={clearSecretPending}
+                  disabled={form.submitting}
                   onClick={() => void onClearSecret(source.id, kind)}
                 >
                   {t("clear")}
@@ -139,7 +143,7 @@ export function CustomWidgetSourceField({
             </Group>
           );
         })}
-        {index > 0 && (
+        {
           <Button
             type="button"
             color="red"
@@ -149,7 +153,7 @@ export function CustomWidgetSourceField({
           >
             {t("remove")}
           </Button>
-        )}
+        }
       </Stack>
     </Fieldset>
   );

@@ -5,6 +5,8 @@ import type { CustomWidgetWorkbenchForm } from "./_custom-widget-form-utils";
 
 interface RenameHandlersInput {
   form: CustomWidgetWorkbenchForm;
+  transaction(action: () => void): void;
+  renameRequestBinding(previousId: string, nextId: string): void;
   invalidWidgetMessage: string;
 }
 
@@ -16,7 +18,11 @@ export function createCustomWidgetRenameHandlers(input: RenameHandlersInput) {
       return;
     }
     try {
-      applyDefinition(input.form, renameCustomWidgetRequest(candidate.data, currentId, nextId));
+      input.transaction(() => {
+        const renamed = renameCustomWidgetRequest(candidate.data, currentId, nextId);
+        input.renameRequestBinding(currentId, nextId);
+        applyDefinition(input.form, renamed);
+      });
       input.form.clearFieldError("requests");
     } catch (error) {
       input.form.setFieldError("requests", error instanceof Error ? error.message : input.invalidWidgetMessage);
@@ -29,7 +35,9 @@ export function createCustomWidgetRenameHandlers(input: RenameHandlersInput) {
       return;
     }
     try {
-      applyDefinition(input.form, renameCustomWidgetOption(candidate.data, currentName, nextName));
+      input.transaction(() =>
+        applyDefinition(input.form, renameCustomWidgetOption(candidate.data, currentName, nextName)),
+      );
       input.form.clearFieldError("options");
     } catch (error) {
       input.form.setFieldError("options", error instanceof Error ? error.message : input.invalidWidgetMessage);

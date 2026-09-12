@@ -16,6 +16,12 @@ export const ROOT_BINDINGS = new Set([
   "data",
   "options",
   "inputs",
+  "preferences",
+  "content",
+  "contentStatus",
+  "theme",
+  "container",
+  "props",
   "status",
   "decodeURIComponent",
   "encodeURIComponent",
@@ -26,6 +32,7 @@ export const ROOT_BINDINGS = new Set([
   "undefined",
 ]);
 
+// New root bindings remain shadowable so existing v2 callback parameters stay valid.
 export const RESERVED_LOCAL_BINDINGS = new Set(["data", "status", "options", "inputs"]);
 const callableRootBindings = new Set([
   "Boolean",

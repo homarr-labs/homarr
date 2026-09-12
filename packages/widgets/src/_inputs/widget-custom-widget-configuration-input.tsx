@@ -28,6 +28,8 @@ import type { CustomWidgetEditorMessages } from "@homarr/custom-widgets/workbenc
 import { IconPicker } from "@homarr/forms-collection";
 import { useI18n } from "@homarr/translation/client";
 
+import { CustomWidgetIntegrationOption } from "../custom-api/integration-option";
+
 import type { CommonWidgetInputProps } from "./common";
 import { useFormContext } from "./form";
 
@@ -128,6 +130,8 @@ function OptionField({
   const form = useFormContext();
   const input = form.getInputProps(path, { type: option.control === "switch" ? "checkbox" : "input" });
   const common = { label: option.label, description: option.description };
+  if (option.control === "integration")
+    return <CustomWidgetIntegrationOption {...common} {...input} kinds={option.integrationKinds} />;
   if (option.choicesFrom)
     return <DynamicOptionField option={option} path={path} configuration={configuration} definitionId={definitionId} />;
   if (option.control === "switch") return <Switch {...common} {...input} />;

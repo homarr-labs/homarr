@@ -36,6 +36,7 @@ export interface CustomWidgetSchemaReferenceData {
 }
 
 export interface CustomWidgetCodeEditorProps {
+  history?: { canUndo: boolean; canRedo: boolean; undo(): void; redo(): void };
   id: string;
   value: string;
   onChange(value: string): void;
@@ -51,6 +52,7 @@ export interface CustomWidgetCodeEditorProps {
   starter?: string;
   completions?: Completion[];
   revealText?: string;
+  revealIndex?: number;
   revealKey?: number;
   insertText?: string;
   insertKey?: number;
