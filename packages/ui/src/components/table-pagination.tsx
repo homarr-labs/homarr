@@ -3,7 +3,7 @@
 import { useCallback } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { PaginationProps } from "@mantine/core";
-import { Pagination } from "@mantine/core";
+import { Box, Group, Pagination } from "@mantine/core";
 
 import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
@@ -49,16 +49,26 @@ export const TablePagination = ({ total }: TablePaginationProps) => {
     [pathName, replace, searchParams],
   );
 
+  if (total <= 0) return null;
+
   return (
-    <Pagination
+    <Pagination.Root
       total={total}
       value={current}
       layout="responsive"
-      formatLabel={({ page, totalPages }) => t("pageOf", { page, totalPages })}
+      w="100%"
       getItemProps={getItemProps}
-      getControlProps={getControlProps}
       onChange={handleChange}
-    />
+    >
+      <Group gap={8} justify="end" wrap="nowrap">
+        <Pagination.Previous {...getControlProps("previous")} />
+        <Box className={Pagination.classes.items}>
+          <Pagination.Items />
+        </Box>
+        <Pagination.Label formatLabel={({ page, totalPages }) => t("pageOf", { page, totalPages })} />
+        <Pagination.Next {...getControlProps("next")} />
+      </Group>
+    </Pagination.Root>
   );
 };
 

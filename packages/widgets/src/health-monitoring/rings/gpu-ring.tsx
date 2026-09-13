@@ -1,5 +1,4 @@
-import { GaugeChart } from "@mantine/charts";
-import { Center, Stack, Text, Tooltip } from "@mantine/core";
+import { Center, RingProgress, Stack, Text, Tooltip } from "@mantine/core";
 import { IconDeviceDesktop } from "@tabler/icons-react";
 
 import { zoomCompensatedSize } from "@homarr/ui";
@@ -28,6 +27,8 @@ export const GpuRing = ({ gpu, isTiny, fahrenheit, ariaLabel }: GpuRingProps) =>
         : `${gpu.temperature}°C`
       : null;
 
+  const percentage = Math.max(0, Math.min(100, Number(gpu.processorUtilization.toFixed(2))));
+
   return (
     <Tooltip
       label={
@@ -42,17 +43,19 @@ export const GpuRing = ({ gpu, isTiny, fahrenheit, ariaLabel }: GpuRingProps) =>
       }
       multiline
     >
-      <GaugeChart
+      <RingProgress
         className={`health-monitoring-gpu health-monitoring-gpu-${gpu.gpuId}`}
         aria-label={ariaLabel}
         roundCaps
         size={isTiny ? 50 : 100}
         thickness={isTiny ? 4 : 8}
-        startAngle={0}
-        endAngle={360}
-        value={Number(gpu.processorUtilization.toFixed(2))}
-        valueFormatter={(value) => `${value.toFixed(0)}%`}
-        filledColor={progressColor(Number(gpu.processorUtilization.toFixed(2)))}
+        // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- RingProgress renders the custom meter graphic.
+        role="meter"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={percentage}
+        aria-valuetext={`${percentage.toFixed(0)}%`}
+        sections={[{ value: percentage, color: progressColor(percentage) }]}
         label={
           <Center style={{ flexDirection: "column" }}>
             <Text

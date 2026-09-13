@@ -92,10 +92,10 @@ export const UserAvatarMenu = ({ children, availableUpdates, isDockerEnabled, bo
         </Menu.Item>
         <Menu.Divider />
 
-        <Menu.Item p={0} closeMenuOnClick={false} component="div">
+        <Menu.Item p={4} closeMenuOnClick={false} component="div">
           <CurrentColorSchemeCombobox />
         </Menu.Item>
-        <Menu.Item p={0} closeMenuOnClick={false} component="div">
+        <Menu.Item p={4} closeMenuOnClick={false} component="div">
           <CurrentLanguageCombobox />
         </Menu.Item>
         <Menu.Divider />

@@ -1,5 +1,4 @@
-import { GaugeChart } from "@mantine/charts";
-import { Center, Text } from "@mantine/core";
+import { Center, RingProgress, Text } from "@mantine/core";
 import { IconCpu } from "@tabler/icons-react";
 
 import { zoomCompensatedSize } from "@homarr/ui";
@@ -30,19 +29,19 @@ export const CpuTempRing = ({
   const temperatureDisplay = formatTemperature(normalizedCpuTemp);
 
   return (
-    <GaugeChart
+    <RingProgress
       className="health-monitoring-cpu-temperature"
       aria-label={ariaLabel}
       roundCaps
       size={isTiny ? 50 : 100}
       thickness={isTiny ? 4 : 8}
-      startAngle={0}
-      endAngle={360}
-      min={CPU_TEMPERATURE_MIN_CELSIUS}
-      max={CPU_TEMPERATURE_MAX_CELSIUS}
-      value={normalizedCpuTemp}
-      valueFormatter={formatTemperature}
-      filledColor={progressColor(normalizedCpuTemp)}
+      // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- RingProgress renders the custom meter graphic.
+      role="meter"
+      aria-valuemin={CPU_TEMPERATURE_MIN_CELSIUS}
+      aria-valuemax={CPU_TEMPERATURE_MAX_CELSIUS}
+      aria-valuenow={normalizedCpuTemp}
+      aria-valuetext={temperatureDisplay}
+      sections={[{ value: normalizedCpuTemp, color: progressColor(normalizedCpuTemp) }]}
       label={
         <Center style={{ flexDirection: "column" }}>
           <Text className="health-monitoring-cpu-temp-value" size={isTiny ? "8px" : "xs"}>

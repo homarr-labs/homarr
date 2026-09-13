@@ -285,9 +285,7 @@ interface TimerDisplayProps {
 
 const CompactTimer = ({
   attentionStyle,
-  controlSize,
   disabled,
-  height,
   onReset,
   onToggleRunning,
   progress,
@@ -297,69 +295,52 @@ const CompactTimer = ({
 }: TimerDisplayProps) => {
   const t = useI18n("widget.timer");
   const phaseLabel = getTimerPhaseLabel(runtime, t);
-  const showCompletedFocus = runtime.mode === "pomodoro" && width >= 320;
-  const showProgress = height >= 125;
-  let phaseBadgeMaxWidth = "calc(100% - var(--mantine-spacing-md))";
-  if (showCompletedFocus) phaseBadgeMaxWidth = "60%";
+  const showCompletedFocus = runtime.mode === "pomodoro" && runtime.completedFocusSessions > 0 && width >= 320;
+
   return (
     <Stack
       h="100%"
       w="100%"
-      align="center"
-      justify="center"
-      gap="xs"
-      p="xs"
-      style={{ ...attentionStyle, overflow: "hidden", position: "relative" }}
+      gap={4}
+      px="xs"
+      py={4}
+      style={{ ...attentionStyle, overflow: "hidden", containerType: "inline-size" }}
     >
-      <Badge
-        variant="light"
-        size="xs"
-        h="auto"
-        maw={phaseBadgeMaxWidth}
-        py="calc(var(--mantine-spacing-xs) / 2)"
-        aria-live="polite"
-        style={{
-          insetInlineStart: "var(--mantine-spacing-xs)",
-          position: "absolute",
-          top: "var(--mantine-spacing-xs)",
-        }}
-        styles={{
-          label: {
-            lineHeight: "var(--mantine-line-height-xs)",
-            overflow: "visible",
-            textOverflow: "clip",
-            whiteSpace: "normal",
-          },
-        }}
+      <Group justify="space-between" gap="xs" wrap="nowrap" style={{ flexShrink: 0 }}>
+        <Badge variant="light" size="xs" maw="100%" aria-live="polite">
+          {phaseLabel}
+        </Badge>
+        {showCompletedFocus && (
+          <Text size="xs" c="dimmed" truncate style={{ minWidth: 0 }}>
+            {t("compact.completedFocus", { count: runtime.completedFocusSessions })}
+          </Text>
+        )}
+      </Group>
+      <Text
+        component="time"
+        fz="clamp(var(--mantine-font-size-lg), 32cqw, var(--mantine-h1-font-size))"
+        fw={700}
+        lh={1}
+        ta="center"
+        style={{ fontVariantNumeric: "tabular-nums", flex: 1, display: "grid", placeItems: "center", minHeight: 0 }}
       >
-        {phaseLabel}
-      </Badge>
-      {showCompletedFocus && (
-        <Text
-          size="xs"
-          c="dimmed"
-          style={{
-            insetInlineEnd: "var(--mantine-spacing-xs)",
-            position: "absolute",
-            top: "var(--mantine-spacing-xs)",
-          }}
-        >
-          {t("compact.completedFocus", { count: runtime.completedFocusSessions })}
-        </Text>
-      )}
-      <Text component="time" fz="xl" fw={700} lh={1} style={{ fontVariantNumeric: "tabular-nums" }}>
         {formatTimerDuration(remainingMs)}
       </Text>
-      {showProgress && (
-        <Progress w="100%" value={progress} aria-label={t("progress", { progress: Math.round(progress) })} />
-      )}
-      <TimerControls
-        controlSize={controlSize}
-        disabled={disabled}
-        isRunning={runtime.status === "running"}
-        onReset={onReset}
-        onToggleRunning={onToggleRunning}
-      />
+      <Group gap={4} w="100%" style={{ flexShrink: 0 }}>
+        <TimerControls
+          controlSize="sm"
+          disabled={disabled}
+          isRunning={runtime.status === "running"}
+          onReset={onReset}
+          onToggleRunning={onToggleRunning}
+        />
+        <Progress
+          style={{ flex: "1 0 calc(var(--mantine-spacing-xl) * 2)", minWidth: 0 }}
+          value={progress}
+          size="sm"
+          aria-label={t("progress", { progress: Math.round(progress) })}
+        />
+      </Group>
     </Stack>
   );
 };
@@ -484,7 +465,7 @@ const TimerControls = ({
   const t = useI18n("widget.timer");
   const toggleLabel = isRunning ? t("action.pause") : t("action.start");
   return (
-    <Group gap="xs" wrap="nowrap">
+    <Group gap={4} wrap="nowrap" style={{ flexShrink: 0 }}>
       <Tooltip label={toggleLabel}>
         <ActionIcon
           size={controlSize}
