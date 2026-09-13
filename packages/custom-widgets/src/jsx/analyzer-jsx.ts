@@ -113,7 +113,7 @@ export function analyzeCustomJsxElement(
 
   nodesOf(node.children).forEach((child) => {
     const expression = child.type === "JSXExpressionContainer" ? nodeOf(child.expression) : null;
-    if (resolvedName === "SubFetch" && expression?.type === "ArrowFunctionExpression") {
+    if (["SubFetch", "NativeQuery"].includes(resolvedName ?? "") && expression?.type === "ArrowFunctionExpression") {
       context.visitArrow(expression, depth + 1, bindings);
       return;
     }

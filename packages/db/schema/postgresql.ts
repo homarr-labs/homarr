@@ -633,6 +633,10 @@ export const customWidgetDefinitions = pgTable("custom_widget_v2_definition", {
   requests: text().notNull(),
   options: text().notNull(),
   template: text().notNull(),
+  extensions: text(),
+  editorLayout: text(),
+  workshopOrigin: text(),
+  previousPackage: text(),
   enabled: boolean().notNull().default(true),
   createdAt: timestamp({ mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp({ mode: "date" }).notNull().defaultNow(),
@@ -660,6 +664,24 @@ export const customWidgetSecrets = pgTable(
       name: "custom_widget_v2_secret_definition_id_fk",
     }).onDelete("cascade"),
   }),
+);
+
+export const customWidgetContent = pgTable(
+  "custom_widget_content",
+  {
+    itemId: varchar({ length: 64 })
+      .notNull()
+      .references(() => items.id, { onDelete: "cascade" }),
+    definitionId: varchar({ length: 64 })
+      .notNull()
+      .references(() => customWidgetDefinitions.id, { onDelete: "cascade" }),
+    key: varchar({ length: 64 }).notNull(),
+    name: varchar({ length: 64 }).notNull(),
+    value: text().notNull(),
+    revision: integer().notNull(),
+    updatedAt: timestamp({ mode: "date" }).notNull().defaultNow(),
+  },
+  (table) => ({ compoundKey: primaryKey({ columns: [table.itemId, table.definitionId, table.key] }) }),
 );
 
 export const widgetSecrets = pgTable(

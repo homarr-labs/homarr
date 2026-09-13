@@ -26,7 +26,7 @@ Equivalent HTTP resources are available under `/api/custom-widgets/` for authent
 ## Authoring lifecycle
 
 1. Load the skill and only the references needed for the design.
-2. Read the external API documentation and build the definition.
+2. Read the external API documentation or discover Homarr capabilities with `customWidget_nativeCapabilities`, then build the definition.
 3. Validate the JSX, then create a preview from the complete definition.
 4. Run every returned query and simulate every relevant action against the current preview revision.
 5. Inspect the preview and redacted journal. Revise the existing preview for JSX-only changes.
@@ -34,7 +34,9 @@ Equivalent HTTP resources are available under `/api/custom-widgets/` for authent
 7. Configure deployment-specific source URLs and credentials, then preview the saved definition again.
 
 Use `templateLines` for multiline JSX tool input. A preview must have current evidence for every query and action before
-it can be saved. Simulation counts as action evidence without performing the mutation.
+it can be saved. Simulation counts as action evidence without performing the mutation. V3 native queries and actions use
+`customWidget_nativeQuery` and `customWidget_nativeAction` with the owned preview session ID; their evidence is recorded
+under `native:<id>`. Native capabilities must also have current evidence before preview-based persistence.
 
 If the agent does not have a source URL or credential, it can request a short-lived Homarr configuration URL. An
 authenticated administrator completes it in Homarr; the agent receives the status, never the plaintext credential.
@@ -43,3 +45,10 @@ Agents can also search, inspect, install, and configure existing Workshop widget
 
 See [MCP](/docs/management/mcp) for client configuration and [requests and security](./requests-and-security) for the
 runtime limits.
+
+## Editing an open workbench
+
+Homarr's built-in Assistant can use `workbench_read`, `workbench_patch`, and `workbench_preview` to change the visible draft.
+Read before patching, supply the returned draft ID and revision, and describe one coherent change. Credentials are excluded from these
+tools. The workbench validates the resulting definition and rejects stale patches; one Undo reverses an accepted patch.
+Browser draft tools require an open workbench and do not grant permission to save, publish, or run live actions.

@@ -33,6 +33,8 @@ export default async function EditCustomWidgetPage(props: EditCustomWidgetPagePr
             <CustomWidgetForm
               mode="edit"
               definitionId={params.id}
+              editorLayout={definition.editorLayout}
+              savedRevision={definition.savedRevision}
               initialValues={{
                 name: definition.name,
                 description: definition.description ?? "",
@@ -41,6 +43,10 @@ export default async function EditCustomWidgetPage(props: EditCustomWidgetPagePr
                 requests: JSON.stringify(definition.requests, null, 2),
                 options: JSON.stringify(definition.options, null, 2),
                 template: definition.template,
+                extensions:
+                  definition.$schema === "homarr-custom-widget-v3"
+                    ? JSON.stringify(definition.extensions ?? {}, null, 2)
+                    : "",
                 secrets: definition.secrets.map((secret) => ({
                   sourceId: secret.sourceId,
                   kind: secret.kind,

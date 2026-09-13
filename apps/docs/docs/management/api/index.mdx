@@ -98,3 +98,28 @@ and focused references under `/api/custom-widgets/`.
 
 Use [Custom Widget agent authoring](../custom-widgets/agent-authoring) for the lifecycle and
 [MCP](../mcp) when the client supports Model Context Protocol.
+
+Workshop installation through `customWidget.workshopInstall` and the in-app catalog uses the same server path. Supply
+`expectedRevision` from `customWidget.workshopGet` to install only the package you reviewed. Source URL overrides and
+credentials are local; the installed definition retains its Workshop provenance.
+For native capabilities, pass local integration selections as `integrations: { "optionId": "integrationId" }`; portable
+defaults do not carry another Homarr instance's integration IDs.
+
+When renaming a saved source through `customWidget.update` or `customWidget.previewCreate`, include
+`sourceRenames: { "previousId": "newId" }` to preserve its credentials. The server checks the original and resulting
+source bindings; changed origin, network scope, or authentication requires re-entered credentials. A rename moves
+encrypted credentials transactionally and does not copy them into the portable definition.
+
+For a linked installation, `customWidget.workshopUpdateReview` returns the current and incoming definitions, source-binding
+changes, local-modification status, and review tokens. Pass its `expectedFingerprint`, `expectedState`,
+`upstreamFingerprint`, and `revision` unchanged to `customWidget.workshopUpdateInstall`. Both procedures require admin
+access and are exposed through MCP with an underscore replacing the dot. An intervening edit or upstream revision
+returns `CONFLICT`; fetch a fresh review instead of retrying the old update. Source/authentication changes and local
+customizations require a separate installation.
+
+Shared widget content uses `customWidget.contentRead({ itemId })` and
+`customWidget.contentWrite({ itemId, name, expectedRevision, value })`. Reads require access to the board; writes require
+authentication and the declaration's `modify` or `full` board permission. Each value has an independent revision; `0`
+means the declared default has not been saved. A stale revision returns `CONFLICT`; read again before saving. Content is
+scoped to the placed item and its selected definition. Workbench previews keep content changes in memory and cannot
+persist them through these procedures. These procedures are not exposed as MCP tools.

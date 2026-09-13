@@ -235,7 +235,10 @@ function createHeightExtension(height: string): Extension {
 
 function createThemeExtension(theme: DirectCodeMirrorProps["theme"]): Extension {
   if (theme === "dark") return oneDark;
-  return [];
+  // The default blue line tint drops JSX tag contrast below 4.5:1.
+  return EditorView.theme({
+    ".cm-activeLine": { backgroundColor: "#fff", boxShadow: "inset 2px 0 #b6cef5" },
+  });
 }
 
 function reconfigure(instanceId: string, compartment: Compartment, extension: Extension) {

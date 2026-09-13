@@ -3,30 +3,32 @@ import { z } from "zod/v4";
 
 import { decryptSecret } from "@homarr/common/server";
 import {
-  collectCustomWidgetRequestReferences,
   customWidgetAuthoringDefinitionSchema,
   customJsxTemplateSchema,
   customWidgetSecretsInputSchema,
+  customWidgetSourceRenamesSchema,
   customWidgetTemplateLinesSchema,
   getCustomWidgetConfirmation,
   getCustomWidgetDefaultOptions,
   normalizeCustomWidgetAuthoringDefinition,
   validateCustomWidgetOptions,
 } from "@homarr/custom-widgets/core";
-import type { CustomJsxRequest } from "@homarr/custom-widgets/core";
 import { eq } from "@homarr/db";
 import { customWidgetDefinitions } from "@homarr/db/schema";
 
 import { permissionRequiredProcedure } from "../../trpc";
+import { getPreviewEvidenceChecklist } from "./preview-evidence-checklist";
 import { parseCustomWidgetAuthoringInput } from "./authoring-validation";
 import { createPreviewSession, getPreviewSession, revisePreviewSessionTemplate } from "./preview-sessions";
 import { hasSameSecretBinding, requiredSecretKinds } from "./secret-policy";
 import { parseStoredCustomWidgetDefinition } from "./stored-definition";
+import { prepareSourceSecretRenames } from "./source-secret-renames";
 
 const previewCreateInputSchema = z.object({
   definition: customWidgetAuthoringDefinitionSchema,
   secrets: customWidgetSecretsInputSchema.default([]),
   definitionId: z.string().optional(),
+  sourceRenames: customWidgetSourceRenamesSchema.default({}),
   options: z.record(z.string(), z.unknown()).optional(),
 });
 
@@ -49,34 +51,6 @@ const previewReviseTemplateInputSchema = z
       });
     }
   });
-
-const getPreviewEvidenceChecklist = (requests: Record<string, CustomJsxRequest>, sessionId: string) => ({
-  queries: Object.entries(requests).flatMap(([requestId, request]) => {
-    if (request.kind !== "query") return [];
-    return [
-      {
-        requestId,
-        trigger: request.trigger,
-        parameterNames: [...collectCustomWidgetRequestReferences(request).params],
-        nextStep: `Call customWidget_previewQuery with sessionId '${sessionId}' and requestId '${requestId}'.`,
-      },
-    ];
-  }),
-  actions: Object.entries(requests).flatMap(([requestId, request]) => {
-    if (request.kind !== "action") return [];
-    return [
-      {
-        requestId,
-        method: request.method,
-        parameterNames: [...collectCustomWidgetRequestReferences(request).params],
-        minimumBoardPermission: request.permission,
-        confirmation: getCustomWidgetConfirmation(request),
-        invalidates: request.invalidates ?? [],
-        nextStep: `Call customWidget_previewAction with sessionId '${sessionId}' and requestId '${requestId}'. Actions are simulated unless live preview actions were explicitly enabled.`,
-      },
-    ];
-  }),
-});
 
 const previewCreateProcedure = permissionRequiredProcedure
   .requiresPermission("admin")
@@ -103,6 +77,9 @@ const previewCreateProcedure = permissionRequiredProcedure
     }
 
     const secrets = [...input.secrets];
+    if (!input.definitionId && Object.keys(input.sourceRenames).length) {
+      throw new TRPCError({ code: "BAD_REQUEST", message: "Source renames require a saved definition" });
+    }
     if (input.definitionId) {
       const existing = await ctx.db.query.customWidgetDefinitions.findFirst({
         where: eq(customWidgetDefinitions.id, input.definitionId),
@@ -110,14 +87,16 @@ const previewCreateProcedure = permissionRequiredProcedure
       });
       if (!existing) throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget definition not found" });
       const existingDefinition = parseStoredCustomWidgetDefinition(existing);
+      prepareSourceSecretRenames(existingDefinition.sources, definition.sources, input.sourceRenames);
       for (const [sourceId, existingSource] of Object.entries(existingDefinition.sources)) {
-        const submittedSource = definition.sources[sourceId];
+        const destinationId = input.sourceRenames[sourceId] ?? sourceId;
+        const submittedSource = definition.sources[destinationId];
         const hasStoredSecrets = existing.secrets.some((secret) => secret.sourceId === sourceId);
         if (!submittedSource || !hasStoredSecrets || hasSameSecretBinding(existingSource, submittedSource)) continue;
 
         const authType = typeof submittedSource.auth === "string" ? submittedSource.auth : submittedSource.auth.type;
         const missingReplacement = requiredSecretKinds(authType).some(
-          (kind) => !secrets.some((secret) => secret.sourceId === sourceId && secret.kind === kind),
+          (kind) => !secrets.some((secret) => secret.sourceId === destinationId && secret.kind === kind),
         );
         if (missingReplacement) {
           throw new TRPCError({
@@ -127,15 +106,16 @@ const previewCreateProcedure = permissionRequiredProcedure
         }
       }
       for (const secret of existing.secrets) {
+        const destinationId = input.sourceRenames[secret.sourceId] ?? secret.sourceId;
         const existingSource = existingDefinition.sources[secret.sourceId];
-        const submittedSource = definition.sources[secret.sourceId];
+        const submittedSource = definition.sources[destinationId];
         if (
           existingSource &&
           submittedSource &&
           hasSameSecretBinding(existingSource, submittedSource) &&
-          !secrets.some((candidate) => candidate.sourceId === secret.sourceId && candidate.kind === secret.kind)
+          !secrets.some((candidate) => candidate.sourceId === destinationId && candidate.kind === secret.kind)
         ) {
-          secrets.push({ sourceId: secret.sourceId, kind: secret.kind, value: decryptSecret(secret.encryptedValue) });
+          secrets.push({ sourceId: destinationId, kind: secret.kind, value: decryptSecret(secret.encryptedValue) });
         }
       }
     }
@@ -163,6 +143,8 @@ const previewCreateProcedure = permissionRequiredProcedure
       description: definition.description,
       iconUrl: definition.iconUrl,
       template: definition.template,
+      // Sessions use extensions to retain the schema version, including static v3 helpers.
+      extensions: definition.$schema === "homarr-custom-widget-v3" ? (definition.extensions ?? {}) : undefined,
       optionDefinitions: definition.options,
       options,
       secrets,
@@ -174,7 +156,7 @@ const previewCreateProcedure = permissionRequiredProcedure
       previewSession,
       previewPath,
       previewUrl: new URL(previewPath, ctx.baseUrl ?? "http://localhost").toString(),
-      ...getPreviewEvidenceChecklist(definition.requests, previewSession.id),
+      ...getPreviewEvidenceChecklist(definition.requests, previewSession.id, definition.extensions?.native),
     };
   });
 
@@ -214,7 +196,7 @@ export const previewBaseProcedures = {
         },
         previewPath,
         previewUrl: new URL(previewPath, ctx.baseUrl ?? "http://localhost").toString(),
-        ...getPreviewEvidenceChecklist(session.requests, session.id),
+        ...getPreviewEvidenceChecklist(session.requests, session.id, session.extensions?.native),
       };
     }),
   previewGet: permissionRequiredProcedure
@@ -230,6 +212,7 @@ export const previewBaseProcedures = {
         iconUrl: session.iconUrl,
         expiresAt: session.expiresAt,
         template: session.template,
+        extensions: session.extensions,
         optionDefinitions: session.optionDefinitions,
         options: session.options,
         requests: Object.entries(session.requests).map(([id, request]) => ({

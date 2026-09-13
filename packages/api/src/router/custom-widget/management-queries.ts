@@ -1,3 +1,4 @@
+import { customWidgetSavedRevision } from "./stored-definition-state";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
@@ -88,6 +89,9 @@ export const managementQueryProcedures = {
         id: definition.id,
         managementPath: `/manage/custom-widgets/edit/${definition.id}`,
         ...parseStoredCustomWidgetDefinition(definition),
+        editorLayout: definition.editorLayout,
+        savedRevision: customWidgetSavedRevision(definition),
+        workshopOrigin: definition.workshopOrigin,
         enabled: definition.enabled,
         createdAt: definition.createdAt,
         updatedAt: definition.updatedAt,

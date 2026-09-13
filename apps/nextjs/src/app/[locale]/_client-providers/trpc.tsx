@@ -171,7 +171,8 @@ const ScopedTRPCReactProvider = ({
         splitLink({
           condition: ({ type }) => type === "subscription",
           true: splitLink({
-            condition: ({ path }) => path === "widget.beszel.subscribeSystemStats",
+            condition: ({ path }) =>
+              path === "widget.beszel.subscribeSystemStats" || path === "customWidget.nativeSubscribe",
             true: httpSubscriptionLink({
               url: getTrpcUrl(),
               transformer: superjson,

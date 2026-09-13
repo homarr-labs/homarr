@@ -1,11 +1,13 @@
 import type { ReactNode } from "react";
 import { createElement, Fragment } from "react";
 
-import { asNode, asNodeArray, SafeJsxError } from "./interpreter-foundation";
-import type { AstNode, Environment } from "./interpreter-foundation";
+import { asNode, asNodeArray, SafeJsxError, Environment } from "./interpreter-foundation";
+import type { AstNode } from "./interpreter-foundation";
 import type { JsxEmitterContext } from "./emitter-context";
 import { resolveCustomJsxComponentName } from "../core/component-registry";
 import { diagnoseCustomJsxProps, normalizedProperty, sanitizeCustomJsxProps } from "./safe-properties";
+import { parseCustomJsxTemplate } from "./interpreter-parser";
+import { scopeCustomWidgetClassNames } from "../core/scoped-styles";
 import { CUSTOM_JSX_BLOCKED_TAGS } from "./policy";
 
 export function emitJsxFragment(
@@ -35,7 +37,7 @@ export function emitJsxElement(
     return null;
   }
   const component = context.components[resolvedTag];
-  if (!component) {
+  if (!component && resolvedTag !== "View") {
     context.warnings.add(`Unknown or unavailable component: ${tag}`);
     return null;
   }
@@ -63,17 +65,48 @@ export function emitJsxElement(
       rawProps[name] = value.type === "Literal" ? value.value : context.evaluate(value, environment, depth + 1);
     }
   }
+  if (resolvedTag === "View") {
+    const fragment = context.fragments?.[String(rawProps.name)];
+    if (!fragment) throw new SafeJsxError(`Unknown view fragment: ${String(rawProps.name)}`);
+    const values = rawProps.values;
+    const props = values && typeof values === "object" && !Array.isArray(values) ? values : {};
+    const content = context.evaluate(
+      parseCustomJsxTemplate(fragment),
+      new Environment({ props }, environment, String(rawProps.name)),
+      depth + 1,
+    ) as ReactNode;
+    if (typeof rawProps.key === "string" || typeof rawProps.key === "number") {
+      context.budget.rendered();
+      return createElement(Fragment, { key: rawProps.key }, content);
+    }
+    return content;
+  }
+  if (!component) return null;
   const children = asNodeArray(node.children, "JSX children").map((child) => {
     const expression =
       child.type === "JSXExpressionContainer" ? asNode(child.expression, "JSX child expression") : null;
-    if (resolvedTag === "SubFetch" && expression?.type === "ArrowFunctionExpression") {
+    if (["SubFetch", "NativeQuery"].includes(resolvedTag) && expression?.type === "ArrowFunctionExpression") {
       const callback = context.createCallback(expression, environment);
-      return (value: unknown) => context.renderCallback(callback, [value], depth + 1);
+      return (...values: unknown[]) => context.renderCallback(callback, values, depth + 1);
     }
     return context.evaluate(child, environment, depth + 1);
   });
   diagnoseCustomJsxProps(rawProps, resolvedTag).forEach((diagnostic) => context.warnings.add(diagnostic));
   const props = sanitizeCustomJsxProps(rawProps, resolvedTag);
+  props.className = scopeCustomWidgetClassNames(props.className, context.scopeId);
+  delete props["data-cw-source"];
+  if (context.captureSourceLocations) {
+    const fragment = environment.getSourceId();
+    const source = context.fragments?.[fragment ?? ""] ?? context.template ?? "";
+    const index = Math.max(0, (node.start ?? 2) - 2);
+    const prefix = source.slice(0, index);
+    props["data-cw-source"] = JSON.stringify({
+      index,
+      line: prefix.split("\n").length,
+      column: index - prefix.lastIndexOf("\n"),
+      fragment,
+    });
+  }
   context.budget.rendered();
   return createElement(component, props as never, ...(children as ReactNode[]));
 }

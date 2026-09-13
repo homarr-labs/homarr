@@ -42,15 +42,15 @@ export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
   }, []);
   useEffect(() => {
     const editorView = editorViewRef.current;
-    if (!editorView || !props.revealText) return;
-    const from = editorView.state.doc.toString().indexOf(props.revealText);
-    if (from < 0) return;
+    if (!editorView || (!props.revealText && props.revealIndex === undefined)) return;
+    const from = props.revealIndex ?? editorView.state.doc.toString().indexOf(props.revealText ?? "");
+    if (from < 0 || from > editorView.state.doc.length) return;
     editorView.dispatch({
-      selection: { anchor: from, head: from + props.revealText.length },
+      selection: { anchor: from, head: Math.min(editorView.state.doc.length, from + (props.revealText?.length ?? 0)) },
       effects: EditorView.scrollIntoView(from, { y: "center" }),
     });
     editorView.focus();
-  }, [editorCreated, props.revealKey, props.revealText]);
+  }, [editorCreated, props.revealKey, props.revealText, props.revealIndex]);
   useEffect(() => {
     const editorView = editorViewRef.current;
     if (!editorView || !props.insertText) return;
@@ -78,15 +78,17 @@ export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
   const handleUndo = useCallback(() => {
     const editorView = editorViewRef.current;
     if (!editorView) return;
-    undo(editorView);
+    if (props.history) props.history.undo();
+    else undo(editorView);
     editorView.focus();
-  }, []);
+  }, [props.history]);
   const handleRedo = useCallback(() => {
     const editorView = editorViewRef.current;
     if (!editorView) return;
-    redo(editorView);
+    if (props.history) props.history.redo();
+    else redo(editorView);
     editorView.focus();
-  }, []);
+  }, [props.history]);
   const handleUpdate = useCallback((update: ViewUpdate) => {
     if (!update.selectionSet && !update.docChanged) return;
     const head = update.state.selection.main.head;
@@ -129,7 +131,9 @@ export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
         <CodeEditorToolbar
           props={props}
           editorCreated={editorCreated}
-          historyDepth={historyDepth}
+          historyDepth={
+            props.history ? { undo: Number(props.history.canUndo), redo: Number(props.history.canRedo) } : historyDepth
+          }
           formattedValue={formattedValue}
           copied={copied}
           referenceOpened={referenceOpened}

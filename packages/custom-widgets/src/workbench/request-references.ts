@@ -1,3 +1,6 @@
+import { collectTemplateReferences } from "./template-references";
+import { applyGeneratedBindingEdits } from "./generated-binding-edits";
+import type { GeneratedBindingEdit } from "./generated-binding-edits";
 import { customWidgetDefinitionSchema } from "../core/custom-jsx-schema";
 import { customWidgetIdentifierSchema } from "../core/request-schema";
 import type { HomarrCustomWidgetV2 } from "../core/custom-jsx-schema";
@@ -24,6 +27,12 @@ export function renameCustomWidgetRequest(
     ),
     options: replaceDynamicOptionRequest(definition.options, currentId, nextId),
     template: replaceTemplateRequestReferences(definition.template, currentId, nextId),
+    extensions: definition.extensions && {
+      ...definition.extensions,
+      fragments: mapFragments(definition.extensions.fragments, (source) =>
+        replaceTemplateRequestReferences(source, currentId, nextId),
+      ),
+    },
   };
   return customWidgetDefinitionSchema.parse(candidate);
 }
@@ -55,6 +64,24 @@ export function renameCustomWidgetOption(
       ]),
     ),
     template: replaceTemplateOptionReferences(definition.template, currentName, nextName),
+    extensions: definition.extensions && {
+      ...definition.extensions,
+      fragments: mapFragments(definition.extensions.fragments, (source) =>
+        replaceTemplateOptionReferences(source, currentName, nextName),
+      ),
+      native:
+        definition.extensions.native &&
+        Object.fromEntries(
+          Object.entries(definition.extensions.native).map(([id, capability]) => [
+            id,
+            {
+              ...capability,
+              integrationOption: capability.integrationOption === currentName ? nextName : capability.integrationOption,
+              input: replaceOptionReferences(capability.input, currentName, nextName),
+            },
+          ]),
+        ),
+    },
   });
 }
 
@@ -70,11 +97,10 @@ function replaceDynamicOptionRequest<T>(value: T, currentId: string, nextId: str
 }
 
 function replaceTemplateRequestReferences(template: string, currentId: string, nextId: string) {
-  const escaped = escapeRegExp(currentId);
-  return template
-    .replace(new RegExp(`(requestId\\s*=\\s*["'])${escaped}(["'])`, "gu"), `$1${nextId}$2`)
-    .replace(new RegExp(`((?:data|status)\\s*\\[\\s*["'])${escaped}(["']\\s*\\])`, "gu"), `$1${nextId}$2`)
-    .replace(new RegExp(`((?:data|status)\\.)${escaped}\\b`, "gu"), `$1${nextId}`);
+  return replaceParsedReferences(template, currentId, nextId, ["data", "status", "request"], {
+    from: `request:${currentId}`,
+    to: `request:${nextId}`,
+  });
 }
 
 function replaceOptionReferences<T>(value: T, currentName: string, nextName: string): T {
@@ -90,12 +116,39 @@ function replaceOptionReferences<T>(value: T, currentName: string, nextName: str
 }
 
 function replaceTemplateOptionReferences(template: string, currentName: string, nextName: string) {
-  const escaped = escapeRegExp(currentName);
-  return template
-    .replace(new RegExp(`(options\\s*\\[\\s*["'])${escaped}(["']\\s*\\])`, "gu"), `$1${nextName}$2`)
-    .replace(new RegExp(`(options\\.)${escaped}\\b`, "gu"), `$1${nextName}`);
+  return replaceParsedReferences(template, currentName, nextName, ["options"]);
 }
 
-function escapeRegExp(value: string) {
-  return value.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+function replaceParsedReferences(
+  template: string,
+  current: string,
+  next: string,
+  kinds: string[],
+  nodeRename?: { from: string; to: string },
+) {
+  const references = collectTemplateReferences(template)
+    .filter((reference) => reference.name === current && kinds.includes(reference.kind))
+    .toSorted((left, right) => right.from - left.from);
+  const edits: GeneratedBindingEdit[] = [];
+  for (const reference of references) {
+    const original = template.slice(reference.from, reference.to);
+    let from = reference.from;
+    let replacement = next;
+    if (original.startsWith('"')) replacement = JSON.stringify(next);
+    else if (original.startsWith("'")) replacement = "'" + next + "'";
+    else if (!/^[A-Za-z_$][A-Za-z0-9_$]*$/u.test(next)) {
+      if (template[from - 1] !== ".") {
+        throw new Error("Use bracket notation for this reference in code before renaming it.");
+      }
+      if (template[from - 2] !== "?") from -= 1;
+      replacement = `[${JSON.stringify(next)}]`;
+    }
+    edits.push({ from, to: reference.to, value: replacement });
+  }
+  return applyGeneratedBindingEdits(template, edits, nodeRename);
+}
+
+function mapFragments(fragments: Record<string, string> | undefined, replace: (template: string) => string) {
+  if (!fragments) return undefined;
+  return Object.fromEntries(Object.entries(fragments).map(([id, template]) => [id, replace(template)]));
 }

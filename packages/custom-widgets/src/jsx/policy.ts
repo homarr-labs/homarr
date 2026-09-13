@@ -24,7 +24,6 @@ export const CUSTOM_JSX_BLOCKED_PROPERTIES: ReadonlySet<string> = new Set([
 export const CUSTOM_JSX_BLOCKED_PROPS: ReadonlySet<string> = new Set([
   "autoFocus",
   "children",
-  "className",
   "classNames",
   "classes",
   "component",

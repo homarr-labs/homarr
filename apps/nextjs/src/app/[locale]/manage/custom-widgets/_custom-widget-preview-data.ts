@@ -6,7 +6,7 @@ interface PreviewSnapshot {
   session: { id: string; liveActions: boolean } | null;
 }
 
-type PreviewCandidate = Pick<HomarrCustomWidgetV2, "requests" | "template">;
+type PreviewCandidate = Pick<HomarrCustomWidgetV2, "requests" | "template" | "extensions">;
 
 export function createPreviewDisplayData({
   candidate,
@@ -23,15 +23,18 @@ export function createPreviewDisplayData({
 }): Record<string, unknown> | null {
   if (!candidate) return null;
   const requests = Object.entries(candidate.requests);
-  const data = fixture === "empty" ? Object.fromEntries(requests.map(([id]) => [id, []])) : preview.data;
+  const queryIds = [...requests.map(([id]) => id), ...Object.keys(candidate.extensions?.native ?? {})];
+  const data =
+    fixture === "empty" ? Object.fromEntries(queryIds.map((id) => [id, emptyFixture(preview.data[id])])) : preview.data;
   const status =
     fixture === "loading"
-      ? Object.fromEntries(requests.map(([id]) => [id, { loading: true }]))
+      ? Object.fromEntries(queryIds.map((id) => [id, { loading: true }]))
       : fixture === "error"
-        ? Object.fromEntries(requests.map(([id]) => [id, { loading: false, ok: false, error: fixtureError }]))
+        ? Object.fromEntries(queryIds.map((id) => [id, { loading: false, ok: false, error: fixtureError }]))
         : preview.status;
   return {
     template: candidate.template,
+    extensions: candidate.extensions,
     data,
     status,
     options,
@@ -50,4 +53,11 @@ export function createPreviewDisplayData({
     queriesDisabled: fixture !== "live",
     isEditMode: fixture !== "live",
   };
+}
+
+function emptyFixture(value: unknown, depth = 0): unknown {
+  if (depth > 10 || Array.isArray(value) || value === undefined) return [];
+  if (value && typeof value === "object")
+    return Object.fromEntries(Object.entries(value).map(([key, entry]) => [key, emptyFixture(entry, depth + 1)]));
+  return value;
 }

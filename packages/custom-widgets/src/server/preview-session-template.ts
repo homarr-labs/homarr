@@ -1,5 +1,5 @@
-import { customWidgetDefinitionSchema } from "../core";
-import type { CustomJsxRequest, CustomWidgetOptions, CustomWidgetSource } from "../core";
+import { CUSTOM_WIDGET_SCHEMA_V3, customWidgetDefinitionSchema } from "../core";
+import type { CustomJsxRequest, CustomWidgetOptions, CustomWidgetSource, CustomWidgetExtensions } from "../core";
 import { CustomWidgetDomainError } from "./errors";
 
 interface PreviewTemplateContext {
@@ -10,11 +10,13 @@ interface PreviewTemplateContext {
   requests: Record<string, CustomJsxRequest>;
   optionDefinitions: CustomWidgetOptions;
   template: string;
+  extensions?: CustomWidgetExtensions;
 }
 
 export function validatePreviewTemplateRevision(current: PreviewTemplateContext, template: string) {
   const parsed = customWidgetDefinitionSchema.safeParse({
-    $schema: "homarr-custom-widget-v2",
+    $schema: current.extensions ? CUSTOM_WIDGET_SCHEMA_V3 : "homarr-custom-widget-v2",
+    extensions: current.extensions,
     name: current.name,
     description: current.description,
     iconUrl: current.iconUrl,

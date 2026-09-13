@@ -1,4 +1,5 @@
 import { z } from "zod/v4";
+import { workbenchPatchSchema, workbenchPreconditionSchema } from "./assistant-workbench-bridge";
 
 import {
   backgroundImageAttachments,
@@ -52,6 +53,21 @@ export const assistantBoardSettingsChangesSchema = z
   .describe("Only the board fields the user asked to change.");
 
 export const browserToolContracts = {
+  workbench_read: {
+    description:
+      "Read the active Custom Widget workbench draft, selected node, and current revision. Use before editing the visible draft. No credentials are returned.",
+    parameters: z.object({}),
+  },
+  workbench_patch: {
+    description:
+      "Edit the visible Custom Widget draft, with one Undo step. Requires draftId and revision from workbench_read. Use templateEdits for targeted JSX changes. Changes do not save, publish, or execute actions.",
+    parameters: workbenchPatchSchema,
+  },
+  workbench_preview: {
+    description:
+      "Validate and run queries in the active Custom Widget workbench. Supply the draftId and revision from workbench_read. Actions remain simulated; this does not save or publish.",
+    parameters: workbenchPreconditionSchema,
+  },
   ask_user: {
     description:
       "Pause and ask the user one concise structured question. Use this only for missing information or a meaningful choice, never to confirm details that are already sufficient for a native review form or mutating tool. In particular, do not use ask_user before configure_app, configure_board_settings, or configure_widget when their inputs are known. Provide 2-4 distinct options and classify every option: agreement, approval, or proceeding is affirmative; refusal or stopping is negative; unrelated selections are alternative. A confirmation question must have exactly one affirmative option. The UI adds a freeform Other choice when allowOther is not false.",

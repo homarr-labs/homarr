@@ -3,7 +3,17 @@
 import { useEffect, useRef } from "react";
 import type { Dispatch, ReactNode, SetStateAction } from "react";
 import type { Icon } from "@tabler/icons-react";
-import { Button, Card, Group, Stack, Text, ThemeIcon } from "@mantine/core";
+import {
+  Button,
+  Card,
+  getContrastColor,
+  Group,
+  Stack,
+  Text,
+  ThemeIcon,
+  useComputedColorScheme,
+  useMantineTheme,
+} from "@mantine/core";
 import {
   IconAlertCircle,
   IconAlertTriangle,
@@ -24,6 +34,7 @@ import { useUnsavedChangesGuard } from "~/components/manage/use-unsaved-changes-
 import { useCustomWidgetFormDocumentDirty } from "./_custom-widget-form-state";
 import { areCustomWidgetValuesEqual } from "./_custom-widget-value-equality";
 import { useCustomWidgetFormAnalysisField } from "./_use-custom-widget-form-analysis";
+import { useWorkbenchSelection } from "./_flow/selection";
 import classes from "./_custom-widget-form.module.css";
 
 const sectionLinks = [
@@ -46,10 +57,11 @@ export function EditorSection({
   icon: Icon;
   children: ReactNode;
 }) {
+  const compact = useWorkbenchSelection() !== undefined;
   return (
-    <Card id={id} component="section" withBorder p="lg" className={classes.editorSection}>
+    <Card id={id} component="section" withBorder={!compact} p={compact ? 0 : "lg"} className={classes.editorSection}>
       <Stack gap="md">
-        <Group gap="sm">
+        <Group gap="sm" data-workbench-section-title>
           <ThemeIcon variant="light" size="lg">
             <SectionIcon size={18} />
           </ThemeIcon>
@@ -64,6 +76,7 @@ export function EditorSection({
 }
 
 export function SaveActions({
+  formId,
   dirty,
   savePending,
   previewPending,
@@ -71,6 +84,7 @@ export function SaveActions({
   mode,
   onPreview,
 }: {
+  formId?: string;
   dirty: boolean;
   savePending: boolean;
   previewPending: boolean;
@@ -80,6 +94,13 @@ export function SaveActions({
 }) {
   const t = useI18n("customWidget.workbench");
   const tCommon = useI18n("common");
+  const theme = useMantineTheme();
+  const colorScheme = useComputedColorScheme();
+  const submitColor = getContrastColor({
+    color: theme.primaryColor,
+    colorScheme,
+    theme: { ...theme, luminanceThreshold: 0.179 },
+  });
   return (
     <Group justify="space-between" wrap="wrap">
       <Group gap="xs">
@@ -103,7 +124,13 @@ export function SaveActions({
         >
           {previewPending ? t("action.previewLoading") : t("action.preview")}
         </Button>
-        <Button type="submit" loading={savePending} disabled={invalid || previewPending}>
+        <Button
+          form={formId}
+          type="submit"
+          loading={savePending}
+          disabled={invalid || previewPending}
+          style={{ "--button-color": submitColor }}
+        >
           {mode === "create" ? tCommon("action.create") : tCommon("action.save")}
         </Button>
       </Group>
@@ -143,11 +170,13 @@ export function CustomWidgetSectionNavigation({
 }
 
 export function CustomWidgetSaveActions({
+  formId,
   mode,
   savePending,
   previewPending,
   onPreview,
 }: {
+  formId?: string;
   mode: "create" | "edit";
   savePending: boolean;
   previewPending: boolean;
@@ -158,6 +187,7 @@ export function CustomWidgetSaveActions({
   const hasDiagnostics = useCustomWidgetFormAnalysisField("hasDiagnostics");
   return (
     <SaveActions
+      formId={formId}
       dirty={dirty}
       savePending={savePending}
       previewPending={previewPending}

@@ -1,13 +1,13 @@
 import { z } from "zod/v4";
-
 import {
   customWidgetOptionsSchema,
+  customWidgetExtensionsSchema,
   customWidgetRequestsSchema,
   customWidgetSecretKinds,
   customWidgetSourcesSchema,
   hasSameCustomWidgetSourceAuthentication,
 } from "../core";
-import type { CustomJsxRequest, CustomWidgetOptions, CustomWidgetSource } from "../core";
+import type { CustomJsxRequest, CustomWidgetOptions, CustomWidgetSource, CustomWidgetExtensions } from "../core";
 import { CustomWidgetDomainError } from "./errors";
 import {
   getPreviewEvidenceKey,
@@ -18,17 +18,14 @@ import {
 } from "./preview-session-evidence";
 import type { CustomWidgetPreviewJournalEntry } from "./preview-session-evidence";
 import { validatePreviewTemplateRevision } from "./preview-session-template";
-
 const SESSION_TTL_MS = 10 * 60_000;
 const MAX_JOURNAL_ENTRIES = 50;
 const MAX_UPDATE_ATTEMPTS = 8;
-
 const encryptedSecretSchema = z.object({
   sourceId: z.string(),
   kind: z.enum(customWidgetSecretKinds),
   value: z.string(),
 });
-
 const sessionSchema = z.object({
   id: z.string(),
   userId: z.string(),
@@ -41,13 +38,13 @@ const sessionSchema = z.object({
   description: z.string().optional(),
   iconUrl: z.string().optional(),
   template: z.string(),
+  extensions: customWidgetExtensionsSchema.optional(),
   optionDefinitions: customWidgetOptionsSchema,
   options: z.record(z.string(), z.unknown()),
   definitionId: z.string().optional(),
   liveActions: z.boolean(),
 });
 export type CustomWidgetPreviewSession = z.infer<typeof sessionSchema>;
-
 export type { CustomWidgetPreviewJournalEntry } from "./preview-session-evidence";
 
 export interface CreatePreviewSessionInput {
@@ -59,6 +56,7 @@ export interface CreatePreviewSessionInput {
   description?: string;
   iconUrl?: string;
   template: string;
+  extensions?: CustomWidgetExtensions;
   optionDefinitions: CustomWidgetOptions;
   options: Record<string, unknown>;
   definitionId?: string;
@@ -113,6 +111,7 @@ export class CustomWidgetPreviewSessionService {
       description: input.description,
       iconUrl: input.iconUrl,
       template: input.template,
+      extensions: input.extensions,
       optionDefinitions: input.optionDefinitions,
       options: input.options,
       definitionId: input.definitionId,

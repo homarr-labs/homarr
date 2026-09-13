@@ -5,7 +5,7 @@ import type {
 } from "./component-types";
 
 export const CUSTOM_JSX_AUTHORING_CATALOG_SCHEMA_VERSION = 1 as const;
-export const CUSTOM_WIDGET_AUTHORING_VERSION = "2.0.0";
+export const CUSTOM_WIDGET_AUTHORING_VERSION = "3.0.0";
 
 export type CustomJsxPropSource = "global" | "component";
 export type CustomJsxLiteralValue = string | number | boolean | null;

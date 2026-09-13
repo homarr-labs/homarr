@@ -13,7 +13,7 @@ interface HomarrCustomWidgetV2 {
 }
 ```
 
-The object key `default` is the required source ID; `default` is not a property on a source. Source properties are `name?`, `baseUrl`, `networkScope`, and `auth?`:
+Sources are keyed by ID. Empty `sources` and `requests` support static widgets. Each HTTP request must reference an existing source; omitting its source selects `default`. Source properties are `name?`, `baseUrl`, `networkScope`, and `auth?`:
 
 ```json
 {
@@ -47,3 +47,5 @@ Use stable real URLs for public APIs and clear suggested URLs for self-hosted se
 Paths use `{option:name}` and `{param:name}`; query/body references use `{ "$option": "name" }` and `{ "$param": "name" }`. Constants stay primitive (`take: 10`); `$param` is only for manual helpers, never load queries. Names and types are inferred.
 
 Every option has `label`, `control`, and `default`. Optional fields are `description`, `choices`, `choicesFrom`, `min`, `max`, `step`, `advanced`, and `group`.
+
+V3 uses `$schema: "homarr-custom-widget-v3"` and optional `extensions`: `stylesheet`, `fragments`, `preferences`, `content`, and `native`. Read `customWidget_schema` for their exact shapes. Integration options use `control: "integration"`, `default: ""`, and optional `integrationKinds`; installations choose local integrations. Discover native input schemas through `customWidget_nativeCapabilities`. Editor layout is separate from the manifest.

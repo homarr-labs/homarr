@@ -6,7 +6,11 @@ import { encryptSecret } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { eq, handleTransactionsAsync } from "@homarr/db";
 import { customWidgetDefinitions, customWidgetSecrets, legacyCustomWidgetDefinitions } from "@homarr/db/schema";
-import { customWidgetImportSchema, customWidgetSecretsInputSchema } from "@homarr/custom-widgets/core";
+import {
+  customWidgetImportSchema,
+  customWidgetSecretsInputSchema,
+  toPortableCustomWidgetDefinition,
+} from "@homarr/custom-widgets/core";
 
 import { insertCustomWidgetDefinition } from "./definition-insert";
 import { permissionRequiredProcedure } from "../../trpc";
@@ -24,7 +28,7 @@ export const transferProcedures = {
         where: eq(customWidgetDefinitions.id, input.id),
       });
       if (!definition) throw new TRPCError({ code: "NOT_FOUND" });
-      return parseStoredCustomWidgetDefinition(definition);
+      return toPortableCustomWidgetDefinition(parseStoredCustomWidgetDefinition(definition));
     }),
 
   exportLegacy: permissionRequiredProcedure

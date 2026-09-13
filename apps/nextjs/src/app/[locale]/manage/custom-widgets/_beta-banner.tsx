@@ -1,6 +1,6 @@
 "use client";
 
-import { Alert, Anchor, Text } from "@mantine/core";
+import { Anchor, Badge, Group } from "@mantine/core";
 import { IconFlask } from "@tabler/icons-react";
 
 import { useI18n } from "@homarr/translation/client";
@@ -11,14 +11,13 @@ export function CustomWidgetBetaBanner() {
   const t = useI18n("customWidget.betaBanner");
 
   return (
-    <Alert variant="light" color="yellow" title={t("title")} icon={<IconFlask />}>
-      <Text size="sm">
-        {t("description")}{" "}
-        <Anchor href={FEEDBACK_URL} target="_blank" fw={600}>
-          {t("discussionLink")}
-        </Anchor>{" "}
-        {t("closing")}
-      </Text>
-    </Alert>
+    <Group gap="xs">
+      <Badge variant="light" color="yellow" leftSection={<IconFlask size={12} />}>
+        {t("title")}
+      </Badge>
+      <Anchor size="xs" href={FEEDBACK_URL} target="_blank" rel="noopener noreferrer">
+        {t("discussionLink")}
+      </Anchor>
+    </Group>
   );
 }

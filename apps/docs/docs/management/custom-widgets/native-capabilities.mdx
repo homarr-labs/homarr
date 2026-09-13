@@ -1,0 +1,98 @@
+# Native capabilities
+
+V3 Custom Widgets can call a curated set of Homarr capabilities through `NativeQuery` and `NativeActionButton`.
+These use the same integration procedures, caches, partial-failure responses, and permissions as their native counterparts.
+A definition declares each capability explicitly; JSX cannot call arbitrary tRPC procedures.
+
+## Available capabilities
+
+| Capability                                      | Behavior                                                                        | Required input                                             |
+| ----------------------------------------------- | ------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| `beszel.systems`                                | Systems overview, status, CPU, memory, disk, network and other reported metrics | None                                                       |
+| `beszel.history`                                | Historical system and optional container statistics                             | `systemId`; optional `timePeriod`, `includeDocker`         |
+| `beszel.alerts`                                 | Alerts and optional history                                                     | Optional `includeHistory`, `maxHistoryItems`               |
+| `beszel.live`                                   | Initial short history or a live statistics stream                               | `systemId`                                                 |
+| `calendar.events`                               | Calendar events from supported integrations                                     | `year`, `month`; optional `releaseType`, `showUnmonitored` |
+| `media.requests`                                | Media requests and partial integration errors                                   | Optional `statuses`, `recentDays`                          |
+| `media.stats`                                   | Request totals and users                                                        | None                                                       |
+| `media.respond`                                 | Approve or decline a media request                                              | `requestId`, `answer`                                      |
+| `smartHome.state`                               | Home Assistant entity state                                                     | `entityId`                                                 |
+| `smartHome.details`                             | Entity state, attributes and timestamps                                         | `entityId`                                                 |
+| `smartHome.switch`                              | Toggle an entity                                                                | `entityId`                                                 |
+| `smartHome.automation`                          | Trigger an automation                                                           | `automationId`                                             |
+| `docker.containers`                             | Container inventory and resource use                                            | Optional `endpointIds`                                     |
+| `docker.start`, `docker.stop`, `docker.restart` | Control a container                                                             | `endpointId`, `containerId`                                |
+
+Use `customWidget_nativeCapabilities` to discover the exact input schema for the installed Homarr version.
+Docker capabilities retain the existing administrator requirement and endpoint capability checks.
+
+## Declare and select an integration
+
+```json
+{
+  "$schema": "homarr-custom-widget-v3",
+  "name": "My systems",
+  "sources": {},
+  "requests": {},
+  "options": {
+    "beszel": {
+      "label": "Beszel integration",
+      "control": "integration",
+      "integrationKinds": ["beszel"],
+      "default": ""
+    }
+  },
+  "extensions": {
+    "native": {
+      "systems": {
+        "capability": "beszel.systems",
+        "integrationOption": "beszel",
+        "kind": "query",
+        "trigger": "load",
+        "permission": "view",
+        "input": {}
+      }
+    }
+  },
+  "template": "<NativeQuery nativeId=\"systems\">{(services) => <Stack>{services.map((service) => <Stack key={service.integrationId}><Text fw={600}>{service.integrationName}</Text>{service.systems.map((system) => <Text key={system.id}>{system.name}</Text>)}</Stack>)}</Stack>}</NativeQuery>"
+}
+```
+
+Choose a local integration in the workbench, during installation, or in board configuration. Portable exports clear the
+local selection. `integrationOption` reads saved configuration, not invocation parameters; a browser cannot replace the
+integration ID by sending a different runtime input. An integration still needs to be accessible to the viewer under
+Homarr's integration permissions. Placing a custom widget does not grant general integration access.
+
+## Inputs, detail views and live data
+
+A capability's `input` supports the same recursive `$option` and `$param` references as HTTP request bodies. Invocation
+parameters are primitive values. Use `trigger: "manual"` when an input depends on a selected row or a temporary input;
+load capabilities cannot depend on invocation parameters.
+
+The workbench reads each installed capability's input schema and offers fixed values, saved-option bindings, and invocation
+parameters. Switching an input to a parameter also switches its trigger to manual. Complex nested inputs retain a JSON
+editor; scalar and list inputs do not require editing the extensions manifest.
+
+Use `<NativeQuery nativeId="details" trigger="manual" params={{ systemId: inputs.systemId }}>` for a selected-system
+query. For a declared `beszel.live` capability, add `live` to receive events. Historical and live responses retain the
+underlying Beszel response shapes; a live event contains its event type and record. Compose those results with supported
+charts, tables, fragments, modals, or drawers. Live subscriptions reconnect periodically to renew authorization and bounded
+request capacity, and stop when their widget unmounts or a preview session expires.
+
+## Actions and preview
+
+Native actions require `kind: "action"`, `trigger: "manual"`, `permission: "modify"` or `"full"`, and a `confirmation`
+object containing `title` and `message`. Render them with `NativeActionButton`. The server checks both board permission and
+the native integration's interaction permission; Docker retains its administrator policy.
+
+**Test and preview** runs declared load queries. Manual queries and actions are exercised through preview controls. Native
+actions simulate until live preview actions are explicitly enabled. The journal records native entries as `native:<id>`;
+preview-based creation requires current evidence for every declared HTTP and native capability.
+
+Individual capability tests use the current preview session. Their parameter values and responses remain local to the
+editor and are not saved into the definition. Action tests in the capability inspector always simulate; they are disabled
+while the preview has live actions enabled. Use the rendered preview's confirmation flow to exercise live actions.
+
+This is the initial native capability library. Other self-hosted services can use HTTP sources or browser embeds. Services
+without an accessible HTTP interface, supported embed, or curated Homarr capability need an external bridge. Custom Widgets
+do not run authored backend code, shell commands, imports, or arbitrary event callbacks.

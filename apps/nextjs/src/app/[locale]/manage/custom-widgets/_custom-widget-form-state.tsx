@@ -13,60 +13,10 @@ import {
 import type { ReactNode } from "react";
 import type { UseFormReturnType } from "@mantine/form";
 
-import { customWidgetFormSchema } from "@homarr/custom-widgets/workbench";
 import type { CustomWidgetFormValues } from "@homarr/custom-widgets/workbench";
-
-import { areCustomWidgetValuesEqual } from "./_custom-widget-value-equality";
-
-export interface CustomWidgetFormDocumentStore {
-  getValues(): CustomWidgetFormValues;
-  setValues(values: CustomWidgetFormValues): void;
-  getDirty(): boolean;
-  subscribe(listener: () => void): () => void;
-  markSaved(values: CustomWidgetFormValues): void;
-}
-
-const documentValueKeys = customWidgetFormSchema.keyof().options;
-
-function areDocumentValuesEqual(left: CustomWidgetFormValues, right: CustomWidgetFormValues) {
-  if (Object.keys(left).length !== documentValueKeys.length) return false;
-  if (Object.keys(right).length !== documentValueKeys.length) return false;
-  return documentValueKeys.every(
-    (key) => Object.hasOwn(left, key) && Object.hasOwn(right, key) && areCustomWidgetValuesEqual(left[key], right[key]),
-  );
-}
-
-export function createCustomWidgetFormDocumentStore(
-  initialValues: CustomWidgetFormValues,
-): CustomWidgetFormDocumentStore {
-  let values = initialValues;
-  let persistedValues = initialValues;
-  let dirty = false;
-  const listeners = new Set<() => void>();
-
-  const notify = () => listeners.forEach((listener) => listener());
-
-  return {
-    getValues: () => values,
-    setValues: (nextValues) => {
-      if (Object.is(values, nextValues)) return;
-      values = nextValues;
-      dirty = !areDocumentValuesEqual(nextValues, persistedValues);
-      notify();
-    },
-    getDirty: () => dirty,
-    subscribe: (listener) => {
-      listeners.add(listener);
-      return () => listeners.delete(listener);
-    },
-    markSaved: (savedValues) => {
-      const wasDirty = dirty;
-      persistedValues = savedValues;
-      dirty = !areDocumentValuesEqual(values, persistedValues);
-      if (wasDirty !== dirty) notify();
-    },
-  };
-}
+import type { CustomWidgetFormDocumentStore } from "./_flow/document-store";
+export { createCustomWidgetFormDocumentStore } from "./_flow/document-store";
+export type { CustomWidgetFormDocumentStore } from "./_flow/document-store";
 
 const CustomWidgetFormDocumentContext = createContext<CustomWidgetFormDocumentStore | null>(null);
 
@@ -78,6 +28,10 @@ export function CustomWidgetFormDocumentProvider({
   children: ReactNode;
 }) {
   return <CustomWidgetFormDocumentContext.Provider value={store}>{children}</CustomWidgetFormDocumentContext.Provider>;
+}
+
+export function useOptionalCustomWidgetFormDocumentStore() {
+  return useContext(CustomWidgetFormDocumentContext);
 }
 
 export function useCustomWidgetFormDocumentStore() {
@@ -104,9 +58,14 @@ export function useDeferredCustomWidgetFormDocumentValues() {
       }, 150);
     };
     const unsubscribe = store.subscribe(scheduleUpdate);
+    const unsubscribeRenames = store.onNodeRenames(() => {
+      clearTimeout(timeout);
+      setValues(store.getValues());
+    });
     return () => {
       clearTimeout(timeout);
       unsubscribe();
+      unsubscribeRenames();
     };
   }, [store]);
   return values;
@@ -120,7 +79,7 @@ export function useCustomWidgetFormDocumentField<Key extends keyof CustomWidgetF
 
 export function useCustomWidgetFormDocumentDirty() {
   const store = useCustomWidgetFormDocumentStore();
-  return useSyncExternalStore(store.subscribe, store.getDirty, store.getDirty);
+  return useSyncExternalStore(store.subscribeEditor, store.getDirty, store.getDirty);
 }
 
 export function useCustomWidgetFormDocumentBridge(
@@ -129,6 +88,7 @@ export function useCustomWidgetFormDocumentBridge(
 ) {
   const formRef = useRef(form);
   formRef.current = form;
+  useEffect(() => store.onRestore((values) => formRef.current.setValues(values)), [store]);
   return useMemo(
     () =>
       new Proxy({} as UseFormReturnType<CustomWidgetFormValues>, {

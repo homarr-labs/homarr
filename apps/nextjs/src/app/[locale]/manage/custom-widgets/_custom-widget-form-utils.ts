@@ -19,7 +19,8 @@ const PREVIEW_QUERY_CONCURRENCY = 4;
 
 export function buildDefinition(values: CustomWidgetFormValues) {
   return customWidgetDefinitionSchema.safeParse({
-    $schema: "homarr-custom-widget-v2",
+    $schema: values.extensions?.trim() ? "homarr-custom-widget-v3" : "homarr-custom-widget-v2",
+    ...(values.extensions?.trim() ? { extensions: parseJson(values.extensions) } : {}),
     name: values.name,
     description: values.description || undefined,
     iconUrl: values.iconUrl || undefined,
@@ -59,6 +60,7 @@ export function applyDefinition(form: CustomWidgetWorkbenchForm, widget: HomarrC
     requests: JSON.stringify(widget.requests, null, 2),
     options: JSON.stringify(widget.options, null, 2),
     template: widget.template,
+    extensions: widget.$schema === "homarr-custom-widget-v3" ? JSON.stringify(widget.extensions ?? {}, null, 2) : "",
   });
 }
 
@@ -104,9 +106,14 @@ export function isRuntimeParams(
 }
 
 export async function loadPreviewQueries(definition: HomarrCustomWidgetV2, sessionId: string) {
-  const requests = Object.entries(definition.requests).filter(
-    ([, entry]) => entry.kind === "query" && entry.trigger === "load",
-  );
+  const requests = [
+    ...Object.entries(definition.requests)
+      .filter(([, entry]) => entry.kind === "query" && entry.trigger === "load")
+      .map(([id]) => ({ id, native: false })),
+    ...Object.entries(definition.extensions?.native ?? {})
+      .filter(([, entry]) => entry.kind === "query" && entry.trigger === "load")
+      .map(([id]) => ({ id, native: true })),
+  ];
   const results: Array<{
     requestId: string;
     data: unknown;
@@ -119,9 +126,11 @@ export async function loadPreviewQueries(definition: HomarrCustomWidgetV2, sessi
       nextIndex += 1;
       const request = requests[index];
       if (!request) return;
-      const [requestId] = request;
+      const requestId = request.id;
       try {
-        const result = await fetchApi.customWidget.previewQuery.query({ sessionId, requestId, params: {} });
+        const result = await (request.native
+          ? fetchApi.customWidget.nativeQuery.query({ previewSessionId: sessionId, nativeId: requestId, params: {} })
+          : fetchApi.customWidget.previewQuery.query({ sessionId, requestId, params: {} }));
         results[index] = { requestId, data: result.data, status: { loading: false, ...result } };
       } catch (error) {
         results[index] = {

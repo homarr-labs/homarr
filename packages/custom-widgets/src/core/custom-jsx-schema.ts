@@ -1,4 +1,8 @@
+import { customWidgetSourceRenamesSchema } from "./source-renames-schema";
 import { z } from "zod/v4";
+import { customWidgetEditorLayoutSchema } from "./editor-layout";
+import { CUSTOM_WIDGET_SUPPORTED_SCHEMAS, customWidgetExtensionsSchema } from "./extensions-schema";
+import { validateCustomWidgetExtensions, validateCustomWidgetTemplateRequests } from "./extensions-validation";
 
 import { validateCustomJsxTemplate } from "../jsx/analyzer";
 import { CUSTOM_JSX_BINDING_IDENTIFIER_PATTERN } from "../jsx/policy";
@@ -10,7 +14,6 @@ import {
   customWidgetRequestsSchema,
   customWidgetSourcesSchema,
 } from "./request-schema";
-import type { CustomJsxRequest } from "./request-schema";
 import { customWidgetSecretKinds } from "./schema-types";
 import { getCustomWidgetHttpUrlIssue } from "./url-policy";
 
@@ -75,7 +78,8 @@ export const customWidgetSecretsInputSchema = z
 
 export const customWidgetDefinitionSchema = z
   .strictObject({
-    $schema: z.literal(CUSTOM_WIDGET_SCHEMA),
+    $schema: z.enum(CUSTOM_WIDGET_SUPPORTED_SCHEMAS),
+    extensions: customWidgetExtensionsSchema.optional(),
     name: z.string().trim().min(1).max(128),
     description: z.string().max(512).optional(),
     iconUrl: z
@@ -94,8 +98,9 @@ export const customWidgetDefinitionSchema = z
   })
   .superRefine((definition, ctx) => {
     validateRequests(definition, ctx);
+    validateCustomWidgetExtensions(definition, ctx);
     validateCaseInsensitiveSourceIds(definition.sources, ctx);
-    validateTemplateRequests(definition.template, definition.requests, ctx);
+    validateCustomWidgetTemplateRequests(definition.template, definition.requests, ctx);
     validateCredentialFreeExport(definition, ctx);
     validatePrototypeKeys(definition, ctx);
   });
@@ -178,31 +183,7 @@ function validateCaseInsensitiveSourceIds(sources: Definition["sources"], ctx: z
   }
 }
 
-function validateTemplateRequests(template: string, requests: Record<string, CustomJsxRequest>, ctx: z.RefinementCtx) {
-  for (const match of template.matchAll(/<(SubFetch|ActionButton|ToggleSwitch)\b([^>]*)>/gu)) {
-    const component = match[1] as "SubFetch" | "ActionButton" | "ToggleSwitch";
-    const attributes = match[2] ?? "";
-    const idMatch = attributes.match(/\brequestId\s*=\s*(?:"([^"]+)"|'([^']+)')/u);
-    const requestId = idMatch?.[1] ?? idMatch?.[2];
-    if (!requestId) {
-      ctx.addIssue({ code: "custom", path: ["template"], message: `${component} must use a literal requestId` });
-      continue;
-    }
-    const request = requests[requestId];
-    const expectedKind = component === "SubFetch" ? "query" : "action";
-    if (!request)
-      ctx.addIssue({
-        code: "custom",
-        path: ["template"],
-        message: `${component} references unknown request '${requestId}'`,
-      });
-    else if (request.kind !== expectedKind)
-      ctx.addIssue({ code: "custom", path: ["template"], message: `${component} requires a ${expectedKind} request` });
-    else if (component === "SubFetch" && request.trigger !== "manual")
-      ctx.addIssue({ code: "custom", path: ["template"], message: `SubFetch requires '${requestId}' to be manual` });
-  }
-}
-
+export type HomarrCustomWidgetDefinition = z.infer<typeof customWidgetDefinitionSchema>;
 export type HomarrCustomWidgetV2 = z.infer<typeof customWidgetDefinitionSchema>;
 export type HomarrCustomWidgetV2Input = z.input<typeof customWidgetDefinitionSchema>;
 
@@ -277,9 +258,13 @@ export function normalizeCustomWidgetAuthoringUpdate(input: CustomWidgetAuthorin
 }
 
 export const customWidgetCreateSchema = customWidgetAuthoringDefinitionSchema.safeExtend({
+  editorLayout: customWidgetEditorLayoutSchema.optional(),
   secrets: customWidgetSecretsInputSchema.default([]),
 });
 export const customWidgetUpdateSchema = customWidgetAuthoringUpdateSchema.safeExtend({
+  sourceRenames: customWidgetSourceRenamesSchema.optional(),
+  expectedSavedRevision: z.string().length(64).optional(),
+  editorLayout: customWidgetEditorLayoutSchema.optional(),
   id: z.string().min(1),
   secrets: customWidgetSecretsInputSchema.optional(),
 });

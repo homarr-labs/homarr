@@ -58,6 +58,8 @@ routerAdd("GET", "/workshop/{id}", workshopDetailPage);
 routerAdd("GET", "/workshop/{id}/{$}", workshopDetailPage);
 
 onRecordCreateRequest((event) => {
+  const { validateSubmissionSchema } = require(`${__hooks}/workshop-content.js`);
+  validateSubmissionSchema(event.record);
   event.record.set("revision", 1);
   event.record.set("expectedRevision", 0);
   event.record.set("changelog", "");
@@ -68,6 +70,13 @@ onRecordCreateRequest((event) => {
 onRecordUpdateRequest((event) => {
   const { rejectRequest } = require(`${__hooks}/workshop-utils.js`);
   const original = event.record.original();
+  if (
+    original.getString("content") !== event.record.getString("content") ||
+    original.getString("widgetSchema") !== event.record.getString("widgetSchema")
+  ) {
+    const { validateSubmissionSchema } = require(`${__hooks}/workshop-content.js`);
+    validateSubmissionSchema(event.record);
+  }
   const currentRevision = original.getInt("revision");
   const expectedRevision = event.record.getInt("expectedRevision");
   if (!Number.isSafeInteger(expectedRevision) || expectedRevision < 1) {

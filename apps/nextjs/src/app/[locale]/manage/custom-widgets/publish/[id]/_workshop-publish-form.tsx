@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import {
   Alert,
+  SegmentedControl,
   Box,
   Button,
   Checkbox,
@@ -29,7 +30,7 @@ import { clientApi } from "@homarr/api/client";
 import { useByteFormatter } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
-import { useWorkshopCreateMutation } from "@homarr/workshop/backend";
+import { useWorkshopPublication } from "./_use-workshop-publication";
 import { MAX_WORKSHOP_SCREENSHOT_BYTES, workshopScreenshotsSchema } from "@homarr/workshop/schema";
 
 import { ManagePageLayout } from "~/components/manage/manage-page-layout";
@@ -52,23 +53,32 @@ export function WorkshopPublishForm({ widget }: { widget: { id: string; name: st
   const session = useWorkshopSession();
   const [title, setTitle] = useState(widget.name);
   const [description, setDescription] = useState("");
+  const [changelog, setChangelog] = useState("");
   const [screenshots, setScreenshots] = useState<File[]>([]);
   const [sourceUrlsReviewed, setSourceUrlsReviewed] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [publishedSubmissionId, setPublishedSubmissionId] = useState<string | null>(null);
 
-  const createSubmission = useWorkshopCreateMutation(session.client);
+  const publication = useWorkshopPublication(widget.id);
+  const flowT = useI18n("customWidget.flow");
   const definition = clientApi.customWidget.export.useQuery({ id: widget.id });
   const privateSourceNames = getPrivateWorkshopSourceNames(definition.data);
   const definitionFingerprint = definition.data ? serializeWorkshopDefinition(definition.data) : null;
   useEffect(() => setSourceUrlsReviewed(false), [definitionFingerprint]);
 
   const breadcrumb = <DynamicBreadcrumb dynamicMappings={new Map([[widget.id, widget.name]])} />;
+  const selectPublicationMode = (mode: string) => {
+    publication.setMode(mode);
+    if (mode === "update" && publication.linked) {
+      setTitle(publication.linked.title);
+      setDescription(publication.linked.description);
+    }
+  };
 
   const publish = async () => {
     // Publishing is immediate and public; a second in-flight call would create a
     // duplicate listing.
-    if (createSubmission.isPending) return;
+    if (publication.isPending) return;
     setError(null);
     try {
       if (!definition.data) throw new Error(t("publish.error"));
@@ -81,10 +91,10 @@ export function WorkshopPublishForm({ widget }: { widget: { id: string; name: st
         inspectedDefinition: definition.data,
         refetchDefinition: async () => (await definition.refetch()).data,
         publish: async (content) => {
-          const submission = await createSubmission.mutateAsync({
-            input: { type: "customWidget", title, description, content },
+          const submission = await publication.publish(
+            { type: "customWidget", title, description, changelog, content },
             screenshots,
-          });
+          );
           submissionId = submission.id;
         },
       });
@@ -106,6 +116,7 @@ export function WorkshopPublishForm({ widget }: { widget: { id: string; name: st
       <ManagePageLayout title={t("publish.successTitle")} breadcrumb={breadcrumb}>
         <Paper withBorder radius="md" p="xl">
           <Stack align="center" gap="lg">
+            {publication.linkError && <Alert color="yellow">{flowT("linkFailed")}</Alert>}
             <ThemeIcon size={64} radius="xl" color="green" variant="light">
               <IconCheck size={32} stroke={2} />
             </ThemeIcon>
@@ -137,7 +148,7 @@ export function WorkshopPublishForm({ widget }: { widget: { id: string; name: st
 
   const blocked =
     !session.user ||
-    createSubmission.isPending ||
+    publication.isPending ||
     !definition.data ||
     definition.isError ||
     title.trim().length < 3 ||
@@ -172,6 +183,15 @@ export function WorkshopPublishForm({ widget }: { widget: { id: string; name: st
         </Paper>
 
         {!session.user && <Alert color="blue">{t("publish.signInHint")}</Alert>}
+        <SegmentedControl
+          value={publication.mode}
+          onChange={selectPublicationMode}
+          data={[
+            { value: "new", label: flowT("publishNew") },
+            ...(publication.owns ? [{ value: "update", label: flowT("publishUpdate") }] : []),
+            ...(publication.origin ? [{ value: "remix", label: flowT("publishRemix") }] : []),
+          ]}
+        />
 
         <Paper withBorder radius="md" p="md">
           <Stack gap="md">
@@ -197,6 +217,23 @@ export function WorkshopPublishForm({ widget }: { widget: { id: string; name: st
               autosize
               maxRows={8}
             />
+            {publication.mode === "update" && (
+              <>
+                <Textarea
+                  label={flowT("changelog")}
+                  value={changelog}
+                  onChange={(event) => setChangelog(event.currentTarget.value)}
+                  maxLength={2000}
+                  minRows={2}
+                />
+                <Text size="sm" c="dimmed">
+                  {flowT("publicationRevision", {
+                    revision: publication.reviewedRevision ?? 1,
+                    count: publication.linked?.screenshots.length ?? 0,
+                  })}
+                </Text>
+              </>
+            )}
             <FileInput
               label={t("publish.screenshots")}
               description={t("publish.screenshotsDescription")}
@@ -240,7 +277,7 @@ export function WorkshopPublishForm({ widget }: { widget: { id: string; name: st
           </Button>
           <Button
             size="md"
-            loading={createSubmission.isPending || definition.isFetching}
+            loading={publication.isPending || definition.isFetching}
             disabled={blocked}
             onClick={() => void publish()}
           >

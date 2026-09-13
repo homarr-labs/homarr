@@ -41,6 +41,7 @@ import { getAssistantProviderQuotaRefreshDelay, isAssistantProviderUnavailable }
 import { AssistantAutoApprovalProvider } from "./assistant-auto-approval";
 import { getRunningAssistantPartType } from "./assistant-activity-state";
 import { prepareAssistantRequestBody } from "./assistant-attachment-payload";
+import { assistantWorkbenchExecutors, isAssistantWorkbenchOpen } from "./assistant-workbench-bridge";
 import { createAssistantBrowserToolExecutors } from "./assistant-browser-tool-executors";
 import { AssistantAskUserTool, AssistantConfigureAppTool } from "./assistant-human-tools";
 import { AssistantPanel } from "./assistant-panel";
@@ -184,6 +185,7 @@ const AssistantPreferencesProvider = ({ children }: PropsWithChildren) => {
         : {
             clientContext: {
               pathname: window.location.pathname,
+              workbenchOpen: isAssistantWorkbenchOpen(),
               timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
             },
           }),
@@ -558,6 +560,24 @@ const AssistantRuntime = ({ children }: PropsWithChildren) => {
   const toolkit = useMemo(
     () =>
       defineToolkit({
+        workbench_read: {
+          type: "frontend",
+          ...browserToolContracts.workbench_read,
+          execute: assistantWorkbenchExecutors.workbench_read,
+          renderText: { running: "Reading widget draft…", complete: "Reading widget draft finished" },
+        },
+        workbench_patch: {
+          type: "frontend",
+          ...browserToolContracts.workbench_patch,
+          execute: assistantWorkbenchExecutors.workbench_patch,
+          renderText: { running: "Updating widget draft…", complete: "Updating widget draft finished" },
+        },
+        workbench_preview: {
+          type: "frontend",
+          ...browserToolContracts.workbench_preview,
+          execute: assistantWorkbenchExecutors.workbench_preview,
+          renderText: { running: "Running widget preview…", complete: "Running widget preview finished" },
+        },
         ask_user: {
           type: "human",
           display: "standalone",

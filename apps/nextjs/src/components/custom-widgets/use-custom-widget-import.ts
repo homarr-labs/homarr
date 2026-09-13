@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
@@ -9,6 +9,8 @@ import {
   applyCustomWidgetSourceSetup,
   getCustomWidgetSourceSetups,
   getImportReview,
+  toPortableCustomWidgetDefinition,
+  getCustomWidgetIntegrationOptionIds,
 } from "@homarr/custom-widgets/core";
 import type { CustomWidgetSecretKind, HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 import { createCustomWidgetSourceSetupValues, isCustomWidgetSourceSetupReady } from "@homarr/custom-widgets/workbench";
@@ -24,6 +26,7 @@ interface UseCustomWidgetImportOptions {
   widget: HomarrCustomWidgetV2 | null;
   /** Set when replacing an existing v1 widget instead of creating a new one. */
   legacyId?: string;
+  workshop?: { submissionId: string; revision: number };
   onImported?(result: { id: string }): void;
 }
 
@@ -32,11 +35,20 @@ interface UseCustomWidgetImportOptions {
  * source setup, security review and the mutation itself. Keeping it in one hook
  * means the Workshop page and the file/clipboard dialog can never drift apart.
  */
-export function useCustomWidgetImport({ widget, legacyId, onImported }: UseCustomWidgetImportOptions) {
+export function useCustomWidgetImport({
+  widget: suppliedWidget,
+  legacyId,
+  workshop,
+  onImported,
+}: UseCustomWidgetImportOptions) {
   const t = useI18n("customWidget");
   const tCommon = useI18n("common");
   const router = useRouter();
   const utils = clientApi.useUtils();
+  const widget = useMemo(() => suppliedWidget && toPortableCustomWidgetDefinition(suppliedWidget), [suppliedWidget]);
+  const [integrationValues, setIntegrationValues] = useState<Record<string, string>>({});
+  const integrationOptionsKey = JSON.stringify(widget && [...getCustomWidgetIntegrationOptionIds(widget)]);
+  useEffect(() => setIntegrationValues({}), [integrationOptionsKey, workshop?.submissionId]);
 
   // Keyed on the sources themselves rather than the widget object: a background
   // refetch (window focus, or the invalidation a vote triggers) hands us a new but
@@ -55,6 +67,13 @@ export function useCustomWidgetImport({ widget, legacyId, onImported }: UseCusto
     if (!widget) return null;
     return {
       ...widget,
+      options: Object.fromEntries(
+        Object.entries(widget.options).map(([id, option]) => {
+          const integrationId = integrationValues[id];
+          if (!integrationId) return [id, option];
+          return [id, { ...option, default: integrationId }];
+        }),
+      ),
       sources: applyCustomWidgetSourceSetup(
         widget.sources,
         Object.fromEntries(
@@ -65,13 +84,18 @@ export function useCustomWidgetImport({ widget, legacyId, onImported }: UseCusto
         ),
       ),
     };
-  }, [values, widget]);
+  }, [values, widget, integrationValues]);
   const review = useMemo(() => getImportReview(configuredWidget), [configuredWidget]);
 
   // A widget must only ever be imported once per visit: the mutation creates a new
   // record every call, so a second click would silently duplicate it.
   const [succeeded, setSucceeded] = useState(false);
-  useEffect(() => setSucceeded(false), [widget]);
+  const importIdentity = workshop?.submissionId ?? legacyId ?? JSON.stringify(widget);
+  const inFlight = useRef(false);
+  useEffect(() => {
+    setSucceeded(false);
+    inFlight.current = false;
+  }, [importIdentity]);
 
   const onSuccess = (result: { id: string }) => {
     setSucceeded(true);
@@ -88,6 +112,7 @@ export function useCustomWidgetImport({ widget, legacyId, onImported }: UseCusto
     void revalidatePathActionAsync("/manage/custom-widgets").then(() => router.refresh());
   };
   const onError = (error: { message?: string }) => {
+    inFlight.current = false;
     showErrorNotification({
       title: legacyId ? t("action.migrate") : tCommon("action.import"),
       message: error.message || (legacyId ? t("notification.migrationError") : t("notification.importError")),
@@ -103,10 +128,22 @@ export function useCustomWidgetImport({ widget, legacyId, onImported }: UseCusto
     onError,
   });
 
-  const pending = importMutation.isPending || migrateMutation.isPending;
+  const workshopMutation = clientApi.customWidget.workshopInstall.useMutation({
+    onSuccess: (result) => onSuccess({ id: result.definitionId }),
+    onError,
+  });
+  const pending = importMutation.isPending || migrateMutation.isPending || workshopMutation.isPending;
 
   const importWidget = () => {
-    if (!configuredWidget || pending || succeeded) return;
+    if (
+      !configuredWidget ||
+      pending ||
+      succeeded ||
+      inFlight.current ||
+      !isCustomWidgetSourceSetupReady(setups, values)
+    )
+      return;
+    inFlight.current = true;
     const secrets = Object.entries(values).flatMap(([sourceId, value]) =>
       Object.entries(value.secrets).flatMap(([kind, secret]) =>
         secret?.trim() ? [{ sourceId, kind: kind as CustomWidgetSecretKind, value: secret }] : [],
@@ -116,6 +153,19 @@ export function useCustomWidgetImport({ widget, legacyId, onImported }: UseCusto
       migrateMutation.mutate({
         id: legacyId,
         widget: configuredWidget,
+        secrets,
+      });
+    else if (workshop)
+      workshopMutation.mutate({
+        submissionId: workshop.submissionId,
+        expectedRevision: workshop.revision,
+        integrations: Object.fromEntries(Object.entries(integrationValues).filter(([, id]) => id)),
+        sources: Object.fromEntries(
+          Object.entries(values).map(([id, value]) => [
+            id,
+            { baseUrl: value.baseUrl, networkScope: value.networkScope },
+          ]),
+        ),
         secrets,
       });
     else importMutation.mutate({ widget: configuredWidget, secrets });
@@ -152,6 +202,10 @@ export function useCustomWidgetImport({ widget, legacyId, onImported }: UseCusto
   };
 
   return {
+    integrationWidget: widget,
+    integrationValues,
+    setIntegrationValue: (id: string, value: string) =>
+      setIntegrationValues((current) => ({ ...current, [id]: value })),
     review,
     setups,
     values,

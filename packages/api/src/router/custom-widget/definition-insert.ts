@@ -3,7 +3,12 @@ import { encryptSecret } from "@homarr/common/server";
 import type { Database } from "@homarr/db";
 import { handleTransactionsAsync } from "@homarr/db";
 import { customWidgetDefinitions, customWidgetSecrets } from "@homarr/db/schema";
-import type { CustomWidgetCreateInput, HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
+import type {
+  CustomWidgetCreateInput,
+  HomarrCustomWidgetV2,
+  CustomWidgetEditorLayout,
+  CustomWidgetWorkshopOrigin,
+} from "@homarr/custom-widgets/core";
 
 import { serializeCustomWidgetDefinition } from "./stored-definition";
 
@@ -12,9 +17,17 @@ export async function insertCustomWidgetDefinition(
   definition: HomarrCustomWidgetV2,
   creatorId: string,
   secrets: CustomWidgetCreateInput["secrets"],
+  editorLayout?: CustomWidgetEditorLayout,
+  workshopOrigin?: CustomWidgetWorkshopOrigin,
 ) {
   const id = createId();
-  const definitionRow = { id, ...serializeCustomWidgetDefinition(definition), creatorId };
+  const definitionRow = {
+    workshopOrigin: workshopOrigin ? JSON.stringify(workshopOrigin) : null,
+    id,
+    ...serializeCustomWidgetDefinition(definition),
+    creatorId,
+    editorLayout: editorLayout ? JSON.stringify(editorLayout) : null,
+  };
   const updatedAt = new Date();
   const secretRows = secrets.map((secret) => ({
     definitionId: id,

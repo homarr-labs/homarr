@@ -194,7 +194,8 @@ export const BoardSwitcher = ({ children }: BoardSwitcherProps) => {
         onClose={closeSwitcher}
         withCloseButton={false}
         yOffset="15vh"
-        aria-label={t("title")}
+        title={<VisuallyHidden>{t("title")}</VisuallyHidden>}
+        styles={{ header: { padding: 0, minHeight: 0 } }}
         size={`${modalColumnCount * 15 + Math.max(0, modalColumnCount - 1) * 0.75}rem`}
         overlayProps={{ backgroundOpacity: 0, blur: 2 }}
         transitionProps={{ transition: "fade", duration: 100, timingFunction: "ease" }}
@@ -312,7 +313,16 @@ const getBoardSwitcherResults = ({
   }
 
   return (
-    <SimpleGrid id="board-switcher-results" aria-label={t("results")} cols={columnCount} spacing="xs" p={2}>
+    <SimpleGrid
+      id="board-switcher-results"
+      component="fieldset"
+      aria-label={t("results")}
+      cols={columnCount}
+      spacing="xs"
+      m={0}
+      p={2}
+      style={{ border: 0, minWidth: 0 }}
+    >
       {filteredBoards.map((board, index) => (
         <UnstyledButton
           key={board.id}

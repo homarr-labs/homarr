@@ -6,6 +6,8 @@ import { IconPlus, IconTrash } from "@tabler/icons-react";
 
 import { useI18n } from "@homarr/translation/client";
 
+import { CustomWidgetIntegrationOption } from "@homarr/widgets/custom-api/integration-option";
+
 import { CodeEditor } from "./_code-editor";
 
 export function DefaultValueEditor({
@@ -22,6 +24,8 @@ export function DefaultValueEditor({
   onChange: (value: unknown) => void;
 }) {
   const t = useI18n("customWidget.workbench.builder");
+  if (control === "integration")
+    return <CustomWidgetIntegrationOption label={t("default")} value={value} onChange={onChange} />;
   if (control === "switch")
     return (
       <Switch

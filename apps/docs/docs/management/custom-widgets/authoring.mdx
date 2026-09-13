@@ -1,29 +1,67 @@
 # Create a Custom Widget
 
-The workbench provides editors for general metadata, API sources, requests, widget options, JSX, and preview data. Raw
-JSON is available when direct editing is faster.
+The definition remains the source of truth in the workbench. Existing widgets open without converting or rewriting their
+JSX. Visual changes use targeted source edits; complex expressions remain editable in code.
 
-## Workflow
+## Definition and layout
 
-1. Configure each API source, network scope, authentication method, and credential.
-2. Add named queries and actions. Values can reference widget options or invocation parameters.
-3. Define widget options and their defaults.
-4. Write JSX using `data`, `status`, `options`, and temporary `inputs`.
-5. Run **Test and preview**, inspect the response data and redacted request journal, then save.
+A static widget needs only a JSX template: set `sources` and `requests` to `{}`. It makes no service request.
 
-Changing the definition, options, or credentials invalidates the previous preview. Preview actions are simulated unless
-**Run actions against the configured API** is enabled for that preview session.
+HTTP requests run on the Homarr server. Native capabilities use Homarr's installed integrations and existing
+permissions. Embeds open in the viewer's browser and need a URL reachable from that browser.
 
-Widget options support text, textarea, number, switch, select, multi-select, slider, date, time, color, icon, URL,
-duration, time zone, and JSON controls. Dynamic choices can come from a load query.
+Node positions and groups are stored separately from the runtime definition. Groups do not change execution. Source
+associations, data references, action invocations, and cache invalidations are distinct relationships; an invalidation edge
+does not create an execution dependency. Referenced objects cannot be removed until their dependants are resolved.
 
-See the [safe JSX runtime](./custom-jsx), [component reference](./component-reference), and
-[request reference](./requests-and-security) for the authoring contract.
+## Visual bindings
 
-## Create with another AI service
+Connecting a query, option, or action to the Widget opens a binding configuration. Queries can insert text, JSON, lists,
+or tables; request parameters can use options, temporary controls, or fixed values. Connecting options to a request changes
+its parameter bindings. These edits do not run queries or actions.
 
-**Create or fix with any AI** copies a self-contained prompt for an ordinary ChatGPT or Claude conversation. The model
-must return one fenced `json` block containing the complete definition. Paste that block into the workbench, add
-credentials separately, and validate it against a real preview.
+Generated JSX includes ownership comments. The canvas can disconnect or replace unchanged generated bindings as one Undo
+operation. Editing a generated block or mixing it with authored references makes the relationship code-owned; resolve it
+in JSX to preserve your changes. Removing ownership comments also removes visual ownership, without changing rendering.
 
-For an MCP-connected agent, use the [Homarr Custom Widget skill](./agent-authoring) instead.
+## Preview evidence
+
+Moving nodes, zooming, and opening inspectors do not execute requests or invalidate the preview. Editing the definition,
+options, or credentials marks execution evidence stale. Valid JSX renders against the last data; invalid JSX leaves the
+last valid preview visible with a stale label. Queries run deliberately, not on every keystroke.
+
+Preview actions simulate by default. Enabling **Run actions against the configured API** applies only to that preview
+session. Native actions also require declared confirmation and their normal integration permissions. Undo changes the draft;
+it never undoes or repeats a service action.
+
+## Undo and draft recovery
+
+Undo/Redo covers code, structured edits, renames, node movement, and Assistant patches. Typing is grouped and a drag or
+coherent Assistant change is one operation. The bounded history excludes credentials, responses, selection, and viewport
+movement. **Reset to saved** restores the saved definition and layout. Saving from an outdated workbench tab reports a
+conflict rather than overwriting a newer save.
+Temporary test parameters and unfinished request-body JSON keep local input Undo, so editing them does not undo an unrelated
+definition change. Credential fields also retain their own input history.
+
+Optional browser draft recovery keeps a credential-free draft and editor layout. Recovery is local to the browser and
+requires a valid recoverable configuration. It is not a revision archive or a backup of service data.
+
+## Assistant changes
+
+The Assistant reads the visible draft and selection, edits through shared draft commands, and can run preview queries. A stale patch is
+rejected when the draft has changed. Saving, live service actions, and Workshop publication remain separate operations.
+
+Form view retains **Create or fix with any AI** for external AI services. Configure credentials locally after importing
+the returned definition and validate the result.
+
+## Advanced capabilities
+
+Native capabilities, scoped CSS, reusable view fragments, typed preferences, and shared content use
+`homarr-custom-widget-v3`; ordinary HTTP and static widgets remain valid v2 definitions. Native input bindings must match
+the installed capability's schema. See the [runtime](./custom-jsx) for the expression language and extension contracts.
+
+V3 adds an integration picker with optional `integrationKinds`. The integration list respects the
+current user's access. Portable exports clear local integration selections so installers choose their own services.
+
+See the [runtime](./custom-jsx), [component reference](./component-reference),
+[native capabilities](./native-capabilities), and [request reference](./requests-and-security).

@@ -105,7 +105,7 @@ export function useCustomWidgetFormAnalysis(values: CustomWidgetFormValues) {
     () => (candidate.success ? candidate.data : null),
     // The preview renderer consumes only these definition fields; other fields affect the validity boolean below.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [analysisValues.requests, analysisValues.template, candidate.success],
+    [analysisValues.requests, analysisValues.template, analysisValues.extensions, candidate.success],
   );
   const previewValidationIssues = useMemo(
     () =>

@@ -26,6 +26,7 @@ export function CustomWidgetIdentifierInput({
   };
   return (
     <TextInput
+      data-workbench-local-input
       label={label}
       value={draft}
       error={error}

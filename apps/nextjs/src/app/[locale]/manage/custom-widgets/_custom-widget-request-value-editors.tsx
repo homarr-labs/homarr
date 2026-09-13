@@ -157,11 +157,16 @@ export function RequestBodyEditor({
   const [optionName, setOptionName] = useState<string | null>(optionNames[0] ?? null);
   const [parameterName, setParameterName] = useState("");
   const [insertion, setInsertion] = useState({ text: "", key: 0 });
-  useEffect(() => setDraft(serialized), [serialized]);
+  useEffect(() => {
+    setDraft(serialized);
+    setError(undefined);
+  }, [serialized]);
   return (
     <Stack gap="xs">
       <CodeEditor
         id={`${id}-request-body-editor`}
+        // Incomplete JSON is a local buffer; its undo must not change another document field.
+        localHistory
         label={t("jsonBody")}
         description={t("jsonBodyDescription")}
         language="json"
@@ -182,7 +187,7 @@ export function RequestBodyEditor({
           }
         }}
       />
-      <Group align="end" wrap="wrap">
+      <Group align="end" wrap="wrap" data-workbench-local-input>
         <Select label={t("option")} data={optionNames} value={optionName} searchable onChange={setOptionName} />
         <Button
           type="button"

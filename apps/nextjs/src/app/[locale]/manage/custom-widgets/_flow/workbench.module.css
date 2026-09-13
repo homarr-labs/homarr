@@ -1,0 +1,253 @@
+.workbench {
+  position: fixed;
+  inset-block-start: var(--app-shell-header-offset, 0px);
+  inset-block-end: 0;
+  inset-inline-start: var(--app-shell-navbar-offset, 0px);
+  inset-inline-end: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--mantine-color-body);
+  container: widget-workbench / inline-size;
+  --workbench-inspector-width: 420px;
+}
+.workbench[data-fullscreen="true"] {
+  inset: 0;
+  height: 100dvh;
+  z-index: var(--homarr-z-index-widget-focus);
+}
+.workbench:focus {
+  outline: none;
+}
+.workbench[data-code="true"] {
+  --workbench-inspector-width: 620px;
+}
+.toolbar {
+  flex-shrink: 0;
+  padding: 0.6rem 0.8rem;
+  border-bottom: 1px solid var(--mantine-color-default-border);
+}
+.toolbar,
+.library,
+.inspector,
+.canvasTools,
+.problems {
+  --mantine-color-dimmed: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-1));
+  --mantine-primary-color-light-color: var(--mantine-color-text);
+  --mantine-color-primaryColor-light-color: var(--mantine-color-text);
+}
+:is(.toolbar, .library, .inspector, .canvasTools, .problems)
+  :global(.mantine-Button-root):is([data-variant="light"], [data-variant="subtle"]) {
+  color: var(--mantine-color-text);
+}
+.body {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  overflow: hidden;
+}
+.center {
+  position: absolute;
+  inset: 0;
+  min-width: 0;
+}
+.workbench[data-inspector-hidden="false"] .center {
+  right: min(calc(var(--workbench-inspector-width) + 24px), calc(62% + 24px));
+}
+.canvas {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 300px;
+}
+.canvasTools {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 4;
+  padding: 0;
+}
+.library,
+.inspector {
+  position: absolute;
+  top: 12px;
+  bottom: 12px;
+  z-index: 5;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 12px;
+  background: var(--mantine-color-body);
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-lg);
+  box-shadow: var(--mantine-shadow-md);
+  min-width: 0;
+}
+.library {
+  left: 12px;
+  width: 270px;
+}
+.inspector {
+  right: 12px;
+  width: min(var(--workbench-inspector-width), 62%);
+}
+.workbench[data-library-hidden="true"] .library,
+.workbench[data-inspector-hidden="true"] .inspector {
+  display: none;
+}
+.inspectorHeader {
+  position: sticky;
+  top: -12px;
+  background: var(--mantine-color-body);
+  z-index: 2;
+  padding-block: 10px;
+  border-bottom: 1px solid var(--mantine-color-default-border);
+}
+.inspector :global(.mantine-Card-root) {
+  padding: 8px;
+  box-shadow: none;
+}
+.workbench[data-mode="flow"] .inspector [data-workbench-section-title] {
+  display: none;
+}
+.inspector :global(.cm-editor),
+.inspector :global(.cm-scroller) {
+  min-height: 380px;
+}
+.inspector [data-workbench-request-row] {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+}
+.inspector [data-workbench-request-row] > * {
+  min-width: 0;
+  max-width: none;
+}
+.outlineRow[data-nested="true"] {
+  margin-inline-start: 10px;
+  border-inline-start: 1px solid var(--mantine-color-default-border);
+  padding-inline-start: 4px;
+}
+.outlineItem {
+  display: block;
+  min-width: 0;
+  flex: 1;
+  padding: 0.5rem;
+  border-radius: var(--mantine-radius-sm);
+}
+.outlineItem:hover {
+  background: var(--mantine-color-default-hover);
+}
+.outlineItem[data-selected="true"] {
+  background: var(--mantine-primary-color-light);
+}
+.outlineItem:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+}
+.node,
+.canvasWidgetNode {
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+  background: var(--mantine-color-body);
+  box-shadow: var(--mantine-shadow-xs);
+}
+.node {
+  width: 240px;
+  --mantine-color-dimmed: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-1));
+}
+.canvasWidgetNode {
+  width: max-content;
+  min-width: 320px;
+}
+.node[data-selected="true"],
+.canvasWidgetNode[data-selected="true"] {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+}
+.node[data-valid-target="true"],
+.canvasWidgetNode[data-valid-target="true"] {
+  border-color: var(--mantine-color-teal-6);
+  box-shadow: 0 0 0 3px var(--mantine-color-teal-light);
+}
+.nodeDetails {
+  padding: 0 0.75rem 0.75rem;
+}
+.node :global(.mantine-Badge-label) {
+  color: var(--mantine-color-text);
+}
+:is(.node, .canvasWidgetNode) :global(.react-flow__handle) {
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--mantine-color-body);
+  background: var(--mantine-color-dimmed);
+}
+:is(.node, .canvasWidgetNode) :global(.react-flow__handle.valid) {
+  background: var(--mantine-color-teal-6);
+}
+:is(.node, .canvasWidgetNode, .group) :global(.widget-node-drag) {
+  cursor: grab;
+}
+.canvas :global(.react-flow__edge-text) {
+  fill: var(--mantine-color-text);
+}
+.canvas :global(.react-flow__controls) {
+  box-shadow: var(--mantine-shadow-xs);
+}
+.canvas :global(.react-flow__controls-button) {
+  background: var(--mantine-color-body);
+  fill: var(--mantine-color-text);
+  border-bottom-color: var(--mantine-color-default-border);
+}
+.group {
+  width: 100%;
+  height: 100%;
+  border: 1px dashed var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+  padding: 12px;
+  background: light-dark(rgba(0, 0, 0, 0.025), rgba(255, 255, 255, 0.025));
+}
+.group[data-selected="true"] {
+  border-color: var(--mantine-primary-color-filled);
+}
+.group :global(.widget-node-drag) {
+  min-height: 26px;
+}
+.assistantPane {
+  min-height: 0;
+}
+.workbench[data-mode="form"] .library {
+  display: none;
+}
+.workbench[data-mode="form"] .inspector {
+  width: 48%;
+}
+.workbench[data-mode="form"] .center {
+  right: 50%;
+}
+@container widget-workbench (max-width: 700px) {
+  .inspector,
+  .workbench[data-mode="form"] .inspector {
+    width: auto;
+    left: 8px;
+    right: 8px;
+    top: 8px;
+    bottom: 8px;
+  }
+  .workbench[data-mode="form"] .center {
+    right: 0;
+  }
+  .workbench[data-inspector-hidden="false"] .center {
+    right: 0;
+  }
+  .library {
+    width: min(320px, calc(100% - 24px));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .workbench *,
+  .workbench *::before,
+  .workbench *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -57,6 +57,7 @@
     "acorn": "catalog:",
     "acorn-jsx": "catalog:",
     "codemirror": "catalog:",
+    "css-tree": "catalog:",
     "jsonpath-plus": "catalog:",
     "react": "catalog:",
     "undici": "catalog:",
@@ -64,6 +65,7 @@
   },
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",
+    "@types/css-tree": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",

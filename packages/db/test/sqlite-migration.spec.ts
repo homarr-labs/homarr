@@ -37,6 +37,7 @@ test("SQLite migrations seed the five disabled bundled custom widgets", async ()
       .prepare("SELECT name FROM sqlite_master WHERE type = 'table' AND name LIKE 'custom_widget%' ORDER BY name")
       .all(),
   ).toEqual([
+    { name: "custom_widget_content" },
     { name: "custom_widget_definition" },
     { name: "custom_widget_secret" },
     { name: "custom_widget_v2_definition" },

@@ -31,7 +31,8 @@
     "./modals": "./src/modals/index.ts",
     "./prefetch": "./src/prefetch.ts",
     "./refetch-intervals": "./src/refetch-intervals.ts",
-    "./widget-card-shell": "./src/widget-card-shell.tsx"
+    "./widget-card-shell": "./src/widget-card-shell.tsx",
+    "./custom-api/integration-option": "./src/custom-api/integration-option.tsx"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",

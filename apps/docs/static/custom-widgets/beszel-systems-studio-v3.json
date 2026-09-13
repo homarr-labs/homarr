@@ -1,0 +1,75 @@
+{
+  "$schema": "homarr-custom-widget-v3",
+  "name": "Beszel systems studio",
+  "description": "Systems overview, configurable columns, selected-system history and live details using your existing Beszel integration. No HTTP source or copied API token required.",
+  "sources": {},
+  "requests": {},
+  "options": {
+    "beszel": {
+      "label": "Beszel integration",
+      "control": "integration",
+      "integrationKinds": ["beszel"],
+      "default": ""
+    }
+  },
+  "extensions": {
+    "stylesheet": ".metric { padding: 14px; border-radius: 12px; background: var(--mantine-color-default-hover); } .system-table { font-variant-numeric: tabular-nums; }",
+    "preferences": {
+      "system": {
+        "type": "string",
+        "defaultValue": ""
+      },
+      "period": {
+        "type": "string",
+        "defaultValue": "1h"
+      },
+      "columns": {
+        "type": "string[]",
+        "defaultValue": ["cpu", "memory", "disk"]
+      }
+    },
+    "fragments": {
+      "metric": "<Stack className=\"metric\" gap={2}><Text size=\"xs\" c=\"dimmed\">{props.label}</Text><Text fw={700} size=\"xl\">{Number(props.value ?? 0).toFixed(1)}{props.suffix ?? \"%\"}</Text></Stack>",
+      "containers": "<Stack gap=\"xs\">\n  <Text size=\"xs\" c=\"dimmed\">{props.items.length} containers \u00b7 {Date.toLocaleTimeString(props.updatedAt)}</Text>\n  {!props.items.length && <Text c=\"dimmed\">No containers reported.</Text>}\n  {props.items.length > 0 && <ScrollArea><Table striped highlightOnHover>\n    <Table.Thead><Table.Tr><Table.Th>Container</Table.Th><Table.Th>CPU</Table.Th><Table.Th>Memory</Table.Th><Table.Th>Sent</Table.Th><Table.Th>Received</Table.Th></Table.Tr></Table.Thead>\n    <Table.Tbody>{props.items.map((row) => <Table.Tr key={row.n}>\n      <Table.Td><Text fw={500}>{row.n}</Text></Table.Td>\n      <Table.Td>{Number(row.c ?? 0).toFixed(1)}%</Table.Td>\n      <Table.Td>{Number(row.m ?? 0).toFixed(1)} MiB</Table.Td>\n      <Table.Td>{Number((row.b?.[0] ?? (row.ns ?? 0) * 1048576) / 1024).toFixed(1)} KiB/s</Table.Td>\n      <Table.Td>{Number((row.b?.[1] ?? (row.nr ?? 0) * 1048576) / 1024).toFixed(1)} KiB/s</Table.Td>\n    </Table.Tr>)}</Table.Tbody>\n  </Table></ScrollArea>}\n</Stack>"
+    },
+    "native": {
+      "systems": {
+        "capability": "beszel.systems",
+        "integrationOption": "beszel",
+        "kind": "query",
+        "permission": "view",
+        "trigger": "load",
+        "input": {}
+      },
+      "history": {
+        "capability": "beszel.history",
+        "integrationOption": "beszel",
+        "kind": "query",
+        "permission": "view",
+        "trigger": "manual",
+        "input": {
+          "systemId": {
+            "$param": "systemId"
+          },
+          "timePeriod": {
+            "$param": "period"
+          },
+          "includeDocker": true
+        }
+      },
+      "live": {
+        "capability": "beszel.live",
+        "integrationOption": "beszel",
+        "kind": "query",
+        "permission": "view",
+        "trigger": "manual",
+        "input": {
+          "systemId": {
+            "$param": "systemId"
+          }
+        }
+      }
+    }
+  },
+  "template": "<NativeQuery nativeId=\"systems\" refreshInterval={30}>{(services) => (\n  <Stack p=\"md\" gap=\"md\">\n    <Group justify=\"space-between\"><Title order={3}>Systems</Title><Badge variant=\"light\">{services.flatMap((service) => service.systems).length} hosts</Badge></Group>\n    <Group grow align=\"flex-start\">\n      <TextInput label=\"Filter systems\" bind=\"filter\" />\n      <Select label=\"Selected system\" bind=\"system\" persist=\"system\" searchable clearable data={services.flatMap((service) => service.systems.map((system) => ({ value: system.id, label: system.name })))} />\n      <MultiSelect label=\"Visible columns\" bind=\"columns\" persist=\"columns\" data={[{value:\"cpu\",label:\"CPU\"},{value:\"memory\",label:\"Memory\"},{value:\"disk\",label:\"Disk\"}]} />\n    </Group>\n    {services.map((service) => <Stack key={service.integrationId} gap=\"xs\">\n      <Group justify=\"space-between\"><Text fw={600}>{service.integrationName}</Text><Text size=\"xs\" c=\"dimmed\">Updated {Date.toLocaleTimeString(service.updatedAt)}</Text></Group>\n      {service.error && <Alert color=\"yellow\" title=\"Integration unavailable\">{service.error}</Alert>}\n      <ScrollArea><Table className=\"system-table\" striped highlightOnHover>\n        <Table.Thead><Table.Tr><Table.Th>System</Table.Th><Table.Th>Status</Table.Th>{preferences.columns.includes(\"cpu\") && <Table.Th>CPU</Table.Th>}{preferences.columns.includes(\"memory\") && <Table.Th>Memory</Table.Th>}{preferences.columns.includes(\"disk\") && <Table.Th>Disk</Table.Th>}</Table.Tr></Table.Thead>\n        <Table.Tbody>{service.systems.filter((system) => !inputs.filter || system.name.toLowerCase().includes(inputs.filter.toLowerCase())).map((system) => <Table.Tr key={system.id}>\n          <Table.Td><Text fw={600}>{system.name}</Text><Text size=\"xs\" c=\"dimmed\">{system.hostname}</Text></Table.Td>\n          <Table.Td><Badge variant=\"light\">{system.status}</Badge></Table.Td>\n          {preferences.columns.includes(\"cpu\") && <Table.Td>{Number(system.cpu ?? 0).toFixed(1)}%</Table.Td>}\n          {preferences.columns.includes(\"memory\") && <Table.Td>{Number(system.memory ?? 0).toFixed(1)}%</Table.Td>}\n          {preferences.columns.includes(\"disk\") && <Table.Td>{Number(system.disk ?? 0).toFixed(1)}%</Table.Td>}\n        </Table.Tr>)}</Table.Tbody>\n      </Table></ScrollArea>\n      {!service.systems.length && !service.error && <Text c=\"dimmed\">No systems reported.</Text>}\n    </Stack>)}\n    {!preferences.system && <Text size=\"sm\" c=\"dimmed\">Select a system to open historical and live details.</Text>}\n    {preferences.system && <WidgetDrawer title=\"Selected system\" triggerLabel=\"Open system details\" size=\"xl\">\n      <Stack gap=\"md\">\n        {services.flatMap((service) => service.systems).filter((system) => system.id === preferences.system).map((system) => <Stack key={system.id}>\n          <Title order={3}>{system.name}</Title><Text size=\"sm\" c=\"dimmed\">{system.osName} \u00b7 {system.cpuModel} \u00b7 {system.cores} cores</Text>\n          <SimpleGrid cols={{base:1,sm:3}}><View name=\"metric\" values={{label:\"CPU\",value:system.cpu}}/><View name=\"metric\" values={{label:\"Memory\",value:system.memory}}/><View name=\"metric\" values={{label:\"Disk\",value:system.disk}}/></SimpleGrid>\n        </Stack>)}\n        <Select label=\"History period\" bind=\"period\" persist=\"period\" data={[{value:\"1h\",label:\"Last hour\"},{value:\"12h\",label:\"12 hours\"},{value:\"24h\",label:\"24 hours\"},{value:\"1w\",label:\"Week\"},{value:\"30d\",label:\"30 days\"}]} />\n        <NativeQuery nativeId=\"history\" params={{systemId:preferences.system,period:preferences.period}}>{(history) => <Stack>\n          <Text fw={600}>Resource history</Text>\n          {!history.systemStats.length && <Text c=\"dimmed\">No history in this period.</Text>}\n          {history.systemStats.length > 0 && <LineChart h={230} data={history.systemStats.slice().sort((a,b) => a.created.localeCompare(b.created)).map((point) => ({time:Date.toLocaleTimeString(point.created),cpu:point.stats.cpu,memory:point.stats.mp,disk:point.stats.dp}))} dataKey=\"time\" series={[{name:\"cpu\",color:\"blue.6\"},{name:\"memory\",color:\"violet.6\"},{name:\"disk\",color:\"teal.6\"}]} withLegend unit=\"%\" />}\n          <Text fw={600}>Latest container statistics</Text>\n          {!history.containerStats.length && <Text c=\"dimmed\">No container history in this period.</Text>}\n          {history.containerStats.slice().sort((a,b) => b.created.localeCompare(a.created)).slice(0,1).map((record) => <View key={record.id} name=\"containers\" values={{items:record.stats,updatedAt:record.created}} />)}\n        </Stack>}</NativeQuery>\n        <NativeQuery nativeId=\"live\" live params={{systemId:preferences.system}}>{(event,meta) => <Stack gap=\"xs\">\n          <Group><Text fw={600}>Live event</Text>{meta.stale && <Badge color=\"yellow\">Last received data</Badge>}</Group>\n          <Text size=\"xs\" c=\"dimmed\">{event.type} \u00b7 {Date.toLocaleTimeString(event.record.created)}</Text>\n          {event.type === \"system_stats\" && <SimpleGrid cols={{base:1,sm:3}}><View name=\"metric\" values={{label:\"CPU\",value:event.record.stats.cpu}}/><View name=\"metric\" values={{label:\"Memory\",value:event.record.stats.mp}}/><View name=\"metric\" values={{label:\"Disk\",value:event.record.stats.dp}}/></SimpleGrid>}\n          {event.type === \"container_stats\" && <View name=\"containers\" values={{items:event.record.stats,updatedAt:event.record.created}} />}\n        </Stack>}</NativeQuery>\n      </Stack>\n    </WidgetDrawer>}\n  </Stack>\n)}</NativeQuery>"
+}

@@ -50,7 +50,11 @@ export class Environment {
   public constructor(
     private readonly values: Readonly<Record<string, unknown>>,
     private readonly parent?: Environment,
+    private readonly sourceId?: string,
   ) {}
+  public getSourceId(): string | undefined {
+    return this.sourceId ?? this.parent?.getSourceId();
+  }
   public get(name: string): unknown {
     if (Object.hasOwn(this.values, name)) return this.values[name];
     if (this.parent) return this.parent.get(name);

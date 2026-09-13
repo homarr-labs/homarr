@@ -7,7 +7,7 @@ Templates are JSX expressions interpreted inside a widget-local safety and rende
 - `options.name` — saved widget configuration
 - `inputs.name` — temporary values from declarative `bind`
 
-The v2 manifest requires a `default` source and supports up to eight sources, 64 requests, and 64 options. Source IDs are
+Manifests support up to eight sources, 64 requests, and 64 options. A static widget can use empty `sources` and `requests`; every HTTP request must name an existing source. Source IDs are
 case-insensitively unique. Each request allows up to 32 static headers and 32 invalidation targets; a widget can contain
 up to 24 secrets, each up to 8,192 characters, and templates are limited to 50,000 characters. Validation reports the
 exact field when a limit is exceeded.
@@ -41,7 +41,7 @@ before it reaches `data`, so treat it as untrusted input even when the source is
 </Stack>
 ```
 
-Bound values live only in React memory while the widget is mounted. They are not saved to the database, board options, exports, browser storage, or `localStorage`. Remounting resets them. Components can share a binding when their adapter types agree.
+Without an explicit v3 `persist` binding, bound values live only in React memory while the widget is mounted. They are not saved to the database, board options, exports, browser storage, or `localStorage`. Remounting resets them. Components can share a binding when their adapter types agree.
 
 Bindable controls accept a scalar `resetKey`. When it changes, Homarr restores that control to its declared `defaultValue` or `defaultChecked` without running a request. This keeps dependent pagination correct while a manual `SubFetch` waits for the user to submit the new query.
 
@@ -74,3 +74,38 @@ than one variable quantifier are rejected.
 - `Icon`/`TablerIcon` resolves installed safe icons.
 
 Always include responsive loading, empty, error, and success states. Runtime failures remain inside the widget tile.
+
+## Version 3 capabilities
+
+Use `$schema: "homarr-custom-widget-v3"` for `extensions`, integration options, scoped classes, and the components below. Version 2 definitions continue to render; opening them in the workbench does not upgrade their runtime schema. Editor positions are Homarr metadata and are excluded from the portable definition.
+
+`extensions.stylesheet` accepts up to 30,000 characters. `className` references local classes; selectors and keyframe names are scoped per widget instance, including content opened through `WidgetModal` and `WidgetDrawer`. Use flat rules, `@media`, `@supports`, `@container`, and local `@keyframes`. Resource-loading CSS (`url()`, imports, fonts), global registration rules, and unresolved animation names are rejected. Theme CSS variables remain available. Inline style restrictions still apply.
+
+Templates can read `theme.colorScheme`, `theme.primaryColor`, `theme.colors`, `theme.spacing`, `theme.radius`, and `theme.fontFamily`. `container.width` and `container.height` report the widget content size in CSS pixels, so responsive composition can follow its tile rather than the browser viewport.
+
+Declare reusable JSX in `extensions.fragments` and render it with `<View name="metric" values={{ label: "CPU" }} />`. The fragment reads `props.label` and inherits the normal data bindings. Fragment names are literal, recursion is rejected, and all expansions share the interpreter's existing operation budget. Up to 32 fragments and 100,000 combined JSX characters are supported.
+
+```json
+{
+  "preferences": {
+    "filter": { "type": "string", "defaultValue": "" }
+  }
+}
+```
+
+The fragment above belongs under `extensions`. A matching `<TextInput bind="filter" persist="filter" label="Filter" />` exposes the value through both `inputs.filter` and `preferences.filter`. Preferences are typed, scoped to the board item, and saved only in that browser; another account or device gets its own values. Preview preferences remain in memory. Exports include the declarations and defaults, never the user's saved values. Storage-disabled browsers retain an in-memory fallback. `resetKey` resets a persisted control to its declared preference default.
+
+`WidgetModal` and `WidgetDrawer` require `title` and `triggerLabel`; Homarr owns their open/close behavior, focus handling, and portal boundary. They allow detailed views without authored callbacks.
+Supported selects, menus, tooltips, and popovers use Homarr-owned dropdown targets to escape tile clipping while preserving
+widget styles and the preview theme. Nested dropdowns stay within their parent overlay. Authored event handlers, refs, and
+portal targets remain blocked; Mantine's own trigger handlers work through the component adapters.
+
+`AppEmbed` requires an absolute HTTP(S) `src` and an accessible `title`. Its URL is reached by the browser, whereas HTTP sources are reached by the Homarr server; a Docker service hostname usually cannot be used for both. The embedded service must permit framing. The iframe uses an isolated origin and restricts navigation; apps requiring same-origin storage or unrestricted browser capabilities need their normal external link instead. `allowForms` explicitly enables embedded form submission.
+
+`extensions.native` maps local IDs to curated Homarr capabilities. Integration-backed entries reference a saved `integration` option through `integrationOption`; the server applies the existing integration and board permissions. `<NativeQuery nativeId="systems">{(systems, meta) => <Text>{systems.length}</Text>}</NativeQuery>` uses the same loading/error behavior as `SubFetch`. Use `trigger="manual"` for invocation parameters and `live` for a supported subscription. Automatic results populate `data` and `status` under their native ID; manual results remain local to the component.
+
+Native action entries require `kind: "action"`, `trigger: "manual"`, a `modify` or `full` permission, and a `confirmation` object containing `title` and `message`. Invoke them through `NativeActionButton`. Preview actions use the existing simulation mode; declaring an action does not authorize a live mutation. Native capability IDs and HTTP request IDs must be distinct.
+
+The [Beszel systems studio definition](/custom-widgets/beszel-systems-studio-v3.json) combines systems, configurable columns, a saved system selection, historical charts, and live detail views. Select a local Beszel integration after importing it. The example uses `preferences` directly for values needed before a control mounts; `inputs` appears only after its bound control mounts. Live failures keep the last received event and expose `meta.stale` alongside Retry.
+
+Shared editable content uses a separate `extensions.content` declaration with the same types/defaults as preferences plus `permission: "modify"` or `"full"`. `<Textarea bind="note" content="note" />` edits a local draft. `<ContentSaveButton name="note">Save note</ContentSaveButton>` commits it to the board item; `<ContentResetButton name="note">Reload note</ContentResetButton>` discards the draft and reloads the current shared value. Templates read `content.note` and `contentStatus.note` (`loading`, `dirty`, `saving`, `error`). Saves use the last read revision, so a stale draft cannot silently replace another saved value. Preview saves stay in memory; exports include declarations/defaults but exclude saved board content.

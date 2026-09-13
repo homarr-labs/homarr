@@ -1,3 +1,4 @@
+import type { CustomWidgetNativeCapability } from "../core/extensions-schema";
 import type { ReactNode } from "react";
 
 export type RuntimeParam = string | number | boolean;
@@ -35,6 +36,13 @@ export interface RuntimeRequestInput {
   params: CustomJsxRuntimeParams;
 }
 
+export interface RuntimeNativeInput {
+  itemId?: string;
+  previewSessionId?: string;
+  nativeId: string;
+  params: CustomJsxRuntimeParams;
+}
+
 export interface RuntimeActionInput extends RuntimeRequestInput {
   confirmed: boolean;
 }
@@ -51,7 +59,29 @@ export interface RuntimeNotification {
   message: string;
 }
 
+export interface CustomWidgetContentResult {
+  value: string | number | boolean | string[] | number[];
+  revision: number;
+}
+
 export interface CustomWidgetRuntimePort {
+  readContent?(
+    input: { itemId: string },
+    signal?: AbortSignal,
+  ): Promise<{ values: Record<string, CustomWidgetContentResult> }>;
+  writeContent?(input: {
+    itemId: string;
+    name: string;
+    expectedRevision: number;
+    value: CustomWidgetContentResult["value"];
+  }): Promise<CustomWidgetContentResult & { name: string }>;
+  queryNative?(input: RuntimeNativeInput, signal?: AbortSignal): Promise<CustomWidgetRequestResult>;
+  executeNativeAction?(input: RuntimeNativeInput & { confirmed: boolean }): Promise<CustomWidgetRequestResult>;
+  subscribeNative?(
+    input: RuntimeNativeInput,
+    onData: (result: CustomWidgetRequestResult) => void,
+    onError: (error: Error) => void,
+  ): () => void;
   query(input: RuntimeRequestInput, signal?: AbortSignal): Promise<CustomWidgetRequestResult>;
   executeAction(input: RuntimeActionInput): Promise<CustomWidgetRequestResult>;
   invalidate(input: RuntimeInvalidationInput): Promise<void>;
@@ -85,6 +115,8 @@ export interface CustomWidgetRuntimeValue {
   queriesDisabled?: boolean;
   isEditMode: boolean;
   requestCapabilities: readonly CustomJsxRequestCapability[];
+  nativeCapabilities?: Readonly<Record<string, CustomWidgetNativeCapability>>;
+  queryFixtures?: Readonly<Record<string, CustomWidgetPublishedQueryState>>;
   port: CustomWidgetRuntimePort;
   messages: CustomWidgetRuntimeMessages;
   setQueryState?(requestId: string, value: CustomWidgetPublishedQueryState | null): void;

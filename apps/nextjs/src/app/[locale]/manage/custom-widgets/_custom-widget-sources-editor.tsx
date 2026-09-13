@@ -1,5 +1,8 @@
 "use client";
 
+import { useCustomWidgetFormDocumentStore } from "./_custom-widget-form-state";
+import { useWorkbenchSelection } from "./_flow/selection";
+
 import { Accordion, Button, List, Stack, Text } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 
@@ -21,6 +24,8 @@ export function CustomWidgetSourcesEditor({
   form: CustomWidgetWorkbenchForm;
   definitionId?: string;
 }) {
+  const selection = useWorkbenchSelection();
+  const store = useCustomWidgetFormDocumentStore();
   const t = useI18n("customWidget.workbench.sources");
   const w = useI18n("customWidget.workbench");
   const { openConfirmModal } = useConfirmModal();
@@ -34,7 +39,16 @@ export function CustomWidgetSourcesEditor({
       form.setFieldError("sources", t("duplicateSourceId"));
       return;
     }
+    let parsedRequests: unknown;
+    if (previousId !== nextId) {
+      parsedRequests = parseJson(form.values.requests);
+      if (!isRecord(parsedRequests)) {
+        form.setFieldError("sources", w("invalidWidget"));
+        return;
+      }
+    }
     if (form.errors.sources === t("duplicateSourceId")) form.clearFieldError("sources");
+    if (previousId && nextId && previousId !== nextId) store.renameSourceBinding(previousId, nextId);
     const sourceEntries = sources.map(({ id, ...source }) => [id, source] as const);
     form.setFieldValue(
       "sources",
@@ -50,12 +64,13 @@ export function CustomWidgetSourcesEditor({
       ),
     );
     if (previousId && nextId && previousId !== nextId) {
-      const parsedRequests = parseJson(form.values.requests);
       const requests = isRecord(parsedRequests)
         ? Object.fromEntries(
             Object.entries(parsedRequests).map(([id, request]) => [
               id,
-              isRecord(request) && request.source === previousId ? { ...request, source: nextId } : request,
+              isRecord(request) && (request.source ?? "default") === previousId
+                ? { ...request, source: nextId }
+                : request,
             ]),
           )
         : {};
@@ -63,7 +78,13 @@ export function CustomWidgetSourcesEditor({
       form.setFieldValue(
         "secrets",
         form.values.secrets.map((secret) =>
-          secret.sourceId === previousId ? { ...secret, sourceId: nextId } : secret,
+          secret.sourceId === previousId
+            ? {
+                ...secret,
+                sourceId: nextId,
+                ...(secret.hasValue ? { savedSourceId: secret.savedSourceId ?? previousId } : {}),
+              }
+            : secret,
         ),
       );
     }
@@ -84,7 +105,10 @@ export function CustomWidgetSourcesEditor({
   const setSecret = (sourceId: string, kind: string, value: string) => {
     const current = form.values.secrets.filter((secret) => !(secret.sourceId === sourceId && secret.kind === kind));
     const existing = form.values.secrets.find((secret) => secret.sourceId === sourceId && secret.kind === kind);
-    form.setFieldValue("secrets", [...current, { sourceId, kind, value, hasValue: existing?.hasValue }]);
+    form.setFieldValue("secrets", [
+      ...current,
+      { sourceId, kind, value, hasValue: existing?.hasValue, savedSourceId: existing?.savedSourceId },
+    ]);
   };
   const addSource = () => {
     let suffix = sources.length + 1;
@@ -132,7 +156,7 @@ export function CustomWidgetSourcesEditor({
     if (!removedId) return;
     const dependentRequestIds = getDependentRequestIds(form.values.requests, removedId);
     if (dependentRequestIds.length === 0) {
-      removeSourceAndDependents(index);
+      store.transaction(() => removeSourceAndDependents(index));
       return;
     }
     openConfirmModal({
@@ -150,12 +174,16 @@ export function CustomWidgetSourcesEditor({
         </Stack>
       ),
       confirmProps: { children: t("remove") },
-      onConfirm: () => removeSourceAndDependents(index),
+      onConfirm: () => store.transaction(() => removeSourceAndDependents(index)),
     });
   };
   const clearSecret = async (sourceId: string, kind: "apiKey" | "username" | "password") => {
+    if (form.submitting) return;
     if (!definitionId) return;
-    await clearSecretMutation.mutateAsync({ definitionId, sourceId, kind });
+    const savedSourceId = form.values.secrets.find(
+      (secret) => secret.sourceId === sourceId && secret.kind === kind,
+    )?.savedSourceId;
+    await clearSecretMutation.mutateAsync({ definitionId, sourceId: savedSourceId ?? sourceId, kind });
     const current = form.values.secrets.filter((secret) => !(secret.sourceId === sourceId && secret.kind === kind));
     form.setFieldValue("secrets", [...current, { sourceId, kind, value: "", hasValue: false }]);
     await utils.customWidget.get.invalidate({ id: definitionId });
@@ -165,6 +193,7 @@ export function CustomWidgetSourcesEditor({
   return (
     <Stack gap="sm">
       {sources.map((source, index) => {
+        if (selection && selection !== `source:${source.id}`) return null;
         return (
           <CustomWidgetSourceField
             key={source.id}
@@ -173,8 +202,8 @@ export function CustomWidgetSourcesEditor({
             form={form}
             definitionId={definitionId}
             clearSecretPending={clearSecretMutation.isPending}
-            onUpdate={update}
-            onSetAuthentication={setAuth}
+            onUpdate={(sourceIndex, changes) => store.transaction(() => update(sourceIndex, changes))}
+            onSetAuthentication={(sourceIndex, type) => store.transaction(() => setAuth(sourceIndex, type))}
             onSetSecret={setSecret}
             onClearSecret={clearSecret}
             onRemove={removeSource}

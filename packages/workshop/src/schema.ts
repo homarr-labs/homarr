@@ -1,4 +1,8 @@
-import { CUSTOM_WIDGET_SCHEMA, customWidgetImportSchema } from "@homarr/custom-widgets/core";
+import {
+  CUSTOM_WIDGET_SCHEMA,
+  CUSTOM_WIDGET_SUPPORTED_SCHEMAS,
+  customWidgetImportSchema,
+} from "@homarr/custom-widgets/core";
 import { z } from "zod/v4";
 
 export const HOMARR_WEBSITE_URL = "https://homarr.dev";
@@ -261,6 +265,18 @@ export function validateWorkshopWidget(content: string): WorkshopWidgetValidatio
   } catch {
     return { success: false, error: "Widget content is not valid JSON" };
   }
+}
+
+export function isSupportedWorkshopWidgetSchema(value: string) {
+  return CUSTOM_WIDGET_SUPPORTED_SCHEMAS.some((schema) => schema === value);
+}
+
+/** Schema metadata follows the validated package, including during v2 to v3 updates. */
+export function getWorkshopContentSchema(type: WorkshopSubmissionType, content: string) {
+  if (type === "customCss") return WORKSHOP_CSS_SCHEMA;
+  const result = validateWorkshopWidget(content);
+  if (!result.success) throw new Error(result.error);
+  return result.data.$schema;
 }
 
 export function workshopExportFilename(title: string, type: WorkshopSubmissionType = "customWidget") {

@@ -10,3 +10,12 @@ export * from "./schema-references";
 export * from "./secret-requirements";
 export * from "./source-setup";
 export * from "./tabler-icons";
+
+export * from "./editor-layout";
+
+export * from "./workshop-origin";
+
+export * from "./extensions-schema";
+export * from "./portable-definition";
+
+export * from "./source-renames-schema";
