@@ -168,6 +168,7 @@ export const useBackupAnalysis = () => {
           dbRef.current = null;
         }
       } catch (err) {
+        console.error("Backup analysis failed", err);
         setError(err instanceof Error ? err.message : t("analyzeError"));
       } finally {
         setLoading(false);
