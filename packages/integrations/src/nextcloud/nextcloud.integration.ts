@@ -21,6 +21,7 @@ import type { ICalendarIntegration } from "../interfaces/calendar/calendar-integ
 import type { CalendarEvent } from "../interfaces/calendar/calendar-types";
 import type { Notification } from "../interfaces/notifications/notification-types";
 import type { INotificationsIntegration } from "../interfaces/notifications/notifications-integration";
+import { createNextcloudCalendarServerUrl } from "./nextcloud-url";
 
 // Register all existing timezones
 if (ICAL.TimezoneService.count === 0) {
@@ -189,7 +190,7 @@ export class NextcloudIntegration extends Integration implements ICalendarIntegr
 
   private async createCalendarClientAsync(agent?: Agent) {
     return new DAVClient({
-      serverUrl: this.integration.url,
+      serverUrl: createNextcloudCalendarServerUrl(this.integration.url),
       credentials: {
         username: this.getSecretValue("username"),
         password: this.getSecretValue("password"),
