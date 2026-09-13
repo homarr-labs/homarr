@@ -212,6 +212,8 @@ minimumReleaseAgeExclude:
   - esbuild@0.28.1
   # Renovate security update: @auth/core@0.41.3
   - "@auth/core@0.41.3"
+  # Renovate security update: hono@4.13.7
+  - hono@4.13.7
 overrides:
   "@babel/helpers@<7.26.10": ">=7.29.7"
   "@babel/runtime@<7.26.10": ">=7.29.7"
@@ -220,7 +222,7 @@ overrides:
   "brace-expansion@>=1.0.0 <=1.1.11": ">=5.0.7"
   "esbuild@<=0.24.2": ">=0.28.1"
   "form-data@>=4.0.0 <4.0.4": ">=4.0.6"
-  "hono@<4.6.5": ">=4.12.28"
+  "hono@<4.6.5": ">=4.13.7"
   "linkifyjs@<4.3.2": ">=4.3.3"
   "nanoid@>=4.0.0 <5.0.9": ">=5.1.16"
   "prismjs@<1.30.0": ">=1.30.0"
