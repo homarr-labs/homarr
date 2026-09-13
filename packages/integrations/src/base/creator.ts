@@ -33,6 +33,7 @@ import { NavidromeIntegration } from "../navidrome/navidrome-integration";
 import { NextcloudIntegration } from "../nextcloud/nextcloud.integration";
 import { GotifyIntegration } from "../gotify/gotify-integration";
 import { NTFYIntegration } from "../ntfy/ntfy-integration";
+import { PushoverIntegration } from "../pushover/pushover-integration";
 import { OpenMediaVaultIntegration } from "../openmediavault/openmediavault-integration";
 import { OPNsenseIntegration } from "../opnsense/opnsense-integration";
 import { OverseerrIntegration } from "../overseerr/overseerr-integration";
@@ -113,6 +114,7 @@ export const integrationCreators = {
   ical: ICalIntegration,
   ntfy: NTFYIntegration,
   gotify: GotifyIntegration,
+  pushover: PushoverIntegration,
   mock: MockIntegration,
   truenas: TrueNasIntegration,
   synology: SynologyIntegration,
