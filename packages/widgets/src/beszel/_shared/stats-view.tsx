@@ -13,12 +13,22 @@ import type { BeszelTimePeriod } from "./chart";
 import {
   BeszelChartPanel,
   CPU_Y_AXIS_DOMAIN,
+  hasGpuMetric,
   useContainerNames,
   useDiskChartData,
   useDockerChartData,
+  useGpuChartData,
+  useGpuDevices,
   useSystemChartData,
 } from "./chart";
-import { chartAxisFormatters, formatByteRate, formatGB, formatPercent, formatStorageBytes } from "./format";
+import {
+  chartAxisFormatters,
+  formatByteRate,
+  formatGB,
+  formatPercent,
+  formatStorageBytes,
+  formatWatts,
+} from "./format";
 import { makeTooltipProps } from "./tooltip";
 import { useLiveStats } from "./use-live-stats";
 
@@ -29,6 +39,7 @@ const tooltipGB = makeTooltipProps(formatGB, true);
 const tooltipRate = makeTooltipProps(formatByteRate, true);
 const tooltipPercentTotal = makeTooltipProps(formatPercent, true);
 const tooltipBytesTotal = makeTooltipProps(formatStorageBytes, true);
+const tooltipWatts = makeTooltipProps(formatWatts);
 
 const ChartSkeleton = () => (
   <Stack gap={4} style={{ minWidth: 0 }}>
@@ -46,6 +57,9 @@ export interface BeszelStatsVisibility {
   disk: boolean;
   diskIO: boolean;
   network: boolean;
+  gpuUsage: boolean;
+  gpuMemory: boolean;
+  gpuPower: boolean;
   dockerCpu: boolean;
   dockerMemory: boolean;
   dockerNetwork: boolean;
@@ -129,6 +143,28 @@ export function BeszelStatsView({
   const memoryData = useSystemChartData(whenVisible(visibility.memory, systemStats), mappers.memory, timePeriod);
   const diskIOData = useSystemChartData(whenVisible(visibility.diskIO, systemStats), mappers.diskIO, timePeriod);
   const networkData = useSystemChartData(whenVisible(visibility.network, systemStats), mappers.network, timePeriod);
+
+  const gpuDevices = useGpuDevices(
+    whenVisible(visibility.gpuUsage || visibility.gpuMemory || visibility.gpuPower, systemStats),
+  );
+  const gpuSeries = useMemo(
+    () =>
+      gpuDevices.map((device, index) => ({
+        name: device.seriesName,
+        color: containerColors[index % containerColors.length] as string,
+      })),
+    [gpuDevices],
+  );
+  const gpuUsageData = useGpuChartData(whenVisible(visibility.gpuUsage, systemStats), gpuDevices, "usage", timePeriod);
+  const gpuMemoryData = useGpuChartData(
+    whenVisible(visibility.gpuMemory, systemStats),
+    gpuDevices,
+    "memory",
+    timePeriod,
+  );
+  const gpuPowerData = useGpuChartData(whenVisible(visibility.gpuPower, systemStats), gpuDevices, "power", timePeriod);
+  const hasGpuMemory = hasGpuMetric(systemStats, "memory");
+  const hasGpuPower = hasGpuMetric(systemStats, "power");
 
   const efsPaths = useMemo(() => {
     const paths = new Set<string>();
@@ -288,6 +324,50 @@ export function BeszelStatsView({
             tooltipProps: tooltipRate,
           }}
         />
+      )}
+      {gpuSeries.length > 0 && (
+        <>
+          {visibility.gpuUsage && gpuUsageData.length > 0 && (
+            <BeszelChartPanel
+              title={t("chart.gpuUsage.title")}
+              subtitle={t("chart.gpuUsage.subtitle")}
+              chartProps={{
+                h: CHART_HEIGHT,
+                data: gpuUsageData,
+                series: gpuSeries,
+                yAxisFormatter: chartAxisFormatters.percent,
+                yAxisDomain: CPU_Y_AXIS_DOMAIN,
+                tooltipProps: tooltipPercent,
+              }}
+            />
+          )}
+          {visibility.gpuMemory && hasGpuMemory && gpuMemoryData.length > 0 && (
+            <BeszelChartPanel
+              title={t("chart.gpuMemory.title")}
+              subtitle={t("chart.gpuMemory.subtitle")}
+              chartProps={{
+                h: CHART_HEIGHT,
+                data: gpuMemoryData,
+                series: gpuSeries,
+                yAxisFormatter: chartAxisFormatters.bytes,
+                tooltipProps: tooltipBytesTotal,
+              }}
+            />
+          )}
+          {visibility.gpuPower && hasGpuPower && gpuPowerData.length > 0 && (
+            <BeszelChartPanel
+              title={t("chart.gpuPower.title")}
+              subtitle={t("chart.gpuPower.subtitle")}
+              chartProps={{
+                h: CHART_HEIGHT,
+                data: gpuPowerData,
+                series: gpuSeries,
+                yAxisFormatter: chartAxisFormatters.watts,
+                tooltipProps: tooltipWatts,
+              }}
+            />
+          )}
+        </>
       )}
       {showDocker && containerSeries.length > 0 && (
         <>

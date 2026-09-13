@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 
 import type { BeszelSystemStatsRecord } from "@homarr/integrations/types";
 
-import { buildDiskChartData, padLiveTimeGrid } from "./chart";
+import { buildDiskChartData, buildGpuChartData, buildGpuDevices, hasGpuMetric, padLiveTimeGrid } from "./chart";
 
 const record = (
   created: string,
@@ -83,5 +83,76 @@ describe("padLiveTimeGrid", () => {
     ]);
 
     expect(data.slice(-3).map((point) => point.CPU)).toEqual([10, undefined, 20]);
+  });
+});
+
+describe("buildGpuChartData", () => {
+  test("uses stable GPU ID and model labels across samples", () => {
+    const first = record("2026-07-11T13:46:00.000Z", 0, undefined);
+    first.stats.g = {
+      "0": { n: "RTX 3090", u: 10, mu: 1024, p: 150 },
+      "1": { n: "RTX 3090", u: 20, mu: 2048, p: 175 },
+    };
+    const second = record("2026-07-11T13:47:00.000Z", 0, undefined);
+    second.stats.g = { "0": { n: "RTX 3090", u: 30, mu: 4096, p: 200 } };
+
+    const devices = [
+      { id: "0", seriesName: "RTX 3090 (0)" },
+      { id: "1", seriesName: "RTX 3090 (1)" },
+    ];
+    const data = buildGpuChartData([second, first], devices, "usage", "1h");
+
+    expect(data.map((point) => ({ zero: point["RTX 3090 (0)"], one: point["RTX 3090 (1)"] }))).toEqual([
+      { zero: 10, one: 20 },
+      { zero: 30, one: 0 },
+    ]);
+    expect(buildGpuChartData([second, first], devices, "memory", "1h").map((point) => point["RTX 3090 (0)"])).toEqual([
+      1024 * 1024 * 1024,
+      4096 * 1024 * 1024,
+    ]);
+    expect(buildGpuChartData([second, first], devices, "power", "1h").map((point) => point["RTX 3090 (0)"])).toEqual([
+      150, 200,
+    ]);
+  });
+
+  test("returns no data when no GPU stats are available", () => {
+    expect(buildGpuDevices(undefined)).toEqual([]);
+    expect(buildGpuChartData(undefined, [], "usage")).toEqual([]);
+  });
+
+  test("keeps same-model GPUs distinct and orders them by device ID", () => {
+    const sample = record("2026-07-11T13:46:00.000Z", 0, undefined);
+    sample.stats.g = {
+      "1": { n: "RTX 3090", u: 20 },
+      "0": { n: "RTX 3090", u: 10 },
+    };
+
+    expect(buildGpuDevices([sample])).toEqual([
+      { id: "0", seriesName: "RTX 3090 (0)" },
+      { id: "1", seriesName: "RTX 3090 (1)" },
+    ]);
+  });
+
+  test("uses zero for unavailable optional metrics and preserves the live window", () => {
+    const sample = record("2026-07-11T13:51:30.000Z", 0, undefined);
+    sample.stats.g = { "0": { n: "RTX 3090", u: 10 } };
+    const devices = [{ id: "0", seriesName: "RTX 3090 (0)" }];
+
+    expect(buildGpuChartData([sample], devices, "memory", "1m").at(-1)?.["RTX 3090 (0)"]).toBe(0);
+    expect(buildGpuChartData([sample], devices, "power", "1m").at(-1)?.["RTX 3090 (0)"]).toBe(0);
+    expect(buildGpuChartData([sample], devices, "usage", "1m")).toHaveLength(60);
+  });
+
+  test("distinguishes missing optional GPU metrics from reported zero values", () => {
+    const sample = record("2026-07-11T13:51:30.000Z", 0, undefined);
+    sample.stats.g = { "0": { n: "RTX 3090", u: 0 } };
+
+    expect(hasGpuMetric([sample], "memory")).toBe(false);
+    expect(hasGpuMetric([sample], "power")).toBe(false);
+
+    sample.stats.g = { "0": { n: "RTX 3090", u: 0, mu: 0, p: 0 } };
+
+    expect(hasGpuMetric([sample], "memory")).toBe(true);
+    expect(hasGpuMetric([sample], "power")).toBe(true);
   });
 });
