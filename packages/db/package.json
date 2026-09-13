@@ -51,6 +51,7 @@
     "@homarr/server-settings": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "@mantine/core": "catalog:",
+    "@mantine/dates": "catalog:",
     "@paralleldrive/cuid2": "catalog:",
     "@testcontainers/mysql": "catalog:",
     "@testcontainers/postgresql": "catalog:",
@@ -66,6 +67,7 @@
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/better-sqlite3": "catalog:",
+    "@types/node": "catalog:",
     "@types/pg": "catalog:",
     "dotenv-cli": "catalog:",
     "esbuild": "catalog:",
