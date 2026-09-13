@@ -16,6 +16,7 @@ import { calendarRouter } from "./router/widgets/calendar";
 import { dnsHoleRouter } from "./router/widgets/dns-hole";
 import { downloadsRouter } from "./router/widgets/downloads";
 import { healthMonitoringRouter } from "./router/widgets/health-monitoring";
+import { hermesAgentRouter } from "./router/widgets/hermes-agent";
 import { mediaRequestsRouter } from "./router/widgets/media-requests";
 import { mediaServerRouter } from "./router/widgets/media-server";
 import { patchmonRouter } from "./router/widgets/patchmon";
@@ -38,6 +39,7 @@ export const mcpRouter = createTRPCRouter({
   dnsHole: dnsHoleRouter,
   downloads: downloadsRouter,
   healthMonitoring: healthMonitoringRouter,
+  hermesAgent: hermesAgentRouter,
   mediaRequests: mediaRequestsRouter,
   mediaServer: mediaServerRouter,
   patchmon: patchmonRouter,

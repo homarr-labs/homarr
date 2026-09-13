@@ -356,6 +356,14 @@ export const integrationDefs = {
     documentationUrl: createDocumentationLink("/docs/integrations/coolify"),
     defaultPort: 8000,
   },
+  hermesAgent: {
+    name: "Hermes Agent",
+    secretKinds: [["apiKey"], []],
+    iconUrl: "https://cdn.jsdelivr.net/gh/NousResearch/hermes-agent@v2026.8.3/website/static/img/apple-touch-icon.png",
+    defaultUrl: "http://127.0.0.1:8642",
+    category: ["automation"],
+    documentationUrl: createDocumentationLink("/docs/integrations/hermes-agent"),
+  },
   immich: {
     name: "Immich",
     secretKinds: [["apiKey"]],
@@ -593,6 +601,7 @@ export const integrationCategories = [
   "uptimeMonitoring",
   "subtitleManager",
   "reverseProxy",
+  "automation",
 ] as const;
 
 export type IntegrationCategory = (typeof integrationCategories)[number];

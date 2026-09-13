@@ -40,6 +40,7 @@ export const integrationDocSlugs: Record<IntegrationKind, string | null> = {
   synology: "synology",
   unraid: "unraid",
   coolify: "coolify",
+  hermesAgent: "hermes-agent",
   immich: "immich",
   paperlessNgx: "paperless-ngx",
   patchmon: "patchmon",
