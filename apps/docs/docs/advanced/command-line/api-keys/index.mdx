@@ -1,0 +1,78 @@
+# API keys
+
+:::info
+
+This guide requires that you understand [how to access the CLI](../).
+
+:::
+
+API keys are normally created from `Management` > `Tools` > `API`, which requires signing in with a
+browser. These commands create and manage them without the web interface, which is what makes a
+fully automated first-time setup possible.
+
+```bash
+Group of commands to manage API keys
+
+Usage:
+  homarr api-keys [command]
+
+Available Commands:
+  list     List all API keys (id and owner, the key itself is not stored in plain text)
+  create   Create an API key for a user, this allows automating Homarr without opening the web interface
+  delete   Delete an API key by id
+
+Flags:
+  -h, --help      help for api-keys
+  -v, --version   version for homarr-cli
+
+Use "homarr api-keys [command] --help" for more information about a command.
+```
+
+## List API keys
+
+- Requires a database connection
+- Only the id and the owner are shown, the key itself is stored hashed and cannot be recovered
+
+```bash
+ID              User
+a1b2c3d4        admin
+```
+
+## Create API key
+
+- Requires a database connection
+- Requires one parameter: `id` or `username` of the user the key belongs to
+- The key inherits the permissions of that user, so use an administrator for full automation
+- The key is printed once and cannot be shown again
+
+```bash
+Create an API key for a user, this allows automating Homarr without opening the web interface
+
+Usage:
+  homarr api-keys create [flags]
+
+Flags:
+  -i, --id string         ID of the user the key belongs to
+  -u, --username string   Name of the user the key belongs to
+  -h, --help              help for api-keys create
+  -v, --version           version for homarr-cli
+```
+
+If no user exists yet, create one first with [recreate-admin](../../../management/api/).
+
+## Delete API key
+
+- Requires a database connection
+- Requires the `id` of the key, which is the part in front of the dot
+
+```bash
+Delete an API key by id
+
+Usage:
+  homarr api-keys delete [flags]
+
+Flags:
+  -i, --id string   ID of the API key, the part in front of the dot
+  -h, --help        help for api-keys delete
+  -v, --version     version for homarr-cli
+```
