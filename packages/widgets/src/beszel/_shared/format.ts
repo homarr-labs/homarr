@@ -35,6 +35,8 @@ export const formatGB = (value: number): string => {
 
 export const formatPercent = (value: number): string => `${value.toFixed(1)}%`;
 
+export const formatWatts = (value: number): string => `${value.toFixed(1)} W`;
+
 export const getProgressTrackSize = (size: "xs" | "sm"): number => (size === "xs" ? 6 : 9);
 
 export const chartAxisFormatters = {
@@ -48,6 +50,7 @@ export const chartAxisFormatters = {
   mb: (value: number) => (!value ? "0" : `${Number(value).toFixed(0)}M`),
   bytes: (value: number) => formatScaledCompact(Number(value), byteUnits, "0"),
   rate: (value: number) => formatScaledCompact(Number(value), rateUnits, "0"),
+  watts: (value: number) => `${Number(value).toFixed(0)}W`,
 } as const;
 
 export const formatUptime = (seconds: number): string => dayjs.duration(seconds, "seconds").humanize();
