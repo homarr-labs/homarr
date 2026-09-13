@@ -69,6 +69,13 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        source: "/manifest.webmanifest",
+        headers: [
+          { key: "Accept-CH", value: "Sec-CH-Prefers-Color-Scheme" },
+          { key: "Vary", value: "Sec-CH-Prefers-Color-Scheme" },
+        ],
+      },
+      {
         source: "/sw.js",
         headers: [
           { key: "Content-Type", value: "application/javascript; charset=utf-8" },
