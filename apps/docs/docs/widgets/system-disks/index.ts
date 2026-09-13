@@ -19,7 +19,11 @@ export const systemDisksWidget: WidgetDefinition = {
         description: "How disk usage values are shown",
         values: {
           type: "select",
-          options: ["Percentage (e.g., 76%)", "Absolute values (e.g., 800GB / 1TB)", "Free space percentage (e.g., 24% free)"],
+          options: [
+            "Percentage (e.g., 76%)",
+            "Absolute values (e.g., 800GB / 1TB)",
+            "Free space percentage (e.g., 24% free)",
+          ],
         },
         defaultValue: "Percentage (e.g., 76%)",
       },
@@ -32,7 +36,7 @@ export const systemDisksWidget: WidgetDefinition = {
       {
         name: "Visible storage volumes",
         description:
-          "Only available when all selected integrations are Synology. Leave empty to show all detected storage volumes.",
+          "Only available when every selected integration is OpenMediaVault or Synology. Leave empty to show all detected storage volumes.",
         values: "List of storage volumes",
         defaultValue: "All volumes",
       },
