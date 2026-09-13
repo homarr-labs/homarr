@@ -32,6 +32,7 @@
     "@homarr/validation": "workspace:^0.1.0",
     "bcrypt": "catalog:",
     "cookies": "catalog:",
+    "dayjs": "catalog:",
     "ldapts": "catalog:",
     "next": "catalog:",
     "next-auth": "catalog:",
@@ -43,6 +44,8 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/bcrypt": "catalog:",
     "@types/cookies": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
     "typescript": "catalog:"
   }
 }
