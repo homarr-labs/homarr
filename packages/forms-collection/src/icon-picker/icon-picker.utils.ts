@@ -46,7 +46,7 @@ export const arrangeIconPickerSections = (iconGroups: IconGroup[], searchTerm = 
   return sections;
 };
 
-export const isDirectImageUrl = (value: string) => {
+export const isHttpUrl = (value: string) => {
   try {
     const url = new URL(value.trim());
     return (url.protocol === "http:" || url.protocol === "https:") && Boolean(url.hostname);
@@ -54,6 +54,8 @@ export const isDirectImageUrl = (value: string) => {
     return false;
   }
 };
+
+export const isDirectImageUrl = (value: string) => isHttpUrl(value);
 
 export const isImageSource = (value: string) => isDirectImageUrl(value) || value.trim().startsWith("/");
 

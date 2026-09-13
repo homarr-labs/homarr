@@ -6,8 +6,9 @@ import { MantineProvider } from "@mantine/core";
 import type { Root } from "react-dom/client";
 import type { IconGroup } from "./icon-picker.utils";
 
-const { findIconsQuery, refetch, uploadSelection, sessionPermissions } = vi.hoisted(() => ({
+const { findIconsQuery, detectFaviconQuery, refetch, uploadSelection, sessionPermissions } = vi.hoisted(() => ({
   findIconsQuery: vi.fn(),
+  detectFaviconQuery: vi.fn(),
   refetch: vi.fn(),
   uploadSelection: vi.fn(),
   sessionPermissions: { current: [] as string[] },
@@ -25,6 +26,7 @@ let queryResult: {
   isFetching: boolean;
   isError: boolean;
 };
+let faviconResult: { data?: { url: string | null } };
 
 vi.mock("@homarr/api/client", () => ({
   clientApi: {
@@ -33,6 +35,12 @@ vi.mock("@homarr/api/client", () => ({
         useQuery: (input: { searchText: string; limitPerGroup: number }, options: { enabled: boolean }) => {
           findIconsQuery(input, options);
           return { ...queryResult, refetch };
+        },
+      },
+      detectFavicon: {
+        useQuery: (input: { href: string }, options: { enabled: boolean }) => {
+          detectFaviconQuery(input, options);
+          return options.enabled ? faviconResult : {};
         },
       },
     },
@@ -105,6 +113,7 @@ const advanceDebounce = async () => {
 describe("IconPicker", () => {
   let container: HTMLDivElement;
   let root: Root;
+  let rerenderPicker: () => Promise<void>;
 
   beforeAll(() => {
     Object.defineProperty(globalThis, "IS_REACT_ACT_ENVIRONMENT", { value: true, writable: true });
@@ -127,10 +136,12 @@ describe("IconPicker", () => {
   beforeEach(() => {
     vi.useFakeTimers();
     findIconsQuery.mockClear();
+    detectFaviconQuery.mockClear();
     refetch.mockClear();
     uploadSelection.mockClear();
     sessionPermissions.current = [];
     queryResult = { data: emptyResult, isLoading: false, isFetching: false, isError: false };
+    faviconResult = { data: undefined };
   });
 
   afterEach(() => {
@@ -147,9 +158,12 @@ describe("IconPicker", () => {
     container = document.createElement("div");
     document.body.appendChild(container);
     root = createRoot(container);
-    await act(async () => {
-      root.render(createElement(MantineProvider, null, createElement(IconPicker, { value: "", onChange, ...props })));
-    });
+    rerenderPicker = async () => {
+      await act(async () => {
+        root.render(createElement(MantineProvider, null, createElement(IconPicker, { value: "", onChange, ...props })));
+      });
+    };
+    await rerenderPicker();
     const input = container.querySelector("input");
     if (!input) throw new Error("Icon picker input was not rendered");
     return input;
@@ -289,6 +303,67 @@ describe("IconPicker", () => {
     await act(async () => retry.click());
 
     expect(refetch).toHaveBeenCalledOnce();
+  });
+
+  test("offers the icon detected for the website of the app", async () => {
+    faviconResult = { data: { url: "https://app.example.com/favicon.ico" } };
+    const onChange = vi.fn();
+    const input = await renderPicker(onChange, { faviconSourceUrl: "https://app.example.com" });
+    await focusInput(input);
+
+    expect(detectFaviconQuery.mock.calls.at(-1)?.[0]).toEqual({ href: "https://app.example.com" });
+    expect(document.body.textContent).toContain("iconPicker.websiteIcon");
+
+    const option = document.body.querySelector<HTMLElement>(
+      '[data-combobox-option][value="https://app.example.com/favicon.ico"]',
+    );
+    if (!option) throw new Error("Website icon option was not rendered");
+    await act(async () => option.click());
+
+    expect(onChange).toHaveBeenCalledWith("https://app.example.com/favicon.ico");
+  });
+
+  test("keeps the keyboard selection on the same image when the website icon arrives later", async () => {
+    queryResult = { data: { icons: iconGroups, countIcons: 3 }, isLoading: false, isFetching: false, isError: false };
+    const onChange = vi.fn();
+    const input = await renderPicker(onChange, { faviconSourceUrl: "https://app.example.com" });
+    await focusInput(input);
+
+    await act(async () => pressKey(input, "ArrowDown"));
+    expect(document.body.querySelector("[data-combobox-selected]")?.getAttribute("value")).toBe(
+      "/api/user-medias/local-icon",
+    );
+
+    // The detection answers only after the user already navigated, which puts the website
+    // icon in front of the library images and moves every one of them one position down.
+    faviconResult = { data: { url: "https://app.example.com/favicon.ico" } };
+    await rerenderPicker();
+
+    expect(document.body.textContent).toContain("iconPicker.websiteIcon");
+    expect(document.body.querySelector("[data-combobox-selected]")?.getAttribute("value")).toBe(
+      "/api/user-medias/local-icon",
+    );
+
+    await act(async () => pressKey(input, "Enter"));
+
+    expect(onChange).toHaveBeenCalledWith("/api/user-medias/local-icon");
+    expect(onChange).not.toHaveBeenCalledWith("https://app.example.com/favicon.ico");
+  });
+
+  test("detects the website icon only while the dropdown is open", async () => {
+    const input = await renderPicker(vi.fn(), { faviconSourceUrl: "https://app.example.com" });
+
+    expect(detectFaviconQuery.mock.calls.at(-1)?.[1]).toMatchObject({ enabled: false });
+
+    await focusInput(input);
+    expect(detectFaviconQuery.mock.calls.at(-1)?.[1]).toMatchObject({ enabled: true });
+  });
+
+  test("does not detect a website icon without a website", async () => {
+    const input = await renderPicker(vi.fn());
+    await focusInput(input);
+
+    expect(detectFaviconQuery.mock.calls.at(-1)?.[1]).toMatchObject({ enabled: false });
   });
 
   test("selects an uploaded local image when the user has permission", async () => {
