@@ -60,13 +60,6 @@ export const unraidSystemInfoSchema = z.object({
       cores: z.number(),
       threads: z.number(),
     }),
-    memory: z.object({
-      layout: z.array(
-        z.object({
-          size: z.number(),
-        }),
-      ),
-    }),
   }),
 });
 
