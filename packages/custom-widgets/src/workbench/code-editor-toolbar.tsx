@@ -41,21 +41,21 @@ export function CodeEditorToolbar({
   onFormat,
 }: CodeEditorToolbarProps) {
   const starter = props.starter;
+  let languageLabel = props.messages.languageJson;
+  if (props.language === "jsx") languageLabel = props.messages.languageJsx;
+  if (props.language === "tsx") languageLabel = "TSX";
+  if (props.language === "css") languageLabel = "CSS";
   return (
     <Group className={classes.toolbar} justify="space-between" gap="xs" wrap="wrap">
       <Group gap={6}>
         <IconCode size={16} aria-hidden />
         <Text size="xs" fw={600}>
-          {props.language === "jsx"
-            ? props.messages.languageJsx
-            : props.language === "css"
-              ? "CSS"
-              : props.messages.languageJson}
+          {languageLabel}
         </Text>
       </Group>
       <Group gap={6}>
         {props.actions}
-        {!props.readOnly && (
+        {!props.readOnly && !props.hideHistoryActions && (
           <>
             <Button
               type="button"
@@ -109,7 +109,7 @@ export function CodeEditorToolbar({
             variant="subtle"
             leftSection={<IconWand size={14} />}
             onClick={onFormat}
-            disabled={props.language !== "jsx" && formattedValue === props.value}
+            disabled={!props.onFormat && props.language !== "jsx" && formattedValue === props.value}
           >
             {props.messages.format}
           </Button>

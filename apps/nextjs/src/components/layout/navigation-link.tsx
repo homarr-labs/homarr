@@ -3,11 +3,12 @@
 import type { ReactElement, ReactNode } from "react";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { NavLink } from "@mantine/core";
+import { ActionIcon, Menu, NavLink, Tooltip } from "@mantine/core";
 
 import { Link } from "@homarr/ui";
 
 import { TourTarget } from "./header/tour-target";
+import { useCompactNavigation } from "./shell";
 
 export const CommonNavLink = (props: ClientNavigationLink) =>
   "href" in props ? <NavLinkHref {...props} /> : <NavLinkWithItems {...props} />;
@@ -40,24 +41,41 @@ const useClientPathname = () => {
 
 const NavLinkHref = (props: NavigationLinkHref) => {
   const { pathname, isClient } = useClientPathname();
+  const compact = useCompactNavigation();
   const tourId = props["data-onboarding-tour-id"];
   const isActive = props.active ?? (isClient && pathMatches(pathname, props.href, props.exact));
+  if (compact) {
+    return withOptionalTourTarget(
+      tourId,
+      <Tooltip label={props.label} position="right">
+        <ActionIcon
+          component={Link}
+          href={props.href}
+          target={props.external ? "_blank" : undefined}
+          rel={props.external ? "noopener noreferrer" : undefined}
+          aria-label={props.label}
+          aria-current={isActive ? "page" : undefined}
+          variant={isActive ? "light" : "subtle"}
+          color={isActive ? undefined : "gray"}
+          size={44}
+          mb={4}
+        >
+          {props.icon}
+        </ActionIcon>
+      </Tooltip>,
+    );
+  }
   const link = props.external ? (
     <NavLink component="a" label={props.label} leftSection={props.icon} href={props.href} target="_blank" />
   ) : (
-    <NavLink
-      component={Link}
-      label={props.label}
-      leftSection={props.icon}
-      href={props.href}
-      active={isActive}
-    />
+    <NavLink component={Link} label={props.label} leftSection={props.icon} href={props.href} active={isActive} />
   );
   return withOptionalTourTarget(tourId, link);
 };
 
 const NavLinkWithItems = (props: NavigationLinkWithItems) => {
   const { pathname, isClient } = useClientPathname();
+  const compact = useCompactNavigation();
   const activeItemHref = getMostSpecificMatchingHref(pathname, props.items);
   const isActive = isClient && activeItemHref !== undefined;
   const [opened, setOpened] = useState(false);
@@ -65,6 +83,43 @@ const NavLinkWithItems = (props: NavigationLinkWithItems) => {
   useEffect(() => {
     if (isActive) setOpened(true);
   }, [isActive]);
+
+  if (compact) {
+    return withOptionalTourTarget(
+      props["data-onboarding-tour-id"],
+      <Menu position="right-start" withinPortal>
+        <Menu.Target>
+          <Tooltip label={props.label} position="right">
+            <ActionIcon
+              aria-label={props.label}
+              variant={isActive ? "light" : "subtle"}
+              color={isActive ? undefined : "gray"}
+              size={44}
+              mb={4}
+            >
+              {props.icon}
+            </ActionIcon>
+          </Tooltip>
+        </Menu.Target>
+        <Menu.Dropdown>
+          <Menu.Label>{props.label}</Menu.Label>
+          {props.items.map((item) => (
+            <Menu.Item
+              key={item.href}
+              component={Link}
+              href={item.href}
+              leftSection={item.icon}
+              target={item.external ? "_blank" : undefined}
+              rel={item.external ? "noopener noreferrer" : undefined}
+              aria-current={activeItemHref === item.href ? "page" : undefined}
+            >
+              {item.label}
+            </Menu.Item>
+          ))}
+        </Menu.Dropdown>
+      </Menu>,
+    );
+  }
 
   const nav = (
     <NavLink label={props.label} leftSection={props.icon} active={isActive} opened={opened} onChange={setOpened}>

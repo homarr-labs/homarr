@@ -1,3 +1,4 @@
+import { HOST_WIDGET_MODULES } from "../package/schema";
 import type { HomarrCustomWidgetV2 } from "./custom-jsx-schema";
 import { customJsxAuthoringCatalog } from "./component-catalog";
 import {
@@ -70,7 +71,7 @@ const AUTHORING_GUIDANCE = `You are writing one safe Homarr Custom JSX v2 dashbo
 Manifest contract:
 ${leanShape}
 
-Sources are keyed by name and must include "default". Auth is "none", "bearer", "basic", {"type":"apiKeyHeader","name":"X-Api-Key"}, or {"type":"apiKeyQuery","name":"api_key"}. Use the stable public API URL for public services and a clear suggested URL for self-hosted services; Homarr asks the installer for their own server URL. Never put credentials in the manifest.
+An API is optional: static widgets use empty sources and requests. Each request must reference a defined source; omitting source uses "default" only when that source exists. Auth is "none", "bearer", "basic", {"type":"apiKeyHeader","name":"X-Api-Key"}, or {"type":"apiKeyQuery","name":"api_key"}. Use stable public API URLs or clear suggested self-hosted URLs; Homarr collects local setup and credentials separately.
 
 Requests are keyed by ID. Defaults are source "default", kind "query", method "GET", query trigger "load", inherited auth, and permission "view" for queries or "modify" for actions. Actions are always manual. DELETE is valid only for actions, requires full permission, and receives confirmation automatically. Use {option:name} or {"$option":"name"} for saved options. Use {param:name} or {"$param":"name"} only for invocation-time params supplied by SubFetch, ActionButton, or ToggleSwitch. Load queries cannot use params. Values and primitive types are inferred from references; do not declare parameters or option bindings. Paths and query values must be primitive; JSON bodies may bind structured options.
 
@@ -284,3 +285,22 @@ function truncatePromptText(value: string, limit: number) {
   const marker = "\n... [content omitted to fit the prompt budget]";
   return `${value.slice(0, Math.max(0, limit - marker.length))}${marker}`;
 }
+
+/** Public authoring context only. Local bindings and runtime response data never belong here. */
+export const packageAssistantSdkContext = {
+  schema: "homarr-widget-package-v3",
+  sdkVersion: "1",
+  hostModules: HOST_WIDGET_MODULES,
+  package:
+    "widget.json contains $schema, manifest, dependencies, connections, options; files are edited separately. manifest requires id, name, version (exact semver), sdkVersion:'1', entrypoints:{tile,advanced?,configuration?,server?}. Each client surface default-exports a React component. Local relative modules and CSS imports work. dependencies maps npm names to exact versions. No request, connection or server file is required for static widgets. Declare connections as named {label,kind:'http'|'integration'|'service',optional?}; service requirements also declare serviceType. Owners bind local settings and encrypted secrets. Never embed credentials, local addresses or connection IDs in portable source.",
+  styling:
+    "Use normal TSX, React hooks, imported Mantine components, CSS and reusable modules. manifest.styles defaults to scoped CSS; 'global' is an explicit package choice. Build dashboard tiles and advanced views; there is no standalone application route. Respect host.visibleWidth/visibleHeight, colorScheme, locale, reducedMotion and isEditMode. Entry points may reuse the same component and branch on displayMode.",
+  client:
+    "Import @homarr/widget-sdk. useWidgetHost() returns displayMode:'compact'|'advanced',width,height,visibleWidth,visibleHeight,displayScale,visible,isPreview,isEditMode,locale,timeZone,colorScheme,reducedMotion. useWidgetOptions<T>() returns option values. useWidgetState<T>(key,initial) shares instance state between tile and advanced. useWidgetClock(intervalMs=1000) returns epoch milliseconds or null, pauses when hidden. useWidgetQuery<T>(name,input?,{enabled?,refetchInterval?,staleTime?}) returns query state. useWidgetAction<Output,Input>(name) returns mutation (mutate/mutateAsync). useWidgetSubscription<T>(name,input?,{enabled?,maximumEvents?}) returns data,events,error,connected,reconnect. useWidgetStorage<T>('user'|'instance'|'installation',key,initial) returns data,set,saving,saveError. useWidgetCommands([{id,label,run,disabled?,destructive?}]) registers native menu commands. WidgetScope name/handlerPrefix/options isolates composed components.",
+  services:
+    "useWidgetServices() exposes notify({title,message?,color?}), navigate(href), openAdvanced(), closeAdvanced(), openDetail({title,content:ReactNode}), closeDetail(), confirm({title,message,destructive?}):Promise<boolean>, updateOptions(record):Promise<void>. Use updateOptions from an authored configuration surface. Managed storage is isolated memory in preview. Query results and local options are not part of Assistant context.",
+  server:
+    "Optional server.ts imports @homarr/widget-sdk/server and default-exports defineWidgetServer({handler:async(input,context)=>value}). Declare every handler in manifest.handlers with kind:'query'|'action'|'subscription'|'migration', permission:'view'|'modify'|'full', inputSchema? (JSON Schema), guestAccess?; actions default to modify. fetchWidgetConnection<T>(context,{connection:'slot',path,method?,query?,body?,responseType?}) returns {data,ok,status,contentType,durationMs,updatedAt}. getWidgetConnection<TSettings>(context,{connection,serviceType?}) returns {configuration:{kind,serviceType?,settings?:TSettings,...},secrets:Record<string,string>} only to trusted server code for Node SQL, MQTT, SSH, files or other service clients; never return secrets to browser queries. getWidgetServerContext(context) returns options,installationId,bindingNames,bindingLabels,isPreview. Declare connections with multiple:true for a repeatable group, and integrationKind (for example sonarr) to filter compatible native integrations. getWidgetConnectionGroup(context,slot) returns all {connection,label} members for queries and actions; do not hard-code first/second server slots. callWidgetIntegration(context,{connection,capability,input?}) invokes native adapters; subscribeWidgetIntegration yields native stream events. callWidgetRunner and subscribeWidgetRunner address owner-managed remote runners. Server modules have trusted Node capabilities. Secrets stay in owner-bound connections. Do not invent integration capabilities: use reference packages or declared capability docs.",
+  lifecycle:
+    "Proposals only change the visible draft after explicit review; they never save, trust, run or activate code. The owner saves the draft, reviews dependencies and trust, runs exact-candidate Preview, then explicitly activates the saved release for all placements. SDK actions are simulated in default previews, but arbitrary trusted browser/Node code still executes. A preview session proves compilation/session creation only, not successful UI rendering, live action success or all application behavior. Any source/options/binding edit invalidates preview evidence.",
+};

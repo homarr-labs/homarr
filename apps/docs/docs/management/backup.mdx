@@ -38,3 +38,17 @@ A backup can be restored on another Homarr instance. When its `SECRET_ENCRYPTION
 integration secrets for the target instance. Version metadata is used to apply compatible migrations.
 
 The same restore flow is available during first-run onboarding, before the target database contains user data.
+
+## Custom widget packages
+
+Database backups include installed v2 definitions and trusted v3 source, compiled artifacts, current and previous
+activation metadata, local connections, placement bindings, guest grants, and managed widget storage/history.
+Restoring an encrypted backup re-encrypts widget credentials with the destination instance's key alongside native
+integration credentials. Compiled artifacts can be materialized again from the restored database without Workshop.
+
+Keep `SECRET_ENCRYPTION_KEY` with database backups made using MySQL or PostgreSQL administration tools. The built-in
+ZIP export/restore remains specific to SQLite. A package export is portable distribution material and deliberately
+excludes local connections, credentials, stored values, and collected history; it is not a complete instance backup.
+
+Files created directly by trusted Node code, external databases, remote-runner state, and changes already made to
+other applications are outside Homarr's managed widget storage. Include those resources in your own backup process.

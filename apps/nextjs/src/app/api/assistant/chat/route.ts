@@ -76,6 +76,7 @@ import {
   needsCustomWidgetAuthoringContext,
 } from "./custom-widget-authoring-context";
 import { createAssistantMcpToolGroups } from "./assistant-tool-groups";
+import { isWidgetPackageWorkbench, widgetPackageAuthoringInstructions } from "./widget-package-authoring-context";
 import {
   customWidgetAssistantInstructions,
   getForcedAssistantToolName,
@@ -497,7 +498,10 @@ export async function POST(request: Request) {
     return Response.json({ error: "The selected model does not support image input." }, { status: 400 });
   }
   const canAuthorCustomWidgets = session.user.permissions.includes("admin");
-  const customWidgetAuthoringActive = canAuthorCustomWidgets && needsCustomWidgetAuthoringContext(incomingMessages);
+  const widgetPackageAuthoringActive =
+    canAuthorCustomWidgets && isWidgetPackageWorkbench(parsed.data.clientContext?.pathname);
+  const customWidgetAuthoringActive =
+    canAuthorCustomWidgets && !widgetPackageAuthoringActive && needsCustomWidgetAuthoringContext(incomingMessages);
   const customWidgetDiscoveryPhase = createCustomWidgetDiscoveryPhaseController();
   const customWidgetToolStepGate = createCustomWidgetToolStepGate();
   const loadedCustomWidgetContextRequests = new Set<string>();
@@ -628,7 +632,7 @@ export async function POST(request: Request) {
   const activeCustomWidgetToolNames = getActiveCustomWidgetToolNames(
     Object.keys(homarrTools),
     incomingMessages,
-    canAuthorCustomWidgets,
+    canAuthorCustomWidgets && !widgetPackageAuthoringActive,
   );
   const getActiveToolNames = (steps: Parameters<typeof getCustomWidgetPhaseToolNames>[1] = []) => {
     const enabledToolNames = assistantToolGroups
@@ -693,7 +697,10 @@ export async function POST(request: Request) {
     const initialModelMessages = await convertAssistantMessagesToModelMessages(
       prepareMessagesForModel(incomingMessages),
     );
-    const baseInstructions = `${assistantInstructions}${customWidgetAuthoringActive ? customWidgetAssistantInstructions : ""}${openRouterServerToolsEnabled ? webSearchInstructions : ""}${requestContext}`;
+    let authoringInstructions = "";
+    if (widgetPackageAuthoringActive) authoringInstructions = widgetPackageAuthoringInstructions;
+    else if (customWidgetAuthoringActive) authoringInstructions = customWidgetAssistantInstructions;
+    const baseInstructions = `${assistantInstructions}${authoringInstructions}${openRouterServerToolsEnabled ? webSearchInstructions : ""}${requestContext}`;
     const getStepInstructions = (activeToolNames: readonly string[]) => {
       if (!customWidgetAuthoringActive) return undefined;
       return appendActiveCustomWidgetToolInstruction(baseInstructions, activeToolNames);

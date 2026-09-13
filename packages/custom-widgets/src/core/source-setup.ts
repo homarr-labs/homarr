@@ -48,6 +48,15 @@ export function hasSameCustomWidgetSourceAuthentication(left: CustomWidgetSource
   return left.auth.type === right.auth.type && left.auth.name === right.auth.name;
 }
 
+/** Credentials belong to an origin, network scope, and authentication destination; URL paths may change. */
+export function hasSameCustomWidgetSourceBinding(left: CustomWidgetSource, right: CustomWidgetSource) {
+  return (
+    new URL(left.baseUrl).origin === new URL(right.baseUrl).origin &&
+    left.networkScope === right.networkScope &&
+    hasSameCustomWidgetSourceAuthentication(left, right)
+  );
+}
+
 export function getCustomWidgetSourceSetups(
   sources: Record<string, CustomWidgetSource>,
   configuredSecrets: readonly CustomWidgetConfiguredSecret[] = [],

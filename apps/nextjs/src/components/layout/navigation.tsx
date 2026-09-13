@@ -1,10 +1,11 @@
 import type { JSX } from "react";
-import { AppShellNavbar, AppShellSection, Image, ScrollArea } from "@mantine/core";
+import { AppShellSection, Image, ScrollArea } from "@mantine/core";
 
 import type { TablerIcon, TablerIconProps } from "@homarr/ui";
 
 import type { ClientNavigationLink } from "./navigation-link";
 import { CommonNavLink } from "./navigation-link";
+import { NavigationPanel } from "./shell";
 
 interface MainNavigationProps {
   headerSection?: JSX.Element;
@@ -14,7 +15,7 @@ interface MainNavigationProps {
 
 export const MainNavigation = ({ headerSection, footerSection, links }: MainNavigationProps) => {
   return (
-    <AppShellNavbar p="md">
+    <NavigationPanel>
       {headerSection && <AppShellSection>{headerSection}</AppShellSection>}
       <AppShellSection
         grow
@@ -57,7 +58,7 @@ export const MainNavigation = ({ headerSection, footerSection, links }: MainNavi
         })}
       </AppShellSection>
       {footerSection && <AppShellSection>{footerSection}</AppShellSection>}
-    </AppShellNavbar>
+    </NavigationPanel>
   );
 };
 

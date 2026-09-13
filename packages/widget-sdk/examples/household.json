@@ -1,0 +1,64 @@
+{
+  "$schema": "homarr-widget-package-v3",
+  "manifest": {
+    "id": "homarr.reference.household",
+    "version": "1.0.0",
+    "sdkVersion": "1",
+    "name": "Household controls",
+    "description": "A Home Assistant control panel with a live configuration surface, owner-bound credentials and confirmed device actions.",
+    "entrypoints": {
+      "tile": "widget.tsx",
+      "advanced": "widget.tsx",
+      "server": "server.ts",
+      "configuration": "configuration.tsx"
+    },
+    "handlers": {
+      "states": {
+        "kind": "query",
+        "permission": "view"
+      },
+      "toggle": {
+        "kind": "action",
+        "permission": "modify",
+        "inputSchema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["entityId"],
+          "properties": {
+            "entityId": {
+              "type": "string",
+              "pattern": "^(light|switch|input_boolean|fan)\\.[A-Za-z0-9_]+$"
+            }
+          }
+        },
+        "guestAccess": true
+      }
+    }
+  },
+  "files": {
+    "widget.tsx": "import type { HouseholdEntity, HouseholdOptions, ToggleInput } from \"./household-types\";\nimport { Alert, Badge, Button, Card, Group, SimpleGrid, Stack, Text } from \"@mantine/core\";\nimport { useWidgetAction, useWidgetCapabilities, useWidgetHost, useWidgetOptions, useWidgetQuery, useWidgetServices } from \"@homarr/widget-sdk\";\nexport default function Household() {\n  const host = useWidgetHost();\n  const options = useWidgetOptions<HouseholdOptions>();\n  const services = useWidgetServices();\n  const query = useWidgetQuery<HouseholdEntity[]>(\"states\", {}, {refetchInterval: 10000});\n  const action = useWidgetAction<unknown, ToggleInput>(\"toggle\");\n  const capabilities = useWidgetCapabilities();\n  const error = query.error ?? action.error;\n  const entities = Array.isArray(options.entities) ? options.entities : [];\n  const rows = (query.data ?? []).filter((row) => entities.includes(row.entity_id));\n  const toggle = async (row: HouseholdEntity) => { if (!await services.confirm({title:row.attributes.friendly_name ?? row.entity_id, message:`Toggle ${row.entity_id}?`})) return; await action.mutateAsync({entityId:row.entity_id}).catch(() => undefined); };\n  return <Stack p=\"md\" h=\"100%\" style={{overflow:\"auto\"}}><Text fw={600}>{options.title}</Text>\n    {error && <Alert color=\"red\">{error.message}<Button size=\"xs\" variant=\"subtle\" onClick={() => void query.refetch()}>Retry</Button></Alert>}\n    <SimpleGrid cols={Math.max(1,Math.floor(host.visibleWidth / 180))}>{rows.map((row) => <Card key={row.entity_id} withBorder><Stack gap=\"xs\"><Text fw={500}>{row.attributes.friendly_name ?? row.entity_id}</Text><Group justify=\"space-between\"><Badge color={row.state === \"on\" ? \"teal\" : \"gray\"}>{row.state}</Badge><Button title={capabilities.canRun(\"toggle\", {entityId:row.entity_id}) ? undefined : \"Your dashboard permissions do not allow this control\"} size=\"compact-xs\" disabled={!capabilities.canRun(\"toggle\", {entityId:row.entity_id}) || action.isPending || ![\"on\",\"off\"].includes(row.state)} onClick={() => void toggle(row)}>Toggle</Button></Group>{host.displayMode === \"advanced\" && <Text size=\"xs\" c=\"dimmed\">Changed {new Date(row.last_changed).toLocaleString(host.locale)}</Text>}</Stack></Card>)}</SimpleGrid>\n    {!entities.length && <Text c=\"dimmed\">Choose your lights and switches in the configuration preview.</Text>}\n  </Stack>;\n}",
+    "server.ts": "import type { WidgetServerContext } from \"@homarr/widget-sdk/server\";\nimport type { HouseholdEntity, HouseholdOptions, ToggleInput } from \"./household-types\";\nimport { defineWidgetServer, fetchWidgetConnection, getWidgetServerContext } from \"@homarr/widget-sdk/server\";\nconst states = async (context: WidgetServerContext) => { const result = await fetchWidgetConnection<HouseholdEntity[]>(context, {connection:\"homeassistant\",path:\"/api/states\"}); if (!result.ok) throw new Error(`Home Assistant returned HTTP ${result.status}`); return result.data; };\nexport default defineWidgetServer({\n  states: (_input: unknown, context) => states(context),\n  toggle: async (input: ToggleInput, context) => {\n    const {options} = await getWidgetServerContext<HouseholdOptions>(context);\n    if (!Array.isArray(options.entities) || !options.entities.includes(input?.entityId)) throw new Error(\"Choose this entity in the widget configuration first\");\n    const domain = input.entityId.split(\".\")[0] ?? \"\";\n    if (![\"light\",\"switch\",\"input_boolean\",\"fan\"].includes(domain)) throw new Error(\"This entity does not support the toggle operation\");\n    const result = await fetchWidgetConnection(context, {connection:\"homeassistant\",path:`/api/services/${domain}/toggle`,method:\"POST\",body:{entity_id:input.entityId}});\n    if (!result.ok) throw new Error(`Home Assistant returned HTTP ${result.status}`);\n    return result.data;\n  },\n});",
+    "configuration.tsx": "import type { HouseholdEntity, HouseholdOptions } from \"./household-types\";\nimport { Alert, Button, MultiSelect, Stack, TextInput } from \"@mantine/core\";\nimport { useWidgetOptions, useWidgetQuery, useWidgetServices, useWidgetState } from \"@homarr/widget-sdk\";\nexport default function Configuration() {\n  const options = useWidgetOptions<HouseholdOptions>();\n  const services = useWidgetServices();\n  const [title, setTitle] = useWidgetState(\"configuration-title\", options.title);\n  const [entities, setEntities] = useWidgetState(\"configuration-entities\", options.entities);\n  const [error, setError] = useWidgetState(\"configuration-error\", \"\");\n  const query = useWidgetQuery<HouseholdEntity[]>(\"states\");\n  const choices = (query.data ?? []).filter((row) => /^(light|switch|input_boolean|fan)\\./.test(row.entity_id)).map((row) => ({value:row.entity_id,label:row.attributes.friendly_name ?? row.entity_id}));\n  const save = async () => { try { await services.updateOptions({...options,title,entities}); setError(\"\"); } catch (error) { setError(error instanceof Error ? error.message : String(error)); } };\n  return <Stack p=\"md\">{query.error && <Alert color=\"red\">{query.error.message}</Alert>}{error && <Alert color=\"red\">{error}</Alert>}<TextInput label=\"Panel title\" value={title} onChange={(event) => setTitle(event.currentTarget.value)} /><MultiSelect label=\"Lights and switches\" searchable data={choices} value={entities} onChange={setEntities} /><Button onClick={() => void save()}>Use these options</Button></Stack>;\n}",
+    "household-types.ts": "export interface HouseholdOptions extends Record<string, unknown> { title: string; entities: string[] }\nexport interface HouseholdEntity { entity_id: string; state: string; last_changed: string; attributes: { friendly_name?: string } }\nexport interface ToggleInput { entityId: string }\n"
+  },
+  "dependencies": {},
+  "connections": {
+    "homeassistant": {
+      "kind": "http",
+      "label": "Home Assistant",
+      "description": "Use the Home Assistant base URL and bearer token authentication."
+    }
+  },
+  "options": {
+    "title": {
+      "control": "text",
+      "label": "Title",
+      "default": "Home"
+    },
+    "entities": {
+      "control": "json",
+      "label": "Entity IDs",
+      "default": []
+    }
+  }
+}

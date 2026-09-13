@@ -24,7 +24,7 @@ export function CustomWidgetRequestsEditor({
   const parsed = parseJson(form.values.requests);
   const entries = isRecord(parsed) ? Object.entries(parsed) : [];
   const sources = parseJson(form.values.sources);
-  const sourceIds = isRecord(sources) ? Object.keys(sources) : ["default"];
+  const sourceIds = isRecord(sources) ? Object.keys(sources) : [];
   const options = parseJson(form.values.options);
   const optionNames = isRecord(options) ? Object.keys(options) : [];
 
@@ -41,13 +41,20 @@ export function CustomWidgetRequestsEditor({
     commit(next);
   };
   const add = () => {
+    const source = sourceIds[0];
+    if (!source) return;
     let suffix = entries.length + 1;
     while (entries.some(([id]) => id === `request-${suffix}`)) suffix += 1;
-    commit([...entries, [`request-${suffix}`, { path: "/api/data" }]]);
+    commit([...entries, [`request-${suffix}`, { source, path: "/api/data" }]]);
   };
 
   return (
     <Stack gap="sm">
+      {sourceIds.length === 0 && (
+        <Text size="sm" c="dimmed">
+          {t("sourceRequired")}
+        </Text>
+      )}
       {entries.map(([id, rawRequest], index) => {
         const request = isRecord(rawRequest) ? rawRequest : {};
         const kind = request.kind === "action" ? "action" : "query";
@@ -212,7 +219,13 @@ export function CustomWidgetRequestsEditor({
           </Fieldset>
         );
       })}
-      <Button type="button" variant="light" leftSection={<IconPlus size={16} />} onClick={add}>
+      <Button
+        type="button"
+        variant="light"
+        leftSection={<IconPlus size={16} />}
+        onClick={add}
+        disabled={sourceIds.length === 0 || entries.length >= 64}
+      >
         {t("addRequest")}
       </Button>
       {form.errors.requests && (

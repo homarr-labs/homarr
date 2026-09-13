@@ -1,0 +1,34 @@
+{
+  "$schema": "homarr-widget-package-v3",
+  "manifest": {
+    "id": "homarr.reference.timer",
+    "version": "1.0.0",
+    "sdkVersion": "1",
+    "name": "Focus timer",
+    "description": "A source-free deadline timer. Pausing, view changes and hidden tabs preserve the correct remaining time.",
+    "entrypoints": {
+      "tile": "widget.tsx",
+      "advanced": "widget.tsx"
+    },
+    "handlers": {}
+  },
+  "files": {
+    "widget.tsx": "import { Alert, Button, Group, NumberInput, Progress, Stack, Text } from \"@mantine/core\";\nimport { useWidgetClock, useWidgetCommands, useWidgetHost, useWidgetOptions, useWidgetState } from \"@homarr/widget-sdk\";\nexport default function Timer() {\n  const host = useWidgetHost();\n  const options = useWidgetOptions<{title:string;minutes:number}>();\n  const now = useWidgetClock(100);\n  const [minutes, setMinutes] = useWidgetState(\"minutes\", options.minutes);\n  const [timer, setTimer] = useWidgetState<{remaining:number;deadline:number|null;duration:number}>(\"timer\", { remaining: options.minutes * 60000, deadline: null, duration: options.minutes * 60000 });\n  const remaining = timer.deadline === null || now === null ? timer.remaining : Math.max(0, timer.deadline - now);\n  const running = timer.deadline !== null && remaining > 0;\n  const start = () => setTimer({ remaining, duration: timer.duration, deadline: Date.now() + remaining });\n  const pause = () => setTimer({ ...timer, remaining, deadline: null });\n  const reset = () => setTimer({ remaining: minutes * 60000, duration: minutes * 60000, deadline: null });\n  useWidgetCommands([{ id: \"toggle\", label: running ? \"Pause timer\" : \"Start timer\", disabled: remaining <= 0, run: running ? pause : start }, { id: \"reset\", label: \"Reset timer\", run: reset }]);\n  const seconds = Math.ceil(remaining / 1000);\n  return <Stack h=\"100%\" justify=\"center\" p=\"md\" gap=\"sm\">\n    <Text c=\"dimmed\" size=\"sm\">{options.title}</Text>\n    <Text ff=\"monospace\" fw={700} fz={host.displayMode === \"advanced\" ? \"4rem\" : \"2rem\"} aria-live={remaining === 0 ? \"polite\" : \"off\"}>{Math.floor(seconds / 60)}:{String(seconds % 60).padStart(2, \"0\")}</Text>\n    <Progress value={timer.duration ? 100 * (1 - remaining / timer.duration) : 0} aria-label=\"Elapsed timer duration\" />\n    {remaining === 0 && <Alert color=\"teal\">Timer complete</Alert>}\n    <Group><Button disabled={host.isEditMode || remaining <= 0} onClick={running ? pause : start}>{running ? \"Pause\" : \"Start\"}</Button><Button variant=\"light\" disabled={host.isEditMode} onClick={reset}>Reset</Button></Group>\n    {host.displayMode === \"advanced\" && <NumberInput label=\"Minutes for next reset\" min={1} max={1440} value={minutes} onChange={(value) => { if (typeof value === \"number\") setMinutes(value); }} />}\n  </Stack>;\n}\n"
+  },
+  "dependencies": {},
+  "connections": {},
+  "options": {
+    "title": {
+      "control": "text",
+      "label": "Title",
+      "default": "Focus"
+    },
+    "minutes": {
+      "control": "number",
+      "label": "Minutes",
+      "default": 25,
+      "min": 1,
+      "max": 1440
+    }
+  }
+}

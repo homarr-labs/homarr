@@ -1,6 +1,6 @@
 "use client";
 
-import { Accordion, Button, List, Stack, Text } from "@mantine/core";
+import { Button, List, Stack, Text } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -55,7 +55,9 @@ export function CustomWidgetSourcesEditor({
         ? Object.fromEntries(
             Object.entries(parsedRequests).map(([id, request]) => [
               id,
-              isRecord(request) && request.source === previousId ? { ...request, source: nextId } : request,
+              isRecord(request) && (request.source ?? "default") === previousId
+                ? { ...request, source: nextId }
+                : request,
             ]),
           )
         : {};
@@ -100,7 +102,7 @@ export function CustomWidgetSourcesEditor({
             {
               name: t("newName", { count: sources.length + 1 }),
               baseUrl: "https://example.com",
-              networkScope: sources.length === 0 ? "public" : "private",
+              networkScope: "private",
               auth: "none",
             },
           ],
@@ -164,6 +166,11 @@ export function CustomWidgetSourcesEditor({
 
   return (
     <Stack gap="sm">
+      {sources.length === 0 && (
+        <Text size="sm" c="dimmed">
+          {t("empty")}
+        </Text>
+      )}
       {sources.map((source, index) => {
         return (
           <CustomWidgetSourceField
@@ -181,16 +188,15 @@ export function CustomWidgetSourcesEditor({
           />
         );
       })}
-      <Accordion variant="contained">
-        <Accordion.Item value="advanced">
-          <Accordion.Control>{t("advanced")}</Accordion.Control>
-          <Accordion.Panel>
-            <Button type="button" variant="light" leftSection={<IconPlus size={16} />} onClick={addSource}>
-              {t("add")}
-            </Button>
-          </Accordion.Panel>
-        </Accordion.Item>
-      </Accordion>
+      <Button
+        type="button"
+        variant="light"
+        leftSection={<IconPlus size={16} />}
+        onClick={addSource}
+        disabled={sources.length >= 8}
+      >
+        {t("add")}
+      </Button>
       {form.errors.sources && (
         <Text c="red" size="xs">
           {form.errors.sources}

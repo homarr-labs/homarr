@@ -57,13 +57,13 @@ export function CustomWidgetSourceField({
   const authType = typeof source.auth === "string" ? source.auth : source.auth.type;
 
   return (
-    <Fieldset legend={index === 0 ? t("primary") : source.name}>
+    <Fieldset legend={source.name ?? source.id}>
       <Stack gap="sm">
         <Group grow align="start">
           <CustomWidgetIdentifierInput
             label={t("id")}
             value={source.id}
-            disabled={source.id === "default" || Boolean(definitionId)}
+            disabled={Boolean(definitionId)}
             error={form.errors.sources}
             onCommit={(value) => onUpdate(index, { id: value })}
           />
@@ -118,6 +118,7 @@ export function CustomWidgetSourceField({
           return (
             <Group key={kind} align="end" wrap="nowrap">
               <Input
+                data-custom-widget-secret
                 style={{ flex: 1 }}
                 label={tSecret(kind)}
                 value={secret?.value ?? ""}
@@ -139,17 +140,15 @@ export function CustomWidgetSourceField({
             </Group>
           );
         })}
-        {index > 0 && (
-          <Button
-            type="button"
-            color="red"
-            variant="subtle"
-            leftSection={<IconTrash size={16} />}
-            onClick={() => onRemove(index)}
-          >
-            {t("remove")}
-          </Button>
-        )}
+        <Button
+          type="button"
+          color="red"
+          variant="subtle"
+          leftSection={<IconTrash size={16} />}
+          onClick={() => onRemove(index)}
+        >
+          {t("remove")}
+        </Button>
       </Stack>
     </Fieldset>
   );

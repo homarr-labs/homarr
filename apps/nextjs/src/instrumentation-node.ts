@@ -32,4 +32,6 @@ export async function registerNodeInstrumentation() {
   };
 
   await Promise.all([startTasksAsync(), startWebsocketAsync()]);
+  const { startWidgetCollections } = await import("@homarr/api/custom-widget/collections");
+  startWidgetCollections();
 }

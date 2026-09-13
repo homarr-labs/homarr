@@ -3,14 +3,14 @@ import { isRecord } from "@homarr/common";
 export function getDependentRequestIds(requestsJson: string, sourceId: string) {
   const requests = parseRequestRecord(requestsJson);
   return Object.entries(requests).flatMap(([requestId, request]) =>
-    isRecord(request) && request.source === sourceId ? [requestId] : [],
+    isRecord(request) && (request.source ?? "default") === sourceId ? [requestId] : [],
   );
 }
 
 export function removeDependentRequests(requestsJson: string, sourceId: string) {
   return Object.fromEntries(
     Object.entries(parseRequestRecord(requestsJson)).filter(
-      ([, request]) => !isRecord(request) || request.source !== sourceId,
+      ([, request]) => !isRecord(request) || (request.source ?? "default") !== sourceId,
     ),
   );
 }

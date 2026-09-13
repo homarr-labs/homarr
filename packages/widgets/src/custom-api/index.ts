@@ -6,10 +6,21 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("customApi", {
   icon: IconApi,
+  supportsAdvancedFocus: true,
+  contextActions: ({ widgetRuntimeRef }) =>
+    (widgetRuntimeRef.current.commands ?? []).map((command) => ({
+      key: command.id,
+      label: () => command.label,
+      disabled: command.disabled,
+      hidden: command.hidden,
+      color: command.destructive ? "red" : undefined,
+      onClick: () => void command.run(),
+    })),
   createOptions() {
     return optionsBuilder.from((factory) => ({
       definitionId: factory.customWidgetSelect({ defaultValue: "" }),
       configuration: factory.customWidgetConfiguration(),
+      connectionBindings: factory.internal({ defaultValue: {} as Record<string, string> }),
       configurationVersion: factory.internal({ defaultValue: 1 }),
       refreshInterval: factory.slider({
         defaultValue: 30,

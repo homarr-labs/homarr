@@ -1,6 +1,6 @@
 import { z } from "zod/v4";
 
-import { CUSTOM_WIDGET_STARTER } from "../core";
+import { CUSTOM_WIDGET_STATIC_STARTER } from "../core";
 
 const jsonObjectString = z.string().superRefine((value, ctx) => {
   try {
@@ -40,12 +40,12 @@ export const CUSTOM_WIDGET_AUTH_SECRET_FIELDS: Record<
 };
 
 export const DEFAULT_CUSTOM_WIDGET_FORM_VALUES: CustomWidgetFormValues = {
-  name: CUSTOM_WIDGET_STARTER.name,
-  description: CUSTOM_WIDGET_STARTER.description ?? "",
-  iconUrl: CUSTOM_WIDGET_STARTER.iconUrl ?? "",
-  sources: JSON.stringify(CUSTOM_WIDGET_STARTER.sources, null, 2),
-  requests: JSON.stringify(CUSTOM_WIDGET_STARTER.requests, null, 2),
-  options: JSON.stringify(CUSTOM_WIDGET_STARTER.options, null, 2),
-  template: CUSTOM_WIDGET_STARTER.template,
+  name: CUSTOM_WIDGET_STATIC_STARTER.name,
+  description: CUSTOM_WIDGET_STATIC_STARTER.description ?? "",
+  iconUrl: CUSTOM_WIDGET_STATIC_STARTER.iconUrl ?? "",
+  sources: JSON.stringify(CUSTOM_WIDGET_STATIC_STARTER.sources, null, 2),
+  requests: JSON.stringify(CUSTOM_WIDGET_STATIC_STARTER.requests, null, 2),
+  options: JSON.stringify(CUSTOM_WIDGET_STATIC_STARTER.options, null, 2),
+  template: CUSTOM_WIDGET_STATIC_STARTER.template,
   secrets: [],
 };

@@ -1,0 +1,27 @@
+{
+  "$schema": "homarr-widget-package-v3",
+  "manifest": {
+    "id": "homarr.reference.clock",
+    "version": "1.0.0",
+    "sdkVersion": "1",
+    "name": "Custom world clock",
+    "description": "A source-free clock with shared compact and advanced state.",
+    "entrypoints": {
+      "tile": "clock.tsx",
+      "advanced": "clock.tsx"
+    },
+    "handlers": {}
+  },
+  "files": {
+    "clock.tsx": "import { Button, Group, Stack, Text } from \"@mantine/core\";\nimport { useWidgetClock, useWidgetCommands, useWidgetHost, useWidgetOptions, useWidgetState } from \"@homarr/widget-sdk\";\n\nexport default function Clock() {\n  const now = useWidgetClock();\n  const host = useWidgetHost();\n  const options = useWidgetOptions<{title:string}>();\n  const [showSeconds, setShowSeconds] = useWidgetState(\"showSeconds\", true);\n  useWidgetCommands([{ id: \"seconds\", label: \"Toggle seconds\", run: () => setShowSeconds((value) => !value) }]);\n  const zones = [host.timeZone, \"UTC\", \"America/New_York\", \"Asia/Tokyo\"];\n  const time = (zone:string) => {\n    if (now === null) return \"—\";\n    return new Intl.DateTimeFormat(host.locale, { timeZone: zone, hour: \"2-digit\", minute: \"2-digit\", ...(showSeconds ? { second: \"2-digit\" } : {}) }).format(now);\n  };\n  return <Stack h=\"100%\" justify=\"center\" gap=\"sm\" p=\"md\">\n    <Text size=\"sm\" c=\"dimmed\">{options.title}</Text>\n    <Text size={host.displayMode === \"advanced\" ? \"3rem\" : \"2rem\"} fw={700}>{time(host.timeZone)}</Text>\n    {host.displayMode === \"advanced\" && zones.filter((zone, index) => zones.indexOf(zone) === index).map((zone) =>\n      <Group key={zone} justify=\"space-between\"><Text>{zone}</Text><Text ff=\"monospace\">{time(zone)}</Text></Group>\n    )}\n    <Button size=\"compact-xs\" variant=\"subtle\" onClick={() => setShowSeconds((value) => !value)}>Toggle seconds</Button>\n  </Stack>;\n}\n"
+  },
+  "dependencies": {},
+  "connections": {},
+  "options": {
+    "title": {
+      "control": "text",
+      "label": "Title",
+      "default": "Local time"
+    }
+  }
+}

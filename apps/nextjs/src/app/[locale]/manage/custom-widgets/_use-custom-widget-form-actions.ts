@@ -24,6 +24,7 @@ import { extractCustomWidgetSaveIssues } from "./_custom-widget-save-errors";
 import type { CustomWidgetSaveIssue } from "./_custom-widget-save-errors";
 import { clearSaveIssues, reportSaveIssues } from "./_custom-widget-save-issue-utils";
 import type { CustomWidgetFormDocumentStore } from "./_custom-widget-form-state";
+import { applyCustomWidgetSavedState } from "./_custom-widget-save-state";
 
 interface FormActionsInput {
   mode: "create" | "edit";
@@ -44,14 +45,22 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
   const createMutation = clientApi.customWidget.create.useMutation();
   const updateMutation = clientApi.customWidget.update.useMutation();
   const previewMutation = clientApi.customWidget.previewCreate.useMutation();
+  const discardPreviewMutation = clientApi.customWidget.previewDiscard.useMutation();
+  const discardPreview = discardPreviewMutation.mutate;
   const [saveIssues, setSaveIssues] = useState<CustomWidgetSaveIssue[]>([]);
   const [previewPending, setPreviewPending] = useState(false);
   const setPreview = input.setPreview;
   const previewGeneration = useRef(0);
   const activePreviewGeneration = useRef<number | null>(null);
+  const activeSessionId = useRef<string | null>(null);
+  const discardCurrentSession = useCallback(() => {
+    const sessionId = activeSessionId.current;
+    activeSessionId.current = null;
+    if (sessionId) discardPreview({ sessionId });
+  }, [discardPreview]);
   const invalidatePreview = useCallback(() => {
     previewGeneration.current += 1;
-    if (activePreviewGeneration.current !== null) return;
+    discardCurrentSession();
     setPreview((preview) => {
       if (
         preview.outcome === "idle" &&
@@ -60,9 +69,9 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
         Object.keys(preview.status).length === 0
       )
         return preview;
-      return { data: {}, status: {}, session: null, outcome: "idle" };
+      return { ...preview, session: null, outcome: "idle", stale: true };
     });
-  }, [setPreview]);
+  }, [discardCurrentSession, setPreview]);
   useLayoutEffect(() => {
     invalidatePreview();
   }, [input.optionsSnapshot, invalidatePreview]);
@@ -71,8 +80,9 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
     () => () => {
       previewGeneration.current += 1;
       activePreviewGeneration.current = null;
+      discardCurrentSession();
     },
-    [],
+    [discardCurrentSession],
   );
   let actionLabel = tCommon("action.save");
   if (input.mode === "create") actionLabel = tCommon("action.create");
@@ -100,9 +110,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
           title: tCommon("action.create"),
           message: t("notification.created", { name: values.name }),
         });
-        input.form.setInitialValues(values);
-        input.form.resetDirty();
-        input.documentStore.markSaved(values);
+        applyCustomWidgetSavedState(input.form, input.documentStore, values);
         await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
         window.location.assign(result.managementPath);
       } else if (input.definitionId) {
@@ -116,9 +124,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
           utils.customWidget.get.invalidate({ id: input.definitionId }),
           utils.widget.customApi.getData.invalidate(),
         ]);
-        input.form.setInitialValues(values);
-        input.form.resetDirty();
-        input.documentStore.markSaved(values);
+        applyCustomWidgetSavedState(input.form, input.documentStore, values);
         showSuccessNotification({
           title: tCommon("action.save"),
           message: t("notification.updated", { name: values.name }),
@@ -157,11 +163,12 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
     }
     const secretsAtStart = getChangedSecrets(valuesAtStart);
     const generation = previewGeneration.current + 1;
+    discardCurrentSession();
     previewGeneration.current = generation;
     activePreviewGeneration.current = generation;
     const isCurrent = () => previewGeneration.current === generation;
     input.setMobilePane("preview");
-    input.setPreview({ data: {}, status: {}, session: null, outcome: "loading" });
+    input.setPreview((current) => ({ ...current, session: null, outcome: "loading" }));
     setPreviewPending(true);
     try {
       const created = await previewMutation.mutateAsync({
@@ -170,7 +177,11 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
         options: optionsAtStart,
         secrets: secretsAtStart,
       });
-      if (!isCurrent()) return;
+      if (!isCurrent()) {
+        discardPreview({ sessionId: created.previewSession.id });
+        return;
+      }
+      activeSessionId.current = created.previewSession.id;
       const snapshot = await loadPreviewQueries(candidateAtStart.data, created.previewSession.id);
       if (!isCurrent()) return;
       const failed = Object.values(snapshot.status).filter((status) => isRecord(status) && status.ok === false).length;
@@ -178,6 +189,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
         ...snapshot,
         session: created.previewSession,
         outcome: failed > 0 ? "error" : "success",
+        stale: false,
       });
       if (failed > 0) {
         showWarningNotification({
@@ -198,13 +210,14 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
       }
     } catch {
       if (!isCurrent()) return;
+      discardCurrentSession();
       input.setPreview((current) => ({ ...current, outcome: "error" }));
       showErrorNotification({ title: w("section.preview"), message: t("notification.previewError") });
     } finally {
       if (activePreviewGeneration.current === generation) {
         activePreviewGeneration.current = null;
         setPreviewPending(false);
-        if (!isCurrent()) setPreview({ data: {}, status: {}, session: null, outcome: "idle" });
+        if (!isCurrent()) setPreview((current) => ({ ...current, session: null, outcome: "idle", stale: true }));
       }
     }
   };

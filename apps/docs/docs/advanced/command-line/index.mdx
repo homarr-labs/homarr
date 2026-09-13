@@ -3,7 +3,8 @@
 The Homarr image includes a recovery CLI for operations that cannot be completed in the web interface. It is not an
 application API; use the [API](/docs/management/api) or [MCP endpoint](/docs/management/mcp) for automation.
 
-Back up the database and stop Homarr before running a command that changes data.
+Back up the database and stop Homarr before running a recovery command that changes database records directly.
+Widget project commands and authenticated preview requests can run while Homarr is online.
 Failed commands print an error and return a non-zero exit code, so shell scripts can stop safely.
 
 ## Run the recovery CLI
@@ -42,6 +43,147 @@ homarr <command>
 ![Bash console open for Homarr in QNAP Container Station](./img/334116642-08c4f204-5cd0-4e4e-a785-0142e1b279ca.png)
 
 See the pages in this section for available commands.
+
+## Build and share custom widget packages
+
+The `widgets` commands accept a project directory, a v3 package JSON file, or an offline archive. Scaffolding,
+validation, compilation and packing do not need a running Homarr database.
+
+Create a project to edit in your own IDE:
+
+```sh
+homarr widgets init my-clock --example clock --id example.my-clock --name "My clock"
+homarr widgets validate my-clock
+homarr widgets pack my-clock
+```
+
+`init` (also `scaffold`) creates a new directory with `homarr-widget.json` and normal TSX, TypeScript, CSS and asset
+files. It refuses to overwrite an existing directory. Choose `clock`, `timer`, `beszel`, `checklist`, `downloads`,
+`sonarr`, `rack`, `backup`, `household`, `overview`, `media`, `sqlite` or `mqtt` with `--example`; leaving out `--id` generates a unique
+local package identity. Edit the manifest and files, then repeat validation and packing. The manifest carries entrypoints,
+handlers, connection requirements, options and exact dependency versions; it does not embed the files map in this layout.
+
+Directory loading skips hidden files, symlinks, `node_modules`, `dist`, `coverage`, generated archives and root-level
+`package.json`, `package-lock.json` and `tsconfig.json`. Keep all widget source under supported TS/JS, JSON, CSS, SVG,
+text, Markdown, image or font files. Build output defaults to `dist/widget.artifact.json`; packing defaults to
+`dist/widget.homarr-widget.json`. Remove or rename an existing output before rebuilding, or pass a new `--output`.
+
+The same commands also accept the single-file format:
+
+```sh
+homarr widgets validate widget.json
+homarr widgets build widget.json --output widget.artifact.json
+homarr widgets pack widget.json --output widget.homarr-widget.json
+homarr widgets validate widget.homarr-widget.json
+```
+
+`validate` checks the package structure or an archive's source and artifact checksums. It does not execute widget code.
+`build` compiles JSX/TSX, local modules, CSS and assets into browser and optional server output. `pack` includes the
+source, compiled output and dependency lock in one JSON archive for offline installation. Output files must not already exist.
+
+Packages with third-party dependencies need `--trust` to install their exact declared versions:
+
+```sh
+homarr widgets pack widget.json --trust
+```
+
+Dependency installations are cached in `.homarr-widgets` beside the input file. Installation scripts are disabled;
+packages requiring native build steps are not supported by these commands. Compilation does not start the widget's
+server handlers. Installed trusted widgets execute with Homarr's privileges; source and artifact checksums establish
+integrity, not publisher authenticity. Local connection bindings, credentials and widget state are separate from the archive.
+
+### Preview a local project in Homarr
+
+Set `HOMARR_API_KEY` to an admin API key from your own Homarr instance, then run:
+
+```sh
+homarr widgets preview my-clock --url http://homarr.local:7575 --trust
+```
+
+The command creates a disabled installation on first use, compiles the current local source on that Homarr instance,
+and prints a link to its exact preview session. Open the link while signed in as the API key owner. Repeating the command
+replaces the previous preview; it does not activate or overwrite the installation's saved draft. Use `--save-draft` to
+also save your local source. Use `--installation-id ID` to target an existing installation. The local
+`.homarr-widget.local.json` file remembers installation and preview IDs and is excluded from scaffolded Git projects.
+
+Pass `--bindings bindings.json` for a JSON object mapping declared connection names to existing Homarr connection IDs,
+and `--options options.json` for preview option values. Credentials remain in Homarr. `--live-actions` explicitly allows
+real mutations during this preview; queries and subscriptions can already execute trusted server code. `--trust` is
+required on every invocation. Set `HOMARR_URL` instead of `--url`, or select a different secret variable with
+`--api-key-env VARIABLE_NAME`. Preview compilation may install declared dependencies after this explicit trust choice.
+
+Use `--scenario NAME` to select synthetic query data declared in the package's `previewScenarios`. This skips server
+startup and configured service requests; unprovided query fixtures fail explicitly and subscriptions are unavailable.
+SDK actions stay simulated, so `--scenario` cannot be combined with `--live-actions`. Trusted browser code and dependency
+compilation keep their normal privileges. See [synthetic preview scenarios](../../management/custom-widgets/trusted-packages.mdx#synthetic-preview-scenarios).
+
+### Publish the exact offline archive
+
+Set `HOMARR_WORKSHOP_TOKEN` to an authenticated Workshop token, then publish the archive you reviewed:
+
+```sh
+homarr widgets publish my-clock/dist/widget.homarr-widget.json
+homarr widgets publish next-release.homarr-widget.json --submission-id LISTING_ID --expected-revision 1
+```
+
+Use `--url` (or `WORKSHOP_API_URL`) for your own Workshop service, `--token-env` for another token variable,
+`--changelog` for release notes, and `--forked-from RELEASE_ID` to attribute a new fork. Existing listings require their
+current revision and a new package version. Forks need their own package identity. Published releases are immutable;
+publication sends the archive without rebuilding it. You can also import the archive into Homarr and publish through
+the package workspace.
+
+### Run a package on another machine
+
+Run an already packed archive on another machine with the optional widget runner:
+
+```sh
+export HOMARR_WIDGET_RUNNER_TOKEN="$(openssl rand -hex 32)"
+homarr widgets serve widget.homarr-widget.json --trust --host 127.0.0.1 --port 8787
+```
+
+`serve` executes the installed package with that machine's operating system privileges. It never downloads packages
+or accepts source uploads. Set a custom token variable with `--token-env VARIABLE_NAME`. The token must have at least
+32 characters. Interrupting the command stops its worker and subscriptions. See [remote widget runners](../../management/custom-widgets/remote-runners.mdx)
+for connection setup, local files, SQL, MQTT, and browser-service adapters.
+
+### Share several widgets as a collection
+
+A collection contains independent compiled widget packages and a shared connection blueprint. Write a collection
+manifest with paths to already packed archives:
+
+```json
+{
+  "manifest": { "id": "example.home", "version": "1.0.0", "name": "Home dashboard" },
+  "connections": { "monitor": { "label": "Monitoring server", "kind": "integration" } },
+  "widgets": [
+    { "key": "clock", "archive": "clock/dist/widget.homarr-widget.json" },
+    {
+      "key": "servers",
+      "archive": "beszel/dist/widget.homarr-widget.json",
+      "connections": { "beszel": "monitor" }
+    }
+  ]
+}
+```
+
+Pack and verify it without compiling or executing the member packages:
+
+```sh
+homarr widgets collection pack collection.json --output home.homarr-collection.json
+homarr widgets collection validate home.homarr-collection.json
+homarr widgets collection import home.homarr-collection.json --url http://homarr.local:7575
+```
+
+`import` uses `HOMARR_API_KEY`, or the variable selected with `--api-key-env`. Pass `--bindings bindings.json` to map
+each collection slot to an existing local Homarr connection once; all members that reference that slot receive the
+binding. Omitted connections can be configured later. Imports create every member as a disabled draft in one database
+transaction and print their review links. Trust and activation are separate, explicit steps.
+
+Collections support 1–32 members and up to 128 MiB. Package identities, compiled artifacts, dependency locks and
+documented Workshop/fork attribution travel with the archive. The collection and each nested artifact have integrity
+checksums. Local connection URLs, IDs and credentials, board placements, stored widget data and local configuration
+are excluded. Authored `options` on a member are portable defaults: include only values you intend to share. Package
+source is included verbatim, so embedded literals are still part of the archive.
 
 ## Build a local branch harness
 

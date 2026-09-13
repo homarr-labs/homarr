@@ -1,20 +1,20 @@
 ---
 name: homarr-custom-widget
-description: Author, validate, preview, test, install, or configure API-backed Homarr Custom JSX v2 widgets.
+description: Author, validate, preview, test, install, or configure static or API-backed Homarr Custom JSX v2 widgets.
 ---
 
 # Homarr Custom Widget
 
-Author one widget or a coordinated set of widgets. Load only needed release-matched context. Run lifecycle tools alone; independent reads may run together. For a set, research once and finish each widget's validation, evidence, and persistence before the next.
+Author one widget or a coordinated set. Load release-matched context on demand. Run lifecycle tools alone; independent reads may run together. Finish each widget's validation, evidence, and persistence before the next.
 
-1. Read primary API documentation. Use web search when documentation is not supplied or may have changed.
-2. Create credential-free definitions with keyed `sources`, `requests`, optional `options`, and safe JSX `template`.
+1. For connected widgets, read primary API documentation; use web search when it is missing or may have changed.
+2. Create credential-free definitions with keyed `sources`, `requests`, optional `options`, and safe JSX `template`. Static widgets use empty `sources` and `requests`; an API is optional.
 3. While drafting, use `customWidget_validateTemplate` for focused JSX diagnostics without resending the manifest.
 4. Send the definition once to `customWidget_previewCreate` and test its queries/actions. For a JSX-only fix, validate, call `customWidget_previewReviseTemplate` with its session, and retest; it inherits the manifest and resets evidence. Create a preview only for source/request/option changes.
 5. Configure deployment-specific source URLs and credentials through Homarr; never repeat plaintext.
 6. Persist each exact final tested preview with `customWidget_createFromPreview`. Do not resend a large definition through `customWidget_create` when a preview session is available.
 
-Treat a supplied sample or successful preview response as the binding contract. Render every core requested field, guard optional arrays and nested values before indexing, and do not silently drop returned items. Humanize numeric enums with indexed literal label arrays, omit absent numeric values instead of inventing zero, and label timestamp timezones. Give recoverable load errors and empty states a clear refresh or retry path.
+Use supplied samples or preview responses as the data contract. Render requested fields and all returned items; guard optional nested values. Humanize numeric enums with label arrays, omit absent numbers, and label timestamp timezones. Give load errors and empty states a refresh or retry path.
 
 Use `{option:name}` or `$option` for saved options. Use `{param:name}` or `$param` for values supplied by `SubFetch`, `ActionButton`, or `ToggleSwitch`. Load queries cannot use invocation parameters. Render load queries from `data` and `status` with `RefreshButton`; reserve `SubFetch` for manual parameterized queries. Templates read `data`, `status`, `options`, and temporary `inputs`.
 
@@ -26,7 +26,7 @@ Plan capabilities. Use one `customWidget_findComponents` search per job. Batch s
 
 Do not simplify a useful workflow merely because the template is interpreted. Freely compose any supported installed components with multiple sources, requests, options, `choicesFrom`, bound filters, charts, responsive detail areas, manual queries, and safe actions when they improve the user's job. Complexity must remain purposeful rather than decorative.
 
-Polish with a divided list or responsive media grid. Make one metric/action asymmetrically primary; keep headers compact, identity/state clear, metadata quiet, and one badge. At base artwork fills its row and caps above xs; never combine full-width media and nowrap.
+Use divided lists or responsive media grids, one primary metric/action, compact headers, quiet metadata, and one badge. Full-width artwork wraps at base and caps above xs.
 
 Make initial states actionable and wrap variable labels/values on narrow tiles. Do not use an unlabeled decorative icon as an empty state.
 

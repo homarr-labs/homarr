@@ -16,6 +16,7 @@ export const ROOT_BINDINGS = new Set([
   "data",
   "options",
   "inputs",
+  "host",
   "status",
   "decodeURIComponent",
   "encodeURIComponent",
@@ -26,6 +27,7 @@ export const ROOT_BINDINGS = new Set([
   "undefined",
 ]);
 
+// Existing v2 callbacks may use `host`; adding host context must preserve those templates.
 export const RESERVED_LOCAL_BINDINGS = new Set(["data", "status", "options", "inputs"]);
 const callableRootBindings = new Set([
   "Boolean",

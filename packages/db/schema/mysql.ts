@@ -10,6 +10,7 @@ import {
   index,
   int,
   mediumtext,
+  longtext,
   mysqlTable,
   primaryKey,
   smallint,
@@ -624,6 +625,92 @@ export const legacyCustomWidgetSecrets = mysqlTable(
       columns: [table.definitionId],
       foreignColumns: [legacyCustomWidgetDefinitions.id],
       name: "cw_secret_definition_id_cw_definition_id_fk",
+    }).onDelete("cascade"),
+  }),
+);
+
+export const customWidgetArtifacts = mysqlTable("custom_widget_artifact", {
+  id: varchar({ length: 128 }).notNull().primaryKey(),
+  packageId: varchar({ length: 128 }).notNull(),
+  version: varchar({ length: 128 }).notNull(),
+  source: longtext().notNull(),
+  artifact: longtext().notNull(),
+  createdAt: timestamp().notNull(),
+});
+
+export const customWidgetInstallations = mysqlTable("custom_widget_installation", {
+  id: varchar({ length: 128 }).notNull().primaryKey(),
+  name: varchar({ length: 128 }).notNull(),
+  draft: longtext().notNull(),
+  activeArtifactId: varchar({ length: 128 }),
+  previousArtifactId: varchar({ length: 128 }),
+  previousSnapshot: longtext(),
+  bindings: longtext().notNull(),
+  origin: longtext(),
+  enabled: boolean().notNull().default(false),
+  creatorId: varchar({ length: 128 }).references(() => users.id, { onDelete: "set null" }),
+  createdAt: timestamp().notNull(),
+  updatedAt: timestamp().notNull(),
+});
+
+export const customWidgetConnections = mysqlTable("custom_widget_connection", {
+  id: varchar({ length: 128 }).notNull().primaryKey(),
+  name: varchar({ length: 128 }).notNull(),
+  integrationId: varchar({ length: 128 }).references(() => integrations.id, { onDelete: "set null" }),
+  configuration: longtext().notNull(),
+  encryptedSecrets: longtext().notNull(),
+  createdAt: timestamp().notNull(),
+  updatedAt: timestamp().notNull(),
+});
+
+export const customWidgetStorage = mysqlTable(
+  "custom_widget_storage",
+  {
+    id: varchar({ length: 128 }).notNull().primaryKey(),
+    installationId: varchar({ length: 128 }).notNull(),
+    scope: varchar({ length: 128 }).notNull(),
+    ownerKey: varchar({ length: 128 }).notNull(),
+    key: varchar({ length: 128 }).notNull(),
+    value: longtext().notNull(),
+    updatedAt: timestamp().notNull(),
+  },
+  (table) => ({
+    installationFk: foreignKey({
+      columns: [table.installationId],
+      foreignColumns: [customWidgetInstallations.id],
+      name: "custom_widget_storage_installation_fk",
+    }).onDelete("cascade"),
+  }),
+);
+
+export const customWidgetGuestGrants = mysqlTable("custom_widget_guest_grant", {
+  id: varchar({ length: 128 }).notNull().primaryKey(),
+  itemId: varchar({ length: 128 })
+    .notNull()
+    .references(() => items.id, { onDelete: "cascade" }),
+  handler: varchar({ length: 128 }).notNull(),
+  artifactDigest: varchar({ length: 128 }).notNull(),
+  bindingsDigest: varchar({ length: 128 }).notNull(),
+  allowedInputs: longtext().notNull(),
+  createdAt: timestamp().notNull(),
+});
+
+export const customWidgetActivity = mysqlTable(
+  "custom_widget_activity",
+  {
+    id: varchar({ length: 128 }).notNull().primaryKey(),
+    installationId: varchar({ length: 128 }).notNull(),
+    itemId: varchar({ length: 128 }),
+    userId: varchar({ length: 128 }),
+    handler: varchar({ length: 128 }).notNull(),
+    status: varchar({ length: 128 }).notNull(),
+    createdAt: timestamp().notNull(),
+  },
+  (table) => ({
+    installationFk: foreignKey({
+      columns: [table.installationId],
+      foreignColumns: [customWidgetInstallations.id],
+      name: "custom_widget_activity_installation_fk",
     }).onDelete("cascade"),
   }),
 );

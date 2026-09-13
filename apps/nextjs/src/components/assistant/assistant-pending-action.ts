@@ -11,6 +11,7 @@ const humanToolKinds = {
   configure_app: "form",
   configure_board_settings: "form",
   configure_widget: "form",
+  propose_widget_package_changes: "form",
 } as const;
 
 const getStringArg = (args: unknown, key: string) => {

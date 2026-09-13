@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
@@ -42,3 +42,15 @@ export const useIntegrationConnected = (updatedAt: Date, { timeout = 30000 }) =>
 
   return connected;
 };
+
+/** Track overlapping preparations without allowing one completion to clear another's pending state. */
+export function usePendingOperations() {
+  const [count, setCount] = useState(0);
+  const trackPending = useCallback((pending: boolean) => {
+    setCount((current) => {
+      if (pending) return current + 1;
+      return current - 1;
+    });
+  }, []);
+  return [count > 0, trackPending] as const;
+}

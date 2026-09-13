@@ -1,0 +1,104 @@
+---
+title: Remote widget runners
+sidebar_position: 8
+---
+
+A trusted widget server normally runs beside Homarr. The optional runner executes one installed widget package on
+another machine. Use it when the data lives on a NAS filesystem, a separate Docker network, or a host with a database
+or browser service that Homarr cannot reach. The runner has the privileges of the account starting it; its child
+process provides cancellation and restart, not security isolation.
+
+## Install a runner
+
+Build an archive using `homarr widgets pack widget.json --trust`, copy the archive to the target machine, and run:
+
+```sh
+export HOMARR_WIDGET_RUNNER_TOKEN="$(openssl rand -hex 32)"
+homarr widgets serve widget.homarr-widget.json --trust --host 127.0.0.1 --port 8787
+```
+
+The runner uses the compiled artifact and bundled JavaScript dependencies. It does not contact an npm registry or
+accept package uploads. Restart it with a different archive to update its installed version. Keep the token in the
+runner environment and Homarr's encrypted connection store. Use a private interface or an HTTPS reverse proxy when
+Homarr runs on another machine. `127.0.0.1` identifies the machine or container running the runner.
+
+In Homarr, create an HTTP connection with the runner's base URL and bearer token. Bind it to the package's named
+`runner` connection. Only declared query, action, and subscription handlers are remotely callable. Migration
+handlers remain local lifecycle operations. Homarr still authorizes the dashboard placement and its named handler
+before calling the runner; the runner token represents the trusted Homarr caller.
+
+## Call a remote handler
+
+The local package's `server.ts` can forward to a handler installed on the runner:
+
+```ts
+import { callWidgetRunner, defineWidgetServer, subscribeWidgetRunner } from "@homarr/widget-sdk/server";
+
+export default defineWidgetServer({
+  status: (input, context) => callWidgetRunner(context, { connection: "runner", handler: "status", input }),
+  activity: async function* (input, context) {
+    yield* subscribeWidgetRunner(context, { connection: "runner", handler: "activity", input });
+  },
+});
+```
+
+Declare `status` as a query and `activity` as a subscription in both manifests. The remote package accesses its own
+environment and filesystem. It has no automatic backchannel to Homarr's storage, native integrations, or connection
+credentials. Put those operations in the local forwarding handler when needed.
+
+The pull subscription transport waits up to ten seconds per read, buffers at most 32 values or 8 MiB, and closes
+subscriptions that are not read for sixty seconds. Returning from an async generator completes the stream. Use
+`context.signal` to release connections and stop work on cancellation.
+
+## Apps without an HTTP API
+
+An API request is optional. A widget may use only JSX, local browser state, a timer, or static information. Trusted
+server handlers can read files, speak other protocols, or query a database using the runner's location and account.
+
+For an application that writes a JSON status file, a remote handler can read that file:
+
+```ts
+import { readFile } from "node:fs/promises";
+import { defineWidgetServer } from "@homarr/widget-sdk/server";
+
+export default defineWidgetServer({
+  status: async (_input, context) => {
+    const path = process.env.APP_STATUS_FILE;
+    if (!path) throw new Error("Set APP_STATUS_FILE on the runner");
+    return JSON.parse(await readFile(path, { encoding: "utf8", signal: context.signal }));
+  },
+});
+```
+
+For an application's SQLite database, Node 24 provides a built-in driver:
+
+```ts
+import { DatabaseSync } from "node:sqlite";
+import { defineWidgetServer } from "@homarr/widget-sdk/server";
+
+export default defineWidgetServer({
+  recentJobs: () => {
+    const path = process.env.APP_DATABASE;
+    if (!path) throw new Error("Set APP_DATABASE on the runner");
+    const database = new DatabaseSync(path, { readOnly: true });
+    try {
+      return database.prepare("SELECT name, status FROM jobs ORDER BY id DESC LIMIT 20").all();
+    } finally {
+      database.close();
+    }
+  },
+});
+```
+
+Adapt the query to the application's actual schema. For PostgreSQL, MySQL, or MQTT, declare an exact version of a
+JavaScript client dependency, bundle it when packing, and use the runner environment for service credentials. MQTT
+subscriptions fit async generator handlers; close the broker client when the handler's signal aborts. Persistent
+history belongs in Homarr's collection and history APIs or the application's database.
+
+A browser-only application can be adapted through an existing browser automation service reachable from the runner.
+Call that service from a server handler and return structured data to the tile. Browser binaries and native addons
+are not shipped inside portable widget archives. Directly bundling a library that requires native addon loading is
+rejected; use an independently installed service for that runtime dependency.
+
+These paths enable adapters for many self-hosted applications. The application must still expose something the
+runner can read or control, such as HTTP, a socket, a file, a database, or a browser session.

@@ -89,7 +89,7 @@ function CustomWidgetRow({ widget }: { widget: WidgetDef }) {
         }
         actions={
           <Group gap="xs" wrap="nowrap">
-            {widget.valid && (
+            {!widget.migrationRequired && (
               <Button
                 component={Link}
                 href={`/manage/custom-widgets/edit/${widget.id}`}
@@ -97,7 +97,17 @@ function CustomWidgetRow({ widget }: { widget: WidgetDef }) {
                 size="sm"
                 leftSection={<IconPencil size={16} stroke={1.5} />}
               >
-                {tCommon("action.edit")}
+                {widget.valid ? tCommon("action.edit") : t("workbench.repair.title")}
+              </Button>
+            )}
+            {widget.valid && (
+              <Button
+                component={Link}
+                href={`/manage/custom-widgets/packages/convert/${widget.id}`}
+                variant="light"
+                size="sm"
+              >
+                {t("package.conversion.shortTitle")}
               </Button>
             )}
             <CustomWidgetRowActions

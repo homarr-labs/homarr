@@ -30,10 +30,14 @@ import { transferProcedures } from "./transfer-procedures";
 import { assertSecretSources, hasSameSecretBinding, requiredSecretKinds } from "./secret-policy";
 import { secretProcedures } from "./secret-procedures";
 import { workshopProcedures } from "./workshop-procedures";
+import { customWidgetPackageRouter } from "./package/management";
+import { repairProcedures } from "./repair-procedures";
 
 const logger = createLogger({ module: "custom-widget" });
 
 export const customWidgetRouter = createTRPCRouter({
+  package: customWidgetPackageRouter,
+  ...repairProcedures,
   ...metadataProcedures,
   ...managementQueryProcedures,
   ...creationProcedures,

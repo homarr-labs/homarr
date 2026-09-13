@@ -6,20 +6,19 @@ import { IconAlertTriangle } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
+import { isRecord } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";
 import { Link, zoomCompensatedSize } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
 import { isLegacyCustomWidgetMigrationError, isTerminalCustomWidgetDefinitionError } from "./migration-state";
+import { usePackageLifecycle } from "./use-package-lifecycle";
 
 const CustomJsxDisplay = dynamic(() => import("./custom-jsx-display"), { ssr: false });
+const TrustedWidgetDisplay = dynamic(() => import("./trusted-widget-display"), { ssr: false });
 
-export default function CustomApiWidget({
-  options,
-  itemId,
-  isEditMode,
-  removeItem,
-}: WidgetComponentProps<"customApi">) {
+export default function CustomApiWidget(props: WidgetComponentProps<"customApi">) {
+  const { options, itemId, isEditMode, removeItem } = props;
   const t = useI18n("widget.customApi");
   const tCustomJsx = useI18n("widget.customApi.customJsx");
   const { data: session } = useSession();
@@ -31,12 +30,22 @@ export default function CustomApiWidget({
     { itemId: itemId ?? "" },
     {
       enabled: Boolean(itemId) && Boolean(definitionId),
-      refetchInterval: (currentQuery) =>
-        isTerminalCustomWidgetDefinitionError(currentQuery.state.error) ? false : intervalMs,
+      refetchInterval: (currentQuery) => {
+        if (isTerminalCustomWidgetDefinitionError(currentQuery.state.error)) return false;
+        const data = currentQuery.state.data;
+        if (isRecord(data) && (data.type === "customWidgetV3" || data.hasLoadQueries === false)) return false;
+        return intervalMs;
+      },
       retry: (failureCount, error) => !isTerminalCustomWidgetDefinitionError(error) && failureCount < 3,
     },
   );
+  const accessError = usePackageLifecycle({
+    itemId,
+    enabled: query.data?.type === "customWidgetV3",
+    refresh: query.refetch,
+  });
 
+  if (accessError) return <Unavailable message={t("definitionNotFound")} />;
   if (!definitionId) {
     return <Unavailable message={t("definitionNotFound")} removeLabel={t("removeFromBoard")} onRemove={removeItem} />;
   }
@@ -47,7 +56,7 @@ export default function CustomApiWidget({
         <Loader size="sm" />
       </Center>
     );
-  if (query.error) {
+  if (query.error && (isTerminalCustomWidgetDefinitionError(query.error) || !query.data)) {
     const errorCode = query.error.data?.code;
     const migrationRequired = isLegacyCustomWidgetMigrationError(query.error);
     if (isEditMode && errorCode === "NOT_FOUND") {
@@ -75,6 +84,9 @@ export default function CustomApiWidget({
     );
   }
   if (!query.data) return null;
+  if (query.data.type === "customWidgetV3") {
+    return <TrustedWidgetDisplay data={query.data} widget={props} />;
+  }
 
   return (
     <CustomJsxDisplay
@@ -83,6 +95,18 @@ export default function CustomApiWidget({
         widgetDefinitionId: definitionId,
         widgetItemId: itemId,
         isEditMode,
+        host: {
+          boardId: props.boardId,
+          itemId,
+          width: props.width,
+          height: props.height,
+          displayScale: props.displayScale ?? 1,
+          visibleWidth: props.width * (props.displayScale ?? 1),
+          visibleHeight: props.height * (props.displayScale ?? 1),
+          displayMode: props.displayMode ?? "compact",
+          isEditMode,
+          isPreview: !itemId,
+        },
       }}
     />
   );

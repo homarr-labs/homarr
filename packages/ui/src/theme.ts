@@ -1,13 +1,10 @@
 import { createTheme, rem } from "@mantine/core";
 
+import { scrollAreaDefaultProps } from "@homarr/widget-sdk/ui-settings";
+
 import { modalComponent } from "./theme/modal";
 
-export const scrollAreaDefaultProps = {
-  type: "hover",
-  scrollbarSize: 2,
-  scrollHideDelay: 500,
-  offsetScrollbars: true,
-} as const;
+export { scrollAreaDefaultProps };
 
 export const theme = createTheme({
   primaryColor: "red",

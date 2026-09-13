@@ -1,12 +1,13 @@
 "use client";
 
 import { Tabs } from "@mantine/core";
-import { IconApi, IconBuildingStore } from "@tabler/icons-react";
+import { IconApi, IconBuildingStore, IconPackage } from "@tabler/icons-react";
 
 import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
 const tabs = {
+  packages: "/manage/custom-widgets/packages",
   installed: "/manage/custom-widgets",
   workshop: "/manage/custom-widgets/workshop",
 } as const;
@@ -18,6 +19,13 @@ export const CustomWidgetTabs = ({ active }: { active: keyof typeof tabs }) => {
   return (
     <Tabs value={tabs[active]}>
       <Tabs.List aria-label={t("ariaLabel")}>
+        <Tabs.Tab
+          value={tabs.packages}
+          leftSection={<IconPackage size={16} stroke={1.5} />}
+          renderRoot={(props) => <Link href={tabs.packages} {...props} />}
+        >
+          {t("packages")}
+        </Tabs.Tab>
         <Tabs.Tab
           value={tabs.installed}
           leftSection={<IconApi size={16} stroke={1.5} />}

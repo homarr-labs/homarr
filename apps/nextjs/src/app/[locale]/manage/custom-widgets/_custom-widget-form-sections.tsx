@@ -201,7 +201,7 @@ interface CustomWidgetPreviewSectionProps {
   onSizeChange(size: string): void;
   optionsSnapshot: Record<string, unknown>;
   onOptionsChange: Dispatch<SetStateAction<Record<string, unknown>>>;
-  onLiveActionsChange(enabled: boolean): void;
+  onLiveActionsChange(enabled: boolean, sessionId: string): void;
 }
 
 export function CustomWidgetPreviewSection(props: CustomWidgetPreviewSectionProps) {

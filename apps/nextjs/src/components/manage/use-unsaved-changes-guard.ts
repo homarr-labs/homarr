@@ -9,6 +9,8 @@ import { registerUnsavedChangesGuard } from "./unsaved-changes-guard";
 
 interface UnsavedChangesGuardOptions {
   guardBeforeUnload?: boolean;
+  /** Reset the remembered URL when an unsaved resource gets its first saved identity. */
+  navigationKey?: string;
 }
 
 export function useUnsavedChangesGuard(isDirty: boolean, options: UnsavedChangesGuardOptions = {}) {
@@ -45,6 +47,6 @@ export function useUnsavedChangesGuard(isDirty: boolean, options: UnsavedChanges
         confirmNavigation: (href) => confirmNavigationRef.current(href),
         guardBeforeUnload: options.guardBeforeUnload,
       }),
-    [options.guardBeforeUnload],
+    [options.guardBeforeUnload, options.navigationKey],
   );
 }

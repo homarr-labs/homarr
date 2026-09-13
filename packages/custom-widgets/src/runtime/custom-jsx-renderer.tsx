@@ -1,4 +1,4 @@
-import type { ComponentType, ErrorInfo, ReactNode } from "react";
+import type { ComponentType, Dispatch, ErrorInfo, ReactNode, SetStateAction } from "react";
 import { Component, useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { Alert, Box, Stack, Text } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
@@ -23,6 +23,8 @@ export interface CustomJsxRendererProps {
   data: unknown;
   status?: Record<string, unknown>;
   options?: Record<string, unknown>;
+  host?: Record<string, unknown>;
+  inputState?: readonly [CustomJsxInputState, Dispatch<SetStateAction<CustomJsxInputState>>];
   components: Readonly<Record<string, ComponentType<never>>>;
   createBindings(data: unknown): Readonly<Record<string, unknown>>;
   messages: CustomJsxRendererMessages;
@@ -80,7 +82,7 @@ interface InputRegistration {
   initialValue: WidgetInputValue;
 }
 
-interface InputState {
+export interface CustomJsxInputState {
   values: Record<string, WidgetInputValue>;
   types: Record<string, WidgetInputType>;
 }
@@ -90,6 +92,8 @@ function CustomJsxRendererSession({
   data,
   status = EMPTY_RECORD,
   options = EMPTY_RECORD,
+  host = EMPTY_RECORD,
+  inputState: externalInputState,
   components,
   createBindings,
   messages,
@@ -97,7 +101,10 @@ function CustomJsxRendererSession({
   const inputScopeId = useId();
   const [parseErrors, setParseErrors] = useState<string[]>([]);
   const [bindingErrors, setBindingErrors] = useState<string[]>([]);
-  const [inputState, setInputState] = useState<InputState>({ values: {}, types: {} });
+  const [localInputState, setLocalInputState] = useState<CustomJsxInputState>({ values: {}, types: {} });
+  const inputState = externalInputState?.[0] ?? localInputState;
+  const setInputState = externalInputState?.[1] ?? setLocalInputState;
+  const preserveInactiveInputs = externalInputState !== undefined;
   const { values: inputs, types: inputTypes } = inputState;
   const registrations = useRef(new Map<symbol, InputRegistration>());
   const registrationVersion = useRef(0);
@@ -125,9 +132,9 @@ function CustomJsxRendererSession({
     }
     setBindingErrors((current) => (sameStringArray(current, conflicts) ? current : conflicts));
     setInputState((current) => {
-      const nextTypes: Record<string, WidgetInputType> = {};
+      const nextTypes: Record<string, WidgetInputType> = preserveInactiveInputs ? { ...current.types } : {};
       for (const [name, registration] of active) nextTypes[name] = registration.type;
-      const nextValues: Record<string, WidgetInputValue> = {};
+      const nextValues: Record<string, WidgetInputValue> = preserveInactiveInputs ? { ...current.values } : {};
       for (const [name, registration] of active) {
         if (current.types[name] === registration.type && Object.hasOwn(current.values, name)) {
           const previousValue = current.values[name];
@@ -141,7 +148,7 @@ function CustomJsxRendererSession({
       if (sameTypeRecord(current.types, nextTypes) && sameInputRecord(current.values, nextValues)) return current;
       return { values: nextValues, types: nextTypes };
     });
-  }, [bindingTypeConflict]);
+  }, [bindingTypeConflict, preserveInactiveInputs, setInputState]);
   const registerInput = useCallback(
     (name: string, type: WidgetInputType, initialValue: WidgetInputValue) => {
       const id = Symbol(name);
@@ -159,35 +166,41 @@ function CustomJsxRendererSession({
     },
     [reconcileInputs],
   );
-  const setInputValue = useCallback((name: string, type: WidgetInputType, value: WidgetInputValue) => {
-    setInputState((current) => {
-      const existing = current.types[name];
-      if (existing && existing !== type) return current;
-      if (existing === type && Object.is(current.values[name], value)) return current;
-      return {
-        values: { ...current.values, [name]: value },
-        types: existing === type ? current.types : { ...current.types, [name]: type },
-      };
-    });
-  }, []);
-  const resetInput = useCallback((name: string, type: WidgetInputType) => {
-    let activeRegistration: InputRegistration | undefined;
-    for (const registration of registrations.current.values()) {
-      if (registration.name !== name) continue;
-      activeRegistration = registration;
-      break;
-    }
-    if (!activeRegistration || activeRegistration.type !== type) return;
-    setInputState((current) => {
-      if (current.types[name] !== type || Object.is(current.values[name], activeRegistration.initialValue)) {
-        return current;
+  const setInputValue = useCallback(
+    (name: string, type: WidgetInputType, value: WidgetInputValue) => {
+      setInputState((current) => {
+        const existing = current.types[name];
+        if (existing && existing !== type) return current;
+        if (existing === type && Object.is(current.values[name], value)) return current;
+        return {
+          values: { ...current.values, [name]: value },
+          types: existing === type ? current.types : { ...current.types, [name]: type },
+        };
+      });
+    },
+    [setInputState],
+  );
+  const resetInput = useCallback(
+    (name: string, type: WidgetInputType) => {
+      let activeRegistration: InputRegistration | undefined;
+      for (const registration of registrations.current.values()) {
+        if (registration.name !== name) continue;
+        activeRegistration = registration;
+        break;
       }
-      return { ...current, values: { ...current.values, [name]: activeRegistration.initialValue } };
-    });
-  }, []);
+      if (!activeRegistration || activeRegistration.type !== type) return;
+      setInputState((current) => {
+        if (current.types[name] !== type || Object.is(current.values[name], activeRegistration.initialValue)) {
+          return current;
+        }
+        return { ...current, values: { ...current.values, [name]: activeRegistration.initialValue } };
+      });
+    },
+    [setInputState],
+  );
   const rendered = useMemo(() => {
     try {
-      const bindings = { ...createBindings(data), status, options, inputs };
+      const bindings = { ...createBindings(data), status, options, inputs, host };
       return {
         ...renderSafeJsx({ template, components, bindings }),
         boundaryKey: createBoundaryKey(template, bindings),
@@ -201,7 +214,7 @@ function CustomJsxRendererSession({
         error: error instanceof Error ? error : new Error(String(error)),
       };
     }
-  }, [components, createBindings, data, inputs, options, status, template]);
+  }, [components, createBindings, data, host, inputs, options, status, template]);
   useEffect(() => setParseErrors([]), [rendered.boundaryKey, template]);
   const handleError = useCallback(
     (error: Error) =>

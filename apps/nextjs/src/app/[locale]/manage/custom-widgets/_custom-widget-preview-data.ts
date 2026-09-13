@@ -47,7 +47,7 @@ export function createPreviewDisplayData({
     })),
     previewSessionId: preview.session?.id,
     previewLiveActions: preview.session?.liveActions ?? false,
-    queriesDisabled: fixture !== "live",
+    queriesDisabled: fixture !== "live" || !preview.session,
     isEditMode: fixture !== "live",
   };
 }

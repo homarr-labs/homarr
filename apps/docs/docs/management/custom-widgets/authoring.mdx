@@ -5,14 +5,26 @@ JSON is available when direct editing is faster.
 
 ## Workflow
 
-1. Configure each API source, network scope, authentication method, and credential.
-2. Add named queries and actions. Values can reference widget options or invocation parameters.
+1. Start with a static widget, or add API sources, network access, authentication, and credentials when needed.
+2. Add named queries and actions for connected services. Values can reference widget options or invocation parameters.
 3. Define widget options and their defaults.
 4. Write JSX using `data`, `status`, `options`, and temporary `inputs`.
 5. Run **Test and preview**, inspect the response data and redacted request journal, then save.
 
-Changing the definition, options, or credentials invalidates the previous preview. Preview actions are simulated unless
+Changing the definition, options, or credentials ends the previous API preview session. The last response remains visible
+as a labelled snapshot while you edit JSX. Run **Test and preview** again to refresh data and enable API interactions.
+Preview actions are simulated unless
 **Run actions against the configured API** is enabled for that preview session.
+
+Use the workbench **Undo** and **Redo** buttons or `Ctrl/Cmd+Z` and `Ctrl/Cmd+Shift+Z` for changes across JSX, sources,
+requests, options, and metadata. History is bounded to 100 entries and about two million characters. **Reset to saved**
+restores the last saved definition. Credentials are excluded from this history and reset clears unsaved credential values.
+Undo and Redo retain pending credentials only when the source origin, network scope, and authentication destination
+are unchanged. Otherwise, enter the credentials again for the restored source.
+
+Homarr keeps one recovery draft per signed-in user in this browser, replacing the previous draft as you edit. On returning
+to that widget, choose **Restore draft** or **Discard draft**. Saved credentials stay on the server; unsaved credentials must
+be entered again. Browser storage is optional, and drafts larger than one million characters are not stored for recovery.
 
 Widget options support text, textarea, number, switch, select, multi-select, slider, date, time, color, icon, URL,
 duration, time zone, and JSON controls. Dynamic choices can come from a load query.

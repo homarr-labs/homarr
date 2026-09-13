@@ -3,6 +3,7 @@ export * from "./assistant-authoring-phase";
 export * from "./assistant-tool-input";
 export * from "./assistant-tool-step";
 export * from "./examples";
+export { redactCustomWidgetCredentialLiterals } from "./definition-security";
 export * from "./import";
 export * from "./options";
 export * from "./schema";

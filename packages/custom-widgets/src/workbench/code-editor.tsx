@@ -9,6 +9,7 @@ import { IconCheck } from "@tabler/icons-react";
 
 import { EditorDiagnostics } from "./code-editor-diagnostics";
 import { CodeEditorToolbar } from "./code-editor-toolbar";
+import { formatCode } from "./code-format";
 import type { EditorDiagnostic } from "./analyzer";
 import type {
   CustomWidgetCodeEditorProps,
@@ -42,15 +43,18 @@ export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
   }, []);
   useEffect(() => {
     const editorView = editorViewRef.current;
-    if (!editorView || !props.revealText) return;
-    const from = editorView.state.doc.toString().indexOf(props.revealText);
+    if (!editorView || (!props.revealText && !props.revealRange)) return;
+    const from = props.revealRange?.from ?? editorView.state.doc.toString().indexOf(props.revealText ?? "");
     if (from < 0) return;
     editorView.dispatch({
-      selection: { anchor: from, head: from + props.revealText.length },
+      selection: {
+        anchor: Math.min(from, editorView.state.doc.length),
+        head: Math.min(props.revealRange?.to ?? from + (props.revealText?.length ?? 0), editorView.state.doc.length),
+      },
       effects: EditorView.scrollIntoView(from, { y: "center" }),
     });
     editorView.focus();
-  }, [editorCreated, props.revealKey, props.revealText]);
+  }, [editorCreated, props.revealKey, props.revealText, props.revealRange]);
   useEffect(() => {
     const editorView = editorViewRef.current;
     if (!editorView || !props.insertText) return;
@@ -138,6 +142,10 @@ export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
           onUndo={handleUndo}
           onRedo={handleRedo}
           onFormat={() => {
+            if (props.onFormat) {
+              props.onFormat();
+              return;
+            }
             const editorView = editorViewRef.current;
             if (props.language === "jsx" && editorView) {
               const selection = editorView.state.selection.main;
@@ -174,6 +182,7 @@ export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
                 language={props.language}
                 diagnostics={diagnostics}
                 completions={props.completions ?? EMPTY_COMPLETIONS}
+                extensions={props.extensions}
                 label={props.label}
                 placeholder={props.placeholder}
                 theme={colorScheme}
@@ -193,22 +202,23 @@ export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
         </div>
         <Group className={classes.footer} justify="space-between" gap="xs">
           <Group gap={6}>
-            {errorCount > 0 ? (
-              <Badge size="xs" color="red" variant="light">
-                {props.messages.errors(errorCount)}
-              </Badge>
-            ) : warningCount > 0 ? (
-              <Badge size="xs" color="yellow" variant="light">
-                {props.messages.warnings(warningCount)}
-              </Badge>
-            ) : (
-              <Group gap={4}>
-                <IconCheck size={13} color="var(--mantine-color-green-6)" aria-hidden />
-                <Text size="xs" className={classes.accessibleMuted}>
-                  {props.messages.ready}
-                </Text>
-              </Group>
-            )}
+            {props.status ??
+              (errorCount > 0 ? (
+                <Badge size="xs" color="red" variant="light">
+                  {props.messages.errors(errorCount)}
+                </Badge>
+              ) : warningCount > 0 ? (
+                <Badge size="xs" color="yellow" variant="light">
+                  {props.messages.warnings(warningCount)}
+                </Badge>
+              ) : (
+                <Group gap={4}>
+                  <IconCheck size={13} color="var(--mantine-color-green-6)" aria-hidden />
+                  <Text size="xs" className={classes.accessibleMuted}>
+                    {props.messages.ready}
+                  </Text>
+                </Group>
+              ))}
             <Text size="xs" className={classes.accessibleMuted}>
               {props.messages.position(cursor)}
             </Text>
@@ -273,20 +283,4 @@ function EditorLoader() {
       <Loader size="sm" />
     </Group>
   );
-}
-function formatCode(value: string, language: "jsx" | "json" | "css") {
-  if (language === "json") {
-    try {
-      const parsed: unknown = JSON.parse(value);
-      return `${JSON.stringify(parsed, null, 2)}\n`;
-    } catch {
-      return value;
-    }
-  }
-  return value
-    .replace(/\r\n?/gu, "\n")
-    .split("\n")
-    .map((line) => line.trimEnd())
-    .join("\n")
-    .trim();
 }

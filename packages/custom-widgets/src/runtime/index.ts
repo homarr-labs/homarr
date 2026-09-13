@@ -4,7 +4,7 @@ export { SubData } from "./data";
 export { RefreshButton } from "./refresh-button";
 export { SubFetch } from "./sub-fetch";
 export { CustomJsxRenderer, CUSTOM_JSX_METHOD_COLORS, parseRequestCapabilities } from "./custom-jsx-renderer";
-export type { CustomJsxRendererMessages, CustomJsxRendererProps } from "./custom-jsx-renderer";
+export type { CustomJsxRendererMessages, CustomJsxRendererProps, CustomJsxInputState } from "./custom-jsx-renderer";
 export type { ActionButtonProps, ToggleSwitchProps } from "./actions";
 export type { SubDataProps } from "./data";
 export type { RefreshButtonProps } from "./refresh-button";

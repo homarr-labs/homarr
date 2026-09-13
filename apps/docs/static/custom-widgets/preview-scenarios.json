@@ -1,0 +1,83 @@
+{
+  "$schema": "homarr-widget-package-v3",
+  "manifest": {
+    "id": "homarr.example.preview-scenarios",
+    "version": "1.0.0",
+    "sdkVersion": "1",
+    "name": "Preview scenario example",
+    "description": "Two independent local metrics with synthetic success, loading and partial-failure scenarios.",
+    "entrypoints": {
+      "tile": "widget.tsx",
+      "advanced": "widget.tsx",
+      "server": "server.ts"
+    },
+    "handlers": {
+      "memory": {
+        "kind": "query"
+      },
+      "storage": {
+        "kind": "query"
+      }
+    }
+  },
+  "files": {
+    "widget.tsx": "import { Alert, Card, Group, Progress, Stack, Text } from \"@mantine/core\";\nimport { useWidgetQuery } from \"@homarr/widget-sdk\";\ninterface MetricData { usedPercent: number; }\ninterface MetricProps { title: string; query: ReturnType<typeof useWidgetQuery<MetricData>>; }\nfunction Metric({ title, query }: MetricProps) {\n  return <Card withBorder><Stack gap=\"xs\"><Text fw={600}>{title}</Text>\n    {query.isPending && <Text c=\"dimmed\">Loading…</Text>}\n    {query.error && <Alert color=\"orange\">{query.error.message}</Alert>}\n    {query.data && <><Group justify=\"space-between\"><Text>Used</Text><Text>{query.data.usedPercent}%</Text></Group><Progress value={query.data.usedPercent} /></>}\n  </Stack></Card>;\n}\nexport default function LocalMetrics() {\n  const memory = useWidgetQuery<MetricData>(\"memory\", {}, {refetchInterval: 10000});\n  const storage = useWidgetQuery<MetricData>(\"storage\", {}, {refetchInterval: 10000});\n  return <Stack p=\"md\"><Metric title=\"Memory\" query={memory} /><Metric title=\"Storage\" query={storage} /></Stack>;\n}\n",
+    "server.ts": "import { freemem, totalmem } from \"node:os\";\nimport { statfs } from \"node:fs/promises\";\nimport { defineWidgetServer } from \"@homarr/widget-sdk/server\";\nexport default defineWidgetServer({\n  memory: () => ({usedPercent: Math.round(100 * (1 - freemem() / totalmem()))}),\n  storage: async () => {const value = await statfs(process.cwd()); return {usedPercent: Math.round(100 * (1 - value.bavail / value.blocks))};},\n});\n"
+  },
+  "dependencies": {},
+  "connections": {},
+  "options": {},
+  "previewScenarios": {
+    "ready": {
+      "label": "Both metrics available",
+      "queries": {
+        "memory": {
+          "data": {
+            "usedPercent": 38
+          }
+        },
+        "storage": {
+          "data": {
+            "usedPercent": 72
+          }
+        }
+      }
+    },
+    "loading": {
+      "label": "Slow storage collector",
+      "description": "Memory appears first; storage stays loading for three seconds.",
+      "queries": {
+        "memory": {
+          "data": {
+            "usedPercent": 38
+          },
+          "delayMs": 100
+        },
+        "storage": {
+          "data": {
+            "usedPercent": 72
+          },
+          "delayMs": 3000
+        }
+      }
+    },
+    "partialFailure": {
+      "label": "Storage unavailable",
+      "description": "Memory still renders when the storage collector fails.",
+      "queries": {
+        "memory": {
+          "data": {
+            "usedPercent": 38
+          }
+        },
+        "storage": {
+          "error": {
+            "message": "Synthetic storage collector timeout",
+            "code": "TIMEOUT"
+          },
+          "delayMs": 700
+        }
+      }
+    }
+  }
+}

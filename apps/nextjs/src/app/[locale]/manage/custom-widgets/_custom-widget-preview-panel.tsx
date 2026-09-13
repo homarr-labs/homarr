@@ -26,6 +26,7 @@ export interface PreviewState {
   status: Record<string, unknown>;
   session: { id: string; expiresAt: number; liveActions: boolean } | null;
   outcome: PreviewOutcome;
+  stale?: boolean;
 }
 
 interface PreviewPanelProps {
@@ -36,7 +37,7 @@ interface PreviewPanelProps {
   onSizeChange(value: string): void;
   optionsSnapshot: Record<string, unknown>;
   onOptionsChange(value: Record<string, unknown>): void;
-  onLiveActionsChange(enabled: boolean): void;
+  onLiveActionsChange(enabled: boolean, sessionId: string): void;
 }
 
 function CustomWidgetPreviewPanelContent(props: PreviewPanelProps) {
@@ -131,6 +132,7 @@ function CustomWidgetPreviewPanelContent(props: PreviewPanelProps) {
             ]}
           />
         </Group>
+        {props.preview.stale && <Alert color="yellow">{t("staleSnapshot")}</Alert>}
         {candidate && (
           <PreviewResult
             outcome={props.preview.outcome}
@@ -203,11 +205,12 @@ function CustomWidgetPreviewPanelContent(props: PreviewPanelProps) {
                 disabled={!props.preview.session || liveActionsMutation.isPending}
                 onChange={(event) => {
                   if (!props.preview.session) return;
+                  const sessionId = props.preview.session.id;
                   const enabled = event.currentTarget.checked;
                   liveActionsMutation.mutate(
                     { sessionId: props.preview.session.id, enabled },
                     {
-                      onSuccess: () => props.onLiveActionsChange(enabled),
+                      onSuccess: () => props.onLiveActionsChange(enabled, sessionId),
                       onError: (error) => showErrorNotification({ title: t("liveActions"), message: error.message }),
                     },
                   );
