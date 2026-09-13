@@ -38,7 +38,7 @@ services:
     volumes:
       - ./homarr/appdata:/appdata
     environment:
-      - BASE_URL=your.internal.dns.address.here.com
+      - BASE_URL=https://your.internal.dns.address.here.com
       - SECRET_ENCRYPTION_KEY=your_64_character_hex_string # <--- can be generated with `openssl rand -hex 32`
     networks:
       - proxy
