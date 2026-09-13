@@ -1,53 +1,58 @@
 ---
-title: 'Docker stats'
-description: 'Stats of your containers'
+title: "Containers"
+description: "Container and server statistics from Docker or Komodo"
 hide_title: true
 ---
 
-import { WidgetHeader } from '@site/src/components/widgets/header';
-import { AddingWidget } from '@site/src/components/widgets/adding';
-import { WidgetConfig } from '@site/src/components/widgets/configuration';
-import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
-import { IconAd } from "@tabler/icons-react";
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-import { dockerContainersWidget } from '.';
-import { dockerIntegration } from '@site/docs/integrations/docker';
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
+import { dockerContainersWidget } from ".";
+import { dockerIntegration } from "@site/docs/integrations/docker";
+import { komodoIntegration } from "@site/docs/integrations/komodo";
 
+<WidgetHeader widget={dockerContainersWidget} categories={["Containers"]} />
 
-<WidgetHeader
-  widget={dockerContainersWidget}
-  categories={['Containers']}
-/>
-
-This widget displays the resource usage of your Docker containers and allows you to manage them.
+This widget displays containers from Homarr's direct Docker connection or from a selected Komodo integration. Komodo can also add compact infrastructure summary information and a server statistics view.
 
 :::info
-This widget can only be used with administrator privileges.
+Direct Docker access and container actions require administrator privileges. Komodo is a read-only data source and uses the selected integration's permissions.
 :::
 
 ### Screenshots
 
-import dockerTable from './img/table.png';
+import dockerTable from "./img/table.png";
 
 <img src={dockerTable} alt="docker-stats table docker-containers" width={128 * 3} height={128 * 2} />
 
 ### Supported Integrations
 
-<WidgetIntegrations items={[{
-  integration: dockerIntegration,
-}]} />
+<WidgetIntegrations
+  items={[
+    {
+      integration: dockerIntegration,
+    },
+    {
+      integration: komodoIntegration,
+    },
+  ]}
+/>
 
 ### Interactions
 
 Hover a column header to reveal its grab handle, then drag it to reorder the table or drag the header's edge to resize it. The layout is saved automatically for each widget instance and restored after a reload. These controls are disabled while the board is in edit mode.
 
-Each container row has an action menu, accessible via the three-dot icon or by right-clicking the row, with the following options:
+For the direct Docker data source, each container row has an action menu, accessible via the three-dot icon or by right-clicking the row, with the following options:
 
 - **View logs** - opens a dedicated terminal page streaming the container's logs
 - **Start** / **Stop** / **Restart** - manage the container's state
 - **Remove** - permanently remove the container after a second confirmation click
 - **Add to Homarr** - create a bookmark app from the container
+
+These actions are only available with the direct Docker data source. Komodo containers are currently read-only.
+
+When a Komodo integration is selected, the widget can additionally show server, stack, deployment, and problem counts above the main view. The **Servers** view displays CPU, memory, disk, load average, network traffic, and Periphery version data.
 
 ### Adding the widget
 

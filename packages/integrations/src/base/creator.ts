@@ -23,6 +23,7 @@ import { ICalIntegration } from "../ical/ical-integration";
 import { ImmichIntegration } from "../immich/immich-integration";
 import { JellyfinIntegration } from "../jellyfin/jellyfin-integration";
 import { JellyseerrIntegration } from "../jellyseerr/jellyseerr-integration";
+import { KomodoIntegration } from "../komodo/komodo-integration";
 import { LidarrIntegration } from "../media-organizer/lidarr/lidarr-integration";
 import { RadarrIntegration } from "../media-organizer/radarr/radarr-integration";
 import { ReadarrIntegration } from "../media-organizer/readarr/readarr-integration";
@@ -118,6 +119,7 @@ export const integrationCreators = {
   synology: SynologyIntegration,
   unraid: UnraidIntegration,
   coolify: CoolifyIntegration,
+  komodo: KomodoIntegration,
   tracearr: TracearrIntegration,
   glances: GlancesIntegration,
   immich: ImmichIntegration,

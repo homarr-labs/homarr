@@ -114,7 +114,7 @@ export const { definition, componentLoader } = createWidgetDefinition("healthMon
     );
   },
   supportedIntegrations: getIntegrationKindsByCategory("healthMonitoring").filter(
-    (kind) => kind !== "patchmon" && kind !== "wud",
+    (kind) => kind !== "komodo" && kind !== "patchmon" && kind !== "wud",
   ),
   errors: {
     INTERNAL_SERVER_ERROR: {
