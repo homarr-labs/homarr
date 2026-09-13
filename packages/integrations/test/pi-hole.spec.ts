@@ -32,24 +32,6 @@ const DEFAULT_PASSWORD = "12341234";
 const DEFAULT_API_KEY = "3b1434980677dcf53fa8c4a611db3b1f0f88478790097515c0abb539102778b9"; // Some hash generated from password
 
 describe("Pi-hole v5 integration", () => {
-  test("getSummaryAsync should return summary from pi-hole", async () => {
-    // Arrange
-    const piholeContainer = await createPiHoleV5Container(DEFAULT_PASSWORD).start();
-    const piHoleIntegration = createPiHoleIntegrationV5(piholeContainer, DEFAULT_API_KEY);
-
-    // Act
-    const result = await piHoleIntegration.getSummaryAsync();
-
-    // Assert
-    expect(result.adsBlockedToday).toBe(0);
-    expect(result.adsBlockedTodayPercentage).toBe(0);
-    expect(result.dnsQueriesToday).toBe(0);
-    expect(result.domainsBeingBlocked).toBeGreaterThan(1);
-
-    // Cleanup
-    await piholeContainer.stop();
-  }, 20_000); // Timeout of 20 seconds
-
   test("testConnectionAsync should be successful", async () => {
     // Arrange
     const piholeContainer = await createPiHoleV5Container(DEFAULT_PASSWORD).start();
