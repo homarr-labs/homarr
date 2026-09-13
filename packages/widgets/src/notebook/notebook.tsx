@@ -377,6 +377,7 @@ export function Notebook({
           },
           content: {
             backgroundColor: "transparent",
+            fontSize: "var(--mantine-font-size-md)",
             padding: height < 120 ? "0.25rem" : "0.5rem",
             height: "100%",
           },

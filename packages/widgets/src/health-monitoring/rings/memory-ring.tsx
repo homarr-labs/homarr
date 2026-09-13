@@ -1,5 +1,4 @@
-import { GaugeChart } from "@mantine/charts";
-import { Center, Text, Tooltip } from "@mantine/core";
+import { Center, RingProgress, Text, Tooltip } from "@mantine/core";
 import { IconBrain } from "@tabler/icons-react";
 
 import { useByteFormatter } from "@homarr/settings";
@@ -21,19 +20,23 @@ export const MemoryRing = ({
   const { formatBytes, formatBytesPair } = useByteFormatter();
   const memoryUsage = formatMemoryUsage(available, used, formatBytes, formatBytesPair);
 
+  const percentage = Math.max(0, Math.min(100, Number(memoryUsage.memUsed.percent)));
+
   return (
     <Tooltip label={`${memoryUsage.memUsed.percent}%`}>
-      <GaugeChart
+      <RingProgress
         className="health-monitoring-memory"
         aria-label={ariaLabel}
         roundCaps
         size={isTiny ? 50 : 100}
         thickness={isTiny ? 4 : 8}
-        startAngle={0}
-        endAngle={360}
-        value={Number(memoryUsage.memUsed.percent)}
-        valueFormatter={(value) => `${value}%`}
-        filledColor={progressColor(Number(memoryUsage.memUsed.percent))}
+        // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- RingProgress renders the custom meter graphic.
+        role="meter"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={percentage}
+        aria-valuetext={`${percentage}%`}
+        sections={[{ value: percentage, color: progressColor(percentage) }]}
         label={
           <Center style={{ flexDirection: "column" }}>
             <Text className="health-monitoring-memory-value" size={isTiny ? "8px" : "xs"}>

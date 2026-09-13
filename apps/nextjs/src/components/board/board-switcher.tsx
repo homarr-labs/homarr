@@ -66,10 +66,12 @@ export const BoardSwitcher = ({ children }: BoardSwitcherProps) => {
     enabled: isOpen,
   });
 
-  const switcherBoards = useMemo(
-    () => boards.filter((board) => board.id !== currentBoard?.id),
-    [boards, currentBoard?.id],
-  );
+  const switcherBoards = useMemo(() => {
+    const activeBoard = boards.find((board) => board.id === currentBoard?.id);
+    if (!activeBoard) return boards;
+
+    return [...boards.filter((board) => board.id !== activeBoard.id), activeBoard];
+  }, [boards, currentBoard?.id]);
   const filteredBoards = useMemo(() => {
     const normalizedSearch = search.trim().toLocaleLowerCase();
     if (normalizedSearch.length === 0) return switcherBoards;

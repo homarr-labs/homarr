@@ -659,7 +659,13 @@ const buildDemoWidgets = (appIds: string[], customWidgetDefinitionId: string): D
     options: {
       showToolbar: false,
       allowReadOnlyCheck: true,
-      content: `<p style="text-align: center"><img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/homarr-wordmark-light.svg" width="28%"></p><h2 style="text-align: center">Quick runbook</h2><p style="text-align: center">Keep today close: signals first, controls beside them, distractions out.</p><ul data-type="taskList"><li data-checked="true" data-type="taskItem"><label><input type="checkbox" checked="checked"><span></span></label><div><p>Backups verified</p></div></li><li data-checked="false" data-type="taskItem"><label><input type="checkbox"><span></span></label><div><p>Review active alerts</p></div></li><li data-checked="false" data-type="taskItem"><label><input type="checkbox"><span></span></label><div><p>Connect your everyday services</p></div></li><li data-checked="false" data-type="taskItem"><label><input type="checkbox"><span></span></label><div><p>Tune this board to your routine</p></div></li></ul><p style="text-align: center"><em>Make it yours. Keep it useful.</em></p>`,
+      content: `
+<p style="text-align: center"><img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/homarr-wordmark-light.svg" width="28%"></p>
+<h2>Welcome to <strong><span style="color: rgb(250, 82, 82)">Homarr demo</span></strong></h2>
+<p>Your apps, widgets, and notes, all in one place.</p>
+<p>Explore the widgets, rearrange the dashboard, or edit this <strong>notebook</strong> to make it your own.</p>
+<p><a href="https://homarr.dev/docs/getting-started" target="_blank" rel="noopener noreferrer">Get started with Homarr</a></p>
+`,
     },
   },
   { kind: "beszelSystemGrid", xOffset: 5, yOffset: 2, width: 4, height: 3, needsIntegration: true },

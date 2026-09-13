@@ -123,6 +123,7 @@ export const BackgroundSettingsContent = ({ form }: Props) => {
         </Grid.Col>
         <Grid.Col span={12}>
           <SelectWithDescriptionBadge
+            withinPortal
             label={tBoard("field.backgroundImageAttachment.label")}
             data={backgroundImageAttachmentData}
             {...form.getInputProps("backgroundImageAttachment")}
@@ -130,6 +131,7 @@ export const BackgroundSettingsContent = ({ form }: Props) => {
         </Grid.Col>
         <Grid.Col span={12}>
           <SelectWithDescriptionBadge
+            withinPortal
             label={tBoard("field.backgroundImageSize.label")}
             data={backgroundImageSizeData}
             {...form.getInputProps("backgroundImageSize")}
@@ -137,6 +139,7 @@ export const BackgroundSettingsContent = ({ form }: Props) => {
         </Grid.Col>
         <Grid.Col span={12}>
           <SelectWithDescriptionBadge
+            withinPortal
             label={tBoard("field.backgroundImageRepeat.label")}
             data={backgroundImageRepeatData}
             {...form.getInputProps("backgroundImageRepeat")}
