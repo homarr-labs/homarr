@@ -335,13 +335,25 @@ export function calculateCpuUsage(stats: ContainerStats): number {
     return 0;
   }
 
-  const numberOfCpus = stats.cpu_stats.online_cpus;
-  const usage = stats.cpu_stats.system_cpu_usage;
-  if (!usage || usage === 0) {
+  // Instantaneous CPU usage: compare the latest reading against the previous one
+  // (precpu_stats). Dividing the cumulative total_usage by the cumulative
+  // system_cpu_usage instead would report the container's lifetime average, which
+  // stays high long after a load spike has ended. precpu_stats is only present
+  // when the stats are NOT fetched in one-shot mode; when it is absent (e.g.
+  // Podman) the deltas fall back to the cumulative totals.
+  const cpuDelta = stats.cpu_stats.cpu_usage.total_usage - (stats.precpu_stats?.cpu_usage?.total_usage ?? 0);
+  const systemDelta = (stats.cpu_stats.system_cpu_usage ?? 0) - (stats.precpu_stats?.system_cpu_usage ?? 0);
+
+  if (systemDelta <= 0 || cpuDelta < 0) {
     return 0;
   }
 
-  return (stats.cpu_stats.cpu_usage.total_usage / usage) * numberOfCpus * 100;
+  // Report usage as a share of the WHOLE machine (0-100%), not docker-stats'
+  // per-core convention (which multiplies by online_cpus and can exceed 100%,
+  // e.g. "134%" for 1.34 busy cores). system_cpu_usage already accumulates
+  // across all cores, so the plain ratio is the total-system share. This keeps
+  // every CPU reading in homarr on the same intuitive 0-100% scale.
+  return (cpuDelta / systemDelta) * 100;
 }
 
 export function calculateMemoryUsage(stats: ContainerStats): number {
