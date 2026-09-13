@@ -212,6 +212,8 @@ minimumReleaseAgeExclude:
   - esbuild@0.28.1
   # Renovate security update: @auth/core@0.41.3
   - "@auth/core@0.41.3"
+  # Renovate security update: postcss@8.5.23
+  - postcss@8.5.23
 overrides:
   "@babel/helpers@<7.26.10": ">=7.29.7"
   "@babel/runtime@<7.26.10": ">=7.29.7"
