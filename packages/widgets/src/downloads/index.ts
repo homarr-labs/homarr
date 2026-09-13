@@ -73,6 +73,16 @@ export const { definition, componentLoader } = createWidgetDefinition("downloads
         showCompletedHttp: factory.switch({
           defaultValue: true,
         }),
+        includeArchivedHistory: factory.switch({
+          defaultValue: false,
+          withDescription: true,
+        }),
+        historyWindowDays: factory.number({
+          defaultValue: 7,
+          validate: z.number().int().min(1),
+          step: 1,
+          withDescription: true,
+        }),
         activeTorrentThreshold: factory.number({
           validate: z.number().min(0),
           defaultValue: 0,
@@ -99,6 +109,13 @@ export const { definition, componentLoader } = createWidgetDefinition("downloads
       {
         columnOrder: { shouldHide: () => true },
         columnWidths: { shouldHide: () => true },
+        includeArchivedHistory: {
+          shouldHide: (_, integrationKinds) => !integrationKinds.includes("sabNzbd"),
+        },
+        historyWindowDays: {
+          shouldHide: ({ includeArchivedHistory }, integrationKinds) =>
+            !integrationKinds.includes("sabNzbd") || !includeArchivedHistory,
+        },
         showCompletedUsenet: {
           shouldHide: (_, integrationKinds) =>
             !getIntegrationKindsByCategory("usenet").some((kinds) => integrationKinds.includes(kinds)),
