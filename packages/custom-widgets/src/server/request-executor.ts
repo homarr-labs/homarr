@@ -1,4 +1,5 @@
 import { Buffer } from "node:buffer";
+import type { ConnectionOptions } from "node:tls";
 import { STATUS_CODES } from "node:http";
 import { Headers, Response } from "undici";
 
@@ -52,6 +53,9 @@ export interface CustomWidgetHttpRequest {
   auth?: CustomWidgetAuthConfig;
   networkScope: CustomJsxNetworkScope;
   kind: "query" | "action";
+  timeoutMs?: number;
+  textFallback?: boolean;
+  tls?: Pick<ConnectionOptions, "ca" | "checkServerIdentity">;
   cacheKey?: string;
   cacheTtlSeconds?: number;
   logError?: (event: { origin: string; method: CustomWidgetMethod; errorName: string; reason?: "timeout" }) => void;
@@ -73,7 +77,10 @@ type RequestHopResult =
 
 async function performRequest(input: CustomWidgetHttpRequest): Promise<CustomWidgetHttpResponse> {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), MAX_REQUEST_DURATION_MS);
+  const timeout = setTimeout(
+    () => controller.abort(),
+    Math.min(input.timeoutMs ?? MAX_REQUEST_DURATION_MS, MAX_REQUEST_DURATION_MS),
+  );
   try {
     return await performRequestWithinDeadline(input, controller.signal);
   } catch (error) {
@@ -113,6 +120,7 @@ async function performRequestWithinDeadline(
     const dispatcher = createPinnedAgent(
       await resolveAndValidateHost(currentUrl.hostname, input.networkScope, { signal: deadlineSignal }),
       REQUEST_TIMEOUT_MS,
+      input.tls,
     );
     const headers = buildHeaders(input, currentUrl, currentBody);
     const controller = new AbortController();
@@ -141,7 +149,7 @@ async function performRequestWithinDeadline(
             ok: response.ok,
             status: response.status,
             statusText: response.statusText,
-            data: await parseResponseBody(response),
+            data: await parseResponseBody(response, input.textFallback),
           },
         };
       } else {

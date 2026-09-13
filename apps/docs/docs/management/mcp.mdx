@@ -70,6 +70,37 @@ through MCP.
 The built-in [Assistant](./assistant) uses the same tool catalog with the current Homarr session and asks for approval
 before mutations by default.
 
+## Authenticated integration requests
+
+`integration_request` calls API endpoints without a dedicated tool, using stored integration credentials.
+Get `integrationId` from `integration_all`. Every method requires **full integration access**: arbitrary GET
+endpoints can expose credentials or change state. DELETE additionally requires `confirmed: true` after user confirmation.
+
+Ask your agent to consult the service's official API docs with its browsing tools, or provide the endpoint contract.
+For example, using the [Sonarr API docs](https://sonarr.tv/docs/api/#v3):
+
+```json
+{ "integrationId": "<Sonarr ID>", "method": "GET", "path": "/api/v3/series" }
+```
+
+Deleting series 42 **and its episode files**, after confirmation:
+
+```json
+{ "integrationId": "<Sonarr ID>", "method": "DELETE", "path": "/api/v3/series/42?deleteFiles=true", "confirmed": true }
+```
+
+Supports GET, POST, PUT, PATCH and DELETE with an optional JSON `body` (10 KiB maximum; not allowed for GET).
+Returns `{status, data}` with parsed JSON, text, or `null` for an empty body, including upstream error responses.
+Known credentials are redacted. Requests have a 15-second total deadline, a 10-second per-request timeout and a
+1 MiB response limit. HTTPS uses Homarr's trusted certificates and hostname exceptions.
+
+Paths follow `new URL(path, integration.url)`: `/api/...` starts at the origin root; `api/...` resolves relative to
+the configured URL's directory. Absolute URLs, protocol-relative paths, credentials, fragments and redirects are rejected.
+
+Supported integrations: Sonarr, Radarr, Lidarr, Readarr, Prowlarr, Overseerr, Jellyseerr, Seerr, Immich, slskd,
+Home Assistant, Coolify, Audiobookshelf, Speedtest Tracker, AdGuard Home and Nextcloud. Other authentication schemes
+are rejected. The built-in Assistant's default mutation approval applies to this tool, including GET calls.
+
 ## Verify the connection
 
 This request lists tools through the older-client compatibility path. It checks authentication and tool discovery:

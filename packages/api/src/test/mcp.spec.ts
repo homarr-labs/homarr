@@ -87,6 +87,7 @@ const MCP_TOOL_ALLOWLIST = {
     "wud_getStats",
   ],
   mutation: [
+    "integration_request",
     "app_create",
     "app_delete",
     "app_update",

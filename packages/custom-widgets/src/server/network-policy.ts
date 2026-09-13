@@ -1,6 +1,7 @@
 import { lookup } from "node:dns/promises";
 import { BlockList, isIP } from "node:net";
 import type { LookupFunction } from "node:net";
+import type { ConnectionOptions } from "node:tls";
 import { Agent } from "undici";
 
 import type { CustomJsxNetworkScope } from "../core";
@@ -191,7 +192,11 @@ export function assertSafeStaticHeaders(headers: Record<string, string> | undefi
   }
 }
 
-export function createPinnedAgent(addresses: ResolvedAddress[], timeoutMs: number) {
+export function createPinnedAgent(
+  addresses: ResolvedAddress[],
+  timeoutMs: number,
+  tls?: Pick<ConnectionOptions, "ca" | "checkServerIdentity">,
+) {
   const customLookup: LookupFunction = (_hostname, options, callback) => {
     const family = options.family === 4 || options.family === 6 ? options.family : undefined;
     const candidates = family ? addresses.filter((entry) => entry.family === family) : addresses;
@@ -204,7 +209,7 @@ export function createPinnedAgent(addresses: ResolvedAddress[], timeoutMs: numbe
     else callback(null, selected.address, selected.family);
   };
   return new Agent({
-    connect: { lookup: customLookup },
+    connect: { ...tls, lookup: customLookup },
     connectTimeout: timeoutMs,
     headersTimeout: timeoutMs,
     bodyTimeout: timeoutMs,
