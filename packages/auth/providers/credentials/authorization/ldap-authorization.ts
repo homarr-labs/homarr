@@ -107,6 +107,7 @@ export const authorizeWithLdapCredentialsAsync = async (
       email: true,
       emailVerified: true,
       provider: true,
+      disabled: true,
     },
     where: and(eq(users.email, mailResult.data), eq(users.provider, "ldap")),
   });
@@ -128,6 +129,11 @@ export const authorizeWithLdapCredentialsAsync = async (
     user = insertUser;
 
     logger.info("User created successfully", { userName: credentials.name });
+  }
+
+  if (user.disabled) {
+    logger.warn("User is disabled", { userName: credentials.name });
+    throw new CredentialsSignin("User is disabled");
   }
 
   return {

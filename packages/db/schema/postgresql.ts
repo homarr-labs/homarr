@@ -71,6 +71,7 @@ export const users = pgTable("user", {
   image: text(),
   password: text(),
   provider: varchar({ length: 64 }).$type<SupportedAuthProvider>().default("credentials").notNull(),
+  disabled: boolean().default(false).notNull(),
   homeBoardId: varchar({ length: 64 }).references((): AnyPgColumn => boards.id, {
     onDelete: "set null",
   }),
