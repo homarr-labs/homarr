@@ -25,6 +25,6 @@ export interface BackupAnalysis {
   migrations: MigrationStatus;
 }
 
-export type RestoreStep = "upload" | "preview" | "confirm" | "restoring" | "error";
+export type RestoreStep = "upload" | "preview" | "confirm" | "restoring" | "complete" | "error";
 
 export const PREVIEW_TABLE_KEYS = ["board", "user", "app", "integration", "item", "media", "search_engine"] as const;
