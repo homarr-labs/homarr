@@ -49,6 +49,19 @@ const createMetadataItem = (key: string, overrides: Record<string, unknown>) => 
   ...overrides,
 });
 
+const createEpisode = (key: string, overrides: Record<string, unknown>) => ({
+  key: `/library/metadata/${key}`,
+  type: "episode",
+  title: "Episode",
+  addedAt: 1_735_689_600,
+  ...overrides,
+});
+
+const respond = (body: unknown) =>
+  Promise.resolve(new Response(JSON.stringify(body), { status: 200 })) as unknown as ReturnType<
+    typeof fetchWithTrustedCertificatesAsync
+  >;
+
 beforeEach(() => {
   mockFetch.mockReset();
   imageProxyMocks.createImageAsync.mockClear();
@@ -136,5 +149,142 @@ describe("PlexIntegration.getMediaReleasesAsync", () => {
         type: "tv",
       },
     ]);
+  });
+});
+describe("PlexIntegration.getMediaReleasesAsync with recently added episodes", () => {
+  const mockPlex = (
+    recentlyAdded: Record<string, unknown>[],
+    episodesBySection: Record<string, Record<string, unknown>[]>,
+  ) => {
+    mockFetch.mockImplementation((url) => {
+      const urlString = String(url);
+
+      if (urlString.endsWith("/identity")) {
+        return respond({ MediaContainer: { machineIdentifier: "server-id" } });
+      }
+
+      if (urlString.endsWith("/library/recentlyAdded")) {
+        return respond({ MediaContainer: { Metadata: recentlyAdded } });
+      }
+
+      if (urlString.endsWith("/library/sections")) {
+        return respond({
+          MediaContainer: {
+            Directory: [
+              { key: "2", type: "movie" },
+              ...Object.keys(episodesBySection).map((key) => ({ key, type: "show" })),
+            ],
+          },
+        });
+      }
+
+      const sectionMatch = /\/library\/sections\/(\d+)\/all\?type=4&sort=addedAt:desc/.exec(urlString);
+      if (sectionMatch?.[1] && sectionMatch[1] in episodesBySection) {
+        return respond({ MediaContainer: { Metadata: episodesBySection[sectionMatch[1]] } });
+      }
+
+      throw new Error(`Unexpected Plex request: ${urlString}`);
+    });
+  };
+
+  test("bumps seasons that received new episodes and re-creates seasons missing from recentlyAdded", async () => {
+    mockPlex(
+      [
+        createMetadataItem("movie", { type: "movie", title: "Inception", addedAt: 300 }),
+        createMetadataItem("season-1/children", {
+          type: "season",
+          title: "Season 1",
+          parentTitle: "Breaking Bad",
+          addedAt: 200,
+          originallyAvailableAt: "2008-01-20",
+        }),
+        createMetadataItem("season-2/children", {
+          type: "season",
+          title: "Season 2",
+          parentTitle: "Breaking Bad",
+          addedAt: 100,
+        }),
+      ],
+      {
+        "1": [
+          createEpisode("ep-new", {
+            parentKey: "/library/metadata/season-1",
+            addedAt: 500,
+            originallyAvailableAt: "2026-09-14",
+          }),
+          createEpisode("ep-old", { parentKey: "/library/metadata/season-1", addedAt: 50 }),
+        ],
+        "7": [
+          createEpisode("ep-missing", {
+            parentKey: "/library/metadata/season-99",
+            parentTitle: "Season 11",
+            grandparentTitle: "Futurama",
+            grandparentThumb: "/library/metadata/show-99/thumb",
+            art: "/library/metadata/ep-missing/art",
+            addedAt: 400,
+            originallyAvailableAt: "2026-09-13",
+          }),
+        ],
+      },
+    );
+
+    const releases = await createIntegration().getMediaReleasesAsync();
+
+    expect(releases.map((release) => [release.title, release.subtitle])).toEqual([
+      ["Breaking Bad", "Season 1"],
+      ["Futurama", "Season 11"],
+      ["Inception", undefined],
+      ["Breaking Bad", "Season 2"],
+    ]);
+    // the bumped season uses the air date of the newest episode
+    expect(releases[0]?.releaseDate).toEqual(new Date("2026-09-14"));
+    expect(releases[1]).toMatchObject({
+      type: "tv",
+      releaseDate: new Date("2026-09-13"),
+      imageUrls: {
+        poster: `proxied:${TEST_URL}/library/metadata/show-99/thumb`,
+        backdrop: `proxied:${TEST_URL}/library/metadata/ep-missing/art`,
+      },
+      href: `${TEST_URL}/web/index.html#!/server/server-id/details?key=${encodeURIComponent("/library/metadata/season-99")}`,
+    });
+  });
+
+  test("falls back to recentlyAdded when episodes cannot be fetched", async () => {
+    mockFetch.mockImplementation((url) => {
+      const urlString = String(url);
+
+      if (urlString.endsWith("/identity")) {
+        return Promise.resolve(
+          new Response(JSON.stringify({ MediaContainer: { machineIdentifier: "server-id" } }), { status: 200 }),
+        ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
+      }
+
+      if (urlString.endsWith("/library/recentlyAdded")) {
+        return Promise.resolve(
+          new Response(
+            JSON.stringify({
+              MediaContainer: {
+                Metadata: [
+                  createMetadataItem("season/children", {
+                    type: "season",
+                    title: "Season 1",
+                    parentTitle: "Breaking Bad",
+                  }),
+                ],
+              },
+            }),
+            { status: 200 },
+          ),
+        ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
+      }
+
+      return Promise.resolve(new Response("Not found", { status: 404 })) as unknown as ReturnType<
+        typeof fetchWithTrustedCertificatesAsync
+      >;
+    });
+
+    const releases = await createIntegration().getMediaReleasesAsync();
+
+    expect(releases).toMatchObject([{ title: "Breaking Bad", subtitle: "Season 1" }]);
   });
 });
