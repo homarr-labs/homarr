@@ -1,12 +1,17 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 import Link from "next/link";
 
 import { getPostUrl, posts } from "@/lib/source";
 
-export const metadata: Metadata = {
+const blogMetadata = pageMetadata({
+  path: "/blog",
   title: "Blog",
   description: "Release notes, migration guides, and project updates from Homarr.",
-  alternates: { types: { "application/rss+xml": "/blog/rss.xml" } },
+});
+
+export const metadata = {
+  ...blogMetadata,
+  alternates: { ...blogMetadata.alternates, types: { "application/rss+xml": "/blog/rss.xml" } },
 };
 
 export default function BlogIndexPage() {

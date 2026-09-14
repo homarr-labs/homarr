@@ -23,11 +23,33 @@ pnpm --filter @homarr/docs typecheck
 pnpm --filter @homarr/docs build
 pnpm --filter @homarr/docs validate:links
 pnpm --filter @homarr/docs verify:search
+pnpm --filter @homarr/docs verify:seo
 ```
 
 The static export is written to `out/`. The build validates that every registered integration and widget has a docs
 page. The link check validates internal Markdown and MDX links and rendered anchors against that export.
 The search check exercises the exported index with title, heading, and body queries and verifies result destinations.
+The SEO check validates canonical URLs, descriptions, social metadata, heading structure, and sitemap coverage in the
+exported HTML. These tags are generated at build time; set `HOMARR_WEBSITE_URL` before building for a different origin.
+
+## Preview the static export with PocketBase
+
+After building the docs, run from the repository root:
+
+```bash
+WORKSHOP_API_URL=https://v2.preview.homarr.dev/api/ sh apps/workshop/preview-docs.sh
+```
+
+Open `http://127.0.0.1:8093/docs/`. This starts an isolated PocketBase container with temporary local data and serves
+the export directly, including search, Markdown, and the custom 404 page. Workshop browser requests use the configured
+backend; a trailing `/api/` is removed because the PocketBase SDK appends its API paths. The preview does not copy or
+migrate the remote database. Workshop social metadata is based on the isolated local database.
+Remote-only Workshop items return HTTP 404 from this preview's empty local database, then load their content from the
+configured backend in the browser. Production serves known items from its own database with HTTP 200 and item metadata.
+
+Stop it with `docker stop homarr-docs-static-preview`. Rebuild and restart the preview after changing source files;
+startup recreates the runtime configuration. `DOCS_PREVIEW_PORT`, `DOCS_PREVIEW_HOST`, and `DOCS_PREVIEW_NAME` override
+the defaults. Set the host to this machine's Tailscale address to access it from your other devices.
 
 ## Write content
 

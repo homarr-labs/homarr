@@ -41,6 +41,7 @@ jobs:
         run: |
           pnpm --filter @homarr/docs validate:links
           pnpm --filter @homarr/docs verify:search
+          pnpm --filter @homarr/docs verify:seo
       - name: Setup Pages
         uses: actions/configure-pages@v6
       - name: Upload pages artifact

@@ -29,7 +29,7 @@ for (const test of cases) {
   );
 
   for (const result of results) {
-    assert(result.url.startsWith("/docs/"), `Unexpected search destination: ${result.url}`);
+    assert(/^\/docs(?:\/|#|$)/.test(result.url), `Unexpected search destination: ${result.url}`);
     if (verifiedUrls.has(result.url)) continue;
     const url = new URL(result.url, "https://homarr.dev");
     const html = await readFile(path.join(outputDirectory, decodeURIComponent(url.pathname), "index.html"), "utf8");

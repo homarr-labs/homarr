@@ -37,9 +37,6 @@ Any user in LDAP server that signs in gets created in Homarr database.
 
 Roles are fetched from LDAP groups. Groups with the same name of Homarr will be used to synchronize them.
 
-
-
-
 <details>
   <summary>
     Example Setup
@@ -94,23 +91,22 @@ Roles are fetched from LDAP groups. Groups with the same name of Homarr will be 
   </div>
 </details>
 
-
 ### LDAP configuration
 
-| Environment Variable                      | Description                                               | Default value       |
-|-------------------------------------------|-----------------------------------------------------------|---------------------|
-| ``AUTH_LDAP_URI``                         | URI of your LDAP server                                   | ---                 |
-| ``AUTH_LDAP_BASE``                        | Base dn of your LDAP server                               | ---                 |
-| ``AUTH_LDAP_BIND_DN``                     | User used for finding users and groups                    | ---                 |
-| ``AUTH_LDAP_BIND_PASSWORD``               | Password for bind user                                    | ---                 |
-| ``AUTH_LDAP_USERNAME_ATTRIBUTE``          | Attribute used for username                               | uid                 |
-| ``AUTH_LDAP_USER_MAIL_ATTRIBUTE``         | Attribute used for mail field                             | mail                |
-| ``AUTH_LDAP_GROUP_CLASS``                 | Class used for querying groups                            | groupOfUniqueNames  |
-| ``AUTH_LDAP_GROUP_MEMBER_ATTRIBUTE``      | Attribute used for querying group member                  | member              |
-| ``AUTH_LDAP_GROUP_MEMBER_USER_ATTRIBUTE`` | User attribute used for comparing with group member       | dn                  |
-| ``AUTH_LDAP_SEARCH_SCOPE``                | Serach scopes between base, one and sub                   | base                |
-| ``AUTH_LDAP_USERNAME_FILTER_EXTRA_ARG``   | Extra arguments for user search filter (& based)          | ---                 |
-| ``AUTH_LDAP_GROUP_FILTER_EXTRA_ARG``      | Extra arguments for user's groups search filter (& based) | ---                 |
+| Environment Variable                    | Description                                               | Default value      |
+| --------------------------------------- | --------------------------------------------------------- | ------------------ |
+| `AUTH_LDAP_URI`                         | URI of your LDAP server                                   | ---                |
+| `AUTH_LDAP_BASE`                        | Base dn of your LDAP server                               | ---                |
+| `AUTH_LDAP_BIND_DN`                     | User used for finding users and groups                    | ---                |
+| `AUTH_LDAP_BIND_PASSWORD`               | Password for bind user                                    | ---                |
+| `AUTH_LDAP_USERNAME_ATTRIBUTE`          | Attribute used for username                               | uid                |
+| `AUTH_LDAP_USER_MAIL_ATTRIBUTE`         | Attribute used for mail field                             | mail               |
+| `AUTH_LDAP_GROUP_CLASS`                 | Class used for querying groups                            | groupOfUniqueNames |
+| `AUTH_LDAP_GROUP_MEMBER_ATTRIBUTE`      | Attribute used for querying group member                  | member             |
+| `AUTH_LDAP_GROUP_MEMBER_USER_ATTRIBUTE` | User attribute used for comparing with group member       | dn                 |
+| `AUTH_LDAP_SEARCH_SCOPE`                | Serach scopes between base, one and sub                   | base               |
+| `AUTH_LDAP_USERNAME_FILTER_EXTRA_ARG`   | Extra arguments for user search filter (& based)          | ---                |
+| `AUTH_LDAP_GROUP_FILTER_EXTRA_ARG`      | Extra arguments for user's groups search filter (& based) | ---                |
 
 ## OIDC provider
 
@@ -185,31 +181,29 @@ To let an existing credentials user also sign in with OIDC, set `AUTH_OIDC_ENABL
   </div>
 </details>
 
-
 ### OIDC configuration
 
-| Environment Variable        | Description                                                | Default value |
-|-----------------------------|------------------------------------------------------------|---------------|
-| ``AUTH_OIDC_ISSUER``        | Issuer URI of OIDC provider. This has generally to be **without trailing slash** except for **Authentik** | ---           |
-| ``AUTH_OIDC_CLIENT_ID``     | ID of OIDC client (application)                            | ---           |
-| ``AUTH_OIDC_CLIENT_SECRET`` | Secret of OIDC client (application)                        | ---           |
-| ``AUTH_OIDC_CLIENT_NAME``   | Display name of provider (in login screen)                 | OIDC          |
-| ``AUTH_OIDC_AUTO_LOGIN``    | Automatically redirect to OIDC login                       | false         |
-| ``AUTH_OIDC_SCOPE_OVERWRITE`` | Overwrite default scopes (openid, profile, email)        | openid email profile groups           |
-| ``AUTH_OIDC_GROUPS_ATTRIBUTE`` | Attribute used for groups (roles) claim. Dot-separated paths such as `resource_access.homarr.roles` are supported. | groups        |
-| ``AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT`` | Stop syncing group memberships of OIDC users from the groups claim and manage them locally via the group members page instead | false |
-| ``AUTH_OIDC_NAME_ATTRIBUTE_OVERWRITE`` | Overwrite name attribute. Dot-separated paths are supported. By default it will use preferred_username if it does not contain a `@` and otherwise name. | ---          |
-| ``AUTH_OIDC_FORCE_USERINFO`` | Force userinfo endpoint to be used for user information.    | false         |
-| ``AUTH_OIDC_ENABLE_DANGEROUS_ACCOUNT_LINKING`` | Enable account linking for OIDC provider. This will link the OIDC accounts by email. Be sure that you have verified emails to prevent stealing accounts. | false |
-| ``AUTH_OIDC_ENABLE_DANGEROUS_CREDENTIALS_LINKING`` | Link an OIDC identity to an existing credentials user with the same email. The credentials login and existing user data are preserved. Requires the OIDC profile to contain `email_verified: true`. | false |
-| ``AUTH_OIDC_TOKEN_ENDPOINT_AUTH_METHOD`` | Override method for the token endpoint authentication. Supported values are `client_secret_basic`, `client_secret_post`, `client_secret_jwt` and `none`. | client_secret_basic |
+| Environment Variable                             | Description                                                                                                                                                                                         | Default value               |
+| ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- |
+| `AUTH_OIDC_ISSUER`                               | Issuer URI of OIDC provider. This has generally to be **without trailing slash** except for **Authentik**                                                                                           | ---                         |
+| `AUTH_OIDC_CLIENT_ID`                            | ID of OIDC client (application)                                                                                                                                                                     | ---                         |
+| `AUTH_OIDC_CLIENT_SECRET`                        | Secret of OIDC client (application)                                                                                                                                                                 | ---                         |
+| `AUTH_OIDC_CLIENT_NAME`                          | Display name of provider (in login screen)                                                                                                                                                          | OIDC                        |
+| `AUTH_OIDC_AUTO_LOGIN`                           | Automatically redirect to OIDC login                                                                                                                                                                | false                       |
+| `AUTH_OIDC_SCOPE_OVERWRITE`                      | Overwrite default scopes (openid, profile, email)                                                                                                                                                   | openid email profile groups |
+| `AUTH_OIDC_GROUPS_ATTRIBUTE`                     | Attribute used for groups (roles) claim. Dot-separated paths such as `resource_access.homarr.roles` are supported.                                                                                  | groups                      |
+| `AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT`              | Stop syncing group memberships of OIDC users from the groups claim and manage them locally via the group members page instead                                                                       | false                       |
+| `AUTH_OIDC_NAME_ATTRIBUTE_OVERWRITE`             | Overwrite name attribute. Dot-separated paths are supported. By default it will use preferred_username if it does not contain a `@` and otherwise name.                                             | ---                         |
+| `AUTH_OIDC_FORCE_USERINFO`                       | Force userinfo endpoint to be used for user information.                                                                                                                                            | false                       |
+| `AUTH_OIDC_ENABLE_DANGEROUS_ACCOUNT_LINKING`     | Enable account linking for OIDC provider. This will link the OIDC accounts by email. Be sure that you have verified emails to prevent stealing accounts.                                            | false                       |
+| `AUTH_OIDC_ENABLE_DANGEROUS_CREDENTIALS_LINKING` | Link an OIDC identity to an existing credentials user with the same email. The credentials login and existing user data are preserved. Requires the OIDC profile to contain `email_verified: true`. | false                       |
+| `AUTH_OIDC_TOKEN_ENDPOINT_AUTH_METHOD`           | Override method for the token endpoint authentication. Supported values are `client_secret_basic`, `client_secret_post`, `client_secret_jwt` and `none`.                                            | client_secret_basic         |
 
 ### OIDC permissions
 
 To give a user special permissions, first create a new group in homarr and assign the permission desired.
 For example if the group on homarr is called `homarr-admins` a new group on the oidc provider, for example authentik needs to be created with the same name, that would be `homarr-admins`.
 After assigning the group on the oidc provider to the user, and logging again into homarr, the user should automatically get placed in that group and inherit the permissions defined.
-
 
 ## Example setups
 

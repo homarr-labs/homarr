@@ -3,8 +3,16 @@ import { notFound } from "next/navigation";
 import { InlineTOC } from "fumadocs-ui/components/inline-toc";
 import { DocsBody, MarkdownCopyButton, ViewOptionsPopover } from "fumadocs-ui/layouts/docs/page";
 
+import { pageMetadata } from "@/lib/metadata";
 import { getMDXComponents } from "@/components/mdx";
-import { getPostBySegments, getPostMarkdownUrl, getPostSegments, getPostUrl, posts } from "@/lib/source";
+import {
+  getPostBySegments,
+  getPostExcerpt,
+  getPostMarkdownUrl,
+  getPostSegments,
+  getPostUrl,
+  posts,
+} from "@/lib/source";
 
 interface PageProps {
   params: Promise<{ slug: string[] }>;
@@ -18,6 +26,7 @@ export default async function BlogPostPage({ params }: PageProps) {
   const MDX = post.body;
   const markdownUrl = getPostMarkdownUrl(post);
   const hasBodyTitle = post.toc[0]?.depth === 1;
+  const bodyTitleId = hasBodyTitle ? decodeURIComponent(post.toc[0].url.slice(1)) : undefined;
   const toc = hasBodyTitle ? post.toc.filter((item) => item.depth !== 1) : post.toc;
 
   return (
@@ -27,7 +36,9 @@ export default async function BlogPostPage({ params }: PageProps) {
           <time className="text-sm text-fd-muted-foreground" dateTime={post.date}>
             {new Intl.DateTimeFormat("en", { dateStyle: "long", timeZone: "UTC" }).format(new Date(post.date))}
           </time>
-          <h1 className="mt-3 text-4xl font-semibold tracking-tight text-balance">{post.title}</h1>
+          <h1 id={bodyTitleId} className="mt-3 text-4xl font-semibold tracking-tight text-balance">
+            {post.title}
+          </h1>
           <p className="mt-3 text-sm text-fd-muted-foreground">By {post.authors.join(", ")}</p>
           <div className="homarr-page-actions" role="group" aria-label="Post actions">
             <MarkdownCopyButton markdownUrl={markdownUrl} />
@@ -37,9 +48,18 @@ export default async function BlogPostPage({ params }: PageProps) {
             />
           </div>
         </header>
-        <DocsBody className={hasBodyTitle ? "homarr-docs-body--hide-title pt-8" : "pt-8"}>
+        <DocsBody className="pt-8">
           <InlineTOC items={toc} />
-          <MDX components={getMDXComponents()} />
+          <MDX
+            components={getMDXComponents({
+              h1: ({ id, children, ...props }) =>
+                bodyTitleId && id === bodyTitleId ? null : (
+                  <h2 id={id} {...props}>
+                    {children}
+                  </h2>
+                ),
+            })}
+          />
         </DocsBody>
       </article>
     </main>
@@ -55,9 +75,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const post = getPostBySegments(slug);
   if (!post) notFound();
 
-  return {
+  return pageMetadata({
     title: post.title,
-    alternates: { canonical: getPostUrl(post) },
-    authors: post.authors.map((name) => ({ name })),
-  };
+    description: post.description ?? (await getPostExcerpt(post)).slice(0, 180),
+    path: getPostUrl(post),
+    authors: post.authors,
+    publishedTime: post.date,
+  });
 }

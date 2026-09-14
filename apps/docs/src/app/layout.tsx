@@ -2,16 +2,16 @@ import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import type { ReactNode } from "react";
 
+import { siteUrl } from "@/lib/metadata";
 import { Analytics } from "@/components/analytics";
 import { Provider } from "@/components/provider";
 
 import "./global.css";
 
-const siteUrl = process.env.HOMARR_WEBSITE_URL ?? "https://homarr.dev";
 const kapaWebsiteId = process.env.KAPA_WEBSITE_ID ?? "1e4656f4-abeb-4343-bbae-1d8626f52378";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: siteUrl,
   title: {
     default: "Homarr documentation",
     template: "%s | Homarr documentation",

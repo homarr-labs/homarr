@@ -12,6 +12,8 @@ import {
 } from "fumadocs-ui/layouts/docs/page";
 import { createRelativeLink } from "fumadocs-ui/mdx";
 
+import { pageMetadata } from "@/lib/metadata";
+import { getPageDescription } from "@/lib/page-description";
 import { getMDXComponents } from "@/components/mdx";
 import { getPageMarkdownUrl, source } from "@/lib/source";
 
@@ -28,6 +30,7 @@ export default async function Page({ params }: PageProps) {
   const markdownUrl = getPageMarkdownUrl(page).url;
   const sourcePath = `apps/docs/docs/${page.path}`;
   const hasLegacyBodyTitle = !page.data.hide_title && page.data.toc[0]?.depth === 1;
+  const bodyTitleId = hasLegacyBodyTitle ? decodeURIComponent(page.data.toc[0].url.slice(1)) : undefined;
   const toc = hasLegacyBodyTitle ? page.data.toc.filter((item) => item.depth !== 1) : page.data.toc;
   const isInstallationGuide =
     page.slugs.length > 2 && page.slugs[0] === "getting-started" && page.slugs[1] === "installation";
@@ -46,7 +49,9 @@ export default async function Page({ params }: PageProps) {
     <DocsPage toc={toc} full={page.data.full} footer={footerItems ? { items: footerItems } : undefined}>
       {!page.data.hide_title && (
         <>
-          <DocsTitle className="homarr-docs-title">{page.data.title}</DocsTitle>
+          <DocsTitle id={bodyTitleId} className="homarr-docs-title">
+            {page.data.title}
+          </DocsTitle>
           {page.data.description && (
             <DocsDescription className="homarr-docs-description mb-0">{page.data.description}</DocsDescription>
           )}
@@ -59,10 +64,18 @@ export default async function Page({ params }: PageProps) {
           githubUrl={`https://github.com/homarr-labs/homarr/blob/release/v2/${sourcePath}`}
         />
       </div>
-      <DocsBody className={hasLegacyBodyTitle ? "homarr-docs-body--hide-title" : undefined}>
+      <DocsBody>
         <MDX
           components={getMDXComponents({
             a: createRelativeLink(source, page),
+            ...(!page.data.hide_title && {
+              h1: ({ id, children, ...props }) =>
+                bodyTitleId && id === bodyTitleId ? null : (
+                  <h2 id={id} {...props}>
+                    {children}
+                  </h2>
+                ),
+            }),
           })}
         />
       </DocsBody>
@@ -84,11 +97,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const page = source.getPage(slug);
   if (!page) notFound();
 
-  return {
+  return pageMetadata({
     title: page.data.title,
-    description: page.data.description,
-    alternates: {
-      canonical: page.url,
-    },
-  };
+    description: await getPageDescription(page),
+    path: page.url,
+  });
 }

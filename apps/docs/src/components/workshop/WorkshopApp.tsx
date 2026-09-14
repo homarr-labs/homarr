@@ -16,6 +16,7 @@ import {
   IconRefresh,
   IconSearch,
   IconShield,
+  IconX,
 } from "@tabler/icons-react";
 
 import type { WorkshopSubmission } from "@site/src/lib/pocketbase";
@@ -26,15 +27,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader } from "@/components/ui/card";
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import { Label } from "@/components/ui/label";
@@ -116,15 +109,24 @@ export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
     ? [...typeFilters, { value: "yours" as const, label: "Yours" }]
     : typeFilters;
   const openReportCount = workshop.submissions.reduce((total, submission) => total + submission.reportCount, 0);
+  const hasFilters = typeFilter !== "all" || search.length > 0 || !includeOutdated;
+  const clearFilters = () => {
+    setTypeFilter("all");
+    setSearch("");
+    setIncludeOutdated(true);
+  };
 
   return (
-    <div className="mx-auto max-w-7xl px-4 pb-16">
+    <div className="mx-auto max-w-7xl px-4 pb-28 sm:pb-16">
       <div className="flex flex-col gap-5 py-8 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Workshop</h1>
           <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
             Discover community-made widgets and CSS. Review the source, then import it into Homarr.
           </p>
+          <a href="/docs/workshop/#install-content" className="mt-2 inline-block text-sm underline underline-offset-4">
+            How to install Workshop content
+          </a>
         </div>
         <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
           {workshop.user ? (
@@ -152,7 +154,7 @@ export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
             </>
           ) : (
             <div className="flex flex-col items-start gap-1 sm:items-end">
-              <Button className="h-10 sm:h-8" onClick={() => void workshop.login()}>
+              <Button variant="outline" className="h-10 sm:h-8" onClick={() => void workshop.login()}>
                 <IconBrandGithub size={14} /> Sign in with GitHub
               </Button>
               <p className="text-xs text-muted-foreground">Vote, comment, report, and publish</p>
@@ -161,21 +163,33 @@ export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
         </div>
       </div>
 
+      {workshop.loading && workshop.submissions.length === 0 && (
+        <output className="sr-only">Loading Workshop listings</output>
+      )}
+
       {workshop.submissions.length > 0 && (
         <section
           aria-label="Filter Workshop submissions"
-          className="mb-6 flex flex-col gap-3 rounded-lg border border-border bg-card p-3 sm:flex-row sm:items-center sm:justify-between"
+          className="mb-3 flex flex-col gap-3 rounded-lg border border-border bg-card p-3 lg:flex-row lg:items-center lg:justify-between"
         >
-          <InputGroup className="order-first h-11 w-full sm:order-last sm:h-9 sm:w-64">
+          <InputGroup className="h-11 w-full lg:order-last lg:h-9 lg:w-72">
             <InputGroupAddon>
               <IconSearch size={16} />
             </InputGroupAddon>
             <InputGroupInput
               placeholder="Search Workshop"
+              aria-description="Search titles, descriptions, and authors"
               aria-label="Search submissions"
               value={search}
               onChange={(event) => setSearch(event.target.value)}
             />
+            {search && (
+              <InputGroupAddon align="inline-end">
+                <Button variant="ghost" size="icon-sm" aria-label="Clear search" onClick={() => setSearch("")}>
+                  <IconX size={14} />
+                </Button>
+              </InputGroupAddon>
+            )}
           </InputGroup>
           <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-center">
             <ToggleGroup
@@ -217,16 +231,28 @@ export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
                   checked={!includeOutdated}
                   onCheckedChange={(checked) => setIncludeOutdated(!checked)}
                 />
-                Current only
+                Hide outdated
               </Label>
             </div>
           </div>
         </section>
       )}
 
-      <p className="sr-only" aria-live="polite">
-        {workshop.loading ? "Loading Workshop listings" : `${visible.length} submissions shown`}
-      </p>
+      {workshop.submissions.length > 0 && (
+        <div className="mb-3 flex min-h-9 items-center justify-between gap-3">
+          <output className="text-sm text-muted-foreground">
+            {workshop.loading
+              ? "Refreshing listings…"
+              : `${visible.length} of ${workshop.submissions.length} submissions`}
+            {search.trim() && <span className="sr-only"> matching {search.trim()}</span>}
+          </output>
+          {hasFilters && visible.length > 0 && (
+            <Button variant="ghost" size="sm" onClick={clearFilters}>
+              Reset filters
+            </Button>
+          )}
+        </div>
+      )}
 
       {initialLoadFailed && (
         <Empty className="min-h-80 border border-border bg-card">
@@ -277,16 +303,8 @@ export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
           </EmptyHeader>
           <EmptyContent>
             {workshop.submissions.length > 0 && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  setTypeFilter("all");
-                  setSearch("");
-                  setIncludeOutdated(true);
-                }}
-              >
-                Clear filters
+              <Button variant="outline" size="sm" onClick={clearFilters}>
+                Reset filters
               </Button>
             )}
             {workshop.submissions.length === 0 && (
@@ -341,13 +359,10 @@ const SubmissionCard = ({ submission, backend, userVote, onVote }: SubmissionCar
   const TypeIcon = typeIcons[submission.type];
 
   return (
-    <Card className="relative flex h-full min-w-0 w-full flex-col">
+    <Card className="relative flex h-full min-w-0 w-full flex-col pt-0">
       {hasScreenshots ? (
         <div className="relative shrink-0">
-          <Badge
-            variant="secondary"
-            className="absolute left-2 top-2 z-10 gap-1.5 bg-background/80 px-2 backdrop-blur-sm"
-          >
+          <Badge variant="secondary" className="absolute left-2 top-2 z-10 gap-1.5 bg-background px-2">
             <span className={cn("size-2 rounded-full", typeDotColors[submission.type])} />
             {typeLabels[submission.type]}
           </Badge>
@@ -361,10 +376,10 @@ const SubmissionCard = ({ submission, backend, userVote, onVote }: SubmissionCar
         </a>
       )}
 
-      <CardHeader className="flex flex-col gap-2 sm:grid">
+      <CardHeader className="grid gap-2">
         <div className="flex items-center gap-2">
           <a href={`/workshop/${submission.id}/`} className="min-w-0 hover:underline" title={submission.title}>
-            <CardTitle className="line-clamp-2">{submission.title}</CardTitle>
+            <h2 className="line-clamp-2 text-lg font-semibold leading-snug">{submission.title}</h2>
           </a>
           {!hasScreenshots && (
             <Badge variant="secondary" className="shrink-0 gap-1.5 px-2">
@@ -390,7 +405,7 @@ const SubmissionCard = ({ submission, backend, userVote, onVote }: SubmissionCar
             · v{submission.revision} · {formatRelativeTime(submission.created)}
           </span>
         </CardDescription>
-        <CardAction className="col-start-auto row-span-1 row-start-auto self-auto justify-self-start sm:col-start-2 sm:row-span-2 sm:row-start-1 sm:self-start sm:justify-self-end">
+        <CardAction>
           <WorkshopVoteControl
             score={score}
             userVote={userVote}
@@ -412,7 +427,7 @@ const SubmissionCard = ({ submission, backend, userVote, onVote }: SubmissionCar
           </div>
         )}
         {submission.description && (
-          <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">{submission.description}</p>
+          <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground">{submission.description}</p>
         )}
       </CardContent>
 
@@ -421,6 +436,7 @@ const SubmissionCard = ({ submission, backend, userVote, onVote }: SubmissionCar
           <IconMessage size={14} /> {submission.commentCount} {submission.commentCount === 1 ? "comment" : "comments"}
         </span>
         <Button
+          variant="outline"
           className="h-10 sm:h-7"
           size="sm"
           nativeButton={false}
@@ -457,7 +473,7 @@ const SkeletonCard = () => (
 );
 
 export const WorkshopListingFallback = () => (
-  <div className="mx-auto max-w-7xl px-4 pb-16" aria-busy="true" aria-label="Loading Workshop listings">
+  <div className="mx-auto max-w-7xl px-4 pb-28 sm:pb-16" aria-busy="true" aria-label="Loading Workshop listings">
     <div className="flex flex-col gap-5 py-8 sm:flex-row sm:items-end sm:justify-between">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Workshop</h1>

@@ -1,13 +1,14 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 
 import { CodeContributorList } from "@/components/pages/about/code-contributors/code-contributor-list";
 import { TranslationContributorList } from "@/components/pages/about/translations-contributors/translation-constributor-list";
 import { SiteFooter } from "@/components/site-footer";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
+  path: "/about-us",
   title: "About Homarr",
   description: "The volunteers and contributors behind the Homarr open-source project.",
-};
+});
 
 export default function AboutPage() {
   return (

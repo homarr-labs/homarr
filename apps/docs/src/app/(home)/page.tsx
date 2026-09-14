@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 
 import { SectionContainer } from "@/components/pages/home/container/section-container";
 import { HomeDataflow } from "@/components/pages/home/dataflow/dataflow";
@@ -12,11 +12,12 @@ import { SiteFooter } from "@/components/site-footer";
 
 import styles from "../../pages/index.module.css";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
+  path: "/",
   title: "A simple, powerful dashboard for your server",
   description:
     "Simplify the management of your server with Homarr, a sleek, modern dashboard that puts all of your apps and services at your fingertips.",
-};
+});
 
 export default function HomePage() {
   return (

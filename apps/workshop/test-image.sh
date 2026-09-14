@@ -40,6 +40,9 @@ WORKSHOP_TEST_URL="http://127.0.0.1:$WORKSHOP_IMAGE_TEST_PORT" \
   EXPECTED_WORKSHOP_WEB_URL="$PREVIEW_WORKSHOP_URL" \
   node apps/workshop/tests/runtime-config.integration.mjs
 
+WORKSHOP_TEST_URL="http://127.0.0.1:$WORKSHOP_IMAGE_TEST_PORT" \
+  node apps/workshop/tests/static-export.integration.mjs
+
 docker exec "$WORKSHOP_IMAGE_TEST_NAME" pocketbase superuser create \
   workshop-image@example.invalid 'WorkshopImageTest123!' --dir=/pb_data
 WORKSHOP_TEST_URL="http://127.0.0.1:$WORKSHOP_IMAGE_TEST_PORT" \

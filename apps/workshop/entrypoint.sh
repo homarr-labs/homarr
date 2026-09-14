@@ -31,4 +31,4 @@ exec pocketbase serve \
   --hooksDir=/pb_hooks \
   --migrationsDir=/pb_migrations \
   --publicDir=/pb_public \
-  --indexFallback=true
+  --indexFallback=false

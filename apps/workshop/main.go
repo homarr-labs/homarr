@@ -1,10 +1,13 @@
 package main
 
 import (
+	"errors"
+	"io/fs"
 	"log"
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/apis"
@@ -13,6 +16,7 @@ import (
 	"github.com/pocketbase/pocketbase/plugins/migratecmd"
 	"github.com/pocketbase/pocketbase/tools/hook"
 	"github.com/pocketbase/pocketbase/tools/osutils"
+	"github.com/pocketbase/pocketbase/tools/router"
 )
 
 func main() {
@@ -37,7 +41,7 @@ func main() {
 	app.RootCmd.PersistentFlags().StringVar(&publicDir, "publicDir", defaultPublicDir(), "the static files directory")
 
 	var indexFallback bool
-	app.RootCmd.PersistentFlags().BoolVar(&indexFallback, "indexFallback", true, "serve index.html for missing paths")
+	app.RootCmd.PersistentFlags().BoolVar(&indexFallback, "indexFallback", false, "serve index.html for missing paths")
 
 	_ = app.RootCmd.ParseFlags(os.Args[1:])
 
@@ -57,7 +61,7 @@ func main() {
 	app.OnServe().Bind(&hook.Handler[*core.ServeEvent]{
 		Func: func(event *core.ServeEvent) error {
 			if !event.Router.HasRoute(http.MethodGet, "/{path...}") {
-				event.Router.GET("/{path...}", apis.Static(os.DirFS(publicDir), indexFallback))
+				event.Router.GET("/{path...}", staticWebsite(os.DirFS(publicDir), indexFallback))
 			}
 			return event.Next()
 		},
@@ -67,6 +71,37 @@ func main() {
 	if err := app.Start(); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func staticWebsite(fsys fs.FS, indexFallback bool) func(*core.RequestEvent) error {
+	serve := apis.Static(fsys, indexFallback)
+	return func(event *core.RequestEvent) error {
+		if event.Request.URL.RawQuery != "" {
+			// PocketBase's canonical file/directory redirects omit the request query.
+			event.Response = &staticRedirectResponse{event.Response, event.Request.URL.RawQuery}
+		}
+		err := serve(event)
+		if !errors.Is(err, router.ErrFileNotFound) || strings.HasPrefix(event.Request.URL.Path, "/api/") {
+			return err
+		}
+		page, readErr := fs.ReadFile(fsys, "404.html")
+		if readErr != nil {
+			return err
+		}
+		return event.HTML(http.StatusNotFound, string(page))
+	}
+}
+
+type staticRedirectResponse struct {
+	http.ResponseWriter
+	query string
+}
+
+func (response *staticRedirectResponse) WriteHeader(status int) {
+	if location := response.Header().Get("Location"); status == http.StatusMovedPermanently && location != "" {
+		response.Header().Set("Location", location+"?"+response.query)
+	}
+	response.ResponseWriter.WriteHeader(status)
 }
 
 func defaultPublicDir() string {

@@ -177,10 +177,6 @@ body {
   border-bottom: 1px solid var(--border);
 }
 
-.homarr-docs-body--hide-title > h1:first-of-type {
-  display: none;
-}
-
 .prose :where(h1, h2, h3) {
   text-wrap: balance;
 }

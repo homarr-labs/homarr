@@ -1,13 +1,14 @@
 import { IconArrowRight } from "@tabler/icons-react";
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 import Link from "next/link";
 
 import { apiSource } from "@/lib/openapi";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
+  path: "/api-reference",
   title: "API reference",
   description: "Interactive reference for Homarr's HTTP API.",
-};
+});
 
 export default function ApiReferenceIndexPage() {
   const pages = apiSource.getPages();

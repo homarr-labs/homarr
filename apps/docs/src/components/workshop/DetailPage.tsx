@@ -534,7 +534,7 @@ const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string;
   const socialImage = screenshotUrls[0] ?? `${window.location.origin}/img/logo.png`;
 
   return (
-    <div className="mx-auto max-w-[90rem] px-4 pb-20 pt-8 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-[90rem] px-4 pb-28 pt-8 sm:px-6 sm:pb-20 lg:px-8">
       <>
         <title>{socialTitle}</title>
         <meta name="description" content={socialDescription} />
@@ -569,7 +569,12 @@ const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string;
         </Alert>
       )}
 
-      <div className="grid items-start gap-10 xl:grid-cols-[minmax(0,1fr)_22rem]">
+      <div
+        className={cn(
+          "grid items-start gap-10",
+          widgetDefinition || canManage ? "xl:grid-cols-[minmax(0,1fr)_22rem]" : "mx-auto max-w-5xl",
+        )}
+      >
         <main className="min-w-0">
           <header className="border-b border-border pb-6">
             <div className="flex flex-wrap items-start justify-between gap-5">
@@ -625,39 +630,78 @@ const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string;
 
             {widgetDefinition && <WidgetSafetySummary widget={widgetDefinition} />}
 
-            <div className="mt-6 flex flex-wrap items-center gap-2">
-              {submission.type === "customWidget" && (
-                <Button size="sm" className="min-h-11 sm:min-h-8" onClick={() => downloadSubmissionJson(submission)}>
-                  <IconDownload size={14} /> Download widget JSON
-                </Button>
-              )}
-              <Button
-                variant={submission.type === "customCss" ? "default" : "outline"}
-                size="sm"
-                className="min-h-11 sm:min-h-8"
-                aria-live="polite"
-                onClick={() => void handleCopy()}
-              >
-                {copyFailed ? (
+            <section className="mt-6" aria-labelledby="workshop-install-heading">
+              <h2 id="workshop-install-heading" className="scroll-mt-24 text-lg font-semibold">
+                Install in Homarr
+              </h2>
+              <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm leading-relaxed text-muted-foreground">
+                {submission.type === "customWidget" ? (
                   <>
-                    <IconX size={14} className="text-destructive" /> Copy failed
+                    <li>Download the widget JSON below.</li>
+                    <li>
+                      Open <strong className="text-foreground">Management → Custom Widgets → Import</strong> in your
+                      Homarr instance and select the file.
+                    </li>
+                    <li>
+                      Review its sources and permissions, then configure the URLs and credentials for your services.
+                    </li>
                   </>
                 ) : (
                   <>
-                    <CopyIcon size={14} className={copyIconClass} />
-                    {copied ? "Copied" : submission.type === "customCss" ? "Copy CSS" : "Copy JSON"}
+                    <li>Copy the CSS below.</li>
+                    <li>
+                      Open <strong className="text-foreground">Board settings → Custom CSS</strong> in your Homarr
+                      instance, paste the CSS, and save.
+                    </li>
                   </>
                 )}
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="min-h-11 text-muted-foreground sm:min-h-8"
-                onClick={() => setReportOpen(true)}
+              </ol>
+              <div className="mt-4 flex flex-wrap items-center gap-2">
+                {submission.type === "customWidget" && (
+                  <Button size="sm" className="min-h-11 sm:min-h-8" onClick={() => downloadSubmissionJson(submission)}>
+                    <IconDownload size={14} /> Download widget JSON
+                  </Button>
+                )}
+                <Button
+                  variant={submission.type === "customCss" ? "default" : "outline"}
+                  size="sm"
+                  className="min-h-11 sm:min-h-8"
+                  aria-live="polite"
+                  onClick={() => void handleCopy()}
+                >
+                  {copyFailed ? (
+                    <>
+                      <IconX size={14} className="text-destructive" /> Copy failed
+                    </>
+                  ) : (
+                    <>
+                      <CopyIcon size={14} className={copyIconClass} />
+                      {copied ? "Copied" : submission.type === "customCss" ? "Copy CSS" : "Copy JSON"}
+                    </>
+                  )}
+                </Button>
+                <a
+                  href="#workshop-source-heading"
+                  className="inline-flex min-h-11 items-center px-2 text-sm underline underline-offset-4 sm:min-h-8"
+                >
+                  Review source
+                </a>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="min-h-11 text-muted-foreground sm:min-h-8"
+                  onClick={() => setReportOpen(true)}
+                >
+                  <IconFlag size={14} /> Report
+                </Button>
+              </div>
+              <Link
+                to="/docs/workshop/#install-content"
+                className="mt-3 inline-flex items-center gap-1.5 text-sm underline underline-offset-4"
               >
-                <IconFlag size={14} /> Report
-              </Button>
-            </div>
+                Installation guide <IconArrowRight size={13} />
+              </Link>
+            </section>
           </header>
 
           {screenshotUrls.length > 0 && (
@@ -676,7 +720,7 @@ const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string;
           <section className="mt-8" aria-labelledby="workshop-source-heading">
             <div className="mb-3 flex items-end justify-between gap-3">
               <div>
-                <h2 id="workshop-source-heading" className="text-lg font-semibold">
+                <h2 id="workshop-source-heading" className="scroll-mt-24 text-lg font-semibold">
                   Source
                 </h2>
                 <p className="mt-1 text-sm text-muted-foreground">Review exactly what will be installed.</p>
@@ -705,139 +749,119 @@ const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string;
           </div>
         </main>
 
-        <aside className="space-y-6 xl:sticky xl:top-24">
-          <section className="rounded-xl border border-border bg-card p-5">
-            <div className="flex items-start gap-3">
-              <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                <IconDownload size={17} />
-              </div>
-              <div>
-                <h2 className="font-semibold">Install in Homarr</h2>
-                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                  {submission.type === "customWidget"
-                    ? "Download the JSON, then import it from Manage → Custom Widgets."
-                    : "Copy the CSS and paste it into your board's Custom CSS settings."}
-                </p>
-              </div>
-            </div>
-            <Link
-              to="/docs/workshop/"
-              className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
-            >
-              Installation guide <IconArrowRight size={13} />
-            </Link>
-          </section>
-
-          {widgetDefinition && (
-            <section className="rounded-xl border border-border bg-card p-5">
-              <h2 className="font-semibold">Widget details</h2>
-              <div className="mt-5 space-y-5">
-                <div>
-                  <h3 className="mb-2 flex items-center gap-2 text-sm font-medium">
-                    <IconServer size={14} /> API sources
-                  </h3>
-                  <div className="space-y-2.5">
-                    {sources.map(([id, source]) => (
-                      <div key={id} className="min-w-0">
-                        <div className="flex items-center justify-between gap-2 text-sm">
-                          <span className="truncate font-medium">{source.name || id}</span>
-                          <Badge variant="secondary" className="shrink-0">
-                            {source.networkScope}
-                          </Badge>
-                        </div>
-                        <p className="truncate text-xs text-muted-foreground">{sourceHost(source.baseUrl)}</p>
-                        <p className="mt-0.5 text-xs text-muted-foreground">{sourceAuthLabel(source.auth)}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="border-t border-border pt-4">
-                  <h3 className="mb-2 flex items-center gap-2 text-sm font-medium">
-                    <IconSettings size={14} /> Capabilities
-                  </h3>
-                  <div className="flex flex-wrap gap-1.5">
-                    <Badge variant="secondary">
-                      {requests.filter(([, request]) => request.kind === "query").length} queries
-                    </Badge>
-                    <Badge variant="secondary">
-                      {requests.filter(([, request]) => request.kind === "action").length} actions
-                    </Badge>
-                    <Badge variant="secondary">{options.length} options</Badge>
-                  </div>
-                  {requests.length > 0 && (
-                    <div className="mt-3 space-y-1.5">
-                      {requests.slice(0, 6).map(([id, request]) => (
-                        <div key={id} className="flex items-center justify-between gap-2 text-xs">
-                          <span className="truncate text-muted-foreground">{id}</span>
-                          <span className="shrink-0 font-mono font-medium">{request.method}</span>
+        {(widgetDefinition || canManage) && (
+          <aside className="space-y-6 xl:sticky xl:top-24">
+            {widgetDefinition && (
+              <section className="rounded-xl border border-border bg-card p-5">
+                <h2 className="font-semibold">Widget details</h2>
+                <div className="mt-5 space-y-5">
+                  <div>
+                    <h3 className="mb-2 flex items-center gap-2 text-sm font-medium">
+                      <IconServer size={14} /> API sources
+                    </h3>
+                    <div className="space-y-2.5">
+                      {sources.map(([id, source]) => (
+                        <div key={id} className="min-w-0">
+                          <div className="flex items-center justify-between gap-2 text-sm">
+                            <span className="truncate font-medium">{source.name || id}</span>
+                            <Badge variant="secondary" className="shrink-0">
+                              {source.networkScope}
+                            </Badge>
+                          </div>
+                          <p className="truncate text-xs text-muted-foreground">{sourceHost(source.baseUrl)}</p>
+                          <p className="mt-0.5 text-xs text-muted-foreground">{sourceAuthLabel(source.auth)}</p>
                         </div>
                       ))}
-                      {requests.length > 6 && (
-                        <p className="text-xs text-muted-foreground">+{requests.length - 6} more</p>
-                      )}
                     </div>
-                  )}
-                </div>
+                  </div>
 
-                {options.length > 0 && (
                   <div className="border-t border-border pt-4">
                     <h3 className="mb-2 flex items-center gap-2 text-sm font-medium">
-                      <IconSettings size={14} /> Configurable options
+                      <IconSettings size={14} /> Capabilities
                     </h3>
-                    <div className="space-y-2">
-                      {options.slice(0, 6).map(([id, option]) => (
-                        <div key={id} className="flex items-start justify-between gap-3 text-xs">
-                          <span className="min-w-0 truncate text-muted-foreground">{option.label}</span>
-                          <span className="shrink-0 font-medium">{option.control}</span>
-                        </div>
-                      ))}
-                      {options.length > 6 && (
-                        <p className="text-xs text-muted-foreground">+{options.length - 6} more</p>
-                      )}
+                    <div className="flex flex-wrap gap-1.5">
+                      <Badge variant="secondary">
+                        {requests.filter(([, request]) => request.kind === "query").length} queries
+                      </Badge>
+                      <Badge variant="secondary">
+                        {requests.filter(([, request]) => request.kind === "action").length} actions
+                      </Badge>
+                      <Badge variant="secondary">{options.length} options</Badge>
                     </div>
+                    {requests.length > 0 && (
+                      <div className="mt-3 space-y-1.5">
+                        {requests.slice(0, 6).map(([id, request]) => (
+                          <div key={id} className="flex items-center justify-between gap-2 text-xs">
+                            <span className="truncate text-muted-foreground">{id}</span>
+                            <span className="shrink-0 font-mono font-medium">{request.method}</span>
+                          </div>
+                        ))}
+                        {requests.length > 6 && (
+                          <p className="text-xs text-muted-foreground">+{requests.length - 6} more</p>
+                        )}
+                      </div>
+                    )}
                   </div>
-                )}
 
-                <div className="border-t border-border pt-4">
-                  <h3 className="mb-2 flex items-center gap-2 text-sm font-medium">
-                    <IconKey size={14} /> Credentials
-                  </h3>
-                  {protectedSources.length > 0 ? (
-                    <>
-                      <p className="text-sm">
-                        {protectedSources.length} source{protectedSources.length === 1 ? " requires" : "s require"}{" "}
-                        credentials.
-                      </p>
-                      <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                        Secrets are entered after import and are never included in Workshop downloads.
-                      </p>
-                    </>
-                  ) : (
-                    <p className="text-sm text-muted-foreground">No credentials required.</p>
+                  {options.length > 0 && (
+                    <div className="border-t border-border pt-4">
+                      <h3 className="mb-2 flex items-center gap-2 text-sm font-medium">
+                        <IconSettings size={14} /> Configurable options
+                      </h3>
+                      <div className="space-y-2">
+                        {options.slice(0, 6).map(([id, option]) => (
+                          <div key={id} className="flex items-start justify-between gap-3 text-xs">
+                            <span className="min-w-0 truncate text-muted-foreground">{option.label}</span>
+                            <span className="shrink-0 font-medium">{option.control}</span>
+                          </div>
+                        ))}
+                        {options.length > 6 && (
+                          <p className="text-xs text-muted-foreground">+{options.length - 6} more</p>
+                        )}
+                      </div>
+                    </div>
                   )}
-                </div>
-              </div>
-            </section>
-          )}
 
-          {canManage && (
-            <section className="border-t border-border pt-5">
-              <h2 className="mb-2 text-sm font-semibold">Manage submission</h2>
-              <div className="grid gap-1">
-                {canEdit && (
-                  <Button variant="ghost" size="sm" className="justify-start" onClick={openEdit}>
-                    <IconPencil size={14} /> Edit submission
+                  <div className="border-t border-border pt-4">
+                    <h3 className="mb-2 flex items-center gap-2 text-sm font-medium">
+                      <IconKey size={14} /> Credentials
+                    </h3>
+                    {protectedSources.length > 0 ? (
+                      <>
+                        <p className="text-sm">
+                          {protectedSources.length} source{protectedSources.length === 1 ? " requires" : "s require"}{" "}
+                          credentials.
+                        </p>
+                        <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                          Secrets are entered after import and are never included in Workshop downloads.
+                        </p>
+                      </>
+                    ) : (
+                      <p className="text-sm text-muted-foreground">No credentials required.</p>
+                    )}
+                  </div>
+                </div>
+              </section>
+            )}
+
+            {canManage && (
+              <section className="border-t border-border pt-5">
+                <h2 className="mb-2 text-sm font-semibold">Manage submission</h2>
+                <div className="grid gap-1">
+                  {canEdit && (
+                    <Button variant="ghost" size="sm" className="justify-start" onClick={openEdit}>
+                      <IconPencil size={14} /> Edit submission
+                    </Button>
+                  )}
+                  <Button variant="ghost" size="sm" className="justify-start" onClick={() => void handleOutdated()}>
+                    <IconInfoCircle size={14} /> {submission.outdated ? "Mark current" : "Mark outdated"}
                   </Button>
-                )}
-                <Button variant="ghost" size="sm" className="justify-start" onClick={() => void handleOutdated()}>
-                  <IconInfoCircle size={14} /> {submission.outdated ? "Mark current" : "Mark outdated"}
-                </Button>
-                <DeleteConfirmButton className="w-full justify-start" onConfirm={handleDelete} />
-              </div>
-            </section>
-          )}
-        </aside>
+                  <DeleteConfirmButton className="w-full justify-start" onConfirm={handleDelete} />
+                </div>
+              </section>
+            )}
+          </aside>
+        )}
       </div>
       <Dialog
         open={reportOpen}

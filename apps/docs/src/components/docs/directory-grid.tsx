@@ -2,7 +2,7 @@
 
 import { IconArrowUpRight, IconSearch, IconX } from "@tabler/icons-react";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 export interface DirectoryItem {
   description?: string;
@@ -17,6 +17,11 @@ interface DirectoryGridProps {
 
 export function DirectoryGrid({ items, label }: DirectoryGridProps) {
   const [query, setQuery] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+  const clearFilter = () => {
+    setQuery("");
+    inputRef.current?.focus();
+  };
   const visibleItems = useMemo(() => {
     const normalizedQuery = query.trim().toLocaleLowerCase();
     if (!normalizedQuery) return items;
@@ -41,8 +46,10 @@ export function DirectoryGrid({ items, label }: DirectoryGridProps) {
           />
           <input
             className="h-10 w-full rounded-md border bg-fd-background pl-9 pr-9 text-sm text-fd-foreground outline-none placeholder:text-fd-muted-foreground focus-visible:ring-2 focus-visible:ring-fd-ring"
-            type="text"
+            ref={inputRef}
+            type="search"
             inputMode="search"
+            aria-label={`Filter ${label}`}
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder={`Filter ${label}`}
@@ -51,7 +58,7 @@ export function DirectoryGrid({ items, label }: DirectoryGridProps) {
             <button
               type="button"
               className="absolute right-1.5 top-1/2 flex size-7 -translate-y-1/2 items-center justify-center rounded text-fd-muted-foreground hover:bg-fd-muted hover:text-fd-foreground"
-              onClick={() => setQuery("")}
+              onClick={clearFilter}
               aria-label={`Clear ${label} filter`}
             >
               <IconX aria-hidden="true" size={16} />
@@ -87,7 +94,10 @@ export function DirectoryGrid({ items, label }: DirectoryGridProps) {
         </ul>
       ) : (
         <div className="rounded-lg border border-dashed p-6 text-center text-sm text-fd-muted-foreground">
-          No guides match “{query}”.
+          <p>No guides match “{query}”. Try a service name or a feature, such as calendar or storage.</p>
+          <button type="button" className="mt-3 text-fd-primary underline underline-offset-4" onClick={clearFilter}>
+            Clear filter
+          </button>
         </div>
       )}
     </nav>

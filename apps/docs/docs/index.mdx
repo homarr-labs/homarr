@@ -1,72 +1,44 @@
 ---
 title: Homarr documentation
-description: Install, configure, operate, and extend Homarr.
+description: Install Homarr, connect your services, and build a dashboard that works for you.
 ---
 
-import {
-  IconApi,
-  IconArrowUp,
-  IconBuildingStore,
-  IconChecklist,
-  IconCode,
-  IconComponents,
-  IconDownload,
-  IconLayoutDashboard,
-  IconPlugConnected,
-  IconSettings,
-  IconUsers,
-  IconVocabulary,
-} from "@tabler/icons-react";
-
-Use these guides to get Homarr running, connect your services, build useful boards, and manage an installation over time.
+import { IconDownload, IconArrowUp } from "@tabler/icons-react";
 
 ## Install or upgrade
 
 <Cards>
   <Card icon={<IconDownload />} title="Install Homarr" href="/docs/getting-started/installation">
-    Choose the installation method for your system.
+    Start with Docker Compose, Kubernetes, or your hosting platform.
   </Card>
   <Card icon={<IconArrowUp />} title="Upgrade from v1" href="/docs/getting-started/upgrade-v2">
-    Move an existing Homarr installation to v2.
-  </Card>
-  <Card icon={<IconChecklist />} title="Finish setup" href="/docs/getting-started/after-the-installation">
-    Add apps, integrations, and widgets after installation.
-  </Card>
-  <Card icon={<IconVocabulary />} title="Learn the concepts" href="/docs/getting-started">
-    Understand boards, apps, integrations, and widgets.
+    Back up your installation and move to Homarr v2.
   </Card>
 </Cards>
 
-## Configure Homarr
+New to Homarr? [Learn how boards, apps, integrations, and widgets fit together](/docs/getting-started), then
+[complete your first-board setup](/docs/getting-started/after-the-installation).
 
-<Cards>
-  <Card icon={<IconLayoutDashboard />} title="Boards and content" href="/docs/management">
-    Configure boards, apps, users, settings, and administration.
-  </Card>
-  <Card icon={<IconPlugConnected />} title="Connect services" href="/docs/integrations">
-    Find the setup guide for an integration.
-  </Card>
-  <Card icon={<IconComponents />} title="Choose widgets" href="/docs/widgets">
-    Find the content and controls available for boards.
-  </Card>
-  <Card icon={<IconSettings />} title="Advanced configuration" href="/docs/advanced">
-    Configure deployment, authentication, networking, and automation.
-  </Card>
-</Cards>
+## Configure your dashboard
 
-## Extend and contribute
+| I want to…                          | Guide                                           |
+| ----------------------------------- | ----------------------------------------------- |
+| Add links to my services            | [Apps and bookmarks](/docs/management/apps)     |
+| Arrange and share a dashboard       | [Boards](/docs/management/boards)               |
+| Connect a service to Homarr         | [Find an integration](/docs/integrations)       |
+| Display service data on a board     | [Choose a widget](/docs/widgets)                |
+| Install a community widget or style | [Use the Workshop](/docs/workshop)              |
+| Manage access for other people      | [Users and permissions](/docs/management/users) |
 
-<Cards>
-  <Card icon={<IconCode />} title="Custom Widgets" href="/docs/management/custom-widgets">
-    Author and publish Custom JSX widgets.
-  </Card>
-  <Card icon={<IconBuildingStore />} title="Community Workshop" href="/docs/workshop">
-    Use and operate the community extension registry.
-  </Card>
-  <Card icon={<IconApi />} title="API reference" href="/api-reference">
-    Inspect Homarr's HTTP API.
-  </Card>
-  <Card icon={<IconUsers />} title="Get help and contribute" href="/docs/community">
-    Find support and ways to contribute.
-  </Card>
-</Cards>
+## Operate your installation
+
+- [Environment variables](/docs/advanced/environment-variables): deployment settings and defaults.
+- [Single sign-on](/docs/advanced/single-sign-on): credentials, LDAP, and OIDC configuration.
+- [Scheduled tasks](/docs/management/tasks): background work and task status.
+- [Get help](/docs/community): support channels and ways to contribute.
+
+## Extend Homarr
+
+[Build a Custom Widget](/docs/management/custom-widgets), [connect an AI client with MCP](/docs/management/mcp),
+or use the [HTTP API reference](/api-reference). For changes to Homarr itself, follow the
+[development setup](/docs/advanced/development/getting-started).

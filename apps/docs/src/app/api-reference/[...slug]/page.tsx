@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { DocsPage, DocsTitle } from "fumadocs-ui/layouts/docs/page";
 
 import { OpenAPIPage } from "@/components/openapi-page";
+import { pageMetadata } from "@/lib/metadata";
 import { apiSource } from "@/lib/openapi";
 
 interface PageProps {
@@ -31,8 +32,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const page = apiSource.getPage(slug);
   if (!page) notFound();
 
-  return {
-    title: page.data.title,
-    description: page.data.description,
-  };
+  const title = page.data.title ?? "API reference";
+  return pageMetadata({
+    title,
+    description: page.data.description ?? `Request parameters and responses for ${title} in the Homarr HTTP API.`,
+    path: page.url,
+  });
 }

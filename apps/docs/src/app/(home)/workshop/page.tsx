@@ -1,13 +1,14 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 
 import { WorkshopListingFallback } from "@/components/workshop/WorkshopApp";
 import { WorkshopErrorBoundary } from "@/components/workshop/WorkshopErrorBoundary";
 import { WorkshopRoute } from "@/components/workshop/WorkshopRoutes";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
+  path: "/workshop",
   title: "Workshop",
   description: "Community custom CSS and custom widgets for Homarr.",
-};
+});
 
 export default function WorkshopPage() {
   const configuredWorkshopUrl = process.env.WORKSHOP_API_URL ?? process.env.WORKSHOP_URL ?? "";

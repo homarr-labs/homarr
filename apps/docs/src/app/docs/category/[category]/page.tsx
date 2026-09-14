@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { DocsBody, DocsPage, DocsTitle } from "fumadocs-ui/layouts/docs/page";
 
 import { LegacyCategoryRedirect } from "@/components/docs/legacy-category-redirect";
+import { canonicalUrl } from "@/lib/metadata";
 import { source } from "@/lib/source";
 
 // Docusaurus generated these URLs from category labels, not directory names.
@@ -52,7 +53,7 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
   const page = await getCategoryPage(props);
   return {
     title: page.data.title,
-    alternates: { canonical: page.url },
+    alternates: { canonical: canonicalUrl(page.url) },
     robots: { index: false, follow: true },
   };
 }

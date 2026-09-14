@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-const baseUrl = process.env.HOMARR_WEBSITE_URL ?? "https://homarr.dev";
+import { siteUrl } from "@/lib/metadata";
 
 export const dynamic = "force-static";
 
@@ -10,6 +10,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: `${baseUrl}/sitemap.xml`,
+    sitemap: new URL("/sitemap.xml", siteUrl).href,
   };
 }

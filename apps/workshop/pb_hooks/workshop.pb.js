@@ -50,7 +50,7 @@ const workshopDetailPage = (event) => {
       }),
     );
   } catch {
-    return event.html(200, indexHtml);
+    return event.html(404, indexHtml);
   }
 };
 
