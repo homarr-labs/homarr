@@ -5,6 +5,7 @@
     "index",
     "---Deploy and secure---",
     "environment-variables",
+    "mysql-to-sqlite",
     "single-sign-on",
     "proxy",
     "running-as-different-user",
