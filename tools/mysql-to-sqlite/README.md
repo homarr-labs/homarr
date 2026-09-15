@@ -27,7 +27,7 @@ The converter does not read, rotate, or decrypt encryption keys. Keep the origin
 npm test
 ```
 
-Requires Docker on Linux. Tests use disposable MySQL 8.4.6, populate every legacy application table, convert with a SELECT-only account, verify preserved data and cancellation/failure behavior, and run the packaged Docker entrypoint. No existing service is contacted. `e2e/mysql-conversion.spec.ts` separately boots the current Homarr image twice with the converted file and verifies authentication, board rendering, media, and decrypted secrets.
+Requires Docker on Linux. Tests initialize disposable MySQL 8.4.6 using the published Homarr v1.77.1 image migrator pinned by digest, then populate every legacy application table, convert with a SELECT-only account, verify preserved data and cancellation/failure behavior, and run the packaged Docker entrypoint. No existing service is contacted. `e2e/mysql-conversion.spec.ts` separately boots the current Homarr image twice with the converted file and verifies authentication, board rendering, media, and decrypted secrets.
 
 ## Frozen compatibility data
 

@@ -1185,7 +1185,7 @@ importers:
         version: 17.4.2
       drizzle-orm:
         specifier: 'catalog:'
-        version: 0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.11.1)(gel@2.0.0(supports-color@10.2.2))(kysely@0.29.2)(mysql2@3.22.6(@types/node@24.13.3))(pg@8.22.0)(sql.js@1.14.1)
+        version: 0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.11.1)(gel@2.0.0(supports-color@10.2.2))(kysely@0.29.2)(pg@8.22.0)(sql.js@1.14.1)
       flag-icons:
         specifier: 'catalog:'
         version: 7.5.0
@@ -1743,7 +1743,7 @@ importers:
         version: 0.2.9
       drizzle-orm:
         specifier: 'catalog:'
-        version: 0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.11.1)(gel@2.0.0(supports-color@10.2.2))(kysely@0.29.2)(mysql2@3.22.6(@types/node@24.13.3))(pg@8.22.0)(sql.js@1.14.1)
+        version: 0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.11.1)(gel@2.0.0(supports-color@10.2.2))(kysely@0.29.2)(pg@8.22.0)(sql.js@1.14.1)
       ioredis:
         specifier: 'catalog:'
         version: 5.11.1(supports-color@10.2.2)
@@ -2012,10 +2012,10 @@ importers:
         version: 0.31.10
       drizzle-orm:
         specifier: 'catalog:'
-        version: 0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.11.1)(gel@2.0.0(supports-color@10.2.2))(kysely@0.29.2)(mysql2@3.22.6(@types/node@24.13.3))(pg@8.22.0)(sql.js@1.14.1)
+        version: 0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.11.1)(gel@2.0.0(supports-color@10.2.2))(kysely@0.29.2)(pg@8.22.0)(sql.js@1.14.1)
       drizzle-zod:
         specifier: 'catalog:'
-        version: 0.8.3(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.11.1)(gel@2.0.0(supports-color@10.2.2))(kysely@0.29.2)(mysql2@3.22.6(@types/node@24.13.3))(pg@8.22.0)(sql.js@1.14.1))(zod@4.4.3)
+        version: 0.8.3(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.11.1)(gel@2.0.0(supports-color@10.2.2))(kysely@0.29.2)(pg@8.22.0)(sql.js@1.14.1))(zod@4.4.3)
       pg:
         specifier: 'catalog:'
         version: 8.22.0
@@ -13422,12 +13422,6 @@ packages:
   mux.js@7.1.0:
     resolution: {integrity: sha512-NTxawK/BBELJrYsZThEulyUMDVlLizKdxyAsMuzoCD1eFj97BVaA8D/CvKsKu6FOLYkFojN5CbM9h++ZTZtknA==}
     engines: {node: '>=8', npm: '>=5'}
-
-  mysql2@3.22.6:
-    resolution: {integrity: sha512-fPKmeDGUzvFP7bMD5SASlJ5zIgvCC4hbanTmhbUlEmhyrY1hR4Hi3xLOWgTd3luYjLVifx6uGvMNJ2m/LlqEpg==}
-    engines: {node: '>= 8.0'}
-    peerDependencies:
-      '@types/node': '>= 8'
 
   mz@2.7.0:
     resolution: {integrity: sha512-z81GNO7nnYMEhrGh9LeymoE4+Yr0Wn5McHIZMK5cfQCl+NDX08sCZgUc9/6MHni9IWuFLm1Z3HTCXu2z9fN62Q==}
@@ -26384,7 +26378,7 @@ snapshots:
       esbuild: 0.25.12
       tsx: 4.21.0
 
-  drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.11.1)(gel@2.0.0(supports-color@10.2.2))(kysely@0.29.2)(mysql2@3.22.6(@types/node@24.13.3))(pg@8.22.0)(sql.js@1.14.1):
+  drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.11.1)(gel@2.0.0(supports-color@10.2.2))(kysely@0.29.2)(pg@8.22.0)(sql.js@1.14.1):
     optionalDependencies:
       '@libsql/client-wasm': 0.14.0
       '@opentelemetry/api': 1.9.0
@@ -26393,13 +26387,12 @@ snapshots:
       better-sqlite3: 12.11.1
       gel: 2.0.0(supports-color@10.2.2)
       kysely: 0.29.2
-      mysql2: 3.22.6(@types/node@24.13.3)
       pg: 8.22.0
       sql.js: 1.14.1
 
-  drizzle-zod@0.8.3(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.11.1)(gel@2.0.0(supports-color@10.2.2))(kysely@0.29.2)(mysql2@3.22.6(@types/node@24.13.3))(pg@8.22.0)(sql.js@1.14.1))(zod@4.4.3):
+  drizzle-zod@0.8.3(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.11.1)(gel@2.0.0(supports-color@10.2.2))(kysely@0.29.2)(pg@8.22.0)(sql.js@1.14.1))(zod@4.4.3):
     dependencies:
-      drizzle-orm: 0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.11.1)(gel@2.0.0(supports-color@10.2.2))(kysely@0.29.2)(mysql2@3.22.6(@types/node@24.13.3))(pg@8.22.0)(sql.js@1.14.1)
+      drizzle-orm: 0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.11.1)(gel@2.0.0(supports-color@10.2.2))(kysely@0.29.2)(pg@8.22.0)(sql.js@1.14.1)
       zod: 4.4.3
 
   dunder-proto@1.0.1:
@@ -29038,19 +29031,6 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.29.7
       global: 4.4.0
-
-  mysql2@3.22.6(@types/node@24.13.3):
-    dependencies:
-      '@types/node': 24.13.3
-      aws-ssl-profiles: 1.1.2
-      denque: 2.1.0
-      generate-function: 2.3.1
-      iconv-lite: 0.7.2
-      long: 5.3.2
-      lru.min: 1.1.4
-      named-placeholders: 1.1.6
-      sql-escaper: 1.4.0
-    optional: true
 
   mz@2.7.0:
     dependencies:

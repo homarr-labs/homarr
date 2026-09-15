@@ -1,12 +1,19 @@
 import { execFile } from "node:child_process";
 import { createCipheriv, randomBytes } from "node:crypto";
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { promisify } from "node:util";
 import { setTimeout } from "node:timers/promises";
 import mysql from "mysql2/promise";
 
-import { migrations, quote, schema } from "../src/legacy.mjs";
+import { quote, schema } from "../src/legacy.mjs";
 
 const exec = promisify(execFile);
+// Published v1.77.1 multi-platform image. Its bundled migrator, not our frozen
+// SQL helper, must produce the source schema and journal used by these tests.
+const sourceImage =
+  "ghcr.io/homarr-labs/homarr:v1.77.1@sha256:1f5b892aeef4ad0a4907f075777bbd0ce7120f4cdc53b9f3f028519250421aed";
 export const fixtureUser = "migration-user";
 export const fixturePassword = "migration-password";
 export const fixtureBoard = "migration-board";
@@ -170,19 +177,53 @@ export async function createFixture() {
       }
     }
     await connection.query("SET SESSION time_zone = '+00:00'");
-    await connection.query(
-      "CREATE TABLE __drizzle_migrations (id SERIAL PRIMARY KEY, hash text NOT NULL, created_at bigint)",
-    );
-    for (const migration of migrations("mysql")) {
-      for (const statement of migration.sql.split("--> statement-breakpoint")) {
-        if (statement.trim()) await connection.query(statement);
-      }
-      await connection.query("INSERT INTO __drizzle_migrations (hash, created_at) VALUES (?, ?)", [
-        migration.hash,
-        migration.when,
-      ]);
+    const environmentDirectory = await mkdtemp(join(tmpdir(), "homarr-release-source-"));
+    try {
+      const environmentFile = join(environmentDirectory, "source.env");
+      await writeFile(
+        environmentFile,
+        [
+          "DB_DRIVER=mysql2",
+          "DB_DIALECT=mysql",
+          "DB_HOST=127.0.0.1",
+          `DB_PORT=${port}`,
+          "DB_USER=root",
+          `DB_PASSWORD=${password}`,
+          "DB_NAME=homarr",
+          "SKIP_ENV_VALIDATION=true",
+          "NO_EXTERNAL_CONNECTION=true",
+          `SECRET_ENCRYPTION_KEY=${"0".repeat(64)}`,
+        ].join("\n") + "\n",
+        { mode: 0o600 },
+      );
+      await exec(
+        "docker",
+        [
+          "run",
+          "--rm",
+          "--network",
+          "host",
+          "--env-file",
+          environmentFile,
+          "--entrypoint",
+          "node",
+          sourceImage,
+          "/app/db/migrations/mysql/migrate.cjs",
+          "/app/db/migrations/mysql",
+        ],
+        { timeout: 120_000, maxBuffer: 8 * 1024 * 1024 },
+      );
+    } finally {
+      await rm(environmentDirectory, { recursive: true, force: true });
     }
     await connection.query("SET FOREIGN_KEY_CHECKS = 0");
+    // Replace release seed rows with deterministic user data, leaving the real
+    // release's schema and migration bookkeeping intact.
+    const [tables] = await connection.query("SHOW TABLES");
+    for (const table of tables) {
+      const name = Object.values(table)[0];
+      if (name !== "__drizzle_migrations") await connection.query(`DELETE FROM ${quote(name)}`);
+    }
     for (const table of schema.tables) {
       const values = Object.fromEntries(
         table.columns.map((column) => {
