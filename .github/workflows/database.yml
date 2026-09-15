@@ -87,6 +87,8 @@ jobs:
           persist-credentials: false
           ref: ${{ inputs.ref || '' }}
       - uses: ./tooling/github/setup
+      - name: Reject retired database configuration
+        run: pnpm exec vitest run --project dom packages/core/src/infrastructure/db/env.spec.ts
       - run: pnpm exec vitest run --project db-node --project integration packages/db/test/sqlite-migration.spec.ts packages/db/test/postgresql-migration.spec.ts packages/db/proxy-reader.integration.spec.ts --maxWorkers 1
 
   converter:

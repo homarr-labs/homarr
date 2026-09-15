@@ -72,10 +72,7 @@
           "encoding": "text"
         }
       ],
-      "orderBy": [
-        "provider",
-        "provider_account_id"
-      ]
+      "orderBy": ["provider", "provider_account_id"]
     },
     {
       "name": "apiKey",
@@ -99,9 +96,7 @@
           "encoding": "text"
         }
       ],
-      "orderBy": [
-        "id"
-      ]
+      "orderBy": ["id"]
     },
     {
       "name": "app",
@@ -143,9 +138,7 @@
           "encoding": "text"
         }
       ],
-      "orderBy": [
-        "id"
-      ]
+      "orderBy": ["id"]
     },
     {
       "name": "boardGroupPermission",
@@ -169,11 +162,7 @@
           "encoding": "text"
         }
       ],
-      "orderBy": [
-        "board_id",
-        "group_id",
-        "permission"
-      ]
+      "orderBy": ["board_id", "group_id", "permission"]
     },
     {
       "name": "boardUserPermission",
@@ -197,11 +186,7 @@
           "encoding": "text"
         }
       ],
-      "orderBy": [
-        "board_id",
-        "user_id",
-        "permission"
-      ]
+      "orderBy": ["board_id", "user_id", "permission"]
     },
     {
       "name": "board",
@@ -321,9 +306,7 @@
           "encoding": "boolean"
         }
       ],
-      "orderBy": [
-        "id"
-      ]
+      "orderBy": ["id"]
     },
     {
       "name": "cron_job_configuration",
@@ -347,9 +330,7 @@
           "encoding": "boolean"
         }
       ],
-      "orderBy": [
-        "name"
-      ]
+      "orderBy": ["name"]
     },
     {
       "name": "custom_widget_definition",
@@ -445,9 +426,7 @@
           "encoding": "boolean"
         }
       ],
-      "orderBy": [
-        "id"
-      ]
+      "orderBy": ["id"]
     },
     {
       "name": "custom_widget_secret",
@@ -477,10 +456,7 @@
           "encoding": "text"
         }
       ],
-      "orderBy": [
-        "definition_id",
-        "kind"
-      ]
+      "orderBy": ["definition_id", "kind"]
     },
     {
       "name": "groupMember",
@@ -498,10 +474,7 @@
           "encoding": "text"
         }
       ],
-      "orderBy": [
-        "group_id",
-        "user_id"
-      ]
+      "orderBy": ["group_id", "user_id"]
     },
     {
       "name": "groupPermission",
@@ -519,10 +492,7 @@
           "encoding": "text"
         }
       ],
-      "orderBy": [
-        "group_id",
-        "permission"
-      ]
+      "orderBy": ["group_id", "permission"]
     },
     {
       "name": "group",
@@ -564,9 +534,7 @@
           "encoding": "integer"
         }
       ],
-      "orderBy": [
-        "id"
-      ]
+      "orderBy": ["id"]
     },
     {
       "name": "iconRepository",
@@ -584,9 +552,7 @@
           "encoding": "text"
         }
       ],
-      "orderBy": [
-        "id"
-      ]
+      "orderBy": ["id"]
     },
     {
       "name": "icon",
@@ -622,9 +588,7 @@
           "encoding": "text"
         }
       ],
-      "orderBy": [
-        "id"
-      ]
+      "orderBy": ["id"]
     },
     {
       "name": "integrationGroupPermissions",
@@ -648,11 +612,7 @@
           "encoding": "text"
         }
       ],
-      "orderBy": [
-        "integration_id",
-        "group_id",
-        "permission"
-      ]
+      "orderBy": ["integration_id", "group_id", "permission"]
     },
     {
       "name": "integration_item",
@@ -670,10 +630,7 @@
           "encoding": "text"
         }
       ],
-      "orderBy": [
-        "item_id",
-        "integration_id"
-      ]
+      "orderBy": ["item_id", "integration_id"]
     },
     {
       "name": "integrationSecret",
@@ -703,10 +660,7 @@
           "encoding": "text"
         }
       ],
-      "orderBy": [
-        "integration_id",
-        "kind"
-      ]
+      "orderBy": ["integration_id", "kind"]
     },
     {
       "name": "integrationUserPermission",
@@ -730,11 +684,7 @@
           "encoding": "text"
         }
       ],
-      "orderBy": [
-        "integration_id",
-        "user_id",
-        "permission"
-      ]
+      "orderBy": ["integration_id", "user_id", "permission"]
     },
     {
       "name": "integration",
@@ -770,9 +720,7 @@
           "encoding": "text"
         }
       ],
-      "orderBy": [
-        "id"
-      ]
+      "orderBy": ["id"]
     },
     {
       "name": "invite",
@@ -802,9 +750,7 @@
           "encoding": "text"
         }
       ],
-      "orderBy": [
-        "id"
-      ]
+      "orderBy": ["id"]
     },
     {
       "name": "item_layout",
@@ -852,11 +798,7 @@
           "encoding": "integer"
         }
       ],
-      "orderBy": [
-        "item_id",
-        "section_id",
-        "layout_id"
-      ]
+      "orderBy": ["item_id", "section_id", "layout_id"]
     },
     {
       "name": "item",
@@ -892,9 +834,7 @@
           "encoding": "text"
         }
       ],
-      "orderBy": [
-        "id"
-      ]
+      "orderBy": ["id"]
     },
     {
       "name": "layout",
@@ -930,9 +870,7 @@
           "encoding": "integer"
         }
       ],
-      "orderBy": [
-        "id"
-      ]
+      "orderBy": ["id"]
     },
     {
       "name": "media",
@@ -980,9 +918,7 @@
           "encoding": "text"
         }
       ],
-      "orderBy": [
-        "id"
-      ]
+      "orderBy": ["id"]
     },
     {
       "name": "onboarding",
@@ -1006,9 +942,7 @@
           "encoding": "text"
         }
       ],
-      "orderBy": [
-        "id"
-      ]
+      "orderBy": ["id"]
     },
     {
       "name": "search_engine",
@@ -1062,9 +996,7 @@
           "encoding": "text"
         }
       ],
-      "orderBy": [
-        "id"
-      ]
+      "orderBy": ["id"]
     },
     {
       "name": "section_collapse_state",
@@ -1088,10 +1020,7 @@
           "encoding": "boolean"
         }
       ],
-      "orderBy": [
-        "user_id",
-        "section_id"
-      ]
+      "orderBy": ["user_id", "section_id"]
     },
     {
       "name": "section_layout",
@@ -1139,10 +1068,7 @@
           "encoding": "integer"
         }
       ],
-      "orderBy": [
-        "section_id",
-        "layout_id"
-      ]
+      "orderBy": ["section_id", "layout_id"]
     },
     {
       "name": "section",
@@ -1190,9 +1116,7 @@
           "encoding": "text"
         }
       ],
-      "orderBy": [
-        "id"
-      ]
+      "orderBy": ["id"]
     },
     {
       "name": "serverSetting",
@@ -1210,9 +1134,7 @@
           "encoding": "text"
         }
       ],
-      "orderBy": [
-        "setting_key"
-      ]
+      "orderBy": ["setting_key"]
     },
     {
       "name": "session",
@@ -1236,9 +1158,7 @@
           "encoding": "milliseconds"
         }
       ],
-      "orderBy": [
-        "session_token"
-      ]
+      "orderBy": ["session_token"]
     },
     {
       "name": "user",
@@ -1352,9 +1272,7 @@
           "encoding": "boolean"
         }
       ],
-      "orderBy": [
-        "id"
-      ]
+      "orderBy": ["id"]
     },
     {
       "name": "verificationToken",
@@ -1378,10 +1296,7 @@
           "encoding": "milliseconds"
         }
       ],
-      "orderBy": [
-        "identifier",
-        "token"
-      ]
+      "orderBy": ["identifier", "token"]
     },
     {
       "name": "trusted_certificate_hostname",
@@ -1405,10 +1320,7 @@
           "encoding": "text"
         }
       ],
-      "orderBy": [
-        "hostname",
-        "thumbprint"
-      ]
+      "orderBy": ["hostname", "thumbprint"]
     },
     {
       "name": "widget_secret",
@@ -1438,10 +1350,7 @@
           "encoding": "seconds"
         }
       ],
-      "orderBy": [
-        "item_id",
-        "kind"
-      ]
+      "orderBy": ["item_id", "kind"]
     }
   ]
 }

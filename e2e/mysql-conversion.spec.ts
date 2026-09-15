@@ -1,4 +1,6 @@
-import { mkdir, mkdtemp, rm } from "node:fs/promises";
+import { execFile } from "node:child_process";
+import { mkdir, mkdtemp, readdir, rm } from "node:fs/promises";
+import { promisify } from "node:util";
 import path from "node:path";
 
 import { chromium, expect as expectBrowser } from "@playwright/test";
@@ -119,3 +121,41 @@ test("converted MySQL data boots, authenticates and survives a v2 restart", asyn
     await rm(appdata, { recursive: true, force: true });
   }
 }, 180_000);
+
+test("retired MySQL settings fail before creating application data", async () => {
+  const root = path.join(__dirname, "tmp");
+  await mkdir(root, { recursive: true });
+  const image = process.env.HOMARR_E2E_IMAGE?.trim() || "homarr-e2e";
+  for (const setting of ["DB_DRIVER=mysql2", "DB_DIALECT=mysql", "DB_URL=mysql://unused.invalid/homarr"]) {
+    const appdata = await mkdtemp(path.join(root, "mysql-rejection-"));
+    const containerName = path.basename(appdata);
+    try {
+      await expect(
+        promisify(execFile)(
+          "docker",
+          [
+            "run",
+            "--rm",
+            "--name",
+            containerName,
+            "--network",
+            "none",
+            "--mount",
+            `type=bind,source=${appdata},target=/appdata`,
+            "-e",
+            setting,
+            image,
+          ],
+          { timeout: 15_000 },
+        ),
+      ).rejects.toMatchObject({
+        code: 1,
+        stdout: expect.stringContaining("MySQL is no longer supported in v2. Use the MySQL-to-SQLite converter"),
+      });
+      expect(await readdir(appdata)).toEqual([]);
+    } finally {
+      await promisify(execFile)("docker", ["rm", "--force", containerName]).catch(() => undefined);
+      await rm(appdata, { recursive: true, force: true });
+    }
+  }
+}, 60_000);
