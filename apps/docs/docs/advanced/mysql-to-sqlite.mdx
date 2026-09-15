@@ -1,0 +1,66 @@
+---
+title: Move from MySQL to SQLite
+---
+
+# Move from MySQL to SQLite
+
+Homarr v2 supports SQLite (the default) and PostgreSQL. MySQL installations must convert before upgrading to v2.
+
+The standalone converter is tested against the **Homarr v1.77.1 database schema** and writes its corresponding SQLite database. Homarr v2 applies its normal migrations when it first opens that file. The converter does not modify the source database.
+
+## Before converting
+
+1. Back up the MySQL database, `/appdata`, your deployment configuration, and `SECRET_ENCRYPTION_KEY`. Keep the previous Homarr image available for rollback.
+2. Upgrade to the latest stable v1 release (**v1.77.1** at the tested baseline) first and let its migrations finish successfully. Back up that database before continuing.
+3. Stop every Homarr instance that writes to this database. Leave MySQL running and keep Homarr stopped throughout conversion and cutover.
+
+The converter validates the schema and migration journal against v1.77.1; it does not identify the application binary version. Older releases with identical schemas are compatible. Different schemas, incomplete migrations, and existing output files are rejected.
+
+## Convert
+
+From a checkout containing `tools/mysql-to-sqlite`, build the converter:
+
+```sh
+docker build -t homarr-mysql-to-sqlite tools/mysql-to-sqlite
+mkdir -p converted
+```
+
+Create `mysql-conversion.env` with credentials for the source database:
+
+```dotenv
+MYSQL_HOST=mysql.example.com
+MYSQL_PORT=3306
+MYSQL_USER=homarr
+MYSQL_PASSWORD=replace-with-your-password
+MYSQL_DATABASE=homarr
+```
+
+`MYSQL_PORT` defaults to `3306`. Use a host reachable from the converter container; `localhost` refers to the container itself. Keep this credentials file out of version control.
+
+Run the converter after stopping Homarr:
+
+```sh
+docker run --rm --user "$(id -u):$(id -g)" --env-file mysql-conversion.env \
+  -v "$(pwd)/converted:/output" \
+  homarr-mysql-to-sqlite --output /output/db.sqlite --homarr-stopped
+```
+
+Running as your user keeps the output file readable by you. The required `--homarr-stopped` flag confirms that you stopped Homarr; it does not stop your deployment. Wait for the converter to exit successfully before using `converted/db.sqlite`.
+
+For a TLS connection, add `MYSQL_SSL_CA=/certs/mysql-ca.pem` to the env file and mount the PEM certificate with `-v "$(pwd)/mysql-ca.pem:/certs/mysql-ca.pem:ro"`. The certificate file must be readable by the container user.
+
+## Start Homarr v2
+
+1. Keep a separate copy of the converted file before the first v2 startup.
+2. Place `db.sqlite` at `/appdata/db/db.sqlite` in the appdata volume used by Homarr. Ensure the Homarr process can write to the file and its directory.
+3. Set `DB_DRIVER=better-sqlite3` and `DB_URL=/appdata/db/db.sqlite`. Remove the previous MySQL connection settings; if you explicitly set `DB_DIALECT`, change it to `sqlite`.
+4. Preserve the original `/appdata` files and **the same `SECRET_ENCRYPTION_KEY`**. The converter copies encrypted values without re-encrypting them; a different key will make those secrets unreadable.
+5. Start Homarr v2 and wait for its database migrations to finish. Check the startup logs, sign in, and verify your boards, users, integrations, and uploaded files.
+
+The converter output is a raw SQLite database. Do not upload it to the backup ZIP import page.
+
+## Roll back
+
+Stop Homarr v2, then restore your previous deployment configuration, image, appdata backup, and encryption key, pointing it at the preserved MySQL database. Do not open the v2 SQLite database with the older Homarr image.
+
+Changes made after switching to SQLite are not synchronized back to MySQL. Keep the original database and backups until you have verified the new installation.

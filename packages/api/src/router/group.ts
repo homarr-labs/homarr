@@ -1,5 +1,3 @@
-import type { MySqlRawQueryResult } from "drizzle-orm/mysql2";
-import type { QueryResult } from "pg";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
@@ -195,13 +193,11 @@ export const groupRouter = createTRPCRouter({
       await handleTransactionsAsync(ctx.db, {
         async handleAsync(db, schema) {
           await db.transaction(async (transaction) => {
-            const transitionResult = (await transaction
+            const transitionResult = await transaction
               .update(schema.onboarding)
               .set({ previousStep: "group", step: "setup" })
-              .where(eq(schema.onboarding.step, "group"))) as MySqlRawQueryResult | QueryResult;
-            const transitionedRows = Array.isArray(transitionResult)
-              ? transitionResult[0].affectedRows
-              : (transitionResult.rowCount ?? 0);
+              .where(eq(schema.onboarding.step, "group"));
+            const transitionedRows = transitionResult.rowCount ?? 0;
             if (transitionedRows !== 1) {
               throw new TRPCError({ code: "CONFLICT", message: "The initial external group was already created." });
             }

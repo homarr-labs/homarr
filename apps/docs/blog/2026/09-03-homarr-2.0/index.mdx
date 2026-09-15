@@ -21,7 +21,22 @@ Homarr 2.0 builds on the dashboard you already use. Here is what changed.
 
 <!-- truncate -->
 
-Update your Homarr image as usual. Homarr runs database migrations automatically when the updated container starts; no manual database migration or separate v2 upgrade procedure is needed. Workshop uses the production service by default, with no preview URL configuration required.
+SQLite and PostgreSQL users can update their Homarr image as usual; database migrations run automatically at startup. **MySQL users must convert before upgrading**, as explained below. Workshop uses the production service by default, with no preview URL configuration required.
+
+## Database support in v2
+
+Homarr v2 drops MySQL support and keeps SQLite (the default) and PostgreSQL. Supporting fewer database engines lets us focus migration testing on those two. Existing MySQL installations have a standalone conversion script to move their data to SQLite before upgrading.
+
+<details>
+<summary>Using MySQL? How to migrate</summary>
+
+1. Update to the latest stable v1 release, then back up your MySQL database, appdata, and encryption key.
+2. Stop Homarr and run the MySQL-to-SQLite converter. It checks the copied data and leaves MySQL unchanged.
+3. Start v2 with the converted database, your existing appdata, and the **same `SECRET_ENCRYPTION_KEY`**.
+
+The converter is verified against the v1.77.1 schema and rejects unknown schemas. See the [migration guide](/docs/advanced/mysql-to-sqlite) for commands, supported inputs, and rollback instructions.
+
+</details>
 
 ## Custom Widgets v2 and Workshop
 

@@ -10,6 +10,8 @@ on:
   push:
     branches: [main, dev, beta, next, v2, release/v2]
   merge_group:
+  release:
+    types: [published]
   workflow_dispatch:
     inputs:
       operation:
@@ -47,9 +49,17 @@ env:
   PREVIEW_IMAGE: ghcr.io/homarr-labs/homarr-test
 
 jobs:
+  database-validation:
+    name: Database validation
+    if: github.event_name != 'pull_request_target' && (github.event_name != 'release' || startsWith(github.event.release.tag_name, 'v2.')) && (github.event_name != 'workflow_dispatch' || inputs.operation != 'cleanup')
+    uses: ./.github/workflows/database.yml
+    with:
+      ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || '' }}
+
   fast-gate:
     name: Fast gate
-    if: github.event_name != 'pull_request_target' && (github.event_name != 'workflow_dispatch' || inputs.operation != 'cleanup')
+    needs: database-validation
+    if: ${{ !cancelled() && github.event_name != 'pull_request_target' && (github.event_name != 'release' || startsWith(github.event.release.tag_name, 'v2.')) && (github.event_name != 'workflow_dispatch' || inputs.operation != 'cleanup') }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
@@ -61,6 +71,11 @@ jobs:
       TURBO_SCM_HEAD: ${{ github.sha }}
       TURBO_PLATFORM: linux/amd64
     steps:
+      - name: Require database validation
+        env:
+          DATABASE_RESULT: ${{ needs.database-validation.result }}
+        run: test "$DATABASE_RESULT" = success
+
       - uses: actions/checkout@v7
         if: "!env.ACT"
         with:
@@ -101,28 +116,42 @@ jobs:
           pnpm check:custom-widget-bundle
 
   container:
-    name: Container build
-    # Same-repository previews already build amd64; only build a fallback when no digest is available.
+    name: Container and migration smoke
+    # Reuse the preview image; only the converter startup/restart smoke runs here.
     needs: [fast-gate, preview-amd64]
     if: |
       !cancelled() && needs.fast-gate.result == 'success' &&
-      needs.preview-amd64.result != 'failure' && needs.preview-amd64.outputs.digest == '' &&
+      needs.preview-amd64.result != 'failure' &&
       (
         github.event_name == 'merge_group' ||
-        (github.event_name == 'push' && github.ref == 'refs/heads/release/v2') ||
+        (github.event_name == 'push' && (github.ref == 'refs/heads/release/v2' || github.ref == 'refs/heads/v2')) ||
+        (github.event_name == 'release' && startsWith(github.event.release.tag_name, 'v2.')) ||
         (github.event_name == 'pull_request' && github.event.pull_request.draft == false) ||
         (github.event_name == 'workflow_dispatch' && (inputs.operation == 'validate' || inputs.operation == 'publish'))
       )
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     permissions:
       contents: read
+      packages: read
     steps:
       - uses: actions/checkout@v7
         if: "!env.ACT"
         with:
           persist-credentials: false
           ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || '' }}
+
+      - name: Setup
+        uses: ./tooling/github/setup
+
+      - name: Reuse amd64 preview image
+        if: needs.preview-amd64.outputs.digest != '' && !env.ACT
+        env:
+          DIGEST: ${{ needs.preview-amd64.outputs.digest }}
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          docker pull "${PREVIEW_IMAGE}@${DIGEST}"
+          docker tag "${PREVIEW_IMAGE}@${DIGEST}" homarr-e2e
 
       - name: Set up Docker Buildx
         if: needs.preview-amd64.outputs.digest == '' && !env.ACT
@@ -137,7 +166,9 @@ jobs:
           platforms: linux/amd64
           load: true
           push: false
-          tags: homarr-ci
+          tags: |
+            homarr-ci
+            homarr-e2e
           labels: |
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
             org.opencontainers.image.revision=${{ github.sha }}
@@ -165,7 +196,40 @@ jobs:
             fi
           done
           DOCKER_BUILDKIT=1 docker build --platform linux/amd64 \
-            --tag homarr-ci "${secret_args[@]}" .
+            --tag homarr-ci --tag homarr-e2e "${secret_args[@]}" .
+
+      - name: Cache Playwright browsers
+        if: "!env.ACT"
+        id: playwright-cache
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Install Playwright Chromium
+        if: steps.playwright-cache.outputs.cache-hit != 'true' || env.ACT
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Install Playwright system deps
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: pnpm exec playwright install-deps chromium
+
+      - name: Install standalone converter test dependencies
+        run: npm ci --prefix tools/mysql-to-sqlite
+
+      - name: Verify converted database boots and survives restart
+        env:
+          NODE_ENV: development
+          CI: "true"
+        run: pnpm exec vitest run --project e2e e2e/mysql-conversion.spec.ts --maxWorkers 1
+
+      - name: Upload E2E artifacts
+        if: failure() && !env.ACT
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report
+          path: e2e/test-results/
+          retention-days: 7
 
   preview-amd64:
     name: Build amd64 preview image
@@ -273,10 +337,11 @@ jobs:
 
   publish-preview:
     name: Publish multi-platform preview image
-    needs: [fast-gate, preview-amd64, preview-arm64]
+    needs: [fast-gate, container, preview-amd64, preview-arm64]
     if: |
       !cancelled() &&
       needs.fast-gate.result == 'success' &&
+      needs.container.result == 'success' &&
       needs.preview-amd64.result == 'success' &&
       needs.preview-arm64.result == 'success' &&
       (

@@ -1,5 +1,17 @@
 #!/usr/bin/env bash
 
+# Check before creating SQLite files or invoking a removed migration bundle.
+reject_mysql() {
+  echo "ERROR: MySQL is no longer supported in v2. Use the MySQL-to-SQLite converter before starting Homarr."
+  exit 1
+}
+case "$DB_DIALECT:$DB_DRIVER" in
+  mysql:*|mariadb:*|*:mysql2|*:mysql|*:mariadb) reject_mysql ;;
+esac
+case "$DB_URL" in
+  [mM][yY][sS][qQ][lL]:*|[mM][aA][rR][iI][aA][dD][bB]:*) reject_mysql ;;
+esac
+
 # Create sub directories in volume
 mkdir -p /appdata/db
 mkdir -p /appdata/redis

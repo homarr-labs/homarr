@@ -5,7 +5,6 @@ import { configDefaults, defineConfig } from "vitest/config";
 // Docker-backed suites are opt-in through pnpm test:integration.
 const integrationTests = [
   "**/*.integration.spec.ts",
-  "packages/db/test/mysql-migration.spec.ts",
   "packages/db/test/postgresql-migration.spec.ts",
   "packages/integrations/test/aria2.spec.ts",
   "packages/integrations/test/home-assistant.spec.ts",
@@ -46,7 +45,7 @@ export default defineConfig({
           name: "db-node",
           environment: "node",
           setupFiles: ["./vitest.setup.ts", "./vitest.setup.node.ts"],
-          include: ["packages/db/test/**/*.spec.ts"],
+          include: ["packages/db/test/**/*.spec.ts", "packages/db/proxy-reader*.spec.ts"],
           exclude: [...configDefaults.exclude, ...integrationTests],
         },
       },

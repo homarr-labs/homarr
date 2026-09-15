@@ -4703,7 +4703,7 @@
             "title": "Análises",
             "general": {
               "title": "Enviar análises anônimas",
-              "text": "O Homarr enviará análises anonimizadas usando o software de código aberto Umami. Quando habilitado, coletamos: versão do Homarr, tipo de banco de dados (MySQL/PostgreSQL/SQLite), status Docker/Kubernetes, métodos de autenticação habilitados e a quantidade de cada recurso. Todos os dados são anônimos e agregados - nenhuma informação pessoal, URLs, nomes ou dados identificáveis são coletados. Isso ajuda nossa equipe de código aberto a entender padrões de uso e priorizar o desenvolvimento."
+              "text": "O Homarr enviará análises anonimizadas usando o software de código aberto Umami. Quando habilitado, coletamos: versão do Homarr, tipo de banco de dados (PostgreSQL/SQLite), status Docker/Kubernetes, métodos de autenticação habilitados e a quantidade de cada recurso. Todos os dados são anônimos e agregados - nenhuma informação pessoal, URLs, nomes ou dados identificáveis são coletados. Isso ajuda nossa equipe de código aberto a entender padrões de uso e priorizar o desenvolvimento."
             }
           },
           "crawlingAndIndexing": {

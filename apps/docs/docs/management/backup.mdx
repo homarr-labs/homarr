@@ -9,9 +9,11 @@ tags:
 # Backup and restore
 
 Administrators using SQLite can export and restore the complete Homarr database under
-**Management → Tools → Backup**. MySQL and PostgreSQL installations must use their database-native backup tools.
+**Management → Tools → Backup**. PostgreSQL installations must use their database-native backup tools.
 
 ![The Backup and restore management page](./img/backup.png)
+
+For an existing MySQL installation, [convert to SQLite before upgrading to v2](/docs/advanced/mysql-to-sqlite). The converter produces a database file, not a backup ZIP.
 
 ## Export
 

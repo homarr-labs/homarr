@@ -4720,7 +4720,7 @@
             "title": "Nutzungsdaten",
             "general": {
               "title": "Anonymisierte Nutzungsdaten senden",
-              "text": "Homarr sendet anonymisierte Analysen mit der Open-Source-Software Umami. Wenn aktiviert, sammeln wir die Homarr-Version, den Datenbanktyp (MySQL/PostgreSQL/SQLite), den Docker/Kubernetes Status, die Authentifizierungsmethoden und die Anzahl der einzelnen Features. Alle Daten sind anonym und aggregiert - es werden keine persönlichen Informationen, URLs, Namen oder identifizierbare Daten gesammelt. Dies hilft unserem Open-Source-Team, Nutzungsmuster zu verstehen und der Entwicklung Priorität einzuräumen."
+              "text": "Homarr sendet anonymisierte Analysen mit der Open-Source-Software Umami. Wenn aktiviert, sammeln wir die Homarr-Version, den Datenbanktyp (PostgreSQL/SQLite), den Docker/Kubernetes Status, die Authentifizierungsmethoden und die Anzahl der einzelnen Features. Alle Daten sind anonym und aggregiert - es werden keine persönlichen Informationen, URLs, Namen oder identifizierbare Daten gesammelt. Dies hilft unserem Open-Source-Team, Nutzungsmuster zu verstehen und der Entwicklung Priorität einzuräumen."
             }
           },
           "crawlingAndIndexing": {

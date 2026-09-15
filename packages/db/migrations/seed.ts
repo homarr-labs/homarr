@@ -898,6 +898,8 @@ const buildDemoWidgets = (appIds: string[], customWidgetDefinitionId: string): D
     options: { websiteId: "homarr-demo", timeFrame: "24h", viewMode: "chart", chartType: "bar" },
   },
 
+  { kind: "llamacpp", xOffset: 0, yOffset: 36, width: 12, height: 3, needsIntegration: true },
+
   // Right app rail
   ...appIds.map(
     (appId, index): DemoWidget => ({

@@ -12,7 +12,7 @@ import { describe, expect, test } from "vitest";
  *   `checkConstraint`, which made `drizzle-kit generate` reject the folder and silently exit 0 for
  *   every later MySQL migration.
  */
-const dialects = ["mysql", "postgresql", "sqlite"] as const;
+const dialects = ["postgresql", "sqlite"] as const;
 
 const migrationsRoot = path.join(__dirname, "..", "migrations");
 
