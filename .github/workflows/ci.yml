@@ -53,8 +53,6 @@ jobs:
     name: Database validation
     if: github.event_name != 'pull_request_target' && (github.event_name != 'release' || startsWith(github.event.release.tag_name, 'v2.')) && (github.event_name != 'workflow_dispatch' || inputs.operation != 'cleanup')
     uses: ./.github/workflows/database.yml
-    with:
-      ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || '' }}
 
   fast-gate:
     name: Fast gate

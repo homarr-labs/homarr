@@ -2,17 +2,7 @@ name: Database migrations
 
 on:
   workflow_call:
-    inputs:
-      ref:
-        type: string
-        required: false
-        default: ""
   workflow_dispatch:
-    inputs:
-      ref:
-        type: string
-        required: false
-        description: Git ref to validate (defaults to selected branch)
 
 permissions:
   contents: read
@@ -34,7 +24,6 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-          ref: ${{ inputs.ref || '' }}
       - name: Select database checks
         id: select
         env:
@@ -71,7 +60,6 @@ jobs:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
-          ref: ${{ inputs.ref || '' }}
       - uses: ./tooling/github/setup
       - run: pnpm exec vitest run --project db-node packages/db/test/migration-journal.spec.ts
 
@@ -85,7 +73,6 @@ jobs:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
-          ref: ${{ inputs.ref || '' }}
       - uses: ./tooling/github/setup
       - name: Reject retired database configuration
         run: pnpm exec vitest run --project dom packages/core/src/infrastructure/db/env.spec.ts
@@ -101,7 +88,6 @@ jobs:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
-          ref: ${{ inputs.ref || '' }}
       - uses: actions/setup-node@v6
         with:
           node-version: 24.18.0
