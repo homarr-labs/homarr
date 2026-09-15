@@ -236,6 +236,16 @@ const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string;
   );
 
   useEffect(() => {
+    if (submission?.id !== submissionId || notFound) return;
+    // Valid details hydrate from the static 404 shell, which restores its robots tag.
+    const tags = [...document.querySelectorAll<HTMLMetaElement>('meta[name="robots"]')].filter((tag) =>
+      tag.content.includes("noindex"),
+    );
+    tags.forEach((tag) => tag.remove());
+    return () => tags.forEach((tag) => document.head.append(tag));
+  }, [submission?.id, submissionId, notFound]);
+
+  useEffect(() => {
     void backend.refreshAuth();
     return backend.subscribeToAuth(setUser);
   }, [backend]);
