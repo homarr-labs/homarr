@@ -22,18 +22,39 @@ const workshopDetailPage = (event) => {
   if (id === "admin") return event.fileFS($os.dirFS("/pb_public"), "workshop/admin/index.html");
 
   const indexHtml = toString($os.readFile("/pb_public/404.html"));
+  const remoteApiUrl = String($os.getenv("WORKSHOP_REMOTE_API_URL") || "")
+    .replace(/\/$/, "")
+    .replace(/\/api$/, "");
   try {
     const { renderWorkshopSocialHtml } = require(`${__hooks}/workshop-utils.js`);
-    const submission = event.app.findRecordById("submissions", id);
-    const type = submission.getString("type");
+    let submission;
+    if (remoteApiUrl) {
+      const response = $http.send({
+        url: `${remoteApiUrl}/api/collections/workshop_listings/records/${encodeURIComponent(id)}`,
+        timeout: 5,
+      });
+      if (response.statusCode === 404) return event.html(404, indexHtml);
+      if (response.statusCode !== 200) return event.html(503, indexHtml);
+      submission = response.json;
+    } else {
+      const record = event.app.findRecordById("submissions", id);
+      submission = {
+        id: record.id,
+        type: record.getString("type"),
+        title: record.getString("title"),
+        description: record.getString("description"),
+        screenshots: record.getStringSlice("screenshots"),
+      };
+    }
+    const type = submission.type;
     const section = type === "customCss" ? "Custom CSS" : "Custom widget";
-    const submissionTitle = submission.getString("title");
+    const submissionTitle = submission.title;
     const title = `${submissionTitle} · Homarr Workshop`;
-    const description = `${section} for Homarr. ${submission.getString("description")}`.trim();
+    const description = `${section} for Homarr. ${submission.description}`.trim();
     const workshopUrl = $os.getenv("WORKSHOP_WEB_URL").replace(/\/$/, "");
-    const apiUrl = $os.getenv("WORKSHOP_API_URL").replace(/\/$/, "");
+    const apiUrl = remoteApiUrl || $os.getenv("WORKSHOP_API_URL").replace(/\/$/, "");
     const websiteUrl = $os.getenv("HOMARR_WEBSITE_URL").replace(/\/$/, "");
-    const screenshot = submission.getStringSlice("screenshots")[0];
+    const screenshot = submission.screenshots[0];
     const image = screenshot
       ? `${apiUrl}/api/files/submissions/${submission.id}/${encodeURIComponent(screenshot)}`
       : `${websiteUrl}/img/logo.png`;
@@ -50,7 +71,7 @@ const workshopDetailPage = (event) => {
       }),
     );
   } catch {
-    return event.html(404, indexHtml);
+    return event.html(remoteApiUrl ? 503 : 404, indexHtml);
   }
 };
 

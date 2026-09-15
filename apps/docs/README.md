@@ -43,9 +43,16 @@ WORKSHOP_API_URL=https://v2.preview.homarr.dev/api/ sh apps/workshop/preview-doc
 Open `http://127.0.0.1:8093/docs/`. This starts an isolated PocketBase container with temporary local data and serves
 the export directly, including search, Markdown, and the custom 404 page. Workshop browser requests use the configured
 backend; a trailing `/api/` is removed because the PocketBase SDK appends its API paths. The preview does not copy or
-migrate the remote database. Workshop social metadata is based on the isolated local database.
-Remote-only Workshop items return HTTP 404 from this preview's empty local database, then load their content from the
-configured backend in the browser. Production serves known items from its own database with HTTP 200 and item metadata.
+migrate the remote database. `WORKSHOP_REMOTE_API_URL` makes the preview fetch public item metadata from that same
+remote backend, so direct item links return HTTP 200 with the correct title and social metadata. Missing remote items
+return 404; an unavailable backend returns 503. Production omits this preview setting and uses its own database.
+
+Verify public item pages without changing the remote database:
+
+```bash
+WORKSHOP_TEST_URL=http://127.0.0.1:8093 WORKSHOP_REMOTE_API_URL=https://v2.preview.homarr.dev/api/ \
+  node apps/workshop/tests/remote-workshop.integration.mjs
+```
 
 Stop it with `docker stop homarr-docs-static-preview`. Rebuild and restart the preview after changing source files;
 startup recreates the runtime configuration. `DOCS_PREVIEW_PORT`, `DOCS_PREVIEW_HOST`, and `DOCS_PREVIEW_NAME` override

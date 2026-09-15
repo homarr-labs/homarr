@@ -28,6 +28,7 @@ docker run --detach --rm --name "$preview_name" \
   --tmpfs "/pb_data:uid=$(id -u),gid=$(id -g)" \
   --env "HOMARR_WEBSITE_URL=$preview_url" \
   --env "WORKSHOP_API_URL=$api_url" \
+  --env "WORKSHOP_REMOTE_API_URL=$api_url" \
   --env "WORKSHOP_WEB_URL=$preview_url/workshop" \
   "$preview_image"
 
