@@ -1,6 +1,4 @@
 import { TRPCError } from "@trpc/server";
-import type { MySqlRawQueryResult } from "drizzle-orm/mysql2";
-import type { QueryResult } from "pg";
 import { z } from "zod/v4";
 
 import { comparePasswordsAsync, hashPasswordAsync } from "@homarr/auth";
@@ -137,15 +135,8 @@ export const userRouter = createTRPCRouter({
             await trx.insert(schema.users).values(user);
 
             // Delete invite as it's used
-            const queryResult = (await trx.delete(schema.invites).where(inviteWhere)) as
-              | QueryResult
-              | MySqlRawQueryResult;
-            let count: number;
-            if (Array.isArray(queryResult)) {
-              count = queryResult[0].affectedRows;
-            } else {
-              count = queryResult.rowCount ?? 0;
-            }
+            const queryResult = await trx.delete(schema.invites).where(inviteWhere);
+            const count = queryResult.rowCount ?? 0;
             if (count === 0) {
               throw new TRPCError({
                 code: "FORBIDDEN",

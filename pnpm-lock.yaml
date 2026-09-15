@@ -207,9 +207,6 @@ catalogs:
     '@tanstack/react-query-persist-client':
       specifier: ^5.101.2
       version: 5.101.2
-    '@testcontainers/mysql':
-      specifier: ^12.0.4
-      version: 12.0.4
     '@testcontainers/postgresql':
       specifier: ^12.0.4
       version: 12.0.4
@@ -504,9 +501,6 @@ catalogs:
     mermaid:
       specifier: ^11.15.0
       version: 11.15.0
-    mysql2:
-      specifier: 3.22.6
-      version: 3.22.6
     next:
       specifier: 16.3.1
       version: 16.3.1
@@ -1753,9 +1747,6 @@ importers:
       ioredis:
         specifier: 'catalog:'
         version: 5.11.1(supports-color@10.2.2)
-      mysql2:
-        specifier: 'catalog:'
-        version: 3.22.6(@types/node@24.13.3)
       pg:
         specifier: 'catalog:'
         version: 8.22.0
@@ -2007,9 +1998,6 @@ importers:
       '@paralleldrive/cuid2':
         specifier: 'catalog:'
         version: 3.3.0
-      '@testcontainers/mysql':
-        specifier: 'catalog:'
-        version: 12.0.4(supports-color@10.2.2)
       '@testcontainers/postgresql':
         specifier: 'catalog:'
         version: 12.0.4(supports-color@10.2.2)
@@ -2028,9 +2016,6 @@ importers:
       drizzle-zod:
         specifier: 'catalog:'
         version: 0.8.3(drizzle-orm@0.45.2(@libsql/client-wasm@0.14.0)(@opentelemetry/api@1.9.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.11.1)(gel@2.0.0(supports-color@10.2.2))(kysely@0.29.2)(mysql2@3.22.6(@types/node@24.13.3))(pg@8.22.0)(sql.js@1.14.1))(zod@4.4.3)
-      mysql2:
-        specifier: 'catalog:'
-        version: 3.22.6(@types/node@24.13.3)
       pg:
         specifier: 'catalog:'
         version: 8.22.0
@@ -8761,9 +8746,6 @@ packages:
     resolution: {integrity: sha512-A+jWpXtMpWXKhGLKQrXeC9mk1VgYeMWSJ+o0CTCEi+HLYMSQFdVmPG9lJz7d4XJyIkc5xVwZU9QY67QpScqnxA==}
     peerDependencies:
       vue: ^2.7.0 || ^3.0.0
-
-  '@testcontainers/mysql@12.0.4':
-    resolution: {integrity: sha512-XZWh/L6EN8XQa5lsBdESDolDmyUA56bDgYh5SicLzzC2b4jho4lc0yA0GOOVX/bd0zK6VQK6hmDDJE+T3rFrdA==}
 
   '@testcontainers/postgresql@12.0.4':
     resolution: {integrity: sha512-a/pLU6j5lpKKAlUTPwqweqMGhOSjgTSb6HBX69TOrXn32ifU37nnQDmNFTj8ddOAw+BQL9oTRkeOxVbZkqhgZA==}
@@ -18560,7 +18542,8 @@ snapshots:
       enabled: 2.0.0
       kuler: 2.0.0
 
-  '@date-fns/tz@1.5.0': {}
+  '@date-fns/tz@1.5.0':
+    optional: true
 
   '@discoveryjs/json-ext@0.5.7': {}
 
@@ -23736,13 +23719,6 @@ snapshots:
       '@tanstack/virtual-core': 3.17.0
       vue: 3.5.35(typescript@7.0.2)
 
-  '@testcontainers/mysql@12.0.4(supports-color@10.2.2)':
-    dependencies:
-      testcontainers: 12.0.4(supports-color@10.2.2)
-    transitivePeerDependencies:
-      - bare-buffer
-      - supports-color
-
   '@testcontainers/postgresql@12.0.4(supports-color@10.2.2)':
     dependencies:
       testcontainers: 12.0.4(supports-color@10.2.2)
@@ -25100,7 +25076,8 @@ snapshots:
       '@fastify/error': 4.2.0
       fastq: 1.20.1
 
-  aws-ssl-profiles@1.1.2: {}
+  aws-ssl-profiles@1.1.2:
+    optional: true
 
   axios@1.18.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2):
     dependencies:
@@ -27103,6 +27080,7 @@ snapshots:
   generate-function@2.3.1:
     dependencies:
       is-property: 1.0.2
+    optional: true
 
   gensync@1.0.0-beta.2: {}
 
@@ -27873,7 +27851,8 @@ snapshots:
 
   is-potential-custom-element-name@1.0.1: {}
 
-  is-property@1.0.2: {}
+  is-property@1.0.2:
+    optional: true
 
   is-regexp@1.0.0: {}
 
@@ -28306,7 +28285,8 @@ snapshots:
     dependencies:
       yallist: 3.1.1
 
-  lru.min@1.1.4: {}
+  lru.min@1.1.4:
+    optional: true
 
   lucide-react@1.24.0(react@19.2.7):
     dependencies:
@@ -29070,6 +29050,7 @@ snapshots:
       lru.min: 1.1.4
       named-placeholders: 1.1.6
       sql-escaper: 1.4.0
+    optional: true
 
   mz@2.7.0:
     dependencies:
@@ -29080,6 +29061,7 @@ snapshots:
   named-placeholders@1.1.6:
     dependencies:
       lru.min: 1.1.4
+    optional: true
 
   nan@2.20.0:
     optional: true
@@ -31514,7 +31496,8 @@ snapshots:
 
   sprintf-js@1.0.3: {}
 
-  sql-escaper@1.4.0: {}
+  sql-escaper@1.4.0:
+    optional: true
 
   sql.js@1.14.1: {}
 

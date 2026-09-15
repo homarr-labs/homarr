@@ -12,7 +12,7 @@ describe("orderMessagesByParent", () => {
   });
 
   test("moves a child that the database returned before its parent", () => {
-    // Happens when created_at ties on MySQL/SQLite, which store whole seconds only.
+    // Happens when created_at ties on SQLite, which stores whole seconds only.
     const messages = [message("c", "b"), message("a", null), message("b", "a")];
 
     expect(orderMessagesByParent(messages).map((entry) => entry.id)).toEqual(["a", "b", "c"]);

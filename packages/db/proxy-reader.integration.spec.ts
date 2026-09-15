@@ -4,9 +4,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import Database from "better-sqlite3";
-import { MySqlContainer } from "@testcontainers/mysql";
 import { PostgreSqlContainer } from "@testcontainers/postgresql";
-import mysql from "mysql2/promise";
 import { Client } from "pg";
 import { stringify } from "superjson";
 import { describe, expect, test, vi } from "vitest";
@@ -58,39 +56,6 @@ describe("proxy settings reader database compatibility", () => {
       await fs.rm(databasePath, { force: true });
     }
   });
-
-  test("reads MySQL settings through the bounded host configuration", async () => {
-    const container = await new MySqlContainer("mysql:latest").start();
-    try {
-      const connection = await mysql.createConnection({
-        host: container.getHost(),
-        port: container.getPort(),
-        database: container.getDatabase(),
-        user: container.getUsername(),
-        password: container.getUserPassword(),
-      });
-      await connection.execute("CREATE TABLE onboarding (step VARCHAR(32) NOT NULL)");
-      await connection.execute("CREATE TABLE serverSetting (setting_key VARCHAR(64) NOT NULL, value TEXT NOT NULL)");
-      await connection.execute("INSERT INTO onboarding (step) VALUES (?)", ["finish"]);
-      await connection.execute("INSERT INTO serverSetting (setting_key, value) VALUES (?, ?)", [
-        "culture",
-        stringify({ defaultLocale: "fr" }),
-      ]);
-      await connection.end();
-
-      configureDriver({
-        DRIVER: "mysql2",
-        HOST: container.getHost(),
-        PORT: container.getPort(),
-        NAME: container.getDatabase(),
-        USER: container.getUsername(),
-        PASSWORD: container.getUserPassword(),
-      });
-      await expect(readSettingsAsync()).resolves.toEqual({ locale: "fr", onboardingStep: "finish" });
-    } finally {
-      await container.stop();
-    }
-  }, 120_000);
 
   test("reads PostgreSQL settings through the bounded host configuration", async () => {
     const container = await new PostgreSqlContainer("postgres:latest").start();

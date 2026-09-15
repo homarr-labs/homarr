@@ -829,7 +829,7 @@ export const assistantRouter = createTRPCRouter({
     const thread = await ownedThreadAsync(ctx.db, input.threadId, ctx.session.user.id);
     const messages = await ctx.db.query.assistantMessages.findMany({
       where: eq(assistantMessages.threadId, thread.id),
-      // `created_at` is only second-granular on MySQL and SQLite, so sibling messages written in the
+      // `created_at` is only second-granular on SQLite, so sibling messages written in the
       // same second tie. The id tiebreaker makes the database order at least deterministic.
       orderBy: [asc(assistantMessages.createdAt), asc(assistantMessages.id)],
     });

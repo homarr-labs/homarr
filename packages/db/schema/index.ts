@@ -2,16 +2,13 @@ import type { InferSelectModel } from "drizzle-orm";
 
 import { createSchema } from "@homarr/core/infrastructure/db";
 
-import * as mysqlSchema from "./mysql";
 import * as pgSchema from "./postgresql";
 import * as sqliteSchema from "./sqlite";
 
 export type PostgreSqlSchema = typeof pgSchema;
-export type MySqlSchema = typeof mysqlSchema;
 
 export const schema = createSchema({
   "better-sqlite3": () => sqliteSchema,
-  mysql2: () => mysqlSchema,
   "node-postgres": () => pgSchema,
 });
 

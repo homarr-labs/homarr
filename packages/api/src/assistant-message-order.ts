@@ -6,7 +6,7 @@ interface OrderableMessage {
 /**
  * Orders thread messages so that a parent always precedes its children.
  *
- * The database can only order by `created_at`, which is second-granular on MySQL and SQLite. Two
+ * The database can only order by `created_at`, which is second-granular on SQLite. Two
  * messages written in the same second therefore tie, and the client rebuilds the conversation tree
  * from `parent_id`, so a child arriving before its parent corrupts the thread. Sorting here keeps
  * the relative order of siblings from the incoming (already deterministic) list.

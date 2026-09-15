@@ -1,7 +1,5 @@
 import { createHash } from "node:crypto";
 
-import type { MySqlRawQueryResult } from "drizzle-orm/mysql2";
-import type { QueryResult } from "pg";
 import { TRPCError } from "@trpc/server";
 import SuperJSON from "superjson";
 import { z } from "zod/v4";
@@ -1010,13 +1008,11 @@ export const onboardRouter = createTRPCRouter({
       await handleTransactionsAsync(ctx.db, {
         async handleAsync(db, schema) {
           await db.transaction(async (transaction) => {
-            const transitionResult = (await transaction
+            const transitionResult = await transaction
               .update(schema.onboarding)
               .set({ previousStep: "setup", step: "finish" })
-              .where(eq(schema.onboarding.step, "setup"))) as MySqlRawQueryResult | QueryResult;
-            const transitionedRows = Array.isArray(transitionResult)
-              ? transitionResult[0].affectedRows
-              : (transitionResult.rowCount ?? 0);
+              .where(eq(schema.onboarding.step, "setup"));
+            const transitionedRows = transitionResult.rowCount ?? 0;
             if (transitionedRows !== 1) {
               throw new TRPCError({ code: "CONFLICT", message: "Onboarding setup was already completed." });
             }
