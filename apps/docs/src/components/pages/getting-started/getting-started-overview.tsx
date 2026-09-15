@@ -1,4 +1,6 @@
-import Link from "@docusaurus/Link";
+import Link from "next/link";
+import { asMarkdown } from "fumadocs-core/server";
+import type { ElementType } from "react";
 import { IconArrowRight } from "@tabler/icons-react";
 
 import addItem from "@site/docs/getting-started/img/manage-board-header-choose-item.png";
@@ -33,14 +35,22 @@ const editingSteps = [
 ];
 
 export function GettingStartedOverview() {
-  return (
-    <section className={styles.overview} aria-labelledby="getting-started-overview-title">
-      <header className={styles.intro}>
-        <h2 id="getting-started-overview-title">How Homarr works</h2>
-        <p>Services expose data, integrations connect to them, widgets use the data, and boards arrange the widgets.</p>
-      </header>
+  const isMarkdown = asMarkdown();
+  let BoardLink: ElementType = Link;
+  if (isMarkdown) BoardLink = "a";
 
-      <ConceptFlow />
+  return (
+    <div className={styles.overview}>
+      <section className={styles.conceptCard} aria-labelledby="getting-started-overview-title">
+        <div className={styles.intro}>
+          <h2 id="getting-started-overview-title">How Homarr works</h2>
+          <p>
+            Services expose data, integrations connect to them, widgets use the data, and boards arrange the widgets.
+          </p>
+        </div>
+
+        {!isMarkdown && <ConceptFlow />}
+      </section>
 
       <section className={styles.editor} aria-labelledby="board-editor-title">
         <div className={styles.editorHeading}>
@@ -48,29 +58,28 @@ export function GettingStartedOverview() {
             <h3 id="board-editor-title">Board edit mode</h3>
             <p>Add items, move them, and resize them on the grid. Each viewport can have its own layout.</p>
           </div>
-          <Link to="/docs/management/boards">
-            Board docs <IconArrowRight size={15} aria-hidden="true" />
-          </Link>
+          <BoardLink href="/docs/management/boards">
+            Board docs {!isMarkdown && <IconArrowRight size={15} aria-hidden="true" />}
+          </BoardLink>
         </div>
 
         <ol className={styles.editorSteps}>
           {editingSteps.map((step, index) => (
             <li className={styles.editorStep} key={step.title}>
               <div className={styles.stepCopy}>
-                <span>{index + 1}</span>
+                {!isMarkdown && <span>{index + 1}</span>}
                 <div>
-                  <strong>{step.title}</strong>
-                  <small>{step.description}</small>
+                  <strong>{step.title}</strong> <small>{step.description}</small>
                 </div>
               </div>
               <div className={styles.stepMedia}>
-                <img src={step.image} alt={step.alt} data-fit={step.fit} loading="lazy" />
+                <img src={step.image.src} alt={step.alt} data-fit={step.fit} loading="lazy" />
               </div>
             </li>
           ))}
         </ol>
       </section>
-    </section>
+    </div>
   );
 }
 
@@ -93,12 +102,25 @@ const installationPaths = [
     eyebrow: "Platforms",
     title: "NAS and hosting guides",
     description: "Unraid, TrueNAS, Synology, Portainer, Proxmox, and more.",
-    href: "/docs/category/installation-1",
+    href: "/docs/getting-started/installation",
     recommended: false,
   },
 ];
 
 export function InstallationPaths() {
+  const isMarkdown = asMarkdown();
+  if (isMarkdown) {
+    return (
+      <ul>
+        {installationPaths.map((path) => (
+          <li key={path.href}>
+            <a href={path.href}>{path.title}</a> ({path.eyebrow}): {path.description}
+          </li>
+        ))}
+      </ul>
+    );
+  }
+
   return (
     <div className={styles.installPaths}>
       {installationPaths.map((path) => {
@@ -106,7 +128,7 @@ export function InstallationPaths() {
         if (path.recommended) className = `${className} ${styles.recommendedPath}`;
 
         return (
-          <Link className={className} to={path.href} key={path.href}>
+          <Link className={className} href={path.href} key={path.href}>
             <span>{path.eyebrow}</span>
             <strong>{path.title}</strong>
             <small>{path.description}</small>

@@ -1,20 +1,14 @@
+"use client";
+
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import BrowserOnly from "@docusaurus/BrowserOnly";
-import Head from "@docusaurus/Head";
-import Link from "@docusaurus/Link";
-import { useLocation } from "@docusaurus/router";
-import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
-import Layout from "@theme/Layout";
 
 import {
-  IconArrowBigDown,
-  IconArrowBigUp,
   IconArrowLeft,
+  IconArrowRight,
   IconBrandGithub,
   IconCheck,
   IconCopy,
   IconDownload,
-  IconExternalLink,
   IconFlag,
   IconInfoCircle,
   IconKey,
@@ -54,10 +48,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Toaster } from "@/components/ui/sonner";
+import Link from "@/components/mdx/link";
 import { CustomWidgetCodeExample, CustomWidgetCodeInput } from "../custom-widget-code";
 import { validateSubmissionContent } from "@site/src/lib/workshop-schema";
 import { cn, errorMessage, oauthErrorMessage } from "@site/src/lib/utils";
@@ -67,6 +64,7 @@ import { CodeBlock, DeleteConfirmButton, DetailSkeleton, ScreenshotGallery } fro
 import { formatRelativeTime } from "./format";
 import { ScreenshotEditor } from "./ScreenshotEditor";
 import { WorkshopErrorBoundary } from "./WorkshopErrorBoundary";
+import { WorkshopVoteControl } from "./WorkshopVoteControl";
 import { downloadSubmissionJson, voteAndReconcile } from "./workshop-utils";
 
 const typeLabels: Record<SubmissionType, string> = { customCss: "CSS", customWidget: "Widget" };
@@ -83,13 +81,6 @@ interface PendingScreenshot {
   file: File;
   previewUrl: string;
 }
-
-const parseSubmissionId = (pathname: string) => {
-  const segments = pathname.split("/").filter(Boolean);
-  const last = segments[segments.length - 1];
-  if (!last || last === "workshop") return null;
-  return last;
-};
 
 const isNotFound = (caught: unknown) =>
   typeof caught === "object" && caught !== null && "status" in caught && (caught as ClientResponseError).status === 404;
@@ -181,9 +172,7 @@ const WidgetSafetySummary = ({ widget }: { widget: HomarrCustomWidgetV2 }) => {
   );
 };
 
-const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
-  const location = useLocation();
-  const submissionId = parseSubmissionId(location.pathname);
+const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string; submissionId: string }) => {
   const backend = useMemo(() => getWorkshopBackend(workshopUrl), [workshopUrl]);
 
   const [submission, setSubmission] = useState<WorkshopSubmission | null>(null);
@@ -245,6 +234,16 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
     },
     [backend],
   );
+
+  useEffect(() => {
+    if (submission?.id !== submissionId || notFound) return;
+    // Valid details hydrate from the static 404 shell, which restores its robots tag.
+    const tags = [...document.querySelectorAll<HTMLMetaElement>('meta[name="robots"]')].filter((tag) =>
+      tag.content.includes("noindex"),
+    );
+    tags.forEach((tag) => tag.remove());
+    return () => tags.forEach((tag) => document.head.append(tag));
+  }, [submission?.id, submissionId, notFound]);
 
   useEffect(() => {
     void backend.refreshAuth();
@@ -488,38 +487,39 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
 
   if (error && !submission) {
     return (
-      <div className="mx-auto flex min-h-[50vh] max-w-xl flex-col items-center justify-center gap-4 px-4 text-center">
-        <div className="flex size-11 items-center justify-center rounded-xl bg-destructive/10 text-destructive">
-          <IconX size={22} />
-        </div>
-        <div>
-          <h1 className="text-xl font-semibold">Submission could not be loaded</h1>
-          <p className="mt-1 text-sm text-muted-foreground">Check the Workshop service and try again.</p>
-        </div>
-        <div className="flex flex-wrap justify-center gap-2">
+      <Empty className="mx-auto min-h-[50vh] max-w-xl px-4">
+        <EmptyHeader>
+          <EmptyMedia className="flex size-11 items-center justify-center rounded-xl bg-destructive/10 text-destructive">
+            <IconX size={22} />
+          </EmptyMedia>
+          <EmptyTitle className="text-xl">Submission could not be loaded</EmptyTitle>
+          <EmptyDescription>Check the Workshop service and try again.</EmptyDescription>
+        </EmptyHeader>
+        <EmptyContent className="flex-row justify-center">
           <Button variant="outline" onClick={() => setReloadKey((value) => value + 1)}>
             <IconRefresh size={15} /> Try loading again
           </Button>
           <Button variant="ghost" nativeButton={false} render={<Link to="/workshop" />}>
             Back to Workshop
           </Button>
-        </div>
-      </div>
+        </EmptyContent>
+      </Empty>
     );
   }
 
   if (notFound || !submission) {
     return (
-      <div className="mx-auto max-w-4xl px-4 py-16 text-center">
-        <p className="text-lg font-medium">Submission not found</p>
-        <p className="mt-1 text-sm text-muted-foreground">This listing may have been removed or the link is invalid.</p>
-        <Link
-          to="/workshop"
-          className="mt-6 inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
-        >
-          <IconArrowLeft size={14} /> Back to Workshop
-        </Link>
-      </div>
+      <Empty className="mx-auto min-h-[50vh] max-w-xl px-4">
+        <EmptyHeader>
+          <EmptyTitle className="text-xl">Submission not found</EmptyTitle>
+          <EmptyDescription>This listing may have been removed or the link is invalid.</EmptyDescription>
+        </EmptyHeader>
+        <EmptyContent>
+          <Button variant="outline" nativeButton={false} render={<Link to="/workshop" />}>
+            <IconArrowLeft /> Back to Workshop
+          </Button>
+        </EmptyContent>
+      </Empty>
     );
   }
 
@@ -544,8 +544,8 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
   const socialImage = screenshotUrls[0] ?? `${window.location.origin}/img/logo.png`;
 
   return (
-    <div className="mx-auto max-w-[90rem] px-4 pb-20 pt-8 sm:px-6 lg:px-8">
-      <Head>
+    <div className="mx-auto max-w-[90rem] px-4 pb-28 pt-8 sm:px-6 sm:pb-20 lg:px-8">
+      <>
         <title>{socialTitle}</title>
         <meta name="description" content={socialDescription} />
         <link rel="canonical" href={socialUrl} />
@@ -562,7 +562,7 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
         <meta name="twitter:description" content={socialDescription} />
         <meta name="twitter:image" content={socialImage} />
         <meta name="twitter:image:alt" content={`${submission.title} preview`} />
-      </Head>
+      </>
       <Toaster position="bottom-right" richColors />
       <Link
         to="/workshop"
@@ -579,7 +579,12 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
         </Alert>
       )}
 
-      <div className="grid items-start gap-10 xl:grid-cols-[minmax(0,1fr)_22rem]">
+      <div
+        className={cn(
+          "grid items-start gap-10",
+          widgetDefinition || canManage ? "xl:grid-cols-[minmax(0,1fr)_22rem]" : "mx-auto max-w-5xl",
+        )}
+      >
         <main className="min-w-0">
           <header className="border-b border-border pb-6">
             <div className="flex flex-wrap items-start justify-between gap-5">
@@ -626,75 +631,87 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-px rounded-lg border border-border bg-muted/40 p-1">
-                <button
-                  type="button"
-                  onClick={() => void handleVote(1)}
-                  aria-label="Upvote"
-                  aria-pressed={userVote?.value === 1}
-                  className={cn(
-                    "flex size-9 items-center justify-center rounded-md transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring/50",
-                    userVote?.value === 1 && "bg-primary/15 text-primary",
-                  )}
-                >
-                  <IconArrowBigUp size={18} />
-                </button>
-                <span
-                  aria-live="polite"
-                  className="min-w-7 text-center text-sm font-semibold tabular-nums text-foreground"
-                >
-                  {score}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => void handleVote(-1)}
-                  aria-label="Downvote"
-                  aria-pressed={userVote?.value === -1}
-                  className={cn(
-                    "flex size-9 items-center justify-center rounded-md transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring/50",
-                    userVote?.value === -1 && "bg-primary/15 text-primary",
-                  )}
-                >
-                  <IconArrowBigDown size={18} />
-                </button>
-              </div>
+              <WorkshopVoteControl
+                score={score}
+                userVote={userVote?.value}
+                onVote={(value) => void handleVote(value)}
+              />
             </div>
 
             {widgetDefinition && <WidgetSafetySummary widget={widgetDefinition} />}
 
-            <div className="mt-6 flex flex-wrap items-center gap-2">
-              {submission.type === "customWidget" && (
-                <Button size="sm" className="min-h-11 sm:min-h-8" onClick={() => downloadSubmissionJson(submission)}>
-                  <IconDownload size={14} /> Download widget JSON
-                </Button>
-              )}
-              <Button
-                variant={submission.type === "customCss" ? "default" : "outline"}
-                size="sm"
-                className="min-h-11 sm:min-h-8"
-                aria-live="polite"
-                onClick={() => void handleCopy()}
-              >
-                {copyFailed ? (
+            <section className="mt-6" aria-labelledby="workshop-install-heading">
+              <h2 id="workshop-install-heading" className="scroll-mt-24 text-lg font-semibold">
+                Install in Homarr
+              </h2>
+              <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm leading-relaxed text-muted-foreground">
+                {submission.type === "customWidget" ? (
                   <>
-                    <IconX size={14} className="text-destructive" /> Copy failed
+                    <li>Download the widget JSON below.</li>
+                    <li>
+                      Open <strong className="text-foreground">Management → Custom Widgets → Import</strong> in your
+                      Homarr instance and select the file.
+                    </li>
+                    <li>
+                      Review its sources and permissions, then configure the URLs and credentials for your services.
+                    </li>
                   </>
                 ) : (
                   <>
-                    <CopyIcon size={14} className={copyIconClass} />
-                    {copied ? "Copied" : submission.type === "customCss" ? "Copy CSS" : "Copy JSON"}
+                    <li>Copy the CSS below.</li>
+                    <li>
+                      Open <strong className="text-foreground">Board settings → Custom CSS</strong> in your Homarr
+                      instance, paste the CSS, and save.
+                    </li>
                   </>
                 )}
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="min-h-11 text-muted-foreground sm:min-h-8"
-                onClick={() => setReportOpen(true)}
+              </ol>
+              <div className="mt-4 flex flex-wrap items-center gap-2">
+                {submission.type === "customWidget" && (
+                  <Button size="sm" className="min-h-11 sm:min-h-8" onClick={() => downloadSubmissionJson(submission)}>
+                    <IconDownload size={14} /> Download widget JSON
+                  </Button>
+                )}
+                <Button
+                  variant={submission.type === "customCss" ? "default" : "outline"}
+                  size="sm"
+                  className="min-h-11 sm:min-h-8"
+                  aria-live="polite"
+                  onClick={() => void handleCopy()}
+                >
+                  {copyFailed ? (
+                    <>
+                      <IconX size={14} className="text-destructive" /> Copy failed
+                    </>
+                  ) : (
+                    <>
+                      <CopyIcon size={14} className={copyIconClass} />
+                      {copied ? "Copied" : submission.type === "customCss" ? "Copy CSS" : "Copy JSON"}
+                    </>
+                  )}
+                </Button>
+                <a
+                  href="#workshop-source-heading"
+                  className="inline-flex min-h-11 items-center px-2 text-sm underline underline-offset-4 sm:min-h-8"
+                >
+                  Review source
+                </a>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="min-h-11 text-muted-foreground sm:min-h-8"
+                  onClick={() => setReportOpen(true)}
+                >
+                  <IconFlag size={14} /> Report
+                </Button>
+              </div>
+              <Link
+                to="/docs/workshop/#install-content"
+                className="mt-3 inline-flex items-center gap-1.5 text-sm underline underline-offset-4"
               >
-                <IconFlag size={14} /> Report
-              </Button>
-            </div>
+                Installation guide <IconArrowRight size={13} />
+              </Link>
+            </section>
           </header>
 
           {screenshotUrls.length > 0 && (
@@ -704,8 +721,8 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
           )}
 
           {submission.changelog && (
-            <section className="mt-8 border-l-2 border-primary/50 pl-4">
-              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">What changed</p>
+            <section className="mt-8 rounded-lg bg-muted/50 px-4 py-3">
+              <h2 className="text-sm font-semibold">What changed</h2>
               <p className="mt-1 text-sm leading-relaxed">{submission.changelog}</p>
             </section>
           )}
@@ -713,7 +730,7 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
           <section className="mt-8" aria-labelledby="workshop-source-heading">
             <div className="mb-3 flex items-end justify-between gap-3">
               <div>
-                <h2 id="workshop-source-heading" className="text-lg font-semibold">
+                <h2 id="workshop-source-heading" className="scroll-mt-24 text-lg font-semibold">
                   Source
                 </h2>
                 <p className="mt-1 text-sm text-muted-foreground">Review exactly what will be installed.</p>
@@ -742,141 +759,119 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
           </div>
         </main>
 
-        <aside className="space-y-6 xl:sticky xl:top-24">
-          <section className="rounded-xl border border-border bg-card p-5 shadow-sm">
-            <div className="flex items-start gap-3">
-              <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                <IconDownload size={17} />
-              </div>
-              <div>
-                <h2 className="font-semibold">Install in Homarr</h2>
-                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                  {submission.type === "customWidget"
-                    ? "Download the JSON, then import it from Manage → Custom Widgets."
-                    : "Copy the CSS and paste it into your board's Custom CSS settings."}
-                </p>
-              </div>
-            </div>
-            <Link
-              to="/docs/workshop/"
-              className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
-            >
-              Installation guide <IconExternalLink size={13} />
-            </Link>
-          </section>
-
-          {widgetDefinition && (
-            <section className="rounded-xl border border-border bg-card p-5 shadow-sm">
-              <h2 className="font-semibold">Widget details</h2>
-              <div className="mt-5 space-y-5">
-                <div>
-                  <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                    <IconServer size={14} /> API sources
-                  </div>
-                  <div className="space-y-2.5">
-                    {sources.map(([id, source]) => (
-                      <div key={id} className="min-w-0">
-                        <div className="flex items-center justify-between gap-2 text-sm">
-                          <span className="truncate font-medium">{source.name || id}</span>
-                          <Badge variant="secondary" className="shrink-0">
-                            {source.networkScope}
-                          </Badge>
-                        </div>
-                        <p className="truncate text-xs text-muted-foreground">{sourceHost(source.baseUrl)}</p>
-                        <p className="mt-0.5 text-xs text-muted-foreground">{sourceAuthLabel(source.auth)}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="border-t border-border pt-4">
-                  <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                    <IconSettings size={14} /> Capabilities
-                  </div>
-                  <div className="flex flex-wrap gap-1.5">
-                    <Badge variant="secondary">
-                      {requests.filter(([, request]) => request.kind === "query").length} queries
-                    </Badge>
-                    <Badge variant="secondary">
-                      {requests.filter(([, request]) => request.kind === "action").length} actions
-                    </Badge>
-                    <Badge variant="secondary">{options.length} options</Badge>
-                  </div>
-                  {requests.length > 0 && (
-                    <div className="mt-3 space-y-1.5">
-                      {requests.slice(0, 6).map(([id, request]) => (
-                        <div key={id} className="flex items-center justify-between gap-2 text-xs">
-                          <span className="truncate text-muted-foreground">{id}</span>
-                          <span className="shrink-0 font-mono font-medium">{request.method}</span>
+        {(widgetDefinition || canManage) && (
+          <aside className="space-y-6 xl:sticky xl:top-24">
+            {widgetDefinition && (
+              <section className="rounded-xl border border-border bg-card p-5">
+                <h2 className="font-semibold">Widget details</h2>
+                <div className="mt-5 space-y-5">
+                  <div>
+                    <h3 className="mb-2 flex items-center gap-2 text-sm font-medium">
+                      <IconServer size={14} /> API sources
+                    </h3>
+                    <div className="space-y-2.5">
+                      {sources.map(([id, source]) => (
+                        <div key={id} className="min-w-0">
+                          <div className="flex items-center justify-between gap-2 text-sm">
+                            <span className="truncate font-medium">{source.name || id}</span>
+                            <Badge variant="secondary" className="shrink-0">
+                              {source.networkScope}
+                            </Badge>
+                          </div>
+                          <p className="truncate text-xs text-muted-foreground">{sourceHost(source.baseUrl)}</p>
+                          <p className="mt-0.5 text-xs text-muted-foreground">{sourceAuthLabel(source.auth)}</p>
                         </div>
                       ))}
-                      {requests.length > 6 && (
-                        <p className="text-xs text-muted-foreground">+{requests.length - 6} more</p>
-                      )}
                     </div>
-                  )}
-                </div>
+                  </div>
 
-                {options.length > 0 && (
                   <div className="border-t border-border pt-4">
-                    <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                      <IconSettings size={14} /> Configurable options
+                    <h3 className="mb-2 flex items-center gap-2 text-sm font-medium">
+                      <IconSettings size={14} /> Capabilities
+                    </h3>
+                    <div className="flex flex-wrap gap-1.5">
+                      <Badge variant="secondary">
+                        {requests.filter(([, request]) => request.kind === "query").length} queries
+                      </Badge>
+                      <Badge variant="secondary">
+                        {requests.filter(([, request]) => request.kind === "action").length} actions
+                      </Badge>
+                      <Badge variant="secondary">{options.length} options</Badge>
                     </div>
-                    <div className="space-y-2">
-                      {options.slice(0, 6).map(([id, option]) => (
-                        <div key={id} className="flex items-start justify-between gap-3 text-xs">
-                          <span className="min-w-0 truncate text-muted-foreground">{option.label}</span>
-                          <span className="shrink-0 font-medium">{option.control}</span>
-                        </div>
-                      ))}
-                      {options.length > 6 && (
-                        <p className="text-xs text-muted-foreground">+{options.length - 6} more</p>
-                      )}
-                    </div>
+                    {requests.length > 0 && (
+                      <div className="mt-3 space-y-1.5">
+                        {requests.slice(0, 6).map(([id, request]) => (
+                          <div key={id} className="flex items-center justify-between gap-2 text-xs">
+                            <span className="truncate text-muted-foreground">{id}</span>
+                            <span className="shrink-0 font-mono font-medium">{request.method}</span>
+                          </div>
+                        ))}
+                        {requests.length > 6 && (
+                          <p className="text-xs text-muted-foreground">+{requests.length - 6} more</p>
+                        )}
+                      </div>
+                    )}
                   </div>
-                )}
 
-                <div className="border-t border-border pt-4">
-                  <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                    <IconKey size={14} /> Credentials
-                  </div>
-                  {protectedSources.length > 0 ? (
-                    <>
-                      <p className="text-sm">
-                        {protectedSources.length} source{protectedSources.length === 1 ? " requires" : "s require"}{" "}
-                        credentials.
-                      </p>
-                      <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                        Secrets are entered after import and are never included in Workshop downloads.
-                      </p>
-                    </>
-                  ) : (
-                    <p className="text-sm text-muted-foreground">No credentials required.</p>
+                  {options.length > 0 && (
+                    <div className="border-t border-border pt-4">
+                      <h3 className="mb-2 flex items-center gap-2 text-sm font-medium">
+                        <IconSettings size={14} /> Configurable options
+                      </h3>
+                      <div className="space-y-2">
+                        {options.slice(0, 6).map(([id, option]) => (
+                          <div key={id} className="flex items-start justify-between gap-3 text-xs">
+                            <span className="min-w-0 truncate text-muted-foreground">{option.label}</span>
+                            <span className="shrink-0 font-medium">{option.control}</span>
+                          </div>
+                        ))}
+                        {options.length > 6 && (
+                          <p className="text-xs text-muted-foreground">+{options.length - 6} more</p>
+                        )}
+                      </div>
+                    </div>
                   )}
-                </div>
-              </div>
-            </section>
-          )}
 
-          {canManage && (
-            <section className="border-t border-border pt-5">
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                Manage submission
-              </p>
-              <div className="grid gap-1">
-                {canEdit && (
-                  <Button variant="ghost" size="sm" className="justify-start" onClick={openEdit}>
-                    <IconPencil size={14} /> Edit submission
+                  <div className="border-t border-border pt-4">
+                    <h3 className="mb-2 flex items-center gap-2 text-sm font-medium">
+                      <IconKey size={14} /> Credentials
+                    </h3>
+                    {protectedSources.length > 0 ? (
+                      <>
+                        <p className="text-sm">
+                          {protectedSources.length} source{protectedSources.length === 1 ? " requires" : "s require"}{" "}
+                          credentials.
+                        </p>
+                        <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                          Secrets are entered after import and are never included in Workshop downloads.
+                        </p>
+                      </>
+                    ) : (
+                      <p className="text-sm text-muted-foreground">No credentials required.</p>
+                    )}
+                  </div>
+                </div>
+              </section>
+            )}
+
+            {canManage && (
+              <section className="border-t border-border pt-5">
+                <h2 className="mb-2 text-sm font-semibold">Manage submission</h2>
+                <div className="grid gap-1">
+                  {canEdit && (
+                    <Button variant="ghost" size="sm" className="justify-start" onClick={openEdit}>
+                      <IconPencil size={14} /> Edit submission
+                    </Button>
+                  )}
+                  <Button variant="ghost" size="sm" className="justify-start" onClick={() => void handleOutdated()}>
+                    <IconInfoCircle size={14} /> {submission.outdated ? "Mark current" : "Mark outdated"}
                   </Button>
-                )}
-                <Button variant="ghost" size="sm" className="justify-start" onClick={() => void handleOutdated()}>
-                  <IconInfoCircle size={14} /> {submission.outdated ? "Mark current" : "Mark outdated"}
-                </Button>
-                <DeleteConfirmButton className="w-full justify-start" onConfirm={handleDelete} />
-              </div>
-            </section>
-          )}
-        </aside>
+                  <DeleteConfirmButton className="w-full justify-start" onConfirm={handleDelete} />
+                </div>
+              </section>
+            )}
+          </aside>
+        )}
       </div>
       <Dialog
         open={reportOpen}
@@ -900,33 +895,35 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
               <AlertDescription>{reportError}</AlertDescription>
             </Alert>
           )}
-          <label htmlFor="workshop-report-category" className="grid gap-1.5 text-sm">
-            Category
-            <Select value={reportCategory} onValueChange={(value) => setReportCategory(value as string)}>
-              <SelectTrigger id="workshop-report-category" className="h-10 w-full">
-                <SelectValue>{(value) => String(value).replace(/^./u, (letter) => letter.toUpperCase())}</SelectValue>
-              </SelectTrigger>
-              <SelectContent align="start">
-                <SelectItem value="outdated">Outdated or no longer working</SelectItem>
-                <SelectItem value="malicious">Malicious</SelectItem>
-                <SelectItem value="spam">Spam</SelectItem>
-                <SelectItem value="copyright">Copyright</SelectItem>
-                <SelectItem value="inappropriate">Inappropriate</SelectItem>
-                <SelectItem value="other">Other</SelectItem>
-              </SelectContent>
-            </Select>
-          </label>
-          <label htmlFor="workshop-report-explanation" className="grid gap-1.5 text-sm">
-            Explanation
-            <Textarea
-              id="workshop-report-explanation"
-              value={reportExplanation}
-              onChange={(event) => setReportExplanation(event.target.value)}
-              placeholder="Explain what should be reviewed"
-              maxLength={1000}
-              rows={5}
-            />
-          </label>
+          <FieldGroup className="gap-4">
+            <Field>
+              <FieldLabel htmlFor="workshop-report-category">Category</FieldLabel>
+              <Select value={reportCategory} onValueChange={(value) => setReportCategory(value as string)}>
+                <SelectTrigger id="workshop-report-category" className="h-10 w-full">
+                  <SelectValue>{(value) => String(value).replace(/^./u, (letter) => letter.toUpperCase())}</SelectValue>
+                </SelectTrigger>
+                <SelectContent align="start">
+                  <SelectItem value="outdated">Outdated or no longer working</SelectItem>
+                  <SelectItem value="malicious">Malicious</SelectItem>
+                  <SelectItem value="spam">Spam</SelectItem>
+                  <SelectItem value="copyright">Copyright</SelectItem>
+                  <SelectItem value="inappropriate">Inappropriate</SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="workshop-report-explanation">Explanation</FieldLabel>
+              <Textarea
+                id="workshop-report-explanation"
+                value={reportExplanation}
+                onChange={(event) => setReportExplanation(event.target.value)}
+                placeholder="Explain what should be reviewed"
+                maxLength={1000}
+                rows={5}
+              />
+            </Field>
+          </FieldGroup>
           <DialogFooter>
             <Button variant="ghost" onClick={() => setReportOpen(false)} disabled={reportPending}>
               Cancel
@@ -972,26 +969,26 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
               height="min(46vh, 460px)"
               required
             />
-            <div className="flex flex-col gap-4">
-              <label htmlFor="workshop-edit-title" className="grid gap-1.5 text-sm">
-                Title
+            <FieldGroup className="gap-4">
+              <Field>
+                <FieldLabel htmlFor="workshop-edit-title">Title</FieldLabel>
                 <Input
                   id="workshop-edit-title"
                   value={editTitle}
                   onChange={(event) => setEditTitle(event.target.value)}
                 />
-              </label>
-              <label htmlFor="workshop-edit-description" className="grid gap-1.5 text-sm">
-                Description
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="workshop-edit-description">Description</FieldLabel>
                 <Textarea
                   id="workshop-edit-description"
                   value={editDescription}
                   onChange={(event) => setEditDescription(event.target.value)}
                   rows={5}
                 />
-              </label>
-              <label htmlFor="workshop-edit-changelog" className="grid gap-1.5 text-sm">
-                Changelog
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="workshop-edit-changelog">Changelog</FieldLabel>
                 <Textarea
                   id="workshop-edit-changelog"
                   value={editChangelog}
@@ -999,8 +996,8 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
                   placeholder="What changed?"
                   rows={4}
                 />
-              </label>
-            </div>
+              </Field>
+            </FieldGroup>
           </div>
           <div className="border-t border-border pt-5">
             <ScreenshotEditor
@@ -1041,25 +1038,22 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
   );
 };
 
-export default function MarketplaceDetailPage() {
-  const { siteConfig } = useDocusaurusContext();
-  const configuredWorkshopUrl = (siteConfig.customFields?.workshopUrl as string | undefined) ?? "";
-
+export default function MarketplaceDetailPage({
+  configuredWorkshopUrl = "",
+  submissionId,
+}: {
+  configuredWorkshopUrl?: string;
+  submissionId: string;
+}) {
   useEffect(() => {
     document.documentElement.removeAttribute("data-workshop-detail-loading");
   }, []);
 
   return (
-    <Layout title="Workshop" description="Community custom CSS and custom widgets for Homarr">
-      <main className="marketplace bg-background text-foreground min-h-[80vh]">
-        <BrowserOnly fallback={<DetailSkeleton />}>
-          {() => (
-            <WorkshopErrorBoundary>
-              <MarketplaceDetail workshopUrl={getRuntimeWorkshopApiUrl(configuredWorkshopUrl)} />
-            </WorkshopErrorBoundary>
-          )}
-        </BrowserOnly>
-      </main>
-    </Layout>
+    <main className="marketplace min-h-[80vh] bg-background text-foreground">
+      <WorkshopErrorBoundary>
+        <MarketplaceDetail workshopUrl={getRuntimeWorkshopApiUrl(configuredWorkshopUrl)} submissionId={submissionId} />
+      </WorkshopErrorBoundary>
+    </main>
   );
 }

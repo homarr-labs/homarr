@@ -1,3 +1,5 @@
+"use client";
+
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   IconBrandGithub,
@@ -14,18 +16,23 @@ import { githubAvatarUrl, githubProfileUrl } from "@homarr/workshop/schema";
 import type { WorkshopReport, WorkshopSubmissionSummary, WorkshopUser } from "@homarr/workshop/schema";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogMedia,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const avatarFallback = (name: string) => name.trim().slice(0, 1).toUpperCase() || "?";
 
@@ -39,7 +46,7 @@ export function WorkshopAdmin({ workshopUrl }: { workshopUrl?: string }) {
   const [submissions, setSubmissions] = useState<WorkshopSubmissionSummary[]>([]);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [pendingDelete, setPendingDelete] = useState<WorkshopSubmissionSummary | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   const load = useCallback(async () => {
@@ -61,10 +68,17 @@ export function WorkshopAdmin({ workshopUrl }: { workshopUrl?: string }) {
 
   useEffect(() => {
     const unsubscribe = client.subscribeToAuth(setUser);
-    void client.refreshAuth().then((nextUser) => {
-      setUser(nextUser);
-      if (nextUser?.isAdmin) void load();
-    });
+    void client
+      .refreshAuth()
+      .then(async (nextUser) => {
+        setUser(nextUser);
+        if (nextUser?.isAdmin) await load();
+        else setLoading(false);
+      })
+      .catch((cause) => {
+        setError(cause instanceof Error ? cause.message : "Unable to check Workshop moderator access");
+        setLoading(false);
+      });
     return unsubscribe;
   }, [client, load]);
 
@@ -109,7 +123,7 @@ export function WorkshopAdmin({ workshopUrl }: { workshopUrl?: string }) {
       submission,
       reports: reports.filter((report) => report.submission === submission.id),
     }))
-    .sort(
+    .toSorted(
       (left, right) =>
         right.reports.length - left.reports.length ||
         Date.parse(right.submission.updated) - Date.parse(left.submission.updated),
@@ -132,11 +146,6 @@ export function WorkshopAdmin({ workshopUrl }: { workshopUrl?: string }) {
           <Button variant="outline" nativeButton={false} render={<a href="/workshop" aria-label="Back to Workshop" />}>
             Back to Workshop
           </Button>
-          {!user && (
-            <Button onClick={() => void signIn()}>
-              <IconBrandGithub size={15} /> Sign in with GitHub
-            </Button>
-          )}
           {user?.isAdmin && (
             <Button variant="outline" disabled={loading} onClick={() => void load()}>
               <IconRefresh size={15} className={loading ? "animate-spin" : undefined} />
@@ -147,6 +156,33 @@ export function WorkshopAdmin({ workshopUrl }: { workshopUrl?: string }) {
       </header>
 
       <div className="py-6">
+        {loading && !user && (
+          <div className="space-y-3 rounded-xl border border-border p-6" aria-label="Checking moderator access">
+            <Skeleton className="h-5 w-48" />
+            <Skeleton className="h-4 w-full max-w-md" />
+            <Skeleton className="h-8 w-40" />
+          </div>
+        )}
+
+        {!user && !loading && (
+          <Empty className="min-h-72 border border-border">
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <IconShield />
+              </EmptyMedia>
+              <EmptyTitle>Sign in to moderate the Workshop</EmptyTitle>
+              <EmptyDescription>
+                Moderator access is checked against your GitHub-linked Workshop account.
+              </EmptyDescription>
+            </EmptyHeader>
+            <EmptyContent>
+              <Button onClick={() => void signIn()}>
+                <IconBrandGithub /> Sign in with GitHub
+              </Button>
+            </EmptyContent>
+          </Empty>
+        )}
+
         {user && !user.isAdmin && (
           <Alert variant="destructive" className="mb-5">
             <IconShield />
@@ -186,7 +222,29 @@ export function WorkshopAdmin({ workshopUrl }: { workshopUrl?: string }) {
               </span>
             </div>
 
-            <div className="space-y-4">
+            {loading && submissions.length === 0 && (
+              <div className="space-y-4" aria-label="Loading Workshop moderation">
+                {Array.from({ length: 3 }, (_, index) => (
+                  <Card key={index}>
+                    <CardHeader className="sm:grid-cols-[1fr_auto]">
+                      <div className="flex items-center gap-3">
+                        <Skeleton className="size-10 rounded-full" />
+                        <div className="space-y-2">
+                          <Skeleton className="h-4 w-52" />
+                          <Skeleton className="h-3 w-28" />
+                        </div>
+                      </div>
+                      <Skeleton className="h-5 w-20 rounded-full" />
+                    </CardHeader>
+                    <CardContent>
+                      <Skeleton className="h-14 w-full" />
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+
+            <div className="space-y-4" aria-live="polite">
               {grouped.map(({ submission, reports: submissionReports }) => (
                 <Card
                   key={submission.id}
@@ -290,36 +348,41 @@ export function WorkshopAdmin({ workshopUrl }: { workshopUrl?: string }) {
             </div>
 
             {!loading && grouped.length === 0 && (
-              <div className="rounded-xl border border-dashed border-border py-16 text-center">
-                <IconShield size={28} className="mx-auto text-muted-foreground" />
-                <p className="mt-3 text-sm font-medium">No Workshop submissions</p>
-                <p className="mt-1 text-sm text-muted-foreground">Published submissions will appear here.</p>
-              </div>
+              <Empty className="border border-border py-16">
+                <EmptyHeader>
+                  <EmptyMedia variant="icon">
+                    <IconShield />
+                  </EmptyMedia>
+                  <EmptyTitle>No Workshop submissions</EmptyTitle>
+                  <EmptyDescription>Published submissions will appear here.</EmptyDescription>
+                </EmptyHeader>
+              </Empty>
             )}
           </section>
         )}
       </div>
 
-      <Dialog open={pendingDelete !== null} onOpenChange={(open) => !open && !busyId && setPendingDelete(null)}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Delete {pendingDelete?.title}?</DialogTitle>
-            <DialogDescription>
+      <AlertDialog open={pendingDelete !== null} onOpenChange={(open) => !open && !busyId && setPendingDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogMedia className="bg-destructive/10 text-destructive">
+              <IconTrash />
+            </AlertDialogMedia>
+            <AlertDialogTitle>Delete {pendingDelete?.title}?</AlertDialogTitle>
+            <AlertDialogDescription>
               This removes the Workshop listing and its reports, votes, screenshots, and comments. Installed local
               copies remain. The submission author will be notified by email.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="ghost" disabled={busyId !== null} onClick={() => setPendingDelete(null)}>
-              Cancel
-            </Button>
-            <Button variant="destructive" disabled={busyId !== null} onClick={() => void remove()}>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={busyId !== null}>Cancel</AlertDialogCancel>
+            <AlertDialogAction variant="destructive" disabled={busyId !== null} onClick={() => void remove()}>
               {busyId && <IconLoader2 size={14} className="animate-spin" />}
               {busyId ? "Deleting" : "Delete submission"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </main>
   );
 }

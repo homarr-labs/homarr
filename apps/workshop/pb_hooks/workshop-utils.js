@@ -36,7 +36,7 @@ const renderWorkshopSocialHtml = (html, metadata) => {
     `<meta name="twitter:image:alt" content="${imageAlt}">`,
   ].join("\n");
   const replaceableTags =
-    /<title\b[^>]*>[\s\S]*?<\/title>|<meta\b[^>]*(?:name|property)=["'](?:description|og:(?:title|description|url|image|image:alt|type|site_name)|twitter:(?:card|title|description|image|image:alt)|article:section)["'][^>]*>|<link\b[^>]*rel=["']canonical["'][^>]*>/gi;
+    /<title\b[^>]*>[\s\S]*?<\/title>|<meta\b[^>]*(?:name|property)=["'](?:robots|description|og:(?:title|description|url|image|image:alt|type|site_name)|twitter:(?:card|title|description|image|image:alt)|article:section)["'][^>]*>|<link\b[^>]*rel=["']canonical["'][^>]*>/gi;
 
   return html.replace(replaceableTags, "").replace("<head>", `<head>\n${tags}`);
 };

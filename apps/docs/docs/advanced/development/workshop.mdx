@@ -4,13 +4,13 @@ sidebar_position: 4
 tags:
   - Workshop
   - Developer
-  - Docusaurus
+  - Fumadocs
   - PocketBase
 ---
 
 # Workshop development
 
-See the [main development guide](./getting-started) for repository prerequisites.
+See the [main development guide](/docs/advanced/development/getting-started) for repository prerequisites.
 
 Start PocketBase:
 
@@ -19,7 +19,7 @@ cp apps/workshop/.env.example apps/workshop/.env
 docker compose --env-file apps/workshop/.env -f apps/workshop/docker-compose.yml up --build workshop
 ```
 
-Start Docusaurus in another terminal:
+Start Fumadocs in another terminal:
 
 ```sh
 WORKSHOP_API_URL=http://127.0.0.1:8090 pnpm dev:docs

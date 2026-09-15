@@ -1,6 +1,8 @@
+"use client";
+
 import { IntegrationDefinition } from "@site/src/types";
 import { DocsHeader } from "../ui/header";
-import { useColorMode } from "@docusaurus/theme-common";
+import { useColorMode } from "@/hooks/use-color-mode";
 
 interface IntegrationHeaderProps {
   integration: IntegrationDefinition;
@@ -14,7 +16,14 @@ export const IntegrationHeader = (props: IntegrationHeaderProps) => {
     <DocsHeader
       title={props.integration.name}
       description={props.integration.description}
-      icon={<img src={getIntegrationIconUrl(props.integration, isDarkTheme)} width={48} height={48} />}
+      icon={
+        <img
+          src={getIntegrationIconUrl(props.integration, isDarkTheme)}
+          width={48}
+          height={48}
+          alt={`${props.integration.name} logo`}
+        />
+      }
       categories={props.categories}
     />
   );

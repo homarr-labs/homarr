@@ -1,29 +1,38 @@
 .overview {
-  --start-ink: var(--ifm-font-color-base);
-  --start-muted: var(--ifm-color-emphasis-700);
-  --start-panel: var(--ifm-background-surface-color);
-  --start-line: var(--ifm-color-emphasis-300);
-  --start-coral: #fa5252;
+  --start-ink: var(--color-fd-foreground);
+  --start-muted: var(--color-fd-muted-foreground);
+  --start-panel: var(--color-fd-card);
+  --start-line: var(--color-fd-border);
+  --start-coral: var(--color-fd-primary);
   display: grid;
-  gap: 1.5rem;
-  margin: 1.5rem 0 3rem;
+  gap: 1rem;
+  margin: 1.25rem 0 2.5rem;
+}
+
+.conceptCard {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.9rem;
+  border: 1px solid color-mix(in oklch, var(--start-coral) 32%, var(--start-line));
+  border-radius: 0.75rem;
+  background: color-mix(in oklch, var(--start-coral) 4%, var(--start-panel));
 }
 
 .intro {
-  padding-left: 1rem;
-  border-left: 3px solid var(--ifm-color-primary);
+  padding: 0;
 }
 
 .intro h2 {
-  margin: 0 0 0.4rem;
-  font-size: 1.5rem;
+  margin: 0 0 0.25rem;
+  font-size: 1.35rem;
+  line-height: 1.2;
 }
 
 .intro p {
   max-width: 48rem;
   margin: 0;
   color: var(--start-muted);
-  line-height: 1.55;
+  line-height: 1.45;
 }
 
 .editor {
@@ -149,7 +158,7 @@
   gap: 0.45rem;
   min-height: 10rem;
   padding: 1.1rem;
-  border: 1px solid var(--ifm-color-emphasis-400);
+  border: 1px solid var(--start-line);
   border-radius: 0.9rem;
   color: var(--start-ink);
   background: var(--start-panel);
@@ -170,16 +179,12 @@
 }
 
 .installPath > span {
-  color: #c92f2f;
+  color: var(--color-fd-primary);
   font-family: var(--font-mono);
   font-size: 0.62rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-}
-
-:global([data-theme="dark"]) .installPath > span {
-  color: var(--ifm-color-primary-light);
 }
 
 .installPath strong {
@@ -199,7 +204,7 @@
 }
 
 .recommendedPath {
-  border-color: var(--ifm-color-primary);
+  border-color: var(--color-fd-primary);
   background: var(--start-panel);
 }
 

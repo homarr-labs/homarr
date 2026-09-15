@@ -8,15 +8,15 @@
     "**/lang/**",
     "static-data/**",
     "CHANGELOG.md",
-    "apps/docs/.docusaurus/**",
-    "apps/docs/build/**",
+    "apps/docs/.next/**",
+    "apps/docs/out/**",
     "apps/docs/blog/2022/**",
     "apps/docs/blog/2023/**",
     "apps/docs/blog/2024/**",
     "apps/docs/blog/2025/**",
     "apps/docs/blog/authors.yml",
-    "apps/docs/static/api/open-api-schema.json",
+    "apps/docs/public/api/open-api-schema.json",
     "packages/custom-widgets/src/core/component-catalog.generated.json",
-    "apps/docs/static/custom-widgets/component-catalog-v1.json"
+    "apps/docs/public/custom-widgets/component-catalog-v1.json"
   ]
 }

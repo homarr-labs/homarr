@@ -1,0 +1,84 @@
+---
+title: Install Homarr
+description: Choose the installation method that matches your infrastructure.
+full: true
+---
+
+import {
+  IconApps,
+  IconBox,
+  IconBrandDocker,
+  IconBrandGithub,
+  IconCloud,
+  IconContainer,
+  IconDatabase,
+  IconHexagons,
+  IconHome,
+  IconLayoutDashboard,
+  IconServer2,
+  IconTrain,
+} from "@tabler/icons-react";
+
+Docker Compose is the best starting point for most self-hosters. Choose a platform-specific guide when Homarr will run inside an existing server manager or managed service.
+
+<Callout type="idea" title="Not sure which guide to choose?">
+  Start with **Docker Compose**. It is the recommended path, has the broadest community support, and makes updates and
+  backups straightforward.
+</Callout>
+
+## Recommended
+
+<Cards>
+  <Card icon={<IconBrandDocker />} title="Docker Compose" href="/docs/getting-started/installation/docker">
+    The recommended installation for most Linux and Windows servers.
+  </Card>
+  <Card icon={<IconHexagons />} title="Kubernetes with Helm" href="/docs/getting-started/installation/helm">
+    Deploy Homarr into an existing Kubernetes cluster.
+  </Card>
+  <Card icon={<IconBrandGithub />} title="Build from source" href="/docs/getting-started/installation/source">
+    Build and run Homarr directly from the repository.
+  </Card>
+</Cards>
+
+## Self-hosting platforms
+
+<Cards>
+  <Card icon={<IconServer2 />} title="Unraid" href="/docs/getting-started/installation/unraid">
+    Install Homarr from the Unraid Community Apps catalog.
+  </Card>
+  <Card icon={<IconDatabase />} title="Synology" href="/docs/getting-started/installation/synology">
+    Run Homarr on a Synology NAS with Container Manager.
+  </Card>
+  <Card icon={<IconServer2 />} title="Proxmox" href="/docs/getting-started/installation/proxmox">
+    Add Homarr to a Proxmox-based homelab.
+  </Card>
+  <Card icon={<IconHome />} title="Home Assistant Add-on" href="/docs/getting-started/installation/home-assistant">
+    Install Homarr alongside your Home Assistant environment.
+  </Card>
+  <Card icon={<IconContainer />} title="Portainer" href="/docs/getting-started/installation/portainer">
+    Deploy and manage Homarr through Portainer stacks.
+  </Card>
+  <Card icon={<IconDatabase />} title="QNAP" href="/docs/getting-started/installation/qnap">
+    Run Homarr on a QNAP NAS.
+  </Card>
+  <Card icon={<IconApps />} title="Runtipi" href="/docs/getting-started/installation/runtipi">
+    Add Homarr from the Runtipi app store.
+  </Card>
+</Cards>
+
+## Managed and app platforms
+
+<Cards>
+  <Card icon={<IconLayoutDashboard />} title="EasyPanel" href="/docs/getting-started/installation/easy-panel">
+    Deploy Homarr from an Easypanel template.
+  </Card>
+  <Card icon={<IconTrain />} title="Railway" href="/docs/getting-started/installation/railway">
+    Launch Homarr as a managed Railway service.
+  </Card>
+  <Card icon={<IconCloud />} title="PikaPods" href="/docs/getting-started/installation/pika-pods">
+    Use a hosted Homarr instance without managing a server.
+  </Card>
+  <Card icon={<IconBox />} title="Saltbox" href="/docs/getting-started/installation/saltbox">
+    Add Homarr to a Saltbox deployment.
+  </Card>
+</Cards>

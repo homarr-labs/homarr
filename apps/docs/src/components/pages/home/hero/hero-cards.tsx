@@ -1,4 +1,5 @@
-import { translate } from "@docusaurus/Translate";
+"use client";
+
 import { IconBrandDocker, IconCpu, IconDeviceDesktopAnalytics } from "@tabler/icons-react";
 
 import styles from "../../../../pages/index.module.css";
@@ -32,16 +33,16 @@ export const HeroCards = () => {
 };
 
 const heroLabels = {
-  systemResources: translate({ id: "homepage.preview.systemResources", message: "System resources" }),
-  online: translate({ id: "homepage.preview.online", message: "Online" }),
-  cpu: translate({ id: "homepage.preview.cpu", message: "CPU" }),
-  memory: translate({ id: "homepage.preview.memory", message: "Memory" }),
-  disk: translate({ id: "homepage.preview.disk", message: "Disk" }),
-  docker: translate({ id: "homepage.preview.docker", message: "Docker" }),
-  dockerSummary: translate({ id: "homepage.preview.dockerSummary", message: "2 running · 1 failed" }),
-  healthy: translate({ id: "homepage.preview.healthy", message: "Healthy" }),
-  running: translate({ id: "homepage.preview.running", message: "Running" }),
-  exited: translate({ id: "homepage.preview.exited", message: "Exited" }),
+  systemResources: "System resources",
+  online: "Online",
+  cpu: "CPU",
+  memory: "Memory",
+  disk: "Disk",
+  docker: "Docker",
+  dockerSummary: "2 running · 1 failed",
+  healthy: "Healthy",
+  running: "Running",
+  exited: "Exited",
 };
 
 const SystemResourcesWidget = () => (

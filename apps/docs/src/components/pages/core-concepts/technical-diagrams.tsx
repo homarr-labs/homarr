@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import Link from "@docusaurus/Link";
+import Link from "next/link";
 import {
   IconApi,
   IconBox,
@@ -170,7 +170,7 @@ export function AssistantFlowDiagram() {
             detail="Instance-wide provider; model may vary by conversation"
           >
             <div className={styles.pillList}>
-              <Link to="/docs/workshop/homarr-provider">Homarr</Link>
+              <Link href="/docs/workshop/homarr-provider">Homarr</Link>
               <span>Hosted</span>
               <span>Local</span>
               <span>Custom</span>
@@ -259,7 +259,7 @@ export function WorkshopFlowDiagram() {
           icon={<IconBuildingStore size={19} />}
           title="Workshop"
           detail="Source, screenshots, and revision"
-          href="pathname:///workshop"
+          href="/workshop"
         />
         <FlowConnector label="inspect" animationDelay={350} />
         <DiagramNode
@@ -361,7 +361,7 @@ function DiagramNode({
 
   if (href) {
     return (
-      <Link className={`${styles.node} ${styles.nodeLink}`} to={href}>
+      <Link className={`${styles.node} ${styles.nodeLink}`} href={href}>
         {content}
       </Link>
     );
