@@ -37,20 +37,21 @@ exported HTML. These tags are generated at build time; set `HOMARR_WEBSITE_URL` 
 After building the docs, run from the repository root:
 
 ```bash
-WORKSHOP_API_URL=https://v2.preview.homarr.dev/api/ sh apps/workshop/preview-docs.sh
+sh apps/workshop/preview-docs.sh
 ```
 
 Open `http://127.0.0.1:8093/docs/`. This starts an isolated PocketBase container with temporary local data and serves
 the export directly, including search, Markdown, and the custom 404 page. Workshop browser requests use the configured
 backend; a trailing `/api/` is removed because the PocketBase SDK appends its API paths. The preview does not copy or
-migrate the remote database. `WORKSHOP_REMOTE_API_URL` makes the preview fetch public item metadata from that same
-remote backend, so direct item links return HTTP 200 with the correct title and social metadata. Missing remote items
-return 404; an unavailable backend returns 503. Production omits this preview setting and uses its own database.
+migrate another database. Set `WORKSHOP_API_URL` to a remote PocketBase origin when testing against one;
+`WORKSHOP_REMOTE_API_URL` can override the server-side metadata source independently. Direct item links then use that
+source for titles and social metadata. Missing remote items return 404; an unavailable backend returns 503.
 
 Verify public item pages without changing the remote database:
 
 ```bash
-WORKSHOP_TEST_URL=http://127.0.0.1:8093 WORKSHOP_REMOTE_API_URL=https://v2.preview.homarr.dev/api/ \
+REMOTE_WORKSHOP_URL=https://workshop.example.com
+WORKSHOP_TEST_URL=http://127.0.0.1:8093 WORKSHOP_REMOTE_API_URL="$REMOTE_WORKSHOP_URL" \
   node apps/workshop/tests/remote-workshop.integration.mjs
 ```
 

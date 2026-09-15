@@ -1,6 +1,7 @@
 const baseUrl = process.env.WORKSHOP_TEST_URL ?? "http://127.0.0.1:18091";
-const publicWorkshopUrl = process.env.EXPECTED_WORKSHOP_WEB_URL ?? "https://v2.preview.homarr.dev/workshop";
-const publicApiUrl = process.env.EXPECTED_WORKSHOP_API_URL ?? "https://v2.preview.homarr.dev";
+const publicWebsiteUrl = process.env.EXPECTED_HOMARR_WEBSITE_URL ?? "https://docs.example.invalid";
+const publicWorkshopUrl = process.env.EXPECTED_WORKSHOP_WEB_URL ?? "https://workshop.example.invalid";
+const publicApiUrl = process.env.EXPECTED_WORKSHOP_API_URL ?? "https://api.example.invalid";
 
 const request = async (path, init = {}) => {
   const response = await fetch(`${baseUrl}${path}`, init);
@@ -50,6 +51,23 @@ for (const expected of [
   'property="article:section" content="Custom CSS"',
 ]) {
   if (!html.includes(expected)) throw new Error(`Rendered Workshop page is missing social metadata: ${expected}`);
+}
+
+const noScreenshotData = new FormData();
+noScreenshotData.set("type", "customCss");
+noScreenshotData.set("title", "No preview image");
+noScreenshotData.set("description", "Uses the Homarr logo.");
+noScreenshotData.set("widgetSchema", "homarr-custom-css-v1");
+noScreenshotData.set("content", "body { color: white; }");
+noScreenshotData.set("author", author.id);
+const noScreenshot = await request("/api/collections/submissions/records", {
+  method: "POST",
+  headers,
+  body: noScreenshotData,
+});
+const noScreenshotHtml = await fetch(`${baseUrl}/workshop/${noScreenshot.id}`).then((response) => response.text());
+if (!noScreenshotHtml.includes(`property="og:image" content="${publicWebsiteUrl}/img/logo.png"`)) {
+  throw new Error("Workshop social metadata must use the website origin for the fallback logo");
 }
 
 console.log("Workshop social metadata integration passed");

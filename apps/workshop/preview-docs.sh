@@ -9,9 +9,12 @@ preview_host=${DOCS_PREVIEW_HOST:-127.0.0.1}
 preview_port=${DOCS_PREVIEW_PORT:-8093}
 preview_image=homarr-workshop:docs-static-preview
 preview_url="http://$preview_host:$preview_port"
-api_url=${WORKSHOP_API_URL:-https://v2.preview.homarr.dev}
+api_url=${WORKSHOP_API_URL:-$preview_url}
 api_url=${api_url%/}
 api_url=${api_url%/api}
+remote_api_url=${WORKSHOP_REMOTE_API_URL:-${WORKSHOP_API_URL:-}}
+remote_api_url=${remote_api_url%/}
+remote_api_url=${remote_api_url%/api}
 
 if [ ! -f apps/docs/out/404.html ]; then
   echo 'Build the docs first: pnpm --filter @homarr/docs build' >&2
@@ -28,7 +31,7 @@ docker run --detach --rm --name "$preview_name" \
   --tmpfs "/pb_data:uid=$(id -u),gid=$(id -g)" \
   --env "HOMARR_WEBSITE_URL=$preview_url" \
   --env "WORKSHOP_API_URL=$api_url" \
-  --env "WORKSHOP_REMOTE_API_URL=$api_url" \
+  --env "WORKSHOP_REMOTE_API_URL=$remote_api_url" \
   --env "WORKSHOP_WEB_URL=$preview_url/workshop" \
   "$preview_image"
 

@@ -9,7 +9,7 @@ import { useColorMode } from "@/hooks/use-color-mode";
 export const DragAndDropShowcase = () => {
   const { colorMode } = useColorMode();
   const [mounted, setMounted] = useState(false);
-  const video = `/videos/home/showcase-${mounted && colorMode === "dark" ? "dark" : "light"}.mp4`;
+  const video = mounted ? `/videos/home/showcase-${colorMode === "dark" ? "dark" : "light"}.mp4` : undefined;
 
   useEffect(() => {
     setMounted(true);

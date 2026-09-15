@@ -8,7 +8,7 @@
 
 .heroContent {
   display: grid;
-  grid-template-columns: minmax(24rem, 1fr) minmax(44rem, 48rem);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 48rem);
   align-items: center;
   gap: clamp(1rem, 3vw, 3rem);
   width: 100%;
