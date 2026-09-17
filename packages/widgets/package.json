@@ -102,6 +102,9 @@
     "react-markdown": "catalog:",
     "react-quill-new": "catalog:",
     "recharts": "catalog:",
+    "rehype-raw": "catalog:",
+    "rehype-sanitize": "catalog:",
+    "remark-gfm": "catalog:",
     "video.js": "catalog:",
     "zod": "catalog:"
   },

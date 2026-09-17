@@ -98,3 +98,9 @@ and focused references under `/api/custom-widgets/`.
 
 Use [Custom Widget agent authoring](../custom-widgets/agent-authoring) for the lifecycle and
 [MCP](../mcp) when the client supports Model Context Protocol.
+
+## Gotify notification deletion
+
+The Notifications widget's `widget.notifications.deleteNotification` tRPC mutation accepts `integrationId` and
+`notificationId` (a positive decimal string). It requires a signed-in user with Interact access to a Gotify integration,
+deletes the message from Gotify, and invalidates its notification cache. It is not exposed through REST or MCP.

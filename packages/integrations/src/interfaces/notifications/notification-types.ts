@@ -3,6 +3,7 @@ export interface Notification {
   time: Date;
   title: string;
   body: string;
+  contentType?: string;
   href?: string;
   source?: {
     name: string;

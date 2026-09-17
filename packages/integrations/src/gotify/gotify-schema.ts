@@ -8,6 +8,11 @@ export const gotifyMessageSchema = z.object({
   title: z.string(),
   message: z.string(),
   priority: z.number().optional(),
+  extras: z
+    .object({
+      "client::display": z.object({ contentType: z.string().optional() }).optional(),
+    })
+    .nullish(),
 });
 
 export const gotifyMessagesResponseSchema = z.object({
