@@ -89,6 +89,29 @@ describe("BinderyIntegration getMissingAsync", () => {
     expect(result.items[0]?.imageUrl).toBeNull();
   });
 
+  test("accepts an explicit null releaseDate, not just an omitted key", async () => {
+    // Observed live against the real Bindery instance: books with no known
+    // release date return releaseDate: null (e.g. newly-added, metadata not
+    // yet fetched), not just an absent field. z.string().optional() alone
+    // rejects null and threw IntegrationParseError for these rows.
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: () =>
+        Promise.resolve([
+          {
+            id: 2,
+            title: "Book With No Release Date Yet",
+            releaseDate: null,
+          },
+        ]),
+    } as never);
+
+    const integration = new BinderyIntegration(integrationInput);
+    const result = await integration.getMissingAsync(10);
+
+    expect(result.items[0]).toMatchObject({ id: 2, title: "Book With No Release Date Yet", year: undefined });
+  });
+
   test("slices client-side to pageSize since the endpoint ignores pagination params", async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,

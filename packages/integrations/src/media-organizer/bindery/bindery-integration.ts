@@ -99,7 +99,9 @@ export class BinderyIntegration extends Integration implements IMediaOrganizerIn
 const binderyMissingBookSchema = z.object({
   id: z.number(),
   title: z.string(),
-  releaseDate: z.string().optional(),
+  // Observed live: books with no known release date return releaseDate: null
+  // (not just an omitted key), e.g. newly-added books awaiting metadata.
+  releaseDate: z.string().optional().nullable(),
   imageUrl: z.string().optional().nullable(),
   author: z
     .object({
