@@ -78,7 +78,9 @@ export class BinderyIntegration extends Integration implements IMediaOrganizerIn
           percentComplete,
           seriesTitle: item.book?.authorName,
           imageUrl: null, // the queue endpoint does not return cover art
-          link: item.book?.id ? this.externalUrl(`/book/${item.book.id}`).toString() : this.externalUrl("/queue").toString(),
+          link: item.book?.id
+            ? this.externalUrl(`/book/${item.book.id}`).toString()
+            : this.externalUrl("/queue").toString(),
         };
       }),
     };

@@ -115,10 +115,7 @@ describe("BinderyIntegration getMissingAsync", () => {
   test("slices client-side to pageSize since the endpoint ignores pagination params", async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
-      json: () =>
-        Promise.resolve(
-          Array.from({ length: 5 }, (_, index) => ({ id: index, title: `Book ${index}` })),
-        ),
+      json: () => Promise.resolve(Array.from({ length: 5 }, (_, index) => ({ id: index, title: `Book ${index}` }))),
     } as never);
 
     const integration = new BinderyIntegration(integrationInput);
@@ -195,7 +192,9 @@ describe("BinderyIntegration testingAsync", () => {
     // the only normal caller. Cast to invoke it directly in isolation from
     // testConnectionAsync's TLS/dispatcher setup, which is out of scope here.
     const testingAsync = (
-      integration as unknown as { testingAsync: (input: { fetchAsync: typeof fetchAsync }) => Promise<{ success: boolean }> }
+      integration as unknown as {
+        testingAsync: (input: { fetchAsync: typeof fetchAsync }) => Promise<{ success: boolean }>;
+      }
     ).testingAsync.bind(integration);
 
     const result = await testingAsync({ fetchAsync });
