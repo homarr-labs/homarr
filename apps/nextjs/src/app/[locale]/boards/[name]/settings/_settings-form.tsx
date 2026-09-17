@@ -178,35 +178,37 @@ export const BoardSettingsForm = ({ board, permissions, hasFullAccess, hideVisib
   const isPending = savePartialSettings.isPending || saveLayouts.isPending;
 
   return (
-    <form onSubmit={form.onSubmit((values) => void handleSubmitAsync(values))}>
-      <Stack gap="xl">
-        <GeneralSettingsContent board={board} form={form} />
-        <LayoutSettingsContent form={form} />
-        <BackgroundSettingsContent form={form} />
-        <ColorSettingsContent form={form} />
-        <CustomCssSettingsContent form={form} />
-        <BehaviorSettingsContent form={form} />
+    <Stack gap="xl">
+      <form onSubmit={form.onSubmit((values) => void handleSubmitAsync(values))}>
+        <Stack gap="xl">
+          <GeneralSettingsContent board={board} form={form} />
+          <LayoutSettingsContent form={form} />
+          <BackgroundSettingsContent form={form} />
+          <ColorSettingsContent form={form} />
+          <CustomCssSettingsContent form={form} />
+          <BehaviorSettingsContent form={form} />
 
-        {hasFullAccess && (
-          <SectionCard title={tSection("access.title")}>
-            <BoardAccessSettings board={board} initialPermissions={permissions} />
-          </SectionCard>
-        )}
+          {form.isDirty() && (
+            <UnsavedChangesBar>
+              <Button type="button" disabled={isPending} variant="default" onClick={handleDiscard}>
+                {t("common.action.discard")}
+              </Button>
+              <Button loading={isPending} type="submit" disabled={!form.isValid()}>
+                {t("common.action.saveChanges")}
+              </Button>
+            </UnsavedChangesBar>
+          )}
+        </Stack>
+      </form>
 
-        {hasFullAccess && <DangerZoneSettingsContent hideVisibility={hideVisibility} />}
+      {hasFullAccess && (
+        <SectionCard title={tSection("access.title")}>
+          <BoardAccessSettings board={board} initialPermissions={permissions} />
+        </SectionCard>
+      )}
 
-        {form.isDirty() && (
-          <UnsavedChangesBar>
-            <Button type="button" disabled={isPending} variant="default" onClick={handleDiscard}>
-              {t("common.action.discard")}
-            </Button>
-            <Button loading={isPending} type="submit" disabled={!form.isValid()}>
-              {t("common.action.saveChanges")}
-            </Button>
-          </UnsavedChangesBar>
-        )}
-      </Stack>
-    </form>
+      {hasFullAccess && <DangerZoneSettingsContent hideVisibility={hideVisibility} />}
+    </Stack>
   );
 };
 
