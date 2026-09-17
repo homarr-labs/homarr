@@ -4,13 +4,7 @@
   "purpose": "Bounded before/after behavior benchmark for three portable Homarr skills.",
   "model": "z-ai/glm-5.3-flash",
   "provider_policy": {
-    "ordered_routes": [
-      "sail-research/fp8",
-      "atlas-cloud/fp8",
-      "together",
-      "coreweave/nvfp4",
-      "baseten/fp8"
-    ],
+    "ordered_routes": ["sail-research/fp8", "atlas-cloud/fp8", "together", "coreweave/nvfp4", "baseten/fp8"],
     "allow_fallbacks": false,
     "require_parameters": true,
     "max_price_usd_per_million": {
@@ -22,16 +16,9 @@
   "scope": {
     "case_count": 10,
     "call_count": 20,
-    "arms": [
-      "before",
-      "after"
-    ],
+    "arms": ["before", "after"],
     "order": "before then after per case",
-    "skills": [
-      "codebase-context",
-      "documentation-sync",
-      "mcp-integration"
-    ],
+    "skills": ["codebase-context", "documentation-sync", "mcp-integration"],
     "case_manifest": ".skillopt-sleep/evidence/portable-skill-behavior-cases-20260917.json",
     "incremental_evidence": ".skillopt-sleep/evidence/portable-benchmark-20260917"
   },
@@ -89,10 +76,7 @@
       "note": "The portable backend evidence and shared telemetry persisted response IDs, token counts, and usage.cost, but no prompt SHA-256."
     },
     "separate_runtime_suite": {
-      "telemetry_rows": [
-        282,
-        291
-      ],
+      "telemetry_rows": [282, 291],
       "calls": 10,
       "cost_usd": 0.0080337,
       "excluded_from_portable_counts": true,
