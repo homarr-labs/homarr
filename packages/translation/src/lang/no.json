@@ -4651,7 +4651,7 @@
             "title": "Statistikk",
             "general": {
               "title": "Send anonym brukerdata",
-              "text": "Homarr vil sende anonymiserte analyser ved bruk av den åpne programvaren Umami. Når dette er aktivert, samler vi inn: Homarr-versjon, databastype (MySQL/PostgreSQL/SQLite), Docker/Kubernetes-status, aktiverte autentiseringsmetoder, og antallet av hver funksjon. Alle data er anonyme og aggregerte – ingen personlig informasjon, URL-er, navn eller identifiserbare data samles inn. Dette hjelper vårt open source-team med å forstå bruks‑mønstre og prioritere utvikling."
+              "text": "Homarr vil sende anonymiserte analyser ved bruk av den åpne programvaren Umami. Når dette er aktivert, samler vi inn: Homarr-versjon, databastype (PostgreSQL/SQLite), Docker/Kubernetes-status, aktiverte autentiseringsmetoder, og antallet av hver funksjon. Alle data er anonyme og aggregerte – ingen personlig informasjon, URL-er, navn eller identifiserbare data samles inn. Dette hjelper vårt open source-team med å forstå bruks‑mønstre og prioritere utvikling."
             }
           },
           "crawlingAndIndexing": {

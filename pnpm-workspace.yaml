@@ -66,7 +66,6 @@ catalog:
   "@tanstack/react-query-devtools": ^5.101.2
   "@tanstack/react-query-next-experimental": ^5.101.2
   "@tanstack/react-query-persist-client": ^5.101.2
-  "@testcontainers/mysql": ^12.0.4
   "@testcontainers/postgresql": ^12.0.4
   "@testcontainers/redis": ^12.0.4
   "@tiptap/extension-color": 3.27.3
@@ -173,7 +172,6 @@ catalog:
   mermaid: ^11.15.0
   motion: ^13.0.0
   maria2: ^0.4.1
-  mysql2: 3.22.6
   next: 16.3.1
   next-auth: 5.0.0-beta.32
   next-intl: 4.13.1
@@ -190,6 +188,8 @@ catalog:
   react-day-picker: ^10.0.1
   react-dom: 19.2.7
   react-error-boundary: ^6.1.2
+  rehype-raw: ^7.0.0
+  rehype-sanitize: ^6.0.0
   react-markdown: ^10.1.0
   react-quill-new: ^3.8.3
   react-simple-code-editor: ^0.14.1

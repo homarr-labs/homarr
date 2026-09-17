@@ -4651,7 +4651,7 @@
             "title": "Analitika",
             "general": {
               "title": "Segíts fejleszteni a Homarrt",
-              "text": "A Homarr az Umami nevű nyílt forráskódú szoftver segítségével névtelen elemzési adatokat küld. Ha ez az opció engedélyezve van, a következő adatokat gyűjtjük: a Homarr verziója, az adatbázis típusa (MySQL/PostgreSQL/SQLite), a Docker/Kubernetes állapota, az engedélyezett hitelesítési módszerek, valamint az egyes funkciók száma. Minden adat névtelen és összesített formában kerül rögzítésre – személyes adatokat, URL-eket, neveket vagy bármilyen azonosítható adatot soha nem gyűjtünk. Ez segít nyílt forráskódú fejlesztői csapatunknak a használati szokások megértésében és a fejlesztési feladatok fontossági sorrendjének meghatározásában."
+              "text": "A Homarr az Umami nevű nyílt forráskódú szoftver segítségével névtelen elemzési adatokat küld. Ha ez az opció engedélyezve van, a következő adatokat gyűjtjük: a Homarr verziója, az adatbázis típusa (PostgreSQL/SQLite), a Docker/Kubernetes állapota, az engedélyezett hitelesítési módszerek, valamint az egyes funkciók száma. Minden adat névtelen és összesített formában kerül rögzítésre – személyes adatokat, URL-eket, neveket vagy bármilyen azonosítható adatot soha nem gyűjtünk. Ez segít nyílt forráskódú fejlesztői csapatunknak a használati szokások megértésében és a fejlesztési feladatok fontossági sorrendjének meghatározásában."
             }
           },
           "crawlingAndIndexing": {

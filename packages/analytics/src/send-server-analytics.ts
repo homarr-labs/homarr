@@ -2,7 +2,7 @@ import { isProviderEnabled } from "@homarr/auth/server";
 import { createId, Stopwatch } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { count, db } from "@homarr/db";
-import { isMysql, isPostgresql } from "@homarr/db/collection";
+import { isPostgresql } from "@homarr/db/collection";
 import { getServerSettingByKeyAsync, updateServerSettingByKeyAsync } from "@homarr/db/queries";
 import {
   accounts,
@@ -122,7 +122,7 @@ export const sendServerAnalyticsAsync = async (): Promise<AnalyticsResult> => {
 
     const properties: Record<string, unknown> = {
       homarrVersion: packageJson.version,
-      databaseType: isMysql() ? "mysql" : isPostgresql() ? "postgresql" : "sqlite",
+      databaseType: isPostgresql() ? "postgresql" : "sqlite",
       dockerEnabled: Boolean(dockerEnv.ENABLE_DOCKER),
       kubernetesEnabled: Boolean(dockerEnv.ENABLE_KUBERNETES),
       authProviders: enabledAuthProviders,

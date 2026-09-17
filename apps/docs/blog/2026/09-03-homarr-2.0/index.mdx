@@ -21,7 +21,22 @@ Homarr 2.0 builds on the dashboard you already use. Here is what changed.
 
 <!-- truncate -->
 
-Update your Homarr image as usual. Homarr runs database migrations automatically when the updated container starts; no manual database migration or separate v2 upgrade procedure is needed. Workshop uses the production service by default, with no preview URL configuration required.
+SQLite and PostgreSQL users can update their Homarr image as usual; database migrations run automatically at startup. **MySQL users must convert before upgrading**, as explained below. Workshop uses the production service by default, with no preview URL configuration required.
+
+## Database support in v2
+
+Homarr v2 drops MySQL support and keeps SQLite (the default) and PostgreSQL. Supporting fewer database engines lets us focus migration testing on those two. Existing MySQL installations have a standalone conversion script to move their data to SQLite before upgrading.
+
+<details>
+<summary>Using MySQL? How to migrate</summary>
+
+1. Update to the latest stable v1 release, then back up your MySQL database, appdata, and encryption key.
+2. Stop Homarr and run the MySQL-to-SQLite converter. It checks the copied data and leaves MySQL unchanged.
+3. Start v2 with the converted database, your existing appdata, and the **same `SECRET_ENCRYPTION_KEY`**.
+
+The converter is verified against the v1.77.1 schema and rejects unknown schemas. See the [migration guide](/docs/advanced/mysql-to-sqlite) for commands, supported inputs, and rollback instructions.
+
+</details>
 
 ## Custom Widgets v2 and Workshop
 
@@ -48,6 +63,12 @@ A `homarr-custom-widget-v2` definition can use several fixed-origin API sources.
 AI makes widgets easy to produce. It does not make the first thing it coughs up worth publishing. **Do not dump untested slop into Workshop.** Test it, add a useful screenshot and explain its setup. Workshop is moderated.
 
 :::
+
+### Docusaurus + PocketBase for the docs and Workshop
+
+Our docs and Workshop now share a Docusaurus + PocketBase deployment. Docusaurus compiles the website into static HTML, CSS and JavaScript at build time. A Go service built on PocketBase serves those files and provides the Workshop backend for accounts, submissions, votes, comments and moderation.
+
+The production image packages both together under the same origin. Node.js is used to build the website, but is not needed to serve it in production. Workshop's persistent data lives separately in `/pb_data`, so replacing the image does not replace community content. This is the website and Workshop architecture; your self-hosted Homarr dashboard remains a separate application.
 
 ### The ultimate Homarr update
 
@@ -143,6 +164,12 @@ Groups use a new Viewer, Editor and Admin matrix. The API, Assistant and MCP fol
 ### Performance
 
 Board startup work runs in parallel, heavy screens load when opened, and identical integration requests share work instead of doing it twice.
+
+## Deploy on Hostinger
+
+[Hostinger now offers a one-click Docker deployment of Homarr](https://www.hostinger.com/applications/homarr) on its VPS plans. They maintain the deployment template, and you manage the resulting VPS and Homarr instance. Our new [Hostinger installation guide](/docs/getting-started/installation/hostinger) walks through deployment and first setup.
+
+We deploy the Homarr Workshop and the compiled Docusaurus docs on the VPS provided by Hostinger. Thank you for hosting this part of Homarr's infrastructure. We have an affiliate partnership as well: purchases through a referral link may support Homarr. For now, the links above go directly to their Homarr application page.
 
 ## Compatibility notes
 

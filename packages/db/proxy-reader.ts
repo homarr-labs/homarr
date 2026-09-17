@@ -80,44 +80,6 @@ const createProxyReaderAsync = async (): Promise<ProxyReader> => {
         connection.close();
       });
     }
-    case "mysql2": {
-      const [{ default: mysql }, { drizzle }, { proxySchema }] = await Promise.all([
-        import("mysql2"),
-        import("drizzle-orm/mysql2"),
-        import("./proxy/mysql"),
-      ]);
-      const connection = dbEnv.HOST
-        ? mysql.createPool({
-            host: dbEnv.HOST,
-            port: dbEnv.PORT,
-            database: dbEnv.NAME,
-            user: dbEnv.USER,
-            password: dbEnv.PASSWORD,
-            connectionLimit: proxyPoolConnectionLimit,
-            maxIdle: 1,
-            idleTimeout: 60_000,
-            enableKeepAlive: true,
-          })
-        : mysql.createPool({
-            uri: dbEnv.URL,
-            connectionLimit: proxyPoolConnectionLimit,
-            maxIdle: 1,
-            idleTimeout: 60_000,
-            enableKeepAlive: true,
-          });
-      const database = drizzle(connection, { schema: proxySchema, mode: "default" });
-      return createProxyReader(
-        database,
-        proxySchema,
-        async () =>
-          await new Promise<void>((resolve, reject) => {
-            connection.end((error) => {
-              if (error) reject(error);
-              else resolve();
-            });
-          }),
-      );
-    }
     case "node-postgres": {
       const [{ Pool }, { drizzle }, { proxySchema }] = await Promise.all([
         import("pg"),

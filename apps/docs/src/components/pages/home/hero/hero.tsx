@@ -3,6 +3,7 @@ import { translate } from "@docusaurus/Translate";
 import { IconDownload, IconExternalLink } from "@tabler/icons-react";
 import clsx from "clsx";
 import styles from "../../../../pages/index.module.css";
+import { LaunchMenu } from "./launch-menu";
 import { HeroCards } from "./hero-cards";
 
 export default function HomeHero() {
@@ -46,16 +47,7 @@ export default function HomeHero() {
                 <IconExternalLink className={"dark:text-gray-200"} size={20} />
               </div>
             </Link>
-            <Link
-              data-attr="Redirect to PikaPods"
-              className={`button bg-neutral-900 button--lg rounded-3xl dark:border-zinc-600 dark:bg-zinc-800`}
-              to="https://www.pikapods.com/pods?run=homarr"
-            >
-              <div className={"flex items-center gap-5"}>
-                <img src={"/img/pictures/partner/pika-pods.svg"} alt={"Pika Pods logo"} height={20} />
-                <span className={"dark:text-gray-200"}>Host with PikaPods</span>
-              </div>
-            </Link>
+            <LaunchMenu />
           </div>
         </div>
         <section

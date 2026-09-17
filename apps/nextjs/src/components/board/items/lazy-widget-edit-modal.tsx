@@ -17,7 +17,7 @@ import { loadWidgetComponent } from "@homarr/widgets/manifest";
 import type { IntegrationSelectOption } from "@homarr/widgets/widget-integration-select";
 
 import { AssistantContext, useOptionalHomarrAssistant } from "~/components/assistant/assistant-context";
-import { getLogicalTrackSize } from "~/components/board/layout";
+import { getLogicalGridSize } from "~/components/board/layout";
 import { IntegrationSelectModal } from "~/components/integration/integration-select-modal";
 import type * as IntegrationEditFormModule from "~/components/integration/embedded-integration-edit-form";
 import type { EmbeddedIntegrationEditFormProps } from "~/components/integration/embedded-integration-edit-form";
@@ -27,8 +27,8 @@ const ignoreAssistantAction = () => undefined;
 const ignoreAssistantPrompt = () => false;
 const ignoreAssistantRefresh = () => Promise.resolve();
 const getPreviewDimensions = (size: WidgetEditModalSize) => ({
-  width: getLogicalTrackSize(size.width),
-  height: getLogicalTrackSize(size.height),
+  width: getLogicalGridSize(size.width),
+  height: getLogicalGridSize(size.height),
 });
 
 const PreviewRuntimeWrapper = ({ children }: PropsWithChildren) => {
@@ -153,8 +153,8 @@ const LazyWidgetEditModalContent = (props: LazyWidgetEditModalContentProps) => {
     if (props.innerProps.previewDimensions) return props.innerProps.previewDimensions;
     const size = widgetDefaultSizes[props.innerProps.kind] ?? defaultWidgetSize;
     return {
-      width: getLogicalTrackSize(size.width),
-      height: getLogicalTrackSize(size.height),
+      width: getLogicalGridSize(size.width),
+      height: getLogicalGridSize(size.height),
     };
   }, [props.innerProps.kind, props.innerProps.previewDimensions]);
   let previewResize = props.innerProps.previewResize;

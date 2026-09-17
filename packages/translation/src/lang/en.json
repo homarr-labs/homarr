@@ -2236,6 +2236,12 @@
       "name": "Bookmarks",
       "description": "Displays multiple app links",
       "option": {
+        "showTitle": {
+          "label": "Show widget title"
+        },
+        "titleSize": {
+          "label": "Widget title size (px)"
+        },
         "layout": {
           "label": "Layout",
           "option": {
@@ -2288,7 +2294,7 @@
           }
         },
         "hideTitle": {
-          "label": "Hide title"
+          "label": "Hide bookmark names"
         },
         "hideIcon": {
           "label": "Hide icons"
@@ -4682,8 +4688,21 @@
       "option": {
         "hideLogos": {
           "label": "Hide logos"
+        },
+        "messageFormat": {
+          "label": "Message format",
+          "option": {
+            "auto": "Automatic",
+            "plain": "Plain text",
+            "markdown": "Markdown",
+            "html": "HTML"
+          }
         }
-      }
+      },
+      "openService": "Open notification service",
+      "deleteNotification": "Delete notification from Gotify",
+      "deleteFailed": "Could not delete notification",
+      "deleteFailedMessage": "The notification could not be deleted. Please try again."
     },
     "speedtestTracker": {
       "name": "Speedtest Tracker",

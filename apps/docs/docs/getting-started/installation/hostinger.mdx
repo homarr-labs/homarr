@@ -1,0 +1,29 @@
+---
+description: Deploy Homarr on a Hostinger VPS using their one-click Docker application.
+---
+
+# Hostinger
+
+Hostinger offers a one-click Docker deployment of Homarr on its VPS plans. Hostinger maintains the deployment template; you manage your Homarr instance and the VPS.
+
+[Deploy on Hostinger](https://www.hostinger.com/applications/homarr)
+
+## Install Homarr
+
+1. Open [Homarr on Hostinger](https://www.hostinger.com/applications/homarr), choose a VPS plan, and follow the account and server setup steps.
+2. In the Hostinger dashboard, open **VPS**, select **Manage** for your server, and open **Docker Manager**.
+3. If Homarr is not already deployed, choose **Compose → One Click Deploy**, select Homarr from the application catalog, and follow the deployment prompts.
+4. Once the project is running, check its published port in Docker Manager. Configure a domain and HTTPS access to that port before creating your account over the internet, then open your HTTPS address.
+5. Complete Homarr's onboarding to create your administrator account and first board. Continue with [After the installation](../after-the-installation.mdx).
+
+For the current dashboard workflow, see [Hostinger's Docker Manager deployment guide](https://www.hostinger.com/support/12040815-how-to-deploy-your-first-container-with-hostinger-docker-manager/).
+
+## Connecting your services
+
+A VPS is outside your home network. For integrations with services at home, configure a private connection, such as a VPN, so the VPS can reach them. A browser bookmark to a local service does not give Homarr's server access to that service.
+
+Use HTTPS when accessing Homarr over the internet. Keep the VPS and Homarr updated, and back up Homarr's persistent data and `SECRET_ENCRYPTION_KEY` before updates. See the [Docker installation guide](./docker.mdx) for Homarr's storage and configuration requirements.
+
+## Partnership
+
+Hostinger provides the VPS we use to deploy the Homarr Workshop and documentation website. We also have an affiliate partnership; purchases through a referral link may support the project. The link on this page currently goes directly to Hostinger's Homarr application page.

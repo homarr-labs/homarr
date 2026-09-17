@@ -9,10 +9,9 @@ const mocks = vi.hoisted(() => {
 
   return {
     dbEnv: {
-      DRIVER: "mysql2",
-      URL: "mysql://homarr:test@localhost:3306/homarr",
+      DRIVER: "node-postgres",
+      URL: "postgresql://homarr:test@localhost:5432/homarr",
     } as Record<string, unknown>,
-    mysqlCreatePool: vi.fn(() => ({})),
     postgresPool: vi.fn(function PostgresPool() {
       return {};
     }),
@@ -23,13 +22,8 @@ const mocks = vi.hoisted(() => {
 });
 
 vi.mock("@homarr/core/infrastructure/db/env", () => ({ dbEnv: mocks.dbEnv }));
-vi.mock("mysql2", () => ({ default: { createPool: mocks.mysqlCreatePool } }));
 vi.mock("pg", () => ({ Pool: mocks.postgresPool }));
-vi.mock("drizzle-orm/mysql2", () => ({ drizzle: vi.fn(() => mocks.database) }));
 vi.mock("drizzle-orm/node-postgres", () => ({ drizzle: vi.fn(() => mocks.database) }));
-vi.mock("./proxy/mysql", () => ({
-  proxySchema: { onboarding: { step: {} }, serverSettings: { settingKey: {}, value: {} } },
-}));
 vi.mock("./proxy/postgresql", () => ({
   proxySchema: { onboarding: { step: {} }, serverSettings: { settingKey: {}, value: {} } },
 }));
@@ -44,39 +38,6 @@ describe("proxy database pools", () => {
     vi.resetModules();
     vi.clearAllMocks();
     for (const key of Object.keys(mocks.dbEnv)) delete mocks.dbEnv[key];
-    mocks.mysqlCreatePool.mockReturnValue({});
-  });
-
-  it("bounds MySQL URL pools instead of falling back to the driver defaults", async () => {
-    Object.assign(mocks.dbEnv, {
-      DRIVER: "mysql2",
-      URL: "mysql://homarr:test@localhost:3306/homarr",
-    });
-
-    await initializeProxyReader();
-
-    expect(mocks.mysqlCreatePool).toHaveBeenCalledWith({
-      uri: "mysql://homarr:test@localhost:3306/homarr",
-      connectionLimit: 1,
-      maxIdle: 1,
-      idleTimeout: 60_000,
-      enableKeepAlive: true,
-    });
-  });
-
-  it("bounds MySQL host pools instead of falling back to the driver defaults", async () => {
-    Object.assign(mocks.dbEnv, {
-      DRIVER: "mysql2",
-      HOST: "localhost",
-      PORT: 3306,
-      NAME: "homarr",
-      USER: "homarr",
-      PASSWORD: "test",
-    });
-
-    await initializeProxyReader();
-
-    expect(mocks.mysqlCreatePool).toHaveBeenCalledWith(expect.objectContaining({ connectionLimit: 1, maxIdle: 1 }));
   });
 
   it("bounds PostgreSQL URL pools instead of falling back to the driver defaults", async () => {
@@ -112,10 +73,10 @@ describe("proxy database pools", () => {
 
   it("retries initialization after a transient driver failure", async () => {
     Object.assign(mocks.dbEnv, {
-      DRIVER: "mysql2",
-      URL: "mysql://homarr:test@localhost:3306/homarr",
+      DRIVER: "node-postgres",
+      URL: "postgresql://homarr:test@localhost:5432/homarr",
     });
-    mocks.mysqlCreatePool.mockImplementationOnce(() => {
+    mocks.postgresPool.mockImplementationOnce(function PostgresPool() {
       throw new Error("database unavailable");
     });
 
@@ -123,6 +84,6 @@ describe("proxy database pools", () => {
 
     await expect(getOnboardingStepForProxyAsync()).rejects.toThrow("database unavailable");
     await expect(getOnboardingStepForProxyAsync()).resolves.toBe("finish");
-    expect(mocks.mysqlCreatePool).toHaveBeenCalledTimes(2);
+    expect(mocks.postgresPool).toHaveBeenCalledTimes(2);
   });
 });

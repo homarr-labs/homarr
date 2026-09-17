@@ -19,8 +19,6 @@
     "ci:act:docker": "bash scripts/ci/act.sh docker",
     "ci:act:fast": "bash scripts/ci/act.sh fast",
     "cli": "pnpm with-env tsx packages/cli/index.ts",
-    "db:migration:mysql:generate": "pnpm -F db migration:mysql:generate",
-    "db:migration:mysql:run": "pnpm -F db migration:mysql:run",
     "db:migration:postgresql:generate": "pnpm -F db migration:postgresql:generate",
     "db:migration:postgresql:run": "pnpm -F db migration:postgresql:run",
     "db:migration:sqlite:generate": "pnpm -F db migration:sqlite:generate",

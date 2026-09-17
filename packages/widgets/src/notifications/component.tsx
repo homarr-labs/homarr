@@ -1,10 +1,12 @@
 "use client";
 
 import { useMemo } from "react";
-import { Avatar, Badge, Card, Flex, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
-import { IconClock } from "@tabler/icons-react";
+import { ActionIcon, Avatar, Badge, Card, Flex, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
+import { IconClock, IconExternalLink, IconTrash } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
+import { showErrorNotification } from "@homarr/notifications";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useTimeAgo } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";
@@ -13,6 +15,7 @@ import { iconSizes } from "@homarr/ui";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
 import { getUsableWidgetQueryData } from "../common/query-state";
 import type { WidgetComponentProps } from "../definition";
+import { NotificationBody } from "./notification-body";
 import { getNotificationDisplay } from "./display";
 import classes from "./component.module.css";
 
@@ -36,6 +39,12 @@ export default function NotificationsWidget({
   const tCommon = useI18n("common");
 
   const board = useRequiredBoard();
+  const interactIntegrations = useIntegrationsWithInteractAccess();
+  const utils = clientApi.useUtils();
+  const deleteNotification = clientApi.widget.notifications.deleteNotification.useMutation({
+    onSuccess: () => utils.widget.notifications.getNotifications.invalidate(),
+    onError: () => showErrorNotification({ title: t("deleteFailed"), message: t("deleteFailedMessage") }),
+  });
 
   const sortedNotifications = useMemo(
     () =>
@@ -45,6 +54,8 @@ export default function NotificationsWidget({
             ...notification,
             compositeKey: `${integration.integration.id}:${notification.id}`,
             integrationName: integration.integration.name,
+            integrationId: integration.integration.id,
+            integrationKind: integration.integration.kind,
           })),
         )
         .sort((entryA, entryB) => entryB.time.getTime() - entryA.time.getTime()),
@@ -97,10 +108,6 @@ export default function NotificationsWidget({
               return (
                 <Card
                   key={notification.compositeKey}
-                  component={href ? "a" : "div"}
-                  href={href}
-                  target={href ? "_blank" : undefined}
-                  rel={href ? SAFE_NEW_TAB_REL : undefined}
                   className={isAdvanced ? (columns > 1 ? classes.card : classes.row) : undefined}
                   radius={board.itemRadius}
                   w="100%"
@@ -132,15 +139,13 @@ export default function NotificationsWidget({
                           {notification.title}
                         </Text>
                       )}
-                      <Text
-                        c="dimmed"
-                        size={isAdvanced && isDense ? "xs" : "sm"}
+                      <NotificationBody
+                        body={notification.body}
+                        contentType={notification.contentType}
+                        format={options.messageFormat}
                         lineClamp={notificationDisplay.bodyLineClamp}
-                        title={notification.body}
-                        style={{ whiteSpace: "pre-line" }}
-                      >
-                        {notification.body}
-                      </Text>
+                        dense={isAdvanced && isDense}
+                      />
 
                       <InfoDisplay
                         date={notification.time}
@@ -152,6 +157,40 @@ export default function NotificationsWidget({
                         dense={isDense}
                       />
                     </Flex>
+                    <Stack gap={4}>
+                      {href && (
+                        <ActionIcon
+                          component="a"
+                          href={href}
+                          target="_blank"
+                          rel={SAFE_NEW_TAB_REL}
+                          variant="subtle"
+                          color="gray"
+                          aria-label={t("openService")}
+                          title={t("openService")}
+                        >
+                          <IconExternalLink size={16} />
+                        </ActionIcon>
+                      )}
+                      {notification.integrationKind === "gotify" &&
+                        interactIntegrations.some(({ id }) => id === notification.integrationId) && (
+                          <ActionIcon
+                            variant="subtle"
+                            color="red"
+                            aria-label={t("deleteNotification")}
+                            title={t("deleteNotification")}
+                            disabled={deleteNotification.isPending}
+                            onClick={() =>
+                              deleteNotification.mutate({
+                                integrationId: notification.integrationId,
+                                notificationId: notification.id,
+                              })
+                            }
+                          >
+                            <IconTrash size={16} />
+                          </ActionIcon>
+                        )}
+                    </Stack>
                   </Flex>
                 </Card>
               );

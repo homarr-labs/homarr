@@ -1,0 +1,1356 @@
+{
+  "release": "v1.77.1",
+  "commit": "7859faaa1d9bc0bb883e6f2d09770daf44750ed1",
+  "tables": [
+    {
+      "name": "account",
+      "columns": [
+        {
+          "name": "user_id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "type",
+          "mysqlType": "text",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "provider",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "provider_account_id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "refresh_token",
+          "mysqlType": "text",
+          "notNull": false,
+          "encoding": "text"
+        },
+        {
+          "name": "access_token",
+          "mysqlType": "text",
+          "notNull": false,
+          "encoding": "text"
+        },
+        {
+          "name": "expires_at",
+          "mysqlType": "int",
+          "notNull": false,
+          "encoding": "integer"
+        },
+        {
+          "name": "token_type",
+          "mysqlType": "text",
+          "notNull": false,
+          "encoding": "text"
+        },
+        {
+          "name": "scope",
+          "mysqlType": "text",
+          "notNull": false,
+          "encoding": "text"
+        },
+        {
+          "name": "id_token",
+          "mysqlType": "text",
+          "notNull": false,
+          "encoding": "text"
+        },
+        {
+          "name": "session_state",
+          "mysqlType": "text",
+          "notNull": false,
+          "encoding": "text"
+        }
+      ],
+      "orderBy": ["provider", "provider_account_id"]
+    },
+    {
+      "name": "apiKey",
+      "columns": [
+        {
+          "name": "id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "api_key",
+          "mysqlType": "text",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "user_id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        }
+      ],
+      "orderBy": ["id"]
+    },
+    {
+      "name": "app",
+      "columns": [
+        {
+          "name": "id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "name",
+          "mysqlType": "text",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "description",
+          "mysqlType": "text",
+          "notNull": false,
+          "encoding": "text"
+        },
+        {
+          "name": "icon_url",
+          "mysqlType": "text",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "href",
+          "mysqlType": "text",
+          "notNull": false,
+          "encoding": "text"
+        },
+        {
+          "name": "ping_url",
+          "mysqlType": "text",
+          "notNull": false,
+          "encoding": "text"
+        }
+      ],
+      "orderBy": ["id"]
+    },
+    {
+      "name": "boardGroupPermission",
+      "columns": [
+        {
+          "name": "board_id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "group_id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "permission",
+          "mysqlType": "varchar(128)",
+          "notNull": true,
+          "encoding": "text"
+        }
+      ],
+      "orderBy": ["board_id", "group_id", "permission"]
+    },
+    {
+      "name": "boardUserPermission",
+      "columns": [
+        {
+          "name": "board_id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "user_id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "permission",
+          "mysqlType": "varchar(128)",
+          "notNull": true,
+          "encoding": "text"
+        }
+      ],
+      "orderBy": ["board_id", "user_id", "permission"]
+    },
+    {
+      "name": "board",
+      "columns": [
+        {
+          "name": "id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "name",
+          "mysqlType": "varchar(256)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "is_public",
+          "mysqlType": "boolean",
+          "notNull": true,
+          "encoding": "boolean"
+        },
+        {
+          "name": "creator_id",
+          "mysqlType": "varchar(64)",
+          "notNull": false,
+          "encoding": "text"
+        },
+        {
+          "name": "page_title",
+          "mysqlType": "text",
+          "notNull": false,
+          "encoding": "text"
+        },
+        {
+          "name": "meta_title",
+          "mysqlType": "text",
+          "notNull": false,
+          "encoding": "text"
+        },
+        {
+          "name": "logo_image_url",
+          "mysqlType": "text",
+          "notNull": false,
+          "encoding": "text"
+        },
+        {
+          "name": "favicon_image_url",
+          "mysqlType": "text",
+          "notNull": false,
+          "encoding": "text"
+        },
+        {
+          "name": "background_image_url",
+          "mysqlType": "text",
+          "notNull": false,
+          "encoding": "text"
+        },
+        {
+          "name": "background_image_attachment",
+          "mysqlType": "text",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "background_image_repeat",
+          "mysqlType": "text",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "background_image_size",
+          "mysqlType": "text",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "primary_color",
+          "mysqlType": "text",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "secondary_color",
+          "mysqlType": "text",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "opacity",
+          "mysqlType": "int",
+          "notNull": true,
+          "encoding": "integer"
+        },
+        {
+          "name": "custom_css",
+          "mysqlType": "text",
+          "notNull": false,
+          "encoding": "text"
+        },
+        {
+          "name": "icon_color",
+          "mysqlType": "text",
+          "notNull": false,
+          "encoding": "text"
+        },
+        {
+          "name": "item_radius",
+          "mysqlType": "text",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "disable_status",
+          "mysqlType": "boolean",
+          "notNull": true,
+          "encoding": "boolean"
+        }
+      ],
+      "orderBy": ["id"]
+    },
+    {
+      "name": "cron_job_configuration",
+      "columns": [
+        {
+          "name": "name",
+          "mysqlType": "varchar(256)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "cron_expression",
+          "mysqlType": "varchar(32)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "is_enabled",
+          "mysqlType": "boolean",
+          "notNull": true,
+          "encoding": "boolean"
+        }
+      ],
+      "orderBy": ["name"]
+    },
+    {
+      "name": "custom_widget_definition",
+      "columns": [
+        {
+          "name": "id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "name",
+          "mysqlType": "varchar(256)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "description",
+          "mysqlType": "text",
+          "notNull": false,
+          "encoding": "text"
+        },
+        {
+          "name": "icon_url",
+          "mysqlType": "text",
+          "notNull": false,
+          "encoding": "text"
+        },
+        {
+          "name": "auth_type",
+          "mysqlType": "varchar(32)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "header_name",
+          "mysqlType": "varchar(256)",
+          "notNull": false,
+          "encoding": "text"
+        },
+        {
+          "name": "method",
+          "mysqlType": "varchar(16)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "request_body",
+          "mysqlType": "text",
+          "notNull": false,
+          "encoding": "text"
+        },
+        {
+          "name": "display_type",
+          "mysqlType": "varchar(32)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "display_config",
+          "mysqlType": "text",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "created_at",
+          "mysqlType": "timestamp",
+          "notNull": true,
+          "encoding": "seconds"
+        },
+        {
+          "name": "updated_at",
+          "mysqlType": "timestamp",
+          "notNull": true,
+          "encoding": "seconds"
+        },
+        {
+          "name": "creator_id",
+          "mysqlType": "varchar(64)",
+          "notNull": false,
+          "encoding": "text"
+        },
+        {
+          "name": "url",
+          "mysqlType": "text",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "enabled",
+          "mysqlType": "boolean",
+          "notNull": true,
+          "encoding": "boolean"
+        }
+      ],
+      "orderBy": ["id"]
+    },
+    {
+      "name": "custom_widget_secret",
+      "columns": [
+        {
+          "name": "kind",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "value",
+          "mysqlType": "text",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "updated_at",
+          "mysqlType": "timestamp",
+          "notNull": true,
+          "encoding": "seconds"
+        },
+        {
+          "name": "definition_id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        }
+      ],
+      "orderBy": ["definition_id", "kind"]
+    },
+    {
+      "name": "groupMember",
+      "columns": [
+        {
+          "name": "group_id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "user_id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        }
+      ],
+      "orderBy": ["group_id", "user_id"]
+    },
+    {
+      "name": "groupPermission",
+      "columns": [
+        {
+          "name": "group_id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "permission",
+          "mysqlType": "text",
+          "notNull": true,
+          "encoding": "text"
+        }
+      ],
+      "orderBy": ["group_id", "permission"]
+    },
+    {
+      "name": "group",
+      "columns": [
+        {
+          "name": "id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "name",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "owner_id",
+          "mysqlType": "varchar(64)",
+          "notNull": false,
+          "encoding": "text"
+        },
+        {
+          "name": "home_board_id",
+          "mysqlType": "varchar(64)",
+          "notNull": false,
+          "encoding": "text"
+        },
+        {
+          "name": "mobile_home_board_id",
+          "mysqlType": "varchar(64)",
+          "notNull": false,
+          "encoding": "text"
+        },
+        {
+          "name": "position",
+          "mysqlType": "smallint",
+          "notNull": true,
+          "encoding": "integer"
+        }
+      ],
+      "orderBy": ["id"]
+    },
+    {
+      "name": "iconRepository",
+      "columns": [
+        {
+          "name": "id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "slug",
+          "mysqlType": "varchar(150)",
+          "notNull": true,
+          "encoding": "text"
+        }
+      ],
+      "orderBy": ["id"]
+    },
+    {
+      "name": "icon",
+      "columns": [
+        {
+          "name": "id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "name",
+          "mysqlType": "varchar(250)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "url",
+          "mysqlType": "text",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "checksum",
+          "mysqlType": "text",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "icon_repository_id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        }
+      ],
+      "orderBy": ["id"]
+    },
+    {
+      "name": "integrationGroupPermissions",
+      "columns": [
+        {
+          "name": "integration_id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "group_id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "permission",
+          "mysqlType": "varchar(128)",
+          "notNull": true,
+          "encoding": "text"
+        }
+      ],
+      "orderBy": ["integration_id", "group_id", "permission"]
+    },
+    {
+      "name": "integration_item",
+      "columns": [
+        {
+          "name": "item_id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "integration_id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        }
+      ],
+      "orderBy": ["item_id", "integration_id"]
+    },
+    {
+      "name": "integrationSecret",
+      "columns": [
+        {
+          "name": "kind",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "value",
+          "mysqlType": "text",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "updated_at",
+          "mysqlType": "timestamp",
+          "notNull": true,
+          "encoding": "seconds"
+        },
+        {
+          "name": "integration_id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        }
+      ],
+      "orderBy": ["integration_id", "kind"]
+    },
+    {
+      "name": "integrationUserPermission",
+      "columns": [
+        {
+          "name": "integration_id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "user_id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "permission",
+          "mysqlType": "varchar(128)",
+          "notNull": true,
+          "encoding": "text"
+        }
+      ],
+      "orderBy": ["integration_id", "user_id", "permission"]
+    },
+    {
+      "name": "integration",
+      "columns": [
+        {
+          "name": "id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "name",
+          "mysqlType": "text",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "url",
+          "mysqlType": "text",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "kind",
+          "mysqlType": "varchar(128)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "app_id",
+          "mysqlType": "varchar(128)",
+          "notNull": false,
+          "encoding": "text"
+        }
+      ],
+      "orderBy": ["id"]
+    },
+    {
+      "name": "invite",
+      "columns": [
+        {
+          "name": "id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "token",
+          "mysqlType": "varchar(512)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "expiration_date",
+          "mysqlType": "timestamp",
+          "notNull": true,
+          "encoding": "seconds"
+        },
+        {
+          "name": "creator_id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        }
+      ],
+      "orderBy": ["id"]
+    },
+    {
+      "name": "item_layout",
+      "columns": [
+        {
+          "name": "item_id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "section_id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "layout_id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "x_offset",
+          "mysqlType": "int",
+          "notNull": true,
+          "encoding": "integer"
+        },
+        {
+          "name": "y_offset",
+          "mysqlType": "int",
+          "notNull": true,
+          "encoding": "integer"
+        },
+        {
+          "name": "width",
+          "mysqlType": "int",
+          "notNull": true,
+          "encoding": "integer"
+        },
+        {
+          "name": "height",
+          "mysqlType": "int",
+          "notNull": true,
+          "encoding": "integer"
+        }
+      ],
+      "orderBy": ["item_id", "section_id", "layout_id"]
+    },
+    {
+      "name": "item",
+      "columns": [
+        {
+          "name": "id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "board_id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "kind",
+          "mysqlType": "text",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "options",
+          "mysqlType": "text",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "advanced_options",
+          "mysqlType": "text",
+          "notNull": true,
+          "encoding": "text"
+        }
+      ],
+      "orderBy": ["id"]
+    },
+    {
+      "name": "layout",
+      "columns": [
+        {
+          "name": "id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "name",
+          "mysqlType": "varchar(32)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "board_id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "column_count",
+          "mysqlType": "tinyint",
+          "notNull": true,
+          "encoding": "integer"
+        },
+        {
+          "name": "breakpoint",
+          "mysqlType": "smallint",
+          "notNull": true,
+          "encoding": "integer"
+        }
+      ],
+      "orderBy": ["id"]
+    },
+    {
+      "name": "media",
+      "columns": [
+        {
+          "name": "id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "name",
+          "mysqlType": "varchar(512)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "content",
+          "mysqlType": "longblob",
+          "notNull": true,
+          "encoding": "blob"
+        },
+        {
+          "name": "content_type",
+          "mysqlType": "text",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "size",
+          "mysqlType": "int",
+          "notNull": true,
+          "encoding": "integer"
+        },
+        {
+          "name": "created_at",
+          "mysqlType": "timestamp",
+          "notNull": true,
+          "encoding": "seconds"
+        },
+        {
+          "name": "creator_id",
+          "mysqlType": "varchar(64)",
+          "notNull": false,
+          "encoding": "text"
+        }
+      ],
+      "orderBy": ["id"]
+    },
+    {
+      "name": "onboarding",
+      "columns": [
+        {
+          "name": "id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "step",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "previous_step",
+          "mysqlType": "varchar(64)",
+          "notNull": false,
+          "encoding": "text"
+        }
+      ],
+      "orderBy": ["id"]
+    },
+    {
+      "name": "search_engine",
+      "columns": [
+        {
+          "name": "id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "icon_url",
+          "mysqlType": "text",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "name",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "short",
+          "mysqlType": "varchar(8)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "description",
+          "mysqlType": "text",
+          "notNull": false,
+          "encoding": "text"
+        },
+        {
+          "name": "url_template",
+          "mysqlType": "text",
+          "notNull": false,
+          "encoding": "text"
+        },
+        {
+          "name": "type",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "integration_id",
+          "mysqlType": "varchar(64)",
+          "notNull": false,
+          "encoding": "text"
+        }
+      ],
+      "orderBy": ["id"]
+    },
+    {
+      "name": "section_collapse_state",
+      "columns": [
+        {
+          "name": "user_id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "section_id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "collapsed",
+          "mysqlType": "boolean",
+          "notNull": true,
+          "encoding": "boolean"
+        }
+      ],
+      "orderBy": ["user_id", "section_id"]
+    },
+    {
+      "name": "section_layout",
+      "columns": [
+        {
+          "name": "section_id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "layout_id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "parent_section_id",
+          "mysqlType": "varchar(64)",
+          "notNull": false,
+          "encoding": "text"
+        },
+        {
+          "name": "x_offset",
+          "mysqlType": "int",
+          "notNull": true,
+          "encoding": "integer"
+        },
+        {
+          "name": "y_offset",
+          "mysqlType": "int",
+          "notNull": true,
+          "encoding": "integer"
+        },
+        {
+          "name": "width",
+          "mysqlType": "int",
+          "notNull": true,
+          "encoding": "integer"
+        },
+        {
+          "name": "height",
+          "mysqlType": "int",
+          "notNull": true,
+          "encoding": "integer"
+        }
+      ],
+      "orderBy": ["section_id", "layout_id"]
+    },
+    {
+      "name": "section",
+      "columns": [
+        {
+          "name": "id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "board_id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "kind",
+          "mysqlType": "text",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "x_offset",
+          "mysqlType": "int",
+          "notNull": false,
+          "encoding": "integer"
+        },
+        {
+          "name": "y_offset",
+          "mysqlType": "int",
+          "notNull": false,
+          "encoding": "integer"
+        },
+        {
+          "name": "name",
+          "mysqlType": "text",
+          "notNull": false,
+          "encoding": "text"
+        },
+        {
+          "name": "options",
+          "mysqlType": "text",
+          "notNull": false,
+          "encoding": "text"
+        }
+      ],
+      "orderBy": ["id"]
+    },
+    {
+      "name": "serverSetting",
+      "columns": [
+        {
+          "name": "setting_key",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "value",
+          "mysqlType": "text",
+          "notNull": true,
+          "encoding": "text"
+        }
+      ],
+      "orderBy": ["setting_key"]
+    },
+    {
+      "name": "session",
+      "columns": [
+        {
+          "name": "session_token",
+          "mysqlType": "varchar(512)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "user_id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "expires",
+          "mysqlType": "timestamp",
+          "notNull": true,
+          "encoding": "milliseconds"
+        }
+      ],
+      "orderBy": ["session_token"]
+    },
+    {
+      "name": "user",
+      "columns": [
+        {
+          "name": "id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "name",
+          "mysqlType": "text",
+          "notNull": false,
+          "encoding": "text"
+        },
+        {
+          "name": "email",
+          "mysqlType": "text",
+          "notNull": false,
+          "encoding": "text"
+        },
+        {
+          "name": "email_verified",
+          "mysqlType": "timestamp",
+          "notNull": false,
+          "encoding": "milliseconds"
+        },
+        {
+          "name": "image",
+          "mysqlType": "text",
+          "notNull": false,
+          "encoding": "text"
+        },
+        {
+          "name": "password",
+          "mysqlType": "text",
+          "notNull": false,
+          "encoding": "text"
+        },
+        {
+          "name": "provider",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "home_board_id",
+          "mysqlType": "varchar(64)",
+          "notNull": false,
+          "encoding": "text"
+        },
+        {
+          "name": "mobile_home_board_id",
+          "mysqlType": "varchar(64)",
+          "notNull": false,
+          "encoding": "text"
+        },
+        {
+          "name": "default_search_engine_id",
+          "mysqlType": "varchar(64)",
+          "notNull": false,
+          "encoding": "text"
+        },
+        {
+          "name": "open_search_in_new_tab",
+          "mysqlType": "boolean",
+          "notNull": true,
+          "encoding": "boolean"
+        },
+        {
+          "name": "ddg_bangs",
+          "mysqlType": "boolean",
+          "notNull": true,
+          "encoding": "boolean"
+        },
+        {
+          "name": "color_scheme",
+          "mysqlType": "varchar(5)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "first_day_of_week",
+          "mysqlType": "tinyint",
+          "notNull": true,
+          "encoding": "integer"
+        },
+        {
+          "name": "ping_icons_enabled",
+          "mysqlType": "boolean",
+          "notNull": true,
+          "encoding": "boolean"
+        },
+        {
+          "name": "enable_right_click_on_widgets",
+          "mysqlType": "boolean",
+          "notNull": true,
+          "encoding": "boolean"
+        },
+        {
+          "name": "completed_manage_tour",
+          "mysqlType": "boolean",
+          "notNull": true,
+          "encoding": "boolean"
+        },
+        {
+          "name": "completed_board_tour",
+          "mysqlType": "boolean",
+          "notNull": true,
+          "encoding": "boolean"
+        }
+      ],
+      "orderBy": ["id"]
+    },
+    {
+      "name": "verificationToken",
+      "columns": [
+        {
+          "name": "identifier",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "token",
+          "mysqlType": "varchar(512)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "expires",
+          "mysqlType": "timestamp",
+          "notNull": true,
+          "encoding": "milliseconds"
+        }
+      ],
+      "orderBy": ["identifier", "token"]
+    },
+    {
+      "name": "trusted_certificate_hostname",
+      "columns": [
+        {
+          "name": "hostname",
+          "mysqlType": "varchar(256)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "thumbprint",
+          "mysqlType": "varchar(128)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "certificate",
+          "mysqlType": "text",
+          "notNull": true,
+          "encoding": "text"
+        }
+      ],
+      "orderBy": ["hostname", "thumbprint"]
+    },
+    {
+      "name": "widget_secret",
+      "columns": [
+        {
+          "name": "item_id",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "kind",
+          "mysqlType": "varchar(64)",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "value",
+          "mysqlType": "text",
+          "notNull": true,
+          "encoding": "text"
+        },
+        {
+          "name": "updated_at",
+          "mysqlType": "timestamp",
+          "notNull": true,
+          "encoding": "seconds"
+        }
+      ],
+      "orderBy": ["item_id", "kind"]
+    }
+  ]
+}

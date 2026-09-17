@@ -1,6 +1,3 @@
-import type { MySqlRawQueryResult } from "drizzle-orm/mysql2";
-import type { QueryResult } from "pg";
-
 import { createId, splitToNChunks, Stopwatch } from "@homarr/common";
 import { env } from "@homarr/common/env";
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -100,11 +97,9 @@ export const iconsUpdaterJob = createCronJob("iconsUpdater", EVERY_WEEK, {
   await handleTransactionsAsync(db, {
     async handleAsync(db, schema) {
       await db.transaction(async (transaction) => {
-        const result = (await transaction.delete(schema.icons).where(deadIconsFilter)) as
-          | MySqlRawQueryResult
-          | QueryResult;
+        const result = await transaction.delete(schema.icons).where(deadIconsFilter);
 
-        countDeleted += Array.isArray(result) ? result[0].affectedRows : (result.rowCount ?? 0);
+        countDeleted += result.rowCount ?? 0;
 
         if (deadIconRepositories.length >= 1) {
           await transaction.delete(schema.iconRepositories).where(
