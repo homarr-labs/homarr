@@ -56,6 +56,16 @@ export default function HomeHero() {
                 <span className={"dark:text-gray-200"}>Host with PikaPods</span>
               </div>
             </Link>
+            <Link
+              data-attr="Redirect to Hostinger"
+              className={`button bg-neutral-900 button--lg rounded-3xl dark:border-zinc-600 dark:bg-zinc-800`}
+              to="https://www.hostinger.com/applications/homarr"
+            >
+              <div className={"flex items-center gap-5"}>
+                <span className={"dark:text-gray-200"}>Host with Hostinger</span>
+                <IconExternalLink className={"dark:text-gray-200"} size={20} />
+              </div>
+            </Link>
           </div>
         </div>
         <section
