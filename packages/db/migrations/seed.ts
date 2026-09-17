@@ -18,6 +18,7 @@ import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server
 
 import type { Database, InferInsertModel } from "..";
 import { eq, inArray } from "..";
+import { seedWidgetUiAuditAsync } from "./widget-ui-audit";
 import { getMaxGroupPositionAsync, placeAllWidgetsAsync } from "../queries";
 import {
   getServerSettingByKeyAsync,
@@ -66,6 +67,10 @@ export const seedDataAsync = async (db: Database) => {
 
   if (isTruthyEnv(process.env.DEMO_MODE)) {
     await seedDemoUserAsync(db);
+  }
+
+  if (isTruthyEnv(process.env.SEED_WIDGET_UI_AUDIT)) {
+    await seedWidgetUiAuditAsync(db);
   }
 
   await seedProtectedBoardLayoutsAsync(db);
@@ -512,7 +517,7 @@ const seedDefaultBoardAsync = async (db: Database) => {
   console.log("Created default board 'dashboard' through seed");
 };
 
-interface DemoWidget {
+export interface DemoWidget {
   kind: WidgetKind;
   section?: "right";
   xOffset: number;
@@ -586,7 +591,7 @@ const demoApps = [
   },
 ] as const;
 
-const buildDemoWidgets = (appIds: string[], customWidgetDefinitionId: string): DemoWidget[] => [
+export const buildDemoWidgets = (appIds: string[], customWidgetDefinitionId: string): DemoWidget[] => [
   // Daily focus
   { kind: "calendar", xOffset: 0, yOffset: 0, width: 2, height: 2, needsIntegration: true },
   {

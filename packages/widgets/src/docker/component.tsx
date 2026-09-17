@@ -244,6 +244,7 @@ export default function DockerWidget({
   width,
   isEditMode,
   displayMode,
+  displayScale = 1,
   boardId,
   itemId,
   setOptions,
@@ -258,6 +259,7 @@ export default function DockerWidget({
   const { formatBytes } = useByteFormatter();
   const hasChangeAccess = board ? constructBoardPermissions(board, session).hasChangeAccess : false;
   const isAdvanced = displayMode === "advanced";
+  const responsiveWidth = width * displayScale;
 
   const utils = clientApi.useUtils();
   const containersQuery = clientApi.docker.getContainers.useQuery(getContainersQueryInput(options.endpointIds));
@@ -363,8 +365,8 @@ export default function DockerWidget({
   );
 
   const columnVisibility = useMemo(
-    () => getDockerColumnVisibility(options.columns, width, isAdvanced),
-    [isAdvanced, options.columns, width],
+    () => getDockerColumnVisibility(options.columns, responsiveWidth, isAdvanced),
+    [isAdvanced, options.columns, responsiveWidth],
   );
   const columns = useMemo(() => {
     const sortingEnabled = (isAdvanced || options.enableRowSorting) && !isEditMode;
@@ -405,7 +407,7 @@ export default function DockerWidget({
     );
   }
 
-  const footerVisibility = getDockerFooterVisibility(width, isAdvanced);
+  const footerVisibility = getDockerFooterVisibility(responsiveWidth, isAdvanced);
 
   return (
     <Stack gap={0} h="100%" style={{ overflow: "hidden" }}>

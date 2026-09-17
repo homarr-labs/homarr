@@ -88,7 +88,10 @@ export function padLiveTimeGrid(data: Record<string, unknown>[], pointCount = 60
   });
 }
 
-const yAxisBase = { tickMargin: 0, tick: { fontSize: "var(--mantine-font-size-xs)" } } as const;
+const yAxisBase = {
+  tickMargin: 0,
+  tick: { fontSize: "var(--mantine-font-size-xs)" },
+} as const;
 const chartStyle = { minWidth: 0, minHeight: 1 } as const;
 const panelStyle = { minWidth: 0, overflow: "hidden" } as const;
 export const CPU_Y_AXIS_DOMAIN: [number, string] = [0, "auto"];
@@ -115,23 +118,38 @@ export const BeszelChartPanel = memo(({ title, subtitle, chartProps }: BeszelCha
   </Stack>
 ));
 
-type BeszelAreaChartProps = Omit<AreaChartProps, "dataKey" | "curveType" | "withDots" | "withXAxis" | "withYAxis"> & {
+type BeszelAreaChartProps = Omit<AreaChartProps, "dataKey" | "curveType" | "withDots" | "withYAxis"> & {
   yAxisFormatter: (value: number) => string;
+  displayScale?: number;
   yAxisDomain?: [number, string];
 };
 
 const BeszelAreaChart = memo(
   ({
     yAxisFormatter,
+    displayScale = 1,
+    withXAxis = true,
     yAxisDomain,
     yAxisProps: yAxisPropsOverride,
+    xAxisProps: xAxisPropsOverride,
     type = "default",
     ...props
   }: BeszelAreaChartProps) => {
+    const mergedXAxis = useMemo(
+      () => ({
+        interval: "preserveEnd" as const,
+        ...xAxisPropsOverride,
+      }),
+      [xAxisPropsOverride],
+    );
+    let axisWidth = 56;
+    if (Number.isFinite(displayScale) && displayScale > 0 && displayScale < 1) {
+      axisWidth /= displayScale;
+    }
     const mergedYAxis = useMemo(() => {
       const base = {
         ...yAxisBase,
-        width: 48,
+        width: axisWidth,
         tickMargin: 2,
         tickFormatter: yAxisFormatter,
         ...yAxisPropsOverride,
@@ -140,7 +158,7 @@ const BeszelAreaChart = memo(
         return { ...base, domain: yAxisDomain };
       }
       return base;
-    }, [yAxisFormatter, yAxisDomain, yAxisPropsOverride]);
+    }, [axisWidth, yAxisFormatter, yAxisDomain, yAxisPropsOverride]);
 
     return (
       <AreaChart
@@ -152,10 +170,11 @@ const BeszelAreaChart = memo(
         type={type}
         strokeWidth={1}
         fillOpacity={0.2}
-        withXAxis
+        withXAxis={withXAxis}
         withYAxis
         w="100%"
         style={chartStyle}
+        xAxisProps={mergedXAxis}
         yAxisProps={mergedYAxis}
         {...props}
       />

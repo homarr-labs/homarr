@@ -263,6 +263,8 @@ export default function BeszelSystemStatsWidget({
       >
         <Stack p="sm">
           <BeszelStatsView
+            displayScale={displayScale}
+            showXAxis={responsiveWidth >= 220 && responsiveHeight >= 180}
             integrationIds={selectedSystem ? [selectedSystem.integrationId] : []}
             systemId={selectedSystem?.systemId ?? ""}
             timePeriod={options.timePeriod as BeszelTimePeriod}

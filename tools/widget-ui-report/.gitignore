@@ -1,0 +1,8 @@
+node_modules/
+dist/
+public/screenshots/
+public/manifest*.json
+
+/public/verification.json
+/public/runs/
+/public/comparison.json

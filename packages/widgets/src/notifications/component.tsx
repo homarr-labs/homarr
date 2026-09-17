@@ -22,6 +22,7 @@ export default function NotificationsWidget({
   width,
   height,
   displayMode,
+  displayScale = 1,
 }: WidgetComponentProps<"notifications">) {
   const notificationsQuery = clientApi.widget.notifications.getNotifications.useQuery({
     ...options,
@@ -53,20 +54,26 @@ export default function NotificationsWidget({
     (integration): integration is typeof integration & { error: string } => Boolean(integration.error),
   );
   const isAdvanced = displayMode === "advanced";
-  const isDense = width < 280 || height < 180;
+  let responsiveWidth = width;
+  let responsiveHeight = height;
+  if (!isAdvanced) {
+    responsiveWidth *= displayScale;
+    responsiveHeight *= displayScale;
+  }
+  const isDense = responsiveWidth < 280 || responsiveHeight < 180;
   const isRoomy = width >= 360 && height >= 220;
-  const bodyLineClamp = height < 112 ? 1 : isDense ? 2 : height >= 300 ? 8 : 4;
+  const bodyLineClamp = responsiveHeight < 180 ? 1 : isDense ? 2 : height >= 300 ? 8 : 4;
   const notificationDisplay = getNotificationDisplay({
     displayMode,
     hideLogos: options.hideLogos,
     isRoomy: isAdvanced && isRoomy,
-    bodyLineClamp: isAdvanced ? bodyLineClamp : 4,
+    bodyLineClamp,
   });
   const columns = isAdvanced && width >= 720 ? 2 : 1;
   const spacing = !isAdvanced || isRoomy ? "sm" : "xs";
 
   return (
-    <ScrollArea className="scroll-area-w100" w="100%" h="100%" p={isAdvanced ? "xs" : "sm"}>
+    <ScrollArea className="scroll-area-w100" w="100%" h="100%" p={isDense ? 4 : "xs"}>
       <Stack w="100%" gap={isAdvanced ? "xs" : "sm"}>
         {failedIntegrations.length > 0 && (
           <Group gap={4} wrap="wrap">
@@ -97,7 +104,7 @@ export default function NotificationsWidget({
                   className={isAdvanced ? (columns > 1 ? classes.card : classes.row) : undefined}
                   radius={board.itemRadius}
                   w="100%"
-                  p={!isAdvanced || isRoomy ? "sm" : isDense ? 6 : "xs"}
+                  p={isDense ? 6 : "sm"}
                   style={{
                     color: "inherit",
                     textDecoration: "none",
@@ -108,18 +115,19 @@ export default function NotificationsWidget({
                       <Avatar
                         src={notification.source.iconUrl}
                         alt={notification.source.name}
-                        size={isAdvanced && isDense ? "xs" : "sm"}
+                        size={isDense ? "xs" : "sm"}
                         radius={board.itemRadius}
                       />
                     )}
 
-                    <Flex gap={!isAdvanced || isRoomy ? "sm" : isDense ? 4 : 6} direction="column" w="100%" miw={0}>
+                    <Flex gap={isDense ? 4 : "sm"} direction="column" w="100%" miw={0}>
                       {notification.title && (
                         <Text
                           fz={isAdvanced && isRoomy ? "md" : "sm"}
                           fw={isAdvanced ? 600 : undefined}
                           lh={isAdvanced ? 1.25 : "sm"}
-                          lineClamp={isAdvanced && isDense ? 1 : 2}
+                          lineClamp={isDense ? 1 : 2}
+                          title={notification.title}
                         >
                           {notification.title}
                         </Text>
@@ -128,6 +136,7 @@ export default function NotificationsWidget({
                         c="dimmed"
                         size={isAdvanced && isDense ? "xs" : "sm"}
                         lineClamp={notificationDisplay.bodyLineClamp}
+                        title={notification.body}
                         style={{ whiteSpace: "pre-line" }}
                       >
                         {notification.body}
@@ -140,7 +149,7 @@ export default function NotificationsWidget({
                             ? (notification.source?.name ?? notification.integrationName)
                             : undefined
                         }
-                        dense={isAdvanced && isDense}
+                        dense={isDense}
                       />
                     </Flex>
                   </Flex>
@@ -166,7 +175,7 @@ const InfoDisplay = ({ date, source, dense }: { date: Date; source?: string; den
   return (
     <Group gap={5} align="center" wrap="nowrap">
       <IconClock aria-hidden style={dense ? iconSizes.xs : iconSizes.md} color="var(--mantine-color-dimmed)" />
-      <Text size={dense ? "xs" : "sm"} c="dimmed">
+      <Text size={dense ? "xs" : "sm"} c="dimmed" truncate={dense}>
         {timeAgo}
       </Text>
       {source && <Text c="dimmed">•</Text>}

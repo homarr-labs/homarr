@@ -11,6 +11,7 @@
     "./collection": "./collection.ts",
     "./migrations/custom": "./migrations/custom/index.ts",
     "./migrations/seed": "./migrations/seed.ts",
+    "./migrations/widget-ui-audit": "./migrations/widget-ui-audit/index.ts",
     "./proxy-reader": "./proxy-reader.ts",
     "./schema": "./schema/index.ts",
     "./test": "./test/index.ts",
