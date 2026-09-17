@@ -35,6 +35,7 @@ describe("AI prompt", () => {
     expect(prompt).toContain("never write `=> {` anywhere");
     expect(prompt).toContain('"choicesFrom"');
     expect(prompt).toContain("must not shadow the reserved roots");
+    expect(prompt).toContain('networkScope must be "public", "private", or "loopback"');
     expect(prompt.endsWith(CUSTOM_WIDGET_FINAL_OUTPUT_INSTRUCTION)).toBe(true);
   });
 
@@ -166,6 +167,8 @@ describe("AI prompt", () => {
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Without lifecycle tools");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain('$schema:"homarr-custom-widget-v2"');
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("sources.default");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("networkScope");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("`public`, `private`, or `loopback`");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("literal slash-prefixed paths from intent");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("pseudo `tool_use`/`tool_call` blocks");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("status.x?.ok === false");
