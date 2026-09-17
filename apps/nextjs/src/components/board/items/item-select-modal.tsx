@@ -291,6 +291,7 @@ const ItemSelectModalContent = ({
           integrationSupport: false,
           settings,
           previewResize: { initialSize, maximumSize: maximumWidgetSize },
+          previewSectionId: effectiveSectionId ?? undefined,
         },
         {
           title: (titleT) => `${titleT("item.edit.title")} - ${customWidgetDefinition.name}`,
@@ -363,6 +364,7 @@ const ItemSelectModalContent = ({
             integrationSupport: hasIntegrationSupport,
             settings,
             previewResize: { initialSize, maximumSize: maximumWidgetSize },
+            previewSectionId: effectiveSectionId ?? undefined,
           },
           {
             title: (titleT) => `${titleT("item.edit.title")} - ${getWidgetName(kind, titleT)}`,

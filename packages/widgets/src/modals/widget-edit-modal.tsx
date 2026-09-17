@@ -3,7 +3,7 @@
 /* eslint-disable react/no-unstable-nested-components -- Widget modules and definition-bound fallbacks are loaded dynamically. */
 
 import { useEffect, useId, useRef, useState } from "react";
-import type { ComponentType, FormEvent, PropsWithChildren } from "react";
+import type { ComponentType, CSSProperties, FormEvent, PropsWithChildren } from "react";
 import {
   Accordion,
   Alert,
@@ -104,6 +104,7 @@ export interface WidgetEditModalProps<TSort extends WidgetKind> {
   onOpenNewIntegration?: (onCreated?: (id: string) => void) => void;
   previewComponent?: ComponentType<WidgetComponentProps<TSort>>;
   previewDimensions?: WidgetPreviewDimensions;
+  previewSectionId?: string;
   previewResize?: WidgetEditPreviewResizeOptions;
   previewWrapper?: ComponentType<PropsWithChildren>;
 }
@@ -116,6 +117,7 @@ interface WidgetEditPreviewProps {
   itemId?: string;
   boardId?: string;
   dimensions?: WidgetPreviewDimensions;
+  sectionId?: string;
   integrationData: IntegrationSelectOption[];
   onChangeOptions: (newOptions: Record<string, unknown>) => void;
   resize?: {
@@ -147,6 +149,7 @@ const WidgetEditPreview = ({
   itemId,
   boardId,
   dimensions = { width: 400, height: 240 },
+  sectionId,
   integrationData,
   onChangeOptions,
   resize,
@@ -157,14 +160,75 @@ const WidgetEditPreview = ({
   const board = useOptionalBoard();
   const generatedPreviewId = useId().replaceAll(":", "");
   const { ref, width: availableWidth, height: availableHeight } = useElementSize<HTMLDivElement>();
-  const sourceWidth = Math.max(dimensions.width, 1);
-  const sourceHeight = Math.max(dimensions.height, 1);
-  let maximumScale = dimensions.scale ?? 0.9;
-  if (!Number.isFinite(maximumScale) || maximumScale <= 0) maximumScale = 0.9;
-  maximumScale = Math.min(maximumScale, 0.9);
-  let previewScale = maximumScale;
+  const { ref: cardRef, width: contentWidth, height: contentHeight } = useElementSize<HTMLDivElement>();
+  const [boardAppearance, setBoardAppearance] = useState<{
+    scale: number;
+    width?: number;
+    height?: number;
+    inset: number;
+    style: CSSProperties;
+  }>();
+
+  useEffect(() => {
+    let item: HTMLElement | null = null;
+    if (itemId) {
+      item = document.querySelector<HTMLElement>(
+        `[data-grid-item-id="${CSS.escape(itemId)}"] [data-grid-item-content]`,
+      );
+    }
+    const canvas = document.querySelector<HTMLElement>("[data-board-canvas-content]");
+    let section: HTMLElement | null = null;
+    if (sectionId) section = document.querySelector<HTMLElement>(`[data-grid-section-id="${CSS.escape(sectionId)}"]`);
+    const source = item ?? section ?? canvas;
+    if (!source) return;
+
+    // New widgets use the full grid footprint. Match SectionGrid's 10px visual widget inset.
+    // Resolve the CSS length in the canvas so rem/calc and custom CSS also work.
+    const insetProbe = document.createElement("span");
+    insetProbe.style.cssText =
+      "position:absolute;visibility:hidden;pointer-events:none;width:calc(10px * var(--board-canvas-inverse-scale, 1))";
+    source.append(insetProbe);
+
+    const updateAppearance = () => {
+      const computed = getComputedStyle(source);
+      const style = Object.fromEntries(
+        Array.from(computed)
+          .filter((property) =>
+            /^--(?:mantine-(?:scale$|spacing-|font-size-|radius-|h\d-font-size)|board-canvas-)/.test(property),
+          )
+          .map((property) => [property, computed.getPropertyValue(property)]),
+      ) as CSSProperties;
+      setBoardAppearance({
+        scale: source.getBoundingClientRect().width / Number.parseFloat(computed.width),
+        width: item ? Number.parseFloat(computed.width) : undefined,
+        height: item ? Number.parseFloat(computed.height) : undefined,
+        inset: item ? 0 : Number.parseFloat(getComputedStyle(insetProbe).width),
+        style,
+      });
+    };
+    updateAppearance();
+    window.addEventListener("resize", updateAppearance);
+    const observer = new ResizeObserver(updateAppearance);
+    observer.observe(source);
+    if (canvas && canvas !== source) observer.observe(canvas);
+    const mutationObserver = new MutationObserver(updateAppearance);
+    if (canvas) mutationObserver.observe(canvas, { attributes: true, attributeFilter: ["style", "class"] });
+    if (section) mutationObserver.observe(section, { attributes: true, attributeFilter: ["style", "class"] });
+    return () => {
+      insetProbe.remove();
+      mutationObserver.disconnect();
+      window.removeEventListener("resize", updateAppearance);
+      observer.disconnect();
+    };
+  }, [itemId, sectionId, board?.id]);
+
+  const sourceWidth = Math.max(boardAppearance?.width ?? dimensions.width - 2 * (boardAppearance?.inset ?? 0), 1);
+  const sourceHeight = Math.max(boardAppearance?.height ?? dimensions.height - 2 * (boardAppearance?.inset ?? 0), 1);
+  let displayScale = boardAppearance?.scale ?? dimensions.scale ?? 1;
+  if (!Number.isFinite(displayScale) || displayScale <= 0) displayScale = 1;
+  let previewScale = displayScale;
   if (availableWidth > 0 && availableHeight > 0) {
-    previewScale = Math.min(availableWidth / sourceWidth, availableHeight / sourceHeight, maximumScale);
+    previewScale = Math.min(availableWidth / sourceWidth, availableHeight / sourceHeight, displayScale);
   }
   const previewWidth = sourceWidth * previewScale;
   const previewHeight = sourceHeight * previewScale;
@@ -258,16 +322,20 @@ const WidgetEditPreview = ({
         ) : (
           <Box className={classes.previewViewport} w={previewWidth} h={previewHeight}>
             <WidgetCardShell
+              innerRef={cardRef}
               className={classes.previewWidget}
               kind={kind}
               advancedOptions={state.advancedOptions}
               opacity={previewOpacity}
               radius={board?.itemRadius}
-              w={sourceWidth}
-              h={sourceHeight}
               p={0}
               data-grid-item-content
-              style={{ transform: `scale(${previewScale})` }}
+              style={{
+                ...boardAppearance?.style,
+                width: sourceWidth,
+                height: sourceHeight,
+                transform: `scale(${previewScale})`,
+              }}
             >
               <WidgetTitleBadge
                 advancedOptions={state.advancedOptions}
@@ -290,9 +358,9 @@ const WidgetEditPreview = ({
                             <Component
                               options={state.options as never}
                               integrationIds={state.integrationIds}
-                              width={sourceWidth}
-                              height={sourceHeight}
-                              displayScale={previewScale}
+                              width={contentWidth || dimensions.width}
+                              height={contentHeight || dimensions.height}
+                              displayScale={displayScale}
                               isEditMode={isPendingCustomWidget}
                               displayMode="compact"
                               boardId={boardId}
@@ -544,6 +612,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
           itemId={innerProps.itemId}
           boardId={innerProps.boardId ?? board?.id}
           dimensions={previewDimensions}
+          sectionId={innerProps.previewSectionId}
           integrationData={innerProps.integrationData}
           onChangeOptions={handlePreviewOptionsChange}
           resize={resizeControls}
