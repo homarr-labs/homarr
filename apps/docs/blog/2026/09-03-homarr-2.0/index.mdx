@@ -64,6 +64,12 @@ AI makes widgets easy to produce. It does not make the first thing it coughs up 
 
 :::
 
+### Docusaurus + PocketBase for the docs and Workshop
+
+Our docs and Workshop now share a Docusaurus + PocketBase deployment. Docusaurus compiles the website into static HTML, CSS and JavaScript at build time. A Go service built on PocketBase serves those files and provides the Workshop backend for accounts, submissions, votes, comments and moderation.
+
+The production image packages both together under the same origin. Node.js is used to build the website, but is not needed to serve it in production. Workshop's persistent data lives separately in `/pb_data`, so replacing the image does not replace community content. This is the website and Workshop architecture; your self-hosted Homarr dashboard remains a separate application.
+
 ### The ultimate Homarr update
 
 We have called this the **"ultimate Homarr update"**. Not because work stops, but because every new service or widget idea no longer needs a full Homarr release; the community can build and share it instead.
@@ -158,6 +164,12 @@ Groups use a new Viewer, Editor and Admin matrix. The API, Assistant and MCP fol
 ### Performance
 
 Board startup work runs in parallel, heavy screens load when opened, and identical integration requests share work instead of doing it twice.
+
+## Deploy on Hostinger
+
+[Hostinger now offers a one-click Docker deployment of Homarr](https://www.hostinger.com/applications/homarr) on its VPS plans. They maintain the deployment template, and you manage the resulting VPS and Homarr instance. Our new [Hostinger installation guide](/docs/getting-started/installation/hostinger) walks through deployment and first setup.
+
+We deploy the Homarr Workshop and the compiled Docusaurus docs on the VPS provided by Hostinger. Thank you for hosting this part of Homarr's infrastructure. We have an affiliate partnership as well: purchases through a referral link may support Homarr. For now, the links above go directly to their Homarr application page.
 
 ## Compatibility notes
 
