@@ -12,7 +12,8 @@ export const gotifyMessageSchema = z.object({
     .object({
       "client::display": z.object({ contentType: z.string().optional() }).optional(),
     })
-    .nullish(),
+    .nullish()
+    .catch(undefined),
 });
 
 export const gotifyMessagesResponseSchema = z.object({

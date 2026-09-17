@@ -5,14 +5,14 @@ import rehypeRaw from "rehype-raw";
 import rehypeSanitize from "rehype-sanitize";
 import remarkGfm from "remark-gfm";
 
-import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
+import { SAFE_NEW_TAB_REL } from "../common/application-url";
 import classes from "./component.module.css";
 
 const markdownPlugins = [rehypeSanitize];
 const htmlPlugins = [rehypeRaw, rehypeSanitize];
 const components: Components = {
   a: ({ href, children }) => (
-    <a href={getSafeApplicationUrl(href)} target="_blank" rel={SAFE_NEW_TAB_REL}>
+    <a href={href} target="_blank" rel={SAFE_NEW_TAB_REL}>
       {children}
     </a>
   ),
