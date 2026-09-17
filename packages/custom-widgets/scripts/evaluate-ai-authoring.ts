@@ -7,7 +7,13 @@ import type { CustomWidgetAssistantEvaluationResult } from "./ai-assistant-evalu
 import { evaluateCustomWidgetCase, resolveAiEvaluationProviderConfig } from "./ai-evaluation";
 import type { AiEvaluationResult } from "./ai-evaluation";
 
-const { apiKey, baseUrl: providerBaseUrl, generatorModel, judgeModel } = resolveAiEvaluationProviderConfig(process.env);
+const {
+  apiKey,
+  baseUrl: providerBaseUrl,
+  generatorModel,
+  judgeModel,
+  generatorTemperature,
+} = resolveAiEvaluationProviderConfig(process.env);
 if (!apiKey) {
   throw new Error("AI_PROVIDER_API_KEY or OPENROUTER_API_KEY is required for the live Custom Widget AI evaluation");
 }
@@ -62,6 +68,7 @@ for (const testCase of selectedCases) {
       maxLoops,
       generatorModel,
       judgeModel,
+      generatorTemperature,
     });
   }
   results.push(result);
@@ -83,6 +90,7 @@ const summary = {
   providerBaseUrl,
   generatorModel,
   judgeModel,
+  ...(assistantMode ? {} : { generatorTemperature }),
   results: results.map((result) => ({
     caseId: result.caseId,
     attempts: result.attempts,

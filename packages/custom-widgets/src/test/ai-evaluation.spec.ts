@@ -13,6 +13,8 @@ import {
   getEvaluationResponseFixtureText,
   getExpectedWidgetCase,
   getAiEvaluationMaxOutputTokens,
+  getAiEvaluationGenerationTemperature,
+  DEFAULT_AI_GENERATION_TEMPERATURE,
   getJudgeResponseFormat,
   judgePasses,
   parseJudgeResult,
@@ -54,6 +56,23 @@ const makeJudgeResult = (score: number) => ({
 });
 
 describe("AI authoring evaluation", () => {
+  it("keeps the generator temperature stable by default and allows bounded overrides", () => {
+    expect(getAiEvaluationGenerationTemperature(undefined)).toBe(DEFAULT_AI_GENERATION_TEMPERATURE);
+    expect(getAiEvaluationGenerationTemperature(" 0.7 ")).toBe(0.7);
+    expect(
+      resolveAiEvaluationProviderConfig({ CUSTOM_WIDGET_AI_GENERATION_TEMPERATURE: "0.4" }).generatorTemperature,
+    ).toBe(0.4);
+  });
+
+  it("rejects invalid generator temperatures before evaluation starts", () => {
+    expect(() => resolveAiEvaluationProviderConfig({ CUSTOM_WIDGET_AI_GENERATION_TEMPERATURE: "NaN" })).toThrow(
+      "CUSTOM_WIDGET_AI_GENERATION_TEMPERATURE must be a finite number between 0 and 2",
+    );
+    expect(() => resolveAiEvaluationProviderConfig({ CUSTOM_WIDGET_AI_GENERATION_TEMPERATURE: "2.01" })).toThrow(
+      "CUSTOM_WIDGET_AI_GENERATION_TEMPERATURE must be a finite number between 0 and 2",
+    );
+  });
+
   it("allows bounded output reservations for low-credit live judges without changing defaults", () => {
     expect(getAiEvaluationMaxOutputTokens("judge", undefined)).toBe(8_000);
     expect(getAiEvaluationMaxOutputTokens("judge", "3000")).toBe(3_000);
@@ -536,6 +555,7 @@ describe("AI authoring evaluation", () => {
       baseUrl: "https://homarr.dev/api/ai/v1",
       generatorModel: "homarr/model",
       judgeModel: "homarr/model",
+      generatorTemperature: DEFAULT_AI_GENERATION_TEMPERATURE,
     });
     expect(
       resolveAiEvaluationProviderConfig({
@@ -549,6 +569,7 @@ describe("AI authoring evaluation", () => {
       baseUrl: DEFAULT_AI_PROVIDER_BASE_URL,
       generatorModel: "legacy-generator",
       judgeModel: "legacy-judge",
+      generatorTemperature: DEFAULT_AI_GENERATION_TEMPERATURE,
     });
     expect(
       resolveAiEvaluationProviderConfig({
@@ -563,6 +584,7 @@ describe("AI authoring evaluation", () => {
       baseUrl: "https://homarr.dev/api/ai/v1",
       generatorModel: "homarr/model",
       judgeModel: "homarr/model",
+      generatorTemperature: DEFAULT_AI_GENERATION_TEMPERATURE,
     });
   });
 

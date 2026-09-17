@@ -17,7 +17,21 @@ import type { CustomWidgetAiExpectation } from "./ai-evaluation-cases";
 export const DEFAULT_GENERATOR_MODEL = "z-ai/glm-5.3-flash";
 export const DEFAULT_JUDGE_MODEL = "z-ai/glm-5.3-flash";
 export const DEFAULT_AI_PROVIDER_BASE_URL = "https://openrouter.ai/api/v1";
+export const DEFAULT_AI_GENERATION_TEMPERATURE = 0.2;
 export const MAX_AI_EVALUATION_LOOPS = 10;
+const AI_GENERATION_TEMPERATURE_ERROR =
+  "CUSTOM_WIDGET_AI_GENERATION_TEMPERATURE must be a finite number between 0 and 2";
+function validateAiEvaluationGenerationTemperature(value: number) {
+  if (!Number.isFinite(value) || value < 0 || value > 2) throw new Error(AI_GENERATION_TEMPERATURE_ERROR);
+  return value;
+}
+export function getAiEvaluationGenerationTemperature(configuredValue: string | undefined) {
+  if (configuredValue === undefined) return DEFAULT_AI_GENERATION_TEMPERATURE;
+  const normalizedValue = configuredValue.trim();
+  const configured = Number(normalizedValue);
+  if (normalizedValue === "") throw new Error(AI_GENERATION_TEMPERATURE_ERROR);
+  return validateAiEvaluationGenerationTemperature(configured);
+}
 export function getAiEvaluationMaxOutputTokens(purpose: "generation" | "judge", configuredValue: string | undefined) {
   let defaultValue = 20_000;
   let minimum = 4_096;
@@ -49,6 +63,7 @@ export const resolveAiEvaluationProviderConfig = (environment: Record<string, st
       environment.AI_PROVIDER_JUDGE_MODEL ??
       (openRouterProvider ? environment.OPENROUTER_JUDGE_MODEL : undefined) ??
       (homarrProvider ? providerDefaultModel : DEFAULT_JUDGE_MODEL),
+    generatorTemperature: getAiEvaluationGenerationTemperature(environment.CUSTOM_WIDGET_AI_GENERATION_TEMPERATURE),
   };
 };
 
@@ -114,6 +129,7 @@ export interface AiEvaluationResult {
   judge: CustomWidgetJudgeResult | null;
   outputDirectory: string;
   errors: string[];
+  generatorTemperature: number;
 }
 
 interface OpenRouterResponse {
@@ -575,7 +591,11 @@ export async function evaluateCustomWidgetCase(args: {
   maxLoops: number;
   generatorModel?: string;
   judgeModel?: string;
+  generatorTemperature?: number;
 }): Promise<AiEvaluationResult> {
+  let generatorTemperature = DEFAULT_AI_GENERATION_TEMPERATURE;
+  if (args.generatorTemperature !== undefined)
+    generatorTemperature = validateAiEvaluationGenerationTemperature(args.generatorTemperature);
   const caseDirectory = path.join(args.outputRoot, args.testCase.id);
   await mkdir(caseDirectory, { recursive: true });
   const originalPrompt = buildEvaluationPrompt(args.testCase);
@@ -594,6 +614,7 @@ export async function evaluateCustomWidgetCase(args: {
         model: args.generatorModel ?? DEFAULT_GENERATOR_MODEL,
         prompt,
         purpose: "generation",
+        temperature: generatorTemperature,
       });
     } catch (error) {
       errors.push(
@@ -652,6 +673,7 @@ export async function evaluateCustomWidgetCase(args: {
         judge,
         outputDirectory: caseDirectory,
         errors,
+        generatorTemperature,
       };
     }
     errors.push(`Attempt ${attempt}: judge ${judge.total}/100 — ${judge.highestImpactFixes.join("; ")}`);
@@ -669,6 +691,7 @@ export async function evaluateCustomWidgetCase(args: {
     judge: bestJudge,
     outputDirectory: caseDirectory,
     errors,
+    generatorTemperature,
   };
 }
 
@@ -704,6 +727,7 @@ async function callOpenRouter(args: {
   model: string;
   prompt: string;
   purpose: "generation" | "judge";
+  temperature?: number;
 }): Promise<string> {
   const isJudge = args.purpose === "judge";
   let configuredMaxOutputTokens = process.env.CUSTOM_WIDGET_AI_GENERATION_MAX_OUTPUT_TOKENS;
@@ -719,7 +743,7 @@ async function callOpenRouter(args: {
     body: JSON.stringify({
       model: args.model,
       messages: [{ role: "user", content: args.prompt }],
-      temperature: isJudge ? 0 : 0.2,
+      temperature: isJudge ? 0 : (args.temperature ?? DEFAULT_AI_GENERATION_TEMPERATURE),
       max_tokens: getAiEvaluationMaxOutputTokens(args.purpose, configuredMaxOutputTokens),
       reasoning: isJudge ? { enabled: false, exclude: true } : { effort: "high", exclude: true },
       ...(isJudge ? { response_format: getJudgeResponseFormat() } : {}),
