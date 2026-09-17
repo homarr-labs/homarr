@@ -167,8 +167,9 @@ describe("AI prompt", () => {
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Without lifecycle tools");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain('$schema:"homarr-custom-widget-v2"');
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("sources.default");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("networkScope");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("`public`, `private`, or `loopback`");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("required `baseUrl`/`networkScope`");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("public/private/loopback");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("optional `auth`, default none");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("literal slash-prefixed paths from intent");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("pseudo `tool_use`/`tool_call` blocks");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("status.x?.ok === false");
