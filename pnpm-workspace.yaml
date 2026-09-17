@@ -188,6 +188,8 @@ catalog:
   react-day-picker: ^10.0.1
   react-dom: 19.2.7
   react-error-boundary: ^6.1.2
+  rehype-raw: ^7.0.0
+  rehype-sanitize: ^6.0.0
   react-markdown: ^10.1.0
   react-quill-new: ^3.8.3
   react-simple-code-editor: ^0.14.1
