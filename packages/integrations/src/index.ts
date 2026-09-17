@@ -15,6 +15,7 @@ export { TransmissionIntegration } from "./download-client/transmission/transmis
 export { HomeAssistantIntegration } from "./homeassistant/homeassistant-integration";
 export { JellyfinIntegration } from "./jellyfin/jellyfin-integration";
 export { JellyseerrIntegration } from "./jellyseerr/jellyseerr-integration";
+export { BinderyIntegration } from "./media-organizer/bindery/bindery-integration";
 export { LidarrIntegration } from "./media-organizer/lidarr/lidarr-integration";
 export { RadarrIntegration } from "./media-organizer/radarr/radarr-integration";
 export { ReadarrIntegration } from "./media-organizer/readarr/readarr-integration";

@@ -4,7 +4,7 @@ import { IconMovie } from "@tabler/icons-react";
 export const mediaMissingWidget: WidgetDefinition = {
   icon: IconMovie,
   name: "Media Missing & Queue",
-  description: "Track missing media and active downloads from Radarr and Sonarr",
+  description: "Track missing media and active downloads from Radarr, Sonarr and Bindery",
   path: "../../widgets/media-missing",
   configuration: {
     items: [

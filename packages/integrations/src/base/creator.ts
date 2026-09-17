@@ -52,6 +52,8 @@ const integrationCreators = {
     new (await import("../media-organizer/lidarr/lidarr-integration")).LidarrIntegration(input),
   readarr: async (input: IntegrationInput) =>
     new (await import("../media-organizer/readarr/readarr-integration")).ReadarrIntegration(input),
+  bindery: async (input: IntegrationInput) =>
+    new (await import("../media-organizer/bindery/bindery-integration")).BinderyIntegration(input),
   dashDot: async (input: IntegrationInput) =>
     new (await import("../dashdot/dashdot-integration")).DashDotIntegration(input),
   tdarr: async (input: IntegrationInput) =>
