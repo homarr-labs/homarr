@@ -48,6 +48,17 @@ const missingItems: MissingMediaItem[] = [
     imageUrl: "https://image.tmdb.org/t/p/w300/2cxhvwyEwRlysAmRH4iodkvo0z5.jpg",
     link: "https://www.imdb.com/title/tt9218128/",
   },
+  {
+    // "book" (added for Bindery) has no season/episode fields; the widget
+    // falls back to a themed icon when, as here, there is no cover image.
+    id: 6,
+    title: "The Will of the Many",
+    type: "book",
+    year: 2023,
+    seriesTitle: "James Islington",
+    imageUrl: null,
+    link: "https://openlibrary.org/works/OL27448W",
+  },
 ];
 
 const queuedItems: QueuedMediaItem[] = [
@@ -96,6 +107,17 @@ const queuedItems: QueuedMediaItem[] = [
     percentComplete: 99,
     imageUrl: "https://image.tmdb.org/t/p/w300/z2yahl2uefxDCl0nogcRBstwruJ.jpg",
     link: "https://www.imdb.com/title/tt11198330/",
+  },
+  {
+    id: 105,
+    title: "The Will of the Many",
+    type: "book",
+    status: "downloading",
+    timeLeft: "12m",
+    percentComplete: 54,
+    seriesTitle: "James Islington",
+    imageUrl: null,
+    link: "https://openlibrary.org/works/OL27448W",
   },
 ];
 
