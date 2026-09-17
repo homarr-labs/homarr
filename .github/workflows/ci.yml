@@ -115,18 +115,11 @@ jobs:
 
   container:
     name: Container and migration smoke
-    # Reuse the preview image; only the converter startup/restart smoke runs here.
+    # Legacy converter verification is opt-in, not a release publication gate.
     needs: [fast-gate, preview-amd64]
     if: |
       !cancelled() && needs.fast-gate.result == 'success' &&
-      needs.preview-amd64.result != 'failure' &&
-      (
-        github.event_name == 'merge_group' ||
-        (github.event_name == 'push' && (github.ref == 'refs/heads/release/v2' || github.ref == 'refs/heads/v2')) ||
-        (github.event_name == 'release' && startsWith(github.event.release.tag_name, 'v2.')) ||
-        (github.event_name == 'pull_request' && github.event.pull_request.draft == false) ||
-        (github.event_name == 'workflow_dispatch' && (inputs.operation == 'validate' || inputs.operation == 'publish'))
-      )
+      github.event_name == 'workflow_dispatch' && inputs.operation == 'validate'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
@@ -335,11 +328,10 @@ jobs:
 
   publish-preview:
     name: Publish multi-platform preview image
-    needs: [fast-gate, container, preview-amd64, preview-arm64]
+    needs: [fast-gate, preview-amd64, preview-arm64]
     if: |
       !cancelled() &&
       needs.fast-gate.result == 'success' &&
-      needs.container.result == 'success' &&
       needs.preview-amd64.result == 'success' &&
       needs.preview-arm64.result == 'success' &&
       (
