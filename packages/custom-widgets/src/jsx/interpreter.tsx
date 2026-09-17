@@ -226,8 +226,10 @@ class Interpreter {
       case ">=":
         return (left as number) >= (right as number);
       case "==":
+        if (left == null || right == null) return left == null && right == null;
         return String(left) === String(right);
       case "!=":
+        if (left == null || right == null) return left != null || right != null;
         return String(left) !== String(right);
       case "===":
         return left === right;
