@@ -34,18 +34,18 @@ The final after run is `589cfec1-5cc0-493b-a3b2-2c2ba86d8bbf`; the before run is
 
 Manual review covered all thirty permutations of each of the ten changed widgets (300 pairs). No remaining layout defect was found in those changed-widget comparisons after the Beszel grid refinement. Notebook, compact metrics and chart gutters show improvements; larger already-correct layouts and loaded media-transcoding surfaces remain acceptable unchanged cases. New user assessments remain unreviewed.
 
-| Reviewed widget | Pairs inspected |
-| --- | ---: |
-| Notebook | 30 |
-| Docker | 30 |
-| Notifications | 30 |
-| Network summary | 30 |
-| Firewall | 30 |
-| Umami | 30 |
-| UPS | 30 |
-| Beszel grid | 30 |
-| Beszel charts | 30 |
-| Media transcoding | 30 |
+| Reviewed widget   | Pairs inspected |
+| ----------------- | --------------: |
+| Notebook          |              30 |
+| Docker            |              30 |
+| Notifications     |              30 |
+| Network summary   |              30 |
+| Firewall          |              30 |
+| Umami             |              30 |
+| UPS               |              30 |
+| Beszel grid       |              30 |
+| Beszel charts     |              30 |
+| Media transcoding |              30 |
 
 Focused existing layout/display checks and widget/database type checks passed. The report production build passed. Focused lint completed with nonblocking style/accessibility warnings, including a preference for a native element instead of the metric group role. No unrelated suites or full Homarr production build were run.
 

@@ -18,7 +18,9 @@ const viewportById = new Map(viewportSpecs.map((viewport) => [viewport.id, viewp
 const issues = [];
 const paths = new Set();
 let verified = 0;
-const matchedRun = ["runId", "sourceRevision", "sourceFingerprint", "fixtureRevision"].every((field) => Boolean(manifest[field]));
+const matchedRun = ["runId", "sourceRevision", "sourceFingerprint", "fixtureRevision"].every((field) =>
+  Boolean(manifest[field]),
+);
 
 async function checkCapture(raw, label, scale = 1, expectedDimensions) {
   const path = typeof raw === "string" ? raw : raw?.path;
@@ -120,15 +122,19 @@ for (const board of manifest.supplementalBoards ?? []) {
 if (matchedRun) {
   const expectedNames = new Set(sizes.map((size) => `widget-ui-audit-assistant-${size}`));
   const supplemental = manifest.supplementalBoards ?? [];
-  if (supplemental.length !== sizes.length) issues.push(`Incomplete isolated Assistant board set (${supplemental.length}/${sizes.length})`);
+  if (supplemental.length !== sizes.length)
+    issues.push(`Incomplete isolated Assistant board set (${supplemental.length}/${sizes.length})`);
   const names = new Set(supplemental.map((board) => board.name));
   for (const name of expectedNames) if (!names.has(name)) issues.push(`Missing isolated Assistant board: ${name}`);
   for (const board of supplemental) {
     const viewportIds = new Set((board.viewports ?? []).map((viewport) => viewport.id));
-    for (const viewport of viewports) if (!viewportIds.has(viewport)) issues.push(`Missing isolated Assistant viewport: ${board.name}/${viewport}`);
+    for (const viewport of viewports)
+      if (!viewportIds.has(viewport)) issues.push(`Missing isolated Assistant viewport: ${board.name}/${viewport}`);
   }
-  if (manifest.captureOutcome !== "ready") issues.push(`Manifest capture outcome is ${manifest.captureOutcome ?? "unverified"}`);
-  if (manifest.failedCaptures?.length) issues.push(`Manifest contains ${manifest.failedCaptures.length} failed captures`);
+  if (manifest.captureOutcome !== "ready")
+    issues.push(`Manifest capture outcome is ${manifest.captureOutcome ?? "unverified"}`);
+  if (manifest.failedCaptures?.length)
+    issues.push(`Manifest contains ${manifest.failedCaptures.length} failed captures`);
 }
 const result = {
   expectedWidgetTypes: kinds.length,
@@ -139,7 +145,8 @@ const result = {
   issues,
   captureOutcome: manifest.captureOutcome ?? "unverified",
   failedCaptures: manifest.failedCaptures ?? [],
-  scope: "PNG integrity, matrix completeness, geometry, and recorded readiness; this does not assert visual approval or live integration correctness.",
+  scope:
+    "PNG integrity, matrix completeness, geometry, and recorded readiness; this does not assert visual approval or live integration correctness.",
 };
 console.log(JSON.stringify(result, null, 2));
 if (issues.length) process.exitCode = 1;
@@ -151,7 +158,8 @@ function checkGeometry(entries, label) {
   }
   const rectangles = entries.flatMap((entry) => {
     const geometry = entry.geometry;
-    if (!Array.isArray(geometry) || geometry.length !== 4 || geometry.some((value) => typeof value !== "number")) return [];
+    if (!Array.isArray(geometry) || geometry.length !== 4 || geometry.some((value) => typeof value !== "number"))
+      return [];
     return [{ id: entry.id ?? "unknown", x: geometry[0], y: geometry[1], width: geometry[2], height: geometry[3] }];
   });
   for (let index = 0; index < rectangles.length; index++) {

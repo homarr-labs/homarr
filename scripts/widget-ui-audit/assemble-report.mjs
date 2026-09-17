@@ -7,9 +7,12 @@ import { basename } from "node:path";
 const output = resolve(process.argv[2] ?? "tools/widget-ui-report/public");
 function sourceFingerprint() {
   try {
-    return createHash("sha256").update(execFileSync("git", ["diff", "HEAD", "--", "packages/widgets", "apps/nextjs"], { encoding: "utf8" })).digest("hex");
+    return createHash("sha256")
+      .update(execFileSync("git", ["diff", "HEAD", "--", "packages/widgets", "apps/nextjs"], { encoding: "utf8" }))
+      .digest("hex");
   } catch (error) {
-    if (error.status === 0 && typeof error.stdout === "string") return createHash("sha256").update(error.stdout).digest("hex");
+    if (error.status === 0 && typeof error.stdout === "string")
+      return createHash("sha256").update(error.stdout).digest("hex");
     return "unavailable";
   }
 }
@@ -72,7 +75,9 @@ for (const file of (await readdir(source)).sort()) {
   }
 }
 await mkdir(output, { recursive: true });
-const fragments = (await readdir(output)).filter((name) => /^manifest-.+\.json$/.test(name)).sort((a, b) => Number(a.includes("assistant-isolated")) - Number(b.includes("assistant-isolated")));
+const fragments = (await readdir(output))
+  .filter((name) => /^manifest-.+\.json$/.test(name))
+  .sort((a, b) => Number(a.includes("assistant-isolated")) - Number(b.includes("assistant-isolated")));
 const fragmentRecords = await Promise.all(
   fragments.map(async (file) => ({ file, fragment: JSON.parse(await readFile(join(output, file), "utf8")) })),
 );
@@ -80,7 +85,12 @@ const matchedRun = fragmentRecords.some(({ fragment }) =>
   ["runId", "sourceRevision", "sourceFingerprint", "fixtureRevision"].every((field) => Boolean(fragment[field])),
 );
 for (const { fragment } of fragmentRecords) {
-  provenance.push({ runId: fragment.runId, sourceRevision: fragment.sourceRevision, sourceFingerprint: fragment.sourceFingerprint, fixtureRevision: fragment.fixtureRevision });
+  provenance.push({
+    runId: fragment.runId,
+    sourceRevision: fragment.sourceRevision,
+    sourceFingerprint: fragment.sourceFingerprint,
+    fixtureRevision: fragment.fixtureRevision,
+  });
   const isolated = fragment.family === "assistant-isolated";
   const family = boards.find((board) => board.id === fragment.family || (isolated && board.id === "home"));
   if (!family) {
@@ -111,14 +121,15 @@ for (const { fragment } of fragmentRecords) {
       const id = { "1080p": "desktop-1080p", "2k": "desktop-1440p" }[viewport.id] ?? viewport.id;
       if (matchedRun && viewport.readiness?.outcome !== "ready")
         errors.push(`${family.name}/${id}: capture is not ready (${viewport.readiness?.outcome ?? "unverified"})`);
-      if (!isolated) family.screenshots[id] = {
-        path: viewport.boardScreenshot,
-        status: matchedRun && viewport.readiness?.outcome !== "ready" ? "failed" : "ok",
-        captureOutcome: viewport.readiness?.outcome ?? "unverified",
-        state: "captured",
-        note: `${viewport.errorCount ?? 0} widget error markers; ${viewport.overlaps?.length ?? 0} grid overlaps`,
-        evidence: { ...viewport, widgets: undefined },
-      };
+      if (!isolated)
+        family.screenshots[id] = {
+          path: viewport.boardScreenshot,
+          status: matchedRun && viewport.readiness?.outcome !== "ready" ? "failed" : "ok",
+          captureOutcome: viewport.readiness?.outcome ?? "unverified",
+          state: "captured",
+          note: `${viewport.errorCount ?? 0} widget error markers; ${viewport.overlaps?.length ?? 0} grid overlaps`,
+          evidence: { ...viewport, widgets: undefined },
+        };
       for (const capture of viewport.widgets ?? []) {
         const widget = widgets.find((entry) => entry.id === capture.kind);
         if (!widget) {
@@ -154,7 +165,8 @@ if (matchedRun) {
   if (isolatedBoards.length !== sizes.length)
     errors.push(`Incomplete isolated Assistant board set (${isolatedBoards.length}/${sizes.length} boards)`);
   const isolatedNames = new Set(isolatedBoards.map((board) => board.name));
-  for (const name of expectedIsolatedBoards) if (!isolatedNames.has(name)) errors.push(`Missing isolated Assistant board: ${name}`);
+  for (const name of expectedIsolatedBoards)
+    if (!isolatedNames.has(name)) errors.push(`Missing isolated Assistant board: ${name}`);
   for (const board of isolatedBoards) {
     const viewportsById = new Map((board.viewports ?? []).map((viewport) => [viewport.id, viewport]));
     if (viewportsById.size !== viewports.length) errors.push(`Incomplete isolated Assistant viewports: ${board.name}`);
@@ -164,7 +176,8 @@ if (matchedRun) {
         errors.push(`Missing isolated Assistant viewport: ${board.name}/${viewport.id}`);
         continue;
       }
-      if (captured.readiness?.outcome !== "ready") errors.push(`Isolated Assistant capture not ready: ${board.name}/${viewport.id}`);
+      if (captured.readiness?.outcome !== "ready")
+        errors.push(`Isolated Assistant capture not ready: ${board.name}/${viewport.id}`);
     }
   }
 }
@@ -200,7 +213,7 @@ if (matchedRun) {
     .digest("hex");
 }
 for (const field of ["runId", "sourceRevision", "sourceFingerprint", "fixtureRevision"]) {
-  const values = [...new Set(provenance.map(entry => entry[field]).filter(Boolean))];
+  const values = [...new Set(provenance.map((entry) => entry[field]).filter(Boolean))];
   if (values.length === 1) manifest[field] = values[0];
   if (values.length > 1) {
     manifest[field] = "mixed";
@@ -208,9 +221,20 @@ for (const field of ["runId", "sourceRevision", "sourceFingerprint", "fixtureRev
   }
 }
 manifest.captureOutcome = "ready";
-manifest.failedCaptures = widgets.flatMap(widget => Object.entries(widget.screenshots).flatMap(([size, screens]) => Object.entries(screens).filter(([, capture]) => capture.status === "failed" || (matchedRun && capture.captureOutcome !== "ready")).map(([viewport, capture]) => ({ widget: widget.id, size, viewport, issues: capture.issues }))));
-const captureCount = widgets.flatMap(widget => Object.values(widget.screenshots).flatMap(Object.values)).length;
-if (errors.length || manifest.failedCaptures.length || captureCount !== widgets.length * sizes.length * viewports.length) manifest.captureOutcome = "failed";
+manifest.failedCaptures = widgets.flatMap((widget) =>
+  Object.entries(widget.screenshots).flatMap(([size, screens]) =>
+    Object.entries(screens)
+      .filter(([, capture]) => capture.status === "failed" || (matchedRun && capture.captureOutcome !== "ready"))
+      .map(([viewport, capture]) => ({ widget: widget.id, size, viewport, issues: capture.issues })),
+  ),
+);
+const captureCount = widgets.flatMap((widget) => Object.values(widget.screenshots).flatMap(Object.values)).length;
+if (
+  errors.length ||
+  manifest.failedCaptures.length ||
+  captureCount !== widgets.length * sizes.length * viewports.length
+)
+  manifest.captureOutcome = "failed";
 await writeFile(join(output, "manifest.json"), `${JSON.stringify(manifest, null, 2)}\n`);
 console.log(
   JSON.stringify(
