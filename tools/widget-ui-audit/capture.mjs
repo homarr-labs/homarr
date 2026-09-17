@@ -263,6 +263,31 @@ const capture = async () => {
     boards: [],
   };
 
+  const manifestPath = join(outputDir, `manifest-${sanitize(family)}.json`);
+  let previous;
+  if (viewportFilter) {
+    previous = JSON.parse(await readFile(manifestPath, "utf8"));
+    if (!previous.authenticated || previous.screenshotMethod !== "native-viewport-full-board-crop") {
+      throw new Error(
+        "Single-viewport recapture requires an existing authenticated CDP capture; rerun the full family",
+      );
+    }
+    for (const field of ["runId", "sourceRevision", "sourceFingerprint", "fixtureRevision"]) {
+      if (!manifest[field] || previous[field] !== manifest[field]) {
+        throw new Error(`Single-viewport recapture has different ${field}; capture a fresh run instead`);
+      }
+    }
+    for (const board of boards) {
+      const oldBoard = previous.boards.find((candidate) => candidate.name === board);
+      if (
+        !oldBoard ||
+        DEFAULT_VIEWPORTS.some((viewport) => !oldBoard.viewports.some((entry) => entry.id === viewport.id))
+      ) {
+        throw new Error(`Previous capture is missing the board or its viewports: ${board}`);
+      }
+    }
+  }
+
   if (shouldLogin) {
     run(["open", `${baseUrl}/auth/login`]);
     run(["wait", "--load", "domcontentloaded"], { allowFailure: true });
@@ -370,14 +395,7 @@ const capture = async () => {
     manifest.boards.push(boardRecord);
   }
 
-  const manifestPath = join(outputDir, `manifest-${sanitize(family)}.json`);
-  if (viewportFilter) {
-    const previous = JSON.parse(await readFile(manifestPath, "utf8"));
-    if (!previous.authenticated || previous.screenshotMethod !== manifest.screenshotMethod) {
-      throw new Error(
-        "Single-viewport recapture requires an existing authenticated CDP capture; rerun the full family",
-      );
-    }
+  if (previous) {
     for (const board of manifest.boards) {
       const oldBoard = previous.boards.find((candidate) => candidate.name === board.name);
       if (!oldBoard) throw new Error(`No previous board capture for ${board.name}`);
@@ -386,6 +404,10 @@ const capture = async () => {
       board.viewports = DEFAULT_VIEWPORTS.map((viewport) => updated.get(viewport.id));
       if (board.viewports.some((viewport) => !viewport)) throw new Error("Previous capture is missing other viewports");
     }
+  }
+  if (previous) {
+    const updatedBoards = new Map(manifest.boards.map((board) => [board.name, board]));
+    manifest.boards = previous.boards.map((board) => updatedBoards.get(board.name) ?? board);
   }
   await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
   console.log(

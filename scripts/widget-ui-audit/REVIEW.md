@@ -60,3 +60,9 @@ Interaction checks exercised Notebook editing and scrolling, Docker details and 
 - Dynamic values, ordering and timestamps differ. Image hashes detect changes, not quality.
 - Some lower-board crops contain the Next.js development indicator. It is part of the capture environment, not a widget control.
 - Original audit images are preserved as historical evidence and are not substituted for the fresh matched baseline.
+
+## Draft PR follow-up
+
+After capturing the matched matrix, the PR incorporated `release/v2` at `4305dd3b7`, preserving its new notification formatting and action controls alongside the compact layout. A separate observability capture at merge commit `b8b3db253` produced 150 ready widget images and three ready board images. All 30 notification crops were inspected again; no new clipping or overlap was found. These follow-up images do not replace the archived matched run. The demo notification fixtures do not exercise rich message formatting or Gotify delete actions.
+
+The merged widget/database type checks and existing notification display tests passed. The full matrix has not been recaptured against the newer upstream source; the original run provenance remains authoritative for the 300-pair before/after review.
