@@ -156,6 +156,8 @@ describe("Custom Widget authoring context", () => {
       "customWidget_getComponents",
       "customWidget_getExample",
       "customWidget_validateTemplate",
+      "customWidget_workshopSearch",
+      "customWidget_workshopGet",
       "customWidget_previewCreate",
     ];
 
@@ -169,6 +171,100 @@ describe("Custom Widget authoring context", () => {
       "customWidget_getComponents",
       "customWidget_getExample",
       "customWidget_validateTemplate",
+      "customWidget_workshopSearch",
+      "customWidget_workshopGet",
+    ]);
+  });
+
+  test("stages Workshop discovery, install, and the next coordinated widget", () => {
+    const tools = [
+      "customWidget_getSkill",
+      "customWidget_getReference",
+      "customWidget_findComponents",
+      "customWidget_getComponents",
+      "customWidget_getExample",
+      "customWidget_validateTemplate",
+      "customWidget_workshopSearch",
+      "customWidget_workshopGet",
+      "customWidget_workshopInstall",
+    ];
+    const skillLoaded = [{ toolResults: [{ toolName: "customWidget_getSkill", output: { content: "skill" } }] }];
+    const workshopSearch = [
+      ...skillLoaded,
+      { toolResults: [{ toolName: "customWidget_workshopSearch", output: { items: [] } }] },
+    ];
+    const failedWorkshopGet = [
+      ...workshopSearch,
+      { toolResults: [{ toolName: "customWidget_workshopGet", output: { error: "unavailable" } }] },
+    ];
+    const successfulWorkshopGet = [
+      ...workshopSearch,
+      {
+        toolResults: [
+          {
+            toolName: "customWidget_workshopGet",
+            output: { widget: { name: "Fixtures" }, sourceSetup: [] },
+          },
+        ],
+      },
+    ];
+
+    expect(getCustomWidgetPhaseToolNames(tools, skillLoaded)).toEqual([
+      "customWidget_getReference",
+      "customWidget_findComponents",
+      "customWidget_getComponents",
+      "customWidget_getExample",
+      "customWidget_validateTemplate",
+      "customWidget_workshopSearch",
+      "customWidget_workshopGet",
+    ]);
+    expect(getCustomWidgetPhaseToolNames(tools, failedWorkshopGet)).toEqual([
+      "customWidget_getReference",
+      "customWidget_findComponents",
+      "customWidget_getComponents",
+      "customWidget_getExample",
+      "customWidget_validateTemplate",
+      "customWidget_workshopSearch",
+      "customWidget_workshopGet",
+    ]);
+    expect(getCustomWidgetPhaseToolNames(tools, successfulWorkshopGet)).toEqual([
+      "customWidget_getReference",
+      "customWidget_findComponents",
+      "customWidget_getComponents",
+      "customWidget_getExample",
+      "customWidget_validateTemplate",
+      "customWidget_workshopSearch",
+      "customWidget_workshopGet",
+      "customWidget_workshopInstall",
+    ]);
+    expect(
+      getCustomWidgetPhaseToolNames(tools, [
+        ...successfulWorkshopGet,
+        {
+          toolResults: [{ toolName: "customWidget_workshopInstall", output: { error: "source setup required" } }],
+        },
+      ]),
+    ).toEqual(getCustomWidgetPhaseToolNames(tools, successfulWorkshopGet));
+    expect(
+      getCustomWidgetPhaseToolNames(tools, [
+        ...successfulWorkshopGet,
+        {
+          toolResults: [
+            {
+              toolName: "customWidget_workshopInstall",
+              output: { status: "installed", definitionId: "widget-1" },
+            },
+          ],
+        },
+      ]),
+    ).toEqual([
+      "customWidget_getReference",
+      "customWidget_findComponents",
+      "customWidget_getComponents",
+      "customWidget_getExample",
+      "customWidget_validateTemplate",
+      "customWidget_workshopSearch",
+      "customWidget_workshopGet",
     ]);
   });
 
