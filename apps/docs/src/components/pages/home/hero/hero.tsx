@@ -1,8 +1,9 @@
 import Link from "@docusaurus/Link";
 import { translate } from "@docusaurus/Translate";
-import { IconChevronDown, IconDownload, IconExternalLink } from "@tabler/icons-react";
+import { IconDownload, IconExternalLink } from "@tabler/icons-react";
 import clsx from "clsx";
 import styles from "../../../../pages/index.module.css";
+import { LaunchMenu } from "./launch-menu";
 import { HeroCards } from "./hero-cards";
 
 export default function HomeHero() {
@@ -46,47 +47,7 @@ export default function HomeHero() {
                 <IconExternalLink className={"dark:text-gray-200"} size={20} />
               </div>
             </Link>
-            {/* Escape bubbles from the native summary and links inside the disclosure. */}
-            {/* oxlint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
-            <details
-              className={styles.launchDropdown}
-              onBlur={(event) => {
-                if (!event.currentTarget.contains(event.relatedTarget)) {
-                  event.currentTarget.open = false;
-                }
-              }}
-              onKeyDown={(event) => {
-                if (event.key === "Escape") {
-                  event.currentTarget.open = false;
-                  event.currentTarget.querySelector("summary")?.focus();
-                }
-              }}
-            >
-              <summary className="button button--secondary button--lg rounded-3xl dark:border-zinc-600 dark:bg-zinc-800">
-                Launch
-                <IconChevronDown size={20} aria-hidden="true" />
-              </summary>
-              <ul className={styles.launchOptions} aria-label="Hosting providers">
-                <li>
-                  <Link data-attr="Redirect to PikaPods" to="https://www.pikapods.com/pods?run=homarr">
-                    PikaPods
-                    <IconExternalLink size={18} aria-hidden="true" />
-                  </Link>
-                </li>
-                <li>
-                  <Link data-attr="Redirect to Hostinger" to="https://www.hostinger.com/applications/homarr">
-                    Hostinger
-                    <IconExternalLink size={18} aria-hidden="true" />
-                  </Link>
-                </li>
-                <li>
-                  <Link data-attr="Redirect to Railway" to="https://railway.com/deploy/_c4Kr9?referralCode=vishify">
-                    Railway
-                    <IconExternalLink size={18} aria-hidden="true" />
-                  </Link>
-                </li>
-              </ul>
-            </details>
+            <LaunchMenu />
           </div>
         </div>
         <section

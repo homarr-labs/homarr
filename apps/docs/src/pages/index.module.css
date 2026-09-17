@@ -56,54 +56,6 @@ section {
   gap: 0.5rem;
 }
 
-.launchDropdown {
-  position: relative;
-}
-
-.launchDropdown > summary {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  list-style: none;
-  cursor: pointer;
-}
-
-.launchDropdown > summary::-webkit-details-marker {
-  display: none;
-}
-
-.launchOptions {
-  position: absolute;
-  bottom: calc(100% + 0.5rem);
-  right: 0;
-  z-index: 10;
-  min-width: 12rem;
-  margin: 0;
-  padding: 0.5rem;
-  list-style: none;
-  border: 1px solid var(--ifm-color-emphasis-300);
-  border-radius: 0.75rem;
-  background: var(--ifm-background-surface-color);
-  box-shadow: var(--ifm-global-shadow-md);
-}
-
-.launchOptions a {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.625rem 0.75rem;
-  border-radius: 0.5rem;
-  color: var(--ifm-font-color-base);
-  text-decoration: none;
-}
-
-.launchOptions a:hover,
-.launchOptions a:focus-visible {
-  background: var(--ifm-color-emphasis-200);
-}
-
 .heroPreview {
   min-width: 0;
 }
