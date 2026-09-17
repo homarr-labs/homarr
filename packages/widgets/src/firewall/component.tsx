@@ -60,7 +60,7 @@ export const hasFirewallPartialFailure = (firewallId: string, queries: readonly 
 
 const getCompactRingSize = (width: number, height: number): number => {
   if (width < 160 || height < 120) return 44;
-  if (width < 240) return 64;
+  if (width < 256 || height < 180) return 64;
   return 100;
 };
 

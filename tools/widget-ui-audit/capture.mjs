@@ -25,7 +25,7 @@ Options:
   --out <directory>      Output directory (default: tools/widget-ui-report/public)
   --session <name>       Isolated agent-browser session name
   --viewport <id>        Recapture one viewport in an existing authenticated fragment
-  --expected-count <n>   Required mounted widget count per board
+  --expected-count <n>   Expected mounted widget count per board (required)
   --settle-ms <number>   Wait for fixture data after mounting (default: 1500, max: 30000)
   --username <name>      Login username (default: demo)
   --password <value>     Login password (default: demo)
@@ -63,6 +63,12 @@ const username = option("--username", "demo");
 const password = option("--password", "demo");
 const shouldLogin = !args.includes("--no-login");
 const viewportFilter = option("--viewport", null);
+const expectedCount = Number(option("--expected-count", ""));
+if (!args.includes("--check-auth") && (!Number.isInteger(expectedCount) || expectedCount < 1)) {
+  throw new Error(
+    "--expected-count must specify a positive widget count; observed counts cannot establish completeness",
+  );
+}
 const settleMs = Number(option("--settle-ms", "1500"));
 if (!Number.isFinite(settleMs) || settleMs < 0 || settleMs > 30000) throw new Error("Invalid settle delay");
 const captureViewports = DEFAULT_VIEWPORTS.filter((viewport) => !viewportFilter || viewport.id === viewportFilter);
@@ -333,8 +339,6 @@ const capture = async () => {
           await document.fonts.ready;
         })()`);
         await new Promise((resolve) => setTimeout(resolve, settleMs));
-        const mountedWidgets = await readWidgets(nativeCapture.evaluate);
-        const expectedCount = Number(option("--expected-count", String(mountedWidgets.length)));
         const readiness = await waitForCaptureReadiness(nativeCapture.evaluate, expectedCount);
         const widgets = await readWidgets(nativeCapture.evaluate);
         if (widgets.length === 0)

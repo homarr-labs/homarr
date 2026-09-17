@@ -252,15 +252,28 @@ const metricRenderers: BeszelMetricRenderer[] = [
   },
   {
     key: "showDisk",
-    render: (s: BeszelSystemRow, t: SystemCardProps["t"], sz: SizeConfig) => (
-      <Group key="disk" gap="xs" wrap="nowrap" justify="space-between" style={{ minHeight: sz.rowHeight }}>
-        <HardDrive style={zoomCompensatedSize(sz.iconSize)} />
-        <Text size={sz.fontSize} c="dimmed" w={sz.labelMiw} style={{ whiteSpace: "nowrap", flexShrink: 0 }}>
-          {t("metric.disk")}
-        </Text>
-        <DiskUsage system={s} fontSize={sz.fontSize} progressSize={sz.progressSize} valueMiw={sz.valueMiw} />
-      </Group>
-    ),
+    render: (s: BeszelSystemRow, t: SystemCardProps["t"], sz: SizeConfig) => {
+      if (sz.showLabels === false) {
+        return (
+          <MetricRow
+            key="disk"
+            icon={<HardDrive style={zoomCompensatedSize(sz.iconSize)} />}
+            label={t("metric.disk")}
+            value={formatPercent(s.disk)}
+            size={sz}
+          />
+        );
+      }
+      return (
+        <Group key="disk" gap="xs" wrap="nowrap" justify="space-between" style={{ minHeight: sz.rowHeight }}>
+          <HardDrive style={zoomCompensatedSize(sz.iconSize)} />
+          <Text size={sz.fontSize} c="dimmed" w={sz.labelMiw} style={{ whiteSpace: "nowrap", flexShrink: 0 }}>
+            {t("metric.disk")}
+          </Text>
+          <DiskUsage system={s} fontSize={sz.fontSize} progressSize={sz.progressSize} valueMiw={sz.valueMiw} />
+        </Group>
+      );
+    },
     visible: (s: BeszelSystemRow, o: SystemCardProps["options"], advanced: boolean) =>
       isBeszelGridMetricVisible(o.showDisk, advanced),
   },
