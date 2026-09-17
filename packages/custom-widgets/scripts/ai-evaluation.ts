@@ -11,10 +11,10 @@ import { formatCustomWidgetImportIssues, parseCustomWidgetAiResponse } from "../
 import type { CustomWidgetAiEvaluationCase } from "./ai-evaluation-cases";
 import type { CustomWidgetAiExpectation } from "./ai-evaluation-cases";
 
-// OpenRouter exposes the rolling "latest" route with a leading tilde. The non-tilde
-// deepseek/deepseek-v4-flash-latest alias is rejected by the chat-completions API.
-export const DEFAULT_GENERATOR_MODEL = "~deepseek/deepseek-v4-flash-latest";
-export const DEFAULT_JUDGE_MODEL = "~deepseek/deepseek-v4-flash-latest";
+// Keep generation and judging on the same concrete, tool-capable model used by the
+// assistant. A concrete ID avoids silently moving evaluations to a different release.
+export const DEFAULT_GENERATOR_MODEL = "z-ai/glm-5.3-flash";
+export const DEFAULT_JUDGE_MODEL = "z-ai/glm-5.3-flash";
 export const DEFAULT_AI_PROVIDER_BASE_URL = "https://openrouter.ai/api/v1";
 export const MAX_AI_EVALUATION_LOOPS = 10;
 export function getAiEvaluationMaxOutputTokens(purpose: "generation" | "judge", configuredValue: string | undefined) {

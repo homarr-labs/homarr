@@ -1,0 +1,1201 @@
+{
+  "schema": "skillopt-sleep.runtime-render-results.v1",
+  "createdAt": "2026-09-17T16:10:04.152793+00:00",
+  "manifest": "runtime-render-v31-manifest.json",
+  "sourceHashes": {
+    "create": "5354247fda02eba64d36085eded88367321636acfbce25f4a749eba7b6eec407",
+    "edit-repair": "83c5fd17ef081ea8f0c4af494c93633e334a4f30221cb753145e545f2605a319",
+    "migration": "e146935ae406733a76a9d10baf2603fe33b839326730b063da89d30bf6fc01a1",
+    "assistant-repair": "8b0a7a2d41d8255f2ad1002963cc2a1ef17b60e4ab2a56e5aebe44ae1d42be9c"
+  },
+  "summary": {
+    "cases": 32,
+    "rendererPasses": 32,
+    "rendererFailures": 0,
+    "thrownCases": 0,
+    "nativeErrorCases": 0,
+    "pageErrorCases": 0,
+    "overflowCases": 0,
+    "successMarkerCases": 6,
+    "staticFallbackCases": 8
+  },
+  "modes": [
+    {
+      "taskId": "create",
+      "mode": "create",
+      "cases": 8,
+      "rendererFailures": 0,
+      "overflowCases": 0,
+      "pageErrorCases": 0,
+      "stateSignals": {
+        "loading": 2,
+        "errorBranch": 2,
+        "emptyBranch": 2,
+        "successMarker": 2,
+        "staticFallback": 0
+      },
+      "semantic": {
+        "requestIds": [
+          "summary"
+        ],
+        "mode": "request-backed",
+        "perRequest": [
+          {
+            "requestId": "summary",
+            "loadingCondition": true,
+            "canonicalErrorCondition": true,
+            "guardedErrorMessageRead": false,
+            "unguardedErrorMessageRead": true,
+            "refreshScope": "global"
+          }
+        ],
+        "observations": [
+          "summary: error message is read without optional chaining",
+          "summary: RefreshButton uses global scope; one-request widget makes this intentional"
+        ]
+      },
+      "outputSha256": "5354247fda02eba64d36085eded88367321636acfbce25f4a749eba7b6eec407"
+    },
+    {
+      "taskId": "edit-repair",
+      "mode": "edit-repair",
+      "cases": 8,
+      "rendererFailures": 0,
+      "overflowCases": 0,
+      "pageErrorCases": 0,
+      "stateSignals": {
+        "loading": 2,
+        "errorBranch": 2,
+        "emptyBranch": 2,
+        "successMarker": 2,
+        "staticFallback": 0
+      },
+      "semantic": {
+        "requestIds": [
+          "status"
+        ],
+        "mode": "request-backed",
+        "perRequest": [
+          {
+            "requestId": "status",
+            "loadingCondition": true,
+            "canonicalErrorCondition": true,
+            "guardedErrorMessageRead": false,
+            "unguardedErrorMessageRead": true,
+            "refreshScope": "global"
+          }
+        ],
+        "observations": [
+          "status: error message is read without optional chaining",
+          "status: RefreshButton uses global scope; one-request widget makes this intentional"
+        ]
+      },
+      "outputSha256": "83c5fd17ef081ea8f0c4af494c93633e334a4f30221cb753145e545f2605a319"
+    },
+    {
+      "taskId": "migration",
+      "mode": "migration",
+      "cases": 8,
+      "rendererFailures": 0,
+      "overflowCases": 0,
+      "pageErrorCases": 0,
+      "stateSignals": {
+        "loading": 2,
+        "errorBranch": 0,
+        "emptyBranch": 0,
+        "successMarker": 0,
+        "staticFallback": 8
+      },
+      "semantic": {
+        "requestIds": [],
+        "mode": "static-fallback-no-request",
+        "perRequest": [],
+        "observations": [
+          "No request is declared; all fixture states render the intentional migration fallback."
+        ]
+      },
+      "outputSha256": "e146935ae406733a76a9d10baf2603fe33b839326730b063da89d30bf6fc01a1"
+    },
+    {
+      "taskId": "assistant-repair",
+      "mode": "assistant-repair",
+      "cases": 8,
+      "rendererFailures": 0,
+      "overflowCases": 0,
+      "pageErrorCases": 0,
+      "stateSignals": {
+        "loading": 2,
+        "errorBranch": 2,
+        "emptyBranch": 2,
+        "successMarker": 2,
+        "staticFallback": 0
+      },
+      "semantic": {
+        "requestIds": [
+          "status"
+        ],
+        "mode": "request-backed",
+        "perRequest": [
+          {
+            "requestId": "status",
+            "loadingCondition": true,
+            "canonicalErrorCondition": true,
+            "guardedErrorMessageRead": false,
+            "unguardedErrorMessageRead": false,
+            "refreshScope": "scoped"
+          }
+        ],
+        "observations": []
+      },
+      "outputSha256": "8b0a7a2d41d8255f2ad1002963cc2a1ef17b60e4ab2a56e5aebe44ae1d42be9c"
+    }
+  ],
+  "cases": [
+    {
+      "width": 320,
+      "index": 0,
+      "state": "loading",
+      "taskId": "create",
+      "renderedText": "Service status\n\nOverall health and component uptime",
+      "signals": {
+        "loading": true,
+        "errorBranch": false,
+        "emptyBranch": false,
+        "successMarker": false,
+        "staticFallback": false
+      },
+      "renderer": {
+        "renderError": "false",
+        "thrown": 0,
+        "nativeErrors": 0,
+        "forbiddenText": false
+      },
+      "layout": {
+        "width": 320,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "overflow": false
+      },
+      "realFailure": false,
+      "pageErrors": [],
+      "requestIds": [
+        "summary"
+      ],
+      "requestIdUsedByFixture": "summary",
+      "stateAssessment": "loading fixture rendered without runtime error"
+    },
+    {
+      "width": 320,
+      "index": 0,
+      "state": "error",
+      "taskId": "create",
+      "renderedText": "Service status\n\nOverall health and component uptime\n\nCould not load status\nThe status feed is unavailable right now. Use Refresh status to try again. fixture failure",
+      "signals": {
+        "loading": false,
+        "errorBranch": true,
+        "emptyBranch": false,
+        "successMarker": false,
+        "staticFallback": false
+      },
+      "renderer": {
+        "renderError": "false",
+        "thrown": 0,
+        "nativeErrors": 0,
+        "forbiddenText": false
+      },
+      "layout": {
+        "width": 320,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "overflow": false
+      },
+      "realFailure": false,
+      "pageErrors": [],
+      "requestIds": [
+        "summary"
+      ],
+      "requestIdUsedByFixture": "summary",
+      "stateAssessment": "error branch rendered"
+    },
+    {
+      "width": 320,
+      "index": 0,
+      "state": "empty",
+      "taskId": "create",
+      "renderedText": "Service status\n\nOverall health and component uptime\n\nStatus unknown\n\nUpdated time not reported\n\n0/0 operational\nNo components\nNo components were returned by the status feed. Use Refresh status to try again.",
+      "signals": {
+        "loading": false,
+        "errorBranch": false,
+        "emptyBranch": true,
+        "successMarker": false,
+        "staticFallback": false
+      },
+      "renderer": {
+        "renderError": "false",
+        "thrown": 0,
+        "nativeErrors": 0,
+        "forbiddenText": false
+      },
+      "layout": {
+        "width": 320,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "overflow": false
+      },
+      "realFailure": false,
+      "pageErrors": [],
+      "requestIds": [
+        "summary"
+      ],
+      "requestIdUsedByFixture": "summary",
+      "stateAssessment": "empty branch rendered"
+    },
+    {
+      "width": 320,
+      "index": 0,
+      "state": "success",
+      "taskId": "create",
+      "renderedText": "Service status\n\nOverall health and component uptime\n\nfixture marker\n\nUpdated Sep 17, 2026, 5:00 PM (local time zone)\n\n1/1 operational\n\nfixture marker\n\nfixture marker\n\nOperational",
+      "signals": {
+        "loading": false,
+        "errorBranch": false,
+        "emptyBranch": false,
+        "successMarker": true,
+        "staticFallback": false
+      },
+      "renderer": {
+        "renderError": "false",
+        "thrown": 0,
+        "nativeErrors": 0,
+        "forbiddenText": false
+      },
+      "layout": {
+        "width": 320,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "overflow": false
+      },
+      "realFailure": false,
+      "pageErrors": [],
+      "requestIds": [
+        "summary"
+      ],
+      "requestIdUsedByFixture": "summary",
+      "stateAssessment": "success fixture marker rendered"
+    },
+    {
+      "width": 320,
+      "index": 1,
+      "state": "loading",
+      "taskId": "edit-repair",
+      "renderedText": "Status\n\nCurrent service health",
+      "signals": {
+        "loading": true,
+        "errorBranch": false,
+        "emptyBranch": false,
+        "successMarker": false,
+        "staticFallback": false
+      },
+      "renderer": {
+        "renderError": "false",
+        "thrown": 0,
+        "nativeErrors": 0,
+        "forbiddenText": false
+      },
+      "layout": {
+        "width": 320,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "overflow": false
+      },
+      "realFailure": false,
+      "pageErrors": [],
+      "requestIds": [
+        "status"
+      ],
+      "requestIdUsedByFixture": "status",
+      "stateAssessment": "loading fixture rendered without runtime error"
+    },
+    {
+      "width": 320,
+      "index": 1,
+      "state": "error",
+      "taskId": "edit-repair",
+      "renderedText": "Status\n\nCurrent service health\n\nCould not load status\nThe status endpoint is unavailable. Use Refresh status to try again. fixture failure",
+      "signals": {
+        "loading": false,
+        "errorBranch": true,
+        "emptyBranch": false,
+        "successMarker": false,
+        "staticFallback": false
+      },
+      "renderer": {
+        "renderError": "false",
+        "thrown": 0,
+        "nativeErrors": 0,
+        "forbiddenText": false
+      },
+      "layout": {
+        "width": 320,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "overflow": false
+      },
+      "realFailure": false,
+      "pageErrors": [],
+      "requestIds": [
+        "status"
+      ],
+      "requestIdUsedByFixture": "status",
+      "stateAssessment": "error branch rendered"
+    },
+    {
+      "width": 320,
+      "index": 1,
+      "state": "empty",
+      "taskId": "edit-repair",
+      "renderedText": "Status\n\nCurrent service health\n\nNo status reported yet\n\nUse Refresh status to load the current state from the status endpoint.",
+      "signals": {
+        "loading": false,
+        "errorBranch": false,
+        "emptyBranch": true,
+        "successMarker": false,
+        "staticFallback": false
+      },
+      "renderer": {
+        "renderError": "false",
+        "thrown": 0,
+        "nativeErrors": 0,
+        "forbiddenText": false
+      },
+      "layout": {
+        "width": 320,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "overflow": false
+      },
+      "realFailure": false,
+      "pageErrors": [],
+      "requestIds": [
+        "status"
+      ],
+      "requestIdUsedByFixture": "status",
+      "stateAssessment": "empty branch rendered"
+    },
+    {
+      "width": 320,
+      "index": 1,
+      "state": "success",
+      "taskId": "edit-repair",
+      "renderedText": "Status\n\nCurrent service health\n\nCurrent state\n\nfixture marker\n\nCheck details",
+      "signals": {
+        "loading": false,
+        "errorBranch": false,
+        "emptyBranch": false,
+        "successMarker": true,
+        "staticFallback": false
+      },
+      "renderer": {
+        "renderError": "false",
+        "thrown": 0,
+        "nativeErrors": 0,
+        "forbiddenText": false
+      },
+      "layout": {
+        "width": 320,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "overflow": false
+      },
+      "realFailure": false,
+      "pageErrors": [],
+      "requestIds": [
+        "status"
+      ],
+      "requestIdUsedByFixture": "status",
+      "stateAssessment": "success fixture marker rendered"
+    },
+    {
+      "width": 320,
+      "index": 2,
+      "state": "loading",
+      "taskId": "migration",
+      "renderedText": "Legacy status\n\nMigrated legacy widget\n\nNot connected\n\nSource\n\nhttps://legacy.example.test\n\nMigration notice\nThe original endpoint path of this legacy widget was redacted and could not be preserved. Homarr will ask you for your own server URL when the data source is connected; once an endpoint is known, add a request to bring the status feed back online.\n\nStatus note\n\nAwaiting configuration",
+      "signals": {
+        "loading": true,
+        "errorBranch": false,
+        "emptyBranch": false,
+        "successMarker": false,
+        "staticFallback": true
+      },
+      "renderer": {
+        "renderError": "false",
+        "thrown": 0,
+        "nativeErrors": 0,
+        "forbiddenText": false
+      },
+      "layout": {
+        "width": 320,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "overflow": false
+      },
+      "realFailure": false,
+      "pageErrors": [],
+      "requestIds": [],
+      "requestIdUsedByFixture": "summary",
+      "stateAssessment": "static-fallback"
+    },
+    {
+      "width": 320,
+      "index": 2,
+      "state": "error",
+      "taskId": "migration",
+      "renderedText": "Legacy status\n\nMigrated legacy widget\n\nNot connected\n\nSource\n\nhttps://legacy.example.test\n\nMigration notice\nThe original endpoint path of this legacy widget was redacted and could not be preserved. Homarr will ask you for your own server URL when the data source is connected; once an endpoint is known, add a request to bring the status feed back online.\n\nStatus note\n\nAwaiting configuration",
+      "signals": {
+        "loading": false,
+        "errorBranch": false,
+        "emptyBranch": false,
+        "successMarker": false,
+        "staticFallback": true
+      },
+      "renderer": {
+        "renderError": "false",
+        "thrown": 0,
+        "nativeErrors": 0,
+        "forbiddenText": false
+      },
+      "layout": {
+        "width": 320,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "overflow": false
+      },
+      "realFailure": false,
+      "pageErrors": [],
+      "requestIds": [],
+      "requestIdUsedByFixture": "summary",
+      "stateAssessment": "static-fallback"
+    },
+    {
+      "width": 320,
+      "index": 2,
+      "state": "empty",
+      "taskId": "migration",
+      "renderedText": "Legacy status\n\nMigrated legacy widget\n\nNot connected\n\nSource\n\nhttps://legacy.example.test\n\nMigration notice\nThe original endpoint path of this legacy widget was redacted and could not be preserved. Homarr will ask you for your own server URL when the data source is connected; once an endpoint is known, add a request to bring the status feed back online.\n\nStatus note\n\nAwaiting configuration",
+      "signals": {
+        "loading": false,
+        "errorBranch": false,
+        "emptyBranch": false,
+        "successMarker": false,
+        "staticFallback": true
+      },
+      "renderer": {
+        "renderError": "false",
+        "thrown": 0,
+        "nativeErrors": 0,
+        "forbiddenText": false
+      },
+      "layout": {
+        "width": 320,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "overflow": false
+      },
+      "realFailure": false,
+      "pageErrors": [],
+      "requestIds": [],
+      "requestIdUsedByFixture": "summary",
+      "stateAssessment": "static-fallback"
+    },
+    {
+      "width": 320,
+      "index": 2,
+      "state": "success",
+      "taskId": "migration",
+      "renderedText": "Legacy status\n\nMigrated legacy widget\n\nNot connected\n\nSource\n\nhttps://legacy.example.test\n\nMigration notice\nThe original endpoint path of this legacy widget was redacted and could not be preserved. Homarr will ask you for your own server URL when the data source is connected; once an endpoint is known, add a request to bring the status feed back online.\n\nStatus note\n\nAwaiting configuration",
+      "signals": {
+        "loading": false,
+        "errorBranch": false,
+        "emptyBranch": false,
+        "successMarker": false,
+        "staticFallback": true
+      },
+      "renderer": {
+        "renderError": "false",
+        "thrown": 0,
+        "nativeErrors": 0,
+        "forbiddenText": false
+      },
+      "layout": {
+        "width": 320,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "overflow": false
+      },
+      "realFailure": false,
+      "pageErrors": [],
+      "requestIds": [],
+      "requestIdUsedByFixture": "summary",
+      "stateAssessment": "static-fallback"
+    },
+    {
+      "width": 320,
+      "index": 3,
+      "state": "loading",
+      "taskId": "assistant-repair",
+      "renderedText": "Service status",
+      "signals": {
+        "loading": true,
+        "errorBranch": false,
+        "emptyBranch": false,
+        "successMarker": false,
+        "staticFallback": false
+      },
+      "renderer": {
+        "renderError": "false",
+        "thrown": 0,
+        "nativeErrors": 0,
+        "forbiddenText": false
+      },
+      "layout": {
+        "width": 320,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "overflow": false
+      },
+      "realFailure": false,
+      "pageErrors": [],
+      "requestIds": [
+        "status"
+      ],
+      "requestIdUsedByFixture": "status",
+      "stateAssessment": "loading fixture rendered without runtime error"
+    },
+    {
+      "width": 320,
+      "index": 3,
+      "state": "error",
+      "taskId": "assistant-repair",
+      "renderedText": "Service status\n\nError\n\nUnable to load status",
+      "signals": {
+        "loading": false,
+        "errorBranch": true,
+        "emptyBranch": false,
+        "successMarker": false,
+        "staticFallback": false
+      },
+      "renderer": {
+        "renderError": "false",
+        "thrown": 0,
+        "nativeErrors": 0,
+        "forbiddenText": false
+      },
+      "layout": {
+        "width": 320,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "overflow": false
+      },
+      "realFailure": false,
+      "pageErrors": [],
+      "requestIds": [
+        "status"
+      ],
+      "requestIdUsedByFixture": "status",
+      "stateAssessment": "error branch rendered"
+    },
+    {
+      "width": 320,
+      "index": 3,
+      "state": "empty",
+      "taskId": "assistant-repair",
+      "renderedText": "Service status\n\nNo status available",
+      "signals": {
+        "loading": false,
+        "errorBranch": false,
+        "emptyBranch": true,
+        "successMarker": false,
+        "staticFallback": false
+      },
+      "renderer": {
+        "renderError": "false",
+        "thrown": 0,
+        "nativeErrors": 0,
+        "forbiddenText": false
+      },
+      "layout": {
+        "width": 320,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "overflow": false
+      },
+      "realFailure": false,
+      "pageErrors": [],
+      "requestIds": [
+        "status"
+      ],
+      "requestIdUsedByFixture": "status",
+      "stateAssessment": "empty branch rendered"
+    },
+    {
+      "width": 320,
+      "index": 3,
+      "state": "success",
+      "taskId": "assistant-repair",
+      "renderedText": "Service status\n\nfixture marker",
+      "signals": {
+        "loading": false,
+        "errorBranch": false,
+        "emptyBranch": false,
+        "successMarker": true,
+        "staticFallback": false
+      },
+      "renderer": {
+        "renderError": "false",
+        "thrown": 0,
+        "nativeErrors": 0,
+        "forbiddenText": false
+      },
+      "layout": {
+        "width": 320,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "overflow": false
+      },
+      "realFailure": false,
+      "pageErrors": [],
+      "requestIds": [
+        "status"
+      ],
+      "requestIdUsedByFixture": "status",
+      "stateAssessment": "success fixture marker rendered"
+    },
+    {
+      "width": 1024,
+      "index": 0,
+      "state": "loading",
+      "taskId": "create",
+      "renderedText": "Service status\n\nOverall health and component uptime",
+      "signals": {
+        "loading": true,
+        "errorBranch": false,
+        "emptyBranch": false,
+        "successMarker": false,
+        "staticFallback": false
+      },
+      "renderer": {
+        "renderError": "false",
+        "thrown": 0,
+        "nativeErrors": 0,
+        "forbiddenText": false
+      },
+      "layout": {
+        "width": 1024,
+        "clientWidth": 1024,
+        "scrollWidth": 1024,
+        "overflow": false
+      },
+      "realFailure": false,
+      "pageErrors": [],
+      "requestIds": [
+        "summary"
+      ],
+      "requestIdUsedByFixture": "summary",
+      "stateAssessment": "loading fixture rendered without runtime error"
+    },
+    {
+      "width": 1024,
+      "index": 0,
+      "state": "error",
+      "taskId": "create",
+      "renderedText": "Service status\n\nOverall health and component uptime\n\nCould not load status\nThe status feed is unavailable right now. Use Refresh status to try again. fixture failure",
+      "signals": {
+        "loading": false,
+        "errorBranch": true,
+        "emptyBranch": false,
+        "successMarker": false,
+        "staticFallback": false
+      },
+      "renderer": {
+        "renderError": "false",
+        "thrown": 0,
+        "nativeErrors": 0,
+        "forbiddenText": false
+      },
+      "layout": {
+        "width": 1024,
+        "clientWidth": 1024,
+        "scrollWidth": 1024,
+        "overflow": false
+      },
+      "realFailure": false,
+      "pageErrors": [],
+      "requestIds": [
+        "summary"
+      ],
+      "requestIdUsedByFixture": "summary",
+      "stateAssessment": "error branch rendered"
+    },
+    {
+      "width": 1024,
+      "index": 0,
+      "state": "empty",
+      "taskId": "create",
+      "renderedText": "Service status\n\nOverall health and component uptime\n\nStatus unknown\n\nUpdated time not reported\n\n0/0 operational\nNo components\nNo components were returned by the status feed. Use Refresh status to try again.",
+      "signals": {
+        "loading": false,
+        "errorBranch": false,
+        "emptyBranch": true,
+        "successMarker": false,
+        "staticFallback": false
+      },
+      "renderer": {
+        "renderError": "false",
+        "thrown": 0,
+        "nativeErrors": 0,
+        "forbiddenText": false
+      },
+      "layout": {
+        "width": 1024,
+        "clientWidth": 1024,
+        "scrollWidth": 1024,
+        "overflow": false
+      },
+      "realFailure": false,
+      "pageErrors": [],
+      "requestIds": [
+        "summary"
+      ],
+      "requestIdUsedByFixture": "summary",
+      "stateAssessment": "empty branch rendered"
+    },
+    {
+      "width": 1024,
+      "index": 0,
+      "state": "success",
+      "taskId": "create",
+      "renderedText": "Service status\n\nOverall health and component uptime\n\nfixture marker\n\nUpdated Sep 17, 2026, 5:00 PM (local time zone)\n\n1/1 operational\n\nfixture marker\n\nfixture marker\n\nOperational",
+      "signals": {
+        "loading": false,
+        "errorBranch": false,
+        "emptyBranch": false,
+        "successMarker": true,
+        "staticFallback": false
+      },
+      "renderer": {
+        "renderError": "false",
+        "thrown": 0,
+        "nativeErrors": 0,
+        "forbiddenText": false
+      },
+      "layout": {
+        "width": 1024,
+        "clientWidth": 1024,
+        "scrollWidth": 1024,
+        "overflow": false
+      },
+      "realFailure": false,
+      "pageErrors": [],
+      "requestIds": [
+        "summary"
+      ],
+      "requestIdUsedByFixture": "summary",
+      "stateAssessment": "success fixture marker rendered"
+    },
+    {
+      "width": 1024,
+      "index": 1,
+      "state": "loading",
+      "taskId": "edit-repair",
+      "renderedText": "Status\n\nCurrent service health",
+      "signals": {
+        "loading": true,
+        "errorBranch": false,
+        "emptyBranch": false,
+        "successMarker": false,
+        "staticFallback": false
+      },
+      "renderer": {
+        "renderError": "false",
+        "thrown": 0,
+        "nativeErrors": 0,
+        "forbiddenText": false
+      },
+      "layout": {
+        "width": 1024,
+        "clientWidth": 1024,
+        "scrollWidth": 1024,
+        "overflow": false
+      },
+      "realFailure": false,
+      "pageErrors": [],
+      "requestIds": [
+        "status"
+      ],
+      "requestIdUsedByFixture": "status",
+      "stateAssessment": "loading fixture rendered without runtime error"
+    },
+    {
+      "width": 1024,
+      "index": 1,
+      "state": "error",
+      "taskId": "edit-repair",
+      "renderedText": "Status\n\nCurrent service health\n\nCould not load status\nThe status endpoint is unavailable. Use Refresh status to try again. fixture failure",
+      "signals": {
+        "loading": false,
+        "errorBranch": true,
+        "emptyBranch": false,
+        "successMarker": false,
+        "staticFallback": false
+      },
+      "renderer": {
+        "renderError": "false",
+        "thrown": 0,
+        "nativeErrors": 0,
+        "forbiddenText": false
+      },
+      "layout": {
+        "width": 1024,
+        "clientWidth": 1024,
+        "scrollWidth": 1024,
+        "overflow": false
+      },
+      "realFailure": false,
+      "pageErrors": [],
+      "requestIds": [
+        "status"
+      ],
+      "requestIdUsedByFixture": "status",
+      "stateAssessment": "error branch rendered"
+    },
+    {
+      "width": 1024,
+      "index": 1,
+      "state": "empty",
+      "taskId": "edit-repair",
+      "renderedText": "Status\n\nCurrent service health\n\nNo status reported yet\n\nUse Refresh status to load the current state from the status endpoint.",
+      "signals": {
+        "loading": false,
+        "errorBranch": false,
+        "emptyBranch": true,
+        "successMarker": false,
+        "staticFallback": false
+      },
+      "renderer": {
+        "renderError": "false",
+        "thrown": 0,
+        "nativeErrors": 0,
+        "forbiddenText": false
+      },
+      "layout": {
+        "width": 1024,
+        "clientWidth": 1024,
+        "scrollWidth": 1024,
+        "overflow": false
+      },
+      "realFailure": false,
+      "pageErrors": [],
+      "requestIds": [
+        "status"
+      ],
+      "requestIdUsedByFixture": "status",
+      "stateAssessment": "empty branch rendered"
+    },
+    {
+      "width": 1024,
+      "index": 1,
+      "state": "success",
+      "taskId": "edit-repair",
+      "renderedText": "Status\n\nCurrent service health\n\nCurrent state\n\nfixture marker\n\nCheck details",
+      "signals": {
+        "loading": false,
+        "errorBranch": false,
+        "emptyBranch": false,
+        "successMarker": true,
+        "staticFallback": false
+      },
+      "renderer": {
+        "renderError": "false",
+        "thrown": 0,
+        "nativeErrors": 0,
+        "forbiddenText": false
+      },
+      "layout": {
+        "width": 1024,
+        "clientWidth": 1024,
+        "scrollWidth": 1024,
+        "overflow": false
+      },
+      "realFailure": false,
+      "pageErrors": [],
+      "requestIds": [
+        "status"
+      ],
+      "requestIdUsedByFixture": "status",
+      "stateAssessment": "success fixture marker rendered"
+    },
+    {
+      "width": 1024,
+      "index": 2,
+      "state": "loading",
+      "taskId": "migration",
+      "renderedText": "Legacy status\n\nMigrated legacy widget\n\nNot connected\n\nSource\n\nhttps://legacy.example.test\n\nMigration notice\nThe original endpoint path of this legacy widget was redacted and could not be preserved. Homarr will ask you for your own server URL when the data source is connected; once an endpoint is known, add a request to bring the status feed back online.\n\nStatus note\n\nAwaiting configuration",
+      "signals": {
+        "loading": true,
+        "errorBranch": false,
+        "emptyBranch": false,
+        "successMarker": false,
+        "staticFallback": true
+      },
+      "renderer": {
+        "renderError": "false",
+        "thrown": 0,
+        "nativeErrors": 0,
+        "forbiddenText": false
+      },
+      "layout": {
+        "width": 1024,
+        "clientWidth": 1024,
+        "scrollWidth": 1024,
+        "overflow": false
+      },
+      "realFailure": false,
+      "pageErrors": [],
+      "requestIds": [],
+      "requestIdUsedByFixture": "summary",
+      "stateAssessment": "static-fallback"
+    },
+    {
+      "width": 1024,
+      "index": 2,
+      "state": "error",
+      "taskId": "migration",
+      "renderedText": "Legacy status\n\nMigrated legacy widget\n\nNot connected\n\nSource\n\nhttps://legacy.example.test\n\nMigration notice\nThe original endpoint path of this legacy widget was redacted and could not be preserved. Homarr will ask you for your own server URL when the data source is connected; once an endpoint is known, add a request to bring the status feed back online.\n\nStatus note\n\nAwaiting configuration",
+      "signals": {
+        "loading": false,
+        "errorBranch": false,
+        "emptyBranch": false,
+        "successMarker": false,
+        "staticFallback": true
+      },
+      "renderer": {
+        "renderError": "false",
+        "thrown": 0,
+        "nativeErrors": 0,
+        "forbiddenText": false
+      },
+      "layout": {
+        "width": 1024,
+        "clientWidth": 1024,
+        "scrollWidth": 1024,
+        "overflow": false
+      },
+      "realFailure": false,
+      "pageErrors": [],
+      "requestIds": [],
+      "requestIdUsedByFixture": "summary",
+      "stateAssessment": "static-fallback"
+    },
+    {
+      "width": 1024,
+      "index": 2,
+      "state": "empty",
+      "taskId": "migration",
+      "renderedText": "Legacy status\n\nMigrated legacy widget\n\nNot connected\n\nSource\n\nhttps://legacy.example.test\n\nMigration notice\nThe original endpoint path of this legacy widget was redacted and could not be preserved. Homarr will ask you for your own server URL when the data source is connected; once an endpoint is known, add a request to bring the status feed back online.\n\nStatus note\n\nAwaiting configuration",
+      "signals": {
+        "loading": false,
+        "errorBranch": false,
+        "emptyBranch": false,
+        "successMarker": false,
+        "staticFallback": true
+      },
+      "renderer": {
+        "renderError": "false",
+        "thrown": 0,
+        "nativeErrors": 0,
+        "forbiddenText": false
+      },
+      "layout": {
+        "width": 1024,
+        "clientWidth": 1024,
+        "scrollWidth": 1024,
+        "overflow": false
+      },
+      "realFailure": false,
+      "pageErrors": [],
+      "requestIds": [],
+      "requestIdUsedByFixture": "summary",
+      "stateAssessment": "static-fallback"
+    },
+    {
+      "width": 1024,
+      "index": 2,
+      "state": "success",
+      "taskId": "migration",
+      "renderedText": "Legacy status\n\nMigrated legacy widget\n\nNot connected\n\nSource\n\nhttps://legacy.example.test\n\nMigration notice\nThe original endpoint path of this legacy widget was redacted and could not be preserved. Homarr will ask you for your own server URL when the data source is connected; once an endpoint is known, add a request to bring the status feed back online.\n\nStatus note\n\nAwaiting configuration",
+      "signals": {
+        "loading": false,
+        "errorBranch": false,
+        "emptyBranch": false,
+        "successMarker": false,
+        "staticFallback": true
+      },
+      "renderer": {
+        "renderError": "false",
+        "thrown": 0,
+        "nativeErrors": 0,
+        "forbiddenText": false
+      },
+      "layout": {
+        "width": 1024,
+        "clientWidth": 1024,
+        "scrollWidth": 1024,
+        "overflow": false
+      },
+      "realFailure": false,
+      "pageErrors": [],
+      "requestIds": [],
+      "requestIdUsedByFixture": "summary",
+      "stateAssessment": "static-fallback"
+    },
+    {
+      "width": 1024,
+      "index": 3,
+      "state": "loading",
+      "taskId": "assistant-repair",
+      "renderedText": "Service status",
+      "signals": {
+        "loading": true,
+        "errorBranch": false,
+        "emptyBranch": false,
+        "successMarker": false,
+        "staticFallback": false
+      },
+      "renderer": {
+        "renderError": "false",
+        "thrown": 0,
+        "nativeErrors": 0,
+        "forbiddenText": false
+      },
+      "layout": {
+        "width": 1024,
+        "clientWidth": 1024,
+        "scrollWidth": 1024,
+        "overflow": false
+      },
+      "realFailure": false,
+      "pageErrors": [],
+      "requestIds": [
+        "status"
+      ],
+      "requestIdUsedByFixture": "status",
+      "stateAssessment": "loading fixture rendered without runtime error"
+    },
+    {
+      "width": 1024,
+      "index": 3,
+      "state": "error",
+      "taskId": "assistant-repair",
+      "renderedText": "Service status\n\nError\n\nUnable to load status",
+      "signals": {
+        "loading": false,
+        "errorBranch": true,
+        "emptyBranch": false,
+        "successMarker": false,
+        "staticFallback": false
+      },
+      "renderer": {
+        "renderError": "false",
+        "thrown": 0,
+        "nativeErrors": 0,
+        "forbiddenText": false
+      },
+      "layout": {
+        "width": 1024,
+        "clientWidth": 1024,
+        "scrollWidth": 1024,
+        "overflow": false
+      },
+      "realFailure": false,
+      "pageErrors": [],
+      "requestIds": [
+        "status"
+      ],
+      "requestIdUsedByFixture": "status",
+      "stateAssessment": "error branch rendered"
+    },
+    {
+      "width": 1024,
+      "index": 3,
+      "state": "empty",
+      "taskId": "assistant-repair",
+      "renderedText": "Service status\n\nNo status available",
+      "signals": {
+        "loading": false,
+        "errorBranch": false,
+        "emptyBranch": true,
+        "successMarker": false,
+        "staticFallback": false
+      },
+      "renderer": {
+        "renderError": "false",
+        "thrown": 0,
+        "nativeErrors": 0,
+        "forbiddenText": false
+      },
+      "layout": {
+        "width": 1024,
+        "clientWidth": 1024,
+        "scrollWidth": 1024,
+        "overflow": false
+      },
+      "realFailure": false,
+      "pageErrors": [],
+      "requestIds": [
+        "status"
+      ],
+      "requestIdUsedByFixture": "status",
+      "stateAssessment": "empty branch rendered"
+    },
+    {
+      "width": 1024,
+      "index": 3,
+      "state": "success",
+      "taskId": "assistant-repair",
+      "renderedText": "Service status\n\nfixture marker",
+      "signals": {
+        "loading": false,
+        "errorBranch": false,
+        "emptyBranch": false,
+        "successMarker": true,
+        "staticFallback": false
+      },
+      "renderer": {
+        "renderError": "false",
+        "thrown": 0,
+        "nativeErrors": 0,
+        "forbiddenText": false
+      },
+      "layout": {
+        "width": 1024,
+        "clientWidth": 1024,
+        "scrollWidth": 1024,
+        "overflow": false
+      },
+      "realFailure": false,
+      "pageErrors": [],
+      "requestIds": [
+        "status"
+      ],
+      "requestIdUsedByFixture": "status",
+      "stateAssessment": "success fixture marker rendered"
+    }
+  ],
+  "limitations": [
+    "SSR/static-markup fixture only; the client was not hydrated.",
+    "No production app boot or live network request was performed.",
+    "No action click or persistence simulation was performed.",
+    "The migration artifact intentionally declares no request, so its four state inputs render the same static fallback by design."
+  ]
+}

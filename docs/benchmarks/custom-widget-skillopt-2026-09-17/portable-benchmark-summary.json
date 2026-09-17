@@ -1,0 +1,211 @@
+{
+  "schema": "portable-skill-behavior-benchmark.v1",
+  "recorded_on": "2026-09-17",
+  "purpose": "Bounded before/after behavior benchmark for three portable Homarr skills.",
+  "model": "z-ai/glm-5.3-flash",
+  "provider_policy": {
+    "ordered_routes": [
+      "sail-research/fp8",
+      "atlas-cloud/fp8",
+      "together",
+      "coreweave/nvfp4",
+      "baseten/fp8"
+    ],
+    "allow_fallbacks": false,
+    "require_parameters": true,
+    "max_price_usd_per_million": {
+      "input": 0.15,
+      "output": 0.5
+    },
+    "observed_provider": "Sail Research"
+  },
+  "scope": {
+    "case_count": 10,
+    "call_count": 20,
+    "arms": [
+      "before",
+      "after"
+    ],
+    "order": "before then after per case",
+    "skills": [
+      "codebase-context",
+      "documentation-sync",
+      "mcp-integration"
+    ],
+    "case_manifest": ".skillopt-sleep/evidence/portable-skill-behavior-cases-20260917.json",
+    "incremental_evidence": ".skillopt-sleep/evidence/portable-benchmark-20260917"
+  },
+  "portable_cost": {
+    "before_usd": 0.00253382,
+    "after_usd": 0.00232355,
+    "total_usd": 0.00485737,
+    "all_calls_confirmed": true,
+    "call_costs_are_settled_usage_cost": true
+  },
+  "first_two_calls": [
+    {
+      "index": 0,
+      "case_id": "codebase-boundary-01",
+      "arm": "before",
+      "response_id": "gen-1789658594-AIkgsDtWTPrSGBjbwDwx",
+      "settled_cost_usd": 0.00027535,
+      "response_chars": 1199
+    },
+    {
+      "index": 1,
+      "case_id": "codebase-boundary-01",
+      "arm": "after",
+      "response_id": "gen-1789658604-K4rg2ZkczvC76V7meIsd",
+      "settled_cost_usd": 0.00026015,
+      "response_chars": 1214
+    }
+  ],
+  "semantic_review": {
+    "reviewer": "agent judgment",
+    "review_passes": 1,
+    "automated": false,
+    "before_points": 19.5,
+    "after_points": 21,
+    "total_points": 28,
+    "before_fraction": 0.696429,
+    "after_fraction": 0.75,
+    "must_not_clean_cases_before": 10,
+    "must_not_clean_cases_after": 10,
+    "full_expected_phrase_hits_before": 0,
+    "full_expected_phrase_hits_after": 0,
+    "full_expected_phrase_total": 28,
+    "literal_phrase_note": "All 28 full expected.must sentences were absent verbatim in both arms; this is intentionally separate from the manual semantic score.",
+    "details": "portable-semantic-grades.json"
+  },
+  "reconciliation": {
+    "portable_telemetry_rows": {
+      "first": 262,
+      "last": 281,
+      "calls": 20,
+      "response_ids_and_costs_match": true
+    },
+    "portable_prompt_hashes": {
+      "available": false,
+      "note": "The portable backend evidence and shared telemetry persisted response IDs, token counts, and usage.cost, but no prompt SHA-256."
+    },
+    "separate_runtime_suite": {
+      "telemetry_rows": [
+        282,
+        291
+      ],
+      "calls": 10,
+      "cost_usd": 0.0080337,
+      "excluded_from_portable_counts": true,
+      "ids_and_prompt_hashes": [
+        {
+          "id": "runtime/manifest-create/after",
+          "case_id": "manifest-create",
+          "arm": "after",
+          "prompt_sha256": "28ae9acf9589c1f730c5fb8386872010ca241a18a9cb8174771bbca42e9aff7f",
+          "telemetry_row": 282,
+          "response_id": "gen-1789658945-gFydP4vwIxKEXpQ92ILH",
+          "output_chars": 2887,
+          "reported_cost_usd": 0.0008603
+        },
+        {
+          "id": "runtime/manifest-create/before",
+          "case_id": "manifest-create",
+          "arm": "before",
+          "prompt_sha256": "27365c6d367118b3eb96802f0c34f041f568d82b3a6293dfd266e2e2f980286b",
+          "telemetry_row": 283,
+          "response_id": "gen-1789658936-NFSpkO5xJ6tc95hYNHbQ",
+          "output_chars": 4213,
+          "reported_cost_usd": 0.0012117
+        },
+        {
+          "id": "runtime/manifest-edit-repair/before",
+          "case_id": "manifest-edit-repair",
+          "arm": "before",
+          "prompt_sha256": "f87746b96e2415f8cb3f972cca187e0630a08efc0c98b0cfd2a5998dd2ef32b6",
+          "telemetry_row": 284,
+          "response_id": "gen-1789658961-ONq0ZBQP2Z4EuQ1GfaP1",
+          "output_chars": 2652,
+          "reported_cost_usd": 0.00082175
+        },
+        {
+          "id": "runtime/manifest-edit-repair/after",
+          "case_id": "manifest-edit-repair",
+          "arm": "after",
+          "prompt_sha256": "4e321048df44b5e0b6af4346dc84aa95a138def660df158caf9077c2d5e124a4",
+          "telemetry_row": 285,
+          "response_id": "gen-1789658971-viE7xZLP9vwsuH2djFsI",
+          "output_chars": 1910,
+          "reported_cost_usd": 0.0007293
+        },
+        {
+          "id": "runtime/manifest-migration/before",
+          "case_id": "manifest-migration",
+          "arm": "before",
+          "prompt_sha256": "569bb1de0dd2a2d8ecfdcfff924368fa2f45a137d210d9c1ee86406d0877a219",
+          "telemetry_row": 286,
+          "response_id": "gen-1789658981-Q2aw4DbsqpCfFQSOnmCS",
+          "output_chars": 2927,
+          "reported_cost_usd": 0.00086485
+        },
+        {
+          "id": "runtime/assistant-repair/before",
+          "case_id": "assistant-repair",
+          "arm": "before",
+          "prompt_sha256": "54d165776b658d09b1d7a8ffae3248b021586f7e5bd2a75cc79550a69a2502e8",
+          "telemetry_row": 287,
+          "response_id": "gen-1789659027-G5SVo7OVw9Y5BsfMThxd",
+          "output_chars": 2919,
+          "reported_cost_usd": 0.00087595
+        },
+        {
+          "id": "runtime/manifest-migration/after",
+          "case_id": "manifest-migration",
+          "arm": "after",
+          "prompt_sha256": "69a3d818e3ea4600dbf625eac83cd10e2cf436d06f4bcfb9d33bd2ceca3f6f3c",
+          "telemetry_row": 288,
+          "response_id": "gen-1789658994-I4FHZ3jnSgYB4WRUhtXT",
+          "output_chars": 4869,
+          "reported_cost_usd": 0.0011948
+        },
+        {
+          "id": "runtime/mcp-plan-create/before",
+          "case_id": "mcp-plan-create",
+          "arm": "before",
+          "prompt_sha256": "4d3899e697d9a3b4e2e90c98d9b7296fd1804b21dceee3cc75473d2fba02d333",
+          "telemetry_row": 289,
+          "response_id": "gen-1789659071-89Sc23koiuJd6nm1QAjy",
+          "output_chars": 45,
+          "reported_cost_usd": 0.00015765
+        },
+        {
+          "id": "runtime/assistant-repair/after",
+          "case_id": "assistant-repair",
+          "arm": "after",
+          "prompt_sha256": "3c7f8d488dbbf5e250dddca0c3fb598eb0d2b33b1dfc1c299eb36484294cadce",
+          "telemetry_row": 290,
+          "response_id": "gen-1789659051-ZbN4uUH3OY2VgQvgCUbv",
+          "output_chars": 2866,
+          "reported_cost_usd": 0.00084985
+        },
+        {
+          "id": "runtime/mcp-plan-create/after",
+          "case_id": "mcp-plan-create",
+          "arm": "after",
+          "prompt_sha256": "09a5a571e12ef1c8938d307927223f1d3554e6468c388dd04cf36050ab2f07ae",
+          "telemetry_row": 291,
+          "response_id": "gen-1789659081-zHg9HYOoBt3SQHO8O8AB",
+          "output_chars": 2078,
+          "reported_cost_usd": 0.00046755
+        }
+      ]
+    },
+    "ledger_context": {
+      "shared_ledger_includes_portable_calls": true,
+      "shared_ledger_includes_separate_runtime_suite": true,
+      "historical_unconfirmed_estimate_usd": 0.11680084,
+      "note": "Additional bounded repair calls share this ledger. Use the portable call rows and confirmed usage.cost values for portable totals, then read the final ledger after all jobs finish."
+    }
+  },
+  "source_hashes": "portable-skill-hashes.json",
+  "calls": "portable-calls.jsonl"
+}

@@ -512,9 +512,9 @@ describe("AI authoring evaluation", () => {
     expect(prompt).toContain("bad response");
   });
 
-  it("uses the requested DeepSeek models and strict structured judge output", () => {
-    expect(DEFAULT_GENERATOR_MODEL).toBe("~deepseek/deepseek-v4-flash-latest");
-    expect(DEFAULT_JUDGE_MODEL).toBe("~deepseek/deepseek-v4-flash-latest");
+  it("uses the requested GLM models and strict structured judge output", () => {
+    expect(DEFAULT_GENERATOR_MODEL).toBe("z-ai/glm-5.3-flash");
+    expect(DEFAULT_JUDGE_MODEL).toBe("z-ai/glm-5.3-flash");
     const format = getJudgeResponseFormat();
     expect(format.type).toBe("json_schema");
     expect(format.json_schema.strict).toBe(true);

@@ -255,6 +255,22 @@ func TestProviderEnvironment(t *testing.T) {
 	}
 }
 
+func TestProviderUsesConfiguredDefaultModel(t *testing.T) {
+	t.Setenv("OPENROUTER_API_KEY", "test-key")
+	t.Setenv("HOMARR_AI_OPENROUTER_BASE_URL", "https://router.example/v1")
+	t.Setenv("HOMARR_AI_OPENROUTER_MODEL", "")
+	t.Setenv("HOMARR_AI_DAILY_REQUEST_LIMIT", "")
+	t.Setenv("HOMARR_AI_GLOBAL_DAILY_REQUEST_LIMIT", "")
+
+	provider, err := newHomarrProviderFromEnv()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if provider.modelID != defaultOpenRouterModelID {
+		t.Fatalf("expected default model %q, got %q", defaultOpenRouterModelID, provider.modelID)
+	}
+}
+
 func TestReadBoundedBody(t *testing.T) {
 	body, err := readBoundedBody(strings.NewReader("1234"), 4)
 	if err != nil || string(body) != "1234" {
