@@ -9,6 +9,16 @@ import { CUSTOM_JSX_BLOCKED_PROPERTIES, CUSTOM_JSX_BLOCKED_PROPS, CUSTOM_JSX_LIM
 
 const components = { Text: () => null };
 const bindings = { data: Object.create(null) as Record<string, unknown> };
+const renderText = (template: string, apiData: unknown) => {
+  const rendered = renderSafeJsx({
+    template,
+    components: {
+      Text: ((props: { children?: unknown }) => createElement("span", null, props.children as never)) as never,
+    },
+    bindings: createCustomJsxBindings(apiData),
+  });
+  return renderToStaticMarkup(rendered.node);
+};
 
 describe("shared Custom JSX policy", () => {
   test.each(['status.list === "loading"', '"success" === status.list', 'status.list !== "error"'])(
@@ -30,6 +40,23 @@ describe("shared Custom JSX policy", () => {
       "<Text>{status.list?.loading ? 'Loading' : status.list?.ok === false ? status.list.error : 'Ready'}</Text>",
     );
     expect(diagnostics.filter(({ severity }) => severity === "error")).toEqual([]);
+  });
+
+  test("handles nullish comparisons without coercing sanitized objects", () => {
+    const healthTemplate = '<Text>{data.health == null ? "No status" : "Degraded"}</Text>';
+    expect(renderText(healthTemplate, {})).toContain("No status");
+    expect(renderText(healthTemplate, { health: { status: "ok" } })).toContain("Degraded");
+    const reverseHealthTemplate =
+      '<Text>{null == data.health ? "No status" : "Degraded"} {data.health != null ? "Present" : "Missing"} {null != data.health ? "Present" : "Missing"}</Text>';
+    expect(renderText(reverseHealthTemplate, { health: { status: "ok" } })).toContain("Degraded Present Present");
+
+    const nullishTemplate =
+      '<Text>{undefined == null ? "equal" : "different"} {null == undefined ? "equal" : "different"} {undefined != null ? "wrong" : "not equal"} {null != undefined ? "wrong" : "not equal"}</Text>';
+    expect(renderText(nullishTemplate, {})).toContain("equal equal not equal not equal");
+
+    const strictTemplate =
+      '<Text>{data.health === null ? "same" : "different"} {data.health !== null ? "different" : "same"}</Text>';
+    expect(renderText(strictTemplate, { health: {} })).toContain("different different");
   });
 
   test("accepts canonical Mantine compound component names", () => {
