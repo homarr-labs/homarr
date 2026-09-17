@@ -1,0 +1,29 @@
+{
+  "kind": "skillopt-comparison-summary",
+  "recordedOn": "2026-09-17",
+  "skill": "homarr-custom-widget",
+  "model": "z-ai/glm-5.3-flash",
+  "candidateRevision": "delivery-v3",
+  "baselineSha256": "1c1ff19f27fa28fdd5139f3b02b02408606ce239f2f772ba87e809d24ae732fd",
+  "candidateSha256": "a3690294a6aa495b0cababaaf8b5af039d158d7914255497b047fb57d08ad366",
+  "outputsPerArm": 24,
+  "hardJudge": {
+    "baselineValid": 13,
+    "candidateValid": 16,
+    "denominator": 24
+  },
+  "nativeBridge": {
+    "baselineValid": 14,
+    "candidateValid": 24,
+    "denominator": 24
+  },
+  "excludedTransportErrorRows": 1,
+  "recordedComparisonCostUsd": 0.01517842,
+  "legacySessionCost": "unknown",
+  "accepted": false,
+  "gateAction": "manual_review_approved_compare_only",
+  "limitations": [
+    "The comparison was not a held-out adoption gate.",
+    "Hard-judge and native-bridge values apply to delivery-v3 only."
+  ]
+}

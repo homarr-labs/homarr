@@ -1,0 +1,167 @@
+{
+  "schema": "skillopt-sleep.runtime-render-manifest.v1",
+  "createdAt": "2026-09-17T16:10:04.152793+00:00",
+  "source": "runtime-benchmark-20260917/final-native-valid-artifacts",
+  "model": "z-ai/glm-5.3-flash",
+  "variant": "delivery-v3.1-runtime-post-fix",
+  "sourceSelection": [
+    {
+      "taskId": "create",
+      "mode": "create",
+      "selection": "repair-native-valid-attempt-1",
+      "sourceFile": ".skillopt-sleep/evidence/runtime-benchmark-20260917/bounded-repair/responses/repair_manifest-create_attempt-1.txt",
+      "outputSha256": "5354247fda02eba64d36085eded88367321636acfbce25f4a749eba7b6eec407",
+      "outputCharacters": 3650,
+      "nativeValidation": {
+        "ok": true,
+        "syntax": "schema-and-jsx",
+        "renderer": "not-run",
+        "validationClaim": true,
+        "issues": [],
+        "widget": {
+          "schema": "homarr-custom-widget-v2",
+          "sourceIds": [
+            "default"
+          ],
+          "requestIds": [
+            "summary"
+          ],
+          "templateCharacters": 2862
+        }
+      },
+      "requestIds": [
+        "summary"
+      ]
+    },
+    {
+      "taskId": "edit-repair",
+      "mode": "edit-repair",
+      "selection": "native-valid-pass-2",
+      "sourceFile": ".skillopt-sleep/evidence/runtime-benchmark-20260917/post-fix-rerun/responses/post-fix_manifest-edit-repair_after_pass-2.txt",
+      "outputSha256": "83c5fd17ef081ea8f0c4af494c93633e334a4f30221cb753145e545f2605a319",
+      "outputCharacters": 2466,
+      "nativeValidation": {
+        "ok": true,
+        "syntax": "schema-and-jsx",
+        "renderer": "not-run",
+        "validationClaim": false,
+        "issues": [],
+        "widget": {
+          "schema": "homarr-custom-widget-v2",
+          "sourceIds": [
+            "default"
+          ],
+          "requestIds": [
+            "status"
+          ],
+          "templateCharacters": 1752
+        }
+      },
+      "requestIds": [
+        "status"
+      ]
+    },
+    {
+      "taskId": "migration",
+      "mode": "migration",
+      "selection": "repair-native-valid-attempt-2",
+      "sourceFile": ".skillopt-sleep/evidence/runtime-benchmark-20260917/bounded-repair/responses/repair_manifest-migration_attempt-2.txt",
+      "outputSha256": "e146935ae406733a76a9d10baf2603fe33b839326730b063da89d30bf6fc01a1",
+      "outputCharacters": 2049,
+      "nativeValidation": {
+        "ok": true,
+        "syntax": "schema-and-jsx",
+        "renderer": "not-run",
+        "validationClaim": false,
+        "issues": [],
+        "widget": {
+          "schema": "homarr-custom-widget-v2",
+          "sourceIds": [
+            "default"
+          ],
+          "requestIds": [],
+          "templateCharacters": 1232
+        }
+      },
+      "requestIds": []
+    },
+    {
+      "taskId": "assistant-repair",
+      "mode": "assistant-repair",
+      "selection": "native-valid-pass-2",
+      "sourceFile": ".skillopt-sleep/evidence/runtime-benchmark-20260917/post-fix-rerun/responses/post-fix_assistant-repair_after_pass-2.txt",
+      "outputSha256": "8b0a7a2d41d8255f2ad1002963cc2a1ef17b60e4ab2a56e5aebe44ae1d42be9c",
+      "outputCharacters": 1543,
+      "nativeValidation": {
+        "ok": true,
+        "syntax": "schema-and-jsx",
+        "renderer": "not-run",
+        "validationClaim": false,
+        "issues": [],
+        "widget": {
+          "schema": "homarr-custom-widget-v2",
+          "sourceIds": [
+            "default"
+          ],
+          "requestIds": [
+            "status"
+          ],
+          "templateCharacters": 619
+        }
+      },
+      "requestIds": [
+        "status"
+      ]
+    }
+  ],
+  "matrix": {
+    "modes": [
+      "create",
+      "edit-repair",
+      "migration",
+      "assistant-repair"
+    ],
+    "states": [
+      "loading",
+      "error",
+      "empty",
+      "success"
+    ],
+    "widths": [
+      320,
+      1024
+    ],
+    "viewportHeight": 900,
+    "cases": 32
+  },
+  "harness": {
+    "server": "/tmp/homarr-custom-widget-runtime-render-v31/server.mts",
+    "runner": "/tmp/homarr-custom-widget-runtime-render-v31/run-representative.sh",
+    "browser": "agent-browser 0.34.0, Chrome for Testing 152.0.7977.75",
+    "session": "c31",
+    "serverHealth": {
+      "url": "http://127.0.0.1:4194/health",
+      "cases": 4
+    },
+    "fixtureContract": [
+      "Request IDs are read from each parsed widget definition.",
+      "Success payloads match each selected request shape: GitHub summary uses status/page/components; status requests use a status object.",
+      "Option definitions are resolved to their default values before rendering, matching CustomJsxDisplay runtime input.",
+      "The response strings were read from source files and passed unchanged to parseCustomWidgetAiResponse."
+    ]
+  },
+  "assertions": [
+    "native parser/schema acceptance before rendering",
+    "renderToStaticMarkup through CustomJsxRenderer",
+    "visible rendered text inspected in Chrome DOM",
+    "no thrown renderer errors or native-error markers",
+    "no console/page errors",
+    "document scrollWidth equals clientWidth at both widths"
+  ],
+  "limitations": [
+    "SSR/static-markup fixture only; the client was not hydrated.",
+    "No production app boot or live network request was performed.",
+    "No action click or persistence simulation was performed.",
+    "The migration artifact intentionally declares no request, so its four state inputs render the same static fallback by design."
+  ]
+}

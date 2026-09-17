@@ -5,39 +5,59 @@ description: Author, validate, preview, test, install, or configure API-backed H
 
 # Homarr Custom Widget
 
-Author widgets using release-matched context. Run lifecycle tools alone; independent reads may run together. Research once and finish each widget's validation, evidence, and persistence before the next.
+Author one widget or a coordinated set. Finish each widget's evidence and persistence before starting the next; use one
+shared research pass for a set. Finish with the artifact and a short evidence boundary.
 
-1. Read primary API documentation. Use web search when documentation is not supplied or may have changed.
-2. Define `sources`, `requests`, `options`, and JSX `template`; reuse saved integrations through the schema reference.
-3. While drafting, use `customWidget_validateTemplate` for focused JSX diagnostics without resending the manifest.
-4. Call `customWidget_previewCreate` and test every query/action. For JSX-only changes, validate, call `customWidget_previewReviseTemplate`, and retest; it inherits the manifest and resets evidence. Recreate only for source/request/option changes.
-5. Configure deployment-specific source URLs and credentials through Homarr; never repeat plaintext.
-6. Persist the exact tested session with `customWidget_createFromPreview`; use `customWidget_create` only without a preview.
+## Choose the route
 
-Treat a supplied sample or successful preview response as the binding contract. Render every core requested field, guard optional arrays and nested values before indexing, and do not silently drop returned items. Humanize numeric enums with indexed literal label arrays, omit absent numeric values instead of inventing zero, and label timestamp timezones. Give recoverable load errors and empty states a clear refresh or retry path.
+- Read primary API documentation once when it is missing or may have changed. Treat a supplied sample or successful
+  preview response as the binding contract; load only the schema, runtime, security, or component context needed.
+- Search for components once when a capability is unknown, then batch selected details. Reuse `contextAlreadyLoaded` and
+  do not repeat an unavailable lookup.
+- A provider/model rejection is a terminal call failure: record the provider, model, and valid-model error, then finish
+  from loaded context. If lifecycle tools are unavailable, use the offline artifact route and mark it unverified.
+- For a community widget, call `customWidget_workshopSearch`, `customWidget_workshopGet`, then
+  `customWidget_workshopInstall`; configure its source securely. Preview configuration expires, so persist before it does.
 
-Use `{option:name}` or `$option` for saved options. Use `{param:name}` or `$param` for values supplied by `SubFetch`, `ActionButton`, or `ToggleSwitch`. Load queries cannot use invocation parameters. Render load queries from `data` and `status` with `RefreshButton`; reserve `SubFetch` for manual parameterized queries. Templates read `data`, `status`, `options`, and temporary `inputs`.
+## Artifact contract
 
-For a bound control that depends on another input, declare its default and set `resetKey` to that scalar dependency. For example, `<Pagination bind="page" defaultValue={1} resetKey={inputs.search} />` restores page 1 when a search changes without fetching by itself.
+For the current widget, return exactly one fenced `json` block; keep evidence prose outside the fence. The definition has
+keyed `sources`, `requests`, a `template`, and optional `options` when needed. Actions are requests with `kind: "action"`;
+there is no top-level `actions` field.
 
-`SubFetch` with `trigger="manual"` renders its own load button. Pass a card or image through `triggerContent` with `triggerAriaLabel` when that content should launch the request. Its callback is `(result, meta)`; callback names must not shadow the reserved roots `data`, `status`, `options`, or `inputs`. Never author `onClick` or a fetch callback. Use `Icon` or `TablerIcon` with a `name`; never invent an `IconFoo` component.
+- `sources.default` has `baseUrl`, `networkScope` (`public`, `private`, or `loopback`), and credential-free `auth`.
+  Auth is `none`, `bearer`, `basic`, or an `apiKeyHeader`/`apiKeyQuery` object containing only its `name`; Homarr holds
+  the credential.
+- Requests use a leading-slash `path`; declare `source`, `method`, and `trigger` when they differ from defaults. Load
+  queries use `trigger: "load"`; manual parameterized queries and actions use `trigger: "manual"`.
+- Read load data from `data.requestId`. Check `status.requestId?.loading` and `status.requestId?.ok === false`; guard
+  arrays and nested fields and use `??` for truthful fallbacks. Render requested fields from the supplied contract.
+- A load template shows loading, error, empty, and success states and includes `RefreshButton requestId="..."`.
+  `SubFetch` is for requested manual parameterized queries; it owns loading/error/retry and receives `(result, metadata)`.
+- Options have `label`, `control`, and `default`; bind with `{option:name}` or `$option`. A dependent control has its
+  own default and `resetKey={inputs.dependency}`. Do not add lookup, pagination, or detail requests for omitted fields.
+- Keep templates expression-only: no imports, hooks, refs, raw HTML/events, browser requests, eval, recursion, IIFEs,
+  statement blocks, or arbitrary functions. Use named `Icon` or `TablerIcon`. Keep credentials and deployment values in
+  Homarr configuration; never put tokens, keys, authorization values, or redacted credential placeholders in the manifest.
 
-Plan capabilities. Use one `customWidget_findComponents` search per job. Batch selected non-obvious binding or interaction documentation with `customWidget_getComponents`; reserve `customWidget_getComponent` for one unknown-prop repair. Failed validation reopens discovery; otherwise search only for a missing capability. The full catalog is for broad exploration; load at most one example. Context never limits composition. Prefer clear hierarchy, responsive grids, divided lists, and aligned actions over nested row cards.
+Minimum shape: include `$schema`, `sources.default`, `requests`, and `template`; actions live under `requests` with `kind: "action"`.
 
-Do not simplify a useful workflow merely because the template is interpreted. Freely compose any supported installed components with multiple sources, requests, options, `choicesFrom`, bound filters, charts, responsive detail areas, manual queries, and safe actions when they improve the user's job. Complexity must remain purposeful rather than decorative.
+Use `data.items?.map(item => ...)` only after loading/error branches and provide a no-items branch. Label timestamps with
+the source timezone when known. Keep hierarchy, imagery, actions, and narrow/wide layout purposeful; avoid dead controls.
 
-Polish with a divided list or responsive media grid. Make one metric/action asymmetrically primary; keep headers compact, identity/state clear, metadata quiet, and one badge. At base artwork fills its row and caps above xs; never combine full-width media and nowrap.
+## Bounded lifecycle
 
-Make initial states actionable and wrap variable labels/values on narrow tiles. Do not use an unlabeled decorative icon as an empty state.
+1. Build the credential-free definition from the request, verified context, and sample. Preserve a migration's API path,
+   method, body, options, and visible behavior.
+2. Call `customWidget_validateTemplate` for focused JSX diagnostics. Send source/request/option changes once to
+   `customWidget_previewCreate`; use `customWidget_previewReviseTemplate` for a JSX-only correction in its session.
+3. Test every returned query or simulated action once. After a validation failure, make one corrected candidate and
+   revalidate. Stop when the result is incomplete, the workbench closes, or the provider/model rejects the call.
+4. After a successful final preview and exact tests, call `customWidget_createFromPreview`; configure private URLs and
+   credentials through Homarr and never repeat plaintext secrets.
 
-Do not use imports, hooks, refs, raw HTML, raw event callbacks, browser requests, arbitrary functions, eval, bigint, npm packages, authored statement blocks, IIFEs, or recursion. Do not pretend MCP tools exist in an offline chat session.
+## Delivery
 
-For a community widget, use `customWidget_workshopSearch`, `customWidget_workshopGet`, then `customWidget_workshopInstall`; configure its source securely. Preview configuration expires, so create before persisting configuration.
-
-Reference routing:
-
-- Load `schema` once before a new manifest; otherwise only for concrete request or option ambiguity.
-- Load `runtime` for bound inputs, manual queries, actions, or other interaction.
-- Load `security` once for any authenticated source or mutation, or to resolve a URL or interpreter limitation.
-
-Repository installations expose these as files under `references/`. MCP clients can call `customWidget_getReference` or read `homarr://custom-widgets/references/{name}` instead of loading every reference.
+For each lifecycle call, report only its actual result. If tools have no result, add one line after the artifact beginning
+`Unverified:` naming the missing validation, preview, renderer, or persistence step. Do not claim rendering or persistence
+from syntax or schema checks alone.

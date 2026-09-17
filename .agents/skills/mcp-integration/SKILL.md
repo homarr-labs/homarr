@@ -96,3 +96,7 @@ Register the smallest router that owns the enabled procedures. If a parent route
 4. Run the focused API MCP spec when the tool list or extraction changes: `pnpm test packages/api/src/test/mcp.spec.ts`.
 5. Run the focused route spec when protocol or transport behavior changes: `pnpm test apps/nextjs/src/app/api/mcp/[transport]/route.spec.ts`.
 6. If manually probing `/api/mcp/<transport>`, use a scoped API key and avoid printing credentials or secret-bearing results.
+
+## Deliver and verify
+
+State the concrete procedure or tool surface the task changes. Run only the focused authorization, extraction, schema, or transport checks relevant to that surface, and distinguish source review from a live MCP call or production proof. Do not claim exposure or safety behavior from metadata alone; finish with the changed paths, checks run, and any material limitation.

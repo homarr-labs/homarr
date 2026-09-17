@@ -1,0 +1,30 @@
+{
+  "schema": "portable-skill-hashes.v1",
+  "source": {
+    "baseline_root": ".skillopt-sleep/baselines/portable-skills",
+    "after_root": ".agents/skills"
+  },
+  "skills": [
+    {
+      "skill": "codebase-context",
+      "baseline_path": ".skillopt-sleep/baselines/portable-skills/codebase-context.SKILL.md",
+      "after_path": ".agents/skills/codebase-context/SKILL.md",
+      "baseline_sha256": "f29baa976dd7cbd3ee9dee29cb71b28dc75071ee96f8874a6195f0d397a8de94",
+      "after_sha256": "68ca719bb79a733dd3c757992d7b64c375c469411316f120454bc3a3ecdad366"
+    },
+    {
+      "skill": "documentation-sync",
+      "baseline_path": ".skillopt-sleep/baselines/portable-skills/documentation-sync.SKILL.md",
+      "after_path": ".agents/skills/documentation-sync/SKILL.md",
+      "baseline_sha256": "41b00126d93b7511a7cad35c1599ad76b4e226d7bbfea4fbb0aabc5bab9bc260",
+      "after_sha256": "d58a5ce0af1534244f1eb23b99450a8386b73db6f87e10963c6bdfb800fc9731"
+    },
+    {
+      "skill": "mcp-integration",
+      "baseline_path": ".skillopt-sleep/baselines/portable-skills/mcp-integration.SKILL.md",
+      "after_path": ".agents/skills/mcp-integration/SKILL.md",
+      "baseline_sha256": "48bcfdb2ba001b4bcc26ca33cbb44ab3a8412a72665e2248f3691870308f9d01",
+      "after_sha256": "a395cb30768098c478470f4da2301211aaf7d6c5ba8eb4ad3473af2ad71f0f1f"
+    }
+  ]
+}
