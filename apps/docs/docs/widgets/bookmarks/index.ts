@@ -15,6 +15,18 @@ export const bookmarksWidget: WidgetDefinition = {
         defaultValue: "-",
       },
       {
+        name: "Show widget title",
+        description: "Hide the widget heading without clearing its saved text. Does not affect bookmark names.",
+        values: { type: "boolean" },
+        defaultValue: "yes",
+      },
+      {
+        name: "Widget title size (px)",
+        description: "Heading font size before preview or dashboard scaling. Does not resize bookmark names.",
+        values: "8–32",
+        defaultValue: "11",
+      },
+      {
         name: "Layout",
         description:
           "How bookmarks use the available widget space. Vertical keeps compact rows and stable title visibility.",
@@ -34,7 +46,7 @@ export const bookmarksWidget: WidgetDefinition = {
         defaultValue: "Extra small",
       },
       {
-        name: "Hide title",
+        name: "Hide bookmark names",
         description: "Whether to hide the title of the bookmark items.",
         values: { type: "boolean" },
         defaultValue: "no",

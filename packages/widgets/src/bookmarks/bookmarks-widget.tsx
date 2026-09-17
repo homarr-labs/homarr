@@ -74,7 +74,13 @@ export default function BookmarksWidget({
     responsiveWidth *= displayScale;
     responsiveHeight *= displayScale;
   }
-  const contentHeight = Math.max(0, responsiveHeight - (options.title.length > 0 ? 36 : 0));
+  const showTitle = options.showTitle && options.title.length > 0;
+  let titleHeight = 0;
+  if (showTitle) {
+    // Preserve the existing header allowance at 11px and account for the selected line height.
+    titleHeight = 36 + (options.titleSize - 11) * 1.2;
+  }
+  const contentHeight = Math.max(0, responsiveHeight - titleHeight);
   let layoutWidth = responsiveWidth;
   if (options.layout === "gridHorizontal") layoutWidth = width;
 
@@ -160,11 +166,11 @@ export default function BookmarksWidget({
 
   return (
     <Stack h="100%" mih={0} gap={isTight ? 6 : "sm"} p={isTight ? 6 : "sm"} style={compactStyle}>
-      {options.title.length > 0 ? (
-        <Text fz={11} fw={600} px={2} lh={1.2} lineClamp={1}>
+      {showTitle && (
+        <Text fz={options.titleSize} fw={600} px={2} lh={1.2} lineClamp={1} style={{ flexShrink: 0 }}>
           {options.title}
         </Text>
-      ) : null}
+      )}
 
       {data.length === 0 ? (
         <Center flex={1}>
