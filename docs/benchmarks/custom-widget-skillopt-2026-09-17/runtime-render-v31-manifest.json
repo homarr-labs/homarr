@@ -20,18 +20,12 @@
         "issues": [],
         "widget": {
           "schema": "homarr-custom-widget-v2",
-          "sourceIds": [
-            "default"
-          ],
-          "requestIds": [
-            "summary"
-          ],
+          "sourceIds": ["default"],
+          "requestIds": ["summary"],
           "templateCharacters": 2862
         }
       },
-      "requestIds": [
-        "summary"
-      ]
+      "requestIds": ["summary"]
     },
     {
       "taskId": "edit-repair",
@@ -48,18 +42,12 @@
         "issues": [],
         "widget": {
           "schema": "homarr-custom-widget-v2",
-          "sourceIds": [
-            "default"
-          ],
-          "requestIds": [
-            "status"
-          ],
+          "sourceIds": ["default"],
+          "requestIds": ["status"],
           "templateCharacters": 1752
         }
       },
-      "requestIds": [
-        "status"
-      ]
+      "requestIds": ["status"]
     },
     {
       "taskId": "migration",
@@ -76,9 +64,7 @@
         "issues": [],
         "widget": {
           "schema": "homarr-custom-widget-v2",
-          "sourceIds": [
-            "default"
-          ],
+          "sourceIds": ["default"],
           "requestIds": [],
           "templateCharacters": 1232
         }
@@ -100,37 +86,18 @@
         "issues": [],
         "widget": {
           "schema": "homarr-custom-widget-v2",
-          "sourceIds": [
-            "default"
-          ],
-          "requestIds": [
-            "status"
-          ],
+          "sourceIds": ["default"],
+          "requestIds": ["status"],
           "templateCharacters": 619
         }
       },
-      "requestIds": [
-        "status"
-      ]
+      "requestIds": ["status"]
     }
   ],
   "matrix": {
-    "modes": [
-      "create",
-      "edit-repair",
-      "migration",
-      "assistant-repair"
-    ],
-    "states": [
-      "loading",
-      "error",
-      "empty",
-      "success"
-    ],
-    "widths": [
-      320,
-      1024
-    ],
+    "modes": ["create", "edit-repair", "migration", "assistant-repair"],
+    "states": ["loading", "error", "empty", "success"],
+    "widths": [320, 1024],
     "viewportHeight": 900,
     "cases": 32
   },

@@ -17,12 +17,12 @@ The semantic review was one manual agent judgment pass. Partial criteria receive
 0.5 points. The full expected sentences were also checked literally; that
 separate audit is not a quality score.
 
-| Skill | Baseline points | Current points | Maximum | Baseline cost | Current cost |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `codebase-context` | 4.0 | 6.0 | 9 | $0.00079515 | $0.00074715 |
-| `documentation-sync` | 6.5 | 5.5 | 7 | $0.00051672 | $0.00058539 |
-| `mcp-integration` | 9.0 | 9.5 | 12 | $0.00122195 | $0.00099101 |
-| **Total** | **19.5** | **21.0** | **28** | **$0.00253382** | **$0.00232355** |
+| Skill                | Baseline points | Current points | Maximum |   Baseline cost |    Current cost |
+| -------------------- | --------------: | -------------: | ------: | --------------: | --------------: |
+| `codebase-context`   |             4.0 |            6.0 |       9 |     $0.00079515 |     $0.00074715 |
+| `documentation-sync` |             6.5 |            5.5 |       7 |     $0.00051672 |     $0.00058539 |
+| `mcp-integration`    |             9.0 |            9.5 |      12 |     $0.00122195 |     $0.00099101 |
+| **Total**            |        **19.5** |       **21.0** |  **28** | **$0.00253382** | **$0.00232355** |
 
 The portable suite cost $0.00485737 in total. All 10 cases were free of
 must-not violations in both arms. Literal overlap was 0/28 in both arms; the

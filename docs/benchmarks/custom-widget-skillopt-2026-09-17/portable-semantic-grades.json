@@ -7,22 +7,14 @@
       "case_id": "codebase-boundary-01",
       "skill": "codebase-context",
       "before": {
-        "criteria": [
-          "partial",
-          "met",
-          "met"
-        ],
+        "criteria": ["partial", "met", "met"],
         "semantic_points": 2.5,
         "semantic_total": 3,
         "must_not_violations": [],
         "rationale": "Names the shared package, public import, and search, but gives no concrete checkout/export evidence and invents helper names and behavior."
       },
       "after": {
-        "criteria": [
-          "met",
-          "met",
-          "met"
-        ],
+        "criteria": ["met", "met", "met"],
         "semantic_points": 3,
         "semantic_total": 3,
         "must_not_violations": [],
@@ -38,22 +30,14 @@
       "case_id": "codebase-evidence-02",
       "skill": "codebase-context",
       "before": {
-        "criteria": [
-          "partial",
-          "partial",
-          "partial"
-        ],
+        "criteria": ["partial", "partial", "partial"],
         "semantic_points": 1.5,
         "semantic_total": 3,
         "must_not_violations": [],
         "rationale": "Correctly requests the missing procedure and names mcp.ts/root.ts, but cannot inspect the owner or state the live boundary without that identifier."
       },
       "after": {
-        "criteria": [
-          "partial",
-          "partial",
-          "partial"
-        ],
+        "criteria": ["partial", "partial", "partial"],
         "semantic_points": 1.5,
         "semantic_total": 3,
         "must_not_violations": [],
@@ -69,22 +53,14 @@
       "case_id": "codebase-concision-03",
       "skill": "codebase-context",
       "before": {
-        "criteria": [
-          "missed",
-          "missed",
-          "missed"
-        ],
+        "criteria": ["missed", "missed", "missed"],
         "semantic_points": 0,
         "semantic_total": 3,
         "must_not_violations": [],
         "rationale": "Invents a generic review and verdict, with no actual diff, check, changed paths, or limitation."
       },
       "after": {
-        "criteria": [
-          "partial",
-          "missed",
-          "met"
-        ],
+        "criteria": ["partial", "missed", "met"],
         "semantic_points": 1.5,
         "semantic_total": 3,
         "must_not_violations": [],
@@ -100,22 +76,14 @@
       "case_id": "docs-hidden-01",
       "skill": "documentation-sync",
       "before": {
-        "criteria": [
-          "met",
-          "met",
-          "met"
-        ],
+        "criteria": ["met", "met", "met"],
         "semantic_points": 3,
         "semantic_total": 3,
         "must_not_violations": [],
         "rationale": "Covers hidden semantics, page discovery, adjacent typed patterns, and the omission of an obvious control tour."
       },
       "after": {
-        "criteria": [
-          "met",
-          "partial",
-          "met"
-        ],
+        "criteria": ["met", "partial", "met"],
         "semantic_points": 2.5,
         "semantic_total": 3,
         "must_not_violations": [],
@@ -131,18 +99,14 @@
       "case_id": "docs-noop-02",
       "skill": "documentation-sync",
       "before": {
-        "criteria": [
-          "met"
-        ],
+        "criteria": ["met"],
         "semantic_points": 1,
         "semantic_total": 1,
         "must_not_violations": [],
         "rationale": "Applies the reader-value test and leaves docs unchanged."
       },
       "after": {
-        "criteria": [
-          "met"
-        ],
+        "criteria": ["met"],
         "semantic_points": 1,
         "semantic_total": 1,
         "must_not_violations": [],
@@ -158,24 +122,14 @@
       "case_id": "docs-proof-03",
       "skill": "documentation-sync",
       "before": {
-        "criteria": [
-          "partial",
-          "met",
-          "met"
-        ],
+        "criteria": ["partial", "met", "met"],
         "semantic_points": 2.5,
         "semantic_total": 3,
-        "must_not_violations": [
-          "claims a docs build/link proof succeeded without evidence"
-        ],
+        "must_not_violations": ["claims a docs build/link proof succeeded without evidence"],
         "rationale": "Lists the expected page and checks, but reports a successful full build/link proof despite no actual run or concrete contract details."
       },
       "after": {
-        "criteria": [
-          "partial",
-          "partial",
-          "met"
-        ],
+        "criteria": ["partial", "partial", "met"],
         "semantic_points": 2,
         "semantic_total": 3,
         "must_not_violations": [],
@@ -191,22 +145,14 @@
       "case_id": "mcp-query-01",
       "skill": "mcp-integration",
       "before": {
-        "criteria": [
-          "met",
-          "partial",
-          "met"
-        ],
+        "criteria": ["met", "partial", "met"],
         "semantic_points": 2.5,
         "semantic_total": 3,
         "must_not_violations": [],
         "rationale": "Preserves protected auth, bounds limit, describes scope/IDs, eagerly registers the router, and names the focused extraction check; no service list is specified by the synthetic task."
       },
       "after": {
-        "criteria": [
-          "met",
-          "partial",
-          "met"
-        ],
+        "criteria": ["met", "partial", "met"],
         "semantic_points": 2.5,
         "semantic_total": 3,
         "must_not_violations": [],
@@ -222,22 +168,14 @@
       "case_id": "mcp-sensitive-02",
       "skill": "mcp-integration",
       "before": {
-        "criteria": [
-          "met",
-          "met",
-          "met"
-        ],
+        "criteria": ["met", "met", "met"],
         "semantic_points": 3,
         "semantic_total": 3,
         "must_not_violations": [],
         "rationale": "Correctly refuses exposure, preserves server-owned encryption/non-return requirements, and calls for security review when auth/audit is unclear."
       },
       "after": {
-        "criteria": [
-          "met",
-          "met",
-          "met"
-        ],
+        "criteria": ["met", "met", "met"],
         "semantic_points": 3,
         "semantic_total": 3,
         "must_not_violations": [],
@@ -253,22 +191,14 @@
       "case_id": "mcp-mutation-03",
       "skill": "mcp-integration",
       "before": {
-        "criteria": [
-          "met",
-          "met",
-          "partial"
-        ],
+        "criteria": ["met", "met", "partial"],
         "semantic_points": 2.5,
         "semantic_total": 3,
         "must_not_violations": [],
         "rationale": "Uses full permission, states irreversible deletion and the ID source, bounds id, and calls the extraction check; focused schema/authorization checks are only described."
       },
       "after": {
-        "criteria": [
-          "met",
-          "met",
-          "met"
-        ],
+        "criteria": ["met", "met", "met"],
         "semantic_points": 3,
         "semantic_total": 3,
         "must_not_violations": [],
@@ -284,22 +214,14 @@
       "case_id": "mcp-proof-04",
       "skill": "mcp-integration",
       "before": {
-        "criteria": [
-          "met",
-          "missed",
-          "missed"
-        ],
+        "criteria": ["met", "missed", "missed"],
         "semantic_points": 1,
         "semantic_total": 3,
         "must_not_violations": [],
         "rationale": "Correctly says eager mcp.ts registration is required, but omits generated name/description/schema inspection and an explicit live-call-unverified label."
       },
       "after": {
-        "criteria": [
-          "met",
-          "missed",
-          "missed"
-        ],
+        "criteria": ["met", "missed", "missed"],
         "semantic_points": 1,
         "semantic_total": 3,
         "must_not_violations": [],

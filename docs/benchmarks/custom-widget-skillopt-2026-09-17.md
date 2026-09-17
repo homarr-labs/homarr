@@ -9,11 +9,11 @@ hydration, live API behavior, MCP transport behavior, or persistence.
 
 The reviewed skill progressed through three manually reviewed generations:
 
-| Generation | Source identity | Result |
-| --- | --- | --- |
-| Original baseline | `.agents/skills/homarr-custom-widget/SKILL.md`, SHA-256 `1c1ff19f27fa28fdd5139f3b02b02408606ce239f2f772ba87e809d24ae732fd` | Paired comparison baseline: hard judge 13/24 and native schema + JSX bridge 14/24. |
-| `delivery-v3` | SHA-256 `a3690294a6aa495b0cababaaf8b5af039d158d7914255497b047fb57d08ad366` | Compare-only candidate: hard judge 16/24 and native bridge 24/24. One transport-error row was excluded from the 24-output denominator. SkillOpt kept `accepted: false`; manual review approved the compare-only adoption, backup, and receipt. |
-| `v3.1` | Current worktree SHA-256 `c95e24be8e7dea732fea9c09f2e5cc7062b54bfbc69e1b091e6a39ab1865a4f4` | Narrow contract correction layered on v3. No model/provider comparison was run. It removes the invalid top-level `actions` shape, restores coordinated-set and ordered Workshop lifecycle guidance, and keeps the serialized skill payload at 11,409 bytes under the 12,000-byte limit. |
+| Generation        | Source identity                                                                                                            | Result                                                                                                                                                                                                                                                                                  |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Original baseline | `.agents/skills/homarr-custom-widget/SKILL.md`, SHA-256 `1c1ff19f27fa28fdd5139f3b02b02408606ce239f2f772ba87e809d24ae732fd` | Paired comparison baseline: hard judge 13/24 and native schema + JSX bridge 14/24.                                                                                                                                                                                                      |
+| `delivery-v3`     | SHA-256 `a3690294a6aa495b0cababaaf8b5af039d158d7914255497b047fb57d08ad366`                                                 | Compare-only candidate: hard judge 16/24 and native bridge 24/24. One transport-error row was excluded from the 24-output denominator. SkillOpt kept `accepted: false`; manual review approved the compare-only adoption, backup, and receipt.                                          |
+| `v3.1`            | Current worktree SHA-256 `c95e24be8e7dea732fea9c09f2e5cc7062b54bfbc69e1b091e6a39ab1865a4f4`                                | Narrow contract correction layered on v3. No model/provider comparison was run. It removes the invalid top-level `actions` shape, restores coordinated-set and ordered Workshop lifecycle guidance, and keeps the serialized skill payload at 11,409 bytes under the 12,000-byte limit. |
 
 The v3.1 contract receipt records matching embedded and live skill hashes,
 6/6 authoring-resource checks, 33/33 assistant-evaluation checks, and 2/2
@@ -31,12 +31,12 @@ The initial ten-call runtime set contained eight artifact calls and two MCP
 plan-only calls. No MCP tool channel was supplied, so the plan-only rows were
 not counted as native artifacts. The progression was:
 
-| Stage | Native-valid artifacts | Result |
-| --- | ---: | --- |
-| Initial baseline arm | 3/4 | One create response used unsupported callback block statements. |
-| Initial after arm (regression) | 2/4 | The migration path lacked `/`; the assistant-repair response returned multiple JSON blocks. |
-| Post-fix after, two passes | 6/8 | One create callback restriction and one migration default-source failure remained. |
-| Bounded repair final | 8/8 | Three repair calls fixed the two remaining cases; the first 6/8 results were preserved. |
+| Stage                          | Native-valid artifacts | Result                                                                                      |
+| ------------------------------ | ---------------------: | ------------------------------------------------------------------------------------------- |
+| Initial baseline arm           |                    3/4 | One create response used unsupported callback block statements.                             |
+| Initial after arm (regression) |                    2/4 | The migration path lacked `/`; the assistant-repair response returned multiple JSON blocks. |
+| Post-fix after, two passes     |                    6/8 | One create callback restriction and one migration default-source failure remained.          |
+| Bounded repair final           |                    8/8 | Three repair calls fixed the two remaining cases; the first 6/8 results were preserved.     |
 
 All completed runtime rows used `z-ai/glm-5.3-flash` and reported Sail Research
 with confirmed `usage.cost`. The detailed request fingerprints, diagnostics,
@@ -62,12 +62,12 @@ arm, for 20 completed OpenRouter requests. It used
 `z-ai/glm-5.3-flash`; all requests used Sail Research and reported confirmed
 `usage.cost`.
 
-| Skill | Baseline | Current | Maximum |
-| --- | ---: | ---: | ---: |
-| `codebase-context` | 4.0 | 6.0 | 9 |
-| `documentation-sync` | 6.5 | 5.5 | 7 |
-| `mcp-integration` | 9.0 | 9.5 | 12 |
-| **Total** | **19.5** | **21.0** | **28** |
+| Skill                | Baseline |  Current | Maximum |
+| -------------------- | -------: | -------: | ------: |
+| `codebase-context`   |      4.0 |      6.0 |       9 |
+| `documentation-sync` |      6.5 |      5.5 |       7 |
+| `mcp-integration`    |      9.0 |      9.5 |      12 |
+| **Total**            | **19.5** | **21.0** |  **28** |
 
 This was one manual agent-judgment pass with half-points for partial criteria;
 it was not an automated quality score. The separate literal audit found 0/28
@@ -92,14 +92,14 @@ were not run for this evidence record.
 
 The confirmed provider-reported costs attributable to the recorded suites are:
 
-| Suite | Calls or outputs | Confirmed cost |
-| --- | ---: | ---: |
-| Original-to-v3 paired comparison | 24 outputs per arm | `$0.01517842` |
-| Portable benchmark | 20 calls | `$0.00485737` |
-| Initial runtime set | 10 calls | `$0.00803370` |
-| Post-fix runtime repeat | 8 calls | `$0.00494372` |
-| Bounded repair continuation | 3 calls | `$0.00176156` |
-| **Confirmed recorded total** |  | **`$0.03477477`** |
+| Suite                            |   Calls or outputs |    Confirmed cost |
+| -------------------------------- | -----------------: | ----------------: |
+| Original-to-v3 paired comparison | 24 outputs per arm |     `$0.01517842` |
+| Portable benchmark               |           20 calls |     `$0.00485737` |
+| Initial runtime set              |           10 calls |     `$0.00803370` |
+| Post-fix runtime repeat          |            8 calls |     `$0.00494372` |
+| Bounded repair continuation      |            3 calls |     `$0.00176156` |
+| **Confirmed recorded total**     |                    | **`$0.03477477`** |
 
 At final report packaging, the shared ledger snapshot was `status: running`,
 `actual_usd: $0.15157561`, `confirmed_actual_usd: $0.03477477`,

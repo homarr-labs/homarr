@@ -35,9 +35,7 @@
         "staticFallback": 0
       },
       "semantic": {
-        "requestIds": [
-          "summary"
-        ],
+        "requestIds": ["summary"],
         "mode": "request-backed",
         "perRequest": [
           {
@@ -71,9 +69,7 @@
         "staticFallback": 0
       },
       "semantic": {
-        "requestIds": [
-          "status"
-        ],
+        "requestIds": ["status"],
         "mode": "request-backed",
         "perRequest": [
           {
@@ -110,9 +106,7 @@
         "requestIds": [],
         "mode": "static-fallback-no-request",
         "perRequest": [],
-        "observations": [
-          "No request is declared; all fixture states render the intentional migration fallback."
-        ]
+        "observations": ["No request is declared; all fixture states render the intentional migration fallback."]
       },
       "outputSha256": "e146935ae406733a76a9d10baf2603fe33b839326730b063da89d30bf6fc01a1"
     },
@@ -131,9 +125,7 @@
         "staticFallback": 0
       },
       "semantic": {
-        "requestIds": [
-          "status"
-        ],
+        "requestIds": ["status"],
         "mode": "request-backed",
         "perRequest": [
           {
@@ -178,9 +170,7 @@
       },
       "realFailure": false,
       "pageErrors": [],
-      "requestIds": [
-        "summary"
-      ],
+      "requestIds": ["summary"],
       "requestIdUsedByFixture": "summary",
       "stateAssessment": "loading fixture rendered without runtime error"
     },
@@ -211,9 +201,7 @@
       },
       "realFailure": false,
       "pageErrors": [],
-      "requestIds": [
-        "summary"
-      ],
+      "requestIds": ["summary"],
       "requestIdUsedByFixture": "summary",
       "stateAssessment": "error branch rendered"
     },
@@ -244,9 +232,7 @@
       },
       "realFailure": false,
       "pageErrors": [],
-      "requestIds": [
-        "summary"
-      ],
+      "requestIds": ["summary"],
       "requestIdUsedByFixture": "summary",
       "stateAssessment": "empty branch rendered"
     },
@@ -277,9 +263,7 @@
       },
       "realFailure": false,
       "pageErrors": [],
-      "requestIds": [
-        "summary"
-      ],
+      "requestIds": ["summary"],
       "requestIdUsedByFixture": "summary",
       "stateAssessment": "success fixture marker rendered"
     },
@@ -310,9 +294,7 @@
       },
       "realFailure": false,
       "pageErrors": [],
-      "requestIds": [
-        "status"
-      ],
+      "requestIds": ["status"],
       "requestIdUsedByFixture": "status",
       "stateAssessment": "loading fixture rendered without runtime error"
     },
@@ -343,9 +325,7 @@
       },
       "realFailure": false,
       "pageErrors": [],
-      "requestIds": [
-        "status"
-      ],
+      "requestIds": ["status"],
       "requestIdUsedByFixture": "status",
       "stateAssessment": "error branch rendered"
     },
@@ -376,9 +356,7 @@
       },
       "realFailure": false,
       "pageErrors": [],
-      "requestIds": [
-        "status"
-      ],
+      "requestIds": ["status"],
       "requestIdUsedByFixture": "status",
       "stateAssessment": "empty branch rendered"
     },
@@ -409,9 +387,7 @@
       },
       "realFailure": false,
       "pageErrors": [],
-      "requestIds": [
-        "status"
-      ],
+      "requestIds": ["status"],
       "requestIdUsedByFixture": "status",
       "stateAssessment": "success fixture marker rendered"
     },
@@ -566,9 +542,7 @@
       },
       "realFailure": false,
       "pageErrors": [],
-      "requestIds": [
-        "status"
-      ],
+      "requestIds": ["status"],
       "requestIdUsedByFixture": "status",
       "stateAssessment": "loading fixture rendered without runtime error"
     },
@@ -599,9 +573,7 @@
       },
       "realFailure": false,
       "pageErrors": [],
-      "requestIds": [
-        "status"
-      ],
+      "requestIds": ["status"],
       "requestIdUsedByFixture": "status",
       "stateAssessment": "error branch rendered"
     },
@@ -632,9 +604,7 @@
       },
       "realFailure": false,
       "pageErrors": [],
-      "requestIds": [
-        "status"
-      ],
+      "requestIds": ["status"],
       "requestIdUsedByFixture": "status",
       "stateAssessment": "empty branch rendered"
     },
@@ -665,9 +635,7 @@
       },
       "realFailure": false,
       "pageErrors": [],
-      "requestIds": [
-        "status"
-      ],
+      "requestIds": ["status"],
       "requestIdUsedByFixture": "status",
       "stateAssessment": "success fixture marker rendered"
     },
@@ -698,9 +666,7 @@
       },
       "realFailure": false,
       "pageErrors": [],
-      "requestIds": [
-        "summary"
-      ],
+      "requestIds": ["summary"],
       "requestIdUsedByFixture": "summary",
       "stateAssessment": "loading fixture rendered without runtime error"
     },
@@ -731,9 +697,7 @@
       },
       "realFailure": false,
       "pageErrors": [],
-      "requestIds": [
-        "summary"
-      ],
+      "requestIds": ["summary"],
       "requestIdUsedByFixture": "summary",
       "stateAssessment": "error branch rendered"
     },
@@ -764,9 +728,7 @@
       },
       "realFailure": false,
       "pageErrors": [],
-      "requestIds": [
-        "summary"
-      ],
+      "requestIds": ["summary"],
       "requestIdUsedByFixture": "summary",
       "stateAssessment": "empty branch rendered"
     },
@@ -797,9 +759,7 @@
       },
       "realFailure": false,
       "pageErrors": [],
-      "requestIds": [
-        "summary"
-      ],
+      "requestIds": ["summary"],
       "requestIdUsedByFixture": "summary",
       "stateAssessment": "success fixture marker rendered"
     },
@@ -830,9 +790,7 @@
       },
       "realFailure": false,
       "pageErrors": [],
-      "requestIds": [
-        "status"
-      ],
+      "requestIds": ["status"],
       "requestIdUsedByFixture": "status",
       "stateAssessment": "loading fixture rendered without runtime error"
     },
@@ -863,9 +821,7 @@
       },
       "realFailure": false,
       "pageErrors": [],
-      "requestIds": [
-        "status"
-      ],
+      "requestIds": ["status"],
       "requestIdUsedByFixture": "status",
       "stateAssessment": "error branch rendered"
     },
@@ -896,9 +852,7 @@
       },
       "realFailure": false,
       "pageErrors": [],
-      "requestIds": [
-        "status"
-      ],
+      "requestIds": ["status"],
       "requestIdUsedByFixture": "status",
       "stateAssessment": "empty branch rendered"
     },
@@ -929,9 +883,7 @@
       },
       "realFailure": false,
       "pageErrors": [],
-      "requestIds": [
-        "status"
-      ],
+      "requestIds": ["status"],
       "requestIdUsedByFixture": "status",
       "stateAssessment": "success fixture marker rendered"
     },
@@ -1086,9 +1038,7 @@
       },
       "realFailure": false,
       "pageErrors": [],
-      "requestIds": [
-        "status"
-      ],
+      "requestIds": ["status"],
       "requestIdUsedByFixture": "status",
       "stateAssessment": "loading fixture rendered without runtime error"
     },
@@ -1119,9 +1069,7 @@
       },
       "realFailure": false,
       "pageErrors": [],
-      "requestIds": [
-        "status"
-      ],
+      "requestIds": ["status"],
       "requestIdUsedByFixture": "status",
       "stateAssessment": "error branch rendered"
     },
@@ -1152,9 +1100,7 @@
       },
       "realFailure": false,
       "pageErrors": [],
-      "requestIds": [
-        "status"
-      ],
+      "requestIds": ["status"],
       "requestIdUsedByFixture": "status",
       "stateAssessment": "empty branch rendered"
     },
@@ -1185,9 +1131,7 @@
       },
       "realFailure": false,
       "pageErrors": [],
-      "requestIds": [
-        "status"
-      ],
+      "requestIds": ["status"],
       "requestIdUsedByFixture": "status",
       "stateAssessment": "success fixture marker rendered"
     }
