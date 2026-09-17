@@ -91,6 +91,16 @@ describe("AI prompt", () => {
     expect(prompts[0]).toContain("Create from the product request");
     expect(prompts[1]).toContain("Edit or repair");
     expect(prompts[2]).toContain("Migrate from the preserved legacy intent");
+    expect(prompts[2]).toContain(
+      "If a migration path is unknown, omit its request (requests:{} if none); never guess /.",
+    );
+    const staticPrompt = buildCustomWidgetAiPrompt(
+      undefined,
+      null,
+      null,
+      "Create a static status tile with title and state options; it has no remote API request.",
+    );
+    expect(staticPrompt).toContain("Always include sources.default, even for static widgets.");
     expect(prompts[3]).toContain("customWidget_previewCreate");
     expect(prompts[4]).toContain("complete tool lifecycle");
     expect(CUSTOM_WIDGET_FINAL_OUTPUT_INSTRUCTION).toContain("Unverified:");
