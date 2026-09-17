@@ -78,6 +78,7 @@ export const ScaledBoardCanvas = ({
       <Box className={classes.sizer} style={{ width: visualWidth, height: resolvedLogicalHeight * scale }}>
         <Box
           ref={canvasRef}
+          data-board-canvas-content
           className={classes.canvas}
           style={{
             "--board-canvas-inverse-scale": inverseScale,
