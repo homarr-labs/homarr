@@ -1,5 +1,6 @@
 import { ActionIcon, Avatar, Group, Stack, Text } from "@mantine/core";
 import { IconBookmark, IconLink, IconX } from "@tabler/icons-react";
+import { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";
 
@@ -16,6 +17,12 @@ export const { definition, componentLoader } = createWidgetDefinition("bookmarks
   createOptions() {
     return optionsBuilder.from((factory) => ({
       title: factory.text(),
+      showTitle: factory.switch({ defaultValue: true }),
+      titleSize: factory.slider({
+        defaultValue: 11,
+        validate: z.number().min(8).max(32),
+        step: 1,
+      }),
       layout: factory.select({
         options: (["adaptive", "column", "row", "grid", "gridHorizontal", "icons"] as const).map((value) => ({
           value,
