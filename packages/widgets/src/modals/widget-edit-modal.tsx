@@ -179,35 +179,31 @@ const WidgetEditPreview = ({
     const canvas = document.querySelector<HTMLElement>("[data-board-canvas-content]");
     let section: HTMLElement | null = null;
     if (sectionId) section = document.querySelector<HTMLElement>(`[data-grid-section-id="${CSS.escape(sectionId)}"]`);
+    section ??= item?.closest<HTMLElement>("[data-grid-section-id]") ?? null;
     const source = item ?? section ?? canvas;
     if (!source) return;
 
-    // New widgets use the full grid footprint. Match SectionGrid's 10px visual widget inset.
-    // Resolve the CSS length in the canvas so rem/calc and custom CSS also work.
-    const insetProbe = document.createElement("span");
-    insetProbe.style.cssText =
-      "position:absolute;visibility:hidden;pointer-events:none;width:calc(10px * var(--board-canvas-inverse-scale, 1))";
-    source.append(insetProbe);
-
     const updateAppearance = () => {
       const computed = getComputedStyle(source);
+      // Inherit board sizing, not the existing item's custom CSS overrides.
+      const inherited = getComputedStyle(section ?? canvas ?? source);
       const style = Object.fromEntries(
-        Array.from(computed)
+        Array.from(inherited)
           .filter((property) =>
             /^--(?:mantine-(?:scale$|spacing-|font-size-|radius-|h\d-font-size)|board-canvas-)/.test(property),
           )
-          .map((property) => [property, computed.getPropertyValue(property)]),
+          .map((property) => [property, inherited.getPropertyValue(property)]),
       ) as CSSProperties;
       setBoardAppearance({
         scale: source.getBoundingClientRect().width / Number.parseFloat(computed.width),
         width: item ? Number.parseFloat(computed.width) : undefined,
         height: item ? Number.parseFloat(computed.height) : undefined,
-        inset: item ? 0 : Number.parseFloat(getComputedStyle(insetProbe).width),
+        // SectionGrid uses a fixed 10px visual inset on each side of new widgets.
+        inset: item ? 0 : 10 * (Number.parseFloat(inherited.getPropertyValue("--board-canvas-inverse-scale")) || 1),
         style,
       });
     };
     updateAppearance();
-    window.addEventListener("resize", updateAppearance);
     const observer = new ResizeObserver(updateAppearance);
     observer.observe(source);
     if (canvas && canvas !== source) observer.observe(canvas);
@@ -215,9 +211,7 @@ const WidgetEditPreview = ({
     if (canvas) mutationObserver.observe(canvas, { attributes: true, attributeFilter: ["style", "class"] });
     if (section) mutationObserver.observe(section, { attributes: true, attributeFilter: ["style", "class"] });
     return () => {
-      insetProbe.remove();
       mutationObserver.disconnect();
-      window.removeEventListener("resize", updateAppearance);
       observer.disconnect();
     };
   }, [itemId, sectionId, board?.id]);
@@ -320,7 +314,10 @@ const WidgetEditPreview = ({
             {tItem("preview.integrationRequired")}
           </Alert>
         ) : (
-          <Box className={classes.previewViewport} w={previewWidth} h={previewHeight}>
+          <Box
+            className={classes.previewViewport}
+            style={{ ...boardAppearance?.style, width: previewWidth, height: previewHeight }}
+          >
             <WidgetCardShell
               innerRef={cardRef}
               className={classes.previewWidget}
@@ -331,7 +328,6 @@ const WidgetEditPreview = ({
               p={0}
               data-grid-item-content
               style={{
-                ...boardAppearance?.style,
                 width: sourceWidth,
                 height: sourceHeight,
                 transform: `scale(${previewScale})`,
