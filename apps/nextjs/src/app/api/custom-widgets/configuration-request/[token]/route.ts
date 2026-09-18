@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 
 import {
   claimCustomWidgetConfigurationRequest,
+  assertCustomWidgetIntegrationBindings,
   completeCustomWidgetConfigurationRequest,
   configureCustomWidgetSourceFromRequest,
   configurePreviewSessionSource,
@@ -12,6 +13,7 @@ import {
 import { customWidgetSourceSchema } from "@homarr/custom-widgets/core";
 import { invalidateCustomWidgetResponseCache } from "@homarr/custom-widgets/server";
 import { db } from "@homarr/db";
+import { auth } from "@homarr/auth/next";
 
 import { adminRoute } from "../../admin";
 import { readConfigurationRequestBody } from "../body";
@@ -52,14 +54,37 @@ const completeConfigurationRequest = async (request: NextRequest, context: Route
     return NextResponse.json({ error: "Enter a valid source configuration." }, { status: 400 });
   }
   const body = parsedBody.data;
-  const sourceResult = customWidgetSourceSchema.safeParse({
-    ...pending.source,
-    baseUrl: body.baseUrl,
-    networkScope: body.networkScope,
-  });
+  let candidate: unknown;
+  if (pending.source.type === "integration") {
+    if (
+      !body.integrationId ||
+      body.baseUrl !== undefined ||
+      body.networkScope !== undefined ||
+      Object.keys(body.secrets).length > 0
+    ) {
+      return NextResponse.json({ error: "Select an existing integration." }, { status: 400 });
+    }
+    candidate = { ...pending.source, integrationId: body.integrationId };
+  } else {
+    if (body.integrationId)
+      return NextResponse.json({ error: "HTTP sources cannot bind an integration." }, { status: 400 });
+    candidate = { ...pending.source, baseUrl: body.baseUrl, networkScope: body.networkScope };
+  }
+  const sourceResult = customWidgetSourceSchema.safeParse(candidate);
   if (!sourceResult.success) {
     return NextResponse.json(
       { error: sourceResult.error.issues[0]?.message ?? "Enter a valid server URL." },
+      { status: 400 },
+    );
+  }
+  try {
+    await assertCustomWidgetIntegrationBindings(
+      { db, session: await auth() },
+      { [pending.sourceId]: sourceResult.data },
+    );
+  } catch {
+    return NextResponse.json(
+      { error: "The selected integration is unavailable or has a different type." },
       { status: 400 },
     );
   }
@@ -95,6 +120,7 @@ const completeConfigurationRequest = async (request: NextRequest, context: Route
       const result = await configureCustomWidgetSourceFromRequest(db, {
         definitionId: claimed.target.id,
         sourceId: claimed.sourceId,
+        integrationId: sourceResult.data.integrationId,
         baseUrl: sourceResult.data.baseUrl,
         networkScope: sourceResult.data.networkScope,
         secrets,

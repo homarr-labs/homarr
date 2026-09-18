@@ -31,7 +31,7 @@ export const getCustomWidgetToolStepsFromResponseMessages = (messages: readonly 
   });
 
 const customWidgetIntentPattern =
-  /(?:\bcustom\s+jsx\b|\bhomarr-custom-widget-v\d+\b|\b(?:build|create|design|edit|fix|make|repair|update|validate)\b[^\n]{0,80}\bcustom[\s-]+widgets?\b|\b(?:build|create|design|make)\b[^\n]{0,80}\bwidgets?\s+(?:for|using|with)\b|\b(?:i|we)\s+(?:need|want)\b[^\n]{0,60}\bwidgets?\s+(?:for|using|with)\b)/iu;
+  /(?:\bcustom\s+jsx\b|\bhomarr-custom-widget-v\d+\b|\b(?:build|convert|create|design|edit|fix|make|migrate|repair|update|validate)\b[^\n]{0,80}\bcustom[\s-]+widgets?\b|\b(?:build|create|design|make)\b[^\n]{0,80}\bwidgets?\s+(?:for|using|with)\b|\b(?:i|we)\s+(?:need|want)\b[^\n]{0,60}\bwidgets?\s+(?:for|using|with)\b)/iu;
 
 const customWidgetBootstrapToolNames = new Set(["customWidget_getSkill"]);
 const maxFocusedComponentSearchesPerPhase = 4;

@@ -32,6 +32,7 @@ import type { WorkshopSubmission, WorkshopVote } from "@site/src/lib/pocketbase"
 import { getWorkshopBackend } from "@site/src/lib/pocketbase";
 import { getRuntimeWorkshopApiUrl } from "@site/src/lib/runtime-config";
 import type { SubmissionType } from "@site/src/lib/workshop-schema";
+import { integrationDefs, isHttpIntegrationKind } from "@homarr/definitions";
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 import {
   githubAvatarUrl,
@@ -96,7 +97,15 @@ const isNotFound = (caught: unknown) =>
 
 const avatarFallback = (name: string) => name.trim().slice(0, 1).toUpperCase() || "?";
 
-const sourceHost = (baseUrl: string) => {
+type WidgetSource = HomarrCustomWidgetV2["sources"][string];
+
+const sourceHost = (source: WidgetSource) => {
+  if (source.type === "integration") {
+    if (isHttpIntegrationKind(source.integrationKind))
+      return `${integrationDefs[source.integrationKind].name} integration`;
+    return `${source.integrationKind} integration`;
+  }
+  const { baseUrl } = source;
   try {
     return new URL(baseUrl).host;
   } catch {
@@ -104,26 +113,31 @@ const sourceHost = (baseUrl: string) => {
   }
 };
 
-const sourceAuthLabel = (auth: HomarrCustomWidgetV2["sources"][string]["auth"]) => {
-  if (typeof auth === "string")
-    return auth === "none" ? "No credentials" : auth === "basic" ? "Basic auth" : "Bearer token";
-  return auth.type === "apiKeyHeader" ? `API key header · ${auth.name}` : `API key query · ${auth.name}`;
+const sourceAuthLabel = (source: WidgetSource) => {
+  if (source.type === "integration") return "Requires a configured integration";
+  const { auth } = source;
+  if (auth === "none") return "No credentials";
+  if (auth === "basic") return "Basic auth";
+  if (auth === "bearer") return "Bearer token";
+  if (auth.type === "apiKeyHeader") return `API key header · ${auth.name}`;
+  return `API key query · ${auth.name}`;
 };
 
-const sourceNeedsSecret = (auth: HomarrCustomWidgetV2["sources"][string]["auth"]) => auth !== "none";
+const sourceNeedsSecret = (source: WidgetSource) => source.type !== "integration" && source.auth !== "none";
 
 const WidgetSafetySummary = ({ widget }: { widget: HomarrCustomWidgetV2 }) => {
   const sources = Object.entries(widget.sources);
   const requests = Object.values(widget.requests);
-  const protectedSources = sources.filter(([, source]) => sourceNeedsSecret(source.auth));
+  const protectedSources = sources.filter(([, source]) => sourceNeedsSecret(source));
+  const integrationSources = sources.filter(([, source]) => source.type === "integration");
   const queryCount = requests.filter((request) => request.kind === "query").length;
   const actionCount = requests.filter((request) => request.kind === "action").length;
   const credentialLabel =
     protectedSources.length === 0
       ? "None required"
       : protectedSources.length === 1
-        ? sourceAuthLabel(protectedSources[0][1].auth)
-        : `${protectedSources.length} credentials required`;
+        ? sourceAuthLabel(protectedSources[0][1])
+        : `${protectedSources.length} authenticated sources`;
 
   return (
     <section
@@ -152,9 +166,9 @@ const WidgetSafetySummary = ({ widget }: { widget: HomarrCustomWidgetV2 }) => {
           <dd className="mt-1.5 space-y-1.5">
             {sources.slice(0, 2).map(([id, source]) => (
               <span key={id} className="flex min-w-0 items-center justify-between gap-2">
-                <span className="truncate font-mono text-xs font-medium">{sourceHost(source.baseUrl)}</span>
+                <span className="truncate font-mono text-xs font-medium">{sourceHost(source)}</span>
                 <Badge variant="secondary" className="shrink-0 font-normal">
-                  {source.networkScope}
+                  {source.networkScope ?? "integration"}
                 </Badge>
               </span>
             ))}
@@ -164,9 +178,15 @@ const WidgetSafetySummary = ({ widget }: { widget: HomarrCustomWidgetV2 }) => {
 
         <div className="border-t border-border px-4 py-3 sm:border-t-0">
           <dt className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-            <IconKey size={14} /> Credentials
+            <IconKey size={14} /> Widget credentials
           </dt>
           <dd className="mt-1.5 truncate font-medium">{credentialLabel}</dd>
+          {integrationSources.length > 0 && (
+            <>
+              <dt className="mt-3 text-xs font-medium text-muted-foreground">Saved integrations</dt>
+              <dd className="mt-1.5 font-medium">{integrationSources.length} required</dd>
+            </>
+          )}
         </div>
 
         <div className="border-t border-border px-4 py-3 sm:border-t-0">
@@ -536,7 +556,8 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
   const sources = widgetDefinition ? Object.entries(widgetDefinition.sources) : [];
   const requests = widgetDefinition ? Object.entries(widgetDefinition.requests) : [];
   const options = widgetDefinition ? Object.entries(widgetDefinition.options) : [];
-  const protectedSources = sources.filter(([, source]) => sourceNeedsSecret(source.auth));
+  const protectedSources = sources.filter(([, source]) => sourceNeedsSecret(source));
+  const integrationSources = sources.filter(([, source]) => source.type === "integration");
   const displayedContent = formatWorkshopContent(submission.type, submission.content);
   const socialTitle = `${submission.title} · Homarr Workshop`;
   const socialDescription = `${typeSocialLabels[submission.type]} for Homarr. ${submission.description}`.trim();
@@ -779,11 +800,11 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
                         <div className="flex items-center justify-between gap-2 text-sm">
                           <span className="truncate font-medium">{source.name || id}</span>
                           <Badge variant="secondary" className="shrink-0">
-                            {source.networkScope}
+                            {source.networkScope ?? "integration"}
                           </Badge>
                         </div>
-                        <p className="truncate text-xs text-muted-foreground">{sourceHost(source.baseUrl)}</p>
-                        <p className="mt-0.5 text-xs text-muted-foreground">{sourceAuthLabel(source.auth)}</p>
+                        <p className="truncate text-xs text-muted-foreground">{sourceHost(source)}</p>
+                        <p className="mt-0.5 text-xs text-muted-foreground">{sourceAuthLabel(source)}</p>
                       </div>
                     ))}
                   </div>
@@ -836,9 +857,24 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
                   </div>
                 )}
 
+                {integrationSources.length > 0 && (
+                  <div className="border-t border-border pt-4">
+                    <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                      <IconServer size={14} /> Saved integrations
+                    </div>
+                    <p className="text-sm">
+                      {integrationSources.length} configured integration{integrationSources.length !== 1 && "s"}{" "}
+                      required.
+                    </p>
+                    <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                      Select matching integrations in Homarr after import. Their connection settings are reused.
+                    </p>
+                  </div>
+                )}
+
                 <div className="border-t border-border pt-4">
                   <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                    <IconKey size={14} /> Credentials
+                    <IconKey size={14} /> Widget credentials
                   </div>
                   {protectedSources.length > 0 ? (
                     <>
@@ -851,7 +887,7 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
                       </p>
                     </>
                   ) : (
-                    <p className="text-sm text-muted-foreground">No credentials required.</p>
+                    <p className="text-sm text-muted-foreground">No widget credentials required.</p>
                   )}
                 </div>
               </div>

@@ -40,6 +40,8 @@ The object key `default` is the required source ID; `default` is not a property 
 }
 ```
 
+Saved sources use `{"type":"integration","integrationKind":"sonarr","integrationId":"saved-id"}`. Discover HTTP kinds with `integration_getKinds`, choose a full-access `integration_all` entry, and bind its ID before preview. Omit URL/auth; paths append to the saved URL, non-GET requests are actions, and exports omit `integrationId`.
+
 Auth is `none`, `bearer`, `basic`, `{ "type": "apiKeyHeader", "name": "X-Api-Key" }`, or `{ "type": "apiKeyQuery", "name": "api_key" }`. Requests default to source `default`, query/GET/load, inherited auth, and view permission. Use `trigger: "load"` for initial/current display, including option-bound data/status with `RefreshButton`; use `trigger: "manual"` only for explicit user-triggered queries or invocation params in `SubFetch`, `ActionButton`, or `ToggleSwitch`. Actions are manual/modify; preserve confirmation, permission, and invalidates. DELETE requires full permission and confirmation. No `load: false`.
 
 Use stable real URLs for public APIs and clear suggested URLs for self-hosted services. Homarr collects the installer's server URL, network scope, and credentials as source setup; credentials remain outside the manifest.

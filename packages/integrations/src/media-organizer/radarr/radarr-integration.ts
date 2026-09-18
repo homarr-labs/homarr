@@ -3,6 +3,8 @@ import { z } from "zod/v4";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
+import type { IntegrationHttpAuthentication } from "../../http-auth";
+import { apiKeyAuth } from "../../http-auth";
 import type { IntegrationTestingInput } from "../../base/integration";
 import { Integration } from "../../base/integration";
 import { TestConnectionError } from "../../base/test-connection/test-connection-error";
@@ -17,6 +19,32 @@ import { mediaOrganizerPriorities } from "../media-organizer";
 const logger = createLogger({ module: "radarrIntegration" });
 
 export class RadarrIntegration extends Integration implements ICalendarIntegration, IMediaOrganizerIntegration {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    return apiKeyAuth(this.integration);
+  }
+
+  async getLibraryStatsAsync() {
+    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v3/movie"), {
+      headers: (await this.getHttpAuthenticationAsync()).headers,
+    });
+    if (!response.ok) throw new Error(`Radarr library request failed (${response.status})`);
+    const library = z
+      .array(
+        z.object({
+          monitored: z.boolean(),
+          hasFile: z.boolean(),
+          sizeOnDisk: z.number().nonnegative(),
+        }),
+      )
+      .parse(await response.json());
+    return {
+      movies: library.length,
+      monitored: library.filter((movie) => movie.monitored).length,
+      downloaded: library.filter((movie) => movie.hasFile).length,
+      storage: library.reduce((sum, movie) => sum + movie.sizeOnDisk, 0),
+    };
+  }
+
   /**
    * Gets the events in the Radarr calendar between two dates.
    * @param start The start date

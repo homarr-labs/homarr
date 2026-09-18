@@ -1,0 +1,37 @@
+---
+title: "Karakeep"
+description: "A self-hostable bookmark manager for saving, organizing, and searching your links, notes, and media."
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { karakeepIntegration } from ".";
+import { statsWidget } from "@site/docs/widgets/stats";
+
+<IntegrationHeader integration={karakeepIntegration} categories={["Bookmark manager"]} />
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites items={[{ widget: statsWidget }]} />
+
+### Adding the integration
+
+<AddingIntegration />
+
+### Secrets
+
+<IntegrationSecrets
+  secrets={[
+    {
+      credentials: ["apiKey"],
+      steps: [
+        "Open Karakeep and go to Settings > API Keys.",
+        "Create an API key with permission to read your bookmarks and copy it.",
+        "Paste the key into the API Key field when creating the integration in Homarr.",
+      ],
+    },
+  ]}
+/>

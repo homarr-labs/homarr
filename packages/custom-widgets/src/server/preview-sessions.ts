@@ -1,3 +1,4 @@
+import { canConfigurePreviewSource } from "./preview-session-template";
 import { z } from "zod/v4";
 
 import {
@@ -5,7 +6,6 @@ import {
   customWidgetRequestsSchema,
   customWidgetSecretKinds,
   customWidgetSourcesSchema,
-  hasSameCustomWidgetSourceAuthentication,
 } from "../core";
 import type { CustomJsxRequest, CustomWidgetOptions, CustomWidgetSource } from "../core";
 import { CustomWidgetDomainError } from "./errors";
@@ -242,7 +242,7 @@ export class CustomWidgetPreviewSessionService {
       if (!currentSource) {
         throw new CustomWidgetDomainError({ code: "NOT_FOUND", message: "Preview source was not found" });
       }
-      if (!hasSameCustomWidgetSourceAuthentication(currentSource, source)) {
+      if (!canConfigurePreviewSource(currentSource, source)) {
         throw new CustomWidgetDomainError({
           code: "BAD_REQUEST",
           message: "Preview source authentication changed; create a new configuration request",
@@ -253,7 +253,7 @@ export class CustomWidgetPreviewSessionService {
         ...session,
         sources: {
           ...session.sources,
-          [sourceId]: { ...currentSource, baseUrl: source.baseUrl, networkScope: source.networkScope },
+          [sourceId]: source,
         },
         secrets: [
           ...session.secrets.filter((secret) => !replacements.has(`${secret.sourceId}:${secret.kind}`)),

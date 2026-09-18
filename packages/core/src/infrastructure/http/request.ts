@@ -13,6 +13,7 @@ import {
 import { UndiciHttpAgent } from "@homarr/core/infrastructure/http";
 
 import type { TrustedCertificateHostname } from "../certificates/hostnames";
+import { getHttpRequestSignal } from "./request-signal";
 import { withTimeoutAsync } from "./timeout";
 export const createCustomCheckServerIdentity = (
   trustedHostnames: TrustedCertificateHostname[],
@@ -66,15 +67,24 @@ export const createHttpsAgentAsync = async (override?: Pick<AgentOptions, "ca" |
 export const createAxiosCertificateInstanceAsync = async (
   override?: Pick<AgentOptions, "ca" | "checkServerIdentity">,
 ) => {
-  return axios.create({
+  const client = axios.create({
     httpsAgent: await createHttpsAgentAsync(override),
   });
+  client.interceptors.request.use((config) => {
+    const signal = getHttpRequestSignal(config.signal as AbortSignal | undefined);
+    signal?.throwIfAborted();
+    config.signal = signal;
+    return config;
+  });
+  return client;
 };
 
 export const fetchWithTrustedCertificatesAsync = async (
   url: RequestInfo,
   options?: RequestInit & { timeout?: number; bodyTimeout?: number },
 ): Promise<Response> => {
+  const requestSignal = getHttpRequestSignal(options?.signal);
+  requestSignal?.throwIfAborted();
   const agent =
     options?.dispatcher ??
     (await createCertificateAgentAsync(
@@ -87,7 +97,7 @@ export const fetchWithTrustedCertificatesAsync = async (
       async (signal) =>
         fetch(url, {
           ...fetchOptions,
-          signal,
+          signal: AbortSignal.any([signal, requestSignal ?? signal]),
           dispatcher: agent,
         }),
       options.timeout,
@@ -97,6 +107,7 @@ export const fetchWithTrustedCertificatesAsync = async (
   const { bodyTimeout: _bodyTimeout, dispatcher: _dispatcher, ...fetchOptions } = options ?? {};
   return fetch(url, {
     ...fetchOptions,
+    signal: requestSignal,
     dispatcher: agent,
   });
 };

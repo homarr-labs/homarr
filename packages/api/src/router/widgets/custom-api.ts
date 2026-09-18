@@ -1,3 +1,4 @@
+import { getCustomWidgetIntegrationCacheVersion, resolveCustomWidgetSource } from "../custom-widget/source-resolver";
 import { TRPCError } from "@trpc/server";
 import { parse as parseSuperJson } from "superjson";
 import { z } from "zod/v4";
@@ -13,7 +14,8 @@ import {
   normalizeCustomWidgetOptions,
   validateCustomWidgetOptions,
 } from "@homarr/custom-widgets/core";
-import type { CustomJsxRequest, CustomWidgetSource } from "@homarr/custom-widgets/core";
+import type { CustomJsxRequest } from "@homarr/custom-widgets/core";
+import type { RequestLimitInput } from "@homarr/custom-widgets/server";
 
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "../board/board-access";
@@ -121,34 +123,15 @@ const findSource = (resolved: ResolvedDefinition, sourceId: string) => {
 };
 
 type IdentifiedRequest = CustomJsxRequest & { id: string };
-type IdentifiedSource = CustomWidgetSource & { id: string };
-
-const getAuth = (resolved: ResolvedDefinition, source: IdentifiedSource, mode: "inherit" | "none") => {
-  const authType = typeof source.auth === "string" ? source.auth : source.auth.type;
-  if (mode === "none" || authType === "none") return undefined;
-  const secrets = resolved.stored.secrets
-    .filter((secret) => secret.sourceId === source.id)
-    .map((secret) => ({ kind: secret.kind, value: decryptSecret(secret.encryptedValue) }));
-  return {
-    type: authType,
-    secrets,
-    headerName:
-      typeof source.auth === "object" && source.auth.type === "apiKeyHeader"
-        ? source.auth.name
-        : typeof source.auth === "object" && source.auth.type === "apiKeyQuery"
-          ? source.auth.name
-          : undefined,
-  };
-};
 
 const withRequestLimit = async <T>(
   ctx: RouterContext,
   resolved: ResolvedDefinition,
-  request: IdentifiedRequest,
+  category: RequestLimitInput["category"],
   callback: () => Promise<T>,
 ) => {
   const release = await acquireCustomWidgetRequestLimit({
-    category: request.kind === "query" ? "query" : request.method === "DELETE" ? "delete" : "action",
+    category,
     userId: ctx.session?.user.id,
     itemId: resolved.item.id,
     definitionId: resolved.stored.id,
@@ -172,21 +155,28 @@ const executeRequest = async (
   await throwIfActionForbiddenAsync(ctx, eq(boards.id, resolved.item.boardId), request.permission as BoardPermission);
   const source = findSource(resolved, request.source);
   const values = resolveCustomWidgetRequestValues(request, resolved.configuration, params);
-  const targetUrl = renderRequestTarget(source.baseUrl, request, values);
-  return withRequestLimit(ctx, resolved, request, () =>
-    executeCustomWidgetRequest({
-      baseUrl: source.baseUrl,
+  let category: RequestLimitInput["category"] = "query";
+  if (request.kind === "action") category = request.method === "DELETE" ? "delete" : "action";
+  return withRequestLimit(ctx, resolved, category, async () => {
+    const connection = await resolveCustomWidgetSource(ctx, source, request, () =>
+      resolved.stored.secrets
+        .filter((secret) => secret.sourceId === source.id)
+        .map((secret) => ({ kind: secret.kind, value: decryptSecret(secret.encryptedValue) })),
+    );
+    const targetUrl = renderRequestTarget(connection.baseUrl, request, values);
+    const response = await executeCustomWidgetRequest({
+      ...connection,
       targetUrl,
       method: request.method,
       body: renderRequestBody(request, values),
       staticHeaders: request.headers,
-      auth: getAuth(resolved, source, request.auth),
-      networkScope: source.networkScope,
       kind: request.kind,
-      cacheKey: request.kind === "query" ? getCacheKey(resolved, request, values) : undefined,
+      cacheKey:
+        request.kind === "query" ? `${getCacheKey(resolved, request, values)}:${connection.cacheVersion}` : undefined,
       cacheTtlSeconds: request.cacheSeconds,
-    }),
-  );
+    });
+    return { ...response, sourceCacheVersion: connection.cacheVersion };
+  });
 };
 
 export const customApiRouter = createTRPCRouter({
@@ -209,6 +199,8 @@ export const customApiRouter = createTRPCRouter({
           return [
             requestId,
             {
+              sourceId: request.source,
+              sourceCacheVersion: response.sourceCacheVersion,
               data: response.data,
               status: {
                 loading: false,
@@ -223,6 +215,9 @@ export const customApiRouter = createTRPCRouter({
           return [
             requestId,
             {
+              sourceId: request.source,
+              sourceCacheVersion:
+                resolved.definition.sources[request.source]?.type === "integration" ? "unavailable" : "",
               data: null,
               status: {
                 loading: false,
@@ -235,11 +230,43 @@ export const customApiRouter = createTRPCRouter({
         }
       }),
     );
+    const integrationVersions = new Map<string, string>();
+    for (const [, result] of entries) {
+      if (!result.sourceCacheVersion) continue;
+      if (result.sourceCacheVersion === "unavailable" && integrationVersions.has(result.sourceId)) continue;
+      integrationVersions.set(result.sourceId, result.sourceCacheVersion);
+    }
+    const loadSourceIds = new Set(loadRequests.map(([, request]) => request.source));
+    const manualSourceIds = new Set<string>();
+    for (const request of Object.values(resolved.definition.requests)) {
+      if (request.kind !== "query" || request.trigger !== "manual" || loadSourceIds.has(request.source)) continue;
+      if (resolved.definition.sources[request.source]?.type !== "integration") continue;
+      manualSourceIds.add(request.source);
+    }
+    const manualIntegrationVersions = await Promise.all(
+      [...manualSourceIds].map(async (sourceId) => {
+        const source = resolved.definition.sources[sourceId];
+        if (source?.type !== "integration") return [sourceId, "unavailable"] as const;
+        try {
+          const version = await withRequestLimit(ctx, resolved, "metadata", () =>
+            getCustomWidgetIntegrationCacheVersion(ctx, source),
+          );
+          return [sourceId, version] as const;
+        } catch {
+          return [sourceId, "unavailable"] as const;
+        }
+      }),
+    );
+    for (const [sourceId, version] of manualIntegrationVersions) integrationVersions.set(sourceId, version);
+    const integrationCacheKey = [...integrationVersions]
+      .toSorted(([left], [right]) => left.localeCompare(right))
+      .map(([sourceId, version]) => `${sourceId}:${version}`)
+      .join(":");
 
     return {
       type: "customJsx" as const,
       template: resolved.definition.template,
-      queryCacheKey: `${getCustomWidgetCacheVersion(resolved.stored)}:${hashRuntimeParams(resolved.configuration)}`,
+      queryCacheKey: `${getCustomWidgetCacheVersion(resolved.stored)}:${hashRuntimeParams(resolved.configuration)}:${integrationCacheKey}`,
       data: Object.fromEntries(entries.map(([id, result]) => [id, result.data])),
       status: Object.fromEntries(entries.map(([id, result]) => [id, result.status])),
       options: resolved.configuration,

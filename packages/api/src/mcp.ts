@@ -1,3 +1,4 @@
+import { statsRouter } from "./router/widgets/stats";
 export { createTRPCContext } from "./trpc";
 export { callMcpTool, extractMcpToolsFromProcedures } from "./mcp-tools";
 export type { McpTool } from "./mcp-tools";
@@ -33,6 +34,7 @@ import { widgetSecretsRouter } from "./router/widgets/widget-secrets";
 import { wudRouter } from "./router/widgets/wud";
 
 export const mcpRouter = createTRPCRouter({
+  stats: statsRouter,
   app: appRouterForApps,
   apiKeys: apiKeysRouter,
   board: boardRouter,

@@ -13,7 +13,7 @@ export const CUSTOM_WIDGET_SKILL_SOURCE_URL =
   "https://github.com/homarr-labs/homarr/tree/HEAD/.agents/skills/homarr-custom-widget";
 export const CUSTOM_WIDGET_SKILL_INSTALL_COMMAND =
   "npx skills add https://github.com/homarr-labs/homarr --skill homarr-custom-widget";
-export const CUSTOM_WIDGET_SKILL_VERSION = "2.10.3";
+export const CUSTOM_WIDGET_SKILL_VERSION = "2.10.4";
 export const CUSTOM_WIDGET_SKILL_REFERENCE_NAMES = ["schema", "runtime", "security"] as const;
 export type CustomWidgetSkillReferenceName = (typeof CUSTOM_WIDGET_SKILL_REFERENCE_NAMES)[number];
 
@@ -85,6 +85,8 @@ The object key \`default\` is the required source ID; \`default\` is not a prope
 }
 \`\`\`
 
+Saved sources use \`{"type":"integration","integrationKind":"sonarr","integrationId":"saved-id"}\`. Discover HTTP kinds with \`integration_getKinds\`, choose a full-access \`integration_all\` entry, and bind its ID before preview. Omit URL/auth; paths append to the saved URL, non-GET requests are actions, and exports omit \`integrationId\`.
+
 Auth is \`none\`, \`bearer\`, \`basic\`, \`{ "type": "apiKeyHeader", "name": "X-Api-Key" }\`, or \`{ "type": "apiKeyQuery", "name": "api_key" }\`. Requests default to source \`default\`, query/GET/load, inherited auth, and view permission. Use \`trigger: "load"\` for initial/current display, including option-bound data/status with \`RefreshButton\`; use \`trigger: "manual"\` only for explicit user-triggered queries or invocation params in \`SubFetch\`, \`ActionButton\`, or \`ToggleSwitch\`. Actions are manual/modify; preserve confirmation, permission, and invalidates. DELETE requires full permission and confirmation. No \`load: false\`.
 
 Use stable real URLs for public APIs and clear suggested URLs for self-hosted services. Homarr collects the installer's server URL, network scope, and credentials as source setup; credentials remain outside the manifest.
@@ -148,48 +150,44 @@ description: Author, validate, preview, test, install, or configure API-backed H
 
 # Homarr Custom Widget
 
-Author widgets with release-matched context. Research once; finish validation, evidence, and persistence before the next
-widget. Finish with the artifact.
+Author one widget at a time with release-matched context. Finish validation, evidence, and persistence before the next
+widget, then return the artifact.
 
-- Read primary API documentation once when it is missing or may have changed. Treat a supplied sample or successful
-  preview response as the binding contract; load only the schema, runtime, security, or component context needed.
-- Search for components once when a capability is unknown, then batch selected details. Reuse \`contextAlreadyLoaded\` and
-  do not repeat an unavailable lookup.
-- A provider/model rejection is a terminal call failure: record the provider, model, and valid-model error, then finish
-  from loaded context. If lifecycle tools are unavailable, use the offline artifact route and mark it unverified.
-- Community widget: call \`customWidget_workshopSearch\`, \`customWidget_workshopGet\`, \`customWidget_workshopInstall\`; configure
-  securely and persist before preview expires.
+- Read primary API documentation once when it is missing or may have changed. Treat supplied samples and successful
+  previews as the binding contract; load only needed schema, runtime, security, or component context.
+- Search for unknown components once, batch selected details, reuse \`contextAlreadyLoaded\`, and do not repeat unavailable
+  lookups. A provider/model rejection is terminal: record it and finish from loaded context.
+- Community widgets use \`customWidget_workshopSearch\`, \`customWidget_workshopGet\`, and
+  \`customWidget_workshopInstall\`; configure and persist before preview expires.
 
-Return one fenced \`json\` block; keep evidence prose outside it. The definition has keyed \`sources\`, \`requests\`, \`template\`,
-and optional \`options\`; actions are requests with \`kind: "action"\`.
+Return one fenced \`json\` block with the complete definition; keep evidence prose outside it. The definition has keyed
+\`sources\`, \`requests\`, \`template\`, and optional \`options\`; actions are requests with \`kind: "action"\`.
 
-- \`sources.default\` has \`baseUrl\`, \`networkScope\`, and credential-free \`auth\`; Homarr holds credentials.
-- Requests use a leading-slash \`path\`; declare \`source\`, \`method\`, and \`trigger\` when they differ from defaults. Load
-  queries use \`trigger: "load"\`; manual parameterized queries and actions use \`trigger: "manual"\`.
-- Actions stay manual; preserve \`confirmation\`, \`permission\`, and \`invalidates\` only when declared or required. DELETE uses
-  full permission and confirmation.
-- Read load data from \`data.requestId\`. Check \`status.requestId?.loading\` and \`status.requestId?.ok === false\`; guard
-  arrays and nested fields and use \`??\` for truthful fallbacks. Render requested fields from the supplied contract.
-- A load template shows loading, error, empty, and success states and includes \`RefreshButton requestId="..."\`.
-  \`SubFetch\` is for requested manual parameterized queries; it owns loading/error/retry and receives \`(result, metadata)\`.
-- Options have \`label\`, \`control\`, and \`default\`; bind with \`{option:name}\` or \`$option\`. A dependent control has its
-  own default and \`resetKey={inputs.dependency}\`. Do not add lookup, pagination, or detail requests for omitted fields.
-- Keep templates expression-only: no imports, hooks, refs, raw HTML/events, browser requests, eval, recursion, IIFEs,
-  statement blocks, or arbitrary functions. Use registered names returned by component discovery; \`Icon\` is an accepted alias
-  for canonical \`TablerIcon\`. Keep credentials and deployment values in Homarr configuration; never put tokens, keys,
-  authorization values, or redacted credential placeholders in the manifest.
-Use \`data.items?.map(item => ...)\` only after loading/error branches and provide a no-items branch. Label timestamps with
-the documented source timezone; if none is documented, preserve the source value or omit any timezone label; use UTC only when the contract says UTC. Keep hierarchy, imagery, actions, and narrow/wide
-layout purposeful; avoid dead controls.
+- \`sources.default\` is required. HTTP sources have \`baseUrl\`, \`networkScope\`, and credential-free \`auth\`; saved sources
+  use \`type: "integration"\` and \`integrationKind\`. Homarr holds credentials.
+- For saved integrations, discover HTTP kinds and full-access entries with \`integration_getKinds\`/\`integration_all\`, bind
+  \`integrationId\` before preview, omit URL/auth fields, and keep non-GET requests as actions.
+- Requests use literal slash-prefixed paths. Load/current display queries use \`trigger: "load"\`, including option-bound
+  requests read through \`data\`/\`status\` and \`RefreshButton\`; use \`trigger: "manual"\` only for explicit manual helpers.
+- Actions stay manual; preserve \`confirmation\`, \`permission\`, and \`invalidates\`; DELETE requires full permission and
+  confirmation. \`$option\` is for saved options; \`$param\` is only for manual \`SubFetch\`, \`ActionButton\`, or \`ToggleSwitch\`.
+- Read load data from \`data.requestId\`, check \`status.requestId?.loading\` and \`status.requestId?.ok === false\`, and show
+  loading, error, empty, and success states with \`RefreshButton requestId="..."\`. \`SubFetch\` owns manual loading/error/retry
+  and receives \`(result, metadata)\`; map the response array, not its envelope.
+- Options have \`label\`, \`control\`, and \`default\`; dependent controls declare a default and \`resetKey={inputs.dependency}\`.
+  Remove controls that do not feed an option, request, or runtime helper. Guard arrays/nested values and use \`??\` for
+  truthful fallbacks. Preserve documented timezone values; use UTC only when the contract says UTC.
+- Templates are one expression: no imports, hooks, refs, raw HTML/events, browser requests, eval, recursion, IIFEs,
+  statement blocks, or arbitrary functions. Use registered component names; \`Icon\` may alias \`TablerIcon\`. Keep hierarchy,
+  theme tokens, useful states, and narrow/wide layouts purposeful.
 
 ## Bounded lifecycle
 
-1. Build the credential-free definition from the request, verified context, and sample. Preserve a migration's API path,
-   method, body, options, and visible behavior.
-2. Call \`customWidget_validateTemplate\` for focused JSX diagnostics. Send source/request/option changes once to
+1. Build a credential-free definition from the request, verified context, and sample. Preserve a migration's supported API
+   path, method, body, options, and visible behavior; omit unknown requests rather than guessing.
+2. Use \`customWidget_validateTemplate\` for focused JSX diagnostics. Send source/request/option changes once to
    \`customWidget_previewCreate\`; use \`customWidget_previewReviseTemplate\` for a JSX-only correction in its session. In the
-   Assistant wrapper, multiline JSX goes to \`customWidget_validateTemplate\` and \`customWidget_previewReviseTemplate\` as
-   \`templateLines\`; \`previewCreate\` receives the complete definition with \`template\` or \`templateLines\`.
+   Assistant wrapper, multiline JSX uses \`templateLines\` and preview creation receives the complete definition.
 3. Test every returned query or simulated action once. After a validation failure, make one corrected candidate and
    revalidate. Stop when the result is incomplete, the workbench closes, or the provider/model rejects the call.
 4. After a successful final preview and exact tests, call \`customWidget_createFromPreview\`; configure private URLs and
@@ -197,9 +195,9 @@ layout purposeful; avoid dead controls.
 
 ## Delivery
 
-For each lifecycle call, report only its actual result. If tools have no result, add one line after the artifact beginning
-\`Unverified:\` naming the missing validation, preview, renderer, or persistence step. Do not claim rendering or persistence
-from syntax or schema checks alone.
+Report each lifecycle call only by its actual result. If a required tool result is unavailable, add exactly one line after
+the artifact beginning \`Unverified:\` naming the missing validation, preview, renderer, or persistence step. Never claim
+rendering or persistence from schema checks alone.
 `;
 
 const CUSTOM_WIDGET_SKILL_ENTRYPOINT_MD = `# Homarr Custom Widget authoring index

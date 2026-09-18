@@ -1,3 +1,4 @@
+import { Buffer } from "node:buffer";
 import type { Response } from "undici";
 import { CustomWidgetDomainError } from "./errors";
 
@@ -63,3 +64,46 @@ export async function parseResponseBody(response: Response, textFallback = false
 
 const tooLarge = () =>
   new CustomWidgetDomainError({ code: "PAYLOAD_TOO_LARGE", message: "Response exceeds the 1 MiB limit" });
+
+export function redactResponseSecrets(data: unknown, secrets: Array<{ kind: string; value: string }>): unknown {
+  if (secrets.length === 0) return data;
+  const values = secrets.filter(({ value }) => value.length > 0);
+  const username = secrets.find(({ kind }) => kind === "username")?.value;
+  const password = secrets.find(({ kind }) => kind === "password")?.value;
+  if (username && password) values.push({ kind: "basic", value: `${username}:${password}` });
+  const sensitive = new Set<string>();
+  const embedded = new Set<string>();
+  for (const { kind, value } of values) {
+    for (const encoded of [
+      value,
+      JSON.stringify(value).slice(1, -1),
+      encodeURIComponent(value),
+      Buffer.from(value).toString("base64"),
+      Buffer.from(value).toString("base64").replace(/=+$/u, ""),
+      Buffer.from(value).toString("base64url"),
+    ]) {
+      sensitive.add(encoded);
+      // Usernames and short credentials can be ordinary words or characters in response data.
+      if (kind !== "username" && value.length >= 12) embedded.add(encoded);
+    }
+  }
+  const embeddedValues = [...embedded].toSorted((a, b) => b.length - a.length);
+  const redactEmbedded = (value: string) => {
+    for (const secret of embeddedValues) value = value.replaceAll(secret, "[REDACTED]");
+    return value;
+  };
+  const visit = (value: unknown): unknown => {
+    if (typeof value === "string") {
+      if (sensitive.has(value)) return "[REDACTED]";
+      return redactEmbedded(value);
+    }
+    if ((typeof value === "number" || typeof value === "boolean" || value === null) && sensitive.has(String(value)))
+      return "[REDACTED]";
+    if (Array.isArray(value)) return value.map(visit);
+    if (value !== null && typeof value === "object") {
+      return Object.fromEntries(Object.entries(value).map(([key, child]) => [redactEmbedded(key), visit(child)]));
+    }
+    return value;
+  };
+  return visit(data);
+}

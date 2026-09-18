@@ -24,7 +24,10 @@ import { WidgetIntegrationSelectInput } from "./widget-integration-select-input"
 import { WidgetIntegrationMultiSelectInput } from "./widget-integration-multi-select-input";
 import { WidgetInternalInput } from "./widget-internal-input";
 
+import { WidgetStatsEntriesInput } from "./widget-stats-entries-input";
+
 const mapping = {
+  statsEntries: WidgetStatsEntriesInput,
   internal: WidgetInternalInput,
   anchorNote: WidgetAnchorNoteInput,
   text: WidgetTextInput,

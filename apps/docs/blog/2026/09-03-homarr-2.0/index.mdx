@@ -48,9 +48,9 @@ Custom Widgets v2 lets you build widgets from JSX, API requests, actions and typ
 
 This was partly inspired by [Google's upcoming Create My Widget feature](https://blog.google/products-and-platforms/platforms/android/gemini-intelligence/): describe a widget in normal language and let AI make it. Coding knowledge is optional. Knowing what the API does still helps; AI has not fixed bad documentation. Yet.
 
-![The Custom Widget v2 workbench after a live exchange-rate request successfully renders its preview](./img/custom-widget-workbench.webp)
+![The Custom Widget workbench displaying a Sonarr response through a saved integration](./img/custom-widget-workbench.png)
 
-A `homarr-custom-widget-v2` definition can use several fixed-origin API sources. Credentials are encrypted separately and stay out of exports and Workshop submissions. Actions support `GET`, `POST`, `PUT`, `PATCH` and `DELETE`; requests have host checks, timeouts, size limits, permissions and rate limits. Custom Widgets remain **Beta** in 2.0.
+A `homarr-custom-widget-v2` definition can use several fixed-origin API sources. Credentials are encrypted separately and stay out of exports and Workshop submissions. Actions support `GET`, `POST`, `PUT`, `PATCH` and `DELETE`; requests have host checks, timeouts, size limits, permissions and rate limits.
 
 ### Share widgets and Custom CSS
 
@@ -149,6 +149,22 @@ Change the name, logo, favicon, colors, corner styles and login page. Global CSS
 
 Add content without leaving the board. Settings have live previews, and supported widgets have advanced views. Weather and Clock were redesigned; Air Quality, Countdown and Timer are new.
 
+### Statistics and 31 new integrations
+
+The new [Statistics widget](/docs/widgets/stats) combines fields from different services in one grid: Sonarr shows beside Paperless-ngx documents, Navidrome songs or Homebox inventory. Choose cards, compact rows or tables grouped by integration. Click a metric for related fields, or open **Advanced view** from the context menu to see every available field from the selected sources.
+
+Add your services in **Management → Integrations**, then select them and their metrics in Statistics settings. Labels, order and abbreviated values are configurable; the widget's local view controls let you try a different arrangement without changing the shared board. The demo board includes mocked cards, rows and tables.
+
+This release adds:
+
+- **Media and libraries:** Autobrr, FileFlows, Jackett, Jellystat, Komga, Maintainerr, RomM, Stash, Tube Archivist, Unmanic, xTeVe and Your Spotify.
+- **Monitoring and networking:** Caddy, Changedetection.io, Frigate, Gatus, Healthchecks, NetAlertX, Netdata, Prometheus, Scrutiny and Syncthing Relay.
+- **Collections and home:** Homebox, Karakeep, Linkwarden, Mealie, Miniflux, Plant-it, Spoolman, Tandoor and Trilium.
+
+The [integration and metric reference](/docs/widgets/stats#new-service-integrations-in-v2) links to each setup guide. Jackett also joins the Indexer Manager widget. Existing supported integrations reuse their Homarr clients.
+
+Statistics keeps saved snapshots until you refresh them. Multiple metrics from one source share retrieval, and dashboard loads read cached data instead of refetching every service. **Right-click → Refresh** retrieves new source data and shows the oldest saved snapshot's age; unsuccessful refreshes keep the previous values. These are on-demand snapshots, not live monitoring.
+
 ### Docker and Podman
 
 `DOCKER_ENDPOINTS` supports several hosts. Assisted setup and container labels can create apps, integrations, Containers, widgets and health checks.
@@ -175,7 +191,6 @@ We deploy the Homarr Workshop and the compiled Docusaurus docs on the VPS provid
 
 - Legacy Custom JSX definitions enter a migration state. Homarr keeps encrypted credentials and an archived copy until the v2 definition validates.
 - Mobile layouts place rail content in the main flow instead of displaying rails.
-- Custom Widgets remain Beta.
 - Assistant and MCP do not bypass permissions.
 
 ## Links

@@ -126,7 +126,9 @@ const safeDate = Object.freeze(
 export function createCustomJsxBindings(apiData: unknown) {
   const safeJson = Object.freeze(
     Object.assign(Object.create(null) as Record<string, unknown>, {
-      stringify: createSafeCallable((value: unknown) => JSON.stringify(value)),
+      stringify: createSafeCallable((value: unknown, _replacer?: null, space?: string | number) =>
+        JSON.stringify(value, null, space),
+      ),
     }),
   );
   const safeArray = Object.freeze(

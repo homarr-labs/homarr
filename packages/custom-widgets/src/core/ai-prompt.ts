@@ -1,3 +1,5 @@
+import { httpIntegrationKinds } from "@homarr/definitions/integration";
+
 import type { HomarrCustomWidgetV2 } from "./custom-jsx-schema";
 import { customJsxAuthoringCatalog } from "./component-catalog";
 import {
@@ -92,11 +94,10 @@ const COMPACT_PROMPT_EXAMPLES = [
 ].join("\n");
 
 const CUSTOM_WIDGET_CONTRACT_RULES = `Contract check before JSX:
-- Preserve each source's literal baseUrl, networkScope, and auth kind; never invent credentials or widen auth scope.
-- Keep literal request paths, methods, query, and body grounded in the contract. Use $option for saved options; use $param only for manual SubFetch, ActionButton, or ToggleSwitch inputs. Actions stay manual; preserve confirmation, permission, and invalidation when declared or required.
-- Static choices are scalar label/value pairs; dynamic choices use choicesFrom. Controls write inputs; pass those values only to the manual request that declares them.
-- A structured option uses control: "json" with an object or array default. Bind it only to a structured body, for example body: { command: { $option: "command" } }; render fields or JSON.stringify(value), never an object as JSX child, label, or choice text.
-- For nullable arrays write (value ?? []).map(...) or (value ?? []).filter(...); never optional-call fn?.(). Preserve the response envelope and loading/error/empty/success states; Use the safe Date helper with a documented timezone; otherwise omit its timezone argument and label; use UTC only when the contract says UTC. Guard missing timestamps. Use theme-adaptive body/text tokens; never hardcode dark surfaces/text.`;
+- Preserve each source's literal contract. HTTP sources keep baseUrl, networkScope, and auth; integrations keep integrationKind and integrationId. Never invent credentials or widen auth scope.
+- Keep request paths, methods, query, and body grounded in the contract. Use $option for saved options; $param only for manual helpers. Actions stay manual; preserve confirmation, permission, and invalidation.
+- Static choices use scalar label/value pairs; dynamic choices use choicesFrom. Controls write inputs and feed only the manual request that declares them. Structured options use control: "json" and bind only structured bodies; render fields or JSON.stringify(value), never objects as JSX children.
+- For nullable arrays write (value ?? []).map(...) or (value ?? []).filter(...); preserve the response envelope and loading/error/empty/success states. Use the safe Date helper with a documented timezone; otherwise omit its timezone argument and label; use UTC only when the contract says UTC. Guard timestamps and use theme-adaptive body/text tokens.`;
 
 const CUSTOM_WIDGET_VISUAL_QUALITY_GUIDANCE = `Visual quality for create jobs:
 - Give the widget a purposeful header with useful context and its primary status or action.
@@ -114,7 +115,7 @@ ${leanShape}
 
 ${CUSTOM_WIDGET_MODE_GUIDANCE}
 
-Sources are keyed by name and must include "default". Each source requires a baseUrl and networkScope; networkScope must be "public", "private", or "loopback". Auth is "none", "bearer", "basic", {"type":"apiKeyHeader","name":"X-Api-Key"}, or {"type":"apiKeyQuery","name":"api_key"}. Use the stable public API URL for public services and a clear suggested URL for self-hosted services; Homarr asks the installer for their own server URL. Never put credentials in the manifest.
+Sources are keyed by name and must include "default". HTTP sources require a baseUrl and networkScope must be "public", "private", or "loopback" plus optional auth: "none", "bearer", "basic", {"type":"apiKeyHeader","name":"X-Api-Key"}, or {"type":"apiKeyQuery","name":"api_key"}. Saved integrations use {"type":"integration","integrationKind":"..."} and omit baseUrl, networkScope, and auth; discover supported kinds with integration_getKinds and bind a matching integrationId from integration_all with permissions.hasFullAccess before preview. Supported kinds: ${httpIntegrationKinds.join(", ")}. Exports omit integrationId, paths append to the saved URL, and non-GET integration requests must be manual actions. Use a stable public API URL or a clear self-hosted suggestion for HTTP sources; Homarr collects installer URLs and credentials. Never put credentials in the manifest.
 
 Requests are keyed by ID. Defaults are source "default", kind "query", method "GET", query trigger "load", inherited auth, and permission "view" for queries or "modify" for actions. Actions are always manual. A request that supplies the widget's initial/current display, including one using \`{option:name}\` in its path or query, is a load query: set \`trigger: "load"\` explicitly when the user asks for a load/current/automatic display. Set \`trigger: "manual"\` only when the user requests an explicit user-triggered query or the request uses invocation parameters with SubFetch, ActionButton, or ToggleSwitch. If the template reads \`data.requestId\`/\`status.requestId\` and uses \`RefreshButton requestId="requestId"\`, that request must be \`trigger: "load"\`; do not make it manual merely because it has an option binding. DELETE is valid only for actions and requires full permission. Set confirmation:"Retry?" or confirmation:{title:"Retry",message:"Retry?"}; DELETE gets a confirmation prompt by default. Use {option:name} or {"$option":"name"} for saved options. Use {param:name} or {"$param":"name"} only for invocation-time params supplied by SubFetch, ActionButton, or ToggleSwitch. Load queries cannot use params. Values and primitive types are inferred from references; do not declare parameters or option bindings. Every request path must remain a literal slash-prefixed path after interpolation; never make {option:name} the entire path. If a migration path is unknown, omit its request (requests:{} if none); never guess /. Always include sources.default, even for static widgets. Paths and query values must be primitive; JSON bodies may bind structured options.
 
@@ -152,8 +153,8 @@ export const CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION =
   "Custom Widget tools are staged by the authoring lifecycle. Use only visible task-needed tools; successful phases expose the next typed tools without loading the full catalog.";
 
 export const CUSTOM_WIDGET_ASSISTANT_POLICY = `Custom Widget work:
-- Provider/model, unavailable, contextAlreadyLoaded, or closed-workbench failure: stop and reuse context. Without lifecycle tools, return v2 with sources.default (baseUrl, networkScope, optional auth), literal slash-prefixed paths, options, one-expression template, and one Unverified: line. Never emit pseudo tool calls or claim results; use that model.
-- Start with customWidget_getSkill; load task-needed references: compact schema once for a new manifest, security once for auth or mutations, runtime for manual interactions. Do not load full catalog; reuse context. Lifecycle tools run one at a time and change phase.
+- Provider/model, unavailable, contextAlreadyLoaded, or closed-workbench failure: stop and reuse context. Without lifecycle tools, return v2 with the declared source shape: HTTP sources keep baseUrl/networkScope/auth, integration sources keep integrationKind and optional integrationId; paths stay literal and credential-free, with one Unverified: line. Never emit pseudo tool calls or claim results; use that model.
+- Start with customWidget_getSkill; load task-needed references, including compact schema once for a new manifest and security once for auth or mutations. Do not load full catalog; Lifecycle tools run one at a time and change phase. For saved integrations, bind a full-access entry before preview and keep credentials out of the manifest.
 - Keep complexity proportional. Preserve migration intent, shape, and visible behavior; add choicesFrom/charts/actions only when needed. Use clear labels, theme-safe colors, wrapping layouts; keep narrow/wide usable.
 - Find registered Mantine components with customWidget_findComponents; batch customWidget_getComponents, then customWidget_validateTemplate. Use customWidget_getComponent for unknown props; Icon aliases TablerIcon.
 

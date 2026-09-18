@@ -104,6 +104,17 @@ type Definition = z.infer<typeof customWidgetDefinitionSchema>;
 
 function validateRequests(definition: Definition, ctx: z.RefinementCtx) {
   for (const [requestId, request] of Object.entries(definition.requests)) {
+    if (
+      definition.sources[request.source]?.type === "integration" &&
+      request.method !== "GET" &&
+      request.kind !== "action"
+    ) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["requests", requestId, "kind"],
+        message: "Integration requests with a method other than GET must be manual actions",
+      });
+    }
     if (!definition.sources[request.source]) {
       ctx.addIssue({
         code: "custom",

@@ -30,7 +30,15 @@ export interface WidgetContextMenuContext {
   canInteractWithSelectedIntegrations: boolean;
 }
 
+export interface WidgetDataStatus {
+  updatedAt: number | null;
+  hasError: boolean;
+  isRefreshing: boolean;
+}
+
 export interface WidgetRuntimeActions {
+  refresh?: () => Promise<void>;
+  getDataStatus?: () => WidgetDataStatus;
   togglePolling?: () => void;
   testAllIndexers?: () => void;
   previousPhoto?: () => void;

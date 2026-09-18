@@ -31,6 +31,8 @@ describe("Custom Widget authoring context", () => {
     "I want a widget for Seerr",
     "Repair this custom-widget",
     "Validate this Custom JSX definition",
+    "Migrate this legacy custom widget to Custom JSX v2",
+    "Convert this custom widget to v2",
     '{"$schema":"homarr-custom-widget-v2"}',
   ])("detects explicit authoring intent: %s", (text) => {
     expect(needsCustomWidgetAuthoringContext([userMessage(text)])).toBe(true);

@@ -1,3 +1,4 @@
+import { isHttpIntegrationKind } from "@homarr/definitions";
 import type { IntegrationKind } from "@homarr/definitions";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
@@ -8,6 +9,241 @@ const logger = createLogger({ module: "integrationFactory" });
 
 // Keep each import path explicit so Node and Turbopack can discover every lazy integration chunk.
 const integrationCreators = {
+  autobrr: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { autobrrStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/autobrr"),
+    ]);
+    return new StatsIntegration(input, autobrrStatsProvider);
+  },
+  jellystat: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { jellystatStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/jellystat"),
+    ]);
+    return new StatsIntegration(input, jellystatStatsProvider);
+  },
+  scrutiny: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { scrutinyStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/scrutiny"),
+    ]);
+    return new StatsIntegration(input, scrutinyStatsProvider);
+  },
+  tubearchivist: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { tubearchivistStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/tubearchivist"),
+    ]);
+    return new StatsIntegration(input, tubearchivistStatsProvider);
+  },
+  frigate: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { frigateStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/frigate"),
+    ]);
+    return new StatsIntegration(input, frigateStatsProvider);
+  },
+  komga: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { komgaStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/komga"),
+    ]);
+    return new StatsIntegration(input, komgaStatsProvider);
+  },
+  netalertx: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { netalertxStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/netalertx"),
+    ]);
+    return new StatsIntegration(input, netalertxStatsProvider);
+  },
+  jackett: async (input: IntegrationInput) =>
+    new (await import("../jackett/jackett-integration")).JackettIntegration(input),
+  yourSpotify: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { yourSpotifyStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/your-spotify"),
+    ]);
+    return new StatsIntegration(input, yourSpotifyStatsProvider);
+  },
+
+  romm: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { rommStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/romm"),
+    ]);
+    return new StatsIntegration(input, rommStatsProvider);
+  },
+
+  homebox: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { homeboxStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/homebox"),
+    ]);
+    return new StatsIntegration(input, homeboxStatsProvider);
+  },
+
+  mealie: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { mealieStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/mealie"),
+    ]);
+    return new StatsIntegration(input, mealieStatsProvider);
+  },
+
+  xteve: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { xteveStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/xteve"),
+    ]);
+    return new StatsIntegration(input, xteveStatsProvider);
+  },
+
+  unmanic: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { unmanicStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/unmanic"),
+    ]);
+    return new StatsIntegration(input, unmanicStatsProvider);
+  },
+
+  syncthingRelay: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { syncthingRelayStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/syncthing-relay"),
+    ]);
+    return new StatsIntegration(input, syncthingRelayStatsProvider);
+  },
+
+  stash: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { stashStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/stash"),
+    ]);
+    return new StatsIntegration(input, stashStatsProvider);
+  },
+
+  prometheus: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { prometheusStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/prometheus"),
+    ]);
+    return new StatsIntegration(input, prometheusStatsProvider);
+  },
+
+  plantit: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { plantitStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/plantit"),
+    ]);
+    return new StatsIntegration(input, plantitStatsProvider);
+  },
+
+  netdata: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { netdataStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/netdata"),
+    ]);
+    return new StatsIntegration(input, netdataStatsProvider);
+  },
+
+  fileflows: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { fileflowsStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/fileflows"),
+    ]);
+    return new StatsIntegration(input, fileflowsStatsProvider);
+  },
+
+  trilium: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { triliumStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/trilium"),
+    ]);
+    return new StatsIntegration(input, triliumStatsProvider);
+  },
+
+  tandoor: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { tandoorStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/tandoor"),
+    ]);
+    return new StatsIntegration(input, tandoorStatsProvider);
+  },
+
+  spoolman: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { spoolmanStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/spoolman"),
+    ]);
+    return new StatsIntegration(input, spoolmanStatsProvider);
+  },
+
+  miniflux: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { minifluxStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/miniflux"),
+    ]);
+    return new StatsIntegration(input, minifluxStatsProvider);
+  },
+
+  maintainerr: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { maintainerrStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/maintainerr"),
+    ]);
+    return new StatsIntegration(input, maintainerrStatsProvider);
+  },
+
+  linkwarden: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { linkwardenStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/linkwarden"),
+    ]);
+    return new StatsIntegration(input, linkwardenStatsProvider);
+  },
+
+  karakeep: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { karakeepStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/karakeep"),
+    ]);
+    return new StatsIntegration(input, karakeepStatsProvider);
+  },
+
+  healthchecks: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { healthchecksStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/healthchecks"),
+    ]);
+    return new StatsIntegration(input, healthchecksStatsProvider);
+  },
+
+  gatus: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { gatusStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/gatus"),
+    ]);
+    return new StatsIntegration(input, gatusStatsProvider);
+  },
+
+  changedetection: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { changedetectionStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/changedetection"),
+    ]);
+    return new StatsIntegration(input, changedetectionStatsProvider);
+  },
+
+  caddy: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { caddyStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/caddy"),
+    ]);
+    return new StatsIntegration(input, caddyStatsProvider);
+  },
+
   anchor: async (input: IntegrationInput) =>
     new (await import("../anchor/anchor-integration")).AnchorIntegration(input),
   piHole: async (input: IntegrationInput) =>
@@ -115,7 +351,7 @@ const integrationCreators = {
 } satisfies Record<IntegrationKind, (input: IntegrationInput) => Promise<Integration>>;
 
 type IntegrationCreators = typeof integrationCreators;
-type IntegrationInstanceOfKind<TKind extends keyof IntegrationCreators> = Awaited<
+export type IntegrationInstanceOfKind<TKind extends keyof IntegrationCreators> = Awaited<
   ReturnType<IntegrationCreators[TKind]>
 >;
 
@@ -161,4 +397,11 @@ export async function createIntegrationAsync(
     );
     throw error;
   }
+}
+
+export async function getIntegrationHttpAuthenticationAsync(integration: IntegrationInput & { kind: IntegrationKind }) {
+  if (!isHttpIntegrationKind(integration.kind))
+    throw new Error("This integration does not support arbitrary HTTP requests");
+  const client = await createIntegrationAsync(integration);
+  return client.getHttpAuthenticationAsync();
 }

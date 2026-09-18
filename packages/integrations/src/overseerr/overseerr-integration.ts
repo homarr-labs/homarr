@@ -4,6 +4,8 @@ import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
+import type { IntegrationHttpAuthentication } from "../http-auth";
+import { apiKeyAuth } from "../http-auth";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import type { ISearchableIntegration } from "../base/searchable-integration";
@@ -40,6 +42,10 @@ export class OverseerrIntegration
   extends Integration
   implements IMediaRequestIntegration, ISearchableIntegration<OverseerrSearchResult>
 {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    return apiKeyAuth(this.integration);
+  }
+
   public async searchAsync(query: string) {
     const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/search", { query }), {
       headers: {
