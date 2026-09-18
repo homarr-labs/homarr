@@ -1,6 +1,6 @@
 ---
 title: Statistics
-description: Combine read-only statistics from multiple integrations.
+description: Combine statistics from your integrations in one widget.
 hide_title: true
 ---
 
@@ -9,33 +9,36 @@ import { statsWidget } from ".";
 
 <WidgetHeader widget={statsWidget} categories={["Statistics"]} />
 
-## Combine integrations
+Sonarr shows, Paperless-ngx documents, Navidrome songs: pick metrics from your configured integrations and combine them in one widget.
 
-Add each service under **Management → Integrations** using its URL and credentials; the linked guides below cover service-specific tokens and API ports. Add a **Statistics** widget, select those integrations, then add the fields you want to display. You can combine, for example, Sonarr shows, Paperless-ngx documents and Navidrome songs in one widget. Several fields from one integration reuse one snapshot; separate instances of the same service remain separate sources.
+## Layouts
 
-Choose cards, compact rows or grouped tables. Saved settings control labels, ordering, visibility and abbreviated values. The demo board includes all three layouts with deterministic Mock data, so it needs no service credentials.
+Use **cards** for prominent values, **rows** for a compact overview, or **tables** to group metrics by integration. Labels, order and number formatting are configurable.
 
-Click a metric to toggle its full value and related fields from the same integration. Advanced view, available from the widget context menu, lists every available field from the selected integrations in collapsible integration groups, including fields not placed on the compact grid. Table mode uses the same groups for your selected metrics. Both views reuse the same source snapshots.
+![Cards showing playback counts and library statistics from Jellystat, Komga and Tube Archivist](./img/cards.webp)
 
-The hover toolbar's view controls change layout, number formatting, visibility, and order locally. They do not update the shared board and reset on page reload. Persistent metric selection and ordering belong in the widget settings.
+![Compact rows combining Homebox inventory, Spoolman filament and Trilium notes](./img/rows.webp)
 
-## Refresh and saved values
+The widget toolbar lets you try layout changes locally; they reset on reload. Use widget settings to save changes for everyone.
 
-Statistics are snapshots, fresh for one hour. Opening the dashboard reads the shared cache first. Only sources without a saved snapshot load automatically while the dashboard is visible; saved snapshots refresh on demand, with at most four source refreshes running across the deployment. Multiple fields from the same source share a retrieval. A source may make several requests internally. Legacy clients may finish their network request after the refresh deadline; timed-out callers release their refresh slot, and repeat calls to that source are suppressed in the same process until the original request settles.
+## See more
 
-**Right-click → Refresh** and the toolbar's **Refresh statistics** both bypass the freshness window. The context menu shows the age of the oldest successful snapshot displayed by this widget, not the time Homarr last read the cache. A failed refresh keeps that original age. There are no stale-data badges on the metrics. Existing values stay visible during refresh. Failed refreshes retain the last successful values and their original timestamps; automatic retries for sources without a saved snapshot wait at least a minute. Hour-old traffic, player counts, CPU readings, and playback sessions are snapshots rather than live monitoring.
+Click a metric to reveal its full value and related fields. **Right-click → Advanced view** shows all available metrics from your selected integrations, including those you haven't added to the widget.
 
-The latest successful snapshot has no time-based expiry. Redis eviction, cache loss, and integration changes can remove it. This is a cache, not a historical archive. Redis must be available for refresh coordination. Dedicated widgets retain their existing refresh behavior.
+![Advanced view with collapsible tables for each integration](./img/advanced.webp)
 
-## Access and availability
+## Refresh
 
-Every cached read and refresh checks the integration's query permission. Credentials stay in the integration configuration on the server. Updating its URL or credentials invalidates old snapshots. Removing an integration from this widget makes its entries unavailable until removed or reassigned.
+These are saved snapshots, not live readings. **Right-click → Refresh** fetches new data; the menu shows the age of the oldest snapshot. Failed refreshes keep the previous values.
 
-Only fields supported by the provider appear in the metric picker. Missing optional values display a dash; malformed upstream responses fail the source refresh rather than silently becoming zero. Read-only RPC/GraphQL calls are supported alongside GET APIs. The widget does not execute service controls or arbitrary URLs.
+Opening a board reuses saved data. Multiple metrics from the same integration share retrieval. Snapshots have no time-based expiry, but clearing the cache or changing integration credentials can remove them.
 
 ## New service integrations in v2
 
-These 31 integrations add read-only statistics. Follow each service guide for authentication and endpoint requirements. Existing integrations such as Sonarr, Radarr, Paperless-ngx and Navidrome also expose compatible fields in the same picker.
+These 31 integrations work with Statistics, alongside existing providers such as Sonarr, Radarr, Paperless-ngx and Navidrome. The metric picker shows what's available for each source.
+
+<details>
+<summary>Integration setup guides and available metrics</summary>
 
 | Integration                                              | Available statistics                                                    |
 | -------------------------------------------------------- | ----------------------------------------------------------------------- |
@@ -71,4 +74,4 @@ These 31 integrations add read-only statistics. Follow each service guide for au
 | [NetAlertX](/docs/integrations/netalertx)                | Total, connected, new, down alerts                                      |
 | [Jackett](/docs/integrations/jackett)                    | Configured indexers; existing indexer widget                            |
 
-Jellystat counts playback over 30 days, not library contents. Prometheus exposes target health, not arbitrary PromQL. Your Spotify requires its own authorized Spotify application and listening history. Jackett also works in the existing Indexer Manager widget; its API does not provide indexer health history.
+</details>
