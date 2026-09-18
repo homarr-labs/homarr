@@ -40,7 +40,7 @@ interface HomarrCustomWidgetV2 {
 }
 ```
 
-Integration sources use `{"type":"integration","integrationKind":"sonarr"}`. Bind `integrationId` from `integration_all`; exports omit it. Calls require full integration access. Omit URL/auth fields. Paths append to the integration URL; non-GET requests must be actions.
+`{"type":"integration","integrationKind":"sonarr","integrationId":"saved-id"}` reuses saved credentials. Select a kind with `integration_getKinds` (`supportsHttpRequests: true`) and a matching `integration_all` entry with `permissions.hasFullAccess`; bind its `id` before preview. Omit URL/auth fields. Exports omit `integrationId`. Paths append to the saved URL; non-GET requests must be actions.
 
 Auth: `none`, `bearer`, `basic`, `{ "type": "apiKeyHeader", "name": "X-Api-Key" }`, or `{ "type": "apiKeyQuery", "name": "api_key" }`. Requests default to source `default`, kind `query`, method `GET`, trigger `load`, inherited auth, and view permission. Parameterized queries need `trigger: "manual"`. Actions default to manual/modify; DELETE requires full permission and confirmation. Do not use `load: false`.
 

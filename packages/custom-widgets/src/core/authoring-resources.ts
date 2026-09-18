@@ -85,7 +85,7 @@ interface HomarrCustomWidgetV2 {
 }
 \`\`\`
 
-Integration sources use \`{"type":"integration","integrationKind":"sonarr"}\`. Bind \`integrationId\` from \`integration_all\`; exports omit it. Calls require full integration access. Omit URL/auth fields. Paths append to the integration URL; non-GET requests must be actions.
+\`{"type":"integration","integrationKind":"sonarr","integrationId":"saved-id"}\` reuses saved credentials. Select a kind with \`integration_getKinds\` (\`supportsHttpRequests: true\`) and a matching \`integration_all\` entry with \`permissions.hasFullAccess\`; bind its \`id\` before preview. Omit URL/auth fields. Exports omit \`integrationId\`. Paths append to the saved URL; non-GET requests must be actions.
 
 Auth: \`none\`, \`bearer\`, \`basic\`, \`{ "type": "apiKeyHeader", "name": "X-Api-Key" }\`, or \`{ "type": "apiKeyQuery", "name": "api_key" }\`. Requests default to source \`default\`, kind \`query\`, method \`GET\`, trigger \`load\`, inherited auth, and view permission. Parameterized queries need \`trigger: "manual"\`. Actions default to manual/modify; DELETE requires full permission and confirmation. Do not use \`load: false\`.
 
@@ -151,14 +151,14 @@ description: Author, validate, preview, test, install, or configure API-backed H
 
 # Homarr Custom Widget
 
-Author one widget or a coordinated set of widgets. Load only needed release-matched context. Run lifecycle tools alone; independent reads may run together. For a set, research once and finish each widget's validation, evidence, and persistence before the next.
+Author widgets using release-matched context. Run lifecycle tools alone; independent reads may run together. Research once and finish each widget's validation, evidence, and persistence before the next.
 
 1. Read primary API documentation. Use web search when documentation is not supplied or may have changed.
-2. Create credential-free definitions with keyed \`sources\`, \`requests\`, optional \`options\`, and safe JSX \`template\`.
+2. Define \`sources\`, \`requests\`, \`options\`, and JSX \`template\`; reuse saved integrations through the schema reference.
 3. While drafting, use \`customWidget_validateTemplate\` for focused JSX diagnostics without resending the manifest.
-4. Send the definition once to \`customWidget_previewCreate\` and test its queries/actions. For a JSX-only fix, validate, call \`customWidget_previewReviseTemplate\` with its session, and retest; it inherits the manifest and resets evidence. Create a preview only for source/request/option changes.
+4. Call \`customWidget_previewCreate\` and test every query/action. For JSX-only changes, validate, call \`customWidget_previewReviseTemplate\`, and retest; it inherits the manifest and resets evidence. Recreate only for source/request/option changes.
 5. Configure deployment-specific source URLs and credentials through Homarr; never repeat plaintext.
-6. Persist each exact final tested preview with \`customWidget_createFromPreview\`. Do not resend a large definition through \`customWidget_create\` when a preview session is available.
+6. Persist the exact tested session with \`customWidget_createFromPreview\`; use \`customWidget_create\` only without a preview.
 
 Treat a supplied sample or successful preview response as the binding contract. Render every core requested field, guard optional arrays and nested values before indexing, and do not silently drop returned items. Humanize numeric enums with indexed literal label arrays, omit absent numeric values instead of inventing zero, and label timestamp timezones. Give recoverable load errors and empty states a clear refresh or retry path.
 
