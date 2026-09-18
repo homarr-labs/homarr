@@ -27,6 +27,7 @@ import { StatsTable } from "./table";
 import type { StatsTableRow } from "./table";
 import { StatsDetails } from "./details";
 import { formatStatsValue } from "./format";
+import { StatsLoading } from "./loading";
 import classes from "./stats.module.css";
 
 export default function StatsWidget({
@@ -42,6 +43,7 @@ export default function StatsWidget({
   const t = useI18n("widget.stats");
   const utils = clientApi.useUtils();
   const [refreshing, setRefreshing] = useState(0);
+  const [refreshErrors, setRefreshErrors] = useState<string[]>([]);
   const [localTable, setLocalTable] = useState<boolean>();
   const table = advanced || (localTable ?? options.table);
   const [localRows, setLocalRows] = useState<boolean>();
@@ -66,7 +68,7 @@ export default function StatsWidget({
   });
   const visibleEntries = orderedEntries.filter((entry) => !entry.hidden && !hidden.includes(entry.id));
   const ids = [...new Set(integrationIds)];
-  // Queries are per integration instance, never per metric. Hover and advanced details reuse these snapshots.
+  // Queries are per integration instance, never per metric. Click and advanced details reuse these snapshots.
   const visibleIds = ids.filter((id) => advanced || visibleEntries.some((entry) => entry.integrationId === id));
   const catalogs = clientApi.useQueries((api) =>
     ids.map((integrationId) => api.widget.stats.catalog({ integrationId }, { staleTime: 60_000, retry: false })),
@@ -91,6 +93,7 @@ export default function StatsWidget({
       if (pending.current.has(integrationId)) return;
       if (!force && (retry.current.get(integrationId) ?? 0) > Date.now()) return;
       pending.current.add(integrationId);
+      setRefreshErrors((values) => values.filter((id) => id !== integrationId));
       setRefreshing((value) => value + 1);
       try {
         const result = await utils.client.widget.stats.refresh.mutate({ integrationId, force });
@@ -98,6 +101,7 @@ export default function StatsWidget({
         utils.widget.stats.snapshot.setData({ integrationId }, result);
         retry.current.set(integrationId, Date.now() + 60_000);
       } catch {
+        setRefreshErrors((values) => [...values.filter((id) => id !== integrationId), integrationId]);
         retry.current.set(integrationId, Date.now() + 60_000);
         await utils.widget.stats.snapshot.invalidate({ integrationId });
       } finally {
@@ -134,19 +138,22 @@ export default function StatsWidget({
     const catalog = catalogs[ids.indexOf(entry.integrationId)];
     const snapshot = snapshots[visibleIds.indexOf(entry.integrationId)];
     const metric = catalog?.data?.metrics.find((item) => item.key === entry.metric);
+    const refreshFailed = !!snapshot?.error || refreshErrors.includes(entry.integrationId);
     const unavailable =
       !ids.includes(entry.integrationId) ||
       (!!catalog?.error && !catalog.data) ||
       (!!snapshot?.error && !snapshot.data) ||
       (!!catalog?.data && !metric);
-    let value = t("loading");
+    const loading =
+      !unavailable && !refreshFailed && !snapshot?.data?.error && (snapshot?.data?.updatedAt == null || !metric);
+    let value = "—";
     let status = "";
     if (snapshot?.data && metric)
       value = formatStatsValue(snapshot.data.values[entry.metric], metric.unit, compact ?? entry.compact);
     if (snapshot?.data?.stale && snapshot.data.updatedAt !== null) status = t("stale");
-    if (snapshot?.error && snapshot.data) status = t("refreshFailed");
+    if (refreshFailed) status = t("refreshFailed");
     if (snapshot?.data?.error) status = t("refreshFailed");
-    if (snapshot?.data?.error && snapshot.data.updatedAt === null) status = t("fetchFailed");
+    if ((refreshFailed || snapshot?.data?.error) && snapshot?.data?.updatedAt == null) status = t("fetchFailed");
     if (unavailable) {
       value = t("unavailable");
       status = t("unavailable");
@@ -154,11 +161,12 @@ export default function StatsWidget({
     return {
       id: entry.id,
       integrationId: entry.integrationId,
-      source: catalog?.data?.name ?? t("unavailable"),
+      source: catalog?.data?.name ?? "",
       iconUrl: catalog?.data?.iconUrl,
       metric: entry.label || metric?.label || entry.metric,
       value,
       status,
+      loading,
     };
   });
 
@@ -336,23 +344,35 @@ export default function StatsWidget({
                 const catalog = catalogs[ids.indexOf(entry.integrationId)];
                 const snapshot = snapshots[visibleIds.indexOf(entry.integrationId)];
                 const metric = catalog?.data?.metrics.find((item) => item.key === entry.metric);
+                const refreshFailed = !!snapshot?.error || refreshErrors.includes(entry.integrationId);
                 const unavailable =
                   !ids.includes(entry.integrationId) ||
                   (!!catalog?.error && !catalog.data) ||
                   (!!snapshot?.error && !snapshot.data);
-                let value = t("loading");
+                const loading =
+                  !unavailable &&
+                  !(catalog?.data && !metric) &&
+                  !refreshFailed &&
+                  !snapshot?.data?.error &&
+                  (snapshot?.data?.updatedAt == null || !metric);
+                let value = "—";
                 if (unavailable || (catalog?.data && !metric)) value = t("unavailable");
                 else if (snapshot?.data && metric)
                   value = formatStatsValue(snapshot.data.values[entry.metric], metric.unit, compact ?? entry.compact);
                 const label = entry.label || metric?.label || entry.metric;
-                const sourceName = catalog?.data?.name ?? t("unavailable");
+                const sourceName = catalog?.data?.name ?? "";
+                let accessibleValue = value;
+                if (loading) accessibleValue = t("loading");
+                let loaderSize = 26;
+                if (rows) loaderSize = 18;
+                let loaderIcon: string | undefined;
+                if (options.showIcon) loaderIcon = catalog?.data?.iconUrl;
                 let status = "";
                 if (snapshot?.data?.stale && snapshot.data.updatedAt !== null) status = t("stale");
-                if (snapshot?.error && snapshot.data) status = t("refreshFailed");
-                if (snapshot?.data?.error) {
-                  status = t("refreshFailed");
-                  if (snapshot.data.updatedAt === null) status = t("fetchFailed");
-                }
+                if (refreshFailed) status = t("refreshFailed");
+                if (snapshot?.data?.error) status = t("refreshFailed");
+                if ((refreshFailed || snapshot?.data?.error) && snapshot?.data?.updatedAt == null)
+                  status = t("fetchFailed");
                 if (unavailable) status = t("unavailable");
                 return (
                   <Popover
@@ -377,9 +397,10 @@ export default function StatsWidget({
                             return entry.id;
                           });
                         }}
-                        aria-label={`${label}: ${value}. ${sourceName}. ${status}`}
+                        aria-label={`${label}: ${accessibleValue}. ${sourceName}. ${status}`}
+                        aria-busy={loading}
                       >
-                        {options.showIcon && catalog?.data && (
+                        {options.showIcon && catalog?.data && !loading && (
                           <Avatar
                             className={classes.icon}
                             src={catalog.data.iconUrl}
@@ -393,7 +414,10 @@ export default function StatsWidget({
                         )}
                         {status && <IconAlertCircle className={classes.status} size={12} aria-label={status} />}
                         <div className={classes.main}>
-                          <Text className={classes.value}>{value}</Text>
+                          <Text component="div" className={classes.value}>
+                            {loading && <StatsLoading iconUrl={loaderIcon} source={sourceName} size={loaderSize} />}
+                            {!loading && value}
+                          </Text>
                           <Text className={classes.label} lineClamp={2}>
                             {label}
                           </Text>
@@ -401,17 +425,18 @@ export default function StatsWidget({
                       </button>
                     </Popover.Target>
                     <Popover.Dropdown className={classes.details} onClick={(event) => event.stopPropagation()}>
-                      {catalog?.data ? (
+                      {catalog?.data && (
                         <StatsDetails
                           catalog={catalog.data}
                           snapshot={snapshot?.data}
                           selected={entry.metric}
                           showIcon={options.showIcon}
                           unavailable={unavailable}
+                          refreshFailed={refreshFailed}
                         />
-                      ) : (
-                        t("unavailable")
                       )}
+                      {!catalog?.data && unavailable && t("unavailable")}
+                      {!catalog?.data && !unavailable && <StatsLoading />}
                     </Popover.Dropdown>
                   </Popover>
                 );

@@ -4,6 +4,7 @@ import type { RouterOutputs } from "@homarr/api";
 import { useI18n } from "@homarr/translation/client";
 
 import { formatStatsValue } from "./format";
+import { StatsLoading } from "./loading";
 import classes from "./stats.module.css";
 
 export type StatsCatalog = RouterOutputs["widget"]["stats"]["catalog"];
@@ -16,6 +17,7 @@ export function StatsDetails({
   compact = false,
   showIcon = true,
   unavailable = false,
+  refreshFailed = false,
 }: {
   catalog: StatsCatalog;
   snapshot?: StatsSnapshot;
@@ -23,6 +25,7 @@ export function StatsDetails({
   compact?: boolean;
   showIcon?: boolean;
   unavailable?: boolean;
+  refreshFailed?: boolean;
 }) {
   const t = useI18n("widget.stats");
   let metrics = catalog.metrics;
@@ -34,9 +37,12 @@ export function StatsDetails({
   }
   const remaining = catalog.metrics.length - metrics.length;
   let status = "";
-  if (snapshot?.error) status = t("refreshFailed");
-  if (snapshot?.error && snapshot.updatedAt === null) status = t("fetchFailed");
+  if (snapshot?.error || refreshFailed) status = t("refreshFailed");
+  if ((snapshot?.error || refreshFailed) && snapshot?.updatedAt == null) status = t("fetchFailed");
   if (unavailable) status = t("unavailable");
+  const loading = !unavailable && !refreshFailed && !snapshot?.error && snapshot?.updatedAt == null;
+  let loaderIcon: string | undefined;
+  if (showIcon) loaderIcon = catalog.iconUrl;
   return (
     <div className={classes.providerDetails}>
       <Group gap={8} wrap="nowrap" mb={12}>
@@ -56,13 +62,16 @@ export function StatsDetails({
       </Group>
       <dl className={classes.metrics}>
         {metrics.map((metric) => {
-          let value = t("loading");
+          let value = "—";
           if (snapshot) value = formatStatsValue(snapshot.values[metric.key], metric.unit, compact);
           if (unavailable) value = t("unavailable");
           return (
             <div key={metric.key} className={classes.metricRow} data-selected={metric.key === selected || undefined}>
               <dt>{metric.label}</dt>
-              <dd>{value}</dd>
+              <dd aria-busy={loading}>
+                {loading && <StatsLoading iconUrl={loaderIcon} source={catalog.name} size={18} />}
+                {!loading && value}
+              </dd>
             </div>
           );
         })}

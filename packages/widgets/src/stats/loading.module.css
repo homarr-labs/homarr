@@ -1,0 +1,61 @@
+.root {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--loader-size);
+  height: var(--loader-size);
+  flex-shrink: 0;
+  vertical-align: middle;
+  isolation: isolate;
+}
+
+.halo {
+  position: absolute;
+  inset: -20%;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--loader-color) 0%, transparent 70%);
+  opacity: 0.12;
+  animation: halo 2s ease-in-out infinite;
+}
+
+.logo {
+  animation: breathe 2s ease-in-out infinite;
+}
+
+.fallback {
+  width: 80%;
+  height: 80%;
+  color: var(--loader-color);
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    transform: scale(0.86);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes halo {
+  0%,
+  100% {
+    transform: scale(0.85);
+    opacity: 0.08;
+  }
+  50% {
+    transform: scale(1.12);
+    opacity: 0.22;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo,
+  .halo {
+    animation: none;
+  }
+}

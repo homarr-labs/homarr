@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { Avatar, Group, ScrollArea, Text } from "@mantine/core";
+import { Avatar, Group, ScrollArea, Skeleton, Text } from "@mantine/core";
 import { IconChevronDown } from "@tabler/icons-react";
 
 import type { DataTableColumn, DataTableProps } from "mantine-datatable";
@@ -8,6 +8,7 @@ import { useI18n } from "@homarr/translation/client";
 
 import { HomarrDataTable } from "../common/homarr-data-table";
 import classes from "./table.module.css";
+import { StatsLoading } from "./loading";
 
 export interface StatsTableRow {
   id: string;
@@ -17,6 +18,7 @@ export interface StatsTableRow {
   metric: string;
   value: string;
   status: string;
+  loading: boolean;
 }
 
 interface StatsGroup {
@@ -95,8 +97,8 @@ function IntegrationTable({
             {showIcon && (
               <Avatar src={group.iconUrl} size={14} radius={2} alt="" imageProps={{ referrerPolicy: "no-referrer" }} />
             )}
-            <Text component="span" size="xs" fw={650} truncate style={{ flex: 1 }}>
-              {group.name}
+            <Text component="div" size="xs" fw={650} truncate style={{ flex: 1 }}>
+              {group.name || <Skeleton height={10} width={90} animate={false} />}
             </Text>
             <Text component="span" size="xs" c="dimmed">
               {group.metrics.length}
@@ -108,7 +110,10 @@ function IntegrationTable({
     ],
     [group, opened, showIcon],
   );
-  const renderMetrics = useCallback(() => <MetricsTable group={group} isEditMode={isEditMode} />, [group, isEditMode]);
+  const renderMetrics = useCallback(
+    () => <MetricsTable group={group} isEditMode={isEditMode} showIcon={showIcon} />,
+    [group, isEditMode, showIcon],
+  );
   const rowExpansion: DataTableProps<StatsGroup>["rowExpansion"] = {
     trigger: "never",
     expanded: { recordIds: expandedIds },
@@ -131,8 +136,8 @@ function IntegrationTable({
 
 const renderMetric = (record: StatsTableRow) => (
   <div>
-    <Text size="xs" c="dimmed" className={classes.metric}>
-      {record.metric}
+    <Text component="div" size="xs" c="dimmed" className={classes.metric}>
+      {record.metric || <Skeleton height={8} width="65%" animate={false} />}
     </Text>
     {record.status && (
       <Text size="xs" c="orange" className={classes.metric}>
@@ -141,16 +146,22 @@ const renderMetric = (record: StatsTableRow) => (
     )}
   </div>
 );
-const renderValue = (record: StatsTableRow) => (
-  <Group justify="flex-end" gap={0}>
-    <Text size="sm" fw={600} className={classes.value}>
-      {record.value}
-    </Text>
-  </Group>
-);
-
-function MetricsTable({ group, isEditMode }: { group: StatsGroup; isEditMode: boolean }) {
+function MetricsTable({ group, isEditMode, showIcon }: { group: StatsGroup; isEditMode: boolean; showIcon: boolean }) {
   const t = useI18n("widget.stats");
+  const renderValue = (record: StatsTableRow) => {
+    let iconUrl: string | undefined;
+    if (showIcon) iconUrl = record.iconUrl;
+    return (
+      <Group justify="flex-end" gap={0} aria-busy={record.loading}>
+        {record.loading && <StatsLoading iconUrl={iconUrl} source={record.source} size={18} />}
+        {!record.loading && (
+          <Text size="sm" fw={600} className={classes.value}>
+            {record.value}
+          </Text>
+        )}
+      </Group>
+    );
+  };
   return (
     <HomarrDataTable<StatsTableRow>
       isEditMode={isEditMode}

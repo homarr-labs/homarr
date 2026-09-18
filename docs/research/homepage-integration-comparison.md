@@ -312,3 +312,9 @@ git restore --source=788a9a826f62374b5319a48572a56a5123e78bf4 -- development/int
 ```
 
 The private ZIP adds the full database, credentials, service data, screenshots and setup instructions. Those private runtime files are not in Git.
+
+## Loading feedback and final review
+
+Statistics now uses a custom Mantine Loader with a breathing integration logo in cards, compact rows, grouped tables, and click details. A neutral fallback handles missing/hidden logos; reduced-motion preferences disable the pulse. Cached values remain visible during refresh. Client refresh failures and snapshot-query failures stop initial loading and show the error without discarding saved values.
+
+The complete merge diff received a defect-first review. Both findings concerned lost client failure state and were fixed; follow-up review reported no findings. Browser checks used real fixture responses, temporarily delayed or aborted only in the test browser, to cover loading, reduced motion, failure, cached-value retention and recovery.
