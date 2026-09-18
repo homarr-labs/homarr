@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",
+    "@types/node": "catalog:",
     "esbuild": "catalog:",
     "typescript": "catalog:"
   }
