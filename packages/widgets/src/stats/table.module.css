@@ -1,0 +1,46 @@
+.columns {
+  columns: 280px;
+  column-gap: 14px;
+  padding: 2px;
+}
+.group {
+  break-inside: avoid;
+  margin-bottom: 14px;
+  overflow: hidden;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--stats-radius, 10px);
+  background: rgb(from var(--mantine-color-body) r g b / 0.35);
+}
+.heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  background: var(--mantine-primary-color-light);
+}
+.heading:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: -2px;
+}
+.chevron {
+  flex-shrink: 0;
+  transform: rotate(-90deg);
+}
+.chevron[data-opened] {
+  transform: none;
+}
+.metric,
+.value {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.value {
+  font-variant-numeric: tabular-nums;
+  line-height: 1.3;
+}

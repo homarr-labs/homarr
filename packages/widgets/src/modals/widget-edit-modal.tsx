@@ -710,6 +710,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
                       />
                     }
                     {...form.getInputProps("advancedOptions.title")}
+                    value={form.values.advancedOptions.title ?? ""}
                   />
                   <TextMultiSelect
                     label={tItem("field.customCssClasses.label")}

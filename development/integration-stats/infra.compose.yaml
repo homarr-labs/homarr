@@ -1,0 +1,58 @@
+name: homarr-stats-live
+services:
+  caddy:
+    image: caddy:latest
+    ports: ["127.0.0.1:23121:2019"]
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+    depends_on: [gatus]
+    networks: [stats]
+  gatus:
+    image: twinproduction/gatus:latest
+    ports: ["127.0.0.1:23122:8080"]
+    volumes:
+      - ./gatus/config.yaml:/config/config.yaml:ro
+    depends_on: [prometheus]
+    networks: [stats]
+  myspeed:
+    image: germannewsmaker/myspeed:latest
+    ports: ["127.0.0.1:23123:5216"]
+    volumes:
+      - myspeed-data:/myspeed/data
+    networks: [stats]
+  netdata:
+    image: netdata/netdata:latest
+    ports: ["127.0.0.1:23124:19999"]
+    networks: [stats]
+  prometheus:
+    image: prom/prometheus:latest
+    ports: ["127.0.0.1:23125:9090"]
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    networks: [stats]
+  spoolman:
+    image: ghcr.io/donkie/spoolman:latest
+    ports: ["127.0.0.1:23126:8000"]
+    volumes:
+      - spoolman-data:/home/app/.local/share/spoolman
+    networks: [stats]
+  trilium:
+    image: triliumnext/notes:latest
+    ports: ["127.0.0.1:23127:8080"]
+    volumes:
+      - trilium-data:/home/node/trilium-data
+    networks: [stats]
+  syncthing-relay:
+    image: syncthing/relaysrv:latest
+    command: ["-pools=", "-listen=:22067", "-status-srv=:22070", "-provided-by=homarr-stats-live"]
+    ports: ["127.0.0.1:23128:22070"]
+    networks: [stats]
+volumes:
+  myspeed-data:
+  prometheus-data:
+  spoolman-data:
+  trilium-data:
+networks:
+  stats:
+    name: homarr-stats-live

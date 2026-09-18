@@ -1,0 +1,40 @@
+---
+title: "Stash"
+description: "A self-hosted media organizer for your adult collection."
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { stashIntegration } from ".";
+import { statsWidget } from "@site/docs/widgets/stats";
+
+<IntegrationHeader integration={stashIntegration} categories={["Media management"]} />
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites items={[{ widget: statsWidget }]} />
+
+The [Stats widget](/docs/widgets/stats) reads Stash's GraphQL stats query and displays scene and image counts and sizes,
+scene duration, and gallery, performer, studio, and tag counts.
+
+### Adding the integration
+
+<AddingIntegration />
+
+### Secrets
+
+<IntegrationSecrets
+  secrets={[
+    {
+      credentials: ["apiKey"],
+      steps: [
+        "Open Stash and go to Settings > Security.",
+        "Create an API key and copy it.",
+        "Paste the key into the API Key field when creating the integration in Homarr.",
+      ],
+    },
+  ]}
+/>

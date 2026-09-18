@@ -222,6 +222,18 @@ export const createLockChannel = (name: string, options: RedisChannelOptions = {
       );
       return result === 1;
     },
+    setPersistentIfOwnedAsync: async <TData>(token: string, targetName: string, data: TData) => {
+      if (!selectedClient) return false;
+      const result = await selectedClient.eval(
+        "if redis.call('get', KEYS[1]) ~= ARGV[1] then return 0 end redis.call('set', KEYS[2], ARGV[2]) return 1",
+        2,
+        name,
+        targetName,
+        token,
+        superjson.stringify(data),
+      );
+      return result === 1;
+    },
     releaseAsync: async (token: string) => {
       await releaseIfOwnedAsync(token);
     },
@@ -584,6 +596,12 @@ const invalidateIntegrationCacheGenerationAsync = async (
 
 export const invalidateIntegrationCacheAsync = async (integrationId: string): Promise<void> => {
   await invalidateIntegrationCacheGenerationAsync(integrationId, true);
+  // Generation invalidation already makes old snapshots inaccessible, including during Redis outages.
+  await createGetSetChannel(`integration-stats:snapshot:v1:${integrationId}`, {
+    useBoundedCacheClient: true,
+  })
+    .removeAsync()
+    .catch(() => undefined);
 };
 
 /** Advances response-cache generation without evicting cached integration credentials. */

@@ -1,0 +1,30 @@
+---
+title: "Unmanic"
+description: "A simple tool for processing videos and audio files."
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { unmanicIntegration } from ".";
+import { statsWidget } from "@site/docs/widgets/stats";
+
+<IntegrationHeader integration={unmanicIntegration} categories={["Media Transcoding"]} />
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites items={[{ widget: statsWidget }]} />
+
+The [Stats widget](/docs/widgets/stats) reads Unmanic's worker status with `GET /unmanic/api/v2/workers/status` and pending task count with the read-only `POST /unmanic/api/v2/pending/tasks` endpoint.
+
+Unmanic does not authenticate these API requests. Protect the service with your network access controls before exposing it beyond a trusted network.
+
+### Adding the integration
+
+<AddingIntegration />
+
+### Secrets
+
+<IntegrationSecrets secrets={[]} />

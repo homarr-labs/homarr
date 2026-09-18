@@ -1,4 +1,5 @@
 export const widgetKinds = [
+  "stats",
   "clock",
   "weather",
   "airQuality",

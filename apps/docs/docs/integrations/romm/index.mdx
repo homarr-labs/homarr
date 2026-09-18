@@ -1,0 +1,30 @@
+---
+title: "RomM"
+description: "A self-hosted ROM manager for organizing and playing your game library."
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { rommIntegration } from ".";
+import { statsWidget } from "@site/docs/widgets/stats";
+
+<IntegrationHeader integration={rommIntegration} categories={["Game management"]} />
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites items={[{ widget: statsWidget }]} />
+
+The [Stats widget](/docs/widgets/stats) reads RomM's `/api/stats` response and displays platform, ROM, save, state,
+screenshot, and total file size metrics. The integration does not need a separate API key or credential; the configured
+URL must point to a RomM instance whose stats endpoint is reachable by Homarr.
+
+### Adding the integration
+
+<AddingIntegration />
+
+### Secrets
+
+<IntegrationSecrets secrets={[]} />

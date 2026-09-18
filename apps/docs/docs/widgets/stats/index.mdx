@@ -1,0 +1,28 @@
+---
+title: Statistics
+description: Combine read-only statistics from multiple integrations.
+hide_title: true
+---
+
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { statsWidget } from ".";
+
+<WidgetHeader widget={statsWidget} />
+
+Click a metric to toggle its full value and related fields from the same integration. Advanced view, available from the widget context menu, lists every available field from the selected integrations in collapsible integration groups, including fields not placed on the compact grid. Table mode uses the same groups for your selected metrics. Both views reuse the same source snapshots.
+
+The hover toolbar's view controls change layout, number formatting, visibility, and order locally. They do not update the shared board and reset on page reload. Persistent metric selection and ordering belong in the widget settings.
+
+## Refresh and saved values
+
+Statistics are snapshots, fresh for one hour. Opening the dashboard reads the shared cache first. Missing or stale sources refresh separately while the dashboard is visible, with at most four source refreshes running across the deployment. Multiple fields from the same source share a retrieval. A source may make several requests internally.
+
+**Refresh statistics** bypasses the freshness window. Existing values stay visible during refresh. Failed refreshes retain the last successful values and their original timestamps; retries wait at least a minute. Hour-old traffic, player counts, CPU readings, and playback sessions are snapshots rather than live monitoring.
+
+The latest successful snapshot has no time-based expiry. Redis eviction, cache loss, and integration changes can remove it. This is a cache, not a historical archive. Redis must be available for refresh coordination. Dedicated widgets retain their existing refresh behavior.
+
+## Access and availability
+
+Every cached read and refresh checks the integration's query permission. Credentials stay in the integration configuration on the server. Updating its URL or credentials invalidates old snapshots. Removing an integration from this widget makes its entries unavailable until removed or reassigned.
+
+Only fields supported by the provider appear in the metric picker. Missing optional values display a dash; malformed upstream responses fail the source refresh rather than silently becoming zero. Read-only RPC/GraphQL calls are supported alongside GET APIs. The widget does not execute service controls or arbitrary URLs.

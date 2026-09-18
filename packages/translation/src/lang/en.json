@@ -5304,6 +5304,65 @@
         "specAccepted": "Spec. accepted tokens",
         "specDraftTokens": "Spec. draft tokens"
       }
+    },
+    "stats": {
+      "name": "Statistics",
+      "description": "Combine statistics from your integrations in one configurable widget.",
+      "configure": "Configure metrics",
+      "refresh": "Refresh statistics",
+      "empty": "Open widget settings, select integrations, then add metrics.",
+      "editorHelp": "Add metrics from the integrations selected for this widget. Changes are saved with your dashboard.",
+      "source": "Integration",
+      "metric": "Metric",
+      "noMetrics": "No statistics available for this integration",
+      "add": "Add metric",
+      "label": "Custom label",
+      "hidden": "Hidden",
+      "compact": "Compact numbers",
+      "moveUp": "Move up",
+      "moveDown": "Move down",
+      "remove": "Remove metric",
+      "loading": "Loading…",
+      "unavailable": "Unavailable",
+      "refreshFailed": "Refresh failed — showing saved data",
+      "stale": "Awaiting refresh",
+      "table": { "value": "Value", "status": "Status" },
+      "option": {
+        "table": { "label": "Table view" },
+        "rows": {
+          "label": "Compact rows"
+        },
+        "showIcon": {
+          "label": "Show source icon"
+        },
+        "spacing": {
+          "label": "Spacing",
+          "option": {
+            "xs": {
+              "label": "Compact"
+            },
+            "sm": {
+              "label": "Comfortable"
+            },
+            "md": {
+              "label": "Spacious"
+            }
+          }
+        },
+        "entries": {
+          "label": "Metrics"
+        },
+        "plain": {
+          "label": "Remove card backgrounds"
+        }
+      },
+      "fetchFailed": "Unable to retrieve statistics",
+      "viewOptions": "Customize this view",
+      "moreMetrics": "{count} more in advanced view",
+      "localHelp": "Layout, formatting, and visibility apply only to this view. Shared board settings stay the same.",
+      "plain": "Remove card backgrounds",
+      "resetView": "Reset view",
+      "allHidden": "All metrics are hidden in this view. Use Customize this view to restore them."
     }
   },
   "widgetPreview": {

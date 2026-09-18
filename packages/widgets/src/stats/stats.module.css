@@ -1,0 +1,205 @@
+.root {
+  position: relative;
+  height: 100%;
+  min-height: 0;
+  padding: calc(8px * var(--mantine-scale));
+}
+.grid {
+  padding: 2px;
+  display: grid;
+  align-content: start;
+}
+.card {
+  border: 0;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  container-type: inline-size;
+  position: relative;
+  min-width: 0;
+  min-height: calc(104px * var(--mantine-scale));
+  padding: calc(22px * var(--mantine-scale)) calc(14px * var(--mantine-scale)) calc(14px * var(--mantine-scale));
+  border-radius: var(--stats-radius, 12px);
+  background: rgb(from var(--mantine-primary-color-filled) r g b / calc(var(--opacity, 1) * 0.08));
+  outline: 1px solid transparent;
+  outline-offset: -1px;
+  transition:
+    background 120ms ease,
+    outline-color 120ms ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.card:hover,
+.card:focus-visible {
+  background: rgb(from var(--mantine-primary-color-filled) r g b / calc(var(--opacity, 1) * 0.14));
+  outline-color: var(--mantine-primary-color-light);
+}
+.main {
+  min-width: 0;
+  text-align: center;
+}
+.value {
+  font-size: clamp(calc(12px * var(--mantine-scale)), 26cqi, calc(27px * var(--mantine-scale)));
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.035em;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.label {
+  font-size: calc(11px * var(--mantine-scale));
+  line-height: 1.35;
+  opacity: 0.7;
+  margin-top: calc(5px * var(--mantine-scale));
+  min-height: calc(30px * var(--mantine-scale));
+}
+.icon {
+  position: absolute;
+  top: calc(8px * var(--mantine-scale));
+  right: calc(8px * var(--mantine-scale));
+  opacity: 0.8;
+}
+.status {
+  position: absolute;
+  top: calc(9px * var(--mantine-scale));
+  left: calc(9px * var(--mantine-scale));
+  color: var(--mantine-color-orange-5);
+}
+.toolbar {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 2;
+  display: flex;
+  gap: 6px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease;
+}
+.root:hover .toolbar,
+.root:focus-within .toolbar {
+  opacity: 1;
+  pointer-events: auto;
+}
+.root[data-rows] .card {
+  min-height: calc(44px * var(--mantine-scale));
+  padding: calc(10px * var(--mantine-scale)) calc(24px * var(--mantine-scale)) calc(10px * var(--mantine-scale))
+    calc(30px * var(--mantine-scale));
+}
+.root[data-rows] .main {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.root[data-rows] .value {
+  font-size: clamp(calc(14px * var(--mantine-scale)), 10cqi, calc(20px * var(--mantine-scale)));
+  flex-shrink: 0;
+  max-width: 65%;
+}
+.root[data-rows] .label {
+  text-align: left;
+  margin-top: 0;
+  min-height: 0;
+}
+.root[data-rows] .icon {
+  top: 50%;
+  transform: translateY(-50%);
+  left: 10px;
+  right: auto;
+}
+.root[data-rows] .status {
+  left: auto;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+@media (hover: none) {
+  .toolbar {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .toolbar {
+    transition: none;
+  }
+}
+
+.root[data-plain] .card,
+.root[data-plain] .provider {
+  background: transparent;
+}
+.root[data-plain] .card {
+  border-radius: 0;
+  border-bottom: 1px solid var(--mantine-color-default-border);
+}
+.provider {
+  min-width: 0;
+  padding: 18px;
+  border-radius: var(--stats-radius, 12px);
+  background: var(--mantine-color-default);
+  border: 1px solid var(--mantine-color-default-border);
+}
+.providerDetails {
+  min-width: 0;
+  text-align: left;
+}
+.metrics {
+  margin: 0;
+}
+.metricRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: baseline;
+  gap: 16px;
+  padding: 9px 0;
+  border-top: 1px solid var(--mantine-color-default-border);
+  font-size: 12px;
+  line-height: 1.4;
+}
+.metricRow dt {
+  color: var(--mantine-color-dimmed);
+  overflow-wrap: anywhere;
+}
+.metricRow dd {
+  margin: 0;
+  text-align: right;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.metricRow[data-selected] dt,
+.metricRow[data-selected] dd {
+  color: var(--mantine-primary-color-light-color);
+  font-weight: 700;
+}
+.details {
+  background: var(--mantine-color-body);
+  color: var(--mantine-color-text);
+  border: 1px solid var(--mantine-color-default-border);
+  box-shadow: var(--mantine-shadow-md);
+  padding: 14px 16px;
+  min-width: min(260px, calc(100vw - 32px));
+  max-height: min(500px, calc(100vh - 32px));
+  overflow-y: auto;
+}
+.root[data-advanced] .grid {
+  align-items: start;
+  padding: 8px 10px 44px;
+}
+.root[data-advanced] .metricRow dd {
+  font-size: 18px;
+}
+
+.root[data-table] {
+  padding-bottom: 38px;
+}
+.root[data-advanced][data-table] {
+  padding-top: 40px;
+}

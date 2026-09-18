@@ -1,0 +1,19 @@
+---
+title: "FileFlows"
+description: "FileFlows is a file processing and media transcoding automation platform."
+hide_title: true
+---
+
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { fileflowsIntegration } from ".";
+
+<IntegrationHeader integration={fileflowsIntegration} categories={["Media Transcoding"]} />
+
+### Widgets & Capabilities
+
+The [Stats widget](/docs/widgets/stats) reads FileFlows' unauthenticated `GET /api/status` endpoint and displays queued, processing, and processed file counts together with FileFlows' formatted processing time.
+
+### Adding the integration
+
+<AddingIntegration />
