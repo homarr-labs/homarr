@@ -98,6 +98,15 @@ const CUSTOM_WIDGET_CONTRACT_RULES = `Contract check before JSX:
 - A structured option uses control: "json" with an object or array default. Bind it only to a structured body, for example body: { command: { $option: "command" } }; render fields or JSON.stringify(value), never an object as JSX child, label, or choice text.
 - For nullable arrays write (value ?? []).map(...) or (value ?? []).filter(...); never optional-call fn?.(). Preserve the response envelope and loading/error/empty/success states; Use the safe Date helper with a documented timezone; otherwise omit its timezone argument and label; use UTC only when the contract says UTC. Guard missing timestamps. Use theme-adaptive body/text tokens; never hardcode dark surfaces/text.`;
 
+const CUSTOM_WIDGET_VISUAL_QUALITY_GUIDANCE = `Visual quality for create jobs:
+- Give the widget a purposeful header with useful context and its primary status or action.
+- When the data supports it, lead with a small set of scannable summary metrics before detailed rows.
+- Use responsive layouts and let variable labels and values wrap on narrow tiles.
+- Make initial, loading, empty, error, and success states useful and actionable; pair icons with visible text or an accessible label.
+- Use semantic theme tokens and one clear primary surface; avoid decorative nested-card walls or hard-coded light backgrounds.
+
+For repairs and migrations, preserve the supplied contract and visible behavior. Add optional polish only when the request asks for it.`;
+
 const AUTHORING_GUIDANCE = `You are writing one safe Homarr Custom JSX v2 dashboard widget for Mantine ${CUSTOM_WIDGET_MANTINE_VERSION}.
 
 Manifest contract:
@@ -107,7 +116,7 @@ ${CUSTOM_WIDGET_MODE_GUIDANCE}
 
 Sources are keyed by name and must include "default". Each source requires a baseUrl and networkScope; networkScope must be "public", "private", or "loopback". Auth is "none", "bearer", "basic", {"type":"apiKeyHeader","name":"X-Api-Key"}, or {"type":"apiKeyQuery","name":"api_key"}. Use the stable public API URL for public services and a clear suggested URL for self-hosted services; Homarr asks the installer for their own server URL. Never put credentials in the manifest.
 
-Requests are keyed by ID. Defaults are source "default", kind "query", method "GET", query trigger "load", inherited auth, and permission "view" for queries or "modify" for actions. Actions are always manual. DELETE is valid only for actions and requires full permission. Set confirmation:"Retry?" or confirmation:{title:"Retry",message:"Retry?"}; DELETE gets a confirmation prompt by default. Use {option:name} or {"$option":"name"} for saved options. Use {param:name} or {"$param":"name"} only for invocation-time params supplied by SubFetch, ActionButton, or ToggleSwitch. Load queries cannot use params. Values and primitive types are inferred from references; do not declare parameters or option bindings. Every request path must remain a literal slash-prefixed path after interpolation; never make {option:name} the entire path. If a migration path is unknown, omit its request (requests:{} if none); never guess /. Always include sources.default, even for static widgets. Paths and query values must be primitive; JSON bodies may bind structured options.
+Requests are keyed by ID. Defaults are source "default", kind "query", method "GET", query trigger "load", inherited auth, and permission "view" for queries or "modify" for actions. Actions are always manual. A request that supplies the widget's initial/current display, including one using \`{option:name}\` in its path or query, is a load query: set \`trigger: "load"\` explicitly when the user asks for a load/current/automatic display. Set \`trigger: "manual"\` only when the user requests an explicit user-triggered query or the request uses invocation parameters with SubFetch, ActionButton, or ToggleSwitch. If the template reads \`data.requestId\`/\`status.requestId\` and uses \`RefreshButton requestId="requestId"\`, that request must be \`trigger: "load"\`; do not make it manual merely because it has an option binding. DELETE is valid only for actions and requires full permission. Set confirmation:"Retry?" or confirmation:{title:"Retry",message:"Retry?"}; DELETE gets a confirmation prompt by default. Use {option:name} or {"$option":"name"} for saved options. Use {param:name} or {"$param":"name"} only for invocation-time params supplied by SubFetch, ActionButton, or ToggleSwitch. Load queries cannot use params. Values and primitive types are inferred from references; do not declare parameters or option bindings. Every request path must remain a literal slash-prefixed path after interpolation; never make {option:name} the entire path. If a migration path is unknown, omit its request (requests:{} if none); never guess /. Always include sources.default, even for static widgets. Paths and query values must be primitive; JSON bodies may bind structured options.
 
 ${CUSTOM_WIDGET_CONTRACT_RULES}
 
@@ -120,6 +129,8 @@ Hard syntax rule: never write \`=> {\` anywhere. Every callback must be one conc
 Use only API routes grounded in the user request, documentation, or verified API notes. When a requested mutation is undocumented, omit it and explain the limitation through the widget design rather than inventing an endpoint.
 
 Use registered Mantine components and the runtime helpers RefreshButton, SubFetch, ActionButton, ToggleSwitch, and <Icon name="tabler-icon-name" />. Use clear labels, wrapping layouts, responsive grids, theme tokens, and a strong primary surface; keep narrow and wide tiles usable.
+
+${CUSTOM_WIDGET_VISUAL_QUALITY_GUIDANCE}
 
 Treat a supplied sample or preview response as an exact executable contract. Render every core field requested by the user, guard optional arrays and nested values before indexing them, and do not silently drop sample items. If an object wraps an array, map that array field (for example, \`data.events?.items\` or \`result.results\`) rather than the envelope. For load requests, show loading and \`status.requestId?.ok === false\` error branches, then an empty branch with \`RefreshButton requestId="..."\`; keep sibling request failures independent. For manual \`SubFetch\`, let the component own loading, error, and retry while its child reads the complete response envelope. For timestamps, follow the timezone rule above. Date.toLocaleDateString and Date.toLocaleTimeString are also safe. Never use new Date, Date constructors, Intl, or arbitrary methods. Pair recoverable load errors and empty states with a clear refresh or retry path.
 
