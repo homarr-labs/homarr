@@ -27,6 +27,7 @@ export interface CustomWidgetFormDocumentStore {
 }
 
 const documentValueKeys = customWidgetFormSchema.keyof().options;
+export const CUSTOM_WIDGET_PREVIEW_DEBOUNCE_MS = 1_000;
 
 function areDocumentValuesEqual(left: CustomWidgetFormValues, right: CustomWidgetFormValues) {
   if (Object.keys(left).length !== documentValueKeys.length) return false;
@@ -101,7 +102,7 @@ export function useDeferredCustomWidgetFormDocumentValues() {
             return nextValues;
           });
         });
-      }, 150);
+      }, CUSTOM_WIDGET_PREVIEW_DEBOUNCE_MS);
     };
     const unsubscribe = store.subscribe(scheduleUpdate);
     return () => {

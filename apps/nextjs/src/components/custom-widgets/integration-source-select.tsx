@@ -1,6 +1,7 @@
 "use client";
 
-import { Alert, Select, Stack, Text } from "@mantine/core";
+import { Alert, Group, Select, Stack, Text } from "@mantine/core";
+import { IconCheck } from "@tabler/icons-react";
 
 import { CustomWidgetSourceSetupPanel } from "@homarr/custom-widgets/workbench";
 import type { CustomWidgetSourceSetupPanelProps } from "@homarr/custom-widgets/workbench";
@@ -9,6 +10,7 @@ import { clientApi } from "@homarr/api/client";
 import type { CustomWidgetIntegrationSource } from "@homarr/custom-widgets/core";
 import { httpIntegrationKinds, integrationDefs, isHttpIntegrationKind } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
+import { IntegrationAvatar } from "@homarr/ui";
 
 const integrationTypeOptions = httpIntegrationKinds
   .map((value) => ({ value, label: integrationDefs[value].name }))
@@ -37,6 +39,15 @@ export function IntegrationSourceSelect({ kind, integrationId, onChange, onKindC
           data={integrationTypeOptions}
           value={kind}
           allowDeselect={false}
+          leftSection={isHttpIntegrationKind(kind) && <IntegrationAvatar kind={kind} size="xs" />}
+          leftSectionPointerEvents="none"
+          renderOption={({ option, checked }) => (
+            <Group flex="1" gap="xs" wrap="nowrap">
+              {isHttpIntegrationKind(option.value) && <IntegrationAvatar kind={option.value} size="xs" />}
+              <Text size="sm">{option.label}</Text>
+              {checked && <IconCheck size={16} style={{ marginInlineStart: "auto", flexShrink: 0 }} />}
+            </Group>
+          )}
           onChange={(value) => {
             const selected = httpIntegrationKinds.find((candidate) => candidate === value);
             if (selected) onKindChange(selected);

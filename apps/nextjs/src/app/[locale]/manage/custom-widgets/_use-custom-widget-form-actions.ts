@@ -24,6 +24,7 @@ import { extractCustomWidgetSaveIssues } from "./_custom-widget-save-errors";
 import type { CustomWidgetSaveIssue } from "./_custom-widget-save-errors";
 import { clearSaveIssues, reportSaveIssues } from "./_custom-widget-save-issue-utils";
 import type { CustomWidgetFormDocumentStore } from "./_custom-widget-form-state";
+import { CUSTOM_WIDGET_PREVIEW_DEBOUNCE_MS } from "./_custom-widget-form-state";
 
 interface FormActionsInput {
   mode: "create" | "edit";
@@ -49,8 +50,8 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
   const setPreview = input.setPreview;
   const previewGeneration = useRef(0);
   const activePreviewGeneration = useRef<number | null>(null);
-  const invalidatePreview = useCallback(() => {
-    previewGeneration.current += 1;
+  const previewInvalidationTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const clearPreview = useCallback(() => {
     if (activePreviewGeneration.current !== null) return;
     setPreview((preview) => {
       if (
@@ -64,9 +65,22 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
     });
   }, [setPreview]);
   useLayoutEffect(() => {
-    invalidatePreview();
-  }, [input.optionsSnapshot, invalidatePreview]);
-  useEffect(() => input.documentStore.subscribe(invalidatePreview), [input.documentStore, invalidatePreview]);
+    previewGeneration.current += 1;
+    clearTimeout(previewInvalidationTimeout.current);
+    clearPreview();
+  }, [input.optionsSnapshot, clearPreview]);
+  useEffect(() => {
+    const unsubscribe = input.documentStore.subscribe(() => {
+      // Reject stale requests immediately, but keep typing out of the preview render path.
+      previewGeneration.current += 1;
+      clearTimeout(previewInvalidationTimeout.current);
+      previewInvalidationTimeout.current = setTimeout(clearPreview, CUSTOM_WIDGET_PREVIEW_DEBOUNCE_MS);
+    });
+    return () => {
+      clearTimeout(previewInvalidationTimeout.current);
+      unsubscribe();
+    };
+  }, [input.documentStore, clearPreview]);
   useEffect(
     () => () => {
       previewGeneration.current += 1;
@@ -155,6 +169,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
       });
       return;
     }
+    clearTimeout(previewInvalidationTimeout.current);
     const secretsAtStart = getChangedSecrets(valuesAtStart);
     const generation = previewGeneration.current + 1;
     previewGeneration.current = generation;
