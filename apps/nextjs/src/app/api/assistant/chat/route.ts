@@ -74,6 +74,7 @@ import {
   createCustomWidgetDiscoveryPhaseController,
   getActiveCustomWidgetToolNames,
   getCustomWidgetPhaseToolNames,
+  getCustomWidgetToolStepsFromResponseMessages,
   needsCustomWidgetAuthoringContext,
 } from "./custom-widget-authoring-context";
 import { createAssistantMcpToolGroups } from "./assistant-tool-groups";
@@ -633,12 +634,16 @@ export async function POST(request: Request) {
     incomingMessages,
     canAuthorCustomWidgets,
   );
-  const getActiveToolNames = (steps: Parameters<typeof getCustomWidgetPhaseToolNames>[1] = []) => {
+  const getActiveToolNames = (
+    steps: Parameters<typeof getCustomWidgetPhaseToolNames>[1] = [],
+    responseMessages: readonly { role: string; content: unknown }[] = [],
+  ) => {
     const enabledToolNames = assistantToolGroups
       .resolve([...enabledToolGroupIds])
       .flatMap((group) => group.tools.map(({ name }) => name));
+    const responseMessageSteps = getCustomWidgetToolStepsFromResponseMessages(responseMessages);
     const phaseToolNames = customWidgetAuthoringActive
-      ? getCustomWidgetPhaseToolNames(Object.keys(homarrTools), steps)
+      ? getCustomWidgetPhaseToolNames(Object.keys(homarrTools), [...responseMessageSteps, ...steps])
       : null;
     if (phaseToolNames)
       return [assistantToolGroupActivationName, ...frontendToolNames, ...enabledToolNames, ...phaseToolNames];
@@ -727,7 +732,7 @@ export async function POST(request: Request) {
             toolChoice: "required",
           };
         }
-        const activeTools = getActiveToolNames(steps);
+        const activeTools = getActiveToolNames(steps, responseMessages);
         return {
           activeTools,
           instructions: getStepInstructions(activeTools),

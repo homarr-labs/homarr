@@ -5,6 +5,7 @@ import {
   createCustomWidgetDiscoveryPhaseController,
   getActiveCustomWidgetToolNames,
   getCustomWidgetPhaseToolNames,
+  getCustomWidgetToolStepsFromResponseMessages,
   needsCustomWidgetAuthoringContext,
 } from "./custom-widget-authoring-context";
 
@@ -146,6 +147,52 @@ describe("Custom Widget authoring context", () => {
         },
       ]),
     ).toBeNull();
+  });
+
+  test("keeps an approved preview in the evidence phase before step zero", () => {
+    const tools = [
+      "customWidget_validateTemplate",
+      "customWidget_previewCreate",
+      "customWidget_previewReviseTemplate",
+      "customWidget_previewQuery",
+      "customWidget_previewAction",
+      "customWidget_previewJournal",
+      "customWidget_createFromPreview",
+      "customWidget_findComponents",
+    ];
+    const responseMessages = [
+      {
+        role: "tool",
+        content: [
+          {
+            type: "tool-result",
+            toolCallId: "preview-call-1",
+            toolName: "customWidget_previewCreate",
+            output: {
+              type: "json",
+              value: {
+                success: true,
+                previewSession: { id: "preview-1" },
+                queries: [{ requestId: "status" }],
+              },
+            },
+          },
+        ],
+      },
+    ];
+
+    const responseSteps = getCustomWidgetToolStepsFromResponseMessages(responseMessages);
+
+    expect(getCustomWidgetPhaseToolNames(tools, responseSteps)).toEqual([
+      "customWidget_validateTemplate",
+      "customWidget_previewCreate",
+      "customWidget_previewReviseTemplate",
+      "customWidget_previewQuery",
+      "customWidget_previewAction",
+      "customWidget_previewJournal",
+      "customWidget_createFromPreview",
+    ]);
+    expect(getCustomWidgetPhaseToolNames(tools, [])).toBeNull();
   });
 
   test("exposes focused context tools only after the skill entrypoint is loaded", () => {
