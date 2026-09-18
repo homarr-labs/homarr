@@ -108,11 +108,26 @@ export const placeAllWidgetsAsync = async (
       if (config?.skip) continue;
       placedWidgets.add(widgetKind);
 
-      const matchingIds = allIntegrations
+      let matchingIds = allIntegrations
         .filter((row) => getWidgetKindsForIntegration(row.kind).includes(widgetKind))
         .map((row) => row.id);
 
-      const options = config?.options ? superjson.stringify(config.options) : undefined;
+      let options = config?.options ? superjson.stringify(config.options) : undefined;
+      const mockIntegration = allIntegrations.find((row) => row.kind === "mock");
+      if (widgetKind === "stats" && mockIntegration) {
+        matchingIds = [mockIntegration.id];
+        options = superjson.stringify({
+          ...config?.options,
+          entries: ["documents", "songs", "storage"].map((metric) => ({
+            id: `mock-${metric}`,
+            integrationId: mockIntegration.id,
+            metric,
+            label: "",
+            hidden: false,
+            compact: false,
+          })),
+        });
+      }
       await placeWidgetAsync(
         db,
         contexts,

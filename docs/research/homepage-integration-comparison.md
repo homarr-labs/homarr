@@ -217,6 +217,14 @@ Difficulty estimates describe adapter/authentication work, not ongoing maintenan
 | NetAlertX          | Network device inventory             | Total, connected, new, down alerts                                      | 🟡 Medium | ✅ / ✅ API               | Real backend runs; fixture web UI is blocked by PHP-FPM file access on this host.          |
 | Jackett            | Indexer aggregation                  | Configured indexers; existing indexer widget                            | 🟡 Medium | ✅ / ✅                   | Internet Archive configured and tested; health history unavailable from API-key interface. |
 
+## Refresh, demo and documentation follow-up
+
+- Removed stale snapshot text and per-card status badges. Actual retrieval failures remain available in details and the context menu.
+- Right-click **Refresh** invokes the Statistics source mutation with `force: true`; the age uses the oldest displayed successful source snapshot. Cache reads do not reset it. A browser check of two Spoolman metrics confirmed exactly one forced source request and an immediate age update after success.
+- The maintained demo seed includes cards, compact rows and grouped tables using the Mock provider. The all-widgets testing-board placement also populates Mock metrics when a Mock integration is supplied. An isolated SQLite seed and provider check verified all four examples and deterministic values without enabling Mock in the real-service fixture instance.
+- The Statistics guide now lists all 32 new providers with setup links and metric coverage; the Homarr v2 blog introduces the integrations and widget configuration.
+- Validation: affected app/widgets/DB typechecks, focused runtime/query-scope checks (22 tests), isolated demo/testing seed verification, lint and the Docusaurus production build passed.
+
 ## Delivery and remaining work
 
 | Area                                                   | Status | Delivered / still missing                                                                                                                                                             |

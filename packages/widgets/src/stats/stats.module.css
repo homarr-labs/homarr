@@ -62,12 +62,6 @@
   right: calc(8px * var(--mantine-scale));
   opacity: 0.8;
 }
-.status {
-  position: absolute;
-  top: calc(9px * var(--mantine-scale));
-  left: calc(9px * var(--mantine-scale));
-  color: var(--mantine-color-orange-5);
-}
 .toolbar {
   position: absolute;
   right: 12px;
@@ -111,12 +105,6 @@
   transform: translateY(-50%);
   left: 10px;
   right: auto;
-}
-.root[data-rows] .status {
-  left: auto;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
 }
 @media (hover: none) {
   .toolbar {

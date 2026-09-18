@@ -9,6 +9,12 @@ import { statsWidget } from ".";
 
 <WidgetHeader widget={statsWidget} categories={["Statistics"]} />
 
+## Combine integrations
+
+Add each service under **Management → Integrations** using its URL and credentials; the linked guides below cover service-specific tokens and API ports. Add a **Statistics** widget, select those integrations, then add the fields you want to display. You can combine, for example, Sonarr shows, Paperless-ngx documents and Navidrome songs in one widget. Several fields from one integration reuse one snapshot; separate instances of the same service remain separate sources.
+
+Choose cards, compact rows or grouped tables. Saved settings control labels, ordering, visibility and abbreviated values. The demo board includes all three layouts with deterministic Mock data, so it needs no service credentials.
+
 Click a metric to toggle its full value and related fields from the same integration. Advanced view, available from the widget context menu, lists every available field from the selected integrations in collapsible integration groups, including fields not placed on the compact grid. Table mode uses the same groups for your selected metrics. Both views reuse the same source snapshots.
 
 The hover toolbar's view controls change layout, number formatting, visibility, and order locally. They do not update the shared board and reset on page reload. Persistent metric selection and ordering belong in the widget settings.
@@ -17,7 +23,7 @@ The hover toolbar's view controls change layout, number formatting, visibility, 
 
 Statistics are snapshots, fresh for one hour. Opening the dashboard reads the shared cache first. Only sources without a saved snapshot load automatically while the dashboard is visible; saved snapshots refresh on demand, with at most four source refreshes running across the deployment. Multiple fields from the same source share a retrieval. A source may make several requests internally. Legacy clients may finish their network request after the refresh deadline; timed-out callers release their refresh slot, and repeat calls to that source are suppressed in the same process until the original request settles.
 
-**Refresh statistics** bypasses the freshness window. Existing values stay visible during refresh. Failed refreshes retain the last successful values and their original timestamps; automatic retries for sources without a saved snapshot wait at least a minute. Hour-old traffic, player counts, CPU readings, and playback sessions are snapshots rather than live monitoring.
+**Right-click → Refresh** and the toolbar's **Refresh statistics** both bypass the freshness window. The context menu shows the age of the oldest successful snapshot displayed by this widget, not the time Homarr last read the cache. A failed refresh keeps that original age. There are no stale-data badges on the metrics. Existing values stay visible during refresh. Failed refreshes retain the last successful values and their original timestamps; automatic retries for sources without a saved snapshot wait at least a minute. Hour-old traffic, player counts, CPU readings, and playback sessions are snapshots rather than live monitoring.
 
 The latest successful snapshot has no time-based expiry. Redis eviction, cache loss, and integration changes can remove it. This is a cache, not a historical archive. Redis must be available for refresh coordination. Dedicated widgets retain their existing refresh behavior.
 
@@ -26,3 +32,44 @@ The latest successful snapshot has no time-based expiry. Redis eviction, cache l
 Every cached read and refresh checks the integration's query permission. Credentials stay in the integration configuration on the server. Updating its URL or credentials invalidates old snapshots. Removing an integration from this widget makes its entries unavailable until removed or reassigned.
 
 Only fields supported by the provider appear in the metric picker. Missing optional values display a dash; malformed upstream responses fail the source refresh rather than silently becoming zero. Read-only RPC/GraphQL calls are supported alongside GET APIs. The widget does not execute service controls or arbitrary URLs.
+
+## New service integrations in v2
+
+These 32 integrations add read-only statistics. Follow each service guide for authentication and endpoint requirements. Existing integrations such as Sonarr, Radarr, Paperless-ngx and Navidrome also expose compatible fields in the same picker.
+
+| Integration                                              | Available statistics                                                    |
+| -------------------------------------------------------- | ----------------------------------------------------------------------- |
+| [Caddy](/docs/integrations/caddy)                        | Upstreams, active requests, failed requests                             |
+| [Changedetection.io](/docs/integrations/changedetection) | Unviewed changed watches, total watched pages                           |
+| [FileFlows](/docs/integrations/fileflows)                | Queued, processing, processed, processing time                          |
+| [Gatus](/docs/integrations/gatus)                        | Up, down, unknown, total                                                |
+| [Healthchecks](/docs/integrations/healthchecks)          | Up, down, grace, new checks                                             |
+| [Homebox](/docs/integrations/homebox)                    | Items, locations, labels, warranty items, value, users                  |
+| [Karakeep](/docs/integrations/karakeep)                  | Bookmarks, favorites, archived, highlights, lists, tags                 |
+| [Linkwarden](/docs/integrations/linkwarden)              | Links, collections, tags                                                |
+| [Maintainerr](/docs/integrations/maintainerr)            | Handled items/episodes/movies, reclaimable storage                      |
+| [Mealie](/docs/integrations/mealie)                      | Recipes, users, categories, tags                                        |
+| [Miniflux](/docs/integrations/miniflux)                  | Read and unread entries                                                 |
+| [MySpeed](/docs/integrations/myspeed)                    | Latest ping, download, upload                                           |
+| [Netdata](/docs/integrations/netdata)                    | Warning and critical alarms                                             |
+| [Plant-it](/docs/integrations/plantit)                   | Plants, species, photos, events                                         |
+| [Prometheus](/docs/integrations/prometheus)              | Targets, up, down                                                       |
+| [RomM](/docs/integrations/romm)                          | Platforms, ROMs, saves, states, screenshots, file size                  |
+| [Spoolman](/docs/integrations/spoolman)                  | Active spools, remaining weight                                         |
+| [Stash](/docs/integrations/stash)                        | Scenes/size/duration, images/size, galleries, performers, studios, tags |
+| [Syncthing Relay](/docs/integrations/syncthing-relay)    | Sessions, connections, bytes proxied                                    |
+| [Tandoor](/docs/integrations/tandoor)                    | Users, recipes, keywords                                                |
+| [Trilium](/docs/integrations/trilium)                    | Version, active notes, database size                                    |
+| [Unmanic](/docs/integrations/unmanic)                    | Active/total workers, pending records                                   |
+| [xTeVe](/docs/integrations/xteve)                        | All streams, active streams, XEPG streams                               |
+| [Your Spotify](/docs/integrations/your-spotify)          | Songs listened, listening time, distinct artists                        |
+| [Autobrr](/docs/integrations/autobrr)                    | Approved/rejected pushes, filters, indexers                             |
+| [Jellystat](/docs/integrations/jellystat)                | 30-day plays by media type                                              |
+| [Scrutiny](/docs/integrations/scrutiny)                  | Passed, failed, unknown devices                                         |
+| [Tube Archivist](/docs/integrations/tubearchivist)       | Pending downloads, videos, channels, playlists                          |
+| [Frigate](/docs/integrations/frigate)                    | Cameras, uptime, version                                                |
+| [Komga](/docs/integrations/komga)                        | Libraries, series, books                                                |
+| [NetAlertX](/docs/integrations/netalertx)                | Total, connected, new, down alerts                                      |
+| [Jackett](/docs/integrations/jackett)                    | Configured indexers; existing indexer widget                            |
+
+Jellystat counts playback over 30 days, not library contents. Prometheus exposes target health, not arbitrary PromQL. Your Spotify requires its own authorized Spotify application and listening history. Jackett also works in the existing Indexer Manager widget; its API does not provide indexer health history.

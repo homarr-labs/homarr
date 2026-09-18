@@ -15,13 +15,14 @@ import {
   Text,
   Tooltip,
 } from "@mantine/core";
-import { IconAlertCircle, IconArrowDown, IconArrowUp, IconRefresh, IconAdjustments } from "@tabler/icons-react";
+import { IconArrowDown, IconArrowUp, IconRefresh, IconAdjustments } from "@tabler/icons-react";
 
 import { useRequiredBoard } from "@homarr/boards/context";
 import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import { useWidgetRuntimeActions } from "../runtime-hooks";
 import { statsEntriesSchema } from "./config";
 import { StatsTable } from "./table";
 import type { StatsTableRow } from "./table";
@@ -32,6 +33,7 @@ import classes from "./stats.module.css";
 
 export default function StatsWidget({
   integrationIds,
+  widgetRuntimeRef,
   isEditMode,
   options,
   width,
@@ -43,7 +45,7 @@ export default function StatsWidget({
   const t = useI18n("widget.stats");
   const utils = clientApi.useUtils();
   const [refreshing, setRefreshing] = useState(0);
-  const [refreshErrors, setRefreshErrors] = useState<string[]>([]);
+  const refreshErrors = useRef(new Set<string>());
   const [localTable, setLocalTable] = useState<boolean>();
   const table = advanced || (localTable ?? options.table);
   const [localRows, setLocalRows] = useState<boolean>();
@@ -93,7 +95,7 @@ export default function StatsWidget({
       if (pending.current.has(integrationId)) return;
       if (!force && (retry.current.get(integrationId) ?? 0) > Date.now()) return;
       pending.current.add(integrationId);
-      setRefreshErrors((values) => values.filter((id) => id !== integrationId));
+      refreshErrors.current.delete(integrationId);
       setRefreshing((value) => value + 1);
       try {
         const result = await utils.client.widget.stats.refresh.mutate({ integrationId, force });
@@ -101,7 +103,7 @@ export default function StatsWidget({
         utils.widget.stats.snapshot.setData({ integrationId }, result);
         retry.current.set(integrationId, Date.now() + 60_000);
       } catch {
-        setRefreshErrors((values) => [...values.filter((id) => id !== integrationId), integrationId]);
+        refreshErrors.current.add(integrationId);
         retry.current.set(integrationId, Date.now() + 60_000);
         await utils.widget.stats.snapshot.invalidate({ integrationId });
       } finally {
@@ -111,6 +113,33 @@ export default function StatsWidget({
     },
     [utils],
   );
+
+  const refreshSources = async () => {
+    await Promise.all(visibleIds.map((id) => refresh(id, true)));
+  };
+  useWidgetRuntimeActions(widgetRuntimeRef, {
+    refresh: refreshSources,
+    getDataStatus: () => {
+      // Read the cache at invocation time: the menu can finish refreshing before React commits our next render.
+      const currentSnapshots = visibleIds.map((integrationId) =>
+        utils.widget.stats.snapshot.getData({ integrationId }),
+      );
+      const timestamps = currentSnapshots.flatMap((snapshot) => {
+        if (snapshot?.updatedAt == null) return [];
+        return [snapshot.updatedAt];
+      });
+      let updatedAt: number | null = null;
+      if (timestamps.length > 0) updatedAt = Math.min(...timestamps);
+      return {
+        updatedAt,
+        hasError:
+          refreshErrors.current.size > 0 ||
+          currentSnapshots.some((snapshot) => !!snapshot?.error) ||
+          snapshots.some((snapshot) => !!snapshot.error),
+        isRefreshing: pending.current.size > 0,
+      };
+    },
+  });
 
   useEffect(() => {
     if (document.hidden) return;
@@ -138,7 +167,7 @@ export default function StatsWidget({
     const catalog = catalogs[ids.indexOf(entry.integrationId)];
     const snapshot = snapshots[visibleIds.indexOf(entry.integrationId)];
     const metric = catalog?.data?.metrics.find((item) => item.key === entry.metric);
-    const refreshFailed = !!snapshot?.error || refreshErrors.includes(entry.integrationId);
+    const refreshFailed = !!snapshot?.error || refreshErrors.current.has(entry.integrationId);
     const unavailable =
       !ids.includes(entry.integrationId) ||
       (!!catalog?.error && !catalog.data) ||
@@ -150,7 +179,6 @@ export default function StatsWidget({
     let status = "";
     if (snapshot?.data && metric)
       value = formatStatsValue(snapshot.data.values[entry.metric], metric.unit, compact ?? entry.compact);
-    if (snapshot?.data?.stale && snapshot.data.updatedAt !== null) status = t("stale");
     if (refreshFailed) status = t("refreshFailed");
     if (snapshot?.data?.error) status = t("refreshFailed");
     if ((refreshFailed || snapshot?.data?.error) && snapshot?.data?.updatedAt == null) status = t("fetchFailed");
@@ -322,9 +350,7 @@ export default function StatsWidget({
             radius="xl"
             aria-label={t("refresh")}
             loading={refreshing > 0}
-            onClick={() => {
-              for (const id of visibleIds) void refresh(id, true);
-            }}
+            onClick={() => void refreshSources()}
           >
             <IconRefresh size={13} />
           </ActionIcon>
@@ -344,7 +370,7 @@ export default function StatsWidget({
                 const catalog = catalogs[ids.indexOf(entry.integrationId)];
                 const snapshot = snapshots[visibleIds.indexOf(entry.integrationId)];
                 const metric = catalog?.data?.metrics.find((item) => item.key === entry.metric);
-                const refreshFailed = !!snapshot?.error || refreshErrors.includes(entry.integrationId);
+                const refreshFailed = !!snapshot?.error || refreshErrors.current.has(entry.integrationId);
                 const unavailable =
                   !ids.includes(entry.integrationId) ||
                   (!!catalog?.error && !catalog.data) ||
@@ -368,7 +394,6 @@ export default function StatsWidget({
                 let loaderIcon: string | undefined;
                 if (options.showIcon) loaderIcon = catalog?.data?.iconUrl;
                 let status = "";
-                if (snapshot?.data?.stale && snapshot.data.updatedAt !== null) status = t("stale");
                 if (refreshFailed) status = t("refreshFailed");
                 if (snapshot?.data?.error) status = t("refreshFailed");
                 if ((refreshFailed || snapshot?.data?.error) && snapshot?.data?.updatedAt == null)
@@ -412,7 +437,6 @@ export default function StatsWidget({
                             styles={{ image: { objectFit: "contain" } }}
                           />
                         )}
-                        {status && <IconAlertCircle className={classes.status} size={12} aria-label={status} />}
                         <div className={classes.main}>
                           <Text component="div" className={classes.value}>
                             {loading && <StatsLoading iconUrl={loaderIcon} source={sourceName} size={loaderSize} />}
