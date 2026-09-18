@@ -56,7 +56,9 @@ const typeIcons: Record<SubmissionType, React.ComponentType<{ size: number; clas
   customWidget: IconPuzzle,
 };
 const typeBgColors: Record<SubmissionType, string> = { customCss: "bg-blue-500/5", customWidget: "bg-yellow-500/5" };
-const cardMediaClassName = "aspect-video w-full overflow-hidden bg-muted";
+const cardMediaClassName = "aspect-video w-full overflow-hidden border-b border-border bg-muted";
+const submissionCardClassName =
+  "relative flex h-full min-w-0 w-full flex-col gap-4 rounded-none border border-border bg-background pt-0 shadow-none ring-0 dark:bg-neutral-900 transition-colors hover:border-foreground/40 [--card-spacing:--spacing(4)]";
 const emptyState = {
   none: { title: "No submissions yet", hint: "Be the first to share something." },
   filtered: { title: "No matching results", hint: "Try adjusting your filters or search." },
@@ -165,8 +167,8 @@ export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
       </div>
 
       {workshop.submissions.length > 0 && (
-        <div className="mb-6 flex flex-col gap-3 rounded-lg border border-border bg-card p-3 sm:flex-row sm:items-center sm:justify-between">
-          <InputGroup className="order-first h-11 w-full sm:order-last sm:h-9 sm:w-64">
+        <div className="mb-6 flex flex-col gap-3 rounded-none border border-border bg-card p-3 sm:flex-row sm:items-center sm:justify-between">
+          <InputGroup className="order-first h-11 w-full rounded-none shadow-none sm:order-last sm:h-9 sm:w-64">
             <InputGroupAddon>
               <IconSearch size={16} />
             </InputGroupAddon>
@@ -184,23 +186,29 @@ export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
               variant="default"
               size="sm"
               spacing={0}
-              className={cn("grid min-w-0 bg-muted/40 sm:flex", workshop.user ? "grid-cols-4" : "grid-cols-3")}
+              className={cn(
+                "grid min-w-0 rounded-none bg-muted/40 sm:flex",
+                workshop.user ? "grid-cols-4" : "grid-cols-3",
+              )}
               aria-label="Submission type"
             >
               {availableTypeFilters.map((opt) => (
                 <ToggleGroupItem
                   key={opt.value}
                   value={opt.value}
-                  className="min-h-10 min-w-0 gap-1.5 px-3 text-sm data-pressed:bg-background data-pressed:text-foreground data-pressed:shadow-sm sm:min-h-8 sm:text-xs"
+                  className="min-h-10 min-w-0 gap-1.5 rounded-none px-3 text-sm data-pressed:bg-background data-pressed:text-foreground data-pressed:shadow-none sm:min-h-8 sm:text-xs"
                 >
                   {opt.dot && <span className={cn("size-2 rounded-full", opt.dot)} />}
                   {opt.label}
                 </ToggleGroupItem>
               ))}
             </ToggleGroup>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <Select value={sort} onValueChange={(value) => setSort(value as SortKey)}>
-                <SelectTrigger aria-label="Sort submissions" className="h-10 min-w-40 flex-1 sm:h-8 sm:flex-none">
+                <SelectTrigger
+                  aria-label="Sort submissions"
+                  className="h-10 min-w-40 flex-1 rounded-none shadow-none sm:h-8 sm:flex-none"
+                >
                   <SelectValue>{(value) => sortOptions.find((option) => option.value === value)?.label}</SelectValue>
                 </SelectTrigger>
                 <SelectContent align="start">
@@ -211,7 +219,7 @@ export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
                   ))}
                 </SelectContent>
               </Select>
-              <Label className="h-10 shrink-0 cursor-pointer rounded-lg border border-input bg-background px-3 text-xs text-muted-foreground sm:h-8">
+              <Label className="h-10 shrink-0 cursor-pointer rounded-none border border-input bg-background px-3 text-xs text-muted-foreground sm:h-8">
                 <Switch
                   size="sm"
                   checked={!includeOutdated}
@@ -336,13 +344,13 @@ const SubmissionCard = ({ submission, backend, userVote, onVote }: SubmissionCar
   const TypeIcon = typeIcons[submission.type];
 
   return (
-    <Card className="relative flex h-full min-w-0 w-full flex-col">
+    <Card className={submissionCardClassName}>
       <a href={`/workshop/${submission.id}/`} className="block shrink-0">
         {hasScreenshots ? (
           <div className="relative">
             <Badge
               variant="secondary"
-              className="absolute left-2 top-2 z-10 gap-1.5 bg-background/80 px-2 backdrop-blur-sm"
+              className="absolute left-3 top-3 z-10 gap-1.5 rounded-none border border-border bg-background px-2 py-1 text-foreground font-mono text-[10px] uppercase tracking-wider"
             >
               <span className={cn("size-2 rounded-full", typeDotColors[submission.type])} />
               {typeLabels[submission.type]}
@@ -356,44 +364,36 @@ const SubmissionCard = ({ submission, backend, userVote, onVote }: SubmissionCar
         )}
       </a>
 
-      <CardHeader className="flex flex-col gap-2 sm:grid">
-        <div className="flex items-center gap-2">
-          <a href={`/workshop/${submission.id}/`} className="min-w-0 hover:underline" title={submission.title}>
-            <CardTitle className="line-clamp-2">{submission.title}</CardTitle>
+      <CardHeader className="flex flex-row flex-nowrap items-start justify-between gap-3 rounded-none">
+        <div className="min-w-0 flex-1 flex items-center gap-2">
+          <a
+            href={`/workshop/${submission.id}/`}
+            className="min-w-0 text-foreground transition-colors hover:text-primary hover:no-underline"
+            title={submission.title}
+          >
+            <CardTitle className="line-clamp-2 font-mono text-base font-semibold tracking-tight">
+              {submission.title}
+            </CardTitle>
           </a>
           {!hasScreenshots && (
-            <Badge variant="secondary" className="shrink-0 gap-1.5 px-2">
+            <Badge
+              variant="secondary"
+              className="shrink-0 gap-1.5 rounded-none border border-border px-2 font-mono text-[10px] uppercase tracking-wider"
+            >
               <span className={cn("size-2 rounded-full", typeDotColors[submission.type])} />
               {typeLabels[submission.type]}
             </Badge>
           )}
         </div>
-        <CardDescription className="flex min-w-0 items-center gap-1 text-xs">
-          <a
-            href={githubProfileUrl(submission.authorName) || undefined}
-            target={submission.authorName ? "_blank" : undefined}
-            rel="noreferrer"
-            className="inline-flex min-w-0 items-center gap-1.5 hover:text-foreground"
-          >
-            <Avatar className="size-4">
-              {submission.authorName && <AvatarImage src={githubAvatarUrl(submission.authorName)} alt="" />}
-              <AvatarFallback className="text-[9px]">{avatarFallback(submission.authorName)}</AvatarFallback>
-            </Avatar>
-            <span className="truncate">{submission.authorName || "Community member"}</span>
-          </a>
-          <span className="shrink-0 whitespace-nowrap">
-            · v{submission.revision} · {formatRelativeTime(submission.created)}
-          </span>
-        </CardDescription>
-        <CardAction className="col-start-auto row-span-1 row-start-auto self-auto justify-self-start sm:col-start-2 sm:row-span-2 sm:row-start-1 sm:self-start sm:justify-self-end">
-          <div className="flex items-center gap-px rounded-md border border-border bg-muted/40 p-px">
+        <CardAction className="ml-auto shrink-0 self-start">
+          <div className="flex shrink-0 items-center border border-border bg-transparent">
             <button
               type="button"
               onClick={() => void onVote(submission.id, 1)}
               aria-label="Upvote"
               aria-pressed={userVote === 1}
               className={cn(
-                "flex size-10 items-center justify-center rounded-[5px] transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring/50 sm:size-8",
+                "flex size-10 items-center justify-center rounded-none transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring/50 sm:size-8",
                 userVote === 1 && "bg-primary/15 text-primary",
               )}
             >
@@ -408,7 +408,7 @@ const SubmissionCard = ({ submission, backend, userVote, onVote }: SubmissionCar
               aria-label="Downvote"
               aria-pressed={userVote === -1}
               className={cn(
-                "flex size-10 items-center justify-center rounded-[5px] transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring/50 sm:size-8",
+                "flex size-10 items-center justify-center rounded-none transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring/50 sm:size-8",
                 userVote === -1 && "bg-primary/15 text-primary",
               )}
             >
@@ -418,41 +418,64 @@ const SubmissionCard = ({ submission, backend, userVote, onVote }: SubmissionCar
         </CardAction>
       </CardHeader>
 
-      <CardContent className="min-h-[4.5rem] flex-1 overflow-hidden">
+      <CardContent className="min-h-[3.5rem] flex-1 overflow-hidden">
         {(submission.outdated || submission.reportCount > 0) && (
           <div className="mb-2 flex flex-wrap gap-1.5">
-            {submission.outdated && <Badge variant="secondary">Outdated</Badge>}
+            {submission.outdated && (
+              <Badge variant="secondary" className="rounded-none font-mono text-[10px] uppercase">
+                Outdated
+              </Badge>
+            )}
             {submission.reportCount > 0 && (
-              <Badge variant="destructive" className="gap-1">
+              <Badge variant="destructive" className="gap-1 rounded-none">
                 <IconFlag size={12} /> {submission.reportCount} {submission.reportCount === 1 ? "report" : "reports"}
               </Badge>
             )}
           </div>
         )}
         {submission.description && (
-          <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">{submission.description}</p>
+          <p className="line-clamp-2 text-sm leading-relaxed text-muted-foreground">{submission.description}</p>
         )}
       </CardContent>
 
-      <CardFooter className="justify-between gap-3 px-3 py-2.5">
-        <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
-          <IconMessage size={14} /> {submission.commentCount} {submission.commentCount === 1 ? "comment" : "comments"}
-        </span>
-        <Button
-          className="h-10 sm:h-7"
-          size="sm"
-          nativeButton={false}
-          render={<a href={`/workshop/${submission.id}/`} aria-label={`View ${submission.title} details`} />}
-        >
-          <IconEye size={14} /> View details
-        </Button>
+      <CardFooter className="flex-col items-stretch gap-3 rounded-none bg-transparent px-4 py-3">
+        <CardDescription className="flex w-full min-w-0 flex-wrap items-center gap-1 font-mono text-[11px]">
+          <a
+            href={githubProfileUrl(submission.authorName) || undefined}
+            target={submission.authorName ? "_blank" : undefined}
+            rel="noreferrer"
+            className="inline-flex min-w-0 items-center gap-1.5 text-muted-foreground hover:text-foreground"
+          >
+            <Avatar className="size-4">
+              {submission.authorName && <AvatarImage src={githubAvatarUrl(submission.authorName)} alt="" />}
+              <AvatarFallback className="text-[9px]">{avatarFallback(submission.authorName)}</AvatarFallback>
+            </Avatar>
+            <span className="truncate">{submission.authorName || "Community member"}</span>
+          </a>
+          <span className="shrink-0 whitespace-nowrap">
+            · v{submission.revision} · {formatRelativeTime(submission.created)}
+          </span>
+        </CardDescription>
+        <div className="flex items-center justify-between gap-3">
+          <span className="inline-flex items-center gap-1.5 font-mono text-[11px] text-muted-foreground">
+            <IconMessage size={14} /> {submission.commentCount} {submission.commentCount === 1 ? "comment" : "comments"}
+          </span>
+          <Button
+            className="h-10 rounded-none border border-primary bg-primary px-3 font-mono text-[11px] uppercase tracking-wide text-primary-foreground shadow-none hover:bg-primary/85 sm:h-8"
+            size="sm"
+            nativeButton={false}
+            render={<a href={`/workshop/${submission.id}/`} aria-label={`View ${submission.title} details`} />}
+          >
+            <IconEye size={14} /> Details
+          </Button>
+        </div>
       </CardFooter>
     </Card>
   );
 };
 
 const SkeletonCard = () => (
-  <Card className="h-full min-w-0 w-full">
+  <Card className={submissionCardClassName}>
     <Skeleton className="aspect-video rounded-none" />
     <CardHeader>
       <div className="flex items-center gap-2">
@@ -461,13 +484,13 @@ const SkeletonCard = () => (
       </div>
       <Skeleton className="h-3 w-40" />
     </CardHeader>
-    <CardContent className="min-h-[4.5rem]">
+    <CardContent className="min-h-[3.5rem]">
       <div className="space-y-1.5">
         <Skeleton className="h-3 w-full" />
         <Skeleton className="h-3 w-2/3" />
       </div>
     </CardContent>
-    <CardFooter className="justify-between gap-3 px-3 py-2.5">
+    <CardFooter className="justify-between gap-3 rounded-none bg-transparent px-4 py-3">
       <Skeleton className="h-3 w-20" />
       <Skeleton className="h-9 w-28" />
     </CardFooter>
@@ -486,7 +509,7 @@ export const WorkshopListingFallback = () => (
       <Skeleton className="h-10 w-40 sm:h-8" />
     </div>
 
-    <div className="mb-6 flex flex-col gap-3 rounded-xl border border-border bg-card p-3 sm:flex-row sm:justify-between">
+    <div className="mb-6 flex flex-col gap-3 rounded-none border border-border bg-card p-3 sm:flex-row sm:justify-between">
       <Skeleton className="h-10 w-full sm:w-80" />
       <Skeleton className="h-10 w-full sm:w-64" />
     </div>
@@ -517,7 +540,7 @@ const ScreenshotGallery = ({ urls, title }: { urls: string[]; title: string }) =
         <>
           <button
             type="button"
-            className="absolute left-2 top-1/2 flex size-10 -translate-y-1/2 items-center justify-center rounded-lg bg-background/85 opacity-80 shadow-sm transition-opacity hover:opacity-100 sm:size-8"
+            className="absolute left-2 top-1/2 flex size-10 -translate-y-1/2 items-center justify-center rounded-none border border-border bg-background opacity-80 shadow-none transition-opacity hover:opacity-100 sm:size-8"
             onClick={(event) => {
               stopCardNavigation(event);
               setIdx((i) => (i - 1 + urls.length) % urls.length);
@@ -528,7 +551,7 @@ const ScreenshotGallery = ({ urls, title }: { urls: string[]; title: string }) =
           </button>
           <button
             type="button"
-            className="absolute right-2 top-1/2 flex size-10 -translate-y-1/2 items-center justify-center rounded-lg bg-background/85 opacity-80 shadow-sm transition-opacity hover:opacity-100 sm:size-8"
+            className="absolute right-2 top-1/2 flex size-10 -translate-y-1/2 items-center justify-center rounded-none border border-border bg-background opacity-80 shadow-none transition-opacity hover:opacity-100 sm:size-8"
             onClick={(event) => {
               stopCardNavigation(event);
               setIdx((i) => (i + 1) % urls.length);
@@ -537,7 +560,7 @@ const ScreenshotGallery = ({ urls, title }: { urls: string[]; title: string }) =
           >
             <IconChevronRight size={14} />
           </button>
-          <div className="absolute bottom-2 left-1/2 flex -translate-x-1/2 rounded-full bg-black/60 px-1 py-0.5">
+          <div className="absolute bottom-2 left-1/2 flex -translate-x-1/2 rounded-none bg-black/60 px-1 py-0.5">
             {urls.map((_, i) => (
               <button
                 type="button"
