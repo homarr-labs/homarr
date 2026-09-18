@@ -220,15 +220,6 @@ export const integrationDefs = {
     defaultPort: 19999,
   },
 
-  myspeed: {
-    name: "MySpeed",
-    secretKinds: [[], ["password"]],
-    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/myspeed.svg",
-    category: ["miscellaneous"],
-    documentationSlug: "myspeed",
-    defaultPort: 5216,
-  },
-
   fileflows: {
     name: "FileFlows",
     secretKinds: [[]],

@@ -147,14 +147,6 @@ const integrationCreators = {
     return new StatsIntegration(input, netdataStatsProvider);
   },
 
-  myspeed: async (input: IntegrationInput) => {
-    const [{ StatsIntegration }, { myspeedStatsProvider }] = await Promise.all([
-      import("../stats/stats-integration"),
-      import("../stats/providers/myspeed"),
-    ]);
-    return new StatsIntegration(input, myspeedStatsProvider);
-  },
-
   fileflows: async (input: IntegrationInput) => {
     const [{ StatsIntegration }, { fileflowsStatsProvider }] = await Promise.all([
       import("../stats/stats-integration"),
