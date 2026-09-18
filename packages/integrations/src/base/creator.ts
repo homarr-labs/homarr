@@ -8,6 +8,57 @@ const logger = createLogger({ module: "integrationFactory" });
 
 // Keep each import path explicit so Node and Turbopack can discover every lazy integration chunk.
 const integrationCreators = {
+  autobrr: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { autobrrStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/autobrr"),
+    ]);
+    return new StatsIntegration(input, autobrrStatsProvider);
+  },
+  jellystat: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { jellystatStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/jellystat"),
+    ]);
+    return new StatsIntegration(input, jellystatStatsProvider);
+  },
+  scrutiny: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { scrutinyStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/scrutiny"),
+    ]);
+    return new StatsIntegration(input, scrutinyStatsProvider);
+  },
+  tubearchivist: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { tubearchivistStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/tubearchivist"),
+    ]);
+    return new StatsIntegration(input, tubearchivistStatsProvider);
+  },
+  frigate: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { frigateStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/frigate"),
+    ]);
+    return new StatsIntegration(input, frigateStatsProvider);
+  },
+  komga: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { komgaStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/komga"),
+    ]);
+    return new StatsIntegration(input, komgaStatsProvider);
+  },
+  netalertx: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { netalertxStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/netalertx"),
+    ]);
+    return new StatsIntegration(input, netalertxStatsProvider);
+  },
+  jackett: async (input: IntegrationInput) =>
+    new (await import("../jackett/jackett-integration")).JackettIntegration(input),
   yourSpotify: async (input: IntegrationInput) => {
     const [{ StatsIntegration }, { yourSpotifyStatsProvider }] = await Promise.all([
       import("../stats/stats-integration"),

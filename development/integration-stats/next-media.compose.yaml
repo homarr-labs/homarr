@@ -1,0 +1,84 @@
+name: homarr-stats-live
+
+services:
+  next-media-jellyfin:
+    image: jellyfin/jellyfin:latest
+    environment: { TZ: UTC }
+    volumes:
+      - ${NEXT_MEDIA_DATA_ROOT:?set NEXT_MEDIA_DATA_ROOT}/jellyfin/config:/config
+      - ${NEXT_MEDIA_DATA_ROOT:?set NEXT_MEDIA_DATA_ROOT}/jellyfin/cache:/cache
+      - ${NEXT_MEDIA_DATA_ROOT:?set NEXT_MEDIA_DATA_ROOT}/jellyfin/media:/media
+
+  next-media-jellystat-db:
+    image: postgres:15.2
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${JELLYSTAT_POSTGRES_PASSWORD:?set JELLYSTAT_POSTGRES_PASSWORD}
+    volumes:
+      - ${NEXT_MEDIA_DATA_ROOT:?set NEXT_MEDIA_DATA_ROOT}/jellystat/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready --dbname=postgres --username=postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  next-media-jellystat:
+    image: cyfershepard/jellystat:latest
+    depends_on:
+      next-media-jellystat-db: { condition: service_healthy }
+    ports: ["127.0.0.1:23201:3000"]
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${JELLYSTAT_POSTGRES_PASSWORD:?set JELLYSTAT_POSTGRES_PASSWORD}
+      POSTGRES_IP: next-media-jellystat-db
+      POSTGRES_PORT: 5432
+      JWT_SECRET: ${JELLYSTAT_JWT_SECRET:?set JELLYSTAT_JWT_SECRET}
+      TZ: UTC
+    volumes:
+      - ${NEXT_MEDIA_DATA_ROOT:?set NEXT_MEDIA_DATA_ROOT}/jellystat/backup-data:/app/backend/backup-data
+
+  next-media-komga:
+    image: gotson/komga:latest
+    ports: ["127.0.0.1:23202:25600"]
+    environment: { TZ: UTC }
+    volumes:
+      - ${NEXT_MEDIA_DATA_ROOT:?set NEXT_MEDIA_DATA_ROOT}/komga/config:/config
+      - ${NEXT_MEDIA_DATA_ROOT:?set NEXT_MEDIA_DATA_ROOT}/komga/library:/data
+
+  next-media-archivist-es:
+    image: bbilly1/tubearchivist-es:latest
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: "true"
+      ELASTIC_PASSWORD: ${TUBE_ARCHIVIST_ELASTIC_PASSWORD:?set TUBE_ARCHIVIST_ELASTIC_PASSWORD}
+      ES_JAVA_OPTS: -Xms512m -Xmx512m
+      path.repo: /usr/share/elasticsearch/data/snapshot
+    expose: ["9200"]
+    volumes:
+      - ${NEXT_MEDIA_DATA_ROOT:?set NEXT_MEDIA_DATA_ROOT}/tubearchivist/elasticsearch:/usr/share/elasticsearch/data
+
+  next-media-archivist-redis:
+    image: redis:7-alpine
+    expose: ["6379"]
+    volumes:
+      - ${NEXT_MEDIA_DATA_ROOT:?set NEXT_MEDIA_DATA_ROOT}/tubearchivist/redis:/data
+
+  next-media-tubearchivist:
+    image: bbilly1/tubearchivist:latest
+    depends_on:
+      - next-media-archivist-es
+      - next-media-archivist-redis
+    ports: ["127.0.0.1:23203:8000"]
+    environment:
+      TA_HOST: http://127.0.0.1:23203
+      ES_URL: http://next-media-archivist-es:9200
+      REDIS_CON: redis://next-media-archivist-redis:6379
+      ELASTIC_PASSWORD: ${TUBE_ARCHIVIST_ELASTIC_PASSWORD:?set TUBE_ARCHIVIST_ELASTIC_PASSWORD}
+      TA_USERNAME: ${TUBE_ARCHIVIST_USERNAME:?set TUBE_ARCHIVIST_USERNAME}
+      TA_PASSWORD: ${TUBE_ARCHIVIST_PASSWORD:?set TUBE_ARCHIVIST_PASSWORD}
+      HOST_UID: 1000
+      HOST_GID: 1000
+      TZ: UTC
+    volumes:
+      - ${NEXT_MEDIA_DATA_ROOT:?set NEXT_MEDIA_DATA_ROOT}/tubearchivist/media:/youtube
+      - ${NEXT_MEDIA_DATA_ROOT:?set NEXT_MEDIA_DATA_ROOT}/tubearchivist/cache:/cache

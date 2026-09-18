@@ -3229,7 +3229,8 @@
       "status": {
         "healthy": "Healthy",
         "unhealthy": "Unhealthy",
-        "disabled": "Disabled"
+        "disabled": "Disabled",
+        "unknown": "Health unavailable"
       },
       "error": {
         "internalServerError": "Failed to fetch indexers status",

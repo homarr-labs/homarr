@@ -56,6 +56,71 @@ interface IntegrationDefinition {
 }
 
 export const integrationDefs = {
+  autobrr: {
+    name: "Autobrr",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/autobrr.svg",
+    category: ["miscellaneous"],
+    documentationSlug: "autobrr",
+    defaultPort: 7474,
+  },
+  jellystat: {
+    name: "Jellystat",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/jellystat.svg",
+    category: ["miscellaneous"],
+    documentationSlug: "jellystat",
+    defaultPort: 3000,
+  },
+  scrutiny: {
+    name: "Scrutiny",
+    secretKinds: [[]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/scrutiny.svg",
+    category: ["miscellaneous"],
+    documentationSlug: "scrutiny",
+    defaultPort: 8080,
+  },
+  tubearchivist: {
+    name: "Tube Archivist",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/tube-archivist.png",
+    category: ["miscellaneous"],
+    documentationSlug: "tubearchivist",
+    defaultPort: 8000,
+  },
+  frigate: {
+    name: "Frigate",
+    secretKinds: [[]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/frigate.svg",
+    category: ["miscellaneous"],
+    documentationSlug: "frigate",
+    defaultPort: 5000,
+  },
+  komga: {
+    name: "Komga",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/komga.svg",
+    category: ["miscellaneous"],
+    documentationSlug: "komga",
+    defaultPort: 25600,
+  },
+  netalertx: {
+    name: "NetAlertX",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/netalertx.svg",
+    category: ["miscellaneous"],
+    documentationSlug: "netalertx",
+    defaultPort: 20212,
+  },
+  jackett: {
+    name: "Jackett",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/jackett.svg",
+    category: ["indexerManager"],
+    documentationSlug: "jackett",
+    defaultPort: 9117,
+  },
+
   yourSpotify: {
     name: "Your Spotify",
     secretKinds: [["apiKey"]],

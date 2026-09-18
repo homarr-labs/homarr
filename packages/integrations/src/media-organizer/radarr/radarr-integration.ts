@@ -17,6 +17,28 @@ import { mediaOrganizerPriorities } from "../media-organizer";
 const logger = createLogger({ module: "radarrIntegration" });
 
 export class RadarrIntegration extends Integration implements ICalendarIntegration, IMediaOrganizerIntegration {
+  async getLibraryStatsAsync() {
+    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v3/movie"), {
+      headers: { "X-Api-Key": this.getSecretValue("apiKey") },
+    });
+    if (!response.ok) throw new Error(`Radarr library request failed (${response.status})`);
+    const library = z
+      .array(
+        z.object({
+          monitored: z.boolean(),
+          hasFile: z.boolean(),
+          sizeOnDisk: z.number().nonnegative(),
+        }),
+      )
+      .parse(await response.json());
+    return {
+      movies: library.length,
+      monitored: library.filter((movie) => movie.monitored).length,
+      downloaded: library.filter((movie) => movie.hasFile).length,
+      storage: library.reduce((sum, movie) => sum + movie.sizeOnDisk, 0),
+    };
+  }
+
   /**
    * Gets the events in the Radarr calendar between two dates.
    * @param start The start date

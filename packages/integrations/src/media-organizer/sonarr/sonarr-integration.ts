@@ -16,6 +16,34 @@ import { mediaOrganizerPriorities } from "../media-organizer";
 const logger = createLogger({ module: "sonarrIntegration" });
 
 export class SonarrIntegration extends Integration implements ICalendarIntegration, IMediaOrganizerIntegration {
+  async getLibraryStatsAsync() {
+    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v3/series"), {
+      headers: { "X-Api-Key": this.getSecretValue("apiKey") },
+    });
+    if (!response.ok) throw new Error(`Sonarr library request failed (${response.status})`);
+    const library = z
+      .array(
+        z.object({
+          monitored: z.boolean(),
+          statistics: z
+            .object({
+              totalEpisodeCount: z.number().nonnegative(),
+              episodeFileCount: z.number().nonnegative(),
+              sizeOnDisk: z.number().nonnegative(),
+            })
+            .nullish(),
+        }),
+      )
+      .parse(await response.json());
+    return {
+      shows: library.length,
+      monitored: library.filter((series) => series.monitored).length,
+      episodes: library.reduce((sum, series) => sum + (series.statistics?.totalEpisodeCount ?? 0), 0),
+      downloaded: library.reduce((sum, series) => sum + (series.statistics?.episodeFileCount ?? 0), 0),
+      storage: library.reduce((sum, series) => sum + (series.statistics?.sizeOnDisk ?? 0), 0),
+    };
+  }
+
   /**
    * Gets the events in the Sonarr calendar between two dates.
    * @param start The start date

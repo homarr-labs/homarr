@@ -1,3 +1,5 @@
+import { withHttpRequestSignalAsync } from "@homarr/core/infrastructure/http";
+
 import type { IntegrationInstanceOfKind } from "../base/creator";
 import type { IntegrationKind } from "@homarr/definitions";
 
@@ -7,7 +9,7 @@ import type { StatsMetric, StatsUnit, StatsValue } from "./types";
 
 export interface ExistingStatsProvider {
   metrics: StatsMetric[];
-  fetchAsync: (input: IntegrationInput) => Promise<Record<string, StatsValue>>;
+  fetchAsync: (input: IntegrationInput, signal: AbortSignal) => Promise<Record<string, StatsValue>>;
 }
 
 const metric = (key: string, label: string, unit: StatsUnit = "count"): StatsMetric => ({ key, label, unit });
@@ -19,12 +21,22 @@ const adapter = <TKind extends IntegrationKind, TData>(
   pick: (data: TData) => Record<string, StatsValue>,
 ): ExistingStatsProvider => ({
   metrics,
-  async fetchAsync(input) {
-    return pick(await fetchAsync(await createIntegrationAsync({ ...input, kind })));
+  async fetchAsync(input, signal) {
+    return await withHttpRequestSignalAsync(signal, async () => {
+      const result = await fetchAsync(await createIntegrationAsync({ ...input, kind }));
+      signal.throwIfAborted();
+      return pick(result);
+    });
   },
 });
 
 export const existingStatsProviders: Partial<Record<IntegrationKind, ExistingStatsProvider>> = {
+  jackett: adapter(
+    "jackett",
+    [metric("configured", "Configured indexers")],
+    (client) => client.getStatsAsync(),
+    (data) => data,
+  ),
   paperlessNgx: adapter(
     "paperlessNgx",
     [
@@ -174,11 +186,35 @@ for (const kind of ["jellyseerr", "seerr", "overseerr"] as const) {
   );
 }
 for (const kind of ["sonarr", "radarr"] as const) {
+  const libraryMetric = metric("movies", "Movies");
+  if (kind === "sonarr") {
+    libraryMetric.key = "shows";
+    libraryMetric.label = "Shows";
+  }
+  const metrics = [
+    libraryMetric,
+    metric("monitored", "Monitored"),
+    metric("downloaded", "Downloaded movies"),
+    metric("storage", "Storage", "bytes"),
+    metric("missing", "Missing"),
+    metric("queued", "Queued"),
+  ];
+  if (kind === "sonarr") {
+    metrics[2] = metric("downloaded", "Downloaded episodes");
+    metrics.push(metric("episodes", "Episodes"));
+  }
   existingStatsProviders[kind] = adapter(
     kind,
-    [metric("missing", "Missing"), metric("queued", "Queued")],
-    async (client) => ({ missing: await client.getMissingAsync(1), queued: await client.getMediaQueueAsync(1) }),
-    ({ missing, queued }) => ({ missing: missing.totalCount, queued: queued.totalCount }),
+    metrics,
+    async (client) => {
+      const [library, missing, queued] = await Promise.all([
+        client.getLibraryStatsAsync(),
+        client.getMissingAsync(1),
+        client.getMediaQueueAsync(1),
+      ]);
+      return { ...library, missing: missing.totalCount, queued: queued.totalCount };
+    },
+    (data) => data,
   );
 }
 for (const kind of ["plex", "jellyfin", "emby"] as const) {
@@ -364,14 +400,31 @@ existingStatsProviders.anchor = adapter(
   (client) => client.listNotesAsync(),
   (data) => ({ notes: data.length }),
 );
-for (const kind of ["lidarr", "readarr", "ical"] as const) {
+for (const kind of ["lidarr", "readarr"] as const) {
+  const libraryMetric = metric("books", "Books");
+  if (kind === "lidarr") {
+    libraryMetric.key = "artists";
+    libraryMetric.label = "Artists";
+  }
   existingStatsProviders[kind] = adapter(
     kind,
-    [metric("upcoming", "Events in the next 7 days")],
-    (client) => client.getCalendarEventsAsync(new Date(), new Date(Date.now() + 7 * 86_400_000)),
-    (data) => ({ upcoming: data.length }),
+    [libraryMetric, metric("monitored", "Monitored"), metric("upcoming", "Events in the next 7 days")],
+    async (client) => {
+      const [library, events] = await Promise.all([
+        client.getLibraryStatsAsync(),
+        client.getCalendarEventsAsync(new Date(), new Date(Date.now() + 7 * 86_400_000)),
+      ]);
+      return { ...library, upcoming: events.length };
+    },
+    (data) => data,
   );
 }
+existingStatsProviders.ical = adapter(
+  "ical",
+  [metric("upcoming", "Events in the next 7 days")],
+  (client) => client.getCalendarEventsAsync(new Date(), new Date(Date.now() + 7 * 86_400_000)),
+  (data) => ({ upcoming: data.length }),
+);
 existingStatsProviders.mock = {
   metrics: [metric("documents", "Documents"), metric("songs", "Songs"), metric("storage", "Storage", "bytes")],
   async fetchAsync() {

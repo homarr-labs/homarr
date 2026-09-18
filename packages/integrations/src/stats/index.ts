@@ -14,7 +14,7 @@ export const getStatsMetrics = (kind: IntegrationKind) => {
 };
 
 // Do not launch repeated legacy calls after a caller's deadline expires. Legacy
-// transports own their cancellation; retain this guard until their work settles.
+// SDKs may ignore transport cancellation; retain this guard until their work settles.
 const legacyPending = new Set<string>();
 const maxLegacyPending = 128;
 
@@ -28,7 +28,7 @@ export const fetchStatsAsync = async (input: IntegrationInput & { kind: Integrat
   if (legacyPending.size >= maxLegacyPending) throw new Error("Legacy statistics request limit reached");
   legacyPending.add(input.id);
   try {
-    return await existing.fetchAsync(input);
+    return await existing.fetchAsync(input, signal);
   } finally {
     legacyPending.delete(input.id);
   }

@@ -9,12 +9,13 @@ import { IntegrationCapabilites } from "@site/src/components/integrations/widget
 import { AddingIntegration } from "@site/src/components/integrations/adding";
 import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
 import { linkwardenIntegration } from ".";
+import { statsWidget } from "@site/docs/widgets/stats";
 
 <IntegrationHeader integration={linkwardenIntegration} categories={["Bookmarks"]} />
 
 ### Widgets & Capabilities
 
-<IntegrationCapabilites items={[]} />
+<IntegrationCapabilites items={[{ widget: statsWidget }]} />
 
 The Linkwarden stats widget is documented at [/docs/widgets/stats](/docs/widgets/stats).
 

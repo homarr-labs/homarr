@@ -35,9 +35,10 @@
 .chevron[data-opened] {
   transform: none;
 }
-.metric,
-.value {
+.group :global(td) .metric,
+.group :global(td) .value {
   white-space: normal;
+  min-width: 0;
   overflow-wrap: anywhere;
 }
 .value {

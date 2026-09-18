@@ -14,6 +14,15 @@ import { mediaOrganizerPriorities } from "../media-organizer";
 const logger = createLogger({ module: "readarrIntegration" });
 
 export class ReadarrIntegration extends Integration implements ICalendarIntegration {
+  async getLibraryStatsAsync() {
+    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/book"), {
+      headers: { "X-Api-Key": this.getSecretValue("apiKey") },
+    });
+    if (!response.ok) throw new Error(`Readarr library request failed (${response.status})`);
+    const library = z.array(z.object({ monitored: z.boolean() })).parse(await response.json());
+    return { books: library.length, monitored: library.filter((book) => book.monitored).length };
+  }
+
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await input.fetchAsync(this.url("/api"), {
       headers: { "X-Api-Key": super.getSecretValue("apiKey") },

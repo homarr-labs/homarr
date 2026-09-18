@@ -15,8 +15,8 @@ export const tandoorStatsProvider = {
   async fetchAsync(context) {
     const headers = { Authorization: `Bearer ${context.secret("apiKey")}` };
     const [spaceResponse, keywordResponse] = await Promise.all([
-      context.requestAsync("/api/space/", { headers }),
-      context.requestAsync("/api/keyword/?page=1&page_size=1", { headers }),
+      context.requestAsync("/api/space/", { headers, signal: context.signal }),
+      context.requestAsync("/api/keyword/?page=1&page_size=1", { headers, signal: context.signal }),
     ]);
     const parsed = spaces.parse(spaceResponse);
     let first: z.infer<typeof space> | undefined;
