@@ -15,6 +15,7 @@ import {
   validateCustomWidgetOptions,
 } from "@homarr/custom-widgets/core";
 import type { CustomJsxRequest } from "@homarr/custom-widgets/core";
+import type { RequestLimitInput } from "@homarr/custom-widgets/server";
 
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "../board/board-access";
@@ -126,11 +127,11 @@ type IdentifiedRequest = CustomJsxRequest & { id: string };
 const withRequestLimit = async <T>(
   ctx: RouterContext,
   resolved: ResolvedDefinition,
-  request: IdentifiedRequest,
+  category: RequestLimitInput["category"],
   callback: () => Promise<T>,
 ) => {
   const release = await acquireCustomWidgetRequestLimit({
-    category: request.kind === "query" ? "query" : request.method === "DELETE" ? "delete" : "action",
+    category,
     userId: ctx.session?.user.id,
     itemId: resolved.item.id,
     definitionId: resolved.stored.id,
@@ -154,7 +155,9 @@ const executeRequest = async (
   await throwIfActionForbiddenAsync(ctx, eq(boards.id, resolved.item.boardId), request.permission as BoardPermission);
   const source = findSource(resolved, request.source);
   const values = resolveCustomWidgetRequestValues(request, resolved.configuration, params);
-  return withRequestLimit(ctx, resolved, request, async () => {
+  let category: RequestLimitInput["category"] = "query";
+  if (request.kind === "action") category = request.method === "DELETE" ? "delete" : "action";
+  return withRequestLimit(ctx, resolved, category, async () => {
     const connection = await resolveCustomWidgetSource(ctx, source, request, () =>
       resolved.stored.secrets
         .filter((secret) => secret.sourceId === source.id)
@@ -234,20 +237,18 @@ export const customApiRouter = createTRPCRouter({
       integrationVersions.set(result.sourceId, result.sourceCacheVersion);
     }
     const loadSourceIds = new Set(loadRequests.map(([, request]) => request.source));
-    const manualSourceRequests = new Map<string, IdentifiedRequest>();
-    for (const [requestId, request] of Object.entries(resolved.definition.requests)) {
+    const manualSourceIds = new Set<string>();
+    for (const request of Object.values(resolved.definition.requests)) {
       if (request.kind !== "query" || request.trigger !== "manual" || loadSourceIds.has(request.source)) continue;
       if (resolved.definition.sources[request.source]?.type !== "integration") continue;
-      if (!manualSourceRequests.has(request.source)) {
-        manualSourceRequests.set(request.source, { id: requestId, ...request });
-      }
+      manualSourceIds.add(request.source);
     }
     const manualIntegrationVersions = await Promise.all(
-      [...manualSourceRequests].map(async ([sourceId, request]) => {
+      [...manualSourceIds].map(async (sourceId) => {
         const source = resolved.definition.sources[sourceId];
         if (source?.type !== "integration") return [sourceId, "unavailable"] as const;
         try {
-          const version = await withRequestLimit(ctx, resolved, request, () =>
+          const version = await withRequestLimit(ctx, resolved, "metadata", () =>
             getCustomWidgetIntegrationCacheVersion(ctx, source),
           );
           return [sourceId, version] as const;
