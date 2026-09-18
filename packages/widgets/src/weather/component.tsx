@@ -1,7 +1,14 @@
 "use client";
 
-import { Box, Group, HoverCard, Stack, Text } from "@mantine/core";
-import { IconArrowDownRight, IconArrowUpRight, IconDroplets, IconMapPin, IconWind } from "@tabler/icons-react";
+import { Box, Button, Group, HoverCard, Stack, Text } from "@mantine/core";
+import {
+  IconArrowDownRight,
+  IconArrowUpRight,
+  IconCloudOff,
+  IconDroplets,
+  IconMapPin,
+  IconWind,
+} from "@tabler/icons-react";
 import combineClasses from "clsx";
 import dayjs from "dayjs";
 
@@ -16,13 +23,38 @@ import { AnimatedWeatherIcon } from "./animated-icon";
 import { WeatherDescription } from "./icon";
 
 export default function WeatherWidget({ isEditMode, options }: WidgetComponentProps<"weather">) {
+  const tError = useScopedI18n("widget.weather.error");
   const input = {
     latitude: options.location.latitude,
     longitude: options.location.longitude,
   };
-  const { data: weather } = clientApi.widget.weather.atLocation.useQuery(input);
+  const { data: weather, isPending, isError, refetch } = clientApi.widget.weather.atLocation.useQuery(input);
 
-  if (!weather) return <WidgetEmptyState />;
+  if (isPending) return <WidgetEmptyState />;
+
+  if (isError) {
+    return (
+      <Stack align="center" justify="center" gap="xs" w="100%" h="100%" p="sm">
+        <IconCloudOff size={24} />
+        <Text c="red" size="sm" ta="center">
+          {tError("failed")}
+        </Text>
+        <Button variant="subtle" size="compact-xs" onClick={() => void refetch()}>
+          {tError("retry")}
+        </Button>
+      </Stack>
+    );
+  }
+
+  if (!weather) {
+    return (
+      <Stack align="center" justify="center" gap="xs" w="100%" h="100%" p="sm">
+        <Text c="dimmed" size="sm" ta="center">
+          {tError("disabled")}
+        </Text>
+      </Stack>
+    );
+  }
 
   return (
     <Stack
