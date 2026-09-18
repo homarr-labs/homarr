@@ -79,9 +79,11 @@ export async function getIntegrationHttpConnection(integration: HttpIntegration,
               decryptedSecrets: secrets,
             });
             headers = authentication.headers;
-            derivedSecrets = [...(authentication.redactValues ?? []), ...Object.values(headers)];
+            derivedSecrets = [...(authentication.redactValues ?? [])];
             for (const [name, value] of Object.entries(headers)) {
-              if (name.toLowerCase() === "authorization") derivedSecrets.push(value.slice(value.indexOf(" ") + 1));
+              if (name.toLowerCase() === "authorization") {
+                derivedSecrets.push(value, value.slice(value.indexOf(" ") + 1));
+              }
             }
           }
           const auth: CustomWidgetAuthConfig = {

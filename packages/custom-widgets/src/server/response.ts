@@ -89,7 +89,7 @@ export function redactResponseSecrets(data: unknown, secrets: Array<{ kind: stri
     if (typeof value === "string") return redact(value);
     if (
       (typeof value === "number" || typeof value === "boolean" || value === null) &&
-      redact(String(value)) !== String(value)
+      sensitive.includes(String(value))
     )
       return "[REDACTED]";
     if (Array.isArray(value)) return value.map(visit);

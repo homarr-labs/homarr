@@ -123,10 +123,7 @@ async function performRequestWithinDeadline(
           statusText: response.statusText,
           data: await parseResponseBody(response, input.textFallback),
         };
-        parsed.data = redactResponseSecrets(parsed.data, [
-          ...(input.redactSecrets ?? []),
-          ...(input.auth?.secrets ?? []),
-        ]);
+        parsed.data = redactResponseSecrets(parsed.data, input.redactSecrets ?? []);
         result = { kind: "response", response: parsed };
       } else {
         await responseData.body.dump();
