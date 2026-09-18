@@ -112,7 +112,7 @@ export default function StatsWidget({
     for (const [index, integrationId] of visibleIds.entries()) {
       const snapshot = snapshots[index];
       if (!snapshot?.data || snapshot.error) continue;
-      if (snapshot.data.stale && snapshot.data.retryAt <= Date.now()) void refresh(integrationId, false);
+      if (snapshot.data.updatedAt === null && snapshot.data.retryAt <= Date.now()) void refresh(integrationId, false);
     }
   }, [visibleIds, snapshots, refresh]);
 

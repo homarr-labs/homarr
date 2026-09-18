@@ -5325,7 +5325,7 @@
       "loading": "Loading…",
       "unavailable": "Unavailable",
       "refreshFailed": "Refresh failed — showing saved data",
-      "stale": "Awaiting refresh",
+      "stale": "Saved data — refresh to update",
       "table": { "value": "Value", "status": "Status" },
       "option": {
         "table": { "label": "Table view" },

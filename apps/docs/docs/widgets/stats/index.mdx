@@ -7,7 +7,7 @@ hide_title: true
 import { WidgetHeader } from "@site/src/components/widgets/header";
 import { statsWidget } from ".";
 
-<WidgetHeader widget={statsWidget} />
+<WidgetHeader widget={statsWidget} categories={["Statistics"]} />
 
 Click a metric to toggle its full value and related fields from the same integration. Advanced view, available from the widget context menu, lists every available field from the selected integrations in collapsible integration groups, including fields not placed on the compact grid. Table mode uses the same groups for your selected metrics. Both views reuse the same source snapshots.
 
@@ -15,9 +15,9 @@ The hover toolbar's view controls change layout, number formatting, visibility, 
 
 ## Refresh and saved values
 
-Statistics are snapshots, fresh for one hour. Opening the dashboard reads the shared cache first. Missing or stale sources refresh separately while the dashboard is visible, with at most four source refreshes running across the deployment. Multiple fields from the same source share a retrieval. A source may make several requests internally.
+Statistics are snapshots, fresh for one hour. Opening the dashboard reads the shared cache first. Only sources without a saved snapshot load automatically while the dashboard is visible; saved snapshots refresh on demand, with at most four source refreshes running across the deployment. Multiple fields from the same source share a retrieval. A source may make several requests internally. Legacy clients may finish their network request after the refresh deadline; timed-out callers release their refresh slot, and repeat calls to that source are suppressed in the same process until the original request settles.
 
-**Refresh statistics** bypasses the freshness window. Existing values stay visible during refresh. Failed refreshes retain the last successful values and their original timestamps; retries wait at least a minute. Hour-old traffic, player counts, CPU readings, and playback sessions are snapshots rather than live monitoring.
+**Refresh statistics** bypasses the freshness window. Existing values stay visible during refresh. Failed refreshes retain the last successful values and their original timestamps; automatic retries for sources without a saved snapshot wait at least a minute. Hour-old traffic, player counts, CPU readings, and playback sessions are snapshots rather than live monitoring.
 
 The latest successful snapshot has no time-based expiry. Redis eviction, cache loss, and integration changes can remove it. This is a cache, not a historical archive. Redis must be available for refresh coordination. Dedicated widgets retain their existing refresh behavior.
 

@@ -4,7 +4,7 @@ import type { WidgetDefinition } from "@site/src/types";
 export const statsWidget: WidgetDefinition = {
   icon: IconChartBar,
   name: "Statistics",
-  description: "Combine selected statistics from multiple integrations in cards or compact rows.",
+  description: "Combine selected statistics from multiple integrations in cards, compact rows, or grouped tables.",
   path: "../../widgets/stats",
   configuration: {
     items: [
@@ -17,21 +17,21 @@ export const statsWidget: WidgetDefinition = {
       },
       {
         name: "Compact rows",
-        description: "Show one metric per row instead of responsive cards.",
+        description: "Display compact metric rows in responsive columns.",
         values: { type: "boolean" },
         defaultValue: "no",
       },
       {
-        name: "Show source icon / name",
+        name: "Show source icon",
         description: "Identify the integration supplying each metric.",
         values: { type: "boolean" },
         defaultValue: "yes",
       },
       {
-        name: "Show last successful update",
-        description: "Show the timestamp retained with each source snapshot.",
+        name: "Table view",
+        description: "Group metrics under collapsible integration headers in responsive columns.",
         values: { type: "boolean" },
-        defaultValue: "yes",
+        defaultValue: "no",
       },
       {
         name: "Spacing",

@@ -31,7 +31,7 @@ export const prometheusStatsProvider = {
   async fetchAsync(context) {
     const headers: Record<string, string> = {};
     if (context.hasSecret("username") && context.hasSecret("password")) {
-      headers.Authorization = `Basic ${btoa(`${context.secret("username")}:${context.secret("password")}`)}`;
+      headers.Authorization = `Basic ${Buffer.from(`${context.secret("username")}:${context.secret("password")}`, "utf8").toString("base64")}`;
     }
 
     const response = await context.requestAsync("/api/v1/targets", {

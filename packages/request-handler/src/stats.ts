@@ -106,7 +106,7 @@ const runRefreshAsync = async (integration: Input, force: boolean) => {
     deadline = setTimeout(() => controller.abort(), 60_000);
     deadline.unref?.();
     try {
-      const raw = await fetchStatsAsync(integration, controller.signal);
+      const raw = await fetchBeforeAbortAsync(integration, controller.signal);
       controller.signal.throwIfAborted();
       const values: Snapshot["values"] = {};
       for (const metric of getStatsMetrics(integration.kind)) values[metric.key] = raw[metric.key] ?? null;
@@ -137,5 +137,21 @@ const runRefreshAsync = async (integration: Input, force: boolean) => {
     const releases = [lock.releaseAsync(token)];
     if (slot && slotToken) releases.push(slot.releaseAsync(slotToken));
     await Promise.allSettled(releases);
+  }
+};
+
+// Legacy adapters may ignore cancellation. Stop waiting so one stalled source cannot
+// retain a distributed refresh slot forever; their own in-flight guard prevents overlap.
+const fetchBeforeAbortAsync = async (integration: Input, signal: AbortSignal) => {
+  signal.throwIfAborted();
+  let onAbort: (() => void) | undefined;
+  const aborted = new Promise<never>((_resolve, reject) => {
+    onAbort = () => reject(signal.reason);
+    signal.addEventListener("abort", onAbort, { once: true });
+  });
+  try {
+    return await Promise.race([fetchStatsAsync(integration, signal), aborted]);
+  } finally {
+    if (onAbort) signal.removeEventListener("abort", onAbort);
   }
 };

@@ -4,7 +4,7 @@ import type { StatsProvider } from "../types";
 
 const spoolSchema = z.object({
   id: z.number().finite().int().nonnegative(),
-  remaining_weight: z.number().finite().nonnegative(),
+  remaining_weight: z.number().finite().nonnegative().nullish(),
   archived: z.boolean(),
 });
 
@@ -20,9 +20,18 @@ export const spoolmanStatsProvider = {
     const response = await context.requestAsync("/api/v1/spool", { signal: context.signal });
     const spools = spoolListSchema.parse(response).filter((spool) => !spool.archived);
 
+    let remainingWeight: number | null = 0;
+    for (const spool of spools) {
+      if (spool.remaining_weight == null) {
+        remainingWeight = null;
+        break;
+      }
+      remainingWeight += spool.remaining_weight;
+    }
+
     return {
       spools: spools.length,
-      remainingWeight: spools.reduce((total, spool) => total + spool.remaining_weight, 0),
+      remainingWeight,
     };
   },
 } satisfies StatsProvider;
