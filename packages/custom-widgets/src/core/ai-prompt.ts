@@ -6,7 +6,6 @@ import {
   redactCustomWidgetAiText,
   redactCustomWidgetAiUrl,
 } from "./definition-security";
-import { customJsxExamples } from "./examples";
 
 export interface CustomWidgetAiDraft {
   name: string;
@@ -65,11 +64,39 @@ const CUSTOM_WIDGET_MODE_GUIDANCE = `Mode handling:
 - Migrate from the preserved legacy intent: retain supported URL, method, path, body, options, and visible behavior; omit unsupported or redacted details instead of inventing replacements.
 - Plan and connected lifecycle work must execute the validated preview, evidence, and persistence sequence; an intended step is not a completed result.`;
 
-function compactExample(index: number) {
-  const example = customJsxExamples[index];
-  if (!example) return "";
-  return `Example — ${example.title}:\n\n\`\`\`json\n${JSON.stringify(example.widget, null, 2)}\n\`\`\``;
-}
+const COMPACT_LOAD_EXAMPLE = {
+  $schema: "homarr-custom-widget-v2",
+  name: "Status",
+  sources: { default: { baseUrl: "https://example.test", networkScope: "public", auth: "none" } },
+  requests: { status: { path: "/status" } },
+  options: {},
+  template: `<Stack>{status.status?.loading ? <Skeleton /> : status.status?.ok === false ? <Alert>{status.status.error ?? "Unavailable"}</Alert> : <Text>{data.status?.value ?? "No status"}</Text>}<RefreshButton requestId="status" /></Stack>`,
+};
+
+const COMPACT_MANUAL_EXAMPLE = {
+  $schema: "homarr-custom-widget-v2",
+  name: "Search",
+  sources: { default: { baseUrl: "https://example.test", networkScope: "public", auth: "none" } },
+  requests: {
+    search: { trigger: "manual", path: "/search", query: { q: { $param: "query" }, page: { $param: "page" } } },
+  },
+  options: {},
+  template: `<Stack><TextInput bind="query" label="Query" /><NumberInput bind="page" label="Page" defaultValue={1} resetKey={inputs.query} min={1} /><SubFetch requestId="search" trigger="manual" params={{query:inputs.query??"",page:inputs.page??1}}>{result => <Stack><Text>{result.page ?? 1}/{result.totalPages ?? 1}</Text>{(result.results?.length ?? 0) > 0 ? result.results.map(item => <Text key={item.id}>{item.name}</Text>) : <Text>No results</Text>}</Stack>}</SubFetch></Stack>`,
+};
+
+const COMPACT_PROMPT_EXAMPLES = [
+  "Example — load:",
+  "",
+  "```json",
+  JSON.stringify(COMPACT_LOAD_EXAMPLE),
+  "```",
+  "",
+  "Example — manual pagination:",
+  "",
+  "```json",
+  JSON.stringify(COMPACT_MANUAL_EXAMPLE),
+  "```",
+].join("\n");
 
 const AUTHORING_GUIDANCE = `You are writing one safe Homarr Custom JSX v2 dashboard widget for Mantine ${CUSTOM_WIDGET_MANTINE_VERSION}.
 
@@ -80,9 +107,9 @@ ${CUSTOM_WIDGET_MODE_GUIDANCE}
 
 Sources are keyed by name and must include "default". Each source requires a baseUrl and networkScope; networkScope must be "public", "private", or "loopback". Auth is "none", "bearer", "basic", {"type":"apiKeyHeader","name":"X-Api-Key"}, or {"type":"apiKeyQuery","name":"api_key"}. Use the stable public API URL for public services and a clear suggested URL for self-hosted services; Homarr asks the installer for their own server URL. Never put credentials in the manifest.
 
-Requests are keyed by ID. Defaults are source "default", kind "query", method "GET", query trigger "load", inherited auth, and permission "view" for queries or "modify" for actions. Actions are always manual. DELETE is valid only for actions, requires full permission, and receives confirmation automatically. Use {option:name} or {"$option":"name"} for saved options. Use {param:name} or {"$param":"name"} only for invocation-time params supplied by SubFetch, ActionButton, or ToggleSwitch. Load queries cannot use params. Values and primitive types are inferred from references; do not declare parameters or option bindings. Every request path must remain a literal slash-prefixed path after interpolation; never make {option:name} the entire path. If a migration path is unknown, omit its request (requests:{} if none); never guess /. Always include sources.default, even for static widgets. Paths and query values must be primitive; JSON bodies may bind structured options.
+Requests are keyed by ID. Defaults are source "default", kind "query", method "GET", query trigger "load", inherited auth, and permission "view" for queries or "modify" for actions. Actions are always manual. DELETE is valid only for actions and requires full permission. Set confirmation:"Retry?" or confirmation:{title:"Retry",message:"Retry?"}; DELETE gets a confirmation prompt by default. Use {option:name} or {"$option":"name"} for saved options. Use {param:name} or {"$param":"name"} only for invocation-time params supplied by SubFetch, ActionButton, or ToggleSwitch. Load queries cannot use params. Values and primitive types are inferred from references; do not declare parameters or option bindings. Every request path must remain a literal slash-prefixed path after interpolation; never make {option:name} the entire path. If a migration path is unknown, omit its request (requests:{} if none); never guess /. Always include sources.default, even for static widgets. Paths and query values must be primitive; JSON bodies may bind structured options.
 
-Options are keyed by name. Every option has label, control, and default. Controls: text, textarea, number, switch, select, multiSelect, slider, date, time, color, icon, url, duration, timeZone, json. Select choices use \`"choices": [{"label":"...","value":"..."}]\`. Dynamic choices must use \`"choicesFrom": {"request":"requestId","itemsPath":"optional.path","valuePath":"id","labelPath":"name"}\`, never an object under \`choices\`. Options are configured outside the widget and read through \`options.name\`; a bound control writes only to \`inputs.name\` and never changes an option.
+Options are keyed by name. Every option has label, control, and default. Dependent page: bind query/page, set page defaultValue={1}, resetKey={inputs.query}, min={1}; set both triggers manual and pass both inputs. Controls: text, textarea, number, switch, select, multiSelect, slider, date, time, color, icon, url, duration, timeZone, json. Select choices use \`"choices": [{"label":"...","value":"..."}]\`. Dynamic choices must use \`"choicesFrom": {"request":"requestId","itemsPath":"optional.path","valuePath":"id","labelPath":"name"}\`, never an object under \`choices\`. Options are configured outside the widget and read through \`options.name\`; a bound control writes only to \`inputs.name\` and never changes an option.
 
 JSX reads data.requestId, status.requestId, options.name, and temporary inputs.name. A status has loading, ok, status, statusText, and error. Use bind="search" on supported controls and inputs.search in params. SubFetch invokes a manual query. With trigger="manual", it renders its own load button; pass a card or image as triggerContent with triggerAriaLabel to make that content launch the request. Never author onClick or a fetch callback. Its child callback is (result, meta), where meta has ok, status, statusText, loading=false, and no error because SubFetch renders loading/error states itself. Use expression callbacks for map, filter, sort, and SubFetch. Do not use imports, hooks, refs, raw HTML, event callbacks, fetch, eval, bigint, npm packages, authored const blocks, IIFEs, or recursion. Regex is only for bounded string matching/replacement. Do not embed secrets.
 
@@ -94,19 +121,11 @@ Recommended components: ${RECOMMENDED_COMPONENTS}. This list is not exhaustive. 
 
 Make the result genuinely attractive: establish clear visual hierarchy, use deliberate spacing, restrained semantic color, responsive layouts, and theme-safe colors. Prefer one strong primary surface over excessive nested cards. Include useful loading, empty, error, and success states. Make narrow and wide tiles both work.
 
-Treat a supplied sample or preview response as an exact executable contract. Render every core field requested by the user, guard optional arrays and nested values before indexing them, and do not silently drop sample items. If an object wraps an array, map that array field (for example, \`data.events?.items\` or \`result.results\`) rather than the envelope. For load requests, show loading and \`status.requestId?.ok === false\` error branches, then an empty branch with \`RefreshButton requestId="..."\`; keep sibling request failures independent. For manual \`SubFetch\`, let the component own loading, error, and retry while its child reads the complete response envelope. When the response includes a timestamp, use a safe documented Date helper and label its timezone. Pair recoverable load errors and empty states with a clear refresh or retry path.
+Treat a supplied sample or preview response as an exact executable contract. Render every core field requested by the user, guard optional arrays and nested values before indexing them, and do not silently drop sample items. If an object wraps an array, map that array field (for example, \`data.events?.items\` or \`result.results\`) rather than the envelope. For load requests, show loading and \`status.requestId?.ok === false\` error branches, then an empty branch with \`RefreshButton requestId="..."\`; keep sibling request failures independent. For manual \`SubFetch\`, let the component own loading, error, and retry while its child reads the complete response envelope. When the response includes a timestamp, use Date.toLocaleString(value, "en-US", "UTC") followed by a visible UTC label; Date.toLocaleDateString and Date.toLocaleTimeString are also safe. Never use new Date, Date constructors, Intl, or arbitrary methods. Pair recoverable load errors and empty states with a clear refresh or retry path.
 
-Visual quality bar:
-- Give the widget a purposeful header with title, useful context, and its primary status or action.
-- When the data supports it, lead with 2–4 scannable summary metrics before detailed rows.
-- Use responsive SimpleGrid/Grid column objects and let long content wrap on narrow tiles.
-- Make the initial state actionable with an example, useful hint, or clear next step. Use wrapping groups for variable-length labels and values on narrow tiles.
-- Avoid unlabeled decorative icons in empty states. Pair an icon with visible explanatory text or give an interactive standalone icon an accessible label.
-- Use theme tokens and semantic Mantine colors; avoid hard-coded light backgrounds and decorative gradients.
+Use clear labels, restrained color, theme tokens, wrapping layouts, and responsive grids. Keep narrow and wide widgets simple and usable.
 
-${compactExample(0)}
-
-${compactExample(1)}`;
+${COMPACT_PROMPT_EXAMPLES}`;
 
 const AUTHORING_PROMPT = `${AUTHORING_GUIDANCE}
 

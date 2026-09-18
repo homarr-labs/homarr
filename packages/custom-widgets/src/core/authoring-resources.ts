@@ -13,7 +13,7 @@ export const CUSTOM_WIDGET_SKILL_SOURCE_URL =
   "https://github.com/homarr-labs/homarr/tree/HEAD/.agents/skills/homarr-custom-widget";
 export const CUSTOM_WIDGET_SKILL_INSTALL_COMMAND =
   "npx skills add https://github.com/homarr-labs/homarr --skill homarr-custom-widget";
-export const CUSTOM_WIDGET_SKILL_VERSION = "2.10.0";
+export const CUSTOM_WIDGET_SKILL_VERSION = "2.10.1";
 export const CUSTOM_WIDGET_SKILL_REFERENCE_NAMES = ["schema", "runtime", "security"] as const;
 export type CustomWidgetSkillReferenceName = (typeof CUSTOM_WIDGET_SKILL_REFERENCE_NAMES)[number];
 
@@ -102,7 +102,7 @@ Templates read \`data.requestId\`, \`status.requestId\`, \`options.name\`, and t
 \`\`\`jsx
 <TextInput bind="search" label="Search" />
 <Pagination bind="page" resetKey={inputs.search} defaultValue={1} total={5} />
-<SubFetch requestId="search" trigger="manual" params={{ query: inputs.search }}>
+<SubFetch requestId="search" trigger="manual" params={{ query: inputs.search, page: inputs.page ?? 1 }}>
   {(result) => <Stack>{(result.results ?? []).map(item => <Text key={item.id}>{item.name}</Text>)}</Stack>}
 </SubFetch>
 \`\`\`
