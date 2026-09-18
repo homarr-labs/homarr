@@ -79,6 +79,8 @@ export function redactResponseSecrets(data: unknown, secrets: Array<{ kind: stri
       JSON.stringify(value).slice(1, -1),
       encodeURIComponent(value),
       Buffer.from(value).toString("base64"),
+      Buffer.from(value).toString("base64").replace(/=+$/u, ""),
+      Buffer.from(value).toString("base64url"),
     ]) {
       sensitive.add(encoded);
       // Usernames and short credentials can be ordinary words or characters in response data.

@@ -239,7 +239,7 @@ function decodePath(value: string) {
     try {
       decoded = decodeURIComponent(path);
     } catch {
-      return path;
+      throw new CustomWidgetDomainError({ code: "FORBIDDEN", message: "Request path contains invalid encoding" });
     }
     if (decoded === path) return path;
     path = decoded;

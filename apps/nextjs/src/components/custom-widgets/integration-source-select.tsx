@@ -10,11 +10,21 @@ import { clientApi } from "@homarr/api/client";
 import type { CustomWidgetIntegrationSource } from "@homarr/custom-widgets/core";
 import { httpIntegrationKinds, integrationDefs, isHttpIntegrationKind } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
-import { IntegrationAvatar } from "@homarr/ui";
+import { IntegrationAvatar, SelectWithCustomItems } from "@homarr/ui";
 
 const integrationTypeOptions = httpIntegrationKinds
   .map((value) => ({ value, label: integrationDefs[value].name }))
   .toSorted((left, right) => left.label.localeCompare(right.label));
+
+function IntegrationTypeOption({ value, label, checked }: { value: string; label: string; checked?: boolean }) {
+  return (
+    <Group flex="1" gap="xs" wrap="nowrap">
+      {isHttpIntegrationKind(value) && <IntegrationAvatar kind={value} size="xs" />}
+      <Text size="sm">{label}</Text>
+      {checked && <IconCheck size={16} style={{ marginInlineStart: "auto", flexShrink: 0 }} />}
+    </Group>
+  );
+}
 
 interface IntegrationSourceSelectProps {
   kind: CustomWidgetIntegrationSource["integrationKind"];
@@ -25,6 +35,8 @@ interface IntegrationSourceSelectProps {
 
 export function IntegrationSourceSelect({ kind, integrationId, onChange, onKindChange }: IntegrationSourceSelectProps) {
   const t = useI18n("customWidget.workbench.sources");
+  const tIntegration = useI18n("integration");
+  const tCommon = useI18n("common");
   const query = clientApi.integration.all.useQuery();
   const integrations = (query.data ?? []).filter(
     (integration) => integration.kind === kind && integration.permissions.hasFullAccess,
@@ -33,24 +45,18 @@ export function IntegrationSourceSelect({ kind, integrationId, onChange, onKindC
   return (
     <Stack gap="sm">
       {onKindChange && (
-        <Select
+        <SelectWithCustomItems
           label={t("integrationType")}
           searchable
+          searchPlaceholder={tIntegration("page.list.search")}
+          nothingFoundMessage={tCommon("noResults")}
           data={integrationTypeOptions}
           value={kind}
-          allowDeselect={false}
-          leftSection={isHttpIntegrationKind(kind) && <IntegrationAvatar kind={kind} size="xs" />}
-          leftSectionPointerEvents="none"
-          renderOption={({ option, checked }) => (
-            <Group flex="1" gap="xs" wrap="nowrap">
-              {isHttpIntegrationKind(option.value) && <IntegrationAvatar kind={option.value} size="xs" />}
-              <Text size="sm">{option.label}</Text>
-              {checked && <IconCheck size={16} style={{ marginInlineStart: "auto", flexShrink: 0 }} />}
-            </Group>
-          )}
+          SelectOption={IntegrationTypeOption}
+          withinPortal
           onChange={(value) => {
             const selected = httpIntegrationKinds.find((candidate) => candidate === value);
-            if (selected) onKindChange(selected);
+            if (selected && selected !== kind) onKindChange(selected);
           }}
         />
       )}

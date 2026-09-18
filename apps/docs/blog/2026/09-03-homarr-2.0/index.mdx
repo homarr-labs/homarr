@@ -48,9 +48,9 @@ Custom Widgets v2 lets you build widgets from JSX, API requests, actions and typ
 
 This was partly inspired by [Google's upcoming Create My Widget feature](https://blog.google/products-and-platforms/platforms/android/gemini-intelligence/): describe a widget in normal language and let AI make it. Coding knowledge is optional. Knowing what the API does still helps; AI has not fixed bad documentation. Yet.
 
-![The Custom Widget v2 workbench after a live exchange-rate request successfully renders its preview](./img/custom-widget-workbench.webp)
+![The Custom Widget workbench displaying a Sonarr response through a saved integration](./img/custom-widget-workbench.png)
 
-A `homarr-custom-widget-v2` definition can use several fixed-origin API sources. Credentials are encrypted separately and stay out of exports and Workshop submissions. Actions support `GET`, `POST`, `PUT`, `PATCH` and `DELETE`; requests have host checks, timeouts, size limits, permissions and rate limits. Custom Widgets remain **Beta** in 2.0.
+A `homarr-custom-widget-v2` definition can use several fixed-origin API sources. Credentials are encrypted separately and stay out of exports and Workshop submissions. Actions support `GET`, `POST`, `PUT`, `PATCH` and `DELETE`; requests have host checks, timeouts, size limits, permissions and rate limits.
 
 ### Share widgets and Custom CSS
 
@@ -191,7 +191,6 @@ We deploy the Homarr Workshop and the compiled Docusaurus docs on the VPS provid
 
 - Legacy Custom JSX definitions enter a migration state. Homarr keeps encrypted credentials and an archived copy until the v2 definition validates.
 - Mobile layouts place rail content in the main flow instead of displaying rails.
-- Custom Widgets remain Beta.
 - Assistant and MCP do not bypass permissions.
 
 ## Links

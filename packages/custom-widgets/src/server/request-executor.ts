@@ -88,7 +88,11 @@ async function performRequestWithinDeadline(
   let currentUrl = resolveSameOriginTarget(input.baseUrl, input.targetUrl);
   let currentMethod = input.method;
   let currentBody = input.body;
-  const maxRedirects = input.kind === "query" ? MAX_QUERY_REDIRECTS : 0;
+  const authenticated =
+    input.auth !== undefined &&
+    input.auth.type !== "none" &&
+    (input.auth.type !== "integration" || Object.keys(input.auth.headers ?? {}).length > 0);
+  const maxRedirects = input.kind === "query" && !authenticated ? MAX_QUERY_REDIRECTS : 0;
   for (let redirects = 0; ; redirects += 1) {
     if (input.pathPrefix !== undefined) assertCustomWidgetPathScope(currentUrl, input.pathPrefix);
     const dispatcher = createPinnedAgent(

@@ -763,12 +763,6 @@
     "multiSelectApps": "Tip: Hold Ctrl / ⌘ to select multiple apps at once"
   },
   "customWidget": {
-    "betaBanner": {
-      "title": "Custom Widgets are in Beta",
-      "description": "This feature is experimental and will probably change significantly. If you encounter bugs, want additional capabilities, or find something confusing, please share your feedback in the",
-      "discussionLink": "official discussion forum",
-      "closing": "so it can be considered. Happy hacking!"
-    },
     "secretEntry": {
       "title": "Configure API source",
       "description": "Confirm the server URL and enter credentials. Secret values are encrypted by Homarr and never returned to the requesting agent.",

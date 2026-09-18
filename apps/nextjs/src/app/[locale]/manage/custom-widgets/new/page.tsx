@@ -5,7 +5,6 @@ import { auth } from "@homarr/auth/next";
 import { getI18n } from "@homarr/translation/server";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
-import { CustomWidgetBetaBanner } from "../_beta-banner";
 import { CustomWidgetForm } from "../_custom-widget-form";
 import { FormErrorBoundary } from "../_form-error-boundary";
 
@@ -27,7 +26,6 @@ export default async function NewCustomWidgetPage() {
               {t("page.create.subtitle")}
             </Text>
           </div>
-          <CustomWidgetBetaBanner />
           <FormErrorBoundary>
             <CustomWidgetForm mode="create" />
           </FormErrorBoundary>
