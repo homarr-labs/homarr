@@ -11,6 +11,12 @@ const usage = {
   outputTokens: { total: 4, text: 2, reasoning: 2 },
 };
 
+type StreamPayload = { type: string; messageMetadata?: unknown; delta?: unknown };
+type DeltaPayload = StreamPayload & { delta: string };
+
+const isDeltaPayload = (payload: StreamPayload, type: string): payload is DeltaPayload =>
+  payload.type === type && typeof payload.delta === "string";
+
 describe("assistant stream metadata boundaries", () => {
   test("suppresses repeated chunk metadata while preserving step and final boundaries", async () => {
     const model = new MockLanguageModelV4({
@@ -46,10 +52,10 @@ describe("assistant stream metadata boundaries", () => {
       .filter((line) => line.startsWith("data: "))
       .map((line) => line.slice("data: ".length))
       .filter((payload) => payload !== "[DONE]")
-      .map((payload) => JSON.parse(payload) as { type: string; messageMetadata?: unknown });
+      .map((payload) => JSON.parse(payload) as StreamPayload);
     const metadataChunks = payloads.filter((payload) => payload.type === "message-metadata");
-    const reasoningDeltas = payloads.filter((payload) => payload.type === "reasoning-delta");
-    const textDeltas = payloads.filter((payload) => payload.type === "text-delta");
+    const reasoningDeltas = payloads.filter((payload) => isDeltaPayload(payload, "reasoning-delta"));
+    const textDeltas = payloads.filter((payload) => isDeltaPayload(payload, "text-delta"));
 
     expect(emittedParts).toEqual(["start", "start-step", "finish-step", "finish"]);
     expect(metadataChunks).toEqual([
