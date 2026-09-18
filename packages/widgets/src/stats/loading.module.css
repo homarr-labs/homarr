@@ -10,52 +10,37 @@
   isolation: isolate;
 }
 
-.halo {
+.ring {
   position: absolute;
-  inset: -20%;
+  inset: 0;
+  border: 1.5px solid color-mix(in srgb, var(--loader-color) 16%, transparent);
+  border-top-color: var(--loader-color);
   border-radius: 50%;
-  background: radial-gradient(circle, var(--loader-color) 0%, transparent 70%);
-  opacity: 0.12;
-  animation: halo 2s ease-in-out infinite;
+  animation: rotate 1.6s linear infinite;
 }
 
-.logo {
-  animation: breathe 2s ease-in-out infinite;
+.image {
+  animation: reveal 180ms ease-out both;
 }
 
-.fallback {
-  width: 80%;
-  height: 80%;
-  color: var(--loader-color);
-}
-
-@keyframes breathe {
-  0%,
-  100% {
-    transform: scale(0.86);
-    opacity: 0.5;
+@keyframes rotate {
+  to {
+    transform: rotate(360deg);
   }
-  50% {
-    transform: scale(1);
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+  }
+  to {
     opacity: 1;
   }
 }
 
-@keyframes halo {
-  0%,
-  100% {
-    transform: scale(0.85);
-    opacity: 0.08;
-  }
-  50% {
-    transform: scale(1.12);
-    opacity: 0.22;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .logo,
-  .halo {
+  .ring,
+  .image {
     animation: none;
   }
 }

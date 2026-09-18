@@ -1,5 +1,4 @@
 import { Avatar, Loader } from "@mantine/core";
-import { IconChartBar } from "@tabler/icons-react";
 
 import { useI18n } from "@homarr/translation/client";
 
@@ -12,12 +11,12 @@ export function StatsLoading({ iconUrl, source, size = 20 }: { iconUrl?: string;
 
   return (
     <Loader size={size} className={classes.root} role="status" aria-label={label}>
-      <span className={classes.halo} aria-hidden="true" />
+      <span className={classes.ring} aria-hidden="true" />
       <Avatar
         component="span"
-        className={classes.logo}
+        classNames={{ image: classes.image }}
         src={iconUrl}
-        size="100%"
+        size="64%"
         radius={0}
         variant="transparent"
         alt=""
@@ -25,7 +24,7 @@ export function StatsLoading({ iconUrl, source, size = 20 }: { iconUrl?: string;
         imageProps={{ referrerPolicy: "no-referrer" }}
         styles={{ image: { objectFit: "contain" } }}
       >
-        <IconChartBar className={classes.fallback} />
+        <span />
       </Avatar>
     </Loader>
   );

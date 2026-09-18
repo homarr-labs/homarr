@@ -125,6 +125,8 @@ const runRefreshAsync = async (integration: Input, force: boolean) => {
       if (owned && latest.identity === initial.identity && latest.generation === initial.generation)
         await lock.setPersistentIfOwnedAsync(token, initial.name, snapshot);
     } catch {
+      // Promise.all can reject before sibling provider requests finish.
+      controller.abort();
       logger.warn("Statistics source refresh failed", { integrationId: integration.id, kind: integration.kind });
       const latest = await resolveAsync(integration);
       if (owned && latest.identity === initial.identity && latest.generation === initial.generation) {
@@ -136,6 +138,7 @@ const runRefreshAsync = async (integration: Input, force: boolean) => {
       }
     }
   } finally {
+    controller.abort();
     clearInterval(renewal);
     if (deadline) clearTimeout(deadline);
     const releases = [lock.releaseAsync(token)];

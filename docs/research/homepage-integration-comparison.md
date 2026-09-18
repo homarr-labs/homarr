@@ -329,6 +329,8 @@ The private ZIP adds the full database, credentials, service data, screenshots a
 
 ## Loading feedback and final review
 
-Statistics now uses a custom Mantine Loader with a breathing integration logo in cards, compact rows, grouped tables, and click details. A neutral fallback handles missing/hidden logos; reduced-motion preferences disable the pulse. Cached values remain visible during refresh. Client refresh failures and snapshot-query failures stop initial loading and show the error without discarding saved values.
+Statistics uses one steady loading ring in cards, compact rows, grouped tables, and click details. The integration logo fades into its center once the image loads; there is no intermediate widget glyph, zoom or glow. Missing/hidden logos retain the same ring, and reduced-motion preferences disable rotation and fading. Cached values remain visible during refresh. Client refresh failures and snapshot-query failures stop initial loading and show the error without discarding saved values.
 
 The complete merge diff received a defect-first review. Both findings concerned lost client failure state and were fixed; follow-up review reported no findings. Browser checks used real fixture responses, temporarily delayed or aborted only in the test browser, to cover loading, reduced motion, failure, cached-value retention and recovery.
+
+Final pre-merge review found incomplete cancellation of sibling requests after a parallel provider failure, and misleading “hourly snapshots” wording in the Home Assistant guide. Both were fixed. A local HTTP reproduction using the real Komga adapter and Statistics handler changed from two leaked pending requests to both requests being aborted after the failing request. Browser verification confirmed the neutral ring, subsequent real logo, unchanged loader dimensions, reduced motion and successful retrieval of real saved values.
