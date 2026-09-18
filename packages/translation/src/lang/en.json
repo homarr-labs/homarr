@@ -4395,7 +4395,7 @@
     },
     "mediaMissing": {
       "name": "Missing & Queued Media",
-      "description": "Shows missing and queued movies and episodes from {radarr} and {sonarr}",
+      "description": "Shows missing and queued movies, episodes and books from {radarr}, {sonarr} and {bindery}",
       "option": {
         "showMissing": {
           "label": "Show missing items"
@@ -4413,7 +4413,8 @@
       },
       "type": {
         "movie": "Movie",
-        "episode": "Episode"
+        "episode": "Episode",
+        "book": "Book"
       },
       "empty": {
         "missing": "No missing items",

@@ -161,6 +161,7 @@ const ItemSelectModalContent = ({
             description = t("widget.mediaMissing.description", {
               radarr: getIntegrationName("radarr"),
               sonarr: getIntegrationName("sonarr"),
+              bindery: getIntegrationName("bindery"),
             });
           } else {
             description = t(`widget.${kind}.description`);
