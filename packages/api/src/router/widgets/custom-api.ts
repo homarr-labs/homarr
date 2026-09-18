@@ -1,4 +1,4 @@
-import { getCustomWidgetIntegrationCacheVersions, resolveCustomWidgetSource } from "../custom-widget/source-resolver";
+import { getCustomWidgetIntegrationCacheVersion, resolveCustomWidgetSource } from "../custom-widget/source-resolver";
 import { TRPCError } from "@trpc/server";
 import { parse as parseSuperJson } from "superjson";
 import { z } from "zod/v4";
@@ -161,7 +161,7 @@ const executeRequest = async (
         .map((secret) => ({ kind: secret.kind, value: decryptSecret(secret.encryptedValue) })),
     );
     const targetUrl = renderRequestTarget(connection.baseUrl, request, values);
-    return executeCustomWidgetRequest({
+    const response = await executeCustomWidgetRequest({
       ...connection,
       targetUrl,
       method: request.method,
@@ -172,6 +172,7 @@ const executeRequest = async (
         request.kind === "query" ? `${getCacheKey(resolved, request, values)}:${connection.cacheVersion}` : undefined,
       cacheTtlSeconds: request.cacheSeconds,
     });
+    return { ...response, sourceCacheVersion: connection.cacheVersion };
   });
 };
 
@@ -185,7 +186,6 @@ export const customApiRouter = createTRPCRouter({
 
   getData: publicProcedure.input(itemInputSchema).query(async ({ ctx, input }) => {
     const resolved = await resolvePlacedDefinitionAsync(ctx, input.itemId);
-    const integrationVersions = await getCustomWidgetIntegrationCacheVersions(ctx, resolved.definition.sources);
     const loadRequests = Object.entries(resolved.definition.requests).filter(
       ([, request]) => request.kind === "query" && request.trigger === "load",
     );
@@ -196,6 +196,8 @@ export const customApiRouter = createTRPCRouter({
           return [
             requestId,
             {
+              sourceId: request.source,
+              sourceCacheVersion: response.sourceCacheVersion,
               data: response.data,
               status: {
                 loading: false,
@@ -210,6 +212,9 @@ export const customApiRouter = createTRPCRouter({
           return [
             requestId,
             {
+              sourceId: request.source,
+              sourceCacheVersion:
+                resolved.definition.sources[request.source]?.type === "integration" ? "unavailable" : "",
               data: null,
               status: {
                 loading: false,
@@ -222,11 +227,45 @@ export const customApiRouter = createTRPCRouter({
         }
       }),
     );
+    const integrationVersions = new Map<string, string>();
+    for (const [, result] of entries) {
+      if (!result.sourceCacheVersion) continue;
+      if (result.sourceCacheVersion === "unavailable" && integrationVersions.has(result.sourceId)) continue;
+      integrationVersions.set(result.sourceId, result.sourceCacheVersion);
+    }
+    const loadSourceIds = new Set(loadRequests.map(([, request]) => request.source));
+    const manualSourceRequests = new Map<string, IdentifiedRequest>();
+    for (const [requestId, request] of Object.entries(resolved.definition.requests)) {
+      if (request.kind !== "query" || request.trigger !== "manual" || loadSourceIds.has(request.source)) continue;
+      if (resolved.definition.sources[request.source]?.type !== "integration") continue;
+      if (!manualSourceRequests.has(request.source)) {
+        manualSourceRequests.set(request.source, { id: requestId, ...request });
+      }
+    }
+    const manualIntegrationVersions = await Promise.all(
+      [...manualSourceRequests].map(async ([sourceId, request]) => {
+        const source = resolved.definition.sources[sourceId];
+        if (source?.type !== "integration") return [sourceId, "unavailable"] as const;
+        try {
+          const version = await withRequestLimit(ctx, resolved, request, () =>
+            getCustomWidgetIntegrationCacheVersion(ctx, source),
+          );
+          return [sourceId, version] as const;
+        } catch {
+          return [sourceId, "unavailable"] as const;
+        }
+      }),
+    );
+    for (const [sourceId, version] of manualIntegrationVersions) integrationVersions.set(sourceId, version);
+    const integrationCacheKey = [...integrationVersions]
+      .toSorted(([left], [right]) => left.localeCompare(right))
+      .map(([sourceId, version]) => `${sourceId}:${version}`)
+      .join(":");
 
     return {
       type: "customJsx" as const,
       template: resolved.definition.template,
-      queryCacheKey: `${getCustomWidgetCacheVersion(resolved.stored)}:${hashRuntimeParams(resolved.configuration)}:${integrationVersions.join(":")}`,
+      queryCacheKey: `${getCustomWidgetCacheVersion(resolved.stored)}:${hashRuntimeParams(resolved.configuration)}:${integrationCacheKey}`,
       data: Object.fromEntries(entries.map(([id, result]) => [id, result.data])),
       status: Object.fromEntries(entries.map(([id, result]) => [id, result.status])),
       options: resolved.configuration,

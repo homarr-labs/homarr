@@ -46,6 +46,13 @@ async function resolveIntegration(
   return integration;
 }
 
+export async function getCustomWidgetIntegrationCacheVersion(
+  ctx: IntegrationHttpContext,
+  source: Extract<CustomWidgetSource, { type: "integration" }>,
+) {
+  return getIntegrationHttpCacheVersion(await resolveIntegration(ctx, source));
+}
+
 export async function resolveCustomWidgetSource(
   ctx: IntegrationHttpContext,
   source: CustomWidgetSource,
@@ -70,20 +77,4 @@ export async function resolveCustomWidgetSource(
   }
   const integration = await resolveIntegration(ctx, source);
   return getIntegrationHttpConnection(integration, request.auth !== "none");
-}
-
-export async function getCustomWidgetIntegrationCacheVersions(
-  ctx: IntegrationHttpContext,
-  sources: Record<string, CustomWidgetSource>,
-) {
-  return Promise.all(
-    Object.entries(sources).flatMap(([sourceId, source]) => {
-      if (source.type !== "integration") return [];
-      return [
-        resolveIntegration(ctx, source)
-          .then((integration) => `${sourceId}:${getIntegrationHttpCacheVersion(integration)}`)
-          .catch(() => `${sourceId}:unavailable`),
-      ];
-    }),
-  );
 }
