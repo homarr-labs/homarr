@@ -2,18 +2,19 @@ import crypto from "crypto";
 import fs from "fs";
 import path from "path";
 
+import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import AdmZip from "adm-zip";
 import Database from "better-sqlite3";
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 
-import { auth } from "@homarr/auth/next";
 import { env } from "@homarr/common/env";
 import { DB_CASING } from "@homarr/core/infrastructure/db/constants";
 import { dbEnv } from "@homarr/core/infrastructure/db/env";
 import { db } from "@homarr/db";
 
+import { getBackupSessionAsync } from "../auth";
 import { findMigrationsFolder } from "../shared";
 
 const REQUIRED_ZIP_ENTRIES = ["db.sqlite", "metadata.json"] as const;
@@ -78,8 +79,8 @@ const isOnboardingActiveAsync = async (): Promise<boolean> => {
   return onboardingRow.step === "start";
 };
 
-export async function POST(req: Request) {
-  const session = await auth();
+export async function POST(req: NextRequest) {
+  const session = await getBackupSessionAsync(req);
   const isAdmin = session?.user.permissions.includes("admin") ?? false;
   const isOnboarding = !isAdmin && (await isOnboardingActiveAsync());
 
