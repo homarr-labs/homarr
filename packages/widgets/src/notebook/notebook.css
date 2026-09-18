@@ -88,6 +88,13 @@
   background-color: transparent;
 }
 
+.homarr-notebook[data-notebook-compact="true"] .tiptap :where(h1, h2, h3):not([style*="font-size"]) {
+  font-size: 1.125rem;
+}
+
+.homarr-notebook[data-notebook-compact="true"] .tiptap :where(h1, h2, h3):not([style*="line-height"]) {
+  line-height: 1.15;
+}
 
 .ProseMirror {
   height: 100%;
@@ -119,4 +126,9 @@
   .homarr-notebook-action {
     transition: none;
   }
+}
+
+.homarr-notebook[data-notebook-compact="true"] .tiptap img {
+  max-height: 2rem;
+  object-fit: contain;
 }

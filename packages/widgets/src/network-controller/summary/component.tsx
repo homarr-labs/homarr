@@ -27,6 +27,8 @@ dayjs.extend(duration);
 export default function NetworkControllerSummaryWidget({
   integrationIds,
   width,
+  height,
+  displayScale = 1,
   displayMode,
 }: WidgetComponentProps<"networkControllerSummary">) {
   const summaryQuery = clientApi.widget.networkController.summary.useQuery({
@@ -65,6 +67,13 @@ export default function NetworkControllerSummaryWidget({
   );
   const firstSummary = summaries[0];
 
+  let responsiveWidth = width;
+  let responsiveHeight = height;
+  if (!isAdvanced && Number.isFinite(displayScale) && displayScale > 0) {
+    responsiveWidth *= displayScale;
+    responsiveHeight *= displayScale;
+  }
+
   if (isPending || !firstSummary) {
     return (
       <Stack h="100%" gap={0}>
@@ -80,6 +89,10 @@ export default function NetworkControllerSummaryWidget({
 
   if (!isAdvanced) {
     const summary = firstSummary.summary;
+    const isCompact = responsiveWidth < 240 || responsiveHeight < 180;
+    const statusIconSize = isCompact ? iconSizes.md : iconSizes.xl;
+    const secondaryTextSize = isCompact ? "xs" : "md";
+    const showSecondary = responsiveWidth >= 180;
 
     return (
       <Box h="100%" p="sm" pos="relative">
@@ -87,59 +100,71 @@ export default function NetworkControllerSummaryWidget({
           {queryIndicators}
         </Box>
         <Center h="100%">
-          <List spacing="xs" center>
+          <List spacing={isCompact ? 2 : "xs"} center style={{ maxWidth: "100%", paddingInlineStart: 0 }}>
             <List.Item
+              style={{ maxWidth: "100%" }}
               icon={
                 <StatusIcon
                   status={summary.wanStatus}
                   label={statusLabels[getBinaryStatusKey(summary.wanStatus)]}
-                  style={iconSizes.xl}
+                  style={statusIconSize}
                 />
               }
             >
               {t("card.wan")}
             </List.Item>
             <List.Item
+              style={{ maxWidth: "100%" }}
               icon={
                 <StatusIcon
                   status={summary.www.status}
                   label={statusLabels[getBinaryStatusKey(summary.www.status)]}
-                  style={iconSizes.xl}
+                  style={statusIconSize}
                 />
               }
             >
-              <Text>
+              <Text title={`${summary.www.latency}ms`} truncate="end" style={{ minWidth: 0 }}>
                 WWW
-                <Text c="dimmed" size="md" ms="xs" span>
-                  {summary.www.latency}ms
-                </Text>
+                {showSecondary && (
+                  <Text c="dimmed" size={secondaryTextSize} ms="xs" span>
+                    {summary.www.latency}ms
+                  </Text>
+                )}
               </Text>
             </List.Item>
             <List.Item
+              style={{ maxWidth: "100%" }}
               icon={
                 <StatusIcon
                   status={summary.wifi.status}
                   label={statusLabels[getBinaryStatusKey(summary.wifi.status)]}
-                  style={iconSizes.xl}
+                  style={statusIconSize}
                 />
               }
             >
               {t("card.wifi")}
             </List.Item>
             <List.Item
+              style={{ maxWidth: "100%" }}
               icon={
                 <StatusIcon
                   status={summary.vpn.status}
                   label={statusLabels[getBinaryStatusKey(summary.vpn.status)]}
-                  style={iconSizes.xl}
+                  style={statusIconSize}
                 />
               }
             >
-              <Text>
+              <Text
+                title={t("card.vpn.countConnected", { count: summary.vpn.users })}
+                truncate="end"
+                style={{ minWidth: 0 }}
+              >
                 {t("card.vpn.label")}
-                <Text c="dimmed" size="md" ms="xs" span>
-                  {t("card.vpn.countConnected", { count: summary.vpn.users })}
-                </Text>
+                {showSecondary && (
+                  <Text c="dimmed" size={secondaryTextSize} ms="xs" span>
+                    {t("card.vpn.countConnected", { count: summary.vpn.users })}
+                  </Text>
+                )}
               </Text>
             </List.Item>
           </List>

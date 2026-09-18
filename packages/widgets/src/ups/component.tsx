@@ -34,10 +34,8 @@ const statusColors: Record<UpsStatus, string> = {
   unknown: "gray",
 };
 
-const neutralSurfaceBackground =
-  "rgb(from var(--mantine-color-default-hover) r g b / calc(var(--opacity, 1) * 0.12))";
-const neutralSurfaceBorder =
-  "rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45))";
+const neutralSurfaceBackground = "rgb(from var(--mantine-color-default-hover) r g b / calc(var(--opacity, 1) * 0.12))";
+const neutralSurfaceBorder = "rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45))";
 
 type UpsLayout = "mini" | "compact" | "full";
 
@@ -47,17 +45,25 @@ export default function UpsWidget({
   width,
   height,
   displayMode = "compact",
+  displayScale = 1,
 }: WidgetComponentProps<"ups">) {
   if (integrationIds.length === 0) {
     throw new NoIntegrationSelectedError();
+  }
+
+  let responsiveWidth = width;
+  let responsiveHeight = height;
+  if (displayMode !== "advanced") {
+    responsiveWidth *= displayScale;
+    responsiveHeight *= displayScale;
   }
 
   return (
     <UpsContent
       integrationIds={integrationIds}
       options={options}
-      width={width}
-      height={height}
+      width={responsiveWidth}
+      height={responsiveHeight}
       displayMode={displayMode}
     />
   );
@@ -123,9 +129,9 @@ function UpsContent({ integrationIds, options, width, height, displayMode }: Ups
             {cards}
           </SimpleGrid>
         ) : (
-          <Stack gap="xs" p="xs">
+          <SimpleGrid cols={Math.min(cards.length, Math.max(1, Math.floor(width / 360)))} spacing="xs" p="xs">
             {cards}
-          </Stack>
+          </SimpleGrid>
         )}
       </ScrollArea>
     </Box>

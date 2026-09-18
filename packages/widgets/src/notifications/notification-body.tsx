@@ -40,6 +40,7 @@ export const NotificationBody = ({ body, contentType, format, lineClamp, dense }
         c="dimmed"
         size={dense ? "xs" : "sm"}
         lineClamp={lineClamp}
+        title={body}
         style={{ whiteSpace: "pre-line", overflowWrap: "anywhere" }}
       >
         {body}

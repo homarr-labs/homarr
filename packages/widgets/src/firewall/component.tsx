@@ -58,17 +58,30 @@ export const hasFirewallPartialFailure = (firewallId: string, queries: readonly 
       query.data?.some(({ error, integration }) => integration?.id === firewallId && Boolean(error)) === true,
   );
 
+const getCompactRingSize = (width: number, height: number): number => {
+  if (width < 160 || height < 120) return 44;
+  if (width < 256 || height < 180) return 64;
+  return 100;
+};
+
 export default function FirewallWidget({
   integrationIds,
   width,
   height,
+  displayScale = 1,
   itemId,
   displayMode,
 }: WidgetComponentProps<"firewall">) {
   const [selectedFirewall, setSelectedFirewall] = useState("");
   const isAdvanced = displayMode === "advanced";
-  const isTiny = !isAdvanced && (width < 256 || height < 180);
-  const ringSize = isAdvanced ? 100 : height < 120 ? 44 : isTiny ? 64 : 100;
+  let responsiveWidth = width;
+  let responsiveHeight = height;
+  if (!isAdvanced && Number.isFinite(displayScale) && displayScale > 0) {
+    responsiveWidth *= displayScale;
+    responsiveHeight *= displayScale;
+  }
+  const isTiny = !isAdvanced && (responsiveWidth < 256 || responsiveHeight < 180);
+  const ringSize = isAdvanced ? 100 : getCompactRingSize(responsiveWidth, responsiveHeight);
   const t = useI18n("widget.firewall");
   const tCommon = useI18n("common");
 
@@ -130,9 +143,9 @@ export default function FirewallWidget({
 
   return (
     <ScrollArea h="100%" style={{ minHeight: 0 }}>
-      <Stack gap="xs" p={isAdvanced ? "xs" : 0}>
+      <Stack gap={isTiny ? 4 : "xs"} p={isAdvanced ? "xs" : 0}>
         {!isAdvanced && (
-          <Group justify="space-between" w="100%" p="xs">
+          <Group justify="space-between" wrap="nowrap" gap={4} w="100%" p={isTiny ? 4 : "xs"}>
             <FirewallMenu
               onChange={handleSelect}
               selectedFirewall={activeFirewall}
@@ -309,7 +322,7 @@ const MetricRing = ({ value, icon: Icon, size, label, t }: MetricRingProps) => {
   const safeValue = Math.max(0, Math.min(100, Number.isFinite(value) ? value : 0));
   const status = getMetricStatus(safeValue);
   const statusLabel = t(`status.${status}` as never);
-  const showIcon = size >= 64;
+  const showIcon = size >= 40;
   const showStatus = size >= 96;
 
   return (

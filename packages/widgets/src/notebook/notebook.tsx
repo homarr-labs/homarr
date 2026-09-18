@@ -88,7 +88,9 @@ export function Notebook({
   isEditMode,
   boardId,
   itemId,
+  width,
   height,
+  displayScale = 1,
   displayMode = "compact",
 }: WidgetComponentProps<"notebook">) {
   const [content, setContent] = useState(options.content);
@@ -326,20 +328,35 @@ export function Notebook({
     characters: documentText.length,
     words: documentText.length === 0 ? 0 : documentText.split(/\s+/).length,
   };
+  let layoutScale = 1;
+  if (displayMode !== "advanced" && Number.isFinite(displayScale) && displayScale > 0) {
+    layoutScale = displayScale;
+  }
+  const renderedWidth = width * layoutScale;
+  const renderedHeight = height * layoutScale;
+  const compactSurface = renderedWidth < 280 || renderedHeight < 240;
   const display = getNotebookDisplay({
-    height,
+    height: renderedHeight,
     isAdvanced: displayMode === "advanced",
     isEditing,
     isSaving,
     showToolbar: options.showToolbar,
   });
 
+  const showDocumentStats = display.showDocumentStats && (displayMode === "advanced" || renderedWidth >= 280);
+
   return (
-    <Box className="homarr-notebook" h="100%" onDoubleClick={handleDoubleClick}>
+    <Box
+      className="homarr-notebook"
+      data-notebook-compact={(displayMode === "compact" && compactSurface) || undefined}
+      h="100%"
+      onDoubleClick={handleDoubleClick}
+      style={{ display: "flex", flexDirection: "column", minHeight: 0, position: "relative" }}
+    >
       <RichTextEditor
         p={0}
         mt={0}
-        h="100%"
+        h="auto"
         onKeyDown={
           isEditing && !isSaving ? getHotkeyHandler([[hotkeys.saveNotebook, () => void handleEditToggle()]]) : undefined
         }
@@ -368,7 +385,9 @@ export function Notebook({
             borderRadius: "0.5rem",
             display: "flex",
             flexDirection: "column",
-            height: "100%",
+            flex: "1 1 auto",
+            height: "auto",
+            minHeight: 0,
           },
           toolbar: {
             backgroundColor: "transparent",
@@ -378,7 +397,7 @@ export function Notebook({
           content: {
             backgroundColor: "transparent",
             fontSize: "var(--mantine-font-size-md)",
-            padding: height < 120 ? "0.25rem" : "0.5rem",
+            padding: renderedHeight < 120 ? "0.25rem" : "0.5rem",
             height: "100%",
           },
           typographyStylesProvider: {
@@ -508,23 +527,32 @@ export function Notebook({
         )}
 
         <ScrollArea
-          mih="4rem"
-          pl={12}
-          pt={12}
+          pl={compactSurface ? 4 : 12}
+          pt={compactSurface ? 4 : 12}
           styles={{
             root: {
+              flex: "1 1 auto",
               height: "100%",
+              minHeight: 0,
             },
             content: {
               height: "100%",
+              minHeight: 0,
             },
           }}
         >
           <RichTextEditor.Content />
         </ScrollArea>
       </RichTextEditor>
-      {(saveError || display.showDocumentStats) && (
-        <Group pos="absolute" bottom={4} right={8} gap="xs" style={{ pointerEvents: saveError ? undefined : "none" }}>
+      {(saveError || showDocumentStats) && (
+        <Group
+          w="100%"
+          justify="flex-end"
+          gap="xs"
+          px={8}
+          pb={4}
+          style={{ flex: "0 0 auto", pointerEvents: saveError ? undefined : "none" }}
+        >
           {saveError && (
             <Tooltip label={saveError} multiline>
               <Text
@@ -539,7 +567,7 @@ export function Notebook({
               </Text>
             </Tooltip>
           )}
-          {display.showDocumentStats && (
+          {showDocumentStats && (
             <Text size="xs" c="dimmed">
               {t("documentStats", documentStats)}
             </Text>

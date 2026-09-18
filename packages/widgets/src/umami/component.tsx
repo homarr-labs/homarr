@@ -16,9 +16,16 @@ export default function UmamiWidget({
   width,
   height,
   displayMode = "compact",
+  displayScale = 1,
   widgetRuntimeRef,
 }: WidgetComponentProps<"umami">) {
   const integrationId = integrationIds[0] ?? "";
+  let responsiveWidth = width;
+  let responsiveHeight = height;
+  if (displayMode !== "advanced") {
+    responsiveWidth *= displayScale;
+    responsiveHeight *= displayScale;
+  }
   const commonTopInput = {
     integrationId,
     websiteId: options.websiteId,
@@ -82,8 +89,8 @@ export default function UmamiWidget({
       chartType={options.chartType}
       viewMode={options.viewMode}
       topCount={options.topCount}
-      width={width}
-      height={height}
+      width={responsiveWidth}
+      height={responsiveHeight}
       displayMode={displayMode}
     />
   );
