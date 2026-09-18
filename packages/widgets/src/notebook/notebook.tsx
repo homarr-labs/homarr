@@ -328,8 +328,12 @@ export function Notebook({
     characters: documentText.length,
     words: documentText.length === 0 ? 0 : documentText.split(/\s+/).length,
   };
-  const renderedWidth = width * displayScale;
-  const renderedHeight = height * displayScale;
+  let layoutScale = 1;
+  if (displayMode !== "advanced" && Number.isFinite(displayScale) && displayScale > 0) {
+    layoutScale = displayScale;
+  }
+  const renderedWidth = width * layoutScale;
+  const renderedHeight = height * layoutScale;
   const compactSurface = renderedWidth < 280 || renderedHeight < 240;
   const display = getNotebookDisplay({
     height: renderedHeight,

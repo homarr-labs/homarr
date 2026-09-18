@@ -73,7 +73,7 @@ export default function NotificationsWidget({
   }
   const isDense = responsiveWidth < 280 || responsiveHeight < 180;
   const isRoomy = width >= 360 && height >= 220;
-  const bodyLineClamp = responsiveHeight < 180 ? 1 : isDense ? 2 : height >= 300 ? 8 : 4;
+  const bodyLineClamp = responsiveHeight < 180 ? 1 : isDense ? 2 : responsiveHeight >= 300 ? 8 : 4;
   const notificationDisplay = getNotificationDisplay({
     displayMode,
     hideLogos: options.hideLogos,
