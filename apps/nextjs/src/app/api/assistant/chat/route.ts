@@ -65,6 +65,7 @@ import {
   createCustomWidgetToolStepGate,
 } from "./assistant-execution-policy";
 import { getAssistantStreamErrorMessage } from "./assistant-stream-error";
+import { shouldEmitAssistantMessageMetadata } from "./assistant-stream-metadata";
 import { getSafeAssistantToolError } from "./assistant-tool-error";
 import { repairAssistantToolInput } from "./assistant-tool-input-repair";
 import { getAssistantToolOutputMaxCharacters, toAssistantToolOutput } from "./assistant-tool-output";
@@ -849,6 +850,8 @@ export async function POST(request: Request) {
       originalMessages: parsed.data.messages as UIMessage<AssistantMessageMetadata>[],
       sendReasoning: true,
       messageMetadata: ({ part }) => {
+        if (!shouldEmitAssistantMessageMetadata(part)) return undefined;
+
         const common = {
           requestId,
           provider: configuration.provider,
