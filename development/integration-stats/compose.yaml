@@ -1,5 +1,0 @@
-name: homarr-stats-live
-include:
-  - content.compose.yaml
-  - media.compose.yaml
-  - infra.compose.yaml
