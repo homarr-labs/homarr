@@ -1,3 +1,4 @@
+import { getCustomWidgetSourceAuthType } from "@homarr/custom-widgets/core";
 import type { InferSelectModel } from "drizzle-orm";
 
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -50,12 +51,12 @@ export function mapCustomWidgetListItem(definition: StoredDefinition & { secrets
     name: widget.name,
     description: widget.description,
     iconUrl: widget.iconUrl,
-    sources: Object.entries(widget.sources).map(([id, { name, baseUrl, networkScope, auth }]) => ({
+    sources: Object.entries(widget.sources).map(([id, source]) => ({
       id,
-      name,
-      origin: new URL(baseUrl).origin,
-      networkScope,
-      authType: typeof auth === "string" ? auth : auth.type,
+      name: source.name,
+      origin: source.type === "integration" ? source.integrationKind : new URL(source.baseUrl).origin,
+      networkScope: source.networkScope,
+      authType: source.type === "integration" ? "integration" : getCustomWidgetSourceAuthType(source),
     })),
     requestCount: Object.keys(widget.requests).length,
     missingSecrets: getCustomWidgetSecretRequirements(widget.sources).filter(
@@ -110,11 +111,11 @@ export function mapAvailableCustomWidget(definition: StoredDefinition) {
       options: widget.options,
       defaultOptions: getCustomWidgetDefaultOptions(widget.options),
       template: widget.template,
-      sources: Object.entries(widget.sources).map(([id, { name, networkScope, auth }]) => ({
+      sources: Object.entries(widget.sources).map(([id, source]) => ({
         id,
-        name,
-        networkScope,
-        authType: typeof auth === "string" ? auth : auth.type,
+        name: source.name,
+        networkScope: source.networkScope,
+        authType: source.type === "integration" ? "integration" : getCustomWidgetSourceAuthType(source),
       })),
       requestCapabilities: Object.entries(widget.requests).map(
         ([id, { kind, method, trigger, permission, confirmation, invalidates }]) => ({

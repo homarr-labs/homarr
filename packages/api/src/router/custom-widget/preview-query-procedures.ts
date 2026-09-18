@@ -38,10 +38,10 @@ export const previewQueryProcedures = {
       if (definition?.kind !== "query")
         throw new TRPCError({ code: "NOT_FOUND", message: "Preview query was not found" });
       const request = { id: input.requestId, ...definition };
-      const resolved = getPreviewRequestSource(session, request.source);
+      const resolved = await getPreviewRequestSource(ctx, session, request);
       if (!resolved) throw new TRPCError({ code: "NOT_FOUND", message: "Preview source was not found" });
       const params = resolvePreviewRequestParams(request, session.options, input.params);
-      const targetUrl = renderRequestTarget(resolved.source.baseUrl, request, params);
+      const targetUrl = renderRequestTarget(resolved.baseUrl, request, params);
       const body = renderRequestBody(request, params);
       const release = await acquireCustomWidgetRequestLimit({
         category: "query",
@@ -52,15 +52,14 @@ export const previewQueryProcedures = {
       const startedAt = Date.now();
       try {
         const response = await executeCustomWidgetRequest({
-          baseUrl: resolved.source.baseUrl,
+          ...resolved,
           targetUrl,
           method: request.method,
           body,
           staticHeaders: request.headers,
           auth: request.auth === "none" ? undefined : resolved.auth,
-          networkScope: resolved.source.networkScope,
           kind: "query",
-          cacheKey: `custom-jsx:preview:${session.id}:${request.id}:${hashRuntimeParams(params)}`,
+          cacheKey: `custom-jsx:preview:${session.id}:${request.id}:${hashRuntimeParams(params)}:${resolved.cacheVersion}`,
           cacheTtlSeconds: request.cacheSeconds,
         });
         await recordPreviewJournal(session, {

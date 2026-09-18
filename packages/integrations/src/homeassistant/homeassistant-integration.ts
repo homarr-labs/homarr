@@ -5,6 +5,7 @@ import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/h
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 
+import type { IntegrationHttpAuthentication } from "../http-auth";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
@@ -17,6 +18,10 @@ import { calendarEventSchema, calendarsSchema, entityStateSchema } from "./homea
 const logger = createLogger({ module: "homeAssistantIntegration" });
 
 export class HomeAssistantIntegration extends Integration implements ISmartHomeIntegration, ICalendarIntegration {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    return { headers: this.getAuthHeaders() };
+  }
+
   public async getEntityStateAsync(entityId: string) {
     try {
       const response = await this.getAsync(`/api/states/${entityId}`);

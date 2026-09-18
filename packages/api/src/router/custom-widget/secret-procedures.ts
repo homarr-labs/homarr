@@ -1,3 +1,5 @@
+import { assertCustomWidgetIntegrationBindings } from "./source-resolver";
+import { getCustomWidgetSourceAuthType } from "@homarr/custom-widgets/core";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
@@ -58,12 +60,19 @@ export const secretProcedures = {
 
   sourceConfigure: permissionRequiredProcedure
     .requiresPermission("admin")
-    .meta({ mcp: { enabled: true, description: "Configure one custom widget API source and its credentials." } })
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Configure one custom widget source. For an integration source, provide integrationId from integration_all (matching integrationKind); omit URL and secrets. Requires administrator permission.",
+      },
+    })
     .input(
       z.object({
         definitionId: z.string(),
         sourceId: z.string(),
-        baseUrl: z.string(),
+        baseUrl: z.string().optional(),
+        integrationId: z.string().min(1).max(100).optional(),
         networkScope: z.enum(["public", "private", "loopback"]).optional(),
         secrets: customWidgetSecretsInputSchema.default([]),
       }),
@@ -76,22 +85,34 @@ export const secretProcedures = {
       const definition = parseStoredCustomWidgetDefinition(stored);
       const current = definition.sources[input.sourceId];
       if (!current) throw new TRPCError({ code: "NOT_FOUND", message: "Widget source not found" });
-      const source = customWidgetSourceSchema.parse({
-        ...current,
-        baseUrl: input.baseUrl,
-        networkScope: input.networkScope ?? current.networkScope,
-      });
+      let configuration: unknown;
+      if (current.type === "integration") {
+        if (
+          !input.integrationId ||
+          input.baseUrl !== undefined ||
+          input.networkScope !== undefined ||
+          input.secrets.length > 0
+        ) {
+          throw new TRPCError({ code: "BAD_REQUEST", message: "Integration sources require only an integrationId" });
+        }
+        configuration = { ...current, integrationId: input.integrationId };
+      } else {
+        if (input.integrationId)
+          throw new TRPCError({ code: "BAD_REQUEST", message: "HTTP sources cannot bind an integration" });
+        configuration = {
+          ...current,
+          baseUrl: input.baseUrl,
+          networkScope: input.networkScope ?? current.networkScope,
+        };
+      }
+      const source = customWidgetSourceSchema.parse(configuration);
+      await assertCustomWidgetIntegrationBindings(ctx, { [input.sourceId]: source });
       assertSecretSources({ [input.sourceId]: source }, input.secrets);
-      const configuredSource = await configureCustomWidgetSource(ctx.db, {
-        definitionId: input.definitionId,
-        sourceId: input.sourceId,
-        baseUrl: source.baseUrl,
-        networkScope: input.networkScope,
-        secrets: input.secrets,
-      });
+      const configuredSource = await configureCustomWidgetSource(ctx.db, { ...input, expectedSource: current });
       return {
         definitionId: input.definitionId,
         sourceId: input.sourceId,
+        integrationId: configuredSource.integrationId,
         baseUrl: configuredSource.baseUrl,
         networkScope: configuredSource.networkScope,
         configuredSecrets: input.secrets.map(({ kind }) => kind),
@@ -110,7 +131,7 @@ export const secretProcedures = {
       }
 
       let widgetName: string;
-      let source: { id: string; name: string; auth: string | { type: string }; value: CustomWidgetSource } | undefined;
+      let source: { id: string; name: string; auth: CustomWidgetSource["auth"]; value: CustomWidgetSource } | undefined;
       let target: { type: "definition"; id: string } | { type: "preview"; id: string };
       if (input.definitionId) {
         const stored = await ctx.db.query.customWidgetDefinitions.findFirst({
@@ -144,7 +165,7 @@ export const secretProcedures = {
         target = { type: "preview", id: preview.id };
       }
       if (!source) throw new TRPCError({ code: "NOT_FOUND", message: "Widget source not found" });
-      const kinds = [...requiredSecretKinds(typeof source.auth === "string" ? source.auth : source.auth.type)];
+      const kinds = [...requiredSecretKinds(getCustomWidgetSourceAuthType(source))];
       const request = await createCustomWidgetConfigurationRequest({
         userId: ctx.session.user.id,
         target,

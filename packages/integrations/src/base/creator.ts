@@ -1,3 +1,4 @@
+import { isHttpIntegrationKind } from "@homarr/definitions";
 import type { IntegrationKind } from "@homarr/definitions";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
@@ -161,4 +162,11 @@ export async function createIntegrationAsync(
     );
     throw error;
   }
+}
+
+export async function getIntegrationHttpAuthenticationAsync(integration: IntegrationInput & { kind: IntegrationKind }) {
+  if (!isHttpIntegrationKind(integration.kind))
+    throw new Error("This integration does not support arbitrary HTTP requests");
+  const client = await createIntegrationAsync(integration);
+  return client.getHttpAuthenticationAsync();
 }

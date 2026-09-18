@@ -1,20 +1,21 @@
 import { Buffer } from "node:buffer";
-import type { ConnectionOptions } from "node:tls";
 import { STATUS_CODES } from "node:http";
 import { Headers, Response } from "undici";
 
-import type { CustomJsxNetworkScope, CustomWidgetMethod } from "../core";
-import { applyAuth } from "./auth";
+import type { CustomWidgetHttpRequest, CustomWidgetHttpResponse } from "./request-types";
+export type { CustomWidgetAuthConfig, CustomWidgetHttpRequest, CustomWidgetHttpResponse } from "./request-types";
+import { applyAuth, performAuthenticatedRequest } from "./auth";
 import { CustomWidgetDomainError } from "./errors";
 import {
   assertSafeStaticHeaders,
+  assertCustomWidgetPathScope,
   createPinnedAgent,
   resolveAndValidateHost,
   resolveSameOriginTarget,
   validateCustomWidgetUrl,
 } from "./network-policy";
 import { closeDispatcher } from "./request-dispatcher-lifecycle";
-import { parseResponseBody } from "./response";
+import { parseResponseBody, redactResponseSecrets } from "./response";
 
 export {
   assertSafeStaticHeaders,
@@ -38,35 +39,6 @@ export const MAX_REQUEST_DURATION_MS = 45_000;
 const TIMEOUT_ERROR_CODES = new Set(["UND_ERR_CONNECT_TIMEOUT", "UND_ERR_HEADERS_TIMEOUT", "UND_ERR_BODY_TIMEOUT"]);
 const RESPONSE_TOO_LARGE_ERROR_CODE = "UND_ERR_RES_EXCEEDED_MAX_SIZE";
 
-export interface CustomWidgetAuthConfig {
-  type: string;
-  secrets: Array<{ kind: string; value: string }>;
-  headerName?: string | null;
-}
-
-export interface CustomWidgetHttpRequest {
-  baseUrl: string;
-  targetUrl?: string | URL;
-  method: CustomWidgetMethod;
-  body?: string;
-  staticHeaders?: Record<string, string>;
-  auth?: CustomWidgetAuthConfig;
-  networkScope: CustomJsxNetworkScope;
-  kind: "query" | "action";
-  timeoutMs?: number;
-  textFallback?: boolean;
-  tls?: Pick<ConnectionOptions, "ca" | "checkServerIdentity">;
-  cacheKey?: string;
-  cacheTtlSeconds?: number;
-  logError?: (event: { origin: string; method: CustomWidgetMethod; errorName: string; reason?: "timeout" }) => void;
-}
-
-export interface CustomWidgetHttpResponse {
-  ok: boolean;
-  status: number;
-  statusText: string;
-  data: unknown;
-}
 const cache = new Map<string, { expiresAt: number; response: CustomWidgetHttpResponse }>();
 const inFlight = new Map<string, Promise<CustomWidgetHttpResponse>>();
 let cacheEpoch = 0;
@@ -82,7 +54,8 @@ async function performRequest(input: CustomWidgetHttpRequest): Promise<CustomWid
     Math.min(input.timeoutMs ?? MAX_REQUEST_DURATION_MS, MAX_REQUEST_DURATION_MS),
   );
   try {
-    return await performRequestWithinDeadline(input, controller.signal);
+    assertRequest(input);
+    return await performAuthenticatedRequest(input, controller.signal, performRequestWithinDeadline);
   } catch (error) {
     if (controller.signal.aborted) {
       throw new CustomWidgetDomainError({
@@ -117,6 +90,7 @@ async function performRequestWithinDeadline(
   let currentBody = input.body;
   const maxRedirects = input.kind === "query" ? MAX_QUERY_REDIRECTS : 0;
   for (let redirects = 0; ; redirects += 1) {
+    if (input.pathPrefix !== undefined) assertCustomWidgetPathScope(currentUrl, input.pathPrefix);
     const dispatcher = createPinnedAgent(
       await resolveAndValidateHost(currentUrl.hostname, input.networkScope, { signal: deadlineSignal }),
       REQUEST_TIMEOUT_MS,
@@ -143,15 +117,17 @@ async function performRequestWithinDeadline(
           statusText: STATUS_CODES[responseData.statusCode] ?? "",
           headers: normalizeResponseHeaders(responseData.headers),
         });
-        result = {
-          kind: "response",
-          response: {
-            ok: response.ok,
-            status: response.status,
-            statusText: response.statusText,
-            data: await parseResponseBody(response, input.textFallback),
-          },
+        const parsed = {
+          ok: response.ok,
+          status: response.status,
+          statusText: response.statusText,
+          data: await parseResponseBody(response, input.textFallback),
         };
+        parsed.data = redactResponseSecrets(parsed.data, [
+          ...(input.redactSecrets ?? []),
+          ...(input.auth?.secrets ?? []),
+        ]);
+        result = { kind: "response", response: parsed };
       } else {
         await responseData.body.dump();
         result = {
@@ -256,6 +232,7 @@ function buildHeaders(input: CustomWidgetHttpRequest, url: URL, body: string | u
   if (input.auth) {
     if (input.auth.type === "apiKeyHeader") assertSafeStaticHeaders({ [input.auth.headerName ?? "X-API-Key"]: "" });
     applyAuth(headers, url, input.auth.type, input.auth.secrets, input.auth.headerName);
+    for (const [name, value] of Object.entries(input.auth.headers ?? {})) headers.set(name, value);
   }
   return headers;
 }

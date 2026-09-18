@@ -725,3 +725,27 @@ export const integrationCategories = [
 ] as const;
 
 export type IntegrationCategory = (typeof integrationCategories)[number];
+
+/** Integrations with a reusable HTTP authentication contract. */
+const httpIntegrationKinds = [
+  "sonarr",
+  "radarr",
+  "lidarr",
+  "readarr",
+  "prowlarr",
+  "overseerr",
+  "jellyseerr",
+  "seerr",
+  "immich",
+  "slskd",
+  "homeAssistant",
+  "coolify",
+  "audiobookshelf",
+  "speedtestTracker",
+  "adGuardHome",
+  "nextcloud",
+] as const satisfies readonly IntegrationKind[];
+
+export function isHttpIntegrationKind(kind: string): kind is (typeof httpIntegrationKinds)[number] {
+  return httpIntegrationKinds.some((supported) => supported === kind);
+}

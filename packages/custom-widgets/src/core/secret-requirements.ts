@@ -1,3 +1,4 @@
+import { getCustomWidgetSourceAuthType } from "./request-schema";
 import type { CustomWidgetSource } from "./request-schema";
 import type { CustomWidgetSecretKind } from "./schema-types";
 
@@ -21,7 +22,7 @@ export function getCustomWidgetSecretRequirements(
   sources: Record<string, CustomWidgetSource>,
 ): CustomWidgetSecretRequirement[] {
   return Object.entries(sources).flatMap(([sourceId, source]) => {
-    const authType = typeof source.auth === "string" ? source.auth : source.auth.type;
+    const authType = getCustomWidgetSourceAuthType(source);
     return getCustomWidgetRequiredSecretKinds(authType).map((kind) => ({
       sourceId,
       sourceName: source.name ?? sourceId,
