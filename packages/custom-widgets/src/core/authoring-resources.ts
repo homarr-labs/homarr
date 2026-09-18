@@ -13,7 +13,7 @@ export const CUSTOM_WIDGET_SKILL_SOURCE_URL =
   "https://github.com/homarr-labs/homarr/tree/HEAD/.agents/skills/homarr-custom-widget";
 export const CUSTOM_WIDGET_SKILL_INSTALL_COMMAND =
   "npx skills add https://github.com/homarr-labs/homarr --skill homarr-custom-widget";
-export const CUSTOM_WIDGET_SKILL_VERSION = "2.10.1";
+export const CUSTOM_WIDGET_SKILL_VERSION = "2.10.2";
 export const CUSTOM_WIDGET_SKILL_REFERENCE_NAMES = ["schema", "runtime", "security"] as const;
 export type CustomWidgetSkillReferenceName = (typeof CUSTOM_WIDGET_SKILL_REFERENCE_NAMES)[number];
 
@@ -85,7 +85,7 @@ The object key \`default\` is the required source ID; \`default\` is not a prope
 }
 \`\`\`
 
-Auth is \`none\`, \`bearer\`, \`basic\`, \`{ "type": "apiKeyHeader", "name": "X-Api-Key" }\`, or \`{ "type": "apiKeyQuery", "name": "api_key" }\`. A request defaults to source \`default\`, kind \`query\`, method \`GET\`, trigger \`load\`, inherited auth, and view permission. Set \`trigger: "manual"\` for a parameterized query. An action defaults to manual and modify permission. DELETE uses full permission and confirmation. Do not use \`load: false\`.
+Auth is \`none\`, \`bearer\`, \`basic\`, \`{ "type": "apiKeyHeader", "name": "X-Api-Key" }\`, or \`{ "type": "apiKeyQuery", "name": "api_key" }\`. A request defaults to source \`default\`, kind \`query\`, method \`GET\`, trigger \`load\`, inherited auth, and view permission. Set \`trigger: "manual"\` for a parameterized query. An action defaults to manual and modify permission. Actions stay manual; preserve confirmation, permission, and invalidates only when declared or required. DELETE uses full permission and confirmation. Do not use \`load: false\`.
 
 Use stable real URLs for public APIs and clear suggested URLs for self-hosted services. Homarr collects the installer's server URL, network scope, and credentials as source setup; credentials remain outside the manifest.
 
@@ -101,8 +101,8 @@ Templates read \`data.requestId\`, \`status.requestId\`, \`options.name\`, and t
 
 \`\`\`jsx
 <TextInput bind="search" label="Search" />
-<Pagination bind="page" resetKey={inputs.search} defaultValue={1} total={5} />
-<SubFetch requestId="search" trigger="manual" params={{ query: inputs.search, page: inputs.page ?? 1 }}>
+<NumberInput bind="page" label="Page" defaultValue={1} resetKey={inputs.search} min={1} />
+<SubFetch requestId="search" trigger="manual" params={{ query: inputs.search ?? "", page: inputs.page ?? 1 }}>
   {(result) => <Stack>{(result.results ?? []).map(item => <Text key={item.id}>{item.name}</Text>)}</Stack>}
 </SubFetch>
 \`\`\`
@@ -117,7 +117,7 @@ When a manual SubFetch request ID, parameters, or effective definition changes, 
 
 The \`SubFetch\` callback receives the entire JSON response exactly as previewed. If the response is \`{ "results": [...] }\`, render and map \`result.results\`; never map the envelope itself. Trace every rendered field from the preview response before persistence.
 
-Format timestamps with safe static helpers; never use \`new Date\`. Never invent a formatter component. Use \`Date.toLocaleString(value, "en-US", "UTC")\` plus a visible \`UTC\` label. Also available: \`Date.toISOString\`, \`Date.toLocaleDateString\`, and \`Date.toLocaleTimeString\`.
+Format timestamps with safe static helpers; never use \`new Date\`. Never invent a formatter component. Use \`Date.toLocaleString(value, "en-US", documentedTimezone)\` and label the documented timezone; if no timezone is documented, preserve the source value or omit any timezone label; use UTC only when the response contract says UTC. Also available: \`Date.toISOString\`, \`Date.toLocaleDateString\`, and \`Date.toLocaleTimeString\`.
 
 For compact numeric enums, index a literal label array with a fallback:
 
@@ -127,7 +127,7 @@ For compact numeric enums, index a literal label array with a fallback:
 
 Every stateful control must use \`bind\`, and its \`inputs.<name>\` value must feed a supported request/helper when it is meant to change remote data. For dependent pagination, declare \`defaultValue={1}\` and use \`resetKey={inputs.search}\` to restore page 1 when the query changes. If a control cannot affect the workflow through a binding, option, or runtime helper, render concise context instead of a dead control.
 
-Callback parameters must not shadow the reserved roots \`data\`, \`status\`, \`options\`, or \`inputs\`. Use \`<Icon name="refresh" />\` or \`<TablerIcon name="refresh" />\`; never invent components such as \`<IconFoo />\`.
+Callback parameters must not shadow the reserved roots \`data\`, \`status\`, \`options\`, or \`inputs\`. Use registered component names returned by discovery; \`Icon\` is an accepted alias for canonical \`TablerIcon\`. Never invent components such as \`<IconFoo />\`.
 
 Use expression callbacks for supported collections and trusted slots. No callback blocks, IIFEs, authored recursion, or raw events. Regex is limited to safe string operations.
 `,
@@ -173,6 +173,8 @@ there is no top-level \`actions\` field.
   the credential.
 - Requests use a leading-slash \`path\`; declare \`source\`, \`method\`, and \`trigger\` when they differ from defaults. Load
   queries use \`trigger: "load"\`; manual parameterized queries and actions use \`trigger: "manual"\`.
+- Actions stay manual; preserve \`confirmation\`, \`permission\`, and \`invalidates\` only when declared or required. DELETE uses
+  full permission and confirmation.
 - Read load data from \`data.requestId\`. Check \`status.requestId?.loading\` and \`status.requestId?.ok === false\`; guard
   arrays and nested fields and use \`??\` for truthful fallbacks. Render requested fields from the supplied contract.
 - A load template shows loading, error, empty, and success states and includes \`RefreshButton requestId="..."\`.
@@ -180,20 +182,24 @@ there is no top-level \`actions\` field.
 - Options have \`label\`, \`control\`, and \`default\`; bind with \`{option:name}\` or \`$option\`. A dependent control has its
   own default and \`resetKey={inputs.dependency}\`. Do not add lookup, pagination, or detail requests for omitted fields.
 - Keep templates expression-only: no imports, hooks, refs, raw HTML/events, browser requests, eval, recursion, IIFEs,
-  statement blocks, or arbitrary functions. Use named \`Icon\` or \`TablerIcon\`. Keep credentials and deployment values in
-  Homarr configuration; never put tokens, keys, authorization values, or redacted credential placeholders in the manifest.
+  statement blocks, or arbitrary functions. Use registered names returned by component discovery; \`Icon\` is an accepted alias
+  for canonical \`TablerIcon\`. Keep credentials and deployment values in Homarr configuration; never put tokens, keys,
+  authorization values, or redacted credential placeholders in the manifest.
 
 Minimum shape: include \`$schema\`, \`sources.default\`, \`requests\`, and \`template\`; actions live under \`requests\` with \`kind: "action"\`.
 
 Use \`data.items?.map(item => ...)\` only after loading/error branches and provide a no-items branch. Label timestamps with
-the source timezone when known. Keep hierarchy, imagery, actions, and narrow/wide layout purposeful; avoid dead controls.
+the documented source timezone; if none is documented, preserve the source value or omit any timezone label; use UTC only when the contract says UTC. Keep hierarchy, imagery, actions, and narrow/wide
+layout purposeful; avoid dead controls.
 
 ## Bounded lifecycle
 
 1. Build the credential-free definition from the request, verified context, and sample. Preserve a migration's API path,
    method, body, options, and visible behavior.
 2. Call \`customWidget_validateTemplate\` for focused JSX diagnostics. Send source/request/option changes once to
-   \`customWidget_previewCreate\`; use \`customWidget_previewReviseTemplate\` for a JSX-only correction in its session.
+   \`customWidget_previewCreate\`; use \`customWidget_previewReviseTemplate\` for a JSX-only correction in its session. In the
+   Assistant wrapper, multiline JSX goes to \`customWidget_validateTemplate\` and \`customWidget_previewReviseTemplate\` as
+   \`templateLines\`; \`previewCreate\` receives the complete definition with \`template\` or \`templateLines\`.
 3. Test every returned query or simulated action once. After a validation failure, make one corrected candidate and
    revalidate. Stop when the result is incomplete, the workbench closes, or the provider/model rejects the call.
 4. After a successful final preview and exact tests, call \`customWidget_createFromPreview\`; configure private URLs and
@@ -208,13 +214,13 @@ from syntax or schema checks alone.
 
 const CUSTOM_WIDGET_SKILL_ENTRYPOINT_MD = `# Homarr Custom Widget authoring index
 
-Use release-matched tools and load only context required by the design. Research primary API documentation once. For each widget, validate JSX, create one preview, test every returned query and relevant simulated action, then persist that exact preview. A JSX-only correction uses \`customWidget_previewReviseTemplate\` with the session; it inherits the manifest and resets evidence.
+Use release-matched tools and load only context required by the design. Research primary API documentation once. For each widget, validate JSX, create one preview, test every returned query and relevant simulated action, then persist that exact preview. A JSX-only correction uses \`customWidget_previewReviseTemplate\` with the session; it inherits the manifest and resets evidence. In the Assistant wrapper, send multiline JSX to \`customWidget_validateTemplate\` and \`customWidget_previewReviseTemplate\` as \`templateLines\`; \`previewCreate\` receives the complete definition with \`template\` or \`templateLines\`.
 
 Deliver the smallest complete result. Preserve a migration's API intent, request shape, and visible behavior; simple lists use one source, one request, and a compact template. Run each lifecycle call once; one validation failure may lead to one correction and revalidation. On provider/model, unavailable, \`contextAlreadyLoaded\`, or closed-workbench errors, stop retrying and reuse loaded context. If lifecycle tools cannot run, return one complete importable definition and one unverified note. Use the configured model exactly and keep updates to the result and next action.
 
 Fallback artifact contract: emit one parseable \`json\` fence with \`sources.default.baseUrl\`, \`networkScope\`, and \`auth\`, leading-slash request paths, option \`control\`, and status checks such as \`status.id?.loading\` or \`status.id?.ok === true\`. Never compare \`status.id\` directly; keep the unverified note outside the fence. Templates read \`data.requestId\` and \`status.requestId\`.
 
-Load \`schema\` once for a new manifest, \`runtime\` for manual interactions, and \`security\` once for authenticated sources or mutations. Use one focused component search per job, keep credentials outside definitions, and make initial, loading, empty, error, and success states useful. Independent context reads may run together; lifecycle tools run one at a time.`;
+Load \`schema\` once for a new manifest, \`runtime\` for manual interactions, and \`security\` once for authenticated sources or mutations. Use one focused component search per job, prefer registered names returned by discovery (\`Icon\` aliases canonical \`TablerIcon\`), keep credentials outside definitions, and make initial, loading, empty, error, and success states useful. Independent context reads may run together; lifecycle tools run one at a time.`;
 
 const CUSTOM_WIDGET_SKILL_BUNDLE_MD = [
   CUSTOM_WIDGET_SKILL_MD.trimEnd(),

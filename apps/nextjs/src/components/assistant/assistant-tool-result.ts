@@ -90,6 +90,16 @@ interface ToolResultPresentationOptions {
 
 const asRecord = (value: unknown): Record<string, unknown> | undefined => (isRecord(value) ? value : undefined);
 
+export const hasMeaningfulToolResultError = (value: unknown) => {
+  const record = asRecord(value);
+  if (!record || !("error" in record)) return false;
+
+  const error = record.error;
+  if (error === null || error === undefined || error === false) return false;
+  if (typeof error === "string") return error.trim().length > 0;
+  return true;
+};
+
 const toDisplayValue = (value: unknown): ToolResultPrimitive | undefined => {
   if (typeof value === "string") {
     const trimmed = value.trim();
@@ -241,7 +251,7 @@ export const getToolResultPresentation = (
     };
   }
 
-  if (!record || "error" in record) return undefined;
+  if (!record || hasMeaningfulToolResultError(record)) return undefined;
   const fields = getFields(record, false);
   return fields.length > 0 ? { type: "properties", fields } : undefined;
 };
