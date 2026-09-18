@@ -56,6 +56,287 @@ interface IntegrationDefinition {
 }
 
 export const integrationDefs = {
+  autobrr: {
+    name: "Autobrr",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/autobrr.svg",
+    category: ["miscellaneous"],
+    documentationSlug: "autobrr",
+    defaultPort: 7474,
+  },
+  jellystat: {
+    name: "Jellystat",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/jellystat.svg",
+    category: ["miscellaneous"],
+    documentationSlug: "jellystat",
+    defaultPort: 3000,
+  },
+  scrutiny: {
+    name: "Scrutiny",
+    secretKinds: [[]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/scrutiny.svg",
+    category: ["miscellaneous"],
+    documentationSlug: "scrutiny",
+    defaultPort: 8080,
+  },
+  tubearchivist: {
+    name: "Tube Archivist",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/tube-archivist.png",
+    category: ["miscellaneous"],
+    documentationSlug: "tubearchivist",
+    defaultPort: 8000,
+  },
+  frigate: {
+    name: "Frigate",
+    secretKinds: [[]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/frigate.svg",
+    category: ["miscellaneous"],
+    documentationSlug: "frigate",
+    defaultPort: 5000,
+  },
+  komga: {
+    name: "Komga",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/komga.svg",
+    category: ["miscellaneous"],
+    documentationSlug: "komga",
+    defaultPort: 25600,
+  },
+  netalertx: {
+    name: "NetAlertX",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/netalertx.svg",
+    category: ["miscellaneous"],
+    documentationSlug: "netalertx",
+    defaultPort: 20212,
+  },
+  jackett: {
+    name: "Jackett",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/jackett.svg",
+    category: ["indexerManager"],
+    documentationSlug: "jackett",
+    defaultPort: 9117,
+  },
+
+  yourSpotify: {
+    name: "Your Spotify",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/your-spotify.svg",
+    category: ["miscellaneous"],
+    documentationSlug: "your-spotify",
+    defaultPort: 8080,
+  },
+
+  romm: {
+    name: "RomM",
+    secretKinds: [[]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/romm.svg",
+    category: ["miscellaneous"],
+    documentationSlug: "romm",
+    defaultPort: 8080,
+  },
+
+  homebox: {
+    name: "Homebox",
+    secretKinds: [["username", "password"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/homebox.svg",
+    category: ["miscellaneous"],
+    documentationSlug: "homebox",
+    defaultPort: 7745,
+  },
+
+  mealie: {
+    name: "Mealie",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/mealie.svg",
+    category: ["miscellaneous"],
+    documentationSlug: "mealie",
+    defaultPort: 9000,
+  },
+
+  xteve: {
+    name: "xTeVe",
+    secretKinds: [[], ["username", "password"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/xteve.png",
+    category: ["miscellaneous"],
+    documentationSlug: "xteve",
+    defaultPort: 34400,
+  },
+
+  unmanic: {
+    name: "Unmanic",
+    secretKinds: [[]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/unmanic.png",
+    category: ["miscellaneous"],
+    documentationSlug: "unmanic",
+    defaultPort: 8888,
+  },
+
+  syncthingRelay: {
+    name: "Syncthing Relay",
+    secretKinds: [[]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/syncthing.svg",
+    category: ["miscellaneous"],
+    documentationSlug: "syncthing-relay",
+    defaultPort: 22070,
+  },
+
+  stash: {
+    name: "Stash",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/stash.svg",
+    category: ["miscellaneous"],
+    documentationSlug: "stash",
+    defaultPort: 9999,
+  },
+
+  prometheus: {
+    name: "Prometheus",
+    secretKinds: [[], ["username", "password"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/prometheus.svg",
+    category: ["miscellaneous"],
+    documentationSlug: "prometheus",
+    defaultPort: 9090,
+  },
+
+  plantit: {
+    name: "Plant-it",
+    secretKinds: [["username", "password"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/plant-it.png",
+    category: ["miscellaneous"],
+    documentationSlug: "plantit",
+    defaultPort: 8080,
+  },
+
+  netdata: {
+    name: "Netdata",
+    secretKinds: [[]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/netdata.svg",
+    category: ["miscellaneous"],
+    documentationSlug: "netdata",
+    defaultPort: 19999,
+  },
+
+  myspeed: {
+    name: "MySpeed",
+    secretKinds: [[], ["password"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/myspeed.svg",
+    category: ["miscellaneous"],
+    documentationSlug: "myspeed",
+    defaultPort: 5216,
+  },
+
+  fileflows: {
+    name: "FileFlows",
+    secretKinds: [[]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/fileflows.svg",
+    category: ["miscellaneous"],
+    documentationSlug: "fileflows",
+    defaultPort: 19200,
+  },
+
+  trilium: {
+    name: "Trilium",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/trilium.svg",
+    category: ["miscellaneous"],
+    documentationSlug: "trilium",
+    defaultPort: 8080,
+  },
+
+  tandoor: {
+    name: "Tandoor",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/tandoor-recipes.svg",
+    category: ["miscellaneous"],
+    documentationSlug: "tandoor",
+    defaultPort: 8080,
+  },
+
+  spoolman: {
+    name: "Spoolman",
+    secretKinds: [[]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/spoolman.svg",
+    category: ["miscellaneous"],
+    documentationSlug: "spoolman",
+    defaultPort: 7912,
+  },
+
+  miniflux: {
+    name: "Miniflux",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/miniflux.svg",
+    category: ["miscellaneous"],
+    documentationSlug: "miniflux",
+    defaultPort: 8080,
+  },
+
+  maintainerr: {
+    name: "Maintainerr",
+    secretKinds: [[]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/maintainerr.svg",
+    category: ["miscellaneous"],
+    documentationSlug: "maintainerr",
+    defaultPort: 6246,
+  },
+
+  linkwarden: {
+    name: "Linkwarden",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/linkwarden.png",
+    category: ["miscellaneous"],
+    documentationSlug: "linkwarden",
+    defaultPort: 3000,
+  },
+
+  karakeep: {
+    name: "Karakeep",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/karakeep.svg",
+    category: ["miscellaneous"],
+    documentationSlug: "karakeep",
+    defaultPort: 3000,
+  },
+
+  healthchecks: {
+    name: "Healthchecks",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/healthchecks.svg",
+    category: ["miscellaneous"],
+    documentationSlug: "healthchecks",
+    defaultPort: 8000,
+  },
+
+  gatus: {
+    name: "Gatus",
+    secretKinds: [[]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/gatus.svg",
+    category: ["miscellaneous"],
+    documentationSlug: "gatus",
+    defaultPort: 8080,
+  },
+
+  changedetection: {
+    name: "Changedetection.io",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/changedetection.svg",
+    category: ["miscellaneous"],
+    documentationSlug: "changedetection",
+    defaultPort: 5000,
+  },
+
+  caddy: {
+    name: "Caddy",
+    secretKinds: [[]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/caddy.svg",
+    category: ["miscellaneous"],
+    documentationSlug: "caddy",
+    defaultPort: 2019,
+  },
+
   sabNzbd: {
     name: "SABnzbd",
     secretKinds: [["apiKey"]],

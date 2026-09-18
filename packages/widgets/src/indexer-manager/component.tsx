@@ -17,7 +17,7 @@ import {
   Tooltip,
   VisuallyHidden,
 } from "@mantine/core";
-import { IconCircleCheck, IconCircleX, IconReportSearch, IconTestPipe } from "@tabler/icons-react";
+import { IconCircleCheck, IconCircleX, IconHelpCircle, IconReportSearch, IconTestPipe } from "@tabler/icons-react";
 import combineClasses from "clsx";
 
 import { clientApi } from "@homarr/api/client";
@@ -40,6 +40,7 @@ const statusPresentation = {
   healthy: { color: "green" },
   unhealthy: { color: "red" },
   disabled: { color: "gray" },
+  unknown: { color: "gray" },
 } as const;
 
 export default function IndexerManagerWidget({
@@ -78,6 +79,8 @@ export default function IndexerManagerWidget({
   const hasSmallHeight = !isAdvanced && height < 256;
   const allIndexers = indexersData.flatMap((entry) => entry.indexers);
   const hasSourceError = indexersData.some((entry) => Boolean(entry.error));
+  const healthyCount = allIndexers.filter((indexer) => getIndexerDisplayStatus(indexer) === "healthy").length;
+  const unknownCount = allIndexers.filter((indexer) => getIndexerDisplayStatus(indexer) === "unknown").length;
   const unavailableCount = allIndexers.filter(
     (indexer) => indexer.status === false || indexer.enabled === false,
   ).length;
@@ -123,8 +126,13 @@ export default function IndexerManagerWidget({
         {isAdvanced && (
           <Group gap={4} wrap="nowrap">
             <Badge size="xs" color="green" variant="light">
-              {allIndexers.length - unavailableCount}
+              {healthyCount}
             </Badge>
+            {unknownCount > 0 && (
+              <Badge size="xs" color="gray" variant="light" aria-label={t("status.unknown")}>
+                {unknownCount}
+              </Badge>
+            )}
             {unavailableCount > 0 && (
               <Badge size="xs" color="red" variant="light">
                 {unavailableCount}
@@ -190,6 +198,9 @@ export default function IndexerManagerWidget({
                   const href = getSafeApplicationUrl(indexer.url);
                   const displayStatus = getIndexerDisplayStatus(indexer);
                   const presentation = statusPresentation[displayStatus];
+                  let StatusIcon = IconCircleX;
+                  if (displayStatus === "healthy") StatusIcon = IconCircleCheck;
+                  if (displayStatus === "unknown") StatusIcon = IconHelpCircle;
                   return (
                     <Group
                       className={combineClasses(
@@ -223,17 +234,12 @@ export default function IndexerManagerWidget({
                         <Badge size="xs" color={presentation.color} variant="light">
                           {t(`status.${displayStatus}` as never)}
                         </Badge>
-                      ) : displayStatus === "healthy" ? (
-                        <IconCircleCheck
-                          className="indexer-manager-line-status-icon indexer-manager-line-icon-enabled"
-                          color="#2ecc71"
-                          style={hasSmallWidth ? iconSizes.xs : iconSizes.md}
-                        />
                       ) : (
-                        <IconCircleX
-                          className="indexer-manager-line-status-icon indexer-manager-line-icon-disabled"
-                          color="#d9534f"
+                        <StatusIcon
+                          className="indexer-manager-line-status-icon"
+                          color={`var(--mantine-color-${presentation.color}-6)`}
                           style={hasSmallWidth ? iconSizes.xs : iconSizes.md}
+                          aria-label={t(`status.${displayStatus}` as never)}
                         />
                       )}
                     </Group>

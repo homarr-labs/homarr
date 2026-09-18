@@ -14,6 +14,15 @@ import { mediaOrganizerPriorities } from "../media-organizer";
 const logger = createLogger({ module: "lidarrIntegration" });
 
 export class LidarrIntegration extends Integration implements ICalendarIntegration {
+  async getLibraryStatsAsync() {
+    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/artist"), {
+      headers: { "X-Api-Key": this.getSecretValue("apiKey") },
+    });
+    if (!response.ok) throw new Error(`Lidarr library request failed (${response.status})`);
+    const library = z.array(z.object({ monitored: z.boolean() })).parse(await response.json());
+    return { artists: library.length, monitored: library.filter((artist) => artist.monitored).length };
+  }
+
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await input.fetchAsync(this.url("/api"), {
       headers: { "X-Api-Key": super.getSecretValue("apiKey") },

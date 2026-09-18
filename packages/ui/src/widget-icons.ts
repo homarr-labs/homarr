@@ -58,6 +58,7 @@ import type { TablerIcon } from "@tabler/icons-react";
 import type { WidgetKind } from "@homarr/definitions";
 
 export const widgetCatalogIcons: Record<WidgetKind, TablerIcon> = {
+  stats: IconChartBar,
   clock: IconClock,
   weather: IconCloud,
   airQuality: IconWind,

@@ -149,6 +149,22 @@ Change the name, logo, favicon, colors, corner styles and login page. Global CSS
 
 Add content without leaving the board. Settings have live previews, and supported widgets have advanced views. Weather and Clock were redesigned; Air Quality, Countdown and Timer are new.
 
+### Statistics and 32 new integrations
+
+The new [Statistics widget](/docs/widgets/stats) combines fields from different services in one grid: Sonarr shows beside Paperless-ngx documents, Navidrome songs or Homebox inventory. Choose cards, compact rows or tables grouped by integration. Click a metric for related fields, or open **Advanced view** from the context menu to see every available field from the selected sources.
+
+Add your services in **Management → Integrations**, then select them and their metrics in Statistics settings. Labels, order and abbreviated values are configurable; the widget's local view controls let you try a different arrangement without changing the shared board. The demo board includes mocked cards, rows and tables.
+
+This release adds:
+
+- **Media and libraries:** Autobrr, FileFlows, Jackett, Jellystat, Komga, Maintainerr, RomM, Stash, Tube Archivist, Unmanic, xTeVe and Your Spotify.
+- **Monitoring and networking:** Caddy, Changedetection.io, Frigate, Gatus, Healthchecks, MySpeed, NetAlertX, Netdata, Prometheus, Scrutiny and Syncthing Relay.
+- **Collections and home:** Homebox, Karakeep, Linkwarden, Mealie, Miniflux, Plant-it, Spoolman, Tandoor and Trilium.
+
+The [integration and metric reference](/docs/widgets/stats#new-service-integrations-in-v2) links to each setup guide. Jackett also joins the Indexer Manager widget. Existing supported integrations reuse their Homarr clients.
+
+Statistics keeps saved snapshots until you refresh them. Multiple metrics from one source share retrieval, and dashboard loads read cached data instead of refetching every service. **Right-click → Refresh** retrieves new source data and shows the oldest saved snapshot's age; unsuccessful refreshes keep the previous values. These are on-demand snapshots, not live monitoring.
+
 ### Docker and Podman
 
 `DOCKER_ENDPOINTS` supports several hosts. Assisted setup and container labels can create apps, integrations, Containers, widgets and health checks.

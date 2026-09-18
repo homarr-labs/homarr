@@ -1,0 +1,46 @@
+.root {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--loader-size);
+  height: var(--loader-size);
+  flex-shrink: 0;
+  vertical-align: middle;
+  isolation: isolate;
+}
+
+.ring {
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid color-mix(in srgb, var(--loader-color) 16%, transparent);
+  border-top-color: var(--loader-color);
+  border-radius: 50%;
+  animation: rotate 1.6s linear infinite;
+}
+
+.image {
+  animation: reveal 180ms ease-out both;
+}
+
+@keyframes rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ring,
+  .image {
+    animation: none;
+  }
+}
