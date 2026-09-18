@@ -60,7 +60,9 @@ export function getIntegrationHttpCacheVersion(integration: HttpIntegration) {
 
 export async function getIntegrationHttpConnection(integration: HttpIntegration, authenticate = true) {
   try {
-    const secrets = integration.secrets.map(({ kind, value }) => ({ kind, value: decryptSecret(value) }));
+    const secrets = authenticate
+      ? integration.secrets.map(({ kind, value }) => ({ kind, value: decryptSecret(value) }))
+      : [];
     const baseUrl = new URL(integration.url);
     return {
       baseUrl: baseUrl.href,

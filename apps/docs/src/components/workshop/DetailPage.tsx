@@ -114,7 +114,7 @@ const sourceHost = (source: WidgetSource) => {
 };
 
 const sourceAuthLabel = (source: WidgetSource) => {
-  if (source.type === "integration") return "Uses stored integration credentials";
+  if (source.type === "integration") return "Requires a configured integration";
   const { auth } = source;
   if (auth === "none") return "No credentials";
   if (auth === "basic") return "Basic auth";
@@ -123,12 +123,13 @@ const sourceAuthLabel = (source: WidgetSource) => {
   return `API key query · ${auth.name}`;
 };
 
-const sourceNeedsSecret = (source: WidgetSource) => source.type === "integration" || source.auth !== "none";
+const sourceNeedsSecret = (source: WidgetSource) => source.type !== "integration" && source.auth !== "none";
 
 const WidgetSafetySummary = ({ widget }: { widget: HomarrCustomWidgetV2 }) => {
   const sources = Object.entries(widget.sources);
   const requests = Object.values(widget.requests);
   const protectedSources = sources.filter(([, source]) => sourceNeedsSecret(source));
+  const integrationSources = sources.filter(([, source]) => source.type === "integration");
   const queryCount = requests.filter((request) => request.kind === "query").length;
   const actionCount = requests.filter((request) => request.kind === "action").length;
   const credentialLabel =
@@ -177,9 +178,15 @@ const WidgetSafetySummary = ({ widget }: { widget: HomarrCustomWidgetV2 }) => {
 
         <div className="border-t border-border px-4 py-3 sm:border-t-0">
           <dt className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-            <IconKey size={14} /> Credentials
+            <IconKey size={14} /> Widget credentials
           </dt>
           <dd className="mt-1.5 truncate font-medium">{credentialLabel}</dd>
+          {integrationSources.length > 0 && (
+            <>
+              <dt className="mt-3 text-xs font-medium text-muted-foreground">Saved integrations</dt>
+              <dd className="mt-1.5 font-medium">{integrationSources.length} required</dd>
+            </>
+          )}
         </div>
 
         <div className="border-t border-border px-4 py-3 sm:border-t-0">
@@ -550,6 +557,7 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
   const requests = widgetDefinition ? Object.entries(widgetDefinition.requests) : [];
   const options = widgetDefinition ? Object.entries(widgetDefinition.options) : [];
   const protectedSources = sources.filter(([, source]) => sourceNeedsSecret(source));
+  const integrationSources = sources.filter(([, source]) => source.type === "integration");
   const displayedContent = formatWorkshopContent(submission.type, submission.content);
   const socialTitle = `${submission.title} · Homarr Workshop`;
   const socialDescription = `${typeSocialLabels[submission.type]} for Homarr. ${submission.description}`.trim();
@@ -849,9 +857,24 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
                   </div>
                 )}
 
+                {integrationSources.length > 0 && (
+                  <div className="border-t border-border pt-4">
+                    <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                      <IconServer size={14} /> Saved integrations
+                    </div>
+                    <p className="text-sm">
+                      {integrationSources.length} configured integration{integrationSources.length !== 1 && "s"}{" "}
+                      required.
+                    </p>
+                    <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                      Select matching integrations in Homarr after import. Their connection settings are reused.
+                    </p>
+                  </div>
+                )}
+
                 <div className="border-t border-border pt-4">
                   <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                    <IconKey size={14} /> Credentials
+                    <IconKey size={14} /> Widget credentials
                   </div>
                   {protectedSources.length > 0 ? (
                     <>
@@ -864,7 +887,7 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
                       </p>
                     </>
                   ) : (
-                    <p className="text-sm text-muted-foreground">No credentials required.</p>
+                    <p className="text-sm text-muted-foreground">No widget credentials required.</p>
                   )}
                 </div>
               </div>
