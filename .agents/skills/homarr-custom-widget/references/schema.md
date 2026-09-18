@@ -40,7 +40,7 @@ The object key `default` is the required source ID; `default` is not a property 
 }
 ```
 
-Auth is `none`, `bearer`, `basic`, `{ "type": "apiKeyHeader", "name": "X-Api-Key" }`, or `{ "type": "apiKeyQuery", "name": "api_key" }`. A request defaults to source `default`, kind `query`, method `GET`, trigger `load`, inherited auth, and view permission. Set `trigger: "manual"` for a parameterized query. An action defaults to manual and modify permission. DELETE uses full permission and confirmation. Do not use `load: false`.
+Auth is `none`, `bearer`, `basic`, `{ "type": "apiKeyHeader", "name": "X-Api-Key" }`, or `{ "type": "apiKeyQuery", "name": "api_key" }`. A request defaults to source `default`, kind `query`, method `GET`, trigger `load`, inherited auth, and view permission. Set `trigger: "manual"` for a parameterized query. An action defaults to manual and modify permission. Actions stay manual; preserve confirmation, permission, and invalidates only when declared or required. DELETE uses full permission and confirmation. Do not use `load: false`.
 
 Use stable real URLs for public APIs and clear suggested URLs for self-hosted services. Homarr collects the installer's server URL, network scope, and credentials as source setup; credentials remain outside the manifest.
 

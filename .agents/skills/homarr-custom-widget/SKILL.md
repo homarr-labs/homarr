@@ -30,6 +30,8 @@ there is no top-level `actions` field.
   the credential.
 - Requests use a leading-slash `path`; declare `source`, `method`, and `trigger` when they differ from defaults. Load
   queries use `trigger: "load"`; manual parameterized queries and actions use `trigger: "manual"`.
+- Actions stay manual; preserve `confirmation`, `permission`, and `invalidates` only when declared or required. DELETE uses
+  full permission and confirmation.
 - Read load data from `data.requestId`. Check `status.requestId?.loading` and `status.requestId?.ok === false`; guard
   arrays and nested fields and use `??` for truthful fallbacks. Render requested fields from the supplied contract.
 - A load template shows loading, error, empty, and success states and includes `RefreshButton requestId="..."`.
@@ -37,20 +39,24 @@ there is no top-level `actions` field.
 - Options have `label`, `control`, and `default`; bind with `{option:name}` or `$option`. A dependent control has its
   own default and `resetKey={inputs.dependency}`. Do not add lookup, pagination, or detail requests for omitted fields.
 - Keep templates expression-only: no imports, hooks, refs, raw HTML/events, browser requests, eval, recursion, IIFEs,
-  statement blocks, or arbitrary functions. Use named `Icon` or `TablerIcon`. Keep credentials and deployment values in
-  Homarr configuration; never put tokens, keys, authorization values, or redacted credential placeholders in the manifest.
+  statement blocks, or arbitrary functions. Use registered names returned by component discovery; `Icon` is an accepted alias
+  for canonical `TablerIcon`. Keep credentials and deployment values in Homarr configuration; never put tokens, keys,
+  authorization values, or redacted credential placeholders in the manifest.
 
 Minimum shape: include `$schema`, `sources.default`, `requests`, and `template`; actions live under `requests` with `kind: "action"`.
 
 Use `data.items?.map(item => ...)` only after loading/error branches and provide a no-items branch. Label timestamps with
-the source timezone when known. Keep hierarchy, imagery, actions, and narrow/wide layout purposeful; avoid dead controls.
+the documented source timezone; if none is documented, preserve the source value or omit any timezone label; use UTC only when the contract says UTC. Keep hierarchy, imagery, actions, and narrow/wide
+layout purposeful; avoid dead controls.
 
 ## Bounded lifecycle
 
 1. Build the credential-free definition from the request, verified context, and sample. Preserve a migration's API path,
    method, body, options, and visible behavior.
 2. Call `customWidget_validateTemplate` for focused JSX diagnostics. Send source/request/option changes once to
-   `customWidget_previewCreate`; use `customWidget_previewReviseTemplate` for a JSX-only correction in its session.
+   `customWidget_previewCreate`; use `customWidget_previewReviseTemplate` for a JSX-only correction in its session. In the
+   Assistant wrapper, multiline JSX goes to `customWidget_validateTemplate` and `customWidget_previewReviseTemplate` as
+   `templateLines`; `previewCreate` receives the complete definition with `template` or `templateLines`.
 3. Test every returned query or simulated action once. After a validation failure, make one corrected candidate and
    revalidate. Stop when the result is incomplete, the workbench closes, or the provider/model rejects the call.
 4. After a successful final preview and exact tests, call `customWidget_createFromPreview`; configure private URLs and
