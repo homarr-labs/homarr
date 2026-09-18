@@ -97,9 +97,7 @@ Known credentials are redacted. Requests have a 15-second total deadline, a 10-s
 Paths follow `new URL(path, integration.url)`: `/api/...` starts at the origin root; `api/...` resolves relative to
 the configured URL's directory. Absolute URLs, protocol-relative paths, credentials, fragments and redirects are rejected.
 
-Supported types are discovered from Homarr's integration registry and use the integration's native HTTP authentication
-adapter. Integrations without this capability are rejected. The built-in Assistant's default mutation approval applies to
-this tool, including GET calls.
+The built-in Assistant's default mutation approval applies to this tool, including GET calls.
 
 ## Verify the connection
 
