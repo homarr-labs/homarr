@@ -154,14 +154,14 @@ const executeRequest = async (
   await throwIfActionForbiddenAsync(ctx, eq(boards.id, resolved.item.boardId), request.permission as BoardPermission);
   const source = findSource(resolved, request.source);
   const values = resolveCustomWidgetRequestValues(request, resolved.configuration, params);
-  const connection = await resolveCustomWidgetSource(ctx, source, request, () =>
-    resolved.stored.secrets
-      .filter((secret) => secret.sourceId === source.id)
-      .map((secret) => ({ kind: secret.kind, value: decryptSecret(secret.encryptedValue) })),
-  );
-  const targetUrl = renderRequestTarget(connection.baseUrl, request, values);
-  const response = await withRequestLimit(ctx, resolved, request, () =>
-    executeCustomWidgetRequest({
+  return withRequestLimit(ctx, resolved, request, async () => {
+    const connection = await resolveCustomWidgetSource(ctx, source, request, () =>
+      resolved.stored.secrets
+        .filter((secret) => secret.sourceId === source.id)
+        .map((secret) => ({ kind: secret.kind, value: decryptSecret(secret.encryptedValue) })),
+    );
+    const targetUrl = renderRequestTarget(connection.baseUrl, request, values);
+    return executeCustomWidgetRequest({
       ...connection,
       targetUrl,
       method: request.method,
@@ -171,9 +171,8 @@ const executeRequest = async (
       cacheKey:
         request.kind === "query" ? `${getCacheKey(resolved, request, values)}:${connection.cacheVersion}` : undefined,
       cacheTtlSeconds: request.cacheSeconds,
-    }),
-  );
-  return response;
+    });
+  });
 };
 
 export const customApiRouter = createTRPCRouter({
