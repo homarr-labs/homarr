@@ -37,6 +37,7 @@ export const unmanicStatsProvider = {
     });
     const pendingResponse = await context.requestAsync("/unmanic/api/v2/pending/tasks", {
       method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         start: 0,
         length: 0,

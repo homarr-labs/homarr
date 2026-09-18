@@ -1,0 +1,5 @@
+version: 0.15-1
+mqtt:
+  enabled: false
+detectors: {}
+cameras: {}

@@ -1,0 +1,14 @@
+metrics: true
+endpoints:
+  - name: gatus-self
+    group: integration-stats
+    url: http://gatus:8080/health
+    interval: 5s
+    conditions:
+      - "[STATUS] == 200"
+  - name: prometheus
+    group: integration-stats
+    url: http://prometheus:9090/-/ready
+    interval: 5s
+    conditions:
+      - "[STATUS] == 200"

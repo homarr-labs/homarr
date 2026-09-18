@@ -27,14 +27,18 @@ const cacheOptions = { useBoundedCacheClient: true };
 const resolveAsync = async (integration: Input) => {
   const generation = await getIntegrationCacheGenerationAsync(integration.id);
   if (!generation.isShared) throw new Error("Statistics cache is temporarily unavailable");
-  const identity = `${generation.value}:${getIntegrationCacheIdentity({ integration, options: { version: 1 } })}`;
+  // Snapshots outlive the expiring response-cache generation. Credentials and URLs
+  // remain part of their identity; generations only guard in-flight refreshes.
+  const identity = getIntegrationCacheIdentity({ integration, options: { version: 1 } });
   // A stable key replaces old credentials' data instead of retaining unreachable snapshots forever.
   const name = `integration-stats:snapshot:v1:${integration.id}`;
   const channel = createGetSetChannel<Snapshot>(name, cacheOptions);
   const parsed = snapshotSchema.safeParse(await channel.getAsync());
   let snapshot: Snapshot = { identity, values: {}, updatedAt: null, retryAt: 0, error: false };
-  if (parsed.success && parsed.data.identity === identity) snapshot = parsed.data;
-  return { identity, name, channel, snapshot };
+  // Retain snapshots written before response generations were decoupled.
+  if (parsed.success && (parsed.data.identity === identity || parsed.data.identity.endsWith(`:${identity}`)))
+    snapshot = { ...parsed.data, identity };
+  return { identity, generation: generation.value, name, channel, snapshot };
 };
 
 export const getStatsSnapshotAsync = async (integration: Input) => {
@@ -101,7 +105,7 @@ const runRefreshAsync = async (integration: Input, force: boolean) => {
     if (!slot || !owned) return;
     // Recheck after queuing: credentials or another refresh may have changed the snapshot.
     const current = await resolveAsync(integration);
-    if (current.identity !== initial.identity) return;
+    if (current.identity !== initial.identity || current.generation !== initial.generation) return;
     if (!force && current.snapshot.updatedAt !== null && Date.now() - current.snapshot.updatedAt < FRESH_MS) return;
     deadline = setTimeout(() => controller.abort(), 60_000);
     deadline.unref?.();
@@ -118,12 +122,12 @@ const runRefreshAsync = async (integration: Input, force: boolean) => {
         error: false,
       });
       const latest = await resolveAsync(integration);
-      if (owned && latest.identity === initial.identity)
+      if (owned && latest.identity === initial.identity && latest.generation === initial.generation)
         await lock.setPersistentIfOwnedAsync(token, initial.name, snapshot);
     } catch {
       logger.warn("Statistics source refresh failed", { integrationId: integration.id, kind: integration.kind });
       const latest = await resolveAsync(integration);
-      if (owned && latest.identity === initial.identity) {
+      if (owned && latest.identity === initial.identity && latest.generation === initial.generation) {
         await lock.setPersistentIfOwnedAsync(token, initial.name, {
           ...current.snapshot,
           retryAt: Date.now() + RETRY_MS,

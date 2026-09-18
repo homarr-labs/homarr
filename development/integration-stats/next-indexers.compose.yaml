@@ -1,0 +1,24 @@
+name: homarr-stats-live
+
+# The host path is configurable so this file also works from a checkout outside
+# the agent workspace. No tracker credentials are required for the smoke setup.
+services:
+  next-autobrr:
+    image: ghcr.io/autobrr/autobrr:latest
+    ports: ["127.0.0.1:23221:7474"]
+    environment:
+      TZ: UTC
+    volumes:
+      - ${NEXT_INDEXERS_DATA_ROOT:-/tmp/homarr-stats-live/next-indexers/data}/autobrr:/config
+
+  next-jackett:
+    image: lscr.io/linuxserver/jackett:latest
+    ports: ["127.0.0.1:23222:9117"]
+    environment:
+      PUID: "${PUID:-1000}"
+      PGID: "${PGID:-1000}"
+      TZ: UTC
+      AUTO_UPDATE: "true"
+    volumes:
+      - ${NEXT_INDEXERS_DATA_ROOT:-/tmp/homarr-stats-live/next-indexers/data}/jackett:/config
+      - ${NEXT_INDEXERS_DATA_ROOT:-/tmp/homarr-stats-live/next-indexers/data}/jackett/downloads:/downloads

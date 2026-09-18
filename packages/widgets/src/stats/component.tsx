@@ -143,6 +143,7 @@ export default function StatsWidget({
     let status = "";
     if (snapshot?.data && metric)
       value = formatStatsValue(snapshot.data.values[entry.metric], metric.unit, compact ?? entry.compact);
+    if (snapshot?.data?.stale && snapshot.data.updatedAt !== null) status = t("stale");
     if (snapshot?.error && snapshot.data) status = t("refreshFailed");
     if (snapshot?.data?.error) status = t("refreshFailed");
     if (snapshot?.data?.error && snapshot.data.updatedAt === null) status = t("fetchFailed");

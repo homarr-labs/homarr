@@ -1,0 +1,161 @@
+name: homarr-stats-live
+
+services:
+  content-miniflux-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: miniflux
+      POSTGRES_USER: miniflux
+      POSTGRES_PASSWORD: ${MINIFLUX_DB_PASSWORD}
+    volumes: [content-miniflux-db:/var/lib/postgresql/data]
+    healthcheck: { test: [CMD-SHELL, pg_isready -U miniflux -d miniflux], interval: 5s, timeout: 5s, retries: 20 }
+  miniflux:
+    image: miniflux/miniflux:latest
+    depends_on: { content-miniflux-db: { condition: service_healthy } }
+    ports: ["127.0.0.1:23101:8080"]
+    environment:
+      DATABASE_URL: postgres://miniflux:${MINIFLUX_DB_PASSWORD}@content-miniflux-db/miniflux?sslmode=disable
+      RUN_MIGRATIONS: 1
+      CREATE_ADMIN: 1
+      ADMIN_USERNAME: stats
+      ADMIN_PASSWORD: ${MINIFLUX_ADMIN_PASSWORD}
+    healthcheck: { test: [CMD-SHELL, wget -q -O /dev/null http://127.0.0.1:8080/], interval: 10s, timeout: 5s, retries: 30 }
+
+  content-karakeep-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: karakeep
+      POSTGRES_USER: karakeep
+      POSTGRES_PASSWORD: ${KARAKEEP_DB_PASSWORD}
+    volumes: [content-karakeep-db:/var/lib/postgresql/data]
+    healthcheck: { test: [CMD-SHELL, pg_isready -U karakeep -d karakeep], interval: 5s, timeout: 5s, retries: 20 }
+  content-karakeep-meili:
+    image: getmeili/meilisearch:v1.13.3
+    environment:
+      MEILI_NO_ANALYTICS: "true"
+      MEILI_MASTER_KEY: ${KARAKEEP_MEILI_KEY}
+    volumes: [content-karakeep-meili:/meili_data]
+  content-karakeep-chrome:
+    image: browserless/chrome:latest
+    environment: { CONNECTION_TIMEOUT: 300000 }
+  karakeep:
+    image: ghcr.io/karakeep-app/karakeep:latest
+    depends_on:
+      content-karakeep-db: { condition: service_healthy }
+      content-karakeep-meili: { condition: service_started }
+      content-karakeep-chrome: { condition: service_started }
+    ports: ["127.0.0.1:23102:3000"]
+    environment:
+      DATA_DIR: /data
+      NEXTAUTH_SECRET: ${KARAKEEP_NEXTAUTH_SECRET}
+      NEXTAUTH_URL: http://localhost:23102
+      DATABASE_URL: postgresql://karakeep:${KARAKEEP_DB_PASSWORD}@content-karakeep-db:5432/karakeep
+      MEILI_ADDR: http://content-karakeep-meili:7700
+      MEILI_MASTER_KEY: ${KARAKEEP_MEILI_KEY}
+      BROWSER_WEB_URL: http://content-karakeep-chrome:9222
+      DISABLE_SIGNUPS: "false"
+    volumes: [content-karakeep-data:/data]
+
+  content-linkwarden-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: linkwarden
+      POSTGRES_USER: linkwarden
+      POSTGRES_PASSWORD: ${LINKWARDEN_DB_PASSWORD}
+    volumes: [content-linkwarden-db:/var/lib/postgresql/data]
+    healthcheck: { test: [CMD-SHELL, pg_isready -U linkwarden -d linkwarden], interval: 5s, timeout: 5s, retries: 20 }
+  content-linkwarden-redis:
+    image: redis:7-alpine
+  linkwarden:
+    image: ghcr.io/linkwarden/linkwarden:latest
+    depends_on:
+      content-linkwarden-db: { condition: service_healthy }
+      content-linkwarden-redis: { condition: service_started }
+    ports: ["127.0.0.1:23103:3000"]
+    environment:
+      DATABASE_URL: postgresql://linkwarden:${LINKWARDEN_DB_PASSWORD}@content-linkwarden-db:5432/linkwarden
+      NEXTAUTH_SECRET: ${LINKWARDEN_NEXTAUTH_SECRET}
+      NEXTAUTH_URL: http://localhost:23103
+      NEXT_PUBLIC_DISABLE_REGISTRATION: "false"
+      REDIS_URL: redis://content-linkwarden-redis:6379
+    volumes: [content-linkwarden-data:/data]
+
+  changedetection:
+    image: ghcr.io/dgtlmoon/changedetection.io:latest
+    ports: ["127.0.0.1:23104:5000"]
+    environment: { PLAYWRIGHT_DRIVER_URL: ws://changedetection-browser:3000/?stealth=1 }
+    depends_on: { changedetection-browser: { condition: service_started } }
+    volumes: [content-changedetection-data:/datastore]
+  changedetection-browser:
+    image: browserless/chrome:latest
+    environment: { CONNECTION_TIMEOUT: 300000 }
+
+  content-tandoor-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: tandoor
+      POSTGRES_USER: tandoor
+      POSTGRES_PASSWORD: ${TANDOOR_DB_PASSWORD}
+    volumes: [content-tandoor-db:/var/lib/postgresql/data]
+    healthcheck: { test: [CMD-SHELL, pg_isready -U tandoor -d tandoor], interval: 5s, timeout: 5s, retries: 20 }
+  tandoor:
+    image: vabene1111/recipes:latest
+    depends_on: { content-tandoor-db: { condition: service_healthy } }
+    ports: ["127.0.0.1:23105:80"]
+    environment:
+      SECRET_KEY: ${TANDOOR_SECRET_KEY}
+      DB_ENGINE: django.db.backends.postgresql
+      POSTGRES_HOST: content-tandoor-db
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: tandoor
+      POSTGRES_PASSWORD: ${TANDOOR_DB_PASSWORD}
+      POSTGRES_DB: tandoor
+      ENABLE_SIGNUP: "1"
+      ALLOWED_HOSTS: "*"
+    volumes: [content-tandoor-static:/opt/recipes/staticfiles, content-tandoor-media:/opt/recipes/mediafiles]
+
+  mealie:
+    image: ghcr.io/mealie-recipes/mealie:v2.8.0
+    ports: ["127.0.0.1:23106:9000"]
+    environment:
+      ALLOW_SIGNUP: "true"
+      BASE_URL: http://localhost:23106
+      TZ: UTC
+    volumes: [content-mealie-data:/app/data]
+
+  homebox:
+    image: ghcr.io/sysadminsmedia/homebox:latest
+    ports: ["127.0.0.1:23107:7745"]
+    environment:
+      HBOX_LOG_LEVEL: info
+      HBOX_AUTH_API_KEY_PEPPER: ${HOMEBOX_API_KEY_PEPPER}
+      HBOX_OPTIONS_ALLOW_REGISTRATION: "true"
+    volumes: [content-homebox-data:/data]
+
+  healthchecks:
+    image: healthchecks/healthchecks:latest
+    ports: ["127.0.0.1:23108:8000"]
+    environment:
+      DB: sqlite
+      DB_NAME: /data/hc.sqlite
+      DEBUG: "False"
+      SITE_ROOT: http://localhost:23108
+      SECRET_KEY: ${HEALTHCHECKS_SECRET_KEY}
+      REGISTRATION_OPEN: "True"
+      ALLOWED_HOSTS: "*"
+    volumes: [content-healthchecks-data:/data]
+
+volumes:
+  content-miniflux-db: {}
+  content-karakeep-db: {}
+  content-karakeep-meili: {}
+  content-karakeep-data: {}
+  content-linkwarden-db: {}
+  content-linkwarden-data: {}
+  content-changedetection-data: {}
+  content-tandoor-db: {}
+  content-tandoor-static: {}
+  content-tandoor-media: {}
+  content-mealie-data: {}
+  content-homebox-data: {}
+  content-healthchecks-data: {}

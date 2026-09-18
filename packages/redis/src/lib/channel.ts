@@ -596,12 +596,10 @@ const invalidateIntegrationCacheGenerationAsync = async (
 
 export const invalidateIntegrationCacheAsync = async (integrationId: string): Promise<void> => {
   await invalidateIntegrationCacheGenerationAsync(integrationId, true);
-  // Generation invalidation already makes old snapshots inaccessible, including during Redis outages.
+  // Statistics snapshots have persistent identities, separate from expiring response generations.
   await createGetSetChannel(`integration-stats:snapshot:v1:${integrationId}`, {
     useBoundedCacheClient: true,
-  })
-    .removeAsync()
-    .catch(() => undefined);
+  }).removeAsync();
 };
 
 /** Advances response-cache generation without evicting cached integration credentials. */
