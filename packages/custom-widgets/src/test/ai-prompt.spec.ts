@@ -32,6 +32,10 @@ describe("AI prompt", () => {
     expect(prompt).toContain("copy one code block and paste it into Homarr once");
     expect(prompt).not.toContain("fenced block followed by");
     expect(prompt).toContain('trigger="manual"');
+    expect(prompt).toContain("A request that supplies the widget's initial/current display");
+    expect(prompt).toContain('set `trigger: "load"` explicitly');
+    expect(prompt).toContain('Set `trigger: "manual"` only when');
+    expect(prompt).toContain("do not make it manual merely because it has an option binding");
     expect(prompt).toContain("never write `=> {` anywhere");
     expect(prompt).toContain('"choicesFrom"');
     expect(prompt).toContain("must not shadow the reserved roots");

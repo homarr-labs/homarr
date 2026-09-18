@@ -5,10 +5,8 @@ description: Author, validate, preview, test, install, or configure API-backed H
 
 # Homarr Custom Widget
 
-Author one widget or a coordinated set. Finish each widget's evidence and persistence before starting the next; use one
-shared research pass for a set. Finish with the artifact and a short evidence boundary.
-
-## Choose the route
+Author widgets with release-matched context. Research once; finish validation, evidence, and persistence before the next
+widget. Finish with the artifact.
 
 - Read primary API documentation once when it is missing or may have changed. Treat a supplied sample or successful
   preview response as the binding contract; load only the schema, runtime, security, or component context needed.
@@ -16,18 +14,13 @@ shared research pass for a set. Finish with the artifact and a short evidence bo
   do not repeat an unavailable lookup.
 - A provider/model rejection is a terminal call failure: record the provider, model, and valid-model error, then finish
   from loaded context. If lifecycle tools are unavailable, use the offline artifact route and mark it unverified.
-- For a community widget, call `customWidget_workshopSearch`, `customWidget_workshopGet`, then
-  `customWidget_workshopInstall`; configure its source securely. Preview configuration expires, so persist before it does.
+- Community widget: call `customWidget_workshopSearch`, `customWidget_workshopGet`, `customWidget_workshopInstall`; configure
+  securely and persist before preview expires.
 
-## Artifact contract
+Return one fenced `json` block; keep evidence prose outside it. The definition has keyed `sources`, `requests`, `template`,
+and optional `options`; actions are requests with `kind: "action"`.
 
-For the current widget, return exactly one fenced `json` block; keep evidence prose outside the fence. The definition has
-keyed `sources`, `requests`, a `template`, and optional `options` when needed. Actions are requests with `kind: "action"`;
-there is no top-level `actions` field.
-
-- `sources.default` has `baseUrl`, `networkScope` (`public`, `private`, or `loopback`), and credential-free `auth`.
-  Auth is `none`, `bearer`, `basic`, or an `apiKeyHeader`/`apiKeyQuery` object containing only its `name`; Homarr holds
-  the credential.
+- `sources.default` has `baseUrl`, `networkScope`, and credential-free `auth`; Homarr holds credentials.
 - Requests use a leading-slash `path`; declare `source`, `method`, and `trigger` when they differ from defaults. Load
   queries use `trigger: "load"`; manual parameterized queries and actions use `trigger: "manual"`.
 - Actions stay manual; preserve `confirmation`, `permission`, and `invalidates` only when declared or required. DELETE uses
@@ -42,9 +35,6 @@ there is no top-level `actions` field.
   statement blocks, or arbitrary functions. Use registered names returned by component discovery; `Icon` is an accepted alias
   for canonical `TablerIcon`. Keep credentials and deployment values in Homarr configuration; never put tokens, keys,
   authorization values, or redacted credential placeholders in the manifest.
-
-Minimum shape: include `$schema`, `sources.default`, `requests`, and `template`; actions live under `requests` with `kind: "action"`.
-
 Use `data.items?.map(item => ...)` only after loading/error branches and provide a no-items branch. Label timestamps with
 the documented source timezone; if none is documented, preserve the source value or omit any timezone label; use UTC only when the contract says UTC. Keep hierarchy, imagery, actions, and narrow/wide
 layout purposeful; avoid dead controls.

@@ -13,7 +13,7 @@ export const CUSTOM_WIDGET_SKILL_SOURCE_URL =
   "https://github.com/homarr-labs/homarr/tree/HEAD/.agents/skills/homarr-custom-widget";
 export const CUSTOM_WIDGET_SKILL_INSTALL_COMMAND =
   "npx skills add https://github.com/homarr-labs/homarr --skill homarr-custom-widget";
-export const CUSTOM_WIDGET_SKILL_VERSION = "2.10.2";
+export const CUSTOM_WIDGET_SKILL_VERSION = "2.10.3";
 export const CUSTOM_WIDGET_SKILL_REFERENCE_NAMES = ["schema", "runtime", "security"] as const;
 export type CustomWidgetSkillReferenceName = (typeof CUSTOM_WIDGET_SKILL_REFERENCE_NAMES)[number];
 
@@ -85,7 +85,7 @@ The object key \`default\` is the required source ID; \`default\` is not a prope
 }
 \`\`\`
 
-Auth is \`none\`, \`bearer\`, \`basic\`, \`{ "type": "apiKeyHeader", "name": "X-Api-Key" }\`, or \`{ "type": "apiKeyQuery", "name": "api_key" }\`. A request defaults to source \`default\`, kind \`query\`, method \`GET\`, trigger \`load\`, inherited auth, and view permission. Set \`trigger: "manual"\` for a parameterized query. An action defaults to manual and modify permission. Actions stay manual; preserve confirmation, permission, and invalidates only when declared or required. DELETE uses full permission and confirmation. Do not use \`load: false\`.
+Auth is \`none\`, \`bearer\`, \`basic\`, \`{ "type": "apiKeyHeader", "name": "X-Api-Key" }\`, or \`{ "type": "apiKeyQuery", "name": "api_key" }\`. Requests default to source \`default\`, query/GET/load, inherited auth, and view permission. Use \`trigger: "load"\` for initial/current display, including option-bound data/status with \`RefreshButton\`; use \`trigger: "manual"\` only for explicit user-triggered queries or invocation params in \`SubFetch\`, \`ActionButton\`, or \`ToggleSwitch\`. Actions are manual/modify; preserve confirmation, permission, and invalidates. DELETE requires full permission and confirmation. No \`load: false\`.
 
 Use stable real URLs for public APIs and clear suggested URLs for self-hosted services. Homarr collects the installer's server URL, network scope, and credentials as source setup; credentials remain outside the manifest.
 
@@ -148,10 +148,8 @@ description: Author, validate, preview, test, install, or configure API-backed H
 
 # Homarr Custom Widget
 
-Author one widget or a coordinated set. Finish each widget's evidence and persistence before starting the next; use one
-shared research pass for a set. Finish with the artifact and a short evidence boundary.
-
-## Choose the route
+Author widgets with release-matched context. Research once; finish validation, evidence, and persistence before the next
+widget. Finish with the artifact.
 
 - Read primary API documentation once when it is missing or may have changed. Treat a supplied sample or successful
   preview response as the binding contract; load only the schema, runtime, security, or component context needed.
@@ -159,18 +157,13 @@ shared research pass for a set. Finish with the artifact and a short evidence bo
   do not repeat an unavailable lookup.
 - A provider/model rejection is a terminal call failure: record the provider, model, and valid-model error, then finish
   from loaded context. If lifecycle tools are unavailable, use the offline artifact route and mark it unverified.
-- For a community widget, call \`customWidget_workshopSearch\`, \`customWidget_workshopGet\`, then
-  \`customWidget_workshopInstall\`; configure its source securely. Preview configuration expires, so persist before it does.
+- Community widget: call \`customWidget_workshopSearch\`, \`customWidget_workshopGet\`, \`customWidget_workshopInstall\`; configure
+  securely and persist before preview expires.
 
-## Artifact contract
+Return one fenced \`json\` block; keep evidence prose outside it. The definition has keyed \`sources\`, \`requests\`, \`template\`,
+and optional \`options\`; actions are requests with \`kind: "action"\`.
 
-For the current widget, return exactly one fenced \`json\` block; keep evidence prose outside the fence. The definition has
-keyed \`sources\`, \`requests\`, a \`template\`, and optional \`options\` when needed. Actions are requests with \`kind: "action"\`;
-there is no top-level \`actions\` field.
-
-- \`sources.default\` has \`baseUrl\`, \`networkScope\` (\`public\`, \`private\`, or \`loopback\`), and credential-free \`auth\`.
-  Auth is \`none\`, \`bearer\`, \`basic\`, or an \`apiKeyHeader\`/\`apiKeyQuery\` object containing only its \`name\`; Homarr holds
-  the credential.
+- \`sources.default\` has \`baseUrl\`, \`networkScope\`, and credential-free \`auth\`; Homarr holds credentials.
 - Requests use a leading-slash \`path\`; declare \`source\`, \`method\`, and \`trigger\` when they differ from defaults. Load
   queries use \`trigger: "load"\`; manual parameterized queries and actions use \`trigger: "manual"\`.
 - Actions stay manual; preserve \`confirmation\`, \`permission\`, and \`invalidates\` only when declared or required. DELETE uses
@@ -185,9 +178,6 @@ there is no top-level \`actions\` field.
   statement blocks, or arbitrary functions. Use registered names returned by component discovery; \`Icon\` is an accepted alias
   for canonical \`TablerIcon\`. Keep credentials and deployment values in Homarr configuration; never put tokens, keys,
   authorization values, or redacted credential placeholders in the manifest.
-
-Minimum shape: include \`$schema\`, \`sources.default\`, \`requests\`, and \`template\`; actions live under \`requests\` with \`kind: "action"\`.
-
 Use \`data.items?.map(item => ...)\` only after loading/error branches and provide a no-items branch. Label timestamps with
 the documented source timezone; if none is documented, preserve the source value or omit any timezone label; use UTC only when the contract says UTC. Keep hierarchy, imagery, actions, and narrow/wide
 layout purposeful; avoid dead controls.
@@ -214,7 +204,12 @@ from syntax or schema checks alone.
 
 const CUSTOM_WIDGET_SKILL_ENTRYPOINT_MD = `# Homarr Custom Widget authoring index
 
-Use release-matched tools and load only context required by the design. Research primary API documentation once. For each widget, validate JSX, create one preview, test every returned query and relevant simulated action, then persist that exact preview. A JSX-only correction uses \`customWidget_previewReviseTemplate\` with the session; it inherits the manifest and resets evidence. In the Assistant wrapper, send multiline JSX to \`customWidget_validateTemplate\` and \`customWidget_previewReviseTemplate\` as \`templateLines\`; \`previewCreate\` receives the complete definition with \`template\` or \`templateLines\`.
+Use release-matched tools and load required context. Research primary API documentation once. For each
+widget, validate JSX, create one preview, test every returned query and relevant simulated action, then persist that exact
+preview. A JSX-only correction uses \`customWidget_previewReviseTemplate\` with the session; it inherits the manifest and
+resets evidence. In the Assistant wrapper, send multiline JSX to \`customWidget_validateTemplate\` and
+\`customWidget_previewReviseTemplate\` as \`templateLines\`; \`previewCreate\` receives the complete definition with
+\`template\` or \`templateLines\`.
 
 Deliver the smallest complete result. Preserve a migration's API intent, request shape, and visible behavior; simple lists use one source, one request, and a compact template. Run each lifecycle call once; one validation failure may lead to one correction and revalidation. On provider/model, unavailable, \`contextAlreadyLoaded\`, or closed-workbench errors, stop retrying and reuse loaded context. If lifecycle tools cannot run, return one complete importable definition and one unverified note. Use the configured model exactly and keep updates to the result and next action.
 
