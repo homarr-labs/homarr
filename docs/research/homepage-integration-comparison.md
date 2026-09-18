@@ -305,10 +305,10 @@ The final review also decoupled persistent snapshot identity from expiring respo
 
 ## Recover the complete expansion harness
 
-Checkpoint [`ac67f8747`](https://github.com/homarr-labs/homarr/tree/ac67f8747af1fafff4d13249cc5c34c9d187fd56) contains the complete expansion, focused verification scripts, seeders, Compose manifests, export and bind-restore tooling. The following cleanup commit removes the development harness from the feature tree; existing repository tests remain. Restore it with:
+Checkpoint [`788a9a826`](https://github.com/homarr-labs/homarr/tree/788a9a826f62374b5319a48572a56a5123e78bf4) contains the complete expansion, focused verification scripts, seeders, Compose manifests, export and bind-restore tooling. The following cleanup commit removes the development harness from the feature tree; existing repository tests remain. Restore it with:
 
 ```sh
-git restore --source=ac67f8747af1fafff4d13249cc5c34c9d187fd56 -- development/integration-stats
+git restore --source=788a9a826f62374b5319a48572a56a5123e78bf4 -- development/integration-stats
 ```
 
 The private ZIP adds the full database, credentials, service data, screenshots and setup instructions. Those private runtime files are not in Git.

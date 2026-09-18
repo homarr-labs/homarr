@@ -1,9 +1,0 @@
-name: homarr-stats-live
-include:
-  - content.compose.yaml
-  - media.compose.yaml
-  - infra.compose.yaml
-  - next-indexers.compose.yaml
-  - next-media.compose.yaml
-  - next-monitoring.compose.yaml
-  - next-arr.compose.yaml
