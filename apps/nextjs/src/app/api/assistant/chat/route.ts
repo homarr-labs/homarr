@@ -50,6 +50,7 @@ import {
   sanitizeAttachmentFilename,
 } from "./assistant-chat-input";
 import { getAssistantModelLookupStatus } from "./assistant-model-lookup";
+import { resolveAssistantReasoning } from "./assistant-reasoning";
 import { compactAssistantStepMessages, convertAssistantMessagesToModelMessages } from "./assistant-message-conversion";
 import {
   getOpenRouterWebSearchRequests,
@@ -749,7 +750,11 @@ export async function POST(request: Request) {
       maxOutputTokens: assistantExecutionPolicy.maxOutputTokens,
       maxRetries: 2,
       experimental_repairToolCall: ({ toolCall }) => Promise.resolve(repairAssistantToolInput(toolCall)),
-      reasoning: parsed.data.reasoning === "auto" ? undefined : parsed.data.reasoning,
+      reasoning: resolveAssistantReasoning({
+        reasoning: parsed.data.reasoning,
+        customWidgetAuthoringActive,
+        modelId,
+      }),
       temperature: customWidgetAuthoringActive && modelId === "z-ai/glm-5.3-flash" ? 0.2 : undefined,
       providerOptions:
         configuration.provider === "openrouter" || openRouterServerToolsEnabled
