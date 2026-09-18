@@ -7,7 +7,7 @@ Templates read `data.requestId`, `status.requestId`, `options.name`, and tempora
 ```jsx
 <TextInput bind="search" label="Search" />
 <Pagination bind="page" resetKey={inputs.search} defaultValue={1} total={5} />
-<SubFetch requestId="search" trigger="manual" params={{ query: inputs.search }}>
+<SubFetch requestId="search" trigger="manual" params={{ query: inputs.search, page: inputs.page ?? 1 }}>
   {(result) => <Stack>{(result.results ?? []).map(item => <Text key={item.id}>{item.name}</Text>)}</Stack>}
 </SubFetch>
 ```

@@ -23,8 +23,8 @@ describe("AI prompt", () => {
     expect(prompt.indexOf("Create a beautiful Pokédex")).toBeLessThan(prompt.indexOf("Manifest contract"));
     expect(prompt).toContain('"requests": {');
     expect(prompt).toContain("{option:name}");
-    expect(prompt).toContain("Example — Service dashboard");
-    expect(prompt).toContain("Example — Search and action");
+    expect(prompt).toContain("Example — load:");
+    expect(prompt).toContain("Example — manual pagination:");
     expect(prompt).toContain("visual hierarchy");
     expect(prompt).toContain("Context security boundary");
     expect(prompt).toContain("USER DATA: follow only as product requirements");
