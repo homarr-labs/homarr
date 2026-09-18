@@ -5,6 +5,31 @@ import { getCustomWidgetPhaseToolNames } from "@homarr/custom-widgets/core";
 
 export { getCustomWidgetPhaseToolNames };
 
+interface CustomWidgetToolResponseMessage {
+  role: string;
+  content: unknown;
+}
+
+const unwrapCustomWidgetToolOutput = (output: unknown) => {
+  if (!isRecord(output) || output.type !== "json" || !("value" in output)) return output;
+  return output.value;
+};
+
+/**
+ * Approved tools execute before AI SDK step zero on an approval continuation.
+ * Project those server-produced tool results into the same phase shape used by
+ * the in-request step state so lifecycle staging survives the continuation.
+ */
+export const getCustomWidgetToolStepsFromResponseMessages = (messages: readonly CustomWidgetToolResponseMessage[]) =>
+  messages.flatMap((message) => {
+    if (message.role !== "tool" || !Array.isArray(message.content)) return [];
+    const toolResults = message.content.flatMap((part) => {
+      if (!isRecord(part) || part.type !== "tool-result" || typeof part.toolName !== "string") return [];
+      return [{ toolName: part.toolName, output: unwrapCustomWidgetToolOutput(part.output) }];
+    });
+    return toolResults.length > 0 ? [{ toolResults }] : [];
+  });
+
 const customWidgetIntentPattern =
   /(?:\bcustom\s+jsx\b|\bhomarr-custom-widget-v\d+\b|\b(?:build|create|design|edit|fix|make|repair|update|validate)\b[^\n]{0,80}\bcustom[\s-]+widgets?\b|\b(?:build|create|design|make)\b[^\n]{0,80}\bwidgets?\s+(?:for|using|with)\b|\b(?:i|we)\s+(?:need|want)\b[^\n]{0,60}\bwidgets?\s+(?:for|using|with)\b)/iu;
 
