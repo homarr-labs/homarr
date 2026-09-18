@@ -10,7 +10,7 @@ export const mediaMissingWidget: WidgetDefinition = {
     items: [
       {
         name: "Show Missing",
-        description: "Display the missing media tab, listing movies or episodes not yet downloaded",
+        description: "Display the missing media tab, listing movies, episodes or books not yet downloaded",
         values: { type: "boolean" },
         defaultValue: "true",
       },
