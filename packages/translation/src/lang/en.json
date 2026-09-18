@@ -1297,6 +1297,14 @@
           "label": "API Secret",
           "newLabel": "New API Secret"
         },
+        "komodoApiKey": {
+          "label": "API Key",
+          "newLabel": "New API Key"
+        },
+        "komodoApiSecret": {
+          "label": "API Secret",
+          "newLabel": "New API Secret"
+        },
         "githubAppId": {
           "label": "App Id",
           "newLabel": "New App Id"
@@ -1355,6 +1363,10 @@
     "patchmon": {
       "name": "PatchMon",
       "description": "Patch management and monitoring for Linux hosts"
+    },
+    "komodo": {
+      "name": "Komodo",
+      "description": "Monitor servers, stacks, and deployments managed by Komodo"
     },
     "bazarr": {
       "name": "Bazarr",
@@ -2454,9 +2466,35 @@
       }
     },
     "dockerContainers": {
-      "name": "Docker stats",
-      "description": "Stats of your containers (This widget can only be added with administrator privileges)",
+      "name": "Containers",
+      "description": "Container and server statistics from Docker or Komodo",
       "option": {
+        "view": {
+          "label": "View",
+          "option": {
+            "containers": "Containers",
+            "servers": "Servers"
+          }
+        },
+        "showSummary": {
+          "label": "Show Komodo summary"
+        },
+        "showServers": {
+          "label": "Show servers"
+        },
+        "showStacks": {
+          "label": "Show stacks"
+        },
+        "showDeployments": {
+          "label": "Show deployments"
+        },
+        "showProblems": {
+          "label": "Show problems"
+        },
+        "refreshInterval": {
+          "label": "Refresh interval",
+          "description": "How often to refetch data from Komodo (in seconds)"
+        },
         "columns": {
           "label": "Columns to show"
         },
@@ -2475,6 +2513,24 @@
         "descendingDefaultSort": {
           "label": "Invert sorting"
         },
+        "showCpu": {
+          "label": "Show CPU"
+        },
+        "showMemory": {
+          "label": "Show memory"
+        },
+        "showDisk": {
+          "label": "Show disk"
+        },
+        "showLoadAverage": {
+          "label": "Show load average"
+        },
+        "showNetwork": {
+          "label": "Show network"
+        },
+        "showVersion": {
+          "label": "Show version"
+        },
         "columnOrder": {
           "label": "Column order"
         },
@@ -2489,6 +2545,48 @@
       },
       "empty": {
         "noContainers": "No containers found"
+      },
+      "komodo": {
+        "resource": {
+          "servers": "Servers",
+          "stacks": "Stacks",
+          "deployments": "Deployments"
+        },
+        "resourceState": {
+          "ok": "Online",
+          "disabled": "Disabled",
+          "notOk": "Offline",
+          "running": "Running",
+          "deploying": "Deploying",
+          "paused": "Paused",
+          "stopped": "Stopped",
+          "created": "Created",
+          "removing": "Removing",
+          "down": "Down",
+          "restarting": "Restarting",
+          "dead": "Dead",
+          "unhealthy": "Unhealthy",
+          "stopping": "Stopping",
+          "exited": "Exited",
+          "notDeployed": "Not deployed",
+          "unknown": "Unknown"
+        },
+        "problems": "Problems",
+        "server": {
+          "column": {
+            "name": "Name",
+            "cpu": "CPU",
+            "memory": "Memory",
+            "disk": "Disk",
+            "loadAverage": "Load Avg",
+            "network": "Net",
+            "version": "Version"
+          },
+          "cores": "cores",
+          "empty": {
+            "noServers": "No servers found"
+          }
+        }
       }
     },
     "coolify": {

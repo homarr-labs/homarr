@@ -1,17 +1,14 @@
 import type { Readable } from "node:stream";
-import type { Container, ContainerInfo, ContainerStats } from "dockerode";
+import type { Container, ContainerStats } from "dockerode";
 import type Dockerode from "dockerode";
 
-import { bestMatch } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
-import { db, like, or } from "@homarr/db";
-import { icons } from "@homarr/db/schema";
-import { extractContainerImageName } from "@homarr/definitions";
 import type { ContainerState, Port } from "@homarr/docker";
 import { dockerLabels, DockerSingleton } from "@homarr/docker";
 
 import { createDockerLogStreamProcessor, decodeDockerLogs } from "./docker-log-decode";
+import { addContainerIconsAsync } from "./lib/container-icons";
 import { createWidgetRequestHandler } from "./lib/widget-request-handler";
 
 const logger = createLogger({ module: "dockerRequestHandler" });
@@ -179,8 +176,6 @@ export const dockerContainersRequestHandler = createWidgetRequestHandler({
   },
 });
 
-const extractImage = (container: ContainerInfo) => extractContainerImageName(container.Image);
-
 const findContainerByIdAsync = async (id: string) => {
   const dockerInstances = DockerSingleton.getInstances();
   const containers = await Promise.all(
@@ -285,15 +280,6 @@ async function getContainersWithStatsAsync() {
 
     return [];
   });
-  const likeQueries = containers.map((container) => like(icons.name, `%${extractImage(container)}%`));
-
-  const dbIcons =
-    likeQueries.length > 0
-      ? await db.query.icons.findMany({
-          where: or(...likeQueries),
-        })
-      : [];
-
   const containerStatsPromises = containers.map(async (container) => {
     const instance = dockerInstances.find(({ host }) => host === container.instance)?.instance;
     if (!instance) return null;
@@ -317,7 +303,6 @@ async function getContainersWithStatsAsync() {
       name: container.Names[0]?.split("/")[1] ?? "Unknown",
       host: container.instance,
       state: container.State as ContainerState,
-      iconUrl: bestMatch(extractImage(container), dbIcons, (icon) => icon.name)?.url ?? null,
       cpuUsage,
       memoryUsage,
       image: container.Image,
@@ -325,7 +310,8 @@ async function getContainersWithStatsAsync() {
     };
   });
 
-  return (await Promise.all(containerStatsPromises)).filter((container) => container !== null);
+  const containersWithStats = (await Promise.all(containerStatsPromises)).filter((container) => container !== null);
+  return await addContainerIconsAsync(containersWithStats);
 }
 
 export function calculateCpuUsage(stats: ContainerStats): number {
