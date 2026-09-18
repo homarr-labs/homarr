@@ -727,7 +727,7 @@ export const integrationCategories = [
 export type IntegrationCategory = (typeof integrationCategories)[number];
 
 /** Integrations with a reusable HTTP authentication contract. */
-const httpIntegrationKinds = [
+export const httpIntegrationKinds = [
   "sonarr",
   "radarr",
   "lidarr",

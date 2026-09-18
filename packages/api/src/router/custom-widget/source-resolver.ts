@@ -17,7 +17,11 @@ export async function assertCustomWidgetIntegrationBindings(
   sources: Record<string, CustomWidgetSource>,
 ) {
   for (const source of Object.values(sources)) {
-    if (source.type !== "integration" || !source.integrationId) continue;
+    if (source.type !== "integration") continue;
+    if (!isHttpIntegrationKind(source.integrationKind)) {
+      throw new TRPCError({ code: "BAD_REQUEST", message: "This integration type does not support widget requests" });
+    }
+    if (!source.integrationId) continue;
     await resolveIntegration(ctx, source);
   }
 }

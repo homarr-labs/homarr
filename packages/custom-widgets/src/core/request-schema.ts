@@ -1,5 +1,7 @@
 import { z } from "zod/v4";
 
+import { httpIntegrationKinds } from "@homarr/definitions/integration";
+
 import { customWidgetMethods } from "./schema-types";
 import { getCustomWidgetHttpUrlIssue } from "./url-policy";
 
@@ -60,7 +62,7 @@ export const customWidgetHttpSourceSchema = z.strictObject({
 export const customWidgetIntegrationSourceSchema = z.strictObject({
   type: z.literal("integration"),
   name: z.string().trim().min(1).max(128).optional(),
-  integrationKind: customWidgetIdentifierSchema,
+  integrationKind: z.enum(httpIntegrationKinds),
   integrationId: z.string().min(1).max(100).optional(),
   baseUrl: z.never().optional(),
   networkScope: z.never().optional(),

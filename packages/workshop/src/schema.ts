@@ -240,11 +240,9 @@ export function validateWorkshopContent(type: WorkshopSubmissionType, content: s
 
 export function formatWorkshopContent(type: WorkshopSubmissionType, content: string): string {
   if (type !== "customWidget") return content;
-  try {
-    return JSON.stringify(JSON.parse(content) as unknown, null, 2);
-  } catch {
-    return content;
-  }
+  const validation = validateWorkshopWidget(content);
+  if (!validation.success) return content;
+  return JSON.stringify(validation.data, null, 2);
 }
 
 export function validateWorkshopWidget(content: string): WorkshopWidgetValidationResult {
