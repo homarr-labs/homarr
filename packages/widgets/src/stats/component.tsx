@@ -45,7 +45,7 @@ export default function StatsWidget({
   const t = useI18n("widget.stats");
   const utils = clientApi.useUtils();
   const [refreshing, setRefreshing] = useState(0);
-  const refreshErrors = useRef(new Set<string>());
+  const refreshErrors = useRef(new Map<string, number | null>());
   const [localTable, setLocalTable] = useState<boolean>();
   const table = advanced || (localTable ?? options.table);
   const [localRows, setLocalRows] = useState<boolean>();
@@ -90,10 +90,21 @@ export default function StatsWidget({
     ),
   );
 
+  const hasRefreshError = (integrationId: string) => {
+    const failedSnapshotAt = refreshErrors.current.get(integrationId);
+    if (failedSnapshotAt === undefined) return false;
+    const updatedAt = utils.widget.stats.snapshot.getData({ integrationId })?.updatedAt;
+    if (updatedAt == null) return true;
+    // A different widget or browser may have recovered this shared source after our transport failure.
+    if (failedSnapshotAt === null) return false;
+    return updatedAt <= failedSnapshotAt;
+  };
+
   const refresh = useCallback(
     async (integrationId: string, force: boolean) => {
       if (pending.current.has(integrationId)) return;
       if (!force && (retry.current.get(integrationId) ?? 0) > Date.now()) return;
+      const previousUpdatedAt = utils.widget.stats.snapshot.getData({ integrationId })?.updatedAt ?? null;
       pending.current.add(integrationId);
       refreshErrors.current.delete(integrationId);
       setRefreshing((value) => value + 1);
@@ -103,7 +114,7 @@ export default function StatsWidget({
         utils.widget.stats.snapshot.setData({ integrationId }, result);
         retry.current.set(integrationId, Date.now() + 60_000);
       } catch {
-        refreshErrors.current.add(integrationId);
+        refreshErrors.current.set(integrationId, previousUpdatedAt);
         retry.current.set(integrationId, Date.now() + 60_000);
         await utils.widget.stats.snapshot.invalidate({ integrationId });
       } finally {
@@ -133,7 +144,7 @@ export default function StatsWidget({
       return {
         updatedAt,
         hasError:
-          refreshErrors.current.size > 0 ||
+          visibleIds.some(hasRefreshError) ||
           currentSnapshots.some((snapshot) => !!snapshot?.error) ||
           snapshots.some((snapshot) => !!snapshot.error),
         isRefreshing: pending.current.size > 0,
@@ -167,7 +178,7 @@ export default function StatsWidget({
     const catalog = catalogs[ids.indexOf(entry.integrationId)];
     const snapshot = snapshots[visibleIds.indexOf(entry.integrationId)];
     const metric = catalog?.data?.metrics.find((item) => item.key === entry.metric);
-    const refreshFailed = !!snapshot?.error || refreshErrors.current.has(entry.integrationId);
+    const refreshFailed = !!snapshot?.error || hasRefreshError(entry.integrationId);
     const unavailable =
       !ids.includes(entry.integrationId) ||
       (!!catalog?.error && !catalog.data) ||
@@ -370,7 +381,7 @@ export default function StatsWidget({
                 const catalog = catalogs[ids.indexOf(entry.integrationId)];
                 const snapshot = snapshots[visibleIds.indexOf(entry.integrationId)];
                 const metric = catalog?.data?.metrics.find((item) => item.key === entry.metric);
-                const refreshFailed = !!snapshot?.error || refreshErrors.current.has(entry.integrationId);
+                const refreshFailed = !!snapshot?.error || hasRefreshError(entry.integrationId);
                 const unavailable =
                   !ids.includes(entry.integrationId) ||
                   (!!catalog?.error && !catalog.data) ||

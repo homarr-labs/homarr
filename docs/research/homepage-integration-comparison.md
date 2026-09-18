@@ -217,6 +217,12 @@ Difficulty estimates describe adapter/authentication work, not ongoing maintenan
 | NetAlertX          | Network device inventory             | Total, connected, new, down alerts                                      | 🟡 Medium | ✅ / ✅ API               | Real backend runs; fixture web UI is blocked by PHP-FPM file access on this host.          |
 | Jackett            | Indexer aggregation                  | Configured indexers; existing indexer widget                            | 🟡 Medium | ✅ / ✅                   | Internet Archive configured and tested; health history unavailable from API-key interface. |
 
+## Live recovery recheck
+
+A fresh forced sweep of all **34 configured integrations** passed after recovering Miniflux and Linkwarden, which had exited during database/DNS startup after the backup cycle. Their original fixture containers now use `restart: unless-stopped`. Jellystat and Tube Archivist also returned complete successful snapshots in this sweep. This verifies the configured fixture stack at check time; Your Spotify and unconfigured legacy providers remain outside the live-tested scope above.
+
+A browser regression reproduced a separate client issue: a transport error in one widget remained visible after another widget refreshed the same source successfully. Client errors are now tied to the failed snapshot version and stop applying when a newer successful snapshot arrives. The same failure/recovery sequence passed after the fix, and the dashboard showed no retrieval errors. Widget title badges now align to the top-left edge, with their width constrained to the widget.
+
 ## Refresh, demo and documentation follow-up
 
 - Removed stale snapshot text and per-card status badges. Actual retrieval failures remain available in details and the context menu.

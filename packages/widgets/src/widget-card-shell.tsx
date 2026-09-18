@@ -75,8 +75,9 @@ export const WidgetTitleBadge = ({ advancedOptions, opacity, radius }: WidgetTit
     <Badge
       pos="absolute"
       style={{ zIndex: "var(--mantine-z-index-app)" }}
-      top={2}
-      left={16}
+      top={0}
+      left={0}
+      maw="100%"
       size="xs"
       radius={radius}
       styles={{
