@@ -13,7 +13,6 @@ import { linkwardenStatsProvider } from "./providers/linkwarden";
 import { maintainerrStatsProvider } from "./providers/maintainerr";
 import { mealieStatsProvider } from "./providers/mealie";
 import { minifluxStatsProvider } from "./providers/miniflux";
-import { myspeedStatsProvider } from "./providers/myspeed";
 import { netdataStatsProvider } from "./providers/netdata";
 import { netalertxStatsProvider } from "./providers/netalertx";
 import { frigateStatsProvider } from "./providers/frigate";
@@ -46,7 +45,6 @@ export const statsProviders = {
   maintainerr: maintainerrStatsProvider,
   mealie: mealieStatsProvider,
   miniflux: minifluxStatsProvider,
-  myspeed: myspeedStatsProvider,
   netdata: netdataStatsProvider,
   netalertx: netalertxStatsProvider,
   frigate: frigateStatsProvider,
