@@ -4,7 +4,7 @@ import { IconChartAreaLine } from "@tabler/icons-react";
 export const beszelSystemStatsWidget: WidgetDefinition = {
   icon: IconChartAreaLine,
   name: "Beszel System Stats",
-  description: "Time-series charts for CPU, memory, disk, network, and Docker container metrics from Beszel.",
+  description: "Time-series charts for CPU, memory, disk, network, GPU, and Docker container metrics from Beszel.",
   path: "../../widgets/beszel-system-stats",
   configuration: {
     items: [
@@ -51,6 +51,24 @@ export const beszelSystemStatsWidget: WidgetDefinition = {
       {
         name: "Show network",
         description: "Displays the network chart",
+        values: { type: "boolean" },
+        defaultValue: "yes",
+      },
+      {
+        name: "Show GPU usage",
+        description: "Displays GPU utilization for each GPU reported by Beszel",
+        values: { type: "boolean" },
+        defaultValue: "yes",
+      },
+      {
+        name: "Show GPU memory",
+        description: "Displays used VRAM for each GPU when reported by Beszel, in standard storage units",
+        values: { type: "boolean" },
+        defaultValue: "yes",
+      },
+      {
+        name: "Show GPU power",
+        description: "Displays power draw for each GPU when reported by Beszel",
         values: { type: "boolean" },
         defaultValue: "yes",
       },
