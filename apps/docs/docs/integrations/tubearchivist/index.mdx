@@ -1,0 +1,38 @@
+---
+title: "Tube Archivist"
+description: "A self-hosted YouTube media server for downloading and organizing videos."
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { tubearchivistIntegration } from ".";
+import { statsWidget } from "@site/docs/widgets/stats";
+
+<IntegrationHeader integration={tubearchivistIntegration} categories={["Media management"]} />
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites items={[{ widget: statsWidget }]} />
+
+The [Stats widget](/docs/widgets/stats) reads Tube Archivist's video, channel, playlist, and download statistics endpoints and displays archived content plus pending downloads.
+
+### Adding the integration
+
+<AddingIntegration />
+
+### Secrets
+
+<IntegrationSecrets
+  secrets={[
+    {
+      credentials: ["apiKey"],
+      steps: [
+        "Open Tube Archivist's Settings page and copy the generated API token.",
+        "Paste the token into Homarr's API Key field.",
+      ],
+    },
+  ]}
+/>

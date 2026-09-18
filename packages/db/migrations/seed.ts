@@ -586,7 +586,7 @@ const demoApps = [
   },
 ] as const;
 
-const buildDemoWidgets = (appIds: string[], customWidgetDefinitionId: string): DemoWidget[] => [
+const buildDemoWidgets = (appIds: string[], customWidgetDefinitionId: string, integrationId: string): DemoWidget[] => [
   // Daily focus
   { kind: "calendar", xOffset: 0, yOffset: 0, width: 2, height: 2, needsIntegration: true },
   {
@@ -900,6 +900,30 @@ const buildDemoWidgets = (appIds: string[], customWidgetDefinitionId: string): D
 
   { kind: "llamacpp", xOffset: 0, yOffset: 36, width: 12, height: 3, needsIntegration: true },
 
+  // Statistics examples share deterministic mock snapshots and never contact an external provider.
+  ...["cards", "rows", "table"].map(
+    (view, index): DemoWidget => ({
+      kind: "stats",
+      xOffset: index * 4,
+      yOffset: 39,
+      width: 4,
+      height: 3,
+      needsIntegration: true,
+      options: {
+        rows: view === "rows",
+        table: view === "table",
+        entries: ["documents", "songs", "storage"].map((metric) => ({
+          id: `demo-${view}-${metric}`,
+          integrationId,
+          metric,
+          label: "",
+          hidden: false,
+          compact: view === "rows",
+        })),
+      },
+    }),
+  ),
+
   // Right app rail
   ...appIds.map(
     (appId, index): DemoWidget => ({
@@ -1064,7 +1088,7 @@ const seedDemoUserAsync = async (db: Database) => {
     boardId,
   });
 
-  const demoWidgets = buildDemoWidgets(appIds, customWidgetDefinitionId);
+  const demoWidgets = buildDemoWidgets(appIds, customWidgetDefinitionId, integrationId);
   for (const widget of demoWidgets) {
     let sectionId = mainSectionId;
     if (widget.section === "right") {

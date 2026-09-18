@@ -27,7 +27,7 @@ interface Options<TData, TKind extends IntegrationKind, TInput extends Record<st
   cacheVersion?: string;
 }
 
-const getIntegrationCacheIdentity = <TKind extends IntegrationKind, TInput extends Record<string, unknown>>({
+export const getIntegrationCacheIdentity = <TKind extends IntegrationKind, TInput extends Record<string, unknown>>({
   integration,
   options,
 }: {

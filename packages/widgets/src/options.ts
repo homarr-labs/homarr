@@ -5,6 +5,9 @@ import type { RefinementCtx, ZodType } from "zod/v4";
 
 import type { IntegrationKind } from "@homarr/definitions";
 
+import { statsEntriesSchema } from "./stats/config";
+import type { StatsEntry } from "./stats/config";
+
 import type { DynamicSelectOption } from "./_inputs/widget-dynamic-select-input";
 import type { inferSelectOptionValue, SelectOption } from "./_inputs/widget-select-input";
 import type { ReleasesRepository } from "./releases/releases-repository";
@@ -340,6 +343,13 @@ const optionsFactory = {
     defaultValue: input.defaultValue ?? [],
     withDescription: input.withDescription ?? false,
     useOptions: input.useOptions,
+  }),
+  statsEntries: () => ({
+    type: "statsEntries" as const,
+    validate: statsEntriesSchema,
+    defaultValue: [] as StatsEntry[],
+    withDescription: false,
+    skipContextMenu: true,
   }),
   customWidgetSelect: (input?: CommonInput<string>) => ({
     type: "customWidgetSelect" as const,

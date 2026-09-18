@@ -22,6 +22,18 @@ export class HomeAssistantIntegration extends Integration implements ISmartHomeI
     return { headers: this.getAuthHeaders() };
   }
 
+  public async getEntityStatsAsync() {
+    const response = await this.getAsync("/api/states");
+    if (!response.ok) throw new ResponseError(response);
+    const entities = z.array(z.object({ entity_id: z.string(), state: z.string() })).parse(await response.json());
+    return {
+      entities: entities.length,
+      unavailable: entities.filter((entity) => entity.state === "unavailable").length,
+      lightsOn: entities.filter((entity) => entity.entity_id.startsWith("light.") && entity.state === "on").length,
+      peopleHome: entities.filter((entity) => entity.entity_id.startsWith("person.") && entity.state === "home").length,
+    };
+  }
+
   public async getEntityStateAsync(entityId: string) {
     try {
       const response = await this.getAsync(`/api/states/${entityId}`);

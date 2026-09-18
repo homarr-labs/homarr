@@ -104,3 +104,9 @@ Use [Custom Widget agent authoring](../custom-widgets/agent-authoring) for the l
 The Notifications widget's `widget.notifications.deleteNotification` tRPC mutation accepts `integrationId` and
 `notificationId` (a positive decimal string). It requires a signed-in user with Interact access to a Gotify integration,
 deletes the message from Gotify, and invalidates its notification cache. It is not exposed through REST or MCP.
+
+## Integration statistics
+
+`widget.stats.catalog` lists the metric keys and units for one integration. `widget.stats.snapshot` reads its shared snapshot without making service requests. `widget.stats.refresh` refreshes it through the shared concurrency limit; `force: true` bypasses the one-hour freshness check. Each procedure requires `integrationId` and checks Query access, including for cached values. These procedures are also exposed through MCP under `stats`. They are not REST endpoints.
+
+Refresh returns the current snapshot, which may still be old if another process is refreshing that source. Inspect `updatedAt`, `stale`, `error`, and `retryAt`; a refresh failure retains successful values. See the [Statistics widget](../../widgets/stats) for cache behavior.

@@ -10,6 +10,7 @@ import {
   Group,
   Pill,
   PillsInput,
+  ScrollArea,
   Stack,
   Text,
   useCombobox,
@@ -166,15 +167,17 @@ export const WidgetIntegrationSelect = ({
       </Combobox.DropdownTarget>
 
       <Combobox.Dropdown>
-        <Combobox.Options>
-          {options.length >= 1 ? (
-            options
-          ) : (
-            <Text p={4} size="sm" ta="center" c="var(--mantine-color-dimmed)">
-              {tIntegration("noData")}
-            </Text>
-          )}
-        </Combobox.Options>
+        <ScrollArea.Autosize mah="min(320px, 45dvh)" type="auto" scrollbars="y">
+          <Combobox.Options>
+            {options.length >= 1 ? (
+              options
+            ) : (
+              <Text p={4} size="sm" ta="center" c="var(--mantine-color-dimmed)">
+                {tIntegration("noData")}
+              </Text>
+            )}
+          </Combobox.Options>
+        </ScrollArea.Autosize>
       </Combobox.Dropdown>
     </Combobox>
   );

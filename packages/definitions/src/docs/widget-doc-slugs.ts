@@ -1,6 +1,7 @@
 import type { WidgetKind } from "../widget";
 
 export const widgetDocSlugs = {
+  stats: "stats",
   clock: "clock",
   weather: "weather",
   airQuality: "air-quality",

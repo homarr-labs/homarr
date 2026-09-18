@@ -18,7 +18,8 @@
     "./factory": "./src/factory.ts",
     "./response-contract": "./src/base/response-contract.ts",
     "./test-connection": "./src/base/test-connection/index.ts",
-    "./types": "./src/types.ts"
+    "./types": "./src/types.ts",
+    "./stats": "./src/stats/index.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
