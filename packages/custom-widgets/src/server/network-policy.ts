@@ -218,7 +218,12 @@ export function createPinnedAgent(
 }
 
 export function assertCustomWidgetPathScope(url: URL, pathPrefix: string) {
-  const prefix = decodePath(pathPrefix).replace(/\/+$/u, "");
+  const decodedPrefix = decodePath(pathPrefix);
+  let prefixEnd = decodedPrefix.length;
+  while (prefixEnd > 0 && decodedPrefix.charAt(prefixEnd - 1) === "/") {
+    prefixEnd -= 1;
+  }
+  const prefix = decodedPrefix.slice(0, prefixEnd);
   const path = decodePath(url.pathname);
   if (
     path.includes("\\") ||
