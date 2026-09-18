@@ -34,6 +34,11 @@ export const getAssistantStreamErrorMessage = (error: unknown) => {
   const statusCode = getStatusCode(error);
   const message = getErrorMessage(error);
 
+  if (/AI_InvalidToolInputError|Invalid input for tool/iu.test(message)) {
+    return /customWidget_|custom[\s-]+widget/iu.test(message)
+      ? "The model produced incomplete Custom Widget input, so Homarr did not run the action. Try again; multiline JSX will be sent as templateLines."
+      : "The model produced invalid tool input, so Homarr did not run the action. Try again.";
+  }
   if (
     /\bmodel(?:\s+id)?\b/iu.test(message) &&
     /\b(invalid|unknown|unavailable|not found|not a valid)\b/iu.test(message)
@@ -57,11 +62,6 @@ export const getAssistantStreamErrorMessage = (error: unknown) => {
   }
   if (statusCode !== undefined && statusCode >= 500) {
     return "The model provider is temporarily unavailable. Try again later.";
-  }
-  if (/AI_InvalidToolInputError|Invalid input for tool/iu.test(message)) {
-    return /customWidget_|custom[\s-]+widget/iu.test(message)
-      ? "The model produced incomplete Custom Widget input, so Homarr did not run the action. Try again; multiline JSX will be sent as templateLines."
-      : "The model produced invalid tool input, so Homarr did not run the action. Try again.";
   }
   if (statusCode === 400) {
     return "The provider rejected the request. The selected model may not support the requested input or tools.";

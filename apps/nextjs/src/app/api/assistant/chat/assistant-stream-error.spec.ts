@@ -18,6 +18,16 @@ describe("assistant stream errors", () => {
     );
   });
 
+  test("prefers malformed tool input over model wording in its validation details", () => {
+    expect(
+      getAssistantStreamErrorMessage(
+        new Error("Invalid input for tool customWidget_validateTemplate: selected model is unavailable"),
+      ),
+    ).toBe(
+      "The model produced incomplete Custom Widget input, so Homarr did not run the action. Try again; multiline JSX will be sent as templateLines.",
+    );
+  });
+
   test("explains invalid provider model identifiers", () => {
     expect(
       getAssistantStreamErrorMessage({
