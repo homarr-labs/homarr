@@ -301,3 +301,13 @@ Review follow-up: Linkwarden follows cursor pagination; Tandoor receives the sha
 - The private replication pack contains the full SQLite database with its encryption environment, Redis snapshot, all service persistent data, pinned image references, and source/harness. Restore uses **local bind directories**, preserving database-file ownership and modes. No credentials or databases are committed to Git.
 
 The private pack was restored into a fresh directory and launched as an isolated Compose project on separate networks/dynamic localhost ports. All **53 containers** started, and all **34 configured integrations** in the copied Homarr SQLite database decrypted their stored credentials and fetched complete metric catalogs from the restored services. The check found and corrected config-file permissions and selected Autobrr's generic amd64 manifest instead of a host-specific CPU variant. FileFlows uses polling to avoid this host's inotify-instance limit. The 85 persistent/config mounts are local binds; 81 data archives were restored with preserved owners and modes. This verifies a clean same-host restore, not an independent Mac/ARM machine.
+
+## Recover the complete expansion harness
+
+Checkpoint [`ac67f8747`](https://github.com/homarr-labs/homarr/tree/ac67f8747af1fafff4d13249cc5c34c9d187fd56) contains the complete expansion, focused verification scripts, seeders, Compose manifests, export and bind-restore tooling. The following cleanup commit removes the development harness from the feature tree; existing repository tests remain. Restore it with:
+
+```sh
+git restore --source=ac67f8747af1fafff4d13249cc5c34c9d187fd56 -- development/integration-stats
+```
+
+The private ZIP adds the full database, credentials, service data, screenshots and setup instructions. Those private runtime files are not in Git.
