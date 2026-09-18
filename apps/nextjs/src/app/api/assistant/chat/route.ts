@@ -744,6 +744,7 @@ export async function POST(request: Request) {
       maxRetries: 2,
       experimental_repairToolCall: ({ toolCall }) => Promise.resolve(repairAssistantToolInput(toolCall)),
       reasoning: parsed.data.reasoning === "auto" ? undefined : parsed.data.reasoning,
+      temperature: customWidgetAuthoringActive && modelId === "z-ai/glm-5.3-flash" ? 0.2 : undefined,
       providerOptions:
         configuration.provider === "openrouter" || openRouterServerToolsEnabled
           ? { [toProviderOptionsKey(providerName)]: { usage: { include: true } } }
