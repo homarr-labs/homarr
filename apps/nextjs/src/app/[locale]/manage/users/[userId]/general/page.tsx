@@ -11,6 +11,7 @@ import { catchTrpcNotFound } from "~/errors/trpc-catch-error";
 import { createMetaTitle } from "~/metadata";
 import { canAccessUserEditPage } from "../access";
 import { DeleteUserButton } from "./_components/_delete-user-button";
+import { DisableUserButton } from "./_components/_disable-user-button";
 import { UserGeneralSettingsForm } from "./_components/_general-settings-form";
 import { UserProfileAvatarForm } from "./_components/_profile-avatar-form";
 import { ResetTours } from "./_components/_reset-tours";
@@ -61,6 +62,19 @@ export default async function EditUserPage(props: Props) {
   const searchEngines = await api.searchEngine.getSelectable();
   const isSelf = session?.user.id === user.id;
   const isCredentialsUser = user.provider === "credentials";
+  const isDisabled = user.disabled;
+
+  const getDisableItemLabel = () => {
+    if (isDisabled) return t("user.action.enable.label");
+    return t("user.action.disable.label");
+  };
+
+  const getDisableItemDescription = () => {
+    if (isDisabled) {
+      return t("management.page.user.action.enable.description", { defaultValue: "Re-enable access for this user" });
+    }
+    return t("management.page.user.action.disable.description", { defaultValue: "Prevent this user from logging in" });
+  };
 
   return (
     <Stack>
@@ -96,6 +110,13 @@ export default async function EditUserPage(props: Props) {
       )}
 
       <DangerZoneRoot>
+        {!isSelf && (
+          <DangerZoneItem
+            label={getDisableItemLabel()}
+            description={getDisableItemDescription()}
+            action={<DisableUserButton user={user} isSelf={isSelf} />}
+          />
+        )}
         <DangerZoneItem
           label={t("user.action.delete.label")}
           description={t("user.action.delete.description")}
