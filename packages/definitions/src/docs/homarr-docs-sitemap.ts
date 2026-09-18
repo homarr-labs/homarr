@@ -299,7 +299,6 @@ export type HomarrDocumentationPath =
   | "/docs/integrations/prometheus"
   | "/docs/integrations/plantit"
   | "/docs/integrations/netdata"
-  | "/docs/integrations/myspeed"
   | "/docs/integrations/fileflows"
   | "/docs/integrations/trilium"
   | "/docs/integrations/tandoor"
