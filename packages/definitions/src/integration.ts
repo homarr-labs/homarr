@@ -53,10 +53,13 @@ interface IntegrationDefinition {
   defaultUrl?: string;
   defaultPort?: number;
   apiKeySettingsPath?: string;
+  /** Declare whether the native adapter implements reusable authentication for arbitrary HTTP requests. */
+  supportsHttpRequests: boolean;
 }
 
 export const integrationDefs = {
   sabNzbd: {
+    supportsHttpRequests: false,
     name: "SABnzbd",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/sabnzbd.svg",
@@ -70,6 +73,7 @@ export const integrationDefs = {
     },
   },
   nzbGet: {
+    supportsHttpRequests: false,
     name: "NZBGet",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/nzbget.svg",
@@ -79,6 +83,7 @@ export const integrationDefs = {
     features: { docker: { aliases: ["nzbget"] } },
   },
   deluge: {
+    supportsHttpRequests: false,
     name: "Deluge",
     secretKinds: [["password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/deluge.svg",
@@ -87,6 +92,7 @@ export const integrationDefs = {
     defaultPort: 8112,
   },
   transmission: {
+    supportsHttpRequests: false,
     name: "Transmission",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/transmission.svg",
@@ -95,6 +101,7 @@ export const integrationDefs = {
     defaultPort: 9091,
   },
   qBittorrent: {
+    supportsHttpRequests: false,
     name: "qBittorrent",
     secretKinds: [["apiKey"], ["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/qbittorrent.svg",
@@ -108,6 +115,7 @@ export const integrationDefs = {
     },
   },
   aria2: {
+    supportsHttpRequests: false,
     name: "Aria2",
     secretKinds: [[], ["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/PapirusDevelopmentTeam/papirus_icons@latest/src/system_downloads_3.svg",
@@ -116,6 +124,7 @@ export const integrationDefs = {
     defaultPort: 6800,
   },
   slskd: {
+    supportsHttpRequests: true,
     name: "Slskd",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/slskd.svg",
@@ -124,6 +133,7 @@ export const integrationDefs = {
     defaultPort: 5030,
   },
   sonarr: {
+    supportsHttpRequests: true,
     name: "Sonarr",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/sonarr.svg",
@@ -134,6 +144,7 @@ export const integrationDefs = {
     features: { onboarding: { featuredOrder: 0 } },
   },
   radarr: {
+    supportsHttpRequests: true,
     name: "Radarr",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/radarr.svg",
@@ -144,6 +155,7 @@ export const integrationDefs = {
     features: { onboarding: { featuredOrder: 1 } },
   },
   lidarr: {
+    supportsHttpRequests: true,
     name: "Lidarr",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/lidarr.svg",
@@ -153,6 +165,7 @@ export const integrationDefs = {
     apiKeySettingsPath: "/settings/general",
   },
   readarr: {
+    supportsHttpRequests: true,
     name: "Readarr",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@main/png/readarr.png",
@@ -162,6 +175,7 @@ export const integrationDefs = {
     apiKeySettingsPath: "/settings/general",
   },
   prowlarr: {
+    supportsHttpRequests: true,
     name: "Prowlarr",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/prowlarr.svg",
@@ -172,6 +186,7 @@ export const integrationDefs = {
     features: { onboarding: { featuredOrder: 2 } },
   },
   bazarr: {
+    supportsHttpRequests: false,
     name: "Bazarr",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/bazarr.svg",
@@ -182,6 +197,7 @@ export const integrationDefs = {
     features: { docker: { aliases: ["bazarr"] } },
   },
   jellyfin: {
+    supportsHttpRequests: false,
     name: "Jellyfin",
     secretKinds: [["username", "password"], ["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/jellyfin.svg",
@@ -192,6 +208,7 @@ export const integrationDefs = {
     features: { onboarding: { featuredOrder: 6 } },
   },
   emby: {
+    supportsHttpRequests: false,
     name: "Emby",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/emby.svg",
@@ -200,6 +217,7 @@ export const integrationDefs = {
     defaultPort: 8096,
   },
   plex: {
+    supportsHttpRequests: false,
     name: "Plex",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/plex.svg",
@@ -208,6 +226,7 @@ export const integrationDefs = {
     defaultPort: 32400,
   },
   jellyseerr: {
+    supportsHttpRequests: true,
     name: "Jellyseerr",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/jellyseerr.svg",
@@ -218,6 +237,7 @@ export const integrationDefs = {
     features: { docker: { aliases: ["jellyseerr"] } },
   },
   seerr: {
+    supportsHttpRequests: true,
     name: "Seerr",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/seerr.svg",
@@ -228,6 +248,7 @@ export const integrationDefs = {
     features: { onboarding: { featuredOrder: 5 } },
   },
   overseerr: {
+    supportsHttpRequests: true,
     name: "Overseerr",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/overseerr.svg",
@@ -238,6 +259,7 @@ export const integrationDefs = {
     features: { docker: { aliases: ["overseerr"] } },
   },
   piHole: {
+    supportsHttpRequests: false,
     name: "Pi-hole",
     secretKinds: [["apiKey"], []],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/pi-hole.svg",
@@ -247,6 +269,7 @@ export const integrationDefs = {
     features: { docker: { aliases: ["pihole", "pi-hole"] } },
   },
   adGuardHome: {
+    supportsHttpRequests: true,
     name: "AdGuard Home",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/adguard-home.svg",
@@ -256,6 +279,7 @@ export const integrationDefs = {
     features: { docker: { aliases: ["adguardhome", "adguard-home", "adguard"] } },
   },
   technitiumDns: {
+    supportsHttpRequests: false,
     name: "Technitium DNS",
     secretKinds: [["apiKey"], ["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/technitium.svg",
@@ -264,6 +288,7 @@ export const integrationDefs = {
     defaultPort: 5380,
   },
   homeAssistant: {
+    supportsHttpRequests: true,
     name: "Home Assistant",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/home-assistant.svg",
@@ -274,6 +299,7 @@ export const integrationDefs = {
     features: { docker: { aliases: ["homeassistant", "home-assistant", "hass"] } },
   },
   openmediavault: {
+    supportsHttpRequests: false,
     name: "OpenMediaVault",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/openmediavault.svg",
@@ -283,6 +309,7 @@ export const integrationDefs = {
     features: { docker: { aliases: ["omv"] } },
   },
   dashDot: {
+    supportsHttpRequests: false,
     name: "Dash.",
     secretKinds: [[]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/dashdot.png",
@@ -292,6 +319,7 @@ export const integrationDefs = {
     features: { docker: { aliases: ["dashdot", "dash-dot", "dash."] } },
   },
   glances: {
+    supportsHttpRequests: false,
     name: "Glances",
     secretKinds: [[]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/glances.svg",
@@ -300,6 +328,7 @@ export const integrationDefs = {
     defaultPort: 61208,
   },
   tdarr: {
+    supportsHttpRequests: false,
     name: "Tdarr",
     secretKinds: [[], ["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/tdarr.png",
@@ -308,6 +337,7 @@ export const integrationDefs = {
     defaultPort: 8265,
   },
   proxmox: {
+    supportsHttpRequests: false,
     name: "Proxmox",
     secretKinds: [["username", "tokenId", "apiKey", "realm"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/proxmox.svg",
@@ -316,6 +346,7 @@ export const integrationDefs = {
     defaultPort: 8006,
   },
   nextcloud: {
+    supportsHttpRequests: true,
     name: "Nextcloud",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/nextcloud.svg",
@@ -324,6 +355,7 @@ export const integrationDefs = {
     defaultPort: 443,
   },
   unifiController: {
+    supportsHttpRequests: false,
     name: "Unifi Controller",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/unifi.png",
@@ -333,6 +365,7 @@ export const integrationDefs = {
     features: { docker: { aliases: ["unifi", "unifi-controller"] } },
   },
   opnsense: {
+    supportsHttpRequests: false,
     name: "OPNsense",
     secretKinds: [["opnsenseApiKey", "opnsenseApiSecret"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/opnsense.svg",
@@ -342,6 +375,7 @@ export const integrationDefs = {
     apiKeySettingsPath: "/system_usermanager.php",
   },
   ntfy: {
+    supportsHttpRequests: false,
     name: "ntfy",
     secretKinds: [["topic"], ["topic", "apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/ntfy.svg",
@@ -351,6 +385,7 @@ export const integrationDefs = {
     apiKeySettingsPath: "/account",
   },
   gotify: {
+    supportsHttpRequests: false,
     name: "Gotify",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/gotify.svg",
@@ -359,6 +394,7 @@ export const integrationDefs = {
     defaultPort: 80,
   },
   ical: {
+    supportsHttpRequests: false,
     name: "iCal",
     secretKinds: [["url"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/ical.svg",
@@ -367,6 +403,7 @@ export const integrationDefs = {
     features: { docker: { discoverable: false } },
   },
   anchor: {
+    supportsHttpRequests: false,
     name: "Anchor",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/anchor.svg",
@@ -376,6 +413,7 @@ export const integrationDefs = {
     apiKeySettingsPath: "/settings",
   },
   truenas: {
+    supportsHttpRequests: false,
     name: "TrueNAS",
     secretKinds: [["username", "password"], ["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/truenas.svg",
@@ -385,6 +423,7 @@ export const integrationDefs = {
     features: { docker: { aliases: ["truenas"] } },
   },
   synology: {
+    supportsHttpRequests: false,
     name: "Synology DiskStation",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/synology.svg",
@@ -394,6 +433,7 @@ export const integrationDefs = {
     features: { docker: { aliases: ["synology", "diskstation"] } },
   },
   unraid: {
+    supportsHttpRequests: false,
     name: "Unraid",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/unraid.svg",
@@ -403,6 +443,7 @@ export const integrationDefs = {
     apiKeySettingsPath: "/Settings/ManagementAccess",
   },
   coolify: {
+    supportsHttpRequests: true,
     name: "Coolify",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/coolify.svg",
@@ -413,6 +454,7 @@ export const integrationDefs = {
     features: { docker: { aliases: ["coolify"] } },
   },
   immich: {
+    supportsHttpRequests: true,
     name: "Immich",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/immich.svg",
@@ -422,6 +464,7 @@ export const integrationDefs = {
     apiKeySettingsPath: "/user-settings",
   },
   paperlessNgx: {
+    supportsHttpRequests: false,
     name: "Paperless-ngx",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/paperless-ngx.svg",
@@ -431,6 +474,7 @@ export const integrationDefs = {
     features: { docker: { aliases: ["paperless-ngx", "paperless"] } },
   },
   patchmon: {
+    supportsHttpRequests: false,
     name: "PatchMon",
     secretKinds: [["patchmonApiKey", "patchmonApiSecret"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/patchmon.svg",
@@ -441,6 +485,7 @@ export const integrationDefs = {
     features: { docker: { aliases: ["patchmon", "patch-mon"] } },
   },
   tracearr: {
+    supportsHttpRequests: false,
     name: "Tracearr",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/tracearr.svg",
@@ -450,6 +495,7 @@ export const integrationDefs = {
     apiKeySettingsPath: "/settings",
   },
   speedtestTracker: {
+    supportsHttpRequests: true,
     name: "Speedtest Tracker",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/speedtest-tracker.png",
@@ -460,6 +506,7 @@ export const integrationDefs = {
     features: { docker: { aliases: ["speedtest-tracker"] } },
   },
   uptimeKuma: {
+    supportsHttpRequests: false,
     name: "Uptime Kuma",
     secretKinds: [[], ["slug"], ["slug", "apiKey"], ["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/uptime-kuma.svg",
@@ -470,6 +517,7 @@ export const integrationDefs = {
     features: { docker: { aliases: ["uptime-kuma"] } },
   },
   audiobookshelf: {
+    supportsHttpRequests: true,
     name: "Audiobookshelf",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/audiobookshelf.svg",
@@ -480,6 +528,7 @@ export const integrationDefs = {
     features: { docker: { aliases: ["audiobookshelf"] } },
   },
   navidrome: {
+    supportsHttpRequests: false,
     name: "Navidrome",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/navidrome.svg",
@@ -489,6 +538,7 @@ export const integrationDefs = {
     features: { docker: { aliases: ["navidrome"] } },
   },
   umami: {
+    supportsHttpRequests: false,
     name: "Umami",
     secretKinds: [["username", "password"], ["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/umami.svg",
@@ -498,6 +548,7 @@ export const integrationDefs = {
     defaultPort: 3000,
   },
   peaNut: {
+    supportsHttpRequests: false,
     name: "PeaNUT",
     secretKinds: [["username", "password"], []],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/peanut.svg",
@@ -506,6 +557,7 @@ export const integrationDefs = {
     defaultPort: 8080,
   },
   beszel: {
+    supportsHttpRequests: false,
     name: "Beszel",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/beszel.svg",
@@ -514,6 +566,7 @@ export const integrationDefs = {
     defaultPort: 8090,
   },
   gluetun: {
+    supportsHttpRequests: false,
     name: "Gluetun",
     secretKinds: [["username", "password"], ["apiKey"], []],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/gluetun.svg",
@@ -522,6 +575,7 @@ export const integrationDefs = {
     defaultPort: 8000,
   },
   traefik: {
+    supportsHttpRequests: false,
     name: "Traefik",
     secretKinds: [[], ["username", "password"], ["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/traefik.svg",
@@ -530,6 +584,7 @@ export const integrationDefs = {
     defaultPort: 8080,
   },
   archiveTeamWarrior: {
+    supportsHttpRequests: false,
     name: "ArchiveTeam Warrior",
     secretKinds: [[], ["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/selfhst/icons/png/archiveteam-warrior.png",
@@ -538,6 +593,7 @@ export const integrationDefs = {
     defaultPort: 8001,
   },
   wud: {
+    supportsHttpRequests: false,
     name: "What's Up Docker",
     secretKinds: [[], ["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/whats-up-docker.svg",
@@ -546,6 +602,7 @@ export const integrationDefs = {
     defaultPort: 3000,
   },
   llamacpp: {
+    supportsHttpRequests: false,
     name: "llama.cpp",
     secretKinds: [[]],
     iconUrl: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/llama-cpp.svg",
@@ -555,6 +612,7 @@ export const integrationDefs = {
   },
   // This integration only returns mock data, it is used during development (but can also be used in production by directly going to the create page)
   mock: {
+    supportsHttpRequests: false,
     name: "Mock",
     secretKinds: [[]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/vitest.svg",
@@ -726,26 +784,21 @@ export const integrationCategories = [
 
 export type IntegrationCategory = (typeof integrationCategories)[number];
 
-/** Integrations with a reusable HTTP authentication contract. */
-export const httpIntegrationKinds = [
-  "sonarr",
-  "radarr",
-  "lidarr",
-  "readarr",
-  "prowlarr",
-  "overseerr",
-  "jellyseerr",
-  "seerr",
-  "immich",
-  "slskd",
-  "homeAssistant",
-  "coolify",
-  "audiobookshelf",
-  "speedtestTracker",
-  "adGuardHome",
-  "nextcloud",
-] as const satisfies readonly IntegrationKind[];
+/** Integration kinds whose native adapter exposes reusable HTTP authentication. */
+export type HttpIntegrationKind = {
+  [Kind in IntegrationKind]: (typeof integrationDefs)[Kind] extends { supportsHttpRequests: true } ? Kind : never;
+}[IntegrationKind];
 
-export function isHttpIntegrationKind(kind: string): kind is (typeof httpIntegrationKinds)[number] {
-  return httpIntegrationKinds.some((supported) => supported === kind);
+export function isHttpIntegrationKind(kind: string): kind is HttpIntegrationKind {
+  if (!isIntegrationKind(kind)) return false;
+  return integrationDefs[kind].supportsHttpRequests;
 }
+
+const httpIntegrationKindValues = integrationKinds.filter(isHttpIntegrationKind);
+const firstHttpIntegrationKind = httpIntegrationKindValues[0];
+if (!firstHttpIntegrationKind) throw new Error("At least one HTTP integration definition is required");
+
+export const httpIntegrationKinds: AtLeastOneOf<HttpIntegrationKind> = [
+  firstHttpIntegrationKind,
+  ...httpIntegrationKindValues.slice(1),
+];

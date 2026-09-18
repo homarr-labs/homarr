@@ -7,13 +7,12 @@ import type { CustomWidgetSourceSetupPanelProps } from "@homarr/custom-widgets/w
 
 import { clientApi } from "@homarr/api/client";
 import type { CustomWidgetIntegrationSource } from "@homarr/custom-widgets/core";
-import { integrationDefs, integrationKinds, isHttpIntegrationKind } from "@homarr/definitions";
+import { httpIntegrationKinds, integrationDefs, isHttpIntegrationKind } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
-const httpIntegrationKinds = integrationKinds
-  .filter(isHttpIntegrationKind)
-  .toSorted((left, right) => integrationDefs[left].name.localeCompare(integrationDefs[right].name));
-const integrationTypeOptions = httpIntegrationKinds.map((value) => ({ value, label: integrationDefs[value].name }));
+const integrationTypeOptions = httpIntegrationKinds
+  .map((value) => ({ value, label: integrationDefs[value].name }))
+  .toSorted((left, right) => left.label.localeCompare(right.label));
 
 interface IntegrationSourceSelectProps {
   kind: CustomWidgetIntegrationSource["integrationKind"];
