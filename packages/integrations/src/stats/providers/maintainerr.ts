@@ -17,6 +17,7 @@ const storageMetricsSchema = z.object({
 });
 
 export const maintainerrStatsProvider = {
+  getHttpAuthentication: () => ({ headers: {} }),
   metrics: [
     { key: "itemsHandled", label: "Items handled", unit: "count" },
     { key: "episodesHandled", label: "Episodes handled", unit: "count" },

@@ -20,6 +20,7 @@ const statsSchema = z.object({
 });
 
 export const caddyStatsProvider = {
+  getHttpAuthentication: () => ({ headers: {} }),
   transport: "axios",
   metrics: [
     { key: "upstreams", label: "Upstreams", unit: "count" },

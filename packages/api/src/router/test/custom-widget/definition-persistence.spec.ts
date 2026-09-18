@@ -42,7 +42,8 @@ if (!jellyfin) throw new Error("Jellyfin bundled widget is missing");
 const pokedex = BUNDLED_CUSTOM_WIDGETS.find(({ id }) => id === "seed-pokedex")?.widget;
 if (!pokedex) throw new Error("Pokédex bundled widget is missing");
 const jellyfinDefaultSource = jellyfin.sources.default;
-if (!jellyfinDefaultSource) throw new Error("Jellyfin default source is missing");
+if (!jellyfinDefaultSource || jellyfinDefaultSource.type === "integration")
+  throw new Error("Jellyfin default source is missing");
 
 function createCaller(db: ReturnType<typeof createDb>) {
   return customWidgetRouter.createCaller({ db, deviceType: undefined, session });
@@ -181,7 +182,7 @@ describe("custom widget definition persistence", () => {
     }
 
     const defaultSource = previewSession.sources.default;
-    if (!defaultSource) throw new Error("Pokédex preview source is missing");
+    if (!defaultSource || defaultSource.type === "integration") throw new Error("Pokédex preview source is missing");
     await configurePreviewSessionSource(previewSession.id, userId, "default", { ...defaultSource }, []);
     await expect(caller.createFromPreview(createInput)).rejects.toThrow("Test every final preview query successfully");
 
@@ -675,7 +676,7 @@ describe("custom widget definition persistence", () => {
     const created = await createCaller(db).create({ ...jellyfin, secrets: [secret] });
     const definition = customWidgetDefinitionSchema.parse(jellyfin);
     const defaultSource = definition.sources.default;
-    if (!defaultSource) throw new Error("Jellyfin default source is missing");
+    if (!defaultSource || defaultSource.type === "integration") throw new Error("Jellyfin default source is missing");
     await db
       .update(customWidgetDefinitions)
       .set(
@@ -720,7 +721,7 @@ describe("custom widget definition persistence", () => {
     const created = await createCaller(db).create({ ...jellyfin, secrets: [] });
     const definition = customWidgetDefinitionSchema.parse(jellyfin);
     const expectedSource = definition.sources.default;
-    if (!expectedSource || typeof expectedSource.auth === "string") {
+    if (!expectedSource || expectedSource.type === "integration" || typeof expectedSource.auth === "string") {
       throw new Error("Jellyfin default source must use header authentication");
     }
     await db

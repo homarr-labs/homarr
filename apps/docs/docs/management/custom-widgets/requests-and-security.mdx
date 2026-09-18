@@ -3,9 +3,29 @@
 Most widgets use a single source named `default`; the manifest must contain it. Extra keyed sources are available for widgets
 that combine APIs. Source IDs are case-insensitively unique. Base URLs must use HTTP(S), contain no embedded credentials,
 query string, or fragment, and sources can be `public`, `private`, or `loopback`. Authentication is `none`, `bearer`,
-`basic`, an API-key header, or an API-key query parameter. Credentials belong to the widget but remain outside its manifest.
+`basic`, an API-key header, or an API-key query parameter. HTTP source credentials belong to the widget but remain outside its manifest.
 Source origins are fixed by the definition and source-setup flow; widget options and invocation parameters cannot redirect a
 request to a different origin.
+
+## Existing integrations
+
+Available types come from Homarr's integration registry. An integration must declare HTTP request support and expose
+its authentication through its native adapter; new compatible integrations appear automatically without Custom Widget changes.
+Integrations that require login sessions are not currently supported.
+
+```json
+{
+  "sources": { "default": { "type": "integration", "integrationKind": "sonarr" } },
+  "requests": { "queue": { "path": "/api/v3/queue" } }
+}
+```
+
+Select the local instance during source setup. Homarr uses its current URL, API key, and trusted certificates;
+paths append to the saved URL, including reverse-proxy subpaths. Changing the integration updates all sources bound to it.
+Deleting it leaves the widget unconfigured until another instance is selected. The binding is shared by every placement
+of that widget definition. Exports and Workshop submissions retain the required type and omit the local integration ID.
+
+Arbitrary integration requests require integration `full` access, including GET requests: service APIs can expose credentials or change state through reads. Board permissions still apply separately. Requests inherit saved authentication unless `auth: "none"` explicitly disables it. Credentials used for authentication are redacted from upstream responses. Non-GET integration requests must be actions. Requests stay within the configured URL path; authenticated requests do not follow redirects.
 
 ## Named requests
 
@@ -17,7 +37,7 @@ Requests are keyed by ID. `source`, `kind`, `method`, `trigger`, `auth`, and `pe
 
 The request `path` is appended to the source `baseUrl`, including a base path such as `/api/v2`.
 
-GET, POST, PUT, and PATCH work for queries and actions. DELETE is restricted to actions so it can never run while a
+For HTTP sources, GET, POST, PUT, and PATCH work for queries and actions. Integration queries use GET. DELETE is restricted to actions so it can never run while a
 board loads. Kind controls the remaining behavior: load queries run automatically, manual queries run through
 `SubFetch`, and actions run only from `ActionButton` or `ToggleSwitch`.
 
@@ -49,17 +69,19 @@ also use structured `json` and `multiSelect` option values, for example `{ "enti
 Every request uses Homarr's existing server executor: same-origin source enforcement, network scope, DNS and redirect validation, SSRF protection, board permissions, rate and request limits, body and response limits, timeouts, and encrypted credential injection. Static headers cannot override credentials, cookies, routing, proxy, forwarding, or hop-by-hop headers.
 
 The executor caps request bodies at 10 KiB and response bodies at 1 MiB. Parsed JSON is limited to depth 32 and 50,000 nodes;
-each network hop has a ten-second timeout, queries follow at most three same-origin redirects, actions do not follow redirects,
+each network hop has a ten-second timeout, unauthenticated queries follow at most three same-origin redirects, actions and authenticated queries do not follow redirects,
 and the total request deadline is 45 seconds.
 
 The limiter allows four concurrent requests per user/item and eight per definition. Per minute, a user/item can make up to 60
 queries, 10 actions, or 3 DELETE actions; a definition can receive up to 240, 40, or 12 of those request categories.
+Integration metadata refreshes have a separate allowance of 60 per user/item and 240 per definition per minute, and share
+the same concurrency limits.
 
 Queries default to view permission and actions to modify. DELETE always requires full permission and confirmation. Actions are never cached, retried, or run on load.
 
 Management and runtime are intentionally separate. A Homarr administrator with board-modify permission places and
 configures the widget. After placement, query and action authorization follows the request's board permission. Public
-boards may execute queries for anonymous viewers, but mutations stay authenticated. This includes shared-cache
+boards may execute HTTP-source queries for anonymous viewers; integration sources require an authenticated viewer with full integration access. Mutations stay authenticated. This includes shared-cache
 invalidation: `RefreshButton` is disabled only without an active item or preview session, or in edit mode, while ordinary
 scheduled query rendering remains available to anonymous viewers.
 

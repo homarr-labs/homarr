@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import type { SelectProps } from "@mantine/core";
-import { Combobox, ComboboxClearButton, Input, InputBase, useCombobox } from "@mantine/core";
+import { Combobox, ComboboxClearButton, Input, InputBase, ScrollArea, useCombobox } from "@mantine/core";
 import { useUncontrolled } from "@mantine/hooks";
 
 interface BaseSelectItem {
@@ -21,10 +21,13 @@ export interface SelectWithCustomItemsProps<TSelectItem extends BaseSelectItem> 
   onFocus?: (event: React.FocusEvent<HTMLButtonElement>) => void;
   w?: string;
   withinPortal?: boolean;
+  searchable?: boolean;
+  searchPlaceholder?: string;
+  nothingFoundMessage?: string;
 }
 
 type Props<TSelectItem extends BaseSelectItem> = SelectWithCustomItemsProps<TSelectItem> & {
-  SelectOption: React.ComponentType<TSelectItem>;
+  SelectOption: React.ComponentType<TSelectItem & { checked?: boolean }>;
 };
 
 export const SelectWithCustomItems = <TSelectItem extends BaseSelectItem>({
@@ -37,54 +40,67 @@ export const SelectWithCustomItems = <TSelectItem extends BaseSelectItem>({
   w,
   clearable,
   withinPortal = false,
+  searchable = false,
+  searchPlaceholder,
+  nothingFoundMessage,
   ...props
 }: Props<TSelectItem>) => {
+  const [search, setSearch] = useState("");
   const combobox = useCombobox({
-    onDropdownClose: () => combobox.resetSelectedOption(),
+    onDropdownClose: () => {
+      combobox.resetSelectedOption();
+      setSearch("");
+    },
+    onDropdownOpen: () => {
+      if (searchable) combobox.focusSearchInput();
+    },
   });
 
-  const [_value, setValue] = useUncontrolled({
+  const [selectedValue, setValue] = useUncontrolled({
     value,
     defaultValue,
     finalValue: null,
     onChange,
   });
 
-  const selectedOption = useMemo(() => data.find((item) => item.value === _value), [data, _value]);
+  const selectedOption = useMemo(() => data.find((item) => item.value === selectedValue), [data, selectedValue]);
 
-  const options = data.map((item) => (
-    <Combobox.Option value={item.value} key={item.value}>
-      <SelectOption {...item} />
+  const normalizedSearch = search.toLocaleLowerCase().trim();
+  const filteredData = data.filter((item) => !searchable || item.label.toLocaleLowerCase().includes(normalizedSearch));
+  const options = filteredData.map((item) => (
+    <Combobox.Option value={item.value} key={item.value} active={item.value === selectedValue}>
+      <SelectOption {...item} checked={item.value === selectedValue} />
     </Combobox.Option>
   ));
 
   const toggle = useCallback(() => combobox.toggleDropdown(), [combobox]);
   const onOptionSubmit = useCallback(
-    (value: string) => {
+    (nextValue: string) => {
       setValue(
-        value,
-        data.find((item) => item.value === value),
+        nextValue,
+        data.find((item) => item.value === nextValue),
       );
       combobox.closeDropdown();
+      if (searchable) combobox.focusTarget();
     },
-    [setValue, data, combobox],
+    [setValue, data, combobox, searchable],
   );
 
-  const _clearable = clearable && Boolean(_value);
+  const isClearable = clearable && Boolean(selectedValue);
 
   return (
     <Combobox store={combobox} withinPortal={withinPortal} onOptionSubmit={onOptionSubmit}>
-      <Combobox.Target>
+      <Combobox.Target targetType="button">
         <InputBase
           {...props}
           component="button"
           type="button"
           pointer
           __clearSection={<ComboboxClearButton onClear={() => setValue(null, null)} />}
-          __clearable={_clearable}
+          __clearable={isClearable}
           __defaultRightSection={<Combobox.Chevron />}
           onClick={toggle}
-          rightSectionPointerEvents={_clearable ? "all" : "none"}
+          rightSectionPointerEvents={isClearable ? "all" : "none"}
           multiline
           w={w}
         >
@@ -93,7 +109,30 @@ export const SelectWithCustomItems = <TSelectItem extends BaseSelectItem>({
       </Combobox.Target>
 
       <Combobox.Dropdown>
-        <Combobox.Options>{options}</Combobox.Options>
+        {searchable && (
+          <>
+            <Combobox.Search
+              value={search}
+              placeholder={searchPlaceholder}
+              aria-label={searchPlaceholder}
+              onChange={(event) => {
+                setSearch(event.currentTarget.value);
+                combobox.updateSelectedOptionIndex();
+              }}
+              onBlur={() => combobox.closeDropdown()}
+              onKeyDown={(event) => {
+                if (event.key === "Escape") combobox.focusTarget();
+              }}
+            />
+            <Combobox.Options>
+              <ScrollArea.Autosize mah="min(250px, 50dvh)" type="scroll">
+                {options}
+                {options.length === 0 && <Combobox.Empty>{nothingFoundMessage}</Combobox.Empty>}
+              </ScrollArea.Autosize>
+            </Combobox.Options>
+          </>
+        )}
+        {!searchable && <Combobox.Options>{options}</Combobox.Options>}
       </Combobox.Dropdown>
     </Combobox>
   );

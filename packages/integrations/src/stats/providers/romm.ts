@@ -21,6 +21,7 @@ const statsResponseSchema = z
   });
 
 export const rommStatsProvider = {
+  getHttpAuthentication: () => ({ headers: {} }),
   metrics: [
     { key: "platforms", label: "Platforms", unit: "count" },
     { key: "roms", label: "ROMs", unit: "count" },

@@ -3,6 +3,8 @@ import { z } from "zod/v4";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
+import type { IntegrationHttpAuthentication } from "../../http-auth";
+import { apiKeyAuth } from "../../http-auth";
 import { Integration } from "../../base/integration";
 import type { IntegrationTestingInput } from "../../base/integration";
 import { TestConnectionError } from "../../base/test-connection/test-connection-error";
@@ -14,9 +16,13 @@ import { mediaOrganizerPriorities } from "../media-organizer";
 const logger = createLogger({ module: "lidarrIntegration" });
 
 export class LidarrIntegration extends Integration implements ICalendarIntegration {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    return apiKeyAuth(this.integration);
+  }
+
   async getLibraryStatsAsync() {
     const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/artist"), {
-      headers: { "X-Api-Key": this.getSecretValue("apiKey") },
+      headers: (await this.getHttpAuthenticationAsync()).headers,
     });
     if (!response.ok) throw new Error(`Lidarr library request failed (${response.status})`);
     const library = z.array(z.object({ monitored: z.boolean() })).parse(await response.json());

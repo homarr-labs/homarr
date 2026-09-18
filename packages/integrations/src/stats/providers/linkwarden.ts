@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import type { StatsProvider } from "../types";
+import type { StatsAuthenticationContext, StatsProvider } from "../types";
 
 const countSchema = z.number().finite().int().nonnegative();
 
@@ -44,14 +44,19 @@ function tagPage(value: unknown) {
   return { tags: parsed.response, nextCursor: null };
 }
 
+const getHttpAuthentication = (context: StatsAuthenticationContext) => ({
+  headers: { Authorization: `Bearer ${context.secret("apiKey")}` },
+});
+
 export const linkwardenStatsProvider = {
+  getHttpAuthentication,
   metrics: [
     { key: "links", label: "Links", unit: "count" },
     { key: "collections", label: "Collections", unit: "count" },
     { key: "tags", label: "Tags", unit: "count" },
   ],
   async fetchAsync(context) {
-    const headers = { Authorization: `Bearer ${context.secret("apiKey")}` };
+    const headers = getHttpAuthentication(context).headers;
     const [collectionsResponse, tagsResponse] = await Promise.all([
       context.requestAsync("/api/v1/collections", { headers, signal: context.signal }),
       context.requestAsync("/api/v1/tags", { headers, signal: context.signal }),

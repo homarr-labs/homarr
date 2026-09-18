@@ -13,6 +13,7 @@ const statusSchema = z
   .passthrough();
 
 export const syncthingRelayStatsProvider = {
+  getHttpAuthentication: () => ({ headers: {} }),
   metrics: [
     { key: "numActiveSessions", label: "Active sessions", unit: "count" },
     { key: "numConnections", label: "Connections", unit: "count" },

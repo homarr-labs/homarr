@@ -25,6 +25,7 @@ const pendingResponseSchema = z
   .passthrough();
 
 export const unmanicStatsProvider = {
+  getHttpAuthentication: () => ({ headers: {} }),
   metrics: [
     { key: "activeWorkers", label: "Active workers", unit: "count" },
     { key: "totalWorkers", label: "Total workers", unit: "count" },

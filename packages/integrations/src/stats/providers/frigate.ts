@@ -10,6 +10,7 @@ const statsSchema = z
   .passthrough();
 
 export const frigateStatsProvider = {
+  getHttpAuthentication: () => ({ headers: {} }),
   metrics: [
     { key: "cameras", label: "Cameras", unit: "count" },
     { key: "uptime", label: "Uptime", unit: "seconds" },

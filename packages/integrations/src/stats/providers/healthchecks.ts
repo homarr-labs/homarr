@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import type { StatsProvider } from "../types";
+import type { StatsAuthenticationContext, StatsProvider } from "../types";
 
 const checkSchema = z
   .object({
@@ -16,7 +16,12 @@ const checksResponseSchema = z
 
 const countSchema = z.number().finite().int().nonnegative();
 
+const getHttpAuthentication = (context: StatsAuthenticationContext) => ({
+  headers: { "X-Api-Key": context.secret("apiKey") },
+});
+
 export const healthchecksStatsProvider = {
+  getHttpAuthentication,
   metrics: [
     { key: "checksUp", label: "Up checks", unit: "count" },
     { key: "checksDown", label: "Down checks", unit: "count" },
@@ -25,7 +30,7 @@ export const healthchecksStatsProvider = {
   ],
   async fetchAsync(context) {
     const response = await context.requestAsync("/api/v3/checks/", {
-      headers: { "X-Api-Key": context.secret("apiKey") },
+      headers: getHttpAuthentication(context).headers,
       signal: context.signal,
     });
     const checks = checksResponseSchema.parse(response).checks;

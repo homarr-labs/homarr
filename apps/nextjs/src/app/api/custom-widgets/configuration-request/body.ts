@@ -1,11 +1,17 @@
 import { z } from "zod/v4";
 
 export const MAX_CONFIGURATION_REQUEST_BODY_BYTES = 24 * 1024;
-const configurationRequestBodySchema = z.strictObject({
-  baseUrl: z.string(),
-  networkScope: z.enum(["public", "private", "loopback"]),
-  secrets: z.record(z.string(), z.string()),
-});
+const configurationRequestBodySchema = z
+  .strictObject({
+    baseUrl: z.string().optional(),
+    integrationId: z.string().min(1).max(100).optional(),
+    networkScope: z.enum(["public", "private", "loopback"]).optional(),
+    secrets: z.record(z.string(), z.string()),
+  })
+  .refine(
+    (value) => Boolean(value.integrationId) || (value.baseUrl !== undefined && value.networkScope !== undefined),
+    "Provide an integration or HTTP connection",
+  );
 
 export async function readConfigurationRequestBody(
   request: Request,

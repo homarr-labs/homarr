@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import type { StatsProvider } from "../types";
+import type { StatsAuthenticationContext, StatsProvider } from "../types";
 
 const countSchema = z.number().finite().int().nonnegative();
 
@@ -11,14 +11,19 @@ const minifluxCountersSchema = z.object({
 
 const sumValues = (values: Record<string, number>) => Object.values(values).reduce((total, value) => total + value, 0);
 
+const getHttpAuthentication = (context: StatsAuthenticationContext) => ({
+  headers: { "X-Auth-Token": context.secret("apiKey") },
+});
+
 export const minifluxStatsProvider = {
+  getHttpAuthentication,
   metrics: [
     { key: "read", label: "Read", unit: "count" },
     { key: "unread", label: "Unread", unit: "count" },
   ],
   async fetchAsync(context) {
     const response = await context.requestAsync("/v1/feeds/counters", {
-      headers: { "X-Auth-Token": context.secret("apiKey") },
+      headers: getHttpAuthentication(context).headers,
       signal: context.signal,
     });
     const counters = minifluxCountersSchema.parse(response);

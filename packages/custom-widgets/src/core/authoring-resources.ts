@@ -13,7 +13,7 @@ export const CUSTOM_WIDGET_SKILL_SOURCE_URL =
   "https://github.com/homarr-labs/homarr/tree/HEAD/.agents/skills/homarr-custom-widget";
 export const CUSTOM_WIDGET_SKILL_INSTALL_COMMAND =
   "npx skills add https://github.com/homarr-labs/homarr --skill homarr-custom-widget";
-export const CUSTOM_WIDGET_SKILL_VERSION = "2.9.0";
+export const CUSTOM_WIDGET_SKILL_VERSION = "2.10.0";
 export const CUSTOM_WIDGET_SKILL_REFERENCE_NAMES = ["schema", "runtime", "security"] as const;
 export type CustomWidgetSkillReferenceName = (typeof CUSTOM_WIDGET_SKILL_REFERENCE_NAMES)[number];
 
@@ -58,7 +58,7 @@ interface HomarrCustomWidgetV2 {
 }
 \`\`\`
 
-The object key \`default\` is the required source ID; \`default\` is not a property on a source. Source properties are \`name?\`, \`baseUrl\`, \`networkScope\`, and \`auth?\`:
+\`sources.default\` is required. HTTP source properties: \`name?\`, \`baseUrl\`, \`networkScope\`, and \`auth?\`:
 
 \`\`\`json
 {
@@ -85,14 +85,17 @@ The object key \`default\` is the required source ID; \`default\` is not a prope
 }
 \`\`\`
 
-Auth is \`none\`, \`bearer\`, \`basic\`, \`{ "type": "apiKeyHeader", "name": "X-Api-Key" }\`, or \`{ "type": "apiKeyQuery", "name": "api_key" }\`. A request defaults to source \`default\`, kind \`query\`, method \`GET\`, trigger \`load\`, inherited auth, and view permission. Set \`trigger: "manual"\` for a parameterized query. An action defaults to manual and modify permission. DELETE uses full permission and confirmation. Do not use \`load: false\`.
+\`{"type":"integration","integrationKind":"sonarr","integrationId":"saved-id"}\` reuses saved credentials. Select a kind with \`integration_getKinds\` (\`supportsHttpRequests: true\`) and a matching \`integration_all\` entry with \`permissions.hasFullAccess\`; bind its \`id\` before preview. Omit URL/auth fields. Exports omit \`integrationId\`. Paths append to the saved URL; non-GET requests must be actions.
 
-Use stable real URLs for public APIs and clear suggested URLs for self-hosted services. Homarr collects the installer's server URL, network scope, and credentials as source setup; credentials remain outside the manifest.
+Auth: \`none\`, \`bearer\`, \`basic\`, \`{ "type": "apiKeyHeader", "name": "X-Api-Key" }\`, or \`{ "type": "apiKeyQuery", "name": "api_key" }\`. Requests default to source \`default\`, kind \`query\`, method \`GET\`, trigger \`load\`, inherited auth, and view permission. Parameterized queries need \`trigger: "manual"\`. Actions default to manual/modify; DELETE requires full permission and confirmation. Do not use \`load: false\`.
 
-Paths use \`{option:name}\` and \`{param:name}\`; query/body references use \`{ "$option": "name" }\` and \`{ "$param": "name" }\`. Constants stay primitive (\`take: 10\`); \`$param\` is only for manual helpers, never load queries. Names and types are inferred.
+HTTP sources declare public URLs or self-hosted suggestions; installers configure their URL, network scope, and credentials separately.
 
-Every option has \`label\`, \`control\`, and \`default\`. Optional fields are \`description\`, \`choices\`, \`choicesFrom\`, \`min\`, \`max\`, \`step\`, \`advanced\`, and \`group\`.
+Paths bind \`{option:name}\` and \`{param:name}\`; query/body references bind \`{ "$option": "name" }\` and \`{ "$param": "name" }\`. Use primitive constants (\`take: 10\`). \`$param\` is only for manual requests.
+
+Options require \`label\`, \`control\`, and \`default\`. Optional fields: \`description\`, \`choices\`, \`choicesFrom\`, \`min\`, \`max\`, \`step\`, \`advanced\`, \`group\`.
 `,
+
   "references/runtime.md": `# Runtime
 
 Templates read \`data.requestId\`, \`status.requestId\`, \`options.name\`, and temporary \`inputs.name\`. Status is \`{ loading, ok, status, statusText, error }\`. Render load queries directly from \`data\` and \`status\` with \`RefreshButton\`; never wrap them in \`SubFetch\`.
@@ -148,14 +151,14 @@ description: Author, validate, preview, test, install, or configure API-backed H
 
 # Homarr Custom Widget
 
-Author one widget or a coordinated set of widgets. Load only needed release-matched context. Run lifecycle tools alone; independent reads may run together. For a set, research once and finish each widget's validation, evidence, and persistence before the next.
+Author widgets using release-matched context. Run lifecycle tools alone; independent reads may run together. Research once and finish each widget's validation, evidence, and persistence before the next.
 
 1. Read primary API documentation. Use web search when documentation is not supplied or may have changed.
-2. Create credential-free definitions with keyed \`sources\`, \`requests\`, optional \`options\`, and safe JSX \`template\`.
+2. Define \`sources\`, \`requests\`, \`options\`, and JSX \`template\`; reuse saved integrations through the schema reference.
 3. While drafting, use \`customWidget_validateTemplate\` for focused JSX diagnostics without resending the manifest.
-4. Send the definition once to \`customWidget_previewCreate\` and test its queries/actions. For a JSX-only fix, validate, call \`customWidget_previewReviseTemplate\` with its session, and retest; it inherits the manifest and resets evidence. Create a preview only for source/request/option changes.
+4. Call \`customWidget_previewCreate\` and test every query/action. For JSX-only changes, validate, call \`customWidget_previewReviseTemplate\`, and retest; it inherits the manifest and resets evidence. Recreate only for source/request/option changes.
 5. Configure deployment-specific source URLs and credentials through Homarr; never repeat plaintext.
-6. Persist each exact final tested preview with \`customWidget_createFromPreview\`. Do not resend a large definition through \`customWidget_create\` when a preview session is available.
+6. Persist the exact tested session with \`customWidget_createFromPreview\`; use \`customWidget_create\` only without a preview.
 
 Treat a supplied sample or successful preview response as the binding contract. Render every core requested field, guard optional arrays and nested values before indexing, and do not silently drop returned items. Humanize numeric enums with indexed literal label arrays, omit absent numeric values instead of inventing zero, and label timestamp timezones. Give recoverable load errors and empty states a clear refresh or retry path.
 

@@ -1,6 +1,6 @@
 import { z } from "zod/v4";
 
-import type { StatsProvider } from "../types";
+import type { StatsAuthenticationContext, StatsProvider } from "../types";
 
 const mealieStatsResponseSchema = z
   .object({
@@ -11,7 +11,12 @@ const mealieStatsResponseSchema = z
   })
   .passthrough();
 
+const getHttpAuthentication = (context: StatsAuthenticationContext) => ({
+  headers: { Authorization: `Bearer ${context.secret("apiKey")}` },
+});
+
 export const mealieStatsProvider = {
+  getHttpAuthentication,
   metrics: [
     { key: "recipes", label: "Recipes", unit: "count" },
     { key: "users", label: "Users", unit: "count" },
@@ -21,7 +26,7 @@ export const mealieStatsProvider = {
 
   async fetchAsync(context) {
     const response = await context.requestAsync("/api/households/statistics", {
-      headers: { Authorization: `Bearer ${context.secret("apiKey")}` },
+      headers: getHttpAuthentication(context).headers,
       signal: context.signal,
     });
     const stats = mealieStatsResponseSchema.parse(response);

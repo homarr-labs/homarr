@@ -48,6 +48,7 @@
     "@codemirror/state": "catalog:",
     "@codemirror/theme-one-dark": "catalog:",
     "@codemirror/view": "catalog:",
+    "@homarr/definitions": "workspace:^0.1.0",
     "@mantine/charts": "catalog:",
     "@mantine/core": "catalog:",
     "@mantine/dates": "catalog:",

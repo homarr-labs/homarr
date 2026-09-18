@@ -12,6 +12,8 @@ import { ResponseError } from "@homarr/common/server";
 import { createHttpsAgentAsync, fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
+import type { IntegrationHttpAuthentication } from "../http-auth";
+import { basicAuth } from "../http-auth";
 import { HandleIntegrationErrors } from "../base/errors/decorator";
 import { integrationTsdavHttpErrorHandler } from "../base/errors/http";
 import type { IntegrationTestingInput } from "../base/integration";
@@ -57,6 +59,10 @@ dayjs.extend(timezone);
 
 @HandleIntegrationErrors([integrationTsdavHttpErrorHandler])
 export class NextcloudIntegration extends Integration implements ICalendarIntegration, INotificationsIntegration {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    return basicAuth("username", "password", { "OCS-APIRequest": "true" })(this.integration);
+  }
+
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const client = await this.createCalendarClientAsync(await createHttpsAgentAsync(input.options));
     await client.login();

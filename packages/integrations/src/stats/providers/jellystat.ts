@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import type { StatsProvider } from "../types";
+import type { StatsAuthenticationContext, StatsProvider } from "../types";
 
 const countSchema = z.number().finite().nonnegative();
 const viewsResponseSchema = z
@@ -12,7 +12,12 @@ const viewsResponseSchema = z
   })
   .passthrough();
 
+const getHttpAuthentication = (context: StatsAuthenticationContext) => ({
+  headers: { "X-API-Token": context.secret("apiKey") },
+});
+
 export const jellystatStatsProvider = {
+  getHttpAuthentication,
   metrics: [
     { key: "songs", label: "Song plays (30 days)", unit: "count" },
     { key: "movies", label: "Movie plays (30 days)", unit: "count" },
@@ -22,7 +27,7 @@ export const jellystatStatsProvider = {
   async fetchAsync(context) {
     const params = new URLSearchParams({ days: "30" });
     const response = await context.requestAsync(`/stats/getViewsByLibraryType?${params.toString()}`, {
-      headers: { "X-API-Token": context.secret("apiKey") },
+      headers: getHttpAuthentication(context).headers,
       signal: context.signal,
     });
     const views = viewsResponseSchema.parse(response);

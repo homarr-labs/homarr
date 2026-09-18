@@ -56,7 +56,7 @@ export const integrationRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "List all supported integration kinds (e.g. sonarr, radarr, overseerr, pihole, homeAssistant) with the secret fields each kind requires. Use this before creating an integration to know which 'kind' values are valid and what secrets to provide.",
+          "List integration kinds with required secret fields and supportsHttpRequests. For Custom Widget integration sources, select a kind with supportsHttpRequests=true, then use integration_all to find a saved instance with permissions.hasFullAccess. Reuse its credentials instead of asking for secrets again. Also use this before creating an integration to discover valid kinds and required secrets.",
       },
     })
     .query(() => {
@@ -65,6 +65,7 @@ export const integrationRouter = createTRPCRouter({
         name: def.name,
         category: def.category,
         requiredSecrets: def.secretKinds,
+        supportsHttpRequests: def.supportsHttpRequests,
       }));
     }),
   all: protectedProcedure
@@ -72,7 +73,7 @@ export const integrationRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "List all configured integrations (connections to services like Sonarr, Radarr, Plex, etc.). Returns each integration's id, name, kind, url, and permissions. Use the 'id' field as 'integrationId' in other tools. Check permissions.hasUseAccess before reading data and permissions.hasInteractAccess before performing actions — false means the API key owner lacks that permission level for this integration, not an error",
+          "List accessible configured integrations with id, name, kind, url, and permissions. Use id as integrationId. Native read tools require permissions.hasUseAccess; native action tools require permissions.hasInteractAccess. Custom Widget integration sources and arbitrary HTTP requests require permissions.hasFullAccess, including GET. False means the API key owner lacks that permission level; never bypass it. For Custom Widget compatibility, check integration_getKinds.supportsHttpRequests.",
       },
     })
     .query(async ({ ctx }) => {

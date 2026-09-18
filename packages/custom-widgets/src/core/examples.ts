@@ -8,8 +8,8 @@ export interface CustomJsxExample {
 }
 
 export const CUSTOM_JSX_STARTER = `<Stack gap="sm" p="sm">
-  <Group justify="space-between"><Text fw={700}>Service status</Text><RefreshButton /></Group>
-  {status.status?.loading ? <Skeleton height={72} radius="md" /> : status.status?.error ? <Alert color="red">{status.status.error}</Alert> : <Badge color={data.status?.online ? "green" : "red"}>{data.status?.online ? "Online" : "Offline"}</Badge>}
+  <Group justify="space-between"><Text fw={700}>Response data</Text><RefreshButton /></Group>
+  <Code block style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>{JSON.stringify(data, null, 2)}</Code>
 </Stack>`;
 
 export const CUSTOM_WIDGET_STARTER: HomarrCustomWidgetV2Input = {

@@ -13,6 +13,7 @@ const fileflowsStatusSchema = z.object({
 });
 
 export const fileflowsStatsProvider = {
+  getHttpAuthentication: () => ({ headers: {} }),
   metrics: [
     { key: "queue", label: "Queued", unit: "count" },
     { key: "processing", label: "Processing", unit: "count" },

@@ -18,6 +18,14 @@ export class StatsIntegration extends Integration {
     super(input);
   }
 
+  public override async getHttpAuthenticationAsync() {
+    if (!this.provider.getHttpAuthentication) return await super.getHttpAuthenticationAsync();
+    return this.provider.getHttpAuthentication({
+      secret: (kind) => this.getSecretValue(kind),
+      hasSecret: (kind) => this.hasSecretValue(kind),
+    });
+  }
+
   async getStatsAsync(signal = AbortSignal.timeout(30_000), testing?: IntegrationTestingInput) {
     return await this.provider.fetchAsync({
       signal,

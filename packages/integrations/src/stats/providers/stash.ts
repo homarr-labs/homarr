@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import type { StatsProvider } from "../types";
+import type { StatsAuthenticationContext, StatsProvider } from "../types";
 
 const countSchema = z.number().finite().int().nonnegative();
 const measurementSchema = z.number().finite().nonnegative();
@@ -40,7 +40,12 @@ const query = `query {
   }
 }`;
 
+const getHttpAuthentication = (context: StatsAuthenticationContext) => ({
+  headers: { ApiKey: context.secret("apiKey") },
+});
+
 export const stashStatsProvider = {
+  getHttpAuthentication,
   metrics: [
     { key: "scenes", label: "Scenes", unit: "count" },
     { key: "sceneBytes", label: "Scene size", unit: "bytes" },
@@ -55,7 +60,7 @@ export const stashStatsProvider = {
   async fetchAsync(context) {
     const response = await context.requestAsync("/graphql", {
       method: "POST",
-      headers: { "content-type": "application/json", ApiKey: context.secret("apiKey") },
+      headers: { "content-type": "application/json", ...getHttpAuthentication(context).headers },
       body: JSON.stringify({ query }),
       signal: context.signal,
     });

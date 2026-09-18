@@ -11,6 +11,7 @@ const spoolSchema = z.object({
 const spoolListSchema = z.array(spoolSchema);
 
 export const spoolmanStatsProvider = {
+  getHttpAuthentication: () => ({ headers: {} }),
   metrics: [
     { key: "spools", label: "Spools", unit: "count" },
     { key: "remainingWeight", label: "Remaining weight", unit: "grams" },

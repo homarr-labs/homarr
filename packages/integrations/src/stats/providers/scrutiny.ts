@@ -24,6 +24,7 @@ const settingsSchema = z
 const status = { passed: 0, failedSmart: 1, failedScrutiny: 2, failedBoth: 3 } as const;
 
 export const scrutinyStatsProvider = {
+  getHttpAuthentication: () => ({ headers: {} }),
   metrics: [
     { key: "passed", label: "Passed devices", unit: "count" },
     { key: "failed", label: "Failed devices", unit: "count" },

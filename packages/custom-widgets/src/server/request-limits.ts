@@ -9,8 +9,8 @@ const WINDOW_MS = 60_000;
 export const CUSTOM_WIDGET_REQUEST_CONCURRENCY_TTL_MS = 60_000;
 export const CUSTOM_WIDGET_USER_ITEM_CONCURRENCY_LIMIT = 4;
 export const CUSTOM_WIDGET_DEFINITION_CONCURRENCY_LIMIT = 8;
-const CATEGORY_LIMITS = { query: 60, action: 10, delete: 3 } as const;
-const DEFINITION_CATEGORY_LIMITS = { query: 240, action: 40, delete: 12 } as const;
+const CATEGORY_LIMITS = { query: 60, action: 10, delete: 3, metadata: 60 } as const;
+const DEFINITION_CATEGORY_LIMITS = { query: 240, action: 40, delete: 12, metadata: 240 } as const;
 type RequestCategory = keyof typeof CATEGORY_LIMITS;
 
 export interface RequestLimitInput {

@@ -16,6 +16,7 @@ const infoSchema = z
   .passthrough();
 
 export const netdataStatsProvider = {
+  getHttpAuthentication: () => ({ headers: {} }),
   metrics: [
     { key: "warnings", label: "Warnings", unit: "count" },
     { key: "criticals", label: "Criticals", unit: "count" },

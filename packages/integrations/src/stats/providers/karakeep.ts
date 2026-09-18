@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import type { StatsProvider } from "../types";
+import type { StatsAuthenticationContext, StatsProvider } from "../types";
 
 const karakeepStatsResponseSchema = z
   .object({
@@ -13,7 +13,12 @@ const karakeepStatsResponseSchema = z
   })
   .passthrough();
 
+const getHttpAuthentication = (context: StatsAuthenticationContext) => ({
+  headers: { Authorization: `Bearer ${context.secret("apiKey")}` },
+});
+
 export const karakeepStatsProvider = {
+  getHttpAuthentication,
   metrics: [
     { key: "bookmarks", label: "Bookmarks", unit: "count" },
     { key: "favorites", label: "Favorites", unit: "count" },
@@ -24,9 +29,8 @@ export const karakeepStatsProvider = {
   ],
 
   async fetchAsync(context) {
-    const apiKey = context.secret("apiKey");
     const response = await context.requestAsync("/api/v1/users/me/stats", {
-      headers: { Authorization: `Bearer ${apiKey}` },
+      headers: getHttpAuthentication(context).headers,
       signal: context.signal,
     });
     const stats = karakeepStatsResponseSchema.parse(response);

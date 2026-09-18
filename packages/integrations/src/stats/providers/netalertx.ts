@@ -1,11 +1,16 @@
 import { z } from "zod";
 
-import type { StatsProvider } from "../types";
+import type { StatsAuthenticationContext, StatsProvider } from "../types";
 
 const totalSchema = z.union([z.number().finite().int().nonnegative(), z.string().regex(/^\d+$/)]).transform(Number);
 const totalsSchema = z.tuple([totalSchema, totalSchema, totalSchema, totalSchema, totalSchema]).rest(totalSchema);
 
+const getHttpAuthentication = (context: StatsAuthenticationContext) => ({
+  headers: { Authorization: `Bearer ${context.secret("apiKey")}` },
+});
+
 export const netalertxStatsProvider = {
+  getHttpAuthentication,
   metrics: [
     { key: "total", label: "Total devices", unit: "count" },
     { key: "connected", label: "Connected devices", unit: "count" },
@@ -14,7 +19,7 @@ export const netalertxStatsProvider = {
   ],
   async fetchAsync(context) {
     const response = await context.requestAsync("/devices/totals", {
-      headers: { Authorization: `Bearer ${context.secret("apiKey")}` },
+      headers: getHttpAuthentication(context).headers,
       signal: context.signal,
     });
     const totals = totalsSchema.parse(response);

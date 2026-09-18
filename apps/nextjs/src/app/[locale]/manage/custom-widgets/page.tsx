@@ -9,7 +9,6 @@ import { Link } from "@homarr/ui";
 
 import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
-import { CustomWidgetBetaBanner } from "./_beta-banner";
 import { CustomWidgetList } from "./_custom-widget-list";
 import { CustomWidgetTabs } from "./_custom-widget-tabs";
 import { ImportCustomWidgetButton } from "./_import-custom-widget-button";
@@ -47,7 +46,6 @@ export default async function CustomWidgetsPage() {
       }
       toolbar={<CustomWidgetTabs active="installed" />}
     >
-      <CustomWidgetBetaBanner />
       <CustomWidgetList definitions={definitions} />
     </ManagePageLayout>
   );

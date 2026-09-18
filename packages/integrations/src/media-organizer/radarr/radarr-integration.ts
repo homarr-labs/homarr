@@ -3,6 +3,8 @@ import { z } from "zod/v4";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
+import type { IntegrationHttpAuthentication } from "../../http-auth";
+import { apiKeyAuth } from "../../http-auth";
 import type { IntegrationTestingInput } from "../../base/integration";
 import { Integration } from "../../base/integration";
 import { TestConnectionError } from "../../base/test-connection/test-connection-error";
@@ -17,9 +19,13 @@ import { mediaOrganizerPriorities } from "../media-organizer";
 const logger = createLogger({ module: "radarrIntegration" });
 
 export class RadarrIntegration extends Integration implements ICalendarIntegration, IMediaOrganizerIntegration {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    return apiKeyAuth(this.integration);
+  }
+
   async getLibraryStatsAsync() {
     const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v3/movie"), {
-      headers: { "X-Api-Key": this.getSecretValue("apiKey") },
+      headers: (await this.getHttpAuthenticationAsync()).headers,
     });
     if (!response.ok) throw new Error(`Radarr library request failed (${response.status})`);
     const library = z

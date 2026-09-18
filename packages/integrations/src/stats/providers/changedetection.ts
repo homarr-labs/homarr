@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import type { StatsProvider } from "../types";
+import type { StatsAuthenticationContext, StatsProvider } from "../types";
 
 const watchSchema = z
   .object({
@@ -11,14 +11,19 @@ const watchSchema = z
 
 const watchesSchema = z.record(z.string(), watchSchema);
 
+const getHttpAuthentication = (context: StatsAuthenticationContext) => ({
+  headers: { "x-api-key": context.secret("apiKey") },
+});
+
 export const changedetectionStatsProvider = {
+  getHttpAuthentication,
   metrics: [
     { key: "diffsDetected", label: "Diffs detected", unit: "count" },
     { key: "totalObserved", label: "Total observed", unit: "count" },
   ],
   async fetchAsync(context) {
     const response = await context.requestAsync("/api/v1/watch", {
-      headers: { "x-api-key": context.secret("apiKey") },
+      headers: getHttpAuthentication(context).headers,
       signal: context.signal,
     });
     const watches = watchesSchema.parse(response);

@@ -17,6 +17,7 @@ const endpointSchema = z
 const endpointsSchema = z.union([z.array(endpointSchema), z.record(z.string(), endpointSchema)]);
 
 export const gatusStatsProvider = {
+  getHttpAuthentication: () => ({ headers: {} }),
   metrics: [
     { key: "up", label: "Up", unit: "count" },
     { key: "down", label: "Down", unit: "count" },
