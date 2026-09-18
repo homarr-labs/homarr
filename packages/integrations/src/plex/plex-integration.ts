@@ -311,11 +311,13 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
 
     return [...bumpedItems, ...missingSeasons]
       .toSorted((itemA, itemB) => itemB.addedAt - itemA.addedAt)
-      .slice(0, Math.max(items.length, RECENTLY_ADDED_LIMIT));
+      .slice(0, RECENTLY_ADDED_LIMIT);
   }
 
   private async getRecentlyAddedEpisodesAsync(): Promise<RecentlyAddedEpisode[]> {
-    const sections = await librarySectionsSchema.parseAsync(await this.fetchJsonAsync("/library/sections"));
+    const sections = await librarySectionsSchema.parseAsync(
+      await this.fetchJsonAsync("/library/sections", { timeout: EPISODES_REQUEST_TIMEOUT_MS }),
+    );
     const showSections = sections.MediaContainer.Directory?.filter((section) => section.type === "show") ?? [];
 
     const episodesPerSection = await Promise.all(
@@ -323,6 +325,7 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
         const data = await recentlyAddedEpisodesSchema.parseAsync(
           await this.fetchJsonAsync(
             `/library/sections/${encodeURIComponent(section.key)}/all?type=4&sort=addedAt:desc&X-Plex-Container-Start=0&X-Plex-Container-Size=${RECENTLY_ADDED_LIMIT}`,
+            { timeout: EPISODES_REQUEST_TIMEOUT_MS },
           ),
         );
         return data.MediaContainer.Metadata ?? [];
@@ -332,9 +335,13 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
     return episodesPerSection.flat().toSorted((episodeA, episodeB) => episodeB.addedAt - episodeA.addedAt);
   }
 
-  private async fetchJsonAsync(path: `/${string}`): Promise<unknown> {
+  /**
+   * Wraps fetchWithTrustedCertificatesAsync with the Plex token and JSON accept header used by all JSON endpoints.
+   */
+  private async fetchJsonAsync(path: `/${string}`, options?: { timeout?: number }): Promise<unknown> {
     const token = super.getSecretValue("apiKey");
     const response = await fetchWithTrustedCertificatesAsync(super.url(path), {
+      ...options,
       headers: {
         "X-Plex-Token": token,
         Accept: "application/json",
@@ -395,6 +402,8 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
 
 // Default page size of /library/recentlyAdded
 const RECENTLY_ADDED_LIMIT = 50;
+// Episodes are an addition to /library/recentlyAdded, a stalled library request must not block the fallback
+const EPISODES_REQUEST_TIMEOUT_MS = 10_000;
 
 const recentlyAddedItemSchema = z.object({
   key: z.string(),
