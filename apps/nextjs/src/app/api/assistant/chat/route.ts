@@ -77,6 +77,7 @@ import {
   getCustomWidgetPhaseToolNames,
   getCustomWidgetToolStepsFromResponseMessages,
   needsCustomWidgetAuthoringContext,
+  shouldRequireCustomWidgetAuthoringTool,
 } from "./custom-widget-authoring-context";
 import { createAssistantMcpToolGroups } from "./assistant-tool-groups";
 import {
@@ -741,7 +742,19 @@ export async function POST(request: Request) {
             toolChoice: "required",
           };
         }
+        const responseMessageSteps = getCustomWidgetToolStepsFromResponseMessages(responseMessages);
         const activeTools = getActiveToolNames(steps, responseMessages);
+        if (
+          customWidgetAuthoringActive &&
+          shouldRequireCustomWidgetAuthoringTool(activeTools, steps, responseMessageSteps, incomingMessages)
+        ) {
+          return {
+            activeTools,
+            instructions: getStepInstructions(activeTools),
+            messages: compactAssistantStepMessages(messages),
+            toolChoice: "required",
+          };
+        }
         return {
           activeTools,
           instructions: getStepInstructions(activeTools),
