@@ -4,6 +4,7 @@ import type { UIMessage } from "ai";
 import {
   customWidgetAssistantInstructions,
   getForcedAssistantToolName,
+  getCustomWidgetPlacementState,
   getRequiredAssistantToolNames,
   withAssistantToolPolicy,
 } from "./assistant-tool-policy";
@@ -35,7 +36,6 @@ describe("customWidgetAssistantInstructions", () => {
     expect(customWidgetAssistantInstructions).toContain("task-needed");
     expect(customWidgetAssistantInstructions).toContain("Reuse loaded context");
     expect(customWidgetAssistantInstructions).toContain("customWidget_findComponents");
-    expect(customWidgetAssistantInstructions).toContain("no arbitrary documentation or creativity cap");
     expect(customWidgetAssistantInstructions).toContain("coordinated set");
     expect(customWidgetAssistantInstructions).toContain("research primary API documentation once");
     expect(customWidgetAssistantInstructions).toContain("templateLines");
@@ -197,7 +197,7 @@ describe("getRequiredAssistantToolNames", () => {
           output: successfulCreation,
         }),
       ]),
-    ).toEqual(["configure_widget", "ask_user"]);
+    ).toEqual(["ask_user"]);
   });
 
   test("places directly when creation already has a target board", () => {
@@ -233,7 +233,7 @@ describe("getRequiredAssistantToolNames", () => {
       },
     ];
 
-    expect(getRequiredAssistantToolNames([], [], responseMessages)).toEqual(["configure_widget", "ask_user"]);
+    expect(getRequiredAssistantToolNames([], [], responseMessages)).toEqual(["ask_user"]);
   });
 
   test("does not force placement after failed creation", () => {
@@ -249,5 +249,315 @@ describe("getRequiredAssistantToolNames", () => {
     ];
 
     expect(getRequiredAssistantToolNames([], steps)).toEqual([]);
+  });
+
+  test("keeps placement required when a later step incorrectly requests Custom Widget tools", () => {
+    const steps = [
+      {
+        toolResults: [
+          {
+            toolName: "customWidget_createFromPreview",
+            output: {
+              ...successfulCreation,
+              nextAction: { type: "place-custom-widget", options: { definitionId: "widget-1" } },
+            },
+          },
+        ],
+      },
+      { toolResults: [{ toolName: "customWidget_getSkill", output: { content: "skill" } }] },
+      { toolResults: [{ toolName: "customWidget_previewQuery", output: { error: "upstream" } }] },
+    ];
+
+    expect(getRequiredAssistantToolNames([], steps)).toEqual(["ask_user"]);
+    expect(getCustomWidgetPlacementState([], steps)).toMatchObject({ status: "ask-user", widgetId: "widget-1" });
+  });
+
+  test("requires board placement after the affirmative unknown-board choice", () => {
+    const steps = [
+      {
+        toolResults: [
+          {
+            toolName: "customWidget_createFromPreview",
+            output: {
+              ...successfulCreation,
+              nextAction: { type: "place-custom-widget", options: { definitionId: "widget-1" } },
+            },
+          },
+        ],
+      },
+      {
+        toolResults: [
+          {
+            toolName: "ask_user",
+            input: {
+              allowOther: false,
+              options: [
+                { id: "place", label: "Place on a board", kind: "affirmative" },
+                { id: "leave", label: "Leave unplaced", kind: "negative" },
+              ],
+            },
+            output: { answer: "Place on a board", optionId: "place", optionKind: "affirmative", source: "option" },
+          },
+        ],
+      },
+    ];
+
+    expect(getRequiredAssistantToolNames([], steps)).toEqual(["configure_widget"]);
+  });
+
+  test("resolves placement by stable IDs when labels are localized", () => {
+    const steps = [
+      {
+        toolResults: [
+          {
+            toolName: "customWidget_createFromPreview",
+            output: {
+              ...successfulCreation,
+              nextAction: { type: "place-custom-widget", options: { definitionId: "widget-1" } },
+            },
+          },
+          {
+            toolName: "ask_user",
+            input: {
+              allowOther: false,
+              options: [
+                { id: "place", label: "Auf einem Board platzieren", kind: "affirmative" },
+                { id: "leave", label: "Unplatziert lassen", kind: "negative" },
+              ],
+            },
+            output: {
+              answer: "Unplatziert lassen",
+              optionId: "leave",
+              optionKind: "negative",
+              source: "option",
+            },
+          },
+        ],
+      },
+    ];
+
+    expect(getRequiredAssistantToolNames([], steps)).toEqual([]);
+  });
+
+  test("requires board_addItem after configure_widget and resolves only after a successful placement", () => {
+    const steps = [
+      {
+        toolResults: [
+          {
+            toolName: "customWidget_createFromPreview",
+            output: {
+              ...successfulCreation,
+              nextAction: {
+                type: "place-custom-widget",
+                targetBoardId: "board-1",
+                options: { definitionId: "widget-1" },
+              },
+            },
+          },
+        ],
+      },
+      {
+        toolResults: [
+          {
+            toolName: "configure_widget",
+            output: { boardId: "board-1", kind: "customApi", options: { definitionId: "widget-1" } },
+          },
+        ],
+      },
+    ];
+
+    expect(getRequiredAssistantToolNames([], steps)).toEqual(["board_addItem"]);
+    expect(
+      getRequiredAssistantToolNames(
+        [],
+        [
+          ...steps,
+          {
+            toolResults: [
+              {
+                toolName: "board_addItem",
+                input: { boardId: "board-1", options: { definitionId: "widget-1" } },
+                output: { itemId: "item-1" },
+              },
+            ],
+          },
+        ],
+      ),
+    ).toEqual([]);
+  });
+
+  test("resolves unknown-board placement only from the structured leave choice", () => {
+    const steps = [
+      {
+        toolResults: [
+          {
+            toolName: "customWidget_createFromPreview",
+            output: {
+              ...successfulCreation,
+              nextAction: { type: "place-custom-widget", options: { definitionId: "widget-1" } },
+            },
+          },
+        ],
+      },
+      {
+        toolResults: [
+          {
+            toolName: "ask_user",
+            input: {
+              allowOther: false,
+              options: [
+                { id: "place", label: "Place on a board", kind: "affirmative" },
+                { id: "leave", label: "Leave unplaced", kind: "negative" },
+              ],
+            },
+            output: { answer: "Leave unplaced", optionId: "leave", optionKind: "negative", source: "option" },
+          },
+        ],
+      },
+    ];
+
+    expect(getRequiredAssistantToolNames([], steps)).toEqual([]);
+  });
+
+  test("does not treat an unrelated negative question as the placement decision", () => {
+    const steps = [
+      {
+        toolResults: [
+          {
+            toolName: "customWidget_createFromPreview",
+            output: {
+              ...successfulCreation,
+              nextAction: { type: "place-custom-widget", options: { definitionId: "widget-1" } },
+            },
+          },
+          {
+            toolName: "ask_user",
+            input: {
+              options: [
+                { id: "no", label: "No", kind: "negative" },
+                { id: "yes", label: "Yes", kind: "affirmative" },
+              ],
+            },
+            output: { answer: "No", optionId: "no", optionKind: "negative", source: "option" },
+          },
+        ],
+      },
+    ];
+
+    expect(getRequiredAssistantToolNames([], steps)).toEqual(["ask_user"]);
+  });
+
+  test("resolves a cancelled known-board form instead of forcing it forever", () => {
+    const steps = [
+      {
+        toolResults: [
+          {
+            toolName: "customWidget_createFromPreview",
+            output: {
+              ...successfulCreation,
+              nextAction: { type: "place-custom-widget", targetBoardId: "board-1" },
+            },
+          },
+          {
+            toolName: "configure_widget",
+            output: { boardId: "board-1", cancelled: true, reason: "user-cancelled" },
+          },
+        ],
+      },
+    ];
+
+    expect(getRequiredAssistantToolNames([], steps)).toEqual([]);
+  });
+
+  test("deduplicates the same create result across SDK response messages and steps", () => {
+    const createOutput = {
+      ...successfulCreation,
+      nextAction: { type: "place-custom-widget", options: { definitionId: "widget-1" } },
+    };
+    const responseMessages = [
+      {
+        role: "tool",
+        content: [
+          {
+            type: "tool-result",
+            toolCallId: "create-widget-1",
+            toolName: "customWidget_createFromPreview",
+            output: { type: "json", value: createOutput },
+          },
+        ],
+      },
+    ];
+    const steps = [
+      {
+        toolResults: [
+          { toolCallId: "create-widget-1", toolName: "customWidget_createFromPreview", output: createOutput },
+          {
+            toolCallId: "ask-user-1",
+            toolName: "ask_user",
+            input: {
+              allowOther: false,
+              options: [
+                { id: "place", label: "Place on a board", kind: "affirmative" },
+                { id: "leave", label: "Leave unplaced", kind: "negative" },
+              ],
+            },
+            output: { answer: "Leave unplaced", optionId: "leave", optionKind: "negative", source: "option" },
+          },
+        ],
+      },
+    ];
+
+    expect(getRequiredAssistantToolNames([], steps, responseMessages)).toEqual([]);
+  });
+
+  test("allows a distinct second creation after the first widget is placed", () => {
+    const steps = [
+      {
+        toolResults: [
+          {
+            toolName: "customWidget_createFromPreview",
+            output: {
+              ...successfulCreation,
+              nextAction: { type: "place-custom-widget", targetBoardId: "board-1" },
+            },
+          },
+          {
+            toolName: "configure_widget",
+            output: { boardId: "board-1", kind: "customApi", options: {} },
+          },
+          { toolName: "board_addItem", input: { boardId: "board-1" }, output: { itemId: "item-1" } },
+          {
+            toolName: "customWidget_createFromPreview",
+            output: {
+              id: "widget-2",
+              managementPath: "/manage/custom-widgets/edit/widget-2",
+              nextAction: { type: "place-custom-widget", targetBoardId: "board-2" },
+            },
+          },
+        ],
+      },
+    ];
+
+    expect(getRequiredAssistantToolNames([], steps)).toEqual(["configure_widget"]);
+  });
+
+  test("does not carry a previous turn's placement requirement into a new user turn", () => {
+    const messages: UIMessage[] = [
+      { id: "user-1", role: "user", parts: [{ type: "text", text: "Create a widget" }] },
+      assistantMessage({
+        type: "dynamic-tool",
+        toolName: "customWidget_createFromPreview",
+        toolCallId: "create-widget-1",
+        input: { previewSessionId: "preview-1" },
+        state: "output-available",
+        output: {
+          ...successfulCreation,
+          nextAction: { type: "place-custom-widget", targetBoardId: "board-1" },
+        },
+      }),
+      { id: "user-2", role: "user", parts: [{ type: "text", text: "Show my boards" }] },
+    ];
+
+    expect(getRequiredAssistantToolNames(messages)).toEqual([]);
   });
 });

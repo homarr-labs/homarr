@@ -1,3 +1,4 @@
+import { NoSuchToolError } from "ai";
 import { describe, expect, test } from "vitest";
 
 import { getAssistantStreamErrorMessage } from "./assistant-stream-error";
@@ -14,6 +15,34 @@ describe("assistant stream errors", () => {
       "The model produced invalid tool input, so Homarr did not run the action. Try again.",
     );
     expect(getAssistantStreamErrorMessage(new Error("Invalid input for tool customWidget_previewCreate"))).toBe(
+      "The model produced incomplete Custom Widget input, so Homarr did not run the action. Try again; multiline JSX will be sent as templateLines.",
+    );
+  });
+
+  test("explains an unavailable authoring tool without blaming the configured model", () => {
+    expect(
+      getAssistantStreamErrorMessage(
+        new NoSuchToolError({
+          toolName: "customWidget_previewCreate",
+          availableTools: ["customWidget_validateTemplate"],
+        }),
+      ),
+    ).toBe("The requested tool is unavailable at this step. Homarr did not run the action. Try again.");
+    expect(
+      getAssistantStreamErrorMessage(
+        new Error(
+          "AI_NoSuchToolError: Model tried to call unavailable tool 'customWidget_previewCreate'; model unavailable",
+        ),
+      ),
+    ).toBe("The requested tool is unavailable at this step. Homarr did not run the action. Try again.");
+  });
+
+  test("prefers malformed tool input over model wording in its validation details", () => {
+    expect(
+      getAssistantStreamErrorMessage(
+        new Error("Invalid input for tool customWidget_validateTemplate: selected model is unavailable"),
+      ),
+    ).toBe(
       "The model produced incomplete Custom Widget input, so Homarr did not run the action. Try again; multiline JSX will be sent as templateLines.",
     );
   });

@@ -5,7 +5,9 @@ import {
   createCustomWidgetDiscoveryPhaseController,
   getActiveCustomWidgetToolNames,
   getCustomWidgetPhaseToolNames,
+  getCustomWidgetToolStepsFromResponseMessages,
   needsCustomWidgetAuthoringContext,
+  shouldRequireCustomWidgetAuthoringTool,
 } from "./custom-widget-authoring-context";
 
 const userMessage = (text: string): UIMessage => ({
@@ -30,6 +32,8 @@ describe("Custom Widget authoring context", () => {
     "I want a widget for Seerr",
     "Repair this custom-widget",
     "Validate this Custom JSX definition",
+    "Migrate this legacy custom widget to Custom JSX v2",
+    "Convert this custom widget to v2",
     '{"$schema":"homarr-custom-widget-v2"}',
   ])("detects explicit authoring intent: %s", (text) => {
     expect(needsCustomWidgetAuthoringContext([userMessage(text)])).toBe(true);
@@ -148,6 +152,52 @@ describe("Custom Widget authoring context", () => {
     ).toBeNull();
   });
 
+  test("keeps an approved preview in the evidence phase before step zero", () => {
+    const tools = [
+      "customWidget_validateTemplate",
+      "customWidget_previewCreate",
+      "customWidget_previewReviseTemplate",
+      "customWidget_previewQuery",
+      "customWidget_previewAction",
+      "customWidget_previewJournal",
+      "customWidget_createFromPreview",
+      "customWidget_findComponents",
+    ];
+    const responseMessages = [
+      {
+        role: "tool",
+        content: [
+          {
+            type: "tool-result",
+            toolCallId: "preview-call-1",
+            toolName: "customWidget_previewCreate",
+            output: {
+              type: "json",
+              value: {
+                success: true,
+                previewSession: { id: "preview-1" },
+                queries: [{ requestId: "status" }],
+              },
+            },
+          },
+        ],
+      },
+    ];
+
+    const responseSteps = getCustomWidgetToolStepsFromResponseMessages(responseMessages);
+
+    expect(getCustomWidgetPhaseToolNames(tools, responseSteps)).toEqual([
+      "customWidget_validateTemplate",
+      "customWidget_previewCreate",
+      "customWidget_previewReviseTemplate",
+      "customWidget_previewQuery",
+      "customWidget_previewAction",
+      "customWidget_previewJournal",
+      "customWidget_createFromPreview",
+    ]);
+    expect(getCustomWidgetPhaseToolNames(tools, [])).toBeNull();
+  });
+
   test("exposes focused context tools only after the skill entrypoint is loaded", () => {
     const tools = [
       "customWidget_getSkill",
@@ -156,6 +206,8 @@ describe("Custom Widget authoring context", () => {
       "customWidget_getComponents",
       "customWidget_getExample",
       "customWidget_validateTemplate",
+      "customWidget_workshopSearch",
+      "customWidget_workshopGet",
       "customWidget_previewCreate",
     ];
 
@@ -169,6 +221,100 @@ describe("Custom Widget authoring context", () => {
       "customWidget_getComponents",
       "customWidget_getExample",
       "customWidget_validateTemplate",
+      "customWidget_workshopSearch",
+      "customWidget_workshopGet",
+    ]);
+  });
+
+  test("stages Workshop discovery, install, and the next coordinated widget", () => {
+    const tools = [
+      "customWidget_getSkill",
+      "customWidget_getReference",
+      "customWidget_findComponents",
+      "customWidget_getComponents",
+      "customWidget_getExample",
+      "customWidget_validateTemplate",
+      "customWidget_workshopSearch",
+      "customWidget_workshopGet",
+      "customWidget_workshopInstall",
+    ];
+    const skillLoaded = [{ toolResults: [{ toolName: "customWidget_getSkill", output: { content: "skill" } }] }];
+    const workshopSearch = [
+      ...skillLoaded,
+      { toolResults: [{ toolName: "customWidget_workshopSearch", output: { items: [] } }] },
+    ];
+    const failedWorkshopGet = [
+      ...workshopSearch,
+      { toolResults: [{ toolName: "customWidget_workshopGet", output: { error: "unavailable" } }] },
+    ];
+    const successfulWorkshopGet = [
+      ...workshopSearch,
+      {
+        toolResults: [
+          {
+            toolName: "customWidget_workshopGet",
+            output: { widget: { name: "Fixtures" }, sourceSetup: [] },
+          },
+        ],
+      },
+    ];
+
+    expect(getCustomWidgetPhaseToolNames(tools, skillLoaded)).toEqual([
+      "customWidget_getReference",
+      "customWidget_findComponents",
+      "customWidget_getComponents",
+      "customWidget_getExample",
+      "customWidget_validateTemplate",
+      "customWidget_workshopSearch",
+      "customWidget_workshopGet",
+    ]);
+    expect(getCustomWidgetPhaseToolNames(tools, failedWorkshopGet)).toEqual([
+      "customWidget_getReference",
+      "customWidget_findComponents",
+      "customWidget_getComponents",
+      "customWidget_getExample",
+      "customWidget_validateTemplate",
+      "customWidget_workshopSearch",
+      "customWidget_workshopGet",
+    ]);
+    expect(getCustomWidgetPhaseToolNames(tools, successfulWorkshopGet)).toEqual([
+      "customWidget_getReference",
+      "customWidget_findComponents",
+      "customWidget_getComponents",
+      "customWidget_getExample",
+      "customWidget_validateTemplate",
+      "customWidget_workshopSearch",
+      "customWidget_workshopGet",
+      "customWidget_workshopInstall",
+    ]);
+    expect(
+      getCustomWidgetPhaseToolNames(tools, [
+        ...successfulWorkshopGet,
+        {
+          toolResults: [{ toolName: "customWidget_workshopInstall", output: { error: "source setup required" } }],
+        },
+      ]),
+    ).toEqual(getCustomWidgetPhaseToolNames(tools, successfulWorkshopGet));
+    expect(
+      getCustomWidgetPhaseToolNames(tools, [
+        ...successfulWorkshopGet,
+        {
+          toolResults: [
+            {
+              toolName: "customWidget_workshopInstall",
+              output: { status: "installed", definitionId: "widget-1" },
+            },
+          ],
+        },
+      ]),
+    ).toEqual([
+      "customWidget_getReference",
+      "customWidget_findComponents",
+      "customWidget_getComponents",
+      "customWidget_getExample",
+      "customWidget_validateTemplate",
+      "customWidget_workshopSearch",
+      "customWidget_workshopGet",
     ]);
   });
 
@@ -384,6 +530,187 @@ describe("Custom Widget authoring context", () => {
         },
       ]),
     ).toEqual(["customWidget_validateTemplate"]);
+  });
+
+  test("keeps component discovery available after a cached reference result", () => {
+    const tools = [
+      "customWidget_getSkill",
+      "customWidget_getReference",
+      "customWidget_findComponents",
+      "customWidget_getComponents",
+      "customWidget_validateTemplate",
+    ];
+
+    const activeNames = getCustomWidgetPhaseToolNames(tools, [
+      { toolResults: [{ toolName: "customWidget_getSkill", output: { content: "skill" } }] },
+      { toolResults: [{ toolName: "customWidget_getReference", output: { name: "schema", content: "schema" } }] },
+      {
+        toolResults: [
+          {
+            toolName: "customWidget_getReference",
+            output: {
+              contextAlreadyLoaded: true,
+              nextStep: "Reuse the earlier result for this exact context request.",
+            },
+          },
+        ],
+      },
+    ]);
+
+    expect(activeNames).toEqual(expect.arrayContaining(["customWidget_findComponents", "customWidget_getComponents"]));
+    expect(activeNames).not.toEqual(["customWidget_validateTemplate"]);
+  });
+
+  test("requires another tool after successful discovery or validation during a build request", () => {
+    const activeTools = [
+      "customWidget_getComponent",
+      "customWidget_getComponents",
+      "customWidget_validateTemplate",
+      "customWidget_previewCreate",
+      "customWidget_previewReviseTemplate",
+      "customWidget_previewQuery",
+      "customWidget_previewAction",
+      "customWidget_createFromPreview",
+    ];
+    const messages = [userMessage("Create a custom widget for my dashboard")];
+
+    expect(
+      shouldRequireCustomWidgetAuthoringTool(
+        activeTools,
+        [{ toolResults: [{ toolName: "customWidget_getComponents", output: { components: [] } }] }],
+        [],
+        messages,
+      ),
+    ).toBe(true);
+    for (const [toolName, output] of [
+      ["customWidget_previewReviseTemplate", { success: true }],
+      ["customWidget_previewAction", { ok: true, error: null }],
+    ] as const) {
+      expect(
+        shouldRequireCustomWidgetAuthoringTool(activeTools, [{ toolResults: [{ toolName, output }] }], [], messages),
+      ).toBe(true);
+    }
+    expect(
+      shouldRequireCustomWidgetAuthoringTool(
+        activeTools,
+        [{ toolResults: [{ toolName: "customWidget_getComponents", output: { phaseComplete: true } }] }],
+        [],
+        [userMessage("Create a Homarr Custom JSX v2 dashboard widget and save it")],
+      ),
+    ).toBe(true);
+    expect(
+      shouldRequireCustomWidgetAuthoringTool(
+        activeTools,
+        [
+          {
+            toolResults: [
+              {
+                toolName: "customWidget_validateTemplate",
+                output: { valid: true, diagnostics: [{ severity: "warning", message: "review" }] },
+              },
+            ],
+          },
+        ],
+        [],
+        messages,
+      ),
+    ).toBe(true);
+    expect(
+      shouldRequireCustomWidgetAuthoringTool(
+        activeTools,
+        [{ toolResults: [{ toolName: "customWidget_previewCreate", output: { success: true } }] }],
+        [],
+        messages,
+      ),
+    ).toBe(true);
+    expect(
+      shouldRequireCustomWidgetAuthoringTool(
+        activeTools,
+        [{ toolResults: [{ toolName: "customWidget_previewQuery", output: { ok: true, error: null } }] }],
+        [],
+        messages,
+      ),
+    ).toBe(true);
+    expect(
+      shouldRequireCustomWidgetAuthoringTool(
+        activeTools,
+        [{ toolResults: [{ toolName: "customWidget_previewQuery", output: { ok: true, error: "timeout" } }] }],
+        [],
+        messages,
+      ),
+    ).toBe(false);
+  });
+
+  test("does not force validation-only, failed, saved, or client-tool continuations", () => {
+    const activeTools = ["customWidget_getComponent", "customWidget_validateTemplate"];
+    const successfulDiscovery = {
+      toolResults: [{ toolName: "customWidget_getComponents", output: { phaseComplete: true } }],
+    };
+
+    expect(
+      shouldRequireCustomWidgetAuthoringTool(
+        activeTools,
+        [successfulDiscovery],
+        [],
+        [userMessage("Validate this widget")],
+      ),
+    ).toBe(false);
+    expect(
+      shouldRequireCustomWidgetAuthoringTool(
+        activeTools,
+        [successfulDiscovery],
+        [],
+        [userMessage("Create a widget"), userMessage("Only validate this custom widget")],
+      ),
+    ).toBe(false);
+    expect(
+      shouldRequireCustomWidgetAuthoringTool(
+        activeTools,
+        [{ toolResults: [{ toolName: "customWidget_getComponents", output: { error: "upstream" } }] }],
+        [],
+        [userMessage("Create a custom widget")],
+      ),
+    ).toBe(false);
+    expect(
+      shouldRequireCustomWidgetAuthoringTool(
+        activeTools,
+        [{ toolResults: [{ toolName: "customWidget_createFromPreview", output: { id: "widget-1" } }] }],
+        [],
+        [userMessage("Create a custom widget")],
+      ),
+    ).toBe(false);
+    expect(
+      shouldRequireCustomWidgetAuthoringTool(
+        activeTools,
+        [{ ...successfulDiscovery, toolCalls: [{ toolCallId: "ask-1", toolName: "ask_user" }] }],
+        [],
+        [userMessage("Create a custom widget")],
+      ),
+    ).toBe(false);
+    expect(
+      shouldRequireCustomWidgetAuthoringTool(
+        activeTools,
+        [],
+        [successfulDiscovery],
+        [
+          userMessage("Create a custom widget"),
+          {
+            id: "assistant-cancelled",
+            role: "assistant",
+            parts: [
+              {
+                type: "dynamic-tool",
+                toolName: "configure_widget",
+                toolCallId: "configure-1",
+                state: "output-available",
+                input: {},
+                output: { cancelled: true },
+              },
+            ],
+          },
+        ],
+      ),
+    ).toBe(false);
   });
 
   test("keeps only references and validation after a selected documentation batch", () => {

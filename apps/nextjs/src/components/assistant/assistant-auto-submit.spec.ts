@@ -42,6 +42,53 @@ describe("shouldAutomaticallyContinueAssistant", () => {
     ).toBe(true);
   });
 
+  test("does not continue after an unmarked server-only tool result", () => {
+    expect(
+      shouldAutomaticallyContinueAssistant({
+        messages: messagesWithToolPart({
+          type: "dynamic-tool",
+          toolName: "customWidget_previewQuery",
+          toolCallId: "preview-1",
+          input: { previewSessionId: "preview-1" },
+          state: "output-available",
+          output: { data: {} },
+        }),
+      }),
+    ).toBe(false);
+  });
+
+  test("waits for a pending server approval alongside a completed browser tool", () => {
+    expect(
+      shouldAutomaticallyContinueAssistant({
+        messages: [
+          {
+            id: "assistant-message",
+            role: "assistant",
+            parts: [
+              { type: "step-start" },
+              {
+                type: "dynamic-tool",
+                toolName: "refresh_current_view",
+                toolCallId: "refresh-1",
+                input: {},
+                state: "output-available",
+                output: { success: true },
+              },
+              {
+                type: "dynamic-tool",
+                toolName: "customWidget_createFromPreview",
+                toolCallId: "create-1",
+                input: { previewSessionId: "preview-1" },
+                state: "approval-requested",
+                approval: { id: "approval-1" },
+              },
+            ],
+          },
+        ],
+      }),
+    ).toBe(false);
+  });
+
   test("continues an approved mutation when the same step also reports a provider-executed server tool", () => {
     expect(
       shouldAutomaticallyContinueAssistant({

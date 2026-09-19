@@ -39,6 +39,12 @@ const customWidgetContextPhaseToolNames = new Set([
   "customWidget_getSharedProps",
   "customWidget_getExample",
   "customWidget_validateTemplate",
+  "customWidget_workshopSearch",
+  "customWidget_workshopGet",
+]);
+const customWidgetWorkshopInstallPhaseToolNames = new Set([
+  ...customWidgetContextPhaseToolNames,
+  "customWidget_workshopInstall",
 ]);
 const maxFocusedComponentSearchesPerPhase = 4;
 
@@ -55,6 +61,16 @@ const getPreviewRequestIds = (value: unknown) => {
     if (!isRecord(entry) || typeof entry.requestId !== "string") return [];
     return [entry.requestId];
   });
+};
+
+const isSuccessfulWorkshopGet = (output: unknown) => {
+  if (!isRecord(output)) return false;
+  return isRecord(output.widget) && Array.isArray(output.sourceSetup);
+};
+
+const isSuccessfulWorkshopInstall = (output: unknown) => {
+  if (!isRecord(output)) return false;
+  return output.status === "installed" && typeof output.definitionId === "string";
 };
 
 const hasCompletePreviewEvidence = (previewOutput: unknown, laterSteps: readonly CustomWidgetToolStep[]) => {
@@ -108,6 +124,25 @@ export const getCustomWidgetPhaseToolNames = <TToolName extends string>(
       }
       discoveryStartStep = stepIndex + 1;
       break;
+    }
+    const workshopInstallResults = step.toolResults.filter(
+      (result) => result.toolName === "customWidget_workshopInstall",
+    );
+    if (workshopInstallResults.length > 0) {
+      const succeeded = workshopInstallResults.every((result) => isSuccessfulWorkshopInstall(result.output));
+      if (!succeeded) {
+        return availableToolNames.filter((toolName) => customWidgetWorkshopInstallPhaseToolNames.has(toolName));
+      }
+      discoveryStartStep = stepIndex + 1;
+      break;
+    }
+    const workshopGetResults = step.toolResults.filter((result) => result.toolName === "customWidget_workshopGet");
+    if (workshopGetResults.length > 0) {
+      const succeeded = workshopGetResults.every((result) => isSuccessfulWorkshopGet(result.output));
+      if (succeeded) {
+        return availableToolNames.filter((toolName) => customWidgetWorkshopInstallPhaseToolNames.has(toolName));
+      }
+      return availableToolNames.filter((toolName) => customWidgetContextPhaseToolNames.has(toolName));
     }
     const previewResults = step.toolResults.filter(
       (result) =>
@@ -175,7 +210,7 @@ export const getCustomWidgetPhaseToolNames = <TToolName extends string>(
   const focusedSearches = discoveryResults.filter((result) => result.toolName === "customWidget_findComponents").length;
   const contextRetrievalComplete = discoveryResults.some((result) => {
     const output = isRecord(result.output) ? result.output : null;
-    return output?.phaseComplete === true || output?.contextAlreadyLoaded === true;
+    return output?.phaseComplete === true;
   });
   if (contextRetrievalComplete) {
     return availableToolNames.filter((toolName) => customWidgetValidationPhaseToolNames.has(toolName));

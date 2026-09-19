@@ -50,6 +50,7 @@ import {
   sanitizeAttachmentFilename,
 } from "./assistant-chat-input";
 import { getAssistantModelLookupStatus } from "./assistant-model-lookup";
+import { resolveAssistantReasoning } from "./assistant-reasoning";
 import { compactAssistantStepMessages, convertAssistantMessagesToModelMessages } from "./assistant-message-conversion";
 import {
   getOpenRouterWebSearchRequests,
@@ -65,21 +66,25 @@ import {
   createCustomWidgetToolStepGate,
 } from "./assistant-execution-policy";
 import { getAssistantStreamErrorMessage } from "./assistant-stream-error";
+import { shouldEmitAssistantMessageMetadata } from "./assistant-stream-metadata";
 import { getSafeAssistantToolError } from "./assistant-tool-error";
 import { repairAssistantToolInput } from "./assistant-tool-input-repair";
 import { getAssistantToolOutputMaxCharacters, toAssistantToolOutput } from "./assistant-tool-output";
-import { getAssistantToolInputSchema } from "./assistant-tool-schema";
+import { getAssistantToolInputSchema, getValidatedAssistantToolSchema } from "./assistant-tool-schema";
 import {
   createCustomWidgetDiscoveryPhaseController,
   getActiveCustomWidgetToolNames,
   getCustomWidgetPhaseToolNames,
+  getCustomWidgetToolStepsFromResponseMessages,
   needsCustomWidgetAuthoringContext,
+  shouldRequireCustomWidgetAuthoringTool,
 } from "./custom-widget-authoring-context";
 import { createAssistantMcpToolGroups } from "./assistant-tool-groups";
 import {
   customWidgetAssistantInstructions,
   getForcedAssistantToolName,
   getRequiredAssistantToolNames,
+  hasPendingCustomWidgetPlacement,
   withAssistantToolPolicy,
 } from "./assistant-tool-policy";
 
@@ -161,7 +166,7 @@ Use Homarr tools for live instance data or actions; never invent resources, IDs,
 
 Homarr permissions are authoritative. Explain denied access without suggesting a bypass. Read before changing when current state matters. Mutations use Homarr's native approval UI: when inputs are sufficient, call the mutation immediately and never ask for duplicate prose confirmation or retry a denial. Use ask_user only when a missing choice blocks the next action; do not end with a prose question expecting a reply.
 
-Use configure_app, configure_board_settings, and configure_widget as the native review step before their matching mutations. Preserve existing board CSS unless replacement was requested. Use Homarr icon results rather than invented icon URLs. Browser tools are same-origin only and may refresh after a completed mutation.
+Use configure_app, configure_board_settings, and configure_widget as the native review step before their matching mutations. Preserve existing board CSS unless replacement was requested. Use Homarr icon results rather than invented icon URLs. Browser tools are same-origin only and may refresh after a completed mutation. For a saved Custom Widget without a target board, ask one finite placement question with allowOther:false and options id place/kind affirmative and id leave/kind negative; labels may be localized.
 
 Complete requested batches before summarizing. Keep responses concise, lead with the result, summarize tool output instead of dumping JSON, and use well-formed GitHub-flavored Markdown. If a service is unavailable, state the concrete next action.`;
 
@@ -581,7 +586,7 @@ export async function POST(request: Request) {
           name,
           tool({
             description: definition.description,
-            inputSchema: jsonSchema(z.toJSONSchema(definition.parameters) as Parameters<typeof jsonSchema>[0]),
+            inputSchema: getValidatedAssistantToolSchema(definition.parameters),
           }),
         ] as const,
       ];
@@ -630,12 +635,23 @@ export async function POST(request: Request) {
     incomingMessages,
     canAuthorCustomWidgets,
   );
-  const getActiveToolNames = (steps: Parameters<typeof getCustomWidgetPhaseToolNames>[1] = []) => {
+  const getActiveToolNames = (
+    steps: Parameters<typeof getCustomWidgetPhaseToolNames>[1] = [],
+    responseMessages: readonly { role: string; content: unknown }[] = [],
+  ) => {
     const enabledToolNames = assistantToolGroups
       .resolve([...enabledToolGroupIds])
       .flatMap((group) => group.tools.map(({ name }) => name));
+    const responseMessageSteps = getCustomWidgetToolStepsFromResponseMessages(responseMessages);
+    if (hasPendingCustomWidgetPlacement(incomingMessages, steps, responseMessages)) {
+      return [
+        assistantToolGroupActivationName,
+        ...frontendToolNames,
+        ...enabledToolNames.filter((toolName) => !toolName.startsWith("customWidget_")),
+      ];
+    }
     const phaseToolNames = customWidgetAuthoringActive
-      ? getCustomWidgetPhaseToolNames(Object.keys(homarrTools), steps)
+      ? getCustomWidgetPhaseToolNames(Object.keys(homarrTools), [...responseMessageSteps, ...steps])
       : null;
     if (phaseToolNames)
       return [assistantToolGroupActivationName, ...frontendToolNames, ...enabledToolNames, ...phaseToolNames];
@@ -724,7 +740,19 @@ export async function POST(request: Request) {
             toolChoice: "required",
           };
         }
-        const activeTools = getActiveToolNames(steps);
+        const responseMessageSteps = getCustomWidgetToolStepsFromResponseMessages(responseMessages);
+        const activeTools = getActiveToolNames(steps, responseMessages);
+        if (
+          customWidgetAuthoringActive &&
+          shouldRequireCustomWidgetAuthoringTool(activeTools, steps, responseMessageSteps, incomingMessages)
+        ) {
+          return {
+            activeTools,
+            instructions: getStepInstructions(activeTools),
+            messages: compactAssistantStepMessages(messages),
+            toolChoice: "required",
+          };
+        }
         return {
           activeTools,
           instructions: getStepInstructions(activeTools),
@@ -741,7 +769,12 @@ export async function POST(request: Request) {
       maxOutputTokens: assistantExecutionPolicy.maxOutputTokens,
       maxRetries: 2,
       experimental_repairToolCall: ({ toolCall }) => Promise.resolve(repairAssistantToolInput(toolCall)),
-      reasoning: parsed.data.reasoning === "auto" ? undefined : parsed.data.reasoning,
+      reasoning: resolveAssistantReasoning({
+        reasoning: parsed.data.reasoning,
+        customWidgetAuthoringActive,
+        modelId,
+      }),
+      temperature: customWidgetAuthoringActive && modelId === "z-ai/glm-5.3-flash" ? 0.2 : undefined,
       providerOptions:
         configuration.provider === "openrouter" || openRouterServerToolsEnabled
           ? { [toProviderOptionsKey(providerName)]: { usage: { include: true } } }
@@ -849,6 +882,8 @@ export async function POST(request: Request) {
       originalMessages: parsed.data.messages as UIMessage<AssistantMessageMetadata>[],
       sendReasoning: true,
       messageMetadata: ({ part }) => {
+        if (!shouldEmitAssistantMessageMetadata(part)) return undefined;
+
         const common = {
           requestId,
           provider: configuration.provider,

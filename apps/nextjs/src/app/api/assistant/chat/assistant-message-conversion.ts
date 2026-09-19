@@ -2,7 +2,7 @@ import { convertToModelMessages, pruneMessages } from "ai";
 import type { ModelMessage, UIMessage } from "ai";
 
 import { isRecord } from "@homarr/common";
-import { isCustomWidgetToolName } from "@homarr/custom-widgets/core";
+import { selectSequentialCustomWidgetToolCalls } from "@homarr/custom-widgets/core";
 
 import { getAssistantToolOutputMaxCharacters, toAssistantToolOutput } from "./assistant-tool-output";
 
@@ -39,24 +39,11 @@ const compactParallelCustomWidgetToolCalls = (messages: ModelMessage[]) => {
 
   for (const message of messages) {
     if (message.role !== "assistant" || typeof message.content === "string") continue;
-    let customWidgetToolSelected = false;
-    let otherToolSelected = false;
-    for (const part of message.content) {
-      if (part.type !== "tool-call") continue;
-      if (isCustomWidgetToolName(part.toolName)) {
-        if (customWidgetToolSelected || otherToolSelected) {
-          rejectedToolCallIds.add(part.toolCallId);
-          continue;
-        }
-        customWidgetToolSelected = true;
-        continue;
-      }
-      if (customWidgetToolSelected) {
-        rejectedToolCallIds.add(part.toolCallId);
-        continue;
-      }
-      otherToolSelected = true;
-    }
+    const toolCalls = message.content.filter((part) => part.type === "tool-call");
+    const selection = selectSequentialCustomWidgetToolCalls(
+      toolCalls.map((part) => ({ function: { name: part.toolName }, part })),
+    );
+    for (const { part } of selection.rejected) rejectedToolCallIds.add(part.toolCallId);
   }
   if (rejectedToolCallIds.size === 0) return messages;
 

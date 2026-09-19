@@ -15,6 +15,10 @@ Orient from the current checkout before editing. Treat package manifests, export
 4. Keep the change in the deepest package that owns the behavior. Reuse public entrypoints rather than deep-importing implementation files.
 5. Re-run targeted searches before documenting counts, consumers, or dependency edges; these change faster than the architectural seams.
 
+## Deliver and verify
+
+State the concrete change or finding the task requires before describing the repository context. Run the narrowest check that exercises the touched package boundary, and distinguish source inspection, focused checks, browser behavior, and deployment evidence. Do not claim a wider validation result than the evidence supports; finish with the changed paths, checks run, and any material limitation.
+
 ## Current toolchain
 
 - Use Node `24.18.0` from `mise.toml` and pnpm `11.15.1` from `package.json`.

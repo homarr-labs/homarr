@@ -182,6 +182,81 @@ describe("convertAssistantMessagesToModelMessages", () => {
     expect(serialized).toContain("preview-1");
   });
 
+  test("keeps parallel reference results and a later cached context result", () => {
+    const messages: ModelMessage[] = [
+      {
+        role: "assistant",
+        content: [
+          {
+            type: "tool-call",
+            toolCallId: "schema-reference",
+            toolName: "customWidget_getReference",
+            input: { name: "schema" },
+          },
+          {
+            type: "tool-call",
+            toolCallId: "runtime-reference",
+            toolName: "customWidget_getReference",
+            input: { name: "runtime" },
+          },
+        ],
+      },
+      {
+        role: "tool",
+        content: [
+          {
+            type: "tool-result",
+            toolCallId: "schema-reference",
+            toolName: "customWidget_getReference",
+            output: { type: "json", value: { name: "schema", content: "schema reference" } },
+          },
+          {
+            type: "tool-result",
+            toolCallId: "runtime-reference",
+            toolName: "customWidget_getReference",
+            output: { type: "json", value: { name: "runtime", content: "runtime reference" } },
+          },
+        ],
+      },
+      {
+        role: "assistant",
+        content: [
+          {
+            type: "tool-call",
+            toolCallId: "runtime-cache-hit",
+            toolName: "customWidget_getReference",
+            input: { name: "runtime" },
+          },
+        ],
+      },
+      {
+        role: "tool",
+        content: [
+          {
+            type: "tool-result",
+            toolCallId: "runtime-cache-hit",
+            toolName: "customWidget_getReference",
+            output: {
+              type: "json",
+              value: { contextAlreadyLoaded: true, nextStep: "Reuse the earlier runtime result." },
+            },
+          },
+        ],
+      },
+    ];
+
+    for (const maxCharacters of [48_000, 1]) {
+      const serialized = JSON.stringify(compactAssistantStepMessages(messages, maxCharacters));
+
+      expect(serialized).toContain("schema-reference");
+      expect(serialized).toContain("schema reference");
+      expect(serialized).toContain("runtime-reference");
+      expect(serialized).toContain("runtime reference");
+      expect(serialized).toContain("runtime-cache-hit");
+      expect(serialized).toContain("contextAlreadyLoaded");
+    }
+  });
+
   test("drops duplicate Custom Widget calls when a provider ignores sequential tool settings", () => {
     const messages: ModelMessage[] = [
       {
