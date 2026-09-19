@@ -1,0 +1,28 @@
+[
+  {
+    "t": 4,
+    "selector": ".workbench",
+    "opacity": "0"
+  },
+  {
+    "t": 31,
+    "selector": ".assistant-board",
+    "opacity": "0"
+  },
+  {
+    "selector": ".onboarding",
+    "present": false
+  },
+  {
+    "selector": ".header-shot",
+    "present": false
+  },
+  {
+    "selector": ".end-board",
+    "present": false
+  },
+  {
+    "selector": ".end-workbench",
+    "present": false
+  }
+]

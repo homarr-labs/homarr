@@ -1,0 +1,94 @@
+[
+  {
+    "name": "moved-one-row",
+    "time": 1.7218486089999998,
+    "items": [
+      {
+        "name": "Radarr",
+        "x": "1",
+        "y": "0",
+        "w": "1",
+        "h": "1",
+        "selected": "false"
+      },
+      {
+        "name": "Plex",
+        "x": "2",
+        "y": "0",
+        "w": "1",
+        "h": "1",
+        "selected": "false"
+      },
+      {
+        "name": "Jellyfin",
+        "x": "3",
+        "y": "0",
+        "w": "1",
+        "h": "1",
+        "selected": "false"
+      },
+      {
+        "name": "Grafana",
+        "x": "4",
+        "y": "0",
+        "w": "1",
+        "h": "1",
+        "selected": "false"
+      },
+      {
+        "name": "Sonarr",
+        "x": "0",
+        "y": "1",
+        "w": "1",
+        "h": "1",
+        "selected": "false"
+      }
+    ]
+  },
+  {
+    "name": "resized-two-by-two",
+    "time": 3.3810764449999997,
+    "items": [
+      {
+        "name": "Radarr",
+        "x": "1",
+        "y": "0",
+        "w": "1",
+        "h": "1",
+        "selected": "false"
+      },
+      {
+        "name": "Plex",
+        "x": "2",
+        "y": "0",
+        "w": "1",
+        "h": "1",
+        "selected": "false"
+      },
+      {
+        "name": "Jellyfin",
+        "x": "3",
+        "y": "0",
+        "w": "1",
+        "h": "1",
+        "selected": "false"
+      },
+      {
+        "name": "Grafana",
+        "x": "4",
+        "y": "0",
+        "w": "1",
+        "h": "1",
+        "selected": "false"
+      },
+      {
+        "name": "Sonarr",
+        "x": "0",
+        "y": "1",
+        "w": "2",
+        "h": "2",
+        "selected": "false"
+      }
+    ]
+  }
+]

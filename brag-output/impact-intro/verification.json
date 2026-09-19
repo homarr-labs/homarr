@@ -1,0 +1,168 @@
+{
+  "motion": {
+    "fullyVisibleIntegrationCount": 55,
+    "names": [
+      "SABnzbd",
+      "Transmission",
+      "Slskd",
+      "Lidarr",
+      "Bazarr",
+      "Plex",
+      "Overseerr",
+      "Technitium DNS",
+      "Dash.",
+      "Proxmox",
+      "ntfy",
+      "Anchor",
+      "Unraid",
+      "Paperless-ngx",
+      "Speedtest Tracker",
+      "Navidrome",
+      "Beszel",
+      "ArchiveTeam Warrior",
+      "Deluge",
+      "Aria2",
+      "Radarr",
+      "Prowlarr",
+      "Emby",
+      "Seerr",
+      "AdGuard Home",
+      "OpenMediaVault",
+      "Tdarr",
+      "Unifi Controller",
+      "Nextcloud",
+      "OPNsense",
+      "Gotify",
+      "Glances",
+      "iCal",
+      "TrueNAS",
+      "Home Assistant",
+      "Synology DiskStation",
+      "Pi-hole",
+      "Coolify",
+      "Immich",
+      "Jellyseerr",
+      "PatchMon",
+      "Tracearr",
+      "Jellyfin",
+      "Uptime Kuma",
+      "Audiobookshelf",
+      "Readarr",
+      "Umami",
+      "PeaNUT",
+      "Sonarr",
+      "Gluetun",
+      "Traefik",
+      "qBittorrent",
+      "llama.cpp",
+      "What's Up Docker",
+      "NZBGet"
+    ],
+    "sample": [
+      {
+        "time": 1,
+        "positions": [
+          {
+            "selector": ".col-0",
+            "x": 850,
+            "y": -65.71430206298828
+          },
+          {
+            "selector": ".col-1",
+            "x": 1351,
+            "y": -405
+          },
+          {
+            "selector": ".row-0",
+            "x": -261.66668701171875,
+            "y": 778
+          },
+          {
+            "selector": ".row-1",
+            "x": -1404.333251953125,
+            "y": 873
+          },
+          {
+            "selector": ".row-2",
+            "x": -230,
+            "y": 968
+          }
+        ]
+      },
+      {
+        "time": 3,
+        "positions": [
+          {
+            "selector": ".col-0",
+            "x": 850,
+            "y": -277.1429138183594
+          },
+          {
+            "selector": ".col-1",
+            "x": 1351,
+            "y": -255
+          },
+          {
+            "selector": ".row-0",
+            "x": -833,
+            "y": 778
+          },
+          {
+            "selector": ".row-1",
+            "x": -833,
+            "y": 873
+          },
+          {
+            "selector": ".row-2",
+            "x": -738,
+            "y": 968
+          }
+        ]
+      },
+      {
+        "time": 5,
+        "positions": [
+          {
+            "selector": ".col-0",
+            "x": 850,
+            "y": -488.5714111328125
+          },
+          {
+            "selector": ".col-1",
+            "x": 1351,
+            "y": -105
+          },
+          {
+            "selector": ".row-0",
+            "x": -1404.333251953125,
+            "y": 778
+          },
+          {
+            "selector": ".row-1",
+            "x": -261.66668701171875,
+            "y": 873
+          },
+          {
+            "selector": ".row-2",
+            "x": -1246,
+            "y": 968
+          }
+        ]
+      }
+    ],
+    "missingImages": []
+  },
+  "playback": {
+    "time": 9.116563,
+    "duration": 68,
+    "width": 1920,
+    "height": 1080,
+    "quality": {
+      "totalFrames": 552,
+      "droppedFrames": 0
+    },
+    "audioMuted": false
+  },
+  "chapter": 26.069257,
+  "errors": []
+}

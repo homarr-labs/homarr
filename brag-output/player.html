@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Homarr 2.0 — Release film</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #181818; color: #f8f9fa; font: 16px system-ui, sans-serif; }
+  main { max-width: 1440px; margin: auto; padding: 28px; }
+  header { display: flex; justify-content: space-between; align-items: center; gap: 24px; margin-bottom: 24px; }
+  h1 { font-size: 24px; margin: 0; font-weight: 600; }
+  p { color: #ced4da; margin: 6px 0 0; }
+  a { color: #ff8787; }
+  video { display: block; width: 100%; background: #242424; border: 1px solid #444; border-radius: 14px; }
+  nav { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+  button { font: inherit; color: #f8f9fa; background: #303030; border: 1px solid #555; border-radius: 8px; padding: 9px 14px; cursor: pointer; }
+  button:hover, button:focus-visible { border-color: #ff8787; }
+</style>
+<main>
+  <header><div><h1>Homarr 2.0</h1><p>Your dashboard. Your possibilities.</p></div><a href="brag.mp4" download>Download MP4</a></header>
+  <video controls playsinline preload="metadata" poster="brag.jpg?v=3" src="brag.mp4?v=3"></video>
+  <nav aria-label="Video chapters">
+    <button data-time="0">Introduction</button><button data-time="6">Integrations</button>
+    <button data-time="18">Board editing</button><button data-time="26">Sidebars & layouts</button>
+    <button data-time="33">Widgets</button><button data-time="41">Assistant</button>
+    <button data-time="50">Workshop</button><button data-time="59">Onboarding</button>
+    <button data-time="65">Everyday details</button><button data-time="72">Release</button>
+  </nav>
+</main>
+<script>
+  const video = document.querySelector('video');
+  document.querySelectorAll('button[data-time]').forEach(button => {
+    button.addEventListener('click', () => { video.currentTime = Number(button.dataset.time); video.play(); });
+  });
+</script>
+</html>

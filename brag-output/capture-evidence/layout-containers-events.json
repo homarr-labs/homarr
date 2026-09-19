@@ -1,0 +1,72 @@
+[
+  {
+    "name": "moved-container-with-contents",
+    "time": 1.9764574790000007,
+    "items": [
+      {
+        "name": "Plex",
+        "x": "2",
+        "y": "0",
+        "w": "1",
+        "h": "1",
+        "selected": "false",
+        "section": "qma2mr53syyeyxlsskyz1r33"
+      },
+      {
+        "name": "Jellyfin",
+        "x": "3",
+        "y": "0",
+        "w": "1",
+        "h": "1",
+        "selected": "false",
+        "section": "qma2mr53syyeyxlsskyz1r33"
+      },
+      {
+        "name": "Grafana",
+        "x": "4",
+        "y": "0",
+        "w": "1",
+        "h": "1",
+        "selected": "false",
+        "section": "qma2mr53syyeyxlsskyz1r33"
+      },
+      {
+        "name": "Date and time",
+        "x": "0",
+        "y": "0",
+        "w": "2",
+        "h": "1",
+        "selected": "false",
+        "section": "ju3w6oyf0bfszlsxfltjiu01"
+      },
+      {
+        "name": "Sonarr",
+        "x": "2",
+        "y": "0",
+        "w": "1",
+        "h": "1",
+        "selected": "false",
+        "section": "ju3w6oyf0bfszlsxfltjiu01"
+      },
+      {
+        "name": "Radarr",
+        "x": "3",
+        "y": "0",
+        "w": "1",
+        "h": "1",
+        "selected": "false",
+        "section": "ju3w6oyf0bfszlsxfltjiu01"
+      }
+    ]
+  },
+  {
+    "name": "container-collapsed",
+    "time": 3.6520975839999994,
+    "expanded": "false"
+  },
+  {
+    "name": "final-settled-state",
+    "time": 6.203103530999999,
+    "items": []
+  }
+]

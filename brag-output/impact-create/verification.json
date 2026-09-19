@@ -1,0 +1,117 @@
+{
+  "intro": {
+    "title": [
+      {
+        "text": "Let's talk",
+        "opacity": "1"
+      },
+      {
+        "text": "about",
+        "opacity": "1"
+      },
+      {
+        "text": "Homarr v2",
+        "opacity": "1"
+      }
+    ],
+    "speed": [
+      70,
+      70,
+      70
+    ],
+    "missingImages": []
+  },
+  "integrations": {
+    "count": 32,
+    "missing": []
+  },
+  "sourceChecks": [
+    {
+      "scene": "intro",
+      "hasHalo": false
+    },
+    {
+      "scene": "workshop",
+      "hasHalo": false
+    },
+    {
+      "scene": "integrations",
+      "hasHalo": false
+    },
+    {
+      "scene": "custom",
+      "hasHalo": false
+    },
+    {
+      "scene": "assistant",
+      "hasHalo": false
+    },
+    {
+      "scene": "ending",
+      "hasHalo": false
+    }
+  ],
+  "results": [
+    {
+      "name": "Intro",
+      "time": 4.397675,
+      "duration": 107,
+      "width": 1920,
+      "height": 1080,
+      "dropped": 0,
+      "frames": 269,
+      "muted": false
+    },
+    {
+      "name": "32 new integrations",
+      "time": 18.421969,
+      "duration": 107,
+      "width": 1920,
+      "height": 1080,
+      "dropped": 0,
+      "frames": 540,
+      "muted": false
+    },
+    {
+      "name": "Create a Custom Widget",
+      "time": 28.514525,
+      "duration": 107,
+      "width": 1920,
+      "height": 1080,
+      "dropped": 0,
+      "frames": 696,
+      "muted": false
+    },
+    {
+      "name": "Assistant · BYOK + free usage",
+      "time": 42.389116,
+      "duration": 107,
+      "width": 1920,
+      "height": 1080,
+      "dropped": 0,
+      "frames": 1026,
+      "muted": false
+    },
+    {
+      "name": "Customized header",
+      "time": 93.503866,
+      "duration": 107,
+      "width": 1920,
+      "height": 1080,
+      "dropped": 0,
+      "frames": 1242,
+      "muted": false
+    },
+    {
+      "name": "Ending",
+      "time": 104.706367,
+      "duration": 107,
+      "width": 1920,
+      "height": 1080,
+      "dropped": 0,
+      "frames": 1350,
+      "muted": false
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,162 @@
+[
+  {
+    "name": "Autobrr",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/autobrr.svg",
+    "asset": "assets/ultimate/integrations/0.svg"
+  },
+  {
+    "name": "Jellystat",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/jellystat.svg",
+    "asset": "assets/ultimate/integrations/1.svg"
+  },
+  {
+    "name": "Scrutiny",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/scrutiny.svg",
+    "asset": "assets/ultimate/integrations/2.svg"
+  },
+  {
+    "name": "Tube Archivist",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/tube-archivist.png",
+    "asset": "assets/ultimate/integrations/3.png"
+  },
+  {
+    "name": "Frigate",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/frigate.svg",
+    "asset": "assets/ultimate/integrations/4.svg"
+  },
+  {
+    "name": "Komga",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/komga.svg",
+    "asset": "assets/ultimate/integrations/5.svg"
+  },
+  {
+    "name": "NetAlertX",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/netalertx.svg",
+    "asset": "assets/ultimate/integrations/6.svg"
+  },
+  {
+    "name": "Jackett",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/jackett.svg",
+    "asset": "assets/ultimate/integrations/7.svg"
+  },
+  {
+    "name": "Your Spotify",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/your-spotify.svg",
+    "asset": "assets/ultimate/integrations/8.svg"
+  },
+  {
+    "name": "RomM",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/romm.svg",
+    "asset": "assets/ultimate/integrations/9.svg"
+  },
+  {
+    "name": "Homebox",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/homebox.svg",
+    "asset": "assets/ultimate/integrations/10.svg"
+  },
+  {
+    "name": "Mealie",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/mealie.svg",
+    "asset": "assets/ultimate/integrations/11.svg"
+  },
+  {
+    "name": "xTeVe",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/xteve.png",
+    "asset": "assets/ultimate/integrations/12.png"
+  },
+  {
+    "name": "Unmanic",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/unmanic.png",
+    "asset": "assets/ultimate/integrations/13.png"
+  },
+  {
+    "name": "Syncthing Relay",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/syncthing.svg",
+    "asset": "assets/ultimate/integrations/14.svg"
+  },
+  {
+    "name": "Stash",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/stash.svg",
+    "asset": "assets/ultimate/integrations/15.svg"
+  },
+  {
+    "name": "Prometheus",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/prometheus.svg",
+    "asset": "assets/ultimate/integrations/16.svg"
+  },
+  {
+    "name": "Plant-it",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/plant-it.png",
+    "asset": "assets/ultimate/integrations/17.png"
+  },
+  {
+    "name": "Netdata",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/netdata.svg",
+    "asset": "assets/ultimate/integrations/18.svg"
+  },
+  {
+    "name": "MySpeed",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/myspeed.svg",
+    "asset": "assets/ultimate/integrations/19.svg"
+  },
+  {
+    "name": "FileFlows",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/fileflows.svg",
+    "asset": "assets/ultimate/integrations/20.svg"
+  },
+  {
+    "name": "Trilium",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/trilium.svg",
+    "asset": "assets/ultimate/integrations/21.svg"
+  },
+  {
+    "name": "Tandoor",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/tandoor-recipes.svg",
+    "asset": "assets/ultimate/integrations/22.svg"
+  },
+  {
+    "name": "Spoolman",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/spoolman.svg",
+    "asset": "assets/ultimate/integrations/23.svg"
+  },
+  {
+    "name": "Miniflux",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/miniflux.svg",
+    "asset": "assets/ultimate/integrations/24.svg"
+  },
+  {
+    "name": "Maintainerr",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/maintainerr.svg",
+    "asset": "assets/ultimate/integrations/25.svg"
+  },
+  {
+    "name": "Linkwarden",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/linkwarden.png",
+    "asset": "assets/ultimate/integrations/26.png"
+  },
+  {
+    "name": "Karakeep",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/karakeep.svg",
+    "asset": "assets/ultimate/integrations/27.svg"
+  },
+  {
+    "name": "Healthchecks",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/healthchecks.svg",
+    "asset": "assets/ultimate/integrations/28.svg"
+  },
+  {
+    "name": "Gatus",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/gatus.svg",
+    "asset": "assets/ultimate/integrations/29.svg"
+  },
+  {
+    "name": "Changedetection.io",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/changedetection.svg",
+    "asset": "assets/ultimate/integrations/30.svg"
+  },
+  {
+    "name": "Caddy",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/caddy.svg",
+    "asset": "assets/ultimate/integrations/31.svg"
+  }
+]

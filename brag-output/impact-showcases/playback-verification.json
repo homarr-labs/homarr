@@ -1,0 +1,20 @@
+{
+  "sidebar": {
+    "time": 22.593048,
+    "quality": {
+      "totalFrames": 221,
+      "droppedFrames": 0
+    },
+    "duration": 53,
+    "width": 1920,
+    "height": 1080
+  },
+  "switcher": {
+    "time": 48.565724,
+    "quality": {
+      "totalFrames": 549,
+      "droppedFrames": 1
+    }
+  },
+  "errors": []
+}

@@ -1,0 +1,15 @@
+[
+  {
+    "name": "switcher-open",
+    "time": 0.538545861
+  },
+  {
+    "name": "filtered",
+    "time": 2.1319910710000003
+  },
+  {
+    "name": "destination-loaded",
+    "time": 3.149140048,
+    "url": "http://127.0.0.1:7589/boards/default"
+  }
+]

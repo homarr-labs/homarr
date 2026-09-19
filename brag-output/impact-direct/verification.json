@@ -1,0 +1,235 @@
+{
+  "intro": {
+    "count": 87,
+    "seen": [
+      "AdGuard Home",
+      "Anchor",
+      "ArchiveTeam Warrior",
+      "Aria2",
+      "Audiobookshelf",
+      "Autobrr",
+      "Bazarr",
+      "Beszel",
+      "Caddy",
+      "Changedetection.io",
+      "Coolify",
+      "Dash.",
+      "Deluge",
+      "Emby",
+      "FileFlows",
+      "Frigate",
+      "Gatus",
+      "Glances",
+      "Gluetun",
+      "Gotify",
+      "Healthchecks",
+      "Home Assistant",
+      "Homebox",
+      "Immich",
+      "Jackett",
+      "Jellyfin",
+      "Jellyseerr",
+      "Jellystat",
+      "Karakeep",
+      "Komga",
+      "Lidarr",
+      "Linkwarden",
+      "Maintainerr",
+      "Mealie",
+      "Miniflux",
+      "MySpeed",
+      "NZBGet",
+      "Navidrome",
+      "NetAlertX",
+      "Netdata",
+      "Nextcloud",
+      "OPNsense",
+      "OpenMediaVault",
+      "Overseerr",
+      "Paperless-ngx",
+      "PatchMon",
+      "PeaNUT",
+      "Pi-hole",
+      "Plant-it",
+      "Plex",
+      "Prometheus",
+      "Prowlarr",
+      "Proxmox",
+      "Radarr",
+      "Readarr",
+      "RomM",
+      "SABnzbd",
+      "Scrutiny",
+      "Seerr",
+      "Slskd",
+      "Sonarr",
+      "Speedtest Tracker",
+      "Spoolman",
+      "Stash",
+      "Syncthing Relay",
+      "Synology DiskStation",
+      "Tandoor",
+      "Tdarr",
+      "Technitium DNS",
+      "Tracearr",
+      "Traefik",
+      "Transmission",
+      "Trilium",
+      "TrueNAS",
+      "Tube Archivist",
+      "Umami",
+      "Unifi Controller",
+      "Unmanic",
+      "Unraid",
+      "Uptime Kuma",
+      "What's Up Docker",
+      "Your Spotify",
+      "iCal",
+      "llama.cpp",
+      "ntfy",
+      "qBittorrent",
+      "xTeVe"
+    ],
+    "directions": [
+      -354.0000123977661,
+      353.9999885559082
+    ],
+    "leftRight": -20,
+    "rightLeft": 1940,
+    "footerY": 1015,
+    "total": "87 INTEGRATIONS · YOUR EXISTING SERVICES, CONNECTED",
+    "hasBottomMarquee": false,
+    "hasSlogan": false,
+    "missing": []
+  },
+  "crop": {
+    "panelWidth": 760,
+    "panelHeight": 602,
+    "sourceWidth": 1570,
+    "imageWidth": 2046.40625,
+    "overflow": "hidden"
+  },
+  "sourceChecks": [
+    {
+      "scene": "workshop",
+      "duration": 7
+    },
+    {
+      "scene": "integrations",
+      "duration": 10
+    },
+    {
+      "scene": "custom",
+      "duration": 12
+    },
+    {
+      "scene": "assistant",
+      "duration": 10
+    },
+    {
+      "scene": "statistics",
+      "duration": 6
+    },
+    {
+      "scene": "header",
+      "duration": 7
+    },
+    {
+      "scene": "ending",
+      "duration": 7
+    }
+  ],
+  "results": [
+    {
+      "name": "Intro",
+      "time": 7.935377,
+      "duration": 112.666667,
+      "width": 1920,
+      "height": 1080,
+      "dropped": 1,
+      "frames": 481,
+      "muted": false
+    },
+    {
+      "name": "Community Workshop",
+      "time": 11.416263,
+      "duration": 112.666667,
+      "width": 1920,
+      "height": 1080,
+      "dropped": 1,
+      "frames": 631,
+      "muted": false
+    },
+    {
+      "name": "Custom Widgets v2",
+      "time": 28.331292,
+      "duration": 112.666667,
+      "width": 1920,
+      "height": 1080,
+      "dropped": 1,
+      "frames": 877,
+      "muted": false
+    },
+    {
+      "name": "Custom Widget examples",
+      "time": 35.194101,
+      "duration": 112.666667,
+      "width": 1920,
+      "height": 1080,
+      "dropped": 1,
+      "frames": 1034,
+      "muted": false
+    },
+    {
+      "name": "Homarr Assistant",
+      "time": 41.390845,
+      "duration": 112.666667,
+      "width": 1920,
+      "height": 1080,
+      "dropped": 1,
+      "frames": 1313,
+      "muted": false
+    },
+    {
+      "name": "New drag-and-drop",
+      "time": 50.417635,
+      "duration": 112.666667,
+      "width": 1920,
+      "height": 1080,
+      "dropped": 1,
+      "frames": 1633,
+      "muted": false
+    },
+    {
+      "name": "Cmd-click multi-select",
+      "time": 53.488274,
+      "duration": 112.666667,
+      "width": 1920,
+      "height": 1080,
+      "dropped": 1,
+      "frames": 1966,
+      "muted": false
+    },
+    {
+      "name": "Customized header",
+      "time": 95.578972,
+      "duration": 112.666667,
+      "width": 1920,
+      "height": 1080,
+      "dropped": 1,
+      "frames": 2146,
+      "muted": false
+    },
+    {
+      "name": "Workshop · Merch",
+      "time": 110.554464,
+      "duration": 112.666667,
+      "width": 1920,
+      "height": 1080,
+      "dropped": 1,
+      "frames": 2445,
+      "muted": false
+    }
+  ],
+  "errors": []
+}

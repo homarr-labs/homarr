@@ -1,0 +1,382 @@
+[
+  {
+    "asset": "assets/integrations/00.svg",
+    "name": "SABnzbd"
+  },
+  {
+    "asset": "assets/integrations/03.svg",
+    "name": "Transmission"
+  },
+  {
+    "asset": "assets/integrations/06.svg",
+    "name": "Slskd"
+  },
+  {
+    "asset": "assets/integrations/09.svg",
+    "name": "Lidarr"
+  },
+  {
+    "asset": "assets/integrations/12.svg",
+    "name": "Bazarr"
+  },
+  {
+    "asset": "assets/integrations/15.svg",
+    "name": "Plex"
+  },
+  {
+    "asset": "assets/integrations/18.svg",
+    "name": "Overseerr"
+  },
+  {
+    "asset": "assets/integrations/21.svg",
+    "name": "Technitium DNS"
+  },
+  {
+    "asset": "assets/integrations/24.png",
+    "name": "Dash."
+  },
+  {
+    "asset": "assets/integrations/27.svg",
+    "name": "Proxmox"
+  },
+  {
+    "asset": "assets/integrations/30.svg",
+    "name": "OPNsense"
+  },
+  {
+    "asset": "assets/integrations/33.svg",
+    "name": "iCal"
+  },
+  {
+    "asset": "assets/integrations/36.svg",
+    "name": "Synology DiskStation"
+  },
+  {
+    "asset": "assets/integrations/39.svg",
+    "name": "Immich"
+  },
+  {
+    "asset": "assets/integrations/42.svg",
+    "name": "Tracearr"
+  },
+  {
+    "asset": "assets/integrations/45.svg",
+    "name": "Audiobookshelf"
+  },
+  {
+    "asset": "assets/integrations/48.svg",
+    "name": "PeaNUT"
+  },
+  {
+    "asset": "assets/integrations/51.svg",
+    "name": "Traefik"
+  },
+  {
+    "asset": "assets/integrations/54.svg",
+    "name": "llama.cpp"
+  },
+  {
+    "asset": "assets/integrations/01.svg",
+    "name": "NZBGet"
+  },
+  {
+    "asset": "assets/integrations/04.svg",
+    "name": "qBittorrent"
+  },
+  {
+    "asset": "assets/integrations/07.svg",
+    "name": "Sonarr"
+  },
+  {
+    "asset": "assets/integrations/10.png",
+    "name": "Readarr"
+  },
+  {
+    "asset": "assets/integrations/13.svg",
+    "name": "Jellyfin"
+  },
+  {
+    "asset": "assets/integrations/16.svg",
+    "name": "Jellyseerr"
+  },
+  {
+    "asset": "assets/integrations/19.svg",
+    "name": "Pi-hole"
+  },
+  {
+    "asset": "assets/integrations/22.svg",
+    "name": "Home Assistant"
+  },
+  {
+    "asset": "assets/integrations/25.svg",
+    "name": "Glances"
+  },
+  {
+    "asset": "assets/integrations/28.svg",
+    "name": "Nextcloud"
+  },
+  {
+    "asset": "assets/integrations/31.svg",
+    "name": "ntfy"
+  },
+  {
+    "asset": "assets/integrations/34.svg",
+    "name": "Anchor"
+  },
+  {
+    "asset": "assets/integrations/37.svg",
+    "name": "Unraid"
+  },
+  {
+    "asset": "assets/integrations/40.svg",
+    "name": "Paperless-ngx"
+  },
+  {
+    "asset": "assets/integrations/43.png",
+    "name": "Speedtest Tracker"
+  },
+  {
+    "asset": "assets/integrations/46.svg",
+    "name": "Navidrome"
+  },
+  {
+    "asset": "assets/integrations/49.svg",
+    "name": "Beszel"
+  },
+  {
+    "asset": "assets/integrations/52.png",
+    "name": "ArchiveTeam Warrior"
+  },
+  {
+    "asset": "assets/integrations/02.svg",
+    "name": "Deluge"
+  },
+  {
+    "asset": "assets/integrations/05.svg",
+    "name": "Aria2"
+  },
+  {
+    "asset": "assets/integrations/08.svg",
+    "name": "Radarr"
+  },
+  {
+    "asset": "assets/integrations/11.svg",
+    "name": "Prowlarr"
+  },
+  {
+    "asset": "assets/integrations/14.svg",
+    "name": "Emby"
+  },
+  {
+    "asset": "assets/integrations/17.svg",
+    "name": "Seerr"
+  },
+  {
+    "asset": "assets/integrations/20.svg",
+    "name": "AdGuard Home"
+  },
+  {
+    "asset": "assets/integrations/23.svg",
+    "name": "OpenMediaVault"
+  },
+  {
+    "asset": "assets/integrations/26.png",
+    "name": "Tdarr"
+  },
+  {
+    "asset": "assets/integrations/29.png",
+    "name": "Unifi Controller"
+  },
+  {
+    "asset": "assets/integrations/32.svg",
+    "name": "Gotify"
+  },
+  {
+    "asset": "assets/integrations/35.svg",
+    "name": "TrueNAS"
+  },
+  {
+    "asset": "assets/integrations/38.svg",
+    "name": "Coolify"
+  },
+  {
+    "asset": "assets/integrations/41.svg",
+    "name": "PatchMon"
+  },
+  {
+    "asset": "assets/integrations/44.svg",
+    "name": "Uptime Kuma"
+  },
+  {
+    "asset": "assets/integrations/47.svg",
+    "name": "Umami"
+  },
+  {
+    "asset": "assets/integrations/50.svg",
+    "name": "Gluetun"
+  },
+  {
+    "asset": "assets/integrations/53.svg",
+    "name": "What's Up Docker"
+  },
+  {
+    "name": "Autobrr",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/autobrr.svg",
+    "asset": "assets/ultimate/integrations/0.svg"
+  },
+  {
+    "name": "Jellystat",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/jellystat.svg",
+    "asset": "assets/ultimate/integrations/1.svg"
+  },
+  {
+    "name": "Scrutiny",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/scrutiny.svg",
+    "asset": "assets/ultimate/integrations/2.svg"
+  },
+  {
+    "name": "Tube Archivist",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/tube-archivist.png",
+    "asset": "assets/ultimate/integrations/3.png"
+  },
+  {
+    "name": "Frigate",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/frigate.svg",
+    "asset": "assets/ultimate/integrations/4.svg"
+  },
+  {
+    "name": "Komga",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/komga.svg",
+    "asset": "assets/ultimate/integrations/5.svg"
+  },
+  {
+    "name": "NetAlertX",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/netalertx.svg",
+    "asset": "assets/ultimate/integrations/6.svg"
+  },
+  {
+    "name": "Jackett",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/jackett.svg",
+    "asset": "assets/ultimate/integrations/7.svg"
+  },
+  {
+    "name": "Your Spotify",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/your-spotify.svg",
+    "asset": "assets/ultimate/integrations/8.svg"
+  },
+  {
+    "name": "RomM",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/romm.svg",
+    "asset": "assets/ultimate/integrations/9.svg"
+  },
+  {
+    "name": "Homebox",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/homebox.svg",
+    "asset": "assets/ultimate/integrations/10.svg"
+  },
+  {
+    "name": "Mealie",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/mealie.svg",
+    "asset": "assets/ultimate/integrations/11.svg"
+  },
+  {
+    "name": "xTeVe",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/xteve.png",
+    "asset": "assets/ultimate/integrations/12.png"
+  },
+  {
+    "name": "Unmanic",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/unmanic.png",
+    "asset": "assets/ultimate/integrations/13.png"
+  },
+  {
+    "name": "Syncthing Relay",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/syncthing.svg",
+    "asset": "assets/ultimate/integrations/14.svg"
+  },
+  {
+    "name": "Stash",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/stash.svg",
+    "asset": "assets/ultimate/integrations/15.svg"
+  },
+  {
+    "name": "Prometheus",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/prometheus.svg",
+    "asset": "assets/ultimate/integrations/16.svg"
+  },
+  {
+    "name": "Plant-it",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/plant-it.png",
+    "asset": "assets/ultimate/integrations/17.png"
+  },
+  {
+    "name": "Netdata",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/netdata.svg",
+    "asset": "assets/ultimate/integrations/18.svg"
+  },
+  {
+    "name": "MySpeed",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/myspeed.svg",
+    "asset": "assets/ultimate/integrations/19.svg"
+  },
+  {
+    "name": "FileFlows",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/fileflows.svg",
+    "asset": "assets/ultimate/integrations/20.svg"
+  },
+  {
+    "name": "Trilium",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/trilium.svg",
+    "asset": "assets/ultimate/integrations/21.svg"
+  },
+  {
+    "name": "Tandoor",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/tandoor-recipes.svg",
+    "asset": "assets/ultimate/integrations/22.svg"
+  },
+  {
+    "name": "Spoolman",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/spoolman.svg",
+    "asset": "assets/ultimate/integrations/23.svg"
+  },
+  {
+    "name": "Miniflux",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/miniflux.svg",
+    "asset": "assets/ultimate/integrations/24.svg"
+  },
+  {
+    "name": "Maintainerr",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/maintainerr.svg",
+    "asset": "assets/ultimate/integrations/25.svg"
+  },
+  {
+    "name": "Linkwarden",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/linkwarden.png",
+    "asset": "assets/ultimate/integrations/26.png"
+  },
+  {
+    "name": "Karakeep",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/karakeep.svg",
+    "asset": "assets/ultimate/integrations/27.svg"
+  },
+  {
+    "name": "Healthchecks",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/healthchecks.svg",
+    "asset": "assets/ultimate/integrations/28.svg"
+  },
+  {
+    "name": "Gatus",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/gatus.svg",
+    "asset": "assets/ultimate/integrations/29.svg"
+  },
+  {
+    "name": "Changedetection.io",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/changedetection.svg",
+    "asset": "assets/ultimate/integrations/30.svg"
+  },
+  {
+    "name": "Caddy",
+    "url": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/caddy.svg",
+    "asset": "assets/ultimate/integrations/31.svg"
+  }
+]

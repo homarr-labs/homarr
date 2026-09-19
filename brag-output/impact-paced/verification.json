@@ -1,0 +1,171 @@
+{
+  "intro": {
+    "title": [
+      {
+        "text": "Let's talk",
+        "opacity": "1"
+      },
+      {
+        "text": "about",
+        "opacity": "1"
+      },
+      {
+        "text": "Homarr v2",
+        "opacity": "1"
+      }
+    ],
+    "speed": [
+      70,
+      70,
+      70
+    ],
+    "missingImages": []
+  },
+  "integrations": {
+    "count": 32,
+    "missing": []
+  },
+  "timer": {
+    "width": 490,
+    "height": 258,
+    "src": "assets/new-widgets/timer.mp4"
+  },
+  "statistics": true,
+  "sourceChecks": [
+    {
+      "scene": "intro",
+      "hasHalo": false
+    },
+    {
+      "scene": "workshop",
+      "hasHalo": false
+    },
+    {
+      "scene": "integrations",
+      "hasHalo": false
+    },
+    {
+      "scene": "custom",
+      "hasHalo": false
+    },
+    {
+      "scene": "assistant",
+      "hasHalo": false
+    },
+    {
+      "scene": "widgets",
+      "hasHalo": false
+    },
+    {
+      "scene": "statistics",
+      "hasHalo": false
+    },
+    {
+      "scene": "ending",
+      "hasHalo": false
+    }
+  ],
+  "results": [
+    {
+      "name": "Intro",
+      "time": 4.367017,
+      "duration": 116.666667,
+      "width": 1920,
+      "height": 1080,
+      "dropped": 0,
+      "frames": 267,
+      "muted": false
+    },
+    {
+      "name": "32 new integrations",
+      "time": 18.424508,
+      "duration": 116.666667,
+      "width": 1920,
+      "height": 1080,
+      "dropped": 0,
+      "frames": 538,
+      "muted": false
+    },
+    {
+      "name": "Create a Custom Widget",
+      "time": 26.439031,
+      "duration": 116.666667,
+      "width": 1920,
+      "height": 1080,
+      "dropped": 0,
+      "frames": 790,
+      "muted": false
+    },
+    {
+      "name": "Assistant · Fast + free",
+      "time": 40.282298,
+      "duration": 116.666667,
+      "width": 1920,
+      "height": 1080,
+      "dropped": 1,
+      "frames": 1122,
+      "muted": false
+    },
+    {
+      "name": "New drag-and-drop",
+      "time": 48.144103,
+      "duration": 116.666667,
+      "width": 1920,
+      "height": 1080,
+      "dropped": 6,
+      "frames": 1426,
+      "muted": false
+    },
+    {
+      "name": "Cmd-click multi-select",
+      "time": 51.285554,
+      "duration": 116.666667,
+      "width": 1920,
+      "height": 1080,
+      "dropped": 10,
+      "frames": 1747,
+      "muted": false
+    },
+    {
+      "name": "New widgets",
+      "time": 74.057438,
+      "duration": 116.666667,
+      "width": 1920,
+      "height": 1080,
+      "dropped": 17,
+      "frames": 1896,
+      "muted": false
+    },
+    {
+      "name": "Statistics",
+      "time": 82.105153,
+      "duration": 116.666667,
+      "width": 1920,
+      "height": 1080,
+      "dropped": 17,
+      "frames": 2048,
+      "muted": false
+    },
+    {
+      "name": "Customized header",
+      "time": 94.15247,
+      "duration": 116.666667,
+      "width": 1920,
+      "height": 1080,
+      "dropped": 17,
+      "frames": 2262,
+      "muted": false
+    },
+    {
+      "name": "Workshop · Merch",
+      "time": 108.07747,
+      "duration": 116.666667,
+      "width": 1920,
+      "height": 1080,
+      "dropped": 17,
+      "frames": 2532,
+      "muted": false
+    }
+  ],
+  "errors": []
+}

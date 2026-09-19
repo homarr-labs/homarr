@@ -1,0 +1,68 @@
+{
+  "intro": {
+    "title": [
+      {
+        "text": "Let's talk",
+        "opacity": "1",
+        "rect": {
+          "x": 72,
+          "y": 197,
+          "width": 735,
+          "height": 114.46875,
+          "top": 197,
+          "right": 807,
+          "bottom": 311.46875,
+          "left": 72
+        }
+      },
+      {
+        "text": "about",
+        "opacity": "1",
+        "rect": {
+          "x": 72,
+          "y": 314,
+          "width": 735,
+          "height": 114.46875,
+          "top": 314,
+          "right": 807,
+          "bottom": 428.46875,
+          "left": 72
+        }
+      },
+      {
+        "text": "Homarr v2",
+        "opacity": "1",
+        "rect": {
+          "x": 72,
+          "y": 438,
+          "width": 735,
+          "height": 164.4375,
+          "top": 438,
+          "right": 807,
+          "bottom": 602.4375,
+          "left": 72
+        }
+      }
+    ],
+    "speed": [
+      70,
+      70,
+      70
+    ],
+    "missingImages": []
+  },
+  "firstPlayback": {
+    "time": 7.467625,
+    "duration": 76,
+    "width": 1920,
+    "height": 1080,
+    "dropped": 0,
+    "frames": 453
+  },
+  "widgets": {
+    "time": 51.500107,
+    "dropped": 0,
+    "frames": 908
+  },
+  "errors": []
+}

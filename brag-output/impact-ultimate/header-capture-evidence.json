@@ -1,0 +1,66 @@
+{
+  "board": "dashboard",
+  "features": [
+    "boardSwitcher",
+    "search",
+    "assistant",
+    "docker",
+    "themeToggle",
+    "settings",
+    "boardEdit"
+  ],
+  "preferences": {
+    "version": 3,
+    "visible": true,
+    "searchDisplay": "icon",
+    "logoDisplay": "logoAndText",
+    "zones": {
+      "left": [
+        {
+          "type": "builtin",
+          "id": "logo"
+        },
+        {
+          "type": "board",
+          "boardId": "ea6usxdwsjsbm23mwfy3iy81"
+        }
+      ],
+      "center": [
+        {
+          "type": "builtin",
+          "id": "boardSwitcher"
+        },
+        {
+          "type": "builtin",
+          "id": "search"
+        },
+        {
+          "type": "builtin",
+          "id": "assistant"
+        }
+      ],
+      "right": [
+        {
+          "type": "builtin",
+          "id": "docker"
+        },
+        {
+          "type": "builtin",
+          "id": "themeToggle"
+        },
+        {
+          "type": "builtin",
+          "id": "settings"
+        },
+        {
+          "type": "builtin",
+          "id": "boardEdit"
+        },
+        {
+          "type": "builtin",
+          "id": "user"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,12 @@
+[
+  {
+    "outputTime": 48,
+    "originalTime": 49,
+    "ssim": 0.998498
+  },
+  {
+    "outputTime": 51,
+    "originalTime": 53.5,
+    "ssim": 0.998725
+  }
+]

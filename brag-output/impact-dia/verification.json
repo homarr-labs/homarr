@@ -1,0 +1,84 @@
+{
+  "intro": {
+    "states": {
+      "0": {
+        "opacity": 1,
+        "clip": "inset(0px 100% 0px 0px)",
+        "bandTransform": "matrix(1, 0, 0, 1, -240, 0)"
+      },
+      "8": {
+        "opacity": 0,
+        "clip": "inset(0px 0% 0px 0px)",
+        "bandTransform": "matrix(1, 0, 0, 1, 920, 0)"
+      },
+      "0.8": {
+        "opacity": 1,
+        "clip": "inset(0px 100% 0px 0px)",
+        "bandTransform": "matrix(1, 0, 0, 1, -240, 0)"
+      },
+      "1.09": {
+        "opacity": 1,
+        "clip": "inset(0px 100% 0px 0px)",
+        "bandTransform": "matrix(1, 0, 0, 1, -240, 0)"
+      },
+      "1.1": {
+        "opacity": 1,
+        "clip": "inset(0px 100% 0px 0px)",
+        "bandTransform": "matrix(1, 0, 0, 1, -240, 0)"
+      },
+      "2.15": {
+        "opacity": 1,
+        "clip": "inset(0px 50% 0px 0px)",
+        "bandTransform": "matrix(1, 0, 0, 1, 340, 0)"
+      },
+      "3.2": {
+        "opacity": 1,
+        "clip": "inset(0px 0% 0px 0px)",
+        "bandTransform": "matrix(1, 0, 0, 1, 920, 0)"
+      },
+      "3.49": {
+        "opacity": 1,
+        "clip": "inset(0px 0% 0px 0px)",
+        "bandTransform": "matrix(1, 0, 0, 1, 920, 0)"
+      },
+      "3.75": {
+        "opacity": 0.5,
+        "clip": "inset(0px 0% 0px 0px)",
+        "bandTransform": "matrix(1, 0, 0, 1, 920, 0)"
+      },
+      "4.05": {
+        "opacity": 0,
+        "clip": "inset(0px 0% 0px 0px)",
+        "bandTransform": "matrix(1, 0, 0, 1, 920, 0)"
+      }
+    },
+    "columnY": {
+      "4": -774.7017822265625,
+      "5": -964.877197265625,
+      "6": -1155.0526123046875
+    },
+    "timelineDuration": 9,
+    "text": "Announcing Homarr v2",
+    "logoLoaded": true,
+    "columns": 8,
+    "sparkles": 12,
+    "wordmarkColor": "rgb(250, 83, 82)"
+  },
+  "ending": {
+    "title": "Thank you.",
+    "prize": "We’re starting a Workshop contest.Our team favorites and active community members will get exclusive Homarr swag. Stay tuned.",
+    "thanks": "Funded by your donations. Thank you.",
+    "sub": "We’re excited to see what you’ll build.",
+    "kicker": "TO CELEBRATE THIS MILESTONE"
+  },
+  "playback": {
+    "time": 4.172698,
+    "duration": 112.666667,
+    "width": 1920,
+    "height": 1080,
+    "dropped": 0,
+    "frames": 256,
+    "muted": false
+  },
+  "errors": []
+}

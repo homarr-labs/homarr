@@ -1,0 +1,3 @@
+Three alternatives for technical users. A: 24s release notes with upgrade constraint. B: 24s focused widget workbench walkthrough. C: 18s UI reel with feature names only. A/B silent; C UI clicks only. Screenshots and drag recording are existing real release-blog/demo captures; widget crops are earlier audit demo captures. Camera movement is editorial, not newly recorded interaction. Claims checked against the release article. Existing cuts preserved.
+
+Validation: all three Hyperframes checks passed; encoded contact sheets reviewed. Final MP4s independently probed at 1920x1080 / 30fps: A/B 720 frames each, C 540 frames. Posters are baked into frame zero. No application tests or builds were needed.
