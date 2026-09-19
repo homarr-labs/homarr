@@ -95,8 +95,8 @@ const COMPACT_PROMPT_EXAMPLES = [
 
 const CUSTOM_WIDGET_CONTRACT_RULES = `Contract check before JSX:
 - Preserve each source's shape: HTTP keeps baseUrl/networkScope/auth; integrations keep integrationKind/integrationId. Never invent credentials or widen auth.
-- Paths are slash-prefixed and use \`{option:name}\`/\`{param:name}\` with no \`$\`; query/body objects use \`{\"id\":{\"$option\":\"name\"}}\`/\`{\"id\":{\"$param\":\"name\"}}\`. \`$param\` is manual-only; \`$option\` may drive loads. Actions stay manual; preserve confirmation, permission, and invalidation.
-- Static choices use scalar label/value pairs; dynamic choices use choicesFrom. Structured options use control: \"json\" and render fields or JSON.stringify(value), never objects as JSX children. Controls must feed their declared request.
+- Paths are slash-prefixed and use \`{option:name}\`/\`{param:name}\` with no \`$\`; query/body objects use \`{"id":{"$option":"name"}}\`/\`{"id":{"$param":"name"}}\`. \`$param\` is manual-only; \`$option\` may drive loads. Actions stay manual; preserve confirmation, permission, and invalidation.
+- Static choices use scalar label/value pairs; dynamic choices use choicesFrom. Structured options use control: "json" and render fields or JSON.stringify(value), never objects as JSX children. Controls must feed their declared request.
 - Guard nullable arrays with (value ?? []).map(...) or (value ?? []).filter(...); preserve the response envelope and loading/error/empty/success states. Use the safe Date helper with a documented timezone; otherwise omit its timezone argument and label. Guard timestamps and use theme-adaptive body/text tokens.`;
 
 const CUSTOM_WIDGET_VISUAL_QUALITY_GUIDANCE = `Visual quality for create jobs:

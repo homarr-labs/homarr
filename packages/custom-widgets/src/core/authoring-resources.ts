@@ -91,7 +91,7 @@ Auth is \`none\`, \`bearer\`, \`basic\`, \`{ "type": "apiKeyHeader", "name": "X-
 
 Use stable real URLs for public APIs and clear suggested URLs for self-hosted services. Homarr collects the installer's server URL, network scope, and credentials as source setup; credentials remain outside the manifest.
 
-Binding syntax is location-specific: path strings use \`{option:name}\` or \`{param:name}\` with no \`$\` (for example, \`/items/{option:itemId}\`); query/body objects use \`{\"$option\":\"name\"}\` or \`{\"$param\":\"name\"}\`. \`$param\` is manual-only; \`$option\` may drive loads. Constants stay primitive (\`take: 10\`); names and types are inferred.
+Binding syntax is location-specific: path strings use \`{option:name}\` or \`{param:name}\` with no \`$\` (for example, \`/items/{option:itemId}\`); query/body objects use \`{"$option":"name"}\` or \`{"$param":"name"}\`. \`$param\` is manual-only; \`$option\` may drive loads. Constants stay primitive (\`take: 10\`); names and types are inferred.
 
 Every option has \`label\`, \`control\`, and \`default\`. Optional fields are \`description\`, \`choices\`, \`choicesFrom\`, \`min\`, \`max\`, \`step\`, \`advanced\`, and \`group\`.
 `,
@@ -165,7 +165,7 @@ Return one fenced \`json\` block with the complete definition; keep evidence pro
   use \`type: "integration"\` and \`integrationKind\`. Homarr holds credentials.
 - For saved integrations, discover HTTP kinds and full-access entries with \`integration_getKinds\`/\`integration_all\`, bind
   \`integrationId\` before preview, omit URL/auth fields, and keep non-GET requests as actions.
-- Requests use slash-prefixed paths: path strings use \`{option:name}\` or \`{param:name}\`; query/body objects use \`{\"$option\":\"name\"}\` or \`{\"$param\":\"name\"}\`. Loads use \`trigger: "load"\`; explicit manual helpers use \`trigger: "manual"\`.
+- Requests use slash-prefixed paths: path strings use \`{option:name}\` or \`{param:name}\`; query/body objects use \`{"$option":"name"}\` or \`{"$param":"name"}\`. Loads use \`trigger: "load"\`; explicit manual helpers use \`trigger: "manual"\`.
 - Actions stay manual; preserve \`confirmation\`, \`permission\`, and \`invalidates\`; DELETE requires full permission and confirmation. \`$param\` is manual-only; \`$option\` may drive load queries.
 - Read load data from \`data.requestId\`, check \`status.requestId?.loading\` and \`status.requestId?.ok === false\`, and show
   loading, error, empty, and success states with \`RefreshButton requestId="..."\`. \`SubFetch\` owns manual loading/error/retry
