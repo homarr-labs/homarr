@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { jsonSchema, simulateReadableStream, stepCountIs, streamText, tool } from "ai";
+import type { UIMessage } from "ai";
 import { MockLanguageModelV4 } from "ai/test";
 import { parse, stringify } from "superjson";
 
@@ -7,6 +8,7 @@ import { getCustomWidgetSkillEntrypoint } from "@homarr/custom-widgets/authoring
 import { getCustomWidgetJsonSchema } from "@homarr/custom-widgets/core";
 
 import { repairAssistantToolInput } from "./assistant-tool-input-repair";
+import { shouldRequireCustomWidgetAuthoringTool } from "./custom-widget-authoring-context";
 
 const usage = {
   inputTokens: { total: 10, noCache: 10, cacheRead: 0, cacheWrite: 0 },
@@ -20,6 +22,77 @@ const finish = (unified: "stop" | "tool-calls") => ({
 });
 
 describe("Custom Widget assistant tool loop", () => {
+  it("requires the next lifecycle tool after valid discovery instead of accepting an empty stop", async () => {
+    const noInputSchema = jsonSchema({ type: "object", properties: {}, additionalProperties: false });
+    const prompt = "Create a Homarr Custom JSX v2 dashboard widget and save it";
+    const userMessages: UIMessage[] = [
+      {
+        id: "widget-request",
+        role: "user",
+        parts: [{ type: "text", text: prompt }],
+      },
+    ];
+    const activeTools = ["customWidget_getComponents", "customWidget_validateTemplate"] as const;
+    const model = new MockLanguageModelV4({
+      doStream: [
+        {
+          stream: simulateReadableStream({
+            chunks: [
+              { type: "stream-start" as const, warnings: [] },
+              {
+                type: "tool-call" as const,
+                toolCallId: "components-call",
+                toolName: "customWidget_getComponents",
+                input: "{}",
+              },
+              finish("tool-calls"),
+            ],
+            chunkDelayInMs: null,
+          }),
+        },
+        {
+          stream: simulateReadableStream({
+            chunks: [
+              { type: "stream-start" as const, warnings: [] },
+              {
+                type: "tool-call" as const,
+                toolCallId: "validate-call",
+                toolName: "customWidget_validateTemplate",
+                input: "{}",
+              },
+              finish("tool-calls"),
+            ],
+            chunkDelayInMs: null,
+          }),
+        },
+      ],
+    });
+
+    const result = streamText({
+      model,
+      messages: [{ role: "user", content: prompt }],
+      tools: {
+        customWidget_getComponents: tool({
+          inputSchema: noInputSchema,
+          execute: () => ({ components: [] }),
+        }),
+        customWidget_validateTemplate: tool({
+          inputSchema: noInputSchema,
+          execute: () => ({ valid: true }),
+        }),
+      },
+      prepareStep: ({ steps }) =>
+        shouldRequireCustomWidgetAuthoringTool(activeTools, steps, [], userMessages)
+          ? { activeTools, toolChoice: "required" }
+          : { activeTools },
+      stopWhen: stepCountIs(2),
+    });
+
+    await result.consumeStream();
+    expect(model.doStreamCalls).toHaveLength(2);
+    expect(model.doStreamCalls[1]?.toolChoice).toEqual({ type: "required" });
+  });
+
   it("feeds the compact skill entrypoint and an explicitly requested schema into the next model step", async () => {
     const streamErrors = vi.fn();
     const model = new MockLanguageModelV4({
