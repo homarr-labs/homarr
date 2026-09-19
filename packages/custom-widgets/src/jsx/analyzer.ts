@@ -29,7 +29,7 @@ export type { CustomJsxTemplateDiagnostic } from "./analyzer-diagnostics";
 
 const JsxParser = Parser.extend(jsx());
 const requestStatusLabels = new Set(["loading", "success", "error"]);
-const unsupportedRequestStatusFields = new Set(["isLoading", "isError", "isFetching"]);
+const unsupportedRequestStatusFields = new Set(["isLoading", "isError", "isFetching", "fetching"]);
 
 export function addCustomJsxDiagnosticSourceExcerpts(
   template: string,

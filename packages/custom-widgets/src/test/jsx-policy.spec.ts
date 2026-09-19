@@ -43,16 +43,17 @@ describe("shared Custom JSX policy", () => {
   });
 
   test.each([
-    ["status.list.isLoading", "isLoading"],
-    ["status.list?.isError", "isError"],
-    ['status["list"]["isFetching"]', "isFetching"],
-  ])("rejects unsupported request-status field %s", (expression, field) => {
+    ["status.list.isLoading", "status.list.isLoading"],
+    ["status.list?.isError", "status.list.isError"],
+    ['status["list"]["isFetching"]', "status.list.isFetching"],
+    ["status.series.fetching", "status.series.fetching"],
+  ])("rejects unsupported request-status field %s", (expression, fieldPath) => {
     const diagnostics = validateCustomJsxTemplate(`<Text>{${expression} ? "Busy" : "Ready"}</Text>`);
     expect(diagnostics).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           severity: "error",
-          message: expect.stringContaining(`INVALID_STATUS_FIELD: status.list.${field}`),
+          message: expect.stringContaining(`INVALID_STATUS_FIELD: ${fieldPath}`),
         }),
       ]),
     );
