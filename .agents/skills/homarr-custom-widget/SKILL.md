@@ -16,18 +16,21 @@ Author one widget with release-matched context; finish validation, evidence, per
 Return one fenced `json` block with the complete definition; keep evidence prose outside it. The definition has keyed
 `sources`, `requests`, `template`, and optional `options`; actions are requests with `kind: "action"`.
 
-- `sources.default` is required. HTTP sources have `baseUrl`, `networkScope`, and credential-free `auth`; saved sources
-  use `type: "integration"` and `integrationKind`. Homarr holds credentials.
-- For saved integrations, discover HTTP kinds and full-access entries with `integration_getKinds`/`integration_all`, bind
-  `integrationId` before preview, omit URL/auth fields, and keep non-GET requests as actions.
-- Requests use slash-prefixed paths: path strings use `{option:name}` or `{param:name}`; query/body objects use `{"$option":"name"}` or `{"$param":"name"}`. Loads use `trigger: "load"`; explicit manual helpers use `trigger: "manual"`.
-- Actions stay manual; preserve `confirmation`, `permission`, and `invalidates`; DELETE requires full permission and confirmation. `$param` is manual-only; `$option` may drive load queries.
-- Read load data from `data.requestId`, check `status.requestId?.loading` and `status.requestId?.ok === false`, and show
-  loading, error, empty, and success states with `RefreshButton requestId="..."`. `SubFetch` owns manual loading/error/retry
-  and receives `(result, metadata)`; map the response array, not its envelope.
-- Options have `label`, `control`, and `default`; dependent controls declare a default and `resetKey={inputs.dependency}`.
-  Remove controls that do not feed an option, request, or runtime helper. Guard arrays/nested values and use `??` for
-  truthful fallbacks. Preserve documented timezone values; use UTC only when the contract says UTC.
+- `sources.default` is required. HTTP has `baseUrl`, `networkScope`, and credential-free `auth`; localhost/loopback requires
+  `networkScope: "loopback"`; never widen an explicit scope. Saved sources use `type: "integration"`/`integrationKind`;
+  Homarr holds credentials.
+- Saved integrations: discover kinds/full-access entries with `integration_getKinds`/`integration_all`, bind `integrationId`
+  before preview, omit URL/auth, and keep non-GET requests as actions.
+- Paths are slash-prefixed: strings use `{option:name}`/`{param:name}`; query/body uses `{"$option":"name"}`/`{"$param":"name"}`.
+  Loads use `trigger: "load"`; manual helpers use `trigger: "manual"`.
+- Actions stay manual; preserve `confirmation`, `permission`, and `invalidates`; DELETE requires full permission/confirmation.
+  `$param` is manual-only; `$option` may drive loads.
+- Read `data.requestId`; check `status.requestId?.loading`/`?.ok === false`; show loading/error/empty/success with
+  `RefreshButton`. `SubFetch` owns manual loading/error/retry, receives `(result, metadata)`; map the response array, not envelope.
+- Options have `label`, `control`, `default`; installation config is `options.name`, never `inputs`. Request-bound TextInput,
+  Select, NumberInput, Pagination use literal `bind` + default and manual `SubFetch params` map `inputs.<name>` to `$param`.
+  Dependent pagination uses `defaultValue={1}`/`resetKey={inputs.query}`. Remove controls with no option, request, or helper; guard arrays/nested with `??`;
+  preserve documented timezone values; use UTC only when the contract says UTC.
 - Templates are one expression: no imports, hooks, refs, raw HTML/events, browser requests, eval, recursion, IIFEs,
   statement blocks, or arbitrary functions. Use registered component names; `Icon` may alias `TablerIcon`. Keep hierarchy,
   theme tokens, useful states, and narrow/wide layouts purposeful.

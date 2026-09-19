@@ -94,10 +94,10 @@ const COMPACT_PROMPT_EXAMPLES = [
 ].join("\n");
 
 const CUSTOM_WIDGET_CONTRACT_RULES = `Contract check before JSX:
-- Preserve each source's shape: HTTP keeps baseUrl/networkScope/auth; integrations keep integrationKind/integrationId. Never invent credentials or widen auth.
-- Paths are slash-prefixed and use \`{option:name}\`/\`{param:name}\` with no \`$\`; query/body objects use \`{"id":{"$option":"name"}}\`/\`{"id":{"$param":"name"}}\`. \`$param\` is manual-only; \`$option\` may drive loads. Actions stay manual; preserve confirmation, permission, and invalidation.
-- Static choices use scalar label/value pairs; dynamic choices use choicesFrom. Structured options use control: "json" and render fields or JSON.stringify(value), never objects as JSX children. Controls must feed their declared request.
-- Guard nullable arrays with (value ?? []).map(...) or (value ?? []).filter(...); preserve the response envelope and loading/error/empty/success states. Use the safe Date helper with a documented timezone; otherwise omit its timezone argument and label. Guard timestamps and use theme-adaptive body/text tokens.`;
+- Preserve source shape/scope: HTTP baseUrl/networkScope/auth; localhost/loopback requires networkScope "loopback"; never widen scope. Integrations keep integrationKind/integrationId; never invent credentials.
+- Paths start with \`/\`; use \`{option:name}\`/\`{param:name}\` in paths and \`{"id":{"$option":"name"}}\`/\`{"id":{"$param":"name"}}\` in query/body. \`$param\` is manual-only; \`$option\` may load. Actions stay manual; preserve confirmation, permission, and invalidation.
+- Options are install config via options.name, never inputs; choices use scalar label/value or choicesFrom. Structured options use control: "json" and render fields or JSON.stringify(value), never object JSX children. Request-bound TextInput/Select/NumberInput/Pagination use literal bind + default; manual SubFetch params map inputs.<name> to matching $param.
+- Preserve each response envelope: q->{items:[...]} renders data.q.items; q->{result:null} checks data.q.result. Guard (value ?? []).map(...) and filter; show loading/error/empty/success. Use safe Date with a documented timezone, otherwise omit its timezone argument/label; guard timestamps; use theme-adaptive body/text tokens.`;
 
 const CUSTOM_WIDGET_VISUAL_QUALITY_GUIDANCE = `Visual quality for create jobs:
 - Give the widget a purposeful header with useful context and its primary status or action.
@@ -121,7 +121,7 @@ Requests are keyed by ID. Defaults are source "default", kind "query", method "G
 
 ${CUSTOM_WIDGET_CONTRACT_RULES}
 
-Options are keyed by name. Every option has label, control, and default. Dependent page: bind query/page, set page defaultValue={1}, resetKey={inputs.query}, min={1}; set both triggers manual and pass both inputs. Controls: text, textarea, number, switch, select, multiSelect, slider, date, time, color, icon, url, duration, timeZone, json. Select choices use \`"choices": [{"label":"...","value":"..."}]\`. Dynamic choices must use \`"choicesFrom": {"request":"requestId","itemsPath":"optional.path","valuePath":"id","labelPath":"name"}\`, never an object under \`choices\`. Options are configured outside the widget and read through \`options.name\`; a bound control writes only to \`inputs.name\` and never changes an option.
+Options are keyed by name; every option has label, control, and default. Controls: text, textarea, number, switch, select, multiSelect, slider, date, time, color, icon, url, duration, timeZone, json. Select choices use \`"choices": [{"label":"...","value":"..."}]\`; dynamic choices use \`"choicesFrom": {"request":"requestId","itemsPath":"optional.path","valuePath":"id","labelPath":"name"}\`.
 
 JSX reads data.requestId, status.requestId, options.name, and temporary inputs.name. A status has loading, ok, status, statusText, and error. Use bind="search" on supported controls and inputs.search in params. SubFetch invokes a manual query. With trigger="manual", it renders its own load button; pass a card or image as triggerContent with triggerAriaLabel to make that content launch the request. Never author onClick or a fetch callback. Its child callback is (result, meta), where meta has ok, status, statusText, loading=false, and no error because SubFetch renders loading/error states itself. Use expression callbacks for map, filter, sort, and SubFetch. Do not use imports, hooks, refs, raw HTML, event callbacks, fetch, eval, bigint, npm packages, authored const blocks, IIFEs, or recursion. Regex is only for bounded string matching/replacement. Do not embed secrets.
 
@@ -153,18 +153,18 @@ export const CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION =
   "Custom Widget tools are staged by the authoring lifecycle. Use only visible task-needed tools; successful phases expose the next typed tools without loading the full catalog.";
 
 export const CUSTOM_WIDGET_ASSISTANT_POLICY = `Custom Widget work:
-- Genuine provider/model, unavailable lifecycle service, or closed-workbench failure: stop and reuse context. Without lifecycle tools, return v2 with declared shape: HTTP keeps baseUrl/networkScope/auth; integrations keep integrationKind/optional integrationId; paths stay credential-free; add one Unverified: line. Never emit pseudo calls.
-- contextAlreadyLoaded is a cache hit: reuse the earlier result and continue; never stop, fall back, or restart discovery. phaseComplete advances to the next visible lifecycle tool; a staged gap is not a provider failure.
-- Start with customWidget_getSkill; load task-needed references, including compact schema once for a new manifest and security once for auth or mutations. Do not load full catalog; Lifecycle tools run one at a time and change phase. Bind full-access saved integrations before preview; keep credentials out.
-- Keep complexity proportional. Preserve migration intent, shape, and visible behavior; add choicesFrom/charts/actions only when needed. Use clear labels, theme-safe colors, wrapping layouts; keep narrow/wide usable.
+- Genuine provider/model, unavailable lifecycle service, or closed-workbench failure: stop and reuse context. Without lifecycle tools return v2: HTTP keeps baseUrl/networkScope/auth; integrations keep integrationKind/optional integrationId; paths stay credential-free; add one Unverified: line; never emit pseudo calls.
+- contextAlreadyLoaded is a cache hit: reuse the earlier result and continue; never stop/fallback/restart discovery. phaseComplete advances to the next visible tool; a staged gap is not provider failure.
+- Start with customWidget_getSkill; load task-needed references: compact schema once for a new manifest and security once for auth or mutations. Do not load full catalog. Lifecycle tools run one at a time and change phase; bind full-access integrations before preview; keep credentials out.
+- Keep complexity proportional; preserve migration intent, shape, and visible behavior. Add choicesFrom/charts/actions only when needed; use clear labels, theme-safe colors, wrapping layouts; keep narrow/wide usable.
 - Find registered Mantine components with customWidget_findComponents; batch customWidget_getComponents, then customWidget_validateTemplate. Use customWidget_getComponent for unknown props; Icon aliases TablerIcon.
 
 ${CUSTOM_WIDGET_CONTRACT_RULES}
 
-- Read loads through data.x/status.x and RefreshButton; status.x?.ok === false is the error condition and sibling failures stay independent. Manual queries use <SubFetch trigger="manual"> for loading/error/retry. Use literal IDs; reset pagination with defaultValue={1} and resetKey={inputs.query}; wire controls and remove dead ones.
-- Samples/previews are exact response envelopes. Render requested fields, map the wrapped array rather than its envelope, humanize numeric enums, follow the timestamp timezone rule, and Parenthesize mixed ??, &&, ||.
+- Read loads through data.x/status.x and RefreshButton; status.x?.ok === false is the error condition; sibling failures stay independent. Manual queries use <SubFetch trigger="manual"> for loading/error/retry. Use literal IDs; remove dead controls.
+- Samples/previews are exact response envelopes. Render requested fields; map the wrapped array rather than its envelope; humanize numeric enums; follow timestamp timezone; Parenthesize mixed ??, &&, ||.
 - Keep one JSX expression: no declarations, statement callbacks, imports, hooks, refs, raw HTML/events, browser requests, eval, recursion, IIFEs, or arbitrary functions. Do not shadow data/status/options/inputs. Use named Icon/TablerIcon; validate templates and fix unknown props before preview.
-- Pass tool objects to customWidget_previewCreate. Run every query/action and inspect shape, confirmation, permission, params, invalidation. On a concrete schema error, fix the named field, call customWidget_validateTemplate once to re-enter validation, then fresh previewCreate when visible. Changes to sources/requests/options require fresh previewCreate; JSX-only fixes use customWidget_previewReviseTemplate, which resets evidence. Retest; never revise byte-identical templates or reopen discovery for polish.
+- Pass tool objects to customWidget_previewCreate; run every query/action and inspect shape, confirmation, permission, params, invalidation. On a concrete schema error, fix its field, call customWidget_validateTemplate once, then fresh previewCreate when visible. Changes to sources/requests/options require fresh previewCreate; JSX-only fixes use customWidget_previewReviseTemplate, which resets evidence. Retest; never revise byte-identical templates or reopen discovery for polish.
 - Assistant wrapper: customWidget_validateTemplate and customWidget_previewReviseTemplate use templateLines; previewCreate takes the full definition (template or templateLines).
 - Persist via customWidget_createFromPreview/create. Never expose credentials or claim success without tool results.`;
 
