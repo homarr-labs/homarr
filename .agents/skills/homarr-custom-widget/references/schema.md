@@ -13,7 +13,7 @@ interface HomarrCustomWidgetV2 {
 }
 ```
 
-`sources.default` is required. HTTP source properties: `name?`, `baseUrl`, `networkScope`, and `auth?`:
+The object key `default` is the required source ID; `default` is not a property on a source. Source properties are `name?`, `baseUrl`, `networkScope`, and `auth?`:
 
 ```json
 {
@@ -40,12 +40,12 @@ interface HomarrCustomWidgetV2 {
 }
 ```
 
-`{"type":"integration","integrationKind":"sonarr","integrationId":"saved-id"}` reuses saved credentials. Select a kind with `integration_getKinds` (`supportsHttpRequests: true`) and a matching `integration_all` entry with `permissions.hasFullAccess`; bind its `id` before preview. Omit URL/auth fields. Exports omit `integrationId`. Paths append to the saved URL; non-GET requests must be actions.
+Saved sources use `{"type":"integration","integrationKind":"sonarr","integrationId":"saved-id"}`. Discover HTTP kinds with `integration_getKinds`, choose a full-access `integration_all` entry, and bind its ID before preview. Omit URL/auth; paths append to the saved URL, non-GET requests are actions, and exports omit `integrationId`.
 
 Auth is `none`, `bearer`, `basic`, `{ "type": "apiKeyHeader", "name": "X-Api-Key" }`, or `{ "type": "apiKeyQuery", "name": "api_key" }`. Requests default to source `default`, query/GET/load, inherited auth, and view permission. Use `trigger: "load"` for initial/current display, including option-bound data/status with `RefreshButton`; use `trigger: "manual"` only for explicit user-triggered queries or invocation params in `SubFetch`, `ActionButton`, or `ToggleSwitch`. Actions are manual/modify; preserve confirmation, permission, and invalidates. DELETE requires full permission and confirmation. No `load: false`.
 
-HTTP sources declare public URLs or self-hosted suggestions; installers configure their URL, network scope, and credentials separately.
+Use stable real URLs for public APIs and clear suggested URLs for self-hosted services. Homarr collects the installer's server URL, network scope, and credentials as source setup; credentials remain outside the manifest.
 
-Paths bind `{option:name}` and `{param:name}`; query/body references bind `{ "$option": "name" }` and `{ "$param": "name" }`. Use primitive constants (`take: 10`). `$param` is only for manual requests.
+Binding syntax is location-specific: path strings use `{option:name}` or `{param:name}` with no `$` (for example, `/items/{option:itemId}`); query/body objects use `{"$option":"name"}` or `{"$param":"name"}`. `$param` is manual-only; `$option` may drive loads. Constants stay primitive (`take: 10`); names and types are inferred.
 
-Options require `label`, `control`, and `default`. Optional fields: `description`, `choices`, `choicesFrom`, `min`, `max`, `step`, `advanced`, `group`.
+Every option has `label`, `control`, and `default`. Optional fields are `description`, `choices`, `choicesFrom`, `min`, `max`, `step`, `advanced`, and `group`.
