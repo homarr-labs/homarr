@@ -13,7 +13,7 @@ interface HomarrCustomWidgetV2 {
 }
 ```
 
-The object key `default` is the required source ID; `default` is not a property on a source. Source properties are `name?`, `baseUrl`, `networkScope`, and `auth?`:
+Key `default` is the required source ID, not a source property. Fields: `name?`, `baseUrl`, `networkScope`, `auth?`; localhost/loopback URLs require `networkScope: "loopback"`; never widen explicit scope:
 
 ```json
 {

@@ -2,7 +2,7 @@
 
 Templates read `data.requestId`, `status.requestId`, `options.name`, and temporary `inputs.name`. Status is `{ loading, ok, status, statusText, error }`. Render load queries directly from `data` and `status` with `RefreshButton`; never wrap them in `SubFetch`.
 
-`bind="search"` creates an in-memory input. It is never persisted. Supply invocation values only through `params`, for example:
+`bind` is temporary; manual request values go in `params` and map to `$param`:
 
 ```jsx
 <TextInput bind="search" label="Search" />
@@ -30,7 +30,7 @@ For compact numeric enums, index a literal label array with a fallback:
 <Text>{["Unknown", "Pending", "Ready"][(item.status ?? 1) - 1] ?? "Unknown"}</Text>
 ```
 
-Every stateful control must use `bind`, and its `inputs.<name>` value must feed a supported request/helper when it is meant to change remote data. For dependent pagination, declare `defaultValue={1}` and use `resetKey={inputs.search}` to restore page 1 when the query changes. If a control cannot affect the workflow through a binding, option, or runtime helper, render concise context instead of a dead control.
+Request-bound controls use literal `bind` plus a default (`defaultChecked` for Switch/Checkbox); pass `inputs.<name>` through manual `SubFetch params` to matching `$param`. Options are installation config via `options.name`, never `inputs`; dependent pagination uses `defaultValue={1}`/`resetKey={inputs.query}`. Remove dead controls.
 
 Callback parameters must not shadow the reserved roots `data`, `status`, `options`, or `inputs`. Use registered component names returned by discovery; `Icon` is an accepted alias for canonical `TablerIcon`. Never invent components such as `<IconFoo />`.
 

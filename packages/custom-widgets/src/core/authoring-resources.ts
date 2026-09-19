@@ -13,7 +13,7 @@ export const CUSTOM_WIDGET_SKILL_SOURCE_URL =
   "https://github.com/homarr-labs/homarr/tree/HEAD/.agents/skills/homarr-custom-widget";
 export const CUSTOM_WIDGET_SKILL_INSTALL_COMMAND =
   "npx skills add https://github.com/homarr-labs/homarr --skill homarr-custom-widget";
-export const CUSTOM_WIDGET_SKILL_VERSION = "2.10.5";
+export const CUSTOM_WIDGET_SKILL_VERSION = "2.10.6";
 export const CUSTOM_WIDGET_SKILL_REFERENCE_NAMES = ["schema", "runtime", "security"] as const;
 export type CustomWidgetSkillReferenceName = (typeof CUSTOM_WIDGET_SKILL_REFERENCE_NAMES)[number];
 
@@ -58,7 +58,7 @@ interface HomarrCustomWidgetV2 {
 }
 \`\`\`
 
-The object key \`default\` is the required source ID; \`default\` is not a property on a source. Source properties are \`name?\`, \`baseUrl\`, \`networkScope\`, and \`auth?\`:
+Key \`default\` is the required source ID, not a source property. Fields: \`name?\`, \`baseUrl\`, \`networkScope\`, \`auth?\`; localhost/loopback URLs require \`networkScope: "loopback"\`; never widen explicit scope:
 
 \`\`\`json
 {
@@ -94,12 +94,13 @@ Use stable real URLs for public APIs and clear suggested URLs for self-hosted se
 Binding syntax is location-specific: path strings use \`{option:name}\` or \`{param:name}\` with no \`$\` (for example, \`/items/{option:itemId}\`); query/body objects use \`{"$option":"name"}\` or \`{"$param":"name"}\`. \`$param\` is manual-only; \`$option\` may drive loads. Constants stay primitive (\`take: 10\`); names and types are inferred.
 
 Every option has \`label\`, \`control\`, and \`default\`. Optional fields are \`description\`, \`choices\`, \`choicesFrom\`, \`min\`, \`max\`, \`step\`, \`advanced\`, and \`group\`.
+
 `,
   "references/runtime.md": `# Runtime
 
 Templates read \`data.requestId\`, \`status.requestId\`, \`options.name\`, and temporary \`inputs.name\`. Status is \`{ loading, ok, status, statusText, error }\`. Render load queries directly from \`data\` and \`status\` with \`RefreshButton\`; never wrap them in \`SubFetch\`.
 
-\`bind="search"\` creates an in-memory input. It is never persisted. Supply invocation values only through \`params\`, for example:
+\`bind\` is temporary; manual request values go in \`params\` and map to \`$param\`:
 
 \`\`\`jsx
 <TextInput bind="search" label="Search" />
@@ -127,11 +128,12 @@ For compact numeric enums, index a literal label array with a fallback:
 <Text>{["Unknown", "Pending", "Ready"][(item.status ?? 1) - 1] ?? "Unknown"}</Text>
 \`\`\`
 
-Every stateful control must use \`bind\`, and its \`inputs.<name>\` value must feed a supported request/helper when it is meant to change remote data. For dependent pagination, declare \`defaultValue={1}\` and use \`resetKey={inputs.search}\` to restore page 1 when the query changes. If a control cannot affect the workflow through a binding, option, or runtime helper, render concise context instead of a dead control.
+Request-bound controls use literal \`bind\` plus a default (\`defaultChecked\` for Switch/Checkbox); pass \`inputs.<name>\` through manual \`SubFetch params\` to matching \`$param\`. Options are installation config via \`options.name\`, never \`inputs\`; dependent pagination uses \`defaultValue={1}\`/\`resetKey={inputs.query}\`. Remove dead controls.
 
 Callback parameters must not shadow the reserved roots \`data\`, \`status\`, \`options\`, or \`inputs\`. Use registered component names returned by discovery; \`Icon\` is an accepted alias for canonical \`TablerIcon\`. Never invent components such as \`<IconFoo />\`.
 
 Use expression callbacks for supported collections and trusted slots. No callback blocks, IIFEs, authored recursion, or raw events. Regex is limited to safe string operations.
+
 `,
   "references/security.md": `# Security
 
@@ -161,18 +163,21 @@ Author one widget with release-matched context; finish validation, evidence, per
 Return one fenced \`json\` block with the complete definition; keep evidence prose outside it. The definition has keyed
 \`sources\`, \`requests\`, \`template\`, and optional \`options\`; actions are requests with \`kind: "action"\`.
 
-- \`sources.default\` is required. HTTP sources have \`baseUrl\`, \`networkScope\`, and credential-free \`auth\`; saved sources
-  use \`type: "integration"\` and \`integrationKind\`. Homarr holds credentials.
-- For saved integrations, discover HTTP kinds and full-access entries with \`integration_getKinds\`/\`integration_all\`, bind
-  \`integrationId\` before preview, omit URL/auth fields, and keep non-GET requests as actions.
-- Requests use slash-prefixed paths: path strings use \`{option:name}\` or \`{param:name}\`; query/body objects use \`{"$option":"name"}\` or \`{"$param":"name"}\`. Loads use \`trigger: "load"\`; explicit manual helpers use \`trigger: "manual"\`.
-- Actions stay manual; preserve \`confirmation\`, \`permission\`, and \`invalidates\`; DELETE requires full permission and confirmation. \`$param\` is manual-only; \`$option\` may drive load queries.
-- Read load data from \`data.requestId\`, check \`status.requestId?.loading\` and \`status.requestId?.ok === false\`, and show
-  loading, error, empty, and success states with \`RefreshButton requestId="..."\`. \`SubFetch\` owns manual loading/error/retry
-  and receives \`(result, metadata)\`; map the response array, not its envelope.
-- Options have \`label\`, \`control\`, and \`default\`; dependent controls declare a default and \`resetKey={inputs.dependency}\`.
-  Remove controls that do not feed an option, request, or runtime helper. Guard arrays/nested values and use \`??\` for
-  truthful fallbacks. Preserve documented timezone values; use UTC only when the contract says UTC.
+- \`sources.default\` is required. HTTP has \`baseUrl\`, \`networkScope\`, and credential-free \`auth\`; localhost/loopback requires
+  \`networkScope: "loopback"\`; never widen an explicit scope. Saved sources use \`type: "integration"\`/\`integrationKind\`;
+  Homarr holds credentials.
+- Saved integrations: discover kinds/full-access entries with \`integration_getKinds\`/\`integration_all\`, bind \`integrationId\`
+  before preview, omit URL/auth, and keep non-GET requests as actions.
+- Paths are slash-prefixed: strings use \`{option:name}\`/\`{param:name}\`; query/body uses \`{"$option":"name"}\`/\`{"$param":"name"}\`.
+  Loads use \`trigger: "load"\`; manual helpers use \`trigger: "manual"\`.
+- Actions stay manual; preserve \`confirmation\`, \`permission\`, and \`invalidates\`; DELETE requires full permission/confirmation.
+  \`$param\` is manual-only; \`$option\` may drive loads.
+- Read \`data.requestId\`; check \`status.requestId?.loading\`/\`?.ok === false\`; show loading/error/empty/success with
+  \`RefreshButton\`. \`SubFetch\` owns manual loading/error/retry, receives \`(result, metadata)\`; map the response array, not envelope.
+- Options have \`label\`, \`control\`, \`default\`; installation config is \`options.name\`, never \`inputs\`. Request-bound TextInput,
+  Select, NumberInput, Pagination use literal \`bind\` + default and manual \`SubFetch params\` map \`inputs.<name>\` to \`$param\`.
+  Dependent pagination uses \`defaultValue={1}\`/\`resetKey={inputs.query}\`. Remove controls with no option, request, or helper; guard arrays/nested with \`??\`;
+  preserve documented timezone values; use UTC only when the contract says UTC.
 - Templates are one expression: no imports, hooks, refs, raw HTML/events, browser requests, eval, recursion, IIFEs,
   statement blocks, or arbitrary functions. Use registered component names; \`Icon\` may alias \`TablerIcon\`. Keep hierarchy,
   theme tokens, useful states, and narrow/wide layouts purposeful.
@@ -192,6 +197,7 @@ Return one fenced \`json\` block with the complete definition; keep evidence pro
 
 Report actual lifecycle results. If unavailable, add one post-artifact \`Unverified:\` line naming missing validation, preview,
 renderer, or persistence. Never claim rendering/persistence from schema checks.
+
 `;
 
 const CUSTOM_WIDGET_SKILL_ENTRYPOINT_MD = `# Homarr Custom Widget authoring index
@@ -208,9 +214,11 @@ Only genuine provider/model, unavailable lifecycle service, or closed-workbench 
 unavailable, return one importable definition and one unverified note.
 
 Binding: path strings use \`{option:name}\`/\`{param:name}\`; query/body objects use \`{"$option":"name"}\`/\`{"$param":"name"}\`;
-$param is manual-only and $option may drive loads. Fallbacks preserve source shape: HTTP uses \`baseUrl\`, \`networkScope\`, \`auth\`;
-integrations use \`type: "integration"\`, \`integrationKind\`, optional \`integrationId\`. Keep paths slash-prefixed, options with
-\`control\`, status checks, and the unverified note outside one parseable \`json\` fence.
+$param is manual-only and $option may drive loads. Request-bound TextInput, Select, NumberInput, and Pagination use literal
+\`bind\`, a default, and manual \`SubFetch params\` for matching \`$param\`; options are installation config via \`options.name\`.
+Dependent pagination uses \`defaultValue={1}\`/\`resetKey={inputs.query}\`. Fallbacks preserve source shape: HTTP keeps \`baseUrl\`,
+\`networkScope\`, \`auth\`; integrations use \`type: "integration"\`, \`integrationKind\`, optional \`integrationId\`; loopback URLs
+require \`networkScope: "loopback"\`.
 
 Load \`schema\` once for a new manifest, \`runtime\` for manual interactions, and \`security\` for auth/mutations. Search once,
 prefer discovered components, keep credentials outside definitions, and make all states useful.`;
