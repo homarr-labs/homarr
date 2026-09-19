@@ -3,14 +3,14 @@ import { describe, expect, test } from "vitest";
 import { resolveAssistantReasoning } from "./assistant-reasoning";
 
 describe("resolveAssistantReasoning", () => {
-  test("uses low reasoning for automatic Custom Widget authoring on the GLM model", () => {
+  test("uses medium reasoning for automatic Custom Widget authoring on the GLM model", () => {
     expect(
       resolveAssistantReasoning({
         reasoning: "auto",
         customWidgetAuthoringActive: true,
         modelId: "z-ai/glm-5.3-flash",
       }),
-    ).toBe("low");
+    ).toBe("medium");
   });
 
   test.each(["none", "high"] as const)("preserves explicit %s reasoning", (reasoning) => {
