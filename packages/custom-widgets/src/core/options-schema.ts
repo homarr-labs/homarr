@@ -78,6 +78,8 @@ export const customWidgetOptionsSchema = z
   .refine((options) => Object.keys(options).length <= 64, "A widget can define at most 64 options")
   .default({});
 
+const jsonValueSchema = z.json();
+
 export type CustomWidgetOption = z.infer<typeof customWidgetOptionSchema>;
 export type CustomWidgetOptions = z.infer<typeof customWidgetOptionsSchema>;
 
@@ -94,7 +96,9 @@ export function getCustomWidgetOptionValueIssue(
   } else if (option.control === "multiSelect") {
     if (!Array.isArray(value) || value.some((entry) => !["string", "number"].includes(typeof entry)))
       return "Expected a list of choices";
-  } else if (option.control !== "json" && typeof value !== "string") return "Expected text";
+  } else if (option.control === "json") {
+    if (!jsonValueSchema.safeParse(value).success) return "Expected valid JSON";
+  } else if (typeof value !== "string") return "Expected text";
 
   if (option.control === "url" && typeof value === "string" && value && !URL.canParse(value))
     return "Must be a valid URL";

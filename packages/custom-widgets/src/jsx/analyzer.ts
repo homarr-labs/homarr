@@ -29,6 +29,7 @@ export type { CustomJsxTemplateDiagnostic } from "./analyzer-diagnostics";
 
 const JsxParser = Parser.extend(jsx());
 const requestStatusLabels = new Set(["loading", "success", "error"]);
+const unsupportedRequestStatusFields = new Set(["isLoading", "isError", "isFetching"]);
 
 export function addCustomJsxDiagnosticSourceExcerpts(
   template: string,
@@ -67,6 +68,16 @@ function invalidRequestStatusComparison(node: AstNode) {
   return requestId
     ? `INVALID_STATUS_COMPARISON: status.${requestId} is an object. Use status.${requestId}?.loading, status.${requestId}?.ok === true, or status.${requestId}?.ok === false`
     : null;
+}
+
+function invalidRequestStatusField(node: AstNode) {
+  if (node.type !== "MemberExpression") return null;
+  const object = nodeOf(node.object);
+  const property = nodeOf(node.property);
+  const requestId = directRequestStatusId(object);
+  const field = node.computed ? staticPropertyName(property) : String(property?.name ?? "");
+  if (!requestId || !field || !unsupportedRequestStatusFields.has(field)) return null;
+  return `INVALID_STATUS_FIELD: status.${requestId}.${field} is not available. Use status.${requestId}?.loading or status.${requestId}?.ok === false`;
 }
 
 export function validateCustomJsxTemplate(template: string): CustomJsxTemplateDiagnostic[] {
@@ -231,6 +242,8 @@ export function validateCustomJsxTemplate(template: string): CustomJsxTemplateDi
       case "MemberExpression": {
         const object = nodeOf(node.object);
         const property = nodeOf(node.property);
+        const statusDiagnostic = invalidRequestStatusField(node);
+        if (statusDiagnostic) add(node, statusDiagnostic);
         if (object) visit(object, depth + 1, bindings);
         if (node.computed && property) visit(property, depth + 1, bindings);
         const propertyName = node.computed

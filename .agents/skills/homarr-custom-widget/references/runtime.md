@@ -1,6 +1,6 @@
 # Runtime
 
-Templates read `data.requestId`, `status.requestId`, `options.name`, and temporary `inputs.name`. Status is `{ loading, ok, status, statusText, error }`. Render load queries directly from `data` and `status` with `RefreshButton`; never wrap them in `SubFetch`.
+Load-query templates read `data.requestId` and `status.requestId`, plus `options.name` and temporary `inputs.name`. Manual `SubFetch` results stay local to that instance and never populate `data`/`status`; render them in its child callback. Status is `{ loading, ok, status, statusText, error }`. Render load queries directly from `data` and `status` with `RefreshButton`; never wrap them in `SubFetch`.
 
 `bind` is temporary; manual request values go in `params` and map to `$param`:
 
