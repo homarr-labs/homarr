@@ -218,6 +218,8 @@ minimumReleaseAgeExclude:
   - next-auth@5.0.0-beta.32
   # Renovate security update: fastify@5.12.1
   - fastify@5.12.1
+  # Renovate security update: postcss@8.5.23
+  - postcss@8.5.23
 overrides:
   "@babel/helpers@<7.26.10": ">=7.29.7"
   "@babel/runtime@<7.26.10": ">=7.29.7"
