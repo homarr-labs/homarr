@@ -3100,8 +3100,8 @@
           "description": "Rotate between pictures in the album every X seconds. Must be at least 1. Must be below 3600."
         },
         "showPhotoInfo": {
-          "label": "",
-          "description": ""
+          "label": "Show photo info",
+          "description": "Display date of the picture and the current index at the bottom of the slideshow"
         },
         "randomizePhotos": {
           "label": "Randomise photos",
@@ -3112,23 +3112,23 @@
       "noPhotos": "No photos found"
     },
     "downloads": {
-      "name": "",
-      "description": "",
+      "name": "Download Client",
+      "description": "Allows you to view and manage your Downloads from both Torrent and Usenet clients.",
       "option": {
         "columns": {
-          "label": ""
+          "label": "Columns to show"
         },
         "enableRowSorting": {
-          "label": ""
+          "label": "Enable items sorting"
         },
         "defaultSort": {
-          "label": ""
+          "label": "Column used for sorting by default"
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "Invert sorting"
         },
         "showCompletedUsenet": {
-          "label": ""
+          "label": "Show usenet entries marked as completed"
         },
         "showCompletedTorrent": {
           "label": ""
@@ -3191,7 +3191,7 @@
           "detailsTitle": "Item ID"
         },
         "integration": {
-          "columnTitle": ""
+          "columnTitle": "Integration"
         },
         "name": {
           "columnTitle": "Job name"
@@ -3386,9 +3386,9 @@
         }
       },
       "tab": {
-        "workers": "",
+        "workers": "Workers",
         "queue": "",
-        "statistics": ""
+        "statistics": "Statistics"
       },
       "currentIndex": "",
       "healthCheck": {
@@ -4221,11 +4221,11 @@
   },
   "widgetPreview": {
     "toggle": {
-      "enabled": "",
-      "disabled": ""
+      "enabled": "Edit mode enabled",
+      "disabled": "Edit mode disabled"
     },
     "dimensions": {
-      "title": ""
+      "title": "Change dimensions"
     }
   },
   "board": {
@@ -4597,7 +4597,7 @@
     },
     "navbar": {
       "items": {
-        "home": "",
+        "home": "Home",
         "boards": "",
         "apps": "",
         "integrations": "",
@@ -4608,12 +4608,12 @@
           "label": "",
           "items": {
             "manage": "",
-            "invites": "",
+            "invites": "Invites",
             "groups": ""
           }
         },
         "tools": {
-          "label": "",
+          "label": "Tools",
           "items": {
             "docker": "",
             "kubernetes": "",
@@ -4626,7 +4626,7 @@
         },
         "settings": "",
         "help": {
-          "label": "",
+          "label": "Help",
           "items": {
             "documentation": "",
             "submitIssue": "",
@@ -4634,7 +4634,7 @@
             "sourceCode": ""
           }
         },
-        "about": ""
+        "about": "About"
       }
     },
     "page": {
@@ -4675,7 +4675,7 @@
           "setHomeBoard": {
             "label": "",
             "badge": {
-              "label": "",
+              "label": "Home",
               "tooltip": ""
             }
           },
@@ -4891,7 +4891,7 @@
               "text": ""
             },
             "noTranslate": {
-              "title": "",
+              "title": "No translate",
               "text": ""
             },
             "noSiteLinksSearchBox": {
@@ -5488,7 +5488,7 @@
         "nodes": "",
         "namespaces": "",
         "ingresses": "",
-        "services": "",
+        "services": "Services",
         "pods": "",
         "configmaps": "",
         "secrets": "",
@@ -5754,7 +5754,7 @@
         }
       },
       "search-engines": {
-        "label": "",
+        "label": "Search engines",
         "new": {
           "label": ""
         },
@@ -5766,7 +5766,7 @@
         "label": ""
       },
       "apps": {
-        "label": "",
+        "label": "Apps",
         "new": {
           "label": ""
         },
@@ -6131,7 +6131,7 @@
             },
             "option": {
               "google": {
-                "name": "",
+                "name": "Google",
                 "description": "Search the web with Google"
               },
               "bing": {
