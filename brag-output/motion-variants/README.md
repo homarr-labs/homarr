@@ -1,3 +1,0 @@
-Two 30s motion edits: Impact and Orbit. Custom Widgets 0-7, actual DnD 7-13, advanced widgets 13-18, Assistant 18-22, other changes 22-27, confetti 27-30. UI imagery remains real; floating panels and confetti are editorial animation. No synthetic product interaction. Local click sounds, no music. Previous versions preserved.
-
-Validation: both full composition checks passed (27/27 contrast checks each). Rendered frames inspected for scene framing and ending confetti; the floating preview crop was adjusted to include the actual exchange-rate result. Final delivery script verifies 900 frames at 1920x1080/30fps and bakes a settled poster into frame zero. Existing Tailscale range server hosts the comparison page.
