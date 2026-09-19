@@ -290,6 +290,7 @@ describe("getRequiredAssistantToolNames", () => {
           {
             toolName: "ask_user",
             input: {
+              allowOther: false,
               options: [
                 { id: "place", label: "Place on a board", kind: "affirmative" },
                 { id: "leave", label: "Leave unplaced", kind: "negative" },
@@ -302,6 +303,40 @@ describe("getRequiredAssistantToolNames", () => {
     ];
 
     expect(getRequiredAssistantToolNames([], steps)).toEqual(["configure_widget"]);
+  });
+
+  test("resolves placement by stable IDs when labels are localized", () => {
+    const steps = [
+      {
+        toolResults: [
+          {
+            toolName: "customWidget_createFromPreview",
+            output: {
+              ...successfulCreation,
+              nextAction: { type: "place-custom-widget", options: { definitionId: "widget-1" } },
+            },
+          },
+          {
+            toolName: "ask_user",
+            input: {
+              allowOther: false,
+              options: [
+                { id: "place", label: "Auf einem Board platzieren", kind: "affirmative" },
+                { id: "leave", label: "Unplatziert lassen", kind: "negative" },
+              ],
+            },
+            output: {
+              answer: "Unplatziert lassen",
+              optionId: "leave",
+              optionKind: "negative",
+              source: "option",
+            },
+          },
+        ],
+      },
+    ];
+
+    expect(getRequiredAssistantToolNames([], steps)).toEqual([]);
   });
 
   test("requires board_addItem after configure_widget and resolves only after a successful placement", () => {
@@ -369,6 +404,7 @@ describe("getRequiredAssistantToolNames", () => {
           {
             toolName: "ask_user",
             input: {
+              allowOther: false,
               options: [
                 { id: "place", label: "Place on a board", kind: "affirmative" },
                 { id: "leave", label: "Leave unplaced", kind: "negative" },
@@ -459,6 +495,7 @@ describe("getRequiredAssistantToolNames", () => {
             toolCallId: "ask-user-1",
             toolName: "ask_user",
             input: {
+              allowOther: false,
               options: [
                 { id: "place", label: "Place on a board", kind: "affirmative" },
                 { id: "leave", label: "Leave unplaced", kind: "negative" },

@@ -58,9 +58,9 @@ interface AssistantToolResponseMessage {
 }
 
 const customWidgetCreateToolNames = new Set(["customWidget_create", "customWidget_createFromPreview"]);
-const customWidgetPlacementOptionLabels = {
-  place: "Place on a board",
-  leave: "Leave unplaced",
+const customWidgetPlacementOptionIds = {
+  place: "place",
+  leave: "leave",
 } as const;
 
 type CustomWidgetPlacementState =
@@ -162,6 +162,8 @@ const getPlacementChoice = (event: CustomWidgetLifecycleEvent) => {
   if (
     typeof event.input !== "object" ||
     event.input === null ||
+    !("allowOther" in event.input) ||
+    event.input.allowOther !== false ||
     !("options" in event.input) ||
     !Array.isArray(event.input.options)
   ) {
@@ -172,16 +174,20 @@ const getPlacementChoice = (event: CustomWidgetLifecycleEvent) => {
   );
   if (selectedOption === undefined) return undefined;
   const selectedKind = getRecordString(selectedOption, "kind");
-  const selectedLabel = getRecordString(selectedOption, "label")?.trim();
-  const hasPlaceOption = event.input.options.some(
-    (option) => getRecordString(option, "label")?.trim() === customWidgetPlacementOptionLabels.place,
+  const placeOption = event.input.options.find(
+    (option) => getRecordString(option, "id") === customWidgetPlacementOptionIds.place,
   );
-  const hasLeaveOption = event.input.options.some(
-    (option) => getRecordString(option, "label")?.trim() === customWidgetPlacementOptionLabels.leave,
+  const leaveOption = event.input.options.find(
+    (option) => getRecordString(option, "id") === customWidgetPlacementOptionIds.leave,
   );
-  if (selectedKind !== optionKind || !hasPlaceOption || !hasLeaveOption) return undefined;
-  if (selectedLabel === customWidgetPlacementOptionLabels.leave) return "leave";
-  if (selectedLabel === customWidgetPlacementOptionLabels.place) return "place";
+  if (
+    selectedKind !== optionKind ||
+    getRecordString(placeOption, "kind") !== "affirmative" ||
+    getRecordString(leaveOption, "kind") !== "negative"
+  )
+    return undefined;
+  if (optionId === customWidgetPlacementOptionIds.leave) return "leave";
+  if (optionId === customWidgetPlacementOptionIds.place) return "place";
   return undefined;
 };
 

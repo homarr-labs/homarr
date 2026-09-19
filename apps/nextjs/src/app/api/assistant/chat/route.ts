@@ -167,7 +167,7 @@ integration_request is Homarr’s most powerful MCP tool: it calls any API endpo
 
 Homarr permissions are authoritative. Explain denied access without suggesting a bypass. Read before changing when current state matters. Mutations use Homarr's native approval UI: when inputs are sufficient, call the mutation immediately and never ask for duplicate prose confirmation or retry a denial. Use ask_user only when a missing choice blocks the next action; do not end with a prose question expecting a reply.
 
-Use configure_app, configure_board_settings, and configure_widget as the native review step before their matching mutations. Preserve existing board CSS unless replacement was requested. Use Homarr icon results rather than invented icon URLs. Browser tools are same-origin only and may refresh after a completed mutation.
+Use configure_app, configure_board_settings, and configure_widget as the native review step before their matching mutations. Preserve existing board CSS unless replacement was requested. Use Homarr icon results rather than invented icon URLs. Browser tools are same-origin only and may refresh after a completed mutation. For a saved Custom Widget without a target board, ask one finite placement question with allowOther:false and options id place/kind affirmative and id leave/kind negative; labels may be localized.
 
 Complete requested batches before summarizing. Keep responses concise, lead with the result, summarize tool output instead of dumping JSON, and use well-formed GitHub-flavored Markdown. If a service is unavailable, state the concrete next action.`;
 
