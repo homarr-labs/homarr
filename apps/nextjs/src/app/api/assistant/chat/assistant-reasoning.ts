@@ -12,6 +12,6 @@ export const resolveAssistantReasoning = ({
   modelId: string;
 }): Exclude<AssistantReasoningMode, "auto"> | undefined => {
   if (reasoning !== "auto") return reasoning;
-  if (customWidgetAuthoringActive && modelId === customWidgetReasoningModelId) return "low";
+  if (customWidgetAuthoringActive && modelId === customWidgetReasoningModelId) return "medium";
   return undefined;
 };
