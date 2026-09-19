@@ -94,10 +94,10 @@ const COMPACT_PROMPT_EXAMPLES = [
 ].join("\n");
 
 const CUSTOM_WIDGET_CONTRACT_RULES = `Contract check before JSX:
-- Preserve source shape/scope: HTTP baseUrl/networkScope/auth; localhost/loopback requires networkScope "loopback"; never widen scope. Integrations keep integrationKind/integrationId; never invent credentials.
-- Paths start with \`/\`; use \`{option:name}\`/\`{param:name}\` in paths and \`{"id":{"$option":"name"}}\`/\`{"id":{"$param":"name"}}\` in query/body. \`$param\` is manual-only; \`$option\` may load. Actions stay manual; preserve confirmation, permission, and invalidation.
-- Options are install config via options.name, never inputs; choices use scalar label/value or choicesFrom. Structured options use control: "json" and render fields or JSON.stringify(value), never object JSX children. Request-bound TextInput/Select/NumberInput/Pagination use literal bind + default; manual SubFetch params map inputs.<name> to matching $param.
-- Preserve each response envelope: q->{items:[...]} renders data.q.items; q->{result:null} checks data.q.result. Guard (value ?? []).map(...) and filter; show loading/error/empty/success. Use safe Date with a documented timezone, otherwise omit its timezone argument/label; guard timestamps; use theme-adaptive body/text tokens.`;
+- Preserve source shape/scope: HTTP baseUrl/networkScope/auth; localhost/loopback requires networkScope "loopback"; never widen it. Integrations keep integrationKind/integrationId; never invent credentials.
+- Paths start with \`/\`; path: \`{option:name}\`/\`{param:name}\`; query/body: \`{"id":{"$option":"name"}}\`/\`{"id":{"$param":"name"}}\`. \`$param\` manual-only; \`$option\` may load. Actions stay manual; preserve confirmation, permission, invalidation.
+- Options use options.name, never inputs; choices scalar label/value or choicesFrom. Structured options use control: "json"; render fields or JSON.stringify(value), never object JSX children. Request-bound TextInput/Select/NumberInput/Pagination use literal bind + default; SubFetch params map inputs.<name> to matching manual $param.
+- Preserve each response envelope: q->{items:[...]} -> data.q.items; q->{result:null} -> data.q.result. Guard (value ?? []).map(...) and filter; show loading/error/empty/success. Safe Date uses documented timezone; otherwise omit its timezone argument/label; guard timestamps; use theme-adaptive body/text tokens.`;
 
 const CUSTOM_WIDGET_VISUAL_QUALITY_GUIDANCE = `Visual quality for create jobs:
 - Give the widget a purposeful header with useful context and its primary status or action.
@@ -153,20 +153,20 @@ export const CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION =
   "Custom Widget tools are staged by the authoring lifecycle. Use only visible task-needed tools; successful phases expose the next typed tools without loading the full catalog.";
 
 export const CUSTOM_WIDGET_ASSISTANT_POLICY = `Custom Widget work:
-- Terminal only for provider/model, lifecycle service, or workbench closure; stop and reuse context. Without tools return v2: HTTP keeps baseUrl/networkScope/auth; integrations keep integrationKind/optional integrationId; paths stay credential-free; add one Unverified: line; never emit pseudo calls.
-- contextAlreadyLoaded is a cache hit: reuse earlier result and continue; never stop/fallback/restart. phaseComplete advances; a staged gap is not provider failure.
-- Start with customWidget_getSkill; load task-needed references: compact schema once for a new manifest and security once for auth or mutations. Do not load full catalog. Lifecycle tools run one at a time and change phase; bind full-access integrations before preview; keep credentials out.
-- Keep complexity proportional; preserve migration intent, shape, and visible behavior. Add choicesFrom/charts/actions only when needed; use clear labels, theme-safe colors, wrapping layouts; keep narrow/wide usable.
-- Find registered Mantine components with customWidget_findComponents; batch customWidget_getComponents, then customWidget_validateTemplate. Use customWidget_getComponent for unknown props; Icon aliases TablerIcon.
+- Terminal only for provider/model, unavailable lifecycle or closed workbench; reuse context. Without tools: v2 HTTP baseUrl/networkScope/auth; integrations integrationKind/optional integrationId; credential-free paths; one Unverified: line; no pseudo calls.
+- contextAlreadyLoaded: Reuse loaded context; continue, never stop/fallback/restart. phaseComplete advances; staged gaps aren't provider failures.
+- Start with customWidget_getSkill; load task-needed references: compact schema once for a new manifest, security once for auth or mutations. Do not load full catalog. Lifecycle tools run one at a time and change phase; bind full-access integrations before preview; no credentials.
+- For a coordinated set, research primary API documentation once; keep it simple; preserve migration intent/shape/behavior. Add choicesFrom/charts/actions as needed; clear labels, theme-safe colors, wrapping layouts; narrow/wide usable.
+- Find registered Mantine components with customWidget_findComponents; batch customWidget_getComponents; customWidget_validateTemplate; customWidget_getComponent for unknown props; TablerIcon aliases.
 
 ${CUSTOM_WIDGET_CONTRACT_RULES}
 
-- Read load data.x/status.x with RefreshButton; status.x?.ok === false is error; siblings stay independent. Manual SubFetch never publishes those roots; render its child result. Use literal IDs; remove dead controls.
-- Samples/previews are exact response envelopes. Render requested fields; map the wrapped array rather than its envelope; humanize numeric enums; follow timestamp timezone; Parenthesize mixed ??, &&, ||.
-- Keep one JSX expression: no declarations, statement callbacks, imports, hooks, refs, raw HTML/events, browser requests, eval, recursion, IIFEs, or arbitrary functions. Do not shadow data/status/options/inputs. Use named Icon/TablerIcon; validate templates and fix unknown props before preview.
-- Pass tool objects to customWidget_previewCreate; run every query/action and inspect shape, confirmation, permission, params, invalidation. On a concrete schema error, fix its field, call customWidget_validateTemplate once, then fresh previewCreate when visible. Changes to sources/requests/options require fresh previewCreate; JSX-only fixes use customWidget_previewReviseTemplate, which resets evidence. Retest; never revise byte-identical templates or reopen discovery for polish.
-- Assistant wrapper: customWidget_validateTemplate and customWidget_previewReviseTemplate use templateLines; previewCreate takes the full definition (template or templateLines).
-- Persist via customWidget_createFromPreview/create. After create, follow nextAction once if needed; finish it; continue only with distinct widgets. Never expose credentials or claim success without tool results.`;
+- Read load data.x/status.x with RefreshButton; status.x?.ok === false is error; siblings independent. Manual SubFetch never publishes those roots; render its child callback result. Literal IDs; remove dead controls.
+- Use an exact response envelope: render fields; map the wrapped array rather than its envelope; humanize numeric enums; follow timestamp timezone; Parenthesize mixed ??, &&, ||.
+- Keep one JSX expression: no declarations, statement callbacks, imports, hooks, refs, raw HTML/events, browser requests, eval, recursion, IIFEs, or arbitrary functions. Do not shadow data/status/options/inputs. Use named Icon/TablerIcon; validate and fix unknown props before preview.
+- Pass tool objects to customWidget_previewCreate; run every returned query and every relevant simulated action; inspect shape, confirmation, permission, params, invalidation. Schema errors: fix its field, call customWidget_validateTemplate once, then fresh previewCreate. Changes to sources/requests/options require fresh previewCreate for a material definition change; JSX-only fixes use customWidget_previewReviseTemplate, which resets evidence. Retest; no byte-identical revisions or discovery reopen.
+- Wrapper: customWidget_validateTemplate and customWidget_previewReviseTemplate use templateLines; previewCreate takes the full definition (template or templateLines).
+- Persist via customWidget_createFromPreview so the definition is not streamed again; customWidget_create only without preview. After create, follow nextAction once if needed, finish it; continue only with distinct widgets. Never expose credentials or claim success without tool results.`;
 
 export const CUSTOM_WIDGET_MCP_AUTHORING_PROMPT = `Author one Homarr Custom JSX v2 widget or a coordinated set through the complete tool lifecycle.
 

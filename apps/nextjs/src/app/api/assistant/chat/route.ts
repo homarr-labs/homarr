@@ -83,6 +83,7 @@ import {
   customWidgetAssistantInstructions,
   getForcedAssistantToolName,
   getRequiredAssistantToolNames,
+  hasPendingCustomWidgetPlacement,
   withAssistantToolPolicy,
 } from "./assistant-tool-policy";
 
@@ -641,6 +642,13 @@ export async function POST(request: Request) {
       .resolve([...enabledToolGroupIds])
       .flatMap((group) => group.tools.map(({ name }) => name));
     const responseMessageSteps = getCustomWidgetToolStepsFromResponseMessages(responseMessages);
+    if (hasPendingCustomWidgetPlacement(incomingMessages, steps, responseMessages)) {
+      return [
+        assistantToolGroupActivationName,
+        ...frontendToolNames,
+        ...enabledToolNames.filter((toolName) => !toolName.startsWith("customWidget_")),
+      ];
+    }
     const phaseToolNames = customWidgetAuthoringActive
       ? getCustomWidgetPhaseToolNames(Object.keys(homarrTools), [...responseMessageSteps, ...steps])
       : null;

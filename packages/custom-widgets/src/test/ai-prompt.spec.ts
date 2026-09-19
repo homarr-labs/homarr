@@ -137,7 +137,7 @@ describe("AI prompt", () => {
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain('control: "json"');
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("(value ?? []).map(...)");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Actions stay manual");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("confirmation, permission, and invalidation");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("confirmation, permission, invalidation");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("choicesFrom");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("customWidget_validateTemplate");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("customWidget_createFromPreview");
