@@ -1,3 +1,6 @@
+import { jsonSchema } from "ai";
+import { z } from "zod/v4";
+
 import { isRecord } from "@homarr/common";
 
 const compactTemplateToolNames = new Set(["customWidget_validateTemplate", "customWidget_previewReviseTemplate"]);
@@ -21,3 +24,11 @@ export const getAssistantToolInputSchema = (toolName: string, inputSchema: Recor
     required: [...new Set([...required, "templateLines"])],
   };
 };
+
+export const getValidatedAssistantToolSchema = (parameters: z.core.$ZodType) =>
+  jsonSchema<unknown>(z.toJSONSchema(parameters) as Parameters<typeof jsonSchema>[0], {
+    validate: (value) => {
+      const parsed = z.safeParse(parameters, value);
+      return parsed.success ? { success: true, value: parsed.data } : { success: false, error: parsed.error };
+    },
+  });

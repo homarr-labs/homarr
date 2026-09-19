@@ -70,7 +70,7 @@ import { shouldEmitAssistantMessageMetadata } from "./assistant-stream-metadata"
 import { getSafeAssistantToolError } from "./assistant-tool-error";
 import { repairAssistantToolInput } from "./assistant-tool-input-repair";
 import { getAssistantToolOutputMaxCharacters, toAssistantToolOutput } from "./assistant-tool-output";
-import { getAssistantToolInputSchema } from "./assistant-tool-schema";
+import { getAssistantToolInputSchema, getValidatedAssistantToolSchema } from "./assistant-tool-schema";
 import {
   createCustomWidgetDiscoveryPhaseController,
   getActiveCustomWidgetToolNames,
@@ -587,7 +587,7 @@ export async function POST(request: Request) {
           name,
           tool({
             description: definition.description,
-            inputSchema: jsonSchema(z.toJSONSchema(definition.parameters) as Parameters<typeof jsonSchema>[0]),
+            inputSchema: getValidatedAssistantToolSchema(definition.parameters),
           }),
         ] as const,
       ];
