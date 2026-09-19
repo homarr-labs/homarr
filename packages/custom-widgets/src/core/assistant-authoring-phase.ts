@@ -210,7 +210,7 @@ export const getCustomWidgetPhaseToolNames = <TToolName extends string>(
   const focusedSearches = discoveryResults.filter((result) => result.toolName === "customWidget_findComponents").length;
   const contextRetrievalComplete = discoveryResults.some((result) => {
     const output = isRecord(result.output) ? result.output : null;
-    return output?.phaseComplete === true || output?.contextAlreadyLoaded === true;
+    return output?.phaseComplete === true;
   });
   if (contextRetrievalComplete) {
     return availableToolNames.filter((toolName) => customWidgetValidationPhaseToolNames.has(toolName));

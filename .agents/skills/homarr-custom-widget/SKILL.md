@@ -5,15 +5,13 @@ description: Author, validate, preview, test, install, or configure API-backed H
 
 # Homarr Custom Widget
 
-Author one widget at a time with release-matched context. Finish validation, evidence, and persistence before the next
-widget, then return the artifact.
+Author one widget with release-matched context; finish validation, evidence, persistence, then return artifact.
 
 - Read primary API documentation once when it is missing or may have changed. Treat supplied samples and successful
   previews as the binding contract; load only needed schema, runtime, security, or component context.
-- Search for unknown components once, batch selected details, reuse `contextAlreadyLoaded`, and do not repeat unavailable
-  lookups. A provider/model rejection is terminal: record it and finish from loaded context.
+- Search for unknown components once and batch selected details. `contextAlreadyLoaded` means reuse the earlier result and continue; `phaseComplete` advances to the next visible tool. Stop only for a genuine provider/model or closed-workbench failure.
 - Community widgets use `customWidget_workshopSearch`, `customWidget_workshopGet`, and
-  `customWidget_workshopInstall`; configure and persist before preview expires.
+  `customWidget_workshopInstall`; configure and persist.
 
 Return one fenced `json` block with the complete definition; keep evidence prose outside it. The definition has keyed
 `sources`, `requests`, `template`, and optional `options`; actions are requests with `kind: "action"`.
@@ -22,10 +20,8 @@ Return one fenced `json` block with the complete definition; keep evidence prose
   use `type: "integration"` and `integrationKind`. Homarr holds credentials.
 - For saved integrations, discover HTTP kinds and full-access entries with `integration_getKinds`/`integration_all`, bind
   `integrationId` before preview, omit URL/auth fields, and keep non-GET requests as actions.
-- Requests use literal slash-prefixed paths. Load/current display queries use `trigger: "load"`, including option-bound
-  requests read through `data`/`status` and `RefreshButton`; use `trigger: "manual"` only for explicit manual helpers.
-- Actions stay manual; preserve `confirmation`, `permission`, and `invalidates`; DELETE requires full permission and
-  confirmation. `$option` is for saved options; `$param` is only for manual `SubFetch`, `ActionButton`, or `ToggleSwitch`.
+- Requests use slash-prefixed paths: path strings use `{option:name}` or `{param:name}`; query/body objects use `{"$option":"name"}` or `{"$param":"name"}`. Loads use `trigger: "load"`; explicit manual helpers use `trigger: "manual"`.
+- Actions stay manual; preserve `confirmation`, `permission`, and `invalidates`; DELETE requires full permission and confirmation. `$param` is manual-only; `$option` may drive load queries.
 - Read load data from `data.requestId`, check `status.requestId?.loading` and `status.requestId?.ok === false`, and show
   loading, error, empty, and success states with `RefreshButton requestId="..."`. `SubFetch` owns manual loading/error/retry
   and receives `(result, metadata)`; map the response array, not its envelope.
@@ -43,13 +39,11 @@ Return one fenced `json` block with the complete definition; keep evidence prose
 2. Use `customWidget_validateTemplate` for focused JSX diagnostics. Send source/request/option changes once to
    `customWidget_previewCreate`; use `customWidget_previewReviseTemplate` for a JSX-only correction in its session. In the
    Assistant wrapper, multiline JSX uses `templateLines` and preview creation receives the complete definition.
-3. Test every returned query or simulated action once. After a validation failure, make one corrected candidate and
-   revalidate. Stop when the result is incomplete, the workbench closes, or the provider/model rejects the call.
+3. Test every returned query or simulated action once. On a concrete schema or preview error, fix only that field, call `customWidget_validateTemplate` once to re-enter validation, then visible `customWidget_previewCreate` with the corrected definition; use `customWidget_previewReviseTemplate` only for JSX-only errors. Stop only for genuine provider/model, lifecycle-service, or workbench-closure failures.
 4. After a successful final preview and exact tests, call `customWidget_createFromPreview`; configure private URLs and
    credentials through Homarr and never repeat plaintext secrets.
 
 ## Delivery
 
-Report each lifecycle call only by its actual result. If a required tool result is unavailable, add exactly one line after
-the artifact beginning `Unverified:` naming the missing validation, preview, renderer, or persistence step. Never claim
-rendering or persistence from schema checks alone.
+Report actual lifecycle results. If unavailable, add one post-artifact `Unverified:` line naming missing validation, preview,
+renderer, or persistence. Never claim rendering/persistence from schema checks.

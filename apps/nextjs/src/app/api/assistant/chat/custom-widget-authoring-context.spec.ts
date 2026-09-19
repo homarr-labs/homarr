@@ -531,6 +531,35 @@ describe("Custom Widget authoring context", () => {
     ).toEqual(["customWidget_validateTemplate"]);
   });
 
+  test("keeps component discovery available after a cached reference result", () => {
+    const tools = [
+      "customWidget_getSkill",
+      "customWidget_getReference",
+      "customWidget_findComponents",
+      "customWidget_getComponents",
+      "customWidget_validateTemplate",
+    ];
+
+    const activeNames = getCustomWidgetPhaseToolNames(tools, [
+      { toolResults: [{ toolName: "customWidget_getSkill", output: { content: "skill" } }] },
+      { toolResults: [{ toolName: "customWidget_getReference", output: { name: "schema", content: "schema" } }] },
+      {
+        toolResults: [
+          {
+            toolName: "customWidget_getReference",
+            output: {
+              contextAlreadyLoaded: true,
+              nextStep: "Reuse the earlier result for this exact context request.",
+            },
+          },
+        ],
+      },
+    ]);
+
+    expect(activeNames).toEqual(expect.arrayContaining(["customWidget_findComponents", "customWidget_getComponents"]));
+    expect(activeNames).not.toEqual(["customWidget_validateTemplate"]);
+  });
+
   test("keeps only references and validation after a selected documentation batch", () => {
     const tools = [
       "customWidget_findComponents",

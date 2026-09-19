@@ -46,6 +46,6 @@ Auth is `none`, `bearer`, `basic`, `{ "type": "apiKeyHeader", "name": "X-Api-Key
 
 Use stable real URLs for public APIs and clear suggested URLs for self-hosted services. Homarr collects the installer's server URL, network scope, and credentials as source setup; credentials remain outside the manifest.
 
-Paths use `{option:name}` and `{param:name}`; query/body references use `{ "$option": "name" }` and `{ "$param": "name" }`. Constants stay primitive (`take: 10`); `$param` is only for manual helpers, never load queries. Names and types are inferred.
+Binding syntax is location-specific: path strings use `{option:name}` or `{param:name}` with no `$` (for example, `/items/{option:itemId}`); query/body objects use `{"$option":"name"}` or `{"$param":"name"}`. `$param` is manual-only; `$option` may drive loads. Constants stay primitive (`take: 10`); names and types are inferred.
 
 Every option has `label`, `control`, and `default`. Optional fields are `description`, `choices`, `choicesFrom`, `min`, `max`, `step`, `advanced`, and `group`.

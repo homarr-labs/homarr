@@ -13,7 +13,7 @@ export const CUSTOM_WIDGET_SKILL_SOURCE_URL =
   "https://github.com/homarr-labs/homarr/tree/HEAD/.agents/skills/homarr-custom-widget";
 export const CUSTOM_WIDGET_SKILL_INSTALL_COMMAND =
   "npx skills add https://github.com/homarr-labs/homarr --skill homarr-custom-widget";
-export const CUSTOM_WIDGET_SKILL_VERSION = "2.10.4";
+export const CUSTOM_WIDGET_SKILL_VERSION = "2.10.5";
 export const CUSTOM_WIDGET_SKILL_REFERENCE_NAMES = ["schema", "runtime", "security"] as const;
 export type CustomWidgetSkillReferenceName = (typeof CUSTOM_WIDGET_SKILL_REFERENCE_NAMES)[number];
 
@@ -91,7 +91,7 @@ Auth is \`none\`, \`bearer\`, \`basic\`, \`{ "type": "apiKeyHeader", "name": "X-
 
 Use stable real URLs for public APIs and clear suggested URLs for self-hosted services. Homarr collects the installer's server URL, network scope, and credentials as source setup; credentials remain outside the manifest.
 
-Paths use \`{option:name}\` and \`{param:name}\`; query/body references use \`{ "$option": "name" }\` and \`{ "$param": "name" }\`. Constants stay primitive (\`take: 10\`); \`$param\` is only for manual helpers, never load queries. Names and types are inferred.
+Binding syntax is location-specific: path strings use \`{option:name}\` or \`{param:name}\` with no \`$\` (for example, \`/items/{option:itemId}\`); query/body objects use \`{\"$option\":\"name\"}\` or \`{\"$param\":\"name\"}\`. \`$param\` is manual-only; \`$option\` may drive loads. Constants stay primitive (\`take: 10\`); names and types are inferred.
 
 Every option has \`label\`, \`control\`, and \`default\`. Optional fields are \`description\`, \`choices\`, \`choicesFrom\`, \`min\`, \`max\`, \`step\`, \`advanced\`, and \`group\`.
 `,
@@ -150,15 +150,13 @@ description: Author, validate, preview, test, install, or configure API-backed H
 
 # Homarr Custom Widget
 
-Author one widget at a time with release-matched context. Finish validation, evidence, and persistence before the next
-widget, then return the artifact.
+Author one widget with release-matched context; finish validation, evidence, persistence, then return artifact.
 
 - Read primary API documentation once when it is missing or may have changed. Treat supplied samples and successful
   previews as the binding contract; load only needed schema, runtime, security, or component context.
-- Search for unknown components once, batch selected details, reuse \`contextAlreadyLoaded\`, and do not repeat unavailable
-  lookups. A provider/model rejection is terminal: record it and finish from loaded context.
+- Search for unknown components once and batch selected details. \`contextAlreadyLoaded\` means reuse the earlier result and continue; \`phaseComplete\` advances to the next visible tool. Stop only for a genuine provider/model or closed-workbench failure.
 - Community widgets use \`customWidget_workshopSearch\`, \`customWidget_workshopGet\`, and
-  \`customWidget_workshopInstall\`; configure and persist before preview expires.
+  \`customWidget_workshopInstall\`; configure and persist.
 
 Return one fenced \`json\` block with the complete definition; keep evidence prose outside it. The definition has keyed
 \`sources\`, \`requests\`, \`template\`, and optional \`options\`; actions are requests with \`kind: "action"\`.
@@ -167,10 +165,8 @@ Return one fenced \`json\` block with the complete definition; keep evidence pro
   use \`type: "integration"\` and \`integrationKind\`. Homarr holds credentials.
 - For saved integrations, discover HTTP kinds and full-access entries with \`integration_getKinds\`/\`integration_all\`, bind
   \`integrationId\` before preview, omit URL/auth fields, and keep non-GET requests as actions.
-- Requests use literal slash-prefixed paths. Load/current display queries use \`trigger: "load"\`, including option-bound
-  requests read through \`data\`/\`status\` and \`RefreshButton\`; use \`trigger: "manual"\` only for explicit manual helpers.
-- Actions stay manual; preserve \`confirmation\`, \`permission\`, and \`invalidates\`; DELETE requires full permission and
-  confirmation. \`$option\` is for saved options; \`$param\` is only for manual \`SubFetch\`, \`ActionButton\`, or \`ToggleSwitch\`.
+- Requests use slash-prefixed paths: path strings use \`{option:name}\` or \`{param:name}\`; query/body objects use \`{\"$option\":\"name\"}\` or \`{\"$param\":\"name\"}\`. Loads use \`trigger: "load"\`; explicit manual helpers use \`trigger: "manual"\`.
+- Actions stay manual; preserve \`confirmation\`, \`permission\`, and \`invalidates\`; DELETE requires full permission and confirmation. \`$param\` is manual-only; \`$option\` may drive load queries.
 - Read load data from \`data.requestId\`, check \`status.requestId?.loading\` and \`status.requestId?.ok === false\`, and show
   loading, error, empty, and success states with \`RefreshButton requestId="..."\`. \`SubFetch\` owns manual loading/error/retry
   and receives \`(result, metadata)\`; map the response array, not its envelope.
@@ -188,32 +184,36 @@ Return one fenced \`json\` block with the complete definition; keep evidence pro
 2. Use \`customWidget_validateTemplate\` for focused JSX diagnostics. Send source/request/option changes once to
    \`customWidget_previewCreate\`; use \`customWidget_previewReviseTemplate\` for a JSX-only correction in its session. In the
    Assistant wrapper, multiline JSX uses \`templateLines\` and preview creation receives the complete definition.
-3. Test every returned query or simulated action once. After a validation failure, make one corrected candidate and
-   revalidate. Stop when the result is incomplete, the workbench closes, or the provider/model rejects the call.
+3. Test every returned query or simulated action once. On a concrete schema or preview error, fix only that field, call \`customWidget_validateTemplate\` once to re-enter validation, then visible \`customWidget_previewCreate\` with the corrected definition; use \`customWidget_previewReviseTemplate\` only for JSX-only errors. Stop only for genuine provider/model, lifecycle-service, or workbench-closure failures.
 4. After a successful final preview and exact tests, call \`customWidget_createFromPreview\`; configure private URLs and
    credentials through Homarr and never repeat plaintext secrets.
 
 ## Delivery
 
-Report each lifecycle call only by its actual result. If a required tool result is unavailable, add exactly one line after
-the artifact beginning \`Unverified:\` naming the missing validation, preview, renderer, or persistence step. Never claim
-rendering or persistence from schema checks alone.
+Report actual lifecycle results. If unavailable, add one post-artifact \`Unverified:\` line naming missing validation, preview,
+renderer, or persistence. Never claim rendering/persistence from schema checks.
 `;
 
 const CUSTOM_WIDGET_SKILL_ENTRYPOINT_MD = `# Homarr Custom Widget authoring index
 
-Use release-matched tools and load required context. Research primary API documentation once. For each
-widget, validate JSX, create one preview, test every returned query and relevant simulated action, then persist that exact
-preview. A JSX-only correction uses \`customWidget_previewReviseTemplate\` with the session; it inherits the manifest and
-resets evidence. In the Assistant wrapper, send multiline JSX to \`customWidget_validateTemplate\` and
-\`customWidget_previewReviseTemplate\` as \`templateLines\`; \`previewCreate\` receives the complete definition with
-\`template\` or \`templateLines\`.
+Use release-matched tools and primary docs. For each widget, validate JSX, create one preview, test every returned query/action,
+then persist that exact preview. JSX-only fixes use \`customWidget_previewReviseTemplate\` with its session; it resets evidence.
+In the Assistant wrapper, multiline JSX goes to \`templateLines\`; \`previewCreate\` receives the complete definition.
 
-Deliver the smallest complete result. Preserve a migration's API intent, request shape, and visible behavior; simple lists use one source, one request, and a compact template. Run each lifecycle call once; one validation failure may lead to one correction and revalidation. On provider/model, unavailable, \`contextAlreadyLoaded\`, or closed-workbench errors, stop retrying and reuse loaded context. If lifecycle tools cannot run, return one complete importable definition and one unverified note. Use the configured model exactly and keep updates to the result and next action.
+Deliver the smallest result while preserving migration intent, request shape, and visible behavior. On a concrete schema/preview
+error, fix only that field, call \`customWidget_validateTemplate\` once, then visible \`customWidget_previewCreate\` with the
+corrected definition. Changes to sources/requests/options require fresh \`customWidget_previewCreate\`; JSX-only fixes use
+\`customWidget_previewReviseTemplate\`. \`contextAlreadyLoaded\` reuses earlier context and continues; \`phaseComplete\` advances.
+Only genuine provider/model, unavailable lifecycle service, or closed-workbench errors are terminal. If lifecycle tools are
+unavailable, return one importable definition and one unverified note.
 
-Fallback artifact contract: emit one parseable \`json\` fence with \`sources.default.baseUrl\`, \`networkScope\`, and \`auth\`, leading-slash request paths, option \`control\`, and status checks such as \`status.id?.loading\` or \`status.id?.ok === true\`. Never compare \`status.id\` directly; keep the unverified note outside the fence. Templates read \`data.requestId\` and \`status.requestId\`.
+Binding: path strings use \`{option:name}\`/\`{param:name}\`; query/body objects use \`{"$option":"name"}\`/\`{"$param":"name"}\`;
+$param is manual-only and $option may drive loads. Fallbacks preserve source shape: HTTP uses \`baseUrl\`, \`networkScope\`, \`auth\`;
+integrations use \`type: "integration"\`, \`integrationKind\`, optional \`integrationId\`. Keep paths slash-prefixed, options with
+\`control\`, status checks, and the unverified note outside one parseable \`json\` fence.
 
-Load \`schema\` once for a new manifest, \`runtime\` for manual interactions, and \`security\` once for authenticated sources or mutations. Use one focused component search per job, prefer registered names returned by discovery (\`Icon\` aliases canonical \`TablerIcon\`), keep credentials outside definitions, and make initial, loading, empty, error, and success states useful. Independent context reads may run together; lifecycle tools run one at a time.`;
+Load \`schema\` once for a new manifest, \`runtime\` for manual interactions, and \`security\` for auth/mutations. Search once,
+prefer discovered components, keep credentials outside definitions, and make all states useful.`;
 
 const CUSTOM_WIDGET_SKILL_BUNDLE_MD = [
   CUSTOM_WIDGET_SKILL_MD.trimEnd(),
