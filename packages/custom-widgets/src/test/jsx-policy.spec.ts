@@ -42,6 +42,29 @@ describe("shared Custom JSX policy", () => {
     expect(diagnostics.filter(({ severity }) => severity === "error")).toEqual([]);
   });
 
+  test.each([
+    ["status.list.isLoading", "isLoading"],
+    ["status.list?.isError", "isError"],
+    ['status["list"]["isFetching"]', "isFetching"],
+  ])("rejects unsupported request-status field %s", (expression, field) => {
+    const diagnostics = validateCustomJsxTemplate(`<Text>{${expression} ? "Busy" : "Ready"}</Text>`);
+    expect(diagnostics).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          severity: "error",
+          message: expect.stringContaining(`INVALID_STATUS_FIELD: status.list.${field}`),
+        }),
+      ]),
+    );
+  });
+
+  test("preserves valid status fields and dynamic status access", () => {
+    const diagnostics = validateCustomJsxTemplate(
+      '<Text>{status.list?.loading ? "Loading" : status.list?.ok === false ? status.list.error : status.list[inputs.field]} {data.status.isLoading}</Text>',
+    );
+    expect(diagnostics.filter(({ severity }) => severity === "error")).toEqual([]);
+  });
+
   test("handles nullish comparisons without coercing sanitized objects", () => {
     const healthTemplate = '<Text>{data.health == null ? "No status" : "Degraded"}</Text>';
     expect(renderText(healthTemplate, {})).toContain("No status");

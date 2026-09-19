@@ -5,11 +5,12 @@ description: Author, validate, preview, test, install, or configure API-backed H
 
 # Homarr Custom Widget
 
-Author one widget with release-matched context; finish validation, evidence, persistence, then return artifact.
+Author requested widgets with release context; validate, test, persist, and return artifacts.
 
-- Read primary API documentation once when it is missing or may have changed. Treat supplied samples and successful
-  previews as the binding contract; load only needed schema, runtime, security, or component context.
-- Search for unknown components once and batch selected details. `contextAlreadyLoaded` means reuse the earlier result and continue; `phaseComplete` advances to the next visible tool. Stop only for a genuine provider/model or closed-workbench failure.
+- Read primary API docs when missing/changed. Samples and successful previews are binding; load only needed schema, runtime,
+  security, or component context.
+- Batch unknown component searches/details. `contextAlreadyLoaded` reuses context; `phaseComplete` advances. Stop only for
+  genuine provider/model, lifecycle-service, or workbench-closure failure.
 - Community widgets use `customWidget_workshopSearch`, `customWidget_workshopGet`, and
   `customWidget_workshopInstall`; configure and persist.
 
@@ -25,11 +26,11 @@ Return one fenced `json` block with the complete definition; keep evidence prose
   Loads use `trigger: "load"`; manual helpers use `trigger: "manual"`.
 - Actions stay manual; preserve `confirmation`, `permission`, and `invalidates`; DELETE requires full permission/confirmation.
   `$param` is manual-only; `$option` may drive loads.
-- Read `data.requestId`; check `status.requestId?.loading`/`?.ok === false`; show loading/error/empty/success with
-  `RefreshButton`. `SubFetch` owns manual loading/error/retry, receives `(result, metadata)`; map the response array, not envelope.
+- Load data.requestId/status.requestId with RefreshButton; status.requestId?.ok === false is error. Manual SubFetch never
+  populates data/status; its child receives (result, metadata) and renders its fields.
 - Options have `label`, `control`, `default`; installation config is `options.name`, never `inputs`. Request-bound TextInput,
   Select, NumberInput, Pagination use literal `bind` + default and manual `SubFetch params` map `inputs.<name>` to `$param`.
-  Dependent pagination uses `defaultValue={1}`/`resetKey={inputs.query}`. Remove controls with no option, request, or helper; guard arrays/nested with `??`;
+  Dependent pagination uses `defaultValue={1}`/`resetKey={inputs.query}`. Remove controls without an option/request/helper; guard arrays/nested with `??`;
   preserve documented timezone values; use UTC only when the contract says UTC.
 - Templates are one expression: no imports, hooks, refs, raw HTML/events, browser requests, eval, recursion, IIFEs,
   statement blocks, or arbitrary functions. Use registered component names; `Icon` may alias `TablerIcon`. Keep hierarchy,
@@ -37,14 +38,18 @@ Return one fenced `json` block with the complete definition; keep evidence prose
 
 ## Bounded lifecycle
 
-1. Build a credential-free definition from the request, verified context, and sample. Preserve a migration's supported API
-   path, method, body, options, and visible behavior; omit unknown requests rather than guessing.
-2. Use `customWidget_validateTemplate` for focused JSX diagnostics. Send source/request/option changes once to
-   `customWidget_previewCreate`; use `customWidget_previewReviseTemplate` for a JSX-only correction in its session. In the
-   Assistant wrapper, multiline JSX uses `templateLines` and preview creation receives the complete definition.
-3. Test every returned query or simulated action once. On a concrete schema or preview error, fix only that field, call `customWidget_validateTemplate` once to re-enter validation, then visible `customWidget_previewCreate` with the corrected definition; use `customWidget_previewReviseTemplate` only for JSX-only errors. Stop only for genuine provider/model, lifecycle-service, or workbench-closure failures.
-4. After a successful final preview and exact tests, call `customWidget_createFromPreview`; configure private URLs and
-   credentials through Homarr and never repeat plaintext secrets.
+1. Build a credential-free definition from request, verified context, and sample. Preserve a migration's API path, method,
+   body, options, and behavior; omit unknown requests rather than guessing.
+2. Use `customWidget_validateTemplate` for JSX diagnostics. Send source/request/option changes once to
+   `customWidget_previewCreate`; use `customWidget_previewReviseTemplate` for JSX-only corrections. In the Assistant wrapper,
+   multiline JSX uses `templateLines` and preview creation receives the complete definition.
+3. Test every returned query/simulated action once. On a concrete schema/preview error, fix only that field, call
+   `customWidget_validateTemplate` once, then visible `customWidget_previewCreate` with the corrected definition; use
+   `customWidget_previewReviseTemplate` only for JSX errors. Stop only for genuine provider/model, lifecycle-service, or
+   workbench-closure failure.
+4. After a successful final preview/tests, call `customWidget_createFromPreview`; follow `nextAction` once if needed, finish it,
+   and never recreate it. Continue only with distinct requested widgets; configure URLs/credentials in Homarr and never repeat
+   plaintext secrets.
 
 ## Delivery
 
