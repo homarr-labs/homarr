@@ -12,8 +12,9 @@ import { createCustomCheckServerIdentity } from "@homarr/core/infrastructure/htt
 import { CustomWidgetDomainError } from "@homarr/custom-widgets/server";
 import type { CustomWidgetAuthConfig, CustomWidgetHttpRequest } from "@homarr/custom-widgets/server";
 import type { Database } from "@homarr/db";
-import { eq, inArray } from "@homarr/db";
+import { asc, eq, inArray } from "@homarr/db";
 import { groupMembers, integrations, integrationGroupPermissions, integrationUserPermissions } from "@homarr/db/schema";
+import type { IntegrationKind } from "@homarr/definitions";
 import { isHttpIntegrationKind } from "@homarr/definitions";
 import { getIntegrationHttpAuthenticationAsync } from "@homarr/integrations/factory";
 
@@ -46,6 +47,35 @@ export async function getIntegrationForHttpRequest(ctx: IntegrationHttpContext, 
   if (!isHttpIntegrationKind(integration.kind)) {
     throw new TRPCError({ code: "BAD_REQUEST", message: "This integration does not support arbitrary HTTP requests" });
   }
+  return integration;
+}
+
+export async function selectIntegrationForHttpRequest(
+  ctx: IntegrationHttpContext,
+  selector: { integrationId?: string; integrationName?: string; integrationKind?: IntegrationKind },
+) {
+  if (selector.integrationId) return getIntegrationForHttpRequest(ctx, selector.integrationId);
+  const userId = ctx.session?.user.id ?? "";
+  const groups = await ctx.db.query.groupMembers.findMany({ where: eq(groupMembers.userId, userId) });
+  let where;
+  if (selector.integrationName) where = eq(integrations.name, selector.integrationName);
+  else if (selector.integrationKind) where = eq(integrations.kind, selector.integrationKind);
+  else throw new TRPCError({ code: "BAD_REQUEST", message: "An integration selector is required" });
+  const matches = await ctx.db.query.integrations.findMany({
+    where,
+    orderBy: [asc(integrations.name), asc(integrations.id)],
+    with: {
+      secrets: true,
+      userPermissions: { where: eq(integrationUserPermissions.userId, userId) },
+      groupPermissions: {
+        where: inArray(integrationGroupPermissions.groupId, groups.map(({ groupId }) => groupId).concat("")),
+      },
+    },
+  });
+  const integration = matches.find((entry) => constructIntegrationPermissions(entry, ctx.session).hasFullAccess);
+  if (!integration) throw new TRPCError({ code: "FORBIDDEN", message: "No matching integration with full access" });
+  if (!isHttpIntegrationKind(integration.kind))
+    throw new TRPCError({ code: "BAD_REQUEST", message: "This integration does not support arbitrary HTTP requests" });
   return integration;
 }
 

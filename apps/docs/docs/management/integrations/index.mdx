@@ -17,6 +17,14 @@ actions to widgets and can be linked to apps.
 See the [integration catalog](/docs/category/integrations) for service-specific URLs, credentials, and supported
 widgets.
 
+## Beyond native widgets
+
+A missing native feature does not mean the integration cannot do it. If the service exposes an API endpoint, an agent
+can consult its API docs and test the request through [`integration_request`](../mcp#authenticated-integration-requests),
+Homarr's most powerful MCP tool. Then bind the same saved integration to a
+[Custom Widget source](../custom-widgets/requests-and-security#existing-integrations) to display its data or run actions.
+Both reuse saved credentials and require **full integration access**; check `supportsHttpRequests` for compatibility.
+
 ## Browser and server routes
 
 <IntegrationRoutesDiagram />
@@ -39,11 +47,11 @@ integration everywhere it is used.
 
 ## Permissions
 
-| Level    | Allows                                                   |
-| -------- | -------------------------------------------------------- |
-| Use      | Select the integration and read its data                 |
-| Interact | Run supported actions, such as pausing a download        |
-| Full     | Change the URL, credentials, permissions, and linked app |
+| Level    | Allows                                                       |
+| -------- | ------------------------------------------------------------ |
+| Use      | Select the integration and read its data                     |
+| Interact | Run supported actions, such as pausing a download            |
+| Full     | Change integration settings and call arbitrary API endpoints |
 
 ![Per-integration access for users and groups](./img/integration-permissions.png)
 

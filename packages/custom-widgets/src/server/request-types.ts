@@ -18,7 +18,7 @@ export interface CustomWidgetHttpRequest {
   redactSecrets?: CustomWidgetAuthConfig["secrets"];
   baseUrl: string;
   targetUrl?: string | URL;
-  method: CustomWidgetMethod;
+  method: CustomWidgetMethod | "HEAD" | "OPTIONS";
   body?: string;
   staticHeaders?: Record<string, string>;
   auth?: CustomWidgetAuthConfig;
@@ -28,7 +28,12 @@ export interface CustomWidgetHttpRequest {
   textFallback?: boolean;
   cacheKey?: string;
   cacheTtlSeconds?: number;
-  logError?: (event: { origin: string; method: CustomWidgetMethod; errorName: string; reason?: "timeout" }) => void;
+  logError?: (event: {
+    origin: string;
+    method: CustomWidgetMethod | "HEAD" | "OPTIONS";
+    errorName: string;
+    reason?: "timeout";
+  }) => void;
 }
 
 export interface CustomWidgetHttpResponse {
