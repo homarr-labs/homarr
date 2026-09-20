@@ -429,9 +429,10 @@ const createSearchEnginesSearchGroup = ({ minimumLength, showEmptyHint, source }
 
       const engineCatalog = enginesQuery.data ?? [];
       const engineData = filterCatalog(engineCatalog, bangToken, (engine) => [engine.short, engine.name], 10);
-      const ddgData = ddgQueryEnabled && bangToken.length > 0
-        ? (ddgQuery.data ?? []).filter((bang) => bang.t.toLowerCase().startsWith(bangToken.toLowerCase()))
-        : [];
+      const ddgData =
+        ddgQueryEnabled && bangToken.length > 0
+          ? (ddgQuery.data ?? []).filter((bang) => bang.t.toLowerCase().startsWith(bangToken.toLowerCase()))
+          : [];
       const isWaitingForDdgResults =
         ddgBangs &&
         bangToken.length > 0 &&
