@@ -7,7 +7,7 @@ import SuperJSON from "superjson";
 import { expect, test } from "vitest";
 
 import { DB_CASING } from "@homarr/core/infrastructure/db/constants";
-import { widgetIntegrationSupport, widgetKinds } from "@homarr/definitions";
+import { widgetIntegrationSupport } from "@homarr/definitions";
 
 import type { Database } from "..";
 import { seedDataAsync } from "../migrations/seed";
@@ -46,7 +46,7 @@ test("SQLite migrations seed the five disabled bundled custom widgets", async ()
   connection.close();
 });
 
-test("SQLite migrations seed the complete demo widget gallery", async () => {
+test("SQLite migrations seed the intentional demo showcase", async () => {
   const previousDemoMode = process.env.DEMO_MODE;
   process.env.DEMO_MODE = "true";
   const connection = new BetterSqlite3(":memory:");
@@ -126,24 +126,60 @@ test("SQLite migrations seed the complete demo widget gallery", async () => {
     expectItemLayout("beszelSystemStats", 6, 7, 3, 2);
     expectItemLayout("notifications", 3, 9, 2, 2);
     expectItemLayout("beszelAlerts", 5, 9, 4, 2);
+    expectItemLayout("beszelSystemTable", 0, 14, 12, 3);
+    expectItemLayout("stats", 0, 33, 12, 4);
 
-    expect(new Set(board.items.map((item) => item.kind))).toEqual(new Set(widgetKinds));
+    const removedKinds = [
+      "llamacpp",
+      "networkControllerSummary",
+      "mediaTranscoding",
+      "smartHome-entityState",
+      "smartHome-executeAutomation",
+      "dnsHoleControls",
+      "iframe",
+      "video",
+      "minecraftServerStatus",
+    ];
+    expect(board.items.filter((item) => removedKinds.includes(item.kind))).toEqual([]);
+    expect(board.items.filter((item) => item.kind === "stats")).toHaveLength(1);
+
     const mockIntegration = await database.query.integrations.findFirst({
       where: (table, { eq }) => eq(table.kind, "mock"),
     });
     if (!mockIntegration) throw new Error("Demo mock integration was not seeded");
     for (const item of board.items) {
+      if (item.kind === "stats") continue;
       if (widgetIntegrationSupport[item.kind] === undefined) continue;
       expect(item.integrations).toEqual([
         expect.objectContaining({ integrationId: mockIntegration.id, itemId: item.id }),
       ]);
     }
 
+    const statsItem = itemByKind("stats");
+    if (!statsItem?.options) throw new Error("Demo statistics widget was not seeded");
+    const statsOptions = SuperJSON.parse<{
+      table: boolean;
+      entries: { integrationId: string; metric: string }[];
+    }>(statsItem.options);
+    expect(statsOptions.table).toBe(true);
+    expect(statsOptions.entries).toHaveLength(37);
+    const statsIntegrationIds = new Set(statsItem.integrations.map(({ integrationId }) => integrationId));
+    expect(statsIntegrationIds).toEqual(new Set(statsOptions.entries.map(({ integrationId }) => integrationId)));
+    const statsIntegrations = (await database.query.integrations.findMany()).filter(({ id }) =>
+      statsIntegrationIds.has(id),
+    );
+    expect(new Set(statsIntegrations.map(({ kind }) => kind))).toEqual(
+      new Set(["sonarr", "radarr", "qBittorrent", "proxmox", "piHole", "immich", "karakeep", "mealie"]),
+    );
+
     for (const kind of ["weather", "airQuality"]) {
       const item = itemByKind(kind);
       if (!item?.options) throw new Error(`Demo ${kind} options were not seeded`);
       expect(SuperJSON.parse<{ location: { name: string } }>(item.options).location.name).toBe("Paris");
     }
+    const notebook = itemByKind("notebook");
+    if (!notebook?.options) throw new Error("Demo notebook options were not seeded");
+    expect(SuperJSON.parse<{ content: string }>(notebook.options).content).toContain("Hold Shift over any widget");
 
     const expectFilledGrid = (
       placements: { xOffset: number; yOffset: number; width: number; height: number }[],

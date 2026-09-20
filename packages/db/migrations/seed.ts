@@ -13,7 +13,7 @@ import {
   integrationKinds,
   normalizeBoardLayoutRoles,
 } from "@homarr/definitions";
-import type { WidgetKind } from "@homarr/definitions";
+import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server-settings";
 
 import type { Database, InferInsertModel } from "..";
@@ -520,8 +520,25 @@ interface DemoWidget {
   width: number;
   height: number;
   needsIntegration: boolean;
+  integrationIds?: string[];
   options?: Record<string, unknown>;
 }
+
+const demoStatsSources = [
+  { kind: "sonarr", metrics: ["shows", "monitored", "downloaded", "storage", "missing", "queued", "episodes"] },
+  { kind: "radarr", metrics: ["movies", "monitored", "downloaded", "storage", "missing", "queued"] },
+  { kind: "qBittorrent", metrics: ["download", "upload", "paused"] },
+  { kind: "proxmox", metrics: ["nodes", "vms", "lxcs"] },
+  {
+    kind: "piHole",
+    metrics: ["dnsQueriesToday", "adsBlockedToday", "adsBlockedTodayPercentage", "domainsBeingBlocked"],
+  },
+  { kind: "immich", metrics: ["userCount", "photoCount", "videoCount", "totalLibraryUsageInBytes"] },
+  { kind: "karakeep", metrics: ["bookmarks", "favorites", "archived", "highlights", "lists", "tags"] },
+  { kind: "mealie", metrics: ["recipes", "users", "categories", "tags"] },
+] as const satisfies readonly { kind: IntegrationKind; metrics: readonly string[] }[];
+
+type DemoStatsIntegrationKind = (typeof demoStatsSources)[number]["kind"];
 
 const demoApps = [
   {
@@ -586,7 +603,11 @@ const demoApps = [
   },
 ] as const;
 
-const buildDemoWidgets = (appIds: string[], customWidgetDefinitionId: string, integrationId: string): DemoWidget[] => [
+const buildDemoWidgets = (
+  appIds: string[],
+  customWidgetDefinitionId: string,
+  statsIntegrationIds: Record<DemoStatsIntegrationKind, string>,
+): DemoWidget[] => [
   // Daily focus
   { kind: "calendar", xOffset: 0, yOffset: 0, width: 2, height: 2, needsIntegration: true },
   {
@@ -662,8 +683,8 @@ const buildDemoWidgets = (appIds: string[], customWidgetDefinitionId: string, in
       content: `
 <p style="text-align: center"><img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/homarr-wordmark-light.svg" width="28%"></p>
 <h2>Welcome to <strong><span style="color: rgb(250, 82, 82)">Homarr demo</span></strong></h2>
-<p>Your apps, widgets, and notes, all in one place.</p>
-<p>Explore the widgets, rearrange the dashboard, or edit this <strong>notebook</strong> to make it your own.</p>
+<p>Your apps, live integrations, and notes, all in one place.</p>
+<p><strong>Hold Shift over any widget</strong> to reveal its advanced view. You can also rearrange the board or edit this notebook.</p>
 <p><a href="https://homarr.dev/docs/getting-started" target="_blank" rel="noopener noreferrer">Get started with Homarr</a></p>
 `,
     },
@@ -736,10 +757,8 @@ const buildDemoWidgets = (appIds: string[], customWidgetDefinitionId: string, in
   { kind: "notifications", xOffset: 3, yOffset: 9, width: 2, height: 2, needsIntegration: true },
   { kind: "beszelAlerts", xOffset: 5, yOffset: 9, width: 4, height: 2, needsIntegration: true },
 
-  // Extended integrations
-  { kind: "mediaTranscoding", xOffset: 0, yOffset: 14, width: 4, height: 3, needsIntegration: true },
-  { kind: "beszelSystemTable", xOffset: 4, yOffset: 14, width: 4, height: 3, needsIntegration: true },
-  { kind: "networkControllerSummary", xOffset: 8, yOffset: 14, width: 4, height: 3, needsIntegration: true },
+  // Infrastructure detail
+  { kind: "beszelSystemTable", xOffset: 0, yOffset: 14, width: 12, height: 3, needsIntegration: true },
   {
     kind: "networkControllerStatus",
     xOffset: 0,
@@ -751,30 +770,9 @@ const buildDemoWidgets = (appIds: string[], customWidgetDefinitionId: string, in
   },
   { kind: "ups", xOffset: 3, yOffset: 17, width: 3, height: 2, needsIntegration: true },
   {
-    kind: "smartHome-entityState",
+    kind: "bookmarks",
     xOffset: 6,
     yOffset: 17,
-    width: 3,
-    height: 2,
-    needsIntegration: true,
-    options: { entityId: "sensor.homarr_demo", displayName: "Demo environment", entityUnit: "online" },
-  },
-  {
-    kind: "smartHome-executeAutomation",
-    xOffset: 9,
-    yOffset: 17,
-    width: 3,
-    height: 2,
-    needsIntegration: true,
-    options: { automationId: "automation.homarr_demo", displayName: "Run demo routine" },
-  },
-
-  // Everyday tools
-  { kind: "dnsHoleControls", xOffset: 0, yOffset: 19, width: 2, height: 2, needsIntegration: true },
-  {
-    kind: "bookmarks",
-    xOffset: 2,
-    yOffset: 19,
     width: 4,
     height: 2,
     needsIntegration: false,
@@ -782,8 +780,8 @@ const buildDemoWidgets = (appIds: string[], customWidgetDefinitionId: string, in
   },
   {
     kind: "countdown",
-    xOffset: 6,
-    yOffset: 19,
+    xOffset: 10,
+    yOffset: 17,
     width: 2,
     height: 2,
     needsIntegration: false,
@@ -802,127 +800,100 @@ const buildDemoWidgets = (appIds: string[], customWidgetDefinitionId: string, in
       showSeconds: false,
     },
   },
-  { kind: "stockPrice", xOffset: 8, yOffset: 19, width: 2, height: 2, needsIntegration: false },
-  { kind: "releases", xOffset: 10, yOffset: 19, width: 2, height: 2, needsIntegration: false },
-  {
-    kind: "iframe",
-    xOffset: 0,
-    yOffset: 21,
-    width: 4,
-    height: 3,
-    needsIntegration: false,
-    options: {
-      embedUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/homarr.svg",
-      allowScrolling: false,
-    },
-  },
-  {
-    kind: "video",
-    xOffset: 4,
-    yOffset: 21,
-    width: 4,
-    height: 3,
-    needsIntegration: false,
-    options: {
-      feedUrl: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
-      hasAutoPlay: false,
-      isMuted: true,
-      hasControls: true,
-    },
-  },
-  { kind: "minecraftServerStatus", xOffset: 8, yOffset: 21, width: 2, height: 3, needsIntegration: false },
+  // Everyday tools
+  { kind: "stockPrice", xOffset: 0, yOffset: 19, width: 2, height: 2, needsIntegration: false },
+  { kind: "releases", xOffset: 2, yOffset: 19, width: 2, height: 2, needsIntegration: false },
   {
     kind: "timetable",
-    xOffset: 10,
-    yOffset: 21,
+    xOffset: 4,
+    yOffset: 19,
     width: 2,
-    height: 3,
+    height: 2,
     needsIntegration: false,
     options: { baseUrl: "https://search.ch", station: { value: "8507000", label: "Bern" } },
   },
+  { kind: "uptimeKuma", xOffset: 6, yOffset: 19, width: 3, height: 2, needsIntegration: true },
+  { kind: "firewall", xOffset: 9, yOffset: 19, width: 3, height: 2, needsIntegration: true },
 
-  // Complete mock integration gallery
+  // Integration showcase
   {
     kind: "immich-albumCarousel",
     xOffset: 0,
-    yOffset: 24,
+    yOffset: 21,
     width: 3,
     height: 3,
     needsIntegration: true,
     options: { albumId: "demo-paris", rotationIntervalSeconds: 8, showPhotoInfo: true, randomizePhotos: false },
   },
-  { kind: "coolify", xOffset: 3, yOffset: 24, width: 3, height: 3, needsIntegration: true },
-  { kind: "systemResources", xOffset: 6, yOffset: 24, width: 3, height: 3, needsIntegration: true },
-  { kind: "systemDisks", xOffset: 9, yOffset: 24, width: 3, height: 3, needsIntegration: true },
+  { kind: "coolify", xOffset: 3, yOffset: 21, width: 3, height: 3, needsIntegration: true },
+  { kind: "systemResources", xOffset: 6, yOffset: 21, width: 3, height: 3, needsIntegration: true },
+  { kind: "systemDisks", xOffset: 9, yOffset: 21, width: 3, height: 3, needsIntegration: true },
 
-  { kind: "immich-serverStats", xOffset: 0, yOffset: 27, width: 2, height: 3, needsIntegration: true },
-  { kind: "paperlessNgx", xOffset: 2, yOffset: 27, width: 2, height: 3, needsIntegration: true },
-  { kind: "patchmon", xOffset: 4, yOffset: 27, width: 2, height: 3, needsIntegration: true },
+  { kind: "immich-serverStats", xOffset: 0, yOffset: 24, width: 2, height: 3, needsIntegration: true },
+  { kind: "paperlessNgx", xOffset: 2, yOffset: 24, width: 2, height: 3, needsIntegration: true },
+  { kind: "patchmon", xOffset: 4, yOffset: 24, width: 2, height: 3, needsIntegration: true },
   {
     kind: "speedtestTracker",
     xOffset: 6,
-    yOffset: 27,
+    yOffset: 24,
     width: 4,
     height: 3,
     needsIntegration: true,
     options: { showLatestResult: true, showStats: true, showRecentResults: false, showPingGraph: false },
   },
-  { kind: "audioStats", xOffset: 10, yOffset: 27, width: 2, height: 3, needsIntegration: true },
+  { kind: "audioStats", xOffset: 10, yOffset: 24, width: 2, height: 3, needsIntegration: true },
 
-  { kind: "uptimeKuma", xOffset: 0, yOffset: 30, width: 3, height: 2, needsIntegration: true },
-  { kind: "firewall", xOffset: 3, yOffset: 30, width: 3, height: 2, needsIntegration: true },
-  { kind: "vpn", xOffset: 6, yOffset: 30, width: 3, height: 2, needsIntegration: true },
-  { kind: "bazarr", xOffset: 9, yOffset: 30, width: 3, height: 2, needsIntegration: true },
+  { kind: "vpn", xOffset: 0, yOffset: 27, width: 3, height: 2, needsIntegration: true },
+  { kind: "bazarr", xOffset: 3, yOffset: 27, width: 3, height: 2, needsIntegration: true },
+  { kind: "archiveTeamWarrior", xOffset: 6, yOffset: 27, width: 3, height: 2, needsIntegration: true },
+  { kind: "wud", xOffset: 9, yOffset: 27, width: 3, height: 2, needsIntegration: true },
 
-  { kind: "archiveTeamWarrior", xOffset: 0, yOffset: 32, width: 3, height: 2, needsIntegration: true },
-  { kind: "wud", xOffset: 3, yOffset: 32, width: 3, height: 2, needsIntegration: true },
   {
     kind: "anchorNote",
-    xOffset: 6,
-    yOffset: 32,
+    xOffset: 0,
+    yOffset: 29,
     width: 2,
     height: 2,
     needsIntegration: true,
     options: { noteId: "homarr-demo-note", showTitle: true, showUpdatedAt: true },
   },
-  { kind: "tracearr", xOffset: 8, yOffset: 32, width: 4, height: 2, needsIntegration: true },
+  { kind: "tracearr", xOffset: 2, yOffset: 29, width: 4, height: 2, needsIntegration: true },
+  { kind: "traefik", xOffset: 6, yOffset: 29, width: 6, height: 2, needsIntegration: true },
 
-  { kind: "traefik", xOffset: 0, yOffset: 34, width: 6, height: 2, needsIntegration: true },
   {
     kind: "umami",
-    xOffset: 6,
-    yOffset: 34,
-    width: 6,
+    xOffset: 0,
+    yOffset: 31,
+    width: 12,
     height: 2,
     needsIntegration: true,
     options: { websiteId: "homarr-demo", timeFrame: "24h", viewMode: "chart", chartType: "bar" },
   },
 
-  { kind: "llamacpp", xOffset: 0, yOffset: 36, width: 12, height: 3, needsIntegration: true },
-
-  // Statistics examples share deterministic mock snapshots and never contact an external provider.
-  ...["cards", "rows", "table"].map(
-    (view, index): DemoWidget => ({
-      kind: "stats",
-      xOffset: index * 4,
-      yOffset: 39,
-      width: 4,
-      height: 3,
-      needsIntegration: true,
-      options: {
-        rows: view === "rows",
-        table: view === "table",
-        entries: ["documents", "songs", "storage"].map((metric) => ({
-          id: `demo-${view}-${metric}`,
-          integrationId,
+  // One table demonstrates how real integrations can share a single operational overview.
+  {
+    kind: "stats",
+    xOffset: 0,
+    yOffset: 33,
+    width: 12,
+    height: 4,
+    needsIntegration: false,
+    integrationIds: demoStatsSources.map(({ kind }) => statsIntegrationIds[kind]),
+    options: {
+      table: true,
+      rows: false,
+      entries: demoStatsSources.flatMap(({ kind, metrics }) =>
+        metrics.map((metric) => ({
+          id: `demo-stats-${kind}-${metric}`,
+          integrationId: statsIntegrationIds[kind],
           metric,
           label: "",
           hidden: false,
-          compact: view === "rows",
+          compact: false,
         })),
-      },
-    }),
-  ),
+      ),
+    },
+  },
 
   // Right app rail
   ...appIds.map(
@@ -988,6 +959,19 @@ const seedDemoUserAsync = async (db: Database) => {
     kind: "mock",
     appId: null,
   });
+
+  const statsIntegrationIds = {} as Record<DemoStatsIntegrationKind, string>;
+  for (const source of demoStatsSources) {
+    const id = createId();
+    statsIntegrationIds[source.kind] = id;
+    await db.insert(integrations).values({
+      id,
+      name: getIntegrationName(source.kind),
+      url: "https://demo.homarr.dev",
+      kind: source.kind,
+      appId: null,
+    });
+  }
 
   const appIds: string[] = [];
   for (const app of demoApps) {
@@ -1088,7 +1072,7 @@ const seedDemoUserAsync = async (db: Database) => {
     boardId,
   });
 
-  const demoWidgets = buildDemoWidgets(appIds, customWidgetDefinitionId, integrationId);
+  const demoWidgets = buildDemoWidgets(appIds, customWidgetDefinitionId, statsIntegrationIds);
   for (const widget of demoWidgets) {
     let sectionId = mainSectionId;
     if (widget.section === "right") {
@@ -1111,11 +1095,9 @@ const seedDemoUserAsync = async (db: Database) => {
       width: widget.width,
       height: widget.height,
     });
-    if (widget.needsIntegration) {
-      await db.insert(integrationItems).values({
-        itemId,
-        integrationId,
-      });
+    const integrationIds = widget.integrationIds ?? (widget.needsIntegration ? [integrationId] : []);
+    if (integrationIds.length > 0) {
+      await db.insert(integrationItems).values(integrationIds.map((id) => ({ itemId, integrationId: id })));
     }
   }
 
