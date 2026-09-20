@@ -232,7 +232,7 @@ export const searchEnginesChildrenOptions = createChildrenOptions<SearchEngine>(
           },
           useInteraction: interaction.link(({ urlTemplate }, query) => ({
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            href: urlTemplate!.replace("%s", query),
+            href: buildSearchUrl(urlTemplate!, query),
             newTab: openSearchInNewTab,
           })),
         },
@@ -294,7 +294,7 @@ export const buildSearchUrl = (template: string, query: string) => {
     return template.replaceAll("{{{s}}}", encoded);
   }
 
-  return template.replaceAll("%s", encoded);
+  return template.replaceAll("%25s", encoded).replaceAll("%s", encoded);
 };
 
 interface SearchEngineGroupOptions {
