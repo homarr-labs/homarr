@@ -14,12 +14,15 @@ export default function ApiReferenceIndexPage() {
   const pages = apiSource.getPages();
 
   return (
-    <main className="mx-auto w-full max-w-4xl px-5 py-14 sm:px-8">
-      <p className="text-sm font-medium text-fd-primary">OpenAPI</p>
-      <h1 className="mt-2 text-4xl font-semibold tracking-tight">Homarr API reference</h1>
-      <p className="mt-4 max-w-2xl text-lg leading-8 text-fd-muted-foreground">
-        Browse request parameters and response schemas, then generate and test examples from the source-of-truth schema.
-      </p>
+    <main className="homarr-content-page max-w-4xl">
+      <header className="homarr-content-header max-w-2xl">
+        <p className="text-sm font-medium text-fd-primary">OpenAPI</p>
+        <h1 className="homarr-content-title mt-2">Homarr API reference</h1>
+        <p className="homarr-content-lead">
+          Browse request parameters and response schemas, then generate and test examples from the source-of-truth
+          schema.
+        </p>
+      </header>
       <div className="mt-10 divide-y border-y">
         {pages.map((page) => (
           <Link key={page.url} href={page.url} className="group flex items-center gap-3 py-4 hover:bg-fd-accent/50">

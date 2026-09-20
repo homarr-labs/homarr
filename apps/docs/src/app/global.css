@@ -173,6 +173,47 @@ body {
   color: var(--color-fd-muted-foreground);
 }
 
+.homarr-content-page {
+  width: 100%;
+  margin-inline: auto;
+  padding: 3rem 1.25rem;
+}
+
+.homarr-content-header {
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.homarr-content-title {
+  max-width: 24ch;
+  font-size: clamp(2.25rem, 4vw, 3rem);
+  font-weight: 750;
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.homarr-content-lead {
+  max-width: 65ch;
+  margin-top: 1rem;
+  color: var(--color-fd-muted-foreground);
+  font-size: 1.125rem;
+  line-height: 1.75;
+  text-wrap: pretty;
+}
+
+@media (min-width: 640px) {
+  .homarr-content-page {
+    padding-inline: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .homarr-content-page {
+    padding-block: 4rem;
+  }
+}
+
 .homarr-page-actions {
   display: flex;
   align-items: center;

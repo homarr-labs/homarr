@@ -24,7 +24,7 @@ export function baseOptions(): BaseLayoutProps {
         active: "nested-url",
       },
       {
-        text: "API",
+        text: "API reference",
         url: "/api-reference",
         active: "url",
       },

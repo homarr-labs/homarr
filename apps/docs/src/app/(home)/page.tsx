@@ -8,7 +8,6 @@ import HomepageFeatures from "@/components/pages/home/features/features";
 import HomeHero from "@/components/pages/home/hero/hero";
 import { AvailableIntegrations } from "@/components/pages/home/integrations/available-integrations";
 import HomepageUserReviews from "@/components/pages/home/review-list/review-list";
-import { SiteFooter } from "@/components/site-footer";
 
 import styles from "../../pages/index.module.css";
 
@@ -48,8 +47,6 @@ export default function HomePage() {
       <SectionContainer>
         <HomepageUserReviews />
       </SectionContainer>
-
-      <SiteFooter />
     </main>
   );
 }

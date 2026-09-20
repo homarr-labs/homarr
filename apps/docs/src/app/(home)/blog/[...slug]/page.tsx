@@ -4,6 +4,7 @@ import { InlineTOC } from "fumadocs-ui/components/inline-toc";
 import { DocsBody, MarkdownCopyButton, ViewOptionsPopover } from "fumadocs-ui/layouts/docs/page";
 
 import { pageMetadata } from "@/lib/metadata";
+import { BlogToc } from "@/components/blog/blog-toc";
 import { getMDXComponents } from "@/components/mdx";
 import {
   getPostBySegments,
@@ -30,13 +31,13 @@ export default async function BlogPostPage({ params }: PageProps) {
   const toc = hasBodyTitle ? post.toc.filter((item) => item.depth !== 1) : post.toc;
 
   return (
-    <main className="mx-auto w-full max-w-4xl px-5 py-14 sm:px-8">
-      <article>
+    <main className="mx-auto grid w-full max-w-6xl gap-12 px-5 py-12 sm:px-8 lg:py-16 xl:grid-cols-[minmax(0,52rem)_16rem]">
+      <article className="min-w-0">
         <header className="border-b pb-8">
           <time className="text-sm text-fd-muted-foreground" dateTime={post.date}>
             {new Intl.DateTimeFormat("en", { dateStyle: "long", timeZone: "UTC" }).format(new Date(post.date))}
           </time>
-          <h1 id={bodyTitleId} className="mt-3 text-4xl font-semibold tracking-tight text-balance">
+          <h1 id={bodyTitleId} className="homarr-content-title mt-3">
             {post.title}
           </h1>
           <p className="mt-3 text-sm text-fd-muted-foreground">By {post.authors.join(", ")}</p>
@@ -49,7 +50,7 @@ export default async function BlogPostPage({ params }: PageProps) {
           </div>
         </header>
         <DocsBody className="pt-8">
-          <InlineTOC items={toc} />
+          <InlineTOC className="xl:hidden" items={toc} />
           <MDX
             components={getMDXComponents({
               h1: ({ id, children, ...props }) =>
@@ -62,6 +63,7 @@ export default async function BlogPostPage({ params }: PageProps) {
           />
         </DocsBody>
       </article>
+      <BlogToc items={toc} />
     </main>
   );
 }

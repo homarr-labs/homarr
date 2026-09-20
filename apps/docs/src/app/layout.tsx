@@ -34,7 +34,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="min-h-screen bg-fd-background text-fd-foreground antialiased">
+      <body className="flex min-h-screen flex-col bg-fd-background text-fd-foreground antialiased">
         <Script src="/workshop-runtime-config.js" strategy="beforeInteractive" />
         <Provider>{children}</Provider>
         <Analytics />

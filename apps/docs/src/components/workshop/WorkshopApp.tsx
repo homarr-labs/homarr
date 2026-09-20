@@ -118,10 +118,10 @@ export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
 
   return (
     <div className="mx-auto max-w-7xl px-4 pb-28 sm:pb-16">
-      <div className="flex flex-col gap-5 py-8 sm:flex-row sm:items-end sm:justify-between">
+      <div className="flex flex-col gap-5 border-b py-10 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Workshop</h1>
-          <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
+          <h1 className="homarr-content-title">Workshop</h1>
+          <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground">
             Discover community-made widgets and CSS. Review the source, then import it into Homarr.
           </p>
           <a href="/docs/workshop/#install-content" className="mt-2 inline-block text-sm underline underline-offset-4">
@@ -474,10 +474,10 @@ const SkeletonCard = () => (
 
 export const WorkshopListingFallback = () => (
   <div className="mx-auto max-w-7xl px-4 pb-28 sm:pb-16" aria-busy="true" aria-label="Loading Workshop listings">
-    <div className="flex flex-col gap-5 py-8 sm:flex-row sm:items-end sm:justify-between">
+    <div className="flex flex-col gap-5 border-b py-10 sm:flex-row sm:items-end sm:justify-between">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Workshop</h1>
-        <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
+        <h1 className="homarr-content-title">Workshop</h1>
+        <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground">
           Discover community-made widgets and CSS. Review the source, then import it into Homarr.
         </p>
       </div>

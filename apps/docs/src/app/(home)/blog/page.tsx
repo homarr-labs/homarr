@@ -18,11 +18,11 @@ export default function BlogIndexPage() {
   const entries = posts.entries.toSorted((left, right) => right.date.localeCompare(left.date));
 
   return (
-    <main className="mx-auto w-full max-w-4xl px-5 py-16 sm:px-8">
-      <header className="max-w-2xl border-b pb-10">
+    <main className="homarr-content-page max-w-4xl">
+      <header className="homarr-content-header max-w-2xl">
         <p className="text-sm font-medium text-fd-primary">Homarr project</p>
-        <h1 className="mt-2 text-4xl font-semibold tracking-tight">Blog</h1>
-        <p className="mt-4 text-lg text-fd-muted-foreground">Release notes, migration guides, and project updates.</p>
+        <h1 className="homarr-content-title mt-2">Blog</h1>
+        <p className="homarr-content-lead">Release notes, migration guides, and project updates.</p>
       </header>
       <div className="divide-y">
         {entries.map((post) => (
