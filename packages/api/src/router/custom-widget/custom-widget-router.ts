@@ -1,3 +1,5 @@
+import { assertCustomWidgetIntegrationBindings } from "./source-resolver";
+import { getCustomWidgetSourceAuthType } from "@homarr/custom-widgets/core";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
@@ -60,6 +62,7 @@ export const customWidgetRouter = createTRPCRouter({
         const changes = normalizeCustomWidgetAuthoringUpdate(authoringChanges);
         return customWidgetDefinitionSchema.parse({ ...current, ...changes });
       });
+      await assertCustomWidgetIntegrationBindings(ctx, definition.sources);
       if (secrets) assertSecretSources(definition.sources, secrets);
       const definitionChanges = { ...serializeCustomWidgetDefinition(definition), updatedAt: new Date() };
       const secretRows = secrets?.map((secret) => ({
@@ -106,7 +109,7 @@ export const customWidgetRouter = createTRPCRouter({
             }
 
             for (const [sourceId, source] of Object.entries(definition.sources)) {
-              const kinds = [...requiredSecretKinds(typeof source.auth === "string" ? source.auth : source.auth.type)];
+              const kinds = [...requiredSecretKinds(getCustomWidgetSourceAuthType(source))];
               const where = and(
                 eq(schema.customWidgetSecrets.definitionId, id),
                 eq(schema.customWidgetSecrets.sourceId, sourceId),
@@ -151,7 +154,7 @@ export const customWidgetRouter = createTRPCRouter({
             }
 
             for (const [sourceId, source] of Object.entries(definition.sources)) {
-              const kinds = [...requiredSecretKinds(typeof source.auth === "string" ? source.auth : source.auth.type)];
+              const kinds = [...requiredSecretKinds(getCustomWidgetSourceAuthType(source))];
               const where = and(eq(customWidgetSecrets.definitionId, id), eq(customWidgetSecrets.sourceId, sourceId));
               transaction
                 .delete(customWidgetSecrets)

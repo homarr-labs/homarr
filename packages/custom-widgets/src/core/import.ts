@@ -1,3 +1,4 @@
+import { getCustomWidgetSourceAuthType } from "./request-schema";
 import type { HomarrCustomWidgetV2 } from "./custom-jsx-schema";
 import { customWidgetImportSchema } from "./custom-jsx-schema";
 
@@ -104,7 +105,7 @@ export function parseCustomWidgetClipboardDetailed(text: string): CustomWidgetPa
   if (removedIssues.length > 0) return { success: false, issues: removedIssues };
   const parsed = customWidgetImportSchema.safeParse(widget);
   if (!parsed.success) return { success: false, issues: zodIssues(parsed.error) };
-  return { success: true, widget: parsed.data, warnings: [] };
+  return { success: true, widget: exportCustomWidgetDefinition(parsed.data), warnings: [] };
 }
 
 export function parseCustomWidgetAiResponse(text: string): CustomWidgetParseResult {
@@ -157,17 +158,35 @@ export function getImportReview(value: unknown): ImportReview | null {
   const widget = parsed.data;
   return {
     name: widget.name,
-    origins: Object.values(widget.sources).map((source) => new URL(source.baseUrl).origin),
+    origins: Object.values(widget.sources).map((source) =>
+      source.type === "integration" ? source.integrationKind : new URL(source.baseUrl).origin,
+    ),
     authTypes: [
       ...new Set(
         Object.values(widget.sources).map((source) =>
-          typeof source.auth === "string" ? source.auth : source.auth.type,
+          source.type === "integration" ? "integration" : getCustomWidgetSourceAuthType(source),
         ),
       ),
     ],
-    networkScopes: [...new Set(Object.values(widget.sources).map((source) => source.networkScope))],
+    networkScopes: [
+      ...new Set(Object.values(widget.sources).flatMap((source) => (source.networkScope ? [source.networkScope] : []))),
+    ],
     methods: [...new Set(Object.values(widget.requests).map((request) => request.method))],
     permissions: [...new Set(Object.values(widget.requests).map((request) => request.permission))],
     hasActions: Object.values(widget.requests).some((request) => request.kind === "action"),
+  };
+}
+
+/** Deployment bindings never travel with an exported or published widget. */
+export function exportCustomWidgetDefinition(widget: HomarrCustomWidgetV2): HomarrCustomWidgetV2 {
+  return {
+    ...widget,
+    sources: Object.fromEntries(
+      Object.entries(widget.sources).map(([id, source]) => {
+        if (source.type !== "integration") return [id, source];
+        const { integrationId: _localBinding, ...portable } = source;
+        return [id, portable];
+      }),
+    ),
   };
 }

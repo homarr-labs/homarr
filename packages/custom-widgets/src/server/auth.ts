@@ -1,3 +1,6 @@
+import type { CustomWidgetHttpRequest, CustomWidgetHttpResponse } from "./request-types";
+import { assertCustomWidgetPathScope, resolveSameOriginTarget } from "./network-policy";
+
 type HeaderSetter = Pick<Headers, "set">;
 
 export const AUTH_HANDLERS: Record<
@@ -41,5 +44,34 @@ export function applyAuth(
   const handler = AUTH_HANDLERS[authType];
   if (handler && secretMap.apiKey) {
     handler(headers, url, secretMap.apiKey, headerName ?? undefined);
+  }
+}
+
+export async function performAuthenticatedRequest(
+  input: CustomWidgetHttpRequest,
+  signal: AbortSignal,
+  perform: (input: CustomWidgetHttpRequest, signal: AbortSignal) => Promise<CustomWidgetHttpResponse>,
+): Promise<CustomWidgetHttpResponse> {
+  const target = resolveSameOriginTarget(input.baseUrl, input.targetUrl);
+  if (input.pathPrefix !== undefined) assertCustomWidgetPathScope(target, input.pathPrefix);
+  if (input.resolveConnectionAsync) {
+    const connection = await withinDeadline(input.resolveConnectionAsync, signal);
+    resolveSameOriginTarget(connection.baseUrl, target);
+    input = { ...input, ...connection, targetUrl: target };
+  }
+  return perform(input, signal);
+}
+
+async function withinDeadline<T>(callback: () => Promise<T>, signal: AbortSignal): Promise<T> {
+  signal.throwIfAborted();
+  let abort: (() => void) | undefined;
+  const aborted = new Promise<never>((_resolve, reject) => {
+    abort = () => reject(signal.reason);
+    signal.addEventListener("abort", abort, { once: true });
+  });
+  try {
+    return await Promise.race([callback(), aborted]);
+  } finally {
+    if (abort) signal.removeEventListener("abort", abort);
   }
 }

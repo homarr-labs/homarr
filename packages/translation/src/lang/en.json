@@ -763,12 +763,6 @@
     "multiSelectApps": "Tip: Hold Ctrl / ⌘ to select multiple apps at once"
   },
   "customWidget": {
-    "betaBanner": {
-      "title": "Custom Widgets are in Beta",
-      "description": "This feature is experimental and will probably change significantly. If you encounter bugs, want additional capabilities, or find something confusing, please share your feedback in the",
-      "discussionLink": "official discussion forum",
-      "closing": "so it can be considered. Happy hacking!"
-    },
     "secretEntry": {
       "title": "Configure API source",
       "description": "Confirm the server URL and enter credentials. Secret values are encrypted by Homarr and never returned to the requesting agent.",
@@ -1016,7 +1010,15 @@
         "clear": "Clear",
         "remove": "Remove source and its requests",
         "advanced": "Advanced",
-        "add": "Add another API source"
+        "add": "Add another API source",
+        "sourceType": "Source",
+        "manualSource": "HTTP API",
+        "existingIntegration": "Existing integration",
+        "integrationType": "Integration type",
+        "selectIntegration": "Configured integration",
+        "noIntegrations": "No matching integrations available",
+        "integrationUnavailable": "The selected integration is no longer available. Select another integration.",
+        "integrationDescription": "Uses the saved integration URL and credentials. Changes apply automatically. Full integration access is required to run requests."
       },
       "ai": {
         "title": "Create or fix with any AI",
@@ -3229,7 +3231,8 @@
       "status": {
         "healthy": "Healthy",
         "unhealthy": "Unhealthy",
-        "disabled": "Disabled"
+        "disabled": "Disabled",
+        "unknown": "Health unavailable"
       },
       "error": {
         "internalServerError": "Failed to fetch indexers status",
@@ -5305,6 +5308,65 @@
         "specAccepted": "Spec. accepted tokens",
         "specDraftTokens": "Spec. draft tokens"
       }
+    },
+    "stats": {
+      "name": "Statistics",
+      "description": "Combine statistics from your integrations in one configurable widget.",
+      "configure": "Configure metrics",
+      "refresh": "Refresh statistics",
+      "empty": "Open widget settings, select integrations, then add metrics.",
+      "editorHelp": "Add metrics from the integrations selected for this widget. Changes are saved with your dashboard.",
+      "source": "Integration",
+      "metric": "Metric",
+      "noMetrics": "No statistics available for this integration",
+      "add": "Add metric",
+      "label": "Custom label",
+      "hidden": "Hidden",
+      "compact": "Compact numbers",
+      "moveUp": "Move up",
+      "moveDown": "Move down",
+      "remove": "Remove metric",
+      "loading": "Loading…",
+      "unavailable": "Unavailable",
+      "refreshFailed": "Refresh failed — showing saved data",
+      "stale": "Saved data — refresh to update",
+      "table": { "value": "Value", "status": "Status" },
+      "option": {
+        "table": { "label": "Table view" },
+        "rows": {
+          "label": "Compact rows"
+        },
+        "showIcon": {
+          "label": "Show source icon"
+        },
+        "spacing": {
+          "label": "Spacing",
+          "option": {
+            "xs": {
+              "label": "Compact"
+            },
+            "sm": {
+              "label": "Comfortable"
+            },
+            "md": {
+              "label": "Spacious"
+            }
+          }
+        },
+        "entries": {
+          "label": "Metrics"
+        },
+        "plain": {
+          "label": "Remove card backgrounds"
+        }
+      },
+      "fetchFailed": "Unable to retrieve statistics",
+      "viewOptions": "Customize this view",
+      "moreMetrics": "{count} more in advanced view",
+      "localHelp": "Layout, formatting, and visibility apply only to this view. Shared board settings stay the same.",
+      "plain": "Remove card backgrounds",
+      "resetView": "Reset view",
+      "allHidden": "All metrics are hidden in this view. Use Customize this view to restore them."
     }
   },
   "widgetPreview": {

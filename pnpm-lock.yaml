@@ -1907,6 +1907,9 @@ importers:
       '@codemirror/view':
         specifier: 'catalog:'
         version: 6.43.0
+      '@homarr/definitions':
+        specifier: workspace:^0.1.0
+        version: link:../definitions
       '@mantine/charts':
         specifier: 'catalog:'
         version: 9.6.0(@mantine/core@9.6.0(@mantine/hooks@9.6.0(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.6.0(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(recharts@3.9.1(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(redux@5.0.1))

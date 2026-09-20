@@ -1,0 +1,25 @@
+---
+title: "Frigate"
+description: "Open source NVR with real-time object detection."
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { statsWidget } from "@site/docs/widgets/stats";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { frigateIntegration } from ".";
+
+<IntegrationHeader integration={frigateIntegration} categories={["Media"]} />
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites items={[{ widget: statsWidget }]} />
+
+The Frigate statistics use `/api/stats` and report camera count, service uptime, and version. Camera and object detection data requires a configured Frigate camera.
+
+### Adding the integration
+
+<AddingIntegration />
+
+Use Frigate's internal HTTP API (port **5000**), reachable from Homarr. This endpoint does not require credentials; the authenticated web interface on port 8971 is not supported by this integration. Keep the internal API on a trusted network.
