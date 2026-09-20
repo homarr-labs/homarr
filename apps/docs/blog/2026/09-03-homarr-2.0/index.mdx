@@ -3,17 +3,37 @@ authors:
   - ajnart
 tags: [homarr, update, version, assistant, custom widgets, dashboards, docker]
 description: Homarr 2.0 introduces Custom Widgets and Workshop, rebuilt board editing, Assistant tooling, responsive layouts, onboarding, and more.
-image: ./img/homarr-v2-dashboard.webp
+image: ./img/homarr-v2-recap.webp
 draft: false
 ---
 
 # Homarr 2.0.0 - Workshop, Custom Widgets and a rebuilt board
+
+![Homarr v2 release recap showing Community Workshop, how to make any widget with Custom Widgets, Homarr Assistant, the new drag-and-drop system, advanced widgets, and 32 new integrations](./img/homarr-v2-recap.webp)
 
 First, thank you.
 
 Many of you used the v2 demo when it was still rough, found bugs and came back to test the next build. Others translated Homarr, answered questions, contributed code or simply kept using it. We would not be shipping this without you.
 
 We are also planning a small batch of **free, limited-edition Homarr swag** for Workshop contributors and a few randomly picked community members. It is not for sale and it is not for profit. No Homarr merch empire, sorry.
+
+If you're thinking, “I ain't reading all dat,” don't worry—we made a video for your short attention span. No Subway Surfers gameplay, though.
+
+<figure style={{ margin: "1.5rem 0" }}>
+  <video
+    controls
+    playsInline
+    preload="metadata"
+    poster={require("./img/homarr-v2-overview.webp").default}
+    width={1920}
+    height={1080}
+    style={{ width: "100%", height: "auto", borderRadius: "0.5rem" }}
+    aria-label="Homarr 2.0 feature overview."
+  >
+    <source src={require("./video/homarr-v2-overview.mp4").default} type="video/mp4" />
+  </video>
+  <figcaption>Homarr 2.0 in under two minutes.</figcaption>
+</figure>
 
 Homarr 2.0 builds on the dashboard you already use. Here is what changed.
 
@@ -50,6 +70,8 @@ This was partly inspired by [Google's upcoming Create My Widget feature](https:/
 
 ![The Custom Widget workbench displaying a Sonarr response through a saved integration](./img/custom-widget-workbench.png)
 
+![A working Pokédex Custom Widget on a local Homarr dashboard, with a search field, Pokémon artwork and stats](./img/custom-widget-dashboard.webp)
+
 A `homarr-custom-widget-v2` definition can use several fixed-origin API sources. Credentials are encrypted separately and stay out of exports and Workshop submissions. Actions support `GET`, `POST`, `PUT`, `PATCH` and `DELETE`; requests have host checks, timeouts, size limits, permissions and rate limits.
 
 ### Share widgets and Custom CSS
@@ -80,15 +102,109 @@ We have called this the **"ultimate Homarr update"**. Not because work stops, bu
 
 We threw out the old drag-and-drop system and rebuilt it on [`dnd-kit`](https://dndkit.com/). Moves and eight-direction resizes are transactional: Homarr previews the result, checks collisions and only saves a valid layout. Bad moves roll back instead of wrecking the board. In short: less fighting with your own dashboard.
 
-![A Calendar tile moving across the rebuilt Homarr 2.0 board grid](./img/drag-and-drop.gif)
+<figure style={{ margin: "1.5rem 0" }}>
+  <video
+    controls
+    muted
+    playsInline
+    preload="none"
+    poster={require("./img/drag-and-resize-poster.webp").default}
+    width={1770}
+    height={706}
+    style={{ width: "100%", height: "auto", borderRadius: "0.5rem" }}
+    aria-label="Move and resize a tile with the new drag-and-drop system."
+  >
+    <source src={require("./video/drag-and-resize.mp4").default} type="video/mp4" />
+    <track kind="captions" src="/media/homarr-2.0/drag-and-resize.vtt" srcLang="en" label="English" />
+  </video>
+  <figcaption>Move and resize a tile with the new drag-and-drop system.</figcaption>
+</figure>
 
 ### Goodbye Groups and sections, bonjour Containers
 
-Groups and dynamic sections did nearly the same job, so **Containers replace both**. They hold apps, widgets and other Containers. Hold <kbd>Ctrl</kbd> or <kbd>Command</kbd> to move several items at once.
+Groups and dynamic sections did nearly the same job, so **Containers replace both**. They hold apps, widgets and other Containers. Move a Container with its contents, or collapse it when you need the space.
+
+<figure style={{ margin: "1.5rem 0" }}>
+  <video
+    controls
+    muted
+    playsInline
+    preload="none"
+    poster={require("./img/containers-poster.webp").default}
+    width={1770}
+    height={716}
+    style={{ width: "100%", height: "auto", borderRadius: "0.5rem" }}
+    aria-label="Move, collapse and reopen a Container without rearranging its contents."
+  >
+    <source src={require("./video/containers.mp4").default} type="video/mp4" />
+    <track kind="captions" src="/media/homarr-2.0/containers.vtt" srcLang="en" label="English" />
+  </video>
+  <figcaption>Move, collapse and reopen a Container without rearranging its contents.</figcaption>
+</figure>
+
+Hold <kbd>Ctrl</kbd> or <kbd>Command</kbd> while clicking to select several items, then use **Move to** to put them in a Container.
+
+<figure style={{ margin: "1.5rem 0" }}>
+  <video
+    controls
+    muted
+    playsInline
+    preload="none"
+    poster={require("./img/multi-select-poster.webp").default}
+    width={1770}
+    height={716}
+    style={{ width: "100%", height: "auto", borderRadius: "0.5rem" }}
+    aria-label="Command-click two apps, then move them into the same Container."
+  >
+    <source src={require("./video/multi-select.mp4").default} type="video/mp4" />
+    <track kind="captions" src="/media/homarr-2.0/multi-select.vtt" srcLang="en" label="English" />
+  </video>
+  <figcaption>Command-click two apps, then move them into the same Container.</figcaption>
+</figure>
 
 ### One board, several layouts
 
 Boards also have Base and Mobile layouts, plus optional breakpoints. **Reset from Base** creates a Mobile starting point without duplicating the board.
+
+### Fixed sidebars
+
+Keep app shortcuts or widgets in a sidebar while the main board scrolls. Enable a sidebar and choose its width in board settings.
+
+<figure style={{ margin: "1.5rem 0" }}>
+  <video
+    controls
+    muted
+    playsInline
+    preload="none"
+    poster={require("./img/sidebar-settings-poster.webp").default}
+    width={1600}
+    height={700}
+    style={{ width: "100%", height: "auto", borderRadius: "0.5rem" }}
+    aria-label="Enable the right sidebar and set its width."
+  >
+    <source src={require("./video/sidebar-settings.mp4").default} type="video/mp4" />
+    <track kind="captions" src="/media/homarr-2.0/sidebar-settings.vtt" srcLang="en" label="English" />
+  </video>
+  <figcaption>Enable the right sidebar and set its width.</figcaption>
+</figure>
+
+<figure style={{ margin: "1.5rem 0" }}>
+  <video
+    controls
+    muted
+    playsInline
+    preload="none"
+    poster={require("./img/fixed-sidebar-poster.webp").default}
+    width={1580}
+    height={640}
+    style={{ width: "100%", height: "auto", borderRadius: "0.5rem" }}
+    aria-label="The board scrolls; the app shortcuts stay in place."
+  >
+    <source src={require("./video/fixed-sidebar.mp4").default} type="video/mp4" />
+    <track kind="captions" src="/media/homarr-2.0/fixed-sidebar.vtt" srcLang="en" label="English" />
+  </video>
+  <figcaption>The board scrolls; the app shortcuts stay in place.</figcaption>
+</figure>
 
 ## Homarr Assistant
 
@@ -126,7 +242,23 @@ A six-stage setup studio handles the first admin, core settings, Docker discover
 
 Boards now live in a searchable gallery with keyboard navigation. Open it from the header or press <kbd>Shift</kbd> + <kbd>C</kbd>.
 
-![A visual board card inside the searchable Homarr board switcher](./img/board-switcher.webp)
+<figure style={{ margin: "1.5rem 0" }}>
+  <video
+    controls
+    muted
+    playsInline
+    preload="none"
+    poster={require("./img/board-switcher-poster.webp").default}
+    width={1920}
+    height={778}
+    style={{ width: "100%", height: "auto", borderRadius: "0.5rem" }}
+    aria-label="Open the switcher, filter by name and press Enter to open a board."
+  >
+    <source src={require("./video/board-switcher.mp4").default} type="video/mp4" />
+    <track kind="captions" src="/media/homarr-2.0/board-switcher.vtt" srcLang="en" label="English" />
+  </video>
+  <figcaption>Open the switcher, filter by name and press Enter to open a board.</figcaption>
+</figure>
 
 ### Command menu and keybinds
 
@@ -135,9 +267,16 @@ keybinds cover Assistant, editing, selection and advanced widget views.
 
 ### Customizable header
 
-Pick which buttons appear, put them on the left, center or right, and change their order.
+Add direct links to boards and shortcuts to features such as search, Docker and settings. Put them on the left, center or right, and change their order.
+
+![A customized header with a board link on the left, board switching and search in the center, and Docker, theme and settings on the right](./img/customized-header.webp)
+
+<details>
+<summary>Arrange it in the Header studio</summary>
 
 ![The Header studio showing left, center, and right zones plus available controls](./img/header-studio.webp)
+
+</details>
 
 ### Instance branding
 
@@ -147,7 +286,49 @@ Change the name, logo, favicon, colors, corner styles and login page. Global CSS
 
 ### Widgets
 
-Add content without leaving the board. Settings have live previews, and supported widgets have advanced views. Weather and Clock were redesigned; Air Quality, Countdown and Timer are new.
+Add content without leaving the board. Settings have live previews. Weather and Clock were redesigned; Air Quality, Countdown and Timer are new.
+
+![The Air Quality widget showing the current AQI and a location trend](./img/air-quality.webp)
+
+![The Countdown widget showing time remaining until an event](./img/countdown.webp)
+
+<figure style={{ margin: "1.5rem 0" }}>
+  <video
+    controls
+    muted
+    playsInline
+    preload="none"
+    poster={require("./img/timer-poster.webp").default}
+    width={950}
+    height={500}
+    style={{ width: "100%", height: "auto", borderRadius: "0.5rem" }}
+    aria-label="Start, pause and reset Timer without leaving the board."
+  >
+    <source src={require("./video/timer.mp4").default} type="video/mp4" />
+    <track kind="captions" src="/media/homarr-2.0/timer.vtt" srcLang="en" label="English" />
+  </video>
+  <figcaption>Start, pause and reset Timer without leaving the board.</figcaption>
+</figure>
+
+Supported widgets also have **advanced views**. Hover over a widget and hold <kbd>Shift</kbd> for **one second** to open one.
+
+<figure style={{ margin: "1.5rem 0" }}>
+  <video
+    controls
+    muted
+    playsInline
+    preload="none"
+    poster={require("./img/advanced-widget-poster.webp").default}
+    width={864}
+    height={600}
+    style={{ width: "100%", height: "auto", borderRadius: "0.5rem" }}
+    aria-label="Hold Shift for one second over Downloads to open its advanced view."
+  >
+    <source src={require("./video/advanced-widget.mp4").default} type="video/mp4" />
+    <track kind="captions" src="/media/homarr-2.0/advanced-widget.vtt" srcLang="en" label="English" />
+  </video>
+  <figcaption>Hold Shift for one second over Downloads to open its advanced view.</figcaption>
+</figure>
 
 ### Statistics and 31 new integrations
 
