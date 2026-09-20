@@ -56,7 +56,7 @@ export const integrationRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "List integration kinds with required secret fields and supportsHttpRequests. For integration_request or Custom Widget integration sources, select a kind with supportsHttpRequests=true, then use integration_all to find a saved instance with permissions.hasFullAccess. Reuse its credentials instead of asking for secrets again. Also use this before creating an integration to discover valid kinds and required secrets.",
+          "List integration kinds with required secret fields and supportsHttpRequests. When true, integration_request can call any API endpoint on that integration, including features Homarr does not implement. For integration_request or Custom Widget integration sources, select a kind with supportsHttpRequests=true, then use integration_all to find a saved instance with permissions.hasFullAccess. Reuse its credentials instead of asking for secrets again. Also use this before creating an integration to discover valid kinds and required secrets.",
       },
     })
     .query(() => {

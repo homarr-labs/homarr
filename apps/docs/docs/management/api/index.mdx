@@ -111,12 +111,12 @@ deletes the message from Gotify, and invalidates its notification cache. It is n
 
 Refresh returns the current snapshot, which may still be old if another process is refreshing that source. Inspect `updatedAt`, `stale`, `error`, and `retryAt`; a refresh failure retains successful values. See the [Statistics widget](../../widgets/stats) for cache behavior.
 
-## Integration request fallback
+## Call any integration API endpoint
 
 `POST /api/integrations/request` is the REST equivalent of
 [`integration_request`, Homarr's most powerful MCP tool](../mcp#authenticated-integration-requests), and tRPC
-`integration.request`. Use it when no native operation covers the task. Homarr supplies the saved URL,
-authentication and trusted certificates; callers provide no integration credentials.
+`integration.request`. Call any API endpoint on a supported saved integration, including features Homarr does not
+implement. Homarr supplies the saved URL, authentication and trusted certificates; callers provide no integration credentials.
 
 ```sh
 curl -X POST https://homarr.example.com/api/integrations/request \

@@ -5256,7 +5256,7 @@
       "post": {
         "operationId": "integration-request",
         "summary": "Proxy an integration API request using saved credentials",
-        "description": "REST access to integration_request, Homarr's most powerful MCP tool. Fallback for operations without a native Homarr tool; uses saved integration authentication and trusted certificates. Supply exactly one selector: integrationId, integrationName or integrationKind. Requires full integration access; DELETE also requires confirmed=true after user confirmation. Paths append to the saved URL. HTTP 200 can contain upstream errors: inspect ok, status and data. Limits: 10 KiB body, 16 KiB headers, 1 MiB response, 15 seconds. See https://homarr.dev/docs/management/api#integration-request-fallback for the full contract.",
+        "description": "REST access to integration_request, Homarr's most powerful MCP tool. Call any API endpoint on a supported saved integration using its authentication and trusted certificates. Features not implemented in Homarr can still be used through this API or MCP if the upstream API supports them. Supply exactly one selector: integrationId, integrationName or integrationKind. Requires full integration access; DELETE also requires confirmed=true after user confirmation. Paths append to the saved URL. HTTP 200 can contain upstream errors: inspect ok, status and data. Limits: 10 KiB body, 16 KiB headers, 1 MiB response, 15 seconds. See https://homarr.dev/docs/management/api#call-any-integration-api-endpoint for the full contract.",
         "tags": [
           "integrations"
         ],
