@@ -1,14 +1,23 @@
 "use client";
 
+import type { WidgetKind } from "@homarr/definitions";
+import { widgetCatalogIcons } from "@homarr/ui/widget-icons";
 import { IconSearch, IconX } from "@tabler/icons-react";
 import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
 
+export interface DirectoryIntegration {
+  iconUrl: string;
+  name: string;
+}
+
 export interface DirectoryItem {
   description?: string;
   iconUrl?: string;
+  supportedIntegrations?: readonly DirectoryIntegration[];
   title: string;
   url: string;
+  widgetKind?: WidgetKind;
 }
 
 interface DirectoryGridProps {
@@ -70,39 +79,84 @@ export function DirectoryGrid({ items, label }: DirectoryGridProps) {
 
       {visibleItems.length > 0 ? (
         <ul className="m-0 grid list-none gap-px border bg-fd-border p-0 sm:grid-cols-2 xl:grid-cols-3">
-          {visibleItems.map((item) => (
-            <li key={item.url} className="m-0 bg-fd-background p-0">
-              <Link
-                href={item.url}
-                className="group flex h-full min-h-24 items-start gap-3 p-4 text-fd-foreground hover:bg-fd-muted/60 hover:no-underline"
-              >
-                {item.iconUrl && (
-                  <span
-                    className="mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-md border bg-fd-card p-1.5"
-                    aria-hidden="true"
-                  >
-                    <img
-                      src={item.iconUrl}
-                      alt=""
-                      width={28}
-                      height={28}
-                      loading="lazy"
-                      decoding="async"
-                      className="size-full object-contain"
-                    />
-                  </span>
-                )}
-                <span className="min-w-0">
-                  <strong className="block text-sm font-semibold">{item.title}</strong>
-                  {item.description && (
-                    <span className="mt-1.5 line-clamp-3 text-sm leading-5 text-fd-muted-foreground">
-                      {item.description}
+          {visibleItems.map((item) => {
+            const WidgetIcon = item.widgetKind ? widgetCatalogIcons[item.widgetKind] : undefined;
+            const integrations = item.supportedIntegrations ?? [];
+            const visibleIntegrations = integrations.slice(0, 6);
+            const remainingIntegrations = integrations.length - visibleIntegrations.length;
+            const supportedIntegrationNames = integrations.map((integration) => integration.name).join(", ");
+
+            return (
+              <li key={item.url} className="m-0 bg-fd-background p-0">
+                <Link
+                  href={item.url}
+                  className="group flex h-full min-h-24 items-start gap-3 p-4 text-fd-foreground hover:bg-fd-muted/60 hover:no-underline"
+                >
+                  {(WidgetIcon || item.iconUrl) && (
+                    <span
+                      className="mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-md border bg-fd-card p-1.5"
+                      aria-hidden="true"
+                    >
+                      {WidgetIcon ? (
+                        <WidgetIcon aria-hidden="true" className="size-6 text-fd-primary" stroke={1.8} />
+                      ) : (
+                        <img
+                          src={item.iconUrl}
+                          alt=""
+                          width={28}
+                          height={28}
+                          loading="lazy"
+                          decoding="async"
+                          className="size-full object-contain"
+                        />
+                      )}
                     </span>
                   )}
-                </span>
-              </Link>
-            </li>
-          ))}
+                  <span className="min-w-0">
+                    <strong className="block text-sm font-semibold">{item.title}</strong>
+                    {item.description && (
+                      <span className="mt-1.5 line-clamp-3 text-sm leading-5 text-fd-muted-foreground">
+                        {item.description}
+                      </span>
+                    )}
+                    {visibleIntegrations.length > 0 && (
+                      <span className="mt-3 flex items-center gap-2 text-xs text-fd-muted-foreground">
+                        <span className="shrink-0" aria-hidden="true">
+                          Supports
+                        </span>
+                        <span
+                          className="flex min-w-0 flex-wrap items-center gap-1"
+                          role="img"
+                          aria-label={supportedIntegrationNames}
+                        >
+                          {visibleIntegrations.map((integration) => (
+                            <span
+                              key={integration.name}
+                              className="flex size-6 items-center justify-center rounded border bg-fd-card p-1"
+                              title={integration.name}
+                            >
+                              <img
+                                src={integration.iconUrl}
+                                alt=""
+                                width={16}
+                                height={16}
+                                loading="lazy"
+                                decoding="async"
+                                className="size-full object-contain"
+                              />
+                            </span>
+                          ))}
+                          {remainingIntegrations > 0 && (
+                            <span className="px-1 font-medium text-fd-muted-foreground">+{remainingIntegrations}</span>
+                          )}
+                        </span>
+                      </span>
+                    )}
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       ) : (
         <div className="rounded-lg border border-dashed p-6 text-center text-sm text-fd-muted-foreground">

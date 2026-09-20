@@ -1,4 +1,5 @@
-import { integrationDefs } from "@homarr/definitions";
+import { integrationDefs, type IntegrationKind, type WidgetKind, widgetIntegrationSupport } from "@homarr/definitions";
+import { widgetDocSlugs } from "@homarr/definitions/docs/widget-doc-slugs";
 
 import { dockerIntegration } from "@site/docs/integrations/docker";
 import { kubernetesIntegration } from "@site/docs/integrations/kubernetes";
@@ -6,7 +7,7 @@ import { kubernetesIntegration } from "@site/docs/integrations/kubernetes";
 import { getPageDescription } from "@/lib/page-description";
 import { source } from "@/lib/source";
 
-import { DirectoryGrid } from "./directory-grid";
+import { DirectoryGrid, type DirectoryIntegration } from "./directory-grid";
 
 const sectionLabels = {
   integrations: "integration guides",
@@ -17,6 +18,25 @@ const integrationIconsBySlug = Object.values(integrationDefs).reduce<Record<stri
   if (definition.documentationSlug) icons[definition.documentationSlug] = definition.iconUrl;
   return icons;
 }, {});
+
+const widgetKindsBySlug = Object.entries(widgetDocSlugs).reduce<Record<string, WidgetKind>>((kinds, [kind, slug]) => {
+  if (slug) kinds[slug] = kind as WidgetKind;
+  return kinds;
+}, {});
+
+Object.assign(widgetKindsBySlug, { "archive-team-warrior": "archiveTeamWarrior" as WidgetKind });
+
+const getSupportedIntegrations = (widgetKind: WidgetKind): DirectoryIntegration[] => {
+  const supportedIntegrations = widgetIntegrationSupport[widgetKind] ?? [];
+  const seen = new Set<IntegrationKind>();
+
+  return supportedIntegrations.flatMap((integrationKind) => {
+    if (integrationKind === "mock" || seen.has(integrationKind)) return [];
+    seen.add(integrationKind);
+    const integration = integrationDefs[integrationKind];
+    return [{ iconUrl: integration.iconUrl, name: integration.name }];
+  });
+};
 
 Object.assign(integrationIconsBySlug, {
   docker: dockerIntegration.iconUrl,
@@ -35,8 +55,13 @@ export async function DocsDirectory({ section }: DocsDirectoryProps) {
       pages.map(async (page) => ({
         description: await getPageDescription(page),
         iconUrl: section === "integrations" ? integrationIconsBySlug[page.slugs[1]] : undefined,
+        supportedIntegrations:
+          section === "widgets" && widgetKindsBySlug[page.slugs[1]]
+            ? getSupportedIntegrations(widgetKindsBySlug[page.slugs[1]])
+            : undefined,
         title: page.data.title,
         url: page.url,
+        widgetKind: section === "widgets" ? widgetKindsBySlug[page.slugs[1]] : undefined,
       })),
     )
   ).toSorted((a, b) => a.title.localeCompare(b.title));

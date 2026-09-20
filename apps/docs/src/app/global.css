@@ -155,6 +155,11 @@ body {
   border-color: color-mix(in oklch, var(--color-fd-primary) 14%, var(--color-fd-border));
 }
 
+#nd-sidebar [data-radix-scroll-area-viewport],
+#nd-sidebar-mobile [data-radix-scroll-area-viewport] {
+  overflow-y: auto !important;
+}
+
 .homarr-docs-title {
   max-width: 22ch;
   font-size: clamp(2.15rem, 3.4vw, 2.75rem);

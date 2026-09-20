@@ -849,6 +849,9 @@ importers:
       '@homarr/definitions':
         specifier: workspace:^
         version: link:../../packages/definitions
+      '@homarr/ui':
+        specifier: workspace:^
+        version: link:../../packages/ui
       '@homarr/workshop':
         specifier: workspace:^
         version: link:../../packages/workshop

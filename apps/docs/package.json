@@ -22,6 +22,7 @@
     "@base-ui/react": "^1.5.0",
     "@homarr/custom-widgets": "workspace:^",
     "@homarr/definitions": "workspace:^",
+    "@homarr/ui": "workspace:^",
     "@homarr/workshop": "workspace:^",
     "@mantine/core": "catalog:",
     "@mdx-js/react": "^3.1.1",
