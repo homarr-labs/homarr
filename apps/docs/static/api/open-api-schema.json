@@ -5256,6 +5256,7 @@
       "post": {
         "operationId": "integration-request",
         "summary": "Proxy an integration API request using saved credentials",
+        "description": "REST access to integration_request, Homarr's most powerful MCP tool. Use this fallback when native Homarr operations cannot perform the task. It can read or change upstream service data through any API endpoint on a supported saved integration, using its native authentication and trusted certificates. Supply exactly one of integrationId, integrationName or integrationKind; name/type selects the first full-access match ordered by name then ID. Check integration_getKinds.supportsHttpRequests for compatibility. All methods require full integration access, and DELETE requires confirmed=true after confirmation of its effects. Consult official upstream API documentation and explain which integration Homarr will use and what the call will do before execution. Paths append to the saved URL; redirects and path escapes are rejected. Supports JSON and raw text/form/XML bodies. Inspect ok, status and data even when Homarr returns HTTP 200: upstream errors are returned in the response envelope. Limits: 10 KiB body, 16 KiB custom headers, 1 MiB response on the wire and after decoding, 15-second total deadline. Binary streaming and multipart uploads are unsupported. A timeout does not prove a write was rolled back; inspect upstream state before retrying.",
         "tags": [
           "integrations"
         ],

@@ -113,8 +113,10 @@ Refresh returns the current snapshot, which may still be old if another process 
 
 ## Integration request fallback
 
-Use `POST /api/integrations/request` (or tRPC `integration.request`, MCP `integration_request`) when a dedicated Homarr
-operation cannot perform the task. Homarr sends the request from its server using the saved integration URL,
+`POST /api/integrations/request` exposes the same capability as
+[`integration_request`, Homarr’s most powerful MCP tool](../mcp#authenticated-integration-requests), and tRPC
+`integration.request`. It can read or change upstream service data beyond Homarr’s built-in features. Use it when a
+dedicated Homarr operation cannot perform the task. Homarr sends the request from its server using the saved integration URL,
 authentication adapter and trusted certificates. The caller supplies no integration credentials.
 
 ```sh
