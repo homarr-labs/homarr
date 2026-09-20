@@ -113,11 +113,10 @@ Refresh returns the current snapshot, which may still be old if another process 
 
 ## Integration request fallback
 
-`POST /api/integrations/request` exposes the same capability as
-[`integration_request`, Homarr’s most powerful MCP tool](../mcp#authenticated-integration-requests), and tRPC
-`integration.request`. It can read or change upstream service data beyond Homarr’s built-in features. Use it when a
-dedicated Homarr operation cannot perform the task. Homarr sends the request from its server using the saved integration URL,
-authentication adapter and trusted certificates. The caller supplies no integration credentials.
+`POST /api/integrations/request` is the REST equivalent of
+[`integration_request`, Homarr's most powerful MCP tool](../mcp#authenticated-integration-requests), and tRPC
+`integration.request`. Use it when no native operation covers the task. Homarr supplies the saved URL,
+authentication and trusted certificates; callers provide no integration credentials.
 
 ```sh
 curl -X POST https://homarr.example.com/api/integrations/request \
@@ -125,36 +124,26 @@ curl -X POST https://homarr.example.com/api/integrations/request \
   -d '{"integrationKind":"sonarr","path":"/api/v3/episode?seriesId=42"}'
 ```
 
-Supply exactly one selector: `integrationId`, `integrationName` (exact saved name), or `integrationKind` (type).
-Name/type chooses the first matching integration with **full access**, ordered by name then ID. It does not probe
-health or fail over to another instance. Use an ID when the target matters, especially for writes.
-`integration.getKinds` / `integration_getKinds` reports `supportsHttpRequests`; unsupported authentication adapters
-are rejected. `integration.all` / `integration_all` lists saved instances and permissions.
+Supply exactly one of `integrationId`, exact `integrationName`, or `integrationKind`. Name/type selects the first
+full-access match ordered by name then ID, without health checks or failover. Prefer an ID for writes.
+Check `integration.getKinds.supportsHttpRequests` for compatibility and `integration.all` for saved instances.
+Every method requires **full integration access**; arbitrary GET endpoints can also change state or expose secrets.
 
-`method` defaults to GET; HEAD, OPTIONS, POST, PUT, PATCH and DELETE are also supported. `path` includes the endpoint
-and query parameters and appends to the saved URL's path: `/api/v3/series` with a saved URL ending in `/sonarr` calls
-`/sonarr/api/v3/series`. Unlike the older MCP tool, a leading slash no longer discards the saved path. Path traversal,
-absolute URLs, URL credentials, fragments and redirects are rejected.
+| Field     | Contract                                                                                                                                                                                |
+| --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `method`  | GET (default), HEAD, OPTIONS, POST, PUT, PATCH or DELETE. DELETE requires `confirmed: true` after user confirmation.                                                                    |
+| `path`    | Appends to the saved URL, even with a leading slash: `/sonarr` + `/api/v3/series` → `/sonarr/api/v3/series`. Absolute URLs, escapes, credentials, fragments and redirects are rejected. |
+| `body`    | JSON by default. For text, XML or URL-encoded forms, use a string with `bodyEncoding: "raw"` and the appropriate `Content-Type` header. No body for GET/HEAD.                           |
+| `headers` | Optional non-authentication headers. Transport headers are restricted; saved authentication takes precedence.                                                                           |
 
-`body` is JSON by default. For URL-encoded forms, XML or text, pass a string with `bodyEncoding: "raw"` and set
-`headers["Content-Type"]` to the upstream media type. Optional headers cannot set transport or authentication headers;
-stored adapter headers take precedence. GET and HEAD cannot carry a body. DELETE requires `confirmed: true` after
-confirmation of its effects, including file deletion. Every method requires full integration access because even a
-GET can expose sensitive data or change state.
+Returns `{integration: {id, name, kind}, ok, status, statusText, data}`. Data is JSON, UTF-8 text or `null`.
+**Homarr HTTP 200 can contain an upstream failure**: inspect `ok`, `status` and service-specific errors in `data`.
+Validation, permission and transport failures use Homarr API errors. Known credentials are redacted; other returned
+data may still be sensitive. A timeout does not imply rollback—check upstream state before retrying a write.
 
-The response is `{integration: {id, name, kind}, ok, status, statusText, data}`. `data` is parsed JSON, UTF-8 text, or
-`null` for an empty response. Upstream HTTP errors return this same envelope: a successful Homarr HTTP response does
-not mean the upstream operation succeeded. Inspect `ok`, `status` and service-specific errors inside `data`.
-Validation, permission and transport failures use Homarr's API error response. Known saved and derived credentials
-are redacted; other upstream content may still be sensitive and must be treated as untrusted data.
+Limits: **10 KiB body, 16 KiB headers, 1 MiB response, 15-second total deadline** (10 seconds per request).
+Gzip, deflate and Brotli decoding enforce the response limit at each stage, up to three stages. Requests are uncached
+and never retried automatically. Paginate large results; binary streaming, WebSockets and multipart uploads are unsupported.
 
-Requests are uncached and have no automatic retries. Limits: 10 KiB body, 16 KiB custom headers, 1 MiB response,
-15-second total deadline and 10-second per-request timeout. Gzip, deflate and Brotli responses are decoded; the
-response limit applies both on the wire and after each decoding stage (at most three). Paginate large results. Binary/file streaming,
-WebSockets and multipart uploads are not supported. After a timeout, check upstream state before retrying a write:
-the service may already have applied it.
-
-Agents should consult the service's official API documentation, explain which integration Homarr will use and what
-the call will do before executing it, then report the selected integration and result. The proxy does not browse
-documentation itself; the calling agent needs browsing tools or an API contract supplied by the user. Service
-capabilities still apply: Sonarr manages TV, Radarr manages movies, and torrent-client APIs expose their own queues.
+Agents must consult official upstream API docs, explain the integration and effects before calling, and report the
+outcome. Documentation lookup is the agent's responsibility, not the proxy's.
