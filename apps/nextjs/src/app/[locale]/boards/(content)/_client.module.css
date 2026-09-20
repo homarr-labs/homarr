@@ -19,10 +19,18 @@
   align-self: start;
   box-sizing: border-box;
   height: var(--board-gutter-viewport-height);
-  overflow: clip;
+  overflow-x: clip;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.gutter::-webkit-scrollbar {
+  display: none;
 }
 
 .gutter[data-board-editing="true"] {
+  overflow: clip;
   outline: 0.0625rem solid var(--mantine-color-default-border);
   outline-offset: -0.0625rem;
   border-radius: var(--mantine-radius-md);

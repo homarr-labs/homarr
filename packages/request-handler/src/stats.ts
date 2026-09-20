@@ -3,6 +3,7 @@ import { z } from "zod/v4";
 import type { IntegrationKind } from "@homarr/definitions";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { fetchStatsAsync, getStatsMetrics } from "@homarr/integrations/stats";
+import type { StatsValue } from "@homarr/integrations/stats";
 import { createGetSetChannel, createLockChannel, getIntegrationCacheGenerationAsync } from "@homarr/redis";
 
 import { getIntegrationCacheIdentity } from "./lib/integration-request-handler";
@@ -24,6 +25,49 @@ type Input = Parameters<typeof getIntegrationCacheIdentity>[0]["integration"] & 
 const running = new Map<string, Promise<void>>();
 const cacheOptions = { useBoundedCacheClient: true };
 
+const demoValues: Partial<Record<IntegrationKind, Record<string, StatsValue>>> = {
+  sonarr: {
+    shows: 74,
+    monitored: 68,
+    downloaded: 3_128,
+    storage: 1.82 * 1024 ** 4,
+    missing: 6,
+    queued: 3,
+    episodes: 3_986,
+  },
+  radarr: {
+    movies: 386,
+    monitored: 342,
+    downloaded: 371,
+    storage: 3.74 * 1024 ** 4,
+    missing: 15,
+    queued: 4,
+  },
+  qBittorrent: { download: 38 * 1024 ** 2, upload: 9.3 * 1024 ** 2, paused: false },
+  proxmox: { nodes: 3, vms: 12, lxcs: 8 },
+  piHole: {
+    dnsQueriesToday: 119_872,
+    adsBlockedToday: 19_641,
+    adsBlockedTodayPercentage: 16.38,
+    domainsBeingBlocked: 1_186_431,
+  },
+  immich: {
+    userCount: 4,
+    photoCount: 48_392,
+    videoCount: 2_438,
+    totalLibraryUsageInBytes: 684.5 * 1024 ** 3,
+  },
+  karakeep: { bookmarks: 1_247, favorites: 86, archived: 212, highlights: 418, lists: 24, tags: 93 },
+  mealie: { recipes: 318, users: 14, categories: 28, tags: 76 },
+  spoolman: { spools: 24, remainingWeight: 8_120 },
+};
+
+export const getDemoStatsValues = (integration: Pick<Input, "kind" | "url">) => {
+  const demoMode = ["1", "yes", "t", "true"].includes((process.env.DEMO_MODE ?? "").toLowerCase());
+  if (!demoMode || integration.url !== "https://demo.homarr.dev") return undefined;
+  return demoValues[integration.kind];
+};
+
 const resolveAsync = async (integration: Input) => {
   const generation = await getIntegrationCacheGenerationAsync(integration.id);
   if (!generation.isShared) throw new Error("Statistics cache is temporarily unavailable");
@@ -42,6 +86,17 @@ const resolveAsync = async (integration: Input) => {
 };
 
 export const getStatsSnapshotAsync = async (integration: Input) => {
+  const demo = getDemoStatsValues(integration);
+  if (demo) {
+    return {
+      values: demo,
+      updatedAt: Date.now(),
+      retryAt: 0,
+      error: false,
+      stale: false,
+    };
+  }
+
   const { snapshot } = await resolveAsync(integration);
   return {
     values: snapshot.values,
@@ -110,7 +165,7 @@ const runRefreshAsync = async (integration: Input, force: boolean) => {
     deadline = setTimeout(() => controller.abort(), 60_000);
     deadline.unref?.();
     try {
-      const raw = await fetchBeforeAbortAsync(integration, controller.signal);
+      const raw = getDemoStatsValues(integration) ?? (await fetchBeforeAbortAsync(integration, controller.signal));
       controller.signal.throwIfAborted();
       const values: Snapshot["values"] = {};
       for (const metric of getStatsMetrics(integration.kind)) values[metric.key] = raw[metric.key] ?? null;
