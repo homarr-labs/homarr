@@ -774,7 +774,7 @@ async function callOpenRouter(args: {
       messages: isJudge ? getCustomWidgetJudgeMessages(args.prompt) : [{ role: "user", content: args.prompt }],
       temperature: isJudge ? 0 : (args.temperature ?? DEFAULT_AI_GENERATION_TEMPERATURE),
       max_tokens: getAiEvaluationMaxOutputTokens(args.purpose, configuredMaxOutputTokens),
-      reasoning: isJudge ? { enabled: false, exclude: true } : { effort: "high", exclude: true },
+      reasoning: isJudge ? { effort: "medium", exclude: true } : { effort: "high", exclude: true },
       ...(isJudge ? { response_format: getJudgeResponseFormat() } : {}),
     }),
     signal: AbortSignal.timeout(180_000),
