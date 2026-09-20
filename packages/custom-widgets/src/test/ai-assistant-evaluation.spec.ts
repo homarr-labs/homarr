@@ -4,8 +4,12 @@ import { CUSTOM_WIDGET_AI_EVALUATION_CASES } from "../../scripts/ai-evaluation-c
 import {
   assistantEvaluationToolRequestOptions,
   assistantEvaluationReasoningOptions,
+  assistantEvaluationTemperature,
+  buildAssistantEvaluationSystemPrompt,
   compactAssistantEvaluationMessages,
   composeAssistantEvaluationFeedback,
+  createAssistantEvaluationCaseSnapshot,
+  createAssistantEvaluationPromptSnapshot,
   createAssistantEvaluationState,
   customWidgetAssistantEvaluationToolDefinitions,
   executeAssistantEvaluationTool,
@@ -21,8 +25,11 @@ import {
   getRequiredAssistantEvaluationRequestParams,
   mergeAssistantEvaluationFeedback,
   replaceAssistantEvaluationFeedback,
+  resolveAssistantEvaluationMaxLoops,
   selectAssistantEvaluationReviewFeedback,
+  validateAssistantEvaluationExperimentConfiguration,
 } from "../../scripts/ai-assistant-evaluation";
+import { CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION } from "../core/ai-prompt";
 import {
   appendActiveCustomWidgetToolInstruction,
   selectSequentialCustomWidgetToolCalls,
@@ -169,6 +176,82 @@ const validateTemplate = (
   });
 
 describe("Custom Widget assistant live evaluation harness", () => {
+  it("makes pass@1 experiment loop configuration explicit", () => {
+    expect(resolveAssistantEvaluationMaxLoops(undefined, undefined)).toEqual({
+      value: 10,
+      source: "default",
+      configuredValue: null,
+    });
+    expect(resolveAssistantEvaluationMaxLoops(undefined, "4")).toEqual({
+      value: 4,
+      source: "environment",
+      configuredValue: "4",
+    });
+    expect(resolveAssistantEvaluationMaxLoops("1", "8")).toEqual({
+      value: 1,
+      source: "cli",
+      configuredValue: "1",
+    });
+    expect(() => resolveAssistantEvaluationMaxLoops("0", undefined)).toThrow(
+      "--max-loops must be an integer between 1 and 10",
+    );
+    expect(() => resolveAssistantEvaluationMaxLoops("11", undefined)).toThrow(
+      "--max-loops must be an integer between 1 and 10",
+    );
+    expect(() => validateAssistantEvaluationExperimentConfiguration(10, "prompt-study", undefined, "dev")).toThrow(
+      "require --max-loops=1",
+    );
+    expect(() => validateAssistantEvaluationExperimentConfiguration(1, "prompt-study", "3", undefined)).toThrow(
+      "require an explicit --split=train|dev|heldout",
+    );
+    expect(() => validateAssistantEvaluationExperimentConfiguration(1, "prompt-study", "3", "heldout")).not.toThrow();
+    expect(() => validateAssistantEvaluationExperimentConfiguration(10, undefined, undefined, "dev", true)).toThrow(
+      "require --max-loops=1",
+    );
+    expect(() => validateAssistantEvaluationExperimentConfiguration(1, undefined, undefined, undefined, true)).toThrow(
+      "require an explicit --split=train|dev|heldout",
+    );
+  });
+
+  it("keeps tool staging around an immutable candidate assistant policy", () => {
+    const candidatePolicy = "Candidate policy generation 3";
+    const prompt = buildAssistantEvaluationSystemPrompt(candidatePolicy, 2);
+
+    expect(prompt).toContain(candidatePolicy);
+    expect(prompt.startsWith(CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION)).toBe(true);
+    expect(prompt).toContain("Complete and persist all 2 requested widget jobs");
+    expect(prompt.indexOf(candidatePolicy)).toBeGreaterThan(0);
+  });
+
+  it("snapshots exact prompt provenance with a stable hash", () => {
+    const snapshot = createAssistantEvaluationPromptSnapshot({
+      text: "Candidate policy generation 3\n",
+      source: "candidate-file",
+      sourceFile: "experiments/generation-3.md",
+    });
+
+    expect(snapshot).toEqual({
+      text: "Candidate policy generation 3\n",
+      source: "candidate-file",
+      sourceFile: "experiments/generation-3.md",
+      sha256: "ccc86a34470f3fc4d3410ddac282662aa1509c038081a501b3b89a0a978adebe",
+    });
+    expect(Object.isFrozen(snapshot)).toBe(true);
+  });
+
+  it("snapshots ordered benchmark cases and their exact content", () => {
+    const cases = [
+      { id: "case-b", split: "dev", request: "Second" },
+      { id: "case-a", split: "dev", request: "First" },
+    ];
+    const snapshot = createAssistantEvaluationCaseSnapshot(cases);
+
+    expect(snapshot.caseIds).toEqual(["case-b", "case-a"]);
+    expect(snapshot.sha256).toBe("114c6c575f1f248b9e722883158e6da394677a45efa42873967d08d0dc45abdc");
+    expect(Object.isFrozen(snapshot.caseIds)).toBe(true);
+    expect(Object.isFrozen(snapshot)).toBe(true);
+  });
+
   it("keeps the production-sized default while allowing a bounded low-credit live-evaluation override", () => {
     expect(getAssistantEvaluationMaxOutputTokens(undefined)).toBe(32_768);
     expect(getAssistantEvaluationMaxOutputTokens("10000")).toBe(10_000);
@@ -189,6 +272,7 @@ describe("Custom Widget assistant live evaluation harness", () => {
       parallel_tool_calls: false,
     });
     expect(assistantEvaluationReasoningOptions).toEqual({ effort: "medium", exclude: true });
+    expect(assistantEvaluationTemperature).toBe(0.2);
   });
 
   it("batches context reads but keeps the first call when a provider mixes in lifecycle work", () => {

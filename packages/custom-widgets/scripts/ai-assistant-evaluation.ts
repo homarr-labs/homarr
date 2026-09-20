@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 
@@ -43,12 +44,55 @@ import {
 import type { CustomWidgetJudgeResult } from "./ai-evaluation";
 
 const MAX_ASSISTANT_STEPS = 40;
+const defaultAssistantEvaluationMaxLoops = 10;
 const defaultAssistantEvaluationMaxOutputTokens = 32_768;
 export const assistantEvaluationToolRequestOptions = {
   tool_choice: "auto",
   parallel_tool_calls: false,
 } as const;
 export const assistantEvaluationReasoningOptions = { effort: "medium", exclude: true } as const;
+export const assistantEvaluationTemperature = 0.2;
+
+export function resolveAssistantEvaluationMaxLoops(cliValue: string | undefined, environmentValue: string | undefined) {
+  if (cliValue !== undefined) {
+    const configured = Number(cliValue);
+    if (!Number.isInteger(configured) || configured < 1 || configured > defaultAssistantEvaluationMaxLoops) {
+      throw new Error("--max-loops must be an integer between 1 and 10");
+    }
+    return { value: configured, source: "cli" as const, configuredValue: cliValue };
+  }
+  if (environmentValue !== undefined) {
+    const configured = Number(environmentValue);
+    if (Number.isInteger(configured) && configured > 0) {
+      return {
+        value: Math.min(configured, defaultAssistantEvaluationMaxLoops),
+        source: "environment" as const,
+        configuredValue: environmentValue,
+      };
+    }
+  }
+  return {
+    value: defaultAssistantEvaluationMaxLoops,
+    source: "default" as const,
+    configuredValue: environmentValue ?? null,
+  };
+}
+
+export function validateAssistantEvaluationExperimentConfiguration(
+  maxLoops: number,
+  experimentId: string | undefined,
+  generationId: string | undefined,
+  split: string | undefined,
+  hasCandidatePrompt = false,
+) {
+  const isComparativeRun = experimentId !== undefined || generationId !== undefined || hasCandidatePrompt;
+  if (isComparativeRun && maxLoops !== 1) {
+    throw new Error("Comparative prompt runs require --max-loops=1 for pass@1 evaluation");
+  }
+  if (isComparativeRun && split === undefined) {
+    throw new Error("Comparative prompt runs require an explicit --split=train|dev|heldout");
+  }
+}
 
 export function getAssistantEvaluationMaxOutputTokens(configuredValue: string | undefined) {
   if (configuredValue === undefined) return defaultAssistantEvaluationMaxOutputTokens;
@@ -1157,7 +1201,7 @@ async function callAssistantStep(args: {
       messages,
       tools: args.tools,
       ...assistantEvaluationToolRequestOptions,
-      temperature: 0.1,
+      temperature: assistantEvaluationTemperature,
       max_tokens: getAssistantEvaluationMaxOutputTokens(process.env.CUSTOM_WIDGET_AI_MAX_OUTPUT_TOKENS),
       reasoning: assistantEvaluationReasoningOptions,
     }),
@@ -1181,13 +1225,14 @@ async function runAssistantAttempt(args: {
   apiKey: string;
   baseUrl?: string;
   model: string;
+  assistantPolicy: string;
   feedback: readonly string[];
 }) {
   const state = createAssistantEvaluationState();
   const messages: OpenRouterMessage[] = [
     {
       role: "system",
-      content: `${CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION}\n\n${CUSTOM_WIDGET_ASSISTANT_POLICY}\n\nThis is an unassisted tool-use evaluation. No tool will be forced for you. Complete and persist all ${getExpectedWidgetCount(args.testCase)} requested widget jobs before returning prose.`,
+      content: buildAssistantEvaluationSystemPrompt(args.assistantPolicy, getExpectedWidgetCount(args.testCase)),
     },
     { role: "user", content: buildAssistantPrompt(args.testCase, args.feedback) },
   ];
@@ -1247,6 +1292,29 @@ async function runAssistantAttempt(args: {
     if (state.createdWidgets.length >= getExpectedWidgetCount(args.testCase)) break;
   }
   return { state, messages };
+}
+
+export function buildAssistantEvaluationSystemPrompt(assistantPolicy: string, expectedWidgetCount: number) {
+  return `${CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION}\n\n${assistantPolicy}\n\nThis is an unassisted tool-use evaluation. No tool will be forced for you. Complete and persist all ${expectedWidgetCount} requested widget jobs before returning prose.`;
+}
+
+export function createAssistantEvaluationPromptSnapshot(args: {
+  text: string;
+  source: "built-in" | "candidate-file";
+  sourceFile: string | null;
+}) {
+  return Object.freeze({
+    ...args,
+    sha256: createHash("sha256").update(args.text, "utf8").digest("hex"),
+  });
+}
+
+export function createAssistantEvaluationCaseSnapshot<TCase extends { id: string }>(cases: readonly TCase[]) {
+  const caseIds = Object.freeze(cases.map((testCase) => testCase.id));
+  return Object.freeze({
+    caseIds,
+    sha256: createHash("sha256").update(JSON.stringify(cases), "utf8").digest("hex"),
+  });
 }
 
 const getAssistantEfficiency = (state: AssistantAttemptState) => ({
@@ -1323,6 +1391,7 @@ export async function evaluateCustomWidgetAssistantCase(args: {
   maxLoops: number;
   generatorModel?: string;
   judgeModel?: string;
+  assistantPolicy?: string;
 }): Promise<CustomWidgetAssistantEvaluationResult> {
   const caseDirectory = path.join(args.outputRoot, `assistant-${args.testCase.id}`);
   await mkdir(caseDirectory, { recursive: true });
@@ -1354,6 +1423,7 @@ export async function evaluateCustomWidgetAssistantCase(args: {
         apiKey: args.apiKey,
         baseUrl: args.baseUrl,
         model: args.generatorModel ?? DEFAULT_GENERATOR_MODEL,
+        assistantPolicy: args.assistantPolicy ?? CUSTOM_WIDGET_ASSISTANT_POLICY,
         feedback: composeAssistantEvaluationFeedback(deterministicFeedback, reviewFeedback, lifecycleFeedback),
       });
     } catch (error) {
