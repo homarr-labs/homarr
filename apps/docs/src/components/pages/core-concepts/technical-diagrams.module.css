@@ -108,6 +108,7 @@
 .nodeIcon img {
   width: 1.15rem;
   height: 1.15rem;
+  margin: 0;
   object-fit: contain;
 }
 
