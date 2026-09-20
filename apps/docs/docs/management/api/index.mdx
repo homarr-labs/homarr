@@ -110,3 +110,48 @@ deletes the message from Gotify, and invalidates its notification cache. It is n
 `widget.stats.catalog` lists the metric keys and units for one integration. `widget.stats.snapshot` reads its shared snapshot without making service requests. `widget.stats.refresh` refreshes it through the shared concurrency limit; `force: true` bypasses the one-hour freshness check. Each procedure requires `integrationId` and checks Query access, including for cached values. These procedures are also exposed through MCP under `stats`. They are not REST endpoints.
 
 Refresh returns the current snapshot, which may still be old if another process is refreshing that source. Inspect `updatedAt`, `stale`, `error`, and `retryAt`; a refresh failure retains successful values. See the [Statistics widget](../../widgets/stats) for cache behavior.
+
+## Integration request fallback
+
+Use `POST /api/integrations/request` (or tRPC `integration.request`, MCP `integration_request`) when a dedicated Homarr
+operation cannot perform the task. Homarr sends the request from its server using the saved integration URL,
+authentication adapter and trusted certificates. The caller supplies no integration credentials.
+
+```sh
+curl -X POST https://homarr.example.com/api/integrations/request \
+  -H 'ApiKey: <id>.<token>' -H 'Content-Type: application/json' \
+  -d '{"integrationKind":"sonarr","path":"/api/v3/episode?seriesId=42"}'
+```
+
+Supply exactly one selector: `integrationId`, `integrationName` (exact saved name), or `integrationKind` (type).
+Name/type chooses the first matching integration with **full access**, ordered by name then ID. It does not probe
+health or fail over to another instance. Use an ID when the target matters, especially for writes.
+`integration.getKinds` / `integration_getKinds` reports `supportsHttpRequests`; unsupported authentication adapters
+are rejected. `integration.all` / `integration_all` lists saved instances and permissions.
+
+`method` defaults to GET; HEAD, OPTIONS, POST, PUT, PATCH and DELETE are also supported. `path` includes the endpoint
+and query parameters and appends to the saved URL's path: `/api/v3/series` with a saved URL ending in `/sonarr` calls
+`/sonarr/api/v3/series`. Unlike the older MCP tool, a leading slash no longer discards the saved path. Path traversal,
+absolute URLs, URL credentials, fragments and redirects are rejected.
+
+`body` is JSON by default. For URL-encoded forms, XML or text, pass a string with `bodyEncoding: "raw"` and set
+`headers["Content-Type"]` to the upstream media type. Optional headers cannot set transport or authentication headers;
+stored adapter headers take precedence. GET and HEAD cannot carry a body. DELETE requires `confirmed: true` after
+confirmation of its effects, including file deletion. Every method requires full integration access because even a
+GET can expose sensitive data or change state.
+
+The response is `{integration: {id, name, kind}, ok, status, statusText, data}`. `data` is parsed JSON, UTF-8 text, or
+`null` for an empty response. Upstream HTTP errors return this same envelope: a successful Homarr HTTP response does
+not mean the upstream operation succeeded. Inspect `ok`, `status` and service-specific errors inside `data`.
+Validation, permission and transport failures use Homarr's API error response. Known saved and derived credentials
+are redacted; other upstream content may still be sensitive and must be treated as untrusted data.
+
+Requests are uncached and have no automatic retries. Limits: 10 KiB body, 16 KiB custom headers, 1 MiB response,
+15-second total deadline and 10-second per-request timeout. Paginate large results. Binary/file streaming,
+WebSockets and multipart uploads are not supported. After a timeout, check upstream state before retrying a write:
+the service may already have applied it.
+
+Agents should consult the service's official API documentation, explain which integration Homarr will use and what
+the call will do before executing it, then report the selected integration and result. The proxy does not browse
+documentation itself; the calling agent needs browsing tools or an API contract supplied by the user. Service
+capabilities still apply: Sonarr manages TV, Radarr manages movies, and torrent-client APIs expose their own queues.

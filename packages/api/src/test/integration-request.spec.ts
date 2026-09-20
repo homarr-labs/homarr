@@ -13,12 +13,13 @@ import { createDb } from "@homarr/db/test";
 import { integrations, integrationSecrets, integrationUserPermissions, users } from "@homarr/db/schema";
 import type { IntegrationPermission } from "@homarr/definitions";
 
+import { getIntegrationHttpAuthenticationAsync } from "@homarr/integrations/factory";
+
 import { createTRPCRouter } from "../trpc";
 import {
   integrationRequestProcedure,
   integrationRequestSchema,
   redactIntegrationResponse,
-  resolveIntegrationRequestAuth,
   resolveIntegrationRequestUrl,
 } from "../router/integration/integration-request";
 
@@ -114,30 +115,42 @@ describe("integration_request validation", () => {
   ])("rejects %s", (path) => {
     expect(() => resolveIntegrationRequestUrl("https://example.com/base/", path)).toThrow();
   });
-  test.each(["../series", "../../series", "%2e%2e/series"])("normalizes same-origin traversal %s", (path) => {
-    expect(resolveIntegrationRequestUrl("https://example.com/base/", path).href).toBe("https://example.com/series");
-  });
+  test.each(["../series", "../../series", "%2e%2e/series"])(
+    "rejects traversal outside the configured path %s",
+    (path) => {
+      expect(() => resolveIntegrationRequestUrl("https://example.com/base/", path)).toThrow();
+    },
+  );
   test("preserves URL resolution semantics and query parameters", () => {
     expect(resolveIntegrationRequestUrl("https://example.com/base/", "series?id=42").href).toBe(
       "https://example.com/base/series?id=42",
     );
-    expect(resolveIntegrationRequestUrl("https://example.com/base/", "/series").pathname).toBe("/series");
+    expect(resolveIntegrationRequestUrl("https://example.com/base/", "/series").pathname).toBe("/base/series");
   });
   test("accepts only JSON bodies and the specified methods", () => {
     expect(integrationRequestSchema.safeParse({ ...get, body: new Date() }).success).toBe(false);
-    expect(integrationRequestSchema.safeParse({ ...get, method: "HEAD" }).success).toBe(false);
+    expect(integrationRequestSchema.safeParse({ ...get, method: "TRACE" }).success).toBe(false);
   });
-  test("resolves supported auth and rejects unsupported or incomplete credentials", () => {
-    expect(resolveIntegrationRequestAuth("sonarr", [{ kind: "apiKey", value: secret }]).type).toBe("apiKeyHeader");
-    expect(resolveIntegrationRequestAuth("homeAssistant", [{ kind: "apiKey", value: secret }]).type).toBe("bearer");
-    expect(
-      resolveIntegrationRequestAuth("adGuardHome", [
-        { kind: "username", value: "user" },
-        { kind: "password", value: secret },
-      ]).type,
-    ).toBe("basic");
-    expect(() => resolveIntegrationRequestAuth("qBittorrent", [])).toThrow("not supported");
-    expect(() => resolveIntegrationRequestAuth("sonarr", [])).toThrow("incomplete");
+  test("resolves native authentication and rejects unsupported or incomplete credentials", async () => {
+    const input = {
+      id: "test",
+      name: "Test",
+      externalUrl: null,
+      url: baseUrl,
+      decryptedSecrets: [{ kind: "apiKey" as const, value: secret }],
+    };
+    await expect(getIntegrationHttpAuthenticationAsync({ ...input, kind: "sonarr" })).resolves.toMatchObject({
+      headers: { "X-API-Key": secret },
+    });
+    await expect(getIntegrationHttpAuthenticationAsync({ ...input, kind: "homeAssistant" })).resolves.toMatchObject({
+      headers: { Authorization: `Bearer ${secret}` },
+    });
+    await expect(getIntegrationHttpAuthenticationAsync({ ...input, kind: "qBittorrent" })).rejects.toThrow(
+      "does not support",
+    );
+    await expect(
+      getIntegrationHttpAuthenticationAsync({ ...input, kind: "sonarr", decryptedSecrets: [] }),
+    ).rejects.toThrow();
   });
   test.each([42, true, false, null])("redacts echoed primitive credential %s", (value) => {
     expect(redactIntegrationResponse(value, [{ kind: "password", value: String(value) }])).toBe("[REDACTED]");
@@ -163,7 +176,10 @@ describe("integration_request validation", () => {
 describe("integration_request with a mock integration server", () => {
   test("GET authenticates with stored credentials and full permission", async () => {
     const caller = await fixture("full");
-    await expect(caller.request(get)).resolves.toEqual({ status: 200, data: [{ id: 42, title: "Example series" }] });
+    await expect(caller.request(get)).resolves.toMatchObject({
+      status: 200,
+      data: [{ id: 42, title: "Example series" }],
+    });
     expect(calls.at(-1)).toMatchObject({ method: "GET", path: "/api/v3/series", auth: secret });
   });
   test("keeps credentials and URL from the same integration snapshot", async () => {
@@ -201,7 +217,7 @@ describe("integration_request with a mock integration server", () => {
       trust.hostnames.mockResolvedValue([
         { hostname: "127.0.0.1", thumbprint: new X509Certificate(cert).fingerprint256 },
       ]);
-      await expect(caller.request(get)).resolves.toEqual({ status: 200, data: { trusted: true } });
+      await expect(caller.request(get)).resolves.toMatchObject({ status: 200, data: { trusted: true } });
     } finally {
       trust.certificates.mockResolvedValue([]);
       trust.hostnames.mockResolvedValue([]);
@@ -214,7 +230,7 @@ describe("integration_request with a mock integration server", () => {
     const before = calls.length;
     await expect(caller.request(get)).rejects.toMatchObject({
       code: "FORBIDDEN",
-      message: "Missing integration permission: hasFullAccess",
+      message: "Arbitrary integration requests require full integration access",
     });
     expect(calls).toHaveLength(before);
   });
@@ -225,7 +241,7 @@ describe("integration_request with a mock integration server", () => {
       const before = calls.length;
       await expect(caller.request({ ...get, method, confirmed: true })).rejects.toMatchObject({
         code: "FORBIDDEN",
-        message: "Missing integration permission: hasFullAccess",
+        message: "Arbitrary integration requests require full integration access",
       });
       expect(calls).toHaveLength(before);
     },
@@ -234,7 +250,7 @@ describe("integration_request with a mock integration server", () => {
     const caller = await fixture("interact");
     await expect(caller.request(get)).rejects.toMatchObject({
       code: "FORBIDDEN",
-      message: "Missing integration permission: hasFullAccess",
+      message: "Arbitrary integration requests require full integration access",
     });
   });
   test("DELETE requires confirmation and preserves deleteFiles", async () => {
@@ -243,7 +259,7 @@ describe("integration_request with a mock integration server", () => {
     const before = calls.length;
     await expect(caller.request(input)).rejects.toMatchObject({ code: "PRECONDITION_FAILED" });
     expect(calls).toHaveLength(before);
-    await expect(caller.request({ ...input, confirmed: true })).resolves.toEqual({ status: 204, data: null });
+    await expect(caller.request({ ...input, confirmed: true })).resolves.toMatchObject({ status: 204, data: null });
     expect(calls.at(-1)).toMatchObject({ method: "DELETE", path: input.path, auth: secret });
   });
   test("sends a JSON body with full access", async () => {
@@ -272,11 +288,11 @@ describe("integration_request with a mock integration server", () => {
   });
   test("redacts upstream JSON and text, including error responses", async () => {
     const caller = await fixture("full");
-    await expect(caller.request({ ...get, path: "/echo" })).resolves.toEqual({
+    await expect(caller.request({ ...get, path: "/echo" })).resolves.toMatchObject({
       status: 400,
       data: { "[REDACTED]": ["[REDACTED]", "[REDACTED]", "[REDACTED]"] },
     });
-    await expect(caller.request({ ...get, path: "/text" })).resolves.toEqual({
+    await expect(caller.request({ ...get, path: "/text" })).resolves.toMatchObject({
       status: 500,
       data: "invalid JSON [REDACTED]",
     });

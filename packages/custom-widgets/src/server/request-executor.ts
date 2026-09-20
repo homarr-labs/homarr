@@ -121,11 +121,13 @@ async function performRequestWithinDeadline(
           statusText: STATUS_CODES[responseData.statusCode] ?? "",
           headers: normalizeResponseHeaders(responseData.headers),
         });
+        let data: unknown = null;
+        if (currentMethod !== "HEAD") data = await parseResponseBody(response, input.textFallback);
         const parsed = {
           ok: response.ok,
           status: response.status,
           statusText: response.statusText,
-          data: await parseResponseBody(response, input.textFallback),
+          data,
         };
         parsed.data = redactResponseSecrets(parsed.data, input.redactSecrets ?? []);
         result = { kind: "response", response: parsed };
@@ -228,8 +230,8 @@ function assertRequest(input: CustomWidgetHttpRequest): void {
 function buildHeaders(input: CustomWidgetHttpRequest, url: URL, body: string | undefined): Headers {
   const headers = new Headers({ Accept: "application/json" });
   for (const [name, value] of Object.entries(input.staticHeaders ?? {})) headers.set(name, value);
-  if (body !== undefined) headers.set("Content-Type", "application/json");
-  else headers.delete("Content-Type");
+  if (body !== undefined && !headers.has("Content-Type")) headers.set("Content-Type", "application/json");
+  if (body === undefined) headers.delete("Content-Type");
   if (input.auth) {
     if (input.auth.type === "apiKeyHeader") assertSafeStaticHeaders({ [input.auth.headerName ?? "X-API-Key"]: "" });
     applyAuth(headers, url, input.auth.type, input.auth.secrets, input.auth.headerName);
