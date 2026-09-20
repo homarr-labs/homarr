@@ -47,6 +47,25 @@ const customWidgetWorkshopInstallPhaseToolNames = new Set([
   "customWidget_workshopInstall",
 ]);
 const maxFocusedComponentSearchesPerPhase = 4;
+const customWidgetDiscoveryToolNames = new Set([
+  "customWidget_getSkill",
+  "customWidget_schema",
+  "customWidget_getAuthoringPrompt",
+  "customWidget_getComponentCatalog",
+  "customWidget_findComponents",
+  "customWidget_getReference",
+  "customWidget_getComponent",
+  "customWidget_getComponents",
+  "customWidget_getSharedProps",
+  "customWidget_getExample",
+  "customWidget_workshopSearch",
+  "customWidget_workshopGet",
+]);
+
+const customWidgetMutationIntentPattern = /\b(?:build|convert|create|design|edit|fix|make|migrate|repair|update)\b/iu;
+const customWidgetSubjectPattern = /\b(?:custom[\s-]+(?:jsx|widgets?)|homarr-custom-widget-v\d+|widgets?)\b/iu;
+const customWidgetNeedPattern = /\b(?:i|we)\s+(?:need|want)\b[^\n]{0,60}\bwidgets?\s+(?:for|using|with)\b/iu;
+const customWidgetContinueOnlyPattern = /^\s*(?:continue|keep\s+going|proceed|go\s+on|finish|complete)\b/iu;
 
 export interface CustomWidgetToolStep {
   toolResults: readonly { toolName: string; output: unknown }[];
@@ -54,6 +73,27 @@ export interface CustomWidgetToolStep {
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
+
+const hasMeaningfulError = (output: Record<string, unknown>) =>
+  "error" in output && output.error !== null && output.error !== undefined && output.error !== false;
+
+export const hasCustomWidgetAuthoringContinuationIntent = (text: string) => {
+  if (customWidgetContinueOnlyPattern.test(text) || customWidgetNeedPattern.test(text)) return true;
+  return customWidgetSubjectPattern.test(text) && customWidgetMutationIntentPattern.test(text);
+};
+
+export const isSuccessfulCustomWidgetAuthoringAdvance = (toolName: string, output: unknown) => {
+  if (!isRecord(output) || hasMeaningfulError(output)) return false;
+  if (customWidgetDiscoveryToolNames.has(toolName)) return true;
+  if (toolName === "customWidget_validateTemplate") return output.valid === true;
+  if (toolName === "customWidget_previewCreate" || toolName === "customWidget_previewReviseTemplate") {
+    return output.success === true || isRecord(output.previewSession);
+  }
+  if (toolName === "customWidget_previewQuery" || toolName === "customWidget_previewAction") {
+    return output.ok === true;
+  }
+  return false;
+};
 
 const getPreviewRequestIds = (value: unknown) => {
   if (!Array.isArray(value)) return [];

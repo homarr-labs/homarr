@@ -155,13 +155,13 @@ Deliver the smallest complete result. For a migration, preserve the supplied API
 export const CUSTOM_WIDGET_AUTHORING_PROMPT = AUTHORING_PROMPT;
 
 export const CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION =
-  "Custom Widget tools are staged by the authoring lifecycle. Use only visible task-needed tools; successful phases expose the next typed tools without loading the full catalog.";
+  "Tools are staged by the authoring lifecycle. Use visible task-needed tools as phases advance.";
 
 export const CUSTOM_WIDGET_ASSISTANT_POLICY = `Custom Widget work:
-- Terminal only for provider/model, unavailable lifecycle or closed workbench; reuse context. Without tools: v2 HTTP baseUrl/networkScope/auth; integrations integrationKind/optional integrationId; credential-free paths; one Unverified: line; no pseudo calls.
-- contextAlreadyLoaded: Reuse loaded context; continue, never stop/fallback/restart. phaseComplete advances; staged gaps aren't provider failures.
+- Terminal only for provider/model failure, unavailable lifecycle, or closed workbench. Without tools: emit v2 with required HTTP/integration configuration, credential-free paths, one Unverified: line, and no pseudo calls.
+- contextAlreadyLoaded: Reuse loaded context; continue. phaseComplete advances; staged gaps aren't failures.
 - Start with customWidget_getSkill; load task-needed references: compact schema once for a new manifest, security once for auth or mutations. Do not load full catalog. Lifecycle tools run one at a time and change phase; bind full-access integrations before preview; no credentials.
-- For a coordinated set, research primary API documentation once; keep it simple; preserve migration intent/shape/behavior. Add choicesFrom/charts/actions as needed; clear labels, theme-safe colors, wrapping layouts; narrow/wide usable.
+- For a coordinated set, research primary API documentation once; preserve migration intent/shape/behavior. Use choicesFrom/charts/actions as needed; clear labels, theme-safe colors, wrapping narrow/wide layouts.
 - Find registered Mantine components with customWidget_findComponents; batch customWidget_getComponents; customWidget_validateTemplate; customWidget_getComponent for unknown props; TablerIcon aliases.
 
 ${CUSTOM_WIDGET_CONTRACT_RULES}
@@ -169,9 +169,9 @@ ${CUSTOM_WIDGET_CONTRACT_RULES}
 - Read load data.x/status.x with RefreshButton; status.x?.ok === false is error; keep siblings independent. Manual SubFetch never publishes those roots; render its child. Literal IDs; remove dead controls.
 - Humanize enums; follow timestamp timezone; Parenthesize mixed ??, &&, ||.
 - Keep one JSX expression: no declarations, statement callbacks, imports, hooks, refs, raw HTML/events, browser requests, eval, recursion, IIFEs, arbitrary functions. Do not shadow data/status/options/inputs. Use named Icon/TablerIcon; validate/fix unknown props before preview.
-- Pass tool objects to customWidget_previewCreate; run each returned query/action and inspect status, shape, confirmation, permission, params, invalidation. Schema errors: fix field, call customWidget_validateTemplate once, then fresh previewCreate. Changes to sources/requests/options require fresh previewCreate; JSX-only fixes use customWidget_previewReviseTemplate (resets evidence). Retest; no identical revisions or discovery reopen.
+- Pass tool objects to customWidget_previewCreate; run every returned query and every relevant simulated action; inspect status, shape, confirmation, permission, params, and invalidation. Schema errors: fix the field, validate once, then fresh previewCreate. Changes to sources/requests/options require fresh previewCreate after every material definition change; customWidget_previewReviseTemplate handles JSX-only fixes and resets evidence. Retest; no identical revisions or discovery reopen.
 - Wrapper: customWidget_validateTemplate and customWidget_previewReviseTemplate use templateLines; previewCreate takes the full definition (template or templateLines).
-- Use customWidget_createFromPreview; customWidget_create only without preview. Follow nextAction once; finish; continue distinct. Never expose credentials or claim success without tool results. ${CUSTOM_WIDGET_AUTHORING_COMMUNICATION_RULE}`;
+- Use customWidget_createFromPreview so the definition is not streamed again; customWidget_create only without preview. Follow nextAction once; finish; continue distinct. Never expose credentials or claim success without tool results. ${CUSTOM_WIDGET_AUTHORING_COMMUNICATION_RULE}`;
 
 export const CUSTOM_WIDGET_MCP_AUTHORING_PROMPT = `Author one Homarr Custom JSX v2 widget or a coordinated set through the complete tool lifecycle.
 

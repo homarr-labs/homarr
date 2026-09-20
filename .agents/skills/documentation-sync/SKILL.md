@@ -53,7 +53,3 @@ For a widget:
 3. Update every affected page and remove superseded guidance.
 4. Run the narrowest useful docs validation. Use `pnpm turbo build --filter=@homarr/docs` when links, MDX, generated definitions, or navigation can fail; otherwise run the docs package formatter on touched files.
 5. Treat broken links and anchors as failures; Docusaurus checks them strictly.
-
-## Deliver and verify
-
-Name the concrete page and hidden behavior the task changes. Run the narrowest relevant docs check for the touched surface, and label formatting, source inspection, link checks, and a full docs build separately. Do not present an unrun build or link check as proof; finish concisely with the changed paths, checks, and remaining limitation.

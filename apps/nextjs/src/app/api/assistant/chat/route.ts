@@ -50,7 +50,7 @@ import {
   sanitizeAttachmentFilename,
 } from "./assistant-chat-input";
 import { getAssistantModelLookupStatus } from "./assistant-model-lookup";
-import { resolveAssistantReasoning } from "./assistant-reasoning";
+import { resolveAssistantReasoning, resolveAssistantTemperature } from "./assistant-reasoning";
 import { compactAssistantStepMessages, convertAssistantMessagesToModelMessages } from "./assistant-message-conversion";
 import {
   getOpenRouterWebSearchRequests,
@@ -775,8 +775,13 @@ export async function POST(request: Request) {
         reasoning: parsed.data.reasoning,
         customWidgetAuthoringActive,
         modelId,
+        provider: configuration.provider,
       }),
-      temperature: customWidgetAuthoringActive && modelId === "z-ai/glm-5.3-flash" ? 0.2 : undefined,
+      temperature: resolveAssistantTemperature({
+        customWidgetAuthoringActive,
+        modelId,
+        provider: configuration.provider,
+      }),
       providerOptions:
         configuration.provider === "openrouter" || openRouterServerToolsEnabled
           ? { [toProviderOptionsKey(providerName)]: { usage: { include: true } } }

@@ -561,6 +561,9 @@ describe("Custom Widget authoring context", () => {
 
   test("requires another tool after successful discovery or validation during a build request", () => {
     const activeTools = [
+      "customWidget_getSkill",
+      "customWidget_getReference",
+      "customWidget_findComponents",
       "customWidget_getComponent",
       "customWidget_getComponents",
       "customWidget_validateTemplate",
@@ -581,6 +584,9 @@ describe("Custom Widget authoring context", () => {
       ),
     ).toBe(true);
     for (const [toolName, output] of [
+      ["customWidget_getSkill", { skillMd: "skill" }],
+      ["customWidget_getReference", { name: "schema", content: "schema" }],
+      ["customWidget_findComponents", { components: [] }],
       ["customWidget_previewReviseTemplate", { success: true }],
       ["customWidget_previewAction", { ok: true, error: null }],
     ] as const) {
@@ -594,6 +600,21 @@ describe("Custom Widget authoring context", () => {
         [{ toolResults: [{ toolName: "customWidget_getComponents", output: { phaseComplete: true } }] }],
         [],
         [userMessage("Create a Homarr Custom JSX v2 dashboard widget and save it")],
+      ),
+    ).toBe(true);
+    expect(
+      shouldRequireCustomWidgetAuthoringTool(
+        activeTools,
+        [
+          {
+            toolResults: [
+              { toolName: "customWidget_getComponents", output: { components: [] } },
+              { toolName: "customWidget_getReference", output: { name: "runtime", content: "runtime" } },
+            ],
+          },
+        ],
+        [],
+        messages,
       ),
     ).toBe(true);
     expect(
@@ -644,6 +665,15 @@ describe("Custom Widget authoring context", () => {
     const successfulDiscovery = {
       toolResults: [{ toolName: "customWidget_getComponents", output: { phaseComplete: true } }],
     };
+
+    expect(
+      shouldRequireCustomWidgetAuthoringTool(
+        activeTools,
+        [successfulDiscovery],
+        [],
+        [userMessage("Validate and fix this custom widget")],
+      ),
+    ).toBe(true);
 
     expect(
       shouldRequireCustomWidgetAuthoringTool(

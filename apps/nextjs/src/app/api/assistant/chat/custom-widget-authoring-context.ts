@@ -2,7 +2,11 @@ import { getToolName, isToolUIPart } from "ai";
 import type { UIMessage } from "ai";
 
 import { isRecord } from "@homarr/common";
-import { getCustomWidgetPhaseToolNames } from "@homarr/custom-widgets/core";
+import {
+  getCustomWidgetPhaseToolNames,
+  hasCustomWidgetAuthoringContinuationIntent,
+  isSuccessfulCustomWidgetAuthoringAdvance,
+} from "@homarr/custom-widgets/core";
 
 export { getCustomWidgetPhaseToolNames };
 
@@ -53,21 +57,6 @@ export const getCustomWidgetToolStepsFromResponseMessages = (messages: readonly 
     return toolResults.length > 0 ? [{ toolResults }] : [];
   });
 
-const isSuccessfulRequiredAdvance = (toolName: string, output: unknown) => {
-  if (!isRecord(output) || ("error" in output && output.error !== null && output.error !== undefined)) return false;
-  if (toolName === "customWidget_getComponents") {
-    return output.phaseComplete === true || Array.isArray(output.components);
-  }
-  if (toolName === "customWidget_validateTemplate") return output.valid === true;
-  if (toolName === "customWidget_previewCreate" || toolName === "customWidget_previewReviseTemplate") {
-    return output.success === true || isRecord(output.previewSession);
-  }
-  if (toolName === "customWidget_previewQuery" || toolName === "customWidget_previewAction") {
-    return output.ok === true;
-  }
-  return false;
-};
-
 const hasPendingNonCustomToolCall = (step: CustomWidgetToolStep) => {
   const toolCalls = step.toolCalls ?? [];
   if (toolCalls.length === 0) return false;
@@ -82,25 +71,12 @@ const hasPendingNonCustomToolCall = (step: CustomWidgetToolStep) => {
   );
 };
 
-const customWidgetContinuationIntentPattern =
-  /(?:\b(?:build|convert|create|design|edit|fix|make|migrate|repair|update)\b[^\n]{0,120}\b(?:custom[\s-]+(?:jsx|widgets?)|homarr-custom-widget-v\d+|widgets?)\b|\b(?:i|we)\s+(?:need|want)\b[^\n]{0,60}\bwidgets?\s+(?:for|using|with)\b)/iu;
-
-const customWidgetValidationOnlyIntentPattern =
-  /\b(?:validate|check|review|inspect|lint)\b[^\n]{0,80}\bcustom[\s-]+widgets?\b/iu;
-const customWidgetContinueOnlyPattern = /^\s*(?:continue|keep\s+going|proceed|go\s+on|finish|complete)\b/iu;
-
 const getLatestUserText = (messages: readonly UIMessage[]) => {
   const latestUserMessage = messages.findLast((message) => message.role === "user");
   if (!latestUserMessage) return "";
   return latestUserMessage.parts
     .flatMap((part) => (isRecord(part) && part.type === "text" && typeof part.text === "string" ? [part.text] : []))
     .join("\n");
-};
-
-const hasCustomWidgetContinuationIntent = (messages: readonly UIMessage[]) => {
-  const text = getLatestUserText(messages);
-  if (!text || customWidgetValidationOnlyIntentPattern.test(text)) return false;
-  return customWidgetContinuationIntentPattern.test(text) || customWidgetContinueOnlyPattern.test(text);
 };
 
 const hasFollowUpCustomWidgetTool = (activeToolNames: readonly string[], latestToolName: string) =>
@@ -128,20 +104,24 @@ export const shouldRequireCustomWidgetAuthoringTool = (
   responseSteps: readonly CustomWidgetToolStep[] = [],
   messages: readonly UIMessage[] = [],
 ) => {
+  const latestUserText = getLatestUserText(messages);
   if (
     activeToolNames.length === 0 ||
-    !hasCustomWidgetContinuationIntent(messages) ||
+    !hasCustomWidgetAuthoringContinuationIntent(latestUserText) ||
     hasLatestClientToolOutcome(messages)
   )
     return false;
   const currentSteps = steps.length > 0 ? steps : responseSteps;
   const latestStep = currentSteps.at(-1);
   if (!latestStep || hasPendingNonCustomToolCall(latestStep)) return false;
-  const latestResult = latestStep.toolResults.at(-1);
-  return (
-    latestResult !== undefined &&
-    hasFollowUpCustomWidgetTool(activeToolNames, latestResult.toolName) &&
-    isSuccessfulRequiredAdvance(latestResult.toolName, latestResult.output)
+  const hasError = latestStep.toolResults.some(
+    (result) => isRecord(result.output) && "error" in result.output && result.output.error,
+  );
+  if (hasError) return false;
+  return latestStep.toolResults.some(
+    (result) =>
+      hasFollowUpCustomWidgetTool(activeToolNames, result.toolName) &&
+      isSuccessfulCustomWidgetAuthoringAdvance(result.toolName, result.output),
   );
 };
 
