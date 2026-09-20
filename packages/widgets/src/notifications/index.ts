@@ -17,6 +17,13 @@ export const { componentLoader, definition } = createWidgetDefinition("notificat
   createOptions() {
     return optionsBuilder.from((factory) => ({
       hideLogos: factory.switch({ defaultValue: false }),
+      messageFormat: factory.select({
+        defaultValue: "auto",
+        options: (["auto", "plain", "markdown", "html"] as const).map((value) => ({
+          value,
+          label: (t) => t(`widget.notifications.option.messageFormat.option.${value}`),
+        })),
+      }),
     }));
   },
   ...getWidgetIntegrationConfig("notifications"),

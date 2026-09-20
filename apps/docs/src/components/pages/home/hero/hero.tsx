@@ -2,6 +2,7 @@ import { IconDownload, IconExternalLink } from "@tabler/icons-react";
 import clsx from "clsx";
 import Link from "@/components/mdx/link";
 import styles from "../../../../pages/index.module.css";
+import { LaunchMenu } from "./launch-menu";
 import { HeroCards } from "./hero-cards";
 
 export default function HomeHero() {
@@ -37,16 +38,7 @@ export default function HomeHero() {
               <span>Try Demo</span>
               <IconExternalLink aria-hidden="true" size={20} />
             </Link>
-            <Link
-              data-attr="Redirect to PikaPods"
-              className={clsx(styles.heroButton, styles.partnerButton)}
-              to="https://www.pikapods.com/pods?run=homarr"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img src="/img/pictures/partner/pika-pods.svg" alt="PikaPods" height={20} />
-              <span>Host with PikaPods</span>
-            </Link>
+            <LaunchMenu />
           </div>
         </div>
         <section className={clsx(styles.heroPreview, "hover-animation")} aria-label="Example Homarr dashboard">

@@ -21,7 +21,7 @@ import { translateIfNecessary } from "@homarr/translation";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import { useIsMobile } from "@homarr/ui/hooks";
-import type { WidgetDefinition, WidgetRuntimeRef } from "@homarr/widgets/definition";
+import type { WidgetDataStatus, WidgetDefinition, WidgetRuntimeRef } from "@homarr/widgets/definition";
 import { getWidgetQueryKeys, getWidgetRuntimeQueries, supportsAdvancedFocus } from "@homarr/widgets/definition";
 import { reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 import { getWidgetOptionTranslationNamespace } from "@homarr/widgets/option-translation";
@@ -79,6 +79,7 @@ export const WidgetContextMenu = ({
   const { open: openAdvancedFocus } = useAdvancedFocus();
   const integrationsWithInteractAccess = useIntegrationsWithInteractAccess();
   const [menuOpened, setMenuOpened] = useState(false);
+  const [isRefreshingSources, setRefreshingSources] = useState(false);
 
   const persistBoard = useCallback(
     (updater: (previous: typeof board) => typeof board) => {
@@ -115,14 +116,24 @@ export const WidgetContextMenu = ({
       ),
     [board.id, definition.queryMatcher, item.id, item.integrationIds, options, widgetQueryKeys, widgetRuntimeRef],
   );
-  const isWidgetFetching =
+  const isQueryFetching =
     useIsFetching({
       type: "active",
       predicate: (query) => matchesWidgetQuery(query.queryKey),
     }) > 0;
-  const handleRefetch = useCallback(() => {
-    void queryClient.refetchQueries({ type: "active", predicate: (query) => matchesWidgetQuery(query.queryKey) });
-  }, [matchesWidgetQuery, queryClient]);
+  const dataStatus = widgetRuntimeRef.current.actions.getDataStatus?.();
+  const isWidgetFetching = isRefreshingSources || isQueryFetching || !!dataStatus?.isRefreshing;
+  const handleRefetch = useCallback(async () => {
+    setRefreshingSources(true);
+    try {
+      const refresh = widgetRuntimeRef.current.actions.refresh;
+      if (refresh) await refresh();
+      else
+        await queryClient.refetchQueries({ type: "active", predicate: (query) => matchesWidgetQuery(query.queryKey) });
+    } finally {
+      setRefreshingSources(false);
+    }
+  }, [matchesWidgetQuery, queryClient, widgetRuntimeRef]);
 
   const canInteractWithSelectedIntegrations = useMemo(() => {
     const allowedIds = new Set(integrationsWithInteractAccess.map(({ id }) => id));
@@ -320,6 +331,7 @@ export const WidgetContextMenu = ({
             {tCommon("refresh")}
             <WidgetQueryStatus
               queryClient={queryClient}
+              dataStatus={dataStatus}
               matchesQuery={matchesWidgetQuery}
               isFetching={isWidgetFetching}
               t={t}
@@ -370,19 +382,22 @@ const WidgetContextMenuDropdown = ({ opened, onClose, title, children }: WidgetC
 };
 
 interface WidgetQueryStatusProps {
+  dataStatus?: WidgetDataStatus;
   queryClient: QueryClient;
   matchesQuery: (queryKey: QueryKey) => boolean;
   isFetching: boolean;
   t: TranslationFunction;
 }
 
-const WidgetQueryStatus = ({ queryClient, matchesQuery, isFetching, t }: WidgetQueryStatusProps) => {
+const WidgetQueryStatus = ({ queryClient, matchesQuery, isFetching, t, dataStatus }: WidgetQueryStatusProps) => {
   const queries = queryClient.getQueryCache().findAll({
     type: "active",
     predicate: (query) => matchesQuery(query.queryKey),
   });
   const timestamps = queries.map((query) => query.state.dataUpdatedAt).filter(Boolean);
-  const latest = timestamps.length > 0 ? Math.max(...timestamps) : 0;
+  let latest = 0;
+  if (timestamps.length > 0) latest = Math.max(...timestamps);
+  if (dataStatus) latest = dataStatus.updatedAt ?? 0;
   const ageLabel = useTimeAgo(new Date(latest || Date.now()));
   const ageSuffix = latest > 0 ? ` · ${ageLabel}` : "";
 
@@ -397,7 +412,7 @@ const WidgetQueryStatus = ({ queryClient, matchesQuery, isFetching, t }: WidgetQ
     );
   }
 
-  if (queries.length === 0) {
+  if (queries.length === 0 && !dataStatus) {
     return (
       <Text size="xs" c="dimmed">
         {t("item.menu.status.idle")}
@@ -405,7 +420,7 @@ const WidgetQueryStatus = ({ queryClient, matchesQuery, isFetching, t }: WidgetQ
     );
   }
 
-  const hasError = queries.some((query) => query.state.status === "error");
+  const hasError = dataStatus?.hasError ?? queries.some((query) => query.state.status === "error");
   if (hasError) {
     return (
       <Tooltip label={t("item.menu.status.error")} position="left">

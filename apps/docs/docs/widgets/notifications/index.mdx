@@ -27,3 +27,14 @@ available service icons.
 ### Adding the widget
 
 <AddingWidget />
+
+### Message formatting and deletion
+
+Automatic formatting follows Gotify's `extras["client::display"].contentType`: `text/markdown` renders Markdown,
+`text/html` renders sanitized HTML, and absent or unknown types remain plain text. Markdown ignores embedded HTML.
+For producers without this metadata, select Markdown or HTML in the widget's message format setting.
+Scripts, event handlers, and unsafe links are removed; remote images in formatted messages may load in your browser.
+
+The service link is a separate icon, so selecting message text or using message links does not open Gotify.
+Deleting a Gotify notification requires **Interact** permission on its integration and permanently removes the
+message from Gotify for all clients. Other notification integrations remain read-only.

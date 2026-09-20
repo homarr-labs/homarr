@@ -1,0 +1,19 @@
+---
+title: "Gatus"
+description: "An open source service health dashboard and monitoring tool."
+hide_title: true
+---
+
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { gatusIntegration } from ".";
+
+<IntegrationHeader integration={gatusIntegration} categories={["Monitoring"]} />
+
+### Widgets & Capabilities
+
+The [Stats widget](/docs/widgets/stats) reads Gatus' endpoint status API and displays the number of endpoints currently up, down, unknown, and the total number of endpoints. It uses each endpoint's latest result; endpoints without a result are counted as unknown.
+
+### Adding the integration
+
+<AddingIntegration />

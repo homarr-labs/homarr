@@ -21,6 +21,7 @@ COPY pnpm-lock.yaml pnpm-workspace.yaml package.json turbo.json ./
 COPY patches ./patches
 COPY apps/docs ./apps/docs
 COPY packages/common ./packages/common
+COPY packages/core ./packages/core
 COPY packages/custom-widgets ./packages/custom-widgets
 COPY packages/definitions ./packages/definitions
 COPY packages/workshop ./packages/workshop

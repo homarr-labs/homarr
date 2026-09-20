@@ -1,0 +1,31 @@
+---
+title: "Miniflux"
+description: "Miniflux is a minimalist and opinionated feed reader."
+hide_title: true
+---
+
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { minifluxIntegration } from ".";
+
+<IntegrationHeader integration={minifluxIntegration} categories={["Feed reader"]} />
+
+### Widgets & Capabilities
+
+The [Stats widget](/docs/widgets/stats) displays the total read and unread entry counts from Miniflux. Create an API key in Miniflux and add it as the integration's `apiKey`; the key must belong to a user who can access the feeds whose counters should be shown.
+
+### Adding the integration
+
+<AddingIntegration />
+
+### Secrets
+
+<IntegrationSecrets
+  secrets={[
+    {
+      credentials: ["apiKey"],
+      steps: [],
+    },
+  ]}
+/>

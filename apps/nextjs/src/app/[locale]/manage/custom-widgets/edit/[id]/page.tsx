@@ -6,7 +6,6 @@ import { auth } from "@homarr/auth/next";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { catchTrpcNotFound } from "~/errors/trpc-catch-error";
-import { CustomWidgetBetaBanner } from "../../_beta-banner";
 import { CustomWidgetForm } from "../../_custom-widget-form";
 import { FormErrorBoundary } from "../../_form-error-boundary";
 
@@ -28,7 +27,6 @@ export default async function EditCustomWidgetPage(props: EditCustomWidgetPagePr
       <Container fluid>
         <Stack>
           <Title>{definition.name}</Title>
-          <CustomWidgetBetaBanner />
           <FormErrorBoundary>
             <CustomWidgetForm
               mode="edit"

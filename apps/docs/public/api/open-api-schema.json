@@ -2246,6 +2246,7 @@
                   "kind": {
                     "type": "string",
                     "enum": [
+                      "stats",
                       "clock",
                       "weather",
                       "airQuality",

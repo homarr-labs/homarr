@@ -1,0 +1,25 @@
+---
+title: "Syncthing Relay Server"
+description: "A Syncthing relay server for connecting clients that cannot connect directly."
+hide_title: true
+---
+
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { syncthingRelayIntegration } from ".";
+import { statsWidget } from "@site/docs/widgets/stats";
+
+<IntegrationHeader integration={syncthingRelayIntegration} categories={["Networking"]} />
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites items={[{ widget: statsWidget }]} />
+
+The [Stats widget](/docs/widgets/stats) reads the relay server's `/status` endpoint and displays active sessions, connections, and bytes proxied.
+
+### Adding the integration
+
+<AddingIntegration />
+
+Point the integration at the Syncthing Relay Server status endpoint. `strelaysrv` exposes `/status` on port `22070` by default; the relay protocol itself uses port `22067`.

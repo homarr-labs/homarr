@@ -33,6 +33,7 @@ export default function BeszelSystemStatsWidget({
   width,
   height,
   displayScale = 1,
+  displayMode,
   boardId,
   itemId,
   setOptions,
@@ -71,12 +72,14 @@ export default function BeszelSystemStatsWidget({
     { value: "1w", label: t("period.oneWeek") },
     { value: "30d", label: t("period.thirtyDays") },
   ];
+  let layoutScale = 1;
+  if (displayMode !== "advanced" && Number.isFinite(displayScale) && displayScale > 0) {
+    layoutScale = displayScale;
+  }
   let responsiveWidth = width;
   let responsiveHeight = height;
-  if (Number.isFinite(displayScale) && displayScale > 0) {
-    responsiveWidth *= displayScale;
-    responsiveHeight *= displayScale;
-  }
+  responsiveWidth *= layoutScale;
+  responsiveHeight *= layoutScale;
   useWidgetRuntimeQueries(
     widgetRuntimeRef,
     selectedSystem && options.timePeriod !== "1m"
@@ -263,6 +266,8 @@ export default function BeszelSystemStatsWidget({
       >
         <Stack p="sm">
           <BeszelStatsView
+            displayScale={layoutScale}
+            showXAxis={responsiveWidth >= 220 && responsiveHeight >= 180}
             integrationIds={selectedSystem ? [selectedSystem.integrationId] : []}
             systemId={selectedSystem?.systemId ?? ""}
             timePeriod={options.timePeriod as BeszelTimePeriod}

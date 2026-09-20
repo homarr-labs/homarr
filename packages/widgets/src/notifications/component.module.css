@@ -8,3 +8,26 @@
   border-bottom-style: solid;
   border-bottom-width: 1px;
 }
+
+.body {
+  width: 100%;
+  overflow-wrap: anywhere;
+
+  & > :first-child {
+    margin-top: 0;
+  }
+  & > :last-child {
+    margin-bottom: 0;
+  }
+  & img {
+    max-width: 100%;
+    height: auto;
+  }
+  & pre {
+    white-space: pre-wrap;
+  }
+  & table {
+    display: block;
+    overflow-x: auto;
+  }
+}

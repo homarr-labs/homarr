@@ -1,0 +1,45 @@
+---
+title: "Mealie"
+description: "A self-hosted recipe manager for organizing and sharing recipes."
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { mealieIntegration } from ".";
+import { statsWidget } from "@site/docs/widgets/stats";
+import Alert from "@/components/mdx/admonition";
+
+<IntegrationHeader integration={mealieIntegration} categories={["Recipe management"]} />
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites items={[{ widget: statsWidget }]} />
+
+The [Stats widget](/docs/widgets/stats) displays recipes and users in the API key's household, plus the group's shared categories and tags.
+
+<Alert type="note">
+  The Stats widget uses Mealie's v2 endpoint, <code>/api/households/statistics</code>. Mealie v1 instances that only
+  expose <code>/api/groups/statistics</code> are not supported.
+</Alert>
+
+### Adding the integration
+
+<AddingIntegration />
+
+### Secrets
+
+<IntegrationSecrets
+  secrets={[
+    {
+      credentials: ["apiKey"],
+      steps: [
+        "Open Mealie and go to your profile's API Tokens page.",
+        "Create a long-lived API token for a user with access to the household whose statistics you want to display.",
+        "Copy the token and paste it into the API Key field when creating the integration in Homarr.",
+      ],
+    },
+  ]}
+/>

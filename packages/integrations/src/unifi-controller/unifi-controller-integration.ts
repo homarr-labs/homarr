@@ -6,7 +6,7 @@ import {
   getAllTrustedCertificatesAsync,
   getTrustedCertificateHostnamesAsync,
 } from "@homarr/core/infrastructure/certificates";
-import { createCustomCheckServerIdentity } from "@homarr/core/infrastructure/http";
+import { createCustomCheckServerIdentity, getHttpRequestSignal } from "@homarr/core/infrastructure/http";
 import type { SiteStats } from "@homarr/node-unifi";
 import Unifi from "@homarr/node-unifi";
 
@@ -79,6 +79,7 @@ export class UnifiControllerIntegration extends Integration implements NetworkCo
         createAxiosInstance({ cookies }) {
           return axios.create({
             adapter: "http",
+            signal: getHttpRequestSignal(),
             httpAgent: new HttpCookieAgent({ cookies }),
             httpsAgent: new HttpsCookieAgent({
               cookies,

@@ -637,7 +637,8 @@ export async function POST(request: Request) {
     const phaseToolNames = customWidgetAuthoringActive
       ? getCustomWidgetPhaseToolNames(Object.keys(homarrTools), steps)
       : null;
-    if (phaseToolNames) return [...frontendToolNames, ...enabledToolNames, ...phaseToolNames];
+    if (phaseToolNames)
+      return [assistantToolGroupActivationName, ...frontendToolNames, ...enabledToolNames, ...phaseToolNames];
     return [
       assistantToolGroupActivationName,
       ...frontendToolNames,

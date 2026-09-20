@@ -1,0 +1,25 @@
+---
+title: "Netdata"
+description: "Real-time performance and health monitoring for systems and applications."
+hide_title: true
+---
+
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { netdataIntegration } from ".";
+import { statsWidget } from "@site/docs/widgets/stats";
+
+<IntegrationHeader integration={netdataIntegration} categories={["Monitoring"]} />
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites items={[{ widget: statsWidget }]} />
+
+The [Stats widget](/docs/widgets/stats) reads Netdata's `/api/v1/info` endpoint and displays the number of active warnings and critical alarms.
+
+### Adding the integration
+
+<AddingIntegration />
+
+Point the integration at the Netdata Agent HTTP API, which listens on port `19999` by default. Netdata's `/api/v1/info` endpoint does not require authentication with the default Agent configuration. If bearer protection or network ACLs are enabled, allow Homarr to access this endpoint; the integration does not currently send an authentication token.

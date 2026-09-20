@@ -79,7 +79,7 @@ describe("Workshop widget validation", () => {
       content: JSON.stringify(CUSTOM_WIDGET_STARTER),
     });
     expect(parsed.content).toContain('\n  "$schema":');
-    expect(JSON.parse(parsed.content)).toEqual(CUSTOM_WIDGET_STARTER);
+    expect(JSON.parse(parsed.content)).toMatchObject(CUSTOM_WIDGET_STARTER);
   });
 
   test("accepts Custom CSS without treating it as widget JSON", () => {

@@ -216,3 +216,40 @@ export function createPinnedAgent(
     maxResponseSize: MAX_RESPONSE_BODY_BYTES,
   });
 }
+
+export function assertCustomWidgetPathScope(url: URL, pathPrefix: string) {
+  const decodedPrefix = decodePath(pathPrefix);
+  let prefixEnd = decodedPrefix.length;
+  while (prefixEnd > 0 && decodedPrefix.charAt(prefixEnd - 1) === "/") {
+    prefixEnd -= 1;
+  }
+  const prefix = decodedPrefix.slice(0, prefixEnd);
+  const path = decodePath(url.pathname);
+  if (
+    path.includes("\\") ||
+    path.split("/").some((segment) => segment === "." || segment === "..") ||
+    (prefix && path !== prefix && !path.startsWith(`${prefix}/`))
+  ) {
+    throw new CustomWidgetDomainError({
+      code: "FORBIDDEN",
+      message: "Request must remain within the selected integration URL",
+    });
+  }
+}
+
+function decodePath(value: string) {
+  let path = value;
+  for (let pass = 0; pass < 4; pass += 1) {
+    let decoded: string;
+    try {
+      decoded = decodeURIComponent(path);
+    } catch {
+      throw new CustomWidgetDomainError({ code: "FORBIDDEN", message: "Request path contains invalid encoding" });
+    }
+    if (decoded === path) return path;
+    path = decoded;
+  }
+  if (/%[0-9a-f]{2}/iu.test(path))
+    throw new CustomWidgetDomainError({ code: "FORBIDDEN", message: "Request path is excessively encoded" });
+  return path;
+}

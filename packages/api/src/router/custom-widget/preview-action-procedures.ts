@@ -29,12 +29,12 @@ export const previewActionProcedures = {
       if (definition?.kind !== "action")
         throw new TRPCError({ code: "NOT_FOUND", message: "Preview action was not found" });
       const request = { id: input.requestId, ...definition };
-      const resolved = getPreviewRequestSource(session, request.source);
-      if (!resolved) throw new TRPCError({ code: "NOT_FOUND", message: "Preview source was not found" });
       const params = resolveCustomWidgetRequestValues(request, session.options, input.params);
-      const targetUrl = renderRequestTarget(resolved.source.baseUrl, request, params);
       const body = renderRequestBody(request, params);
       if (!session.liveActions) {
+        const resolved = await getPreviewRequestSource(ctx, session, request);
+        if (!resolved) throw new TRPCError({ code: "NOT_FOUND", message: "Preview source was not found" });
+        renderRequestTarget(resolved.baseUrl, request, params);
         await recordPreviewJournal(session, {
           requestId: request.id,
           kind: "action",
@@ -65,14 +65,16 @@ export const previewActionProcedures = {
       });
       const startedAt = Date.now();
       try {
+        const resolved = await getPreviewRequestSource(ctx, session, request);
+        if (!resolved) throw new TRPCError({ code: "NOT_FOUND", message: "Preview source was not found" });
+        const targetUrl = renderRequestTarget(resolved.baseUrl, request, params);
         const response = await executeCustomWidgetRequest({
-          baseUrl: resolved.source.baseUrl,
+          ...resolved,
           targetUrl,
           method: request.method,
           body,
           staticHeaders: request.headers,
           auth: request.auth === "none" ? undefined : resolved.auth,
-          networkScope: resolved.source.networkScope,
           kind: "action",
         });
         if (response.ok && request.invalidates?.length) {

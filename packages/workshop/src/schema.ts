@@ -1,3 +1,4 @@
+import { exportCustomWidgetDefinition } from "@homarr/custom-widgets/core";
 import { CUSTOM_WIDGET_SCHEMA, customWidgetImportSchema } from "@homarr/custom-widgets/core";
 import { z } from "zod/v4";
 
@@ -239,11 +240,9 @@ export function validateWorkshopContent(type: WorkshopSubmissionType, content: s
 
 export function formatWorkshopContent(type: WorkshopSubmissionType, content: string): string {
   if (type !== "customWidget") return content;
-  try {
-    return JSON.stringify(JSON.parse(content) as unknown, null, 2);
-  } catch {
-    return content;
-  }
+  const validation = validateWorkshopWidget(content);
+  if (!validation.success) return content;
+  return JSON.stringify(validation.data, null, 2);
 }
 
 export function validateWorkshopWidget(content: string): WorkshopWidgetValidationResult {
@@ -257,7 +256,7 @@ export function validateWorkshopWidget(content: string): WorkshopWidgetValidatio
         .join("\n");
       return { success: false, error: error || "Invalid widget" };
     }
-    return { success: true, data: result.data };
+    return { success: true, data: exportCustomWidgetDefinition(result.data) };
   } catch {
     return { success: false, error: "Widget content is not valid JSON" };
   }

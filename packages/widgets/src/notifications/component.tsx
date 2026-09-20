@@ -1,10 +1,12 @@
 "use client";
 
 import { useMemo } from "react";
-import { Avatar, Badge, Card, Flex, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
-import { IconClock } from "@tabler/icons-react";
+import { ActionIcon, Avatar, Badge, Card, Flex, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
+import { IconClock, IconExternalLink, IconTrash } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
+import { showErrorNotification } from "@homarr/notifications";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useTimeAgo } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";
@@ -13,6 +15,7 @@ import { iconSizes } from "@homarr/ui";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
 import { getUsableWidgetQueryData } from "../common/query-state";
 import type { WidgetComponentProps } from "../definition";
+import { NotificationBody } from "./notification-body";
 import { getNotificationDisplay } from "./display";
 import classes from "./component.module.css";
 
@@ -22,6 +25,7 @@ export default function NotificationsWidget({
   width,
   height,
   displayMode,
+  displayScale = 1,
 }: WidgetComponentProps<"notifications">) {
   const notificationsQuery = clientApi.widget.notifications.getNotifications.useQuery({
     ...options,
@@ -35,6 +39,12 @@ export default function NotificationsWidget({
   const tCommon = useI18n("common");
 
   const board = useRequiredBoard();
+  const interactIntegrations = useIntegrationsWithInteractAccess();
+  const utils = clientApi.useUtils();
+  const deleteNotification = clientApi.widget.notifications.deleteNotification.useMutation({
+    onSuccess: () => utils.widget.notifications.getNotifications.invalidate(),
+    onError: () => showErrorNotification({ title: t("deleteFailed"), message: t("deleteFailedMessage") }),
+  });
 
   const sortedNotifications = useMemo(
     () =>
@@ -44,6 +54,8 @@ export default function NotificationsWidget({
             ...notification,
             compositeKey: `${integration.integration.id}:${notification.id}`,
             integrationName: integration.integration.name,
+            integrationId: integration.integration.id,
+            integrationKind: integration.integration.kind,
           })),
         )
         .sort((entryA, entryB) => entryB.time.getTime() - entryA.time.getTime()),
@@ -53,20 +65,26 @@ export default function NotificationsWidget({
     (integration): integration is typeof integration & { error: string } => Boolean(integration.error),
   );
   const isAdvanced = displayMode === "advanced";
-  const isDense = width < 280 || height < 180;
+  let responsiveWidth = width;
+  let responsiveHeight = height;
+  if (!isAdvanced) {
+    responsiveWidth *= displayScale;
+    responsiveHeight *= displayScale;
+  }
+  const isDense = responsiveWidth < 280 || responsiveHeight < 180;
   const isRoomy = width >= 360 && height >= 220;
-  const bodyLineClamp = height < 112 ? 1 : isDense ? 2 : height >= 300 ? 8 : 4;
+  const bodyLineClamp = responsiveHeight < 180 ? 1 : isDense ? 2 : responsiveHeight >= 300 ? 8 : 4;
   const notificationDisplay = getNotificationDisplay({
     displayMode,
     hideLogos: options.hideLogos,
     isRoomy: isAdvanced && isRoomy,
-    bodyLineClamp: isAdvanced ? bodyLineClamp : 4,
+    bodyLineClamp,
   });
   const columns = isAdvanced && width >= 720 ? 2 : 1;
   const spacing = !isAdvanced || isRoomy ? "sm" : "xs";
 
   return (
-    <ScrollArea className="scroll-area-w100" w="100%" h="100%" p={isAdvanced ? "xs" : "sm"}>
+    <ScrollArea className="scroll-area-w100" w="100%" h="100%" p={isDense ? 4 : "xs"}>
       <Stack w="100%" gap={isAdvanced ? "xs" : "sm"}>
         {failedIntegrations.length > 0 && (
           <Group gap={4} wrap="wrap">
@@ -90,14 +108,10 @@ export default function NotificationsWidget({
               return (
                 <Card
                   key={notification.compositeKey}
-                  component={href ? "a" : "div"}
-                  href={href}
-                  target={href ? "_blank" : undefined}
-                  rel={href ? SAFE_NEW_TAB_REL : undefined}
                   className={isAdvanced ? (columns > 1 ? classes.card : classes.row) : undefined}
                   radius={board.itemRadius}
                   w="100%"
-                  p={!isAdvanced || isRoomy ? "sm" : isDense ? 6 : "xs"}
+                  p={isDense ? 6 : "sm"}
                   style={{
                     color: "inherit",
                     textDecoration: "none",
@@ -108,30 +122,30 @@ export default function NotificationsWidget({
                       <Avatar
                         src={notification.source.iconUrl}
                         alt={notification.source.name}
-                        size={isAdvanced && isDense ? "xs" : "sm"}
+                        size={isDense ? "xs" : "sm"}
                         radius={board.itemRadius}
                       />
                     )}
 
-                    <Flex gap={!isAdvanced || isRoomy ? "sm" : isDense ? 4 : 6} direction="column" w="100%" miw={0}>
+                    <Flex gap={isDense ? 4 : "sm"} direction="column" w="100%" miw={0}>
                       {notification.title && (
                         <Text
                           fz={isAdvanced && isRoomy ? "md" : "sm"}
                           fw={isAdvanced ? 600 : undefined}
                           lh={isAdvanced ? 1.25 : "sm"}
-                          lineClamp={isAdvanced && isDense ? 1 : 2}
+                          lineClamp={isDense ? 1 : 2}
+                          title={notification.title}
                         >
                           {notification.title}
                         </Text>
                       )}
-                      <Text
-                        c="dimmed"
-                        size={isAdvanced && isDense ? "xs" : "sm"}
+                      <NotificationBody
+                        body={notification.body}
+                        contentType={notification.contentType}
+                        format={options.messageFormat}
                         lineClamp={notificationDisplay.bodyLineClamp}
-                        style={{ whiteSpace: "pre-line" }}
-                      >
-                        {notification.body}
-                      </Text>
+                        dense={isAdvanced && isDense}
+                      />
 
                       <InfoDisplay
                         date={notification.time}
@@ -140,9 +154,43 @@ export default function NotificationsWidget({
                             ? (notification.source?.name ?? notification.integrationName)
                             : undefined
                         }
-                        dense={isAdvanced && isDense}
+                        dense={isDense}
                       />
                     </Flex>
+                    <Stack gap={4}>
+                      {href && (
+                        <ActionIcon
+                          component="a"
+                          href={href}
+                          target="_blank"
+                          rel={SAFE_NEW_TAB_REL}
+                          variant="subtle"
+                          color="gray"
+                          aria-label={t("openService")}
+                          title={t("openService")}
+                        >
+                          <IconExternalLink size={16} />
+                        </ActionIcon>
+                      )}
+                      {notification.integrationKind === "gotify" &&
+                        interactIntegrations.some(({ id }) => id === notification.integrationId) && (
+                          <ActionIcon
+                            variant="subtle"
+                            color="red"
+                            aria-label={t("deleteNotification")}
+                            title={t("deleteNotification")}
+                            disabled={deleteNotification.isPending}
+                            onClick={() =>
+                              deleteNotification.mutate({
+                                integrationId: notification.integrationId,
+                                notificationId: notification.id,
+                              })
+                            }
+                          >
+                            <IconTrash size={16} />
+                          </ActionIcon>
+                        )}
+                    </Stack>
                   </Flex>
                 </Card>
               );
@@ -166,7 +214,7 @@ const InfoDisplay = ({ date, source, dense }: { date: Date; source?: string; den
   return (
     <Group gap={5} align="center" wrap="nowrap">
       <IconClock aria-hidden style={dense ? iconSizes.xs : iconSizes.md} color="var(--mantine-color-dimmed)" />
-      <Text size={dense ? "xs" : "sm"} c="dimmed">
+      <Text size={dense ? "xs" : "sm"} c="dimmed" truncate={dense}>
         {timeAgo}
       </Text>
       {source && <Text c="dimmed">•</Text>}

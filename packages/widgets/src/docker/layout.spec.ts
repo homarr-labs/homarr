@@ -5,14 +5,14 @@ import { getDockerColumnVisibility, getDockerFooterVisibility } from "./layout";
 const columns = ["name", "state", "host", "cpuUsage", "memoryUsage", "actions"] as const;
 
 describe("getDockerColumnVisibility", () => {
-  test("keeps every configured column in a narrow compact widget", () => {
+  test("prioritizes identity and state in a narrow compact widget", () => {
     expect(getDockerColumnVisibility(columns, 240, false)).toEqual({
       name: true,
       state: true,
-      host: true,
-      cpuUsage: true,
-      memoryUsage: true,
-      actions: true,
+      host: false,
+      cpuUsage: false,
+      memoryUsage: false,
+      actions: false,
     });
   });
 
@@ -50,7 +50,9 @@ describe("getDockerColumnVisibility", () => {
 describe("getDockerFooterVisibility", () => {
   test("shows the full compact footer above its threshold", () => {
     expect(getDockerFooterVisibility(256, false)).toEqual({ footer: false, cpu: false, memory: false });
-    expect(getDockerFooterVisibility(257, false)).toEqual({ footer: true, cpu: true, memory: true });
+    expect(getDockerFooterVisibility(257, false)).toEqual({ footer: true, cpu: false, memory: false });
+    expect(getDockerFooterVisibility(420, false)).toEqual({ footer: true, cpu: true, memory: false });
+    expect(getDockerFooterVisibility(560, false)).toEqual({ footer: true, cpu: true, memory: true });
   });
 
   test("keeps every total in advanced mode", () => {

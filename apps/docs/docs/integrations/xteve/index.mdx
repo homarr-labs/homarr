@@ -1,0 +1,41 @@
+---
+title: "xTeVe"
+description: "A M3U proxy for IPTV services with EPG support."
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { xteveIntegration } from ".";
+import { statsWidget } from "@site/docs/widgets/stats";
+
+<IntegrationHeader integration={xteveIntegration} categories={["Media server"]} />
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites items={[{ widget: statsWidget }]} />
+
+The [Stats widget](/docs/widgets/stats) sends xTeVe's read-only `POST /api/` status command and displays all, active, and
+XEPG stream counts. The default xTeVe web port is `34400`.
+
+### Adding the integration
+
+<AddingIntegration />
+
+### Secrets
+
+<IntegrationSecrets
+  secrets={[
+    {
+      credentials: [],
+      steps: [],
+      body: "If xTeVe authentication is enabled, provide the xTeVe username and password so Homarr can log in before requesting status.",
+    },
+    {
+      credentials: ["username", "password"],
+      steps: [],
+    },
+  ]}
+/>

@@ -1,10 +1,28 @@
+import { z } from "zod/v4";
+
+import { createIntegrationAsync } from "@homarr/integrations/factory";
 import { notificationsRequestHandler } from "@homarr/request-handler/notifications";
 
-import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
+import { createManyWidgetIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { settleIntegrationQueries, toPublicIntegrationError } from "../../settle-integrations";
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 
 export const notificationsRouter = createTRPCRouter({
+  deleteNotification: protectedProcedure
+    .concat(createOneIntegrationMiddleware("interact", "gotify"))
+    .input(
+      z.object({
+        notificationId: z
+          .string()
+          .regex(/^[1-9]\d*$/)
+          .max(20),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const integration = await createIntegrationAsync(ctx.integration);
+      await integration.deleteNotificationAsync(input.notificationId);
+      await notificationsRequestHandler.invalidateCacheAsync([ctx.integration.id]);
+    }),
   getNotifications: publicProcedure
     .unstable_concat(createManyWidgetIntegrationMiddleware("query", "notifications"))
     .query(async ({ ctx }) => {
