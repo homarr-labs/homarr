@@ -161,8 +161,8 @@ test("SQLite migrations seed the intentional demo showcase", async () => {
       table: boolean;
       entries: { integrationId: string; metric: string }[];
     }>(statsItem.options);
-    expect(statsOptions.table).toBe(true);
-    expect(statsOptions.entries).toHaveLength(37);
+    expect(statsOptions.table).toBe(false);
+    expect(statsOptions.entries).toHaveLength(24);
     const statsIntegrationIds = new Set(statsItem.integrations.map(({ integrationId }) => integrationId));
     expect(statsIntegrationIds).toEqual(new Set(statsOptions.entries.map(({ integrationId }) => integrationId)));
     const statsIntegrations = (await database.query.integrations.findMany()).filter(({ id }) =>

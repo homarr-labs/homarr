@@ -525,17 +525,17 @@ interface DemoWidget {
 }
 
 const demoStatsSources = [
-  { kind: "sonarr", metrics: ["shows", "monitored", "downloaded", "storage", "missing", "queued", "episodes"] },
-  { kind: "radarr", metrics: ["movies", "monitored", "downloaded", "storage", "missing", "queued"] },
+  { kind: "sonarr", metrics: ["shows", "episodes", "missing"] },
+  { kind: "radarr", metrics: ["movies", "monitored", "queued"] },
   { kind: "qBittorrent", metrics: ["download", "upload", "paused"] },
   { kind: "proxmox", metrics: ["nodes", "vms", "lxcs"] },
   {
     kind: "piHole",
-    metrics: ["dnsQueriesToday", "adsBlockedToday", "adsBlockedTodayPercentage", "domainsBeingBlocked"],
+    metrics: ["dnsQueriesToday", "adsBlockedTodayPercentage", "domainsBeingBlocked"],
   },
-  { kind: "immich", metrics: ["userCount", "photoCount", "videoCount", "totalLibraryUsageInBytes"] },
-  { kind: "karakeep", metrics: ["bookmarks", "favorites", "archived", "highlights", "lists", "tags"] },
-  { kind: "mealie", metrics: ["recipes", "users", "categories", "tags"] },
+  { kind: "immich", metrics: ["photoCount", "videoCount", "totalLibraryUsageInBytes"] },
+  { kind: "karakeep", metrics: ["bookmarks", "favorites", "highlights"] },
+  { kind: "mealie", metrics: ["recipes", "users", "categories"] },
 ] as const satisfies readonly { kind: IntegrationKind; metrics: readonly string[] }[];
 
 type DemoStatsIntegrationKind = (typeof demoStatsSources)[number]["kind"];
@@ -880,7 +880,7 @@ const buildDemoWidgets = (
     needsIntegration: false,
     integrationIds: demoStatsSources.map(({ kind }) => statsIntegrationIds[kind]),
     options: {
-      table: true,
+      table: false,
       rows: false,
       entries: demoStatsSources.flatMap(({ kind, metrics }) =>
         metrics.map((metric) => ({
