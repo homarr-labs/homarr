@@ -66,6 +66,15 @@ export const docsContentRoute = "/llms.mdx/docs";
 export const source = loader({
   baseUrl: docsRoute,
   source: docs.toFumadocsSource(),
+  pageTree: {
+    transformers: [
+      {
+        folder(node) {
+          return node.children.length === 0 ? { ...node, collapsible: false } : node;
+        },
+      },
+    ],
+  },
 });
 
 export function getPageMarkdownUrl(page: (typeof source)["$inferPage"]) {

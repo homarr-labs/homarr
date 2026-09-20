@@ -1,11 +1,12 @@
 "use client";
 
-import { IconArrowUpRight, IconSearch, IconX } from "@tabler/icons-react";
+import { IconSearch, IconX } from "@tabler/icons-react";
 import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
 
 export interface DirectoryItem {
   description?: string;
+  iconUrl?: string;
   title: string;
   url: string;
 }
@@ -73,8 +74,24 @@ export function DirectoryGrid({ items, label }: DirectoryGridProps) {
             <li key={item.url} className="m-0 bg-fd-background p-0">
               <Link
                 href={item.url}
-                className="group flex h-full min-h-24 items-start justify-between gap-4 p-4 text-fd-foreground hover:bg-fd-muted/60 hover:no-underline"
+                className="group flex h-full min-h-24 items-start gap-3 p-4 text-fd-foreground hover:bg-fd-muted/60 hover:no-underline"
               >
+                {item.iconUrl && (
+                  <span
+                    className="mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-md border bg-fd-card p-1.5"
+                    aria-hidden="true"
+                  >
+                    <img
+                      src={item.iconUrl}
+                      alt=""
+                      width={28}
+                      height={28}
+                      loading="lazy"
+                      decoding="async"
+                      className="size-full object-contain"
+                    />
+                  </span>
+                )}
                 <span className="min-w-0">
                   <strong className="block text-sm font-semibold">{item.title}</strong>
                   {item.description && (
@@ -83,11 +100,6 @@ export function DirectoryGrid({ items, label }: DirectoryGridProps) {
                     </span>
                   )}
                 </span>
-                <IconArrowUpRight
-                  aria-hidden="true"
-                  className="mt-0.5 shrink-0 text-fd-muted-foreground group-hover:text-fd-primary"
-                  size={17}
-                />
               </Link>
             </li>
           ))}
