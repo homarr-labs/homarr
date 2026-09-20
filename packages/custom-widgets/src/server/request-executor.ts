@@ -15,7 +15,7 @@ import {
   validateCustomWidgetUrl,
 } from "./network-policy";
 import { closeDispatcher } from "./request-dispatcher-lifecycle";
-import { parseResponseBody, redactResponseSecrets } from "./response";
+import { decodeResponseBody, parseResponseBody, redactResponseSecrets } from "./response";
 
 export {
   assertSafeStaticHeaders,
@@ -115,11 +115,17 @@ async function performRequestWithinDeadline(
         signal: AbortSignal.any([deadlineSignal, controller.signal]),
       });
       if (![301, 302, 303, 307, 308].includes(responseData.statusCode)) {
-        const body = await responseData.body.arrayBuffer();
+        let body: ArrayBuffer | Buffer = await responseData.body.arrayBuffer();
+        const responseHeaders = normalizeResponseHeaders(responseData.headers);
+        if (currentMethod !== "HEAD" && responseHeaders.has("content-encoding")) {
+          body = decodeResponseBody(body, responseHeaders.get("content-encoding"));
+          responseHeaders.delete("content-encoding");
+          responseHeaders.delete("content-length");
+        }
         const response = new Response(body.byteLength > 0 ? body : null, {
           status: responseData.statusCode,
           statusText: STATUS_CODES[responseData.statusCode] ?? "",
-          headers: normalizeResponseHeaders(responseData.headers),
+          headers: responseHeaders,
         });
         let data: unknown = null;
         if (currentMethod !== "HEAD") data = await parseResponseBody(response, input.textFallback);

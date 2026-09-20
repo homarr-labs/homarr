@@ -147,7 +147,8 @@ Validation, permission and transport failures use Homarr's API error response. K
 are redacted; other upstream content may still be sensitive and must be treated as untrusted data.
 
 Requests are uncached and have no automatic retries. Limits: 10 KiB body, 16 KiB custom headers, 1 MiB response,
-15-second total deadline and 10-second per-request timeout. Paginate large results. Binary/file streaming,
+15-second total deadline and 10-second per-request timeout. Gzip, deflate and Brotli responses are decoded; the
+response limit applies both on the wire and after each decoding stage (at most three). Paginate large results. Binary/file streaming,
 WebSockets and multipart uploads are not supported. After a timeout, check upstream state before retrying a write:
 the service may already have applied it.
 
