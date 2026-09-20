@@ -3,7 +3,10 @@ import { X509Certificate } from "node:crypto";
 import { createServer as createHttpsServer } from "node:https";
 import { createServer } from "node:http";
 import type { AddressInfo } from "node:net";
+import { brotliCompressSync, deflateSync, gzipSync } from "node:zlib";
+import { createOpenApiFetchHandler } from "trpc-to-openapi";
 import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
+import type { z } from "zod/v4";
 
 import type { Session } from "@homarr/auth";
 import { encryptSecret } from "@homarr/common/server";
@@ -15,6 +18,8 @@ import type { IntegrationPermission } from "@homarr/definitions";
 
 import { getIntegrationHttpAuthenticationAsync } from "@homarr/integrations/factory";
 
+import { callMcpTool, extractMcpToolsFromProcedures } from "../mcp-tools";
+import { openApiRouter } from "../open-api";
 import { createTRPCRouter } from "../trpc";
 import {
   integrationRequestProcedure,
@@ -36,11 +41,35 @@ vi.mock("@homarr/core/infrastructure/certificates", () => ({
 const router = createTRPCRouter({ request: integrationRequestProcedure });
 const secret = "test-credential-not-for-output";
 const calls: { method: string | undefined; path: string | undefined; auth: string | undefined; body: string }[] = [];
+const compressors = { gzip: gzipSync, deflate: deflateSync, br: brotliCompressSync };
 const server = createServer(async (req, res) => {
   let body = "";
   for await (const chunk of req) body += String(chunk);
   calls.push({ method: req.method, path: req.url, auth: req.headers["x-api-key"] as string | undefined, body });
   if (req.url === "/slow") return;
+  if (req.url === "/inspect") {
+    res.setHeader("Content-Type", "application/json");
+    res.end(JSON.stringify({ body, contentType: req.headers["content-type"], auth: req.headers["x-api-key"] }));
+    return;
+  }
+  if (req.method === "HEAD") {
+    res.writeHead(200, { "Content-Length": "9000000", "Content-Encoding": "gzip" });
+    res.end();
+    return;
+  }
+  if (req.url?.startsWith("/compressed")) {
+    const encoding = req.headers["accept-encoding"] ?? "gzip";
+    let bytes = Buffer.from(JSON.stringify({ value: "decoded", secret }));
+    if (req.url === "/compressed-large") bytes = Buffer.from("x".repeat(1024 * 1024 + 1));
+    for (const name of encoding.split(", ")) {
+      const compress = compressors[name as keyof typeof compressors];
+      if (compress) bytes = compress(bytes);
+    }
+    if (req.url === "/compressed-invalid") bytes = Buffer.from(secret);
+    res.writeHead(200, { "Content-Type": "application/json", "Content-Encoding": encoding });
+    res.end(bytes);
+    return;
+  }
   if (req.url === "/redirect") {
     res.writeHead(302, { Location: "/echo" });
     res.end();
@@ -83,7 +112,10 @@ afterAll(async () => {
   );
 });
 
-async function fixture(permission?: IntegrationPermission, setup?: (db: ReturnType<typeof createDb>) => Promise<void>) {
+async function fixtureContext(
+  permission?: IntegrationPermission,
+  setup?: (db: ReturnType<typeof createDb>) => Promise<void>,
+) {
   const db = createDb();
   await db.insert(users).values([{ id: "reader" }, { id: "other" }]);
   await db.insert(integrations).values({ id: "sonarr", name: "Sonarr", kind: "sonarr", url: baseUrl });
@@ -97,7 +129,11 @@ async function fixture(permission?: IntegrationPermission, setup?: (db: ReturnTy
     expires: new Date().toISOString(),
   } satisfies Session;
   await setup?.(db);
-  return router.createCaller({ db, session, deviceType: undefined });
+  return { db, session, deviceType: undefined };
+}
+
+async function fixture(permission?: IntegrationPermission, setup?: (db: ReturnType<typeof createDb>) => Promise<void>) {
+  return router.createCaller(await fixtureContext(permission, setup));
 }
 
 const get = { integrationId: "sonarr", method: "GET", path: "/api/v3/series" } as const;
@@ -312,5 +348,146 @@ describe("integration_request with a mock integration server", () => {
       }),
     ).rejects.toMatchObject({ code: "BAD_GATEWAY", reason: "timeout" });
     expect(JSON.stringify(logError.mock.calls)).not.toContain(secret);
+  });
+});
+
+describe("integration proxy public contract", () => {
+  test.each([{ integrationKind: "sonarr" as const }, { integrationName: "Sonarr" }])(
+    "selects the first authorized instance with %j",
+    async (selector) => {
+      const caller = await fixture(undefined, async (db) => {
+        await db.insert(integrations).values([
+          { id: "b", name: "Sonarr", kind: "sonarr", url: baseUrl },
+          { id: "a-denied", name: "Sonarr", kind: "sonarr", url: baseUrl },
+          { id: "c", name: "Sonarr", kind: "sonarr", url: baseUrl },
+        ]);
+        for (const id of ["b", "c"]) {
+          await db
+            .insert(integrationSecrets)
+            .values({ integrationId: id, kind: "apiKey", value: encryptSecret(secret) });
+          await db
+            .insert(integrationUserPermissions)
+            .values({ integrationId: id, userId: "reader", permission: "full" });
+        }
+      });
+      await expect(caller.request({ ...selector, path: "/api/v3/series" })).resolves.toMatchObject({
+        integration: { id: "b", name: "Sonarr", kind: "sonarr" },
+        ok: true,
+      });
+    },
+  );
+
+  test.each<z.input<typeof integrationRequestSchema>>([
+    { path: "/x" },
+    { integrationId: "sonarr", integrationName: "Sonarr", path: "/x" },
+    { integrationName: "missing", path: "/x" },
+    { integrationId: "sonarr", method: "HEAD" as const, path: "/x", body: "invalid" },
+    { integrationId: "sonarr", method: "POST" as const, path: "/x", bodyEncoding: "raw" as const, body: {} },
+    { integrationId: "sonarr", path: "/x", headers: { Host: "another-host" } },
+    { integrationId: "sonarr", path: "/x", headers: { Authorization: "another-credential" } },
+    { integrationId: "sonarr", path: "/x", headers: { a: "x".repeat(8192), b: "y".repeat(8192) } },
+  ])("rejects invalid or unauthorized input before transmission (%#)", async (input) => {
+    const caller = await fixture("full");
+    const count = calls.length;
+    await expect(caller.request(input)).rejects.toThrow();
+    expect(calls).toHaveLength(count);
+  });
+
+  test("preserves reverse-proxy subpaths and rejects encoded path escapes before transmission", async () => {
+    const caller = await fixture("full", async (db) => {
+      await db.update(integrations).set({ url: `${baseUrl}/sonarr` });
+    });
+    await caller.request(get);
+    expect(calls.at(-1)?.path).toBe("/sonarr/api/v3/series");
+    const count = calls.length;
+    for (const path of ["../escape", "/%252e%252e/escape", "/%2f..%2fescape"])
+      await expect(caller.request({ ...get, path })).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    expect(calls).toHaveLength(count);
+  });
+
+  test("keeps native authentication while forwarding raw form bodies and their content type", async () => {
+    const caller = await fixture("full");
+    await expect(
+      caller.request({
+        ...get,
+        method: "POST",
+        path: "/inspect",
+        bodyEncoding: "raw",
+        body: "name=Example&enabled=true",
+        headers: { "Content-Type": "application/x-www-form-urlencoded", "X-API-Key": "caller-cannot-override" },
+      }),
+    ).resolves.toMatchObject({
+      data: {
+        body: "name=Example&enabled=true",
+        contentType: "application/x-www-form-urlencoded",
+        auth: "[REDACTED]",
+      },
+    });
+    expect(calls.at(-1)?.auth).toBe(secret);
+  });
+
+  test.each(["HEAD", "OPTIONS"] as const)("supports %s without a body", async (method) => {
+    const caller = await fixture("full");
+    const result = await caller.request({ ...get, method });
+    expect(result.ok).toBe(true);
+    if (method === "HEAD") expect(result.data).toBeNull();
+    expect(calls.at(-1)).toMatchObject({ method, body: "" });
+  });
+
+  test.each(["gzip", "deflate", "br", "gzip, br"])("decodes %s and bounds expanded responses", async (encoding) => {
+    const caller = await fixture("full");
+    const input = { ...get, headers: { "Accept-Encoding": encoding } };
+    await expect(caller.request({ ...input, path: "/compressed" })).resolves.toMatchObject({
+      ok: true,
+      data: { value: "decoded", secret: "[REDACTED]" },
+    });
+    await expect(caller.request({ ...input, path: "/compressed-large" })).rejects.toMatchObject({
+      code: "PAYLOAD_TOO_LARGE",
+    });
+  });
+
+  test("sanitizes malformed compressed responses", async () => {
+    const caller = await fixture("full");
+    await expect(caller.request({ ...get, path: "/compressed-invalid" })).rejects.toMatchObject({
+      code: "BAD_GATEWAY",
+      message: "Invalid compressed upstream response",
+    });
+  });
+
+  test("REST and MCP expose the same result and permission boundary", async () => {
+    const context = await fixtureContext("full");
+    const request = () =>
+      new Request("http://homarr.local/api/integrations/request", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...get, path: "/echo" }),
+      });
+    const response = await createOpenApiFetchHandler({
+      req: request(),
+      endpoint: "/",
+      router: openApiRouter,
+      createContext: () => context,
+    });
+    expect(response.status).toBe(200);
+    const result = await response.json();
+    expect(result).toMatchObject({ ok: false, status: 400, integration: { id: "sonarr" } });
+    expect(JSON.stringify(result)).not.toContain(secret);
+    const tool = extractMcpToolsFromProcedures(router).tools.find((entry) => entry.name === "request");
+    expect(tool).toBeDefined();
+    if (!tool) throw new Error("Missing request MCP tool");
+    await expect(callMcpTool(router.createCaller(context), tool, { ...get, path: "/echo" })).resolves.toEqual(result);
+    const deniedContext = { ...context, session: null };
+    const count = calls.length;
+    const denied = await createOpenApiFetchHandler({
+      req: request(),
+      endpoint: "/",
+      router: openApiRouter,
+      createContext: () => deniedContext,
+    });
+    expect(denied.status).toBe(401);
+    await expect(callMcpTool(router.createCaller(deniedContext), tool, get)).rejects.toMatchObject({
+      code: "UNAUTHORIZED",
+    });
+    expect(calls).toHaveLength(count);
   });
 });

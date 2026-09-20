@@ -19,8 +19,14 @@ widgets.
 
 ## Beyond native widgets
 
-A missing native feature does not mean the integration cannot do it. If the service exposes an API endpoint, an agent
-can consult its API docs and test the request through [`integration_request`](../mcp#authenticated-integration-requests),
+:::tip Homarr is the front door to your homelab
+
+Configure a supported service once, then use its API through MCP and bring its data or actions onto your dashboard
+with Custom Widgets—even when Homarr has no native feature for it.
+
+:::
+
+Have your agent consult the service’s API docs and test the endpoint through [`integration_request`](../mcp#authenticated-integration-requests),
 Homarr's most powerful MCP tool. Then bind the same saved integration to a
 [Custom Widget source](../custom-widgets/requests-and-security#existing-integrations) to display its data or run actions.
 Both reuse saved credentials and require **full integration access**; check `supportsHttpRequests` for compatibility.
