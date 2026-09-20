@@ -525,17 +525,18 @@ interface DemoWidget {
 }
 
 const demoStatsSources = [
-  { kind: "sonarr", metrics: ["shows", "episodes", "missing"] },
+  { kind: "sonarr", metrics: ["shows", "episodes", "monitored", "missing"] },
   { kind: "radarr", metrics: ["movies", "monitored", "queued"] },
   { kind: "qBittorrent", metrics: ["download", "upload", "paused"] },
   { kind: "proxmox", metrics: ["nodes", "vms", "lxcs"] },
   {
     kind: "piHole",
-    metrics: ["dnsQueriesToday", "adsBlockedTodayPercentage", "domainsBeingBlocked"],
+    metrics: ["dnsQueriesToday", "adsBlockedToday", "adsBlockedTodayPercentage"],
   },
-  { kind: "immich", metrics: ["photoCount", "videoCount", "totalLibraryUsageInBytes"] },
-  { kind: "karakeep", metrics: ["bookmarks", "favorites", "highlights"] },
-  { kind: "mealie", metrics: ["recipes", "users", "categories"] },
+  { kind: "immich", metrics: ["photoCount", "videoCount", "userCount", "totalLibraryUsageInBytes"] },
+  { kind: "karakeep", metrics: ["bookmarks", "favorites", "archived", "highlights", "lists", "tags"] },
+  { kind: "mealie", metrics: ["recipes", "users", "categories", "tags"] },
+  { kind: "spoolman", metrics: ["spools", "remainingWeight"] },
 ] as const satisfies readonly { kind: IntegrationKind; metrics: readonly string[] }[];
 
 type DemoStatsIntegrationKind = (typeof demoStatsSources)[number]["kind"];
@@ -870,13 +871,13 @@ const buildDemoWidgets = (
     options: { websiteId: "homarr-demo", timeFrame: "24h", viewMode: "chart", chartType: "bar" },
   },
 
-  // One table demonstrates how real integrations can share a single operational overview.
+  // One grid demonstrates how real integrations can share a single operational overview.
   {
     kind: "stats",
     xOffset: 0,
     yOffset: 33,
     width: 12,
-    height: 4,
+    height: 5,
     needsIntegration: false,
     integrationIds: demoStatsSources.map(({ kind }) => statsIntegrationIds[kind]),
     options: {

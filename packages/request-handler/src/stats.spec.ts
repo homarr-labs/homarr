@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, test } from "vitest";
 
-import { getDemoStatsValues } from "./stats";
+import { getDemoStatsValues, getStatsSnapshotAsync } from "./stats";
 
 const previousDemoMode = process.env.DEMO_MODE;
 
@@ -23,8 +23,34 @@ describe("demo integration statistics", () => {
       categories: 28,
       tags: 76,
     });
+    expect(getDemoStatsValues({ kind: "spoolman", url: "https://demo.homarr.dev" })).toEqual({
+      spools: 24,
+      remainingWeight: 8_120,
+    });
     expect(getDemoStatsValues({ kind: "sonarr", url: "https://sonarr.example.com" })).toBeUndefined();
     expect(getDemoStatsValues({ kind: "mock", url: "https://demo.homarr.dev" })).toBeUndefined();
+  });
+
+  test("serves seeded values through the read-only snapshot path", async () => {
+    process.env.DEMO_MODE = "true";
+
+    const snapshot = await getStatsSnapshotAsync({
+      id: "demo-spoolman",
+      appId: null,
+      kind: "spoolman",
+      name: "Spoolman",
+      url: "https://demo.homarr.dev",
+      externalUrl: null,
+      decryptedSecrets: [],
+    });
+
+    expect(snapshot).toMatchObject({
+      values: { spools: 24, remainingWeight: 8_120 },
+      retryAt: 0,
+      error: false,
+      stale: false,
+    });
+    expect(snapshot.updatedAt).not.toBeNull();
   });
 
   test("does not replace live statistics outside demo mode", () => {

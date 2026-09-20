@@ -59,6 +59,7 @@ const demoValues: Partial<Record<IntegrationKind, Record<string, StatsValue>>> =
   },
   karakeep: { bookmarks: 1_247, favorites: 86, archived: 212, highlights: 418, lists: 24, tags: 93 },
   mealie: { recipes: 318, users: 14, categories: 28, tags: 76 },
+  spoolman: { spools: 24, remainingWeight: 8_120 },
 };
 
 export const getDemoStatsValues = (integration: Pick<Input, "kind" | "url">) => {
@@ -85,6 +86,17 @@ const resolveAsync = async (integration: Input) => {
 };
 
 export const getStatsSnapshotAsync = async (integration: Input) => {
+  const demo = getDemoStatsValues(integration);
+  if (demo) {
+    return {
+      values: demo,
+      updatedAt: Date.now(),
+      retryAt: 0,
+      error: false,
+      stale: false,
+    };
+  }
+
   const { snapshot } = await resolveAsync(integration);
   return {
     values: snapshot.values,

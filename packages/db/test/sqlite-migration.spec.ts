@@ -127,7 +127,7 @@ test("SQLite migrations seed the intentional demo showcase", async () => {
     expectItemLayout("notifications", 3, 9, 2, 2);
     expectItemLayout("beszelAlerts", 5, 9, 4, 2);
     expectItemLayout("beszelSystemTable", 0, 14, 12, 3);
-    expectItemLayout("stats", 0, 33, 12, 4);
+    expectItemLayout("stats", 0, 33, 12, 5);
 
     const removedKinds = [
       "llamacpp",
@@ -162,14 +162,14 @@ test("SQLite migrations seed the intentional demo showcase", async () => {
       entries: { integrationId: string; metric: string }[];
     }>(statsItem.options);
     expect(statsOptions.table).toBe(false);
-    expect(statsOptions.entries).toHaveLength(24);
+    expect(statsOptions.entries).toHaveLength(32);
     const statsIntegrationIds = new Set(statsItem.integrations.map(({ integrationId }) => integrationId));
     expect(statsIntegrationIds).toEqual(new Set(statsOptions.entries.map(({ integrationId }) => integrationId)));
     const statsIntegrations = (await database.query.integrations.findMany()).filter(({ id }) =>
       statsIntegrationIds.has(id),
     );
     expect(new Set(statsIntegrations.map(({ kind }) => kind))).toEqual(
-      new Set(["sonarr", "radarr", "qBittorrent", "proxmox", "piHole", "immich", "karakeep", "mealie"]),
+      new Set(["sonarr", "radarr", "qBittorrent", "proxmox", "piHole", "immich", "karakeep", "mealie", "spoolman"]),
     );
 
     for (const kind of ["weather", "airQuality"]) {
