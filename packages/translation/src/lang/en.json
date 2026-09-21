@@ -5115,7 +5115,7 @@
         },
         "diskIO": {
           "title": "Disk I/O",
-          "subtitle": "Throughput of root filesystem",
+          "subtitle": "Throughput by filesystem",
           "read": "Read",
           "write": "Write"
         },
