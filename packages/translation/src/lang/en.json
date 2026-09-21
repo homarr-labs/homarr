@@ -767,6 +767,7 @@
       "title": "Configure API source",
       "description": "Confirm the server URL and enter credentials. Secret values are encrypted by Homarr and never returned to the requesting agent.",
       "loading": "Loading secure request…",
+      "applying": "Applying this configuration… Keep this page open.",
       "saved": "API source configured. You can close this page.",
       "unavailable": "Request unavailable",
       "saveError": "Unable to configure API source",
@@ -7959,6 +7960,10 @@
       "style": {
         "label": "Improve a dashboard",
         "prompt": "Help me improve a board's appearance or custom CSS. Show me my boards first, then preserve my current settings while we make the change."
+      },
+      "designWidget": {
+        "label": "Design a widget",
+        "prompt": "Create and install a Custom Widget for "
       }
     },
     "composerPlaceholder": "Ask Assistant…",
@@ -8057,13 +8062,14 @@
       "health": "Prepare a service-health check",
       "explore": "Prepare an overview of this Homarr instance",
       "media": "Prepare a media search",
-      "style": "Prepare a board appearance or custom CSS change"
+      "style": "Prepare a board appearance or custom CSS change",
+      "designWidget": "Prepare a one-prompt Custom Widget build"
     },
     "usage": {
       "tokens": "tokens",
       "contextWindow": "Context window",
       "requestDetails": "Request details",
-      "used": "Used",
+      "used": "Latest step",
       "remaining": "Remaining",
       "capacity": "Capacity",
       "input": "Input",

@@ -18,6 +18,46 @@ const isDeltaPayload = (payload: StreamPayload, type: string): payload is DeltaP
   payload.type === type && typeof payload.delta === "string";
 
 describe("assistant stream metadata boundaries", () => {
+  test("forwards source parts into the UI stream at their emitted position", async () => {
+    const model = new MockLanguageModelV4({
+      doStream: {
+        stream: simulateReadableStream({
+          chunks: [
+            { type: "stream-start", warnings: [] },
+            { type: "text-start", id: "text" },
+            { type: "text-delta", id: "text", delta: "Grounded answer." },
+            {
+              type: "source",
+              sourceType: "url",
+              id: "source-1",
+              url: "https://docs.example.com/api",
+              title: "API documentation",
+            },
+            { type: "text-end", id: "text" },
+            { type: "finish", finishReason: { unified: "stop", raw: "stop" }, usage },
+          ],
+          chunkDelayInMs: null,
+        }),
+      },
+    });
+    const response = streamText({ model, prompt: "Return a grounded answer." }).toUIMessageStreamResponse({
+      sendSources: true,
+    });
+    const payloads = (await response.text())
+      .split(/\r?\n/u)
+      .filter((line) => line.startsWith("data: "))
+      .map((line) => line.slice("data: ".length))
+      .filter((payload) => payload !== "[DONE]")
+      .map((payload) => JSON.parse(payload) as StreamPayload);
+
+    expect(payloads.map(({ type }) => type)).toEqual(expect.arrayContaining(["text-delta", "source-url", "finish"]));
+    expect(payloads.find(({ type }) => type === "source-url")).toMatchObject({
+      sourceId: "source-1",
+      url: "https://docs.example.com/api",
+      title: "API documentation",
+    });
+  });
+
   test("suppresses repeated chunk metadata while preserving step and final boundaries", async () => {
     const model = new MockLanguageModelV4({
       doStream: {

@@ -15,6 +15,12 @@ describe("assistant tool output", () => {
     });
   });
 
+  test("keeps a complete persisted Custom Widget available for a follow-up edit", () => {
+    expect(getAssistantToolOutputOptions("customWidget_get").maxCharacters).toBeGreaterThan(
+      assistantToolOutputMaxCharacters,
+    );
+  });
+
   test("returns a bounded preview for oversized tool output", () => {
     const output = toAssistantToolOutput(
       {

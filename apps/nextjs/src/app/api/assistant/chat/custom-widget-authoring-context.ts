@@ -3,12 +3,20 @@ import type { UIMessage } from "ai";
 
 import { isRecord } from "@homarr/common";
 import {
+  assistantIntegrationResearchToolName,
   getCustomWidgetPhaseToolNames,
+  getLatestLoadedCustomWidgetDefinition,
+  getLatestPersistedCustomWidgetDefinitionId,
   hasCustomWidgetAuthoringContinuationIntent,
+  hasCustomWidgetFreshCreationIntent,
   hasCustomWidgetAuthoringLifecycleResumeIntent,
+  hasCustomWidgetStyleOnlyFollowUpIntent,
+  hasExplicitCustomWidgetSourceChangeIntent,
   isRecoverableCustomWidgetAuthoringFailure,
   isSuccessfulCustomWidgetAuthoringAdvance,
+  MAX_FOCUSED_COMPONENT_SEARCHES_PER_PHASE,
 } from "@homarr/custom-widgets/core";
+import type { CustomWidgetToolStep } from "@homarr/custom-widgets/core";
 import { getIntegrationName, integrationKinds, widgetKinds } from "@homarr/definitions";
 
 export { getCustomWidgetPhaseToolNames };
@@ -18,21 +26,7 @@ interface CustomWidgetToolResponseMessage {
   content: unknown;
 }
 
-interface CustomWidgetToolResult {
-  toolCallId?: string;
-  toolName: string;
-  output: unknown;
-}
-
-interface CustomWidgetToolCall {
-  toolCallId?: string;
-  toolName: string;
-}
-
-export interface CustomWidgetToolStep {
-  toolResults: readonly CustomWidgetToolResult[];
-  toolCalls?: readonly CustomWidgetToolCall[];
-}
+export type { CustomWidgetToolStep };
 
 const unwrapCustomWidgetToolOutput = (output: unknown) => {
   if (!isRecord(output) || output.type !== "json" || !("value" in output)) return output;
@@ -40,6 +34,8 @@ const unwrapCustomWidgetToolOutput = (output: unknown) => {
 };
 
 const explicitCustomWidgetContinuePattern = /^\s*(?:continue|keep\s+going|proceed|go\s+on|finish|complete)\b/iu;
+const explicitCustomWidgetResumePattern =
+  /^\s*(?:(?:continue|keep\s+going|proceed|go\s+on|finish|complete)\b|(?:(?:i(?:'ve|\s+have)?\s+)?(?:completed|configured|finished)|done\b|(?:the\s+)?(?:configuration|setup)\s+is\s+(?:complete|done))\b)/iu;
 
 const getUiMessageText = (message: UIMessage) =>
   message.parts
@@ -93,12 +89,14 @@ export const getCustomWidgetToolStepsFromUiMessages = (messages: readonly UIMess
     break;
   }
 
-  return messages.slice(authoringStartIndex, latestUserIndex).flatMap((message) => {
+  return messages.slice(authoringStartIndex).flatMap((message) => {
     if (message.role !== "assistant") return [];
     return message.parts.flatMap((part) => {
       if (!isToolUIPart(part) || part.state !== "output-available") return [];
       const toolName = getToolName(part);
-      if (!toolName.startsWith("customWidget_")) return [];
+      if (!toolName.startsWith("customWidget_") && toolName !== "integration_all" && toolName !== "ask_user") {
+        return [];
+      }
       return [
         {
           toolResults: [
@@ -139,6 +137,18 @@ const hasFollowUpCustomWidgetTool = (activeToolNames: readonly string[], latestT
 
 const hasActiveCustomWidgetTool = (activeToolNames: readonly string[]) =>
   activeToolNames.some((toolName) => toolName.startsWith("customWidget_"));
+
+const isSuccessfulPrerequisiteAdvance = (toolName: string, output: unknown) => {
+  if (toolName === assistantIntegrationResearchToolName) {
+    return isRecord(output) && output.recorded === true && output.status === "ready";
+  }
+  if (toolName === "homarr_enableToolGroups") {
+    return isRecord(output) && !output.error && Array.isArray(output.enabledGroups);
+  }
+  if (toolName === "integration_getKinds" || toolName === "integration_all") return Array.isArray(output);
+  if (toolName === "integration_request") return isRecord(output) && output.ok === true && !output.error;
+  return false;
+};
 
 const hasPendingHistoricalConfigurationRequest = (messages: readonly UIMessage[]) => {
   const statusByRequestId = new Map<string, unknown>();
@@ -185,6 +195,7 @@ export const shouldRequireCustomWidgetAuthoringTool = (
   const currentSteps = steps.length > 0 ? steps : responseSteps;
   const latestStep = currentSteps.at(-1);
   if (!latestStep) {
+    if (hasActiveCustomWidgetTool(activeToolNames)) return true;
     return (
       activeToolNames.length === 1 &&
       activeToolNames[0] === "customWidget_configurationRequestUser" &&
@@ -194,6 +205,22 @@ export const shouldRequireCustomWidgetAuthoringTool = (
   }
   if (hasPendingNonCustomToolCall(latestStep)) return false;
   return latestStep.toolResults.some((result) => {
+    if (isSuccessfulPrerequisiteAdvance(result.toolName, result.output)) {
+      if (result.toolName === "integration_all") {
+        return (
+          activeToolNames.includes(assistantIntegrationResearchToolName) ||
+          activeToolNames.includes("customWidget_previewCreate") ||
+          activeToolNames.includes("ask_user")
+        );
+      }
+      return hasActiveCustomWidgetTool(activeToolNames);
+    }
+    if (
+      result.toolName === "customWidget_getExample" &&
+      isSuccessfulCustomWidgetAuthoringAdvance(result.toolName, result.output)
+    ) {
+      return activeToolNames.includes("integration_all") || hasActiveCustomWidgetTool(activeToolNames);
+    }
     if (isRecoverableCustomWidgetAuthoringFailure(result.toolName, result.output)) {
       return hasActiveCustomWidgetTool(activeToolNames);
     }
@@ -216,7 +243,8 @@ const explicitCustomWidgetIntentPattern =
 const boardManagementIntentPattern =
   /\b(?:build|create|design|fill|make|populate|set\s*up)\b(?:(?!\bwidgets?\b)[^\n]){0,60}\b(?:board|dashboard)\b/iu;
 const serviceWidgetIntentPatterns = [
-  /\b(?:build|create|design|make)\s+(?:(?:me|us)\s+)?an?\s+([^\n,.!?]{1,60}?)\s+widgets?\b/iu,
+  /\b(?:build|create|design|make)(?:\s+and\s+install)?\s+(?:an?\s+)?(?:custom[\s-]+)?widgets?\s+(?:for|using|with)\s+([^\n,.!?]{1,60})/iu,
+  /\b(?:build|create|design|make)\s+(?:(?:me|us)\s+)?(?:an?\s+)?([^\n,.!?]{1,60}?)\s+widgets?\b/iu,
   /\b(?:build|create|design|make)\b[^\n]{0,40}\bwidgets?\s+(?:for|using|with)\s+([^\n,.!?]{1,60})/iu,
   /\b(?:i|we)\s+(?:need|want)\b[^\n]{0,40}\bwidgets?\s+(?:for|using|with)\s+([^\n,.!?]{1,60})/iu,
 ];
@@ -227,8 +255,10 @@ const serviceTargetNoiseWords = new Set([
   "api",
   "beautiful",
   "compact",
+  "custom",
   "existing",
   "integration",
+  "jsx",
   "my",
   "new",
   "our",
@@ -239,8 +269,11 @@ const serviceTargetNoiseWords = new Set([
   "some",
   "that",
   "the",
+  "these",
   "this",
   "those",
+  "fixtures",
+  "services",
   "your",
 ]);
 const nativeWidgetNames = widgetKinds
@@ -282,17 +315,15 @@ const includesTarget = (candidate: string, targets: ReadonlySet<string>) => {
   return false;
 };
 
-const customWidgetBootstrapToolNames = new Set(["customWidget_getSkill"]);
-const maxFocusedComponentSearchesPerPhase = 4;
 const customWidgetContextToolBudgets: Readonly<Record<string, number>> = {
-  customWidget_findComponents: maxFocusedComponentSearchesPerPhase,
+  customWidget_findComponents: MAX_FOCUSED_COMPONENT_SEARCHES_PER_PHASE,
   customWidget_getComponents: 1,
   customWidget_getComponent: 2,
   customWidget_getSharedProps: 1,
   customWidget_getExample: 1,
 };
 
-export const createCustomWidgetDiscoveryPhaseController = (limit = maxFocusedComponentSearchesPerPhase) => {
+export const createCustomWidgetDiscoveryPhaseController = (limit = MAX_FOCUSED_COMPONENT_SEARCHES_PER_PHASE) => {
   const calls = new Map<string, number>();
   const reset = () => {
     calls.clear();
@@ -330,6 +361,23 @@ export const createCustomWidgetDiscoveryPhaseController = (limit = maxFocusedCom
   };
 };
 
+const hasDefinitionIdOption = (value: unknown) => {
+  if (!isRecord(value) || !isRecord(value.options)) return false;
+  return typeof value.options.definitionId === "string";
+};
+
+const isCustomWidgetPlacementToolPart = (part: Record<string, unknown>, toolName: string) => {
+  if (toolName === "configure_widget") {
+    return hasDefinitionIdOption(part.input) || hasDefinitionIdOption(part.output);
+  }
+  if (toolName === "board_addItem") return hasDefinitionIdOption(part.input);
+  if (toolName !== "ask_user" || !isRecord(part.input) || !Array.isArray(part.input.options)) return false;
+  const optionIds = new Set(
+    part.input.options.flatMap((option) => (isRecord(option) && typeof option.id === "string" ? [option.id] : [])),
+  );
+  return optionIds.has("place") && optionIds.has("leave");
+};
+
 const hasCustomWidgetToolPart = (message: UIMessage) =>
   message.parts.some((part) => {
     if (!isRecord(part) || typeof part.type !== "string") return false;
@@ -339,7 +387,8 @@ const hasCustomWidgetToolPart = (message: UIMessage) =>
     } else if (part.type.startsWith("tool-")) {
       toolName = part.type.slice("tool-".length);
     }
-    return toolName?.startsWith("customWidget_") === true;
+    if (toolName?.startsWith("customWidget_") === true) return true;
+    return toolName !== undefined && isCustomWidgetPlacementToolPart(part, toolName);
   });
 
 const hasRecentCustomWidgetLifecycleContext = (messages: readonly UIMessage[]) => {
@@ -347,21 +396,52 @@ const hasRecentCustomWidgetLifecycleContext = (messages: readonly UIMessage[]) =
   if (latestMessage?.role === "assistant") return hasCustomWidgetToolPart(latestMessage);
   if (latestMessage?.role !== "user") return false;
 
-  const precedingAssistantMessage = messages
-    .slice(0, -1)
-    .toReversed()
-    .find((message) => message.role === "assistant");
-  return precedingAssistantMessage !== undefined && hasCustomWidgetToolPart(precedingAssistantMessage);
+  const previousUserIndex = messages.slice(0, -1).findLastIndex((message) => message.role === "user");
+  return messages
+    .slice(previousUserIndex + 1, -1)
+    .some((message) => message.role === "assistant" && hasCustomWidgetToolPart(message));
 };
 
-const hasCustomWidgetAuthoringText = (text: string) => {
-  if (boardManagementIntentPattern.test(text)) return false;
-  if (explicitCustomWidgetIntentPattern.test(text)) return true;
-  if (nativeWidgetIntentPattern.test(text)) return false;
+export interface CustomWidgetFollowUpEditContext {
+  definitionId: string;
+  preserveDataContract: boolean;
+  allowSourceChanges: boolean;
+  loadedDefinition?: Record<string, unknown>;
+}
 
-  return serviceWidgetIntentPatterns.some((pattern) => {
+export const getCustomWidgetFollowUpEditContext = (
+  messages: readonly UIMessage[],
+): CustomWidgetFollowUpEditContext | null => {
+  const latestUserText = getLatestUserText(messages);
+  if (!hasCustomWidgetAuthoringLifecycleResumeIntent(latestUserText, hasRecentCustomWidgetLifecycleContext(messages))) {
+    return null;
+  }
+  const restoredSteps = getCustomWidgetToolStepsFromUiMessages(messages);
+  const loadedDefinition = getLatestLoadedCustomWidgetDefinition(restoredSteps);
+  let definitionId = getLatestPersistedCustomWidgetDefinitionId(restoredSteps);
+  if (!definitionId && typeof loadedDefinition?.id === "string") definitionId = loadedDefinition.id;
+  if (!definitionId) return null;
+  const matchingLoadedDefinition = loadedDefinition?.id === definitionId ? loadedDefinition : undefined;
+  let followUpRequestText = latestUserText;
+  if (explicitCustomWidgetResumePattern.test(latestUserText)) {
+    const previousRequest = messages
+      .slice(0, -1)
+      .toReversed()
+      .find((message) => message.role === "user" && !explicitCustomWidgetResumePattern.test(getUiMessageText(message)));
+    if (previousRequest) followUpRequestText = getUiMessageText(previousRequest);
+  }
+  return {
+    definitionId,
+    preserveDataContract: hasCustomWidgetStyleOnlyFollowUpIntent(followUpRequestText),
+    allowSourceChanges: hasExplicitCustomWidgetSourceChangeIntent(followUpRequestText),
+    ...(matchingLoadedDefinition ? { loadedDefinition: matchingLoadedDefinition } : {}),
+  };
+};
+
+const getCustomWidgetServiceTargetFromText = (text: string) => {
+  for (const pattern of serviceWidgetIntentPatterns) {
     const target = pattern.exec(text)?.[1];
-    if (!target) return false;
+    if (!target) continue;
 
     const targetWithoutPlacement = target
       .replace(/\s+(?:in|on|to)\s+(?:(?:my|our|the|this)\s+)?(?:board|dashboard)\b.*$/iu, "")
@@ -376,10 +456,100 @@ const hasCustomWidgetAuthoringText = (text: string) => {
         word.toLowerCase() !== "widgets",
     );
     const meaningfulTarget = meaningfulTargetWords.join(" ").toLowerCase();
-    if (includesTarget(meaningfulTarget, nativeWidgetTargets)) return false;
-    if (includesTarget(meaningfulTarget, integrationTargets)) return true;
-    return meaningfulTargetWords.length > 0;
-  });
+    if (includesTarget(meaningfulTarget, integrationTargets)) return meaningfulTarget;
+    if (includesTarget(meaningfulTarget, nativeWidgetTargets)) return null;
+    if (meaningfulTargetWords.length > 0) return meaningfulTarget;
+  }
+  return null;
+};
+
+const hasCustomWidgetAuthoringText = (text: string) => {
+  if (boardManagementIntentPattern.test(text)) return false;
+  if (explicitCustomWidgetIntentPattern.test(text)) return true;
+  if (nativeWidgetIntentPattern.test(text)) return false;
+  return getCustomWidgetServiceTargetFromText(text) !== null;
+};
+
+export const getRequestedCustomWidgetServiceTarget = (messages: readonly UIMessage[]) => {
+  const latestUserMessage = messages.findLast((message) => message.role === "user");
+  if (!latestUserMessage) return null;
+  return getCustomWidgetServiceTargetFromText(getUiMessageText(latestUserMessage));
+};
+
+export const getRequestedCustomWidgetExampleId = (messages: readonly UIMessage[]) => {
+  const target = getRequestedCustomWidgetServiceTarget(messages);
+  if (target === null) return null;
+  if (target === "dispatcharr" || (target.includes("dispatcharr") && /\bchannels?\b/iu.test(target))) {
+    return "dispatcharr-channels";
+  }
+  if (target === "karakeep" || (target.includes("karakeep") && /\bbookmarks?\b/iu.test(target))) {
+    return "karakeep-bookmarks";
+  }
+  if (target === "mealie" || (target.includes("mealie") && /\b(?:daily|meals?|plans?|today)\b/iu.test(target))) {
+    return "mealie-today";
+  }
+  if (target === "romm" || (target.includes("romm") && /\b(?:games?|library|recent)\b/iu.test(target))) {
+    return "romm-library";
+  }
+  const isTubeArchivist = target.includes("tube archivist") || target.includes("tubearchivist");
+  if (
+    target === "tube archivist" ||
+    target === "tubearchivist" ||
+    (isTubeArchivist && /\b(?:downloads?|queue)\b/iu.test(target))
+  ) {
+    return "tubearchivist-queue";
+  }
+  if (!target.includes("frigate")) return null;
+  if (/\b(?:review|alerts?)\b/iu.test(target)) return "frigate-alerts";
+  if (/\b(?:system|metrics?|stats?|health)\b/iu.test(target)) return "frigate-system";
+  if (/\b(?:live|camera|streams?)\b/iu.test(target)) return "frigate-live-streams";
+  return null;
+};
+
+export const getRequestedCustomWidgetExampleIds = (messages: readonly UIMessage[]) => {
+  if (!hasMultiCustomWidgetCreationRequest(messages)) {
+    const exampleId = getRequestedCustomWidgetExampleId(messages);
+    return exampleId === null ? [] : [exampleId];
+  }
+  const text = getLatestUserText(messages).toLowerCase();
+  const uncoveredTarget = text
+    .replace(
+      /\b(?:build|create|design|make|install|custom|widgets?|for|using|with|me|us|a|an|the|dispatcharr|karakeep|mealie|romm|tube\s*archivist|tubearchivist|frigate|channels?|bookmarks?|daily|meals?|plans?|today|games?|library|recent|downloads?|queue|live|camera|streams?|review|alerts?|system|metrics?|stats?|health|and|or)\b/giu,
+      " ",
+    )
+    .replace(/[^\p{L}\p{N}]+/gu, "")
+    .trim();
+  if (uncoveredTarget) return [];
+  const candidates: Array<{ id: string; index: number }> = [];
+  const add = (id: string, pattern: RegExp) => {
+    const match = pattern.exec(text);
+    if (match?.index === undefined) return;
+    candidates.push({ id, index: match.index });
+  };
+  add("dispatcharr-channels", /\bdispatcharr\b/iu);
+  add("karakeep-bookmarks", /\bkarakeep\b/iu);
+  add("mealie-today", /\bmealie\b/iu);
+  add("romm-library", /\bromm\b/iu);
+  add("tubearchivist-queue", /\b(?:tube\s*archivist|tubearchivist)\b/iu);
+  if (/\bfrigate\b/iu.test(text)) {
+    add("frigate-live-streams", /\b(?:live|streams?)\b/iu);
+    add("frigate-alerts", /\b(?:review|alerts?)\b/iu);
+    add("frigate-system", /\b(?:system|metrics?|stats?|health)\b/iu);
+  }
+  return candidates
+    .toSorted((left, right) => left.index - right.index)
+    .map(({ id }) => id)
+    .filter((id, index, ids) => ids.indexOf(id) === index);
+};
+
+export const isFreshCustomWidgetCreationRequest = (messages: readonly UIMessage[]) =>
+  hasCustomWidgetFreshCreationIntent(getLatestUserText(messages));
+
+export const hasMultiCustomWidgetCreationRequest = (messages: readonly UIMessage[]) => {
+  const text = getLatestUserText(messages);
+  return /\b(?:multiple|several|two|three|four|five|six|seven|eight|nine|ten|\d+)\s+(?:custom[\s-]+)?widgets?\b|\b(?:custom[\s-]+)?widgets\b/iu.test(
+    text,
+  );
 };
 
 const hasExplicitCustomWidgetIntent = (message: UIMessage) =>
@@ -397,13 +567,4 @@ export const needsCustomWidgetAuthoringContext = (messages: UIMessage[]) => {
   if (!latestMessage) return false;
   if (hasExplicitCustomWidgetIntent(latestMessage)) return true;
   return hasRecentCustomWidgetLifecycleContext(messages);
-};
-
-export const getActiveCustomWidgetToolNames = <TToolName extends string>(
-  availableToolNames: readonly TToolName[],
-  messages: UIMessage[],
-  isAdmin: boolean,
-) => {
-  if (!isAdmin || !needsCustomWidgetAuthoringContext(messages)) return [];
-  return availableToolNames.filter((toolName) => customWidgetBootstrapToolNames.has(toolName));
 };

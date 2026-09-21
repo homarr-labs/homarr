@@ -133,7 +133,7 @@ describe("authoring resources", () => {
     });
     expect(result.components.find(({ name }) => name === "TextInput")).not.toHaveProperty("props");
     expect(result.notFound).toEqual(["Missing"]);
-    expect(result.nextStep).toContain("template validation");
+    expect(result.nextStep).toContain("preview creation");
     expect(Buffer.byteLength(JSON.stringify(result), "utf8")).toBeLessThan(10_000);
   });
 

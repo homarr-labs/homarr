@@ -131,6 +131,12 @@ export const ComposerTriggers = () => {
         description: t("commands.style"),
         execute: () => aui.composer().setText(t("suggestions.style.prompt")),
       },
+      {
+        id: "design-widget",
+        label: "/design-widget",
+        description: t("commands.designWidget"),
+        execute: () => aui.composer().setText(t("suggestions.designWidget.prompt")),
+      },
     ],
   });
 

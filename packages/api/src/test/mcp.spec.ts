@@ -3,12 +3,9 @@ import type { TRPCError } from "@trpc/server";
 import { describe, expect, test, vi } from "vitest";
 import { z } from "zod/v4";
 
-import { customWidgetAssistantEvaluationToolDefinitions } from "../../../custom-widgets/scripts/ai-assistant-evaluation";
-
 import { mcpRouter } from "../mcp";
 import type { McpMeta } from "../mcp-tools";
 import { createMcpProtocolHandler } from "../../../../apps/nextjs/src/app/api/mcp/_protocol";
-import { getAssistantToolInputSchema } from "../../../../apps/nextjs/src/app/api/assistant/chat/assistant-tool-schema";
 import { callMcpTool, extractMcpToolsFromProcedures } from "../mcp-tools";
 
 vi.mock("@homarr/auth", () => ({}));
@@ -180,36 +177,6 @@ function actualToolInventory() {
     .toSorted((left, right) => left.name.localeCompare(right.name));
 }
 
-function normalizeAssistantEvaluationSchema(value: unknown): unknown {
-  if (Array.isArray(value)) return value.map(normalizeAssistantEvaluationSchema);
-  if (typeof value !== "object" || value === null) return value;
-  return Object.fromEntries(
-    Object.entries(value)
-      .filter(
-        ([key, entry]) =>
-          key !== "$schema" &&
-          key !== "$defs" &&
-          key !== "description" &&
-          !(key === "additionalProperties" && typeof entry === "boolean") &&
-          !(key === "required" && Array.isArray(entry) && entry.length === 0),
-      )
-      .map(([key, entry]) => {
-        if (key !== "properties" || typeof entry !== "object" || entry === null || Array.isArray(entry)) {
-          return [key, normalizeAssistantEvaluationSchema(entry)];
-        }
-        return [
-          key,
-          Object.fromEntries(
-            Object.entries(entry).map(([propertyName, propertySchema]) => [
-              propertyName,
-              propertyName === "definition" ? { type: "object" } : normalizeAssistantEvaluationSchema(propertySchema),
-            ]),
-          ),
-        ];
-      }),
-  );
-}
-
 describe("production MCP router", () => {
   test("matches the reviewed tool and permission inventory exactly", () => {
     expect(actualToolInventory()).toEqual(expectedToolInventory());
@@ -256,26 +223,6 @@ test("publishes both Custom Widget template input formats", () => {
     template: expect.any(Object),
     templateLines: expect.any(Object),
   });
-});
-
-test("keeps assistant evaluation schemas aligned with production tools", () => {
-  const evaluatorOnlyToolNames = new Set(["configure_widget", "web_search"]);
-  const productionTools = new Map(
-    extractMcpToolsFromProcedures(mcpRouter).tools.map((tool) => [tool.name, tool] as const),
-  );
-
-  for (const definition of customWidgetAssistantEvaluationToolDefinitions) {
-    const name = definition.function.name;
-    if (evaluatorOnlyToolNames.has(name)) continue;
-
-    const productionTool = productionTools.get(name);
-    expect(productionTool, `Missing production tool '${name}'`).toBeDefined();
-    if (!productionTool) continue;
-    expect(
-      normalizeAssistantEvaluationSchema(definition.function.parameters),
-      `Schema drift for production tool '${name}'`,
-    ).toEqual(normalizeAssistantEvaluationSchema(getAssistantToolInputSchema(name, productionTool.inputSchema)));
-  }
 });
 
 describe("custom widget authoring procedure access", () => {

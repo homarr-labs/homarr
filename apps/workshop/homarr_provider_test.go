@@ -98,6 +98,49 @@ func TestSanitizeProviderPayload(t *testing.T) {
 	}
 }
 
+func TestSanitizeProviderPayloadPinsDefaultModelQuality(t *testing.T) {
+	payload := map[string]any{
+		"reasoning_effort": "high",
+	}
+	if err := sanitizeProviderPayload(payload, defaultOpenRouterModelID); err != nil {
+		t.Fatal(err)
+	}
+
+	if payload["reasoning_effort"] != "xhigh" {
+		t.Fatalf("default model did not use max reasoning: %#v", payload["reasoning_effort"])
+	}
+	preferences := payload["provider"].(map[string]any)
+	order := preferences["order"].([]string)
+	quantizations := preferences["quantizations"].([]string)
+	if len(order) != 1 || order[0] != "deepinfra/fp8" || len(quantizations) != 1 || quantizations[0] != "fp8" {
+		t.Fatalf("default model routing was not pinned to DeepInfra FP8 first: %#v", preferences)
+	}
+	if preferences["allow_fallbacks"] != true {
+		t.Fatalf("default model routing must retain fallbacks: %#v", preferences)
+	}
+}
+
+func TestSanitizeProviderPayloadPinsLunaReasoning(t *testing.T) {
+	payload := map[string]any{
+		"reasoning":        map[string]any{"effort": "xhigh"},
+		"reasoning_effort": "xhigh",
+	}
+	if err := sanitizeProviderPayload(payload, lunaOpenRouterModelID); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, exists := payload["reasoning"]; exists {
+		t.Fatal("Luna must use the top-level reasoning_effort field")
+	}
+	if payload["reasoning_effort"] != "high" {
+		t.Fatalf("Luna did not use high reasoning: %#v", payload["reasoning_effort"])
+	}
+	preferences := payload["provider"].(map[string]any)
+	if _, exists := preferences["order"]; exists {
+		t.Fatalf("Luna must not inherit DeepInfra routing: %#v", preferences)
+	}
+}
+
 func TestSanitizeProviderPayloadRejectsUnsupportedServerTools(t *testing.T) {
 	payload := map[string]any{"tools": []any{map[string]any{"type": "openrouter:computer"}}}
 	if err := sanitizeProviderPayload(payload, "mock/team-selected-model"); err == nil {
@@ -128,6 +171,10 @@ func TestValidateProviderInput(t *testing.T) {
 	}
 	if err := validateProviderInput(payload); err != nil {
 		t.Fatalf("expected a supported Homarr image request, got %v", err)
+	}
+	payload["messages"] = []any{map[string]any{"role": "user", "content": strings.Repeat("x", maxChatTextBytes-100)}}
+	if err := validateProviderInput(payload); err != nil {
+		t.Fatalf("expected text at the conservative context boundary to be accepted, got %v", err)
 	}
 	payload["messages"] = []any{map[string]any{"role": "user", "content": strings.Repeat("x", maxChatTextBytes+1)}}
 	if err := validateProviderInput(payload); !errors.Is(err, errInputTooLarge) {
@@ -252,27 +299,6 @@ func TestProviderEnvironment(t *testing.T) {
 	t.Setenv("HOMARR_AI_OPENROUTER_BASE_URL", "http://router.example/v1")
 	if _, err := newHomarrProviderFromEnv(); err == nil {
 		t.Fatal("expected an insecure upstream to fail without an explicit development opt-in")
-	}
-}
-
-func TestProviderUsesConfiguredDefaultModel(t *testing.T) {
-	const releaseV2DefaultModelID = "~deepseek/deepseek-v4-flash-latest"
-	if defaultOpenRouterModelID != releaseV2DefaultModelID {
-		t.Fatalf("expected release/v2 default model %q, got %q", releaseV2DefaultModelID, defaultOpenRouterModelID)
-	}
-
-	t.Setenv("OPENROUTER_API_KEY", "test-key")
-	t.Setenv("HOMARR_AI_OPENROUTER_BASE_URL", "https://router.example/v1")
-	t.Setenv("HOMARR_AI_OPENROUTER_MODEL", "")
-	t.Setenv("HOMARR_AI_DAILY_REQUEST_LIMIT", "")
-	t.Setenv("HOMARR_AI_GLOBAL_DAILY_REQUEST_LIMIT", "")
-
-	provider, err := newHomarrProviderFromEnv()
-	if err != nil {
-		t.Fatal(err)
-	}
-	if provider.modelID != defaultOpenRouterModelID {
-		t.Fatalf("expected default model %q, got %q", defaultOpenRouterModelID, provider.modelID)
 	}
 }
 

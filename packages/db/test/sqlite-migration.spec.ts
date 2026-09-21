@@ -24,7 +24,7 @@ const applyMigration = (connection: BetterSqlite3.Database, fileName: string) =>
   }
 };
 
-test("SQLite migrations seed the five disabled bundled custom widgets", async () => {
+test("SQLite migrations seed the disabled bundled custom widgets", async () => {
   const connection = new BetterSqlite3(":memory:");
   const database = drizzle(connection, { schema: sqliteSchema, casing: DB_CASING });
 

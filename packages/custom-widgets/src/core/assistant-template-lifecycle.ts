@@ -4,6 +4,8 @@ import { normalizeCustomJsxAuthoringTemplate } from "./custom-jsx-schema";
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
+const formatTemplateDigestPart = (value: number) => (value >>> 0).toString(16).padStart(8, "0");
+
 const getTemplateFromInput = (toolName: string, input: Record<string, unknown>) => {
   const container = toolName === "customWidget_previewCreate" && isRecord(input.definition) ? input.definition : input;
   if (typeof container.template === "string") return normalizeCustomJsxAuthoringTemplate(container.template);
@@ -21,8 +23,7 @@ export const getCustomWidgetTemplateDigest = (template: string) => {
     first = Math.imul(first ^ code, 0x01000193);
     second = Math.imul(second ^ code, 0x85ebca6b);
   }
-  const format = (value: number) => (value >>> 0).toString(16).padStart(8, "0");
-  return `tpl-${format(first)}${format(second)}`;
+  return `tpl-${formatTemplateDigestPart(first)}${formatTemplateDigestPart(second)}`;
 };
 
 const getTemplateMetadata = (template: string) => {
@@ -51,12 +52,10 @@ const getEvidenceRecommendation = (recommendedNextTool: PreviewPersistenceTool) 
 });
 
 export const createCustomWidgetTemplateLifecycleController = () => {
-  const validTemplates = new Set<string>();
   const invalidPreviewAttempts = new Map<string, number>();
   const previewRequirements = new Map<string, Set<string>>();
   const previewEvidence = new Map<string, Set<string>>();
   const previewPersistenceTools = new Map<string, PreviewPersistenceTool>();
-  let lastValidTemplate: string | null = null;
 
   const markInvalidPreview = (toolName: string, input: Record<string, unknown>, output: Record<string, unknown>) => {
     const template = getTemplateFromInput(toolName, input);
@@ -69,9 +68,6 @@ export const createCustomWidgetTemplateLifecycleController = () => {
     return {
       ...output,
       ...(template === null ? {} : getTemplateMetadata(template)),
-      ...(lastValidTemplate === null
-        ? {}
-        : { lastValidTemplateDigest: getCustomWidgetTemplateDigest(lastValidTemplate) }),
       diagnostics,
       failureFingerprint,
       repeatedInvalidInput: invalidAttemptCount > 1,
@@ -83,27 +79,7 @@ export const createCustomWidgetTemplateLifecycleController = () => {
     recordValidation(input: Record<string, unknown>, output: Record<string, unknown>) {
       const template = getTemplateFromInput("customWidget_validateTemplate", input);
       if (template === null) return output;
-      if (output.valid === true) {
-        validTemplates.add(template);
-        lastValidTemplate = template;
-      }
       return { ...output, ...getTemplateMetadata(template) };
-    },
-    getPreviewValidationMismatch(toolName: string, input: Record<string, unknown>) {
-      const template = getTemplateFromInput(toolName, input);
-      if (template === null || validTemplates.has(template)) return null;
-      const noun = toolName === "customWidget_previewReviseTemplate" ? "revised JSX template" : "JSX template";
-      return markInvalidPreview(toolName, input, {
-        error: `Validate this exact ${noun} before ${toolName === "customWidget_previewReviseTemplate" ? "revising the preview" : "sending the complete definition to preview"}.`,
-        recovery: {
-          recoverable: true,
-          kind: "preview-validation-required",
-          requiredNextTool: "customWidget_validateTemplate",
-          ...(toolName === "customWidget_previewReviseTemplate" ? { preservesPreviewEvidence: true } : {}),
-        },
-        nextStep:
-          "Validate the exact template from the submitted preview input, not another draft, then resend the matching input.",
-      });
     },
     recordInvalidPreview(toolName: string, input: Record<string, unknown>, output: Record<string, unknown>) {
       return markInvalidPreview(toolName, input, output);

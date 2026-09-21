@@ -19,7 +19,7 @@ describe("resolveAssistantReasoning", () => {
         modelId: "homarr/model",
         provider: "homarr",
       }),
-    ).toBe("high");
+    ).toBe("xhigh");
     expect(
       resolveAssistantTemperature({
         customWidgetAuthoringActive: true,
@@ -28,6 +28,20 @@ describe("resolveAssistantReasoning", () => {
       }),
     ).toBe(0.2);
   });
+
+  test.each(["deepseek/deepseek-v4.1-flash", "deepseek/deepseek-v4-flash-latest"])(
+    "uses max reasoning for automatic Custom Widget authoring on %s",
+    (modelId) => {
+      expect(
+        resolveAssistantReasoning({
+          reasoning: "auto",
+          customWidgetAuthoringActive: true,
+          modelId,
+          provider: "openrouter",
+        }),
+      ).toBe("xhigh");
+    },
+  );
 
   test.each(["none", "high"] as const)("preserves explicit %s reasoning", (reasoning) => {
     expect(

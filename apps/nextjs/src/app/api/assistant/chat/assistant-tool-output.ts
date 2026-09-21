@@ -15,6 +15,7 @@ const customWidgetAuthoringResourceToolNames = new Set([
   "customWidget_getComponents",
   "customWidget_getSharedProps",
   "customWidget_getExample",
+  "customWidget_get",
 ]);
 
 export const getAssistantToolOutputMaxCharacters = (toolName: string) => {

@@ -40,12 +40,13 @@ Return one fenced `json` block with the complete definition; keep evidence prose
 
 1. Build a credential-free definition from request, verified context, and sample. Preserve a migration's API path, method,
    body, options, and behavior; omit unknown requests rather than guessing.
-2. Use `customWidget_validateTemplate` for JSX diagnostics. Send source/request/option changes once to
-   `customWidget_previewCreate`; use `customWidget_previewReviseTemplate` for JSX-only corrections. In the Assistant wrapper,
-   multiline JSX uses `templateLines` and preview creation receives the complete definition.
-3. Test every returned query/simulated action once. On a concrete schema/preview error, fix only that field, call
-   `customWidget_validateTemplate` once, then visible `customWidget_previewCreate` with the corrected definition; use
-   `customWidget_previewReviseTemplate` only for JSX errors. Stop only for genuine provider/model, lifecycle-service, or
+2. Send the coherent complete definition directly to `customWidget_previewCreate`; it validates both manifest and JSX.
+   Use `customWidget_validateTemplate` only for isolated JSX diagnostics, never as a preview prerequisite. Use
+   `customWidget_previewReviseTemplate` for JSX-only corrections after a preview exists. In the Assistant wrapper, multiline
+   JSX uses `templateLines` and preview creation receives the complete definition.
+3. Test every returned query/simulated action once, batching independent queries. On a concrete schema/preview error, fix only
+   that field and retry `customWidget_previewCreate` with the corrected definition; use `customWidget_previewReviseTemplate`
+   only for JSX errors after a preview exists. Stop only for genuine provider/model, lifecycle-service, or
    workbench-closure failure.
 4. If `previewCreate` used `definitionId`, persist with `customWidget_updateFromPreview`; otherwise use
    `customWidget_createFromPreview`. Follow create `nextAction` once. Configure credentials in Homarr; never repeat plaintext

@@ -33,6 +33,20 @@ const iterativeCustomWidgetToolNames = [
 ];
 
 const assistantStepContextMaxCharacters = 48_000;
+const assistantStepContextMaxExpandedCharacters = 240_000;
+const assistantStepReservedTokens = 48_000;
+const assistantStepMinimumInputTokens = 16_000;
+const assistantStepCharactersPerToken = 3;
+
+export const getAssistantStepContextMaxCharacters = (contextLength?: number | null) => {
+  if (contextLength === undefined || contextLength === null) return assistantStepContextMaxCharacters;
+  const availableTokens = Math.max(contextLength - assistantStepReservedTokens, assistantStepMinimumInputTokens);
+  const availableCharacters = availableTokens * assistantStepCharactersPerToken;
+  return Math.min(
+    assistantStepContextMaxExpandedCharacters,
+    Math.max(assistantStepContextMaxCharacters, availableCharacters),
+  );
+};
 
 const compactParallelCustomWidgetToolCalls = (messages: ModelMessage[]) => {
   const rejectedToolCallIds = new Set<string>();

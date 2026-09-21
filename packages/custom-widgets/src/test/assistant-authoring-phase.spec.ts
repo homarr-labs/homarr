@@ -9,9 +9,13 @@ describe("Custom Widget lifecycle resume intent", () => {
     "I completed the secure source configuration",
     "The setup is done",
     "Change it to use a compact header",
+    "The header should be blue",
+    "I want it more compact",
+    "Could it show six items?",
     "Make it purple",
     "Add a latency chart to my custom widget",
     "Remove the footer from the widget",
+    "Add a weekly meal-plan request and show its next three meals",
   ])("resumes accepted lifecycle work for: %s", (text) => {
     expect(hasCustomWidgetAuthoringLifecycleResumeIntent(text, true)).toBe(true);
   });
@@ -30,4 +34,11 @@ describe("Custom Widget lifecycle resume intent", () => {
     expect(hasCustomWidgetAuthoringLifecycleResumeIntent("Continue", false)).toBe(false);
     expect(hasCustomWidgetAuthoringLifecycleResumeIntent("Change it to use a compact header", false)).toBe(false);
   });
+
+  test.each(["Add an app to my dashboard", "Show my integrations", "Update Homarr"])(
+    "does not treat an unrelated command as an implicit widget follow-up: %s",
+    (text) => {
+      expect(hasCustomWidgetAuthoringLifecycleResumeIntent(text, true)).toBe(false);
+    },
+  );
 });

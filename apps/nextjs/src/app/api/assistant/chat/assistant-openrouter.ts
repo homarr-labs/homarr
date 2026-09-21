@@ -1,15 +1,21 @@
+import type { TextStreamPart, ToolSet } from "ai";
+
 import { isRecord } from "@homarr/common";
 
 const openRouterWebSearchTool = {
   type: "openrouter:web_search",
   parameters: {
-    max_results: 5,
+    max_results: 6,
     max_uses: 3,
-    max_total_results: 10,
-    max_characters: 2_500,
-    search_context_size: "low",
+    max_total_results: 12,
+    max_characters: 6_000,
+    search_context_size: "medium",
   },
 } as const;
+
+const maximumOpenRouterServerToolCalls = 5;
+const deepSeekV41ModelId = "deepseek/deepseek-v4.1-flash";
+const parallelSafeAssistantToolNames = new Set(["customWidget_previewQuery"]);
 
 export interface OpenRouterWebSearchSource {
   url: string;
@@ -72,6 +78,46 @@ export const getOpenRouterWebSearchSources = (value: unknown): OpenRouterWebSear
   return [...sources.values()];
 };
 
+export const createOpenRouterCitationStreamTransform =
+  <TOOLS extends ToolSet>() =>
+  (_options: { tools: TOOLS; stopStream: () => void }) => {
+    const emittedUrls = new Set<string>();
+    let nextSourceId = 1;
+    let pendingSources: OpenRouterWebSearchSource[] = [];
+    const flushSources = (controller: TransformStreamDefaultController<TextStreamPart<TOOLS>>) => {
+      for (const source of pendingSources) {
+        controller.enqueue({
+          type: "source",
+          sourceType: "url",
+          id: `openrouter-source-${nextSourceId}`,
+          url: source.url,
+          ...(source.title ? { title: source.title } : {}),
+        });
+        nextSourceId += 1;
+      }
+      pendingSources = [];
+    };
+
+    return new TransformStream<TextStreamPart<TOOLS>, TextStreamPart<TOOLS>>({
+      transform(chunk, controller) {
+        if (chunk.type === "raw") {
+          for (const source of getOpenRouterWebSearchSources(chunk.rawValue)) {
+            if (emittedUrls.has(source.url)) continue;
+            emittedUrls.add(source.url);
+            pendingSources.push(source);
+          }
+          controller.enqueue(chunk);
+          return;
+        }
+        controller.enqueue(chunk);
+        if (chunk.type === "text-delta" || chunk.type === "finish-step" || chunk.type === "finish") {
+          flushSources(controller);
+        }
+      },
+      flush: flushSources,
+    });
+  };
+
 export const withOpenRouterWebSearch = (body: Record<string, unknown>) => {
   const tools = Array.isArray(body.tools) ? body.tools : [];
   if (
@@ -89,16 +135,45 @@ export const withOpenRouterWebSearch = (body: Record<string, unknown>) => {
   return { ...body, tools: [...tools, openRouterWebSearchTool] };
 };
 
+export const withOpenRouterProviderRouting = (body: Record<string, unknown>) => {
+  if (body.model !== deepSeekV41ModelId) return body;
+  return {
+    ...body,
+    provider: {
+      order: ["deepinfra/fp8"],
+      quantizations: ["fp8"],
+      allow_fallbacks: true,
+    },
+  };
+};
+
 export const withOpenRouterToolRequestOptions = (
   body: Record<string, unknown>,
   options: { webSearchEnabled: boolean },
-) => ({
-  ...(options.webSearchEnabled ? withOpenRouterWebSearch(body) : body),
-  // OpenRouter enables parallel tool calls for most models by default. Several routed models
-  // interleave or truncate function argument streams when they emit multiple calls together.
-  // Sequential calls preserve the same agent loop while making every tool input independently valid.
-  parallel_tool_calls: false,
-});
+) => {
+  const routedBody = withOpenRouterProviderRouting(body);
+  const requestBody = options.webSearchEnabled ? withOpenRouterWebSearch(routedBody) : routedBody;
+  const tools = Array.isArray(requestBody.tools) ? requestBody.tools : [];
+  const functionToolNames = tools.flatMap((candidate) => {
+    const tool = asRecord(candidate);
+    if (tool?.type !== "function") return [];
+    const definition = asRecord(tool.function);
+    if (typeof definition?.name !== "string") return [];
+    return [definition.name];
+  });
+  const hasServerTool = tools.some((candidate) => asRecord(candidate)?.type === openRouterWebSearchTool.type);
+  const allowParallelToolCalls =
+    !hasServerTool &&
+    functionToolNames.length > 0 &&
+    functionToolNames.every((toolName) => parallelSafeAssistantToolNames.has(toolName));
+  return {
+    ...requestBody,
+    ...(options.webSearchEnabled ? { max_tool_calls: maximumOpenRouterServerToolCalls } : {}),
+    // Several routed models interleave mutation arguments when calls run together. Only the
+    // explicitly allowlisted read-only preview-query phase may emit parallel calls.
+    parallel_tool_calls: allowParallelToolCalls,
+  };
+};
 
 export const getOpenRouterWebSearchRequests = (value: unknown) => {
   if (!isRecord(value)) return undefined;

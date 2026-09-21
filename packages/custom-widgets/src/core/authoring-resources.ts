@@ -85,13 +85,15 @@ Key \`default\` is the required source ID, not a source property. Fields: \`name
 }
 \`\`\`
 
-Saved sources use \`{"type":"integration","integrationKind":"sonarr","integrationId":"saved-id"}\`. Discover HTTP kinds with \`integration_getKinds\`, choose a full-access \`integration_all\` entry, and bind its ID before preview. Omit URL/auth; paths append to the saved URL, non-GET requests are actions, and exports omit \`integrationId\`.
+Saved sources use \`{"type":"integration","integrationKind":"sonarr","integrationId":"saved-id"}\`. Discover and bind a full-access entry before preview. Omit URL/auth; paths append to its URL, non-GET requests are actions, and exports omit \`integrationId\`.
 
-Auth is \`none\`, \`bearer\`, \`basic\`, \`{ "type": "apiKeyHeader", "name": "X-Api-Key" }\`, or \`{ "type": "apiKeyQuery", "name": "api_key" }\`. Requests default to source \`default\`, query/GET/load, inherited auth, and view permission. Use \`trigger: "load"\` for initial/current display, including option-bound data/status with \`RefreshButton\`; use \`trigger: "manual"\` only for explicit user-triggered queries or invocation params in \`SubFetch\`, \`ActionButton\`, or \`ToggleSwitch\`. Actions are manual/modify; preserve confirmation, permission, and invalidates. DELETE requires full permission and confirmation. No \`load: false\`.
+Auth is \`none\`, \`bearer\`, \`basic\`, \`apiKeyHeader\`, or \`apiKeyQuery\`. Requests default to source \`default\`, query/GET/load, inherited auth, and view permission. Use \`load\` for initial/current display and \`manual\` only for explicit interactions or invocation params. Actions are manual/modify; DELETE requires full permission and confirmation.
 
-Use stable real URLs for public APIs and clear suggested URLs for self-hosted services. Homarr collects the installer's server URL, network scope, and credentials as source setup; credentials remain outside the manifest.
+JSON responses become their decoded value. Responses with \`application/x-ndjson\` become an array with one decoded object per non-empty line.
 
-Binding syntax is location-specific: path strings use \`{option:name}\` or \`{param:name}\` with no \`$\` (for example, \`/items/{option:itemId}\`); query/body objects use \`{"$option":"name"}\` or \`{"$param":"name"}\`. \`$param\` is manual-only; \`$option\` may drive loads. Constants stay primitive (\`take: 10\`); names and types are inferred.
+Use real public API URLs and clear self-hosted placeholders. Homarr collects URL, scope, and credentials outside the manifest.
+
+Paths use \`{option:name}\`/\`{param:name}\`; query/body objects use \`{"$option":"name"}\`/\`{"$param":"name"}\`. \`$param\` is manual-only; \`$option\` may drive loads. Constants stay primitive.
 
 Every option has \`label\`, \`control\`, and \`default\`. Optional fields are \`description\`, \`choices\`, \`choicesFrom\`, \`min\`, \`max\`, \`step\`, \`advanced\`, and \`group\`.
 
@@ -187,12 +189,13 @@ Return one fenced \`json\` block with the complete definition; keep evidence pro
 
 1. Build a credential-free definition from request, verified context, and sample. Preserve a migration's API path, method,
    body, options, and behavior; omit unknown requests rather than guessing.
-2. Use \`customWidget_validateTemplate\` for JSX diagnostics. Send source/request/option changes once to
-   \`customWidget_previewCreate\`; use \`customWidget_previewReviseTemplate\` for JSX-only corrections. In the Assistant wrapper,
-   multiline JSX uses \`templateLines\` and preview creation receives the complete definition.
-3. Test every returned query/simulated action once. On a concrete schema/preview error, fix only that field, call
-   \`customWidget_validateTemplate\` once, then visible \`customWidget_previewCreate\` with the corrected definition; use
-   \`customWidget_previewReviseTemplate\` only for JSX errors. Stop only for genuine provider/model, lifecycle-service, or
+2. Send the coherent complete definition directly to \`customWidget_previewCreate\`; it validates both manifest and JSX.
+   Use \`customWidget_validateTemplate\` only for isolated JSX diagnostics, never as a preview prerequisite. Use
+   \`customWidget_previewReviseTemplate\` for JSX-only corrections after a preview exists. In the Assistant wrapper, multiline
+   JSX uses \`templateLines\` and preview creation receives the complete definition.
+3. Test every returned query/simulated action once, batching independent queries. On a concrete schema/preview error, fix only
+   that field and retry \`customWidget_previewCreate\` with the corrected definition; use \`customWidget_previewReviseTemplate\`
+   only for JSX errors after a preview exists. Stop only for genuine provider/model, lifecycle-service, or
    workbench-closure failure.
 4. If \`previewCreate\` used \`definitionId\`, persist with \`customWidget_updateFromPreview\`; otherwise use
    \`customWidget_createFromPreview\`. Follow create \`nextAction\` once. Configure credentials in Homarr; never repeat plaintext
@@ -207,13 +210,13 @@ renderer, or persistence. Never claim rendering/persistence from schema checks.
 
 const CUSTOM_WIDGET_SKILL_ENTRYPOINT_MD = `# Homarr Custom Widget authoring index
 
-Use release-matched tools and primary docs. For each widget, validate JSX, create one preview, test every returned query/action,
-then persist that exact preview. JSX-only fixes use \`customWidget_previewReviseTemplate\` with its session; it resets evidence.
+Use current tools and primary docs. Create one validated preview, batch/test every query/action, then persist it. JSX-only fixes use
+\`customWidget_previewReviseTemplate\` with its session; it resets evidence.
 In the Assistant wrapper, multiline JSX goes to \`templateLines\`; \`previewCreate\` receives the complete definition.
 
 Deliver the smallest result while preserving migration intent, request shape, and visible behavior. On a concrete schema/preview
-error, fix only that field, call \`customWidget_validateTemplate\` once, then visible \`customWidget_previewCreate\` with the
-corrected definition. Changes to sources/requests/options require fresh \`customWidget_previewCreate\`; JSX-only fixes use
+error, fix only that field, then retry \`customWidget_previewCreate\` with the corrected definition. Use
+\`customWidget_validateTemplate\` only for focused JSX diagnostics, never as a preview prerequisite. Changes to sources/requests/options require fresh \`customWidget_previewCreate\`; JSX-only fixes use
 \`customWidget_previewReviseTemplate\`. \`contextAlreadyLoaded\` reuses earlier context and continues; \`phaseComplete\` advances.
 Only genuine provider/model, unavailable lifecycle service, or closed-workbench errors are terminal. If lifecycle tools are
 unavailable, return one importable definition and one unverified note.

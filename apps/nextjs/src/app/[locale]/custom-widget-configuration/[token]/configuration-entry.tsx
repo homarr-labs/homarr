@@ -27,7 +27,7 @@ interface RequestDetails {
   sourceName: string;
   kinds: Array<"apiKey" | "username" | "password">;
   expiresAt: number;
-  status: "pending" | "completed";
+  status: "pending" | "applying" | "completed";
   source: CustomWidgetSource;
 }
 
@@ -100,6 +100,7 @@ export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
               {t("saved")}
             </Alert>
           )}
+          {details?.status === "applying" && <Alert color="blue">{t("applying")}</Alert>}
           {details?.status === "pending" && (
             <Stack gap="md">
               <Card withBorder bg="var(--mantine-color-default-hover)">

@@ -40,12 +40,14 @@ Key `default` is the required source ID, not a source property. Fields: `name?`,
 }
 ```
 
-Saved sources use `{"type":"integration","integrationKind":"sonarr","integrationId":"saved-id"}`. Discover HTTP kinds with `integration_getKinds`, choose a full-access `integration_all` entry, and bind its ID before preview. Omit URL/auth; paths append to the saved URL, non-GET requests are actions, and exports omit `integrationId`.
+Saved sources use `{"type":"integration","integrationKind":"sonarr","integrationId":"saved-id"}`. Discover and bind a full-access entry before preview. Omit URL/auth; paths append to its URL, non-GET requests are actions, and exports omit `integrationId`.
 
-Auth is `none`, `bearer`, `basic`, `{ "type": "apiKeyHeader", "name": "X-Api-Key" }`, or `{ "type": "apiKeyQuery", "name": "api_key" }`. Requests default to source `default`, query/GET/load, inherited auth, and view permission. Use `trigger: "load"` for initial/current display, including option-bound data/status with `RefreshButton`; use `trigger: "manual"` only for explicit user-triggered queries or invocation params in `SubFetch`, `ActionButton`, or `ToggleSwitch`. Actions are manual/modify; preserve confirmation, permission, and invalidates. DELETE requires full permission and confirmation. No `load: false`.
+Auth is `none`, `bearer`, `basic`, `apiKeyHeader`, or `apiKeyQuery`. Requests default to source `default`, query/GET/load, inherited auth, and view permission. Use `load` for initial/current display and `manual` only for explicit interactions or invocation params. Actions are manual/modify; DELETE requires full permission and confirmation.
 
-Use stable real URLs for public APIs and clear suggested URLs for self-hosted services. Homarr collects the installer's server URL, network scope, and credentials as source setup; credentials remain outside the manifest.
+JSON responses become their decoded value. Responses with `application/x-ndjson` become an array with one decoded object per non-empty line.
 
-Binding syntax is location-specific: path strings use `{option:name}` or `{param:name}` with no `$` (for example, `/items/{option:itemId}`); query/body objects use `{"$option":"name"}` or `{"$param":"name"}`. `$param` is manual-only; `$option` may drive loads. Constants stay primitive (`take: 10`); names and types are inferred.
+Use real public API URLs and clear self-hosted placeholders. Homarr collects URL, scope, and credentials outside the manifest.
+
+Paths use `{option:name}`/`{param:name}`; query/body objects use `{"$option":"name"}`/`{"$param":"name"}`. `$param` is manual-only; `$option` may drive loads. Constants stay primitive.
 
 Every option has `label`, `control`, and `default`. Optional fields are `description`, `choices`, `choicesFrom`, `min`, `max`, `step`, `advanced`, and `group`.

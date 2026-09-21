@@ -10,7 +10,12 @@ interface AssistantActivityStateInput {
 export const getRunningAssistantPartType = (
   messageStatusType: string | undefined,
   latestPartType: string | undefined,
-) => (messageStatusType === "running" ? latestPartType : undefined);
+  latestToolComplete = false,
+) => {
+  if (messageStatusType !== "running") return undefined;
+  if (latestPartType === "tool-call" && latestToolComplete) return undefined;
+  return latestPartType;
+};
 
 export const getAssistantActivityState = ({
   isRunning,

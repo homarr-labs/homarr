@@ -1074,34 +1074,6 @@
   margin-inline-end: 0.4rem;
 }
 
-.webSearchActivity {
-  background: color-mix(in srgb, var(--mantine-color-blue-light) 45%, var(--mantine-color-default));
-}
-
-.webSearchSources {
-  margin-top: 0.65rem;
-  padding-top: 0.65rem;
-  border-top: 1px solid var(--mantine-color-default-border);
-}
-
-.webSearchSource {
-  display: inline-flex;
-  max-width: min(100%, 18rem);
-  align-items: center;
-  gap: 0.3rem;
-  padding: 0.3rem 0.5rem;
-  border: 1px solid var(--mantine-color-default-border);
-  border-radius: var(--mantine-radius-xl);
-  color: var(--mantine-color-text);
-  background: var(--mantine-color-body);
-  text-decoration: none;
-}
-
-.webSearchSource:hover {
-  border-color: var(--mantine-primary-color-filled);
-  color: var(--mantine-primary-color-filled);
-}
-
 .messageFile,
 .attachment {
   width: fit-content;

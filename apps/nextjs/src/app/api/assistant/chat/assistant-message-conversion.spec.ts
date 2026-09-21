@@ -1,7 +1,51 @@
 import { describe, expect, test } from "vitest";
 import type { ModelMessage, UIMessage } from "ai";
 
-import { compactAssistantStepMessages, convertAssistantMessagesToModelMessages } from "./assistant-message-conversion";
+import {
+  compactAssistantStepMessages,
+  convertAssistantMessagesToModelMessages,
+  getAssistantStepContextMaxCharacters,
+} from "./assistant-message-conversion";
+
+describe("getAssistantStepContextMaxCharacters", () => {
+  test("uses model context without starving large-context tool loops", () => {
+    expect(getAssistantStepContextMaxCharacters()).toBe(48_000);
+    expect(getAssistantStepContextMaxCharacters(32_000)).toBe(48_000);
+    expect(getAssistantStepContextMaxCharacters(128_000)).toBe(240_000);
+    expect(getAssistantStepContextMaxCharacters(262_144)).toBe(240_000);
+  });
+
+  test("retains a large recent tool transcript for large-context models", () => {
+    const messages: ModelMessage[] = [
+      {
+        role: "assistant",
+        content: [
+          {
+            type: "tool-call",
+            toolCallId: "component-docs",
+            toolName: "customWidget_getComponents",
+            input: { names: ["Card"] },
+          },
+        ],
+      },
+      {
+        role: "tool",
+        content: [
+          {
+            type: "tool-result",
+            toolCallId: "component-docs",
+            toolName: "customWidget_getComponents",
+            output: { type: "json", value: { marker: "KEEP-LARGE-CONTEXT", docs: "x".repeat(60_000) } },
+          },
+        ],
+      },
+      { role: "user", content: [{ type: "text", text: "Continue building it." }] },
+    ];
+
+    const maxCharacters = getAssistantStepContextMaxCharacters(262_144);
+    expect(JSON.stringify(compactAssistantStepMessages(messages, maxCharacters))).toContain("KEEP-LARGE-CONTEXT");
+  });
+});
 
 describe("convertAssistantMessagesToModelMessages", () => {
   test("drops an interrupted tool call while preserving completed tool results", async () => {

@@ -7,7 +7,11 @@ import { BUNDLED_CUSTOM_WIDGETS } from "./bundled-widgets";
 import { customJsxExamples } from "./examples";
 import { customJsxTablerIconNames } from "./tabler-icons";
 
-const pokedexAuthoringExample = BUNDLED_CUSTOM_WIDGETS.find(({ id }) => id === "seed-pokedex");
+type BundledCustomWidget = (typeof BUNDLED_CUSTOM_WIDGETS)[number];
+
+const getBundledAuthoringExampleId = (id: BundledCustomWidget["id"]) => id.replace(/^seed-/u, "");
+const getBundledAuthoringExample = (name: string) =>
+  BUNDLED_CUSTOM_WIDGETS.find(({ id }) => getBundledAuthoringExampleId(id) === name);
 
 export function getCustomWidgetComponentCatalog() {
   return {
@@ -75,16 +79,11 @@ export function findCustomWidgetComponents(query: string, limit = 16) {
 export function getCustomWidgetExampleCatalog() {
   return [
     ...customJsxExamples.map(({ id, title, description }) => ({ id, title, description })),
-    ...(pokedexAuthoringExample
-      ? [
-          {
-            id: "pokedex",
-            title: "Complete Pokédex",
-            description:
-              "A production-safe PokéAPI browser with searchable species, artwork, types, abilities, base stats, loading states, and manual detail requests.",
-          },
-        ]
-      : []),
+    ...BUNDLED_CUSTOM_WIDGETS.map(({ id, widget }) => ({
+      id: getBundledAuthoringExampleId(id),
+      title: widget.name,
+      description: widget.description ?? `Bundled ${widget.name} example.`,
+    })),
   ];
 }
 
@@ -136,7 +135,7 @@ export function getCustomWidgetComponents(names: readonly string[]) {
     components,
     notFound,
     nextStep:
-      "Use these compact selected docs and proceed to template validation. Fetch one full component document only for a concrete unresolved prop or repair.",
+      "Use these compact selected docs and proceed directly to preview creation. Fetch one full component document only for a concrete unresolved prop or repair.",
   };
 }
 
@@ -173,13 +172,13 @@ export function getCustomWidgetSharedProps(names: readonly string[]) {
 }
 
 export function getCustomWidgetExample(name: string) {
-  if (name === "pokedex" && pokedexAuthoringExample) {
+  const bundled = getBundledAuthoringExample(name);
+  if (bundled) {
     return {
-      id: "pokedex",
-      title: "Complete Pokédex",
-      description:
-        "A production-safe PokéAPI browser with searchable species, artwork, types, abilities, base stats, loading states, and manual detail requests.",
-      widget: pokedexAuthoringExample.widget,
+      id: name,
+      title: bundled.widget.name,
+      description: bundled.widget.description ?? `Bundled ${bundled.widget.name} example.`,
+      widget: bundled.widget,
     };
   }
   return customJsxExamples.find((example) => example.id === name) ?? null;

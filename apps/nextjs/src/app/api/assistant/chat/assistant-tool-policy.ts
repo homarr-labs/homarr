@@ -6,7 +6,7 @@ import {
   CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION,
 } from "@homarr/custom-widgets/authoring-prompt";
 import { getCustomWidgetPlacementToolNames, resolveCustomWidgetPlacementState } from "@homarr/custom-widgets/core";
-import type { CustomWidgetAssistantLifecycleEvent } from "@homarr/custom-widgets/core";
+import type { CustomWidgetAssistantLifecycleEvent, CustomWidgetPlacementState } from "@homarr/custom-widgets/core";
 
 const mutationApprovalInstruction =
   "Uses Homarr's native approval UI; call when inputs are ready without separate prose confirmation.";
@@ -93,11 +93,25 @@ const getLifecycleEvents = (
   return [...messageEvents, ...responseEvents, ...completedSteps.flatMap((step) => step.toolResults)];
 };
 
+const explicitUnplacedCustomWidgetPattern =
+  /\b(?:leave|keep|remain|save)\b[^\n]{0,40}\bunplaced\b|\b(?:do not|don't|dont|without)\b[^\n]{0,40}\b(?:place|placement)\b[^\n]{0,40}\b(?:board|dashboard)\b/iu;
+
+const hasExplicitUnplacedCustomWidgetIntent = (messages: readonly UIMessage[]) => {
+  const latestUserMessage = messages.findLast((message) => message.role === "user");
+  if (!latestUserMessage) return false;
+  const text = latestUserMessage.parts.flatMap((part) => (part.type === "text" ? [part.text] : [])).join("\n");
+  return explicitUnplacedCustomWidgetPattern.test(text);
+};
+
 export const getCustomWidgetPlacementState = (
   messages: UIMessage[],
   completedSteps: readonly AssistantToolExecutionStep[] = [],
   responseMessages: readonly AssistantToolResponseMessage[] = [],
-) => resolveCustomWidgetPlacementState(getLifecycleEvents(messages, completedSteps, responseMessages));
+): CustomWidgetPlacementState => {
+  const state = resolveCustomWidgetPlacementState(getLifecycleEvents(messages, completedSteps, responseMessages));
+  if (state.status === "ask-user" && hasExplicitUnplacedCustomWidgetIntent(messages)) return { status: "none" };
+  return state;
+};
 
 export const hasPendingCustomWidgetPlacement = (
   messages: UIMessage[],

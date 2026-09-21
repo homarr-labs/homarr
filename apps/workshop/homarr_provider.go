@@ -25,7 +25,8 @@ import (
 const (
 	homarrProviderModelID    = "homarr/model"
 	homarrProviderModelName  = "Homarr model"
-	defaultOpenRouterModelID = "~deepseek/deepseek-v4-flash-latest"
+	defaultOpenRouterModelID = "deepseek/deepseek-v4.1-flash"
+	lunaOpenRouterModelID    = "openai/gpt-5.6-luna"
 	maxChatInputTokens       = 256 * 1024
 	maxChatOutputTokens      = 32 * 1024
 	defaultDailyLimit        = 50
@@ -34,9 +35,8 @@ const (
 	// base64. Keep the authenticated transport bounded without confusing bytes with
 	// model tokens; validate textual and image content separately below.
 	maxChatRequestBytes = 12_000_000
-	// One UTF-8 byte cannot expand into more than one tokenizer fallback token.
-	// This conservative bound keeps every accepted text payload within 256K tokens
-	// without coupling the public alias to the private upstream tokenizer.
+	// One UTF-8 byte can represent a complete token. Keep the byte guard conservative
+	// so accepted requests cannot exceed the advertised context before reaching the model.
 	maxChatTextBytes       = maxChatInputTokens
 	maxChatImageDataBytes  = 1_400_000
 	maxChatImages          = 5
@@ -432,7 +432,18 @@ func sanitizeProviderPayload(payload map[string]any, upstreamModelID string) err
 	payload["n"] = 1
 	payload["parallel_tool_calls"] = false
 	payload["usage"] = map[string]any{"include": true}
-	payload["provider"] = map[string]any{"zdr": true, "data_collection": "deny"}
+	providerPreferences := map[string]any{"zdr": true, "data_collection": "deny"}
+	if upstreamModelID == defaultOpenRouterModelID {
+		delete(payload, "reasoning")
+		payload["reasoning_effort"] = "xhigh"
+		providerPreferences["order"] = []string{"deepinfra/fp8"}
+		providerPreferences["quantizations"] = []string{"fp8"}
+		providerPreferences["allow_fallbacks"] = true
+	} else if upstreamModelID == lunaOpenRouterModelID {
+		delete(payload, "reasoning")
+		payload["reasoning_effort"] = "high"
+	}
+	payload["provider"] = providerPreferences
 	return nil
 }
 

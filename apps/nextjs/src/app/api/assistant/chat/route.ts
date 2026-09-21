@@ -33,7 +33,11 @@ import { getI18n } from "@homarr/translation/server";
 import { resolveHomarrUrlConfig } from "@homarr/workshop/schema";
 import { getCustomWidgetContextRequestKey } from "@homarr/custom-widgets/authoring-resources";
 import {
+  assistantIntegrationResearchSchema,
+  assistantIntegrationResearchToolName,
+  createCustomWidgetFollowUpEditController,
   createCustomWidgetTemplateLifecycleController,
+  getAssistantIntegrationResearchOutput,
   normalizeCustomWidgetLifecycleToolInput,
 } from "@homarr/custom-widgets/core";
 
@@ -52,15 +56,23 @@ import {
   getRequestedMentionIds,
   sanitizeAttachmentFilename,
 } from "./assistant-chat-input";
+import {
+  createAssistantIntegrationResearchController,
+  getCustomWidgetProductionInstructions,
+} from "./assistant-integration-research";
 import { getAssistantModelLookupStatus } from "./assistant-model-lookup";
 import { resolveAssistantReasoning, resolveAssistantTemperature } from "./assistant-reasoning";
-import { compactAssistantStepMessages, convertAssistantMessagesToModelMessages } from "./assistant-message-conversion";
 import {
+  compactAssistantStepMessages,
+  convertAssistantMessagesToModelMessages,
+  getAssistantStepContextMaxCharacters,
+} from "./assistant-message-conversion";
+import {
+  createOpenRouterCitationStreamTransform,
   getOpenRouterWebSearchRequests,
   getOpenRouterWebSearchSources,
   normalizeOpenRouterWebSearchSources,
   withOpenRouterToolRequestOptions,
-  withOpenRouterWebSearch,
 } from "./assistant-openrouter";
 import { resolveHomarrProviderToken, toProviderOptionsKey } from "./assistant-provider-options";
 import {
@@ -76,10 +88,14 @@ import { getAssistantToolOutputOptions, toAssistantToolOutput } from "./assistan
 import { getAssistantToolInputSchema, getValidatedAssistantToolSchema } from "./assistant-tool-schema";
 import {
   createCustomWidgetDiscoveryPhaseController,
-  getActiveCustomWidgetToolNames,
+  getCustomWidgetFollowUpEditContext,
   getCustomWidgetPhaseToolNames,
   getCustomWidgetToolStepsFromResponseMessages,
   getCustomWidgetToolStepsFromUiMessages,
+  getRequestedCustomWidgetExampleIds,
+  getRequestedCustomWidgetServiceTarget,
+  hasMultiCustomWidgetCreationRequest,
+  isFreshCustomWidgetCreationRequest,
   needsCustomWidgetAuthoringContext,
   shouldRequireCustomWidgetAuthoringTool,
 } from "./custom-widget-authoring-context";
@@ -93,7 +109,7 @@ import {
   withAssistantToolPolicy,
 } from "./assistant-tool-policy";
 
-export const maxDuration = 300;
+export const maxDuration = 600;
 
 // Five 1 MB image attachments expand to roughly 6.7 MB as base64 before the surrounding message
 // history and JSON envelope are added. Keep the transport ceiling above the composer contract while
@@ -510,9 +526,34 @@ export async function POST(request: Request) {
   }
   const canAuthorCustomWidgets = session.user.permissions.includes("admin");
   const customWidgetAuthoringActive = canAuthorCustomWidgets && needsCustomWidgetAuthoringContext(incomingMessages);
+  const multiCustomWidgetCreationRequest =
+    customWidgetAuthoringActive && hasMultiCustomWidgetCreationRequest(incomingMessages);
+  const openRouterServerToolsEnabled =
+    configuration.webSearchEnabled && assistantProviderCanUseOpenRouterServerTools(configuration.provider);
+  const requestedCustomWidgetService =
+    customWidgetAuthoringActive && !multiCustomWidgetCreationRequest
+      ? getRequestedCustomWidgetServiceTarget(incomingMessages)
+      : null;
+  const requestedCustomWidgetExampleIds = customWidgetAuthoringActive
+    ? getRequestedCustomWidgetExampleIds(incomingMessages)
+    : [];
+  const requestedCustomWidgetExampleId = requestedCustomWidgetExampleIds[0] ?? null;
+  const integrationResearch =
+    requestedCustomWidgetService !== null && requestedCustomWidgetExampleId === null
+      ? createAssistantIntegrationResearchController(requestedCustomWidgetService, {
+          webResearchEnabled: openRouterServerToolsEnabled,
+        })
+      : null;
+  const customWidgetFollowUpEditContext = customWidgetAuthoringActive
+    ? getCustomWidgetFollowUpEditContext(incomingMessages)
+    : null;
+  const customWidgetFollowUpEdit = customWidgetFollowUpEditContext
+    ? createCustomWidgetFollowUpEditController(customWidgetFollowUpEditContext)
+    : null;
   const customWidgetDiscoveryPhase = createCustomWidgetDiscoveryPhaseController();
   const customWidgetTemplateLifecycle = createCustomWidgetTemplateLifecycleController();
   const customWidgetToolStepGate = createCustomWidgetToolStepGate();
+  let completedRequestedExamples = 0;
   const loadedCustomWidgetContextRequests = new Set<string>();
   const caller = mcpRouter.createCaller(context);
   const mcpTools = extractMcpTools().filter(
@@ -540,17 +581,28 @@ export async function POST(request: Request) {
               };
             }
             let executionInput = input;
+            if (mcpTool.name === "customWidget_getExample") {
+              const expectedExampleId = requestedCustomWidgetExampleIds[completedRequestedExamples];
+              if (expectedExampleId !== undefined) executionInput = { name: expectedExampleId };
+            }
             if (mcpTool.name.startsWith("customWidget_") && isRecord(input)) {
-              executionInput = normalizeCustomWidgetLifecycleToolInput(mcpTool.name, input);
+              executionInput = normalizeCustomWidgetLifecycleToolInput(mcpTool.name, executionInput);
             }
             if (
-              (mcpTool.name === "customWidget_previewCreate" ||
-                mcpTool.name === "customWidget_previewReviseTemplate") &&
-              isRecord(executionInput)
+              mcpTool.name === "integration_request" &&
+              integrationResearch?.getStage() === "probe-saved-integration"
             ) {
-              const mismatch = customWidgetTemplateLifecycle.getPreviewValidationMismatch(mcpTool.name, executionInput);
-              if (mismatch !== null) return mismatch;
+              const probeValidationError = integrationResearch.validateProbe(executionInput);
+              if (probeValidationError !== null) {
+                return {
+                  error: probeValidationError,
+                  nextStep:
+                    "Use the selected integration ID and an exact documented GET path from the research record.",
+                };
+              }
             }
+            const followUpInputFailure = customWidgetFollowUpEdit?.validateInput(mcpTool.name, executionInput);
+            if (followUpInputFailure) return followUpInputFailure;
             const contextRequestKey = getCustomWidgetContextRequestKey(mcpTool.name, executionInput);
             if (contextRequestKey !== null && loadedCustomWidgetContextRequests.has(contextRequestKey)) {
               return {
@@ -563,13 +615,23 @@ export async function POST(request: Request) {
                 phaseComplete: true,
                 components: [],
                 nextStep:
-                  "Focused discovery is complete for this phase. Use the accumulated component names, batch selected docs with customWidget_getComponents, then call customWidget_validateTemplate. A failed validation reopens focused discovery.",
+                  "Focused discovery is complete for this phase. Use the accumulated component names, batch selected docs if needed, then send the coherent definition directly to customWidget_previewCreate.",
               };
             }
             if (contextRequestKey !== null) loadedCustomWidgetContextRequests.add(contextRequestKey);
             try {
               const result = await callMcpTool(caller, mcpTool, executionInput);
+              integrationResearch?.observe(mcpTool.name, result);
+              customWidgetFollowUpEdit?.observeResult(mcpTool.name, result);
               customWidgetDiscoveryPhase.observe(mcpTool.name, result);
+              if (
+                (mcpTool.name === "customWidget_createFromPreview" ||
+                  mcpTool.name === "customWidget_updateFromPreview") &&
+                isRecord(result) &&
+                typeof result.id === "string"
+              ) {
+                completedRequestedExamples += 1;
+              }
               let lifecycleResult = result;
               if (isRecord(result) && isRecord(executionInput)) {
                 if (mcpTool.name === "customWidget_validateTemplate") {
@@ -588,6 +650,7 @@ export async function POST(request: Request) {
               }
               return toAssistantToolOutput(lifecycleResult, getAssistantToolOutputOptions(mcpTool.name));
             } catch (error) {
+              integrationResearch?.observeFailure(mcpTool.name);
               const safeError = getSafeAssistantToolError(error, { toolName: mcpTool.name });
               const componentNotFound =
                 mcpTool.name === "customWidget_getComponent" && /not found|not compatible/iu.test(safeError);
@@ -609,10 +672,11 @@ export async function POST(request: Request) {
                       "customWidget_findComponents",
                       "customWidget_getComponents",
                       "customWidget_validateTemplate",
+                      "customWidget_previewCreate",
                     ],
                   },
                   nextStep:
-                    "Do not retry this component name. Replace it with a previously discovered component, or run one focused component search, then validate the corrected template.",
+                    "Do not retry this component name. Replace it with a discovered component, then retry the preview directly. Use template validation only when isolated JSX diagnostics are useful.",
                 };
               }
               if (mcpTool.name === "customWidget_previewReviseTemplate" && /unchanged/iu.test(safeError)) {
@@ -633,7 +697,7 @@ export async function POST(request: Request) {
                     ],
                   },
                   nextStep:
-                    "The existing preview and its evidence remain valid. Persist it, or make a distinct correction and validate before revising.",
+                    "The existing preview and its evidence remain valid. Persist it, or make a distinct JSX correction and revise the preview directly.",
                 };
               }
               if (
@@ -673,6 +737,39 @@ export async function POST(request: Request) {
       .filter((mcpTool) => requiresAssistantToolApproval(mcpTool.name, mcpTool.type))
       .map((mcpTool) => [mcpTool.name, "user-approval" as const]),
   );
+
+  const integrationResearchTools: ToolSet =
+    integrationResearch !== null
+      ? {
+          [assistantIntegrationResearchToolName]: tool({
+            description:
+              "After OpenRouter web_search, preserve a compact API contract from cited primary/official documentation for later Homarr tool steps. Runtime validation requires the exact discovered saved integration and HTTP/full-access capabilities, or proves that direct HTTP has no matching Homarr kind. Record unavailable and stop instead of guessing.",
+            inputSchema: jsonSchema(
+              z.toJSONSchema(assistantIntegrationResearchSchema) as Parameters<typeof jsonSchema>[0],
+            ),
+            execute: (value) => {
+              if (!customWidgetToolStepGate.claim(assistantIntegrationResearchToolName)) {
+                return {
+                  error:
+                    "A Custom Widget tool must run in its own model step. Use that result before calling another tool.",
+                };
+              }
+              const research = assistantIntegrationResearchSchema.parse(value);
+              const validationError = integrationResearch.validate(research);
+              if (validationError !== null) {
+                return {
+                  recorded: false,
+                  status: "invalid",
+                  error: validationError,
+                  nextStep: "Correct the research record from the exact discovery results; never bypass the blocker.",
+                };
+              }
+              integrationResearch.record(research);
+              return getAssistantIntegrationResearchOutput(research);
+            },
+          }),
+        }
+      : {};
 
   const frontendTools = Object.fromEntries(
     Object.keys(parsed.data.tools ?? {}).flatMap((name) => {
@@ -715,23 +812,22 @@ export async function POST(request: Request) {
       const input = assistantToolGroupActivationSchema.parse(value);
       const groups = assistantToolGroups.resolve(input.groups);
       for (const group of groups) enabledToolGroupIds.add(group.id);
-      return {
+      const output = {
         enabledGroups: groups.map(({ id }) => id),
         nextStep: "Use one or more enabled typed tools now. Enable another group only when the task needs it.",
       };
+      integrationResearch?.observe(assistantToolGroupActivationName, output);
+      return output;
     },
   });
   const availableTools: ToolSet = {
     ...homarrTools,
     [assistantToolGroupActivationName]: toolGroupActivation,
+    ...integrationResearchTools,
     ...frontendTools,
   };
   const frontendToolNames = Object.keys(frontendTools);
-  const activeCustomWidgetToolNames = getActiveCustomWidgetToolNames(
-    Object.keys(homarrTools),
-    incomingMessages,
-    canAuthorCustomWidgets,
-  );
+  const integrationResearchToolNames = Object.keys(integrationResearchTools);
   const restoredCustomWidgetSteps = customWidgetAuthoringActive
     ? getCustomWidgetToolStepsFromUiMessages(incomingMessages)
     : [];
@@ -743,6 +839,13 @@ export async function POST(request: Request) {
       .resolve([...enabledToolGroupIds])
       .flatMap((group) => group.tools.map(({ name }) => name));
     const responseMessageSteps = getCustomWidgetToolStepsFromResponseMessages(responseMessages);
+    const researchStage = integrationResearch?.getStage();
+    if (researchStage === "enable-integration-tools") return [assistantToolGroupActivationName];
+    if (researchStage === "discover-kinds") return ["integration_getKinds"];
+    if (researchStage === "discover-saved-integrations") return ["integration_all"];
+    if (researchStage === "record-research") return integrationResearchToolNames;
+    if (researchStage === "probe-saved-integration") return ["integration_request"];
+    if (researchStage === "unavailable") return frontendToolNames;
     if (hasPendingCustomWidgetPlacement(incomingMessages, steps, responseMessages)) {
       return [
         assistantToolGroupActivationName,
@@ -751,23 +854,31 @@ export async function POST(request: Request) {
       ];
     }
     const phaseToolNames = customWidgetAuthoringActive
-      ? getCustomWidgetPhaseToolNames(Object.keys(homarrTools), [
-          ...restoredCustomWidgetSteps,
-          ...responseMessageSteps,
-          ...steps,
-        ])
+      ? getCustomWidgetPhaseToolNames(
+          [...Object.keys(homarrTools), ...frontendToolNames],
+          [...restoredCustomWidgetSteps, ...responseMessageSteps, ...steps],
+          {
+            continueAfterPersistence: customWidgetFollowUpEditContext === null && multiCustomWidgetCreationRequest,
+            followUpDefinitionId: customWidgetFollowUpEditContext?.definitionId,
+            preferDirectPreview:
+              isFreshCustomWidgetCreationRequest(incomingMessages) &&
+              ((!multiCustomWidgetCreationRequest && requestedCustomWidgetService === null) ||
+                requestedCustomWidgetExampleIds.length > 0 ||
+                requestedCustomWidgetExampleId !== null ||
+                integrationResearch?.getStage() === "ready"),
+            preferredExampleIds: requestedCustomWidgetExampleIds,
+          },
+        )
       : null;
-    if (phaseToolNames)
-      return [assistantToolGroupActivationName, ...frontendToolNames, ...enabledToolNames, ...phaseToolNames];
-    return [
-      assistantToolGroupActivationName,
-      ...frontendToolNames,
-      ...new Set([...enabledToolNames, ...activeCustomWidgetToolNames]),
-    ];
+    if (phaseToolNames) return phaseToolNames;
+    return [assistantToolGroupActivationName, ...frontendToolNames, ...new Set(enabledToolNames)];
   };
   const forcedToolName = getForcedAssistantToolName(incomingMessages);
-  const openRouterServerToolsEnabled =
-    configuration.webSearchEnabled && assistantProviderCanUseOpenRouterServerTools(configuration.provider);
+  const shouldEnableOpenRouterWebSearch = () => {
+    if (!openRouterServerToolsEnabled) return false;
+    if (integrationResearch === null) return true;
+    return integrationResearch.getStage() === "record-research";
+  };
 
   try {
     const customHeaders = configuration.encryptedHeaders
@@ -797,11 +908,12 @@ export async function POST(request: Request) {
       headers: providerHeaders,
       includeUsage: true,
       transformRequestBody:
-        configuration.provider === "openrouter"
-          ? (body) => withOpenRouterToolRequestOptions(body, { webSearchEnabled: openRouterServerToolsEnabled })
-          : openRouterServerToolsEnabled
-            ? withOpenRouterWebSearch
-            : undefined,
+        configuration.provider === "openrouter" || openRouterServerToolsEnabled
+          ? (body) =>
+              withOpenRouterToolRequestOptions(body, {
+                webSearchEnabled: shouldEnableOpenRouterWebSearch(),
+              })
+          : undefined,
       metadataExtractor: createProviderTelemetryExtractor(),
     });
 
@@ -814,7 +926,8 @@ export async function POST(request: Request) {
     const initialModelMessages = await convertAssistantMessagesToModelMessages(
       prepareMessagesForModel(incomingMessages),
     );
-    const baseInstructions = `${assistantInstructions}${customWidgetAuthoringActive ? customWidgetAssistantInstructions : ""}${openRouterServerToolsEnabled ? webSearchInstructions : ""}${requestContext}`;
+    const assistantStepContextMaxCharacters = getAssistantStepContextMaxCharacters(selectedModel?.contextLength);
+    const baseInstructions = `${assistantInstructions}${customWidgetAuthoringActive ? customWidgetAssistantInstructions : ""}${requestedCustomWidgetService !== null && requestedCustomWidgetExampleId === null ? getCustomWidgetProductionInstructions(openRouterServerToolsEnabled) : ""}${openRouterServerToolsEnabled ? webSearchInstructions : ""}${requestContext}`;
     const getStepInstructions = (activeToolNames: readonly string[]) => {
       if (!customWidgetAuthoringActive) return undefined;
       return appendActiveCustomWidgetToolInstruction(baseInstructions, activeToolNames);
@@ -833,7 +946,7 @@ export async function POST(request: Request) {
           return {
             activeTools: requiredToolNames,
             instructions: getStepInstructions(requiredToolNames),
-            messages: compactAssistantStepMessages(messages),
+            messages: compactAssistantStepMessages(messages, assistantStepContextMaxCharacters),
             toolChoice: "required",
           };
         }
@@ -846,6 +959,19 @@ export async function POST(request: Request) {
         }
         const responseMessageSteps = getCustomWidgetToolStepsFromResponseMessages(responseMessages);
         const activeTools = getActiveToolNames(steps, responseMessages);
+        const integrationResearchStage = integrationResearch?.getStage();
+        if (
+          integrationResearchStage !== undefined &&
+          integrationResearchStage !== "ready" &&
+          integrationResearchStage !== "unavailable"
+        ) {
+          return {
+            activeTools,
+            instructions: getStepInstructions(activeTools),
+            messages: compactAssistantStepMessages(messages, assistantStepContextMaxCharacters),
+            toolChoice: "required",
+          };
+        }
         if (
           customWidgetAuthoringActive &&
           shouldRequireCustomWidgetAuthoringTool(activeTools, steps, responseMessageSteps, incomingMessages)
@@ -853,14 +979,14 @@ export async function POST(request: Request) {
           return {
             activeTools,
             instructions: getStepInstructions(activeTools),
-            messages: compactAssistantStepMessages(messages),
+            messages: compactAssistantStepMessages(messages, assistantStepContextMaxCharacters),
             toolChoice: "required",
           };
         }
         return {
           activeTools,
           instructions: getStepInstructions(activeTools),
-          messages: compactAssistantStepMessages(messages),
+          messages: compactAssistantStepMessages(messages, assistantStepContextMaxCharacters),
         };
       },
       stopWhen: stepCountIs(assistantExecutionPolicy.maxSteps),
@@ -888,6 +1014,12 @@ export async function POST(request: Request) {
         configuration.provider === "openrouter" || openRouterServerToolsEnabled
           ? { [toProviderOptionsKey(providerName)]: { usage: { include: true } } }
           : undefined,
+      ...(openRouterServerToolsEnabled
+        ? {
+            include: { rawChunks: true },
+            experimental_transform: createOpenRouterCitationStreamTransform(),
+          }
+        : {}),
       toolApproval,
       experimental_toolApprovalSecret: getToolApprovalSecret(),
       onChunk: ({ chunk }) => {
@@ -990,6 +1122,7 @@ export async function POST(request: Request) {
     return result.toUIMessageStreamResponse<UIMessage<AssistantMessageMetadata>>({
       originalMessages: parsed.data.messages as UIMessage<AssistantMessageMetadata>[],
       sendReasoning: true,
+      sendSources: true,
       messageMetadata: ({ part }) => {
         if (!shouldEmitAssistantMessageMetadata(part)) return undefined;
 

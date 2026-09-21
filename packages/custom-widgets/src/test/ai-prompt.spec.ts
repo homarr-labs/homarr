@@ -11,6 +11,12 @@ import {
 } from "../core/ai-prompt";
 
 describe("AI prompt", () => {
+  it("uses shipped service examples before researching a matching contract", () => {
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("dispatcharr-channels");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("frigate-live-streams");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("load that example once");
+  });
+
   it("is self-contained, request-first, and compact", () => {
     const prompt = buildCustomWidgetAiPrompt(
       undefined,
@@ -113,9 +119,10 @@ describe("AI prompt", () => {
   it("makes the connected MCP workflow lazy, batch-capable, and evidence-driven", () => {
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY.length).toBeLessThan(8_000);
     expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT.length).toBeLessThan(8_500);
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Call customWidget_getSkill once");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("do not call customWidget_getSkill");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Make lifecycle/mutation calls one per step");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Load required references and uncertain components");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("at most eight needed component documents");
     expect(CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION).toContain("staged by the authoring lifecycle");
     expect(CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION).toContain("task-needed");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("customWidget_previewReviseTemplate");
@@ -148,11 +155,19 @@ describe("AI prompt", () => {
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Keep requests/nullable siblings independent");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("SubFetch owns those states");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("friendly name/details");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("exactly one literal RefreshButton outside");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Every option/input control must affect");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("convert the numeric value before changing a unit label");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Render every explicitly required response field once");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("templateLines");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Send the complete definition object");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Send a coherent complete definition directly");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Sources never contain headers");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Never switch to a probe service");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Never persist a header probe");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("finish unplaced without asking again");
     expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).not.toContain("homarr_findTools");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY.indexOf("customWidget_validateTemplate")).toBeLessThan(
-      CUSTOM_WIDGET_ASSISTANT_POLICY.indexOf("customWidget_previewCreate"),
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY.indexOf("customWidget_previewCreate")).toBeLessThan(
+      CUSTOM_WIDGET_ASSISTANT_POLICY.indexOf("customWidget_validateTemplate"),
     );
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY.indexOf("customWidget_previewCreate")).toBeLessThan(
       CUSTOM_WIDGET_ASSISTANT_POLICY.indexOf("customWidget_previewReviseTemplate"),

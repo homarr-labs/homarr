@@ -1,10 +1,69 @@
 import { describe, expect, it } from "vitest";
 
-import { BUNDLED_CUSTOM_WIDGETS, customWidgetDefinitionSchema, parseCustomWidgetAiResponse } from "../core";
+import {
+  BUNDLED_CUSTOM_WIDGETS,
+  customWidgetAuthoringDefinitionSchema,
+  customWidgetDefinitionSchema,
+  normalizeCustomWidgetAuthoringDefinition,
+  parseCustomWidgetAiResponse,
+} from "../core";
+import { getCustomWidgetExample, getCustomWidgetExampleCatalog } from "../core/authoring-resources";
 import { collectCustomWidgetRequestReferences } from "../core/request-schema";
 import { PORTAINER_REFERENCE_WIDGET } from "./fixtures/reference-widgets";
 
 describe("reference widget capabilities", () => {
+  const integrationPresetIds = [
+    "dispatcharr-channels",
+    "karakeep-bookmarks",
+    "mealie-today",
+    "romm-library",
+    "tubearchivist-queue",
+    "frigate-alerts",
+    "frigate-system",
+    "frigate-live-streams",
+  ] as const;
+
+  it("validates every bundled widget through the production definition schema", () => {
+    expect(BUNDLED_CUSTOM_WIDGETS).toHaveLength(13);
+    for (const { widget } of BUNDLED_CUSTOM_WIDGETS) {
+      expect(() => customWidgetDefinitionSchema.parse(widget)).not.toThrow();
+    }
+  });
+
+  it("exposes the requested integration presets to the assistant as installed examples", () => {
+    expect(getCustomWidgetExampleCatalog().map(({ id }) => id)).toEqual(
+      expect.arrayContaining([...integrationPresetIds]),
+    );
+    for (const id of integrationPresetIds) {
+      expect(getCustomWidgetExample(id)?.widget.$schema).toBe("homarr-custom-widget-v2");
+    }
+  });
+
+  it.each(integrationPresetIds)("round-trips %s through the production authoring schema", (id) => {
+    const example = getCustomWidgetExample(id);
+    if (!example) throw new Error(`Bundled example '${id}' was not found`);
+    const { template, ...manifest } = example.widget;
+    const normalized = normalizeCustomWidgetAuthoringDefinition(
+      customWidgetAuthoringDefinitionSchema.parse({ ...manifest, templateLines: template.split("\n") }),
+    );
+
+    expect(normalized.template).toBe(template);
+  });
+
+  it("uses saved integrations for RomM and Frigate live-stream discovery", () => {
+    expect(getCustomWidgetExample("romm-library")?.widget.sources.default).toMatchObject({
+      type: "integration",
+      integrationKind: "romm",
+    });
+    expect(getCustomWidgetExample("frigate-live-streams")?.widget).toMatchObject({
+      sources: { default: { type: "integration", integrationKind: "frigate" } },
+      requests: { streams: { path: "/api/go2rtc/streams" } },
+    });
+    const frigateLiveTemplate = getCustomWidgetExample("frigate-live-streams")?.widget.template ?? "";
+    expect(frigateLiveTemplate).not.toContain("producer.url");
+    expect(frigateLiveTemplate).not.toContain("producer.remote_addr");
+  });
+
   it("validates a full Pokédex with list and manual detail requests", () => {
     const pokedex = BUNDLED_CUSTOM_WIDGETS.find(({ id }) => id === "seed-pokedex");
     expect(pokedex).toBeDefined();
