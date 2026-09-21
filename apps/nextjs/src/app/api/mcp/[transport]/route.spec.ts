@@ -18,8 +18,6 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("next/server", () => ({ userAgent: () => ({ ua: "MCP route test" }) }));
 vi.mock("@homarr/api/mcp", async () => ({
-  HOMARR_CAPABILITY_GUIDANCE: (await import("../../../../../../../packages/api/src/mcp-capabilities"))
-    .HOMARR_CAPABILITY_GUIDANCE,
   callMcpTool: (await import("../../../../../../../packages/api/src/mcp-tools")).callMcpTool,
   extractMcpToolsFromProcedures: mocks.extractCatalog,
   createTRPCContext: vi.fn(() => ({})),
@@ -138,7 +136,6 @@ describe("authenticated MCP prompt protocol", () => {
     expect(response.status).toBe(200);
     expect(body.error).toBeUndefined();
     expect(body.result).toMatchObject({
-      instructions: expect.stringContaining("integration_request, its most powerful MCP tool"),
       protocolVersion: expect.any(String),
       capabilities: { prompts: {}, resources: {} },
       serverInfo: { name: "homarr", version: "test-version" },

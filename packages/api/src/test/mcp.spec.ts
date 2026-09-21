@@ -57,7 +57,6 @@ const MCP_TOOL_ALLOWLIST = {
     "healthMonitoring_getSystemHealthStatus",
     "healthMonitoring_listStorageVolumes",
     "icon_findIcons",
-    "info_capabilities",
     "info_getInfo",
     "integration_all",
     "integration_byId",
@@ -480,18 +479,3 @@ test.each([false, true])(
     );
   },
 );
-
-test("capability discovery exposes upstream API access without requiring administrator access", async () => {
-  const tool = extractMcpToolsFromProcedures(mcpRouter).tools.find((entry) => entry.name === "info_capabilities");
-  expect(tool).toBeDefined();
-  if (!tool) throw new Error("Missing info_capabilities tool");
-  expect(tool.description).toContain("beyond native Homarr");
-  const caller = mcpRouter.createCaller({
-    db: null as never,
-    deviceType: undefined,
-    session: { user: { id: "user-1", permissions: [] } } as never,
-  });
-  const result = await callMcpTool(caller, tool, {});
-  expect(result).toMatchObject({ overview: expect.stringContaining("any API endpoint") });
-  expect(result).toMatchObject({ overview: expect.stringContaining("require full access") });
-});

@@ -7,7 +7,7 @@ import { createUIMessageStream, createUIMessageStreamResponse, jsonSchema, stepC
 import { cookies } from "next/headers";
 import { z } from "zod/v4";
 
-import { callMcpTool, createTRPCContext, mcpRouter, HOMARR_CAPABILITY_GUIDANCE } from "@homarr/api/mcp";
+import { callMcpTool, createTRPCContext, mcpRouter } from "@homarr/api/mcp";
 import {
   createAssistantGenerationAccessToken,
   getAssistantRequestContextEntitiesAsync,
@@ -156,8 +156,6 @@ const assistantToolGroupActivationName = "homarr_enableToolGroups";
 const maxAssistantToolGroupsPerActivation = 4;
 
 const assistantInstructions = `You are Homarr Assistant, embedded in the user's self-hosted Homarr dashboard.
-
-${HOMARR_CAPABILITY_GUIDANCE}
 
 Use Homarr tools for live instance data or actions; never invent resources, IDs, state, or results. Homarr tools are grouped by their MCP router namespace. Call ${assistantToolGroupActivationName} with the task-needed group when its typed tools are not visible, then use the activated tool. Follow each tool's description and use integration IDs returned by Homarr tools.
 
