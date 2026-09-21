@@ -3,15 +3,15 @@ import { describe, expect, test } from "vitest";
 import { resolveAssistantReasoning, resolveAssistantTemperature } from "./assistant-reasoning";
 
 describe("resolveAssistantReasoning", () => {
-  test("uses medium reasoning for automatic Custom Widget authoring on the GLM model", () => {
+  test("uses high reasoning for automatic Custom Widget authoring on the selected Luna model", () => {
     expect(
       resolveAssistantReasoning({
         reasoning: "auto",
         customWidgetAuthoringActive: true,
-        modelId: "z-ai/glm-5.3-flash",
+        modelId: "openai/gpt-5.6-luna",
         provider: "openrouter",
       }),
-    ).toBe("medium");
+    ).toBe("high");
     expect(
       resolveAssistantReasoning({
         reasoning: "auto",
@@ -19,7 +19,7 @@ describe("resolveAssistantReasoning", () => {
         modelId: "homarr/model",
         provider: "homarr",
       }),
-    ).toBe("medium");
+    ).toBe("high");
     expect(
       resolveAssistantTemperature({
         customWidgetAuthoringActive: true,
@@ -34,14 +34,14 @@ describe("resolveAssistantReasoning", () => {
       resolveAssistantReasoning({
         reasoning,
         customWidgetAuthoringActive: true,
-        modelId: "z-ai/glm-5.3-flash",
+        modelId: "openai/gpt-5.6-luna",
         provider: "openrouter",
       }),
     ).toBe(reasoning);
   });
 
   test.each([
-    { customWidgetAuthoringActive: false, modelId: "z-ai/glm-5.3-flash", provider: "openrouter" as const },
+    { customWidgetAuthoringActive: false, modelId: "openai/gpt-5.6-luna", provider: "openrouter" as const },
     { customWidgetAuthoringActive: true, modelId: "another/model", provider: "openrouter" as const },
     { customWidgetAuthoringActive: true, modelId: "homarr/model", provider: "custom" as const },
   ])("leaves automatic reasoning unchanged outside the scoped case", (input) => {

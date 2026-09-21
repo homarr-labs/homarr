@@ -32,7 +32,10 @@ import { fallbackLocale, isLocaleSupported } from "@homarr/translation";
 import { getI18n } from "@homarr/translation/server";
 import { resolveHomarrUrlConfig } from "@homarr/workshop/schema";
 import { getCustomWidgetContextRequestKey } from "@homarr/custom-widgets/authoring-resources";
-import { normalizeCustomWidgetLifecycleToolInput } from "@homarr/custom-widgets/core";
+import {
+  createCustomWidgetTemplateLifecycleController,
+  normalizeCustomWidgetLifecycleToolInput,
+} from "@homarr/custom-widgets/core";
 
 import { browserToolContracts } from "~/components/assistant/assistant-tool-contracts";
 import { env as appEnv } from "~/env";
@@ -506,6 +509,7 @@ export async function POST(request: Request) {
   const canAuthorCustomWidgets = session.user.permissions.includes("admin");
   const customWidgetAuthoringActive = canAuthorCustomWidgets && needsCustomWidgetAuthoringContext(incomingMessages);
   const customWidgetDiscoveryPhase = createCustomWidgetDiscoveryPhaseController();
+  const customWidgetTemplateLifecycle = createCustomWidgetTemplateLifecycleController();
   const customWidgetToolStepGate = createCustomWidgetToolStepGate();
   const loadedCustomWidgetContextRequests = new Set<string>();
   const caller = mcpRouter.createCaller(context);
@@ -537,6 +541,14 @@ export async function POST(request: Request) {
             if (mcpTool.name.startsWith("customWidget_") && isRecord(input)) {
               executionInput = normalizeCustomWidgetLifecycleToolInput(mcpTool.name, input);
             }
+            if (
+              (mcpTool.name === "customWidget_previewCreate" ||
+                mcpTool.name === "customWidget_previewReviseTemplate") &&
+              isRecord(executionInput)
+            ) {
+              const mismatch = customWidgetTemplateLifecycle.getPreviewValidationMismatch(mcpTool.name, executionInput);
+              if (mismatch !== null) return mismatch;
+            }
             const contextRequestKey = getCustomWidgetContextRequestKey(mcpTool.name, executionInput);
             if (contextRequestKey !== null && loadedCustomWidgetContextRequests.has(contextRequestKey)) {
               return {
@@ -556,17 +568,83 @@ export async function POST(request: Request) {
             try {
               const result = await callMcpTool(caller, mcpTool, executionInput);
               customWidgetDiscoveryPhase.observe(mcpTool.name, result);
-              return toAssistantToolOutput(result, {
+              let lifecycleResult = result;
+              if (isRecord(result) && isRecord(executionInput)) {
+                if (mcpTool.name === "customWidget_validateTemplate") {
+                  lifecycleResult = customWidgetTemplateLifecycle.recordValidation(executionInput, result);
+                } else if (
+                  mcpTool.name === "customWidget_previewCreate" ||
+                  mcpTool.name === "customWidget_previewReviseTemplate"
+                ) {
+                  lifecycleResult = customWidgetTemplateLifecycle.recordPreview(result);
+                } else if (
+                  mcpTool.name === "customWidget_previewQuery" ||
+                  mcpTool.name === "customWidget_previewAction"
+                ) {
+                  lifecycleResult = customWidgetTemplateLifecycle.recordEvidence(mcpTool.name, result);
+                }
+              }
+              return toAssistantToolOutput(lifecycleResult, {
                 maxCharacters: getAssistantToolOutputMaxCharacters(mcpTool.name),
               });
             } catch (error) {
-              if (contextRequestKey !== null) loadedCustomWidgetContextRequests.delete(contextRequestKey);
+              const safeError = getSafeAssistantToolError(error, { toolName: mcpTool.name });
+              const componentNotFound =
+                mcpTool.name === "customWidget_getComponent" && /not found|not compatible/iu.test(safeError);
+              if (contextRequestKey !== null && !componentNotFound) {
+                loadedCustomWidgetContextRequests.delete(contextRequestKey);
+              }
               customWidgetDiscoveryPhase.observeFailure(mcpTool.name);
               logger.error("Assistant tool call failed", {
                 toolName: mcpTool.name,
                 errorType: getAssistantLogErrorType(error),
               });
-              return { error: getSafeAssistantToolError(error, { toolName: mcpTool.name }) };
+              if (componentNotFound) {
+                return {
+                  error: safeError,
+                  recovery: {
+                    recoverable: true,
+                    kind: "component-not-found",
+                    allowedNextTools: [
+                      "customWidget_findComponents",
+                      "customWidget_getComponents",
+                      "customWidget_validateTemplate",
+                    ],
+                  },
+                  nextStep:
+                    "Do not retry this component name. Replace it with a previously discovered component, or run one focused component search, then validate the corrected template.",
+                };
+              }
+              if (mcpTool.name === "customWidget_previewReviseTemplate" && /unchanged/iu.test(safeError)) {
+                const sessionId = isRecord(executionInput) ? executionInput.sessionId : undefined;
+                return {
+                  error: safeError,
+                  unchanged: true,
+                  preservesPreviewEvidence: true,
+                  ...(typeof sessionId === "string" ? { sessionId } : {}),
+                  recovery: {
+                    recoverable: true,
+                    kind: "unchanged-preview-revision",
+                    allowedNextTools: [
+                      "customWidget_validateTemplate",
+                      "customWidget_previewReviseTemplate",
+                      "customWidget_createFromPreview",
+                    ],
+                  },
+                  nextStep:
+                    "The existing preview and its evidence remain valid. Persist it, or make a distinct correction and validate before revising.",
+                };
+              }
+              if (
+                (mcpTool.name === "customWidget_previewCreate" ||
+                  mcpTool.name === "customWidget_previewReviseTemplate") &&
+                isRecord(executionInput)
+              ) {
+                return customWidgetTemplateLifecycle.recordInvalidPreview(mcpTool.name, executionInput, {
+                  error: safeError,
+                });
+              }
+              return { error: safeError };
             }
           },
         }),

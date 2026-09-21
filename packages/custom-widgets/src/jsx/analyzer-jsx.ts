@@ -17,7 +17,8 @@ interface AnalyzerJsxContext {
   visitArrow(node: AstNode, depth: number, bindings: ReadonlySet<string>): void;
 }
 
-const componentsRequiringLiteralRequestId = new Set(["SubFetch", "ActionButton", "ToggleSwitch"]);
+const componentsRequiringRequestId = new Set(["SubFetch", "ActionButton", "ToggleSwitch"]);
+const componentsWithLiteralRequestId = new Set([...componentsRequiringRequestId, "RefreshButton"]);
 
 export function analyzeCustomJsxElement(
   node: AstNode,
@@ -35,14 +36,23 @@ export function analyzeCustomJsxElement(
   const resolvedName = name ? resolveCustomJsxComponentName(name) : null;
   const descriptor = resolvedName ? customJsxComponentByName.get(resolvedName) : undefined;
   const attributes = nodesOf(opening.attributes);
-  if (resolvedName && componentsRequiringLiteralRequestId.has(resolvedName)) {
+  if (resolvedName && componentsWithLiteralRequestId.has(resolvedName)) {
     const requestIdAttribute = attributes.find((attribute) => {
       if (attribute.type !== "JSXAttribute") return false;
       const attributeName = nodeOf(attribute.name);
       return attributeName?.type === "JSXIdentifier" && attributeName.name === "requestId";
     });
     const requestIdValue = requestIdAttribute ? nodeOf(requestIdAttribute.value) : null;
-    if (requestIdValue?.type !== "Literal" || typeof requestIdValue.value !== "string" || !requestIdValue.value) {
+    const requestIdExpression =
+      requestIdValue?.type === "JSXExpressionContainer" ? nodeOf(requestIdValue.expression) : null;
+    const requestIdLiteral = requestIdValue?.type === "Literal" ? requestIdValue : requestIdExpression;
+    const requiresRequestId = componentsRequiringRequestId.has(resolvedName);
+    const hasInvalidRequestId =
+      requestIdAttribute !== undefined &&
+      (requestIdLiteral?.type !== "Literal" ||
+        typeof requestIdLiteral.value !== "string" ||
+        requestIdLiteral.value.trim().length === 0);
+    if ((!requestIdAttribute && requiresRequestId) || hasInvalidRequestId) {
       context.add(requestIdAttribute ?? opening, `${resolvedName} must use a literal requestId`);
     }
   }

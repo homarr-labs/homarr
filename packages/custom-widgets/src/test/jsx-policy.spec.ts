@@ -324,11 +324,17 @@ describe("shared Custom JSX policy", () => {
     ).toBe(false);
   });
 
-  test.each(["SubFetch", "ActionButton", "ToggleSwitch"])(
-    "requires a literal requestId on %s during independent JSX validation",
+  test.each(["RefreshButton", "SubFetch", "ActionButton", "ToggleSwitch"])(
+    "rejects a non-string or empty requestId on %s during independent JSX validation",
     (component) => {
       expect(validateCustomJsxTemplate(`<${component} requestId="known" />`)).toEqual([]);
-      for (const template of [`<${component} />`, `<${component} requestId={data.requestId} />`]) {
+      expect(validateCustomJsxTemplate(`<${component} requestId={'known'} />`)).toEqual([]);
+      for (const template of [
+        `<${component} requestId={8} />`,
+        `<${component} requestId={data.requestId} />`,
+        `<${component} requestId="" />`,
+        `<${component} requestId="   " />`,
+      ]) {
         expect(validateCustomJsxTemplate(template)).toEqual(
           expect.arrayContaining([
             expect.objectContaining({
@@ -340,6 +346,24 @@ describe("shared Custom JSX policy", () => {
       }
     },
   );
+
+  test.each(["SubFetch", "ActionButton", "ToggleSwitch"])(
+    "requires requestId on %s during independent JSX validation",
+    (component) => {
+      expect(validateCustomJsxTemplate(`<${component} />`)).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            severity: "error",
+            message: `${component} must use a literal requestId`,
+          }),
+        ]),
+      );
+    },
+  );
+
+  test("keeps requestId optional on RefreshButton", () => {
+    expect(validateCustomJsxTemplate("<RefreshButton />")).toEqual([]);
+  });
 
   test("accepts only scalar reset dependencies for bindable controls", () => {
     expect(

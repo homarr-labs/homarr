@@ -68,6 +68,7 @@ const currentRunnerSummary = {
     temperature: 0.2,
     reasoning: { effort: "medium", exclude: true },
     maxOutputTokens: 32_768,
+    judgeMaxOutputTokens: 32_768,
   },
   providerBaseUrl: "https://openrouter.ai/api/v1",
   generatorModel: "z-ai/glm-5.3-flash",
@@ -77,6 +78,9 @@ const currentRunnerSummary = {
     sourceFile: "prompts/generation-2.md",
     text: "candidate",
     sha256: "prompt-v2",
+  },
+  assistantPromptBundle: {
+    sha256: "prompt-bundle-v2",
   },
   benchmark: {
     split: "heldout",
@@ -180,6 +184,52 @@ describe("benchmark generation reporting", () => {
     expect(report).toContain("90 (1/2 cases)");
   });
 
+  test("requires absolute strict-pass and lifecycle completion only for dev promotion", () => {
+    const createSummary = (split: "dev" | "heldout", candidate: boolean) => ({
+      generation: {
+        generationId: candidate ? "candidate" : "baseline",
+        maxLoops: 1,
+        temperature: 0.2,
+        reasoning: { effort: "medium" },
+        maxOutputTokens: 16_384,
+      },
+      providerBaseUrl: "https://openrouter.ai/api/v1",
+      generatorModel: "generator",
+      judgeModel: "judge",
+      benchmark: { split, sha256: `fixed-${split}` },
+      harness: { sha256: "harness", judgePolicySha256: "judge-policy" },
+      results: [
+        {
+          caseId: "hard-case",
+          score: candidate ? 80 : 0,
+          verdict: "fail",
+          calledTools: [],
+          widgets: 0,
+        },
+      ],
+    });
+    const devComparison = compareGenerationSummaries(
+      [
+        { source: "dev-baseline/summary.json", summary: createSummary("dev", false) },
+        { source: "dev-candidate/summary.json", summary: createSummary("dev", true) },
+      ],
+      "dev-baseline/summary.json",
+    );
+    const heldoutComparison = compareGenerationSummaries(
+      [
+        { source: "heldout-baseline/summary.json", summary: createSummary("heldout", false) },
+        { source: "heldout-candidate/summary.json", summary: createSummary("heldout", true) },
+      ],
+      "heldout-baseline/summary.json",
+    );
+
+    expect(devComparison.generations[1]?.promotion).toEqual({
+      promote: false,
+      reasons: ["dev pass rate 0% is below 100%", "dev lifecycle completion 0% is below 100%"],
+    });
+    expect(heldoutComparison.generations[1]?.promotion).toEqual({ promote: true, reasons: [] });
+  });
+
   test("rejects a changed benchmark hash even when case identifiers match", () => {
     const comparison = compareGenerationSummaries(
       [
@@ -208,7 +258,7 @@ describe("benchmark generation reporting", () => {
     expect(generation).toMatchObject({
       name: "generation-2",
       generatedAt: "2026-09-20T10:00:00.000Z",
-      promptHash: "prompt-v2",
+      promptHash: "prompt-bundle-v2",
       caseHash: "cases-v2",
       caseIds: ["hard-multi-widget"],
       metrics: { lifecycleCompletionRate: 100 },
@@ -221,11 +271,13 @@ describe("benchmark generation reporting", () => {
         temperature: 0.2,
         reasoning: { effort: "medium", exclude: true },
         maxOutputTokens: 32_768,
+        judgeMaxOutputTokens: 32_768,
       },
     });
     expect(renderBenchmarkReport(comparison)).toContain(
       "It does not prove one successful create call per requested widget",
     );
+    expect(renderBenchmarkReport(comparison)).toContain("judgeMaxOutputTokens=32768");
   });
 
   test("rejects promotion when the evaluation configuration differs", () => {

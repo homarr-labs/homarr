@@ -1,6 +1,6 @@
 import type { AssistantProvider, AssistantReasoningMode } from "@homarr/definitions";
 
-const customWidgetReasoningModelId = "z-ai/glm-5.3-flash";
+const customWidgetReasoningModelId = "openai/gpt-5.6-luna";
 const homarrProviderModelId = "homarr/model";
 
 const usesOptimizedCustomWidgetModel = ({
@@ -29,7 +29,7 @@ export const resolveAssistantReasoning = ({
   provider: AssistantProvider;
 }): Exclude<AssistantReasoningMode, "auto"> | undefined => {
   if (reasoning !== "auto") return reasoning;
-  if (usesOptimizedCustomWidgetModel({ customWidgetAuthoringActive, modelId, provider })) return "medium";
+  if (usesOptimizedCustomWidgetModel({ customWidgetAuthoringActive, modelId, provider })) return "high";
   return undefined;
 };
 

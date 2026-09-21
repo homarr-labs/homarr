@@ -42,9 +42,71 @@ const withParsedPreviewDefinition = (input: Record<string, unknown>) => {
 
 const withCanonicalTemplateLines = (input: Record<string, unknown>) => {
   if (typeof input.template !== "string" || !Array.isArray(input.templateLines)) return input;
+  if (!input.templateLines.every((line) => typeof line === "string")) return input;
+  if (input.template !== "" && input.template !== input.templateLines.join("\n")) return input;
   const normalized = { ...input };
   delete normalized.template;
   return normalized;
+};
+
+const scalarSourceAuthTypes = new Set(["none", "bearer", "basic"]);
+
+const withCanonicalSourceAuth = (definition: Record<string, unknown>) => {
+  if (typeof definition.sources !== "object" || definition.sources === null || Array.isArray(definition.sources)) {
+    return definition;
+  }
+
+  let changed = false;
+  const sources = Object.fromEntries(
+    Object.entries(definition.sources).map(([sourceName, source]) => {
+      if (typeof source !== "object" || source === null || Array.isArray(source)) return [sourceName, source];
+
+      const auth = (source as Record<string, unknown>).auth;
+      if (typeof auth !== "object" || auth === null || Array.isArray(auth)) return [sourceName, source];
+      const authKeys = Object.keys(auth);
+      const type = (auth as Record<string, unknown>).type;
+      if (authKeys.length !== 1 || authKeys[0] !== "type" || typeof type !== "string") return [sourceName, source];
+      if (!scalarSourceAuthTypes.has(type)) return [sourceName, source];
+
+      changed = true;
+      return [sourceName, { ...source, auth: type }];
+    }),
+  );
+
+  return changed ? { ...definition, sources } : definition;
+};
+
+const withoutRedundantOptionNames = (definition: Record<string, unknown>) => {
+  if (typeof definition.options !== "object" || definition.options === null || Array.isArray(definition.options)) {
+    return definition;
+  }
+
+  let changed = false;
+  const options = Object.fromEntries(
+    Object.entries(definition.options).map(([optionName, option]) => {
+      if (typeof option !== "object" || option === null || Array.isArray(option)) return [optionName, option];
+      if ((option as Record<string, unknown>).name !== optionName) return [optionName, option];
+
+      const normalizedOption = { ...option };
+      delete normalizedOption.name;
+      changed = true;
+      return [optionName, normalizedOption];
+    }),
+  );
+
+  return changed ? { ...definition, options } : definition;
+};
+
+const withCanonicalPreviewDefinition = (input: Record<string, unknown>) => {
+  input = withParsedPreviewDefinition(input);
+  if (typeof input.definition !== "object" || input.definition === null || Array.isArray(input.definition))
+    return input;
+
+  let definition = input.definition as Record<string, unknown>;
+  definition = withCanonicalTemplateLines(definition);
+  definition = withCanonicalSourceAuth(definition);
+  definition = withoutRedundantOptionNames(definition);
+  return definition === input.definition ? input : { ...input, definition };
 };
 
 export function normalizeCustomWidgetLifecycleToolInput(
@@ -55,7 +117,7 @@ export function normalizeCustomWidgetLifecycleToolInput(
     input = withCanonicalTemplateLines(input);
   }
   if (toolName === "customWidget_previewCreate") {
-    return withParsedPreviewDefinition(input);
+    return withCanonicalPreviewDefinition(input);
   }
   if (
     toolName === "customWidget_previewQuery" ||

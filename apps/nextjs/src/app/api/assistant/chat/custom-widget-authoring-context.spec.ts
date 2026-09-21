@@ -196,6 +196,214 @@ describe("Custom Widget authoring context", () => {
     expect(getCustomWidgetPhaseToolNames(tools, [])).toBeNull();
   });
 
+  test("keeps failed validation and preview calls on narrow repair paths", () => {
+    const tools = [
+      "customWidget_getSkill",
+      "customWidget_getReference",
+      "customWidget_findComponents",
+      "customWidget_getComponent",
+      "customWidget_getComponents",
+      "customWidget_validateTemplate",
+      "customWidget_previewCreate",
+      "customWidget_previewReviseTemplate",
+      "customWidget_previewQuery",
+      "customWidget_createFromPreview",
+    ];
+
+    expect(
+      getCustomWidgetPhaseToolNames(tools, [
+        {
+          toolResults: [
+            {
+              toolName: "customWidget_validateTemplate",
+              output: { valid: false, diagnostics: [{ severity: "error", message: "Unexpected token" }] },
+            },
+          ],
+        },
+      ]),
+    ).toEqual(["customWidget_validateTemplate"]);
+    expect(
+      getCustomWidgetPhaseToolNames(tools, [
+        {
+          toolResults: [
+            {
+              toolName: "customWidget_validateTemplate",
+              output: {
+                valid: false,
+                diagnostics: [{ severity: "error", message: "UNKNOWN_COMPONENT: 'div' is not available" }],
+              },
+            },
+          ],
+        },
+      ]),
+    ).toEqual(["customWidget_getComponent", "customWidget_validateTemplate"]);
+    expect(
+      getCustomWidgetPhaseToolNames(tools, [
+        {
+          toolResults: [
+            {
+              toolName: "customWidget_previewCreate",
+              output: { error: "Definition is invalid: sources.default.auth: Invalid input" },
+            },
+          ],
+        },
+      ]),
+    ).toEqual(["customWidget_getReference", "customWidget_validateTemplate"]);
+    expect(
+      getCustomWidgetPhaseToolNames(tools, [
+        {
+          toolResults: [
+            {
+              toolName: "customWidget_previewReviseTemplate",
+              output: { error: "Provide template or templateLines, not both" },
+            },
+          ],
+        },
+      ]),
+    ).toEqual(["customWidget_validateTemplate"]);
+  });
+
+  test("routes a missing component through one focused replacement path and forces continuation", () => {
+    const tools = [
+      "customWidget_findComponents",
+      "customWidget_getComponent",
+      "customWidget_getComponents",
+      "customWidget_validateTemplate",
+      "customWidget_previewCreate",
+    ];
+    const messages = [userMessage("Create a custom widget for my dashboard")];
+    const steps = [
+      {
+        toolResults: [
+          {
+            toolName: "customWidget_validateTemplate",
+            output: {
+              valid: false,
+              diagnostics: [{ severity: "error", message: "UNKNOWN_COMPONENT: 'IconCheck' is not available" }],
+            },
+          },
+        ],
+      },
+      {
+        toolResults: [
+          {
+            toolName: "customWidget_getComponent",
+            output: {
+              error: "The requested resource was not found or is not compatible with this tool.",
+              recovery: {
+                recoverable: true,
+                kind: "component-not-found",
+                allowedNextTools: [
+                  "customWidget_findComponents",
+                  "customWidget_getComponents",
+                  "customWidget_validateTemplate",
+                ],
+              },
+            },
+          },
+        ],
+      },
+    ];
+
+    expect(getCustomWidgetPhaseToolNames(tools, steps)).toEqual([
+      "customWidget_findComponents",
+      "customWidget_getComponents",
+      "customWidget_validateTemplate",
+    ]);
+    expect(
+      shouldRequireCustomWidgetAuthoringTool(getCustomWidgetPhaseToolNames(tools, steps) ?? [], steps, [], messages),
+    ).toBe(true);
+  });
+
+  test("keeps prior preview evidence after an unchanged revision", () => {
+    const tools = [
+      "customWidget_validateTemplate",
+      "customWidget_previewCreate",
+      "customWidget_previewReviseTemplate",
+      "customWidget_previewQuery",
+      "customWidget_createFromPreview",
+    ];
+    const steps = [
+      {
+        toolResults: [
+          {
+            toolName: "customWidget_previewCreate",
+            output: {
+              success: true,
+              previewSession: { id: "preview-1" },
+              queries: [{ requestId: "status" }],
+              actions: [],
+            },
+          },
+        ],
+      },
+      {
+        toolResults: [
+          {
+            toolName: "customWidget_previewQuery",
+            output: { sessionId: "preview-1", requestId: "status", ok: true },
+          },
+        ],
+      },
+      {
+        toolResults: [
+          {
+            toolName: "customWidget_previewReviseTemplate",
+            output: {
+              error: "Revised preview template is unchanged",
+              unchanged: true,
+              preservesPreviewEvidence: true,
+              sessionId: "preview-1",
+              recovery: { recoverable: true, kind: "unchanged-preview-revision" },
+            },
+          },
+        ],
+      },
+    ];
+
+    expect(getCustomWidgetPhaseToolNames(tools, steps)).toEqual(["customWidget_createFromPreview"]);
+  });
+
+  test("advances directly to persistence after revised preview evidence completes", () => {
+    const tools = [
+      "customWidget_validateTemplate",
+      "customWidget_previewReviseTemplate",
+      "customWidget_previewQuery",
+      "customWidget_createFromPreview",
+    ];
+    const steps = [
+      {
+        toolResults: [
+          {
+            toolName: "customWidget_previewReviseTemplate",
+            output: {
+              success: true,
+              previewSession: { id: "preview-1", revision: 1 },
+              queries: [{ requestId: "status" }],
+              actions: [],
+            },
+          },
+        ],
+      },
+      {
+        toolResults: [
+          {
+            toolName: "customWidget_previewQuery",
+            output: {
+              sessionId: "preview-1",
+              requestId: "status",
+              ok: true,
+              evidenceComplete: true,
+              recommendedNextTool: "customWidget_createFromPreview",
+            },
+          },
+        ],
+      },
+    ];
+
+    expect(getCustomWidgetPhaseToolNames(tools, steps)).toEqual(["customWidget_createFromPreview"]);
+  });
+
   test("exposes focused context tools only after the skill entrypoint is loaded", () => {
     const tools = [
       "customWidget_getSkill",
@@ -422,11 +630,7 @@ describe("Custom Widget authoring context", () => {
       },
     ];
 
-    expect(getCustomWidgetPhaseToolNames(tools, completeEvidence)).toEqual([
-      "customWidget_validateTemplate",
-      "customWidget_previewReviseTemplate",
-      "customWidget_createFromPreview",
-    ]);
+    expect(getCustomWidgetPhaseToolNames(tools, completeEvidence)).toEqual(["customWidget_createFromPreview"]);
     expect(
       getCustomWidgetPhaseToolNames(tools, [
         ...completeEvidence,
@@ -530,7 +734,7 @@ describe("Custom Widget authoring context", () => {
     ).toEqual(["customWidget_validateTemplate"]);
   });
 
-  test("keeps component discovery available after a cached reference result", () => {
+  test("removes repeated reference retrieval while keeping remaining context and validation available", () => {
     const tools = [
       "customWidget_getSkill",
       "customWidget_getReference",
@@ -555,7 +759,10 @@ describe("Custom Widget authoring context", () => {
       },
     ]);
 
-    expect(activeNames).toEqual(expect.arrayContaining(["customWidget_findComponents", "customWidget_getComponents"]));
+    expect(activeNames).toEqual(
+      expect.arrayContaining(["customWidget_findComponents", "customWidget_getComponents", "customWidget_validateTemplate"]),
+    );
+    expect(activeNames).not.toContain("customWidget_getReference");
     expect(activeNames).not.toEqual(["customWidget_validateTemplate"]);
   });
 
@@ -654,6 +861,41 @@ describe("Custom Widget authoring context", () => {
       shouldRequireCustomWidgetAuthoringTool(
         activeTools,
         [{ toolResults: [{ toolName: "customWidget_previewQuery", output: { ok: true, error: "timeout" } }] }],
+        [],
+        messages,
+      ),
+    ).toBe(false);
+    expect(
+      shouldRequireCustomWidgetAuthoringTool(
+        ["customWidget_validateTemplate"],
+        [
+          {
+            toolResults: [{ toolName: "customWidget_validateTemplate", output: { valid: false, diagnostics: [] } }],
+          },
+        ],
+        [],
+        messages,
+      ),
+    ).toBe(true);
+
+    for (const [toolName, output] of [
+      ["customWidget_validateTemplate", { valid: false, diagnostics: [] }],
+      ["customWidget_previewCreate", { error: "Definition is invalid: sources.default.auth: Invalid input" }],
+      ["customWidget_previewReviseTemplate", { error: "Provide template or templateLines" }],
+      ["customWidget_createFromPreview", { error: "Test every final preview query successfully: status" }],
+    ] as const) {
+      expect(
+        shouldRequireCustomWidgetAuthoringTool(activeTools, [{ toolResults: [{ toolName, output }] }], [], messages),
+      ).toBe(true);
+    }
+    expect(
+      shouldRequireCustomWidgetAuthoringTool(
+        activeTools,
+        [
+          {
+            toolResults: [{ toolName: "customWidget_previewCreate", output: { error: "Preview service unavailable" } }],
+          },
+        ],
         [],
         messages,
       ),

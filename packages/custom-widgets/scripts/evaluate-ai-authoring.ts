@@ -2,9 +2,10 @@ import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
-import { CUSTOM_WIDGET_ASSISTANT_POLICY } from "../src/core/ai-prompt";
+import { CUSTOM_WIDGET_ASSISTANT_POLICY, CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION } from "../src/core/ai-prompt";
 import { CUSTOM_WIDGET_AI_EVALUATION_CASES } from "./ai-evaluation-cases";
 import {
+  assistantEvaluationProviderPreferences,
   assistantEvaluationReasoningOptions,
   assistantEvaluationTemperature,
   createAssistantEvaluationCaseSnapshot,
@@ -15,8 +16,11 @@ import {
   validateAssistantEvaluationExperimentConfiguration,
 } from "./ai-assistant-evaluation";
 import type { CustomWidgetAssistantEvaluationResult } from "./ai-assistant-evaluation";
+import { createAssistantPromptBundleSnapshot, parseAssistantPromptBundle } from "./assistant-prompt-bundle";
+import type { AssistantPromptBundleFile } from "./assistant-prompt-bundle";
 import {
   evaluateCustomWidgetCase,
+  getAiEvaluationMaxOutputTokens,
   getCustomWidgetJudgePolicyHash,
   resolveAiEvaluationProviderConfig,
 } from "./ai-evaluation";
@@ -37,6 +41,9 @@ const requestedSplit = evaluationSplits.find((split) => split === splitArgument)
 const candidatePromptArgument = process.argv
   .find((value) => value.startsWith("--candidate-prompt="))
   ?.slice("--candidate-prompt=".length);
+const candidatePromptBundleArgument = process.argv
+  .find((value) => value.startsWith("--candidate-prompt-bundle="))
+  ?.slice("--candidate-prompt-bundle=".length);
 const outputRootArgument = process.argv
   .find((value) => value.startsWith("--output-root="))
   ?.slice("--output-root=".length);
@@ -54,7 +61,14 @@ if (requestedCaseArgument !== undefined && requestedSplit !== undefined) {
 if (candidatePromptArgument !== undefined && !assistantMode) {
   throw new Error("--candidate-prompt requires --assistant");
 }
+if (candidatePromptBundleArgument !== undefined && !assistantMode) {
+  throw new Error("--candidate-prompt-bundle requires --assistant");
+}
+if (candidatePromptArgument !== undefined && candidatePromptBundleArgument !== undefined) {
+  throw new Error("--candidate-prompt and --candidate-prompt-bundle are mutually exclusive");
+}
 if (candidatePromptArgument === "") throw new Error("--candidate-prompt requires a file path");
+if (candidatePromptBundleArgument === "") throw new Error("--candidate-prompt-bundle requires a file path");
 if (outputRootArgument === "") throw new Error("--output-root requires a directory path");
 if (experimentId === "") throw new Error("--experiment requires an identifier");
 if (generationId === "") throw new Error("--generation requires an identifier");
@@ -69,23 +83,52 @@ validateAssistantEvaluationExperimentConfiguration(
   experimentId,
   generationId,
   requestedSplit,
-  candidatePromptArgument !== undefined,
+  candidatePromptArgument !== undefined || candidatePromptBundleArgument !== undefined,
 );
 
 const candidatePromptPath = candidatePromptArgument ? path.resolve(process.cwd(), candidatePromptArgument) : null;
-const assistantPolicy = candidatePromptPath
-  ? await readFile(candidatePromptPath, "utf8")
-  : CUSTOM_WIDGET_ASSISTANT_POLICY;
+const candidatePromptBundlePath = candidatePromptBundleArgument
+  ? path.resolve(process.cwd(), candidatePromptBundleArgument)
+  : null;
+let assistantPromptBundle: AssistantPromptBundleFile = {
+  schemaVersion: 1,
+  stagingInstruction: CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION,
+  assistantPolicy: CUSTOM_WIDGET_ASSISTANT_POLICY,
+};
+if (candidatePromptPath) {
+  assistantPromptBundle = {
+    ...assistantPromptBundle,
+    assistantPolicy: await readFile(candidatePromptPath, "utf8"),
+  };
+}
+if (candidatePromptBundlePath) {
+  const serializedBundle = await readFile(candidatePromptBundlePath, "utf8");
+  assistantPromptBundle = parseAssistantPromptBundle(JSON.parse(serializedBundle) as unknown);
+}
+const { stagingInstruction, assistantPolicy } = assistantPromptBundle;
 if (assistantPolicy.trim().length === 0) throw new Error("The assistant candidate prompt must not be empty");
+const assistantPromptSourcePath = candidatePromptPath ?? candidatePromptBundlePath;
+const assistantPromptSourceFile = assistantPromptSourcePath
+  ? path.relative(process.cwd(), assistantPromptSourcePath)
+  : null;
 const assistantPromptSnapshot = createAssistantEvaluationPromptSnapshot({
-  source: candidatePromptPath ? "candidate-file" : "built-in",
-  sourceFile: candidatePromptPath ? path.relative(process.cwd(), candidatePromptPath) : null,
+  source: assistantPromptSourcePath ? "candidate-file" : "built-in",
+  sourceFile: assistantPromptSourceFile,
   text: assistantPolicy,
+});
+let assistantPromptBundleSource: "built-in" | "candidate-policy-file" | "candidate-bundle-file" = "built-in";
+if (candidatePromptPath) assistantPromptBundleSource = "candidate-policy-file";
+if (candidatePromptBundlePath) assistantPromptBundleSource = "candidate-bundle-file";
+const assistantPromptBundleSnapshot = createAssistantPromptBundleSnapshot({
+  bundle: assistantPromptBundle,
+  source: assistantPromptBundleSource,
+  sourceFile: assistantPromptSourceFile,
 });
 
 const harnessSourceUrls = [
   new URL("./evaluate-ai-authoring.ts", import.meta.url),
   new URL("./ai-assistant-evaluation.ts", import.meta.url),
+  new URL("./assistant-prompt-bundle.ts", import.meta.url),
   new URL("./ai-evaluation.ts", import.meta.url),
   new URL("../src/core/assistant-authoring-phase.ts", import.meta.url),
   new URL("../src/core/assistant-tool-input.ts", import.meta.url),
@@ -149,6 +192,7 @@ for (const testCase of selectedCases) {
       maxLoops,
       generatorModel,
       judgeModel,
+      stagingInstruction,
       assistantPolicy,
     });
   } else {
@@ -187,15 +231,18 @@ const summary = {
     model: generatorModel,
     temperature: assistantMode ? assistantEvaluationTemperature : generatorTemperature,
     reasoning: assistantMode ? assistantEvaluationReasoningOptions : null,
+    providerPreferences: assistantMode ? (assistantEvaluationProviderPreferences ?? null) : null,
     maxOutputTokens: assistantMode
       ? getAssistantEvaluationMaxOutputTokens(process.env.CUSTOM_WIDGET_AI_MAX_OUTPUT_TOKENS)
-      : null,
+      : getAiEvaluationMaxOutputTokens("generation", process.env.CUSTOM_WIDGET_AI_GENERATION_MAX_OUTPUT_TOKENS),
+    judgeMaxOutputTokens: getAiEvaluationMaxOutputTokens("judge", process.env.CUSTOM_WIDGET_AI_JUDGE_MAX_OUTPUT_TOKENS),
   },
   mode: assistantMode ? "assistant-tool-loop" : "manifest",
   providerBaseUrl,
   generatorModel,
   judgeModel,
   assistantPrompt: assistantMode ? assistantPromptSnapshot : null,
+  assistantPromptBundle: assistantMode ? assistantPromptBundleSnapshot : null,
   harness: harnessSnapshot,
   benchmark: {
     split: selectedSplit,

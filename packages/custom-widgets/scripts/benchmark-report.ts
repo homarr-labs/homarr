@@ -30,8 +30,12 @@ interface GenerationSummary {
         temperature?: number | null;
         reasoning?: unknown;
         maxOutputTokens?: number | null;
+        judgeMaxOutputTokens?: number | null;
       };
   assistantPrompt?: {
+    sha256?: string;
+  } | null;
+  assistantPromptBundle?: {
     sha256?: string;
   } | null;
   benchmark?: {
@@ -67,6 +71,8 @@ export interface PromotionPolicy {
   maximumMinimumRegression: number;
   maximumPassRateRegression: number;
   maximumLifecycleCompletionRegression: number;
+  minimumDevPassRate: number;
+  minimumDevLifecycleCompletionRate: number;
 }
 
 export const DEFAULT_PROMOTION_POLICY: PromotionPolicy = {
@@ -74,6 +80,8 @@ export const DEFAULT_PROMOTION_POLICY: PromotionPolicy = {
   maximumMinimumRegression: 0,
   maximumPassRateRegression: 0,
   maximumLifecycleCompletionRegression: 0,
+  minimumDevPassRate: 100,
+  minimumDevLifecycleCompletionRate: 100,
 };
 
 interface EfficiencyMetrics {
@@ -110,6 +118,7 @@ export interface BenchmarkConfiguration {
   temperature: number | null;
   reasoning: unknown;
   maxOutputTokens: number | null;
+  judgeMaxOutputTokens: number | null;
   harnessSha256: string | null;
   judgePolicySha256: string | null;
 }
@@ -205,7 +214,10 @@ const getGenerationName = (summary: GenerationSummary, source: string) => {
 };
 
 const getPromptHash = (summary: GenerationSummary) =>
-  summary.assistantPrompt?.sha256 ?? summary.promptHash ?? summary.hashes?.prompt;
+  summary.assistantPromptBundle?.sha256 ??
+  summary.assistantPrompt?.sha256 ??
+  summary.promptHash ??
+  summary.hashes?.prompt;
 
 const getCaseHash = (summary: GenerationSummary) =>
   summary.benchmark?.sha256 ??
@@ -227,6 +239,7 @@ const getBenchmarkConfiguration = (summary: GenerationSummary): BenchmarkConfigu
     temperature: generationTemperature ?? summary.generatorTemperature ?? null,
     reasoning: generation && "reasoning" in generation ? (generation.reasoning ?? null) : null,
     maxOutputTokens: typeof generation?.maxOutputTokens === "number" ? generation.maxOutputTokens : null,
+    judgeMaxOutputTokens: typeof generation?.judgeMaxOutputTokens === "number" ? generation.judgeMaxOutputTokens : null,
     harnessSha256: summary.harness?.sha256 ?? null,
     judgePolicySha256: summary.harness?.judgePolicySha256 ?? null,
   };
@@ -342,6 +355,7 @@ const getPromotionDecision = (
   baselineCaseHash: string | undefined,
   configuration: BenchmarkConfiguration,
   baselineConfiguration: BenchmarkConfiguration,
+  metrics: GenerationMetrics,
   deltas: MetricDeltas,
   policy: PromotionPolicy,
 ): PromotionDecision => {
@@ -367,6 +381,14 @@ const getPromotionDecision = (
   }
   if (deltas.lifecycleCompletionRate < -policy.maximumLifecycleCompletionRegression) {
     reasons.push(`lifecycle completion regressed by ${Math.abs(deltas.lifecycleCompletionRate)} points`);
+  }
+  if (configuration.split === "dev" && metrics.passRate < policy.minimumDevPassRate) {
+    reasons.push(`dev pass rate ${metrics.passRate}% is below ${policy.minimumDevPassRate}%`);
+  }
+  if (configuration.split === "dev" && metrics.lifecycleCompletionRate < policy.minimumDevLifecycleCompletionRate) {
+    reasons.push(
+      `dev lifecycle completion ${metrics.lifecycleCompletionRate}% is below ${policy.minimumDevLifecycleCompletionRate}%`,
+    );
   }
   return { promote: reasons.length === 0, reasons };
 };
@@ -427,6 +449,7 @@ export function compareGenerationSummaries(
         baselineCaseHash,
         configuration,
         baselineConfiguration,
+        metrics,
         deltas,
         policy,
       );
@@ -505,7 +528,7 @@ export function renderBenchmarkReport(comparison: BenchmarkComparison) {
   for (const generation of comparison.generations) {
     const configuration = generation.configuration;
     lines.push(
-      `- **${generation.name} (${generation.configurationHash.slice(0, 12)}):** split=${configuration.split ?? "n/a"}; provider=${configuration.providerBaseUrl ?? "n/a"}; generator=${configuration.generatorModel ?? "n/a"}; judge=${configuration.judgeModel ?? "n/a"}; loops=${configuration.maxLoops ?? "n/a"}; temperature=${configuration.temperature ?? "n/a"}; reasoning=${JSON.stringify(configuration.reasoning)}; maxOutputTokens=${configuration.maxOutputTokens ?? "n/a"}; harness=${configuration.harnessSha256?.slice(0, 12) ?? "n/a"}; judgePolicy=${configuration.judgePolicySha256?.slice(0, 12) ?? "n/a"}`,
+      `- **${generation.name} (${generation.configurationHash.slice(0, 12)}):** split=${configuration.split ?? "n/a"}; provider=${configuration.providerBaseUrl ?? "n/a"}; generator=${configuration.generatorModel ?? "n/a"}; judge=${configuration.judgeModel ?? "n/a"}; loops=${configuration.maxLoops ?? "n/a"}; temperature=${configuration.temperature ?? "n/a"}; reasoning=${JSON.stringify(configuration.reasoning)}; maxOutputTokens=${configuration.maxOutputTokens ?? "n/a"}; judgeMaxOutputTokens=${configuration.judgeMaxOutputTokens ?? "n/a"}; harness=${configuration.harnessSha256?.slice(0, 12) ?? "n/a"}; judgePolicy=${configuration.judgePolicySha256?.slice(0, 12) ?? "n/a"}`,
     );
   }
   const hashes = comparison.generations.filter(({ promptHash, caseHash }) => promptHash || caseHash);

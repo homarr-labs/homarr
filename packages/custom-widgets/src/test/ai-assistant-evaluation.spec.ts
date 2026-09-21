@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { z } from "zod/v4";
 
 import { CUSTOM_WIDGET_AI_EVALUATION_CASES } from "../../scripts/ai-evaluation-cases";
 import {
@@ -17,6 +18,9 @@ import {
   formatAssistantDeterministicFeedback,
   getActiveAssistantEvaluationToolDefinitions,
   getAssistantEvaluationMaxOutputTokens,
+  getAssistantEvaluationProviderPreferences,
+  getAssistantEvaluationReasoningOptions,
+  getAssistantEvaluationToolChoice,
   getAssistantEvaluationEfficiencyIssues,
   getAssistantEvaluationLifecycleIssues,
   getAssistantEvaluationPreviewResponse,
@@ -27,6 +31,7 @@ import {
   replaceAssistantEvaluationFeedback,
   resolveAssistantEvaluationMaxLoops,
   selectAssistantEvaluationReviewFeedback,
+  selectAssistantEvaluationLifecycleEvidence,
   validateAssistantEvaluationExperimentConfiguration,
 } from "../../scripts/ai-assistant-evaluation";
 import { CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION } from "../core/ai-prompt";
@@ -39,6 +44,7 @@ import {
   customWidgetAuthoringDefinitionSchema,
   normalizeCustomWidgetAuthoringDefinition,
 } from "../core/custom-jsx-schema";
+import { normalizeCustomWidgetLifecycleToolInput } from "../core/assistant-tool-input";
 
 const healthWidget = {
   $schema: "homarr-custom-widget-v2",
@@ -252,9 +258,23 @@ describe("Custom Widget assistant live evaluation harness", () => {
     expect(Object.isFrozen(snapshot)).toBe(true);
   });
 
+  it("preserves completed lifecycle evidence when deterministic grading rejects the result", () => {
+    const state = createAssistantEvaluationState();
+    const widget = normalizeCustomWidgetAuthoringDefinition(customWidgetAuthoringDefinitionSchema.parse(healthWidget));
+    state.createdWidgets.push(widget);
+    state.calledTools.push("customWidget_previewCreate", "customWidget_createFromPreview");
+
+    expect(selectAssistantEvaluationLifecycleEvidence([], [], [state, createAssistantEvaluationState()])).toEqual({
+      widgets: [widget],
+      calledTools: ["customWidget_previewCreate", "customWidget_createFromPreview"],
+    });
+  });
+
   it("keeps the production-sized default while allowing a bounded low-credit live-evaluation override", () => {
     expect(getAssistantEvaluationMaxOutputTokens(undefined)).toBe(32_768);
     expect(getAssistantEvaluationMaxOutputTokens("10000")).toBe(10_000);
+    expect(getAssistantEvaluationMaxOutputTokens("32768")).toBe(32_768);
+    expect(getAssistantEvaluationMaxOutputTokens("50000")).toBe(32_768);
     expect(getAssistantEvaluationMaxOutputTokens("2048")).toBe(4_096);
     expect(getAssistantEvaluationMaxOutputTokens("not-a-number")).toBe(32_768);
   });
@@ -272,7 +292,58 @@ describe("Custom Widget assistant live evaluation harness", () => {
       parallel_tool_calls: false,
     });
     expect(assistantEvaluationReasoningOptions).toEqual({ effort: "medium", exclude: true });
+    expect(getAssistantEvaluationReasoningOptions("max")).toEqual({ effort: "max", exclude: true });
+    expect(getAssistantEvaluationReasoningOptions("high")).toEqual({ effort: "high", exclude: true });
+    expect(getAssistantEvaluationReasoningOptions("unsupported")).toEqual({ effort: "medium", exclude: true });
+    expect(
+      getAssistantEvaluationProviderPreferences({
+        CUSTOM_WIDGET_AI_PROVIDER_ORDER: "DeepInfra",
+        CUSTOM_WIDGET_AI_PROVIDER_QUANTIZATIONS: "fp8",
+      }),
+    ).toEqual({ order: ["DeepInfra"], allow_fallbacks: false, quantizations: ["fp8"] });
     expect(assistantEvaluationTemperature).toBe(0.2);
+  });
+
+  it("uses the authoring definition schema for preview tool input", () => {
+    const previewTool = customWidgetAssistantEvaluationToolDefinitions.find(
+      ({ function: definition }) => definition.name === "customWidget_previewCreate",
+    );
+    const previewParameters = previewTool?.function.parameters as { properties?: Record<string, unknown> } | undefined;
+    const definitionSchema = previewParameters?.properties?.definition;
+
+    expect(definitionSchema).toEqual(z.toJSONSchema(customWidgetAuthoringDefinitionSchema, { io: "input" }));
+    expect(definitionSchema).toMatchObject({
+      type: "object",
+      additionalProperties: false,
+      properties: {
+        $schema: { const: "homarr-custom-widget-v2" },
+        sources: { type: "object" },
+        requests: { type: "object" },
+        templateLines: { type: "array" },
+      },
+    });
+  });
+
+  it("requires actionable lifecycle transitions but permits completion and terminal failure prose", () => {
+    const testCase = getCase("fake-service-health");
+    const state = createAssistantEvaluationState();
+
+    expect(getAssistantEvaluationToolChoice(state, 1)).toBe("auto");
+    executeAssistantEvaluationTool(testCase, state, "customWidget_getSkill", {});
+    expect(getAssistantEvaluationToolChoice(state, 1)).toBe("required");
+
+    executeAssistantEvaluationTool(testCase, state, "customWidget_validateTemplate", {
+      templateLines: ["<UnknownComponent />"],
+    });
+    expect(getAssistantEvaluationToolChoice(state, 1)).toBe("required");
+
+    state.failure = "The lifecycle service is unavailable";
+    expect(getAssistantEvaluationToolChoice(state, 1)).toBe("auto");
+    state.failure = null;
+    state.createdWidgets.push(
+      normalizeCustomWidgetAuthoringDefinition(customWidgetAuthoringDefinitionSchema.parse(healthWidget)),
+    );
+    expect(getAssistantEvaluationToolChoice(state, 1)).toBe("auto");
   });
 
   it("batches context reads but keeps the first call when a provider mixes in lifecycle work", () => {
@@ -555,6 +626,28 @@ describe("Custom Widget assistant live evaluation harness", () => {
     ).toMatchObject({ id: "service-dashboard" });
   });
 
+  it("keeps a missing component lookup recoverable through one focused replacement search", () => {
+    const testCase = getCase("fake-service-health");
+    const state = createAssistantEvaluationState();
+    executeAssistantEvaluationTool(testCase, state, "customWidget_validateTemplate", {
+      template: "<IconCheck />",
+    });
+
+    expect(
+      executeAssistantEvaluationTool(testCase, state, "customWidget_getComponent", { name: "IconCheck" }),
+    ).toMatchObject({
+      error: "Custom JSX component not found",
+      recovery: {
+        recoverable: true,
+        kind: "component-not-found",
+      },
+      nextStep: expect.stringContaining("Do not retry"),
+    });
+    expect(
+      getActiveAssistantEvaluationToolDefinitions(state).map(({ function: definition }) => definition.name),
+    ).toEqual(["customWidget_findComponents", "customWidget_getComponents", "customWidget_validateTemplate"]);
+  });
+
   it("retrieves selected component docs in one bounded batch", () => {
     const testCase = getCase("seerr-media-workflows");
     const state = createAssistantEvaluationState();
@@ -584,14 +677,31 @@ describe("Custom Widget assistant live evaluation harness", () => {
   it("returns a compact marker instead of reloading identical context", () => {
     const testCase = getCase("seerr-media-workflows");
     const state = createAssistantEvaluationState();
+    executeAssistantEvaluationTool(testCase, state, "customWidget_getSkill", {});
 
     expect(
       executeAssistantEvaluationTool(testCase, state, "customWidget_getReference", { name: "schema" }),
     ).toMatchObject({ name: "schema", content: expect.any(String) });
-    expect(executeAssistantEvaluationTool(testCase, state, "customWidget_getReference", { name: "schema" })).toEqual({
+    expect(
+      getActiveAssistantEvaluationToolDefinitions(state).map(({ function: definition }) => definition.name),
+    ).toContain("customWidget_getReference");
+    expect(
+      executeAssistantEvaluationTool(testCase, state, "customWidget_getReference", { name: "runtime" }),
+    ).toMatchObject({ name: "runtime", content: expect.any(String) });
+    expect(executeAssistantEvaluationTool(testCase, state, "customWidget_getReference", { name: "runtime" })).toEqual({
       contextAlreadyLoaded: true,
       nextStep: "Reuse the earlier result for this exact context request.",
     });
+    expect(
+      getActiveAssistantEvaluationToolDefinitions(state).map(({ function: definition }) => definition.name),
+    ).toEqual([
+      "customWidget_findComponents",
+      "customWidget_getComponents",
+      "customWidget_getComponent",
+      "customWidget_getSharedProps",
+      "customWidget_getExample",
+      "customWidget_validateTemplate",
+    ]);
     expect(getAssistantEvaluationEfficiencyIssues(testCase, state)).toEqual([]);
   });
 
@@ -662,10 +772,18 @@ describe("Custom Widget assistant live evaluation harness", () => {
     executeAssistantEvaluationTool(testCase, state, "customWidget_getSkill", {});
     expect(
       executeAssistantEvaluationTool(testCase, state, "customWidget_previewCreate", { definition: healthWidget }),
-    ).toEqual({
+    ).toMatchObject({
       error: "Validate this exact JSX template before sending the complete definition to preview.",
+      recovery: {
+        recoverable: true,
+        requiredNextTool: "customWidget_validateTemplate",
+      },
     });
-    expect(validateTemplate(testCase, state, healthWidget)).toMatchObject({ valid: true });
+    expect(validateTemplate(testCase, state, healthWidget)).toMatchObject({
+      valid: true,
+      templateDigest: expect.stringMatching(/^tpl-[a-f0-9]{16}$/u),
+      validationId: expect.stringMatching(/^template:tpl-[a-f0-9]{16}$/u),
+    });
     expect(
       getActiveAssistantEvaluationToolDefinitions(state).map(({ function: definition }) => definition.name),
     ).toEqual(expect.arrayContaining(["customWidget_validateTemplate", "customWidget_previewCreate"]));
@@ -716,14 +834,12 @@ describe("Custom Widget assistant live evaluation harness", () => {
       ok: true,
       status: 200,
       data: testCase.sampleResponse,
+      evidenceComplete: true,
+      recommendedNextTool: "customWidget_createFromPreview",
     });
     expect(
       getActiveAssistantEvaluationToolDefinitions(state).map(({ function: definition }) => definition.name),
-    ).toEqual([
-      "customWidget_validateTemplate",
-      "customWidget_previewReviseTemplate",
-      "customWidget_createFromPreview",
-    ]);
+    ).toEqual(["customWidget_createFromPreview"]);
     expect(
       executeActiveAssistantEvaluationTool(testCase, state, "customWidget_createFromPreview", {
         previewSessionId: "preview-1",
@@ -732,6 +848,42 @@ describe("Custom Widget assistant live evaluation harness", () => {
     expect(state.createdWidgets).toHaveLength(1);
     expect(getAssistantEvaluationLifecycleIssues(testCase, state)).toEqual([]);
     expect(getAssistantEvaluationEfficiencyIssues(testCase, state)).toEqual([]);
+  });
+
+  it("identifies stale preview templates and flags repeated identical invalid input", () => {
+    const testCase = getCase("fake-service-health");
+    const state = createAssistantEvaluationState();
+    const validated = validateTemplate(testCase, state, healthWidget) as { templateDigest: string };
+    const staleDefinition = {
+      ...healthWidget,
+      templateLines: ["<Stack>", "  <Text>{data.health.status</Text>", "</Stack>"],
+    };
+
+    const first = executeAssistantEvaluationTool(testCase, state, "customWidget_previewCreate", {
+      definition: staleDefinition,
+    });
+    expect(first).toMatchObject({
+      error: "Validate this exact JSX template before sending the complete definition to preview.",
+      templateDigest: expect.stringMatching(/^tpl-[a-f0-9]{16}$/u),
+      lastValidTemplateDigest: validated.templateDigest,
+      diagnostics: [expect.objectContaining({ severity: "error" })],
+      repeatedInvalidInput: false,
+      invalidAttemptCount: 1,
+      recovery: {
+        requiredNextTool: "customWidget_validateTemplate",
+      },
+    });
+    expect(first).not.toMatchObject({ templateDigest: validated.templateDigest });
+
+    expect(
+      executeAssistantEvaluationTool(testCase, state, "customWidget_previewCreate", {
+        definition: staleDefinition,
+      }),
+    ).toMatchObject({
+      failureFingerprint: (first as { failureFingerprint: string }).failureFingerprint,
+      repeatedInvalidInput: true,
+      invalidAttemptCount: 2,
+    });
   });
 
   it("revises only the tested template and requires fresh evidence without resending the manifest", () => {
@@ -800,6 +952,36 @@ describe("Custom Widget assistant live evaluation harness", () => {
     expect(getAssistantEvaluationEfficiencyIssues(testCase, state)).toEqual([]);
   });
 
+  it("preserves tested preview evidence when a revision is unchanged", () => {
+    const testCase = getCase("fake-service-health");
+    const state = createAssistantEvaluationState();
+    validateTemplate(testCase, state, healthWidget);
+    executeAssistantEvaluationTool(testCase, state, "customWidget_previewCreate", { definition: healthWidget });
+    executeAssistantEvaluationTool(testCase, state, "customWidget_previewQuery", {
+      sessionId: "preview-1",
+      requestId: "health",
+      params: {},
+    });
+
+    expect(
+      executeAssistantEvaluationTool(testCase, state, "customWidget_previewReviseTemplate", {
+        sessionId: "preview-1",
+        templateLines: healthWidget.templateLines,
+      }),
+    ).toMatchObject({
+      unchanged: true,
+      preservesPreviewEvidence: true,
+      sessionId: "preview-1",
+      recovery: {
+        recoverable: true,
+        kind: "unchanged-preview-revision",
+      },
+    });
+    expect(
+      getActiveAssistantEvaluationToolDefinitions(state).map(({ function: definition }) => definition.name),
+    ).toEqual(["customWidget_createFromPreview"]);
+  });
+
   it("finishes current preview evidence before a prevalidated next-widget draft", () => {
     const testCase = getCase("fake-service-health");
     const state = createAssistantEvaluationState();
@@ -831,19 +1013,76 @@ describe("Custom Widget assistant live evaluation harness", () => {
     );
   });
 
-  it("normalizes duplicated Assistant template formats to canonical templateLines", () => {
+  it("normalizes equivalent duplicated Assistant template formats to canonical templateLines", () => {
     const testCase = getCase("fake-service-health");
     const state = createAssistantEvaluationState();
 
     expect(
       executeAssistantEvaluationTool(testCase, state, "customWidget_validateTemplate", {
-        template: "<Broken",
+        template: healthWidget.templateLines.join("\n"),
         templateLines: healthWidget.templateLines,
       }),
     ).toMatchObject({ valid: true, diagnostics: [] });
     expect(
       executeAssistantEvaluationTool(testCase, state, "customWidget_previewCreate", { definition: healthWidget }),
     ).toMatchObject({ success: true, previewSession: { id: "preview-1" } });
+  });
+
+  it("only normalizes lossless Assistant preview definition mistakes", () => {
+    const definition = {
+      ...healthWidget,
+      sources: {
+        default: { ...healthWidget.sources.default, auth: { type: "none" } },
+        bearer: { ...healthWidget.sources.default, auth: { type: "bearer" } },
+        basic: { ...healthWidget.sources.default, auth: { type: "basic" } },
+        preserved: {
+          ...healthWidget.sources.default,
+          auth: { type: "bearer", unexpected: true },
+        },
+      },
+      options: {
+        limit: { name: "limit", label: "Limit", control: "number", default: 10 },
+        environment: { name: "Environment", label: "Environment", control: "text", default: "production" },
+      },
+      template: healthWidget.templateLines.join("\n"),
+    };
+    const { template: _template, ...definitionWithoutTemplate } = definition;
+
+    expect(normalizeCustomWidgetLifecycleToolInput("customWidget_previewCreate", { definition })).toEqual({
+      definition: {
+        ...definitionWithoutTemplate,
+        sources: {
+          ...definition.sources,
+          default: { ...healthWidget.sources.default, auth: "none" },
+          bearer: { ...healthWidget.sources.default, auth: "bearer" },
+          basic: { ...healthWidget.sources.default, auth: "basic" },
+        },
+        options: {
+          limit: { label: "Limit", control: "number", default: 10 },
+          environment: definition.options.environment,
+        },
+      },
+    });
+  });
+
+  it("prefers templateLines when the duplicate template is empty", () => {
+    expect(
+      normalizeCustomWidgetLifecycleToolInput("customWidget_validateTemplate", {
+        template: "",
+        templateLines: healthWidget.templateLines,
+      }),
+    ).toEqual({ templateLines: healthWidget.templateLines });
+  });
+
+  it("preserves conflicting template formats for schema diagnostics", () => {
+    const input = { template: "<Text>Different</Text>", templateLines: ["<Text>Original</Text>"] };
+
+    expect(normalizeCustomWidgetLifecycleToolInput("customWidget_validateTemplate", input)).toBe(input);
+    expect(
+      normalizeCustomWidgetLifecycleToolInput("customWidget_previewCreate", {
+        definition: { ...healthWidget, ...input },
+      }),
+    ).toEqual({ definition: { ...healthWidget, ...input } });
   });
 
   it("accepts an otherwise valid preview definition serialized once by the provider", () => {

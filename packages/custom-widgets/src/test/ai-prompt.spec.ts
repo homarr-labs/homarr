@@ -91,7 +91,7 @@ describe("AI prompt", () => {
       expect(prompt).toContain("response envelope");
       expect(prompt).toContain("credentials");
     }
-    expect(prompts[4]).toContain("wrapped array");
+    expect(prompts[4]).toContain("guard arrays");
     expect(prompts[0]).toContain("create from the request");
     expect(prompts[1]).toContain("repair preserves working contract");
     expect(prompts[2]).toContain("migration preserves supported legacy URL");
@@ -111,44 +111,31 @@ describe("AI prompt", () => {
   });
 
   it("makes the connected MCP workflow lazy, batch-capable, and evidence-driven", () => {
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY.length).toBeLessThan(4_000);
-    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT.length).toBeLessThan(4_500);
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Start with customWidget_getSkill");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("load task-needed references");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Lifecycle tools run one at a time and change phase");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("customWidget_getComponents");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Do not load full catalog");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain(
-      "Find registered Mantine components with customWidget_findComponents",
-    );
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("customWidget_getComponent");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY.length).toBeLessThan(8_000);
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT.length).toBeLessThan(8_500);
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Call customWidget_getSkill once");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Make one tool call per step");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Load required references and uncertain components");
     expect(CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION).toContain("staged by the authoring lifecycle");
     expect(CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION).toContain("task-needed");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("compact schema once for a new manifest");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("security once for auth or mutations");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("customWidget_previewReviseTemplate");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Changes to sources/requests/options require fresh previewCreate");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("resets evidence");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Do not shadow data/status/options/inputs");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("For manifest fixes");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("evidence resets");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("root-name shadowing");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("one JSX expression");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("no declarations");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("theme-adaptive body/text tokens");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("otherwise omit its timezone argument");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain('control: "json"');
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("(value ?? []).map(...)");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Actions stay manual");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("confirmation, permission, invalidation");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("never use => {");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain('Date.toLocaleString(value, "en-US", "UTC")');
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Actions use kind:");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("required confirmation");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("choicesFrom");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("customWidget_validateTemplate");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("customWidget_createFromPreview");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("exact response envelope");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("map the wrapped array rather than its envelope");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("status.x?.ok === false");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Parenthesize mixed ??");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("data.q === B");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Keep requests/nullable siblings independent");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("SubFetch owns those states");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("friendly name/details");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("templateLines");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("previewCreate takes the full definition");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).not.toContain("Example —");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).not.toContain("Recommended components:");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Send the complete definition object");
     expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).not.toContain("homarr_findTools");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY.indexOf("customWidget_validateTemplate")).toBeLessThan(
       CUSTOM_WIDGET_ASSISTANT_POLICY.indexOf("customWidget_previewCreate"),

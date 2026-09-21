@@ -19,11 +19,7 @@ const customWidgetEvidencePhaseToolNames = new Set([
   "customWidget_previewJournal",
   "customWidget_createFromPreview",
 ]);
-const customWidgetFinalizationPhaseToolNames = new Set([
-  "customWidget_validateTemplate",
-  "customWidget_previewReviseTemplate",
-  "customWidget_createFromPreview",
-]);
+const customWidgetFinalizationPhaseToolNames = new Set(["customWidget_createFromPreview"]);
 const customWidgetDraftPhaseToolNames = new Set([
   "customWidget_getReference",
   "customWidget_getComponents",
@@ -95,6 +91,31 @@ export const isSuccessfulCustomWidgetAuthoringAdvance = (toolName: string, outpu
   return false;
 };
 
+const recoverablePreviewErrorPattern =
+  /(?:definition is invalid|invalid input|provide template|unrecognized key|unknown widget option|sources\.|requests\.|options\.|template)/iu;
+const terminalPreviewErrorPattern =
+  /(?:closed|connection|credential|forbidden|model|not found|permission denied|provider|session|timed? out|unavailable)/iu;
+
+export const isRecoverableCustomWidgetAuthoringFailure = (toolName: string, output: unknown) => {
+  if (!isRecord(output)) return false;
+  const recovery = isRecord(output.recovery) ? output.recovery : null;
+  if (recovery?.recoverable === true) return true;
+  if (toolName === "customWidget_validateTemplate") return output.valid === false;
+  if (
+    toolName !== "customWidget_previewCreate" &&
+    toolName !== "customWidget_previewReviseTemplate" &&
+    toolName !== "customWidget_createFromPreview"
+  ) {
+    return false;
+  }
+  if (typeof output.error !== "string") return false;
+  if (terminalPreviewErrorPattern.test(output.error)) return false;
+  if (toolName === "customWidget_createFromPreview") {
+    return /test every final preview (?:query|action)/iu.test(output.error);
+  }
+  return recoverablePreviewErrorPattern.test(output.error);
+};
+
 const getPreviewRequestIds = (value: unknown) => {
   if (!Array.isArray(value)) return [];
   return value.flatMap((entry) => {
@@ -146,11 +167,18 @@ export const getCustomWidgetPhaseToolNames = <TToolName extends string>(
   let discoveryStartStep = 0;
   let hasPreviewEvidence = false;
   let hasPostValidationComponentRepair = false;
+  let componentLookupFailed = false;
   for (let stepIndex = steps.length - 1; stepIndex >= 0; stepIndex -= 1) {
     const step = steps[stepIndex];
     if (!step) continue;
-    if (step.toolResults.some((result) => result.toolName === "customWidget_getComponent")) {
+    const componentResults = step.toolResults.filter((result) => result.toolName === "customWidget_getComponent");
+    if (componentResults.length > 0) {
       hasPostValidationComponentRepair = true;
+      componentLookupFailed ||= componentResults.some((result) => {
+        const output = isRecord(result.output) ? result.output : null;
+        const recovery = isRecord(output?.recovery) ? output.recovery : null;
+        return recovery?.kind === "component-not-found";
+      });
     }
     const creationResults = step.toolResults.filter((result) => result.toolName === "customWidget_createFromPreview");
     if (creationResults.length > 0) {
@@ -189,6 +217,11 @@ export const getCustomWidgetPhaseToolNames = <TToolName extends string>(
         result.toolName === "customWidget_previewCreate" || result.toolName === "customWidget_previewReviseTemplate",
     );
     if (previewResults.length > 0) {
+      const unchanged = previewResults.every((result) => {
+        const output = isRecord(result.output) ? result.output : null;
+        return output?.unchanged === true && output?.preservesPreviewEvidence === true;
+      });
+      if (unchanged) continue;
       const succeeded = previewResults.every((result) => {
         const output = isRecord(result.output) ? result.output : null;
         return output?.success === true || isRecord(output?.previewSession);
@@ -198,18 +231,14 @@ export const getCustomWidgetPhaseToolNames = <TToolName extends string>(
           hasCompletePreviewEvidence(result.output, steps.slice(stepIndex + 1)),
         );
         if (evidenceComplete) {
-          if (previewResults.some((result) => result.toolName === "customWidget_previewReviseTemplate")) {
-            return availableToolNames.filter((toolName) => toolName === "customWidget_createFromPreview");
-          }
           return availableToolNames.filter((toolName) => customWidgetFinalizationPhaseToolNames.has(toolName));
         }
         return availableToolNames.filter((toolName) => customWidgetEvidencePhaseToolNames.has(toolName));
       }
       if (previewResults.some((result) => result.toolName === "customWidget_previewReviseTemplate")) {
-        return availableToolNames.filter((toolName) => customWidgetEvidencePhaseToolNames.has(toolName));
+        return availableToolNames.filter((toolName) => customWidgetValidationPhaseToolNames.has(toolName));
       }
-      discoveryStartStep = stepIndex + 1;
-      break;
+      return availableToolNames.filter((toolName) => customWidgetReferenceAndValidationToolNames.has(toolName));
     }
     if (
       step.toolResults.some(
@@ -224,6 +253,11 @@ export const getCustomWidgetPhaseToolNames = <TToolName extends string>(
     }
     const validationResults = step.toolResults.filter((result) => result.toolName === "customWidget_validateTemplate");
     if (validationResults.length > 0) {
+      const validationOutcomes = validationResults.map((result) => {
+        const output = isRecord(result.output) ? result.output : null;
+        return output?.valid === true;
+      });
+      if (validationOutcomes.some(Boolean) && validationOutcomes.some((valid) => !valid)) return null;
       const succeeded = validationResults.every((result) => {
         const output = isRecord(result.output) ? result.output : null;
         return output?.valid === true;
@@ -239,21 +273,44 @@ export const getCustomWidgetPhaseToolNames = <TToolName extends string>(
         }
         return availableToolNames.filter((toolName) => customWidgetPreviewPhaseToolNames.has(toolName));
       }
-      discoveryStartStep = stepIndex + 1;
-      break;
+      const needsComponentRepair = validationResults.some((result) => {
+        const output = isRecord(result.output) ? result.output : null;
+        if (!Array.isArray(output?.diagnostics)) return false;
+        return output.diagnostics.some(
+          (diagnostic) =>
+            isRecord(diagnostic) &&
+            typeof diagnostic.message === "string" &&
+            /UNKNOWN_(?:COMPONENT|MANTINE_PROP)/u.test(diagnostic.message),
+        );
+      });
+      return availableToolNames.filter(
+        (toolName) =>
+          toolName === "customWidget_validateTemplate" ||
+          (needsComponentRepair && !componentLookupFailed && toolName === "customWidget_getComponent") ||
+          (needsComponentRepair && componentLookupFailed && toolName === "customWidget_findComponents") ||
+          (needsComponentRepair && componentLookupFailed && toolName === "customWidget_getComponents"),
+      );
     }
   }
   if (hasPreviewEvidence) {
     return availableToolNames.filter((toolName) => customWidgetEvidencePhaseToolNames.has(toolName));
   }
   const discoveryResults = steps.slice(discoveryStartStep).flatMap((step) => step.toolResults);
+  const repeatedContextToolNames = new Set(
+    discoveryResults.flatMap((result) => {
+      const output = isRecord(result.output) ? result.output : null;
+      return output?.contextAlreadyLoaded === true ? [result.toolName] : [];
+    }),
+  );
+  const getAvailablePhaseTools = (phaseToolNames: ReadonlySet<string>) =>
+    availableToolNames.filter((toolName) => phaseToolNames.has(toolName) && !repeatedContextToolNames.has(toolName));
   const focusedSearches = discoveryResults.filter((result) => result.toolName === "customWidget_findComponents").length;
   const contextRetrievalComplete = discoveryResults.some((result) => {
     const output = isRecord(result.output) ? result.output : null;
     return output?.phaseComplete === true;
   });
   if (contextRetrievalComplete) {
-    return availableToolNames.filter((toolName) => customWidgetValidationPhaseToolNames.has(toolName));
+    return getAvailablePhaseTools(customWidgetValidationPhaseToolNames);
   }
   const selectedDocumentationLoaded = discoveryResults.some((result) => {
     if (result.toolName !== "customWidget_getComponents") return false;
@@ -261,16 +318,16 @@ export const getCustomWidgetPhaseToolNames = <TToolName extends string>(
     return Array.isArray(output?.components) && output.components.length > 0;
   });
   if (selectedDocumentationLoaded) {
-    return availableToolNames.filter((toolName) => customWidgetReferenceAndValidationToolNames.has(toolName));
+    return getAvailablePhaseTools(customWidgetReferenceAndValidationToolNames);
   }
   if (focusedSearches >= maxFocusedComponentSearchesPerPhase) {
-    return availableToolNames.filter((toolName) => customWidgetDraftPhaseToolNames.has(toolName));
+    return getAvailablePhaseTools(customWidgetDraftPhaseToolNames);
   }
   const skillLoaded = steps.some((step) =>
     step.toolResults.some((result) => result.toolName === "customWidget_getSkill"),
   );
   if (skillLoaded) {
-    return availableToolNames.filter((toolName) => customWidgetContextPhaseToolNames.has(toolName));
+    return getAvailablePhaseTools(customWidgetContextPhaseToolNames);
   }
   return null;
 };

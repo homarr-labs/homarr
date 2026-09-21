@@ -25,7 +25,7 @@ import (
 const (
 	homarrProviderModelID    = "homarr/model"
 	homarrProviderModelName  = "Homarr model"
-	defaultOpenRouterModelID = "z-ai/glm-5.3-flash"
+	defaultOpenRouterModelID = "openai/gpt-5.6-luna"
 	maxChatInputTokens       = 256 * 1024
 	maxChatOutputTokens      = 32 * 1024
 	defaultDailyLimit        = 50

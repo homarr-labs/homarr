@@ -22,7 +22,12 @@ import {
   normalizeCustomWidgetAuthoringDefinition,
 } from "../src/core/custom-jsx-schema";
 import { normalizeCustomWidgetLifecycleToolInput } from "../src/core/assistant-tool-input";
-import { getCustomWidgetPhaseToolNames } from "../src/core/assistant-authoring-phase";
+import { createCustomWidgetTemplateLifecycleController } from "../src/core/assistant-template-lifecycle";
+import {
+  getCustomWidgetPhaseToolNames,
+  isRecoverableCustomWidgetAuthoringFailure,
+  isSuccessfulCustomWidgetAuthoringAdvance,
+} from "../src/core/assistant-authoring-phase";
 import {
   appendActiveCustomWidgetToolInstruction,
   selectSequentialCustomWidgetToolCalls,
@@ -37,9 +42,8 @@ import {
   getAiProviderChatCompletionsUrl,
   getDeterministicEvaluationMatches,
   getDeterministicEvaluationSuiteIssues,
+  judgeCustomWidgetCase,
   judgePasses,
-  parseJudgeResult,
-  requestCustomWidgetJudge,
 } from "./ai-evaluation";
 import type { CustomWidgetJudgeResult } from "./ai-evaluation";
 
@@ -50,7 +54,32 @@ export const assistantEvaluationToolRequestOptions = {
   tool_choice: "auto",
   parallel_tool_calls: false,
 } as const;
-export const assistantEvaluationReasoningOptions = { effort: "medium", exclude: true } as const;
+const assistantReasoningEfforts = ["low", "medium", "high", "xhigh", "max"] as const;
+
+export function getAssistantEvaluationReasoningOptions(configuredValue: string | undefined) {
+  const normalized = configuredValue?.trim().toLowerCase();
+  const effort = assistantReasoningEfforts.find((candidate) => candidate === normalized) ?? "medium";
+  return { effort, exclude: true } as const;
+}
+
+export function getAssistantEvaluationProviderPreferences(environment: Record<string, string | undefined>) {
+  const order = environment.CUSTOM_WIDGET_AI_PROVIDER_ORDER?.split(",")
+    .map((provider) => provider.trim())
+    .filter(Boolean);
+  const quantizations = environment.CUSTOM_WIDGET_AI_PROVIDER_QUANTIZATIONS?.split(",")
+    .map((quantization) => quantization.trim())
+    .filter(Boolean);
+  if (!order?.length && !quantizations?.length) return undefined;
+  return {
+    ...(order?.length ? { order, allow_fallbacks: false } : {}),
+    ...(quantizations?.length ? { quantizations } : {}),
+  };
+}
+
+export const assistantEvaluationReasoningOptions = getAssistantEvaluationReasoningOptions(
+  process.env.CUSTOM_WIDGET_AI_REASONING_EFFORT,
+);
+export const assistantEvaluationProviderPreferences = getAssistantEvaluationProviderPreferences(process.env);
 export const assistantEvaluationTemperature = 0.2;
 
 export function resolveAssistantEvaluationMaxLoops(cliValue: string | undefined, environmentValue: string | undefined) {
@@ -254,6 +283,7 @@ export interface AssistantAttemptState {
   calledTools: string[];
   toolCalls: AssistantEvaluationToolCall[];
   validatedTemplates: Set<string>;
+  templateLifecycle: ReturnType<typeof createCustomWidgetTemplateLifecycleController>;
   previews: Map<string, PreviewState>;
   completedPreviewSignatures: Set<string>;
   createdPreviewIds: Set<string>;
@@ -413,7 +443,7 @@ export const customWidgetAssistantEvaluationToolDefinitions: ToolDefinition[] = 
         "Fully validate a coherent complete definition and create its preview. Pass definition directly as an object, never serialized JSON. Returns every query and action that needs evidence.",
       parameters: objectSchema(
         {
-          definition: { type: "object", additionalProperties: true },
+          definition: z.toJSONSchema(customWidgetAuthoringDefinitionSchema, { io: "input" }),
           secrets: { type: "array", items: { type: "object" }, maxItems: 0 },
         },
         ["definition"],
@@ -508,6 +538,29 @@ export const getActiveAssistantEvaluationToolDefinitions = (state: AssistantAtte
   return customWidgetAssistantEvaluationToolDefinitions.filter(({ function: definition }) =>
     activeToolNames.has(definition.name),
   );
+};
+
+export const getAssistantEvaluationToolChoice = (
+  state: AssistantAttemptState,
+  expectedWidgetCount: number,
+): "auto" | "required" => {
+  if (state.failure !== null || state.createdWidgets.length >= expectedWidgetCount) return "auto";
+  const latestToolCall = state.toolCalls.at(-1);
+  if (!latestToolCall) return "auto";
+  const activeTools = getActiveAssistantEvaluationToolDefinitions(state);
+  const hasFollowUpTool = activeTools.some(
+    ({ function: definition }) =>
+      definition.name.startsWith("customWidget_") && definition.name !== latestToolCall.name,
+  );
+  if (
+    isRecoverableCustomWidgetAuthoringFailure(latestToolCall.name, latestToolCall.output) &&
+    activeTools.some(({ function: definition }) => definition.name.startsWith("customWidget_"))
+  ) {
+    return "required";
+  }
+  if (!hasFollowUpTool) return "auto";
+  if (isSuccessfulCustomWidgetAuthoringAdvance(latestToolCall.name, latestToolCall.output)) return "required";
+  return "auto";
 };
 
 export function executeActiveAssistantEvaluationTool(
@@ -709,8 +762,24 @@ const executeAssistantEvaluationToolCore = (
     return findCustomWidgetComponents(query, limit);
   }
   if (name === "customWidget_getComponent") {
-    const component = typeof input.name === "string" ? getCustomWidgetComponent(input.name) : null;
-    return component ?? { error: "Custom JSX component not found" };
+    const componentName = typeof input.name === "string" ? input.name : "";
+    const component = getCustomWidgetComponent(componentName);
+    return (
+      component ?? {
+        error: "Custom JSX component not found",
+        recovery: {
+          recoverable: true,
+          kind: "component-not-found",
+          allowedNextTools: [
+            "customWidget_findComponents",
+            "customWidget_getComponents",
+            "customWidget_validateTemplate",
+          ],
+        },
+        nextStep:
+          "Do not retry this component name. Replace it with a previously discovered component, or run one focused component search, then validate the corrected template.",
+      }
+    );
   }
   if (name === "customWidget_getComponents") {
     const names = Array.isArray(input.names)
@@ -752,19 +821,38 @@ const executeAssistantEvaluationToolCore = (
       nextStep = "Repair unknown component props before previewing, then revalidate only the corrected JSX.";
     }
     if (valid) state.validatedTemplates.add(template);
-    return {
+    return state.templateLifecycle.recordValidation(input, {
       valid,
       normalizedCharacters,
       diagnostics,
       summary: { characters: template.length, lines: template.split("\n").length },
       nextStep,
-    };
+    });
   }
   if (name === "customWidget_previewCreate") {
+    const mismatch = state.templateLifecycle.getPreviewValidationMismatch(name, input);
+    if (mismatch !== null) return mismatch;
     const parsed = parseDefinition(input.definition);
-    if (!parsed.success) return { error: "Definition is invalid", issues: parsed.issues };
+    if (!parsed.success) {
+      return state.templateLifecycle.recordInvalidPreview(name, input, {
+        error: "Definition is invalid",
+        issues: parsed.issues,
+        recovery: {
+          recoverable: true,
+          kind: "preview-validation-required",
+          requiredNextTool: "customWidget_validateTemplate",
+        },
+      });
+    }
     if (!state.validatedTemplates.has(parsed.widget.template)) {
-      return { error: "Validate this exact JSX template before sending the complete definition to preview." };
+      return {
+        error: "Validate this exact JSX template before sending the complete definition to preview.",
+        recovery: {
+          recoverable: true,
+          kind: "preview-validation-required",
+          requiredNextTool: "customWidget_validateTemplate",
+        },
+      };
     }
     const signature = getDefinitionSignature(parsed.widget);
     if ([...state.previews.values()].some((preview) => preview.signature === signature)) {
@@ -782,12 +870,12 @@ const executeAssistantEvaluationToolCore = (
       testedActions: new Set(),
       journal: [],
     });
-    return {
+    return state.templateLifecycle.recordPreview({
       success: true,
       previewSession: { id, revision: 0 },
       previewPath: `/manage/custom-widgets/preview/${id}`,
       ...getAssistantEvaluationPreviewChecklist(parsed.widget),
-    };
+    });
   }
   if (name === "customWidget_previewReviseTemplate") {
     const sessionId = typeof input.sessionId === "string" ? input.sessionId : "";
@@ -803,9 +891,29 @@ const executeAssistantEvaluationToolCore = (
       };
     }
     const templateInput = getTemplateFromInput(input);
-    if (!templateInput.success) return { error: templateInput.error };
+    if (!templateInput.success) {
+      return {
+        error: templateInput.error,
+        recovery: {
+          recoverable: true,
+          kind: "preview-validation-required",
+          requiredNextTool: "customWidget_validateTemplate",
+          preservesPreviewEvidence: true,
+        },
+      };
+    }
+    const mismatch = state.templateLifecycle.getPreviewValidationMismatch(name, input);
+    if (mismatch !== null) return mismatch;
     if (!state.validatedTemplates.has(templateInput.template)) {
-      return { error: "Validate this exact revised JSX template before revising the preview." };
+      return {
+        error: "Validate this exact revised JSX template before revising the preview.",
+        recovery: {
+          recoverable: true,
+          kind: "preview-validation-required",
+          requiredNextTool: "customWidget_validateTemplate",
+          preservesPreviewEvidence: true,
+        },
+      };
     }
     const parsed = customWidgetDefinitionSchema.safeParse({ ...preview.widget, template: templateInput.template });
     if (!parsed.success) {
@@ -816,10 +924,34 @@ const executeAssistantEvaluationToolCore = (
           code: issue.code,
           message: issue.message,
         })),
+        recovery: {
+          recoverable: true,
+          kind: "preview-validation-required",
+          requiredNextTool: "customWidget_validateTemplate",
+          preservesPreviewEvidence: true,
+        },
       };
     }
     const signature = getDefinitionSignature(parsed.data);
-    if (signature === preview.signature) return { error: "Revised preview template is unchanged" };
+    if (signature === preview.signature) {
+      return {
+        error: "Revised preview template is unchanged",
+        unchanged: true,
+        preservesPreviewEvidence: true,
+        sessionId,
+        recovery: {
+          recoverable: true,
+          kind: "unchanged-preview-revision",
+          allowedNextTools: [
+            "customWidget_validateTemplate",
+            "customWidget_previewReviseTemplate",
+            "customWidget_createFromPreview",
+          ],
+        },
+        nextStep:
+          "The existing preview and its evidence remain valid. Persist it, or make a distinct correction and validate before revising.",
+      };
+    }
     if ([...state.previews.values()].some((candidate) => candidate !== preview && candidate.signature === signature)) {
       return { error: "This exact definition already has a preview" };
     }
@@ -830,13 +962,13 @@ const executeAssistantEvaluationToolCore = (
     preview.testedQueries.clear();
     preview.testedActions.clear();
     preview.journal = [];
-    return {
+    return state.templateLifecycle.recordPreview({
       success: true,
       evidenceReset: true,
       previewSession: { id: sessionId, revision: preview.revision },
       previewPath: `/manage/custom-widgets/preview/${sessionId}`,
       ...getAssistantEvaluationPreviewChecklist(preview.widget),
-    };
+    });
   }
   if (name === "customWidget_previewQuery") {
     const sessionId = typeof input.sessionId === "string" ? input.sessionId : "";
@@ -860,14 +992,14 @@ const executeAssistantEvaluationToolCore = (
       simulated: false,
     });
     rememberCompletedPreview(state, preview);
-    return {
+    return state.templateLifecycle.recordEvidence(name, {
       sessionId,
       requestId,
       ok: true,
       status: 200,
       data: response,
       request: { method: request.method, path: request.path },
-    };
+    });
   }
   if (name === "customWidget_previewAction") {
     const sessionId = typeof input.sessionId === "string" ? input.sessionId : "";
@@ -889,7 +1021,7 @@ const executeAssistantEvaluationToolCore = (
       simulated: true,
     });
     rememberCompletedPreview(state, preview);
-    return {
+    return state.templateLifecycle.recordEvidence(name, {
       sessionId,
       requestId,
       ok: true,
@@ -897,7 +1029,7 @@ const executeAssistantEvaluationToolCore = (
       statusText: "Simulated",
       data: null,
       simulated: true,
-    };
+    });
   }
   if (name === "customWidget_previewJournal") {
     const sessionId = typeof input.sessionId === "string" ? input.sessionId : "";
@@ -1127,6 +1259,7 @@ export function createAssistantEvaluationState(): AssistantAttemptState {
     calledTools: [],
     toolCalls: [],
     validatedTemplates: new Set(),
+    templateLifecycle: createCustomWidgetTemplateLifecycleController(),
     previews: new Map(),
     completedPreviewSignatures: new Set(),
     createdPreviewIds: new Set(),
@@ -1178,6 +1311,7 @@ async function callAssistantStep(args: {
   model: string;
   messages: OpenRouterMessage[];
   tools: ToolDefinition[];
+  toolChoice: "auto" | "required";
 }) {
   const activeToolNames = args.tools.map(({ function: definition }) => definition.name);
   const compactedMessages = compactAssistantEvaluationMessages(args.messages);
@@ -1201,9 +1335,11 @@ async function callAssistantStep(args: {
       messages,
       tools: args.tools,
       ...assistantEvaluationToolRequestOptions,
+      tool_choice: args.toolChoice,
       temperature: assistantEvaluationTemperature,
       max_tokens: getAssistantEvaluationMaxOutputTokens(process.env.CUSTOM_WIDGET_AI_MAX_OUTPUT_TOKENS),
       reasoning: assistantEvaluationReasoningOptions,
+      ...(assistantEvaluationProviderPreferences ? { provider: assistantEvaluationProviderPreferences } : {}),
     }),
     signal: AbortSignal.timeout(180_000),
   });
@@ -1225,6 +1361,7 @@ async function runAssistantAttempt(args: {
   apiKey: string;
   baseUrl?: string;
   model: string;
+  stagingInstruction: string;
   assistantPolicy: string;
   feedback: readonly string[];
 }) {
@@ -1232,7 +1369,11 @@ async function runAssistantAttempt(args: {
   const messages: OpenRouterMessage[] = [
     {
       role: "system",
-      content: buildAssistantEvaluationSystemPrompt(args.assistantPolicy, getExpectedWidgetCount(args.testCase)),
+      content: buildAssistantEvaluationSystemPrompt(
+        args.assistantPolicy,
+        getExpectedWidgetCount(args.testCase),
+        args.stagingInstruction,
+      ),
     },
     { role: "user", content: buildAssistantPrompt(args.testCase, args.feedback) },
   ];
@@ -1246,6 +1387,7 @@ async function runAssistantAttempt(args: {
         model: args.model,
         messages,
         tools: getActiveAssistantEvaluationToolDefinitions(state),
+        toolChoice: getAssistantEvaluationToolChoice(state, getExpectedWidgetCount(args.testCase)),
       });
     } catch (error) {
       state.failure = error instanceof Error ? error.message : "The provider request failed";
@@ -1294,8 +1436,12 @@ async function runAssistantAttempt(args: {
   return { state, messages };
 }
 
-export function buildAssistantEvaluationSystemPrompt(assistantPolicy: string, expectedWidgetCount: number) {
-  return `${CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION}\n\n${assistantPolicy}\n\nThis is an unassisted tool-use evaluation. No tool will be forced for you. Complete and persist all ${expectedWidgetCount} requested widget jobs before returning prose.`;
+export function buildAssistantEvaluationSystemPrompt(
+  assistantPolicy: string,
+  expectedWidgetCount: number,
+  stagingInstruction = CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION,
+) {
+  return `${stagingInstruction}\n\n${assistantPolicy}\n\nThis is a production-equivalent tool-use evaluation. The lifecycle controller may require one active tool after an actionable or recoverable result. Complete and persist all ${expectedWidgetCount} requested widget jobs before returning prose.`;
 }
 
 export function createAssistantEvaluationPromptSnapshot(args: {
@@ -1383,6 +1529,25 @@ export function getAssistantJudgeFloor(judges: readonly CustomWidgetJudgeResult[
   return judges.toSorted((left, right) => left.total - right.total)[0] ?? null;
 }
 
+export function selectAssistantEvaluationLifecycleEvidence(
+  bestWidgets: readonly HomarrCustomWidgetV2[],
+  bestCalledTools: readonly string[],
+  attemptStates: readonly AssistantAttemptState[],
+) {
+  if (bestWidgets.length > 0) {
+    return { widgets: [...bestWidgets], calledTools: [...bestCalledTools] };
+  }
+  let evidenceState = attemptStates.at(-1) ?? null;
+  for (const state of attemptStates) {
+    if (state.createdWidgets.length <= (evidenceState?.createdWidgets.length ?? 0)) continue;
+    evidenceState = state;
+  }
+  return {
+    widgets: [...(evidenceState?.createdWidgets ?? [])],
+    calledTools: [...(evidenceState?.calledTools ?? [])],
+  };
+}
+
 export async function evaluateCustomWidgetAssistantCase(args: {
   testCase: CustomWidgetAiEvaluationCase;
   apiKey: string;
@@ -1391,6 +1556,7 @@ export async function evaluateCustomWidgetAssistantCase(args: {
   maxLoops: number;
   generatorModel?: string;
   judgeModel?: string;
+  stagingInstruction?: string;
   assistantPolicy?: string;
 }): Promise<CustomWidgetAssistantEvaluationResult> {
   const caseDirectory = path.join(args.outputRoot, `assistant-${args.testCase.id}`);
@@ -1406,6 +1572,7 @@ export async function evaluateCustomWidgetAssistantCase(args: {
   let bestScoreFloor = -1;
   let bestCalledTools: string[] = [];
   let lastAttemptState: AssistantAttemptState | null = null;
+  const attemptStates: AssistantAttemptState[] = [];
   let bestEfficiency = {
     toolCalls: 0,
     toolInputCharacters: 0,
@@ -1423,6 +1590,7 @@ export async function evaluateCustomWidgetAssistantCase(args: {
         apiKey: args.apiKey,
         baseUrl: args.baseUrl,
         model: args.generatorModel ?? DEFAULT_GENERATOR_MODEL,
+        stagingInstruction: args.stagingInstruction ?? CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION,
         assistantPolicy: args.assistantPolicy ?? CUSTOM_WIDGET_ASSISTANT_POLICY,
         feedback: composeAssistantEvaluationFeedback(deterministicFeedback, reviewFeedback, lifecycleFeedback),
       });
@@ -1433,6 +1601,7 @@ export async function evaluateCustomWidgetAssistantCase(args: {
       continue;
     }
     lastAttemptState = run.state;
+    attemptStates.push(run.state);
     await writeFile(path.join(caseDirectory, `trace-${attempt}.json`), JSON.stringify(run.messages, null, 2), "utf8");
     await writeFile(
       path.join(caseDirectory, `efficiency-${attempt}.json`),
@@ -1483,15 +1652,20 @@ export async function evaluateCustomWidgetAssistantCase(args: {
         "utf8",
       );
       try {
-        const judgeRaw = await requestCustomWidgetJudge({
+        const judgeBasename = `judge-${attempt}-${match.expectedWidgetId}`;
+        const { raw: judgeRaw, result: judgeResult } = await judgeCustomWidgetCase({
           testCase: match.testCase,
           widget,
           apiKey: args.apiKey,
           baseUrl: args.baseUrl,
           judgeModel: args.judgeModel,
+          onResponse: async (requestAttempt, raw) => {
+            await writeFile(path.join(caseDirectory, `${judgeBasename}.request-${requestAttempt}.json`), raw, "utf8");
+            await writeFile(path.join(caseDirectory, `${judgeBasename}.json`), raw, "utf8");
+          },
         });
-        await writeFile(path.join(caseDirectory, `judge-${attempt}-${match.expectedWidgetId}.json`), judgeRaw, "utf8");
-        judgeResults.push(parseJudgeResult(judgeRaw));
+        await writeFile(path.join(caseDirectory, `${judgeBasename}.json`), judgeRaw, "utf8");
+        judgeResults.push(judgeResult);
       } catch (error) {
         judgeFailure = error instanceof Error ? error.message : "Unknown judge error";
         break;
@@ -1543,15 +1717,16 @@ export async function evaluateCustomWidgetAssistantCase(args: {
     replaceAssistantEvaluationFeedback(reviewFeedback, issues);
   }
 
+  const lifecycleEvidence = selectAssistantEvaluationLifecycleEvidence(bestWidgets, bestCalledTools, attemptStates);
   return {
     caseId: args.testCase.id,
     attempts: args.maxLoops,
-    widget: bestWidget,
+    widget: bestWidget ?? lifecycleEvidence.widgets[0] ?? null,
     judge: bestJudge,
     outputDirectory: caseDirectory,
     errors,
-    calledTools: bestCalledTools.length > 0 ? bestCalledTools : (lastAttemptState?.calledTools ?? []),
-    widgets: bestWidgets,
+    calledTools: lifecycleEvidence.calledTools,
+    widgets: lifecycleEvidence.widgets,
     judges: bestJudges,
     efficiency:
       bestScoreFloor >= 0

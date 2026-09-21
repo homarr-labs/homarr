@@ -28,6 +28,29 @@ import { customWidgetRouter } from "../../custom-widget/custom-widget-router";
 describe("custom widget agent preview workflow", () => {
   beforeEach(() => mocks.executeRequest.mockClear());
 
+  test("returns a stable normalized template digest from focused validation", async () => {
+    const db = createDb();
+    const userId = createId();
+    await db.insert(users).values({ id: userId });
+    const session = {
+      user: { id: userId, permissions: ["admin"], colorScheme: "light" },
+      expires: new Date(Date.now() + 60_000).toISOString(),
+    } satisfies Session;
+    const caller = customWidgetRouter.createCaller({ db, deviceType: undefined, session });
+
+    const first = await caller.validateTemplate({ template: "<Text>Ready</Text>" });
+    const equivalent = await caller.validateTemplate({ template: "<Text>Ready</Text>\u200B" });
+    const different = await caller.validateTemplate({ template: "<Text>Waiting</Text>" });
+
+    expect(first).toMatchObject({
+      valid: true,
+      templateDigest: expect.stringMatching(/^tpl-[a-f0-9]{16}$/u),
+      validationId: expect.stringMatching(/^template:tpl-[a-f0-9]{16}$/u),
+    });
+    expect(equivalent.templateDigest).toBe(first.templateDigest);
+    expect(different.templateDigest).not.toBe(first.templateDigest);
+  });
+
   test("runs a named preview query and returns the real response shape to the agent", async () => {
     const db = createDb();
     const userId = createId();

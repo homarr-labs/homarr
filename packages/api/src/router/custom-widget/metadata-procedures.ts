@@ -15,6 +15,7 @@ import {
 } from "@homarr/custom-widgets/authoring-resources";
 import {
   customWidgetAuthoringDefinitionSchema,
+  getCustomWidgetTemplateDigest,
   getCustomWidgetJsonSchema,
   normalizeCustomJsxAuthoringTemplate,
   normalizeCustomWidgetAuthoringDefinition,
@@ -228,6 +229,8 @@ export const metadataProcedures = {
       }
       return {
         valid,
+        templateDigest: getCustomWidgetTemplateDigest(template),
+        validationId: `template:${getCustomWidgetTemplateDigest(template)}`,
         normalizedCharacters: rawTemplate.length - template.length,
         diagnostics,
         summary: {

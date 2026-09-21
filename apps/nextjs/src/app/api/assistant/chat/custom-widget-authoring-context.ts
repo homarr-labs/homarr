@@ -5,6 +5,7 @@ import { isRecord } from "@homarr/common";
 import {
   getCustomWidgetPhaseToolNames,
   hasCustomWidgetAuthoringContinuationIntent,
+  isRecoverableCustomWidgetAuthoringFailure,
   isSuccessfulCustomWidgetAuthoringAdvance,
 } from "@homarr/custom-widgets/core";
 
@@ -82,6 +83,9 @@ const getLatestUserText = (messages: readonly UIMessage[]) => {
 const hasFollowUpCustomWidgetTool = (activeToolNames: readonly string[], latestToolName: string) =>
   activeToolNames.some((toolName) => toolName.startsWith("customWidget_") && toolName !== latestToolName);
 
+const hasActiveCustomWidgetTool = (activeToolNames: readonly string[]) =>
+  activeToolNames.some((toolName) => toolName.startsWith("customWidget_"));
+
 const hasLatestClientToolOutcome = (messages: readonly UIMessage[]) => {
   const latestUserIndex = messages.findLastIndex((message) => message.role === "user");
   const latestAssistantMessage = messages
@@ -114,14 +118,16 @@ export const shouldRequireCustomWidgetAuthoringTool = (
   const currentSteps = steps.length > 0 ? steps : responseSteps;
   const latestStep = currentSteps.at(-1);
   if (!latestStep || hasPendingNonCustomToolCall(latestStep)) return false;
-  const hasError = latestStep.toolResults.some(
-    (result) => isRecord(result.output) && "error" in result.output && result.output.error,
-  );
-  if (hasError) return false;
   return latestStep.toolResults.some(
-    (result) =>
-      hasFollowUpCustomWidgetTool(activeToolNames, result.toolName) &&
-      isSuccessfulCustomWidgetAuthoringAdvance(result.toolName, result.output),
+    (result) => {
+      if (isRecoverableCustomWidgetAuthoringFailure(result.toolName, result.output)) {
+        return hasActiveCustomWidgetTool(activeToolNames);
+      }
+      return (
+        hasFollowUpCustomWidgetTool(activeToolNames, result.toolName) &&
+        isSuccessfulCustomWidgetAuthoringAdvance(result.toolName, result.output)
+      );
+    },
   );
 };
 
