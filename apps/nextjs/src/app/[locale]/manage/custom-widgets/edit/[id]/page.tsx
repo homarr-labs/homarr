@@ -3,6 +3,7 @@ import { Container, Stack, Title } from "@mantine/core";
 
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
+import { createLoginUrl } from "@homarr/auth/shared";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { catchTrpcNotFound } from "~/errors/trpc-catch-error";
@@ -14,11 +15,13 @@ interface EditCustomWidgetPageProps {
 }
 
 export default async function EditCustomWidgetPage(props: EditCustomWidgetPageProps) {
-  const session = await auth();
-  if (!session || !session.user.permissions.includes("admin")) {
+  const [session, params] = await Promise.all([auth(), props.params]);
+  if (!session) {
+    redirect(createLoginUrl(`/manage/custom-widgets/edit/${params.id}`));
+  }
+  if (!session.user.permissions.includes("admin")) {
     redirect("/manage/custom-widgets");
   }
-  const params = await props.params;
   const definition = await api.customWidget.get({ id: params.id }).catch(catchTrpcNotFound);
 
   return (

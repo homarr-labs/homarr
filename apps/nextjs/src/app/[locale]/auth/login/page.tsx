@@ -17,14 +17,16 @@ import { LoginForm } from "./_login-form";
 interface LoginProps {
   searchParams: Promise<{
     callbackUrl?: string;
+    redirect?: string;
   }>;
 }
 
 export default async function Login(props: LoginProps) {
   const [searchParams, session] = await Promise.all([props.searchParams, auth()]);
+  const redirectUrl = sanitizeRedirectionUrl(searchParams.redirect ?? searchParams.callbackUrl);
 
   if (session) {
-    redirect(sanitizeRedirectionUrl(searchParams.callbackUrl));
+    redirect(redirectUrl);
   }
 
   const [t, serverSettings] = await Promise.all([getI18n("user.page.login"), getRscServerSettingsAsync()]);
@@ -61,7 +63,7 @@ export default async function Login(props: LoginProps) {
         providers={env.AUTH_PROVIDERS}
         oidcClientName={env.AUTH_OIDC_CLIENT_NAME}
         isOidcAutoLoginEnabled={env.AUTH_OIDC_AUTO_LOGIN}
-        callbackUrl={searchParams.callbackUrl ?? "/"}
+        callbackUrl={redirectUrl}
       />
     </OnboardingAuthShell>
   );

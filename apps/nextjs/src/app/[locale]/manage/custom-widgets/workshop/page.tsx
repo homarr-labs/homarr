@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod/v4";
 
 import { auth } from "@homarr/auth/next";
+import { createLoginUrl } from "@homarr/auth/shared";
 import type { inferSearchParamsFromSchema } from "@homarr/common/types";
 import { resolveHomarrUrlConfig } from "@homarr/workshop/schema";
 
@@ -26,7 +27,8 @@ interface WorkshopBrowsePageProps {
 
 export default async function WorkshopBrowsePage(props: WorkshopBrowsePageProps) {
   const session = await auth();
-  if (!session?.user.permissions.includes("admin")) redirect(session ? "/" : "/auth/login");
+  if (!session) redirect(createLoginUrl("/manage/custom-widgets/workshop"));
+  if (!session.user.permissions.includes("admin")) redirect("/");
 
   const { search, sort, page } = searchParamsSchema.parse(await props.searchParams);
   const { workshopWebUrl } = resolveHomarrUrlConfig({
