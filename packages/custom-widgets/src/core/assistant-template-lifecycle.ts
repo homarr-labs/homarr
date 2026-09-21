@@ -1,4 +1,4 @@
-import { addCustomJsxDiagnosticSourceExcerpts, validateCustomJsxTemplate } from "../jsx";
+import { addCustomJsxDiagnosticSourceExcerpts, validateCustomJsxTemplate } from "../jsx/analyzer";
 import { normalizeCustomJsxAuthoringTemplate } from "./custom-jsx-schema";
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
