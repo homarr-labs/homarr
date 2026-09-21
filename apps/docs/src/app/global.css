@@ -223,6 +223,15 @@ body {
   border-bottom: 1px solid var(--border);
 }
 
+.homarr-blog-body :where(p, li) {
+  font-size: 1.0625rem;
+  line-height: 1.8;
+}
+
+.homarr-blog-body :where(img, video) {
+  border-radius: 0.5rem;
+}
+
 .prose :where(h1, h2, h3) {
   text-wrap: balance;
 }
