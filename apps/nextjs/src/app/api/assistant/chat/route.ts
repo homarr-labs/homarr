@@ -94,6 +94,7 @@ import {
   getCustomWidgetToolStepsFromUiMessages,
   getRequestedCustomWidgetExampleIds,
   getRequestedCustomWidgetServiceTarget,
+  hasExplicitCustomWidgetComponentDiscoveryRequest,
   hasMultiCustomWidgetCreationRequest,
   isFreshCustomWidgetCreationRequest,
   needsCustomWidgetAuthoringContext,
@@ -538,6 +539,8 @@ export async function POST(request: Request) {
     ? getRequestedCustomWidgetExampleIds(incomingMessages)
     : [];
   const requestedCustomWidgetExampleId = requestedCustomWidgetExampleIds[0] ?? null;
+  const explicitCustomWidgetComponentDiscovery =
+    customWidgetAuthoringActive && hasExplicitCustomWidgetComponentDiscoveryRequest(incomingMessages);
   const integrationResearch =
     requestedCustomWidgetService !== null && requestedCustomWidgetExampleId === null
       ? createAssistantIntegrationResearchController(requestedCustomWidgetService, {
@@ -810,7 +813,9 @@ export async function POST(request: Request) {
         };
       }
       const input = assistantToolGroupActivationSchema.parse(value);
-      const groups = assistantToolGroups.resolve(input.groups);
+      let requestedGroups = input.groups;
+      if (integrationResearch?.getStage() === "enable-integration-tools") requestedGroups = ["integration"];
+      const groups = assistantToolGroups.resolve(requestedGroups);
       for (const group of groups) enabledToolGroupIds.add(group.id);
       const output = {
         enabledGroups: groups.map(({ id }) => id),
@@ -862,10 +867,12 @@ export async function POST(request: Request) {
             followUpDefinitionId: customWidgetFollowUpEditContext?.definitionId,
             preferDirectPreview:
               isFreshCustomWidgetCreationRequest(incomingMessages) &&
+              !explicitCustomWidgetComponentDiscovery &&
               ((!multiCustomWidgetCreationRequest && requestedCustomWidgetService === null) ||
                 requestedCustomWidgetExampleIds.length > 0 ||
                 requestedCustomWidgetExampleId !== null ||
                 integrationResearch?.getStage() === "ready"),
+            preferComponentDiscovery: explicitCustomWidgetComponentDiscovery,
             preferredExampleIds: requestedCustomWidgetExampleIds,
           },
         )

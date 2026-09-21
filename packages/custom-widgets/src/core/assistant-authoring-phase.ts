@@ -46,6 +46,14 @@ const customWidgetContextPhaseToolNames = new Set([
   "customWidget_workshopGet",
   "customWidget_previewCreate",
 ]);
+const customWidgetInitialContextPhaseToolNames = new Set(
+  [...customWidgetContextPhaseToolNames].filter(
+    (toolName) =>
+      toolName !== "customWidget_getComponents" &&
+      toolName !== "customWidget_getComponent" &&
+      toolName !== "customWidget_getSharedProps",
+  ),
+);
 const customWidgetWorkshopInstallPhaseToolNames = new Set([
   ...customWidgetContextPhaseToolNames,
   "customWidget_workshopInstall",
@@ -354,6 +362,7 @@ export interface CustomWidgetPhaseOptions {
   continueAfterPersistence?: boolean;
   followUpDefinitionId?: string;
   preferDirectPreview?: boolean;
+  preferComponentDiscovery?: boolean;
   preferredExampleId?: string;
   preferredExampleIds?: readonly string[];
 }
@@ -367,6 +376,7 @@ export const getCustomWidgetPhaseToolNames = <TToolName extends string>(
     continueAfterPersistence = true,
     followUpDefinitionId,
     preferDirectPreview = false,
+    preferComponentDiscovery = false,
     preferredExampleId,
     preferredExampleIds = preferredExampleId === undefined ? [] : [preferredExampleId],
   } = options;
@@ -666,8 +676,16 @@ export const getCustomWidgetPhaseToolNames = <TToolName extends string>(
   if (selectedDocumentationLoaded) {
     return getAvailablePhaseTools(customWidgetDirectPreviewPhaseToolNames);
   }
+  const latestFocusedSearch = discoveryResults.findLast((result) => result.toolName === "customWidget_findComponents");
+  if (latestFocusedSearch) {
+    const output = isRecord(latestFocusedSearch.output) ? latestFocusedSearch.output : null;
+    if (Array.isArray(output?.components) && output.components.length > 0) {
+      return getAvailablePhaseTools(new Set(["customWidget_getComponents"]));
+    }
+  }
   if (focusedSearches >= MAX_FOCUSED_COMPONENT_SEARCHES_PER_PHASE) {
     return getAvailablePhaseTools(customWidgetDraftPhaseToolNames);
   }
-  return getAvailablePhaseTools(customWidgetContextPhaseToolNames);
+  if (preferComponentDiscovery) return getAvailablePhaseTools(new Set(["customWidget_findComponents"]));
+  return getAvailablePhaseTools(customWidgetInitialContextPhaseToolNames);
 };

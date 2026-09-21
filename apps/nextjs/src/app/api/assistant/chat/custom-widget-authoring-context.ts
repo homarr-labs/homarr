@@ -265,8 +265,12 @@ const serviceTargetNoiseWords = new Set([
   "polished",
   "responsive",
   "service",
+  "server",
   "simple",
   "some",
+  "static",
+  "status",
+  "summary",
   "that",
   "the",
   "these",
@@ -474,6 +478,15 @@ export const getRequestedCustomWidgetServiceTarget = (messages: readonly UIMessa
   const latestUserMessage = messages.findLast((message) => message.role === "user");
   if (!latestUserMessage) return null;
   return getCustomWidgetServiceTargetFromText(getUiMessageText(latestUserMessage));
+};
+
+export const hasExplicitCustomWidgetComponentDiscoveryRequest = (messages: readonly UIMessage[]) => {
+  const latestUserMessage = messages.findLast((message) => message.role === "user");
+  if (!latestUserMessage) return false;
+  const text = getUiMessageText(latestUserMessage);
+  return /\b(?:component\s+discovery|find|inspect|search)\b[^\n]{0,80}\bcomponents?\b|\bcomponents?\b[^\n]{0,80}\b(?:documentation|docs|reference)\b/iu.test(
+    text,
+  );
 };
 
 export const getRequestedCustomWidgetExampleId = (messages: readonly UIMessage[]) => {

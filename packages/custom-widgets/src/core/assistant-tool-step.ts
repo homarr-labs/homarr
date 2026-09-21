@@ -17,8 +17,22 @@ const isExclusiveCustomWidgetToolName = (toolName: string) =>
   isCustomWidgetToolName(toolName) && !parallelSafeCustomWidgetToolNames.has(toolName);
 const onePerStepToolNames = new Set(["homarr_enableToolGroups", "integration_getKinds", "integration_all"]);
 
-export const appendActiveCustomWidgetToolInstruction = (instructions: string, activeToolNames: readonly string[]) =>
-  `${instructions}\n\nCurrent authoring step (authoritative), active function tools: [${activeToolNames.join(", ")}]. Provider server tools such as web_search can also be available even when absent from this function-tool list. Independent read-only discovery/reference tools and preview queries may run together. Preview creation, validation, source configuration, actions, revision, and persistence must run alone; every unlisted function tool fails. After a recoverable tool failure, apply its diagnostics and call one active repair tool immediately; do not re-derive the lifecycle or narrate before the repair call.`;
+export const appendActiveCustomWidgetToolInstruction = (instructions: string, activeToolNames: readonly string[]) => {
+  let activeToolInputInstruction = "";
+  if (activeToolNames.length === 1 && activeToolNames[0] === "customWidget_findComponents") {
+    activeToolInputInstruction =
+      " Call it with a non-empty query derived directly from the requested widget; never send an empty object.";
+  }
+  if (activeToolNames.length === 1 && activeToolNames[0] === "customWidget_getComponents") {
+    activeToolInputInstruction =
+      " Call it with the non-empty component names returned by the immediately preceding search; never send an empty object.";
+  }
+  if (activeToolNames.length === 1 && activeToolNames[0] === "customWidget_previewCreate") {
+    activeToolInputInstruction =
+      " Pass definition as an object and multiline JSX as templateLines. Use single-quoted JSX attribute values inside each JSON string so provider argument encoding cannot truncate them.";
+  }
+  return `${instructions}\n\nCurrent authoring step (authoritative), active function tools: [${activeToolNames.join(", ")}].${activeToolInputInstruction} Provider server tools such as web_search can also be available even when absent from this function-tool list. Independent read-only discovery/reference tools and preview queries may run together. Preview creation, validation, source configuration, actions, revision, and persistence must run alone; every unlisted function tool fails. After a recoverable tool failure, apply its diagnostics and call one active repair tool immediately; do not re-derive the lifecycle or narrate before the repair call.`;
+};
 
 export const createCustomWidgetToolStepGate = () => {
   let currentStep: number | null = null;

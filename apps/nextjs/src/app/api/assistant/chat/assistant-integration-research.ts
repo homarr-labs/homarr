@@ -116,7 +116,7 @@ export const createAssistantIntegrationResearchController = (
     getStage,
     observe(toolName: string, output: unknown) {
       if (toolName === "homarr_enableToolGroups" && isRecord(output) && Array.isArray(output.enabledGroups)) {
-        integrationToolsEnabled = output.enabledGroups.includes("integration");
+        if (output.enabledGroups.includes("integration")) integrationToolsEnabled = true;
         return;
       }
       if (toolName === "integration_getKinds") {
