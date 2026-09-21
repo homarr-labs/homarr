@@ -1,6 +1,7 @@
 import { pageMetadata } from "@/lib/metadata";
 import Link from "next/link";
 
+import { getBlogAuthor } from "@/lib/blog-authors";
 import { getPostUrl, posts } from "@/lib/source";
 
 const blogMetadata = pageMetadata({
@@ -35,7 +36,26 @@ export default function BlogIndexPage() {
                 {post.title}
               </Link>
             </h2>
-            <p className="mt-2 text-sm text-fd-muted-foreground">By {post.authors.join(", ")}</p>
+            <p className="mt-2 flex flex-wrap gap-x-1 text-sm text-fd-muted-foreground">
+              <span>By</span>
+              {post.authors.map((author, index) => {
+                const profile = getBlogAuthor(author);
+
+                return (
+                  <span key={author}>
+                    <a
+                      href={`https://github.com/${profile.github}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="hover:text-fd-primary hover:underline"
+                    >
+                      {profile.name}
+                    </a>
+                    {index < post.authors.length - 1 ? "," : null}
+                  </span>
+                );
+              })}
+            </p>
           </article>
         ))}
       </div>

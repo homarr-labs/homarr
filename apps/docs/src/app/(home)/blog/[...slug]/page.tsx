@@ -7,6 +7,7 @@ import { DocsBody, MarkdownCopyButton, ViewOptionsPopover } from "fumadocs-ui/la
 
 import homarrV2SocialImage from "@site/blog/2026/09-03-homarr-2.0/img/homarr-v2-recap.webp";
 
+import { getBlogAuthor } from "@/lib/blog-authors";
 import { pageMetadata } from "@/lib/metadata";
 import { BlogToc } from "@/components/blog/blog-toc";
 import { getMDXComponents } from "@/components/mdx";
@@ -22,14 +23,6 @@ import {
 interface PageProps {
   params: Promise<{ slug: string[] }>;
 }
-
-const authorNames: Record<string, string> = {
-  "manuel-rw": "Manuel",
-  ajnart: "Ajnart",
-  meierschlumpf: "Meierschlumpf",
-  tagashi: "Tagashi",
-  walkx: "Walkx",
-};
 
 const dateFormatter = new Intl.DateTimeFormat("en", { dateStyle: "long", timeZone: "UTC" });
 
@@ -105,35 +98,38 @@ export default async function BlogPostPage({ params }: PageProps) {
           >
             {post.title}
           </h1>
-          <div className="mt-6 flex flex-wrap items-center justify-between gap-5">
-            <div className="flex flex-wrap gap-4">
-              {post.authors.map((author) => (
-                <a
-                  key={author}
-                  href={`https://github.com/${author}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="group flex items-center gap-3"
-                >
-                  <img
-                    src={`https://github.com/${author}.png?size=96`}
-                    alt=""
-                    width={48}
-                    height={48}
-                    className="size-12 rounded-full bg-fd-muted object-cover"
-                  />
-                  <span>
-                    <span className="block text-sm font-semibold group-hover:text-fd-primary">
-                      {authorNames[author] ?? author}
-                    </span>
-                    <span className="mt-0.5 flex items-center gap-1 text-xs text-fd-muted-foreground">
-                      <IconBrandGithub aria-hidden size={14} />@{author}
-                    </span>
-                  </span>
-                </a>
-              ))}
-            </div>
-            <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Post actions">
+          <div className="mt-6 grid gap-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
+            <ul className="flex min-w-0 flex-wrap gap-x-5 gap-y-3" aria-label="Authors">
+              {post.authors.map((author) => {
+                const profile = getBlogAuthor(author);
+
+                return (
+                  <li key={author}>
+                    <a
+                      href={`https://github.com/${profile.github}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="group flex items-center gap-3"
+                    >
+                      <img
+                        src={profile.image}
+                        alt=""
+                        width={48}
+                        height={48}
+                        className="size-12 rounded-full bg-fd-muted object-cover"
+                      />
+                      <span>
+                        <span className="block text-sm font-semibold group-hover:text-fd-primary">{profile.name}</span>
+                        <span className="mt-0.5 flex items-center gap-1 text-xs text-fd-muted-foreground">
+                          <IconBrandGithub aria-hidden size={14} />@{profile.github}
+                        </span>
+                      </span>
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+            <div className="flex flex-wrap items-center gap-2 lg:justify-end" role="group" aria-label="Post actions">
               <MarkdownCopyButton markdownUrl={markdownUrl} />
               <ViewOptionsPopover
                 markdownUrl={markdownUrl}
