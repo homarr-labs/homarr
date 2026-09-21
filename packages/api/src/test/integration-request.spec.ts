@@ -45,7 +45,12 @@ const compressors = { gzip: gzipSync, deflate: deflateSync, br: brotliCompressSy
 const server = createServer(async (req, res) => {
   let body = "";
   for await (const chunk of req) body += String(chunk);
-  calls.push({ method: req.method, path: req.url, auth: req.headers["x-api-key"] as string | undefined, body });
+  calls.push({
+    method: req.method,
+    path: req.url,
+    auth: (req.headers["x-api-key"] ?? req.headers.authorization) as string | undefined,
+    body,
+  });
   if (req.url === "/slow") return;
   if (req.url === "/inspect") {
     res.setHeader("Content-Type", "application/json");
@@ -87,6 +92,11 @@ const server = createServer(async (req, res) => {
   if (req.url === "/text") {
     res.writeHead(500, { "Content-Type": "application/json" });
     res.end(`invalid JSON ${secret}`);
+    return;
+  }
+  if (req.url === "/boolean") {
+    res.setHeader("Content-Type", "application/json");
+    res.end(JSON.stringify({ healthy: true }));
     return;
   }
   if (req.method === "DELETE") {
@@ -217,6 +227,29 @@ describe("integration_request with a mock integration server", () => {
       data: [{ id: 42, title: "Example series" }],
     });
     expect(calls.at(-1)).toMatchObject({ method: "GET", path: "/api/v3/series", auth: secret });
+  });
+  test("reuses the Custom Widget authentication resolver for every HTTP-capable kind", async () => {
+    const caller = await fixture("full", async (db) => {
+      await db.update(integrations).set({ kind: "mealie" }).where(eq(integrations.id, "sonarr"));
+    });
+    await expect(caller.request({ ...get, path: "/api/households/statistics" })).resolves.toMatchObject({
+      status: 200,
+    });
+    expect(calls.at(-1)?.auth).toBe(`Bearer ${secret}`);
+  });
+  test("does not redact ordinary response values that match constant adapter headers", async () => {
+    const caller = await fixture("full", async (db) => {
+      await db.update(integrations).set({ kind: "nextcloud" }).where(eq(integrations.id, "sonarr"));
+      await db.delete(integrationSecrets).where(eq(integrationSecrets.integrationId, "sonarr"));
+      await db.insert(integrationSecrets).values([
+        { integrationId: "sonarr", kind: "username", value: encryptSecret("reader") },
+        { integrationId: "sonarr", kind: "password", value: encryptSecret(secret) },
+      ]);
+    });
+    await expect(caller.request({ ...get, path: "/boolean" })).resolves.toEqual({
+      status: 200,
+      data: { healthy: true },
+    });
   });
   test("keeps credentials and URL from the same integration snapshot", async () => {
     const rotated = "credential-for-the-new-origin";

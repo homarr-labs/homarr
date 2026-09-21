@@ -127,7 +127,7 @@ export function normalizeCustomWidgetLifecycleToolInput(
   ) {
     return withCanonicalSessionId(input, "sessionId", previewSessionAliases);
   }
-  if (toolName === "customWidget_createFromPreview") {
+  if (toolName === "customWidget_createFromPreview" || toolName === "customWidget_updateFromPreview") {
     return withCanonicalSessionId(input, "previewSessionId", ["sessionId", "previewId", "previewSession"]);
   }
   return input;

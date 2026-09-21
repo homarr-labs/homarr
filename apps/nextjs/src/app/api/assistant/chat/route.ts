@@ -629,6 +629,7 @@ export async function POST(request: Request) {
                       "customWidget_validateTemplate",
                       "customWidget_previewReviseTemplate",
                       "customWidget_createFromPreview",
+                      "customWidget_updateFromPreview",
                     ],
                   },
                   nextStep:

@@ -41,18 +41,21 @@ const getRequestIds = (value: unknown) => {
   });
 };
 
-const evidenceRecommendation = {
+type PreviewPersistenceTool = "customWidget_createFromPreview" | "customWidget_updateFromPreview";
+
+const getEvidenceRecommendation = (recommendedNextTool: PreviewPersistenceTool) => ({
   evidenceComplete: true as const,
-  recommendedNextTool: "customWidget_createFromPreview" as const,
+  recommendedNextTool,
   nextStep:
     "Preview evidence is complete. Persist this tested preview unless a concrete original requirement remains unmet.",
-};
+});
 
 export const createCustomWidgetTemplateLifecycleController = () => {
   const validTemplates = new Set<string>();
   const invalidPreviewAttempts = new Map<string, number>();
   const previewRequirements = new Map<string, Set<string>>();
   const previewEvidence = new Map<string, Set<string>>();
+  const previewPersistenceTools = new Map<string, PreviewPersistenceTool>();
   let lastValidTemplate: string | null = null;
 
   const markInvalidPreview = (toolName: string, input: Record<string, unknown>, output: Record<string, unknown>) => {
@@ -115,7 +118,12 @@ export const createCustomWidgetTemplateLifecycleController = () => {
       ]);
       previewRequirements.set(sessionId, requirements);
       previewEvidence.set(sessionId, new Set());
-      if (requirements.size === 0) return { ...output, ...evidenceRecommendation };
+      let persistenceTool: PreviewPersistenceTool = "customWidget_createFromPreview";
+      if (output.persistenceTool === "customWidget_updateFromPreview") {
+        persistenceTool = "customWidget_updateFromPreview";
+      }
+      previewPersistenceTools.set(sessionId, persistenceTool);
+      if (requirements.size === 0) return { ...output, ...getEvidenceRecommendation(persistenceTool) };
       return output;
     },
     recordEvidence(toolName: string, output: Record<string, unknown>) {
@@ -129,7 +137,8 @@ export const createCustomWidgetTemplateLifecycleController = () => {
       evidence.add(`${kind}:${output.requestId}`);
       const complete = [...requirements].every((requirement) => evidence.has(requirement));
       if (!complete) return output;
-      return { ...output, ...evidenceRecommendation };
+      const persistenceTool = previewPersistenceTools.get(output.sessionId) ?? "customWidget_createFromPreview";
+      return { ...output, ...getEvidenceRecommendation(persistenceTool) };
     },
   };
 };

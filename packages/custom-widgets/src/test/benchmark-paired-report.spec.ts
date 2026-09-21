@@ -5,9 +5,11 @@ import {
   getOneSidedDiscordantPairResult,
   getStratifiedPairedBootstrapInterval,
   getWilsonInterval,
+  renderPairedBenchmarkReport,
 } from "../../scripts/benchmark-paired-report";
 
 const cases = ["api-contract", "lifecycle-recovery"];
+const candidatePersistenceTools = ["customWidget_createFromPreview", "customWidget_updateFromPreview"] as const;
 
 const createSummary = (arm: "baseline" | "candidate", repetition: number, split = "dev") => ({
   providerBaseUrl: "https://openrouter.ai/api/v1",
@@ -16,6 +18,8 @@ const createSummary = (arm: "baseline" | "candidate", repetition: number, split 
   generation: {
     generationId: `${arm}-${repetition}`,
     maxLoops: 1,
+    concurrency: 3,
+    requestTimeoutMs: 450_000,
     temperature: 0.2,
     reasoning: { effort: "medium", exclude: true },
     maxOutputTokens: 12_000,
@@ -29,12 +33,12 @@ const createSummary = (arm: "baseline" | "candidate", repetition: number, split 
     assistantPolicy: { sha256: `${arm}-policy` },
   },
   harness: { sha256: "fixed-harness", judgePolicySha256: "fixed-judge-policy" },
-  benchmark: { split, sha256: `fixed-${split}-cases`, caseIds: cases },
+  benchmark: { suite: "core", split, sha256: `fixed-${split}-cases`, caseIds: cases },
   results: cases.map((caseId, index) => ({
     caseId,
     score: arm === "candidate" ? 90 + index : 40 + repetition + index,
     verdict: arm === "candidate" ? "pass" : "fail",
-    calledTools: arm === "candidate" ? ["customWidget_createFromPreview"] : [],
+    calledTools: arm === "candidate" ? [candidatePersistenceTools[index] ?? candidatePersistenceTools[0]] : [],
     widgets: arm === "candidate" ? 1 : 0,
   })),
 });
@@ -75,6 +79,20 @@ describe("paired repeated benchmark reporting", () => {
       expect.objectContaining({ caseId: "api-contract", meanScoreDelta: 48 }),
       expect.objectContaining({ caseId: "lifecycle-recovery", meanScoreDelta: 48 }),
     ]);
+    expect(comparison.provenance.configuration).toMatchObject({
+      suite: "core",
+      concurrency: 3,
+      requestTimeoutMs: 450_000,
+    });
+    expect(renderPairedBenchmarkReport(comparison)).toContain(
+      "Suite: core; split: dev; concurrency: 3; request timeout: 450000 ms",
+    );
+  });
+
+  test("counts both create and update preview persistence as completed lifecycles", () => {
+    const comparison = comparePairedRepeatedSummaries(pairedInputs);
+
+    expect(comparison.pooled.candidate.lifecycle).toMatchObject({ count: 6, total: 6, rate: 100 });
   });
 
   test("rejects harness, model, case, and prompt drift before aggregation", () => {
@@ -97,6 +115,22 @@ describe("paired repeated benchmark reporting", () => {
     if (!casePair) throw new Error("Missing case-drift fixture");
     (casePair.baseline as ReturnType<typeof createSummary>).results.pop();
     expect(() => comparePairedRepeatedSummaries(caseDrift)).toThrow("results must exactly match benchmark.caseIds");
+
+    const suiteDrift = structuredClone(pairedInputs);
+    const suitePair = suiteDrift[0];
+    if (!suitePair) throw new Error("Missing suite-drift fixture");
+    (suitePair.candidate as ReturnType<typeof createSummary>).benchmark.suite = "integrations";
+    expect(() => comparePairedRepeatedSummaries(suiteDrift)).toThrow(
+      "evaluation configuration or benchmark provenance differs",
+    );
+
+    const executionDrift = structuredClone(pairedInputs);
+    const executionPair = executionDrift[0];
+    if (!executionPair) throw new Error("Missing execution-drift fixture");
+    (executionPair.candidate as ReturnType<typeof createSummary>).generation.concurrency = 1;
+    expect(() => comparePairedRepeatedSummaries(executionDrift)).toThrow(
+      "evaluation configuration or benchmark provenance differs",
+    );
   });
 
   test("computes deterministic intervals and exact one-sided discordant probabilities", () => {

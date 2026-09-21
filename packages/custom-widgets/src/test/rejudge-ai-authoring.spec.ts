@@ -6,6 +6,7 @@ import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { CUSTOM_WIDGET_AI_EVALUATION_CASES } from "../../scripts/ai-evaluation-cases";
+import { CUSTOM_WIDGET_AI_INTEGRATION_EVALUATION_CASES } from "../../scripts/ai-integration-evaluation-cases";
 import { createAssistantEvaluationCaseSnapshot } from "../../scripts/ai-assistant-evaluation";
 import { parseAndValidateRejudgeSourceSummary, rejudgeAssistantSummary } from "../../scripts/rejudge-ai-authoring";
 import type { RejudgeJudgeRunner } from "../../scripts/rejudge-ai-authoring";
@@ -227,5 +228,28 @@ describe("assistant artifact rejudge", () => {
         "summary.json",
       ),
     ).toThrow("result case IDs do not match benchmark case IDs");
+  });
+
+  it("validates integration-suite provenance without treating new cases as core", () => {
+    const testCase = CUSTOM_WIDGET_AI_INTEGRATION_EVALUATION_CASES.find(
+      ({ id }) => id === "frigate-live-safety-fallback",
+    );
+    if (!testCase) throw new Error("Frigate integration case is missing");
+    const summary = {
+      mode: "assistant-tool-loop",
+      benchmark: {
+        suite: "integrations",
+        split: "heldout",
+        ...createAssistantEvaluationCaseSnapshot([testCase]),
+      },
+      results: [{ caseId: testCase.id, outputDirectory: "/tmp/not-read" }],
+    };
+    expect(parseAndValidateRejudgeSourceSummary(summary, "summary.json").benchmark.suite).toBe("integrations");
+    expect(() =>
+      parseAndValidateRejudgeSourceSummary(
+        { ...summary, benchmark: { ...summary.benchmark, suite: "core" } },
+        "summary.json",
+      ),
+    ).toThrow("unknown benchmark case");
   });
 });

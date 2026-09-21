@@ -27,6 +27,8 @@ interface GenerationSummary {
         experimentId?: string | null;
         generationId?: string | null;
         maxLoops?: number;
+        concurrency?: number;
+        requestTimeoutMs?: number;
         temperature?: number | null;
         reasoning?: unknown;
         maxOutputTokens?: number | null;
@@ -39,6 +41,7 @@ interface GenerationSummary {
     sha256?: string;
   } | null;
   benchmark?: {
+    suite?: string;
     sha256?: string;
     split?: string;
     caseIds?: string[];
@@ -110,11 +113,14 @@ interface GenerationMetrics {
 }
 
 export interface BenchmarkConfiguration {
+  suite: string;
   split: string | null;
   providerBaseUrl: string | null;
   generatorModel: string | null;
   judgeModel: string | null;
   maxLoops: number | null;
+  concurrency: number | null;
+  requestTimeoutMs: number | null;
   temperature: number | null;
   reasoning: unknown;
   maxOutputTokens: number | null;
@@ -231,11 +237,14 @@ const getBenchmarkConfiguration = (summary: GenerationSummary): BenchmarkConfigu
   const generation = isRecord(summary.generation) ? summary.generation : null;
   const generationTemperature = typeof generation?.temperature === "number" ? generation.temperature : null;
   return {
+    suite: summary.benchmark?.suite ?? "core",
     split: summary.benchmark?.split ?? null,
     providerBaseUrl: summary.providerBaseUrl ?? null,
     generatorModel: summary.generatorModel ?? null,
     judgeModel: summary.judgeModel ?? null,
     maxLoops: typeof generation?.maxLoops === "number" ? generation.maxLoops : null,
+    concurrency: typeof generation?.concurrency === "number" ? generation.concurrency : null,
+    requestTimeoutMs: typeof generation?.requestTimeoutMs === "number" ? generation.requestTimeoutMs : null,
     temperature: generationTemperature ?? summary.generatorTemperature ?? null,
     reasoning: generation && "reasoning" in generation ? (generation.reasoning ?? null) : null,
     maxOutputTokens: typeof generation?.maxOutputTokens === "number" ? generation.maxOutputTokens : null,
@@ -246,7 +255,10 @@ const getBenchmarkConfiguration = (summary: GenerationSummary): BenchmarkConfigu
 };
 
 const hasCompletedLifecycle = (result: BenchmarkCaseSummary) => {
-  if (!result.calledTools?.includes("customWidget_createFromPreview")) return false;
+  const persistedFromPreview =
+    result.calledTools?.includes("customWidget_createFromPreview") === true ||
+    result.calledTools?.includes("customWidget_updateFromPreview") === true;
+  if (!persistedFromPreview) return false;
   return (result.widgets ?? 0) > 0;
 };
 
@@ -483,7 +495,7 @@ export function renderBenchmarkReport(comparison: BenchmarkComparison) {
     "",
     `Baseline: ${comparison.baseline}`,
     "",
-    "Lifecycle is a case-level proxy: at least one `customWidget_createFromPreview` call and one created widget. It does not prove one successful create call per requested widget.",
+    "Lifecycle is a case-level proxy: at least one `customWidget_createFromPreview` or `customWidget_updateFromPreview` call and one persisted widget. It does not prove one successful persistence call per requested widget.",
     "",
     "| Generation | Config | Mean | Median | Minimum | Pass rate | Lifecycle | Tools/case | Tokens/case | Delta | Promote |",
     "| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | :---: |",
@@ -528,7 +540,7 @@ export function renderBenchmarkReport(comparison: BenchmarkComparison) {
   for (const generation of comparison.generations) {
     const configuration = generation.configuration;
     lines.push(
-      `- **${generation.name} (${generation.configurationHash.slice(0, 12)}):** split=${configuration.split ?? "n/a"}; provider=${configuration.providerBaseUrl ?? "n/a"}; generator=${configuration.generatorModel ?? "n/a"}; judge=${configuration.judgeModel ?? "n/a"}; loops=${configuration.maxLoops ?? "n/a"}; temperature=${configuration.temperature ?? "n/a"}; reasoning=${JSON.stringify(configuration.reasoning)}; maxOutputTokens=${configuration.maxOutputTokens ?? "n/a"}; judgeMaxOutputTokens=${configuration.judgeMaxOutputTokens ?? "n/a"}; harness=${configuration.harnessSha256?.slice(0, 12) ?? "n/a"}; judgePolicy=${configuration.judgePolicySha256?.slice(0, 12) ?? "n/a"}`,
+      `- **${generation.name} (${generation.configurationHash.slice(0, 12)}):** suite=${configuration.suite}; split=${configuration.split ?? "n/a"}; provider=${configuration.providerBaseUrl ?? "n/a"}; generator=${configuration.generatorModel ?? "n/a"}; judge=${configuration.judgeModel ?? "n/a"}; loops=${configuration.maxLoops ?? "n/a"}; temperature=${configuration.temperature ?? "n/a"}; reasoning=${JSON.stringify(configuration.reasoning)}; maxOutputTokens=${configuration.maxOutputTokens ?? "n/a"}; judgeMaxOutputTokens=${configuration.judgeMaxOutputTokens ?? "n/a"}; concurrency=${configuration.concurrency ?? "n/a"}; requestTimeoutMs=${configuration.requestTimeoutMs ?? "n/a"}; harness=${configuration.harnessSha256?.slice(0, 12) ?? "n/a"}; judgePolicy=${configuration.judgePolicySha256?.slice(0, 12) ?? "n/a"}`,
     );
   }
   const hashes = comparison.generations.filter(({ promptHash, caseHash }) => promptHash || caseHash);

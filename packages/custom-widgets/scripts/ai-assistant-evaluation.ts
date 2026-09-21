@@ -4,6 +4,10 @@ import path from "node:path";
 
 import { z } from "zod/v4";
 
+import { widgetKinds } from "@homarr/definitions";
+
+import { integrationDefs } from "@homarr/definitions/integration";
+
 import {
   findCustomWidgetComponents,
   getCustomWidgetContextRequestKey,
@@ -32,13 +36,16 @@ import {
   appendActiveCustomWidgetToolInstruction,
   selectSequentialCustomWidgetToolCalls,
 } from "../src/core/assistant-tool-step";
+import { getCustomWidgetPlacementToolNames, resolveCustomWidgetPlacementState } from "../src/core/assistant-placement";
 import type { HomarrCustomWidgetV2 } from "../src/core/custom-jsx-schema";
 import { CUSTOM_WIDGET_ASSISTANT_POLICY, CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION } from "../src/core/ai-prompt";
 import { getCustomWidgetJsonSchema } from "../src/core/schema";
 import { addCustomJsxDiagnosticSourceExcerpts, validateCustomJsxTemplate } from "../src/jsx";
-import type { CustomWidgetAiEvaluationCase } from "./ai-evaluation-cases";
+import type { CustomWidgetAiEvaluationCase, CustomWidgetAiPlacementFixture } from "./ai-evaluation-cases";
 import {
+  aiEvaluationSpendBudget,
   DEFAULT_GENERATOR_MODEL,
+  getAiEvaluationRequestTimeoutMs,
   getAiProviderChatCompletionsUrl,
   getDeterministicEvaluationMatches,
   getDeterministicEvaluationSuiteIssues,
@@ -217,6 +224,7 @@ interface OpenRouterResponse {
     prompt_tokens?: number;
     completion_tokens?: number;
     total_tokens?: number;
+    cost?: number;
   };
 }
 
@@ -231,6 +239,7 @@ interface ToolDefinition {
 
 interface PreviewState {
   widget: HomarrCustomWidgetV2;
+  definitionId?: string;
   signature: string;
   revision: number;
   testedQueries: Set<string>;
@@ -244,6 +253,11 @@ interface PreviewState {
     simulated: boolean;
   }>;
 }
+
+const getAssistantEvaluationPersistenceTool = (preview: Pick<PreviewState, "definitionId">) => {
+  if (preview.definitionId) return "customWidget_updateFromPreview" as const;
+  return "customWidget_createFromPreview" as const;
+};
 
 export const getRequiredAssistantEvaluationRequestParams = (request: HomarrCustomWidgetV2["requests"][string]) => {
   const serialized = JSON.stringify(request);
@@ -279,7 +293,16 @@ interface AssistantEvaluationToolCall {
   phaseLimited: boolean;
 }
 
+export interface AssistantEvaluationPlacementEvidence {
+  widgetId: string;
+  boardId: string;
+  itemId: string;
+}
+
 export interface AssistantAttemptState {
+  integrationDiscoveryEnabled: boolean;
+  placement: CustomWidgetAiPlacementFixture | undefined;
+  placementEvidence: AssistantEvaluationPlacementEvidence[];
   calledTools: string[];
   toolCalls: AssistantEvaluationToolCall[];
   validatedTemplates: Set<string>;
@@ -324,6 +347,22 @@ const objectSchema = (properties: Record<string, unknown>, required: string[] = 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
+const configureWidgetInputSchema = z.object({
+  boardId: z.string().trim().min(1).max(64),
+  boardName: z.string().trim().min(1).max(255),
+  kind: z.enum(widgetKinds),
+  summary: z.string().trim().min(1).max(400),
+  options: z.record(z.string(), z.unknown()).optional(),
+  integrationIds: z.array(z.string().trim().min(1).max(64)).max(32).optional(),
+});
+
+const boardAddItemInputSchema = z.object({
+  boardId: z.string(),
+  kind: z.enum(widgetKinds),
+  options: z.record(z.string(), z.unknown()).default({}),
+  integrationIds: z.array(z.string()).max(32).default([]),
+});
+
 export const customWidgetAssistantEvaluationToolDefinitions: ToolDefinition[] = [
   {
     type: "function",
@@ -332,6 +371,24 @@ export const customWidgetAssistantEvaluationToolDefinitions: ToolDefinition[] = 
       description:
         "Search current primary API documentation when the user did not supply a verified contract. Use one focused search per service and reuse its result across a widget set.",
       parameters: objectSchema({ query: { type: "string", minLength: 2, maxLength: 240 } }, ["query"]),
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "integration_getKinds",
+      description:
+        "List integration kinds with required secret fields and supportsHttpRequests. Use this before selecting a saved integration for a Custom Widget source.",
+      parameters: objectSchema({}),
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "integration_all",
+      description:
+        "List accessible configured integrations. A Custom Widget integration source requires permissions.hasFullAccess and a kind whose supportsHttpRequests is true.",
+      parameters: objectSchema({}),
     },
   },
   {
@@ -445,6 +502,7 @@ export const customWidgetAssistantEvaluationToolDefinitions: ToolDefinition[] = 
         {
           definition: z.toJSONSchema(customWidgetAuthoringDefinitionSchema, { io: "input" }),
           secrets: { type: "array", items: { type: "object" }, maxItems: 0 },
+          definitionId: { type: "string" },
         },
         ["definition"],
       ),
@@ -511,12 +569,47 @@ export const customWidgetAssistantEvaluationToolDefinitions: ToolDefinition[] = 
     function: {
       name: "customWidget_createFromPreview",
       description: "Persist the exact final tested preview. Every query in that preview must have succeeded first.",
+      parameters: objectSchema(
+        { previewSessionId: { type: "string" }, targetBoardId: { type: "string", minLength: 1 } },
+        ["previewSessionId"],
+      ),
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "customWidget_updateFromPreview",
+      description:
+        "Update the existing Custom Widget associated with an exact final tested edit preview. Every query in that preview must have succeeded first.",
       parameters: objectSchema({ previewSessionId: { type: "string" } }, ["previewSessionId"]),
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "configure_widget",
+      description:
+        "Open Homarr's native widget editor with the known target board and created Custom Widget preselected. Use the returned boardId, kind, options, and integrationIds exactly with board_addItem.",
+      parameters: z.toJSONSchema(configureWidgetInputSchema, { io: "input" }),
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "board_addItem",
+      description:
+        "Add the reviewed widget to the target board at the first free grid position. Use the configure_widget result exactly.",
+      parameters: z.toJSONSchema(boardAddItemInputSchema, { io: "input" }),
     },
   },
 ];
 
-const initiallyActiveAssistantEvaluationTools = new Set(["web_search", "customWidget_getSkill"]);
+const initiallyActiveAssistantEvaluationTools = new Set([
+  "web_search",
+  "integration_getKinds",
+  "integration_all",
+  "customWidget_getSkill",
+]);
 const maxFocusedComponentSearchesPerPhase = 4;
 const customWidgetContextToolBudgets: Readonly<Record<string, number>> = {
   customWidget_findComponents: maxFocusedComponentSearchesPerPhase,
@@ -526,15 +619,54 @@ const customWidgetContextToolBudgets: Readonly<Record<string, number>> = {
   customWidget_getExample: 1,
 };
 
-export const getActiveAssistantEvaluationToolDefinitions = (state: AssistantAttemptState) => {
-  const availableNames = customWidgetAssistantEvaluationToolDefinitions.map(
-    ({ function: definition }) => definition.name,
+const getAssistantEvaluationPlacementState = (state: AssistantAttemptState) =>
+  resolveCustomWidgetPlacementState(
+    state.toolCalls.map((toolCall) => ({
+      toolName: toolCall.name,
+      input: toolCall.input,
+      output: toolCall.output,
+    })),
   );
+
+const hasRequiredAssistantEvaluationPlacement = (state: AssistantAttemptState, expectedWidgetCount: number) => {
+  if (!state.placement) return true;
+  const placedWidgetIds = new Set(
+    state.placementEvidence.flatMap(({ widgetId, boardId }) =>
+      boardId === state.placement?.targetBoardId ? [widgetId] : [],
+    ),
+  );
+  return placedWidgetIds.size >= expectedWidgetCount;
+};
+
+const isAssistantEvaluationComplete = (state: AssistantAttemptState, expectedWidgetCount: number) =>
+  state.createdWidgets.length >= expectedWidgetCount &&
+  hasRequiredAssistantEvaluationPlacement(state, expectedWidgetCount);
+
+export const getActiveAssistantEvaluationToolDefinitions = (state: AssistantAttemptState) => {
+  const availableNames = customWidgetAssistantEvaluationToolDefinitions.flatMap(({ function: definition }) => {
+    if (
+      !state.integrationDiscoveryEnabled &&
+      (definition.name === "integration_getKinds" || definition.name === "integration_all")
+    ) {
+      return [];
+    }
+    return [definition.name];
+  });
+  if (state.placement) {
+    const placementToolNames = getCustomWidgetPlacementToolNames(getAssistantEvaluationPlacementState(state));
+    if (placementToolNames.length > 0) {
+      return customWidgetAssistantEvaluationToolDefinitions.filter(({ function: definition }) =>
+        placementToolNames.includes(definition.name),
+      );
+    }
+  }
   const steps = state.toolCalls.map((toolCall) => ({
     toolResults: [{ toolName: toolCall.name, output: toolCall.output }],
   }));
   const phaseToolNames = getCustomWidgetPhaseToolNames(availableNames, steps);
-  const activeToolNames = new Set(phaseToolNames ?? initiallyActiveAssistantEvaluationTools);
+  const activeToolNames = new Set(
+    (phaseToolNames ?? [...initiallyActiveAssistantEvaluationTools]).filter((name) => availableNames.includes(name)),
+  );
   return customWidgetAssistantEvaluationToolDefinitions.filter(({ function: definition }) =>
     activeToolNames.has(definition.name),
   );
@@ -544,7 +676,11 @@ export const getAssistantEvaluationToolChoice = (
   state: AssistantAttemptState,
   expectedWidgetCount: number,
 ): "auto" | "required" => {
-  if (state.failure !== null || state.createdWidgets.length >= expectedWidgetCount) return "auto";
+  if (state.failure !== null) return "auto";
+  if (state.placement && getCustomWidgetPlacementToolNames(getAssistantEvaluationPlacementState(state)).length > 0) {
+    return "required";
+  }
+  if (isAssistantEvaluationComplete(state, expectedWidgetCount)) return "auto";
   const latestToolCall = state.toolCalls.at(-1);
   if (!latestToolCall) return "auto";
   const activeTools = getActiveAssistantEvaluationToolDefinitions(state);
@@ -735,16 +871,32 @@ const executeAssistantEvaluationToolCore = (
     return getContextPhaseCompleteOutput(name);
   }
   if (name === "web_search") {
+    const configuredResults = testCase.research?.searchResults;
     return {
       query: typeof input.query === "string" ? input.query : "",
-      results: [
+      results: configuredResults ?? [
         {
           title: `${testCase.id} primary API documentation`,
           url: testCase.documentationUrl,
           content: testCase.apiNotes,
+          authority: "first-party",
         },
       ],
     };
+  }
+  if (name === "integration_getKinds") {
+    return Object.entries(integrationDefs).map(([kind, definition]) => ({
+      kind,
+      name: definition.name,
+      category: definition.category,
+      requiredSecrets: definition.secretKinds,
+      supportsHttpRequests: definition.supportsHttpRequests,
+    }));
+  }
+  if (name === "integration_all") {
+    return (testCase.availableIntegrations ?? []).map(
+      ({ supportsHttpRequests: _supportsHttpRequests, ...integration }) => integration,
+    );
   }
   if (name === "customWidget_getSkill") return getCustomWidgetSkillEntrypoint();
   if (name === "customWidget_schema") return getCustomWidgetJsonSchema();
@@ -862,8 +1014,10 @@ const executeAssistantEvaluationToolCore = (
       };
     }
     const id = `preview-${state.previews.size + 1}`;
+    const definitionId = typeof input.definitionId === "string" ? input.definitionId : undefined;
     state.previews.set(id, {
       widget: parsed.widget,
+      definitionId,
       signature,
       revision: 0,
       testedQueries: new Set(),
@@ -874,6 +1028,7 @@ const executeAssistantEvaluationToolCore = (
       success: true,
       previewSession: { id, revision: 0 },
       previewPath: `/manage/custom-widgets/preview/${id}`,
+      persistenceTool: getAssistantEvaluationPersistenceTool({ definitionId }),
       ...getAssistantEvaluationPreviewChecklist(parsed.widget),
     });
   }
@@ -934,6 +1089,7 @@ const executeAssistantEvaluationToolCore = (
     }
     const signature = getDefinitionSignature(parsed.data);
     if (signature === preview.signature) {
+      const persistenceTool = getAssistantEvaluationPersistenceTool(preview);
       return {
         error: "Revised preview template is unchanged",
         unchanged: true,
@@ -942,11 +1098,7 @@ const executeAssistantEvaluationToolCore = (
         recovery: {
           recoverable: true,
           kind: "unchanged-preview-revision",
-          allowedNextTools: [
-            "customWidget_validateTemplate",
-            "customWidget_previewReviseTemplate",
-            "customWidget_createFromPreview",
-          ],
+          allowedNextTools: ["customWidget_validateTemplate", "customWidget_previewReviseTemplate", persistenceTool],
         },
         nextStep:
           "The existing preview and its evidence remain valid. Persist it, or make a distinct correction and validate before revising.",
@@ -967,6 +1119,7 @@ const executeAssistantEvaluationToolCore = (
       evidenceReset: true,
       previewSession: { id: sessionId, revision: preview.revision },
       previewPath: `/manage/custom-widgets/preview/${sessionId}`,
+      persistenceTool: getAssistantEvaluationPersistenceTool(preview),
       ...getAssistantEvaluationPreviewChecklist(preview.widget),
     });
   }
@@ -1037,11 +1190,17 @@ const executeAssistantEvaluationToolCore = (
     if (!preview) return { error: "Preview session not found" };
     return { entries: preview.journal };
   }
-  if (name === "customWidget_createFromPreview") {
+  if (name === "customWidget_createFromPreview" || name === "customWidget_updateFromPreview") {
     const sessionId = typeof input.previewSessionId === "string" ? input.previewSessionId : "";
     const preview = state.previews.get(sessionId);
     if (!preview) return { error: "Preview session not found" };
     if (state.createdPreviewIds.has(sessionId)) return { error: "This preview was already persisted" };
+    if (name === "customWidget_createFromPreview" && preview.definitionId) {
+      return { error: "This edit preview must update its existing custom widget with customWidget_updateFromPreview" };
+    }
+    if (name === "customWidget_updateFromPreview" && !preview.definitionId) {
+      return { error: "This preview is not associated with an existing custom widget definition" };
+    }
     const untestedQueries = Object.entries(preview.widget.requests).flatMap(([requestId, request]) =>
       request.kind === "query" && !preview.testedQueries.has(requestId) ? [requestId] : [],
     );
@@ -1062,15 +1221,94 @@ const executeAssistantEvaluationToolCore = (
         error: `Complete at least ${minimumPreviewCycles} distinct preview-and-evidence cycles before creation; ${completedPreviewCycles} completed. Make a material improvement, validate its JSX, create a fresh preview, and test it again.`,
       };
     }
+    const targetBoardId = typeof input.targetBoardId === "string" ? input.targetBoardId : undefined;
+    if (testCase.placement && targetBoardId !== testCase.placement.targetBoardId) {
+      return {
+        error: `Persist this preview with targetBoardId '${testCase.placement.targetBoardId}' so the requested placement can be verified.`,
+        recovery: {
+          recoverable: true,
+          kind: "placement-target-required",
+          requiredNextTool: "customWidget_createFromPreview",
+        },
+      };
+    }
+    if (!testCase.placement && targetBoardId !== undefined) {
+      return { error: "This evaluation case does not provide a known target board." };
+    }
     const widget = customWidgetDefinitionSchema.parse(preview.widget);
     state.createdPreviewIds.add(sessionId);
     state.createdWidgets.push(widget);
+    if (name === "customWidget_updateFromPreview") {
+      return {
+        id: preview.definitionId,
+        managementPath: `/manage/custom-widgets/edit/${preview.definitionId}`,
+      };
+    }
     const createdId = `created-${testCase.id}-${state.createdWidgets.length}`;
     return {
       id: createdId,
       managementPath: `/manage/custom-widgets/edit/${createdId}`,
-      nextAction: { type: "place-custom-widget", widgetKind: "customApi" },
+      nextAction: {
+        type: "place-custom-widget",
+        widgetKind: "customApi",
+        options: { definitionId: createdId },
+        ...(targetBoardId ? { targetBoardId } : {}),
+        whenTargetIsKnown: "Call configure_widget now with the requested board and these exact widget options.",
+        whenTargetIsUnknown:
+          "Call ask_user now with 'Place on a board' and 'Leave unplaced'. Never ask this choice in prose.",
+      },
     };
+  }
+  if (name === "configure_widget") {
+    const placementState = getAssistantEvaluationPlacementState(state);
+    if (!state.placement || placementState.status !== "configure") {
+      return { error: "No created Custom Widget is awaiting native configuration." };
+    }
+    const parsed = configureWidgetInputSchema.safeParse(input);
+    if (!parsed.success) return { error: "Widget configuration is invalid", issues: parsed.error.issues };
+    if (
+      parsed.data.boardId !== state.placement.targetBoardId ||
+      parsed.data.boardName !== state.placement.targetBoardName
+    ) {
+      return { error: "Use the known target board ID and name supplied by this evaluation case." };
+    }
+    if (parsed.data.kind !== "customApi" || parsed.data.options?.definitionId !== placementState.definitionId) {
+      return { error: "Configure the created Custom Widget with the exact definitionId from nextAction." };
+    }
+    return {
+      boardId: parsed.data.boardId,
+      kind: parsed.data.kind,
+      options: parsed.data.options ?? {},
+      integrationIds: parsed.data.integrationIds ?? [],
+    };
+  }
+  if (name === "board_addItem") {
+    const placementState = getAssistantEvaluationPlacementState(state);
+    if (!state.placement || placementState.status !== "board-add") {
+      return { error: "No configured Custom Widget is awaiting board placement." };
+    }
+    const parsed = boardAddItemInputSchema.safeParse(input);
+    if (!parsed.success) return { error: "Board item input is invalid", issues: parsed.error.issues };
+    const configured = state.toolCalls.findLast(
+      (toolCall) => toolCall.name === "configure_widget" && isRecord(toolCall.output) && !("error" in toolCall.output),
+    )?.output;
+    if (!isRecord(configured)) return { error: "Configure the widget before adding it to the board." };
+    const expectedInput = {
+      boardId: configured.boardId,
+      kind: configured.kind,
+      options: configured.options,
+      integrationIds: configured.integrationIds,
+    };
+    if (JSON.stringify(parsed.data) !== JSON.stringify(expectedInput)) {
+      return { error: "Use the configure_widget result exactly with board_addItem." };
+    }
+    const itemId = `item-${testCase.id}-${state.placementEvidence.length + 1}`;
+    state.placementEvidence.push({
+      widgetId: placementState.widgetId,
+      boardId: parsed.data.boardId,
+      itemId,
+    });
+    return { itemId };
   }
   return { error: `Unknown evaluation tool '${name}'` };
 };
@@ -1098,6 +1336,7 @@ export function executeAssistantEvaluationTool(
   name: string,
   input: Record<string, unknown>,
 ): unknown {
+  if (state.placement === undefined && testCase.placement) state.placement = testCase.placement;
   const normalizedInput = normalizeCustomWidgetLifecycleToolInput(name, input);
   const output = executeAssistantEvaluationToolCore(testCase, state, name, normalizedInput);
   state.calledTools.push(name);
@@ -1122,12 +1361,7 @@ export function getAssistantEvaluationLifecycleIssues(
   testCase: CustomWidgetAiEvaluationCase,
   state: AssistantAttemptState,
 ) {
-  const required = [
-    "customWidget_getSkill",
-    "customWidget_validateTemplate",
-    "customWidget_previewCreate",
-    "customWidget_createFromPreview",
-  ];
+  const required = ["customWidget_getSkill", "customWidget_validateTemplate", "customWidget_previewCreate"];
   const hasQueries = state.createdWidgets.some((widget) =>
     Object.values(widget.requests).some((request) => request.kind === "query"),
   );
@@ -1139,12 +1373,40 @@ export function getAssistantEvaluationLifecycleIssues(
   const issues = required.flatMap((name) =>
     state.calledTools.includes(name) ? [] : [`The assistant never called ${name}.`],
   );
+  if (
+    !state.calledTools.includes("customWidget_createFromPreview") &&
+    !state.calledTools.includes("customWidget_updateFromPreview")
+  ) {
+    issues.push("The assistant never called customWidget_createFromPreview or customWidget_updateFromPreview.");
+  }
   const expectedWidgetCount = getExpectedWidgetCount(testCase);
   if (state.createdWidgets.length !== expectedWidgetCount) {
     issues.push(`The assistant created ${state.createdWidgets.length} of ${expectedWidgetCount} required widgets.`);
   }
+  const placedWidgetIds = new Set(
+    state.placementEvidence.flatMap(({ widgetId, boardId }) =>
+      boardId === testCase.placement?.targetBoardId ? [widgetId] : [],
+    ),
+  );
+  if (testCase.placement && placedWidgetIds.size !== expectedWidgetCount) {
+    issues.push(
+      `The assistant placed ${placedWidgetIds.size} of ${expectedWidgetCount} required widgets on '${testCase.placement.targetBoardName}'.`,
+    );
+  }
   if (testCase.research && state.calledTools.filter((name) => name === "web_search").length !== 1) {
     issues.push("The assistant must perform exactly one shared primary-documentation search for this widget set.");
+  }
+  const webSearchCall = state.toolCalls.find((toolCall) => toolCall.name === "web_search");
+  const webSearchQuery = typeof webSearchCall?.input.query === "string" ? webSearchCall.input.query.toLowerCase() : "";
+  for (const term of testCase.research?.requiredQueryTerms ?? []) {
+    if (!webSearchQuery.includes(term.toLowerCase())) {
+      issues.push(`The primary-documentation search omitted required term '${term}'.`);
+    }
+  }
+  for (const term of testCase.research?.forbiddenQueryTerms ?? []) {
+    if (webSearchQuery.includes(term.toLowerCase())) {
+      issues.push(`The primary-documentation search included forbidden term '${term}'.`);
+    }
   }
   for (const reference of testCase.research?.requiredReferences ?? []) {
     const loaded = state.toolCalls.some(
@@ -1152,7 +1414,62 @@ export function getAssistantEvaluationLifecycleIssues(
     );
     if (!loaded) issues.push(`The assistant never loaded the required '${reference}' reference.`);
   }
+  if (testCase.expectations?.sourceType === "integration") {
+    for (const toolName of ["integration_getKinds", "integration_all"]) {
+      if (!state.calledTools.includes(toolName)) issues.push(`The assistant never called ${toolName}.`);
+    }
+  }
+  if (testCase.finalResponse) {
+    issues.push(
+      ...assessAssistantFinalResponse({
+        text: state.finalText,
+        persistedWidgets: state.createdWidgets,
+        maxCharacters: testCase.finalResponse.maxCharacters,
+        requiredTerms: testCase.finalResponse.requiredTerms ?? [],
+        placementEvidence: state.placementEvidence,
+      }).issues,
+    );
+  }
   return issues;
+}
+
+export function assessAssistantFinalResponse(args: {
+  text: string;
+  persistedWidgets: readonly HomarrCustomWidgetV2[];
+  maxCharacters: number;
+  requiredTerms: readonly string[];
+  placementEvidence?: readonly AssistantEvaluationPlacementEvidence[];
+}) {
+  const response = args.text.trim();
+  const words = response.length === 0 ? 0 : response.split(/\s+/u).length;
+  const issues: string[] = [];
+  if (response.length === 0) issues.push("The assistant did not return a final user-facing response.");
+  if (response.length > args.maxCharacters) {
+    issues.push(`The final response used ${response.length} characters; the limit is ${args.maxCharacters}.`);
+  }
+  if (response.length > 0 && words < 8) issues.push("The final response is too terse to hand off the created widget.");
+  if (words > 80) issues.push("The final response exceeds the 80-word handoff limit.");
+  if (/\n\s*(?:[-*#]|\d+\.)|```/u.test(response)) {
+    issues.push("The final response must be one short paragraph without headings, lists, or code fences.");
+  }
+  if (!/\b(?:created|saved|updated)\b/iu.test(response)) {
+    issues.push("The final response must state that the widget was created, saved, or updated.");
+  }
+  const namesToRequire = args.persistedWidgets.length <= 4 ? args.persistedWidgets.map(({ name }) => name) : [];
+  for (const name of namesToRequire) {
+    if (!response.toLowerCase().includes(name.toLowerCase()))
+      issues.push(`The final response omitted widget '${name}'.`);
+  }
+  for (const term of args.requiredTerms) {
+    if (!response.toLowerCase().includes(term.toLowerCase())) issues.push(`The final response omitted '${term}'.`);
+  }
+  if (/"(?:schemaVersion|sources|requests|template)"\s*:|<Stack\b|customWidget_/u.test(response)) {
+    issues.push("The final response dumped implementation or tool data instead of a concise handoff.");
+  }
+  if (/\b(?:added|placed)\b[^.\n]{0,40}\b(?:board|dashboard)\b/iu.test(response) && !args.placementEvidence?.length) {
+    issues.push("The final response claimed board placement without placement evidence.");
+  }
+  return { passed: issues.length === 0, issues, words, characters: response.length };
 }
 
 export function getAssistantEvaluationEfficiencyIssues(
@@ -1246,16 +1563,27 @@ export function getAssistantEvaluationEfficiencyIssues(
   if (new Set(loadedReferences).size !== loadedReferences.length) {
     issues.push("The assistant loaded the same named reference more than once.");
   }
-  for (const toolCall of state.toolCalls.filter((candidate) => candidate.name === "customWidget_createFromPreview")) {
-    if (Object.keys(toolCall.input).some((key) => key !== "previewSessionId")) {
+  for (const toolCall of state.toolCalls.filter(
+    (candidate) =>
+      candidate.name === "customWidget_createFromPreview" || candidate.name === "customWidget_updateFromPreview",
+  )) {
+    const allowedInputKeys = ["previewSessionId"];
+    if (toolCall.name === "customWidget_createFromPreview") allowedInputKeys.push("targetBoardId");
+    if (Object.keys(toolCall.input).some((key) => !allowedInputKeys.includes(key))) {
       issues.push("The assistant resent definition data while persisting a tested preview.");
     }
   }
   return issues;
 }
 
-export function createAssistantEvaluationState(): AssistantAttemptState {
+export function createAssistantEvaluationState(
+  integrationDiscoveryEnabled = false,
+  placement?: CustomWidgetAiPlacementFixture,
+): AssistantAttemptState {
   return {
+    integrationDiscoveryEnabled,
+    placement,
+    placementEvidence: [],
     calledTools: [],
     toolCalls: [],
     validatedTemplates: new Set(),
@@ -1274,6 +1602,16 @@ export function createAssistantEvaluationState(): AssistantAttemptState {
 
 function buildAssistantPrompt(testCase: CustomWidgetAiEvaluationCase, feedback: readonly string[]) {
   const sections = [testCase.request];
+  if (testCase.availableIntegrations?.length) {
+    sections.push(
+      "Use integration_getKinds and integration_all to discover and reuse the compatible saved integration. Do not ask for its URL or credentials again.",
+    );
+  }
+  if (testCase.placement) {
+    sections.push(
+      `After the tested preview is ready, persist it with targetBoardId '${testCase.placement.targetBoardId}', then complete configure_widget and board_addItem for the known '${testCase.placement.targetBoardName}' board before claiming placement.`,
+    );
+  }
   if (testCase.research) {
     sections.push(
       `The API contract was not supplied in the conversation. Use web_search exactly once with a focused primary-documentation query and reuse that result for the complete widget set.`,
@@ -1302,6 +1640,11 @@ function buildAssistantPrompt(testCase: CustomWidgetAiEvaluationCase, feedback: 
   sections.push(
     "Use the available Custom Widget tools and continue automatically until the exact tested preview is created. Do not merely return JSON or instructions.",
   );
+  if (testCase.finalResponse) {
+    sections.push(
+      `After persistence, return one concise user-facing handoff of at most ${testCase.finalResponse.maxCharacters} characters. Name what was created and summarize the data, refresh behavior, and any real setup or privilege limitation without dumping the manifest or tool narration.`,
+    );
+  }
   return sections.join("\n\n");
 }
 
@@ -1317,43 +1660,61 @@ async function callAssistantStep(args: {
   const compactedMessages = compactAssistantEvaluationMessages(args.messages);
   const messages = compactedMessages.map((message, index) => {
     if (index !== 0 || message.role !== "system") return message;
+    if (activeToolNames.length === 0) return message;
     return {
       ...message,
       content: appendActiveCustomWidgetToolInstruction(message.content, activeToolNames),
     };
   });
-  const response = await fetch(getAiProviderChatCompletionsUrl(args.baseUrl), {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${args.apiKey}`,
-      "Content-Type": "application/json",
-      "HTTP-Referer": "https://homarr.dev",
-      "X-Title": "Homarr Custom Widget Assistant Evaluation",
-    },
-    body: JSON.stringify({
-      model: args.model,
-      messages,
-      tools: args.tools,
-      ...assistantEvaluationToolRequestOptions,
-      tool_choice: args.toolChoice,
-      temperature: assistantEvaluationTemperature,
-      max_tokens: getAssistantEvaluationMaxOutputTokens(process.env.CUSTOM_WIDGET_AI_MAX_OUTPUT_TOKENS),
-      reasoning: assistantEvaluationReasoningOptions,
-      ...(assistantEvaluationProviderPreferences ? { provider: assistantEvaluationProviderPreferences } : {}),
-    }),
-    signal: AbortSignal.timeout(180_000),
-  });
-  const payload = (await response.json()) as OpenRouterResponse;
-  if (!response.ok) {
-    throw new Error(`AI provider request failed (${response.status}): ${payload.error?.message ?? "Unknown error"}`);
-  }
-  const message = payload.choices?.[0]?.message;
-  if (!message) throw new Error("AI provider returned no assistant message");
-  return {
-    message,
-    inputTokens: payload.usage?.prompt_tokens ?? 0,
-    outputTokens: payload.usage?.completion_tokens ?? 0,
+  const reservation = aiEvaluationSpendBudget.reserve();
+  let settled = false;
+  const settle = (cost?: number) => {
+    if (settled) return;
+    settled = true;
+    aiEvaluationSpendBudget.settle(reservation, cost);
   };
+  try {
+    const response = await fetch(getAiProviderChatCompletionsUrl(args.baseUrl), {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${args.apiKey}`,
+        "Content-Type": "application/json",
+        "HTTP-Referer": "https://homarr.dev",
+        "X-Title": "Homarr Custom Widget Assistant Evaluation",
+      },
+      body: JSON.stringify({
+        model: args.model,
+        messages,
+        ...(args.tools.length > 0
+          ? {
+              tools: args.tools,
+              ...assistantEvaluationToolRequestOptions,
+              tool_choice: args.toolChoice,
+            }
+          : {}),
+        temperature: assistantEvaluationTemperature,
+        max_tokens: getAssistantEvaluationMaxOutputTokens(process.env.CUSTOM_WIDGET_AI_MAX_OUTPUT_TOKENS),
+        reasoning: assistantEvaluationReasoningOptions,
+        ...(assistantEvaluationProviderPreferences ? { provider: assistantEvaluationProviderPreferences } : {}),
+      }),
+      signal: AbortSignal.timeout(getAiEvaluationRequestTimeoutMs(process.env.CUSTOM_WIDGET_AI_REQUEST_TIMEOUT_MS)),
+    });
+    const payload = (await response.json()) as OpenRouterResponse;
+    settle(payload.usage?.cost);
+    if (!response.ok) {
+      throw new Error(`AI provider request failed (${response.status}): ${payload.error?.message ?? "Unknown error"}`);
+    }
+    const message = payload.choices?.[0]?.message;
+    if (!message) throw new Error("AI provider returned no assistant message");
+    return {
+      message,
+      inputTokens: payload.usage?.prompt_tokens ?? 0,
+      outputTokens: payload.usage?.completion_tokens ?? 0,
+    };
+  } catch (error) {
+    settle();
+    throw error;
+  }
 }
 
 async function runAssistantAttempt(args: {
@@ -1365,7 +1726,10 @@ async function runAssistantAttempt(args: {
   assistantPolicy: string;
   feedback: readonly string[];
 }) {
-  const state = createAssistantEvaluationState();
+  const state = createAssistantEvaluationState(
+    (args.testCase.availableIntegrations?.length ?? 0) > 0,
+    args.testCase.placement,
+  );
   const messages: OpenRouterMessage[] = [
     {
       role: "system",
@@ -1381,12 +1745,16 @@ async function runAssistantAttempt(args: {
   for (let step = 0; step < MAX_ASSISTANT_STEPS; step += 1) {
     let stepResult: Awaited<ReturnType<typeof callAssistantStep>>;
     try {
+      let tools = getActiveAssistantEvaluationToolDefinitions(state);
+      if (isAssistantEvaluationComplete(state, getExpectedWidgetCount(args.testCase)) && args.testCase.finalResponse) {
+        tools = [];
+      }
       stepResult = await callAssistantStep({
         apiKey: args.apiKey,
         baseUrl: args.baseUrl,
         model: args.model,
         messages,
-        tools: getActiveAssistantEvaluationToolDefinitions(state),
+        tools,
         toolChoice: getAssistantEvaluationToolChoice(state, getExpectedWidgetCount(args.testCase)),
       });
     } catch (error) {
@@ -1413,7 +1781,12 @@ async function runAssistantAttempt(args: {
     messages.push(message);
     if (!message.tool_calls || message.tool_calls.length === 0) {
       state.finalText = message.content ?? "";
-      state.failure = `The model stopped with prose after creating ${state.createdWidgets.length} of ${getExpectedWidgetCount(args.testCase)} required widgets.`;
+      if (!isAssistantEvaluationComplete(state, getExpectedWidgetCount(args.testCase))) {
+        const placementDetail = args.testCase.placement
+          ? ` and placing ${state.placementEvidence.length} of ${getExpectedWidgetCount(args.testCase)}`
+          : "";
+        state.failure = `The model stopped with prose after creating ${state.createdWidgets.length} of ${getExpectedWidgetCount(args.testCase)}${placementDetail} required widgets.`;
+      }
       break;
     }
     for (const toolCall of message.tool_calls) {
@@ -1431,7 +1804,9 @@ async function runAssistantAttempt(args: {
       }
       messages.push({ role: "tool", tool_call_id: toolCall.id, content: JSON.stringify(output) });
     }
-    if (state.createdWidgets.length >= getExpectedWidgetCount(args.testCase)) break;
+    if (isAssistantEvaluationComplete(state, getExpectedWidgetCount(args.testCase)) && !args.testCase.finalResponse) {
+      break;
+    }
   }
   return { state, messages };
 }

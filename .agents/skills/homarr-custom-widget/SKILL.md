@@ -47,9 +47,9 @@ Return one fenced `json` block with the complete definition; keep evidence prose
    `customWidget_validateTemplate` once, then visible `customWidget_previewCreate` with the corrected definition; use
    `customWidget_previewReviseTemplate` only for JSX errors. Stop only for genuine provider/model, lifecycle-service, or
    workbench-closure failure.
-4. After a successful final preview/tests, call `customWidget_createFromPreview`; follow `nextAction` once if needed, finish it,
-   and never recreate it. Continue only with distinct requested widgets; configure URLs/credentials in Homarr and never repeat
-   plaintext secrets.
+4. If `previewCreate` used `definitionId`, persist with `customWidget_updateFromPreview`; otherwise use
+   `customWidget_createFromPreview`. Follow create `nextAction` once. Configure credentials in Homarr; never repeat plaintext
+   secrets.
 
 ## Delivery
 

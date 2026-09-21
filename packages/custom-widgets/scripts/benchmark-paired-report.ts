@@ -17,6 +17,8 @@ interface EvaluationSummary {
   judgeModel?: string;
   generation?: {
     maxLoops?: number;
+    concurrency?: number;
+    requestTimeoutMs?: number;
     temperature?: number;
     reasoning?: unknown;
     maxOutputTokens?: number;
@@ -30,7 +32,7 @@ interface EvaluationSummary {
     assistantPolicy?: { sha256?: string };
   } | null;
   harness?: { sha256?: string; judgePolicySha256?: string };
-  benchmark?: { split?: string; sha256?: string; caseIds?: string[] };
+  benchmark?: { suite?: string; split?: string; sha256?: string; caseIds?: string[] };
   results: CaseResult[];
 }
 
@@ -97,6 +99,7 @@ const getPromptProvenance = (summary: EvaluationSummary, source: string) => {
 };
 
 const getConfiguration = (summary: EvaluationSummary) => ({
+  suite: summary.benchmark?.suite ?? "core",
   split: summary.benchmark?.split ?? null,
   benchmarkSha256: summary.benchmark?.sha256 ?? null,
   caseIds: [...(summary.benchmark?.caseIds ?? [])].toSorted(),
@@ -104,6 +107,8 @@ const getConfiguration = (summary: EvaluationSummary) => ({
   generatorModel: summary.generatorModel ?? null,
   judgeModel: summary.judgeModel ?? null,
   maxLoops: summary.generation?.maxLoops ?? null,
+  concurrency: summary.generation?.concurrency ?? null,
+  requestTimeoutMs: summary.generation?.requestTimeoutMs ?? null,
   temperature: summary.generation?.temperature ?? null,
   reasoning: summary.generation?.reasoning ?? null,
   maxOutputTokens: summary.generation?.maxOutputTokens ?? null,
@@ -127,7 +132,9 @@ const getResultMap = (summary: EvaluationSummary, source: string) => {
 const score = (result: CaseResult) => (typeof result.score === "number" ? result.score : 0);
 const passed = (result: CaseResult) => result.verdict === "pass";
 const completedLifecycle = (result: CaseResult) =>
-  result.calledTools?.includes("customWidget_createFromPreview") === true && (result.widgets ?? 0) > 0;
+  (result.calledTools?.includes("customWidget_createFromPreview") === true ||
+    result.calledTools?.includes("customWidget_updateFromPreview") === true) &&
+  (result.widgets ?? 0) > 0;
 
 export const getWilsonInterval = (successes: number, total: number) => {
   if (total === 0) return { lower: 0, upper: 0 };
@@ -353,14 +360,15 @@ export function comparePairedRepeatedSummaries(inputs: readonly PairedSummaryInp
   };
 }
 
-const renderReport = (comparison: ReturnType<typeof comparePairedRepeatedSummaries>) => {
+export const renderPairedBenchmarkReport = (comparison: ReturnType<typeof comparePairedRepeatedSummaries>) => {
   const { pooled } = comparison;
+  const { configuration } = comparison.provenance;
   const formatRate = (metric: RateMetric) =>
     `${metric.rate}% (${metric.count}/${metric.total}); Wilson 95% [${round(metric.wilson95.lower * 100, 2)}%, ${round(metric.wilson95.upper * 100, 2)}%]`;
   const lines = [
     "# Paired repeated Custom Widget benchmark",
     "",
-    `Split: ${comparison.split}; repetitions: ${comparison.repetitions}; paired observations: ${comparison.pairedObservations}`,
+    `Suite: ${configuration.suite}; split: ${comparison.split}; concurrency: ${configuration.concurrency ?? "n/a"}; request timeout: ${configuration.requestTimeoutMs ?? "n/a"} ms; repetitions: ${comparison.repetitions}; paired observations: ${comparison.pairedObservations}`,
     "",
     "| Arm | Mean score | Strict pass | Lifecycle |",
     "| --- | ---: | ---: | ---: |",
@@ -413,6 +421,6 @@ if (process.argv[1] && pathToFileURL(path.resolve(process.argv[1])).href === imp
   await mkdir(output, { recursive: true });
   await Promise.all([
     writeFile(path.join(output, "paired-comparison.json"), `${JSON.stringify(comparison, null, 2)}\n`, "utf8"),
-    writeFile(path.join(output, "paired-report.md"), renderReport(comparison), "utf8"),
+    writeFile(path.join(output, "paired-report.md"), renderPairedBenchmarkReport(comparison), "utf8"),
   ]);
 }

@@ -73,7 +73,7 @@ const hasMatchingDefinitionId = (value: unknown, definitionId: string | undefine
     options = value.options;
   }
   const submittedDefinitionId = getRecordString(options, "definitionId");
-  return submittedDefinitionId === undefined || submittedDefinitionId === definitionId;
+  return submittedDefinitionId === definitionId;
 };
 
 const isSuccessfulConfigureWidget = (

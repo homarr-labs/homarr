@@ -21,6 +21,7 @@ import { customWidgetDefinitions } from "@homarr/db/schema";
 
 import { permissionRequiredProcedure } from "../../trpc";
 import { parseCustomWidgetAuthoringInput } from "./authoring-validation";
+import { getCustomWidgetDefinitionStateFingerprint } from "./definition-update";
 import { createPreviewSession, getPreviewSession, revisePreviewSessionTemplate } from "./preview-sessions";
 import { hasSameSecretBinding, requiredSecretKinds } from "./secret-policy";
 import { parseStoredCustomWidgetDefinition } from "./stored-definition";
@@ -106,12 +107,17 @@ const previewCreateProcedure = permissionRequiredProcedure
     }
 
     const secrets = [...input.secrets];
+    let definitionStateFingerprint: string | undefined;
+    let persistenceTool: "customWidget_createFromPreview" | "customWidget_updateFromPreview" =
+      "customWidget_createFromPreview";
     if (input.definitionId) {
       const existing = await ctx.db.query.customWidgetDefinitions.findFirst({
         where: eq(customWidgetDefinitions.id, input.definitionId),
         with: { secrets: true },
       });
       if (!existing) throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget definition not found" });
+      definitionStateFingerprint = getCustomWidgetDefinitionStateFingerprint(existing, existing.secrets);
+      persistenceTool = "customWidget_updateFromPreview";
       const existingDefinition = parseStoredCustomWidgetDefinition(existing);
       for (const [sourceId, existingSource] of Object.entries(existingDefinition.sources)) {
         const submittedSource = definition.sources[sourceId];
@@ -170,6 +176,7 @@ const previewCreateProcedure = permissionRequiredProcedure
       options,
       secrets,
       definitionId: input.definitionId,
+      definitionStateFingerprint,
     });
     const previewPath = `/manage/custom-widgets/preview/${previewSession.id}`;
     return {
@@ -177,6 +184,7 @@ const previewCreateProcedure = permissionRequiredProcedure
       previewSession,
       previewPath,
       previewUrl: new URL(previewPath, ctx.baseUrl ?? "http://localhost").toString(),
+      persistenceTool,
       ...getPreviewEvidenceChecklist(definition.requests, previewSession.id),
     };
   });
@@ -205,6 +213,9 @@ export const previewBaseProcedures = {
         input.expectedRevision,
       );
       const session = await getPreviewSession(revised.id, ctx.session.user.id);
+      let persistenceTool: "customWidget_createFromPreview" | "customWidget_updateFromPreview" =
+        "customWidget_createFromPreview";
+      if (session.definitionId) persistenceTool = "customWidget_updateFromPreview";
       const previewPath = `/manage/custom-widgets/preview/${session.id}`;
       return {
         success: true as const,
@@ -217,6 +228,7 @@ export const previewBaseProcedures = {
         },
         previewPath,
         previewUrl: new URL(previewPath, ctx.baseUrl ?? "http://localhost").toString(),
+        persistenceTool,
         ...getPreviewEvidenceChecklist(session.requests, session.id),
       };
     }),

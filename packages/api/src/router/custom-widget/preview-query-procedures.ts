@@ -28,7 +28,7 @@ export const previewQueryProcedures = {
       mcp: {
         enabled: true,
         description:
-          "Execute one real API query from a preview evidence list and return its HTTP status plus parsed data so request paths and template bindings can be verified. Call once for every query in the current preview revision before customWidget_createFromPreview.",
+          "Execute one real API query from a preview evidence list and return its HTTP status plus parsed data so request paths and template bindings can be verified. Call once for every query in the current preview revision before createFromPreview or updateFromPreview persistence.",
       },
     })
     .input(previewSessionRequestSchema)

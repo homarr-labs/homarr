@@ -3,7 +3,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import { CUSTOM_WIDGET_ASSISTANT_POLICY, CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION } from "../src/core/ai-prompt";
-import { CUSTOM_WIDGET_AI_EVALUATION_CASES } from "./ai-evaluation-cases";
+import { getCustomWidgetAiEvaluationSuite, resolveCustomWidgetAiEvaluationSuiteId } from "./ai-evaluation-suites";
 import {
   assistantEvaluationProviderPreferences,
   assistantEvaluationReasoningOptions,
@@ -19,9 +19,13 @@ import type { CustomWidgetAssistantEvaluationResult } from "./ai-assistant-evalu
 import { createAssistantPromptBundleSnapshot, parseAssistantPromptBundle } from "./assistant-prompt-bundle";
 import type { AssistantPromptBundleFile } from "./assistant-prompt-bundle";
 import {
+  aiEvaluationSpendBudget,
   evaluateCustomWidgetCase,
   getAiEvaluationMaxOutputTokens,
+  getAiEvaluationConcurrency,
+  getAiEvaluationRequestTimeoutMs,
   getCustomWidgetJudgePolicyHash,
+  mapAiEvaluationCasesWithConcurrency,
   resolveAiEvaluationProviderConfig,
 } from "./ai-evaluation";
 import type { AiEvaluationResult } from "./ai-evaluation";
@@ -35,6 +39,7 @@ const {
 } = resolveAiEvaluationProviderConfig(process.env);
 
 const requestedCaseArgument = process.argv.find((value) => value.startsWith("--case="))?.slice("--case=".length);
+const suiteArgument = process.argv.find((value) => value.startsWith("--suite="))?.slice("--suite=".length);
 const splitArgument = process.argv.find((value) => value.startsWith("--split="))?.slice("--split=".length);
 const evaluationSplits = ["train", "dev", "heldout"] as const;
 const requestedSplit = evaluationSplits.find((split) => split === splitArgument);
@@ -50,8 +55,13 @@ const outputRootArgument = process.argv
 const experimentId = process.argv.find((value) => value.startsWith("--experiment="))?.slice("--experiment=".length);
 const generationId = process.argv.find((value) => value.startsWith("--generation="))?.slice("--generation=".length);
 const maxLoopsArgument = process.argv.find((value) => value.startsWith("--max-loops="))?.slice("--max-loops=".length);
+const concurrencyArgument = process.argv
+  .find((value) => value.startsWith("--concurrency="))
+  ?.slice("--concurrency=".length);
 const assistantMode = process.argv.includes("--assistant");
 if (requestedCaseArgument === "") throw new Error("--case requires a case ID");
+const selectedSuiteId = resolveCustomWidgetAiEvaluationSuiteId(suiteArgument ?? process.env.CUSTOM_WIDGET_AI_SUITE);
+const evaluationCases = getCustomWidgetAiEvaluationSuite(selectedSuiteId);
 if (splitArgument !== undefined && requestedSplit === undefined) {
   throw new Error("--split must be one of: train, dev, heldout");
 }
@@ -72,12 +82,15 @@ if (candidatePromptBundleArgument === "") throw new Error("--candidate-prompt-bu
 if (outputRootArgument === "") throw new Error("--output-root requires a directory path");
 if (experimentId === "") throw new Error("--experiment requires an identifier");
 if (generationId === "") throw new Error("--generation requires an identifier");
+if (concurrencyArgument === "") throw new Error("--concurrency requires an integer");
 
 const maxLoopsConfiguration = resolveAssistantEvaluationMaxLoops(
   maxLoopsArgument,
   process.env.CUSTOM_WIDGET_AI_MAX_LOOPS,
 );
 const maxLoops = maxLoopsConfiguration.value;
+const concurrency = getAiEvaluationConcurrency(concurrencyArgument ?? process.env.CUSTOM_WIDGET_AI_CONCURRENCY);
+const requestTimeoutMs = getAiEvaluationRequestTimeoutMs(process.env.CUSTOM_WIDGET_AI_REQUEST_TIMEOUT_MS);
 validateAssistantEvaluationExperimentConfiguration(
   maxLoops,
   experimentId,
@@ -131,6 +144,8 @@ const harnessSourceUrls = [
   new URL("./assistant-prompt-bundle.ts", import.meta.url),
   new URL("./ai-evaluation.ts", import.meta.url),
   new URL("../src/core/assistant-authoring-phase.ts", import.meta.url),
+  new URL("../src/core/assistant-placement.ts", import.meta.url),
+  new URL("../src/core/assistant-template-lifecycle.ts", import.meta.url),
   new URL("../src/core/assistant-tool-input.ts", import.meta.url),
   new URL("../src/core/assistant-tool-step.ts", import.meta.url),
   new URL("../src/core/custom-jsx-schema.ts", import.meta.url),
@@ -144,9 +159,9 @@ const harnessSnapshot = {
 if (!apiKey) {
   throw new Error("AI_PROVIDER_API_KEY or OPENROUTER_API_KEY is required for the live Custom Widget AI evaluation");
 }
-let selectableCases = CUSTOM_WIDGET_AI_EVALUATION_CASES.filter((testCase) => !testCase.expectedWidgets?.length);
+let selectableCases = evaluationCases.filter((testCase) => !testCase.expectedWidgets?.length);
 if (assistantMode) {
-  selectableCases = CUSTOM_WIDGET_AI_EVALUATION_CASES.filter(
+  selectableCases = evaluationCases.filter(
     (testCase) =>
       (testCase.sampleResponse !== undefined || testCase.previewResponses?.length) &&
       (testCase.expectations !== undefined || testCase.expectedWidgets?.length),
@@ -179,8 +194,7 @@ function getResultScoreFloor(result: AiEvaluationResult | CustomWidgetAssistantE
   return result.judge?.total ?? null;
 }
 
-const results: Array<AiEvaluationResult | CustomWidgetAssistantEvaluationResult> = [];
-for (const testCase of selectedCases) {
+const results = await mapAiEvaluationCasesWithConcurrency(selectedCases, concurrency, async (testCase) => {
   process.stdout.write(`Evaluating ${testCase.id}...\n`);
   let result: AiEvaluationResult | CustomWidgetAssistantEvaluationResult;
   if (assistantMode) {
@@ -207,7 +221,6 @@ for (const testCase of selectedCases) {
       generatorTemperature,
     });
   }
-  results.push(result);
   if (result.judge) {
     const widgetCount = "widgets" in result ? result.widgets.length : 1;
     const scoreFloor = getResultScoreFloor(result);
@@ -218,7 +231,8 @@ for (const testCase of selectedCases) {
   } else {
     process.stdout.write(`  failed after ${result.attempts} attempt(s)\n`);
   }
-}
+  return result;
+});
 
 const summary = {
   generatedAt: new Date().toISOString(),
@@ -227,6 +241,8 @@ const summary = {
     experimentId: experimentId ?? null,
     generationId: generationId ?? null,
     maxLoops,
+    concurrency,
+    requestTimeoutMs,
     maxLoopsConfiguration,
     model: generatorModel,
     temperature: assistantMode ? assistantEvaluationTemperature : generatorTemperature,
@@ -241,10 +257,12 @@ const summary = {
   providerBaseUrl,
   generatorModel,
   judgeModel,
+  spend: aiEvaluationSpendBudget.snapshot(),
   assistantPrompt: assistantMode ? assistantPromptSnapshot : null,
   assistantPromptBundle: assistantMode ? assistantPromptBundleSnapshot : null,
   harness: harnessSnapshot,
   benchmark: {
+    suite: selectedSuiteId,
     split: selectedSplit,
     ...caseSnapshot,
   },

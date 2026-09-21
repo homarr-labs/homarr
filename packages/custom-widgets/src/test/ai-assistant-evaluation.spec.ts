@@ -3,6 +3,7 @@ import { z } from "zod/v4";
 
 import { CUSTOM_WIDGET_AI_EVALUATION_CASES } from "../../scripts/ai-evaluation-cases";
 import {
+  assessAssistantFinalResponse,
   assistantEvaluationToolRequestOptions,
   assistantEvaluationReasoningOptions,
   assistantEvaluationTemperature,
@@ -322,6 +323,157 @@ describe("Custom Widget assistant live evaluation harness", () => {
         templateLines: { type: "array" },
       },
     });
+    expect(previewParameters?.properties?.definitionId).toEqual({ type: "string" });
+    const createFromPreviewTool = customWidgetAssistantEvaluationToolDefinitions.find(
+      ({ function: definition }) => definition.name === "customWidget_createFromPreview",
+    );
+    expect(createFromPreviewTool?.function.parameters).toMatchObject({
+      required: ["previewSessionId"],
+      properties: {
+        previewSessionId: { type: "string" },
+        targetBoardId: { type: "string", minLength: 1 },
+      },
+    });
+    const updateFromPreviewTool = customWidgetAssistantEvaluationToolDefinitions.find(
+      ({ function: definition }) => definition.name === "customWidget_updateFromPreview",
+    );
+    expect(updateFromPreviewTool?.function.parameters).toMatchObject({
+      required: ["previewSessionId"],
+      properties: { previewSessionId: { type: "string" } },
+    });
+  });
+
+  it("simulates editing an existing definition through updateFromPreview", () => {
+    const testCase = getCase("fake-service-health");
+    const state = createAssistantEvaluationState();
+    executeAssistantEvaluationTool(testCase, state, "customWidget_getSkill", {});
+    validateTemplate(testCase, state, healthWidget);
+    expect(
+      executeAssistantEvaluationTool(testCase, state, "customWidget_previewCreate", {
+        definition: healthWidget,
+        definitionId: "existing-widget-1",
+      }),
+    ).toMatchObject({
+      success: true,
+      previewSession: { id: "preview-1" },
+      persistenceTool: "customWidget_updateFromPreview",
+    });
+    expect(
+      executeAssistantEvaluationTool(testCase, state, "customWidget_createFromPreview", {
+        previewSessionId: "preview-1",
+      }),
+    ).toEqual({
+      error: "This edit preview must update its existing custom widget with customWidget_updateFromPreview",
+    });
+    expect(
+      executeAssistantEvaluationTool(testCase, state, "customWidget_previewQuery", {
+        sessionId: "preview-1",
+        requestId: "health",
+        params: {},
+      }),
+    ).toMatchObject({
+      evidenceComplete: true,
+      recommendedNextTool: "customWidget_updateFromPreview",
+    });
+    expect(
+      getActiveAssistantEvaluationToolDefinitions(state).map(({ function: definition }) => definition.name),
+    ).toEqual(["customWidget_updateFromPreview"]);
+    expect(
+      executeActiveAssistantEvaluationTool(testCase, state, "customWidget_updateFromPreview", {
+        previewSessionId: "preview-1",
+      }),
+    ).toEqual({
+      id: "existing-widget-1",
+      managementPath: "/manage/custom-widgets/edit/existing-widget-1",
+    });
+    expect(state.createdWidgets).toHaveLength(1);
+    expect(getAssistantEvaluationLifecycleIssues(testCase, state)).toEqual([]);
+    expect(getAssistantEvaluationEfficiencyIssues(testCase, state)).toEqual([]);
+  });
+
+  it("forces known-board placement through configure_widget and board_addItem with evidence", () => {
+    const testCase = {
+      ...getCase("fake-service-health"),
+      placement: { targetBoardId: "board-home", targetBoardName: "Home" },
+    };
+    const state = createAssistantEvaluationState(false, testCase.placement);
+    executeAssistantEvaluationTool(testCase, state, "customWidget_getSkill", {});
+    validateTemplate(testCase, state, healthWidget);
+    executeAssistantEvaluationTool(testCase, state, "customWidget_previewCreate", { definition: healthWidget });
+    executeAssistantEvaluationTool(testCase, state, "customWidget_previewQuery", {
+      sessionId: "preview-1",
+      requestId: "health",
+      params: {},
+    });
+
+    expect(
+      executeAssistantEvaluationTool(testCase, state, "customWidget_createFromPreview", {
+        previewSessionId: "preview-1",
+      }),
+    ).toMatchObject({
+      error: "Persist this preview with targetBoardId 'board-home' so the requested placement can be verified.",
+      recovery: { recoverable: true, requiredNextTool: "customWidget_createFromPreview" },
+    });
+    expect(getAssistantEvaluationToolChoice(state, 1)).toBe("required");
+    const creation = executeAssistantEvaluationTool(testCase, state, "customWidget_createFromPreview", {
+      previewSessionId: "preview-1",
+      targetBoardId: "board-home",
+    });
+    expect(creation).toMatchObject({
+      id: "created-fake-service-health-1",
+      nextAction: {
+        targetBoardId: "board-home",
+        options: { definitionId: "created-fake-service-health-1" },
+      },
+    });
+    expect(
+      getActiveAssistantEvaluationToolDefinitions(state).map(({ function: definition }) => definition.name),
+    ).toEqual(["configure_widget"]);
+    expect(getAssistantEvaluationToolChoice(state, 1)).toBe("required");
+
+    const configured = executeActiveAssistantEvaluationTool(testCase, state, "configure_widget", {
+      boardId: "board-home",
+      boardName: "Home",
+      kind: "customApi",
+      summary: "Place the tested health widget",
+      options: { definitionId: "created-fake-service-health-1" },
+      integrationIds: [],
+    });
+    expect(configured).toEqual({
+      boardId: "board-home",
+      kind: "customApi",
+      options: { definitionId: "created-fake-service-health-1" },
+      integrationIds: [],
+    });
+    expect(
+      getActiveAssistantEvaluationToolDefinitions(state).map(({ function: definition }) => definition.name),
+    ).toEqual(["board_addItem"]);
+
+    expect(
+      executeActiveAssistantEvaluationTool(testCase, state, "board_addItem", {
+        boardId: "board-home",
+        kind: "customApi",
+        options: { definitionId: "created-fake-service-health-1" },
+        integrationIds: [],
+      }),
+    ).toEqual({ itemId: "item-fake-service-health-1" });
+    expect(state.placementEvidence).toEqual([
+      {
+        widgetId: "created-fake-service-health-1",
+        boardId: "board-home",
+        itemId: "item-fake-service-health-1",
+      },
+    ]);
+    expect(getAssistantEvaluationLifecycleIssues(testCase, state)).toEqual([]);
+    expect(
+      assessAssistantFinalResponse({
+        text: "Created Homelab health with refresh and placed it on the Home board.",
+        persistedWidgets: state.createdWidgets,
+        maxCharacters: 600,
+        requiredTerms: ["refresh"],
+        placementEvidence: state.placementEvidence,
+      }).passed,
+    ).toBe(true);
   });
 
   it("requires actionable lifecycle transitions but permits completion and terminal failure prose", () => {

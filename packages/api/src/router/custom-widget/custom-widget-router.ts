@@ -1,13 +1,11 @@
 import { assertCustomWidgetIntegrationBindings } from "./source-resolver";
-import { getCustomWidgetSourceAuthType } from "@homarr/custom-widgets/core";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
 import { createId } from "@homarr/common";
-import { encryptSecret } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { and, eq, handleTransactionsAsync, notInArray } from "@homarr/db";
-import { customWidgetDefinitions, customWidgetSecrets } from "@homarr/db/schema";
+import { eq } from "@homarr/db";
+import { customWidgetDefinitions } from "@homarr/db/schema";
 import {
   customWidgetDefinitionSchema,
   customWidgetUpdateSchema,
@@ -17,6 +15,7 @@ import {
 import { createTRPCRouter, permissionRequiredProcedure } from "../../trpc";
 import { parseCustomWidgetAuthoringInput } from "./authoring-validation";
 import { creationProcedures } from "./creation-procedures";
+import { updateCustomWidgetDefinition } from "./definition-update";
 import { managementQueryProcedures } from "./management-queries";
 import { metadataProcedures } from "./metadata-procedures";
 import { previewActionProcedures } from "./preview-action-procedures";
@@ -29,7 +28,7 @@ import {
 } from "./stored-definition";
 import { templateProcedures } from "./template-procedures";
 import { transferProcedures } from "./transfer-procedures";
-import { assertSecretSources, hasSameSecretBinding, requiredSecretKinds } from "./secret-policy";
+import { assertSecretSources } from "./secret-policy";
 import { secretProcedures } from "./secret-procedures";
 import { workshopProcedures } from "./workshop-procedures";
 
@@ -64,120 +63,7 @@ export const customWidgetRouter = createTRPCRouter({
       });
       await assertCustomWidgetIntegrationBindings(ctx, definition.sources);
       if (secrets) assertSecretSources(definition.sources, secrets);
-      const definitionChanges = { ...serializeCustomWidgetDefinition(definition), updatedAt: new Date() };
-      const secretRows = secrets?.map((secret) => ({
-        definitionId: id,
-        sourceId: secret.sourceId,
-        kind: secret.kind,
-        encryptedValue: encryptSecret(secret.value),
-        updatedAt: new Date(),
-      }));
-      const sourceIds = Object.keys(definition.sources);
-      const changedSecretBindings = new Set(
-        Object.entries(definition.sources).flatMap(([sourceId, source]) => {
-          const previous = current.sources[sourceId];
-          return previous && !hasSameSecretBinding(previous, source) ? [sourceId] : [];
-        }),
-      );
-
-      await handleTransactionsAsync(ctx.db, {
-        async handleAsync(db, schema) {
-          await db.transaction(async (transaction) => {
-            await transaction
-              .update(schema.customWidgetDefinitions)
-              .set(definitionChanges)
-              .where(eq(schema.customWidgetDefinitions.id, id));
-
-            await transaction
-              .delete(schema.customWidgetSecrets)
-              .where(
-                and(
-                  eq(schema.customWidgetSecrets.definitionId, id),
-                  notInArray(schema.customWidgetSecrets.sourceId, sourceIds),
-                ),
-              );
-
-            for (const sourceId of changedSecretBindings) {
-              await transaction
-                .delete(schema.customWidgetSecrets)
-                .where(
-                  and(
-                    eq(schema.customWidgetSecrets.definitionId, id),
-                    eq(schema.customWidgetSecrets.sourceId, sourceId),
-                  ),
-                );
-            }
-
-            for (const [sourceId, source] of Object.entries(definition.sources)) {
-              const kinds = [...requiredSecretKinds(getCustomWidgetSourceAuthType(source))];
-              const where = and(
-                eq(schema.customWidgetSecrets.definitionId, id),
-                eq(schema.customWidgetSecrets.sourceId, sourceId),
-              );
-              await transaction
-                .delete(schema.customWidgetSecrets)
-                .where(kinds.length > 0 ? and(where, notInArray(schema.customWidgetSecrets.kind, kinds)) : where);
-            }
-
-            for (const secret of secretRows ?? []) {
-              await transaction
-                .delete(schema.customWidgetSecrets)
-                .where(
-                  and(
-                    eq(schema.customWidgetSecrets.definitionId, id),
-                    eq(schema.customWidgetSecrets.sourceId, secret.sourceId),
-                    eq(schema.customWidgetSecrets.kind, secret.kind),
-                  ),
-                );
-              await transaction.insert(schema.customWidgetSecrets).values(secret);
-            }
-          });
-        },
-        handleSync(db) {
-          db.transaction((transaction) => {
-            transaction
-              .update(customWidgetDefinitions)
-              .set(definitionChanges)
-              .where(eq(customWidgetDefinitions.id, id))
-              .run();
-
-            transaction
-              .delete(customWidgetSecrets)
-              .where(and(eq(customWidgetSecrets.definitionId, id), notInArray(customWidgetSecrets.sourceId, sourceIds)))
-              .run();
-
-            for (const sourceId of changedSecretBindings) {
-              transaction
-                .delete(customWidgetSecrets)
-                .where(and(eq(customWidgetSecrets.definitionId, id), eq(customWidgetSecrets.sourceId, sourceId)))
-                .run();
-            }
-
-            for (const [sourceId, source] of Object.entries(definition.sources)) {
-              const kinds = [...requiredSecretKinds(getCustomWidgetSourceAuthType(source))];
-              const where = and(eq(customWidgetSecrets.definitionId, id), eq(customWidgetSecrets.sourceId, sourceId));
-              transaction
-                .delete(customWidgetSecrets)
-                .where(kinds.length > 0 ? and(where, notInArray(customWidgetSecrets.kind, kinds)) : where)
-                .run();
-            }
-
-            for (const secret of secretRows ?? []) {
-              transaction
-                .delete(customWidgetSecrets)
-                .where(
-                  and(
-                    eq(customWidgetSecrets.definitionId, id),
-                    eq(customWidgetSecrets.sourceId, secret.sourceId),
-                    eq(customWidgetSecrets.kind, secret.kind),
-                  ),
-                )
-                .run();
-              transaction.insert(customWidgetSecrets).values(secret).run();
-            }
-          });
-        },
-      });
+      await updateCustomWidgetDefinition(ctx.db, { id, definition, secrets });
       logger.info("Updated custom widget definition", { id });
       return { id, managementPath: `/manage/custom-widgets/edit/${id}` };
     }),

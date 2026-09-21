@@ -8,6 +8,7 @@ import {
   isRecoverableCustomWidgetAuthoringFailure,
   isSuccessfulCustomWidgetAuthoringAdvance,
 } from "@homarr/custom-widgets/core";
+import { widgetKinds } from "@homarr/definitions";
 
 export { getCustomWidgetPhaseToolNames };
 
@@ -111,7 +112,7 @@ export const shouldRequireCustomWidgetAuthoringTool = (
   const latestUserText = getLatestUserText(messages);
   if (
     activeToolNames.length === 0 ||
-    !hasCustomWidgetAuthoringContinuationIntent(latestUserText) ||
+    !hasCustomWidgetAuthoringContinuationIntent(latestUserText, hasRecentCustomWidgetLifecycleContext(messages)) ||
     hasLatestClientToolOutcome(messages)
   )
     return false;
@@ -129,8 +130,24 @@ export const shouldRequireCustomWidgetAuthoringTool = (
   });
 };
 
+const explicitCustomWidgetIntentPattern =
+  /(?:\bcustom\s+jsx\b|\bhomarr-custom-widget-v\d+\b|\b(?:build|convert|create|design|edit|fix|make|migrate|repair|update|validate)\b[^\n]{0,80}\bcustom[\s-]+widgets?\b)/iu;
 const customWidgetIntentPattern =
-  /(?:\bcustom\s+jsx\b|\bhomarr-custom-widget-v\d+\b|\b(?:build|create|design|edit|fix|make|repair|update|validate)\b[^\n]{0,80}\bcustom[\s-]+widgets?\b|\b(?:build|create|design|make)\b[^\n]{0,80}\bwidgets?\s+(?:for|using|with)\b|\b(?:i|we)\s+(?:need|want)\b[^\n]{0,60}\bwidgets?\s+(?:for|using|with)\b)/iu;
+  /(?:\bcustom\s+jsx\b|\bhomarr-custom-widget-v\d+\b|\b(?:build|convert|create|design|edit|fix|make|migrate|repair|update|validate)\b[^\n]{0,80}\bcustom[\s-]+widgets?\b|\b(?:build|create|design|make)\s+(?:(?:me|us)\s+)?an?\s+[^\n]{1,60}\bwidgets?\b|\b(?:build|create|design|make)\b[^\n]{0,80}\bwidgets?\s+(?:for|using|with)\b|\b(?:i|we)\s+(?:need|want)\b[^\n]{0,60}\bwidgets?\s+(?:for|using|with)\b)/iu;
+const nativeWidgetNames = widgetKinds
+  .filter((kind) => kind !== "customApi")
+  .map((kind) =>
+    kind
+      .replaceAll("-", " ")
+      .replace(/([a-z\d])([A-Z])/gu, "$1 $2")
+      .toLowerCase(),
+  )
+  .toSorted((left, right) => right.length - left.length)
+  .join("|");
+const nativeWidgetIntentPattern = new RegExp(
+  `\\b(?:${nativeWidgetNames})\\s+widgets?\\b|\\bwidgets?\\s+(?:for|using|with)\\s+(?:${nativeWidgetNames})\\b`,
+  "iu",
+);
 
 const customWidgetBootstrapToolNames = new Set(["customWidget_getSkill"]);
 const maxFocusedComponentSearchesPerPhase = 4;
@@ -162,6 +179,7 @@ export const createCustomWidgetDiscoveryPhaseController = (limit = maxFocusedCom
       if (toolName === "customWidget_validateTemplate" && result?.valid === false) reset();
       if (toolName === "customWidget_previewCreate" && result?.success !== true) reset();
       if (toolName === "customWidget_createFromPreview" && typeof result?.id === "string") reset();
+      if (toolName === "customWidget_updateFromPreview" && typeof result?.id === "string") reset();
     },
     observeFailure(toolName: string) {
       if (toolName === "customWidget_validateTemplate" || toolName === "customWidget_previewCreate") {
@@ -191,6 +209,24 @@ const hasCustomWidgetToolPart = (message: UIMessage) =>
     return toolName?.startsWith("customWidget_") === true;
   });
 
+const hasRecentCustomWidgetLifecycleContext = (messages: readonly UIMessage[]) => {
+  const latestMessage = messages.at(-1);
+  if (latestMessage?.role === "assistant") return hasCustomWidgetToolPart(latestMessage);
+  if (latestMessage?.role !== "user") return false;
+
+  const precedingAssistantMessage = messages
+    .slice(0, -1)
+    .toReversed()
+    .find((message) => message.role === "assistant");
+  return precedingAssistantMessage !== undefined && hasCustomWidgetToolPart(precedingAssistantMessage);
+};
+
+const hasCustomWidgetAuthoringText = (text: string) => {
+  if (explicitCustomWidgetIntentPattern.test(text)) return true;
+  if (nativeWidgetIntentPattern.test(text)) return false;
+  return customWidgetIntentPattern.test(text);
+};
+
 const hasExplicitCustomWidgetIntent = (message: UIMessage) =>
   message.role === "user" &&
   message.parts.some(
@@ -198,20 +234,14 @@ const hasExplicitCustomWidgetIntent = (message: UIMessage) =>
       isRecord(part) &&
       part.type === "text" &&
       typeof part.text === "string" &&
-      customWidgetIntentPattern.test(part.text),
+      hasCustomWidgetAuthoringText(part.text),
   );
 
 export const needsCustomWidgetAuthoringContext = (messages: UIMessage[]) => {
   const latestMessage = messages.at(-1);
   if (!latestMessage) return false;
   if (hasExplicitCustomWidgetIntent(latestMessage)) return true;
-  if (latestMessage.role === "assistant") return hasCustomWidgetToolPart(latestMessage);
-
-  const precedingAssistantMessage = messages
-    .slice(0, -1)
-    .toReversed()
-    .find((message) => message.role === "assistant");
-  return precedingAssistantMessage !== undefined && hasCustomWidgetToolPart(precedingAssistantMessage);
+  return hasRecentCustomWidgetLifecycleContext(messages);
 };
 
 export const getActiveCustomWidgetToolNames = <TToolName extends string>(

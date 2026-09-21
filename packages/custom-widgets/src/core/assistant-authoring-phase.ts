@@ -18,8 +18,12 @@ const customWidgetEvidencePhaseToolNames = new Set([
   "customWidget_previewAction",
   "customWidget_previewJournal",
   "customWidget_createFromPreview",
+  "customWidget_updateFromPreview",
 ]);
-const customWidgetFinalizationPhaseToolNames = new Set(["customWidget_createFromPreview"]);
+const customWidgetFinalizationPhaseToolNames = new Set([
+  "customWidget_createFromPreview",
+  "customWidget_updateFromPreview",
+]);
 const customWidgetDraftPhaseToolNames = new Set([
   "customWidget_getReference",
   "customWidget_getComponents",
@@ -28,6 +32,8 @@ const customWidgetDraftPhaseToolNames = new Set([
   "customWidget_validateTemplate",
 ]);
 const customWidgetContextPhaseToolNames = new Set([
+  "integration_getKinds",
+  "integration_all",
   "customWidget_getReference",
   "customWidget_findComponents",
   "customWidget_getComponents",
@@ -62,6 +68,7 @@ const customWidgetMutationIntentPattern = /\b(?:build|convert|create|design|edit
 const customWidgetSubjectPattern = /\b(?:custom[\s-]+(?:jsx|widgets?)|homarr-custom-widget-v\d+|widgets?)\b/iu;
 const customWidgetNeedPattern = /\b(?:i|we)\s+(?:need|want)\b[^\n]{0,60}\bwidgets?\s+(?:for|using|with)\b/iu;
 const customWidgetContinueOnlyPattern = /^\s*(?:continue|keep\s+going|proceed|go\s+on|finish|complete)\b/iu;
+const customWidgetContextualSubjectPattern = /\b(?:it|that|this)(?:\s+(?:one|widget))?\b/iu;
 
 export interface CustomWidgetToolStep {
   toolResults: readonly { toolName: string; output: unknown }[];
@@ -73,8 +80,15 @@ const isRecord = (value: unknown): value is Record<string, unknown> =>
 const hasMeaningfulError = (output: Record<string, unknown>) =>
   "error" in output && output.error !== null && output.error !== undefined && output.error !== false;
 
-export const hasCustomWidgetAuthoringContinuationIntent = (text: string) => {
+export const hasCustomWidgetAuthoringContinuationIntent = (text: string, hasRecentLifecycleContext = false) => {
   if (customWidgetContinueOnlyPattern.test(text) || customWidgetNeedPattern.test(text)) return true;
+  if (
+    hasRecentLifecycleContext &&
+    customWidgetContextualSubjectPattern.test(text) &&
+    customWidgetMutationIntentPattern.test(text)
+  ) {
+    return true;
+  }
   return customWidgetSubjectPattern.test(text) && customWidgetMutationIntentPattern.test(text);
 };
 
@@ -104,13 +118,14 @@ export const isRecoverableCustomWidgetAuthoringFailure = (toolName: string, outp
   if (
     toolName !== "customWidget_previewCreate" &&
     toolName !== "customWidget_previewReviseTemplate" &&
-    toolName !== "customWidget_createFromPreview"
+    toolName !== "customWidget_createFromPreview" &&
+    toolName !== "customWidget_updateFromPreview"
   ) {
     return false;
   }
   if (typeof output.error !== "string") return false;
   if (terminalPreviewErrorPattern.test(output.error)) return false;
-  if (toolName === "customWidget_createFromPreview") {
+  if (toolName === "customWidget_createFromPreview" || toolName === "customWidget_updateFromPreview") {
     return /test every final preview (?:query|action)/iu.test(output.error);
   }
   return recoverablePreviewErrorPattern.test(output.error);
@@ -132,6 +147,13 @@ const isSuccessfulWorkshopGet = (output: unknown) => {
 const isSuccessfulWorkshopInstall = (output: unknown) => {
   if (!isRecord(output)) return false;
   return output.status === "installed" && typeof output.definitionId === "string";
+};
+
+const getPreviewPersistenceTool = (output: unknown) => {
+  if (isRecord(output) && output.persistenceTool === "customWidget_updateFromPreview") {
+    return "customWidget_updateFromPreview";
+  }
+  return "customWidget_createFromPreview";
 };
 
 const hasCompletePreviewEvidence = (previewOutput: unknown, laterSteps: readonly CustomWidgetToolStep[]) => {
@@ -180,9 +202,12 @@ export const getCustomWidgetPhaseToolNames = <TToolName extends string>(
         return recovery?.kind === "component-not-found";
       });
     }
-    const creationResults = step.toolResults.filter((result) => result.toolName === "customWidget_createFromPreview");
-    if (creationResults.length > 0) {
-      const succeeded = creationResults.every((result) => {
+    const persistenceResults = step.toolResults.filter(
+      (result) =>
+        result.toolName === "customWidget_createFromPreview" || result.toolName === "customWidget_updateFromPreview",
+    );
+    if (persistenceResults.length > 0) {
+      const succeeded = persistenceResults.every((result) => {
         const output = isRecord(result.output) ? result.output : null;
         return typeof output?.id === "string";
       });
@@ -231,7 +256,12 @@ export const getCustomWidgetPhaseToolNames = <TToolName extends string>(
           hasCompletePreviewEvidence(result.output, steps.slice(stepIndex + 1)),
         );
         if (evidenceComplete) {
-          return availableToolNames.filter((toolName) => customWidgetFinalizationPhaseToolNames.has(toolName));
+          const persistenceToolNames = new Set<string>(
+            previewResults.map((result) => getPreviewPersistenceTool(result.output)),
+          );
+          return availableToolNames.filter(
+            (toolName) => customWidgetFinalizationPhaseToolNames.has(toolName) && persistenceToolNames.has(toolName),
+          );
         }
         return availableToolNames.filter((toolName) => customWidgetEvidencePhaseToolNames.has(toolName));
       }

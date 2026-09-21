@@ -5,8 +5,9 @@ import { pathToFileURL } from "node:url";
 
 import { customWidgetDefinitionSchema } from "../src/core/custom-jsx-schema";
 import type { HomarrCustomWidgetV2 } from "../src/core/custom-jsx-schema";
-import { CUSTOM_WIDGET_AI_EVALUATION_CASES } from "./ai-evaluation-cases";
+import type { CustomWidgetAiEvaluationCase } from "./ai-evaluation-cases";
 import { createAssistantEvaluationCaseSnapshot } from "./ai-assistant-evaluation";
+import { getCustomWidgetAiEvaluationSuite, resolveCustomWidgetAiEvaluationSuiteId } from "./ai-evaluation-suites";
 import {
   getCustomWidgetJudgePolicyHash,
   getAiEvaluationMaxOutputTokens,
@@ -40,7 +41,7 @@ interface AssistantSourceSummary {
   assistantPrompt?: unknown;
   assistantPromptBundle?: unknown;
   harness?: { judgePolicySha256?: string; [key: string]: unknown };
-  benchmark: { split?: string; sha256: string; caseIds: string[] };
+  benchmark: { suite?: string; split?: string; sha256: string; caseIds: string[] };
   results: SourceResult[];
   [key: string]: unknown;
 }
@@ -84,8 +85,12 @@ export function parseAndValidateRejudgeSourceSummary(value: unknown, source: str
   if (JSON.stringify(resultCaseIds) !== JSON.stringify(caseIds)) {
     throw new Error(`${source}: result case IDs do not match benchmark case IDs`);
   }
+  const suiteId = resolveCustomWidgetAiEvaluationSuiteId(
+    typeof value.benchmark.suite === "string" ? value.benchmark.suite : undefined,
+  );
+  const evaluationCases = getCustomWidgetAiEvaluationSuite(suiteId);
   const cases = caseIds.map((caseId) => {
-    const testCase = CUSTOM_WIDGET_AI_EVALUATION_CASES.find((candidate) => candidate.id === caseId);
+    const testCase = evaluationCases.find((candidate) => candidate.id === caseId);
     if (!testCase) throw new Error(`${source}: unknown benchmark case '${caseId}'`);
     return testCase;
   });
@@ -131,14 +136,14 @@ const resolveCaseDirectory = async (summaryPath: string, outputDirectory: string
 
 interface JudgeCandidate {
   expectedWidgetId: string;
-  testCase: (typeof CUSTOM_WIDGET_AI_EVALUATION_CASES)[number];
+  testCase: CustomWidgetAiEvaluationCase;
   widget: HomarrCustomWidgetV2;
 }
 
 const loadJudgeCandidates = async (
   summaryPath: string,
   result: SourceResult,
-  testCase: (typeof CUSTOM_WIDGET_AI_EVALUATION_CASES)[number],
+  testCase: CustomWidgetAiEvaluationCase,
 ): Promise<JudgeCandidate[]> => {
   const caseDirectory = await resolveCaseDirectory(summaryPath, result.outputDirectory);
   const entries = await readdir(caseDirectory);
@@ -226,6 +231,8 @@ export async function rejudgeAssistantSummary(args: {
   const sourceSummaryPath = path.resolve(args.sourceSummaryPath);
   const sourceRaw = await readFile(sourceSummaryPath, "utf8");
   const source = parseAndValidateRejudgeSourceSummary(JSON.parse(sourceRaw) as unknown, sourceSummaryPath);
+  const suiteId = resolveCustomWidgetAiEvaluationSuiteId(source.benchmark.suite);
+  const evaluationCases = getCustomWidgetAiEvaluationSuite(suiteId);
   const judgeRunner = args.judgeRunner ?? judgeCustomWidgetCase;
   await mkdir(args.outputRoot, { recursive: true });
   const results: SourceResult[] = [];
@@ -234,7 +241,7 @@ export async function rejudgeAssistantSummary(args: {
       results.push({ ...sourceResult, rejudge: { status: "preserved", reason: "lifecycle-failure" } });
       continue;
     }
-    const testCase = CUSTOM_WIDGET_AI_EVALUATION_CASES.find(({ id }) => id === sourceResult.caseId);
+    const testCase = evaluationCases.find(({ id }) => id === sourceResult.caseId);
     if (!testCase) throw new Error(`Unknown benchmark case '${sourceResult.caseId}'`);
     const candidates = await loadJudgeCandidates(sourceSummaryPath, sourceResult, testCase);
     const candidateArtifacts = candidates.map(({ expectedWidgetId, widget }) => ({

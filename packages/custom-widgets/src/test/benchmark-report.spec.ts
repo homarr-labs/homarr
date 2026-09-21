@@ -64,6 +64,8 @@ const currentRunnerSummary = {
     experimentId: "assistant-prompt-hard",
     generationId: "generation-2",
     maxLoops: 10,
+    concurrency: 4,
+    requestTimeoutMs: 450_000,
     model: "z-ai/glm-5.3-flash",
     temperature: 0.2,
     reasoning: { effort: "medium", exclude: true },
@@ -83,6 +85,7 @@ const currentRunnerSummary = {
     sha256: "prompt-bundle-v2",
   },
   benchmark: {
+    suite: "integration-coverage",
     split: "heldout",
     caseIds: ["hard-multi-widget"],
     sha256: "cases-v2",
@@ -127,6 +130,34 @@ describe("benchmark generation reporting", () => {
         scorePerThousandModelTokens: 26.67,
       },
     });
+  });
+
+  test("counts create and update preview persistence as completed lifecycles", () => {
+    const metrics = aggregateGenerationMetrics([
+      {
+        caseId: "create",
+        score: 80,
+        verdict: "pass",
+        calledTools: ["customWidget_createFromPreview"],
+        widgets: 1,
+      },
+      {
+        caseId: "update",
+        score: 80,
+        verdict: "pass",
+        calledTools: ["customWidget_updateFromPreview"],
+        widgets: 1,
+      },
+      {
+        caseId: "not-persisted",
+        score: 80,
+        verdict: "pass",
+        calledTools: ["customWidget_previewCreate"],
+        widgets: 1,
+      },
+    ]);
+
+    expect(metrics.lifecycleCompletionRate).toBe(66.67);
   });
 
   test("compares generations to a fixed baseline and promotes non-regressing improvements", () => {
@@ -263,11 +294,14 @@ describe("benchmark generation reporting", () => {
       caseIds: ["hard-multi-widget"],
       metrics: { lifecycleCompletionRate: 100 },
       configuration: {
+        suite: "integration-coverage",
         split: "heldout",
         providerBaseUrl: "https://openrouter.ai/api/v1",
         generatorModel: "z-ai/glm-5.3-flash",
         judgeModel: "z-ai/glm-5.3-flash",
         maxLoops: 10,
+        concurrency: 4,
+        requestTimeoutMs: 450_000,
         temperature: 0.2,
         reasoning: { effort: "medium", exclude: true },
         maxOutputTokens: 32_768,
@@ -275,9 +309,11 @@ describe("benchmark generation reporting", () => {
       },
     });
     expect(renderBenchmarkReport(comparison)).toContain(
-      "It does not prove one successful create call per requested widget",
+      "It does not prove one successful persistence call per requested widget",
     );
     expect(renderBenchmarkReport(comparison)).toContain("judgeMaxOutputTokens=32768");
+    expect(renderBenchmarkReport(comparison)).toContain("suite=integration-coverage; split=heldout");
+    expect(renderBenchmarkReport(comparison)).toContain("concurrency=4; requestTimeoutMs=450000");
   });
 
   test("rejects promotion when the evaluation configuration differs", () => {
@@ -305,6 +341,31 @@ describe("benchmark generation reporting", () => {
     });
     expect(generation?.configurationHash).not.toBe(baseline?.configurationHash);
     expect(renderBenchmarkReport(comparison)).toContain("loops=9; temperature=0.2");
+  });
+
+  test("rejects promotion when request execution settings differ", () => {
+    const candidate = {
+      ...currentRunnerSummary,
+      generation: {
+        ...currentRunnerSummary.generation,
+        generationId: "generation-3",
+        concurrency: 2,
+        requestTimeoutMs: 300_000,
+      },
+      results: [{ ...currentRunnerSummary.results[0], score: 90 }],
+    };
+    const comparison = compareGenerationSummaries(
+      [
+        { source: "generation-2/summary.json", summary: currentRunnerSummary },
+        { source: "generation-3/summary.json", summary: candidate },
+      ],
+      "generation-2/summary.json",
+    );
+
+    expect(comparison.generations[1]?.promotion).toEqual({
+      promote: false,
+      reasons: ["configuration differs from baseline: concurrency, requestTimeoutMs"],
+    });
   });
 
   test("reports zero category coverage when a generation has no judge categories", () => {

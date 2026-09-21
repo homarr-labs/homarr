@@ -29,6 +29,7 @@ describe("Custom Widget authoring context", () => {
   test.each([
     "Create a custom widget for these fixtures",
     "Create custom widgets for these services",
+    "Make me a Mealie widget",
     "I want a widget for Seerr",
     "Repair this custom-widget",
     "Validate this Custom JSX definition",
@@ -43,6 +44,15 @@ describe("Custom Widget authoring context", () => {
       expect(needsCustomWidgetAuthoringContext([userMessage(text)])).toBe(false);
     },
   );
+
+  test.each([
+    "Make me a weather widget",
+    "Create a clock widget",
+    "Build a calendar widget",
+    "I want a widget for weather",
+  ])("leaves known native widget kinds to the general widget tools: %s", (text) => {
+    expect(needsCustomWidgetAuthoringContext([userMessage(text)])).toBe(false);
+  });
 
   test("continues after a Custom Widget tool call", () => {
     const messages: UIMessage[] = [
@@ -64,6 +74,34 @@ describe("Custom Widget authoring context", () => {
     ];
 
     expect(needsCustomWidgetAuthoringContext(messages)).toBe(true);
+  });
+
+  test("continues a pronoun-based edit only with recent Custom Widget lifecycle context", () => {
+    const activeTools = ["customWidget_validateTemplate", "customWidget_previewCreate"];
+    const messages: UIMessage[] = [
+      userMessage("Create a custom widget"),
+      {
+        id: "assistant-1",
+        role: "assistant",
+        parts: [
+          {
+            type: "dynamic-tool",
+            toolName: "customWidget_validateTemplate",
+            toolCallId: "validate-1",
+            state: "output-available",
+            input: { template: "<Text>Green</Text>" },
+            output: { valid: true },
+          },
+        ],
+      },
+      userMessage("Make it purple"),
+    ];
+    const steps = [{ toolResults: [{ toolName: "customWidget_validateTemplate", output: { valid: true } }] }];
+
+    expect(needsCustomWidgetAuthoringContext(messages)).toBe(true);
+    expect(shouldRequireCustomWidgetAuthoringTool(activeTools, steps, [], messages)).toBe(true);
+    expect(needsCustomWidgetAuthoringContext([userMessage("Make it purple")])).toBe(false);
+    expect(shouldRequireCustomWidgetAuthoringTool(activeTools, steps, [], [userMessage("Make it purple")])).toBe(false);
   });
 
   test("does not activate from stale authoring history", () => {
@@ -402,6 +440,41 @@ describe("Custom Widget authoring context", () => {
     ];
 
     expect(getCustomWidgetPhaseToolNames(tools, steps)).toEqual(["customWidget_createFromPreview"]);
+  });
+
+  test("finalizes an edit preview through updateFromPreview", () => {
+    const tools = [
+      "customWidget_previewCreate",
+      "customWidget_previewQuery",
+      "customWidget_createFromPreview",
+      "customWidget_updateFromPreview",
+    ];
+    const steps = [
+      {
+        toolResults: [
+          {
+            toolName: "customWidget_previewCreate",
+            output: {
+              success: true,
+              persistenceTool: "customWidget_updateFromPreview",
+              previewSession: { id: "preview-edit" },
+              queries: [{ requestId: "status" }],
+              actions: [],
+            },
+          },
+        ],
+      },
+      {
+        toolResults: [
+          {
+            toolName: "customWidget_previewQuery",
+            output: { sessionId: "preview-edit", requestId: "status", ok: true },
+          },
+        ],
+      },
+    ];
+
+    expect(getCustomWidgetPhaseToolNames(tools, steps)).toEqual(["customWidget_updateFromPreview"]);
   });
 
   test("exposes focused context tools only after the skill entrypoint is loaded", () => {

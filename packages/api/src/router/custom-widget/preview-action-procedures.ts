@@ -19,7 +19,7 @@ export const previewActionProcedures = {
       mcp: {
         enabled: true,
         description:
-          "Test one action from the current preview revision. Supply its required params and keep preview actions simulated unless the user explicitly enabled live actions. Verify confirmation, permission, and invalidation metadata before customWidget_createFromPreview.",
+          "Test one action from the current preview revision. Supply its required params and keep preview actions simulated unless the user explicitly enabled live actions. Verify confirmation, permission, and invalidation metadata before createFromPreview or updateFromPreview persistence.",
       },
     })
     .input(previewSessionRequestSchema.extend({ confirmed: z.boolean().optional() }))

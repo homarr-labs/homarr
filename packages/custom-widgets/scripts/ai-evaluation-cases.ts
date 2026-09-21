@@ -1,8 +1,6 @@
-export interface CustomWidgetAiExpectation {
-  sourceBaseUrl: string;
-  sourceNetworkScope?: "public" | "private" | "loopback";
-  sourceAuth: "none" | "bearer" | "basic" | "apiKeyHeader" | "apiKeyQuery";
-  sourceAuthName?: string;
+import type { HttpIntegrationKind } from "@homarr/definitions";
+
+interface CustomWidgetAiExpectationBase {
   minimumTemplateCharacters?: number;
   requests: Array<{
     kind: "query" | "action";
@@ -32,6 +30,40 @@ export interface CustomWidgetAiExpectation {
   forbidUnexpectedRequests?: boolean;
 }
 
+interface CustomWidgetAiHttpExpectation extends CustomWidgetAiExpectationBase {
+  sourceType?: "http";
+  sourceBaseUrl: string;
+  sourceNetworkScope?: "public" | "private" | "loopback";
+  sourceAuth: "none" | "bearer" | "basic" | "apiKeyHeader" | "apiKeyQuery";
+  sourceAuthName?: string;
+}
+
+interface CustomWidgetAiIntegrationExpectation extends CustomWidgetAiExpectationBase {
+  sourceType: "integration";
+  sourceIntegrationKind: HttpIntegrationKind;
+  sourceIntegrationId: string;
+}
+
+export type CustomWidgetAiExpectation = CustomWidgetAiHttpExpectation | CustomWidgetAiIntegrationExpectation;
+
+export interface CustomWidgetAiIntegrationFixture {
+  id: string;
+  name: string;
+  kind: HttpIntegrationKind;
+  url: string;
+  supportsHttpRequests: boolean;
+  permissions: {
+    hasUseAccess: boolean;
+    hasInteractAccess: boolean;
+    hasFullAccess: boolean;
+  };
+}
+
+export interface CustomWidgetAiPlacementFixture {
+  targetBoardId: string;
+  targetBoardName: string;
+}
+
 export interface CustomWidgetAiEvaluationCase {
   id: string;
   split: "train" | "dev" | "heldout";
@@ -46,6 +78,12 @@ export interface CustomWidgetAiEvaluationCase {
     response: unknown;
   }>;
   minimumPreviewCycles?: number;
+  availableIntegrations?: readonly CustomWidgetAiIntegrationFixture[];
+  placement?: CustomWidgetAiPlacementFixture;
+  finalResponse?: {
+    maxCharacters: number;
+    requiredTerms?: readonly string[];
+  };
   expectations?: CustomWidgetAiExpectation;
   expectedWidgets?: Array<{
     id: string;
@@ -57,6 +95,14 @@ export interface CustomWidgetAiEvaluationCase {
     query: string;
     requiredReferences: Array<"schema" | "runtime" | "security">;
     allowedReferences?: Array<"schema" | "runtime" | "security">;
+    requiredQueryTerms?: readonly string[];
+    forbiddenQueryTerms?: readonly string[];
+    searchResults?: readonly {
+      title: string;
+      url: string;
+      content: string;
+      authority: "first-party" | "community" | "unknown";
+    }[];
   };
 }
 

@@ -6,6 +6,7 @@ import {
   buildEvaluationPrompt,
   buildJudgePrompt,
   buildRepairPrompt,
+  createAiEvaluationSpendBudget,
   CUSTOM_WIDGET_JUDGE_POLICY,
   DEFAULT_AI_PROVIDER_BASE_URL,
   DEFAULT_GENERATOR_MODEL,
@@ -15,6 +16,9 @@ import {
   getEvaluationResponseFixtureText,
   getExpectedWidgetCase,
   getAiEvaluationMaxOutputTokens,
+  getAiEvaluationConcurrency,
+  getAiEvaluationRequestTimeoutMs,
+  mapAiEvaluationCasesWithConcurrency,
   getAiEvaluationGenerationTemperature,
   DEFAULT_AI_GENERATION_TEMPERATURE,
   getJudgeResponseFormat,
@@ -62,6 +66,33 @@ const makeJudgeResult = (score: number) => ({
 });
 
 describe("AI authoring evaluation", () => {
+  it("reserves parallel request spend and fails closed before exceeding the campaign cap", () => {
+    const budget = createAiEvaluationSpendBudget({
+      CUSTOM_WIDGET_AI_MAX_SPEND_USD: "1",
+      CUSTOM_WIDGET_AI_REQUEST_RESERVATION_USD: "0.4",
+    });
+    const first = budget.reserve();
+    const second = budget.reserve();
+    expect(() => budget.reserve()).toThrow("spend budget exhausted");
+    budget.settle(first, 0.12);
+    expect(budget.snapshot()).toMatchObject({ spentUsd: 0.12, reservedUsd: 0.4, requests: 1 });
+    expect(budget.reserve()).toBe(0.4);
+    budget.settle(second, undefined);
+    expect(budget.snapshot().spentUsd).toBeCloseTo(0.52);
+  });
+
+  it("validates spend controls before launching provider requests", () => {
+    expect(() => createAiEvaluationSpendBudget({ CUSTOM_WIDGET_AI_MAX_SPEND_USD: "0" })).toThrow(
+      "CUSTOM_WIDGET_AI_MAX_SPEND_USD must be a positive number",
+    );
+    expect(() =>
+      createAiEvaluationSpendBudget({
+        CUSTOM_WIDGET_AI_MAX_SPEND_USD: "0.2",
+        CUSTOM_WIDGET_AI_REQUEST_RESERVATION_USD: "0.5",
+      }),
+    ).toThrow("cannot exceed");
+  });
+
   it("keeps the generator temperature stable by default and allows bounded overrides", () => {
     expect(getAiEvaluationGenerationTemperature(undefined)).toBe(DEFAULT_AI_GENERATION_TEMPERATURE);
     expect(getAiEvaluationGenerationTemperature(" 0.7 ")).toBe(0.7);
@@ -87,6 +118,35 @@ describe("AI authoring evaluation", () => {
     expect(getAiEvaluationMaxOutputTokens("generation", "1000")).toBe(4_096);
     expect(getAiEvaluationMaxOutputTokens("generation", "32768")).toBe(32_768);
     expect(getAiEvaluationMaxOutputTokens("generation", "invalid")).toBe(20_000);
+  });
+  it("bounds live evaluation concurrency", () => {
+    expect(getAiEvaluationConcurrency(undefined)).toBe(1);
+    expect(getAiEvaluationConcurrency("4")).toBe(4);
+    expect(getAiEvaluationConcurrency("64")).toBe(8);
+    expect(() => getAiEvaluationConcurrency("0")).toThrow("between 1 and 8");
+    expect(() => getAiEvaluationConcurrency("many")).toThrow("between 1 and 8");
+  });
+
+  it("allows slow max-reasoning providers without unbounded request timeouts", () => {
+    expect(getAiEvaluationRequestTimeoutMs(undefined)).toBe(300_000);
+    expect(getAiEvaluationRequestTimeoutMs("600000")).toBe(600_000);
+    expect(() => getAiEvaluationRequestTimeoutMs("29999")).toThrow("between 30000 and 600000");
+    expect(() => getAiEvaluationRequestTimeoutMs("forever")).toThrow("between 30000 and 600000");
+  });
+
+  it("runs cases concurrently while preserving deterministic result order", async () => {
+    let active = 0;
+    let maximumActive = 0;
+    const results = await mapAiEvaluationCasesWithConcurrency([40, 5, 20, 1], 3, async (delay, index) => {
+      active += 1;
+      maximumActive = Math.max(maximumActive, active);
+      await new Promise((resolve) => setTimeout(resolve, delay));
+      active -= 1;
+      return `case-${index}`;
+    });
+
+    expect(maximumActive).toBe(3);
+    expect(results).toEqual(["case-0", "case-1", "case-2", "case-3"]);
   });
   it("defines distinct complex and public-API scenarios", () => {
     expect(CUSTOM_WIDGET_AI_EVALUATION_CASES.map(({ id }) => id)).toEqual([

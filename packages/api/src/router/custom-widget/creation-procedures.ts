@@ -3,15 +3,13 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import {
-  customWidgetCreateSchema,
-  customWidgetDefinitionSchema,
-  normalizeCustomWidgetAuthoringDefinition,
-} from "@homarr/custom-widgets/core";
+import { customWidgetCreateSchema, normalizeCustomWidgetAuthoringDefinition } from "@homarr/custom-widgets/core";
 
 import { permissionRequiredProcedure } from "../../trpc";
 import { parseCustomWidgetAuthoringInput } from "./authoring-validation";
 import { insertCustomWidgetDefinition } from "./definition-insert";
+import { updateCustomWidgetDefinition } from "./definition-update";
+import { assertCurrentPreviewEvidence, parsePreviewDefinition } from "./preview-persistence";
 import { getPreviewEvidence, getPreviewSession, getPreviewSessionSecrets } from "./preview-sessions";
 import { assertSecretSources } from "./secret-policy";
 
@@ -58,65 +56,22 @@ export const creationProcedures = {
       mcp: {
         enabled: true,
         description:
-          "Requires administrator permission. Persist the exact tested definition from a customWidget_previewCreate or customWidget_previewReviseTemplate session. Prefer this over resending a large widget to customWidget_create. Every query and action in the final preview revision must have current evidence.",
+          "Requires administrator permission. Persist an exact tested new-widget preview from customWidget_previewCreate or customWidget_previewReviseTemplate. Edit previews must use customWidget_updateFromPreview. Every query and action in the final preview revision must have current evidence.",
       },
     })
     .input(z.object({ previewSessionId: z.string().min(1), targetBoardId: z.string().min(1).optional() }))
     .mutation(async ({ ctx, input }) => {
       const session = await getPreviewSession(input.previewSessionId, ctx.session.user.id);
+      if (session.definitionId) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "This edit preview must update its existing custom widget with customWidget_updateFromPreview",
+        });
+      }
       const evidence = await getPreviewEvidence(session.id, ctx.session.user.id);
-      const unverifiedQueryIds = Object.entries(session.requests).flatMap(([requestId, request]) => {
-        if (request.kind !== "query") return [];
-        const verified = evidence.some(
-          (entry) =>
-            entry.kind === "query" &&
-            entry.requestId === requestId &&
-            entry.sessionRevision === session.revision &&
-            entry.status !== null &&
-            entry.status >= 200 &&
-            entry.status < 300,
-        );
-        return verified ? [] : [requestId];
-      });
-      if (unverifiedQueryIds.length > 0) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: `Test every final preview query successfully before creating the widget: ${unverifiedQueryIds.join(", ")}`,
-        });
-      }
-      const unverifiedActionIds = Object.entries(session.requests).flatMap(([requestId, request]) => {
-        if (request.kind !== "action") return [];
-        const verified = evidence.some((entry) => {
-          if (entry.kind !== "action" || entry.requestId !== requestId || entry.sessionRevision !== session.revision) {
-            return false;
-          }
-          if (entry.simulated) return true;
-          return entry.status !== null && entry.status >= 200 && entry.status < 300;
-        });
-        return verified ? [] : [requestId];
-      });
-      if (unverifiedActionIds.length > 0) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: `Test every final preview action before creating the widget: ${unverifiedActionIds.join(", ")}`,
-        });
-      }
-
-      const definition = parseCustomWidgetAuthoringInput(() =>
-        customWidgetDefinitionSchema.parse({
-          $schema: "homarr-custom-widget-v2",
-          name: session.name,
-          description: session.description,
-          iconUrl: session.iconUrl,
-          sources: session.sources,
-          requests: session.requests,
-          options: session.optionDefinitions,
-          template: session.template,
-        }),
-      );
-      const secrets = Object.keys(session.sources).flatMap((sourceId) =>
-        getPreviewSessionSecrets(session, sourceId).map((secret) => ({ sourceId, ...secret })),
-      );
+      assertCurrentPreviewEvidence(session, evidence, "creating");
+      const definition = parsePreviewDefinition(session);
+      const secrets = getPersistedPreviewSecrets(session);
       await assertCustomWidgetIntegrationBindings(ctx, definition.sources);
       assertSecretSources(definition.sources, secrets);
       const id = await insertCustomWidgetDefinition(ctx.db, definition, ctx.session.user.id, secrets);
@@ -127,4 +82,57 @@ export const creationProcedures = {
       });
       return getCreatedCustomWidgetResult(id, input.targetBoardId);
     }),
+
+  updateFromPreview: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Requires administrator permission. Update the existing Custom JSX widget associated with an edit preview, using that exact tested preview revision without creating a duplicate. Every query and action in the final preview revision must have current evidence.",
+      },
+    })
+    .input(z.object({ previewSessionId: z.string().min(1) }))
+    .mutation(async ({ ctx, input }) => {
+      const session = await getPreviewSession(input.previewSessionId, ctx.session.user.id);
+      if (!session.definitionId) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "This preview is not associated with an existing custom widget definition",
+        });
+      }
+      if (!session.definitionStateFingerprint) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "This edit preview predates safe update persistence. Create a new preview and retry.",
+        });
+      }
+      const evidence = await getPreviewEvidence(session.id, ctx.session.user.id);
+      assertCurrentPreviewEvidence(session, evidence, "updating");
+      const definition = parsePreviewDefinition(session);
+      const secrets = getPersistedPreviewSecrets(session);
+      await assertCustomWidgetIntegrationBindings(ctx, definition.sources);
+      assertSecretSources(definition.sources, secrets);
+      await updateCustomWidgetDefinition(ctx.db, {
+        id: session.definitionId,
+        definition,
+        secrets,
+        expectedStateFingerprint: session.definitionStateFingerprint,
+      });
+      logger.info("Updated custom widget definition from tested preview", {
+        id: session.definitionId,
+        name: definition.name,
+        previewSessionId: session.id,
+      });
+      return {
+        id: session.definitionId,
+        managementPath: `/manage/custom-widgets/edit/${session.definitionId}`,
+      };
+    }),
 };
+
+function getPersistedPreviewSecrets(session: Awaited<ReturnType<typeof getPreviewSession>>) {
+  return Object.keys(session.sources).flatMap((sourceId) =>
+    getPreviewSessionSecrets(session, sourceId).map((secret) => ({ sourceId, ...secret })),
+  );
+}
