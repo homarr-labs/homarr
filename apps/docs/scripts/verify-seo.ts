@@ -41,6 +41,9 @@ for (const file of files) {
   assert.equal(canonical, `${origin}${pathname}`, `${pathname}: canonical must match exported route`);
   assert(indexed.has(canonical), `${pathname}: missing from sitemap`);
   canonicalPages.add(canonical);
+  const isArticle = pathname.startsWith("/blog/") && pathname !== "/blog/";
+  const socialImage = $("meta[property='og:image']").attr("content");
+  const twitterCard = socialImage === `${origin}/img/logo.png` ? "summary" : "summary_large_image";
 
   for (const [selector, expected] of [
     ['meta[property="og:title"]', title],
@@ -48,11 +51,10 @@ for (const file of files) {
     ['meta[property="og:url"]', canonical],
     ['meta[name="twitter:title"]', title],
     ['meta[name="twitter:description"]', description],
-    ['meta[name="twitter:card"]', "summary"],
+    ['meta[name="twitter:card"]', twitterCard],
   ]) {
     assert.equal($(selector).attr("content"), expected, `${pathname}: incorrect ${selector}`);
   }
-  const isArticle = pathname.startsWith("/blog/") && pathname !== "/blog/";
   assert.equal(
     $("meta[property='og:type']").attr("content"),
     isArticle ? "article" : "website",

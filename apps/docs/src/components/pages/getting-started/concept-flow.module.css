@@ -3,6 +3,7 @@
   --diagram-muted: var(--color-fd-muted-foreground);
   --diagram-panel: var(--color-fd-card);
   --diagram-line: var(--color-fd-border);
+  --diagram-outline: color-mix(in oklch, var(--color-fd-foreground) 18%, var(--color-fd-border));
   margin: 0;
   padding: 0;
   border: 0;
@@ -25,10 +26,11 @@
   grid-template-rows: auto 1fr;
   gap: 0.55rem;
   min-width: 0;
-  padding: 0.45rem;
-  border: 0;
+  padding: 0.7rem;
+  border: 1px solid var(--diagram-outline);
+  border-radius: 0.65rem;
   margin: 0;
-  background: transparent;
+  background: color-mix(in oklch, var(--color-fd-primary) 2.5%, var(--diagram-panel));
 }
 
 .stageHeading {

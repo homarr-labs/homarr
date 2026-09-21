@@ -12,15 +12,19 @@ export function pageMetadata({
   path,
   publishedTime,
   authors,
+  image: socialImage,
 }: {
   title: string;
   description: string;
   path: string;
   publishedTime?: string;
   authors?: string[];
+  image?: { url: string; width: number; height: number; alt: string };
 }): Metadata {
   const socialTitle = title === "Homarr documentation" ? title : `${title} | Homarr documentation`;
-  const image = { url: new URL("/img/logo.png", siteUrl).href, width: 484, height: 329, alt: "Homarr" };
+  const image = socialImage
+    ? { ...socialImage, url: new URL(socialImage.url, siteUrl).href }
+    : { url: new URL("/img/logo.png", siteUrl).href, width: 484, height: 329, alt: "Homarr" };
   return {
     title: { absolute: socialTitle },
     description,
@@ -36,7 +40,7 @@ export function pageMetadata({
       ...(publishedTime ? { type: "article", publishedTime, authors } : { type: "website" }),
     },
     twitter: {
-      card: "summary",
+      card: socialImage ? "summary_large_image" : "summary",
       title: socialTitle,
       description,
       images: [{ url: image.url, alt: image.alt }],

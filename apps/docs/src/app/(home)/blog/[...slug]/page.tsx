@@ -5,6 +5,8 @@ import { IconBrandGithub } from "@tabler/icons-react";
 import { InlineTOC } from "fumadocs-ui/components/inline-toc";
 import { DocsBody, MarkdownCopyButton, ViewOptionsPopover } from "fumadocs-ui/layouts/docs/page";
 
+import homarrV2SocialImage from "@site/blog/2026/09-03-homarr-2.0/img/homarr-v2-recap.webp";
+
 import { pageMetadata } from "@/lib/metadata";
 import { BlogToc } from "@/components/blog/blog-toc";
 import { getMDXComponents } from "@/components/mdx";
@@ -168,11 +170,21 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const post = getPostBySegments(slug);
   if (!post) notFound();
 
+  const image = getPostUrl(post) === "/blog/2026/09/03/homarr-2.0" ? homarrV2SocialImage : undefined;
+
   return pageMetadata({
     title: post.title,
     description: post.description ?? (await getPostExcerpt(post)).slice(0, 180),
     path: getPostUrl(post),
     authors: post.authors,
     publishedTime: post.date,
+    image: image
+      ? {
+          url: image.src,
+          width: image.width,
+          height: image.height,
+          alt: `${post.title} release overview`,
+        }
+      : undefined,
   });
 }

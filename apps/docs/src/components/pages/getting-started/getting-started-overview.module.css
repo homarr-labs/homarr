@@ -1,9 +1,14 @@
-.overview {
+.overview,
+.installPaths {
   --start-ink: var(--color-fd-foreground);
   --start-muted: var(--color-fd-muted-foreground);
   --start-panel: var(--color-fd-card);
   --start-line: var(--color-fd-border);
+  --start-line-strong: color-mix(in oklch, var(--color-fd-foreground) 18%, var(--color-fd-border));
   --start-coral: var(--color-fd-primary);
+}
+
+.overview {
   display: grid;
   gap: 1rem;
   margin: 1.25rem 0 2.5rem;
@@ -25,6 +30,7 @@
 .intro h2 {
   margin: 0 0 0.25rem;
   font-size: 1.35rem;
+  font-weight: 700;
   line-height: 1.2;
 }
 
@@ -51,6 +57,7 @@
 .editorHeading h3 {
   margin: 0 0 0.25rem;
   font-size: 1.1rem;
+  font-weight: 700;
 }
 
 .editorHeading p {
@@ -152,33 +159,32 @@
   margin: 1rem 0 1.5rem;
 }
 
-.installPath {
+.installPaths > .installPath {
   position: relative;
   display: grid;
   gap: 0.45rem;
   min-height: 10rem;
   padding: 1.1rem;
-  border: 1px solid var(--start-line);
+  border: 1px solid var(--start-line-strong);
   border-radius: 0.9rem;
   color: var(--start-ink);
-  background: var(--start-panel);
-  box-shadow: 0 3px 10px rgb(20 25 35 / 8%);
+  background: color-mix(in oklch, var(--start-coral) 2.5%, var(--start-panel));
   text-decoration: none;
   transition:
     border-color 160ms ease,
     transform 160ms ease,
-    box-shadow 160ms ease;
+    background-color 160ms ease;
 }
 
-.installPath:hover {
+.installPaths > .installPath:hover {
   border-color: rgb(250 82 82 / 55%);
   color: var(--start-ink);
+  background: color-mix(in oklch, var(--start-coral) 6%, var(--start-panel));
   text-decoration: none;
   transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgb(20 25 35 / 8%);
 }
 
-.installPath > span {
+.installPaths > .installPath > span {
   color: var(--color-fd-primary);
   font-family: var(--font-mono);
   font-size: 0.62rem;
@@ -187,25 +193,25 @@
   text-transform: uppercase;
 }
 
-.installPath strong {
+.installPaths > .installPath strong {
   font-size: 1rem;
 }
 
-.installPath small {
+.installPaths > .installPath small {
   color: var(--start-muted);
   line-height: 1.45;
 }
 
-.installPath > svg {
+.installPaths > .installPath > svg {
   position: absolute;
   right: 0.9rem;
   bottom: 0.9rem;
   color: var(--start-coral);
 }
 
-.recommendedPath {
+.installPaths > .recommendedPath {
   border-color: var(--color-fd-primary);
-  background: var(--start-panel);
+  background: color-mix(in oklch, var(--start-coral) 5%, var(--start-panel));
 }
 
 @media (max-width: 800px) {
@@ -225,13 +231,13 @@
     grid-template-columns: 1fr;
   }
 
-  .installPath {
+  .installPaths > .installPath {
     min-height: 8rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .installPath {
+  .installPaths > .installPath {
     transition: none;
   }
 }

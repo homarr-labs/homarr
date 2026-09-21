@@ -40,7 +40,7 @@ export function GettingStartedOverview() {
   if (isMarkdown) BoardLink = "a";
 
   return (
-    <div className={styles.overview}>
+    <div className={`${styles.overview} not-prose`}>
       <section className={styles.conceptCard} aria-labelledby="getting-started-overview-title">
         <div className={styles.intro}>
           <h2 id="getting-started-overview-title">How Homarr works</h2>
@@ -122,7 +122,7 @@ export function InstallationPaths() {
   }
 
   return (
-    <div className={styles.installPaths}>
+    <div className={`${styles.installPaths} not-prose`}>
       {installationPaths.map((path) => {
         let className = styles.installPath;
         if (path.recommended) className = `${className} ${styles.recommendedPath}`;

@@ -15,10 +15,6 @@ import {
   IconSparkles,
 } from "@tabler/icons-react";
 
-import onboardingWelcome from "./img/onboarding-v2-welcome.png";
-import onboardingBoard from "./img/onboarding-v2-board.png";
-import onboardingReview from "./img/onboarding-v2-review.png";
-
 After Homarr starts, open its URL. An unfinished installation redirects to the onboarding screen at `/init`. Choose
 **Get started** for a new installation or **Restore backup** to import a compatible SQLite backup.
 
@@ -59,16 +55,13 @@ appearance can all be changed later.
 
 <Cards>
   <Card title="Start or restore">
-    <img
-      src={onboardingWelcome.src}
-      alt="Homarr onboarding welcome screen with Get started and Restore backup actions"
-    />
+    ![Homarr onboarding welcome screen with Get started and Restore backup actions](./img/onboarding-v2-welcome.png)
   </Card>
   <Card title="Configure the board">
-    <img src={onboardingBoard.src} alt="Board onboarding section for colors, columns, corner radius, and sidebars" />
+    ![Board onboarding section for colors, columns, corner radius, and sidebars](./img/onboarding-v2-board.png)
   </Card>
   <Card title="Review before building">
-    <img src={onboardingReview.src} alt="Onboarding review showing the board settings Homarr will create" />
+    ![Onboarding review showing the board settings Homarr will create](./img/onboarding-v2-review.png)
   </Card>
 </Cards>
 
