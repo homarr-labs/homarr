@@ -1,3 +1,4 @@
+export { HOMARR_CAPABILITY_GUIDANCE } from "./mcp-capabilities";
 import { statsRouter } from "./router/widgets/stats";
 export { createTRPCContext } from "./trpc";
 export { callMcpTool, extractMcpToolsFromProcedures } from "./mcp-tools";
