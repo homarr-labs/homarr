@@ -9,6 +9,7 @@ import type { CustomWidgetAiEvaluationCase } from "./ai-evaluation-cases";
 import { createAssistantEvaluationCaseSnapshot } from "./ai-assistant-evaluation";
 import { getCustomWidgetAiEvaluationSuite, resolveCustomWidgetAiEvaluationSuiteId } from "./ai-evaluation-suites";
 import {
+  aiEvaluationSpendBudget,
   getCustomWidgetJudgePolicyHash,
   getAiEvaluationMaxOutputTokens,
   getDeterministicEvaluationMatches,
@@ -18,6 +19,7 @@ import {
   resolveAiEvaluationProviderConfig,
 } from "./ai-evaluation";
 import type { CustomWidgetJudgeRequest, CustomWidgetJudgeResult } from "./ai-evaluation";
+import { createAiEvaluationHarnessSnapshot } from "./ai-evaluation-provenance";
 
 interface SourceResult {
   caseId: string;
@@ -54,6 +56,11 @@ export type RejudgeJudgeRunner = (
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
+
+const getProviderPreferences = (generation: unknown) => {
+  if (!isRecord(generation)) return null;
+  return generation.providerPreferences ?? null;
+};
 
 const sha256 = (text: string) => createHash("sha256").update(text, "utf8").digest("hex");
 
@@ -197,16 +204,29 @@ const loadJudgeCandidates = async (
 };
 
 const renderRejudgeReport = (summary: Record<string, unknown> & { results: SourceResult[] }) => {
+  const sourceSummary = summary.sourceSummary as {
+    path: string;
+    sha256: string;
+    judgeModel: string | null;
+    judgePolicySha256: string | null;
+    harnessSha256: string | null;
+    providerPreferences: unknown;
+  };
+  const harness = summary.harness as { sha256: string; judgePolicySha256: string; files: string[] };
   const lines = [
     "# Custom Widget assistant rejudge",
     "",
-    `Source summary: ${String((summary.sourceSummary as { path: string }).path)}`,
-    `Source SHA-256: ${String((summary.sourceSummary as { sha256: string }).sha256)}`,
-    `Source judge: ${String((summary.sourceSummary as { judgeModel: string | null }).judgeModel)}`,
-    `Source judge policy: ${String((summary.sourceSummary as { judgePolicySha256: string | null }).judgePolicySha256)}`,
+    `Source summary: ${sourceSummary.path}`,
+    `Source SHA-256: ${sourceSummary.sha256}`,
+    `Source judge: ${String(sourceSummary.judgeModel)}`,
+    `Source judge policy: ${String(sourceSummary.judgePolicySha256)}`,
+    `Source harness: ${String(sourceSummary.harnessSha256)}`,
+    `Source provider preferences: ${JSON.stringify(sourceSummary.providerPreferences)}`,
     `Judge: ${String(summary.judgeModel)}`,
     `Judge max output tokens: ${String(summary.judgeMaxOutputTokens)}`,
-    `Judge policy: ${String((summary.harness as { judgePolicySha256: string }).judgePolicySha256)}`,
+    `Judge policy: ${harness.judgePolicySha256}`,
+    `Harness: ${harness.sha256} (${harness.files.length} files)`,
+    `Spend: ${JSON.stringify(summary.spend)}`,
     "",
     "| Case | Status | Score | Verdict |",
     "| --- | --- | ---: | :---: |",
@@ -231,6 +251,7 @@ export async function rejudgeAssistantSummary(args: {
   const sourceSummaryPath = path.resolve(args.sourceSummaryPath);
   const sourceRaw = await readFile(sourceSummaryPath, "utf8");
   const source = parseAndValidateRejudgeSourceSummary(JSON.parse(sourceRaw) as unknown, sourceSummaryPath);
+  const harness = await createAiEvaluationHarnessSnapshot();
   const suiteId = resolveCustomWidgetAiEvaluationSuiteId(source.benchmark.suite);
   const evaluationCases = getCustomWidgetAiEvaluationSuite(suiteId);
   const judgeRunner = args.judgeRunner ?? judgeCustomWidgetCase;
@@ -341,8 +362,10 @@ export async function rejudgeAssistantSummary(args: {
       sha256: sha256(sourceRaw),
       generatedAt: source.generatedAt ?? null,
       generation: source.generation ?? null,
+      providerPreferences: getProviderPreferences(source.generation),
       judgeModel: source.judgeModel ?? null,
       judgePolicySha256: source.harness?.judgePolicySha256 ?? null,
+      harnessSha256: typeof source.harness?.sha256 === "string" ? source.harness.sha256 : null,
     },
     providerBaseUrl: args.baseUrl,
     generatorModel: source.generatorModel ?? null,
@@ -350,7 +373,8 @@ export async function rejudgeAssistantSummary(args: {
     judgeMaxOutputTokens: getAiEvaluationMaxOutputTokens("judge", process.env.CUSTOM_WIDGET_AI_JUDGE_MAX_OUTPUT_TOKENS),
     assistantPrompt: source.assistantPrompt ?? null,
     assistantPromptBundle: source.assistantPromptBundle ?? null,
-    harness: { judgePolicySha256: getCustomWidgetJudgePolicyHash() },
+    spend: aiEvaluationSpendBudget.snapshot(),
+    harness: { ...harness, judgePolicySha256: getCustomWidgetJudgePolicyHash() },
     benchmark: source.benchmark,
     results,
   };

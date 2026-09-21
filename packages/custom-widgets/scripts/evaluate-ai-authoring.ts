@@ -1,4 +1,3 @@
-import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
@@ -29,6 +28,7 @@ import {
   resolveAiEvaluationProviderConfig,
 } from "./ai-evaluation";
 import type { AiEvaluationResult } from "./ai-evaluation";
+import { createAiEvaluationHarnessSnapshot } from "./ai-evaluation-provenance";
 
 const {
   apiKey,
@@ -138,23 +138,10 @@ const assistantPromptBundleSnapshot = createAssistantPromptBundleSnapshot({
   sourceFile: assistantPromptSourceFile,
 });
 
-const harnessSourceUrls = [
-  new URL("./evaluate-ai-authoring.ts", import.meta.url),
-  new URL("./ai-assistant-evaluation.ts", import.meta.url),
-  new URL("./assistant-prompt-bundle.ts", import.meta.url),
-  new URL("./ai-evaluation.ts", import.meta.url),
-  new URL("../src/core/assistant-authoring-phase.ts", import.meta.url),
-  new URL("../src/core/assistant-placement.ts", import.meta.url),
-  new URL("../src/core/assistant-template-lifecycle.ts", import.meta.url),
-  new URL("../src/core/assistant-tool-input.ts", import.meta.url),
-  new URL("../src/core/assistant-tool-step.ts", import.meta.url),
-  new URL("../src/core/custom-jsx-schema.ts", import.meta.url),
-];
-const harnessSources = await Promise.all(harnessSourceUrls.map((url) => readFile(url, "utf8")));
+const evaluatorHarnessSnapshot = await createAiEvaluationHarnessSnapshot();
 const harnessSnapshot = {
-  sha256: createHash("sha256").update(JSON.stringify(harnessSources), "utf8").digest("hex"),
+  ...evaluatorHarnessSnapshot,
   judgePolicySha256: getCustomWidgetJudgePolicyHash(),
-  files: harnessSourceUrls.map((url) => path.relative(process.cwd(), url.pathname)),
 };
 if (!apiKey) {
   throw new Error("AI_PROVIDER_API_KEY or OPENROUTER_API_KEY is required for the live Custom Widget AI evaluation");

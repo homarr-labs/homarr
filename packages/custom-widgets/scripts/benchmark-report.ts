@@ -31,9 +31,17 @@ interface GenerationSummary {
         requestTimeoutMs?: number;
         temperature?: number | null;
         reasoning?: unknown;
+        providerPreferences?: unknown;
         maxOutputTokens?: number | null;
         judgeMaxOutputTokens?: number | null;
       };
+  mode?: string;
+  spend?: {
+    enabled?: boolean;
+    maxUsd?: number | null;
+    requestReservationUsd?: number;
+    ceiling?: unknown;
+  };
   assistantPrompt?: {
     sha256?: string;
   } | null;
@@ -49,6 +57,7 @@ interface GenerationSummary {
   harness?: {
     sha256?: string;
     judgePolicySha256?: string;
+    files?: string[];
   };
   providerBaseUrl?: string;
   generatorModel?: string;
@@ -115,6 +124,7 @@ interface GenerationMetrics {
 export interface BenchmarkConfiguration {
   suite: string;
   split: string | null;
+  mode: string | null;
   providerBaseUrl: string | null;
   generatorModel: string | null;
   judgeModel: string | null;
@@ -123,10 +133,18 @@ export interface BenchmarkConfiguration {
   requestTimeoutMs: number | null;
   temperature: number | null;
   reasoning: unknown;
+  providerPreferences: unknown;
   maxOutputTokens: number | null;
   judgeMaxOutputTokens: number | null;
+  spend: {
+    enabled: boolean | null;
+    maxUsd: number | null;
+    requestReservationUsd: number | null;
+    ceiling: unknown;
+  };
   harnessSha256: string | null;
   judgePolicySha256: string | null;
+  harnessFiles: string[];
 }
 
 interface MetricDeltas {
@@ -239,6 +257,7 @@ const getBenchmarkConfiguration = (summary: GenerationSummary): BenchmarkConfigu
   return {
     suite: summary.benchmark?.suite ?? "core",
     split: summary.benchmark?.split ?? null,
+    mode: summary.mode ?? null,
     providerBaseUrl: summary.providerBaseUrl ?? null,
     generatorModel: summary.generatorModel ?? null,
     judgeModel: summary.judgeModel ?? null,
@@ -247,10 +266,20 @@ const getBenchmarkConfiguration = (summary: GenerationSummary): BenchmarkConfigu
     requestTimeoutMs: typeof generation?.requestTimeoutMs === "number" ? generation.requestTimeoutMs : null,
     temperature: generationTemperature ?? summary.generatorTemperature ?? null,
     reasoning: generation && "reasoning" in generation ? (generation.reasoning ?? null) : null,
+    providerPreferences:
+      generation && "providerPreferences" in generation ? (generation.providerPreferences ?? null) : null,
     maxOutputTokens: typeof generation?.maxOutputTokens === "number" ? generation.maxOutputTokens : null,
     judgeMaxOutputTokens: typeof generation?.judgeMaxOutputTokens === "number" ? generation.judgeMaxOutputTokens : null,
+    spend: {
+      enabled: typeof summary.spend?.enabled === "boolean" ? summary.spend.enabled : null,
+      maxUsd: typeof summary.spend?.maxUsd === "number" ? summary.spend.maxUsd : null,
+      requestReservationUsd:
+        typeof summary.spend?.requestReservationUsd === "number" ? summary.spend.requestReservationUsd : null,
+      ceiling: summary.spend?.ceiling ?? null,
+    },
     harnessSha256: summary.harness?.sha256 ?? null,
     judgePolicySha256: summary.harness?.judgePolicySha256 ?? null,
+    harnessFiles: [...(summary.harness?.files ?? [])].toSorted(),
   };
 };
 
@@ -540,7 +569,7 @@ export function renderBenchmarkReport(comparison: BenchmarkComparison) {
   for (const generation of comparison.generations) {
     const configuration = generation.configuration;
     lines.push(
-      `- **${generation.name} (${generation.configurationHash.slice(0, 12)}):** suite=${configuration.suite}; split=${configuration.split ?? "n/a"}; provider=${configuration.providerBaseUrl ?? "n/a"}; generator=${configuration.generatorModel ?? "n/a"}; judge=${configuration.judgeModel ?? "n/a"}; loops=${configuration.maxLoops ?? "n/a"}; temperature=${configuration.temperature ?? "n/a"}; reasoning=${JSON.stringify(configuration.reasoning)}; maxOutputTokens=${configuration.maxOutputTokens ?? "n/a"}; judgeMaxOutputTokens=${configuration.judgeMaxOutputTokens ?? "n/a"}; concurrency=${configuration.concurrency ?? "n/a"}; requestTimeoutMs=${configuration.requestTimeoutMs ?? "n/a"}; harness=${configuration.harnessSha256?.slice(0, 12) ?? "n/a"}; judgePolicy=${configuration.judgePolicySha256?.slice(0, 12) ?? "n/a"}`,
+      `- **${generation.name} (${generation.configurationHash.slice(0, 12)}):** suite=${configuration.suite}; split=${configuration.split ?? "n/a"}; mode=${configuration.mode ?? "n/a"}; provider=${configuration.providerBaseUrl ?? "n/a"}; generator=${configuration.generatorModel ?? "n/a"}; judge=${configuration.judgeModel ?? "n/a"}; loops=${configuration.maxLoops ?? "n/a"}; temperature=${configuration.temperature ?? "n/a"}; reasoning=${JSON.stringify(configuration.reasoning)}; providerPreferences=${JSON.stringify(configuration.providerPreferences)}; maxOutputTokens=${configuration.maxOutputTokens ?? "n/a"}; judgeMaxOutputTokens=${configuration.judgeMaxOutputTokens ?? "n/a"}; concurrency=${configuration.concurrency ?? "n/a"}; requestTimeoutMs=${configuration.requestTimeoutMs ?? "n/a"}; spend=${JSON.stringify(configuration.spend)}; harness=${configuration.harnessSha256?.slice(0, 12) ?? "n/a"}; harnessFiles=${configuration.harnessFiles.length}; judgePolicy=${configuration.judgePolicySha256?.slice(0, 12) ?? "n/a"}`,
     );
   }
   const hashes = comparison.generations.filter(({ promptHash, caseHash }) => promptHash || caseHash);

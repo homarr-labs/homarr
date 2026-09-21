@@ -75,6 +75,37 @@ describe("universal integration benchmark satisfiability", () => {
   );
 
   it.each(CUSTOM_WIDGET_AI_UNIVERSAL_INTEGRATION_EVALUATION_CASES)(
+    "rejects a request routed through a decoy integration source for $id",
+    (testCase) => {
+      const index = CUSTOM_WIDGET_AI_UNIVERSAL_INTEGRATION_EVALUATION_CASES.indexOf(testCase);
+      const contract = CUSTOM_WIDGET_AI_UNIVERSAL_INTEGRATION_CONTRACTS[index];
+      const decoyContract =
+        CUSTOM_WIDGET_AI_UNIVERSAL_INTEGRATION_CONTRACTS[
+          (index + 1) % CUSTOM_WIDGET_AI_UNIVERSAL_INTEGRATION_CONTRACTS.length
+        ];
+      if (!contract || !decoyContract) throw new Error(`Contract missing for ${testCase.id}`);
+      const widget = makeKnownGoodWidget(testCase, contract);
+      widget.sources.decoy = {
+        type: "integration",
+        integrationId: `int-${decoyContract.kind}-production`,
+        integrationKind: decoyContract.kind,
+      };
+      const request = widget.requests.query;
+      if (!request) throw new Error("Fixture request is missing");
+      request.source = "decoy";
+
+      expect(getDeterministicEvaluationIssues(testCase, widget)).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            path: ["requests", "query", "source"],
+            message: expect.stringContaining("expected saved integration"),
+          }),
+        ]),
+      );
+    },
+  );
+
+  it.each(CUSTOM_WIDGET_AI_UNIVERSAL_INTEGRATION_EVALUATION_CASES)(
     "rejects an undocumented extra request for $id",
     (testCase) => {
       const index = CUSTOM_WIDGET_AI_UNIVERSAL_INTEGRATION_EVALUATION_CASES.indexOf(testCase);

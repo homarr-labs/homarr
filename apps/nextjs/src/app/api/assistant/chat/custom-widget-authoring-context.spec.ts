@@ -30,7 +30,11 @@ describe("Custom Widget authoring context", () => {
     "Create a custom widget for these fixtures",
     "Create custom widgets for these services",
     "Make me a Mealie widget",
+    "Make me a Dispatcharr widget",
+    "make me a dispatcharr widget",
     "I want a widget for Seerr",
+    "Create a widget using my Mealie integration",
+    "Build an API widget for Sonarr",
     "Repair this custom-widget",
     "Validate this Custom JSX definition",
     '{"$schema":"homarr-custom-widget-v2"}',
@@ -46,10 +50,24 @@ describe("Custom Widget authoring context", () => {
   );
 
   test.each([
+    "Create a dashboard with widgets for my services",
+    "Create a board with a Mealie widget",
+    "Populate my dashboard with widgets",
+    "Set up a board with custom widgets",
+    "Add a widget to my dashboard",
+    "Create a new widget",
+    "Create a responsive widget",
+    "Create a polished widget",
+  ])("leaves board and widget management intent to the general tools: %s", (text) => {
+    expect(needsCustomWidgetAuthoringContext([userMessage(text)])).toBe(false);
+  });
+
+  test.each([
     "Make me a weather widget",
     "Create a clock widget",
     "Build a calendar widget",
     "I want a widget for weather",
+    "Create a widget using my weather integration",
   ])("leaves known native widget kinds to the general widget tools: %s", (text) => {
     expect(needsCustomWidgetAuthoringContext([userMessage(text)])).toBe(false);
   });

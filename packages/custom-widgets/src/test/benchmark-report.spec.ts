@@ -59,6 +59,7 @@ const candidateSummary = {
 
 const currentRunnerSummary = {
   generatedAt: "2026-09-20T10:00:00.000Z",
+  mode: "assistant-tool-loop",
   generation: {
     runId: "2026-09-20T10-00-00-000Z",
     experimentId: "assistant-prompt-hard",
@@ -69,12 +70,24 @@ const currentRunnerSummary = {
     model: "z-ai/glm-5.3-flash",
     temperature: 0.2,
     reasoning: { effort: "medium", exclude: true },
+    providerPreferences: { order: ["DeepInfra"], allow_fallbacks: false, quantizations: ["fp8"] },
     maxOutputTokens: 32_768,
     judgeMaxOutputTokens: 32_768,
   },
   providerBaseUrl: "https://openrouter.ai/api/v1",
   generatorModel: "z-ai/glm-5.3-flash",
   judgeModel: "z-ai/glm-5.3-flash",
+  spend: {
+    enabled: true,
+    maxUsd: 20,
+    requestReservationUsd: 0.5,
+    ceiling: { strategy: "openrouter-provider-max-price-v1" },
+  },
+  harness: {
+    sha256: "harness-v2",
+    judgePolicySha256: "judge-v2",
+    files: ["packages/custom-widgets/scripts/ai-evaluation.ts", "pnpm-lock.yaml"],
+  },
   assistantPrompt: {
     source: "candidate-file",
     sourceFile: "prompts/generation-2.md",
@@ -296,6 +309,7 @@ describe("benchmark generation reporting", () => {
       configuration: {
         suite: "integration-coverage",
         split: "heldout",
+        mode: "assistant-tool-loop",
         providerBaseUrl: "https://openrouter.ai/api/v1",
         generatorModel: "z-ai/glm-5.3-flash",
         judgeModel: "z-ai/glm-5.3-flash",
@@ -304,8 +318,16 @@ describe("benchmark generation reporting", () => {
         requestTimeoutMs: 450_000,
         temperature: 0.2,
         reasoning: { effort: "medium", exclude: true },
+        providerPreferences: { order: ["DeepInfra"], allow_fallbacks: false, quantizations: ["fp8"] },
         maxOutputTokens: 32_768,
         judgeMaxOutputTokens: 32_768,
+        spend: {
+          enabled: true,
+          maxUsd: 20,
+          requestReservationUsd: 0.5,
+          ceiling: { strategy: "openrouter-provider-max-price-v1" },
+        },
+        harnessFiles: ["packages/custom-widgets/scripts/ai-evaluation.ts", "pnpm-lock.yaml"],
       },
     });
     expect(renderBenchmarkReport(comparison)).toContain(
@@ -314,6 +336,11 @@ describe("benchmark generation reporting", () => {
     expect(renderBenchmarkReport(comparison)).toContain("judgeMaxOutputTokens=32768");
     expect(renderBenchmarkReport(comparison)).toContain("suite=integration-coverage; split=heldout");
     expect(renderBenchmarkReport(comparison)).toContain("concurrency=4; requestTimeoutMs=450000");
+    expect(renderBenchmarkReport(comparison)).toContain(
+      'providerPreferences={"order":["DeepInfra"],"allow_fallbacks":false,"quantizations":["fp8"]}',
+    );
+    expect(renderBenchmarkReport(comparison)).toContain('spend={"enabled":true,"maxUsd":20');
+    expect(renderBenchmarkReport(comparison)).toContain("harnessFiles=2");
   });
 
   test("rejects promotion when the evaluation configuration differs", () => {
@@ -366,6 +393,31 @@ describe("benchmark generation reporting", () => {
       promote: false,
       reasons: ["configuration differs from baseline: concurrency, requestTimeoutMs"],
     });
+  });
+
+  test("rejects promotion when provider, spend, or evaluator dependency provenance differs", () => {
+    const candidate = {
+      ...currentRunnerSummary,
+      generation: {
+        ...currentRunnerSummary.generation,
+        generationId: "generation-3",
+        providerPreferences: { order: ["Together"], allow_fallbacks: false, quantizations: ["fp8"] },
+      },
+      spend: { ...currentRunnerSummary.spend, requestReservationUsd: 0.4 },
+      harness: { ...currentRunnerSummary.harness, files: ["packages/custom-widgets/scripts/ai-evaluation.ts"] },
+      results: [{ ...currentRunnerSummary.results[0], score: 90 }],
+    };
+    const comparison = compareGenerationSummaries(
+      [
+        { source: "generation-2/summary.json", summary: currentRunnerSummary },
+        { source: "generation-3/summary.json", summary: candidate },
+      ],
+      "generation-2/summary.json",
+    );
+
+    expect(comparison.generations[1]?.promotion.reasons).toContain(
+      "configuration differs from baseline: providerPreferences, spend, harnessFiles",
+    );
   });
 
   test("reports zero category coverage when a generation has no judge categories", () => {

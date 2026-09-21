@@ -107,7 +107,8 @@ describe("assistant artifact rejudge", () => {
       mode: "assistant-tool-loop",
       generatorModel: "generator/model",
       judgeModel: "old/judge",
-      harness: { judgePolicySha256: "old-policy" },
+      generation: { providerPreferences: { order: ["DeepInfra"], allow_fallbacks: false } },
+      harness: { sha256: "old-harness", judgePolicySha256: "old-policy" },
       benchmark,
       results: [
         {
@@ -166,6 +167,8 @@ describe("assistant artifact rejudge", () => {
       sha256: createHash("sha256").update(sourceRaw, "utf8").digest("hex"),
       judgeModel: "old/judge",
       judgePolicySha256: "old-policy",
+      harnessSha256: "old-harness",
+      providerPreferences: { order: ["DeepInfra"], allow_fallbacks: false },
     });
     expect(rejudged.judgeModel).toBe("new/judge");
     expect(rejudged.benchmark).toEqual(benchmark);
@@ -201,7 +204,17 @@ describe("assistant artifact rejudge", () => {
         "utf8",
       ),
     ).toBe(JSON.stringify(judgeResult));
-    expect(await readFile(path.join(outputRoot, "report.md"), "utf8")).toContain("old-policy");
+    const report = await readFile(path.join(outputRoot, "report.md"), "utf8");
+    expect(report).toContain("old-policy");
+    expect(report).toContain("old-harness");
+    expect(report).toContain('Source provider preferences: {"order":["DeepInfra"],"allow_fallbacks":false}');
+    expect(report).toContain("Harness:");
+    expect(report).toContain("Spend:");
+    expect(rejudged.harness).toMatchObject({
+      sha256: expect.stringMatching(/^[a-f\d]{64}$/u),
+      judgePolicySha256: expect.stringMatching(/^[a-f\d]{64}$/u),
+      files: expect.arrayContaining(["packages/custom-widgets/scripts/rejudge-ai-authoring.ts"]),
+    });
   });
 
   it("rejects stale benchmark hashes and mismatched case lists", () => {

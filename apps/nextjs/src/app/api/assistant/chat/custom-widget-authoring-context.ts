@@ -8,7 +8,7 @@ import {
   isRecoverableCustomWidgetAuthoringFailure,
   isSuccessfulCustomWidgetAuthoringAdvance,
 } from "@homarr/custom-widgets/core";
-import { widgetKinds } from "@homarr/definitions";
+import { getIntegrationName, integrationKinds, widgetKinds } from "@homarr/definitions";
 
 export { getCustomWidgetPhaseToolNames };
 
@@ -132,8 +132,36 @@ export const shouldRequireCustomWidgetAuthoringTool = (
 
 const explicitCustomWidgetIntentPattern =
   /(?:\bcustom\s+jsx\b|\bhomarr-custom-widget-v\d+\b|\b(?:build|convert|create|design|edit|fix|make|migrate|repair|update|validate)\b[^\n]{0,80}\bcustom[\s-]+widgets?\b)/iu;
-const customWidgetIntentPattern =
-  /(?:\bcustom\s+jsx\b|\bhomarr-custom-widget-v\d+\b|\b(?:build|convert|create|design|edit|fix|make|migrate|repair|update|validate)\b[^\n]{0,80}\bcustom[\s-]+widgets?\b|\b(?:build|create|design|make)\s+(?:(?:me|us)\s+)?an?\s+[^\n]{1,60}\bwidgets?\b|\b(?:build|create|design|make)\b[^\n]{0,80}\bwidgets?\s+(?:for|using|with)\b|\b(?:i|we)\s+(?:need|want)\b[^\n]{0,60}\bwidgets?\s+(?:for|using|with)\b)/iu;
+const boardManagementIntentPattern =
+  /\b(?:build|create|design|fill|make|populate|set\s*up)\b(?:(?!\bwidgets?\b)[^\n]){0,60}\b(?:board|dashboard)\b/iu;
+const serviceWidgetIntentPatterns = [
+  /\b(?:build|create|design|make)\s+(?:(?:me|us)\s+)?an?\s+([^\n,.!?]{1,60}?)\s+widgets?\b/iu,
+  /\b(?:build|create|design|make)\b[^\n]{0,40}\bwidgets?\s+(?:for|using|with)\s+([^\n,.!?]{1,60})/iu,
+  /\b(?:i|we)\s+(?:need|want)\b[^\n]{0,40}\bwidgets?\s+(?:for|using|with)\s+([^\n,.!?]{1,60})/iu,
+];
+const serviceTargetNoiseWords = new Set([
+  "a",
+  "an",
+  "another",
+  "api",
+  "beautiful",
+  "compact",
+  "existing",
+  "integration",
+  "my",
+  "new",
+  "our",
+  "polished",
+  "responsive",
+  "service",
+  "simple",
+  "some",
+  "that",
+  "the",
+  "this",
+  "those",
+  "your",
+]);
 const nativeWidgetNames = widgetKinds
   .filter((kind) => kind !== "customApi")
   .map((kind) =>
@@ -148,6 +176,30 @@ const nativeWidgetIntentPattern = new RegExp(
   `\\b(?:${nativeWidgetNames})\\s+widgets?\\b|\\bwidgets?\\s+(?:for|using|with)\\s+(?:${nativeWidgetNames})\\b`,
   "iu",
 );
+const nativeWidgetTargets = new Set(nativeWidgetNames.split("|"));
+const integrationTargets = new Set(
+  integrationKinds.flatMap((kind) => [
+    kind
+      .replaceAll("-", " ")
+      .replace(/([a-z\d])([A-Z])/gu, "$1 $2")
+      .toLowerCase(),
+    getIntegrationName(kind).toLowerCase(),
+  ]),
+);
+
+const includesTarget = (candidate: string, targets: ReadonlySet<string>) => {
+  for (const target of targets) {
+    if (
+      candidate === target ||
+      candidate.startsWith(`${target} `) ||
+      candidate.endsWith(` ${target}`) ||
+      candidate.includes(` ${target} `)
+    ) {
+      return true;
+    }
+  }
+  return false;
+};
 
 const customWidgetBootstrapToolNames = new Set(["customWidget_getSkill"]);
 const maxFocusedComponentSearchesPerPhase = 4;
@@ -222,9 +274,31 @@ const hasRecentCustomWidgetLifecycleContext = (messages: readonly UIMessage[]) =
 };
 
 const hasCustomWidgetAuthoringText = (text: string) => {
+  if (boardManagementIntentPattern.test(text)) return false;
   if (explicitCustomWidgetIntentPattern.test(text)) return true;
   if (nativeWidgetIntentPattern.test(text)) return false;
-  return customWidgetIntentPattern.test(text);
+
+  return serviceWidgetIntentPatterns.some((pattern) => {
+    const target = pattern.exec(text)?.[1];
+    if (!target) return false;
+
+    const targetWithoutPlacement = target
+      .replace(/\s+(?:in|on|to)\s+(?:(?:my|our|the|this)\s+)?(?:board|dashboard)\b.*$/iu, "")
+      .trim();
+    const targetWords = targetWithoutPlacement.split(/[^\p{L}\p{N}]+/u).filter(Boolean);
+    const meaningfulTargetWords = targetWords.filter(
+      (word) =>
+        !serviceTargetNoiseWords.has(word.toLowerCase()) &&
+        word.toLowerCase() !== "board" &&
+        word.toLowerCase() !== "dashboard" &&
+        word.toLowerCase() !== "widget" &&
+        word.toLowerCase() !== "widgets",
+    );
+    const meaningfulTarget = meaningfulTargetWords.join(" ").toLowerCase();
+    if (includesTarget(meaningfulTarget, nativeWidgetTargets)) return false;
+    if (includesTarget(meaningfulTarget, integrationTargets)) return true;
+    return meaningfulTargetWords.length > 0;
+  });
 };
 
 const hasExplicitCustomWidgetIntent = (message: UIMessage) =>

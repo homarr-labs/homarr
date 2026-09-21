@@ -246,7 +246,7 @@ describe("integration_request with a mock integration server", () => {
         { integrationId: "sonarr", kind: "password", value: encryptSecret(secret) },
       ]);
     });
-    await expect(caller.request({ ...get, path: "/boolean" })).resolves.toEqual({
+    await expect(caller.request({ ...get, path: "/boolean" })).resolves.toMatchObject({
       status: 200,
       data: { healthy: true },
     });

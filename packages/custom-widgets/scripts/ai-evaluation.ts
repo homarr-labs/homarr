@@ -28,6 +28,84 @@ export const MAX_AI_EVALUATION_CONCURRENCY = 8;
 export const DEFAULT_AI_EVALUATION_REQUEST_TIMEOUT_MS = 300_000;
 export const MAX_AI_EVALUATION_REQUEST_TIMEOUT_MS = 600_000;
 const DEFAULT_AI_EVALUATION_REQUEST_RESERVATION_USD = 0.5;
+const AI_EVALUATION_PROMPT_TOKEN_OVERHEAD = 4_096;
+const AI_EVALUATION_PROMPT_PRICE_SHARE = 0.45;
+const AI_EVALUATION_COMPLETION_PRICE_SHARE = 0.45;
+const AI_EVALUATION_REQUEST_PRICE_SHARE = 0.1;
+const AI_EVALUATION_COST_TOLERANCE_USD = 1e-9;
+
+interface AiEvaluationProviderMaxPrice {
+  prompt: string;
+  completion: string;
+  request: string;
+}
+
+export interface AiEvaluationProviderSpendCeiling {
+  maxPrice: AiEvaluationProviderMaxPrice;
+  promptTokenUpperBound: number;
+  maxOutputTokens: number;
+  maximumCostUsd: number;
+}
+
+const floorPrice = (value: number) => Math.floor(value * 1_000_000_000_000) / 1_000_000_000_000;
+
+const serializePrice = (value: number) => String(floorPrice(value));
+
+export function getAiEvaluationProviderSpendCeiling(
+  requestBody: Readonly<Record<string, unknown>>,
+  reservationUsd: number,
+): AiEvaluationProviderSpendCeiling | null {
+  if (reservationUsd === 0) return null;
+  if (!Number.isFinite(reservationUsd) || reservationUsd < 0) {
+    throw new Error("AI evaluation request reservation must be a non-negative finite number");
+  }
+  const maxOutputTokens = requestBody.max_tokens;
+  if (!Number.isInteger(maxOutputTokens) || Number(maxOutputTokens) <= 0) {
+    throw new Error("AI evaluation requests require a positive integer max_tokens spend bound");
+  }
+  const promptTokenUpperBound =
+    Buffer.byteLength(JSON.stringify(requestBody), "utf8") + AI_EVALUATION_PROMPT_TOKEN_OVERHEAD;
+  const maxPrice: AiEvaluationProviderMaxPrice = {
+    prompt: serializePrice((reservationUsd * AI_EVALUATION_PROMPT_PRICE_SHARE * 1_000_000) / promptTokenUpperBound),
+    completion: serializePrice(
+      (reservationUsd * AI_EVALUATION_COMPLETION_PRICE_SHARE * 1_000_000) / Number(maxOutputTokens),
+    ),
+    request: serializePrice(reservationUsd * AI_EVALUATION_REQUEST_PRICE_SHARE),
+  };
+  const maximumCostUsd =
+    (promptTokenUpperBound * Number(maxPrice.prompt)) / 1_000_000 +
+    (Number(maxOutputTokens) * Number(maxPrice.completion)) / 1_000_000 +
+    Number(maxPrice.request);
+  if (maximumCostUsd > reservationUsd + AI_EVALUATION_COST_TOLERANCE_USD) {
+    throw new Error("AI evaluation provider spend ceiling exceeds its reservation");
+  }
+  return {
+    maxPrice,
+    promptTokenUpperBound,
+    maxOutputTokens: Number(maxOutputTokens),
+    maximumCostUsd,
+  };
+}
+
+export function withAiEvaluationProviderSpendCeiling(
+  requestBody: Readonly<Record<string, unknown>>,
+  reservationUsd: number,
+) {
+  const ceiling = getAiEvaluationProviderSpendCeiling(requestBody, reservationUsd);
+  if (ceiling === null) return { requestBody, ceiling };
+  const configuredProvider = requestBody.provider;
+  let provider: Record<string, unknown> = {};
+  if (typeof configuredProvider === "object" && configuredProvider !== null && !Array.isArray(configuredProvider)) {
+    provider = configuredProvider as Record<string, unknown>;
+  }
+  return {
+    requestBody: {
+      ...requestBody,
+      provider: { ...provider, max_price: ceiling.maxPrice },
+    },
+    ceiling,
+  };
+}
 
 const parsePositiveUsd = (value: string | undefined, name: string) => {
   if (value === undefined || value.trim() === "") return null;
@@ -64,6 +142,11 @@ export class AiEvaluationSpendBudget {
       Number.isFinite(actualCostUsd) && (actualCostUsd ?? -1) >= 0 ? (actualCostUsd ?? 0) : reservedUsd;
     this.spentUsd += chargedUsd;
     this.requests += 1;
+    if (chargedUsd > reservedUsd + AI_EVALUATION_COST_TOLERANCE_USD) {
+      throw new Error(
+        `AI provider reported $${chargedUsd.toFixed(6)} for a request with a $${reservedUsd.toFixed(6)} hard ceiling`,
+      );
+    }
   }
 
   snapshot() {
@@ -75,6 +158,21 @@ export class AiEvaluationSpendBudget {
       reservedUsd: this.reservedUsd,
       requests: this.requests,
       remainingUsd: this.maxUsd === null ? null : Math.max(0, this.maxUsd - this.spentUsd - this.reservedUsd),
+      ceiling: {
+        strategy: "openrouter-provider-max-price-v1",
+        promptTokenUpperBound: `utf8 request bytes plus ${AI_EVALUATION_PROMPT_TOKEN_OVERHEAD} tokens`,
+        outputTokenUpperBound: "max_tokens",
+        assumptions: [
+          "Each prompt token consumes at least one serialized UTF-8 request byte; the fixed overhead covers provider chat framing.",
+          "The selected provider enforces max_price for prompt, completion, and request pricing and max_tokens for all charged output tokens.",
+          "Evaluation requests do not use separately priced image or audio inputs.",
+        ],
+        priceShares: {
+          prompt: AI_EVALUATION_PROMPT_PRICE_SHARE,
+          completion: AI_EVALUATION_COMPLETION_PRICE_SHARE,
+          request: AI_EVALUATION_REQUEST_PRICE_SHARE,
+        },
+      },
     };
   }
 }
@@ -498,6 +596,19 @@ const requestMatchesExpectation = (
   return true;
 };
 
+const requestUsesExpectedIntegration = (
+  widget: HomarrCustomWidgetV2,
+  request: HomarrCustomWidgetV2["requests"][string],
+  expectations: Extract<CustomWidgetAiExpectation, { sourceType: "integration" }>,
+) => {
+  const source = widget.sources[request.source];
+  return (
+    source?.type === "integration" &&
+    source.integrationKind === expectations.sourceIntegrationKind &&
+    source.integrationId === expectations.sourceIntegrationId
+  );
+};
+
 const getExpectedRequestConstraintSummary = (expected: CustomWidgetAiExpectation["requests"][number]) => {
   const formatBinding = (value: string | readonly string[]): string => {
     if (Array.isArray(value)) return value.map((candidate) => formatBinding(candidate)).join(" or ");
@@ -589,10 +700,14 @@ export function getDeterministicEvaluationIssues(
   }
   const matchedRequestIds = new Set<string>();
   for (const expected of expectations.requests) {
-    const match = Object.entries(widget.requests).find(([requestId, request]) => {
+    const candidates = Object.entries(widget.requests).filter(([requestId, request]) => {
       if (matchedRequestIds.has(requestId)) return false;
       return requestMatchesExpectation(request, expected, widget.options, widget.requests);
     });
+    let match = candidates[0];
+    if (expectations.sourceType === "integration") {
+      match = candidates.find(([, request]) => requestUsesExpectedIntegration(widget, request, expectations)) ?? match;
+    }
     if (!match) {
       issues.push({
         path: ["requests"],
@@ -603,6 +718,15 @@ export function getDeterministicEvaluationIssues(
       });
     } else {
       matchedRequestIds.add(match[0]);
+      if (
+        expectations.sourceType === "integration" &&
+        !requestUsesExpectedIntegration(widget, match[1], expectations)
+      ) {
+        issues.push({
+          path: ["requests", match[0], "source"],
+          message: `Route this request through the expected saved integration ${expectations.sourceIntegrationKind}/${expectations.sourceIntegrationId}.`,
+        });
+      }
       if (expected.requiresStatusBinding === true && !widget.template.includes(`status.${match[0]}`)) {
         issues.push({
           path: ["template"],
@@ -647,9 +771,11 @@ export function getDeterministicEvaluationIssues(
   if (expectations.forbidUnexpectedRequests === true) {
     for (const [requestId, request] of Object.entries(widget.requests)) {
       if (matchedRequestIds.has(requestId)) continue;
-      const matchesDocumentedRequest = expectations.requests.some((expected) =>
-        requestMatchesExpectation(request, expected, widget.options, widget.requests),
-      );
+      const matchesDocumentedRequest = expectations.requests.some((expected) => {
+        if (!requestMatchesExpectation(request, expected, widget.options, widget.requests)) return false;
+        if (expectations.sourceType !== "integration") return true;
+        return requestUsesExpectedIntegration(widget, request, expectations);
+      });
       if (matchesDocumentedRequest) continue;
       issues.push({
         path: ["requests", requestId],
@@ -1099,7 +1225,17 @@ async function callOpenRouter(args: {
   const isJudge = args.purpose === "judge";
   let configuredMaxOutputTokens = process.env.CUSTOM_WIDGET_AI_GENERATION_MAX_OUTPUT_TOKENS;
   if (isJudge) configuredMaxOutputTokens = process.env.CUSTOM_WIDGET_AI_JUDGE_MAX_OUTPUT_TOKENS;
+  const maxOutputTokens = getAiEvaluationMaxOutputTokens(args.purpose, configuredMaxOutputTokens);
+  const requestBody = {
+    model: args.model,
+    messages: isJudge ? getCustomWidgetJudgeMessages(args.prompt) : [{ role: "user", content: args.prompt }],
+    temperature: isJudge ? 0 : (args.temperature ?? DEFAULT_AI_GENERATION_TEMPERATURE),
+    max_tokens: maxOutputTokens,
+    reasoning: isJudge ? { effort: "medium", exclude: true } : { effort: "high", exclude: true },
+    ...(isJudge ? { response_format: getJudgeResponseFormat() } : {}),
+  };
   const reservation = aiEvaluationSpendBudget.reserve();
+  const boundedRequest = withAiEvaluationProviderSpendCeiling(requestBody, reservation);
   let settled = false;
   const settle = (cost?: number) => {
     if (settled) return;
@@ -1115,14 +1251,7 @@ async function callOpenRouter(args: {
         "HTTP-Referer": "https://homarr.dev",
         "X-Title": "Homarr Custom Widget AI Evaluation",
       },
-      body: JSON.stringify({
-        model: args.model,
-        messages: isJudge ? getCustomWidgetJudgeMessages(args.prompt) : [{ role: "user", content: args.prompt }],
-        temperature: isJudge ? 0 : (args.temperature ?? DEFAULT_AI_GENERATION_TEMPERATURE),
-        max_tokens: getAiEvaluationMaxOutputTokens(args.purpose, configuredMaxOutputTokens),
-        reasoning: isJudge ? { effort: "medium", exclude: true } : { effort: "high", exclude: true },
-        ...(isJudge ? { response_format: getJudgeResponseFormat() } : {}),
-      }),
+      body: JSON.stringify(boundedRequest.requestBody),
       signal: AbortSignal.timeout(getAiEvaluationRequestTimeoutMs(process.env.CUSTOM_WIDGET_AI_REQUEST_TIMEOUT_MS)),
     });
     const payload = (await response.json()) as OpenRouterResponse;

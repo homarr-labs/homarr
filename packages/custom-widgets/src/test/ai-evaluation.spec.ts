@@ -29,8 +29,10 @@ import {
   MAX_AI_JUDGE_REQUEST_ATTEMPTS,
   parseJudgeResult,
   resolveAiEvaluationProviderConfig,
+  withAiEvaluationProviderSpendCeiling,
 } from "../../scripts/ai-evaluation";
 import type { CustomWidgetJudgeResult } from "../../scripts/ai-evaluation";
+import { createAiEvaluationHarnessSnapshot, getAiEvaluationHarnessHash } from "../../scripts/ai-evaluation-provenance";
 
 const categoryNames = [
   "schemaAndBindings",
@@ -93,6 +95,57 @@ describe("AI authoring evaluation", () => {
     ).toThrow("cannot exceed");
   });
 
+  it("enforces each concurrent reservation through OpenRouter max_price and max_tokens", () => {
+    const budget = createAiEvaluationSpendBudget({
+      CUSTOM_WIDGET_AI_MAX_SPEND_USD: "0.8",
+      CUSTOM_WIDGET_AI_REQUEST_RESERVATION_USD: "0.4",
+    });
+    const request = {
+      model: "openai/gpt-5.6-luna",
+      messages: [{ role: "user", content: "Evaluate this widget" }],
+      max_tokens: 32_768,
+      provider: { order: ["DeepInfra"], allow_fallbacks: false },
+    };
+    const reservations = [budget.reserve(), budget.reserve()];
+    expect(() => budget.reserve()).toThrow("spend budget exhausted");
+    const bounded = withAiEvaluationProviderSpendCeiling(request, reservations[0] ?? 0);
+    if (!bounded.ceiling) throw new Error("Expected an enabled provider spend ceiling");
+
+    expect(bounded.requestBody.provider).toMatchObject({
+      order: ["DeepInfra"],
+      allow_fallbacks: false,
+      max_price: {
+        prompt: expect.any(String),
+        completion: expect.any(String),
+        request: expect.any(String),
+      },
+    });
+    expect(bounded.ceiling.promptTokenUpperBound).toBeGreaterThan(Buffer.byteLength(JSON.stringify(request), "utf8"));
+    expect(bounded.ceiling.maxOutputTokens).toBe(32_768);
+    expect(bounded.ceiling.maximumCostUsd).toBeLessThanOrEqual(0.4);
+    const worstCaseCost =
+      (bounded.ceiling.promptTokenUpperBound * Number(bounded.ceiling.maxPrice.prompt)) / 1_000_000 +
+      (bounded.ceiling.maxOutputTokens * Number(bounded.ceiling.maxPrice.completion)) / 1_000_000 +
+      Number(bounded.ceiling.maxPrice.request);
+    expect(worstCaseCost).toBe(bounded.ceiling.maximumCostUsd);
+    expect(worstCaseCost).toBeLessThanOrEqual(0.4);
+    expect(worstCaseCost * reservations.length).toBeLessThanOrEqual(0.8);
+    expect(() => withAiEvaluationProviderSpendCeiling({ ...request, max_tokens: undefined }, 0.4)).toThrow(
+      "positive integer max_tokens",
+    );
+  });
+
+  it("fails closed when reported provider cost exceeds the reserved hard ceiling", () => {
+    const budget = createAiEvaluationSpendBudget({
+      CUSTOM_WIDGET_AI_MAX_SPEND_USD: "1",
+      CUSTOM_WIDGET_AI_REQUEST_RESERVATION_USD: "0.4",
+    });
+    const reservation = budget.reserve();
+
+    expect(() => budget.settle(reservation, 0.41)).toThrow("hard ceiling");
+    expect(budget.snapshot()).toMatchObject({ spentUsd: 0.41, reservedUsd: 0, requests: 1 });
+  });
+
   it("keeps the generator temperature stable by default and allows bounded overrides", () => {
     expect(getAiEvaluationGenerationTemperature(undefined)).toBe(DEFAULT_AI_GENERATION_TEMPERATURE);
     expect(getAiEvaluationGenerationTemperature(" 0.7 ")).toBe(0.7);
@@ -147,6 +200,30 @@ describe("AI authoring evaluation", () => {
 
     expect(maximumActive).toBe(3);
     expect(results).toEqual(["case-0", "case-1", "case-2", "case-3"]);
+  });
+
+  it("hashes evaluator code, transitive Custom Widget behavior, integration definitions, and dependency locks", async () => {
+    const snapshot = await createAiEvaluationHarnessSnapshot();
+
+    expect(snapshot.sha256).toMatch(/^[a-f\d]{64}$/u);
+    expect(snapshot.files).toEqual(
+      expect.arrayContaining([
+        "packages/custom-widgets/scripts/evaluate-ai-authoring.ts",
+        "packages/custom-widgets/scripts/ai-evaluation-provenance.ts",
+        "packages/custom-widgets/scripts/ai-universal-integration-evaluation-cases.ts",
+        "packages/custom-widgets/src/core/component-catalog.generated.json",
+        "packages/custom-widgets/src/core/request-schema.ts",
+        "packages/custom-widgets/src/jsx/analyzer.ts",
+        "packages/custom-widgets/src/jsx/regex-policy.ts",
+        "packages/definitions/src/integration.ts",
+        "packages/definitions/src/widget.ts",
+        "packages/custom-widgets/package.json",
+        "pnpm-lock.yaml",
+      ]),
+    );
+    expect(getAiEvaluationHarnessHash([{ path: "dependency.ts", content: "before" }])).not.toBe(
+      getAiEvaluationHarnessHash([{ path: "dependency.ts", content: "after" }]),
+    );
   });
   it("defines distinct complex and public-API scenarios", () => {
     expect(CUSTOM_WIDGET_AI_EVALUATION_CASES.map(({ id }) => id)).toEqual([

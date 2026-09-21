@@ -51,6 +51,7 @@ import {
   getDeterministicEvaluationSuiteIssues,
   judgeCustomWidgetCase,
   judgePasses,
+  withAiEvaluationProviderSpendCeiling,
 } from "./ai-evaluation";
 import type { CustomWidgetJudgeResult } from "./ai-evaluation";
 
@@ -1666,7 +1667,24 @@ async function callAssistantStep(args: {
       content: appendActiveCustomWidgetToolInstruction(message.content, activeToolNames),
     };
   });
+  const maxOutputTokens = getAssistantEvaluationMaxOutputTokens(process.env.CUSTOM_WIDGET_AI_MAX_OUTPUT_TOKENS);
+  const requestBody = {
+    model: args.model,
+    messages,
+    ...(args.tools.length > 0
+      ? {
+          tools: args.tools,
+          ...assistantEvaluationToolRequestOptions,
+          tool_choice: args.toolChoice,
+        }
+      : {}),
+    temperature: assistantEvaluationTemperature,
+    max_tokens: maxOutputTokens,
+    reasoning: assistantEvaluationReasoningOptions,
+    ...(assistantEvaluationProviderPreferences ? { provider: assistantEvaluationProviderPreferences } : {}),
+  };
   const reservation = aiEvaluationSpendBudget.reserve();
+  const boundedRequest = withAiEvaluationProviderSpendCeiling(requestBody, reservation);
   let settled = false;
   const settle = (cost?: number) => {
     if (settled) return;
@@ -1682,21 +1700,7 @@ async function callAssistantStep(args: {
         "HTTP-Referer": "https://homarr.dev",
         "X-Title": "Homarr Custom Widget Assistant Evaluation",
       },
-      body: JSON.stringify({
-        model: args.model,
-        messages,
-        ...(args.tools.length > 0
-          ? {
-              tools: args.tools,
-              ...assistantEvaluationToolRequestOptions,
-              tool_choice: args.toolChoice,
-            }
-          : {}),
-        temperature: assistantEvaluationTemperature,
-        max_tokens: getAssistantEvaluationMaxOutputTokens(process.env.CUSTOM_WIDGET_AI_MAX_OUTPUT_TOKENS),
-        reasoning: assistantEvaluationReasoningOptions,
-        ...(assistantEvaluationProviderPreferences ? { provider: assistantEvaluationProviderPreferences } : {}),
-      }),
+      body: JSON.stringify(boundedRequest.requestBody),
       signal: AbortSignal.timeout(getAiEvaluationRequestTimeoutMs(process.env.CUSTOM_WIDGET_AI_REQUEST_TIMEOUT_MS)),
     });
     const payload = (await response.json()) as OpenRouterResponse;

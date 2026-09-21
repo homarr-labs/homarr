@@ -12,6 +12,7 @@ interface CaseResult {
 }
 
 interface EvaluationSummary {
+  mode?: string;
   providerBaseUrl?: string;
   generatorModel?: string;
   judgeModel?: string;
@@ -21,8 +22,15 @@ interface EvaluationSummary {
     requestTimeoutMs?: number;
     temperature?: number;
     reasoning?: unknown;
+    providerPreferences?: unknown;
     maxOutputTokens?: number;
     judgeMaxOutputTokens?: number;
+  };
+  spend?: {
+    enabled?: boolean;
+    maxUsd?: number | null;
+    requestReservationUsd?: number;
+    ceiling?: unknown;
   };
   assistantPromptBundle?: {
     sha256?: string;
@@ -31,7 +39,7 @@ interface EvaluationSummary {
     stagingInstruction?: { sha256?: string };
     assistantPolicy?: { sha256?: string };
   } | null;
-  harness?: { sha256?: string; judgePolicySha256?: string };
+  harness?: { sha256?: string; judgePolicySha256?: string; files?: string[] };
   benchmark?: { suite?: string; split?: string; sha256?: string; caseIds?: string[] };
   results: CaseResult[];
 }
@@ -101,6 +109,7 @@ const getPromptProvenance = (summary: EvaluationSummary, source: string) => {
 const getConfiguration = (summary: EvaluationSummary) => ({
   suite: summary.benchmark?.suite ?? "core",
   split: summary.benchmark?.split ?? null,
+  mode: summary.mode ?? null,
   benchmarkSha256: summary.benchmark?.sha256 ?? null,
   caseIds: [...(summary.benchmark?.caseIds ?? [])].toSorted(),
   providerBaseUrl: summary.providerBaseUrl ?? null,
@@ -111,10 +120,19 @@ const getConfiguration = (summary: EvaluationSummary) => ({
   requestTimeoutMs: summary.generation?.requestTimeoutMs ?? null,
   temperature: summary.generation?.temperature ?? null,
   reasoning: summary.generation?.reasoning ?? null,
+  providerPreferences: summary.generation?.providerPreferences ?? null,
   maxOutputTokens: summary.generation?.maxOutputTokens ?? null,
   judgeMaxOutputTokens: summary.generation?.judgeMaxOutputTokens ?? null,
+  spend: {
+    enabled: typeof summary.spend?.enabled === "boolean" ? summary.spend.enabled : null,
+    maxUsd: typeof summary.spend?.maxUsd === "number" ? summary.spend.maxUsd : null,
+    requestReservationUsd:
+      typeof summary.spend?.requestReservationUsd === "number" ? summary.spend.requestReservationUsd : null,
+    ceiling: summary.spend?.ceiling ?? null,
+  },
   harnessSha256: summary.harness?.sha256 ?? null,
   judgePolicySha256: summary.harness?.judgePolicySha256 ?? null,
+  harnessFiles: [...(summary.harness?.files ?? [])].toSorted(),
 });
 
 const getResultMap = (summary: EvaluationSummary, source: string) => {
@@ -368,7 +386,7 @@ export const renderPairedBenchmarkReport = (comparison: ReturnType<typeof compar
   const lines = [
     "# Paired repeated Custom Widget benchmark",
     "",
-    `Suite: ${configuration.suite}; split: ${comparison.split}; concurrency: ${configuration.concurrency ?? "n/a"}; request timeout: ${configuration.requestTimeoutMs ?? "n/a"} ms; repetitions: ${comparison.repetitions}; paired observations: ${comparison.pairedObservations}`,
+    `Suite: ${configuration.suite}; split: ${comparison.split}; mode: ${configuration.mode ?? "n/a"}; concurrency: ${configuration.concurrency ?? "n/a"}; request timeout: ${configuration.requestTimeoutMs ?? "n/a"} ms; provider preferences: ${JSON.stringify(configuration.providerPreferences)}; spend: ${JSON.stringify(configuration.spend)}; harness files: ${configuration.harnessFiles.length}; repetitions: ${comparison.repetitions}; paired observations: ${comparison.pairedObservations}`,
     "",
     "| Arm | Mean score | Strict pass | Lifecycle |",
     "| --- | ---: | ---: | ---: |",

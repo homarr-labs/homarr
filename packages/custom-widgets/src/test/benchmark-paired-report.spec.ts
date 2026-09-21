@@ -12,6 +12,7 @@ const cases = ["api-contract", "lifecycle-recovery"];
 const candidatePersistenceTools = ["customWidget_createFromPreview", "customWidget_updateFromPreview"] as const;
 
 const createSummary = (arm: "baseline" | "candidate", repetition: number, split = "dev") => ({
+  mode: "assistant-tool-loop",
   providerBaseUrl: "https://openrouter.ai/api/v1",
   generatorModel: "generator/model",
   judgeModel: "independent/judge",
@@ -22,8 +23,15 @@ const createSummary = (arm: "baseline" | "candidate", repetition: number, split 
     requestTimeoutMs: 450_000,
     temperature: 0.2,
     reasoning: { effort: "medium", exclude: true },
+    providerPreferences: { order: ["DeepInfra"], allow_fallbacks: false },
     maxOutputTokens: 12_000,
     judgeMaxOutputTokens: 32_768,
+  },
+  spend: {
+    enabled: true,
+    maxUsd: 20,
+    requestReservationUsd: 0.5,
+    ceiling: { strategy: "openrouter-provider-max-price-v1" },
   },
   assistantPromptBundle: {
     sha256: `${arm}-bundle`,
@@ -32,7 +40,11 @@ const createSummary = (arm: "baseline" | "candidate", repetition: number, split 
     stagingInstruction: { sha256: `${arm}-staging` },
     assistantPolicy: { sha256: `${arm}-policy` },
   },
-  harness: { sha256: "fixed-harness", judgePolicySha256: "fixed-judge-policy" },
+  harness: {
+    sha256: "fixed-harness",
+    judgePolicySha256: "fixed-judge-policy",
+    files: ["packages/custom-widgets/scripts/ai-evaluation.ts", "pnpm-lock.yaml"],
+  },
   benchmark: { suite: "core", split, sha256: `fixed-${split}-cases`, caseIds: cases },
   results: cases.map((caseId, index) => ({
     caseId,
@@ -81,12 +93,20 @@ describe("paired repeated benchmark reporting", () => {
     ]);
     expect(comparison.provenance.configuration).toMatchObject({
       suite: "core",
+      mode: "assistant-tool-loop",
       concurrency: 3,
       requestTimeoutMs: 450_000,
+      providerPreferences: { order: ["DeepInfra"], allow_fallbacks: false },
+      spend: { enabled: true, maxUsd: 20, requestReservationUsd: 0.5 },
+      harnessFiles: ["packages/custom-widgets/scripts/ai-evaluation.ts", "pnpm-lock.yaml"],
     });
     expect(renderPairedBenchmarkReport(comparison)).toContain(
-      "Suite: core; split: dev; concurrency: 3; request timeout: 450000 ms",
+      "Suite: core; split: dev; mode: assistant-tool-loop; concurrency: 3; request timeout: 450000 ms",
     );
+    expect(renderPairedBenchmarkReport(comparison)).toContain(
+      'provider preferences: {"order":["DeepInfra"],"allow_fallbacks":false}',
+    );
+    expect(renderPairedBenchmarkReport(comparison)).toContain("harness files: 2");
   });
 
   test("counts both create and update preview persistence as completed lifecycles", () => {
@@ -129,6 +149,14 @@ describe("paired repeated benchmark reporting", () => {
     if (!executionPair) throw new Error("Missing execution-drift fixture");
     (executionPair.candidate as ReturnType<typeof createSummary>).generation.concurrency = 1;
     expect(() => comparePairedRepeatedSummaries(executionDrift)).toThrow(
+      "evaluation configuration or benchmark provenance differs",
+    );
+
+    const providerDrift = structuredClone(pairedInputs);
+    const providerPair = providerDrift[0];
+    if (!providerPair) throw new Error("Missing provider-drift fixture");
+    (providerPair.candidate as ReturnType<typeof createSummary>).generation.providerPreferences.order = ["Together"];
+    expect(() => comparePairedRepeatedSummaries(providerDrift)).toThrow(
       "evaluation configuration or benchmark provenance differs",
     );
   });
