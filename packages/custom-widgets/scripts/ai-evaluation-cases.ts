@@ -611,15 +611,7 @@ export const CUSTOM_WIDGET_AI_EVALUATION_CASES: readonly CustomWidgetAiEvaluatio
           requiresStatusBinding: true,
         },
       ],
-      templateIncludes: [
-        "RefreshButton",
-        ".payload",
-        ".summary",
-        ".nodes",
-        "incidents",
-        "healthyNodes",
-        "latencyMs",
-      ],
+      templateIncludes: ["RefreshButton", ".payload", ".summary", ".nodes", "incidents", "healthyNodes", "latencyMs"],
     },
   },
   {

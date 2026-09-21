@@ -118,17 +118,15 @@ export const shouldRequireCustomWidgetAuthoringTool = (
   const currentSteps = steps.length > 0 ? steps : responseSteps;
   const latestStep = currentSteps.at(-1);
   if (!latestStep || hasPendingNonCustomToolCall(latestStep)) return false;
-  return latestStep.toolResults.some(
-    (result) => {
-      if (isRecoverableCustomWidgetAuthoringFailure(result.toolName, result.output)) {
-        return hasActiveCustomWidgetTool(activeToolNames);
-      }
-      return (
-        hasFollowUpCustomWidgetTool(activeToolNames, result.toolName) &&
-        isSuccessfulCustomWidgetAuthoringAdvance(result.toolName, result.output)
-      );
-    },
-  );
+  return latestStep.toolResults.some((result) => {
+    if (isRecoverableCustomWidgetAuthoringFailure(result.toolName, result.output)) {
+      return hasActiveCustomWidgetTool(activeToolNames);
+    }
+    return (
+      hasFollowUpCustomWidgetTool(activeToolNames, result.toolName) &&
+      isSuccessfulCustomWidgetAuthoringAdvance(result.toolName, result.output)
+    );
+  });
 };
 
 const customWidgetIntentPattern =

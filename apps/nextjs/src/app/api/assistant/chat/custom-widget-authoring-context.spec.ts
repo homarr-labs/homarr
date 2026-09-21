@@ -760,7 +760,11 @@ describe("Custom Widget authoring context", () => {
     ]);
 
     expect(activeNames).toEqual(
-      expect.arrayContaining(["customWidget_findComponents", "customWidget_getComponents", "customWidget_validateTemplate"]),
+      expect.arrayContaining([
+        "customWidget_findComponents",
+        "customWidget_getComponents",
+        "customWidget_validateTemplate",
+      ]),
     );
     expect(activeNames).not.toContain("customWidget_getReference");
     expect(activeNames).not.toEqual(["customWidget_validateTemplate"]);
