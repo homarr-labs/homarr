@@ -1,5 +1,12 @@
 const previewSessionAliases = ["previewSessionId", "previewId", "previewSession"] as const;
 
+const withCanonicalReferenceName = (input: Record<string, unknown>) => {
+  if (typeof input.name !== "string") return input;
+  const name = input.name.trim().toLowerCase();
+  if (name === input.name) return input;
+  return { ...input, name };
+};
+
 const getSessionAliasValue = (input: Record<string, unknown>, aliases: readonly string[]) => {
   for (const alias of aliases) {
     const value = input[alias];
@@ -113,6 +120,9 @@ export function normalizeCustomWidgetLifecycleToolInput(
   toolName: string,
   input: Record<string, unknown>,
 ): Record<string, unknown> {
+  if (toolName === "customWidget_getReference") {
+    return withCanonicalReferenceName(input);
+  }
   if (toolName === "customWidget_validateTemplate" || toolName === "customWidget_previewReviseTemplate") {
     input = withCanonicalTemplateLines(input);
   }

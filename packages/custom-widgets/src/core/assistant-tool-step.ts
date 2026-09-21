@@ -18,7 +18,7 @@ const isExclusiveCustomWidgetToolName = (toolName: string) =>
 const onePerStepToolNames = new Set(["homarr_enableToolGroups", "integration_getKinds", "integration_all"]);
 
 export const appendActiveCustomWidgetToolInstruction = (instructions: string, activeToolNames: readonly string[]) =>
-  `${instructions}\n\nCurrent authoring step (authoritative), active function tools: [${activeToolNames.join(", ")}]. Provider server tools such as web_search can also be available even when absent from this function-tool list. Independent read-only discovery/reference tools and preview queries may run together. Preview creation, validation, source configuration, actions, revision, and persistence must run alone; every unlisted function tool fails.`;
+  `${instructions}\n\nCurrent authoring step (authoritative), active function tools: [${activeToolNames.join(", ")}]. Provider server tools such as web_search can also be available even when absent from this function-tool list. Independent read-only discovery/reference tools and preview queries may run together. Preview creation, validation, source configuration, actions, revision, and persistence must run alone; every unlisted function tool fails. After a recoverable tool failure, apply its diagnostics and call one active repair tool immediately; do not re-derive the lifecycle or narrate before the repair call.`;
 
 export const createCustomWidgetToolStepGate = () => {
   let currentStep: number | null = null;

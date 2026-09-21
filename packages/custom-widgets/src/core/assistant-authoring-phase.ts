@@ -4,7 +4,6 @@ const customWidgetPreviewPhaseToolNames = new Set(["customWidget_previewCreate",
 const customWidgetWarningRepairPhaseToolNames = new Set(["customWidget_getComponent", "customWidget_previewCreate"]);
 const customWidgetDirectPreviewPhaseToolNames = new Set(["customWidget_previewCreate"]);
 const customWidgetPreviewCreateRepairToolNames = new Set([
-  "customWidget_getReference",
   "customWidget_findComponents",
   "customWidget_getComponents",
   "customWidget_getComponent",
@@ -28,7 +27,6 @@ const customWidgetFinalizationPhaseToolNames = new Set([
   "customWidget_updateFromPreview",
 ]);
 const customWidgetDraftPhaseToolNames = new Set([
-  "customWidget_getReference",
   "customWidget_getComponents",
   "customWidget_getComponent",
   "customWidget_getSharedProps",
@@ -39,7 +37,6 @@ const customWidgetContextPhaseToolNames = new Set([
   "integration_all",
   "customWidget_list",
   "customWidget_get",
-  "customWidget_getReference",
   "customWidget_findComponents",
   "customWidget_getComponents",
   "customWidget_getComponent",
@@ -583,6 +580,9 @@ export const getCustomWidgetPhaseToolNames = <TToolName extends string>(
   }
   if (hasPreviewEvidence) {
     return phaseAvailableToolNames.filter((toolName) => customWidgetEvidencePhaseToolNames.has(toolName));
+  }
+  if (followUpDefinitionId && hasLoadedFollowUpDefinition(steps, followUpDefinitionId)) {
+    return phaseAvailableToolNames.filter((toolName) => customWidgetDirectPreviewPhaseToolNames.has(toolName));
   }
   const discoveryResults = steps.slice(discoveryStartStep).flatMap((step) => step.toolResults);
   if (currentPreferredExampleId && !discoveryResults.some((result) => result.toolName.startsWith("customWidget_"))) {

@@ -110,8 +110,10 @@ const repairMultilineToolInput = <T extends AssistantToolCallInput>(toolCall: T)
   const repairedInput = escapeControlCharactersInsideJsonStrings(toolCall.input);
   if (repairedInput === toolCall.input) return null;
   try {
-    JSON.parse(repairedInput);
-    return { ...toolCall, input: repairedInput };
+    const parsedInput: unknown = JSON.parse(repairedInput);
+    if (!isCustomWidgetTool || !isRecord(parsedInput)) return { ...toolCall, input: repairedInput };
+    const normalizedInput = normalizeCustomWidgetLifecycleToolInput(toolCall.toolName, parsedInput);
+    return { ...toolCall, input: JSON.stringify(normalizedInput) };
   } catch {
     return null;
   }

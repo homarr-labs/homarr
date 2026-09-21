@@ -932,6 +932,13 @@ export async function POST(request: Request) {
       if (!customWidgetAuthoringActive) return undefined;
       return appendActiveCustomWidgetToolInstruction(baseInstructions, activeToolNames);
     };
+    const getRequiredToolChoice = (activeToolNames: readonly string[]) => {
+      const toolName = activeToolNames[0];
+      if (activeToolNames.length === 1 && toolName !== undefined) {
+        return { type: "tool" as const, toolName };
+      }
+      return "required" as const;
+    };
     const result = streamText({
       model: provider(modelId),
       instructions: baseInstructions,
@@ -947,7 +954,7 @@ export async function POST(request: Request) {
             activeTools: requiredToolNames,
             instructions: getStepInstructions(requiredToolNames),
             messages: compactAssistantStepMessages(messages, assistantStepContextMaxCharacters),
-            toolChoice: "required",
+            toolChoice: getRequiredToolChoice(requiredToolNames),
           };
         }
         if (stepNumber === 0 && forcedToolName !== undefined && forcedToolName in availableTools) {
@@ -969,7 +976,7 @@ export async function POST(request: Request) {
             activeTools,
             instructions: getStepInstructions(activeTools),
             messages: compactAssistantStepMessages(messages, assistantStepContextMaxCharacters),
-            toolChoice: "required",
+            toolChoice: getRequiredToolChoice(activeTools),
           };
         }
         if (
@@ -980,7 +987,7 @@ export async function POST(request: Request) {
             activeTools,
             instructions: getStepInstructions(activeTools),
             messages: compactAssistantStepMessages(messages, assistantStepContextMaxCharacters),
-            toolChoice: "required",
+            toolChoice: getRequiredToolChoice(activeTools),
           };
         }
         return {
