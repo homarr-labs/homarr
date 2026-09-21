@@ -5,7 +5,7 @@ import { ResourceTemplate } from "@modelcontextprotocol/server";
 import { z } from "zod/v4";
 
 import type { McpTool } from "@homarr/api/mcp";
-import { createTRPCContext, mcpRouter } from "@homarr/api/mcp";
+import { createTRPCContext, mcpRouter, HOMARR_CAPABILITY_GUIDANCE } from "@homarr/api/mcp";
 import { API_KEY_HEADER_NAME, getSessionFromApiKeyAsync } from "@homarr/auth/api-key";
 import { removeTrailingSlash } from "@homarr/common";
 import { ipAddressFromHeaders } from "@homarr/common/server";
@@ -225,6 +225,8 @@ function sanitizeErrorMessage(error: unknown, toolName: string): string {
 }
 
 const SERVER_INSTRUCTIONS = `You are connected to Homarr, a self-hosted homelab dashboard. Use the listed tools and their descriptions for live data and actions; never invent resources, IDs, state, or results.
+
+${HOMARR_CAPABILITY_GUIDANCE}
 
 Integrations connect Homarr to services, boards contain widgets, and apps are visual links. Discover an integration before passing its integrationId to another tool. Returned permissions are authoritative: use access permits reads, interact access permits service actions, and full access permits configuration changes. Explain denied or unavailable access without suggesting a bypass.
 
