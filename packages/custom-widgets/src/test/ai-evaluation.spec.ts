@@ -1,8 +1,13 @@
 import { describe, expect, it, vi } from "vitest";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { hostname, tmpdir } from "node:os";
+import path from "node:path";
 
 import { CUSTOM_WIDGET_AI_EVALUATION_CASES } from "../../scripts/ai-evaluation-cases";
+import type { CustomWidgetAiEvaluationCase } from "../../scripts/ai-evaluation-cases";
 import { CUSTOM_WIDGET_STARTER, customWidgetDefinitionSchema } from "../core";
 import {
+  assertLiveAiEvaluationSpendCap,
   buildEvaluationPrompt,
   buildJudgePrompt,
   buildRepairPrompt,
@@ -67,7 +72,97 @@ const makeJudgeResult = (score: number) => ({
   highestImpactFixes: [],
 });
 
+const makeExpectedHttpSourceWidget = (source: string, requestPath: string) => ({
+  $schema: "homarr-custom-widget-v2" as const,
+  name: "Cluster overview",
+  sources: {
+    default: {
+      baseUrl: "https://fleet.example.test",
+      networkScope: "public" as const,
+      auth: "none" as const,
+    },
+    decoy: {
+      baseUrl: "https://other.example.test",
+      networkScope: "public" as const,
+      auth: "none" as const,
+    },
+  },
+  requests: {
+    summary: {
+      source,
+      kind: "query" as const,
+      method: "GET" as const,
+      path: requestPath,
+      trigger: "load" as const,
+      auth: "inherit" as const,
+      permission: "view" as const,
+    },
+  },
+  options: {},
+  template:
+    '<Stack><RefreshButton requestId="summary" /><Text>{status.summary?.loading ? "Loading" : status.summary?.ok === false ? status.summary.error : "No data"}</Text></Stack>',
+});
+
+const makeNullableResponseWidget = (template: string) => ({
+  $schema: "homarr-custom-widget-v2" as const,
+  name: "Progress",
+  sources: {
+    default: {
+      baseUrl: "https://example.test",
+      networkScope: "public" as const,
+      auth: "none" as const,
+    },
+  },
+  requests: {
+    summary: {
+      source: "default",
+      kind: "query" as const,
+      method: "GET" as const,
+      path: "/summary",
+      trigger: "load" as const,
+      auth: "inherit" as const,
+      permission: "view" as const,
+    },
+  },
+  options: {},
+  template,
+});
+
 describe("AI authoring evaluation", () => {
+  it("keeps the default assistant benchmark on the core suite and exposes additive integration suites", () => {
+    const packageJson = JSON.parse(readFileSync(new URL("../../package.json", import.meta.url), "utf8")) as {
+      scripts?: Record<string, string>;
+    };
+
+    expect(packageJson.scripts?.["test:assistant-ai"]).toBe("tsx ./scripts/evaluate-ai-authoring.ts --assistant --ci");
+    expect(packageJson.scripts?.["test:assistant-ai-services"]).toContain("--suite=integrations");
+    expect(packageJson.scripts?.["test:assistant-ai-integration-coverage"]).toContain("--suite=integration-coverage");
+  });
+
+  it("requires an OpenRouter hard spend cap only at the live evaluation boundary", () => {
+    const offlineBudget = createAiEvaluationSpendBudget({});
+    expect(offlineBudget.snapshot().enabled).toBe(false);
+    expect(() => assertLiveAiEvaluationSpendCap(offlineBudget)).toThrow("CUSTOM_WIDGET_AI_MAX_SPEND_USD is required");
+
+    const liveBudget = createAiEvaluationSpendBudget({ CUSTOM_WIDGET_AI_MAX_SPEND_USD: "1" });
+    expect(() => assertLiveAiEvaluationSpendCap(liveBudget)).toThrow(
+      "CUSTOM_WIDGET_AI_CAMPAIGN_LEDGER_PATH is required",
+    );
+    const directory = mkdtempSync(path.join(tmpdir(), "homarr-ai-budget-"));
+    const hardCappedBudget = createAiEvaluationSpendBudget({
+      CUSTOM_WIDGET_AI_MAX_SPEND_USD: "1",
+      CUSTOM_WIDGET_AI_CAMPAIGN_LEDGER_PATH: path.join(directory, "campaign.json"),
+    });
+    expect(() => assertLiveAiEvaluationSpendCap(liveBudget, "https://homarr.dev/api/ai/v1")).toThrow(
+      "CUSTOM_WIDGET_AI_CAMPAIGN_LEDGER_PATH is required",
+    );
+    expect(() => assertLiveAiEvaluationSpendCap(hardCappedBudget, "https://homarr.dev/api/ai/v1")).toThrow(
+      "provider.max_price is OpenRouter-specific",
+    );
+    expect(() => assertLiveAiEvaluationSpendCap(hardCappedBudget, `${DEFAULT_AI_PROVIDER_BASE_URL}/`)).not.toThrow();
+    rmSync(directory, { recursive: true });
+  });
+
   it("reserves parallel request spend and fails closed before exceeding the campaign cap", () => {
     const budget = createAiEvaluationSpendBudget({
       CUSTOM_WIDGET_AI_MAX_SPEND_USD: "1",
@@ -83,16 +178,144 @@ describe("AI authoring evaluation", () => {
     expect(budget.snapshot().spentUsd).toBeCloseTo(0.52);
   });
 
+  it("shards one campaign cap across parallel evaluator processes", () => {
+    const budget = createAiEvaluationSpendBudget({
+      CUSTOM_WIDGET_AI_MAX_SPEND_USD: "30",
+      CUSTOM_WIDGET_AI_BUDGET_SHARDS: "10",
+      CUSTOM_WIDGET_AI_REQUEST_RESERVATION_USD: "0.5",
+    });
+    expect(budget.snapshot()).toMatchObject({
+      maxUsd: 3,
+      campaignMaxUsd: 30,
+      budgetShards: 10,
+      requestReservationUsd: 0.5,
+    });
+    for (let request = 0; request < 6; request += 1) budget.reserve();
+    expect(() => budget.reserve()).toThrow("spend budget exhausted");
+  });
+
+  it("atomically shares one hard campaign cap across evaluator processes", () => {
+    const directory = mkdtempSync(path.join(tmpdir(), "homarr-ai-campaign-"));
+    const ledgerPath = path.join(directory, "campaign.json");
+    const environment = {
+      CUSTOM_WIDGET_AI_MAX_SPEND_USD: "1",
+      CUSTOM_WIDGET_AI_BUDGET_SHARDS: "1",
+      CUSTOM_WIDGET_AI_REQUEST_RESERVATION_USD: "0.4",
+      CUSTOM_WIDGET_AI_CAMPAIGN_LEDGER_PATH: ledgerPath,
+    };
+    try {
+      const firstProcess = createAiEvaluationSpendBudget(environment);
+      const secondProcess = createAiEvaluationSpendBudget(environment);
+      const first = firstProcess.reserve();
+      const second = secondProcess.reserve();
+      expect(() => firstProcess.reserve()).toThrow("campaign spend budget exhausted");
+      firstProcess.settle(first, 0.1);
+      expect(firstProcess.reserve()).toBe(0.4);
+      expect(secondProcess.snapshot().campaignLedger).toMatchObject({
+        enabled: true,
+        strategy: "shared-file-lock-v1",
+        spentUsd: 0.1,
+        reservedUsd: 0.8,
+        requests: 1,
+      });
+      const mismatchedProcess = createAiEvaluationSpendBudget({
+        ...environment,
+        CUSTOM_WIDGET_AI_MAX_SPEND_USD: "2",
+      });
+      expect(() => mismatchedProcess.snapshot()).toThrow("belongs to a different budget configuration");
+      secondProcess.settle(second, undefined);
+    } finally {
+      rmSync(directory, { recursive: true });
+    }
+  });
+
+  it("recovers a verifiably stale campaign lock without resetting absolute spend", () => {
+    const directory = mkdtempSync(path.join(tmpdir(), "homarr-ai-stale-campaign-"));
+    const ledgerPath = path.join(directory, "campaign.json");
+    const environment = {
+      CUSTOM_WIDGET_AI_MAX_SPEND_USD: "1",
+      CUSTOM_WIDGET_AI_REQUEST_RESERVATION_USD: "0.4",
+      CUSTOM_WIDGET_AI_CAMPAIGN_LEDGER_PATH: ledgerPath,
+    };
+    try {
+      const firstProcess = createAiEvaluationSpendBudget(environment);
+      firstProcess.reserve();
+      const lockPath = `${ledgerPath}.lock`;
+      mkdirSync(lockPath);
+      writeFileSync(
+        path.join(lockPath, "owner.json"),
+        `${JSON.stringify({
+          version: 1,
+          pid: 2_147_483_647,
+          hostname: hostname(),
+          token: "dead-worker",
+          createdAtMs: Date.now(),
+        })}\n`,
+        "utf8",
+      );
+
+      const recoveredProcess = createAiEvaluationSpendBudget(environment);
+      expect(recoveredProcess.snapshot().campaignLedger).toMatchObject({ spentUsd: 0, reservedUsd: 0.4 });
+      expect(existsSync(lockPath)).toBe(false);
+      recoveredProcess.reserve();
+      expect(() => recoveredProcess.reserve()).toThrow("campaign spend budget exhausted");
+    } finally {
+      rmSync(directory, { recursive: true });
+    }
+  });
+
+  it("refuses to recover a lock owned by a live worker", () => {
+    const directory = mkdtempSync(path.join(tmpdir(), "homarr-ai-live-campaign-"));
+    const ledgerPath = path.join(directory, "campaign.json");
+    const lockPath = `${ledgerPath}.lock`;
+    mkdirSync(lockPath);
+    writeFileSync(
+      path.join(lockPath, "owner.json"),
+      `${JSON.stringify({
+        version: 1,
+        pid: process.pid,
+        hostname: hostname(),
+        token: "live-worker",
+        createdAtMs: Date.now(),
+      })}\n`,
+      "utf8",
+    );
+    const wait = vi.spyOn(Atomics, "wait").mockReturnValue("timed-out");
+    try {
+      const budget = createAiEvaluationSpendBudget({
+        CUSTOM_WIDGET_AI_MAX_SPEND_USD: "1",
+        CUSTOM_WIDGET_AI_CAMPAIGN_LEDGER_PATH: ledgerPath,
+      });
+      expect(() => budget.snapshot()).toThrow("Timed out acquiring AI evaluation campaign ledger lock");
+      expect(existsSync(lockPath)).toBe(true);
+    } finally {
+      wait.mockRestore();
+      rmSync(directory, { recursive: true });
+    }
+  });
+
   it("validates spend controls before launching provider requests", () => {
     expect(() => createAiEvaluationSpendBudget({ CUSTOM_WIDGET_AI_MAX_SPEND_USD: "0" })).toThrow(
       "CUSTOM_WIDGET_AI_MAX_SPEND_USD must be a positive number",
     );
     expect(() =>
       createAiEvaluationSpendBudget({
+        CUSTOM_WIDGET_AI_MAX_SPEND_USD: "1",
+        CUSTOM_WIDGET_AI_BUDGET_SHARDS: "1.5",
+      }),
+    ).toThrow("CUSTOM_WIDGET_AI_BUDGET_SHARDS must be a positive integer");
+    expect(() =>
+      createAiEvaluationSpendBudget({
         CUSTOM_WIDGET_AI_MAX_SPEND_USD: "0.2",
         CUSTOM_WIDGET_AI_REQUEST_RESERVATION_USD: "0.5",
       }),
     ).toThrow("cannot exceed");
+    expect(() =>
+      createAiEvaluationSpendBudget({
+        CUSTOM_WIDGET_AI_MAX_SPEND_USD: "1",
+        CUSTOM_WIDGET_AI_CAMPAIGN_LEDGER_PATH: "relative/campaign.json",
+      }),
+    ).toThrow("must be an absolute path");
   });
 
   it("enforces each concurrent reservation through OpenRouter max_price and max_tokens", () => {
@@ -218,6 +441,15 @@ describe("AI authoring evaluation", () => {
         "packages/definitions/src/integration.ts",
         "packages/definitions/src/widget.ts",
         "packages/custom-widgets/package.json",
+        "packages/api/src/router/custom-widget/preview-base-procedures.ts",
+        "packages/api/src/router/custom-widget/preview-query-procedures.ts",
+        "packages/api/src/router/custom-widget/secret-procedures.ts",
+        "packages/custom-widgets/src/core/assistant-execution-policy.ts",
+        "apps/nextjs/src/app/api/assistant/chat/assistant-reasoning.ts",
+        "apps/nextjs/src/app/api/assistant/chat/assistant-tool-policy.ts",
+        "apps/nextjs/src/app/api/assistant/chat/assistant-tool-schema.ts",
+        "apps/nextjs/src/app/api/assistant/chat/custom-widget-authoring-context.ts",
+        "apps/nextjs/src/app/api/assistant/chat/route.ts",
         "pnpm-lock.yaml",
       ]),
     );
@@ -410,7 +642,7 @@ describe("AI authoring evaluation", () => {
         },
       },
       template:
-        '<Stack><RefreshButton requestId="summary" /><Text>{status.summary.loading}</Text><Text>capacity cpuPercent memoryPercent workloads healthy region version</Text></Stack>',
+        '<Stack><RefreshButton requestId="summary" />{status.summary?.loading ? <Text>Loading</Text> : status.summary?.ok === false ? <Text>{status.summary.error}</Text> : <Text>capacity cpuPercent memoryPercent workloads healthy region version</Text>}</Stack>',
     };
 
     expect(getDeterministicEvaluationIssues(testCase, widget)).toEqual([]);
@@ -422,7 +654,7 @@ describe("AI authoring evaluation", () => {
           summaryAlias: { ...widget.requests.summary },
         },
       }),
-    ).toEqual([]);
+    ).toContainEqual(expect.objectContaining({ path: ["requests", "summaryAlias"] }));
     const issues = getDeterministicEvaluationIssues(testCase, {
       ...widget,
       requests: {
@@ -453,6 +685,76 @@ describe("AI authoring evaluation", () => {
     );
   });
 
+  it("requires HTTP requests to use the expected source and exact endpoint path", () => {
+    const baseCase = CUSTOM_WIDGET_AI_EVALUATION_CASES.find(({ id }) => id === "dependent-cluster-selector");
+    if (!baseCase?.expectations) throw new Error("Dependent cluster expectations are missing");
+    const summaryExpectation = baseCase.expectations.requests.find(({ pathIncludes }) =>
+      pathIncludes.endsWith("/summary"),
+    );
+    if (!summaryExpectation) throw new Error("Dependent cluster summary expectation is missing");
+    const testCase = {
+      ...baseCase,
+      expectations: {
+        ...baseCase.expectations,
+        requests: [summaryExpectation],
+        templateIncludes: undefined,
+        templateIncludesAny: undefined,
+        optionChoicesFrom: undefined,
+      },
+    };
+    expect(
+      getDeterministicEvaluationIssues(
+        testCase,
+        makeExpectedHttpSourceWidget("decoy", "/v1/clusters/{option:clusterId}/summary"),
+      ),
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          path: ["requests", "summary", "source"],
+          message: expect.stringContaining("expected HTTP source"),
+        }),
+      ]),
+    );
+    expect(
+      getDeterministicEvaluationIssues(
+        testCase,
+        makeExpectedHttpSourceWidget("default", "/v1/clusters/{option:clusterId}/summary/extra"),
+      ),
+    ).toEqual(expect.arrayContaining([expect.objectContaining({ path: ["requests"] })]));
+    expect(
+      getDeterministicEvaluationIssues(
+        testCase,
+        makeExpectedHttpSourceWidget("default", "/v1/clusters//{option:clusterId}/summary"),
+      ),
+    ).toEqual(expect.arrayContaining([expect.objectContaining({ path: ["requests"] })]));
+    expect(
+      getDeterministicEvaluationIssues(testCase, {
+        ...makeExpectedHttpSourceWidget("default", "/v1/clusters/{option:clusterId}/summary"),
+        template: '<Stack><RefreshButton requestId="summary" /><Text>status.summary loading</Text></Stack>',
+      }),
+    ).toContainEqual(expect.objectContaining({ message: expect.stringContaining("both loading and error state") }));
+    expect(
+      getDeterministicEvaluationIssues(testCase, {
+        ...makeExpectedHttpSourceWidget("default", "/v1/clusters/{option:clusterId}/summary"),
+        template:
+          '<Stack><RefreshButton requestId="summary" />{status.summary?.loading ? <Text>Loading</Text> : status.summary?.ok ? <Text>{data.summary?.capacity}</Text> : null}</Stack>',
+      }),
+    ).toContainEqual(expect.objectContaining({ message: expect.stringContaining("both loading and error state") }));
+    expect(
+      getDeterministicEvaluationIssues(testCase, {
+        ...makeExpectedHttpSourceWidget("default", "/v1/clusters/{option:clusterId}/summary"),
+        template:
+          '<Stack><RefreshButton requestId="summary" />{status.summary?.loading ? <Text>Loading</Text> : status.summary?.ok ? <Text>{data.summary?.capacity}</Text> : <Alert>{status.summary?.error}</Alert>}</Stack>',
+      }),
+    ).toEqual([]);
+    expect(
+      getDeterministicEvaluationIssues(
+        testCase,
+        makeExpectedHttpSourceWidget("default", "/v1/clusters/{option:otherCluster}/summary"),
+      ),
+    ).toEqual([]);
+  });
+
   it("defines full-permission PATCH and DELETE actions with isolated multi-query and multi-widget cases", () => {
     const administration = CUSTOM_WIDGET_AI_EVALUATION_CASES.find(({ id }) => id === "policy-rule-administration");
     expect(administration?.expectations?.requests).toEqual(
@@ -472,6 +774,105 @@ describe("AI authoring evaluation", () => {
 
     const coordinated = CUSTOM_WIDGET_AI_EVALUATION_CASES.find(({ id }) => id === "coordinated-build-workspace");
     expect(coordinated?.expectedWidgets?.map(({ id }) => id)).toEqual(["build-health", "queue-operations"]);
+  });
+
+  it("rejects combined status gates for independently recoverable panels", () => {
+    const baseCase = CUSTOM_WIDGET_AI_EVALUATION_CASES.find(({ id }) => id === "independent-operations-panels");
+    if (!baseCase?.expectations) throw new Error("Independent panel expectations are missing");
+    const testCase = {
+      ...baseCase,
+      expectations: {
+        ...baseCase.expectations,
+        minimumTemplateCharacters: undefined,
+        templateIncludes: undefined,
+      },
+    };
+    const widget = {
+      $schema: "homarr-custom-widget-v2" as const,
+      name: "Operations",
+      sources: {
+        default: {
+          baseUrl: "https://operations.example.test",
+          networkScope: "public" as const,
+          auth: "none" as const,
+        },
+      },
+      requests: {
+        fleet: {
+          source: "default",
+          kind: "query" as const,
+          method: "GET" as const,
+          path: "/v1/fleet/summary",
+          trigger: "load" as const,
+          auth: "inherit" as const,
+          permission: "view" as const,
+        },
+        incidents: {
+          source: "default",
+          kind: "query" as const,
+          method: "GET" as const,
+          path: "/v1/incidents/active",
+          trigger: "load" as const,
+          auth: "inherit" as const,
+          permission: "view" as const,
+        },
+      },
+      options: {},
+      template:
+        '<Stack><Stack>{status.fleet?.loading ? <Text>Loading fleet</Text> : status.fleet?.ok === false ? <Alert>{status.fleet.error}</Alert> : <Text>{data.fleet?.healthy}</Text>}<RefreshButton requestId="fleet" /></Stack><Stack>{status.incidents?.loading ? <Text>Loading incidents</Text> : status.incidents?.ok === false ? <Alert>{status.incidents.error}</Alert> : <Text>{data.incidents?.items?.length}</Text>}<RefreshButton requestId="incidents" /></Stack></Stack>',
+    };
+
+    expect(getDeterministicEvaluationIssues(testCase, widget)).toEqual([]);
+    expect(
+      getDeterministicEvaluationIssues(testCase, {
+        ...widget,
+        template:
+          '<Stack><Stack>{status.fleet?.loading ? <><Text>Loading fleet</Text></> : status.fleet?.ok === false ? <><Alert>{status.fleet.error}</Alert></> : <Text>{data.fleet?.healthy}</Text>}<RefreshButton requestId="fleet" /></Stack><Stack>{status.incidents?.loading ? <><Text>Loading incidents</Text></> : status.incidents?.ok === false ? <><Alert>{status.incidents.error}</Alert></> : <Text>{data.incidents?.items?.length}</Text>}<RefreshButton requestId="incidents" /></Stack></Stack>',
+      }),
+    ).toEqual([]);
+    expect(
+      getDeterministicEvaluationIssues(testCase, {
+        ...widget,
+        template:
+          '<Stack>{status.fleet?.loading || status.incidents?.loading ? <Text>Loading</Text> : status.fleet?.ok === false || status.incidents?.ok === false ? <Alert>Unavailable</Alert> : <Stack><Text>{data.fleet?.healthy}</Text><Text>{data.incidents?.items?.length}</Text></Stack>}<RefreshButton requestId="fleet" /><RefreshButton requestId="incidents" /></Stack>',
+      }),
+    ).toEqual(
+      expect.arrayContaining([expect.objectContaining({ message: expect.stringContaining("request-local branches") })]),
+    );
+    for (const template of [
+      '<Stack><Stack>{status.fleet?.loading ? null : status.fleet?.ok === false ? <Alert>{status.fleet.error}</Alert> : <Text>{data.fleet?.healthy}</Text>}<RefreshButton requestId="fleet" /></Stack><Stack>{status.incidents?.loading ? <Text>Loading incidents</Text> : status.incidents?.ok === false ? <Alert>{status.incidents.error}</Alert> : <Text>{data.incidents?.items?.length}</Text>}<RefreshButton requestId="incidents" /></Stack></Stack>',
+      '<Stack>{status.fleet?.loading ? null : status.incidents?.loading ? null : <Stack><Text>{data.fleet?.healthy}</Text><Text>{data.incidents?.items?.length}</Text></Stack>}<RefreshButton requestId="fleet" /><RefreshButton requestId="incidents" /></Stack>',
+      '<Stack>{status.fleet?.loading ? <Text>Loading fleet</Text> : status.fleet?.ok === false ? <Alert>{status.fleet.error}</Alert> : status.incidents?.loading ? <Text>Loading incidents</Text> : status.incidents?.ok === false ? <Alert>{status.incidents.error}</Alert> : <Stack><Text>{data.fleet?.healthy}</Text><Text>{data.incidents?.items?.length}</Text></Stack>}<RefreshButton requestId="fleet" /><RefreshButton requestId="incidents" /></Stack>',
+    ]) {
+      expect(getDeterministicEvaluationIssues(testCase, { ...widget, template })).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ message: expect.stringContaining("request-local branches") }),
+        ]),
+      );
+    }
+
+    expect(
+      getDeterministicEvaluationIssues(testCase, {
+        ...widget,
+        template:
+          '<Stack><Stack>{status.fleet?.loading ? <Text>Loading fleet</Text> : status.fleet?.ok === false ? <Alert>{status.fleet.error}</Alert> : <Text>Fleet state</Text>}<RefreshButton requestId="fleet" /></Stack><Stack>{status.incidents?.loading ? <Text>Loading incidents</Text> : status.incidents?.ok === false ? <Alert>{status.incidents.error}</Alert> : <Text>Incident state</Text>}<RefreshButton requestId="incidents" /></Stack>{status.fleet?.loading ? <Text>Loading overview</Text> : status.fleet?.ok === false ? <Alert>Overview unavailable</Alert> : status.incidents?.loading ? <Text>Loading overview</Text> : status.incidents?.ok === false ? <Alert>Overview unavailable</Alert> : <Stack><Text>{data.fleet?.healthy}</Text><Text>{data.incidents?.items?.length}</Text></Stack>}</Stack>',
+      }),
+    ).toEqual(
+      expect.arrayContaining([expect.objectContaining({ message: expect.stringContaining("request-local branches") })]),
+    );
+
+    const statusOnlyCase = {
+      ...testCase,
+      expectations: { ...testCase.expectations, requiresIndependentStatusHandling: undefined },
+    };
+    for (const template of [
+      '<Stack><Stack>{status.fleet?.loading ? <></> : status.fleet?.ok === false ? <Alert>{status.fleet.error}</Alert> : <Text>{data.fleet?.healthy}</Text>}<RefreshButton requestId="fleet" /></Stack><Stack>{status.incidents?.loading ? <Text>Loading incidents</Text> : status.incidents?.ok === false ? <Alert>{status.incidents.error}</Alert> : <Text>{data.incidents?.items?.length}</Text>}<RefreshButton requestId="incidents" /></Stack></Stack>',
+      '<Stack><Stack>{status.fleet?.loading ? <Text>Loading fleet</Text> : status.fleet?.ok === false ? <></> : <Text>{data.fleet?.healthy}</Text>}<RefreshButton requestId="fleet" /></Stack><Stack>{status.incidents?.loading ? <Text>Loading incidents</Text> : status.incidents?.ok === false ? <Alert>{status.incidents.error}</Alert> : <Text>{data.incidents?.items?.length}</Text>}<RefreshButton requestId="incidents" /></Stack></Stack>',
+    ]) {
+      expect(getDeterministicEvaluationIssues(statusOnlyCase, { ...widget, template })).toContainEqual(
+        expect.objectContaining({ message: expect.stringContaining("both loading and error state from status.fleet") }),
+      );
+    }
   });
 
   it("grounds fixture-backed scenarios in verified routes and authentication", () => {
@@ -688,6 +1089,210 @@ describe("AI authoring evaluation", () => {
     ).toContainEqual(expect.objectContaining({ message: expect.stringContaining("'response.data'") }));
   });
 
+  it("requires real response member access and rejects protected-media templates", () => {
+    const baseCase = CUSTOM_WIDGET_AI_EVALUATION_CASES.find(({ id }) => id === "tautulli-activity");
+    const requestExpectation = baseCase?.expectations?.requests[0];
+    if (!baseCase?.expectations || !requestExpectation) throw new Error("Tautulli expectations are missing");
+    const testCase = {
+      ...baseCase,
+      expectations: {
+        ...baseCase.expectations,
+        requests: [
+          {
+            ...requestExpectation,
+            requiresResponseBinding: true,
+            requiredResponseMemberPaths: ["progress_percent"],
+          },
+        ],
+        templateIncludes: undefined,
+        templateExcludes: ["thumb_path", "token="],
+        forbiddenTemplateComponents: ["Image"],
+      },
+    };
+    const widget = {
+      $schema: "homarr-custom-widget-v2" as const,
+      name: "Activity",
+      sources: {
+        default: {
+          baseUrl: "http://tautulli.local:8181",
+          networkScope: "private" as const,
+          auth: { type: "apiKeyQuery" as const, name: "apikey" },
+        },
+      },
+      requests: {
+        activity: {
+          source: "default",
+          kind: "query" as const,
+          method: "GET" as const,
+          path: "/api/v2",
+          trigger: "load" as const,
+          query: { cmd: "get_activity" },
+          auth: "inherit" as const,
+          permission: "view" as const,
+        },
+      },
+      options: {},
+      template:
+        "<Stack>{status.activity?.loading ? <Text>Loading</Text> : (data.activity?.response?.data?.sessions ?? []).map(session => <Text key={session.session_id}>{session.progress_percent}</Text>)}</Stack>",
+    };
+
+    expect(getDeterministicEvaluationIssues(testCase, widget)).toEqual([]);
+    expect(
+      getDeterministicEvaluationIssues(testCase, {
+        ...widget,
+        template:
+          "<Stack>{(data.activity?.response?.data?.sessions ?? []).flatMap(({ progress_percent }) => [<Text>{progress_percent}</Text>])}</Stack>",
+      }),
+    ).toEqual([]);
+    const unsafeIssues = getDeterministicEvaluationIssues(testCase, {
+      ...widget,
+      template:
+        '<Stack>{status.activity?.loading ? <Text>Loading</Text> : <Text>progress_percent thumb_path ?TOKEN=</Text>}<Image src="/protected.jpg" /></Stack>',
+    });
+    expect(unsafeIssues).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ message: expect.stringContaining("real JSX member access") }),
+        expect.objectContaining({ message: expect.stringContaining("thumb_path") }),
+        expect.objectContaining({ message: expect.stringContaining("token=") }),
+        expect.objectContaining({ message: expect.stringContaining("forbidden Image") }),
+      ]),
+    );
+  });
+
+  it("accepts member-specific nullable response fallbacks and guards", () => {
+    const testCase = {
+      id: "nullable-response-member",
+      split: "dev",
+      request: "Render progress with a fallback when it is unavailable.",
+      documentationUrl: "https://example.test/docs",
+      apiNotes: "GET /summary returns items with nullable progress.",
+      expectations: {
+        sourceBaseUrl: "https://example.test",
+        sourceAuth: "none",
+        requests: [
+          {
+            kind: "query",
+            method: "GET",
+            pathIncludes: "/summary",
+            trigger: "load",
+            requiredNullableResponseMemberPaths: ["progress"],
+          },
+        ],
+      },
+    } satisfies CustomWidgetAiEvaluationCase;
+    const templates = [
+      '<Stack>{(data.summary?.items ?? []).map(item => <Text>{item.progress?.toFixed(0) ?? "Unavailable"}</Text>)}</Stack>',
+      '<Stack>{(data.summary?.items ?? []).map(item => <Text>{item.progress ?? "Unavailable"}</Text>)}</Stack>',
+      '<Stack>{(data.summary?.items ?? []).map(item => <Text>{item.progress || "Unavailable"}</Text>)}</Stack>',
+      '<Stack>{(data.summary?.items ?? []).map(({ progress }) => <Text>{progress ?? "Unavailable"}</Text>)}</Stack>',
+      '<Stack>{(data.summary?.items ?? []).map(({ progress }) => <Text>{progress != null ? progress : "Unavailable"}</Text>)}</Stack>',
+      '<Stack>{(data.summary?.items ?? []).map(item => <Text>{item.progress ?? item.label ?? "Unavailable"}</Text>)}</Stack>',
+      '<Stack>{(data.summary?.items ?? []).map(item => <Text>{item.progress != null ? item.progress : "Unavailable"}</Text>)}</Stack>',
+      '<Stack>{(data.summary?.items ?? []).map(item => <Text>{item.progress ? item.progress : "Unavailable"}</Text>)}</Stack>',
+    ];
+
+    for (const template of templates) {
+      expect(getDeterministicEvaluationIssues(testCase, makeNullableResponseWidget(template)), template).toEqual([]);
+    }
+  });
+
+  it("accepts a meaningful ancestor guard for an opted-in nullable descendant", () => {
+    const testCase = {
+      id: "nullable-response-ancestor",
+      split: "dev",
+      request: "Render each nullable recipe name with a fallback.",
+      documentationUrl: "https://example.test/docs",
+      apiNotes: "GET /summary returns items with nullable recipes.",
+      expectations: {
+        sourceBaseUrl: "https://example.test",
+        sourceAuth: "none",
+        requests: [
+          {
+            kind: "query",
+            method: "GET",
+            pathIncludes: "/summary",
+            trigger: "load",
+            requiredNullableResponseMemberPaths: ["recipe.name"],
+          },
+        ],
+      },
+    } satisfies CustomWidgetAiEvaluationCase;
+    const widget = {
+      $schema: "homarr-custom-widget-v2" as const,
+      name: "Recipes",
+      sources: {
+        default: {
+          baseUrl: "https://example.test",
+          networkScope: "public" as const,
+          auth: "none" as const,
+        },
+      },
+      requests: {
+        summary: {
+          source: "default",
+          kind: "query" as const,
+          method: "GET" as const,
+          path: "/summary",
+          trigger: "load" as const,
+          auth: "inherit" as const,
+          permission: "view" as const,
+        },
+      },
+      options: {},
+      template:
+        '<Stack>{(data.summary?.items ?? []).map(item => <Text>{item.recipe ? item.recipe.name : "No recipe"}</Text>)}</Stack>',
+    };
+
+    expect(getDeterministicEvaluationIssues(testCase, widget)).toEqual([]);
+  });
+
+  it("rejects nullable response members without their own meaningful fallback", () => {
+    const testCase = {
+      id: "nullable-response-member-adversarial",
+      split: "dev",
+      request: "Render progress with a fallback when it is unavailable.",
+      documentationUrl: "https://example.test/docs",
+      apiNotes: "GET /summary returns items with nullable progress.",
+      expectations: {
+        sourceBaseUrl: "https://example.test",
+        sourceAuth: "none",
+        requests: [
+          {
+            kind: "query",
+            method: "GET",
+            pathIncludes: "/summary",
+            trigger: "load",
+            requiredNullableResponseMemberPaths: ["progress"],
+          },
+        ],
+      },
+    } satisfies CustomWidgetAiEvaluationCase;
+    const templates = [
+      "<Stack>{(data.summary?.items ?? []).map(item => <Text>{item.progress}</Text>)}</Stack>",
+      "<Stack>{(data.summary?.items ?? []).map(item => <Text>Progress unavailable</Text>)}</Stack>",
+      '<Stack>{(data.summary?.items ?? []).map(item => <Text>{item.progress} {item.label ?? "Unavailable"}</Text>)}</Stack>',
+      "<Stack>{(data.summary?.items ?? []).map(item => <Text>{item.progress?.toFixed(0)}</Text>)}</Stack>",
+      '<Stack>{(data.summary?.items ?? []).map(item => <Text>{item.label ? item.progress : "Unavailable"}</Text>)}</Stack>',
+      "<Stack>{(data.summary?.items ?? []).map(item => <Text>{item.progress ? item.progress : null}</Text>)}</Stack>",
+      "<Stack>{(data.summary?.items ?? []).map(item => <Text>{item.progress ?? null}</Text>)}</Stack>",
+      "<Stack>{(data.summary?.items ?? []).map(item => <Text>{item.progress ?? undefined}</Text>)}</Stack>",
+      "<Stack>{(data.summary?.items ?? []).map(item => <Text>{item.progress ?? <></>}</Text>)}</Stack>",
+      "<Stack>{(data.summary?.items ?? []).map(item => <Text>{item.progress ?? []}</Text>)}</Stack>",
+      "<Stack>{(data.summary?.items ?? []).map(item => <Text>{item.progress ?? {}}</Text>)}</Stack>",
+      "<Stack>{(data.summary?.items ?? []).map(item => <Text>{item.progress ?? item.label}</Text>)}</Stack>",
+      "<Stack>{(data.summary?.items ?? []).map(item => <Text>{item.progress ?? <Text>{item.label}</Text>}</Text>)}</Stack>",
+      "<Stack>{(data.summary?.items ?? []).map(item => <Text>{item.progress ?? item.label ?? null}</Text>)}</Stack>",
+      "<Stack>{(data.summary?.items ?? []).map(item => <Text>{item.progress ? item.progress : item.label}</Text>)}</Stack>",
+      "<Stack>{(data.summary?.items ?? []).map(item => <Text>{item.progress != null ? item.progress : <></>}</Text>)}</Stack>",
+    ];
+
+    for (const template of templates) {
+      expect(getDeterministicEvaluationIssues(testCase, makeNullableResponseWidget(template))).toContainEqual(
+        expect.objectContaining({ message: expect.stringContaining("nullable response member progress") }),
+      );
+    }
+  });
+
   it("ties opted-in request controls to the matched literal request ID", () => {
     const baseCase = CUSTOM_WIDGET_AI_EVALUATION_CASES.find(({ id }) => id === "agify-name");
     const requestExpectation = baseCase?.expectations?.requests[0];
@@ -745,6 +1350,59 @@ describe("AI authoring evaluation", () => {
         expect.stringContaining("Bind SubFetch"),
       ]),
     );
+  });
+
+  it("requires every manual request parameter in each opted-in SubFetch params object", () => {
+    const baseCase = CUSTOM_WIDGET_AI_EVALUATION_CASES.find(({ id }) => id === "agify-name");
+    const requestExpectation = baseCase?.expectations?.requests[0];
+    if (!baseCase?.expectations || !requestExpectation) throw new Error("Agify expectations are missing");
+    const testCase = {
+      ...baseCase,
+      expectations: {
+        ...baseCase.expectations,
+        requests: [{ ...requestExpectation, requiresSubFetchParams: true }],
+        templateIncludes: undefined,
+      },
+    };
+    const widget = {
+      $schema: "homarr-custom-widget-v2" as const,
+      name: "Prediction",
+      sources: {
+        default: {
+          baseUrl: "https://api.agify.io",
+          networkScope: "public" as const,
+          auth: { type: "apiKeyQuery" as const, name: "apikey" },
+        },
+      },
+      requests: {
+        prediction: {
+          source: "default",
+          kind: "query" as const,
+          method: "GET" as const,
+          path: "/",
+          trigger: "manual" as const,
+          query: { name: { $param: "name" }, country_id: { $param: "country" } },
+          auth: "inherit" as const,
+          permission: "view" as const,
+        },
+      },
+      options: {},
+      template:
+        '<Stack><SubFetch requestId="prediction" params={{ name: inputs.name, country: inputs.country }} /></Stack>',
+    };
+
+    expect(getDeterministicEvaluationIssues(testCase, widget)).toEqual([]);
+    for (const template of [
+      '<Stack><SubFetch requestId="prediction" /></Stack>',
+      '<Stack><SubFetch requestId="prediction" params={{ name: inputs.name }} /></Stack>',
+      '<Stack><SubFetch requestId="prediction" params={{ name: inputs.name, country: inputs.country }} /><SubFetch requestId="prediction" params={{ name: inputs.name }} /></Stack>',
+    ]) {
+      expect(getDeterministicEvaluationIssues(testCase, { ...widget, template })).toContainEqual(
+        expect.objectContaining({
+          message: expect.stringContaining("through each matching SubFetch params object"),
+        }),
+      );
+    }
   });
 
   it("accepts either an ActionButton or ToggleSwitch when an action permits both helpers", () => {

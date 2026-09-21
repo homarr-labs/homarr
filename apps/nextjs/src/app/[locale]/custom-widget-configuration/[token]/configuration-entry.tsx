@@ -16,6 +16,7 @@ import {
 } from "@mantine/core";
 import { IconCheck, IconKey, IconLock } from "@tabler/icons-react";
 
+import { isCustomWidgetSourceUrlPlaceholder } from "@homarr/custom-widgets/core";
 import type { CustomWidgetSource } from "@homarr/custom-widgets/core";
 import { IntegrationSourceSelect } from "~/components/custom-widgets/integration-source-select";
 
@@ -48,7 +49,8 @@ export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
         const body = (await response.json()) as RequestDetails | { error: string };
         if (!response.ok || "error" in body) throw new Error("error" in body ? body.error : t("unavailable"));
         setDetails(body);
-        setBaseUrl(body.source.baseUrl ?? "");
+        const sourceBaseUrl = body.source.baseUrl ?? "";
+        setBaseUrl(isCustomWidgetSourceUrlPlaceholder(sourceBaseUrl) ? "" : sourceBaseUrl);
         setNetworkScope(body.source.networkScope ?? "public");
         setIntegrationId(body.source.integrationId);
       })
@@ -119,6 +121,7 @@ export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
                     label={t("baseUrl")}
                     type="url"
                     value={baseUrl}
+                    placeholder={details.source.baseUrl}
                     onChange={(event) => setBaseUrl(event.currentTarget.value)}
                     required
                   />
@@ -148,7 +151,9 @@ export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
               <Button
                 loading={saving}
                 disabled={
-                  (details.source.type === "integration" ? !integrationId : !URL.canParse(baseUrl)) ||
+                  (details.source.type === "integration"
+                    ? !integrationId
+                    : !URL.canParse(baseUrl) || isCustomWidgetSourceUrlPlaceholder(baseUrl)) ||
                   details.kinds.some((kind) => !values[kind])
                 }
                 onClick={() => void submit()}

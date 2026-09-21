@@ -6,7 +6,51 @@ import {
   renderBenchmarkReport,
 } from "../../scripts/benchmark-report";
 
+const assistantPromotionProvenance = (generationId: string, promptHash: string) => ({
+  mode: "assistant-tool-loop",
+  generation: {
+    experimentId: "assistant-promotion-test",
+    generationId,
+    maxLoops: 1,
+    concurrency: 2,
+    requestTimeoutMs: 300_000,
+    temperature: 0.2,
+    reasoning: { effort: "max", exclude: true },
+    requiredReasoningEffort: "max",
+    providerPreferences: null,
+    maxOutputTokens: 32_768,
+    judgeMaxOutputTokens: 8_000,
+  },
+  providerBaseUrl: "https://openrouter.ai/api/v1",
+  generatorModel: "generator/model",
+  judgeModel: "judge/model",
+  spend: {
+    enabled: true,
+    maxUsd: 10,
+    campaignMaxUsd: 30,
+    budgetShards: 3,
+    requestReservationUsd: 0.5,
+    campaignLedger: { enabled: true, strategy: "shared-file-lock-v1", id: "campaign-ledger" },
+    ceiling: { strategy: "openrouter-provider-max-price-v1" },
+  },
+  assistantPromptBundle: {
+    sha256: promptHash,
+    stagingInstruction: { sha256: "staging" },
+    assistantPolicy: { sha256: promptHash },
+  },
+  harness: { sha256: "harness", judgePolicySha256: "judge-policy", files: ["harness.ts"] },
+  benchmark: {
+    suite: "core",
+    split: "dev",
+    sha256: "cases-v1",
+    caseIds: ["hard-api", "hard-layout"],
+    promotionEligible: true,
+    promotionIneligibilityReasons: [] as string[],
+  },
+});
+
 const baselineSummary = {
+  ...assistantPromotionProvenance("baseline", "prompt-v0"),
   generationName: "baseline",
   promptHash: "prompt-v0",
   caseHash: "cases-v1",
@@ -18,7 +62,7 @@ const baselineSummary = {
       categories: { safety: 90, usefulness: 70 },
       calledTools: ["customWidget_createFromPreview"],
       widgets: 1,
-      efficiency: { toolCalls: 8, modelInputTokens: 900, modelOutputTokens: 100 },
+      efficiency: { toolCalls: 8, modelInputTokens: 900, modelOutputTokens: 100, modelCostUsd: 0.1, elapsedMs: 1_000 },
     },
     {
       caseId: "hard-layout",
@@ -27,13 +71,20 @@ const baselineSummary = {
       categories: null,
       calledTools: ["customWidget_validateTemplate"],
       widgets: 0,
-      efficiency: { toolCalls: 12, modelInputTokens: 1_700, modelOutputTokens: 300 },
+      efficiency: {
+        toolCalls: 12,
+        modelInputTokens: 1_700,
+        modelOutputTokens: 300,
+        modelCostUsd: 0.2,
+        elapsedMs: 3_000,
+      },
     },
   ],
 };
 
 const candidateSummary = {
-  generation: 1,
+  ...assistantPromotionProvenance("1", "prompt-v1"),
+  generationName: "1",
   hashes: { prompt: "prompt-v1", cases: "cases-v1" },
   results: [
     {
@@ -43,7 +94,13 @@ const candidateSummary = {
       categories: { safety: 85, usefulness: 80 },
       calledTools: ["customWidget_createFromPreview"],
       widgets: 1,
-      efficiency: { toolCalls: 10, modelInputTokens: 1_200, modelOutputTokens: 300 },
+      efficiency: {
+        toolCalls: 10,
+        modelInputTokens: 1_200,
+        modelOutputTokens: 300,
+        modelCostUsd: 0.12,
+        elapsedMs: 1_500,
+      },
     },
     {
       caseId: "hard-api",
@@ -52,10 +109,54 @@ const candidateSummary = {
       categories: { safety: 92, usefulness: 82 },
       calledTools: ["customWidget_createFromPreview"],
       widgets: 1,
-      efficiency: { toolCalls: 8, modelInputTokens: 900, modelOutputTokens: 100 },
+      efficiency: {
+        toolCalls: 8,
+        modelInputTokens: 900,
+        modelOutputTokens: 100,
+        modelCostUsd: 0.08,
+        elapsedMs: 900,
+      },
     },
   ],
 };
+
+const createPromotionSummary = (name: string) => ({
+  generationName: name,
+  mode: "assistant-tool-loop",
+  generation: {
+    experimentId: "assistant-experiment",
+    generationId: name,
+    maxLoops: 1,
+    reasoning: { effort: "max", exclude: true },
+    requiredReasoningEffort: "max",
+  },
+  providerBaseUrl: "https://openrouter.ai/api/v1",
+  generatorModel: "generator/model",
+  judgeModel: "judge/model",
+  spend: {
+    enabled: true,
+    maxUsd: 20,
+    campaignMaxUsd: 20,
+    budgetShards: 1,
+    requestReservationUsd: 0.5,
+    campaignLedger: { enabled: true, strategy: "shared-file-lock-v1", id: "campaign-ledger" },
+    ceiling: { strategy: "openrouter-provider-max-price-v1" },
+  },
+  assistantPromptBundle: {
+    sha256: `${name}-prompt`,
+    stagingInstruction: { sha256: `${name}-staging` },
+    assistantPolicy: { sha256: `${name}-policy` },
+  },
+  harness: { sha256: "harness", judgePolicySha256: "judge-policy", files: ["harness.ts"] },
+  benchmark: {
+    suite: "core",
+    split: "dev",
+    sha256: "cases",
+    caseIds: ["case-a"],
+    promotionEligible: true,
+  },
+  results: [{ caseId: "case-a", score: name === "candidate" ? 90 : 80, verdict: "pass" }],
+});
 
 const currentRunnerSummary = {
   generatedAt: "2026-09-20T10:00:00.000Z",
@@ -69,7 +170,8 @@ const currentRunnerSummary = {
     requestTimeoutMs: 450_000,
     model: "z-ai/glm-5.3-flash",
     temperature: 0.2,
-    reasoning: { effort: "medium", exclude: true },
+    reasoning: { effort: "max", exclude: true },
+    requiredReasoningEffort: "max",
     providerPreferences: { order: ["DeepInfra"], allow_fallbacks: false, quantizations: ["fp8"] },
     maxOutputTokens: 32_768,
     judgeMaxOutputTokens: 32_768,
@@ -80,7 +182,10 @@ const currentRunnerSummary = {
   spend: {
     enabled: true,
     maxUsd: 20,
+    campaignMaxUsd: 20,
+    budgetShards: 1,
     requestReservationUsd: 0.5,
+    campaignLedger: { enabled: true, strategy: "shared-file-lock-v1", id: "campaign-ledger" },
     ceiling: { strategy: "openrouter-provider-max-price-v1" },
   },
   harness: {
@@ -139,9 +244,53 @@ describe("benchmark generation reporting", () => {
         totalModelOutputTokens: 400,
         totalModelTokens: 3_000,
         meanModelTokens: 1_500,
+        measuredCostCases: 2,
+        totalModelCostUsd: 0.3,
+        meanModelCostUsd: 0.15,
+        accountedCostCases: 2,
+        totalModelAccountedCostUsd: 0.3,
+        meanModelAccountedCostUsd: 0.15,
+        measuredDurationCases: 2,
+        totalElapsedMs: 4_000,
+        meanElapsedMs: 2_000,
         scorePerToolCall: 4,
         scorePerThousandModelTokens: 26.67,
       },
+    });
+  });
+
+  test("uses cumulative attempt spend and keeps unreported provider cost non-exact", () => {
+    const metrics = aggregateGenerationMetrics([
+      {
+        caseId: "retried-case",
+        score: 90,
+        verdict: "pass",
+        efficiency: {
+          toolCalls: 8,
+          modelInputTokens: 900,
+          modelOutputTokens: 100,
+          modelCostUsd: 0.05,
+          elapsedMs: 1_000,
+        },
+        cumulativeEfficiency: {
+          modelCostUsd: null,
+          modelAccountedCostUsd: 0.5,
+          modelCostExact: false,
+          elapsedMs: 5_000,
+        },
+      },
+    ]);
+
+    expect(metrics.efficiency).toMatchObject({
+      measuredCostCases: 0,
+      totalModelCostUsd: 0,
+      meanModelCostUsd: null,
+      accountedCostCases: 1,
+      totalModelAccountedCostUsd: 0.5,
+      meanModelAccountedCostUsd: 0.5,
+      measuredDurationCases: 1,
+      totalElapsedMs: 5_000,
+      meanElapsedMs: 5_000,
     });
   });
 
@@ -173,7 +322,7 @@ describe("benchmark generation reporting", () => {
     expect(metrics.lifecycleCompletionRate).toBe(66.67);
   });
 
-  test("compares generations to a fixed baseline and promotes non-regressing improvements", () => {
+  test("compares generations to a fixed baseline without promoting from one run", () => {
     const comparison = compareGenerationSummaries(
       [
         { source: "/runs/generation-0/summary.json", summary: baselineSummary },
@@ -195,63 +344,119 @@ describe("benchmark generation reporting", () => {
         lifecycleCompletionRate: 50,
         categoryAverages: { safety: -1.5, usefulness: 11 },
       },
-      promotion: { promote: true, reasons: [] },
+      promotion: {
+        promote: false,
+        reasons: ["single-run reports are exploratory; use the paired repeated report for promotion"],
+      },
     });
     expect(comparison.generations[1]?.metrics.efficiency).toMatchObject({
       meanToolCalls: 9,
       meanModelTokens: 1_250,
+      meanModelCostUsd: 0.1,
+      meanElapsedMs: 1_200,
       scorePerToolCall: 8.83,
       scorePerThousandModelTokens: 63.6,
     });
   });
 
-  test("rejects changed case sets and renders hashes and decisions", () => {
+  test("rejects incomplete or duplicate result coverage against benchmark provenance", () => {
+    const subsetBaseline = {
+      ...baselineSummary,
+      results: baselineSummary.results.slice(0, 1),
+    };
+    const subsetCandidate = {
+      ...candidateSummary,
+      results: candidateSummary.results.slice(1),
+    };
+
+    expect(() =>
+      compareGenerationSummaries(
+        [
+          { source: "baseline/summary.json", summary: subsetBaseline },
+          { source: "candidate/summary.json", summary: subsetCandidate },
+        ],
+        "baseline/summary.json",
+      ),
+    ).toThrow("results must exactly match benchmark.caseIds");
+
+    const duplicateCandidate = {
+      ...candidateSummary,
+      results: [candidateSummary.results[0], candidateSummary.results[0]],
+    };
+    expect(() =>
+      compareGenerationSummaries(
+        [
+          { source: "baseline/summary.json", summary: baselineSummary },
+          { source: "candidate/summary.json", summary: duplicateCandidate },
+        ],
+        "baseline/summary.json",
+      ),
+    ).toThrow("result case IDs must be unique");
+  });
+
+  test("does not promote an unchanged assistant prompt", () => {
+    const unchangedCandidate = {
+      ...candidateSummary,
+      assistantPromptBundle: baselineSummary.assistantPromptBundle,
+    };
     const comparison = compareGenerationSummaries(
       [
         { source: "baseline/summary.json", summary: baselineSummary },
-        {
-          source: "candidate/summary.json",
-          summary: { ...candidateSummary, results: candidateSummary.results.slice(0, 1) },
-        },
+        { source: "candidate/summary.json", summary: unchangedCandidate },
+      ],
+      "baseline/summary.json",
+    );
+
+    expect(comparison.generations[1]?.promotion).toEqual({
+      promote: false,
+      reasons: [
+        "candidate prompt bundle matches baseline",
+        "single-run reports are exploratory; use the paired repeated report for promotion",
+      ],
+    });
+  });
+
+  test("renders hashes and decisions", () => {
+    const comparison = compareGenerationSummaries(
+      [
+        { source: "baseline/summary.json", summary: baselineSummary },
+        { source: "candidate/summary.json", summary: candidateSummary },
       ],
       "baseline/summary.json",
     );
     const report = renderBenchmarkReport(comparison);
 
-    expect(comparison.generations[1]?.promotion).toEqual({
-      promote: false,
-      reasons: ["case set differs from baseline"],
-    });
     expect(report).toContain("| Generation | Config | Mean | Median | Minimum | Pass rate | Lifecycle |");
-    expect(report).toContain("**1: do not promote.** case set differs from baseline");
+    expect(report).toContain(
+      "**1: do not promote.** single-run reports are exploratory; use the paired repeated report for promotion",
+    );
     expect(report).toContain("prompt prompt-v1; cases cases-v1");
     expect(report).toContain("90 (1/2 cases)");
   });
 
-  test("requires absolute strict-pass and lifecycle completion only for dev promotion", () => {
-    const createSummary = (split: "dev" | "heldout", candidate: boolean) => ({
-      generation: {
-        generationId: candidate ? "candidate" : "baseline",
-        maxLoops: 1,
-        temperature: 0.2,
-        reasoning: { effort: "medium" },
-        maxOutputTokens: 16_384,
-      },
-      providerBaseUrl: "https://openrouter.ai/api/v1",
-      generatorModel: "generator",
-      judgeModel: "judge",
-      benchmark: { split, sha256: `fixed-${split}` },
-      harness: { sha256: "harness", judgePolicySha256: "judge-policy" },
-      results: [
-        {
-          caseId: "hard-case",
-          score: candidate ? 80 : 0,
-          verdict: "fail",
-          calledTools: [],
-          widgets: 0,
+  test("keeps all single-run split comparisons exploratory", () => {
+    const createSummary = (split: "dev" | "heldout", candidate: boolean) => {
+      const generationId = candidate ? "candidate" : "baseline";
+      const provenance = assistantPromotionProvenance(generationId, `${generationId}-prompt`);
+      return {
+        ...provenance,
+        benchmark: {
+          ...provenance.benchmark,
+          split,
+          sha256: `fixed-${split}`,
+          caseIds: ["hard-case"],
         },
-      ],
-    });
+        results: [
+          {
+            caseId: "hard-case",
+            score: candidate ? 80 : 0,
+            verdict: "fail",
+            calledTools: [],
+            widgets: 0,
+          },
+        ],
+      };
+    };
     const devComparison = compareGenerationSummaries(
       [
         { source: "dev-baseline/summary.json", summary: createSummary("dev", false) },
@@ -269,9 +474,16 @@ describe("benchmark generation reporting", () => {
 
     expect(devComparison.generations[1]?.promotion).toEqual({
       promote: false,
-      reasons: ["dev pass rate 0% is below 100%", "dev lifecycle completion 0% is below 100%"],
+      reasons: [
+        "dev pass rate 0% is below 100%",
+        "dev lifecycle completion 0% is below 100%",
+        "single-run reports are exploratory; use the paired repeated report for promotion",
+      ],
     });
-    expect(heldoutComparison.generations[1]?.promotion).toEqual({ promote: true, reasons: [] });
+    expect(heldoutComparison.generations[1]?.promotion).toEqual({
+      promote: false,
+      reasons: ["single-run reports are exploratory; use the paired repeated report for promotion"],
+    });
   });
 
   test("rejects a changed benchmark hash even when case identifiers match", () => {
@@ -280,7 +492,10 @@ describe("benchmark generation reporting", () => {
         { source: "baseline/summary.json", summary: baselineSummary },
         {
           source: "candidate/summary.json",
-          summary: { ...candidateSummary, hashes: { prompt: "prompt-v1", cases: "cases-v2" } },
+          summary: {
+            ...candidateSummary,
+            benchmark: { ...candidateSummary.benchmark, sha256: "cases-v2" },
+          },
         },
       ],
       "baseline/summary.json",
@@ -288,7 +503,10 @@ describe("benchmark generation reporting", () => {
 
     expect(comparison.generations[1]?.promotion).toEqual({
       promote: false,
-      reasons: ["case hash differs from baseline"],
+      reasons: [
+        "case hash differs from baseline",
+        "single-run reports are exploratory; use the paired repeated report for promotion",
+      ],
     });
   });
 
@@ -317,14 +535,18 @@ describe("benchmark generation reporting", () => {
         concurrency: 4,
         requestTimeoutMs: 450_000,
         temperature: 0.2,
-        reasoning: { effort: "medium", exclude: true },
+        reasoning: { effort: "max", exclude: true },
+        requiredReasoningEffort: "max",
         providerPreferences: { order: ["DeepInfra"], allow_fallbacks: false, quantizations: ["fp8"] },
         maxOutputTokens: 32_768,
         judgeMaxOutputTokens: 32_768,
         spend: {
           enabled: true,
           maxUsd: 20,
+          campaignMaxUsd: 20,
+          budgetShards: 1,
           requestReservationUsd: 0.5,
+          campaignLedger: { enabled: true, strategy: "shared-file-lock-v1", id: "campaign-ledger" },
           ceiling: { strategy: "openrouter-provider-max-price-v1" },
         },
         harnessFiles: ["packages/custom-widgets/scripts/ai-evaluation.ts", "pnpm-lock.yaml"],
@@ -364,7 +586,14 @@ describe("benchmark generation reporting", () => {
 
     expect(generation?.promotion).toEqual({
       promote: false,
-      reasons: ["configuration differs from baseline: maxLoops"],
+      reasons: [
+        "run is not marked promotion-eligible",
+        "promotion requires maxLoops=1",
+        "missing assistant prompt provenance",
+        "baseline is not promotion-eligible",
+        "configuration differs from baseline: maxLoops",
+        "single-run reports are exploratory; use the paired repeated report for promotion",
+      ],
     });
     expect(generation?.configurationHash).not.toBe(baseline?.configurationHash);
     expect(renderBenchmarkReport(comparison)).toContain("loops=9; temperature=0.2");
@@ -391,7 +620,14 @@ describe("benchmark generation reporting", () => {
 
     expect(comparison.generations[1]?.promotion).toEqual({
       promote: false,
-      reasons: ["configuration differs from baseline: concurrency, requestTimeoutMs"],
+      reasons: [
+        "run is not marked promotion-eligible",
+        "promotion requires maxLoops=1",
+        "missing assistant prompt provenance",
+        "baseline is not promotion-eligible",
+        "configuration differs from baseline: concurrency, requestTimeoutMs",
+        "single-run reports are exploratory; use the paired repeated report for promotion",
+      ],
     });
   });
 
@@ -403,7 +639,12 @@ describe("benchmark generation reporting", () => {
         generationId: "generation-3",
         providerPreferences: { order: ["Together"], allow_fallbacks: false, quantizations: ["fp8"] },
       },
-      spend: { ...currentRunnerSummary.spend, requestReservationUsd: 0.4 },
+      spend: {
+        ...currentRunnerSummary.spend,
+        campaignMaxUsd: 40,
+        budgetShards: 2,
+        requestReservationUsd: 0.4,
+      },
       harness: { ...currentRunnerSummary.harness, files: ["packages/custom-widgets/scripts/ai-evaluation.ts"] },
       results: [{ ...currentRunnerSummary.results[0], score: 90 }],
     };
@@ -439,5 +680,50 @@ describe("benchmark generation reporting", () => {
       usefulness: { gradedCases: 0, totalCases: 2, rate: 0 },
     });
     expect(renderBenchmarkReport(comparison)).toContain("n/a (0 cases)");
+  });
+
+  test("blocks assistant promotion when pass@1 or provenance is missing", () => {
+    const baseline = createPromotionSummary("baseline");
+    const candidate = { ...createPromotionSummary("candidate"), providerBaseUrl: undefined };
+    const comparison = compareGenerationSummaries(
+      [
+        { source: "baseline/summary.json", summary: baseline },
+        { source: "candidate/summary.json", summary: candidate },
+      ],
+      "baseline/summary.json",
+    );
+
+    expect(comparison.generations[1]?.promotion).toMatchObject({ promote: false });
+    expect(comparison.generations[1]?.promotion.reasons).toContain("missing provider/model provenance");
+  });
+
+  test("blocks summaries with incomplete or inconsistent campaign spend provenance", () => {
+    const variants = [
+      (summary: ReturnType<typeof createPromotionSummary>) => {
+        delete (summary.spend as Partial<typeof summary.spend>).campaignMaxUsd;
+      },
+      (summary: ReturnType<typeof createPromotionSummary>) => {
+        delete (summary.spend as Partial<typeof summary.spend>).budgetShards;
+      },
+      (summary: ReturnType<typeof createPromotionSummary>) => {
+        summary.spend.campaignMaxUsd = 21;
+      },
+      (summary: ReturnType<typeof createPromotionSummary>) => {
+        summary.spend.ceiling = {} as typeof summary.spend.ceiling;
+      },
+    ];
+    for (const invalidate of variants) {
+      const baseline = createPromotionSummary("baseline");
+      const candidate = createPromotionSummary("candidate");
+      invalidate(candidate);
+      const comparison = compareGenerationSummaries(
+        [
+          { source: "baseline/summary.json", summary: baseline },
+          { source: "candidate/summary.json", summary: candidate },
+        ],
+        "baseline/summary.json",
+      );
+      expect(comparison.generations[1]?.promotion.reasons).toContain("missing spend budget provenance");
+    }
   });
 });

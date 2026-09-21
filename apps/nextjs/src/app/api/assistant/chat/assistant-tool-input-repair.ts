@@ -126,6 +126,16 @@ const repairCustomWidgetLifecycleInput = <T extends AssistantToolCallInput>(tool
     return null;
   }
   if (!isRecord(input)) return null;
+  if (
+    toolCall.toolName === "customWidget_validateTemplate" &&
+    typeof input.template === "string" &&
+    Array.isArray(input.templateLines) &&
+    input.templateLines.every((line) => typeof line === "string")
+  ) {
+    const normalized = { ...input };
+    delete normalized.template;
+    return { ...toolCall, input: JSON.stringify(normalized) };
+  }
   const normalized = normalizeCustomWidgetLifecycleToolInput(toolCall.toolName, input);
   if (normalized === input) return null;
   return { ...toolCall, input: JSON.stringify(normalized) };

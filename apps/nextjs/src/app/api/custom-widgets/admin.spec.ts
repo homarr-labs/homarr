@@ -8,7 +8,7 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("@homarr/auth/next", () => ({ auth: mocks.auth }));
 
-import { adminRoute } from "./admin";
+import { adminRoute, adminRouteWithSession } from "./admin";
 
 beforeEach(() => {
   mocks.auth.mockResolvedValue({ user: { permissions: ["admin"] } });
@@ -21,6 +21,17 @@ describe("Custom Widget HTTP resource access", () => {
 
     expect(response.status).toBe(200);
     expect(handler).toHaveBeenCalledOnce();
+  });
+
+  test("passes the authenticated administrator session to owner-scoped handlers", async () => {
+    const session = { user: { id: "admin-1", permissions: ["admin"] } };
+    mocks.auth.mockResolvedValue(session);
+    const handler = vi.fn(async () => Response.json({ ok: true }));
+
+    const response = await adminRouteWithSession(handler)();
+
+    expect(response.status).toBe(200);
+    expect(handler).toHaveBeenCalledWith(session);
   });
 
   test.each([

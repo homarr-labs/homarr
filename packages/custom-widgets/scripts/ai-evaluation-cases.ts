@@ -2,6 +2,7 @@ import type { HttpIntegrationKind } from "@homarr/definitions";
 
 interface CustomWidgetAiExpectationBase {
   minimumTemplateCharacters?: number;
+  requiresIndependentStatusHandling?: boolean;
   requests: Array<{
     kind: "query" | "action";
     method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
@@ -9,17 +10,56 @@ interface CustomWidgetAiExpectationBase {
     trigger?: "load" | "manual";
     permission?: "view" | "modify" | "full";
     queryIncludes?: Record<string, string | readonly string[]>;
+    queryExcludes?: readonly string[];
     bodyIncludes?: Record<string, string | readonly string[]>;
+    bodyExcludes?: readonly string[];
+    bodyOnlyKeys?: readonly string[];
     invalidates?: string[];
     invalidatesPaths?: string[];
     requiresConfirmation?: boolean;
     requiresStatusBinding?: boolean;
     requiredTemplateComponents?: readonly ("RefreshButton" | "ActionButton" | "SubFetch" | "ToggleSwitch")[];
     requiredTemplateComponentAnyOf?: readonly ("RefreshButton" | "ActionButton" | "SubFetch" | "ToggleSwitch")[];
+    requiresSubFetchParams?: boolean;
+    requiredBoundParamSources?: readonly {
+      param: string;
+      component: "Select";
+      requestPathIncludes: string;
+      itemsPath: string;
+      valuePath: string;
+    }[];
+    requiresResponseBinding?: boolean;
+    requiredDynamicResponseRecordPaths?: readonly string[];
     requiredResponsePaths?: readonly string[];
+    requiredResponseMemberPaths?: readonly string[];
+    requiredResponseMemberPathAnyOf?: readonly string[];
+    requiredNullableResponseMemberPaths?: readonly string[];
+    requiredResponseTimeWindows?: readonly {
+      memberPath: string;
+      maxAgeSeconds: number;
+    }[];
+    requiredEmptyState?: {
+      responsePath: "$" | string;
+      textAnyOf: readonly string[];
+    };
+    requiredDiscriminatedUnions?: readonly {
+      discriminatorPath: string;
+      variants: readonly {
+        value: string;
+        requiredMemberPaths: readonly string[];
+      }[];
+      fallbackTextAnyOf: readonly string[];
+    }[];
+    requiredBinaryResponseDerivations?: readonly {
+      operator: "-";
+      leftPath: string;
+      rightPath: string;
+    }[];
   }>;
   templateIncludes?: string[];
   templateIncludesAny?: string[][];
+  templateExcludes?: string[];
+  forbiddenTemplateComponents?: string[];
   optionChoicesFrom?: Array<{
     optionName: string;
     requestPathIncludes: string;
@@ -80,9 +120,16 @@ export interface CustomWidgetAiEvaluationCase {
   minimumPreviewCycles?: number;
   availableIntegrations?: readonly CustomWidgetAiIntegrationFixture[];
   placement?: CustomWidgetAiPlacementFixture;
+  sourceConfiguration?: {
+    sourceId: string;
+    baseUrl: string;
+    networkScope: "public" | "private" | "loopback";
+  };
   finalResponse?: {
     maxCharacters: number;
     requiredTerms?: readonly string[];
+    requiredPhrasesAny?: readonly string[];
+    forbiddenPhrases?: readonly string[];
   };
   expectations?: CustomWidgetAiExpectation;
   expectedWidgets?: Array<{
@@ -97,6 +144,7 @@ export interface CustomWidgetAiEvaluationCase {
     allowedReferences?: Array<"schema" | "runtime" | "security">;
     requiredQueryTerms?: readonly string[];
     forbiddenQueryTerms?: readonly string[];
+    requiresFrozenSearchResults?: boolean;
     searchResults?: readonly {
       title: string;
       url: string;
@@ -900,6 +948,7 @@ export const CUSTOM_WIDGET_AI_EVALUATION_CASES: readonly CustomWidgetAiEvaluatio
       sourceAuth: "none",
       forbidUnexpectedRequests: true,
       minimumTemplateCharacters: 650,
+      requiresIndependentStatusHandling: true,
       requests: [
         {
           kind: "query",

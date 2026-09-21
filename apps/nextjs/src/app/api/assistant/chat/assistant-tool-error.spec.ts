@@ -1,9 +1,28 @@
 import { TRPCError } from "@trpc/server";
 import { describe, expect, test } from "vitest";
 
-import { getSafeAssistantToolError } from "./assistant-tool-error";
+import { getCustomWidgetConfigurationStatusRecovery, getSafeAssistantToolError } from "./assistant-tool-error";
 
 describe("getSafeAssistantToolError", () => {
+  test("preserves an expired source-configuration request ID and directs a secure restart", () => {
+    expect(
+      getCustomWidgetConfigurationStatusRecovery(
+        "customWidget_configurationRequestUser",
+        { requestId: "request-1" },
+        "The requested resource was not found or is not compatible with this tool.",
+      ),
+    ).toMatchObject({
+      requestId: "request-1",
+      status: "expired",
+      recovery: {
+        recoverable: true,
+        kind: "expired-source-configuration-request",
+        requiredNextTool: "customWidget_configurationRequestUser",
+      },
+      nextStep: expect.stringContaining("original previewSessionId and sourceId"),
+    });
+  });
+
   test("keeps authorization and compatibility failures actionable", () => {
     expect(getSafeAssistantToolError(new TRPCError({ code: "FORBIDDEN" }))).toBe(
       "You do not have permission to perform this action.",

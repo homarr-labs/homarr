@@ -10,6 +10,7 @@ import type { CustomWidgetAssistantLifecycleEvent } from "@homarr/custom-widgets
 
 const mutationApprovalInstruction =
   "Uses Homarr's native approval UI; call when inputs are ready without separate prose confirmation.";
+const assistantApprovalExemptToolNames = new Set(["customWidget_configurationRequestUser"]);
 
 export const customWidgetAssistantInstructions = `\n\n${CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION}\n\n${CUSTOM_WIDGET_ASSISTANT_POLICY}`;
 
@@ -18,6 +19,9 @@ export const withAssistantToolPolicy = (description: string | undefined, require
   if (!description) return mutationApprovalInstruction;
   return `${description}\n\n${mutationApprovalInstruction}`;
 };
+
+export const requiresAssistantToolApproval = (toolName: string, toolType: string) =>
+  toolType === "mutation" && !assistantApprovalExemptToolNames.has(toolName);
 
 export const getForcedAssistantToolName = (messages: UIMessage[]) => {
   const latestMessage = messages.at(-1);

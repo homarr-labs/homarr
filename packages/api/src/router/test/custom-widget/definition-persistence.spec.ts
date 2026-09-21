@@ -134,6 +134,9 @@ describe("custom widget definition persistence", () => {
       previewPath: `/manage/custom-widgets/preview/${preview.previewSession.id}`,
     });
     expect(preview).not.toHaveProperty("definition");
+    expect(preview.previewSession).not.toHaveProperty("secrets");
+    expect(preview.previewSession).not.toHaveProperty("sources");
+    expect(preview.previewSession).not.toHaveProperty("template");
     expect(Buffer.byteLength(JSON.stringify(preview), "utf8")).toBeLessThan(4_000);
     expect(preview.queries.map(({ requestId }) => requestId)).toEqual(Object.keys(jellyfin.requests));
     expect(preview.queries.every(({ nextStep }) => nextStep.includes("customWidget_previewQuery"))).toBe(true);
@@ -307,6 +310,7 @@ describe("custom widget definition persistence", () => {
       secrets: [],
     });
     expect(preview.persistenceTool).toBe("customWidget_updateFromPreview");
+    expect(preview.sourceConfigurations).toEqual([]);
     const previewSession = await getPreviewSession(preview.previewSession.id, userId);
     for (const [requestId, request] of Object.entries(previewSession.requests)) {
       if (request.kind !== "query") continue;
@@ -746,6 +750,41 @@ describe("custom widget definition persistence", () => {
 
     expect(await getCustomWidgetConfigurationRequestForUser(request.requestId, userId)).toMatchObject({
       widgetName: "Living room Jellyfin",
+    });
+  });
+
+  test("collects a preview URL and scope without credentials for an unauthenticated source", async () => {
+    const db = await prepareDatabase();
+    const caller = createCaller(db);
+    const definition = {
+      ...jellyfin,
+      sources: {
+        ...jellyfin.sources,
+        default: { ...jellyfinDefaultSource, baseUrl: "https://your-service.example.com", auth: "none" as const },
+      },
+    };
+    const preview = await caller.previewCreate({ definition, secrets: [] });
+    const request = await caller.configurationRequestUser({
+      previewSessionId: preview.previewSession.id,
+      sourceId: "default",
+    });
+
+    expect(request).toMatchObject({
+      previewSessionId: preview.previewSession.id,
+      sourceId: "default",
+      status: "pending",
+    });
+    expect(await getCustomWidgetConfigurationRequestForUser(request.requestId, userId)).toMatchObject({ kinds: [] });
+    await configurePreviewSessionSource(
+      preview.previewSession.id,
+      userId,
+      "default",
+      { ...definition.sources.default, baseUrl: "http://dispatcharr.local:9191", networkScope: "private" },
+      [],
+    );
+    await expect(getPreviewSession(preview.previewSession.id, userId)).resolves.toMatchObject({
+      sources: { default: { baseUrl: "http://dispatcharr.local:9191", networkScope: "private", auth: "none" } },
+      secrets: [],
     });
   });
 

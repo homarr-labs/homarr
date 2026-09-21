@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { z } from "zod/v4";
 
 import { CUSTOM_WIDGET_AI_EVALUATION_CASES } from "../../scripts/ai-evaluation-cases";
+import { CUSTOM_WIDGET_AI_INTEGRATION_EVALUATION_CASES } from "../../scripts/ai-integration-evaluation-cases";
 import {
   assessAssistantFinalResponse,
   assistantEvaluationToolRequestOptions,
@@ -9,6 +10,7 @@ import {
   assistantEvaluationTemperature,
   buildAssistantEvaluationSystemPrompt,
   compactAssistantEvaluationMessages,
+  completeAssistantEvaluationCredentialRequest,
   composeAssistantEvaluationFeedback,
   createAssistantEvaluationCaseSnapshot,
   createAssistantEvaluationPromptSnapshot,
@@ -16,20 +18,25 @@ import {
   customWidgetAssistantEvaluationToolDefinitions,
   executeAssistantEvaluationTool,
   executeActiveAssistantEvaluationTool,
+  expireAssistantEvaluationCredentialRequest,
   formatAssistantDeterministicFeedback,
   getActiveAssistantEvaluationToolDefinitions,
   getAssistantEvaluationMaxOutputTokens,
   getAssistantEvaluationProviderPreferences,
   getAssistantEvaluationReasoningOptions,
+  getAssistantEvaluationStepTimeoutMs,
   getAssistantEvaluationToolChoice,
   getAssistantEvaluationEfficiencyIssues,
   getAssistantEvaluationLifecycleIssues,
   getAssistantEvaluationPreviewResponse,
+  getAssistantEvaluationPromotionEligibility,
   getAssistantJudgeFloor,
   getPortableAssistantLifecycleFeedback,
   getRequiredAssistantEvaluationRequestParams,
+  isAssistantEvaluationRetryableStatus,
   mergeAssistantEvaluationFeedback,
   replaceAssistantEvaluationFeedback,
+  resumeAssistantEvaluationCredentialRequests,
   resolveAssistantEvaluationMaxLoops,
   selectAssistantEvaluationReviewFeedback,
   selectAssistantEvaluationLifecycleEvidence,
@@ -182,6 +189,11 @@ const validateTemplate = (
     templateLines: definition.templateLines,
   });
 
+const setSuccessfulFinalHandoff = (state: ReturnType<typeof createAssistantEvaluationState>) => {
+  const names = state.createdWidgets.map(({ name }) => name).join(" and ");
+  state.finalText = `Created ${names}, showing the requested dashboard data with manual refresh and truthful setup limits.`;
+};
+
 describe("Custom Widget assistant live evaluation harness", () => {
   it("makes pass@1 experiment loop configuration explicit", () => {
     expect(resolveAssistantEvaluationMaxLoops(undefined, undefined)).toEqual({
@@ -218,6 +230,116 @@ describe("Custom Widget assistant live evaluation harness", () => {
     expect(() => validateAssistantEvaluationExperimentConfiguration(1, undefined, undefined, undefined, true)).toThrow(
       "require an explicit --split=train|dev|heldout",
     );
+  });
+
+  it("marks only complete assistant split runs as promotion-eligible", () => {
+    expect(
+      getAssistantEvaluationPromotionEligibility({
+        assistantMode: true,
+        requestedCase: undefined,
+        requestedSplit: "dev",
+        experimentId: "experiment",
+        generationId: "generation",
+        maxLoops: 1,
+        selectedCaseIds: ["case-a", "case-b"],
+        expectedCaseIds: ["case-a", "case-b"],
+        generatorModel: "openai/gpt-5.6-luna",
+        reasoningEffort: "high",
+        maxOutputTokens: 32_768,
+      }),
+    ).toEqual({ eligible: true, reasons: [] });
+
+    expect(
+      getAssistantEvaluationPromotionEligibility({
+        assistantMode: true,
+        requestedCase: undefined,
+        requestedSplit: "dev",
+        experimentId: "experiment",
+        generationId: "generation",
+        maxLoops: 1,
+        selectedCaseIds: ["case-a", "case-b"],
+        expectedCaseIds: ["case-a", "case-b"],
+        generatorModel: "openai/gpt-5.6-luna",
+        reasoningEffort: "high",
+        maxOutputTokens: 10_000,
+      }),
+    ).toEqual({
+      eligible: false,
+      reasons: ["promotion requires the production maxOutputTokens=32768"],
+    });
+
+    expect(
+      getAssistantEvaluationPromotionEligibility({
+        assistantMode: true,
+        requestedCase: "case-a",
+        requestedSplit: "dev",
+        experimentId: "experiment",
+        generationId: "generation",
+        maxLoops: 1,
+        selectedCaseIds: ["case-a"],
+        expectedCaseIds: ["case-a", "case-b"],
+        generatorModel: "openai/gpt-5.6-luna",
+        reasoningEffort: "high",
+        maxOutputTokens: 32_768,
+      }),
+    ).toMatchObject({ eligible: false, reasons: expect.arrayContaining([expect.stringContaining("single-case")]) });
+
+    expect(
+      getAssistantEvaluationPromotionEligibility({
+        assistantMode: true,
+        requestedCase: undefined,
+        requestedSplit: "dev",
+        experimentId: "experiment",
+        generationId: "generation",
+        maxLoops: 4,
+        selectedCaseIds: ["case-a"],
+        expectedCaseIds: ["case-a", "case-b"],
+        generatorModel: "openai/gpt-5.6-luna",
+        reasoningEffort: "high",
+        maxOutputTokens: 32_768,
+      }),
+    ).toMatchObject({
+      eligible: false,
+      reasons: expect.arrayContaining([
+        "promotion requires --max-loops=1",
+        "selected cases do not cover the complete requested split",
+      ]),
+    });
+
+    expect(
+      getAssistantEvaluationPromotionEligibility({
+        assistantMode: true,
+        requestedCase: undefined,
+        requestedSplit: "train",
+        experimentId: "experiment",
+        generationId: "generation",
+        maxLoops: 1,
+        selectedCaseIds: ["case-a"],
+        expectedCaseIds: ["case-a"],
+        generatorModel: "openai/gpt-5.6-luna",
+        reasoningEffort: "high",
+        maxOutputTokens: 32_768,
+      }),
+    ).toEqual({ eligible: false, reasons: ["train split runs are not eligible for promotion"] });
+
+    expect(
+      getAssistantEvaluationPromotionEligibility({
+        assistantMode: true,
+        requestedCase: undefined,
+        requestedSplit: "dev",
+        experimentId: "experiment",
+        generationId: "generation",
+        maxLoops: 1,
+        selectedCaseIds: ["case-a"],
+        expectedCaseIds: ["case-a"],
+        generatorModel: "deepseek/deepseek-v4.1-flash",
+        reasoningEffort: "high",
+        maxOutputTokens: 32_768,
+      }),
+    ).toEqual({
+      eligible: false,
+      reasons: ["promotion requires max reasoning for generator model 'deepseek/deepseek-v4.1-flash'"],
+    });
   });
 
   it("keeps tool staging around an immutable candidate assistant policy", () => {
@@ -279,6 +401,22 @@ describe("Custom Widget assistant live evaluation harness", () => {
     expect(getAssistantEvaluationMaxOutputTokens("2048")).toBe(4_096);
     expect(getAssistantEvaluationMaxOutputTokens("not-a-number")).toBe(32_768);
   });
+
+  it("uses the production step and remaining total timeout ceilings", () => {
+    expect(getAssistantEvaluationStepTimeoutMs(undefined, 240_000)).toBe(60_000);
+    expect(getAssistantEvaluationStepTimeoutMs("30000", 240_000)).toBe(30_000);
+    expect(getAssistantEvaluationStepTimeoutMs("600000", 12_345)).toBe(12_345);
+    expect(getAssistantEvaluationStepTimeoutMs("600000", 0)).toBe(1);
+  });
+
+  it("matches production retry policy for transient provider failures", () => {
+    expect(isAssistantEvaluationRetryableStatus(408)).toBe(true);
+    expect(isAssistantEvaluationRetryableStatus(409)).toBe(true);
+    expect(isAssistantEvaluationRetryableStatus(429)).toBe(true);
+    expect(isAssistantEvaluationRetryableStatus(503)).toBe(true);
+    expect(isAssistantEvaluationRetryableStatus(400)).toBe(false);
+    expect(isAssistantEvaluationRetryableStatus(404)).toBe(false);
+  });
   it("reports the weakest widget review as the multi-widget score floor", () => {
     const stronger = { total: 85 };
     const weaker = { total: 83 };
@@ -292,16 +430,26 @@ describe("Custom Widget assistant live evaluation harness", () => {
       tool_choice: "auto",
       parallel_tool_calls: false,
     });
-    expect(assistantEvaluationReasoningOptions).toEqual({ effort: "medium", exclude: true });
+    expect(assistantEvaluationReasoningOptions).toEqual({ effort: "high", exclude: true });
+    expect(getAssistantEvaluationReasoningOptions(undefined, "openai/gpt-5.6-luna")).toEqual({
+      effort: "high",
+      exclude: true,
+    });
+    expect(getAssistantEvaluationReasoningOptions(undefined, "deepseek/deepseek-v4.1-flash")).toEqual({
+      effort: "max",
+      exclude: true,
+    });
     expect(getAssistantEvaluationReasoningOptions("max")).toEqual({ effort: "max", exclude: true });
     expect(getAssistantEvaluationReasoningOptions("high")).toEqual({ effort: "high", exclude: true });
-    expect(getAssistantEvaluationReasoningOptions("unsupported")).toEqual({ effort: "medium", exclude: true });
+    expect(() => getAssistantEvaluationReasoningOptions("unsupported")).toThrow(
+      "CUSTOM_WIDGET_AI_REASONING_EFFORT must be one of",
+    );
     expect(
       getAssistantEvaluationProviderPreferences({
         CUSTOM_WIDGET_AI_PROVIDER_ORDER: "DeepInfra",
         CUSTOM_WIDGET_AI_PROVIDER_QUANTIZATIONS: "fp8",
       }),
-    ).toEqual({ order: ["DeepInfra"], allow_fallbacks: false, quantizations: ["fp8"] });
+    ).toEqual({ order: ["deepinfra"], allow_fallbacks: false, quantizations: ["fp8"] });
     expect(assistantEvaluationTemperature).toBe(0.2);
   });
 
@@ -341,6 +489,432 @@ describe("Custom Widget assistant live evaluation harness", () => {
       required: ["previewSessionId"],
       properties: { previewSessionId: { type: "string" } },
     });
+    expect(
+      customWidgetAssistantEvaluationToolDefinitions.some(
+        ({ function: definition }) => definition.name === "customWidget_configurationRequestUser",
+      ),
+    ).toBe(true);
+  });
+
+  it("requires secure credential configuration, Continue, and fresh evidence for authenticated HTTP previews", () => {
+    const testCase = getCase("seerr-media-workflows");
+    const state = createAssistantEvaluationState();
+    validateTemplate(testCase, state, requestOperationsWidget);
+
+    expect(
+      executeAssistantEvaluationTool(testCase, state, "customWidget_previewCreate", {
+        definition: requestOperationsWidget,
+        secrets: [{ sourceId: "default", kind: "apiKey", value: "must-not-enter-model-context" }],
+      }),
+    ).toEqual({
+      error: "Assistant preview inputs must not contain credentials. Use secure source configuration before evidence.",
+    });
+    expect(
+      executeAssistantEvaluationTool(testCase, state, "customWidget_previewCreate", {
+        definition: requestOperationsWidget,
+      }),
+    ).toMatchObject({
+      sourceConfigurations: [expect.objectContaining({ sourceId: "default" })],
+    });
+
+    expect(
+      executeAssistantEvaluationTool(testCase, state, "customWidget_previewQuery", {
+        sessionId: "preview-1",
+        requestId: "counts",
+        params: {},
+      }),
+    ).toMatchObject({
+      ok: false,
+      sourceId: "default",
+      requiredNextTool: "customWidget_configurationRequestUser",
+    });
+    expect(
+      getActiveAssistantEvaluationToolDefinitions(state).map(({ function: definition }) => definition.name),
+    ).toContain("customWidget_configurationRequestUser");
+    expect(
+      executeAssistantEvaluationTool(testCase, state, "customWidget_configurationRequestUser", {
+        previewSessionId: "preview-1",
+        sourceId: "missing",
+      }),
+    ).toEqual({ error: "Preview source was not found" });
+    const setup = executeAssistantEvaluationTool(testCase, state, "customWidget_configurationRequestUser", {
+      previewSessionId: "preview-1",
+      sourceId: "default",
+    });
+    expect(setup).toMatchObject({ requestId: "configuration-1", status: "pending" });
+    expect(
+      executeAssistantEvaluationTool(testCase, state, "customWidget_configurationRequestUser", {
+        previewSessionId: "preview-1",
+        sourceId: "default",
+      }),
+    ).toMatchObject({
+      error: expect.stringContaining("already exists"),
+      requestId: "configuration-1",
+    });
+    expect(
+      executeAssistantEvaluationTool(testCase, state, "customWidget_configurationRequestUser", {
+        requestId: "configuration-1",
+      }),
+    ).toEqual({
+      requestId: "configuration-1",
+      status: "pending",
+      previewSessionId: "preview-1",
+      sourceId: "default",
+    });
+    expect(
+      executeAssistantEvaluationTool(testCase, state, "customWidget_createFromPreview", {
+        previewSessionId: "preview-1",
+      }),
+    ).toEqual({ error: "Configure preview source 'default' before persistence" });
+
+    expect(resumeAssistantEvaluationCredentialRequests(state)).toEqual(["configuration-1"]);
+    expect(state.syntheticCredentialContinues).toBe(1);
+    expect(state.previews.get("preview-1")).toMatchObject({ revision: 1 });
+    expect(
+      executeAssistantEvaluationTool(testCase, state, "customWidget_configurationRequestUser", {
+        requestId: "configuration-1",
+      }),
+    ).toEqual({
+      requestId: "configuration-1",
+      status: "completed",
+      previewSessionId: "preview-1",
+      sourceId: "default",
+    });
+    expect(getActiveAssistantEvaluationToolDefinitions(state).map(({ function: tool }) => tool.name)).toContain(
+      "customWidget_previewQuery",
+    );
+    expect(
+      executeAssistantEvaluationTool(testCase, state, "customWidget_createFromPreview", {
+        previewSessionId: "preview-1",
+      }),
+    ).toEqual({ error: "Test every preview query before creation: counts, recent" });
+
+    for (const requestId of ["counts", "recent"]) {
+      expect(
+        executeAssistantEvaluationTool(testCase, state, "customWidget_previewQuery", {
+          sessionId: "preview-1",
+          requestId,
+          params: {},
+        }),
+      ).toMatchObject({ ok: true, status: 200 });
+    }
+    for (const requestId of ["approve", "decline"]) {
+      executeAssistantEvaluationTool(testCase, state, "customWidget_previewAction", {
+        sessionId: "preview-1",
+        requestId,
+        params: { requestId: 91 },
+      });
+    }
+    expect(
+      executeAssistantEvaluationTool(testCase, state, "customWidget_createFromPreview", {
+        previewSessionId: "preview-1",
+      }),
+    ).toMatchObject({ id: "created-seerr-media-workflows-1" });
+  });
+
+  it("blocks action-only authenticated evidence until secure source configuration completes", () => {
+    const testCase = getCase("seerr-media-workflows");
+    const actionOnlyWidget = {
+      $schema: "homarr-custom-widget-v2",
+      name: "Authenticated action",
+      sources: requestOperationsWidget.sources,
+      requests: {
+        restart: {
+          kind: "action",
+          method: "POST",
+          path: "/admin/restart",
+          confirmation: "Restart the service?",
+          permission: "full",
+        },
+      },
+      options: {},
+      templateLines: ['<ActionButton requestId="restart" color="red">Restart service</ActionButton>'],
+    };
+    const state = createAssistantEvaluationState();
+    validateTemplate(testCase, state, actionOnlyWidget);
+    expect(
+      executeAssistantEvaluationTool(testCase, state, "customWidget_previewCreate", {
+        definition: actionOnlyWidget,
+      }),
+    ).toMatchObject({
+      queries: [],
+      actions: [expect.objectContaining({ requestId: "restart" })],
+      sourceConfigurations: [expect.objectContaining({ sourceId: "default" })],
+    });
+    expect(
+      executeAssistantEvaluationTool(testCase, state, "customWidget_previewAction", {
+        sessionId: "preview-1",
+        requestId: "restart",
+        params: {},
+      }),
+    ).toMatchObject({
+      ok: false,
+      sourceId: "default",
+      requiredNextTool: "customWidget_configurationRequestUser",
+    });
+    expect(state.previews.get("preview-1")?.testedActions).toEqual(new Set());
+    expect(
+      executeAssistantEvaluationTool(testCase, state, "customWidget_createFromPreview", {
+        previewSessionId: "preview-1",
+      }),
+    ).toEqual({ error: "Configure preview source 'default' before persistence" });
+
+    executeAssistantEvaluationTool(testCase, state, "customWidget_configurationRequestUser", {
+      previewSessionId: "preview-1",
+      sourceId: "default",
+    });
+    resumeAssistantEvaluationCredentialRequests(state);
+    executeAssistantEvaluationTool(testCase, state, "customWidget_configurationRequestUser", {
+      requestId: "configuration-1",
+    });
+    expect(
+      executeAssistantEvaluationTool(testCase, state, "customWidget_previewAction", {
+        sessionId: "preview-1",
+        requestId: "restart",
+        params: {},
+      }),
+    ).toMatchObject({ ok: true, simulated: true });
+    expect(
+      executeAssistantEvaluationTool(testCase, state, "customWidget_createFromPreview", {
+        previewSessionId: "preview-1",
+      }),
+    ).toMatchObject({ id: "created-seerr-media-workflows-1" });
+  });
+
+  it("configures a placeholder URL before evidence without treating it as an auth-only 401", () => {
+    const testCase = CUSTOM_WIDGET_AI_INTEGRATION_EVALUATION_CASES.find(
+      ({ id }) => id === "dispatcharr-now-playing-permission",
+    );
+    if (!testCase) throw new Error("Dispatcharr placeholder evaluation case is missing");
+    const definition = {
+      $schema: "homarr-custom-widget-v2",
+      name: "Dispatcharr setup fixture",
+      sources: {
+        default: {
+          baseUrl: "https://your-dispatcharr.example.com",
+          networkScope: "private",
+          auth: { type: "apiKeyHeader", name: "X-API-Key" },
+        },
+      },
+      requests: {
+        channels: {
+          source: "default",
+          kind: "query",
+          method: "GET",
+          path: "/api/channels/channels/",
+          trigger: "load",
+          query: { page: 1, page_size: 12, ordering: "channel_number" },
+          auth: "inherit",
+          permission: "view",
+        },
+      },
+      options: {},
+      templateLines: [
+        '<Stack><RefreshButton requestId="channels" />{status.channels?.loading ? <Text>Loading</Text> : status.channels?.ok === false ? <Alert>{status.channels.error}</Alert> : <Text>{data.channels?.count}</Text>}</Stack>',
+      ],
+    };
+    const state = createAssistantEvaluationState();
+    validateTemplate(testCase, state, definition);
+    expect(
+      executeAssistantEvaluationTool(testCase, state, "customWidget_previewCreate", {
+        definition: {
+          ...definition,
+          sources: {
+            default: {
+              ...definition.sources.default,
+              baseUrl: "http://dispatcharr.local",
+            },
+          },
+        },
+      }),
+    ).toMatchObject({
+      error: expect.stringContaining("did not supply this self-hosted URL"),
+      recovery: { kind: "source-placeholder-required" },
+    });
+    expect(executeAssistantEvaluationTool(testCase, state, "customWidget_previewCreate", { definition })).toMatchObject(
+      {
+        sourceConfigurations: [
+          {
+            sourceId: "default",
+            nextStep: expect.stringContaining("before testing"),
+          },
+        ],
+      },
+    );
+    expect(getActiveAssistantEvaluationToolDefinitions(state).map(({ function: tool }) => tool.name)).toContain(
+      "customWidget_configurationRequestUser",
+    );
+    expect(
+      executeAssistantEvaluationTool(testCase, state, "customWidget_previewQuery", {
+        sessionId: "preview-1",
+        requestId: "channels",
+        params: {},
+      }),
+    ).toMatchObject({
+      ok: false,
+      error: expect.stringContaining("requires secure URL or credential configuration"),
+      requiredNextTool: "customWidget_configurationRequestUser",
+    });
+    expect(state.previews.get("preview-1")?.journal).toEqual([]);
+    expect(
+      executeAssistantEvaluationTool(testCase, state, "customWidget_configurationRequestUser", {
+        previewSessionId: "preview-1",
+        sourceId: "default",
+      }),
+    ).toMatchObject({ requestId: "configuration-1", status: "pending" });
+    expect(resumeAssistantEvaluationCredentialRequests(state)).toEqual(["configuration-1"]);
+    expect(state.previews.get("preview-1")?.widget.sources.default).toMatchObject({
+      baseUrl: "http://dispatcharr.local",
+      networkScope: "private",
+      auth: { type: "apiKeyHeader", name: "X-API-Key" },
+    });
+    expect(
+      executeAssistantEvaluationTool(testCase, state, "customWidget_configurationRequestUser", {
+        requestId: "configuration-1",
+      }),
+    ).toEqual({
+      requestId: "configuration-1",
+      status: "completed",
+      previewSessionId: "preview-1",
+      sourceId: "default",
+    });
+    expect(getActiveAssistantEvaluationToolDefinitions(state).map(({ function: tool }) => tool.name)).toContain(
+      "customWidget_previewQuery",
+    );
+    expect(
+      executeAssistantEvaluationTool(testCase, state, "customWidget_previewQuery", {
+        sessionId: "preview-1",
+        requestId: "channels",
+        params: {},
+      }),
+    ).toMatchObject({ ok: true, status: 200 });
+    expect(
+      executeAssistantEvaluationTool(testCase, state, "customWidget_createFromPreview", {
+        previewSessionId: "preview-1",
+        targetBoardId: "board-home",
+      }),
+    ).toMatchObject({ id: "created-dispatcharr-now-playing-permission-1" });
+    expect(state.createdWidgets[0]?.sources.default).toMatchObject({
+      baseUrl: "http://dispatcharr.local",
+      networkScope: "private",
+    });
+  });
+
+  it("does not configure the required but unused source of a static widget", () => {
+    const testCase = getCase("fake-service-health");
+    const definition = {
+      $schema: "homarr-custom-widget-v2",
+      name: "Static dashboard note",
+      sources: {
+        default: { baseUrl: "https://example.com", networkScope: "public", auth: "bearer" },
+      },
+      requests: {},
+      options: {},
+      templateLines: ["<Text>Static dashboard note</Text>"],
+    };
+    const state = createAssistantEvaluationState();
+    validateTemplate(testCase, state, definition);
+
+    expect(executeAssistantEvaluationTool(testCase, state, "customWidget_previewCreate", { definition })).toMatchObject(
+      {
+        sourceConfigurations: [],
+        queries: [],
+        actions: [],
+      },
+    );
+    expect(
+      executeAssistantEvaluationTool(testCase, state, "customWidget_createFromPreview", {
+        previewSessionId: "preview-1",
+      }),
+    ).toMatchObject({ id: "created-fake-service-health-1" });
+  });
+
+  it("rejects expired and failed credential setup evidence", () => {
+    const testCase = getCase("seerr-media-workflows");
+    const createState = () => {
+      const state = createAssistantEvaluationState();
+      validateTemplate(testCase, state, requestOperationsWidget);
+      executeAssistantEvaluationTool(testCase, state, "customWidget_previewCreate", {
+        definition: requestOperationsWidget,
+      });
+      executeAssistantEvaluationTool(testCase, state, "customWidget_previewQuery", {
+        sessionId: "preview-1",
+        requestId: "counts",
+        params: {},
+      });
+      executeAssistantEvaluationTool(testCase, state, "customWidget_configurationRequestUser", {
+        previewSessionId: "preview-1",
+        sourceId: "default",
+      });
+      return state;
+    };
+
+    const expiredState = createState();
+    expect(expireAssistantEvaluationCredentialRequest(expiredState, "configuration-1")).toBe(true);
+    expect(
+      executeAssistantEvaluationTool(testCase, expiredState, "customWidget_configurationRequestUser", {
+        requestId: "configuration-1",
+      }),
+    ).toMatchObject({
+      error: "Source configuration request expired or was not found",
+      requestId: "configuration-1",
+      status: "expired",
+      recovery: {
+        recoverable: true,
+        kind: "expired-source-configuration-request",
+        requiredNextTool: "customWidget_configurationRequestUser",
+      },
+    });
+    expect(
+      executeAssistantEvaluationTool(testCase, expiredState, "customWidget_configurationRequestUser", {
+        previewSessionId: "preview-1",
+        sourceId: "default",
+      }),
+    ).toMatchObject({
+      requestId: "configuration-2",
+      previewSessionId: "preview-1",
+      sourceId: "default",
+      status: "pending",
+    });
+    expect(completeAssistantEvaluationCredentialRequest(expiredState, "configuration-2")).toBe(true);
+    expect(
+      executeAssistantEvaluationTool(testCase, expiredState, "customWidget_configurationRequestUser", {
+        requestId: "configuration-2",
+      }),
+    ).toMatchObject({
+      requestId: "configuration-2",
+      previewSessionId: "preview-1",
+      sourceId: "default",
+      status: "completed",
+    });
+    expect(
+      executeAssistantEvaluationTool(testCase, expiredState, "customWidget_createFromPreview", {
+        previewSessionId: "preview-1",
+      }),
+    ).toEqual({ error: "Test every preview query before creation: counts, recent" });
+    expect(getAssistantEvaluationLifecycleIssues(testCase, expiredState)).not.toContain(
+      "The assistant did not verify completed source configuration request 'configuration-1'.",
+    );
+
+    const forbiddenState = createState();
+    expect(completeAssistantEvaluationCredentialRequest(forbiddenState, "configuration-1", { httpStatus: 403 })).toBe(
+      true,
+    );
+    executeAssistantEvaluationTool(testCase, forbiddenState, "customWidget_configurationRequestUser", {
+      requestId: "configuration-1",
+    });
+    expect(
+      executeAssistantEvaluationTool(testCase, forbiddenState, "customWidget_previewQuery", {
+        sessionId: "preview-1",
+        requestId: "counts",
+        params: {},
+      }),
+    ).toMatchObject({ ok: false, status: 403 });
+    expect(
+      executeAssistantEvaluationTool(testCase, forbiddenState, "customWidget_createFromPreview", {
+        previewSessionId: "preview-1",
+      }),
+    ).toEqual({ error: "Test every preview query before creation: counts, recent" });
   });
 
   it("simulates editing an existing definition through updateFromPreview", () => {
@@ -387,6 +961,7 @@ describe("Custom Widget assistant live evaluation harness", () => {
       managementPath: "/manage/custom-widgets/edit/existing-widget-1",
     });
     expect(state.createdWidgets).toHaveLength(1);
+    setSuccessfulFinalHandoff(state);
     expect(getAssistantEvaluationLifecycleIssues(testCase, state)).toEqual([]);
     expect(getAssistantEvaluationEfficiencyIssues(testCase, state)).toEqual([]);
   });
@@ -464,16 +1039,53 @@ describe("Custom Widget assistant live evaluation harness", () => {
         itemId: "item-fake-service-health-1",
       },
     ]);
+    setSuccessfulFinalHandoff(state);
     expect(getAssistantEvaluationLifecycleIssues(testCase, state)).toEqual([]);
     expect(
       assessAssistantFinalResponse({
-        text: "Created Homelab health with refresh and placed it on the Home board.",
+        text: "Created Homelab health, showing service health with manual refresh, and placed it on the Home board.",
         persistedWidgets: state.createdWidgets,
         maxCharacters: 600,
         requiredTerms: ["refresh"],
         placementEvidence: state.placementEvidence,
       }).passed,
     ).toBe(true);
+  });
+
+  it("requires one substantive concise handoff for every assistant case", () => {
+    const persistedWidgets = [
+      normalizeCustomWidgetAuthoringDefinition(customWidgetAuthoringDefinitionSchema.parse(healthWidget)),
+    ];
+    expect(
+      assessAssistantFinalResponse({
+        text: "Created Homelab health, showing service health with manual refresh and clear setup limits.",
+        persistedWidgets,
+        maxCharacters: 600,
+        requiredTerms: [],
+      }),
+    ).toMatchObject({ passed: true, issues: [] });
+
+    expect(
+      assessAssistantFinalResponse({
+        text: "Created Homelab health dashboard widget successfully for everyday use.",
+        persistedWidgets,
+        maxCharacters: 600,
+        requiredTerms: [],
+      }).issues,
+    ).toEqual(
+      expect.arrayContaining([
+        "The final response must briefly state what data or capability the widget shows.",
+        "The final response must briefly state refresh or update behavior.",
+      ]),
+    );
+    expect(
+      assessAssistantFinalResponse({
+        text: "Created Homelab health, showing service health with manual refresh.\nSaved with setup limits documented.",
+        persistedWidgets,
+        maxCharacters: 600,
+        requiredTerms: [],
+      }).issues,
+    ).toContain("The final response must be one short paragraph without headings, lists, or code fences.");
   });
 
   it("requires actionable lifecycle transitions but permits completion and terminal failure prose", () => {
@@ -675,6 +1287,17 @@ describe("Custom Widget assistant live evaluation harness", () => {
       "customWidget_previewCreate",
       "customWidget_previewReviseTemplate",
     ]);
+  });
+
+  it("stages saved-integration discovery after the skill like production", () => {
+    const testCase = getCase("seerr-media-workflows");
+    const state = createAssistantEvaluationState(true);
+    const activeNames = () =>
+      getActiveAssistantEvaluationToolDefinitions(state).map(({ function: definition }) => definition.name);
+
+    expect(activeNames()).toEqual(["web_search", "customWidget_getSkill"]);
+    executeAssistantEvaluationTool(testCase, state, "customWidget_getSkill", {});
+    expect(activeNames()).toEqual(expect.arrayContaining(["integration_getKinds", "integration_all"]));
   });
 
   it("compacts obsolete documentation and validation calls but retains the current preview", () => {
@@ -909,6 +1532,18 @@ describe("Custom Widget assistant live evaluation harness", () => {
     );
   });
 
+  it("rejects visible narration attached to tool-call steps", () => {
+    const testCase = getCase("fake-service-health");
+    const state = createAssistantEvaluationState();
+
+    expect(getAssistantEvaluationEfficiencyIssues(testCase, state)).toEqual([]);
+    state.toolStepNarrations.push("I will now validate the widget before continuing.");
+
+    expect(getAssistantEvaluationEfficiencyIssues(testCase, state)).toContain(
+      "The assistant included visible narration in 1 tool-call step; tool-call steps must contain no prose.",
+    );
+  });
+
   it("keeps optimistic revisions out of the built-in Assistant tool surface", () => {
     const revisionTool = customWidgetAssistantEvaluationToolDefinitions.find(
       ({ function: definition }) => definition.name === "customWidget_previewReviseTemplate",
@@ -998,6 +1633,7 @@ describe("Custom Widget assistant live evaluation harness", () => {
       }),
     ).toMatchObject({ id: "created-fake-service-health-1" });
     expect(state.createdWidgets).toHaveLength(1);
+    setSuccessfulFinalHandoff(state);
     expect(getAssistantEvaluationLifecycleIssues(testCase, state)).toEqual([]);
     expect(getAssistantEvaluationEfficiencyIssues(testCase, state)).toEqual([]);
   });
@@ -1383,6 +2019,21 @@ describe("Custom Widget assistant live evaluation harness", () => {
         }),
       ]),
     });
+    expect(
+      executeAssistantEvaluationTool(testCase, state, "customWidget_previewQuery", {
+        sessionId: "preview-1",
+        requestId: "counts",
+        params: {},
+      }),
+    ).toMatchObject({ ok: false, requiredNextTool: "customWidget_configurationRequestUser" });
+    executeAssistantEvaluationTool(testCase, state, "customWidget_configurationRequestUser", {
+      previewSessionId: "preview-1",
+      sourceId: "default",
+    });
+    resumeAssistantEvaluationCredentialRequests(state);
+    executeAssistantEvaluationTool(testCase, state, "customWidget_configurationRequestUser", {
+      requestId: "configuration-1",
+    });
     for (const requestId of ["counts", "recent"]) {
       expect(
         executeAssistantEvaluationTool(testCase, state, "customWidget_previewQuery", {
@@ -1417,6 +2068,21 @@ describe("Custom Widget assistant live evaluation harness", () => {
         expect.objectContaining({ requestId: "requestSeries", requiredParams: ["mediaId"], invalidates: ["search"] }),
       ]),
     });
+    expect(
+      executeAssistantEvaluationTool(testCase, state, "customWidget_previewQuery", {
+        sessionId: "preview-2",
+        requestId: "search",
+        params: { query: "matrix", page: 1 },
+      }),
+    ).toMatchObject({ ok: false, requiredNextTool: "customWidget_configurationRequestUser" });
+    executeAssistantEvaluationTool(testCase, state, "customWidget_configurationRequestUser", {
+      previewSessionId: "preview-2",
+      sourceId: "default",
+    });
+    resumeAssistantEvaluationCredentialRequests(state);
+    executeAssistantEvaluationTool(testCase, state, "customWidget_configurationRequestUser", {
+      requestId: "configuration-2",
+    });
     executeAssistantEvaluationTool(testCase, state, "customWidget_previewQuery", {
       sessionId: "preview-2",
       requestId: "search",
@@ -1442,6 +2108,7 @@ describe("Custom Widget assistant live evaluation harness", () => {
 
     expect(state.createdWidgets.map(({ name }) => name)).toEqual(["Seerr request operations", "Seerr media research"]);
     expect(state.calledTools.filter((name) => name === "web_search")).toHaveLength(1);
+    setSuccessfulFinalHandoff(state);
     expect(getAssistantEvaluationLifecycleIssues(testCase, state)).toEqual([]);
     expect(getAssistantEvaluationEfficiencyIssues(testCase, state)).toEqual([]);
     expect(getDeterministicEvaluationSuiteIssues(testCase, state.createdWidgets)).toEqual([]);

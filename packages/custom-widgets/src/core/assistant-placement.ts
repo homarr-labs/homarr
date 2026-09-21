@@ -7,9 +7,22 @@ export interface CustomWidgetAssistantLifecycleEvent {
 
 export type CustomWidgetPlacementState =
   | { status: "none" }
-  | { status: "configure"; widgetId: string; targetBoardId?: string; definitionId?: string }
+  | {
+      status: "configure";
+      widgetId: string;
+      targetBoardId?: string;
+      targetBoardName?: string;
+      definitionId?: string;
+    }
   | { status: "ask-user"; widgetId: string; targetBoardId?: string; definitionId?: string }
+  | { status: "discover-board"; widgetId: string; definitionId?: string }
+  | { status: "choose-board"; widgetId: string; boards: CustomWidgetPlacementBoard[]; definitionId?: string }
   | { status: "board-add"; widgetId: string; targetBoardId?: string; definitionId?: string };
+
+interface CustomWidgetPlacementBoard {
+  id: string;
+  name: string;
+}
 
 const customWidgetCreateToolNames = new Set(["customWidget_create", "customWidget_createFromPreview"]);
 const nonePlacementState: CustomWidgetPlacementState = { status: "none" };
@@ -84,6 +97,10 @@ const isSuccessfulConfigureWidget = (
   if ("cancelled" in event.output && event.output.cancelled === true) return false;
   const boardId = getRecordString(event.output, "boardId");
   if (!boardId || (state.targetBoardId !== undefined && state.targetBoardId !== boardId)) return false;
+  if (state.targetBoardName !== undefined) {
+    if (getRecordString(event.input, "boardId") !== state.targetBoardId) return false;
+    if (getRecordString(event.input, "boardName") !== state.targetBoardName) return false;
+  }
   return hasMatchingDefinitionId(event.output, state.definitionId);
 };
 
@@ -94,7 +111,7 @@ const isSuccessfulBoardAdd = (
   if (event.toolName !== "board_addItem" || typeof event.output !== "object" || event.output === null) return false;
   if (!getRecordString(event.output, "itemId")) return false;
   const boardId = getRecordString(event.input, "boardId");
-  if (state.targetBoardId !== undefined && boardId !== undefined && state.targetBoardId !== boardId) return false;
+  if (state.targetBoardId !== undefined && state.targetBoardId !== boardId) return false;
   return hasMatchingDefinitionId(event.input, state.definitionId);
 };
 
@@ -126,6 +143,57 @@ const getPlacementChoice = (event: CustomWidgetAssistantLifecycleEvent) => {
   if (optionId === "leave") return "leave";
   if (optionId === "place") return "place";
   return undefined;
+};
+
+const getDiscoveredBoards = (event: CustomWidgetAssistantLifecycleEvent) => {
+  if (event.toolName !== "board_getAllBoards") return undefined;
+  let candidates: unknown;
+  if (Array.isArray(event.output)) candidates = event.output;
+  else if (typeof event.output === "object" && event.output !== null && "boards" in event.output) {
+    candidates = event.output.boards;
+  }
+  if (!Array.isArray(candidates)) return undefined;
+  const boards: CustomWidgetPlacementBoard[] = [];
+  const boardIds = new Set<string>();
+  for (const candidate of candidates) {
+    const id = getRecordString(candidate, "id");
+    const name = getRecordString(candidate, "name");
+    if (!id || !name || boardIds.has(id)) return undefined;
+    boardIds.add(id);
+    boards.push({ id, name });
+  }
+  return boards;
+};
+
+const getBoardChoice = (event: CustomWidgetAssistantLifecycleEvent, boards: readonly CustomWidgetPlacementBoard[]) => {
+  if (event.toolName !== "ask_user" || typeof event.output !== "object" || event.output === null) return undefined;
+  if (getRecordString(event.output, "source") !== "option") return undefined;
+  if (getRecordString(event.output, "optionKind") !== "alternative") return undefined;
+  const optionId = getRecordString(event.output, "optionId");
+  if (!optionId) return undefined;
+  if (
+    typeof event.input !== "object" ||
+    event.input === null ||
+    !("allowOther" in event.input) ||
+    event.input.allowOther !== false ||
+    !("options" in event.input) ||
+    !Array.isArray(event.input.options) ||
+    event.input.options.length < 2 ||
+    event.input.options.length > 4
+  ) {
+    return undefined;
+  }
+
+  const boardById = new Map(boards.map((board) => [board.id, board]));
+  const offeredIds = new Set<string>();
+  for (const option of event.input.options) {
+    const offeredId = getRecordString(option, "id");
+    if (!offeredId || getRecordString(option, "kind") !== "alternative") return undefined;
+    if (!boardById.has(offeredId) || offeredIds.has(offeredId)) return undefined;
+    offeredIds.add(offeredId);
+  }
+  if (!offeredIds.has(optionId)) return undefined;
+  return boardById.get(optionId);
 };
 
 const deduplicateLifecycleEvents = (events: readonly CustomWidgetAssistantLifecycleEvent[]) => {
@@ -172,12 +240,50 @@ export const resolveCustomWidgetPlacementState = (
       }
       if (choice === "place") {
         state = {
-          status: "configure",
+          status: "discover-board",
           widgetId: state.widgetId,
-          ...(state.targetBoardId ? { targetBoardId: state.targetBoardId } : {}),
           ...(state.definitionId ? { definitionId: state.definitionId } : {}),
         };
       }
+      continue;
+    }
+    if (state.status === "discover-board") {
+      const boards = getDiscoveredBoards(event);
+      if (!boards) continue;
+      if (boards.length === 0) {
+        state = nonePlacementState;
+        continue;
+      }
+      if (boards.length === 1) {
+        const board = boards[0];
+        if (!board) continue;
+        state = {
+          status: "configure",
+          widgetId: state.widgetId,
+          targetBoardId: board.id,
+          targetBoardName: board.name,
+          ...(state.definitionId ? { definitionId: state.definitionId } : {}),
+        };
+        continue;
+      }
+      state = {
+        status: "choose-board",
+        widgetId: state.widgetId,
+        boards,
+        ...(state.definitionId ? { definitionId: state.definitionId } : {}),
+      };
+      continue;
+    }
+    if (state.status === "choose-board") {
+      const board = getBoardChoice(event, state.boards);
+      if (!board) continue;
+      state = {
+        status: "configure",
+        widgetId: state.widgetId,
+        targetBoardId: board.id,
+        targetBoardName: board.name,
+        ...(state.definitionId ? { definitionId: state.definitionId } : {}),
+      };
       continue;
     }
     if (state.status === "configure") {
@@ -207,6 +313,8 @@ export const resolveCustomWidgetPlacementState = (
 
 export const getCustomWidgetPlacementToolNames = (state: CustomWidgetPlacementState) => {
   if (state.status === "ask-user") return ["ask_user"];
+  if (state.status === "discover-board") return ["board_getAllBoards"];
+  if (state.status === "choose-board") return ["ask_user"];
   if (state.status === "configure") return ["configure_widget"];
   if (state.status === "board-add") return ["board_addItem"];
   return [];

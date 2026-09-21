@@ -5,6 +5,7 @@ import { isRecord } from "@homarr/common";
 import {
   getCustomWidgetPhaseToolNames,
   hasCustomWidgetAuthoringContinuationIntent,
+  hasCustomWidgetAuthoringLifecycleResumeIntent,
   isRecoverableCustomWidgetAuthoringFailure,
   isSuccessfulCustomWidgetAuthoringAdvance,
 } from "@homarr/custom-widgets/core";
@@ -38,6 +39,13 @@ const unwrapCustomWidgetToolOutput = (output: unknown) => {
   return output.value;
 };
 
+const explicitCustomWidgetContinuePattern = /^\s*(?:continue|keep\s+going|proceed|go\s+on|finish|complete)\b/iu;
+
+const getUiMessageText = (message: UIMessage) =>
+  message.parts
+    .flatMap((part) => (isRecord(part) && part.type === "text" && typeof part.text === "string" ? [part.text] : []))
+    .join("\n");
+
 /**
  * Approved tools execute before AI SDK step zero on an approval continuation.
  * Project those server-produced tool results into the same phase shape used by
@@ -59,6 +67,53 @@ export const getCustomWidgetToolStepsFromResponseMessages = (messages: readonly 
     return toolResults.length > 0 ? [{ toolResults }] : [];
   });
 
+/** Restore the current authoring phase when the user resumes after one or more
+ * external source-configuration pauses or asks for a follow-up edit. Each UI
+ * tool part represents one completed model step even though assistant-ui stores
+ * an individual agent loop in one assistant message. */
+export const getCustomWidgetToolStepsFromUiMessages = (messages: readonly UIMessage[]) => {
+  const latestUserIndex = messages.findLastIndex((message) => message.role === "user");
+  if (latestUserIndex <= 0) return [];
+  const latestUserMessage = messages[latestUserIndex];
+  if (
+    !latestUserMessage ||
+    !hasCustomWidgetAuthoringLifecycleResumeIntent(
+      getUiMessageText(latestUserMessage),
+      hasRecentCustomWidgetLifecycleContext(messages),
+    )
+  ) {
+    return [];
+  }
+  let authoringStartIndex = 0;
+  for (let index = latestUserIndex - 1; index >= 0; index -= 1) {
+    const message = messages[index];
+    if (!message || message.role !== "user") continue;
+    if (explicitCustomWidgetContinuePattern.test(getUiMessageText(message))) continue;
+    authoringStartIndex = index + 1;
+    break;
+  }
+
+  return messages.slice(authoringStartIndex, latestUserIndex).flatMap((message) => {
+    if (message.role !== "assistant") return [];
+    return message.parts.flatMap((part) => {
+      if (!isToolUIPart(part) || part.state !== "output-available") return [];
+      const toolName = getToolName(part);
+      if (!toolName.startsWith("customWidget_")) return [];
+      return [
+        {
+          toolResults: [
+            {
+              toolCallId: part.toolCallId,
+              toolName,
+              output: unwrapCustomWidgetToolOutput(part.output),
+            },
+          ],
+        },
+      ];
+    });
+  });
+};
+
 const hasPendingNonCustomToolCall = (step: CustomWidgetToolStep) => {
   const toolCalls = step.toolCalls ?? [];
   if (toolCalls.length === 0) return false;
@@ -76,9 +131,7 @@ const hasPendingNonCustomToolCall = (step: CustomWidgetToolStep) => {
 const getLatestUserText = (messages: readonly UIMessage[]) => {
   const latestUserMessage = messages.findLast((message) => message.role === "user");
   if (!latestUserMessage) return "";
-  return latestUserMessage.parts
-    .flatMap((part) => (isRecord(part) && part.type === "text" && typeof part.text === "string" ? [part.text] : []))
-    .join("\n");
+  return getUiMessageText(latestUserMessage);
 };
 
 const hasFollowUpCustomWidgetTool = (activeToolNames: readonly string[], latestToolName: string) =>
@@ -86,6 +139,19 @@ const hasFollowUpCustomWidgetTool = (activeToolNames: readonly string[], latestT
 
 const hasActiveCustomWidgetTool = (activeToolNames: readonly string[]) =>
   activeToolNames.some((toolName) => toolName.startsWith("customWidget_"));
+
+const hasPendingHistoricalConfigurationRequest = (messages: readonly UIMessage[]) => {
+  const statusByRequestId = new Map<string, unknown>();
+  for (const step of getCustomWidgetToolStepsFromUiMessages(messages)) {
+    for (const result of step.toolResults) {
+      if (result.toolName !== "customWidget_configurationRequestUser") continue;
+      const output = isRecord(result.output) ? result.output : null;
+      if (typeof output?.requestId !== "string") continue;
+      statusByRequestId.set(output.requestId, output.status);
+    }
+  }
+  return [...statusByRequestId.values()].some((status) => status === "pending");
+};
 
 const hasLatestClientToolOutcome = (messages: readonly UIMessage[]) => {
   const latestUserIndex = messages.findLastIndex((message) => message.role === "user");
@@ -118,10 +184,25 @@ export const shouldRequireCustomWidgetAuthoringTool = (
     return false;
   const currentSteps = steps.length > 0 ? steps : responseSteps;
   const latestStep = currentSteps.at(-1);
-  if (!latestStep || hasPendingNonCustomToolCall(latestStep)) return false;
+  if (!latestStep) {
+    return (
+      activeToolNames.length === 1 &&
+      activeToolNames[0] === "customWidget_configurationRequestUser" &&
+      explicitCustomWidgetContinuePattern.test(latestUserText) &&
+      hasPendingHistoricalConfigurationRequest(messages)
+    );
+  }
+  if (hasPendingNonCustomToolCall(latestStep)) return false;
   return latestStep.toolResults.some((result) => {
     if (isRecoverableCustomWidgetAuthoringFailure(result.toolName, result.output)) {
       return hasActiveCustomWidgetTool(activeToolNames);
+    }
+    if (
+      result.toolName === "customWidget_configurationRequestUser" &&
+      activeToolNames.includes(result.toolName) &&
+      isSuccessfulCustomWidgetAuthoringAdvance(result.toolName, result.output)
+    ) {
+      return true;
     }
     return (
       hasFollowUpCustomWidgetTool(activeToolNames, result.toolName) &&
@@ -131,7 +212,7 @@ export const shouldRequireCustomWidgetAuthoringTool = (
 };
 
 const explicitCustomWidgetIntentPattern =
-  /(?:\bcustom\s+jsx\b|\bhomarr-custom-widget-v\d+\b|\b(?:build|convert|create|design|edit|fix|make|migrate|repair|update|validate)\b[^\n]{0,80}\bcustom[\s-]+widgets?\b)/iu;
+  /(?:\bcustom\s+jsx\b|\bhomarr-custom-widget-v\d+\b|\b(?:add|adjust|build|change|convert|create|design|edit|fix|make|migrate|modify|remove|repair|update|validate)\b[^\n]{0,80}\bcustom[\s-]+widgets?\b)/iu;
 const boardManagementIntentPattern =
   /\b(?:build|create|design|fill|make|populate|set\s*up)\b(?:(?!\bwidgets?\b)[^\n]){0,60}\b(?:board|dashboard)\b/iu;
 const serviceWidgetIntentPatterns = [

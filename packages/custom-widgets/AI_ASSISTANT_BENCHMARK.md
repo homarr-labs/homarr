@@ -1,12 +1,14 @@
-# Assistant authoring benchmark — 2026-09-21
+# Assistant authoring benchmark — historical record and pending acceptance
 
-This campaign evaluates pass@1 Custom Widget authoring through the real staged tool lifecycle. It uses synthetic requests, API notes, and preview fixtures only.
+The results below record the original 2026-09-21 pass@1 campaign through the staged Custom Widget tool lifecycle. They are preserved for context but are superseded by the hardened benchmark and are not promotion, model-selection, visual-acceptance, or shipped-default evidence.
+
+The current acceptance suite has 15 named Dispatcharr, Karakeep, Mealie, RomM, TubeArchivist, and Frigate cases, plus schema-valid coverage for all 41 HTTP integration kinds. A fresh repeated comparison of Luna at high reasoning, GLM at max reasoning, and DeepSeek V4.1 Flash at max reasoning through DeepInfra FP8 is still pending. This execution environment has no OpenRouter/API provider key, so no fresh score is claimed.
 
 ## Baseline and fixed setup
 
 The baseline is `release/v2` at commit `c6da4a4366fa852e8aae67fea7137a21bae7538b`, not `dev`. Its prompt bundle is pinned in `scripts/prompt-baselines/` with source hashes.
 
-- 18 hard cases: 6 train, 6 dev, 6 held-out
+- Historical suite: 18 core cases, 6 train, 6 dev, 6 held-out
 - Generator temperature: `0.2`
 - Attempts per case: `1`
 - Generator and judge output caps: `32768`
@@ -19,9 +21,9 @@ Strict pass requires lifecycle completion, every deterministic contract check, t
 
 The previous report is superseded. It used the wrong baseline, `tool_choice: auto` where an active lifecycle tool was required, an incomplete preview schema, and deterministic checks that rejected valid AST-equivalent JSX.
 
-## Ten-generation search
+## Historical ten-generation search
 
-The campaign ran more than ten prompt generations and parallel judge/rejudge variants. Selected checkpoints:
+The earlier campaign ran more than ten prompt generations and parallel judge/rejudge variants. These checkpoints predate the hardened integration suites and are not current promotion evidence:
 
 | Candidate                         | Dev strict | Dev lifecycle | Notes                                                             |
 | --------------------------------- | ---------: | ------------: | ----------------------------------------------------------------- |
@@ -38,19 +40,19 @@ The campaign ran more than ten prompt generations and parallel judge/rejudge var
 
 Generation 5's 5/6 is the best observed result, not a fully comparable baseline pair: its artifacts were generated before the final 32k configuration and then rejudged with the corrected deterministic checks and judge policy. No output was truncated. The fully comparable final GLM run improves strict dev pass rate from 1/6 to 3/6 and lifecycle from 2/6 to 4/6: both are +33.3 percentage points.
 
-## Model comparison
+## Historical model comparison
 
-The final prompt and harness were held constant.
+The then-final prompt and harness were held constant. GLM ran at medium rather than the now-required max reasoning, and DeepSeek did not complete the suite, so this table cannot select the current hosted default.
 
 | Generator                      | Reasoning / route  |       Strict | Lifecycle | Scored mean | Model tokens | Result                              |
 | ------------------------------ | ------------------ | -----------: | --------: | ----------: | -----------: | ----------------------------------- |
 | `z-ai/glm-5.3`                 | medium             |          3/6 |       4/6 |        86.0 |    1,068,013 | Two validation/preview loops        |
-| `openai/gpt-5.6-luna`          | high               |          3/6 |       6/6 |        89.2 |      465,542 | Selected                            |
+| `openai/gpt-5.6-luna`          | high               |          3/6 |       6/6 |        89.2 |      465,542 | Historical result                   |
 | `deepseek/deepseek-v4.1-flash` | max, DeepInfra FP8 | 0/2 screened |       0/2 |         n/a |          n/a | Stopped after two provider timeouts |
 
-Luna ties GLM on strict passes, completes every lifecycle, scores higher, and records 56% fewer model tokens. It is selected for the default hosted assistant path. DeepSeek's first route attempt was discarded because a strict parameter filter matched no endpoint; the corrected DeepInfra FP8 route then timed out on both screened cases after discovery and was stopped.
+In this historical sample, Luna tied GLM on strict passes, completed every lifecycle, scored higher, and recorded 56% fewer model tokens. DeepSeek's first route attempt was discarded because a strict parameter filter matched no endpoint; the corrected DeepInfra FP8 route then timed out on both screened cases after discovery and was stopped. No model is selected by this evidence; the Workshop default remains the `release/v2` value until the fresh tournament passes.
 
-## Held-out result
+## Historical held-out result
 
 The one complete held-out run used generation 5 with GLM-5.3: 1/6 strict, 6/6 lifecycle, scored mean 76.6. It exposed real generalization gaps in selected-entity rendering, readable timestamps, responsive wrapping, and manual `SubFetch` state ownership. One nested-envelope failure was also a benchmark defect because it required the literal `??` token; that syntax-specific check is removed, but the historical result is not retroactively promoted.
 
@@ -69,8 +71,8 @@ Held-out cases were not reused to claim a new sealed score after their failures 
 - Paired-repeat report support with Wilson intervals, bootstrap deltas, and McNemar counts
 - Configurable benchmark reasoning effort and OpenRouter provider/quantization provenance
 
-## Limits
+## Current acceptance status and limits
 
-These are single pass@1 samples, so model variance is material. The benchmark measures generated manifests and simulated preview evidence, not browser-rendered visual correctness. The held-out set was sealed for the generation-5 run but no longer sealed after its failures were analyzed. Mean scores exclude lifecycle/deterministic failures; strict pass and lifecycle rates are the primary metrics.
+The historical results are single pass@1 samples, so model variance is material. The hardened benchmark measures generated manifests and simulated preview evidence; representative browser-rendered visual acceptance remains pending. The historical held-out set was sealed for the generation-5 run but no longer sealed after its failures were analyzed. Mean scores exclude lifecycle/deterministic failures; strict pass and lifecycle rates are the primary metrics.
 
-OpenRouter usage increased from `$25.101597031` to `$32.187875912`, or `$7.086278881`, below the approved `$10` maximum. This assumes no unrelated concurrent account usage.
+Historical OpenRouter usage increased from `$25.101597031` to `$32.187875912`, or `$7.086278881`. The total authorization is now `$30`, leaving `$22.913721119` for the fresh hardened campaign. This assumes no unrelated concurrent account usage. No generated integration widget is accepted as a shipped default until the fresh benchmark and representative visual checks pass.

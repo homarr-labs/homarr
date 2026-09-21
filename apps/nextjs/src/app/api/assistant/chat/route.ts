@@ -70,15 +70,16 @@ import {
 } from "./assistant-execution-policy";
 import { getAssistantStreamErrorMessage } from "./assistant-stream-error";
 import { shouldEmitAssistantMessageMetadata } from "./assistant-stream-metadata";
-import { getSafeAssistantToolError } from "./assistant-tool-error";
+import { getCustomWidgetConfigurationStatusRecovery, getSafeAssistantToolError } from "./assistant-tool-error";
 import { repairAssistantToolInput } from "./assistant-tool-input-repair";
-import { getAssistantToolOutputMaxCharacters, toAssistantToolOutput } from "./assistant-tool-output";
+import { getAssistantToolOutputOptions, toAssistantToolOutput } from "./assistant-tool-output";
 import { getAssistantToolInputSchema, getValidatedAssistantToolSchema } from "./assistant-tool-schema";
 import {
   createCustomWidgetDiscoveryPhaseController,
   getActiveCustomWidgetToolNames,
   getCustomWidgetPhaseToolNames,
   getCustomWidgetToolStepsFromResponseMessages,
+  getCustomWidgetToolStepsFromUiMessages,
   needsCustomWidgetAuthoringContext,
   shouldRequireCustomWidgetAuthoringTool,
 } from "./custom-widget-authoring-context";
@@ -88,6 +89,7 @@ import {
   getForcedAssistantToolName,
   getRequiredAssistantToolNames,
   hasPendingCustomWidgetPlacement,
+  requiresAssistantToolApproval,
   withAssistantToolPolicy,
 } from "./assistant-tool-policy";
 
@@ -171,7 +173,7 @@ integration_request is Homarr’s most powerful MCP tool: it calls any API endpo
 
 Homarr permissions are authoritative. Explain denied access without suggesting a bypass. Read before changing when current state matters. Mutations use Homarr's native approval UI: when inputs are sufficient, call the mutation immediately and never ask for duplicate prose confirmation or retry a denial. Use ask_user only when a missing choice blocks the next action; do not end with a prose question expecting a reply.
 
-Use configure_app, configure_board_settings, and configure_widget as the native review step before their matching mutations. Preserve existing board CSS unless replacement was requested. Use Homarr icon results rather than invented icon URLs. Browser tools are same-origin only and may refresh after a completed mutation. For a saved Custom Widget without a target board, ask one finite placement question with allowOther:false and options id place/kind affirmative and id leave/kind negative; labels may be localized.
+Use configure_app, configure_board_settings, and configure_widget as the native review step before their matching mutations. Preserve existing board CSS unless replacement was requested. Use Homarr icon results rather than invented icon URLs. Browser tools are same-origin only and may refresh after a completed mutation. For a saved Custom Widget without a target board, ask one finite placement question with allowOther:false and options id place/kind affirmative and id leave/kind negative; labels may be localized. If place is selected, discover boards with board_getAllBoards and follow the staged board choice exactly; never invent a board or ID. If none are returned, report that the widget was saved but remains unplaced.
 
 Complete requested batches before summarizing. Keep responses concise, lead with the result, summarize tool output instead of dumping JSON, and use well-formed GitHub-flavored Markdown. If a service is unavailable, state the concrete next action.`;
 
@@ -519,7 +521,7 @@ export async function POST(request: Request) {
 
   const homarrTools = Object.fromEntries(
     mcpTools.map((mcpTool) => {
-      const requiresApproval = mcpTool.type === "mutation";
+      const requiresApproval = requiresAssistantToolApproval(mcpTool.name, mcpTool.type);
       return [
         mcpTool.name,
         tool({
@@ -584,9 +586,7 @@ export async function POST(request: Request) {
                   lifecycleResult = customWidgetTemplateLifecycle.recordEvidence(mcpTool.name, result);
                 }
               }
-              return toAssistantToolOutput(lifecycleResult, {
-                maxCharacters: getAssistantToolOutputMaxCharacters(mcpTool.name),
-              });
+              return toAssistantToolOutput(lifecycleResult, getAssistantToolOutputOptions(mcpTool.name));
             } catch (error) {
               const safeError = getSafeAssistantToolError(error, { toolName: mcpTool.name });
               const componentNotFound =
@@ -645,6 +645,22 @@ export async function POST(request: Request) {
                   error: safeError,
                 });
               }
+              const configurationStatusRecovery = getCustomWidgetConfigurationStatusRecovery(
+                mcpTool.name,
+                executionInput,
+                safeError,
+              );
+              if (configurationStatusRecovery) return configurationStatusRecovery;
+              if (
+                (mcpTool.name === "customWidget_previewQuery" || mcpTool.name === "customWidget_previewAction") &&
+                isRecord(executionInput)
+              ) {
+                return {
+                  error: safeError,
+                  ...(typeof executionInput.sessionId === "string" ? { sessionId: executionInput.sessionId } : {}),
+                  ...(typeof executionInput.requestId === "string" ? { requestId: executionInput.requestId } : {}),
+                };
+              }
               return { error: safeError };
             }
           },
@@ -654,7 +670,7 @@ export async function POST(request: Request) {
   ) satisfies ToolSet;
   const toolApproval = Object.fromEntries(
     mcpTools
-      .filter((mcpTool) => mcpTool.type === "mutation")
+      .filter((mcpTool) => requiresAssistantToolApproval(mcpTool.name, mcpTool.type))
       .map((mcpTool) => [mcpTool.name, "user-approval" as const]),
   );
 
@@ -716,6 +732,9 @@ export async function POST(request: Request) {
     incomingMessages,
     canAuthorCustomWidgets,
   );
+  const restoredCustomWidgetSteps = customWidgetAuthoringActive
+    ? getCustomWidgetToolStepsFromUiMessages(incomingMessages)
+    : [];
   const getActiveToolNames = (
     steps: Parameters<typeof getCustomWidgetPhaseToolNames>[1] = [],
     responseMessages: readonly { role: string; content: unknown }[] = [],
@@ -732,7 +751,11 @@ export async function POST(request: Request) {
       ];
     }
     const phaseToolNames = customWidgetAuthoringActive
-      ? getCustomWidgetPhaseToolNames(Object.keys(homarrTools), [...responseMessageSteps, ...steps])
+      ? getCustomWidgetPhaseToolNames(Object.keys(homarrTools), [
+          ...restoredCustomWidgetSteps,
+          ...responseMessageSteps,
+          ...steps,
+        ])
       : null;
     if (phaseToolNames)
       return [assistantToolGroupActivationName, ...frontendToolNames, ...enabledToolNames, ...phaseToolNames];
@@ -803,13 +826,6 @@ export async function POST(request: Request) {
       tools: availableTools,
       prepareStep: ({ messages, responseMessages, stepNumber, steps }) => {
         customWidgetToolStepGate.begin(stepNumber);
-        if (stepNumber === 0 && forcedToolName !== undefined && forcedToolName in availableTools) {
-          return {
-            activeTools: [forcedToolName],
-            instructions: getStepInstructions([forcedToolName]),
-            toolChoice: { type: "tool", toolName: forcedToolName },
-          };
-        }
         const requiredToolNames = getRequiredAssistantToolNames(incomingMessages, steps, responseMessages).filter(
           (toolName) => toolName in availableTools,
         );
@@ -819,6 +835,13 @@ export async function POST(request: Request) {
             instructions: getStepInstructions(requiredToolNames),
             messages: compactAssistantStepMessages(messages),
             toolChoice: "required",
+          };
+        }
+        if (stepNumber === 0 && forcedToolName !== undefined && forcedToolName in availableTools) {
+          return {
+            activeTools: [forcedToolName],
+            instructions: getStepInstructions([forcedToolName]),
+            toolChoice: { type: "tool", toolName: forcedToolName },
           };
         }
         const responseMessageSteps = getCustomWidgetToolStepsFromResponseMessages(responseMessages);
@@ -848,7 +871,7 @@ export async function POST(request: Request) {
         toolMs: assistantExecutionPolicy.toolTimeoutMs,
       },
       maxOutputTokens: assistantExecutionPolicy.maxOutputTokens,
-      maxRetries: 2,
+      maxRetries: assistantExecutionPolicy.maxRetries,
       experimental_repairToolCall: ({ toolCall }) => Promise.resolve(repairAssistantToolInput(toolCall)),
       reasoning: resolveAssistantReasoning({
         reasoning: parsed.data.reasoning,

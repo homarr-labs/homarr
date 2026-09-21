@@ -12,6 +12,10 @@ interface UniversalIntegrationContract {
   body?: Record<string, string>;
   response: unknown;
   responsePaths: readonly string[];
+  responseMemberPaths?: readonly string[];
+  dynamicRecordPaths?: readonly string[];
+  templateExcludes?: readonly string[];
+  forbiddenTemplateComponents?: readonly string[];
   notes: string;
   limitation?: string;
 }
@@ -40,6 +44,8 @@ const contracts: readonly UniversalIntegrationContract[] = [
       },
     },
     responsePaths: ["data.summary"],
+    responseMemberPaths: ["device.device_name", "device.model_name", "device.archived", "device.device_status"],
+    dynamicRecordPaths: ["data.summary"],
     notes:
       "GET /api/summary returns data.summary as an object keyed by device identity, not an array. Each entry has a device object; archived devices should be excluded and device_status must remain visibly distinguishable.",
   },
@@ -62,6 +68,10 @@ const contracts: readonly UniversalIntegrationContract[] = [
       service: { uptime: 86400, version: "0.16.2", latest_version: "0.16.2", storage: {} },
     },
     responsePaths: ["cameras", "detectors", "service"],
+    responseMemberPaths: ["camera_fps", "inference_speed", "uptime", "version"],
+    dynamicRecordPaths: ["cameras", "detectors"],
+    templateExcludes: ["token=", "api_key=", "jwt=", "/api/go2rtc", "/api/ffmpeg", "/latest.jpg"],
+    forbiddenTemplateComponents: ["Image"],
     notes:
       "GET /api/stats returns a direct object with dynamically keyed cameras and detectors plus service uptime/version. It is JSON telemetry; do not invent a live-stream URL or put credentials into browser media URLs.",
     limitation:
@@ -75,7 +85,8 @@ const contracts: readonly UniversalIntegrationContract[] = [
       { id: "library-1", name: "Comics", unavailable: false, root: "/data/comics" },
       { id: "library-2", name: "Offline", unavailable: true, root: "/mnt/offline" },
     ],
-    responsePaths: [],
+    responsePaths: ["0.name", "0.unavailable"],
+    responseMemberPaths: ["name", "unavailable"],
     notes:
       "GET /api/v1/libraries returns a direct array. Show library names and availability and bound the rendered list. The saved integration supplies X-API-Key authentication.",
   },
@@ -84,7 +95,7 @@ const contracts: readonly UniversalIntegrationContract[] = [
     documentationUrl: "https://github.com/jokob-sk/NetAlertX/tree/main/docs",
     path: "/devices/totals",
     response: ["42", 31, 0, "2", 3],
-    responsePaths: [],
+    responsePaths: ["0", "1", "3", "4"],
     notes:
       "GET /devices/totals returns a positional array: total devices at index 0, connected at 1, new devices at 3, and down alerts at 4. Values may be numbers or decimal strings. The saved integration supplies Bearer authentication.",
   },
@@ -128,7 +139,8 @@ const contracts: readonly UniversalIntegrationContract[] = [
         recipe: null,
       },
     ],
-    responsePaths: [],
+    responsePaths: ["0.entryType", "0.recipe.name", "1.text"],
+    responseMemberPaths: ["entryType", "recipe.name", "recipe.recipeServings", "title", "text"],
     notes:
       "GET /api/households/mealplans/today returns a direct array. Entries can be recipe-backed or text-only with recipe=null; preserve entryType and use title/text fallbacks.",
   },
@@ -143,6 +155,7 @@ const contracts: readonly UniversalIntegrationContract[] = [
       ],
     },
     responsePaths: ["workers_status"],
+    responseMemberPaths: ["id", "idle"],
     notes:
       "GET /unmanic/api/v2/workers/status returns {workers_status:[...]}; each worker has an idle boolean. Show active versus idle workers and handle an empty list.",
   },
@@ -158,9 +171,8 @@ const contracts: readonly UniversalIntegrationContract[] = [
   {
     kind: "stash",
     documentationUrl: "https://docs.stashapp.cc/in-app-manual/graphql-api/",
-    method: "POST",
     path: "/graphql",
-    body: {
+    query: {
       query:
         "query { stats { scene_count scenes_size scenes_duration image_count images_size gallery_count performer_count studio_count tag_count } }",
     },
@@ -180,8 +192,9 @@ const contracts: readonly UniversalIntegrationContract[] = [
       },
     },
     responsePaths: ["data.stats"],
+    responseMemberPaths: ["scene_count", "scenes_size", "scenes_duration", "image_count"],
     notes:
-      "POST /graphql with a JSON GraphQL query for stats returns {data:{stats:{scene_count,scenes_size,scenes_duration,image_count,images_size,gallery_count,performer_count,studio_count,tag_count}}}. The saved integration supplies ApiKey authentication. Treat GraphQL errors as failure, not empty data.",
+      "GET /graphql with the GraphQL document in the query parameter requests stats and returns {data:{stats:{scene_count,scenes_size,scenes_duration,image_count,images_size,gallery_count,performer_count,studio_count,tag_count}}}. Stash's gqlgen server explicitly supports GET transport, which keeps this saved-integration overview schema-valid; the saved integration supplies ApiKey authentication. Treat GraphQL errors as failure, not empty data.",
   },
   {
     kind: "prometheus",
@@ -198,6 +211,7 @@ const contracts: readonly UniversalIntegrationContract[] = [
       },
     },
     responsePaths: ["data.activeTargets"],
+    responseMemberPaths: ["labels.job", "health", "lastError"],
     notes:
       "GET /api/v1/targets returns a status envelope with data.activeTargets. Use health and labels.job, surface lastError for down targets, and do not map the outer object as a list.",
   },
@@ -239,6 +253,7 @@ const contracts: readonly UniversalIntegrationContract[] = [
     path: "/api/space/",
     response: { count: 1, results: [{ id: 1, name: "Home", user_count: 4, recipe_count: 528 }] },
     responsePaths: ["results"],
+    responseMemberPaths: ["name", "user_count", "recipe_count"],
     notes:
       "GET /api/space/ may return a paginated {results:[...]} envelope or a direct array across versions. Show the first space's name, user_count, and recipe_count and handle no spaces.",
   },
@@ -255,7 +270,8 @@ const contracts: readonly UniversalIntegrationContract[] = [
       },
       { id: 2, archived: false, remaining_weight: null, filament: { name: "PETG" } },
     ],
-    responsePaths: [],
+    responsePaths: ["0.filament.name", "0.remaining_weight"],
+    responseMemberPaths: ["filament.name", "remaining_weight", "archived"],
     notes:
       "GET /api/v1/spool returns a direct array. Exclude archived spools, keep nullable remaining_weight honest, and show a bounded material/vendor list with total known remaining weight.",
   },
@@ -265,6 +281,7 @@ const contracts: readonly UniversalIntegrationContract[] = [
     path: "/v1/feeds/counters",
     response: { reads: { "1": 34, "2": 81 }, unreads: { "1": 5, "2": 12 } },
     responsePaths: ["reads", "unreads"],
+    dynamicRecordPaths: ["reads", "unreads"],
     notes:
       "GET /v1/feeds/counters returns reads and unreads as objects keyed by feed ID. Sum their numeric values and do not assume arrays. The saved integration supplies X-Auth-Token.",
   },
@@ -277,6 +294,7 @@ const contracts: readonly UniversalIntegrationContract[] = [
       collectionSummary: { activeSizeBytes: 456789000000 },
     },
     responsePaths: ["cleanupTotals", "collectionSummary.activeSizeBytes"],
+    responseMemberPaths: ["itemsHandled", "episodesHandled", "moviesHandled"],
     notes:
       "GET /api/storage-metrics returns cleanupTotals and collectionSummary.activeSizeBytes. Format storage as bytes and distinguish items, episodes, and movies handled.",
   },
@@ -293,6 +311,7 @@ const contracts: readonly UniversalIntegrationContract[] = [
       },
     },
     responsePaths: ["data.collections"],
+    responseMemberPaths: ["name", "_count.links"],
     notes:
       "GET /api/v1/collections can return {data:{collections:[...]}} as well as legacy envelopes. Each collection has _count.links. Render a bounded list and sum links without assuming response is a direct array.",
   },
@@ -325,6 +344,7 @@ const contracts: readonly UniversalIntegrationContract[] = [
       ],
     },
     responsePaths: ["checks"],
+    responseMemberPaths: ["name", "status", "last_ping"],
     notes:
       "GET /api/v3/checks/ returns {checks:[...]}. Status can be new, up, grace, down, or paused. Show a bounded operational list and treat paused separately rather than as down. The saved project key supplies X-Api-Key.",
   },
@@ -345,6 +365,8 @@ const contracts: readonly UniversalIntegrationContract[] = [
       },
     },
     responsePaths: [],
+    responseMemberPaths: ["name", "group", "success", "duration", "errors"],
+    dynamicRecordPaths: [""],
     notes:
       "GET /api/v1/endpoints/statuses may return a record or an array. Each endpoint's newest state is results.at(-1); missing results means unknown. Show name/group, success, time, duration, and error context.",
   },
@@ -369,6 +391,8 @@ const contracts: readonly UniversalIntegrationContract[] = [
       },
     },
     responsePaths: [],
+    responseMemberPaths: ["title", "url", "last_changed", "last_checked", "viewed"],
+    dynamicRecordPaths: [""],
     notes:
       "GET /api/v1/watch returns an object keyed by watch UUID, not an array. last_changed and last_checked are Unix timestamps; a positive unviewed last_changed is a new diff. The saved integration supplies lowercase x-api-key.",
   },
@@ -380,7 +404,8 @@ const contracts: readonly UniversalIntegrationContract[] = [
       { address: "10.0.0.10:3000", num_requests: 4, fails: 0 },
       { address: "10.0.0.11:3000", num_requests: 1, fails: 3 },
     ],
-    responsePaths: [],
+    responsePaths: ["0.address", "0.fails"],
+    responseMemberPaths: ["address", "num_requests", "fails"],
     notes:
       "GET /reverse_proxy/upstreams on Caddy's admin API returns a direct array with address, num_requests, and fails. The admin API is privileged; this widget must remain read-only and must not expose arbitrary config mutation.",
   },
@@ -407,7 +432,8 @@ const contracts: readonly UniversalIntegrationContract[] = [
         ],
       },
     ],
-    responsePaths: [],
+    responsePaths: ["0.directories.0.files.0.state", "0.directories.0.files.0.remainingTime"],
+    responseMemberPaths: ["filename", "size", "bytesTransferred", "state", "remainingTime"],
     notes:
       "GET /api/v0/transfers/downloads returns a direct user array with nested directories and files. Filenames may contain backslashes and remainingTime can be absent. The saved integration supplies X-API-Key; keep this overview read-only.",
   },
@@ -431,7 +457,8 @@ const contracts: readonly UniversalIntegrationContract[] = [
         },
       },
     ],
-    responsePaths: [],
+    responsePaths: ["0.title", "0.statistics.percentOfEpisodes"],
+    responseMemberPaths: ["title", "monitored", "status", "statistics.percentOfEpisodes"],
     notes:
       "GET /api/v3/series returns a direct array. Use title, monitored, status, network, and nullable statistics fields. Sonarr uses API v3 and the saved integration supplies X-Api-Key.",
   },
@@ -452,7 +479,8 @@ const contracts: readonly UniversalIntegrationContract[] = [
         physicalRelease: "2026-10-01T00:00:00Z",
       },
     ],
-    responsePaths: [],
+    responsePaths: ["0.title", "0.hasFile"],
+    responseMemberPaths: ["title", "year", "monitored", "status", "hasFile", "sizeOnDisk"],
     notes:
       "GET /api/v3/movie returns a direct array. Use title/year, monitored, status, hasFile, sizeOnDisk, and nullable release dates. Radarr uses API v3 and the saved integration supplies X-Api-Key.",
   },
@@ -475,7 +503,8 @@ const contracts: readonly UniversalIntegrationContract[] = [
         },
       },
     ],
-    responsePaths: [],
+    responsePaths: ["0.artistName", "0.statistics.percentOfTracks"],
+    responseMemberPaths: ["artistName", "monitored", "status", "statistics.percentOfTracks"],
     notes:
       "GET /api/v1/artist returns a direct array. Use artistName, monitored, status, and nullable statistics. Lidarr uses API v1, not the Sonarr/Radarr v3 path.",
   },
@@ -493,7 +522,8 @@ const contracts: readonly UniversalIntegrationContract[] = [
         author: { authorName: "Example Author" },
       },
     ],
-    responsePaths: [],
+    responsePaths: ["0.title", "0.author.authorName"],
+    responseMemberPaths: ["title", "author.authorName", "monitored", "releaseDate"],
     notes:
       "GET /api/v1/book returns a direct array. Use title, author.authorName, monitored, releaseDate, and nullable statistics. Readarr uses API v1 and is retired, so show unavailable optional fields defensively.",
   },
@@ -513,7 +543,8 @@ const contracts: readonly UniversalIntegrationContract[] = [
       },
       { id: 2, name: "Indexer B", enable: false, protocol: "usenet", privacy: "public", priority: 50, appProfileId: 1 },
     ],
-    responsePaths: [],
+    responsePaths: ["0.name", "0.enable", "1.priority"],
+    responseMemberPaths: ["name", "enable", "protocol", "privacy", "priority"],
     notes:
       "GET /api/v1/indexer returns a direct array. Show name, enable, protocol, privacy, and priority. The saved integration supplies X-Api-Key; do not turn this read overview into test-all or mutation actions.",
   },
@@ -536,6 +567,7 @@ const contracts: readonly UniversalIntegrationContract[] = [
       ],
     },
     responsePaths: ["results", "pageInfo"],
+    responseMemberPaths: ["status", "createdAt", "requestedBy.displayName", "media.mediaType", "media.status"],
     notes:
       "GET /api/v1/request with take=10, skip=0, sort=modified returns {pageInfo,results}. Request status is numeric; render a readable status and nested requestedBy/media fields. The saved integration supplies X-Api-Key.",
   },
@@ -558,6 +590,7 @@ const contracts: readonly UniversalIntegrationContract[] = [
       ],
     },
     responsePaths: ["results", "pageInfo"],
+    responseMemberPaths: ["status", "createdAt", "requestedBy.displayName", "media.mediaType", "media.status"],
     notes:
       "GET /api/v1/request with take=10, skip=0, sort=modified returns {pageInfo,results}. Keep numeric request/media statuses distinct and use nested requestedBy.displayName. This overview is read-only.",
   },
@@ -580,6 +613,7 @@ const contracts: readonly UniversalIntegrationContract[] = [
       ],
     },
     responsePaths: ["results", "pageInfo"],
+    responseMemberPaths: ["status", "createdAt", "requestedBy.displayName", "media.mediaType", "media.status"],
     notes:
       "GET /api/v1/request with take=10, skip=0, sort=modified returns {pageInfo,results}. Use readable request status, requester, type, and nested media availability; do not assume the outer object is the list.",
   },
@@ -620,7 +654,8 @@ const contracts: readonly UniversalIntegrationContract[] = [
         last_changed: "2026-09-21T18:03:00Z",
       },
     ],
-    responsePaths: [],
+    responsePaths: ["0.entity_id", "0.state", "0.attributes.friendly_name"],
+    responseMemberPaths: ["entity_id", "state", "attributes.friendly_name", "attributes.unit_of_measurement"],
     notes:
       "GET /api/states returns a direct heterogeneous entity array. state is always a string and attributes vary by domain. Render a bounded overview using friendly_name fallback to entity_id and optional unit_of_measurement.",
   },
@@ -645,6 +680,7 @@ const contracts: readonly UniversalIntegrationContract[] = [
       },
     },
     responsePaths: ["ocs.data"],
+    responseMemberPaths: ["subject", "message", "datetime", "app"],
     notes:
       "GET /ocs/v2.php/apps/notifications/api/v2/notifications with format=json returns an OCS envelope; notifications are at ocs.data. Without format=json the server may return XML. The saved integration supplies Basic auth and OCS-APIRequest.",
   },
@@ -662,7 +698,8 @@ const contracts: readonly UniversalIntegrationContract[] = [
       },
       { uuid: "db-1", name: "Postgres", type: "postgresql", status: "running:healthy", fqdn: null },
     ],
-    responsePaths: [],
+    responsePaths: ["0.name", "1.status", "1.fqdn"],
+    responseMemberPaths: ["name", "type", "status", "fqdn"],
     notes:
       "GET /api/v1/resources returns a heterogeneous direct resource array. Use name, type, status, and optional fqdn; group or label resource types without assuming application-only fields. The saved integration supplies Bearer auth.",
   },
@@ -677,6 +714,8 @@ const contracts: readonly UniversalIntegrationContract[] = [
       usageByUser: [{ userId: "user-1", userName: "Alex", photos: 14000, videos: 900, usage: 456789000000 }],
     },
     responsePaths: ["photos", "videos", "usage", "usageByUser"],
+    templateExcludes: ["token=", "api_key=", "/api/assets"],
+    forbiddenTemplateComponents: ["Image"],
     notes:
       "GET /api/server/statistics returns direct photo/video/usage totals and usageByUser. API-key permissions are endpoint-specific. Do not render protected relative thumbnails directly; this task is a JSON statistics overview.",
   },
@@ -695,6 +734,7 @@ const contracts: readonly UniversalIntegrationContract[] = [
       },
     },
     responsePaths: ["data"],
+    responseMemberPaths: ["ping", "download_bits", "upload_bits", "healthy", "created_at"],
     notes:
       "GET /api/v1/results/latest returns {data:{ping,download_bits,upload_bits,healthy,created_at}}. A fresh install can return 404 with no result. Rates are bits per second, not bytes. The saved integration supplies Bearer auth.",
   },
@@ -709,6 +749,7 @@ const contracts: readonly UniversalIntegrationContract[] = [
       ],
     },
     responsePaths: ["libraries"],
+    responseMemberPaths: ["name", "mediaType", "displayOrder"],
     notes:
       "GET /api/libraries returns {libraries:[...]}. Use id, name, mediaType, and displayOrder; detailed statistics require one follow-up per library and are intentionally out of scope. The saved integration supplies Bearer auth.",
   },
@@ -803,11 +844,18 @@ const makeCase = (contract: UniversalIntegrationContract, index: number): Custom
           ...(contract.body ? { bodyIncludes: contract.body } : {}),
           requiresStatusBinding: true,
           requiredTemplateComponents: ["RefreshButton"],
+          requiresResponseBinding: true,
+          ...(contract.dynamicRecordPaths ? { requiredDynamicResponseRecordPaths: contract.dynamicRecordPaths } : {}),
           ...(contract.responsePaths.length > 0 ? { requiredResponsePaths: contract.responsePaths } : {}),
+          ...(contract.responseMemberPaths ? { requiredResponseMemberPaths: contract.responseMemberPaths } : {}),
         },
       ],
-      templateIncludes: contract.responsePaths.slice(0, 6),
+      templateIncludes: [...contract.responsePaths, ...(contract.responseMemberPaths ?? [])].slice(0, 8),
       templateIncludesAny: [["No data", "Nothing", "No results", "No activity", "Empty"]],
+      ...(contract.templateExcludes ? { templateExcludes: [...contract.templateExcludes] } : {}),
+      ...(contract.forbiddenTemplateComponents
+        ? { forbiddenTemplateComponents: [...contract.forbiddenTemplateComponents] }
+        : {}),
       forbidUnexpectedRequests: true,
     },
   };

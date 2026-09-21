@@ -10,6 +10,7 @@ import { createAssistantEvaluationCaseSnapshot } from "./ai-assistant-evaluation
 import { getCustomWidgetAiEvaluationSuite, resolveCustomWidgetAiEvaluationSuiteId } from "./ai-evaluation-suites";
 import {
   aiEvaluationSpendBudget,
+  assertLiveAiEvaluationSpendCap,
   getCustomWidgetJudgePolicyHash,
   getAiEvaluationMaxOutputTokens,
   getDeterministicEvaluationMatches,
@@ -24,6 +25,7 @@ import { createAiEvaluationHarnessSnapshot } from "./ai-evaluation-provenance";
 interface SourceResult {
   caseId: string;
   attempts?: number;
+  selectedAttempt?: number | null;
   score?: number | null;
   verdict?: string;
   categories?: Record<string, number> | null;
@@ -85,6 +87,28 @@ export function parseAndValidateRejudgeSourceSummary(value: unknown, source: str
     ) {
       throw new Error(`${source}: result ${index + 1} has invalid errors`);
     }
+    if (
+      result.selectedAttempt !== undefined &&
+      result.selectedAttempt !== null &&
+      (typeof result.selectedAttempt !== "number" ||
+        !Number.isInteger(result.selectedAttempt) ||
+        result.selectedAttempt <= 0)
+    ) {
+      throw new Error(`${source}: result ${index + 1} has invalid selectedAttempt`);
+    }
+    if (
+      result.attempts !== undefined &&
+      (typeof result.attempts !== "number" || !Number.isInteger(result.attempts) || result.attempts <= 0)
+    ) {
+      throw new Error(`${source}: result ${index + 1} has invalid attempts`);
+    }
+    if (
+      typeof result.selectedAttempt === "number" &&
+      typeof result.attempts === "number" &&
+      result.selectedAttempt > result.attempts
+    ) {
+      throw new Error(`${source}: result ${index + 1} selectedAttempt exceeds attempts`);
+    }
     return result as SourceResult;
   });
   const caseIds = value.benchmark.caseIds as string[];
@@ -130,7 +154,7 @@ const resolveCaseDirectory = async (summaryPath: string, outputDirectory: string
         path.resolve(path.dirname(summaryPath), outputDirectory),
         path.resolve(path.dirname(summaryPath), path.basename(outputDirectory)),
       ];
-  for (const candidate of [...new Set(candidates)]) {
+  for (const candidate of new Set(candidates)) {
     try {
       await access(candidate);
       return candidate;
@@ -147,6 +171,37 @@ interface JudgeCandidate {
   widget: HomarrCustomWidgetV2;
 }
 
+interface AttemptArtifact {
+  attempt: number;
+}
+
+const resolveArtifactAttempt = (result: SourceResult, artifacts: readonly AttemptArtifact[], artifactKind: string) => {
+  if (result.selectedAttempt !== undefined && result.selectedAttempt !== null) return result.selectedAttempt;
+  const attempts = [...new Set(artifacts.map(({ attempt }) => attempt))];
+  if (attempts.length === 1) return attempts[0] ?? null;
+  if (attempts.length > 1) {
+    throw new Error(`${result.caseId}: selectedAttempt is required to choose among ${artifactKind} artifacts`);
+  }
+  return null;
+};
+
+const assertCompleteExpectedWidgetSet = (
+  result: SourceResult,
+  testCase: CustomWidgetAiEvaluationCase,
+  actualWidgetIds: readonly string[],
+) => {
+  const expectedWidgetIds = (testCase.expectedWidgets?.map(({ id }) => id) ?? [testCase.id]).toSorted();
+  const uniqueActualWidgetIds = [...new Set(actualWidgetIds)].toSorted();
+  if (
+    uniqueActualWidgetIds.length !== actualWidgetIds.length ||
+    uniqueActualWidgetIds.join("\n") !== expectedWidgetIds.join("\n")
+  ) {
+    throw new Error(
+      `${result.caseId}: selected attempt must contain exactly the requested widgets (${expectedWidgetIds.join(", ")})`,
+    );
+  }
+};
+
 const loadJudgeCandidates = async (
   summaryPath: string,
   result: SourceResult,
@@ -160,27 +215,34 @@ const loadJudgeCandidates = async (
     return [{ file, attempt: Number(match[1]), expectedWidgetId: match[2] }];
   });
   if (widgetArtifacts.length > 0) {
-    const latestAttempt = Math.max(...widgetArtifacts.map(({ attempt }) => attempt));
-    return Promise.all(
-      widgetArtifacts
-        .filter(({ attempt }) => attempt === latestAttempt)
-        .toSorted((left, right) => left.expectedWidgetId.localeCompare(right.expectedWidgetId))
-        .map(async ({ file, expectedWidgetId }) => {
-          let judgeCase = testCase;
-          if (testCase.expectedWidgets?.length) {
-            const expectedWidget = testCase.expectedWidgets.find(({ id }) => id === expectedWidgetId);
-            if (!expectedWidget)
-              throw new Error(`${result.caseId}: unknown expected widget artifact '${expectedWidgetId}'`);
-            judgeCase = getExpectedWidgetCase(testCase, expectedWidget);
-          } else if (expectedWidgetId !== testCase.id) {
-            throw new Error(`${result.caseId}: unexpected widget artifact '${expectedWidgetId}'`);
-          }
-          const widget = customWidgetDefinitionSchema.parse(
-            JSON.parse(await readFile(path.join(caseDirectory, file), "utf8")),
-          );
-          return { expectedWidgetId, testCase: judgeCase, widget };
-        }),
-    );
+    const selectedAttempt = resolveArtifactAttempt(result, widgetArtifacts, "persisted widget");
+    const selectedArtifacts = widgetArtifacts.filter(({ attempt }) => attempt === selectedAttempt);
+    if (selectedArtifacts.length > 0) {
+      assertCompleteExpectedWidgetSet(
+        result,
+        testCase,
+        selectedArtifacts.map(({ expectedWidgetId }) => expectedWidgetId),
+      );
+      return Promise.all(
+        selectedArtifacts
+          .toSorted((left, right) => left.expectedWidgetId.localeCompare(right.expectedWidgetId))
+          .map(async ({ file, expectedWidgetId }) => {
+            let judgeCase = testCase;
+            if (testCase.expectedWidgets?.length) {
+              const expectedWidget = testCase.expectedWidgets.find(({ id }) => id === expectedWidgetId);
+              if (!expectedWidget)
+                throw new Error(`${result.caseId}: unknown expected widget artifact '${expectedWidgetId}'`);
+              judgeCase = getExpectedWidgetCase(testCase, expectedWidget);
+            } else if (expectedWidgetId !== testCase.id) {
+              throw new Error(`${result.caseId}: unexpected widget artifact '${expectedWidgetId}'`);
+            }
+            const widget = customWidgetDefinitionSchema.parse(
+              JSON.parse(await readFile(path.join(caseDirectory, file), "utf8")),
+            );
+            return { expectedWidgetId, testCase: judgeCase, widget };
+          }),
+      );
+    }
   }
 
   const previewArtifacts = entries.flatMap((file) => {
@@ -188,14 +250,23 @@ const loadJudgeCandidates = async (
     if (!match?.[1]) return [];
     return [{ file, attempt: Number(match[1]) }];
   });
-  const latestPreview = previewArtifacts.toSorted((left, right) => right.attempt - left.attempt)[0];
-  if (!latestPreview) throw new Error(`${result.caseId}: no persisted or preview candidate artifact was found`);
-  const rawWidgets = JSON.parse(await readFile(path.join(caseDirectory, latestPreview.file), "utf8")) as unknown;
+  const selectedAttempt = resolveArtifactAttempt(result, previewArtifacts, "preview candidate");
+  const selectedPreview = previewArtifacts.find(({ attempt }) => attempt === selectedAttempt);
+  if (!selectedPreview) {
+    const suffix = result.selectedAttempt ? ` for selected attempt ${result.selectedAttempt}` : "";
+    throw new Error(`${result.caseId}: no persisted or preview candidate artifact was found${suffix}`);
+  }
+  const rawWidgets = JSON.parse(await readFile(path.join(caseDirectory, selectedPreview.file), "utf8")) as unknown;
   if (!Array.isArray(rawWidgets)) throw new Error(`${result.caseId}: preview candidate artifact must contain an array`);
   const widgets = rawWidgets.map((widget) => customWidgetDefinitionSchema.parse(widget));
   const matches = getDeterministicEvaluationMatches(testCase, widgets);
   if (matches.length === 0)
     throw new Error(`${result.caseId}: preview candidates cannot be matched to requested widgets`);
+  assertCompleteExpectedWidgetSet(
+    result,
+    testCase,
+    matches.map(({ expectedWidgetId }) => expectedWidgetId),
+  );
   return matches.map((match) => ({
     expectedWidgetId: match.expectedWidgetId,
     testCase: match.testCase,
@@ -255,6 +326,7 @@ export async function rejudgeAssistantSummary(args: {
   const suiteId = resolveCustomWidgetAiEvaluationSuiteId(source.benchmark.suite);
   const evaluationCases = getCustomWidgetAiEvaluationSuite(suiteId);
   const judgeRunner = args.judgeRunner ?? judgeCustomWidgetCase;
+  if (!args.judgeRunner) assertLiveAiEvaluationSpendCap(aiEvaluationSpendBudget, args.baseUrl);
   await mkdir(args.outputRoot, { recursive: true });
   const results: SourceResult[] = [];
   for (const sourceResult of source.results) {

@@ -83,9 +83,18 @@ describe("assistant artifact rejudge", () => {
       template:
         "<Stack><RefreshButton />{((data.prices ?? {}).data ?? []).map(item => <Text key={item.id}>{item.percent_change_24h} {item.market_cap} {item.volume_24h} {item.last_updated}</Text>)}</Stack>",
     });
+    const laterCoinWidget = customWidgetDefinitionSchema.parse({
+      ...recoveredCoinWidget,
+      name: "Wrong later attempt",
+    });
     await writeFile(
       path.join(coinDirectory, "widget-1-coinmarketcap-keyless.json"),
       JSON.stringify(recoveredCoinWidget),
+      "utf8",
+    );
+    await writeFile(
+      path.join(coinDirectory, "widget-2-coinmarketcap-keyless.json"),
+      JSON.stringify(laterCoinWidget),
       "utf8",
     );
     await writeFile(path.join(homeAssistantDirectory, "preview-candidates-1.json"), JSON.stringify([widget]), "utf8");
@@ -113,6 +122,7 @@ describe("assistant artifact rejudge", () => {
       results: [
         {
           caseId: "coinmarketcap-keyless",
+          selectedAttempt: 1,
           score: null,
           verdict: "fail",
           errors: ["Attempt 1: deterministic checks failed — stale evaluator false negative"],
@@ -163,6 +173,7 @@ describe("assistant artifact rejudge", () => {
     });
 
     expect(judgeRunner).toHaveBeenCalledTimes(2);
+    expect(judgeRunner.mock.calls[0]?.[0].widget.name).toBe("Crypto");
     expect(rejudged.sourceSummary).toMatchObject({
       sha256: createHash("sha256").update(sourceRaw, "utf8").digest("hex"),
       judgeModel: "old/judge",
@@ -264,5 +275,70 @@ describe("assistant artifact rejudge", () => {
         "summary.json",
       ),
     ).toThrow("unknown benchmark case");
+  });
+
+  it("rejects selected attempts outside the recorded trajectory", () => {
+    const testCase = CUSTOM_WIDGET_AI_EVALUATION_CASES.find(({ id }) => id === "coinmarketcap-keyless");
+    if (!testCase) throw new Error("CoinMarketCap case is missing");
+    expect(() =>
+      parseAndValidateRejudgeSourceSummary(
+        {
+          mode: "assistant-tool-loop",
+          benchmark: { split: "dev", ...createAssistantEvaluationCaseSnapshot([testCase]) },
+          results: [
+            {
+              caseId: testCase.id,
+              attempts: 1,
+              selectedAttempt: 2,
+              outputDirectory: "/tmp/not-read",
+            },
+          ],
+        },
+        "summary.json",
+      ),
+    ).toThrow("selectedAttempt exceeds attempts");
+  });
+
+  it("rejects incomplete persisted artifacts for a multi-widget selected attempt", async () => {
+    const root = await mkdtemp(path.join(tmpdir(), "homarr-rejudge-incomplete-"));
+    temporaryDirectories.push(root);
+    const sourceRoot = path.join(root, "source");
+    const caseDirectory = path.join(sourceRoot, "assistant-coordinated-build-workspace");
+    await mkdir(caseDirectory, { recursive: true });
+    await writeFile(
+      path.join(caseDirectory, "widget-1-build-health.json"),
+      JSON.stringify(customWidgetDefinitionSchema.parse(CUSTOM_WIDGET_STARTER)),
+      "utf8",
+    );
+    const testCase = CUSTOM_WIDGET_AI_EVALUATION_CASES.find(({ id }) => id === "coordinated-build-workspace");
+    if (!testCase) throw new Error("Coordinated build case is missing");
+    const sourceSummaryPath = path.join(sourceRoot, "summary.json");
+    await writeFile(
+      sourceSummaryPath,
+      JSON.stringify({
+        mode: "assistant-tool-loop",
+        benchmark: { split: "heldout", ...createAssistantEvaluationCaseSnapshot([testCase]) },
+        results: [
+          {
+            caseId: testCase.id,
+            attempts: 1,
+            selectedAttempt: 1,
+            outputDirectory: caseDirectory,
+          },
+        ],
+      }),
+      "utf8",
+    );
+
+    await expect(
+      rejudgeAssistantSummary({
+        sourceSummaryPath,
+        outputRoot: path.join(root, "rejudged"),
+        apiKey: "test-key",
+        baseUrl: "https://provider.example/v1",
+        judgeModel: "new/judge",
+        judgeRunner: vi.fn(),
+      }),
+    ).rejects.toThrow("must contain exactly the requested widgets (build-health, queue-operations)");
   });
 });

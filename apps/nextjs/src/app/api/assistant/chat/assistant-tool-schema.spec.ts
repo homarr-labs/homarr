@@ -32,6 +32,28 @@ describe("getAssistantToolInputSchema", () => {
     expect(getAssistantToolInputSchema("board_getAllBoards", templateSchema)).toBe(templateSchema);
   });
 
+  test("keeps preview credentials out of the Assistant tool channel", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        definition: { type: "object" },
+        secrets: { type: "array", items: { type: "object" } },
+        definitionId: { type: "string" },
+      },
+      required: ["definition", "secrets"],
+      additionalProperties: false,
+    };
+
+    expect(getAssistantToolInputSchema("customWidget_previewCreate", schema)).toEqual({
+      ...schema,
+      properties: {
+        definition: { type: "object" },
+        definitionId: { type: "string" },
+      },
+      required: ["definition"],
+    });
+  });
+
   test("omits optional optimistic concurrency from the single-owner Assistant revision tool", () => {
     const schema = {
       ...templateSchema,

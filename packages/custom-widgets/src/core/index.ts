@@ -1,5 +1,6 @@
 export * from "./bundled-widgets";
 export * from "./assistant-authoring-phase";
+export * from "./assistant-execution-policy";
 export * from "./assistant-placement";
 export * from "./assistant-tool-input";
 export * from "./assistant-tool-step";

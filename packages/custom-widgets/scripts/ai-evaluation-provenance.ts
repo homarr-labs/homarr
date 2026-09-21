@@ -24,6 +24,7 @@ const evaluatorScriptUrls = [
 const evaluatorDependencyDirectoryUrls = [
   new URL("../src/core/", import.meta.url),
   new URL("../src/jsx/", import.meta.url),
+  new URL("../../api/src/router/custom-widget/", import.meta.url),
 ];
 
 const evaluatorExternalDependencyUrls = [
@@ -33,6 +34,19 @@ const evaluatorExternalDependencyUrls = [
   new URL("../../definitions/package.json", import.meta.url),
   new URL("../../../package.json", import.meta.url),
   new URL("../../../pnpm-lock.yaml", import.meta.url),
+  new URL("../../../apps/nextjs/src/app/api/assistant/chat/assistant-chat-input.ts", import.meta.url),
+  new URL("../../../apps/nextjs/src/app/api/assistant/chat/assistant-model-lookup.ts", import.meta.url),
+  new URL("../../../apps/nextjs/src/app/api/assistant/chat/assistant-openrouter.ts", import.meta.url),
+  new URL("../../../apps/nextjs/src/app/api/assistant/chat/assistant-provider-options.ts", import.meta.url),
+  new URL("../../../apps/nextjs/src/app/api/assistant/chat/assistant-reasoning.ts", import.meta.url),
+  new URL("../../../apps/nextjs/src/app/api/assistant/chat/assistant-tool-error.ts", import.meta.url),
+  new URL("../../../apps/nextjs/src/app/api/assistant/chat/assistant-tool-groups.ts", import.meta.url),
+  new URL("../../../apps/nextjs/src/app/api/assistant/chat/assistant-tool-input-repair.ts", import.meta.url),
+  new URL("../../../apps/nextjs/src/app/api/assistant/chat/assistant-tool-output.ts", import.meta.url),
+  new URL("../../../apps/nextjs/src/app/api/assistant/chat/assistant-tool-policy.ts", import.meta.url),
+  new URL("../../../apps/nextjs/src/app/api/assistant/chat/assistant-tool-schema.ts", import.meta.url),
+  new URL("../../../apps/nextjs/src/app/api/assistant/chat/custom-widget-authoring-context.ts", import.meta.url),
+  new URL("../../../apps/nextjs/src/app/api/assistant/chat/route.ts", import.meta.url),
 ];
 
 const collectDependencyUrls = async (directoryUrl: URL): Promise<URL[]> => {

@@ -9,6 +9,7 @@ import {
 describe("assistantExecutionPolicy", () => {
   test("allows a sizeable batch of tool calls to finish in one request", () => {
     expect(assistantExecutionPolicy.maxSteps).toBe(40);
+    expect(assistantExecutionPolicy.maxRetries).toBe(2);
     expect(assistantExecutionPolicy.maxOutputTokens).toBe(32_768);
     expect(assistantExecutionPolicy.totalTimeoutMs).toBeGreaterThan(assistantExecutionPolicy.stepTimeoutMs);
     expect(assistantExecutionPolicy.toolTimeoutMs).toBeGreaterThanOrEqual(60_000);
@@ -56,5 +57,7 @@ test("makes the current authoring phase explicit without repeating inactive tool
 
   expect(instructions).toContain("lifecycle tool");
   expect(instructions).toContain("customWidget_previewCreate");
+  expect(instructions).toContain("Provider server tools such as web_search");
+  expect(instructions).toContain("unlisted function tool");
   expect(instructions).not.toContain("customWidget_getComponents");
 });

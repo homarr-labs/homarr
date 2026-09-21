@@ -256,6 +256,11 @@ func TestProviderEnvironment(t *testing.T) {
 }
 
 func TestProviderUsesConfiguredDefaultModel(t *testing.T) {
+	const releaseV2DefaultModelID = "~deepseek/deepseek-v4-flash-latest"
+	if defaultOpenRouterModelID != releaseV2DefaultModelID {
+		t.Fatalf("expected release/v2 default model %q, got %q", releaseV2DefaultModelID, defaultOpenRouterModelID)
+	}
+
 	t.Setenv("OPENROUTER_API_KEY", "test-key")
 	t.Setenv("HOMARR_AI_OPENROUTER_BASE_URL", "https://router.example/v1")
 	t.Setenv("HOMARR_AI_OPENROUTER_MODEL", "")

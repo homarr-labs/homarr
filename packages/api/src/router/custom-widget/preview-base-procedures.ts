@@ -12,10 +12,11 @@ import {
   customWidgetTemplateLinesSchema,
   getCustomWidgetConfirmation,
   getCustomWidgetDefaultOptions,
+  isCustomWidgetSourceUrlPlaceholder,
   normalizeCustomWidgetAuthoringDefinition,
   validateCustomWidgetOptions,
 } from "@homarr/custom-widgets/core";
-import type { CustomJsxRequest } from "@homarr/custom-widgets/core";
+import type { CustomJsxRequest, CustomWidgetSource } from "@homarr/custom-widgets/core";
 import { eq } from "@homarr/db";
 import { customWidgetDefinitions } from "@homarr/db/schema";
 
@@ -80,6 +81,32 @@ const getPreviewEvidenceChecklist = (requests: Record<string, CustomJsxRequest>,
     ];
   }),
 });
+
+const getRequiredSourceConfigurations = (
+  sources: Record<string, CustomWidgetSource>,
+  requests: Record<string, CustomJsxRequest>,
+  secrets: readonly { sourceId: string; kind: string }[],
+  sessionId: string,
+) =>
+  Object.entries(sources).flatMap(([sourceId, source]) => {
+    if (source.type === "integration") return [];
+    const sourceRequests = Object.values(requests).filter((request) => request.source === sourceId);
+    if (sourceRequests.length === 0) return [];
+    const configuredSecretKinds = new Set(
+      secrets.flatMap((secret) => (secret.sourceId === sourceId ? [secret.kind] : [])),
+    );
+    const sourceRequiresCredentials = sourceRequests.some((request) => request.auth !== "none");
+    const isMissingCredential =
+      sourceRequiresCredentials &&
+      requiredSecretKinds(getCustomWidgetSourceAuthType(source)).some((kind) => !configuredSecretKinds.has(kind));
+    if (!isCustomWidgetSourceUrlPlaceholder(source.baseUrl) && !isMissingCredential) return [];
+    return [
+      {
+        sourceId,
+        nextStep: `Call customWidget_configurationRequestUser with previewSessionId '${sessionId}' and sourceId '${sourceId}' before testing preview requests.`,
+      },
+    ];
+  });
 
 const previewCreateProcedure = permissionRequiredProcedure
   .requiresPermission("admin")
@@ -181,10 +208,21 @@ const previewCreateProcedure = permissionRequiredProcedure
     const previewPath = `/manage/custom-widgets/preview/${previewSession.id}`;
     return {
       success: true as const,
-      previewSession,
+      previewSession: {
+        id: previewSession.id,
+        revision: previewSession.revision,
+        expiresAt: previewSession.expiresAt,
+        liveActions: previewSession.liveActions,
+      },
       previewPath,
       previewUrl: new URL(previewPath, ctx.baseUrl ?? "http://localhost").toString(),
       persistenceTool,
+      sourceConfigurations: getRequiredSourceConfigurations(
+        definition.sources,
+        definition.requests,
+        secrets,
+        previewSession.id,
+      ),
       ...getPreviewEvidenceChecklist(definition.requests, previewSession.id),
     };
   });

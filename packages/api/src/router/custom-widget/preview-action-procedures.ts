@@ -4,6 +4,7 @@ import { z } from "zod/v4";
 import { permissionRequiredProcedure } from "../../trpc";
 import {
   getPreviewRequestSource,
+  getPreviewRequestSourceConfigurationFailure,
   previewSessionRequestSchema,
   recordPreviewJournal,
 } from "./preview-procedure-helpers";
@@ -29,6 +30,8 @@ export const previewActionProcedures = {
       if (definition?.kind !== "action")
         throw new TRPCError({ code: "NOT_FOUND", message: "Preview action was not found" });
       const request = { id: input.requestId, ...definition };
+      const sourceConfigurationFailure = getPreviewRequestSourceConfigurationFailure(session, request);
+      if (sourceConfigurationFailure) return { ...sourceConfigurationFailure, simulated: false as const };
       const params = resolveCustomWidgetRequestValues(request, session.options, input.params);
       const body = renderRequestBody(request, params);
       if (!session.liveActions) {
@@ -47,6 +50,7 @@ export const previewActionProcedures = {
         return {
           sessionId: session.id,
           requestId: request.id,
+          sourceId: request.source,
           ok: true,
           status: 0,
           statusText: "Simulated",
@@ -94,6 +98,7 @@ export const previewActionProcedures = {
         return {
           sessionId: session.id,
           requestId: request.id,
+          sourceId: request.source,
           ok: response.ok,
           status: response.status,
           statusText: response.statusText,

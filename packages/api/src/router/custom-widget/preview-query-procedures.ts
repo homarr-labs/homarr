@@ -4,6 +4,7 @@ import { z } from "zod/v4";
 import { permissionRequiredProcedure } from "../../trpc";
 import {
   getPreviewRequestSource,
+  getPreviewRequestSourceConfigurationFailure,
   previewSessionRequestSchema,
   recordPreviewJournal,
   resolvePreviewRequestParams,
@@ -38,6 +39,8 @@ export const previewQueryProcedures = {
       if (definition?.kind !== "query")
         throw new TRPCError({ code: "NOT_FOUND", message: "Preview query was not found" });
       const request = { id: input.requestId, ...definition };
+      const sourceConfigurationFailure = getPreviewRequestSourceConfigurationFailure(session, request);
+      if (sourceConfigurationFailure) return sourceConfigurationFailure;
       const params = resolvePreviewRequestParams(request, session.options, input.params);
       const body = renderRequestBody(request, params);
       const release = await acquireCustomWidgetRequestLimit({
@@ -74,6 +77,7 @@ export const previewQueryProcedures = {
         return {
           sessionId: session.id,
           requestId: request.id,
+          sourceId: request.source,
           ok: response.ok,
           status: response.status,
           statusText: response.statusText,

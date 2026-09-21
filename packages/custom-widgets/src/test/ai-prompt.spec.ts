@@ -114,7 +114,7 @@ describe("AI prompt", () => {
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY.length).toBeLessThan(8_000);
     expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT.length).toBeLessThan(8_500);
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Call customWidget_getSkill once");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Make one tool call per step");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Make lifecycle/mutation calls one per step");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Load required references and uncertain components");
     expect(CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION).toContain("staged by the authoring lifecycle");
     expect(CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION).toContain("task-needed");
@@ -131,6 +131,19 @@ describe("AI prompt", () => {
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("customWidget_validateTemplate");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("customWidget_createFromPreview");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("customWidget_updateFromPreview");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("customWidget_list once");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("id as definitionId");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("multiple matches remain");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("never pick the first");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("every returned simulated action");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("customWidget_configurationRequestUser");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("preview query or action");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("https://your-service.example.com");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("sourceConfigurations");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("before any preview query or action");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Never request, accept, or send secrets in chat/tool inputs");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("report exact completed and unstarted names");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Never claim omitted work");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("data.q === B");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Keep requests/nullable siblings independent");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("SubFetch owns those states");
@@ -167,6 +180,22 @@ describe("AI prompt", () => {
     const prompt = buildCustomWidgetAiPrompt(undefined, JSON.stringify({ data: "x".repeat(20_000) }), null, "Build it");
     expect(prompt).toContain('"data": "');
     expect(prompt.endsWith(CUSTOM_WIDGET_FINAL_OUTPUT_INSTRUCTION)).toBe(true);
+    expect(prompt.length).toBeLessThanOrEqual(12_000);
+  });
+
+  it("keeps the compact create-quality invariant when optional Assistant context consumes the prompt budget", () => {
+    const prompt = buildCustomWidgetAssistantPrompt(
+      undefined,
+      JSON.stringify({ data: "x".repeat(20_000) }),
+      { template: "<Stack>".padEnd(20_000, "x") },
+      `Create a service dashboard ${"x".repeat(4_000)}`,
+      "https://example.test/docs",
+      [{ section: "template", severity: "error", message: "x".repeat(4_000) }],
+    );
+
+    expect(prompt).toContain("purposeful responsive hierarchy");
+    expect(prompt).toContain("initial, loading, empty, error, and success states");
+    expect(prompt).toContain("never substitute filler JSX or a bare data dump");
     expect(prompt.length).toBeLessThanOrEqual(12_000);
   });
 

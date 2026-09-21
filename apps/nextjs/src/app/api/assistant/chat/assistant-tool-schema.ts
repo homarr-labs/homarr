@@ -4,16 +4,24 @@ import { z } from "zod/v4";
 import { isRecord } from "@homarr/common";
 
 const compactTemplateToolNames = new Set(["customWidget_validateTemplate", "customWidget_previewReviseTemplate"]);
+const hiddenAssistantToolInputProperties: Readonly<Record<string, ReadonlySet<string>>> = {
+  customWidget_previewCreate: new Set(["secrets"]),
+};
 
 const asRecord = (value: unknown): Record<string, unknown> | null => (isRecord(value) ? value : null);
 
 export const getAssistantToolInputSchema = (toolName: string, inputSchema: Record<string, unknown>) => {
-  if (!compactTemplateToolNames.has(toolName)) return inputSchema;
   const properties = asRecord(inputSchema.properties);
-  if (!properties?.templateLines) return inputSchema;
+  if (!properties) return inputSchema;
 
-  const omittedProperties = new Set(["template"]);
-  if (toolName === "customWidget_previewReviseTemplate") omittedProperties.add("expectedRevision");
+  const omittedProperties = new Set(
+    [...(hiddenAssistantToolInputProperties[toolName] ?? [])].filter((name) => name in properties),
+  );
+  if (compactTemplateToolNames.has(toolName) && properties.templateLines) {
+    omittedProperties.add("template");
+    if (toolName === "customWidget_previewReviseTemplate") omittedProperties.add("expectedRevision");
+  }
+  if (omittedProperties.size === 0) return inputSchema;
 
   const required = Array.isArray(inputSchema.required)
     ? inputSchema.required.filter((name): name is string => typeof name === "string" && !omittedProperties.has(name))
@@ -21,7 +29,7 @@ export const getAssistantToolInputSchema = (toolName: string, inputSchema: Recor
   return {
     ...inputSchema,
     properties: Object.fromEntries(Object.entries(properties).filter(([name]) => !omittedProperties.has(name))),
-    required: [...new Set([...required, "templateLines"])],
+    required: compactTemplateToolNames.has(toolName) ? [...new Set([...required, "templateLines"])] : required,
   };
 };
 

@@ -5,12 +5,15 @@ import { CUSTOM_WIDGET_ASSISTANT_POLICY, CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION 
 import { getCustomWidgetAiEvaluationSuite, resolveCustomWidgetAiEvaluationSuiteId } from "./ai-evaluation-suites";
 import {
   assistantEvaluationProviderPreferences,
-  assistantEvaluationReasoningOptions,
   assistantEvaluationTemperature,
   createAssistantEvaluationCaseSnapshot,
   createAssistantEvaluationPromptSnapshot,
   evaluateCustomWidgetAssistantCase,
   getAssistantEvaluationMaxOutputTokens,
+  getAssistantEvaluationPromotionEligibility,
+  getAssistantEvaluationReasoningOptions,
+  getAssistantEvaluationStepTimeoutMs,
+  getRequiredAssistantEvaluationReasoningEffort,
   resolveAssistantEvaluationMaxLoops,
   validateAssistantEvaluationExperimentConfiguration,
 } from "./ai-assistant-evaluation";
@@ -19,6 +22,7 @@ import { createAssistantPromptBundleSnapshot, parseAssistantPromptBundle } from 
 import type { AssistantPromptBundleFile } from "./assistant-prompt-bundle";
 import {
   aiEvaluationSpendBudget,
+  assertLiveAiEvaluationSpendCap,
   evaluateCustomWidgetCase,
   getAiEvaluationMaxOutputTokens,
   getAiEvaluationConcurrency,
@@ -37,6 +41,7 @@ const {
   judgeModel,
   generatorTemperature,
 } = resolveAiEvaluationProviderConfig(process.env);
+assertLiveAiEvaluationSpendCap(aiEvaluationSpendBudget, providerBaseUrl);
 
 const requestedCaseArgument = process.argv.find((value) => value.startsWith("--case="))?.slice("--case=".length);
 const suiteArgument = process.argv.find((value) => value.startsWith("--suite="))?.slice("--suite=".length);
@@ -59,6 +64,7 @@ const concurrencyArgument = process.argv
   .find((value) => value.startsWith("--concurrency="))
   ?.slice("--concurrency=".length);
 const assistantMode = process.argv.includes("--assistant");
+const ciMode = process.argv.includes("--ci");
 if (requestedCaseArgument === "") throw new Error("--case requires a case ID");
 const selectedSuiteId = resolveCustomWidgetAiEvaluationSuiteId(suiteArgument ?? process.env.CUSTOM_WIDGET_AI_SUITE);
 const evaluationCases = getCustomWidgetAiEvaluationSuite(selectedSuiteId);
@@ -83,14 +89,24 @@ if (outputRootArgument === "") throw new Error("--output-root requires a directo
 if (experimentId === "") throw new Error("--experiment requires an identifier");
 if (generationId === "") throw new Error("--generation requires an identifier");
 if (concurrencyArgument === "") throw new Error("--concurrency requires an integer");
+if (ciMode && maxLoopsArgument !== undefined && maxLoopsArgument !== "1") {
+  throw new Error("--ci requires --max-loops=1");
+}
 
 const maxLoopsConfiguration = resolveAssistantEvaluationMaxLoops(
-  maxLoopsArgument,
+  maxLoopsArgument ?? (ciMode ? "1" : undefined),
   process.env.CUSTOM_WIDGET_AI_MAX_LOOPS,
 );
 const maxLoops = maxLoopsConfiguration.value;
 const concurrency = getAiEvaluationConcurrency(concurrencyArgument ?? process.env.CUSTOM_WIDGET_AI_CONCURRENCY);
-const requestTimeoutMs = getAiEvaluationRequestTimeoutMs(process.env.CUSTOM_WIDGET_AI_REQUEST_TIMEOUT_MS);
+const requestTimeoutMs = assistantMode
+  ? getAssistantEvaluationStepTimeoutMs(process.env.CUSTOM_WIDGET_AI_REQUEST_TIMEOUT_MS, Number.MAX_SAFE_INTEGER)
+  : getAiEvaluationRequestTimeoutMs(process.env.CUSTOM_WIDGET_AI_REQUEST_TIMEOUT_MS);
+const assistantMaxOutputTokens = getAssistantEvaluationMaxOutputTokens(process.env.CUSTOM_WIDGET_AI_MAX_OUTPUT_TOKENS);
+const assistantReasoningOptions = getAssistantEvaluationReasoningOptions(
+  process.env.CUSTOM_WIDGET_AI_REASONING_EFFORT,
+  generatorModel,
+);
 validateAssistantEvaluationExperimentConfiguration(
   maxLoops,
   experimentId,
@@ -168,6 +184,23 @@ let selectedSplit: (typeof evaluationSplits)[number] | "all" = "all";
 if (requestedSplit) selectedSplit = requestedSplit;
 if (requestedCaseArgument && selectedCases[0]) selectedSplit = selectedCases[0].split;
 
+const promotionEligibility = getAssistantEvaluationPromotionEligibility({
+  assistantMode,
+  requestedCase: requestedCaseArgument,
+  requestedSplit,
+  experimentId,
+  generationId,
+  maxLoops,
+  selectedCaseIds: selectedCases.map(({ id }) => id),
+  expectedCaseIds:
+    requestedSplit === undefined
+      ? []
+      : selectableCases.filter((testCase) => testCase.split === requestedSplit).map(({ id }) => id),
+  generatorModel,
+  reasoningEffort: assistantReasoningOptions.effort,
+  maxOutputTokens: assistantMaxOutputTokens,
+});
+
 const runId = new Date().toISOString().replaceAll(/[:.]/gu, "-");
 const outputRoot = outputRootArgument
   ? path.resolve(process.cwd(), outputRootArgument)
@@ -227,16 +260,18 @@ const summary = {
     runId,
     experimentId: experimentId ?? null,
     generationId: generationId ?? null,
+    ci: ciMode,
     maxLoops,
     concurrency,
     requestTimeoutMs,
     maxLoopsConfiguration,
     model: generatorModel,
     temperature: assistantMode ? assistantEvaluationTemperature : generatorTemperature,
-    reasoning: assistantMode ? assistantEvaluationReasoningOptions : null,
+    reasoning: assistantMode ? assistantReasoningOptions : null,
+    requiredReasoningEffort: assistantMode ? getRequiredAssistantEvaluationReasoningEffort(generatorModel) : null,
     providerPreferences: assistantMode ? (assistantEvaluationProviderPreferences ?? null) : null,
     maxOutputTokens: assistantMode
-      ? getAssistantEvaluationMaxOutputTokens(process.env.CUSTOM_WIDGET_AI_MAX_OUTPUT_TOKENS)
+      ? assistantMaxOutputTokens
       : getAiEvaluationMaxOutputTokens("generation", process.env.CUSTOM_WIDGET_AI_GENERATION_MAX_OUTPUT_TOKENS),
     judgeMaxOutputTokens: getAiEvaluationMaxOutputTokens("judge", process.env.CUSTOM_WIDGET_AI_JUDGE_MAX_OUTPUT_TOKENS),
   },
@@ -251,12 +286,15 @@ const summary = {
   benchmark: {
     suite: selectedSuiteId,
     split: selectedSplit,
+    promotionEligible: promotionEligibility.eligible,
+    promotionIneligibilityReasons: promotionEligibility.reasons,
     ...caseSnapshot,
   },
   ...(assistantMode ? {} : { generatorTemperature }),
   results: results.map((result) => ({
     caseId: result.caseId,
     attempts: result.attempts,
+    selectedAttempt: "selectedAttempt" in result ? result.selectedAttempt : result.attempts,
     score: getResultScoreFloor(result),
     verdict: result.judge?.verdict ?? "fail",
     categories: result.judge?.categories ?? null,
@@ -265,6 +303,7 @@ const summary = {
     widgets: "widgets" in result ? result.widgets.length : 1,
     widgetScores: "judges" in result ? result.judges.map((judge) => judge.total) : undefined,
     efficiency: "efficiency" in result ? result.efficiency : undefined,
+    cumulativeEfficiency: "cumulativeEfficiency" in result ? result.cumulativeEfficiency : undefined,
     outputDirectory: path.relative(process.cwd(), result.outputDirectory),
   })),
 };

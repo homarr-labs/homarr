@@ -16,7 +16,7 @@ const isExclusiveCustomWidgetToolName = (toolName: string) =>
   isCustomWidgetToolName(toolName) && !parallelSafeCustomWidgetToolNames.has(toolName);
 
 export const appendActiveCustomWidgetToolInstruction = (instructions: string, activeToolNames: readonly string[]) =>
-  `${instructions}\n\nCurrent authoring step (authoritative), active tools: [${activeToolNames.join(", ")}]. Independent read-only discovery/reference tools may run together. A lifecycle tool (validation, preview, evidence, revision, or persistence) must be the only call in its step; every unlisted tool fails.`;
+  `${instructions}\n\nCurrent authoring step (authoritative), active function tools: [${activeToolNames.join(", ")}]. Provider server tools such as web_search can also be available even when absent from this function-tool list. Independent read-only discovery/reference tools may run together. A lifecycle tool (validation, preview, source configuration, evidence, revision, or persistence) must be the only function call in its step; every unlisted function tool fails.`;
 
 export const createCustomWidgetToolStepGate = () => {
   let currentStep: number | null = null;

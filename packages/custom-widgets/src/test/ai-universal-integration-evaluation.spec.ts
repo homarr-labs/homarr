@@ -60,6 +60,17 @@ describe("universal Custom Widget integration benchmark", () => {
     }
   });
 
+  it("requires every reusable integration case to bind and render verified response semantics", () => {
+    for (const testCase of CUSTOM_WIDGET_AI_UNIVERSAL_INTEGRATION_EVALUATION_CASES) {
+      const request = testCase.expectations?.requests[0];
+      expect(request?.requiresResponseBinding, `${testCase.id} does not bind its response`).toBe(true);
+      expect(
+        Boolean(request?.requiredResponsePaths?.length) || Boolean(request?.requiredResponseMemberPaths?.length),
+        `${testCase.id} has no verified response paths or members`,
+      ).toBe(true);
+    }
+  });
+
   it("simulates the complete production kind catalog instead of revealing only the answer", () => {
     const testCase = CUSTOM_WIDGET_AI_UNIVERSAL_INTEGRATION_EVALUATION_CASES.find(
       ({ id }) => id === "universal-mealie",

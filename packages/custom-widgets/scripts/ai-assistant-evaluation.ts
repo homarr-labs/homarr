@@ -25,6 +25,8 @@ import {
   normalizeCustomJsxAuthoringTemplate,
   normalizeCustomWidgetAuthoringDefinition,
 } from "../src/core/custom-jsx-schema";
+import { getCustomWidgetSourceAuthType } from "../src/core/request-schema";
+import { isCustomWidgetSourceUrlPlaceholder } from "../src/core/source-setup";
 import { normalizeCustomWidgetLifecycleToolInput } from "../src/core/assistant-tool-input";
 import { createCustomWidgetTemplateLifecycleController } from "../src/core/assistant-template-lifecycle";
 import {
@@ -32,6 +34,7 @@ import {
   isRecoverableCustomWidgetAuthoringFailure,
   isSuccessfulCustomWidgetAuthoringAdvance,
 } from "../src/core/assistant-authoring-phase";
+import { assistantExecutionPolicy } from "../src/core/assistant-execution-policy";
 import {
   appendActiveCustomWidgetToolInstruction,
   selectSequentialCustomWidgetToolCalls,
@@ -44,6 +47,7 @@ import { addCustomJsxDiagnosticSourceExcerpts, validateCustomJsxTemplate } from 
 import type { CustomWidgetAiEvaluationCase, CustomWidgetAiPlacementFixture } from "./ai-evaluation-cases";
 import {
   aiEvaluationSpendBudget,
+  assertLiveAiEvaluationSpendCap,
   DEFAULT_GENERATOR_MODEL,
   getAiEvaluationRequestTimeoutMs,
   getAiProviderChatCompletionsUrl,
@@ -55,27 +59,40 @@ import {
 } from "./ai-evaluation";
 import type { CustomWidgetJudgeResult } from "./ai-evaluation";
 
-const MAX_ASSISTANT_STEPS = 40;
 const defaultAssistantEvaluationMaxLoops = 10;
-const defaultAssistantEvaluationMaxOutputTokens = 32_768;
+const defaultAssistantEvaluationMaxOutputTokens = assistantExecutionPolicy.maxOutputTokens;
 export const assistantEvaluationToolRequestOptions = {
   tool_choice: "auto",
   parallel_tool_calls: false,
 } as const;
 const assistantReasoningEfforts = ["low", "medium", "high", "xhigh", "max"] as const;
+export type AssistantEvaluationReasoningEffort = (typeof assistantReasoningEfforts)[number];
 
-export function getAssistantEvaluationReasoningOptions(configuredValue: string | undefined) {
+export function getRequiredAssistantEvaluationReasoningEffort(model: string) {
+  if (model.trim().toLowerCase().includes("gpt-5.6-luna")) return "high" as const;
+  return "max" as const;
+}
+
+export function getAssistantEvaluationReasoningOptions(
+  configuredValue: string | undefined,
+  model = DEFAULT_GENERATOR_MODEL,
+) {
   const normalized = configuredValue?.trim().toLowerCase();
-  const effort = assistantReasoningEfforts.find((candidate) => candidate === normalized) ?? "medium";
+  if (normalized && !assistantReasoningEfforts.includes(normalized as AssistantEvaluationReasoningEffort)) {
+    throw new Error(`CUSTOM_WIDGET_AI_REASONING_EFFORT must be one of: ${assistantReasoningEfforts.join(", ")}`);
+  }
+  const effort = normalized
+    ? (normalized as AssistantEvaluationReasoningEffort)
+    : getRequiredAssistantEvaluationReasoningEffort(model);
   return { effort, exclude: true } as const;
 }
 
 export function getAssistantEvaluationProviderPreferences(environment: Record<string, string | undefined>) {
   const order = environment.CUSTOM_WIDGET_AI_PROVIDER_ORDER?.split(",")
-    .map((provider) => provider.trim())
+    .map((provider) => provider.trim().toLowerCase())
     .filter(Boolean);
   const quantizations = environment.CUSTOM_WIDGET_AI_PROVIDER_QUANTIZATIONS?.split(",")
-    .map((quantization) => quantization.trim())
+    .map((quantization) => quantization.trim().toLowerCase())
     .filter(Boolean);
   if (!order?.length && !quantizations?.length) return undefined;
   return {
@@ -86,6 +103,7 @@ export function getAssistantEvaluationProviderPreferences(environment: Record<st
 
 export const assistantEvaluationReasoningOptions = getAssistantEvaluationReasoningOptions(
   process.env.CUSTOM_WIDGET_AI_REASONING_EFFORT,
+  process.env.AI_PROVIDER_MODEL?.trim() || process.env.OPENROUTER_GENERATOR_MODEL?.trim() || DEFAULT_GENERATOR_MODEL,
 );
 export const assistantEvaluationProviderPreferences = getAssistantEvaluationProviderPreferences(process.env);
 export const assistantEvaluationTemperature = 0.2;
@@ -131,12 +149,55 @@ export function validateAssistantEvaluationExperimentConfiguration(
   }
 }
 
+export function getAssistantEvaluationPromotionEligibility(args: {
+  assistantMode: boolean;
+  requestedCase: string | undefined;
+  requestedSplit: string | undefined;
+  experimentId: string | undefined;
+  generationId: string | undefined;
+  maxLoops: number;
+  selectedCaseIds: readonly string[];
+  expectedCaseIds: readonly string[];
+  generatorModel: string;
+  reasoningEffort: AssistantEvaluationReasoningEffort;
+  maxOutputTokens: number;
+}) {
+  const requiredReasoningEffort = getRequiredAssistantEvaluationReasoningEffort(args.generatorModel);
+  const reasons = [
+    ...(!args.assistantMode ? ["promotion requires --assistant"] : []),
+    ...(args.requestedCase ? ["single-case exploratory runs are not eligible for promotion"] : []),
+    ...(args.requestedSplit === undefined ? ["promotion requires an explicit --split"] : []),
+    ...(args.requestedSplit === "train" ? ["train split runs are not eligible for promotion"] : []),
+    ...(args.experimentId === undefined ? ["promotion requires --experiment"] : []),
+    ...(args.generationId === undefined ? ["promotion requires --generation"] : []),
+    ...(args.maxLoops !== 1 ? ["promotion requires --max-loops=1"] : []),
+    ...(args.reasoningEffort !== requiredReasoningEffort
+      ? [`promotion requires ${requiredReasoningEffort} reasoning for generator model '${args.generatorModel}'`]
+      : []),
+    ...(args.maxOutputTokens !== assistantExecutionPolicy.maxOutputTokens
+      ? [`promotion requires the production maxOutputTokens=${assistantExecutionPolicy.maxOutputTokens}`]
+      : []),
+    ...(args.selectedCaseIds.join("\n") !== args.expectedCaseIds.join("\n")
+      ? ["selected cases do not cover the complete requested split"]
+      : []),
+  ];
+  return { eligible: reasons.length === 0, reasons };
+}
+
 export function getAssistantEvaluationMaxOutputTokens(configuredValue: string | undefined) {
   if (configuredValue === undefined) return defaultAssistantEvaluationMaxOutputTokens;
   const configured = Number(configuredValue);
   if (!Number.isInteger(configured) || configured <= 0) return defaultAssistantEvaluationMaxOutputTokens;
   return Math.min(defaultAssistantEvaluationMaxOutputTokens, Math.max(4_096, configured));
 }
+
+export function getAssistantEvaluationStepTimeoutMs(configuredValue: string | undefined, remainingTotalMs: number) {
+  const configuredTimeoutMs = getAiEvaluationRequestTimeoutMs(configuredValue);
+  return Math.max(1, Math.min(configuredTimeoutMs, assistantExecutionPolicy.stepTimeoutMs, remainingTotalMs));
+}
+
+export const isAssistantEvaluationRetryableStatus = (status: number) =>
+  status === 408 || status === 409 || status === 429 || status >= 500;
 
 interface OpenRouterToolCall {
   id: string;
@@ -245,6 +306,8 @@ interface PreviewState {
   revision: number;
   testedQueries: Set<string>;
   testedActions: Set<string>;
+  configuredSourceIds: Set<string>;
+  configuredSourceHttpStatuses: Map<string, number>;
   journal: Array<{
     requestId: string;
     kind: "query" | "action";
@@ -253,6 +316,18 @@ interface PreviewState {
     status: number | null;
     simulated: boolean;
   }>;
+}
+
+export interface AssistantEvaluationCredentialRequest {
+  id: string;
+  sessionId: string;
+  sourceId: string;
+  status: "pending" | "completed" | "expired";
+  checkedCompleted: boolean;
+  configuredSource?: {
+    baseUrl: string;
+    networkScope: "public" | "private" | "loopback";
+  };
 }
 
 const getAssistantEvaluationPersistenceTool = (preview: Pick<PreviewState, "definitionId">) => {
@@ -309,11 +384,18 @@ export interface AssistantAttemptState {
   validatedTemplates: Set<string>;
   templateLifecycle: ReturnType<typeof createCustomWidgetTemplateLifecycleController>;
   previews: Map<string, PreviewState>;
+  credentialRequests: Map<string, AssistantEvaluationCredentialRequest>;
+  syntheticCredentialContinues: number;
   completedPreviewSignatures: Set<string>;
   createdPreviewIds: Set<string>;
   createdWidgets: HomarrCustomWidgetV2[];
   modelInputTokens: number;
   modelOutputTokens: number;
+  modelReportedCostUsd: number;
+  modelAccountedCostUsd: number;
+  modelCostExact: boolean;
+  elapsedMs: number;
+  toolStepNarrations: string[];
   finalText: string;
   failure: string | null;
   retryFeedback: string[];
@@ -322,6 +404,7 @@ export interface AssistantAttemptState {
 export interface CustomWidgetAssistantEvaluationResult {
   caseId: string;
   attempts: number;
+  selectedAttempt: number | null;
   widget: HomarrCustomWidgetV2 | null;
   judge: CustomWidgetJudgeResult | null;
   outputDirectory: string;
@@ -335,6 +418,21 @@ export interface CustomWidgetAssistantEvaluationResult {
     toolOutputCharacters: number;
     modelInputTokens: number;
     modelOutputTokens: number;
+    modelCostUsd: number | null;
+    modelAccountedCostUsd: number;
+    modelCostExact: boolean;
+    elapsedMs: number;
+  };
+  cumulativeEfficiency: {
+    toolCalls: number;
+    toolInputCharacters: number;
+    toolOutputCharacters: number;
+    modelInputTokens: number;
+    modelOutputTokens: number;
+    modelCostUsd: number | null;
+    modelAccountedCostUsd: number;
+    modelCostExact: boolean;
+    elapsedMs: number;
   };
 }
 
@@ -435,8 +533,8 @@ export const customWidgetAssistantEvaluationToolDefinitions: ToolDefinition[] = 
         "Find a small release-matched component subset by name or capability. Prefer this over the complete catalog when the intended UI is known.",
       parameters: objectSchema(
         {
-          query: { type: "string", minLength: 2, maxLength: 240 },
-          limit: { type: "number", minimum: 1, maximum: 16 },
+          query: { type: "string" },
+          limit: { type: "integer", minimum: 1, maximum: 16, default: 16 },
         },
         ["query"],
       ),
@@ -488,7 +586,14 @@ export const customWidgetAssistantEvaluationToolDefinitions: ToolDefinition[] = 
       description:
         "Validate JSX without resending the manifest. Pass templateLines only and reuse those exact lines in the preview definition.",
       parameters: objectSchema(
-        { templateLines: { type: "array", items: { type: "string" }, minItems: 1, maxItems: 2_000 } },
+        {
+          templateLines: {
+            type: "array",
+            items: { type: "string", maxLength: 10_000 },
+            minItems: 1,
+            maxItems: 2_000,
+          },
+        },
         ["templateLines"],
       ),
     },
@@ -502,8 +607,8 @@ export const customWidgetAssistantEvaluationToolDefinitions: ToolDefinition[] = 
       parameters: objectSchema(
         {
           definition: z.toJSONSchema(customWidgetAuthoringDefinitionSchema, { io: "input" }),
-          secrets: { type: "array", items: { type: "object" }, maxItems: 0 },
           definitionId: { type: "string" },
+          options: { type: "object", propertyNames: { type: "string" }, additionalProperties: {} },
         },
         ["definition"],
       ),
@@ -517,8 +622,13 @@ export const customWidgetAssistantEvaluationToolDefinitions: ToolDefinition[] = 
         "Replace only the validated JSX template in an existing preview after inspecting response evidence. Inherits the manifest, resets evidence, and avoids resending sources, requests, and options.",
       parameters: objectSchema(
         {
-          sessionId: { type: "string" },
-          templateLines: { type: "array", items: { type: "string" }, minItems: 1, maxItems: 2_000 },
+          sessionId: { type: "string", minLength: 1 },
+          templateLines: {
+            type: "array",
+            items: { type: "string", maxLength: 10_000 },
+            minItems: 1,
+            maxItems: 2_000,
+          },
         },
         ["sessionId", "templateLines"],
       ),
@@ -532,9 +642,16 @@ export const customWidgetAssistantEvaluationToolDefinitions: ToolDefinition[] = 
         "Simulate one action returned by previewCreate.actions with representative parameters. Verify its confirmation, permission, and invalidation metadata.",
       parameters: objectSchema(
         {
-          sessionId: { type: "string" },
-          requestId: { type: "string" },
-          params: { type: "object", additionalProperties: true },
+          sessionId: { type: "string", minLength: 1 },
+          requestId: { type: "string", minLength: 1, maxLength: 64 },
+          params: {
+            type: "object",
+            propertyNames: { type: "string" },
+            additionalProperties: {
+              anyOf: [{ type: "string" }, { type: "number" }, { type: "boolean" }],
+            },
+            default: {},
+          },
           confirmed: { type: "boolean" },
         },
         ["sessionId", "requestId"],
@@ -546,7 +663,7 @@ export const customWidgetAssistantEvaluationToolDefinitions: ToolDefinition[] = 
     function: {
       name: "customWidget_previewJournal",
       description: "Read the redacted preview request journal when query or action routing needs inspection.",
-      parameters: objectSchema({ sessionId: { type: "string" } }, ["sessionId"]),
+      parameters: objectSchema({ sessionId: { type: "string", minLength: 1 } }, ["sessionId"]),
     },
   },
   {
@@ -557,9 +674,16 @@ export const customWidgetAssistantEvaluationToolDefinitions: ToolDefinition[] = 
         "Execute one query from a preview against the evaluation fixture. Call once for every query returned by previewCreate.",
       parameters: objectSchema(
         {
-          sessionId: { type: "string" },
-          requestId: { type: "string" },
-          params: { type: "object", additionalProperties: true },
+          sessionId: { type: "string", minLength: 1 },
+          requestId: { type: "string", minLength: 1, maxLength: 64 },
+          params: {
+            type: "object",
+            propertyNames: { type: "string" },
+            additionalProperties: {
+              anyOf: [{ type: "string" }, { type: "number" }, { type: "boolean" }],
+            },
+            default: {},
+          },
         },
         ["sessionId", "requestId"],
       ),
@@ -568,10 +692,24 @@ export const customWidgetAssistantEvaluationToolDefinitions: ToolDefinition[] = 
   {
     type: "function",
     function: {
+      name: "customWidget_configurationRequestUser",
+      description:
+        "Create or check a secure source-configuration request. Complete every sourceConfigurations item before preview evidence. If a previously configured source later fails authentication, request fresh setup for its exact previewSessionId and sourceId. Pause for the user, then check the same requestId on Continue.",
+      parameters: objectSchema({
+        definitionId: { type: "string" },
+        requestId: { type: "string" },
+        previewSessionId: { type: "string" },
+        sourceId: { type: "string" },
+      }),
+    },
+  },
+  {
+    type: "function",
+    function: {
       name: "customWidget_createFromPreview",
       description: "Persist the exact final tested preview. Every query in that preview must have succeeded first.",
       parameters: objectSchema(
-        { previewSessionId: { type: "string" }, targetBoardId: { type: "string", minLength: 1 } },
+        { previewSessionId: { type: "string", minLength: 1 }, targetBoardId: { type: "string", minLength: 1 } },
         ["previewSessionId"],
       ),
     },
@@ -582,7 +720,7 @@ export const customWidgetAssistantEvaluationToolDefinitions: ToolDefinition[] = 
       name: "customWidget_updateFromPreview",
       description:
         "Update the existing Custom Widget associated with an exact final tested edit preview. Every query in that preview must have succeeded first.",
-      parameters: objectSchema({ previewSessionId: { type: "string" } }, ["previewSessionId"]),
+      parameters: objectSchema({ previewSessionId: { type: "string", minLength: 1 } }, ["previewSessionId"]),
     },
   },
   {
@@ -605,12 +743,7 @@ export const customWidgetAssistantEvaluationToolDefinitions: ToolDefinition[] = 
   },
 ];
 
-const initiallyActiveAssistantEvaluationTools = new Set([
-  "web_search",
-  "integration_getKinds",
-  "integration_all",
-  "customWidget_getSkill",
-]);
+const initiallyActiveAssistantEvaluationTools = new Set(["web_search", "customWidget_getSkill"]);
 const maxFocusedComponentSearchesPerPhase = 4;
 const customWidgetContextToolBudgets: Readonly<Record<string, number>> = {
   customWidget_findComponents: maxFocusedComponentSearchesPerPhase,
@@ -848,6 +981,117 @@ const getAssistantEvaluationPreviewChecklist = (widget: HomarrCustomWidgetV2) =>
   }),
 });
 
+const sourceNeedsAssistantEvaluationCredentials = (widget: HomarrCustomWidgetV2, sourceId: string) => {
+  const source = widget.sources[sourceId];
+  if (!source || source.type === "integration" || getCustomWidgetSourceAuthType(source) === "none") return false;
+  return Object.values(widget.requests).some((request) => request.source === sourceId && request.auth !== "none");
+};
+
+const sourceHasAssistantEvaluationRequests = (widget: HomarrCustomWidgetV2, sourceId: string) =>
+  Object.values(widget.requests).some((request) => request.source === sourceId);
+
+const getAssistantEvaluationSourceConfigurations = (
+  widget: HomarrCustomWidgetV2,
+  sessionId: string,
+  configuredSourceIds: ReadonlySet<string>,
+) =>
+  Object.entries(widget.sources).flatMap(([sourceId, source]) => {
+    if (
+      source.type === "integration" ||
+      configuredSourceIds.has(sourceId) ||
+      !sourceHasAssistantEvaluationRequests(widget, sourceId)
+    ) {
+      return [];
+    }
+    if (
+      !isCustomWidgetSourceUrlPlaceholder(source.baseUrl) &&
+      !sourceNeedsAssistantEvaluationCredentials(widget, sourceId)
+    ) {
+      return [];
+    }
+    return [
+      {
+        sourceId,
+        nextStep: `Call customWidget_configurationRequestUser with previewSessionId '${sessionId}' and sourceId '${sourceId}' before testing preview requests.`,
+      },
+    ];
+  });
+
+const sourceNeedsAssistantEvaluationUrlConfiguration = (
+  source: HomarrCustomWidgetV2["sources"][string] | undefined,
+) => {
+  if (!source || source.type === "integration") return false;
+  return isCustomWidgetSourceUrlPlaceholder(source.baseUrl);
+};
+
+const requestNeedsAssistantEvaluationCredentials = (
+  preview: PreviewState,
+  request: HomarrCustomWidgetV2["requests"][string],
+) => {
+  const source = preview.widget.sources[request.source];
+  return source?.type !== "integration" && request.auth !== "none" && getCustomWidgetSourceAuthType(source) !== "none";
+};
+
+const widgetNeedsAssistantEvaluationCredentials = (widget: HomarrCustomWidgetV2) =>
+  Object.keys(widget.sources).some((sourceId) => sourceNeedsAssistantEvaluationCredentials(widget, sourceId));
+
+export function completeAssistantEvaluationCredentialRequest(
+  state: AssistantAttemptState,
+  requestId: string,
+  options: { httpStatus?: number } = {},
+) {
+  const request = state.credentialRequests.get(requestId);
+  if (!request || request.status !== "pending") return false;
+  const preview = state.previews.get(request.sessionId);
+  if (!preview || state.createdPreviewIds.has(request.sessionId)) return false;
+
+  request.status = "completed";
+  const source = preview.widget.sources[request.sourceId];
+  if (request.configuredSource && source?.type !== "integration") {
+    preview.widget = customWidgetDefinitionSchema.parse({
+      ...preview.widget,
+      sources: {
+        ...preview.widget.sources,
+        [request.sourceId]: {
+          ...source,
+          baseUrl: request.configuredSource.baseUrl,
+          networkScope: request.configuredSource.networkScope,
+        },
+      },
+    });
+    preview.signature = getDefinitionSignature(preview.widget);
+  }
+  preview.configuredSourceIds.add(request.sourceId);
+  preview.configuredSourceHttpStatuses.set(request.sourceId, options.httpStatus ?? 200);
+  preview.revision += 1;
+  preview.testedQueries.clear();
+  preview.testedActions.clear();
+  preview.journal = [];
+  state.templateLifecycle.recordPreview({
+    success: true,
+    evidenceReset: true,
+    previewSession: { id: request.sessionId, revision: preview.revision },
+    persistenceTool: getAssistantEvaluationPersistenceTool(preview),
+    ...getAssistantEvaluationPreviewChecklist(preview.widget),
+  });
+  return true;
+}
+
+export function expireAssistantEvaluationCredentialRequest(state: AssistantAttemptState, requestId: string) {
+  const request = state.credentialRequests.get(requestId);
+  if (!request || request.status !== "pending") return false;
+  request.status = "expired";
+  return true;
+}
+
+export function resumeAssistantEvaluationCredentialRequests(state: AssistantAttemptState) {
+  const completedRequestIds = [...state.credentialRequests.values()].flatMap((request) =>
+    request.status === "pending" && completeAssistantEvaluationCredentialRequest(state, request.id) ? [request.id] : [],
+  );
+  if (completedRequestIds.length > 0) state.syntheticCredentialContinues += 1;
+  return completedRequestIds;
+}
+
 const executeAssistantEvaluationToolCore = (
   testCase: CustomWidgetAiEvaluationCase,
   state: AssistantAttemptState,
@@ -872,7 +1116,13 @@ const executeAssistantEvaluationToolCore = (
     return getContextPhaseCompleteOutput(name);
   }
   if (name === "web_search") {
-    const configuredResults = testCase.research?.searchResults;
+    const research = testCase.research;
+    const configuredResults = research?.searchResults;
+    if (research?.requiresFrozenSearchResults && !configuredResults?.length) {
+      throw new Error(
+        `Evaluation case '${testCase.id}' requires frozen first-party search results; refusing to substitute apiNotes`,
+      );
+    }
     return {
       query: typeof input.query === "string" ? input.query : "",
       results: configuredResults ?? [
@@ -983,6 +1233,12 @@ const executeAssistantEvaluationToolCore = (
     });
   }
   if (name === "customWidget_previewCreate") {
+    if (Array.isArray(input.secrets) && input.secrets.length > 0) {
+      return {
+        error:
+          "Assistant preview inputs must not contain credentials. Use secure source configuration before evidence.",
+      };
+    }
     const mismatch = state.templateLifecycle.getPreviewValidationMismatch(name, input);
     if (mismatch !== null) return mismatch;
     const parsed = parseDefinition(input.definition);
@@ -1007,6 +1263,20 @@ const executeAssistantEvaluationToolCore = (
         },
       };
     }
+    if (testCase.sourceConfiguration) {
+      const source = parsed.widget.sources[testCase.sourceConfiguration.sourceId];
+      if (!sourceNeedsAssistantEvaluationUrlConfiguration(source)) {
+        return {
+          error:
+            "The user did not supply this self-hosted URL. Use an explicit example.com placeholder and complete the returned sourceConfigurations flow instead of guessing an address.",
+          recovery: {
+            recoverable: true,
+            kind: "source-placeholder-required",
+            requiredNextTool: "customWidget_previewCreate",
+          },
+        };
+      }
+    }
     const signature = getDefinitionSignature(parsed.widget);
     if ([...state.previews.values()].some((preview) => preview.signature === signature)) {
       return {
@@ -1016,6 +1286,18 @@ const executeAssistantEvaluationToolCore = (
     }
     const id = `preview-${state.previews.size + 1}`;
     const definitionId = typeof input.definitionId === "string" ? input.definitionId : undefined;
+    const configuredSourceIds = new Set<string>();
+    if (definitionId) {
+      for (const [sourceId, source] of Object.entries(parsed.widget.sources)) {
+        if (
+          source.type !== "integration" &&
+          !isCustomWidgetSourceUrlPlaceholder(source.baseUrl) &&
+          sourceNeedsAssistantEvaluationCredentials(parsed.widget, sourceId)
+        ) {
+          configuredSourceIds.add(sourceId);
+        }
+      }
+    }
     state.previews.set(id, {
       widget: parsed.widget,
       definitionId,
@@ -1023,6 +1305,8 @@ const executeAssistantEvaluationToolCore = (
       revision: 0,
       testedQueries: new Set(),
       testedActions: new Set(),
+      configuredSourceIds,
+      configuredSourceHttpStatuses: new Map(),
       journal: [],
     });
     return state.templateLifecycle.recordPreview({
@@ -1030,6 +1314,7 @@ const executeAssistantEvaluationToolCore = (
       previewSession: { id, revision: 0 },
       previewPath: `/manage/custom-widgets/preview/${id}`,
       persistenceTool: getAssistantEvaluationPersistenceTool({ definitionId }),
+      sourceConfigurations: getAssistantEvaluationSourceConfigurations(parsed.widget, id, configuredSourceIds),
       ...getAssistantEvaluationPreviewChecklist(parsed.widget),
     });
   }
@@ -1134,6 +1419,47 @@ const executeAssistantEvaluationToolCore = (
     if (missingParams.length > 0) {
       return { error: `Supply the required manual preview parameters: ${missingParams.join(", ")}` };
     }
+    const source = preview.widget.sources[request.source];
+    if (
+      !preview.configuredSourceIds.has(request.source) &&
+      (sourceNeedsAssistantEvaluationUrlConfiguration(source) ||
+        requestNeedsAssistantEvaluationCredentials(preview, request))
+    ) {
+      return {
+        sessionId,
+        requestId,
+        sourceId: request.source,
+        ok: false,
+        status: 0,
+        statusText: "Configuration required",
+        data: null,
+        error: `Source '${request.source}' requires secure URL or credential configuration before preview testing.`,
+        requiredNextTool: "customWidget_configurationRequestUser",
+      };
+    }
+    if (requestNeedsAssistantEvaluationCredentials(preview, request)) {
+      const sourceId = request.source;
+      const configuredStatus = preview.configuredSourceHttpStatuses.get(sourceId) ?? 200;
+      if (configuredStatus < 200 || configuredStatus >= 300) {
+        preview.journal.push({
+          requestId,
+          kind: "query",
+          method: request.method,
+          path: request.path,
+          status: configuredStatus,
+          simulated: false,
+        });
+        return {
+          sessionId,
+          requestId,
+          sourceId,
+          ok: false,
+          status: configuredStatus,
+          statusText: configuredStatus === 403 ? "Forbidden" : "Authentication failed",
+          error: `HTTP ${configuredStatus}: Authentication failed`,
+        };
+      }
+    }
     const response = getAssistantEvaluationPreviewResponse(testCase, request);
     if (response === undefined) return { error: `No deterministic preview response is configured for ${request.path}` };
     preview.testedQueries.add(requestId);
@@ -1149,11 +1475,90 @@ const executeAssistantEvaluationToolCore = (
     return state.templateLifecycle.recordEvidence(name, {
       sessionId,
       requestId,
+      sourceId: request.source,
       ok: true,
       status: 200,
       data: response,
       request: { method: request.method, path: request.path },
     });
+  }
+  if (name === "customWidget_configurationRequestUser") {
+    if (typeof input.requestId === "string") {
+      const request = state.credentialRequests.get(input.requestId);
+      if (!request || request.status === "expired") {
+        return {
+          error: "Source configuration request expired or was not found",
+          requestId: input.requestId,
+          status: "expired",
+          recovery: {
+            recoverable: true,
+            kind: "expired-source-configuration-request",
+            requiredNextTool: "customWidget_configurationRequestUser",
+          },
+          nextStep:
+            "This source-configuration request is no longer available. Create a replacement request with the original previewSessionId and sourceId; do not reuse this requestId.",
+        };
+      }
+      if (input.previewSessionId !== undefined || input.sourceId !== undefined) {
+        return { error: "Status checks only accept requestId" };
+      }
+      if (request.status === "completed") request.checkedCompleted = true;
+      return {
+        requestId: request.id,
+        status: request.status,
+        previewSessionId: request.sessionId,
+        sourceId: request.sourceId,
+      };
+    }
+    const sessionId = typeof input.previewSessionId === "string" ? input.previewSessionId : "";
+    const sourceId = typeof input.sourceId === "string" ? input.sourceId : "";
+    const preview = state.previews.get(sessionId);
+    const source = preview?.widget.sources[sourceId];
+    if (!preview || !source) return { error: "Preview source was not found" };
+    const requiresUrlConfiguration = sourceNeedsAssistantEvaluationUrlConfiguration(source);
+    const requiresCredentials = source.type !== "integration" && getCustomWidgetSourceAuthType(source) !== "none";
+    if (source.type === "integration" || (!requiresUrlConfiguration && !requiresCredentials)) {
+      return { error: "This preview source does not need user configuration" };
+    }
+    const configuredSource = requiresUrlConfiguration ? testCase.sourceConfiguration : undefined;
+    if (requiresUrlConfiguration && configuredSource?.sourceId !== sourceId) {
+      return { error: `No deterministic source configuration is configured for '${sourceId}'` };
+    }
+    const existing = [...state.credentialRequests.values()].find(
+      (request) => request.sessionId === sessionId && request.sourceId === sourceId && request.status !== "expired",
+    );
+    if (existing) {
+      return {
+        error: `A source configuration request already exists; check requestId '${existing.id}' instead`,
+        requestId: existing.id,
+        status: existing.status,
+        previewSessionId: existing.sessionId,
+        sourceId: existing.sourceId,
+      };
+    }
+    const request: AssistantEvaluationCredentialRequest = {
+      id: `configuration-${state.credentialRequests.size + 1}`,
+      sessionId,
+      sourceId,
+      status: "pending",
+      checkedCompleted: false,
+      ...(configuredSource
+        ? {
+            configuredSource: {
+              baseUrl: configuredSource.baseUrl,
+              networkScope: configuredSource.networkScope,
+            },
+          }
+        : {}),
+    };
+    state.credentialRequests.set(request.id, request);
+    return {
+      requestId: request.id,
+      status: request.status,
+      previewSessionId: request.sessionId,
+      sourceId: request.sourceId,
+      url: `https://homarr.test/custom-widget-configuration/${request.id}`,
+    };
   }
   if (name === "customWidget_previewAction") {
     const sessionId = typeof input.sessionId === "string" ? input.sessionId : "";
@@ -1164,6 +1569,39 @@ const executeAssistantEvaluationToolCore = (
     const missingParams = getMissingRequestParams(request, input);
     if (missingParams.length > 0) {
       return { error: `Supply the required manual preview parameters: ${missingParams.join(", ")}` };
+    }
+    const source = preview.widget.sources[request.source];
+    if (
+      !preview.configuredSourceIds.has(request.source) &&
+      (sourceNeedsAssistantEvaluationUrlConfiguration(source) ||
+        requestNeedsAssistantEvaluationCredentials(preview, request))
+    ) {
+      return {
+        sessionId,
+        requestId,
+        sourceId: request.source,
+        ok: false,
+        status: 0,
+        statusText: "Configuration required",
+        data: null,
+        simulated: false,
+        error: `Source '${request.source}' requires secure URL or credential configuration before preview testing.`,
+        requiredNextTool: "customWidget_configurationRequestUser",
+      };
+    }
+    if (requestNeedsAssistantEvaluationCredentials(preview, request)) {
+      const configuredStatus = preview.configuredSourceHttpStatuses.get(request.source) ?? 200;
+      if (configuredStatus < 200 || configuredStatus >= 300) {
+        return {
+          sessionId,
+          requestId,
+          sourceId: request.source,
+          ok: false,
+          status: configuredStatus,
+          statusText: configuredStatus === 403 ? "Forbidden" : "Authentication failed",
+          error: `HTTP ${configuredStatus}: Authentication failed`,
+        };
+      }
     }
     preview.testedActions.add(requestId);
     preview.journal.push({
@@ -1178,6 +1616,7 @@ const executeAssistantEvaluationToolCore = (
     return state.templateLifecycle.recordEvidence(name, {
       sessionId,
       requestId,
+      sourceId: request.source,
       ok: true,
       status: 0,
       statusText: "Simulated",
@@ -1201,6 +1640,25 @@ const executeAssistantEvaluationToolCore = (
     }
     if (name === "customWidget_updateFromPreview" && !preview.definitionId) {
       return { error: "This preview is not associated with an existing custom widget definition" };
+    }
+    const uncheckedCredentialRequest = [...state.credentialRequests.values()].find(
+      (request) =>
+        request.sessionId === sessionId && request.status === "completed" && request.checkedCompleted === false,
+    );
+    if (uncheckedCredentialRequest) {
+      return {
+        error: `Check completed source configuration request '${uncheckedCredentialRequest.id}' before persistence`,
+      };
+    }
+    const unresolvedSourceId = Object.entries(preview.widget.sources).find(
+      ([sourceId, source]) =>
+        !preview.configuredSourceIds.has(sourceId) &&
+        sourceHasAssistantEvaluationRequests(preview.widget, sourceId) &&
+        (sourceNeedsAssistantEvaluationUrlConfiguration(source) ||
+          sourceNeedsAssistantEvaluationCredentials(preview.widget, sourceId)),
+    )?.[0];
+    if (unresolvedSourceId) {
+      return { error: `Configure preview source '${unresolvedSourceId}' before persistence` };
     }
     const untestedQueries = Object.entries(preview.widget.requests).flatMap(([requestId, request]) =>
       request.kind === "query" && !preview.testedQueries.has(requestId) ? [requestId] : [],
@@ -1324,8 +1782,8 @@ const getAssistantEvaluationToolRetryFeedback = (name: string, output: unknown) 
     for (const entry of entries) {
       if (!isRecord(entry) || typeof entry.message !== "string") continue;
       if (key === "diagnostics" && entry.severity !== "error") continue;
-      const path = typeof entry.path === "string" ? `${entry.path}: ` : "";
-      messages.push(`${path}${entry.message}`);
+      const issuePath = typeof entry.path === "string" ? `${entry.path}: ` : "";
+      messages.push(`${issuePath}${entry.message}`);
     }
   }
   return [...new Set(messages)].map((message) => `${name}: ${message}`);
@@ -1369,8 +1827,13 @@ export function getAssistantEvaluationLifecycleIssues(
   const hasActions = state.createdWidgets.some((widget) =>
     Object.values(widget.requests).some((request) => request.kind === "action"),
   );
+  const hasAuthenticatedHttpSource = state.createdWidgets.some(widgetNeedsAssistantEvaluationCredentials);
+  const hasSourceConfigurationRequests = state.credentialRequests.size > 0;
   if (hasQueries) required.push("customWidget_previewQuery");
   if (hasActions) required.push("customWidget_previewAction");
+  if (hasAuthenticatedHttpSource || hasSourceConfigurationRequests) {
+    required.push("customWidget_configurationRequestUser");
+  }
   const issues = required.flatMap((name) =>
     state.calledTools.includes(name) ? [] : [`The assistant never called ${name}.`],
   );
@@ -1395,7 +1858,7 @@ export function getAssistantEvaluationLifecycleIssues(
     );
   }
   if (testCase.research && state.calledTools.filter((name) => name === "web_search").length !== 1) {
-    issues.push("The assistant must perform exactly one shared primary-documentation search for this widget set.");
+    issues.push("The assistant must perform one primary-documentation search for this unknown service.");
   }
   const webSearchCall = state.toolCalls.find((toolCall) => toolCall.name === "web_search");
   const webSearchQuery = typeof webSearchCall?.input.query === "string" ? webSearchCall.input.query.toLowerCase() : "";
@@ -1420,17 +1883,44 @@ export function getAssistantEvaluationLifecycleIssues(
       if (!state.calledTools.includes(toolName)) issues.push(`The assistant never called ${toolName}.`);
     }
   }
-  if (testCase.finalResponse) {
-    issues.push(
-      ...assessAssistantFinalResponse({
-        text: state.finalText,
-        persistedWidgets: state.createdWidgets,
-        maxCharacters: testCase.finalResponse.maxCharacters,
-        requiredTerms: testCase.finalResponse.requiredTerms ?? [],
-        placementEvidence: state.placementEvidence,
-      }).issues,
-    );
+  if (hasAuthenticatedHttpSource || hasSourceConfigurationRequests) {
+    if (state.syntheticCredentialContinues === 0) {
+      issues.push("The assistant never paused for secure source configuration and resumed on Continue.");
+    }
+    for (const request of state.credentialRequests.values()) {
+      const recovered =
+        request.status === "expired" &&
+        [...state.credentialRequests.values()].some(
+          (candidate) =>
+            candidate !== request &&
+            candidate.sessionId === request.sessionId &&
+            candidate.sourceId === request.sourceId &&
+            candidate.status === "completed" &&
+            candidate.checkedCompleted,
+        );
+      if (recovered) continue;
+      if (request.status !== "completed" || !request.checkedCompleted) {
+        issues.push(`The assistant did not verify completed source configuration request '${request.id}'.`);
+      }
+    }
   }
+  for (const toolCall of state.toolCalls.filter((candidate) => candidate.name === "customWidget_previewCreate")) {
+    if (Array.isArray(toolCall.input.secrets) && toolCall.input.secrets.length > 0) {
+      issues.push("The assistant sent plaintext credentials through customWidget_previewCreate.");
+    }
+  }
+  const finalResponse = testCase.finalResponse;
+  issues.push(
+    ...assessAssistantFinalResponse({
+      text: state.finalText,
+      persistedWidgets: state.createdWidgets,
+      maxCharacters: finalResponse?.maxCharacters ?? 600,
+      requiredTerms: finalResponse?.requiredTerms ?? [],
+      requiredPhrasesAny: finalResponse?.requiredPhrasesAny,
+      forbiddenPhrases: finalResponse?.forbiddenPhrases,
+      placementEvidence: state.placementEvidence,
+    }).issues,
+  );
   return issues;
 }
 
@@ -1439,6 +1929,8 @@ export function assessAssistantFinalResponse(args: {
   persistedWidgets: readonly HomarrCustomWidgetV2[];
   maxCharacters: number;
   requiredTerms: readonly string[];
+  requiredPhrasesAny?: readonly string[];
+  forbiddenPhrases?: readonly string[];
   placementEvidence?: readonly AssistantEvaluationPlacementEvidence[];
 }) {
   const response = args.text.trim();
@@ -1450,11 +1942,25 @@ export function assessAssistantFinalResponse(args: {
   }
   if (response.length > 0 && words < 8) issues.push("The final response is too terse to hand off the created widget.");
   if (words > 80) issues.push("The final response exceeds the 80-word handoff limit.");
-  if (/\n\s*(?:[-*#]|\d+\.)|```/u.test(response)) {
+  if (/[\r\n]/u.test(response) || /```/u.test(response)) {
     issues.push("The final response must be one short paragraph without headings, lists, or code fences.");
   }
   if (!/\b(?:created|saved|updated)\b/iu.test(response)) {
     issues.push("The final response must state that the widget was created, saved, or updated.");
+  }
+  if (
+    !/\b(?:shows?|showing|displays?|displaying|summari[sz](?:es|ing)|tracks?|tracking|lists?|listing|surfaces?|surfacing|highlights?|highlighting|reports?|reporting|monitors?|monitoring|provides?|providing)\b/iu.test(
+      response,
+    )
+  ) {
+    issues.push("The final response must briefly state what data or capability the widget shows.");
+  }
+  const statesRefreshBehavior = /\b(?:refresh(?:es|ed|ing)?|reload(?:s|ed|ing)?|rerun(?:s|ning)?)\b/iu.test(response);
+  const statesUpdateBehavior =
+    /\bupdates?\b[^.\n]{0,40}\b(?:automatically|manually|on demand|after|when|every)\b/iu.test(response) ||
+    /\b(?:automatically|manually|on demand|after|when|every)\b[^.\n]{0,40}\bupdates?\b/iu.test(response);
+  if (!statesRefreshBehavior && !statesUpdateBehavior) {
+    issues.push("The final response must briefly state refresh or update behavior.");
   }
   const namesToRequire = args.persistedWidgets.length <= 4 ? args.persistedWidgets.map(({ name }) => name) : [];
   for (const name of namesToRequire) {
@@ -1463,6 +1969,16 @@ export function assessAssistantFinalResponse(args: {
   }
   for (const term of args.requiredTerms) {
     if (!response.toLowerCase().includes(term.toLowerCase())) issues.push(`The final response omitted '${term}'.`);
+  }
+  if (
+    args.requiredPhrasesAny?.length &&
+    !args.requiredPhrasesAny.some((phrase) => response.toLowerCase().includes(phrase.toLowerCase()))
+  ) {
+    issues.push(`The final response omitted a required phrase: ${args.requiredPhrasesAny.join("; ")}.`);
+  }
+  for (const phrase of args.forbiddenPhrases ?? []) {
+    if (!response.toLowerCase().includes(phrase.toLowerCase())) continue;
+    issues.push(`The final response made the forbidden claim '${phrase}'.`);
   }
   if (/"(?:schemaVersion|sources|requests|template)"\s*:|<Stack\b|customWidget_/u.test(response)) {
     issues.push("The final response dumped implementation or tool data instead of a concise handoff.");
@@ -1478,6 +1994,11 @@ export function getAssistantEvaluationEfficiencyIssues(
   state: AssistantAttemptState,
 ) {
   const issues: string[] = [];
+  if (state.toolStepNarrations.length > 0) {
+    issues.push(
+      `The assistant included visible narration in ${state.toolStepNarrations.length} tool-call step${state.toolStepNarrations.length === 1 ? "" : "s"}; tool-call steps must contain no prose.`,
+    );
+  }
   if (state.calledTools.includes("customWidget_validate")) {
     issues.push("The assistant resent a complete definition through customWidget_validate.");
   }
@@ -1590,11 +2111,18 @@ export function createAssistantEvaluationState(
     validatedTemplates: new Set(),
     templateLifecycle: createCustomWidgetTemplateLifecycleController(),
     previews: new Map(),
+    credentialRequests: new Map(),
+    syntheticCredentialContinues: 0,
     completedPreviewSignatures: new Set(),
     createdPreviewIds: new Set(),
     createdWidgets: [],
     modelInputTokens: 0,
     modelOutputTokens: 0,
+    modelReportedCostUsd: 0,
+    modelAccountedCostUsd: 0,
+    modelCostExact: true,
+    elapsedMs: 0,
+    toolStepNarrations: [],
     finalText: "",
     failure: null,
     retryFeedback: [],
@@ -1615,7 +2143,7 @@ function buildAssistantPrompt(testCase: CustomWidgetAiEvaluationCase, feedback: 
   }
   if (testCase.research) {
     sections.push(
-      `The API contract was not supplied in the conversation. Use web_search exactly once with a focused primary-documentation query and reuse that result for the complete widget set.`,
+      `The API contract was not supplied in the conversation. Use web_search once for this unknown service with a focused primary-documentation query and reuse that result across its widgets.`,
     );
   } else {
     sections.push(
@@ -1641,11 +2169,9 @@ function buildAssistantPrompt(testCase: CustomWidgetAiEvaluationCase, feedback: 
   sections.push(
     "Use the available Custom Widget tools and continue automatically until the exact tested preview is created. Do not merely return JSON or instructions.",
   );
-  if (testCase.finalResponse) {
-    sections.push(
-      `After persistence, return one concise user-facing handoff of at most ${testCase.finalResponse.maxCharacters} characters. Name what was created and summarize the data, refresh behavior, and any real setup or privilege limitation without dumping the manifest or tool narration.`,
-    );
-  }
+  sections.push(
+    `After persistence, return one concise user-facing paragraph of at most ${testCase.finalResponse?.maxCharacters ?? 600} characters. Name what was created, state what it shows, and summarize refresh or update behavior plus any real setup or privilege limitation without dumping the manifest or tool narration. Tool-call steps must contain no user-facing prose.`,
+  );
   return sections.join("\n\n");
 }
 
@@ -1656,7 +2182,10 @@ async function callAssistantStep(args: {
   messages: OpenRouterMessage[];
   tools: ToolDefinition[];
   toolChoice: "auto" | "required";
+  timeoutMs: number;
+  onCost: (accountedCostUsd: number, reportedCostUsd: number | null) => void;
 }) {
+  assertLiveAiEvaluationSpendCap(aiEvaluationSpendBudget, args.baseUrl);
   const activeToolNames = args.tools.map(({ function: definition }) => definition.name);
   const compactedMessages = compactAssistantEvaluationMessages(args.messages);
   const messages = compactedMessages.map((message, index) => {
@@ -1680,45 +2209,75 @@ async function callAssistantStep(args: {
       : {}),
     temperature: assistantEvaluationTemperature,
     max_tokens: maxOutputTokens,
-    reasoning: assistantEvaluationReasoningOptions,
+    reasoning: getAssistantEvaluationReasoningOptions(process.env.CUSTOM_WIDGET_AI_REASONING_EFFORT, args.model),
     ...(assistantEvaluationProviderPreferences ? { provider: assistantEvaluationProviderPreferences } : {}),
   };
-  const reservation = aiEvaluationSpendBudget.reserve();
-  const boundedRequest = withAiEvaluationProviderSpendCeiling(requestBody, reservation);
-  let settled = false;
-  const settle = (cost?: number) => {
-    if (settled) return;
-    settled = true;
-    aiEvaluationSpendBudget.settle(reservation, cost);
-  };
-  try {
-    const response = await fetch(getAiProviderChatCompletionsUrl(args.baseUrl), {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${args.apiKey}`,
-        "Content-Type": "application/json",
-        "HTTP-Referer": "https://homarr.dev",
-        "X-Title": "Homarr Custom Widget Assistant Evaluation",
-      },
-      body: JSON.stringify(boundedRequest.requestBody),
-      signal: AbortSignal.timeout(getAiEvaluationRequestTimeoutMs(process.env.CUSTOM_WIDGET_AI_REQUEST_TIMEOUT_MS)),
-    });
-    const payload = (await response.json()) as OpenRouterResponse;
-    settle(payload.usage?.cost);
-    if (!response.ok) {
-      throw new Error(`AI provider request failed (${response.status}): ${payload.error?.message ?? "Unknown error"}`);
-    }
-    const message = payload.choices?.[0]?.message;
-    if (!message) throw new Error("AI provider returned no assistant message");
-    return {
-      message,
-      inputTokens: payload.usage?.prompt_tokens ?? 0,
-      outputTokens: payload.usage?.completion_tokens ?? 0,
+  const deadline = Date.now() + args.timeoutMs;
+  let lastError: unknown = null;
+  for (let attempt = 0; attempt <= assistantExecutionPolicy.maxRetries; attempt += 1) {
+    const remainingMs = deadline - Date.now();
+    if (remainingMs <= 0) throw lastError ?? new Error("AI provider request exceeded the production step timeout");
+    const reservation = aiEvaluationSpendBudget.reserve();
+    const boundedRequest = withAiEvaluationProviderSpendCeiling(requestBody, reservation);
+    let settled = false;
+    const settle = (cost?: number) => {
+      if (settled) return;
+      settled = true;
+      const hasReportedCost = typeof cost === "number" && Number.isFinite(cost) && cost >= 0;
+      const reportedCost = hasReportedCost ? cost : null;
+      const accountedCost = reportedCost ?? reservation;
+      aiEvaluationSpendBudget.settle(reservation, reportedCost ?? undefined);
+      args.onCost(accountedCost, reportedCost);
     };
-  } catch (error) {
-    settle();
-    throw error;
+    try {
+      const response = await fetch(getAiProviderChatCompletionsUrl(args.baseUrl), {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${args.apiKey}`,
+          "Content-Type": "application/json",
+          "HTTP-Referer": "https://homarr.dev",
+          "X-Title": "Homarr Custom Widget Assistant Evaluation",
+        },
+        body: JSON.stringify(boundedRequest.requestBody),
+        signal: AbortSignal.timeout(remainingMs),
+      });
+      const payload = (await response.json().catch(() => ({}))) as OpenRouterResponse;
+      settle(payload.usage?.cost);
+      if (!response.ok) {
+        const error = new Error(
+          `AI provider request failed (${response.status}): ${payload.error?.message ?? "Unknown error"}`,
+        );
+        lastError = error;
+        if (!isAssistantEvaluationRetryableStatus(response.status) || attempt >= assistantExecutionPolicy.maxRetries) {
+          throw error;
+        }
+      } else {
+        const message = payload.choices?.[0]?.message;
+        if (!message) throw new Error("AI provider returned no assistant message");
+        return {
+          message,
+          inputTokens: payload.usage?.prompt_tokens ?? 0,
+          outputTokens: payload.usage?.completion_tokens ?? 0,
+        };
+      }
+    } catch (error) {
+      settle();
+      lastError = error;
+      const isProviderStatusError =
+        error instanceof Error && /^AI provider request failed \(\d+\):/u.test(error.message);
+      const isTimeout = error instanceof Error && (error.name === "AbortError" || error.name === "TimeoutError");
+      const isNetworkError = error instanceof TypeError;
+      if (isProviderStatusError || isTimeout || !isNetworkError || attempt >= assistantExecutionPolicy.maxRetries) {
+        throw error;
+      }
+    }
+    const retryDelayMs = 2_000 * 2 ** attempt;
+    if (Date.now() + retryDelayMs >= deadline) {
+      throw lastError ?? new Error("AI provider retry exceeded the production step timeout");
+    }
+    await new Promise((resolve) => setTimeout(resolve, retryDelayMs));
   }
+  throw lastError ?? new Error("AI provider request failed");
 }
 
 async function runAssistantAttempt(args: {
@@ -1730,6 +2289,9 @@ async function runAssistantAttempt(args: {
   assistantPolicy: string;
   feedback: readonly string[];
 }) {
+  const startedAt = Date.now();
+  let requestStartedAt = startedAt;
+  let requestStep = 0;
   const state = createAssistantEvaluationState(
     (args.testCase.availableIntegrations?.length ?? 0) > 0,
     args.testCase.placement,
@@ -1746,11 +2308,17 @@ async function runAssistantAttempt(args: {
     { role: "user", content: buildAssistantPrompt(args.testCase, args.feedback) },
   ];
 
-  for (let step = 0; step < MAX_ASSISTANT_STEPS; step += 1) {
+  while (requestStep < assistantExecutionPolicy.maxSteps) {
+    requestStep += 1;
+    const remainingTotalMs = assistantExecutionPolicy.totalTimeoutMs - (Date.now() - requestStartedAt);
+    if (remainingTotalMs <= 0) {
+      state.failure = `The assistant exceeded the production total timeout of ${assistantExecutionPolicy.totalTimeoutMs}ms.`;
+      break;
+    }
     let stepResult: Awaited<ReturnType<typeof callAssistantStep>>;
     try {
       let tools = getActiveAssistantEvaluationToolDefinitions(state);
-      if (isAssistantEvaluationComplete(state, getExpectedWidgetCount(args.testCase)) && args.testCase.finalResponse) {
+      if (isAssistantEvaluationComplete(state, getExpectedWidgetCount(args.testCase))) {
         tools = [];
       }
       stepResult = await callAssistantStep({
@@ -1760,6 +2328,18 @@ async function runAssistantAttempt(args: {
         messages,
         tools,
         toolChoice: getAssistantEvaluationToolChoice(state, getExpectedWidgetCount(args.testCase)),
+        timeoutMs: getAssistantEvaluationStepTimeoutMs(
+          process.env.CUSTOM_WIDGET_AI_REQUEST_TIMEOUT_MS,
+          remainingTotalMs,
+        ),
+        onCost: (accountedCostUsd, reportedCostUsd) => {
+          state.modelAccountedCostUsd += accountedCostUsd;
+          if (reportedCostUsd === null) {
+            state.modelCostExact = false;
+            return;
+          }
+          state.modelReportedCostUsd += reportedCostUsd;
+        },
       });
     } catch (error) {
       state.failure = error instanceof Error ? error.message : "The provider request failed";
@@ -1783,7 +2363,23 @@ async function runAssistantAttempt(args: {
       break;
     }
     messages.push(message);
+    if (message.tool_calls?.length && (message.content ?? "").trim()) {
+      state.toolStepNarrations.push((message.content ?? "").trim());
+    }
     if (!message.tool_calls || message.tool_calls.length === 0) {
+      const pendingCredentialRequests = [...state.credentialRequests.values()].filter(
+        (request) => request.status === "pending",
+      );
+      if (pendingCredentialRequests.length > 0) {
+        resumeAssistantEvaluationCredentialRequests(state);
+        messages.push({
+          role: "user",
+          content: "Continue. I completed the secure source configuration request.",
+        });
+        requestStartedAt = Date.now();
+        requestStep = 0;
+        continue;
+      }
       state.finalText = message.content ?? "";
       if (!isAssistantEvaluationComplete(state, getExpectedWidgetCount(args.testCase))) {
         const placementDetail = args.testCase.placement
@@ -1808,10 +2404,15 @@ async function runAssistantAttempt(args: {
       }
       messages.push({ role: "tool", tool_call_id: toolCall.id, content: JSON.stringify(output) });
     }
-    if (isAssistantEvaluationComplete(state, getExpectedWidgetCount(args.testCase)) && !args.testCase.finalResponse) {
-      break;
-    }
   }
+  if (
+    requestStep >= assistantExecutionPolicy.maxSteps &&
+    state.failure === null &&
+    !isAssistantEvaluationComplete(state, getExpectedWidgetCount(args.testCase))
+  ) {
+    state.failure = `The assistant exceeded the production request limit of ${assistantExecutionPolicy.maxSteps} steps.`;
+  }
+  state.elapsedMs = Date.now() - startedAt;
   return { state, messages };
 }
 
@@ -1848,7 +2449,29 @@ const getAssistantEfficiency = (state: AssistantAttemptState) => ({
   toolOutputCharacters: state.toolCalls.reduce((sum, toolCall) => sum + toolCall.outputCharacters, 0),
   modelInputTokens: state.modelInputTokens,
   modelOutputTokens: state.modelOutputTokens,
+  modelCostUsd: state.modelCostExact ? state.modelReportedCostUsd : null,
+  modelAccountedCostUsd: state.modelAccountedCostUsd,
+  modelCostExact: state.modelCostExact,
+  elapsedMs: state.elapsedMs,
 });
+
+const getCumulativeAssistantEfficiency = (states: readonly AssistantAttemptState[]) => {
+  const efficiencies = states.map(getAssistantEfficiency);
+  const modelCostExact = efficiencies.every((efficiency) => efficiency.modelCostExact);
+  return {
+    toolCalls: efficiencies.reduce((total, efficiency) => total + efficiency.toolCalls, 0),
+    toolInputCharacters: efficiencies.reduce((total, efficiency) => total + efficiency.toolInputCharacters, 0),
+    toolOutputCharacters: efficiencies.reduce((total, efficiency) => total + efficiency.toolOutputCharacters, 0),
+    modelInputTokens: efficiencies.reduce((total, efficiency) => total + efficiency.modelInputTokens, 0),
+    modelOutputTokens: efficiencies.reduce((total, efficiency) => total + efficiency.modelOutputTokens, 0),
+    modelCostUsd: modelCostExact
+      ? efficiencies.reduce((total, efficiency) => total + (efficiency.modelCostUsd ?? 0), 0)
+      : null,
+    modelAccountedCostUsd: efficiencies.reduce((total, efficiency) => total + efficiency.modelAccountedCostUsd, 0),
+    modelCostExact,
+    elapsedMs: efficiencies.reduce((total, efficiency) => total + efficiency.elapsedMs, 0),
+  };
+};
 
 export function mergeAssistantEvaluationFeedback(feedback: string[], issues: readonly string[]) {
   const merged = [...new Set([...feedback, ...issues])];
@@ -1927,6 +2550,17 @@ export function selectAssistantEvaluationLifecycleEvidence(
   };
 }
 
+const getAssistantEvaluationLifecycleEvidenceIndex = (attemptStates: readonly AssistantAttemptState[]) => {
+  if (attemptStates.length === 0) return -1;
+  let evidenceIndex = attemptStates.length - 1;
+  for (const [index, state] of attemptStates.entries()) {
+    const evidenceState = attemptStates[evidenceIndex];
+    if (state.createdWidgets.length <= (evidenceState?.createdWidgets.length ?? 0)) continue;
+    evidenceIndex = index;
+  }
+  return evidenceIndex;
+};
+
 export async function evaluateCustomWidgetAssistantCase(args: {
   testCase: CustomWidgetAiEvaluationCase;
   apiKey: string;
@@ -1949,15 +2583,21 @@ export async function evaluateCustomWidgetAssistantCase(args: {
   let bestJudge: CustomWidgetJudgeResult | null = null;
   let bestJudges: CustomWidgetJudgeResult[] = [];
   let bestScoreFloor = -1;
+  let bestAttempt: number | null = null;
   let bestCalledTools: string[] = [];
   let lastAttemptState: AssistantAttemptState | null = null;
   const attemptStates: AssistantAttemptState[] = [];
-  let bestEfficiency = {
+  const attemptStateNumbers: number[] = [];
+  let bestEfficiency: ReturnType<typeof getAssistantEfficiency> = {
     toolCalls: 0,
     toolInputCharacters: 0,
     toolOutputCharacters: 0,
     modelInputTokens: 0,
     modelOutputTokens: 0,
+    modelCostUsd: null,
+    modelAccountedCostUsd: 0,
+    modelCostExact: false,
+    elapsedMs: 0,
   };
 
   for (let attempt = 1; attempt <= args.maxLoops; attempt += 1) {
@@ -1981,6 +2621,7 @@ export async function evaluateCustomWidgetAssistantCase(args: {
     }
     lastAttemptState = run.state;
     attemptStates.push(run.state);
+    attemptStateNumbers.push(attempt);
     await writeFile(path.join(caseDirectory, `trace-${attempt}.json`), JSON.stringify(run.messages, null, 2), "utf8");
     await writeFile(
       path.join(caseDirectory, `efficiency-${attempt}.json`),
@@ -2071,6 +2712,7 @@ export async function evaluateCustomWidgetAssistantCase(args: {
       bestJudge = weakestJudge;
       bestJudges = judgeResults;
       bestScoreFloor = weakestJudge.total;
+      bestAttempt = attempt;
       bestCalledTools = run.state.calledTools;
       bestEfficiency = getAssistantEfficiency(run.state);
     }
@@ -2078,6 +2720,7 @@ export async function evaluateCustomWidgetAssistantCase(args: {
       return {
         caseId: args.testCase.id,
         attempts: attempt,
+        selectedAttempt: attempt,
         widget: run.state.createdWidgets[0] ?? null,
         judge: weakestJudge,
         outputDirectory: caseDirectory,
@@ -2086,6 +2729,7 @@ export async function evaluateCustomWidgetAssistantCase(args: {
         widgets: run.state.createdWidgets,
         judges: judgeResults,
         efficiency: getAssistantEfficiency(run.state),
+        cumulativeEfficiency: getCumulativeAssistantEfficiency(attemptStates),
       };
     }
     const issues = selectAssistantEvaluationReviewFeedback(
@@ -2097,9 +2741,12 @@ export async function evaluateCustomWidgetAssistantCase(args: {
   }
 
   const lifecycleEvidence = selectAssistantEvaluationLifecycleEvidence(bestWidgets, bestCalledTools, attemptStates);
+  const lifecycleEvidenceIndex = getAssistantEvaluationLifecycleEvidenceIndex(attemptStates);
+  const lifecycleEvidenceAttempt = attemptStateNumbers[lifecycleEvidenceIndex] ?? null;
   return {
     caseId: args.testCase.id,
     attempts: args.maxLoops,
+    selectedAttempt: bestAttempt ?? lifecycleEvidenceAttempt,
     widget: bestWidget ?? lifecycleEvidence.widgets[0] ?? null,
     judge: bestJudge,
     outputDirectory: caseDirectory,
@@ -2111,5 +2758,6 @@ export async function evaluateCustomWidgetAssistantCase(args: {
       bestScoreFloor >= 0
         ? bestEfficiency
         : getAssistantEfficiency(lastAttemptState ?? createAssistantEvaluationState()),
+    cumulativeEfficiency: getCumulativeAssistantEfficiency(attemptStates),
   };
 }

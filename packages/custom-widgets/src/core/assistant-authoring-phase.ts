@@ -17,6 +17,7 @@ const customWidgetEvidencePhaseToolNames = new Set([
   "customWidget_previewQuery",
   "customWidget_previewAction",
   "customWidget_previewJournal",
+  "customWidget_configurationRequestUser",
   "customWidget_createFromPreview",
   "customWidget_updateFromPreview",
 ]);
@@ -34,6 +35,8 @@ const customWidgetDraftPhaseToolNames = new Set([
 const customWidgetContextPhaseToolNames = new Set([
   "integration_getKinds",
   "integration_all",
+  "customWidget_list",
+  "customWidget_get",
   "customWidget_getReference",
   "customWidget_findComponents",
   "customWidget_getComponents",
@@ -51,6 +54,8 @@ const customWidgetWorkshopInstallPhaseToolNames = new Set([
 const maxFocusedComponentSearchesPerPhase = 4;
 const customWidgetDiscoveryToolNames = new Set([
   "customWidget_getSkill",
+  "customWidget_list",
+  "customWidget_get",
   "customWidget_schema",
   "customWidget_getAuthoringPrompt",
   "customWidget_getComponentCatalog",
@@ -64,11 +69,20 @@ const customWidgetDiscoveryToolNames = new Set([
   "customWidget_workshopGet",
 ]);
 
-const customWidgetMutationIntentPattern = /\b(?:build|convert|create|design|edit|fix|make|migrate|repair|update)\b/iu;
+const customWidgetMutationIntentPattern =
+  /\b(?:add|adjust|build|change|convert|create|design|edit|fix|make|migrate|modify|remove|repair|update)\b/iu;
 const customWidgetSubjectPattern = /\b(?:custom[\s-]+(?:jsx|widgets?)|homarr-custom-widget-v\d+|widgets?)\b/iu;
 const customWidgetNeedPattern = /\b(?:i|we)\s+(?:need|want)\b[^\n]{0,60}\bwidgets?\s+(?:for|using|with)\b/iu;
 const customWidgetContinueOnlyPattern = /^\s*(?:continue|keep\s+going|proceed|go\s+on|finish|complete)\b/iu;
 const customWidgetContextualSubjectPattern = /\b(?:it|that|this)(?:\s+(?:one|widget))?\b/iu;
+const customWidgetFreshCreationPattern =
+  /\b(?:build|create|design|make)\b[^\n]{0,100}\bwidgets?\b|\b(?:add|start)\b[^\n]{0,40}\b(?:another|new)\b[^\n]{0,40}\bwidgets?\b|\b(?:i|we)\s+(?:need|want)\b[^\n]{0,80}\bwidgets?\b/iu;
+const customWidgetFollowUpMutationPattern = /\b(?:add|adjust|change|edit|fix|modify|remove|repair|update)\b/iu;
+const customWidgetExplicitFollowUpPattern =
+  /\b(?:add\b[^\n]{0,60}\bto|remove\b[^\n]{0,60}\bfrom|adjust|change|edit|fix|modify|repair|update)\b[^\n]{0,80}\b(?:custom[\s-]+widgets?|widgets?)\b/iu;
+const customWidgetContextualMakePattern = /\bmake\s+(?:it|that\s+one)\b/iu;
+const customWidgetConfigurationResumePattern =
+  /^\s*(?:(?:i(?:'ve|\s+have)?\s+)?(?:completed|configured|finished)|done\b|(?:the\s+)?(?:configuration|setup)\s+is\s+(?:complete|done))\b/iu;
 
 export interface CustomWidgetToolStep {
   toolResults: readonly { toolName: string; output: unknown }[];
@@ -92,6 +106,16 @@ export const hasCustomWidgetAuthoringContinuationIntent = (text: string, hasRece
   return customWidgetSubjectPattern.test(text) && customWidgetMutationIntentPattern.test(text);
 };
 
+export const hasCustomWidgetAuthoringLifecycleResumeIntent = (text: string, hasRecentLifecycleContext = false) => {
+  if (!hasRecentLifecycleContext || customWidgetFreshCreationPattern.test(text)) return false;
+  if (customWidgetContinueOnlyPattern.test(text) || customWidgetConfigurationResumePattern.test(text)) return true;
+  if (customWidgetContextualMakePattern.test(text)) return true;
+  if (customWidgetContextualSubjectPattern.test(text) && customWidgetFollowUpMutationPattern.test(text)) {
+    return true;
+  }
+  return customWidgetExplicitFollowUpPattern.test(text);
+};
+
 export const isSuccessfulCustomWidgetAuthoringAdvance = (toolName: string, output: unknown) => {
   if (!isRecord(output) || hasMeaningfulError(output)) return false;
   if (customWidgetDiscoveryToolNames.has(toolName)) return true;
@@ -102,6 +126,7 @@ export const isSuccessfulCustomWidgetAuthoringAdvance = (toolName: string, outpu
   if (toolName === "customWidget_previewQuery" || toolName === "customWidget_previewAction") {
     return output.ok === true;
   }
+  if (toolName === "customWidget_configurationRequestUser") return output.status === "completed";
   return false;
 };
 
@@ -114,6 +139,10 @@ export const isRecoverableCustomWidgetAuthoringFailure = (toolName: string, outp
   if (!isRecord(output)) return false;
   const recovery = isRecord(output.recovery) ? output.recovery : null;
   if (recovery?.recoverable === true) return true;
+  if (toolName === "customWidget_previewQuery" || toolName === "customWidget_previewAction") {
+    if (output.status === 401) return true;
+    return typeof output.error === "string" && /(?:authenticat|credential|secret|unauthori[sz]ed)/iu.test(output.error);
+  }
   if (toolName === "customWidget_validateTemplate") return output.valid === false;
   if (
     toolName !== "customWidget_previewCreate" &&
@@ -136,6 +165,75 @@ const getPreviewRequestIds = (value: unknown) => {
   return value.flatMap((entry) => {
     if (!isRecord(entry) || typeof entry.requestId !== "string") return [];
     return [entry.requestId];
+  });
+};
+
+const getPreviewSourceConfigurationIds = (value: unknown) => {
+  if (!Array.isArray(value)) return [];
+  return value.flatMap((entry) => {
+    if (!isRecord(entry) || typeof entry.sourceId !== "string") return [];
+    return [entry.sourceId];
+  });
+};
+
+const hasCompletedPreviewSourceConfiguration = (
+  sessionId: string,
+  sourceId: string,
+  laterSteps: readonly CustomWidgetToolStep[],
+) =>
+  laterSteps.some((step) =>
+    step.toolResults.some((result) => {
+      if (result.toolName !== "customWidget_configurationRequestUser") return false;
+      const output = isRecord(result.output) ? result.output : null;
+      return output?.status === "completed" && output.previewSessionId === sessionId && output.sourceId === sourceId;
+    }),
+  );
+
+const hasPendingPreviewSourceConfiguration = (laterSteps: readonly CustomWidgetToolStep[]) => {
+  const statusByRequestId = new Map<string, unknown>();
+  for (const result of laterSteps.flatMap((step) => step.toolResults)) {
+    if (result.toolName !== "customWidget_configurationRequestUser") continue;
+    const output = isRecord(result.output) ? result.output : null;
+    if (typeof output?.requestId !== "string") continue;
+    statusByRequestId.set(output.requestId, output.status);
+  }
+  return [...statusByRequestId.values()].some((status) => status === "pending");
+};
+
+const isPreviewAuthenticationFailure = (output: Record<string, unknown>) => {
+  if (output.status === 401) return true;
+  return typeof output.error === "string" && /(?:authenticat|credential|secret|unauthori[sz]ed)/iu.test(output.error);
+};
+
+const isPreviewSourceConfigurationFailure = (output: Record<string, unknown>) =>
+  isPreviewAuthenticationFailure(output) || output.requiredNextTool === "customWidget_configurationRequestUser";
+
+const getLatestPreviewEvidenceFailures = (laterSteps: readonly CustomWidgetToolStep[]) => {
+  const indexedResults = laterSteps.flatMap((step) => step.toolResults).map((result, index) => ({ result, index }));
+  const latestEvidenceByRequest = new Map<string, { index: number; output: Record<string, unknown> }>();
+  for (const { result, index } of indexedResults) {
+    if (result.toolName !== "customWidget_previewQuery" && result.toolName !== "customWidget_previewAction") continue;
+    const output = isRecord(result.output) ? result.output : null;
+    if (!output) continue;
+    const sessionId = typeof output.sessionId === "string" ? output.sessionId : "unknown-session";
+    const requestId = typeof output.requestId === "string" ? output.requestId : `unknown-request-${index}`;
+    latestEvidenceByRequest.set(`${result.toolName}:${sessionId}:${requestId}`, {
+      index,
+      output,
+    });
+  }
+
+  return [...latestEvidenceByRequest.values()].filter(({ index, output }) => {
+    if (output.ok === true) return false;
+    if (!isPreviewSourceConfigurationFailure(output)) return true;
+    return !indexedResults.slice(index + 1).some(({ result }) => {
+      if (result.toolName !== "customWidget_configurationRequestUser") return false;
+      const configuration = isRecord(result.output) ? result.output : null;
+      if (configuration?.status !== "completed") return false;
+      if (typeof output.sessionId === "string" && configuration.previewSessionId !== output.sessionId) return false;
+      if (typeof output.sourceId === "string" && configuration.sourceId !== output.sourceId) return false;
+      return true;
+    });
   });
 };
 
@@ -252,8 +350,29 @@ export const getCustomWidgetPhaseToolNames = <TToolName extends string>(
         return output?.success === true || isRecord(output?.previewSession);
       });
       if (succeeded) {
+        const laterSteps = steps.slice(stepIndex + 1);
+        if (hasPendingPreviewSourceConfiguration(laterSteps)) {
+          return availableToolNames.filter((toolName) => toolName === "customWidget_configurationRequestUser");
+        }
+        const evidenceFailures = getLatestPreviewEvidenceFailures(laterSteps);
+        if (evidenceFailures.some(({ output }) => isPreviewSourceConfigurationFailure(output))) {
+          return availableToolNames.filter((toolName) => toolName === "customWidget_configurationRequestUser");
+        }
+        if (evidenceFailures.length > 0) return [];
+        const sourceConfigurationComplete = previewResults.every((result) => {
+          const output = isRecord(result.output) ? result.output : null;
+          const sourceIds = getPreviewSourceConfigurationIds(output?.sourceConfigurations);
+          if (sourceIds.length === 0) return true;
+          const previewSession = isRecord(output?.previewSession) ? output.previewSession : null;
+          const sessionId = typeof previewSession?.id === "string" ? previewSession.id : null;
+          if (sessionId === null) return false;
+          return sourceIds.every((sourceId) => hasCompletedPreviewSourceConfiguration(sessionId, sourceId, laterSteps));
+        });
+        if (!sourceConfigurationComplete) {
+          return availableToolNames.filter((toolName) => toolName === "customWidget_configurationRequestUser");
+        }
         const evidenceComplete = previewResults.every((result) =>
-          hasCompletePreviewEvidence(result.output, steps.slice(stepIndex + 1)),
+          hasCompletePreviewEvidence(result.output, laterSteps),
         );
         if (evidenceComplete) {
           const persistenceToolNames = new Set<string>(

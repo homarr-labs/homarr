@@ -6,6 +6,7 @@ import {
   getActiveCustomWidgetToolNames,
   getCustomWidgetPhaseToolNames,
   getCustomWidgetToolStepsFromResponseMessages,
+  getCustomWidgetToolStepsFromUiMessages,
   needsCustomWidgetAuthoringContext,
   shouldRequireCustomWidgetAuthoringTool,
 } from "./custom-widget-authoring-context";
@@ -15,6 +16,45 @@ const userMessage = (text: string): UIMessage => ({
   role: "user",
   parts: [{ type: "text", text }],
 });
+
+const sourceConfigurationPausedMessages = (latestUserText: string): UIMessage[] => [
+  userMessage("Create a Dispatcharr custom widget"),
+  {
+    id: "assistant-paused-configuration",
+    role: "assistant",
+    parts: [
+      {
+        type: "dynamic-tool",
+        toolName: "customWidget_previewCreate",
+        toolCallId: "preview-create",
+        state: "output-available",
+        input: { definition: {} },
+        output: {
+          success: true,
+          previewSession: { id: "preview-dispatcharr" },
+          sourceConfigurations: [{ sourceId: "default" }],
+          queries: [{ requestId: "channels" }],
+          actions: [],
+        },
+      },
+      {
+        type: "dynamic-tool",
+        toolName: "customWidget_configurationRequestUser",
+        toolCallId: "configure-dispatcharr",
+        state: "output-available",
+        input: { previewSessionId: "preview-dispatcharr", sourceId: "default" },
+        output: {
+          requestId: "request-dispatcharr",
+          previewSessionId: "preview-dispatcharr",
+          sourceId: "default",
+          status: "pending",
+          url: "https://homarr.test/configure/dispatcharr",
+        },
+      },
+    ],
+  },
+  userMessage(latestUserText),
+];
 
 describe("Custom Widget authoring context", () => {
   test("refunds a focused discovery claim when the tool call fails", () => {
@@ -36,6 +76,11 @@ describe("Custom Widget authoring context", () => {
     "Create a widget using my Mealie integration",
     "Build an API widget for Sonarr",
     "Repair this custom-widget",
+    "Change my custom widget to show ten items",
+    "Modify the custom widget header",
+    "Adjust this custom widget's spacing",
+    "Add a latency chart to my custom widget",
+    "Remove the footer from my custom widget",
     "Validate this Custom JSX definition",
     '{"$schema":"homarr-custom-widget-v2"}',
   ])("detects explicit authoring intent: %s", (text) => {
@@ -120,6 +165,38 @@ describe("Custom Widget authoring context", () => {
     expect(shouldRequireCustomWidgetAuthoringTool(activeTools, steps, [], messages)).toBe(true);
     expect(needsCustomWidgetAuthoringContext([userMessage("Make it purple")])).toBe(false);
     expect(shouldRequireCustomWidgetAuthoringTool(activeTools, steps, [], [userMessage("Make it purple")])).toBe(false);
+  });
+
+  test.each([
+    "Change it to show ten items",
+    "Modify it to use a compact header",
+    "Adjust it to wrap long labels",
+    "Add a latency chart to it",
+    "Remove the footer from it",
+  ])("requires lifecycle continuation for a contextual edit: %s", (text) => {
+    const activeTools = ["customWidget_get", "customWidget_validateTemplate", "customWidget_previewCreate"];
+    const messages: UIMessage[] = [
+      userMessage("Create a custom widget"),
+      {
+        id: "assistant-1",
+        role: "assistant",
+        parts: [
+          {
+            type: "dynamic-tool",
+            toolName: "customWidget_get",
+            toolCallId: "get-1",
+            state: "output-available",
+            input: { id: "widget-1" },
+            output: { id: "widget-1", template: "<Text>Green</Text>" },
+          },
+        ],
+      },
+      userMessage(text),
+    ];
+    const steps = [{ toolResults: [{ toolName: "customWidget_get", output: { id: "widget-1" } }] }];
+
+    expect(needsCustomWidgetAuthoringContext(messages)).toBe(true);
+    expect(shouldRequireCustomWidgetAuthoringTool(activeTools, steps, [], messages)).toBe(true);
   });
 
   test("does not activate from stale authoring history", () => {
@@ -250,6 +327,433 @@ describe("Custom Widget authoring context", () => {
       "customWidget_createFromPreview",
     ]);
     expect(getCustomWidgetPhaseToolNames(tools, [])).toBeNull();
+  });
+
+  test("restores a credential-paused preview phase on the next user turn", () => {
+    const messages: UIMessage[] = [
+      userMessage("Create a custom widget for this authenticated service"),
+      {
+        id: "assistant-authoring",
+        role: "assistant",
+        parts: [
+          {
+            type: "dynamic-tool",
+            toolName: "customWidget_previewCreate",
+            toolCallId: "preview-create",
+            state: "output-available",
+            input: { definition: {} },
+            output: {
+              success: true,
+              previewSession: { id: "preview-1" },
+              queries: [{ requestId: "status" }],
+              actions: [],
+            },
+          },
+          {
+            type: "dynamic-tool",
+            toolName: "customWidget_previewQuery",
+            toolCallId: "preview-query",
+            state: "output-available",
+            input: { sessionId: "preview-1", requestId: "status" },
+            output: { sessionId: "preview-1", requestId: "status", ok: false, status: 401 },
+          },
+          {
+            type: "dynamic-tool",
+            toolName: "customWidget_configurationRequestUser",
+            toolCallId: "configure-source",
+            state: "output-available",
+            input: { previewSessionId: "preview-1", sourceId: "default" },
+            output: { requestId: "request-1", status: "pending", url: "https://homarr.test/configure" },
+          },
+          { type: "text", text: "Open the secure configuration link, then continue." },
+        ],
+      },
+      userMessage("Continue"),
+    ];
+    const tools = [
+      "customWidget_previewQuery",
+      "customWidget_previewAction",
+      "customWidget_configurationRequestUser",
+      "customWidget_createFromPreview",
+    ];
+    const restoredSteps = getCustomWidgetToolStepsFromUiMessages(messages);
+
+    expect(restoredSteps).toHaveLength(3);
+    expect(getCustomWidgetPhaseToolNames(tools, restoredSteps)).toEqual(["customWidget_configurationRequestUser"]);
+    expect(shouldRequireCustomWidgetAuthoringTool(["customWidget_configurationRequestUser"], [], [], messages)).toBe(
+      true,
+    );
+  });
+
+  test("does not restore an abandoned configuration phase into a new widget request", () => {
+    const messages = sourceConfigurationPausedMessages("Create a new Mealie custom widget instead");
+
+    expect(needsCustomWidgetAuthoringContext(messages)).toBe(true);
+    expect(getCustomWidgetToolStepsFromUiMessages(messages)).toEqual([]);
+    expect(
+      getCustomWidgetPhaseToolNames(
+        ["customWidget_getSkill", "customWidget_configurationRequestUser", "customWidget_createFromPreview"],
+        getCustomWidgetToolStepsFromUiMessages(messages),
+      ),
+    ).toBeNull();
+  });
+
+  test.each(["Continue", "I completed the secure source configuration", "Change it to use a compact header"])(
+    "restores a credential-paused phase for a genuine continuation: %s",
+    (latestUserText) => {
+      const messages = sourceConfigurationPausedMessages(latestUserText);
+      const restoredSteps = getCustomWidgetToolStepsFromUiMessages(messages);
+
+      expect(restoredSteps.map(({ toolResults }) => toolResults[0]?.toolCallId)).toEqual([
+        "preview-create",
+        "configure-dispatcharr",
+      ]);
+      expect(
+        getCustomWidgetPhaseToolNames(
+          ["customWidget_getSkill", "customWidget_configurationRequestUser", "customWidget_createFromPreview"],
+          restoredSteps,
+        ),
+      ).toEqual(["customWidget_configurationRequestUser"]);
+    },
+  );
+
+  test("restores the original preview across repeated source-configuration pauses", () => {
+    const messages: UIMessage[] = [
+      userMessage("Create a custom widget with two authenticated sources"),
+      {
+        id: "assistant-first-source",
+        role: "assistant",
+        parts: [
+          {
+            type: "dynamic-tool",
+            toolName: "customWidget_previewCreate",
+            toolCallId: "preview-create",
+            state: "output-available",
+            input: { definition: {} },
+            output: {
+              success: true,
+              previewSession: { id: "preview-1" },
+              sourceConfigurations: [{ sourceId: "primary" }, { sourceId: "secondary" }],
+              queries: [{ requestId: "primary-status" }, { requestId: "secondary-status" }],
+              actions: [],
+            },
+          },
+          {
+            type: "dynamic-tool",
+            toolName: "customWidget_configurationRequestUser",
+            toolCallId: "configure-primary",
+            state: "output-available",
+            input: { previewSessionId: "preview-1", sourceId: "primary" },
+            output: {
+              requestId: "request-primary",
+              previewSessionId: "preview-1",
+              sourceId: "primary",
+              status: "pending",
+              url: "https://homarr.test/configure/primary",
+            },
+          },
+        ],
+      },
+      userMessage("Continue"),
+      {
+        id: "assistant-second-source",
+        role: "assistant",
+        parts: [
+          {
+            type: "dynamic-tool",
+            toolName: "customWidget_configurationRequestUser",
+            toolCallId: "check-primary",
+            state: "output-available",
+            input: { requestId: "request-primary" },
+            output: {
+              requestId: "request-primary",
+              previewSessionId: "preview-1",
+              sourceId: "primary",
+              status: "completed",
+            },
+          },
+          {
+            type: "dynamic-tool",
+            toolName: "customWidget_configurationRequestUser",
+            toolCallId: "configure-secondary",
+            state: "output-available",
+            input: { previewSessionId: "preview-1", sourceId: "secondary" },
+            output: {
+              requestId: "request-secondary",
+              previewSessionId: "preview-1",
+              sourceId: "secondary",
+              status: "pending",
+              url: "https://homarr.test/configure/secondary",
+            },
+          },
+        ],
+      },
+      userMessage("Continue"),
+    ];
+    const tools = [
+      "customWidget_previewQuery",
+      "customWidget_configurationRequestUser",
+      "customWidget_createFromPreview",
+    ];
+    const restoredSteps = getCustomWidgetToolStepsFromUiMessages(messages);
+
+    expect(restoredSteps.map(({ toolResults }) => toolResults[0]?.toolCallId)).toEqual([
+      "preview-create",
+      "configure-primary",
+      "check-primary",
+      "configure-secondary",
+    ]);
+    expect(getCustomWidgetPhaseToolNames(tools, restoredSteps)).toEqual(["customWidget_configurationRequestUser"]);
+    expect(shouldRequireCustomWidgetAuthoringTool(["customWidget_configurationRequestUser"], [], [], messages)).toBe(
+      true,
+    );
+  });
+
+  test("requires another source-configuration call after one source completes", () => {
+    const messages = [userMessage("Create a custom widget with two authenticated sources")];
+
+    expect(
+      shouldRequireCustomWidgetAuthoringTool(
+        ["customWidget_configurationRequestUser"],
+        [
+          {
+            toolResults: [
+              {
+                toolName: "customWidget_configurationRequestUser",
+                output: {
+                  requestId: "request-primary",
+                  previewSessionId: "preview-1",
+                  sourceId: "primary",
+                  status: "completed",
+                },
+              },
+            ],
+          },
+        ],
+        [],
+        messages,
+      ),
+    ).toBe(true);
+  });
+
+  test("requires suggested HTTP source configuration before preview evidence", () => {
+    const tools = [
+      "customWidget_previewQuery",
+      "customWidget_configurationRequestUser",
+      "customWidget_createFromPreview",
+    ];
+    const previewStep = {
+      toolResults: [
+        {
+          toolName: "customWidget_previewCreate",
+          output: {
+            success: true,
+            previewSession: { id: "preview-1" },
+            sourceConfigurations: [{ sourceId: "default" }],
+            queries: [{ requestId: "status" }],
+            actions: [],
+          },
+        },
+      ],
+    };
+
+    expect(getCustomWidgetPhaseToolNames(tools, [previewStep])).toEqual(["customWidget_configurationRequestUser"]);
+    expect(
+      getCustomWidgetPhaseToolNames(tools, [
+        previewStep,
+        {
+          toolResults: [
+            {
+              toolName: "customWidget_configurationRequestUser",
+              output: {
+                requestId: "request-1",
+                previewSessionId: "preview-1",
+                sourceId: "default",
+                status: "pending",
+              },
+            },
+          ],
+        },
+      ]),
+    ).toEqual(["customWidget_configurationRequestUser"]);
+    expect(
+      getCustomWidgetPhaseToolNames(tools, [
+        previewStep,
+        {
+          toolResults: [
+            {
+              toolName: "customWidget_configurationRequestUser",
+              output: {
+                requestId: "request-1",
+                previewSessionId: "preview-1",
+                sourceId: "default",
+                status: "completed",
+              },
+            },
+          ],
+        },
+      ]),
+    ).toEqual(tools);
+  });
+
+  test("allows an expired source-configuration request to be replaced", () => {
+    const tools = [
+      "customWidget_previewQuery",
+      "customWidget_configurationRequestUser",
+      "customWidget_createFromPreview",
+    ];
+    const steps = [
+      {
+        toolResults: [
+          {
+            toolName: "customWidget_previewCreate",
+            output: {
+              success: true,
+              previewSession: { id: "preview-1" },
+              sourceConfigurations: [{ sourceId: "default" }],
+              queries: [{ requestId: "status" }],
+              actions: [],
+            },
+          },
+        ],
+      },
+      {
+        toolResults: [
+          {
+            toolName: "customWidget_configurationRequestUser",
+            output: {
+              requestId: "request-1",
+              previewSessionId: "preview-1",
+              sourceId: "default",
+              status: "pending",
+            },
+          },
+        ],
+      },
+      {
+        toolResults: [
+          {
+            toolName: "customWidget_configurationRequestUser",
+            output: {
+              requestId: "request-1",
+              status: "expired",
+              error: "The requested resource was not found or is not compatible with this tool.",
+              recovery: {
+                recoverable: true,
+                kind: "expired-source-configuration-request",
+                requiredNextTool: "customWidget_configurationRequestUser",
+              },
+            },
+          },
+        ],
+      },
+    ];
+
+    expect(getCustomWidgetPhaseToolNames(tools, steps)).toEqual(["customWidget_configurationRequestUser"]);
+    expect(
+      getCustomWidgetPhaseToolNames(tools, [
+        ...steps,
+        {
+          toolResults: [
+            {
+              toolName: "customWidget_configurationRequestUser",
+              output: {
+                requestId: "request-2",
+                previewSessionId: "preview-1",
+                sourceId: "default",
+                status: "completed",
+              },
+            },
+          ],
+        },
+        {
+          toolResults: [
+            {
+              toolName: "customWidget_previewQuery",
+              output: { sessionId: "preview-1", requestId: "status", sourceId: "default", ok: true },
+            },
+          ],
+        },
+      ]),
+    ).toEqual(["customWidget_createFromPreview"]);
+  });
+
+  test("routes authentication recovery securely and keeps exact URL connection failures terminal", () => {
+    const tools = [
+      "customWidget_previewQuery",
+      "customWidget_configurationRequestUser",
+      "customWidget_createFromPreview",
+    ];
+    const previewStep = {
+      toolResults: [
+        {
+          toolName: "customWidget_previewCreate",
+          output: {
+            success: true,
+            previewSession: { id: "preview-1" },
+            sourceConfigurations: [],
+            queries: [{ requestId: "status" }],
+            actions: [],
+          },
+        },
+      ],
+    };
+    const authenticationFailure = {
+      toolResults: [
+        {
+          toolName: "customWidget_previewQuery",
+          output: {
+            sessionId: "preview-1",
+            requestId: "status",
+            sourceId: "default",
+            ok: false,
+            status: 401,
+            error: "HTTP 401: Unauthorized",
+          },
+        },
+      ],
+    };
+
+    expect(getCustomWidgetPhaseToolNames(tools, [previewStep, authenticationFailure])).toEqual([
+      "customWidget_configurationRequestUser",
+    ]);
+    expect(
+      getCustomWidgetPhaseToolNames(tools, [
+        previewStep,
+        authenticationFailure,
+        {
+          toolResults: [
+            {
+              toolName: "customWidget_configurationRequestUser",
+              output: {
+                requestId: "request-1",
+                previewSessionId: "preview-1",
+                sourceId: "default",
+                status: "completed",
+              },
+            },
+          ],
+        },
+      ]),
+    ).toEqual(tools);
+    expect(
+      getCustomWidgetPhaseToolNames(tools, [
+        previewStep,
+        {
+          toolResults: [
+            {
+              toolName: "customWidget_previewQuery",
+              output: {
+                sessionId: "preview-1",
+                requestId: "status",
+                ok: false,
+                error: "Connection refused",
+              },
+            },
+          ],
+        },
+      ]),
+    ).toEqual([]);
   });
 
   test("keeps failed validation and preview calls on narrow repair paths", () => {
@@ -498,6 +1002,8 @@ describe("Custom Widget authoring context", () => {
   test("exposes focused context tools only after the skill entrypoint is loaded", () => {
     const tools = [
       "customWidget_getSkill",
+      "customWidget_list",
+      "customWidget_get",
       "customWidget_getReference",
       "customWidget_findComponents",
       "customWidget_getComponents",
@@ -513,6 +1019,8 @@ describe("Custom Widget authoring context", () => {
         { toolResults: [{ toolName: "customWidget_getSkill", output: { content: "skill" } }] },
       ]),
     ).toEqual([
+      "customWidget_list",
+      "customWidget_get",
       "customWidget_getReference",
       "customWidget_findComponents",
       "customWidget_getComponents",
@@ -873,6 +1381,7 @@ describe("Custom Widget authoring context", () => {
       "customWidget_previewReviseTemplate",
       "customWidget_previewQuery",
       "customWidget_previewAction",
+      "customWidget_configurationRequestUser",
       "customWidget_createFromPreview",
     ];
     const messages = [userMessage("Create a custom widget for my dashboard")];
@@ -881,6 +1390,23 @@ describe("Custom Widget authoring context", () => {
       shouldRequireCustomWidgetAuthoringTool(
         activeTools,
         [{ toolResults: [{ toolName: "customWidget_getComponents", output: { components: [] } }] }],
+        [],
+        messages,
+      ),
+    ).toBe(true);
+    expect(
+      shouldRequireCustomWidgetAuthoringTool(
+        activeTools,
+        [
+          {
+            toolResults: [
+              {
+                toolName: "customWidget_previewAction",
+                output: { ok: false, error: "Preview source credentials are missing" },
+              },
+            ],
+          },
+        ],
         [],
         messages,
       ),
@@ -952,6 +1478,64 @@ describe("Custom Widget authoring context", () => {
         messages,
       ),
     ).toBe(true);
+    expect(
+      shouldRequireCustomWidgetAuthoringTool(
+        activeTools,
+        [
+          {
+            toolResults: [
+              {
+                toolName: "customWidget_previewQuery",
+                output: { ok: false, status: 401, error: "HTTP 401: Unauthorized" },
+              },
+            ],
+          },
+        ],
+        [],
+        messages,
+      ),
+    ).toBe(true);
+    expect(
+      shouldRequireCustomWidgetAuthoringTool(
+        activeTools,
+        [
+          {
+            toolResults: [{ toolName: "customWidget_configurationRequestUser", output: { status: "completed" } }],
+          },
+        ],
+        [],
+        messages,
+      ),
+    ).toBe(true);
+    expect(
+      shouldRequireCustomWidgetAuthoringTool(
+        activeTools,
+        [
+          {
+            toolResults: [{ toolName: "customWidget_configurationRequestUser", output: { status: "pending" } }],
+          },
+        ],
+        [],
+        messages,
+      ),
+    ).toBe(false);
+    expect(
+      shouldRequireCustomWidgetAuthoringTool(
+        ["customWidget_configurationRequestUser"],
+        [
+          {
+            toolResults: [
+              {
+                toolName: "customWidget_configurationRequestUser",
+                output: { requestId: "request-1", status: "pending" },
+              },
+            ],
+          },
+        ],
+        [],
+        messages,
+      ),
+    ).toBe(false);
     expect(
       shouldRequireCustomWidgetAuthoringTool(
         activeTools,

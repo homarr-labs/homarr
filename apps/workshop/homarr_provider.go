@@ -25,7 +25,7 @@ import (
 const (
 	homarrProviderModelID    = "homarr/model"
 	homarrProviderModelName  = "Homarr model"
-	defaultOpenRouterModelID = "openai/gpt-5.6-luna"
+	defaultOpenRouterModelID = "~deepseek/deepseek-v4-flash-latest"
 	maxChatInputTokens       = 256 * 1024
 	maxChatOutputTokens      = 32 * 1024
 	defaultDailyLimit        = 50

@@ -6,8 +6,10 @@ import {
   getForcedAssistantToolName,
   getCustomWidgetPlacementState,
   getRequiredAssistantToolNames,
+  requiresAssistantToolApproval,
   withAssistantToolPolicy,
 } from "./assistant-tool-policy";
+import { getAssistantToolOutputOptions, toAssistantToolOutput } from "./assistant-tool-output";
 
 const assistantMessage = (...parts: UIMessage["parts"]): UIMessage => ({
   id: "assistant-message",
@@ -26,26 +28,37 @@ describe("withAssistantToolPolicy", () => {
   test("does not alter read-only tool descriptions", () => {
     expect(withAssistantToolPolicy("List all Homarr apps.", false)).toBe("List all Homarr apps.");
   });
+
+  test("exempts only secure source-configuration orchestration from mutation approval", () => {
+    expect(requiresAssistantToolApproval("customWidget_configurationRequestUser", "mutation")).toBe(false);
+    expect(requiresAssistantToolApproval("customWidget_createFromPreview", "mutation")).toBe(true);
+    expect(requiresAssistantToolApproval("board_addItem", "mutation")).toBe(true);
+    expect(requiresAssistantToolApproval("customWidget_previewQuery", "query")).toBe(false);
+  });
 });
 
 describe("customWidgetAssistantInstructions", () => {
   test("loads authoring resources lazily and verifies every final preview", () => {
-    expect(customWidgetAssistantInstructions.length).toBeLessThan(4_100);
+    expect(customWidgetAssistantInstructions.length).toBeLessThan(6_500);
     expect(customWidgetAssistantInstructions).toContain("customWidget_getSkill");
     expect(customWidgetAssistantInstructions).toContain("staged by the authoring lifecycle");
     expect(customWidgetAssistantInstructions).toContain("task-needed");
     expect(customWidgetAssistantInstructions).toContain("Reuse loaded context");
     expect(customWidgetAssistantInstructions).toContain("customWidget_findComponents");
     expect(customWidgetAssistantInstructions).toContain("coordinated set");
-    expect(customWidgetAssistantInstructions).toContain("research primary API documentation once");
+    expect(customWidgetAssistantInstructions).toContain("For each service whose contract is missing");
+    expect(customWidgetAssistantInstructions).toContain("customWidget_configurationRequestUser");
     expect(customWidgetAssistantInstructions).toContain("templateLines");
     expect(customWidgetAssistantInstructions).toContain("customWidget_validateTemplate");
     expect(customWidgetAssistantInstructions).toContain("customWidget_previewCreate");
     expect(customWidgetAssistantInstructions).toContain("every returned query");
-    expect(customWidgetAssistantInstructions).toContain("every relevant simulated action");
+    expect(customWidgetAssistantInstructions).toContain("every returned simulated action");
     expect(customWidgetAssistantInstructions).toContain("material definition change");
     expect(customWidgetAssistantInstructions).toContain("customWidget_createFromPreview");
     expect(customWidgetAssistantInstructions).toContain("definition is not streamed again");
+    expect(customWidgetAssistantInstructions).toContain("call board_getAllBoards");
+    expect(customWidgetAssistantInstructions).toContain("saved but remains unplaced");
+    expect(customWidgetAssistantInstructions).toContain("Never invent a board or board ID");
   });
 });
 
@@ -272,7 +285,7 @@ describe("getRequiredAssistantToolNames", () => {
     expect(getCustomWidgetPlacementState([], steps)).toMatchObject({ status: "ask-user", widgetId: "widget-1" });
   });
 
-  test("requires board placement after the affirmative unknown-board choice", () => {
+  test("requires board discovery after the affirmative unknown-board choice", () => {
     const steps = [
       {
         toolResults: [
@@ -302,7 +315,228 @@ describe("getRequiredAssistantToolNames", () => {
       },
     ];
 
-    expect(getRequiredAssistantToolNames([], steps)).toEqual(["configure_widget"]);
+    expect(getRequiredAssistantToolNames([], steps)).toEqual(["board_getAllBoards"]);
+  });
+
+  test("finishes honestly without placement when board discovery returns no boards", () => {
+    const steps = [
+      {
+        toolResults: [
+          {
+            toolName: "customWidget_createFromPreview",
+            output: {
+              ...successfulCreation,
+              nextAction: { type: "place-custom-widget", options: { definitionId: "widget-1" } },
+            },
+          },
+          {
+            toolName: "ask_user",
+            input: {
+              allowOther: false,
+              options: [
+                { id: "place", label: "Place on a board", kind: "affirmative" },
+                { id: "leave", label: "Leave unplaced", kind: "negative" },
+              ],
+            },
+            output: { answer: "Place on a board", optionId: "place", optionKind: "affirmative", source: "option" },
+          },
+          { toolName: "board_getAllBoards", output: [] },
+        ],
+      },
+    ];
+
+    expect(getRequiredAssistantToolNames([], steps)).toEqual([]);
+    expect(getCustomWidgetPlacementState([], steps)).toEqual({ status: "none" });
+  });
+
+  test("uses the exact discovered board when only one board is available", () => {
+    const discoverySteps = [
+      {
+        toolResults: [
+          {
+            toolName: "customWidget_createFromPreview",
+            output: {
+              ...successfulCreation,
+              nextAction: { type: "place-custom-widget", options: { definitionId: "widget-1" } },
+            },
+          },
+          {
+            toolName: "ask_user",
+            input: {
+              allowOther: false,
+              options: [
+                { id: "place", label: "Place on a board", kind: "affirmative" },
+                { id: "leave", label: "Leave unplaced", kind: "negative" },
+              ],
+            },
+            output: { answer: "Place on a board", optionId: "place", optionKind: "affirmative", source: "option" },
+          },
+          { toolName: "board_getAllBoards", output: [{ id: "board-1", name: "Home" }] },
+        ],
+      },
+    ];
+
+    expect(getRequiredAssistantToolNames([], discoverySteps)).toEqual(["configure_widget"]);
+    expect(getCustomWidgetPlacementState([], discoverySteps)).toMatchObject({
+      status: "configure",
+      targetBoardId: "board-1",
+      targetBoardName: "Home",
+    });
+
+    const malformedConfiguration = [
+      ...discoverySteps,
+      {
+        toolResults: [
+          {
+            toolName: "configure_widget",
+            input: { boardId: "board-1", boardName: "Invented" },
+            output: { boardId: "board-1", kind: "customApi", options: { definitionId: "widget-1" } },
+          },
+        ],
+      },
+    ];
+    expect(getRequiredAssistantToolNames([], malformedConfiguration)).toEqual(["configure_widget"]);
+  });
+
+  test("requires a finite validated board choice when multiple boards are available", () => {
+    const discoverySteps = [
+      {
+        toolResults: [
+          {
+            toolName: "customWidget_createFromPreview",
+            output: {
+              ...successfulCreation,
+              nextAction: { type: "place-custom-widget", options: { definitionId: "widget-1" } },
+            },
+          },
+          {
+            toolName: "ask_user",
+            input: {
+              allowOther: false,
+              options: [
+                { id: "place", label: "Place on a board", kind: "affirmative" },
+                { id: "leave", label: "Leave unplaced", kind: "negative" },
+              ],
+            },
+            output: { answer: "Place on a board", optionId: "place", optionKind: "affirmative", source: "option" },
+          },
+          {
+            toolName: "board_getAllBoards",
+            output: [
+              { id: "board-1", name: "Home" },
+              { id: "board-2", name: "Media" },
+            ],
+          },
+        ],
+      },
+    ];
+
+    expect(getRequiredAssistantToolNames([], discoverySteps)).toEqual(["ask_user"]);
+
+    const selectedSteps = [
+      ...discoverySteps,
+      {
+        toolResults: [
+          {
+            toolName: "ask_user",
+            input: {
+              allowOther: false,
+              options: [
+                { id: "board-1", label: "Home", kind: "alternative" },
+                { id: "board-2", label: "Media", kind: "alternative" },
+              ],
+            },
+            output: { answer: "Media", optionId: "board-2", optionKind: "alternative", source: "option" },
+          },
+        ],
+      },
+    ];
+    expect(getRequiredAssistantToolNames([], selectedSteps)).toEqual(["configure_widget"]);
+    expect(getCustomWidgetPlacementState([], selectedSteps)).toMatchObject({
+      status: "configure",
+      targetBoardId: "board-2",
+      targetBoardName: "Media",
+    });
+
+    const inventedChoiceSteps = [
+      ...discoverySteps,
+      {
+        toolResults: [
+          {
+            toolName: "ask_user",
+            input: {
+              allowOther: false,
+              options: [
+                { id: "board-1", label: "Home", kind: "alternative" },
+                { id: "invented", label: "Invented", kind: "alternative" },
+              ],
+            },
+            output: { answer: "Invented", optionId: "invented", optionKind: "alternative", source: "option" },
+          },
+        ],
+      },
+    ];
+    expect(getRequiredAssistantToolNames([], inventedChoiceSteps)).toEqual(["ask_user"]);
+
+    const malformedChoiceSteps = [
+      ...discoverySteps,
+      {
+        toolResults: [
+          {
+            toolName: "ask_user",
+            input: {
+              allowOther: true,
+              options: [
+                { id: "board-1", label: "Home", kind: "alternative" },
+                { id: "board-2", label: "Media", kind: "alternative" },
+              ],
+            },
+            output: { answer: "Home", optionId: "board-1", optionKind: "alternative", source: "option" },
+          },
+        ],
+      },
+    ];
+    expect(getRequiredAssistantToolNames([], malformedChoiceSteps)).toEqual(["ask_user"]);
+  });
+
+  test("advances from a bounded oversized board result without repeating discovery", () => {
+    const largeBoardResult = Array.from({ length: 2_000 }, (_, index) => ({
+      id: `board-${index}`,
+      name: `Board ${index} ${"x".repeat(40)}`,
+      logoImageUrl: null,
+    }));
+    const boundedBoardResult = toAssistantToolOutput(
+      largeBoardResult,
+      getAssistantToolOutputOptions("board_getAllBoards"),
+    );
+    const steps = [
+      {
+        toolResults: [
+          {
+            toolName: "customWidget_createFromPreview",
+            output: {
+              ...successfulCreation,
+              nextAction: { type: "place-custom-widget", options: { definitionId: "widget-1" } },
+            },
+          },
+          {
+            toolName: "ask_user",
+            input: {
+              allowOther: false,
+              options: [
+                { id: "place", label: "Place on a board", kind: "affirmative" },
+                { id: "leave", label: "Leave unplaced", kind: "negative" },
+              ],
+            },
+            output: { answer: "Place on a board", optionId: "place", optionKind: "affirmative", source: "option" },
+          },
+          { toolName: "board_getAllBoards", output: boundedBoardResult },
+        ],
+      },
+    ];
+
+    expect(getRequiredAssistantToolNames([], steps)).toEqual(["ask_user"]);
+    expect(getCustomWidgetPlacementState([], steps)).toMatchObject({ status: "choose-board" });
   });
 
   test("resolves placement by stable IDs when labels are localized", () => {

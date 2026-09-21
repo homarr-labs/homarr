@@ -127,7 +127,13 @@ export const secretProcedures = {
       if (input.requestId) {
         const request = await getCustomWidgetConfigurationRequestForUser(input.requestId, ctx.session.user.id);
         if (!request) throw new TRPCError({ code: "NOT_FOUND" });
-        return { requestId: request.id, status: request.status, expiresAt: request.expiresAt };
+        return {
+          requestId: request.id,
+          status: request.status,
+          expiresAt: request.expiresAt,
+          sourceId: request.sourceId,
+          ...(request.target.type === "preview" ? { previewSessionId: request.target.id } : {}),
+        };
       }
 
       let widgetName: string;
@@ -179,6 +185,8 @@ export const secretProcedures = {
         requestId: request.id,
         status: request.status,
         expiresAt: request.expiresAt,
+        sourceId: request.sourceId,
+        ...(request.target.type === "preview" ? { previewSessionId: request.target.id } : {}),
         url: new URL(`/custom-widget-configuration/${request.id}`, ctx.baseUrl ?? "http://localhost").toString(),
       };
     }),
