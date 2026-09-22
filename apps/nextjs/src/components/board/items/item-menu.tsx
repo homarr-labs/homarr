@@ -5,9 +5,10 @@ import { IconCopy, IconDotsVertical, IconLayoutKanban, IconPencil, IconTrash } f
 import { useSession } from "@homarr/auth/client";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { getWidgetName } from "@homarr/definitions";
-import { useConfirmModal, useModalAction } from "@homarr/modals";
+import { useModalAction } from "@homarr/modals";
 import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
+import { InlineConfirmMenuItem } from "@homarr/ui";
 import type { WidgetDefinition } from "@homarr/widgets/definition";
 import type { WidgetPreviewDimensions } from "@homarr/widgets/modals";
 
@@ -39,7 +40,6 @@ const BoardItemMenuInner = ({ item, definition, previewDimensions, resetErrorBou
   const tItem = useI18n("item");
   const t = useI18n();
   const { openModal } = useModalAction(LazyWidgetEditModal);
-  const { openConfirmModal } = useConfirmModal();
   const openMoveModal = useOpenItemMoveModal();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations, duplicateItem, removeItem } =
@@ -143,21 +143,14 @@ const BoardItemMenuInner = ({ item, definition, previewDimensions, resetErrorBou
           </Menu.Item>
         )}
         <Menu.Divider />
-        <Menu.Item
+        <InlineConfirmMenuItem
           color="red"
+          confirmLabel={tItem("remove.message")}
           leftSection={<IconTrash size={16} />}
-          onClick={() => {
-            setIsMenuOpen(false);
-            openConfirmModal({
-              title: tItem("remove.message"),
-              children: label,
-              labels: { confirm: tItem("action.remove") },
-              onConfirm: () => removeItem({ itemId: item.id }),
-            });
-          }}
+          onConfirm={() => removeItem({ itemId: item.id })}
         >
           {tItem("action.remove")}
-        </Menu.Item>
+        </InlineConfirmMenuItem>
       </Menu.Dropdown>
     </Menu>
   );
