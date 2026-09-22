@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from "react";
 import { Box } from "@mantine/core";
-import { CanvasAddon } from "@xterm/addon-canvas";
 import { FitAddon } from "@xterm/addon-fit";
 import { Terminal } from "@xterm/xterm";
 
@@ -176,8 +175,6 @@ export const TerminalComponent = ({ focusTimestamp }: TerminalComponentProps) =>
       return () => undefined;
     }
 
-    const canvasAddon = new CanvasAddon();
-
     terminalRef.current = new Terminal({
       cursorBlink: false,
       disableStdin: true,
@@ -186,7 +183,6 @@ export const TerminalComponent = ({ focusTimestamp }: TerminalComponentProps) =>
       scrollback: TERMINAL_SCROLLBACK_LINES,
     });
     terminalRef.current.open(ref.current);
-    terminalRef.current.loadAddon(canvasAddon);
 
     const fitTimeout = window.setTimeout(() => {
       const fitAddon = new FitAddon();
@@ -198,7 +194,6 @@ export const TerminalComponent = ({ focusTimestamp }: TerminalComponentProps) =>
 
     return () => {
       window.clearTimeout(fitTimeout);
-      canvasAddon.dispose();
       terminalRef.current?.dispose();
       terminalRef.current = null;
       fitAddonRef.current = null;

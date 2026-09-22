@@ -350,6 +350,7 @@ export const createAssistantSurfaceRuntime = (runtime: AssistantRuntime): Assist
     reload: () => sharedThreads.reload(),
     reloadMainThread: () => sharedThreads.reloadMainThread(),
     loadMore: () => sharedThreads.loadMore(),
+    unstable_subscribeThreadEvents: (callback) => sharedThreads.unstable_subscribeThreadEvents(callback),
   };
 
   return {

@@ -210,16 +210,17 @@ export default function NotificationsWidget({
 
 const InfoDisplay = ({ date, source, dense }: { date: Date; source?: string; dense: boolean }) => {
   const timeAgo = useTimeAgo(date, 30000); // update every 30sec
+  const secondaryTextColor = "light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-3))";
 
   return (
     <Group gap={5} align="center" wrap="nowrap">
-      <IconClock aria-hidden style={dense ? iconSizes.xs : iconSizes.md} color="var(--mantine-color-dimmed)" />
-      <Text size={dense ? "xs" : "sm"} c="dimmed" truncate={dense}>
+      <IconClock aria-hidden style={dense ? iconSizes.xs : iconSizes.md} color={secondaryTextColor} />
+      <Text size={dense ? "xs" : "sm"} c={secondaryTextColor} truncate={dense}>
         {timeAgo}
       </Text>
-      {source && <Text c="dimmed">•</Text>}
+      {source && <Text c={secondaryTextColor}>•</Text>}
       {source && (
-        <Text size="xs" c="dimmed" truncate="end">
+        <Text size="xs" c={secondaryTextColor} truncate="end">
           {source}
         </Text>
       )}

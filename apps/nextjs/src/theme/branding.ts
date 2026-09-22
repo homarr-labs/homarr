@@ -5,7 +5,7 @@ import type { ServerSettings } from "@homarr/server-settings";
 import { theme as homarrTheme } from "@homarr/ui";
 
 export const generateColorScale = (hex: string) => {
-  const lightnessSteps = [-0.25, -0.2, -0.15, -0.1, -0.05, 0, 0.05, 0.1, 0.15, 0.2] as const;
+  const lightnessSteps = [-0.25, -0.2, -0.15, -0.15, -0.05, 0, 0.05, 0.1, 0.15, 0.2] as const;
   const colors = lightnessSteps.map((lightness) => {
     if (lightness < 0) return lighten(hex, -lightness);
     return darken(hex, lightness);

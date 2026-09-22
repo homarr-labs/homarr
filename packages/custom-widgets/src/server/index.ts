@@ -15,7 +15,12 @@ export {
   resolveSameOriginTarget,
   validateCustomWidgetUrl,
 } from "./request-executor";
-export type { CustomWidgetAuthConfig, CustomWidgetHttpRequest, CustomWidgetHttpResponse } from "./request-executor";
+export type {
+  CustomWidgetAuthConfig,
+  CustomWidgetHttpNetworkScope,
+  CustomWidgetHttpRequest,
+  CustomWidgetHttpResponse,
+} from "./request-executor";
 export {
   CUSTOM_WIDGET_DEFINITION_CONCURRENCY_LIMIT,
   CUSTOM_WIDGET_REQUEST_CONCURRENCY_TTL_MS,

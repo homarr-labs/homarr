@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { fetchStatsGroupsAsync } from "../types";
 import type { StatsAuthenticationContext, StatsProvider } from "../types";
 
 const countSchema = z.number().finite().int().nonnegative();
@@ -57,33 +58,41 @@ export const linkwardenStatsProvider = {
   ],
   async fetchAsync(context) {
     const headers = getHttpAuthentication(context).headers;
-    const [collectionsResponse, tagsResponse] = await Promise.all([
-      context.requestAsync("/api/v1/collections", { headers, signal: context.signal }),
-      context.requestAsync("/api/v1/tags", { headers, signal: context.signal }),
+    return await fetchStatsGroupsAsync([
+      {
+        metrics: ["links", "collections"],
+        fetchAsync: async () => {
+          const response = await context.requestAsync("/api/v1/collections", { headers, signal: context.signal });
+          const collections = collectionList(response);
+          return statsSchema.pick({ links: true, collections: true }).parse({
+            links: collections.reduce((total, collection) => total + collection._count.links, 0),
+            collections: collections.length,
+          });
+        },
+      },
+      {
+        metrics: ["tags"],
+        fetchAsync: async () => {
+          let page = tagPage(await context.requestAsync("/api/v1/tags", { headers, signal: context.signal }));
+          let tags = page.tags.length;
+          const visited = new Set<string>();
+          while (page.nextCursor != null) {
+            context.signal.throwIfAborted();
+            const cursor = String(page.nextCursor);
+            if (visited.has(cursor) || visited.size >= 1000)
+              throw new Error("Invalid or excessive Linkwarden tag pagination");
+            visited.add(cursor);
+            page = tagPage(
+              await context.requestAsync(`/api/v1/tags?cursor=${encodeURIComponent(cursor)}`, {
+                headers,
+                signal: context.signal,
+              }),
+            );
+            tags += page.tags.length;
+          }
+          return { tags: countSchema.parse(tags) };
+        },
+      },
     ]);
-    const collections = collectionList(collectionsResponse);
-    let page = tagPage(tagsResponse);
-    let tagCount = page.tags.length;
-    const visited = new Set<string>();
-    while (page.nextCursor != null) {
-      context.signal.throwIfAborted();
-      const cursor = String(page.nextCursor);
-      if (visited.has(cursor) || visited.size >= 1000)
-        throw new Error("Invalid or excessive Linkwarden tag pagination");
-      visited.add(cursor);
-      page = tagPage(
-        await context.requestAsync(`/api/v1/tags?cursor=${encodeURIComponent(cursor)}`, {
-          headers,
-          signal: context.signal,
-        }),
-      );
-      tagCount += page.tags.length;
-    }
-
-    return statsSchema.parse({
-      links: collections.reduce((total, collection) => total + collection._count.links, 0),
-      collections: collections.length,
-      tags: tagCount,
-    });
   },
 } satisfies StatsProvider;

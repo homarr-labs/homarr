@@ -68,6 +68,7 @@ export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: C
     <HoverCard
       position="bottom"
       withArrow
+      withRoles={false}
       withinPortal
       radius="lg"
       shadow="sm"
@@ -76,7 +77,15 @@ export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: C
       closeDelay={400}
     >
       <HoverCard.Target>{cell}</HoverCard.Target>
-      <HoverCard.Dropdown maw="calc(100vw - 24px)" w={512} pe={4} pb={0} style={{ overflow: "hidden" }}>
+      <HoverCard.Dropdown
+        role="region"
+        aria-label={date.toLocaleDateString()}
+        maw="calc(100vw - 24px)"
+        w={512}
+        pe={4}
+        pb={0}
+        style={{ overflow: "hidden" }}
+      >
         <CalendarEventList events={events} />
       </HoverCard.Dropdown>
     </HoverCard>

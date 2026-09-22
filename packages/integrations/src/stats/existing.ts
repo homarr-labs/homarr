@@ -5,11 +5,12 @@ import type { IntegrationKind } from "@homarr/definitions";
 
 import type { IntegrationInput } from "../base/integration";
 import { createIntegrationAsync } from "../factory";
-import type { StatsMetric, StatsUnit, StatsValue } from "./types";
+import { createStatsRequestSignal, fetchStatsGroupsAsync } from "./types";
+import type { StatsFetchResult, StatsMetric, StatsUnit, StatsValue } from "./types";
 
 export interface ExistingStatsProvider {
   metrics: StatsMetric[];
-  fetchAsync: (input: IntegrationInput, signal: AbortSignal) => Promise<Record<string, StatsValue>>;
+  fetchAsync: (input: IntegrationInput, signal: AbortSignal) => Promise<Record<string, StatsValue> | StatsFetchResult>;
 }
 
 const metric = (key: string, label: string, unit: StatsUnit = "count"): StatsMetric => ({ key, label, unit });
@@ -27,6 +28,26 @@ const adapter = <TKind extends IntegrationKind, TData>(
       signal.throwIfAborted();
       return pick(result);
     });
+  },
+});
+
+const groupedAdapter = <TKind extends IntegrationKind>(
+  kind: TKind,
+  metrics: StatsMetric[],
+  groups: (client: IntegrationInstanceOfKind<TKind>) => Parameters<typeof fetchStatsGroupsAsync>[0],
+): ExistingStatsProvider => ({
+  metrics,
+  async fetchAsync(input, signal) {
+    signal.throwIfAborted();
+    const client = await createIntegrationAsync({ ...input, kind });
+    const boundedGroups = groups(client).map((group) => ({
+      ...group,
+      fetchAsync: async () =>
+        await withHttpRequestSignalAsync(createStatsRequestSignal(signal), async () => await group.fetchAsync()),
+    }));
+    const result = await fetchStatsGroupsAsync(boundedGroups);
+    signal.throwIfAborted();
+    return result;
   },
 });
 
@@ -203,19 +224,14 @@ for (const kind of ["sonarr", "radarr"] as const) {
     metrics[2] = metric("downloaded", "Downloaded episodes");
     metrics.push(metric("episodes", "Episodes"));
   }
-  existingStatsProviders[kind] = adapter(
-    kind,
-    metrics,
-    async (client) => {
-      const [library, missing, queued] = await Promise.all([
-        client.getLibraryStatsAsync(),
-        client.getMissingAsync(1),
-        client.getMediaQueueAsync(1),
-      ]);
-      return { ...library, missing: missing.totalCount, queued: queued.totalCount };
+  existingStatsProviders[kind] = groupedAdapter(kind, metrics, (client) => [
+    {
+      metrics: metrics.filter((item) => item.key !== "missing" && item.key !== "queued").map((item) => item.key),
+      fetchAsync: async () => await client.getLibraryStatsAsync(),
     },
-    (data) => data,
-  );
+    { metrics: ["missing"], fetchAsync: async () => ({ missing: (await client.getMissingAsync(1)).totalCount }) },
+    { metrics: ["queued"], fetchAsync: async () => ({ queued: (await client.getMediaQueueAsync(1)).totalCount }) },
+  ]);
 }
 for (const kind of ["plex", "jellyfin", "emby"] as const) {
   existingStatsProviders[kind] = adapter(
@@ -406,17 +422,21 @@ for (const kind of ["lidarr", "readarr"] as const) {
     libraryMetric.key = "artists";
     libraryMetric.label = "Artists";
   }
-  existingStatsProviders[kind] = adapter(
+  existingStatsProviders[kind] = groupedAdapter(
     kind,
     [libraryMetric, metric("monitored", "Monitored"), metric("upcoming", "Events in the next 7 days")],
-    async (client) => {
-      const [library, events] = await Promise.all([
-        client.getLibraryStatsAsync(),
-        client.getCalendarEventsAsync(new Date(), new Date(Date.now() + 7 * 86_400_000)),
-      ]);
-      return { ...library, upcoming: events.length };
-    },
-    (data) => data,
+    (client) => [
+      {
+        metrics: [libraryMetric.key, "monitored"],
+        fetchAsync: async () => await client.getLibraryStatsAsync(),
+      },
+      {
+        metrics: ["upcoming"],
+        fetchAsync: async () => ({
+          upcoming: (await client.getCalendarEventsAsync(new Date(), new Date(Date.now() + 7 * 86_400_000))).length,
+        }),
+      },
+    ],
   );
 }
 existingStatsProviders.ical = adapter(

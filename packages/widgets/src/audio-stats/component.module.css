@@ -87,7 +87,7 @@
     calc(2.5cqi * var(--board-canvas-ui-scale, 1)),
     calc(11px * var(--board-canvas-ui-scale, 1))
   );
-  color: var(--mantine-color-dimmed);
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-3));
   line-height: 1.2;
   text-align: center;
   max-width: 100%;

@@ -591,3 +591,21 @@ html[data-theme="dark"] div#__docusaurus div[role="banner"] button svg {
     letter-spacing: var(--tracking-normal);
   }
 }
+
+[data-theme="light"] .theme-code-block .token.property {
+  color: #006b69 !important;
+}
+
+[data-theme="light"] .theme-code-block .token.string {
+  color: #ad004c !important;
+}
+
+[data-theme="light"] .carbon-via,
+[data-theme="light"] .carbon-poweredby {
+  color: #666 !important;
+}
+
+[data-theme="dark"] .carbon-via,
+[data-theme="dark"] .carbon-poweredby {
+  color: #b3b3b3 !important;
+}

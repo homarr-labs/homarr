@@ -157,7 +157,8 @@ export default function StatsWidget({
     for (const [index, integrationId] of visibleIds.entries()) {
       const snapshot = snapshots[index];
       if (!snapshot?.data || snapshot.error) continue;
-      if (snapshot.data.updatedAt === null && snapshot.data.retryAt <= Date.now()) void refresh(integrationId, false);
+      const needsRefresh = snapshot.data.updatedAt === null || (snapshot.data.unavailableMetrics?.length ?? 0) > 0;
+      if (needsRefresh && snapshot.data.retryAt <= Date.now()) void refresh(integrationId, false);
     }
   }, [visibleIds, snapshots, refresh]);
 
@@ -183,7 +184,8 @@ export default function StatsWidget({
       !ids.includes(entry.integrationId) ||
       (!!catalog?.error && !catalog.data) ||
       (!!snapshot?.error && !snapshot.data) ||
-      (!!catalog?.data && !metric);
+      (!!catalog?.data && !metric) ||
+      snapshot?.data?.unavailableMetrics?.includes(entry.metric);
     const loading =
       !unavailable && !refreshFailed && !snapshot?.data?.error && (snapshot?.data?.updatedAt == null || !metric);
     let value = "—";
@@ -382,10 +384,11 @@ export default function StatsWidget({
                 const snapshot = snapshots[visibleIds.indexOf(entry.integrationId)];
                 const metric = catalog?.data?.metrics.find((item) => item.key === entry.metric);
                 const refreshFailed = !!snapshot?.error || hasRefreshError(entry.integrationId);
-                const unavailable =
+                const sourceUnavailable =
                   !ids.includes(entry.integrationId) ||
                   (!!catalog?.error && !catalog.data) ||
                   (!!snapshot?.error && !snapshot.data);
+                const unavailable = sourceUnavailable || !!snapshot?.data?.unavailableMetrics?.includes(entry.metric);
                 const loading =
                   !unavailable &&
                   !(catalog?.data && !metric) &&
@@ -466,7 +469,7 @@ export default function StatsWidget({
                           snapshot={snapshot?.data}
                           selected={entry.metric}
                           showIcon={options.showIcon}
-                          unavailable={unavailable}
+                          unavailable={sourceUnavailable}
                           refreshFailed={refreshFailed}
                         />
                       )}

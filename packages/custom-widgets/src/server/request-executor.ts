@@ -3,7 +3,12 @@ import { STATUS_CODES } from "node:http";
 import { Headers, Response } from "undici";
 
 import type { CustomWidgetHttpRequest, CustomWidgetHttpResponse } from "./request-types";
-export type { CustomWidgetAuthConfig, CustomWidgetHttpRequest, CustomWidgetHttpResponse } from "./request-types";
+export type {
+  CustomWidgetAuthConfig,
+  CustomWidgetHttpNetworkScope,
+  CustomWidgetHttpRequest,
+  CustomWidgetHttpResponse,
+} from "./request-types";
 import { applyAuth, performAuthenticatedRequest } from "./auth";
 import { CustomWidgetDomainError } from "./errors";
 import {

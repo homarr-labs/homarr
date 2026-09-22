@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { fetchStatsGroupsAsync } from "../types";
 import type { StatsAuthenticationContext, StatsProvider } from "../types";
 
 const countSchema = z.number().finite().nonnegative().int();
@@ -22,18 +23,25 @@ export const tubearchivistStatsProvider = {
   ],
   async fetchAsync(context) {
     const headers = getHttpAuthentication(context).headers;
-    const [downloadsResponse, videosResponse, channelsResponse, playlistsResponse] = await Promise.all([
-      context.requestAsync("/api/stats/download/", { headers, signal: context.signal }),
-      context.requestAsync("/api/stats/video/", { headers, signal: context.signal }),
-      context.requestAsync("/api/stats/channel/", { headers, signal: context.signal }),
-      context.requestAsync("/api/stats/playlist/", { headers, signal: context.signal }),
+    const collection = (path: `/${string}`, key: string) => ({
+      metrics: [key],
+      fetchAsync: async () => ({
+        [key]: collectionStatsSchema.parse(await context.requestAsync(path, { headers, signal: context.signal }))
+          .doc_count,
+      }),
+    });
+    return await fetchStatsGroupsAsync([
+      {
+        metrics: ["pendingDownloads"],
+        fetchAsync: async () => ({
+          pendingDownloads: downloadStatsSchema.parse(
+            await context.requestAsync("/api/stats/download/", { headers, signal: context.signal }),
+          ).pending,
+        }),
+      },
+      collection("/api/stats/video/", "videos"),
+      collection("/api/stats/channel/", "channels"),
+      collection("/api/stats/playlist/", "playlists"),
     ]);
-
-    return {
-      pendingDownloads: downloadStatsSchema.parse(downloadsResponse).pending ?? 0,
-      videos: collectionStatsSchema.parse(videosResponse).doc_count,
-      channels: collectionStatsSchema.parse(channelsResponse).doc_count,
-      playlists: collectionStatsSchema.parse(playlistsResponse).doc_count,
-    };
   },
 } satisfies StatsProvider;

@@ -3,14 +3,14 @@
 import type { PropsWithChildren } from "react";
 import { useMemo } from "react";
 import type { MantineColorScheme, MantineColorSchemeManager } from "@mantine/core";
-import { DirectionProvider, MantineProvider, v8CssVariablesResolver } from "@mantine/core";
+import { DirectionProvider, MantineProvider } from "@mantine/core";
 import dayjs from "dayjs";
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { parseCookies, setClientCookie } from "@homarr/common";
 import { colorSchemeCookieKey } from "@homarr/definitions";
-import { theme } from "@homarr/ui";
+import { cssVariablesResolver, theme } from "@homarr/ui";
 import type { ServerSettings } from "@homarr/server-settings";
 
 import { createBrandTheme } from "~/theme/branding";
@@ -28,7 +28,7 @@ export const CustomMantineProvider = ({
         defaultColorScheme={defaultColorScheme}
         colorSchemeManager={manager}
         theme={configuredTheme}
-        cssVariablesResolver={v8CssVariablesResolver}
+        cssVariablesResolver={cssVariablesResolver}
       >
         {children}
       </MantineProvider>

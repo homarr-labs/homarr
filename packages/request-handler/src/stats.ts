@@ -16,6 +16,7 @@ const MAX_PENDING = 128;
 const snapshotSchema = z.object({
   identity: z.string(),
   values: z.record(z.string(), z.union([z.number().finite(), z.string().max(4096), z.boolean(), z.null()])),
+  unavailableMetrics: z.array(z.string()).default([]),
   updatedAt: z.number().nullable(),
   retryAt: z.number(),
   error: z.boolean(),
@@ -24,6 +25,19 @@ type Snapshot = z.infer<typeof snapshotSchema>;
 type Input = Parameters<typeof getIntegrationCacheIdentity>[0]["integration"] & { kind: IntegrationKind };
 const running = new Map<string, Promise<void>>();
 const cacheOptions = { useBoundedCacheClient: true };
+
+export const mergeStatsValues = (
+  metricKeys: readonly string[],
+  previous: Record<string, StatsValue>,
+  next: Record<string, StatsValue>,
+) => {
+  const values: Record<string, StatsValue> = {};
+  for (const key of metricKeys) {
+    if (Object.hasOwn(next, key)) values[key] = next[key] ?? null;
+    else values[key] = previous[key] ?? null;
+  }
+  return values;
+};
 
 const demoValues: Partial<Record<IntegrationKind, Record<string, StatsValue>>> = {
   sonarr: {
@@ -78,7 +92,7 @@ const resolveAsync = async (integration: Input) => {
   const name = `integration-stats:snapshot:v1:${integration.id}`;
   const channel = createGetSetChannel<Snapshot>(name, cacheOptions);
   const parsed = snapshotSchema.safeParse(await channel.getAsync());
-  let snapshot: Snapshot = { identity, values: {}, updatedAt: null, retryAt: 0, error: false };
+  let snapshot: Snapshot = { identity, values: {}, unavailableMetrics: [], updatedAt: null, retryAt: 0, error: false };
   // Retain snapshots written before response generations were decoupled.
   if (parsed.success && (parsed.data.identity === identity || parsed.data.identity.endsWith(`:${identity}`)))
     snapshot = { ...parsed.data, identity };
@@ -90,6 +104,7 @@ export const getStatsSnapshotAsync = async (integration: Input) => {
   if (demo) {
     return {
       values: demo,
+      unavailableMetrics: [],
       updatedAt: Date.now(),
       retryAt: 0,
       error: false,
@@ -100,6 +115,7 @@ export const getStatsSnapshotAsync = async (integration: Input) => {
   const { snapshot } = await resolveAsync(integration);
   return {
     values: snapshot.values,
+    unavailableMetrics: snapshot.unavailableMetrics,
     updatedAt: snapshot.updatedAt,
     retryAt: snapshot.retryAt,
     error: snapshot.error,
@@ -122,7 +138,13 @@ export const refreshStatsAsync = async (integration: Input, force: boolean) => {
 const runRefreshAsync = async (integration: Input, force: boolean) => {
   const initial = await resolveAsync(integration);
   if (!force && initial.snapshot.retryAt > Date.now()) return;
-  if (!force && initial.snapshot.updatedAt !== null && Date.now() - initial.snapshot.updatedAt < FRESH_MS) return;
+  if (
+    !force &&
+    initial.snapshot.unavailableMetrics.length === 0 &&
+    initial.snapshot.updatedAt !== null &&
+    Date.now() - initial.snapshot.updatedAt < FRESH_MS
+  )
+    return;
   const lock = createLockChannel(`integration-stats:lock:${integration.id}`, cacheOptions);
   const token = await lock.acquireAsync(120);
   // Another process owns this source. The caller keeps its snapshot and checks again later.
@@ -161,19 +183,35 @@ const runRefreshAsync = async (integration: Input, force: boolean) => {
     // Recheck after queuing: credentials or another refresh may have changed the snapshot.
     const current = await resolveAsync(integration);
     if (current.identity !== initial.identity || current.generation !== initial.generation) return;
-    if (!force && current.snapshot.updatedAt !== null && Date.now() - current.snapshot.updatedAt < FRESH_MS) return;
+    if (
+      !force &&
+      current.snapshot.unavailableMetrics.length === 0 &&
+      current.snapshot.updatedAt !== null &&
+      Date.now() - current.snapshot.updatedAt < FRESH_MS
+    )
+      return;
     deadline = setTimeout(() => controller.abort(), 60_000);
     deadline.unref?.();
     try {
-      const raw = getDemoStatsValues(integration) ?? (await fetchBeforeAbortAsync(integration, controller.signal));
+      const demo = getDemoStatsValues(integration);
+      let result;
+      if (demo) result = { values: demo, unavailableMetrics: [] };
+      else result = await fetchBeforeAbortAsync(integration, controller.signal);
       controller.signal.throwIfAborted();
-      const values: Snapshot["values"] = {};
-      for (const metric of getStatsMetrics(integration.kind)) values[metric.key] = raw[metric.key] ?? null;
+      const metrics = getStatsMetrics(integration.kind);
+      const values = mergeStatsValues(
+        metrics.map((metric) => metric.key),
+        current.snapshot.values,
+        result.values,
+      );
+      let retryAt = 0;
+      if (result.unavailableMetrics.length > 0) retryAt = Date.now() + RETRY_MS;
       const snapshot = snapshotSchema.parse({
         identity: initial.identity,
         values,
+        unavailableMetrics: result.unavailableMetrics,
         updatedAt: Date.now(),
-        retryAt: 0,
+        retryAt,
         error: false,
       });
       const latest = await resolveAsync(integration);

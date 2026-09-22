@@ -96,7 +96,7 @@ export async function getIntegrationHttpConnection(integration: HttpIntegration,
     const baseUrl = new URL(integration.url);
     return {
       baseUrl: baseUrl.href,
-      networkScope: "loopback" as const,
+      networkScope: "any" as const,
       pathPrefix: baseUrl.pathname,
       redactSecrets: secrets,
       cacheVersion: getIntegrationHttpCacheVersion(integration),

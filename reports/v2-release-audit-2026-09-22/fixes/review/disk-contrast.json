@@ -1,0 +1,102 @@
+{
+  "light": [
+    {
+      "label": "Healthy 0%Usage 0%",
+      "color": "rgb(0, 0, 0)",
+      "track": "rgb(241, 243, 245)",
+      "fill": "rgb(178, 242, 187)",
+      "trackContrast": 18.878905715422263,
+      "fillContrast": 16.311419002134542
+    },
+    {
+      "label": "Healthy 25%Usage 25%",
+      "color": "rgb(0, 0, 0)",
+      "track": "rgb(241, 243, 245)",
+      "fill": "rgb(178, 242, 187)",
+      "trackContrast": 18.878905715422263,
+      "fillContrast": 16.311419002134542
+    },
+    {
+      "label": "Healthy 100%Usage 100%",
+      "color": "rgb(0, 0, 0)",
+      "track": "rgb(241, 243, 245)",
+      "fill": "rgb(178, 242, 187)",
+      "trackContrast": 18.878905715422263,
+      "fillContrast": 16.311419002134542
+    },
+    {
+      "label": "Unhealthy 0%Usage 0%status.unhealthy",
+      "color": "rgb(0, 0, 0)",
+      "track": "rgb(241, 243, 245)",
+      "fill": "rgb(255, 201, 201)",
+      "trackContrast": 18.878905715422263,
+      "fillContrast": 14.45006692495005
+    },
+    {
+      "label": "Unhealthy 25%Usage 25%status.unhealthy",
+      "color": "rgb(0, 0, 0)",
+      "track": "rgb(241, 243, 245)",
+      "fill": "rgb(255, 201, 201)",
+      "trackContrast": 18.878905715422263,
+      "fillContrast": 14.45006692495005
+    },
+    {
+      "label": "Unhealthy 100%Usage 100%status.unhealthy",
+      "color": "rgb(0, 0, 0)",
+      "track": "rgb(241, 243, 245)",
+      "fill": "rgb(255, 201, 201)",
+      "trackContrast": 18.878905715422263,
+      "fillContrast": 14.45006692495005
+    }
+  ],
+  "dark": [
+    {
+      "label": "Healthy 0%Usage 0%",
+      "color": "rgb(255, 255, 255)",
+      "track": "rgb(36, 36, 36)",
+      "fill": "color(srgb 0.151765 0.487059 0.218824)",
+      "trackContrast": 15.522910417680388,
+      "fillContrast": 5.215535237074974
+    },
+    {
+      "label": "Healthy 25%Usage 25%",
+      "color": "rgb(255, 255, 255)",
+      "track": "rgb(36, 36, 36)",
+      "fill": "color(srgb 0.151765 0.487059 0.218824)",
+      "trackContrast": 15.522910417680388,
+      "fillContrast": 5.215535237074974
+    },
+    {
+      "label": "Healthy 100%Usage 100%",
+      "color": "rgb(255, 255, 255)",
+      "track": "rgb(36, 36, 36)",
+      "fill": "color(srgb 0.151765 0.487059 0.218824)",
+      "trackContrast": 15.522910417680388,
+      "fillContrast": 5.215535237074974
+    },
+    {
+      "label": "Unhealthy 0%Usage 0%status.unhealthy",
+      "color": "rgb(255, 255, 255)",
+      "track": "rgb(36, 36, 36)",
+      "fill": "rgb(201, 42, 42)",
+      "trackContrast": 15.522910417680388,
+      "fillContrast": 5.457209361605109
+    },
+    {
+      "label": "Unhealthy 25%Usage 25%status.unhealthy",
+      "color": "rgb(255, 255, 255)",
+      "track": "rgb(36, 36, 36)",
+      "fill": "rgb(201, 42, 42)",
+      "trackContrast": 15.522910417680388,
+      "fillContrast": 5.457209361605109
+    },
+    {
+      "label": "Unhealthy 100%Usage 100%status.unhealthy",
+      "color": "rgb(255, 255, 255)",
+      "track": "rgb(36, 36, 36)",
+      "fill": "rgb(201, 42, 42)",
+      "trackContrast": 15.522910417680388,
+      "fillContrast": 5.457209361605109
+    }
+  ]
+}

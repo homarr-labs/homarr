@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useRef } from "react";
 import { Box } from "@mantine/core";
-import { CanvasAddon } from "@xterm/addon-canvas";
 import { FitAddon } from "@xterm/addon-fit";
 import { Terminal } from "@xterm/xterm";
 
@@ -46,8 +45,6 @@ export const DockerLogsTerminal = ({ endpointId, containerId }: DockerLogsTermin
       return () => undefined;
     }
 
-    const canvasAddon = new CanvasAddon();
-
     terminalRef.current = new Terminal({
       cursorBlink: false,
       disableStdin: true,
@@ -55,7 +52,6 @@ export const DockerLogsTerminal = ({ endpointId, containerId }: DockerLogsTermin
       fontSize: 14,
     });
     terminalRef.current.open(ref.current);
-    terminalRef.current.loadAddon(canvasAddon);
 
     isTerminalReadyRef.current = true;
     const terminal = terminalRef.current;
@@ -72,7 +68,6 @@ export const DockerLogsTerminal = ({ endpointId, containerId }: DockerLogsTermin
     return () => {
       isTerminalReadyRef.current = false;
       pendingLogsRef.current = [];
-      canvasAddon.dispose();
       terminalRef.current?.dispose();
       terminalRef.current = null;
     };

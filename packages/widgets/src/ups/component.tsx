@@ -313,6 +313,7 @@ function UpsDeviceCard({ summary, sourceName, options, layout, advanced, t }: Up
                 <Text size="xs">{Math.round(summary.load)}%</Text>
               </Group>
               <Progress
+                aria-label={t("field.load")}
                 value={clampPercent(summary.load)}
                 size="sm"
                 color={getLoadColor(summary.load)}

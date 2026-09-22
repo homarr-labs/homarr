@@ -30,6 +30,9 @@ describe("custom widget request executor", () => {
     await expect(resolveAndValidateHost("169.254.169.254", "loopback")).rejects.toMatchObject({
       code: "FORBIDDEN",
     });
+    await expect(resolveAndValidateHost("100.64.0.1", "any")).resolves.toHaveLength(1);
+    await expect(resolveAndValidateHost("169.254.169.254", "any")).resolves.toHaveLength(1);
+    await expect(resolveAndValidateHost("::ffff:127.0.0.1", "any")).resolves.toHaveLength(1);
   });
 
   test("allows only credential-free HTTP(S) URLs without fragments", () => {

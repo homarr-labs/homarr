@@ -21,12 +21,12 @@
     "verify:search": "node ./scripts/verify-algolia-search.mjs"
   },
   "dependencies": {
-    "@base-ui/react": "^1.5.0",
-    "@docusaurus/core": "^3.10.1",
-    "@docusaurus/faster": "^3.10.1",
-    "@docusaurus/plugin-content-docs": "^3.10.1",
-    "@docusaurus/plugin-sitemap": "^3.10.1",
-    "@docusaurus/preset-classic": "^3.10.1",
+    "@base-ui/react": "^1.8.0",
+    "@docusaurus/core": "^3.10.2",
+    "@docusaurus/faster": "^3.10.2",
+    "@docusaurus/plugin-content-docs": "^3.10.2",
+    "@docusaurus/plugin-sitemap": "^3.10.2",
+    "@docusaurus/preset-classic": "^3.10.2",
     "@homarr/custom-widgets": "workspace:^",
     "@homarr/definitions": "workspace:^",
     "@homarr/workshop": "workspace:^",
@@ -35,7 +35,7 @@
     "@nivo/line": "^0.99.0",
     "@scalar/api-reference-react": "catalog:",
     "@tabler/icons-react": "catalog:",
-    "@tailwindcss/postcss": "^4.3.2",
+    "@tailwindcss/postcss": "^4.3.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "catalog:",
     "date-fns": "catalog:",
@@ -44,20 +44,20 @@
     "leader-line-new": "^1.1.9",
     "next-themes": "catalog:",
     "pocketbase": "catalog:",
-    "postcss": "^8.5.16",
+    "postcss": "^8.5.28",
     "posthog-docusaurus": "^2.0.5",
     "prism-react-renderer": "^2.4.1",
     "react": "catalog:",
     "react-dom": "catalog:",
     "sonner": "catalog:",
-    "swiper": "^14.0.5",
-    "tailwind-merge": "^3.6.0",
-    "tailwindcss": "^4.3.2"
+    "swiper": "^14.2.0",
+    "tailwind-merge": "^3.7.0",
+    "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
-    "@docusaurus/module-type-aliases": "^3.10.1",
-    "@docusaurus/tsconfig": "^3.10.1",
-    "@docusaurus/types": "^3.10.1",
+    "@docusaurus/module-type-aliases": "^3.10.2",
+    "@docusaurus/tsconfig": "^3.10.2",
+    "@docusaurus/types": "^3.10.2",
     "@fec/remark-a11y-emoji": "^4.0.2",
     "@tsconfig/docusaurus": "^2.0.9",
     "@types/react": "catalog:",
@@ -67,8 +67,8 @@
     "zod": "catalog:"
   },
   "peerDependencies": {
-    "@docusaurus/theme-common": "^3.10.1",
-    "@docusaurus/theme-mermaid": "^3.10.1"
+    "@docusaurus/theme-common": "^3.10.2",
+    "@docusaurus/theme-mermaid": "^3.10.2"
   },
   "browserslist": {
     "production": [

@@ -1,11 +1,12 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { colorsTuple, createTheme, MantineProvider, rem, v8CssVariablesResolver } from "@mantine/core";
+import { colorsTuple, createTheme, MantineProvider, rem } from "@mantine/core";
 
 import { useRequiredBoard } from "@homarr/boards/context";
 import type { ColorScheme } from "@homarr/definitions";
 import { useSettings } from "@homarr/settings";
+import { cssVariablesResolver } from "@homarr/ui";
 
 import { useColorSchemeManager } from "../../_client-providers/mantine";
 import { generateColorScale } from "~/theme/branding";
@@ -40,7 +41,7 @@ export const BoardMantineProvider = ({
       defaultColorScheme={defaultColorScheme}
       theme={theme}
       colorSchemeManager={colorSchemeManager}
-      cssVariablesResolver={v8CssVariablesResolver}
+      cssVariablesResolver={cssVariablesResolver}
     >
       {children}
     </MantineProvider>

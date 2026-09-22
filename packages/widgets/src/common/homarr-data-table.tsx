@@ -151,8 +151,8 @@ export function HomarrDataTable<T>({
       defaultColumnProps={{
         ...defaultColumnProps,
         noWrap: defaultColumnProps?.noWrap ?? true,
-        draggable: true,
-        resizable: true,
+        draggable: defaultColumnProps?.draggable ?? true,
+        resizable: defaultColumnProps?.resizable ?? true,
         cellsStyle: defaultColumnProps?.cellsStyle ?? (() => ({ padding: cellPadding })),
       }}
       scrollAreaProps={{ ...scrollAreaDefaultProps, ...scrollAreaProps }}

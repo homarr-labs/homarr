@@ -2,6 +2,8 @@ import type { ConnectionOptions } from "node:tls";
 
 import type { CustomJsxNetworkScope, CustomWidgetMethod } from "../core";
 
+export type CustomWidgetHttpNetworkScope = CustomJsxNetworkScope | "any";
+
 export interface CustomWidgetAuthConfig {
   type: string;
   secrets: Array<{ kind: string; value: string }>;
@@ -22,7 +24,7 @@ export interface CustomWidgetHttpRequest {
   body?: string;
   staticHeaders?: Record<string, string>;
   auth?: CustomWidgetAuthConfig;
-  networkScope: CustomJsxNetworkScope;
+  networkScope: CustomWidgetHttpNetworkScope;
   kind: "query" | "action";
   timeoutMs?: number;
   textFallback?: boolean;

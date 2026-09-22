@@ -8,6 +8,7 @@ import {
 
 import { Integration } from "../base/integration";
 import type { IntegrationInput, IntegrationTestingInput } from "../base/integration";
+import { createStatsRequestSignal } from "./types";
 import type { StatsProvider } from "./types";
 
 export class StatsIntegration extends Integration {
@@ -27,11 +28,13 @@ export class StatsIntegration extends Integration {
   }
 
   async getStatsAsync(signal = AbortSignal.timeout(30_000), testing?: IntegrationTestingInput) {
+    const providerSignal = createStatsRequestSignal(signal);
     return await this.provider.fetchAsync({
-      signal,
+      signal: providerSignal,
       secret: (kind) => this.getSecretValue(kind),
       hasSecret: (kind) => this.hasSecretValue(kind),
       requestAsync: async (path, init) => {
+        const requestSignal = createStatsRequestSignal(providerSignal, init?.signal);
         // Paths belong to compiled providers, never to dashboard input.
         if (this.provider.transport === "axios") {
           const client = testing?.axiosInstance ?? (await createAxiosCertificateInstanceAsync());
@@ -40,13 +43,13 @@ export class StatsIntegration extends Integration {
             method: init?.method ?? "GET",
             headers: Object.fromEntries(new Headers(init?.headers)),
             data: init?.body,
-            signal,
+            signal: requestSignal,
             maxRedirects: 0,
           });
           return response.data;
         }
         const fetchAsync = testing?.fetchAsync ?? fetchWithTrustedCertificatesAsync;
-        const response = await fetchAsync(this.url(path), { ...init, signal, redirect: "error" });
+        const response = await fetchAsync(this.url(path), { ...init, signal: requestSignal, redirect: "error" });
         if (!response.ok) throw new ResponseError(response);
         return await response.json();
       },

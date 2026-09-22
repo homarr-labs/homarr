@@ -64,7 +64,8 @@ export function StatsDetails({
         {metrics.map((metric) => {
           let value = "—";
           if (snapshot) value = formatStatsValue(snapshot.values[metric.key], metric.unit, compact);
-          if (unavailable) value = t("unavailable");
+          const metricUnavailable = unavailable || snapshot?.unavailableMetrics?.includes(metric.key);
+          if (metricUnavailable) value = t("unavailable");
           return (
             <div key={metric.key} className={classes.metricRow} data-selected={metric.key === selected || undefined}>
               <dt>{metric.label}</dt>

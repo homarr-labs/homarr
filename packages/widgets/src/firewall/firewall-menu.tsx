@@ -8,12 +8,14 @@ interface FirewallMenuProps {
   dropdownItems: Firewall[];
   selectedFirewall: string;
   isTiny: boolean;
+  ariaLabel: string;
 }
 
-export const FirewallMenu = ({ onChange, isTiny, dropdownItems, selectedFirewall }: FirewallMenuProps) => (
+export const FirewallMenu = ({ onChange, isTiny, dropdownItems, selectedFirewall, ariaLabel }: FirewallMenuProps) => (
   <Box style={{ flex: 1, minWidth: 0 }}>
     <Select
       value={selectedFirewall}
+      aria-label={ariaLabel}
       onChange={onChange}
       size="xs"
       w="100%"

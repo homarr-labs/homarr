@@ -1,0 +1,105 @@
+{
+  "axeVersion": "4.12.1",
+  "counts": {
+    "inapplicable": 53,
+    "incomplete": 1,
+    "passes": 36,
+    "violations": 1
+  },
+  "url": "https://app-v2.preview.homarr.dev/auth/login",
+  "violations": [
+    {
+      "help": "Elements must meet minimum color contrast ratio thresholds",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=axeAPI",
+      "id": "color-contrast",
+      "impact": "serious",
+      "nodeCount": 1,
+      "nodes": [
+        {
+          "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.59 (foreground color: #ffffff, background color: #ee4e4e, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1",
+          "html": "<span class=\"m_811560b9 mantine-Button-label\">Login</span>",
+          "target": [
+            ".m_811560b9"
+          ]
+        }
+      ],
+      "tags": [
+        "cat.color",
+        "wcag2aa",
+        "wcag143",
+        "TTv5",
+        "TT13.c",
+        "EN-301-549",
+        "EN-9.1.4.3",
+        "ACT",
+        "RGAAv4",
+        "RGAA-3.2.1"
+      ]
+    }
+  ],
+  "incomplete": [
+    {
+      "help": "Elements must meet minimum color contrast ratio thresholds",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=axeAPI",
+      "id": "color-contrast",
+      "impact": "serious",
+      "nodeCount": 6,
+      "nodes": [
+        {
+          "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient",
+          "html": "<h1 style=\"--title-fw:var(--mantine-h2-font-weight);--title-lh:var(--mantine-h2-line-height);--title-fz:var(--mantine-h2-font-size)\" class=\"m_8a5d1357 mantine-Title-root\" data-size=\"h2\" data-order=\"1\">Log in to your account</h1>",
+          "target": [
+            "h1"
+          ]
+        },
+        {
+          "failureSummary": "Fix any of the following:\n  Element's background color could not be determined because it partially overlaps other elements",
+          "html": "<p style=\"color:var(--mantine-color-dimmed)\" class=\"mantine-focus-auto m_b6d8b162 mantine-Text-root\">Welcome back! Please enter your credentials</p>",
+          "target": [
+            ".m_4081bf90 > .m_6d731127.mantine-Stack-root > p"
+          ]
+        },
+        {
+          "failureSummary": "Fix any of the following:\n  Element's background color could not be determined because it partially overlaps other elements",
+          "html": "<p style=\"--text-fz:var(--mantine-font-size-sm);--text-lh:var(--mantine-line-height-sm);font-weight:500\" class=\"mantine-focus-auto m_b6d8b162 mantine-Text-root\" data-size=\"sm\">",
+          "target": [
+            "#mantine-f8xv1911g-body > p"
+          ]
+        },
+        {
+          "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient",
+          "html": "<label style=\"--input-label-size:var(--mantine-font-size-sm)\" class=\"m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label\" data-size=\"sm\" for=\"username\" id=\"username-label\">Username</label>",
+          "target": [
+            "#username-label"
+          ]
+        },
+        {
+          "failureSummary": "Fix any of the following:\n  Element's background color could not be determined because element contains an image node",
+          "html": "<label style=\"--input-label-size:var(--mantine-font-size-sm)\" class=\"m_8fdc1311 mantine-InputWrapper-label mantine-PasswordInput-label\" data-size=\"sm\" for=\"password\" id=\"password-label\">Password</label>",
+          "target": [
+            "#password-label"
+          ]
+        },
+        {
+          "failureSummary": "Fix any of the following:\n  Element's background color could not be determined because element contains an image node",
+          "html": "<button class=\"mantine-focus-auto m_849cf0da m_b6d8b162 mantine-Text-root mantine-Anchor-root\" data-underline=\"hover\" type=\"button\">Forgotten your password?</button>",
+          "target": [
+            ".m_849cf0da"
+          ]
+        }
+      ],
+      "tags": [
+        "cat.color",
+        "wcag2aa",
+        "wcag143",
+        "TTv5",
+        "TT13.c",
+        "EN-301-549",
+        "EN-9.1.4.3",
+        "ACT",
+        "RGAAv4",
+        "RGAA-3.2.1"
+      ]
+    }
+  ]
+}

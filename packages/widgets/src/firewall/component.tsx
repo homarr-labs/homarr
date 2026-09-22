@@ -151,6 +151,7 @@ export default function FirewallWidget({
               selectedFirewall={activeFirewall}
               dropdownItems={dropdownItems}
               isTiny={isTiny}
+              ariaLabel={t("name")}
             />
             <Group gap={4} wrap="nowrap">
               {activeFirewall && firewallHasError(activeFirewall) && (
@@ -327,6 +328,7 @@ const MetricRing = ({ value, icon: Icon, size, label, t }: MetricRingProps) => {
 
   return (
     <RingProgress
+      role="img"
       aria-label={t("metricAccessible", {
         metric: label,
         value: safeValue.toFixed(1),

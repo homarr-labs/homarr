@@ -196,7 +196,7 @@ export const BoardSwitcher = ({ children }: BoardSwitcherProps) => {
         onClose={closeSwitcher}
         withCloseButton={false}
         yOffset="15vh"
-        aria-label={t("title")}
+        title={<VisuallyHidden>{t("title")}</VisuallyHidden>}
         size={`${modalColumnCount * 15 + Math.max(0, modalColumnCount - 1) * 0.75}rem`}
         overlayProps={{ backgroundOpacity: 0, blur: 2 }}
         transitionProps={{ transition: "fade", duration: 100, timingFunction: "ease" }}

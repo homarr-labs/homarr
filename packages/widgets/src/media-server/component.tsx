@@ -326,8 +326,6 @@ export default function MediaServerWidget({
                   className={isEditMode ? undefined : classes.sessionRow}
                   tabIndex={isEditMode ? -1 : 0}
                   aria-label={session.sessionName}
-                  aria-haspopup={isEditMode ? undefined : "dialog"}
-                  aria-expanded={isEditMode ? undefined : selectedRowId === rowId}
                   onClick={isEditMode ? undefined : toggleDetails}
                   onKeyDown={
                     isEditMode
@@ -343,7 +341,12 @@ export default function MediaServerWidget({
                   {columnVisibility.user && (
                     <Table.Td>
                       <Group gap="xs" wrap="nowrap" w="100%">
-                        <Avatar size={28} src={session.user?.profilePictureUrl} style={{ flexShrink: 0 }} />
+                        <Avatar
+                          size={28}
+                          src={session.user?.profilePictureUrl}
+                          alt={session.user?.username ?? ""}
+                          style={{ flexShrink: 0 }}
+                        />
                         <Stack gap={2} className={classes.cellContent}>
                           <Text size="xs" truncate>
                             {session.user?.username ?? t("items.unknownUser")}
@@ -462,6 +465,7 @@ export default function MediaServerWidget({
               <Avatar
                 className="media-server-icon"
                 src={integration.integrationIcon}
+                alt=""
                 radius={isAdvanced ? "xl" : "xs"}
                 size={isAdvanced ? 18 : "xs"}
               />
@@ -614,7 +618,7 @@ function SessionDetails({ item }: { item: StreamSession }) {
         itemKey={t("user")}
         value={
           <Group gap="xs" align="center" wrap="nowrap">
-            <Avatar size="xs" src={item.user?.profilePictureUrl} />
+            <Avatar size="xs" src={item.user?.profilePictureUrl} alt={item.user?.username ?? ""} />
             <Text size="sm" truncate>
               {item.user?.username ?? t("unknownUser")}
             </Text>

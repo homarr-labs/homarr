@@ -106,6 +106,7 @@ const CalendarEventRows = ({
           {event.image !== null && (
             <Box pos="relative">
               <Image
+                alt=""
                 src={event.image.src}
                 w={70}
                 mah={150}
@@ -216,7 +217,9 @@ const CalendarEventRows = ({
                               : undefined,
                           },
                         }}
-                        leftSection={link.logo ? <Image src={link.logo} fit="contain" w={20} h={20} /> : undefined}
+                        leftSection={
+                          link.logo ? <Image alt="" src={link.logo} fit="contain" w={20} h={20} /> : undefined
+                        }
                       >
                         <Text>{link.name}</Text>
                       </Button>

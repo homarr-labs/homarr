@@ -54,7 +54,7 @@
 
 .statLabel {
   font-size: clamp(8px, 2.5cqi, 12px);
-  color: var(--mantine-color-dimmed);
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-3));
   line-height: 1.2;
   text-align: center;
   max-width: 100%;

@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { fetchStatsGroupsAsync } from "../types";
 import type { StatsProvider } from "../types";
 
 const countSchema = z.number().finite().nonnegative().int();
@@ -46,22 +47,34 @@ export const homeboxStatsProvider = {
     const token = login.token;
     const headers = { Authorization: token };
 
-    const response = await context.requestAsync("/api/v1/groups/statistics", {
-      headers,
-      signal: context.signal,
-    });
-    const stats = groupStatsResponseSchema.parse(response);
-    const group = z
-      .object({ currency: z.string().min(1) })
-      .parse(await context.requestAsync("/api/v1/groups", { headers, signal: context.signal }));
-
-    return {
-      items: stats.totalItems,
-      locations: stats.totalLocations,
-      labels: stats.totalLabels ?? stats.totalTags ?? 0,
-      itemsWithWarranty: stats.totalWithWarranty,
-      totalValue: `${group.currency} ${stats.totalItemPrice}`,
-      users: stats.totalUsers,
-    };
+    const statsPromise = context
+      .requestAsync("/api/v1/groups/statistics", { headers, signal: context.signal })
+      .then((response) => groupStatsResponseSchema.parse(response));
+    return await fetchStatsGroupsAsync([
+      {
+        metrics: ["items", "locations", "labels", "itemsWithWarranty", "users"],
+        fetchAsync: async () => {
+          const stats = await statsPromise;
+          return {
+            items: stats.totalItems,
+            locations: stats.totalLocations,
+            labels: stats.totalLabels ?? stats.totalTags ?? 0,
+            itemsWithWarranty: stats.totalWithWarranty,
+            users: stats.totalUsers,
+          };
+        },
+      },
+      {
+        metrics: ["totalValue"],
+        fetchAsync: async () => {
+          const [stats, groupResponse] = await Promise.all([
+            statsPromise,
+            context.requestAsync("/api/v1/groups", { headers, signal: context.signal }),
+          ]);
+          const group = z.object({ currency: z.string().min(1) }).parse(groupResponse);
+          return { totalValue: `${group.currency} ${stats.totalItemPrice}` };
+        },
+      },
+    ]);
   },
 } satisfies StatsProvider;

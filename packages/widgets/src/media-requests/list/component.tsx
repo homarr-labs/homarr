@@ -186,6 +186,7 @@ const MediaRequestCard = ({ request, isTiny, showIntegrationSource, canInteract,
                 <Avatar
                   className="mediaRequests-list-item-request-user-avatar"
                   src={request.requestedBy?.avatar}
+                  alt={request.requestedBy?.displayName ?? ""}
                   size="xs"
                 />
                 <Anchor

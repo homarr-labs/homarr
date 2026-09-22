@@ -70,6 +70,14 @@ export async function proxy(request: NextRequest) {
   // We don't want to fallback to accept-language header so we clear it
   request.headers.set("accept-language", "");
 
+  // `next-intl` adds this request header when it rewrites an unprefixed URL to the internal
+  // locale-qualified route. Next.js can run the proxy again for that internal request, so do not
+  // send it back through the locale middleware or it redirects to the original URL and loops.
+  // A directly requested locale-qualified URL has no marker and is still canonicalized normally.
+  if (supportedLanguages.includes(segments[0] as SupportedLanguage) && request.headers.has("x-next-intl-locale")) {
+    return NextResponse.next();
+  }
+
   const next = createI18nMiddleware(defaultLocale);
   return next(request);
 }

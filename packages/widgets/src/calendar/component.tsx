@@ -136,6 +136,7 @@ const CalendarBase = ({
   options,
   displayMode,
 }: CalendarBaseProps) => {
+  const t = useI18n("widget.calendar.advanced");
   const locale = useCurrentIntlLocale();
   const { firstDayOfWeek } = useSettings();
   const board = useRequiredBoard();
@@ -179,6 +180,7 @@ const CalendarBase = ({
     <Box ref={ref} h="100%" w="100%" pos="relative" style={{ overflow: "hidden" }}>
       <Calendar
         defaultDate={new Date()}
+        ariaLabels={{ previousMonth: t("previousMonth"), nextMonth: t("nextMonth") }}
         onPreviousMonth={(previousMonth) => setMonth(new Date(previousMonth))}
         onNextMonth={(nextMonth) => setMonth(new Date(nextMonth))}
         highlightToday

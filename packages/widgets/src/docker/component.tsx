@@ -413,6 +413,7 @@ export default function DockerWidget({
     <Stack gap={0} h="100%" style={{ overflow: "hidden" }}>
       <Box style={{ flex: 1, minHeight: 0 }}>
         <HomarrDataTable
+          defaultColumnProps={{ draggable: isAdvanced, resizable: isAdvanced }}
           isEditMode={isEditMode}
           cellPadding={isAdvanced || width < 400 ? "2px 8px" : "4px 8px"}
           className="docker-table"

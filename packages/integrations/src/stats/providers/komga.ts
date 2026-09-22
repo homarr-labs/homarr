@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { fetchStatsGroupsAsync } from "../types";
 import type { StatsAuthenticationContext, StatsProvider } from "../types";
 
 const countSchema = z.number().finite().nonnegative().int();
@@ -23,19 +24,39 @@ export const komgaStatsProvider = {
       "Content-Type": "application/json",
       ...getHttpAuthentication(context).headers,
     };
-    const [librariesResponse, seriesResponse, booksResponse] = await Promise.all([
-      context.requestAsync("/api/v1/libraries", { headers, signal: context.signal }),
-      context.requestAsync("/api/v1/series/list", { method: "POST", headers, body: "{}", signal: context.signal }),
-      context.requestAsync("/api/v1/books/list", { method: "POST", headers, body: "{}", signal: context.signal }),
+    return await fetchStatsGroupsAsync([
+      {
+        metrics: ["libraries"],
+        fetchAsync: async () => {
+          const response = await context.requestAsync("/api/v1/libraries", { headers, signal: context.signal });
+          const libraries = z.array(librarySchema).parse(response);
+          return { libraries: libraries.filter((library) => !library.unavailable).length };
+        },
+      },
+      {
+        metrics: ["series"],
+        fetchAsync: async () => {
+          const response = await context.requestAsync("/api/v1/series/list", {
+            method: "POST",
+            headers,
+            body: "{}",
+            signal: context.signal,
+          });
+          return { series: pageSchema.parse(response).totalElements };
+        },
+      },
+      {
+        metrics: ["books"],
+        fetchAsync: async () => {
+          const response = await context.requestAsync("/api/v1/books/list", {
+            method: "POST",
+            headers,
+            body: "{}",
+            signal: context.signal,
+          });
+          return { books: pageSchema.parse(response).totalElements };
+        },
+      },
     ]);
-    const libraries = z.array(librarySchema).parse(librariesResponse);
-    const series = pageSchema.parse(seriesResponse);
-    const books = pageSchema.parse(booksResponse);
-
-    return {
-      libraries: libraries.filter((library) => !library.unavailable).length,
-      series: series.totalElements,
-      books: books.totalElements,
-    };
   },
 } satisfies StatsProvider;

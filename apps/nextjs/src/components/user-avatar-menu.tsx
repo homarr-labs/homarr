@@ -153,28 +153,26 @@ export const UserAvatarMenu = ({ children, availableUpdates, isDockerEnabled, bo
           </Menu.Item>
         )}
       </Menu.Dropdown>
-      <Menu.Target>
-        <Indicator
-          inline
-          disabled={!assistant?.isRunning && !assistant?.unreadCount}
-          color="red"
-          size={20}
-          offset={4}
-          label={
-            assistant?.isRunning ? (
-              <Loader type="bars" color="white" size={10} />
-            ) : assistant?.unreadCount ? (
-              assistant.unreadCount > 99 ? (
-                "99+"
-              ) : (
-                assistant.unreadCount
-              )
-            ) : undefined
-          }
-        >
-          {children}
-        </Indicator>
-      </Menu.Target>
+      <Indicator
+        inline
+        disabled={!assistant?.isRunning && !assistant?.unreadCount}
+        color="red"
+        size={20}
+        offset={4}
+        label={
+          assistant?.isRunning ? (
+            <Loader type="bars" color="white" size={10} />
+          ) : assistant?.unreadCount ? (
+            assistant.unreadCount > 99 ? (
+              "99+"
+            ) : (
+              assistant.unreadCount
+            )
+          ) : undefined
+        }
+      >
+        <Menu.Target>{children}</Menu.Target>
+      </Indicator>
     </Menu>
   );
 };

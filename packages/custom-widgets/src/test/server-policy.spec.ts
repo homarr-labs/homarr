@@ -30,9 +30,12 @@ describe("custom widget network policy", () => {
     await expect(resolveAndValidateHost("127.0.0.1", "private")).rejects.toMatchObject({ code: "FORBIDDEN" });
     await expect(resolveAndValidateHost("127.0.0.1", "loopback")).resolves.toHaveLength(1);
     await expect(resolveAndValidateHost("169.254.169.254", "loopback")).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await expect(resolveAndValidateHost("100.64.0.1", "any")).resolves.toHaveLength(1);
+    await expect(resolveAndValidateHost("169.254.169.254", "any")).resolves.toHaveLength(1);
+    await expect(resolveAndValidateHost("::ffff:127.0.0.1", "any")).resolves.toHaveLength(1);
   });
 
-  test("executes a DNS-pinned request within the approved scope", async () => {
+  test("executes a DNS-pinned request within the unrestricted integration scope", async () => {
     const server = createServer((_request, response) => {
       response.writeHead(200, { "content-type": "application/json" });
       response.end('{"status":"ok"}');
@@ -45,7 +48,7 @@ describe("custom widget network policy", () => {
         executeCustomWidgetRequest({
           baseUrl: `http://127.0.0.1:${address.port}`,
           method: "GET",
-          networkScope: "loopback",
+          networkScope: "any",
           kind: "query",
         }),
       ).resolves.toMatchObject({ ok: true, status: 200, data: { status: "ok" } });

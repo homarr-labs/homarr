@@ -64,7 +64,7 @@ function StatCard({
       <Group gap={4} wrap="nowrap">
         {icon}
         <Stack gap={0} style={{ overflow: "hidden" }}>
-          <Text size="xs" c="dimmed" lineClamp={1}>
+          <Text size="xs" c="light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-3))" lineClamp={1}>
             {label}
           </Text>
           <Text size="sm" fw={600}>

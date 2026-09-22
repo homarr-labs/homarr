@@ -316,18 +316,6 @@
   }
 }
 
-@container assistant-widget (max-height: 24rem) {
-  .empty {
-    min-height: 16rem;
-    padding-block: 1rem;
-  }
-
-  .suggestion {
-    min-height: 2.5rem;
-    padding-block: 0.45rem;
-  }
-}
-
 .historyMenu {
   min-width: 0;
   overflow: hidden;
@@ -1730,6 +1718,18 @@
   white-space: normal;
 }
 
+@container assistant-widget (max-height: 24rem) {
+  .empty {
+    min-height: 100%;
+    padding-block: 0.75rem;
+  }
+
+  .suggestion {
+    min-height: 2.5rem;
+    padding-block: 0.45rem;
+  }
+}
+
 .scrollToBottom {
   position: sticky;
   bottom: 0.75rem;
@@ -1817,6 +1817,11 @@
   .empty {
     min-height: 26rem;
     padding-block: 1.5rem;
+  }
+
+  .widgetPanel[data-board-widget] .empty {
+    min-height: 100%;
+    padding-block: 0.75rem;
   }
 }
 

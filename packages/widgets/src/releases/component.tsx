@@ -232,6 +232,7 @@ export default function ReleasesWidget({ options, itemId, width, displayMode }: 
               >
                 <Group p="xs">
                   <MaskedOrNormalImage
+                    alt=""
                     className="releases-repository-header-icon"
                     imageUrl={repository.iconUrl ?? repository.providerMetadata?.iconUrl}
                     hasColor={hasIconColor}
@@ -605,6 +606,7 @@ const ExpandedDisplay = ({
           {repository.providerMetadata && (
             <Group className="releases-repository-expanded-header-provider-wrapper" gap={5} align="center">
               <MaskedOrNormalImage
+                alt=""
                 className="releases-repository-expanded-header-provider-icon"
                 imageUrl={repository.providerMetadata.iconUrl}
                 hasColor={hasIconColor}

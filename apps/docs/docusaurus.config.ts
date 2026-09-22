@@ -1,7 +1,7 @@
 import type * as Preset from "@docusaurus/preset-classic";
 import type { Config } from "@docusaurus/types";
 import { themes as prismThemes } from "prism-react-renderer";
-import { resolveHomarrUrlConfig } from "@homarr/workshop/schema";
+import { resolveHomarrUrlConfig } from "@homarr/workshop/urls";
 const a11yEmoji = require("@fec/remark-a11y-emoji");
 
 const deprecatedWorkshopUrl = process.env.WORKSHOP_URL;

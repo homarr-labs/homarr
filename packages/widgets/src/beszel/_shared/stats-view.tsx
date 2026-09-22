@@ -257,7 +257,7 @@ export function BeszelStatsView({
     const rowCount = Math.ceil(visibleChartCount / effectiveColumns);
     const chartHeight = computeChartHeight(availableHeight, rowCount);
     return (
-      <SimpleGrid cols={effectiveColumns} spacing="md" aria-label={t("name")}>
+      <SimpleGrid role="group" cols={effectiveColumns} spacing="md" aria-label={t("name")}>
         {Array.from({ length: visibleChartCount }, (_, index) => (
           <ChartSkeleton key={index} height={chartHeight} />
         ))}

@@ -500,7 +500,7 @@ export default function DownloadClientsWidget({
         width: 36,
         render: (record) => (
           <Tooltip key={displayMode} label={record.integration.name} withArrow>
-            <Avatar size={20} radius={0} src={getIconUrl(record.integration.kind)} />
+            <Avatar size={20} radius={0} src={getIconUrl(record.integration.kind)} alt="" />
           </Tooltip>
         ),
       },
@@ -563,6 +563,7 @@ export default function DownloadClientsWidget({
                   value={pct}
                   color={progressColor(record.state, record.progress)}
                   size="sm"
+                  aria-label={`${record.name}: ${t("items.progress.columnTitle")}`}
                   style={{ flex: 1 }}
                 />
               </Group>
@@ -787,6 +788,7 @@ export default function DownloadClientsWidget({
           fz={size.fontSize}
           records={sortedData}
           columns={effectiveColumns}
+          defaultColumnProps={{ draggable: isAdvanced, resizable: isAdvanced }}
           storeColumnsKey={storeKey}
           sortStatus={sortStatus}
           onSortStatusChange={setSortStatus}
@@ -910,7 +912,7 @@ function ExpandedRow({ item, collapse }: { item: ExtendedDownloadClientItem; col
 
         <Stack gap="xs" style={{ flex: 1, minWidth: 0 }}>
           <Group gap="xs" wrap="nowrap" style={{ minWidth: 0 }}>
-            <Avatar size="var(--mantine-font-size-md)" radius={0} src={getIconUrl(item.integration.kind)} />
+            <Avatar size="var(--mantine-font-size-md)" radius={0} src={getIconUrl(item.integration.kind)} alt="" />
             <Text size="sm" fw={600} truncate style={{ minWidth: 0 }}>
               {item.name}
             </Text>
@@ -1013,7 +1015,13 @@ function GlobalStatsBar({
         <Group gap="md">
           <Tooltip label={t("stats.overallProgress")} withArrow>
             <Group gap={4}>
-              <Progress value={overallProgressPct} color="blue" size="xs" w={40} />
+              <Progress
+                value={overallProgressPct}
+                color="blue"
+                size="xs"
+                w={40}
+                aria-label={t("stats.overallProgress")}
+              />
               <Text size="xs" fw={600}>{`${overallProgressPct}%`}</Text>
             </Group>
           </Tooltip>
@@ -1281,7 +1289,7 @@ function WidgetFooter({
                         <Badge
                           size="xs"
                           variant={variant}
-                          leftSection={<Avatar size={12} radius={0} src={getIconUrl(integration.kind)} />}
+                          leftSection={<Avatar size={12} radius={0} src={getIconUrl(integration.kind)} alt="" />}
                         >
                           {integration.name}
                         </Badge>
@@ -1439,6 +1447,7 @@ function ClientIndicator({ integration }: { integration: ExtendedClientStatus["i
         size={18}
         radius={0}
         src={getIconUrl(integration.kind)}
+        alt=""
         style={{ filter: avatarFilter, opacity: avatarOpacity }}
       />
     </Tooltip>

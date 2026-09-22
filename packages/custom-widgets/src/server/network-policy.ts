@@ -4,8 +4,8 @@ import type { LookupFunction } from "node:net";
 import type { ConnectionOptions } from "node:tls";
 import { Agent } from "undici";
 
-import type { CustomJsxNetworkScope } from "../core";
 import { CustomWidgetDomainError } from "./errors";
+import type { CustomWidgetHttpNetworkScope } from "./request-types";
 import { MAX_RESPONSE_BODY_BYTES } from "./response";
 
 const RESERVED_HEADERS = new Set([
@@ -88,7 +88,7 @@ export function classifyAddress(address: string): AddressClass {
 
 export async function resolveAndValidateHost(
   hostname: string,
-  scope: CustomJsxNetworkScope,
+  scope: CustomWidgetHttpNetworkScope,
   options: ResolveHostOptions = {},
 ): Promise<ResolvedAddress[]> {
   const normalized = normalizeHostname(hostname);
@@ -105,11 +105,14 @@ export async function resolveAndValidateHost(
   if (!addresses.length)
     throw new CustomWidgetDomainError({ code: "BAD_REQUEST", message: "Target host did not resolve" });
   for (const address of addresses) {
+    const validAddress = isIP(normalizeHostname(address.address)) !== 0;
     const classification = classifyAddress(address.address);
     const allowed =
-      classification === "public" ||
-      (classification === "private" && scope !== "public") ||
-      (classification === "loopback" && scope === "loopback");
+      validAddress &&
+      (scope === "any" ||
+        classification === "public" ||
+        (classification === "private" && scope !== "public") ||
+        (classification === "loopback" && scope === "loopback"));
     if (!allowed)
       throw new CustomWidgetDomainError({
         code: "FORBIDDEN",

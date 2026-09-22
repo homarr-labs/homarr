@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { fetchStatsGroupsAsync } from "../types";
 import type { StatsProvider } from "../types";
 
 const count = z.number().finite().int().nonnegative();
@@ -15,17 +16,33 @@ export const autobrrStatsProvider = {
   ],
   async fetchAsync(context) {
     const apiKey = encodeURIComponent(context.secret("apiKey"));
-    const [stats, filters, indexers] = await Promise.all([
-      context.requestAsync(`/api/release/stats?apikey=${apiKey}`, { signal: context.signal }),
-      context.requestAsync(`/api/filters?apikey=${apiKey}`, { signal: context.signal }),
-      context.requestAsync(`/api/release/indexers?apikey=${apiKey}`, { signal: context.signal }),
+    return await fetchStatsGroupsAsync([
+      {
+        metrics: ["approvedPushes", "rejectedPushes"],
+        fetchAsync: async () => {
+          const response = await context.requestAsync(`/api/release/stats?apikey=${apiKey}`, {
+            signal: context.signal,
+          });
+          const stats = statsSchema.parse(response);
+          return { approvedPushes: stats.push_approved_count, rejectedPushes: stats.push_rejected_count };
+        },
+      },
+      {
+        metrics: ["filters"],
+        fetchAsync: async () => ({
+          filters: listSchema.parse(
+            await context.requestAsync(`/api/filters?apikey=${apiKey}`, { signal: context.signal }),
+          ).length,
+        }),
+      },
+      {
+        metrics: ["indexers"],
+        fetchAsync: async () => ({
+          indexers: listSchema.parse(
+            await context.requestAsync(`/api/release/indexers?apikey=${apiKey}`, { signal: context.signal }),
+          ).length,
+        }),
+      },
     ]);
-    const parsedStats = statsSchema.parse(stats);
-    return {
-      approvedPushes: parsedStats.push_approved_count,
-      rejectedPushes: parsedStats.push_rejected_count,
-      filters: listSchema.parse(filters).length,
-      indexers: listSchema.parse(indexers).length,
-    };
   },
 } satisfies StatsProvider;

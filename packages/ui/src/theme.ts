@@ -1,4 +1,5 @@
-import { createTheme, rem } from "@mantine/core";
+import { createTheme, rem, v8CssVariablesResolver } from "@mantine/core";
+import type { CSSVariablesResolver } from "@mantine/core";
 
 import { modalComponent } from "./theme/modal";
 
@@ -7,11 +8,13 @@ export const scrollAreaDefaultProps = {
   scrollbarSize: 2,
   scrollHideDelay: 500,
   offsetScrollbars: true,
+  viewportProps: { tabIndex: 0 },
 } as const;
 
 export const theme = createTheme({
   primaryColor: "red",
   autoContrast: true,
+  luminanceThreshold: 0.179,
   respectReducedMotion: true,
   cursorType: "pointer",
 
@@ -88,6 +91,11 @@ export const theme = createTheme({
         radius: "md",
       },
     },
+    Avatar: {
+      defaultProps: {
+        alt: "",
+      },
+    },
     Tooltip: {
       defaultProps: {
         openDelay: 300,
@@ -118,3 +126,18 @@ export const theme = createTheme({
     Modal: modalComponent,
   },
 });
+
+export const cssVariablesResolver: CSSVariablesResolver = (resolvedTheme) => {
+  const variables = v8CssVariablesResolver(resolvedTheme);
+  return {
+    ...variables,
+    light: {
+      ...variables.light,
+      "--mantine-color-dimmed": "var(--mantine-color-gray-7)",
+    },
+    dark: {
+      ...variables.dark,
+      "--mantine-color-dimmed": "var(--mantine-color-gray-4)",
+    },
+  };
+};

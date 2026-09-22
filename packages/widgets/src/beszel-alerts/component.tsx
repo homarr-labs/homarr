@@ -155,7 +155,12 @@ export default function BeszelAlertsWidget({
             <Stack gap={6}>
               <Group gap={6}>
                 <IconCircleCheck size="var(--mantine-font-size-sm)" color="var(--mantine-color-green-6)" />
-                <Text size="xs" fw={600} c="dimmed" tt={isAdvanced ? undefined : "uppercase"}>
+                <Text
+                  size="xs"
+                  fw={600}
+                  c="light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-3))"
+                  tt={isAdvanced ? undefined : "uppercase"}
+                >
                   {t("status.ok")} ({okAlerts.length})
                 </Text>
               </Group>
@@ -180,7 +185,12 @@ export default function BeszelAlertsWidget({
               <Stack gap={6}>
                 <Group gap={6}>
                   <IconHistory size="var(--mantine-font-size-sm)" opacity={0.5} />
-                  <Text size="xs" fw={600} c="dimmed" tt={isAdvanced ? undefined : "uppercase"}>
+                  <Text
+                    size="xs"
+                    fw={600}
+                    c="light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-3))"
+                    tt={isAdvanced ? undefined : "uppercase"}
+                  >
                     {t("history")}
                   </Text>
                 </Group>
@@ -203,7 +213,11 @@ export default function BeszelAlertsWidget({
                           <Text size="xs" fw={500} truncate>
                             {entry.name}
                           </Text>
-                          <Text size="xs" c="dimmed" truncate>
+                          <Text
+                            size="xs"
+                            c="light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-3))"
+                            truncate
+                          >
                             {systemLabel}
                           </Text>
                         </Stack>
@@ -212,7 +226,7 @@ export default function BeszelAlertsWidget({
                         <Badge size="xs" variant="dot" color={isResolved ? "green" : "red"}>
                           {isResolved ? t("resolved") : t("status.triggered")}
                         </Badge>
-                        <Text size="xs" c="dimmed">
+                        <Text size="xs" c="light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-3))">
                           {dayjs(entry.created).fromNow()}
                         </Text>
                       </Stack>
@@ -286,14 +300,18 @@ function AlertRow({ name, value, min, systemName, integrationName, triggered, is
           <Text size="xs" fw={600} truncate>
             {integrationName ? `${systemName} · ${integrationName}` : systemName}
           </Text>
-          <Text size="xs" c="dimmed">
+          <Text size="xs" c="light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-3))">
             ·
           </Text>
-          <Text size="xs" c="dimmed" style={{ whiteSpace: "nowrap" }}>
+          <Text
+            size="xs"
+            c="light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-3))"
+            style={{ whiteSpace: "nowrap" }}
+          >
             {name}
           </Text>
         </Group>
-        <Text size="xs" c="dimmed" truncate>
+        <Text size="xs" c="light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-3))" truncate>
           {description}
         </Text>
       </Stack>

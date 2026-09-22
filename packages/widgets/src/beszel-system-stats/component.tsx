@@ -249,6 +249,7 @@ export default function BeszelSystemStatsWidget({
             </Button.Group>
           ) : (
             <Select
+              aria-label={t("option.timePeriod.label")}
               size="xs"
               value={options.timePeriod}
               onChange={(value) => value && handleTimePeriod(value)}

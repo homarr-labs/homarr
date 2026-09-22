@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { fetchStatsGroupsAsync } from "../types";
 import type { StatsProvider } from "../types";
 
 const finiteNumberSchema = z.number().finite().nonnegative();
@@ -39,20 +40,34 @@ export const yourSpotifyStatsProvider = {
   ],
   async fetchAsync(context) {
     const token = context.secret("apiKey");
-    const [songsResponse, timeResponse, artistsResponse] = await Promise.all([
-      context.requestAsync(endpointPath("songs_per", token), { signal: context.signal }),
-      context.requestAsync(endpointPath("time_per", token), { signal: context.signal }),
-      context.requestAsync(endpointPath("different_artists_per", token), { signal: context.signal }),
+    return await fetchStatsGroupsAsync([
+      {
+        metrics: ["songs"],
+        fetchAsync: async () => ({
+          songs:
+            countResponseSchema.parse(
+              await context.requestAsync(endpointPath("songs_per", token), { signal: context.signal }),
+            )[0]?.count ?? 0,
+        }),
+      },
+      {
+        metrics: ["time"],
+        fetchAsync: async () => ({
+          time:
+            (countResponseSchema.parse(
+              await context.requestAsync(endpointPath("time_per", token), { signal: context.signal }),
+            )[0]?.count ?? 0) / 1000,
+        }),
+      },
+      {
+        metrics: ["artists"],
+        fetchAsync: async () => ({
+          artists:
+            artistsResponseSchema.parse(
+              await context.requestAsync(endpointPath("different_artists_per", token), { signal: context.signal }),
+            )[0]?.artists.length ?? 0,
+        }),
+      },
     ]);
-
-    const songs = countResponseSchema.parse(songsResponse)[0]?.count ?? 0;
-    const timeMilliseconds = countResponseSchema.parse(timeResponse)[0]?.count ?? 0;
-    const artists = artistsResponseSchema.parse(artistsResponse)[0]?.artists.length ?? 0;
-
-    return {
-      songs,
-      time: timeMilliseconds / 1000,
-      artists,
-    };
   },
 } satisfies StatsProvider;

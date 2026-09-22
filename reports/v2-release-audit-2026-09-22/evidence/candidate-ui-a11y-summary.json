@@ -1,0 +1,63 @@
+{
+  "fixture": "clean seeded candidate",
+  "axeVersion": "4.12.1",
+  "viewports": {
+    "mobile": {
+      "width": 390,
+      "height": 844
+    },
+    "desktop": {
+      "width": 1440,
+      "height": 1000
+    }
+  },
+  "loginMobile": {
+    "violations": 0,
+    "incomplete": [
+      "color-contrast: 6 gradient-background nodes require manual review"
+    ]
+  },
+  "loginMobileLightTheme": {
+    "configuration": "temporary DOM-only light color scheme; not saved",
+    "violations": 0,
+    "incomplete": [
+      "color-contrast: 6 gradient-background nodes require manual review"
+    ]
+  },
+  "dashboardMobile": {
+    "violations": 0,
+    "violationNodes": 0,
+    "rules": [],
+    "incomplete": [
+      "color-contrast: 582 nodes use image or composite backgrounds that axe cannot calculate"
+    ],
+    "clearedReleaseAuditRules": [
+      "aria-allowed-attr",
+      "aria-conditional-attr",
+      "aria-progressbar-name",
+      "button-name",
+      "image-alt",
+      "input-field-name",
+      "label",
+      "nested-interactive",
+      "scrollable-region-focusable"
+    ]
+  },
+  "dashboardMobileSolidBackground": {
+    "background": "temporary DOM-only #242424 override; not saved",
+    "violations": 0,
+    "violationNodes": 0,
+    "rules": [],
+    "incomplete": [
+      "color-contrast: 132 nodes use content images or gradients that axe cannot calculate"
+    ]
+  },
+  "assistantCompact": {
+    "allControlsWithinBounds": true,
+    "visibleControls": 6
+  },
+  "calendarHoverCard": {
+    "opened": true,
+    "interactiveControls": 1
+  }
+}

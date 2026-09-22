@@ -1,0 +1,87 @@
+kind,name,http_requests,factory_present,documentation_slug,documentation_exists,directory_test_paths,provider_acceptance
+autobrr,Autobrr,False,True,autobrr,True,,Not executed; shared tests may cover this integration
+jellystat,Jellystat,True,True,jellystat,True,,Not executed; shared tests may cover this integration
+scrutiny,Scrutiny,True,True,scrutiny,True,,Not executed; shared tests may cover this integration
+tubearchivist,Tube Archivist,True,True,tubearchivist,True,,Not executed; shared tests may cover this integration
+frigate,Frigate,True,True,frigate,True,,Not executed; shared tests may cover this integration
+komga,Komga,True,True,komga,True,,Not executed; shared tests may cover this integration
+netalertx,NetAlertX,True,True,netalertx,True,,Not executed; shared tests may cover this integration
+jackett,Jackett,False,True,jackett,True,,Not executed; shared tests may cover this integration
+yourSpotify,Your Spotify,False,True,your-spotify,True,,Not executed; shared tests may cover this integration
+romm,RomM,True,True,romm,True,,Not executed; shared tests may cover this integration
+homebox,Homebox,False,True,homebox,True,,Not executed; shared tests may cover this integration
+mealie,Mealie,True,True,mealie,True,,Not executed; shared tests may cover this integration
+xteve,xTeVe,False,True,xteve,True,,Not executed; shared tests may cover this integration
+unmanic,Unmanic,True,True,unmanic,True,,Not executed; shared tests may cover this integration
+syncthingRelay,Syncthing Relay,True,True,syncthing-relay,True,,Not executed; shared tests may cover this integration
+stash,Stash,True,True,stash,True,,Not executed; shared tests may cover this integration
+prometheus,Prometheus,True,True,prometheus,True,,Not executed; shared tests may cover this integration
+plantit,Plant-it,False,True,plantit,True,,Not executed; shared tests may cover this integration
+netdata,Netdata,True,True,netdata,True,,Not executed; shared tests may cover this integration
+fileflows,FileFlows,True,True,fileflows,True,,Not executed; shared tests may cover this integration
+trilium,Trilium,True,True,trilium,True,,Not executed; shared tests may cover this integration
+tandoor,Tandoor,True,True,tandoor,True,,Not executed; shared tests may cover this integration
+spoolman,Spoolman,True,True,spoolman,True,,Not executed; shared tests may cover this integration
+miniflux,Miniflux,True,True,miniflux,True,,Not executed; shared tests may cover this integration
+maintainerr,Maintainerr,True,True,maintainerr,True,,Not executed; shared tests may cover this integration
+linkwarden,Linkwarden,True,True,linkwarden,True,,Not executed; shared tests may cover this integration
+karakeep,Karakeep,True,True,karakeep,True,,Not executed; shared tests may cover this integration
+healthchecks,Healthchecks,True,True,healthchecks,True,,Not executed; shared tests may cover this integration
+gatus,Gatus,True,True,gatus,True,,Not executed; shared tests may cover this integration
+changedetection,Changedetection.io,True,True,changedetection,True,,Not executed; shared tests may cover this integration
+caddy,Caddy,True,True,caddy,True,,Not executed; shared tests may cover this integration
+sabNzbd,SABnzbd,False,True,sabnzbd,True,packages/integrations/src/download-client/sabnzbd/test/sabnzbd-integration.spec.ts,Not executed; shared tests may cover this integration
+nzbGet,NZBGet,False,True,nzbget,True,packages/integrations/src/download-client/nzbget/test/nzbget-integration.spec.ts,Not executed; shared tests may cover this integration
+deluge,Deluge,False,True,deluge,True,,Not executed; shared tests may cover this integration
+transmission,Transmission,False,True,transmission,True,,Not executed; shared tests may cover this integration
+qBittorrent,qBittorrent,False,True,q-bittorent,True,,Not executed; shared tests may cover this integration
+aria2,Aria2,False,True,aria2,True,,Not executed; shared tests may cover this integration
+slskd,Slskd,True,True,slskd,True,,Not executed; shared tests may cover this integration
+sonarr,Sonarr,True,True,sonarr,True,,Not executed; shared tests may cover this integration
+radarr,Radarr,True,True,radarr,True,,Not executed; shared tests may cover this integration
+lidarr,Lidarr,True,True,lidarr,True,,Not executed; shared tests may cover this integration
+readarr,Readarr,True,True,readarr,True,,Not executed; shared tests may cover this integration
+prowlarr,Prowlarr,True,True,prowlarr,True,,Not executed; shared tests may cover this integration
+bazarr,Bazarr,False,True,bazarr,True,packages/widgets/src/bazarr/layout.spec.ts,Not executed; shared tests may cover this integration
+jellyfin,Jellyfin,False,True,jellyfin,True,packages/integrations/src/jellyfin/jellyfin-integration.spec.ts,Not executed; shared tests may cover this integration
+emby,Emby,False,True,emby,True,,Not executed; shared tests may cover this integration
+plex,Plex,False,True,plex,True,packages/integrations/src/plex/test/plex-integration.spec.ts,Not executed; shared tests may cover this integration
+jellyseerr,Jellyseerr,True,True,jellyseerr,True,,Not executed; shared tests may cover this integration
+seerr,Seerr,True,True,seerr,True,,Not executed; shared tests may cover this integration
+overseerr,Overseerr,True,True,overseerr,True,packages/integrations/src/overseerr/overseerr-integration.spec.ts,Not executed; shared tests may cover this integration
+piHole,Pi-hole,False,True,pi-hole,True,,Not executed; shared tests may cover this integration
+adGuardHome,AdGuard Home,True,True,adguard-home,True,packages/integrations/src/adguard-home/test/adguard-home-integration.spec.ts,Not executed; shared tests may cover this integration
+technitiumDns,Technitium DNS,False,True,technitium-dns,True,,Not executed; shared tests may cover this integration
+homeAssistant,Home Assistant,True,True,home-assistant,True,,Not executed; shared tests may cover this integration
+openmediavault,OpenMediaVault,False,True,open-media-vault,True,,Not executed; shared tests may cover this integration
+dashDot,Dash.,False,True,dash-dot,True,,Not executed; shared tests may cover this integration
+glances,Glances,False,True,glances,True,,Not executed; shared tests may cover this integration
+tdarr,Tdarr,False,True,tdarr,True,,Not executed; shared tests may cover this integration
+proxmox,Proxmox,False,True,proxmox,True,packages/integrations/src/proxmox/test/proxmox-error-handler.spec.ts,Not executed; shared tests may cover this integration
+nextcloud,Nextcloud,True,True,nextcloud,True,packages/integrations/src/nextcloud/test/nextcloud-integration.spec.ts; packages/integrations/src/nextcloud/test/nextcloud-url.spec.ts,Not executed; shared tests may cover this integration
+unifiController,Unifi Controller,False,True,unifi-controller,True,packages/integrations/src/unifi-controller/test/unifi-controller-integration.spec.ts,Not executed; shared tests may cover this integration
+opnsense,OPNsense,False,True,opnsense,True,,Not executed; shared tests may cover this integration
+ntfy,ntfy,False,True,ntfy,True,,Not executed; shared tests may cover this integration
+gotify,Gotify,False,True,gotify,True,,Not executed; shared tests may cover this integration
+ical,iCal,False,True,ical,True,,Not executed; shared tests may cover this integration
+anchor,Anchor,False,True,anchor,True,,Not executed; shared tests may cover this integration
+truenas,TrueNAS,False,True,truenas,True,packages/integrations/src/truenas/test/truenas-api.spec.ts; packages/integrations/src/truenas/test/truenas-integration.spec.ts,Not executed; shared tests may cover this integration
+synology,Synology DiskStation,False,True,synology,True,packages/integrations/src/synology/test/synology-integration.spec.ts,Not executed; shared tests may cover this integration
+unraid,Unraid,False,True,unraid,True,,Not executed; shared tests may cover this integration
+coolify,Coolify,True,True,coolify,True,packages/integrations/src/coolify/test/coolify-integration.spec.ts; packages/widgets/src/coolify/coolify-utils.spec.ts,Not executed; shared tests may cover this integration
+immich,Immich,True,True,immich,True,packages/integrations/src/immich/test/immich-integration.spec.ts; packages/widgets/src/immich/albums-query.spec.ts; packages/widgets/src/immich/server-stats/layout.spec.ts,Not executed; shared tests may cover this integration
+paperlessNgx,Paperless-ngx,False,True,paperless-ngx,True,,Not executed; shared tests may cover this integration
+patchmon,PatchMon,False,True,patchmon,True,packages/integrations/src/patchmon/test/patchmon-integration.spec.ts; packages/widgets/src/patchmon/test/layout-utils.spec.ts; packages/widgets/src/patchmon/test/stat-colors.spec.ts; packages/widgets/src/patchmon/test/threshold-validation.spec.ts,Not executed; shared tests may cover this integration
+tracearr,Tracearr,False,True,tracearr,True,packages/widgets/src/tracearr/bitrate.spec.ts; packages/widgets/src/tracearr/component.spec.ts,Not executed; shared tests may cover this integration
+speedtestTracker,Speedtest Tracker,True,True,speedtest-tracker,True,packages/integrations/src/speedtest-tracker/test/speedtest-tracker-types.spec.ts; packages/widgets/src/speedtest-tracker/helpers.spec.ts,Not executed; shared tests may cover this integration
+uptimeKuma,Uptime Kuma,False,True,uptime-kuma,True,packages/integrations/src/uptime-kuma/test/uptime-kuma-integration.spec.ts; packages/widgets/src/uptime-kuma/aggregate.spec.ts,Not executed; shared tests may cover this integration
+audiobookshelf,Audiobookshelf,True,True,audiobookshelf,True,,Not executed; shared tests may cover this integration
+navidrome,Navidrome,False,True,navidrome,True,packages/integrations/src/navidrome/test/navidrome-integration.spec.ts,Not executed; shared tests may cover this integration
+umami,Umami,False,True,umami,True,packages/integrations/src/umami/test/umami-integration.spec.ts; packages/widgets/src/umami/umami-layout.spec.ts,Not executed; shared tests may cover this integration
+peaNut,PeaNUT,False,True,peanut,True,packages/integrations/src/peanut/test/peanut-integration.spec.ts,Not executed; shared tests may cover this integration
+beszel,Beszel,False,True,beszel,True,packages/integrations/src/beszel/test/beszel-integration.spec.ts; packages/integrations/src/beszel/test/beszel-session.spec.ts; packages/integrations/src/beszel/test/pocketbase-realtime.spec.ts; packages/widgets/src/beszel/_shared/chart.spec.ts; packages/widgets/src/beszel/_shared/format.spec.ts,Not executed; shared tests may cover this integration
+gluetun,Gluetun,False,True,gluetun,True,packages/integrations/src/gluetun/test/gluetun-integration.spec.ts,Not executed; shared tests may cover this integration
+traefik,Traefik,False,True,traefik,True,packages/integrations/src/traefik/traefik-bounds.spec.ts; packages/integrations/src/traefik/traefik-integration.spec.ts; packages/widgets/src/traefik/component.spec.ts,Not executed; shared tests may cover this integration
+archiveTeamWarrior,ArchiveTeam Warrior,False,True,archiveteam-warrior,True,,Not executed; shared tests may cover this integration
+wud,What's Up Docker,False,True,whats-up-docker,True,,Not executed; shared tests may cover this integration
+llamacpp,llama.cpp,False,True,llama-cpp,True,packages/integrations/src/llama-cpp/test/llamacpp-integration.spec.ts,Not executed; shared tests may cover this integration

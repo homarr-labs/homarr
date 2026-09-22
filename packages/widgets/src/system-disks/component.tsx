@@ -156,7 +156,17 @@ const SystemDiskCard = ({
   const legacyBackground = colorScheme === "dark" ? "dark.7" : "gray.1";
   const cardBackground = isAdvanced ? backgroundColor : legacyBackground;
   const progressBackground = healthy ? "var(--mantine-color-green-light)" : "var(--mantine-color-red-light)";
-  const legacyProgressColor = healthy ? "green" : "red";
+  let legacyProgressColor = "red.2";
+  if (healthy) legacyProgressColor = "green.2";
+  let compactTextColor: string | undefined;
+  if (showBackgroundBar) {
+    compactTextColor = "black";
+    if (colorScheme === "dark") {
+      compactTextColor = "white";
+      legacyProgressColor = "red.9";
+      if (healthy) legacyProgressColor = "color-mix(in srgb, var(--mantine-color-green-9), black 10%)";
+    }
+  }
 
   return (
     <Tooltip
@@ -170,6 +180,7 @@ const SystemDiskCard = ({
         py="xs"
         withBorder={isAdvanced}
         bg={cardBackground}
+        c={isAdvanced ? undefined : compactTextColor}
         style={{ overflow: "hidden", position: "relative", borderColor: isAdvanced ? borderColor : undefined }}
       >
         <Group justify="space-between" wrap="nowrap" style={{ zIndex: 1, minWidth: 0 }}>
@@ -178,7 +189,7 @@ const SystemDiskCard = ({
               {deviceName}
             </Text>
             {integrationName && (
-              <Text size="xs" c="dimmed" truncate="end">
+              <Text size="xs" c={isAdvanced ? "dimmed" : compactTextColor} truncate="end">
                 {integrationName}
               </Text>
             )}
@@ -191,7 +202,7 @@ const SystemDiskCard = ({
               {!healthy && <span style={{ marginLeft: 5 }}>{unhealthyLabel}</span>}
             </Text>
             {showSecondaryText && secondaryText && secondaryText !== displayText && (
-              <Text size="xs" c="dimmed">
+              <Text size="xs" c={isAdvanced ? "dimmed" : compactTextColor}>
                 {secondaryText}
               </Text>
             )}

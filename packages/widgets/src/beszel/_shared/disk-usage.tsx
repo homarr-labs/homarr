@@ -64,6 +64,7 @@ export const DiskUsage = ({ system, fontSize, progressSize, valueMiw, valueGap =
             >
               <Box pos="relative" style={{ flex: 1, minWidth: 24 }}>
                 <Progress
+                  aria-label={filesystemUsageLabel}
                   value={system.disk}
                   color={thresholdColor(system.disk)}
                   size={trackSize}
@@ -106,6 +107,7 @@ export const DiskUsage = ({ system, fontSize, progressSize, valueMiw, valueGap =
                       {formatPercent(value)}
                     </Text>
                     <Progress
+                      aria-label={`${mountLabel(path)}: ${formatPercent(value)}`}
                       value={value}
                       color={thresholdColor(value)}
                       size="xs"
@@ -121,6 +123,7 @@ export const DiskUsage = ({ system, fontSize, progressSize, valueMiw, valueGap =
         <Box style={{ display: "flex", alignItems: "center", flex: 1, minWidth: 24 }}>
           <Box pos="relative" style={{ flex: 1, minWidth: 24 }}>
             <Progress
+              aria-label={filesystemUsageLabel}
               value={system.disk}
               color={thresholdColor(system.disk)}
               size={trackSize}

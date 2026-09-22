@@ -1,0 +1,71 @@
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.11 /home/habs/.codex/worktrees/39c9/homarr
+
+ ❯ |dom| packages/widgets/src/stats/component.spec.tsx (2 tests | 2 failed) 144ms
+   × renders persisted snapshots written before metric availability was added 21ms
+   × opening a failed metric preserves healthy sibling values in its details 122ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |dom| packages/widgets/src/stats/component.spec.tsx > renders persisted snapshots written before metric availability was added
+TypeError: Cannot read properties of undefined (reading 'includes')
+ ❯ packages/widgets/src/stats/component.tsx:188:23
+    186|       (!!snapshot?.error && !snapshot.data) ||
+    187|       (!!catalog?.data && !metric) ||
+    188|       snapshot?.data?.unavailableMetrics.includes(entry.metric);
+       |                       ^
+    189|     const loading =
+    190|       !unavailable && !refreshFailed && !snapshot?.data?.error && (sna…
+ ❯ StatsWidget packages/widgets/src/stats/component.tsx:178:54
+ ❯ Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:28571:20
+ ❯ renderWithHooks node_modules/react-dom/cjs/react-dom-client.development.js:8030:22
+ ❯ updateFunctionComponent node_modules/react-dom/cjs/react-dom-client.development.js:10569:19
+ ❯ beginWork node_modules/react-dom/cjs/react-dom-client.development.js:12205:18
+ ❯ runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:1048:13
+ ❯ performUnitOfWork node_modules/react-dom/cjs/react-dom-client.development.js:19176:22
+ ❯ workLoopSync node_modules/react-dom/cjs/react-dom-client.development.js:19004:41
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |dom| packages/widgets/src/stats/component.spec.tsx > opening a failed metric preserves healthy sibling values in its details
+AssertionError: expected [ [ 'Failed', 'unavailable' ], …(1) ] to deeply equal [ [ 'Failed', 'unavailable' ], …(1) ]
+
+- Expected
++ Received
+
+@@ -3,8 +3,8 @@
+      "Failed",
+      "unavailable",
+    ],
+    [
+      "Healthy",
+-     "42",
++     "unavailable",
+    ],
+  ]
+
+ ❯ packages/widgets/src/stats/component.spec.tsx:112:36
+    110| test("opening a failed metric preserves healthy sibling values in its …
+    111|   fixture.snapshot.unavailableMetrics = ["failed"];
+    112|   expect(await openFailedMetric()).toEqual([
+       |                                    ^
+    113|     ["Failed", "unavailable"],
+    114|     ["Healthy", "42"],
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  17:21:06
+   Duration  983ms (transform 76ms, setup 18ms, import 382ms, tests 144ms, environment 335ms)

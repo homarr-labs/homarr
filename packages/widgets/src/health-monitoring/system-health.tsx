@@ -262,11 +262,13 @@ export const SystemHealthMonitoring = ({
                         </Group>
                         <Progress.Root className="health-monitoring-disk-use" radius={board.itemRadius} size="lg">
                           <Progress.Section
+                            aria-label={`${disk.deviceName}: ${t("popover.used")}`}
                             value={disk.percentage}
                             color={progressColor(disk.percentage)}
                             className="health-monitoring-disk-use-percentage"
                           />
                           <Progress.Section
+                            aria-label={`${disk.deviceName}: ${t("popover.available")}`}
                             className="health-monitoring-disk-available-percentage"
                             value={100 - disk.percentage}
                             color="default"

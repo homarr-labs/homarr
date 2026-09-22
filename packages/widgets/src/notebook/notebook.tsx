@@ -168,6 +168,7 @@ export function Notebook({
           addAttributes() {
             return {
               ...this.parent?.(),
+              alt: { default: "" },
               width: { default: null },
             };
           },
@@ -231,6 +232,12 @@ export function Notebook({
       shouldRerenderOnTransaction: true,
       immediatelyRender: false,
       content,
+      editorProps: {
+        attributes: {
+          "aria-label": t("name"),
+          role: "textbox",
+        },
+      },
       onUpdate: ({ editor }) => {
         setContent(editor.getHTML());
       },

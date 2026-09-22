@@ -92,13 +92,14 @@ const getSizeConfig = (width: number): SizeConfig => {
   };
 };
 
-const PercentCell = ({ value, size }: { value: number; size: SizeConfig }) => {
+const PercentCell = ({ value, size, label }: { value: number; size: SizeConfig; label: string }) => {
   return (
     <Group gap={8} wrap="nowrap" style={{ flex: 1 }}>
       <Text size={size.fontSize} fw={500} w={size.valueMiw} ta="left" style={{ whiteSpace: "nowrap", flexShrink: 0 }}>
         {formatPercent(value)}
       </Text>
       <Progress
+        aria-label={label}
         value={value}
         color={thresholdColor(value)}
         size={getProgressTrackSize(size.progressSize)}
@@ -269,7 +270,7 @@ export default function BeszelSystemTableWidget({
           </Group>
         ),
         sortable: true,
-        render: (record) => <PercentCell value={record.cpu} size={size} />,
+        render: (record) => <PercentCell value={record.cpu} size={size} label={invariantTechnicalLabels.cpu} />,
       },
       visibleMetricKeys.has("showMemory") && {
         accessor: "memory",
@@ -281,7 +282,7 @@ export default function BeszelSystemTableWidget({
           </Group>
         ),
         sortable: true,
-        render: (record) => <PercentCell value={record.memory} size={size} />,
+        render: (record) => <PercentCell value={record.memory} size={size} label={tBeszel("metric.memory")} />,
       },
       visibleMetricKeys.has("showDisk") && {
         accessor: "disk",
@@ -313,7 +314,7 @@ export default function BeszelSystemTableWidget({
           </Group>
         ),
         sortable: true,
-        render: (record) => <PercentCell value={record.gpu} size={size} />,
+        render: (record) => <PercentCell value={record.gpu} size={size} label={invariantTechnicalLabels.gpu} />,
       },
       visibleMetricKeys.has("showLoadAvg") && {
         accessor: "loadAvg",
@@ -451,6 +452,7 @@ export default function BeszelSystemTableWidget({
         </Group>
       </div>
       <HomarrDataTable
+        defaultColumnProps={{ draggable: isAdvanced, resizable: isAdvanced }}
         isEditMode={isEditMode}
         cellPadding={`${size.cellPadding}px 8px`}
         fz={size.fontSize}
