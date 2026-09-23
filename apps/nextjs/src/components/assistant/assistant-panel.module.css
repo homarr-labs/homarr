@@ -132,13 +132,9 @@
 
 .widgetPanel[data-board-widget] {
   background: transparent;
-  --assistant-widget-font-sm: calc(var(--mantine-font-size-sm) * var(--board-canvas-ui-scale, 1));
-  --assistant-widget-font-md: calc(var(--mantine-font-size-md) * var(--board-canvas-ui-scale, 1));
-  --assistant-widget-font-lg: calc(var(--mantine-font-size-lg) * var(--board-canvas-ui-scale, 1));
   --assistant-widget-spacing-xs: calc(var(--mantine-spacing-xs) * var(--board-canvas-ui-scale, 1));
   --assistant-widget-spacing-sm: calc(var(--mantine-spacing-sm) * var(--board-canvas-ui-scale, 1));
   --assistant-widget-spacing-md: calc(var(--mantine-spacing-md) * var(--board-canvas-ui-scale, 1));
-  --assistant-widget-spacing-lg: calc(var(--mantine-spacing-lg) * var(--board-canvas-ui-scale, 1));
   --assistant-widget-spacing-xl: calc(var(--mantine-spacing-xl) * var(--board-canvas-ui-scale, 1));
 }
 
@@ -161,7 +157,12 @@
 
 .widgetPanel[data-board-widget] .panelHeader {
   min-height: calc(var(--assistant-widget-spacing-xl) + var(--assistant-widget-spacing-xs));
-  padding: var(--assistant-widget-spacing-xs);
+  padding: var(--assistant-widget-spacing-xs) var(--assistant-widget-spacing-sm);
+}
+
+.widgetPanelTitle {
+  flex: 0 0 auto;
+  white-space: nowrap;
 }
 
 .widgetPanel[data-board-widget] .historyButtonLabel {
@@ -180,27 +181,26 @@
   height: calc(var(--assistant-widget-spacing-xl) + var(--assistant-widget-spacing-xs));
 }
 
-.widgetPanel[data-board-widget] .messages {
-  display: flex;
-  min-height: 100%;
-  flex: 1 1 auto;
-  flex-direction: column;
-  padding: var(--assistant-widget-spacing-sm) var(--assistant-widget-spacing-md) var(--assistant-widget-spacing-lg);
+.widgetPanel[data-board-widget] .panelAction svg,
+.widgetPanel[data-board-widget] .historyButton svg {
+  width: 1.25em;
+  height: 1.25em;
 }
 
-.widgetPanel[data-board-widget] .messages:has(.empty[data-compact]) > :first-child {
+.widgetPanel[data-board-widget] .messages {
   display: flex;
   min-height: 0;
   flex: 0 0 auto;
   flex-direction: column;
+  padding: var(--assistant-widget-spacing-sm) var(--assistant-widget-spacing-md);
 }
 
-.widgetPanel[data-board-widget]:has(.empty[data-compact]) .viewport {
-  flex: 0 1 auto;
-}
-
-.widgetPanel[data-board-widget] .messages:has(.empty[data-compact]) {
+.widgetPanel[data-board-widget] .viewport {
   min-height: 0;
+  flex: 1 1 0;
+}
+
+.widgetPanel[data-board-widget] .composerWrap {
   flex: 0 0 auto;
 }
 
@@ -209,54 +209,19 @@
   padding: var(--assistant-widget-spacing-xs) var(--assistant-widget-spacing-sm);
 }
 
-.widgetPanel[data-board-widget]:has(.empty[data-compact]) .composerWrap {
-  min-height: 0;
-  flex: 1 1 0;
-}
-
-.widgetPanel[data-board-widget]:has(.empty[data-compact]) .composer {
-  height: 100%;
-  min-height: 0;
-}
-
-.widgetPanel[data-board-widget]:has(.empty[data-compact]) .composerDropzone {
-  display: flex;
-  height: 100%;
-  min-height: 0;
-  flex-direction: column;
-}
-
-.widgetPanel[data-board-widget]:has(.empty[data-compact]) .composerRow {
-  min-height: 0;
-  flex: 1 1 auto;
-  align-items: stretch;
-}
-
-.widgetPanel[data-board-widget]:has(.empty[data-compact]) .composerRow > :not(.composerInput) {
-  align-self: flex-end;
-}
-
 .widgetPanel[data-board-widget] .composerInput {
+  min-height: calc(var(--assistant-widget-spacing-xl) * 2);
   padding: var(--assistant-widget-spacing-xs);
-  font-size: var(--assistant-widget-font-lg);
+  font-size: var(--mantine-font-size-md);
 }
 
 .widgetPanel[data-board-widget] .composerInput :global(.aui-lexical-placeholder) {
-  font-size: var(--assistant-widget-font-lg);
+  font-size: var(--mantine-font-size-md);
 }
 
 .widgetPanel[data-board-widget] .runtimeSelectorName,
 .widgetPanel[data-board-widget] .composerContextLabel {
-  font-size: var(--assistant-widget-font-sm);
-}
-
-.widgetPanel[data-board-widget]:has(.empty[data-compact]) .composerInput {
-  min-height: 0;
-  max-height: none;
-}
-
-.widgetPanel[data-board-widget]:has(.empty[data-compact]) .composerInput :global(.aui-lexical-input) {
-  min-height: 100%;
+  font-size: var(--mantine-font-size-sm);
 }
 
 .widgetPanel[data-board-widget] .attachment {
@@ -1288,28 +1253,20 @@
 }
 
 .compactEmptyIntro {
-  max-width: 52rem;
+  max-width: 100%;
   margin-inline: auto;
 }
 
-.compactEmptyIntro .emptyDescription {
-  max-width: 58ch;
-  line-height: var(--mantine-line-height-sm);
-}
-
 .widgetPanel[data-board-widget] .suggestions:has(.compactSuggestion) {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: var(--assistant-widget-spacing-xs);
-  margin: var(--assistant-widget-spacing-md) auto 0;
+  margin: var(--assistant-widget-spacing-sm) auto 0;
 }
 
-.widgetWelcomeTitle {
-  font-size: var(--assistant-widget-font-lg);
-}
-
-.widgetWelcomeDescription {
-  font-size: var(--assistant-widget-font-md);
-  line-height: var(--mantine-line-height-md);
+@container assistant-widget (min-width: 40rem) {
+  .widgetPanel[data-board-widget] .suggestions:has(.compactSuggestion) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 .widgetPanel[data-board-widget] .tool,
@@ -1342,13 +1299,13 @@
 
 .compactSuggestion {
   width: 100%;
-  height: auto;
+  height: calc(var(--assistant-widget-spacing-xl) + var(--assistant-widget-spacing-sm));
   min-width: 0;
   min-height: calc(var(--assistant-widget-spacing-xl) + var(--assistant-widget-spacing-sm));
   justify-content: flex-start;
   padding: var(--assistant-widget-spacing-xs) var(--assistant-widget-spacing-sm);
   text-align: start;
-  white-space: normal;
+  white-space: nowrap;
 }
 
 .compactSuggestion :global(.mantine-Button-inner) {
@@ -1362,9 +1319,14 @@
 
 .compactSuggestion :global(.mantine-Button-label) {
   min-width: 0;
+  overflow: hidden;
   line-height: var(--mantine-line-height-sm);
-  overflow-wrap: anywhere;
-  white-space: normal;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.widgetPanel[data-board-widget]:has(.empty[data-compact]) .scrollToBottom {
+  display: none;
 }
 
 .attachmentImage,
@@ -2153,16 +2115,12 @@
 
 @container assistant-widget (max-width: 30rem) {
   .widgetPanel[data-board-widget] .panelHeader {
-    min-height: calc(var(--assistant-widget-spacing-xl) + var(--assistant-widget-spacing-sm));
+    min-height: calc(var(--assistant-widget-spacing-xl) + var(--assistant-widget-spacing-xs));
     padding: var(--assistant-widget-spacing-xs) var(--assistant-widget-spacing-sm);
   }
 
   .widgetPanel[data-board-widget] .messages {
-    padding: var(--assistant-widget-spacing-xs) var(--assistant-widget-spacing-sm) var(--assistant-widget-spacing-md);
-  }
-
-  .widgetPanel[data-board-widget] .composerInput {
-    min-height: calc(var(--assistant-widget-spacing-xl) + var(--assistant-widget-spacing-xs));
+    padding: var(--assistant-widget-spacing-xs) var(--assistant-widget-spacing-sm);
   }
 
   .widgetPanel[data-board-widget] .suggestions:has(.compactSuggestion) {
@@ -2185,6 +2143,7 @@
   }
 
   .compactSuggestion {
+    height: var(--assistant-widget-spacing-xl);
     min-height: var(--assistant-widget-spacing-xl);
     padding-block: var(--assistant-widget-spacing-xs);
   }

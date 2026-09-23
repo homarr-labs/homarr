@@ -17,6 +17,8 @@ import { showErrorNotification, showSuccessNotification } from "@homarr/notifica
 import { useI18n } from "@homarr/translation/client";
 
 import classes from "./assistant-panel.module.css";
+import { useAssistantAutoApproval } from "./assistant-auto-approval";
+import type { AssistantConversationControls } from "./assistant-conversation-controls";
 
 const compactSuggestionVars = () => ({
   root: {
@@ -26,8 +28,6 @@ const compactSuggestionVars = () => ({
     "--button-bd": "1px solid rgb(from var(--mantine-color-default-border) r g b / var(--opacity, 1))",
   },
 });
-import { useAssistantAutoApproval } from "./assistant-auto-approval";
-import type { AssistantConversationControls } from "./assistant-conversation-controls";
 
 export const AutoApprovalControl = () => {
   const t = useI18n("assistant.autoApproval");
@@ -127,12 +127,9 @@ export const EmptyThread = ({ compact = false }: { compact?: boolean }) => {
             <ThemeIcon size="md" radius="xl" variant="light" mt={2}>
               <IconRobot size="1em" />
             </ThemeIcon>
-            <Stack gap={4} ta="start" miw={0}>
-              <Text className={classes.widgetWelcomeTitle} size="lg" fw={700}>
+            <Stack gap={0} ta="start" miw={0}>
+              <Text size="md" fw={700}>
                 {t("emptyTitle")}
-              </Text>
-              <Text size="md" className={classes.widgetWelcomeDescription}>
-                {t("emptyDescription")}
               </Text>
             </Stack>
           </Group>

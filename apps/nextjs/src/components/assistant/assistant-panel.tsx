@@ -586,6 +586,11 @@ export const AssistantConversationSurface = ({
   return (
     <AssistantDirectiveEntitiesProvider>
       <Group className={classes.panelHeader} justify="space-between" wrap="nowrap" gap="xs">
+        {variant === "widget" && (
+          <Text className={classes.widgetPanelTitle} size="sm" fw={600}>
+            {t("title")}
+          </Text>
+        )}
         <Group className={classes.panelActions} gap={2} wrap="nowrap">
           <ConversationHistory compact={variant === "widget"} />
           <ViewRefreshAction isRefreshing={isRefreshing} onRefresh={onRefresh} />
