@@ -15,7 +15,7 @@ import {
   validateCustomWidgetUrl,
 } from "./network-policy";
 import { closeDispatcher } from "./request-dispatcher-lifecycle";
-import { parseResponseBody, redactResponseSecrets } from "./response";
+import { decodeResponseBody, parseResponseBody, redactResponseSecrets } from "./response";
 
 export {
   assertSafeStaticHeaders,
@@ -115,17 +115,25 @@ async function performRequestWithinDeadline(
         signal: AbortSignal.any([deadlineSignal, controller.signal]),
       });
       if (![301, 302, 303, 307, 308].includes(responseData.statusCode)) {
-        const body = await responseData.body.arrayBuffer();
+        let body: ArrayBuffer | Buffer = await responseData.body.arrayBuffer();
+        const responseHeaders = normalizeResponseHeaders(responseData.headers);
+        if (currentMethod !== "HEAD" && responseHeaders.has("content-encoding")) {
+          body = decodeResponseBody(body, responseHeaders.get("content-encoding"));
+          responseHeaders.delete("content-encoding");
+          responseHeaders.delete("content-length");
+        }
         const response = new Response(body.byteLength > 0 ? body : null, {
           status: responseData.statusCode,
           statusText: STATUS_CODES[responseData.statusCode] ?? "",
-          headers: normalizeResponseHeaders(responseData.headers),
+          headers: responseHeaders,
         });
+        let data: unknown = null;
+        if (currentMethod !== "HEAD") data = await parseResponseBody(response, input.textFallback);
         const parsed = {
           ok: response.ok,
           status: response.status,
           statusText: response.statusText,
-          data: await parseResponseBody(response, input.textFallback),
+          data,
         };
         parsed.data = redactResponseSecrets(parsed.data, input.redactSecrets ?? []);
         result = { kind: "response", response: parsed };
@@ -228,8 +236,8 @@ function assertRequest(input: CustomWidgetHttpRequest): void {
 function buildHeaders(input: CustomWidgetHttpRequest, url: URL, body: string | undefined): Headers {
   const headers = new Headers({ Accept: "application/json" });
   for (const [name, value] of Object.entries(input.staticHeaders ?? {})) headers.set(name, value);
-  if (body !== undefined) headers.set("Content-Type", "application/json");
-  else headers.delete("Content-Type");
+  if (body !== undefined && !headers.has("Content-Type")) headers.set("Content-Type", "application/json");
+  if (body === undefined) headers.delete("Content-Type");
   if (input.auth) {
     if (input.auth.type === "apiKeyHeader") assertSafeStaticHeaders({ [input.auth.headerName ?? "X-API-Key"]: "" });
     applyAuth(headers, url, input.auth.type, input.auth.secrets, input.auth.headerName);

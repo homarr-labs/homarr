@@ -1,4 +1,5 @@
 import { Buffer } from "node:buffer";
+import { brotliDecompressSync, gunzipSync, inflateSync } from "node:zlib";
 import type { Response } from "undici";
 import { CustomWidgetDomainError } from "./errors";
 
@@ -44,6 +45,43 @@ async function readLimitedBody(response: Response): Promise<string> {
     offset += chunk.byteLength;
   }
   return new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+}
+
+/** Bound every decoding stage as well as the on-wire response body. */
+export function decodeResponseBody(body: ArrayBuffer, contentEncoding: string | null): ArrayBuffer | Buffer {
+  if (!contentEncoding || body.byteLength === 0) return body;
+  const encodings = contentEncoding
+    .toLowerCase()
+    .split(",")
+    .map((value) => value.trim());
+  if (encodings.length > 3)
+    throw new CustomWidgetDomainError({ code: "BAD_GATEWAY", message: "Too many upstream content encodings" });
+  let decoded: ArrayBuffer | Buffer = body;
+  for (const encoding of encodings.toReversed()) {
+    try {
+      const options = { maxOutputLength: MAX_RESPONSE_BODY_BYTES };
+      switch (encoding) {
+        case "identity":
+          break;
+        case "gzip":
+          decoded = gunzipSync(decoded, options);
+          break;
+        case "deflate":
+          decoded = inflateSync(decoded, options);
+          break;
+        case "br":
+          decoded = brotliDecompressSync(decoded, options);
+          break;
+        default:
+          throw new CustomWidgetDomainError({ code: "BAD_GATEWAY", message: "Unsupported upstream content encoding" });
+      }
+    } catch (error) {
+      if (error instanceof CustomWidgetDomainError) throw error;
+      if (error instanceof Error && "code" in error && error.code === "ERR_BUFFER_TOO_LARGE") throw tooLarge();
+      throw new CustomWidgetDomainError({ code: "BAD_GATEWAY", message: "Invalid compressed upstream response" });
+    }
+  }
+  return decoded;
 }
 
 export async function parseResponseBody(response: Response, textFallback = false): Promise<unknown> {

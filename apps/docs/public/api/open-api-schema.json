@@ -5335,10 +5335,411 @@
           }
         }
       }
+    },
+    "/api/integrations/request": {
+      "post": {
+        "operationId": "integration-request",
+        "summary": "Proxy an integration API request using saved credentials",
+        "description": "REST access to integration_request, Homarr's most powerful MCP tool. Call any API endpoint on a supported saved integration using its authentication and trusted certificates. Features not implemented in Homarr can still be used through this API or MCP if the upstream API supports them. Supply exactly one selector: integrationId, integrationName or integrationKind. Requires full integration access; DELETE also requires confirmed=true after user confirmation. Paths append to the saved URL. HTTP 200 can contain upstream errors: inspect ok, status and data. Limits: 10 KiB body, 16 KiB headers, 1 MiB response, 15 seconds. See https://homarr.dev/docs/management/api#call-any-integration-api-endpoint for the full contract.",
+        "tags": [
+          "integrations"
+        ],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "integrationId": {
+                    "description": "Saved integration ID from integration_all; supply exactly one selector",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                  },
+                  "integrationName": {
+                    "description": "Exact saved name; first full-access match ordered by name then ID",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 256
+                  },
+                  "integrationKind": {
+                    "description": "Integration type from integration_getKinds; first full-access match ordered by name then ID",
+                    "type": "string",
+                    "enum": [
+                      "autobrr",
+                      "jellystat",
+                      "scrutiny",
+                      "tubearchivist",
+                      "frigate",
+                      "komga",
+                      "netalertx",
+                      "jackett",
+                      "yourSpotify",
+                      "romm",
+                      "homebox",
+                      "mealie",
+                      "xteve",
+                      "unmanic",
+                      "syncthingRelay",
+                      "stash",
+                      "prometheus",
+                      "plantit",
+                      "netdata",
+                      "fileflows",
+                      "trilium",
+                      "tandoor",
+                      "spoolman",
+                      "miniflux",
+                      "maintainerr",
+                      "linkwarden",
+                      "karakeep",
+                      "healthchecks",
+                      "gatus",
+                      "changedetection",
+                      "caddy",
+                      "sabNzbd",
+                      "nzbGet",
+                      "deluge",
+                      "transmission",
+                      "qBittorrent",
+                      "aria2",
+                      "slskd",
+                      "sonarr",
+                      "radarr",
+                      "lidarr",
+                      "readarr",
+                      "prowlarr",
+                      "bazarr",
+                      "jellyfin",
+                      "emby",
+                      "plex",
+                      "jellyseerr",
+                      "seerr",
+                      "overseerr",
+                      "piHole",
+                      "adGuardHome",
+                      "technitiumDns",
+                      "homeAssistant",
+                      "openmediavault",
+                      "dashDot",
+                      "glances",
+                      "tdarr",
+                      "proxmox",
+                      "nextcloud",
+                      "unifiController",
+                      "opnsense",
+                      "ntfy",
+                      "gotify",
+                      "ical",
+                      "anchor",
+                      "truenas",
+                      "synology",
+                      "unraid",
+                      "coolify",
+                      "immich",
+                      "paperlessNgx",
+                      "patchmon",
+                      "tracearr",
+                      "speedtestTracker",
+                      "uptimeKuma",
+                      "audiobookshelf",
+                      "navidrome",
+                      "umami",
+                      "peaNut",
+                      "beszel",
+                      "gluetun",
+                      "traefik",
+                      "archiveTeamWarrior",
+                      "wud",
+                      "llamacpp",
+                      "mock"
+                    ]
+                  },
+                  "method": {
+                    "default": "GET",
+                    "type": "string",
+                    "enum": [
+                      "GET",
+                      "HEAD",
+                      "OPTIONS",
+                      "POST",
+                      "PUT",
+                      "PATCH",
+                      "DELETE"
+                    ]
+                  },
+                  "path": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 8192,
+                    "description": "API endpoint appended to the saved integration URL, including query parameters"
+                  },
+                  "body": {
+                    "description": "JSON value by default; a string when bodyEncoding is raw",
+                    "$ref": "#/components/schemas/__schema0"
+                  },
+                  "bodyEncoding": {
+                    "default": "json",
+                    "description": "Use raw with a Content-Type header for form-encoded, XML or text bodies",
+                    "type": "string",
+                    "enum": [
+                      "json",
+                      "raw"
+                    ]
+                  },
+                  "headers": {
+                    "description": "Optional non-authentication headers; stored authentication takes precedence",
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128,
+                      "pattern": "^[!#$%&'*+.^_`|~0-9A-Za-z-]+$"
+                    },
+                    "additionalProperties": {
+                      "type": "string",
+                      "maxLength": 8192,
+                      "pattern": "^[\\t\\x20-\\x7e]*$"
+                    }
+                  },
+                  "confirmed": {
+                    "description": "Required for DELETE after the user confirms the deletion and its effects",
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "integration": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "autobrr",
+                            "jellystat",
+                            "scrutiny",
+                            "tubearchivist",
+                            "frigate",
+                            "komga",
+                            "netalertx",
+                            "jackett",
+                            "yourSpotify",
+                            "romm",
+                            "homebox",
+                            "mealie",
+                            "xteve",
+                            "unmanic",
+                            "syncthingRelay",
+                            "stash",
+                            "prometheus",
+                            "plantit",
+                            "netdata",
+                            "fileflows",
+                            "trilium",
+                            "tandoor",
+                            "spoolman",
+                            "miniflux",
+                            "maintainerr",
+                            "linkwarden",
+                            "karakeep",
+                            "healthchecks",
+                            "gatus",
+                            "changedetection",
+                            "caddy",
+                            "sabNzbd",
+                            "nzbGet",
+                            "deluge",
+                            "transmission",
+                            "qBittorrent",
+                            "aria2",
+                            "slskd",
+                            "sonarr",
+                            "radarr",
+                            "lidarr",
+                            "readarr",
+                            "prowlarr",
+                            "bazarr",
+                            "jellyfin",
+                            "emby",
+                            "plex",
+                            "jellyseerr",
+                            "seerr",
+                            "overseerr",
+                            "piHole",
+                            "adGuardHome",
+                            "technitiumDns",
+                            "homeAssistant",
+                            "openmediavault",
+                            "dashDot",
+                            "glances",
+                            "tdarr",
+                            "proxmox",
+                            "nextcloud",
+                            "unifiController",
+                            "opnsense",
+                            "ntfy",
+                            "gotify",
+                            "ical",
+                            "anchor",
+                            "truenas",
+                            "synology",
+                            "unraid",
+                            "coolify",
+                            "immich",
+                            "paperlessNgx",
+                            "patchmon",
+                            "tracearr",
+                            "speedtestTracker",
+                            "uptimeKuma",
+                            "audiobookshelf",
+                            "navidrome",
+                            "umami",
+                            "peaNut",
+                            "beszel",
+                            "gluetun",
+                            "traefik",
+                            "archiveTeamWarrior",
+                            "wud",
+                            "llamacpp",
+                            "mock"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "kind"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "ok": {
+                      "type": "boolean"
+                    },
+                    "status": {
+                      "type": "number"
+                    },
+                    "statusText": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/__schema1"
+                    }
+                  },
+                  "required": [
+                    "integration",
+                    "ok",
+                    "status",
+                    "statusText",
+                    "data"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "__schema0": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          },
+          {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/__schema0"
+            }
+          },
+          {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "$ref": "#/components/schemas/__schema0"
+            }
+          }
+        ]
+      },
       "error.BAD_REQUEST": {
         "type": "object",
         "properties": {
@@ -5558,6 +5959,37 @@
           "message": "Internal server error",
           "issues": []
         }
+      },
+      "__schema1": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          },
+          {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/__schema1"
+            }
+          },
+          {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "$ref": "#/components/schemas/__schema1"
+            }
+          }
+        ]
       }
     },
     "securitySchemes": {
