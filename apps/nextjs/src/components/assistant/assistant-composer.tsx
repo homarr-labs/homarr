@@ -18,7 +18,10 @@ import type { AssistantPendingAction } from "./assistant-pending-action";
 import { isAssistantProviderUnavailable } from "./assistant-provider-quota";
 import { HomarrProviderQuota, RuntimeControls } from "./assistant-runtime-controls";
 
-type ComposerProps = AssistantConversationControls & { pendingAction: AssistantPendingAction | undefined };
+type ComposerProps = AssistantConversationControls & {
+  pendingAction: AssistantPendingAction | undefined;
+  compact?: boolean;
+};
 
 export const Composer = (props: ComposerProps) => {
   const t = useI18n("assistant");
@@ -36,6 +39,7 @@ export const Composer = (props: ComposerProps) => {
   if (hasPendingAction) sendLabel = t("pendingAction.sendBlocked");
   const composerInputRef = useRef<HTMLDivElement>(null);
   const composerLabel = t("composerPlaceholder");
+  const actionSize = props.compact ? "sm" : "lg";
 
   useLayoutEffect(() => {
     const editor = composerInputRef.current?.querySelector<HTMLElement>(".aui-lexical-input");
@@ -67,13 +71,21 @@ export const Composer = (props: ComposerProps) => {
                 </ActionIcon>
               </ComposerPrimitive.QuoteDismiss>
             </ComposerPrimitive.Quote>
-            <ComposerPrimitive.Attachments>{() => <Attachment removable />}</ComposerPrimitive.Attachments>
+            <ComposerPrimitive.Attachments className={classes.composerAttachments}>
+              {() => <Attachment removable />}
+            </ComposerPrimitive.Attachments>
             <Group className={classes.composerRow} gap="xs" wrap="nowrap" align="flex-end">
               <Group gap={2} wrap="nowrap">
                 <Tooltip label={t("attachments.add")}>
                   <ComposerPrimitive.AddAttachment asChild>
-                    <ActionIcon variant="subtle" color="gray" size="lg" aria-label={t("attachments.add")}>
-                      <IconPaperclip size={17} />
+                    <ActionIcon
+                      variant={props.compact ? "light" : "subtle"}
+                      color="gray"
+                      size={actionSize}
+                      radius={props.compact ? "xl" : undefined}
+                      aria-label={t("attachments.add")}
+                    >
+                      <IconPaperclip size="1em" />
                     </ActionIcon>
                   </ComposerPrimitive.AddAttachment>
                 </Tooltip>
@@ -90,14 +102,26 @@ export const Composer = (props: ComposerProps) => {
               />
               {running ? (
                 <ComposerPrimitive.Cancel asChild>
-                  <ActionIcon color="red" variant="light" size="lg" aria-label={t("stop")}>
-                    <IconPlayerStop size={18} />
+                  <ActionIcon
+                    color="red"
+                    variant="light"
+                    size={actionSize}
+                    radius={props.compact ? "xl" : undefined}
+                    aria-label={t("stop")}
+                  >
+                    <IconPlayerStop size="1em" />
                   </ActionIcon>
                 </ComposerPrimitive.Cancel>
               ) : (
                 <ComposerPrimitive.Send asChild>
-                  <ActionIcon variant="filled" size="lg" aria-label={sendLabel} disabled={sendBlocked}>
-                    <IconArrowUp size={18} />
+                  <ActionIcon
+                    variant="filled"
+                    size={actionSize}
+                    radius={props.compact ? "xl" : undefined}
+                    aria-label={sendLabel}
+                    disabled={sendBlocked}
+                  >
+                    <IconArrowUp size="1em" />
                   </ActionIcon>
                 </ComposerPrimitive.Send>
               )}

@@ -132,6 +132,11 @@
 
 .widgetPanel[data-board-widget] {
   background: transparent;
+  --assistant-widget-spacing-xs: calc(var(--mantine-spacing-xs) * var(--board-canvas-ui-scale, 1));
+  --assistant-widget-spacing-sm: calc(var(--mantine-spacing-sm) * var(--board-canvas-ui-scale, 1));
+  --assistant-widget-spacing-md: calc(var(--mantine-spacing-md) * var(--board-canvas-ui-scale, 1));
+  --assistant-widget-spacing-lg: calc(var(--mantine-spacing-lg) * var(--board-canvas-ui-scale, 1));
+  --assistant-widget-spacing-xl: calc(var(--mantine-spacing-xl) * var(--board-canvas-ui-scale, 1));
 }
 
 .widgetPanel[data-board-widget] .panelHeader,
@@ -144,6 +149,84 @@
 .widgetPanel[data-board-widget] .composerQuote,
 .widgetPanel[data-board-widget] .pendingQuestionDock {
   background: transparent;
+}
+
+.widgetPanel[data-board-widget] .empty {
+  min-height: 0;
+  padding: var(--assistant-widget-spacing-xs);
+}
+
+.widgetPanel[data-board-widget] .panelHeader {
+  min-height: calc(var(--assistant-widget-spacing-xl) + var(--assistant-widget-spacing-xs));
+  padding: var(--assistant-widget-spacing-xs);
+}
+
+.widgetPanel[data-board-widget] .historyButtonLabel {
+  display: none;
+}
+
+.widgetPanel[data-board-widget] .historyButton {
+  width: calc(var(--assistant-widget-spacing-xl) + var(--assistant-widget-spacing-xs));
+  max-width: calc(var(--assistant-widget-spacing-xl) + var(--assistant-widget-spacing-xs));
+  height: calc(var(--assistant-widget-spacing-xl) + var(--assistant-widget-spacing-xs));
+  padding-inline: var(--assistant-widget-spacing-xs);
+}
+
+.widgetPanel[data-board-widget] .panelAction {
+  width: calc(var(--assistant-widget-spacing-xl) + var(--assistant-widget-spacing-xs));
+  height: calc(var(--assistant-widget-spacing-xl) + var(--assistant-widget-spacing-xs));
+}
+
+.widgetPanel[data-board-widget] .messages {
+  display: flex;
+  min-height: 100%;
+  flex: 1 1 auto;
+  flex-direction: column;
+  padding: var(--assistant-widget-spacing-sm) var(--assistant-widget-spacing-md) var(--assistant-widget-spacing-lg);
+}
+
+.widgetPanel[data-board-widget] .messages:has(.empty[data-compact]) > :first-child {
+  display: flex;
+  min-height: 100%;
+  flex: 1 1 auto;
+  flex-direction: column;
+}
+
+.widgetPanel[data-board-widget] .composer {
+  gap: var(--assistant-widget-spacing-xs);
+  padding: var(--assistant-widget-spacing-xs) var(--assistant-widget-spacing-sm);
+}
+
+.widgetPanel[data-board-widget] .composerInput {
+  padding: var(--assistant-widget-spacing-xs);
+}
+
+.widgetPanel[data-board-widget] .attachment {
+  gap: var(--assistant-widget-spacing-xs);
+  padding: var(--assistant-widget-spacing-xs);
+}
+
+.widgetPanel[data-board-widget] .attachmentImage,
+.widgetPanel[data-board-widget] .attachmentFileIcon {
+  width: var(--assistant-widget-spacing-xl);
+  height: var(--assistant-widget-spacing-xl);
+}
+
+.widgetPanel[data-board-widget] .composerAttachments {
+  display: flex;
+  max-width: 100%;
+  align-items: center;
+  gap: var(--assistant-widget-spacing-xs);
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-inline: var(--assistant-widget-spacing-xs);
+  scrollbar-width: thin;
+  white-space: nowrap;
+}
+
+.widgetPanel[data-board-widget] .composerAttachments .attachment {
+  flex: 0 0 auto;
+  margin: 0;
 }
 
 .widgetPanel[data-board-widget] .suggestion,
@@ -177,7 +260,7 @@
 .compactState {
   width: 100%;
   height: 100%;
-  padding: 0.75rem;
+  padding: var(--mantine-spacing-md);
 }
 
 .compactCopy {
@@ -1131,6 +1214,99 @@
   padding: 0.3rem;
 }
 
+.widgetPanel[data-board-widget] .attachment {
+  max-width: min(15rem, 100%);
+}
+
+.widgetPanel[data-board-widget] .empty[data-compact] {
+  display: block;
+  text-align: start;
+}
+
+.compactEmptyIntro {
+  max-width: 52rem;
+  margin-inline: auto;
+}
+
+.compactEmptyIntro .emptyDescription {
+  max-width: 58ch;
+  line-height: var(--mantine-line-height-sm);
+}
+
+.widgetPanel[data-board-widget] .suggestions:has(.compactSuggestion) {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--assistant-widget-spacing-xs);
+  margin: var(--assistant-widget-spacing-md) auto 0;
+}
+
+.widgetPanel[data-board-widget] .tool,
+.widgetPanel[data-board-widget] .messageFile,
+.widgetPanel[data-board-widget] .attachment {
+  background-color: rgb(from var(--mantine-color-default) r g b / var(--opacity, 1));
+  border-color: rgb(from var(--mantine-color-default-border) r g b / var(--opacity, 1));
+}
+
+.widgetPanel[data-board-widget] .tool[data-compact] {
+  background-color: rgb(from var(--mantine-color-body) r g b / var(--opacity, 1));
+}
+
+.widgetPanel[data-board-widget] .attachmentImage,
+.widgetPanel[data-board-widget] .attachmentFileIcon {
+  background-color: rgb(from var(--mantine-color-body) r g b / var(--opacity, 1));
+}
+
+.widgetPanel[data-board-widget] .userMessage {
+  background-color: rgb(from var(--mantine-color-red-light) r g b / var(--opacity, 1));
+}
+
+.widgetPanel[data-board-widget] .pendingActionBanner {
+  background-color: rgb(from var(--mantine-color-yellow-light) r g b / var(--opacity, 1));
+}
+
+.widgetPanel[data-board-widget] .autoApprovalProgress {
+  background-color: rgb(from var(--mantine-color-green-light) r g b / var(--opacity, 1));
+}
+
+.compactSuggestion {
+  width: 100%;
+  min-width: 0;
+  min-height: calc(var(--assistant-widget-spacing-xl) + var(--assistant-widget-spacing-md));
+  justify-content: flex-start;
+  padding: var(--assistant-widget-spacing-xs) var(--assistant-widget-spacing-sm);
+  text-align: start;
+  white-space: normal;
+}
+
+.widgetPanel[data-board-widget] .empty[data-compact] {
+  display: flex;
+  min-height: 100%;
+  flex: 1 1 auto;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.compactSuggestion :global(.mantine-Button-inner) {
+  min-width: 0;
+  justify-content: flex-start;
+}
+
+.compactSuggestion :global(.mantine-Button-section) {
+  flex: 0 0 auto;
+}
+
+.compactSuggestion :global(.mantine-Button-label) {
+  display: -webkit-box;
+  min-width: 0;
+  overflow: hidden;
+  line-height: var(--mantine-line-height-sm);
+  text-overflow: ellipsis;
+  overflow-wrap: anywhere;
+  white-space: normal;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
 .attachmentImage,
 .attachmentFileIcon {
   display: grid;
@@ -1903,6 +2079,54 @@
   .boardSettingsSubmitGroup {
     justify-content: space-between;
     margin-inline-start: 0;
+  }
+}
+
+@container assistant-widget (max-width: 36rem) {
+  .widgetPanel[data-board-widget] .historyButton {
+    width: calc(var(--assistant-widget-spacing-xl) + var(--assistant-widget-spacing-xs));
+    max-width: calc(var(--assistant-widget-spacing-xl) + var(--assistant-widget-spacing-xs));
+    height: calc(var(--assistant-widget-spacing-xl) + var(--assistant-widget-spacing-xs));
+    padding-inline: var(--assistant-widget-spacing-xs);
+  }
+}
+
+@container assistant-widget (max-width: 30rem) {
+  .widgetPanel[data-board-widget] .panelHeader {
+    min-height: calc(var(--assistant-widget-spacing-xl) + var(--assistant-widget-spacing-sm));
+    padding: var(--assistant-widget-spacing-xs) var(--assistant-widget-spacing-sm);
+  }
+
+  .widgetPanel[data-board-widget] .messages {
+    padding: var(--assistant-widget-spacing-xs) var(--assistant-widget-spacing-sm) var(--assistant-widget-spacing-md);
+  }
+
+  .widgetPanel[data-board-widget] .composerInput {
+    min-height: calc(var(--assistant-widget-spacing-xl) + var(--assistant-widget-spacing-xs));
+  }
+
+  .widgetPanel[data-board-widget] .suggestions:has(.compactSuggestion) {
+    grid-template-columns: 1fr;
+  }
+}
+
+@container assistant-widget (max-height: 24rem) {
+  .widgetPanel[data-board-widget] .empty {
+    min-height: 0;
+    padding-block: var(--assistant-widget-spacing-md);
+  }
+
+  .widgetPanel[data-board-widget] .empty[data-compact] {
+    padding-block: var(--assistant-widget-spacing-xs);
+  }
+
+  .widgetPanel[data-board-widget] .suggestions:has(.compactSuggestion) {
+    margin-top: var(--assistant-widget-spacing-xs);
+  }
+
+  .compactSuggestion {
+    min-height: var(--assistant-widget-spacing-xl);
+    padding-block: var(--assistant-widget-spacing-xs);
   }
 }
 

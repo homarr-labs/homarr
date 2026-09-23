@@ -52,6 +52,7 @@ export const AssistantBoardWidget = (props: WidgetComponentProps<"assistant">) =
 const EnabledAssistantBoardWidget = ({
   width,
   height,
+  displayScale = 1,
   isEditMode,
   assistantWidgetId,
 }: WidgetComponentProps<"assistant"> & { assistantWidgetId: string }) => {
@@ -59,8 +60,11 @@ const EnabledAssistantBoardWidget = ({
   const assistant = useHomarrAssistant();
   const preferences = useAssistantPreferences();
   const aui = useAui();
+  const responsiveWidth = width * displayScale;
+  const responsiveHeight = height * displayScale;
   const messages = useAuiState((state) => state.thread.messages);
   const isLoading = useAuiState((state) => state.thread.isLoading);
+  const widgetUiScale = Number.isFinite(displayScale) && displayScale > 1 ? 1 / displayScale : 1;
   const latestAssistantMessage = messages.findLast((message) => message.role === "assistant");
   const pendingAction = getPendingAssistantAction(latestAssistantMessage);
   const selectModel = (modelId: string) => {
@@ -78,7 +82,7 @@ const EnabledAssistantBoardWidget = ({
     return <CompactAssistantWidget onOpen={() => assistant.activateWidget(assistantWidgetId)} location="widget" />;
   }
 
-  if (width < 300 || height < 280) {
+  if (responsiveWidth < 300 || responsiveHeight < 280) {
     return <CompactAssistantWidget onOpen={assistant.open} />;
   }
 
@@ -86,12 +90,19 @@ const EnabledAssistantBoardWidget = ({
     <Box
       className={classes.widgetPanel}
       data-board-widget
-      data-compact={width < 420 || height < 420 || undefined}
+      data-compact={responsiveWidth < 420 || responsiveHeight < 420 || undefined}
       data-editing={isEditMode || undefined}
       aria-busy={isLoading || assistant.isRunning}
-      style={{ "--assistant-widget-radius": `var(--mantine-radius-${board.itemRadius})` } as CSSProperties}
+      style={
+        {
+          "--assistant-widget-radius": `var(--mantine-radius-${board.itemRadius})`,
+          "--board-canvas-ui-scale": widgetUiScale,
+          "--mantine-scale": widgetUiScale,
+        } as CSSProperties
+      }
     >
       <AssistantConversationSurface
+        variant="widget"
         isRunning={assistant.isRunning}
         pendingAction={pendingAction}
         modelId={preferences.modelId}
@@ -119,13 +130,13 @@ const CompactAssistantWidget = ({
   let title = t("widget.assistant.compact.title");
   let description = t("widget.assistant.compact.description");
   let actionLabel = t("widget.assistant.compact.open");
-  let actionIcon = <IconArrowsMaximize size={18} />;
+  let actionIcon = <IconArrowsMaximize size="1em" />;
 
   if (location === "panel") {
     title = t("widget.assistant.compact.openTitle");
     description = t("widget.assistant.compact.openDescription");
     actionLabel = t("widget.assistant.compact.returnToWidget");
-    actionIcon = <IconArrowsMinimize size={18} />;
+    actionIcon = <IconArrowsMinimize size="1em" />;
   }
   if (location === "widget") {
     title = t("widget.assistant.compact.otherWidgetTitle");
@@ -138,7 +149,7 @@ const CompactAssistantWidget = ({
       <Group className={classes.compactState} justify="space-between" wrap="nowrap" gap="sm">
         <Group wrap="nowrap" gap="xs" miw={0}>
           <ThemeIcon variant="light" radius="xl" size="lg" flex="0 0 auto">
-            <IconRobot size={19} />
+            <IconRobot size="1em" />
           </ThemeIcon>
           <Stack className={classes.compactCopy} gap={1}>
             <Text className={classes.compactTitle} size="sm" fw={700} lineClamp={1}>
@@ -150,7 +161,7 @@ const CompactAssistantWidget = ({
           </Stack>
         </Group>
         <Tooltip label={actionLabel}>
-          <ActionIcon variant="light" color="red" size={44} radius="md" onClick={onOpen} aria-label={actionLabel}>
+          <ActionIcon variant="light" color="red" size="md" radius="md" onClick={onOpen} aria-label={actionLabel}>
             {actionIcon}
           </ActionIcon>
         </Tooltip>
@@ -171,7 +182,7 @@ const AssistantWidgetState = ({ icon: Icon, title, description, color, children 
   <Center className={classes.widgetState} h="100%" p="md">
     <Stack align="center" gap="sm" ta="center" maw={360}>
       <ThemeIcon variant="light" color={color} radius="xl" size="xl">
-        <Icon size={24} />
+        <Icon size="1em" />
       </ThemeIcon>
       <Stack gap={3} align="center">
         <Text fw={700}>{title}</Text>

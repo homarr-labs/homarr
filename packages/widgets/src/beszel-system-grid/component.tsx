@@ -61,8 +61,6 @@ interface SizeConfig {
   badgeHeight: number;
   badgeSize: "xs" | "sm";
   gap: number;
-  showLabels?: boolean;
-  showProgress?: boolean;
 }
 
 const defaultSizeConfig: SizeConfig = {
@@ -127,7 +125,7 @@ const getMaxVisibleMetrics = (cellHeight: number, size: SizeConfig): number => {
 };
 
 const MIN_CELL_WIDTH = 140;
-const MIN_CELL_HEIGHT = 112;
+const MIN_CELL_HEIGHT = 80;
 const ADVANCED_MIN_CELL_WIDTH = 320;
 const ADVANCED_MIN_CELL_HEIGHT = 420;
 
@@ -137,17 +135,6 @@ const getColCount = (width: number, height: number, itemCount: number, minCellWi
   const aspectRatio = width / Math.max(height, MIN_CELL_HEIGHT);
   const idealCols = Math.round(Math.sqrt(itemCount * aspectRatio));
   return Math.min(maxCols, Math.max(1, idealCols));
-};
-
-const getGapAdjustedCellHeight = (width: number, height: number, rows: number): number => {
-  let cellHeight = height / rows;
-  for (let iteration = 0; iteration < 3; iteration += 1) {
-    const gap = getSizeConfig(width, cellHeight).gap;
-    const nextCellHeight = Math.max(0, height - (rows - 1) * gap) / rows;
-    if (nextCellHeight === cellHeight) return cellHeight;
-    cellHeight = nextCellHeight;
-  }
-  return cellHeight;
 };
 
 interface MetricRowProps {
@@ -163,7 +150,7 @@ const MetricValue = ({ value, progress, size }: Pick<MetricRowProps, "value" | "
     <Text size={size.fontSize} fw={500} w={size.valueMiw} ta="left" style={{ whiteSpace: "nowrap", flexShrink: 0 }}>
       {value}
     </Text>
-    {progress && size.showProgress !== false && (
+    {progress && (
       <Progress
         value={progress.value}
         color={progress.color}
@@ -175,21 +162,11 @@ const MetricValue = ({ value, progress, size }: Pick<MetricRowProps, "value" | "
 );
 
 const MetricRow = ({ icon, label, value, progress, size }: MetricRowProps) => (
-  <Group
-    gap="xs"
-    wrap="nowrap"
-    justify="space-between"
-    role="group"
-    aria-label={label}
-    title={label}
-    style={{ minHeight: size.rowHeight }}
-  >
+  <Group gap="xs" wrap="nowrap" justify="space-between" style={{ minHeight: size.rowHeight }}>
     {icon}
-    {size.showLabels !== false && (
-      <Text size={size.fontSize} c="dimmed" w={size.labelMiw} style={{ whiteSpace: "nowrap", flexShrink: 0 }}>
-        {label}
-      </Text>
-    )}
+    <Text size={size.fontSize} c="dimmed" w={size.labelMiw} style={{ whiteSpace: "nowrap", flexShrink: 0 }}>
+      {label}
+    </Text>
     <MetricValue value={value} progress={progress} size={size} />
   </Group>
 );
@@ -252,28 +229,15 @@ const metricRenderers: BeszelMetricRenderer[] = [
   },
   {
     key: "showDisk",
-    render: (s: BeszelSystemRow, t: SystemCardProps["t"], sz: SizeConfig) => {
-      if (sz.showLabels === false) {
-        return (
-          <MetricRow
-            key="disk"
-            icon={<HardDrive style={zoomCompensatedSize(sz.iconSize)} />}
-            label={t("metric.disk")}
-            value={formatPercent(s.disk)}
-            size={sz}
-          />
-        );
-      }
-      return (
-        <Group key="disk" gap="xs" wrap="nowrap" justify="space-between" style={{ minHeight: sz.rowHeight }}>
-          <HardDrive style={zoomCompensatedSize(sz.iconSize)} />
-          <Text size={sz.fontSize} c="dimmed" w={sz.labelMiw} style={{ whiteSpace: "nowrap", flexShrink: 0 }}>
-            {t("metric.disk")}
-          </Text>
-          <DiskUsage system={s} fontSize={sz.fontSize} progressSize={sz.progressSize} valueMiw={sz.valueMiw} />
-        </Group>
-      );
-    },
+    render: (s: BeszelSystemRow, t: SystemCardProps["t"], sz: SizeConfig) => (
+      <Group key="disk" gap="xs" wrap="nowrap" justify="space-between" style={{ minHeight: sz.rowHeight }}>
+        <HardDrive style={zoomCompensatedSize(sz.iconSize)} />
+        <Text size={sz.fontSize} c="dimmed" w={sz.labelMiw} style={{ whiteSpace: "nowrap", flexShrink: 0 }}>
+          {t("metric.disk")}
+        </Text>
+        <DiskUsage system={s} fontSize={sz.fontSize} progressSize={sz.progressSize} valueMiw={sz.valueMiw} />
+      </Group>
+    ),
     visible: (s: BeszelSystemRow, o: SystemCardProps["options"], advanced: boolean) =>
       isBeszelGridMetricVisible(o.showDisk, advanced),
   },
@@ -468,7 +432,7 @@ const SystemCard = ({
       <Stack gap={0} style={{ flex: 1 }} justify="space-evenly">
         {visibleMetrics.map((m) => m.render(system, t, size, tCommon, formatByteRate))}
       </Stack>
-      {hiddenMetricCount > 0 && size.showLabels !== false && (
+      {hiddenMetricCount > 0 && (
         <Text size="xs" c="dimmed" ta="right">
           +{hiddenMetricCount}
         </Text>
@@ -494,7 +458,6 @@ export default function BeszelSystemGridWidget({
   isEditMode,
   width,
   height,
-  displayScale = 1,
   displayMode,
 }: WidgetComponentProps<"beszelSystemGrid">) {
   const t = useI18n("widget.beszel");
@@ -537,35 +500,15 @@ export default function BeszelSystemGridWidget({
   }
 
   const minimumCellWidth = isAdvanced ? ADVANCED_MIN_CELL_WIDTH : MIN_CELL_WIDTH;
-  let responsiveWidth = width;
-  let responsiveHeight = height;
-  if (!isAdvanced && Number.isFinite(displayScale) && displayScale > 0) {
-    responsiveWidth *= displayScale;
-    responsiveHeight *= displayScale;
-  }
-  const cols = getColCount(responsiveWidth, responsiveHeight, filteredSystems.length, minimumCellWidth);
+  const cols = getColCount(width, height, filteredSystems.length, minimumCellWidth);
   const rows = Math.ceil(filteredSystems.length / cols) || 1;
-  const cellWidth = responsiveWidth / cols;
-  const rawCellHeight = getGapAdjustedCellHeight(cellWidth, responsiveHeight, rows);
+  const rawCellHeight = height / rows;
   const minimumCellHeight = isAdvanced ? ADVANCED_MIN_CELL_HEIGHT : MIN_CELL_HEIGHT;
   const scrollEnabled = rawCellHeight < minimumCellHeight;
   const effectiveCellHeight = scrollEnabled ? minimumCellHeight : rawCellHeight;
-  const compactDisplayScale = !isAdvanced && Number.isFinite(displayScale) && displayScale > 0 ? displayScale : 1;
-  const renderedMinimumCellHeight = minimumCellHeight / compactDisplayScale;
-  const compact = !isAdvanced && (cellWidth < 160 || effectiveCellHeight < 160);
-  const baseSize = getSizeConfig(cellWidth, effectiveCellHeight);
-  const actualSize = compact ? { ...baseSize, valueMiw: 56, showLabels: false, showProgress: false } : baseSize;
-  let maxMetrics = getMaxVisibleMetrics(effectiveCellHeight, actualSize);
-  if (isAdvanced) maxMetrics = Number.POSITIVE_INFINITY;
-  else if (compact) maxMetrics = 2;
-  const size = {
-    ...actualSize,
-    labelMiw: actualSize.labelMiw / compactDisplayScale,
-    valueMiw: actualSize.valueMiw / compactDisplayScale,
-    rowHeight: actualSize.rowHeight / compactDisplayScale,
-    cardPadding: actualSize.cardPadding / compactDisplayScale,
-    gap: actualSize.gap / compactDisplayScale,
-  };
+  const cellWidth = width / cols;
+  const size = getSizeConfig(cellWidth, effectiveCellHeight);
+  const maxMetrics = isAdvanced ? Number.POSITIVE_INFINITY : getMaxVisibleMetrics(effectiveCellHeight, size);
 
   return (
     <Box h="100%" pos="relative" style={{ pointerEvents: isEditMode ? "none" : undefined }}>
@@ -577,7 +520,7 @@ export default function BeszelSystemGridWidget({
         style={{
           display: "grid",
           gridTemplateColumns: `repeat(${cols}, 1fr)`,
-          gridTemplateRows: scrollEnabled ? `repeat(${rows}, ${renderedMinimumCellHeight}px)` : `repeat(${rows}, 1fr)`,
+          gridTemplateRows: scrollEnabled ? `repeat(${rows}, ${minimumCellHeight}px)` : `repeat(${rows}, 1fr)`,
           gap: size.gap,
           overflow: scrollEnabled ? "auto" : "hidden",
         }}

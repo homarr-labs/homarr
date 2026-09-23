@@ -356,24 +356,34 @@ export const UserTextPart = () => {
 const AttachmentPreview = () => {
   const attachment = useAuiState((state) => state.attachment);
   const [filePreview, setFilePreview] = useState<string | null>(null);
-  const contentImage = attachment.content?.find((part) => part.type === "image");
+  const contentImage = attachment.content?.find(
+    (part) => part.type === "image" || (part.type === "file" && part.mimeType?.startsWith("image/") === true),
+  );
+  let persistedImageSource: string | null = null;
+  if (contentImage?.type === "image" && typeof contentImage.image === "string") {
+    persistedImageSource = contentImage.image;
+  }
+  if (contentImage?.type === "file" && typeof contentImage.data === "string") {
+    persistedImageSource = contentImage.data;
+  }
   const persistedPreview =
-    contentImage?.type === "image"
+    persistedImageSource
       ? getSafeAssistantAttachmentImageSource(
-          contentImage.image,
+          persistedImageSource,
           typeof window === "undefined" ? undefined : window.location.origin,
         )
       : null;
+  const isImage = attachment.type === "image" || attachment.contentType?.startsWith("image/") === true;
 
   useEffect(() => {
-    if (persistedPreview || attachment.type !== "image" || !attachment.file) {
+    if (persistedPreview || !isImage || !attachment.file) {
       setFilePreview(null);
       return;
     }
     const objectUrl = URL.createObjectURL(attachment.file);
     setFilePreview(objectUrl);
     return () => URL.revokeObjectURL(objectUrl);
-  }, [attachment.file, attachment.type, persistedPreview]);
+  }, [attachment.file, isImage, persistedPreview]);
 
   const source = persistedPreview ?? filePreview;
   if (source) {
@@ -381,7 +391,7 @@ const AttachmentPreview = () => {
   }
   return (
     <Box className={classes.attachmentFileIcon}>
-      {attachment.type === "image" ? <IconPhoto size={18} /> : <IconFile size={18} />}
+      {isImage ? <IconPhoto size={18} /> : <IconFile size={18} />}
     </Box>
   );
 };

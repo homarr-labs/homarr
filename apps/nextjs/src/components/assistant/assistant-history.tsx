@@ -271,7 +271,7 @@ const ThreadHistory = ({ onSelect }: { onSelect: () => void }) => {
   );
 };
 
-export const ConversationHistory = () => {
+export const ConversationHistory = ({ compact = false }: { compact?: boolean }) => {
   const t = useI18n("assistant");
   const [opened, setOpened] = useState(false);
   return (
@@ -288,7 +288,7 @@ export const ConversationHistory = () => {
           className={classes.historyButton}
           variant="subtle"
           color="gray"
-          size="compact-sm"
+          size={compact ? "xs" : "compact-sm"}
           leftSection={<IconHistory size={16} />}
           classNames={{ section: classes.historyButtonSection, label: classes.historyButtonLabel }}
           onClick={() => setOpened((current) => !current)}

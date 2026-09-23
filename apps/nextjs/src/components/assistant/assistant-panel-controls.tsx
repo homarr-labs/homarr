@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ThreadPrimitive } from "@assistant-ui/react";
-import { ActionIcon, Box, Button, Popover, Stack, Text, ThemeIcon, Tooltip } from "@mantine/core";
+import { ActionIcon, Box, Button, Group, Popover, Stack, Text, ThemeIcon, Tooltip } from "@mantine/core";
 import {
   IconActivityHeartbeat,
   IconApps,
@@ -17,6 +17,14 @@ import { showErrorNotification, showSuccessNotification } from "@homarr/notifica
 import { useI18n } from "@homarr/translation/client";
 
 import classes from "./assistant-panel.module.css";
+
+const compactSuggestionVars = () => ({
+  root: {
+    "--button-bg": "rgb(from var(--mantine-color-default) r g b / var(--opacity, 1))",
+    "--button-hover": "rgb(from var(--mantine-color-default-hover) r g b / var(--opacity, 1))",
+    "--button-bd": "1px solid rgb(from var(--mantine-color-default-border) r g b / var(--opacity, 1))",
+  },
+});
 import { useAssistantAutoApproval } from "./assistant-auto-approval";
 import type { AssistantConversationControls } from "./assistant-conversation-controls";
 
@@ -108,13 +116,81 @@ export const ViewRefreshAction = ({
   );
 };
 
-export const EmptyThread = () => {
+export const EmptyThread = ({ compact = false }: { compact?: boolean }) => {
   const t = useI18n("assistant");
+  if (compact) {
+    return (
+      <ThreadPrimitive.Empty>
+        <Box className={classes.empty} data-compact>
+          <Group className={classes.compactEmptyIntro} wrap="nowrap" align="flex-start" gap="sm">
+            <ThemeIcon size="md" radius="xl" variant="light" mt={2}>
+              <IconRobot size="1em" />
+            </ThemeIcon>
+            <Stack gap={4} ta="start" miw={0}>
+              <Text size="sm" fw={700}>
+                {t("emptyTitle")}
+              </Text>
+              <Text size="xs" className={classes.emptyDescription}>
+                {t("emptyDescription")}
+              </Text>
+            </Stack>
+          </Group>
+          <Box className={classes.suggestions}>
+            <ThreadPrimitive.Suggestion prompt={t("suggestions.health.prompt")} send={false} clearComposer asChild>
+              <Button
+                variant="default"
+                size="compact-sm"
+                className={classes.compactSuggestion}
+                vars={compactSuggestionVars}
+                leftSection={<IconActivityHeartbeat size="1em" />}
+              >
+                {t("suggestions.health.label")}
+              </Button>
+            </ThreadPrimitive.Suggestion>
+            <ThreadPrimitive.Suggestion prompt={t("suggestions.explore.prompt")} send={false} clearComposer asChild>
+              <Button
+                variant="default"
+                size="compact-sm"
+                className={classes.compactSuggestion}
+                vars={compactSuggestionVars}
+                leftSection={<IconApps size="1em" />}
+              >
+                {t("suggestions.explore.label")}
+              </Button>
+            </ThreadPrimitive.Suggestion>
+            <ThreadPrimitive.Suggestion prompt={t("suggestions.media.prompt")} send={false} clearComposer asChild>
+              <Button
+                variant="default"
+                size="compact-sm"
+                className={classes.compactSuggestion}
+                vars={compactSuggestionVars}
+                leftSection={<IconSearch size="1em" />}
+              >
+                {t("suggestions.media.label")}
+              </Button>
+            </ThreadPrimitive.Suggestion>
+            <ThreadPrimitive.Suggestion prompt={t("suggestions.style.prompt")} send={false} clearComposer asChild>
+              <Button
+                variant="default"
+                size="compact-sm"
+                className={classes.compactSuggestion}
+                vars={compactSuggestionVars}
+                leftSection={<IconPalette size="1em" />}
+              >
+                {t("suggestions.style.label")}
+              </Button>
+            </ThreadPrimitive.Suggestion>
+          </Box>
+        </Box>
+      </ThreadPrimitive.Empty>
+    );
+  }
+
   return (
     <ThreadPrimitive.Empty>
       <Box className={classes.empty}>
         <Stack align="center" gap="lg" maw={560} w="100%">
-          <Stack align="center" gap="xs" maw={430}>
+          <Stack align="center" gap="xs" maw={430} ta="center">
             <ThemeIcon size={52} radius="xl" variant="light">
               <IconRobot size={27} />
             </ThemeIcon>

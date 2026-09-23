@@ -548,6 +548,7 @@ const AssistantActivityBar = ({
 };
 
 interface AssistantConversationSurfaceProps extends AssistantConversationControls {
+  variant?: "widget" | "panel";
   isRunning: boolean;
   pendingAction: AssistantPendingAction | undefined;
   onExpand?: () => void;
@@ -556,6 +557,7 @@ interface AssistantConversationSurfaceProps extends AssistantConversationControl
 }
 
 export const AssistantConversationSurface = ({
+  variant = "panel",
   isRunning,
   pendingAction,
   modelId,
@@ -585,7 +587,7 @@ export const AssistantConversationSurface = ({
     <AssistantDirectiveEntitiesProvider>
       <Group className={classes.panelHeader} justify="space-between" wrap="nowrap" gap="xs">
         <Group className={classes.panelActions} gap={2} wrap="nowrap">
-          <ConversationHistory />
+          <ConversationHistory compact={variant === "widget"} />
           <ViewRefreshAction isRefreshing={isRefreshing} onRefresh={onRefresh} />
           <AutoApprovalControl />
           <Tooltip label={t("newConversation")}>
@@ -649,7 +651,7 @@ export const AssistantConversationSurface = ({
           >
             <ThreadPrimitive.Viewport className={classes.viewport} autoScroll>
               <Box className={classes.messages}>
-                <EmptyThread />
+                <EmptyThread compact={variant === "widget"} />
                 <ThreadPrimitive.Messages components={assistantThreadMessageComponents} />
               </Box>
               <SelectionToolbarPrimitive.Root className={classes.selectionToolbar}>
@@ -673,6 +675,7 @@ export const AssistantConversationSurface = ({
             <PendingQuestionDock pendingAction={pendingAction} setTarget={setQuestionPortalTarget} />
             <PendingActionBanner pendingAction={pendingAction} />
             <Composer
+              compact={variant === "widget"}
               modelId={modelId}
               models={models}
               modelOptionsLoading={modelOptionsLoading}

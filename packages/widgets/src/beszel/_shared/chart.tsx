@@ -120,14 +120,12 @@ export const BeszelChartPanel = memo(({ title, subtitle, chartProps }: BeszelCha
 
 type BeszelAreaChartProps = Omit<AreaChartProps, "dataKey" | "curveType" | "withDots" | "withYAxis"> & {
   yAxisFormatter: (value: number) => string;
-  displayScale?: number;
   yAxisDomain?: [number, string];
 };
 
 const BeszelAreaChart = memo(
   ({
     yAxisFormatter,
-    displayScale = 1,
     withXAxis = true,
     yAxisDomain,
     yAxisProps: yAxisPropsOverride,
@@ -142,14 +140,10 @@ const BeszelAreaChart = memo(
       }),
       [xAxisPropsOverride],
     );
-    let axisWidth = 56;
-    if (Number.isFinite(displayScale) && displayScale > 0 && displayScale < 1) {
-      axisWidth /= displayScale;
-    }
     const mergedYAxis = useMemo(() => {
       const base = {
         ...yAxisBase,
-        width: axisWidth,
+        width: 48,
         tickMargin: 2,
         tickFormatter: yAxisFormatter,
         ...yAxisPropsOverride,
@@ -158,7 +152,7 @@ const BeszelAreaChart = memo(
         return { ...base, domain: yAxisDomain };
       }
       return base;
-    }, [axisWidth, yAxisFormatter, yAxisDomain, yAxisPropsOverride]);
+    }, [yAxisFormatter, yAxisDomain, yAxisPropsOverride]);
 
     return (
       <AreaChart
