@@ -1,3 +1,4 @@
+import { Carbon } from "@/components/carbon";
 import { IconArrowRight } from "@tabler/icons-react";
 import { pageMetadata } from "@/lib/metadata";
 import Link from "next/link";
@@ -15,6 +16,7 @@ export default function ApiReferenceIndexPage() {
 
   return (
     <main className="homarr-content-page max-w-4xl">
+      <Carbon />
       <header className="homarr-content-header max-w-2xl">
         <p className="text-sm font-medium text-fd-primary">OpenAPI</p>
         <h1 className="homarr-content-title mt-2">Homarr API reference</h1>

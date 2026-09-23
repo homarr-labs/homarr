@@ -83,6 +83,8 @@ When a user-facing change affects setup or behavior, update the matching page in
 Every docs page and blog post includes copy-Markdown and view-source actions. Search is generated at build time and
 runs locally in the browser; it does not depend on an external crawler. Markdown exports and search resolve
 integration credentials and widget defaults from the same typed metadata used by the pages.
+The search dialog and its client-side engine load when search is first opened. Fumadocs caches the downloaded index
+for subsequent queries. The docs index, individual Markdown pages, and full corpus share the `llms()` renderer.
 The getting-started overview and complete Custom JSX component catalog are also included, with property types,
 binding contracts, and blocked capabilities taken from the published catalog JSON.
 
@@ -90,6 +92,23 @@ Published Docusaurus `/docs/category/...` addresses remain available as static c
 the corresponding overview or developer setup guide, preserving query strings and anchors, and provide a direct
 link when JavaScript is disabled. Their canonical metadata points to the destination; compatibility pages are
 excluded from search and the sitemap.
+
+## Fumadocs upgrade notes
+
+The September 2026 update moves Core/UI from 16.15.4 to 16.15.12, MDX from 15.4.0 to 15.4.3, and OpenAPI from
+11.3.5 to 12.0.1. Review the upstream [Core](https://github.com/fuma-nama/fumadocs/blob/dev/packages/core/CHANGELOG.md),
+[UI](https://github.com/fuma-nama/fumadocs/blob/dev/packages/radix-ui/CHANGELOG.md),
+[MDX](https://github.com/fuma-nama/fumadocs/blob/dev/packages/mdx/CHANGELOG.md), and
+[OpenAPI](https://github.com/fuma-nama/fumadocs/blob/dev/packages/openapi/CHANGELOG.md) changelogs when upgrading.
+
+- Core/UI and MDX now declare side effects for better tree shaking. UI also fixes tabs reverting to the URL hash.
+- Core's `llms({ renderPage })` API provides the shared `index()`, `page()`, and `full()` exports.
+- OpenAPI 12 replaces several custom renderer options and hooks. This site uses `createOpenAPIPage()` and
+  `getOpenAPIPageProps()` without those removed overrides; the built-in renderer retains all request languages.
+- MDX 15.4.3 fixes duplicate compilation output when its experimental build cache is enabled. We leave that cache
+  disabled: its current key checks source content without accounting for all compiler configuration changes.
+- The existing macro collections, processed-Markdown component adapters, and static search remain supported.
+  Typed version roots and server-side MCP tools are available upstream but are not needed by this static site.
 
 ## Kapa AI
 
@@ -112,3 +131,19 @@ Kapa ingestion automatically. See [Kapa source setup](https://docs.kapa.ai/getti
 
 Before publishing, check that Ask AI opens after navigating between pages, ask a documentation question, and verify
 its citations point to the current docs. In a separate check, block `widget.kapa.ai` and confirm search still works.
+
+## Release verification
+
+Use the [release checklist](./RELEASE-CHECKLIST.md) for the combined PocketBase/docs image, analytics, ads, and
+production promotion. The production image compiles the docs itself; it does not depend on a host `out/` directory.
+Build-time `HOMARR_WEBSITE_URL` controls canonical metadata. Runtime URL overrides configure Workshop connections
+but do not rewrite already-exported canonical URLs.
+
+PostHog records SPA pageviews and named `demo_opened`, `installation_opened`, and `link_clicked` events through
+`hog.homarr.dev`. Link events include destination, source path, external status, and an explicit CTA label when present.
+Form autocapture and session replay are disabled; tracked URL query strings and fragments are removed. Localhost and
+`?analytics_test` traffic carries `verification=true`; exclude it from production reports.
+
+Carbon loads one visible placement per page, above the docs TOC on desktop and inline elsewhere. The mobile homepage
+is excluded. Navigation reloads the ad script; resizing changes placement only when crossing its breakpoint. Ad blockers
+or no-fill responses must not prevent content, navigation, or search from working.

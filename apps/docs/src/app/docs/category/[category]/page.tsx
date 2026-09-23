@@ -1,3 +1,4 @@
+import { Carbon } from "@/components/carbon";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { DocsBody, DocsPage, DocsTitle } from "fumadocs-ui/layouts/docs/page";
@@ -36,6 +37,7 @@ export default async function LegacyCategoryPage(props: PageProps) {
 
   return (
     <DocsPage tableOfContent={{ enabled: false }}>
+      <Carbon />
       <DocsTitle>{page.data.title}</DocsTitle>
       <DocsBody>
         <p>This documentation has moved to a new address.</p>

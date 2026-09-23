@@ -156,10 +156,10 @@ catalog:
   fastify: ^5.9.0
   feed: ^6.0.0
   flag-icons: ^7.5.0
-  fumadocs-core: 16.15.4
-  fumadocs-mdx: 15.4.0
-  fumadocs-openapi: 11.3.5
-  fumadocs-ui: 16.15.4
+  fumadocs-core: 16.15.12
+  fumadocs-mdx: 15.4.3
+  fumadocs-openapi: 12.0.1
+  fumadocs-ui: 16.15.12
   glob: ^13.0.6
   ical.js: ^2.2.1
   input-otp: ^1.4.2

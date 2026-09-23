@@ -3,17 +3,19 @@ set -eu
 
 WORKSHOP_IMAGE_TEST_PORT=${WORKSHOP_IMAGE_TEST_PORT:-18091}
 WORKSHOP_IMAGE_TEST_NAME="homarr-workshop-image-test-$$"
-WORKSHOP_IMAGE_TEST_TAG="homarr-workshop:test-$$"
+WORKSHOP_IMAGE_TEST_TAG=${WORKSHOP_IMAGE_TEST_IMAGE:-homarr-workshop:test-$$}
 TEST_WEBSITE_URL=https://docs.example.invalid
 TEST_API_URL=https://api.example.invalid
 TEST_WORKSHOP_URL=https://workshop.example.invalid
 
 cleanup() {
-  docker rm --force "$WORKSHOP_IMAGE_TEST_NAME" >/dev/null 2>&1 || true
+  docker rm --force --volumes "$WORKSHOP_IMAGE_TEST_NAME" >/dev/null 2>&1 || true
 }
 trap cleanup EXIT
 
-docker build --target production -f apps/workshop/Dockerfile -t "$WORKSHOP_IMAGE_TEST_TAG" .
+if [ -z "${WORKSHOP_IMAGE_TEST_IMAGE:-}" ]; then
+  docker build --target production -f apps/workshop/Dockerfile -t "$WORKSHOP_IMAGE_TEST_TAG" .
+fi
 docker run --detach --name "$WORKSHOP_IMAGE_TEST_NAME" \
   --publish "127.0.0.1:$WORKSHOP_IMAGE_TEST_PORT:8090" \
   --env HOMARR_WEBSITE_URL="$TEST_WEBSITE_URL" \

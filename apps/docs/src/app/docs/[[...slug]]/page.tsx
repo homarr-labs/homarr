@@ -1,3 +1,4 @@
+import { Carbon } from "@/components/carbon";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { findNeighbour } from "fumadocs-core/page-tree";
@@ -45,8 +46,17 @@ export default async function Page({ params }: PageProps) {
       }
     : undefined;
 
+  let carbonPlacement: "banner" | "inline" = "inline";
+  if (page.data.full) carbonPlacement = "banner";
+
   return (
-    <DocsPage toc={toc} full={page.data.full} footer={footerItems ? { items: footerItems } : undefined}>
+    <DocsPage
+      toc={toc}
+      full={page.data.full}
+      tableOfContent={{ header: <Carbon placement="toc" /> }}
+      footer={footerItems ? { items: footerItems } : undefined}
+    >
+      <Carbon placement={carbonPlacement} />
       {!page.data.hide_title && (
         <>
           <DocsTitle id={bodyTitleId} className="homarr-docs-title">

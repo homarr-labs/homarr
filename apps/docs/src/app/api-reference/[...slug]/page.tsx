@@ -1,3 +1,4 @@
+import { Carbon } from "@/components/carbon";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { DocsPage, DocsTitle } from "fumadocs-ui/layouts/docs/page";
@@ -17,6 +18,7 @@ export default async function ApiPage({ params }: PageProps) {
 
   return (
     <DocsPage toc={page.data.toc} full>
+      <Carbon />
       <DocsTitle>{page.data.title}</DocsTitle>
       <OpenAPIPage {...page.data.getOpenAPIPageProps()} />
     </DocsPage>

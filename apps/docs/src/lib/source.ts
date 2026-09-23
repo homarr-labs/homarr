@@ -1,4 +1,4 @@
-import { loader } from "fumadocs-core/source";
+import { llms, loader } from "fumadocs-core/source";
 import { metaSchema, pageSchema } from "fumadocs-core/source/schema";
 import { defineCollections, defineDocs } from "fumadocs-mdx/macro";
 import { z } from "zod";
@@ -86,12 +86,24 @@ export function getPageMarkdownUrl(page: (typeof source)["$inferPage"]) {
   };
 }
 
-export async function getLLMText(page: (typeof source)["$inferPage"]) {
-  const processed = await getPageMarkdown(page);
-  const body = processed.replace(/^\s*#\s+[^\n]+\n+/, "");
+export const docsLlms = llms(source, {
+  renderDescription(node, { lang }) {
+    if (node.type === "page") {
+      const page = source.getNodePage(node, lang);
+      if (page) {
+        return [page.data.description, `[Markdown](${getPageMarkdownUrl(page).url})`].filter(Boolean).join(" ");
+      }
+    }
+    if (typeof node.description === "string") return node.description;
+    return "";
+  },
+  async renderPage(page) {
+    const processed = await getPageMarkdown(page);
+    const body = processed.replace(/^\s*#\s+[^\n]+\n+/, "");
 
-  return `# ${page.data.title} (${page.url})\n\n${body}`;
-}
+    return `# ${page.data.title} (${page.url})\n\n${body}`;
+  },
+});
 
 export function getPageMarkdown(page: (typeof source)["$inferPage"]) {
   return page.data.getText("processed", { components: metadataMarkdownComponents });

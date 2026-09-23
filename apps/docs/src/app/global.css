@@ -291,3 +291,38 @@ footer a {
 .dark .prose a code {
   color: var(--color-fd-primary);
 }
+
+/* Keep the complete Carbon creative visible before the TOC and on narrow pages. */
+.homarr-carbon {
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto 1.5rem;
+  flex-shrink: 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.homarr-carbon-banner {
+  margin-top: 1rem;
+}
+.homarr-carbon:has(> div:empty) {
+  margin-block: 0;
+}
+.homarr-carbon img {
+  max-width: 100%;
+}
+.homarr-carbon-toc {
+  display: none;
+}
+@media (min-width: 1280px) {
+  .homarr-carbon-toc {
+    display: block;
+  }
+  .homarr-carbon-inline {
+    display: none;
+  }
+}
+@media (max-width: 767px) {
+  .homarr-carbon[data-homepage="true"] {
+    display: none;
+  }
+}

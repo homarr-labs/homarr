@@ -24,6 +24,12 @@ COPY packages/common ./packages/common
 COPY packages/core ./packages/core
 COPY packages/custom-widgets ./packages/custom-widgets
 COPY packages/definitions ./packages/definitions
+COPY packages/db ./packages/db
+COPY packages/server-settings ./packages/server-settings
+COPY packages/settings ./packages/settings
+COPY packages/translation ./packages/translation
+COPY packages/ui ./packages/ui
+COPY packages/validation ./packages/validation
 COPY packages/workshop ./packages/workshop
 COPY tooling/typescript ./tooling/typescript
 RUN --mount=type=cache,id=workshop-pnpm-store,target=/pnpm/store pnpm config set store-dir /pnpm/store && pnpm install --filter @homarr/docs... --frozen-lockfile
@@ -37,7 +43,7 @@ ARG WORKSHOP_WEB_URL=https://homarr.dev/workshop
 ENV HOMARR_WEBSITE_URL=$HOMARR_WEBSITE_URL
 ENV WORKSHOP_API_URL=$WORKSHOP_API_URL
 ENV WORKSHOP_WEB_URL=$WORKSHOP_WEB_URL
-RUN CI=true SKIP_ENV_VALIDATION=true pnpm turbo build --filter=@homarr/docs
+RUN CI=true SKIP_ENV_VALIDATION=true pnpm --filter @homarr/docs build
 
 FROM ${POCKETBASE_IMAGE} AS pocketbase-runtime
 ENV PORT=8090
