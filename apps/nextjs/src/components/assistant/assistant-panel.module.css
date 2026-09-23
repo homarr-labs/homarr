@@ -571,9 +571,11 @@
 }
 
 .userMessageWrap {
+  position: relative;
   width: fit-content;
   max-width: 86%;
   margin-inline-start: auto;
+  margin-block-end: calc(0.9rem + 1.75rem);
 }
 
 .userMessage {
@@ -596,6 +598,7 @@
   line-height: 1.6;
   overflow-wrap: anywhere;
   white-space: pre-wrap;
+  user-select: text;
 }
 
 .directiveChip {
@@ -659,6 +662,7 @@
 .messageMarkdown {
   line-height: 1.65;
   overflow-wrap: anywhere;
+  user-select: text;
 }
 
 .messageMarkdown > :first-child {
@@ -1448,6 +1452,30 @@
 
 .userActions {
   min-height: 1.75rem;
+}
+
+.userMessageActions {
+  position: absolute;
+  inset-block-start: 100%;
+  inset-inline-end: 0;
+  z-index: 1;
+  min-height: 1.75rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease;
+}
+
+.userMessageWrap:hover .userMessageActions,
+.userMessageWrap:focus-within .userMessageActions {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (hover: none) {
+  .userMessageActions {
+    opacity: 1;
+    pointer-events: auto;
+  }
 }
 
 .branchPicker {
