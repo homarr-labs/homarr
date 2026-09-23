@@ -6,6 +6,7 @@ import {
   customWidgetDefinitionSchema,
   customWidgetUpdateSchema,
   customJsxRequestSchema,
+  customWidgetHttpSourceSchema,
   getCustomWidgetDefaultOptions,
   getCustomWidgetSecretRequirements,
   getCustomWidgetSourceSetups,
@@ -15,6 +16,23 @@ import {
 } from "../core";
 
 describe("lean Custom Widget schema", () => {
+  it("accepts fragments, custom routing headers and sources without a network scope", () => {
+    expect(customWidgetHttpSourceSchema.safeParse({ baseUrl: "http://100.64.0.1:8080/api#section" }).success).toBe(
+      true,
+    );
+    expect(
+      customJsxRequestSchema.safeParse({
+        path: "/status#section",
+        headers: {
+          "Proxy-Custom": "value",
+          "Sec-Fetch-Site": "same-origin",
+          "X-Forwarded-For": "127.0.0.1",
+          Forwarded: "for=127.0.0.1",
+        },
+      }).success,
+    ).toBe(true);
+  });
+
   it("applies request defaults", () => {
     expect(customJsxRequestSchema.parse({ path: "/status" })).toMatchObject({
       source: "default",

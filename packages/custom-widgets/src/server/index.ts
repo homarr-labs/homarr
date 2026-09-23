@@ -3,7 +3,6 @@ export type { CustomWidgetDomainErrorCode } from "./errors";
 export {
   assertJsonBudget,
   assertSafeStaticHeaders,
-  classifyAddress,
   executeCustomWidgetRequest,
   invalidateCustomWidgetResponseCache,
   MAX_REQUEST_DURATION_MS,

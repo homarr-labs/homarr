@@ -153,13 +153,6 @@ function CustomWidgetHttpSourceFields({
       />
       <Group grow align="start">
         <Select
-          label={t("networkScope")}
-          data={["public", "private", "loopback"]}
-          value={source.networkScope}
-          onChange={(value) => value && onUpdate(index, { networkScope: value as CustomWidgetSource["networkScope"] })}
-          allowDeselect={false}
-        />
-        <Select
           label={t("authentication")}
           data={["none", "bearer", "basic", "apiKeyHeader", "apiKeyQuery"]}
           value={authType}

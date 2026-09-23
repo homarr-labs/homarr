@@ -26,7 +26,6 @@ export function PreviewDiagnosticsPanel({
   templateLength,
   namedRequestCount,
   methods,
-  networkScope,
   diagnostics,
   messages,
 }: PreviewDiagnosticsPanelProps) {
@@ -36,7 +35,6 @@ export function PreviewDiagnosticsPanel({
         <DiagnosticFact label={messages.templateSize} value={messages.characters(templateLength)} />
         <DiagnosticFact label={messages.namedRequests} value={String(namedRequestCount)} />
         <DiagnosticFact label={messages.methods} value={methods} />
-        <DiagnosticFact label={messages.networkScope} value={networkScope} />
       </SimpleGrid>
       {diagnostics.length === 0 ? (
         <Alert color="green" variant="light" p="xs" icon={<IconCheck size={15} />}>

@@ -27,9 +27,8 @@ of that widget definition. Exports and Workshop submissions retain the required 
 
 Arbitrary integration requests require integration `full` access, including GET requests: service APIs can expose credentials or change state through reads. Board permissions still apply separately. Requests inherit saved authentication unless `auth: "none"` explicitly disables it. Credentials used for authentication are redacted from upstream responses. Non-GET integration requests must be actions. Requests stay within the configured URL path; authenticated requests do not follow redirects.
 
-Saved integrations may target any IPv4 or IPv6 destination that the Homarr server can reach, including loopback, private,
-link-local, and tailnet addresses. Administrators control these URLs; keep full integration access restricted to trusted users.
-Manual HTTP sources retain their configured `public`, `private`, or `loopback` address scope.
+HTTP sources and saved integrations can reach any IPv4 or IPv6 destination accessible to Homarr, including loopback,
+private, link-local, and tailnet addresses. Legacy `networkScope` fields no longer restrict destinations.
 
 ## Named requests
 
@@ -70,7 +69,7 @@ also use structured `json` and `multiSelect` option values, for example `{ "enti
 
 ## Protection
 
-Every request uses Homarr's existing server executor: same-origin source enforcement, DNS pinning and redirect validation, board permissions, rate and request limits, body and response limits, timeouts, and encrypted credential injection. Manual HTTP sources also enforce their configured network scope. Static headers cannot override credentials, cookies, routing, proxy, forwarding, or hop-by-hop headers.
+Every request uses Homarr's existing server executor: same-origin source enforcement, DNS pinning and redirect validation, board permissions, rate and request limits, body and response limits, timeouts, and encrypted credential injection. Custom proxy, forwarding, and `sec-*` headers are accepted. Authentication, cookies, host, and transport-managed headers remain reserved. URL fragments are discarded before sending requests.
 
 The executor caps request bodies at 10 KiB and response bodies at 1 MiB. Parsed JSON is limited to depth 32 and 50,000 nodes;
 each network hop has a ten-second timeout, unauthenticated queries follow at most three same-origin redirects, actions and authenticated queries do not follow redirects,

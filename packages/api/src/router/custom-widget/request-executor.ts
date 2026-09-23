@@ -2,7 +2,6 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 import {
   assertJsonBudget as assertDomainJsonBudget,
   assertSafeStaticHeaders as assertDomainSafeStaticHeaders,
-  classifyAddress,
   executeCustomWidgetRequest as executeDomainRequest,
   invalidateCustomWidgetResponseCache as invalidateDomainResponseCache,
   MAX_REQUEST_BODY_BYTES,
@@ -22,13 +21,7 @@ export type {
   CustomWidgetHttpRequest,
   CustomWidgetHttpResponse,
 } from "@homarr/custom-widgets/server";
-export {
-  classifyAddress,
-  MAX_REQUEST_BODY_BYTES,
-  MAX_RESPONSE_BODY_BYTES,
-  MAX_RESPONSE_JSON_DEPTH,
-  MAX_RESPONSE_JSON_NODES,
-};
+export { MAX_REQUEST_BODY_BYTES, MAX_RESPONSE_BODY_BYTES, MAX_RESPONSE_JSON_DEPTH, MAX_RESPONSE_JSON_NODES };
 
 const logger = createLogger({ module: "custom-widget:http" });
 

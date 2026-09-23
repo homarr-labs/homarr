@@ -24,7 +24,6 @@ import { decodeResponseBody, parseResponseBody, redactResponseSecrets } from "./
 
 export {
   assertSafeStaticHeaders,
-  classifyAddress,
   resolveAndValidateHost,
   resolveSameOriginTarget,
   validateCustomWidgetUrl,

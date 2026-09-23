@@ -86,7 +86,6 @@ export function ImportReviewContent({ review, messages, children }: ImportReview
         <ImportFact label={messages.name} value={review.name} />
         <ImportFact label={messages.origin} value={review.origins.join(", ")} />
         <ImportFact label={messages.authentication} value={review.authTypes.join(", ")} />
-        <ImportFact label={messages.networkScope} value={review.networkScopes.join(", ")} />
       </SimpleGrid>
       <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
         <div>

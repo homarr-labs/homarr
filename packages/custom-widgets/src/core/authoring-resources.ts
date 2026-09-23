@@ -58,7 +58,7 @@ interface HomarrCustomWidgetV2 {
 }
 \`\`\`
 
-\`sources.default\` is required. HTTP source properties: \`name?\`, \`baseUrl\`, \`networkScope\`, and \`auth?\`:
+\`sources.default\` is required. HTTP source properties: \`name?\`, \`baseUrl\` and \`auth?\`:
 
 \`\`\`json
 {
@@ -66,7 +66,6 @@ interface HomarrCustomWidgetV2 {
     "default": {
       "name": "Service",
       "baseUrl": "http://service.local:5055/api/v1",
-      "networkScope": "private",
       "auth": { "type": "apiKeyHeader", "name": "X-Api-Key" }
     }
   },
@@ -89,7 +88,7 @@ interface HomarrCustomWidgetV2 {
 
 Auth: \`none\`, \`bearer\`, \`basic\`, \`{ "type": "apiKeyHeader", "name": "X-Api-Key" }\`, or \`{ "type": "apiKeyQuery", "name": "api_key" }\`. Requests default to source \`default\`, kind \`query\`, method \`GET\`, trigger \`load\`, inherited auth, and view permission. Parameterized queries need \`trigger: "manual"\`. Actions default to manual/modify; DELETE requires full permission and confirmation. Do not use \`load: false\`.
 
-HTTP sources declare public URLs or self-hosted suggestions; installers configure their URL, network scope, and credentials separately.
+HTTP sources declare public URLs or self-hosted suggestions; installers configure their URL and credentials separately.
 
 Paths bind \`{option:name}\` and \`{param:name}\`; query/body references bind \`{ "$option": "name" }\` and \`{ "$param": "name" }\`. Use primitive constants (\`take: 10\`). \`$param\` is only for manual requests.
 
@@ -136,7 +135,7 @@ Use expression callbacks for supported collections and trusted slots. No callbac
 `,
   "references/security.md": `# Security
 
-All requests use Homarr's protected server executor. Source origin, network scope, DNS, redirects, SSRF, rate limits, permissions, size limits, timeouts, and encrypted credential injection remain enforced.
+All requests use Homarr's protected server executor. Source origin, DNS pinning, redirects, rate limits, permissions, size limits, timeouts, and encrypted credential injection remain enforced. All reachable IP addresses are accepted; legacy networkScope fields do not restrict destinations.
 
 The JSX interpreter blocks imports, hooks, refs, raw event callbacks, browser requests, eval, arbitrary functions, prototype access, unsafe URLs, global CSS escape, arbitrary portals, bigint, statement blocks, IIFEs, and recursion. Regex literals must be bounded and reject backreferences, lookbehind, nested quantifiers, excessive length, and unsupported flags.
 

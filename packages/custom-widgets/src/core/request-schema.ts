@@ -32,7 +32,7 @@ export function getCustomWidgetSourceUrlIssue(value: string): CustomWidgetSource
   const issue = getCustomWidgetHttpUrlIssue(value);
   if (issue) return issue;
   const url = new URL(value);
-  if (url.search || url.hash) return "queryOrFragment";
+  if (url.search) return "queryOrFragment";
   return null;
 }
 
@@ -40,7 +40,7 @@ const sourceUrlIssueMessages: Record<CustomWidgetSourceUrlIssue, string> = {
   invalid: "Must be a valid URL",
   protocol: "API sources must use HTTP or HTTPS",
   credentials: "Credentials must not be embedded in an API source URL",
-  queryOrFragment: "API source URLs cannot contain a query string or fragment",
+  queryOrFragment: "API source URLs cannot contain a query string",
 };
 
 export const customWidgetHttpSourceSchema = z.strictObject({
@@ -56,7 +56,8 @@ export const customWidgetHttpSourceSchema = z.strictObject({
     })
     .url()
     .max(2048),
-  networkScope: z.enum(customJsxNetworkScopes),
+  // Retained for existing definitions; HTTP destinations are no longer restricted by address class.
+  networkScope: z.enum(customJsxNetworkScopes).default("public"),
   auth: authSchema.default("none"),
 });
 export const customWidgetIntegrationSourceSchema = z.strictObject({
@@ -109,7 +110,6 @@ const reservedRequestHeaders = new Set([
   "content-length",
   "cookie",
   "expect",
-  "forwarded",
   "host",
   "keep-alive",
   "proxy-authenticate",
@@ -118,7 +118,6 @@ const reservedRequestHeaders = new Set([
   "trailer",
   "transfer-encoding",
   "upgrade",
-  "via",
 ]);
 
 const headersSchema = z
@@ -128,14 +127,9 @@ const headersSchema = z
     (headers) =>
       Object.keys(headers).every((name) => {
         const normalized = name.toLowerCase();
-        return (
-          !reservedRequestHeaders.has(normalized) &&
-          !normalized.startsWith("proxy-") &&
-          !normalized.startsWith("sec-") &&
-          !normalized.startsWith("x-forwarded-")
-        );
+        return !reservedRequestHeaders.has(normalized);
       }),
-    "Headers cannot override authentication, cookies, routing, forwarding, proxy, or hop-by-hop headers",
+    "Headers cannot override authentication, cookies, host, or transport-managed headers",
   )
   .refine(
     (headers) =>
@@ -165,7 +159,6 @@ export const customJsxRequestSchema = z
       .startsWith("/")
       .refine((path) => !path.startsWith("//"), "Request paths must be same-origin")
       .refine((path) => !path.includes("\\"), "Request paths cannot contain backslashes")
-      .refine((path) => !path.includes("#"), "Request paths cannot contain URL fragments")
       .refine(
         (path) => !/[{}]/u.test(path.replaceAll(/\{(?:option|param):[A-Za-z][A-Za-z0-9_-]*\}/gu, "")),
         "Request paths contain an invalid placeholder; use {option:name} or {param:name}",

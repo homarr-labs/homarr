@@ -5,7 +5,6 @@ import { describe, expect, test } from "vitest";
 import {
   assertJsonBudget,
   assertSafeStaticHeaders,
-  classifyAddress,
   executeCustomWidgetRequest,
   resolveAndValidateHost,
   resolveSameOriginTarget,
@@ -14,25 +13,12 @@ import {
 import { isCustomWidgetRequestTimeoutError } from "../server/request-executor";
 
 describe("custom widget network policy", () => {
-  test.each([
-    ["8.8.8.8", "public"],
-    ["10.0.0.1", "private"],
-    ["127.0.0.1", "loopback"],
-    ["169.254.169.254", "blocked"],
-    ["224.0.0.1", "blocked"],
-    ["::ffff:127.0.0.1", "blocked"],
-    ["fe80::1", "blocked"],
-  ] as const)("classifies %s as %s", (address, expected) => expect(classifyAddress(address)).toBe(expected));
-
-  test("enforces configured address scopes", async () => {
-    await expect(resolveAndValidateHost("10.0.0.1", "public")).rejects.toMatchObject({ code: "FORBIDDEN" });
-    await expect(resolveAndValidateHost("10.0.0.1", "private")).resolves.toHaveLength(1);
-    await expect(resolveAndValidateHost("127.0.0.1", "private")).rejects.toMatchObject({ code: "FORBIDDEN" });
-    await expect(resolveAndValidateHost("127.0.0.1", "loopback")).resolves.toHaveLength(1);
-    await expect(resolveAndValidateHost("169.254.169.254", "loopback")).rejects.toMatchObject({ code: "FORBIDDEN" });
-    await expect(resolveAndValidateHost("100.64.0.1", "any")).resolves.toHaveLength(1);
-    await expect(resolveAndValidateHost("169.254.169.254", "any")).resolves.toHaveLength(1);
-    await expect(resolveAndValidateHost("::ffff:127.0.0.1", "any")).resolves.toHaveLength(1);
+  test("accepts self-hosted destinations regardless of legacy network scope", async () => {
+    for (const scope of ["public", "private", "loopback", "any"] as const) {
+      for (const address of ["10.0.0.1", "127.0.0.1", "100.64.0.1", "169.254.169.254", "::ffff:127.0.0.1", "fe80::1"]) {
+        await expect(resolveAndValidateHost(address, scope)).resolves.toHaveLength(1);
+      }
+    }
   });
 
   test("executes a DNS-pinned request within the unrestricted integration scope", async () => {
@@ -283,24 +269,27 @@ describe("custom widget network policy", () => {
     }
   });
 
-  test("allows only credential-free HTTP(S) URLs without fragments", () => {
+  test("accepts custom proxy, browser and forwarding headers", () => {
+    expect(() =>
+      assertSafeStaticHeaders({
+        "Proxy-Custom": "value",
+        "Sec-Fetch-Site": "same-origin",
+        "X-Forwarded-For": "127.0.0.1",
+      }),
+    ).not.toThrow();
+  });
+
+  test("accepts credential-free HTTP(S) URLs and discards fragments", () => {
     expect(validateCustomWidgetUrl("https://example.com/api").href).toBe("https://example.com/api");
     expect(() => validateCustomWidgetUrl("file:///etc/passwd")).toThrow("HTTP and HTTPS");
     expect(() => validateCustomWidgetUrl("https://user:password@example.com/api")).toThrow("credentials");
-    expect(() => validateCustomWidgetUrl("https://example.com/api#secret")).toThrow("fragments");
+    expect(validateCustomWidgetUrl("https://example.com/api#section").href).toBe("https://example.com/api");
   });
 
   test("rejects cross-origin targets and reserved headers", () => {
     expect(resolveSameOriginTarget("https://example.com/base", "https://example.com/status").pathname).toBe("/status");
     expect(() => resolveSameOriginTarget("https://example.com", "https://attacker.example")).toThrow("origin");
-    for (const header of [
-      "Authorization",
-      "Cookie",
-      "Host",
-      "Proxy-Authorization",
-      "Sec-Fetch-Site",
-      "X-Forwarded-For",
-    ]) {
+    for (const header of ["Authorization", "Cookie", "Host", "Proxy-Authorization"]) {
       expect(() => assertSafeStaticHeaders({ [header]: "value" })).toThrow("reserved");
     }
   });

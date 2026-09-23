@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Alert, Badge, Checkbox, Group, PasswordInput, Select, Stack, Text, TextInput } from "@mantine/core";
+import { Alert, Badge, Checkbox, Group, PasswordInput, Stack, Text, TextInput } from "@mantine/core";
 import { IconCheck, IconKey, IconServer, IconX } from "@tabler/icons-react";
 
 import type {
@@ -156,19 +156,6 @@ export function CustomWidgetSourceSetupPanel({
               }
             />
             <Group grow align="start">
-              <Select
-                label={messages.networkScope}
-                data={["public", "private", "loopback"]}
-                value={value.networkScope}
-                allowDeselect={false}
-                onChange={(networkScope) =>
-                  networkScope &&
-                  onChange(setup.sourceId, {
-                    ...value,
-                    networkScope: networkScope as CustomJsxNetworkScope,
-                  })
-                }
-              />
               <TextInput label={messages.authentication} value={setup.authType} readOnly />
             </Group>
             {setup.requiresUrlConfirmation && value.baseUrl === setup.suggestedBaseUrl && (
