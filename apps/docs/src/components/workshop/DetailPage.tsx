@@ -92,7 +92,8 @@ type WidgetSource = HomarrCustomWidgetV2["sources"][string];
 
 const sourceHost = (source: WidgetSource) => {
   if (source.type === "integration") {
-    if (isHttpIntegrationKind(source.integrationKind)) return `${integrationDefs[source.integrationKind].name} integration`;
+    if (isHttpIntegrationKind(source.integrationKind))
+      return `${integrationDefs[source.integrationKind].name} integration`;
     return `${source.integrationKind} integration`;
   }
   const { baseUrl } = source;
@@ -857,7 +858,8 @@ const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string;
                         <IconServer size={14} /> Saved integrations
                       </h3>
                       <p className="text-sm">
-                        {integrationSources.length} configured integration{integrationSources.length !== 1 && "s"} required.
+                        {integrationSources.length} configured integration{integrationSources.length !== 1 && "s"}{" "}
+                        required.
                       </p>
                       <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
                         Select matching integrations in Homarr after import. Their connection settings are reused.

@@ -28,7 +28,7 @@ Use the same candidate image digest throughout staging and promotion.
 - [x] Client navigation requests a fresh ad; back/forward and breakpoint changes retain one active unit.
 - [x] Long/empty TOCs, full-width docs, API reference, blog, Workshop details, and 404 pages have a placement.
 - [x] Blocking Carbon and no-fill responses leave navigation/content usable; no periodic refresh timer is used.
-- [ ] Verify delivery on the staging/production hostname and confirm the placement with Carbon before release.
+- [ ] Verify delivery and placement on the intended staging hostname before release.
 
 ## PostHog
 
@@ -47,8 +47,9 @@ Use the same candidate image digest throughout staging and promotion.
       exercise the external provider. Recheck account permissions and disposable upload/moderation after sign-in.
 - [ ] Verify proxy headers/TLS, OAuth URLs/secrets, persistent storage, backups, resource limits, and public assets
       using the intended staging configuration. Check API-client requests against the intended HTTPS Homarr origin.
-- [ ] Verify Kapa opens after navigation, returns useful answers with current citations, and has current crawl/domain
-      configuration; blocking Kapa must leave local search available.
+- [x] Verify Kapa opens after client navigation and local search works with its script blocked.
+- [ ] Verify Kapa answers/citations and crawl/domain configuration in a normal browser on staging. Automated QA
+      reached the provider but received HTTP 403 (`Captcha token is invalid`); no answer was available.
 - [ ] Record and rehearse the prior-image rollback with an isolated restored backup in staging.
 
 ## Promotion only — intentionally not performed by this PR

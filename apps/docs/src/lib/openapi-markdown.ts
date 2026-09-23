@@ -182,7 +182,7 @@ export function getApiMarkdown(page: ApiPage): string {
   });
 
   const serverGuidance =
-    "Set Server URL to the full URL of your Homarr instance, including its scheme and reverse-proxy path. Requests run from your browser only after you select Test; authentication values are not persisted.\n\n";
+    "Set Server URL to the full URL of your Homarr instance, including its scheme and reverse-proxy path. Open Test, then select Send to run a request from your browser; authentication values are not persisted.\n\n";
   return `# ${page.data.title}\n\n${pageDescription}${serverGuidance}${rendered.join("\n\n")}`.trim();
 }
 
