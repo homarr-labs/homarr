@@ -132,6 +132,9 @@
 
 .widgetPanel[data-board-widget] {
   background: transparent;
+  --assistant-widget-font-sm: calc(var(--mantine-font-size-sm) * var(--board-canvas-ui-scale, 1));
+  --assistant-widget-font-md: calc(var(--mantine-font-size-md) * var(--board-canvas-ui-scale, 1));
+  --assistant-widget-font-lg: calc(var(--mantine-font-size-lg) * var(--board-canvas-ui-scale, 1));
   --assistant-widget-spacing-xs: calc(var(--mantine-spacing-xs) * var(--board-canvas-ui-scale, 1));
   --assistant-widget-spacing-sm: calc(var(--mantine-spacing-sm) * var(--board-canvas-ui-scale, 1));
   --assistant-widget-spacing-md: calc(var(--mantine-spacing-md) * var(--board-canvas-ui-scale, 1));
@@ -187,9 +190,18 @@
 
 .widgetPanel[data-board-widget] .messages:has(.empty[data-compact]) > :first-child {
   display: flex;
-  min-height: 100%;
-  flex: 1 1 auto;
+  min-height: 0;
+  flex: 0 0 auto;
   flex-direction: column;
+}
+
+.widgetPanel[data-board-widget]:has(.empty[data-compact]) .viewport {
+  flex: 0 1 auto;
+}
+
+.widgetPanel[data-board-widget] .messages:has(.empty[data-compact]) {
+  min-height: 0;
+  flex: 0 0 auto;
 }
 
 .widgetPanel[data-board-widget] .composer {
@@ -197,8 +209,54 @@
   padding: var(--assistant-widget-spacing-xs) var(--assistant-widget-spacing-sm);
 }
 
+.widgetPanel[data-board-widget]:has(.empty[data-compact]) .composerWrap {
+  min-height: 0;
+  flex: 1 1 0;
+}
+
+.widgetPanel[data-board-widget]:has(.empty[data-compact]) .composer {
+  height: 100%;
+  min-height: 0;
+}
+
+.widgetPanel[data-board-widget]:has(.empty[data-compact]) .composerDropzone {
+  display: flex;
+  height: 100%;
+  min-height: 0;
+  flex-direction: column;
+}
+
+.widgetPanel[data-board-widget]:has(.empty[data-compact]) .composerRow {
+  min-height: 0;
+  flex: 1 1 auto;
+  align-items: stretch;
+}
+
+.widgetPanel[data-board-widget]:has(.empty[data-compact]) .composerRow > :not(.composerInput) {
+  align-self: flex-end;
+}
+
 .widgetPanel[data-board-widget] .composerInput {
   padding: var(--assistant-widget-spacing-xs);
+  font-size: var(--assistant-widget-font-lg);
+}
+
+.widgetPanel[data-board-widget] .composerInput :global(.aui-lexical-placeholder) {
+  font-size: var(--assistant-widget-font-lg);
+}
+
+.widgetPanel[data-board-widget] .runtimeSelectorName,
+.widgetPanel[data-board-widget] .composerContextLabel {
+  font-size: var(--assistant-widget-font-sm);
+}
+
+.widgetPanel[data-board-widget]:has(.empty[data-compact]) .composerInput {
+  min-height: 0;
+  max-height: none;
+}
+
+.widgetPanel[data-board-widget]:has(.empty[data-compact]) .composerInput :global(.aui-lexical-input) {
+  min-height: 100%;
 }
 
 .widgetPanel[data-board-widget] .attachment {
@@ -1219,7 +1277,13 @@
 }
 
 .widgetPanel[data-board-widget] .empty[data-compact] {
-  display: block;
+  display: flex;
+  min-height: 0;
+  flex: 0 0 auto;
+  flex-direction: column;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  padding-block: var(--assistant-widget-spacing-xs);
   text-align: start;
 }
 
@@ -1237,6 +1301,15 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--assistant-widget-spacing-xs);
   margin: var(--assistant-widget-spacing-md) auto 0;
+}
+
+.widgetWelcomeTitle {
+  font-size: var(--assistant-widget-font-lg);
+}
+
+.widgetWelcomeDescription {
+  font-size: var(--assistant-widget-font-md);
+  line-height: var(--mantine-line-height-md);
 }
 
 .widgetPanel[data-board-widget] .tool,
@@ -1269,21 +1342,13 @@
 
 .compactSuggestion {
   width: 100%;
+  height: auto;
   min-width: 0;
-  min-height: calc(var(--assistant-widget-spacing-xl) + var(--assistant-widget-spacing-md));
+  min-height: calc(var(--assistant-widget-spacing-xl) + var(--assistant-widget-spacing-sm));
   justify-content: flex-start;
   padding: var(--assistant-widget-spacing-xs) var(--assistant-widget-spacing-sm);
   text-align: start;
   white-space: normal;
-}
-
-.widgetPanel[data-board-widget] .empty[data-compact] {
-  display: flex;
-  min-height: 100%;
-  flex: 1 1 auto;
-  flex-direction: column;
-  justify-content: center;
-  box-sizing: border-box;
 }
 
 .compactSuggestion :global(.mantine-Button-inner) {
@@ -1296,15 +1361,10 @@
 }
 
 .compactSuggestion :global(.mantine-Button-label) {
-  display: -webkit-box;
   min-width: 0;
-  overflow: hidden;
   line-height: var(--mantine-line-height-sm);
-  text-overflow: ellipsis;
   overflow-wrap: anywhere;
   white-space: normal;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
 }
 
 .attachmentImage,

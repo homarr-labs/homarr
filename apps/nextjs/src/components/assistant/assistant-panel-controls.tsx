@@ -20,6 +20,7 @@ import classes from "./assistant-panel.module.css";
 
 const compactSuggestionVars = () => ({
   root: {
+    "--button-fz": "calc(var(--mantine-font-size-sm) * var(--board-canvas-ui-scale, 1))",
     "--button-bg": "rgb(from var(--mantine-color-default) r g b / var(--opacity, 1))",
     "--button-hover": "rgb(from var(--mantine-color-default-hover) r g b / var(--opacity, 1))",
     "--button-bd": "1px solid rgb(from var(--mantine-color-default-border) r g b / var(--opacity, 1))",
@@ -127,10 +128,10 @@ export const EmptyThread = ({ compact = false }: { compact?: boolean }) => {
               <IconRobot size="1em" />
             </ThemeIcon>
             <Stack gap={4} ta="start" miw={0}>
-              <Text size="sm" fw={700}>
+              <Text className={classes.widgetWelcomeTitle} size="lg" fw={700}>
                 {t("emptyTitle")}
               </Text>
-              <Text size="xs" className={classes.emptyDescription}>
+              <Text size="md" className={classes.widgetWelcomeDescription}>
                 {t("emptyDescription")}
               </Text>
             </Stack>
@@ -139,7 +140,7 @@ export const EmptyThread = ({ compact = false }: { compact?: boolean }) => {
             <ThreadPrimitive.Suggestion prompt={t("suggestions.health.prompt")} send={false} clearComposer asChild>
               <Button
                 variant="default"
-                size="compact-sm"
+                size="sm"
                 className={classes.compactSuggestion}
                 vars={compactSuggestionVars}
                 leftSection={<IconActivityHeartbeat size="1em" />}
@@ -150,7 +151,7 @@ export const EmptyThread = ({ compact = false }: { compact?: boolean }) => {
             <ThreadPrimitive.Suggestion prompt={t("suggestions.explore.prompt")} send={false} clearComposer asChild>
               <Button
                 variant="default"
-                size="compact-sm"
+                size="sm"
                 className={classes.compactSuggestion}
                 vars={compactSuggestionVars}
                 leftSection={<IconApps size="1em" />}
@@ -161,7 +162,7 @@ export const EmptyThread = ({ compact = false }: { compact?: boolean }) => {
             <ThreadPrimitive.Suggestion prompt={t("suggestions.media.prompt")} send={false} clearComposer asChild>
               <Button
                 variant="default"
-                size="compact-sm"
+                size="sm"
                 className={classes.compactSuggestion}
                 vars={compactSuggestionVars}
                 leftSection={<IconSearch size="1em" />}
@@ -172,7 +173,7 @@ export const EmptyThread = ({ compact = false }: { compact?: boolean }) => {
             <ThreadPrimitive.Suggestion prompt={t("suggestions.style.prompt")} send={false} clearComposer asChild>
               <Button
                 variant="default"
-                size="compact-sm"
+                size="sm"
                 className={classes.compactSuggestion}
                 vars={compactSuggestionVars}
                 leftSection={<IconPalette size="1em" />}
