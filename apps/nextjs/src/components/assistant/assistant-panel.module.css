@@ -210,7 +210,9 @@
 }
 
 .widgetPanel[data-board-widget] .composerInput {
-  min-height: calc(var(--assistant-widget-spacing-xl) * 2);
+  min-width: 0;
+  min-height: calc(var(--assistant-widget-spacing-xl) + var(--assistant-widget-spacing-xs));
+  flex: 1 1 auto;
   padding: var(--assistant-widget-spacing-xs);
   font-size: var(--mantine-font-size-md);
 }
@@ -248,8 +250,40 @@
 }
 
 .widgetPanel[data-board-widget] .composerAttachments .attachment {
+  width: fit-content;
+  min-width: 0;
+  max-width: min(15rem, 75%);
   flex: 0 0 auto;
   margin: 0;
+  overflow: hidden;
+}
+
+.widgetPanel[data-board-widget] .composerRow {
+  align-items: center;
+  gap: var(--assistant-widget-spacing-sm);
+}
+
+.widgetPanel[data-board-widget] .composerRow > :global(.mantine-ActionIcon-root) {
+  flex: 0 0 auto;
+}
+
+.widgetPanel[data-board-widget] .composerRow > :global(.mantine-Group-root) {
+  flex: 0 0 auto;
+}
+
+.widgetPanel[data-board-widget] .composerInput {
+  align-self: center;
+}
+
+.widgetPanel[data-board-widget] .composerInput :global(.aui-lexical-input) {
+  min-height: var(--mantine-font-size-md);
+  max-height: calc(var(--assistant-widget-spacing-xl) * 2);
+  overflow-y: auto;
+}
+
+.widgetPanel[data-board-widget] .attachmentName,
+.widgetPanel[data-board-widget] .attachmentType {
+  max-width: 100%;
 }
 
 .widgetPanel[data-board-widget] .suggestion,

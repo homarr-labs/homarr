@@ -74,10 +74,10 @@ export const Composer = (props: ComposerProps) => {
             <ComposerPrimitive.Attachments className={classes.composerAttachments}>
               {() => <Attachment removable />}
             </ComposerPrimitive.Attachments>
-            <Group className={classes.composerRow} gap="xs" wrap="nowrap" align="flex-end">
+            <Group className={classes.composerRow} gap="xs" wrap="nowrap" align="center">
               <Group gap={2} wrap="nowrap">
                 <Tooltip label={t("attachments.add")}>
-                  <ComposerPrimitive.AddAttachment asChild>
+                  <ComposerPrimitive.AddAttachment multiple asChild>
                     <ActionIcon
                       variant={props.compact ? "light" : "subtle"}
                       color="gray"

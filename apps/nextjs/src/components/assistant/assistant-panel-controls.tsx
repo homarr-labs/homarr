@@ -134,7 +134,7 @@ export const EmptyThread = ({ compact = false }: { compact?: boolean }) => {
             </Stack>
           </Group>
           <Box className={classes.suggestions}>
-            <ThreadPrimitive.Suggestion prompt={t("suggestions.health.prompt")} send={false} clearComposer asChild>
+            <ThreadPrimitive.Suggestion prompt={t("suggestions.health.prompt")} send clearComposer asChild>
               <Button
                 variant="default"
                 size="sm"
@@ -145,7 +145,7 @@ export const EmptyThread = ({ compact = false }: { compact?: boolean }) => {
                 {t("suggestions.health.label")}
               </Button>
             </ThreadPrimitive.Suggestion>
-            <ThreadPrimitive.Suggestion prompt={t("suggestions.explore.prompt")} send={false} clearComposer asChild>
+            <ThreadPrimitive.Suggestion prompt={t("suggestions.explore.prompt")} send clearComposer asChild>
               <Button
                 variant="default"
                 size="sm"
@@ -156,7 +156,7 @@ export const EmptyThread = ({ compact = false }: { compact?: boolean }) => {
                 {t("suggestions.explore.label")}
               </Button>
             </ThreadPrimitive.Suggestion>
-            <ThreadPrimitive.Suggestion prompt={t("suggestions.media.prompt")} send={false} clearComposer asChild>
+            <ThreadPrimitive.Suggestion prompt={t("suggestions.media.prompt")} send clearComposer asChild>
               <Button
                 variant="default"
                 size="sm"
@@ -167,7 +167,7 @@ export const EmptyThread = ({ compact = false }: { compact?: boolean }) => {
                 {t("suggestions.media.label")}
               </Button>
             </ThreadPrimitive.Suggestion>
-            <ThreadPrimitive.Suggestion prompt={t("suggestions.style.prompt")} send={false} clearComposer asChild>
+            <ThreadPrimitive.Suggestion prompt={t("suggestions.style.prompt")} send clearComposer asChild>
               <Button
                 variant="default"
                 size="sm"

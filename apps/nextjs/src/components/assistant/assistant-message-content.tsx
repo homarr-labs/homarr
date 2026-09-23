@@ -380,9 +380,19 @@ const AttachmentPreview = () => {
       setFilePreview(null);
       return;
     }
-    const objectUrl = URL.createObjectURL(attachment.file);
-    setFilePreview(objectUrl);
-    return () => URL.revokeObjectURL(objectUrl);
+    const reader = new FileReader();
+    let cancelled = false;
+    reader.onload = () => {
+      if (!cancelled && typeof reader.result === "string") setFilePreview(reader.result);
+    };
+    reader.onerror = () => {
+      if (!cancelled) setFilePreview(null);
+    };
+    reader.readAsDataURL(attachment.file);
+    return () => {
+      cancelled = true;
+      if (reader.readyState === FileReader.LOADING) reader.abort();
+    };
   }, [attachment.file, isImage, persistedPreview]);
 
   const source = persistedPreview ?? filePreview;
