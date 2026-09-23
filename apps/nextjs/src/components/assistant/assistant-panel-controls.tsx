@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ThreadPrimitive } from "@assistant-ui/react";
-import { ActionIcon, Box, Button, Group, Popover, Stack, Text, ThemeIcon, Tooltip } from "@mantine/core";
+import { ActionIcon, Box, Button, Popover, Stack, Text, ThemeIcon, Tooltip } from "@mantine/core";
 import {
   IconActivityHeartbeat,
   IconApps,
@@ -10,6 +10,7 @@ import {
   IconRefresh,
   IconRobot,
   IconSearch,
+  IconShield,
   IconShieldCheck,
 } from "@tabler/icons-react";
 
@@ -29,7 +30,7 @@ const compactSuggestionVars = () => ({
   },
 });
 
-export const AutoApprovalControl = () => {
+export const AutoApprovalControl = ({ compact = false }: { compact?: boolean }) => {
   const t = useI18n("assistant.autoApproval");
   const [opened, setOpened] = useState(false);
   const { enabled, setEnabled } = useAssistantAutoApproval();
@@ -45,17 +46,32 @@ export const AutoApprovalControl = () => {
       withinPortal
     >
       <Popover.Target>
-        <ActionIcon
-          className={classes.panelAction}
-          variant={enabled ? "light" : "subtle"}
-          color={enabled ? "green" : "gray"}
-          onClick={() => setOpened((current) => !current)}
-          aria-label={t("label")}
-          aria-pressed={enabled}
-          title={enabled ? t("enabled") : t("label")}
-        >
-          <IconShieldCheck size={17} />
-        </ActionIcon>
+        {compact ? (
+          <ActionIcon
+            className={classes.composerApproval}
+            variant={enabled ? "light" : "subtle"}
+            color={enabled ? "green" : "gray"}
+            size="sm"
+            onClick={() => setOpened((current) => !current)}
+            aria-label={enabled ? t("enabled") : t("label")}
+            aria-pressed={enabled}
+            title={enabled ? t("enabled") : t("label")}
+          >
+            {enabled ? <IconShieldCheck size={18} /> : <IconShield size={18} />}
+          </ActionIcon>
+        ) : (
+          <ActionIcon
+            className={classes.panelAction}
+            variant={enabled ? "light" : "subtle"}
+            color={enabled ? "green" : "gray"}
+            onClick={() => setOpened((current) => !current)}
+            aria-label={t("label")}
+            aria-pressed={enabled}
+            title={enabled ? t("enabled") : t("label")}
+          >
+            <IconShieldCheck size={17} />
+          </ActionIcon>
+        )}
       </Popover.Target>
       <Popover.Dropdown>
         <Stack gap="sm">
@@ -123,16 +139,6 @@ export const EmptyThread = ({ compact = false }: { compact?: boolean }) => {
     return (
       <ThreadPrimitive.Empty>
         <Box className={classes.empty} data-compact>
-          <Group className={classes.compactEmptyIntro} wrap="nowrap" align="flex-start" gap="sm">
-            <ThemeIcon size="md" radius="xl" variant="light" mt={2}>
-              <IconRobot size="1em" />
-            </ThemeIcon>
-            <Stack gap={0} ta="start" miw={0}>
-              <Text size="md" fw={700}>
-                {t("emptyTitle")}
-              </Text>
-            </Stack>
-          </Group>
           <Box className={classes.suggestions}>
             <ThreadPrimitive.Suggestion prompt={t("suggestions.health.prompt")} send clearComposer asChild>
               <Button

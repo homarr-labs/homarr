@@ -4,7 +4,15 @@ import { useLayoutEffect, useRef } from "react";
 import { ComposerPrimitive, ThreadPrimitive, useAuiState } from "@assistant-ui/react";
 import { LexicalComposerInput } from "@assistant-ui/react-lexical";
 import { ActionIcon, Box, Button, Group, Stack, Text, ThemeIcon, Tooltip } from "@mantine/core";
-import { IconArrowUp, IconMessage, IconPaperclip, IconPlayerStop, IconQuote, IconX } from "@tabler/icons-react";
+import {
+  IconArrowUp,
+  IconMessage,
+  IconPaperclip,
+  IconPlayerStop,
+  IconPlus,
+  IconQuote,
+  IconX,
+} from "@tabler/icons-react";
 
 import { useI18n } from "@homarr/translation/client";
 
@@ -13,6 +21,7 @@ import { ComposerTriggers } from "./assistant-composer-triggers";
 import type { AssistantConversationControls } from "./assistant-conversation-controls";
 import { ConversationContext } from "./assistant-conversation-context";
 import { useAssistantPreferences } from "./assistant-context";
+import { AutoApprovalControl } from "./assistant-panel-controls";
 import { Attachment, ContextDirectiveChip } from "./assistant-message-content";
 import type { AssistantPendingAction } from "./assistant-pending-action";
 import { isAssistantProviderUnavailable } from "./assistant-provider-quota";
@@ -40,6 +49,47 @@ export const Composer = (props: ComposerProps) => {
   const composerInputRef = useRef<HTMLDivElement>(null);
   const composerLabel = t("composerPlaceholder");
   const actionSize = props.compact ? "sm" : "lg";
+  const sendSize = props.compact ? "md" : "lg";
+  const attachmentAction = (
+    <Tooltip label={t("attachments.add")}>
+      <ComposerPrimitive.AddAttachment multiple asChild>
+        <ActionIcon
+          variant="subtle"
+          color="gray"
+          size={actionSize}
+          radius={props.compact ? "xl" : undefined}
+          aria-label={t("attachments.add")}
+        >
+          {props.compact ? <IconPlus size="1em" /> : <IconPaperclip size="1em" />}
+        </ActionIcon>
+      </ComposerPrimitive.AddAttachment>
+    </Tooltip>
+  );
+  const sendAction = running ? (
+    <ComposerPrimitive.Cancel asChild>
+      <ActionIcon
+        color="red"
+        variant="light"
+        size={sendSize}
+        radius={props.compact ? "xl" : undefined}
+        aria-label={t("stop")}
+      >
+        <IconPlayerStop size="1em" />
+      </ActionIcon>
+    </ComposerPrimitive.Cancel>
+  ) : (
+    <ComposerPrimitive.Send asChild>
+      <ActionIcon
+        variant="filled"
+        size={sendSize}
+        radius={props.compact ? "xl" : undefined}
+        aria-label={sendLabel}
+        disabled={sendBlocked}
+      >
+        <IconArrowUp size="1em" />
+      </ActionIcon>
+    </ComposerPrimitive.Send>
+  );
 
   useLayoutEffect(() => {
     const editor = composerInputRef.current?.querySelector<HTMLElement>(".aui-lexical-input");
@@ -71,68 +121,61 @@ export const Composer = (props: ComposerProps) => {
                 </ActionIcon>
               </ComposerPrimitive.QuoteDismiss>
             </ComposerPrimitive.Quote>
-            <ComposerPrimitive.Attachments className={classes.composerAttachments}>
-              {() => <Attachment removable />}
-            </ComposerPrimitive.Attachments>
-            <Group className={classes.composerRow} gap="xs" wrap="nowrap" align="center">
-              <Group gap={2} wrap="nowrap">
-                <Tooltip label={t("attachments.add")}>
-                  <ComposerPrimitive.AddAttachment multiple asChild>
-                    <ActionIcon
-                      variant={props.compact ? "light" : "subtle"}
-                      color="gray"
-                      size={actionSize}
-                      radius={props.compact ? "xl" : undefined}
-                      aria-label={t("attachments.add")}
-                    >
-                      <IconPaperclip size="1em" />
-                    </ActionIcon>
-                  </ComposerPrimitive.AddAttachment>
-                </Tooltip>
-              </Group>
-              <LexicalComposerInput
-                ref={composerInputRef}
-                className={classes.composerInput}
-                data-assistant-composer-input
-                placeholder={composerLabel}
-                directiveChip={ContextDirectiveChip}
-                // oxlint-disable-next-line jsx-a11y/no-autofocus -- opening the assistant is an explicit intent to compose
-                autoFocus={props.autoFocusComposer}
-                data-autofocus={props.autoFocusComposer ? true : undefined}
-              />
-              {running ? (
-                <ComposerPrimitive.Cancel asChild>
-                  <ActionIcon
-                    color="red"
-                    variant="light"
-                    size={actionSize}
-                    radius={props.compact ? "xl" : undefined}
-                    aria-label={t("stop")}
-                  >
-                    <IconPlayerStop size="1em" />
-                  </ActionIcon>
-                </ComposerPrimitive.Cancel>
+            <Box className={classes.composerAttachments}>
+              <ComposerPrimitive.Attachments>{() => <Attachment removable />}</ComposerPrimitive.Attachments>
+            </Box>
+            <Box className={classes.composerMain}>
+              {props.compact ? (
+                <LexicalComposerInput
+                  ref={composerInputRef}
+                  className={`${classes.composerInput} ${classes.composerWidgetInput}`}
+                  data-assistant-composer-input
+                  placeholder={composerLabel}
+                  directiveChip={ContextDirectiveChip}
+                  // oxlint-disable-next-line jsx-a11y/no-autofocus -- opening the assistant is an explicit intent to compose
+                  autoFocus={props.autoFocusComposer}
+                  data-autofocus={props.autoFocusComposer ? true : undefined}
+                />
               ) : (
-                <ComposerPrimitive.Send asChild>
-                  <ActionIcon
-                    variant="filled"
-                    size={actionSize}
-                    radius={props.compact ? "xl" : undefined}
-                    aria-label={sendLabel}
-                    disabled={sendBlocked}
-                  >
-                    <IconArrowUp size="1em" />
-                  </ActionIcon>
-                </ComposerPrimitive.Send>
+                <Group className={classes.composerRow} gap="xs" wrap="nowrap" align="center">
+                  <Group gap={2} wrap="nowrap">
+                    {attachmentAction}
+                  </Group>
+                  <LexicalComposerInput
+                    ref={composerInputRef}
+                    className={classes.composerInput}
+                    data-assistant-composer-input
+                    placeholder={composerLabel}
+                    directiveChip={ContextDirectiveChip}
+                    // oxlint-disable-next-line jsx-a11y/no-autofocus -- opening the assistant is an explicit intent to compose
+                    autoFocus={props.autoFocusComposer}
+                    data-autofocus={props.autoFocusComposer ? true : undefined}
+                  />
+                  {sendAction}
+                </Group>
               )}
-            </Group>
-            <Group className={classes.composerFooter} justify="space-between" gap="xs" wrap="nowrap">
-              <Group className={classes.composerControls} gap={5} wrap="nowrap">
-                <RuntimeControls {...props} />
-                <HomarrProviderQuota />
-                <ConversationContext />
+              <Group className={classes.composerFooter} justify="space-between" gap="xs" wrap="nowrap">
+                {props.compact ? (
+                  <>
+                    <Group className={classes.composerLeading} gap="xs" wrap="nowrap">
+                      {attachmentAction}
+                      <AutoApprovalControl compact />
+                    </Group>
+                    <Group className={classes.composerTrailing} gap={0} wrap="nowrap">
+                      <ConversationContext compact />
+                      <RuntimeControls {...props} compact />
+                      {sendAction}
+                    </Group>
+                  </>
+                ) : (
+                  <Group className={classes.composerControls} gap={5} wrap="nowrap">
+                    <RuntimeControls {...props} />
+                    <HomarrProviderQuota />
+                    <ConversationContext />
+                  </Group>
+                )}
               </Group>
-            </Group>
+            </Box>
           </ComposerPrimitive.Root>
         </ComposerPrimitive.AttachmentDropzone>
       </ComposerPrimitive.Unstable_TriggerPopoverRoot>

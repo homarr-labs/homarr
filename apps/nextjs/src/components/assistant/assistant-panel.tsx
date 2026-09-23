@@ -594,7 +594,7 @@ export const AssistantConversationSurface = ({
         <Group className={classes.panelActions} gap={2} wrap="nowrap">
           <ConversationHistory compact={variant === "widget"} />
           <ViewRefreshAction isRefreshing={isRefreshing} onRefresh={onRefresh} />
-          <AutoApprovalControl />
+          {variant !== "widget" && <AutoApprovalControl />}
           <Tooltip label={t("newConversation")}>
             <ThreadListPrimitive.New asChild>
               <ActionIcon

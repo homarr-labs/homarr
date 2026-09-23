@@ -135,6 +135,7 @@
   --assistant-widget-spacing-xs: calc(var(--mantine-spacing-xs) * var(--board-canvas-ui-scale, 1));
   --assistant-widget-spacing-sm: calc(var(--mantine-spacing-sm) * var(--board-canvas-ui-scale, 1));
   --assistant-widget-spacing-md: calc(var(--mantine-spacing-md) * var(--board-canvas-ui-scale, 1));
+  --assistant-widget-spacing-lg: calc(var(--mantine-spacing-lg) * var(--board-canvas-ui-scale, 1));
   --assistant-widget-spacing-xl: calc(var(--mantine-spacing-xl) * var(--board-canvas-ui-scale, 1));
 }
 
@@ -202,11 +203,85 @@
 
 .widgetPanel[data-board-widget] .composerWrap {
   flex: 0 0 auto;
+  border-top: 0;
 }
 
 .widgetPanel[data-board-widget] .composer {
   gap: var(--assistant-widget-spacing-xs);
-  padding: var(--assistant-widget-spacing-xs) var(--assistant-widget-spacing-sm);
+  padding: calc(var(--assistant-widget-spacing-xs) / 4);
+}
+
+.widgetPanel[data-board-widget] .composerMain {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid rgb(from var(--mantine-color-default-border) r g b / var(--opacity, 1));
+  border-radius: var(--assistant-widget-radius);
+  background: rgb(from var(--mantine-color-default) r g b / var(--opacity, 1));
+}
+
+.widgetPanel[data-board-widget] .composerFooter {
+  padding: 0 var(--assistant-widget-spacing-xs) var(--assistant-widget-spacing-xs);
+}
+
+.widgetPanel[data-board-widget] .composerLeading,
+.widgetPanel[data-board-widget] .composerTrailing {
+  min-width: 0;
+}
+
+.widgetPanel[data-board-widget] .composerTrailing {
+  margin-inline-start: auto;
+}
+
+.widgetPanel[data-board-widget] .composerTrailing > :last-child {
+  margin-inline-start: var(--mantine-spacing-xs);
+}
+
+.widgetPanel[data-board-widget] .composerApproval,
+.widgetPanel[data-board-widget] .composerModelButton {
+  min-width: 0;
+  max-width: 100%;
+  padding-inline: var(--assistant-widget-spacing-xs);
+  background: transparent;
+  font-weight: 400;
+}
+
+.widgetPanel[data-board-widget] .composerApproval {
+  flex: 0 0 auto;
+  padding: 0;
+}
+
+.widgetPanel[data-board-widget] .composerModelButton {
+  padding-inline: calc(var(--mantine-spacing-xs) / 2);
+}
+
+.widgetPanel[data-board-widget] .composerApproval:hover:not(:disabled),
+.widgetPanel[data-board-widget] .composerModelButton:hover:not(:disabled) {
+  background: rgb(from var(--mantine-color-default-hover) r g b / var(--opacity, 1));
+}
+
+.widgetPanel[data-board-widget] .composerApproval :global(.mantine-Button-label),
+.widgetPanel[data-board-widget] .composerModelButton :global(.mantine-Button-label) {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.widgetPanel[data-board-widget] .composerContextIndicator {
+  display: grid;
+  width: var(--assistant-widget-spacing-lg);
+  height: var(--assistant-widget-spacing-lg);
+  flex: 0 0 auto;
+  place-items: center;
+  cursor: default;
+}
+
+.widgetPanel[data-board-widget] .composerContextIndicator:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+  border-radius: var(--mantine-radius-xl);
 }
 
 .widgetPanel[data-board-widget] .composerInput {
@@ -215,6 +290,27 @@
   flex: 1 1 auto;
   padding: var(--assistant-widget-spacing-xs);
   font-size: var(--mantine-font-size-md);
+}
+
+.widgetPanel[data-board-widget] .composerWidgetInput {
+  width: 100%;
+  min-height: calc(var(--assistant-widget-spacing-xl) * 2);
+  max-height: calc(var(--assistant-widget-spacing-xl) * 5);
+  padding: var(--assistant-widget-spacing-sm);
+  border: 0;
+  background: transparent;
+}
+
+.widgetPanel[data-board-widget] .composerWidgetInput :global(.aui-lexical-placeholder) {
+  inset: var(--assistant-widget-spacing-sm) var(--assistant-widget-spacing-sm) auto;
+}
+
+.widgetPanel[data-board-widget] .composer:has(.composerWidgetInput:focus-within) {
+  box-shadow: none;
+}
+
+.widgetPanel[data-board-widget] .composerMain:has(.composerWidgetInput:focus-within) {
+  border-color: var(--mantine-primary-color-filled);
 }
 
 .widgetPanel[data-board-widget] .composerInput :global(.aui-lexical-placeholder) {
@@ -238,24 +334,11 @@
 }
 
 .widgetPanel[data-board-widget] .composerAttachments {
-  display: flex;
   max-width: 100%;
-  align-items: center;
-  gap: var(--assistant-widget-spacing-xs);
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding-inline: var(--assistant-widget-spacing-xs);
-  scrollbar-width: thin;
-  white-space: nowrap;
 }
 
 .widgetPanel[data-board-widget] .composerAttachments .attachment {
-  width: fit-content;
-  min-width: 0;
   max-width: min(15rem, 75%);
-  flex: 0 0 auto;
-  margin: 0;
-  overflow: hidden;
 }
 
 .widgetPanel[data-board-widget] .composerRow {
@@ -472,6 +555,10 @@
   min-width: 0;
   overflow: hidden;
   background: var(--mantine-color-body);
+}
+
+.widgetHistoryDropdown {
+  border: 0;
 }
 
 .historyMenu :global(.mantine-ScrollArea-content) {
@@ -1293,15 +1380,10 @@
   text-align: start;
 }
 
-.compactEmptyIntro {
-  max-width: 100%;
-  margin-inline: auto;
-}
-
 .widgetPanel[data-board-widget] .suggestions:has(.compactSuggestion) {
   grid-template-columns: 1fr;
   gap: var(--assistant-widget-spacing-xs);
-  margin: var(--assistant-widget-spacing-sm) auto 0;
+  margin: 0 auto;
 }
 
 @container assistant-widget (min-width: 40rem) {
@@ -1383,7 +1465,72 @@
 }
 
 .attachmentImage {
-  object-fit: cover;
+  object-fit: contain;
+}
+
+.composerAttachments {
+  display: flex;
+  max-width: 100%;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: calc(var(--mantine-spacing-xs) / 4);
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-inline: var(--mantine-spacing-xs);
+  scrollbar-width: thin;
+}
+
+.composerAttachments:empty {
+  display: none;
+}
+
+.composerAttachments .attachment {
+  position: relative;
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: min(15rem, 75%);
+  flex: 0 0 auto;
+  margin: 0;
+  gap: var(--mantine-spacing-xs);
+  padding: var(--mantine-spacing-xs);
+}
+
+.composerAttachments .attachment[data-image] {
+  width: calc(var(--mantine-spacing-xl) * 1.5);
+  height: calc(var(--mantine-spacing-xl) * 1.5);
+  padding: 0;
+}
+
+.composerAttachments .attachment[data-image] .attachmentImage,
+.composerAttachments .attachment[data-image] .attachmentFileIcon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.composerAttachments .attachment[data-image] .attachmentCopy {
+  display: none;
+}
+
+.composerAttachments .attachmentRemove {
+  position: absolute;
+  top: 0;
+  right: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.composerAttachments .attachment:hover .attachmentRemove,
+.composerAttachments .attachment:focus-within .attachmentRemove {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (hover: none) {
+  .composerAttachments .attachmentRemove {
+    opacity: 1;
+    pointer-events: auto;
+  }
 }
 
 .attachmentCopy {
@@ -1619,6 +1766,10 @@
 .conversationContextPopover {
   max-height: min(34rem, calc(100dvh - 1rem));
   overflow: hidden;
+}
+
+.contextQuickView {
+  padding: var(--mantine-spacing-xs);
 }
 
 .conversationUsageSummary {

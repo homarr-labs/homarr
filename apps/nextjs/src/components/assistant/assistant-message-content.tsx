@@ -366,13 +366,12 @@ const AttachmentPreview = () => {
   if (contentImage?.type === "file" && typeof contentImage.data === "string") {
     persistedImageSource = contentImage.data;
   }
-  const persistedPreview =
-    persistedImageSource
-      ? getSafeAssistantAttachmentImageSource(
-          persistedImageSource,
-          typeof window === "undefined" ? undefined : window.location.origin,
-        )
-      : null;
+  const persistedPreview = persistedImageSource
+    ? getSafeAssistantAttachmentImageSource(
+        persistedImageSource,
+        typeof window === "undefined" ? undefined : window.location.origin,
+      )
+    : null;
   const isImage = attachment.type === "image" || attachment.contentType?.startsWith("image/") === true;
 
   useEffect(() => {
@@ -399,18 +398,15 @@ const AttachmentPreview = () => {
   if (source) {
     return <Box component="img" className={classes.attachmentImage} src={source} alt="" aria-hidden />;
   }
-  return (
-    <Box className={classes.attachmentFileIcon}>
-      {isImage ? <IconPhoto size={18} /> : <IconFile size={18} />}
-    </Box>
-  );
+  return <Box className={classes.attachmentFileIcon}>{isImage ? <IconPhoto size={18} /> : <IconFile size={18} />}</Box>;
 };
 
 export const Attachment = ({ removable = false }: { removable?: boolean }) => {
   const t = useI18n("assistant");
   const attachment = useAuiState((state) => state.attachment);
+  const isImage = attachment.type === "image" || attachment.contentType?.startsWith("image/") === true;
   return (
-    <AttachmentPrimitive.Root className={classes.attachment}>
+    <AttachmentPrimitive.Root className={classes.attachment} data-image={isImage || undefined}>
       <AttachmentPreview />
       <Box className={classes.attachmentCopy}>
         <Text size="xs" fw={600} lineClamp={1} className={classes.attachmentName}>
@@ -425,7 +421,13 @@ export const Attachment = ({ removable = false }: { removable?: boolean }) => {
       {attachment.status.type === "running" && <Loader type="bars" size="xs" />}
       {removable && (
         <AttachmentPrimitive.Remove asChild>
-          <ActionIcon variant="subtle" color="gray" size="xs" aria-label={t("removeAttachment")}>
+          <ActionIcon
+            className={classes.attachmentRemove}
+            variant="filled"
+            color="dark"
+            size="xs"
+            aria-label={t("removeAttachment")}
+          >
             <IconX size={12} />
           </ActionIcon>
         </AttachmentPrimitive.Remove>
