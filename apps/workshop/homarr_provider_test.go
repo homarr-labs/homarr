@@ -100,23 +100,49 @@ func TestSanitizeProviderPayload(t *testing.T) {
 
 func TestSanitizeProviderPayloadPinsDefaultModelQuality(t *testing.T) {
 	payload := map[string]any{
-		"reasoning_effort": "high",
+		"reasoning_effort":  "none",
+		"reasoning":         map[string]any{"effort": "low", "enabled": false, "exclude": true},
+		"include_reasoning": false,
+		"temperature":       0.3,
+		"top_p":             0.5,
+		"provider":          map[string]any{"only": []string{"azure"}, "allow_fallbacks": true},
+		"stream":            true,
+		"stream_options":    map[string]any{"include_usage": false},
 	}
 	if err := sanitizeProviderPayload(payload, defaultOpenRouterModelID); err != nil {
 		t.Fatal(err)
 	}
 
-	if payload["reasoning_effort"] != "xhigh" {
-		t.Fatalf("default model did not use max reasoning: %#v", payload["reasoning_effort"])
+	if payload["model"] != "openai/gpt-6-luna" {
+		t.Fatalf("unexpected default model: %#v", payload["model"])
+	}
+	reasoning := payload["reasoning"].(map[string]any)
+	if reasoning["effort"] != "max" || reasoning["exclude"] != false {
+		t.Fatalf("default model did not use visible max reasoning: %#v", reasoning)
+	}
+	for _, field := range []string{"reasoning_effort", "include_reasoning", "temperature", "top_p"} {
+		if _, exists := payload[field]; exists {
+			t.Fatalf("conflicting or unsupported field %q was forwarded", field)
+		}
+	}
+	if payload["stream_options"].(map[string]any)["include_usage"] != true {
+		t.Fatal("streamed token usage must be included")
 	}
 	preferences := payload["provider"].(map[string]any)
-	order := preferences["order"].([]string)
-	quantizations := preferences["quantizations"].([]string)
-	if len(order) != 1 || order[0] != "deepinfra/fp8" || len(quantizations) != 1 || quantizations[0] != "fp8" {
-		t.Fatalf("default model routing was not pinned to DeepInfra FP8 first: %#v", preferences)
+	providers := preferences["only"].([]string)
+	if len(providers) != 1 || providers[0] != "openai" {
+		t.Fatalf("default model must only use OpenAI: %#v", preferences)
 	}
-	if preferences["allow_fallbacks"] != true {
-		t.Fatalf("default model routing must retain fallbacks: %#v", preferences)
+	if preferences["allow_fallbacks"] != false {
+		t.Fatalf("default model must not fall back to another provider: %#v", preferences)
+	}
+	if preferences["zdr"] != true || preferences["data_collection"] != "deny" {
+		t.Fatalf("privacy controls must remain enforced: %#v", preferences)
+	}
+	for _, field := range []string{"order", "quantizations"} {
+		if _, exists := preferences[field]; exists {
+			t.Fatalf("obsolete DeepInfra routing field %q was forwarded", field)
+		}
 	}
 }
 

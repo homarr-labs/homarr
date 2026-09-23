@@ -25,7 +25,7 @@ import (
 const (
 	homarrProviderModelID    = "homarr/model"
 	homarrProviderModelName  = "Homarr model"
-	defaultOpenRouterModelID = "deepseek/deepseek-v4.1-flash"
+	defaultOpenRouterModelID = "openai/gpt-6-luna"
 	lunaOpenRouterModelID    = "openai/gpt-5.6-luna"
 	maxChatInputTokens       = 256 * 1024
 	maxChatOutputTokens      = 32 * 1024
@@ -432,13 +432,21 @@ func sanitizeProviderPayload(payload map[string]any, upstreamModelID string) err
 	payload["n"] = 1
 	payload["parallel_tool_calls"] = false
 	payload["usage"] = map[string]any{"include": true}
-	providerPreferences := map[string]any{"zdr": true, "data_collection": "deny"}
+	delete(payload, "stream_options")
+	if payload["stream"] == true {
+		payload["stream_options"] = map[string]any{"include_usage": true}
+	}
+	// BYOK-only billing also requires disabling shared capacity on the OpenRouter key.
+	providerPreferences := map[string]any{
+		"zdr": true, "data_collection": "deny",
+		"only": []string{"openai"}, "allow_fallbacks": false,
+	}
 	if upstreamModelID == defaultOpenRouterModelID {
-		delete(payload, "reasoning")
-		payload["reasoning_effort"] = "xhigh"
-		providerPreferences["order"] = []string{"deepinfra/fp8"}
-		providerPreferences["quantizations"] = []string{"fp8"}
-		providerPreferences["allow_fallbacks"] = true
+		delete(payload, "reasoning_effort")
+		delete(payload, "include_reasoning")
+		delete(payload, "temperature")
+		delete(payload, "top_p")
+		payload["reasoning"] = map[string]any{"effort": "max", "exclude": false}
 	} else if upstreamModelID == lunaOpenRouterModelID {
 		delete(payload, "reasoning")
 		payload["reasoning_effort"] = "high"
