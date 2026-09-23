@@ -104,5 +104,5 @@ Never run that reset against production.
 ## Production
 
 The production image serves the documentation site and PocketBase from one origin. See the
-[Workshop operator guide](../docs/docs/workshop/operator.mdx) for environment variables, proxying, staging, backups,
+[Workshop operator guide](../docs/docs/advanced/development/workshop-operator.mdx) for environment variables, proxying, staging, backups,
 and promotion. Publish by immutable digest, validate that exact digest in staging, then promote it.

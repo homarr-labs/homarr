@@ -43,7 +43,8 @@ Use the same candidate image digest throughout staging and promotion.
 ## Remaining staging gates
 
 - [x] Native amd64 and arm64 image-smoke CI jobs passed, including persistence and restore.
-- [ ] Check the final candidate commit's documentation and application CI jobs.
+- [x] Documentation and application CI passed on code commit `333206c06`, including the Fast gate, schema drift,
+      links/search/SEO, formatting, and database validation.
 - [ ] Complete real GitHub OAuth sign-in/out on the configured staging callback; configuration tests alone do not
       exercise the external provider. Recheck account permissions and disposable upload/moderation after sign-in.
 - [ ] Verify proxy headers/TLS, OAuth URLs/secrets, persistent storage, backups, resource limits, and public assets
@@ -78,5 +79,9 @@ only runtime Workshop connections were overridden for isolated browser checks.
 - The widget registry's 13 manifest checks passed; the Stats polling entry now matches its definition.
 - Independent browser review covered ad lifecycle, analytics payloads, mobile layout, and the widget playground.
   Focused playground accessibility scanning reported no violations.
+
+The example staging hostname `v2.preview.homarr.dev` was reachable over HTTPS on 2026-09-24. PocketBase health
+and the public GitHub OAuth provider listing responded successfully, but the site still served Docusaurus rather
+than this Fumadocs candidate. It cannot establish candidate deployment, callback, ad-placement, or rollback proof.
 
 Unchecked staging gates remain required; local success does not verify external OAuth or production configuration.
