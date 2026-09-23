@@ -57,6 +57,27 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  production-smoke:
+    if: github.event_name == 'pull_request'
+    name: Production image smoke (${{ matrix.arch }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: amd64
+            runner: ubuntu-24.04
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24.18.0
+      - name: Build and exercise the combined production image
+        run: sh apps/workshop/test-image.sh
+
   validate:
     runs-on: ubuntu-24.04
     timeout-minutes: 5

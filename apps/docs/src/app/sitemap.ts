@@ -32,6 +32,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: canonicalUrl("/workshop"), changeFrequency: "daily", priority: 0.7 },
     { url: canonicalUrl("/api-reference"), changeFrequency: "weekly", priority: 0.7 },
     { url: canonicalUrl("/about-us"), changeFrequency: "monthly", priority: 0.5 },
-    { url: canonicalUrl("/blog"), changeFrequency: "monthly", priority: 0.6 },
   ];
 }

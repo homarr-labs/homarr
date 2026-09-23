@@ -29,7 +29,14 @@ export function Analytics() {
             window.location.hostname === "localhost" ||
             window.location.hostname === "127.0.0.1" ||
             new URLSearchParams(window.location.search).has("analytics_test");
-          for (const properties of [event.properties, event.properties.$set, event.properties.$set_once]) {
+          // PostHog also sends person properties at the top level of $set events.
+          for (const properties of [
+            event.properties,
+            event.properties.$set,
+            event.properties.$set_once,
+            "$set" in event && event.$set,
+            "$set_once" in event && event.$set_once,
+          ]) {
             if (!properties || typeof properties !== "object") continue;
             for (const key of [
               "$current_url",

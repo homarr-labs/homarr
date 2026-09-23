@@ -169,6 +169,9 @@ export const userRouter = createTRPCRouter({
         path: "/api/users",
         tags: ["users"],
         protect: true,
+        summary: "Create a user",
+        description:
+          "Create a credentials account and assign the supplied groups. Requires admin permission and credentials authentication to be enabled. The username must be unique and password confirmation must match.",
       },
       mcp: {
         enabled: true,
@@ -196,6 +199,9 @@ export const userRouter = createTRPCRouter({
         path: "/api/users/profileImage",
         tags: ["users"],
         protect: true,
+        summary: "Set a profile image",
+        description:
+          "Set a user's image to a base64 PNG, JPEG, GIF, or WebP data URL, or null to clear it. The data URL is limited to 350,000 characters. Users can update themselves; updating another user requires admin permission.",
       },
     })
     .input(
@@ -260,6 +266,9 @@ export const userRouter = createTRPCRouter({
         path: "/api/users",
         tags: ["users"],
         protect: true,
+        summary: "List all users",
+        description:
+          "Return user IDs, names, email addresses, verification dates, and profile images. Requires admin permission.",
       },
       mcp: { enabled: true, description: "List all users (admin only)" },
     })
@@ -293,6 +302,9 @@ export const userRouter = createTRPCRouter({
         path: "/api/users/selectable",
         tags: ["users"],
         protect: true,
+        summary: "List selectable users",
+        description:
+          "Return user IDs, names, profile images, and email addresses for selection controls, optionally filtered by authentication provider. Requires authentication.",
       },
     })
     .query(({ ctx, input }) => {
@@ -330,6 +342,9 @@ export const userRouter = createTRPCRouter({
         path: "/api/users/search",
         tags: ["users"],
         protect: true,
+        summary: "Search users",
+        description:
+          "Find users whose names contain the query. Returns IDs, names, profile images, and email addresses, with up to 100 results. Requires admin permission.",
       },
     })
     .query(async ({ input, ctx }) => {
@@ -380,6 +395,9 @@ export const userRouter = createTRPCRouter({
         path: "/api/users/{userId}",
         tags: ["users"],
         protect: true,
+        summary: "Get a user",
+        description:
+          "Return a user's profile, authentication provider, and preferences. Users can read themselves; reading another user requires admin permission.",
       },
       mcp: { enabled: true, description: "Get user details by user ID. REQUIRED: userId (string)" },
     })
@@ -433,6 +451,9 @@ export const userRouter = createTRPCRouter({
         path: "/api/users/profile",
         tags: ["users"],
         protect: true,
+        summary: "Update a user profile",
+        description:
+          "Update a credentials account's username and email. Users can update themselves; updating another user requires admin permission. External-provider profiles cannot be edited, and username changes are disabled in demo mode.",
       },
     })
     .mutation(async ({ input, ctx }) => {
@@ -491,6 +512,9 @@ export const userRouter = createTRPCRouter({
         path: "/api/users/{userId}",
         tags: ["users"],
         protect: true,
+        summary: "Delete a user",
+        description:
+          "Delete a user account. Users can delete themselves; deleting another user requires admin permission. Disabled in demo mode.",
       },
       mcp: { enabled: true, description: "Delete a user by ID. REQUIRED: userId (string)" },
     })
@@ -521,6 +545,9 @@ export const userRouter = createTRPCRouter({
         path: "/api/users/{userId}/changePassword",
         tags: ["users"],
         protect: true,
+        summary: "Change a user password",
+        description:
+          "Change a credentials account's password. Changing your own password requires the previous password, including for admins. Admins can reset another user's password without verifying their previous password. Disabled in demo mode.",
       },
     })
     .mutation(async ({ ctx, input }) => {
@@ -600,6 +627,9 @@ export const userRouter = createTRPCRouter({
         path: "/api/users/changeHome",
         tags: ["users"],
         protect: true,
+        summary: "Change user home boards",
+        description:
+          "Set or clear a user's desktop and mobile home boards. The caller must be able to view each selected board. Users can update themselves; updating another user requires admin permission.",
       },
     })
     .mutation(async ({ input, ctx }) => {
@@ -656,6 +686,9 @@ export const userRouter = createTRPCRouter({
         tags: ["users"],
         protect: true,
         deprecated: true,
+        summary: "Change the default search engine",
+        description:
+          "Deprecated: use PATCH /api/users/search-preferences instead. Updates the default search engine and supplied DuckDuckGo bang preference while preserving the new-tab preference. Users can update themselves; updating another user requires admin permission.",
       },
     })
     .mutation(async ({ input, ctx }) => {
@@ -673,6 +706,9 @@ export const userRouter = createTRPCRouter({
         path: "/api/users/search-preferences",
         tags: ["users"],
         protect: true,
+        summary: "Update search preferences",
+        description:
+          "Set a user's default search engine, new-tab behavior, and DuckDuckGo bang preference. Users can update themselves; updating another user requires admin permission.",
       },
     })
     .mutation(async ({ input, ctx }) => {
@@ -687,6 +723,8 @@ export const userRouter = createTRPCRouter({
         path: "/api/users/changeScheme",
         tags: ["users"],
         protect: true,
+        summary: "Change your color scheme",
+        description: "Set the current user's preferred color scheme. Requires authentication.",
       },
     })
     .mutation(async ({ input, ctx }) => {
@@ -736,6 +774,9 @@ export const userRouter = createTRPCRouter({
         path: "/api/users/right-click-widgets",
         tags: ["users"],
         protect: true,
+        summary: "Change widget context menu behavior",
+        description:
+          "Enable or disable opening widget context menus with a right click for a user. Users can update themselves; updating another user requires admin permission.",
       },
     })
     .input(convertIntersectionToZodObject(userEnableRightClickOnWidgetsSchema.and(byIdSchema)))
@@ -780,6 +821,9 @@ export const userRouter = createTRPCRouter({
         path: "/api/users/header-preferences",
         tags: ["users"],
         protect: true,
+        summary: "Update header preferences",
+        description:
+          "Replace a user's header layout and display preferences. New board shortcuts must reference boards the target user can view; existing shortcuts may be retained. Users can update themselves; updating another user requires admin permission.",
       },
       mcp: {
         enabled: true,
@@ -840,6 +884,9 @@ export const userRouter = createTRPCRouter({
         tags: ["users"],
         protect: true,
         deprecated: true,
+        summary: "Change DuckDuckGo bang behavior",
+        description:
+          "Deprecated: use PATCH /api/users/search-preferences instead. Enable or disable DuckDuckGo bangs for a user. Users can update themselves; updating another user requires admin permission.",
       },
     })
     .mutation(async ({ input, ctx }) => {
@@ -866,6 +913,9 @@ export const userRouter = createTRPCRouter({
         path: "/api/users/firstDayOfWeek",
         tags: ["users"],
         protect: true,
+        summary: "Change the first day of the week",
+        description:
+          "Set a user's preferred first day of the week. Users can update themselves; updating another user requires admin permission.",
       },
     })
     .mutation(async ({ input, ctx }) => {

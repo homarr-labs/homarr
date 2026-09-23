@@ -16,6 +16,8 @@
     "/api/apps/paginated": {
       "get": {
         "operationId": "appRouter-getPaginated",
+        "summary": "List apps with pagination",
+        "description": "Return apps ordered by name with a total count. Supports a name filter and page controls. Requires app-modify-all permission.",
         "tags": [
           "apps"
         ],
@@ -186,6 +188,8 @@
     "/api/apps": {
       "get": {
         "operationId": "appRouter-all",
+        "summary": "List all apps",
+        "description": "Return all apps ordered by name. Requires app-modify-all permission.",
         "tags": [
           "apps"
         ],
@@ -292,6 +296,8 @@
       },
       "post": {
         "operationId": "appRouter-create",
+        "summary": "Create an app",
+        "description": "Create an app bookmark. Requires app-create permission. Returns the app, including its ID and the legacy appId field. An empty pingUrl disables the custom ping URL.",
         "tags": [
           "apps"
         ],
@@ -500,6 +506,8 @@
     "/api/apps/search": {
       "get": {
         "operationId": "appRouter-search",
+        "summary": "Search apps",
+        "description": "Find apps whose names contain the query, ordered by name. Requires app-modify-all or board-modify-all permission; returns up to 100 results.",
         "tags": [
           "apps"
         ],
@@ -648,6 +656,8 @@
     "/api/apps/selectable": {
       "get": {
         "operationId": "appRouter-selectable",
+        "summary": "List selectable apps",
+        "description": "Return app IDs, names, icons, descriptions, destination URLs, and ping URLs for selection controls. Requires authentication.",
         "tags": [
           "apps"
         ],
@@ -756,10 +766,13 @@
     "/api/apps/{id}": {
       "get": {
         "operationId": "appRouter-byId",
+        "summary": "Get an app",
+        "description": "Return an app by ID. Signed-in users can access all apps; anonymous access is limited to apps placed on public boards. Missing or inaccessible apps return not found.",
         "tags": [
           "apps"
         ],
         "security": [
+          {},
           {
             "apikey": []
           }
@@ -889,6 +902,8 @@
       },
       "patch": {
         "operationId": "appRouter-update",
+        "summary": "Update an app",
+        "description": "Update an app by ID. Requires app-modify-all permission. Supply all required app fields; an empty pingUrl clears the custom ping URL. Changing href invalidates linked integration caches.",
         "tags": [
           "apps"
         ],
@@ -1046,6 +1061,8 @@
       },
       "delete": {
         "operationId": "appRouter-delete",
+        "summary": "Delete an app",
+        "description": "Delete an app by ID and invalidate linked integration caches. Requires app-full-all permission.",
         "tags": [
           "apps"
         ],
@@ -1129,10 +1146,13 @@
     "/api/boards": {
       "get": {
         "operationId": "boardRouter-getAllBoards",
+        "summary": "List accessible boards",
+        "description": "Return accessible boards with creator details, visibility, and the current user's desktop and mobile home flags. Anonymous callers can see public boards.",
         "tags": [
           "boards"
         ],
         "security": [
+          {},
           {
             "apikey": []
           }
@@ -1316,6 +1336,8 @@
       },
       "post": {
         "operationId": "boardRouter-createBoard",
+        "summary": "Create a board",
+        "description": "Create a board with base and mobile layouts. Requires board-create permission. Returns the board ID, name, and base layout ID; sets the creator's home board if none is selected.",
         "tags": [
           "boards"
         ],
@@ -1430,6 +1452,8 @@
     "/api/boards/{id}/duplicate": {
       "post": {
         "operationId": "boardRouter-duplicateBoard",
+        "summary": "Duplicate a board",
+        "description": "Copy a board under a unique name and return its new ID. Requires board-create permission, view access to the source, and use access to its linked integrations. Widget configurations must be valid; boards containing Custom Widgets require admin permission.",
         "tags": [
           "boards"
         ],
@@ -1535,6 +1559,8 @@
     "/api/boards/{id}/name": {
       "patch": {
         "operationId": "boardRouter-renameBoard",
+        "summary": "Rename a board",
+        "description": "Change a board's name to a unique name. Requires full access to the board.",
         "tags": [
           "boards"
         ],
@@ -1639,6 +1665,8 @@
     "/api/boards/{id}/visibility": {
       "patch": {
         "operationId": "boardRouter-changeBoardVisibility",
+        "summary": "Change board visibility",
+        "description": "Make a board public or private. Requires full access to the board. A board selected as an instance desktop or mobile home board cannot be made private.",
         "tags": [
           "boards"
         ],
@@ -1744,6 +1772,8 @@
     "/api/boards/{id}": {
       "delete": {
         "operationId": "boardRouter-deleteBoard",
+        "summary": "Delete a board",
+        "description": "Delete a board by ID. Requires full access to the board.",
         "tags": [
           "boards"
         ],
@@ -1827,6 +1857,8 @@
     "/api/boards/{id}/home": {
       "patch": {
         "operationId": "boardRouter-setHomeBoard",
+        "summary": "Set your desktop home board",
+        "description": "Select the current user's desktop home board. Requires view access to the board.",
         "tags": [
           "boards"
         ],
@@ -1910,6 +1942,8 @@
     "/api/boards/{id}/mobile-home": {
       "patch": {
         "operationId": "boardRouter-setMobileHomeBoard",
+        "summary": "Set your mobile home board",
+        "description": "Select the current user's mobile home board. Requires view access to the board.",
         "tags": [
           "boards"
         ],
@@ -1993,6 +2027,8 @@
     "/api/boards/{id}/settings": {
       "patch": {
         "operationId": "boardRouter-savePartialBoardSettings",
+        "summary": "Update board settings",
+        "description": "Update the supplied appearance, metadata, background, custom CSS, or status settings. Omitted settings remain unchanged. Requires modify access to the board.",
         "tags": [
           "boards"
         ],
@@ -2224,6 +2260,8 @@
     "/api/boards/items": {
       "post": {
         "operationId": "boardRouter-addItem",
+        "summary": "Add an item to a board",
+        "description": "Add a widget or app to the first available position in the main canvas of each layout and return its item ID. Requires modify access to the board and use access to linked integrations. Widget configurations must be valid; placing Custom Widgets requires admin permission.",
         "tags": [
           "boards"
         ],
@@ -2400,6 +2438,8 @@
     "/api/info": {
       "get": {
         "operationId": "infoRouter-getInfo",
+        "summary": "Get server information",
+        "description": "Return the Homarr server version. Requires authentication.",
         "tags": [
           "info"
         ],
@@ -2464,6 +2504,8 @@
     "/api/invites": {
       "get": {
         "operationId": "inviteRouter-getAll",
+        "summary": "List user invitations",
+        "description": "Return invitations with their expiration dates and creators, ordered by expiration. Invite tokens are excluded. Requires admin permission and credentials authentication to be enabled.",
         "tags": [
           "invites"
         ],
@@ -2557,6 +2599,8 @@
       },
       "post": {
         "operationId": "inviteRouter-createInvite",
+        "summary": "Create a user invitation",
+        "description": "Create a single-use invitation with the supplied expiration date and return its ID and registration token. Requires admin permission and credentials authentication to be enabled.",
         "tags": [
           "invites"
         ],
@@ -2656,6 +2700,8 @@
     "/api/invites/{id}": {
       "delete": {
         "operationId": "inviteRouter-deleteInvite",
+        "summary": "Delete a user invitation",
+        "description": "Revoke an invitation by ID. Requires admin permission and credentials authentication to be enabled. Returns not found if the invitation does not exist.",
         "tags": [
           "invites"
         ],
@@ -2741,6 +2787,8 @@
     "/api/settings/board": {
       "get": {
         "operationId": "serverSettingsRouter-getBoardSettings",
+        "summary": "Get global board settings",
+        "description": "Return instance desktop and mobile home board IDs and default status behavior. Requires admin permission.",
         "tags": [
           "settings"
         ],
@@ -2829,6 +2877,8 @@
       },
       "patch": {
         "operationId": "serverSettingsRouter-updateBoardSettings",
+        "summary": "Update global board settings",
+        "description": "Update supplied instance board defaults and return the resulting settings. Home board IDs must reference public boards, or be null to clear the default. Requires admin permission.",
         "tags": [
           "settings"
         ],
@@ -2978,6 +3028,8 @@
     "/api/users": {
       "post": {
         "operationId": "userRouter-create",
+        "summary": "Create a user",
+        "description": "Create a credentials account and assign the supplied groups. Requires admin permission and credentials authentication to be enabled. The username must be unique and password confirmation must match.",
         "tags": [
           "users"
         ],
@@ -3091,6 +3143,8 @@
       },
       "get": {
         "operationId": "userRouter-getAll",
+        "summary": "List all users",
+        "description": "Return user IDs, names, email addresses, verification dates, and profile images. Requires admin permission.",
         "tags": [
           "users"
         ],
@@ -3202,6 +3256,8 @@
     "/api/users/profileImage": {
       "put": {
         "operationId": "userRouter-setProfileImage",
+        "summary": "Set a profile image",
+        "description": "Set a user's image to a base64 PNG, JPEG, GIF, or WebP data URL, or null to clear it. The data URL is limited to 350,000 characters. Users can update themselves; updating another user requires admin permission.",
         "tags": [
           "users"
         ],
@@ -3307,6 +3363,8 @@
     "/api/users/selectable": {
       "get": {
         "operationId": "userRouter-selectable",
+        "summary": "List selectable users",
+        "description": "Return user IDs, names, profile images, and email addresses for selection controls, optionally filtered by authentication provider. Requires authentication.",
         "tags": [
           "users"
         ],
@@ -3444,6 +3502,8 @@
     "/api/users/search": {
       "post": {
         "operationId": "userRouter-search",
+        "summary": "Search users",
+        "description": "Find users whose names contain the query. Returns IDs, names, profile images, and email addresses, with up to 100 results. Requires admin permission.",
         "tags": [
           "users"
         ],
@@ -3579,6 +3639,8 @@
     "/api/users/{userId}": {
       "get": {
         "operationId": "userRouter-getById",
+        "summary": "Get a user",
+        "description": "Return a user's profile, authentication provider, and preferences. Users can read themselves; reading another user requires admin permission.",
         "tags": [
           "users"
         ],
@@ -3794,6 +3856,8 @@
       },
       "delete": {
         "operationId": "userRouter-delete",
+        "summary": "Delete a user",
+        "description": "Delete a user account. Users can delete themselves; deleting another user requires admin permission. Disabled in demo mode.",
         "tags": [
           "users"
         ],
@@ -3877,6 +3941,8 @@
     "/api/users/profile": {
       "put": {
         "operationId": "userRouter-editProfile",
+        "summary": "Update a user profile",
+        "description": "Update a credentials account's username and email. Users can update themselves; updating another user requires admin permission. External-provider profiles cannot be edited, and username changes are disabled in demo mode.",
         "tags": [
           "users"
         ],
@@ -3995,6 +4061,8 @@
     "/api/users/{userId}/changePassword": {
       "patch": {
         "operationId": "userRouter-changePassword",
+        "summary": "Change a user password",
+        "description": "Change a credentials account's password. Changing your own password requires the previous password, including for admins. Admins can reset another user's password without verifying their previous password. Disabled in demo mode.",
         "tags": [
           "users"
         ],
@@ -4107,6 +4175,8 @@
     "/api/users/changeHome": {
       "patch": {
         "operationId": "userRouter-changeHomeBoards",
+        "summary": "Change user home boards",
+        "description": "Set or clear a user's desktop and mobile home boards. The caller must be able to view each selected board. Users can update themselves; updating another user requires admin permission.",
         "tags": [
           "users"
         ],
@@ -4221,6 +4291,8 @@
     "/api/users/changeSearchEngine": {
       "patch": {
         "operationId": "userRouter-changeDefaultSearchEngine",
+        "summary": "Change the default search engine",
+        "description": "Deprecated: use PATCH /api/users/search-preferences instead. Updates the default search engine and supplied DuckDuckGo bang preference while preserving the new-tab preference. Users can update themselves; updating another user requires admin permission.",
         "tags": [
           "users"
         ],
@@ -4330,6 +4402,8 @@
     "/api/users/search-preferences": {
       "patch": {
         "operationId": "userRouter-changeSearchPreferences",
+        "summary": "Update search preferences",
+        "description": "Set a user's default search engine, new-tab behavior, and DuckDuckGo bang preference. Users can update themselves; updating another user requires admin permission.",
         "tags": [
           "users"
         ],
@@ -4442,6 +4516,8 @@
     "/api/users/changeScheme": {
       "patch": {
         "operationId": "userRouter-changeColorScheme",
+        "summary": "Change your color scheme",
+        "description": "Set the current user's preferred color scheme. Requires authentication.",
         "tags": [
           "users"
         ],
@@ -4539,6 +4615,8 @@
     "/api/users/right-click-widgets": {
       "patch": {
         "operationId": "userRouter-changeEnableRightClickOnWidgets",
+        "summary": "Change widget context menu behavior",
+        "description": "Enable or disable opening widget context menus with a right click for a user. Users can update themselves; updating another user requires admin permission.",
         "tags": [
           "users"
         ],
@@ -4635,6 +4713,8 @@
     "/api/users/header-preferences": {
       "patch": {
         "operationId": "userRouter-changeHeaderPreferences",
+        "summary": "Update header preferences",
+        "description": "Replace a user's header layout and display preferences. New board shortcuts must reference boards the target user can view; existing shortcuts may be retained. Users can update themselves; updating another user requires admin permission.",
         "tags": [
           "users"
         ],
@@ -5060,6 +5140,8 @@
     "/api/users/ddg-bangs": {
       "patch": {
         "operationId": "userRouter-changeDdgBangs",
+        "summary": "Change DuckDuckGo bang behavior",
+        "description": "Deprecated: use PATCH /api/users/search-preferences instead. Enable or disable DuckDuckGo bangs for a user. Users can update themselves; updating another user requires admin permission.",
         "tags": [
           "users"
         ],
@@ -5157,6 +5239,8 @@
     "/api/users/firstDayOfWeek": {
       "patch": {
         "operationId": "userRouter-changeFirstDayOfWeek",
+        "summary": "Change the first day of the week",
+        "description": "Set a user's preferred first day of the week. Users can update themselves; updating another user requires admin permission.",
         "tags": [
           "users"
         ],

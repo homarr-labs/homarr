@@ -1,0 +1,54 @@
+name: Validate documentation
+
+on:
+  pull_request:
+    paths:
+      - "apps/docs/**"
+      - "apps/nextjs/src/app/api/**"
+      - "packages/definitions/src/**"
+      - "packages/widgets/src/**"
+      - "packages/custom-widgets/src/**"
+      - "packages/ui/src/**"
+      - "packages/workshop/src/**"
+      - "packages/api/src/**"
+      - "packages/auth/src/**"
+      - "packages/integrations/src/**"
+      - "tooling/**"
+      - "pnpm-lock.yaml"
+      - "package.json"
+      - "pnpm-workspace.yaml"
+      - "turbo.json"
+      - ".github/workflows/deployment-docs.yml"
+      - ".github/workflows/validate-docs.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-docs-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  docs:
+    name: Build and validate docs
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SKIP_ENV_VALIDATION: true
+    steps:
+      - uses: actions/checkout@v7
+      - name: Setup
+        uses: ./tooling/github/setup
+      - name: Validate the published API schema against the application
+        run: pnpm check:openapi
+      - name: Validate browser access to the documented REST API
+        run: pnpm exec vitest run 'apps/nextjs/src/app/api/[...trpc]/route.spec.ts'
+      - name: Build docs
+        run: pnpm --filter @homarr/docs build
+        env:
+          CI: "true"
+      - name: Validate exported links, search, and metadata
+        run: |
+          pnpm --filter @homarr/docs validate:links
+          pnpm --filter @homarr/docs verify:search
+          pnpm --filter @homarr/docs verify:seo

@@ -1,71 +1,77 @@
 # Fumadocs + Workshop release checklist
 
-Use the exact candidate image digest throughout staging and promotion. A passing build is not deployment proof.
+Keep this PR a draft until the staging gates pass. Production promotion is a separate action.
+Use the same candidate image digest throughout staging and promotion.
 
-## Candidate verification
+## Verified locally
 
-- [ ] Build `apps/workshop/Dockerfile --target production` from the candidate commit with the production
-      `HOMARR_WEBSITE_URL`, `WORKSHOP_API_URL`, and `WORKSHOP_WEB_URL` build arguments.
-- [x] Start that image with an empty, isolated `/pb_data` volume; confirm health, non-root runtime, migrations,
-      PocketBase administration, and public Workshop listing reads.
-- [x] Run `apps/workshop/test-image.sh`: static search, Markdown exports, trailing-slash redirects, HTML/API 404s,
-      runtime URL overrides, Workshop social metadata, and public CORS.
-- [ ] Restart the container with the same volume and verify data persists. Rehearse backup and restore into a
-      separate volume. Do not reuse an unsupported pre-consolidation v2 database.
-- [ ] Verify both published amd64 and arm64 images; smoke-test the architecture used by production.
-- [ ] Check canonical URLs, sitemap, robots, legacy category redirects, blog redirects, images, and assets through
-      the production reverse proxy. Resolve the existing `/blog/` redirect mismatch in `verify:seo`.
-- [ ] Run docs typecheck, coverage, link, search, and SEO checks against the candidate export.
-- [ ] Navigate between docs, blog, API reference, home, and Workshop without reloads; test search, hash links,
-      light/dark theme, browser back/forward, and a direct deep-link reload.
+- [x] Build the combined PocketBase/docs production image with production canonical URLs.
+- [x] Start with empty isolated storage; verify health, UID 100, migrations, administration, and public reads.
+- [x] Check static HTML, search, Markdown, assets, redirects with query strings, and HTML/API 404s.
+- [x] Verify gzip and identity responses, including explicit `gzip;q=0` rejection.
+- [x] Replace the container with the same volume; verify persisted records and uploaded bytes.
+- [x] Back up stopped storage and restore into a separate volume; verify authentication, records, and uploaded bytes.
+- [x] Run docs/API typechecks, schema drift, integration/widget coverage, rendered links, search, and SEO checks.
+- [x] Verify all 41 API operations have descriptions and appear in search and Markdown exports.
+- [x] Exercise the API client with a configurable instance URL and API key; sending is explicit and credentials
+      are not retained in local storage. Verify authenticated cross-origin requests against a real Homarr runtime.
+- [x] Test blog/category redirects, canonical URLs, sitemap, mobile API layout, and direct deep links.
+- [x] Exercise the embedded Custom JSX example: bindings, progress changes, malformed input, reset, theme,
+      keyboard access, mobile layout, and focused accessibility checks.
+- [x] Run Workshop integration checks for permissions, submissions, uploads, moderation, social previews,
+      missing items, runtime configuration, OAuth configuration rotation, and migrations.
 
 ## Carbon
 
-- [x] A real creative renders above the fold at 1366×768 and 1920×1080; no TOC overlap or clipped attribution.
-- [x] At 390×844 and 768×1024, non-home pages show one ad before scrolling, with no horizontal overflow.
-- [x] At mobile width the homepage neither displays nor requests an ad. Navigating to docs loads one.
-- [ ] Client navigation requests a fresh ad; back/forward and desktop/mobile resize leave only one active unit.
-- [ ] Long/empty TOCs, full-width docs, API pages, blog posts, Workshop details, and 404 pages retain a placement.
-- [ ] Blocking Carbon or receiving no fill leaves navigation and content usable. No ad refresh timer is used.
-- [ ] Verify real delivery on the production hostname and confirm the redesigned placement with Carbon.
+- [x] Real creatives render above the fold on desktop and non-home mobile/tablet pages, without TOC overlap.
+- [x] The mobile homepage neither displays nor requests an ad; navigating away loads one.
+- [x] Client navigation requests a fresh ad; back/forward and breakpoint changes retain one active unit.
+- [x] Long/empty TOCs, full-width docs, API reference, blog, Workshop details, and 404 pages have a placement.
+- [x] Blocking Carbon and no-fill responses leave navigation/content usable; no periodic refresh timer is used.
+- [ ] Verify delivery on the staging/production hostname and confirm the placement with Carbon before release.
 
 ## PostHog
 
-- [ ] Initial navigation and client-side route changes each emit one `$pageview`; hash links do not create pageviews.
-- [ ] Demo emits `demo_opened`, Install emits `installation_opened`, and other HTTP(S) links emit `link_clicked`.
-      Verify normal, new-tab, and middle-click navigation without delaying the user's click.
-- [ ] Events include `site`, `source_path`/page URL, destination, and internal/external classification as applicable.
-      Queries/fragments are stripped from captured URL fields; forms/API credentials and ad clicks are not autocaptured.
-- [ ] Verify successful ingestion through `https://hog.homarr.dev` and confirm events in the PostHog project.
-      Filter `verification=true` (localhost or `?analytics_test`) out of production reports.
-- [ ] Block analytics requests and confirm the site remains usable. Session replay stays disabled.
+- [x] Initial/client navigation and back/forward each emit one pageview; hash navigation adds none.
+- [x] Demo, Install, and other links emit `demo_opened`, `installation_opened`, and `link_clicked` respectively.
+      Normal, Ctrl-click, and native middle-click events were checked without delaying navigation.
+- [x] Verify site/source/destination/external properties and removal of URL queries/fragments, including nested
+      person properties. Form, API-key, and ad-click autocapture and session replay remain disabled.
+- [x] Verify HTTP 200 ingestion through `hog.homarr.dev` and stored events in project 62963.
+- [x] Blocking analytics does not break the site. Exclude `verification=true` traffic from production reports.
 
-## Workshop and promotion
+## Remaining staging gates
 
-- [ ] Verify GitHub OAuth callback, sign-in/out, account permissions, submission/upload, moderation, and installation
-      against staging; use disposable content and remove it afterward.
-- [ ] Verify saved item URLs/social previews and missing-item responses with the intended local or remote backend.
-- [ ] Check API-reference authentication against a real Homarr instance; static rendering does not prove CORS or
-      authenticated playground requests. Endpoint descriptions/examples and API search coverage remain follow-up work.
-- [ ] Verify production secrets, OAuth URLs, proxy headers/TLS, persistent storage, backups, and resource limits.
-- [ ] Capture the running image digest and backup, deploy the candidate, then repeat health, docs, search, Workshop,
-      Carbon, and PostHog smoke checks on the public hostname.
-- [ ] Record rollback image and data-restore procedure before promotion; verify the rollback in staging.
+- [ ] Check the candidate commit's documentation and native amd64/arm64 image-smoke CI jobs.
+- [ ] Complete real GitHub OAuth sign-in/out on the configured staging callback; configuration tests alone do not
+      exercise the external provider. Recheck account permissions and disposable upload/moderation after sign-in.
+- [ ] Verify proxy headers/TLS, OAuth URLs/secrets, persistent storage, backups, resource limits, and public assets
+      using the intended staging configuration. Check API-client requests against the intended HTTPS Homarr origin.
+- [ ] Verify Kapa opens after navigation, returns useful answers with current citations, and has current crawl/domain
+      configuration; blocking Kapa must leave local search available.
+- [ ] Record and rehearse the prior-image rollback with an isolated restored backup in staging.
 
-## Evidence for this update
+## Promotion only — intentionally not performed by this PR
 
-Verified locally on 2026-09-23 using the production target on amd64, with loopback build URLs.
-Local image ID: `sha256:f242f3579ec11d1f49ec79ac1234a1a635e8dbc4370c8cb5b211dd88fb84eaff`.
-This is a local image ID, not a published manifest digest. Rebuild with production URLs before promotion.
+- [ ] Record the tested published image digest and production backup; approve promotion and change PR draft status.
+- [ ] Deploy that digest and repeat health, docs/search, Workshop, Carbon, and PostHog public-hostname checks.
 
-- Production build, coverage validation, docs typecheck, and the complete image smoke script passed.
-- Search verification passed: 233 Markdown exports and 66 result destinations. Rendered links: zero errors.
-- PocketBase ran as UID 100; the isolated data volume survived container replacement.
-- Real Carbon creatives rendered at desktop, mobile, and tablet sizes. Mobile homepage requested no ad;
-  client navigation to docs created a fresh ad without reloading the document. Resizing home to mobile removed it.
-- PostHog returned HTTP 200 for pageviews, demo, install, and link events, marked `verification=true`.
-  Final-image payloads removed a query/fragment probe and contained no heatmap data. Dashboard readback remains
-  unverified: the connected account does not expose the Homarr project.
-- `verify:seo` still fails on the existing `/blog/` redirect: `expected one document heading`.
+## Evidence
 
-Unchecked items include broader interaction cases and production-only checks; they are not implied passes.
+Verified on 2026-09-23. Local amd64 production image:
+`sha256:dff7d74d23d6dc35376ecb0f15366a8def172e35e76b8e29239326eb91acddc2`.
+This is a local image ID, not a published multi-architecture manifest digest. Canonical origin is `https://homarr.dev`;
+only runtime Workshop connections were overridden for isolated browser checks.
+
+- Exact-image smoke passed, including backup/restore and uploaded-file byte comparisons.
+- Exact-image export: 274 Markdown pages, all 41 API operations, 106 search destinations, 278 canonical pages,
+  and 12 noindex pages. Blog alias SEO now passes.
+- Search transfer compressed from about 8.23 MB to 1.52 MB; search still loads only on demand.
+- Real REST runtime: valid key 200, missing/invalid key 401, missing endpoint 404, OPTIONS 204; authenticated browser
+  cross-origin fetch succeeded. Six focused CORS tests and the complete Workshop integration suite passed.
+- PostHog readback of marked checks after 20:00 UTC: 16 pageviews, 3 demo, 6 install, and 4 link events.
+  These are aggregate QA totals; separate browser traces checked per-interaction duplication and URL sanitization.
+- Independent browser review covered ad lifecycle, analytics payloads, mobile layout, and the widget playground.
+  Focused playground accessibility scanning reported no violations.
+
+Unchecked staging gates remain required; local success does not verify external OAuth or production configuration.

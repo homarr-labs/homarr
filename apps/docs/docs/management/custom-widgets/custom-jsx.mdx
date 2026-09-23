@@ -1,5 +1,7 @@
 # Use the safe JSX runtime
 
+import { WidgetPlayground } from "@/components/docs/widget-playground";
+
 Templates are JSX expressions interpreted inside a widget-local safety and render budget. They can read:
 
 - `data.requestId` — the latest response
@@ -22,6 +24,14 @@ template.
 Use normal Mantine layouts, typography, feedback, dates, and charts. Official compound names such as `Card.Section`, `Tabs.List`, and `Radio.Group` are supported. Ordinary safe props pass through; a dangerous capability produces an explicit error.
 Unsafe URLs, callback props, and unapproved style properties are stripped. Response data is deep-sanitized and budgeted
 before it reaches `data`, so treat it as untrusted input even when the source is private.
+
+## Try the renderer
+
+Change the sample JSON or JSX, then type in the preview’s title field to see how `data` and temporary `inputs` differ.
+The playground uses the same safe interpreter and bound inputs as a dashboard widget; API sources and actions require
+Homarr’s workbench.
+
+<WidgetPlayground />
 
 ## Temporary inputs
 

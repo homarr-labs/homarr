@@ -27,7 +27,7 @@ pnpm --filter @homarr/docs verify:seo
 ```
 
 The static export is written to `out/`. The build validates that every registered integration and widget has a docs
-page. The link check validates internal Markdown and MDX links and rendered anchors against that export.
+page and typed metadata module. CI enforces this alongside schema drift and export validation. The link check validates internal Markdown and MDX links and rendered anchors against that export.
 The search check exercises the exported index with title, heading, and body queries and verifies result destinations.
 The SEO check validates canonical URLs, descriptions, social metadata, heading structure, and sitemap coverage in the
 exported HTML. These tags are generated at build time; set `HOMARR_WEBSITE_URL` before building for a different origin.
@@ -78,6 +78,7 @@ When a user-facing change affects setup or behavior, update the matching page in
 - `/llms-full.txt` — complete processed Markdown corpus
 - `/llms.mdx/docs/.../content.md` — raw Markdown for each docs page
 - `/llms.mdx/blog/.../content.md` — raw Markdown for each blog post
+- `/llms.mdx/api-reference/.../content.md` — operation parameters, bodies, responses, and authentication
 - `/blog/rss.xml` — RSS feed for project posts
 
 Every docs page and blog post includes copy-Markdown and view-source actions. Search is generated at build time and
@@ -85,6 +86,13 @@ runs locally in the browser; it does not depend on an external crawler. Markdown
 integration credentials and widget defaults from the same typed metadata used by the pages.
 The search dialog and its client-side engine load when search is first opened. Fumadocs caches the downloaded index
 for subsequent queries. The docs index, individual Markdown pages, and full corpus share the `llms()` renderer.
+API operations are indexed alongside docs and exported as Markdown from the same OpenAPI schema. The reference uses
+Fumadocs with Scalar: select an instance URL and API key, then explicitly send a request. Authentication is not
+persisted in local storage. Browser access requires the documented REST CORS configuration.
+
+The Custom JSX guide includes a lazily loaded, editable example using the application renderer and real component
+registry. Its bindings work locally; configured widget queries and actions do not run.
+
 The getting-started overview and complete Custom JSX component catalog are also included, with property types,
 binding contracts, and blocked capabilities taken from the published catalog JSON.
 

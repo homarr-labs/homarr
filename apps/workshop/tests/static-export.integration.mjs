@@ -7,6 +7,17 @@ const indexResponse = await fetch(`${baseUrl}/api/search?q=board`);
 assert.equal(indexResponse.status, 200, "PocketBase must serve the static search index under /api/search");
 assert.equal((await indexResponse.json()).type, "advanced");
 
+const compressedIndex = await fetch(`${baseUrl}/api/search`, { headers: { "Accept-Encoding": "gzip" } });
+assert.equal(compressedIndex.headers.get("content-encoding"), "gzip", "large static indexes must be compressed");
+assert.match(compressedIndex.headers.get("vary"), /Accept-Encoding/i);
+const plainIndex = await fetch(`${baseUrl}/api/search`, { headers: { "Accept-Encoding": "identity" } });
+assert.equal(plainIndex.headers.get("content-encoding"), null);
+const indexText = await plainIndex.text();
+assert.equal(await compressedIndex.text(), indexText, "compression must preserve the exported index");
+const declinedIndex = await fetch(`${baseUrl}/api/search`, { headers: { "Accept-Encoding": "br, gzip; q=0" } });
+assert.equal(declinedIndex.headers.get("content-encoding"), null, "an explicitly refused encoding must not be used");
+assert.equal(await declinedIndex.text(), indexText);
+
 for (const path of ["/llms.txt", "/llms-full.txt", "/llms.mdx/docs/content.md"]) {
   const response = await fetch(`${baseUrl}${path}`);
   assert.equal(response.status, 200, path);
@@ -31,11 +42,12 @@ assert.equal(missingItem.status, 404);
 assert.match(await missingItem.text(), /name="robots" content="noindex"/);
 
 for (const method of ["GET", "HEAD"]) {
-  const redirect = await fetch(`${baseUrl}/docs?example=1`, { method, redirect: "manual" });
+  const headers = { "Accept-Encoding": "gzip" };
+  const redirect = await fetch(`${baseUrl}/docs?example=1`, { method, headers, redirect: "manual" });
   assert.equal(redirect.status, 301);
   assert.equal(redirect.headers.get("location"), "/docs/?example=1");
   await redirect.arrayBuffer();
-  const page = await fetch(`${baseUrl}/docs/`, { method });
+  const page = await fetch(`${baseUrl}/docs/`, { method, headers });
   assert.equal(page.status, 200);
   await page.arrayBuffer();
 }

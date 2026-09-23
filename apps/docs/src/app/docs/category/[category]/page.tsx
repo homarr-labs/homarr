@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { DocsBody, DocsPage, DocsTitle } from "fumadocs-ui/layouts/docs/page";
 
-import { LegacyCategoryRedirect } from "@/components/docs/legacy-category-redirect";
+import { StaticRedirect } from "@/components/static-redirect";
 import { canonicalUrl } from "@/lib/metadata";
 import { source } from "@/lib/source";
 
@@ -41,7 +41,7 @@ export default async function LegacyCategoryPage(props: PageProps) {
       <DocsTitle>{page.data.title}</DocsTitle>
       <DocsBody>
         <p>This documentation has moved to a new address.</p>
-        <LegacyCategoryRedirect href={`${page.url}/`} />
+        <StaticRedirect href={`${page.url}/`} label="Continue to the documentation" />
       </DocsBody>
     </DocsPage>
   );

@@ -53,7 +53,15 @@ export const serverSettingsRouter = createTRPCRouter({
   getBoardSettings: permissionRequiredProcedure
     .requiresPermission("admin")
     .meta({
-      openapi: { method: "GET", path: "/api/settings/board", tags: ["settings"], protect: true },
+      openapi: {
+        method: "GET",
+        path: "/api/settings/board",
+        tags: ["settings"],
+        protect: true,
+        summary: "Get global board settings",
+        description:
+          "Return instance desktop and mobile home board IDs and default status behavior. Requires admin permission.",
+      },
       mcp: {
         enabled: true,
         description:
@@ -68,7 +76,15 @@ export const serverSettingsRouter = createTRPCRouter({
   updateBoardSettings: permissionRequiredProcedure
     .requiresPermission("admin")
     .meta({
-      openapi: { method: "PATCH", path: "/api/settings/board", tags: ["settings"], protect: true },
+      openapi: {
+        method: "PATCH",
+        path: "/api/settings/board",
+        tags: ["settings"],
+        protect: true,
+        summary: "Update global board settings",
+        description:
+          "Update supplied instance board defaults and return the resulting settings. Home board IDs must reference public boards, or be null to clear the default. Requires admin permission.",
+      },
       mcp: {
         enabled: true,
         description:

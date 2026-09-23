@@ -2,6 +2,7 @@ import { Carbon } from "@/components/carbon";
 import { IconArrowRight } from "@tabler/icons-react";
 import { pageMetadata } from "@/lib/metadata";
 import Link from "next/link";
+import { DocsPage } from "fumadocs-ui/layouts/docs/page";
 
 import { apiSource } from "@/lib/openapi";
 
@@ -15,14 +16,14 @@ export default function ApiReferenceIndexPage() {
   const pages = apiSource.getPages();
 
   return (
-    <main className="homarr-content-page max-w-4xl">
+    <DocsPage full breadcrumb={{ enabled: false }} footer={{ enabled: false }}>
       <Carbon />
       <header className="homarr-content-header max-w-2xl">
         <p className="text-sm font-medium text-fd-primary">OpenAPI</p>
         <h1 className="homarr-content-title mt-2">Homarr API reference</h1>
         <p className="homarr-content-lead">
-          Browse request parameters and response schemas, then generate and test examples from the source-of-truth
-          schema.
+          Browse request parameters and response schemas, enter your Homarr instance’s full URL in Server URL, then
+          review examples or send a test request from your browser.
         </p>
       </header>
       <div className="mt-10 divide-y border-y">
@@ -33,6 +34,6 @@ export default function ApiReferenceIndexPage() {
           </Link>
         ))}
       </div>
-    </main>
+    </DocsPage>
   );
 }

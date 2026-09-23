@@ -24,10 +24,27 @@ for (const file of files) {
   const $ = load(await readFile(path.join(outputDirectory, file), "utf8"));
   const noindex = /\bnoindex\b/.test($("meta[name=robots]").attr("content") ?? "");
   const isExcluded =
-    /^\/(?:404|_not-found|workshop\/admin)\/$/.test(pathname) || pathname.startsWith("/docs/category/");
+    /^\/(?:404|_not-found|blog|workshop\/admin)\/$/.test(pathname) || pathname.startsWith("/docs/category/");
   assert.equal(noindex, isExcluded, `${pathname}: unexpected robots indexing policy`);
   if (isExcluded) {
     assert(!indexed.has(`${origin}${pathname}`), `${pathname}: noindex page in sitemap`);
+    if (pathname === "/blog/" || pathname.startsWith("/docs/category/")) {
+      const canonical = $("link[rel=canonical]").attr("href");
+      assert(canonical && indexed.has(canonical), `${pathname}: redirect destination must be indexed`);
+      const destination = new URL(canonical);
+      assert.equal(destination.origin, origin, `${pathname}: redirect must stay on this site`);
+      assert.notEqual(destination.pathname, pathname, `${pathname}: redirect must not point to itself`);
+      assert(
+        $("a[href]")
+          .toArray()
+          .some((link) => {
+            const href = $(link).attr("href");
+            return href !== undefined && new URL(href, origin).href === canonical;
+          }),
+        `${pathname}: missing no-JavaScript redirect link`,
+      );
+      await access(path.join(outputDirectory, destination.pathname, "index.html"));
+    }
     excluded++;
     continue;
   }

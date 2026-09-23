@@ -13,6 +13,7 @@ import { GettingStartedOverview, InstallationPaths } from "@/components/pages/ge
 import { getDocsHref } from "@/lib/docs-path";
 import type { WidgetConfiguration } from "@/types";
 import { ComponentCatalogMarkdown } from "./component-catalog-markdown";
+import { widgetPlaygroundTemplate, widgetPlaygroundData } from "@/components/docs/widget-playground-example";
 
 // Fumadocs supplies the original MDX props, including typed metadata and JSX steps.
 function markdown<Props>(component: (props: Props) => ReactNode) {
@@ -49,6 +50,17 @@ function configuration({ items }: WidgetConfiguration): ReactNode {
 }
 
 export const metadataMarkdownComponents = {
+  WidgetPlayground: markdown(() => (
+    <>
+      <p>Interactive safe JSX example: edit the template or sample data in the browser. Inputs are temporary.</p>
+      <pre>
+        <code className="language-jsx">{widgetPlaygroundTemplate}</code>
+      </pre>
+      <pre>
+        <code className="language-json">{JSON.stringify(widgetPlaygroundData, null, 2)}</code>
+      </pre>
+    </>
+  )),
   CustomJsxComponentReference: markdown(ComponentCatalogMarkdown),
   GettingStartedOverview: markdown(GettingStartedOverview),
   InstallationPaths: markdown(InstallationPaths),

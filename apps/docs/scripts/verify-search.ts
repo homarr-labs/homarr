@@ -29,7 +29,7 @@ for (const test of cases) {
   );
 
   for (const result of results) {
-    assert(/^\/docs(?:\/|#|$)/.test(result.url), `Unexpected search destination: ${result.url}`);
+    assert(/^\/(?:docs|api-reference)(?:\/|#|$)/.test(result.url), `Unexpected search destination: ${result.url}`);
     if (verifiedUrls.has(result.url)) continue;
     const url = new URL(result.url, "https://homarr.dev");
     const html = await readFile(path.join(outputDirectory, decodeURIComponent(url.pathname), "index.html"), "utf8");
@@ -62,6 +62,41 @@ for (const [slug, expected] of [
   for (const text of expected) assert(markdown.includes(text), `${slug}: missing resolved metadata ${text}`);
   assert(!/<(?:Integration|Widget|Adding)[A-Z][^>]*[/>]/.test(markdown), `${slug}: unresolved metadata component`);
 }
+
+const openApi = JSON.parse(await readFile(path.join(outputDirectory, "api/open-api-schema.json"), "utf8"));
+const apiClient = staticClient({ from, search: { limit: 1000 } });
+let operationCount = 0;
+for (const [apiPath, pathItem] of Object.entries(openApi.paths)) {
+  for (const [method, operation] of Object.entries(pathItem as Record<string, { operationId?: string }>)) {
+    const operationId = operation.operationId;
+    if (!operationId) continue;
+    const results = await apiClient.search(operationId);
+    const result = results.find((entry) => entry.url.startsWith("/api-reference/") && entry.url.includes(operationId));
+    assert(result, `${method} ${apiPath}: operation must be searchable by ID`);
+    const destination = new URL(result.url, "https://homarr.dev");
+    assert(!destination.hash, `${result.url}: generated API search text must not invent anchors`);
+    await access(path.join(outputDirectory, destination.pathname, "index.html"));
+    const markdown = await readFile(path.join(outputDirectory, "llms.mdx", destination.pathname, "content.md"), "utf8");
+    assert(
+      markdown.includes(`${method.toUpperCase()} ${apiPath}`),
+      `${result.url}: Markdown must describe its request`,
+    );
+    assert(markdown.includes(operationId), `${result.url}: Markdown must identify its operation`);
+    verifiedUrls.add(result.url);
+    operationCount++;
+  }
+}
+assert(operationCount > 0, "API operation coverage must not be empty");
+const playground = await readFile(
+  path.join(outputDirectory, "llms.mdx/docs/management/custom-widgets/custom-jsx/content.md"),
+  "utf8",
+);
+assert(
+  playground.includes('bind="name"') && playground.includes("data.server.used"),
+  "Playground source must remain readable in Markdown",
+);
+assert(!playground.includes("<WidgetPlayground"), "Playground must have a resolved Markdown adapter");
+console.log(`API discovery verified: ${operationCount} operations in search and Markdown.`);
 
 const discovery = await readFile(path.join(outputDirectory, "llms.txt"), "utf8");
 const markdownLinks = [...discovery.matchAll(/\]\(([^)]*\/llms\.mdx\/[^)]+)\)/g)];

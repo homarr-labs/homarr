@@ -19,8 +19,16 @@ const missing: string[] = [];
 for (const { label, folder, entries } of documentationEntries) {
   for (const [kind, slug] of entries) {
     if (!slug) continue;
-    if (!fs.existsSync(path.join(docsDir, folder, slug, "index.mdx"))) {
+    const entryDirectory = path.join(docsDir, folder, slug);
+    if (!fs.existsSync(path.join(entryDirectory, "index.mdx"))) {
       missing.push(`${label} "${kind}" -> docs/${folder}/${slug}/index.mdx`);
+      continue;
+    }
+
+    const metadataModules = ["index.ts", "index.tsx"];
+    const hasMetadataModule = metadataModules.some((file) => fs.existsSync(path.join(entryDirectory, file)));
+    if (!hasMetadataModule) {
+      missing.push(`${label} "${kind}" -> docs/${folder}/${slug}/index.ts or index.tsx`);
     }
   }
 }

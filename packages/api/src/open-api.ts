@@ -19,8 +19,8 @@ export const openApiRouter = createTRPCRouter({
   userRouter,
 });
 
-export const openApiDocument = (base: string) =>
-  generateOpenApiDocument(openApiRouter, {
+export const openApiDocument = (base: string) => {
+  const document = generateOpenApiDocument(openApiRouter, {
     title: "Homarr API documentation",
     version: "1.1.0",
     baseUrl: base,
@@ -34,3 +34,11 @@ export const openApiDocument = (base: string) =>
       },
     },
   });
+  // These reads support anonymous public resources and API-key-scoped private resources.
+  // The generator's boolean `protect` cannot express optional authentication.
+  for (const path of ["/api/boards", "/api/apps/{id}"]) {
+    const operation = document.paths?.[path]?.get;
+    if (operation) operation.security = [{}, { apikey: [] }];
+  }
+  return document;
+};
