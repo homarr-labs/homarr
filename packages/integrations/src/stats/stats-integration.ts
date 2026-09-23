@@ -29,7 +29,7 @@ export class StatsIntegration extends Integration {
 
   async getStatsAsync(signal = AbortSignal.timeout(30_000), testing?: IntegrationTestingInput) {
     const providerSignal = createStatsRequestSignal(signal);
-    return await this.provider.fetchAsync({
+    const result = await this.provider.fetchAsync({
       signal: providerSignal,
       secret: (kind) => this.getSecretValue(kind),
       hasSecret: (kind) => this.hasSecretValue(kind),
@@ -54,6 +54,8 @@ export class StatsIntegration extends Integration {
         return await response.json();
       },
     });
+    signal.throwIfAborted();
+    return result;
   }
 
   protected async testingAsync(input: IntegrationTestingInput) {

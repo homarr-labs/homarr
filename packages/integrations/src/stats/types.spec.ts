@@ -1,6 +1,16 @@
+// @vitest-environment node
+
 import { afterEach, describe, expect, test, vi } from "vitest";
 
+import { StatsIntegration } from "./stats-integration";
+
 import { createStatsRequestSignal, fetchStatsGroupsAsync } from "./types";
+
+vi.hoisted(() => {
+  process.env.DB_DRIVER ??= "better-sqlite3";
+  process.env.DB_URL ??= ":memory:";
+  process.env.SECRET_ENCRYPTION_KEY ??= "0".repeat(64);
+});
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -49,4 +59,20 @@ describe("fetchStatsGroupsAsync", () => {
     expect(sourceController.signal.aborted).toBe(false);
     expect(result).toEqual({ values: { healthy: 42 }, unavailableMetrics: ["stalled"] });
   });
+});
+
+test("rejects caller cancellation even when a provider returns partial metrics", async () => {
+  const controller = new AbortController();
+  const reason = new Error("Caller cancelled");
+  const integration = new StatsIntegration(
+    { id: "stats", name: "Stats", url: "http://localhost", externalUrl: null, decryptedSecrets: [] },
+    {
+      metrics: [],
+      fetchAsync: async () => {
+        controller.abort(reason);
+        return { values: { healthy: 42 }, unavailableMetrics: ["cancelled"] };
+      },
+    },
+  );
+  await expect(integration.getStatsAsync(controller.signal)).rejects.toMatchObject({ cause: reason });
 });

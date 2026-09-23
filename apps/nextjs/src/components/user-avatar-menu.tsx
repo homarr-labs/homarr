@@ -1,7 +1,7 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { useCallback } from "react";
+import type { ComponentPropsWithoutRef, ReactElement } from "react";
+import { cloneElement, useCallback } from "react";
 import { Badge, Indicator, Kbd, Loader, Menu, Text } from "@mantine/core";
 import {
   IconBrandDocker,
@@ -33,7 +33,7 @@ import { DockerQuickAccessModal } from "./layout/header/docker-quick-access-moda
 import { AvailableUpdatesMenuItem } from "./layout/header/update";
 
 interface UserAvatarMenuProps {
-  children: ReactNode;
+  children: ReactElement<ComponentPropsWithoutRef<"button">>;
   availableUpdates?: RouterOutputs["updateChecker"]["getAvailableUpdates"];
   isDockerEnabled?: boolean;
   boardSwitcher: BoardSwitcherControls;
@@ -153,26 +153,35 @@ export const UserAvatarMenu = ({ children, availableUpdates, isDockerEnabled, bo
           </Menu.Item>
         )}
       </Menu.Dropdown>
-      <Indicator
-        inline
-        disabled={!assistant?.isRunning && !assistant?.unreadCount}
-        color="red"
-        size={20}
-        offset={4}
-        label={
-          assistant?.isRunning ? (
-            <Loader type="bars" color="white" size={10} />
-          ) : assistant?.unreadCount ? (
-            assistant.unreadCount > 99 ? (
-              "99+"
-            ) : (
-              assistant.unreadCount
-            )
-          ) : undefined
-        }
-      >
-        <Menu.Target>{children}</Menu.Target>
-      </Indicator>
+      <Menu.Target>
+        <Indicator
+          renderRoot={(props) =>
+            cloneElement(children, {
+              ...props,
+              className: [children.props.className, props.className].filter(Boolean).join(" "),
+              style: { ...children.props.style, ...props.style },
+            })
+          }
+          inline
+          disabled={!assistant?.isRunning && !assistant?.unreadCount}
+          color="red"
+          size={20}
+          offset={4}
+          label={
+            assistant?.isRunning ? (
+              <Loader type="bars" color="white" size={10} />
+            ) : assistant?.unreadCount ? (
+              assistant.unreadCount > 99 ? (
+                "99+"
+              ) : (
+                assistant.unreadCount
+              )
+            ) : undefined
+          }
+        >
+          {children.props.children}
+        </Indicator>
+      </Menu.Target>
     </Menu>
   );
 };
