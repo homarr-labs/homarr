@@ -398,6 +398,8 @@ describe("Custom Widget authoring context", () => {
     ];
     const editTools = getCustomWidgetPhaseToolNames(tools, afterExactLoad, {
       followUpDefinitionId: followUp?.definitionId,
+      restoredStepCount: restoredSteps.length,
+      continueAfterPersistence: false,
     });
     expect(editTools).toContain("customWidget_previewCreate");
     expect(editTools).not.toContain("customWidget_validateTemplate");
@@ -433,7 +435,11 @@ describe("Custom Widget authoring context", () => {
       },
     ];
     expect(
-      getCustomWidgetPhaseToolNames(tools, completedEditEvidence, { followUpDefinitionId: followUp?.definitionId }),
+      getCustomWidgetPhaseToolNames(tools, completedEditEvidence, {
+        followUpDefinitionId: followUp?.definitionId,
+        restoredStepCount: restoredSteps.length,
+        continueAfterPersistence: false,
+      }),
     ).toEqual(["customWidget_updateFromPreview"]);
   });
 

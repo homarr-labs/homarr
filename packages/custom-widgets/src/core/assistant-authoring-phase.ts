@@ -309,14 +309,7 @@ export const getLatestLoadedCustomWidgetDefinition = (steps: readonly CustomWidg
 
 const hasLoadedFollowUpDefinition = (steps: readonly CustomWidgetToolStep[], definitionId: string) => {
   const results = steps.flatMap((step) => step.toolResults);
-  const latestPersistenceIndex = results.findLastIndex((result) => {
-    if (result.toolName !== "customWidget_createFromPreview" && result.toolName !== "customWidget_updateFromPreview") {
-      return false;
-    }
-    const output = isRecord(result.output) ? result.output : null;
-    return output?.id === definitionId;
-  });
-  return results.slice(latestPersistenceIndex + 1).some((result) => {
+  return results.some((result) => {
     if (result.toolName !== "customWidget_get") return false;
     const output = isRecord(result.output) ? result.output : null;
     return output?.id === definitionId && !hasMeaningfulError(output);
@@ -373,6 +366,7 @@ const hasPendingPreviewEvidence = (
 export interface CustomWidgetPhaseOptions {
   continueAfterPersistence?: boolean;
   followUpDefinitionId?: string;
+  restoredStepCount?: number;
   legacyMigrationOnly?: boolean;
   preferDirectPreview?: boolean;
   preferComponentDiscovery?: boolean;
@@ -394,6 +388,34 @@ export const getCustomWidgetPhaseToolNames = <TToolName extends string>(
     preferredExampleId,
     preferredExampleIds = preferredExampleId === undefined ? [] : [preferredExampleId],
   } = options;
+  // A follow-up starts after the previous save, not after a save made by this response.
+  if (followUpDefinitionId) {
+    const restoredSteps = steps.slice(0, options.restoredStepCount ?? 0);
+    const previousSaveIndex = restoredSteps.findLastIndex((step) =>
+      step.toolResults.some((result) => {
+        if (
+          result.toolName !== "customWidget_createFromPreview" &&
+          result.toolName !== "customWidget_updateFromPreview"
+        )
+          return false;
+        return (
+          isRecord(result.output) && result.output.id === followUpDefinitionId && !hasMeaningfulError(result.output)
+        );
+      }),
+    );
+    steps = steps.slice(previousSaveIndex + 1);
+  }
+  // Response messages and SDK steps can contain the same tool result.
+  const seenToolCallIds = new Set<string>();
+  steps = steps.map((step) => ({
+    ...step,
+    toolResults: step.toolResults.filter((result) => {
+      if (!result.toolCallId) return true;
+      if (seenToolCallIds.has(result.toolCallId)) return false;
+      seenToolCallIds.add(result.toolCallId);
+      return true;
+    }),
+  }));
   const completedPreferredExamples = steps
     .flatMap((step) => step.toolResults)
     .filter((result) => {
@@ -492,10 +514,12 @@ export const getCustomWidgetPhaseToolNames = <TToolName extends string>(
       if (succeeded) {
         const laterSteps = steps.slice(stepIndex + 1);
         if (hasPendingPreviewSourceConfiguration(laterSteps)) {
+          if (legacyMigrationOnly) return [];
           return availableToolNames.filter((toolName) => toolName === "customWidget_configurationRequestUser");
         }
         const evidenceFailures = getLatestPreviewEvidenceFailures(laterSteps);
         if (evidenceFailures.some(({ output }) => isPreviewSourceConfigurationFailure(output))) {
+          if (legacyMigrationOnly) return [];
           return availableToolNames.filter((toolName) => toolName === "customWidget_configurationRequestUser");
         }
         if (evidenceFailures.length > 0) {
@@ -511,6 +535,9 @@ export const getCustomWidgetPhaseToolNames = <TToolName extends string>(
           return sourceIds.every((sourceId) => hasCompletedPreviewSourceConfiguration(sessionId, sourceId, laterSteps));
         });
         if (!sourceConfigurationComplete) {
+          // Portable migration exports must not require access to the original owner's secrets.
+          // This only permits an artifact response, never persistence without evidence.
+          if (legacyMigrationOnly) return [];
           return availableToolNames.filter((toolName) => toolName === "customWidget_configurationRequestUser");
         }
         const hasPendingQuery = previewResults.some((result) =>

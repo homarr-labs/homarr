@@ -607,6 +607,20 @@ const isPreviewComplete = (preview: PreviewState) =>
     return preview.testedActions.has(requestId);
   });
 
+const getIntegrationBindingError = (
+  testCase: CustomWidgetAiEvaluationCase,
+  source: HomarrCustomWidgetV2["sources"][string] | undefined,
+) => {
+  if (!source) return "Request source was not found";
+  if (source.type !== "integration") return null;
+  if (!source.integrationId) return "Select an existing integration for this widget source";
+  const integration = testCase.savedIntegrations?.find((entry) => entry.id === source.integrationId);
+  if (!integration || !integration.permissions.hasFullAccess)
+    return "Integration was not found or full access is required";
+  if (integration.kind !== source.integrationKind) return "Integration kind does not match the widget source";
+  return null;
+};
+
 const rememberCompletedPreview = (state: AssistantAttemptState, preview: PreviewState) => {
   if (isPreviewComplete(preview)) state.completedPreviewSignatures.add(preview.signature);
 };
@@ -672,7 +686,7 @@ const executeAssistantEvaluationToolCore = (
       ],
     };
   }
-  if (name === "integration_all") return [];
+  if (name === "integration_all") return testCase.savedIntegrations ?? [];
   if (name === "customWidget_getSkill") return getCustomWidgetSkillEntrypoint();
   if (name === "customWidget_schema") return getCustomWidgetJsonSchema();
   if (name === "customWidget_getReference") {
@@ -742,6 +756,11 @@ const executeAssistantEvaluationToolCore = (
   if (name === "customWidget_previewCreate") {
     const parsed = parseDefinition(input.definition);
     if (!parsed.success) return { error: "Definition is invalid", issues: parsed.issues };
+    for (const source of Object.values(parsed.widget.sources)) {
+      if (source.type !== "integration" || !source.integrationId) continue;
+      const error = getIntegrationBindingError(testCase, source);
+      if (error) return { error };
+    }
     const signature = getDefinitionSignature(parsed.widget);
     if ([...state.previews.values()].some((preview) => preview.signature === signature)) {
       return {
@@ -817,6 +836,8 @@ const executeAssistantEvaluationToolCore = (
     const preview = state.previews.get(sessionId);
     const request = preview?.widget.requests[requestId];
     if (!preview || request?.kind !== "query") return { error: "Preview query was not found" };
+    const bindingError = getIntegrationBindingError(testCase, preview.widget.sources[request.source]);
+    if (bindingError) return { error: bindingError };
     const missingParams = getMissingRequestParams(request, input);
     if (missingParams.length > 0) {
       return { error: `Supply the required manual preview parameters: ${missingParams.join(", ")}` };
@@ -848,6 +869,8 @@ const executeAssistantEvaluationToolCore = (
     const preview = state.previews.get(sessionId);
     const request = preview?.widget.requests[requestId];
     if (!preview || request?.kind !== "action") return { error: "Preview action was not found" };
+    const bindingError = getIntegrationBindingError(testCase, preview.widget.sources[request.source]);
+    if (bindingError) return { error: bindingError };
     const missingParams = getMissingRequestParams(request, input);
     if (missingParams.length > 0) {
       return { error: `Supply the required manual preview parameters: ${missingParams.join(", ")}` };

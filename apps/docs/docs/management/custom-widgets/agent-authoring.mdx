@@ -27,7 +27,7 @@ Equivalent HTTP resources are available under `/api/custom-widgets/` for authent
 
 1. Load the skill and only the references needed for the design.
 2. Read the external API documentation and build the definition.
-3. Validate the JSX, then create a preview from the complete definition.
+3. Create a preview from the complete definition; it validates both the manifest and JSX.
 4. Run every returned query and simulate every relevant action against the current preview revision.
 5. Inspect the preview and redacted journal. Revise the existing preview for JSX-only changes.
 6. Save from the final tested preview.
@@ -35,6 +35,9 @@ Equivalent HTTP resources are available under `/api/custom-widgets/` for authent
 
 Use `templateLines` for multiline JSX tool input. A preview must have current evidence for every query and action before
 it can be saved. Simulation counts as action evidence without performing the mutation.
+
+Migration-only exports can return validated JSON without credentials. Authentication is preserved, and live testing
+remains unverified until the administrator configures and tests the imported widget.
 
 If the agent does not have a source URL or credential, it can request a short-lived Homarr configuration URL. An
 authenticated administrator completes it in Homarr; the agent receives the status, never the plaintext credential.

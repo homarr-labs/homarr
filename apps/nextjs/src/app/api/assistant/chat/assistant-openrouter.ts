@@ -136,6 +136,14 @@ export const withOpenRouterWebSearch = (body: Record<string, unknown>) => {
 };
 
 export const withOpenRouterProviderRouting = (body: Record<string, unknown>) => {
+  if (body.model === "openai/gpt-6-luna") {
+    const { temperature: _temperature, top_p: _topP, reasoning_effort: _reasoningEffort, ...request } = body;
+    return {
+      ...request,
+      provider: { only: ["openai"], allow_fallbacks: false },
+      reasoning: { effort: "max", exclude: false },
+    };
+  }
   if (body.model !== deepSeekV41ModelId) return body;
   return {
     ...body,

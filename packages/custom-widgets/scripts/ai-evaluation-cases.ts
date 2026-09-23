@@ -29,6 +29,7 @@ export interface CustomWidgetAiEvaluationCase {
   documentationUrl: string;
   apiNotes: string;
   preferredExampleId?: string;
+  savedIntegrations?: Array<{ id: string; name: string; kind: string; permissions: { hasFullAccess: boolean } }>;
   sampleResponse?: unknown;
   previewResponses?: Array<{
     pathIncludes: string;
@@ -647,6 +648,9 @@ export const CUSTOM_WIDGET_AI_EVALUATION_CASES: readonly CustomWidgetAiEvaluatio
   },
   {
     id: "seed-karakeep-bookmarks",
+    savedIntegrations: [
+      { id: "fixture-karakeep", name: "Synthetic karakeep", kind: "karakeep", permissions: { hasFullAccess: true } },
+    ],
     documentationUrl: "https://docs.karakeep.app/api/karakeep-api/",
     request:
       "Create the shipped Karakeep Recent Bookmarks widget using my saved Karakeep integration. Show at most eight newest unarchived bookmarks, handle link, text, asset, and unknown content without broken titles, and include favorite state, tags, summary or note fallbacks, cursor context, refresh, and complete loading, empty, error, and success states.",
@@ -734,6 +738,9 @@ export const CUSTOM_WIDGET_AI_EVALUATION_CASES: readonly CustomWidgetAiEvaluatio
   },
   {
     id: "seed-mealie-today",
+    savedIntegrations: [
+      { id: "fixture-mealie", name: "Synthetic mealie", kind: "mealie", permissions: { hasFullAccess: true } },
+    ],
     documentationUrl: "https://docs.mealie.io/documentation/getting-started/api-usage/",
     request:
       "Create the shipped Mealie Today widget using my saved Mealie integration. Render today's direct-array meal plan as a compact day view where recipe-backed and text-only entries remain useful. Show meal type, recipe name, servings, total time, rating, or title and text fallbacks, plus refresh and complete loading, empty, error, and success states.",
@@ -800,6 +807,9 @@ export const CUSTOM_WIDGET_AI_EVALUATION_CASES: readonly CustomWidgetAiEvaluatio
   },
   {
     id: "seed-romm-library",
+    savedIntegrations: [
+      { id: "fixture-romm", name: "Synthetic romm", kind: "romm", permissions: { hasFullAccess: true } },
+    ],
     documentationUrl: "https://docs.romm.app/latest/developers/api-authentication/",
     request:
       "Create the shipped RomM Library Overview widget using my saved RomM integration. Combine platform, ROM, save, and state totals with six recently added games. Handle the items envelope, missing names, filesystem availability, platform, and creation date with independent refresh, loading, error, empty, and success states. Keep it text-first and do not render protected cover URLs.",
@@ -900,6 +910,14 @@ export const CUSTOM_WIDGET_AI_EVALUATION_CASES: readonly CustomWidgetAiEvaluatio
   },
   {
     id: "seed-tubearchivist-queue",
+    savedIntegrations: [
+      {
+        id: "fixture-tubearchivist",
+        name: "Synthetic tubearchivist",
+        kind: "tubearchivist",
+        permissions: { hasFullAccess: true },
+      },
+    ],
     documentationUrl: "https://docs.tubearchivist.com/api/docs/",
     request:
       "Create the shipped TubeArchivist Queue Health widget using my saved TubeArchivist integration. Combine channel counts, pending-download counts, and the first page of pending queue items. Show channel name, title, duration, message, type or status, honest page context, independent refresh and failures, and complete loading, empty, error, and success states without rendering authenticated thumbnails.",
@@ -1015,6 +1033,9 @@ export const CUSTOM_WIDGET_AI_EVALUATION_CASES: readonly CustomWidgetAiEvaluatio
   },
   {
     id: "seed-frigate-alerts",
+    savedIntegrations: [
+      { id: "fixture-frigate", name: "Synthetic frigate", kind: "frigate", permissions: { hasFullAccess: true } },
+    ],
     documentationUrl: "https://docs.frigate.video/integrations/api/review-review-get/",
     request:
       "Create the shipped Frigate Review Alerts widget using my saved Frigate integration. Show at most ten unreviewed alerts from the last 24 hours with camera, severity or active state, start time, reviewed state, objects, verified objects, zones, refresh, and complete loading, empty, error, and success states. Do not render protected relative thumbnails.",
@@ -1078,6 +1099,9 @@ export const CUSTOM_WIDGET_AI_EVALUATION_CASES: readonly CustomWidgetAiEvaluatio
   },
   {
     id: "seed-frigate-system",
+    savedIntegrations: [
+      { id: "fixture-frigate", name: "Synthetic frigate", kind: "frigate", permissions: { hasFullAccess: true } },
+    ],
     documentationUrl: "https://docs.frigate.video/integrations/api/stats-stats-get/",
     request:
       "Create the shipped Frigate System Metrics widget using my saved Frigate integration. Show service version and uptime, aggregate camera, detection, process, and skipped FPS, per-camera connection quality, reconnects and stalls, detector inference speed, storage usage, refresh, and complete loading, error, and success states in a responsive layout.",
@@ -1151,6 +1175,9 @@ export const CUSTOM_WIDGET_AI_EVALUATION_CASES: readonly CustomWidgetAiEvaluatio
   },
   {
     id: "seed-frigate-live-streams",
+    savedIntegrations: [
+      { id: "fixture-frigate", name: "Synthetic frigate", kind: "frigate", permissions: { hasFullAccess: true } },
+    ],
     documentationUrl: "https://docs.frigate.video/integrations/api/go-2-rtc-streams-go-2-rtc-streams-get/",
     request:
       "Create the shipped Frigate Stream Readiness widget using my saved Frigate integration. Show every configured go2rtc stream with producer and consumer counts, safe media descriptors, live or offline state, refresh, and complete loading, empty, error, and success states. Never expose producer URLs, remote addresses, credentials, or pretend the JSON runtime embeds protected live video.",

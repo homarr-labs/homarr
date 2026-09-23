@@ -377,7 +377,9 @@ describe("Custom Widget assistant live evaluation harness", () => {
     });
     expect(state.toolCalls.at(-1)?.input).toEqual({ name: "mealie-today" });
     expect(getActiveNames()).toEqual(["integration_all"]);
-    expect(executeActiveAssistantEvaluationTool(testCase, state, "integration_all", {})).toEqual([]);
+    expect(executeActiveAssistantEvaluationTool(testCase, state, "integration_all", {})).toEqual(
+      testCase.savedIntegrations,
+    );
     expect(getActiveNames()).toEqual(["customWidget_previewCreate"]);
   });
 
@@ -396,6 +398,7 @@ describe("Custom Widget assistant live evaluation harness", () => {
     const state = createAssistantEvaluationState();
     const testCase = {
       id,
+      savedIntegrations: getCase(id).savedIntegrations,
       request: `Create ${preset.widget.name}`,
       documentationUrl: "https://example.test",
       apiNotes: "Bundled preset contract",
@@ -405,8 +408,15 @@ describe("Custom Widget assistant live evaluation harness", () => {
       })),
     };
 
+    const widget = structuredClone(preset.widget);
+    for (const source of Object.values(widget.sources)) {
+      if (source.type !== "integration") continue;
+      source.integrationId = testCase.savedIntegrations?.find(
+        (integration) => integration.kind === source.integrationKind,
+      )?.id;
+    }
     const preview = executeActiveAssistantEvaluationTool(testCase, state, "customWidget_previewCreate", {
-      definition: preset.widget,
+      definition: widget,
     });
     expect(preview).toMatchObject({ success: true, previewSession: { id: "preview-1" } });
 

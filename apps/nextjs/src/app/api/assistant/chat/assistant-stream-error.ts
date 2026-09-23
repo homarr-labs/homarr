@@ -1,5 +1,24 @@
 import { isRecord } from "@homarr/common";
 import { NoSuchToolError } from "ai";
+import type { TextStreamPart, ToolSet } from "ai";
+
+export const createAssistantAbortErrorTransform =
+  <TOOLS extends ToolSet>(clientSignal: AbortSignal) =>
+  () =>
+    new TransformStream<TextStreamPart<TOOLS>, TextStreamPart<TOOLS>>({
+      transform(part, controller) {
+        // SDK timeouts are abort parts, not errors. A user cancellation should remain silent.
+        if (part.type === "abort" && !clientSignal.aborted) {
+          controller.enqueue({
+            type: "error",
+            error: new Error(
+              "The assistant response was interrupted before completion. Retry to continue; this is not a completed result.",
+            ),
+          });
+        }
+        controller.enqueue(part);
+      },
+    });
 
 const asRecord = (value: unknown): Record<string, unknown> | null => (isRecord(value) ? value : null);
 

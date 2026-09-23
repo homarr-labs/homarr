@@ -80,7 +80,7 @@ import {
   assistantExecutionPolicy,
   createCustomWidgetToolStepGate,
 } from "./assistant-execution-policy";
-import { getAssistantStreamErrorMessage } from "./assistant-stream-error";
+import { createAssistantAbortErrorTransform, getAssistantStreamErrorMessage } from "./assistant-stream-error";
 import { shouldEmitAssistantMessageMetadata } from "./assistant-stream-metadata";
 import { getCustomWidgetConfigurationStatusRecovery, getSafeAssistantToolError } from "./assistant-tool-error";
 import { repairAssistantToolInput } from "./assistant-tool-input-repair";
@@ -868,6 +868,7 @@ export async function POST(request: Request) {
           {
             continueAfterPersistence: customWidgetFollowUpEditContext === null && multiCustomWidgetCreationRequest,
             followUpDefinitionId: customWidgetFollowUpEditContext?.definitionId,
+            restoredStepCount: restoredCustomWidgetSteps.length,
             legacyMigrationOnly: customWidgetLegacyMigrationOnly,
             preferDirectPreview:
               isFreshCustomWidgetCreationRequest(incomingMessages) &&
@@ -950,6 +951,10 @@ export async function POST(request: Request) {
       }
       return "required" as const;
     };
+    // Large legacy templates with maximum reasoning may use most of the request budget
+    // in one step. Retain the total deadline instead of cutting active migrations short.
+    let stepTimeoutMs: number = assistantExecutionPolicy.stepTimeoutMs;
+    if (customWidgetLegacyMigrationOnly) stepTimeoutMs = assistantExecutionPolicy.totalTimeoutMs;
     const result = streamText({
       model: provider(modelId),
       instructions: baseInstructions,
@@ -1011,7 +1016,7 @@ export async function POST(request: Request) {
       abortSignal: request.signal,
       timeout: {
         totalMs: assistantExecutionPolicy.totalTimeoutMs,
-        stepMs: assistantExecutionPolicy.stepTimeoutMs,
+        stepMs: stepTimeoutMs,
         toolMs: assistantExecutionPolicy.toolTimeoutMs,
       },
       maxOutputTokens: assistantExecutionPolicy.maxOutputTokens,
@@ -1032,10 +1037,13 @@ export async function POST(request: Request) {
         configuration.provider === "openrouter" || openRouterServerToolsEnabled
           ? { [toProviderOptionsKey(providerName)]: { usage: { include: true } } }
           : undefined,
+      experimental_transform: [
+        createAssistantAbortErrorTransform(request.signal),
+        ...(openRouterServerToolsEnabled ? [createOpenRouterCitationStreamTransform()] : []),
+      ],
       ...(openRouterServerToolsEnabled
         ? {
             include: { rawChunks: true },
-            experimental_transform: createOpenRouterCitationStreamTransform(),
           }
         : {}),
       toolApproval,

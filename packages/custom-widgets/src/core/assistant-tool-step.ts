@@ -20,6 +20,9 @@ const isExclusiveCustomWidgetToolName = (toolName: string) =>
 const onePerStepToolNames = new Set(["homarr_enableToolGroups", "integration_getKinds", "integration_all"]);
 
 export const appendActiveCustomWidgetToolInstruction = (instructions: string, activeToolNames: readonly string[]) => {
+  if (activeToolNames.length === 0) {
+    return `${instructions}\n\nCurrent authoring step (authoritative): no function tools remain. Return the requested final deliverable now, not reasoning or a progress update. For a migration, return the complete importable v2 JSON matching the latest validated preview, with templateLines joined into template. Preserve authentication and report missing credentials or unavailable live verification separately; do not wait for configuration or invent a tool call. For a saved-widget task, report only the actual persistence outcome.`;
+  }
   let activeToolInputInstruction = "";
   if (activeToolNames.length === 1 && activeToolNames[0] === "customWidget_findComponents") {
     activeToolInputInstruction =
