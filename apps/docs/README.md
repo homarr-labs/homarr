@@ -113,6 +113,8 @@ The September 2026 update moves Core/UI from 16.15.4 to 16.15.12, MDX from 15.4.
 - Core's `llms({ renderPage })` API provides the shared `index()`, `page()`, and `full()` exports.
 - OpenAPI 12 replaces several custom renderer options and hooks. This site uses `createOpenAPIPage()` and
   `getOpenAPIPageProps()` without those removed overrides; the built-in renderer retains all request languages.
+  The Scalar adapter receives an equivalent nonrecursive union for unconstrained JSON values to avoid recursive
+  schema expansion during rendering. The generated public OpenAPI document remains unchanged.
 - MDX 15.4.3 fixes duplicate compilation output when its experimental build cache is enabled. We leave that cache
   disabled: its current key checks source content without accounting for all compiler configuration changes.
 - The existing macro collections, processed-Markdown component adapters, and static search remain supported.

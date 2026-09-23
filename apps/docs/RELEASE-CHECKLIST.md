@@ -12,7 +12,7 @@ Use the same candidate image digest throughout staging and promotion.
 - [x] Replace the container with the same volume; verify persisted records and uploaded bytes.
 - [x] Back up stopped storage and restore into a separate volume; verify authentication, records, and uploaded bytes.
 - [x] Run docs/API typechecks, schema drift, integration/widget coverage, rendered links, search, and SEO checks.
-- [x] Verify all 41 API operations have descriptions and appear in search and Markdown exports.
+- [x] Verify all 42 API operations have descriptions and appear in search and Markdown exports.
 - [x] Exercise the API client with a configurable instance URL and API key; sending is explicit and credentials
       are not retained in local storage. Verify authenticated cross-origin requests against a real Homarr runtime.
 - [x] Test blog/category redirects, canonical URLs, sitemap, mobile API layout, and direct deep links.
@@ -42,7 +42,8 @@ Use the same candidate image digest throughout staging and promotion.
 
 ## Remaining staging gates
 
-- [ ] Check the candidate commit's documentation and native amd64/arm64 image-smoke CI jobs.
+- [x] Native amd64 and arm64 image-smoke CI jobs passed, including persistence and restore.
+- [ ] Check the final candidate commit's documentation and application CI jobs.
 - [ ] Complete real GitHub OAuth sign-in/out on the configured staging callback; configuration tests alone do not
       exercise the external provider. Recheck account permissions and disposable upload/moderation after sign-in.
 - [ ] Verify proxy headers/TLS, OAuth URLs/secrets, persistent storage, backups, resource limits, and public assets
@@ -59,19 +60,22 @@ Use the same candidate image digest throughout staging and promotion.
 
 ## Evidence
 
-Verified on 2026-09-23. Local amd64 production image:
-`sha256:dff7d74d23d6dc35376ecb0f15366a8def172e35e76b8e29239326eb91acddc2`.
+Verified on 2026-09-23–24. Local amd64 production image:
+`sha256:4395c7c5b9ee2504fcabcd706a4b7d284864b3037c334f69604b0483a34bb23b`.
 This is a local image ID, not a published multi-architecture manifest digest. Canonical origin is `https://homarr.dev`;
 only runtime Workshop connections were overridden for isolated browser checks.
 
 - Exact-image smoke passed, including backup/restore and uploaded-file byte comparisons.
-- Exact-image export: 274 Markdown pages, all 41 API operations, 106 search destinations, 278 canonical pages,
+- Exact-image export: 275 Markdown pages, all 42 API operations, 108 search destinations, 279 canonical pages,
   and 12 noindex pages. Blog alias SEO now passes.
 - Search transfer compressed from about 8.23 MB to 1.52 MB; search still loads only on demand.
 - Real REST runtime: valid key 200, missing/invalid key 401, missing endpoint 404, OPTIONS 204; authenticated browser
   cross-origin fetch succeeded. Six focused CORS tests and the complete Workshop integration suite passed.
 - PostHog readback of marked checks after 20:00 UTC: 16 pageviews, 3 demo, 6 install, and 4 link events.
   These are aggregate QA totals; separate browser traces checked per-interaction duplication and URL sanitization.
+- Recursive integration-request JSON schemas render through Scalar without unbounded expansion; two focused
+  normalization tests and a 256 MB capped render passed. The raw published API contract is preserved.
+- The widget registry's 13 manifest checks passed; the Stats polling entry now matches its definition.
 - Independent browser review covered ad lifecycle, analytics payloads, mobile layout, and the widget playground.
   Focused playground accessibility scanning reported no violations.
 

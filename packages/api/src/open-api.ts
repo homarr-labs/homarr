@@ -42,5 +42,11 @@ export const openApiDocument = (base: string) => {
     const operation = document.paths?.[path]?.get;
     if (operation) operation.security = [{}, { apikey: [] }];
   }
+  // Exactly one selector is valid; generated samples otherwise fill all three.
+  const integrationBody = document.paths?.["/api/integrations/request"]?.post?.requestBody;
+  if (integrationBody && "content" in integrationBody) {
+    const json = integrationBody.content["application/json"];
+    if (json) json.example = { integrationKind: "sonarr", method: "GET", path: "/api/v3/system/status" };
+  }
   return document;
 };

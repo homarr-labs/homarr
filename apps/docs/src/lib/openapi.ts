@@ -12,8 +12,8 @@ function asRecord(value: unknown): RecordValue | undefined {
 }
 
 function hasExactKeys(value: RecordValue, keys: string[]) {
-  const actual = Object.keys(value).sort();
-  const expected = [...keys].sort();
+  const actual = Object.keys(value).toSorted();
+  const expected = keys.toSorted();
   if (actual.length !== expected.length) return false;
   return actual.every((key, index) => key === expected[index]);
 }
@@ -28,8 +28,8 @@ function isUnconstrainedRecursiveJsonSchema(name: string, value: unknown) {
   let hasObject = false;
   const self = `#/components/schemas/${name.replaceAll("~", "~0").replaceAll("/", "~1")}`;
 
-  for (const value of root.anyOf) {
-    const variant = asRecord(value);
+  for (const member of root.anyOf) {
+    const variant = asRecord(member);
     if (!variant) return false;
     if (typeof variant.type === "string" && hasExactKeys(variant, ["type"])) {
       simpleTypes.add(variant.type);

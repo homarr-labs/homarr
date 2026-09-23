@@ -5517,6 +5517,11 @@
                 "required": [
                   "path"
                 ]
+              },
+              "example": {
+                "integrationKind": "sonarr",
+                "method": "GET",
+                "path": "/api/v3/system/status"
               }
             }
           }
