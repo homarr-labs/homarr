@@ -562,7 +562,7 @@
 }
 
 .message {
-  margin-block: 0.9rem;
+  margin-block: 0.45rem;
 }
 
 .message[data-static] {
@@ -575,7 +575,10 @@
   width: fit-content;
   max-width: 86%;
   margin-inline-start: auto;
-  margin-block-end: calc(0.9rem + 1.75rem);
+}
+
+.userMessageWrap[data-static] {
+  content-visibility: visible;
 }
 
 .userMessage {
@@ -2105,7 +2108,7 @@
   }
 
   .message {
-    margin-block: 0.7rem;
+    margin-block: 0.35rem;
   }
 
   .userMessage {
