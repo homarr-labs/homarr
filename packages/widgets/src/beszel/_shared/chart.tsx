@@ -13,10 +13,10 @@ import { formatLocalizedDate } from "../../common/locale";
 export type BeszelTimePeriod = "1m" | "1h" | "12h" | "24h" | "1w" | "30d";
 
 const timeFormatOptions: Record<BeszelTimePeriod, Intl.DateTimeFormatOptions> = {
-  "1m": { hour: "numeric", minute: "2-digit", second: "2-digit" },
-  "1h": { hour: "numeric", minute: "2-digit" },
-  "12h": { hour: "numeric", minute: "2-digit" },
-  "24h": { hour: "numeric", minute: "2-digit" },
+  "1m": { hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23" },
+  "1h": { hour: "2-digit", minute: "2-digit", hourCycle: "h23" },
+  "12h": { hour: "2-digit", minute: "2-digit", hourCycle: "h23" },
+  "24h": { hour: "2-digit", minute: "2-digit", hourCycle: "h23" },
   "1w": { month: "short", day: "numeric" },
   "30d": { month: "short", day: "numeric" },
 };
@@ -93,7 +93,8 @@ const yAxisBase = {
   tick: { fontSize: "var(--mantine-font-size-xs)" },
 } as const;
 const chartStyle = { minWidth: 0, minHeight: 1 } as const;
-const panelStyle = { minWidth: 0, overflow: "hidden" } as const;
+const panelStyle = { minWidth: 0 } as const;
+const chartMargin = { top: 0, right: 0, bottom: 0, left: 0 } as const;
 export const CPU_Y_AXIS_DOMAIN: [number, string] = [0, "auto"];
 
 interface BeszelChartPanelProps {
@@ -136,6 +137,7 @@ const BeszelAreaChart = memo(
     const mergedXAxis = useMemo(
       () => ({
         interval: "preserveEnd" as const,
+        tick: { fontSize: "var(--mantine-font-size-xs)" },
         ...xAxisPropsOverride,
       }),
       [xAxisPropsOverride],
@@ -143,7 +145,7 @@ const BeszelAreaChart = memo(
     const mergedYAxis = useMemo(() => {
       const base = {
         ...yAxisBase,
-        width: 48,
+        width: 56,
         tickMargin: 2,
         tickFormatter: yAxisFormatter,
         ...yAxisPropsOverride,
@@ -167,6 +169,7 @@ const BeszelAreaChart = memo(
         withXAxis={withXAxis}
         withYAxis
         w="100%"
+        margin={chartMargin}
         style={chartStyle}
         xAxisProps={mergedXAxis}
         yAxisProps={mergedYAxis}
