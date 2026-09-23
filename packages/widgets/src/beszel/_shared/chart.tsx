@@ -131,6 +131,7 @@ const BeszelAreaChart = memo(
     yAxisDomain,
     yAxisProps: yAxisPropsOverride,
     xAxisProps: xAxisPropsOverride,
+    areaChartProps: areaChartPropsOverride,
     type = "default",
     ...props
   }: BeszelAreaChartProps) => {
@@ -169,7 +170,7 @@ const BeszelAreaChart = memo(
         withXAxis={withXAxis}
         withYAxis
         w="100%"
-        margin={chartMargin}
+        areaChartProps={{ margin: chartMargin, ...areaChartPropsOverride }}
         style={chartStyle}
         xAxisProps={mergedXAxis}
         yAxisProps={mergedYAxis}
