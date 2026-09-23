@@ -676,7 +676,8 @@ describe("AI authoring evaluation", () => {
 
     const resolvedFail = summarizeCustomWidgetJudgePanel(judgePanelWidget, makePanelCalls([87, 83, 82, 88, 81]));
     expect(resolvedFail).toMatchObject({ status: "fail", passVotes: 2, failVotes: 3, medianTotal: 83 });
-    expect(judgePasses(resolvedFail.representative!)).toBe(false);
+    if (!resolvedFail.representative) throw new Error("Expected a representative judge result");
+    expect(judgePasses(resolvedFail.representative)).toBe(false);
   });
 
   it("marks an incomplete judge panel inconclusive", () => {

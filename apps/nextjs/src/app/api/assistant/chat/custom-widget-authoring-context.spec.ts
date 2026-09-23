@@ -1452,9 +1452,9 @@ describe("Custom Widget authoring context", () => {
     ];
 
     expect(getCustomWidgetPhaseToolNames(tools, steps)).toEqual(["customWidget_updateFromPreview"]);
-    expect(
-      getCustomWidgetPhaseToolNames(tools, steps, { legacyMigrationOnly: true }),
-    ).toEqual(["customWidget_updateFromPreview"]);
+    expect(getCustomWidgetPhaseToolNames(tools, steps, { legacyMigrationOnly: true })).toEqual([
+      "customWidget_updateFromPreview",
+    ]);
   });
 
   test("exposes focused context tools only after the skill entrypoint is loaded", () => {
@@ -1677,9 +1677,7 @@ describe("Custom Widget authoring context", () => {
     ];
 
     expect(getCustomWidgetPhaseToolNames(tools, completeEvidence)).toEqual(["customWidget_createFromPreview"]);
-    expect(
-      getCustomWidgetPhaseToolNames(tools, completeEvidence, { legacyMigrationOnly: true }),
-    ).toEqual([]);
+    expect(getCustomWidgetPhaseToolNames(tools, completeEvidence, { legacyMigrationOnly: true })).toEqual([]);
   });
 
   test("recognizes the current user v1 migration task without inheriting it into a new task", () => {

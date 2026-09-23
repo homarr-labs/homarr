@@ -98,9 +98,7 @@ function getLegacyRequest(definition: LegacyCustomWidgetDefinition) {
       query: Object.fromEntries(
         [...url.searchParams.entries()].map(([key, value]) => [
           key,
-          definition.authType === "apiKeyQuery" && key === (definition.headerName ?? "api_key")
-            ? "[REDACTED]"
-            : value,
+          definition.authType === "apiKeyQuery" && key === (definition.headerName ?? "api_key") ? "[REDACTED]" : value,
         ]),
       ),
       method: definition.method,

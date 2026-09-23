@@ -58,7 +58,7 @@ describe("legacy custom widget migration prompt", () => {
         method: "GET",
         requestBody: null,
         displayType: "singleValue",
-        displayConfig: null,
+        displayConfig: "{}",
         enabled: true,
         createdAt: new Date(0),
         updatedAt: new Date(0),

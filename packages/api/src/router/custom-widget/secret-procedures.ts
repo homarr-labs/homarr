@@ -35,7 +35,9 @@ const secretRequestInputSchema = z
     previewSessionId: z
       .string()
       .optional()
-      .describe("Create configuration for a preview returned by previewCreate. Requires sourceId; omit requestId and definitionId."),
+      .describe(
+        "Create configuration for a preview returned by previewCreate. Requires sourceId; omit requestId and definitionId.",
+      ),
     sourceId: z
       .string()
       .optional()

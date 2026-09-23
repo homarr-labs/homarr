@@ -124,7 +124,8 @@ export const hasCustomWidgetFreshCreationIntent = (text: string) => {
   const match = customWidgetFreshCreationPattern.exec(text);
   if (!match) return false;
   // "Make a layout repair to the existing widget" must load the widget before drafting.
-  if (/\b(?:adjustments?|changes?|edits?|fix(?:es)?|repairs?|updates?)\s+(?:to|for|of)\b/iu.test(match[0])) return false;
+  if (/\b(?:adjustments?|changes?|edits?|fix(?:es)?|repairs?|updates?)\s+(?:to|for|of)\b/iu.test(match[0]))
+    return false;
   const matchStart = match.index ?? 0;
   const prefix = text.slice(Math.max(0, matchStart - 32), matchStart);
   return !customWidgetFreshCreationNegationPattern.test(prefix);
