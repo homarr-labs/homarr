@@ -35,7 +35,8 @@ const unwrapCustomWidgetToolOutput = (output: unknown) => {
 
 const explicitCustomWidgetContinuePattern = /^\s*(?:continue|keep\s+going|proceed|go\s+on|finish|complete)\b/iu;
 const explicitCustomWidgetResumePattern =
-  /^\s*(?:(?:continue|keep\s+going|proceed|go\s+on|finish|complete)\b|(?:(?:i(?:'ve|\s+have)?\s+)?(?:completed|configured|finished)|done\b|(?:the\s+)?(?:configuration|setup)\s+is\s+(?:complete|done))\b)/iu;
+  /^\s*(?:(?:continue|keep\s+going|proceed|go\s+on|finish|complete)\b|(?:(?:i(?:'ve|\s+have)?\s+)?(?:completed|configured|finished)|done\b|(?:the\s+)?(?:configuration|setup)\s+(?:is\s+)?(?:complete|completed|done|saved))\b)/iu;
+const customWidgetLegacyMigrationPattern = /"\$schema"\s*:\s*"homarr-custom-widget-v1"/iu;
 
 const getUiMessageText = (message: UIMessage) =>
   message.parts
@@ -84,7 +85,7 @@ export const getCustomWidgetToolStepsFromUiMessages = (messages: readonly UIMess
   for (let index = latestUserIndex - 1; index >= 0; index -= 1) {
     const message = messages[index];
     if (!message || message.role !== "user") continue;
-    if (explicitCustomWidgetContinuePattern.test(getUiMessageText(message))) continue;
+    if (hasCustomWidgetAuthoringLifecycleResumeIntent(getUiMessageText(message), true)) continue;
     authoringStartIndex = index + 1;
     break;
   }
@@ -130,6 +131,20 @@ const getLatestUserText = (messages: readonly UIMessage[]) => {
   const latestUserMessage = messages.findLast((message) => message.role === "user");
   if (!latestUserMessage) return "";
   return getUiMessageText(latestUserMessage);
+};
+
+export const hasCustomWidgetLegacyMigrationContext = (messages: readonly UIMessage[]) => {
+  const latestUserIndex = messages.findLastIndex((message) => message.role === "user");
+  if (latestUserIndex < 0) return false;
+  for (let index = latestUserIndex; index >= 0; index -= 1) {
+    const message = messages[index];
+    if (!message || message.role !== "user") continue;
+    const text = getUiMessageText(message);
+    if (customWidgetLegacyMigrationPattern.test(text)) return true;
+    if (hasCustomWidgetAuthoringLifecycleResumeIntent(text, true)) continue;
+    return false;
+  }
+  return false;
 };
 
 const hasFollowUpCustomWidgetTool = (activeToolNames: readonly string[], latestToolName: string) =>
@@ -443,6 +458,7 @@ export const getCustomWidgetFollowUpEditContext = (
 };
 
 const getCustomWidgetServiceTargetFromText = (text: string) => {
+  if (!hasCustomWidgetFreshCreationIntent(text)) return null;
   for (const pattern of serviceWidgetIntentPatterns) {
     const target = pattern.exec(text)?.[1];
     if (!target) continue;

@@ -10,6 +10,7 @@ import {
   getRequestedCustomWidgetExampleId,
   getRequestedCustomWidgetExampleIds,
   getRequestedCustomWidgetServiceTarget,
+  hasCustomWidgetLegacyMigrationContext,
   hasMultiCustomWidgetCreationRequest,
   isFreshCustomWidgetCreationRequest,
   needsCustomWidgetAuthoringContext,
@@ -1451,6 +1452,9 @@ describe("Custom Widget authoring context", () => {
     ];
 
     expect(getCustomWidgetPhaseToolNames(tools, steps)).toEqual(["customWidget_updateFromPreview"]);
+    expect(
+      getCustomWidgetPhaseToolNames(tools, steps, { legacyMigrationOnly: true }),
+    ).toEqual(["customWidget_updateFromPreview"]);
   });
 
   test("exposes focused context tools only after the skill entrypoint is loaded", () => {
@@ -1673,6 +1677,24 @@ describe("Custom Widget authoring context", () => {
     ];
 
     expect(getCustomWidgetPhaseToolNames(tools, completeEvidence)).toEqual(["customWidget_createFromPreview"]);
+    expect(
+      getCustomWidgetPhaseToolNames(tools, completeEvidence, { legacyMigrationOnly: true }),
+    ).toEqual([]);
+  });
+
+  test("recognizes the current user v1 migration task without inheriting it into a new task", () => {
+    const migration = userMessage('Migrate {"$schema":"homarr-custom-widget-v1"}');
+    const continuation = userMessage("Continue after source configuration");
+    const freshCreation = userMessage("Create a new custom widget for Mealie");
+    const assistantQuote: UIMessage = {
+      id: "assistant-migration-quote",
+      role: "assistant",
+      parts: [{ type: "text", text: 'The data includes "$schema":"homarr-custom-widget-v1".' }],
+    };
+
+    expect(hasCustomWidgetLegacyMigrationContext([migration, continuation])).toBe(true);
+    expect(hasCustomWidgetLegacyMigrationContext([assistantQuote])).toBe(false);
+    expect(hasCustomWidgetLegacyMigrationContext([migration, freshCreation])).toBe(false);
   });
 
   test("closes focused discovery after four searches and proceeds to drafting", () => {

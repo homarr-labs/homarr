@@ -29,7 +29,7 @@ function parseBool(value: unknown, fallback = false) {
 function useActionExecutor() {
   const runtime = useCustomWidgetRuntime();
   const mutation = useMutation({
-    mutationFn: ({
+    mutationFn: async ({
       requestId,
       params,
       confirmed,
@@ -44,13 +44,35 @@ function useActionExecutor() {
       if (runtime.isEditMode) {
         return Promise.resolve({ ok: false, status: 0, data: null, error: runtime.messages.actionsDisabledEditMode });
       }
-      return runtime.port.executeAction({
-        itemId: runtime.itemId,
-        previewSessionId: runtime.previewSessionId,
-        requestId,
-        params,
-        confirmed,
+      runtime.setQueryState?.(requestId, { data: null, status: { loading: true } });
+      let result: CustomWidgetRequestResult;
+      try {
+        result = await runtime.port.executeAction({
+          itemId: runtime.itemId,
+          previewSessionId: runtime.previewSessionId,
+          requestId,
+          params,
+          confirmed,
+        });
+      } catch (error) {
+        runtime.setQueryState?.(requestId, {
+          data: null,
+          status: { loading: false, ok: false, error: runtime.messages.requestFailed },
+        });
+        throw error;
+      }
+      // Action responses are local to this widget instance, just like published query data.
+      runtime.setQueryState?.(requestId, {
+        data: result.data,
+        status: {
+          loading: false,
+          ok: result.ok,
+          status: result.status,
+          statusText: result.statusText,
+          error: result.error,
+        },
       });
+      return result;
     },
   });
   return { runtime, mutation };

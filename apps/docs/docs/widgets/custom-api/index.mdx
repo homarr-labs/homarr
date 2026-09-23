@@ -31,4 +31,9 @@ require authentication. DELETE actions require full board permission and confirm
 The refresh interval reruns load queries. Manual queries run through `SubFetch`; successful actions can invalidate their
 declared queries.
 
+After an `ActionButton` or `ToggleSwitch` executes, its response is available as `data.requestId` and
+`status.requestId` in that widget instance. Guard the initial state: actions do not run on load, and their last response
+is not persisted across reloads. This also lets migrated POST-backed displays retain their response rendering behind an
+explicit user action.
+
 See [Custom Widgets](/docs/management/custom-widgets) for authoring, network scopes, and security limits.

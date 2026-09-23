@@ -92,6 +92,7 @@ import {
   getCustomWidgetPhaseToolNames,
   getCustomWidgetToolStepsFromResponseMessages,
   getCustomWidgetToolStepsFromUiMessages,
+  hasCustomWidgetLegacyMigrationContext,
   getRequestedCustomWidgetExampleIds,
   getRequestedCustomWidgetServiceTarget,
   hasExplicitCustomWidgetComponentDiscoveryRequest,
@@ -527,6 +528,8 @@ export async function POST(request: Request) {
   }
   const canAuthorCustomWidgets = session.user.permissions.includes("admin");
   const customWidgetAuthoringActive = canAuthorCustomWidgets && needsCustomWidgetAuthoringContext(incomingMessages);
+  const customWidgetLegacyMigrationOnly =
+    customWidgetAuthoringActive && hasCustomWidgetLegacyMigrationContext(incomingMessages);
   const multiCustomWidgetCreationRequest =
     customWidgetAuthoringActive && hasMultiCustomWidgetCreationRequest(incomingMessages);
   const openRouterServerToolsEnabled =
@@ -865,6 +868,7 @@ export async function POST(request: Request) {
           {
             continueAfterPersistence: customWidgetFollowUpEditContext === null && multiCustomWidgetCreationRequest,
             followUpDefinitionId: customWidgetFollowUpEditContext?.definitionId,
+            legacyMigrationOnly: customWidgetLegacyMigrationOnly,
             preferDirectPreview:
               isFreshCustomWidgetCreationRequest(incomingMessages) &&
               !explicitCustomWidgetComponentDiscovery &&

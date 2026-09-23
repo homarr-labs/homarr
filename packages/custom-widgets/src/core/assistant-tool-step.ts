@@ -1,6 +1,8 @@
 export const isCustomWidgetToolName = (toolName: string) => toolName.startsWith("customWidget_");
 
 const parallelSafeCustomWidgetToolNames = new Set([
+  "customWidget_list",
+  "customWidget_get",
   "customWidget_getSkill",
   "customWidget_schema",
   "customWidget_getReference",

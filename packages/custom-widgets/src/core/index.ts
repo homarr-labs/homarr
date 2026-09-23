@@ -1,4 +1,10 @@
 export * from "./bundled-widgets";
+export {
+  containsCustomWidgetCredentialLiteral,
+  getCustomWidgetCredentialKeyRisk,
+  isHarmlessCustomWidgetCredentialSetting,
+  redactCustomWidgetCredentialLiterals,
+} from "./definition-security";
 export * from "./assistant-authoring-phase";
 export * from "./assistant-execution-policy";
 export * from "./assistant-follow-up";

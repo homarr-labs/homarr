@@ -84,6 +84,7 @@ const customWidgetContinueOnlyPattern = /^\s*(?:continue|keep\s+going|proceed|go
 const customWidgetContextualSubjectPattern = /\b(?:it|that|this)(?:\s+(?:one|widget))?\b/iu;
 const customWidgetFreshCreationPattern =
   /\b(?:build|create|design|make)\b[^\n]{0,100}\bwidgets?\b|\b(?:add|start)\b[^\n]{0,40}\b(?:another|new)\b[^\n]{0,40}\bwidgets?\b|\b(?:i|we)\s+(?:need|want)\b[^\n]{0,80}\bwidgets?\b/iu;
+const customWidgetLegacyMigrationFreshPattern = /"\$schema"\s*:\s*"homarr-custom-widget-v1"/iu;
 const customWidgetFollowUpMutationPattern = /\b(?:add|adjust|change|edit|fix|modify|remove|repair|update)\b/iu;
 const customWidgetExplicitFollowUpPattern =
   /\b(?:add\b[^\n]{0,60}\bto|remove\b[^\n]{0,60}\bfrom|adjust|change|edit|fix|modify|repair|update)\b[^\n]{0,80}\b(?:custom[\s-]+widgets?|widgets?)\b/iu;
@@ -91,7 +92,8 @@ const customWidgetContextualMakePattern = /\bmake\s+(?:it|that\s+one)\b/iu;
 const customWidgetImplicitFollowUpPattern =
   /^(?:\s*(?:add|adjust|change|edit|fix|include|modify|remove|repair|show|update)\b[^\n]{0,140}\b(?:action|api|button|chart|data|endpoint|field|filter|footer|header|items?|layout|metric|option|query|request|rows?|spacing|style|theme)\b|\s*(?:the\s+)?(?:action|button|chart|footer|header|layout|spacing|style|theme)\b[^\n]{0,140}\b(?:can|could|should|would|needs?|must)\b|\s*i\s+want\s+it\b|\s*could\s+it\b)/iu;
 const customWidgetConfigurationResumePattern =
-  /^\s*(?:(?:i(?:'ve|\s+have)?\s+)?(?:completed|configured|finished)|done\b|(?:the\s+)?(?:configuration|setup)\s+is\s+(?:complete|done))\b/iu;
+  /^\s*(?:(?:i(?:'ve|\s+have)?\s+)?(?:completed|configured|finished)|done\b|(?:the\s+)?(?:configuration|setup)\s+(?:is\s+)?(?:complete|completed|done|saved))\b/iu;
+const customWidgetFreshCreationNegationPattern = /\b(?:do\s+not|don't|never|not)\s*$/iu;
 
 export interface CustomWidgetToolStep {
   toolResults: readonly CustomWidgetAssistantLifecycleEvent[];
@@ -117,10 +119,19 @@ export const hasCustomWidgetAuthoringContinuationIntent = (text: string, hasRece
   return customWidgetSubjectPattern.test(text) && customWidgetMutationIntentPattern.test(text);
 };
 
-export const hasCustomWidgetFreshCreationIntent = (text: string) => customWidgetFreshCreationPattern.test(text);
+export const hasCustomWidgetFreshCreationIntent = (text: string) => {
+  if (customWidgetLegacyMigrationFreshPattern.test(text)) return true;
+  const match = customWidgetFreshCreationPattern.exec(text);
+  if (!match) return false;
+  // "Make a layout repair to the existing widget" must load the widget before drafting.
+  if (/\b(?:adjustments?|changes?|edits?|fix(?:es)?|repairs?|updates?)\s+(?:to|for|of)\b/iu.test(match[0])) return false;
+  const matchStart = match.index ?? 0;
+  const prefix = text.slice(Math.max(0, matchStart - 32), matchStart);
+  return !customWidgetFreshCreationNegationPattern.test(prefix);
+};
 
 export const hasCustomWidgetAuthoringLifecycleResumeIntent = (text: string, hasRecentLifecycleContext = false) => {
-  if (!hasRecentLifecycleContext || customWidgetFreshCreationPattern.test(text)) return false;
+  if (!hasRecentLifecycleContext || hasCustomWidgetFreshCreationIntent(text)) return false;
   if (customWidgetContinueOnlyPattern.test(text) || customWidgetConfigurationResumePattern.test(text)) return true;
   if (customWidgetContextualMakePattern.test(text)) return true;
   if (customWidgetImplicitFollowUpPattern.test(text)) return true;
@@ -361,6 +372,7 @@ const hasPendingPreviewEvidence = (
 export interface CustomWidgetPhaseOptions {
   continueAfterPersistence?: boolean;
   followUpDefinitionId?: string;
+  legacyMigrationOnly?: boolean;
   preferDirectPreview?: boolean;
   preferComponentDiscovery?: boolean;
   preferredExampleId?: string;
@@ -375,6 +387,7 @@ export const getCustomWidgetPhaseToolNames = <TToolName extends string>(
   const {
     continueAfterPersistence = true,
     followUpDefinitionId,
+    legacyMigrationOnly = false,
     preferDirectPreview = false,
     preferComponentDiscovery = false,
     preferredExampleId,
@@ -518,6 +531,11 @@ export const getCustomWidgetPhaseToolNames = <TToolName extends string>(
           const persistenceToolNames = new Set<string>(
             previewResults.map((result) => getPreviewPersistenceTool(result.output)),
           );
+          if (legacyMigrationOnly) {
+            return phaseAvailableToolNames.filter(
+              (toolName) => toolName === "customWidget_updateFromPreview" && persistenceToolNames.has(toolName),
+            );
+          }
           return phaseAvailableToolNames.filter(
             (toolName) => customWidgetFinalizationPhaseToolNames.has(toolName) && persistenceToolNames.has(toolName),
           );

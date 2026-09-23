@@ -143,7 +143,10 @@ export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
                     label={tSecret(kind)}
                     leftSection={<IconKey size={16} />}
                     value={values[kind] ?? ""}
-                    onChange={(event) => setValues((current) => ({ ...current, [kind]: event.currentTarget.value }))}
+                    onChange={(event) => {
+                      const value = event.currentTarget.value;
+                      setValues((current) => ({ ...current, [kind]: value }));
+                    }}
                     autoComplete="off"
                     required
                   />

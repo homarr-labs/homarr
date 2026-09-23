@@ -17,9 +17,21 @@ import { getPreviewJournal, getPreviewSession, setPreviewSessionLiveActions } fr
 export const previewQueryProcedures = {
   previewRefresh: permissionRequiredProcedure
     .requiresPermission("admin")
-    .input(z.object({ sessionId: z.string().min(1) }))
+    .input(
+      z.object({
+        sessionId: z.string().min(1),
+        requestIds: z.array(z.string().min(1).max(128)).max(128).optional(),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       const session = await getPreviewSession(input.sessionId, ctx.session.user.id);
+      if (input.requestIds) {
+        const prefixes = input.requestIds
+          .filter((id) => Object.hasOwn(session.requests, id))
+          .map((id) => `custom-jsx:preview:${session.id}:${id}:`);
+        invalidateCustomWidgetResponseCache(prefixes);
+        return;
+      }
       invalidateCustomWidgetResponseCache([`custom-jsx:preview:${session.id}:`]);
     }),
 

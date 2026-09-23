@@ -26,6 +26,8 @@ describe("createCustomWidgetToolStepGate", () => {
     expect(gate.claim("web_search")).toBe(true);
     expect(gate.claim("homarr_enableToolGroups")).toBe(true);
     expect(gate.claim("customWidget_getReference")).toBe(true);
+    expect(gate.claim("customWidget_list")).toBe(true);
+    expect(gate.claim("customWidget_get")).toBe(true);
     expect(gate.claim("customWidget_getComponent")).toBe(true);
     expect(gate.claim("customWidget_getComponent")).toBe(false);
     expect(gate.claim("customWidget_validateTemplate")).toBe(false);

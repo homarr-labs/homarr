@@ -1,12 +1,17 @@
 import { describe, expect, test } from "vitest";
 
-import { hasCustomWidgetAuthoringLifecycleResumeIntent } from "../core/assistant-authoring-phase";
+import {
+  hasCustomWidgetAuthoringLifecycleResumeIntent,
+  hasCustomWidgetFreshCreationIntent,
+} from "../core/assistant-authoring-phase";
 
 describe("Custom Widget lifecycle resume intent", () => {
   test.each([
     "Continue",
     "Keep going",
     "I completed the secure source configuration",
+    "Configuration completed. Continue with the existing preview query.",
+    "Setup saved. Return the tested migration JSON.",
     "The setup is done",
     "Change it to use a compact header",
     "The header should be blue",
@@ -16,6 +21,7 @@ describe("Custom Widget lifecycle resume intent", () => {
     "Add a latency chart to my custom widget",
     "Remove the footer from the widget",
     "Add a weekly meal-plan request and show its next three meals",
+    "Continue. The source configuration has been saved. Finish the preview evidence, then return the exact previewed definition as importable JSON for Paste migrated widget. Do not create a new widget.",
   ])("resumes accepted lifecycle work for: %s", (text) => {
     expect(hasCustomWidgetAuthoringLifecycleResumeIntent(text, true)).toBe(true);
   });
@@ -33,6 +39,16 @@ describe("Custom Widget lifecycle resume intent", () => {
   test("does not restore lifecycle state without recent Custom Widget work", () => {
     expect(hasCustomWidgetAuthoringLifecycleResumeIntent("Continue", false)).toBe(false);
     expect(hasCustomWidgetAuthoringLifecycleResumeIntent("Change it to use a compact header", false)).toBe(false);
+  });
+
+  test("treats a pasted v1 manifest as a fresh migration task", () => {
+    expect(hasCustomWidgetFreshCreationIntent('{"$schema":"homarr-custom-widget-v1"}')).toBe(true);
+    expect(
+      hasCustomWidgetAuthoringLifecycleResumeIntent(
+        'Migrate {"$schema":"homarr-custom-widget-v1"} and return the v2 JSON',
+        true,
+      ),
+    ).toBe(false);
   });
 
   test.each(["Add an app to my dashboard", "Show my integrations", "Update Homarr"])(

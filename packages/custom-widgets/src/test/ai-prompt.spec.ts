@@ -100,10 +100,13 @@ describe("AI prompt", () => {
     expect(prompts[4]).toContain("guard arrays");
     expect(prompts[0]).toContain("create from the request");
     expect(prompts[1]).toContain("repair preserves working contract");
-    expect(prompts[2]).toContain("migration preserves supported legacy URL");
-    expect(prompts[2]).toContain(
-      "If a migration path is unknown, omit its request (requests:{} if none); never guess /.",
-    );
+    expect(prompts[2]).toContain("This is a migration, not a redesign");
+    expect(prompts[2]).toContain("Preserve original path, query values, and body");
+    expect(prompts[2]).toContain("never an empty placeholder");
+    expect(prompts[2]).toContain("empty configuredSecretKinds means credentials need configuration");
+    expect(prompts[2]).toContain("iconUrl must be a valid URL string or omitted, never null");
+    expect(prompts[2]).toContain("Return the exact tested definition in the final JSON");
+    expect(prompts[2]).toContain("successMessage props");
     const staticPrompt = buildCustomWidgetAiPrompt(
       undefined,
       null,
