@@ -128,8 +128,6 @@ Supply exactly one of `integrationId`, exact `integrationName`, or `integrationK
 full-access match ordered by name then ID, without health checks or failover. Prefer an ID for writes.
 Check `integration.getKinds.supportsHttpRequests` for compatibility and `integration.all` for saved instances.
 Every method requires **full integration access**; arbitrary GET endpoints can also change state or expose secrets.
-Saved integration URLs may resolve to any IPv4 or IPv6 destination reachable by the Homarr server, including loopback,
-private, link-local, and tailnet addresses. Restrict full integration access to trusted users.
 
 | Field     | Contract                                                                                                                                                                                |
 | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
