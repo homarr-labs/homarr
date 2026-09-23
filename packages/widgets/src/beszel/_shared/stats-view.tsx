@@ -20,6 +20,7 @@ import {
   normalizeBeszelByteRate,
   useContainerNames,
   useDiskChartData,
+  useDiskIOChartData,
   useDockerChartData,
   useSystemChartData,
 } from "./chart";
@@ -126,10 +127,6 @@ export function BeszelStatsView({
         [t("chart.memory.series")]: s.mu * GIBIBYTE,
         [t("chart.memory.cache")]: (s.mb ?? 0) * GIBIBYTE,
       }),
-      diskIO: (s: { dr?: number; dw?: number; dio?: [number, number] }) => ({
-        [t("chart.diskIO.read")]: normalizeBeszelByteRate(s.dio?.[0], s.dr),
-        [t("chart.diskIO.write")]: normalizeBeszelByteRate(s.dio?.[1], s.dw),
-      }),
       network: (s: { ns?: number; nr?: number; b?: [number, number] }) => ({
         [t("chart.network.sent")]: normalizeBeszelByteRate(s.b?.[0], s.ns),
         [t("chart.network.recv")]: normalizeBeszelByteRate(s.b?.[1], s.nr),
@@ -144,10 +141,6 @@ export function BeszelStatsView({
       memory: [
         { name: t("chart.memory.series"), color: "teal.5" },
         { name: t("chart.memory.cache"), color: "teal.8" },
-      ],
-      diskIO: [
-        { name: t("chart.diskIO.write"), color: "orange.6" },
-        { name: t("chart.diskIO.read"), color: "blue.6" },
       ],
       network: [
         { name: t("chart.network.sent"), color: "blue.6" },
@@ -166,12 +159,6 @@ export function BeszelStatsView({
     timePeriod,
     locale,
   );
-  const diskIOData = useSystemChartData(
-    whenVisible(visibility.diskIO, systemStats),
-    mappers.diskIO,
-    timePeriod,
-    locale,
-  );
   const networkData = useSystemChartData(
     whenVisible(visibility.network, systemStats),
     mappers.network,
@@ -187,10 +174,24 @@ export function BeszelStatsView({
     return [...paths];
   }, [systemStats]);
   const rootSeriesName = t("chart.disk.series");
+  const readLabel = t("chart.diskIO.read");
+  const writeLabel = t("chart.diskIO.write");
+  const rootReadSeriesName = `${rootSeriesName} ${readLabel}`;
+  const rootWriteSeriesName = `${rootSeriesName} ${writeLabel}`;
   const diskData = useDiskChartData(
     whenVisible(visibility.disk, systemStats),
     efsPaths,
     rootSeriesName,
+    timePeriod,
+    locale,
+  );
+  const diskIOData = useDiskIOChartData(
+    whenVisible(visibility.diskIO, systemStats),
+    efsPaths,
+    rootReadSeriesName,
+    rootWriteSeriesName,
+    readLabel,
+    writeLabel,
     timePeriod,
     locale,
   );
@@ -203,6 +204,23 @@ export function BeszelStatsView({
       })),
     ],
     [efsPaths, rootSeriesName],
+  );
+  const diskIOSeries = useMemo(
+    () => [
+      { name: rootWriteSeriesName, color: "orange.6" },
+      { name: rootReadSeriesName, color: "blue.6" },
+      ...efsPaths.flatMap((path, index) => [
+        {
+          name: `${path} ${writeLabel}`,
+          color: containerColors[(index * 2 + 2) % containerColors.length] as string,
+        },
+        {
+          name: `${path} ${readLabel}`,
+          color: containerColors[(index * 2 + 3) % containerColors.length] as string,
+        },
+      ]),
+    ],
+    [efsPaths, readLabel, rootReadSeriesName, rootWriteSeriesName, writeLabel],
   );
 
   const containerNames = useContainerNames(whenVisible(showDocker, containerStats));
@@ -352,7 +370,7 @@ export function BeszelStatsView({
             displayScale,
             withXAxis: showXAxis,
             data: diskIOData,
-            series: series.diskIO,
+            series: diskIOSeries,
             yAxisFormatter: byteAxisFormatters.rate,
             tooltipProps: tooltips.rate,
           }}

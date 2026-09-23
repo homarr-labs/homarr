@@ -274,6 +274,37 @@ export const buildDiskChartData = (
   return padTimeGrid(mapped, timePeriod, locale);
 };
 
+export const useDiskIOChartData = (
+  systemStats: BeszelSystemStatsRecord[] | undefined,
+  efsPaths: string[],
+  rootReadSeriesName: string,
+  rootWriteSeriesName: string,
+  readLabel: string,
+  writeLabel: string,
+  timePeriod: BeszelTimePeriod = "1h",
+  locale = "en-US",
+) =>
+  useMemo(() => {
+    if (!systemStats?.length) return [];
+    const { fmt, ordered } = prepareRecords(systemStats, timePeriod, locale);
+    const mapped = ordered.map((record) => {
+      const point: Record<string, unknown> = {
+        time: fmt(record.created),
+        rawTime: record.created,
+        [rootReadSeriesName]: normalizeBeszelByteRate(record.stats.dio?.[0], record.stats.dr),
+        [rootWriteSeriesName]: normalizeBeszelByteRate(record.stats.dio?.[1], record.stats.dw),
+      };
+      const efs = record.stats.efs ?? {};
+      for (const path of efsPaths) {
+        const filesystem = efs[path];
+        point[`${path} ${readLabel}`] = normalizeBeszelByteRate(filesystem?.rb, filesystem?.r);
+        point[`${path} ${writeLabel}`] = normalizeBeszelByteRate(filesystem?.wb, filesystem?.w);
+      }
+      return point;
+    });
+    return padTimeGrid(mapped, timePeriod, locale);
+  }, [systemStats, efsPaths, rootReadSeriesName, rootWriteSeriesName, readLabel, writeLabel, timePeriod, locale]);
+
 export const useDockerChartData = (
   containerStats: BeszelContainerStatsRecord[] | undefined,
   containerNames: string[],

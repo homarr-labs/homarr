@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { ReactNode } from "react";
+import type { ReactNode, TouchEventHandler } from "react";
 import { ActionIcon, Button, Menu } from "@mantine/core";
 import type { ActionIconProps, ButtonProps, ElementProps, MenuItemProps } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
@@ -204,6 +204,7 @@ export const InlineConfirmActionIcon = ({
 type InlineConfirmMenuItemProps = Omit<MenuItemProps, "children" | "closeMenuOnClick" | "disabled" | "onClick"> &
   InlineConfirmActionOptions & {
     children: ReactNode;
+    onTouchStart?: TouchEventHandler<HTMLButtonElement>;
   };
 
 export const InlineConfirmMenuItem = ({
@@ -213,6 +214,7 @@ export const InlineConfirmMenuItem = ({
   disabled,
   pending,
   timeout,
+  onTouchStart,
   ...props
 }: InlineConfirmMenuItemProps) => {
   const action = useInlineConfirmAction({ confirmLabel, onConfirm, disabled, pending, timeout });
@@ -226,6 +228,10 @@ export const InlineConfirmMenuItem = ({
         disabled={disabled || pending || action.submitting}
         closeMenuOnClick={action.confirming}
         onClick={() => void action.handleClick().catch(() => undefined)}
+        onTouchStart={(event) => {
+          event.stopPropagation();
+          onTouchStart?.(event);
+        }}
         aria-label={typeof label === "string" ? label : undefined}
         data-confirming={action.confirming || undefined}
       >

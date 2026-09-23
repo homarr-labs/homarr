@@ -60,7 +60,11 @@ export const BoardContainerSection = ({ section }: Props) => {
         h: 20,
         maw: `calc(100% - ${labelLeft + labelRight}px)`,
       };
-  const toggleIcon = isVisuallyCollapsed ? <IconChevronDown size={16} /> : <IconChevronUp size={16} />;
+  const toggleIcon = isVisuallyCollapsed ? (
+    <IconChevronDown size="var(--mantine-font-size-md)" />
+  ) : (
+    <IconChevronUp size="var(--mantine-font-size-md)" />
+  );
 
   return (
     <Box className="board-grid-item-content" data-grid-item-content w="100%" h="100%" style={{ overflow: "visible" }}>
@@ -142,7 +146,7 @@ export const BoardContainerSection = ({ section }: Props) => {
             onClick={openAllInNewTabs}
             aria-label={tSection("action.openAllInNewTabsFor", { name: label })}
           >
-            <IconExternalLink size={16} />
+            <IconExternalLink size="var(--mantine-font-size-md)" />
           </ActionIcon>
         )}
         <Box

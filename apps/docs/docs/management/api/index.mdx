@@ -110,3 +110,40 @@ deletes the message from Gotify, and invalidates its notification cache. It is n
 `widget.stats.catalog` lists the metric keys and units for one integration. `widget.stats.snapshot` reads its shared snapshot without making service requests. `widget.stats.refresh` refreshes it through the shared concurrency limit; `force: true` bypasses the one-hour freshness check. Each procedure requires `integrationId` and checks Query access, including for cached values. These procedures are also exposed through MCP under `stats`. They are not REST endpoints.
 
 Refresh returns the current snapshot, which may still be old if another process is refreshing that source. Inspect `updatedAt`, `stale`, `error`, and `retryAt`; a refresh failure retains successful values. See the [Statistics widget](../../widgets/stats) for cache behavior.
+
+## Call any integration API endpoint
+
+`POST /api/integrations/request` is the REST equivalent of
+[`integration_request`, Homarr's most powerful MCP tool](../mcp#authenticated-integration-requests), and tRPC
+`integration.request`. Call any API endpoint on a supported saved integration, including features Homarr does not
+implement. Homarr supplies the saved URL, authentication and trusted certificates; callers provide no integration credentials.
+
+```sh
+curl -X POST https://homarr.example.com/api/integrations/request \
+  -H 'ApiKey: <id>.<token>' -H 'Content-Type: application/json' \
+  -d '{"integrationKind":"sonarr","path":"/api/v3/episode?seriesId=42"}'
+```
+
+Supply exactly one of `integrationId`, exact `integrationName`, or `integrationKind`. Name/type selects the first
+full-access match ordered by name then ID, without health checks or failover. Prefer an ID for writes.
+Check `integration.getKinds.supportsHttpRequests` for compatibility and `integration.all` for saved instances.
+Every method requires **full integration access**; arbitrary GET endpoints can also change state or expose secrets.
+
+| Field     | Contract                                                                                                                                                                                |
+| --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `method`  | GET (default), HEAD, OPTIONS, POST, PUT, PATCH or DELETE. DELETE requires `confirmed: true` after user confirmation.                                                                    |
+| `path`    | Appends to the saved URL, even with a leading slash: `/sonarr` + `/api/v3/series` → `/sonarr/api/v3/series`. Absolute URLs, escapes, credentials, fragments and redirects are rejected. |
+| `body`    | JSON by default. For text, XML or URL-encoded forms, use a string with `bodyEncoding: "raw"` and the appropriate `Content-Type` header. No body for GET/HEAD.                           |
+| `headers` | Optional non-authentication headers. Transport headers are restricted; saved authentication takes precedence.                                                                           |
+
+Returns `{integration: {id, name, kind}, ok, status, statusText, data}`. Data is JSON, UTF-8 text or `null`.
+**Homarr HTTP 200 can contain an upstream failure**: inspect `ok`, `status` and service-specific errors in `data`.
+Validation, permission and transport failures use Homarr API errors. Known credentials are redacted; other returned
+data may still be sensitive. A timeout does not imply rollback—check upstream state before retrying a write.
+
+Limits: **10 KiB body, 16 KiB headers, 1 MiB response, 15-second total deadline** (10 seconds per request).
+Gzip, deflate and Brotli decoding enforce the response limit at each stage, up to three stages. Requests are uncached
+and never retried automatically. Paginate large results; binary streaming, WebSockets and multipart uploads are unsupported.
+
+Agents must consult official upstream API docs, explain the integration and effects before calling, and report the
+outcome. Documentation lookup is the agent's responsibility, not the proxy's.
