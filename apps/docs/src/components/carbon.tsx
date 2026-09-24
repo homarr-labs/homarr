@@ -12,7 +12,8 @@ export function Carbon({ placement = "banner" }: { placement?: Placement }) {
 
   useEffect(() => {
     const host = ref.current;
-    if (!host || pathname === "/" || process.env.NODE_ENV !== "production") return;
+    if (!host || pathname === "/") return;
+    if (process.env.NODE_ENV !== "production" && process.env.NEXT_PUBLIC_ENABLE_CARBON_ADS !== "true") return;
     const desktop = window.matchMedia("(min-width: 1280px)");
 
     function update() {

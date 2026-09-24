@@ -156,3 +156,6 @@ Form autocapture and session replay are disabled; tracked URL query strings and 
 Carbon loads one visible placement after the desktop TOC, below API examples, or below content on other layouts.
 The homepage is excluded at every viewport size. Navigation reloads the ad script; resizing changes placement only when crossing its breakpoint. Ad blockers
 or no-fill responses must not prevent content, navigation, or search from working.
+
+To preview Carbon locally, start docs with `NEXT_PUBLIC_ENABLE_CARBON_ADS=true pnpm dev:docs`. Production builds
+enable ads automatically. When the TOC collapses into a toggle, the ad appears below the content before “Edit this page”.
