@@ -331,18 +331,14 @@
     max-width: 46rem;
   }
 
-  .heroCards {
-    width: min(100%, 48rem);
+  .heroPreview {
+    display: none;
   }
 }
 
 @media screen and (max-width: 996px) {
   .heroBanner {
     padding: 3.25rem 2rem 4rem;
-  }
-
-  .heroPreview {
-    display: none;
   }
 }
 

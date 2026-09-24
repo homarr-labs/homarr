@@ -1,3 +1,4 @@
+import { integrationKinds } from "@homarr/definitions/integration";
 import { IconArrowRight } from "@tabler/icons-react";
 import Link from "next/link";
 
@@ -5,7 +6,9 @@ import { SectionContainer } from "@/components/pages/home/container/section-cont
 import { supportedIntegrations } from "@/constants/supported-integrations";
 
 export const AvailableIntegrations = () => {
-  const featuredIntegrations = supportedIntegrations.filter(({ name }) => name !== "Homarr").slice(0, 12);
+  const featuredIntegrations = supportedIntegrations.filter(({ name }) => name !== "Homarr").slice(0, 11);
+  const integrationCount = integrationKinds.length;
+  const remainingCount = integrationCount - featuredIntegrations.length;
 
   return (
     <SectionContainer className="my-16 sm:my-20">
@@ -13,7 +16,7 @@ export const AvailableIntegrations = () => {
         <div className="grid items-center gap-8 md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
           <div>
             <h2 id="integrations-title" className="m-0 text-3xl font-bold tracking-tight sm:text-4xl">
-              Many integrations built in
+              {integrationCount}+ integrations built in
             </h2>
             <p className="mb-0 mt-4 leading-7 text-fd-muted-foreground">
               Browse supported integrations and their setup instructions.
@@ -36,6 +39,13 @@ export const AvailableIntegrations = () => {
                 <img className="size-7 object-contain sm:size-10" src={iconUrl} alt={name} width={40} height={40} />
               </div>
             ))}
+            <Link
+              href="/docs/integrations"
+              className="flex aspect-square items-center justify-center border bg-fd-muted/35 p-2 text-lg font-semibold text-fd-primary hover:bg-fd-accent sm:p-3 sm:text-xl"
+              aria-label={`${remainingCount} more integrations`}
+            >
+              +{remainingCount}
+            </Link>
           </div>
         </div>
       </section>
