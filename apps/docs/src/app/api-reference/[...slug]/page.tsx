@@ -18,9 +18,9 @@ export default async function ApiPage({ params }: PageProps) {
 
   return (
     <DocsPage toc={page.data.toc} full>
-      <Carbon />
       <DocsTitle>{page.data.title}</DocsTitle>
       <OpenAPIPage {...page.data.getOpenAPIPageProps()} />
+      <Carbon />
     </DocsPage>
   );
 }

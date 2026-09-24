@@ -17,7 +17,6 @@ export default function ApiReferenceIndexPage() {
 
   return (
     <DocsPage full breadcrumb={{ enabled: false }} footer={{ enabled: false }}>
-      <Carbon />
       <header className="homarr-content-header max-w-2xl">
         <p className="text-sm font-medium text-fd-primary">OpenAPI</p>
         <h1 className="homarr-content-title mt-2">Homarr API reference</h1>
@@ -34,6 +33,7 @@ export default function ApiReferenceIndexPage() {
           </Link>
         ))}
       </div>
+      <Carbon />
     </DocsPage>
   );
 }

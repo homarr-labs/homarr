@@ -23,8 +23,9 @@ Use the same candidate image digest throughout staging and promotion.
 
 ## Carbon
 
-- [x] Real creatives render above the fold on desktop and non-home mobile/tablet pages, without TOC overlap.
-- [x] The mobile homepage neither displays nor requests an ad; navigating away loads one.
+- [x] Carbon follows the desktop TOC. Full-width pages and pages without a TOC place it below the content;
+      mobile/tablet layouts also place it below the content.
+- [x] The homepage neither displays nor requests an ad at any viewport size; navigating away loads one.
 - [x] Client navigation requests a fresh ad; back/forward and breakpoint changes retain one active unit.
 - [x] Long/empty TOCs, full-width docs, API reference, blog, Workshop details, and 404 pages have a placement.
 - [x] Blocking Carbon and no-fill responses leave navigation/content usable; no periodic refresh timer is used.
@@ -60,6 +61,10 @@ Use the same candidate image digest throughout staging and promotion.
 - [ ] Deploy that digest and repeat health, docs/search, Workshop, Carbon, and PostHog public-hostname checks.
 
 ## Evidence
+
+Carbon placement revised on 2026-09-24: focused docs typecheck, formatting, and production build passed. Browser
+checks confirmed no homepage ad/request at 1440px and 390px, placement after the desktop TOC and below installation
+content, and one fresh script on client navigation. This supersedes the earlier above-the-fold placement requirement.
 
 Dependency refresh on 2026-09-24 incorporates `release/v2` through `a974c9642`, including Next 16.3.3,
 Mermaid ^11.16.1 (resolved to 11.17.2), and the security overrides. The regenerated lockfile retains the Fumadocs

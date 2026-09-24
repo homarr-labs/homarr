@@ -292,11 +292,11 @@ footer a {
   color: var(--color-fd-primary);
 }
 
-/* Keep the complete Carbon creative visible before the TOC and on narrow pages. */
+/* Place Carbon after the TOC, or below the page content when no TOC is visible. */
 .homarr-carbon {
   width: 100%;
   max-width: 300px;
-  margin: 0 auto 1.5rem;
+  margin: 1.5rem auto 0;
   flex-shrink: 0;
   font-size: 13px;
   line-height: 1.5;
@@ -318,11 +318,6 @@ footer a {
     display: block;
   }
   .homarr-carbon-inline {
-    display: none;
-  }
-}
-@media (max-width: 767px) {
-  .homarr-carbon[data-homepage="true"] {
     display: none;
   }
 }

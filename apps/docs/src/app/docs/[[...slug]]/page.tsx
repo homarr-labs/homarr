@@ -47,16 +47,15 @@ export default async function Page({ params }: PageProps) {
     : undefined;
 
   let carbonPlacement: "banner" | "inline" = "inline";
-  if (page.data.full) carbonPlacement = "banner";
+  if (page.data.full || toc.length === 0) carbonPlacement = "banner";
 
   return (
     <DocsPage
       toc={toc}
       full={page.data.full}
-      tableOfContent={{ header: <Carbon placement="toc" /> }}
+      tableOfContent={{ enabled: !page.data.full && toc.length > 0, footer: <Carbon placement="toc" /> }}
       footer={footerItems ? { items: footerItems } : undefined}
     >
-      <Carbon placement={carbonPlacement} />
       {!page.data.hide_title && (
         <>
           <DocsTitle id={bodyTitleId} className="homarr-docs-title">
@@ -89,6 +88,7 @@ export default async function Page({ params }: PageProps) {
           })}
         />
       </DocsBody>
+      <Carbon placement={carbonPlacement} />
       <div className="mt-8 border-t pt-6">
         <EditOnGitHub href={`https://github.com/homarr-labs/homarr/edit/release/v2/${sourcePath}`}>
           Edit this page

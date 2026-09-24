@@ -37,12 +37,12 @@ export default async function LegacyCategoryPage(props: PageProps) {
 
   return (
     <DocsPage tableOfContent={{ enabled: false }}>
-      <Carbon />
       <DocsTitle>{page.data.title}</DocsTitle>
       <DocsBody>
         <p>This documentation has moved to a new address.</p>
         <StaticRedirect href={`${page.url}/`} label="Continue to the documentation" />
       </DocsBody>
+      <Carbon />
     </DocsPage>
   );
 }

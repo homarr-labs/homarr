@@ -7,8 +7,8 @@ import { baseOptions } from "@/lib/layout.shared";
 export default function NotFoundPage() {
   return (
     <HomeLayout {...baseOptions()}>
-      <Carbon />
       <WorkshopNotFoundRouter configuredWorkshopUrl={process.env.WORKSHOP_API_URL ?? process.env.WORKSHOP_URL ?? ""} />
+      <Carbon />
     </HomeLayout>
   );
 }

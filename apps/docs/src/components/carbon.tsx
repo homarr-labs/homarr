@@ -12,17 +12,15 @@ export function Carbon({ placement = "banner" }: { placement?: Placement }) {
 
   useEffect(() => {
     const host = ref.current;
-    if (!host || process.env.NODE_ENV !== "production") return;
+    if (!host || pathname === "/" || process.env.NODE_ENV !== "production") return;
     const desktop = window.matchMedia("(min-width: 1280px)");
-    const mobile = window.matchMedia("(max-width: 767px)");
 
     function update() {
       if (!host) return;
       const visible =
-        !(pathname === "/" && mobile.matches) &&
-        (placement === "banner" ||
-          (placement === "toc" && desktop.matches) ||
-          (placement === "inline" && !desktop.matches));
+        placement === "banner" ||
+        (placement === "toc" && desktop.matches) ||
+        (placement === "inline" && !desktop.matches);
       if (!visible) {
         host.replaceChildren();
         return;
@@ -37,19 +35,18 @@ export function Carbon({ placement = "banner" }: { placement?: Placement }) {
 
     update();
     desktop.addEventListener("change", update);
-    mobile.addEventListener("change", update);
     return () => {
       desktop.removeEventListener("change", update);
-      mobile.removeEventListener("change", update);
       host.replaceChildren();
     };
   }, [pathname, placement]);
+
+  if (pathname === "/") return null;
 
   return (
     <aside
       aria-label="Advertisement"
       className={`homarr-carbon homarr-carbon-${placement}`}
-      data-homepage={pathname === "/"}
       data-visual-test="blackout"
     >
       <div ref={ref} />

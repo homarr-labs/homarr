@@ -9,8 +9,8 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <HomeLayout {...baseOptions()}>
       <div className="flex min-h-[calc(100dvh-var(--fd-nav-height))] flex-col">
-        <Carbon />
         <div className="flex-1">{children}</div>
+        <Carbon />
         <SiteFooter />
       </div>
     </HomeLayout>
