@@ -8,20 +8,22 @@ import { InlineConfirmMenuItem } from "@homarr/ui";
 
 import type { ContainerSectionItem } from "~/app/[locale]/boards/_types";
 import { useOpenItemMoveModal } from "../../items/item-move-modal";
-import { useSectionContext } from "../section-context";
 import { useContainerActions } from "./container-actions";
 import { ContainerEditModal } from "./container-edit-modal";
 
-export const BoardContainerMenu = ({ section }: { section: ContainerSectionItem }) => {
+interface ContainerMenuProps {
+  section: ContainerSectionItem;
+  position: { left?: number | string; right?: number; top: number | string };
+}
+
+export const BoardContainerMenu = ({ section, position }: ContainerMenuProps) => {
   const tContainer = useI18n("section.container");
   const tItem = useI18n("item");
   const { openModal } = useModalAction(ContainerEditModal);
   const openMoveModal = useOpenItemMoveModal();
   const { updateContainer, removeContainer } = useContainerActions();
   const [isEditMode] = useEditMode();
-  const { section: parentSection } = useSectionContext();
   const label = section.options.title || tContainer("action.create");
-  const menuLeftOffset = parentSection.kind === "container" ? 36 : 4;
 
   if (!isEditMode) return null;
 
@@ -40,8 +42,7 @@ export const BoardContainerMenu = ({ section }: { section: ContainerSectionItem 
           size={24}
           radius="sm"
           pos="absolute"
-          top={4}
-          left={menuLeftOffset}
+          {...position}
           style={{ zIndex: 10 }}
           aria-label={tItem("menu.label.settingsFor", { name: label })}
         >

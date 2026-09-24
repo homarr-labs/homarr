@@ -179,11 +179,30 @@ const getGithubReleaseAsync = async (
 
   const api = getGithubApi(baseUrl, "Homarr-Lab/Homarr:GithubReleaseProvider", token);
   try {
-    const allReleases = await api.paginate(api.rest.repos.listReleases, {
-      owner: parsed.owner,
-      repo: parsed.name,
-      per_page: 100,
-    });
+    const allReleases: Awaited<ReturnType<typeof api.rest.repos.listReleases>>["data"] = [];
+    try {
+      for await (const page of api.paginate.iterator(api.rest.repos.listReleases, {
+        owner: parsed.owner,
+        repo: parsed.name,
+        per_page: 100,
+      })) {
+        allReleases.push(...page.data);
+      }
+    } catch (error) {
+      // GitHub can reject a later page even though earlier pages contain the latest release.
+      if (
+        !(error instanceof OctokitRequestError) ||
+        error.status !== 422 ||
+        !error.message.includes("Only the first 1000 results are available") ||
+        allReleases.length === 0
+      ) {
+        throw error;
+      }
+      logger.warn("GitHub release history capped; using the returned releases", {
+        identifier,
+        count: allReleases.length,
+      });
+    }
     if (allReleases.length === 0) {
       return { success: false, error: { code: "noReleasesFound", message: `${identifier} has no GitHub releases` } };
     }
