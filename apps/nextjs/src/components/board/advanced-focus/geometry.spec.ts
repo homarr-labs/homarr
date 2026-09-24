@@ -7,8 +7,6 @@ describe("getAdvancedFocusRect", () => {
     const rect = getAdvancedFocusRect({ left: 450, top: 300, width: 300, height: 200 }, { width: 1200, height: 800 });
 
     expect(rect).toEqual({ left: 200, top: 120, width: 800, height: 560 });
-    expect(rect.left + rect.width / 2).toBe(600);
-    expect(rect.top + rect.height / 2).toBe(400);
   });
 
   it("uses the available viewport on small screens", () => {

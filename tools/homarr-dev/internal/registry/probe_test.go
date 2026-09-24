@@ -16,7 +16,7 @@ func TestPublishedTagsIntegration(t *testing.T) {
 	start := time.Now()
 	tags, err := PublishedTags(ctx, true)
 	if err != nil {
-		t.Skipf("GHCR unreachable: %v", err)
+		t.Fatalf("failed to fetch GHCR tags: %v", err)
 	}
 	t.Logf("fetched %d tags in %s", len(tags), time.Since(start))
 	if len(tags) == 0 {

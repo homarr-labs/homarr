@@ -98,7 +98,10 @@ When documentation is needed, use these locations:
 - Run `pnpm dev:cli -- dev` to browse local `homarr:*` images and remote PR images.
 - Run `pnpm dev:cli -- build <name>` from a Homarr checkout to build `homarr:<name>` with rebuild provenance.
 - Run `pnpm dev:cli -- build --pr <number>` to build a PR locally from a temporary checkout.
-- Run Go checks from `tools/homarr-dev` with `go test ./...` and `go vet ./...`.
+
+## Testing
+
+Add tests only when requested. Favor assertions that would fail for a plausible regression in user-visible behavior or a security boundary; avoid checks that repeat implementation details or duplicate stronger coverage. For focused changes, run only the relevant existing or newly requested checks when validation is needed. Do not run broad test, Docker, or E2E suites by default.
 
 ## MCP servers
 
