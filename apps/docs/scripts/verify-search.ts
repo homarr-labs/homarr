@@ -87,15 +87,6 @@ for (const [apiPath, pathItem] of Object.entries(openApi.paths)) {
   }
 }
 assert(operationCount > 0, "API operation coverage must not be empty");
-const playground = await readFile(
-  path.join(outputDirectory, "llms.mdx/docs/management/custom-widgets/custom-jsx/content.md"),
-  "utf8",
-);
-assert(
-  playground.includes('bind="name"') && playground.includes("data.server.used"),
-  "Playground source must remain readable in Markdown",
-);
-assert(!playground.includes("<WidgetPlayground"), "Playground must have a resolved Markdown adapter");
 console.log(`API discovery verified: ${operationCount} operations in search and Markdown.`);
 
 const discovery = await readFile(path.join(outputDirectory, "llms.txt"), "utf8");

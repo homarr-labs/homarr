@@ -85,7 +85,6 @@ To smoke-test an already built candidate without rebuilding:
 WORKSHOP_IMAGE_TEST_IMAGE=homarr-workshop:candidate pnpm test:workshop-image
 ```
 
-See the [release checklist](../docs/RELEASE-CHECKLIST.md) for verification evidence and remaining promotion gates.
 
 ## Data safety
 
