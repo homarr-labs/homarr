@@ -4,6 +4,18 @@ import { describe, expect, test } from "vitest";
 import { getCustomWidgetConfigurationStatusRecovery, getSafeAssistantToolError } from "./assistant-tool-error";
 
 describe("getSafeAssistantToolError", () => {
+  test("explains integration connection failures without leaking upstream details or inviting write retries", () => {
+    const message = getSafeAssistantToolError(
+      new TRPCError({ code: "BAD_GATEWAY", message: "https://private.test/path token=secret" }),
+      { toolName: "integration_request" },
+    );
+    expect(message).toContain("service reachability");
+    expect(message).toContain("does not establish that the API path is wrong");
+    expect(message).toContain("check state before retrying");
+    expect(message).not.toContain("private.test");
+    expect(message).not.toContain("secret");
+  });
+
   test("preserves an expired source-configuration request ID and directs a secure restart", () => {
     expect(
       getCustomWidgetConfigurationStatusRecovery(

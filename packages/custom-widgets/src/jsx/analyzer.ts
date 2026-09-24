@@ -80,7 +80,10 @@ function invalidRequestStatusField(node: AstNode) {
   return `INVALID_STATUS_FIELD: status.${requestId}.${field} is not available. Use status.${requestId}?.loading or status.${requestId}?.ok === false`;
 }
 
-export function validateCustomJsxTemplate(template: string): CustomJsxTemplateDiagnostic[] {
+export function validateCustomJsxTemplate(
+  template: string,
+  requestParameters?: ReadonlyMap<string, ReadonlySet<string>>,
+): CustomJsxTemplateDiagnostic[] {
   const diagnostics: CustomJsxTemplateDiagnostic[] = [];
   let operations = 0;
 
@@ -160,7 +163,7 @@ export function validateCustomJsxTemplate(template: string): CustomJsxTemplateDi
         nodesOf(node.children).forEach((child) => visit(child, depth + 1, bindings));
         return;
       case "JSXElement": {
-        analyzeCustomJsxElement(node, depth, bindings, { add, visit, visitArrow });
+        analyzeCustomJsxElement(node, depth, bindings, { add, visit, visitArrow, requestParameters });
         return;
       }
       case "JSXText":

@@ -59,7 +59,18 @@ export const creationProcedures = {
           "Requires administrator permission. Persist an exact tested new-widget preview from customWidget_previewCreate or customWidget_previewReviseTemplate. Edit previews must use customWidget_updateFromPreview. Every query and action in the final preview revision must have current evidence.",
       },
     })
-    .input(z.object({ previewSessionId: z.string().min(1), targetBoardId: z.string().min(1).optional() }))
+    .input(
+      z.object({
+        previewSessionId: z.string().min(1),
+        targetBoardId: z
+          .string()
+          .min(1)
+          .nullish()
+          .describe(
+            "An existing board ID only when placement was requested. Omit or send null to save unplaced; never send labels or placeholders such as unplaced or none.",
+          ),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       const session = await getPreviewSession(input.previewSessionId, ctx.session.user.id);
       if (session.definitionId) {
@@ -80,7 +91,7 @@ export const creationProcedures = {
         name: definition.name,
         previewSessionId: session.id,
       });
-      return getCreatedCustomWidgetResult(id, input.targetBoardId);
+      return getCreatedCustomWidgetResult(id, input.targetBoardId ?? undefined);
     }),
 
   updateFromPreview: permissionRequiredProcedure

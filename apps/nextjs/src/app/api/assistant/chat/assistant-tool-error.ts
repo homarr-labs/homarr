@@ -101,6 +101,9 @@ export const getSafeAssistantToolError = (error: unknown, options?: { toolName?:
       }
       return "The tool input was not valid.";
     case "BAD_GATEWAY":
+      if (options?.toolName === "integration_request") {
+        return "The saved integration could not complete the HTTP request. Check service reachability and connection settings; this does not establish that the API path is wrong. A write may have completed before the connection failed: check state before retrying it.";
+      }
       if (isCustomWidgetTool) {
         const details = getCustomWidgetValidationDetails(chain);
         return details

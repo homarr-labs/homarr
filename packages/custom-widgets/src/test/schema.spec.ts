@@ -4,6 +4,7 @@ import {
   CUSTOM_WIDGET_STARTER,
   customWidgetAuthoringDefinitionSchema,
   customWidgetDefinitionSchema,
+  customWidgetPreviewDefinitionSchema,
   customWidgetUpdateSchema,
   customJsxRequestSchema,
   getCustomWidgetDefaultOptions,
@@ -15,6 +16,68 @@ import {
 } from "../core";
 
 describe("lean Custom Widget schema", () => {
+  it("rejects manual JSX parameters that differ from the tested request contract", () => {
+    const definition = {
+      ...CUSTOM_WIDGET_STARTER,
+      requests: {
+        search: { path: "/search.json", trigger: "manual", query: { title: { $param: "title" }, limit: 8 } },
+      },
+    };
+    for (const params of [
+      "params={{ title: inputs.title, limit: 8 }}",
+      "params={{ title: inputs.title, ...{ stale: 1 } }}",
+      "params={{ title: inputs.title, stale: 1, ...inputs.extra }}",
+      "params={{}}",
+      "",
+    ]) {
+      const candidate = {
+        ...definition,
+        template: `<SubFetch requestId="search" ${params}>{(result) => <Text>{result.title}</Text>}</SubFetch>`,
+      };
+      // Stored definitions remain readable so the assistant can repair them.
+      expect(customWidgetDefinitionSchema.safeParse(candidate).success).toBe(true);
+      expect(() =>
+        normalizeCustomWidgetAuthoringDefinition(customWidgetAuthoringDefinitionSchema.parse(candidate)),
+      ).toThrow("REQUEST_PARAMS_MISMATCH");
+      const result = customWidgetPreviewDefinitionSchema.safeParse(candidate);
+      expect(result.success).toBe(false);
+      if (!result.success)
+        expect(result.error.issues.some((issue) => issue.message.includes("REQUEST_PARAMS_MISMATCH"))).toBe(true);
+    }
+    expect(
+      customWidgetDefinitionSchema.safeParse({
+        ...definition,
+        template:
+          '<SubFetch requestId="search" params={{ title: inputs.title }}>{(result) => <Text>{result.title}</Text>}</SubFetch>',
+      }).success,
+    ).toBe(true);
+  });
+
+  it("checks both static ToggleSwitch parameter objects against the action", () => {
+    const definition = {
+      ...CUSTOM_WIDGET_STARTER,
+      requests: {
+        toggle: { kind: "action", method: "POST", path: "/toggle", body: { enabled: { $param: "enabled" } } },
+      },
+    };
+    for (const template of [
+      '<ToggleSwitch requestId="toggle" enabledParams={{ wrong: true }} disabledParams={{ enabled: false }} />',
+      '<ToggleSwitch requestId="toggle" enabledParams={{ enabled: true }} disabledParams={{ wrong: false }} />',
+    ]) {
+      const result = customWidgetPreviewDefinitionSchema.safeParse({ ...definition, template });
+      expect(result.success).toBe(false);
+      if (!result.success)
+        expect(result.error.issues.some((issue) => issue.message.includes("REQUEST_PARAMS_MISMATCH"))).toBe(true);
+    }
+    expect(
+      customWidgetPreviewDefinitionSchema.safeParse({
+        ...definition,
+        template:
+          '<ToggleSwitch requestId="toggle" enabledParams={{ enabled: true }} disabledParams={{ enabled: false }} />',
+      }).success,
+    ).toBe(true);
+  });
+
   it("applies request defaults", () => {
     expect(customJsxRequestSchema.parse({ path: "/status" })).toMatchObject({
       source: "default",

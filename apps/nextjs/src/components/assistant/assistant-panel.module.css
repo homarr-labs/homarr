@@ -1,6 +1,6 @@
 .activityBar {
   position: fixed;
-  z-index: 290;
+  z-index: calc(var(--mantine-z-index-modal) - 1);
   inset-inline-start: 50%;
   bottom: max(1rem, env(safe-area-inset-bottom, 0px));
   display: flex;
@@ -97,7 +97,7 @@
   container-name: assistant-widget;
   container-type: size;
   position: fixed;
-  z-index: 290;
+  z-index: calc(var(--mantine-z-index-modal) - 1);
   inset-block: 1rem;
   inset-inline-end: 1rem;
   inset-inline-start: auto;

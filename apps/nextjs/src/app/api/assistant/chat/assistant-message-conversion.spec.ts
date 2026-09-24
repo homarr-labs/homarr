@@ -48,6 +48,44 @@ describe("getAssistantStepContextMaxCharacters", () => {
 });
 
 describe("convertAssistantMessagesToModelMessages", () => {
+  test("preserves provider search references across approval continuation without replaying metadata", async () => {
+    const messages: UIMessage[] = [
+      {
+        id: "researched",
+        role: "assistant",
+        metadata: { generationAccessToken: "DO-NOT-REPLAY" },
+        parts: [
+          { type: "text", text: "The documented endpoint is GET /today." },
+          { type: "source-url", sourceId: "source-1", url: "https://example.com/api", title: "API docs" },
+          { type: "source-url", sourceId: "source-2", url: "https://example.com/api" },
+          { type: "source-url", sourceId: "unsafe", url: "https://secret:password@example.com/api" },
+        ],
+      },
+    ];
+    const serialized = JSON.stringify(await convertAssistantMessagesToModelMessages(messages));
+    expect(serialized).toContain("https://example.com/api");
+    expect(serialized.match(/https:\/\/example.com\/api/g)).toHaveLength(1);
+    expect(serialized).not.toContain("DO-NOT-REPLAY");
+    expect(serialized).not.toContain("secret:password");
+    expect(serialized).toContain("not page contents");
+  });
+
+  test("bounds replayed references and never turns user sources into provider search evidence", async () => {
+    const sources = Array.from({ length: 20 }, (_, index) => ({
+      type: "source-url" as const,
+      sourceId: `source-${index}`,
+      url: `https://example.com/${index}`,
+    }));
+    const result = await convertAssistantMessagesToModelMessages([
+      { id: "user", role: "user", parts: [{ type: "text", text: "Continue" }, ...sources] },
+      { id: "assistant", role: "assistant", parts: sources },
+    ]);
+    expect(JSON.stringify(result[0])).not.toContain("provider web-search");
+    const serialized = JSON.stringify(result);
+    expect(serialized.match(/Earlier provider web-search/g)).toHaveLength(12);
+    expect(serialized).not.toContain("https://example.com/12");
+  });
+
   test("drops an interrupted tool call while preserving completed tool results", async () => {
     const messages: UIMessage[] = [
       {

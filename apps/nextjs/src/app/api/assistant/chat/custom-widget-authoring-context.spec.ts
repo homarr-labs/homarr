@@ -5,12 +5,14 @@ import {
   createCustomWidgetDiscoveryPhaseController,
   getCustomWidgetFollowUpEditContext,
   getCustomWidgetPhaseToolNames,
+  getCustomWidgetPreviewOutageStatus,
   getCustomWidgetToolStepsFromResponseMessages,
   getCustomWidgetToolStepsFromUiMessages,
   getRequestedCustomWidgetExampleId,
   getRequestedCustomWidgetExampleIds,
   getRequestedCustomWidgetServiceTarget,
   hasCustomWidgetLegacyMigrationContext,
+  hasExplicitCustomWidgetComponentDiscoveryRequest,
   hasMultiCustomWidgetCreationRequest,
   isFreshCustomWidgetCreationRequest,
   needsCustomWidgetAuthoringContext,
@@ -21,6 +23,34 @@ const userMessage = (text: string): UIMessage => ({
   id: crypto.randomUUID(),
   role: "user",
   parts: [{ type: "text", text }],
+});
+
+describe("preview upstream outages", () => {
+  test.each([500, 502, 503, 504])("stops authoring after HTTP %s without treating it as verified", (status) => {
+    expect(
+      getCustomWidgetPreviewOutageStatus([
+        { toolResults: [{ toolName: "customWidget_previewQuery", output: { ok: false, status } }] },
+      ]),
+    ).toBe(status);
+  });
+
+  test.each([200, 400, 401, 403, 404, 429])("leaves HTTP %s to existing evidence or repair handling", (status) => {
+    expect(
+      getCustomWidgetPreviewOutageStatus([
+        { toolResults: [{ toolName: "customWidget_previewQuery", output: { ok: false, status } }] },
+      ]),
+    ).toBeUndefined();
+  });
+
+  test("does not carry an old outage into a successful user-requested retry", () => {
+    expect(
+      getCustomWidgetPreviewOutageStatus([
+        { toolResults: [{ toolName: "customWidget_previewQuery", output: { ok: false, status: 503 } }] },
+        { toolResults: [{ toolName: "customWidget_previewQuery", output: { ok: true, status: 200 } }] },
+      ]),
+    ).toBeUndefined();
+    expect(getCustomWidgetPreviewOutageStatus([])).toBeUndefined();
+  });
 });
 
 const isAuthoringToolRequiredAfter = (
@@ -174,6 +204,129 @@ const persistedAndPlacedWidgetMessages = (latestUserText: string): UIMessage[] =
 ];
 
 describe("Custom Widget authoring context", () => {
+  test.each(["workshopSearch", "workshopGet", "workshopInstall"])(
+    "does not switch Workshop %s approval continuations into widget authoring",
+    (operation) => {
+      expect(
+        needsCustomWidgetAuthoringContext([
+          userMessage("Install the exact qa-clock-card item on QA Single Board."),
+          {
+            id: "workshop-result",
+            role: "assistant",
+            parts: [
+              {
+                type: "dynamic-tool",
+                toolName: `customWidget_${operation}`,
+                toolCallId: "workshop",
+                state: "output-available",
+                input: {},
+                output: { status: "installed", definitionId: "saved-widget" },
+              },
+            ],
+          },
+        ]),
+      ).toBe(false);
+    },
+  );
+
+  test.each([
+    "customWidget_getSkill",
+    "customWidget_list",
+    "customWidget_schema",
+    "customWidget_getComponentCatalog",
+    "customWidget_findComponents",
+    "customWidget_getReference",
+    "customWidget_getComponent",
+    "customWidget_getComponents",
+    "customWidget_getSharedProps",
+    "customWidget_getExample",
+  ])("does not resume Workshop placement as authoring after passive %s discovery", (toolName) => {
+    const messages: UIMessage[] = [
+      userMessage("Install the exact qa-clock-card@1 item from benchmark-fixtures."),
+      {
+        id: "assistant-workshop-install-and-discovery",
+        role: "assistant",
+        parts: [
+          {
+            type: "dynamic-tool",
+            toolName: "customWidget_workshopSearch",
+            toolCallId: "workshop-search",
+            state: "output-available",
+            input: {},
+            output: { items: [{ id: "qa-clock-card", revision: 1 }] },
+          },
+          {
+            type: "dynamic-tool",
+            toolName: "customWidget_workshopGet",
+            toolCallId: "workshop-get",
+            state: "output-available",
+            input: {},
+            output: { id: "qa-clock-card", revision: 1 },
+          },
+          {
+            type: "dynamic-tool",
+            toolName: "customWidget_workshopInstall",
+            toolCallId: "workshop-install",
+            state: "output-available",
+            input: {},
+            output: { status: "installed", definitionId: "saved-widget" },
+          },
+          { type: "dynamic-tool", toolName, toolCallId: "discovery", state: "output-available", input: {}, output: {} },
+        ],
+      },
+      userMessage("Place the already-installed qa-clock-card on QA Single Board."),
+    ];
+
+    expect(needsCustomWidgetAuthoringContext(messages)).toBe(false);
+    expect(getCustomWidgetToolStepsFromUiMessages(messages)).toEqual([]);
+  });
+
+  test.each([
+    ["Create a custom widget for Synthetic API", "customWidget_getSkill"],
+    ["Update the existing custom widget with ID widget-123", "customWidget_findComponents"],
+  ])("keeps a genuine %s request active after %s discovery", (request, toolName) => {
+    const messages: UIMessage[] = [
+      userMessage(request),
+      {
+        id: "assistant-discovery",
+        role: "assistant",
+        parts: [
+          { type: "dynamic-tool", toolName, toolCallId: "discovery", state: "output-available", input: {}, output: {} },
+        ],
+      },
+    ];
+
+    expect(needsCustomWidgetAuthoringContext(messages)).toBe(true);
+  });
+
+  test.each(["customWidget_getSkill", "customWidget_findComponents"])(
+    "resumes an explicit authoring task after %s discovery",
+    (toolName) => {
+      const messages: UIMessage[] = [
+        userMessage("Create a custom widget for Synthetic API"),
+        {
+          id: "assistant-discovery",
+          role: "assistant",
+          parts: [
+            {
+              type: "dynamic-tool",
+              toolName,
+              toolCallId: "discovery",
+              state: "output-available",
+              input: {},
+              output: {},
+            },
+          ],
+        },
+        userMessage("Continue"),
+      ];
+
+      expect(needsCustomWidgetAuthoringContext(messages)).toBe(true);
+      expect(getCustomWidgetToolStepsFromUiMessages(messages)).toEqual([
+        { toolResults: [{ toolCallId: "discovery", toolName, output: {} }] },
+      ]);
+    },
+  );
   test("refunds a focused discovery claim when the tool call fails", () => {
     const controller = createCustomWidgetDiscoveryPhaseController();
 
@@ -204,12 +357,28 @@ describe("Custom Widget authoring context", () => {
     expect(needsCustomWidgetAuthoringContext([userMessage(text)])).toBe(true);
   });
 
+  test("keeps authoring context for an explicit existing-widget update that forbids duplication and placement", () => {
+    const text =
+      "Update the existing custom widget with ID widget-existing-123 (QA Berlin Rain Window Bundled). Make the three days denser so all three can fit a compact tile without losing high/low temperatures or rain probabilities. Keep the exact same source, request path, query, refresh behavior and name. Do not create a copy and do not place it on any board. Complete the actual update.";
+
+    expect(needsCustomWidgetAuthoringContext([userMessage(text)])).toBe(true);
+    expect(getRequestedCustomWidgetServiceTarget([userMessage(text)])).toBeNull();
+  });
+
   test.each([
     ["Make me a Mealie widget", "mealie"],
     ["Create a Frigate live alerts widget", "frigate live alerts"],
     ["Create a widget for Tube Archivist", "tube archivist"],
     ["Create and install a Custom Widget for Mealie daily meals", "mealie daily meals"],
     ["Create a custom widget", null],
+    ["Create and save a custom widget named QA Service Checklist Baseline. No API calls.", null],
+    ["Create and install a custom widget named Checklist", null],
+    ["Create and save a Mealie widget", "mealie"],
+    ["Create a today's meal-plan widget using my saved integration named Benchmark Mealie.", "benchmark mealie"],
+    ["Create a meal-plan widget using my Mealie integration.", "mealie"],
+    ["Create a small Open Library search widget with a Search button.", "open library"],
+    ["Create an Open Library widget with a refresh control.", "open library"],
+    ["Create and save a custom widget for Sonarr", "sonarr"],
     ["Create a custom widget for these fixtures", null],
     ["Create a clock widget", null],
     ["Repair this custom widget", null],
@@ -218,6 +387,28 @@ describe("Custom Widget authoring context", () => {
   });
 
   test.each([
+    "Where can I manage integrations and create a custom widget? Give me clickable links. Do not change anything.",
+    "How do I create a custom widget?",
+    "Show me where to create a Mealie widget",
+    "Explain how to create a custom widget",
+  ])("does not force authoring tools for navigation or guidance: %s", (text) => {
+    expect(needsCustomWidgetAuthoringContext([userMessage(text)])).toBe(false);
+    expect(getRequestedCustomWidgetServiceTarget([userMessage(text)])).toBeNull();
+  });
+
+  test.each([
+    ["Search is pressed again. Use proper Mantine components.", false],
+    ["Include a Search button and proper components", false],
+    ["Find supported components for this widget", true],
+    ["Search for Mantine components", true],
+    ["Inspect component documentation", true],
+  ])("only stages component discovery when explicitly requested: %s", (text, expected) => {
+    expect(hasExplicitCustomWidgetComponentDiscoveryRequest([userMessage(String(text))])).toBe(expected);
+  });
+
+  test.each([
+    ["Create QA Weather Default from the bundled Weather Outlook example", "weather-outlook"],
+    ["Create a widget from the bundled ntfy Inbox example", "ntfy-inbox"],
     ["Make me a Mealie widget", "mealie-today"],
     ["Create a Dispatcharr channels widget", "dispatcharr-channels"],
     ["Create a Karakeep bookmarks widget", "karakeep-bookmarks"],
@@ -814,7 +1005,7 @@ describe("Custom Widget authoring context", () => {
       getCustomWidgetPhaseToolNames(tools, [
         { toolResults: [{ toolName: "customWidget_createFromPreview", output: { id: "widget-1" } }] },
       ]),
-    ).toEqual(["customWidget_findComponents", "customWidget_getComponents", "customWidget_previewCreate"]);
+    ).toEqual(["customWidget_findComponents", "customWidget_previewCreate"]);
     expect(
       getCustomWidgetPhaseToolNames(
         tools,
@@ -1227,7 +1418,6 @@ describe("Custom Widget authoring context", () => {
         },
       ]),
     ).toEqual([
-      "customWidget_getReference",
       "customWidget_findComponents",
       "customWidget_getComponent",
       "customWidget_previewCreate",
@@ -1267,7 +1457,6 @@ describe("Custom Widget authoring context", () => {
         "customWidget_previewCreate",
         { error: "Definition is invalid: sources.default.auth: Invalid input" },
         [
-          "customWidget_getReference",
           "customWidget_findComponents",
           "customWidget_getComponent",
           "customWidget_getComponents",
@@ -1484,9 +1673,7 @@ describe("Custom Widget authoring context", () => {
     ).toEqual([
       "customWidget_list",
       "customWidget_get",
-      "customWidget_getReference",
       "customWidget_findComponents",
-      "customWidget_getComponents",
       "customWidget_getExample",
       "customWidget_workshopSearch",
       "customWidget_workshopGet",
@@ -1527,15 +1714,12 @@ describe("Custom Widget authoring context", () => {
     ];
 
     expect(getCustomWidgetPhaseToolNames(tools, skillLoaded)).toEqual([
-      "customWidget_getReference",
       "customWidget_findComponents",
-      "customWidget_getComponents",
       "customWidget_getExample",
       "customWidget_workshopSearch",
       "customWidget_workshopGet",
     ]);
     expect(getCustomWidgetPhaseToolNames(tools, failedWorkshopGet)).toEqual([
-      "customWidget_getReference",
       "customWidget_findComponents",
       "customWidget_getComponents",
       "customWidget_getExample",
@@ -1543,7 +1727,6 @@ describe("Custom Widget authoring context", () => {
       "customWidget_workshopGet",
     ]);
     expect(getCustomWidgetPhaseToolNames(tools, successfulWorkshopGet)).toEqual([
-      "customWidget_getReference",
       "customWidget_findComponents",
       "customWidget_getComponents",
       "customWidget_getExample",
@@ -1572,9 +1755,7 @@ describe("Custom Widget authoring context", () => {
         },
       ]),
     ).toEqual([
-      "customWidget_getReference",
       "customWidget_findComponents",
-      "customWidget_getComponents",
       "customWidget_getExample",
       "customWidget_workshopSearch",
       "customWidget_workshopGet",
@@ -1717,7 +1898,6 @@ describe("Custom Widget authoring context", () => {
     }));
 
     expect(getCustomWidgetPhaseToolNames(tools, steps)).toEqual([
-      "customWidget_getReference",
       "customWidget_getComponents",
       "customWidget_getComponent",
       "customWidget_getSharedProps",
@@ -1749,7 +1929,7 @@ describe("Custom Widget authoring context", () => {
     ).toEqual(["customWidget_previewCreate"]);
   });
 
-  test("removes repeated reference retrieval while keeping remaining context and validation available", () => {
+  test("keeps a fresh authoring phase on focused context and direct preview tools", () => {
     const tools = [
       "customWidget_getSkill",
       "customWidget_getReference",
@@ -1775,13 +1955,7 @@ describe("Custom Widget authoring context", () => {
       },
     ]);
 
-    expect(activeNames).toEqual(
-      expect.arrayContaining([
-        "customWidget_findComponents",
-        "customWidget_getComponents",
-        "customWidget_previewCreate",
-      ]),
-    );
+    expect(activeNames).toEqual(["customWidget_findComponents", "customWidget_previewCreate"]);
     expect(activeNames).not.toContain("customWidget_getReference");
     expect(activeNames).not.toContain("customWidget_validateTemplate");
   });

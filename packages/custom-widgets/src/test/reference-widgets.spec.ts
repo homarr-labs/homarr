@@ -24,7 +24,7 @@ describe("reference widget capabilities", () => {
   ] as const;
 
   it("validates every bundled widget through the production definition schema", () => {
-    expect(BUNDLED_CUSTOM_WIDGETS).toHaveLength(13);
+    expect(BUNDLED_CUSTOM_WIDGETS).toHaveLength(15);
     for (const { widget } of BUNDLED_CUSTOM_WIDGETS) {
       expect(() => customWidgetDefinitionSchema.parse(widget)).not.toThrow();
     }

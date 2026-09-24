@@ -94,6 +94,45 @@ describe("shared Custom JSX policy", () => {
     expect(validateCustomJsxTemplate('<ThemeIcon><Icon name="brand-docker" /></ThemeIcon>')).toEqual([]);
   });
 
+  test.each(["IconCloudUpload", "cloud-rain", "not-a-real-icon"])(
+    "rejects invisible unsupported icon names: %s",
+    (name) => {
+      expect(validateCustomJsxTemplate(`<Icon name="${name}" />`)).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            severity: "error",
+            message: expect.stringContaining("registered kebab-case icon name"),
+          }),
+        ]),
+      );
+    },
+  );
+
+  test.each(["Anchor", "Button", "TextInput"])("rejects %s inside a manual SubFetch trigger", (component) => {
+    const template = `<SubFetch requestId="search" trigger="manual" triggerContent={<Card><${component} /></Card>} />`;
+    expect(validateCustomJsxTemplate(template)).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          severity: "error",
+          message: expect.stringContaining("SubFetch triggerContent cannot contain interactive descendants"),
+        }),
+      ]),
+    );
+  });
+
+  test("allows non-interactive and automatic SubFetch content", () => {
+    expect(
+      validateCustomJsxTemplate(
+        '<SubFetch requestId="search" trigger="manual" triggerContent={<Card><Text>Search</Text></Card>} />',
+      ).filter(({ message }) => message.includes("SubFetch triggerContent cannot contain interactive descendants")),
+    ).toEqual([]);
+    expect(
+      validateCustomJsxTemplate(
+        '<SubFetch requestId="search" trigger="auto" triggerContent={<Button>Search</Button>} />',
+      ).filter(({ message }) => message.includes("SubFetch triggerContent cannot contain interactive descendants")),
+    ).toEqual([]);
+  });
+
   test("rejects TablerIcon without its required name prop", () => {
     expect(validateCustomJsxTemplate('<TablerIcon icon="IconHeartbeat" />')).toEqual(
       expect.arrayContaining([

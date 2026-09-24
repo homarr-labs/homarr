@@ -56,6 +56,49 @@ const discoverMealie = (options: { supportsHttpRequests?: boolean; hasFullAccess
 };
 
 describe("Assistant integration research", () => {
+  test("records a documented public host without pretending it was user-supplied or a placeholder", () => {
+    const controller = createAssistantIntegrationResearchController("Open Library");
+    controller.observe("homarr_enableToolGroups", { enabledGroups: ["integration"] });
+    controller.observe("integration_getKinds", []);
+    controller.observe("integration_all", []);
+    const contract = assistantIntegrationResearchSchema.parse({
+      ...readyResearch,
+      service: "Open Library",
+      connection: { type: "directHttp", integrationKindAvailable: false, baseUrlSource: "documentedPublicApi" },
+      authentication: "Public API; no authentication",
+      officialSources: [{ url: "https://openlibrary.org/dev/docs/api/search", title: "Official Search API" }],
+      endpoints: [
+        {
+          purpose: "Search titles",
+          method: "GET",
+          path: "/search.json",
+          query: ["title"],
+          responseShape: "Object with docs array",
+        },
+      ],
+    });
+    expect(controller.validate(contract)).toBeNull();
+    controller.record(contract);
+    expect(controller.getStage()).toBe("ready");
+  });
+
+  test("does not confuse a generic uptime API with Uptime Kuma", () => {
+    const controller = createAssistantIntegrationResearchController("uptime");
+    controller.observe("homarr_enableToolGroups", { enabledGroups: ["integration"] });
+    controller.observe("integration_getKinds", [
+      { kind: "uptimeKuma", name: "Uptime Kuma", supportsHttpRequests: false },
+    ]);
+    controller.observe("integration_all", []);
+    const contract = assistantIntegrationResearchSchema.parse({
+      ...readyResearch,
+      service: "uptime",
+      connection: { type: "directHttp", integrationKindAvailable: false, baseUrlSource: "exactUserSupplied" },
+    });
+    expect(controller.validate(contract)).toBeNull();
+    controller.record(contract);
+    expect(controller.getStage()).toBe("ready");
+  });
+
   test("records a bounded official API contract for later lifecycle steps", () => {
     const parsed = assistantIntegrationResearchSchema.parse(readyResearch);
 
@@ -133,6 +176,9 @@ describe("Assistant integration research", () => {
         baseUrlSource: "secureConfigurationPlaceholder",
       },
     });
+    expect(getAssistantIntegrationResearchOutput(directHttp).nextStep).toContain(
+      "integration_request cannot target this source",
+    );
 
     expect(
       assistantIntegrationResearchSchema.safeParse({
@@ -154,7 +200,8 @@ describe("Assistant integration research", () => {
     expect(enabled).toContain("Never probe a write");
     expect(enabled).toContain("no integration kind");
     expect(enabled).toContain("never bypass it with a direct HTTP source");
-    expect(enabled).toContain("requestContext.currentBoard");
+    expect(enabled).toContain("Creating a widget does not authorize board placement");
+    expect(enabled).toContain("omit targetBoardId, save unplaced");
     expect(enabled).toContain("targetBoardId");
 
     const disabled = getCustomWidgetProductionInstructions(false);
@@ -328,7 +375,7 @@ describe("Assistant integration research", () => {
     ).toContain("cannot contain a fragment");
   });
 
-  test("requires the user to disambiguate multiple matching saved integrations", () => {
+  test("asks for an exact choice between multiple matching full-access integrations", () => {
     const kinds = [{ kind: "mealie", name: "Mealie", supportsHttpRequests: true }];
     const integrations = [
       {
@@ -349,14 +396,53 @@ describe("Assistant integration research", () => {
     controller.observe("integration_getKinds", kinds);
     controller.observe("integration_all", integrations);
 
+    expect(controller.getStage()).toBe("choose-integration");
+    const choice = controller.getIntegrationChoiceQuestion();
+    expect(choice.allowOther).toBe(false);
+    expect(choice.options).toHaveLength(2);
+    expect(choice.options.map(({ label }) => label)).toEqual(["Family meals", "Work meals"]);
     expect(controller.validate(assistantIntegrationResearchSchema.parse(readyResearch))).toContain(
-      "Multiple matching full-access saved integrations",
+      "Ask the user to choose",
     );
+    expect(
+      controller.observeAskUserSelection(
+        { ...choice, allowOther: true },
+        {
+          answer: choice.options[0]?.label,
+          optionId: choice.options[0]?.id,
+          optionKind: "alternative",
+          source: "option",
+        },
+      ),
+    ).toBe(false);
+    expect(controller.getStage()).toBe("choose-integration");
+    expect(
+      controller.observeAskUserSelection(choice, {
+        answer: choice.options[0]?.label,
+        optionId: choice.options[0]?.id,
+        optionKind: "alternative",
+        source: "option",
+      }),
+    ).toBe(true);
+    expect(controller.getStage()).toBe("record-research");
+    expect(controller.validate(assistantIntegrationResearchSchema.parse(readyResearch))).toBeNull();
+
+    const mismatchedResearch = assistantIntegrationResearchSchema.parse({
+      ...readyResearch,
+      connection: {
+        type: "savedIntegration",
+        integrationId: "integration-mealie-work",
+        integrationName: "Work meals",
+        integrationKind: "mealie",
+      },
+    });
+    expect(controller.validate(mismatchedResearch)).toContain("exactly match the saved integration chosen by the user");
 
     const namedController = createAssistantIntegrationResearchController("Family meals");
     namedController.observe("homarr_enableToolGroups", { enabledGroups: ["integration"] });
     namedController.observe("integration_getKinds", kinds);
     namedController.observe("integration_all", integrations);
+    expect(namedController.getStage()).toBe("record-research");
     expect(namedController.validate(assistantIntegrationResearchSchema.parse(readyResearch))).toBeNull();
   });
 });

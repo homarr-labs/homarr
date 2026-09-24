@@ -1,3 +1,6 @@
+import { customJsxAuthoringCatalog } from "./component-catalog";
+import { customJsxTablerIconNames } from "./tabler-icons";
+
 export {
   findCustomWidgetComponents,
   getCustomWidgetComponent,
@@ -7,6 +10,67 @@ export {
   getCustomWidgetExampleCatalog,
   getCustomWidgetSharedProps,
 } from "./authoring-catalog";
+
+const assistantCommonComponentNames = new Set([
+  "Stack",
+  "Group",
+  "Box",
+  "SimpleGrid",
+  "Card",
+  "Paper",
+  "Text",
+  "Title",
+  "Badge",
+  "Alert",
+  "Progress",
+  "ThemeIcon",
+  "Divider",
+  "Anchor",
+  "Image",
+  "ScrollArea",
+  "Skeleton",
+  "Center",
+  "TextInput",
+  "NumberInput",
+  "Select",
+  "Pagination",
+  "Switch",
+  "Checkbox",
+  "Table",
+  "Tabs",
+]);
+
+const assistantReferenceComponents = customJsxAuthoringCatalog.components.filter(
+  ({ name, safety, package: packageName }) =>
+    safety !== "denied" && (assistantCommonComponentNames.has(name) || packageName === "@homarr/widgets"),
+);
+const assistantReferenceTypeIds = new Set(
+  [...customJsxAuthoringCatalog.globalProps, ...assistantReferenceComponents.flatMap(({ props }) => props)].map(
+    ({ typeRef }) => typeRef,
+  ),
+);
+
+export const CUSTOM_WIDGET_ASSISTANT_COMPONENT_REFERENCE = JSON.stringify({
+  mantineVersion: customJsxAuthoringCatalog.mantineVersion,
+  iconNames: customJsxTablerIconNames,
+  format: "Props are [name, type ID, required]. Shared props apply unless blocked. Type IDs resolve through types.",
+  types: Object.fromEntries([...assistantReferenceTypeIds].map((id) => [id, customJsxAuthoringCatalog.types[id]])),
+  registeredNames: customJsxAuthoringCatalog.components
+    .filter(({ safety }) => safety !== "denied")
+    .map(({ name }) => name),
+  sharedProps: customJsxAuthoringCatalog.globalProps.map(({ name, typeRef, required }) => [name, typeRef, required]),
+  components: assistantReferenceComponents.map(
+    ({ name, description, props, blockedProps, bind, subcomponents, accessibilityRequirements }) => ({
+      name,
+      description,
+      props: props.map(({ name, typeRef, required }) => [name, typeRef, required]),
+      blockedProps,
+      bind,
+      subcomponents,
+      accessibilityRequirements,
+    }),
+  ),
+});
 
 export const CUSTOM_WIDGET_SKILLS_SH_URL = "https://www.skills.sh/homarr-labs/homarr/homarr-custom-widget";
 export const CUSTOM_WIDGET_SKILL_SOURCE_URL =
@@ -112,7 +176,7 @@ Load-query templates read \`data.requestId\` and \`status.requestId\`, plus \`op
 </SubFetch>
 \`\`\`
 
-Manual queries require \`trigger: "manual"\` on request and \`SubFetch\`; otherwise they run automatically. \`triggerContent\` with \`triggerAriaLabel\` makes custom content the launcher. \`SubFetch\` owns loading/error/retry; its child receives success plus \`{ ok, status, statusText, loading: false }\`. Never author \`onClick\` or fetch callbacks.
+Manual queries require \`trigger: "manual"\` on request and \`SubFetch\`; otherwise they run automatically. \`triggerContent\` with \`triggerAriaLabel\` makes custom content the launcher; it is already wrapped in a button, so use non-interactive content such as Text or Card, never Button, Anchor, or form controls inside it. \`SubFetch\` owns loading/error/retry; its child receives success plus \`{ ok, status, statusText, loading: false }\`. Never author \`onClick\` or fetch callbacks.
 
 \`SubFetch\`, \`ActionButton\`, and \`ToggleSwitch\` need literal \`requestId\`; validation rejects missing/computed IDs.
 
@@ -120,6 +184,7 @@ After an explicit \`ActionButton\` or \`ToggleSwitch\` invocation, its response 
 
 Inside a successful manual result, \`<RefreshButton requestId="search" label="Run again" />\` reruns the same parameters.
 
+SubFetch/ActionButton params must contain exactly the names referenced by $param or {param:name} in that request. Fixed query values such as limit or fields belong in requests.<id>.query, not params. Test using the same parameter names the JSX will supply; do not fix only the test call while leaving mismatched JSX.
 When a manual SubFetch ID, params, or definition changes, Homarr hides the prior result and returns to the trigger; new params fetch only after triggering again.
 
 Exact paths: load request ID \`q\` with raw preview body \`B\` -> \`data.q === B\`. \`q=events\` body\`{"events":[...]}\` -> \`data.events.events\`; do not flatten repeated keys. Manual \`SubFetch\` receives \`B\` as result -> \`result.events\`. Before persistence inspect core paths against preview; revise JSX and retest if mismatched

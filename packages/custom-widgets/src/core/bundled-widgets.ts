@@ -7,6 +7,8 @@ export interface BundledCustomWidget {
     | "seed-jellyfin"
     | "seed-pokedex"
     | "seed-tautulli-activity"
+    | "seed-weather-outlook"
+    | "seed-ntfy-inbox"
     | "seed-dispatcharr-channels"
     | "seed-karakeep-bookmarks"
     | "seed-mealie-today"
@@ -20,6 +22,83 @@ export interface BundledCustomWidget {
 
 export const BUNDLED_CUSTOM_WIDGETS: readonly BundledCustomWidget[] = [
   {
+    id: "seed-weather-outlook",
+    widget: {
+      $schema: "homarr-custom-widget-v2",
+      name: "Weather Outlook",
+      description:
+        "Current temperature, feels-like temperature, wind, and a five-day rain outlook. Set your coordinates in widget options.",
+      sources: {
+        default: { name: "Open-Meteo", baseUrl: "https://api.open-meteo.com", networkScope: "public", auth: "none" },
+      },
+      requests: {
+        forecast: {
+          path: "/v1/forecast",
+          query: {
+            latitude: { $option: "latitude" },
+            longitude: { $option: "longitude" },
+            current: "temperature_2m,apparent_temperature,wind_speed_10m",
+            daily: "temperature_2m_max,temperature_2m_min,precipitation_probability_max",
+            timezone: "auto",
+            forecast_days: 5,
+            temperature_unit: { $option: "unit" },
+          },
+          cacheSeconds: 900,
+        },
+      },
+      options: {
+        location: { label: "Location label", control: "text", default: "Berlin" },
+        latitude: { label: "Latitude", control: "number", default: 52.52, min: -90, max: 90, step: 0.01 },
+        longitude: { label: "Longitude", control: "number", default: 13.41, min: -180, max: 180, step: 0.01 },
+        unit: {
+          label: "Temperature unit",
+          control: "select",
+          default: "celsius",
+          choices: [
+            { label: "Celsius", value: "celsius" },
+            { label: "Fahrenheit", value: "fahrenheit" },
+          ],
+        },
+      },
+      template: `<Stack gap="sm" p="sm" h="100%" style={{ minWidth: 0, minHeight: 0 }}>
+  <Group justify="space-between" wrap="nowrap"><Stack gap={2} style={{ minWidth: 0 }}><Text size="xs" c="dimmed" tt="uppercase" fw={700}>Weather outlook</Text><Title order={4} style={{ overflowWrap: "anywhere" }}>{options.location}</Title></Stack><RefreshButton requestId="forecast" label="Refresh weather" size="xs" /></Group>
+  {status.forecast?.loading && <Skeleton height={180} radius="md" />}
+  {status.forecast?.ok === false && <Alert color="red" title="Weather unavailable">{status.forecast.error || "Check your coordinates and try refreshing."}</Alert>}
+  {!status.forecast?.loading && status.forecast?.ok !== false && <ScrollArea style={{ flex: 1, minHeight: 0 }}><Stack gap="sm">
+    {data.forecast?.current?.temperature_2m == null && <Alert color="gray" title="No current weather">Refresh to request a new forecast.</Alert>}
+    {data.forecast?.current?.temperature_2m != null && <Paper withBorder radius="md" p="md"><Group justify="space-between" align="center" gap="sm"><Text size="2.5rem" fw={750} lh={1.1}>{Math.round(data.forecast.current.temperature_2m)}<Text span size="xl" c="dimmed">{data.forecast.current_units?.temperature_2m}</Text></Text><Stack gap={4}><Text size="sm">Feels like {data.forecast.current.apparent_temperature ?? "—"}{data.forecast.current_units?.apparent_temperature}</Text><Text size="sm" c="dimmed">Wind {data.forecast.current.wind_speed_10m ?? "—"} {data.forecast.current_units?.wind_speed_10m}</Text></Stack></Group></Paper>}
+    {(data.forecast?.daily?.time ?? []).length > 0 && <Stack gap={0}>{data.forecast.daily.time.map((day, index) => <Box key={day} py="xs" style={{ borderBottom: "1px solid var(--mantine-color-default-border)" }}><Group justify="space-between" gap="xs"><Text size="sm" fw={600}>{day.slice(5)}</Text><Group gap="xs"><Text size="xs" c="blue">Rain {data.forecast.daily.precipitation_probability_max?.[index] ?? "—"}%</Text><Text size="sm"><Text span c="dimmed">{data.forecast.daily.temperature_2m_min?.[index] ?? "—"}°</Text> / {data.forecast.daily.temperature_2m_max?.[index] ?? "—"}°</Text></Group></Group></Box>)}</Stack>}
+    <Group justify="space-between" gap="xs"><Text size="xs" c="dimmed">Local dates · {data.forecast?.timezone || "Location timezone"}</Text><Anchor href="https://open-meteo.com/" target="_blank" rel="noreferrer" size="xs">Open-Meteo</Anchor></Group>
+  </Stack></ScrollArea>}
+</Stack>`,
+    },
+  },
+  {
+    id: "seed-ntfy-inbox",
+    widget: {
+      $schema: "homarr-custom-widget-v2",
+      name: "ntfy Inbox",
+      description:
+        "Latest cached notifications from one ntfy topic, with priority and UTC timestamps. Configure your server and topic before use.",
+      iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/ntfy.svg",
+      sources: {
+        default: { name: "ntfy", baseUrl: "https://your-service.example.com", networkScope: "private", auth: "bearer" },
+      },
+      requests: { messages: { path: "/{option:topic}/json", query: { poll: "1", since: "24h" }, cacheSeconds: 30 } },
+      options: { topic: { label: "Topic", control: "text", default: "homarr" } },
+      template: `<Stack gap="sm" p="sm" h="100%" style={{ minWidth: 0, minHeight: 0 }}>
+  <Group justify="space-between" wrap="nowrap"><Group gap="sm" wrap="nowrap" style={{ minWidth: 0 }}><ThemeIcon color="blue" variant="light" size="lg" radius="md"><Icon name="bell" size={20} /></ThemeIcon><Stack gap={0} style={{ minWidth: 0 }}><Title order={4}>Notifications</Title><Text size="xs" c="dimmed" style={{ overflowWrap: "anywhere" }}>{options.topic} · last 24 hours</Text></Stack></Group><RefreshButton requestId="messages" label="Refresh notifications" size="xs" /></Group>
+  {status.messages?.loading && <Stack gap="xs"><Skeleton height={80} radius="md" /><Skeleton height={80} radius="md" /></Stack>}
+  {status.messages?.ok === false && <Alert color="red" title="Inbox unavailable">{status.messages.error || "Check the server, topic, and access token, then refresh."}</Alert>}
+  {!status.messages?.loading && status.messages?.ok !== false && <ScrollArea style={{ flex: 1, minHeight: 0 }}><Stack gap="sm">
+    {(data.messages ?? []).filter(message => message.event === "message").length === 0 && <Paper withBorder radius="md" p="lg"><Text fw={600}>You're all caught up</Text><Text size="sm" c="dimmed" mt={4}>No cached messages for this topic in the last 24 hours.</Text></Paper>}
+    {(data.messages ?? []).filter(message => message.event === "message").slice(-8).reverse().map(message => <Card key={message.id} withBorder radius="md" p="sm"><Stack gap="xs"><Group justify="space-between" gap="xs"><Text size="sm" fw={700} style={{ overflowWrap: "anywhere", minWidth: 0 }}>{message.title || "Notification"}</Text>{Number(message.priority) >= 4 && <Badge color="orange" variant="light" size="xs">High priority</Badge>}</Group><Text size="sm" style={{ overflowWrap: "anywhere", whiteSpace: "pre-wrap" }}>{message.message}</Text><Text size="xs" c="dimmed">{Date.toLocaleString(message.time * 1000, "en-US", "UTC")} UTC</Text></Stack></Card>)}
+    {(data.messages ?? []).filter(message => message.event === "message").length > 8 && <Text size="xs" c="dimmed">Showing the latest 8 notifications</Text>}
+  </Stack></ScrollArea>}
+</Stack>`,
+    },
+  },
+  {
     id: "seed-dog-facts",
     widget: {
       $schema: "homarr-custom-widget-v2",
@@ -28,9 +107,11 @@ export const BUNDLED_CUSTOM_WIDGETS: readonly BundledCustomWidget[] = [
       sources: { default: { name: "Dog API", baseUrl: "https://dogapi.dog", networkScope: "public", auth: "none" } },
       requests: { fact: { path: "/api/v2/facts", cacheSeconds: 30 } },
       options: {},
-      template: `<Stack gap="sm" p="sm" h="100%" justify="center">
-  <Group justify="space-between"><Text fw={700}>Dog fact</Text><RefreshButton /></Group>
-  {status.fact?.loading ? <Skeleton height={72} radius="md" /> : status.fact?.error ? <Alert color="red">{status.fact.error}</Alert> : <Text size="sm">{data.fact?.data?.[0]?.attributes?.body ?? "No dog fact was returned."}</Text>}
+      template: `<Stack gap="md" p="sm" h="100%" justify="center" style={{ minWidth: 0 }}>
+  <Group justify="space-between" wrap="nowrap"><Group gap="xs"><ThemeIcon color="teal" variant="light" radius="xl" size="lg"><Icon name="heart" size={20} /></ThemeIcon><Text size="xs" fw={700} tt="uppercase" c="dimmed">A little dog knowledge</Text></Group><RefreshButton requestId="fact" label="Another dog fact" size="xs" /></Group>
+  {status.fact?.loading && <Skeleton height={96} radius="md" />}
+  {status.fact?.ok === false && <Alert color="red" title="Fact unavailable">Try refreshing in a moment.</Alert>}
+  {!status.fact?.loading && status.fact?.ok !== false && <Paper withBorder radius="md" p="lg"><Text size="lg" fw={500} lh={1.65} style={{ overflowWrap: "anywhere" }}>{data.fact?.data?.[0]?.attributes?.body || "No fact returned. Try another."}</Text><Text size="xs" c="dimmed" mt="md">Dog API · Something new to learn</Text></Paper>}
 </Stack>`,
     },
   },
@@ -60,9 +141,15 @@ export const BUNDLED_CUSTOM_WIDGETS: readonly BundledCustomWidget[] = [
         },
         amount: { label: "Amount", control: "number", default: 50, min: 0 },
       },
-      template: `<Stack gap="sm" p="sm">
-  <Group justify="space-between"><Text fw={700}>{options.amount} {options.from}</Text><Badge>{data.rates?.date ?? "Latest"}</Badge></Group>
-  {status.rates?.loading ? <Skeleton height={80} radius="md" /> : status.rates?.error ? <Alert color="red">{status.rates.error}</Alert> : <SimpleGrid cols={{ base: 1, xs: 2 }}>{Object.entries(data.rates?.rates ?? {}).map(entry => <Paper key={entry[0]} withBorder p="sm"><Text size="xs" c="dimmed">{entry[0]}</Text><Text fw={700} size="xl">{entry[1]}</Text></Paper>)}</SimpleGrid>}
+      template: `<Stack gap="sm" p="sm" h="100%" style={{ minWidth: 0, minHeight: 0 }}>
+  <Group justify="space-between" wrap="nowrap"><Stack gap={2}><Text size="xs" c="dimmed" tt="uppercase" fw={700}>Currency exchange</Text><Title order={3}>{options.amount} {options.from}</Title></Stack><RefreshButton requestId="rates" label="Refresh exchange rates" size="xs" /></Group>
+  {status.rates?.loading && <Skeleton height={100} radius="md" />}
+  {status.rates?.ok === false && <Alert color="red" title="Rates unavailable">{status.rates.error || "Check the currency codes in widget options, then refresh."}</Alert>}
+  {!status.rates?.loading && status.rates?.ok !== false && <ScrollArea style={{ flex: 1, minHeight: 0 }}><Stack gap="sm">
+    {Object.entries(data.rates?.rates ?? {}).length === 0 && <Alert color="gray" title="No exchange rates">Choose supported target currencies in widget options.</Alert>}
+    <SimpleGrid type="container" cols={{ base: 1, "300px": 2 }} spacing="xs">{Object.entries(data.rates?.rates ?? {}).map(entry => <Paper key={entry[0]} withBorder radius="md" p="md"><Group justify="space-between"><Badge variant="light" color="blue">{entry[0]}</Badge><Text size="xs" c="dimmed">Converted amount</Text></Group><Text fw={750} size="1.75rem" mt="sm" style={{ overflowWrap: "anywhere", fontVariantNumeric: "tabular-nums" }}>{Number(entry[1]).toFixed(2)}</Text></Paper>)}</SimpleGrid>
+    <Text size="xs" c="dimmed">ECB reference rates · {data.rates?.date || "Date unavailable"} · Not a live trading quote</Text>
+  </Stack></ScrollArea>}
 </Stack>`,
     },
   },
@@ -125,28 +212,37 @@ export const BUNDLED_CUSTOM_WIDGETS: readonly BundledCustomWidget[] = [
     widget: {
       $schema: "homarr-custom-widget-v2",
       name: "Tautulli Activity",
-      description: "Shows active Plex streams from Tautulli.",
+      description: "Now playing, viewers, devices, playback progress, and bandwidth from Tautulli.",
       sources: {
         default: {
           name: "Tautulli API",
-          baseUrl: "http://tautulli.local",
+          baseUrl: "https://your-service.example.com",
           networkScope: "private",
           auth: { type: "apiKeyQuery", name: "apikey" },
         },
       },
       requests: { activity: { path: "/api/v2", query: { cmd: "get_activity" }, cacheSeconds: 15 } },
       options: {},
-      template: `<Stack gap="md" p="md">
-  <Group justify="space-between"><Stack gap={2}><Text fw={700}>Tautulli Activity</Text><Text size="xs" c="dimmed">Live streaming sessions</Text></Stack><RefreshButton /></Group>
-  {status.activity?.loading ? <Stack gap="sm"><Skeleton height={80} radius="md" /><Skeleton height={80} radius="md" /></Stack> : status.activity?.error ? <Alert color="red" title="Could not load activity">{status.activity.error}</Alert> : (data.activity?.response?.data?.sessions ?? []).length === 0 ? <Alert color="gray" title="No active streams">All quiet.</Alert> : <>
-    <SimpleGrid cols={{ base: 2, xs: 4 }}>
-      <Paper withBorder p="sm" radius="md"><Text size="xs" c="dimmed">Active streams</Text><Text size="xl" fw={700}>{(data.activity?.response?.data?.sessions ?? []).length}</Text></Paper>
-      <Paper withBorder p="sm" radius="md"><Text size="xs" c="dimmed">Total bandwidth</Text><Text size="xl" fw={700}>{((data.activity?.response?.data?.sessions ?? []).reduce((sum, session) => sum + (session.bandwidth || 0), 0) / 1000000).toFixed(1)}<Text span size="xs" c="dimmed"> Mbps</Text></Text></Paper>
-      <Paper withBorder p="sm" radius="md"><Text size="xs" c="dimmed">Direct play</Text><Text size="xl" fw={700}>{(data.activity?.response?.data?.sessions ?? []).filter(session => session.transcode_decision === "direct play" || session.transcode_decision === "copy").length}</Text></Paper>
-      <Paper withBorder p="sm" radius="md"><Text size="xs" c="dimmed">Transcodes</Text><Text size="xl" fw={700}>{(data.activity?.response?.data?.sessions ?? []).filter(session => session.transcode_decision === "transcode").length}</Text></Paper>
-    </SimpleGrid>
-    <SimpleGrid cols={{ base: 1, sm: 2 }}>{(data.activity?.response?.data?.sessions ?? []).map(session => <Paper key={session.session_key} withBorder p="sm" radius="md"><Stack gap="xs"><Group justify="space-between"><Group gap="xs"><Text size="sm" fw={600}>{session.user}</Text><Badge variant="light" color={session.state === "playing" ? "green" : session.state === "paused" ? "yellow" : "orange"}>{session.state}</Badge></Group><Badge variant="light" color="gray">{session.player}</Badge></Group><Text size="sm" lineClamp={1}>{session.full_title}</Text><Progress value={session.progress_percent} size="sm" color="blue" /><Group justify="space-between"><Group gap="xs"><Badge variant="light" color={session.transcode_decision === "transcode" ? "red" : session.transcode_decision === "copy" ? "orange" : "teal"}>{session.transcode_decision}</Badge><Badge variant="light" color="gray">{session.bandwidth ? (session.bandwidth / 1000000).toFixed(1) + " Mbps" : "—"}</Badge></Group><Badge variant="outline" color={session.location === "lan" ? "blue" : "yellow"}>{session.location}</Badge></Group></Stack></Paper>)}</SimpleGrid>
-  </>}
+      template: `<Stack gap="sm" p="sm" h="100%" style={{ minWidth: 0, minHeight: 0 }}>
+  <Group justify="space-between" wrap="nowrap"><Group gap="sm" wrap="nowrap"><ThemeIcon color="grape" variant="light" size="lg" radius="md"><Icon name="player-play" size={20} /></ThemeIcon><Stack gap={0}><Title order={4}>Now playing</Title><Text size="xs" c="dimmed">Plex · Tautulli</Text></Stack></Group><RefreshButton requestId="activity" label="Refresh playback" size="xs" /></Group>
+  {status.activity?.loading && <Stack gap="xs"><Skeleton height={100} radius="md" /><Skeleton height={100} radius="md" /></Stack>}
+  {status.activity?.ok === false && <Alert color="red" title="Playback unavailable">{status.activity.error || "Check your Tautulli connection and refresh."}</Alert>}
+  {!status.activity?.loading && status.activity?.ok !== false && <ScrollArea style={{ flex: 1, minHeight: 0 }}><Stack gap="sm">
+    {data.activity?.response?.result === "error" && <Alert color="red" title="Tautulli rejected the request">{data.activity.response.message || "Check the API key in source configuration."}</Alert>}
+    {data.activity?.response?.result !== "error" && <>
+      {(data.activity?.response?.data?.sessions ?? []).length === 0 && <Paper withBorder radius="md" p="lg"><Text fw={600}>Nothing playing right now</Text><Text size="sm" c="dimmed" mt={4}>Active sessions will appear here when someone starts watching.</Text></Paper>}
+      {(data.activity?.response?.data?.sessions ?? []).length > 0 && <>
+        <Group gap="xs"><Badge color="grape" variant="light">{(data.activity.response.data.sessions ?? []).length} active</Badge><Text size="xs" c="dimmed">{((data.activity.response.data.sessions ?? []).reduce((sum, session) => sum + Number(session.bandwidth || 0), 0) / 1000).toFixed(1)} Mbps total</Text></Group>
+        <SimpleGrid type="container" cols={{ base: 1, "560px": 2 }} spacing="sm">{(data.activity.response.data.sessions ?? []).map((session, index) => <Card key={session.session_key || index} withBorder radius="md" p="sm"><Stack gap="sm">
+          <Group justify="space-between" align="flex-start" gap="xs"><Stack gap={2} style={{ minWidth: 0, flex: 1 }}><Text size="sm" fw={700} lineClamp={2} style={{ overflowWrap: "anywhere" }}>{session.full_title || session.title || "Untitled media"}</Text><Text size="xs" c="dimmed" style={{ overflowWrap: "anywhere" }}>{session.friendly_name || session.user || "Unknown viewer"} · {session.player || session.platform || "Unknown device"}</Text></Stack><Badge size="xs" variant="light" color="grape">{session.state || "Unknown state"}</Badge></Group>
+          <Progress value={Math.min(100, Math.max(0, Number(session.progress_percent) || 0))} color="grape" size="sm" radius="xl" aria-label={"Playback progress for " + (session.full_title || session.title || "media")} />
+          <Group justify="space-between" gap="xs"><Text size="xs" c="dimmed">{Math.floor(Number(session.view_offset || 0) / 60000)} / {Math.floor(Number(session.duration || 0) / 60000)} min</Text><Text size="xs" fw={600}>{Math.min(100, Math.max(0, Math.round(Number(session.progress_percent) || 0)))}%</Text></Group>
+          <Group gap={6}><Badge size="xs" variant="outline" color="gray">{session.transcode_decision || "Unknown playback"}</Badge>{session.video_resolution && <Badge size="xs" variant="light" color="gray">{session.video_resolution}</Badge>}<Text size="xs" c="dimmed">{(Number(session.bandwidth || 0) / 1000).toFixed(1)} Mbps</Text></Group>
+          {Number(session.relayed) === 1 && <Alert color="orange" p="xs" title="Relayed connection">Plex is relaying this stream.</Alert>}
+        </Stack></Card>)}</SimpleGrid>
+      </>}
+    </>}
+  </Stack></ScrollArea>}
 </Stack>`,
     },
   },

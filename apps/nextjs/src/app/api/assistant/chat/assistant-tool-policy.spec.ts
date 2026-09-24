@@ -6,6 +6,7 @@ import type { CustomWidgetAssistantLifecycleEvent } from "@homarr/custom-widgets
 import {
   customWidgetAssistantInstructions,
   getForcedAssistantToolName,
+  hasDeniedAssistantToolApproval,
   getCustomWidgetPlacementState,
   getRequiredAssistantToolNames,
   requiresAssistantToolApproval,
@@ -17,6 +18,58 @@ const assistantMessage = (...parts: UIMessage["parts"]): UIMessage => ({
   id: "assistant-message",
   role: "assistant",
   parts,
+});
+
+describe("hasDeniedAssistantToolApproval", () => {
+  const denied = assistantMessage({
+    type: "dynamic-tool",
+    toolName: "customWidget_createFromPreview",
+    toolCallId: "save-1",
+    input: { previewSessionId: "preview-1" },
+    state: "approval-responded",
+    approval: { id: "approval-1", approved: false },
+  });
+
+  test("stops lifecycle enforcement after a denied native approval", () => {
+    expect(hasDeniedAssistantToolApproval([denied])).toBe(true);
+    expect(hasDeniedAssistantToolApproval([denied, assistantMessage({ type: "text", text: "Cancelled." })])).toBe(true);
+  });
+
+  test("does not carry a denial into a new user request", () => {
+    expect(
+      hasDeniedAssistantToolApproval([
+        denied,
+        { id: "new-request", role: "user", parts: [{ type: "text", text: "Create a different widget." }] },
+      ]),
+    ).toBe(false);
+  });
+
+  test("recognizes persisted denials but permits approved mutations", () => {
+    expect(
+      hasDeniedAssistantToolApproval([
+        assistantMessage({
+          type: "dynamic-tool",
+          toolName: "customWidget_createFromPreview",
+          toolCallId: "save-2",
+          input: {},
+          state: "output-denied",
+          approval: { id: "approval-2", approved: false },
+        }),
+      ]),
+    ).toBe(true);
+    expect(
+      hasDeniedAssistantToolApproval([
+        assistantMessage({
+          type: "dynamic-tool",
+          toolName: "customWidget_createFromPreview",
+          toolCallId: "save-3",
+          input: {},
+          state: "approval-responded",
+          approval: { id: "approval-3", approved: true },
+        }),
+      ]),
+    ).toBe(false);
+  });
 });
 
 describe("withAssistantToolPolicy", () => {
@@ -31,17 +84,27 @@ describe("withAssistantToolPolicy", () => {
     expect(withAssistantToolPolicy("List all Homarr apps.", false)).toBe("List all Homarr apps.");
   });
 
-  test("exempts only secure source-configuration orchestration from mutation approval", () => {
+  test("exempts ephemeral drafts and secure configuration orchestration, not saves or actions", () => {
     expect(requiresAssistantToolApproval("customWidget_configurationRequestUser", "mutation")).toBe(false);
+    expect(requiresAssistantToolApproval("customWidget_previewCreate", "mutation")).toBe(false);
+    expect(requiresAssistantToolApproval("customWidget_previewReviseTemplate", "mutation")).toBe(false);
     expect(requiresAssistantToolApproval("customWidget_createFromPreview", "mutation")).toBe(true);
+    expect(requiresAssistantToolApproval("customWidget_updateFromPreview", "mutation")).toBe(true);
+    expect(requiresAssistantToolApproval("customWidget_setPreviewLiveActions", "mutation")).toBe(true);
+    expect(requiresAssistantToolApproval("customWidget_previewAction", "mutation")).toBe(true);
     expect(requiresAssistantToolApproval("board_addItem", "mutation")).toBe(true);
     expect(requiresAssistantToolApproval("customWidget_previewQuery", "query")).toBe(false);
   });
 });
 
 describe("customWidgetAssistantInstructions", () => {
-  test("loads authoring resources lazily and verifies every final preview", () => {
-    expect(customWidgetAssistantInstructions.length).toBeLessThan(6_500);
+  test("bundles authoring contracts and verifies every final preview", () => {
+    expect(customWidgetAssistantInstructions.length).toBeLessThan(65_000);
+    expect(customWidgetAssistantInstructions).toContain("# Schema");
+    expect(customWidgetAssistantInstructions).toContain("# Runtime");
+    expect(customWidgetAssistantInstructions).toContain("# Security");
+    expect(customWidgetAssistantInstructions).toContain('"registeredNames"');
+    expect(customWidgetAssistantInstructions).toContain("Function-call spread arguments are unsupported");
     expect(customWidgetAssistantInstructions).toContain("do not call customWidget_getSkill");
     expect(customWidgetAssistantInstructions).toContain("staged by the authoring lifecycle");
     expect(customWidgetAssistantInstructions).toContain("task-needed");
@@ -273,10 +336,11 @@ describe("getRequiredAssistantToolNames", () => {
         parts: [{ type: "text", text: "Save it but do not place it on a board." }],
       },
     ];
-    const steps = [toolStep(unknownBoardCreation)];
-
-    expect(getCustomWidgetPlacementState(messages, steps)).toEqual({ status: "none" });
-    expect(getRequiredAssistantToolNames(messages, steps)).toEqual([]);
+    for (const creation of [unknownBoardCreation, knownBoardCreation, knownBoardCreationWithOptions]) {
+      const steps = [toolStep(creation)];
+      expect(getCustomWidgetPlacementState(messages, steps)).toEqual({ status: "none" });
+      expect(getRequiredAssistantToolNames(messages, steps)).toEqual([]);
+    }
   });
 
   test("places directly when creation already has a target board", () => {

@@ -11,7 +11,9 @@ const httpUrlSchema = z
   }, "Use an HTTP(S) URL without embedded credentials");
 
 const researchSourceSchema = z.object({
-  url: httpUrlSchema.describe("Primary or official API documentation URL used for this contract."),
+  url: httpUrlSchema.describe(
+    "Primary API documentation URL. If the user supplied the complete contract directly, use its exact API URL and identify it as user-provided in title; never claim independent verification.",
+  ),
   title: z.string().trim().min(1).max(200),
 });
 
@@ -28,7 +30,14 @@ const endpointContractSchema = z.object({
     .describe("Documented slash-prefixed path relative to the saved integration URL."),
   query: z.array(z.string().trim().min(1).max(100)).max(20).default([]),
   requestBody: z.string().trim().min(1).max(1_500).optional(),
-  responseShape: z.string().trim().min(1).max(2_500),
+  responseShape: z
+    .string()
+    .trim()
+    .min(1)
+    .max(2_500)
+    .describe(
+      "Documented response shape, or explicitly unknown until the saved integration's read-only GET probe. Never invent fields.",
+    ),
   permissionNotes: z.string().trim().min(1).max(500).optional(),
 });
 
@@ -42,7 +51,11 @@ const researchConnectionSchema = z.discriminatedUnion("type", [
   z.object({
     type: z.literal("directHttp"),
     integrationKindAvailable: z.literal(false),
-    baseUrlSource: z.enum(["exactUserSupplied", "secureConfigurationPlaceholder"]),
+    baseUrlSource: z
+      .enum(["exactUserSupplied", "documentedPublicApi", "secureConfigurationPlaceholder"])
+      .describe(
+        "Use documentedPublicApi for a canonical public API host established by official docs. Self-hosted hosts require an exact user URL or secure configuration placeholder.",
+      ),
   }),
 ]);
 
@@ -55,7 +68,9 @@ const readyResearchSchema = z.object({
     .trim()
     .min(1)
     .max(800)
-    .describe("Documented authentication mechanism, never an actual credential."),
+    .describe(
+      "Saved integrations inherit Homarr's configured authentication; direct HTTP needs a documented mechanism. Never include credentials.",
+    ),
   officialSources: z.array(researchSourceSchema).min(1).max(6),
   endpoints: z.array(endpointContractSchema).min(1).max(16),
   limitations: z.array(z.string().trim().min(1).max(500)).max(12).default([]),
@@ -84,10 +99,11 @@ export const getAssistantIntegrationResearchOutput = (research: AssistantIntegra
         "Stop before authoring. Briefly identify the missing official API contract and ask the user for its documentation; never invent an endpoint or request credentials.",
     };
   }
-  return {
-    recorded: true,
-    ...research,
-    nextStep:
-      "Reuse this exact contract in later steps. Probe documented GET endpoints through the selected saved integration, then author, validate, preview, test, persist, and place the widget.",
-  };
+  let nextStep =
+    "Reuse this exact contract. Author the direct-HTTP widget, then test its queries through preview evidence; integration_request cannot target this source. Persist after verification and place only if requested.";
+  if (research.connection.type === "savedIntegration") {
+    nextStep =
+      "Reuse this exact contract. Probe documented GET endpoints through the selected saved integration, then author, preview, test and persist. Place only if requested.";
+  }
+  return { recorded: true, ...research, nextStep };
 };

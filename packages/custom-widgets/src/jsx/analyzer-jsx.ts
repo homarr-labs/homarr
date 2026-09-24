@@ -6,12 +6,18 @@ import {
   resolveCustomJsxComponentName,
 } from "../core/component-registry";
 import type { AstNode } from "./analyzer-ast";
-import { containsEscapingCallback, nodeOf, nodesOf } from "./analyzer-ast";
+import { containsEscapingCallback, nodeOf, nodesOf, staticPropertyName } from "./analyzer-ast";
 import { closestCustomJsxComponentName, customJsxTagName, isSafeLiteralCustomJsxUrl } from "./analyzer-language";
-import { CUSTOM_JSX_BINDING_IDENTIFIER_PATTERN, CUSTOM_JSX_URL_PROPS, isBlockedCustomJsxProp } from "./policy";
+import {
+  CUSTOM_JSX_BINDING_IDENTIFIER_PATTERN,
+  CUSTOM_JSX_LIMITS,
+  CUSTOM_JSX_URL_PROPS,
+  isBlockedCustomJsxProp,
+} from "./policy";
 import { getInvalidCustomJsxPropValueReason } from "./runtime-component-policy";
 
 interface AnalyzerJsxContext {
+  requestParameters?: ReadonlyMap<string, ReadonlySet<string>>;
   add(node: AstNode, message: string, severity?: "error" | "warning"): void;
   visit(node: AstNode, depth: number, bindings: ReadonlySet<string>): void;
   visitArrow(node: AstNode, depth: number, bindings: ReadonlySet<string>): void;
@@ -19,6 +25,113 @@ interface AnalyzerJsxContext {
 
 const componentsRequiringRequestId = new Set(["SubFetch", "ActionButton", "ToggleSwitch"]);
 const componentsWithLiteralRequestId = new Set([...componentsRequiringRequestId, "RefreshButton"]);
+
+function staticParameterKeys(expression: AstNode | null, depth = 0): { keys: Set<string>; complete: boolean } {
+  const keys = new Set<string>();
+  if (!expression) return { keys, complete: true };
+  if (expression.type !== "ObjectExpression" || depth > CUSTOM_JSX_LIMITS.astDepth) return { keys, complete: false };
+  let complete = true;
+  for (const property of nodesOf(expression.properties)) {
+    if (property.type === "SpreadElement") {
+      const spread = staticParameterKeys(nodeOf(property.argument), depth + 1);
+      spread.keys.forEach((key) => keys.add(key));
+      complete &&= spread.complete;
+      continue;
+    }
+    const key = nodeOf(property.key);
+    let name = staticPropertyName(key);
+    if (!property.computed && key?.type === "Identifier") name = String(key.name);
+    if (name === undefined) complete = false;
+    else keys.add(name);
+  }
+  return { keys, complete };
+}
+const interactiveTriggerContentComponentNames = new Set([
+  "ActionButton",
+  "ActionIcon",
+  "Anchor",
+  "Autocomplete",
+  "Checkbox",
+  "Checkbox.Card",
+  "Chip",
+  "CloseButton",
+  "ColorInput",
+  "ColorPicker",
+  "DateInput",
+  "DatePicker",
+  "DatePickerInput",
+  "DateTimePicker",
+  "InlineDateTimePicker",
+  "Input",
+  "JsonInput",
+  "MaskInput",
+  "MonthPicker",
+  "MonthPickerInput",
+  "MultiSelect",
+  "NativeSelect",
+  "NumberInput",
+  "PasswordInput",
+  "PinInput",
+  "Radio",
+  "Radio.Card",
+  "RangeSlider",
+  "Rating",
+  "SegmentedControl",
+  "Select",
+  "Slider",
+  "Switch",
+  "TagsInput",
+  "TextInput",
+  "Textarea",
+  "TimeInput",
+  "TimePicker",
+  "TreeSelect",
+  "UnstyledButton",
+  "YearPickerInput",
+  "Button",
+  "RefreshButton",
+  "ToggleSwitch",
+]);
+
+const isManualSubFetchTrigger = (attributes: readonly AstNode[]) => {
+  const triggerAttribute = attributes.find((attribute) => {
+    if (attribute.type !== "JSXAttribute") return false;
+    const attributeName = nodeOf(attribute.name);
+    return attributeName?.type === "JSXIdentifier" && attributeName.name === "trigger";
+  });
+  const triggerValue = nodeOf(triggerAttribute?.value);
+  const triggerExpression =
+    triggerValue?.type === "JSXExpressionContainer" ? nodeOf(triggerValue.expression) : triggerValue;
+  if (triggerExpression?.type === "Literal") return triggerExpression.value === "manual";
+  return triggerExpression !== null;
+};
+
+const findInteractiveTriggerContentNode = (root: AstNode) => {
+  const pending = [root];
+  while (pending.length > 0) {
+    const current = pending.pop();
+    if (!current) continue;
+
+    if (current.type === "JSXElement") {
+      const opening = nodeOf(current.openingElement);
+      const nameNode = opening ? nodeOf(opening.name) : null;
+      const name = nameNode ? customJsxTagName(nameNode) : null;
+      const resolvedName = name ? resolveCustomJsxComponentName(name) : null;
+      if (resolvedName && interactiveTriggerContentComponentNames.has(resolvedName)) return opening ?? current;
+    }
+
+    for (const [key, value] of Object.entries(current)) {
+      if (["end", "loc", "start", "type"].includes(key)) continue;
+      if (Array.isArray(value)) {
+        pending.push(...nodesOf(value));
+        continue;
+      }
+      const child = nodeOf(value);
+      if (child) pending.push(child);
+    }
+  }
+  return null;
+};
 
 export function analyzeCustomJsxElement(
   node: AstNode,
@@ -54,6 +167,27 @@ export function analyzeCustomJsxElement(
         requestIdLiteral.value.trim().length === 0);
     if ((!requestIdAttribute && requiresRequestId) || hasInvalidRequestId) {
       context.add(requestIdAttribute ?? opening, `${resolvedName} must use a literal requestId`);
+    }
+    if (componentsRequiringRequestId.has(resolvedName) && typeof requestIdLiteral?.value === "string") {
+      const expected = context.requestParameters?.get(requestIdLiteral.value);
+      let parameterProps = ["params"];
+      if (resolvedName === "ToggleSwitch") parameterProps = ["enabledParams", "disabledParams"];
+      for (const parameterProp of parameterProps) {
+        const paramsAttribute = attributes.find((attribute) => nodeOf(attribute.name)?.name === parameterProp);
+        const params = nodeOf(nodeOf(paramsAttribute?.value)?.expression);
+        // Unknown keys stay runtime-checked, but must not conceal known extra keys.
+        if (expected && (!paramsAttribute || params?.type === "ObjectExpression")) {
+          const actual = staticParameterKeys(params);
+          const missing = [...expected].filter((name) => actual.complete && !actual.keys.has(name));
+          const extra = [...actual.keys].filter((name) => !expected.has(name));
+          if (missing.length > 0 || extra.length > 0) {
+            context.add(
+              paramsAttribute ?? opening,
+              `REQUEST_PARAMS_MISMATCH: ${resolvedName}.${parameterProp} '${requestIdLiteral.value}' expects only [${[...expected].join(", ")}]; missing [${missing.join(", ")}], extra [${extra.join(", ")}]. Match params to the request's $param references; fixed query values belong in the request, not params.`,
+            );
+          }
+        }
+      }
     }
   }
   if (resolvedName === "TablerIcon") {
@@ -96,6 +230,20 @@ export function analyzeCustomJsxElement(
     }
     const attributeNameNode = nodeOf(attribute.name);
     const attributeName = attributeNameNode?.type === "JSXIdentifier" ? String(attributeNameNode.name) : "";
+    if (resolvedName === "SubFetch" && attributeName === "triggerContent" && isManualSubFetchTrigger(attributes)) {
+      const triggerContent = nodeOf(attribute.value);
+      const triggerContentExpression =
+        triggerContent?.type === "JSXExpressionContainer" ? nodeOf(triggerContent.expression) : null;
+      const interactiveNode = triggerContentExpression
+        ? findInteractiveTriggerContentNode(triggerContentExpression)
+        : null;
+      if (interactiveNode) {
+        context.add(
+          interactiveNode,
+          "SubFetch triggerContent cannot contain interactive descendants because the manual trigger wraps it in a button",
+        );
+      }
+    }
     const componentBlockedProp = descriptor?.blockedProps.find(({ name: propName }) => propName === attributeName);
     if (componentBlockedProp) {
       context.add(

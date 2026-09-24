@@ -1,5 +1,5 @@
 import { hasSameCustomWidgetSourceAuthentication } from "../core";
-import { customWidgetDefinitionSchema } from "../core";
+import { customWidgetPreviewDefinitionSchema } from "../core";
 import type { CustomJsxRequest, CustomWidgetOptions, CustomWidgetSource } from "../core";
 import { CustomWidgetDomainError } from "./errors";
 
@@ -14,7 +14,7 @@ interface PreviewTemplateContext {
 }
 
 export function validatePreviewTemplateRevision(current: PreviewTemplateContext, template: string) {
-  const parsed = customWidgetDefinitionSchema.safeParse({
+  const parsed = customWidgetPreviewDefinitionSchema.safeParse({
     $schema: "homarr-custom-widget-v2",
     name: current.name,
     description: current.description,

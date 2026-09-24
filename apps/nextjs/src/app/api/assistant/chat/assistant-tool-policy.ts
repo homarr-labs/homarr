@@ -5,14 +5,38 @@ import {
   CUSTOM_WIDGET_ASSISTANT_POLICY,
   CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION,
 } from "@homarr/custom-widgets/authoring-prompt";
+import {
+  CUSTOM_WIDGET_ASSISTANT_COMPONENT_REFERENCE,
+  CUSTOM_WIDGET_SKILL_REFERENCES,
+} from "@homarr/custom-widgets/authoring-resources";
 import { getCustomWidgetPlacementToolNames, resolveCustomWidgetPlacementState } from "@homarr/custom-widgets/core";
 import type { CustomWidgetAssistantLifecycleEvent, CustomWidgetPlacementState } from "@homarr/custom-widgets/core";
 
 const mutationApprovalInstruction =
   "Uses Homarr's native approval UI; call when inputs are ready without separate prose confirmation.";
-const assistantApprovalExemptToolNames = new Set(["customWidget_configurationRequestUser"]);
+// Previews are owner-scoped, short-lived drafts; these tools neither save widgets nor execute requests.
+const assistantApprovalExemptToolNames = new Set([
+  "customWidget_configurationRequestUser",
+  "customWidget_previewCreate",
+  "customWidget_previewReviseTemplate",
+]);
 
-export const customWidgetAssistantInstructions = `\n\n${CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION}\n\n${CUSTOM_WIDGET_ASSISTANT_POLICY}`;
+export const customWidgetAssistantInstructions = `\n\nCUSTOM WIDGET REFERENCE
+Apply this reference only when the user's task calls for creating, editing, or inspecting a Custom Widget. Its presence does not authorize a mutation or turn a navigation, documentation, or Workshop search question into widget creation.
+${CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION}
+
+AUTHORING REFERENCE — ALREADY LOADED
+Use the schema, runtime, security rules and component contracts below directly. Do not retrieve Markdown references. Common component props and all registered names are supplied; only look up an uncommon component when its exact contract is missing. Draft the complete widget, then let preview validation report concrete errors rather than speculating about supported syntax.
+
+${Object.values(CUSTOM_WIDGET_SKILL_REFERENCES).join("\n\n")}
+
+${CUSTOM_WIDGET_ASSISTANT_COMPONENT_REFERENCE}
+
+Function-call spread arguments are unsupported: use values.reduce((maximum, value) => Math.max(maximum, value), 0), not Math.max(...values). Use only the supplied iconNames (for example server, database, bell, cloud, circle-check), never React names such as IconServer.
+Start the template directly with its root JSX element or fragment, without wrapping parentheses or Markdown fences; characters outside JSX render as literal text.
+Design for a roughly 320px-wide compact tile. Keep essential dates, readings and action labels visible: shorten their format or use rows instead of truncating them with lineClamp. Screen-width breakpoints do not measure a dashboard tile's width.
+
+${CUSTOM_WIDGET_ASSISTANT_POLICY}`;
 
 export const withAssistantToolPolicy = (description: string | undefined, requiresApproval: boolean) => {
   if (!requiresApproval) return description;
@@ -22,6 +46,22 @@ export const withAssistantToolPolicy = (description: string | undefined, require
 
 export const requiresAssistantToolApproval = (toolName: string, toolType: string) =>
   toolType === "mutation" && !assistantApprovalExemptToolNames.has(toolName);
+
+export const hasDeniedAssistantToolApproval = (messages: UIMessage[]) => {
+  const latestUserIndex = messages.findLastIndex((message) => message.role === "user");
+  return messages
+    .slice(Math.max(0, latestUserIndex))
+    .some(
+      (message) =>
+        message.role === "assistant" &&
+        message.parts.some(
+          (part) =>
+            isToolUIPart(part) &&
+            (part.state === "output-denied" ||
+              (part.state === "approval-responded" && part.approval.approved === false)),
+        ),
+    );
+};
 
 export const getForcedAssistantToolName = (messages: UIMessage[]) => {
   const latestMessage = messages.at(-1);
@@ -109,7 +149,8 @@ export const getCustomWidgetPlacementState = (
   responseMessages: readonly AssistantToolResponseMessage[] = [],
 ): CustomWidgetPlacementState => {
   const state = resolveCustomWidgetPlacementState(getLifecycleEvents(messages, completedSteps, responseMessages));
-  if (state.status === "ask-user" && hasExplicitUnplacedCustomWidgetIntent(messages)) return { status: "none" };
+  // An inferred targetBoardId must not override an explicit request to save without placement.
+  if (hasExplicitUnplacedCustomWidgetIntent(messages)) return { status: "none" };
   return state;
 };
 

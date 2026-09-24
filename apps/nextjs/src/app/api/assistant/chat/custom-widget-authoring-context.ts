@@ -2,6 +2,7 @@ import { getToolName, isToolUIPart } from "ai";
 import type { UIMessage } from "ai";
 
 import { isRecord } from "@homarr/common";
+import { getCustomWidgetExampleCatalog } from "@homarr/custom-widgets/authoring-resources";
 import {
   assistantIntegrationResearchToolName,
   getCustomWidgetPhaseToolNames,
@@ -27,6 +28,17 @@ interface CustomWidgetToolResponseMessage {
 }
 
 export type { CustomWidgetToolStep };
+
+/** An upstream outage cannot be repaired by rewriting JSX or recreating previews. */
+export const getCustomWidgetPreviewOutageStatus = (steps: readonly CustomWidgetToolStep[]) => {
+  for (const result of steps.at(-1)?.toolResults ?? []) {
+    if (result.toolName !== "customWidget_previewQuery" && result.toolName !== "customWidget_previewAction") continue;
+    const output = result.output;
+    if (!isRecord(output) || output.ok !== false) continue;
+    if (typeof output.status === "number" && output.status >= 500 && output.status <= 599) return output.status;
+  }
+  return undefined;
+};
 
 const unwrapCustomWidgetToolOutput = (output: unknown) => {
   if (!isRecord(output) || output.type !== "json" || !("value" in output)) return output;
@@ -257,10 +269,15 @@ const explicitCustomWidgetIntentPattern =
   /(?:\bcustom\s+jsx\b|\bhomarr-custom-widget-v\d+\b|\b(?:add|adjust|build|change|convert|create|design|edit|fix|make|migrate|modify|remove|repair|update|validate)\b[^\n]{0,80}\bcustom[\s-]+widgets?\b)/iu;
 const boardManagementIntentPattern =
   /\b(?:build|create|design|fill|make|populate|set\s*up)\b(?:(?!\bwidgets?\b)[^\n]){0,60}\b(?:board|dashboard)\b/iu;
+const withoutNegatedBoardManagementIntent = (text: string) =>
+  text.replace(
+    /\b(?:do not|don't|dont)\s+(?:build|create|design|fill|make|populate|set\s*up)\b[^\n]{0,80}\b(?:board|dashboard)\b/giu,
+    "",
+  );
 const serviceWidgetIntentPatterns = [
-  /\b(?:build|create|design|make)(?:\s+and\s+install)?\s+(?:an?\s+)?(?:custom[\s-]+)?widgets?\s+(?:for|using|with)\s+([^\n,.!?]{1,60})/iu,
-  /\b(?:build|create|design|make)\s+(?:(?:me|us)\s+)?(?:an?\s+)?([^\n,.!?]{1,60}?)\s+widgets?\b/iu,
+  /\b(?:build|create|design|make)(?:\s+and\s+(?:save|install))?\s+(?:an?\s+)?(?:custom[\s-]+)?widgets?\s+(?:for|using|with)\s+([^\n,.!?]{1,60})/iu,
   /\b(?:build|create|design|make)\b[^\n]{0,40}\bwidgets?\s+(?:for|using|with)\s+([^\n,.!?]{1,60})/iu,
+  /\b(?:build|create|design|make)(?:\s+and\s+(?:save|install))?\s+(?:(?:me|us)\s+)?(?:an?\s+)?([^\n,.!?]{1,60}?)\s+widgets?\b/iu,
   /\b(?:i|we)\s+(?:need|want)\b[^\n]{0,40}\bwidgets?\s+(?:for|using|with)\s+([^\n,.!?]{1,60})/iu,
 ];
 const serviceTargetNoiseWords = new Set([
@@ -274,14 +291,19 @@ const serviceTargetNoiseWords = new Set([
   "existing",
   "integration",
   "jsx",
+  "lookup",
   "my",
+  "named",
   "new",
   "our",
   "polished",
   "responsive",
+  "saved",
+  "search",
   "service",
   "server",
   "simple",
+  "small",
   "some",
   "static",
   "status",
@@ -397,17 +419,54 @@ const isCustomWidgetPlacementToolPart = (part: Record<string, unknown>, toolName
   return optionIds.has("place") && optionIds.has("leave");
 };
 
+const customWidgetAuthoringLifecycleToolNames = new Set([
+  // Loading a saved definition is the first authoring step for an explicit follow-up edit.
+  "customWidget_get",
+  "customWidget_validateTemplate",
+  "customWidget_previewCreate",
+  "customWidget_previewReviseTemplate",
+  "customWidget_previewQuery",
+  "customWidget_previewAction",
+  "customWidget_previewJournal",
+  "customWidget_configurationRequestUser",
+  "customWidget_createFromPreview",
+  "customWidget_updateFromPreview",
+]);
+
+const customWidgetDiscoveryToolNames = new Set([
+  "customWidget_getSkill",
+  "customWidget_list",
+  "customWidget_schema",
+  "customWidget_getAuthoringPrompt",
+  "customWidget_getComponentCatalog",
+  "customWidget_findComponents",
+  "customWidget_getReference",
+  "customWidget_getComponent",
+  "customWidget_getComponents",
+  "customWidget_getSharedProps",
+  "customWidget_getExample",
+]);
+
+const getUiMessageToolName = (part: unknown) => {
+  if (!isRecord(part) || typeof part.type !== "string") return null;
+  if (part.type === "dynamic-tool" && typeof part.toolName === "string") return part.toolName;
+  if (part.type.startsWith("tool-")) return part.type.slice("tool-".length);
+  return null;
+};
+
+const hasToolPartFromSet = (message: UIMessage, toolNames: ReadonlySet<string>) =>
+  message.parts.some((part) => {
+    const toolName = getUiMessageToolName(part);
+    return toolName !== null && toolNames.has(toolName);
+  });
+
 const hasCustomWidgetToolPart = (message: UIMessage) =>
   message.parts.some((part) => {
-    if (!isRecord(part) || typeof part.type !== "string") return false;
-    let toolName: string | undefined;
-    if (part.type === "dynamic-tool" && typeof part.toolName === "string") {
-      toolName = part.toolName;
-    } else if (part.type.startsWith("tool-")) {
-      toolName = part.type.slice("tool-".length);
-    }
-    if (toolName?.startsWith("customWidget_") === true) return true;
-    return toolName !== undefined && isCustomWidgetPlacementToolPart(part, toolName);
+    const toolName = getUiMessageToolName(part);
+    if (toolName === null) return false;
+    if (customWidgetAuthoringLifecycleToolNames.has(toolName)) return true;
+    if (toolName.startsWith("customWidget_")) return false;
+    return isRecord(part) && isCustomWidgetPlacementToolPart(part, toolName);
   });
 
 const hasRecentCustomWidgetLifecycleContext = (messages: readonly UIMessage[]) => {
@@ -416,9 +475,15 @@ const hasRecentCustomWidgetLifecycleContext = (messages: readonly UIMessage[]) =
   if (latestMessage?.role !== "user") return false;
 
   const previousUserIndex = messages.slice(0, -1).findLastIndex((message) => message.role === "user");
-  return messages
+  const recentAssistantMessages = messages
     .slice(previousUserIndex + 1, -1)
-    .some((message) => message.role === "assistant" && hasCustomWidgetToolPart(message));
+    .filter((message) => message.role === "assistant");
+  if (recentAssistantMessages.some(hasCustomWidgetToolPart)) return true;
+
+  const previousUserMessage = messages[previousUserIndex];
+  if (!previousUserMessage || !hasCustomWidgetAuthoringText(getUiMessageText(previousUserMessage))) return false;
+  if (!hasCustomWidgetAuthoringLifecycleResumeIntent(getUiMessageText(latestMessage), true)) return false;
+  return recentAssistantMessages.some((message) => hasToolPartFromSet(message, customWidgetDiscoveryToolNames));
 };
 
 export interface CustomWidgetFollowUpEditContext {
@@ -457,11 +522,19 @@ export const getCustomWidgetFollowUpEditContext = (
   };
 };
 
+const isCustomWidgetGuidanceRequest = (text: string) =>
+  /^\s*(?:(?:where|how)\s+(?:can|do|should|would)\s+(?:i|we)\b|(?:show|tell)\s+me\s+(?:how|where)\b|explain\s+(?:how|where)\b)/iu.test(
+    text,
+  ) || /\b(?:do not|don't|dont)\s+(?:change|modify|create|save|install)\s+anything\b/iu.test(text);
+
 const getCustomWidgetServiceTargetFromText = (text: string) => {
+  if (isCustomWidgetGuidanceRequest(text)) return null;
   if (!hasCustomWidgetFreshCreationIntent(text)) return null;
   for (const pattern of serviceWidgetIntentPatterns) {
     const target = pattern.exec(text)?.[1];
     if (!target) continue;
+    // A trailing UI requirement is not the service supplying the widget's data.
+    if (/^(?:(?:a|an|the)\s+)?(?:search|refresh|retry|submit)\s+(?:button|control)\b/iu.test(target.trim())) continue;
 
     const targetWithoutPlacement = target
       .replace(/\s+(?:in|on|to)\s+(?:(?:my|our|the|this)\s+)?(?:board|dashboard)\b.*$/iu, "")
@@ -484,7 +557,8 @@ const getCustomWidgetServiceTargetFromText = (text: string) => {
 };
 
 const hasCustomWidgetAuthoringText = (text: string) => {
-  if (boardManagementIntentPattern.test(text)) return false;
+  if (isCustomWidgetGuidanceRequest(text)) return false;
+  if (boardManagementIntentPattern.test(withoutNegatedBoardManagementIntent(text))) return false;
   if (explicitCustomWidgetIntentPattern.test(text)) return true;
   if (nativeWidgetIntentPattern.test(text)) return false;
   return getCustomWidgetServiceTargetFromText(text) !== null;
@@ -500,12 +574,18 @@ export const hasExplicitCustomWidgetComponentDiscoveryRequest = (messages: reado
   const latestUserMessage = messages.findLast((message) => message.role === "user");
   if (!latestUserMessage) return false;
   const text = getUiMessageText(latestUserMessage);
-  return /\b(?:component\s+discovery|find|inspect|search)\b[^\n]{0,80}\bcomponents?\b|\bcomponents?\b[^\n]{0,80}\b(?:documentation|docs|reference)\b/iu.test(
+  return /\bcomponent\s+discovery\b|\b(?:find|inspect|search(?:\s+for)?)\s+(?:(?:the|available|supported|registered|mantine|custom|widget)\s+){0,3}components?\b|\bcomponents?\s+(?:documentation|docs|reference)\b/iu.test(
     text,
   );
 };
 
 export const getRequestedCustomWidgetExampleId = (messages: readonly UIMessage[]) => {
+  const latestUserMessage = messages.findLast((message) => message.role === "user");
+  const text = latestUserMessage ? getUiMessageText(latestUserMessage).toLowerCase() : "";
+  const explicitExample = getCustomWidgetExampleCatalog().find(({ title }) =>
+    text.includes(`bundled ${title.toLowerCase()} example`),
+  );
+  if (explicitExample) return explicitExample.id;
   const target = getRequestedCustomWidgetServiceTarget(messages);
   if (target === null) return null;
   if (target === "dispatcharr" || (target.includes("dispatcharr") && /\bchannels?\b/iu.test(target))) {
@@ -594,6 +674,8 @@ const hasExplicitCustomWidgetIntent = (message: UIMessage) =>
 export const needsCustomWidgetAuthoringContext = (messages: UIMessage[]) => {
   const latestMessage = messages.at(-1);
   if (!latestMessage) return false;
-  if (hasExplicitCustomWidgetIntent(latestMessage)) return true;
+  if (isCustomWidgetGuidanceRequest(getLatestUserText(messages))) return false;
+  const latestUserMessage = messages.findLast((message) => message.role === "user");
+  if (latestUserMessage && hasExplicitCustomWidgetIntent(latestUserMessage)) return true;
   return hasRecentCustomWidgetLifecycleContext(messages);
 };
