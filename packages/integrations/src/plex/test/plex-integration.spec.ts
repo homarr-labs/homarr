@@ -11,8 +11,11 @@ const imageProxyMocks = vi.hoisted(() => ({
   createImageAsync: vi.fn((url: string) => Promise.resolve(`proxied:${url}`)),
 }));
 
+const dispatcherMocks = vi.hoisted(() => ({ close: vi.fn(() => Promise.resolve()) }));
+
 vi.mock("@homarr/core/infrastructure/http", () => ({
   fetchWithTrustedCertificatesAsync: vi.fn(),
+  createCertificateAgentAsync: vi.fn(() => Promise.resolve(dispatcherMocks)),
 }));
 
 vi.mock("@homarr/image-proxy", () => ({
@@ -57,8 +60,8 @@ const createEpisode = (key: string, overrides: Record<string, unknown>) => ({
   ...overrides,
 });
 
-const respond = (body: unknown) =>
-  Promise.resolve(new Response(JSON.stringify(body), { status: 200 })) as unknown as ReturnType<
+const respond = (body: unknown, status = 200) =>
+  Promise.resolve(new Response(JSON.stringify(body), { status })) as unknown as ReturnType<
     typeof fetchWithTrustedCertificatesAsync
   >;
 
@@ -155,7 +158,7 @@ describe("PlexIntegration.getMediaReleasesAsync", () => {
 describe("PlexIntegration.getMediaReleasesAsync with recently added episodes", () => {
   const mockPlex = (
     recentlyAdded: Record<string, unknown>[],
-    episodesBySection: Record<string, Record<string, unknown>[]>,
+    episodesBySection: Record<string, Record<string, unknown>[] | "error">,
   ) => {
     mockFetch.mockImplementation((url) => {
       const urlString = String(url);
@@ -181,7 +184,10 @@ describe("PlexIntegration.getMediaReleasesAsync with recently added episodes", (
 
       const sectionMatch = /\/library\/sections\/(\d+)\/all\?type=4&sort=addedAt:desc/.exec(urlString);
       if (sectionMatch?.[1] && sectionMatch[1] in episodesBySection) {
-        return respond({ MediaContainer: { Metadata: episodesBySection[sectionMatch[1]] } });
+        const episodes = episodesBySection[sectionMatch[1]];
+        return episodes === "error"
+          ? respond({ error: "boom" }, 500)
+          : respond({ MediaContainer: { Metadata: episodes } });
       }
 
       throw new Error(`Unexpected Plex request: ${urlString}`);
@@ -237,11 +243,11 @@ describe("PlexIntegration.getMediaReleasesAsync with recently added episodes", (
       ["Inception", undefined],
       ["Breaking Bad", "Season 2"],
     ]);
-    // the bumped season uses the air date of the newest episode
-    expect(releases[0]?.releaseDate).toEqual(new Date("2026-09-14"));
+    // the bumped season uses the air date of the newest episode, as a local calendar date
+    expect(releases[0]?.releaseDate).toEqual(new Date(2026, 8, 14));
     expect(releases[1]).toMatchObject({
       type: "tv",
-      releaseDate: new Date("2026-09-13"),
+      releaseDate: new Date(2026, 8, 13),
       imageUrls: {
         poster: `proxied:${TEST_URL}/library/metadata/show-99/thumb`,
         backdrop: `proxied:${TEST_URL}/library/metadata/ep-missing/art`,
@@ -287,5 +293,75 @@ describe("PlexIntegration.getMediaReleasesAsync with recently added episodes", (
     const releases = await createIntegration().getMediaReleasesAsync();
 
     expect(releases).toMatchObject([{ title: "Breaking Bad", subtitle: "Season 1" }]);
+  });
+
+  test("does not duplicate content that recentlyAdded already lists as an episode or a show", async () => {
+    mockPlex(
+      [
+        createMetadataItem("episode", {
+          type: "episode",
+          title: "Oceans Three",
+          parentKey: "/library/metadata/season-11",
+          grandparentTitle: "Futurama",
+          addedAt: 100,
+        }),
+        createMetadataItem("show-42", { type: "show", title: "Severance", addedAt: 90 }),
+      ],
+      {
+        "1": [
+          createEpisode("ep-futurama", {
+            title: "Oceans Three",
+            index: 5,
+            parentIndex: 11,
+            parentKey: "/library/metadata/season-11",
+            grandparentKey: "/library/metadata/show-futurama",
+            grandparentTitle: "Futurama",
+            addedAt: 500,
+          }),
+          createEpisode("ep-severance", {
+            title: "Cold Harbor",
+            index: 10,
+            parentIndex: 2,
+            parentKey: "/library/metadata/season-sev-2",
+            grandparentKey: "/library/metadata/show-42",
+            grandparentTitle: "Severance",
+            addedAt: 400,
+          }),
+        ],
+      },
+    );
+
+    const releases = await createIntegration().getMediaReleasesAsync();
+
+    // one card per show: the episode entry is bumped and labelled, the show entry is left untouched
+    expect(releases.map((release) => [release.title, release.subtitle])).toEqual([
+      ["Futurama", "S11E05 \u2013 Oceans Three"],
+      ["Severance", undefined],
+    ]);
+  });
+
+  test("keeps the episodes of the libraries that answered when one library fails", async () => {
+    mockPlex([createMetadataItem("movie", { type: "movie", title: "Inception", addedAt: 100 })], {
+      "1": "error",
+      "7": [
+        createEpisode("ep-ok", {
+          parentKey: "/library/metadata/season-7",
+          parentTitle: "Season 3",
+          grandparentTitle: "Andor",
+          grandparentThumb: "/library/metadata/show-andor/thumb",
+          addedAt: 400,
+        }),
+      ],
+    });
+
+    const releases = await createIntegration().getMediaReleasesAsync();
+
+    expect(releases.map((release) => release.title)).toEqual(["Andor", "Inception"]);
+  });
+
+  test("throws a response error instead of a parse error when Plex rejects the request", async () => {
+    mockFetch.mockImplementation(() => respond({ error: "unauthorized" }, 401));
+
+    await expect(createIntegration().getMediaReleasesAsync()).rejects.toThrow();
   });
 });

@@ -1,8 +1,10 @@
 import { parseStringPromise } from "xml2js";
 import { z } from "zod/v4";
 
-import { ParseError } from "@homarr/common/server";
-import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import { ParseError, ResponseError } from "@homarr/common/server";
+import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
+import type { UndiciHttpAgent } from "@homarr/core/infrastructure/http";
+import { createCertificateAgentAsync, fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ImageProxy } from "@homarr/image-proxy";
 
@@ -44,9 +46,92 @@ function parseResolution(
 }
 
 // Seasons in /library/recentlyAdded use "/library/metadata/{ratingKey}/children" as key, episodes reference their
-// season through parentKey "/library/metadata/{ratingKey}"
-function seasonKeyOf(item: { type: string; key: string }): string | null {
-  return item.type === "season" ? item.key.replace(/\/children$/, "") : null;
+// season through parentKey "/library/metadata/{ratingKey}". /library/recentlyAdded can return either of them for the
+// same content, so both are mapped to the season they belong to.
+function seasonKeyOf(item: RecentlyAddedItem): string | null {
+  if (item.type === "season") return item.key.replace(/\/children$/, "");
+  if (item.type === "episode") return item.parentKey ?? null;
+  return null;
+}
+
+function formatEpisodeSubtitle(episode: RecentlyAddedEpisode): string | undefined {
+  if (episode.parentIndex === undefined || episode.index === undefined) return undefined;
+
+  const seasonEpisode = `S${String(episode.parentIndex).padStart(2, "0")}E${String(episode.index).padStart(2, "0")}`;
+  return episode.title ? `${seasonEpisode} \u2013 ${episode.title}` : seasonEpisode;
+}
+
+/**
+ * Plex returns date only values such as "2008-01-20" for air dates, which `new Date` parses as UTC midnight and
+ * therefore renders as the previous day for anyone west of UTC. Those are calendar dates, so they are kept local.
+ */
+function parseReleaseDate(item: RecentlyAddedItem): Date {
+  const airDate = item.originallyAvailableAt;
+  if (!airDate) return new Date(item.addedAt * 1000);
+
+  const dateOnly = /^(\d{4})-(\d{2})-(\d{2})$/.exec(airDate);
+  if (!dateOnly) return new Date(airDate);
+
+  return new Date(Number(dateOnly[1]), Number(dateOnly[2]) - 1, Number(dateOnly[3]));
+}
+
+/**
+ * `/library/recentlyAdded` lists seasons with the `addedAt` of the season itself, so episodes added to an existing
+ * season never surface. Merges the most recently added episode of every season into the list: entries that received
+ * newer episodes are bumped to the episode's `addedAt`, seasons that are no longer part of `/library/recentlyAdded`
+ * are re-created from the episode metadata. Entries whose show or season is already listed are never duplicated.
+ */
+function mergeRecentlyAddedEpisodes(items: RecentlyAddedItem[], episodes: RecentlyAddedEpisode[]): MergedItem[] {
+  if (episodes.length === 0) return items;
+
+  // Episodes are sorted by addedAt descending, so the first one per season is the newest
+  const newestEpisodeBySeasonKey = new Map<string, RecentlyAddedEpisode>();
+  for (const episode of episodes) {
+    if (!episode.parentKey || newestEpisodeBySeasonKey.has(episode.parentKey)) continue;
+    newestEpisodeBySeasonKey.set(episode.parentKey, episode);
+  }
+
+  const bumpedItems = items.map((item): MergedItem => {
+    const seasonKey = seasonKeyOf(item);
+    const episode = seasonKey ? newestEpisodeBySeasonKey.get(seasonKey) : undefined;
+    if (!episode || episode.addedAt <= item.addedAt) return item;
+
+    return {
+      ...item,
+      addedAt: episode.addedAt,
+      originallyAvailableAt: episode.originallyAvailableAt ?? item.originallyAvailableAt,
+      latestEpisode: episode,
+    };
+  });
+
+  const listedKeys = new Set(
+    items.flatMap((item) => (item.type === "show" ? [item.key] : [seasonKeyOf(item)])).filter((key) => key !== null),
+  );
+  const missingSeasons = [...newestEpisodeBySeasonKey.entries()]
+    .filter(([seasonKey, episode]) => !listedKeys.has(seasonKey) && !listedKeys.has(episode.grandparentKey ?? ""))
+    .map(([seasonKey, episode]): MergedItem => {
+      const poster = episode.grandparentThumb ?? episode.parentThumb;
+      const backdrop = episode.art ?? episode.grandparentArt;
+
+      return {
+        key: `${seasonKey}/children`,
+        type: "season",
+        title: episode.parentTitle ?? (episode.parentIndex !== undefined ? `Season ${episode.parentIndex}` : "Season"),
+        parentTitle: episode.grandparentTitle,
+        addedAt: episode.addedAt,
+        originallyAvailableAt: episode.originallyAvailableAt,
+        latestEpisode: episode,
+        Image:
+          poster || backdrop
+            ? [
+                ...(poster ? [{ type: "coverPoster", url: poster }] : []),
+                ...(backdrop ? [{ type: "background", url: backdrop }] : []),
+              ]
+            : undefined,
+      };
+    });
+
+  return [...bumpedItems, ...missingSeasons].toSorted((itemA, itemB) => itemB.addedAt - itemA.addedAt);
 }
 
 function isStreamDirect(decision: string | undefined): boolean {
@@ -164,9 +249,30 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
 
   public async getMediaReleasesAsync(): Promise<MediaRelease[]> {
     const token = super.getSecretValue("apiKey");
-    const machineIdentifier = await this.getMachineIdentifierAsync();
-    const data = await recentlyAddedSchema.parseAsync(await this.fetchJsonAsync("/library/recentlyAdded"));
-    const recentlyAddedItems = await this.withRecentlyAddedEpisodesAsync(data.MediaContainer.Metadata ?? []);
+    // A single dispatcher for all requests of this call, so the trusted certificates are read once and the
+    // connection to Plex is reused instead of opening a new TLS connection per library.
+    const dispatcher = await createCertificateAgentAsync(undefined, { bodyTimeout: REQUEST_TIMEOUT_MS });
+
+    try {
+      return await this.getMediaReleasesWithDispatcherAsync(token, dispatcher);
+    } finally {
+      await dispatcher.close();
+    }
+  }
+
+  private async getMediaReleasesWithDispatcherAsync(token: string, dispatcher: UndiciHttpAgent) {
+    // The episode requests are an addition to /library/recentlyAdded and run alongside it instead of after it
+    const [machineIdentifier, data, episodes] = await Promise.all([
+      this.getMachineIdentifierAsync(dispatcher),
+      this.fetchJsonAsync("/library/recentlyAdded", dispatcher).then(
+        async (json) => await recentlyAddedSchema.parseAsync(json),
+      ),
+      this.getRecentlyAddedEpisodesAsync(dispatcher),
+    ]);
+    const recentlyAddedItems = mergeRecentlyAddedEpisodes(data.MediaContainer.Metadata ?? [], episodes).slice(
+      0,
+      MEDIA_RELEASES_LIMIT,
+    );
     const imageProxy = new ImageProxy();
 
     const images =
@@ -223,11 +329,11 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
           id: item.Media?.at(0)?.id.toString() ?? item.key,
           type: mapType(item.type),
           title,
-          subtitle: title === item.title ? item.tagline : item.title,
+          subtitle:
+            (item.latestEpisode ? formatEpisodeSubtitle(item.latestEpisode) : undefined) ??
+            (title === item.title ? item.tagline : item.title),
           description: item.summary,
-          releaseDate: item.originallyAvailableAt
-            ? new Date(item.originallyAvailableAt)
-            : new Date(item.addedAt * 1000),
+          releaseDate: parseReleaseDate(item),
           imageUrls: {
             poster: proxiedImages.find((image) => image.mediaKey === item.key && image.type === "poster")?.url,
             backdrop: proxiedImages.find((image) => image.mediaKey === item.key && image.type === "backdrop")?.url,
@@ -249,110 +355,78 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
   }
 
   /**
-   * `/library/recentlyAdded` lists seasons with the `addedAt` of the season itself, so episodes added to an
-   * existing season never surface. This merges the most recently added episodes of every show library into
-   * the list: seasons that received new episodes are bumped to the episode's `addedAt` (and its air date),
-   * seasons that are no longer part of `/library/recentlyAdded` are re-created from the episode metadata.
-   * Any failure while fetching episodes falls back to the plain `/library/recentlyAdded` result.
+   * Most recently added episodes of every show library, newest first. Never rejects: a library that fails or times
+   * out is skipped so the remaining libraries still contribute, and an empty result keeps the seasons only list.
    */
-  private async withRecentlyAddedEpisodesAsync(items: RecentlyAddedItem[]): Promise<RecentlyAddedItem[]> {
-    const episodes = await this.getRecentlyAddedEpisodesAsync().catch((error) => {
-      logger.warn(new Error("Failed to fetch recently added episodes, falling back to seasons only", { cause: error }));
-      return [];
-    });
+  private async getRecentlyAddedEpisodesAsync(dispatcher: UndiciHttpAgent): Promise<RecentlyAddedEpisode[]> {
+    const showSections = await this.getShowSectionsAsync(dispatcher);
 
-    if (episodes.length === 0) {
-      return items;
-    }
-
-    // Keep only the most recently added episode per season, episodes are sorted by addedAt descending
-    const newestEpisodeBySeasonKey = new Map<string, RecentlyAddedEpisode>();
-    for (const episode of episodes) {
-      if (!episode.parentKey || newestEpisodeBySeasonKey.has(episode.parentKey)) continue;
-      newestEpisodeBySeasonKey.set(episode.parentKey, episode);
-    }
-
-    const bumpedItems = items.map((item) => {
-      const seasonKey = seasonKeyOf(item);
-      const episode = seasonKey ? newestEpisodeBySeasonKey.get(seasonKey) : undefined;
-      if (!episode || episode.addedAt <= item.addedAt) return item;
-
-      return {
-        ...item,
-        addedAt: episode.addedAt,
-        originallyAvailableAt: episode.originallyAvailableAt ?? item.originallyAvailableAt,
-      };
-    });
-
-    const knownSeasonKeys = new Set(items.map(seasonKeyOf).filter((key): key is string => key !== null));
-    const missingSeasons = [...newestEpisodeBySeasonKey.entries()]
-      .filter(([seasonKey]) => !knownSeasonKeys.has(seasonKey))
-      .map(([seasonKey, episode]): RecentlyAddedItem => {
-        const poster = episode.grandparentThumb ?? episode.parentThumb;
-        const backdrop = episode.art ?? episode.grandparentArt;
-
-        return {
-          key: `${seasonKey}/children`,
-          type: "season",
-          title:
-            episode.parentTitle ?? (episode.parentIndex !== undefined ? `Season ${episode.parentIndex}` : "Season"),
-          parentTitle: episode.grandparentTitle,
-          addedAt: episode.addedAt,
-          originallyAvailableAt: episode.originallyAvailableAt,
-          Image:
-            poster || backdrop
-              ? [
-                  ...(poster ? [{ type: "coverPoster", url: poster }] : []),
-                  ...(backdrop ? [{ type: "background", url: backdrop }] : []),
-                ]
-              : undefined,
-        };
-      });
-
-    return [...bumpedItems, ...missingSeasons]
-      .toSorted((itemA, itemB) => itemB.addedAt - itemA.addedAt)
-      .slice(0, RECENTLY_ADDED_LIMIT);
-  }
-
-  private async getRecentlyAddedEpisodesAsync(): Promise<RecentlyAddedEpisode[]> {
-    const sections = await librarySectionsSchema.parseAsync(
-      await this.fetchJsonAsync("/library/sections", { timeout: EPISODES_REQUEST_TIMEOUT_MS }),
-    );
-    const showSections = sections.MediaContainer.Directory?.filter((section) => section.type === "show") ?? [];
-
-    const episodesPerSection = await Promise.all(
+    const episodesPerSection = await Promise.allSettled(
       showSections.map(async (section) => {
         const data = await recentlyAddedEpisodesSchema.parseAsync(
           await this.fetchJsonAsync(
-            `/library/sections/${encodeURIComponent(section.key)}/all?type=4&sort=addedAt:desc&X-Plex-Container-Start=0&X-Plex-Container-Size=${RECENTLY_ADDED_LIMIT}`,
-            { timeout: EPISODES_REQUEST_TIMEOUT_MS },
+            `/library/sections/${encodeURIComponent(section.key)}/all?type=4&sort=addedAt:desc&X-Plex-Container-Start=0&X-Plex-Container-Size=${EPISODES_PAGE_SIZE}`,
+            dispatcher,
           ),
         );
         return data.MediaContainer.Metadata ?? [];
       }),
     );
 
-    return episodesPerSection.flat().toSorted((episodeA, episodeB) => episodeB.addedAt - episodeA.addedAt);
+    return episodesPerSection
+      .flatMap((result, index) => {
+        if (result.status === "fulfilled") return result.value;
+
+        logger.warn(
+          new ErrorWithMetadata(
+            "Failed to fetch recently added episodes of Plex library",
+            { section: showSections[index]?.key ?? "unknown" },
+            { cause: result.reason },
+          ),
+        );
+        return [];
+      })
+      .toSorted((episodeA, episodeB) => episodeB.addedAt - episodeA.addedAt);
+  }
+
+  private async getShowSectionsAsync(dispatcher: UndiciHttpAgent) {
+    try {
+      const sections = await librarySectionsSchema.parseAsync(
+        await this.fetchJsonAsync("/library/sections", dispatcher),
+      );
+      return sections.MediaContainer.Directory?.filter((section) => section.type === "show") ?? [];
+    } catch (error) {
+      logger.warn(
+        new Error("Failed to list Plex libraries, media releases fall back to seasons only", { cause: error }),
+      );
+      return [];
+    }
   }
 
   /**
    * Wraps fetchWithTrustedCertificatesAsync with the Plex token and JSON accept header used by all JSON endpoints.
+   * The dispatcher carries the body timeout, `timeout` covers the response headers.
    */
-  private async fetchJsonAsync(path: `/${string}`, options?: { timeout?: number }): Promise<unknown> {
+  private async fetchJsonAsync(path: `/${string}`, dispatcher: UndiciHttpAgent): Promise<unknown> {
     const token = super.getSecretValue("apiKey");
     const response = await fetchWithTrustedCertificatesAsync(super.url(path), {
-      ...options,
+      dispatcher,
+      timeout: REQUEST_TIMEOUT_MS,
       headers: {
         "X-Plex-Token": token,
         Accept: "application/json",
       },
     });
 
+    if (!response.ok) {
+      throw new ResponseError(response);
+    }
+
     return await response.json();
   }
 
-  private async getMachineIdentifierAsync(): Promise<string> {
-    const data = await identitySchema.parseAsync(await this.fetchJsonAsync("/identity"));
+  private async getMachineIdentifierAsync(dispatcher: UndiciHttpAgent): Promise<string> {
+    const data = await identitySchema.parseAsync(await this.fetchJsonAsync("/identity", dispatcher));
     return data.MediaContainer.machineIdentifier;
   }
 
@@ -400,13 +474,16 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
   }
 }
 
-// Default page size of /library/recentlyAdded
-const RECENTLY_ADDED_LIMIT = 50;
-// Episodes are an addition to /library/recentlyAdded, a stalled library request must not block the fallback
-const EPISODES_REQUEST_TIMEOUT_MS = 10_000;
+// Same limit as the Jellyfin and Emby integrations
+const MEDIA_RELEASES_LIMIT = 100;
+// Default page size of /library/recentlyAdded, enough to cover the newest episode of every recently updated season
+const EPISODES_PAGE_SIZE = 50;
+// A stalled Plex request must not block the merge, the fallback or the widget
+const REQUEST_TIMEOUT_MS = 10_000;
 
 const recentlyAddedItemSchema = z.object({
   key: z.string(),
+  parentKey: z.string().optional(), // season of an episode, for example "/library/metadata/123"
   studio: z.string().optional(),
   type: z.string(), // For example "movie", "album"
   title: z.string(),
@@ -446,6 +523,13 @@ const recentlyAddedItemSchema = z.object({
 
 type RecentlyAddedItem = z.infer<typeof recentlyAddedItemSchema>;
 
+/**
+ * A recently added item together with the newest episode that put it at its position, if any.
+ */
+interface MergedItem extends RecentlyAddedItem {
+  latestEpisode?: RecentlyAddedEpisode;
+}
+
 // https://plexapi.dev/api-reference/library/get-recently-added
 const recentlyAddedSchema = z.object({
   MediaContainer: z.object({
@@ -470,10 +554,13 @@ const librarySectionsSchema = z.object({
 // https://plexapi.dev/api-reference/library/get-library-items with type=4 (episodes)
 const recentlyAddedEpisodeSchema = z.object({
   key: z.string(),
+  title: z.string().optional(), // episode title
+  index: z.number().optional(), // episode number
   parentKey: z.string().optional(), // season, for example "/library/metadata/123"
-  parentIndex: z.number().optional(),
+  parentIndex: z.number().optional(), // season number
   parentTitle: z.string().optional(), // season title, for example "Season 2"
   parentThumb: z.string().optional(),
+  grandparentKey: z.string().optional(), // show, for example "/library/metadata/122"
   grandparentTitle: z.string().optional(), // show title
   grandparentThumb: z.string().optional(),
   grandparentArt: z.string().optional(),
