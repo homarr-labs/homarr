@@ -1,4 +1,0 @@
-ready=1 health_http=200
-stop_exit=0 duration_ms=577
-homarr-triage-v2-platform-681c1dd1
-state=exited exit=0 oom=false

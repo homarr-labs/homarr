@@ -1,3 +1,0 @@
-stop_exit=0 duration_ms=15944
-homarr-triage-v2-platform-681c1dd1
-state=exited exit=137 oom=false

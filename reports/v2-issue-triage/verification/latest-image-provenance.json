@@ -1,8 +1,0 @@
-{
-  "Id": "sha256:a448a40203214afd934c41999718825bb41ce3a6b4ebd358cc0da9242c9a603d",
-  "Created": "2026-09-18T17:44:20.605862738+02:00",
-  "Labels": {
-    "org.homarr.dev.revision": "439b208283c2e80dd399fcb2a83e1661bb0c099f",
-    "org.homarr.dev.source": "release/v2"
-  }
-}

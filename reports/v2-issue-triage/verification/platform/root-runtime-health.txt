@@ -1,2 +1,0 @@
-health_http=200
-{"status":"healthy","healthChecks":{"database":{"status":"healthy","latency":4.415122999999994},"redis":{"status":"healthy","latency":12.918231000000105}}}

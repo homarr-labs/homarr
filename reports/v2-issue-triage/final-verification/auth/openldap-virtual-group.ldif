@@ -1,8 +1,0 @@
-dn: ou=virtual-groups,dc=example,dc=test
-objectClass: organizationalUnit
-ou: virtual-groups
-
-dn: cn=admin,ou=virtual-groups,dc=example,dc=test
-objectClass: groupOfNames
-cn: admin
-member: uid=admin,ou=users,dc=example,dc=test
