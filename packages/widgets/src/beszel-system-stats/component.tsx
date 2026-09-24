@@ -23,9 +23,6 @@ import { getUsableWidgetQueryData } from "../common/query-state";
 import { BeszelStatsView } from "../beszel/_shared/stats-view";
 import { createBeszelSystemChoices, resolveBeszelSystemChoice } from "./selection";
 
-const STACK_PADDING = 24;
-const SCROLL_FIT_BUFFER = 2;
-
 export default function BeszelSystemStatsWidget({
   options,
   integrationIds,
@@ -264,15 +261,14 @@ export default function BeszelSystemStatsWidget({
         className={classes.beszelStatsContainer}
         style={{ pointerEvents: isEditMode ? "none" : undefined }}
       >
-        <Stack p="sm">
+        <Stack gap={0}>
           <BeszelStatsView
-            displayScale={layoutScale}
             showXAxis={responsiveWidth >= 220 && responsiveHeight >= 180}
             integrationIds={selectedSystem ? [selectedSystem.integrationId] : []}
             systemId={selectedSystem?.systemId ?? ""}
             timePeriod={options.timePeriod as BeszelTimePeriod}
             columns={responsiveWidth > 600 ? 2 : 1}
-            availableHeight={Math.max(0, responsiveHeight - STACK_PADDING - SCROLL_FIT_BUFFER)}
+            availableHeight={height}
             visibility={{
               cpu: options.showCpu,
               memory: options.showMemory,

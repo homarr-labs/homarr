@@ -40,7 +40,10 @@ import type { AssistantPendingAction } from "./assistant-pending-action";
 import type { AssistantReasoningMode, AssistantRuntimeModelOption } from "./assistant-preferences";
 import { getAssistantProviderQuotaLevel } from "./assistant-provider-quota";
 
-type ComposerProps = AssistantConversationControls & { pendingAction: AssistantPendingAction | undefined };
+type ComposerProps = AssistantConversationControls & {
+  pendingAction: AssistantPendingAction | undefined;
+  compact?: boolean;
+};
 
 const getModelProviderLabel = (modelId: string, fallback: string) => {
   const separator = modelId.indexOf("/");
@@ -57,6 +60,7 @@ const formatCompactModelNumber = (value: number) =>
   new Intl.NumberFormat(undefined, { notation: "compact", maximumFractionDigits: 1 }).format(value);
 
 export const RuntimeControls = ({
+  compact = false,
   modelId,
   models,
   modelOptionsLoading,
@@ -103,25 +107,48 @@ export const RuntimeControls = ({
   return (
     <Combobox store={modelCombobox} onOptionSubmit={selectModel} withinPortal position="top-start" width={340}>
       <Combobox.Target>
-        <UnstyledButton
-          className={classes.runtimeSelectorTrigger}
-          type="button"
-          disabled={modelOptionsLoading || models.length === 0}
-          onClick={() => modelCombobox.toggleDropdown()}
-          aria-label={`${t("runtime.model")}: ${selectedModel?.name ?? t("runtime.noModels")}. ${t("runtime.thinking")}: ${t(`runtime.reasoning.${reasoning}`)}`}
-          aria-expanded={modelCombobox.dropdownOpened}
-        >
-          <Group gap="xs" wrap="nowrap">
-            {modelOptionsLoading && <Loader size={12} />}
-            <Text className={classes.runtimeSelectorName} size="xs" fw={650} lineClamp={1}>
+        {compact ? (
+          <Button
+            className={classes.composerModelButton}
+            classNames={{ label: classes.runtimeSelectorName }}
+            variant="subtle"
+            color="gray"
+            size="compact-sm"
+            type="button"
+            disabled={modelOptionsLoading || models.length === 0}
+            onClick={() => modelCombobox.toggleDropdown()}
+            aria-label={`${t("runtime.model")}: ${selectedModel?.name ?? t("runtime.noModels")}. ${t("runtime.thinking")}: ${t(`runtime.reasoning.${reasoning}`)}`}
+            aria-expanded={modelCombobox.dropdownOpened}
+          >
+            {modelOptionsLoading && <Loader size="xs" />}
+            <Text component="span" size="sm" fw={300}>
               {selectedModel?.name ?? t("runtime.model")}
-            </Text>
-            <Badge className={classes.runtimeSelectorEffort} size="xs" variant="light" color="gray">
+            </Text>{" "}
+            <Text component="span" size="sm" fw={300} c="dimmed">
               {t(`runtime.reasoning.${reasoning}`)}
-            </Badge>
-            <Combobox.Chevron size="xs" />
-          </Group>
-        </UnstyledButton>
+            </Text>
+          </Button>
+        ) : (
+          <UnstyledButton
+            className={classes.runtimeSelectorTrigger}
+            type="button"
+            disabled={modelOptionsLoading || models.length === 0}
+            onClick={() => modelCombobox.toggleDropdown()}
+            aria-label={`${t("runtime.model")}: ${selectedModel?.name ?? t("runtime.noModels")}. ${t("runtime.thinking")}: ${t(`runtime.reasoning.${reasoning}`)}`}
+            aria-expanded={modelCombobox.dropdownOpened}
+          >
+            <Group gap="xs" wrap="nowrap">
+              {modelOptionsLoading && <Loader size={12} />}
+              <Text className={classes.runtimeSelectorName} size="xs" fw={400} lineClamp={1}>
+                {selectedModel?.name ?? t("runtime.model")}
+              </Text>
+              <Badge className={classes.runtimeSelectorEffort} size="xs" variant="light" color="gray">
+                {t(`runtime.reasoning.${reasoning}`)}
+              </Badge>
+              <Combobox.Chevron size="xs" />
+            </Group>
+          </UnstyledButton>
+        )}
       </Combobox.Target>
       <Combobox.Dropdown className={classes.modelDropdown}>
         <Combobox.Search

@@ -8,8 +8,10 @@ import {
   Collapse,
   Divider,
   Group,
+  HoverCard,
   Loader,
   Popover,
+  Progress,
   RingProgress,
   ScrollArea,
   Stack,
@@ -476,7 +478,7 @@ const ConversationContextBreakdown = ({ breakdown }: { breakdown: AssistantConte
   );
 };
 
-export const ConversationContext = () => {
+export const ConversationContext = ({ compact = false }: { compact?: boolean }) => {
   const t = useI18n("assistant");
   const [opened, setOpened] = useState(false);
   const messages = useAuiState((state) => state.thread.messages);
@@ -504,6 +506,58 @@ export const ConversationContext = () => {
   ]
     .filter(Boolean)
     .join(" · ");
+
+  if (compact) {
+    let contextUsed = t("usage.notReported");
+    if (breakdown.contextUsed !== undefined && breakdown.contextLength !== undefined) {
+      contextUsed = `${breakdown.contextUsed.toLocaleString()} / ${breakdown.contextLength.toLocaleString()} ${t("usage.tokens")}`;
+    }
+
+    return (
+      <HoverCard width={220} position="top" shadow="md" openDelay={120} closeDelay={120} withinPortal>
+        <HoverCard.Target>
+          <Box
+            component="span"
+            className={classes.composerContextIndicator}
+            role="img"
+            tabIndex={0}
+            aria-label={`${t("usage.contextWindow")}: ${contextUsed}. ${t("usage.cost")}: ${hasCost ? formatCost(usage.cost) : t("usage.notReported")}`}
+          >
+            <RingProgress
+              size={24}
+              thickness={4}
+              roundCaps
+              sections={hasContext ? [{ value: contextPercentage, color: getContextColor(contextPercentage) }] : []}
+            />
+          </Box>
+        </HoverCard.Target>
+        <HoverCard.Dropdown className={classes.contextQuickView}>
+          <Stack gap="xs">
+            <Group justify="space-between" gap="xs" wrap="nowrap">
+              <Text size="xs" fw={500}>
+                {t("usage.contextWindow")}
+              </Text>
+              <Text size="xs" c="dimmed">
+                {hasContext ? `${contextPercentage}%` : t("usage.notReported")}
+              </Text>
+            </Group>
+            <Progress size="xs" value={contextPercentage} color={getContextColor(contextPercentage)} />
+            <Text size="xs" c="dimmed">
+              {contextUsed}
+            </Text>
+            <Group justify="space-between" gap="xs" wrap="nowrap">
+              <Text size="xs" c="dimmed">
+                {t("usage.cost")}
+              </Text>
+              <Text size="xs" fw={500}>
+                {hasCost ? formatCost(usage.cost) : t("usage.notReported")}
+              </Text>
+            </Group>
+          </Stack>
+        </HoverCard.Dropdown>
+      </HoverCard>
+    );
+  }
 
   return (
     <Popover

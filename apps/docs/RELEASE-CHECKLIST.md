@@ -61,6 +61,15 @@ Use the same candidate image digest throughout staging and promotion.
 
 ## Evidence
 
+Dependency refresh on 2026-09-24 incorporates `release/v2` through `a974c9642`, including Next 16.3.3,
+Mermaid 11.16.1, and the security overrides. The regenerated lockfile retains the Fumadocs pins and unrelated
+Babel, Lucide, and Zod resolutions. Frozen installation, all 21 focused API/CORS/widget-manifest tests, and docs
+typechecking passed. The rebuilt combined image
+`sha256:7148d4777cf3c6abbfdbe96524fd8c7bfb864b7e7c8425f9d5f66c314cc25aeb`
+passed runtime configuration, static routes, persistence, and backup/restore checks. Its exact export passed
+search, Markdown, SEO, and link validation with the same counts below. External-service evidence below predates
+this dependency refresh; the remaining staging gates still apply.
+
 Verified on 2026-09-23–24. Local amd64 production image:
 `sha256:4395c7c5b9ee2504fcabcd706a4b7d284864b3037c334f69604b0483a34bb23b`.
 This is a local image ID, not a published multi-architecture manifest digest. Canonical origin is `https://homarr.dev`;

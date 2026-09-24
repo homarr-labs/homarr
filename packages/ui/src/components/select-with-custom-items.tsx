@@ -27,7 +27,7 @@ export interface SelectWithCustomItemsProps<TSelectItem extends BaseSelectItem> 
 }
 
 type Props<TSelectItem extends BaseSelectItem> = SelectWithCustomItemsProps<TSelectItem> & {
-  SelectOption: React.ComponentType<TSelectItem & { checked?: boolean }>;
+  SelectOption: React.ComponentType<TSelectItem & { checked?: boolean; selected?: boolean }>;
 };
 
 export const SelectWithCustomItems = <TSelectItem extends BaseSelectItem>({
@@ -104,7 +104,11 @@ export const SelectWithCustomItems = <TSelectItem extends BaseSelectItem>({
           multiline
           w={w}
         >
-          {selectedOption ? <SelectOption {...selectedOption} /> : <Input.Placeholder>{placeholder}</Input.Placeholder>}
+          {selectedOption ? (
+            <SelectOption {...selectedOption} selected />
+          ) : (
+            <Input.Placeholder>{placeholder}</Input.Placeholder>
+          )}
         </InputBase>
       </Combobox.Target>
 

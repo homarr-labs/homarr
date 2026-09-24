@@ -132,6 +132,11 @@
 
 .widgetPanel[data-board-widget] {
   background: transparent;
+  --assistant-widget-spacing-xs: calc(var(--mantine-spacing-xs) * var(--board-canvas-ui-scale, 1));
+  --assistant-widget-spacing-sm: calc(var(--mantine-spacing-sm) * var(--board-canvas-ui-scale, 1));
+  --assistant-widget-spacing-md: calc(var(--mantine-spacing-md) * var(--board-canvas-ui-scale, 1));
+  --assistant-widget-spacing-lg: calc(var(--mantine-spacing-lg) * var(--board-canvas-ui-scale, 1));
+  --assistant-widget-spacing-xl: calc(var(--mantine-spacing-xl) * var(--board-canvas-ui-scale, 1));
 }
 
 .widgetPanel[data-board-widget] .panelHeader,
@@ -144,6 +149,224 @@
 .widgetPanel[data-board-widget] .composerQuote,
 .widgetPanel[data-board-widget] .pendingQuestionDock {
   background: transparent;
+}
+
+.widgetPanel[data-board-widget] .empty {
+  min-height: 0;
+  padding: var(--assistant-widget-spacing-xs);
+}
+
+.widgetPanel[data-board-widget] .panelHeader {
+  min-height: calc(var(--assistant-widget-spacing-xl) + var(--assistant-widget-spacing-xs));
+  padding: var(--assistant-widget-spacing-xs) var(--assistant-widget-spacing-sm);
+}
+
+.widgetPanelTitle {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.widgetPanel[data-board-widget] .historyButtonLabel {
+  display: none;
+}
+
+.widgetPanel[data-board-widget] .historyButton {
+  width: calc(var(--assistant-widget-spacing-xl) + var(--assistant-widget-spacing-xs));
+  max-width: calc(var(--assistant-widget-spacing-xl) + var(--assistant-widget-spacing-xs));
+  height: calc(var(--assistant-widget-spacing-xl) + var(--assistant-widget-spacing-xs));
+  padding-inline: var(--assistant-widget-spacing-xs);
+}
+
+.widgetPanel[data-board-widget] .panelAction {
+  width: calc(var(--assistant-widget-spacing-xl) + var(--assistant-widget-spacing-xs));
+  height: calc(var(--assistant-widget-spacing-xl) + var(--assistant-widget-spacing-xs));
+}
+
+.widgetPanel[data-board-widget] .panelAction svg,
+.widgetPanel[data-board-widget] .historyButton svg {
+  width: 1.25em;
+  height: 1.25em;
+}
+
+.widgetPanel[data-board-widget] .messages {
+  display: flex;
+  min-height: 0;
+  flex: 0 0 auto;
+  flex-direction: column;
+  padding: var(--assistant-widget-spacing-sm) var(--assistant-widget-spacing-md);
+}
+
+.widgetPanel[data-board-widget] .viewport {
+  min-height: 0;
+  flex: 1 1 0;
+}
+
+.widgetPanel[data-board-widget] .composerWrap {
+  flex: 0 0 auto;
+  border-top: 0;
+}
+
+.widgetPanel[data-board-widget] .composer {
+  gap: var(--assistant-widget-spacing-xs);
+  padding: calc(var(--assistant-widget-spacing-xs) / 4);
+}
+
+.widgetPanel[data-board-widget] .composerMain {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid rgb(from var(--mantine-color-default-border) r g b / var(--opacity, 1));
+  border-radius: var(--assistant-widget-radius);
+  background: rgb(from var(--mantine-color-default) r g b / var(--opacity, 1));
+}
+
+.widgetPanel[data-board-widget] .composerFooter {
+  padding: 0 var(--assistant-widget-spacing-xs) var(--assistant-widget-spacing-xs);
+}
+
+.widgetPanel[data-board-widget] .composerLeading,
+.widgetPanel[data-board-widget] .composerTrailing {
+  min-width: 0;
+}
+
+.widgetPanel[data-board-widget] .composerTrailing {
+  margin-inline-start: auto;
+}
+
+.widgetPanel[data-board-widget] .composerTrailing > :last-child {
+  margin-inline-start: var(--mantine-spacing-xs);
+}
+
+.widgetPanel[data-board-widget] .composerApproval,
+.widgetPanel[data-board-widget] .composerModelButton {
+  min-width: 0;
+  max-width: 100%;
+  padding-inline: var(--assistant-widget-spacing-xs);
+  background: transparent;
+  font-weight: 400;
+}
+
+.widgetPanel[data-board-widget] .composerApproval {
+  flex: 0 0 auto;
+  padding: 0;
+}
+
+.widgetPanel[data-board-widget] .composerModelButton {
+  padding-inline: calc(var(--mantine-spacing-xs) / 2);
+}
+
+.widgetPanel[data-board-widget] .composerApproval:hover:not(:disabled),
+.widgetPanel[data-board-widget] .composerModelButton:hover:not(:disabled) {
+  background: rgb(from var(--mantine-color-default-hover) r g b / var(--opacity, 1));
+}
+
+.widgetPanel[data-board-widget] .composerApproval :global(.mantine-Button-label),
+.widgetPanel[data-board-widget] .composerModelButton :global(.mantine-Button-label) {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.widgetPanel[data-board-widget] .composerContextIndicator {
+  display: grid;
+  width: var(--assistant-widget-spacing-lg);
+  height: var(--assistant-widget-spacing-lg);
+  flex: 0 0 auto;
+  place-items: center;
+  cursor: default;
+}
+
+.widgetPanel[data-board-widget] .composerContextIndicator:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+  border-radius: var(--mantine-radius-xl);
+}
+
+.widgetPanel[data-board-widget] .composerInput {
+  min-width: 0;
+  min-height: calc(var(--assistant-widget-spacing-xl) + var(--assistant-widget-spacing-xs));
+  flex: 1 1 auto;
+  padding: var(--assistant-widget-spacing-xs);
+  font-size: var(--mantine-font-size-md);
+}
+
+.widgetPanel[data-board-widget] .composerWidgetInput {
+  width: 100%;
+  min-height: calc(var(--assistant-widget-spacing-xl) * 2);
+  max-height: calc(var(--assistant-widget-spacing-xl) * 5);
+  padding: var(--assistant-widget-spacing-sm);
+  border: 0;
+  background: transparent;
+}
+
+.widgetPanel[data-board-widget] .composerWidgetInput :global(.aui-lexical-placeholder) {
+  inset: var(--assistant-widget-spacing-sm) var(--assistant-widget-spacing-sm) auto;
+}
+
+.widgetPanel[data-board-widget] .composer:has(.composerWidgetInput:focus-within) {
+  box-shadow: none;
+}
+
+.widgetPanel[data-board-widget] .composerMain:has(.composerWidgetInput:focus-within) {
+  border-color: var(--mantine-primary-color-filled);
+}
+
+.widgetPanel[data-board-widget] .composerInput :global(.aui-lexical-placeholder) {
+  font-size: var(--mantine-font-size-md);
+}
+
+.widgetPanel[data-board-widget] .runtimeSelectorName,
+.widgetPanel[data-board-widget] .composerContextLabel {
+  font-size: var(--mantine-font-size-sm);
+}
+
+.widgetPanel[data-board-widget] .attachment {
+  gap: var(--assistant-widget-spacing-xs);
+  padding: var(--assistant-widget-spacing-xs);
+}
+
+.widgetPanel[data-board-widget] .attachmentImage,
+.widgetPanel[data-board-widget] .attachmentFileIcon {
+  width: var(--assistant-widget-spacing-xl);
+  height: var(--assistant-widget-spacing-xl);
+}
+
+.widgetPanel[data-board-widget] .composerAttachments {
+  max-width: 100%;
+}
+
+.widgetPanel[data-board-widget] .composerAttachments .attachment {
+  max-width: min(15rem, 75%);
+}
+
+.widgetPanel[data-board-widget] .composerRow {
+  align-items: center;
+  gap: var(--assistant-widget-spacing-sm);
+}
+
+.widgetPanel[data-board-widget] .composerRow > :global(.mantine-ActionIcon-root) {
+  flex: 0 0 auto;
+}
+
+.widgetPanel[data-board-widget] .composerRow > :global(.mantine-Group-root) {
+  flex: 0 0 auto;
+}
+
+.widgetPanel[data-board-widget] .composerInput {
+  align-self: center;
+}
+
+.widgetPanel[data-board-widget] .composerInput :global(.aui-lexical-input) {
+  min-height: var(--mantine-font-size-md);
+  max-height: calc(var(--assistant-widget-spacing-xl) * 2);
+  overflow-y: auto;
+}
+
+.widgetPanel[data-board-widget] .attachmentName,
+.widgetPanel[data-board-widget] .attachmentType {
+  max-width: 100%;
 }
 
 .widgetPanel[data-board-widget] .suggestion,
@@ -177,7 +400,7 @@
 .compactState {
   width: 100%;
   height: 100%;
-  padding: 0.75rem;
+  padding: var(--mantine-spacing-md);
 }
 
 .compactCopy {
@@ -334,6 +557,10 @@
   background: var(--mantine-color-body);
 }
 
+.widgetHistoryDropdown {
+  border: 0;
+}
+
 .historyMenu :global(.mantine-ScrollArea-content) {
   display: block;
   width: 100%;
@@ -422,7 +649,7 @@
 }
 
 .message {
-  margin-block: 0.9rem;
+  margin-block: 0.45rem;
 }
 
 .message[data-static] {
@@ -431,9 +658,14 @@
 }
 
 .userMessageWrap {
+  position: relative;
   width: fit-content;
   max-width: 86%;
   margin-inline-start: auto;
+}
+
+.userMessageWrap[data-static] {
+  content-visibility: visible;
 }
 
 .userMessage {
@@ -456,6 +688,7 @@
   line-height: 1.6;
   overflow-wrap: anywhere;
   white-space: pre-wrap;
+  user-select: text;
 }
 
 .directiveChip {
@@ -519,6 +752,7 @@
 .messageMarkdown {
   line-height: 1.65;
   overflow-wrap: anywhere;
+  user-select: text;
 }
 
 .messageMarkdown > :first-child {
@@ -1131,6 +1365,93 @@
   padding: 0.3rem;
 }
 
+.widgetPanel[data-board-widget] .attachment {
+  max-width: min(15rem, 100%);
+}
+
+.widgetPanel[data-board-widget] .empty[data-compact] {
+  display: flex;
+  min-height: 0;
+  flex: 0 0 auto;
+  flex-direction: column;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  padding-block: var(--assistant-widget-spacing-xs);
+  text-align: start;
+}
+
+.widgetPanel[data-board-widget] .suggestions:has(.compactSuggestion) {
+  grid-template-columns: 1fr;
+  gap: var(--assistant-widget-spacing-xs);
+  margin: 0 auto;
+}
+
+@container assistant-widget (min-width: 40rem) {
+  .widgetPanel[data-board-widget] .suggestions:has(.compactSuggestion) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.widgetPanel[data-board-widget] .tool,
+.widgetPanel[data-board-widget] .messageFile,
+.widgetPanel[data-board-widget] .attachment {
+  background-color: rgb(from var(--mantine-color-default) r g b / var(--opacity, 1));
+  border-color: rgb(from var(--mantine-color-default-border) r g b / var(--opacity, 1));
+}
+
+.widgetPanel[data-board-widget] .tool[data-compact] {
+  background-color: rgb(from var(--mantine-color-body) r g b / var(--opacity, 1));
+}
+
+.widgetPanel[data-board-widget] .attachmentImage,
+.widgetPanel[data-board-widget] .attachmentFileIcon {
+  background-color: rgb(from var(--mantine-color-body) r g b / var(--opacity, 1));
+}
+
+.widgetPanel[data-board-widget] .userMessage {
+  background-color: rgb(from var(--mantine-color-red-light) r g b / var(--opacity, 1));
+}
+
+.widgetPanel[data-board-widget] .pendingActionBanner {
+  background-color: rgb(from var(--mantine-color-yellow-light) r g b / var(--opacity, 1));
+}
+
+.widgetPanel[data-board-widget] .autoApprovalProgress {
+  background-color: rgb(from var(--mantine-color-green-light) r g b / var(--opacity, 1));
+}
+
+.compactSuggestion {
+  width: 100%;
+  height: calc(var(--assistant-widget-spacing-xl) + var(--assistant-widget-spacing-sm));
+  min-width: 0;
+  min-height: calc(var(--assistant-widget-spacing-xl) + var(--assistant-widget-spacing-sm));
+  justify-content: flex-start;
+  padding: var(--assistant-widget-spacing-xs) var(--assistant-widget-spacing-sm);
+  text-align: start;
+  white-space: nowrap;
+}
+
+.compactSuggestion :global(.mantine-Button-inner) {
+  min-width: 0;
+  justify-content: flex-start;
+}
+
+.compactSuggestion :global(.mantine-Button-section) {
+  flex: 0 0 auto;
+}
+
+.compactSuggestion :global(.mantine-Button-label) {
+  min-width: 0;
+  overflow: hidden;
+  line-height: var(--mantine-line-height-sm);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.widgetPanel[data-board-widget]:has(.empty[data-compact]) .scrollToBottom {
+  display: none;
+}
+
 .attachmentImage,
 .attachmentFileIcon {
   display: grid;
@@ -1144,7 +1465,72 @@
 }
 
 .attachmentImage {
-  object-fit: cover;
+  object-fit: contain;
+}
+
+.composerAttachments {
+  display: flex;
+  max-width: 100%;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: calc(var(--mantine-spacing-xs) / 4);
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-inline: var(--mantine-spacing-xs);
+  scrollbar-width: thin;
+}
+
+.composerAttachments:empty {
+  display: none;
+}
+
+.composerAttachments .attachment {
+  position: relative;
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: min(15rem, 75%);
+  flex: 0 0 auto;
+  margin: 0;
+  gap: var(--mantine-spacing-xs);
+  padding: var(--mantine-spacing-xs);
+}
+
+.composerAttachments .attachment[data-image] {
+  width: calc(var(--mantine-spacing-xl) * 1.5);
+  height: calc(var(--mantine-spacing-xl) * 1.5);
+  padding: 0;
+}
+
+.composerAttachments .attachment[data-image] .attachmentImage,
+.composerAttachments .attachment[data-image] .attachmentFileIcon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.composerAttachments .attachment[data-image] .attachmentCopy {
+  display: none;
+}
+
+.composerAttachments .attachmentRemove {
+  position: absolute;
+  top: 0;
+  right: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.composerAttachments .attachment:hover .attachmentRemove,
+.composerAttachments .attachment:focus-within .attachmentRemove {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (hover: none) {
+  .composerAttachments .attachmentRemove {
+    opacity: 1;
+    pointer-events: auto;
+  }
 }
 
 .attachmentCopy {
@@ -1216,6 +1602,30 @@
 
 .userActions {
   min-height: 1.75rem;
+}
+
+.userMessageActions {
+  position: absolute;
+  inset-block-start: 100%;
+  inset-inline-end: 0;
+  z-index: 1;
+  min-height: 1.75rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease;
+}
+
+.userMessageWrap:hover .userMessageActions,
+.userMessageWrap:focus-within .userMessageActions {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (hover: none) {
+  .userMessageActions {
+    opacity: 1;
+    pointer-events: auto;
+  }
 }
 
 .branchPicker {
@@ -1356,6 +1766,10 @@
 .conversationContextPopover {
   max-height: min(34rem, calc(100dvh - 1rem));
   overflow: hidden;
+}
+
+.contextQuickView {
+  padding: var(--mantine-spacing-xs);
 }
 
 .conversationUsageSummary {
@@ -1845,7 +2259,7 @@
   }
 
   .message {
-    margin-block: 0.7rem;
+    margin-block: 0.35rem;
   }
 
   .userMessage {
@@ -1903,6 +2317,51 @@
   .boardSettingsSubmitGroup {
     justify-content: space-between;
     margin-inline-start: 0;
+  }
+}
+
+@container assistant-widget (max-width: 36rem) {
+  .widgetPanel[data-board-widget] .historyButton {
+    width: calc(var(--assistant-widget-spacing-xl) + var(--assistant-widget-spacing-xs));
+    max-width: calc(var(--assistant-widget-spacing-xl) + var(--assistant-widget-spacing-xs));
+    height: calc(var(--assistant-widget-spacing-xl) + var(--assistant-widget-spacing-xs));
+    padding-inline: var(--assistant-widget-spacing-xs);
+  }
+}
+
+@container assistant-widget (max-width: 30rem) {
+  .widgetPanel[data-board-widget] .panelHeader {
+    min-height: calc(var(--assistant-widget-spacing-xl) + var(--assistant-widget-spacing-xs));
+    padding: var(--assistant-widget-spacing-xs) var(--assistant-widget-spacing-sm);
+  }
+
+  .widgetPanel[data-board-widget] .messages {
+    padding: var(--assistant-widget-spacing-xs) var(--assistant-widget-spacing-sm);
+  }
+
+  .widgetPanel[data-board-widget] .suggestions:has(.compactSuggestion) {
+    grid-template-columns: 1fr;
+  }
+}
+
+@container assistant-widget (max-height: 24rem) {
+  .widgetPanel[data-board-widget] .empty {
+    min-height: 0;
+    padding-block: var(--assistant-widget-spacing-md);
+  }
+
+  .widgetPanel[data-board-widget] .empty[data-compact] {
+    padding-block: var(--assistant-widget-spacing-xs);
+  }
+
+  .widgetPanel[data-board-widget] .suggestions:has(.compactSuggestion) {
+    margin-top: var(--assistant-widget-spacing-xs);
+  }
+
+  .compactSuggestion {
+    height: var(--assistant-widget-spacing-xl);
+    min-height: var(--assistant-widget-spacing-xl);
+    padding-block: var(--assistant-widget-spacing-xs);
   }
 }
 

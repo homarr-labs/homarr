@@ -13,10 +13,10 @@ import { formatLocalizedDate } from "../../common/locale";
 export type BeszelTimePeriod = "1m" | "1h" | "12h" | "24h" | "1w" | "30d";
 
 const timeFormatOptions: Record<BeszelTimePeriod, Intl.DateTimeFormatOptions> = {
-  "1m": { hour: "numeric", minute: "2-digit", second: "2-digit" },
-  "1h": { hour: "numeric", minute: "2-digit" },
-  "12h": { hour: "numeric", minute: "2-digit" },
-  "24h": { hour: "numeric", minute: "2-digit" },
+  "1m": { hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23" },
+  "1h": { hour: "2-digit", minute: "2-digit", hourCycle: "h23" },
+  "12h": { hour: "2-digit", minute: "2-digit", hourCycle: "h23" },
+  "24h": { hour: "2-digit", minute: "2-digit", hourCycle: "h23" },
   "1w": { month: "short", day: "numeric" },
   "30d": { month: "short", day: "numeric" },
 };
@@ -93,7 +93,8 @@ const yAxisBase = {
   tick: { fontSize: "var(--mantine-font-size-xs)" },
 } as const;
 const chartStyle = { minWidth: 0, minHeight: 1 } as const;
-const panelStyle = { minWidth: 0, overflow: "hidden" } as const;
+const panelStyle = { minWidth: 0 } as const;
+const chartMargin = { top: 0, right: 0, bottom: 0, left: 0 } as const;
 export const CPU_Y_AXIS_DOMAIN: [number, string] = [0, "auto"];
 
 interface BeszelChartPanelProps {
@@ -120,36 +121,32 @@ export const BeszelChartPanel = memo(({ title, subtitle, chartProps }: BeszelCha
 
 type BeszelAreaChartProps = Omit<AreaChartProps, "dataKey" | "curveType" | "withDots" | "withYAxis"> & {
   yAxisFormatter: (value: number) => string;
-  displayScale?: number;
   yAxisDomain?: [number, string];
 };
 
 const BeszelAreaChart = memo(
   ({
     yAxisFormatter,
-    displayScale = 1,
     withXAxis = true,
     yAxisDomain,
     yAxisProps: yAxisPropsOverride,
     xAxisProps: xAxisPropsOverride,
+    areaChartProps: areaChartPropsOverride,
     type = "default",
     ...props
   }: BeszelAreaChartProps) => {
     const mergedXAxis = useMemo(
       () => ({
         interval: "preserveEnd" as const,
+        tick: { fontSize: "var(--mantine-font-size-xs)" },
         ...xAxisPropsOverride,
       }),
       [xAxisPropsOverride],
     );
-    let axisWidth = 56;
-    if (Number.isFinite(displayScale) && displayScale > 0 && displayScale < 1) {
-      axisWidth /= displayScale;
-    }
     const mergedYAxis = useMemo(() => {
       const base = {
         ...yAxisBase,
-        width: axisWidth,
+        width: 56,
         tickMargin: 2,
         tickFormatter: yAxisFormatter,
         ...yAxisPropsOverride,
@@ -158,7 +155,7 @@ const BeszelAreaChart = memo(
         return { ...base, domain: yAxisDomain };
       }
       return base;
-    }, [axisWidth, yAxisFormatter, yAxisDomain, yAxisPropsOverride]);
+    }, [yAxisFormatter, yAxisDomain, yAxisPropsOverride]);
 
     return (
       <AreaChart
@@ -173,6 +170,7 @@ const BeszelAreaChart = memo(
         withXAxis={withXAxis}
         withYAxis
         w="100%"
+        areaChartProps={{ margin: chartMargin, ...areaChartPropsOverride }}
         style={chartStyle}
         xAxisProps={mergedXAxis}
         yAxisProps={mergedYAxis}
