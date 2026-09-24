@@ -22,7 +22,7 @@ const skillSourceDirectory = path.resolve(import.meta.dirname, "../../../../.age
 describe("authoring resources", () => {
   it("returns the complete portable skill and keeps every bundled source file in sync", () => {
     const skill = getCustomWidgetSkill();
-    expect(skill).toMatchObject({ name: "homarr-custom-widget", version: "2.10.0" });
+    expect(skill).toMatchObject({ name: "homarr-custom-widget", version: "2.10.8" });
     expect(skill.skillsShUrl).toContain("skills.sh/homarr-labs/homarr");
     expect(skill.sourceUrl).toContain("/tree/HEAD/.agents/skills/homarr-custom-widget");
     expect(skill.installCommand).toContain("--skill homarr-custom-widget");
@@ -133,7 +133,7 @@ describe("authoring resources", () => {
     });
     expect(result.components.find(({ name }) => name === "TextInput")).not.toHaveProperty("props");
     expect(result.notFound).toEqual(["Missing"]);
-    expect(result.nextStep).toContain("template validation");
+    expect(result.nextStep).toContain("preview creation");
     expect(Buffer.byteLength(JSON.stringify(result), "utf8")).toBeLessThan(10_000);
   });
 

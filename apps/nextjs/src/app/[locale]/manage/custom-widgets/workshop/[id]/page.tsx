@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 
 import { auth } from "@homarr/auth/next";
+import { createLoginUrl } from "@homarr/auth/shared";
 
 import { WorkshopDetail } from "./_workshop-detail";
 
@@ -9,10 +10,9 @@ interface WorkshopDetailPageProps {
 }
 
 export default async function WorkshopDetailPage(props: WorkshopDetailPageProps) {
-  const session = await auth();
-  if (!session?.user.permissions.includes("admin")) redirect(session ? "/" : "/auth/login");
-
-  const { id } = await props.params;
+  const [session, { id }] = await Promise.all([auth(), props.params]);
+  if (!session) redirect(createLoginUrl(`/manage/custom-widgets/workshop/${id}`));
+  if (!session.user.permissions.includes("admin")) redirect("/");
 
   return <WorkshopDetail id={id} />;
 }

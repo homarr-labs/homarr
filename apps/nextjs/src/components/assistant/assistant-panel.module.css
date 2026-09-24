@@ -1,6 +1,6 @@
 .activityBar {
   position: fixed;
-  z-index: 290;
+  z-index: calc(var(--mantine-z-index-modal) - 1);
   inset-inline-start: 50%;
   bottom: max(1rem, env(safe-area-inset-bottom, 0px));
   display: flex;
@@ -97,7 +97,7 @@
   container-name: assistant-widget;
   container-type: size;
   position: fixed;
-  z-index: 290;
+  z-index: calc(var(--mantine-z-index-modal) - 1);
   inset-block: 1rem;
   inset-inline-end: 1rem;
   inset-inline-start: auto;
@@ -1306,34 +1306,6 @@
   align-items: center;
   gap: 0.25rem;
   margin-inline-end: 0.4rem;
-}
-
-.webSearchActivity {
-  background: color-mix(in srgb, var(--mantine-color-blue-light) 45%, var(--mantine-color-default));
-}
-
-.webSearchSources {
-  margin-top: 0.65rem;
-  padding-top: 0.65rem;
-  border-top: 1px solid var(--mantine-color-default-border);
-}
-
-.webSearchSource {
-  display: inline-flex;
-  max-width: min(100%, 18rem);
-  align-items: center;
-  gap: 0.3rem;
-  padding: 0.3rem 0.5rem;
-  border: 1px solid var(--mantine-color-default-border);
-  border-radius: var(--mantine-radius-xl);
-  color: var(--mantine-color-text);
-  background: var(--mantine-color-body);
-  text-decoration: none;
-}
-
-.webSearchSource:hover {
-  border-color: var(--mantine-primary-color-filled);
-  color: var(--mantine-primary-color-filled);
 }
 
 .messageFile,

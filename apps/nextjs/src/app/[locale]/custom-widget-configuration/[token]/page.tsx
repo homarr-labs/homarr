@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 import { auth } from "@homarr/auth/next";
+import { createLoginUrl } from "@homarr/auth/shared";
 
 import { CustomWidgetConfigurationEntry } from "./configuration-entry";
 
@@ -11,8 +12,8 @@ export const metadata: Metadata = {
 };
 
 export default async function CustomWidgetConfigurationPage({ params }: { params: Promise<{ token: string }> }) {
-  const session = await auth();
-  if (!session?.user.permissions.includes("admin")) redirect(session ? "/" : "/auth/login");
-  const { token } = await params;
+  const [session, { token }] = await Promise.all([auth(), params]);
+  if (!session) redirect(createLoginUrl(`/custom-widget-configuration/${token}`));
+  if (!session.user.permissions.includes("admin")) redirect("/");
   return <CustomWidgetConfigurationEntry token={token} />;
 }

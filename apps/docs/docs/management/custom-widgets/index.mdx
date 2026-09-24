@@ -46,9 +46,9 @@ Use **Import from Workshop** while adding board content or import a v2 JSON defi
 requested permissions, API hosts, and actions before installation, then configure deployment-specific URLs and
 credentials in Homarr.
 
-Legacy definitions show **Migration required**. The migration prompt excludes credentials and the old display template;
-describe the visible behavior separately, import the returned v2 definition, and verify it before removing the archived
-version.
+Legacy definitions show **Migration required**. The migration prompt preserves the original template and API contract
+while excluding credentials. Import the returned v2 definition and verify it before removing the archived version.
+Missing credentials do not block a validated portable migration export; configure them after import and verify live data.
 
 Keep `SECRET_ENCRYPTION_KEY` unchanged when updating Homarr so existing credentials remain readable. Multi-replica
 installations must use the same Redis service so cached responses invalidate consistently.

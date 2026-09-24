@@ -2,29 +2,34 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 import {
-  claimCustomWidgetConfigurationRequest,
+  claimCustomWidgetConfigurationRequestForUser,
   assertCustomWidgetIntegrationBindings,
   completeCustomWidgetConfigurationRequest,
   configureCustomWidgetSourceFromRequest,
   configurePreviewSessionSource,
-  getCustomWidgetConfigurationRequest,
+  getCustomWidgetConfigurationRequestForUser,
   releaseCustomWidgetConfigurationRequest,
+  retryCustomWidgetConfigurationRequest,
 } from "@homarr/api/custom-widget-configuration";
-import { customWidgetSourceSchema } from "@homarr/custom-widgets/core";
+import { customWidgetSourceSchema, isCustomWidgetSourceUrlPlaceholder } from "@homarr/custom-widgets/core";
 import { invalidateCustomWidgetResponseCache } from "@homarr/custom-widgets/server";
 import { db } from "@homarr/db";
-import { auth } from "@homarr/auth/next";
 
-import { adminRoute } from "../../admin";
+import type { AdminSession } from "../../admin";
+import { adminRouteWithSession } from "../../admin";
 import { readConfigurationRequestBody } from "../body";
 
 interface RouteContext {
   params: Promise<{ token: string }>;
 }
 
-const getConfigurationRequest = async (_request: NextRequest, context: RouteContext): Promise<Response> => {
+const getConfigurationRequest = async (
+  session: AdminSession,
+  _request: NextRequest,
+  context: RouteContext,
+): Promise<Response> => {
   const { token } = await context.params;
-  const request = await getCustomWidgetConfigurationRequest(token);
+  const request = await getCustomWidgetConfigurationRequestForUser(token, session.user.id);
   if (!request)
     return NextResponse.json({ error: "This source configuration request is invalid or expired." }, { status: 404 });
   return NextResponse.json(
@@ -40,9 +45,13 @@ const getConfigurationRequest = async (_request: NextRequest, context: RouteCont
   );
 };
 
-const completeConfigurationRequest = async (request: NextRequest, context: RouteContext): Promise<Response> => {
+const completeConfigurationRequest = async (
+  session: AdminSession,
+  request: NextRequest,
+  context: RouteContext,
+): Promise<Response> => {
   const { token } = await context.params;
-  const pending = await getCustomWidgetConfigurationRequest(token);
+  const pending = await getCustomWidgetConfigurationRequestForUser(token, session.user.id);
   if (!pending || pending.status !== "pending") {
     return NextResponse.json({ error: "This credential request is invalid, completed, or expired." }, { status: 404 });
   }
@@ -77,11 +86,11 @@ const completeConfigurationRequest = async (request: NextRequest, context: Route
       { status: 400 },
     );
   }
+  if (sourceResult.data.type !== "integration" && isCustomWidgetSourceUrlPlaceholder(sourceResult.data.baseUrl)) {
+    return NextResponse.json({ error: "Replace the suggested URL with the actual server URL." }, { status: 400 });
+  }
   try {
-    await assertCustomWidgetIntegrationBindings(
-      { db, session: await auth() },
-      { [pending.sourceId]: sourceResult.data },
-    );
+    await assertCustomWidgetIntegrationBindings({ db, session }, { [pending.sourceId]: sourceResult.data });
   } catch {
     return NextResponse.json(
       { error: "The selected integration is unavailable or has a different type." },
@@ -98,7 +107,7 @@ const completeConfigurationRequest = async (request: NextRequest, context: Route
     return NextResponse.json({ error: "Enter every requested credential field." }, { status: 400 });
   }
 
-  const claimed = await claimCustomWidgetConfigurationRequest(token);
+  const claimed = await claimCustomWidgetConfigurationRequestForUser(token, session.user.id);
   if (!claimed) {
     return NextResponse.json(
       { error: "This source configuration request is already being completed." },
@@ -127,15 +136,18 @@ const completeConfigurationRequest = async (request: NextRequest, context: Route
         expectedSource: claimed.source,
       });
       if (result.status === "definition-not-found") {
+        await retryCustomWidgetConfigurationRequest(token);
         return NextResponse.json({ error: "The custom widget no longer exists." }, { status: 404 });
       }
       if (result.status === "source-not-found") {
+        await retryCustomWidgetConfigurationRequest(token);
         return NextResponse.json(
           { error: "This API source changed after the setup link was created. Request a new setup link." },
           { status: 409 },
         );
       }
       if (result.status === "binding-changed") {
+        await retryCustomWidgetConfigurationRequest(token);
         return NextResponse.json(
           {
             error: "This API source authentication changed after the setup link was created. Request a new setup link.",
@@ -145,12 +157,18 @@ const completeConfigurationRequest = async (request: NextRequest, context: Route
       }
     }
 
-    await completeCustomWidgetConfigurationRequest(token);
+    const completed = await completeCustomWidgetConfigurationRequest(token);
+    if (!completed) {
+      return NextResponse.json(
+        { error: "The source was configured, but the setup request could not be completed. Request a new setup link." },
+        { status: 409 },
+      );
+    }
     return NextResponse.json({ status: "completed" }, { headers: { "Cache-Control": "no-store" } });
   } finally {
     await releaseCustomWidgetConfigurationRequest(token);
   }
 };
 
-export const GET = adminRoute(getConfigurationRequest);
-export const POST = adminRoute(completeConfigurationRequest);
+export const GET = adminRouteWithSession(getConfigurationRequest);
+export const POST = adminRouteWithSession(completeConfigurationRequest);

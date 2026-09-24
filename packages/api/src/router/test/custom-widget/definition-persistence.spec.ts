@@ -134,6 +134,9 @@ describe("custom widget definition persistence", () => {
       previewPath: `/manage/custom-widgets/preview/${preview.previewSession.id}`,
     });
     expect(preview).not.toHaveProperty("definition");
+    expect(preview.previewSession).not.toHaveProperty("secrets");
+    expect(preview.previewSession).not.toHaveProperty("sources");
+    expect(preview.previewSession).not.toHaveProperty("template");
     expect(Buffer.byteLength(JSON.stringify(preview), "utf8")).toBeLessThan(4_000);
     expect(preview.queries.map(({ requestId }) => requestId)).toEqual(Object.keys(jellyfin.requests));
     expect(preview.queries.every(({ nextStep }) => nextStep.includes("customWidget_previewQuery"))).toBe(true);
@@ -294,6 +297,128 @@ describe("custom widget definition persistence", () => {
 
     const created = await caller.createFromPreview(createInput);
     await expect(caller.get({ id: created.id })).resolves.toMatchObject({ template: revisedTemplate });
+  });
+
+  test("updates the existing widget from its exact tested edit preview and preserves inherited secrets", async () => {
+    const db = await prepareDatabase();
+    const caller = createCaller(db);
+    const created = await caller.create({ ...jellyfin, secrets: [secret] });
+    const updatedTemplate = jellyfin.template.replace("Jellyfin library", "Updated Jellyfin library");
+    const preview = await caller.previewCreate({
+      definitionId: created.id,
+      definition: { ...jellyfin, name: "Updated Jellyfin", template: updatedTemplate },
+      secrets: [],
+    });
+    expect(preview.persistenceTool).toBe("customWidget_updateFromPreview");
+    expect(preview.sourceConfigurations).toEqual([]);
+    const previewSession = await getPreviewSession(preview.previewSession.id, userId);
+    for (const [requestId, request] of Object.entries(previewSession.requests)) {
+      if (request.kind !== "query") continue;
+      await appendPreviewJournal(previewSession, {
+        requestId,
+        kind: "query",
+        method: request.method,
+        path: request.path,
+        status: 200,
+        durationMs: 1,
+        simulated: false,
+      });
+    }
+
+    const updated = await caller.updateFromPreview({ previewSessionId: previewSession.id });
+
+    expect(updated).toEqual({
+      id: created.id,
+      managementPath: `/manage/custom-widgets/edit/${created.id}`,
+    });
+    expect(await db.query.customWidgetDefinitions.findMany()).toHaveLength(1);
+    await expect(caller.get({ id: created.id })).resolves.toMatchObject({
+      name: "Updated Jellyfin",
+      template: updatedTemplate,
+      secrets: [{ sourceId: "default", kind: "apiKey", hasValue: true }],
+    });
+  });
+
+  test("rejects updateFromPreview when the preview is not associated with a stored definition", async () => {
+    const db = await prepareDatabase();
+    const caller = createCaller(db);
+    const preview = await caller.previewCreate({ definition: pokedex, secrets: [] });
+
+    await expect(caller.updateFromPreview({ previewSessionId: preview.previewSession.id })).rejects.toThrow(
+      "This preview is not associated with an existing custom widget definition",
+    );
+    expect(await db.query.customWidgetDefinitions.findMany()).toHaveLength(0);
+  });
+
+  test("rejects createFromPreview for an edit preview instead of duplicating the stored widget", async () => {
+    const db = await prepareDatabase();
+    const caller = createCaller(db);
+    const created = await caller.create({ ...pokedex, secrets: [] });
+    const preview = await caller.previewCreate({
+      definitionId: created.id,
+      definition: { ...pokedex, name: "Edited Pokédex" },
+      secrets: [],
+    });
+
+    await expect(caller.createFromPreview({ previewSessionId: preview.previewSession.id })).rejects.toThrow(
+      "This edit preview must update its existing custom widget with customWidget_updateFromPreview",
+    );
+    expect(await db.query.customWidgetDefinitions.findMany()).toHaveLength(1);
+    await expect(caller.get({ id: created.id })).resolves.toMatchObject({ name: pokedex.name });
+  });
+
+  test("requires current-revision evidence before updating from an edit preview", async () => {
+    const db = await prepareDatabase();
+    const caller = createCaller(db);
+    const created = await caller.create({ ...pokedex, secrets: [] });
+    const preview = await caller.previewCreate({
+      definitionId: created.id,
+      definition: { ...pokedex, name: "Updated Pokédex" },
+      secrets: [],
+    });
+
+    await expect(caller.updateFromPreview({ previewSessionId: preview.previewSession.id })).rejects.toThrow(
+      "Test every final preview query successfully before updating the widget",
+    );
+    await expect(caller.get({ id: created.id })).resolves.toMatchObject({ name: pokedex.name });
+  });
+
+  test("rejects an edit preview after the stored credentials change", async () => {
+    const db = await prepareDatabase();
+    const caller = createCaller(db);
+    const created = await caller.create({ ...jellyfin, secrets: [secret] });
+    const preview = await caller.previewCreate({
+      definitionId: created.id,
+      definition: { ...jellyfin, name: "Stale Jellyfin edit" },
+      secrets: [],
+    });
+    const previewSession = await getPreviewSession(preview.previewSession.id, userId);
+    await appendPreviewJournal(previewSession, {
+      requestId: "counts",
+      kind: "query",
+      method: "GET",
+      path: "/Items/Counts",
+      status: 200,
+      durationMs: 1,
+      simulated: false,
+    });
+    await caller.secretSet({
+      definitionId: created.id,
+      secret: { ...secret, value: "rotated-secret" },
+    });
+    const rotatedSecret = await db.query.customWidgetSecrets.findFirst({
+      where: eq(customWidgetSecrets.definitionId, created.id),
+    });
+
+    await expect(caller.updateFromPreview({ previewSessionId: preview.previewSession.id })).rejects.toMatchObject({
+      code: "CONFLICT",
+    });
+    await expect(caller.get({ id: created.id })).resolves.toMatchObject({ name: jellyfin.name });
+    expect(
+      await db.query.customWidgetSecrets.findFirst({
+        where: eq(customWidgetSecrets.definitionId, created.id),
+      }),
+    ).toEqual(rotatedSecret);
   });
 
   test("retains persistence evidence for every request beyond the bounded journal", async () => {
@@ -625,6 +750,41 @@ describe("custom widget definition persistence", () => {
 
     expect(await getCustomWidgetConfigurationRequestForUser(request.requestId, userId)).toMatchObject({
       widgetName: "Living room Jellyfin",
+    });
+  });
+
+  test("collects a preview URL and scope without credentials for an unauthenticated source", async () => {
+    const db = await prepareDatabase();
+    const caller = createCaller(db);
+    const definition = {
+      ...jellyfin,
+      sources: {
+        ...jellyfin.sources,
+        default: { ...jellyfinDefaultSource, baseUrl: "https://your-service.example.com", auth: "none" as const },
+      },
+    };
+    const preview = await caller.previewCreate({ definition, secrets: [] });
+    const request = await caller.configurationRequestUser({
+      previewSessionId: preview.previewSession.id,
+      sourceId: "default",
+    });
+
+    expect(request).toMatchObject({
+      previewSessionId: preview.previewSession.id,
+      sourceId: "default",
+      status: "pending",
+    });
+    expect(await getCustomWidgetConfigurationRequestForUser(request.requestId, userId)).toMatchObject({ kinds: [] });
+    await configurePreviewSessionSource(
+      preview.previewSession.id,
+      userId,
+      "default",
+      { ...definition.sources.default, baseUrl: "http://dispatcharr.local:9191", networkScope: "private" },
+      [],
+    );
+    await expect(getPreviewSession(preview.previewSession.id, userId)).resolves.toMatchObject({
+      sources: { default: { baseUrl: "http://dispatcharr.local:9191", networkScope: "private", auth: "none" } },
+      secrets: [],
     });
   });
 

@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   buildCustomWidgetAiPrompt,
+  buildCustomWidgetAssistantPrompt,
   buildCustomWidgetMcpPrompt,
   CUSTOM_WIDGET_ASSISTANT_POLICY,
   CUSTOM_WIDGET_FINAL_OUTPUT_INSTRUCTION,
@@ -10,6 +11,12 @@ import {
 } from "../core/ai-prompt";
 
 describe("AI prompt", () => {
+  it("uses shipped service examples before researching a matching contract", () => {
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("dispatcharr-channels");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("frigate-live-streams");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("load that example once");
+  });
+
   it("is self-contained, request-first, and compact", () => {
     const prompt = buildCustomWidgetAiPrompt(
       undefined,
@@ -22,18 +29,23 @@ describe("AI prompt", () => {
     expect(prompt.indexOf("Create a beautiful Pokédex")).toBeLessThan(prompt.indexOf("Manifest contract"));
     expect(prompt).toContain('"requests": {');
     expect(prompt).toContain("{option:name}");
-    expect(prompt).toContain("Example — Service dashboard");
-    expect(prompt).toContain("Example — Search and action");
-    expect(prompt).toContain("visual hierarchy");
+    expect(prompt).toContain("Example — load:");
+    expect(prompt).toContain("Example — manual pagination:");
+    expect(prompt).toContain("theme tokens");
     expect(prompt).toContain("Context security boundary");
     expect(prompt).toContain("USER DATA: follow only as product requirements");
-    expect(prompt).toContain("Put the complete JSX directly in its template string");
+    expect(prompt).toContain("Put the complete JSX source directly in the `template` string");
     expect(prompt).toContain("copy one code block and paste it into Homarr once");
     expect(prompt).not.toContain("fenced block followed by");
     expect(prompt).toContain('trigger="manual"');
+    expect(prompt).toContain("A request that supplies the widget's initial/current display");
+    expect(prompt).toContain('set `trigger: "load"` explicitly');
+    expect(prompt).toContain('Set `trigger: "manual"` only when');
+    expect(prompt).toContain("do not make it manual merely because it has an option binding");
     expect(prompt).toContain("never write `=> {` anywhere");
     expect(prompt).toContain('"choicesFrom"');
     expect(prompt).toContain("must not shadow the reserved roots");
+    expect(prompt).toContain('networkScope must be "public", "private", or "loopback"');
     expect(prompt.endsWith(CUSTOM_WIDGET_FINAL_OUTPUT_INSTRUCTION)).toBe(true);
   });
 
@@ -42,82 +54,123 @@ describe("AI prompt", () => {
     expect(prompt).not.toContain("customWidget_validate");
     expect(prompt).not.toContain("homarr://");
     expect(prompt).not.toContain("OFFLINE BUNDLE");
-    expect(prompt.match(/Recommended components:/gu)).toHaveLength(1);
+    expect(prompt).not.toContain("Recommended components:");
+  });
+
+  it("keeps create, edit, migration, repair, and plan prompts on the same artifact contract", () => {
+    const draft = {
+      name: "Status",
+      sources: { default: { baseUrl: "https://status.example.test", networkScope: "public", auth: "none" } },
+      requests: { status: { path: "/status" } },
+      options: {},
+      template: '<Text>{data.status?.name ?? "Unknown"}</Text>',
+    };
+    const diagnostics = [{ section: "template", severity: "error" as const, message: "Use a registered component." }];
+    const prompts = [
+      buildCustomWidgetAiPrompt(undefined, null, null, "Create a status widget"),
+      buildCustomWidgetAiPrompt(
+        undefined,
+        JSON.stringify({ name: "Ready", updatedAt: "2026-09-17T08:00:00Z" }),
+        draft,
+        "Edit the status widget",
+        null,
+        diagnostics,
+      ),
+      buildCustomWidgetAiPrompt(
+        undefined,
+        null,
+        { $schema: "homarr-custom-widget-v1", name: "Legacy status", url: "https://legacy.example.test/[REDACTED]" },
+        "Migrate this legacy widget",
+      ),
+      buildCustomWidgetAssistantPrompt(
+        undefined,
+        JSON.stringify({ name: "Ready" }),
+        draft,
+        "Repair the status widget",
+        null,
+        diagnostics,
+      ),
+      buildCustomWidgetMcpPrompt("Plan and create a status widget", "https://status.example.test/docs"),
+    ];
+
+    for (const prompt of prompts) {
+      expect(prompt).toContain("response envelope");
+      expect(prompt).toContain("credentials");
+    }
+    expect(prompts[4]).toContain("guard arrays");
+    expect(prompts[0]).toContain("create from the request");
+    expect(prompts[1]).toContain("repair preserves working contract");
+    expect(prompts[2]).toContain("This is a migration, not a redesign");
+    expect(prompts[2]).toContain("Preserve original path, query values, and body");
+    expect(prompts[2]).toContain("never an empty placeholder");
+    expect(prompts[2]).toContain("empty configuredSecretKinds means credentials need configuration");
+    expect(prompts[2]).toContain("iconUrl must be a valid URL string or omitted, never null");
+    expect(prompts[2]).toContain("Return the exact tested definition in the final JSON");
+    expect(prompts[2]).toContain("successMessage props");
+    const staticPrompt = buildCustomWidgetAiPrompt(
+      undefined,
+      null,
+      null,
+      "Create a static status tile with title and state options; it has no remote API request.",
+    );
+    expect(staticPrompt).toContain("Always include sources.default, even for static widgets.");
+    expect(prompts[3]).toContain("customWidget_previewCreate");
+    expect(prompts[4]).toContain("complete tool lifecycle");
+    expect(CUSTOM_WIDGET_FINAL_OUTPUT_INSTRUCTION).toContain("Unverified:");
   });
 
   it("makes the connected MCP workflow lazy, batch-capable, and evidence-driven", () => {
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY.length).toBeLessThan(4_000);
-    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT.length).toBeLessThan(4_500);
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Start with customWidget_getSkill");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("one focused component search per widget job");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Lifecycle tools run one at a time");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("change the active phase");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("customWidget_getComponents");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Do not load the full catalog");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY.length).toBeLessThan(8_000);
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT.length).toBeLessThan(8_500);
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("do not call customWidget_getSkill");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Make lifecycle/mutation calls one per step");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Load required references and uncertain components");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("at most eight needed component documents");
     expect(CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION).toContain("staged by the authoring lifecycle");
     expect(CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION).toContain("task-needed");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Reuse loaded context");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("no arbitrary documentation or creativity cap");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("one focused component search per widget job");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("presentation components exist");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Load the compact schema reference once for a new manifest");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("skip it for a supplied valid v2 draft");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("validate one response-driven correction");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("customWidget_previewReviseTemplate");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("it inherits the manifest and resets evidence");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain(
-      "fresh previewCreate only when sources, requests, or options change",
-    );
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Do not reopen discovery or add optional polish");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("byte-identical template");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("coordinated set");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("research primary API documentation once");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Before previewing any authenticated source or mutation");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("security reference exactly once");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("SubFetch");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain('<SubFetch trigger="manual">');
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain('<RefreshButton requestId="x">');
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("SubFetch owns loading/error/retry");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("literal inherited requestId");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("RefreshButton");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("load queries");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Fixed query/body values stay primitives");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("load queries never contain $param");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("resetKey={inputs.query}");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("defaultValue={1}");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("ActionButton");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("ToggleSwitch");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Do not simplify because JSX is interpreted");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("choicesFrom");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("charts");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("multiple sources");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("customWidget_validateTemplate");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("queries and actions that need evidence");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("every relevant simulated action");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("byte-identical template");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("customWidget_createFromPreview");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("reserved roots");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("For manifest fixes");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("evidence resets");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("root-name shadowing");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("one JSX expression");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("statement-bodied callbacks");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Fix unknown-prop warnings before preview");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("IconFoo");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("exact response envelope");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Never map the envelope as an array");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("indexed literal label arrays");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Wire every stateful control");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("remove dead controls");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("keep sibling request data/errors independent");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("preserve field meaning");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("documented Date helpers");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Base artwork fills its row");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("responsive media grid");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("one summary of responsive metrics");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("One primary badge");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).not.toContain("Example —");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).not.toContain("Recommended components:");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("never use => {");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain('Date.toLocaleString(value, "en-US", "UTC")');
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Actions use kind:");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("required confirmation");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("choicesFrom");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("customWidget_validateTemplate");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("customWidget_createFromPreview");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("customWidget_updateFromPreview");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("customWidget_list once");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("id as definitionId");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("multiple matches remain");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("never pick the first");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("every returned simulated action");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("customWidget_configurationRequestUser");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("preview query or action");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("https://your-service.example.com");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("sourceConfigurations");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("before any preview query or action");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Never request, accept, or send secrets in chat/tool inputs");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("report exact completed and unstarted names");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Never claim omitted work");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("data.q === B");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Keep requests/nullable siblings independent");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("SubFetch owns those states");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("friendly name/details");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("exactly one literal RefreshButton outside");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Every option/input control must affect");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("convert the numeric value before changing a unit label");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Render every explicitly required response field once");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("templateLines");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Send a coherent complete definition directly");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Sources never contain headers");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Never switch to a probe service");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Never persist a header probe");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("finish unplaced without asking again");
     expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).not.toContain("homarr_findTools");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY.indexOf("customWidget_validateTemplate")).toBeLessThan(
-      CUSTOM_WIDGET_ASSISTANT_POLICY.indexOf("customWidget_previewCreate"),
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY.indexOf("customWidget_previewCreate")).toBeLessThan(
+      CUSTOM_WIDGET_ASSISTANT_POLICY.indexOf("customWidget_validateTemplate"),
     );
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY.indexOf("customWidget_previewCreate")).toBeLessThan(
       CUSTOM_WIDGET_ASSISTANT_POLICY.indexOf("customWidget_previewReviseTemplate"),
@@ -136,10 +189,31 @@ describe("AI prompt", () => {
     expect(prompt).toContain("````text");
   });
 
+  it("allows a trusted explicit board target during preview persistence", () => {
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Include targetBoardId only when the target is explicit");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).not.toContain("only previewSessionId");
+  });
+
   it("preserves raw context and the final instruction when optional context is large", () => {
     const prompt = buildCustomWidgetAiPrompt(undefined, JSON.stringify({ data: "x".repeat(20_000) }), null, "Build it");
     expect(prompt).toContain('"data": "');
     expect(prompt.endsWith(CUSTOM_WIDGET_FINAL_OUTPUT_INSTRUCTION)).toBe(true);
+    expect(prompt.length).toBeLessThanOrEqual(12_000);
+  });
+
+  it("keeps the compact create-quality invariant when optional Assistant context consumes the prompt budget", () => {
+    const prompt = buildCustomWidgetAssistantPrompt(
+      undefined,
+      JSON.stringify({ data: "x".repeat(20_000) }),
+      { template: "<Stack>".padEnd(20_000, "x") },
+      `Create a service dashboard ${"x".repeat(4_000)}`,
+      "https://example.test/docs",
+      [{ section: "template", severity: "error", message: "x".repeat(4_000) }],
+    );
+
+    expect(prompt).toContain("purposeful responsive hierarchy");
+    expect(prompt).toContain("initial, loading, empty, error, and success states");
+    expect(prompt).toContain("never substitute filler JSX or a bare data dump");
     expect(prompt.length).toBeLessThanOrEqual(12_000);
   });
 

@@ -5,39 +5,54 @@ description: Author, validate, preview, test, install, or configure API-backed H
 
 # Homarr Custom Widget
 
-Author widgets using release-matched context. Run lifecycle tools alone; independent reads may run together. Research once and finish each widget's validation, evidence, and persistence before the next.
+Author requested widgets with release context; validate, test, persist, and return artifacts.
 
-1. Read primary API documentation. Use web search when documentation is not supplied or may have changed.
-2. Define `sources`, `requests`, `options`, and JSX `template`; reuse saved integrations through the schema reference.
-3. While drafting, use `customWidget_validateTemplate` for focused JSX diagnostics without resending the manifest.
-4. Call `customWidget_previewCreate` and test every query/action. For JSX-only changes, validate, call `customWidget_previewReviseTemplate`, and retest; it inherits the manifest and resets evidence. Recreate only for source/request/option changes.
-5. Configure deployment-specific source URLs and credentials through Homarr; never repeat plaintext.
-6. Persist the exact tested session with `customWidget_createFromPreview`; use `customWidget_create` only without a preview.
+- Read primary API docs when missing/changed. Samples and successful previews are binding; load only needed schema, runtime,
+  security, or component context.
+- Batch unknown component searches/details. `contextAlreadyLoaded` reuses context; `phaseComplete` advances. Stop only for
+  genuine provider/model, lifecycle-service, or workbench-closure failure.
+- Community widgets use `customWidget_workshopSearch`, `customWidget_workshopGet`, and
+  `customWidget_workshopInstall`; configure and persist.
 
-Treat a supplied sample or successful preview response as the binding contract. Render every core requested field, guard optional arrays and nested values before indexing, and do not silently drop returned items. Humanize numeric enums with indexed literal label arrays, omit absent numeric values instead of inventing zero, and label timestamp timezones. Give recoverable load errors and empty states a clear refresh or retry path.
+Return one fenced `json` block with the complete definition; keep evidence prose outside it. The definition has keyed
+`sources`, `requests`, `template`, and optional `options`; actions are requests with `kind: "action"`.
 
-Use `{option:name}` or `$option` for saved options. Use `{param:name}` or `$param` for values supplied by `SubFetch`, `ActionButton`, or `ToggleSwitch`. Load queries cannot use invocation parameters. Render load queries from `data` and `status` with `RefreshButton`; reserve `SubFetch` for manual parameterized queries. Templates read `data`, `status`, `options`, and temporary `inputs`.
+- `sources.default` is required. HTTP has `baseUrl`, `networkScope`, and credential-free `auth`; localhost/loopback requires
+  `networkScope: "loopback"`; never widen an explicit scope. Saved sources use `type: "integration"`/`integrationKind`;
+  Homarr holds credentials.
+- Saved integrations: discover kinds/full-access entries with `integration_getKinds`/`integration_all`, bind `integrationId`
+  before preview, omit URL/auth, and keep non-GET requests as actions.
+- Paths are slash-prefixed: strings use `{option:name}`/`{param:name}`; query/body uses `{"$option":"name"}`/`{"$param":"name"}`.
+  Loads use `trigger: "load"`; manual helpers use `trigger: "manual"`.
+- Actions stay manual; preserve `confirmation`, `permission`, and `invalidates`; DELETE requires full permission/confirmation.
+  `$param` is manual-only; `$option` may drive loads.
+- Load data.requestId/status.requestId with RefreshButton; status.requestId?.ok === false is error. Manual SubFetch never
+  populates data/status; its child receives (result, metadata) and renders its fields.
+- Options have `label`, `control`, `default`; installation config is `options.name`, never `inputs`. Request-bound TextInput,
+  Select, NumberInput, Pagination use literal `bind` + default and manual `SubFetch params` map `inputs.<name>` to `$param`.
+  Dependent pagination uses `defaultValue={1}`/`resetKey={inputs.query}`. Remove controls without an option/request/helper; guard arrays/nested with `??`;
+  preserve documented timezone values; use UTC only when the contract says UTC.
+- Templates are one expression: no imports, hooks, refs, raw HTML/events, browser requests, eval, recursion, IIFEs,
+  statement blocks, or arbitrary functions. Use registered component names; `Icon` may alias `TablerIcon`. Keep hierarchy,
+  theme tokens, useful states, and narrow/wide layouts purposeful.
 
-For a bound control that depends on another input, declare its default and set `resetKey` to that scalar dependency. For example, `<Pagination bind="page" defaultValue={1} resetKey={inputs.search} />` restores page 1 when a search changes without fetching by itself.
+## Bounded lifecycle
 
-`SubFetch` with `trigger="manual"` renders its own load button. Pass a card or image through `triggerContent` with `triggerAriaLabel` when that content should launch the request. Its callback is `(result, meta)`; callback names must not shadow the reserved roots `data`, `status`, `options`, or `inputs`. Never author `onClick` or a fetch callback. Use `Icon` or `TablerIcon` with a `name`; never invent an `IconFoo` component.
+1. Build a credential-free definition from request, verified context, and sample. Preserve a migration's API path, method,
+   body, options, and behavior; omit unknown requests rather than guessing.
+2. Send the coherent complete definition directly to `customWidget_previewCreate`; it validates both manifest and JSX.
+   Use `customWidget_validateTemplate` only for isolated JSX diagnostics, never as a preview prerequisite. Use
+   `customWidget_previewReviseTemplate` for JSX-only corrections after a preview exists. In the Assistant wrapper, multiline
+   JSX uses `templateLines` and preview creation receives the complete definition.
+3. Test every returned query/simulated action once, batching independent queries. On a concrete schema/preview error, fix only
+   that field and retry `customWidget_previewCreate` with the corrected definition; use `customWidget_previewReviseTemplate`
+   only for JSX errors after a preview exists. Stop only for genuine provider/model, lifecycle-service, or
+   workbench-closure failure.
+4. If `previewCreate` used `definitionId`, persist with `customWidget_updateFromPreview`; otherwise use
+   `customWidget_createFromPreview`. Follow create `nextAction` once. Configure credentials in Homarr; never repeat plaintext
+   secrets.
 
-Plan capabilities. Use one `customWidget_findComponents` search per job. Batch selected non-obvious binding or interaction documentation with `customWidget_getComponents`; reserve `customWidget_getComponent` for one unknown-prop repair. Failed validation reopens discovery; otherwise search only for a missing capability. The full catalog is for broad exploration; load at most one example. Context never limits composition. Prefer clear hierarchy, responsive grids, divided lists, and aligned actions over nested row cards.
+## Delivery
 
-Do not simplify a useful workflow merely because the template is interpreted. Freely compose any supported installed components with multiple sources, requests, options, `choicesFrom`, bound filters, charts, responsive detail areas, manual queries, and safe actions when they improve the user's job. Complexity must remain purposeful rather than decorative.
-
-Polish with a divided list or responsive media grid. Make one metric/action asymmetrically primary; keep headers compact, identity/state clear, metadata quiet, and one badge. At base artwork fills its row and caps above xs; never combine full-width media and nowrap.
-
-Make initial states actionable and wrap variable labels/values on narrow tiles. Do not use an unlabeled decorative icon as an empty state.
-
-Do not use imports, hooks, refs, raw HTML, raw event callbacks, browser requests, arbitrary functions, eval, bigint, npm packages, authored statement blocks, IIFEs, or recursion. Do not pretend MCP tools exist in an offline chat session.
-
-For a community widget, use `customWidget_workshopSearch`, `customWidget_workshopGet`, then `customWidget_workshopInstall`; configure its source securely. Preview configuration expires, so create before persisting configuration.
-
-Reference routing:
-
-- Load `schema` once before a new manifest; otherwise only for concrete request or option ambiguity.
-- Load `runtime` for bound inputs, manual queries, actions, or other interaction.
-- Load `security` once for any authenticated source or mutation, or to resolve a URL or interpreter limitation.
-
-Repository installations expose these as files under `references/`. MCP clients can call `customWidget_getReference` or read `homarr://custom-widgets/references/{name}` instead of loading every reference.
+Report actual lifecycle results. If unavailable, add one post-artifact `Unverified:` line naming missing validation, preview,
+renderer, or persistence. Never claim rendering/persistence from schema checks.

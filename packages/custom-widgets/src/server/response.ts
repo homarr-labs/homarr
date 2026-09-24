@@ -87,13 +87,23 @@ export function decodeResponseBody(body: ArrayBuffer, contentEncoding: string | 
 export async function parseResponseBody(response: Response, textFallback = false): Promise<unknown> {
   const text = await readLimitedBody(response);
   if (!text) return null;
+  const contentType = response.headers.get("content-type")?.toLowerCase() ?? "";
   try {
+    if (contentType.includes("ndjson")) {
+      const json = text
+        .split("\n")
+        .map((line) => line.trim())
+        .filter((line) => line.length > 0)
+        .map((line) => JSON.parse(line) as unknown);
+      assertJsonBudget(json);
+      return json;
+    }
     const json = JSON.parse(text) as unknown;
     assertJsonBudget(json);
     return json;
   } catch (error) {
     if (error instanceof CustomWidgetDomainError) throw error;
-    if (!textFallback && response.headers.get("content-type")?.toLowerCase().includes("json")) {
+    if (!textFallback && contentType.includes("json")) {
       throw new CustomWidgetDomainError({ code: "BAD_REQUEST", message: "Upstream returned invalid JSON" });
     }
     return text;

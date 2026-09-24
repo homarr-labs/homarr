@@ -12,15 +12,17 @@ import {
   customWidgetTemplateLinesSchema,
   getCustomWidgetConfirmation,
   getCustomWidgetDefaultOptions,
+  isCustomWidgetSourceUrlPlaceholder,
   normalizeCustomWidgetAuthoringDefinition,
   validateCustomWidgetOptions,
 } from "@homarr/custom-widgets/core";
-import type { CustomJsxRequest } from "@homarr/custom-widgets/core";
+import type { CustomJsxRequest, CustomWidgetSource } from "@homarr/custom-widgets/core";
 import { eq } from "@homarr/db";
 import { customWidgetDefinitions } from "@homarr/db/schema";
 
 import { permissionRequiredProcedure } from "../../trpc";
 import { parseCustomWidgetAuthoringInput } from "./authoring-validation";
+import { getCustomWidgetDefinitionStateFingerprint } from "./definition-update";
 import { createPreviewSession, getPreviewSession, revisePreviewSessionTemplate } from "./preview-sessions";
 import { hasSameSecretBinding, requiredSecretKinds } from "./secret-policy";
 import { parseStoredCustomWidgetDefinition } from "./stored-definition";
@@ -80,6 +82,32 @@ const getPreviewEvidenceChecklist = (requests: Record<string, CustomJsxRequest>,
   }),
 });
 
+const getRequiredSourceConfigurations = (
+  sources: Record<string, CustomWidgetSource>,
+  requests: Record<string, CustomJsxRequest>,
+  secrets: readonly { sourceId: string; kind: string }[],
+  sessionId: string,
+) =>
+  Object.entries(sources).flatMap(([sourceId, source]) => {
+    if (source.type === "integration") return [];
+    const sourceRequests = Object.values(requests).filter((request) => request.source === sourceId);
+    if (sourceRequests.length === 0) return [];
+    const configuredSecretKinds = new Set(
+      secrets.flatMap((secret) => (secret.sourceId === sourceId ? [secret.kind] : [])),
+    );
+    const sourceRequiresCredentials = sourceRequests.some((request) => request.auth !== "none");
+    const isMissingCredential =
+      sourceRequiresCredentials &&
+      requiredSecretKinds(getCustomWidgetSourceAuthType(source)).some((kind) => !configuredSecretKinds.has(kind));
+    if (!isCustomWidgetSourceUrlPlaceholder(source.baseUrl) && !isMissingCredential) return [];
+    return [
+      {
+        sourceId,
+        nextStep: `Call customWidget_configurationRequestUser with previewSessionId '${sessionId}' and sourceId '${sourceId}' before testing preview requests.`,
+      },
+    ];
+  });
+
 const previewCreateProcedure = permissionRequiredProcedure
   .requiresPermission("admin")
   .meta({
@@ -106,12 +134,17 @@ const previewCreateProcedure = permissionRequiredProcedure
     }
 
     const secrets = [...input.secrets];
+    let definitionStateFingerprint: string | undefined;
+    let persistenceTool: "customWidget_createFromPreview" | "customWidget_updateFromPreview" =
+      "customWidget_createFromPreview";
     if (input.definitionId) {
       const existing = await ctx.db.query.customWidgetDefinitions.findFirst({
         where: eq(customWidgetDefinitions.id, input.definitionId),
         with: { secrets: true },
       });
       if (!existing) throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget definition not found" });
+      definitionStateFingerprint = getCustomWidgetDefinitionStateFingerprint(existing, existing.secrets);
+      persistenceTool = "customWidget_updateFromPreview";
       const existingDefinition = parseStoredCustomWidgetDefinition(existing);
       for (const [sourceId, existingSource] of Object.entries(existingDefinition.sources)) {
         const submittedSource = definition.sources[sourceId];
@@ -170,13 +203,26 @@ const previewCreateProcedure = permissionRequiredProcedure
       options,
       secrets,
       definitionId: input.definitionId,
+      definitionStateFingerprint,
     });
     const previewPath = `/manage/custom-widgets/preview/${previewSession.id}`;
     return {
       success: true as const,
-      previewSession,
+      previewSession: {
+        id: previewSession.id,
+        revision: previewSession.revision,
+        expiresAt: previewSession.expiresAt,
+        liveActions: previewSession.liveActions,
+      },
       previewPath,
       previewUrl: new URL(previewPath, ctx.baseUrl ?? "http://localhost").toString(),
+      persistenceTool,
+      sourceConfigurations: getRequiredSourceConfigurations(
+        definition.sources,
+        definition.requests,
+        secrets,
+        previewSession.id,
+      ),
       ...getPreviewEvidenceChecklist(definition.requests, previewSession.id),
     };
   });
@@ -205,6 +251,9 @@ export const previewBaseProcedures = {
         input.expectedRevision,
       );
       const session = await getPreviewSession(revised.id, ctx.session.user.id);
+      let persistenceTool: "customWidget_createFromPreview" | "customWidget_updateFromPreview" =
+        "customWidget_createFromPreview";
+      if (session.definitionId) persistenceTool = "customWidget_updateFromPreview";
       const previewPath = `/manage/custom-widgets/preview/${session.id}`;
       return {
         success: true as const,
@@ -217,6 +266,7 @@ export const previewBaseProcedures = {
         },
         previewPath,
         previewUrl: new URL(previewPath, ctx.baseUrl ?? "http://localhost").toString(),
+        persistenceTool,
         ...getPreviewEvidenceChecklist(session.requests, session.id),
       };
     }),

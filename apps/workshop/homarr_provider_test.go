@@ -98,6 +98,75 @@ func TestSanitizeProviderPayload(t *testing.T) {
 	}
 }
 
+func TestSanitizeProviderPayloadPinsDefaultModelQuality(t *testing.T) {
+	payload := map[string]any{
+		"reasoning_effort":  "none",
+		"reasoning":         map[string]any{"effort": "low", "enabled": false, "exclude": true},
+		"include_reasoning": false,
+		"temperature":       0.3,
+		"top_p":             0.5,
+		"provider":          map[string]any{"only": []string{"azure"}, "allow_fallbacks": true},
+		"stream":            true,
+		"stream_options":    map[string]any{"include_usage": false},
+	}
+	if err := sanitizeProviderPayload(payload, defaultOpenRouterModelID); err != nil {
+		t.Fatal(err)
+	}
+
+	if payload["model"] != "openai/gpt-6-luna" {
+		t.Fatalf("unexpected default model: %#v", payload["model"])
+	}
+	reasoning := payload["reasoning"].(map[string]any)
+	if reasoning["effort"] != "max" || reasoning["exclude"] != false {
+		t.Fatalf("default model did not use visible max reasoning: %#v", reasoning)
+	}
+	for _, field := range []string{"reasoning_effort", "include_reasoning", "temperature", "top_p"} {
+		if _, exists := payload[field]; exists {
+			t.Fatalf("conflicting or unsupported field %q was forwarded", field)
+		}
+	}
+	if payload["stream_options"].(map[string]any)["include_usage"] != true {
+		t.Fatal("streamed token usage must be included")
+	}
+	preferences := payload["provider"].(map[string]any)
+	providers := preferences["only"].([]string)
+	if len(providers) != 1 || providers[0] != "openai" {
+		t.Fatalf("default model must only use OpenAI: %#v", preferences)
+	}
+	if preferences["allow_fallbacks"] != false {
+		t.Fatalf("default model must not fall back to another provider: %#v", preferences)
+	}
+	if preferences["zdr"] != true || preferences["data_collection"] != "deny" {
+		t.Fatalf("privacy controls must remain enforced: %#v", preferences)
+	}
+	for _, field := range []string{"order", "quantizations"} {
+		if _, exists := preferences[field]; exists {
+			t.Fatalf("obsolete DeepInfra routing field %q was forwarded", field)
+		}
+	}
+}
+
+func TestSanitizeProviderPayloadPinsLunaReasoning(t *testing.T) {
+	payload := map[string]any{
+		"reasoning":        map[string]any{"effort": "xhigh"},
+		"reasoning_effort": "xhigh",
+	}
+	if err := sanitizeProviderPayload(payload, lunaOpenRouterModelID); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, exists := payload["reasoning"]; exists {
+		t.Fatal("Luna must use the top-level reasoning_effort field")
+	}
+	if payload["reasoning_effort"] != "high" {
+		t.Fatalf("Luna did not use high reasoning: %#v", payload["reasoning_effort"])
+	}
+	preferences := payload["provider"].(map[string]any)
+	if _, exists := preferences["order"]; exists {
+		t.Fatalf("Luna must not inherit DeepInfra routing: %#v", preferences)
+	}
+}
+
 func TestSanitizeProviderPayloadRejectsUnsupportedServerTools(t *testing.T) {
 	payload := map[string]any{"tools": []any{map[string]any{"type": "openrouter:computer"}}}
 	if err := sanitizeProviderPayload(payload, "mock/team-selected-model"); err == nil {
@@ -128,6 +197,10 @@ func TestValidateProviderInput(t *testing.T) {
 	}
 	if err := validateProviderInput(payload); err != nil {
 		t.Fatalf("expected a supported Homarr image request, got %v", err)
+	}
+	payload["messages"] = []any{map[string]any{"role": "user", "content": strings.Repeat("x", maxChatTextBytes-100)}}
+	if err := validateProviderInput(payload); err != nil {
+		t.Fatalf("expected text at the conservative context boundary to be accepted, got %v", err)
 	}
 	payload["messages"] = []any{map[string]any{"role": "user", "content": strings.Repeat("x", maxChatTextBytes+1)}}
 	if err := validateProviderInput(payload); !errors.Is(err, errInputTooLarge) {

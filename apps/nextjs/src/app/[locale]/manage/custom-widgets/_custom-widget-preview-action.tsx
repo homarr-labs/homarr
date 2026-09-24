@@ -47,11 +47,16 @@ export function PreviewActionControl({
     actionMutation.mutate(
       { sessionId, requestId: request.id, params: validParams, confirmed: needsConfirmation },
       {
-        onSuccess: (result) =>
+        onSuccess: (result) => {
+          if (!result.ok) {
+            showErrorNotification({ title: request.id, message: result.error ?? result.statusText });
+            return;
+          }
           showSuccessNotification({
             title: request.id,
             message: result.simulated ? t("simulated") : t("httpStatus", { status: result.status }),
-          }),
+          });
+        },
         onError: (error) => showErrorNotification({ title: request.id, message: error.message }),
       },
     );

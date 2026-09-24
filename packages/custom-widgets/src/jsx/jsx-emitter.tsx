@@ -68,14 +68,27 @@ export function emitJsxElement(
       child.type === "JSXExpressionContainer" ? asNode(child.expression, "JSX child expression") : null;
     if (resolvedTag === "SubFetch" && expression?.type === "ArrowFunctionExpression") {
       const callback = context.createCallback(expression, environment);
-      return (value: unknown) => context.renderCallback(callback, [value], depth + 1);
+      return (value: unknown, metadata: unknown) => context.renderCallback(callback, [value, metadata], depth + 1);
     }
     return context.evaluate(child, environment, depth + 1);
   });
+  const normalizedChildren = resolvedTag === "SubFetch" ? normalizeSubFetchChildren(children) : children;
   diagnoseCustomJsxProps(rawProps, resolvedTag).forEach((diagnostic) => context.warnings.add(diagnostic));
   const props = sanitizeCustomJsxProps(rawProps, resolvedTag);
   context.budget.rendered();
-  return createElement(component, props as never, ...(children as ReactNode[]));
+  return createElement(component, props as never, ...(normalizedChildren as ReactNode[]));
+}
+
+function normalizeSubFetchChildren(children: unknown[]): unknown[] {
+  const callbacks = children.filter((child) => typeof child === "function");
+  if (callbacks.length !== 1) return children;
+  const callback = callbacks[0];
+  if (children.some((child) => !isEmptySubFetchChild(child) && child !== callback)) return children;
+  return [callback];
+}
+
+function isEmptySubFetchChild(child: unknown): boolean {
+  return child === null || child === undefined || child === false || child === true || child === "";
 }
 
 function jsxTagName(node: AstNode): string {

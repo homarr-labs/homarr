@@ -322,6 +322,7 @@ export type HomarrDocumentationPath =
   | "/docs/integrations/radarr"
   | "/docs/integrations/lidarr"
   | "/docs/integrations/readarr"
+  | "/docs/integrations/bindery"
   | "/docs/integrations/prowlarr"
   | "/docs/integrations/bazarr"
   | "/docs/integrations/jellyfin"

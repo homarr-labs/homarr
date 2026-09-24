@@ -24,10 +24,24 @@ import { parseStoredCustomWidgetDefinition } from "./stored-definition";
 
 const secretRequestInputSchema = z
   .object({
-    requestId: z.string().optional(),
-    definitionId: z.string().optional(),
-    previewSessionId: z.string().optional(),
-    sourceId: z.string().optional(),
+    requestId: z
+      .string()
+      .optional()
+      .describe("Check an existing configuration request by its returned requestId. Omit every other field."),
+    definitionId: z
+      .string()
+      .optional()
+      .describe("Create configuration for a saved widget. Requires sourceId; omit requestId and previewSessionId."),
+    previewSessionId: z
+      .string()
+      .optional()
+      .describe(
+        "Create configuration for a preview returned by previewCreate. Requires sourceId; omit requestId and definitionId.",
+      ),
+    sourceId: z
+      .string()
+      .optional()
+      .describe("Source key from sourceConfigurations, used only when creating a configuration request."),
   })
   .superRefine((input, ctx) => {
     if (input.requestId) {
@@ -121,13 +135,25 @@ export const secretProcedures = {
 
   configurationRequestUser: permissionRequiredProcedure
     .requiresPermission("admin")
-    .meta({ mcp: { enabled: true, description: "Create or check a short-lived user source-configuration request." } })
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Create or check a short-lived source-configuration request for the current administrator. Create with {previewSessionId,sourceId} or {definitionId,sourceId}; check status with {requestId} only. Never combine these modes or include secret values. Share the returned URL for the user to configure credentials.",
+      },
+    })
     .input(secretRequestInputSchema)
     .mutation(async ({ ctx, input }) => {
       if (input.requestId) {
         const request = await getCustomWidgetConfigurationRequestForUser(input.requestId, ctx.session.user.id);
         if (!request) throw new TRPCError({ code: "NOT_FOUND" });
-        return { requestId: request.id, status: request.status, expiresAt: request.expiresAt };
+        return {
+          requestId: request.id,
+          status: request.status,
+          expiresAt: request.expiresAt,
+          sourceId: request.sourceId,
+          ...(request.target.type === "preview" ? { previewSessionId: request.target.id } : {}),
+        };
       }
 
       let widgetName: string;
@@ -179,6 +205,8 @@ export const secretProcedures = {
         requestId: request.id,
         status: request.status,
         expiresAt: request.expiresAt,
+        sourceId: request.sourceId,
+        ...(request.target.type === "preview" ? { previewSessionId: request.target.id } : {}),
         url: new URL(`/custom-widget-configuration/${request.id}`, ctx.baseUrl ?? "http://localhost").toString(),
       };
     }),

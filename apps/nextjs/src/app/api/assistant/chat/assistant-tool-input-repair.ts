@@ -110,8 +110,10 @@ const repairMultilineToolInput = <T extends AssistantToolCallInput>(toolCall: T)
   const repairedInput = escapeControlCharactersInsideJsonStrings(toolCall.input);
   if (repairedInput === toolCall.input) return null;
   try {
-    JSON.parse(repairedInput);
-    return { ...toolCall, input: repairedInput };
+    const parsedInput: unknown = JSON.parse(repairedInput);
+    if (!isCustomWidgetTool || !isRecord(parsedInput)) return { ...toolCall, input: repairedInput };
+    const normalizedInput = normalizeCustomWidgetLifecycleToolInput(toolCall.toolName, parsedInput);
+    return { ...toolCall, input: JSON.stringify(normalizedInput) };
   } catch {
     return null;
   }
@@ -126,6 +128,16 @@ const repairCustomWidgetLifecycleInput = <T extends AssistantToolCallInput>(tool
     return null;
   }
   if (!isRecord(input)) return null;
+  if (
+    toolCall.toolName === "customWidget_validateTemplate" &&
+    typeof input.template === "string" &&
+    Array.isArray(input.templateLines) &&
+    input.templateLines.every((line) => typeof line === "string")
+  ) {
+    const normalized = { ...input };
+    delete normalized.template;
+    return { ...toolCall, input: JSON.stringify(normalized) };
+  }
   const normalized = normalizeCustomWidgetLifecycleToolInput(toolCall.toolName, input);
   if (normalized === input) return null;
   return { ...toolCall, input: JSON.stringify(normalized) };

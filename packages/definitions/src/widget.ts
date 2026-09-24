@@ -70,6 +70,7 @@ export const widgetDefaultSizes: Partial<Record<WidgetKind, { width: number; hei
   airQuality: { width: 2, height: 1 },
   calendar: { width: 2, height: 2 },
   countdown: { width: 2, height: 1 },
+  customApi: { width: 3, height: 2 },
   downloads: { width: 4, height: 2 },
   indexerManager: { width: 2, height: 3 },
   timer: { width: 2, height: 1 },

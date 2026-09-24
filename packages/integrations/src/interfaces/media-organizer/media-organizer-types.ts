@@ -1,7 +1,7 @@
 export interface MissingMediaItem {
   id: number;
   title: string;
-  type: "movie" | "episode";
+  type: "movie" | "episode" | "book";
   year?: number;
   seasonNumber?: number;
   episodeNumber?: number;
@@ -13,7 +13,7 @@ export interface MissingMediaItem {
 export interface QueuedMediaItem {
   id: number;
   title: string;
-  type: "movie" | "episode";
+  type: "movie" | "episode" | "book";
   status: string;
   timeLeft: string | null;
   percentComplete: number;

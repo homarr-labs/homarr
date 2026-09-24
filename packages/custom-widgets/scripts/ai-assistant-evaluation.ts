@@ -33,22 +33,24 @@ import { addCustomJsxDiagnosticSourceExcerpts, validateCustomJsxTemplate } from 
 import type { CustomWidgetAiEvaluationCase } from "./ai-evaluation-cases";
 import {
   DEFAULT_GENERATOR_MODEL,
+  getAiEvaluationProviderPreferences,
+  getAiEvaluationReasoningOptions,
   getAiProviderChatCompletionsUrl,
   getDeterministicEvaluationMatches,
   getDeterministicEvaluationSuiteIssues,
-  judgePasses,
-  parseJudgeResult,
-  requestCustomWidgetJudge,
+  judgeCustomWidgetPanel,
+  recordAiEvaluationProviderSpend,
+  reserveAiEvaluationProviderRequest,
 } from "./ai-evaluation";
-import type { CustomWidgetJudgeResult } from "./ai-evaluation";
+import type { CustomWidgetJudgePanel, CustomWidgetJudgePanelStatus, CustomWidgetJudgeResult } from "./ai-evaluation";
 
 const MAX_ASSISTANT_STEPS = 40;
 const defaultAssistantEvaluationMaxOutputTokens = 32_768;
 export const assistantEvaluationToolRequestOptions = {
-  tool_choice: "auto",
+  tool_choice: "required",
   parallel_tool_calls: false,
 } as const;
-export const assistantEvaluationReasoningOptions = { effort: "medium", exclude: true } as const;
+export const assistantEvaluationReasoningOptions = getAiEvaluationReasoningOptions(DEFAULT_GENERATOR_MODEL);
 
 export function getAssistantEvaluationMaxOutputTokens(configuredValue: string | undefined) {
   if (configuredValue === undefined) return defaultAssistantEvaluationMaxOutputTokens;
@@ -144,6 +146,7 @@ interface OpenRouterResponse {
     prompt_tokens?: number;
     completion_tokens?: number;
     total_tokens?: number;
+    cost?: number;
   };
 }
 
@@ -207,9 +210,9 @@ interface AssistantEvaluationToolCall {
 }
 
 export interface AssistantAttemptState {
+  preferredExampleId: string | null;
   calledTools: string[];
   toolCalls: AssistantEvaluationToolCall[];
-  validatedTemplates: Set<string>;
   previews: Map<string, PreviewState>;
   completedPreviewSignatures: Set<string>;
   createdPreviewIds: Set<string>;
@@ -231,6 +234,8 @@ export interface CustomWidgetAssistantEvaluationResult {
   calledTools: string[];
   widgets: HomarrCustomWidgetV2[];
   judges: CustomWidgetJudgeResult[];
+  judgePanels: CustomWidgetJudgePanel[];
+  judgeStatus: CustomWidgetJudgePanelStatus;
   efficiency: {
     toolCalls: number;
     toolInputCharacters: number;
@@ -265,7 +270,7 @@ export const customWidgetAssistantEvaluationToolDefinitions: ToolDefinition[] = 
     function: {
       name: "customWidget_getSkill",
       description:
-        "Load the compact installed Custom Widget skill entrypoint and reference index. Call this before authoring.",
+        "Optionally load the compact installed Custom Widget skill entrypoint and reference index for diagnostics.",
       parameters: objectSchema({}),
     },
   },
@@ -343,6 +348,14 @@ export const customWidgetAssistantEvaluationToolDefinitions: ToolDefinition[] = 
   {
     type: "function",
     function: {
+      name: "integration_all",
+      description: "List saved integrations available for binding an installed Custom Widget example.",
+      parameters: objectSchema({}),
+    },
+  },
+  {
+    type: "function",
+    function: {
       name: "customWidget_getExample",
       description:
         "Optionally get one installed Custom JSX example by catalog ID before requesting any component documentation.",
@@ -354,7 +367,7 @@ export const customWidgetAssistantEvaluationToolDefinitions: ToolDefinition[] = 
     function: {
       name: "customWidget_validateTemplate",
       description:
-        "Validate JSX without resending the manifest. Pass templateLines only and reuse those exact lines in the preview definition.",
+        "Optionally validate JSX for focused diagnostics without resending the manifest. previewCreate does not require this call first.",
       parameters: objectSchema(
         { templateLines: { type: "array", items: { type: "string" }, minItems: 1, maxItems: 2_000 } },
         ["templateLines"],
@@ -381,7 +394,7 @@ export const customWidgetAssistantEvaluationToolDefinitions: ToolDefinition[] = 
     function: {
       name: "customWidget_previewReviseTemplate",
       description:
-        "Replace only the validated JSX template in an existing preview after inspecting response evidence. Inherits the manifest, resets evidence, and avoids resending sources, requests, and options.",
+        "Replace only the JSX template in an existing preview after inspecting response evidence. Validates the replacement, inherits the manifest, resets evidence, and avoids resending sources, requests, and options.",
       parameters: objectSchema(
         {
           sessionId: { type: "string" },
@@ -442,7 +455,7 @@ export const customWidgetAssistantEvaluationToolDefinitions: ToolDefinition[] = 
   },
 ];
 
-const initiallyActiveAssistantEvaluationTools = new Set(["web_search", "customWidget_getSkill"]);
+const initiallyActiveAssistantEvaluationTools = new Set(["customWidget_previewCreate"]);
 const maxFocusedComponentSearchesPerPhase = 4;
 const customWidgetContextToolBudgets: Readonly<Record<string, number>> = {
   customWidget_findComponents: maxFocusedComponentSearchesPerPhase,
@@ -459,7 +472,10 @@ export const getActiveAssistantEvaluationToolDefinitions = (state: AssistantAtte
   const steps = state.toolCalls.map((toolCall) => ({
     toolResults: [{ toolName: toolCall.name, output: toolCall.output }],
   }));
-  const phaseToolNames = getCustomWidgetPhaseToolNames(availableNames, steps);
+  const phaseToolNames = getCustomWidgetPhaseToolNames(availableNames, steps, {
+    preferDirectPreview: true,
+    ...(state.preferredExampleId === null ? {} : { preferredExampleId: state.preferredExampleId }),
+  });
   const activeToolNames = new Set(phaseToolNames ?? initiallyActiveAssistantEvaluationTools);
   return customWidgetAssistantEvaluationToolDefinitions.filter(({ function: definition }) =>
     activeToolNames.has(definition.name),
@@ -481,17 +497,24 @@ export function executeActiveAssistantEvaluationTool(
       activeTools,
     };
   }
-  return executeAssistantEvaluationTool(testCase, state, name, input);
+  const effectiveInput =
+    name === "customWidget_getExample" && state.preferredExampleId !== null
+      ? { name: state.preferredExampleId }
+      : input;
+  return executeAssistantEvaluationTool(testCase, state, name, effectiveInput);
 }
 
 const getDefinitionSignature = (widget: HomarrCustomWidgetV2) => JSON.stringify(widget);
 
 const getContextToolCallsInCurrentPhase = (state: AssistantAttemptState, toolName: string) => {
-  const lastValidationIndex = state.toolCalls.findLastIndex(
-    (toolCall) => toolCall.name === "customWidget_validateTemplate",
+  const lastPhaseBoundaryIndex = state.toolCalls.findLastIndex(
+    (toolCall) =>
+      toolCall.name === "customWidget_validateTemplate" ||
+      toolCall.name === "customWidget_createFromPreview" ||
+      toolCall.name === "customWidget_updateFromPreview",
   );
   return state.toolCalls
-    .slice(lastValidationIndex + 1)
+    .slice(lastPhaseBoundaryIndex + 1)
     .filter((toolCall) => toolCall.name === toolName && !toolCall.phaseLimited).length;
 };
 
@@ -502,7 +525,7 @@ const getContextPhaseCompleteOutput = (toolName: string) => ({
     : {}),
   ...(toolName === "customWidget_getSharedProps" ? { props: [], notFound: [] } : {}),
   nextStep:
-    "Context retrieval is complete for this phase. Use accumulated results and call customWidget_validateTemplate. A failed validation reopens focused retrieval.",
+    "Context retrieval is complete for this phase. Use accumulated results and send the complete definition to customWidget_previewCreate.",
 });
 
 function parseDefinition(value: unknown) {
@@ -584,6 +607,20 @@ const isPreviewComplete = (preview: PreviewState) =>
     return preview.testedActions.has(requestId);
   });
 
+const getIntegrationBindingError = (
+  testCase: CustomWidgetAiEvaluationCase,
+  source: HomarrCustomWidgetV2["sources"][string] | undefined,
+) => {
+  if (!source) return "Request source was not found";
+  if (source.type !== "integration") return null;
+  if (!source.integrationId) return "Select an existing integration for this widget source";
+  const integration = testCase.savedIntegrations?.find((entry) => entry.id === source.integrationId);
+  if (!integration || !integration.permissions.hasFullAccess)
+    return "Integration was not found or full access is required";
+  if (integration.kind !== source.integrationKind) return "Integration kind does not match the widget source";
+  return null;
+};
+
 const rememberCompletedPreview = (state: AssistantAttemptState, preview: PreviewState) => {
   if (isPreviewComplete(preview)) state.completedPreviewSignatures.add(preview.signature);
 };
@@ -649,6 +686,7 @@ const executeAssistantEvaluationToolCore = (
       ],
     };
   }
+  if (name === "integration_all") return testCase.savedIntegrations ?? [];
   if (name === "customWidget_getSkill") return getCustomWidgetSkillEntrypoint();
   if (name === "customWidget_schema") return getCustomWidgetJsonSchema();
   if (name === "customWidget_getReference") {
@@ -707,7 +745,6 @@ const executeAssistantEvaluationToolCore = (
     } else if (hasUnknownProp) {
       nextStep = "Repair unknown component props before previewing, then revalidate only the corrected JSX.";
     }
-    if (valid) state.validatedTemplates.add(template);
     return {
       valid,
       normalizedCharacters,
@@ -719,8 +756,10 @@ const executeAssistantEvaluationToolCore = (
   if (name === "customWidget_previewCreate") {
     const parsed = parseDefinition(input.definition);
     if (!parsed.success) return { error: "Definition is invalid", issues: parsed.issues };
-    if (!state.validatedTemplates.has(parsed.widget.template)) {
-      return { error: "Validate this exact JSX template before sending the complete definition to preview." };
+    for (const source of Object.values(parsed.widget.sources)) {
+      if (source.type !== "integration" || !source.integrationId) continue;
+      const error = getIntegrationBindingError(testCase, source);
+      if (error) return { error };
     }
     const signature = getDefinitionSignature(parsed.widget);
     if ([...state.previews.values()].some((preview) => preview.signature === signature)) {
@@ -760,9 +799,6 @@ const executeAssistantEvaluationToolCore = (
     }
     const templateInput = getTemplateFromInput(input);
     if (!templateInput.success) return { error: templateInput.error };
-    if (!state.validatedTemplates.has(templateInput.template)) {
-      return { error: "Validate this exact revised JSX template before revising the preview." };
-    }
     const parsed = customWidgetDefinitionSchema.safeParse({ ...preview.widget, template: templateInput.template });
     if (!parsed.success) {
       return {
@@ -800,6 +836,8 @@ const executeAssistantEvaluationToolCore = (
     const preview = state.previews.get(sessionId);
     const request = preview?.widget.requests[requestId];
     if (!preview || request?.kind !== "query") return { error: "Preview query was not found" };
+    const bindingError = getIntegrationBindingError(testCase, preview.widget.sources[request.source]);
+    if (bindingError) return { error: bindingError };
     const missingParams = getMissingRequestParams(request, input);
     if (missingParams.length > 0) {
       return { error: `Supply the required manual preview parameters: ${missingParams.join(", ")}` };
@@ -831,6 +869,8 @@ const executeAssistantEvaluationToolCore = (
     const preview = state.previews.get(sessionId);
     const request = preview?.widget.requests[requestId];
     if (!preview || request?.kind !== "action") return { error: "Preview action was not found" };
+    const bindingError = getIntegrationBindingError(testCase, preview.widget.sources[request.source]);
+    if (bindingError) return { error: bindingError };
     const missingParams = getMissingRequestParams(request, input);
     if (missingParams.length > 0) {
       return { error: `Supply the required manual preview parameters: ${missingParams.join(", ")}` };
@@ -883,7 +923,7 @@ const executeAssistantEvaluationToolCore = (
     const minimumPreviewCycles = testCase.minimumPreviewCycles ?? 1;
     if (completedPreviewCycles < minimumPreviewCycles) {
       return {
-        error: `Complete at least ${minimumPreviewCycles} distinct preview-and-evidence cycles before creation; ${completedPreviewCycles} completed. Make a material improvement, validate its JSX, create a fresh preview, and test it again.`,
+        error: `Complete at least ${minimumPreviewCycles} distinct preview-and-evidence cycles before creation; ${completedPreviewCycles} completed. Make a material improvement, create a fresh preview, and test it again.`,
       };
     }
     const widget = customWidgetDefinitionSchema.parse(preview.widget);
@@ -909,8 +949,8 @@ const getAssistantEvaluationToolRetryFeedback = (name: string, output: unknown) 
     for (const entry of entries) {
       if (!isRecord(entry) || typeof entry.message !== "string") continue;
       if (key === "diagnostics" && entry.severity !== "error") continue;
-      const path = typeof entry.path === "string" ? `${entry.path}: ` : "";
-      messages.push(`${path}${entry.message}`);
+      const issuePath = typeof entry.path === "string" ? `${entry.path}: ` : "";
+      messages.push(`${issuePath}${entry.message}`);
     }
   }
   return [...new Set(messages)].map((message) => `${name}: ${message}`);
@@ -946,12 +986,13 @@ export function getAssistantEvaluationLifecycleIssues(
   testCase: CustomWidgetAiEvaluationCase,
   state: AssistantAttemptState,
 ) {
-  const required = [
-    "customWidget_getSkill",
-    "customWidget_validateTemplate",
-    "customWidget_previewCreate",
-    "customWidget_createFromPreview",
-  ];
+  const required = ["customWidget_previewCreate", "customWidget_createFromPreview"];
+  if (testCase.preferredExampleId) required.unshift("customWidget_getExample");
+  if (
+    state.createdWidgets.some((widget) => Object.values(widget.sources).some((source) => source.type === "integration"))
+  ) {
+    required.unshift("integration_all");
+  }
   const hasQueries = state.createdWidgets.some((widget) =>
     Object.values(widget.requests).some((request) => request.kind === "query"),
   );
@@ -1037,11 +1078,8 @@ export function getAssistantEvaluationEfficiencyIssues(
     if (state.calledTools.includes("customWidget_getComponentCatalog")) {
       issues.push("The assistant loaded the full component catalog instead of using a focused component search.");
     }
-    const firstValidationIndex = state.toolCalls.findIndex(
-      (toolCall) => toolCall.name === "customWidget_validateTemplate",
-    );
-    const discoveryCalls =
-      firstValidationIndex === -1 ? state.toolCalls : state.toolCalls.slice(0, firstValidationIndex);
+    const firstPreviewIndex = state.toolCalls.findIndex((toolCall) => toolCall.name === "customWidget_previewCreate");
+    const discoveryCalls = firstPreviewIndex === -1 ? state.toolCalls : state.toolCalls.slice(0, firstPreviewIndex);
     const componentSearches = discoveryCalls.filter(
       (toolCall) => toolCall.name === "customWidget_findComponents" && !toolCall.phaseLimited,
     ).length;
@@ -1049,7 +1087,7 @@ export function getAssistantEvaluationEfficiencyIssues(
     const componentSearchBudget = Math.max(expectedWidgetCount * 2, maxFocusedComponentSearchesPerPhase);
     if (componentSearches > componentSearchBudget) {
       issues.push(
-        `The assistant used ${componentSearches} focused component searches before validation for ${expectedWidgetCount} widget jobs.`,
+        `The assistant used ${componentSearches} focused component searches before preview for ${expectedWidgetCount} widget jobs.`,
       );
     }
     const examples = discoveryCalls.filter(
@@ -1057,7 +1095,7 @@ export function getAssistantEvaluationEfficiencyIssues(
     ).length;
     if (examples > expectedWidgetCount) {
       issues.push(
-        `The assistant loaded ${examples} complete examples before validation for ${expectedWidgetCount} widget jobs.`,
+        `The assistant loaded ${examples} complete examples before preview for ${expectedWidgetCount} widget jobs.`,
       );
     }
     const modelInputTokenBudget = 600_000;
@@ -1078,11 +1116,11 @@ export function getAssistantEvaluationEfficiencyIssues(
   return issues;
 }
 
-export function createAssistantEvaluationState(): AssistantAttemptState {
+export function createAssistantEvaluationState(preferredExampleId?: string): AssistantAttemptState {
   return {
+    preferredExampleId: preferredExampleId ?? null,
     calledTools: [],
     toolCalls: [],
-    validatedTemplates: new Set(),
     previews: new Map(),
     completedPreviewSignatures: new Set(),
     createdPreviewIds: new Set(),
@@ -1097,6 +1135,11 @@ export function createAssistantEvaluationState(): AssistantAttemptState {
 
 function buildAssistantPrompt(testCase: CustomWidgetAiEvaluationCase, feedback: readonly string[]) {
   const sections = [testCase.request];
+  if (testCase.preferredExampleId) {
+    sections.push(
+      `The installed example '${testCase.preferredExampleId}' is the shipped candidate under test. Load that exact example, preserve its definition, bind any saved integration, and send it directly through preview evidence and persistence. Change it only to repair a concrete validation error.`,
+    );
+  }
   if (testCase.research) {
     sections.push(
       `The API contract was not supplied in the conversation. Use web_search exactly once with a focused primary-documentation query and reuse that result for the complete widget set.`,
@@ -1144,6 +1187,7 @@ async function callAssistantStep(args: {
       content: appendActiveCustomWidgetToolInstruction(message.content, activeToolNames),
     };
   });
+  reserveAiEvaluationProviderRequest();
   const response = await fetch(getAiProviderChatCompletionsUrl(args.baseUrl), {
     method: "POST",
     headers: {
@@ -1159,11 +1203,15 @@ async function callAssistantStep(args: {
       ...assistantEvaluationToolRequestOptions,
       temperature: 0.1,
       max_tokens: getAssistantEvaluationMaxOutputTokens(process.env.CUSTOM_WIDGET_AI_MAX_OUTPUT_TOKENS),
-      reasoning: assistantEvaluationReasoningOptions,
+      reasoning: getAiEvaluationReasoningOptions(args.model),
+      ...(getAiEvaluationProviderPreferences(args.model)
+        ? { provider: getAiEvaluationProviderPreferences(args.model) }
+        : {}),
     }),
     signal: AbortSignal.timeout(180_000),
   });
   const payload = (await response.json()) as OpenRouterResponse;
+  recordAiEvaluationProviderSpend(payload.usage?.cost);
   if (!response.ok) {
     throw new Error(`AI provider request failed (${response.status}): ${payload.error?.message ?? "Unknown error"}`);
   }
@@ -1183,11 +1231,11 @@ async function runAssistantAttempt(args: {
   model: string;
   feedback: readonly string[];
 }) {
-  const state = createAssistantEvaluationState();
+  const state = createAssistantEvaluationState(args.testCase.preferredExampleId);
   const messages: OpenRouterMessage[] = [
     {
       role: "system",
-      content: `${CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION}\n\n${CUSTOM_WIDGET_ASSISTANT_POLICY}\n\nThis is an unassisted tool-use evaluation. No tool will be forced for you. Complete and persist all ${getExpectedWidgetCount(args.testCase)} requested widget jobs before returning prose.`,
+      content: `${CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION}\n\n${CUSTOM_WIDGET_ASSISTANT_POLICY}\n\nThis is a production-equivalent tool-use evaluation. Complete and persist all ${getExpectedWidgetCount(args.testCase)} requested widget jobs before returning prose.`,
     },
     { role: "user", content: buildAssistantPrompt(args.testCase, args.feedback) },
   ];
@@ -1319,6 +1367,8 @@ export async function evaluateCustomWidgetAssistantCase(args: {
   testCase: CustomWidgetAiEvaluationCase;
   apiKey: string;
   baseUrl?: string;
+  judgeApiKey?: string;
+  judgeBaseUrl?: string;
   outputRoot: string;
   maxLoops: number;
   generatorModel?: string;
@@ -1334,6 +1384,8 @@ export async function evaluateCustomWidgetAssistantCase(args: {
   let bestWidgets: HomarrCustomWidgetV2[] = [];
   let bestJudge: CustomWidgetJudgeResult | null = null;
   let bestJudges: CustomWidgetJudgeResult[] = [];
+  let bestJudgePanels: CustomWidgetJudgePanel[] = [];
+  let bestJudgeStatus: CustomWidgetJudgePanelStatus = "inconclusive";
   let bestScoreFloor = -1;
   let bestCalledTools: string[] = [];
   let lastAttemptState: AssistantAttemptState | null = null;
@@ -1403,6 +1455,7 @@ export async function evaluateCustomWidgetAssistantCase(args: {
 
     const matches = getDeterministicEvaluationMatches(args.testCase, run.state.createdWidgets);
     const judgeResults: CustomWidgetJudgeResult[] = [];
+    const judgePanels: CustomWidgetJudgePanel[] = [];
     let judgeFailure: string | null = null;
     for (const match of matches) {
       const widget = run.state.createdWidgets[match.widgetIndex];
@@ -1412,27 +1465,42 @@ export async function evaluateCustomWidgetAssistantCase(args: {
         JSON.stringify(widget, null, 2),
         "utf8",
       );
-      try {
-        const judgeRaw = await requestCustomWidgetJudge({
-          testCase: match.testCase,
-          widget,
-          apiKey: args.apiKey,
-          baseUrl: args.baseUrl,
-          judgeModel: args.judgeModel,
-        });
-        await writeFile(path.join(caseDirectory, `judge-${attempt}-${match.expectedWidgetId}.json`), judgeRaw, "utf8");
-        judgeResults.push(parseJudgeResult(judgeRaw));
-      } catch (error) {
-        judgeFailure = error instanceof Error ? error.message : "Unknown judge error";
+      const panel = await judgeCustomWidgetPanel({
+        testCase: match.testCase,
+        widget,
+        apiKey: args.judgeApiKey ?? args.apiKey,
+        baseUrl: args.judgeBaseUrl ?? args.baseUrl,
+        judgeModel: args.judgeModel,
+      });
+      await writeFile(
+        path.join(caseDirectory, `judge-panel-${attempt}-${match.expectedWidgetId}.json`),
+        JSON.stringify(panel, null, 2),
+        "utf8",
+      );
+      for (const call of panel.calls) {
+        if (call.raw) {
+          await writeFile(
+            path.join(caseDirectory, `judge-${attempt}-${match.expectedWidgetId}-${call.call}.json`),
+            call.raw,
+            "utf8",
+          );
+        }
+      }
+      judgePanels.push(panel);
+      if (!panel.representative || panel.status === "inconclusive") {
+        judgeFailure = `The ${match.expectedWidgetId} judge panel was inconclusive after ${panel.calls.length} calls.`;
         break;
       }
+      judgeResults.push(panel.representative);
     }
     if (judgeFailure) {
       errors.push(`Attempt ${attempt}: judge failed — ${judgeFailure}`);
-      replaceAssistantEvaluationFeedback(reviewFeedback, [
-        "Return a complete polished widget set for another independent review.",
-      ]);
-      continue;
+      bestWidget = run.state.createdWidgets[0] ?? null;
+      bestWidgets = run.state.createdWidgets;
+      bestCalledTools = run.state.calledTools;
+      bestEfficiency = getAssistantEfficiency(run.state);
+      bestJudgePanels = judgePanels;
+      break;
     }
     const weakestJudge = getAssistantJudgeFloor(judgeResults);
     if (!weakestJudge) {
@@ -1447,11 +1515,13 @@ export async function evaluateCustomWidgetAssistantCase(args: {
       bestWidgets = run.state.createdWidgets;
       bestJudge = weakestJudge;
       bestJudges = judgeResults;
+      bestJudgePanels = judgePanels;
+      bestJudgeStatus = judgePanels.every((panel) => panel.status === "pass") ? "pass" : "fail";
       bestScoreFloor = weakestJudge.total;
       bestCalledTools = run.state.calledTools;
       bestEfficiency = getAssistantEfficiency(run.state);
     }
-    if (judgeResults.every(judgePasses)) {
+    if (judgePanels.every((panel) => panel.status === "pass")) {
       return {
         caseId: args.testCase.id,
         attempts: attempt,
@@ -1462,6 +1532,8 @@ export async function evaluateCustomWidgetAssistantCase(args: {
         calledTools: run.state.calledTools,
         widgets: run.state.createdWidgets,
         judges: judgeResults,
+        judgePanels,
+        judgeStatus: "pass",
         efficiency: getAssistantEfficiency(run.state),
       };
     }
@@ -1483,6 +1555,8 @@ export async function evaluateCustomWidgetAssistantCase(args: {
     calledTools: bestCalledTools.length > 0 ? bestCalledTools : (lastAttemptState?.calledTools ?? []),
     widgets: bestWidgets,
     judges: bestJudges,
+    judgePanels: bestJudgePanels,
+    judgeStatus: bestJudgeStatus,
     efficiency:
       bestScoreFloor >= 0
         ? bestEfficiency

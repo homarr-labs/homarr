@@ -767,6 +767,7 @@
       "title": "Configure API source",
       "description": "Confirm the server URL and enter credentials. Secret values are encrypted by Homarr and never returned to the requesting agent.",
       "loading": "Loading secure request…",
+      "applying": "Applying this configuration… Keep this page open.",
       "saved": "API source configured. You can close this page.",
       "unavailable": "Request unavailable",
       "saveError": "Unable to configure API source",
@@ -1365,6 +1366,11 @@
       "attemptSearchEngineCreation": {
         "label": "Create Search Engine",
         "description": "Integration \"{kind}\" can be used with the search engines. Check this to automatically configure the search engine."
+      },
+      "allowInsecureHttp": {
+        "title": "Unencrypted connection",
+        "label": "Allow HTTP for this Bindery connection",
+        "description": "The API key will be sent without encryption. Enable this only on a trusted local network; use HTTPS for remote access."
       },
       "app": {
         "sectionTitle": "Linked App"
@@ -4398,7 +4404,7 @@
     },
     "mediaMissing": {
       "name": "Missing & Queued Media",
-      "description": "Shows missing and queued movies and episodes from {radarr} and {sonarr}",
+      "description": "Shows missing and queued movies, episodes and books from {radarr}, {sonarr} and {bindery}",
       "option": {
         "showMissing": {
           "label": "Show missing items"
@@ -4416,7 +4422,8 @@
       },
       "type": {
         "movie": "Movie",
-        "episode": "Episode"
+        "episode": "Episode",
+        "book": "Book"
       },
       "empty": {
         "missing": "No missing items",
@@ -7959,6 +7966,10 @@
       "style": {
         "label": "Improve a dashboard",
         "prompt": "Help me improve a board's appearance or custom CSS. Show me my boards first, then preserve my current settings while we make the change."
+      },
+      "designWidget": {
+        "label": "Design a widget",
+        "prompt": "Create and install a Custom Widget for "
       }
     },
     "composerPlaceholder": "Ask Assistant…",
@@ -8057,13 +8068,14 @@
       "health": "Prepare a service-health check",
       "explore": "Prepare an overview of this Homarr instance",
       "media": "Prepare a media search",
-      "style": "Prepare a board appearance or custom CSS change"
+      "style": "Prepare a board appearance or custom CSS change",
+      "designWidget": "Prepare a one-prompt Custom Widget build"
     },
     "usage": {
       "tokens": "tokens",
       "contextWindow": "Context window",
       "requestDetails": "Request details",
-      "used": "Used",
+      "used": "Latest step",
       "remaining": "Remaining",
       "capacity": "Capacity",
       "input": "Input",

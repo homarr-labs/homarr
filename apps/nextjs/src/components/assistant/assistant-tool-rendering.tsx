@@ -29,7 +29,7 @@ import { AssistantDotMatrix } from "./assistant-dot-matrix";
 import { hasModifiedLinkClick, ReasoningVisibilityContext } from "./assistant-message-content";
 import { useAssistantReasoningState } from "./assistant-reasoning-state";
 import { getAssistantIconSearchQuery } from "./assistant-tool-label";
-import { getToolResultPresentation } from "./assistant-tool-result";
+import { getToolResultPresentation, hasMeaningfulToolResultError } from "./assistant-tool-result";
 import { getAssistantToolTraceTarget } from "./assistant-tool-trace";
 
 const formatToolResultValue = (value: string | number | boolean) =>
@@ -239,11 +239,7 @@ export const ToolPart = ({
   const completed = status?.type === "complete";
   const awaitingApproval = approval !== undefined && approval.approved === undefined && !approval.resolution;
   const denied = approval?.approved === false;
-  const failed =
-    !denied &&
-    (isError === true ||
-      status?.type === "incomplete" ||
-      (typeof result === "object" && result !== null && "error" in result));
+  const failed = !denied && (isError === true || status?.type === "incomplete" || hasMeaningfulToolResultError(result));
   const successful = completed && !denied && !failed;
   const compactPresentation = compact && !awaitingApproval;
   const traceTarget = getAssistantToolTraceTarget(args);

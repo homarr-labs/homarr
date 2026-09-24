@@ -38,6 +38,7 @@ import type { AssistantConversationControls } from "./assistant-conversation-con
 import { useAssistantPreferences } from "./assistant-context";
 import type { AssistantPendingAction } from "./assistant-pending-action";
 import type { AssistantReasoningMode, AssistantRuntimeModelOption } from "./assistant-preferences";
+import { resolveAssistantReasoningDisplayMode } from "./assistant-preferences";
 import { getAssistantProviderQuotaLevel } from "./assistant-provider-quota";
 
 type ComposerProps = AssistantConversationControls & {
@@ -69,8 +70,39 @@ export const RuntimeControls = ({
   onReasoningChange,
 }: ComposerProps) => {
   const t = useI18n("assistant");
+  const { provider: assistantProvider } = useAssistantPreferences();
   const [modelSearch, setModelSearch] = useState("");
   const selectedModel = models.find((model) => model.id === modelId);
+  const displayedReasoning = resolveAssistantReasoningDisplayMode({ provider: assistantProvider, modelId, reasoning });
+  const reasoningIsForced = displayedReasoning === "max";
+  let reasoningLabel = "Max";
+  if (!reasoningIsForced) reasoningLabel = t(`runtime.reasoning.${displayedReasoning}`);
+  let reasoningControl: ReactNode;
+  if (reasoningIsForced) {
+    reasoningControl = (
+      <Badge size="sm" variant="light" color="gray">
+        Max
+      </Badge>
+    );
+  } else {
+    reasoningControl = (
+      <SegmentedControl
+        className={classes.reasoningSegmentedControl}
+        value={reasoning}
+        onChange={(value) => {
+          if (assistantReasoningModes.includes(value as AssistantReasoningMode)) {
+            onReasoningChange(value as AssistantReasoningMode);
+          }
+        }}
+        size="xs"
+        fullWidth
+        data={assistantReasoningModes.map((mode) => ({
+          value: mode,
+          label: t(`runtime.reasoning.${mode}`),
+        }))}
+      />
+    );
+  }
   const normalizedModelSearch = modelSearch.trim().toLocaleLowerCase();
   const visibleModels =
     normalizedModelSearch.length === 0
@@ -117,7 +149,7 @@ export const RuntimeControls = ({
             type="button"
             disabled={modelOptionsLoading || models.length === 0}
             onClick={() => modelCombobox.toggleDropdown()}
-            aria-label={`${t("runtime.model")}: ${selectedModel?.name ?? t("runtime.noModels")}. ${t("runtime.thinking")}: ${t(`runtime.reasoning.${reasoning}`)}`}
+            aria-label={`${t("runtime.model")}: ${selectedModel?.name ?? t("runtime.noModels")}. ${t("runtime.thinking")}: ${reasoningLabel}`}
             aria-expanded={modelCombobox.dropdownOpened}
           >
             {modelOptionsLoading && <Loader size="xs" />}
@@ -125,7 +157,7 @@ export const RuntimeControls = ({
               {selectedModel?.name ?? t("runtime.model")}
             </Text>{" "}
             <Text component="span" size="sm" fw={300} c="dimmed">
-              {t(`runtime.reasoning.${reasoning}`)}
+              {reasoningLabel}
             </Text>
           </Button>
         ) : (
@@ -134,7 +166,7 @@ export const RuntimeControls = ({
             type="button"
             disabled={modelOptionsLoading || models.length === 0}
             onClick={() => modelCombobox.toggleDropdown()}
-            aria-label={`${t("runtime.model")}: ${selectedModel?.name ?? t("runtime.noModels")}. ${t("runtime.thinking")}: ${t(`runtime.reasoning.${reasoning}`)}`}
+            aria-label={`${t("runtime.model")}: ${selectedModel?.name ?? t("runtime.noModels")}. ${t("runtime.thinking")}: ${reasoningLabel}`}
             aria-expanded={modelCombobox.dropdownOpened}
           >
             <Group gap="xs" wrap="nowrap">
@@ -143,7 +175,7 @@ export const RuntimeControls = ({
                 {selectedModel?.name ?? t("runtime.model")}
               </Text>
               <Badge className={classes.runtimeSelectorEffort} size="xs" variant="light" color="gray">
-                {t(`runtime.reasoning.${reasoning}`)}
+                {reasoningLabel}
               </Badge>
               <Combobox.Chevron size="xs" />
             </Group>
@@ -210,21 +242,7 @@ export const RuntimeControls = ({
           <Text size="xs" fw={650} mb={5}>
             {t("runtime.thinking")}
           </Text>
-          <SegmentedControl
-            className={classes.reasoningSegmentedControl}
-            value={reasoning}
-            onChange={(value) => {
-              if (assistantReasoningModes.includes(value as AssistantReasoningMode)) {
-                onReasoningChange(value as AssistantReasoningMode);
-              }
-            }}
-            size="xs"
-            fullWidth
-            data={assistantReasoningModes.map((mode) => ({
-              value: mode,
-              label: t(`runtime.reasoning.${mode}`),
-            }))}
-          />
+          {reasoningControl}
         </Box>
       </Combobox.Dropdown>
     </Combobox>

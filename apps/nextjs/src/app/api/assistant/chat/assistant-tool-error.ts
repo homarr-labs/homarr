@@ -51,6 +51,29 @@ const getCustomWidgetValidationDetails = (chain: Record<string, unknown>[]) => {
   return safeMessage;
 };
 
+export const getCustomWidgetConfigurationStatusRecovery = (toolName: string, input: unknown, safeError: string) => {
+  if (
+    toolName !== "customWidget_configurationRequestUser" ||
+    !isRecord(input) ||
+    typeof input.requestId !== "string" ||
+    safeError !== "The requested resource was not found or is not compatible with this tool."
+  ) {
+    return null;
+  }
+  return {
+    error: safeError,
+    requestId: input.requestId,
+    status: "expired" as const,
+    recovery: {
+      recoverable: true,
+      kind: "expired-source-configuration-request",
+      requiredNextTool: "customWidget_configurationRequestUser",
+    },
+    nextStep:
+      "This source-configuration request is no longer available. Create a replacement request with the original previewSessionId and sourceId; do not reuse this requestId.",
+  };
+};
+
 export const getSafeAssistantToolError = (error: unknown, options?: { toolName?: string }) => {
   const chain = getErrorChain(error);
   const isCustomWidgetTool = options?.toolName?.startsWith("customWidget_") === true;
@@ -78,6 +101,9 @@ export const getSafeAssistantToolError = (error: unknown, options?: { toolName?:
       }
       return "The tool input was not valid.";
     case "BAD_GATEWAY":
+      if (options?.toolName === "integration_request") {
+        return "The saved integration could not complete the HTTP request. Check service reachability and connection settings; this does not establish that the API path is wrong. A write may have completed before the connection failed: check state before retrying it.";
+      }
       if (isCustomWidgetTool) {
         const details = getCustomWidgetValidationDetails(chain);
         return details

@@ -4,6 +4,7 @@ import { z } from "zod/v4";
 import { permissionRequiredProcedure } from "../../trpc";
 import {
   getPreviewRequestSource,
+  getPreviewRequestSourceConfigurationFailure,
   previewSessionRequestSchema,
   recordPreviewJournal,
   resolvePreviewRequestParams,
@@ -16,9 +17,21 @@ import { getPreviewJournal, getPreviewSession, setPreviewSessionLiveActions } fr
 export const previewQueryProcedures = {
   previewRefresh: permissionRequiredProcedure
     .requiresPermission("admin")
-    .input(z.object({ sessionId: z.string().min(1) }))
+    .input(
+      z.object({
+        sessionId: z.string().min(1),
+        requestIds: z.array(z.string().min(1).max(128)).max(128).optional(),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       const session = await getPreviewSession(input.sessionId, ctx.session.user.id);
+      if (input.requestIds) {
+        const prefixes = input.requestIds
+          .filter((id) => Object.hasOwn(session.requests, id))
+          .map((id) => `custom-jsx:preview:${session.id}:${id}:`);
+        invalidateCustomWidgetResponseCache(prefixes);
+        return;
+      }
       invalidateCustomWidgetResponseCache([`custom-jsx:preview:${session.id}:`]);
     }),
 
@@ -28,7 +41,7 @@ export const previewQueryProcedures = {
       mcp: {
         enabled: true,
         description:
-          "Execute one real API query from a preview evidence list and return its HTTP status plus parsed data so request paths and template bindings can be verified. Call once for every query in the current preview revision before customWidget_createFromPreview.",
+          "Execute one real API query from a preview evidence list and return its HTTP status plus parsed data so request paths and template bindings can be verified. Call once for every query in the current preview revision before createFromPreview or updateFromPreview persistence.",
       },
     })
     .input(previewSessionRequestSchema)
@@ -38,6 +51,8 @@ export const previewQueryProcedures = {
       if (definition?.kind !== "query")
         throw new TRPCError({ code: "NOT_FOUND", message: "Preview query was not found" });
       const request = { id: input.requestId, ...definition };
+      const sourceConfigurationFailure = getPreviewRequestSourceConfigurationFailure(session, request);
+      if (sourceConfigurationFailure) return sourceConfigurationFailure;
       const params = resolvePreviewRequestParams(request, session.options, input.params);
       const body = renderRequestBody(request, params);
       const release = await acquireCustomWidgetRequestLimit({
@@ -74,6 +89,7 @@ export const previewQueryProcedures = {
         return {
           sessionId: session.id,
           requestId: request.id,
+          sourceId: request.source,
           ok: response.ok,
           status: response.status,
           statusText: response.statusText,

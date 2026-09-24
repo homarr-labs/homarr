@@ -22,8 +22,25 @@ describe("getAssistantActivityState", () => {
 
   test("shows a waiting pattern while a tool is running", () => {
     expect(
-      getAssistantActivityState({ isRunning: true, latestPartType: "tool-call", needsApproval: false, failed: false }),
+      getAssistantActivityState({
+        isRunning: true,
+        latestPartType: "tool-call",
+        needsApproval: false,
+        failed: false,
+      }),
     ).toBe("waiting");
+  });
+
+  test("returns to thinking after the latest tool completes and the next model step starts", () => {
+    expect(getRunningAssistantPartType("running", "tool-call", true)).toBeUndefined();
+    expect(
+      getAssistantActivityState({
+        isRunning: true,
+        latestPartType: getRunningAssistantPartType("running", "tool-call", true),
+        needsApproval: false,
+        failed: false,
+      }),
+    ).toBe("thinking");
   });
 
   test("maps settled states to waiting, failure, and success glyphs", () => {

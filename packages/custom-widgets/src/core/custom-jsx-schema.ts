@@ -189,6 +189,20 @@ function validateCaseInsensitiveSourceIds(sources: Definition["sources"], ctx: z
   }
 }
 
+// Validate new previews strictly without making older saved definitions unreadable for repair.
+export const customWidgetPreviewDefinitionSchema = customWidgetDefinitionSchema.superRefine((definition, ctx) => {
+  const parameters = new Map(
+    Object.entries(definition.requests).map(([id, request]) => [
+      id,
+      collectCustomWidgetRequestReferences(request).params,
+    ]),
+  );
+  for (const diagnostic of validateCustomJsxTemplate(definition.template, parameters)) {
+    if (!diagnostic.message.startsWith("REQUEST_PARAMS_MISMATCH:")) continue;
+    ctx.addIssue({ code: "custom", path: ["template"], message: diagnostic.message });
+  }
+});
+
 function validateTemplateRequests(template: string, requests: Record<string, CustomJsxRequest>, ctx: z.RefinementCtx) {
   for (const match of template.matchAll(/<(SubFetch|ActionButton|ToggleSwitch)\b([^>]*)>/gu)) {
     const component = match[1] as "SubFetch" | "ActionButton" | "ToggleSwitch";
@@ -254,7 +268,7 @@ export type CustomWidgetAuthoringDefinitionInput = z.input<typeof customWidgetAu
 
 export function normalizeCustomWidgetAuthoringDefinition(input: CustomWidgetAuthoringDefinitionInput) {
   const { templateLines, ...definition } = input;
-  return customWidgetDefinitionSchema.parse({
+  return customWidgetPreviewDefinitionSchema.parse({
     ...definition,
     template: definition.template ?? templateLines?.join("\n"),
   });

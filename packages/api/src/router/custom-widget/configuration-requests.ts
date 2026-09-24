@@ -18,7 +18,7 @@ export interface CustomWidgetConfigurationRequest {
   source: CustomWidgetSource;
   kinds: CustomWidgetSecretKind[];
   expiresAt: number;
-  status: "pending" | "completed";
+  status: "pending" | "applying" | "completed";
 }
 
 const localRequests = new Map<string, CustomWidgetConfigurationRequest>();
@@ -77,23 +77,45 @@ export async function getCustomWidgetConfigurationRequestForUser(id: string, use
 
 export async function completeCustomWidgetConfigurationRequest(id: string) {
   const request = await getCustomWidgetConfigurationRequest(id);
-  if (!request || request.status !== "pending") return null;
+  if (!request || request.status !== "applying") return null;
   const completed = { ...request, status: "completed" as const };
   await save(completed);
   await releaseCustomWidgetConfigurationRequest(id);
   return completed;
 }
 
-export async function claimCustomWidgetConfigurationRequest(id: string) {
-  const request = await getCustomWidgetConfigurationRequest(id);
+export async function claimCustomWidgetConfigurationRequestForUser(id: string, userId: string) {
+  const request = await getCustomWidgetConfigurationRequestForUser(id, userId);
   if (!request || request.status !== "pending") return null;
+  const claimed = await claim(request);
+  if (!claimed) return null;
+  const applying = { ...claimed, status: "applying" as const };
+  try {
+    await save(applying);
+    return applying;
+  } catch (error) {
+    await releaseCustomWidgetConfigurationRequest(id);
+    throw error;
+  }
+}
+
+export async function retryCustomWidgetConfigurationRequest(id: string) {
+  const request = await getCustomWidgetConfigurationRequest(id);
+  if (!request || request.status !== "applying") return null;
+  const pending = { ...request, status: "pending" as const };
+  await save(pending);
+  return pending;
+}
+
+async function claim(request: CustomWidgetConfigurationRequest) {
   const client = getRedis();
   if (client) {
-    const claimed = await client.set(`${CONFIGURATION_REQUEST_LOCK_PREFIX}${id}`, "1", "PX", 60_000, "NX");
+    const ttl = Math.max(1, request.expiresAt - Date.now());
+    const claimed = await client.set(`${CONFIGURATION_REQUEST_LOCK_PREFIX}${request.id}`, "1", "PX", ttl, "NX");
     return claimed === "OK" ? request : null;
   }
-  if (localLocks.has(id)) return null;
-  localLocks.add(id);
+  if (localLocks.has(request.id)) return null;
+  localLocks.add(request.id);
   return request;
 }
 

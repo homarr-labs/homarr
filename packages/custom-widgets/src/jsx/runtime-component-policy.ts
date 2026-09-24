@@ -1,3 +1,7 @@
+import { customJsxTablerIconNames } from "../core/tabler-icons";
+
+const supportedIconNames: ReadonlySet<string> = new Set(customJsxTablerIconNames);
+
 export function isSafeCustomJsxUrl(value: unknown) {
   if (typeof value !== "string") return false;
   if (value.startsWith("#")) return true;
@@ -17,6 +21,11 @@ export function getScopedCustomJsxControlName(scopeId: string, name: string) {
 }
 
 export function getInvalidCustomJsxPropValueReason(componentName: string, propName: string, value: unknown) {
+  if (componentName === "TablerIcon" && propName === "name") {
+    if (typeof value !== "string" || !supportedIconNames.has(value)) {
+      return "TablerIcon.name must be a registered kebab-case icon name, such as server, database, bell, cloud, or circle-check; React component names such as IconServer are not supported";
+    }
+  }
   if (propName === "resetKey" && value !== null) {
     const scalar =
       typeof value === "string" || typeof value === "boolean" || (typeof value === "number" && Number.isFinite(value));

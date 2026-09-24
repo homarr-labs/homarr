@@ -1,4 +1,5 @@
 import { getCustomWidgetSourceAuthType } from "../src/core/request-schema";
+import { createHash } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 
@@ -12,19 +13,67 @@ import { formatCustomWidgetImportIssues, parseCustomWidgetAiResponse } from "../
 import type { CustomWidgetAiEvaluationCase } from "./ai-evaluation-cases";
 import type { CustomWidgetAiExpectation } from "./ai-evaluation-cases";
 
-// OpenRouter exposes the rolling "latest" route with a leading tilde. The non-tilde
-// deepseek/deepseek-v4-flash-latest alias is rejected by the chat-completions API.
-export const DEFAULT_GENERATOR_MODEL = "~deepseek/deepseek-v4-flash-latest";
-export const DEFAULT_JUDGE_MODEL = "~deepseek/deepseek-v4-flash-latest";
+export const DEFAULT_GENERATOR_MODEL = "deepseek/deepseek-v4.1-flash";
+export const DEFAULT_JUDGE_MODEL = "openai/gpt-5.6-luna";
 export const DEFAULT_AI_PROVIDER_BASE_URL = "https://openrouter.ai/api/v1";
 export const MAX_AI_EVALUATION_LOOPS = 10;
-export function getAiEvaluationMaxOutputTokens(purpose: "generation" | "judge", configuredValue: string | undefined) {
-  let defaultValue = 20_000;
-  let minimum = 4_096;
-  if (purpose === "judge") {
-    defaultValue = 8_000;
-    minimum = 2_000;
+
+let aiProviderRequestCount = 0;
+let observedAiProviderSpend = 0;
+
+const getPositiveLimit = (value: string | undefined, fallback: number) => {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+};
+
+export const getAiEvaluationBudgetUsage = () => ({
+  requests: aiProviderRequestCount,
+  observedSpendUsd: observedAiProviderSpend,
+});
+
+export const reserveAiEvaluationProviderRequest = () => {
+  const requestLimit = getPositiveLimit(process.env.CUSTOM_WIDGET_AI_MAX_PROVIDER_CALLS, 100);
+  const spendLimit = Number(process.env.CUSTOM_WIDGET_AI_MAX_SPEND_USD);
+  if (!Number.isFinite(spendLimit) || spendLimit <= 0) {
+    throw new Error(
+      "CUSTOM_WIDGET_AI_MAX_SPEND_USD must define this evaluator process's share of the approved total budget.",
+    );
   }
+  if (aiProviderRequestCount >= requestLimit) {
+    throw new Error(`AI evaluation request cap reached (${requestLimit}).`);
+  }
+  if (observedAiProviderSpend >= spendLimit) {
+    throw new Error(`AI evaluation observed-spend cap reached ($${spendLimit.toFixed(2)}).`);
+  }
+  aiProviderRequestCount += 1;
+};
+
+export const recordAiEvaluationProviderSpend = (cost: unknown) => {
+  if (typeof cost !== "number" || !Number.isFinite(cost) || cost < 0) return;
+  observedAiProviderSpend += cost;
+};
+
+export const getAiEvaluationReasoningOptions = (model: string) => ({
+  effort:
+    model === DEFAULT_GENERATOR_MODEL
+      ? ("xhigh" as const)
+      : model === DEFAULT_JUDGE_MODEL
+        ? ("high" as const)
+        : ("medium" as const),
+  exclude: true,
+});
+
+export const getAiEvaluationProviderPreferences = (model: string) => {
+  if (model !== DEFAULT_GENERATOR_MODEL) return undefined;
+  return {
+    order: ["deepinfra/fp8"],
+    quantizations: ["fp8"],
+    allow_fallbacks: true,
+  };
+};
+export function getAiEvaluationMaxOutputTokens(purpose: "generation" | "judge", configuredValue: string | undefined) {
+  const defaultValue = 32_768;
+  const minimum = purpose === "judge" ? 2_000 : 4_096;
   if (configuredValue === undefined) return defaultValue;
   const configured = Number(configuredValue);
   if (!Number.isInteger(configured) || configured <= 0) return defaultValue;
@@ -38,17 +87,30 @@ export const resolveAiEvaluationProviderConfig = (environment: Record<string, st
   const homarrProvider = baseUrl.endsWith("/api/ai/v1");
   const openRouterProvider = baseUrl === DEFAULT_AI_PROVIDER_BASE_URL;
   const providerDefaultModel = homarrProvider ? "homarr/model" : DEFAULT_GENERATOR_MODEL;
+  const generatorApiKey =
+    environment.AI_PROVIDER_API_KEY ?? (openRouterProvider ? environment.OPENROUTER_API_KEY : undefined);
+  const judgeBaseUrl = (
+    environment.AI_JUDGE_PROVIDER_BASE_URL ??
+    (homarrProvider && environment.OPENROUTER_API_KEY ? DEFAULT_AI_PROVIDER_BASE_URL : baseUrl)
+  ).replace(/\/+$/u, "");
+  const openRouterJudge = judgeBaseUrl === DEFAULT_AI_PROVIDER_BASE_URL;
   return {
-    apiKey: environment.AI_PROVIDER_API_KEY ?? (openRouterProvider ? environment.OPENROUTER_API_KEY : undefined),
+    apiKey: generatorApiKey,
     baseUrl,
     generatorModel:
       environment.AI_PROVIDER_MODEL ??
       (openRouterProvider ? environment.OPENROUTER_GENERATOR_MODEL : undefined) ??
       providerDefaultModel,
     judgeModel:
+      environment.AI_JUDGE_PROVIDER_MODEL ??
       environment.AI_PROVIDER_JUDGE_MODEL ??
-      (openRouterProvider ? environment.OPENROUTER_JUDGE_MODEL : undefined) ??
-      (homarrProvider ? providerDefaultModel : DEFAULT_JUDGE_MODEL),
+      (openRouterJudge ? environment.OPENROUTER_JUDGE_MODEL : undefined) ??
+      (judgeBaseUrl === baseUrl && homarrProvider ? providerDefaultModel : DEFAULT_JUDGE_MODEL),
+    judgeBaseUrl,
+    judgeApiKey:
+      environment.AI_JUDGE_PROVIDER_API_KEY ??
+      (openRouterJudge ? environment.OPENROUTER_API_KEY : undefined) ??
+      generatorApiKey,
   };
 };
 
@@ -107,11 +169,35 @@ const categoryWeights = {
 
 export type CustomWidgetJudgeResult = z.infer<typeof judgeResultSchema>;
 
+export type CustomWidgetJudgePanelStatus = "pass" | "fail" | "inconclusive";
+
+export interface CustomWidgetJudgePanelCall {
+  call: number;
+  raw: string | null;
+  result: CustomWidgetJudgeResult | null;
+  error: string | null;
+}
+
+export interface CustomWidgetJudgePanel {
+  status: CustomWidgetJudgePanelStatus;
+  artifactHash: string;
+  judges: CustomWidgetJudgeResult[];
+  representative: CustomWidgetJudgeResult | null;
+  passVotes: number;
+  failVotes: number;
+  medianTotal: number | null;
+  scoreRange: { min: number; max: number } | null;
+  medianCategories: CustomWidgetJudgeResult["categories"] | null;
+  calls: CustomWidgetJudgePanelCall[];
+}
+
 export interface AiEvaluationResult {
   caseId: string;
   attempts: number;
   widget: HomarrCustomWidgetV2 | null;
   judge: CustomWidgetJudgeResult | null;
+  judgePanel: CustomWidgetJudgePanel | null;
+  judgeStatus: CustomWidgetJudgePanelStatus;
   outputDirectory: string;
   errors: string[];
 }
@@ -119,6 +205,7 @@ export interface AiEvaluationResult {
 interface OpenRouterResponse {
   choices?: Array<{ message?: { content?: string | null } }>;
   error?: { message?: string };
+  usage?: { cost?: number };
 }
 
 export function buildEvaluationPrompt(testCase: CustomWidgetAiEvaluationCase): string {
@@ -227,7 +314,9 @@ const requestMatchesExpectation = (
     .map((requestId) => requests[requestId])
     .filter((candidate) => candidate !== undefined);
   if (
-    !(expected.invalidatesPaths ?? []).every((path) => invalidatedRequests.some((candidate) => candidate.path === path))
+    !(expected.invalidatesPaths ?? []).every((expectedPath) =>
+      invalidatedRequests.some((candidate) => candidate.path === expectedPath),
+    )
   ) {
     return false;
   }
@@ -235,16 +324,17 @@ const requestMatchesExpectation = (
   return true;
 };
 
+const formatExpectedBinding = (value: string | readonly string[]): string => {
+  if (Array.isArray(value)) return value.map((candidate) => formatExpectedBinding(candidate)).join(" or ");
+  if (value === "$param:*") return "any $param binding";
+  if (value === "$option:*") return "any $option binding";
+  return JSON.stringify(value);
+};
+
 const getExpectedRequestConstraintSummary = (expected: CustomWidgetAiExpectation["requests"][number]) => {
-  const formatBinding = (value: string | readonly string[]): string => {
-    if (Array.isArray(value)) return value.map((candidate) => formatBinding(candidate)).join(" or ");
-    if (value === "$param:*") return "any $param binding";
-    if (value === "$option:*") return "any $option binding";
-    return JSON.stringify(value);
-  };
   const formatBindings = (bindings: Readonly<Record<string, string | readonly string[]>>) =>
     Object.entries(bindings)
-      .map(([name, value]) => `${name}=${formatBinding(value)}`)
+      .map(([name, value]) => `${name}=${formatExpectedBinding(value)}`)
       .join(", ");
   const constraints: string[] = [];
   if (expected.trigger !== undefined) constraints.push(`trigger=${expected.trigger}`);
@@ -274,14 +364,29 @@ export function getDeterministicEvaluationIssues(
   if (!expectations) return [];
   const issues: DeterministicEvaluationIssue[] = [];
   const source = widget.sources.default;
-  if (!source || source.baseUrl !== expectations.sourceBaseUrl) {
+  if (expectations.sourceType !== undefined && source?.type !== expectations.sourceType) {
+    issues.push({
+      path: ["sources", "default", "type"],
+      message: `Use the verified ${expectations.sourceType} source type.`,
+    });
+  }
+  if (expectations.sourceBaseUrl !== undefined && (!source || source.baseUrl !== expectations.sourceBaseUrl)) {
     issues.push({
       path: ["sources", "default", "baseUrl"],
       message: `Use the verified source URL ${expectations.sourceBaseUrl}.`,
     });
   }
+  if (
+    expectations.sourceIntegrationKind !== undefined &&
+    (!source || source.type !== "integration" || source.integrationKind !== expectations.sourceIntegrationKind)
+  ) {
+    issues.push({
+      path: ["sources", "default", "integrationKind"],
+      message: `Use the verified ${expectations.sourceIntegrationKind} saved integration.`,
+    });
+  }
   const authType = getCustomWidgetSourceAuthType(source);
-  if (authType !== expectations.sourceAuth) {
+  if (expectations.sourceAuth !== undefined && authType !== expectations.sourceAuth) {
     issues.push({
       path: ["sources", "default", "auth"],
       message: `Use the verified ${expectations.sourceAuth} authentication mode.`,
@@ -478,7 +583,7 @@ const getJudgeRuntimeContext = (widget: HomarrCustomWidgetV2) => {
 export function buildJudgePrompt(testCase: CustomWidgetAiEvaluationCase, widget: HomarrCustomWidgetV2): string {
   return `You are a hostile-but-fair product review panel evaluating a safe dashboard widget. Most competent drafts should score 55-75, not 90. Judge only evidence present in the manifest and JSX. Never reward unsupported capabilities, invented API routes, aspirational claims, or code that merely validates.
 
-The installed Homarr skill and runtime references below are authoritative. The verified API notes and representative response fixtures are authoritative for endpoint paths, authentication requirements, and response shapes unless the validated manifest contradicts them. Do not invent external endpoint or authentication objections from outside assumptions. Judge only the scoped Request below; an endpoint mentioned in broader API notes is available, not automatically required, and an optional fixture field omitted by the scoped Request is not a missing capability. Decorative icons paired with equivalent adjacent visible status text need no separate aria-label. A Badge containing explicit visible status text is not color-only. Date.toLocaleString(value, "en-US", "UTC") is an installed safe static helper for concise absolute UTC timestamps; do not require relative time. In particular, request state is exposed as status.<requestId> with loading/ok/status/error fields while successful payloads are exposed as data.<requestId>. RefreshButton is an installed runtime helper: it refreshes load queries by default; inside a successful manual result, requestId targets and reruns that active query with unchanged parameters. A bound Pagination should declare defaultValue={1}; resetKey={inputs.query} restores that default when its dependent scalar query changes. SubFetch without trigger="manual" runs automatically and reruns when bound params change, so never demand a hidden input, debounce callback, or raw event. When the scoped Request requires manual search, do not penalize the required re-trigger after query or page changes. A manual SubFetch synchronously hides its old result and returns to its trigger when its request ID, normalized parameters, or effective definition changes; it cannot display stale results under edited inputs or fetch the new parameters before another trigger. ActionButton supplies pending UI, native success/error notification, confirmation, and declared invalidation; do not demand duplicate local action state. Safe templates forbid local declarations and helper functions, so do not penalize a repeated short literal label array used for distinct enum fields as an avoidable missing abstraction. Every component in this already-validated template exists in the installed release. Do not penalize those documented facts. The widget has already passed Homarr's real schema and JSX analyzer, which proves syntax and component compatibility but does not prove API correctness, visual quality, usefulness, or accessibility.
+The installed Homarr skill and runtime references below are authoritative. The verified API notes and representative response fixtures are authoritative for endpoint paths, authentication requirements, and response shapes unless the validated manifest contradicts them. Do not invent external endpoint or authentication objections from outside assumptions. Judge only the scoped Request below; an endpoint mentioned in broader API notes is available, not automatically required, and an optional fixture field omitted by the scoped Request is not a missing capability. Decorative icons paired with equivalent adjacent visible status text need no separate aria-label. A Badge containing explicit visible status text is not color-only. Date.toLocaleString(value, "en-US", "UTC") is an installed safe static helper for concise absolute UTC timestamps; do not require relative time. In particular, request state is exposed as status.<requestId> with loading/ok/status/error fields while successful payloads are exposed as data.<requestId>. RefreshButton is an installed runtime helper: it refreshes load queries by default; inside a successful manual result, requestId targets and reruns that active query with unchanged parameters. A bound Pagination should declare defaultValue={1}; resetKey={inputs.query} restores that default when its dependent scalar query changes. SubFetch without trigger="manual" runs automatically and reruns when bound params change, so never demand a hidden input, debounce callback, or raw event. When the scoped Request requires manual search, do not penalize the required re-trigger after query or page changes. A manual SubFetch synchronously hides its old result and returns to its trigger when its request ID, normalized parameters, or effective definition changes; it cannot display stale results under edited inputs or fetch the new parameters before another trigger. ActionButton supplies pending UI, native success/error notification, confirmation, and declared invalidation; do not demand duplicate local action state. Safe templates forbid local declarations and helper functions; do not penalize a repeated short literal label array used for distinct enum fields, or a repeated pure collection/count expression that must drive both an empty branch and rendered content, as an avoidable missing abstraction. Every component in this already-validated template exists in the installed release. Do not penalize those documented facts. The widget has already passed Homarr's real schema and JSX analyzer, which proves syntax and component compatibility but does not prove API correctness, visual quality, usefulness, or accessibility.
 
 Task-relevant installed Homarr runtime references:
 ${getJudgeRuntimeContext(widget)}
@@ -508,6 +613,7 @@ Required review behavior:
 - Judge visual quality, not component count: hierarchy, density, whitespace, typography, restrained color, scanability, and avoidance of repetitive nested cards.
 - A purpose-specific asymmetric summary, divided hierarchy, responsive density, and restrained semantic accents can clear 75 without decorative chrome. Do not demand gradients, novelty, or a generic selected-row detail interaction.
 - Judge daily usefulness: information priority, interaction cost, refresh behavior, narrow-tile usability, and whether the widget is pleasant rather than demo-like.
+- Do not penalize a missing last-refreshed timestamp when the verified response has no freshness field; cache policy plus a labeled RefreshButton is complete. Do not penalize a deliberately bounded first-page view for lacking pagination unless the scoped Request asks for pagination or browsing the full collection.
 - A required manual search rerun is deliberate interaction, not daily-use friction. SubFetch owns failure and retry before its child renders; never demand an unreachable child error branch or a RefreshButton there.
 - Judge complexity discipline: penalize duplicate requests/options, unnecessary controls, excessive JSX, cleverness, and UI chrome that does not help the goal. Complexity must earn its place.
 - Recommend only interactions supported by the installed authoring contract. Do not suggest portals, modals, arbitrary event handlers, or other blocked capabilities. Prefer a responsive in-widget detail area when separation is useful.
@@ -529,6 +635,80 @@ export function judgePasses(result: CustomWidgetJudgeResult): boolean {
   );
 }
 
+const median = (values: readonly number[]) => {
+  if (values.length === 0) return null;
+  const sorted = values.toSorted((left, right) => left - right);
+  const midpoint = Math.floor(sorted.length / 2);
+  if (sorted.length % 2 === 1) return sorted[midpoint] ?? null;
+  const left = sorted[midpoint - 1];
+  const right = sorted[midpoint];
+  if (left === undefined || right === undefined) return null;
+  return Math.round((left + right) / 2);
+};
+
+export function getCustomWidgetArtifactHash(widget: HomarrCustomWidgetV2) {
+  return createHash("sha256").update(JSON.stringify(widget)).digest("hex");
+}
+
+export function summarizeCustomWidgetJudgePanel(
+  widget: HomarrCustomWidgetV2,
+  calls: readonly CustomWidgetJudgePanelCall[],
+): CustomWidgetJudgePanel {
+  const judges = calls.flatMap((call) => (call.result ? [call.result] : []));
+  const passVotes = judges.filter(judgePasses).length;
+  const failVotes = judges.length - passVotes;
+  let status: CustomWidgetJudgePanelStatus = "inconclusive";
+  if (judges.length >= 3) {
+    const firstThreePassVotes = judges.slice(0, 3).filter(judgePasses).length;
+    if (firstThreePassVotes === 3) status = "pass";
+    if (firstThreePassVotes === 0) status = "fail";
+    if (firstThreePassVotes > 0 && firstThreePassVotes < 3 && judges.length >= 5) {
+      status = passVotes >= 3 ? "pass" : "fail";
+    }
+  }
+
+  const medianTotal = median(judges.map((judge) => judge.total));
+  let representative: CustomWidgetJudgeResult | null = null;
+  const representativeCandidates = judges.filter((judge) => {
+    if (status === "pass") return judgePasses(judge);
+    if (status === "fail") return !judgePasses(judge);
+    return true;
+  });
+  const representativeMedian = median(representativeCandidates.map((judge) => judge.total));
+  if (representativeMedian !== null) {
+    representative =
+      representativeCandidates.toSorted(
+        (left, right) => Math.abs(left.total - representativeMedian) - Math.abs(right.total - representativeMedian),
+      )[0] ?? null;
+  }
+  let scoreRange: CustomWidgetJudgePanel["scoreRange"] = null;
+  if (judges.length > 0) {
+    const totals = judges.map((judge) => judge.total);
+    scoreRange = { min: Math.min(...totals), max: Math.max(...totals) };
+  }
+  let medianCategories: CustomWidgetJudgePanel["medianCategories"] = null;
+  if (judges.length > 0) {
+    medianCategories = Object.fromEntries(
+      Object.keys(categoryWeights).map((category) => [
+        category,
+        median(judges.map((judge) => judge.categories[category as keyof typeof categoryWeights])) ?? 0,
+      ]),
+    ) as CustomWidgetJudgeResult["categories"];
+  }
+  return {
+    status,
+    artifactHash: getCustomWidgetArtifactHash(widget),
+    judges,
+    representative,
+    passVotes,
+    failVotes,
+    medianTotal,
+    scoreRange,
+    medianCategories,
+    calls: [...calls],
+  };
+}
+
 export function getJudgeResponseFormat() {
   return {
     type: "json_schema" as const,
@@ -546,13 +726,24 @@ export async function requestCustomWidgetJudge(args: {
   apiKey: string;
   baseUrl?: string;
   judgeModel?: string;
+  sample?: number;
 }) {
+  const perspectives = [
+    "Prioritize API correctness and runtime compatibility while still applying every rubric gate.",
+    "Prioritize daily usefulness and information design while still applying every rubric gate.",
+    "Act as an adversarial completeness reviewer while still applying every rubric gate.",
+    "Prioritize responsive visual quality and accessibility while still applying every rubric gate.",
+    "Prioritize complexity discipline and action safety while still applying every rubric gate.",
+  ];
+  const sample = args.sample ?? 1;
+  const perspective = perspectives[(sample - 1) % perspectives.length] ?? perspectives[0];
   return callOpenRouter({
     apiKey: args.apiKey,
     baseUrl: args.baseUrl,
     model: args.judgeModel ?? DEFAULT_JUDGE_MODEL,
-    prompt: buildJudgePrompt(args.testCase, args.widget),
+    prompt: `${buildJudgePrompt(args.testCase, args.widget)}\n\nIndependent review lens: ${perspective}`,
     purpose: "judge",
+    temperature: Math.min(0.35, (sample - 1) * 0.08),
   });
 }
 
@@ -567,10 +758,53 @@ export async function judgeCustomWidgetCase(args: {
   return { raw, result: parseJudgeResult(raw) };
 }
 
+export async function judgeCustomWidgetPanel(args: {
+  testCase: CustomWidgetAiEvaluationCase;
+  widget: HomarrCustomWidgetV2;
+  apiKey: string;
+  baseUrl?: string;
+  judgeModel?: string;
+}) {
+  const calls: CustomWidgetJudgePanelCall[] = [];
+  const collect = async (count: number) => {
+    const start = calls.length;
+    const collected = await Promise.all(
+      Array.from({ length: count }, async (_, index): Promise<CustomWidgetJudgePanelCall> => {
+        const call = start + index + 1;
+        try {
+          const raw = await requestCustomWidgetJudge({ ...args, sample: call });
+          return { call, raw, result: parseJudgeResult(raw), error: null };
+        } catch (error) {
+          const message = error instanceof Error ? error.message : "Unknown judge error";
+          return { call, raw: null, result: null, error: message };
+        }
+      }),
+    );
+    calls.push(...collected);
+  };
+
+  await collect(3);
+  while (calls.flatMap((call) => (call.result ? [call.result] : [])).length < 3 && calls.length < 5) {
+    await collect(1);
+  }
+  let panel = summarizeCustomWidgetJudgePanel(args.widget, calls);
+  const splitInitialVote = panel.judges.length >= 3 && panel.passVotes > 0 && panel.failVotes > 0;
+  if (splitInitialVote) {
+    await collect(2);
+    while (calls.flatMap((call) => (call.result ? [call.result] : [])).length < 5 && calls.length < 7) {
+      await collect(1);
+    }
+    panel = summarizeCustomWidgetJudgePanel(args.widget, calls);
+  }
+  return panel;
+}
+
 export async function evaluateCustomWidgetCase(args: {
   testCase: CustomWidgetAiEvaluationCase;
   apiKey: string;
   baseUrl?: string;
+  judgeApiKey?: string;
+  judgeBaseUrl?: string;
   outputRoot: string;
   maxLoops: number;
   generatorModel?: string;
@@ -585,6 +819,7 @@ export async function evaluateCustomWidgetCase(args: {
   const errors: string[] = [];
   let bestWidget: HomarrCustomWidgetV2 | null = null;
   let bestJudge: CustomWidgetJudgeResult | null = null;
+  let bestJudgePanel: CustomWidgetJudgePanel | null = null;
   for (let attempt = 1; attempt <= Math.min(args.maxLoops, MAX_AI_EVALUATION_LOOPS); attempt += 1) {
     let response: string;
     try {
@@ -620,41 +855,55 @@ export async function evaluateCustomWidgetCase(args: {
       continue;
     }
     await writeWidgetFiles(caseDirectory, canonical, `attempt-${attempt}`);
-    let judge: CustomWidgetJudgeResult;
-    try {
-      const { raw: judgeRaw, result } = await judgeCustomWidgetCase({
-        testCase: args.testCase,
-        widget: canonical,
-        apiKey: args.apiKey,
-        baseUrl: args.baseUrl,
-        judgeModel: args.judgeModel,
-      });
-      await writeFile(path.join(caseDirectory, `judge-${attempt}.json`), judgeRaw, "utf8");
-      judge = result;
-    } catch (error) {
-      errors.push(
-        `Attempt ${attempt}: judge response invalid — ${error instanceof Error ? error.message : "Unknown error"}`,
-      );
-      continue;
+    const judgePanel = await judgeCustomWidgetPanel({
+      testCase: args.testCase,
+      widget: canonical,
+      apiKey: args.judgeApiKey ?? args.apiKey,
+      baseUrl: args.judgeBaseUrl ?? args.baseUrl,
+      judgeModel: args.judgeModel,
+    });
+    await writeFile(
+      path.join(caseDirectory, `judge-panel-${attempt}.json`),
+      JSON.stringify(judgePanel, null, 2),
+      "utf8",
+    );
+    for (const call of judgePanel.calls) {
+      if (call.raw) await writeFile(path.join(caseDirectory, `judge-${attempt}-${call.call}.json`), call.raw, "utf8");
     }
-    if (!bestJudge || judge.total > bestJudge.total) {
+    const judge = judgePanel.representative;
+    if (!judge) {
+      errors.push(`Attempt ${attempt}: judge panel inconclusive — no valid judge response.`);
+      bestWidget = canonical;
+      bestJudgePanel = judgePanel;
+      break;
+    }
+    if (!bestJudge || (judgePanel.medianTotal ?? -1) > (bestJudgePanel?.medianTotal ?? -1)) {
       bestJudge = judge;
       bestWidget = canonical;
+      bestJudgePanel = judgePanel;
       await writeWidgetFiles(caseDirectory, canonical, "best");
-      await writeFile(path.join(caseDirectory, "best-judge.json"), JSON.stringify(judge, null, 2), "utf8");
+      await writeFile(path.join(caseDirectory, "best-judge-panel.json"), JSON.stringify(judgePanel, null, 2), "utf8");
     }
-    if (judgePasses(judge)) {
-      await writeFile(path.join(caseDirectory, "result.json"), JSON.stringify(judge, null, 2), "utf8");
+    if (judgePanel.status === "pass") {
+      await writeFile(path.join(caseDirectory, "result.json"), JSON.stringify(judgePanel, null, 2), "utf8");
       return {
         caseId: args.testCase.id,
         attempts: attempt,
         widget: canonical,
         judge,
+        judgePanel,
+        judgeStatus: "pass",
         outputDirectory: caseDirectory,
         errors,
       };
     }
-    errors.push(`Attempt ${attempt}: judge ${judge.total}/100 — ${judge.highestImpactFixes.join("; ")}`);
+    if (judgePanel.status === "inconclusive") {
+      errors.push(`Attempt ${attempt}: judge panel inconclusive after ${judgePanel.calls.length} calls.`);
+      break;
+    }
+    errors.push(
+      `Attempt ${attempt}: judge panel failed ${judgePanel.passVotes}-${judgePanel.failVotes}, median ${judgePanel.medianTotal}/100 — ${judge.highestImpactFixes.join("; ")}`,
+    );
     prompt = buildRepairPrompt(
       originalPrompt,
       response,
@@ -667,6 +916,8 @@ export async function evaluateCustomWidgetCase(args: {
     attempts: Math.min(args.maxLoops, MAX_AI_EVALUATION_LOOPS),
     widget: bestWidget,
     judge: bestJudge,
+    judgePanel: bestJudgePanel,
+    judgeStatus: bestJudgePanel?.status ?? "inconclusive",
     outputDirectory: caseDirectory,
     errors,
   };
@@ -704,32 +955,45 @@ async function callOpenRouter(args: {
   model: string;
   prompt: string;
   purpose: "generation" | "judge";
+  temperature?: number;
 }): Promise<string> {
   const isJudge = args.purpose === "judge";
   let configuredMaxOutputTokens = process.env.CUSTOM_WIDGET_AI_GENERATION_MAX_OUTPUT_TOKENS;
   if (isJudge) configuredMaxOutputTokens = process.env.CUSTOM_WIDGET_AI_JUDGE_MAX_OUTPUT_TOKENS;
-  const response = await fetch(getAiProviderChatCompletionsUrl(args.baseUrl), {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${args.apiKey}`,
-      "Content-Type": "application/json",
-      "HTTP-Referer": "https://homarr.dev",
-      "X-Title": "Homarr Custom Widget AI Evaluation",
-    },
-    body: JSON.stringify({
-      model: args.model,
-      messages: [{ role: "user", content: args.prompt }],
-      temperature: isJudge ? 0 : 0.2,
-      max_tokens: getAiEvaluationMaxOutputTokens(args.purpose, configuredMaxOutputTokens),
-      reasoning: isJudge ? { enabled: false, exclude: true } : { effort: "high", exclude: true },
-      ...(isJudge ? { response_format: getJudgeResponseFormat() } : {}),
-    }),
-    signal: AbortSignal.timeout(180_000),
-  });
-  const payload = (await response.json()) as OpenRouterResponse;
-  if (!response.ok)
-    throw new Error(`AI provider request failed (${response.status}): ${payload.error?.message ?? "Unknown error"}`);
-  const content = payload.choices?.[0]?.message?.content;
-  if (!content) throw new Error("AI provider returned no message content");
-  return content;
+  const attempts = isJudge ? 1 : 2;
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    reserveAiEvaluationProviderRequest();
+    const response = await fetch(getAiProviderChatCompletionsUrl(args.baseUrl), {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${args.apiKey}`,
+        "Content-Type": "application/json",
+        "HTTP-Referer": "https://homarr.dev",
+        "X-Title": "Homarr Custom Widget AI Evaluation",
+      },
+      body: JSON.stringify({
+        model: args.model,
+        messages: [{ role: "user", content: args.prompt }],
+        temperature: args.temperature ?? (isJudge ? 0 : 0.2),
+        max_tokens: getAiEvaluationMaxOutputTokens(args.purpose, configuredMaxOutputTokens),
+        reasoning: getAiEvaluationReasoningOptions(args.model),
+        ...(getAiEvaluationProviderPreferences(args.model)
+          ? { provider: getAiEvaluationProviderPreferences(args.model) }
+          : {}),
+        ...(isJudge ? { response_format: getJudgeResponseFormat() } : {}),
+      }),
+      signal: AbortSignal.timeout(180_000),
+    });
+    const payload = (await response.json()) as OpenRouterResponse;
+    recordAiEvaluationProviderSpend(payload.usage?.cost);
+    if (!response.ok)
+      throw new Error(`AI provider request failed (${response.status}): ${payload.error?.message ?? "Unknown error"}`);
+    const content = payload.choices?.[0]?.message?.content;
+    if (content) return content;
+    if (attempt === attempts) {
+      const suffix = isJudge ? "" : " after one retry";
+      throw new Error(`AI provider returned no message content${suffix}`);
+    }
+  }
+  throw new Error("AI provider returned no message content");
 }
