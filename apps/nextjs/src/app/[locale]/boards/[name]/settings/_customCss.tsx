@@ -28,13 +28,17 @@ export const CustomCssSettingsContent = ({ form }: Props) => {
         id="board-custom-css"
         label={customCssT("label")}
         description={customCssT("description")}
+        actions={
+          isAdmin ? (
+            <WorkshopCssImportButton size="compact-xs" onImport={(css) => form.setFieldValue("customCss", css)} />
+          ) : undefined
+        }
         {...form.getInputProps("customCss")}
       />
 
       <Alert variant="light" color="cyan" title={customCssT("customClassesAlert.title")} icon={<IconInfoCircle />}>
         {customCssT("customClassesAlert.description")}
       </Alert>
-      {isAdmin && <WorkshopCssImportButton onImport={(css) => form.setFieldValue("customCss", css)} />}
     </SectionCard>
   );
 };

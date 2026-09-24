@@ -5116,7 +5116,7 @@
         },
         "diskIO": {
           "title": "Disk I/O",
-          "subtitle": "Throughput of root filesystem",
+          "subtitle": "Throughput by filesystem",
           "read": "Read",
           "write": "Write"
         },
@@ -8243,6 +8243,7 @@
     "deny": "Deny",
     "autoApproval": {
       "label": "Automatic approvals",
+      "composerLabel": "Approve for me",
       "title": "Automatic approvals",
       "description": "Automatically prepare forms and approve protected changes for this conversation. Questions still wait for your answer, and your Homarr permissions still apply. This turns off when you switch conversations.",
       "enable": "Enable for this conversation",
