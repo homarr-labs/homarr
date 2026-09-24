@@ -86,10 +86,8 @@
 
 .settingsPanel {
   min-width: 0;
-  max-height: calc(100dvh - 13rem);
-  padding-right: 0.25rem;
-  overflow-y: auto;
-  scrollbar-gutter: stable;
+  max-height: none;
+  overflow: visible;
 }
 
 .settingsForm {
@@ -177,11 +175,6 @@
 
   .previewCanvas {
     height: 24rem;
-  }
-
-  .settingsPanel {
-    max-height: none;
-    overflow: visible;
   }
 }
 

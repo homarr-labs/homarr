@@ -10,6 +10,7 @@ import {
   IconRefresh,
   IconRobot,
   IconSearch,
+  IconShield,
   IconShieldCheck,
 } from "@tabler/icons-react";
 
@@ -20,7 +21,16 @@ import classes from "./assistant-panel.module.css";
 import { useAssistantAutoApproval } from "./assistant-auto-approval";
 import type { AssistantConversationControls } from "./assistant-conversation-controls";
 
-export const AutoApprovalControl = () => {
+const compactSuggestionVars = () => ({
+  root: {
+    "--button-fz": "calc(var(--mantine-font-size-sm) * var(--board-canvas-ui-scale, 1))",
+    "--button-bg": "rgb(from var(--mantine-color-default) r g b / var(--opacity, 1))",
+    "--button-hover": "rgb(from var(--mantine-color-default-hover) r g b / var(--opacity, 1))",
+    "--button-bd": "1px solid rgb(from var(--mantine-color-default-border) r g b / var(--opacity, 1))",
+  },
+});
+
+export const AutoApprovalControl = ({ compact = false }: { compact?: boolean }) => {
   const t = useI18n("assistant.autoApproval");
   const [opened, setOpened] = useState(false);
   const { enabled, setEnabled } = useAssistantAutoApproval();
@@ -36,17 +46,32 @@ export const AutoApprovalControl = () => {
       withinPortal
     >
       <Popover.Target>
-        <ActionIcon
-          className={classes.panelAction}
-          variant={enabled ? "light" : "subtle"}
-          color={enabled ? "green" : "gray"}
-          onClick={() => setOpened((current) => !current)}
-          aria-label={t("label")}
-          aria-pressed={enabled}
-          title={enabled ? t("enabled") : t("label")}
-        >
-          <IconShieldCheck size={17} />
-        </ActionIcon>
+        {compact ? (
+          <ActionIcon
+            className={classes.composerApproval}
+            variant={enabled ? "light" : "subtle"}
+            color={enabled ? "green" : "gray"}
+            size="sm"
+            onClick={() => setOpened((current) => !current)}
+            aria-label={enabled ? t("enabled") : t("label")}
+            aria-pressed={enabled}
+            title={enabled ? t("enabled") : t("label")}
+          >
+            {enabled ? <IconShieldCheck size={18} /> : <IconShield size={18} />}
+          </ActionIcon>
+        ) : (
+          <ActionIcon
+            className={classes.panelAction}
+            variant={enabled ? "light" : "subtle"}
+            color={enabled ? "green" : "gray"}
+            onClick={() => setOpened((current) => !current)}
+            aria-label={t("label")}
+            aria-pressed={enabled}
+            title={enabled ? t("enabled") : t("label")}
+          >
+            <IconShieldCheck size={17} />
+          </ActionIcon>
+        )}
       </Popover.Target>
       <Popover.Dropdown>
         <Stack gap="sm">
@@ -108,13 +133,68 @@ export const ViewRefreshAction = ({
   );
 };
 
-export const EmptyThread = () => {
+export const EmptyThread = ({ compact = false }: { compact?: boolean }) => {
   const t = useI18n("assistant");
+  if (compact) {
+    return (
+      <ThreadPrimitive.Empty>
+        <Box className={classes.empty} data-compact>
+          <Box className={classes.suggestions}>
+            <ThreadPrimitive.Suggestion prompt={t("suggestions.health.prompt")} send clearComposer asChild>
+              <Button
+                variant="default"
+                size="sm"
+                className={classes.compactSuggestion}
+                vars={compactSuggestionVars}
+                leftSection={<IconActivityHeartbeat size="1em" />}
+              >
+                {t("suggestions.health.label")}
+              </Button>
+            </ThreadPrimitive.Suggestion>
+            <ThreadPrimitive.Suggestion prompt={t("suggestions.explore.prompt")} send clearComposer asChild>
+              <Button
+                variant="default"
+                size="sm"
+                className={classes.compactSuggestion}
+                vars={compactSuggestionVars}
+                leftSection={<IconApps size="1em" />}
+              >
+                {t("suggestions.explore.label")}
+              </Button>
+            </ThreadPrimitive.Suggestion>
+            <ThreadPrimitive.Suggestion prompt={t("suggestions.media.prompt")} send clearComposer asChild>
+              <Button
+                variant="default"
+                size="sm"
+                className={classes.compactSuggestion}
+                vars={compactSuggestionVars}
+                leftSection={<IconSearch size="1em" />}
+              >
+                {t("suggestions.media.label")}
+              </Button>
+            </ThreadPrimitive.Suggestion>
+            <ThreadPrimitive.Suggestion prompt={t("suggestions.style.prompt")} send clearComposer asChild>
+              <Button
+                variant="default"
+                size="sm"
+                className={classes.compactSuggestion}
+                vars={compactSuggestionVars}
+                leftSection={<IconPalette size="1em" />}
+              >
+                {t("suggestions.style.label")}
+              </Button>
+            </ThreadPrimitive.Suggestion>
+          </Box>
+        </Box>
+      </ThreadPrimitive.Empty>
+    );
+  }
+
   return (
     <ThreadPrimitive.Empty>
       <Box className={classes.empty}>
         <Stack align="center" gap="lg" maw={560} w="100%">
-          <Stack align="center" gap="xs" maw={430}>
+          <Stack align="center" gap="xs" maw={430} ta="center">
             <ThemeIcon size={52} radius="xl" variant="light">
               <IconRobot size={27} />
             </ThemeIcon>

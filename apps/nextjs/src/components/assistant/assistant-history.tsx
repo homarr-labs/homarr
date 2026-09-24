@@ -217,7 +217,7 @@ const ThreadListItem = () => {
   );
 };
 
-const ThreadHistory = ({ onSelect }: { onSelect: () => void }) => {
+const ThreadHistory = ({ onSelect, compact }: { onSelect: () => void; compact: boolean }) => {
   const t = useI18n("assistant");
   const [query, setQuery] = useState("");
   const normalizedQuery = query.trim().toLocaleLowerCase();
@@ -229,37 +229,60 @@ const ThreadHistory = ({ onSelect }: { onSelect: () => void }) => {
   return (
     <HistorySelectContext.Provider value={onSelect}>
       <Stack className={classes.historyMenu} gap="xs" p="xs">
-        <Group gap="xs" wrap="nowrap" px={4} pt={4}>
-          <ThreadListPrimitive.New asChild>
-            <Button variant="light" leftSection={<IconPlus size={16} />} fullWidth onClick={onSelect}>
-              {t("newConversation")}
-            </Button>
-          </ThreadListPrimitive.New>
-        </Group>
-        <Group gap="xs" px="xs" mt="xs">
-          <IconHistory size={14} />
-          <Text size="sm" fw={600} c="dimmed">
-            {t("conversations")}
-          </Text>
-        </Group>
-        <TextInput
-          value={query}
-          onChange={(event) => setQuery(event.currentTarget.value)}
-          leftSection={<IconSearch size={15} />}
-          placeholder={t("searchConversations")}
-          aria-label={t("searchConversations")}
-          size="xs"
-        />
+        {compact ? (
+          <Group justify="space-between" gap="xs" wrap="nowrap" px="xs">
+            <Text size="sm" fw={600}>
+              {t("conversations")}
+            </Text>
+            <ThreadListPrimitive.New asChild>
+              <ActionIcon
+                variant="subtle"
+                color="gray"
+                size="sm"
+                title={t("newConversation")}
+                aria-label={t("newConversation")}
+                onClick={onSelect}
+              >
+                <IconPlus size={16} />
+              </ActionIcon>
+            </ThreadListPrimitive.New>
+          </Group>
+        ) : (
+          <>
+            <Group gap="xs" wrap="nowrap" px={4} pt={4}>
+              <ThreadListPrimitive.New asChild>
+                <Button variant="light" leftSection={<IconPlus size={16} />} fullWidth onClick={onSelect}>
+                  {t("newConversation")}
+                </Button>
+              </ThreadListPrimitive.New>
+            </Group>
+            <Group gap="xs" px="xs" mt="xs">
+              <IconHistory size={14} />
+              <Text size="sm" fw={600} c="dimmed">
+                {t("conversations")}
+              </Text>
+            </Group>
+            <TextInput
+              value={query}
+              onChange={(event) => setQuery(event.currentTarget.value)}
+              leftSection={<IconSearch size={15} />}
+              placeholder={t("searchConversations")}
+              aria-label={t("searchConversations")}
+              size="xs"
+            />
+          </>
+        )}
         <ScrollArea.Autosize mah="min(24rem, 55dvh)" type="auto" scrollbars="y" offsetScrollbars>
           <Stack gap={3}>
             <ThreadListPrimitive.Items>
               {({ threadListItem }) => {
                 const itemTitle = threadListItem.title ?? t("newConversation");
-                if (normalizedQuery && !itemTitle.toLocaleLowerCase().includes(normalizedQuery)) return null;
+                if (!compact && normalizedQuery && !itemTitle.toLocaleLowerCase().includes(normalizedQuery))
+                  return null;
                 return <ThreadListItem />;
               }}
             </ThreadListPrimitive.Items>
-            {normalizedQuery && !hasMatchingConversation && (
+            {!compact && normalizedQuery && !hasMatchingConversation && (
               <Text size="xs" c="dimmed" ta="center" py="md">
                 {t("noMatchingConversations")}
               </Text>
@@ -271,7 +294,7 @@ const ThreadHistory = ({ onSelect }: { onSelect: () => void }) => {
   );
 };
 
-export const ConversationHistory = () => {
+export const ConversationHistory = ({ compact = false }: { compact?: boolean }) => {
   const t = useI18n("assistant");
   const [opened, setOpened] = useState(false);
   return (
@@ -288,7 +311,7 @@ export const ConversationHistory = () => {
           className={classes.historyButton}
           variant="subtle"
           color="gray"
-          size="compact-sm"
+          size={compact ? "xs" : "compact-sm"}
           leftSection={<IconHistory size={16} />}
           classNames={{ section: classes.historyButtonSection, label: classes.historyButtonLabel }}
           onClick={() => setOpened((current) => !current)}
@@ -303,8 +326,8 @@ export const ConversationHistory = () => {
           {t("conversations")}
         </Button>
       </Popover.Target>
-      <Popover.Dropdown p={0}>
-        <ThreadHistory onSelect={() => setOpened(false)} />
+      <Popover.Dropdown className={compact ? classes.widgetHistoryDropdown : undefined} p={0}>
+        <ThreadHistory compact={compact} onSelect={() => setOpened(false)} />
       </Popover.Dropdown>
     </Popover>
   );

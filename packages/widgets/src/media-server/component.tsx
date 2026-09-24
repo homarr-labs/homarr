@@ -9,6 +9,7 @@ import {
   Group,
   Popover,
   Progress,
+  ScrollArea,
   SimpleGrid,
   Stack,
   Table,
@@ -268,9 +269,10 @@ export default function MediaServerWidget({
           <IntegrationErrorIndicator results={currentStreams} />
         </Group>
       )}
-      <div
+      <ScrollArea
         className={classes.tableViewport}
         data-media-server-streams
+        scrollbars="xy"
         style={{ pointerEvents: isEditMode ? "none" : undefined }}
       >
         <Table stickyHeader highlightOnHover={!isEditMode} layout="fixed" className="media-server-widget-table">
@@ -408,7 +410,7 @@ export default function MediaServerWidget({
             })}
           </Table.Tbody>
         </Table>
-      </div>
+      </ScrollArea>
       <Group
         gap="xs"
         h={30}
