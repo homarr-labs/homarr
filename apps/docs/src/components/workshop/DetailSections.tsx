@@ -1,7 +1,8 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
-import { useColorMode } from "@docusaurus/theme-common";
 import { IconChevronLeft, IconChevronRight, IconTrash } from "@tabler/icons-react";
-import { Highlight, themes } from "prism-react-renderer";
+import { DynamicCodeBlock } from "fumadocs-ui/components/dynamic-codeblock";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -20,24 +21,75 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@site/src/lib/utils";
 import { clampScreenshotIndex } from "./workshop-utils";
 
-const prismThemes = { light: themes.github, dark: themes.dracula } as const;
-const colorModeKeys = { dark: "dark", light: "light" } as const;
+export const detailLayout = {
+  shell: "marketplace w-full min-h-[80vh] bg-background text-foreground",
+  container: "mx-auto max-w-[90rem] px-4 pb-28 pt-8 sm:px-6 sm:pb-20 lg:px-8",
+  grid: "grid items-start gap-10 xl:grid-cols-[minmax(0,1fr)_22rem]",
+  sidebar: "space-y-6 xl:sticky xl:top-24",
+};
 
 export const DetailSkeleton = () => (
-  <div className="mx-auto max-w-[90rem] space-y-6 px-4 py-8 sm:px-6 lg:px-8">
-    <Skeleton className="h-4 w-24" />
-    <div className="grid gap-10 xl:grid-cols-[minmax(0,1fr)_22rem]">
-      <div className="space-y-6">
-        <div className="space-y-2">
-          <Skeleton className="h-9 w-2/3" />
-          <Skeleton className="h-4 w-2/5" />
+  <div className={detailLayout.shell}>
+    <div className={detailLayout.container} role="status" aria-label="Loading submission" aria-busy="true">
+      <div aria-hidden="true">
+        <div className="mb-6 inline-flex items-center px-2.5 py-1.5">
+          <Skeleton className="h-5 w-36" />
         </div>
-        <Skeleton className="aspect-video w-full rounded-xl" />
-        <Skeleton className="h-96 rounded-xl" />
-      </div>
-      <div className="space-y-5">
-        <Skeleton className="h-40 rounded-xl" />
-        <Skeleton className="h-72 rounded-xl" />
+        <div className={detailLayout.grid}>
+          <div className="min-w-0">
+            <div className="border-b border-border pb-6">
+              <div className="flex flex-wrap items-start justify-between gap-5">
+                <div className="min-w-0 flex-1">
+                  <div className="mb-3 flex items-center gap-2">
+                    <Skeleton className="h-5 w-24" />
+                    <Skeleton className="h-4 w-16" />
+                  </div>
+                  <Skeleton className="h-9 w-2/3 sm:h-10" />
+                  <Skeleton className="mt-3 h-6 w-full" />
+                  <div className="mt-5 flex items-center gap-3">
+                    <Skeleton className="size-10 rounded-full" />
+                    <div className="space-y-1">
+                      <Skeleton className="h-5 w-28" />
+                      <Skeleton className="h-4 w-36" />
+                    </div>
+                  </div>
+                </div>
+                <Skeleton className="h-9 w-24 rounded-lg" />
+              </div>
+            </div>
+            <div className="mt-8">
+              <Skeleton className="h-7 w-20" />
+              <Skeleton className="mt-1 h-5 w-64 max-w-full" />
+              <Skeleton className="mt-3 h-[min(58vh,640px)] w-full rounded-xl" />
+            </div>
+            <div className="mt-12 border-t border-border pt-9">
+              <Skeleton className="h-6 w-28" />
+              <Skeleton className="mt-4 h-20 w-full" />
+            </div>
+          </div>
+          <div className={detailLayout.sidebar}>
+            <div className="rounded-xl border border-border bg-card p-5">
+              <Skeleton className="h-7 w-40" />
+              <div className="mt-3 space-y-2">
+                <Skeleton className="h-5 w-full" />
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-5/6" />
+              </div>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <Skeleton className="h-11 w-40 sm:h-8" />
+                <Skeleton className="h-11 w-24 sm:h-8" />
+              </div>
+            </div>
+            <div className="rounded-xl border border-border bg-card p-5">
+              <Skeleton className="h-6 w-32" />
+              <div className="mt-5 space-y-5">
+                <Skeleton className="h-20 w-full" />
+                <Skeleton className="h-16 w-full" />
+                <Skeleton className="h-24 w-full" />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -60,22 +112,29 @@ export const ScreenshotGallery = ({ urls, title }: { urls: string[]; title: stri
         />
         {urls.length > 1 && (
           <>
-            <button
+            <Button
               type="button"
-              className="absolute left-3 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-lg bg-background/85 opacity-80 shadow-sm transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-ring sm:size-9"
+              variant="secondary"
+              size="icon-lg"
+              className="absolute left-3 top-1/2 -translate-y-1/2 bg-background/90 opacity-85 shadow-sm hover:opacity-100"
               onClick={() => setIdx((i) => (i - 1 + urls.length) % urls.length)}
               aria-label="Previous screenshot"
             >
               <IconChevronLeft size={16} />
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
-              className="absolute right-3 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-lg bg-background/85 opacity-80 shadow-sm transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-ring sm:size-9"
+              variant="secondary"
+              size="icon-lg"
+              className="absolute right-3 top-1/2 -translate-y-1/2 bg-background/90 opacity-85 shadow-sm hover:opacity-100"
               onClick={() => setIdx((i) => (i + 1) % urls.length)}
               aria-label="Next screenshot"
             >
               <IconChevronRight size={16} />
-            </button>
+            </Button>
+            <span className="absolute right-3 bottom-3 rounded-md bg-background/90 px-2 py-1 text-xs font-medium tabular-nums shadow-sm">
+              {selectedIndex + 1} / {urls.length}
+            </span>
           </>
         )}
       </div>
@@ -110,29 +169,9 @@ export const ScreenshotGallery = ({ urls, title }: { urls: string[]; title: stri
   );
 };
 
-export const CodeBlock = ({ content, language }: { content: string; language: string }) => {
-  const { colorMode } = useColorMode();
-  const theme = prismThemes[colorModeKeys[colorMode as keyof typeof colorModeKeys] ?? "light"];
-
-  return (
-    <Highlight theme={theme} code={content} language={language}>
-      {({ className, style, tokens, getLineProps, getTokenProps }) => (
-        <pre
-          className={cn(className, "overflow-auto rounded-lg border border-border p-4 text-sm leading-relaxed")}
-          style={style}
-        >
-          {tokens.map((line, i) => (
-            <div key={i} {...getLineProps({ line })}>
-              {line.map((token, key) => (
-                <span key={key} {...getTokenProps({ token })} />
-              ))}
-            </div>
-          ))}
-        </pre>
-      )}
-    </Highlight>
-  );
-};
+export const CodeBlock = ({ content, language }: { content: string; language: string }) => (
+  <DynamicCodeBlock lang={language} code={content} />
+);
 
 export const DeleteConfirmButton = ({ onConfirm, className }: { onConfirm: () => void; className?: string }) => {
   return (

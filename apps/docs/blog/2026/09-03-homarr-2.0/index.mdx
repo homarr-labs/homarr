@@ -1,4 +1,6 @@
 ---
+title: Homarr 2.0.0 - Workshop, Custom Widgets and a rebuilt board
+date: 2026-09-03
 authors:
   - ajnart
 tags: [homarr, update, version, assistant, custom widgets, dashboards, docker]
@@ -24,13 +26,13 @@ If you're thinking, “I ain't reading all dat,” don't worry—we made a video
     controls
     playsInline
     preload="metadata"
-    poster={require("./img/homarr-v2-overview.webp").default}
+    poster={require("./img/homarr-v2-overview.webp").default.src}
     width={1920}
     height={1080}
     style={{ width: "100%", height: "auto", borderRadius: "0.5rem" }}
     aria-label="Homarr 2.0 feature overview."
   >
-    <source src={require("./video/homarr-v2-overview.mp4").default} type="video/mp4" />
+    <source src="/media/homarr-2.0/homarr-v2-overview.mp4" type="video/mp4" />
   </video>
   <figcaption>Homarr 2.0 in under two minutes.</figcaption>
 </figure>
@@ -39,7 +41,7 @@ Homarr 2.0 builds on the dashboard you already use. Here is what changed.
 
 ![A populated Homarr 2.0 dashboard with compact widgets, an Assistant, and an application rail](./img/homarr-v2-dashboard.webp)
 
-<!-- truncate -->
+{/* Historical excerpt boundary. */}
 
 SQLite and PostgreSQL users can update their Homarr image as usual; database migrations run automatically at startup. **MySQL users must convert before upgrading**, as explained below. Workshop uses the production service by default, with no preview URL configuration required.
 
@@ -80,7 +82,7 @@ A `homarr-custom-widget-v2` definition can use several fixed-origin API sources.
 
 ![The Community Workshop catalog inside Custom Widget management](./img/community-workshop.webp)
 
-:::warning Workshop is moderated
+:::warning[Workshop is moderated]
 
 AI makes widgets easy to produce. It does not make the first thing it coughs up worth publishing. **Do not dump untested slop into Workshop.** Test it, add a useful screenshot and explain its setup. Workshop is moderated.
 
@@ -108,13 +110,13 @@ We threw out the old drag-and-drop system and rebuilt it on [`dnd-kit`](https://
     muted
     playsInline
     preload="none"
-    poster={require("./img/drag-and-resize-poster.webp").default}
+    poster={require("./img/drag-and-resize-poster.webp").default.src}
     width={1770}
     height={706}
     style={{ width: "100%", height: "auto", borderRadius: "0.5rem" }}
     aria-label="Move and resize a tile with the new drag-and-drop system."
   >
-    <source src={require("./video/drag-and-resize.mp4").default} type="video/mp4" />
+    <source src="/media/homarr-2.0/drag-and-resize.mp4" type="video/mp4" />
     <track kind="captions" src="/media/homarr-2.0/drag-and-resize.vtt" srcLang="en" label="English" />
   </video>
   <figcaption>Move and resize a tile with the new drag-and-drop system.</figcaption>
@@ -130,13 +132,13 @@ Groups and dynamic sections did nearly the same job, so **Containers replace bot
     muted
     playsInline
     preload="none"
-    poster={require("./img/containers-poster.webp").default}
+    poster={require("./img/containers-poster.webp").default.src}
     width={1770}
     height={716}
     style={{ width: "100%", height: "auto", borderRadius: "0.5rem" }}
     aria-label="Move, collapse and reopen a Container without rearranging its contents."
   >
-    <source src={require("./video/containers.mp4").default} type="video/mp4" />
+    <source src="/media/homarr-2.0/containers.mp4" type="video/mp4" />
     <track kind="captions" src="/media/homarr-2.0/containers.vtt" srcLang="en" label="English" />
   </video>
   <figcaption>Move, collapse and reopen a Container without rearranging its contents.</figcaption>
@@ -150,13 +152,13 @@ Hold <kbd>Ctrl</kbd> or <kbd>Command</kbd> while clicking to select several item
     muted
     playsInline
     preload="none"
-    poster={require("./img/multi-select-poster.webp").default}
+    poster={require("./img/multi-select-poster.webp").default.src}
     width={1770}
     height={716}
     style={{ width: "100%", height: "auto", borderRadius: "0.5rem" }}
     aria-label="Command-click two apps, then move them into the same Container."
   >
-    <source src={require("./video/multi-select.mp4").default} type="video/mp4" />
+    <source src="/media/homarr-2.0/multi-select.mp4" type="video/mp4" />
     <track kind="captions" src="/media/homarr-2.0/multi-select.vtt" srcLang="en" label="English" />
   </video>
   <figcaption>Command-click two apps, then move them into the same Container.</figcaption>
@@ -176,13 +178,13 @@ Keep app shortcuts or widgets in a sidebar while the main board scrolls. Enable 
     muted
     playsInline
     preload="none"
-    poster={require("./img/sidebar-settings-poster.webp").default}
+    poster={require("./img/sidebar-settings-poster.webp").default.src}
     width={1600}
     height={700}
     style={{ width: "100%", height: "auto", borderRadius: "0.5rem" }}
     aria-label="Enable the right sidebar and set its width."
   >
-    <source src={require("./video/sidebar-settings.mp4").default} type="video/mp4" />
+    <source src="/media/homarr-2.0/sidebar-settings.mp4" type="video/mp4" />
     <track kind="captions" src="/media/homarr-2.0/sidebar-settings.vtt" srcLang="en" label="English" />
   </video>
   <figcaption>Enable the right sidebar and set its width.</figcaption>
@@ -194,13 +196,13 @@ Keep app shortcuts or widgets in a sidebar while the main board scrolls. Enable 
     muted
     playsInline
     preload="none"
-    poster={require("./img/fixed-sidebar-poster.webp").default}
+    poster={require("./img/fixed-sidebar-poster.webp").default.src}
     width={1580}
     height={640}
     style={{ width: "100%", height: "auto", borderRadius: "0.5rem" }}
     aria-label="The board scrolls; the app shortcuts stay in place."
   >
-    <source src={require("./video/fixed-sidebar.mp4").default} type="video/mp4" />
+    <source src="/media/homarr-2.0/fixed-sidebar.mp4" type="video/mp4" />
     <track kind="captions" src="/media/homarr-2.0/fixed-sidebar.vtt" srcLang="en" label="English" />
   </video>
   <figcaption>The board scrolls; the app shortcuts stay in place.</figcaption>
@@ -256,13 +258,13 @@ Boards now live in a searchable gallery with keyboard navigation. Open it from t
     muted
     playsInline
     preload="none"
-    poster={require("./img/board-switcher-poster.webp").default}
+    poster={require("./img/board-switcher-poster.webp").default.src}
     width={1920}
     height={778}
     style={{ width: "100%", height: "auto", borderRadius: "0.5rem" }}
     aria-label="Open the switcher, filter by name and press Enter to open a board."
   >
-    <source src={require("./video/board-switcher.mp4").default} type="video/mp4" />
+    <source src="/media/homarr-2.0/board-switcher.mp4" type="video/mp4" />
     <track kind="captions" src="/media/homarr-2.0/board-switcher.vtt" srcLang="en" label="English" />
   </video>
   <figcaption>Open the switcher, filter by name and press Enter to open a board.</figcaption>
@@ -306,13 +308,13 @@ Add content without leaving the board. Settings have live previews. Weather and 
     muted
     playsInline
     preload="none"
-    poster={require("./img/timer-poster.webp").default}
+    poster={require("./img/timer-poster.webp").default.src}
     width={950}
     height={500}
     style={{ width: "100%", height: "auto", borderRadius: "0.5rem" }}
     aria-label="Start, pause and reset Timer without leaving the board."
   >
-    <source src={require("./video/timer.mp4").default} type="video/mp4" />
+    <source src="/media/homarr-2.0/timer.mp4" type="video/mp4" />
     <track kind="captions" src="/media/homarr-2.0/timer.vtt" srcLang="en" label="English" />
   </video>
   <figcaption>Start, pause and reset Timer without leaving the board.</figcaption>
@@ -326,13 +328,13 @@ Supported widgets also have **advanced views**. Hover over a widget and hold <kb
     muted
     playsInline
     preload="none"
-    poster={require("./img/advanced-widget-poster.webp").default}
+    poster={require("./img/advanced-widget-poster.webp").default.src}
     width={864}
     height={600}
     style={{ width: "100%", height: "auto", borderRadius: "0.5rem" }}
     aria-label="Hold Shift for one second over Downloads to open its advanced view."
   >
-    <source src={require("./video/advanced-widget.mp4").default} type="video/mp4" />
+    <source src="/media/homarr-2.0/advanced-widget.mp4" type="video/mp4" />
     <track kind="captions" src="/media/homarr-2.0/advanced-widget.vtt" srcLang="en" label="English" />
   </video>
   <figcaption>Hold Shift for one second over Downloads to open its advanced view.</figcaption>
@@ -372,9 +374,9 @@ Board startup work runs in parallel, heavy screens load when opened, and identic
 
 ## Deploy on Hostinger
 
-[Hostinger now offers a one-click Docker deployment of Homarr](https://www.hostinger.com/applications/homarr) on its VPS plans. They maintain the deployment template, and you manage the resulting VPS and Homarr instance. Our new [Hostinger installation guide](/docs/getting-started/installation/hostinger) walks through deployment and first setup.
+[Hostinger now offers a one-click Docker deployment of Homarr](https://www.hostg.xyz/aff_c?offer_id=815&aff_id=244277&url_id=6861) on its VPS plans. They maintain the deployment template, and you manage the resulting VPS and Homarr instance. Our new [Hostinger installation guide](/docs/getting-started/installation/hostinger) walks through deployment and first setup.
 
-We deploy the Homarr Workshop and the compiled Docusaurus docs on the VPS provided by Hostinger. Thank you for hosting this part of Homarr's infrastructure. We have an affiliate partnership as well: purchases through a referral link may support Homarr. For now, the links above go directly to their Homarr application page.
+We deploy the Homarr Workshop and the compiled documentation website on the VPS provided by Hostinger. Thank you for hosting this part of Homarr's infrastructure. We have an affiliate partnership as well: purchases through a referral link may support Homarr.
 
 ## Compatibility notes
 

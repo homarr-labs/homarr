@@ -24,18 +24,26 @@ COPY packages/common ./packages/common
 COPY packages/core ./packages/core
 COPY packages/custom-widgets ./packages/custom-widgets
 COPY packages/definitions ./packages/definitions
+COPY packages/db ./packages/db
+COPY packages/server-settings ./packages/server-settings
+COPY packages/settings ./packages/settings
+COPY packages/translation ./packages/translation
+COPY packages/ui ./packages/ui
+COPY packages/validation ./packages/validation
 COPY packages/workshop ./packages/workshop
 COPY tooling/typescript ./tooling/typescript
 RUN --mount=type=cache,id=workshop-pnpm-store,target=/pnpm/store pnpm config set store-dir /pnpm/store && pnpm install --filter @homarr/docs... --frozen-lockfile
 
 FROM dependencies AS website
+ARG KAPA_WEBSITE_ID=1e4656f4-abeb-4343-bbae-1d8626f52378
+ENV KAPA_WEBSITE_ID=$KAPA_WEBSITE_ID
 ARG HOMARR_WEBSITE_URL=https://homarr.dev
 ARG WORKSHOP_API_URL=https://homarr.dev
 ARG WORKSHOP_WEB_URL=https://homarr.dev/workshop
 ENV HOMARR_WEBSITE_URL=$HOMARR_WEBSITE_URL
 ENV WORKSHOP_API_URL=$WORKSHOP_API_URL
 ENV WORKSHOP_WEB_URL=$WORKSHOP_WEB_URL
-RUN CI=true SKIP_ENV_VALIDATION=true pnpm turbo build --filter=@homarr/docs
+RUN CI=true SKIP_ENV_VALIDATION=true pnpm --filter @homarr/docs build
 
 FROM ${POCKETBASE_IMAGE} AS pocketbase-runtime
 ENV PORT=8090
@@ -57,7 +65,7 @@ ARG WORKSHOP_WEB_URL=https://homarr.dev/workshop
 ENV HOMARR_WEBSITE_URL=$HOMARR_WEBSITE_URL
 ENV WORKSHOP_API_URL=$WORKSHOP_API_URL
 ENV WORKSHOP_WEB_URL=$WORKSHOP_WEB_URL
-COPY --from=website /app/apps/docs/build /pb_public
+COPY --from=website /app/apps/docs/out /pb_public
 COPY apps/workshop/pb_migrations /pb_migrations
 COPY apps/workshop/pb_hooks /pb_hooks
 RUN chown -R pocketbase:pocketbase /pb_hooks /pb_migrations /pb_public

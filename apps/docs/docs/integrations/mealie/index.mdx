@@ -10,7 +10,7 @@ import { AddingIntegration } from "@site/src/components/integrations/adding";
 import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
 import { mealieIntegration } from ".";
 import { statsWidget } from "@site/docs/widgets/stats";
-import Alert from "@theme/Admonition";
+import Alert from "@/components/mdx/admonition";
 
 <IntegrationHeader integration={mealieIntegration} categories={["Recipe management"]} />
 
@@ -20,7 +20,7 @@ import Alert from "@theme/Admonition";
 
 The [Stats widget](/docs/widgets/stats) displays recipes and users in the API key's household, plus the group's shared categories and tags.
 
-<Alert type="note" className="my-2">
+<Alert type="note">
   The Stats widget uses Mealie's v2 endpoint, <code>/api/households/statistics</code>. Mealie v1 instances that only
   expose <code>/api/groups/statistics</code> are not supported.
 </Alert>

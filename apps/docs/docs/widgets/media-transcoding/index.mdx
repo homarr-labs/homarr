@@ -11,8 +11,8 @@ import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
 import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
 import { IconAd } from "@tabler/icons-react";
-import Tabs from "@theme/Tabs";
-import TabItem from "@theme/TabItem";
+import Tabs from "@/components/mdx/legacy-tabs";
+import { TabItem } from "@/components/mdx/legacy-tabs";
 import { mediaTranscodingWidget } from ".";
 import { tdarrIntegration } from "@site/docs/integrations/tdarr";
 
@@ -29,9 +29,9 @@ import workersCard from "./img/workers.png";
 import statisticsCard from "./img/statistics.png";
 
 <div className="flex gap-1 flex-wrap">
-  <img src={workersCard} alt="media-transcoding workers-tab" width={128 * 3} />
-  <img src={queueCard} alt="media-transcoding  queue-tab" width={128 * 3} />
-  <img src={statisticsCard} alt="media-transcoding statistics-tab" width={128 * 3} />
+  <img src={workersCard.src} alt="media-transcoding workers-tab" width={128 * 3} />
+  <img src={queueCard.src} alt="media-transcoding  queue-tab" width={128 * 3} />
+  <img src={statisticsCard.src} alt="media-transcoding statistics-tab" width={128 * 3} />
 </div>
 
 ### Supported Integrations

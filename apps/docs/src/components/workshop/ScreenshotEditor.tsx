@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { IconPhoto, IconUpload, IconX } from "@tabler/icons-react";
 

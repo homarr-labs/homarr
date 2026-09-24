@@ -21,8 +21,8 @@ export const openApiRouter = createTRPCRouter({
   integration: createTRPCRouter({ request: integrationRequestProcedure }),
 });
 
-export const openApiDocument = (base: string) =>
-  generateOpenApiDocument(openApiRouter, {
+export const openApiDocument = (base: string) => {
+  const document = generateOpenApiDocument(openApiRouter, {
     title: "Homarr API documentation",
     version: "1.1.0",
     baseUrl: base,
@@ -36,3 +36,17 @@ export const openApiDocument = (base: string) =>
       },
     },
   });
+  // These reads support anonymous public resources and API-key-scoped private resources.
+  // The generator's boolean `protect` cannot express optional authentication.
+  for (const path of ["/api/boards", "/api/apps/{id}"]) {
+    const operation = document.paths?.[path]?.get;
+    if (operation) operation.security = [{}, { apikey: [] }];
+  }
+  // Exactly one selector is valid; generated samples otherwise fill all three.
+  const integrationBody = document.paths?.["/api/integrations/request"]?.post?.requestBody;
+  if (integrationBody && "content" in integrationBody) {
+    const json = integrationBody.content["application/json"];
+    if (json) json.example = { integrationKind: "sonarr", method: "GET", path: "/api/v3/system/status" };
+  }
+  return document;
+};

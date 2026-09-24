@@ -3,10 +3,10 @@
   align-items: center;
   justify-content: center;
   padding: 0;
-  border: 1px solid #ebedf0;
+  border: 1px solid var(--hero-button-border);
   border-radius: 1.5rem;
-  background: #ebedf0;
-  color: #1c1e21;
+  background: var(--hero-button-bg);
+  color: var(--hero-button-fg);
   font: inherit;
   font-size: 1.125rem;
   font-weight: 700;
@@ -25,16 +25,17 @@
   justify-content: center;
   align-self: stretch;
   width: 2.75rem;
-  border-left: 1px solid #c6c9ce;
+  border-left: 1px solid var(--hero-button-border);
 }
 
 .trigger:hover,
 .trigger[data-popup-open] {
-  background: #dfe2e6;
+  background: var(--hero-button-hover-bg);
+  color: var(--hero-button-hover-fg);
 }
 
 .trigger:focus-visible {
-  outline: 2px solid var(--ifm-font-color-base);
+  outline: 2px solid var(--ring);
   outline-offset: 3px;
 }
 
@@ -46,10 +47,10 @@
   width: 228px;
   max-width: calc(100vw - 24px);
   padding: 0.375rem;
-  border: 1px solid #dfe2e6;
+  border: 1px solid var(--border);
   border-radius: 1rem;
-  background: #fff;
-  color: #1c1e21;
+  background: var(--card);
+  color: var(--foreground);
   box-shadow: 0 12px 32px rgb(0 0 0 / 16%);
   outline: none;
 }
@@ -71,7 +72,7 @@
 
 .item:hover,
 .item[data-highlighted] {
-  background: #f0f1f3;
+  background: var(--accent);
   color: inherit;
   text-decoration: none;
 }
@@ -82,9 +83,9 @@
   justify-content: center;
   flex: 0 0 34px;
   height: 34px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border);
   border-radius: 0.5rem;
-  background: #fff;
+  background: var(--card);
 }
 
 .logo img {
@@ -97,30 +98,4 @@
 
 .externalIcon {
   opacity: 0.55;
-}
-
-:global([data-theme="dark"]) .trigger {
-  border-color: #52525b;
-  background: #27272a;
-  color: #f4f4f5;
-}
-
-:global([data-theme="dark"]) .chevron {
-  border-color: #52525b;
-}
-
-:global([data-theme="dark"]) .trigger:hover,
-:global([data-theme="dark"]) .trigger[data-popup-open] {
-  background: #3f3f46;
-}
-
-:global([data-theme="dark"]) .popup {
-  border-color: #52525b;
-  background: #27272a;
-  color: #f4f4f5;
-}
-
-:global([data-theme="dark"]) .item:hover,
-:global([data-theme="dark"]) .item[data-highlighted] {
-  background: #3f3f46;
 }

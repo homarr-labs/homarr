@@ -1,0 +1,44 @@
+---
+title: Homarr documentation
+description: Install Homarr, connect your services, and build a dashboard that works for you.
+---
+
+import { IconDownload, IconArrowUp } from "@tabler/icons-react";
+
+## Install or upgrade
+
+<Cards>
+  <Card icon={<IconDownload />} title="Install Homarr" href="/docs/getting-started/installation">
+    Start with Docker Compose, Kubernetes, or your hosting platform.
+  </Card>
+  <Card icon={<IconArrowUp />} title="Update Homarr" href="/docs/getting-started/installation/docker#update">
+    Update your Docker installation while keeping its data and configuration.
+  </Card>
+</Cards>
+
+New to Homarr? [Learn how boards, apps, integrations, and widgets fit together](/docs/getting-started), then
+[complete your first-board setup](/docs/getting-started/after-the-installation).
+
+## Configure your dashboard
+
+| I want to…                          | Guide                                           |
+| ----------------------------------- | ----------------------------------------------- |
+| Add links to my services            | [Apps and bookmarks](/docs/management/apps)     |
+| Arrange and share a dashboard       | [Boards](/docs/management/boards)               |
+| Connect a service to Homarr         | [Find an integration](/docs/integrations)       |
+| Display service data on a board     | [Choose a widget](/docs/widgets)                |
+| Install a community widget or style | [Use the Workshop](/docs/workshop)              |
+| Manage access for other people      | [Users and permissions](/docs/management/users) |
+
+## Operate your installation
+
+- [Environment variables](/docs/advanced/environment-variables): deployment settings and defaults.
+- [Single sign-on](/docs/advanced/single-sign-on): credentials, LDAP, and OIDC configuration.
+- [Scheduled tasks](/docs/management/tasks): background work and task status.
+- [Get help](/docs/community): support channels and ways to contribute.
+
+## Extend Homarr
+
+[Build a Custom Widget](/docs/management/custom-widgets), [connect an AI client with MCP](/docs/management/mcp),
+or use the [HTTP API reference](/api-reference). For changes to Homarr itself, follow the
+[development setup](/docs/advanced/development/getting-started).

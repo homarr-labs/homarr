@@ -327,7 +327,15 @@ export const boardRouter = createTRPCRouter({
     .input(z.void())
     .output(z.array(boardSummarySchema))
     .meta({
-      openapi: { method: "GET", path: "/api/boards", tags: ["boards"], protect: true },
+      openapi: {
+        method: "GET",
+        path: "/api/boards",
+        tags: ["boards"],
+        protect: true,
+        summary: "List accessible boards",
+        description:
+          "Return accessible boards with creator details, visibility, and the current user's desktop and mobile home flags. Anonymous callers can see public boards.",
+      },
       mcp: {
         enabled: true,
         description:
@@ -648,7 +656,15 @@ export const boardRouter = createTRPCRouter({
   createBoard: permissionRequiredProcedure
     .requiresPermission("board-create")
     .meta({
-      openapi: { method: "POST", path: "/api/boards", tags: ["boards"], protect: true },
+      openapi: {
+        method: "POST",
+        path: "/api/boards",
+        tags: ["boards"],
+        protect: true,
+        summary: "Create a board",
+        description:
+          "Create a board with base and mobile layouts. Requires board-create permission. Returns the board ID, name, and base layout ID; sets the creator's home board if none is selected.",
+      },
       mcp: {
         enabled: true,
         description:
@@ -718,7 +734,15 @@ export const boardRouter = createTRPCRouter({
   duplicateBoard: permissionRequiredProcedure
     .requiresPermission("board-create")
     .meta({
-      openapi: { method: "POST", path: "/api/boards/{id}/duplicate", tags: ["boards"], protect: true },
+      openapi: {
+        method: "POST",
+        path: "/api/boards/{id}/duplicate",
+        tags: ["boards"],
+        protect: true,
+        summary: "Duplicate a board",
+        description:
+          "Copy a board under a unique name and return its new ID. Requires board-create permission, view access to the source, and use access to its linked integrations. Widget configurations must be valid; boards containing Custom Widgets require admin permission.",
+      },
       mcp: {
         enabled: true,
         description:
@@ -1015,7 +1039,14 @@ export const boardRouter = createTRPCRouter({
     }),
   renameBoard: protectedProcedure
     .meta({
-      openapi: { method: "PATCH", path: "/api/boards/{id}/name", tags: ["boards"], protect: true },
+      openapi: {
+        method: "PATCH",
+        path: "/api/boards/{id}/name",
+        tags: ["boards"],
+        protect: true,
+        summary: "Rename a board",
+        description: "Change a board's name to a unique name. Requires full access to the board.",
+      },
       mcp: {
         enabled: true,
         description:
@@ -1033,7 +1064,15 @@ export const boardRouter = createTRPCRouter({
     }),
   changeBoardVisibility: protectedProcedure
     .meta({
-      openapi: { method: "PATCH", path: "/api/boards/{id}/visibility", tags: ["boards"], protect: true },
+      openapi: {
+        method: "PATCH",
+        path: "/api/boards/{id}/visibility",
+        tags: ["boards"],
+        protect: true,
+        summary: "Change board visibility",
+        description:
+          "Make a board public or private. Requires full access to the board. A board selected as an instance desktop or mobile home board cannot be made private.",
+      },
       mcp: {
         enabled: true,
         description:
@@ -1063,7 +1102,14 @@ export const boardRouter = createTRPCRouter({
     }),
   deleteBoard: protectedProcedure
     .meta({
-      openapi: { method: "DELETE", path: "/api/boards/{id}", tags: ["boards"], protect: true },
+      openapi: {
+        method: "DELETE",
+        path: "/api/boards/{id}",
+        tags: ["boards"],
+        protect: true,
+        summary: "Delete a board",
+        description: "Delete a board by ID. Requires full access to the board.",
+      },
       mcp: {
         enabled: true,
         description:
@@ -1079,7 +1125,14 @@ export const boardRouter = createTRPCRouter({
     }),
   setHomeBoard: protectedProcedure
     .meta({
-      openapi: { method: "PATCH", path: "/api/boards/{id}/home", tags: ["boards"], protect: true },
+      openapi: {
+        method: "PATCH",
+        path: "/api/boards/{id}/home",
+        tags: ["boards"],
+        protect: true,
+        summary: "Set your desktop home board",
+        description: "Select the current user's desktop home board. Requires view access to the board.",
+      },
       mcp: {
         enabled: true,
         description:
@@ -1095,7 +1148,14 @@ export const boardRouter = createTRPCRouter({
     }),
   setMobileHomeBoard: protectedProcedure
     .meta({
-      openapi: { method: "PATCH", path: "/api/boards/{id}/mobile-home", tags: ["boards"], protect: true },
+      openapi: {
+        method: "PATCH",
+        path: "/api/boards/{id}/mobile-home",
+        tags: ["boards"],
+        protect: true,
+        summary: "Set your mobile home board",
+        description: "Select the current user's mobile home board. Requires view access to the board.",
+      },
       mcp: {
         enabled: true,
         description:
@@ -1523,7 +1583,15 @@ export const boardRouter = createTRPCRouter({
     }),
   savePartialBoardSettings: protectedProcedure
     .meta({
-      openapi: { method: "PATCH", path: "/api/boards/{id}/settings", tags: ["boards"], protect: true },
+      openapi: {
+        method: "PATCH",
+        path: "/api/boards/{id}/settings",
+        tags: ["boards"],
+        protect: true,
+        summary: "Update board settings",
+        description:
+          "Update the supplied appearance, metadata, background, custom CSS, or status settings. Omitted settings remain unchanged. Requires modify access to the board.",
+      },
       mcp: {
         enabled: true,
         description:
@@ -2144,7 +2212,15 @@ export const boardRouter = createTRPCRouter({
   }),
   addItem: protectedProcedure
     .meta({
-      openapi: { method: "POST", path: "/api/boards/items", tags: ["boards"], protect: true },
+      openapi: {
+        method: "POST",
+        path: "/api/boards/items",
+        tags: ["boards"],
+        protect: true,
+        summary: "Add an item to a board",
+        description:
+          "Add a widget or app to the first available position in the main canvas of each layout and return its item ID. Requires modify access to the board and use access to linked integrations. Widget configurations must be valid; placing Custom Widgets requires admin permission.",
+      },
       mcp: {
         enabled: true,
         description:

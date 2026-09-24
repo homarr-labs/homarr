@@ -27,6 +27,13 @@ session cookie.
 API keys do not expire automatically and act as the user that created them. Every request uses that user's group and
 resource permissions.
 
+## Browser requests
+
+The HTTP API accepts cross-origin requests authenticated with the `ApiKey` header; session cookies are not used.
+The API reference sends requests directly from your browser to the server you choose. An HTTPS documentation page
+cannot call an HTTP-only instance when the browser blocks mixed content; use HTTPS or the reference inside that instance.
+A reverse proxy must forward `OPTIONS` and preserve the API’s CORS response headers.
+
 ## Invitation dates
 
 `POST /api/invites` and the tRPC `invite.createInvite` procedure accept `expirationDate` as an ISO 8601 timestamp with a
@@ -100,8 +107,8 @@ integration fails, the query returns an error.
 Authenticated administrators can retrieve the current Custom Widget authoring prompt, schema, component catalog, skill,
 and focused references under `/api/custom-widgets/`.
 
-Use [Custom Widget agent authoring](../custom-widgets/agent-authoring) for the lifecycle and
-[MCP](../mcp) when the client supports Model Context Protocol.
+Use [Custom Widget agent authoring](/docs/management/custom-widgets/agent-authoring) for the lifecycle and
+[MCP](/docs/management/mcp) when the client supports Model Context Protocol.
 
 ## Gotify notification deletion
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useColorMode } from "@docusaurus/theme-common";
+import { useColorMode } from "@/hooks/use-color-mode";
 import { Toaster as Sonner, type ToasterProps } from "sonner";
 import { IconCircleCheck, IconInfoCircle, IconAlertTriangle, IconAlertOctagon, IconLoader } from "@tabler/icons-react";
 

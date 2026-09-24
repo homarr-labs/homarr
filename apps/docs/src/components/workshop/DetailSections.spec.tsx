@@ -3,11 +3,9 @@
 import React, { act } from "react";
 import { createRoot } from "react-dom/client";
 import type { Root } from "react-dom/client";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import { ScreenshotGallery } from "./DetailSections";
-
-vi.mock("@docusaurus/theme-common", () => ({ useColorMode: () => ({ colorMode: "light" }) }));
 
 let host: HTMLDivElement;
 let root: Root;

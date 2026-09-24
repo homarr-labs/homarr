@@ -35,6 +35,7 @@ export const widgetQueryRefetchIntervals = [
   { queryKey: [["widget", "releases", "getLatest"]], intervalSeconds: null },
   { queryKey: [["widget", "rssFeed", "getFeeds"]], intervalSeconds: null },
   { queryKey: [["widget", "speedtestTracker"]], intervalSeconds: null },
+  { queryKey: [["widget", "stats"]], intervalSeconds: null },
   { queryKey: [["widget", "stockPrice", "getPriceHistory"]], intervalSeconds: null },
   { queryKey: [["widget", "umami", "getVisitorStats"]], intervalSeconds: null },
   { queryKey: [["widget", "umami", "getActiveVisitors"]], intervalSeconds: null },

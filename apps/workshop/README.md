@@ -77,7 +77,13 @@ pnpm --filter @homarr/docs typecheck
 ```
 
 The integration suite uses a disposable Compose project. `pnpm test:workshop-image` additionally builds and smoke-tests
-the combined production image. Both commands are manual and do not run in CI. Workshop CI validates Compose configuration only when its workflow or Docker build inputs change, then publishes images on release branches. The main Fast gate owns workspace typechecking.
+the combined production image. The production image smoke also runs in PR CI on native amd64 and arm64 runners, including data persistence and backup restore. The broader integration suite remains available manually. Workshop CI validates Compose configuration and publishes images only on release branches. The main Fast gate owns workspace typechecking.
+
+To smoke-test an already built candidate without rebuilding:
+
+```sh
+WORKSHOP_IMAGE_TEST_IMAGE=homarr-workshop:candidate pnpm test:workshop-image
+```
 
 ## Data safety
 
@@ -96,5 +102,5 @@ Never run that reset against production.
 ## Production
 
 The production image serves the documentation site and PocketBase from one origin. See the
-[Workshop operator guide](../docs/docs/workshop/operator.mdx) for environment variables, proxying, staging, backups,
+[Workshop operator guide](../docs/docs/advanced/development/workshop-operator.mdx) for environment variables, proxying, staging, backups,
 and promotion. Publish by immutable digest, validate that exact digest in staging, then promote it.

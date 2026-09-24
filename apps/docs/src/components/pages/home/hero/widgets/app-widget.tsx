@@ -13,8 +13,8 @@ export const AppWidget = ({ name, label, className }: AppWidgetProps) => {
 
   return (
     <WidgetCard width={1} className={clsx("app-card text-center", className)}>
-      <span className={"text-sm font-bold"}>{label ?? app.name}</span>
-      <img src={app.iconUrl} className="aspect-square scale-[0.6]" alt="" />
+      <span className="absolute top-2 inset-x-1 text-sm font-bold leading-4">{label ?? app.name}</span>
+      <img src={app.iconUrl} className="absolute bottom-0 size-24 object-contain scale-[0.6]" alt="" />
       <div className="absolute bottom-3 right-3 rounded-full bg-green-500 w-2 h-2" aria-hidden="true" />
     </WidgetCard>
   );

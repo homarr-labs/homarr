@@ -32,6 +32,9 @@ export const inviteRouter = createTRPCRouter({
         path: "/api/invites",
         tags: ["invites"],
         protect: true,
+        summary: "List user invitations",
+        description:
+          "Return invitations with their expiration dates and creators, ordered by expiration. Invite tokens are excluded. Requires admin permission and credentials authentication to be enabled.",
       },
       mcp: { enabled: true, description: "List all user invites" },
     })
@@ -66,6 +69,9 @@ export const inviteRouter = createTRPCRouter({
         path: "/api/invites",
         tags: ["invites"],
         protect: true,
+        summary: "Create a user invitation",
+        description:
+          "Create a single-use invitation with the supplied expiration date and return its ID and registration token. Requires admin permission and credentials authentication to be enabled.",
       },
       mcp: {
         enabled: true,
@@ -104,6 +110,9 @@ export const inviteRouter = createTRPCRouter({
         path: "/api/invites/{id}",
         tags: ["invites"],
         protect: true,
+        summary: "Delete a user invitation",
+        description:
+          "Revoke an invitation by ID. Requires admin permission and credentials authentication to be enabled. Returns not found if the invitation does not exist.",
       },
       mcp: { enabled: true, description: "Delete an invite by ID. REQUIRED: id (invite ID string)" },
     })

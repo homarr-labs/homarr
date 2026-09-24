@@ -27,6 +27,9 @@ export const appRouter = createTRPCRouter({
         path: "/api/apps/paginated",
         tags: ["apps"],
         protect: true,
+        summary: "List apps with pagination",
+        description:
+          "Return apps ordered by name with a total count. Supports a name filter and page controls. Requires app-modify-all permission.",
       },
       mcp: {
         enabled: true,
@@ -62,6 +65,8 @@ export const appRouter = createTRPCRouter({
         path: "/api/apps",
         tags: ["apps"],
         protect: true,
+        summary: "List all apps",
+        description: "Return all apps ordered by name. Requires app-modify-all permission.",
       },
       mcp: { enabled: true, description: "List all apps" },
     })
@@ -84,6 +89,9 @@ export const appRouter = createTRPCRouter({
         path: "/api/apps/search",
         tags: ["apps"],
         protect: true,
+        summary: "Search apps",
+        description:
+          "Find apps whose names contain the query, ordered by name. Requires app-modify-all or board-modify-all permission; returns up to 100 results.",
       },
       mcp: {
         enabled: true,
@@ -127,6 +135,9 @@ export const appRouter = createTRPCRouter({
         path: "/api/apps/selectable",
         tags: ["apps"],
         protect: true,
+        summary: "List selectable apps",
+        description:
+          "Return app IDs, names, icons, descriptions, destination URLs, and ping URLs for selection controls. Requires authentication.",
       },
     })
     .query(({ ctx }) => {
@@ -151,6 +162,9 @@ export const appRouter = createTRPCRouter({
         path: "/api/apps/{id}",
         tags: ["apps"],
         protect: true,
+        summary: "Get an app",
+        description:
+          "Return an app by ID. Signed-in users can access all apps; anonymous access is limited to apps placed on public boards. Missing or inaccessible apps return not found.",
       },
       mcp: { enabled: true, description: "Get a single app by its ID. REQUIRED: id (app ID string)" },
     })
@@ -181,6 +195,9 @@ export const appRouter = createTRPCRouter({
         path: "/api/apps",
         tags: ["apps"],
         protect: true,
+        summary: "Create an app",
+        description:
+          "Create an app bookmark. Requires app-create permission. Returns the app, including its ID and the legacy appId field. An empty pingUrl disables the custom ping URL.",
       },
       mcp: {
         enabled: true,
@@ -228,6 +245,9 @@ export const appRouter = createTRPCRouter({
         path: "/api/apps/{id}",
         tags: ["apps"],
         protect: true,
+        summary: "Update an app",
+        description:
+          "Update an app by ID. Requires app-modify-all permission. Supply all required app fields; an empty pingUrl clears the custom ping URL. Changing href invalidates linked integration caches.",
       },
       mcp: {
         enabled: true,
@@ -275,6 +295,8 @@ export const appRouter = createTRPCRouter({
         path: "/api/apps/{id}",
         tags: ["apps"],
         protect: true,
+        summary: "Delete an app",
+        description: "Delete an app by ID and invalidate linked integration caches. Requires app-full-all permission.",
       },
       mcp: { enabled: true, description: "Delete an app by ID. REQUIRED: id (app ID string)" },
     })

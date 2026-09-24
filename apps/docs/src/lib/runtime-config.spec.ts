@@ -8,9 +8,9 @@ describe("Workshop runtime configuration", () => {
   });
 
   test("prefers the URL supplied when the container starts", () => {
-    window.homarrRuntimeConfig = { workshopApiUrl: "https://v2.preview.homarr.dev" };
+    window.homarrRuntimeConfig = { workshopApiUrl: "https://api.example.invalid" };
 
-    expect(getRuntimeWorkshopApiUrl("https://homarr.dev")).toBe("https://v2.preview.homarr.dev");
+    expect(getRuntimeWorkshopApiUrl("https://homarr.dev")).toBe("https://api.example.invalid");
   });
 
   test("keeps the build-time URL as a fallback", () => {

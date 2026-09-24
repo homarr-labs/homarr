@@ -1,6 +1,6 @@
 .explorer {
-  --catalog-border: color-mix(in srgb, var(--ifm-color-emphasis-500) 42%, transparent);
-  --catalog-surface: color-mix(in srgb, var(--ifm-background-surface-color) 90%, var(--ifm-color-primary) 10%);
+  --catalog-border: color-mix(in srgb, var(--color-fd-border) 42%, transparent);
+  --catalog-surface: color-mix(in srgb, var(--color-fd-card) 90%, var(--color-fd-primary) 10%);
   border: 1px solid var(--catalog-border);
   border-radius: 18px;
   margin: 1.5rem 0 2rem;
@@ -9,7 +9,7 @@
 
 .header {
   align-items: flex-start;
-  background: linear-gradient(135deg, color-mix(in srgb, var(--ifm-color-primary) 13%, transparent), transparent 65%);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--color-fd-primary) 13%, transparent), transparent 65%);
   display: flex;
   gap: 1.5rem;
   justify-content: space-between;
@@ -17,7 +17,7 @@
 }
 
 .eyebrow {
-  color: var(--ifm-color-primary);
+  color: var(--color-fd-primary);
   font-size: 0.72rem;
   font-weight: 750;
   letter-spacing: 0.09em;
@@ -31,7 +31,7 @@
 }
 
 .summary {
-  color: var(--ifm-color-emphasis-700);
+  color: var(--color-fd-muted-foreground);
   margin: 0.45rem 0 0;
   max-width: 68ch;
 }
@@ -52,9 +52,9 @@
 .rawLink,
 .expandButton,
 .showMoreButton {
-  background: var(--ifm-color-primary);
-  border: 1px solid var(--ifm-color-primary);
-  color: var(--ifm-color-white);
+  background: var(--color-fd-primary);
+  border: 1px solid var(--color-fd-primary);
+  color: var(--color-fd-primary-foreground);
   padding: 0.58rem 0.85rem;
   text-decoration: none;
 }
@@ -67,8 +67,8 @@
 .rawLink:hover,
 .expandButton:hover,
 .showMoreButton:hover {
-  background: var(--ifm-color-primary-dark);
-  color: var(--ifm-color-white);
+  background: var(--color-fd-primary);
+  color: var(--color-fd-primary-foreground);
   text-decoration: none;
 }
 
@@ -87,7 +87,7 @@
   gap: 1rem;
   grid-template-columns: minmax(0, 1fr) auto;
   padding: 1rem 1.4rem;
-  scroll-margin-top: calc(var(--ifm-navbar-height) + 1rem);
+  scroll-margin-top: calc(4.25rem + 1rem);
 }
 
 .globalProps h4,
@@ -96,7 +96,7 @@
 }
 
 .globalProps p {
-  color: var(--ifm-color-emphasis-700);
+  color: var(--color-fd-muted-foreground);
   font-size: 0.86rem;
   margin-top: 0.2rem;
 }
@@ -114,14 +114,14 @@
 }
 
 .versions dt {
-  color: var(--ifm-color-emphasis-700);
+  color: var(--color-fd-muted-foreground);
   font-size: 0.72rem;
   font-weight: 650;
   text-transform: uppercase;
 }
 
 .versions dd {
-  font-family: var(--ifm-font-family-monospace);
+  font-family: var(--font-mono, ui-monospace, monospace);
   font-size: 0.86rem;
   margin: 0.12rem 0 0;
 }
@@ -141,17 +141,17 @@
 }
 
 .filters label > span {
-  color: var(--ifm-color-emphasis-700);
+  color: var(--color-fd-muted-foreground);
   font-size: 0.76rem;
   font-weight: 700;
 }
 
 .filters input[type="search"],
 .filters select {
-  background: var(--ifm-background-color);
+  background: var(--color-fd-background);
   border: 1px solid var(--catalog-border);
   border-radius: 9px;
-  color: var(--ifm-font-color-base);
+  color: var(--color-fd-foreground);
   font: inherit;
   min-height: 42px;
   padding: 0.55rem 0.68rem;
@@ -164,7 +164,7 @@
 .showMoreButton:focus-visible,
 .resetButton:focus-visible,
 .anchorLink:focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--ifm-color-primary) 45%, transparent);
+  outline: 3px solid color-mix(in srgb, var(--color-fd-primary) 45%, transparent);
   outline-offset: 2px;
 }
 
@@ -193,7 +193,7 @@
 .resetButton {
   background: transparent;
   border: 0;
-  color: var(--ifm-color-primary);
+  color: var(--color-fd-primary);
   margin-left: auto;
   padding: 0.35rem;
 }
@@ -203,7 +203,7 @@
 }
 
 .componentCard {
-  scroll-margin-top: calc(var(--ifm-navbar-height) + 1rem);
+  scroll-margin-top: calc(4.25rem + 1rem);
 }
 
 .componentCard + .componentCard {
@@ -225,7 +225,7 @@
 }
 
 .componentNameRow h4 {
-  font-family: var(--ifm-font-family-monospace);
+  font-family: var(--font-mono, ui-monospace, monospace);
   font-size: 1.05rem;
   margin: 0;
 }
@@ -249,43 +249,43 @@
 }
 
 .badges span {
-  background: var(--ifm-color-emphasis-200);
+  background: var(--color-fd-muted);
   border-radius: 999px;
-  color: var(--ifm-color-emphasis-800);
+  color: var(--color-fd-foreground);
   font-size: 0.7rem;
   padding: 0.2rem 0.48rem;
 }
 
 .badges span[data-safety="allowed"] {
   background: color-mix(in srgb, #2f9e44 18%, transparent);
-  color: color-mix(in srgb, #2f9e44 78%, var(--ifm-font-color-base));
+  color: color-mix(in srgb, #2f9e44 78%, var(--color-fd-foreground));
 }
 
 .badges span[data-safety="wrapped"] {
-  background: color-mix(in srgb, var(--ifm-color-primary) 18%, transparent);
-  color: var(--ifm-color-primary-darkest);
+  background: color-mix(in srgb, var(--color-fd-primary) 18%, transparent);
+  color: var(--color-fd-primary);
 }
 
 .badges span[data-safety="denied"] {
   background: color-mix(in srgb, #e03131 18%, transparent);
-  color: color-mix(in srgb, #e03131 78%, var(--ifm-font-color-base));
+  color: color-mix(in srgb, #e03131 78%, var(--color-fd-foreground));
 }
 
 .expandButton {
   background: transparent;
-  color: var(--ifm-color-primary);
+  color: var(--color-fd-primary);
   flex: 0 0 auto;
   padding: 0.42rem 0.7rem;
 }
 
 .expandButton:hover {
-  background: color-mix(in srgb, var(--ifm-color-primary) 12%, transparent);
-  color: var(--ifm-color-primary-dark);
+  background: color-mix(in srgb, var(--color-fd-primary) 12%, transparent);
+  color: var(--color-fd-primary);
 }
 
 .description,
 .deniedReason {
-  color: var(--ifm-color-emphasis-700);
+  color: var(--color-fd-muted-foreground);
   margin: -0.45rem 1.4rem 1rem;
 }
 
@@ -312,7 +312,7 @@
 }
 
 .detailsGrid > section {
-  background: var(--ifm-background-color);
+  background: var(--color-fd-background);
   border: 1px solid var(--catalog-border);
   border-radius: 12px;
   min-width: 0;
@@ -344,7 +344,7 @@
 }
 
 .propsTable th {
-  background: var(--ifm-background-color);
+  background: var(--color-fd-background);
   position: sticky;
   top: 0;
   z-index: 1;
@@ -368,7 +368,7 @@
 }
 
 .muted {
-  color: var(--ifm-color-emphasis-600);
+  color: var(--color-fd-muted-foreground);
 }
 
 .rawComponent {
@@ -376,7 +376,7 @@
 }
 
 .rawComponent summary {
-  color: var(--ifm-color-primary);
+  color: var(--color-fd-primary);
   cursor: pointer;
   font-weight: 650;
 }
@@ -393,8 +393,8 @@
 .loading,
 .error,
 .empty {
-  background: var(--ifm-background-surface-color);
-  border: 1px solid var(--ifm-color-emphasis-300);
+  background: var(--color-fd-card);
+  border: 1px solid var(--color-fd-border);
   border-radius: 12px;
   margin: 1rem 0;
   padding: 1rem;

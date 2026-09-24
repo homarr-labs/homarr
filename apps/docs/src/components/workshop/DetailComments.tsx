@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useCallback, useEffect, useState } from "react";
 import { IconCheck, IconEdit, IconMessageCircle, IconRefresh, IconSend, IconTrash, IconX } from "@tabler/icons-react";
 
@@ -21,7 +23,8 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 
 import { formatRelativeTime } from "./format";
@@ -121,8 +124,8 @@ export const CommentsSection = ({ submissionId, backend, currentUser, onRequireA
 
       {loading && (
         <div className="space-y-4" aria-label="Loading comments">
-          <div className="h-20 w-3/4 animate-pulse rounded-xl bg-muted" />
-          <div className="ml-auto h-20 w-2/3 animate-pulse rounded-xl bg-primary/10" />
+          <Skeleton className="h-20 w-3/4 rounded-xl" />
+          <Skeleton className="ml-auto h-20 w-2/3 rounded-xl bg-primary/10" />
         </div>
       )}
 
@@ -143,13 +146,15 @@ export const CommentsSection = ({ submissionId, backend, currentUser, onRequireA
       )}
 
       {!loading && !fetchError && rows.length === 0 && (
-        <div className="rounded-xl bg-muted/40 px-4 py-8 text-center">
-          <IconMessageCircle size={24} className="mx-auto text-muted-foreground" />
-          <p className="m-0 mt-2 text-sm font-medium">Start the discussion</p>
-          <p className="m-0 mt-1 text-sm text-muted-foreground">
-            Share a question or something you learned using this submission.
-          </p>
-        </div>
+        <Empty className="bg-muted/40 py-8">
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <IconMessageCircle />
+            </EmptyMedia>
+            <EmptyTitle>Start the discussion</EmptyTitle>
+            <EmptyDescription>Share a question or something you learned using this submission.</EmptyDescription>
+          </EmptyHeader>
+        </Empty>
       )}
 
       {!loading && !fetchError && rows.length > 0 && (
@@ -218,14 +223,17 @@ export const CommentsSection = ({ submissionId, backend, currentUser, onRequireA
                       }
                     >
                       {isEditing ? (
-                        <div className="flex items-center gap-1.5">
-                          <Input
-                            className="min-w-48 bg-background text-foreground"
+                        <div className="flex w-full min-w-0 items-end gap-1.5">
+                          <Textarea
+                            className="min-h-20 min-w-0 resize-y bg-background text-foreground"
                             aria-label="Edit comment"
                             value={editContent}
+                            rows={3}
+                            maxLength={2000}
                             onChange={(event) => setEditContent(event.target.value)}
                             onKeyDown={(event) => {
-                              if (event.key === "Enter") void handleUpdate(comment.id);
+                              if ((event.metaKey || event.ctrlKey) && event.key === "Enter")
+                                void handleUpdate(comment.id);
                             }}
                           />
                           <Button
@@ -314,7 +322,10 @@ export const CommentsSection = ({ submissionId, backend, currentUser, onRequireA
             <IconSend size={15} />
           </Button>
         </div>
-        <p className="m-0 mt-2 pl-12 text-xs text-muted-foreground">Press Ctrl or ⌘ + Enter to post.</p>
+        <div className="mt-2 flex items-center justify-between gap-4 pl-12 text-xs text-muted-foreground">
+          <p className="m-0">Press Ctrl or ⌘ + Enter to post.</p>
+          <span className="tabular-nums">{newComment.length}/2000</span>
+        </div>
         {mutationError && (
           <Alert variant="destructive" className="mt-3">
             <IconMessageCircle />

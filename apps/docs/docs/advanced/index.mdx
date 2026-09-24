@@ -1,0 +1,60 @@
+---
+title: Advanced configuration
+description: Configure deployment, authentication, networking, styling, automation, and development workflows.
+---
+
+import {
+  IconCode,
+  IconIcons,
+  IconKey,
+  IconKeyboard,
+  IconNetwork,
+  IconPalette,
+  IconTerminal2,
+  IconUserCog,
+  IconVariable,
+} from "@tabler/icons-react";
+
+These guides cover changes that affect how Homarr is deployed, secured, operated, or extended.
+
+## Deploy and secure
+
+<Cards>
+  <Card icon={<IconVariable />} title="Environment variables" href="/docs/advanced/environment-variables">
+    Configure Homarr at deployment time.
+  </Card>
+  <Card icon={<IconKey />} title="Single sign-on" href="/docs/advanced/single-sign-on">
+    Connect an external identity provider.
+  </Card>
+  <Card icon={<IconNetwork />} title="Proxies and certificates" href="/docs/advanced/proxy">
+    Run Homarr behind a reverse proxy.
+  </Card>
+  <Card icon={<IconUserCog />} title="Run as a different user" href="/docs/advanced/running-as-different-user">
+    Change the user and group used by the container.
+  </Card>
+</Cards>
+
+## Customize
+
+<Cards>
+  <Card icon={<IconPalette />} title="Custom styling" href="/docs/advanced/styling">
+    Apply custom CSS to Homarr.
+  </Card>
+  <Card icon={<IconIcons />} title="Icons" href="/docs/advanced/icons">
+    Configure icon sources and behavior.
+  </Card>
+  <Card icon={<IconKeyboard />} title="Keyboard shortcuts" href="/docs/advanced/keyboard-shortcuts">
+    Navigate and operate Homarr with the keyboard.
+  </Card>
+</Cards>
+
+## Develop and automate
+
+<Cards>
+  <Card icon={<IconTerminal2 />} title="Command line interface" href="/docs/advanced/command-line">
+    Use administrative commands from the terminal.
+  </Card>
+  <Card icon={<IconCode />} title="Developer guides" href="/docs/advanced/development/getting-started">
+    Set up a development environment and contribute code.
+  </Card>
+</Cards>
