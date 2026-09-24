@@ -71,6 +71,51 @@ describe("board.addItem", () => {
     });
   });
 
+  test("places a sized notebook on each layout without exceeding its columns", async () => {
+    const { db, boardId, caller, layoutId } = await createBoardCallerAsync();
+    const mobileLayoutId = createId();
+    await db.insert(layouts).values({
+      id: mobileLayoutId,
+      name: "Mobile",
+      boardId,
+      columnCount: 4,
+      breakpoint: 640,
+    });
+
+    const result = await caller.addItem({
+      boardId,
+      kind: "notebook",
+      options: { content: "<p>Stack summary</p>" },
+      size: { width: 8, height: 4 },
+      integrationIds: [],
+    });
+    const placements = await db.query.itemLayouts.findMany({
+      where: (table, { eq }) => eq(table.itemId, result.itemId),
+    });
+
+    expect(placements).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ layoutId, width: 8, height: 4, xOffset: 0, yOffset: 0 }),
+        expect.objectContaining({ layoutId: mobileLayoutId, width: 4, height: 4, xOffset: 0, yOffset: 0 }),
+      ]),
+    );
+  });
+
+  test("rejects an oversized item before creating it", async () => {
+    const { db, boardId, caller } = await createBoardCallerAsync();
+
+    await expect(
+      caller.addItem({
+        boardId,
+        kind: "notebook",
+        options: {},
+        size: { width: 25, height: 4 },
+        integrationIds: [],
+      }),
+    ).rejects.toThrow();
+    await expect(db.$count(items)).resolves.toBe(0);
+  });
+
   test("places a new item after the complete footprint of an existing container", async () => {
     const { db, boardId, caller, layoutId, sectionId } = await createBoardCallerAsync();
     const mobileLayoutId = createId();

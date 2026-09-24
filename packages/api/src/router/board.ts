@@ -2148,7 +2148,7 @@ export const boardRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Add a widget/app item to a board after configure_widget has reviewed it. Automatically places it in the main canvas at the first free grid position without overlapping items or containers. Use the configure_widget result's boardId, kind, options, and integrationIds exactly. Integration IDs must be accessible to the current user. To create a formatted dashboard note, configure kind 'notebook' with options { content: Tiptap-compatible HTML, showToolbar: boolean, allowReadOnlyCheck: boolean }. Returns { itemId }",
+          "Add a widget/app item to a board after configure_widget has reviewed it. Automatically places it in the main canvas at the first free grid position without overlapping items or containers. Use the configure_widget result's boardId, kind, options, and integrationIds exactly. Optional size {width,height} sets grid dimensions; width is capped by each layout's available columns. Integration IDs must be accessible to the current user. To create a formatted dashboard note, configure kind 'notebook' with options { content: Tiptap-compatible HTML, showToolbar: boolean, allowReadOnlyCheck: boolean }. Returns { itemId }",
       },
     })
     .input(addItemToBoardSchema)
@@ -2195,7 +2195,7 @@ export const boardRouter = createTRPCRouter({
         }
 
         const itemId = createId();
-        const defaultSize = widgetDefaultSizes[input.kind as WidgetKind] ?? { width: 1, height: 1 };
+        const defaultSize = input.size ?? widgetDefaultSizes[input.kind as WidgetKind] ?? { width: 1, height: 1 };
         const layoutRows: (typeof itemLayouts.$inferInsert)[] = board.layouts.map((layout) => {
           const columnCount = getBoardLaneColumnCount(layout, getRootSectionLane(emptySection.xOffset));
           const size = { ...defaultSize, width: Math.min(columnCount, defaultSize.width) };
