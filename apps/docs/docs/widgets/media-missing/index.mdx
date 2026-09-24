@@ -18,18 +18,20 @@ import { binderyIntegration } from "@site/docs/integrations/bindery";
 <WidgetHeader widget={mediaMissingWidget} categories={["Media", "Downloads"]} />
 
 Monitor which movies, episodes and books are missing from your library, and track what is currently being downloaded.
-The widget pulls data from Radarr, Sonarr and Bindery and groups results by type in two tabs.
+The widget combines data from Radarr, Sonarr and Bindery, with separate tabs for missing items and active downloads.
 
 ### Screenshots
 
-import widgetMissing from "./img/missing.png";
-import widgetQueued from "./img/queued.png";
-import widgetCompact from "./img/compact.png";
+import widgetMissing from "./img/sizing-4x4.png";
+import widgetQueued from "./img/sizing-4x3-queued.png";
 
 <div className="flex gap-2 flex-wrap">
-  <img src={widgetMissing} alt="media-missing widget showing missing movies and episodes in a grid" width={360} />
-  <img src={widgetQueued} alt="media-missing tab showing download queue with progress bars" width={256} />
-  <img src={widgetCompact} alt="media-missing widget in a compact wide-and-short size" width={256} />
+  <img
+    src={widgetMissing}
+    alt="media-missing widget showing missing movies, episodes and a book in a grid"
+    width={360}
+  />
+  <img src={widgetQueued} alt="media-missing widget showing queued items with progress, including a book" width={360} />
 </div>
 
 ### Supported Integrations
@@ -51,9 +53,9 @@ import widgetCompact from "./img/compact.png";
 ### Tabs
 
 | Tab         | Description                                                                                                            |
-| ----------- | ----------------------------------------------------------------------------------------------------------------------- |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------- |
 | **Missing** | Lists movies (Radarr), episodes (Sonarr) and books (Bindery) that are monitored but not yet available in your library. |
-| **Queued**  | Shows items currently being downloaded with a progress bar and estimated time remaining.                              |
+| **Queued**  | Shows items currently being downloaded with a progress bar and estimated time remaining.                               |
 
 ### Sizing
 
