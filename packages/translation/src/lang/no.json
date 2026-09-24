@@ -10,7 +10,7 @@
           "importOldmarr": "Importer fra Homarr før 1.0",
           "restoreSqlite": "Gjenopprett fra SQLite sikkerhetskopi",
           "restoreSqliteDescription": "Last opp en full SQLite database sikkerhetskopi fra en tidligere Homarr instans. Dette vil gjenopprette alle tavler, brukere, apper, integrasjoner og innstillinger.",
-          "backToOptions": "λ Tilbake til innstillingsvalg"
+          "backToOptions": "← Tilbake til oppsettalternativer"
         }
       },
       "import": {
@@ -200,7 +200,7 @@
       },
       "enableRightClickOnWidgets": {
         "label": "Aktiver høyreklikk på widgets",
-        "description": "Vis Hjemmens kontekstmeny når høyre klikker en widget. Deaktiver for å bruke nettleserens standardmeny (f.eks \"Åpne link i ny fan\")."
+        "description": "Vis Homarrs hurtigmeny når du høyreklikker på en widget. Deaktiver for å bruke nettleserens standardmeny (f.eks. «Åpne lenke i ny fane»)."
       },
       "defaultSearchEngine": {
         "label": "Standard søkemotor"
@@ -692,12 +692,12 @@
     "page": {
       "list": {
         "title": "Egendefinerte Widgeter",
-        "noResults": "Ingen tilpassede miniprogrammer enda. Opprett din første!",
+        "noResults": "Ingen tilpassede widgets ennå. Opprett din første!",
         "loading": "Laster..."
       },
       "create": {
         "title": "Opprett tilpasset widget",
-        "subtitle": "Angi en API URL, autentisering og hvordan du kan vise respons-dataene."
+        "subtitle": "Angi en API-URL, autentisering og hvordan svardataene skal vises."
       },
       "edit": {
         "title": "Rediger tilpasset widget"
@@ -774,16 +774,16 @@
     },
     "placeholder": {
       "exampleLabel": "CPU temperatur",
-      "exampleLabelShort": "Prosessor Temp",
+      "exampleLabelShort": "CPU Temp",
       "exampleHeader": "Navn",
       "exampleUnit": "°C",
       "iconUrl": "https://...",
       "url": "https://api.eksempel.com/api/v1/status",
       "headerName": "X-API-nøkkel",
-      "jsonPath": "$.data.value",
-      "tablePath": "$.data.items",
+      "jsonPath": "$.data.verdi",
+      "tablePath": "$.data.objekter",
       "columnJsonPath": "$.navn",
-      "valuePath": "$.data.used",
+      "valuePath": "$.data.brukt",
       "maxPath": "$.data.totalt",
       "goodValues": "online, true, opp",
       "color": "blå"
