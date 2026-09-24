@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Badge,
@@ -18,7 +18,7 @@ import {
   ThemeIcon,
   Tooltip,
 } from "@mantine/core";
-import { IconDownload, IconMovie, IconQuestionMark, IconVideo } from "@tabler/icons-react";
+import { IconBook, IconDownload, IconMovie, IconQuestionMark, IconVideo } from "@tabler/icons-react";
 import { getQueryKey } from "@trpc/react-query";
 
 import { clientApi } from "@homarr/api/client";
@@ -245,7 +245,16 @@ const CARD_HEIGHT: Record<Density, number> = { thin: 52, compact: 56, comfortabl
 
 const posterSizes: Record<Density, number> = { thin: 34, compact: 40, comfortable: 52 };
 
-const Poster = ({ src, type, density }: { src?: string | null; type: "movie" | "episode"; density: Density }) => {
+const posterColor = (type: "movie" | "episode" | "book") =>
+  type === "movie" ? "yellow" : type === "book" ? "grape" : "blue";
+
+const PosterIcon = ({ type, style }: { type: "movie" | "episode" | "book"; style: CSSProperties }) => {
+  if (type === "movie") return <IconMovie style={style} />;
+  if (type === "book") return <IconBook style={style} />;
+  return <IconVideo style={style} />;
+};
+
+const Poster = ({ src, type, density }: { src?: string | null; type: "movie" | "episode" | "book"; density: Density }) => {
   const size = posterSizes[density];
   const w = Math.round(size * 0.68);
 
@@ -254,19 +263,8 @@ const Poster = ({ src, type, density }: { src?: string | null; type: "movie" | "
   }
 
   return (
-    <ThemeIcon
-      className={classes.poster}
-      h={size}
-      w={w}
-      radius="sm"
-      variant="light"
-      color={type === "movie" ? "yellow" : "blue"}
-    >
-      {type === "movie" ? (
-        <IconMovie style={zoomCompensatedSize(size * 0.5)} />
-      ) : (
-        <IconVideo style={zoomCompensatedSize(size * 0.5)} />
-      )}
+    <ThemeIcon className={classes.poster} h={size} w={w} radius="sm" variant="light" color={posterColor(type)}>
+      <PosterIcon type={type} style={zoomCompensatedSize(size * 0.5)} />
     </ThemeIcon>
   );
 };
@@ -278,7 +276,7 @@ const episodeCode = (item: MissingMediaItem | QueuedMediaItem) =>
 
 const TypeBadge = ({ item, density }: { item: MissingMediaItem | QueuedMediaItem; density: Density }) => {
   const t = useI18n("widget.mediaMissing");
-  const color = item.type === "movie" ? "yellow" : "blue";
+  const color = posterColor(item.type);
   const code = episodeCode(item);
 
   if (density !== "comfortable") {
@@ -380,7 +378,7 @@ const MediaCard = ({
           </Text>
           {density === "comfortable" && (
             <Text fz="xs" c="dimmed" lineClamp={1} lh={1.1}>
-              {item.type === "episode" ? item.title : item.year}
+              {item.type === "episode" ? item.title : item.type === "book" ? item.seriesTitle : item.year}
             </Text>
           )}
           {isQueued && showQueueDetails && (

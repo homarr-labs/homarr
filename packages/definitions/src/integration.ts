@@ -477,6 +477,16 @@ export const integrationDefs = {
     defaultPort: 8787,
     apiKeySettingsPath: "/settings/general",
   },
+  bindery: {
+    supportsHttpRequests: false,
+    name: "Bindery",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/bindery.svg",
+    category: ["mediaOrganizer"],
+    documentationSlug: "bindery",
+    defaultPort: 8787,
+    apiKeySettingsPath: "/settings?tab=general",
+  },
   prowlarr: {
     supportsHttpRequests: true,
     name: "Prowlarr",

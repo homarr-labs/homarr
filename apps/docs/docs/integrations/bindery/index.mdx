@@ -1,0 +1,37 @@
+---
+title: "Bindery"
+description: "Bindery is a Sonarr/Radarr-style manager for ebooks and audiobooks that automates searching, downloading, sorting and renaming your book library."
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { binderyIntegration } from ".";
+import { mediaMissingWidget } from "@site/docs/widgets/media-missing";
+
+<IntegrationHeader integration={binderyIntegration} categories={["Media manager"]} />
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites items={[{ widget: mediaMissingWidget }]} />
+
+### Adding the integration
+
+<AddingIntegration />
+
+### Connection security
+
+Bindery sends its API key with each request. Prefer HTTPS; HTTP sends the key without encryption. Homarr requires explicit HTTP opt-in, which should only be used on a trusted local network.
+
+### Secrets
+
+<IntegrationSecrets
+  secrets={[
+    {
+      credentials: ["apiKey"],
+      steps: [],
+    },
+  ]}
+/>

@@ -36,6 +36,7 @@ import {
   integrationCreateSchema,
   integrationSavePermissionsSchema,
   integrationUpdateSchema,
+  requiresInsecureHttpOptIn,
 } from "@homarr/validation/integration";
 import { mediaRequestOptionsSchema, mediaRequestRequestSchema } from "@homarr/validation/widgets/media-request";
 
@@ -227,7 +228,7 @@ export const integrationRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Create a new integration (connection to an external service). REQUIRED fields: name, url (http/https), kind, secrets, attemptSearchEngineCreation. The 'secrets' field is REQUIRED and must be a non-empty array — call integration_getKinds first to see which secret kinds each integration type needs. Example for Radarr: secrets=[{kind:'apiKey', value:'your-radarr-api-key'}]. Example for Proxmox: secrets=[{kind:'tokenId', value:'...'}, {kind:'personalAccessToken', value:'...'}, {kind:'realm', value:'pam'}]. The connection is tested before saving — if secrets are wrong, an error is returned. Set attemptSearchEngineCreation to false unless explicitly requested. The 'app' field is optional — pass {id:'...'} to link to an existing app, or omit it. Returns integration details and appId, which is null when no app is linked or created.",
+          "Create a new integration (connection to an external service). REQUIRED fields: name, url (http/https), kind, secrets, attemptSearchEngineCreation. The 'secrets' field is REQUIRED and must be a non-empty array — call integration_getKinds first to see which secret kinds each integration type needs. Example for Radarr: secrets=[{kind:'apiKey', value:'your-radarr-api-key'}]. Example for Proxmox: secrets=[{kind:'tokenId', value:'...'}, {kind:'personalAccessToken', value:'...'}, {kind:'realm', value:'pam'}]. For Bindery over HTTP, pass allowInsecureHttp=true only on a trusted local network; HTTPS is recommended because the API key is sent with every request. The connection is tested before saving — if secrets are wrong, an error is returned. Set attemptSearchEngineCreation to false unless explicitly requested. The 'app' field is optional — pass {id:'...'} to link to an existing app, or omit it. Returns integration details and appId, which is null when no app is linked or created.",
       },
     })
     .input(integrationCreateSchema)
@@ -323,6 +324,13 @@ export const integrationRouter = createTRPCRouter({
       throw new TRPCError({
         code: "NOT_FOUND",
         message: "Integration not found",
+      });
+    }
+
+    if (requiresInsecureHttpOptIn(integration.kind, input.url) && !input.allowInsecureHttp) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Bindery over HTTP requires explicit opt-in and should only be used on a trusted local network.",
       });
     }
 
