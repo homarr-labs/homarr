@@ -1,0 +1,1194 @@
+[
+  {
+    "number": 6850,
+    "title": "bug: OIDC logout aborts the end-session request before it completes",
+    "category": "bug",
+    "status": "needs-verification",
+    "confidence": "medium",
+    "summary": "V2 retains the reported logout sequence: it awaits Auth.js signOut with redirect:false, then navigates the current window to AUTH_LOGOUT_REDIRECT_URL. There is no explicit completion signal for the cross-origin IdP end-session navigation. The source establishes the sequence but cannot establish that Firefox aborts the request or that the sequence causes the provider session to remain active, so this needs a controlled browser/IdP reproduction.",
+    "conversation": "The issue reports Firefox aborting Authentik's end-session request and leaving the IdP session active after local logout. It has no comments or linked fix. The configured URL is documented as the post-logout redirect target, and the current menu handler performs a full-window assignment as soon as local signOut resolves. This is navigation to the IdP, rather than a return navigation to Homarr; source inspection alone cannot prove whether the provider request is aborted, so runtime tracing is required before calling it an addressed or remaining bug.",
+    "comments_read": 0,
+    "evidence": [
+      "apps/nextjs/src/components/user-avatar-menu.tsx:59-65 \u2014 logout awaits signOut({ redirect: false }) and then immediately calls window.location.assign(redirectUrl).",
+      "apps/nextjs/src/app/[locale]/layout.tsx:142-145 \u2014 AUTH_LOGOUT_REDIRECT_URL is passed into the client auth context as logoutUrl.",
+      "packages/auth/env.ts:26-29 \u2014 AUTH_LOGOUT_REDIRECT_URL is an optional configured URL with no completion/timeout contract.",
+      "apps/docs/docs/advanced/single-sign-on/index.mdx:20-27,275-284 \u2014 documentation describes the configured logout redirect but provides no cross-origin end-session completion mechanism."
+    ],
+    "remaining": "Reproduce with Authentik and Firefox while tracing both local signOut and the IdP end-session navigation; if confirmed, use a browser-safe completion strategy (or provider-supported logout flow) before leaving the page and verify the IdP session is invalidated.",
+    "reviewer": "Luna 5 (maximum reasoning)",
+    "baseline_status": "needs-verification",
+    "baseline_revision": "60b4e980ed86a3b36d66bd1e25ee277e13836916",
+    "delta_review": {
+      "number": 6850,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "changed_since_baseline": false,
+      "affected_paths": [],
+      "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6850; the baseline needs-verification assessment remains applicable.",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "reports/v2-issue-triage/assessments.json baseline #6850 (bug: OIDC logout aborts the end-session request before it completes) records status=needs-verification and confidence=medium.",
+        "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6850."
+      ]
+    },
+    "verification": {
+      "number": 6850,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "method": "source inspection; external-IdP runtime reproduction",
+      "checks": [
+        "Source retains the logout sequence: await local Auth.js signOut({ redirect: false }), then window.location.assign(AUTH_LOGOUT_REDIRECT_URL).",
+        "No Authentik/Firefox IdP session was available for tracing request completion or proving that the provider session remains active."
+      ],
+      "outcome": "blocked",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "apps/nextjs/src/components/user-avatar-menu.tsx:59-65",
+        "apps/nextjs/src/app/[locale]/layout.tsx:142-145",
+        "packages/auth/env.ts:26-29",
+        "reports/v2-issue-triage/source/6850.json:body and full_comments (0 comments)"
+      ],
+      "blockers": [
+        "The reported Authentik end-session behavior requires a real external IdP and Firefox network trace; neither was available in the isolated runtime."
+      ],
+      "artifact": "auth/auth.json"
+    },
+    "latest_delta": null,
+    "verification_outcome": "blocked",
+    "comments_read_current": 0
+  },
+  {
+    "number": 6849,
+    "title": "bug: I can't switch between the dark and light themes",
+    "category": "bug",
+    "status": "needs-verification",
+    "confidence": "medium",
+    "summary": "This is a duplicate of #6823 with a separate Ubuntu/Portainer/LDAP report and no comments. The current v2 theme setter wiring exists, but it does not prove the Chromium event failure from the related Citrix report is fixed.",
+    "conversation": "The reporter says the profile theme control is inert across Edge and Firefox on an Ubuntu/Portainer/LDAP deployment. The timeline has no direct comments; #6823 identifies it as the same incident and later isolates the failure to Citrix VDI pointer events. Treat this issue as the duplicate environment report and keep it pending a controlled reproduction.",
+    "evidence": [
+      "apps/nextjs/src/components/color-scheme/current-color-scheme-combobox.tsx:13-16 + the profile control is wired to setColorScheme.",
+      "apps/nextjs/src/app/[locale]/_client-providers/mantine.tsx:39-50 + 66-79 + theme changes are persisted through cookie and server mutation wiring, but no VDI/event workaround is present.",
+      "apps/nextjs/src/app/[locale]/boards/(content)/_theme.tsx:38-46 + the board provider consumes the manager's color-scheme value.",
+      "reports/v2-issue-triage/source/timelines/6849.json:commented events + the timeline cross-references duplicate #6823 and contains no independent fix or validation."
+    ],
+    "remaining": "Reproduce this exact deployment and browser, then compare with the Citrix VDI event trace from #6823. Verify mouseup/click delivery and determine whether a browser/Portainer policy or Mantine event workaround is needed before calling it fixed.",
+    "comments_read": 0,
+    "reviewer": "Luna 2 (maximum reasoning)",
+    "baseline_status": "needs-verification",
+    "baseline_revision": "60b4e980ed86a3b36d66bd1e25ee277e13836916",
+    "delta_review": {
+      "number": 6849,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "changed_since_baseline": false,
+      "affected_paths": [],
+      "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6849; the baseline needs-verification assessment remains applicable.",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "reports/v2-issue-triage/assessments.json baseline #6849 (bug: I can't switch between the dark and light themes) records status=needs-verification and confidence=medium.",
+        "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6849."
+      ]
+    },
+    "verification": {
+      "number": 6849,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "method": "Chromium/Linux pointer interaction in isolated production image",
+      "checks": [
+        "Changed account theme from dark to light using actual menu clicks; light theme survived full page reload."
+      ],
+      "outcome": "partial",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "reports/v2-issue-triage/verification/ui/light-theme.png"
+      ],
+      "blockers": [
+        "Citrix VDI, Edge/Firefox and the reporter LDAP deployment were unavailable. Ordinary Chromium success does not disprove environment-specific pointer-event failures."
+      ],
+      "artifact": "ui.json"
+    },
+    "latest_delta": null,
+    "verification_outcome": "partial",
+    "comments_read_current": 0
+  },
+  {
+    "number": 6823,
+    "title": "bug:",
+    "category": "bug",
+    "status": "needs-verification",
+    "confidence": "medium",
+    "summary": "The reported dark-mode failure is limited to Citrix VDI in the conversation and is not explained by a confirmed v2 fix. The current combobox calls the theme setter, but Mantine event delivery failure in that environment remains unaddressed.",
+    "conversation": "The reporter says theme selection has failed across several Homarr versions and browsers for a migrated user. Maintainers could not reproduce it on normal systems. The reporter then isolated it to Citrix virtual desktops and observed pointerdown/mousedown without mouseup/click; the same VDI event issue affects board-user permission changes. #6849 is a duplicate. This points to a browser/event-environment problem rather than proof that the theme state manager is broken.",
+    "evidence": [
+      "apps/nextjs/src/components/color-scheme/current-color-scheme-combobox.tsx:13-16 + the control receives colorScheme and passes setColorScheme to the current option selection.",
+      "apps/nextjs/src/app/[locale]/_client-providers/mantine.tsx:39-50 + 66-79 + the manager wires the theme setter to cookie persistence and a server mutation, while subscribe/unsubscribe/clear are no-op manager hooks.",
+      "apps/nextjs/src/app/[locale]/boards/(content)/_theme.tsx:13-20 + 38-46 + board theme rendering consumes the provider/manager state.",
+      "reports/v2-issue-triage/source/6823.json:full_comments + the final debug comment records POINTERDOWN/MOUSEDOWN but no MOUSEUP/CLICK inside VDI, and no v2 fix is claimed."
+    ],
+    "remaining": "Reproduce on the affected Citrix VDI/browser and inspect Mantine Combobox event handling, pointer capture, and virtualization policies. Test the theme control and board permission controls with the same VDI policies before deciding on a Homarr workaround; the setter wiring alone does not prove the no-op is fixed.",
+    "comments_read": 6,
+    "reviewer": "Luna 2 (maximum reasoning)",
+    "baseline_status": "needs-verification",
+    "baseline_revision": "60b4e980ed86a3b36d66bd1e25ee277e13836916",
+    "delta_review": {
+      "number": 6823,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "changed_since_baseline": false,
+      "affected_paths": [],
+      "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6823; the baseline needs-verification assessment remains applicable.",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "reports/v2-issue-triage/assessments.json baseline #6823 (bug:) records status=needs-verification and confidence=medium.",
+        "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6823."
+      ]
+    },
+    "verification": {
+      "number": 6823,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "method": "Chromium/Linux pointer interaction in isolated production image",
+      "checks": [
+        "Changed account theme from dark to light using actual menu clicks; light theme survived full page reload."
+      ],
+      "outcome": "partial",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "reports/v2-issue-triage/verification/ui/light-theme.png"
+      ],
+      "blockers": [
+        "Citrix VDI, Edge/Firefox and the reporter LDAP deployment were unavailable. Ordinary Chromium success does not disprove environment-specific pointer-event failures."
+      ],
+      "artifact": "ui.json"
+    },
+    "latest_delta": null,
+    "verification_outcome": "partial",
+    "comments_read_current": 6
+  },
+  {
+    "number": 6811,
+    "title": "bug: Annoying scroll bar",
+    "category": "annoyance",
+    "status": "needs-verification",
+    "confidence": "medium",
+    "summary": "The supplied Chrome crop confirms visible vertical and horizontal scrollbars in the header/banner area, but it does not identify their owning element; release/v2 still permits horizontal scrolling inside header zones, so banner removal alone cannot establish resolution.",
+    "conversation": "The complete body and both comments were read. The report is a low-impact Chrome-only observation from Homarr 1.77 with a screenshot, and says the bars remain after dismissing the version banner. The maintainer says the announcement banner will be removed in a later release and also notes only Firefox was tested. The saved crop visibly contains a vertical bar at the right and a horizontal bar along the bottom, but image evidence cannot determine whether the page or a header descendant owns either scroller. Current release/v2 CSS hides overflow on the outer header while desktop and mobile zones still set overflow-x:auto. No browser runtime check was performed, so source inspection cannot determine whether the exact bars persist after the banner is gone.",
+    "comments_read": 2,
+    "evidence": [
+      "reports/v2-issue-triage/source/6811.json:10-88 \u2014 complete issue body was read; it describes the Chrome screenshot, banner-dismissed observation, version, and low impact.",
+      "reports/v2-issue-triage/source/6811.json:88-182 \u2014 both comments were read; they discuss removing the announcement banner and limited Firefox testing.",
+      "reports/v2-issue-triage/source/attachments/6811-1.png \u2014 saved crop visibly shows a vertical scrollbar at the right and a horizontal scrollbar along the bottom of the cropped area, without establishing the DOM owner.",
+      "apps/nextjs/src/components/layout/header/configurable-header.module.css:1-3,24-38 \u2014 the outer header hides overflow, while desktop zones allow horizontal overflow with overflow-x:auto.",
+      "apps/nextjs/src/components/layout/header/configurable-header.module.css:91-99; apps/nextjs/src/components/layout/header/configurable-header.tsx:110-146 \u2014 mobile zones also allow horizontal overflow and the component renders the desktop/mobile header zones."
+    ],
+    "remaining": "Reproduce on the verified release/v2 revision in Chrome, inspect the owning scroll container and dimensions, and compare with the historical V1 screenshot. The V1 beta banner is not a V2 runtime fixture. If overflow remains, identify its cause before considering a fix.",
+    "reviewer": "Luna 4 (maximum reasoning)",
+    "baseline_status": "needs-verification",
+    "baseline_revision": "60b4e980ed86a3b36d66bd1e25ee277e13836916",
+    "delta_review": {
+      "number": 6811,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "changed_since_baseline": false,
+      "affected_paths": [],
+      "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6811; the baseline needs-verification assessment remains applicable.",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "reports/v2-issue-triage/assessments.json baseline #6811 (bug: Annoying scroll bar) records status=needs-verification and confidence=medium.",
+        "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6811."
+      ]
+    },
+    "verification": {
+      "number": 6811,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "method": "Browser header/page geometry at 1377, 768 and 390 pixels",
+      "checks": [
+        "Document width equals viewport at each width.",
+        "Header descendants showed no horizontal overflow in the disposable fixture."
+      ],
+      "outcome": "partial",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "reports/v2-issue-triage/verification/ui/header-width-checks.json"
+      ],
+      "blockers": [
+        "Original header configuration and Chrome environment were not reproduced. This bounded smoke does not establish a global fix."
+      ],
+      "artifact": "ui.json"
+    },
+    "latest_delta": null,
+    "verification_outcome": "partial",
+    "comments_read_current": 2
+  },
+  {
+    "number": 6620,
+    "title": "bug: Dashboard briefly flashes skeleton placeholders on every refresh since v1.75.0",
+    "category": "bug",
+    "status": "needs-verification",
+    "confidence": "medium",
+    "summary": "V2 uses a different board and widget loading architecture, so the v1.75 skeleton path is not directly present. Board item module loading shows a compact Loader, and widget query helpers preserve cached data during refetches and only treat an undefined first result as initially pending. That is evidence against replacing populated widgets with skeletons on ordinary refetch, but a full page refresh still has an initial loading transition and the exact visual flash requires browser observation.",
+    "conversation": "The issue reports a reproducible skeleton flash on every dashboard refresh after v1.75, while v1.74 did not show it. The maintainer says the behavior was an intentional optimization while the browser computes layout and that v2 uses a different system. No comment claims a v2 fix or provides a current reproduction. This makes source comparison useful but insufficient to label the browser-visible timing issue resolved.",
+    "comments_read": 2,
+    "evidence": [
+      "apps/nextjs/src/components/board/items/item-content.tsx:89-120 \u2014 V2's board item boundary uses a Loader while a lazy widget module is first loading, not a v1 skeleton placeholder implementation.",
+      "packages/widgets/src/common/query-state.ts:12-21 \u2014 cached/stale data is retained and initial pending is true only when no first result exists, so ordinary refetch should not blank populated widget data.",
+      "apps/nextjs/src/components/board/layout/scaled-board-canvas.tsx:45-71 \u2014 V2 board hydration is tracked on a scaled canvas with initial dimensions, reflecting the separate board-loading architecture.",
+      "apps/nextjs/src/components/board/layout/scaled-board-canvas.module.css:1-11 \u2014 hydration overflow handling is scoped to the new board viewport rather than the former dashboard skeleton system."
+    ],
+    "remaining": "Run a controlled V2 browser refresh test on a populated board, distinguishing initial lazy-module Loader behavior from data refetch; compare screenshots/timing against the reported skeleton flash at the affected viewport sizes.",
+    "reviewer": "Luna 5 (maximum reasoning)",
+    "baseline_status": "needs-verification",
+    "baseline_revision": "60b4e980ed86a3b36d66bd1e25ee277e13836916",
+    "delta_review": {
+      "number": 6620,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "changed_since_baseline": true,
+      "affected_paths": [
+        "apps/nextjs/src/components/board/layout/scaled-board-canvas.tsx"
+      ],
+      "finding": "b09d13c0c adds the data-board-canvas-content marker so edit previews can discover the live canvas. It does not alter the board item Loader, query-state retention, or initial page-refresh transition underlying the skeleton-flash report. Keep needs-verification; no browser refresh proof was produced.",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "apps/nextjs/src/components/board/layout/scaled-board-canvas.tsx:65-82 adds the canvas marker and preserves the existing hydration/scale calculations.",
+        "b09d13c0c and packages/widgets/src/modals/widget-edit-modal.tsx:172-217 use the marker for preview appearance; no loading-state implementation changed.",
+        "reports/v2-issue-triage/source/6620.json:body/full_comments contain the original refresh-flash report, while reports/v2-issue-triage/assessments.json requires a controlled V2 refresh comparison.",
+        "No browser or deployment run was performed in this delta."
+      ]
+    },
+    "verification": {
+      "number": 6620,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "method": "Pre-navigation DOM mutation observer plus25ms geometry sampling on populated public board",
+      "checks": [
+        "Observed four-item board on first navigation and full reload; no visible Mantine Skeleton elements were recorded.",
+        "Initial navigation and reload both showed brief Loader transitions; warm refresh changed loader state at87\u201396ms and220\u2013295ms.",
+        "This supports absence of old Skeleton components in the fixture, while initial-loading flashes are still observable."
+      ],
+      "outcome": "partial",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "reports/v2-issue-triage/verification/ui/observe-loading.js",
+        "reports/v2-issue-triage/verification/ui/initial-loading.json",
+        "reports/v2-issue-triage/verification/ui/refresh-loading.json"
+      ],
+      "blockers": [
+        "No controlled v1.74/v1.75 visual comparison or original Synology dashboard. DOM observation does not measure every rendered frame or subjective smoothness."
+      ],
+      "artifact": "ui.json"
+    },
+    "latest_delta": null,
+    "verification_outcome": "partial",
+    "comments_read_current": 2
+  },
+  {
+    "number": 6559,
+    "title": "bug: Releases widget showing \"Only the first 1000 results are available\" error",
+    "category": "bug",
+    "status": "needs-verification",
+    "confidence": "medium",
+    "summary": "The release/v2 GitHub path no longer uses repository search, but it still paginates every GitHub release page; the reported 1000-result failure cannot be classified without checking the exact endpoint response.",
+    "conversation": "The body and sole comment were read. The saved configuration screenshot identifies the GitHub provider, repository `home-assistant/home-assistant`, default `https://api.github.com`, and no filter; the comment says the bug still occurs in 1.76.2. Current release/v2 code obtains releases with Octokit `api.paginate` over `repos.listReleases`, then fetches repository details directly with `repos.get`. The direct details call rules out a current search endpoint in this path, while unbounded release pagination could still encounter a provider-side 1000-result cap. Source inspection therefore shows an improvement but cannot prove the configured repository no longer fails.",
+    "comments_read": 1,
+    "evidence": [
+      "reports/v2-issue-triage/source/6559.json:10-135 \u2014 complete body and one comment were read; the report names the 1000-result error and the comment says it persists in 1.76.2.",
+      "reports/v2-issue-triage/source/attachments/6559-config.png \u2014 saved configuration screenshot shows GitHub, `home-assistant/home-assistant`, `https://api.github.com`, and no release filter.",
+      "packages/request-handler/src/release-providers.ts:167-213 \u2014 the GitHub release provider calls `api.paginate` for `repos.listReleases` with `per_page: 100` and reduces the returned releases.",
+      "packages/request-handler/src/release-providers.ts:216-233 \u2014 repository details use direct `api.rest.repos.get`; no repository-search request appears in the current details path.",
+      "packages/definitions/src/release-provider.ts:3-8 \u2014 GitHub provider defaults to the public GitHub API URL shown in the report configuration."
+    ],
+    "remaining": "Run release/v2 against the exact repository or a mocked GitHub API that exercises the endpoint beyond 1000 results. If `listReleases` is capped, bound or redesign pagination to obtain the latest releases without traversing the capped history; otherwise capture the actual failing request and payload.",
+    "reviewer": "Luna 4 (maximum reasoning)",
+    "baseline_status": "needs-verification",
+    "baseline_revision": "60b4e980ed86a3b36d66bd1e25ee277e13836916",
+    "delta_review": {
+      "number": 6559,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "changed_since_baseline": false,
+      "affected_paths": [],
+      "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6559; the baseline needs-verification assessment remains applicable.",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "reports/v2-issue-triage/assessments.json baseline #6559 (bug: Releases widget showing \"Only the first 1000 results are available\" error) records status=needs-verification and confidence=medium.",
+        "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6559."
+      ]
+    },
+    "verification": {
+      "number": 6559,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "method": "source-contract + synthetic paginated GitHub API",
+      "checks": [
+        "The GitHub provider uses repos.listReleases through api.paginate with per_page=100 and direct repos.get details.",
+        "The fixture served 1001 releases across 11 pages and the bounded checker collected all 1001.",
+        "The fixture did not exercise GitHub's real historical-result cap."
+      ],
+      "outcome": "partial",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "packages/request-handler/src/release-providers.ts:167-233",
+        "reports/v2-issue-triage/verification/integrations/check-integrations.mjs: synthetic 1001-release pagination passed",
+        "reports/v2-issue-triage/verification/integrations/fixtures.mjs: GitHub page fixture"
+      ],
+      "blockers": [
+        "The exact home-assistant/home-assistant GitHub response and provider-side cap were not queried live."
+      ],
+      "artifact": "integrations/integrations.json"
+    },
+    "latest_delta": null,
+    "verification_outcome": "partial",
+    "comments_read_current": 1
+  },
+  {
+    "number": 6438,
+    "title": "bug: OOM with 1.71.0",
+    "category": "bug",
+    "status": "needs-verification",
+    "confidence": "medium",
+    "summary": "Release/v2 contains the relevant Beszel live-stream cleanup, bounded subscription queue, and client buffer trimming, but the reported dashboard-wide OOM under a 1.5 GB cap remains unverified.",
+    "conversation": "The body and all four comments were read. The report describes Homarr reaching its 1.5 GB limit while a dashboard combines Docker data with Beszel Live data, and later discussion mentions desktop/mobile use and multiple live views. The conversation never isolates a reproducible leak or confirms a post-fix retest. Merged PR #6448 is a release/v2 ancestor and its current source closes the Beszel SSE response/agent on disconnect, bounds pending events, and trims the one-minute client buffer. Those changes address a credible live-subscription growth path, while the broader process OOM and other widgets remain unproven.",
+    "comments_read": 4,
+    "evidence": [
+      "reports/v2-issue-triage/source/6438.json:70-334 \u2014 complete issue body and four comments were read; it reports the memory cap/OOM scenario and does not provide a confirmed leak trace or post-fix result.",
+      "reports/v2-issue-triage/source/linked-prs/6448.json:12,34-39,415 \u2014 PR #6448 describes the Beszel live memory-growth fix and its merge commit is recorded as an ancestor of release/v2.",
+      "packages/integrations/src/beszel/beszel-integration.ts:407-590 \u2014 the live SSE reader uses abort handling, closes response bodies and the undici agent, and bounds retry behavior on disconnect.",
+      "packages/api/src/router/widgets/beszel.ts:198-293; packages/api/src/router/widgets/bounded-async-queue.ts:8-88 \u2014 live subscriptions use abort cleanup and a queue that caps pending events and discards the oldest item when full.",
+      "packages/widgets/src/beszel/_shared/use-live-stats.ts:9-76 \u2014 the client keeps a maximum one-minute buffer and trims older live samples, pausing updates when the page is hidden."
+    ],
+    "remaining": "Reproduce the exact Docker-plus-Beszel dashboard with multiple tabs/views and the 1.5 GB limit on release/v2 while recording process memory. If OOM persists, isolate Docker, app prefetch, or another subscription path separately from the fixed Beszel stream.",
+    "reviewer": "Luna 4 (maximum reasoning)",
+    "baseline_status": "needs-verification",
+    "baseline_revision": "60b4e980ed86a3b36d66bd1e25ee277e13836916",
+    "delta_review": {
+      "number": 6438,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "changed_since_baseline": false,
+      "affected_paths": [],
+      "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6438; the baseline needs-verification assessment remains applicable.",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "reports/v2-issue-triage/assessments.json baseline #6438 (bug: OOM with 1.71.0) records status=needs-verification and confidence=medium.",
+        "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6438."
+      ]
+    },
+    "verification": {
+      "number": 6438,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "method": "source-contract inspection",
+      "checks": [
+        "Beszel server subscriptions use abort cleanup and a bounded async queue.",
+        "The client keeps a 60-record sliding buffer and stops live updates while the page is hidden.",
+        "The source changes are relevant mitigations but do not reproduce the reported Docker-plus-Beszel OOM."
+      ],
+      "outcome": "source-only",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "packages/api/src/router/widgets/bounded-async-queue.ts:8-88",
+        "packages/api/src/router/widgets/beszel.ts:198-293",
+        "packages/widgets/src/beszel/_shared/use-live-stats.ts:9-76",
+        "reports/v2-issue-triage/verification/integrations/check-integrations.mjs: source checks passed"
+      ],
+      "blockers": [
+        "No long-running dashboard, 1.5 GB cap, mobile/multi-tab workload, or post-fix RSS/heap trace was available."
+      ],
+      "artifact": "integrations/integrations.json"
+    },
+    "latest_delta": null,
+    "verification_outcome": "source-only",
+    "comments_read_current": 4
+  },
+  {
+    "number": 6300,
+    "comments_read": 5,
+    "title": "bug: Memory leak",
+    "category": "bug",
+    "status": "needs-verification",
+    "confidence": "medium",
+    "summary": "V2 bounds several caches and fixes Beszel live-stream retention, but no causal link establishes that those changes resolve this broader retained Next.js memory report.",
+    "conversation": "All five comments were read. The original reporter lists media, download, calendar, weather, Dashdot iframe and Docker widgets, with retention after repeatedly opening/closing tabs. A later ARM64 report documents a multi-day plateau near 1.9 GB and uses Beszel as the external measurement source; that does not establish use of a Beszel live widget. Neither report isolates a subsystem.",
+    "evidence": [
+      "packages/api/src/router/widgets/bounded-async-queue.ts:8-15,28-40 \u2014 live snapshots use a bounded queue that discards old values when a slow client falls behind.",
+      "packages/api/src/router/widgets/beszel.ts:205-220,254-270 \u2014 each Beszel subscription installs an abort-linked bounded queue and closes it on cancellation/error.",
+      "packages/widgets/src/beszel/_shared/use-live-stats.ts:9-21,30-72 \u2014 the browser keeps only a 60-record sliding buffer, stops hidden-page subscriptions, and clears buffers on key changes.",
+      "packages/integrations/src/beszel/beszel-integration.ts:427-438,549-587 \u2014 SSE response bodies/readers/agents are cancelled and closed on normal completion, abort, and retry.",
+      "packages/request-handler/src/lib/request-handler.ts:28-39,113-145,232-269,317-337 \u2014 in-memory cache, inflight requests, and upstream work have explicit size/expiry/concurrency bounds.",
+      "packages/api/src/query-cache.ts:21-35,36-65 \u2014 large Beszel system stats are excluded from persisted cache and supporting dashboard query policies are bounded.",
+      "apps/docs/blog/2026/09-03-homarr-2.0/index.mdx:158-160 \u2014 release-level performance claims cover parallel startup, lazy heavy screens, and deduplicated integration work."
+    ],
+    "remaining": "Run a long RSS/heap retention reproduction using the reported widgets and repeated tab open/close lifecycle on the affected architectures. The cited bounded queues/caches are relevant improvements, not proof of even a partial fix for this particular cause.",
+    "reviewer": "Initial reviewer",
+    "baseline_status": "needs-verification",
+    "baseline_revision": "60b4e980ed86a3b36d66bd1e25ee277e13836916",
+    "delta_review": {
+      "number": 6300,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "changed_since_baseline": false,
+      "affected_paths": [],
+      "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6300; the baseline needs-verification assessment remains applicable.",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "reports/v2-issue-triage/assessments.json baseline #6300 (bug: Memory leak) records status=needs-verification and confidence=medium.",
+        "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6300."
+      ]
+    },
+    "verification": {
+      "number": 6300,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "method": "source-contract inspection",
+      "checks": [
+        "V2 bounds live queues, client buffers, request caches, and in-flight work in the relevant paths.",
+        "The broad media/Docker/calendar/weather/iframe retention report has no isolated causal path in source."
+      ],
+      "outcome": "source-only",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "packages/request-handler/src/lib/request-handler.ts:28-39,113-145,232-269,317-337",
+        "packages/api/src/query-cache.ts:21-65",
+        "packages/integrations/src/beszel/beszel-integration.ts:427-438,549-587",
+        "reports/v2-issue-triage/verification/integrations/check-integrations.mjs: source checks passed"
+      ],
+      "blockers": [
+        "No long RSS/heap retention run or subsystem isolation was performed."
+      ],
+      "artifact": "integrations/integrations.json"
+    },
+    "latest_delta": null,
+    "verification_outcome": "source-only",
+    "comments_read_current": 5
+  },
+  {
+    "number": 6271,
+    "title": "bug: TrueNAS Integration eating up memory on TrueNAS host",
+    "category": "bug",
+    "status": "needs-verification",
+    "confidence": "medium",
+    "summary": "V2's TrueNAS client now reuses one authenticated WebSocket per integration ID, evicts it on close/failure, bounds requests, and negotiates JSON-RPC with a legacy fallback. The integration still launches four concurrent data queries per refresh, including reporting and network data, so the source demonstrates connection reuse but cannot establish that the TrueNAS host memory leak is fixed. The report targets TrueNAS 25.10.4, while no reproduction or memory profile is available here.",
+    "conversation": "The reporter says reconnecting Homarr's TrueNAS integration eventually consumes all host memory and that removing the integration plus a host restart restores normal usage. There are no comments, linked fixes, or diagnostic logs identifying whether the cause is socket churn, an API response leak, or server-side reporting. V2 contains a redesigned/reused client and newer API handling, which is relevant mitigation but not issue-specific proof.",
+    "comments_read": 0,
+    "evidence": [
+      "packages/integrations/src/truenas/truenas-client.ts:26-49,68-95 \u2014 client connections are cached per integration, shared by concurrent calls, and evicted/reconnected when a socket fails or closes.",
+      "packages/integrations/src/truenas/truenas-client.ts:106-139 \u2014 V2 negotiates JSON-RPC and falls back to the legacy API, retaining the selected API per integration.",
+      "packages/integrations/src/truenas/truenas-integration.ts:34-60 \u2014 each system-info refresh still runs system, reporting, pool, and network requests concurrently.",
+      "packages/integrations/src/truenas/truenas-integration.ts:219-246,273-295 \u2014 reporting calls request five-minute CPU/memory/temperature and interface netdata windows on each refresh."
+    ],
+    "remaining": "Reproduce against TrueNAS 25.10.4 with sustained widget polling, collect Homarr socket/request counts and TrueNAS memory profiles, and confirm cleanup/backpressure; inspect server-side reporting responses if memory still grows.",
+    "reviewer": "Luna 5 (maximum reasoning)",
+    "baseline_status": "needs-verification",
+    "baseline_revision": "60b4e980ed86a3b36d66bd1e25ee277e13836916",
+    "delta_review": {
+      "number": 6271,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "changed_since_baseline": false,
+      "affected_paths": [],
+      "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6271; the baseline needs-verification assessment remains applicable.",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "reports/v2-issue-triage/assessments.json baseline #6271 (bug: TrueNAS Integration eating up memory on TrueNAS host) records status=needs-verification and confidence=medium.",
+        "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6271."
+      ]
+    },
+    "verification": {
+      "number": 6271,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "method": "source-contract inspection",
+      "checks": [
+        "TrueNasClient caches one connection promise per integration ID and evicts it on failure or close.",
+        "V2 negotiates JSON-RPC with a legacy fallback, while the integration still performs four concurrent data queries per refresh."
+      ],
+      "outcome": "source-only",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "packages/integrations/src/truenas/truenas-client.ts:26-139",
+        "packages/integrations/src/truenas/truenas-integration.ts:34-60,219-246,273-295",
+        "reports/v2-issue-triage/verification/integrations/check-integrations.mjs: TrueNAS reuse source checks passed"
+      ],
+      "blockers": [
+        "No TrueNAS 25.10.4 host, sustained polling run, or server memory profile was available."
+      ],
+      "artifact": "integrations/integrations.json"
+    },
+    "latest_delta": null,
+    "verification_outcome": "source-only",
+    "comments_read_current": 0
+  },
+  {
+    "number": 6177,
+    "title": "bug: Homarr red action buttons on Floorp browser ofen spin forver w/o completion",
+    "category": "bug",
+    "status": "needs-verification",
+    "confidence": "low",
+    "summary": "No Floorp-specific v2 change or reproducible source cause was found. The generic upload action uses normal Mantine loading state, so the reported endless spinner needs a current Floorp reproduction.",
+    "conversation": "The report says red action buttons in Floorp often spin forever without completing. The maintainer asked whether the same happens in Chrome or Safari, but there is no follow-up answer and no browser/version/network trace establishing whether the issue is Homarr, Floorp, or an environment problem.",
+    "evidence": [
+      "packages/forms-collection/src/upload-media/upload-media.tsx:17-55 + the upload control is a generic Mantine button/FileButton with a loading prop supplied by the action state.",
+      "apps/nextjs/src/app/[locale]/manage/medias/_actions/upload-media.tsx:18-19 + the server action boundary is small and has no Floorp-specific branch or retry loop.",
+      "reports/v2-issue-triage/source/timelines/6177.json:commented events + the only maintainer follow-up requests Chrome/Safari comparison, with no confirmed resolution.",
+      "apps/docs/blog/2026/09-03-homarr-2.0/index.mdx:144-160 + V2 preview/performance/permission notes contain no claim about Floorp action-button completion."
+    ],
+    "remaining": "Retest the reported actions on release/v2 with Floorp and a control browser, record the network request and promise completion/error state, and isolate whether the spinner is an action failure or browser rendering/event issue.",
+    "comments_read": 1,
+    "reviewer": "Luna 2 (maximum reasoning)",
+    "baseline_status": "needs-verification",
+    "baseline_revision": "60b4e980ed86a3b36d66bd1e25ee277e13836916",
+    "delta_review": {
+      "number": 6177,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "changed_since_baseline": false,
+      "affected_paths": [],
+      "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6177; the baseline needs-verification assessment remains applicable.",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "low",
+      "evidence": [
+        "reports/v2-issue-triage/assessments.json baseline #6177 (bug: Homarr red action buttons on Floorp browser ofen spin forver w/o completion) records status=needs-verification and confidence=low.",
+        "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6177."
+      ]
+    },
+    "verification": {
+      "number": 6177,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "method": "Source-only review of the upload action state; no Floorp or equivalent authenticated browser reproduction was available.",
+      "checks": [
+        "The generic upload hook passes the mutation isPending state through FileButton to the action button's loading prop.",
+        "The media upload action has no Floorp-specific branch, retry loop, or browser workaround.",
+        "No request trace or promise completion observation was possible for the reported Windows Floorp version."
+      ],
+      "outcome": "blocked",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "low",
+      "evidence": [
+        "packages/forms-collection/src/upload-media/upload-media.tsx:17-55 \u2014 mutation state and FileButton wiring.",
+        "apps/nextjs/src/app/[locale]/manage/medias/_actions/upload-media.tsx:10-24 \u2014 button receives loading from the generic upload component.",
+        "source/6177.json \u2014 complete report and sole maintainer comment requesting Chrome/Safari comparison."
+      ],
+      "blockers": [
+        "Floorp 12.14.2 on Windows 10 was unavailable.",
+        "No control-browser comparison, authenticated media fixture, network trace, or mutation promise trace was captured."
+      ],
+      "artifact": "platform/platform.json"
+    },
+    "latest_delta": null,
+    "verification_outcome": "blocked",
+    "comments_read_current": 1
+  },
+  {
+    "number": 6024,
+    "title": "bug: SyntaxError: Expecting Unicode escape sequence \\uXXXX (1:10901)",
+    "category": "bug",
+    "status": "needs-verification",
+    "confidence": "medium",
+    "summary": "The report's parser exception has no confirmed causal fix in release/v2. V2 normalizes JSON SyntaxErrors from decorated integration methods, but the logged `\\uXXXX (1:10901)` shape is consistent with a JavaScript parser and no source identifies that path.",
+    "conversation": "The issue body and its zero comments were read. The reporter sees a recurring Unicode-escape SyntaxError with low visible impact and suspects an empty Beszel integration, but provides no reproduction or endpoint payload. A later triage PR considered wrapping only Beszel authentication JSON, then removed that narrow change because the report points to collection responses. The current generic integration boundary can normalize JSON parse failures, and Beszel response.json calls run inside it, but that does not establish that the reported parser exception came from JSON.parse or from Beszel. The linked narrow PR is not a release/v2 ancestor, so disposition remains unproven.",
+    "comments_read": 0,
+    "evidence": [
+      "reports/v2-issue-triage/source/6024.json:10-88 \u2014 the complete body was read; it reports the recurring malformed Unicode escape, possible empty Beszel data, low impact, and no comments or reproduction steps.",
+      "packages/integrations/src/base/errors/decorator.ts:22-25,90-169 \u2014 all Integration methods are wrapped and rejected errors pass through the default JSON parse handler before being rethrown as normalized integration errors.",
+      "packages/integrations/src/base/errors/parse/integration-parse-error-handler.ts:8-21 \u2014 SyntaxError values are converted into IntegrationParseError through JsonParseErrorHandler rather than remaining raw exceptions.",
+      "packages/common/src/errors/parse/handlers/json-parse-error-handler.ts:4-17 \u2014 the JSON handler recognizes SyntaxError, logs the parse message, and creates a ParseError cause.",
+      "packages/integrations/src/beszel/beszel-integration.ts:253-278,598-618 \u2014 Beszel collection and auth testing calls still call response.json, but those methods run under the decorated Integration boundary.",
+      "packages/api/src/router/widgets/beszel.ts:31-63,168-195 \u2014 Beszel system and stats routes convert integration failures into public error results instead of propagating a process-level uncaught exception.",
+      "reports/v2-issue-triage/source/linked-prs/6510.json:34-39,437 \u2014 the later PR explicitly removed its narrow Beszel wrapper and records its merge commit as not an ancestor of release/v2; this metadata is context only, while the current source above supplies the disposition evidence."
+    ],
+    "remaining": "Capture the complete stack, parser, and malformed payload on release/v2 if the recurring log is still observed. Identify whether the failure is JSON parsing, JavaScript/Acorn parsing, or another upstream path before adding a targeted fix or fixture.",
+    "reviewer": "Luna 4 (maximum reasoning)",
+    "baseline_status": "needs-verification",
+    "baseline_revision": "60b4e980ed86a3b36d66bd1e25ee277e13836916",
+    "delta_review": {
+      "number": 6024,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "changed_since_baseline": false,
+      "affected_paths": [],
+      "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6024; the baseline needs-verification assessment remains applicable.",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "reports/v2-issue-triage/assessments.json baseline #6024 (bug: SyntaxError: Expecting Unicode escape sequence \\uXXXX (1:10901)) records status=needs-verification and confidence=medium.",
+        "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6024."
+      ]
+    },
+    "verification": {
+      "number": 6024,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "method": "source-contract inspection",
+      "checks": [
+        "The integration error boundary routes JSON SyntaxError values through JsonParseErrorHandler and normalizes them.",
+        "Beszel response.json calls are inside decorated integration methods, while the report's parser type and source payload are not identified."
+      ],
+      "outcome": "source-only",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "packages/integrations/src/base/errors/decorator.ts:22-25,90-169",
+        "packages/common/src/errors/parse/handlers/json-parse-error-handler.ts:4-17",
+        "packages/integrations/src/beszel/beszel-integration.ts:253-278,598-618",
+        "reports/v2-issue-triage/verification/integrations/check-integrations.mjs: parse-boundary source checks passed"
+      ],
+      "blockers": [
+        "No complete stack, malformed payload, or release/v2 recurrence was captured."
+      ],
+      "artifact": "integrations/integrations.json"
+    },
+    "latest_delta": null,
+    "verification_outcome": "source-only",
+    "comments_read_current": 0
+  },
+  {
+    "number": 5085,
+    "title": "bug: Unable to connect to LDAP",
+    "category": "bug",
+    "status": "needs-verification",
+    "confidence": "medium",
+    "summary": "The initial LLDAP failure was a bind-DN configuration mistake corrected in the thread, while the separate Authentik LDAP Outpost failure remains unresolved and has no release/v2-specific fix or fixture.",
+    "conversation": "All 8 comments were read. The original Docker Compose example uses cn=admin even though the returned LLDAP entry has uid=admin; the reporter confirms changing the bind DN to that returned DN makes LLDAP login work. They then reproduce a different failure against Authentik, using a correct bind DN, sAMAccountName, subtree search, and an objectClass filter; ldapsearch from the Homarr container returns one user, but Homarr still returns CredentialsSignin. The maintainer questions the search scope, the reporter tests it and reports no change, then supplies base and subtree queries showing the expected Authentik user. Current v2 supports the requested username attribute, search scope, and optional extra filter, but there is no Authentik-specific handling or end-to-end evidence that those settings authorize successfully.",
+    "comments_read": 8,
+    "evidence": [
+      "reports/v2-issue-triage/source/5085.json:10-112,130-507 \u2014 the full report and all eight comments were read; the thread separates the corrected LLDAP bind DN from the still-failing Authentik case and includes the later base/subtree ldapsearch output.",
+      "packages/auth/providers/credentials/authorization/ldap-authorization.ts:17-54 \u2014 login binds with AUTH_LDAP_BIND_DN, searches with configured base, username filter, scope, and attributes, and rejects zero or multiple matches.",
+      "packages/auth/providers/credentials/authorization/ldap-authorization.ts:81-95,141-148 \u2014 group lookup uses the configured scope and the username filter extra argument is interpolated as a caller-supplied LDAP filter expression.",
+      "packages/auth/env.ts:55-69 \u2014 release/v2 exposes AUTH_LDAP_SEARCH_SCOPE, AUTH_LDAP_USERNAME_ATTRIBUTE, username/group filter extras, and group mapping settings needed for the reported Authentik schema.",
+      "packages/auth/providers/credentials/ldap-client.ts:18-56 \u2014 the client passes the configured URI and ldapts search options through without provider-specific Authentik normalization.",
+      "apps/docs/docs/advanced/single-sign-on/index.mdx:103-118 \u2014 the documented LDAP contract expects a parenthesized extra filter and supports base/one/sub scopes, so malformed filter syntax remains a configuration variable to verify."
+    ],
+    "remaining": "Reproduce the Authentik setup on the release/v2 image with the documented parenthesized extra filter and capture Homarr's search/bind result, then add provider-compatible handling or documentation if the one-entry ldapsearch case still fails. Do not treat the LLDAP configuration correction as resolution of the Authentik failure.",
+    "reviewer": "Luna 4 (maximum reasoning)",
+    "baseline_status": "needs-verification",
+    "baseline_revision": "60b4e980ed86a3b36d66bd1e25ee277e13836916",
+    "delta_review": {
+      "number": 5085,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "changed_since_baseline": false,
+      "affected_paths": [],
+      "finding": "No issue-specific implementation path or post-baseline conversation change was found for #5085; the baseline needs-verification assessment remains applicable.",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "reports/v2-issue-triage/assessments.json baseline #5085 (bug: Unable to connect to LDAP) records status=needs-verification and confidence=medium.",
+        "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #5085."
+      ]
+    },
+    "verification": {
+      "number": 5085,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "method": "source inspection; external LDAP provider runtime unavailable",
+      "checks": [
+        "Source supports the reported username attribute, search scope, extra filter, group member attribute, and group scope settings.",
+        "No Authentik LDAP Outpost was available to reproduce the one-user ldapsearch versus Homarr CredentialsSignin failure."
+      ],
+      "outcome": "blocked",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "packages/auth/providers/credentials/authorization/ldap-authorization.ts:17-54,81-95,141-148",
+        "packages/auth/providers/credentials/ldap-client.ts:18-56",
+        "packages/auth/env.ts:55-69",
+        "apps/docs/docs/advanced/single-sign-on/index.mdx:103-118",
+        "reports/v2-issue-triage/source/5085.json:body and all 8 full_comments"
+      ],
+      "blockers": [
+        "The remaining failure is provider-specific Authentik LDAP behavior and requires a real LDAP server plus credentials; a controlled external IdP fixture was unavailable."
+      ],
+      "artifact": "auth/auth.json"
+    },
+    "latest_delta": null,
+    "verification_outcome": "blocked",
+    "comments_read_current": 8
+  },
+  {
+    "number": 4965,
+    "title": "bug: LDAP authentication fails for users with non-ASCII characters in Distinguished Name",
+    "category": "bug",
+    "status": "needs-verification",
+    "confidence": "medium",
+    "summary": "V2 has explicit DN normalization for LDAP values containing escaped hexadecimal bytes and converts non-string attributes as UTF-8, but it has no issue-specific fix or regression evidence for the reported Active Directory group lookup. The group filter still interpolates the configured user DN directly, with no dedicated LDAP filter escaping/encoding helper. That may work for LDAPv3 servers and may fail for vendor-specific encoding, so source inspection cannot settle the report.",
+    "conversation": "The reporter says user lookup and password validation succeed, then group retrieval fails only when the CN/DN contains Cyrillic, Polish, Chinese, or other non-ASCII characters; ASCII-only users work. Comments question why a CN is non-ASCII, answer that other LDAP services handle it, and suggest vendor differences between encoded and UTF-8 strings while expecting LDAPv3 UTF-8 to work. The issue remains open, has no linked fix, and the only workaround is using local credentials accounts.",
+    "comments_read": 4,
+    "evidence": [
+      "packages/auth/providers/credentials/authorization/ldap-authorization.ts:34-54,68-99 \u2014 user lookup and password bind succeed before the separate group search, whose filter directly inserts ldapUser[configured member attribute].",
+      "packages/auth/providers/credentials/authorization/ldap-authorization.ts:141-148 \u2014 username filters also interpolate input without a filter escaping helper.",
+      "packages/auth/providers/credentials/ldap-client.ts:43-66 \u2014 LDAP values are converted to strings and buffers as UTF-8.",
+      "packages/auth/providers/credentials/ldap-client.ts:69-82 \u2014 returned DNs with escaped hex bytes are normalized through decodeURIComponent; this predates the issue and does not prove the group filter works with every directory vendor.",
+      "packages/auth/env.ts:61-68 \u2014 group member attribute and search scope are configurable, matching the reporter's distinguishedName setup but offering no encoding mode."
+    ],
+    "remaining": "Reproduce with the reported AD/LDAP configurations and capture the exact generated group filter and server response; then add standards-compliant filter escaping/encoding or a vendor-compatible DN path and regression coverage if confirmed.",
+    "reviewer": "Luna 5 (maximum reasoning)",
+    "baseline_status": "needs-verification",
+    "baseline_revision": "60b4e980ed86a3b36d66bd1e25ee277e13836916",
+    "delta_review": {
+      "number": 4965,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "changed_since_baseline": false,
+      "affected_paths": [],
+      "finding": "No issue-specific implementation path or post-baseline conversation change was found for #4965; the baseline needs-verification assessment remains applicable.",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "reports/v2-issue-triage/assessments.json baseline #4965 (bug: LDAP authentication fails for users with non-ASCII characters in Distinguished Name) records status=needs-verification and confidence=medium.",
+        "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #4965."
+      ]
+    },
+    "verification": {
+      "number": 4965,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "method": "source inspection; external AD/LDAP provider runtime unavailable",
+      "checks": [
+        "Source normalizes returned LDAP values as UTF-8 and decodes escaped DN bytes, but the group filter still interpolates the configured DN without a dedicated filter-escaping helper.",
+        "No Active Directory/LDAP server with a non-ASCII distinguishedName was available for group lookup reproduction."
+      ],
+      "outcome": "blocked",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "packages/auth/providers/credentials/authorization/ldap-authorization.ts:34-54,68-99,141-148",
+        "packages/auth/providers/credentials/ldap-client.ts:43-82",
+        "packages/auth/env.ts:61-68",
+        "reports/v2-issue-triage/source/4965.json:body and all 4 full_comments"
+      ],
+      "blockers": [
+        "The reported vendor/encoding behavior requires a real AD or LDAP server and a non-ASCII DN; source inspection cannot establish the server response."
+      ],
+      "artifact": "auth/auth.json"
+    },
+    "latest_delta": null,
+    "verification_outcome": "blocked",
+    "comments_read_current": 4
+  },
+  {
+    "number": 4766,
+    "title": "bug: Homarr blocks HTTP/2 WebSocket connections for other sites sharing the same reverse proxy",
+    "category": "bug",
+    "status": "needs-verification",
+    "confidence": "medium",
+    "summary": "The issue is an environment-specific Chromium/reverse-proxy WebSocket interference report. V2 has a lazy, timed websocket client, but source inspection cannot establish that it prevents cross-site HTTP/2 connection interference.",
+    "conversation": "The reporter supplied a detailed reverse-proxy and HTTP/2 WebSocket reproduction in which opening Homarr affected another site sharing the proxy. The thread considered an AI-generated diagnosis, which the reporter challenged, and a maintainer could not reproduce and suspected the proxy. Another user reported a similar symptom. There is no controlled reproduction or confirmed root-cause fix in the conversation.",
+    "evidence": [
+      "apps/nextjs/src/app/[locale]/_client-providers/trpc.tsx:98-110 + the current client uses a lazy websocket with a 30-second close window and cleanup.",
+      "apps/nextjs/src/app/[locale]/_client-providers/trpc.tsx:112-140 + the websocket is part of the tRPC transport selection, but no reverse-proxy isolation or HTTP/2 connection policy is encoded here.",
+      "reports/v2-issue-triage/source/timelines/4766.json:commented events + the maintainer's inability to reproduce and proxy suspicion remain the latest disposition evidence.",
+      "apps/docs/blog/2026/09-03-homarr-2.0/index.mdx:75-85 + the V2 architecture announcement describes board/layout changes and does not claim a reverse-proxy websocket fix."
+    ],
+    "remaining": "Reproduce on release/v2 with the reported Chromium version and reverse proxy, while tracing HTTP/2 streams and connection ownership for the other site. Test Caddy/Nginx Proxy Manager or the reporter's exact proxy configuration before assigning a source-level fix.",
+    "comments_read": 5,
+    "reviewer": "Luna 2 (maximum reasoning)",
+    "baseline_status": "needs-verification",
+    "baseline_revision": "60b4e980ed86a3b36d66bd1e25ee277e13836916",
+    "delta_review": {
+      "number": 4766,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "changed_since_baseline": false,
+      "affected_paths": [],
+      "finding": "No issue-specific implementation path or post-baseline conversation change was found for #4766; the baseline needs-verification assessment remains applicable.",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "reports/v2-issue-triage/assessments.json baseline #4766 (bug: Homarr blocks HTTP/2 WebSocket connections for other sites sharing the same reverse proxy) records status=needs-verification and confidence=medium.",
+        "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #4766."
+      ]
+    },
+    "verification": {
+      "number": 4766,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "method": "Source review of the V2 tRPC WebSocket transport and bounded direct-container HTTP checks; no shared reverse-proxy fixture was available.",
+      "checks": [
+        "V2 creates the WebSocket client lazily with a 30-second close window and closes it on provider cleanup.",
+        "The source contains no HTTP/2 connection-coalescing policy or reverse-proxy isolation for another site.",
+        "The local direct HTTP/1.1 health check does not exercise Chromium connection reuse, Caddy/Nginx proxying, or a second site's WebSocket."
+      ],
+      "outcome": "source-only",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "apps/nextjs/src/app/[locale]/_client-providers/trpc.tsx:98-110 \u2014 lazy WebSocket and cleanup behavior.",
+        "apps/nextjs/src/app/[locale]/_client-providers/trpc.tsx:165-180 \u2014 WebSocket is selected for subscriptions, with no proxy connection controls.",
+        "source/4766.json \u2014 the complete report describes the Chromium, Caddy, wildcard-TLS, and cross-site reproduction plus non-reproduction by maintainers."
+      ],
+      "blockers": [
+        "A Chromium-capable session exists, but no controlled Caddy or Nginx shared reverse proxy, TrueNAS-like second WebSocket service, HTTP/2 HAR, or matching wildcard certificate was available.",
+        "The conversation contains conflicting reproduction results, so source inspection cannot establish a V2 fix or root cause."
+      ],
+      "artifact": "platform/platform.json"
+    },
+    "latest_delta": null,
+    "verification_outcome": "source-only",
+    "comments_read_current": 5
+  },
+  {
+    "number": 4738,
+    "comments_read": 4,
+    "title": "bug: Dashboard Layout - Saving Changes Failure",
+    "category": "bug",
+    "status": "needs-verification",
+    "confidence": "medium",
+    "summary": "V2 replaces the layout-save path, but the report affected only one existing board and its cause was not isolated. The new implementation alone does not prove that the specific Board not found failure or migrated board data is repaired.",
+    "conversation": "All 4 comments were read. The reporter describes v1.46 failing when adding a layout with Board not found in createBoardLayout, provides follow-up logs, removes bad integrations, and says the failure remains. No comment identifies a separate root cause beyond the layout-save path.",
+    "evidence": [
+      "apps/nextjs/src/app/[locale]/boards/[name]/settings/_settings-form.tsx:123-152 \u2014 layout saves return canonical layouts, reset dirty state, and revalidate the settings page.",
+      "apps/nextjs/src/app/[locale]/boards/[name]/settings/_shared.tsx:15-22 \u2014 layout mutation settlement invalidates the board and home-board queries.",
+      "packages/api/src/router/board.ts:1192-1206,1261-1289 \u2014 saveLayouts rereads the board, validates added/removed roles, creates custom layouts, and projects sections/items.",
+      "packages/validation/src/board.ts:102-131 \u2014 the responsive layout payload has strict Base/Mobile/unique-breakpoint validation."
+    ],
+    "remaining": "No live reproduction or database migration test was run. Verify adding, resizing, and reloading a custom layout on a board upgraded from the affected v1 version.",
+    "reviewer": "Initial reviewer",
+    "baseline_status": "needs-verification",
+    "baseline_revision": "60b4e980ed86a3b36d66bd1e25ee277e13836916",
+    "delta_review": {
+      "number": 4738,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "changed_since_baseline": false,
+      "affected_paths": [],
+      "finding": "No issue-specific implementation path or post-baseline conversation change was found for #4738; the baseline needs-verification assessment remains applicable.",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "reports/v2-issue-triage/assessments.json baseline #4738 (bug: Dashboard Layout - Saving Changes Failure) records status=needs-verification and confidence=medium.",
+        "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #4738."
+      ]
+    },
+    "verification": {
+      "number": 4738,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "method": "Create custom layout via settings UI and authenticated persisted-state readback",
+      "checks": [
+        "Created TriageWide with 10 columns; saved breakpoint1200 and confirmed server readback.",
+        "Full page reload retained TriageWide, 10 columns and breakpoint1200 in the server readback."
+      ],
+      "outcome": "partial",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "reports/v2-issue-triage/verification/ui/saved-custom-layout.json",
+        "reports/v2-issue-triage/verification/ui/custom-layout-after-reload.json"
+      ],
+      "blockers": [
+        "Original problematic/migrated board export was unavailable. Fresh-board success alone does not reproduce existing-board data corruption."
+      ],
+      "artifact": "ui.json"
+    },
+    "latest_delta": null,
+    "verification_outcome": "partial",
+    "comments_read_current": 4
+  },
+  {
+    "number": 4406,
+    "title": "bug: OIDC not working with Cloudflare Zero Trust / SaaS",
+    "category": "bug",
+    "status": "needs-verification",
+    "confidence": "medium",
+    "summary": "V2's OIDC implementation has configurable scopes, nested groups/name claim paths, and an option to force userinfo, but the provider definition does not explicitly set an authorization response_type or add a Cloudflare-specific callback flow. Auth.js may use the authorization-code default, which is the relevant configuration direction, yet the reported Cloudflare fragment/state failure cannot be proven resolved from these files. The profile parser still requires sub and a usable name claim.",
+    "conversation": "The report describes Cloudflare Zero Trust OIDC with Entra failing at the callback, initially around the groups scope. Comments clarify that the provider is Cloudflare OIDC, try implicit/hybrid flow, and report persistent failures through several Homarr releases. The later investigation explains that implicit/hybrid responses put state/tokens in a browser fragment unavailable to the server, recommends authorization code, and notes that profile claims may need scope/name/group overrides or userinfo. No linked fix or v2-specific verification is recorded.",
+    "comments_read": 14,
+    "evidence": [
+      "packages/auth/providers/oidc/oidc-provider.ts:13-31 \u2014 OIDC authorization sends the configured scope and redirect URI but does not explicitly set response_type; the source provides no Cloudflare-specific handling.",
+      "packages/auth/providers/oidc/oidc-provider.ts:53-73 \u2014 profile processing requires sub and a resolved name, with optional userinfo, so claim shape still affects callback success.",
+      "packages/auth/env.ts:36-52 \u2014 V2 exposes scope, groups/name attribute overrides, force-userinfo, and token endpoint auth configuration.",
+      "apps/docs/docs/advanced/single-sign-on/index.mdx:197-211 \u2014 the supported OIDC knobs and nested claim paths are documented, but there is no Cloudflare response-flow fix documented."
+    ],
+    "remaining": "Verify the Cloudflare Zero Trust authorization-code flow end to end against the reported Entra configuration, including callback query state, groups/name claims, and userinfo; add an explicit response-flow/configuration fix if the current Auth.js default is insufficient.",
+    "reviewer": "Luna 5 (maximum reasoning)",
+    "baseline_status": "needs-verification",
+    "baseline_revision": "60b4e980ed86a3b36d66bd1e25ee277e13836916",
+    "delta_review": {
+      "number": 4406,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "changed_since_baseline": false,
+      "affected_paths": [],
+      "finding": "No issue-specific implementation path or post-baseline conversation change was found for #4406; the baseline needs-verification assessment remains applicable.",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "reports/v2-issue-triage/assessments.json baseline #4406 (bug: OIDC not working with Cloudflare Zero Trust / SaaS) records status=needs-verification and confidence=medium.",
+        "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #4406."
+      ]
+    },
+    "verification": {
+      "number": 4406,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "method": "source inspection; external Cloudflare Zero Trust OIDC runtime unavailable",
+      "checks": [
+        "Source exposes scope, nested group/name claim paths, force-userinfo, and token endpoint auth settings, but does not add Cloudflare-specific response-flow handling.",
+        "No Cloudflare Zero Trust/Entra OIDC tenant was available to verify authorization-code callback query state, profile claims, or userinfo."
+      ],
+      "outcome": "blocked",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "packages/auth/providers/oidc/oidc-provider.ts:13-31,53-73",
+        "packages/auth/env.ts:36-52",
+        "apps/docs/docs/advanced/single-sign-on/index.mdx:197-211",
+        "reports/v2-issue-triage/source/4406.json:body and all 14 full_comments"
+      ],
+      "blockers": [
+        "The callback failure is specific to Cloudflare Zero Trust OIDC response mode and claim shape; no external tenant was available."
+      ],
+      "artifact": "auth/auth.json"
+    },
+    "latest_delta": null,
+    "verification_outcome": "blocked",
+    "comments_read_current": 14
+  },
+  {
+    "number": 4190,
+    "comments_read": 7,
+    "title": "bug: Cannot integrate with OMV, Invalid system information response",
+    "category": "bug",
+    "status": "needs-verification",
+    "confidence": "medium",
+    "summary": "The OMV response-validation failure needs the actual payload to determine whether it persists in V2. Current code accepts a null CPU model name, but other system fields remain strict and the failing field was not identified.",
+    "conversation": "The reporter identified OMV 7.7.17-1 on a Raspberry Pi, with a successful connection test but a system-information schema error, and suspected null CPU values. Maintainers requested Discord debugging; another user suggested admin credentials. No failing payload or confirmation of that workaround appears in the seven comments.",
+    "evidence": [
+      "packages/integrations/src/openmediavault/openmediavault-integration.ts:30-53 \u2014 the integration safe-parses system information and returns the exact Invalid system information response error on schema mismatch.",
+      "packages/integrations/src/openmediavault/openmediavault-types.ts:3-20 \u2014 the schema requires version, numeric CPU/load fields, string memory fields, uptime, rebootRequired, and availablePkgUpdates.",
+      "packages/integrations/src/openmediavault/openmediavault-integration.ts:70-90 \u2014 the widget-facing mapping depends on the parsed response and does not normalize alternate OMV versions.",
+      "packages/integrations/src/openmediavault/openmediavault-types.ts:7 + cpuModelName is already nullable; openmediavault-integration.ts:72 maps null to Unknown CPU. This contradicts a blanket claim that no null CPU response is supported, but does not establish which field failed."
+    ],
+    "remaining": "Retrieve the failing System.getInformation payload and permissions on OMV 7.7.17-1, identify the exact schema mismatch, and compare it against V2. Do not label this fixed or definitely still failing solely from the generic error string.",
+    "reviewer": "Initial reviewer",
+    "baseline_status": "needs-verification",
+    "baseline_revision": "60b4e980ed86a3b36d66bd1e25ee277e13836916",
+    "delta_review": {
+      "number": 4190,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "changed_since_baseline": false,
+      "affected_paths": [],
+      "finding": "No issue-specific implementation path or post-baseline conversation change was found for #4190; the baseline needs-verification assessment remains applicable.",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "reports/v2-issue-triage/assessments.json baseline #4190 (bug: Cannot integrate with OMV, Invalid system information response) records status=needs-verification and confidence=medium.",
+        "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #4190."
+      ]
+    },
+    "verification": {
+      "number": 4190,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "method": "source-contract inspection",
+      "checks": [
+        "OMV system information is schema-validated and the generic Invalid system information response remains the failure boundary.",
+        "cpuModelName is nullable and mapped to Unknown CPU, but the remaining failing field from the report is unknown."
+      ],
+      "outcome": "source-only",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "packages/integrations/src/openmediavault/openmediavault-integration.ts:30-90",
+        "packages/integrations/src/openmediavault/openmediavault-types.ts:3-20",
+        "reports/v2-issue-triage/verification/integrations/check-integrations.mjs: OMV schema-boundary source checks passed"
+      ],
+      "blockers": [
+        "No OMV 7.7.17-1 System.getInformation payload or permission matrix was available."
+      ],
+      "artifact": "integrations/integrations.json"
+    },
+    "latest_delta": null,
+    "verification_outcome": "source-only",
+    "comments_read_current": 7
+  },
+  {
+    "number": 3732,
+    "title": "Release Widget: Icon only",
+    "category": "qol",
+    "status": "needs-verification",
+    "confidence": "medium",
+    "summary": "V2 has compact and advanced release layouts and allows the release version text to shrink, while compact icon-only mode hides the repository name. The requested visual behavior for 1x1 versus 2xY dimensions is not explicitly encoded, so source inspection cannot establish that the screenshot request is satisfied.",
+    "conversation": "The body praises icon-only mode and asks whether the release widget can resemble the attached design: retain the icon-only presentation at 2xY but switch to 1xY, where the version number disappears at 1x1. There are no comments. The current code restores compact v1 surfaces but does not contain a width/height-specific rule for hiding the version.",
+    "evidence": [
+      "reports/v2-issue-triage/source/3732.json:1 \u2014 the complete screenshot-based request was read; full_comments is empty.",
+      "packages/widgets/src/releases/component.tsx:63-68 \u2014 viewed releases are localStorage-backed and the column count depends only on advanced display mode and width; there is no 1x1 version-visibility branch.",
+      "packages/widgets/src/releases/component.tsx:251-275 \u2014 compact icon-only mode can hide the repository name, but the latest version text remains rendered with flexShrink and end truncation.",
+      "packages/widgets/src/releases/component.tsx:278-328 \u2014 release-date/status content is kept as a non-shrinking group, which can compete with the version text at narrow widths.",
+      "packages/widgets/src/releases/component.module.scss:9-29 \u2014 the header has general width/focus rules but no responsive selector that hides the version for a one-cell widget."
+    ],
+    "remaining": "Render the widget at the actual 1x1, 2x1, and 2xY v2 dimensions in compact icon-only mode and compare with the requested design. If the version should disappear at a threshold, encode and document that responsive rule; otherwise record the exact supported behavior.",
+    "comments_read": 0,
+    "reviewer": "Luna 3 (maximum reasoning)",
+    "baseline_status": "needs-verification",
+    "baseline_revision": "60b4e980ed86a3b36d66bd1e25ee277e13836916",
+    "delta_review": {
+      "number": 3732,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "changed_since_baseline": false,
+      "affected_paths": [],
+      "finding": "No issue-specific implementation path or post-baseline conversation change was found for #3732; the baseline needs-verification assessment remains applicable.",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "reports/v2-issue-triage/assessments.json baseline #3732 (Release Widget: Icon only) records status=needs-verification and confidence=medium.",
+        "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #3732."
+      ]
+    },
+    "verification": {
+      "number": 3732,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "method": "source-inspection",
+      "checks": [
+        "Inspected the exact revision's releases widget source.",
+        "Confirmed compact icon-only behavior can hide the repository name and that release version text remains rendered with flex-shrink/truncation.",
+        "Confirmed there is no width/height-specific branch that hides the version at 1x1 while retaining it at 2xY."
+      ],
+      "outcome": "source-only",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "Exact-source inspection used git show 681c1dd15:packages/widgets/src/releases/component.tsx.",
+        "packages/widgets/src/releases/component.tsx:63-68",
+        "packages/widgets/src/releases/component.tsx:251-275",
+        "packages/widgets/src/releases/component.tsx:278-328"
+      ],
+      "blockers": [
+        "The request is dimension-specific and the seeded release data is mock/error-prone, so this browser run did not establish the requested 1x1 versus 2xY visual behavior."
+      ],
+      "artifact": "features.json"
+    },
+    "latest_delta": null,
+    "verification_outcome": "source-only",
+    "comments_read_current": 0
+  },
+  {
+    "number": 3407,
+    "title": "bug: background jittering when scrolling",
+    "category": "bug",
+    "status": "needs-verification",
+    "confidence": "medium",
+    "summary": "V2 substantially changed the board/background layout, but the source alone cannot establish that the Safari tab-return and scrolling jitter is fixed. Image backgrounds still use AppShell background attachment settings, while the board now renders through a scaled canvas and video backgrounds use a fixed video element. Those changes could alter the reported behavior, yet no source change is explicitly tied to this issue and no Safari reproduction was run.",
+    "conversation": "The report describes Safari on v1.24.0 showing a blank delay after returning from another tab and a jumpy background while scrolling. Comments ask for a reproducible board/configuration and a safe upload; the reporter says the board has no custom CSS/extensions besides Bitwarden, and another participant reports a macOS half-screen issue that went away at 90% zoom. The timeline does not document a resolution. These reports leave both browser-specific reproduction and the relationship to board settings uncertain.",
+    "comments_read": 7,
+    "evidence": [
+      "apps/nextjs/src/components/layout/background.tsx:9-28 \u2014 image backgrounds are still passed to AppShell with configurable position, size, repeat, and attachment properties.",
+      "apps/nextjs/src/components/layout/shell.tsx:27-35 \u2014 V2 changed the shell sizing/background minimum-height behavior to a content-sized board canvas.",
+      "apps/nextjs/src/app/[locale]/boards/(content)/_client.tsx:79-110 \u2014 the board now mounts a separate background-video layer and ScaledBoardCanvas/grid architecture.",
+      "apps/nextjs/src/components/board/layout/scaled-board-canvas.module.css:1-11,17-24 \u2014 the new viewport clips overflow during hydration and positions the scaled canvas, changing scroll/layout behavior without proving a Safari fix."
+    ],
+    "remaining": "Reproduce the original Safari tab-switch and scroll sequence against a V2 board with image backgrounds and each attachment mode, checking blank frames, scroll position, and jitter at multiple viewport sizes.",
+    "reviewer": "Luna 5 (maximum reasoning)",
+    "baseline_status": "needs-verification",
+    "baseline_revision": "60b4e980ed86a3b36d66bd1e25ee277e13836916",
+    "delta_review": {
+      "number": 3407,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "changed_since_baseline": false,
+      "affected_paths": [],
+      "finding": "No issue-specific implementation path or post-baseline conversation change was found for #3407; the baseline needs-verification assessment remains applicable.",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "reports/v2-issue-triage/assessments.json baseline #3407 (bug: background jittering when scrolling) records status=needs-verification and confidence=medium.",
+        "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #3407."
+      ]
+    },
+    "verification": {
+      "number": 3407,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "method": "Source-only review of the V2 background and board canvas layout; Safari tab-switch and scroll behavior was not runnable in this environment.",
+      "checks": [
+        "Image backgrounds still use AppShell position, size, repeat, and attachment settings.",
+        "Video backgrounds use a fixed viewport video layer, and boards render through the scaled canvas with clipped overflow during hydration.",
+        "These V2 layout changes are relevant to the report but do not prove Safari tab-return or scrolling jitter behavior."
+      ],
+      "outcome": "blocked",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "apps/nextjs/src/components/layout/background.tsx:9-28,31-59 \u2014 image attachment settings and fixed video background.",
+        "apps/nextjs/src/components/layout/shell.tsx:27-46 \u2014 content-sized AppShell and minimum-height behavior.",
+        "apps/nextjs/src/app/[locale]/boards/(content)/_client.tsx:79-96 and apps/nextjs/src/components/board/layout/scaled-board-canvas.module.css:1-11,17-24 \u2014 scaled canvas and hydration overflow behavior.",
+        "source/3407.json \u2014 complete Safari report and follow-up conversation, including the supplied settings and macOS zoom observation."
+      ],
+      "blockers": [
+        "Safari on macOS was unavailable.",
+        "No original board export/settings fixture, image attachment variants, tab-switch sequence, or scroll-frame capture was available."
+      ],
+      "artifact": "platform/platform.json"
+    },
+    "latest_delta": null,
+    "verification_outcome": "blocked",
+    "comments_read_current": 7
+  },
+  {
+    "number": 3140,
+    "title": "bug: Bookmark and notebook widget not working anymore",
+    "category": "bug",
+    "status": "needs-verification",
+    "confidence": "medium",
+    "summary": "V2 has notebook save and bookmark render implementations, but their existence does not establish a causal fix for the reported stale edits, public-board failures, and deployment-specific client errors.",
+    "conversation": "The Helm report began with edits appearing unusable. Follow-ups expanded it to edits disappearing after navigation or logout, anonymous public boards going blank after reload, client exceptions, chunk-load errors, and severe slowness. Maintainers could not reproduce it; another user observed that a refresh showed the database-saved notebook value even when in-app navigation did not. A minor notebook fix (#3401) made things start working, but the reporter still needed repeated reloads and asked to close for now in August 2026 without testing a newer version. The conversation therefore contains both a core save symptom and environment/deployment symptoms.",
+    "evidence": [
+      "packages/widgets/src/notebook/notebook.tsx:85-116 + 126-147 + the current notebook holds editable content and invokes the update mutation, with success/error state handling.",
+      "packages/api/src/router/widgets/notebook.ts:11-40 + the protected mutation validates the board/item and persists serialized notebook options.",
+      "packages/widgets/src/notebook/notebook.tsx:337-370 + the editor is mounted as an actual RichTextEditor in the current code path.",
+      "packages/widgets/src/bookmarks/index.tsx:12-16 + 53-100 + packages/widgets/src/bookmarks/bookmarks-widget.tsx:39-69 + 127-206 + bookmark definitions, loading, and rendering are present.",
+      "git history around the notebook implementation + no current v2 change establishes that the Helm/public anonymous reload or stale client cache behavior from the conversation was fixed."
+    ],
+    "remaining": "Verify on release/v2 with the reported Helm deployment, authenticated edit followed by navigation/logout, and anonymous public-board reload. If the stale in-app value or blank public board still occurs, trace cache invalidation and deployment chunk/version consistency; the current mutation alone does not prove those symptoms are fixed.",
+    "comments_read": 21,
+    "reviewer": "Luna 2 (maximum reasoning)",
+    "baseline_status": "needs-verification",
+    "baseline_revision": "60b4e980ed86a3b36d66bd1e25ee277e13836916",
+    "delta_review": {
+      "number": 3140,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "changed_since_baseline": true,
+      "affected_paths": [
+        "packages/widgets/src/bookmarks/index.tsx",
+        "packages/widgets/src/bookmarks/bookmarks-widget.tsx",
+        "apps/nextjs/src/components/board/items/lazy-widget-edit-modal.tsx",
+        "packages/widgets/src/modals/widget-edit-modal.tsx"
+      ],
+      "finding": "The touched bookmark and edit-modal code adds title controls and board-aware preview sizing/context, but it does not change the notebook mutation, cache invalidation, anonymous-board loading, Helm deployment, or chunk/version behavior described by the 21-comment report. It therefore provides no causal proof for the stale-save, blank-public-board, or client-error symptoms. Keep the baseline needs-verification disposition and require the reported deployment/browser reproduction.",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "packages/widgets/src/bookmarks/index.tsx:18-25 and packages/widgets/src/bookmarks/bookmarks-widget.tsx:167-173 show the new bookmark title controls only.",
+        "apps/nextjs/src/components/board/items/lazy-widget-edit-modal.tsx:152-175 and packages/widgets/src/modals/widget-edit-modal.tsx:172-217 add preview sizing/context discovery; these paths do not implement notebook persistence or public-board reload handling.",
+        "reports/v2-issue-triage/source/3140.json:full_comments contains the reported save/navigation, anonymous reload, client exception, and Helm symptoms; no new comment or code path here establishes their fix.",
+        "reports/v2-issue-triage/assessments.json baseline #3140 explicitly requires a release/v2 Helm/browser reproduction."
+      ]
+    },
+    "verification": {
+      "number": 3140,
+      "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+      "method": "Authenticated editor and anonymous public-board browser checks",
+      "checks": [
+        "Edited notebook text through UI; navigated to settings and back and reloaded; saved text persisted.",
+        "Edited bookmark title through widget UI, saved board, reloaded; title persisted.",
+        "Anonymous separate browser loaded public board and reloaded with both saved markers present."
+      ],
+      "outcome": "partial",
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "reports/v2-issue-triage/verification/ui/bookmark-notebook-persistence.png",
+        "reports/v2-issue-triage/verification/ui/public-board-reload.png"
+      ],
+      "blockers": [
+        "Fresh SQLite container does not reproduce original Helm/OIDC deployment or its cache topology."
+      ],
+      "artifact": "ui.json"
+    },
+    "latest_delta": {
+      "number": 3140,
+      "revision": "439b208283c2e80dd399fcb2a83e1661bb0c099f",
+      "finding": "The Notebook layout changes can affect presentation, but they do not change the save mutation, cache behavior, or public-board loading path behind the reported stale-edit/deployment symptoms. Keep needs-verification/medium. The available persistence/browser result is pinned to 681c1dd15 and is not evidence for the changed 439b20828 paths.",
+      "affected_paths": [
+        "packages/widgets/src/notebook/notebook.css",
+        "packages/widgets/src/notebook/notebook.tsx"
+      ],
+      "suggested_status": "needs-verification",
+      "suggested_confidence": "medium",
+      "evidence": [
+        "reports/v2-issue-triage/assessments.json baseline #3140 is needs-verification/medium and requires authenticated edit/navigation/logout plus anonymous public-board reload verification.",
+        "439b208283c2e80dd399fcb2a83e1661bb0c099f changes Notebook displayScale, compact CSS, editor flex sizing, and stats placement; packages/api/src/router/widgets/notebook.ts is outside the diff.",
+        "reports/v2-issue-triage/verification/ui.json #3140 records notebook/bookmark persistence and public-board reload checks at revision 681c1dd15; that prior runtime result is not evidence for the changed paths at 439b20828.",
+        "No fresh 439b20828 browser/runtime capture for #3140 exists in verification/*."
+      ]
+    },
+    "verification_outcome": "partial",
+    "comments_read_current": 21
+  }
+]

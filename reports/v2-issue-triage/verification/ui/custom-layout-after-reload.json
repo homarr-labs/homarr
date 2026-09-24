@@ -1,0 +1,29 @@
+[
+  {
+    "breakpoint": 0,
+    "columnCount": 3,
+    "id": "qwp5zmxi89jy592imcrluwfs",
+    "leftGutterColumnCount": 0,
+    "name": "Mobile",
+    "rightGutterColumnCount": 0,
+    "role": "mobile"
+  },
+  {
+    "breakpoint": 768,
+    "columnCount": 12,
+    "id": "phcqjayvfcwdpbirsuz794m6",
+    "leftGutterColumnCount": 0,
+    "name": "Base",
+    "rightGutterColumnCount": 0,
+    "role": "base"
+  },
+  {
+    "breakpoint": 1200,
+    "columnCount": 10,
+    "id": "b3r0479wn7l4ziulf013miaa",
+    "leftGutterColumnCount": 0,
+    "name": "TriageWide",
+    "rightGutterColumnCount": 0,
+    "role": "custom"
+  }
+]

@@ -1,0 +1,42 @@
+{
+  "created": [
+    {
+      "app": "Grafana",
+      "result": {
+        "result": {
+          "data": {
+            "json": {
+              "itemId": "yd93w89vwx94slfes11z5fur"
+            }
+          }
+        }
+      }
+    },
+    {
+      "app": "Help Translate",
+      "result": {
+        "result": {
+          "data": {
+            "json": {
+              "itemId": "dhwcf2m7oerqq3fl79d8ypbd"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "saveBody": {
+    "result": {
+      "data": {
+        "json": null,
+        "meta": {
+          "v": 1,
+          "values": [
+            "undefined"
+          ]
+        }
+      }
+    }
+  },
+  "saveStatus": 200
+}

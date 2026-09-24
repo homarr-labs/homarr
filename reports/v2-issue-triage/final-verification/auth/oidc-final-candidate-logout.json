@@ -1,0 +1,24 @@
+{
+  "image": "homarr:v2-triage-final-candidate",
+  "imageId": "sha256:47d853a87ff0e37657f1494477801de9e3adcdb1f06c8409cbc5830d860fb001",
+  "container": "homarr-triage-auth-final-oidc-20260918",
+  "port": 47613,
+  "browserAction": "Actual account-menu Logout after a successful local OIDC code-flow login",
+  "providerEvents": [
+    {
+      "at": "2026-09-18T16:47:04.269Z",
+      "event": "request",
+      "method": "GET",
+      "path": "/end-session",
+      "query": { "post_logout_redirect_uri": null }
+    },
+    { "at": "2026-09-18T16:47:04.269Z", "event": "logout-start", "callback": null },
+    { "at": "2026-09-18T16:47:04.277Z", "event": "logout-aborted" },
+    {
+      "at": "2026-09-18T16:47:04.277Z",
+      "event": "logout-connection-closed-before-end"
+    }
+  ],
+  "completionObserved": false,
+  "browserAfterAction": "http://localhost:47613/auth/login"
+}

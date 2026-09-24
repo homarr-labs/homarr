@@ -1,0 +1,261 @@
+[
+  {
+    "Id": "1f4282e04531bd315de277f810c303e7cb558e376105fd11be96260dd26173d4",
+    "Created": "2026-09-18T15:44:31.83553783Z",
+    "Path": "/app/entrypoint.sh",
+    "Args": [
+      "sh",
+      "run.sh"
+    ],
+    "State": {
+      "Status": "running",
+      "Running": true,
+      "Paused": false,
+      "Restarting": false,
+      "OOMKilled": false,
+      "Dead": false,
+      "Pid": 3690233,
+      "ExitCode": 0,
+      "Error": "",
+      "StartedAt": "2026-09-18T15:44:32.437883132Z",
+      "FinishedAt": "0001-01-01T00:00:00Z"
+    },
+    "Image": "sha256:1c94518799b5b4a30ba245e1cdf82736323fe64f991a1c1e47c26c23446028c0",
+    "ResolvConfPath": "/home/habs/.local/share/docker/containers/1f4282e04531bd315de277f810c303e7cb558e376105fd11be96260dd26173d4/resolv.conf",
+    "HostnamePath": "/home/habs/.local/share/docker/containers/1f4282e04531bd315de277f810c303e7cb558e376105fd11be96260dd26173d4/hostname",
+    "HostsPath": "/home/habs/.local/share/docker/containers/1f4282e04531bd315de277f810c303e7cb558e376105fd11be96260dd26173d4/hosts",
+    "LogPath": "/home/habs/.local/share/docker/containers/1f4282e04531bd315de277f810c303e7cb558e376105fd11be96260dd26173d4/1f4282e04531bd315de277f810c303e7cb558e376105fd11be96260dd26173d4-json.log",
+    "Name": "/homarr-triage-v2-platform-681c1dd1",
+    "RestartCount": 0,
+    "Driver": "overlay2",
+    "Platform": "linux",
+    "MountLabel": "",
+    "ProcessLabel": "",
+    "AppArmorProfile": "",
+    "ExecIDs": null,
+    "HostConfig": {
+      "Binds": null,
+      "ContainerIDFile": "",
+      "LogConfig": {
+        "Type": "json-file",
+        "Config": {}
+      },
+      "NetworkMode": "bridge",
+      "PortBindings": {
+        "7575/tcp": [
+          {
+            "HostIp": "",
+            "HostPort": "47579"
+          }
+        ]
+      },
+      "RestartPolicy": {
+        "Name": "no",
+        "MaximumRetryCount": 0
+      },
+      "AutoRemove": false,
+      "VolumeDriver": "",
+      "VolumesFrom": null,
+      "ConsoleSize": [
+        0,
+        0
+      ],
+      "CapAdd": null,
+      "CapDrop": null,
+      "CgroupnsMode": "private",
+      "Dns": null,
+      "DnsOptions": [],
+      "DnsSearch": [],
+      "ExtraHosts": null,
+      "GroupAdd": null,
+      "IpcMode": "private",
+      "Cgroup": "",
+      "Links": null,
+      "OomScoreAdj": 200,
+      "PidMode": "",
+      "Privileged": false,
+      "PublishAllPorts": false,
+      "ReadonlyRootfs": false,
+      "SecurityOpt": null,
+      "UTSMode": "",
+      "UsernsMode": "",
+      "ShmSize": 67108864,
+      "Runtime": "runc",
+      "Isolation": "",
+      "CpuShares": 0,
+      "Memory": 2147483648,
+      "NanoCpus": 2000000000,
+      "CgroupParent": "",
+      "BlkioWeight": 0,
+      "BlkioWeightDevice": [],
+      "BlkioDeviceReadBps": [],
+      "BlkioDeviceWriteBps": [],
+      "BlkioDeviceReadIOps": [],
+      "BlkioDeviceWriteIOps": [],
+      "CpuPeriod": 0,
+      "CpuQuota": 0,
+      "CpuRealtimePeriod": 0,
+      "CpuRealtimeRuntime": 0,
+      "CpusetCpus": "",
+      "CpusetMems": "",
+      "Devices": [],
+      "DeviceCgroupRules": null,
+      "DeviceRequests": null,
+      "MemoryReservation": 0,
+      "MemorySwap": 4294967296,
+      "MemorySwappiness": null,
+      "OomKillDisable": null,
+      "PidsLimit": null,
+      "Ulimits": [],
+      "CpuCount": 0,
+      "CpuPercent": 0,
+      "IOMaximumIOps": 0,
+      "IOMaximumBandwidth": 0,
+      "MaskedPaths": [
+        "/proc/acpi",
+        "/proc/asound",
+        "/proc/interrupts",
+        "/proc/kcore",
+        "/proc/keys",
+        "/proc/latency_stats",
+        "/proc/sched_debug",
+        "/proc/scsi",
+        "/proc/timer_list",
+        "/proc/timer_stats",
+        "/sys/devices/virtual/powercap",
+        "/sys/firmware",
+        "/sys/devices/system/cpu/cpu0/thermal_throttle",
+        "/sys/devices/system/cpu/cpu1/thermal_throttle",
+        "/sys/devices/system/cpu/cpu2/thermal_throttle",
+        "/sys/devices/system/cpu/cpu3/thermal_throttle",
+        "/sys/devices/system/cpu/cpu4/thermal_throttle",
+        "/sys/devices/system/cpu/cpu5/thermal_throttle",
+        "/sys/devices/system/cpu/cpu6/thermal_throttle",
+        "/sys/devices/system/cpu/cpu7/thermal_throttle",
+        "/sys/devices/system/cpu/cpu8/thermal_throttle",
+        "/sys/devices/system/cpu/cpu9/thermal_throttle",
+        "/sys/devices/system/cpu/cpu10/thermal_throttle",
+        "/sys/devices/system/cpu/cpu11/thermal_throttle",
+        "/sys/devices/system/cpu/cpu12/thermal_throttle",
+        "/sys/devices/system/cpu/cpu13/thermal_throttle",
+        "/sys/devices/system/cpu/cpu14/thermal_throttle",
+        "/sys/devices/system/cpu/cpu15/thermal_throttle",
+        "/sys/devices/system/cpu/cpu16/thermal_throttle",
+        "/sys/devices/system/cpu/cpu17/thermal_throttle",
+        "/sys/devices/system/cpu/cpu18/thermal_throttle",
+        "/sys/devices/system/cpu/cpu19/thermal_throttle"
+      ],
+      "ReadonlyPaths": [
+        "/proc/bus",
+        "/proc/fs",
+        "/proc/irq",
+        "/proc/sys",
+        "/proc/sysrq-trigger"
+      ]
+    },
+    "GraphDriver": {
+      "Data": {
+        "ID": "1f4282e04531bd315de277f810c303e7cb558e376105fd11be96260dd26173d4",
+        "LowerDir": "/home/habs/.local/share/docker/overlay2/344ebf12310088edd208124a91c9de5fa8e6af701786b09e5b4f5a41620a30bb-init/diff:/home/habs/.local/share/docker/overlay2/o51ihedzbzh08kf4rpsbsy46m/diff:/home/habs/.local/share/docker/overlay2/9sr5iy9vhw4g0payt0o5ogwdh/diff:/home/habs/.local/share/docker/overlay2/2el05noq4ewhh5kuwdyrwtrvi/diff:/home/habs/.local/share/docker/overlay2/610ku3qrmz8e51kg7tdcoozyo/diff:/home/habs/.local/share/docker/overlay2/rljr8zinwaorwp90fuvfdd6kk/diff:/home/habs/.local/share/docker/overlay2/8fbq2uycbnox4eaams8cp0g69/diff:/home/habs/.local/share/docker/overlay2/yr4yq9uuov325x0b9fnpzopie/diff:/home/habs/.local/share/docker/overlay2/rotflxp7lgnqvx725dy8wmmfm/diff:/home/habs/.local/share/docker/overlay2/qwk6bsd7vfb2lazqri6rm75is/diff:/home/habs/.local/share/docker/overlay2/2a474obxaak4ityvtq0ay4ryn/diff:/home/habs/.local/share/docker/overlay2/tijib5wkava9pzt2842j3cdx2/diff:/home/habs/.local/share/docker/overlay2/o9hoxf597ayk383xc3dtqf454/diff:/home/habs/.local/share/docker/overlay2/rk8mochsxjadwa8kpm8bhdztu/diff:/home/habs/.local/share/docker/overlay2/o8k9ryzi6d3dzn0fzndxoxryy/diff:/home/habs/.local/share/docker/overlay2/ltttlskiop7pshdibltgwpdx6/diff:/home/habs/.local/share/docker/overlay2/adybrkzr2ll955mqwi9eza22r/diff:/home/habs/.local/share/docker/overlay2/qomnjyvryu9jp10m7zntc561s/diff:/home/habs/.local/share/docker/overlay2/z5ppy3wr1vg09g0kacbvb822f/diff:/home/habs/.local/share/docker/overlay2/7qynu4ax5prb0mi10s2by0bm7/diff:/home/habs/.local/share/docker/overlay2/08dcff0582b443e9f2fbf4194c006b1fa7bcf1f5dece5e2688fd8748bed533ba/diff:/home/habs/.local/share/docker/overlay2/55d28927b26f4d1504b380392a2c58172f28f799a9f7e36c25237a157c9e1790/diff:/home/habs/.local/share/docker/overlay2/0b22413b9a1e121a84e6842c14b9b75727f738f13ce938990edcb59083d9c520/diff:/home/habs/.local/share/docker/overlay2/fa2a83781bf0a553cffb016c7669080a68e0f84b482a52809dbebba8735ad3fd/diff",
+        "MergedDir": "/home/habs/.local/share/docker/overlay2/344ebf12310088edd208124a91c9de5fa8e6af701786b09e5b4f5a41620a30bb/merged",
+        "UpperDir": "/home/habs/.local/share/docker/overlay2/344ebf12310088edd208124a91c9de5fa8e6af701786b09e5b4f5a41620a30bb/diff",
+        "WorkDir": "/home/habs/.local/share/docker/overlay2/344ebf12310088edd208124a91c9de5fa8e6af701786b09e5b4f5a41620a30bb/work"
+      },
+      "Name": "overlay2"
+    },
+    "Mounts": [
+      {
+        "Type": "volume",
+        "Name": "1e9f79549568606f248e7dd29579ec5b97e72707ee650ce842dec6d359a8570d",
+        "Source": "/home/habs/.local/share/docker/volumes/1e9f79549568606f248e7dd29579ec5b97e72707ee650ce842dec6d359a8570d/_data",
+        "Destination": "/appdata",
+        "Driver": "local",
+        "Mode": "",
+        "RW": true,
+        "Propagation": ""
+      }
+    ],
+    "Config": {
+      "Hostname": "1f4282e04531",
+      "Domainname": "",
+      "User": "",
+      "AttachStdin": false,
+      "AttachStdout": false,
+      "AttachStderr": false,
+      "ExposedPorts": {
+        "7575/tcp": {}
+      },
+      "Tty": false,
+      "OpenStdin": false,
+      "StdinOnce": false,
+      "Env": [
+        "NO_EXTERNAL_CONNECTION=true",
+        "SECRET_ENCRYPTION_KEY=[redacted]",
+        "DEMO_MODE=true",
+        "DEMO_READ_ONLY=false",
+        "UNSAFE_ENABLE_MOCK_INTEGRATION=true",
+        "NEXT_TELEMETRY_DISABLED=1",
+        "BASE_URL=http://127.0.0.1:47579",
+        "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+        "NODE_VERSION=24.18.0",
+        "YARN_VERSION=1.22.22",
+        "DB_URL=/appdata/db/db.sqlite",
+        "DB_DIALECT=sqlite",
+        "DB_DRIVER=better-sqlite3",
+        "AUTH_PROVIDERS=credentials",
+        "REDIS_IS_EXTERNAL=false",
+        "NODE_ENV=production"
+      ],
+      "Cmd": [
+        "sh",
+        "run.sh"
+      ],
+      "Image": "homarr:v2-issue-triage-681c1dd1",
+      "Volumes": {
+        "/appdata": {}
+      },
+      "WorkingDir": "/app",
+      "Entrypoint": [
+        "/app/entrypoint.sh"
+      ],
+      "Labels": {
+        "homarr.triage": "2026-09-18"
+      }
+    },
+    "NetworkSettings": {
+      "SandboxID": "95ae73224a6ad28beaf72dc32756aa7efa18cfefe48cca18912c0d82eb661f30",
+      "SandboxKey": "/run/user/1000/docker/netns/95ae73224a6a",
+      "Ports": {
+        "7575/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "47579"
+          },
+          {
+            "HostIp": "::",
+            "HostPort": "47579"
+          }
+        ]
+      },
+      "Networks": {
+        "bridge": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "DriverOpts": null,
+          "GwPriority": 0,
+          "NetworkID": "bb694870c1fea2c25897fd641a35f68a6e7f49f16426a503f924621f07efcb15",
+          "EndpointID": "7fde9ddd3b1720690f44d15587e3a2d5bd4c6a70fe2622a0d47f86a6e22a1703",
+          "Gateway": "172.17.0.1",
+          "IPAddress": "172.17.0.9",
+          "MacAddress": "32:49:65:96:f2:37",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "DNSNames": null
+        }
+      }
+    }
+  }
+]

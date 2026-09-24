@@ -1,0 +1,37 @@
+{
+  "scope": "136 open issues; original135 bodies/conversations plus these refreshed snapshots",
+  "comments": 448,
+  "previous_comments": 442,
+  "additional_comments": 6,
+  "newly_included_issue": 6853,
+  "files": [
+    {
+      "path": "open-inventory.jsonl",
+      "sha256": "b88284469a339e08c9bc8c8177af68f032414016dd63a175707ef4188ce179bd"
+    },
+    {
+      "path": "updated-6600.json",
+      "sha256": "ee7491ed826a4f703e5997b1d394875c40bc2326efca899afd0341b52af27dce"
+    },
+    {
+      "path": "updated-6152.json",
+      "sha256": "099062eb28c6d7d56ad4fed1ae6d5e2332cea64d5db9f145e898eeec977e2905"
+    },
+    {
+      "path": "updated-2861.json",
+      "sha256": "99fa42ba325e8c543f5ab276025589f4ea13d138cb96905be804a0d89980358e"
+    },
+    {
+      "path": "updated-125.json",
+      "sha256": "ac5922aa0f3cb3b7bd2a28a852a6c39d5d082126341c08bc3957afe102f8cc01"
+    },
+    {
+      "path": "updated-6853.json",
+      "sha256": "ac2f2f873190f4d8671c9fe5548a49043445c8b1efbb1042dfb855e9febd62de"
+    },
+    {
+      "path": "comments-6853.json",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+[
+    {
+        "Id": "sha256:1c94518799b5b4a30ba245e1cdf82736323fe64f991a1c1e47c26c23446028c0",
+        "RepoTags": [
+            "homarr:v2-issue-triage-681c1dd1"
+        ],
+        "RepoDigests": [],
+        "Comment": "buildkit.dockerfile.v0",
+        "Created": "2026-09-18T17:40:44.215480142+02:00",
+        "Config": {
+            "ExposedPorts": {
+                "7575/tcp": {}
+            },
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "NODE_VERSION=24.18.0",
+                "YARN_VERSION=1.22.22",
+                "DB_URL=/appdata/db/db.sqlite",
+                "DB_DIALECT=sqlite",
+                "DB_DRIVER=better-sqlite3",
+                "AUTH_PROVIDERS=credentials",
+                "REDIS_IS_EXTERNAL=false",
+                "NODE_ENV=production"
+            ],
+            "Entrypoint": [
+                "/app/entrypoint.sh"
+            ],
+            "Cmd": [
+                "sh",
+                "run.sh"
+            ],
+            "Volumes": {
+                "/appdata": {}
+            },
+            "WorkingDir": "/app",
+            "ArgsEscaped": true
+        },
+        "Architecture": "amd64",
+        "Os": "linux",
+        "Size": 464867705,
+        "GraphDriver": {
+            "Data": {
+                "LowerDir": "/home/habs/.local/share/docker/overlay2/9sr5iy9vhw4g0payt0o5ogwdh/diff:/home/habs/.local/share/docker/overlay2/2el05noq4ewhh5kuwdyrwtrvi/diff:/home/habs/.local/share/docker/overlay2/610ku3qrmz8e51kg7tdcoozyo/diff:/home/habs/.local/share/docker/overlay2/rljr8zinwaorwp90fuvfdd6kk/diff:/home/habs/.local/share/docker/overlay2/8fbq2uycbnox4eaams8cp0g69/diff:/home/habs/.local/share/docker/overlay2/yr4yq9uuov325x0b9fnpzopie/diff:/home/habs/.local/share/docker/overlay2/rotflxp7lgnqvx725dy8wmmfm/diff:/home/habs/.local/share/docker/overlay2/qwk6bsd7vfb2lazqri6rm75is/diff:/home/habs/.local/share/docker/overlay2/2a474obxaak4ityvtq0ay4ryn/diff:/home/habs/.local/share/docker/overlay2/tijib5wkava9pzt2842j3cdx2/diff:/home/habs/.local/share/docker/overlay2/o9hoxf597ayk383xc3dtqf454/diff:/home/habs/.local/share/docker/overlay2/rk8mochsxjadwa8kpm8bhdztu/diff:/home/habs/.local/share/docker/overlay2/o8k9ryzi6d3dzn0fzndxoxryy/diff:/home/habs/.local/share/docker/overlay2/ltttlskiop7pshdibltgwpdx6/diff:/home/habs/.local/share/docker/overlay2/adybrkzr2ll955mqwi9eza22r/diff:/home/habs/.local/share/docker/overlay2/qomnjyvryu9jp10m7zntc561s/diff:/home/habs/.local/share/docker/overlay2/z5ppy3wr1vg09g0kacbvb822f/diff:/home/habs/.local/share/docker/overlay2/7qynu4ax5prb0mi10s2by0bm7/diff:/home/habs/.local/share/docker/overlay2/08dcff0582b443e9f2fbf4194c006b1fa7bcf1f5dece5e2688fd8748bed533ba/diff:/home/habs/.local/share/docker/overlay2/55d28927b26f4d1504b380392a2c58172f28f799a9f7e36c25237a157c9e1790/diff:/home/habs/.local/share/docker/overlay2/0b22413b9a1e121a84e6842c14b9b75727f738f13ce938990edcb59083d9c520/diff:/home/habs/.local/share/docker/overlay2/fa2a83781bf0a553cffb016c7669080a68e0f84b482a52809dbebba8735ad3fd/diff",
+                "MergedDir": "/home/habs/.local/share/docker/overlay2/o51ihedzbzh08kf4rpsbsy46m/merged",
+                "UpperDir": "/home/habs/.local/share/docker/overlay2/o51ihedzbzh08kf4rpsbsy46m/diff",
+                "WorkDir": "/home/habs/.local/share/docker/overlay2/o51ihedzbzh08kf4rpsbsy46m/work"
+            },
+            "Name": "overlay2"
+        },
+        "RootFS": {
+            "Type": "layers",
+            "Layers": [
+                "sha256:34884abbe92863fce933ed7c39c0e045631af0ed86d5cc0dfbdf9fdca426ce3c",
+                "sha256:0ba8902ff50f7fee1d64f2ed6d666e61a9fde25a6d288e667ac6690dd864f97b",
+                "sha256:b0d4b0de83068d512460168e1ee13fe81f3ba6abd4c011aa6415c8013c110e83",
+                "sha256:01028eae69241625b1dc642c51feaf4b361a9d9f0521b2714d5caea3e0a626d2",
+                "sha256:6f701a442b267c0b80dabf3f09c6e04cbad143fc2e08f1c5c125d95b3cfbea31",
+                "sha256:4a2a55e89aab1659728a323376ab27f8920e5f4f125a5799019ecb46c6a17e97",
+                "sha256:2cb58f639a1dddc197b5b47aaef594cb8ed897120656859fde6934c693d46706",
+                "sha256:0b95165f12adabd04c49406ef2456ff2d26e4041e9b3711a0a683a5f6801e034",
+                "sha256:e034d8c3509e27cb4551af54ba6c80626efd32e8dbded9d652f8dedb79c0021d",
+                "sha256:ae7650b6a51a2faffd13dc96b3d48bcfd9ebebc78fd56527e520a4d62958b17e",
+                "sha256:526f05f62856d9653087f3c4e824c4b826ad811d9fbd8eaca2ebde21e88664bf",
+                "sha256:c4a2741a0e4f4612e4dbf5c77c40d194d274d28aa2fe5714abbb1f0baf3567e9",
+                "sha256:05aca03f0009bb7bdbcccdc320ce55a52adcc9af6abbb9b465cbf3012abc5752",
+                "sha256:1e689cde0516a4fa3d9481446a413b7dc8c0c2a2097af9db3b0193e94780f6b7",
+                "sha256:35804a1548b517377a527a8cfcb285379d6585fc0f74f8f320e7b9833fd1116b",
+                "sha256:77f3f44db23975fba6088d208beea34805a0b52b62a62a45b316782e96047e2b",
+                "sha256:90922eb7faaa17b7585ee3c236f2cd6e97708f0d08ce2d11c5338bb7dff9fa55",
+                "sha256:3d0fa28ac79dfc58b3004e14bd797b13d1cd5555648d7e6607541e81b219836f",
+                "sha256:9656311c2d9a9c80f2a53801285760c10b7fcca95eeeb65ff34172b7c2e53486",
+                "sha256:a836f10f0895ec02770f03de4d486ecef1b434cdf4f28eabe496fa0452ed20c4",
+                "sha256:f1cccabd6dcf0dd6fb542a18dad63c6323ec94ac370280e429c6bcb63aa38e6c",
+                "sha256:5a9806a8f5073cc029caf6dc925bbd61ec3ddc2127f66ebbbddc43991a58b0f3",
+                "sha256:acdaba27e90b6a85244f51d441596c18b3e85c998ee0388e695cb80b90bd9253"
+            ]
+        },
+        "Metadata": {
+            "LastTagTime": "2026-09-18T17:40:45.364753376+02:00"
+        }
+    }
+]

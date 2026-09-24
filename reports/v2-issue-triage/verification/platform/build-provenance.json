@@ -1,0 +1,32 @@
+{
+  "checkout": {
+    "head": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "head_date": "2026-09-18T16:37:32+02:00",
+    "head_subject": "feat(docs): sharpen Workshop cards and mobile layout (#6862)",
+    "branch": "triage/v2-issues-2026-09-17",
+    "worktree_at_build": "dirty only by untracked reports/ artifacts; no tracked diff"
+  },
+  "build": {
+    "command": "docker build -t homarr:v2-issue-triage-681c1dd1 .",
+    "context": "/home/habs/.codex/worktrees/7c6e19a8-b227-4287-bf45-e5a0d9cb7061/homarr",
+    "dockerfile": "Dockerfile",
+    "builder": "BuildKit rootless instance using the docker driver",
+    "status": "success",
+    "image": "homarr:v2-issue-triage-681c1dd1",
+    "digest": "sha256:1c94518799b5b4a30ba245e1cdf82736323fe64f991a1c1e47c26c23446028c0",
+    "created": "2026-09-18T17:40:44.215480142+02:00",
+    "architecture": "amd64",
+    "os": "linux",
+    "provenance_artifact": "verification/platform/image.inspect.json"
+  },
+  "context_notes": [
+    ".dockerignore excludes .git but does not exclude reports/, so the untracked triage reports directory was part of the build context.",
+    "The final runner image copies selected build outputs and runtime files; no product source file was edited for this verification.",
+    "The platform checks and logs in this directory were produced against the image digest above, before any later image with the same tag was considered."
+  ],
+  "other_image_distinction": {
+    "reported_other_digest": "sha256:9518...",
+    "same_tag_identity_verified": false,
+    "note": "The parent agent's image digest is distinct from this locally built digest. Do not merge or attribute runtime results across the two images; platform.json applies only to sha256:1c94518799b5b4a30ba245e1cdf82736323fe64f991a1c1e47c26c23446028c0."
+  }
+}

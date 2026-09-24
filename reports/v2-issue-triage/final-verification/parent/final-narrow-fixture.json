@@ -1,0 +1,186 @@
+{
+  "backgroundImageAttachment": "fixed",
+  "backgroundImageRepeat": "no-repeat",
+  "backgroundImageSize": "cover",
+  "backgroundImageUrl": null,
+  "creator": {
+    "email": "demo@example.com",
+    "id": "qypqte7qpt25srq67w3hc973",
+    "image": null,
+    "name": "demo"
+  },
+  "creatorId": "qypqte7qpt25srq67w3hc973",
+  "customCss": null,
+  "disableStatus": false,
+  "faviconImageUrl": null,
+  "groupPermissions": [],
+  "iconColor": null,
+  "id": "tx5erataeygzmhu0naq93mub",
+  "isPublic": true,
+  "itemRadius": "lg",
+  "items": [],
+  "layouts": [
+    {
+      "breakpoint": 0,
+      "columnCount": 3,
+      "id": "fnf0efz4og674oeqi5pwftxb",
+      "leftGutterColumnCount": 0,
+      "name": "Mobile",
+      "rightGutterColumnCount": 0,
+      "role": "mobile"
+    },
+    {
+      "breakpoint": 768,
+      "columnCount": 12,
+      "id": "l7fjjsj67ch1odglearvxbbh",
+      "leftGutterColumnCount": 0,
+      "name": "Base",
+      "rightGutterColumnCount": 0,
+      "role": "base"
+    }
+  ],
+  "logoImageUrl": null,
+  "metaTitle": null,
+  "name": "menu-narrow",
+  "opacity": 100,
+  "pageTitle": null,
+  "primaryColor": "#fa5252",
+  "secondaryColor": "#fd7e14",
+  "sections": [
+    {
+      "id": "hmxt6rfxt1z0cs9m1d50d3cf",
+      "kind": "empty",
+      "xOffset": 0,
+      "yOffset": 0
+    },
+    {
+      "collapsed": false,
+      "id": "tx5erataeygzmhu0naq93mub-depth-0",
+      "kind": "container",
+      "layouts": [
+        {
+          "height": 8,
+          "layoutId": "fnf0efz4og674oeqi5pwftxb",
+          "parentSectionId": "hmxt6rfxt1z0cs9m1d50d3cf",
+          "width": 1,
+          "xOffset": 0,
+          "yOffset": 0
+        },
+        {
+          "height": 8,
+          "layoutId": "l7fjjsj67ch1odglearvxbbh",
+          "parentSectionId": "hmxt6rfxt1z0cs9m1d50d3cf",
+          "width": 1,
+          "xOffset": 0,
+          "yOffset": 0
+        }
+      ],
+      "options": {
+        "borderColor": "",
+        "collapsible": true,
+        "customCssClasses": [],
+        "scrollable": false,
+        "showLabel": false,
+        "showOpenAll": false,
+        "title": "Depth 0"
+      }
+    },
+    {
+      "collapsed": false,
+      "id": "tx5erataeygzmhu0naq93mub-depth-1",
+      "kind": "container",
+      "layouts": [
+        {
+          "height": 7,
+          "layoutId": "fnf0efz4og674oeqi5pwftxb",
+          "parentSectionId": "tx5erataeygzmhu0naq93mub-depth-0",
+          "width": 1,
+          "xOffset": 0,
+          "yOffset": 0
+        },
+        {
+          "height": 7,
+          "layoutId": "l7fjjsj67ch1odglearvxbbh",
+          "parentSectionId": "tx5erataeygzmhu0naq93mub-depth-0",
+          "width": 1,
+          "xOffset": 0,
+          "yOffset": 0
+        }
+      ],
+      "options": {
+        "borderColor": "",
+        "collapsible": true,
+        "customCssClasses": [],
+        "scrollable": false,
+        "showLabel": false,
+        "showOpenAll": false,
+        "title": "Depth 1"
+      }
+    },
+    {
+      "collapsed": false,
+      "id": "tx5erataeygzmhu0naq93mub-depth-2",
+      "kind": "container",
+      "layouts": [
+        {
+          "height": 6,
+          "layoutId": "fnf0efz4og674oeqi5pwftxb",
+          "parentSectionId": "tx5erataeygzmhu0naq93mub-depth-1",
+          "width": 1,
+          "xOffset": 0,
+          "yOffset": 0
+        },
+        {
+          "height": 6,
+          "layoutId": "l7fjjsj67ch1odglearvxbbh",
+          "parentSectionId": "tx5erataeygzmhu0naq93mub-depth-1",
+          "width": 1,
+          "xOffset": 0,
+          "yOffset": 0
+        }
+      ],
+      "options": {
+        "borderColor": "",
+        "collapsible": true,
+        "customCssClasses": [],
+        "scrollable": false,
+        "showLabel": false,
+        "showOpenAll": false,
+        "title": "Depth 2"
+      }
+    },
+    {
+      "collapsed": false,
+      "id": "tx5erataeygzmhu0naq93mub-depth-3",
+      "kind": "container",
+      "layouts": [
+        {
+          "height": 5,
+          "layoutId": "fnf0efz4og674oeqi5pwftxb",
+          "parentSectionId": "tx5erataeygzmhu0naq93mub-depth-2",
+          "width": 1,
+          "xOffset": 0,
+          "yOffset": 0
+        },
+        {
+          "height": 5,
+          "layoutId": "l7fjjsj67ch1odglearvxbbh",
+          "parentSectionId": "tx5erataeygzmhu0naq93mub-depth-2",
+          "width": 1,
+          "xOffset": 0,
+          "yOffset": 0
+        }
+      ],
+      "options": {
+        "borderColor": "",
+        "collapsible": true,
+        "customCssClasses": [],
+        "scrollable": false,
+        "showLabel": false,
+        "showOpenAll": false,
+        "title": "Depth 3"
+      }
+    }
+  ],
+  "userPermissions": []
+}

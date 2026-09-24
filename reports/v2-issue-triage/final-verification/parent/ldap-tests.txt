@@ -1,0 +1,137 @@
+[WARN] Your node_modules are out of sync with your lockfile. The value of the enableGlobalVirtualStore setting has changed
+[33mThe plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the [1mresolve.tsconfigPaths[22m option. You can remove the plugin and set [1mresolve.tsconfigPaths: true[22m in your Vite config instead.[39m
+[33mThe plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the [1mresolve.tsconfigPaths[22m option. You can remove the plugin and set [1mresolve.tsconfigPaths: true[22m in your Vite config instead.[39m
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.10 [39m[90m/app[39m
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mrequests the group lookup attribute and preserves literal filter values
+[22m[39m2026-09-18T16:24:45.136Z [32minfo[39m: User is trying to log in using LDAP. Connecting to LDAP server... module="ldapAuthorization" userName="user*)(uid=*)"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mrequests the group lookup attribute and preserves literal filter values
+[22m[39m2026-09-18T16:24:45.138Z [32minfo[39m: Connected to LDAP server. Searching for user... module="ldapAuthorization"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mrequests the group lookup attribute and preserves literal filter values
+[22m[39m2026-09-18T16:24:45.139Z [32minfo[39m: User found in LDAP. Logging in... module="ldapAuthorization" userName="user*)(uid=*)"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mrequests the group lookup attribute and preserves literal filter values
+[22m[39m2026-09-18T16:24:45.139Z [32minfo[39m: User credentials are correct. Retrieving user groups... module="ldapAuthorization" userName="user*)(uid=*)"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mrequests the group lookup attribute and preserves literal filter values
+[22m[39m2026-09-18T16:24:45.139Z [32minfo[39m: User groups retrieved module="ldapAuthorization" userName="user*)(uid=*)" groups="1"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mrequests the group lookup attribute and preserves literal filter values
+[22m[39m2026-09-18T16:24:45.141Z [32minfo[39m: User not found in the database. Creating... module="ldapAuthorization" userName="user*)(uid=*)"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mrequests the group lookup attribute and preserves literal filter values
+[22m[39m2026-09-18T16:24:45.147Z [32minfo[39m: User created successfully module="ldapAuthorization" userName="user*)(uid=*)"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mshould fail when wrong ldap base credentials
+[22m[39m2026-09-18T16:24:45.150Z [32minfo[39m: User is trying to log in using LDAP. Connecting to LDAP server... module="ldapAuthorization" userName="test"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mshould fail when user not found
+[22m[39m2026-09-18T16:24:45.151Z [32minfo[39m: User is trying to log in using LDAP. Connecting to LDAP server... module="ldapAuthorization" userName="test"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mshould fail when user not found
+[22m[39m2026-09-18T16:24:45.151Z [32minfo[39m: Connected to LDAP server. Searching for user... module="ldapAuthorization"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mshould fail when user has invalid email
+[22m[39m2026-09-18T16:24:45.151Z [32minfo[39m: User is trying to log in using LDAP. Connecting to LDAP server... module="ldapAuthorization" userName="test"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mshould fail when user has invalid email
+[22m[39m2026-09-18T16:24:45.151Z [32minfo[39m: Connected to LDAP server. Searching for user... module="ldapAuthorization"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mshould fail when user has invalid email
+[22m[39m2026-09-18T16:24:45.152Z [31merror[39m: User found in LDAP but with invalid or non-existing Email module="ldapAuthorization" userName="test" emailValue="test"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mshould fail when user password is incorrect
+[22m[39m2026-09-18T16:24:45.152Z [32minfo[39m: User is trying to log in using LDAP. Connecting to LDAP server... module="ldapAuthorization" userName="test"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mshould fail when user password is incorrect
+[22m[39m2026-09-18T16:24:45.152Z [32minfo[39m: Connected to LDAP server. Searching for user... module="ldapAuthorization"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mshould fail when user password is incorrect
+[22m[39m2026-09-18T16:24:45.153Z [32minfo[39m: User found in LDAP. Logging in... module="ldapAuthorization" userName="test"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mshould fail when user password is incorrect
+[22m[39m2026-09-18T16:24:45.153Z [33mwarn[39m: Wrong credentials for user module="ldapAuthorization" userName="test"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mshould authorize user with correct credentials and create user
+[22m[39m2026-09-18T16:24:45.185Z [32minfo[39m: User is trying to log in using LDAP. Connecting to LDAP server... module="ldapAuthorization" userName="test"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mshould authorize user with correct credentials and create user
+[22m[39m2026-09-18T16:24:45.185Z [32minfo[39m: Connected to LDAP server. Searching for user... module="ldapAuthorization"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mshould authorize user with correct credentials and create user
+[22m[39m2026-09-18T16:24:45.185Z [32minfo[39m: User found in LDAP. Logging in... module="ldapAuthorization" userName="test"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mshould authorize user with correct credentials and create user
+[22m[39m2026-09-18T16:24:45.185Z [32minfo[39m: User credentials are correct. Retrieving user groups... module="ldapAuthorization" userName="test"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mshould authorize user with correct credentials and create user
+[22m[39m2026-09-18T16:24:45.185Z [32minfo[39m: User groups retrieved module="ldapAuthorization" userName="test" groups="0"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mshould authorize user with correct credentials and create user
+[22m[39m2026-09-18T16:24:45.186Z [32minfo[39m: User not found in the database. Creating... module="ldapAuthorization" userName="test"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mshould authorize user with correct credentials and create user
+[22m[39m2026-09-18T16:24:45.187Z [32minfo[39m: User created successfully module="ldapAuthorization" userName="test"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mshould authorize user with correct credentials and create user with same email when credentials user already exists
+[22m[39m2026-09-18T16:24:45.225Z [32minfo[39m: User is trying to log in using LDAP. Connecting to LDAP server... module="ldapAuthorization" userName="test"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mshould authorize user with correct credentials and create user with same email when credentials user already exists
+[22m[39m2026-09-18T16:24:45.225Z [32minfo[39m: Connected to LDAP server. Searching for user... module="ldapAuthorization"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mshould authorize user with correct credentials and create user with same email when credentials user already exists
+[22m[39m2026-09-18T16:24:45.225Z [32minfo[39m: User found in LDAP. Logging in... module="ldapAuthorization" userName="test"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mshould authorize user with correct credentials and create user with same email when credentials user already exists
+[22m[39m2026-09-18T16:24:45.225Z [32minfo[39m: User credentials are correct. Retrieving user groups... module="ldapAuthorization" userName="test"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mshould authorize user with correct credentials and create user with same email when credentials user already exists
+[22m[39m2026-09-18T16:24:45.225Z [32minfo[39m: User groups retrieved module="ldapAuthorization" userName="test" groups="0"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mshould authorize user with correct credentials and create user with same email when credentials user already exists
+[22m[39m2026-09-18T16:24:45.226Z [32minfo[39m: User not found in the database. Creating... module="ldapAuthorization" userName="test"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mshould authorize user with correct credentials and create user with same email when credentials user already exists
+[22m[39m2026-09-18T16:24:45.227Z [32minfo[39m: User created successfully module="ldapAuthorization" userName="test"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mshould authorize user with correct credentials and return updated name
+[22m[39m2026-09-18T16:24:45.261Z [32minfo[39m: User is trying to log in using LDAP. Connecting to LDAP server... module="ldapAuthorization" userName="test"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mshould authorize user with correct credentials and return updated name
+[22m[39m2026-09-18T16:24:45.261Z [32minfo[39m: Connected to LDAP server. Searching for user... module="ldapAuthorization"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mshould authorize user with correct credentials and return updated name
+[22m[39m2026-09-18T16:24:45.261Z [32minfo[39m: User found in LDAP. Logging in... module="ldapAuthorization" userName="test"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mshould authorize user with correct credentials and return updated name
+[22m[39m2026-09-18T16:24:45.261Z [32minfo[39m: User credentials are correct. Retrieving user groups... module="ldapAuthorization" userName="test"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mshould authorize user with correct credentials and return updated name
+[22m[39m2026-09-18T16:24:45.261Z [32minfo[39m: User groups retrieved module="ldapAuthorization" userName="test" groups="0"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mshould authorize user with correct credentials and return his groups
+[22m[39m2026-09-18T16:24:45.295Z [32minfo[39m: User is trying to log in using LDAP. Connecting to LDAP server... module="ldapAuthorization" userName="test"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mshould authorize user with correct credentials and return his groups
+[22m[39m2026-09-18T16:24:45.295Z [32minfo[39m: Connected to LDAP server. Searching for user... module="ldapAuthorization"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mshould authorize user with correct credentials and return his groups
+[22m[39m2026-09-18T16:24:45.295Z [32minfo[39m: User found in LDAP. Logging in... module="ldapAuthorization" userName="test"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mshould authorize user with correct credentials and return his groups
+[22m[39m2026-09-18T16:24:45.295Z [32minfo[39m: User credentials are correct. Retrieving user groups... module="ldapAuthorization" userName="test"
+
+[90mstdout[2m | packages/auth/providers/test/ldap-authorization.spec.ts[2m > [22m[2mauthorizeWithLdapCredentials[2m > [22m[2mshould authorize user with correct credentials and return his groups
+[22m[39m2026-09-18T16:24:45.295Z [32minfo[39m: User groups retrieved module="ldapAuthorization" userName="test" groups="1"
+
+ [32m✓[39m [30m[45m dom [49m[39m packages/auth/providers/test/ldap-authorization.spec.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 198[2mms[22m[39m
+ [32m✓[39m [30m[45m dom [49m[39m packages/auth/providers/test/ldap-client.spec.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[32m13 passed[39m[22m[90m (13)[39m
+[2m   Start at [22m 16:24:43
+[2m   Duration [22m 2.60s[2m (transform 295ms, setup 47ms, import 1.29s, tests 202ms, environment 863ms)[22m
+

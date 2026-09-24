@@ -1,0 +1,15 @@
+{
+  "issues": 136,
+  "comments": 448,
+  "followups": 20,
+  "addressed": 72,
+  "partial_included": 33,
+  "not_addressed": 50,
+  "needs_verification": 14,
+  "closing_keywords": 72,
+  "source_hashes_match": true,
+  "pr_body_bytes": 39365,
+  "github_mutations": false,
+  "local_changes_committed": false,
+  "runtime_fixtures_running": 0
+}

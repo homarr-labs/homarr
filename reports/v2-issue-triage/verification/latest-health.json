@@ -1,0 +1,1 @@
+{"status":"healthy","healthChecks":{"database":{"status":"healthy","latency":0.4797450000187382},"redis":{"status":"healthy","latency":0.5795210000069346}}}

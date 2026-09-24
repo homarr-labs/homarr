@@ -1,0 +1,138 @@
+[
+  {
+    "number": 3675,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "Built homarr:v2-issue-triage-681c1dd1 from the pinned checkout. Ran the bounded Docker image with the requested limits and no host mounts or sockets. Sent SIGTERM after health readiness and once during startup migration.",
+    "checks": [
+      "The ready-state container returned /api/health/live HTTP 200 and then docker stop --timeout 15 returned exit 0 in 577 ms; the container exited 0 without OOM.",
+      "The ready-state log contains Shutting down, websocket SIGTERM, Redis final shutdown, and Shutdown complete.",
+      "A SIGTERM sent during the initial migration window did not reach the later trap: docker stop waited 15,944 ms and the container exited 137 after the timeout, while the migration process was still active when inspected."
+    ],
+    "outcome": "partial",
+    "suggested_status": "partially-addressed",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "verification/platform/image.inspect.json — image tag homarr:v2-issue-triage-681c1dd1, digest sha256:1c94518799b5b4a30ba245e1cdf82736323fe64f991a1c1e47c26c23446028c0.",
+      "verification/platform/sigterm-ready.txt:1-4 — ready health, 577 ms stop, exit 0.",
+      "verification/platform/sigterm-ready.log — graceful WebSocket, Redis, and shell shutdown messages.",
+      "verification/platform/sigterm-root.txt:1-3 and sigterm-root.log — startup-time stop timed out and exited 137.",
+      "scripts/run.sh:61-78,80-84 — the shutdown trap waits on Next.js after startup and is installed after migrations; apps/websocket/src/main.ts:73-84 — WebSocket SIGTERM handling is present but not the startup migration process."
+    ],
+    "blockers": [
+      "The check used Docker only; Podman, systemd, and quadlet were not run.",
+      "The startup-time failure is a migration-phase boundary case, while the post-readiness Docker path passed."
+    ]
+  },
+  {
+    "number": 6671,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "Ran the pinned image in demo mode with NO_EXTERNAL_CONNECTION=true and queried the public weather tRPC procedure for Paris coordinates.",
+    "checks": [
+      "The container reached /api/health/live HTTP 200 with healthy SQLite and Redis checks.",
+      "GET /api/trpc/widget.weather.atLocation returned HTTP 200 with result.data.json=null under NO_EXTERNAL_CONNECTION=true.",
+      "The V2 widget renders the disabled translation for null weather data, and the translation says weather is unavailable because outbound connections are disabled."
+    ],
+    "outcome": "passed",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "verification/platform/root-runtime.inspect.json — runtime environment includes NO_EXTERNAL_CONNECTION=true and the requested resource bounds.",
+      "verification/platform/root-runtime-health.txt:1-2 — health HTTP 200 and healthy database/Redis checks.",
+      "verification/platform/root-runtime-weather.txt:1-18 — HTTP 200 and tRPC JSON null result.",
+      "packages/api/src/router/widgets/weather.ts:13-19 — returns null when external connections are disabled.",
+      "packages/widgets/src/weather/component.tsx:27-39 and packages/translation/src/lang/en.json:3153 — null data is rendered as the explicit disabled message."
+    ],
+    "blockers": [
+      "No browser screenshot was captured; the tRPC result plus the current widget source verifies the state contract, not pixel rendering."
+    ]
+  },
+  {
+    "number": 3913,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "Started the pinned image with Docker user 1234:1234, the requested resource bounds, and no host volume or socket.",
+    "checks": [
+      "The container exited 1 during startup before serving HTTP.",
+      "The entrypoint log shows permission denied creating /appdata/db, /appdata/redis, and /appdata/trusted-certificates, followed by the migration directory-not-found error.",
+      "Inspect metadata confirmed Config.User=1234:1234, NanoCpus=2000000000, Memory=2147483648, and only an anonymous /appdata volume."
+    ],
+    "outcome": "failed",
+    "suggested_status": "partially-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "verification/platform/rootless-1234.log:1-23 — direct non-root startup fails before migrations can open SQLite.",
+      "verification/platform/rootless-1234.inspect.json — user, limits, label, and anonymous volume metadata.",
+      "Dockerfile:52-70,91-100 — no USER directive and runtime directories are prepared by the root-oriented image path.",
+      "scripts/entrypoint.sh:4-35,51-54 and scripts/run.sh:15-30 — the supported PUID/PGID path still assumes startup filesystem setup and writable appdata."
+    ],
+    "blockers": [
+      "This was a Docker direct-user check; Podman and Kubernetes user/security-context variants were not run."
+    ]
+  },
+  {
+    "number": 4766,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "Source review of the V2 tRPC WebSocket transport and bounded direct-container HTTP checks; no shared reverse-proxy fixture was available.",
+    "checks": [
+      "V2 creates the WebSocket client lazily with a 30-second close window and closes it on provider cleanup.",
+      "The source contains no HTTP/2 connection-coalescing policy or reverse-proxy isolation for another site.",
+      "The local direct HTTP/1.1 health check does not exercise Chromium connection reuse, Caddy/Nginx proxying, or a second site's WebSocket."
+    ],
+    "outcome": "source-only",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "apps/nextjs/src/app/[locale]/_client-providers/trpc.tsx:98-110 — lazy WebSocket and cleanup behavior.",
+      "apps/nextjs/src/app/[locale]/_client-providers/trpc.tsx:165-180 — WebSocket is selected for subscriptions, with no proxy connection controls.",
+      "source/4766.json — the complete report describes the Chromium, Caddy, wildcard-TLS, and cross-site reproduction plus non-reproduction by maintainers."
+    ],
+    "blockers": [
+      "A Chromium-capable session exists, but no controlled Caddy or Nginx shared reverse proxy, TrueNAS-like second WebSocket service, HTTP/2 HAR, or matching wildcard certificate was available.",
+      "The conversation contains conflicting reproduction results, so source inspection cannot establish a V2 fix or root cause."
+    ]
+  },
+  {
+    "number": 6177,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "Source-only review of the upload action state; no Floorp or equivalent authenticated browser reproduction was available.",
+    "checks": [
+      "The generic upload hook passes the mutation isPending state through FileButton to the action button's loading prop.",
+      "The media upload action has no Floorp-specific branch, retry loop, or browser workaround.",
+      "No request trace or promise completion observation was possible for the reported Windows Floorp version."
+    ],
+    "outcome": "blocked",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "low",
+    "evidence": [
+      "packages/forms-collection/src/upload-media/upload-media.tsx:17-55 — mutation state and FileButton wiring.",
+      "apps/nextjs/src/app/[locale]/manage/medias/_actions/upload-media.tsx:10-24 — button receives loading from the generic upload component.",
+      "source/6177.json — complete report and sole maintainer comment requesting Chrome/Safari comparison."
+    ],
+    "blockers": [
+      "Floorp 12.14.2 on Windows 10 was unavailable.",
+      "No control-browser comparison, authenticated media fixture, network trace, or mutation promise trace was captured."
+    ]
+  },
+  {
+    "number": 3407,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "Source-only review of the V2 background and board canvas layout; Safari tab-switch and scroll behavior was not runnable in this environment.",
+    "checks": [
+      "Image backgrounds still use AppShell position, size, repeat, and attachment settings.",
+      "Video backgrounds use a fixed viewport video layer, and boards render through the scaled canvas with clipped overflow during hydration.",
+      "These V2 layout changes are relevant to the report but do not prove Safari tab-return or scrolling jitter behavior."
+    ],
+    "outcome": "blocked",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "apps/nextjs/src/components/layout/background.tsx:9-28,31-59 — image attachment settings and fixed video background.",
+      "apps/nextjs/src/components/layout/shell.tsx:27-46 — content-sized AppShell and minimum-height behavior.",
+      "apps/nextjs/src/app/[locale]/boards/(content)/_client.tsx:79-96 and apps/nextjs/src/components/board/layout/scaled-board-canvas.module.css:1-11,17-24 — scaled canvas and hydration overflow behavior.",
+      "source/3407.json — complete Safari report and follow-up conversation, including the supplied settings and macOS zoom observation."
+    ],
+    "blockers": [
+      "Safari on macOS was unavailable.",
+      "No original board export/settings fixture, image attachment variants, tab-switch sequence, or scroll-frame capture was available."
+    ]
+  }
+]

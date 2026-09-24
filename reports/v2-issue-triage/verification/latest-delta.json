@@ -1,0 +1,150 @@
+[
+  {
+    "number": 6853,
+    "revision": "439b208283c2e80dd399fcb2a83e1661bb0c099f",
+    "finding": "The 439b20828 tree contains the requested notification capabilities: sanitized Markdown/HTML rendering with an explicit or metadata-derived format, Gotify deletion guarded by integration interaction access, and a dedicated service-link action instead of card-wide navigation. Those capabilities already exist at the 681c1dd15 parent; commit #6860 adds responsive density handling and title/body tooltips on the two changed notification files. Source supports addressed-in-v2, but no fresh runtime capture at 439b20828 was found.",
+    "affected_paths": [
+      "packages/widgets/src/notifications/component.tsx",
+      "packages/widgets/src/notifications/notification-body.tsx"
+    ],
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/verification/updated-6853.json contains the complete open issue body and its three requests: Markdown/HTML rendering, Gotify delete/dismiss, and disabling or isolating clickthrough.",
+      "439b208283c2e80dd399fcb2a83e1661bb0c099f:packages/widgets/src/notifications/notification-body.tsx:29-64 resolves auto/plain/markdown/html formats and uses rehype sanitization; packages/widgets/src/notifications/component.tsx:142-148 renders it.",
+      "439b208283c2e80dd399fcb2a83e1661bb0c099f:packages/widgets/src/notifications/component.tsx:161-191 uses a dedicated external-link ActionIcon and Gotify delete ActionIcon; the Card itself has no href.",
+      "439b208283c2e80dd399fcb2a83e1661bb0c099f:packages/api/src/router/widgets/notifications.ts:11-25 protects deletion with the interact/Gotify middleware and invalidates the notification cache; the Gotify integration performs DELETE at :71-77.",
+      "git diff 681c1dd15a5d4753c04a84f7cb92a60e47a2c360..439b208283c2e80dd399fcb2a83e1661bb0c099f -- packages/widgets/src/notifications shows #6860's delta is responsive sizing, clamping, and title attributes; it does not newly introduce the feature implementation.",
+      "reports/v2-issue-triage/verification/run.json and verification/ui.json contain no 439b20828 notification runtime capture; the available runtime records are pinned to 681c1dd15."
+    ]
+  },
+  {
+    "number": 6644,
+    "revision": "439b208283c2e80dd399fcb2a83e1661bb0c099f",
+    "finding": "#6860 improves Beszel System Stats chart sizing, axis visibility, and compact scaling, but the 439b20828 tree still has no GPU option or GPU historical panels in System Stats. The baseline not-addressed disposition remains applicable.",
+    "affected_paths": [
+      "packages/widgets/src/beszel-system-grid/component.tsx",
+      "packages/widgets/src/beszel-system-stats/component.tsx",
+      "packages/widgets/src/beszel/_shared/chart.tsx",
+      "packages/widgets/src/beszel/_shared/stats-view.tsx"
+    ],
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6644 is not-addressed/high and requires native System Stats GPU utilization, VRAM, power, and multi-GPU historical panels.",
+      "439b208283c2e80dd399fcb2a83e1661bb0c099f changes Beszel responsive dimensions and chart rendering in the affected paths; 439b208283c2e80dd399fcb2a83e1661bb0c099f:packages/widgets/src/beszel-system-stats/index.ts still exposes no GPU chart option, and stats-view still renders only the existing CPU/memory/disk/network/Docker panels.",
+      "No available verification/* runtime result is pinned to 439b20828 for Beszel System Stats; the prior runtime set is pinned to 681c1dd15."
+    ]
+  },
+  {
+    "number": 6600,
+    "revision": "439b208283c2e80dd399fcb2a83e1661bb0c099f",
+    "finding": "The responsive widget sweep is adjacent to the beta umbrella and changes compact Docker presentation, but it does not add the unresolved direct Docker controls or pause action and does not settle the other outstanding beta subtopics. Keep the umbrella partially addressed.",
+    "affected_paths": [
+      "packages/widgets/src/docker/component.tsx",
+      "packages/widgets/src/docker/layout.ts"
+    ],
+    "suggested_status": "partially-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6600 is partially-addressed/high and explicitly leaves direct Docker actions/pause, provider-specific Media Releases, compact world clocks, ultrawide layout, and endurance verification unresolved.",
+      "439b208283c2e80dd399fcb2a83e1661bb0c099f changes Docker responsive width, column-priority, and footer thresholds in the affected paths; it adds no Docker action handler or pause control.",
+      "The #6600 assessment's existing Docker evidence still describes start/stop/restart/remove in a menu and no pause action; no 439b20828 runtime result is available for the umbrella board."
+    ]
+  },
+  {
+    "number": 6589,
+    "revision": "439b208283c2e80dd399fcb2a83e1661bb0c099f",
+    "finding": "The changed Docker files only alter compact column and footer presentation. The endpointIds query and endpoint-scoped totals that support separate Docker widgets remain intact, so the baseline addressed-in-v2 disposition remains applicable; this delta supplies no new runtime proof.",
+    "affected_paths": [
+      "packages/widgets/src/docker/component.tsx",
+      "packages/widgets/src/docker/layout.ts"
+    ],
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6589 is addressed-in-v2/high based on per-widget endpointIds input and filtered totals.",
+      "439b208283c2e80dd399fcb2a83e1661bb0c099f:packages/widgets/src/docker/component.tsx changes displayScale-derived responsiveWidth and visibility decisions; it does not change getContainersQueryInput(options.endpointIds) or the endpoint-scoped aggregation path.",
+      "No verification/* runtime capture at 439b20828 exercises multiple Docker endpoint widgets."
+    ]
+  },
+  {
+    "number": 6155,
+    "revision": "439b208283c2e80dd399fcb2a83e1661bb0c099f",
+    "finding": "#6860 makes Beszel's own charts more compact and responsive, but the requested Beszel-to-Dashdot CommonChart reuse or adapter is still absent. Keep not-addressed.",
+    "affected_paths": [
+      "packages/widgets/src/beszel/_shared/chart.tsx",
+      "packages/widgets/src/beszel/_shared/stats-view.tsx"
+    ],
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6155 is not-addressed/high and defines success as Beszel values being displayed through the existing Dashdot graphs.",
+      "439b208283c2e80dd399fcb2a83e1661bb0c099f keeps BeszelChartPanel/BeszelAreaChart in packages/widgets/src/beszel/_shared/chart.tsx and routes the stats panels through it; no system-resources CommonChart adapter or shared Beszel data contract is added.",
+      "No 439b20828 runtime chart capture is present in verification/*; available runtime evidence remains at 681c1dd15."
+    ]
+  },
+  {
+    "number": 3853,
+    "revision": "439b208283c2e80dd399fcb2a83e1661bb0c099f",
+    "finding": "The Docker widget's responsive layout changed, but its getContainers query remains behind the admin permission and no read-only permission split was added. The requested non-admin stats access remains not addressed.",
+    "affected_paths": [
+      "packages/widgets/src/docker/component.tsx"
+    ],
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #3853 is not-addressed/high because docker.getContainers requires admin for both stats and actions.",
+      "439b208283c2e80dd399fcb2a83e1661bb0c099f changes only displayScale-derived responsive width and column/footer visibility in packages/widgets/src/docker/component.tsx; packages/api/src/router/docker/docker-router.ts is outside the diff and retains the admin procedure guard.",
+      "No 439b20828 non-admin runtime result is available."
+    ]
+  },
+  {
+    "number": 3843,
+    "revision": "439b208283c2e80dd399fcb2a83e1661bb0c099f",
+    "finding": "The Notebook changes add compact heading/image sizing and flex/scroll handling, but no table border color, width, or transparency option. The native table styling request remains not addressed.",
+    "affected_paths": [
+      "packages/widgets/src/notebook/notebook.css",
+      "packages/widgets/src/notebook/notebook.tsx"
+    ],
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #3843 is not-addressed/high and identifies hardcoded table borders plus the missing toolbar/configuration control.",
+      "439b208283c2e80dd399fcb2a83e1661bb0c099f changes only compact typography, image limits, editor sizing, and scroll padding in the affected Notebook files; it adds no border configuration or table toolbar control.",
+      "No 439b20828 Notebook table-style runtime result is present in verification/*."
+    ]
+  },
+  {
+    "number": 3784,
+    "revision": "439b208283c2e80dd399fcb2a83e1661bb0c099f",
+    "finding": "The responsive Docker widget changes do not add a durable app-to-container reference or native app-tile status/lifecycle controls. The container-linking request remains not addressed.",
+    "affected_paths": [
+      "packages/widgets/src/docker/component.tsx"
+    ],
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #3784 is not-addressed/high because Docker actions remain confined to the Docker widget and import flow has no persistent app/container link.",
+      "439b208283c2e80dd399fcb2a83e1661bb0c099f changes Docker widget sizing/column visibility only; app item schemas and app-tile files are outside the diff and no container identifier or app-tile lifecycle control appears.",
+      "No 439b20828 app/container-link runtime result is available."
+    ]
+  },
+  {
+    "number": 3140,
+    "revision": "439b208283c2e80dd399fcb2a83e1661bb0c099f",
+    "finding": "The Notebook layout changes can affect presentation, but they do not change the save mutation, cache behavior, or public-board loading path behind the reported stale-edit/deployment symptoms. Keep needs-verification/medium. The available persistence/browser result is pinned to 681c1dd15 and is not evidence for the changed 439b20828 paths.",
+    "affected_paths": [
+      "packages/widgets/src/notebook/notebook.css",
+      "packages/widgets/src/notebook/notebook.tsx"
+    ],
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #3140 is needs-verification/medium and requires authenticated edit/navigation/logout plus anonymous public-board reload verification.",
+      "439b208283c2e80dd399fcb2a83e1661bb0c099f changes Notebook displayScale, compact CSS, editor flex sizing, and stats placement; packages/api/src/router/widgets/notebook.ts is outside the diff.",
+      "reports/v2-issue-triage/verification/ui.json #3140 records notebook/bookmark persistence and public-board reload checks at revision 681c1dd15; that prior runtime result is not evidence for the changed paths at 439b20828.",
+      "No fresh 439b20828 browser/runtime capture for #3140 exists in verification/*."
+    ]
+  }
+]

@@ -1,0 +1,39 @@
+[
+  {
+    "id": 21919538699,
+    "node_id": "ITAE_lADOK3hdfc7iCYvqzwAAAAUagZ4L",
+    "url": "https://api.github.com/repos/homarr-labs/homarr/issues/events/21919538699",
+    "actor": {
+      "login": "ajnart",
+      "id": 49837342,
+      "node_id": "MDQ6VXNlcjQ5ODM3MzQy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/49837342?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/ajnart",
+      "html_url": "https://github.com/ajnart",
+      "followers_url": "https://api.github.com/users/ajnart/followers",
+      "following_url": "https://api.github.com/users/ajnart/following{/other_user}",
+      "gists_url": "https://api.github.com/users/ajnart/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/ajnart/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/ajnart/subscriptions",
+      "organizations_url": "https://api.github.com/users/ajnart/orgs",
+      "repos_url": "https://api.github.com/users/ajnart/repos",
+      "events_url": "https://api.github.com/users/ajnart/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/ajnart/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "event": "issue_type_added",
+    "commit_id": null,
+    "commit_url": null,
+    "created_at": "2026-01-08T10:18:51Z",
+    "issue_type": {
+      "id": 21101736,
+      "name": "Feature",
+      "color": "blue"
+    },
+    "intent": null,
+    "performed_via_github_app": null
+  }
+]

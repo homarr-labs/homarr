@@ -1,0 +1,30 @@
+{
+  "image": "homarr:v2-triage-logout-fix",
+  "imageId": "sha256:8da60640d9ae676dd1b2d59a1cb25f68820fb419e23d11d40188345577ad1059",
+  "container": "homarr-triage-auth-logout-fix-20260918",
+  "port": 47616,
+  "browserAction": "Actual account-menu Logout after a successful local OIDC code-flow login",
+  "localSession": {
+    "sessionCookieBefore": true,
+    "sessionCookieAfterLogout": false,
+    "sessionCookieOn47616Revisit": false,
+    "revisitUrl": "http://localhost:47616/auth/login"
+  },
+  "providerEvents": [
+    {
+      "at": "2026-09-18T16:57:18.063Z",
+      "event": "request",
+      "method": "GET",
+      "path": "/end-session",
+      "query": { "post_logout_redirect_uri": null }
+    },
+    { "at": "2026-09-18T16:57:18.063Z", "event": "logout-start", "callback": null },
+    {
+      "at": "2026-09-18T16:57:19.564Z",
+      "event": "logout-complete",
+      "callback": "http://localhost:47606/auth/login?logout=complete"
+    }
+  ],
+  "providerCompletionObserved": true,
+  "fixtureLimitation": "The mock provider's default HOMARR_BASE was localhost:47606, so the first redirect landed there; reopening the tested app at localhost:47616 still redirected to its login page with no session cookie."
+}

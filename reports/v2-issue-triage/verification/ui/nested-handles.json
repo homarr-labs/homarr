@@ -1,0 +1,57 @@
+{
+  "handles": [
+    {
+      "height": 22.984375,
+      "label": "Settings for Notebook",
+      "visible": true,
+      "width": 22.984375,
+      "x": 94.296875,
+      "y": 418.734375
+    },
+    {
+      "height": 22.984375,
+      "label": "Settings for Bookmarks",
+      "visible": true,
+      "width": 22.984375,
+      "x": 193.9375,
+      "y": 418.734375
+    },
+    {
+      "height": 23.375,
+      "label": "Settings for Deep triage",
+      "visible": true,
+      "width": 23.375,
+      "x": 66.78125,
+      "y": 406.890625
+    },
+    {
+      "height": 23.703125,
+      "label": "Settings for Inner triage",
+      "visible": true,
+      "width": 23.703125,
+      "x": 61.5625,
+      "y": 401.9375
+    },
+    {
+      "height": 24,
+      "label": "Settings for Outer triage",
+      "visible": true,
+      "width": 24,
+      "x": 25,
+      "y": 397
+    }
+  ],
+  "overlaps": [
+    {
+      "a": "Settings for Deep triage",
+      "b": "Settings for Inner triage",
+      "height": 18.75,
+      "width": 18.484375
+    }
+  ],
+  "url": "http://127.0.0.1:47575/boards/v2-triage-ui",
+  "viewport": {
+    "height": 900,
+    "width": 1280
+  }
+}

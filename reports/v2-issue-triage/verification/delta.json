@@ -1,0 +1,1807 @@
+[
+  {
+    "number": 6850,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6850; the baseline needs-verification assessment remains applicable.",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6850 (bug: OIDC logout aborts the end-session request before it completes) records status=needs-verification and confidence=medium.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6850."
+    ]
+  },
+  {
+    "number": 6849,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6849; the baseline needs-verification assessment remains applicable.",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6849 (bug: I can't switch between the dark and light themes) records status=needs-verification and confidence=medium.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6849."
+    ]
+  },
+  {
+    "number": 6847,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6847; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6847 (feat(plex): media releases widget should list newly added episodes, not seasons) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6847."
+    ]
+  },
+  {
+    "number": 6830,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6830; the baseline addressed-in-v2 assessment remains applicable.",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6830 (bug: WUD integration fails to load data after upgrading WUD to 9.0.0 (connection test passes, widget doesn't)) records status=addressed-in-v2 and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6830."
+    ]
+  },
+  {
+    "number": 6823,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6823; the baseline needs-verification assessment remains applicable.",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6823 (bug:) records status=needs-verification and confidence=medium.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6823."
+    ]
+  },
+  {
+    "number": 6811,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6811; the baseline needs-verification assessment remains applicable.",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6811 (bug: Annoying scroll bar) records status=needs-verification and confidence=medium.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6811."
+    ]
+  },
+  {
+    "number": 6807,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6807; the baseline addressed-in-v2 assessment remains applicable.",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6807 (bug: MCP tools/list fails on invite_createInvite z.date() schema) records status=addressed-in-v2 and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6807."
+    ]
+  },
+  {
+    "number": 6803,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6803; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6803 (feat: Add support for Unraid Storage Pools) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6803."
+    ]
+  },
+  {
+    "number": 6764,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6764; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6764 (aria2 integration: torrents never report 'seeding' state, always 'leeching') records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6764."
+    ]
+  },
+  {
+    "number": 6763,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6763; the baseline addressed-in-v2 assessment remains applicable.",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6763 (bug: Unable to add users/group to board access control when using OIDC via Authentik) records status=addressed-in-v2 and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6763."
+    ]
+  },
+  {
+    "number": 6761,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6761; the baseline addressed-in-v2 assessment remains applicable.",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6761 (bug: App Management Breaks w/o Modify All Boards Permission) records status=addressed-in-v2 and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6761."
+    ]
+  },
+  {
+    "number": 6745,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6745; the baseline addressed-in-v2 assessment remains applicable.",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6745 (bug: Unraid health widget reports RAM in GiB approximately 1024x too small) records status=addressed-in-v2 and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6745."
+    ]
+  },
+  {
+    "number": 6728,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6728; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6728 (feat: Ping health-check timeout is hardcoded and too short for slower endpoints) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6728."
+    ]
+  },
+  {
+    "number": 6712,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6712; the baseline addressed-in-v2 assessment remains applicable.",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6712 (bug: What's Up Docker (WUD) Integration Won't Connect with Username and Password) records status=addressed-in-v2 and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6712."
+    ]
+  },
+  {
+    "number": 6697,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6697; the baseline addressed-in-v2 assessment remains applicable.",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6697 (feat: Use Tb / Gb for UNRAID Integration) records status=addressed-in-v2 and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6697."
+    ]
+  },
+  {
+    "number": 6682,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6682; the baseline addressed-in-v2 assessment remains applicable.",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6682 (bug: Immich integration stops working after the latest update) records status=addressed-in-v2 and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6682."
+    ]
+  },
+  {
+    "number": 6681,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6681; the baseline addressed-in-v2 assessment remains applicable.",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6681 (bug: Immich Integration show as working, zero results.) records status=addressed-in-v2 and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6681."
+    ]
+  },
+  {
+    "number": 6677,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6677; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6677 (feat: save state of accordion in system health monitor) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6677."
+    ]
+  },
+  {
+    "number": 6671,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6671; the baseline addressed-in-v2 assessment remains applicable.",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6671 (bug: Weather widget not displaying data) records status=addressed-in-v2 and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6671."
+    ]
+  },
+  {
+    "number": 6644,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6644; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6644 (feat: add GPU charts to Beszel System Stats widget) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6644."
+    ]
+  },
+  {
+    "number": 6643,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6643; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6643 (feat: Allow reordering boards in the board switcher) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6643."
+    ]
+  },
+  {
+    "number": 6628,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6628; the baseline addressed-in-v2 assessment remains applicable.",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6628 (bug: MCP OAuth login redirect uses internal container hostname:port instead of BASE_URL) records status=addressed-in-v2 and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6628."
+    ]
+  },
+  {
+    "number": 6626,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6626; the baseline partially-addressed assessment remains applicable.",
+    "suggested_status": "partially-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6626 (feat: allow selecting which disks are shown in health monitoring / disks widgets) records status=partially-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6626."
+    ]
+  },
+  {
+    "number": 6622,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6622; the baseline addressed-in-v2 assessment remains applicable.",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6622 (bug: Bug/UX: Restoring .zip backup shows empty boards until manual hard refresh / re-login) records status=addressed-in-v2 and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6622."
+    ]
+  },
+  {
+    "number": 6620,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": true,
+    "affected_paths": [
+      "apps/nextjs/src/components/board/layout/scaled-board-canvas.tsx"
+    ],
+    "finding": "b09d13c0c adds the data-board-canvas-content marker so edit previews can discover the live canvas. It does not alter the board item Loader, query-state retention, or initial page-refresh transition underlying the skeleton-flash report. Keep needs-verification; no browser refresh proof was produced.",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "apps/nextjs/src/components/board/layout/scaled-board-canvas.tsx:65-82 adds the canvas marker and preserves the existing hydration/scale calculations.",
+      "b09d13c0c and packages/widgets/src/modals/widget-edit-modal.tsx:172-217 use the marker for preview appearance; no loading-state implementation changed.",
+      "reports/v2-issue-triage/source/6620.json:body/full_comments contain the original refresh-flash report, while reports/v2-issue-triage/assessments.json requires a controlled V2 refresh comparison.",
+      "No browser or deployment run was performed in this delta."
+    ]
+  },
+  {
+    "number": 6614,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6614; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6614 (feat: Add Quven integration) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6614."
+    ]
+  },
+  {
+    "number": 6608,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6608; the baseline addressed-in-v2 assessment remains applicable.",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6608 (bug: Integration page accessible without board-modify-all permission) records status=addressed-in-v2 and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6608."
+    ]
+  },
+  {
+    "number": 6600,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": true,
+    "affected_paths": [
+      "packages/widgets/src/bookmarks/index.tsx",
+      "packages/widgets/src/bookmarks/bookmarks-widget.tsx",
+      "apps/docs/docs/widgets/bookmarks/index.mdx",
+      "apps/docs/docs/widgets/bookmarks/index.ts"
+    ],
+    "finding": "The bookmark-title gap in the baseline umbrella assessment is invalidated by b55ed9d5f: the widget now has independent showTitle and 8–32 titleSize options, and the renderer consumes both. The refreshed #6600 conversation records the reporter saying the result is “much much better.” The umbrella remains partially addressed because its other subtopics (demo login/reset, compact world clocks, provider-specific Media Releases, prominent Docker pause/controls, ultrawide centering, and endurance) remain unresolved or unverified. This source/code delta is not runtime proof for the whole beta thread.",
+    "suggested_status": "partially-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "b55ed9d5f adds showTitle and titleSize validation in packages/widgets/src/bookmarks/index.tsx:18-25; packages/widgets/src/bookmarks/bookmarks-widget.tsx:167-173 renders the saved title and size.",
+      "apps/docs/docs/widgets/bookmarks/index.mdx:31-36 and index.ts document the independent title visibility and heading-size controls.",
+      "reports/v2-issue-triage/verification/updated-6600.json:1514-1516 records the 2026-09-18 reporter response: the bookmark fix is “much much better.”",
+      "reports/v2-issue-triage/assessments.json baseline #6600 remains an umbrella partial assessment; the new bookmark control closes only the title subtopic."
+    ]
+  },
+  {
+    "number": 6593,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6593; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6593 (bug: Pi-hole v6 / Plex integrations send unauthenticated periodic health-check requests, causing real 401s) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6593."
+    ]
+  },
+  {
+    "number": 6589,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6589; the baseline addressed-in-v2 assessment remains applicable.",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6589 (feat: 2 separate widgets for 2 separate docker instances) records status=addressed-in-v2 and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6589."
+    ]
+  },
+  {
+    "number": 6559,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6559; the baseline needs-verification assessment remains applicable.",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6559 (bug: Releases widget showing \"Only the first 1000 results are available\" error) records status=needs-verification and confidence=medium.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6559."
+    ]
+  },
+  {
+    "number": 6543,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6543; the baseline partially-addressed assessment remains applicable.",
+    "suggested_status": "partially-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6543 (Upgrade to MCP v2 (spec 2026-07-28)) records status=partially-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6543."
+    ]
+  },
+  {
+    "number": 6519,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6519; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6519 (bug: RSS widget poster images don't load for reddit feeds) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6519."
+    ]
+  },
+  {
+    "number": 6516,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6516; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6516 (bug: mysql migration error) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6516."
+    ]
+  },
+  {
+    "number": 6513,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6513; the baseline partially-addressed assessment remains applicable.",
+    "suggested_status": "partially-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6513 (feat: Windows-style board switcher overlay (Alt-Tab style) when cycling boards) records status=partially-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6513."
+    ]
+  },
+  {
+    "number": 6438,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6438; the baseline needs-verification assessment remains applicable.",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6438 (bug: OOM with 1.71.0) records status=needs-verification and confidence=medium.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6438."
+    ]
+  },
+  {
+    "number": 6435,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6435; the baseline partially-addressed assessment remains applicable.",
+    "suggested_status": "partially-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6435 (feat: Expand Homarr API Coverage to Support Full Dashboard Automation) records status=partially-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6435."
+    ]
+  },
+  {
+    "number": 6403,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6403; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6403 (feat: Dynamic apps fetched from reverse proxy) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6403."
+    ]
+  },
+  {
+    "number": 6392,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6392; the baseline partially-addressed assessment remains applicable.",
+    "suggested_status": "partially-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6392 (feat: Switch Board via keyboard shortcut) records status=partially-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6392."
+    ]
+  },
+  {
+    "number": 6300,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6300; the baseline needs-verification assessment remains applicable.",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6300 (bug: Memory leak) records status=needs-verification and confidence=medium.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6300."
+    ]
+  },
+  {
+    "number": 6271,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6271; the baseline needs-verification assessment remains applicable.",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6271 (bug: TrueNAS Integration eating up memory on TrueNAS host) records status=needs-verification and confidence=medium.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6271."
+    ]
+  },
+  {
+    "number": 6254,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6254; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6254 (feat: aMule) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6254."
+    ]
+  },
+  {
+    "number": 6207,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6207; the baseline addressed-in-v2 assessment remains applicable.",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6207 (bug: Unifi integration not working) records status=addressed-in-v2 and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6207."
+    ]
+  },
+  {
+    "number": 6177,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6177; the baseline needs-verification assessment remains applicable.",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "low",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6177 (bug: Homarr red action buttons on Floorp browser ofen spin forver w/o completion) records status=needs-verification and confidence=low.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6177."
+    ]
+  },
+  {
+    "number": 6155,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6155; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6155 (feat: re-open: Transfer to the existing Dashdot graphs?  #5964) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6155."
+    ]
+  },
+  {
+    "number": 6153,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6153; the baseline partially-addressed assessment remains applicable.",
+    "suggested_status": "partially-addressed",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6153 (feat: re-open: add open webui  #3766) records status=partially-addressed and confidence=medium.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6153."
+    ]
+  },
+  {
+    "number": 6152,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": true,
+    "affected_paths": [],
+    "finding": "The refreshed conversation says a contributor is working on a Wazuh integration and is checking V2 compatibility. No merged commit, current integration definition, or shipped widget is present in this release/v2 delta, so the Wazuh request remains not addressed.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/verification/updated-6152.json:273-301 records the 2026-09-18 'working on this' comment; it is a work-in-progress statement, not a merged implementation.",
+      "reports/v2-issue-triage/source/6152.json:body/full_comments define the requested Wazuh stats/dashboard integration.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no Wazuh integration path."
+    ]
+  },
+  {
+    "number": 6050,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6050; the baseline partially-addressed assessment remains applicable.",
+    "suggested_status": "partially-addressed",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6050 (bug: background image is absent or cut off with white space) records status=partially-addressed and confidence=medium.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6050."
+    ]
+  },
+  {
+    "number": 6024,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6024; the baseline needs-verification assessment remains applicable.",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6024 (bug: SyntaxError: Expecting Unicode escape sequence \\uXXXX (1:10901)) records status=needs-verification and confidence=medium.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6024."
+    ]
+  },
+  {
+    "number": 6008,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6008; the baseline addressed-in-v2 assessment remains applicable.",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6008 (bug: manage/about page fails to load with ECONNREFUSED) records status=addressed-in-v2 and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6008."
+    ]
+  },
+  {
+    "number": 6002,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #6002; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #6002 (bug: Uptime-Kuma, paused has no effect) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #6002."
+    ]
+  },
+  {
+    "number": 5867,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #5867; the baseline addressed-in-v2 assessment remains applicable.",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #5867 (feat: REST Endpoint  to manage boards) records status=addressed-in-v2 and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #5867."
+    ]
+  },
+  {
+    "number": 5769,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #5769; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #5769 (feat: Support Kubernetes integration as dashboard widgets instead of a global tool for multi-tenant access control) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #5769."
+    ]
+  },
+  {
+    "number": 5730,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #5730; the baseline partially-addressed assessment remains applicable.",
+    "suggested_status": "partially-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #5730 (bug: Administration menu breaks if you click around the options too much) records status=partially-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #5730."
+    ]
+  },
+  {
+    "number": 5716,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #5716; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #5716 (bug: OIDC group assignment is not working if user is only in one group) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #5716."
+    ]
+  },
+  {
+    "number": 5538,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #5538; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #5538 (bug: No integration data available for unraid disks) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #5538."
+    ]
+  },
+  {
+    "number": 5387,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": true,
+    "affected_paths": [
+      "packages/api/src/router/widgets/notifications.ts",
+      "packages/integrations/src/gotify/gotify-integration.ts",
+      "packages/integrations/src/gotify/gotify-schema.ts",
+      "packages/integrations/src/interfaces/notifications/notification-types.ts",
+      "packages/widgets/src/notifications/component.tsx",
+      "packages/widgets/src/notifications/notification-body.tsx",
+      "packages/widgets/src/notifications/index.ts",
+      "apps/docs/docs/widgets/notifications/index.mdx"
+    ],
+    "finding": "f8854a893 adds notification Markdown/HTML formatting and a permission-gated Gotify delete action, but it does not add Pushover. Current integration definitions/exports still contain ntfy and Gotify only, so the Pushover integration request remains not addressed despite the adjacent notification improvements.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "packages/widgets/src/notifications/index.ts:18-27 and notification-body.tsx:29-64 add automatic/plain/Markdown/HTML rendering; packages/widgets/src/notifications/component.tsx:167-184 exposes Gotify deletion.",
+      "packages/api/src/router/widgets/notifications.ts:10-25 and packages/integrations/src/gotify/gotify-integration.ts:71-117 implement the Gotify-only delete endpoint and contentType mapping.",
+      "packages/definitions/src/integration.ts:344-360 and packages/integrations/src/index.ts:22-24 still list/export ntfy and Gotify without Pushover.",
+      "reports/v2-issue-triage/source/5387.json:body/full_comments request a native Pushover integration; reports/v2-issue-triage/assessments.json baseline #5387 is not-addressed."
+    ]
+  },
+  {
+    "number": 5342,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #5342; the baseline addressed-in-v2 assessment remains applicable.",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #5342 (bug: Homarr generates malformed DNS queries (<host>https) for Tracearr integration) records status=addressed-in-v2 and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #5342."
+    ]
+  },
+  {
+    "number": 5336,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #5336; the baseline addressed-in-v2 assessment remains applicable.",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #5336 (feat: widget to display missing / queued movies & episodes) records status=addressed-in-v2 and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #5336."
+    ]
+  },
+  {
+    "number": 5154,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #5154; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #5154 (feat: SLO (Single Log-out)) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #5154."
+    ]
+  },
+  {
+    "number": 5085,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #5085; the baseline needs-verification assessment remains applicable.",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #5085 (bug: Unable to connect to LDAP) records status=needs-verification and confidence=medium.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #5085."
+    ]
+  },
+  {
+    "number": 4973,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #4973; the baseline addressed-in-v2 assessment remains applicable.",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #4973 (bug: System Resources Incorrect Total Ram for TrueNAS 25.04) records status=addressed-in-v2 and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #4973."
+    ]
+  },
+  {
+    "number": 4965,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #4965; the baseline needs-verification assessment remains applicable.",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #4965 (bug: LDAP authentication fails for users with non-ASCII characters in Distinguished Name) records status=needs-verification and confidence=medium.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #4965."
+    ]
+  },
+  {
+    "number": 4906,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #4906; the baseline partially-addressed assessment remains applicable.",
+    "suggested_status": "partially-addressed",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #4906 (feat: Top right UI Cleanup (concept video inside)) records status=partially-addressed and confidence=medium.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #4906."
+    ]
+  },
+  {
+    "number": 4815,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": true,
+    "affected_paths": [
+      "apps/nextjs/src/components/board/items/item-select-modal.tsx",
+      "apps/nextjs/src/components/board/items/lazy-widget-edit-modal.tsx",
+      "packages/widgets/src/modals/widget-edit-modal.tsx",
+      "apps/docs/docs/management/boards/index.mdx"
+    ],
+    "finding": "The preview-parity change improves the in-dashboard add/edit flow: new widgets pass their target section and the modal derives scale/dimensions from the board canvas/section. It does not change normal fresh-install seeding, the static showcase contents, or the DEMO_MODE distinction. Keep the baseline partial disposition for the combined showcase-seed and inline-integration request.",
+    "suggested_status": "partially-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "apps/nextjs/src/components/board/items/item-select-modal.tsx:336-368 passes previewResize and previewSectionId when opening the editor; lazy-widget-edit-modal.tsx:152-175 forwards preview dimensions/wrappers.",
+      "packages/widgets/src/modals/widget-edit-modal.tsx:172-217 reads board/item/section/canvas sizing and :219-228 computes the preview scale; apps/docs/docs/management/boards/index.mdx:103-105 documents the behavior.",
+      "reports/v2-issue-triage/source/4815.json:body has zero comments and asks for both showcase seeding and in-place integration management.",
+      "reports/v2-issue-triage/assessments.json baseline #4815 shows inline integration selection is covered while ordinary fresh-install showcase seeding remains absent."
+    ]
+  },
+  {
+    "number": 4797,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #4797; the baseline partially-addressed assessment remains applicable.",
+    "suggested_status": "partially-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #4797 (feat(releases): support image tags) records status=partially-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #4797."
+    ]
+  },
+  {
+    "number": 4766,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #4766; the baseline needs-verification assessment remains applicable.",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #4766 (bug: Homarr blocks HTTP/2 WebSocket connections for other sites sharing the same reverse proxy) records status=needs-verification and confidence=medium.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #4766."
+    ]
+  },
+  {
+    "number": 4738,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #4738; the baseline needs-verification assessment remains applicable.",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #4738 (bug: Dashboard Layout - Saving Changes Failure) records status=needs-verification and confidence=medium.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #4738."
+    ]
+  },
+  {
+    "number": 4563,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #4563; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #4563 (feat: Generic Game Server Status Widget) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #4563."
+    ]
+  },
+  {
+    "number": 4562,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #4562; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #4562 (feat(integrations): support music media type for seerr) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #4562."
+    ]
+  },
+  {
+    "number": 4543,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": true,
+    "affected_paths": [
+      "packages/widgets/src/modals/widget-edit-modal.tsx"
+    ],
+    "finding": "The widget-edit modal was touched for preview parity, while its embedded linked-app tab and submit path remain present. This delta does not regress or materially change the addressed-in-v2 finding for editing apps inside Edit Item.",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "packages/widgets/src/modals/widget-edit-modal.tsx:457-481 still gates and exposes the linked-app resource tab; the preview changes are in :172-217 and :584-590.",
+      "reports/v2-issue-triage/source/4543.json:body has no comments and asks for editing the linked app without leaving Edit Item.",
+      "reports/v2-issue-triage/assessments.json baseline #4543 cites the embedded form and submit path as the concrete implementation."
+    ]
+  },
+  {
+    "number": 4541,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #4541; the baseline partially-addressed assessment remains applicable.",
+    "suggested_status": "partially-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #4541 (feat(boards): support automatic layout for different screen sizes) records status=partially-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #4541."
+    ]
+  },
+  {
+    "number": 4538,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #4538; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #4538 (bug: iCal widget intergration not working) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #4538."
+    ]
+  },
+  {
+    "number": 4533,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #4533; the baseline addressed-in-v2 assessment remains applicable.",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #4533 (feat: show Description next to title for application) records status=addressed-in-v2 and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #4533."
+    ]
+  },
+  {
+    "number": 4455,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #4455; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #4455 (feat: Ability to disable users without deleting them.) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #4455."
+    ]
+  },
+  {
+    "number": 4406,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #4406; the baseline needs-verification assessment remains applicable.",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #4406 (bug: OIDC not working with Cloudflare Zero Trust / SaaS) records status=needs-verification and confidence=medium.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #4406."
+    ]
+  },
+  {
+    "number": 4361,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #4361; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #4361 (feat(media-releases): support selection of user for library fetching) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #4361."
+    ]
+  },
+  {
+    "number": 4330,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #4330; the baseline partially-addressed assessment remains applicable.",
+    "suggested_status": "partially-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #4330 (feat(icon-picker): show more than 12 icons per source) records status=partially-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #4330."
+    ]
+  },
+  {
+    "number": 4246,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #4246; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #4246 (bug: download client sorting only on client side) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #4246."
+    ]
+  },
+  {
+    "number": 4190,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #4190; the baseline needs-verification assessment remains applicable.",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #4190 (bug: Cannot integrate with OMV, Invalid system information response) records status=needs-verification and confidence=medium.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #4190."
+    ]
+  },
+  {
+    "number": 4159,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #4159; the baseline addressed-in-v2 assessment remains applicable.",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #4159 (bug: Tasks page does not load) records status=addressed-in-v2 and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #4159."
+    ]
+  },
+  {
+    "number": 4157,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #4157; the baseline addressed-in-v2 assessment remains applicable.",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #4157 (feat: Download Client Item - Job Name column should be wider than the rest.) records status=addressed-in-v2 and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #4157."
+    ]
+  },
+  {
+    "number": 4143,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #4143; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #4143 (feat: separate region from language) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #4143."
+    ]
+  },
+  {
+    "number": 4026,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #4026; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #4026 (bug: Downloads: number of shown entries per intergration include already hidden entries) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #4026."
+    ]
+  },
+  {
+    "number": 3990,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #3990; the baseline partially-addressed assessment remains applicable.",
+    "suggested_status": "partially-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #3990 (feat: Allow one URL and just map ports for each app) records status=partially-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #3990."
+    ]
+  },
+  {
+    "number": 3913,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #3913; the baseline partially-addressed assessment remains applicable.",
+    "suggested_status": "partially-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #3913 (feat: Support running as fully non-root containers) records status=partially-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #3913."
+    ]
+  },
+  {
+    "number": 3904,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #3904; the baseline addressed-in-v2 assessment remains applicable.",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #3904 (feat: GPU usage in Dash component) records status=addressed-in-v2 and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #3904."
+    ]
+  },
+  {
+    "number": 3887,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #3887; the baseline partially-addressed assessment remains applicable.",
+    "suggested_status": "partially-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #3887 (feat: allow no network for system resources and allow proxmox to be used) records status=partially-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #3887."
+    ]
+  },
+  {
+    "number": 3853,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #3853; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #3853 (feat: Allow Docker stats widget to be seen without admin privileges) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #3853."
+    ]
+  },
+  {
+    "number": 3843,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #3843; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #3843 (feat: Ability to set the border color or transparency of tables in the Notebook widget) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #3843."
+    ]
+  },
+  {
+    "number": 3805,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #3805; the baseline addressed-in-v2 assessment remains applicable.",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #3805 (bug: cache invalidation for board settings not working) records status=addressed-in-v2 and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #3805."
+    ]
+  },
+  {
+    "number": 3786,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #3786; the baseline partially-addressed assessment remains applicable.",
+    "suggested_status": "partially-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #3786 (feat: automatic service discovery) records status=partially-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #3786."
+    ]
+  },
+  {
+    "number": 3784,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #3784; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #3784 (feat(app-widget): container linking & run toggling) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #3784."
+    ]
+  },
+  {
+    "number": 3778,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": true,
+    "affected_paths": [
+      "packages/widgets/src/bookmarks/index.tsx"
+    ],
+    "finding": "The bookmarks definition was extended with title visibility and title-size options, while openNewTab remains a per-widget option. No board-level default is introduced for newly added app widgets, so the baseline not-addressed disposition is unchanged.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "packages/widgets/src/bookmarks/index.tsx:20-25 adds showTitle/titleSize; :54-58 still defines openNewTab on the bookmark widget itself.",
+      "reports/v2-issue-triage/source/3778.json:body and full_comments contain only the board-level default request; the delta adds no board setting.",
+      "reports/v2-issue-triage/assessments.json baseline #3778 identifies the missing board/app-click default."
+    ]
+  },
+  {
+    "number": 3771,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #3771; the baseline partially-addressed assessment remains applicable.",
+    "suggested_status": "partially-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #3771 (feat(boards): open all apps) records status=partially-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #3771."
+    ]
+  },
+  {
+    "number": 3758,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #3758; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #3758 (feat(release-widget): synchronize marked as viewed over multiple devices) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #3758."
+    ]
+  },
+  {
+    "number": 3732,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #3732; the baseline needs-verification assessment remains applicable.",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #3732 (Release Widget: Icon only) records status=needs-verification and confidence=medium.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #3732."
+    ]
+  },
+  {
+    "number": 3731,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #3731; the baseline partially-addressed assessment remains applicable.",
+    "suggested_status": "partially-addressed",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #3731 (Release Widget: Docker importable programs) records status=partially-addressed and confidence=medium.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #3731."
+    ]
+  },
+  {
+    "number": 3704,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #3704; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #3704 (bug: removed integrations keep coming back) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #3704."
+    ]
+  },
+  {
+    "number": 3696,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #3696; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #3696 (feat: Integration for Scrutiny) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #3696."
+    ]
+  },
+  {
+    "number": 3675,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #3675; the baseline needs-verification assessment remains applicable.",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #3675 (bug: Stopping the container with SIGTERM fails) records status=needs-verification and confidence=medium.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #3675."
+    ]
+  },
+  {
+    "number": 3597,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #3597; the baseline addressed-in-v2 assessment remains applicable.",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #3597 (bug: nexcloud integration with subpaths do not work) records status=addressed-in-v2 and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #3597."
+    ]
+  },
+  {
+    "number": 3595,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #3595; the baseline partially-addressed assessment remains applicable.",
+    "suggested_status": "partially-addressed",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #3595 (feat: Focus search bar like pre 1.0) records status=partially-addressed and confidence=medium.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #3595."
+    ]
+  },
+  {
+    "number": 3515,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #3515; the baseline addressed-in-v2 assessment remains applicable.",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #3515 (feat: Personalize the upper right menu bar) records status=addressed-in-v2 and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #3515."
+    ]
+  },
+  {
+    "number": 3512,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #3512; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #3512 (feat: Add Support for Homey API Integration) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #3512."
+    ]
+  },
+  {
+    "number": 3478,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #3478; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #3478 (feat(login): add possibility to specify forgot password link) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #3478."
+    ]
+  },
+  {
+    "number": 3407,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #3407; the baseline needs-verification assessment remains applicable.",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #3407 (bug: background jittering when scrolling) records status=needs-verification and confidence=medium.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #3407."
+    ]
+  },
+  {
+    "number": 3371,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #3371; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #3371 (feat: upload video backgrounds) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #3371."
+    ]
+  },
+  {
+    "number": 3287,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #3287; the baseline addressed-in-v2 assessment remains applicable.",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #3287 (feat: sidebars) records status=addressed-in-v2 and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #3287."
+    ]
+  },
+  {
+    "number": 3266,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #3266; the baseline partially-addressed assessment remains applicable.",
+    "suggested_status": "partially-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #3266 (feat: Multiple Docker Environments in GUI) records status=partially-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #3266."
+    ]
+  },
+  {
+    "number": 3220,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #3220; the baseline partially-addressed assessment remains applicable.",
+    "suggested_status": "partially-addressed",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #3220 (bug(calendar): Nextcloud integration - not all entries are displayed) records status=partially-addressed and confidence=medium.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #3220."
+    ]
+  },
+  {
+    "number": 3140,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": true,
+    "affected_paths": [
+      "packages/widgets/src/bookmarks/index.tsx",
+      "packages/widgets/src/bookmarks/bookmarks-widget.tsx",
+      "apps/nextjs/src/components/board/items/lazy-widget-edit-modal.tsx",
+      "packages/widgets/src/modals/widget-edit-modal.tsx"
+    ],
+    "finding": "The touched bookmark and edit-modal code adds title controls and board-aware preview sizing/context, but it does not change the notebook mutation, cache invalidation, anonymous-board loading, Helm deployment, or chunk/version behavior described by the 21-comment report. It therefore provides no causal proof for the stale-save, blank-public-board, or client-error symptoms. Keep the baseline needs-verification disposition and require the reported deployment/browser reproduction.",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "packages/widgets/src/bookmarks/index.tsx:18-25 and packages/widgets/src/bookmarks/bookmarks-widget.tsx:167-173 show the new bookmark title controls only.",
+      "apps/nextjs/src/components/board/items/lazy-widget-edit-modal.tsx:152-175 and packages/widgets/src/modals/widget-edit-modal.tsx:172-217 add preview sizing/context discovery; these paths do not implement notebook persistence or public-board reload handling.",
+      "reports/v2-issue-triage/source/3140.json:full_comments contains the reported save/navigation, anonymous reload, client exception, and Helm symptoms; no new comment or code path here establishes their fix.",
+      "reports/v2-issue-triage/assessments.json baseline #3140 explicitly requires a release/v2 Helm/browser reproduction."
+    ]
+  },
+  {
+    "number": 3064,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #3064; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #3064 (feat(integrations): store sessions for emby / jellyfin) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #3064."
+    ]
+  },
+  {
+    "number": 3055,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #3055; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #3055 (feat: Provide SSO user information - groups and other auth info) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #3055."
+    ]
+  },
+  {
+    "number": 2911,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #2911; the baseline needs-verification assessment remains applicable.",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #2911 (bug: Cannot drag apps from dynamic zone) records status=needs-verification and confidence=medium.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #2911."
+    ]
+  },
+  {
+    "number": 2861,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": true,
+    "affected_paths": [],
+    "finding": "The refreshed issue conversation adds a user report that the V2 demo scales exactly as expected in a simple layout and says the problem is solved there. That is meaningful corroboration for the responsive-board improvement, but it covers one demo layout and does not exercise every nested/container fixture; the baseline source still showed layout-specific section membership. Keep partially-addressed with medium confidence pending controlled reproduction across breakpoints and migrated boards. This delta contains no browser run.",
+    "suggested_status": "partially-addressed",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/verification/updated-2861.json:754-782 records the 2026-09-17 user report of expected V2 scaling in a simple layout and the accompanying V2 context.",
+      "reports/v2-issue-triage/source/2861.json:full_comments contains the original multi-breakpoint category/dynamic-section reports and the maintainers' V2 expectation; the updated snapshot adds one positive demo observation.",
+      "reports/v2-issue-triage/assessments.json baseline #2861 cites packages/api/src/router/board.ts, packages/boards/src/context.tsx, and section membership as remaining source-level risk.",
+      "The positive report is user-supplied runtime evidence from a demo, not a controlled acceptance run by this delta."
+    ]
+  },
+  {
+    "number": 2657,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #2657; the baseline addressed-in-v2 assessment remains applicable.",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #2657 (feat(auth): support object path for groups and username claims) records status=addressed-in-v2 and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #2657."
+    ]
+  },
+  {
+    "number": 2555,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #2555; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #2555 (feat: add settings to configure file upload limit) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #2555."
+    ]
+  },
+  {
+    "number": 2508,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #2508; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #2508 (feat: log source ip for failed login attempts) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #2508."
+    ]
+  },
+  {
+    "number": 2495,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #2495; the baseline partially-addressed assessment remains applicable.",
+    "suggested_status": "partially-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #2495 (feat: Redirect to login page if not logged in) records status=partially-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #2495."
+    ]
+  },
+  {
+    "number": 2482,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #2482; the baseline partially-addressed assessment remains applicable.",
+    "suggested_status": "partially-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #2482 (feat: add all relevant tRPC queries / mutations as openapi endpoint) records status=partially-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #2482."
+    ]
+  },
+  {
+    "number": 2480,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #2480; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #2480 (feat: fetch app icons automatically) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #2480."
+    ]
+  },
+  {
+    "number": 2478,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #2478; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #2478 (feat: import / export apps) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #2478."
+    ]
+  },
+  {
+    "number": 2362,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #2362; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #2362 (feat: wake on lan widget) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #2362."
+    ]
+  },
+  {
+    "number": 2294,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #2294; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #2294 (feat: Integration with FileFlows) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #2294."
+    ]
+  },
+  {
+    "number": 2160,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #2160; the baseline addressed-in-v2 assessment remains applicable.",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #2160 (feat: Two proxmox on one TAB) records status=addressed-in-v2 and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #2160."
+    ]
+  },
+  {
+    "number": 2154,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #2154; the baseline not-addressed assessment remains applicable.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #2154 (feat: Re-add ability to use different port number) records status=not-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #2154."
+    ]
+  },
+  {
+    "number": 2095,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #2095; the baseline partially-addressed assessment remains applicable.",
+    "suggested_status": "partially-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #2095 (feat: add css templates) records status=partially-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #2095."
+    ]
+  },
+  {
+    "number": 2078,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #2078; the baseline partially-addressed assessment remains applicable.",
+    "suggested_status": "partially-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #2078 (feat: Permission per App / App-Element / Dynamic Group) records status=partially-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #2078."
+    ]
+  },
+  {
+    "number": 1921,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #1921; the baseline addressed-in-v2 assessment remains applicable.",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #1921 (feat: Add titles and folding for Dynamic Sections) records status=addressed-in-v2 and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #1921."
+    ]
+  },
+  {
+    "number": 1014,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": true,
+    "affected_paths": [
+      "packages/widgets/src/bookmarks/index.tsx",
+      "apps/docs/docs/widgets/bookmarks/index.mdx"
+    ],
+    "finding": "The bookmark widget and its documentation now describe title controls, but still model existing apps/direct URLs and have no browser HTML bookmark parser or normalized exporter. The standard import/export request remains not addressed.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "packages/widgets/src/bookmarks/index.tsx:61-100 still stores sortable app IDs/direct URLs; no Netscape/browser HTML import or export path was added.",
+      "apps/docs/docs/widgets/bookmarks/index.mdx:16-25 documents direct URLs and app ordering; the new configuration text at :31-36 concerns only the widget heading.",
+      "reports/v2-issue-triage/source/1014.json:body and full_comments specify HTML bookmark-file import/export and the feasibility clarification.",
+      "reports/v2-issue-triage/assessments.json baseline #1014 records the absent parser/exporter."
+    ]
+  },
+  {
+    "number": 962,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #962; the baseline needs-verification assessment remains applicable.",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #962 (bug: item and dynamic section menus overlap) records status=needs-verification and confidence=medium.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #962."
+    ]
+  },
+  {
+    "number": 925,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #925; the baseline partially-addressed assessment remains applicable.",
+    "suggested_status": "partially-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #925 (feat: import items from another board) records status=partially-addressed and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #925."
+    ]
+  },
+  {
+    "number": 437,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "No issue-specific implementation path or post-baseline conversation change was found for #437; the baseline addressed-in-v2 assessment remains applicable.",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/assessments.json baseline #437 (feat: add board preview) records status=addressed-in-v2 and confidence=high.",
+      "git diff --name-only 60b4e980ed86a3b36d66bd1e25ee277e13836916..681c1dd15a5d4753c04a84f7cb92a60e47a2c360 contains no issue-specific path or new source conversation evidence for #437."
+    ]
+  },
+  {
+    "number": 125,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "changed_since_baseline": false,
+    "affected_paths": [],
+    "finding": "The refreshed source snapshot still has no issue comments and only tracks dependency-dashboard maintenance; no release/v2 code or conversation evidence changes the baseline disposition.",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/verification/updated-125.json:72-76 shows full_comments is still empty.",
+      "reports/v2-issue-triage/source/125.json and reports/v2-issue-triage/assessments.json retain the recurring Renovate dashboard scope."
+    ]
+  }
+]

@@ -1,0 +1,188 @@
+diff --git a/apps/nextjs/src/components/board/sections/container-section.tsx b/apps/nextjs/src/components/board/sections/container-section.tsx
+index 5c936aed2..f79de0f7b 100644
+--- a/apps/nextjs/src/components/board/sections/container-section.tsx
++++ b/apps/nextjs/src/components/board/sections/container-section.tsx
+@@ -1,3 +1,4 @@
++import { createContext, useContext } from "react";
+ import dynamic from "next/dynamic";
+ import { ActionIcon, Badge, Box, Button, Card } from "@mantine/core";
+ import { IconChevronDown, IconChevronUp, IconExternalLink } from "@tabler/icons-react";
+@@ -11,7 +12,6 @@ import type { ContainerSectionItem } from "~/app/[locale]/boards/_types";
+ import { COLLAPSED_SECTION_ROW_COUNT } from "~/components/board/layout";
+ import { SectionGrid } from "./grid/section-grid";
+ import { useSectionCollapse } from "./section-collapse";
+-import { useSectionContext } from "./section-context";
+ import { useOpenSectionApps } from "./use-open-section-apps";
+ import classes from "./item.module.css";
+ 
+@@ -20,13 +20,16 @@ const BoardContainerMenu = dynamic(
+   { ssr: false },
+ );
+ 
++const ContainerDepthContext = createContext(0);
++
+ interface Props {
+   section: ContainerSectionItem;
+ }
+ 
+ export const BoardContainerSection = ({ section }: Props) => {
+   const board = useRequiredBoard();
+-  const { section: parentSection } = useSectionContext();
++  const containerDepth = useContext(ContainerDepthContext);
++  const menuLeftOffset = 4 + containerDepth * 32;
+   const [isEditMode] = useEditMode();
+   const t = useI18n("section.container");
+   const tSection = useI18n("section");
+@@ -44,9 +47,8 @@ export const BoardContainerSection = ({ section }: Props) => {
+   let labelLeft = 8;
+   let labelRight = 8;
+   if (isEditMode) {
+-    // Match the root/nested menu offsets in BoardContainerMenu, plus its width and gap.
+-    labelLeft = 36;
+-    if (parentSection.kind === "container") labelLeft = 68;
++    // Reserve a distinct control position for every ancestor, not just the immediate parent.
++    labelLeft = menuLeftOffset + 32;
+   } else if (options.showOpenAll) {
+     labelRight = 40;
+   }
+@@ -154,16 +156,18 @@ export const BoardContainerSection = ({ section }: Props) => {
+           aria-hidden={isVisuallyCollapsed}
+           inert={isVisuallyCollapsed}
+         >
+-          <SectionGrid
+-            section={section}
+-            columnCount={section.width}
+-            requestedRowCount={section.height}
+-            viewportRowCountOverride={isVisuallyCollapsed ? COLLAPSED_SECTION_ROW_COUNT : undefined}
+-            label={label}
+-          />
++          <ContainerDepthContext value={containerDepth + 1}>
++            <SectionGrid
++              section={section}
++              columnCount={section.width}
++              requestedRowCount={section.height}
++              viewportRowCountOverride={isVisuallyCollapsed ? COLLAPSED_SECTION_ROW_COUNT : undefined}
++              label={label}
++            />
++          </ContainerDepthContext>
+         </Box>
+       </Card>
+-      {isEditMode && <BoardContainerMenu section={section} />}
++      {isEditMode && <BoardContainerMenu section={section} leftOffset={menuLeftOffset} />}
+     </Box>
+   );
+ };
+diff --git a/apps/nextjs/src/components/board/sections/container/container-menu.tsx b/apps/nextjs/src/components/board/sections/container/container-menu.tsx
+index 0e415b1ae..4d8565d4c 100644
+--- a/apps/nextjs/src/components/board/sections/container/container-menu.tsx
++++ b/apps/nextjs/src/components/board/sections/container/container-menu.tsx
+@@ -8,20 +8,17 @@ import { InlineConfirmMenuItem } from "@homarr/ui";
+ 
+ import type { ContainerSectionItem } from "~/app/[locale]/boards/_types";
+ import { useOpenItemMoveModal } from "../../items/item-move-modal";
+-import { useSectionContext } from "../section-context";
+ import { useContainerActions } from "./container-actions";
+ import { ContainerEditModal } from "./container-edit-modal";
+ 
+-export const BoardContainerMenu = ({ section }: { section: ContainerSectionItem }) => {
++export const BoardContainerMenu = ({ section, leftOffset }: { section: ContainerSectionItem; leftOffset: number }) => {
+   const tContainer = useI18n("section.container");
+   const tItem = useI18n("item");
+   const { openModal } = useModalAction(ContainerEditModal);
+   const openMoveModal = useOpenItemMoveModal();
+   const { updateContainer, removeContainer } = useContainerActions();
+   const [isEditMode] = useEditMode();
+-  const { section: parentSection } = useSectionContext();
+   const label = section.options.title || tContainer("action.create");
+-  const menuLeftOffset = parentSection.kind === "container" ? 36 : 4;
+ 
+   if (!isEditMode) return null;
+ 
+@@ -41,7 +38,7 @@ export const BoardContainerMenu = ({ section }: { section: ContainerSectionItem
+           radius="sm"
+           pos="absolute"
+           top={4}
+-          left={menuLeftOffset}
++          left={leftOffset}
+           style={{ zIndex: 10 }}
+           aria-label={tItem("menu.label.settingsFor", { name: label })}
+         >
+diff --git a/scripts/run.sh b/scripts/run.sh
+index cdb3afe61..f45f68bad 100644
+--- a/scripts/run.sh
++++ b/scripts/run.sh
+@@ -1,5 +1,33 @@
+ #!/usr/bin/env bash
+ 
++MIGRATION_PID=""
++NEXTJS_PID=""
++NGINX_PID=""
++REDIS_PID=""
++SHUTTING_DOWN=false
++
++stop_process() {
++    if [ -n "$1" ]; then
++        kill -TERM "$1" 2>/dev/null
++        wait "$1" 2>/dev/null
++    fi
++}
++
++terminate() {
++    trap '' TERM INT
++    SHUTTING_DOWN=true
++    echo "Shutting down..."
++    stop_process "$MIGRATION_PID"
++    stop_process "$NEXTJS_PID"
++    stop_process "$NGINX_PID"
++    stop_process "$REDIS_PID"
++    echo "Shutdown complete."
++    exit 0
++}
++
++# Install before migrations: a foreground child defers Bash's signal trap.
++trap terminate TERM INT
++
+ # Check before creating SQLite files or invoking a removed migration bundle.
+ reject_mysql() {
+   echo "ERROR: MySQL is no longer supported in v2. Use the MySQL-to-SQLite converter before starting Homarr."
+@@ -22,8 +50,12 @@ if [ "$DB_MIGRATIONS_DISABLED" = "true" ]; then
+   echo "DB migrations are disabled, skipping"
+ else
+     echo "Running DB migrations"
+-    DISABLE_REDIS_LOGS=true node ./db/migrations/$DB_DIALECT/migrate.cjs ./db/migrations/$DB_DIALECT
+-    if [ $? -ne 0 ]; then
++    DISABLE_REDIS_LOGS=true node ./db/migrations/$DB_DIALECT/migrate.cjs ./db/migrations/$DB_DIALECT &
++    MIGRATION_PID=$!
++    wait "$MIGRATION_PID"
++    MIGRATION_EXIT_CODE=$?
++    MIGRATION_PID=""
++    if [ "$MIGRATION_EXIT_CODE" -ne 0 ]; then
+         echo "ERROR: DB migrations failed, aborting startup"
+         exit 1
+     fi
+@@ -58,25 +90,6 @@ else
+     REDIS_PID=$!
+ fi
+ 
+-SHUTTING_DOWN=false
+-
+-terminate() {
+-    SHUTTING_DOWN=true
+-    echo "Shutting down..."
+-    kill -TERM $NEXTJS_PID 2>/dev/null
+-    wait $NEXTJS_PID 2>/dev/null
+-    kill -TERM $NGINX_PID 2>/dev/null
+-    wait $NGINX_PID 2>/dev/null
+-    if [ -n "$REDIS_PID" ]; then
+-        kill -TERM $REDIS_PID 2>/dev/null
+-        wait $REDIS_PID 2>/dev/null
+-    fi
+-    echo "Shutdown complete."
+-    exit 0
+-}
+-
+-trap terminate TERM INT
+-
+ # Next.js standalone uses HOSTNAME as its bind address. Docker's generated
+ # hostname can be unresolvable, so bind explicitly while nginx uses loopback.
+ export HOSTNAME=0.0.0.0

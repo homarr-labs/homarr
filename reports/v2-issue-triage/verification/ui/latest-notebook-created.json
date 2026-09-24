@@ -1,0 +1,63 @@
+{
+  "board": {
+    "backgroundImageAttachment": "fixed",
+    "backgroundImageRepeat": "no-repeat",
+    "backgroundImageSize": "cover",
+    "backgroundImageUrl": null,
+    "creator": {
+      "email": "demo@example.com",
+      "id": "cg5aag95ieu8mx61jg7o0mrt",
+      "image": null,
+      "name": "demo"
+    },
+    "creatorId": "cg5aag95ieu8mx61jg7o0mrt",
+    "customCss": null,
+    "disableStatus": false,
+    "faviconImageUrl": null,
+    "groupPermissions": [],
+    "iconColor": null,
+    "id": "q3x9b68zl6hf06csvmn433br",
+    "isPublic": true,
+    "itemRadius": "lg",
+    "items": [],
+    "layouts": [
+      {
+        "breakpoint": 0,
+        "columnCount": 3,
+        "id": "y0kgaq9437osw844jbl6h27i",
+        "leftGutterColumnCount": 0,
+        "name": "Mobile",
+        "rightGutterColumnCount": 0,
+        "role": "mobile"
+      },
+      {
+        "breakpoint": 768,
+        "columnCount": 12,
+        "id": "jsaydfdclsgs9hg4hqj7s1ux",
+        "leftGutterColumnCount": 0,
+        "name": "Base",
+        "rightGutterColumnCount": 0,
+        "role": "base"
+      }
+    ],
+    "logoImageUrl": null,
+    "metaTitle": null,
+    "name": "latest-v2-smoke",
+    "opacity": 100,
+    "pageTitle": null,
+    "primaryColor": "#fa5252",
+    "secondaryColor": "#fd7e14",
+    "sections": [
+      {
+        "id": "b5fnw0ervhszawszcyzi7lyk",
+        "kind": "empty",
+        "xOffset": 0,
+        "yOffset": 0
+      }
+    ],
+    "userPermissions": []
+  },
+  "item": {
+    "itemId": "de4qlf3bycqtxyvrpyw7s7k8"
+  }
+}

@@ -1,0 +1,38 @@
+[
+  {
+    "items": 0,
+    "loaders": 0,
+    "skeletons": 0,
+    "time": 2603
+  },
+  {
+    "items": 0,
+    "loaders": 1,
+    "skeletons": 0,
+    "time": 2649
+  },
+  {
+    "items": 4,
+    "loaders": 1,
+    "skeletons": 0,
+    "time": 2651
+  },
+  {
+    "items": 4,
+    "loaders": 0,
+    "skeletons": 0,
+    "time": 2660
+  },
+  {
+    "items": 0,
+    "loaders": 1,
+    "skeletons": 0,
+    "time": 2951
+  },
+  {
+    "items": 4,
+    "loaders": 0,
+    "skeletons": 0,
+    "time": 3034
+  }
+]

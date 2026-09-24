@@ -1,0 +1,38 @@
+[
+  {
+    "id": 27444322690,
+    "node_id": "LE_lADOK3hdfc8AAAABHWdWDM8AAAAGY88hgg",
+    "url": "https://api.github.com/repos/homarr-labs/homarr/issues/events/27444322690",
+    "actor": {
+      "login": "FasteryXD",
+      "id": 185694833,
+      "node_id": "U_kgDOCxF6cQ",
+      "avatar_url": "https://avatars.githubusercontent.com/u/185694833?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/FasteryXD",
+      "html_url": "https://github.com/FasteryXD",
+      "followers_url": "https://api.github.com/users/FasteryXD/followers",
+      "following_url": "https://api.github.com/users/FasteryXD/following{/other_user}",
+      "gists_url": "https://api.github.com/users/FasteryXD/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/FasteryXD/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/FasteryXD/subscriptions",
+      "organizations_url": "https://api.github.com/users/FasteryXD/orgs",
+      "repos_url": "https://api.github.com/users/FasteryXD/repos",
+      "events_url": "https://api.github.com/users/FasteryXD/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/FasteryXD/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "event": "labeled",
+    "commit_id": null,
+    "commit_url": null,
+    "created_at": "2026-07-01T18:37:37Z",
+    "label": {
+      "name": "needs triage",
+      "color": "e99695"
+    },
+    "intent": null,
+    "performed_via_github_app": null
+  }
+]

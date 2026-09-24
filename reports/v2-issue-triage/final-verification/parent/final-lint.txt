@@ -1,0 +1,13 @@
+[WARN] Your node_modules are out of sync with your lockfile. Patches were modified
+
+  ! eslint(no-underscore-dangle): Unexpected dangling '_' in '`_links`'.
+     ,-[packages/request-handler/src/release-providers.ts:559:27]
+ 558 |       latestReleaseAt: releaseDate,
+ 559 |       releaseUrl: release._links?.self,
+     :                           ^^^^^^
+ 560 |       releaseDescription: release.description ?? undefined,
+     `----
+  help: Remove the dangling '_' or add `_links` to the 'allow' configuration.
+
+Found 1 warning and 0 errors.
+Finished in 194ms on 4 files with 197 rules using 2 threads.

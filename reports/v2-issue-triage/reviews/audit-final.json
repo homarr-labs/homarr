@@ -1,0 +1,113 @@
+[
+  {
+    "number": 2657,
+    "verdict": "confirmed",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "reason": "The reported Keycloak claim is a nested dotted path, and release/v2 resolves that path for OIDC group synchronization. The same helper is used for the configurable username claim named by the issue title, with focused nested-claim coverage.",
+    "evidence": [
+      "reports/v2-issue-triage/source/2657.json:90-297 — complete issue body and all four comments describe resource_access.homarr.roles and the requested path behavior.",
+      "packages/auth/providers/oidc/profile.ts:5-12,15-22 — getProfileValueByPath traverses dotted profile paths and extractProfileName applies it to the override claim.",
+      "packages/auth/events.ts:33-38 — OIDC groups are read through the path helper and synchronized when the resolved value is an array.",
+      "packages/auth/test/events.spec.ts:161-180, packages/auth/providers/oidc/test/profile.spec.ts:16-36 — nested group/profile claims are covered by focused fixtures."
+    ]
+  },
+  {
+    "number": 3597,
+    "verdict": "confirmed",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "reason": "The reported failure is loss of a Nextcloud installation path during calendar discovery. The release/v2 calendar client now receives a canonical DAV URL built from the configured path, with root, subpath, trailing-slash, and existing-DAV cases covered.",
+    "evidence": [
+      "reports/v2-issue-triage/source/3597.json:90-108 — the complete body and zero comments identify /nextcloud loss in tsdav discovery and the resulting failure.",
+      "packages/integrations/src/nextcloud/nextcloud-url.ts:1-12 — preserves the configured pathname, appends /remote.php/dav/, and removes query/hash components.",
+      "packages/integrations/src/nextcloud/nextcloud.integration.ts:191-205 — passes the path-preserving URL to DAVClient for calendar operations.",
+      "packages/integrations/src/nextcloud/test/nextcloud-url.spec.ts:5-28, packages/integrations/src/nextcloud/test/nextcloud-integration.spec.ts:18-37 — focused tests cover subpaths and client wiring.",
+      "reports/v2-issue-triage/source/linked-prs/6786.json:34-39 — the linked fix states the exact subpath scope and its merge commit is an ancestor of release/v2."
+    ]
+  },
+  {
+    "number": 3904,
+    "verdict": "confirmed",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "reason": "The request is for selectable GPU percentage usage in the System Resources/Dashdot surface. Release/v2 exposes GPU as an opt-in chart, maps Dashdot processor load, averages multiple GPUs, and tolerates an unavailable GPU endpoint.",
+    "evidence": [
+      "reports/v2-issue-triage/source/3904.json:81-241 — complete feature request and all three comments ask for GPU usage with opt-in/default-off behavior for variable Dashdot support.",
+      "packages/widgets/src/system-resources/index.ts:16-38 — GPU is a visibleCharts option and is excluded from the default CPU/memory/network selection.",
+      "packages/widgets/src/system-resources/component.tsx:40-53,287-295 — processor utilization is averaged into chart history and rendered by SystemResourceGPUChart when selected.",
+      "packages/widgets/src/system-resources/chart/gpu-chart.tsx:8-39 — the chart displays the latest and tooltip values as percentages on a 0–100 axis.",
+      "packages/integrations/src/dashdot/dashdot-integration.ts:28-36,61-68,164-173,237-243 — fetches /load/gpu, maps load/memory data, and converts endpoint/parsing failures to an empty GPU result."
+    ]
+  },
+  {
+    "number": 6024,
+    "verdict": "change-recommended",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "medium",
+    "reason": "Release/v2 does normalize SyntaxError values raised by decorated Beszel Integration methods and the system/stats routers serialize those integration failures. The issue's exact parser position and temporal Beszel correlation do not establish that the logged uncaughtException originated in one of those methods, and the report has no reproduction or payload. The existing boundary is promising evidence but is insufficient to retain an addressed/high disposition without tracing the actual throw site.",
+    "evidence": [
+      "reports/v2-issue-triage/source/6024.json:70-88 — complete body records the exact Unicode-escape SyntaxError, uncaughtException log, Beszel timing suspicion, unknown reproduction, and low impact.",
+      "packages/integrations/src/base/integration.ts:35-35, packages/integrations/src/base/errors/decorator.ts:90-175 — the decorated base constructor wraps subclass methods, and rejected calls pass through the default JSON parse handler before rethrowing a normalized integration error.",
+      "packages/integrations/src/base/errors/parse/integration-parse-error-handler.ts:15-20, packages/common/src/errors/parse/handlers/json-parse-error-handler.ts:9-17 — SyntaxError is converted to ParseError and then IntegrationParseError.",
+      "packages/integrations/src/beszel/beszel-integration.ts:253-259,268-278,598-617 — collection and auth response.json calls run inside decorated Integration methods; the reported malformed JSON type is the handled SyntaxError case.",
+      "packages/api/src/router/widgets/beszel.ts:31-64,156-195, reports/v2-issue-triage/source/linked-prs/6510.json:34-39 — system/stats routes serialize integration failures, and the later diagnostic records that collection JSON is already classified by the decorator."
+    ]
+  },
+  {
+    "number": 4159,
+    "verdict": "confirmed",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "reason": "The source-built-only report fails on the old separate task tRPC endpoint. Release/v2 calls the cron router as a local server-side caller and its router reads jobs through JobManager; production instrumentation embeds task startup in the Next process, removing that ECONNREFUSED dependency. Startup or deployment failures still require runtime verification.",
+    "evidence": [
+      "reports/v2-issue-triage/source/4159.json:81-147 — complete body and the sole comment scope the Tasks page failure to source deployment and record that Docker did not reproduce it.",
+      "apps/nextjs/src/app/[locale]/manage/tools/tasks/page.tsx:23-39 — the page calls the server-side api.cronJobs.getJobs caller and renders returned jobs without a task-service HTTP fetch.",
+      "packages/api/src/server.ts:1-15, packages/api/src/trpc.ts:90-93 — api is a createCaller instance for direct server-side procedure execution.",
+      "packages/api/src/router/cron-jobs.ts:17-23,59-61 — cron procedures instantiate JobManager against the local request context/database.",
+      "apps/nextjs/src/instrumentation-node.ts:5-34, apps/tasks/src/main.ts:8-12 — production starts the embedded task package and its startup promise alongside the application."
+    ]
+  },
+  {
+    "number": 5336,
+    "verdict": "confirmed",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "reason": "The requested missing and queued movie/episode counts are implemented as a registered native widget backed by the shared media-organizer contract. Radarr and Sonarr supply both item lists and total counts, while compact and advanced presentations remain within the requested dashboard widget scope.",
+    "evidence": [
+      "reports/v2-issue-triage/source/5336.json:81-241 — complete request and all three comments describe the missing/queued movie and episode use case.",
+      "packages/widgets/src/registry.ts:88,221, packages/definitions/src/widget.ts:17-24, packages/definitions/src/widget-integration-map.ts:51-56 — mediaMissing is registered as an addable widget and mapped to media-organizer integrations.",
+      "packages/widgets/src/media-missing/index.ts:10-29 — the native definition exposes showMissing, showQueued, and pageSize options.",
+      "packages/widgets/src/media-missing/component.tsx:66-118,166-240 — queries integration data, computes missing/queued totals, and renders advanced panels or compact tabs.",
+      "packages/request-handler/src/media-organizer.ts:14-33, packages/integrations/src/interfaces/media-organizer/media-organizer-integration.ts:3-6 — both item collections and total counts are fetched through the integration contract."
+    ]
+  },
+  {
+    "number": 6008,
+    "verdict": "confirmed",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "reason": "The reported /manage/about ECONNREFUSED is caused by the page fetching its own HTTP endpoints. Release/v2 imports the static contributor payloads and invokes getDependenciesAsync directly on the server, and a management error boundary provides the requested usable failure surface if another error occurs. The original loopback request path is gone; deployment runtime was not tested.",
+    "evidence": [
+      "reports/v2-issue-triage/source/6008.json:81-241 — complete body and all three comments record the unusable page, ECONNREFUSED digest, and request for a recoverable management surface.",
+      "apps/nextjs/src/app/[locale]/manage/about/page.tsx:40-60 — static contributor data is imported directly and dependencies are read through getDependenciesAsync without a self-fetch or HOSTNAME URL.",
+      "apps/nextjs/src/app/[locale]/manage/error.tsx:9-41 — the manage segment renders a localized retry boundary and preserves the digest for future failures.",
+      "reports/v2-issue-triage/source/linked-prs/6009.json:34-39 — linked PR identifies the four self-fetches and boundary change; its merge commit is an ancestor of release/v2."
+    ]
+  },
+  {
+    "number": 6589,
+    "verdict": "confirmed",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "reason": "The later comments clarify that the requirement is two widgets with separate per-host resource totals, while GUI endpoint creation is a separate request. Release/v2 exposes named endpoint IDs as a Docker widget option, filters inventory by the selected IDs, and computes totals from only the returned containers; legacy hostname/port configuration remains supported.",
+    "evidence": [
+      "reports/v2-issue-triage/source/6589.json:70-851 — complete body and all 15 comments distinguish separate widget totals from endpoint setup/GUI creation and report the two-host test progression.",
+      "packages/widgets/src/docker/index.ts:27-47 — Docker Containers exposes a dynamic multi-select of configured endpoint IDs.",
+      "packages/widgets/src/docker/component.tsx:88-95,242-264,352-363 — selected endpoint IDs are passed to getContainers and CPU/memory totals reduce the filtered container list; action/log targets retain endpoint IDs.",
+      "packages/api/src/router/docker/docker-router.ts:26-29,68-90 — optional endpointIds are normalized and passed to the inventory request.",
+      "packages/request-handler/src/docker.ts:341-363,393-474 — inventory and per-container stats are restricted to selected endpoints, with endpoint status reported separately.",
+      "packages/docker/src/endpoint-descriptor.ts:30-58,136-154, packages/docker/src/singleton.ts:52-83 — named descriptors and legacy DOCKER_HOSTNAMES/DOCKER_PORTS endpoints are materialized independently."
+    ]
+  }
+]

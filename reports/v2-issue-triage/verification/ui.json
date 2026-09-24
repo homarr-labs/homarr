@@ -1,0 +1,239 @@
+[
+  {
+    "number": 6849,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "Chromium/Linux pointer interaction in isolated production image",
+    "checks": [
+      "Changed account theme from dark to light using actual menu clicks; light theme survived full page reload."
+    ],
+    "outcome": "partial",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/verification/ui/light-theme.png"
+    ],
+    "blockers": [
+      "Citrix VDI, Edge/Firefox and the reporter LDAP deployment were unavailable. Ordinary Chromium success does not disprove environment-specific pointer-event failures."
+    ]
+  },
+  {
+    "number": 6823,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "Chromium/Linux pointer interaction in isolated production image",
+    "checks": [
+      "Changed account theme from dark to light using actual menu clicks; light theme survived full page reload."
+    ],
+    "outcome": "partial",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/verification/ui/light-theme.png"
+    ],
+    "blockers": [
+      "Citrix VDI, Edge/Firefox and the reporter LDAP deployment were unavailable. Ordinary Chromium success does not disprove environment-specific pointer-event failures."
+    ]
+  },
+  {
+    "number": 3140,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "Authenticated editor and anonymous public-board browser checks",
+    "checks": [
+      "Edited notebook text through UI; navigated to settings and back and reloaded; saved text persisted.",
+      "Edited bookmark title through widget UI, saved board, reloaded; title persisted.",
+      "Anonymous separate browser loaded public board and reloaded with both saved markers present."
+    ],
+    "outcome": "partial",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/verification/ui/bookmark-notebook-persistence.png",
+      "reports/v2-issue-triage/verification/ui/public-board-reload.png"
+    ],
+    "blockers": [
+      "Fresh SQLite container does not reproduce original Helm/OIDC deployment or its cache topology."
+    ]
+  },
+  {
+    "number": 962,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "Three nested hidden-label containers; DOM geometry and actual browser hit testing",
+    "checks": [
+      "Created nested container fixture through runtime API and entered edit mode.",
+      "Deep and Inner settings buttons overlap 18.484375 by 18.75 pixels.",
+      "Hit testing at the center of Deep settings selects Inner settings instead. Screenshot confirms overlapping controls."
+    ],
+    "outcome": "failed",
+    "suggested_status": "not-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/verification/ui/create-nested-fixture.js",
+      "reports/v2-issue-triage/verification/ui/nested-fixture-result.json",
+      "reports/v2-issue-triage/verification/ui/measure-handles.js",
+      "reports/v2-issue-triage/verification/ui/nested-handles.json",
+      "reports/v2-issue-triage/verification/ui/nested-handle-hit-targets.json",
+      "reports/v2-issue-triage/verification/ui/nested-handles.png"
+    ],
+    "blockers": []
+  },
+  {
+    "number": 2911,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "Actual repeated pointer drags of two app tiles from nested container to root",
+    "checks": [
+      "Dragged two app tiles consecutively without leaving edit mode or refreshing; both moved independently and outer container did not move.",
+      "Saved and reloaded; API readback confirmed both Base item section IDs equal root and positions 1,0 and 3,0.",
+      "Also repeated with notebook/bookmark widgets successfully."
+    ],
+    "outcome": "passed",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/verification/ui/create-app-drag-fixture.js",
+      "reports/v2-issue-triage/verification/ui/app-drag-fixture-result.json",
+      "reports/v2-issue-triage/verification/ui/repeated-app-drags-labels.json",
+      "reports/v2-issue-triage/verification/ui/after-repeated-app-drags.json",
+      "reports/v2-issue-triage/verification/ui/after-repeated-drags.json"
+    ],
+    "blockers": [
+      "Fresh fixture covers repeated nested-to-root drag; original migrated dashboard was unavailable."
+    ]
+  },
+  {
+    "number": 2861,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "Desktop/mobile layout persistence and responsive browser rendering",
+    "checks": [
+      "After moving child apps on Base, saved API state keeps old nested section membership on Mobile.",
+      "390px viewport renders nested containers and their mobile members.",
+      "Ongoing Base edits do not automatically propagate membership to an existing Mobile layout."
+    ],
+    "outcome": "partial",
+    "suggested_status": "partially-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/verification/ui/after-repeated-app-drags.json",
+      "reports/v2-issue-triage/verification/ui/mobile-container-membership.json",
+      "reports/v2-issue-triage/verification/ui/mobile-nested-board.png"
+    ],
+    "blockers": [
+      "Independent layouts remain different after desktop edits. #2861 also has new reporter confirmation for the simpler v2 demo dashboard; this does not establish every migrated layout behaves identically."
+    ]
+  },
+  {
+    "number": 4541,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "Desktop/mobile layout persistence and responsive browser rendering",
+    "checks": [
+      "After moving child apps on Base, saved API state keeps old nested section membership on Mobile.",
+      "390px viewport renders nested containers and their mobile members.",
+      "Ongoing Base edits do not automatically propagate membership to an existing Mobile layout."
+    ],
+    "outcome": "partial",
+    "suggested_status": "partially-addressed",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/verification/ui/after-repeated-app-drags.json",
+      "reports/v2-issue-triage/verification/ui/mobile-container-membership.json",
+      "reports/v2-issue-triage/verification/ui/mobile-nested-board.png"
+    ],
+    "blockers": [
+      "Independent layouts remain different after desktop edits. #2861 also has new reporter confirmation for the simpler v2 demo dashboard; this does not establish every migrated layout behaves identically."
+    ]
+  },
+  {
+    "number": 6811,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "Browser header/page geometry at 1377, 768 and 390 pixels",
+    "checks": [
+      "Document width equals viewport at each width.",
+      "Header descendants showed no horizontal overflow in the disposable fixture."
+    ],
+    "outcome": "partial",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/verification/ui/header-width-checks.json"
+    ],
+    "blockers": [
+      "Original header configuration and Chrome environment were not reproduced. This bounded smoke does not establish a global fix."
+    ]
+  },
+  {
+    "number": 3805,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "Create custom layout via settings UI and authenticated persisted-state readback",
+    "checks": [
+      "Created TriageWide with 10 columns; saved breakpoint1200 and confirmed server readback.",
+      "Full page reload retained TriageWide, 10 columns and breakpoint1200 in the server readback."
+    ],
+    "outcome": "partial",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/verification/ui/saved-custom-layout.json",
+      "reports/v2-issue-triage/verification/ui/custom-layout-after-reload.json"
+    ],
+    "blockers": [
+      "Runtime exercised Chromium at1280px; Firefox ultrawide is untested. Maintainer identified server cache invalidation as cause, addressed by current save/invalidation path."
+    ]
+  },
+  {
+    "number": 4738,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "Create custom layout via settings UI and authenticated persisted-state readback",
+    "checks": [
+      "Created TriageWide with 10 columns; saved breakpoint1200 and confirmed server readback.",
+      "Full page reload retained TriageWide, 10 columns and breakpoint1200 in the server readback."
+    ],
+    "outcome": "partial",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/verification/ui/saved-custom-layout.json",
+      "reports/v2-issue-triage/verification/ui/custom-layout-after-reload.json"
+    ],
+    "blockers": [
+      "Original problematic/migrated board export was unavailable. Fresh-board success alone does not reproduce existing-board data corruption."
+    ]
+  },
+  {
+    "number": 6620,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "Pre-navigation DOM mutation observer plus25ms geometry sampling on populated public board",
+    "checks": [
+      "Observed four-item board on first navigation and full reload; no visible Mantine Skeleton elements were recorded.",
+      "Initial navigation and reload both showed brief Loader transitions; warm refresh changed loader state at87\u201396ms and220\u2013295ms.",
+      "This supports absence of old Skeleton components in the fixture, while initial-loading flashes are still observable."
+    ],
+    "outcome": "partial",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/verification/ui/observe-loading.js",
+      "reports/v2-issue-triage/verification/ui/initial-loading.json",
+      "reports/v2-issue-triage/verification/ui/refresh-loading.json"
+    ],
+    "blockers": [
+      "No controlled v1.74/v1.75 visual comparison or original Synology dashboard. DOM observation does not measure every rendered frame or subjective smoothness."
+    ]
+  },
+  {
+    "number": 1921,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "Named nested container fixture and actual collapse click",
+    "checks": [
+      "Named Outer, Inner and Deep containers render in board accessibility tree.",
+      "Clicking Collapse: Outer triage changes aria-expanded to false and removes child regions from visible accessibility tree."
+    ],
+    "outcome": "passed",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/verification/ui/collapsed-container.txt",
+      "reports/v2-issue-triage/verification/ui/nested-fixture-result.json"
+    ],
+    "blockers": [
+      "Legacy board migration and opacity follow-up were not runtime tested."
+    ]
+  }
+]

@@ -1,0 +1,458 @@
+[
+  {
+    "number": 6830,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "source-contract + isolated app API + synthetic WUD HTTP service",
+    "checks": [
+      "WUD connection test and widget data path both use /api/containers and getAuthHeaders().",
+      "Authenticated runtime create succeeded and widget.wud.getStats returned totalContainers=2 and updatesAvailable=1.",
+      "Unauthenticated fixture request returned 401; the same synthetic WUD response with Basic auth returned 200."
+    ],
+    "outcome": "partial",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "packages/integrations/src/wud/wud-integration.ts:15-50",
+      "reports/v2-issue-triage/verification/integrations/check-integrations.mjs: WUD auth and response-contract checks, 112/112 checks passed",
+      "reports/v2-issue-triage/verification/integrations/runtime-smoke.mjs: isolated v2 app runtime returned the fixture WUD counts"
+    ],
+    "blockers": [
+      "The service was synthetic; no live WUD 9.0 deployment was available."
+    ]
+  },
+  {
+    "number": 6712,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "source-contract + isolated app API + synthetic WUD HTTP service",
+    "checks": [
+      "Basic credentials are encoded into Authorization and passed to both WUD request paths.",
+      "Runtime integration creation tested the fixture credentials and widget.wud.getStats returned data.",
+      "The fixture rejected missing auth and accepted the exact configured Basic header."
+    ],
+    "outcome": "partial",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "packages/integrations/src/wud/wud-integration.ts:15-63",
+      "reports/v2-issue-triage/verification/integrations/check-integrations.mjs: WUD Basic auth fixture",
+      "reports/v2-issue-triage/verification/integrations/runtime-smoke.mjs: WUD fixture integration creation and widget query passed"
+    ],
+    "blockers": [
+      "No live WUD or reverse-proxy Basic auth service was available."
+    ]
+  },
+  {
+    "number": 6745,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "source-contract + isolated app API + synthetic Unraid GraphQL service",
+    "checks": [
+      "Unraid maps used memory from metrics.total minus metrics.available and preserves byte units.",
+      "The runtime GraphQL fixture returned total=32000000000 and available=19500000000; health output returned memUsedInBytes=12500000000 and memAvailableInBytes=19500000000.",
+      "The fixture required x-api-key and the runtime health route completed successfully."
+    ],
+    "outcome": "partial",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "packages/integrations/src/unraid/unraid-integration.ts:36-55,84-103",
+      "reports/v2-issue-triage/verification/integrations/fixtures.mjs: Unraid metrics payload",
+      "reports/v2-issue-triage/verification/integrations/runtime-smoke.mjs: widget.healthMonitoring.getSystemHealthStatus returned the corrected byte values"
+    ],
+    "blockers": [
+      "No live Unraid 7.3.2 GraphQL endpoint or browser-rendered ring was available."
+    ]
+  },
+  {
+    "number": 6697,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "source-contract inspection",
+    "checks": [
+      "The shared byte formatter defaults to decimal units and defines KB/MB/GB/TB separately from KiB/MiB/GiB/TiB.",
+      "The settings formatter reads byteUnitSystem, while Unraid returns raw byte quantities."
+    ],
+    "outcome": "source-only",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "packages/common/src/number.ts:19-31,54-60",
+      "packages/settings/src/byte-format.ts:9-18",
+      "packages/integrations/src/unraid/unraid-integration.ts:36-67",
+      "reports/v2-issue-triage/verification/integrations/check-integrations.mjs: decimal/binary source checks passed"
+    ],
+    "blockers": [
+      "No live upgraded user setting or rendered Unraid panel was checked."
+    ]
+  },
+  {
+    "number": 6682,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "source-contract + isolated app API + synthetic Immich HTTP service",
+    "checks": [
+      "Immich initializes the SDK with /api and the configured API key, and image proxy requests also carry x-api-key.",
+      "Runtime Immich integration creation succeeded; server stats returned photoCount=12, userCount=1, and videoCount=3 through API-key protected fixture routes.",
+      "Album and server-statistics fixture routes both returned 200 only with the configured API key."
+    ],
+    "outcome": "partial",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "packages/integrations/src/immich/immich-integration.ts:40-61,94-104,142-158",
+      "reports/v2-issue-triage/verification/integrations/check-integrations.mjs: Immich API-key fixture checks",
+      "reports/v2-issue-triage/verification/integrations/runtime-smoke.mjs: runtime server-stats request passed"
+    ],
+    "blockers": [
+      "No live Immich 3.x server was available."
+    ]
+  },
+  {
+    "number": 6681,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "source-contract + isolated app API + synthetic Immich HTTP service",
+    "checks": [
+      "Album listing and album detail use the authenticated SDK request options after init({ apiKey }).",
+      "Runtime Immich integration creation succeeded and widget.immich.getAlbums returned both fixture albums.",
+      "The album fixture returned 401 without x-api-key and 200 with the configured key."
+    ],
+    "outcome": "partial",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "packages/integrations/src/immich/immich-integration.ts:69-120,162-181",
+      "reports/v2-issue-triage/verification/integrations/runtime-smoke.mjs: runtime album query returned two albums",
+      "reports/v2-issue-triage/verification/integrations/check-integrations.mjs: protected album fixture check"
+    ],
+    "blockers": [
+      "No live Immich album-carousel browser smoke was available."
+    ]
+  },
+  {
+    "number": 6559,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "source-contract + synthetic paginated GitHub API",
+    "checks": [
+      "The GitHub provider uses repos.listReleases through api.paginate with per_page=100 and direct repos.get details.",
+      "The fixture served 1001 releases across 11 pages and the bounded checker collected all 1001.",
+      "The fixture did not exercise GitHub's real historical-result cap."
+    ],
+    "outcome": "partial",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "packages/request-handler/src/release-providers.ts:167-233",
+      "reports/v2-issue-triage/verification/integrations/check-integrations.mjs: synthetic 1001-release pagination passed",
+      "reports/v2-issue-triage/verification/integrations/fixtures.mjs: GitHub page fixture"
+    ],
+    "blockers": [
+      "The exact home-assistant/home-assistant GitHub response and provider-side cap were not queried live."
+    ]
+  },
+  {
+    "number": 6438,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "source-contract inspection",
+    "checks": [
+      "Beszel server subscriptions use abort cleanup and a bounded async queue.",
+      "The client keeps a 60-record sliding buffer and stops live updates while the page is hidden.",
+      "The source changes are relevant mitigations but do not reproduce the reported Docker-plus-Beszel OOM."
+    ],
+    "outcome": "source-only",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "packages/api/src/router/widgets/bounded-async-queue.ts:8-88",
+      "packages/api/src/router/widgets/beszel.ts:198-293",
+      "packages/widgets/src/beszel/_shared/use-live-stats.ts:9-76",
+      "reports/v2-issue-triage/verification/integrations/check-integrations.mjs: source checks passed"
+    ],
+    "blockers": [
+      "No long-running dashboard, 1.5 GB cap, mobile/multi-tab workload, or post-fix RSS/heap trace was available."
+    ]
+  },
+  {
+    "number": 6300,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "source-contract inspection",
+    "checks": [
+      "V2 bounds live queues, client buffers, request caches, and in-flight work in the relevant paths.",
+      "The broad media/Docker/calendar/weather/iframe retention report has no isolated causal path in source."
+    ],
+    "outcome": "source-only",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "packages/request-handler/src/lib/request-handler.ts:28-39,113-145,232-269,317-337",
+      "packages/api/src/query-cache.ts:21-65",
+      "packages/integrations/src/beszel/beszel-integration.ts:427-438,549-587",
+      "reports/v2-issue-triage/verification/integrations/check-integrations.mjs: source checks passed"
+    ],
+    "blockers": [
+      "No long RSS/heap retention run or subsystem isolation was performed."
+    ]
+  },
+  {
+    "number": 6271,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "source-contract inspection",
+    "checks": [
+      "TrueNasClient caches one connection promise per integration ID and evicts it on failure or close.",
+      "V2 negotiates JSON-RPC with a legacy fallback, while the integration still performs four concurrent data queries per refresh."
+    ],
+    "outcome": "source-only",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "packages/integrations/src/truenas/truenas-client.ts:26-139",
+      "packages/integrations/src/truenas/truenas-integration.ts:34-60,219-246,273-295",
+      "reports/v2-issue-triage/verification/integrations/check-integrations.mjs: TrueNAS reuse source checks passed"
+    ],
+    "blockers": [
+      "No TrueNAS 25.10.4 host, sustained polling run, or server memory profile was available."
+    ]
+  },
+  {
+    "number": 6207,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "source-contract + synthetic 443/8443 fallback service",
+    "checks": [
+      "Bare controller URLs resolve to 443 then 8443, explicit ports are preserved, and fallback is limited to connection/detection errors.",
+      "The synthetic service returned 503 on 443 and 200 on 8443, matching the fallback scenario."
+    ],
+    "outcome": "partial",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "packages/integrations/src/unifi-controller/unifi-controller-integration.ts:59-105",
+      "packages/integrations/src/unifi-controller/test/unifi-controller-integration.spec.ts:80-140",
+      "reports/v2-issue-triage/verification/integrations/check-integrations.mjs: synthetic 443/8443 service passed"
+    ],
+    "blockers": [
+      "The fixture was plain HTTP and did not prove TLS, certificate, Dream Router, or authentication behavior against a controller."
+    ]
+  },
+  {
+    "number": 6024,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "source-contract inspection",
+    "checks": [
+      "The integration error boundary routes JSON SyntaxError values through JsonParseErrorHandler and normalizes them.",
+      "Beszel response.json calls are inside decorated integration methods, while the report's parser type and source payload are not identified."
+    ],
+    "outcome": "source-only",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "packages/integrations/src/base/errors/decorator.ts:22-25,90-169",
+      "packages/common/src/errors/parse/handlers/json-parse-error-handler.ts:4-17",
+      "packages/integrations/src/beszel/beszel-integration.ts:253-278,598-618",
+      "reports/v2-issue-triage/verification/integrations/check-integrations.mjs: parse-boundary source checks passed"
+    ],
+    "blockers": [
+      "No complete stack, malformed payload, or release/v2 recurrence was captured."
+    ]
+  },
+  {
+    "number": 5342,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "source-contract inspection + absolute URL fixture",
+    "checks": [
+      "Tracearr checks absolute image URLs before deciding whether to resolve against the integration base URL.",
+      "The absolute URL fixture remained absolute and did not produce the historical hosthttps form."
+    ],
+    "outcome": "source-only",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "packages/integrations/src/tracearr/tracearr-integration.ts:188-197",
+      "reports/v2-issue-triage/verification/integrations/check-integrations.mjs: Tracearr absolute URL check passed",
+      "reports/v2-issue-triage/source/linked-prs/5654.json: merged fix metadata"
+    ],
+    "blockers": [
+      "No live Tracearr image response or resolver trace was available."
+    ]
+  },
+  {
+    "number": 4973,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "source-contract inspection",
+    "checks": [
+      "TrueNAS maps available memory from the reporting graph and used memory as max(physmem - available, 0).",
+      "System Resources adds available and used, so the corrected values sum to physical memory for valid payloads."
+    ],
+    "outcome": "source-only",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "packages/integrations/src/truenas/truenas-integration.ts:57-66",
+      "packages/widgets/src/system-resources/component.tsx:133-149",
+      "reports/v2-issue-triage/verification/integrations/check-integrations.mjs: TrueNAS memory source check passed"
+    ],
+    "blockers": [
+      "No TrueNAS 25.04 payload or rendered System Resources comparison was available."
+    ]
+  },
+  {
+    "number": 4190,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "source-contract inspection",
+    "checks": [
+      "OMV system information is schema-validated and the generic Invalid system information response remains the failure boundary.",
+      "cpuModelName is nullable and mapped to Unknown CPU, but the remaining failing field from the report is unknown."
+    ],
+    "outcome": "source-only",
+    "suggested_status": "needs-verification",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "packages/integrations/src/openmediavault/openmediavault-integration.ts:30-90",
+      "packages/integrations/src/openmediavault/openmediavault-types.ts:3-20",
+      "reports/v2-issue-triage/verification/integrations/check-integrations.mjs: OMV schema-boundary source checks passed"
+    ],
+    "blockers": [
+      "No OMV 7.7.17-1 System.getInformation payload or permission matrix was available."
+    ]
+  },
+  {
+    "number": 3597,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "source-contract + URL fixture",
+    "checks": [
+      "The DAV URL builder retains a configured base path, appends remote.php/dav, and avoids duplicate DAV segments.",
+      "The subpath fixture retained /nextcloud/remote.php/dav/ and the existing focused URL tests are present in the checkout."
+    ],
+    "outcome": "partial",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "packages/integrations/src/nextcloud/nextcloud-url.ts:1-12",
+      "packages/integrations/src/nextcloud/test/nextcloud-url.spec.ts:5-28",
+      "reports/v2-issue-triage/verification/integrations/check-integrations.mjs: subpath URL fixture passed"
+    ],
+    "blockers": [
+      "No live Nextcloud DAV authentication or calendar request was performed."
+    ]
+  },
+  {
+    "number": 3904,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "source-contract inspection",
+    "checks": [
+      "Dashdot requests /load/gpu and maps GPU memory and processor utilization.",
+      "System Resources exposes gpu as an option while defaulting visible charts to CPU, memory, and network; GPU request failures degrade to an empty list."
+    ],
+    "outcome": "source-only",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "packages/integrations/src/dashdot/dashdot-integration.ts:28-68,164-173",
+      "packages/widgets/src/system-resources/index.ts:16-38",
+      "packages/widgets/src/system-resources/component.tsx:40-53,287-295",
+      "reports/v2-issue-triage/verification/integrations/check-integrations.mjs: GPU source checks passed"
+    ],
+    "blockers": [
+      "No Dashdot NVIDIA image or GPU telemetry was available for a live check."
+    ]
+  },
+  {
+    "number": 2160,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "source-contract inspection",
+    "checks": [
+      "Health Monitoring maps every selected cluster integration ID to its own ClusterHealthMonitoring panel.",
+      "The source has no single-cluster-only truncation in the multi-selection path."
+    ],
+    "outcome": "source-only",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "packages/widgets/src/health-monitoring/component.tsx:18-42",
+      "packages/widgets/src/health-monitoring/integration-selection.spec.ts:5-18",
+      "reports/v2-issue-triage/verification/integrations/check-integrations.mjs: two-Proxmox source check passed"
+    ],
+    "blockers": [
+      "No two-standalone-Proxmox runtime or browser rendering was available."
+    ]
+  },
+  {
+    "number": 5336,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "source-contract + media payload fixture",
+    "checks": [
+      "The native mediaMissing widget exposes missing/queued options and a media-organizer integration configuration.",
+      "The fixture preserved both missing and queued categories for the widget contract."
+    ],
+    "outcome": "source-only",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "packages/widgets/src/media-missing/index.ts:10-29",
+      "packages/widgets/src/media-missing/component.tsx:66-118,166-240",
+      "reports/v2-issue-triage/verification/integrations/check-integrations.mjs: media-missing fixture and source checks passed"
+    ],
+    "blockers": [
+      "No live Radarr/Sonarr queue or missing-item payload was available."
+    ]
+  },
+  {
+    "number": 6589,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "source-contract + endpoint descriptor fixture",
+    "checks": [
+      "Docker Containers exposes a per-widget endpointIds dynamic multi-select, with empty selection meaning all endpoints.",
+      "The widget passes endpointIds into getContainers and calculates totals from the returned filtered containers.",
+      "The endpoint descriptor fixture retained two unique endpoint IDs."
+    ],
+    "outcome": "source-only",
+    "suggested_status": "addressed-in-v2",
+    "suggested_confidence": "high",
+    "evidence": [
+      "packages/widgets/src/docker/index.ts:27-47",
+      "packages/widgets/src/docker/component.tsx:93-95,260-264,345-363",
+      "packages/api/src/router/docker/docker-router.ts:68-90",
+      "reports/v2-issue-triage/verification/integrations/check-integrations.mjs: endpoint source/fixture checks passed"
+    ],
+    "blockers": [
+      "The isolated image had no personal Docker socket or live DOCKER_ENDPOINTS hosts, so endpoint-specific runtime totals/actions were not checked."
+    ]
+  },
+  {
+    "number": 3731,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "source-contract inspection",
+    "checks": [
+      "GHCR candidates now map to gitHubContainerRegistry and image prefixes/tags are normalized before comparison.",
+      "The source still compares provider plus normalized identifier, so imagegenius/immich and immich-app/immich remain distinct."
+    ],
+    "outcome": "source-only",
+    "suggested_status": "partially-addressed",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "packages/widgets/src/_inputs/widget-multiReleasesRepositories-input.tsx:698-750,806-875",
+      "packages/definitions/src/release-provider.ts:53-77",
+      "reports/v2-issue-triage/verification/integrations/check-integrations.mjs: release-provider source checks passed"
+    ],
+    "blockers": [
+      "No live Docker import modal or release fetch for the screenshot's two image/repository identities was available."
+    ]
+  },
+  {
+    "number": 3220,
+    "revision": "681c1dd15a5d4753c04a84f7cb92a60e47a2c360",
+    "method": "source-contract + multi-calendar fixture",
+    "checks": [
+      "Nextcloud fetches all configured calendars in parallel and the widget/API paths do not impose a generic seven-entry or one-calendar cap.",
+      "The synthetic DAV fixture returned all five events from three calendars, and the subpath URL contract passed.",
+      "The original recurrence/time-zone/server payload remains unavailable."
+    ],
+    "outcome": "partial",
+    "suggested_status": "partially-addressed",
+    "suggested_confidence": "medium",
+    "evidence": [
+      "packages/integrations/src/nextcloud/nextcloud.integration.ts:67-165",
+      "packages/api/src/router/widgets/calendar.ts:29-61",
+      "packages/widgets/src/calendar/component.tsx:71-115",
+      "reports/v2-issue-triage/verification/integrations/check-integrations.mjs: synthetic three-calendar/five-event fixture passed"
+    ],
+    "blockers": [
+      "No live Nextcloud recurrence, all-day, time-zone, or original three-calendar reproduction was available."
+    ]
+  }
+]

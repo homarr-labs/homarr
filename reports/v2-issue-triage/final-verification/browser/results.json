@@ -1,0 +1,206 @@
+[
+  {
+    "number": 6849,
+    "checks": [
+      "Logged in to the pinned image with Chromium and opened the profile theme selector.",
+      "A complete pointer sequence (pointerdown, mousedown, pointerup, mouseup, click) changed the document scheme from dark to light.",
+      "A pointerdown/mousedown-only dispatch left the light scheme unchanged, matching the reported missing-release failure shape.",
+      "Keyboard fallback on the visible theme combobox trigger moved the active option to Light and changed the scheme to light."
+    ],
+    "outcome": "partial",
+    "suggested_status": "needs-verification",
+    "confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/final-verification/browser/screenshots/6849-theme-light.png",
+      "The successful pointer trace was pointerdown -> mousedown -> pointerup -> mouseup -> click on the theme option; final data-mantine-color-scheme was light.",
+      "The incomplete-pointer simulation recorded pointerdown + mousedown only and left data-mantine-color-scheme at light; the subsequent keyboard event path changed it to light from dark.",
+      "The current Chromium theme control did not reproduce the issue in the available local account."
+    ],
+    "remaining": [
+      "The original Edge/Firefox, Ubuntu/Portainer/LDAP, and persisted migrated-user environments were unavailable.",
+      "This does not prove behavior in the reporter's Citrix VDI or across separate browser profiles."
+    ]
+  },
+  {
+    "number": 6823,
+    "checks": [
+      "Exercised the same profile theme control with complete Chromium pointer events.",
+      "Simulated the Citrix-shaped missing pointerup/click sequence and verified that it does not commit a theme change by itself.",
+      "Exercised the keyboard combobox fallback after the incomplete pointer sequence."
+    ],
+    "outcome": "partial",
+    "suggested_status": "needs-verification",
+    "confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/final-verification/browser/screenshots/6849-theme-light.png",
+      "Complete pointer events reached the Light option and changed the runtime scheme; the simulated incomplete sequence omitted pointerup, mouseup, and click.",
+      "The browser's keyboard event path selected Light on the visible theme combobox trigger."
+    ],
+    "remaining": [
+      "No real Citrix VDI session was available; synthetic event dispatch is not Citrix input proof.",
+      "The issue also mentions permission controls; only the theme control was exercised.",
+      "Firefox and Edge were not installed in the container."
+    ]
+  },
+  {
+    "number": 6811,
+    "checks": [
+      "Measured the current header at 1377x768, matching the historical screenshot width.",
+      "Measured the header at 390x768 and checked document/body horizontal geometry and descendant overflow.",
+      "Checked the header after normal board hydration with the banner absent."
+    ],
+    "outcome": "partial",
+    "suggested_status": "needs-verification",
+    "confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/final-verification/browser/screenshots/6811-header-1377.png",
+      "reports/v2-issue-triage/final-verification/browser/screenshots/6811-header-390.png",
+      "At 1377px: document and body scrollWidth/clientWidth were 1377, header rect was x=0 width=1377 height=60, header scrollWidth/clientWidth were 1377, and no descendant crossed the viewport.",
+      "At 390px: document and body scrollWidth/clientWidth were 390 and header rect/scrollWidth/clientWidth were 390; only lower notebook descendants extended beyond the narrow viewport, not the header."
+    ],
+    "remaining": [
+      "The historical v1.77 Chrome build and its exact banner state were not available.",
+      "No real Chrome version/OS combination from the report was available beyond the bundled Chromium engine."
+    ]
+  },
+  {
+    "number": 6620,
+    "checks": [
+      "Installed a pre-navigation loading observer in a fresh browser session, logged in, and captured initial board hydration.",
+      "Repeated a full dashboard reload after the board was populated and sampled visible loaders until the release widget rendered.",
+      "Distinguished Mantine Loader nodes from skeleton-class nodes."
+    ],
+    "outcome": "partial",
+    "suggested_status": "needs-verification",
+    "confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/final-verification/browser/loading-observer.js",
+      "reports/v2-issue-triage/final-verification/browser/screenshots/6620-refresh-final.png",
+      "Fresh board hydration showed one shell Loader, a transient set of nine widget Loader nodes, then zero visible loading nodes; the Releases widget progressed from Loading widget data to v2.4.1.",
+      "The observer found no visible .skeleton or skeleton-class elements during the captured v2 refresh."
+    ],
+    "remaining": [
+      "No v1.74/v1.75 image pair or slow upstream network was available for a historical regression comparison.",
+      "The current check establishes v2 refresh behavior only; it does not prove the old skeleton flash was impossible in the reported deployment."
+    ]
+  },
+  {
+    "number": 6177,
+    "checks": [
+      "Changed a disposable custom layout value in the live settings form and invoked Save changes in Chromium.",
+      "Observed the real button transition from enabled to data-loading=true and disabled, with a Mantine Button-loader, then observed the success settlement and restored the value.",
+      "Checked installed browser binaries; Firefox, Floorp, Chrome, Chromium, and WebKit command paths were not present."
+    ],
+    "outcome": "partial",
+    "suggested_status": "needs-verification",
+    "confidence": "medium",
+    "evidence": [
+      "The Chromium save trace recorded enabled before click, then disabled + data-loading=true + Button-loader on repeated samples, followed by a successful save and settled settings page.",
+      "The final board settings remained usable after the save and the temporary value was restored to 1200."
+    ],
+    "remaining": [
+      "Floorp 12.14.2 on Windows 10 was unavailable and cannot be emulated by Chromium.",
+      "Upload-image and custom-CSS action buttons were not separately exercised; the check covered a real red settings save action only."
+    ]
+  },
+  {
+    "number": 4766,
+    "checks": [
+      "Confirmed the local app was reachable directly over loopback HTTP and exercised its ordinary browser requests.",
+      "Reviewed the available local synthetic fixture; it provides HTTP integration endpoints but no same-origin wildcard TLS reverse proxy, HTTP/2 connection coalescing, or second-site WebSocket service.",
+      "Did not classify a direct-container result as evidence for the shared-proxy failure."
+    ],
+    "outcome": "blocked",
+    "suggested_status": "needs-verification",
+    "confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/final-verification/integrations/fixture-server.mjs does not implement the reported Caddy/HTTP2/WebSocket topology.",
+      "reports/v2-issue-triage/final-verification/pending.json records the same missing controlled proxy, second WebSocket service, wildcard certificate, and HTTP/2 HAR inputs."
+    ],
+    "remaining": [
+      "Requires a controlled Caddy or equivalent reverse proxy with wildcard TLS, two subdomains sharing one IP/443 connection, a TrueNAS-like WebSocket client, and Chromium HTTP/2 HAR/network evidence.",
+      "No meaningful reproduction claim is made from the direct container."
+    ]
+  },
+  {
+    "number": 4738,
+    "checks": [
+      "Added a second layout through the current board settings UI.",
+      "Named it Browser Triage Layout, set 10 columns and a 1200 breakpoint, saved it, navigated away, and reopened settings.",
+      "Queried the live board tRPC response after reload and confirmed the custom layout persisted."
+    ],
+    "outcome": "partial",
+    "suggested_status": "needs-verification",
+    "confidence": "medium",
+    "evidence": [
+      "The persisted board response contained {name: Browser Triage Layout, breakpoint: 1200, columnCount: 10, role: custom} after a fresh settings navigation.",
+      "The UI showed the custom layout after reload and allowed the form to be saved successfully."
+    ],
+    "remaining": [
+      "The reporter explicitly said a fresh blank board saved layouts successfully; this fresh-board success does not establish a fix for the one existing failing board.",
+      "Mobile rendering of the custom layout was not a separate device-engine check."
+    ]
+  },
+  {
+    "number": 3732,
+    "checks": [
+      "Configured the Releases widget against a local synthetic GitHub-compatible release fixture and saved the board.",
+      "Used the board's documented keyboard resize path to persist 1x1, 2x1, and 2x2 (2xY) layouts.",
+      "Captured actual rendered dimensions and text for each saved layout."
+    ],
+    "outcome": "addressed",
+    "suggested_status": "addressed",
+    "confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/final-verification/browser/screenshots/3732-1x1-release.png",
+      "reports/v2-issue-triage/final-verification/browser/screenshots/3732-2x1-release.png",
+      "reports/v2-issue-triage/final-verification/browser/screenshots/3732-2xY-release.png",
+      "At 1x1 the card was 104.8x104.8 CSS px, the icon was 9.4x9.4 px, and v2.4.1, its age, count 1, and dash values were still visible.",
+      "At 2x1 the card was 229.6x104.8 px; at 2x2 it was 229.6x229.6 px. Both retained the compact icon-above/version header and data rows."
+    ],
+    "remaining": [
+      "The original attachment pixels and external GitHub rate-limit behavior were not used; the widget rendered against a controlled release fixture.",
+      "This confirms the reported disappearing-version behavior is fixed in the current fixture, with bounded visual confidence rather than exact legacy screenshot parity."
+    ]
+  },
+  {
+    "number": 3407,
+    "checks": [
+      "Ran a bounded Chromium scroll analogue on the populated board and returned to the original scroll position.",
+      "Sampled document height and horizontal width before and after the scroll.",
+      "Checked browser availability for Safari/WebKit and other alternate engines."
+    ],
+    "outcome": "partial",
+    "suggested_status": "needs-verification",
+    "confidence": "low",
+    "evidence": [
+      "reports/v2-issue-triage/final-verification/browser/screenshots/3407-chromium-scroll.png",
+      "Chromium scroll trace moved to y=198 then returned to y=0 with document height 966 and document/body width 1280 throughout."
+    ],
+    "remaining": [
+      "Safari/WebKit was unavailable; no Safari tab-background return or real macOS compositing behavior was tested.",
+      "The original background-image hardware/OS setup and recording were unavailable, so jitter and blank-tab timing remain unverified."
+    ]
+  },
+  {
+    "number": 3140,
+    "checks": [
+      "Edited a Notebook marker through the widget editor, saved it, navigated to board settings and back, and reloaded.",
+      "Edited a Bookmarks title through the widget editor, saved the board, navigated, and reloaded.",
+      "Verified both markers in the live DOM after navigation and after a full reload; the board API also contained the notebook marker.",
+      "Confirmed the disposable board remained private (isPublic=false), so the anonymous public-board branch could not be exercised from the available UI fixture."
+    ],
+    "outcome": "partial",
+    "suggested_status": "needs-verification",
+    "confidence": "medium",
+    "evidence": [
+      "reports/v2-issue-triage/final-verification/browser/screenshots/3140-authenticated-reload.png",
+      "After navigation and reload, the DOM contained both Browser triage notebook persistence 2026-09-18 and Browser triage bookmarks 2026-09-18.",
+      "The persisted board response contained the notebook marker in item options.content and the custom board fixture remained loadable."
+    ],
+    "remaining": [
+      "The original Helm deployment, migration state, logout path, OIDC/session topology, and anonymous public board were unavailable in this fresh local container.",
+      "A prior public-board artifact exists for an older revision, but it is not counted as current-image proof."
+    ]
+  }
+]

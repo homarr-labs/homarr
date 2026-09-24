@@ -1,0 +1,599 @@
+[
+  {
+    "number": 6853,
+    "title": "feat: Notification widget - Support Markdown/HTML, Delete Option, and Disable Clickthrough",
+    "release_status": "addressed",
+    "implementation_coverage": "addressed-in-v2",
+    "remaining": "Validate formatting and deletion against a real Gotify deployment.",
+    "runtime_limits": [
+      "The isolated fixture has no real Gotify server, so notification rendering, deletion, and clickthrough behavior were not exercised against a live provider."
+    ]
+  },
+  {
+    "number": 6830,
+    "title": "bug: WUD integration fails to load data after upgrading WUD to 9.0.0 (connection test passes, widget doesn't)",
+    "release_status": "addressed",
+    "implementation_coverage": "addressed-in-v2",
+    "remaining": "Confirm with a live WUD 9 instance if desired, but the merged v2 implementation addresses the reported mismatch and will be fixed with v2.",
+    "runtime_limits": [
+      "The service was synthetic; no live WUD 9.0 deployment was available."
+    ]
+  },
+  {
+    "number": 6807,
+    "title": "bug: MCP tools/list fails on invite_createInvite z.date() schema",
+    "release_status": "addressed",
+    "implementation_coverage": "addressed-in-v2",
+    "remaining": "No remaining gap for the reported tools/list failure. Verify a live MCP tools/list and invite call after deployment if protocol/client versions differ.",
+    "runtime_limits": []
+  },
+  {
+    "number": 6763,
+    "title": "bug: Unable to add users/group to board access control when using OIDC via Authentik",
+    "release_status": "addressed",
+    "implementation_coverage": "addressed-in-v2",
+    "remaining": "No source gap remains for the reported form-reset behavior. If the issue was forgotten open, mention it as fixed with v2; a future report should include provider claim shape or a mutation error if access persistence fails after this separation.",
+    "runtime_limits": [
+      "Authentik/Pocket ID OIDC login and provider claim synchronization were not available; the runtime check exercised the resulting access mutation with a local admin session."
+    ]
+  },
+  {
+    "number": 6761,
+    "title": "bug: App Management Breaks w/o Modify All Boards Permission",
+    "release_status": "addressed",
+    "implementation_coverage": "addressed-in-v2",
+    "remaining": "Verify release/v2 with users holding each supported app permission combination and no board-modify-all permission, including direct navigation and management navigation visibility. Confirm unrelated app API actions still enforce their own permissions.",
+    "runtime_limits": []
+  },
+  {
+    "number": 6745,
+    "title": "bug: Unraid health widget reports RAM in GiB approximately 1024x too small",
+    "release_status": "addressed",
+    "implementation_coverage": "addressed-in-v2",
+    "remaining": "Feed an actual Unraid 7.3.2 response through a release/v2 deployment and confirm the rendered GiB value. No runtime image or browser check was performed in this source-only review.",
+    "runtime_limits": [
+      "No live Unraid 7.3.2 GraphQL endpoint or browser-rendered ring was available."
+    ]
+  },
+  {
+    "number": 6712,
+    "title": "bug: What's Up Docker (WUD) Integration Won't Connect with Username and Password",
+    "release_status": "addressed",
+    "implementation_coverage": "addressed-in-v2",
+    "remaining": "Verify against WUD 9 and a reverse proxy that requires Basic auth, including invalid-credential error handling. Source evidence confirms the requested auth path is present.",
+    "runtime_limits": [
+      "No live WUD or reverse-proxy Basic auth service was available."
+    ]
+  },
+  {
+    "number": 6697,
+    "title": "feat: Use Tb / Gb for UNRAID Integration",
+    "release_status": "addressed",
+    "implementation_coverage": "addressed-in-v2",
+    "remaining": "Users who choose binary units will still see GiB/TiB by design. Verify the default setting in an upgraded installation and confirm the reported Unraid panel uses the shared formatter.",
+    "runtime_limits": [
+      "No live upgraded user setting or rendered Unraid panel was checked."
+    ]
+  },
+  {
+    "number": 6682,
+    "title": "bug: Immich integration stops working after the latest update",
+    "release_status": "addressed",
+    "implementation_coverage": "addressed-in-v2",
+    "remaining": "No code gap remains for the reported 1.76.0 API-key regression. If the issue remains open, mention it as fixed in v2; a different current Immich error would need a new request payload/version reproduction.",
+    "runtime_limits": [
+      "No live Immich 3.x server was available."
+    ]
+  },
+  {
+    "number": 6681,
+    "title": "bug: Immich Integration show as working, zero results.",
+    "release_status": "addressed",
+    "implementation_coverage": "addressed-in-v2",
+    "remaining": "Run a live Immich album-carousel smoke check against a current Immich server if release confidence is required; no source-level gap remains for the reported unauthenticated album calls.",
+    "runtime_limits": [
+      "No live Immich album-carousel browser smoke was available."
+    ]
+  },
+  {
+    "number": 6671,
+    "title": "bug: Weather widget not displaying data",
+    "release_status": "addressed",
+    "implementation_coverage": "addressed-in-v2",
+    "remaining": "If outbound connections are enabled and a real location still returns no data, collect the provider response separately. Under NO_EXTERNAL_CONNECTION=true, no weather data is expected and the explanation is now explicit.",
+    "runtime_limits": [
+      "No browser screenshot was captured; the tRPC result plus the current widget source verifies the state contract, not pixel rendering."
+    ]
+  },
+  {
+    "number": 6628,
+    "title": "bug: MCP OAuth login redirect uses internal container hostname:port instead of BASE_URL",
+    "release_status": "addressed",
+    "implementation_coverage": "addressed-in-v2",
+    "remaining": "Deploy release/v2 behind the affected reverse proxy with BASE_URL set and exercise root/nested discovery, login redirect, and rejected-token 401 responses. Source coverage addresses the reported paths, but no live endpoint or latest-image check was performed here.",
+    "runtime_limits": [
+      "No Cloudflare Access reverse-proxy/Claude connector was available for the final external-client authorization flow."
+    ]
+  },
+  {
+    "number": 6626,
+    "title": "feat: allow selecting which disks are shown in health monitoring / disks widgets",
+    "release_status": "addressed",
+    "implementation_coverage": "partially-addressed",
+    "remaining": "Expose volume discovery/options for OMV and other supported integrations with no-SMART semantics, preserve integration-scoped filtering, and verify virtual-drive exclusions in both widgets.",
+    "runtime_limits": []
+  },
+  {
+    "number": 6622,
+    "title": "bug: Bug/UX: Restoring .zip backup shows empty boards until manual hard refresh / re-login",
+    "release_status": "addressed",
+    "implementation_coverage": "addressed-in-v2",
+    "remaining": "Add the reporter's suggested warning before accepting the backup file if desired. The reported stale/empty-board core is handled by forced re-login in v2.",
+    "runtime_limits": [
+      "A successful restore replaces the runtime database and restarts the service; automatic review rejected that destructive probe, so no live post-restart login redirect was claimed."
+    ]
+  },
+  {
+    "number": 6608,
+    "title": "bug: Integration page accessible without board-modify-all permission",
+    "release_status": "addressed",
+    "implementation_coverage": "addressed-in-v2",
+    "remaining": "Test the page with each relevant delegated/global permission in a browser, but the route guard and merged v2 fix directly address the report.",
+    "runtime_limits": []
+  },
+  {
+    "number": 6600,
+    "title": "\ud83d\ude80 Homarr v2 public beta is here! Join the testing",
+    "release_status": "addressed",
+    "implementation_coverage": "partially-addressed",
+    "remaining": "Keep this umbrella partial. Track each outstanding item independently: (1) run the real public demo repeatedly and make seed/reset behavior deterministic; (2) verify world clocks in compact versus Advanced Clock modes; (3) reproduce Media Releases with the reporter's provider and inspect logs; (4) decide whether direct Docker controls need prominent buttons and add pause if required; (5) do not count open PR #6852 as present for bookmark title toggle/size; (6) verify ultrawide layout centering/max columns; and (7) run a long performance/memory soak.",
+    "runtime_limits": [
+      "The local DEMO_MODE fixture does not prove public-demo login determinism or provider-specific live integrations.",
+      "Compact versus advanced world-clock behavior, provider Media Releases failures, ultrawide centering/max columns, and a long performance/memory soak were not proven.",
+      "Docker controls are mock integration evidence only and the visible menu has no Pause action."
+    ]
+  },
+  {
+    "number": 6589,
+    "title": "feat: 2 separate widgets for 2 separate docker instances",
+    "release_status": "addressed",
+    "implementation_coverage": "addressed-in-v2",
+    "remaining": "If users need endpoint creation entirely through the GUI, that is a separate feature; retain clear setup documentation and verify partial endpoint failures and endpoint-specific actions in deployment.",
+    "runtime_limits": [
+      "The isolated image had no personal Docker socket or live DOCKER_ENDPOINTS hosts, so endpoint-specific runtime totals/actions were not checked."
+    ]
+  },
+  {
+    "number": 6543,
+    "title": "Upgrade to MCP v2 (spec 2026-07-28)",
+    "release_status": "addressed",
+    "implementation_coverage": "partially-addressed",
+    "remaining": "Record the OAuth/CIMD evaluation and any consciously deferred scope, align authorization-server metadata and cache documentation, and verify the built-in Assistant and external-client compatibility before treating the full proposal as complete. DCR retention alone is not a claim of protocol noncompliance.",
+    "runtime_limits": [
+      "No external MCP client or separate Assistant acceptance harness was available for the remaining OAuth/client-compatibility scope."
+    ]
+  },
+  {
+    "number": 6513,
+    "title": "feat: Windows-style board switcher overlay (Alt-Tab style) when cycling boards",
+    "release_status": "addressed",
+    "implementation_coverage": "partially-addressed",
+    "remaining": "Implement the requested modifier-held overlay if that interaction remains desired: cycle on Tab/arrows, select on modifier release, and cancel on Escape. The current Shift+C searchable modal is a usable partial substitute but does not provide those semantics.",
+    "runtime_limits": [
+      "Alt-Tab-style keydown/keyup behavior is not represented by the implemented overlay and was not runtime-proven."
+    ]
+  },
+  {
+    "number": 6435,
+    "title": "feat: Expand Homarr API Coverage to Support Full Dashboard Automation",
+    "release_status": "addressed",
+    "implementation_coverage": "partially-addressed",
+    "remaining": "Add round-trip REST/OpenAPI endpoints for settings, sections, layouts, and every item geometry/update/delete operation, then cover integrations, groups/containers, search engines, users/API keys, import/export, and bootstrap/auth semantics. Publish the schemas and permission behavior for Terraform/Ansible clients.",
+    "runtime_limits": []
+  },
+  {
+    "number": 6392,
+    "title": "feat: Switch Board via keyboard shortcut",
+    "release_status": "addressed",
+    "implementation_coverage": "partially-addressed",
+    "remaining": "Implement and document guarded global next/previous and numbered or persisted per-board shortcuts, then verify them on release/v2 across typing contexts and board counts.",
+    "runtime_limits": [
+      "The implemented Shift+C/gallery workflow is present, but the issue's requested direct global next/previous and numbered shortcuts remain absent."
+    ]
+  },
+  {
+    "number": 6207,
+    "title": "bug: Unifi integration not working",
+    "release_status": "addressed",
+    "implementation_coverage": "addressed-in-v2",
+    "remaining": "No v2 code gap remains for the reported default-port error. If the issue was forgotten open, mention it as fixed by v2; users still need a local controller account and supported HTTPS endpoint.",
+    "runtime_limits": [
+      "The fixture was plain HTTP and did not prove TLS, certificate, Dream Router, or authentication behavior against a controller."
+    ]
+  },
+  {
+    "number": 6153,
+    "title": "feat: re-open: add open webui  #3766",
+    "release_status": "addressed",
+    "implementation_coverage": "partially-addressed",
+    "remaining": "Test the intended Open WebUI endpoint, authentication, model discovery, streaming and supported tool behavior with Assistant. Decide whether this satisfies the requester before treating it as fully resolved; a dedicated Open WebUI client remains absent.",
+    "runtime_limits": []
+  },
+  {
+    "number": 6050,
+    "title": "bug: background image is absent or cut off with white space",
+    "release_status": "addressed",
+    "implementation_coverage": "partially-addressed",
+    "remaining": "Reproduce in Firefox/Linux using the reporter's image and deployment, capture the image response and decode result, and verify both the viewport-height fix and any remaining CDN/proxy/content-type issue.",
+    "runtime_limits": []
+  },
+  {
+    "number": 6008,
+    "title": "bug: manage/about page fails to load with ECONNREFUSED",
+    "release_status": "addressed",
+    "implementation_coverage": "addressed-in-v2",
+    "remaining": "Validate /manage/about in the affected source-built/restricted-network deployment and inspect any new digest if direct dependency reading fails; the original loopback ECONNREFUSED path is removed.",
+    "runtime_limits": []
+  },
+  {
+    "number": 5867,
+    "title": "feat: REST Endpoint  to manage boards",
+    "release_status": "addressed",
+    "implementation_coverage": "addressed-in-v2",
+    "remaining": "The issue's minimal create-board/add-app workflow is covered. Declarative read/update/delete coverage for every board item and related resources remains the separate #6435/#6546 scope.",
+    "runtime_limits": []
+  },
+  {
+    "number": 5730,
+    "title": "bug: Administration menu breaks if you click around the options too much",
+    "release_status": "addressed",
+    "implementation_coverage": "partially-addressed",
+    "remaining": "Verify logs navigation on release/v2, then independently reproduce the Scalar dependency error and tRPC stream shutdown. Upgrade or isolate incompatible Scalar/tRPC behavior and add a server-safe close path if those two failures remain; the xterm source change alone does not close the compound report.",
+    "runtime_limits": []
+  },
+  {
+    "number": 5342,
+    "title": "bug: Homarr generates malformed DNS queries (<host>https) for Tracearr integration",
+    "release_status": "addressed",
+    "implementation_coverage": "addressed-in-v2",
+    "remaining": "No product work remains for the reported malformed URL. If the issue was not closed on GitHub, mention it as fixed by v2; monitor a real Tracearr deployment for unrelated proxy/image failures.",
+    "runtime_limits": [
+      "No live Tracearr image response or resolver trace was available."
+    ]
+  },
+  {
+    "number": 5336,
+    "title": "feat: widget to display missing / queued movies & episodes",
+    "release_status": "addressed",
+    "implementation_coverage": "addressed-in-v2",
+    "remaining": "No issue-specific implementation gap remains; verify integration-specific data quality separately if a particular Radarr/Sonarr version reports different queue semantics.",
+    "runtime_limits": [
+      "No live Radarr/Sonarr queue or missing-item payload was available."
+    ]
+  },
+  {
+    "number": 4973,
+    "title": "bug: System Resources Incorrect Total Ram for TrueNAS 25.04",
+    "release_status": "addressed",
+    "implementation_coverage": "addressed-in-v2",
+    "remaining": "Confirm the original TrueNAS 25.04 payload has available memory between zero and physmem, then compare System Resources and Health Monitoring against the host. The arithmetic fix is present; no live TrueNAS validation was performed.",
+    "runtime_limits": [
+      "No TrueNAS 25.04 payload or rendered System Resources comparison was available."
+    ]
+  },
+  {
+    "number": 4906,
+    "title": "feat: Top right UI Cleanup (concept video inside)",
+    "release_status": "addressed",
+    "implementation_coverage": "partially-addressed",
+    "remaining": "Because the source request is a visual concept without exact acceptance criteria, keep this partial. Validate keyboard, touch, screen-reader, and hidden-header discoverability against the specific video expectations.",
+    "runtime_limits": []
+  },
+  {
+    "number": 4815,
+    "title": "feature: Seed the database with a showcase default dashboard using the new JSON import endpoint",
+    "release_status": "addressed",
+    "implementation_coverage": "partially-addressed",
+    "remaining": "Add or explicitly ship a standard fresh-install showcase configuration with the requested no-integration widgets, clock locations, stock note, links/search engine, and verified defaults; clarify whether DEMO_MODE is the intended showcase entry point. The in-place selection/creation workflow has no remaining source-level gap, but its integrated behavior was not live-tested.",
+    "runtime_limits": [
+      "This is the DEMO_MODE showcase board; it does not prove that an ordinary fresh install gets the requested static showcase configuration or that provider-backed integrations work live."
+    ]
+  },
+  {
+    "number": 4797,
+    "title": "feat(releases): support image tags",
+    "release_status": "addressed",
+    "implementation_coverage": "partially-addressed",
+    "remaining": "The tag endpoint and latest/no-filter path work for repository discovery, but exact image-tag selection and flexible include/exclude filters are still missing. Verify the reporter's :latest and desired tag semantics against a current Docker Hub repository.",
+    "runtime_limits": []
+  },
+  {
+    "number": 4543,
+    "title": "feat: Edit apps inside Edit Item",
+    "release_status": "addressed",
+    "implementation_coverage": "addressed-in-v2",
+    "remaining": "No material gap for the stated request. Permission gating is intentional: the App tab appears only for users with app-modify-all.",
+    "runtime_limits": []
+  },
+  {
+    "number": 4541,
+    "title": "feat(boards): support automatic layout for different screen sizes",
+    "release_status": "addressed",
+    "implementation_coverage": "partially-addressed",
+    "remaining": "Decide whether editing Base should automatically regenerate every non-Base layout or only offer reset; if automatic, propagate the new Base elements/geometry to existing layouts while preserving intentional overrides, then verify save and migration behavior.",
+    "runtime_limits": [
+      "Independent layouts remain different after desktop edits. #2861 also has new reporter confirmation for the simpler v2 demo dashboard; this does not establish every migrated layout behaves identically."
+    ]
+  },
+  {
+    "number": 4533,
+    "title": "feat: show Description next to title for application",
+    "release_status": "addressed",
+    "implementation_coverage": "addressed-in-v2",
+    "remaining": "The default remains column layout, so users must choose a horizontal layout for this arrangement. Verify whether the reporter expected horizontal to become the default rather than an available option.",
+    "runtime_limits": []
+  },
+  {
+    "number": 4330,
+    "title": "feat(icon-picker): show more than 12 icons per source",
+    "release_status": "addressed",
+    "implementation_coverage": "partially-addressed",
+    "remaining": "Add bounded pagination or progressive loading with a visible control and a way to know whether a repository is truncated. Keep search reset and performance behavior explicit; the current 24-result increase only reduces the symptom.",
+    "runtime_limits": [
+      "The fixed per-source result set is larger than the old 12-item behavior, but the requested way to reach further icons remains absent."
+    ]
+  },
+  {
+    "number": 4159,
+    "title": "bug: Tasks page does not load",
+    "release_status": "addressed",
+    "implementation_coverage": "addressed-in-v2",
+    "remaining": "Confirm a source-built or otherwise non-Docker V2 deployment can start the embedded task service and load /manage/tools/tasks; investigate startup failures separately if the embedded service rejects readiness.",
+    "runtime_limits": []
+  },
+  {
+    "number": 4157,
+    "title": "feat: Download Client Item - Job Name column should be wider than the rest.",
+    "release_status": "addressed",
+    "implementation_coverage": "addressed-in-v2",
+    "remaining": "Users may still tune widths for unusually long names, but no issue-level implementation gap remains. A browser check can verify the persisted resize interaction.",
+    "runtime_limits": [
+      "The automation pointer drag did not produce an observable width change, so persisted user resizing was not proven."
+    ]
+  },
+  {
+    "number": 3990,
+    "title": "feat: Allow one URL and just map ports for each app",
+    "release_status": "addressed",
+    "implementation_coverage": "partially-addressed",
+    "remaining": "Add a server- or user-scoped base-address registry, app-level selection/reference semantics, and a deliberate update/migration policy for existing hrefs. Preserve the current one-origin template as a convenient setup default.",
+    "runtime_limits": []
+  },
+  {
+    "number": 3913,
+    "title": "feat: Support running as fully non-root containers",
+    "release_status": "addressed",
+    "implementation_coverage": "partially-addressed",
+    "remaining": "Support a genuinely non-root image/entrypoint path that never requires chown or privileged filesystem setup, define writable cache/runtime directories and Docker socket behavior, and verify Docker/Podman/Kubernetes user configurations.",
+    "runtime_limits": [
+      "This was a Docker direct-user check; Podman and Kubernetes user/security-context variants were not run."
+    ]
+  },
+  {
+    "number": 3904,
+    "title": "feat: GPU usage in Dash component",
+    "release_status": "addressed",
+    "implementation_coverage": "addressed-in-v2",
+    "remaining": "No source-level implementation gap remains. GPU visibility and telemetry still depend on a Dashdot build that exposes /load/gpu; live hardware verification was outside this triage.",
+    "runtime_limits": [
+      "No Dashdot NVIDIA image or GPU telemetry was available for a live check."
+    ]
+  },
+  {
+    "number": 3887,
+    "title": "feat: allow no network for system resources and allow proxmox to be used",
+    "release_status": "addressed",
+    "implementation_coverage": "partially-addressed",
+    "remaining": "Either add a Proxmox-compatible System Resources adapter with clearly defined network semantics or update the widget documentation/selector wording to describe cluster-only Proxmox support. No network-chart handling gap remains for integrations that return no network samples.",
+    "runtime_limits": []
+  },
+  {
+    "number": 3805,
+    "title": "bug: cache invalidation for board settings not working",
+    "release_status": "addressed",
+    "implementation_coverage": "addressed-in-v2",
+    "remaining": "The v2 code path is explicit, but no browser reproduction was run here. Verify persistence in the reported Firefox/ultrawide scenario after a reload and across another session.",
+    "runtime_limits": [
+      "Runtime exercised Chromium at1280px; Firefox ultrawide is untested. Maintainer identified server cache invalidation as cause, addressed by current save/invalidation path."
+    ]
+  },
+  {
+    "number": 3786,
+    "title": "feat: automatic service discovery",
+    "release_status": "addressed",
+    "implementation_coverage": "partially-addressed",
+    "remaining": "The code does not create a continuously populated runtime discovered-services widget/section or the requested automatic filter. Confirm whether onboarding/admin-assisted setup is an accepted replacement; otherwise the persistent discovery presentation remains open.",
+    "runtime_limits": []
+  },
+  {
+    "number": 3771,
+    "title": "feat(boards): open all apps",
+    "release_status": "addressed",
+    "implementation_coverage": "partially-addressed",
+    "remaining": "Promote the shared app-opening helper to the board header, define how nested/duplicated apps and popup blockers behave, and verify it is available in view mode for read-only users as requested by the unmerged PR.",
+    "runtime_limits": []
+  },
+  {
+    "number": 3731,
+    "title": "Release Widget: Docker importable programs",
+    "release_status": "addressed",
+    "implementation_coverage": "partially-addressed",
+    "remaining": "Decide whether cross-provider image identity should be canonicalized or whether the import UI should clearly explain that imagegenius/immich is a different source. Add a regression case for the screenshot's GHCR image and existing immich-app/immich entry, then verify the imported source actually serves releases.",
+    "runtime_limits": [
+      "No live Docker import modal or release fetch for the screenshot's two image/repository identities was available."
+    ]
+  },
+  {
+    "number": 3675,
+    "title": "bug: Stopping the container with SIGTERM fails",
+    "release_status": "addressed",
+    "implementation_coverage": "partially-addressed",
+    "remaining": "Reproduce SIGTERM on V2 with Docker/Podman and Redis logging enabled, checking the embedded services and actual Next.js exit behavior. The potential open handles and wait ordering justify investigation, not a claim that the exact old hang is proven to remain.",
+    "runtime_limits": [
+      "The check used Docker only; Podman, systemd, and quadlet were not run.",
+      "The startup-time failure is a migration-phase boundary case, while the post-readiness Docker path passed."
+    ]
+  },
+  {
+    "number": 3597,
+    "title": "bug: nexcloud integration with subpaths do not work",
+    "release_status": "addressed",
+    "implementation_coverage": "addressed-in-v2",
+    "remaining": "Five direct assertions against the unmodified release/v2 URL helper passed (root, subpath, trailing slash, existing DAV endpoint, query/hash cleanup). A live Nextcloud calendar request, authentication and rendering remain untested; see RUNTIME-VALIDATION.md.",
+    "runtime_limits": [
+      "No live Nextcloud DAV authentication or calendar request was performed."
+    ]
+  },
+  {
+    "number": 3595,
+    "title": "feat: Focus search bar like pre 1.0",
+    "release_status": "addressed",
+    "implementation_coverage": "partially-addressed",
+    "remaining": "Decide whether V2 should autofocus/open Spotlight on board entry or expose a focusable persistent search field; if the original behavior remains desired, add a page-load/new-tab trigger and verify keyboard focus accessibility.",
+    "runtime_limits": []
+  },
+  {
+    "number": 3515,
+    "title": "feat: Personalize the upper right menu bar",
+    "release_status": "addressed",
+    "implementation_coverage": "addressed-in-v2",
+    "remaining": "No material gap for the stated request. Verify the specific mobile/desktop arrangement only if the reporter expected separate per-device custom layouts.",
+    "runtime_limits": [
+      "The browser interaction did not produce a durable preference update, so per-user persistence and responsive arrangements remain unverified."
+    ]
+  },
+  {
+    "number": 3287,
+    "title": "feat: sidebars",
+    "release_status": "addressed",
+    "implementation_coverage": "addressed-in-v2",
+    "remaining": "Users should still test migrated v1 layouts and responsive widths in their own deployment, but the requested sidebar capability is present in v2.",
+    "runtime_limits": []
+  },
+  {
+    "number": 3266,
+    "title": "feat: Multiple Docker Environments in GUI",
+    "release_status": "addressed",
+    "implementation_coverage": "partially-addressed",
+    "remaining": "Build a management UI to add, edit, validate, test, and remove named Docker endpoints, with secure secret/certificate handling and a clear persistence model. The existing environment configuration is a backend capability and does not complete the GUI request.",
+    "runtime_limits": []
+  },
+  {
+    "number": 3220,
+    "title": "bug(calendar): Nextcloud integration - not all entries are displayed",
+    "release_status": "addressed",
+    "implementation_coverage": "partially-addressed",
+    "remaining": "Retest with the original Nextcloud version, calendar count, recurrence/all-day data, and exact time zone. Add a fixture covering all calendars and recurrence exceptions, then confirm whether unsupported VEVENT forms or server-side DAV responses still omit entries.",
+    "runtime_limits": [
+      "No live Nextcloud recurrence, all-day, time-zone, or original three-calendar reproduction was available."
+    ]
+  },
+  {
+    "number": 2911,
+    "title": "bug: Cannot drag apps from dynamic zone",
+    "release_status": "addressed",
+    "implementation_coverage": "addressed-in-v2",
+    "remaining": "On release/v2, drag multiple apps successively out of a migrated container and between containers. Verify the second and subsequent drags move the selected app rather than the parent, including after save/reload. Keep this issue pending that reproduction.",
+    "runtime_limits": [
+      "Fresh fixture covers repeated nested-to-root drag; original migrated dashboard was unavailable."
+    ]
+  },
+  {
+    "number": 2861,
+    "title": "bug: All apps drop out of their categories on mobile, or if the browser is resized to a smaller width",
+    "release_status": "addressed",
+    "implementation_coverage": "partially-addressed",
+    "remaining": "Test a migrated v1 board with categories/dynamic sections across every configured breakpoint, including edits followed by resize and refresh. If the requirement is invariant functional membership, v2 needs shared section membership or automatic synchronized updates; Base reset/projection alone does not guarantee it.",
+    "runtime_limits": [
+      "Independent layouts remain different after desktop edits. #2861 also has new reporter confirmation for the simpler v2 demo dashboard; this does not establish every migrated layout behaves identically."
+    ]
+  },
+  {
+    "number": 2657,
+    "title": "feat(auth): support object path for groups and username claims",
+    "release_status": "addressed",
+    "implementation_coverage": "addressed-in-v2",
+    "remaining": "No issue-level implementation gap remains for the reported nested Keycloak claim. The linked PR #6294's open/dev status should not override the directly inspected release/v2 implementation; deployment-specific verification is optional.",
+    "runtime_limits": [
+      "No disposable Keycloak/OIDC provider was available for an end-to-end claim exchange."
+    ]
+  },
+  {
+    "number": 2495,
+    "title": "feat: Redirect to login page if not logged in",
+    "release_status": "addressed",
+    "implementation_coverage": "partially-addressed",
+    "remaining": "Existing public boards intentionally render without login, and management routes do not consistently retain the original destination. Decide whether the desired policy is all boards/manage routes or only protected resources, then verify each route.",
+    "runtime_limits": []
+  },
+  {
+    "number": 2482,
+    "title": "feat: add all relevant tRPC queries / mutations as openapi endpoint",
+    "release_status": "addressed",
+    "implementation_coverage": "partially-addressed",
+    "remaining": "Define the supported API surface and add metadata/output schemas for the relevant missing routers and procedures, with deliberate exclusions for sensitive or UI-only operations. The existing OpenAPI subset and API-key handler do not satisfy the stated all-relevant coverage.",
+    "runtime_limits": []
+  },
+  {
+    "number": 2160,
+    "title": "feat: Two proxmox on one TAB",
+    "release_status": "addressed",
+    "implementation_coverage": "addressed-in-v2",
+    "remaining": "Confirm with the two standalone Proxmox servers. Per-host panels remain separate within the widget; aggregated totals were not an explicit requirement in this conversation.",
+    "runtime_limits": [
+      "No two-standalone-Proxmox runtime or browser rendering was available."
+    ]
+  },
+  {
+    "number": 2095,
+    "title": "feat: add css templates",
+    "release_status": "addressed",
+    "implementation_coverage": "partially-addressed",
+    "remaining": "Add a structured template format with typed variables, explicit selector/target scopes, composition semantics, and selectors for item and container settings. Workshop's raw CSS import is useful partial coverage but cannot prove the requested fragment system.",
+    "runtime_limits": []
+  },
+  {
+    "number": 2078,
+    "title": "feat: Permission per App / App-Element / Dynamic Group",
+    "release_status": "addressed",
+    "implementation_coverage": "partially-addressed",
+    "remaining": "Implement and define the native semantics for group-based visibility of apps, bookmarks, widgets, and nested containers, including layout reflow and whether hidden items are removed or merely disabled. Treat it as presentation/access control with explicit security boundaries; Custom Widgets or a user-created workaround do not satisfy native app and item filtering.",
+    "runtime_limits": []
+  },
+  {
+    "number": 1921,
+    "title": "feat: Add titles and folding for Dynamic Sections",
+    "release_status": "addressed",
+    "implementation_coverage": "addressed-in-v2",
+    "remaining": "There is no dedicated opacity slider in the Container options, and the legacy transform only changes the section kind. Verify migrated boards if the opacity follow-up is still required.",
+    "runtime_limits": [
+      "Legacy board migration and opacity follow-up were not runtime tested."
+    ]
+  },
+  {
+    "number": 925,
+    "title": "feat: import items from another board",
+    "release_status": "addressed",
+    "implementation_coverage": "partially-addressed",
+    "remaining": "A board-to-board import picker with preview, permission handling, and an option to choose items without manually switching tabs would still be needed for the full proposal.",
+    "runtime_limits": []
+  },
+  {
+    "number": 437,
+    "title": "feat: add board preview",
+    "release_status": "addressed",
+    "implementation_coverage": "addressed-in-v2",
+    "remaining": "No issue-level gap was identified. A browser check could confirm the visual fidelity at unusual board layouts, but source evidence covers the requested capability.",
+    "runtime_limits": []
+  }
+]

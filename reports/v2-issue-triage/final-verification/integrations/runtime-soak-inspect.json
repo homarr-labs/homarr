@@ -1,0 +1,18 @@
+{
+  "image": "sha256:a448a40203214afd934c41999718825bb41ce3a6b4ebd358cc0da9242c9a603d",
+  "revision": "439b208283c2e80dd399fcb2a83e1661bb0c099f",
+  "container": "homarr-final-runtime-20260918",
+  "network": "homarr-final-runtime-20260918",
+  "portBinding": "127.0.0.1:47629 -> 7575/tcp",
+  "memoryBytes": 1610612736,
+  "memorySwapBytes": 1610612736,
+  "nanoCpus": 2000000000,
+  "pidsLimit": 512,
+  "tmpfs": {
+    "/appdata": "rw,exec,size=768m",
+    "/tmp": "rw,exec,size=256m"
+  },
+  "binds": null,
+  "mounts": [],
+  "hostDockerSocketMounted": false
+}

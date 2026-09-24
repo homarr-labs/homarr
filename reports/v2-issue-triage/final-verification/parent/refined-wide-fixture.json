@@ -1,0 +1,186 @@
+{
+  "backgroundImageAttachment": "fixed",
+  "backgroundImageRepeat": "no-repeat",
+  "backgroundImageSize": "cover",
+  "backgroundImageUrl": null,
+  "creator": {
+    "email": "demo@example.com",
+    "id": "m793pneldj8jpdmqpb8t7dcm",
+    "image": null,
+    "name": "demo"
+  },
+  "creatorId": "m793pneldj8jpdmqpb8t7dcm",
+  "customCss": null,
+  "disableStatus": false,
+  "faviconImageUrl": null,
+  "groupPermissions": [],
+  "iconColor": null,
+  "id": "hc4iu0mwpu6huvn3gqfuz7xn",
+  "isPublic": true,
+  "itemRadius": "lg",
+  "items": [],
+  "layouts": [
+    {
+      "breakpoint": 0,
+      "columnCount": 3,
+      "id": "tmyc8ba4bkr7bgzpjjqwbqmu",
+      "leftGutterColumnCount": 0,
+      "name": "Mobile",
+      "rightGutterColumnCount": 0,
+      "role": "mobile"
+    },
+    {
+      "breakpoint": 768,
+      "columnCount": 12,
+      "id": "afn8isze7xk05de4wzevhsvl",
+      "leftGutterColumnCount": 0,
+      "name": "Base",
+      "rightGutterColumnCount": 0,
+      "role": "base"
+    }
+  ],
+  "logoImageUrl": null,
+  "metaTitle": null,
+  "name": "menu-regression",
+  "opacity": 100,
+  "pageTitle": null,
+  "primaryColor": "#fa5252",
+  "secondaryColor": "#fd7e14",
+  "sections": [
+    {
+      "id": "mmbfnm7razxu1oclgnxtjfcr",
+      "kind": "empty",
+      "xOffset": 0,
+      "yOffset": 0
+    },
+    {
+      "collapsed": false,
+      "id": "menu-depth-0",
+      "kind": "container",
+      "layouts": [
+        {
+          "height": 8,
+          "layoutId": "tmyc8ba4bkr7bgzpjjqwbqmu",
+          "parentSectionId": "mmbfnm7razxu1oclgnxtjfcr",
+          "width": 3,
+          "xOffset": 0,
+          "yOffset": 0
+        },
+        {
+          "height": 8,
+          "layoutId": "afn8isze7xk05de4wzevhsvl",
+          "parentSectionId": "mmbfnm7razxu1oclgnxtjfcr",
+          "width": 8,
+          "xOffset": 0,
+          "yOffset": 0
+        }
+      ],
+      "options": {
+        "borderColor": "",
+        "collapsible": true,
+        "customCssClasses": [],
+        "scrollable": false,
+        "showLabel": false,
+        "showOpenAll": false,
+        "title": "Depth 0"
+      }
+    },
+    {
+      "collapsed": false,
+      "id": "menu-depth-1",
+      "kind": "container",
+      "layouts": [
+        {
+          "height": 7,
+          "layoutId": "tmyc8ba4bkr7bgzpjjqwbqmu",
+          "parentSectionId": "menu-depth-0",
+          "width": 3,
+          "xOffset": 0,
+          "yOffset": 0
+        },
+        {
+          "height": 7,
+          "layoutId": "afn8isze7xk05de4wzevhsvl",
+          "parentSectionId": "menu-depth-0",
+          "width": 8,
+          "xOffset": 0,
+          "yOffset": 0
+        }
+      ],
+      "options": {
+        "borderColor": "",
+        "collapsible": true,
+        "customCssClasses": [],
+        "scrollable": false,
+        "showLabel": false,
+        "showOpenAll": false,
+        "title": "Depth 1"
+      }
+    },
+    {
+      "collapsed": false,
+      "id": "menu-depth-2",
+      "kind": "container",
+      "layouts": [
+        {
+          "height": 6,
+          "layoutId": "tmyc8ba4bkr7bgzpjjqwbqmu",
+          "parentSectionId": "menu-depth-1",
+          "width": 3,
+          "xOffset": 0,
+          "yOffset": 0
+        },
+        {
+          "height": 6,
+          "layoutId": "afn8isze7xk05de4wzevhsvl",
+          "parentSectionId": "menu-depth-1",
+          "width": 8,
+          "xOffset": 0,
+          "yOffset": 0
+        }
+      ],
+      "options": {
+        "borderColor": "",
+        "collapsible": true,
+        "customCssClasses": [],
+        "scrollable": false,
+        "showLabel": false,
+        "showOpenAll": false,
+        "title": "Depth 2"
+      }
+    },
+    {
+      "collapsed": false,
+      "id": "menu-depth-3",
+      "kind": "container",
+      "layouts": [
+        {
+          "height": 5,
+          "layoutId": "tmyc8ba4bkr7bgzpjjqwbqmu",
+          "parentSectionId": "menu-depth-2",
+          "width": 3,
+          "xOffset": 0,
+          "yOffset": 0
+        },
+        {
+          "height": 5,
+          "layoutId": "afn8isze7xk05de4wzevhsvl",
+          "parentSectionId": "menu-depth-2",
+          "width": 8,
+          "xOffset": 0,
+          "yOffset": 0
+        }
+      ],
+      "options": {
+        "borderColor": "",
+        "collapsible": true,
+        "customCssClasses": [],
+        "scrollable": false,
+        "showLabel": false,
+        "showOpenAll": false,
+        "title": "Depth 3"
+      }
+    }
+  ],
+  "userPermissions": []
+}

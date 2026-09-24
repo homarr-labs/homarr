@@ -1,0 +1,3 @@
+[WARN] Your node_modules are out of sync with your lockfile. Patches were modified
+Found 0 warnings and 0 errors.
+Finished in 489ms on 2 files with 197 rules using 2 threads.

@@ -1,0 +1,93 @@
+[
+  {
+    "number": 6850,
+    "checks": [
+      "On homarr:v2-issue-triage-439b2082, a local OIDC authorization-code login completed in the browser and reached the authenticated dashboard.",
+      "The actual account-menu Logout control was clicked with a delayed local OIDC /end-session response (1.5 seconds); the browser landed at /auth/login.",
+      "The provider recorded /end-session, logout-start, logout-aborted, and logout-connection-closed-before-end about 8 ms after the request; logout-complete was absent.",
+      "The same actual account-menu probe on homarr:v2-triage-final-candidate (sha256:47d853a87ff0e37657f1494477801de9e3adcdb1f06c8409cbc5830d860fb001) reproduced the abort on fresh port 47613.",
+      "The post-fix homarr:v2-triage-logout-fix image (sha256:8da60640d9ae676dd1b2d59a1cb25f68820fb419e23d11d40188345577ad1059) completed the delayed end-session request; the provider recorded logout-complete after 1.5 seconds.",
+      "The post-fix browser had a session cookie before Logout, no session cookie after Logout, and revisiting localhost:47616 redirected to /auth/login."
+    ],
+    "outcome": "baseline-failure-fixed-in-logout-candidate",
+    "suggested_status": "addressed-in-v2",
+    "confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/final-verification/auth/mock-oidc.js",
+      "reports/v2-issue-triage/final-verification/auth/oidc-runtime-events.json",
+      "reports/v2-issue-triage/final-verification/auth/oidc-final-candidate-logout.json",
+      "reports/v2-issue-triage/final-verification/auth/oidc-logout-fix.json",
+      "Final-candidate container homarr-triage-auth-final-oidc-20260918 used a fresh named volume, provider network, and no host mounts or sockets; browser session used the actual account menu.",
+      "Final-candidate provider event sequence: /end-session -> logout-start -> logout-aborted -> logout-connection-closed-before-end, with no logout-complete."
+    ],
+    "remaining": [
+      "The real Authentik end-session endpoint was unavailable; the controlled delayed provider proves the browser sequencing and local-session contract."
+    ]
+  },
+  {
+    "number": 5085,
+    "checks": [
+      "OpenLDAP fixture ldapsearch returned two cn=admin entries: uid=admin under ou=users and cn=admin under ou=virtual-groups, modelling the reported Authentik user plus virtual-group collision.",
+      "Baseline homarr:v2-issue-triage-439b2082 on port 47602 with username attribute cn and no extra user filter rejected admin with HTTP 302 to /auth/login?error=CredentialsSignin; runtime log recorded Multiple LDAP users found for admin.",
+      "Baseline with extra filter (objectClass=inetOrgPerson) and group member user attribute distinguishedName authenticated admin but retrieved zero groups because the OpenLDAP fixture exposes the DN as protocol dn and has no distinguishedName attribute.",
+      "Baseline documented equivalent with extra filter and group member user attribute dn authenticated admin and retrieved two groups.",
+      "Final candidate homarr:v2-triage-final-candidate on fresh port 47614 with the documented filter and dn attribute authenticated the duplicate admin and retrieved two groups."
+    ],
+    "outcome": "partial-with-final-candidate-success",
+    "suggested_status": "partially-addressed",
+    "confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/final-verification/auth/openldap-fixture.ldif",
+      "reports/v2-issue-triage/final-verification/auth/openldap-virtual-group.ldif",
+      "reports/v2-issue-triage/final-verification/auth/ldap-runtime-matrix.json",
+      "Final-candidate image ID sha256:47d853a87ff0e37657f1494477801de9e3adcdb1f06c8409cbc5830d860fb001; fresh container homarr-triage-auth-final-20260918 used port 47614 and a fresh named volume."
+    ],
+    "remaining": [
+      "The exact Authentik LDAP Outpost schema, sAMAccountName attribute, and provider response were unavailable; the controlled fixture proves the duplicate-result failure and final-candidate filter/dn success path but does not prove Authentik-specific behavior.",
+      "The distinguishedName configuration variant needs a vendor fixture that actually returns a distinguishedName attribute; OpenLDAP's protocol dn equivalent was tested end to end."
+    ]
+  },
+  {
+    "number": 4965,
+    "checks": [
+      "Baseline OpenLDAP fixture with cn=Громов Иван authenticated on port 47601, retrieved one group, and created the LDAP user; plain UTF-8 alone did not reproduce the report on this provider.",
+      "Baseline DN cn=Comma\\2C User was found, but user bind failed after Homarr normalized the DN to a literal comma; HTTP 302 ended at /auth/login?error=CredentialsSignin.",
+      "Baseline DN cn=100% User failed during user search before User found in LDAP; HTTP 302 ended at /auth/login?error=CredentialsSignin, consistent with decodeURIComponent receiving a literal percent.",
+      "Final candidate on fresh port 47614 with username attribute uid and extra filter (objectClass=inetOrgPerson) authenticated unicode, comma, and percent users; each returned HTTP 302 to the app root and logged correct credentials, groups=1, and User logged in."
+    ],
+    "outcome": "final-candidate-fix-confirmed-on-controlled-ldap",
+    "suggested_status": "addressed-in-v2",
+    "confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/final-verification/auth/openldap-fixture.ldif",
+      "reports/v2-issue-triage/final-verification/auth/ldap-runtime-matrix.json",
+      "Final-candidate image ID sha256:47d853a87ff0e37657f1494477801de9e3adcdb1f06c8409cbc5830d860fb001; fresh container homarr-triage-auth-final-20260918 used port 47614 and a fresh named volume.",
+      "The cn username value Comma, User still fails the existing LDAP username schema, but uid=comma isolates the escaped DN and succeeds after the fix."
+    ],
+    "remaining": [
+      "Retest against the reported AD/LDAPS vendor and a non-ASCII DN; keep separate coverage for username-schema validation and LDAP filter escaping."
+    ]
+  },
+  {
+    "number": 4406,
+    "checks": [
+      "The local OIDC fixture authorization-code flow sent response_type=code with state and PKCE, exchanged the code successfully (token authValid=true), and reached the Homarr dashboard.",
+      "Replaying the same authorization request as response_type=id_token made the provider return id_token and state in the URL fragment; the browser callback ended at /auth/login?error=Configuration with the fragment still present, so the server did not receive the fragment values.",
+      "The final-candidate code path uses the same default authorization-code behavior; no Cloudflare or Entra credentials were used."
+    ],
+    "outcome": "code-flow-confirmed-fragment-failure-reproduced",
+    "suggested_status": "addressed-in-v2",
+    "confidence": "high",
+    "evidence": [
+      "reports/v2-issue-triage/final-verification/auth/mock-oidc.js",
+      "reports/v2-issue-triage/final-verification/auth/oidc-runtime-events.json",
+      "reports/v2-issue-triage/final-verification/auth/oidc-final-candidate-code.json",
+      "reports/v2-issue-triage/final-verification/auth/oidc-final-candidate-fragment.json",
+      "Code-flow event sequence includes response_type=code, statePresent=true, fragmentMode=false, POST /token, and authValid=true.",
+      "Fragment event sequence includes response_type=id_token, statePresent=true, fragmentMode=true; browser result was /auth/login?error=Configuration#id_token=...&state=... (raw token omitted from evidence)."
+    ],
+    "remaining": [
+      "Validate the authorization-code and claim mapping against a real Cloudflare Zero Trust tenant if that provider is still required; the controlled fixture establishes the fragment failure mechanism and the code-flow contract."
+    ]
+  }
+]

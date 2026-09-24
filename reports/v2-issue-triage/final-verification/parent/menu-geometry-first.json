@@ -1,0 +1,42 @@
+{
+  "handles": [
+    {
+      "height": 22.984375,
+      "label": "Settings for Depth 3",
+      "visible": true,
+      "width": 22.984375,
+      "x": 134.1875,
+      "y": 99.828125
+    },
+    {
+      "height": 23.375,
+      "label": "Settings for Depth 2",
+      "visible": true,
+      "width": 23.375,
+      "x": 97.953125,
+      "y": 94.890625
+    },
+    {
+      "height": 23.703125,
+      "label": "Settings for Depth 1",
+      "visible": true,
+      "width": 23.703125,
+      "x": 61.5625,
+      "y": 89.9375
+    },
+    {
+      "height": 24,
+      "label": "Settings for Depth 0",
+      "visible": true,
+      "width": 24,
+      "x": 25,
+      "y": 85
+    }
+  ],
+  "overlaps": [],
+  "url": "http://127.0.0.1:47600/boards/menu-regression",
+  "viewport": {
+    "height": 577,
+    "width": 1280
+  }
+}

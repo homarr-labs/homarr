@@ -1,0 +1,54 @@
+{
+  "base": "439b208283c2e80dd399fcb2a83e1661bb0c099f",
+  "image": "homarr:v2-triage-final-candidate",
+  "files": [
+    {
+      "path": "apps/nextjs/src/components/board/sections/container-section.tsx",
+      "sha256": "7f42145f22a675d4a31ba377cb78b45120f2853cd3065c34a7d4801f070c570b"
+    },
+    {
+      "path": "apps/nextjs/src/components/board/sections/container/container-menu.tsx",
+      "sha256": "48d2d4386f9f9457f2e54658add88875f6df679622a885fde7e22dba186dc672"
+    },
+    {
+      "path": "packages/auth/providers/credentials/authorization/ldap-authorization.ts",
+      "sha256": "367b9598d086d69f725fce4c6ad6b55607bc0fd940932033682e8d008ef3dbf9"
+    },
+    {
+      "path": "packages/auth/providers/credentials/ldap-client.ts",
+      "sha256": "c3dad7d1129164e98a6ad3d314a98696d78bbf3c32e42a8c05d2900b2cc61a9c"
+    },
+    {
+      "path": "packages/auth/providers/test/ldap-authorization.spec.ts",
+      "sha256": "05ee0546c0dc0e696af8b8983f4810c72f17e5a410f6753c421188dce64e2e80"
+    },
+    {
+      "path": "packages/request-handler/src/release-providers.ts",
+      "sha256": "597c2afad93278dc1df34faad835f15d25e8598313cb203087f72ab4893b6825"
+    },
+    {
+      "path": "scripts/run.sh",
+      "sha256": "6c9be8f2c57c7e4f17d3541720eb6a446683fc0c1799289625cf6d0b8049fc11"
+    },
+    {
+      "path": "packages/auth/providers/test/ldap-client.spec.ts",
+      "sha256": "b224b9f87259d01569990805b65fe08cb417207a462fc8f27dbdf42f2ff52398"
+    },
+    {
+      "path": "packages/request-handler/src/test/github-release-pagination.spec.ts",
+      "sha256": "b0134b2d4a7c83f6f861367ccfba99bbd8b8d16c593587ebe995140a13ace941"
+    }
+  ],
+  "image_id": "sha256:47d853a87ff0e37657f1494477801de9e3adcdb1f06c8409cbc5830d860fb001",
+  "production_build": "passed",
+  "typechecks": {
+    "auth": "passed",
+    "request-handler": "passed",
+    "nextjs": "passed"
+  },
+  "focused_tests": {
+    "ldap": 13,
+    "release_provider": 14
+  },
+  "source_hashes_match": true
+}
