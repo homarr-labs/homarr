@@ -118,7 +118,7 @@ export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
 
   return (
     <div className="mx-auto max-w-7xl px-4 pb-28 sm:pb-16">
-      <div className="flex flex-col gap-5 border-b py-10 sm:flex-row sm:items-end sm:justify-between">
+      <div className="flex flex-col gap-5 py-10 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h1 className="homarr-content-title">Workshop</h1>
           <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground">
@@ -164,7 +164,10 @@ export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
       </div>
 
       {workshop.loading && workshop.submissions.length === 0 && (
-        <output className="sr-only">Loading Workshop listings</output>
+        <>
+          <output className="sr-only">Loading Workshop listings</output>
+          <WorkshopFiltersSkeleton />
+        </>
       )}
 
       {workshop.submissions.length > 0 && (
@@ -472,9 +475,33 @@ const SkeletonCard = () => (
   </Card>
 );
 
+const WorkshopFiltersSkeleton = () => (
+  <div aria-hidden="true">
+    <div className="mb-3 flex flex-col gap-3 rounded-lg border border-border bg-card p-3 lg:flex-row lg:items-center lg:justify-between">
+      <Skeleton className="h-11 w-full lg:order-last lg:h-9 lg:w-72" />
+      <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-center">
+        <div className="grid grid-cols-3 sm:flex">
+          {["All", "Widgets", "CSS"].map((label) => (
+            <Skeleton key={label} className="h-10 min-w-0 px-3 sm:h-8">
+              <span className="invisible text-sm sm:text-xs">{label}</span>
+            </Skeleton>
+          ))}
+        </div>
+        <div className="flex items-center gap-2">
+          <Skeleton className="h-10 min-w-40 flex-1 sm:h-8 sm:flex-none" />
+          <Skeleton className="h-10 w-36 shrink-0 sm:h-8" />
+        </div>
+      </div>
+    </div>
+    <div className="mb-3 flex min-h-9 items-center">
+      <Skeleton className="h-5 w-36" />
+    </div>
+  </div>
+);
+
 export const WorkshopListingFallback = () => (
   <div className="mx-auto max-w-7xl px-4 pb-28 sm:pb-16" aria-busy="true" aria-label="Loading Workshop listings">
-    <div className="flex flex-col gap-5 border-b py-10 sm:flex-row sm:items-end sm:justify-between">
+    <div className="flex flex-col gap-5 py-10 sm:flex-row sm:items-end sm:justify-between">
       <div>
         <h1 className="homarr-content-title">Workshop</h1>
         <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground">
@@ -484,10 +511,7 @@ export const WorkshopListingFallback = () => (
       <Skeleton className="h-10 w-40 sm:h-8" />
     </div>
 
-    <div className="mb-6 flex flex-col gap-3 rounded-xl border border-border bg-card p-3 sm:flex-row sm:justify-between">
-      <Skeleton className="h-10 w-full sm:w-80" />
-      <Skeleton className="h-10 w-full sm:w-64" />
-    </div>
+    <WorkshopFiltersSkeleton />
 
     <div className="grid auto-rows-fr grid-cols-1 items-stretch gap-4 lg:grid-cols-2 xl:grid-cols-3">
       {Array.from({ length: 6 }, (_, index) => (
