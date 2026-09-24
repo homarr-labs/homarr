@@ -321,3 +321,8 @@ footer a {
     display: none;
   }
 }
+
+/* Keep the ad in the side column on pages with no headings, without an empty TOC label. */
+.homarr-docs-toc:not(:has(a[href^="#"])) > :not(.homarr-carbon) {
+  display: none;
+}

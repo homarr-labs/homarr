@@ -47,13 +47,17 @@ export default async function Page({ params }: PageProps) {
     : undefined;
 
   let carbonPlacement: "banner" | "inline" = "inline";
-  if (page.data.full || toc.length === 0) carbonPlacement = "banner";
+  if (page.data.full) carbonPlacement = "banner";
 
   return (
     <DocsPage
       toc={toc}
       full={page.data.full}
-      tableOfContent={{ enabled: !page.data.full && toc.length > 0, footer: <Carbon placement="toc" /> }}
+      tableOfContent={{
+        enabled: !page.data.full,
+        footer: <Carbon placement="toc" />,
+        container: { className: "homarr-docs-toc" },
+      }}
       footer={footerItems ? { items: footerItems } : undefined}
     >
       {!page.data.hide_title && (
