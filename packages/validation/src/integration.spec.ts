@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 
-import { integrationCreateSchema, requiresInsecureHttpOptIn } from "./integration";
+import { integrationCreateFieldsSchema, integrationCreateSchema, requiresInsecureHttpOptIn } from "./integration";
 
 const binderyInput = {
   name: "Bindery",
@@ -9,6 +9,18 @@ const binderyInput = {
   secrets: [{ kind: "apiKey", value: "test-key" }],
   attemptSearchEngineCreation: false,
 };
+
+test("new integration form can derive fields without kind and app", () => {
+  const formSchema = integrationCreateFieldsSchema.omit({ kind: true, app: true });
+  expect(
+    formSchema.safeParse({
+      name: "Bindery",
+      url: "http://bindery:8787",
+      secrets: [{ kind: "apiKey", value: "test-key" }],
+      attemptSearchEngineCreation: false,
+    }).success,
+  ).toBe(true);
+});
 
 describe("integrationCreateSchema HTTP opt-in", () => {
   test("requires an explicit opt-in for HTTP Bindery URLs", () => {
