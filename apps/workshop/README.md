@@ -85,7 +85,6 @@ To smoke-test an already built candidate without rebuilding:
 WORKSHOP_IMAGE_TEST_IMAGE=homarr-workshop:candidate pnpm test:workshop-image
 ```
 
-
 ## Data safety
 
 PocketBase data lives in `/pb_data`. Normal start, stop, and down operations retain the named volume. Back up the
