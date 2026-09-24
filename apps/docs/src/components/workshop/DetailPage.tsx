@@ -62,7 +62,7 @@ import { validateSubmissionContent } from "@site/src/lib/workshop-schema";
 import { cn, errorMessage, oauthErrorMessage } from "@site/src/lib/utils";
 
 import { CommentsSection } from "./DetailComments";
-import { CodeBlock, DeleteConfirmButton, DetailSkeleton, ScreenshotGallery } from "./DetailSections";
+import { CodeBlock, DeleteConfirmButton, detailLayout, DetailSkeleton, ScreenshotGallery } from "./DetailSections";
 import { formatRelativeTime } from "./format";
 import { ScreenshotEditor } from "./ScreenshotEditor";
 import { WorkshopErrorBoundary } from "./WorkshopErrorBoundary";
@@ -565,7 +565,7 @@ const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string;
   const socialImage = screenshotUrls[0] ?? `${window.location.origin}/img/logo.png`;
 
   return (
-    <div className="mx-auto max-w-[90rem] px-4 pb-28 pt-8 sm:px-6 sm:pb-20 lg:px-8">
+    <div className={detailLayout.container}>
       <>
         <title>{socialTitle}</title>
         <meta name="description" content={socialDescription} />
@@ -600,7 +600,7 @@ const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string;
         </Alert>
       )}
 
-      <div className="grid items-start gap-10 xl:grid-cols-[minmax(0,1fr)_22rem]">
+      <div className={detailLayout.grid}>
         <main className="min-w-0">
           <header className="border-b border-border pb-6">
             <div className="flex flex-wrap items-start justify-between gap-5">
@@ -702,7 +702,7 @@ const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string;
           </div>
         </main>
 
-        <aside className="space-y-6 xl:sticky xl:top-24">
+        <aside className={detailLayout.sidebar}>
           <section className="rounded-xl border border-border bg-card p-5" aria-labelledby="workshop-install-heading">
             <h2 id="workshop-install-heading" className="scroll-mt-24 text-lg font-semibold">
               Install in Homarr
@@ -1068,7 +1068,7 @@ export default function MarketplaceDetailPage({
   }, []);
 
   return (
-    <main className="marketplace min-h-[80vh] bg-background text-foreground">
+    <main className={detailLayout.shell}>
       <WorkshopErrorBoundary>
         <MarketplaceDetail workshopUrl={getRuntimeWorkshopApiUrl(configuredWorkshopUrl)} submissionId={submissionId} />
       </WorkshopErrorBoundary>
