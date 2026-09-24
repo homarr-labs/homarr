@@ -2,8 +2,11 @@ import { describe, expect, test, vi } from "vitest";
 import { jsonSchema, simulateReadableStream, stepCountIs, streamText, tool } from "ai";
 import { MockLanguageModelV4 } from "ai/test";
 
+import { browserToolContracts } from "~/components/assistant/assistant-tool-contracts";
+
 import { repairAssistantToolInput } from "./assistant-tool-input-repair";
 import { toAssistantToolOutput } from "./assistant-tool-output";
+import { getValidatedAssistantToolSchema } from "./assistant-tool-schema";
 
 const usage = {
   inputTokens: { total: 10, noCache: 10, cacheRead: 0, cacheWrite: 0 },
@@ -231,5 +234,99 @@ describe("Assistant tool loop", () => {
     expect(nextPrompt).toContain('"optional":null');
     expect(nextPrompt).toContain('"exactCount":"28154"');
     expect(nextPrompt).toContain('"groups":[["icons",["homarr.svg","homarr.png"]]]');
+  });
+
+  test("validates browser tool arguments before a human tool can render them", async () => {
+    const model = new MockLanguageModelV4({
+      doStream: [
+        {
+          stream: simulateReadableStream({
+            chunks: [
+              { type: "stream-start" as const, warnings: [] },
+              {
+                type: "tool-call" as const,
+                toolCallId: "ask-call",
+                toolName: "ask_user",
+                input: JSON.stringify({
+                  question: "Where should this go?",
+                  options: [
+                    { id: "place", description: "Add it to the dashboard.", kind: "affirmative" },
+                    { id: "leave", description: "Leave it unplaced.", kind: "negative" },
+                  ],
+                  allowOther: false,
+                }),
+              },
+              finish("tool-calls"),
+            ],
+            chunkDelayInMs: null,
+          }),
+        },
+        {
+          stream: simulateReadableStream({
+            chunks: [
+              { type: "stream-start" as const, warnings: [] },
+              {
+                type: "tool-call" as const,
+                toolCallId: "ask-call-repaired",
+                toolName: "ask_user",
+                input: JSON.stringify({
+                  question: "Wohin soll das Widget?",
+                  options: [
+                    { id: "place", label: "Dashboard hinzufügen", kind: "affirmative" },
+                    { id: "leave", label: "Nicht platzieren", kind: "negative" },
+                  ],
+                  allowOther: false,
+                }),
+              },
+              finish("tool-calls"),
+            ],
+            chunkDelayInMs: null,
+          }),
+        },
+      ],
+    });
+
+    const result = streamText({
+      model,
+      prompt: "Ask where to place the widget.",
+      tools: {
+        ask_user: tool({ inputSchema: getValidatedAssistantToolSchema(browserToolContracts.ask_user.parameters) }),
+      },
+      stopWhen: stepCountIs(2),
+    });
+
+    const steps = await result.steps;
+    expect(steps[0]?.toolCalls[0]).toMatchObject({
+      toolName: "ask_user",
+      invalid: true,
+    });
+    expect(steps[0]?.toolCalls[0]?.input).toMatchObject({
+      options: [{ id: "place" }, { id: "leave" }],
+    });
+    expect(steps).toHaveLength(2);
+    expect(JSON.stringify(model.doStreamCalls[1]?.prompt)).toContain("Invalid input for tool ask_user");
+    expect(steps[1]?.toolCalls[0]).toMatchObject({
+      toolName: "ask_user",
+      input: {
+        options: [
+          { id: "place", label: "Dashboard hinzufügen", kind: "affirmative" },
+          { id: "leave", label: "Nicht platzieren", kind: "negative" },
+        ],
+      },
+    });
+    expect(steps[1]?.toolCalls[0]).not.toHaveProperty("invalid");
+  });
+
+  test("accepts localized browser option labels through the same schema", () => {
+    expect(
+      browserToolContracts.ask_user.parameters.safeParse({
+        question: "Wohin soll das Widget?",
+        options: [
+          { id: "place", label: "Dashboard hinzufügen", kind: "affirmative" },
+          { id: "leave", label: "Nicht platzieren", kind: "negative" },
+        ],
+        allowOther: false,
+      }).success,
+    ).toBe(true);
   });
 });

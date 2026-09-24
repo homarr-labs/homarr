@@ -488,6 +488,64 @@ describe("Custom Widget runtime ports", () => {
     expect(host.textContent).toContain("Bulbasaur:200:false");
   });
 
+  it("forwards the actual result and metadata to interpreted SubFetch callbacks", async () => {
+    const components = createCustomJsxComponents({
+      TablerIcon: (() => null) as never,
+      copyLabels: { copy: "Copy", copied: "Copied" },
+    });
+    const query = vi.fn<CustomWidgetRuntimePort["query"]>(async () => ({
+      ok: true,
+      status: 204,
+      statusText: "No Content",
+      data: null,
+    }));
+
+    await render(
+      <CustomJsxRenderer
+        template={`<SubFetch requestId="details" trigger="manual">
+  {(result, meta) => (
+    <Text>{result === null ? "null" : "value"}:{meta.ok ? "ok" : "not-ok"}:{meta.status}:{meta.statusText}:{meta.loading ? "loading" : "done"}</Text>
+  )}
+</SubFetch>`}
+        data={{}}
+        components={components}
+        createBindings={() => ({})}
+        messages={rendererMessages}
+      />,
+      createPort({ query }),
+    );
+    expect(host.textContent).toContain("Load");
+
+    await act(async () => (host.querySelector("button") as HTMLButtonElement).click());
+    await settle();
+
+    expect(query).toHaveBeenCalledOnce();
+    expect(host.textContent).toContain("null:ok:204:No Content:done");
+  });
+
+  it("keeps one-argument interpreted SubFetch callbacks compatible", async () => {
+    const components = createCustomJsxComponents({
+      TablerIcon: (() => null) as never,
+      copyLabels: { copy: "Copy", copied: "Copied" },
+    });
+
+    await render(
+      <CustomJsxRenderer
+        template={'<SubFetch requestId="details" trigger="manual">{(result) => <Text>{result.name}</Text>}</SubFetch>'}
+        data={{}}
+        components={components}
+        createBindings={() => ({})}
+        messages={rendererMessages}
+      />,
+      createPort(),
+    );
+
+    await act(async () => (host.querySelector("button") as HTMLButtonElement).click());
+    await settle();
+
+    expect(host.textContent).toContain("Bulbasaur");
+  });
+
   it("reruns a successful manual query through a targeted refresh button", async () => {
     const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
     const query = vi.fn<CustomWidgetRuntimePort["query"]>(async () => ({

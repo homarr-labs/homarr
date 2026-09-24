@@ -1,7 +1,9 @@
 export interface CustomWidgetAiExpectation {
-  sourceBaseUrl: string;
+  sourceType?: "http" | "integration";
+  sourceBaseUrl?: string;
+  sourceIntegrationKind?: string;
   sourceNetworkScope?: "public" | "private" | "loopback";
-  sourceAuth: "none" | "bearer" | "basic" | "apiKeyHeader" | "apiKeyQuery";
+  sourceAuth?: "none" | "bearer" | "basic" | "apiKeyHeader" | "apiKeyQuery";
   sourceAuthName?: string;
   minimumTemplateCharacters?: number;
   requests: Array<{
@@ -26,6 +28,8 @@ export interface CustomWidgetAiEvaluationCase {
   request: string;
   documentationUrl: string;
   apiNotes: string;
+  preferredExampleId?: string;
+  savedIntegrations?: Array<{ id: string; name: string; kind: string; permissions: { hasFullAccess: boolean } }>;
   sampleResponse?: unknown;
   previewResponses?: Array<{
     pathIncludes: string;
@@ -557,5 +561,663 @@ export const CUSTOM_WIDGET_AI_EVALUATION_CASES: readonly CustomWidgetAiEvaluatio
         },
       },
     ],
+  },
+  {
+    id: "seed-dispatcharr-channels",
+    documentationUrl: "https://dispatcharr.github.io/Dispatcharr-Docs/api/",
+    request:
+      "Create the shipped Dispatcharr Channels widget for my private Dispatcharr instance. Show a bounded channel lineup ordered by channel number with effective name and number fallbacks, group and EPG context, catch-up and hidden state, total count, refresh, and complete loading, empty, error, and success states.",
+    apiNotes:
+      "Keep the shipped private-network HTTP source placeholder and X-API-Key header configuration; the user supplies the real URL and secret through secure source configuration. GET /api/channels/channels/ with page=1, page_size=12, ordering=channel_number returns {count,next,previous,results,has_unassigned_epg_channels}. Render results and do not invent system metrics or actions.",
+    preferredExampleId: "dispatcharr-channels",
+    previewResponses: [
+      {
+        pathIncludes: "/api/channels/channels/",
+        response: {
+          count: 2,
+          next: null,
+          previous: null,
+          results: [
+            {
+              id: 41,
+              uuid: "3a4c76d1-93bb-48ad-883b-943441024769",
+              channel_number: 101,
+              name: "BBC One",
+              channel_group_id: 3,
+              epg_data_id: 62,
+              effective_name: "BBC One HD",
+              effective_channel_number: 101,
+              effective_channel_group_id: 3,
+              effective_epg_data_id: 62,
+              is_catchup: true,
+              catchup_days: 7,
+              hidden_from_output: false,
+            },
+            {
+              id: 42,
+              uuid: "b0e4e5e0-31a4-47ed-a6b7-35680a4f540e",
+              channel_number: 102,
+              name: "News Backup",
+              channel_group_id: null,
+              epg_data_id: null,
+              effective_name: null,
+              effective_channel_number: null,
+              effective_channel_group_id: null,
+              effective_epg_data_id: null,
+              is_catchup: false,
+              catchup_days: 0,
+              hidden_from_output: true,
+            },
+          ],
+          has_unassigned_epg_channels: false,
+        },
+      },
+    ],
+    expectations: {
+      sourceBaseUrl: "https://your-service.example.com",
+      sourceNetworkScope: "private",
+      sourceAuth: "apiKeyHeader",
+      sourceAuthName: "X-API-Key",
+      minimumTemplateCharacters: 800,
+      requests: [
+        {
+          kind: "query",
+          method: "GET",
+          pathIncludes: "/api/channels/channels/",
+          trigger: "load",
+          queryIncludes: { page: "1", page_size: "12", ordering: "channel_number" },
+          requiresStatusBinding: true,
+        },
+      ],
+      templateIncludes: [
+        "RefreshButton",
+        ".results",
+        "count",
+        "effective_name",
+        "effective_channel_number",
+        "channel_group_id",
+        "epg_data_id",
+        "is_catchup",
+        "hidden_from_output",
+      ],
+      templateIncludesAny: [
+        ["No channels", "empty lineup"],
+        ["catch-up", "Catch-up", "Catch up"],
+      ],
+    },
+  },
+  {
+    id: "seed-karakeep-bookmarks",
+    savedIntegrations: [
+      { id: "fixture-karakeep", name: "Synthetic karakeep", kind: "karakeep", permissions: { hasFullAccess: true } },
+    ],
+    documentationUrl: "https://docs.karakeep.app/api/karakeep-api/",
+    request:
+      "Create the shipped Karakeep Recent Bookmarks widget using my saved Karakeep integration. Show at most eight newest unarchived bookmarks, handle link, text, asset, and unknown content without broken titles, and include favorite state, tags, summary or note fallbacks, cursor context, refresh, and complete loading, empty, error, and success states.",
+    apiNotes:
+      "Use the saved Karakeep integration and inherit its authentication. GET /api/v1/bookmarks with archived=false, sortOrder=desc, limit=8, includeContent=false returns {bookmarks,nextCursor}. content is a discriminated union: link has url/title, text has text/sourceUrl, asset has assetType/assetId, and unknown can have no useful payload.",
+    preferredExampleId: "karakeep-bookmarks",
+    previewResponses: [
+      {
+        pathIncludes: "/api/v1/bookmarks",
+        response: {
+          bookmarks: [
+            {
+              id: "link-1",
+              title: "A useful article",
+              favourited: true,
+              summary: "A short generated summary.",
+              note: null,
+              tags: [{ id: "tag-1", name: "reading" }],
+              content: { type: "link", url: "https://example.com/article", title: "A useful article" },
+            },
+            {
+              id: "text-1",
+              title: null,
+              favourited: false,
+              summary: null,
+              note: "Remember this",
+              tags: [],
+              content: { type: "text", text: "Short saved thought", sourceUrl: null },
+            },
+            {
+              id: "asset-1",
+              title: null,
+              favourited: false,
+              summary: null,
+              note: null,
+              tags: [],
+              content: { type: "asset", assetType: "pdf", assetId: "pdf-1" },
+            },
+            {
+              id: "unknown-1",
+              title: null,
+              favourited: false,
+              summary: null,
+              note: null,
+              tags: [],
+              content: { type: "unknown" },
+            },
+          ],
+          nextCursor: null,
+        },
+      },
+    ],
+    expectations: {
+      sourceType: "integration",
+      sourceIntegrationKind: "karakeep",
+      minimumTemplateCharacters: 900,
+      requests: [
+        {
+          kind: "query",
+          method: "GET",
+          pathIncludes: "/api/v1/bookmarks",
+          trigger: "load",
+          queryIncludes: { archived: "false", sortOrder: "desc", limit: "8", includeContent: "false" },
+          requiresStatusBinding: true,
+        },
+      ],
+      templateIncludes: [
+        "RefreshButton",
+        ".bookmarks",
+        "nextCursor",
+        "favourited",
+        "content",
+        "content?.title",
+        "content?.text",
+        "assetType",
+        "summary",
+        "note",
+        "tags",
+      ],
+      templateIncludesAny: [
+        ["Unknown bookmark", "Unknown content", "Unsupported bookmark"],
+        ["Favorite", "Favourite"],
+      ],
+    },
+  },
+  {
+    id: "seed-mealie-today",
+    savedIntegrations: [
+      { id: "fixture-mealie", name: "Synthetic mealie", kind: "mealie", permissions: { hasFullAccess: true } },
+    ],
+    documentationUrl: "https://docs.mealie.io/documentation/getting-started/api-usage/",
+    request:
+      "Create the shipped Mealie Today widget using my saved Mealie integration. Render today's direct-array meal plan as a compact day view where recipe-backed and text-only entries remain useful. Show meal type, recipe name, servings, total time, rating, or title and text fallbacks, plus refresh and complete loading, empty, error, and success states.",
+    apiNotes:
+      "Use the saved Mealie integration and inherit its authentication. GET /api/households/mealplans/today returns a direct array. Each entry has entryType, title, text, recipeId, and nullable recipe; recipe can include name, slug, recipeServings, recipeYield, totalTime, and rating. This today view does not need to display or invent a timezone for the date-only field.",
+    preferredExampleId: "mealie-today",
+    previewResponses: [
+      {
+        pathIncludes: "/api/households/mealplans/today",
+        response: [
+          {
+            id: 51,
+            date: "2026-09-21",
+            entryType: "dinner",
+            title: "",
+            text: "",
+            recipeId: "recipe-1",
+            recipe: {
+              name: "Mushroom risotto",
+              slug: "mushroom-risotto",
+              recipeServings: 4,
+              recipeYield: "servings",
+              totalTime: "45 minutes",
+              rating: 4.5,
+            },
+          },
+          {
+            id: 52,
+            date: "2026-09-21",
+            entryType: "snack",
+            title: "Use the ripe bananas",
+            text: "Before tomorrow",
+            recipeId: null,
+            recipe: null,
+          },
+        ],
+      },
+    ],
+    expectations: {
+      sourceType: "integration",
+      sourceIntegrationKind: "mealie",
+      minimumTemplateCharacters: 750,
+      requests: [
+        {
+          kind: "query",
+          method: "GET",
+          pathIncludes: "/api/households/mealplans/today",
+          trigger: "load",
+          requiresStatusBinding: true,
+        },
+      ],
+      templateIncludes: [
+        "RefreshButton",
+        "entryType",
+        "recipe",
+        "recipeServings",
+        "totalTime",
+        "rating",
+        "title",
+        "text",
+      ],
+      templateIncludesAny: [["Nothing planned", "No meals", "plan is empty"]],
+    },
+  },
+  {
+    id: "seed-romm-library",
+    savedIntegrations: [
+      { id: "fixture-romm", name: "Synthetic romm", kind: "romm", permissions: { hasFullAccess: true } },
+    ],
+    documentationUrl: "https://docs.romm.app/latest/developers/api-authentication/",
+    request:
+      "Create the shipped RomM Library Overview widget using my saved RomM integration. Combine platform, ROM, save, and state totals with six recently added games. Handle the items envelope, missing names, filesystem availability, platform, and creation date with independent refresh, loading, error, empty, and success states. Keep it text-first and do not render protected cover URLs.",
+    apiNotes:
+      "Use the saved RomM integration and inherit its authentication. GET /api/stats returns PLATFORMS, ROMS, SAVES, STATES, SCREENSHOTS, and TOTAL_FILESIZE_BYTES. GET /api/roms with limit=6, offset=0, order_by=created_at, order_dir=desc, with_char_index=false, with_filter_values=false, with_rom_id_index=false, with_total=false returns {items,total,limit,offset,...}.",
+    preferredExampleId: "romm-library",
+    previewResponses: [
+      {
+        pathIncludes: "/api/stats",
+        response: {
+          PLATFORMS: 14,
+          ROMS: 824,
+          SAVES: 39,
+          STATES: 17,
+          SCREENSHOTS: 61,
+          TOTAL_FILESIZE_BYTES: 536_870_912_000,
+        },
+      },
+      {
+        pathIncludes: "/api/roms",
+        response: {
+          items: [
+            {
+              id: 42,
+              name: "Metroid Prime",
+              fs_name_no_ext: "Metroid Prime",
+              platform_display_name: "Nintendo GameCube",
+              created_at: "2026-09-20T18:42:10Z",
+              fs_size_bytes: 1_459_617_792,
+              missing_from_fs: false,
+            },
+            {
+              id: 43,
+              name: null,
+              fs_name_no_ext: "Unmatched Disc 01",
+              platform_display_name: "Nintendo GameCube",
+              created_at: "2026-09-19T12:20:00Z",
+              fs_size_bytes: 1_395_864_371,
+              missing_from_fs: true,
+            },
+          ],
+          total: null,
+          limit: 6,
+          offset: 0,
+          char_index: {},
+          rom_id_index: [],
+          filter_values: {},
+        },
+      },
+    ],
+    expectations: {
+      sourceType: "integration",
+      sourceIntegrationKind: "romm",
+      minimumTemplateCharacters: 1_000,
+      requests: [
+        {
+          kind: "query",
+          method: "GET",
+          pathIncludes: "/api/stats",
+          trigger: "load",
+          requiresStatusBinding: true,
+        },
+        {
+          kind: "query",
+          method: "GET",
+          pathIncludes: "/api/roms",
+          trigger: "load",
+          queryIncludes: {
+            limit: "6",
+            offset: "0",
+            order_by: "created_at",
+            order_dir: "desc",
+            with_char_index: "false",
+            with_filter_values: "false",
+            with_rom_id_index: "false",
+            with_total: "false",
+          },
+          requiresStatusBinding: true,
+        },
+      ],
+      templateIncludes: [
+        "RefreshButton",
+        "PLATFORMS",
+        "ROMS",
+        "SAVES",
+        "STATES",
+        ".items",
+        "fs_name_no_ext",
+        "platform_display_name",
+        "created_at",
+        "missing_from_fs",
+      ],
+      templateIncludesAny: [
+        ["No games", "Nothing added"],
+        ["Missing", "missing"],
+      ],
+    },
+  },
+  {
+    id: "seed-tubearchivist-queue",
+    savedIntegrations: [
+      {
+        id: "fixture-tubearchivist",
+        name: "Synthetic tubearchivist",
+        kind: "tubearchivist",
+        permissions: { hasFullAccess: true },
+      },
+    ],
+    documentationUrl: "https://docs.tubearchivist.com/api/docs/",
+    request:
+      "Create the shipped TubeArchivist Queue Health widget using my saved TubeArchivist integration. Combine channel counts, pending-download counts, and the first page of pending queue items. Show channel name, title, duration, message, type or status, honest page context, independent refresh and failures, and complete loading, empty, error, and success states without rendering authenticated thumbnails.",
+    apiNotes:
+      "Use the saved TubeArchivist integration and inherit its Authorization token. GET /api/stats/channel/ returns channel counts. GET /api/stats/download/ returns nullable pending counts. GET /api/download/ with filter=pending,page=0 returns {data,paginate}; page 0 is the first page.",
+    preferredExampleId: "tubearchivist-queue",
+    previewResponses: [
+      {
+        pathIncludes: "/api/stats/channel/",
+        response: {
+          doc_count: 86,
+          active_true: 81,
+          active_false: 5,
+          subscribed_true: 42,
+          subscribed_false: 44,
+        },
+      },
+      {
+        pathIncludes: "/api/stats/download/",
+        response: {
+          pending: 13,
+          ignore: null,
+          pending_videos: 9,
+          pending_shorts: null,
+          pending_streams: 4,
+        },
+      },
+      {
+        pathIncludes: "/api/download/",
+        response: {
+          data: [
+            {
+              youtube_id: "w7Ft2ymGmfc",
+              title: "Building a resilient home server",
+              channel_name: "Homelab Notes",
+              duration: "18:42",
+              message: "",
+              published: "20260919",
+              status: "pending",
+              timestamp: 1_789_843_200,
+              vid_type: "videos",
+            },
+            {
+              youtube_id: "short-health",
+              title: "Quick rack tour",
+              channel_name: "Homelab Notes",
+              duration: "00:58",
+              message: "Metadata retry pending",
+              published: null,
+              status: "pending",
+              timestamp: null,
+              vid_type: "shorts",
+            },
+          ],
+          paginate: {
+            page_size: 12,
+            current_page: 0,
+            last_page: 2,
+            next_pages: [1, 2],
+            total_hits: 13,
+          },
+        },
+      },
+    ],
+    expectations: {
+      sourceType: "integration",
+      sourceIntegrationKind: "tubearchivist",
+      minimumTemplateCharacters: 1_100,
+      requests: [
+        {
+          kind: "query",
+          method: "GET",
+          pathIncludes: "/api/stats/channel/",
+          trigger: "load",
+          requiresStatusBinding: true,
+        },
+        {
+          kind: "query",
+          method: "GET",
+          pathIncludes: "/api/stats/download/",
+          trigger: "load",
+          requiresStatusBinding: true,
+        },
+        {
+          kind: "query",
+          method: "GET",
+          pathIncludes: "/api/download/",
+          trigger: "load",
+          queryIncludes: { filter: "pending", page: "0" },
+          requiresStatusBinding: true,
+        },
+      ],
+      templateIncludes: [
+        "RefreshButton",
+        "doc_count",
+        "subscribed_true",
+        "pending",
+        "pending_videos",
+        "pending_shorts",
+        "pending_streams",
+        ".data",
+        "channel_name",
+        "duration",
+        "message",
+        "vid_type",
+        "paginate",
+        "current_page",
+        "last_page",
+        "total_hits",
+      ],
+      templateIncludesAny: [["Queue is clear", "No pending downloads", "Nothing queued"]],
+    },
+  },
+  {
+    id: "seed-frigate-alerts",
+    savedIntegrations: [
+      { id: "fixture-frigate", name: "Synthetic frigate", kind: "frigate", permissions: { hasFullAccess: true } },
+    ],
+    documentationUrl: "https://docs.frigate.video/integrations/api/review-review-get/",
+    request:
+      "Create the shipped Frigate Review Alerts widget using my saved Frigate integration. Show at most ten unreviewed alerts from the last 24 hours with camera, severity or active state, start time, reviewed state, objects, verified objects, zones, refresh, and complete loading, empty, error, and success states. Do not render protected relative thumbnails.",
+    apiNotes:
+      "Use the saved Frigate integration and inherit its connection settings. GET /api/review with reviewed=0, severity=alert, limit=10 returns a direct array. start_time and nullable end_time are Unix seconds. Filter the returned array client-side to start_time >= current Unix time minus 86400; do not invent date parameters.",
+    preferredExampleId: "frigate-alerts",
+    previewResponses: [
+      {
+        pathIncludes: "/api/review",
+        response: [
+          {
+            id: "1789957430.014544-vgnctm",
+            camera: "front_door",
+            start_time: 1_789_957_430.014544,
+            end_time: null,
+            severity: "alert",
+            has_been_reviewed: false,
+            data: {
+              detections: ["detection-1"],
+              objects: ["person", "car"],
+              verified_objects: ["person"],
+              sub_labels: [],
+              zones: ["porch"],
+              audio: [],
+            },
+          },
+        ],
+      },
+    ],
+    expectations: {
+      sourceType: "integration",
+      sourceIntegrationKind: "frigate",
+      minimumTemplateCharacters: 900,
+      requests: [
+        {
+          kind: "query",
+          method: "GET",
+          pathIncludes: "/api/review",
+          trigger: "load",
+          queryIncludes: { reviewed: "0", severity: "alert", limit: "10" },
+          requiresStatusBinding: true,
+        },
+      ],
+      templateIncludes: [
+        "RefreshButton",
+        "start_time",
+        "end_time",
+        "camera",
+        "severity",
+        "has_been_reviewed",
+        "objects",
+        "verified_objects",
+        "zones",
+        "86400",
+      ],
+      templateIncludesAny: [
+        ["Active", "Ongoing", "In progress"],
+        ["All clear", "No recent", "No alerts"],
+      ],
+    },
+  },
+  {
+    id: "seed-frigate-system",
+    savedIntegrations: [
+      { id: "fixture-frigate", name: "Synthetic frigate", kind: "frigate", permissions: { hasFullAccess: true } },
+    ],
+    documentationUrl: "https://docs.frigate.video/integrations/api/stats-stats-get/",
+    request:
+      "Create the shipped Frigate System Metrics widget using my saved Frigate integration. Show service version and uptime, aggregate camera, detection, process, and skipped FPS, per-camera connection quality, reconnects and stalls, detector inference speed, storage usage, refresh, and complete loading, error, and success states in a responsive layout.",
+    apiNotes:
+      "Use the saved Frigate integration and inherit its connection settings. GET /api/stats returns a direct object with camera_fps, detection_fps, process_fps, skipped_fps, cameras, detectors, and service. service contains version, uptime, and a dynamic storage record; cameras and detectors are dynamic records. Detector inference_speed values are milliseconds. Storage free, used, and total values are decimal megabytes, matching Frigate's Prometheus conversion to bytes.",
+    preferredExampleId: "frigate-system",
+    previewResponses: [
+      {
+        pathIncludes: "/api/stats",
+        response: {
+          camera_fps: 5,
+          detection_fps: 1.4,
+          process_fps: 4.9,
+          skipped_fps: 0.1,
+          cameras: {
+            front_door: {
+              camera_fps: 5,
+              connection_quality: "excellent",
+              reconnects_last_hour: 0,
+              stalls_last_hour: 0,
+            },
+            driveway: {
+              camera_fps: 4.7,
+              connection_quality: "fair",
+              reconnects_last_hour: 2,
+              stalls_last_hour: 1,
+            },
+          },
+          detectors: { coral: { inference_speed: 8.4 } },
+          service: {
+            uptime: 86_400,
+            version: "0.16.1",
+            storage: {
+              "/media/frigate/recordings": { free: 500, used: 250, total: 750, mount_type: "ext4" },
+            },
+          },
+        },
+      },
+    ],
+    expectations: {
+      sourceType: "integration",
+      sourceIntegrationKind: "frigate",
+      minimumTemplateCharacters: 1_100,
+      requests: [
+        {
+          kind: "query",
+          method: "GET",
+          pathIncludes: "/api/stats",
+          trigger: "load",
+          requiresStatusBinding: true,
+        },
+      ],
+      templateIncludes: [
+        "RefreshButton",
+        "camera_fps",
+        "detection_fps",
+        "process_fps",
+        "skipped_fps",
+        "cameras",
+        "connection_quality",
+        "reconnects_last_hour",
+        "stalls_last_hour",
+        "detectors",
+        "inference_speed",
+        "service",
+        "version",
+        "uptime",
+        "storage",
+      ],
+    },
+  },
+  {
+    id: "seed-frigate-live-streams",
+    savedIntegrations: [
+      { id: "fixture-frigate", name: "Synthetic frigate", kind: "frigate", permissions: { hasFullAccess: true } },
+    ],
+    documentationUrl: "https://docs.frigate.video/integrations/api/go-2-rtc-streams-go-2-rtc-streams-get/",
+    request:
+      "Create the shipped Frigate Stream Readiness widget using my saved Frigate integration. Show every configured go2rtc stream with producer and consumer counts, safe media descriptors, live or offline state, refresh, and complete loading, empty, error, and success states. Never expose producer URLs, remote addresses, credentials, or pretend the JSON runtime embeds protected live video.",
+    apiNotes:
+      "Use the saved Frigate integration and inherit its connection settings. GET /api/go2rtc/streams returns a dynamic object keyed by stream name. Each value can contain producers and consumers arrays; producers can contain a medias array. Render counts and medias only, never producer.url, remote_addr, token values, or other connection URLs.",
+    preferredExampleId: "frigate-live-streams",
+    previewResponses: [
+      {
+        pathIncludes: "/api/go2rtc/streams",
+        response: {
+          front_door: {
+            producers: [{ medias: ["video, recvonly, H264", "audio, recvonly, AAC"] }],
+            consumers: [{ id: "consumer-1" }],
+          },
+          driveway: {
+            producers: [],
+            consumers: [],
+          },
+        },
+      },
+    ],
+    expectations: {
+      sourceType: "integration",
+      sourceIntegrationKind: "frigate",
+      minimumTemplateCharacters: 750,
+      requests: [
+        {
+          kind: "query",
+          method: "GET",
+          pathIncludes: "/api/go2rtc/streams",
+          trigger: "load",
+          requiresStatusBinding: true,
+        },
+      ],
+      templateIncludes: ["RefreshButton", "Object.entries", "producers", "consumers", "medias"],
+      templateIncludesAny: [
+        ["Live", "Ready", "Online"],
+        ["Offline", "No active producer"],
+        ["No live streams", "No streams"],
+      ],
+    },
   },
 ] as const;

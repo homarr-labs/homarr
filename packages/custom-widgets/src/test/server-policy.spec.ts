@@ -1,5 +1,5 @@
 import { createServer } from "node:http";
-import { errors } from "undici";
+import { errors, Response } from "undici";
 import { describe, expect, test } from "vitest";
 
 import {
@@ -12,6 +12,7 @@ import {
   validateCustomWidgetUrl,
 } from "../server";
 import { isCustomWidgetRequestTimeoutError } from "../server/request-executor";
+import { parseResponseBody } from "../server/response";
 
 describe("custom widget network policy", () => {
   test.each([
@@ -167,6 +168,17 @@ describe("custom widget network policy", () => {
     } finally {
       await new Promise<void>((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())));
     }
+  });
+
+  test("parses newline-delimited JSON responses as an array", async () => {
+    const response = new Response('{"id":"first","message":"Disk full"}\n{"id":"second","message":"Recovered"}\n', {
+      headers: { "content-type": "application/x-ndjson; charset=utf-8" },
+    });
+
+    await expect(parseResponseBody(response)).resolves.toEqual([
+      { id: "first", message: "Disk full" },
+      { id: "second", message: "Recovered" },
+    ]);
   });
 
   test("preserves structured bodies for GET queries", async () => {

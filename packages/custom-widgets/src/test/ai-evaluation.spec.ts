@@ -9,6 +9,8 @@ import {
   DEFAULT_GENERATOR_MODEL,
   DEFAULT_JUDGE_MODEL,
   getAiProviderChatCompletionsUrl,
+  getAiEvaluationProviderPreferences,
+  getAiEvaluationReasoningOptions,
   getDeterministicEvaluationIssues,
   getEvaluationResponseFixtureText,
   getExpectedWidgetCase,
@@ -17,8 +19,11 @@ import {
   judgePasses,
   parseJudgeResult,
   resolveAiEvaluationProviderConfig,
+  summarizeCustomWidgetJudgePanel,
 } from "../../scripts/ai-evaluation";
-import type { CustomWidgetJudgeResult } from "../../scripts/ai-evaluation";
+import type { CustomWidgetJudgePanelCall, CustomWidgetJudgeResult } from "../../scripts/ai-evaluation";
+import { getCustomWidgetExample } from "../core/authoring-resources";
+import { customWidgetDefinitionSchema } from "../core/custom-jsx-schema";
 
 const categoryNames = [
   "schemaAndBindings",
@@ -53,16 +58,39 @@ const makeJudgeResult = (score: number) => ({
   highestImpactFixes: [],
 });
 
+const judgePanelWidget = customWidgetDefinitionSchema.parse({
+  $schema: "homarr-custom-widget-v2",
+  name: "Panel fixture",
+  sources: {
+    default: {
+      baseUrl: "https://status.example.test",
+      networkScope: "public",
+      auth: "none",
+    },
+  },
+  requests: {},
+  options: {},
+  template: "<Text>Panel fixture</Text>",
+});
+
+const makePanelCalls = (scores: readonly number[]): CustomWidgetJudgePanelCall[] =>
+  scores.map((score, index) => ({
+    call: index + 1,
+    raw: JSON.stringify(makeJudgeResult(score)),
+    result: makeJudgeResult(score),
+    error: null,
+  }));
+
 describe("AI authoring evaluation", () => {
   it("allows bounded output reservations for low-credit live judges without changing defaults", () => {
-    expect(getAiEvaluationMaxOutputTokens("judge", undefined)).toBe(8_000);
+    expect(getAiEvaluationMaxOutputTokens("judge", undefined)).toBe(32_768);
     expect(getAiEvaluationMaxOutputTokens("judge", "3000")).toBe(3_000);
     expect(getAiEvaluationMaxOutputTokens("generation", "1000")).toBe(4_096);
-    expect(getAiEvaluationMaxOutputTokens("generation", "invalid")).toBe(20_000);
+    expect(getAiEvaluationMaxOutputTokens("generation", "invalid")).toBe(32_768);
   });
   it("defines distinct complex and public-API scenarios", () => {
-    expect(CUSTOM_WIDGET_AI_EVALUATION_CASES).toHaveLength(10);
-    expect(new Set(CUSTOM_WIDGET_AI_EVALUATION_CASES.map((entry) => entry.id)).size).toBe(10);
+    expect(CUSTOM_WIDGET_AI_EVALUATION_CASES).toHaveLength(18);
+    expect(new Set(CUSTOM_WIDGET_AI_EVALUATION_CASES.map((entry) => entry.id)).size).toBe(18);
     expect(CUSTOM_WIDGET_AI_EVALUATION_CASES.map(({ id }) => id)).toEqual(
       expect.arrayContaining([
         "pokedex",
@@ -71,6 +99,14 @@ describe("AI authoring evaluation", () => {
         "bored-activity",
         "agify-name",
         "seerr-media-workflows",
+        "seed-dispatcharr-channels",
+        "seed-karakeep-bookmarks",
+        "seed-mealie-today",
+        "seed-romm-library",
+        "seed-tubearchivist-queue",
+        "seed-frigate-alerts",
+        "seed-frigate-system",
+        "seed-frigate-live-streams",
       ]),
     );
     const advancedCase = CUSTOM_WIDGET_AI_EVALUATION_CASES.find(({ id }) => id === "seerr-media-workflows");
@@ -143,6 +179,17 @@ describe("AI authoring evaluation", () => {
     expect(mediaExpectations?.templateIncludesAny).not.toContainEqual(["SimpleGrid", "Grid"]);
     expect(mediaExpectations?.templateIncludesAny).toContainEqual(["Rating", "★", "/10"]);
     expect(mediaExpectations?.templateIncludesAny).toContainEqual(["Partially Available", "Partially available"]);
+  });
+
+  it("accepts every shipped preset against its benchmark contract", () => {
+    for (const testCase of CUSTOM_WIDGET_AI_EVALUATION_CASES.filter((entry) => entry.preferredExampleId)) {
+      const example = getCustomWidgetExample(testCase.preferredExampleId ?? "");
+      if (!example) throw new Error(`Bundled example '${testCase.preferredExampleId}' was not found`);
+      expect(
+        getDeterministicEvaluationIssues(testCase, customWidgetDefinitionSchema.parse(example.widget)),
+        testCase.id,
+      ).toEqual([]);
+    }
   });
 
   it("scopes multi-widget judging to each requested capability and its exact fixtures", () => {
@@ -513,8 +560,16 @@ describe("AI authoring evaluation", () => {
   });
 
   it("uses the requested DeepSeek models and strict structured judge output", () => {
-    expect(DEFAULT_GENERATOR_MODEL).toBe("~deepseek/deepseek-v4-flash-latest");
-    expect(DEFAULT_JUDGE_MODEL).toBe("~deepseek/deepseek-v4-flash-latest");
+    expect(DEFAULT_GENERATOR_MODEL).toBe("deepseek/deepseek-v4.1-flash");
+    expect(DEFAULT_JUDGE_MODEL).toBe("openai/gpt-5.6-luna");
+    expect(getAiEvaluationReasoningOptions(DEFAULT_GENERATOR_MODEL)).toEqual({ effort: "xhigh", exclude: true });
+    expect(getAiEvaluationReasoningOptions(DEFAULT_JUDGE_MODEL)).toEqual({ effort: "high", exclude: true });
+    expect(getAiEvaluationProviderPreferences(DEFAULT_GENERATOR_MODEL)).toEqual({
+      order: ["deepinfra/fp8"],
+      quantizations: ["fp8"],
+      allow_fallbacks: true,
+    });
+    expect(getAiEvaluationProviderPreferences(DEFAULT_JUDGE_MODEL)).toBeUndefined();
     const format = getJudgeResponseFormat();
     expect(format.type).toBe("json_schema");
     expect(format.json_schema.strict).toBe(true);
@@ -536,6 +591,8 @@ describe("AI authoring evaluation", () => {
       baseUrl: "https://homarr.dev/api/ai/v1",
       generatorModel: "homarr/model",
       judgeModel: "homarr/model",
+      judgeBaseUrl: "https://homarr.dev/api/ai/v1",
+      judgeApiKey: "workshop-token",
     });
     expect(
       resolveAiEvaluationProviderConfig({
@@ -549,20 +606,24 @@ describe("AI authoring evaluation", () => {
       baseUrl: DEFAULT_AI_PROVIDER_BASE_URL,
       generatorModel: "legacy-generator",
       judgeModel: "legacy-judge",
+      judgeBaseUrl: DEFAULT_AI_PROVIDER_BASE_URL,
+      judgeApiKey: "legacy-key",
     });
     expect(
       resolveAiEvaluationProviderConfig({
         AI_PROVIDER_BASE_URL: "https://homarr.dev/api/ai/v1",
         AI_PROVIDER_API_KEY: "workshop-token",
-        OPENROUTER_API_KEY: "must-not-leak",
+        OPENROUTER_API_KEY: "judge-key",
         OPENROUTER_GENERATOR_MODEL: "must-not-apply",
-        OPENROUTER_JUDGE_MODEL: "must-not-apply",
+        OPENROUTER_JUDGE_MODEL: "independent-judge",
       }),
     ).toEqual({
       apiKey: "workshop-token",
       baseUrl: "https://homarr.dev/api/ai/v1",
       generatorModel: "homarr/model",
-      judgeModel: "homarr/model",
+      judgeModel: "independent-judge",
+      judgeBaseUrl: DEFAULT_AI_PROVIDER_BASE_URL,
+      judgeApiKey: "judge-key",
     });
   });
 
@@ -599,6 +660,36 @@ describe("AI authoring evaluation", () => {
     ).toBe(false);
     expect(judgePasses({ ...makeJudgeResult(92), dailyUseDecision: "promising-but-not-daily" })).toBe(false);
     expect(judgePasses({ ...makeJudgeResult(95), fatalProblems: ["A requested core action is missing."] })).toBe(false);
+  });
+
+  it("uses a unanimous three-vote panel and escalates split votes to five", () => {
+    const unanimous = summarizeCustomWidgetJudgePanel(judgePanelWidget, makePanelCalls([87, 89, 86]));
+    expect(unanimous).toMatchObject({ status: "pass", passVotes: 3, failVotes: 0, medianTotal: 87 });
+    expect(unanimous.scoreRange).toEqual({ min: 86, max: 89 });
+    expect(unanimous.artifactHash).toMatch(/^[a-f0-9]{64}$/u);
+
+    const split = summarizeCustomWidgetJudgePanel(judgePanelWidget, makePanelCalls([87, 83, 86]));
+    expect(split.status).toBe("inconclusive");
+
+    const resolvedPass = summarizeCustomWidgetJudgePanel(judgePanelWidget, makePanelCalls([87, 83, 86, 88, 82]));
+    expect(resolvedPass).toMatchObject({ status: "pass", passVotes: 3, failVotes: 2, medianTotal: 86 });
+
+    const resolvedFail = summarizeCustomWidgetJudgePanel(judgePanelWidget, makePanelCalls([87, 83, 82, 88, 81]));
+    expect(resolvedFail).toMatchObject({ status: "fail", passVotes: 2, failVotes: 3, medianTotal: 83 });
+    if (!resolvedFail.representative) throw new Error("Expected a representative judge result");
+    expect(judgePasses(resolvedFail.representative)).toBe(false);
+  });
+
+  it("marks an incomplete judge panel inconclusive", () => {
+    const calls = makePanelCalls([90, 89]);
+    calls.push({ call: 3, raw: null, result: null, error: "empty provider response" });
+
+    expect(summarizeCustomWidgetJudgePanel(judgePanelWidget, calls)).toMatchObject({
+      status: "inconclusive",
+      passVotes: 2,
+      failVotes: 0,
+      medianTotal: 90,
+    });
   });
 
   it("gives the harsh judge the authoritative request-state runtime contract", () => {

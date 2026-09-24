@@ -1,3 +1,5 @@
+import type { AssistantProvider, AssistantReasoningMode } from "@homarr/definitions";
+
 export type { AssistantReasoningMode } from "@homarr/definitions";
 
 export type AssistantRuntimeModelOption = {
@@ -8,6 +10,19 @@ export type AssistantRuntimeModelOption = {
   promptPrice: string | null;
   completionPrice: string | null;
   inputModalities: string[];
+};
+
+export const resolveAssistantReasoningDisplayMode = ({
+  provider,
+  modelId,
+  reasoning,
+}: {
+  provider: AssistantProvider | null;
+  modelId: string | null;
+  reasoning: AssistantReasoningMode;
+}): AssistantReasoningMode | "max" => {
+  if (provider === "openrouter" && modelId === "openai/gpt-6-luna") return "max";
+  return reasoning;
 };
 
 export const resolveAssistantPreferenceModelId = ({

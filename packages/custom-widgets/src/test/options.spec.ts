@@ -92,6 +92,44 @@ describe("lean Custom Widget options", () => {
     expect(validateCustomWidgetOptions(options, normalized)).toEqual([]);
   });
 
+  it("uses JSON defaults for missing values and preserves valid JSON values", () => {
+    const options = {
+      policy: customWidgetOptionSchema.parse({
+        label: "Policy",
+        control: "json",
+        default: { mode: "balanced", ceiling: 65 },
+      }),
+      nullable: customWidgetOptionSchema.parse({ label: "Nullable", control: "json", default: null }),
+    };
+
+    expect(normalizeCustomWidgetOptions(options, {})).toEqual({
+      policy: { mode: "balanced", ceiling: 65 },
+      nullable: null,
+    });
+    expect(
+      normalizeCustomWidgetOptions(options, {
+        policy: null,
+        nullable: { enabled: true },
+      }),
+    ).toEqual({
+      policy: null,
+      nullable: { enabled: true },
+    });
+  });
+
+  it("reports missing and non-JSON values for JSON options", () => {
+    const options = {
+      policy: customWidgetOptionSchema.parse({ label: "Policy", control: "json", default: {} }),
+    };
+
+    expect(validateCustomWidgetOptions(options, {})).toEqual([
+      { path: "configuration.policy", message: "Expected valid JSON" },
+    ]);
+    expect(validateCustomWidgetOptions(options, { policy: undefined })).toEqual([
+      { path: "configuration.policy", message: "Expected valid JSON" },
+    ]);
+  });
+
   it("rejects duplicate static choice values", () => {
     expect(
       customWidgetOptionSchema.safeParse({

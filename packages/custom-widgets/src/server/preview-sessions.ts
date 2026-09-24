@@ -44,6 +44,7 @@ const sessionSchema = z.object({
   optionDefinitions: customWidgetOptionsSchema,
   options: z.record(z.string(), z.unknown()),
   definitionId: z.string().optional(),
+  definitionStateFingerprint: z.string().optional(),
   liveActions: z.boolean(),
 });
 export type CustomWidgetPreviewSession = z.infer<typeof sessionSchema>;
@@ -62,6 +63,7 @@ export interface CreatePreviewSessionInput {
   optionDefinitions: CustomWidgetOptions;
   options: Record<string, unknown>;
   definitionId?: string;
+  definitionStateFingerprint?: string;
 }
 
 export interface PreviewSessionStore {
@@ -116,6 +118,7 @@ export class CustomWidgetPreviewSessionService {
       optionDefinitions: input.optionDefinitions,
       options: input.options,
       definitionId: input.definitionId,
+      definitionStateFingerprint: input.definitionStateFingerprint,
       liveActions: false,
     };
     await this.save(session);

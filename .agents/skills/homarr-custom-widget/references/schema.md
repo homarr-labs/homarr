@@ -13,7 +13,7 @@ interface HomarrCustomWidgetV2 {
 }
 ```
 
-`sources.default` is required. HTTP source properties: `name?`, `baseUrl`, `networkScope`, and `auth?`:
+Key `default` is the required source ID, not a source property. Fields: `name?`, `baseUrl`, `networkScope`, `auth?`; localhost/loopback URLs require `networkScope: "loopback"`; never widen explicit scope:
 
 ```json
 {
@@ -40,12 +40,14 @@ interface HomarrCustomWidgetV2 {
 }
 ```
 
-`{"type":"integration","integrationKind":"sonarr","integrationId":"saved-id"}` reuses saved credentials. Select a kind with `integration_getKinds` (`supportsHttpRequests: true`) and a matching `integration_all` entry with `permissions.hasFullAccess`; bind its `id` before preview. Omit URL/auth fields. Exports omit `integrationId`. Paths append to the saved URL; non-GET requests must be actions.
+Saved sources use `{"type":"integration","integrationKind":"sonarr","integrationId":"saved-id"}`. Discover and bind a full-access entry before preview. Omit URL/auth; paths append to its URL, non-GET requests are actions, and exports omit `integrationId`.
 
-Auth: `none`, `bearer`, `basic`, `{ "type": "apiKeyHeader", "name": "X-Api-Key" }`, or `{ "type": "apiKeyQuery", "name": "api_key" }`. Requests default to source `default`, kind `query`, method `GET`, trigger `load`, inherited auth, and view permission. Parameterized queries need `trigger: "manual"`. Actions default to manual/modify; DELETE requires full permission and confirmation. Do not use `load: false`.
+Auth is `none`, `bearer`, `basic`, `apiKeyHeader`, or `apiKeyQuery`. Requests default to source `default`, query/GET/load, inherited auth, and view permission. Use `load` for initial/current display and `manual` only for explicit interactions or invocation params. Actions are manual/modify; DELETE requires full permission and confirmation.
 
-HTTP sources declare public URLs or self-hosted suggestions; installers configure their URL, network scope, and credentials separately.
+JSON responses become their decoded value. Responses with `application/x-ndjson` become an array with one decoded object per non-empty line.
 
-Paths bind `{option:name}` and `{param:name}`; query/body references bind `{ "$option": "name" }` and `{ "$param": "name" }`. Use primitive constants (`take: 10`). `$param` is only for manual requests.
+Use real public API URLs and clear self-hosted placeholders. Homarr collects URL, scope, and credentials outside the manifest.
 
-Options require `label`, `control`, and `default`. Optional fields: `description`, `choices`, `choicesFrom`, `min`, `max`, `step`, `advanced`, `group`.
+Paths use `{option:name}`/`{param:name}`; query/body objects use `{"$option":"name"}`/`{"$param":"name"}`. `$param` is manual-only; `$option` may drive loads. Constants stay primitive.
+
+Every option has `label`, `control`, and `default`. Optional fields are `description`, `choices`, `choicesFrom`, `min`, `max`, `step`, `advanced`, and `group`.

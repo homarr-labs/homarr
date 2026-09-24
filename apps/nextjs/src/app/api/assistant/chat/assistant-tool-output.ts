@@ -15,6 +15,7 @@ const customWidgetAuthoringResourceToolNames = new Set([
   "customWidget_getComponents",
   "customWidget_getSharedProps",
   "customWidget_getExample",
+  "customWidget_get",
 ]);
 
 export const getAssistantToolOutputMaxCharacters = (toolName: string) => {
@@ -25,6 +26,55 @@ export const getAssistantToolOutputMaxCharacters = (toolName: string) => {
 
 type AssistantToolOutputOptions = {
   maxCharacters?: number;
+  compactArray?: {
+    itemProperties: readonly string[];
+    outputProperty: string;
+  };
+};
+
+export const getAssistantToolOutputOptions = (toolName: string): AssistantToolOutputOptions => {
+  const maxCharacters = getAssistantToolOutputMaxCharacters(toolName);
+  if (toolName === "board_getAllBoards") {
+    return {
+      maxCharacters,
+      compactArray: {
+        itemProperties: ["id", "name"],
+        outputProperty: "boards",
+      },
+    };
+  }
+  return { maxCharacters };
+};
+
+const compactArrayItems = (items: unknown[], itemProperties: readonly string[]) =>
+  items.map((item) => {
+    if (!isRecord(item)) return item;
+    return Object.fromEntries(
+      itemProperties.flatMap((property) => (item[property] === undefined ? [] : [[property, item[property]]])),
+    );
+  });
+
+const createBoundedArrayOutput = (
+  items: unknown[],
+  outputProperty: string,
+  originalCharacters: number,
+  maxCharacters: number,
+) => {
+  const createOutput = (itemCount: number) => ({
+    truncated: true as const,
+    originalCharacters,
+    totalItems: items.length,
+    [outputProperty]: items.slice(0, itemCount),
+    note: "Only the entries required for the next assistant action are included.",
+  });
+  let lowerBound = 0;
+  let upperBound = items.length;
+  while (lowerBound < upperBound) {
+    const candidate = Math.ceil((lowerBound + upperBound) / 2);
+    if (JSON.stringify(createOutput(candidate)).length <= maxCharacters) lowerBound = candidate;
+    else upperBound = candidate - 1;
+  }
+  return createOutput(lowerBound);
 };
 
 /**
@@ -40,10 +90,22 @@ export const toAssistantToolOutput = (value: unknown, options: AssistantToolOutp
   const serialized = JSON.stringify(output);
   if (serialized === undefined || serialized.length <= options.maxCharacters) return output;
 
+  if (Array.isArray(output) && options.compactArray) {
+    const compactItems = compactArrayItems(output, options.compactArray.itemProperties);
+    const compactSerialized = JSON.stringify(compactItems);
+    if (compactSerialized.length <= options.maxCharacters) return compactItems;
+    return createBoundedArrayOutput(
+      compactItems,
+      options.compactArray.outputProperty,
+      serialized.length,
+      options.maxCharacters,
+    );
+  }
+
   const outputRecord = isRecord(output) ? output : undefined;
   const metadata = outputRecord
     ? Object.fromEntries(
-        ["ok", "status", "statusText", "error"].flatMap((key) =>
+        ["sessionId", "requestId", "sourceId", "ok", "status", "statusText", "error", "simulated"].flatMap((key) =>
           outputRecord[key] === undefined ? [] : [[key, outputRecord[key]]],
         ),
       )

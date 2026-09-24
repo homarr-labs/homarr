@@ -1,6 +1,10 @@
 import { describe, expect, test } from "vitest";
 
-import { resolveAssistantPreferenceModelId, resolveAssistantThreadPreferenceModelId } from "./assistant-preferences";
+import {
+  resolveAssistantPreferenceModelId,
+  resolveAssistantReasoningDisplayMode,
+  resolveAssistantThreadPreferenceModelId,
+} from "./assistant-preferences";
 
 const models = [
   {
@@ -104,5 +108,24 @@ describe("resolveAssistantThreadPreferenceModelId", () => {
         models,
       }),
     ).toBe("provider/alternate");
+  });
+});
+
+describe("resolveAssistantReasoningDisplayMode", () => {
+  test("shows Max for the OpenRouter GPT-6 Luna route enforced by the server", () => {
+    expect(
+      resolveAssistantReasoningDisplayMode({
+        provider: "openrouter",
+        modelId: "openai/gpt-6-luna",
+        reasoning: "auto",
+      }),
+    ).toBe("max");
+  });
+
+  test.each([
+    { provider: "openrouter" as const, modelId: "openai/gpt-5.6-luna", reasoning: "auto" as const },
+    { provider: "openai" as const, modelId: "openai/gpt-6-luna", reasoning: "high" as const },
+  ])("preserves the selected mode outside the forced route: %s", (input) => {
+    expect(resolveAssistantReasoningDisplayMode(input)).toBe(input.reasoning);
   });
 });

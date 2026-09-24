@@ -698,9 +698,12 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
   const latestAssistantText = getMessageText(latestAssistantMessage);
   const latestUserText = getMessageText(latestUserMessage);
   const latestStatus = latestAssistantMessage?.role === "assistant" ? latestAssistantMessage.status : undefined;
+  const latestAssistantPart = latestAssistantMessage?.content.at(-1);
+  const latestToolComplete = latestAssistantPart?.type === "tool-call" && latestAssistantPart.result !== undefined;
   const latestAssistantPartType = getRunningAssistantPartType(
     latestStatus?.type,
-    latestAssistantMessage?.content.at(-1)?.type,
+    latestAssistantPart?.type,
+    latestToolComplete,
   );
   const pendingAction = getPendingAssistantAction(latestAssistantMessage);
   const assistantIsRunning = isRunning || queuedPrompt !== null;

@@ -4,6 +4,7 @@ import { IconExternalLink, IconPlus } from "@tabler/icons-react";
 
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
+import { createLoginUrl } from "@homarr/auth/shared";
 import { getI18n } from "@homarr/translation/server";
 import { Link } from "@homarr/ui";
 
@@ -16,8 +17,11 @@ import { ImportCustomWidgetButton } from "./_import-custom-widget-button";
 export default async function CustomWidgetsPage() {
   const session = await auth();
 
-  if (!session || !session.user.permissions.includes("admin")) {
-    redirect(session ? "/" : "/auth/login");
+  if (!session) {
+    redirect(createLoginUrl("/manage/custom-widgets"));
+  }
+  if (!session.user.permissions.includes("admin")) {
+    redirect("/");
   }
   const definitions = await api.customWidget.list();
   const t = await getI18n("customWidget");

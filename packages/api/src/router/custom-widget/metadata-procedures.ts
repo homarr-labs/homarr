@@ -15,6 +15,7 @@ import {
 } from "@homarr/custom-widgets/authoring-resources";
 import {
   customWidgetAuthoringDefinitionSchema,
+  getCustomWidgetTemplateDigest,
   getCustomWidgetJsonSchema,
   normalizeCustomJsxAuthoringTemplate,
   normalizeCustomWidgetAuthoringDefinition,
@@ -208,7 +209,7 @@ export const metadataProcedures = {
       mcp: {
         enabled: true,
         description:
-          "Validate only a Custom JSX template for parser, component, interpreter, and safety issues. Prefer templateLines and never pass both formats. Use this inexpensive check while drafting so the complete manifest is sent only once to preview creation.",
+          "Optionally validate only a Custom JSX template for focused parser, component, interpreter, and safety diagnostics. Prefer templateLines and never pass both formats. previewCreate already validates the complete manifest and does not require this call first.",
       },
     })
     .input(customWidgetTemplateValidationInputSchema)
@@ -219,15 +220,16 @@ export const metadataProcedures = {
       const valid = diagnostics.every((diagnostic) => diagnostic.severity !== "error");
       const hasUnknownProp = diagnostics.some((diagnostic) => diagnostic.message.startsWith("UNKNOWN_MANTINE_PROP"));
       let nextStep =
-        "After the manifest and template agree, send the complete definition once to customWidget_previewCreate for full validation and a testable preview.";
+        "Send the complete definition to customWidget_previewCreate for full validation and a testable preview.";
       if (!valid) {
-        nextStep = "Repair the reported JSX errors, then revalidate only the corrected template before previewing.";
+        nextStep = "Repair the reported JSX errors, then send the corrected complete definition to previewCreate.";
       } else if (hasUnknownProp) {
-        nextStep =
-          "Repair unknown component props before previewing; they may be ignored by the installed release. Revalidate the corrected JSX only.";
+        nextStep = "Repair unknown component props before previewing; they may be ignored by the installed release.";
       }
       return {
         valid,
+        templateDigest: getCustomWidgetTemplateDigest(template),
+        validationId: `template:${getCustomWidgetTemplateDigest(template)}`,
         normalizedCharacters: rawTemplate.length - template.length,
         diagnostics,
         summary: {

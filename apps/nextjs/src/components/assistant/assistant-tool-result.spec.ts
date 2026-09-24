@@ -1,8 +1,40 @@
 import { describe, expect, test } from "vitest";
 
-import { getToolResultPresentation, humanizeToolResultKey } from "./assistant-tool-result";
+import {
+  getToolResultPresentation,
+  hasMeaningfulToolResultError,
+  humanizeToolResultKey,
+} from "./assistant-tool-result";
+
+describe("hasMeaningfulToolResultError", () => {
+  test.each([
+    [null, false],
+    [undefined, false],
+    [{ error: null, status: "ok", value: 42 }, false],
+    [{ error: "   ", status: "ok" }, false],
+    [{ error: {}, status: "ok" }, true],
+    [{ error: { message: "failed" } }, true],
+    [{ error: "failed" }, true],
+  ])("classifies %j", (value, expected) => {
+    expect(hasMeaningfulToolResultError(value)).toBe(expected);
+  });
+});
 
 describe("getToolResultPresentation", () => {
+  test("keeps successful fields when error is explicitly null", () => {
+    expect(getToolResultPresentation({ error: null, status: "ok", value: 42 })).toEqual({
+      type: "properties",
+      fields: [
+        { label: "Status", value: "ok" },
+        { label: "Value", value: 42 },
+      ],
+    });
+  });
+
+  test("suppresses presentation for a meaningful error object", () => {
+    expect(getToolResultPresentation({ error: { message: "failed" }, status: "error" })).toBeUndefined();
+  });
+
   test("presents icon search variants as image previews instead of the catalog count", () => {
     expect(
       getToolResultPresentation(

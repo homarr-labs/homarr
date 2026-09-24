@@ -140,6 +140,7 @@ const MCP_TOOL_ALLOWLIST = {
     "customWidget_secretSet",
     "customWidget_sourceConfigure",
     "customWidget_update",
+    "customWidget_updateFromPreview",
     "customWidget_workshopInstall",
     "user_create",
     "widgetSecrets_deleteSecret",
@@ -246,6 +247,7 @@ describe("custom widget authoring procedure access", () => {
       unauthenticatedCaller.customWidget.validate({ widget: {} }),
       unauthenticatedCaller.customWidget.validateTemplate({ template: "<Text>Hi</Text>" }),
       unauthenticatedCaller.customWidget.createFromPreview({ previewSessionId: "preview" }),
+      unauthenticatedCaller.customWidget.updateFromPreview({ previewSessionId: "preview" }),
       unauthenticatedCaller.customWidget.previewReviseTemplate({
         sessionId: "preview",
         template: "<Text>Hi</Text>",
@@ -278,6 +280,7 @@ describe("custom widget authoring procedure access", () => {
       nonAdminCaller.customWidget.getSkill(),
       nonAdminCaller.customWidget.validateTemplate({ template: "<Text>Hi</Text>" }),
       nonAdminCaller.customWidget.createFromPreview({ previewSessionId: "preview" }),
+      nonAdminCaller.customWidget.updateFromPreview({ previewSessionId: "preview" }),
       nonAdminCaller.customWidget.previewReviseTemplate({
         sessionId: "preview",
         template: "<Text>Hi</Text>",

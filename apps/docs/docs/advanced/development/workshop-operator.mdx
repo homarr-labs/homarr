@@ -29,7 +29,7 @@ Workshop uses PocketBase. The production image serves the Workshop website and A
 | `HOMARR_AI_DAILY_REQUEST_LIMIT`        | Per-user daily request allowance             | `50`                           |
 | `HOMARR_AI_GLOBAL_DAILY_REQUEST_LIMIT` | Shared daily request ceiling                 | `10000`                        |
 | `HOMARR_AI_OPENROUTER_BASE_URL`        | OpenRouter-compatible upstream               | `https://openrouter.ai/api/v1` |
-| `HOMARR_AI_OPENROUTER_MODEL`           | Upstream model behind `homarr/model`         | Selected by the Homarr team    |
+| `HOMARR_AI_OPENROUTER_MODEL`           | Upstream model behind `homarr/model`         | `openai/gpt-6-luna`            |
 
 Public URL variables accept HTTP(S) origins without embedded credentials, query strings, or fragments. Restart the
 container after changing runtime configuration.
@@ -44,11 +44,23 @@ can use a comma-separated allowlist.
 
 ## Homarr provider
 
-`OPENROUTER_API_KEY` enables the [Homarr provider](/docs/workshop/homarr-provider). The Workshop server chooses the upstream model and
-enforces per-user and global daily limits. It requests zero-data-retention routing, disables data-collecting providers,
-and does not retain prompts or responses.
+`OPENROUTER_API_KEY` enables the [Homarr provider](/docs/workshop/homarr-provider). The default is `openai/gpt-6-luna`
+with Max reasoning and a 32K combined reasoning/output budget. Remove an old `HOMARR_AI_OPENROUTER_MODEL` override or set
+it explicitly to this model when upgrading. Workshop enforces OpenAI-only routing (`provider.only: ["openai"]`) with
+provider fallbacks disabled; a model override must also be served by OpenAI.
 
-Keep an OpenRouter account-level credit limit as the monetary backstop; request limits are not cost limits.
+For [BYOK](https://openrouter.ai/docs/guides/overview/auth/byok), configure your OpenAI key as a prioritized key in the
+same OpenRouter workspace as `OPENROUTER_API_KEY`. Set **Shared capacity fallback** to **Never use shared capacity for
+any model on this provider**. The request's `allow_fallbacks: false` prevents other providers, but does not replace this
+account-side setting. Store the OpenAI key in OpenRouter, not in Workshop or Homarr clients.
+
+Workshop retains zero-data-retention routing and denies data collection. Your BYOK key must be eligible under those
+policies; configure any provider-agreement declaration only if it reflects your actual OpenAI agreement. An ineligible
+or unavailable key should fail rather than use another provider or shared capacity.
+
+Workshop does not retain prompts or responses and enforces per-user and global daily request limits. Keep spending
+controls on both the OpenAI account and OpenRouter workspace: request limits are not monetary limits, and OpenRouter
+fees can still apply to BYOK requests. Streaming responses include upstream token usage when reported.
 
 ## Deployment
 

@@ -32,6 +32,7 @@ import {
   customWidgetAuthoringDefinitionSchema,
   normalizeCustomWidgetAuthoringDefinition,
 } from "../core/custom-jsx-schema";
+import { BUNDLED_CUSTOM_WIDGETS } from "../core/bundled-widgets";
 
 const healthWidget = {
   $schema: "homarr-custom-widget-v2",
@@ -185,10 +186,10 @@ describe("Custom Widget assistant live evaluation harness", () => {
 
   it("matches production by disabling parallel tool calls", () => {
     expect(assistantEvaluationToolRequestOptions).toEqual({
-      tool_choice: "auto",
+      tool_choice: "required",
       parallel_tool_calls: false,
     });
-    expect(assistantEvaluationReasoningOptions).toEqual({ effort: "medium", exclude: true });
+    expect(assistantEvaluationReasoningOptions).toEqual({ effort: "xhigh", exclude: true });
   });
 
   it("batches context reads but keeps the first call when a provider mixes in lifecycle work", () => {
@@ -216,11 +217,19 @@ describe("Custom Widget assistant live evaluation harness", () => {
     const repairSelection = selectSequentialCustomWidgetToolCalls([componentRepair, redundantRepair]);
     expect(repairSelection.selected).toEqual([componentRepair]);
     expect(repairSelection.rejected).toEqual([redundantRepair]);
+
+    const duplicateIntegration = { id: "integrations-duplicate", function: { name: "integration_all" } };
+    const integrationSelection = selectSequentialCustomWidgetToolCalls([
+      { id: "integrations", function: { name: "integration_all" } },
+      duplicateIntegration,
+    ]);
+    expect(integrationSelection.selected).toHaveLength(1);
+    expect(integrationSelection.rejected).toEqual([duplicateIntegration]);
   });
 
   it("tells the model which tools remain active without carrying stale names", () => {
     const instructions = appendActiveCustomWidgetToolInstruction("Author the requested widgets.", [
-      "customWidget_validateTemplate",
+      "customWidget_getReference",
       "customWidget_previewCreate",
     ]);
 
@@ -336,38 +345,98 @@ describe("Custom Widget assistant live evaluation harness", () => {
     expect(names).not.toContain("customWidget_validate");
   });
 
-  it("starts with compact authoring context tools and stages later lifecycle tools by phase", () => {
-    const testCase = getCase("seerr-media-workflows");
+  it("starts with direct preview and opens context only after diagnostics", () => {
+    const testCase = getCase("fake-service-health");
     const state = createAssistantEvaluationState();
     const getActiveNames = () =>
       getActiveAssistantEvaluationToolDefinitions(state).map(({ function: definition }) => definition.name);
 
-    expect(getActiveNames()).toEqual(["web_search", "customWidget_getSkill"]);
-    executeAssistantEvaluationTool(testCase, state, "customWidget_getSkill", {});
-    expect(getActiveNames()).toEqual([
-      "customWidget_getReference",
-      "customWidget_findComponents",
-      "customWidget_getComponents",
-      "customWidget_getComponent",
-      "customWidget_getSharedProps",
-      "customWidget_getExample",
-      "customWidget_validateTemplate",
-    ]);
+    expect(getActiveNames()).toEqual(["customWidget_previewCreate"]);
     expect(getActiveNames()).not.toEqual(
-      expect.arrayContaining(["customWidget_previewCreate", "customWidget_createFromPreview"]),
+      expect.arrayContaining(["customWidget_getSkill", "customWidget_validateTemplate"]),
     );
 
-    executeAssistantEvaluationTool(testCase, state, "customWidget_getComponents", {
-      names: ["Stack", "TextInput", "Button"],
-    });
-    expect(getActiveNames()).toEqual(["customWidget_getReference", "customWidget_validateTemplate"]);
+    expect(
+      executeActiveAssistantEvaluationTool(testCase, state, "customWidget_previewCreate", {
+        definition: healthWidget,
+      }),
+    ).toMatchObject({ success: true, previewSession: { id: "preview-1" } });
+  });
 
-    validateTemplate(testCase, state, mediaResearchWidget);
-    expect(getActiveNames()).toEqual([
-      "customWidget_validateTemplate",
-      "customWidget_previewCreate",
-      "customWidget_previewReviseTemplate",
-    ]);
+  it("runs a named preset through the production example and integration phases", () => {
+    const testCase = getCase("seed-mealie-today");
+    const state = createAssistantEvaluationState(testCase.preferredExampleId);
+    const getActiveNames = () =>
+      getActiveAssistantEvaluationToolDefinitions(state).map(({ function: definition }) => definition.name);
+
+    expect(getActiveNames()).toEqual(["customWidget_getExample"]);
+    expect(
+      executeActiveAssistantEvaluationTool(testCase, state, "customWidget_getExample", { name: "wrong-id" }),
+    ).toMatchObject({
+      id: "mealie-today",
+    });
+    expect(state.toolCalls.at(-1)?.input).toEqual({ name: "mealie-today" });
+    expect(getActiveNames()).toEqual(["integration_all"]);
+    expect(executeActiveAssistantEvaluationTool(testCase, state, "integration_all", {})).toEqual(
+      testCase.savedIntegrations,
+    );
+    expect(getActiveNames()).toEqual(["customWidget_previewCreate"]);
+  });
+
+  it.each([
+    "seed-dispatcharr-channels",
+    "seed-karakeep-bookmarks",
+    "seed-mealie-today",
+    "seed-romm-library",
+    "seed-tubearchivist-queue",
+    "seed-frigate-alerts",
+    "seed-frigate-system",
+    "seed-frigate-live-streams",
+  ])("passes the complete deterministic assistant preview lifecycle for %s", (id) => {
+    const preset = BUNDLED_CUSTOM_WIDGETS.find((entry) => entry.id === id);
+    if (!preset) throw new Error(`Bundled preset '${id}' was not found`);
+    const state = createAssistantEvaluationState();
+    const testCase = {
+      id,
+      savedIntegrations: getCase(id).savedIntegrations,
+      request: `Create ${preset.widget.name}`,
+      documentationUrl: "https://example.test",
+      apiNotes: "Bundled preset contract",
+      previewResponses: Object.values(preset.widget.requests).map((request) => ({
+        pathIncludes: request.path,
+        response: {},
+      })),
+    };
+
+    const widget = structuredClone(preset.widget);
+    for (const source of Object.values(widget.sources)) {
+      if (source.type !== "integration") continue;
+      source.integrationId = testCase.savedIntegrations?.find(
+        (integration) => integration.kind === source.integrationKind,
+      )?.id;
+    }
+    const preview = executeActiveAssistantEvaluationTool(testCase, state, "customWidget_previewCreate", {
+      definition: widget,
+    });
+    expect(preview).toMatchObject({ success: true, previewSession: { id: "preview-1" } });
+
+    for (const requestId of Object.keys(preset.widget.requests)) {
+      expect(
+        executeActiveAssistantEvaluationTool(testCase, state, "customWidget_previewQuery", {
+          sessionId: "preview-1",
+          requestId,
+          params: {},
+        }),
+      ).toMatchObject({ ok: true, requestId });
+    }
+    expect(
+      getActiveAssistantEvaluationToolDefinitions(state).map(({ function: definition }) => definition.name),
+    ).toEqual(["customWidget_createFromPreview"]);
+    expect(
+      executeActiveAssistantEvaluationTool(testCase, state, "customWidget_createFromPreview", {
+        previewSessionId: "preview-1",
+      }),
+    ).toMatchObject({ id: `created-${id}-1` });
   });
 
   it("compacts obsolete documentation and validation calls but retains the current preview", () => {
@@ -489,7 +558,7 @@ describe("Custom Widget assistant live evaluation harness", () => {
     });
     expect(
       getActiveAssistantEvaluationToolDefinitions(state).map(({ function: definition }) => definition.name),
-    ).toEqual(["customWidget_getReference", "customWidget_validateTemplate"]);
+    ).toEqual(["customWidget_previewCreate"]);
     expect(
       executeAssistantEvaluationTool(testCase, state, "customWidget_getComponents", {
         names: ["Image", "Badge"],
@@ -511,7 +580,7 @@ describe("Custom Widget assistant live evaluation harness", () => {
     expect(getAssistantEvaluationEfficiencyIssues(testCase, state)).toEqual([]);
   });
 
-  it("moves from focused discovery to batched docs and validation after four searches", () => {
+  it("moves from focused discovery to batched docs and direct preview after four searches", () => {
     const testCase = getCase("seerr-media-workflows");
     const state = createAssistantEvaluationState();
     for (let index = 0; index < 4; index += 1) {
@@ -526,8 +595,9 @@ describe("Custom Widget assistant live evaluation harness", () => {
     expect(activeNames).toEqual(
       expect.arrayContaining([
         "customWidget_getComponents",
+        "customWidget_getComponent",
         "customWidget_getSharedProps",
-        "customWidget_validateTemplate",
+        "customWidget_previewCreate",
       ]),
     );
     expect(activeNames).not.toContain("customWidget_findComponents");
@@ -539,7 +609,7 @@ describe("Custom Widget assistant live evaluation harness", () => {
     ).toMatchObject({ phaseComplete: true, components: [] });
     expect(
       getActiveAssistantEvaluationToolDefinitions(state).map(({ function: definition }) => definition.name),
-    ).toEqual(["customWidget_validateTemplate"]);
+    ).toEqual(["customWidget_previewCreate"]);
   });
 
   it("flags wasteful advanced-authoring context and token use without limiting supported components", () => {
@@ -571,33 +641,16 @@ describe("Custom Widget assistant live evaluation harness", () => {
     expect(revisionTool?.function.parameters.properties).not.toHaveProperty("expectedRevision");
   });
 
-  it("validates JSX independently, fully validates at preview, and persists only after query evidence", () => {
+  it("fully validates at preview and persists only after query evidence", () => {
     const testCase = getCase("fake-service-health");
     const state = createAssistantEvaluationState();
 
-    executeAssistantEvaluationTool(testCase, state, "customWidget_getSkill", {});
-    expect(
-      executeAssistantEvaluationTool(testCase, state, "customWidget_previewCreate", { definition: healthWidget }),
-    ).toEqual({
-      error: "Validate this exact JSX template before sending the complete definition to preview.",
-    });
-    expect(validateTemplate(testCase, state, healthWidget)).toMatchObject({ valid: true });
     expect(
       getActiveAssistantEvaluationToolDefinitions(state).map(({ function: definition }) => definition.name),
-    ).toEqual(expect.arrayContaining(["customWidget_validateTemplate", "customWidget_previewCreate"]));
+    ).toContain("customWidget_previewCreate");
     expect(
       getActiveAssistantEvaluationToolDefinitions(state).map(({ function: definition }) => definition.name),
-    ).not.toContain("customWidget_findComponents");
-    expect(
-      executeActiveAssistantEvaluationTool(testCase, state, "customWidget_getReference", { name: "schema" }),
-    ).toEqual({
-      error: "Tool 'customWidget_getReference' is not active in the current authoring phase.",
-      activeTools: [
-        "customWidget_validateTemplate",
-        "customWidget_previewCreate",
-        "customWidget_previewReviseTemplate",
-      ],
-    });
+    ).not.toEqual(expect.arrayContaining(["customWidget_getSkill", "customWidget_validateTemplate"]));
     expect(
       executeActiveAssistantEvaluationTool(testCase, state, "customWidget_previewCreate", { definition: healthWidget }),
     ).toMatchObject({
@@ -608,21 +661,15 @@ describe("Custom Widget assistant live evaluation harness", () => {
     });
     expect(
       getActiveAssistantEvaluationToolDefinitions(state).map(({ function: definition }) => definition.name),
-    ).toEqual(
-      expect.arrayContaining([
-        "customWidget_previewQuery",
-        "customWidget_previewAction",
-        "customWidget_createFromPreview",
-      ]),
-    );
+    ).toEqual(["customWidget_previewQuery"]);
     expect(
       executeAssistantEvaluationTool(testCase, state, "customWidget_createFromPreview", {
         previewSessionId: "preview-1",
       }),
     ).toEqual({ error: "Test every preview query before creation: health" });
     expect(
-      executeAssistantEvaluationTool(testCase, state, "customWidget_previewQuery", {
-        previewId: "preview-1",
+      executeActiveAssistantEvaluationTool(testCase, state, "customWidget_previewQuery", {
+        sessionId: "preview-1",
         requestId: "health",
         params: {},
       }),
@@ -635,11 +682,7 @@ describe("Custom Widget assistant live evaluation harness", () => {
     });
     expect(
       getActiveAssistantEvaluationToolDefinitions(state).map(({ function: definition }) => definition.name),
-    ).toEqual([
-      "customWidget_validateTemplate",
-      "customWidget_previewReviseTemplate",
-      "customWidget_createFromPreview",
-    ]);
+    ).toEqual(["customWidget_createFromPreview"]);
     expect(
       executeActiveAssistantEvaluationTool(testCase, state, "customWidget_createFromPreview", {
         previewSessionId: "preview-1",
@@ -662,17 +705,14 @@ describe("Custom Widget assistant live evaluation harness", () => {
       ],
     };
 
-    validateTemplate(testCase, state, healthWidget);
     executeAssistantEvaluationTool(testCase, state, "customWidget_previewCreate", { definition: healthWidget });
     executeAssistantEvaluationTool(testCase, state, "customWidget_previewQuery", {
       sessionId: "preview-1",
       requestId: "health",
       params: {},
     });
-    validateTemplate(testCase, state, revisedDefinition);
-    const revised = executeActiveAssistantEvaluationTool(testCase, state, "customWidget_previewReviseTemplate", {
-      previewSessionId: "preview-1",
-      expectedRevision: 0,
+    const revised = executeAssistantEvaluationTool(testCase, state, "customWidget_previewReviseTemplate", {
+      sessionId: "preview-1",
       templateLines: revisedDefinition.templateLines,
     });
 
@@ -716,23 +756,17 @@ describe("Custom Widget assistant live evaluation harness", () => {
     expect(getAssistantEvaluationEfficiencyIssues(testCase, state)).toEqual([]);
   });
 
-  it("finishes current preview evidence before a prevalidated next-widget draft", () => {
+  it("finishes current preview evidence before starting another widget", () => {
     const testCase = getCase("fake-service-health");
     const state = createAssistantEvaluationState();
-    const nextWidgetDraft = {
-      ...healthWidget,
-      templateLines: [...healthWidget.templateLines.slice(0, -1), "  <Text>Next widget draft</Text>", "</Stack>"],
-    };
 
-    validateTemplate(testCase, state, healthWidget);
-    validateTemplate(testCase, state, nextWidgetDraft);
     executeActiveAssistantEvaluationTool(testCase, state, "customWidget_previewCreate", {
       definition: healthWidget,
     });
 
     expect(
       getActiveAssistantEvaluationToolDefinitions(state).map(({ function: definition }) => definition.name),
-    ).toEqual(expect.arrayContaining(["customWidget_previewQuery", "customWidget_previewAction"]));
+    ).toEqual(["customWidget_previewQuery"]);
   });
 
   it("normalizes invisible model formatting consistently between template validation and preview", () => {
@@ -747,7 +781,7 @@ describe("Custom Widget assistant live evaluation harness", () => {
     );
   });
 
-  it("normalizes duplicated Assistant template formats to canonical templateLines", () => {
+  it("rejects duplicated template formats and accepts canonical templateLines", () => {
     const testCase = getCase("fake-service-health");
     const state = createAssistantEvaluationState();
 
@@ -756,7 +790,10 @@ describe("Custom Widget assistant live evaluation harness", () => {
         template: "<Broken",
         templateLines: healthWidget.templateLines,
       }),
-    ).toMatchObject({ valid: true, diagnostics: [] });
+    ).toMatchObject({
+      valid: false,
+      diagnostics: [{ severity: "error", message: "Provide template or templateLines, not both" }],
+    });
     expect(
       executeAssistantEvaluationTool(testCase, state, "customWidget_previewCreate", { definition: healthWidget }),
     ).toMatchObject({ success: true, previewSession: { id: "preview-1" } });
@@ -765,7 +802,6 @@ describe("Custom Widget assistant live evaluation harness", () => {
   it("accepts an otherwise valid preview definition serialized once by the provider", () => {
     const testCase = getCase("fake-service-health");
     const state = createAssistantEvaluationState();
-    validateTemplate(testCase, state, healthWidget);
 
     expect(
       executeAssistantEvaluationTool(testCase, state, "customWidget_previewCreate", {
@@ -828,7 +864,6 @@ describe("Custom Widget assistant live evaluation harness", () => {
   it("rejects unchanged preview cycles instead of counting them as deliberate refinement", () => {
     const testCase = getCase("fake-service-health");
     const state = createAssistantEvaluationState();
-    validateTemplate(testCase, state, healthWidget);
     executeAssistantEvaluationTool(testCase, state, "customWidget_previewCreate", { definition: healthWidget });
 
     expect(
@@ -839,22 +874,16 @@ describe("Custom Widget assistant live evaluation harness", () => {
     });
   });
 
-  it("starts fresh component discovery after persisting one widget in a coordinated set", () => {
+  it("starts the next widget with direct preview after persisting a coordinated widget", () => {
     const testCase = getCase("fake-service-health");
     const state = createAssistantEvaluationState();
 
-    executeAssistantEvaluationTool(testCase, state, "customWidget_getSkill", {});
     executeAssistantEvaluationTool(testCase, state, "customWidget_findComponents", {
       query: "health status layout",
     });
     executeAssistantEvaluationTool(testCase, state, "customWidget_getComponents", {
       names: ["Stack", "Text", "RefreshButton"],
     });
-    validateTemplate(testCase, state, {
-      ...healthWidget,
-      templateLines: [...healthWidget.templateLines.slice(0, -1), "  <Text>Superseded draft</Text>", "</Stack>"],
-    });
-    validateTemplate(testCase, state, healthWidget);
     executeAssistantEvaluationTool(testCase, state, "customWidget_previewCreate", { definition: healthWidget });
     executeAssistantEvaluationTool(testCase, state, "customWidget_previewQuery", {
       sessionId: "preview-1",
@@ -868,7 +897,7 @@ describe("Custom Widget assistant live evaluation harness", () => {
     const activeNames = getActiveAssistantEvaluationToolDefinitions(state).map(
       ({ function: definition }) => definition.name,
     );
-    expect(activeNames).toEqual(expect.arrayContaining(["customWidget_findComponents", "customWidget_getComponents"]));
+    expect(activeNames).toEqual(["customWidget_previewCreate"]);
   });
 
   it("completes two advanced Seerr widgets, every query and action, from one research pass", () => {
@@ -876,7 +905,6 @@ describe("Custom Widget assistant live evaluation harness", () => {
     const state = createAssistantEvaluationState();
 
     executeAssistantEvaluationTool(testCase, state, "web_search", { query: testCase.research?.query });
-    executeAssistantEvaluationTool(testCase, state, "customWidget_getSkill", {});
     executeAssistantEvaluationTool(testCase, state, "customWidget_findComponents", {
       query: "TextInput SubFetch Image Card Badge ActionButton responsive layout",
       limit: 16,
@@ -885,7 +913,6 @@ describe("Custom Widget assistant live evaluation harness", () => {
     executeAssistantEvaluationTool(testCase, state, "customWidget_getReference", { name: "runtime" });
     executeAssistantEvaluationTool(testCase, state, "customWidget_getReference", { name: "security" });
 
-    expect(validateTemplate(testCase, state, requestOperationsWidget)).toMatchObject({ valid: true });
     expect(
       executeAssistantEvaluationTool(testCase, state, "customWidget_previewCreate", {
         definition: requestOperationsWidget,
@@ -930,7 +957,6 @@ describe("Custom Widget assistant live evaluation harness", () => {
       previewSessionId: "preview-1",
     });
 
-    expect(validateTemplate(testCase, state, mediaResearchWidget)).toMatchObject({ valid: true });
     expect(
       executeAssistantEvaluationTool(testCase, state, "customWidget_previewCreate", {
         definition: mediaResearchWidget,

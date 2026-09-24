@@ -140,6 +140,186 @@ describe("CustomJsxDisplay", () => {
     expect(container.textContent).not.toContain("RUNTIME_RENDER_ERROR");
   });
 
+  it.each([
+    {
+      id: "seed-dispatcharr-channels",
+      expected: "BBC One HD",
+      data: {
+        channels: {
+          count: 1,
+          results: [
+            {
+              id: 41,
+              uuid: "channel-41",
+              channel_number: 101,
+              name: "BBC One",
+              effective_channel_number: 101,
+              effective_name: "BBC One HD",
+              channel_group_id: 3,
+              epg_data_id: 62,
+              is_catchup: true,
+              catchup_days: 7,
+              hidden_from_output: false,
+            },
+          ],
+        },
+      },
+      status: { channels: { loading: false, ok: true, status: 200 } },
+    },
+    {
+      id: "seed-karakeep-bookmarks",
+      expected: "A useful article",
+      data: {
+        bookmarks: {
+          nextCursor: null,
+          bookmarks: [
+            {
+              id: "bookmark-1",
+              title: "A useful article",
+              favourited: true,
+              summary: "Saved for later",
+              tags: [{ id: "tag-1", name: "reading" }],
+              content: { type: "link", title: "A useful article", url: "https://example.com" },
+            },
+          ],
+        },
+      },
+      status: { bookmarks: { loading: false, ok: true, status: 200 } },
+    },
+    {
+      id: "seed-mealie-today",
+      expected: "Mushroom risotto",
+      data: {
+        meals: [
+          {
+            id: 51,
+            entryType: "dinner",
+            title: "",
+            text: "",
+            recipe: { name: "Mushroom risotto", recipeServings: 4, totalTime: "45 minutes", rating: 4.5 },
+          },
+        ],
+      },
+      status: { meals: { loading: false, ok: true, status: 200 } },
+    },
+    {
+      id: "seed-romm-library",
+      expected: "F-Zero GX",
+      data: {
+        stats: { PLATFORMS: 4, ROMS: 120, SAVES: 10, STATES: 8 },
+        recent: {
+          items: [
+            {
+              id: 702,
+              name: "F-Zero GX",
+              fs_name_no_ext: "F-Zero GX (USA)",
+              platform_display_name: "Nintendo GameCube",
+              created_at: "2026-09-19T12:20:00Z",
+              missing_from_fs: false,
+            },
+          ],
+        },
+      },
+      status: {
+        stats: { loading: false, ok: true, status: 200 },
+        recent: { loading: false, ok: true, status: 200 },
+      },
+    },
+    {
+      id: "seed-tubearchivist-queue",
+      expected: "Building a resilient home server",
+      data: {
+        channels: { doc_count: 86, subscribed_true: 42 },
+        downloads: { pending: 13, pending_videos: 9, pending_shorts: 0, pending_streams: 4 },
+        queue: {
+          data: [
+            {
+              youtube_id: "video-1",
+              title: "Building a resilient home server",
+              channel_name: "Homelab Notes",
+              duration: "18:42",
+              status: "pending",
+              vid_type: "videos",
+            },
+          ],
+          paginate: { current_page: 0, last_page: 2, total_hits: 13 },
+        },
+      },
+      status: {
+        channels: { loading: false, ok: true, status: 200 },
+        downloads: { loading: false, ok: true, status: 200 },
+        queue: { loading: false, ok: true, status: 200 },
+      },
+    },
+    {
+      id: "seed-frigate-alerts",
+      expected: "front door",
+      data: {
+        alerts: [
+          {
+            id: "alert-1",
+            camera: "front_door",
+            start_time: Math.floor(Date.now() / 1000),
+            end_time: null,
+            severity: "alert",
+            has_been_reviewed: false,
+            data: { objects: ["person"], verified_objects: [], zones: ["porch"] },
+          },
+        ],
+      },
+      status: { alerts: { loading: false, ok: true, status: 200 } },
+    },
+    {
+      id: "seed-frigate-system",
+      expected: "front_door",
+      data: {
+        stats: {
+          camera_fps: 5,
+          detection_fps: 1.4,
+          process_fps: 5,
+          skipped_fps: 0,
+          service: { version: "0.16.1", uptime: 86400, storage: {} },
+          cameras: {
+            front_door: {
+              camera_fps: 5,
+              connection_quality: "excellent",
+              reconnects_last_hour: 0,
+              stalls_last_hour: 0,
+            },
+          },
+          detectors: {},
+        },
+      },
+      status: { stats: { loading: false, ok: true, status: 200 } },
+    },
+    {
+      id: "seed-frigate-live-streams",
+      expected: "front_door",
+      data: {
+        streams: {
+          front_door: {
+            producers: [{ medias: ["video, recvonly, H264"] }],
+            consumers: [{ remote_addr: "127.0.0.1:8554" }],
+          },
+        },
+      },
+      status: { streams: { loading: false, ok: true, status: 200 } },
+    },
+  ])("renders the bundled integration widget $id", async ({ id, expected, data, status }) => {
+    const bundled = BUNDLED_CUSTOM_WIDGETS.find((candidate) => candidate.id === id)?.widget;
+    if (!bundled) throw new Error(`Bundled widget '${id}' was not found`);
+
+    await renderDisplay({
+      template: bundled.template,
+      data,
+      status,
+      options: getCustomWidgetDefaultOptions(bundled.options ?? {}),
+    });
+
+    expect(container.textContent).toContain(expected);
+    expect(container.textContent).not.toContain("RUNTIME_RENDER_ERROR");
+  });
+
   it("recovers when preview data arrives after an initial render error", async () => {
     const template = "<Stack>{data.items.map((item) => <Text key={item}>{item}</Text>)}</Stack>";
     await renderDisplay({ template, data: {} });

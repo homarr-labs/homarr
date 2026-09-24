@@ -109,11 +109,44 @@ export function WidgetDefinitionProvider(props: WidgetDefinitionProviderProps) {
             confirmed: input.confirmed,
           }),
     invalidate: async ({ itemId, previewSessionId, targets }) => {
+      if (targets.length === 0) return;
       const invalidateAll = targets.includes("*");
       if (previewSessionId) {
-        if (invalidateAll) {
-          await fetchApi.customWidget.previewRefresh.mutate({ sessionId: previewSessionId });
-        }
+        if (props.queriesDisabled) return;
+        const requests = (props.requestCapabilities ?? []).filter(
+          (request) => request.kind === "query" && (invalidateAll || targets.includes(request.id)),
+        );
+        await fetchApi.customWidget.previewRefresh.mutate({
+          sessionId: previewSessionId,
+          requestIds: requests.map((request) => request.id),
+        });
+        // Preview load data starts as a snapshot, not an active React Query subscription.
+        // Publish refreshed load results so both editor and standalone previews update.
+        await Promise.all(
+          requests
+            .filter((request) => request.trigger === "load")
+            .map(async (request) => {
+              props.setQueryState?.(request.id, { data: null, status: { loading: true } });
+              try {
+                const result = await port.query({ previewSessionId, requestId: request.id, params: {} });
+                props.setQueryState?.(request.id, {
+                  data: result.data,
+                  status: {
+                    loading: false,
+                    ok: result.ok,
+                    status: result.status,
+                    statusText: result.statusText,
+                    error: result.error,
+                  },
+                });
+              } catch {
+                props.setQueryState?.(request.id, {
+                  data: null,
+                  status: { loading: false, ok: false, error: messages.requestFailed },
+                });
+              }
+            }),
+        );
         await queryClient.invalidateQueries({
           predicate: (query) => {
             const key = query.queryKey;
@@ -128,7 +161,6 @@ export function WidgetDefinitionProvider(props: WidgetDefinitionProviderProps) {
         return;
       }
       if (!itemId) return;
-      if (targets.length === 0) return;
       if (invalidateAll) await fetchApi.widget.customApi.refresh.mutate({ itemId });
       const tasks: Promise<unknown>[] = [
         queryClient.invalidateQueries({
