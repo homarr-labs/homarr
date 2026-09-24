@@ -478,6 +478,7 @@ export const integrationDefs = {
     apiKeySettingsPath: "/settings/general",
   },
   bindery: {
+    supportsHttpRequests: false,
     name: "Bindery",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/bindery.svg",
