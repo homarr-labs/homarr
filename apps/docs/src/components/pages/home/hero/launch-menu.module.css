@@ -3,10 +3,10 @@
   align-items: center;
   justify-content: center;
   padding: 0;
-  border: 1px solid var(--border);
+  border: 1px solid var(--hero-button-border);
   border-radius: 1.5rem;
-  background: var(--secondary);
-  color: var(--foreground);
+  background: var(--hero-button-bg);
+  color: var(--hero-button-fg);
   font: inherit;
   font-size: 1.125rem;
   font-weight: 700;
@@ -25,12 +25,13 @@
   justify-content: center;
   align-self: stretch;
   width: 2.75rem;
-  border-left: 1px solid var(--border);
+  border-left: 1px solid var(--hero-button-border);
 }
 
 .trigger:hover,
 .trigger[data-popup-open] {
-  background: var(--accent);
+  background: var(--hero-button-hover-bg);
+  color: var(--hero-button-hover-fg);
 }
 
 .trigger:focus-visible {

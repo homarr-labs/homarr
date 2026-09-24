@@ -43,6 +43,11 @@
 }
 
 .heroActions {
+  --hero-button-bg: #fff;
+  --hero-button-fg: #27272a;
+  --hero-button-border: color-mix(in srgb, #111827 12%, transparent);
+  --hero-button-hover-bg: #f4f4f5;
+  --hero-button-hover-fg: #18181b;
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
@@ -56,10 +61,10 @@
   justify-content: center;
   gap: 0.65rem;
   padding: 0.7rem 1rem;
-  border: 1px solid color-mix(in srgb, #111827 12%, transparent);
+  border: 1px solid var(--hero-button-border);
   border-radius: 999px;
-  background: #fff;
-  color: #27272a;
+  background: var(--hero-button-bg);
+  color: var(--hero-button-fg);
   font-size: 0.95rem;
   font-weight: 700;
   line-height: 1;
@@ -71,8 +76,8 @@
 }
 
 .heroButton:hover {
-  background: #f4f4f5;
-  color: #18181b;
+  background: var(--hero-button-hover-bg);
+  color: var(--hero-button-hover-fg);
   box-shadow: 0 4px 14px rgb(49 46 129 / 18%);
 }
 
@@ -88,15 +93,12 @@
   max-height: 1.25rem;
 }
 
-:global(.dark) .heroButton {
-  border-color: #52525b;
-  background: #27272a;
-  color: #f4f4f5;
-}
-
-:global(.dark) .heroButton:hover {
-  background: #3f3f46;
-  color: #fff;
+:global(.dark) .heroActions {
+  --hero-button-bg: #27272a;
+  --hero-button-fg: #f4f4f5;
+  --hero-button-border: #52525b;
+  --hero-button-hover-bg: #3f3f46;
+  --hero-button-hover-fg: #fff;
 }
 
 .heroPreview {
