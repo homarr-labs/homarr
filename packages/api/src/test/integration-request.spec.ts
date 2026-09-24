@@ -41,7 +41,6 @@ vi.mock("@homarr/core/infrastructure/certificates", () => ({
 const router = createTRPCRouter({ request: integrationRequestProcedure });
 const secret = "test-credential-not-for-output";
 const calls: { method: string | undefined; path: string | undefined; auth: string | undefined; body: string }[] = [];
-const compressors = { gzip: gzipSync, deflate: deflateSync, br: brotliCompressSync };
 const server = createServer(async (req, res) => {
   let body = "";
   for await (const chunk of req) body += String(chunk);
@@ -67,8 +66,17 @@ const server = createServer(async (req, res) => {
     let bytes = Buffer.from(JSON.stringify({ value: "decoded", secret }));
     if (req.url === "/compressed-large") bytes = Buffer.from("x".repeat(1024 * 1024 + 1));
     for (const name of encoding.split(", ")) {
-      const compress = compressors[name as keyof typeof compressors];
-      if (compress) bytes = compress(bytes);
+      switch (name) {
+        case "gzip":
+          bytes = gzipSync(bytes);
+          break;
+        case "deflate":
+          bytes = deflateSync(bytes);
+          break;
+        case "br":
+          bytes = brotliCompressSync(bytes);
+          break;
+      }
     }
     if (req.url === "/compressed-invalid") bytes = Buffer.from(secret);
     res.writeHead(200, { "Content-Type": "application/json", "Content-Encoding": encoding });

@@ -77,6 +77,10 @@ roles and use the canonical layouts returned by save operations, including gener
 
 Creating or changing an integration-backed widget requires use access to each newly selected integration.
 
+`board.addItem` accepts an optional `size: { width, height }` in grid cells (1–24 each). It places the item in the first
+free position on every layout and caps the requested width to that layout's available columns. This lets automation
+create a readable Notebook without saving the entire board merely to resize the new item.
+
 ## Docker targets
 
 Docker actions identify both the configured endpoint and the container:

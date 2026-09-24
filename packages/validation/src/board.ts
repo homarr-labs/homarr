@@ -176,6 +176,7 @@ export const addItemToBoardSchema = z.object({
   boardId: z.string(),
   kind: zodEnumFromArray(widgetKinds),
   options: z.record(z.string(), z.unknown()).default({}),
+  size: z.object({ width: z.number().int().min(1).max(24), height: z.number().int().min(1).max(24) }).optional(),
   integrationIds: z
     .array(z.string())
     .max(32)

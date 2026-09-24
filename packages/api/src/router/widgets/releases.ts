@@ -1,5 +1,4 @@
 import SuperJSON from "superjson";
-import { escapeForRegEx } from "@tiptap/react";
 import { z } from "zod/v4";
 
 import { decryptSecret } from "@homarr/common/server";
@@ -14,6 +13,7 @@ import { throwIfActionForbiddenAsync } from "../board/board-access";
 
 const logger = createLogger({ module: "releasesRouter" });
 const PUBLIC_RELEASE_ERROR_MESSAGE: string = "Release provider request failed";
+const escapeForRegEx = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 const formatVersionFilterRegex = (versionFilter: z.infer<typeof releaseVersionFilterSchema> | undefined) => {
   if (!versionFilter) return undefined;

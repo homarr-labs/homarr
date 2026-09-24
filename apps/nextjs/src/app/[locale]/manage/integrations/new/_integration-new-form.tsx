@@ -40,7 +40,7 @@ import { showErrorNotification, showSuccessNotification } from "@homarr/notifica
 import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 import { appHrefSchema } from "@homarr/validation/app";
-import { integrationCreateSchema, requiresInsecureHttpOptIn } from "@homarr/validation/integration";
+import { integrationCreateSchema } from "@homarr/validation/integration";
 
 import { IntegrationSecretInput } from "../_components/secrets/integration-secret-inputs";
 import { SecretKindsSegmentedControl } from "../_components/secrets/integration-secret-segmented-control";
@@ -72,21 +72,12 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
   const hasUrlSecret = secretKinds.some((kinds) => kinds.includes("url"));
   const { data: session } = useSession();
   const canCreateApps = session?.user.permissions.includes("app-create") ?? false;
-  const appValidationSchema = canCreateApps
+  const validationSchema = canCreateApps
     ? formSchema
     : formSchema.superRefine((values, context) => {
         if (!values.hasApp || values.appId !== null) return;
         context.addIssue({ code: "custom", message: tCommon("zod.errors.required"), path: ["appId"] });
       });
-  const validationSchema = appValidationSchema.superRefine((values, context) => {
-    if (!requiresInsecureHttpOptIn(kind, values.url) || values.allowInsecureHttp) return;
-    context.addIssue({
-      code: "custom",
-      path: ["allowInsecureHttp"],
-      message: "HTTP sends the Bindery API key without encryption; allow it only on a trusted local network.",
-    });
-  });
-
   let url = initialUrl ?? getIntegrationDefaultUrl(kind) ?? "";
   if (hasUrlSecret) {
     url = "http://localhost";
@@ -100,7 +91,6 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
         value: "",
       })),
       attemptSearchEngineCreation: true,
-      allowInsecureHttp: false,
       hasApp: canCreateApps,
       appHref: url,
       appId: null,
@@ -181,16 +171,6 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
 
         {hasUrlSecret ? null : (
           <TextInput withAsterisk label={invariantTechnicalLabels.url} {...form.getInputProps("url")} />
-        )}
-
-        {kind === "bindery" && form.values.url.startsWith("http://") && (
-          <Alert icon={<IconInfoCircle size="1rem" />} title={tIntegration("field.allowInsecureHttp.title")}>
-            <Checkbox
-              {...form.getInputProps("allowInsecureHttp", { type: "checkbox" })}
-              label={tIntegration("field.allowInsecureHttp.label")}
-              description={tIntegration("field.allowInsecureHttp.description")}
-            />
-          </Alert>
         )}
 
         <Fieldset legend={tIntegration("secrets.title")}>
