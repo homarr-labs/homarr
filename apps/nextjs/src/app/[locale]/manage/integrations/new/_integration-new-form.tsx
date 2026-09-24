@@ -40,7 +40,7 @@ import { showErrorNotification, showSuccessNotification } from "@homarr/notifica
 import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 import { appHrefSchema } from "@homarr/validation/app";
-import { integrationCreateSchema, requiresInsecureHttpOptIn } from "@homarr/validation/integration";
+import { integrationCreateBaseSchema, requiresInsecureHttpOptIn } from "@homarr/validation/integration";
 
 import { IntegrationSecretInput } from "../_components/secrets/integration-secret-inputs";
 import { SecretKindsSegmentedControl } from "../_components/secrets/integration-secret-segmented-control";
@@ -57,7 +57,7 @@ interface NewIntegrationFormProps {
 
 export type CreatedIntegrationResult = Extract<RouterOutputs["integration"]["create"], { integration: unknown }>;
 
-const formSchema = integrationCreateSchema.omit({ kind: true, app: true }).and(
+const formSchema = integrationCreateBaseSchema.omit({ kind: true, app: true }).and(
   z.object({
     hasApp: z.boolean(),
     appHref: appHrefSchema,
