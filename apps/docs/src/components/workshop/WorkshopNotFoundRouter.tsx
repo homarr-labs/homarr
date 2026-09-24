@@ -4,6 +4,9 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IconBook, IconPackage } from "@tabler/icons-react";
 
+import { Carbon } from "@/components/carbon";
+import { DetailSkeleton } from "./DetailSections";
+
 import { Button } from "@/components/ui/button";
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 
@@ -16,6 +19,8 @@ export function WorkshopNotFoundRouter({ configuredWorkshopUrl }: { configuredWo
     // The static 404 shell carries its build-time route, not the requested Workshop URL.
     setPathname(window.location.pathname);
   }, [routerPathname]);
+  if (!pathname) return <DetailSkeleton />;
+
   const submissionId = /^\/workshop\/([^/]+)\/?$/.exec(pathname)?.[1];
 
   if (submissionId && submissionId !== "admin") {
@@ -41,6 +46,7 @@ export function WorkshopNotFoundRouter({ configuredWorkshopUrl }: { configuredWo
           </Button>
         </EmptyContent>
       </Empty>
+      <Carbon />
     </main>
   );
 }

@@ -4,7 +4,6 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 import {
   IconArrowLeft,
-  IconArrowRight,
   IconBrandGithub,
   IconCheck,
   IconCopy,
@@ -36,6 +35,8 @@ import {
   MAX_WORKSHOP_SCREENSHOT_BYTES,
   WORKSHOP_SCREENSHOT_MIME_TYPES,
 } from "@homarr/workshop";
+
+import { Carbon } from "@/components/carbon";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -599,12 +600,7 @@ const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string;
         </Alert>
       )}
 
-      <div
-        className={cn(
-          "grid items-start gap-10",
-          widgetDefinition || canManage ? "xl:grid-cols-[minmax(0,1fr)_22rem]" : "mx-auto max-w-5xl",
-        )}
-      >
+      <div className="grid items-start gap-10 xl:grid-cols-[minmax(0,1fr)_22rem]">
         <main className="min-w-0">
           <header className="border-b border-border pb-6">
             <div className="flex flex-wrap items-start justify-between gap-5">
@@ -659,79 +655,6 @@ const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string;
             </div>
 
             {widgetDefinition && <WidgetSafetySummary widget={widgetDefinition} />}
-
-            <section className="mt-6" aria-labelledby="workshop-install-heading">
-              <h2 id="workshop-install-heading" className="scroll-mt-24 text-lg font-semibold">
-                Install in Homarr
-              </h2>
-              <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm leading-relaxed text-muted-foreground">
-                {submission.type === "customWidget" ? (
-                  <>
-                    <li>Download the widget JSON below.</li>
-                    <li>
-                      Open <strong className="text-foreground">Management → Custom Widgets → Import</strong> in your
-                      Homarr instance and select the file.
-                    </li>
-                    <li>
-                      Review its sources and permissions, then configure the URLs and credentials for your services.
-                    </li>
-                  </>
-                ) : (
-                  <>
-                    <li>Copy the CSS below.</li>
-                    <li>
-                      Open <strong className="text-foreground">Board settings → Custom CSS</strong> in your Homarr
-                      instance, paste the CSS, and save.
-                    </li>
-                  </>
-                )}
-              </ol>
-              <div className="mt-4 flex flex-wrap items-center gap-2">
-                {submission.type === "customWidget" && (
-                  <Button size="sm" className="min-h-11 sm:min-h-8" onClick={() => downloadSubmissionJson(submission)}>
-                    <IconDownload size={14} /> Download widget JSON
-                  </Button>
-                )}
-                <Button
-                  variant={submission.type === "customCss" ? "default" : "outline"}
-                  size="sm"
-                  className="min-h-11 sm:min-h-8"
-                  aria-live="polite"
-                  onClick={() => void handleCopy()}
-                >
-                  {copyFailed ? (
-                    <>
-                      <IconX size={14} className="text-destructive" /> Copy failed
-                    </>
-                  ) : (
-                    <>
-                      <CopyIcon size={14} className={copyIconClass} />
-                      {copied ? "Copied" : submission.type === "customCss" ? "Copy CSS" : "Copy JSON"}
-                    </>
-                  )}
-                </Button>
-                <a
-                  href="#workshop-source-heading"
-                  className="inline-flex min-h-11 items-center px-2 text-sm underline underline-offset-4 sm:min-h-8"
-                >
-                  Review source
-                </a>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="min-h-11 text-muted-foreground sm:min-h-8"
-                  onClick={() => setReportOpen(true)}
-                >
-                  <IconFlag size={14} /> Report
-                </Button>
-              </div>
-              <Link
-                to="/docs/workshop/#install-content"
-                className="mt-3 inline-flex items-center gap-1.5 text-sm underline underline-offset-4"
-              >
-                Installation guide <IconArrowRight size={13} />
-              </Link>
-            </section>
           </header>
 
           {screenshotUrls.length > 0 && (
@@ -779,134 +702,194 @@ const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string;
           </div>
         </main>
 
-        {(widgetDefinition || canManage) && (
-          <aside className="space-y-6 xl:sticky xl:top-24">
-            {widgetDefinition && (
-              <section className="rounded-xl border border-border bg-card p-5">
-                <h2 className="font-semibold">Widget details</h2>
-                <div className="mt-5 space-y-5">
-                  <div>
-                    <h3 className="mb-2 flex items-center gap-2 text-sm font-medium">
-                      <IconServer size={14} /> API sources
-                    </h3>
-                    <div className="space-y-2.5">
-                      {sources.map(([id, source]) => (
-                        <div key={id} className="min-w-0">
-                          <div className="flex items-center justify-between gap-2 text-sm">
-                            <span className="truncate font-medium">{source.name || id}</span>
-                            <Badge variant="secondary" className="shrink-0">
-                              {source.networkScope ?? "integration"}
-                            </Badge>
-                          </div>
-                          <p className="truncate text-xs text-muted-foreground">{sourceHost(source)}</p>
-                          <p className="mt-0.5 text-xs text-muted-foreground">{sourceAuthLabel(source)}</p>
+        <aside className="space-y-6 xl:sticky xl:top-24">
+          <section className="rounded-xl border border-border bg-card p-5" aria-labelledby="workshop-install-heading">
+            <h2 id="workshop-install-heading" className="scroll-mt-24 text-lg font-semibold">
+              Install in Homarr
+            </h2>
+            <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm leading-relaxed text-muted-foreground">
+              {submission.type === "customWidget" ? (
+                <>
+                  <li>Download the widget JSON below.</li>
+                  <li>
+                    Open <strong className="text-foreground">Management → Custom Widgets → Import</strong> in your
+                    Homarr instance and select the file.
+                  </li>
+                  <li>
+                    Review its sources and permissions, then configure the URLs and credentials for your services.
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li>Copy the CSS below.</li>
+                  <li>
+                    Open <strong className="text-foreground">Board settings → Custom CSS</strong> in your Homarr
+                    instance, paste the CSS, and save.
+                  </li>
+                </>
+              )}
+            </ol>
+            <div className="mt-4 flex flex-wrap items-center gap-2">
+              {submission.type === "customWidget" && (
+                <Button size="sm" className="min-h-11 sm:min-h-8" onClick={() => downloadSubmissionJson(submission)}>
+                  <IconDownload size={14} /> Download widget JSON
+                </Button>
+              )}
+              <Button
+                variant={submission.type === "customCss" ? "default" : "outline"}
+                size="sm"
+                className="min-h-11 sm:min-h-8"
+                aria-live="polite"
+                onClick={() => void handleCopy()}
+              >
+                {copyFailed ? (
+                  <>
+                    <IconX size={14} className="text-destructive" /> Copy failed
+                  </>
+                ) : (
+                  <>
+                    <CopyIcon size={14} className={copyIconClass} />
+                    {copied ? "Copied" : submission.type === "customCss" ? "Copy CSS" : "Copy JSON"}
+                  </>
+                )}
+              </Button>
+
+              <Button
+                variant="ghost"
+                size="sm"
+                className="min-h-11 text-muted-foreground sm:min-h-8"
+                onClick={() => setReportOpen(true)}
+              >
+                <IconFlag size={14} /> Report
+              </Button>
+            </div>
+          </section>
+          {widgetDefinition && (
+            <section className="rounded-xl border border-border bg-card p-5">
+              <h2 className="font-semibold">Widget details</h2>
+              <div className="mt-5 space-y-5">
+                <div>
+                  <h3 className="mb-2 flex items-center gap-2 text-sm font-medium">
+                    <IconServer size={14} /> API sources
+                  </h3>
+                  <div className="space-y-2.5">
+                    {sources.map(([id, source]) => (
+                      <div key={id} className="min-w-0">
+                        <div className="flex items-center justify-between gap-2 text-sm">
+                          <span className="truncate font-medium">{source.name || id}</span>
+                          <Badge variant="secondary" className="shrink-0">
+                            {source.networkScope ?? "integration"}
+                          </Badge>
+                        </div>
+                        <p className="truncate text-xs text-muted-foreground">{sourceHost(source)}</p>
+                        <p className="mt-0.5 text-xs text-muted-foreground">{sourceAuthLabel(source)}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="border-t border-border pt-4">
+                  <h3 className="mb-2 flex items-center gap-2 text-sm font-medium">
+                    <IconSettings size={14} /> Capabilities
+                  </h3>
+                  <div className="flex flex-wrap gap-1.5">
+                    <Badge variant="secondary">
+                      {requests.filter(([, request]) => request.kind === "query").length} queries
+                    </Badge>
+                    <Badge variant="secondary">
+                      {requests.filter(([, request]) => request.kind === "action").length} actions
+                    </Badge>
+                    <Badge variant="secondary">{options.length} options</Badge>
+                  </div>
+                  {requests.length > 0 && (
+                    <div className="mt-3 space-y-1.5">
+                      {requests.slice(0, 6).map(([id, request]) => (
+                        <div key={id} className="flex items-center justify-between gap-2 text-xs">
+                          <span className="truncate text-muted-foreground">{id}</span>
+                          <span className="shrink-0 font-mono font-medium">{request.method}</span>
                         </div>
                       ))}
-                    </div>
-                  </div>
-
-                  <div className="border-t border-border pt-4">
-                    <h3 className="mb-2 flex items-center gap-2 text-sm font-medium">
-                      <IconSettings size={14} /> Capabilities
-                    </h3>
-                    <div className="flex flex-wrap gap-1.5">
-                      <Badge variant="secondary">
-                        {requests.filter(([, request]) => request.kind === "query").length} queries
-                      </Badge>
-                      <Badge variant="secondary">
-                        {requests.filter(([, request]) => request.kind === "action").length} actions
-                      </Badge>
-                      <Badge variant="secondary">{options.length} options</Badge>
-                    </div>
-                    {requests.length > 0 && (
-                      <div className="mt-3 space-y-1.5">
-                        {requests.slice(0, 6).map(([id, request]) => (
-                          <div key={id} className="flex items-center justify-between gap-2 text-xs">
-                            <span className="truncate text-muted-foreground">{id}</span>
-                            <span className="shrink-0 font-mono font-medium">{request.method}</span>
-                          </div>
-                        ))}
-                        {requests.length > 6 && (
-                          <p className="text-xs text-muted-foreground">+{requests.length - 6} more</p>
-                        )}
-                      </div>
-                    )}
-                  </div>
-
-                  {options.length > 0 && (
-                    <div className="border-t border-border pt-4">
-                      <h3 className="mb-2 flex items-center gap-2 text-sm font-medium">
-                        <IconSettings size={14} /> Configurable options
-                      </h3>
-                      <div className="space-y-2">
-                        {options.slice(0, 6).map(([id, option]) => (
-                          <div key={id} className="flex items-start justify-between gap-3 text-xs">
-                            <span className="min-w-0 truncate text-muted-foreground">{option.label}</span>
-                            <span className="shrink-0 font-medium">{option.control}</span>
-                          </div>
-                        ))}
-                        {options.length > 6 && (
-                          <p className="text-xs text-muted-foreground">+{options.length - 6} more</p>
-                        )}
-                      </div>
+                      {requests.length > 6 && (
+                        <p className="text-xs text-muted-foreground">+{requests.length - 6} more</p>
+                      )}
                     </div>
                   )}
+                </div>
 
-                  {integrationSources.length > 0 && (
-                    <div className="border-t border-border pt-4">
-                      <h3 className="mb-2 flex items-center gap-2 text-sm font-medium">
-                        <IconServer size={14} /> Saved integrations
-                      </h3>
+                {options.length > 0 && (
+                  <div className="border-t border-border pt-4">
+                    <h3 className="mb-2 flex items-center gap-2 text-sm font-medium">
+                      <IconSettings size={14} /> Configurable options
+                    </h3>
+                    <div className="space-y-2">
+                      {options.slice(0, 6).map(([id, option]) => (
+                        <div key={id} className="flex items-start justify-between gap-3 text-xs">
+                          <span className="min-w-0 truncate text-muted-foreground">{option.label}</span>
+                          <span className="shrink-0 font-medium">{option.control}</span>
+                        </div>
+                      ))}
+                      {options.length > 6 && (
+                        <p className="text-xs text-muted-foreground">+{options.length - 6} more</p>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {integrationSources.length > 0 && (
+                  <div className="border-t border-border pt-4">
+                    <h3 className="mb-2 flex items-center gap-2 text-sm font-medium">
+                      <IconServer size={14} /> Saved integrations
+                    </h3>
+                    <p className="text-sm">
+                      {integrationSources.length} configured integration{integrationSources.length !== 1 && "s"}{" "}
+                      required.
+                    </p>
+                    <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                      Select matching integrations in Homarr after import. Their connection settings are reused.
+                    </p>
+                  </div>
+                )}
+
+                <div className="border-t border-border pt-4">
+                  <h3 className="mb-2 flex items-center gap-2 text-sm font-medium">
+                    <IconKey size={14} /> Widget credentials
+                  </h3>
+                  {protectedSources.length > 0 ? (
+                    <>
                       <p className="text-sm">
-                        {integrationSources.length} configured integration{integrationSources.length !== 1 && "s"}{" "}
-                        required.
+                        {protectedSources.length} source{protectedSources.length === 1 ? " requires" : "s require"}{" "}
+                        credentials.
                       </p>
                       <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                        Select matching integrations in Homarr after import. Their connection settings are reused.
+                        Secrets are entered after import and are never included in Workshop downloads.
                       </p>
-                    </div>
+                    </>
+                  ) : (
+                    <p className="text-sm text-muted-foreground">No widget credentials required.</p>
                   )}
-
-                  <div className="border-t border-border pt-4">
-                    <h3 className="mb-2 flex items-center gap-2 text-sm font-medium">
-                      <IconKey size={14} /> Widget credentials
-                    </h3>
-                    {protectedSources.length > 0 ? (
-                      <>
-                        <p className="text-sm">
-                          {protectedSources.length} source{protectedSources.length === 1 ? " requires" : "s require"}{" "}
-                          credentials.
-                        </p>
-                        <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                          Secrets are entered after import and are never included in Workshop downloads.
-                        </p>
-                      </>
-                    ) : (
-                      <p className="text-sm text-muted-foreground">No widget credentials required.</p>
-                    )}
-                  </div>
                 </div>
-              </section>
-            )}
+              </div>
+            </section>
+          )}
 
-            {canManage && (
-              <section className="border-t border-border pt-5">
-                <h2 className="mb-2 text-sm font-semibold">Manage submission</h2>
-                <div className="grid gap-1">
-                  {canEdit && (
-                    <Button variant="ghost" size="sm" className="justify-start" onClick={openEdit}>
-                      <IconPencil size={14} /> Edit submission
-                    </Button>
-                  )}
-                  <Button variant="ghost" size="sm" className="justify-start" onClick={() => void handleOutdated()}>
-                    <IconInfoCircle size={14} /> {submission.outdated ? "Mark current" : "Mark outdated"}
+          {canManage && (
+            <section className="border-t border-border pt-5">
+              <h2 className="mb-2 text-sm font-semibold">Manage submission</h2>
+              <div className="grid gap-1">
+                {canEdit && (
+                  <Button variant="ghost" size="sm" className="justify-start" onClick={openEdit}>
+                    <IconPencil size={14} /> Edit submission
                   </Button>
-                  <DeleteConfirmButton className="w-full justify-start" onConfirm={handleDelete} />
-                </div>
-              </section>
-            )}
-          </aside>
-        )}
+                )}
+                <Button variant="ghost" size="sm" className="justify-start" onClick={() => void handleOutdated()}>
+                  <IconInfoCircle size={14} /> {submission.outdated ? "Mark current" : "Mark outdated"}
+                </Button>
+                <DeleteConfirmButton className="w-full justify-start" onConfirm={handleDelete} />
+              </div>
+            </section>
+          )}
+          <Carbon />
+        </aside>
       </div>
       <Dialog
         open={reportOpen}

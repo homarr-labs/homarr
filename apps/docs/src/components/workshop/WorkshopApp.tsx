@@ -124,7 +124,7 @@ export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
           <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground">
             Discover community-made widgets and CSS. Review the source, then import it into Homarr.
           </p>
-          <a href="/docs/workshop/#install-content" className="mt-2 inline-block text-sm underline underline-offset-4">
+          <a href="/docs/workshop/" className="mt-2 inline-block text-sm underline underline-offset-4">
             How to install Workshop content
           </a>
         </div>

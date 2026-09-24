@@ -3,16 +3,19 @@
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 
-type Placement = "toc" | "inline" | "banner";
+type Placement = "toc" | "inline" | "banner" | "site-footer";
 
 /** Responsive placements are mutually exclusive: never request a hidden ad. */
 export function Carbon({ placement = "banner" }: { placement?: Placement }) {
   const ref = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
 
+  const hidden =
+    pathname === "/" || (placement === "site-footer" && /^\/workshop\/(?!admin\/?$)[^/]+\/?$/.test(pathname ?? ""));
+
   useEffect(() => {
     const host = ref.current;
-    if (!host || pathname === "/") return;
+    if (!host || hidden) return;
     if (process.env.NODE_ENV !== "production" && process.env.NEXT_PUBLIC_ENABLE_CARBON_ADS !== "true") return;
     const desktop = window.matchMedia("(min-width: 1280px)");
 
@@ -30,6 +33,7 @@ export function Carbon({ placement = "banner" }: { placement?: Placement }) {
       if (!host) return;
       const visible =
         placement === "banner" ||
+        placement === "site-footer" ||
         (placement === "toc" && desktop.matches) ||
         (placement === "inline" && !desktop.matches);
       if (!visible) {
@@ -57,9 +61,9 @@ export function Carbon({ placement = "banner" }: { placement?: Placement }) {
       desktop.removeEventListener("change", update);
       host.replaceChildren();
     };
-  }, [pathname, placement]);
+  }, [pathname, placement, hidden]);
 
-  if (pathname === "/") return null;
+  if (hidden) return null;
 
   return (
     <aside
