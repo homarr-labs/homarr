@@ -61,6 +61,15 @@ export default defineConfig({
       {
         extends: true,
         test: {
+          name: "auth-ldap-node",
+          environment: "node",
+          setupFiles: ["./vitest.setup.ts", "./vitest.setup.node.ts"],
+          include: ["packages/auth/providers/test/ldap-*.spec.ts"],
+        },
+      },
+      {
+        extends: true,
+        test: {
           name: "request-handler-node",
           environment: "node",
           setupFiles: ["./vitest.setup.ts", "./vitest.setup.node.ts"],
@@ -86,6 +95,7 @@ export default defineConfig({
             ...configDefaults.exclude,
             "apps/nextjs/.next",
             "packages/api/**",
+            "packages/auth/providers/test/ldap-*.spec.ts",
             "packages/custom-widgets/**",
             "packages/db/**",
             "packages/docker/**",

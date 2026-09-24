@@ -37,6 +37,8 @@ Any user in LDAP server that signs in gets created in Homarr database.
 
 Roles are fetched from LDAP groups. Groups with the same name of Homarr will be used to synchronize them.
 
+LDAP users whose distinguished names contain non-ASCII characters can sign in and have their groups resolved.
+
 <details>
   <summary>
     Example Setup
@@ -113,6 +115,8 @@ Roles are fetched from LDAP groups. Groups with the same name of Homarr will be 
 This provider authenticates using OIDC protocol.
 
 Users signed in using OIDC are created in Homarr.
+
+When signing out, Homarr completes the redirect to the configured logout URL after clearing its local session.
 
 Roles are fetched from group claims. This can also be changed to roles for example added to a azure app registration by using the `AUTH_OIDC_GROUPS_ATTRIBUTE`.
 
