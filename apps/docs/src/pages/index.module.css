@@ -113,7 +113,7 @@
   width: min(100%, 48rem);
   margin-inline: auto;
   color: #343a40;
-  transform: rotate(20deg) scale(0.8) skew(21deg);
+  transform: rotate(8deg) scale(0.8) skew(8deg);
 }
 
 :global(.dark) .heroCards {
