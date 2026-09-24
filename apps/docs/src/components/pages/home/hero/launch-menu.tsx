@@ -5,7 +5,7 @@ import styles from "./launch-menu.module.css";
 const providers = [
   { name: "PikaPods", logo: "pikapods", href: "https://www.pikapods.com/pods?run=homarr" },
   { name: "Railway", logo: "railway", href: "https://railway.com/deploy/_c4Kr9?referralCode=vishify" },
-  { name: "Hostinger", logo: "hostinger", href: "https://www.hostinger.com/applications/homarr" },
+  { name: "Hostinger", logo: "hostinger", href: "https://www.hostg.xyz/aff_c?offer_id=815&aff_id=244277&url_id=6861" },
 ];
 
 export function LaunchMenu() {
