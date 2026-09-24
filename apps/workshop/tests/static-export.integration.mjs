@@ -26,7 +26,11 @@ for (const path of ["/llms.txt", "/llms-full.txt", "/llms.mdx/docs/content.md"])
 
 const missing = await fetch(`${baseUrl}/docs/this-page-does-not-exist`);
 assert.equal(missing.status, 404);
-assert.match(await missing.text(), /Page not found/);
+const missingHtml = await missing.text();
+// The shared static 404 shell waits for hydration to distinguish missing pages
+// from dynamic Workshop detail routes without flashing a false not-found state.
+assert.match(missingHtml, /aria-label="Loading submission"/);
+assert.match(missingHtml, /name="robots" content="noindex"/);
 
 const missingApi = await fetch(`${baseUrl}/api/this-endpoint-does-not-exist`);
 assert.equal(missingApi.status, 404);
