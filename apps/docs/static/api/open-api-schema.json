@@ -2317,6 +2317,25 @@
                     },
                     "additionalProperties": {}
                   },
+                  "size": {
+                    "type": "object",
+                    "properties": {
+                      "width": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 24
+                      },
+                      "height": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 24
+                      }
+                    },
+                    "required": [
+                      "width",
+                      "height"
+                    ]
+                  },
                   "integrationIds": {
                     "default": [],
                     "maxItems": 32,
@@ -5331,6 +5350,7 @@
                       "radarr",
                       "lidarr",
                       "readarr",
+                      "bindery",
                       "prowlarr",
                       "bazarr",
                       "jellyfin",
@@ -5499,6 +5519,7 @@
                             "radarr",
                             "lidarr",
                             "readarr",
+                            "bindery",
                             "prowlarr",
                             "bazarr",
                             "jellyfin",
