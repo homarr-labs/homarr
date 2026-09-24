@@ -2,7 +2,7 @@
 
 import { useCallback, useImperativeHandle, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Alert, Anchor, Button, ButtonGroup, Checkbox, Fieldset, Group, Stack, Text, TextInput } from "@mantine/core";
+import { Alert, Anchor, Button, ButtonGroup, Fieldset, Group, Stack, Text, TextInput } from "@mantine/core";
 import { IconInfoCircle, IconPencil, IconPlus, IconUnlink } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
@@ -17,7 +17,7 @@ import { AppSelectModal } from "@homarr/modals-collection";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
-import { integrationUpdateSchema, requiresInsecureHttpOptIn } from "@homarr/validation/integration";
+import { integrationUpdateSchema } from "@homarr/validation/integration";
 
 import { SecretCard } from "../../_components/secrets/integration-secret-card";
 import { IntegrationSecretInput } from "../../_components/secrets/integration-secret-inputs";
@@ -67,22 +67,12 @@ export const EditIntegrationForm = ({
     ) ?? getDefaultSecretKinds(integration.kind);
 
   const hasUrlSecret = initialSecretsKinds.includes("url");
-  const validationSchema = formSchema.superRefine((values, context) => {
-    if (!requiresInsecureHttpOptIn(integration.kind, values.url) || values.allowInsecureHttp) return;
-    context.addIssue({
-      code: "custom",
-      path: ["allowInsecureHttp"],
-      message: "HTTP sends the Bindery API key without encryption; allow it only on a trusted local network.",
-    });
-  });
-
   const utils = clientApi.useUtils();
   const router = useRouter();
-  const form = useZodForm(validationSchema, {
+  const form = useZodForm(formSchema, {
     initialValues: {
       name: integration.name,
       url: integration.url,
-      allowInsecureHttp: false,
       secrets: initialSecretsKinds.map((kind) => ({
         kind,
         value: integration.secrets.find((secret) => secret.kind === kind)?.value ?? "",
@@ -197,16 +187,6 @@ export const EditIntegrationForm = ({
 
       {hasUrlSecret ? null : (
         <TextInput withAsterisk label={invariantTechnicalLabels.url} {...form.getInputProps("url")} />
-      )}
-
-      {integration.kind === "bindery" && form.values.url.startsWith("http://") && (
-        <Alert icon={<IconInfoCircle size="1rem" />} title={tIntegration("field.allowInsecureHttp.title")}>
-          <Checkbox
-            {...form.getInputProps("allowInsecureHttp", { type: "checkbox" })}
-            label={tIntegration("field.allowInsecureHttp.label")}
-            description={tIntegration("field.allowInsecureHttp.description")}
-          />
-        </Alert>
       )}
 
       <Fieldset legend={tIntegration("secrets.title")}>
