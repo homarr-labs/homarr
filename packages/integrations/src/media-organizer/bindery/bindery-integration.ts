@@ -52,12 +52,15 @@ export class BinderyIntegration extends Integration implements IMediaOrganizerIn
     const response = await fetchWithTrustedCertificatesAsync(url, {
       headers: { "X-Api-Key": super.getSecretValue("apiKey") },
     });
-    const data = await z.object({ items: z.array(binderyQueueItemSchema) }).parseAsync(await response.json());
+    const data = await z
+      .union([z.array(binderyQueueItemSchema), z.object({ items: z.array(binderyQueueItemSchema) })])
+      .parseAsync(await response.json());
+    const queueItems = Array.isArray(data) ? data : data.items;
 
     // Bindery's queue endpoint returns its entire historical log rather than
     // just in-flight downloads (observed live: 522 of 555 rows were already
     // "imported"). Exclude those so the widget shows what's actually active.
-    const activeItems = data.items.filter((item) => item.status !== "imported");
+    const activeItems = queueItems.filter((item) => item.status !== "imported");
 
     return {
       totalCount: activeItems.length,

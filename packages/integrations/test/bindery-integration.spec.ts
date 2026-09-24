@@ -133,12 +133,10 @@ describe("BinderyIntegration getMediaQueueAsync", () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: () =>
-        Promise.resolve({
-          items: [
-            { id: 1, title: "Done Book", status: "imported", percentage: "100.0" },
-            { id: 2, title: "Grabbing Book", status: "grabbed", percentage: "40.0", timeLeft: "10m" },
-          ],
-        }),
+        Promise.resolve([
+          { id: 1, title: "Done Book", status: "imported", percentage: "100.0" },
+          { id: 2, title: "Grabbing Book", status: "grabbed", percentage: "40.0", timeLeft: "10m" },
+        ]),
     } as never);
 
     const integration = new BinderyIntegration(integrationInput);
