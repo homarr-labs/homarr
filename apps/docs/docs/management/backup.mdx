@@ -24,10 +24,10 @@ Navigate to `Management` → `Tools` → `Backup`. You must have **admin** permi
 
 Click the **Export** button in the export card. You'll be prompted to type `I understand` to confirm. Once confirmed, a ZIP file downloads containing:
 
-| File                 | Description                                                         |
-| -------------------- | ------------------------------------------------------------------- |
-| `db.sqlite`          | Full SQLite database with all entities                              |
-| `metadata.json`      | Backup metadata: Homarr version, creation timestamp, encryption key |
+| File            | Description                                                         |
+| --------------- | ------------------------------------------------------------------- |
+| `db.sqlite`     | Full SQLite database with all entities                              |
+| `metadata.json` | Backup metadata: Homarr version, creation timestamp, encryption key |
 
 The backup includes everything: apps, integrations, secrets, boards, users, groups, permissions, search engines, custom widgets, and server settings. (It just backs-up the whole database)
 
@@ -63,6 +63,22 @@ You can restore a backup from one Homarr instance onto another. Homarr handles:
 
 - **Encryption key re-encryption** - If the target instance has a different `SECRET_ENCRYPTION_KEY`, integration secrets are decrypted with the old key and re-encrypted with the new one during import
 - **Version compatibility** - Backups include the Homarr version they were created with. Backward compatibility is maintained for older backup formats
+
+## Automating Backups
+
+Both endpoints accept an [API key](api/index.mdx) in the `ApiKey` header, so a scheduled job can
+create and restore backups without a browser session:
+
+```bash
+curl -H 'ApiKey: <id>.<token>' -o homarr-backup.zip http://localhost:7575/api/backup/export
+```
+
+```bash
+curl -H 'ApiKey: <id>.<token>' -F 'file=@homarr-backup.zip' http://localhost:7575/api/backup/import
+```
+
+The key has to belong to a user with admin permissions. Use
+[`homarr api-keys create`](../advanced/command-line/api-keys/) to obtain one without the web interface.
 
 ## Backup During Onboarding
 

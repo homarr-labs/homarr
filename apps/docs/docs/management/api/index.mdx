@@ -72,6 +72,21 @@ API key authentication enables programmatic access for:
 - Custom dashboards and monitoring tools
 - Container orchestration systems that need to sync app definitions
 
+### Obtaining the first API key without the web interface
+
+Creating an API key normally requires signing in once. For fully automated setups the
+[command line interface](../../advanced/command-line/) can do both steps instead:
+
+```bash
+# Only needed when no credentials admin exists yet
+docker exec -it <container-id> homarr recreate-admin -u admin
+
+# Prints "<id>.<token>" once, store it somewhere safe
+docker exec -it <container-id> homarr api-keys create -u admin
+```
+
+See [API keys](../../advanced/command-line/api-keys/) for the other available commands.
+
 ## Board Automation
 
 The OpenAPI and MCP APIs include board management endpoints for common automation workflows:
@@ -83,3 +98,208 @@ The OpenAPI and MCP APIs include board management endpoints for common automatio
 - Configure global board defaults such as public home boards and status behavior
 
 Use the interactive API reference to inspect the exact request body for each endpoint under the `boards` and `settings` tags.
+
+### Composing a board
+
+A board is made up of three things, each of which can be managed on its own:
+
+| Concept      | Endpoints                                                                               | Description                                                                     |
+| ------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| **Layouts**  | `GET`/`PUT /api/boards/{id}/layouts`                                                    | Responsive breakpoints. Each layout defines the number of grid columns (1 - 24) |
+| **Sections** | `GET`/`POST /api/boards/{id}/sections`, `PATCH`/`DELETE .../sections/{id}`              | Empty, category and dynamic sections that hold the items                        |
+| **Items**    | `GET /api/boards/{id}/items`, `POST /api/boards/items`, `PATCH`/`DELETE .../items/{id}` | The widgets themselves, including their position and size                       |
+
+`GET /api/boards/{id}` returns all three at once.
+
+#### Position and size
+
+`POST /api/boards/items` accepts an optional placement. Without it the item keeps the previous
+behaviour and is placed automatically with the default size of its widget kind:
+
+```json
+{ "boardId": "<board id>", "kind": "clock" }
+```
+
+Adding `width` and `height` sets the size, `xOffset` and `yOffset` set the exact position, and
+`sectionId` picks the target section:
+
+```json
+{
+  "boardId": "<board id>",
+  "kind": "clock",
+  "sectionId": "<section id>",
+  "xOffset": 4,
+  "yOffset": 2,
+  "width": 6,
+  "height": 5
+}
+```
+
+A few rules apply:
+
+- The width of an item is limited by the column count of the layout. Use
+  `PUT /api/boards/{id}/layouts` with a higher `columnCount` if an item needs to be wider.
+- The height is not limited.
+- The values above are applied to every layout of the board and the width is clamped to the column
+  count of narrow breakpoints. Pass a `layouts` array instead to control every breakpoint yourself:
+
+  ```json
+  {
+    "boardId": "<board id>",
+    "kind": "clock",
+    "layouts": [
+      { "layoutId": "<layout id>", "sectionId": "<section id>", "xOffset": 0, "yOffset": 0, "width": 6, "height": 4 }
+    ]
+  }
+  ```
+
+- Overlapping items are rejected with `400`. Omit `xOffset` and `yOffset` to let Homarr pick the
+  next free position for the requested size.
+- A dynamic section cannot be nested inside itself or one of its descendants in the same layout.
+
+`PATCH /api/boards/{boardId}/items/{itemId}` accepts the same placement properties. Anything that is
+not part of the request keeps its current value, so an item can be resized, moved into another
+section and reconfigured in a single call.
+
+#### Import and export
+
+`GET /api/boards/{id}/export` returns a board as a single document and
+`POST /api/boards/import` creates a board from one, which makes boards reproducible from version control:
+
+```json
+{
+  "name": "homelab",
+  "isPublic": false,
+  "settings": { "opacity": 80 },
+  "layouts": [{ "id": "base", "name": "Base", "columnCount": 12, "breakpoint": 0 }],
+  "sections": [{ "id": "main", "kind": "empty", "yOffset": 0 }],
+  "items": [
+    {
+      "kind": "clock",
+      "options": { "is24HourFormat": true },
+      "layouts": [{ "layoutId": "base", "sectionId": "main", "xOffset": 0, "yOffset": 0, "width": 6, "height": 4 }]
+    }
+  ]
+}
+```
+
+The ids inside the document only reference layouts and sections within that same document. Homarr
+generates fresh ids on import, so the same document can be imported repeatedly and into other
+instances without conflicts.
+
+Board names are unique. Pass `onConflict` to decide what happens when a board with that name already
+exists, which is what makes a pipeline re-runnable:
+
+| `onConflict` | Behaviour                                                         |
+| ------------ | ----------------------------------------------------------------- |
+| `fail`       | Default. Responds with `409` and changes nothing                  |
+| `skip`       | Keeps the existing board and returns its id with `created: false` |
+| `replace`    | Exchanges the content, the board itself keeps its id              |
+
+The document is validated completely before anything is written and `replace` runs as a single
+transaction, so a document with a broken reference never leaves a board half imported. Because the
+board row survives a `replace`, the home board settings and per user permissions pointing at it are
+kept as well.
+
+:::note
+
+This endpoint creates a board the same way the interface does, so `name` follows the same rule and
+may only contain letters, digits, `-` and `_`. A board created by an older version or the oldmarr
+importer can carry a name outside of that, and such a board can only be moved with
+`POST /api/config/import`, which accepts any name because it restores rather than creates.
+
+:::
+
+#### Board access
+
+Boards created through the API are only visible to their creator until access is granted:
+
+- `GET /api/boards/{id}/permissions` lists the users and groups that can access the board, plus the
+  groups that already have access through a global permission
+- `PUT /api/boards/{entityId}/permissions/users` and `PUT /api/boards/{entityId}/permissions/groups`
+  replace the respective list. Principals missing from the request lose their access.
+
+## Full configuration
+
+`GET /api/config/export` returns the configuration of an instance and `POST /api/config/import`
+applies such a document. It covers **server settings, apps, integrations, search engines, groups
+with their permissions, and every board including its group access**.
+
+Unlike a single board import, the ids in this document are kept as they are. Widget options can
+reference other entities by id and those references live inside an opaque options object, so
+remapping them would silently break the boards. Applying the same document twice therefore needs a
+strategy:
+
+| `onConflict` | Behaviour                                                                      |
+| ------------ | ------------------------------------------------------------------------------ |
+| `fail`       | Default. Responds with `409` listing what already exists                       |
+| `skip`       | Only creates what is missing, existing entities are left untouched             |
+| `replace`    | Additionally updates existing entities and exchanges the content of the boards |
+
+Entities are matched by id first. When an id is unknown but the natural key is taken — the group
+name, the board name or the search engine trigger — the existing entity is adopted instead. Every
+instance seeds its own `everyone` group with a random id, so without this a document could never be
+applied to a separately installed instance.
+
+`replace` never deletes a board row, it only exchanges layouts, sections and items. That way the
+board keeps its id and everything pointing at it, such as the home board of a user or the per user
+permissions, stays intact. Server settings have no identity of their own and are always merged.
+
+:::caution
+
+The export is a **configuration** document, not a backup. It does not contain:
+
+- **Users, group memberships and per user board permissions** — they belong to your authentication provider
+- **Integration secret values** — secrets must not leave the instance in plain text
+- **Custom widget definitions and uploaded media** — boards using a `customApi` widget or a media
+  reference need those to be transferred separately
+- **Widget secrets** — they are attached to the items and are lost when a board is replaced
+
+Supply integration secrets on import instead:
+
+```json
+{
+  "id": "<integration id>",
+  "name": "Sonarr",
+  "url": "https://sonarr.local",
+  "kind": "sonarr",
+  "appId": null,
+  "secrets": [{ "kind": "apiKey", "value": "..." }]
+}
+```
+
+For a complete copy including users, custom widgets, media and secrets, use the backup endpoints below.
+
+:::
+
+## Backup and restore
+
+`GET /api/backup/export` downloads a zip with the SQLite database and
+`POST /api/backup/import` restores one. Both accept the `ApiKey` header, so a disaster recovery job
+does not need a browser session:
+
+```bash
+curl -H 'ApiKey: <id>.<token>' -o homarr-backup.zip http://localhost:7575/api/backup/export
+```
+
+These two endpoints are only available when Homarr runs on SQLite and are not part of the OpenAPI
+document, because they exchange binary files rather than JSON.
+
+## Managing the remaining services
+
+Besides boards, apps, users and invites, the following are available over the OpenAPI interface:
+
+| Tag              | Endpoints                                                                                                   |
+| ---------------- | ----------------------------------------------------------------------------------------------------------- |
+| `search-engines` | `GET`/`POST /api/search-engines`, `GET`/`PATCH`/`DELETE /api/search-engines/{id}`                           |
+| `integrations`   | `GET`/`POST /api/integrations`, `GET`/`PATCH`/`DELETE /api/integrations/{id}`, `GET /api/integration-kinds` |
+| `groups`         | `GET`/`POST /api/groups`, `GET`/`PATCH`/`DELETE /api/groups/{id}`, members and permissions sub resources    |
+| `apikeys`        | `GET`/`POST /api/apikeys`, `DELETE /api/apikeys/{apiKeyId}`                                                 |
+| `settings`       | `GET`/`PATCH /api/settings`, `GET`/`PATCH /api/settings/board`                                              |
+| `config`         | `GET /api/config/export`, `POST /api/config/import`                                                         |
+
+Creating or updating an integration tests the connection first. If the test fails the response
+contains an `error` object describing the problem and nothing is saved.
+
+Server-setting imports and updates reject unknown setting groups, unknown fields, and values of the
+wrong type instead of storing configuration that the management interface cannot read back.

@@ -118,7 +118,7 @@ export const NewIntegrationForm = ({
       ? new URL(values.secrets.find((secret) => secret.kind === "url")?.value ?? values.url).origin
       : values.url;
 
-    const onMutationSuccess = (data: { error?: AnyMappedTestConnectionError } | undefined | void) => {
+    const onMutationSuccess = (data: { id: string } | { error: AnyMappedTestConnectionError } | undefined | void) => {
       if (data && "error" in data && data.error) {
         setError(data.error);
         showErrorNotification({
