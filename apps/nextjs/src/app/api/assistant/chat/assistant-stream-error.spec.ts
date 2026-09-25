@@ -4,6 +4,22 @@ import { describe, expect, test } from "vitest";
 import { getAssistantStreamErrorMessage } from "./assistant-stream-error";
 
 describe("assistant stream errors", () => {
+  test.each([404, 502])("preserves Workshop upstream details through HTTP %s", (statusCode) => {
+    const detail = "Upstream model service returned HTTP 404. No endpoints found matching your data policy";
+    const error = Object.assign(new Error("Provider request failed"), {
+      statusCode,
+      responseBody: JSON.stringify({ error: { type: "homarr_provider_upstream_error", message: detail } }),
+    });
+    expect(getAssistantStreamErrorMessage(error)).toBe(detail);
+    expect(getAssistantStreamErrorMessage(new Error("Retry failed", { cause: error }))).toBe(detail);
+  });
+
+  test("does not forward arbitrary upstream metadata or unmarked response bodies", () => {
+    expect(getAssistantStreamErrorMessage({ statusCode: 404, responseBody: "<html>private data</html>" })).toBe(
+      "The selected model or chat endpoint was not found. Ask an administrator to verify the model and API URL.",
+    );
+  });
+
   test("explains a provider-interrupted input stream without blaming tool input", () => {
     expect(getAssistantStreamErrorMessage(new Error("Error in input stream"))).toBe(
       "The model provider interrupted the streamed response before the assistant could finish. Try again.",
