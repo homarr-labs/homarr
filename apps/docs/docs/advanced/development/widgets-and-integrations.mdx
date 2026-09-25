@@ -16,8 +16,8 @@ A new feature is available when its typed metadata and lazy loader are registere
 Keep the UI, options, helpers, and tests together in `packages/widgets/src/<widget>/`. The usual folder only needs an
 `index.ts` definition and a lazily imported `component.tsx`; complex widgets can add local files as needed.
 
-1. Add the stable kind to `packages/definitions/src/widget.ts` and its documentation slug to the direct typed map in
-   `packages/definitions/src/docs/widget-doc-slugs.ts`.
+1. Add the stable kind to `packages/definitions/src/widget.ts` and its documentation slug or `null` to the direct typed
+   map in `packages/definitions/src/docs/widget-doc-slugs.ts`.
 2. Export `definition` and `componentLoader` from `packages/widgets/src/<widget>/index.ts` with
    `createWidgetDefinition`. The local definition owns its icon, query keys, refresh interval, options, matchers, and
    errors. Keep the component behind `withDynamicImport` so adding a widget does not load it on every dashboard.
@@ -33,7 +33,8 @@ Keep the UI, options, helpers, and tests together in `packages/widgets/src/<widg
 5. If the widget needs server data, add its tRPC router under `packages/api/src/router/widgets/` and add its explicit
    lazy import to `packages/api/src/router/widgets/index.ts`. Keep upstream requests and Redis response caching in
    `@homarr/request-handler`. Use the widget integration middleware for integration-backed procedures.
-6. Add canonical documentation in `apps/docs/docs/widgets/<slug>/`.
+6. If advanced users need non-obvious setup or behavior explained, add a concise page in `apps/docs/docs/widgets/<slug>/`;
+   otherwise leave the widget's docs slug as `null`.
 
 Weather is the small integration-free example. Downloads shows integration selection, polling, server caching,
 mutations, partial upstream failures, and a larger options surface.
@@ -42,20 +43,21 @@ mutations, partial upstream failures, and a larger options surface.
 
 Keep the HTTP client and its capability-specific types in `packages/integrations/src/<integration>/`.
 
-1. Add the typed definition to `packages/definitions/src/integration.ts`, including credential alternatives,
-   categories, documentation slug, ports, Docker aliases, and onboarding metadata when relevant.
+1. Add the typed definition to `packages/definitions/src/integration.ts`, including credential alternatives, categories,
+   ports, Docker aliases, and onboarding metadata when relevant. Set `documentationSlug` to a page slug or `null`.
 2. Add an explicit lazy creator to `packages/integrations/src/base/creator.ts`. The literal import keeps the
    implementation out of the initial server bundle and makes the registration easy to find.
 3. Implement only the interfaces required by the widgets that use the service.
-4. Add canonical documentation in `apps/docs/docs/integrations/<slug>/`. Its `index.ts` must satisfy
-   `IntegrationDefinition` so invalid metadata fails type checking without widening the object. Use a type-only import
-   and `satisfies IntegrationDefinition`; do not cast the object.
+4. When advanced users need non-obvious setup or behavior explained, add a concise page in
+   `apps/docs/docs/integrations/<slug>/`. Its `index.ts` must satisfy `IntegrationDefinition`; use a type-only import
+   and `satisfies IntegrationDefinition` rather than a cast.
 
 Beszel is a compact example with several widgets sharing one integration client.
 
-## Write user documentation
+## User documentation
 
-Write for technically capable self-hosters. Keep each page short and operational.
+Add a page only when a smart, advanced user cannot infer setup or behavior from the UI or generated schema. Keep it short
+and operational.
 
 - Start with one sentence describing what the integration or widget adds to Homarr.
 - Include prerequisites, credentials, permissions, destructive actions, and non-obvious limits only when they matter.

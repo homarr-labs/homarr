@@ -6,160 +6,64 @@ tags:
   - Interface
 ---
 
-Homarr exposes OpenAPI and tRPC endpoints for automation. Open the generated specification under
-**Management → Tools → API** or use the [interactive API reference](/api-reference).
+Use the generated specification under **Management → Tools → API** or the [interactive API reference](/api-reference).
+This page covers contracts that are not obvious from those schemas.
 
 ![Homarr's API documentation page](../img/api.png)
 
-## Authentication
+## Authentication and browser access
 
-Create an API key from the **Authentication** tab. Its value has the form `<id>.<token>` and is shown once.
+API keys are shown once as `<id>.<token>`. Send one in the `ApiKey` header; it acts as its creator and does not expire.
+tRPC accepts the same header. Same-origin browser requests can use the Homarr session cookie.
 
-Send it in the `ApiKey` header:
+Cross-origin browser requests require `ApiKey`; they do not use session cookies. Reverse proxies must forward `OPTIONS`
+and preserve CORS headers. An HTTPS API reference cannot call an HTTP-only instance because browsers block mixed content.
 
-```sh
-curl -H 'ApiKey: <id>.<token>' https://homarr.example.com/api/info
-```
+## Endpoint constraints
 
-The same header authenticates tRPC requests under `/api/trpc`. Without a key, browser requests can use the Homarr
-session cookie.
+- General pagination and shared search are capped at 100 records.
+- `POST /api/invites` and `invite.createInvite` accept `expirationDate` as a timezone-qualified ISO 8601 string.
+- `GET /api/health/live` is unauthenticated and returns `200` when all dependencies are healthy, `500` otherwise.
 
-API keys do not expire automatically and act as the user that created them. Every request uses that user's group and
-resource permissions.
+## Permissions and results
 
-## Browser requests
+Requests use the API key owner's permissions. Unauthorized operations return `FORBIDDEN`; resource-aware lists are
+filtered on the server.
 
-The HTTP API accepts cross-origin requests authenticated with the `ApiKey` header; session cookies are not used.
-The API reference sends requests directly from your browser to the server you choose. An HTTPS documentation page
-cannot call an HTTP-only instance when the browser blocks mixed content; use HTTPS or the reference inside that instance.
-A reverse proxy must forward `OPTIONS` and preserve the API’s CORS response headers.
+`app.all`, `app.getPaginated`, and `app.search` require **Modify all apps** because they include internal URLs. Use
+`app.selectable` for reduced picker data. Integration lists include only accessible integrations; check `hasUseAccess`
+and `hasInteractAccess` before reading data or invoking actions.
 
-## Invitation dates
-
-`POST /api/invites` and the tRPC `invite.createInvite` procedure accept `expirationDate` as an ISO 8601 timestamp with a
-timezone, for example `2026-12-01T18:00:00Z`. Homarr validates the timestamp and stores it as a date. tRPC callers should
-send the ISO string rather than a JavaScript `Date` object.
-
-## Health probes
-
-The liveness endpoint does not require authentication:
-
-```sh
-curl https://homarr.example.com/api/health/live
-```
-
-It returns JSON with overall and per-component status and latency. HTTP `200` means every dependency is healthy; HTTP
-`500` identifies an unhealthy component without exposing its internal error. Health responses are not cached.
-
-## Pagination
-
-General paginated endpoints accept at most 100 records per page, and shared search endpoints accept a limit of at most 100. Request subsequent pages instead of using a larger value.
-
-## Permission behavior
-
-Unauthorized operations return `FORBIDDEN`. List endpoints filter records on the server when resource-specific access
-applies.
-
-App catalog endpoints such as `app.all`, `app.getPaginated`, and `app.search` require **Modify all apps** because they
-include internal URLs. Use `app.selectable` for the reduced board-picker fields.
-
-Integration list and search endpoints return only integrations the key owner can access. Check each integration's
-`hasUseAccess` and `hasInteractAccess` fields before reading data or invoking actions.
+Multi-integration queries can return partial data with endpoint-specific failure metadata.
 
 ## Board automation
 
-The API can create, duplicate, rename, delete, and configure boards; manage board content; and set desktop or mobile home
-boards.
+Each board has one Base and one Mobile layout; Mobile uses breakpoint `0`. Other breakpoints must be unique, and Homarr
+uses the highest breakpoint that fits. Reuse canonical layouts and generated IDs returned by save operations.
 
-Each board has exactly one Mobile and one Base layout. Mobile uses breakpoint `0`; all breakpoints are unique. Custom
-layouts can use any other breakpoint, and Homarr selects the highest breakpoint that fits the viewport. Preserve layout
-roles and use the canonical layouts returned by save operations, including generated IDs.
+Integration-backed widgets require use access to each newly selected integration.
 
-Creating or changing an integration-backed widget requires use access to each newly selected integration.
+`board.addItem` accepts `size: { width, height }` in grid cells (1–24 each), places the item in the first free position
+on every layout, and caps width to the available columns.
 
-`board.addItem` accepts an optional `size: { width, height }` in grid cells (1–24 each). It places the item in the first
-free position on every layout and caps the requested width to that layout's available columns. This lets automation
-create a readable Notebook without saving the entire board merely to resize the new item.
-
-`PATCH /api/boards/{boardId}/items/{itemId}/layouts/{layoutId}` (tRPC `board.updateItemLayout`) moves or resizes one
-existing item in one layout. Supply `xOffset`, `yOffset`, `width`, and `height` in grid cells. It keeps the item in its
-current section and rejects placements outside that section or overlapping another item/container. Unlike `board.saveBoard`,
-it does not replace a full board snapshot; use it when an agent must not remove concurrently added items.
+`board.updateItemLayout` (`PATCH /api/boards/{boardId}/items/{itemId}/layouts/{layoutId}`) moves or resizes one item in
+one layout without replacing the board. It cannot move the item outside its section or overlap another item/container.
 
 ## Docker targets
 
-Docker actions identify both the configured endpoint and the container:
-
-```json
-{
-  "targets": [{ "endpointId": "local", "id": "container-id" }]
-}
-```
-
-Read both values from `docker.getContainers` immediately before calling `docker.startAll`, `stopAll`, `restartAll`, or
-`removeAll`. The endpoint ID prevents collisions between Docker or Podman hosts.
-
-`docker.getContainers` accepts optional `endpointIds`. Omit it or pass an empty array for every configured endpoint.
-
-## Partial upstream failures
-
-Queries that combine several integrations can return healthy data alongside failure metadata. The exact response shape
-depends on the endpoint; inspect the generated schema instead of assuming a common `error` field. When every selected
-integration fails, the query returns an error.
+Docker actions require `{ endpointId, id }` targets from `docker.getContainers`; `endpointId` distinguishes hosts.
+Omit `endpointIds` or pass an empty array to query every configured endpoint.
 
 ## Custom Widget resources
 
-Authenticated administrators can retrieve the current Custom Widget authoring prompt, schema, component catalog, skill,
-and focused references under `/api/custom-widgets/`.
+Administrators can retrieve the Custom Widget authoring prompt, schema, component catalog, skill, and references under
+`/api/custom-widgets/`. See [agent authoring](/docs/management/custom-widgets/agent-authoring) for the workflow.
 
-Use [Custom Widget agent authoring](/docs/management/custom-widgets/agent-authoring) for the lifecycle and
-[MCP](/docs/management/mcp) when the client supports Model Context Protocol.
+## Integration requests
 
-## Gotify notification deletion
+`POST /api/integrations/request` is available as tRPC `integration.request` and MCP `integration_request`. Homarr uses
+the saved integration credentials; callers do not supply them. The `path` stays within the saved integration URL, and
+redirects are rejected. See the generated schema for selectors, permissions, and request limits.
 
-The Notifications widget's `widget.notifications.deleteNotification` tRPC mutation accepts `integrationId` and
-`notificationId` (a positive decimal string). It requires a signed-in user with Interact access to a Gotify integration,
-deletes the message from Gotify, and invalidates its notification cache. It is not exposed through REST or MCP.
-
-## Integration statistics
-
-`widget.stats.catalog` lists the metric keys and units for one integration. `widget.stats.snapshot` reads its shared snapshot without making service requests. `widget.stats.refresh` refreshes it through the shared concurrency limit; `force: true` bypasses the one-hour freshness check. Each procedure requires `integrationId` and checks Query access, including for cached values. These procedures are also exposed through MCP under `stats`. They are not REST endpoints.
-
-Refresh returns the current snapshot, which may still be old if another process is refreshing that source. Inspect `updatedAt`, `stale`, `error`, and `retryAt`; a refresh failure retains successful values. See the [Statistics widget](../../widgets/stats) for cache behavior.
-
-## Call any integration API endpoint
-
-`POST /api/integrations/request` is the REST equivalent of
-[`integration_request`, Homarr's most powerful MCP tool](../mcp#authenticated-integration-requests), and tRPC
-`integration.request`. Call any API endpoint on a supported saved integration, including features Homarr does not
-implement. Homarr supplies the saved URL, authentication and trusted certificates; callers provide no integration credentials.
-
-```sh
-curl -X POST https://homarr.example.com/api/integrations/request \
-  -H 'ApiKey: <id>.<token>' -H 'Content-Type: application/json' \
-  -d '{"integrationKind":"sonarr","path":"/api/v3/episode?seriesId=42"}'
-```
-
-Supply exactly one of `integrationId`, exact `integrationName`, or `integrationKind`. Name/type selects the first
-full-access match ordered by name then ID, without health checks or failover. Prefer an ID for writes.
-Check `integration.getKinds.supportsHttpRequests` for compatibility and `integration.all` for saved instances.
-Every method requires **full integration access**; arbitrary GET endpoints can also change state or expose secrets.
-
-| Field     | Contract                                                                                                                                                                                |
-| --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `method`  | GET (default), HEAD, OPTIONS, POST, PUT, PATCH or DELETE. DELETE requires `confirmed: true` after user confirmation.                                                                    |
-| `path`    | Appends to the saved URL, even with a leading slash: `/sonarr` + `/api/v3/series` → `/sonarr/api/v3/series`. Absolute URLs, escapes, credentials, fragments and redirects are rejected. |
-| `body`    | JSON by default. For text, XML or URL-encoded forms, use a string with `bodyEncoding: "raw"` and the appropriate `Content-Type` header. No body for GET/HEAD.                           |
-| `headers` | Optional non-authentication headers. Transport headers are restricted; saved authentication takes precedence.                                                                           |
-
-Returns `{integration: {id, name, kind}, ok, status, statusText, data}`. Data is JSON, UTF-8 text or `null`.
-**Homarr HTTP 200 can contain an upstream failure**: inspect `ok`, `status` and service-specific errors in `data`.
-Validation, permission and transport failures use Homarr API errors. Known credentials are redacted; other returned
-data may still be sensitive. A timeout does not imply rollback—check upstream state before retrying a write.
-
-Limits: **10 KiB body, 16 KiB headers, 1 MiB response, 15-second total deadline** (10 seconds per request).
-Gzip, deflate and Brotli decoding enforce the response limit at each stage, up to three stages. Requests are uncached
-and never retried automatically. Paginate large results; binary streaming, WebSockets and multipart uploads are unsupported.
-
-Agents must consult official upstream API docs, explain the integration and effects before calling, and report the
-outcome. Documentation lookup is the agent's responsibility, not the proxy's.
+Even `GET` can change upstream state. Homarr `200` can contain an upstream failure; inspect `ok`, `status`, and `data`.
+Requests are not retried, so check upstream state after a timeout before retrying a write.

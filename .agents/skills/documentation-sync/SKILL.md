@@ -1,17 +1,19 @@
 ---
 name: documentation-sync
-description: Write concise Homarr docs for advanced users, covering only hidden capabilities and information not evident from the UI. Use when that information changes or existing guidance becomes inaccurate; skip obvious controls and routine fixes.
+description: Write concise Homarr docs only when changed behavior is not clear to a smart, advanced user from the UI or generated schema. Skip routine, obvious, or self-explanatory changes.
 ---
 
 # Documentation Sync
 
-Apply the audience and scope rules in `AGENTS.md` first. Before adding a passage, identify what an advanced user could not learn directly from the interface. If there is no such information, omit it.
+Apply the audience and scope rules in `AGENTS.md` first. A code, UI, or API change alone does not warrant documentation. Add a passage only when a smart, advanced user cannot infer the behavior from the interface or generated schema.
 
 For hidden capabilities such as the advanced widget feature, explain discovery, activation, and non-obvious behavior. For visible standard controls such as Delete, omit narration of what the label already conveys. Use the shortest explanation that preserves necessary technical detail; remove redundant prose in the passage being edited.
 
 When an update is warranted, inspect adjacent pages for structure and types, not as a verbosity target. The mappings below locate needed information; they do not require a page for every feature or code change.
 
 ## Locate a needed update
+
+These are destinations for warranted updates, not triggers to add documentation:
 
 | Code change                         | Documentation target                                                 |
 | ----------------------------------- | -------------------------------------------------------------------- |
