@@ -30,7 +30,7 @@ export const rssFeedsRequestHandler = createWidgetRequestHandler({
   },
 });
 
-const attemptGetImageFromEntry = (feedUrl: string, entry: object) => {
+export const attemptGetImageFromEntry = (feedUrl: string, entry: object) => {
   const media = getFirstMediaProperty(entry);
   if (media !== null) {
     return media;
@@ -59,6 +59,9 @@ const mediaProperties = [
   {
     path: ["media:content", "@_url"],
   },
+  {
+    path: ["media:thumbnail", "@_url"],
+  },
 ];
 
 /**
@@ -69,7 +72,7 @@ const mediaProperties = [
  * @param feedObject The object to scan for.
  * @returns the value of the first path that is found within the object
  */
-const getFirstMediaProperty = (feedObject: object) => {
+export const getFirstMediaProperty = (feedObject: object) => {
   for (const mediaProperty of mediaProperties) {
     let propertyIndex = 0;
     let objectAtPath: object = feedObject;
