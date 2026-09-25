@@ -3131,26 +3131,26 @@
           "label": "Show usenet entries marked as completed"
         },
         "showCompletedTorrent": {
-          "label": ""
+          "label": "Show torrent entries marked as completed"
         },
         "showCompletedHttp": {
-          "label": ""
+          "label": "Show Miscellaneous entries marked as completed"
         },
         "activeTorrentThreshold": {
-          "label": ""
+          "label": "Hide completed torrent under this threshold (in kiB/s)"
         },
         "categoryFilter": {
-          "label": ""
+          "label": "Categories/labels to filter"
         },
         "filterIsWhitelist": {
-          "label": ""
+          "label": "Filter as a whitelist"
         },
         "applyFilterToRatio": {
-          "label": ""
+          "label": "Use filter to calculate Ratio"
         },
         "limitPerIntegration": {
-          "label": "",
-          "description": ""
+          "label": "Limit items per integration",
+          "description": "This will limit the number of items shown per integration, not globally"
         },
         "columnOrder": {
           "label": "Column order"
@@ -3160,7 +3160,7 @@
         }
       },
       "errors": {
-        "noColumns": "",
+        "noColumns": "Select Columns in Items",
         "noCommunications": "",
         "noItems": "No downloads found",
         "actionFailed": "Action failed",
@@ -5914,32 +5914,32 @@
         "help": "",
         "group": {
           "localCommand": {
-            "title": ""
+            "title": "Local commands"
           },
           "globalCommand": {
-            "title": "",
+            "title": "Global commands",
             "option": {
               "colorScheme": {
                 "auto": "Toggle appearance mode",
-                "light": "",
-                "dark": ""
+                "light": "Switch to light mode",
+                "dark": "Switch to dark mode"
               },
               "language": {
-                "label": "",
+                "label": "Change language",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Select your prefered language"
                   }
                 }
               },
               "newBoard": {
-                "label": ""
+                "label": "Create a new board"
               },
               "importBoard": {
-                "label": ""
+                "label": "Import a board"
               },
               "newApp": {
-                "label": ""
+                "label": "Create a new app"
               },
               "newIntegration": {
                 "label": "Create a new integration",
@@ -6079,9 +6079,9 @@
       },
       "media": {
         "help": "Search for movies or shows to request",
-        "requestMovie": "",
-        "requestSeries": "",
-        "openIn": "",
+        "requestMovie": "Request movie",
+        "requestSeries": "Request series",
+        "openIn": "Open in {kind}",
         "group": {
           "title": "Movies and shows"
         },
@@ -6104,10 +6104,10 @@
         }
       },
       "external": {
-        "help": "",
+        "help": "Use an external search engine",
         "group": {
           "searchEngine": {
-            "title": "",
+            "title": "Search engines",
             "tipDdgBangs": "Tip: You can use any DuckDuckGo bangs here as well, e.g. !something",
             "bang": {
               "searchWithQuery": "Search \"{query}\" with {label}",
@@ -6119,14 +6119,14 @@
             "children": {
               "action": {
                 "search": {
-                  "label": ""
+                  "label": "Search with {name}"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Select an action for the search engine"
               },
               "searchResults": {
-                "title": ""
+                "title": "Select a search result for actions"
               }
             },
             "option": {
