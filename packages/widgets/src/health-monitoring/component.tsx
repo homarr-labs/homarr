@@ -8,7 +8,8 @@ import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
-import { getUsableWidgetQueryData } from "../common/query-state";
+import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
+import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import { ClusterHealthMonitoring } from "./cluster/cluster-health";
 import { partitionHealthMonitoringIntegrations } from "./integration-selection";
 import { SystemHealthMonitoring } from "./system-health";
@@ -16,13 +17,20 @@ import { SystemHealthMonitoring } from "./system-health";
 dayjs.extend(duration);
 
 export default function HealthMonitoringWidget(props: WidgetComponentProps<"healthMonitoring">) {
-  const integrations = getUsableWidgetQueryData(clientApi.integration.byIds.useQuery(props.integrationIds)) ?? [];
+  const integrationsQuery = clientApi.integration.byIds.useQuery(props.integrationIds);
   const t = useI18n("widget.healthMonitoring");
 
+  // Wait for integrations to load, or cluster-only kinds like Proxmox get routed to the
+  // system-only query below and error.
+  if (isInitialWidgetQueryPending(integrationsQuery)) {
+    return <WidgetQueryLoadingState />;
+  }
+
+  const integrations = getUsableWidgetQueryData(integrationsQuery) ?? [];
   const { clusterIntegrationIds, systemIntegrationIds } = partitionHealthMonitoringIntegrations(integrations);
 
   if (clusterIntegrationIds.length === 0) {
-    return <SystemHealthMonitoring {...props} />;
+    return <SystemHealthMonitoring {...props} integrationIds={systemIntegrationIds} />;
   }
 
   const clusters = (
