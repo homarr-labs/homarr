@@ -40,6 +40,8 @@ export interface MediaRelease {
   subtitle?: string;
   description?: string;
   releaseDate: Date;
+  /** The source supplied a calendar date without a time or timezone. */
+  releaseDateIsDateOnly?: boolean;
   imageUrls: {
     poster: string | undefined;
     backdrop: string | undefined;
