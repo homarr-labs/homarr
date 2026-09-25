@@ -150,9 +150,8 @@ func TestSanitizeProviderPayloadPinsDefaultModelQuality(t *testing.T) {
 		t.Fatal("streamed token usage must be included")
 	}
 	preferences := payload["provider"].(map[string]any)
-	providers := preferences["only"].([]string)
-	if len(providers) != 1 || providers[0] != "openai" {
-		t.Fatalf("default model must only use OpenAI: %#v", preferences)
+	if _, exists := preferences["only"]; exists {
+		t.Fatalf("provider allowlists must not restrict eligible ZDR endpoints: %#v", preferences)
 	}
 	if preferences["allow_fallbacks"] != false {
 		t.Fatalf("default model must not fall back to another provider: %#v", preferences)
