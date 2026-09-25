@@ -64,16 +64,45 @@ describe("calculateCpuUsage", () => {
     const stats = createStats({
       cpu_stats: { online_cpus: 4, cpu_usage: { total_usage: 2000 }, system_cpu_usage: 10000 },
     });
-    // (2000 / 10000) * 4 * 100 = 80
-    expect(calculateCpuUsage(stats)).toBe(80);
+    // Total-system share: (2000 / 10000) * 100 = 20 (system_cpu_usage spans all cores)
+    expect(calculateCpuUsage(stats)).toBe(20);
   });
 
   test("should handle fractional CPU usage", () => {
     const stats = createStats({
       cpu_stats: { online_cpus: 2, cpu_usage: { total_usage: 500 }, system_cpu_usage: 100000 },
     });
-    // (500 / 100000) * 2 * 100 = 1
-    expect(calculateCpuUsage(stats)).toBe(1);
+    // (500 / 100000) * 100 = 0.5
+    expect(calculateCpuUsage(stats)).toBe(0.5);
+  });
+
+  test("should never exceed 100% even when multiple cores are fully busy", () => {
+    const stats = createStats({
+      // 3 of 4 cores fully busy: docker-stats' per-core convention would say 300%.
+      cpu_stats: { online_cpus: 4, cpu_usage: { total_usage: 7500 }, system_cpu_usage: 10000 },
+    });
+    // Total-system share: (7500 / 10000) * 100 = 75
+    expect(calculateCpuUsage(stats)).toBe(75);
+  });
+
+  test("should use the delta against precpu_stats for the current usage", () => {
+    const stats = createStats({
+      cpu_stats: { online_cpus: 4, cpu_usage: { total_usage: 1_002_000 }, system_cpu_usage: 20_000 },
+      precpu_stats: { cpu_usage: { total_usage: 1_000_000 }, system_cpu_usage: 10_000 },
+    });
+    // Despite a large lifetime total_usage, only the recent delta counts:
+    // (2000 / 10000) * 100 = 20
+    expect(calculateCpuUsage(stats)).toBe(20);
+  });
+
+  test("should report 0 for a container that was busy over its lifetime but is idle now", () => {
+    const stats = createStats({
+      cpu_stats: { online_cpus: 4, cpu_usage: { total_usage: 1_000_000 }, system_cpu_usage: 20_000 },
+      precpu_stats: { cpu_usage: { total_usage: 1_000_000 }, system_cpu_usage: 10_000 },
+    });
+    // No CPU delta since the last reading -> current usage is 0, even though the
+    // lifetime average would be high. This is the regression the fix addresses.
+    expect(calculateCpuUsage(stats)).toBe(0);
   });
 });
 
