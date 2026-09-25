@@ -233,6 +233,7 @@ export const userRouter = createTRPCRouter({
           email: true,
           emailVerified: true,
           image: true,
+          disabled: true,
         }),
       ),
     )
@@ -253,6 +254,7 @@ export const userRouter = createTRPCRouter({
           email: true,
           emailVerified: true,
           image: true,
+          disabled: true,
         },
       });
     }),
@@ -342,6 +344,7 @@ export const userRouter = createTRPCRouter({
         emailVerified: true,
         image: true,
         provider: true,
+        disabled: true,
         homeBoardId: true,
         mobileHomeBoardId: true,
         firstDayOfWeek: true,
@@ -379,6 +382,7 @@ export const userRouter = createTRPCRouter({
           emailVerified: true,
           image: true,
           provider: true,
+          disabled: true,
           homeBoardId: true,
           mobileHomeBoardId: true,
           firstDayOfWeek: true,
@@ -806,6 +810,45 @@ export const userRouter = createTRPCRouter({
       completedBoardTour: user?.completedBoardTour ?? false,
     };
   }),
+  changeDisabled: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .input(
+      z.object({
+        userId: z.string(),
+        disabled: z.boolean(),
+      }),
+    )
+    .output(z.void())
+    .meta({
+      openapi: {
+        method: "PATCH",
+        path: "/api/users/disabled",
+        tags: ["users"],
+        protect: true,
+      },
+    })
+    .mutation(async ({ input, ctx }) => {
+      const dbUser = await ctx.db.query.users.findFirst({
+        columns: {
+          id: true,
+        },
+        where: eq(users.id, input.userId),
+      });
+
+      if (!dbUser) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      await ctx.db
+        .update(users)
+        .set({
+          disabled: input.disabled,
+        })
+        .where(eq(users.id, input.userId));
+    }),
 });
 
 const createUserAsync = async (db: Database, input: Omit<z.infer<typeof userBaseCreateSchema>, "groupIds">) => {

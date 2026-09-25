@@ -23,6 +23,11 @@ export const authorizeWithBasicCredentialsAsync = async (
     return null;
   }
 
+  if (user.disabled) {
+    logger.warn("User is disabled", { userName: user.name });
+    return null;
+  }
+
   logger.info("User is trying to log in. Checking password...", { userName: user.name });
   const isValidPassword = await comparePasswordsAsync(credentials.password, user.password);
 
