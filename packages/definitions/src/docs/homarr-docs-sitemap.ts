@@ -313,6 +313,7 @@ export type HomarrDocumentationPath =
   | "/docs/integrations/opnsense"
   | "/docs/integrations/ntfy"
   | "/docs/integrations/gotify"
+  | "/docs/integrations/pushover"
   | "/docs/integrations/ical"
   | "/docs/integrations/anchor"
   | "/docs/integrations/truenas"

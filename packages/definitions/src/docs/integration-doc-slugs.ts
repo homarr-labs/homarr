@@ -34,6 +34,7 @@ export const integrationDocSlugs: Record<IntegrationKind, string | null> = {
   opnsense: "opnsense",
   ntfy: "ntfy",
   gotify: "gotify",
+  pushover: "pushover",
   ical: "ical",
   anchor: "anchor",
   truenas: "truenas",
