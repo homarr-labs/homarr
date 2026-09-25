@@ -487,8 +487,8 @@ func sanitizeProviderPayload(payload map[string]any, upstreamModelID string) err
 		payload["stream_options"] = map[string]any{"include_usage": true}
 	}
 	// BYOK-only billing also requires disabling shared capacity on the OpenRouter key.
+	// Retention and data collection policies are managed by OpenRouter guardrails.
 	providerPreferences := map[string]any{
-		"zdr": true, "data_collection": "deny",
 		"allow_fallbacks": false,
 	}
 	if upstreamModelID == defaultOpenRouterModelID {

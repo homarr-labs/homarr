@@ -114,8 +114,10 @@ func TestSanitizeProviderPayload(t *testing.T) {
 		t.Fatalf("unexpected usage options: %s, %v", usage, err)
 	}
 	privacy := payload["provider"].(map[string]any)
-	if privacy["zdr"] != true || privacy["data_collection"] != "deny" {
-		t.Fatalf("upstream privacy controls were not enforced: %#v", privacy)
+	for _, field := range []string{"zdr", "data_collection"} {
+		if _, exists := privacy[field]; exists {
+			t.Fatalf("privacy policy must be left to OpenRouter guardrails: %#v", privacy)
+		}
 	}
 }
 
@@ -126,7 +128,7 @@ func TestSanitizeProviderPayloadPinsDefaultModelQuality(t *testing.T) {
 		"include_reasoning": false,
 		"temperature":       0.3,
 		"top_p":             0.5,
-		"provider":          map[string]any{"only": []string{"azure"}, "allow_fallbacks": true},
+		"provider":          map[string]any{"only": []string{"azure"}, "allow_fallbacks": true, "zdr": true, "data_collection": "allow"},
 		"stream":            true,
 		"stream_options":    map[string]any{"include_usage": false},
 	}
@@ -151,13 +153,15 @@ func TestSanitizeProviderPayloadPinsDefaultModelQuality(t *testing.T) {
 	}
 	preferences := payload["provider"].(map[string]any)
 	if _, exists := preferences["only"]; exists {
-		t.Fatalf("provider allowlists must not restrict eligible ZDR endpoints: %#v", preferences)
+		t.Fatalf("provider allowlists must not restrict eligible endpoints: %#v", preferences)
 	}
 	if preferences["allow_fallbacks"] != false {
 		t.Fatalf("default model must not fall back to another provider: %#v", preferences)
 	}
-	if preferences["zdr"] != true || preferences["data_collection"] != "deny" {
-		t.Fatalf("privacy controls must remain enforced: %#v", preferences)
+	for _, field := range []string{"zdr", "data_collection"} {
+		if _, exists := preferences[field]; exists {
+			t.Fatalf("client privacy overrides must not be forwarded: %#v", preferences)
+		}
 	}
 	for _, field := range []string{"order", "quantizations"} {
 		if _, exists := preferences[field]; exists {
