@@ -23,6 +23,7 @@ import * as dockerContainers from "./docker";
 import * as downloads from "./downloads";
 import * as firewall from "./firewall";
 import * as healthMonitoring from "./health-monitoring";
+import * as hermesAgent from "./hermes-agent";
 import * as iframe from "./iframe";
 import * as immichAlbumCarousel from "./immich/album-carousel";
 import * as immichServerStats from "./immich/server-stats";
@@ -111,6 +112,7 @@ export const widgetImports = {
   mediaReleases,
   systemResources,
   coolify,
+  hermesAgent,
   systemDisks,
   timetable,
   "immich-serverStats": immichServerStats,

@@ -50,6 +50,7 @@ export const widgetIntegrationSupport: Partial<Record<WidgetKind, readonly Integ
   beszelAlerts: ["beszel", "mock"],
   beszelSystemStats: ["beszel", "mock"],
   archiveTeamWarrior: ["archiveTeamWarrior"],
+  hermesAgent: ["hermesAgent"],
   anchorNote: ["anchor"],
   traefik: ["traefik"],
   wud: ["wud"],

@@ -9,6 +9,8 @@ node_modules
 
 # testing
 coverage
+artifacts/
+.playwright-cli/
 
 # next.js
 .next/
@@ -73,6 +75,7 @@ apps/nextjs/public/images/background.png
 .opencode
 .agents/*
 !.agents/skills/
+.hermes/
 skills-lock.json
 
 # docusaurus

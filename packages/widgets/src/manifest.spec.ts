@@ -1,5 +1,22 @@
 import type { QueryKey } from "@tanstack/react-query";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
+const createMockFont = vi.hoisted(() => (variable: string) => () => ({ className: variable, variable }));
+
+vi.mock("next/font/google", () => ({
+  Atkinson_Hyperlegible: createMockFont("--font-hermes-atkinson-hyperlegible"),
+  DM_Mono: createMockFont("--font-hermes-dm-mono"),
+  DM_Sans: createMockFont("--font-hermes-dm-sans"),
+  Fraunces: createMockFont("--font-hermes-fraunces"),
+  IBM_Plex_Mono: createMockFont("--font-hermes-ibm-plex-mono"),
+  IBM_Plex_Sans: createMockFont("--font-hermes-ibm-plex-sans"),
+  JetBrains_Mono: createMockFont("--font-hermes-jetbrains-mono"),
+  Share_Tech_Mono: createMockFont("--font-hermes-share-tech-mono"),
+  Source_Serif_4: createMockFont("--font-hermes-source-serif-4"),
+  Space_Mono: createMockFont("--font-hermes-space-mono"),
+  Spectral: createMockFont("--font-hermes-spectral"),
+  Work_Sans: createMockFont("--font-hermes-work-sans"),
+}));
 
 import { widgetIntegrationSupport, widgetKinds as definedWidgetKinds } from "@homarr/definitions";
 

@@ -16,6 +16,7 @@ import { SlskdIntegration } from "../download-client/slskd/slskd-integration";
 import { TransmissionIntegration } from "../download-client/transmission/transmission-integration";
 import { EmbyIntegration } from "../emby/emby-integration";
 import { GlancesIntegration } from "../glances/glances-integration";
+import { HermesAgentIntegration } from "../hermes-agent/hermes-agent-integration";
 import { ArchiveTeamWarriorIntegration } from "../archive-team-warrior/archive-team-warrior-integration";
 import { GluetunIntegration } from "../gluetun/gluetun-integration";
 import { HomeAssistantIntegration } from "../homeassistant/homeassistant-integration";
@@ -118,6 +119,7 @@ export const integrationCreators = {
   synology: SynologyIntegration,
   unraid: UnraidIntegration,
   coolify: CoolifyIntegration,
+  hermesAgent: HermesAgentIntegration,
   tracearr: TracearrIntegration,
   glances: GlancesIntegration,
   immich: ImmichIntegration,
