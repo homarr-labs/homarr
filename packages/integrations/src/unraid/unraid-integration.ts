@@ -47,8 +47,12 @@ export class UnraidIntegration extends Integration implements ISystemHealthMonit
       cpuUtilizationNormalized = cpuUtilization / cpuCount;
     }
 
-    const totalMemory = systemInfo.info.memory.layout.reduce((acc, layout) => layout.size + acc, 0);
-    const usedMemory = totalMemory * (systemInfo.metrics.memory.percentTotal / 100);
+    // metrics.memory.* is documented as bytes (see MemoryUtilization schema), unlike
+    // info.memory.layout[].size, which can be reported in KiB on some Unraid versions and caused a
+    // 1024x under-reporting of used RAM. total - available matches Unraid's percentTotal calculation.
+
+    const totalMemory = systemInfo.metrics.memory.total;
+    const usedMemory = Math.max(totalMemory - systemInfo.metrics.memory.available, 0);
     const uptime = dayjs(systemInfo.info.os.uptime);
 
     return {
@@ -143,11 +147,6 @@ export class UnraidIntegration extends Integration implements ISystemHealthMonit
             brand,
             cores,
             threads
-          },
-          memory {
-            layout {
-              size
-            }
           }
         }
       }
