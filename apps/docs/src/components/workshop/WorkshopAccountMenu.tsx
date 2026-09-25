@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -44,41 +45,43 @@ export const WorkshopAccountMenu = ({ user, onSignOut }: WorkshopAccountMenuProp
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end" className="w-64" aria-label="Workshop account">
-        <DropdownMenuLabel className="flex items-center gap-3 px-2 py-2 font-normal text-foreground">
-          <Avatar className="size-9">
-            {avatarUrl && <AvatarImage src={avatarUrl} alt="" />}
-            <AvatarFallback>{avatarFallback(user.name)}</AvatarFallback>
-          </Avatar>
-          <div className="min-w-0">
-            <p className="truncate text-sm font-medium">{accountLabel}</p>
-            <p className="text-xs text-muted-foreground">Workshop account</p>
-          </div>
-        </DropdownMenuLabel>
+        <DropdownMenuGroup>
+          <DropdownMenuLabel className="flex items-center gap-3 px-2 py-2 font-normal text-foreground">
+            <Avatar className="size-9">
+              {avatarUrl && <AvatarImage src={avatarUrl} alt="" />}
+              <AvatarFallback>{avatarFallback(user.name)}</AvatarFallback>
+            </Avatar>
+            <div className="min-w-0">
+              <p className="truncate text-sm font-medium">{accountLabel}</p>
+              <p className="text-xs text-muted-foreground">Workshop account</p>
+            </div>
+          </DropdownMenuLabel>
 
-        <DropdownMenuSeparator />
+          <DropdownMenuSeparator />
 
-        {profileUrl && (
-          <DropdownMenuItem
-            render={
-              <a
-                href={profileUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="no-underline"
-                aria-label="View GitHub profile"
-              />
-            }
-          >
-            <IconBrandGithub aria-hidden="true" />
-            View GitHub profile
-            <IconExternalLink aria-hidden="true" className="ml-auto text-muted-foreground" />
+          {profileUrl && (
+            <DropdownMenuItem
+              render={
+                <a
+                  href={profileUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="no-underline"
+                  aria-label="View GitHub profile"
+                />
+              }
+            >
+              <IconBrandGithub aria-hidden="true" />
+              View GitHub profile
+              <IconExternalLink aria-hidden="true" className="ml-auto text-muted-foreground" />
+            </DropdownMenuItem>
+          )}
+
+          <DropdownMenuItem variant="destructive" onClick={onSignOut}>
+            <IconLogout aria-hidden="true" />
+            Sign out
           </DropdownMenuItem>
-        )}
-
-        <DropdownMenuItem variant="destructive" onClick={onSignOut}>
-          <IconLogout aria-hidden="true" />
-          Sign out
-        </DropdownMenuItem>
+        </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );
