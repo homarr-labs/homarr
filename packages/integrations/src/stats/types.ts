@@ -32,8 +32,10 @@ export interface StatsFetchContext extends StatsAuthenticationContext {
 }
 
 export interface StatsProvider {
-  /** Shared native HTTP credentials; omit when authentication needs a service-specific exchange. */
+  /** Legacy reusable credentials; prefer integration httpAuth metadata for standard schemes. */
   getHttpAuthentication?: (context: StatsAuthenticationContext) => IntegrationHttpAuthentication;
+  /** Exchange saved credentials using the same trusted request transport as Stats. */
+  getHttpAuthenticationAsync?: (context: StatsFetchContext) => Promise<IntegrationHttpAuthentication>;
   /** Some admin APIs reject browser fetch metadata on server-to-server requests. */
   transport?: "fetch" | "axios";
   metrics: readonly StatsMetric[];

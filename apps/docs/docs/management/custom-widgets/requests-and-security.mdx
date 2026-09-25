@@ -9,9 +9,11 @@ request to a different origin.
 
 ## Existing integrations
 
-Available types come from Homarr's integration registry. An integration must declare HTTP request support and expose
-its authentication through its native adapter; new compatible integrations appear automatically without Custom Widget changes.
-Integrations that require login sessions are not currently supported.
+Available types come from Homarr's integration registry. Saved credentials are applied by the integration's authentication
+contract, including services that require a login session. **iCalendar feeds (iCal)** are calendar URLs rather than arbitrary
+service APIs, and **TrueNAS uses a WebSocket API**; neither appears as a generic HTTP source. qBittorrent requires a saved
+API key and qBittorrent 5.2.0 or newer; saved username/password credentials cannot authenticate generic requests. UniFi
+generic requests require an HTTPS saved URL with the controller's actual port.
 
 ```json
 {

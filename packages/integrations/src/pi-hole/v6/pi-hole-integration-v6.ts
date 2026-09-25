@@ -7,6 +7,7 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import type { IntegrationInput, IntegrationTestingInput } from "../../base/integration";
 import { Integration } from "../../base/integration";
+import type { IntegrationHttpAuthentication } from "../../http-auth";
 import type { SessionStore } from "../../base/session-store";
 import { createSessionStore } from "../../base/session-store";
 import type { TestingResult } from "../../base/test-connection/test-connection-service";
@@ -22,6 +23,13 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
   constructor(integration: IntegrationInput) {
     super(integration);
     this.sessionStore = createSessionStore(integration);
+  }
+
+  public override async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    if (!this.hasSecretValue("apiKey")) return { headers: {} };
+    const sessionId = await this.getSessionAsync();
+    if (!sessionId) throw new Error("Pi-hole did not return an authenticated session");
+    return { headers: { sid: sessionId }, redactValues: [sessionId] };
   }
 
   public async getDnsBlockingStatusAsync(): Promise<z.infer<typeof dnsBlockingGetSchema>> {

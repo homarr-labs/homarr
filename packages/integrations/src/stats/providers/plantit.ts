@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import type { StatsProvider } from "../types";
+import type { StatsFetchContext, StatsProvider } from "../types";
 
 const plantitStatsResponseSchema = z
   .object({
@@ -23,20 +23,12 @@ export const plantitStatsProvider = {
     { key: "events", label: "Events", unit: "count" },
   ],
 
+  getHttpAuthenticationAsync,
+
   async fetchAsync(context) {
-    const login = plantitLoginResponseSchema.parse(
-      await context.requestAsync("/api/authentication/login", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          username: context.secret("username"),
-          password: context.secret("password"),
-        }),
-        signal: context.signal,
-      }),
-    );
+    const authentication = await getHttpAuthenticationAsync(context);
     const response = await context.requestAsync("/api/stats", {
-      headers: { Authorization: `Bearer ${login.jwt.value}` },
+      headers: authentication.headers,
       signal: context.signal,
     });
     const stats = plantitStatsResponseSchema.parse(response);
@@ -49,3 +41,23 @@ export const plantitStatsProvider = {
     };
   },
 } satisfies StatsProvider;
+
+async function getHttpAuthenticationAsync(context: StatsFetchContext) {
+  try {
+    const loginResponse = await context.requestAsync("/api/authentication/login", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        username: context.secret("username"),
+        password: context.secret("password"),
+      }),
+      signal: context.signal,
+    });
+    const login = plantitLoginResponseSchema.safeParse(loginResponse);
+    if (!login.success) throw new Error("Plant-it authentication failed");
+    const token = login.data.jwt.value;
+    return { headers: { Authorization: `Bearer ${token}` }, redactValues: [token] };
+  } catch {
+    throw new Error("Plant-it authentication failed");
+  }
+}

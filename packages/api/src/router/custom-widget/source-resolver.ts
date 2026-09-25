@@ -3,7 +3,6 @@ import { TRPCError } from "@trpc/server";
 import type { CustomJsxRequest, CustomWidgetSource } from "@homarr/custom-widgets/core";
 import { getCustomWidgetSourceAuthType } from "@homarr/custom-widgets/core";
 import type { CustomWidgetHttpRequest } from "@homarr/custom-widgets/server";
-import { isHttpIntegrationKind } from "@homarr/definitions";
 
 import type { IntegrationHttpContext } from "../integration/integration-http";
 import {
@@ -18,9 +17,6 @@ export async function assertCustomWidgetIntegrationBindings(
 ) {
   for (const source of Object.values(sources)) {
     if (source.type !== "integration") continue;
-    if (!isHttpIntegrationKind(source.integrationKind)) {
-      throw new TRPCError({ code: "BAD_REQUEST", message: "This integration type does not support widget requests" });
-    }
     if (!source.integrationId) continue;
     await resolveIntegration(ctx, source);
   }
@@ -37,7 +33,7 @@ async function resolveIntegration(
     });
   }
   const integration = await getIntegrationForHttpRequest(ctx, source.integrationId);
-  if (!isHttpIntegrationKind(integration.kind) || integration.kind !== source.integrationKind) {
+  if (integration.kind !== source.integrationKind) {
     throw new TRPCError({
       code: "PRECONDITION_FAILED",
       message: "The selected integration is unavailable or has a different type",

@@ -126,7 +126,7 @@ describe("Custom Widget assistant tool loop", () => {
         }),
         integration_getKinds: tool({
           inputSchema: emptySchema,
-          execute: () => [{ kind: "mealie", supportsHttpRequests: true }],
+          execute: () => [{ kind: "mealie", name: "Mealie" }],
         }),
         integration_all: tool({
           inputSchema: emptySchema,

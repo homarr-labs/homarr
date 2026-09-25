@@ -6,7 +6,11 @@ import {
   getAllTrustedCertificatesAsync,
   getTrustedCertificateHostnamesAsync,
 } from "@homarr/core/infrastructure/certificates";
-import { createCustomCheckServerIdentity, getHttpRequestSignal } from "@homarr/core/infrastructure/http";
+import {
+  createCustomCheckServerIdentity,
+  fetchWithTrustedCertificatesAsync,
+  getHttpRequestSignal,
+} from "@homarr/core/infrastructure/http";
 import type { SiteStats } from "@homarr/node-unifi";
 import Unifi from "@homarr/node-unifi";
 
@@ -14,6 +18,8 @@ import { HandleIntegrationErrors } from "../base/errors/decorator";
 import { integrationAxiosHttpErrorHandler } from "../base/errors/http";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
+import { createSessionStore } from "../base/session-store";
+import type { IntegrationHttpAuthentication } from "../http-auth";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { NetworkControllerSummaryIntegration } from "../interfaces/network-controller-summary/network-controller-summary-integration";
 import type { NetworkControllerSummary } from "../interfaces/network-controller-summary/network-controller-summary-types";
@@ -21,6 +27,21 @@ import type { HealthSubsystem } from "./unifi-controller-types";
 
 @HandleIntegrationErrors([integrationAxiosHttpErrorHandler])
 export class UnifiControllerIntegration extends Integration implements NetworkControllerSummaryIntegration {
+  private readonly httpSessionStore = createSessionStore<{ cookie: string; csrfToken?: string }>(this.integration);
+
+  public override async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    let session = await this.httpSessionStore.getAsync();
+    if (!session) {
+      session = await this.loginForHttpRequestsAsync();
+      await this.httpSessionStore.setAsync(session, { ttlSeconds: 300 });
+    }
+    const headers: Record<string, string> = { Cookie: session.cookie };
+    if (session.csrfToken) headers["X-CSRF-Token"] = session.csrfToken;
+    const redactValues = [session.cookie];
+    if (session.csrfToken) redactValues.push(session.csrfToken);
+    return { headers, redactValues };
+  }
+
   public async getNetworkSummaryAsync(): Promise<NetworkControllerSummary> {
     const client = await this.createControllerClientAsync();
     const stats = await client.getSitesStats();
@@ -54,6 +75,52 @@ export class UnifiControllerIntegration extends Integration implements NetworkCo
     const client = await this.createControllerClientAsync(options);
     await client.getSitesStats();
     return { success: true };
+  }
+
+  private async loginForHttpRequestsAsync(): Promise<{ cookie: string; csrfToken?: string }> {
+    const integrationUrl = new URL(this.integration.url);
+    if (integrationUrl.protocol !== "https:") {
+      throw new Error("UniFi generic HTTP requests require an HTTPS integration URL to protect the session cookie");
+    }
+
+    // Use the saved origin exactly. Generic requests target the saved URL, so falling back
+    // to another port would bind the cookie to a different origin than the later request.
+    const loginUrl = new URL(integrationUrl);
+    loginUrl.pathname = "/api/auth/login";
+    loginUrl.search = "";
+    loginUrl.hash = "";
+    let response = await fetchWithTrustedCertificatesAsync(loginUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({
+        username: this.getSecretValue("username"),
+        password: this.getSecretValue("password"),
+      }),
+      redirect: "error",
+    });
+
+    if (response.status === 404) {
+      loginUrl.pathname = "/api/login";
+      response = await fetchWithTrustedCertificatesAsync(loginUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          username: this.getSecretValue("username"),
+          password: this.getSecretValue("password"),
+        }),
+        redirect: "error",
+      });
+    }
+
+    if (!response.ok) throw new Error("UniFi controller authentication failed");
+    const cookies = response.headers
+      .getSetCookie()
+      .map((cookie) => cookie.split(";", 1)[0])
+      .filter(Boolean);
+    if (cookies.length === 0) throw new Error("UniFi controller did not return a session cookie");
+
+    const csrfToken = response.headers.get("x-csrf-token") ?? undefined;
+    return { cookie: cookies.join("; "), ...(csrfToken ? { csrfToken } : {}) };
   }
 
   private async createControllerClientAsync(options?: {

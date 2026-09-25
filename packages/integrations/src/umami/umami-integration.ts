@@ -9,6 +9,7 @@ import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
+import type { IntegrationHttpAuthentication } from "../http-auth";
 import type {
   UmamiEventSeries,
   UmamiMetricItem,
@@ -47,6 +48,24 @@ const extractDataArray = (json: unknown): unknown[] => {
 };
 
 export class UmamiIntegration extends Integration {
+  public override async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    if (this.hasSecretValue("apiKey")) {
+      const apiKey = this.getSecretValue("apiKey");
+
+      return {
+        headers: { "x-umami-api-key": apiKey },
+        redactValues: [apiKey],
+      };
+    }
+
+    const token = await this.getJwtTokenAsync();
+
+    return {
+      headers: { Authorization: `Bearer ${token}` },
+      redactValues: [token],
+    };
+  }
+
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const authHeaders = await this.getAuthHeadersAsync();
     const url = this.url("/websites");
@@ -444,6 +463,7 @@ export class UmamiIntegration extends Integration {
     const response = await fetchWithTrustedCertificatesAsync(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      redirect: "error",
       body: JSON.stringify({
         username: this.getSecretValue("username"),
         password: this.getSecretValue("password"),

@@ -6,6 +6,7 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import type { IntegrationInput, IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
+import type { IntegrationHttpAuthentication } from "../http-auth";
 import type { SessionStore } from "../base/session-store";
 import { createSessionStore } from "../base/session-store";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
@@ -39,6 +40,22 @@ export class TechnitiumDnsIntegration extends Integration implements DnsHoleSumm
   // || null rather than ?? null: treats an empty string as absent since "" is not a valid token.
   private get apiKey(): string | null {
     return super.hasSecretValue("apiKey") ? super.getSecretValue("apiKey") || null : null;
+  }
+
+  public override async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    let token: string | null;
+    if (this.apiKey) {
+      token = await this.acquireTokenAsync();
+    } else {
+      // Resolve a fresh login for generic calls because that path cannot inspect an
+      // invalid-token response and trigger the native client's retry flow.
+      const session = await this.resolveTokenAsync();
+      this.version = session.version;
+      token = session.token;
+    }
+    if (!token) return { headers: {} };
+    if (this.version === "v15") return { headers: { Authorization: `Bearer ${token}` } };
+    return { headers: {}, query: { token } };
   }
 
   public async getSummaryAsync(): Promise<DnsHoleSummary> {

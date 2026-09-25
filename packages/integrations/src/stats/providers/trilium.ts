@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import type { StatsAuthenticationContext, StatsProvider } from "../types";
+import type { StatsProvider } from "../types";
 
 const triliumStatsResponseSchema = z
   .object({
@@ -10,12 +10,7 @@ const triliumStatsResponseSchema = z
   })
   .passthrough();
 
-const getHttpAuthentication = (context: StatsAuthenticationContext) => ({
-  headers: { Authorization: context.secret("apiKey") },
-});
-
 export const triliumStatsProvider = {
-  getHttpAuthentication,
   metrics: [
     { key: "version", label: "Version", unit: "text" },
     { key: "notesCount", label: "Notes", unit: "count" },
@@ -23,7 +18,6 @@ export const triliumStatsProvider = {
   ],
   async fetchAsync(context) {
     const response = await context.requestAsync("/etapi/metrics?format=json", {
-      headers: getHttpAuthentication(context).headers,
       signal: context.signal,
     });
     const stats = triliumStatsResponseSchema.parse(response);

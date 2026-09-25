@@ -56,7 +56,7 @@ export const integrationRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "List integration kinds with required secret fields and supportsHttpRequests. When true, integration_request can call any API endpoint on that integration, including features Homarr does not implement. For integration_request or Custom Widget integration sources, select a kind with supportsHttpRequests=true, then use integration_all to find a saved instance with permissions.hasFullAccess. Reuse its credentials instead of asking for secrets again. Also use this before creating an integration to discover valid kinds and required secrets.",
+          "List integration kinds and required secret fields. Saved integrations can be used with integration_request and Custom Widget sources when permissions.hasFullAccess is true, except iCalendar feeds (iCal) and the TrueNAS WebSocket API, which are not generic HTTP APIs. qBittorrent generic HTTP requires an API key and qBittorrent 5.2.0 or newer. Reuse saved credentials instead of asking for secrets again.",
       },
     })
     .query(() => {
@@ -65,7 +65,6 @@ export const integrationRouter = createTRPCRouter({
         name: def.name,
         category: def.category,
         requiredSecrets: def.secretKinds,
-        supportsHttpRequests: def.supportsHttpRequests,
       }));
     }),
   all: protectedProcedure
@@ -73,7 +72,7 @@ export const integrationRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "List accessible configured integrations with id, name, kind, url, and permissions. Use id as integrationId. Native read tools require permissions.hasUseAccess; native action tools require permissions.hasInteractAccess. Custom Widget integration sources and arbitrary HTTP requests require permissions.hasFullAccess, including GET. False means the API key owner lacks that permission level; never bypass it. For arbitrary HTTP request compatibility, check integration_getKinds.supportsHttpRequests.",
+          "List accessible configured integrations with id, name, kind, url, and permissions. Use id as integrationId. Native read tools require permissions.hasUseAccess; native action tools require permissions.hasInteractAccess. Custom Widget integration sources and arbitrary HTTP requests require permissions.hasFullAccess, including GET. False means the API key owner lacks that permission level; never bypass it.",
       },
     })
     .query(async ({ ctx }) => {

@@ -14,11 +14,10 @@ export const autobrrStatsProvider = {
     { key: "indexers", label: "Indexers", unit: "count" },
   ],
   async fetchAsync(context) {
-    const apiKey = encodeURIComponent(context.secret("apiKey"));
     const [stats, filters, indexers] = await Promise.all([
-      context.requestAsync(`/api/release/stats?apikey=${apiKey}`, { signal: context.signal }),
-      context.requestAsync(`/api/filters?apikey=${apiKey}`, { signal: context.signal }),
-      context.requestAsync(`/api/release/indexers?apikey=${apiKey}`, { signal: context.signal }),
+      context.requestAsync("/api/release/stats", { signal: context.signal }),
+      context.requestAsync("/api/filters", { signal: context.signal }),
+      context.requestAsync("/api/release/indexers", { signal: context.signal }),
     ]);
     const parsedStats = statsSchema.parse(stats);
     return {

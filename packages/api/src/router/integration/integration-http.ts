@@ -15,7 +15,7 @@ import type { Database } from "@homarr/db";
 import { asc, eq, inArray } from "@homarr/db";
 import { groupMembers, integrations, integrationGroupPermissions, integrationUserPermissions } from "@homarr/db/schema";
 import type { IntegrationKind } from "@homarr/definitions";
-import { isHttpIntegrationKind } from "@homarr/definitions";
+import { getIntegrationHttpUnavailableReason } from "@homarr/definitions";
 import { getIntegrationHttpAuthenticationAsync } from "@homarr/integrations/factory";
 
 export interface IntegrationHttpContext {
@@ -44,9 +44,8 @@ export async function getIntegrationForHttpRequest(ctx: IntegrationHttpContext, 
       message: "Arbitrary integration requests require full integration access",
     });
   }
-  if (!isHttpIntegrationKind(integration.kind)) {
-    throw new TRPCError({ code: "BAD_REQUEST", message: "This integration does not support arbitrary HTTP requests" });
-  }
+  const unavailableReason = getIntegrationHttpUnavailableReason(integration.kind);
+  if (unavailableReason) throw new TRPCError({ code: "BAD_REQUEST", message: unavailableReason });
   return integration;
 }
 
@@ -74,8 +73,8 @@ export async function selectIntegrationForHttpRequest(
   });
   const integration = matches.find((entry) => constructIntegrationPermissions(entry, ctx.session).hasFullAccess);
   if (!integration) throw new TRPCError({ code: "FORBIDDEN", message: "No matching integration with full access" });
-  if (!isHttpIntegrationKind(integration.kind))
-    throw new TRPCError({ code: "BAD_REQUEST", message: "This integration does not support arbitrary HTTP requests" });
+  const unavailableReason = getIntegrationHttpUnavailableReason(integration.kind);
+  if (unavailableReason) throw new TRPCError({ code: "BAD_REQUEST", message: unavailableReason });
   return integration;
 }
 
@@ -103,6 +102,8 @@ export async function getIntegrationHttpConnection(integration: HttpIntegration,
       resolveConnectionAsync: async () => {
         try {
           let headers: Record<string, string> = {};
+          let query: Record<string, string> = {};
+          let body: CustomWidgetAuthConfig["body"];
           let derivedSecrets: string[] = [];
           if (authenticate) {
             const authentication = await getIntegrationHttpAuthenticationAsync({
@@ -111,6 +112,8 @@ export async function getIntegrationHttpConnection(integration: HttpIntegration,
               decryptedSecrets: secrets,
             });
             headers = authentication.headers;
+            query = authentication.query ?? {};
+            body = authentication.body;
             derivedSecrets = [...(authentication.redactValues ?? [])];
             for (const [name, value] of Object.entries(headers)) {
               if (name.toLowerCase() === "authorization") {
@@ -121,7 +124,17 @@ export async function getIntegrationHttpConnection(integration: HttpIntegration,
           const auth: CustomWidgetAuthConfig = {
             type: "integration",
             headers,
-            secrets: [...secrets, ...derivedSecrets.map((value) => ({ kind: "authentication", value }))],
+            query,
+            body,
+            secrets: [
+              ...secrets,
+              ...derivedSecrets.map((value) => ({ kind: "authentication", value })),
+              ...Object.entries(query).map(([name, value]) => ({
+                kind: "authenticationQuery",
+                value: `${encodeURIComponent(name)}=${encodeURIComponent(value)}`,
+              })),
+              ...(body ? [{ kind: "authentication", value: body.value }] : []),
+            ],
           };
           let tls: CustomWidgetHttpRequest["tls"];
           if (baseUrl.protocol === "https:") {

@@ -2053,7 +2053,7 @@ describe("Custom Widget authoring context", () => {
     expect(shouldRequireCustomWidgetAuthoringTool(activeTools, [], [], messages)).toBe(true);
     for (const [toolName, output] of [
       ["homarr_enableToolGroups", { enabledGroups: ["integration"] }],
-      ["integration_getKinds", [{ kind: "mealie", supportsHttpRequests: true }]],
+      ["integration_getKinds", [{ kind: "mealie", name: "Mealie" }]],
       ["integration_all", [{ id: "integration-mealie", kind: "mealie", permissions: { hasFullAccess: true } }]],
       [researchTool, { recorded: true, status: "ready" }],
       ["integration_request", { ok: true, status: 200, data: { items: [] } }],

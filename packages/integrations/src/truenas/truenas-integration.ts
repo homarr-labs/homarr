@@ -5,6 +5,7 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
+import type { IntegrationHttpAuthentication } from "../http-auth";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { ISystemHealthMonitoringIntegration } from "../interfaces/health-monitoring/health-monitoring-integration";
 import type { SystemHealthMonitoring } from "../interfaces/health-monitoring/health-monitoring-types";
@@ -32,6 +33,10 @@ const describeRequestError = (error: unknown) => {
 };
 
 export class TrueNasIntegration extends Integration implements ISystemHealthMonitoringIntegration {
+  public override async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    throw new Error("TrueNAS credentials authenticate its WebSocket API and cannot authenticate generic HTTP requests");
+  }
+
   private client?: TrueNasClient;
 
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {

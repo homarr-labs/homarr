@@ -59,7 +59,7 @@ Omit `endpointIds` or pass an empty array to query every configured endpoint.
 Administrators can retrieve the Custom Widget authoring prompt, schema, component catalog, skill, and references under
 `/api/custom-widgets/`. See [agent authoring](/docs/management/custom-widgets/agent-authoring) for the workflow.
 
-## Integration requests
+## Call any integration API endpoint
 
 `POST /api/integrations/request` is available as tRPC `integration.request` and MCP `integration_request`. Homarr uses
 the saved integration credentials; callers do not supply them. The `path` stays within the saved integration URL, and
@@ -67,3 +67,7 @@ redirects are rejected. See the generated schema for selectors, permissions, and
 
 Even `GET` can change upstream state. Homarr `200` can contain an upstream failure; inspect `ok`, `status`, and `data`.
 Requests are not retried, so check upstream state after a timeout before retrying a write.
+
+The iCalendar feed integration stores a calendar URL rather than arbitrary HTTP API credentials. TrueNAS uses a WebSocket
+API. Neither works with `integration_request` or Custom Widget integration sources. qBittorrent generic requests require
+a saved API key and qBittorrent 5.2.0 or newer. UniFi generic requests require the controller's HTTPS URL and actual port.
