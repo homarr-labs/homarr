@@ -8,7 +8,8 @@ import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
-import { getUsableWidgetQueryData } from "../common/query-state";
+import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
+import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import { ClusterHealthMonitoring } from "./cluster/cluster-health";
 import { partitionHealthMonitoringIntegrations } from "./integration-selection";
 import { SystemHealthMonitoring } from "./system-health";
@@ -16,13 +17,22 @@ import { SystemHealthMonitoring } from "./system-health";
 dayjs.extend(duration);
 
 export default function HealthMonitoringWidget(props: WidgetComponentProps<"healthMonitoring">) {
-  const integrations = getUsableWidgetQueryData(clientApi.integration.byIds.useQuery(props.integrationIds)) ?? [];
+  const integrationsQuery = clientApi.integration.byIds.useQuery(props.integrationIds);
   const t = useI18n("widget.healthMonitoring");
 
+  // Integration kinds (cluster vs. system) aren't known until this resolves. Resolving the
+  // partition below against an empty array while this is still pending sends every integration
+  // - including cluster-only kinds like Proxmox - into the system-health branch, which rejects
+  // them with a NOT_FOUND error instead of just waiting for the data.
+  if (isInitialWidgetQueryPending(integrationsQuery)) {
+    return <WidgetQueryLoadingState />;
+  }
+
+  const integrations = getUsableWidgetQueryData(integrationsQuery) ?? [];
   const { clusterIntegrationIds, systemIntegrationIds } = partitionHealthMonitoringIntegrations(integrations);
 
   if (clusterIntegrationIds.length === 0) {
-    return <SystemHealthMonitoring {...props} />;
+    return <SystemHealthMonitoring {...props} integrationIds={systemIntegrationIds} />;
   }
 
   const clusters = (
