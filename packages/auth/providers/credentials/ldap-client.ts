@@ -48,7 +48,8 @@ export class LdapClient {
         ...objectEntries(entry)
           .map(([key, value]) => [key, LdapClient.convertEntryPropertyToString(value)] as const)
           .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {} as Record<string, string>),
-        dn: LdapClient.getEntryDn(entry),
+        // Keep RFC 4514 escaping intact for the subsequent user bind.
+        dn: entry.dn,
       } as {
         [key: string]: string;
         dn: string;
@@ -64,21 +65,6 @@ export class LdapClient {
     }
 
     return firstValue.toString("utf8");
-  }
-
-  /**
-   * dn is the only attribute returned with special characters formatted in UTF-8 (Bad for any letters with an accent)
-   * Regex replaces any backslash followed by 2 hex characters with a percentage unless said backslash is preceded by another backslash.
-   * That can then be processed by decodeURIComponent which will turn back characters to normal.
-   * @param entry search entry from ldap
-   * @returns normalized distinguishedName
-   */
-  private static getEntryDn(entry: Entry) {
-    try {
-      return decodeURIComponent(entry.dn.replace(/(?<!\\)\\([0-9a-fA-F]{2})/g, "%$1"));
-    } catch {
-      throw new Error(`Cannot resolve distinguishedName for the entry ${entry.dn}`);
-    }
   }
 
   /**

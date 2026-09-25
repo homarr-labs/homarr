@@ -52,17 +52,22 @@ export const UserAvatarMenu = ({ children, availableUpdates, isDockerEnabled, bo
   const board = useOptionalBoard();
   const boardPermissions = board && constructBoardPermissions(board, session.data ?? null);
 
-  const { logoutUrl } = useAuthContext();
+  const { logoutUrl, logoutRedirectInProgress } = useAuthContext();
   const { openModal: openDockerModal } = useModalAction(DockerQuickAccessModal);
   const assistant = useOptionalHomarrAssistant();
 
   const handleSignout = useCallback(async () => {
     const redirectUrl = logoutUrl ?? "/auth/login";
-    await signOut({
-      redirect: false,
-    });
-    window.location.assign(redirectUrl);
-  }, [logoutUrl]);
+    // Session cache invalidation must not reload over the provider logout navigation.
+    logoutRedirectInProgress.current = true;
+    try {
+      await signOut({ redirect: false });
+      window.location.assign(redirectUrl);
+    } catch (error) {
+      logoutRedirectInProgress.current = false;
+      throw error;
+    }
+  }, [logoutUrl, logoutRedirectInProgress]);
 
   return (
     // We use keepMounted so we can add event listeners to prevent navigating away without saving the board

@@ -37,6 +37,7 @@ import { env } from "@homarr/common/env";
 import { showWarningNotification } from "@homarr/notifications";
 import { widgetQueryRefetchIntervals } from "@homarr/widgets/refetch-intervals";
 
+import { useAuthContext } from "./session";
 import { getSessionQueryScope, SessionQueryScopeGuard } from "./session-query-scope";
 import { createSessionQueryPersistence } from "./query-persistence";
 import type { SessionQueryPersistence } from "./query-persistence";
@@ -70,13 +71,14 @@ const constructWebsocketUrl = () => {
 
 export function TRPCReactProvider({ children }: PropsWithChildren) {
   const { data: session } = useSession();
+  const { logoutRedirectInProgress } = useAuthContext();
   const sessionQueryScope = getSessionQueryScope(session);
   const [initialSessionQueryScope] = useState(() => sessionQueryScope);
   const [queryPersistence] = useState(() => createSessionQueryPersistence(initialSessionQueryScope));
   const handleScopeChange = useCallback(() => {
     void queryPersistence.persister.removeClient();
-    reloadPage();
-  }, [queryPersistence]);
+    if (!logoutRedirectInProgress.current) reloadPage();
+  }, [queryPersistence, logoutRedirectInProgress]);
 
   return (
     <SessionQueryScopeGuard
