@@ -2454,6 +2454,188 @@
         }
       }
     },
+    "/api/boards/{boardId}/items/{itemId}/layouts/{layoutId}": {
+      "patch": {
+        "operationId": "boardRouter-updateItemLayout",
+        "summary": "Move or resize one board item",
+        "description": "Update one item's position and size in one existing layout without replacing the board. Requires modify access. The item stays in its current section; out-of-bounds and overlapping placements are rejected.",
+        "tags": [
+          "boards"
+        ],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "boardId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "itemId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "layoutId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "xOffset": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 32767
+                  },
+                  "yOffset": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 32767
+                  },
+                  "width": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 24
+                  },
+                  "height": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 24
+                  }
+                },
+                "required": [
+                  "xOffset",
+                  "yOffset",
+                  "width",
+                  "height"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "boardId": {
+                      "type": "string"
+                    },
+                    "itemId": {
+                      "type": "string"
+                    },
+                    "layoutId": {
+                      "type": "string"
+                    },
+                    "xOffset": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 32767
+                    },
+                    "yOffset": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 32767
+                    },
+                    "width": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 24
+                    },
+                    "height": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 24
+                    }
+                  },
+                  "required": [
+                    "boardId",
+                    "itemId",
+                    "layoutId",
+                    "xOffset",
+                    "yOffset",
+                    "width",
+                    "height"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/info": {
       "get": {
         "operationId": "infoRouter-getInfo",

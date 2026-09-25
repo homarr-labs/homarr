@@ -2312,6 +2312,81 @@ describe("resetLayout should rebuild a layout from Base", () => {
   });
 });
 
+describe("updateItemLayout should change only one item placement", () => {
+  test("resizes an item without changing other items", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const { boardId, sectionId, layoutId, itemId } = await createFullBoardAsync(db, "targeted-layout");
+    const otherItemId = await addItemAsync(db, { boardId, sectionId, layoutId, xOffset: 7, yOffset: 0 });
+
+    const result = await caller.updateItemLayout({
+      boardId,
+      itemId,
+      layoutId,
+      xOffset: 2,
+      yOffset: 0,
+      width: 4,
+      height: 8,
+    });
+
+    const updated = await db.query.itemLayouts.findFirst({
+      where: and(eq(itemLayouts.itemId, itemId), eq(itemLayouts.layoutId, layoutId)),
+    });
+    const other = await db.query.itemLayouts.findFirst({
+      where: and(eq(itemLayouts.itemId, otherItemId), eq(itemLayouts.layoutId, layoutId)),
+    });
+    expect(result).toMatchObject({ itemId, layoutId, xOffset: 2, width: 4, height: 8 });
+    expect(updated).toMatchObject({ sectionId, xOffset: 2, yOffset: 0, width: 4, height: 8 });
+    expect(other).toMatchObject({ sectionId, xOffset: 7, yOffset: 0, width: 1, height: 1 });
+  });
+
+  test("rejects overlap and preserves the original placement", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const { boardId, sectionId, layoutId, itemId } = await createFullBoardAsync(db, "layout-overlap");
+    await addItemAsync(db, { boardId, sectionId, layoutId, xOffset: 2, yOffset: 0 });
+
+    await expect(
+      caller.updateItemLayout({ boardId, itemId, layoutId, xOffset: 1, yOffset: 0, width: 2, height: 2 }),
+    ).rejects.toMatchObject({ code: "CONFLICT" });
+
+    const unchanged = await db.query.itemLayouts.findFirst({
+      where: and(eq(itemLayouts.itemId, itemId), eq(itemLayouts.layoutId, layoutId)),
+    });
+    expect(unchanged).toMatchObject({ xOffset: 0, yOffset: 0, width: 1, height: 1 });
+  });
+
+  test("rejects a foreign item or layout and a placement outside its section", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const { boardId, layoutId, itemId } = await createFullBoardAsync(db, "layout-scope");
+
+    await expect(
+      caller.updateItemLayout({ boardId, itemId: createId(), layoutId, xOffset: 0, yOffset: 0, width: 1, height: 2 }),
+    ).rejects.toMatchObject({ code: "NOT_FOUND" });
+    await expect(
+      caller.updateItemLayout({ boardId, itemId, layoutId: createId(), xOffset: 0, yOffset: 0, width: 1, height: 2 }),
+    ).rejects.toMatchObject({ code: "NOT_FOUND" });
+    await expect(
+      caller.updateItemLayout({ boardId, itemId, layoutId, xOffset: 9, yOffset: 0, width: 2, height: 2 }),
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+  });
+
+  test("hides a board from a user without modify permission", async () => {
+    const db = createDb();
+    const { boardId, layoutId, itemId } = await createFullBoardAsync(db, "layout-permissions");
+    const caller = boardRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: { ...defaultSession, user: { ...defaultSession.user, id: createId() } },
+    });
+
+    await expect(
+      caller.updateItemLayout({ boardId, itemId, layoutId, xOffset: 0, yOffset: 0, width: 1, height: 2 }),
+    ).rejects.toMatchObject({ code: "NOT_FOUND" });
+  });
+});
+
 describe("Custom Widget placement permissions", () => {
   test("rejects a direct addItem request from a non-admin board modifier", async () => {
     const db = createDb();

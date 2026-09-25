@@ -103,6 +103,7 @@ const MCP_TOOL_ALLOWLIST = {
     "board_savePartialBoardSettings",
     "board_setHomeBoard",
     "board_setMobileHomeBoard",
+    "board_updateItemLayout",
     "customWidget_delete",
     "customWidget_previewAction",
     "customWidget_previewReviseTemplate",
