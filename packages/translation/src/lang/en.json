@@ -1777,7 +1777,6 @@
     "success": "Success",
     "beta": "Beta",
     "error": "Error",
-    "analyticsError": "Setup analytics could not be recorded.",
     "action": {
       "add": "Add",
       "apply": "Apply",

@@ -46,7 +46,6 @@ import { widgetCatalogIcons } from "@homarr/ui/widget-icons";
 import { loadWidgetDefinition, reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 
 import type { EmptySection } from "~/app/[locale]/boards/_types";
-import { useSetupAnalytics } from "~/components/create/setup-analytics";
 import { IntegrationSelectModal } from "~/components/integration/integration-select-modal";
 import { getSectionGridColumnCount } from "../sections/grid/section-grid-placements";
 import { useItemActions } from "./item-actions";
@@ -143,8 +142,6 @@ const ItemSelectModalContent = ({
   const { openModal: openEditModal } = useModalAction(LazyWidgetEditModal);
   const { openModal: openIntegrationModal } = useModalAction(IntegrationSelectModal);
   const settings = useSettings();
-  const trackSetup = useSetupAnalytics();
-  const flowStartedAt = useRef<number | null>(null);
 
   const availableKinds = useMemo(
     () => new Set((integrationData ?? []).filter(({ permissions }) => permissions.hasUseAccess).map((i) => i.kind)),
@@ -308,8 +305,6 @@ const ItemSelectModalContent = ({
 
   const handleAdd = async (kind: WidgetKind) => {
     if (!tryLockSelection(selectionLock)) return;
-    flowStartedAt.current = performance.now();
-    trackSetup("widget-started", { entryPoint: "board", intent: kind });
     setLoadingSelection(kind);
     preloadWidgetEditModal();
     try {
@@ -354,12 +349,6 @@ const ItemSelectModalContent = ({
                 size: selectedSize ?? initialSize,
               });
               if (!notifyCreated(updatedBoard, itemId, getWidgetName(kind, t))) return;
-              trackSetup("widget-completed", {
-                entryPoint: "board",
-                intent: kind,
-                outcome: "completed",
-                elapsedMs: flowStartedAt.current ? Math.round(performance.now() - flowStartedAt.current) : undefined,
-              });
             },
             integrationData: availableIntegrations,
             integrationSupport: hasIntegrationSupport,
@@ -376,12 +365,6 @@ const ItemSelectModalContent = ({
         hasIntegrationSupport && (!("integrationsRequired" in definition) || definition.integrationsRequired !== false);
 
       if (integrationsRequired && matchingIntegrationCount === 0) {
-        trackSetup("dependency-blocked", {
-          entryPoint: "board",
-          intent: kind,
-          outcome: "blocked",
-          canResolveInline: canCreateIntegration,
-        });
         if (!canCreateIntegration) {
           showErrorNotification({
             title: t("item.create.missingIntegration.title"),
@@ -395,12 +378,6 @@ const ItemSelectModalContent = ({
           allowedKinds: (definition.supportedIntegrations ?? []).filter((integration) => integration !== "mock"),
           onSuccess: (result) => {
             if (result) {
-              trackSetup("dependency-resolved-inline", {
-                entryPoint: "board",
-                intent: kind,
-                outcome: "continued",
-                canResolveInline: true,
-              });
               openEditor([result.integration]);
             }
           },

@@ -1,10 +1,10 @@
-import SuperJSON from "superjson";
+import { parse, stringify } from "superjson";
 
 import type { ServerSettings } from "@homarr/server-settings";
 import { defaultServerSettings, defaultServerSettingsKeys, parseBrandingSettings } from "@homarr/server-settings";
 
 import type { Database } from "..";
-import { eq } from "..";
+import { and, eq } from "..";
 import { serverSettings } from "../schema";
 
 export const getServerSettingsAsync = async (db: Database) => {
@@ -18,7 +18,7 @@ export const getServerSettingsAsync = async (db: Database) => {
       return acc;
     }
 
-    const parsedSetting = SuperJSON.parse<Record<string, unknown>>(setting.value);
+    const parsedSetting = parse<Record<string, unknown>>(setting.value);
     if (settingKey === "branding") {
       acc[settingKey] = parseBrandingSettings(parsedSetting) as never;
       return acc;
@@ -40,7 +40,7 @@ export const getServerSettingByKeyAsync = async <TKey extends keyof ServerSettin
     return defaultServerSettings[key];
   }
 
-  const parsedSetting = SuperJSON.parse<ServerSettings[TKey]>(dbSettings.value);
+  const parsedSetting = parse<ServerSettings[TKey]>(dbSettings.value);
   if (key === "branding") {
     return parseBrandingSettings(parsedSetting) as ServerSettings[TKey];
   }
@@ -58,9 +58,35 @@ export const updateServerSettingByKeyAsync = async <TKey extends keyof ServerSet
   await db
     .update(serverSettings)
     .set({
-      value: SuperJSON.stringify(value),
+      value: stringify(value),
     })
     .where(eq(serverSettings.settingKey, key));
+};
+
+export const updateAnalyticsServerSettingAsync = async (
+  db: Database,
+  update: (current: ServerSettings["analytics"]) => ServerSettings["analytics"],
+) => {
+  for (let attempt = 0; attempt < 5; attempt++) {
+    const row = await db.query.serverSettings.findFirst({
+      where: eq(serverSettings.settingKey, "analytics"),
+    });
+    if (!row) throw new Error("Analytics server settings are missing");
+
+    const current = {
+      ...defaultServerSettings.analytics,
+      ...parse<ServerSettings["analytics"]>(row.value),
+    };
+    const next = update(current);
+    const updated = await db
+      .update(serverSettings)
+      .set({ value: stringify(next) })
+      .where(and(eq(serverSettings.settingKey, "analytics"), eq(serverSettings.value, row.value)))
+      .returning({ settingKey: serverSettings.settingKey });
+    if (updated.length > 0) return next;
+  }
+
+  throw new Error("Analytics server settings changed too often to update");
 };
 
 export const insertServerSettingByKeyAsync = async <TKey extends keyof ServerSettings>(
@@ -70,6 +96,6 @@ export const insertServerSettingByKeyAsync = async <TKey extends keyof ServerSet
 ) => {
   await db.insert(serverSettings).values({
     settingKey: key,
-    value: SuperJSON.stringify(value),
+    value: stringify(value),
   });
 };

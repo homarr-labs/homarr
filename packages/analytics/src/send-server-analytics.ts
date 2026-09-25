@@ -1,9 +1,12 @@
+import { createHash } from "node:crypto";
+
 import { isProviderEnabled } from "@homarr/auth/server";
 import { createId, Stopwatch } from "@homarr/common";
+import { env } from "@homarr/common/env";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { count, db } from "@homarr/db";
+import { count, countDistinct, db, eq } from "@homarr/db";
 import { isPostgresql } from "@homarr/db/collection";
-import { getServerSettingByKeyAsync, updateServerSettingByKeyAsync } from "@homarr/db/queries";
+import { getServerSettingByKeyAsync, updateAnalyticsServerSettingAsync } from "@homarr/db/queries";
 import {
   accounts,
   apiKeys,
@@ -14,6 +17,7 @@ import {
   groups,
   iconRepositories,
   icons,
+  integrationItems,
   integrations,
   invites,
   itemLayouts,
@@ -30,11 +34,12 @@ import {
 import { env as dockerEnv } from "@homarr/docker/env";
 
 import packageJson from "../../../package.json";
-import { getPostHogClient } from "./client";
+import { createPostHogClient } from "./client";
+import { getItemCountBucket, getSnapshotPeriod, isSnapshotDue, omitZeroCounts } from "./snapshot-properties";
 
 const logger = createLogger({ module: "analytics" });
 
-type AnalyticsResult = "sent" | "disabled" | "failed";
+type AnalyticsResult = "sent" | "skipped" | "disabled" | "failed";
 
 const getOrCreateInstanceId = async (
   analyticsSettings: Awaited<ReturnType<typeof getServerSettingByKeyAsync<"analytics">>>,
@@ -42,16 +47,24 @@ const getOrCreateInstanceId = async (
   if (analyticsSettings.instanceId) return analyticsSettings.instanceId;
 
   const instanceId = createId();
-  await updateServerSettingByKeyAsync(db, "analytics", { ...analyticsSettings, instanceId });
-
-  const verified = await getServerSettingByKeyAsync(db, "analytics");
-  return verified.instanceId ?? instanceId;
+  const updated = await updateAnalyticsServerSettingAsync(db, (current) => {
+    if (current.instanceId) return current;
+    return { ...current, instanceId };
+  });
+  return updated.instanceId ?? instanceId;
 };
 
 const sumGroupedCounts = (rows: { count: number }[]): number => rows.reduce((sum, row) => sum + row.count, 0);
 
-export const sendServerAnalyticsAsync = async (): Promise<AnalyticsResult> => {
+const getSnapshotUuid = (instanceId: string, now: Date) => {
+  const period = getSnapshotPeriod(now);
+  const hash = createHash("sha256").update(`${instanceId}:${period}:server-analytics`).digest("hex").slice(0, 32);
+  return `${hash.slice(0, 8)}-${hash.slice(8, 12)}-5${hash.slice(13, 16)}-a${hash.slice(17, 20)}-${hash.slice(20)}`;
+};
+
+const sendSnapshotAsync = async (): Promise<AnalyticsResult> => {
   const stopWatch = new Stopwatch();
+  if (env.NO_EXTERNAL_CONNECTION) return "disabled";
   const analyticsSettings = await getServerSettingByKeyAsync(db, "analytics");
 
   if (!analyticsSettings.enableGeneral) {
@@ -59,14 +72,18 @@ export const sendServerAnalyticsAsync = async (): Promise<AnalyticsResult> => {
     return "disabled";
   }
 
-  const client = getPostHogClient();
+  const now = new Date();
+  if (!isSnapshotDue(analyticsSettings.lastSuccessfulSnapshotAt, now)) return "skipped";
 
   try {
     const instanceId = await getOrCreateInstanceId(analyticsSettings);
 
     const [
       cultureSettings,
+      boardSettings,
       countBoards,
+      countPublicBoards,
+      countBoardsWithStatusEnabled,
       countGroups,
       countApps,
       countSections,
@@ -87,9 +104,17 @@ export const sendServerAnalyticsAsync = async (): Promise<AnalyticsResult> => {
       countAccounts,
       integrationKinds,
       widgetKinds,
+      boardsWithWidgetKinds,
+      boardItemCounts,
+      boardsWithIntegrationKinds,
+      layoutRoleCounts,
+      sectionKindCounts,
     ] = await Promise.all([
       getServerSettingByKeyAsync(db, "culture"),
+      getServerSettingByKeyAsync(db, "board"),
       db.$count(boards),
+      db.$count(boards, eq(boards.isPublic, true)),
+      db.$count(boards, eq(boards.disableStatus, false)),
       db.$count(groups),
       db.$count(apps),
       db.$count(sections),
@@ -116,6 +141,28 @@ export const sendServerAnalyticsAsync = async (): Promise<AnalyticsResult> => {
         .select({ kind: items.kind, count: count(items.id) })
         .from(items)
         .groupBy(items.kind),
+      db
+        .select({ kind: items.kind, count: countDistinct(items.boardId) })
+        .from(items)
+        .groupBy(items.kind),
+      db
+        .select({ boardId: items.boardId, count: count(items.id) })
+        .from(items)
+        .groupBy(items.boardId),
+      db
+        .select({ kind: integrations.kind, count: countDistinct(items.boardId) })
+        .from(integrationItems)
+        .innerJoin(integrations, eq(integrationItems.integrationId, integrations.id))
+        .innerJoin(items, eq(integrationItems.itemId, items.id))
+        .groupBy(integrations.kind),
+      db
+        .select({ kind: layouts.role, count: count(layouts.id) })
+        .from(layouts)
+        .groupBy(layouts.role),
+      db
+        .select({ kind: sections.kind, count: count(sections.id) })
+        .from(sections)
+        .groupBy(sections.kind),
     ]);
 
     const enabledAuthProviders = (["credentials", "oidc", "ldap"] as const).filter(isProviderEnabled);
@@ -133,6 +180,7 @@ export const sendServerAnalyticsAsync = async (): Promise<AnalyticsResult> => {
       defaultLocale: cultureSettings.defaultLocale,
 
       countBoards,
+      countPublicBoards,
       countGroups,
       countApps,
       countSections,
@@ -157,24 +205,69 @@ export const sendServerAnalyticsAsync = async (): Promise<AnalyticsResult> => {
       countWidgets: sumGroupedCounts(widgetKinds),
     };
 
-    for (const row of integrationKinds) {
-      properties[`integration_${row.kind}`] = row.count;
-    }
-    for (const row of widgetKinds) {
-      properties[`widget_${row.kind}`] = row.count;
+    if (!boardSettings.forceDisableStatus && countBoardsWithStatusEnabled > 0) {
+      properties.countBoardsWithStatusEnabled = countBoardsWithStatusEnabled;
     }
 
+    for (const row of integrationKinds) {
+      if (row.count > 0) properties[`integration_${row.kind}`] = row.count;
+    }
+    for (const row of widgetKinds) {
+      if (row.count > 0) properties[`widget_${row.kind}`] = row.count;
+    }
+    for (const row of boardsWithWidgetKinds) {
+      if (row.count > 0) properties[`boardsWithWidget_${row.kind}`] = row.count;
+    }
+    for (const row of boardsWithIntegrationKinds) {
+      if (row.count > 0) properties[`boardsWithIntegration_${row.kind}`] = row.count;
+    }
+    for (const row of layoutRoleCounts) {
+      if (row.count > 0) properties[`layout_${row.kind}`] = row.count;
+    }
+    for (const row of sectionKindCounts) {
+      if (row.count > 0) properties[`section_${row.kind}`] = row.count;
+    }
+    const boardSizeCounts = new Map<string, number>();
+    const emptyBoardCount = countBoards - boardItemCounts.length;
+    if (emptyBoardCount > 0) boardSizeCounts.set("empty", emptyBoardCount);
+    for (const row of boardItemCounts) {
+      const bucket = getItemCountBucket(row.count);
+      boardSizeCounts.set(bucket, (boardSizeCounts.get(bucket) ?? 0) + 1);
+    }
+    for (const [bucket, boardCount] of boardSizeCounts) {
+      properties[`boardsWithItemCount_${bucket}`] = boardCount;
+    }
+    const currentSettings = await getServerSettingByKeyAsync(db, "analytics");
+    if (!currentSettings.enableGeneral || env.NO_EXTERNAL_CONNECTION) return "disabled";
+
+    const client = createPostHogClient();
     client.capture({
+      uuid: getSnapshotUuid(instanceId, now),
       distinctId: instanceId,
       event: "server-analytics",
-      properties,
+      properties: { ...omitZeroCounts(properties), $process_person_profile: false },
+      disableGeoip: true,
     });
 
     await client.flush();
+    await updateAnalyticsServerSettingAsync(db, (current) => ({
+      ...current,
+      lastSuccessfulSnapshotAt: now.toISOString(),
+    }));
     logger.info(`Sent analytics to PostHog in ${stopWatch.getElapsedInHumanWords()}`);
     return "sent";
   } catch (error) {
     logger.warn("Failed to send analytics to PostHog", { error });
     return "failed";
   }
+};
+
+let pendingSnapshot: Promise<AnalyticsResult> | null = null;
+
+export const sendServerAnalyticsAsync = (): Promise<AnalyticsResult> => {
+  if (pendingSnapshot) return pendingSnapshot;
+  pendingSnapshot = sendSnapshotAsync().finally(() => {
+    pendingSnapshot = null;
+  });
+  return pendingSnapshot;
 };

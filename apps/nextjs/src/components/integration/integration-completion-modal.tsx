@@ -19,7 +19,6 @@ import {
   getBoardRecipeDismissalKey,
   getBoardRecipeRecommendations,
 } from "~/components/board/items/board-recipe-recommendations";
-import { useSetupAnalytics } from "~/components/create/setup-analytics";
 
 interface IntegrationCompletionModalProps {
   result: CreatedIntegrationResult;
@@ -34,7 +33,6 @@ export const IntegrationCompletionModal = createModal<IntegrationCompletionModal
   const { data: session } = useSession();
   const { data: integrations = [] } = clientApi.integration.all.useQuery();
   const { openModal: openItemSelectModal } = useModalAction(ItemSelectModal);
-  const trackSetup = useSetupAnalytics();
   const compatibleWidgets = getWidgetKindsForIntegration(innerProps.result.integration.kind);
   const boardMatchesContext = board !== null && board.id === innerProps.boardId;
   const canModifyBoard = boardMatchesContext && constructBoardPermissions(board, session).hasChangeAccess;
@@ -72,12 +70,6 @@ export const IntegrationCompletionModal = createModal<IntegrationCompletionModal
 
   const addRecommendedWidget = (widgetKind: (typeof recommendations)[number]["widgetKind"]) => {
     if (!innerProps.boardId) return;
-    trackSetup("completion-recipe-selected", {
-      entryPoint: "board",
-      intent: "add-compatible-widget",
-      outcome: "continued",
-      hasBoardContext: true,
-    });
     actions.closeModal();
     openItemSelectModal({ boardId: innerProps.boardId, initialWidgetKind: widgetKind });
   };
