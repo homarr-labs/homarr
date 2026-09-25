@@ -56,6 +56,7 @@ export const BoardSwitcher = ({ children }: BoardSwitcherProps) => {
   const [search, setSearch] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
   const responsiveColumnCount = useMatches({ base: 1, sm: 2, lg: 3, xl: 4 });
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const optionRefs = useRef<Array<HTMLAnchorElement | null>>([]);
   const utils = clientApi.useUtils();
   const {
@@ -124,6 +125,7 @@ export const BoardSwitcher = ({ children }: BoardSwitcherProps) => {
       event.preventDefault();
       setSearch((current) => current.slice(0, -1));
       setActiveIndex(0);
+      searchInputRef.current?.focus();
       return;
     }
 
@@ -131,6 +133,7 @@ export const BoardSwitcher = ({ children }: BoardSwitcherProps) => {
       event.preventDefault();
       setSearch((current) => `${current}${event.key}`);
       setActiveIndex(0);
+      searchInputRef.current?.focus();
       return;
     }
 
@@ -211,6 +214,7 @@ export const BoardSwitcher = ({ children }: BoardSwitcherProps) => {
         >
           <VisuallyHidden id="board-switcher-instructions">{t("keyboard.instructions")}</VisuallyHidden>
           <TextInput
+            ref={searchInputRef}
             data-autofocus
             data-board-switcher-search
             value={search}

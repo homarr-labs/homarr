@@ -310,9 +310,8 @@ func (m Model) deleteImage(reference string) (Model, tea.Cmd) {
 	return m, nil
 }
 
-// deleteData removes an instance's volume. Docker refuses to delete a volume
-// that is still attached, so the container is removed first — the data is going
-// away either way, and failing halfway would leave the user to work out why.
+// deleteData verifies the actual mount before removing the owning container.
+// Discovery uses names, which can also match recreated or manually run instances.
 func (m Model) deleteData(subject target) (Model, tea.Cmd) {
 	container, volume := subject.container, subject.volume
 	if volume == "" {
@@ -320,7 +319,18 @@ func (m Model) deleteData(subject target) (Model, tea.Cmd) {
 		return m, nil
 	}
 	m.tasks.Action("delete data "+volume, volume, func(ctx context.Context) error {
-		_ = docker.RemoveContext(ctx, container)
+		containerID, mountsVolume, err := docker.InspectContainerVolumeMount(ctx, container, volume)
+		if err != nil && !docker.IsContainerNotFound(err) {
+			return fmt.Errorf("verify owning container %s: %w", container, err)
+		}
+		if err == nil {
+			if !mountsVolume {
+				return fmt.Errorf("refusing to remove container %s: it does not mount volume %s", container, volume)
+			}
+			if err := docker.RemoveContext(ctx, containerID); err != nil && !docker.IsContainerNotFound(err) {
+				return fmt.Errorf("remove owning container %s: %w", container, err)
+			}
+		}
 		return docker.RemoveVolume(ctx, volume)
 	})
 	m.status, m.statusLevel = "deleting "+volume+"…", levelInfo

@@ -36,7 +36,7 @@ export const weatherWidget: WidgetDefinition = {
         values: {
           type: "boolean",
         },
-        defaultValue: "yes",
+        defaultValue: "no",
       },
       {
         name: "Animate weather icons",
@@ -75,7 +75,7 @@ export const weatherWidget: WidgetDefinition = {
         values: {
           type: "boolean",
         },
-        defaultValue: "yes",
+        defaultValue: "no",
       },
       {
         name: "Has forecast",
@@ -83,7 +83,7 @@ export const weatherWidget: WidgetDefinition = {
         values: {
           type: "boolean",
         },
-        defaultValue: "yes",
+        defaultValue: "no",
       },
       {
         name: "Amount of forecast days",
