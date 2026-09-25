@@ -83,17 +83,21 @@ interface ItemProps {
   isAdvanced: boolean;
 }
 
-const formatReleaseDate = (value: unknown, locale: string) => {
+const formatReleaseDate = (value: unknown, locale: string, isDateOnly?: boolean) => {
   const date = toValidDate(value);
   if (!date) return "—";
-  return Intl.DateTimeFormat(locale, {
+  const options: Intl.DateTimeFormatOptions = {
     month: "2-digit",
     year: "numeric",
     day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  }).format(date);
+  };
+  if (isDateOnly) options.timeZone = "UTC";
+  else {
+    options.hour = "2-digit";
+    options.minute = "2-digit";
+    options.hour12 = false;
+  }
+  return Intl.DateTimeFormat(locale, options).format(date);
 };
 
 const Item = ({ item, options, isAdvanced }: ItemProps) => {
@@ -182,7 +186,10 @@ const Item = ({ item, options, isAdvanced }: ItemProps) => {
                 wrap={isAdvanced ? "nowrap" : "wrap"}
                 style={isAdvanced ? { minWidth: 0 } : { minWidth: 0, rowGap: 0 }}
               >
-                <Info icon={IconCalendar} label={formatReleaseDate(item.releaseDate, locale)} />
+                <Info
+                  icon={IconCalendar}
+                  label={formatReleaseDate(item.releaseDate, locale, item.releaseDateIsDateOnly)}
+                />
                 {length !== undefined && (
                   <>
                     <InfoDivider />

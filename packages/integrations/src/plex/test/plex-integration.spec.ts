@@ -243,11 +243,13 @@ describe("PlexIntegration.getMediaReleasesAsync with recently added episodes", (
       ["Inception", undefined],
       ["Breaking Bad", "Season 2"],
     ]);
-    // the bumped season uses the air date of the newest episode, as a local calendar date
-    expect(releases[0]?.releaseDate).toEqual(new Date(2026, 8, 14));
+    // Plex air dates are represented as UTC dates and rendered as calendar dates by the widget
+    expect(releases[0]?.releaseDate).toEqual(new Date("2026-09-14"));
+    expect(releases[0]?.releaseDateIsDateOnly).toBe(true);
     expect(releases[1]).toMatchObject({
       type: "tv",
-      releaseDate: new Date(2026, 8, 13),
+      releaseDate: new Date("2026-09-13"),
+      releaseDateIsDateOnly: true,
       imageUrls: {
         poster: `proxied:${TEST_URL}/library/metadata/show-99/thumb`,
         backdrop: `proxied:${TEST_URL}/library/metadata/ep-missing/art`,
@@ -300,7 +302,7 @@ describe("PlexIntegration.getMediaReleasesAsync with recently added episodes", (
       [
         createMetadataItem("episode", {
           type: "episode",
-          title: "Oceans Three",
+          title: "Older episode",
           parentKey: "/library/metadata/season-11",
           grandparentTitle: "Futurama",
           addedAt: 100,
@@ -333,11 +335,12 @@ describe("PlexIntegration.getMediaReleasesAsync with recently added episodes", (
 
     const releases = await createIntegration().getMediaReleasesAsync();
 
-    // one card per show: the episode entry is bumped and labelled, the show entry is left untouched
+    // one card per show: the episode and show entries are both labelled with their newest episodes
     expect(releases.map((release) => [release.title, release.subtitle])).toEqual([
       ["Futurama", "S11E05 \u2013 Oceans Three"],
-      ["Severance", undefined],
+      ["Severance", "S02E10 \u2013 Cold Harbor"],
     ]);
+    expect(releases[0]?.href).toContain(encodeURIComponent("/library/metadata/ep-futurama"));
   });
 
   test("keeps the episodes of the libraries that answered when one library fails", async () => {

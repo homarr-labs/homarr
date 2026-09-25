@@ -61,18 +61,19 @@ function formatEpisodeSubtitle(episode: RecentlyAddedEpisode): string | undefine
   return episode.title ? `${seasonEpisode} \u2013 ${episode.title}` : seasonEpisode;
 }
 
-/**
- * Plex returns date only values such as "2008-01-20" for air dates, which `new Date` parses as UTC midnight and
- * therefore renders as the previous day for anyone west of UTC. Those are calendar dates, so they are kept local.
- */
+function episodeImages(episode: RecentlyAddedEpisode): RecentlyAddedItem["Image"] {
+  const images: NonNullable<RecentlyAddedItem["Image"]> = [];
+  const poster = episode.grandparentThumb ?? episode.parentThumb ?? episode.thumb;
+  const backdrop = episode.art ?? episode.grandparentArt;
+  if (poster) images.push({ type: "coverPoster", url: poster });
+  if (backdrop) images.push({ type: "background", url: backdrop });
+  return images.length > 0 ? images : undefined;
+}
+
 function parseReleaseDate(item: RecentlyAddedItem): Date {
   const airDate = item.originallyAvailableAt;
   if (!airDate) return new Date(item.addedAt * 1000);
-
-  const dateOnly = /^(\d{4})-(\d{2})-(\d{2})$/.exec(airDate);
-  if (!dateOnly) return new Date(airDate);
-
-  return new Date(Number(dateOnly[1]), Number(dateOnly[2]) - 1, Number(dateOnly[3]));
+  return new Date(airDate);
 }
 
 /**
@@ -84,21 +85,45 @@ function parseReleaseDate(item: RecentlyAddedItem): Date {
 function mergeRecentlyAddedEpisodes(items: RecentlyAddedItem[], episodes: RecentlyAddedEpisode[]): MergedItem[] {
   if (episodes.length === 0) return items;
 
-  // Episodes are sorted by addedAt descending, so the first one per season is the newest
+  // Episodes are sorted by addedAt descending, so the first one per season or show is the newest
   const newestEpisodeBySeasonKey = new Map<string, RecentlyAddedEpisode>();
+  const newestEpisodeByShowKey = new Map<string, RecentlyAddedEpisode>();
   for (const episode of episodes) {
-    if (!episode.parentKey || newestEpisodeBySeasonKey.has(episode.parentKey)) continue;
-    newestEpisodeBySeasonKey.set(episode.parentKey, episode);
+    if (episode.parentKey && !newestEpisodeBySeasonKey.has(episode.parentKey)) {
+      newestEpisodeBySeasonKey.set(episode.parentKey, episode);
+    }
+    if (episode.grandparentKey && !newestEpisodeByShowKey.has(episode.grandparentKey)) {
+      newestEpisodeByShowKey.set(episode.grandparentKey, episode);
+    }
   }
 
   const bumpedItems = items.map((item): MergedItem => {
     const seasonKey = seasonKeyOf(item);
-    const episode = seasonKey ? newestEpisodeBySeasonKey.get(seasonKey) : undefined;
-    if (!episode || episode.addedAt <= item.addedAt) return item;
+    let episode: RecentlyAddedEpisode | undefined;
+    if (item.type === "show") episode = newestEpisodeByShowKey.get(item.key);
+    else if (seasonKey) episode = newestEpisodeBySeasonKey.get(seasonKey);
+    if (!episode || (item.type !== "show" && episode.addedAt <= item.addedAt)) return item;
+
+    if (item.type === "episode") {
+      return {
+        ...item,
+        key: episode.key,
+        Media: undefined,
+        title: episode.title ?? item.title,
+        parentTitle: episode.parentTitle ?? item.parentTitle,
+        grandparentTitle: episode.grandparentTitle ?? item.grandparentTitle,
+        Image: episodeImages(episode) ?? item.Image,
+        summary: episode.summary,
+        duration: episode.duration,
+        addedAt: episode.addedAt,
+        originallyAvailableAt: episode.originallyAvailableAt,
+        latestEpisode: episode,
+      };
+    }
 
     return {
       ...item,
-      addedAt: episode.addedAt,
+      addedAt: Math.max(item.addedAt, episode.addedAt),
       originallyAvailableAt: episode.originallyAvailableAt ?? item.originallyAvailableAt,
       latestEpisode: episode,
     };
@@ -110,9 +135,6 @@ function mergeRecentlyAddedEpisodes(items: RecentlyAddedItem[], episodes: Recent
   const missingSeasons = [...newestEpisodeBySeasonKey.entries()]
     .filter(([seasonKey, episode]) => !listedKeys.has(seasonKey) && !listedKeys.has(episode.grandparentKey ?? ""))
     .map(([seasonKey, episode]): MergedItem => {
-      const poster = episode.grandparentThumb ?? episode.parentThumb;
-      const backdrop = episode.art ?? episode.grandparentArt;
-
       return {
         key: `${seasonKey}/children`,
         type: "season",
@@ -121,13 +143,7 @@ function mergeRecentlyAddedEpisodes(items: RecentlyAddedItem[], episodes: Recent
         addedAt: episode.addedAt,
         originallyAvailableAt: episode.originallyAvailableAt,
         latestEpisode: episode,
-        Image:
-          poster || backdrop
-            ? [
-                ...(poster ? [{ type: "coverPoster", url: poster }] : []),
-                ...(backdrop ? [{ type: "background", url: backdrop }] : []),
-              ]
-            : undefined,
+        Image: episodeImages(episode),
       };
     });
 
@@ -269,10 +285,9 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
       ),
       this.getRecentlyAddedEpisodesAsync(dispatcher),
     ]);
-    const recentlyAddedItems = mergeRecentlyAddedEpisodes(data.MediaContainer.Metadata ?? [], episodes).slice(
-      0,
-      MEDIA_RELEASES_LIMIT,
-    );
+    const recentlyAddedItems = mergeRecentlyAddedEpisodes(data.MediaContainer.Metadata ?? [], episodes)
+      .filter((item) => item.Image)
+      .slice(0, MEDIA_RELEASES_LIMIT);
     const imageProxy = new ImageProxy();
 
     const images =
@@ -318,6 +333,11 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
     const media = recentlyAddedItems
       .filter((item) => item.Image)
       .map((item) => {
+        let latestEpisodeSubtitle: string | undefined;
+        if (item.latestEpisode) {
+          latestEpisodeSubtitle = formatEpisodeSubtitle(item.latestEpisode);
+          if (!latestEpisodeSubtitle && item.type === "show") latestEpisodeSubtitle = item.latestEpisode.title;
+        }
         const title =
           item.type === "episode"
             ? (item.grandparentTitle ?? item.title)
@@ -329,11 +349,10 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
           id: item.Media?.at(0)?.id.toString() ?? item.key,
           type: mapType(item.type),
           title,
-          subtitle:
-            (item.latestEpisode ? formatEpisodeSubtitle(item.latestEpisode) : undefined) ??
-            (title === item.title ? item.tagline : item.title),
+          subtitle: latestEpisodeSubtitle ?? (title === item.title ? item.tagline : item.title),
           description: item.summary,
           releaseDate: parseReleaseDate(item),
+          releaseDateIsDateOnly: /^\d{4}-\d{2}-\d{2}$/.test(item.originallyAvailableAt ?? ""),
           imageUrls: {
             poster: proxiedImages.find((image) => image.mediaKey === item.key && image.type === "poster")?.url,
             backdrop: proxiedImages.find((image) => image.mediaKey === item.key && image.type === "backdrop")?.url,
@@ -555,11 +574,14 @@ const librarySectionsSchema = z.object({
 const recentlyAddedEpisodeSchema = z.object({
   key: z.string(),
   title: z.string().optional(), // episode title
+  summary: z.string().optional(),
+  duration: z.number().optional(),
   index: z.number().optional(), // episode number
   parentKey: z.string().optional(), // season, for example "/library/metadata/123"
   parentIndex: z.number().optional(), // season number
   parentTitle: z.string().optional(), // season title, for example "Season 2"
   parentThumb: z.string().optional(),
+  thumb: z.string().optional(),
   grandparentKey: z.string().optional(), // show, for example "/library/metadata/122"
   grandparentTitle: z.string().optional(), // show title
   grandparentThumb: z.string().optional(),
