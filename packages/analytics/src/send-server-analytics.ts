@@ -6,7 +6,7 @@ import { env } from "@homarr/common/env";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { count, countDistinct, db, eq } from "@homarr/db";
 import { isPostgresql } from "@homarr/db/collection";
-import { getServerSettingByKeyAsync, updateServerSettingByKeyAsync } from "@homarr/db/queries";
+import { getServerSettingByKeyAsync, updateAnalyticsServerSettingAsync } from "@homarr/db/queries";
 import {
   accounts,
   apiKeys,
@@ -47,10 +47,11 @@ const getOrCreateInstanceId = async (
   if (analyticsSettings.instanceId) return analyticsSettings.instanceId;
 
   const instanceId = createId();
-  await updateServerSettingByKeyAsync(db, "analytics", { ...analyticsSettings, instanceId });
-
-  const verified = await getServerSettingByKeyAsync(db, "analytics");
-  return verified.instanceId ?? instanceId;
+  const updated = await updateAnalyticsServerSettingAsync(db, (current) => {
+    if (current.instanceId) return current;
+    return { ...current, instanceId };
+  });
+  return updated.instanceId ?? instanceId;
 };
 
 const sumGroupedCounts = (rows: { count: number }[]): number => rows.reduce((sum, row) => sum + row.count, 0);
@@ -58,7 +59,7 @@ const sumGroupedCounts = (rows: { count: number }[]): number => rows.reduce((sum
 const isSnapshotDue = (lastSuccessfulSnapshotAt: string | null, now: Date) => {
   if (!lastSuccessfulSnapshotAt) return true;
   const lastSent = Date.parse(lastSuccessfulSnapshotAt);
-  if (!Number.isFinite(lastSent) || lastSent > now.getTime()) return true;
+  if (!Number.isFinite(lastSent)) return true;
   return now.getTime() - lastSent >= snapshotIntervalMs;
 };
 
@@ -95,6 +96,7 @@ const sendSnapshotAsync = async (): Promise<AnalyticsResult> => {
 
     const [
       cultureSettings,
+      boardSettings,
       countBoards,
       countPublicBoards,
       countBoardsWithStatusEnabled,
@@ -125,6 +127,7 @@ const sendSnapshotAsync = async (): Promise<AnalyticsResult> => {
       sectionKindCounts,
     ] = await Promise.all([
       getServerSettingByKeyAsync(db, "culture"),
+      getServerSettingByKeyAsync(db, "board"),
       db.$count(boards),
       db.$count(boards, eq(boards.isPublic, true)),
       db.$count(boards, eq(boards.disableStatus, false)),
@@ -194,7 +197,6 @@ const sendSnapshotAsync = async (): Promise<AnalyticsResult> => {
 
       countBoards,
       countPublicBoards,
-      countBoardsWithStatusEnabled,
       countGroups,
       countApps,
       countSections,
@@ -218,6 +220,10 @@ const sendSnapshotAsync = async (): Promise<AnalyticsResult> => {
       countIntegrations: sumGroupedCounts(integrationKinds),
       countWidgets: sumGroupedCounts(widgetKinds),
     };
+
+    if (!boardSettings.forceDisableStatus && countBoardsWithStatusEnabled > 0) {
+      properties.countBoardsWithStatusEnabled = countBoardsWithStatusEnabled;
+    }
 
     for (const row of integrationKinds) {
       if (row.count > 0) properties[`integration_${row.kind}`] = row.count;
@@ -264,11 +270,10 @@ const sendSnapshotAsync = async (): Promise<AnalyticsResult> => {
     });
 
     await client.flush();
-    const latestSettings = await getServerSettingByKeyAsync(db, "analytics");
-    await updateServerSettingByKeyAsync(db, "analytics", {
-      ...latestSettings,
+    await updateAnalyticsServerSettingAsync(db, (current) => ({
+      ...current,
       lastSuccessfulSnapshotAt: now.toISOString(),
-    });
+    }));
     logger.info(`Sent analytics to PostHog in ${stopWatch.getElapsedInHumanWords()}`);
     return "sent";
   } catch (error) {

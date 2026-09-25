@@ -6,6 +6,7 @@ import {
   getServerSettingByKeyAsync,
   getServerSettingsAsync,
   insertServerSettingByKeyAsync,
+  updateAnalyticsServerSettingAsync,
   updateServerSettingByKeyAsync,
 } from "@homarr/db/queries";
 import { boards, serverSettings } from "@homarr/db/schema";
@@ -151,6 +152,17 @@ export const serverSettingsRouter = createTRPCRouter({
           authBranding,
         });
         await updateServerSettingByKeyAsync(ctx.db, "branding", value);
+        return;
+      }
+      if (input.settingsKey === "analytics") {
+        await updateAnalyticsServerSettingAsync(
+          ctx.db,
+          (current) =>
+            ({
+              ...current,
+              ...input.value,
+            }) as ServerSettings["analytics"],
+        );
         return;
       }
       const current = await getServerSettingByKeyAsync(ctx.db, input.settingsKey);
