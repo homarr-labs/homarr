@@ -15,24 +15,17 @@ COPY patches ./patches
 COPY --parents ./apps/*/package.json ./packages/*/package.json ./tooling/*/package.json ./
 # @homarr/definitions generates documentation types during install.
 COPY --parents ./packages/definitions/src ./
-# Workaround for pnpm/pnpm#5268: pnpm fetch crashes when patchedDependencies
-# are configured with nodeLinker: hoisted. The applyPatchToDir function tries
-# to chdir into node_modules/<pkg> which doesn't exist during fetch (only the
-# content-addressable store is populated). By temporarily switching to the
-# isolated linker, patches apply inside the virtual store (node_modules/.pnpm/...)
-# which IS created by pnpm fetch. The original hoisted linker is restored
-# before the install step so the final node_modules layout stays flat.
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
     pnpm config set store-dir /pnpm/store && \
-    sed -i 's/nodeLinker: hoisted/nodeLinker: isolated/' pnpm-workspace.yaml && \
-    pnpm fetch --ignore-scripts && \
-    sed -i 's/nodeLinker: isolated/nodeLinker: hoisted/' pnpm-workspace.yaml
+    pnpm fetch --ignore-scripts
 
 # Install only from the fetched, committed lockfile so local and Docker builds
 # resolve the same dependency graph. Serial lifecycle builds avoid esbuild's
-# atomic binary replacement racing across the hoisted workspace (pnpm/pnpm#8200).
+# atomic binary replacement racing across the workspace (pnpm/pnpm#8200).
+# --force re-runs native build scripts (better-sqlite3 etc.) that the offline
+# store otherwise considers "already built" without the actual artifacts.
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
-    npm_config_nodedir=/usr/local pnpm install --recursive --offline --frozen-lockfile --child-concurrency=1
+    npm_config_nodedir=/usr/local pnpm install --recursive --offline --frozen-lockfile --child-concurrency=1 --force
 
 COPY . .
 

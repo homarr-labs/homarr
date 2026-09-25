@@ -36,9 +36,12 @@
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/ui": "workspace:^0.1.0",
     "@mantine/core": "catalog:",
+    "@mantine/dates": "catalog:",
     "@mantine/hooks": "catalog:",
     "@mantine/spotlight": "catalog:",
     "@tabler/icons-react": "catalog:",
+    "@tanstack/react-query": "catalog:",
+    "dayjs": "catalog:",
     "jotai": "catalog:",
     "next": "catalog:",
     "react": "catalog:",
@@ -47,6 +50,9 @@
   },
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "typescript": "catalog:"
   }
 }

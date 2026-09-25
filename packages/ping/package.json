@@ -22,10 +22,12 @@
   },
   "dependencies": {
     "@homarr/common": "workspace:^0.1.0",
-    "@homarr/core": "workspace:^0.1.0"
+    "@homarr/core": "workspace:^0.1.0",
+    "undici": "catalog:"
   },
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",
+    "@types/node": "catalog:",
     "typescript": "catalog:"
   }
 }

@@ -24,16 +24,21 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@gfazioli/mantine-onboarding-tour": "catalog:",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/settings": "workspace:^0.1.0",
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
+    "@mantine/charts": "catalog:",
     "@mantine/core": "catalog:",
     "@mantine/dates": "catalog:",
     "@mantine/hooks": "catalog:",
     "@tabler/icons-react": "catalog:",
+    "@tanstack/react-query": "catalog:",
+    "clsx": "catalog:",
     "crypto-js": "catalog:",
+    "csstype": "catalog:",
     "mantine-react-table": "catalog:",
     "next": "catalog:",
     "react": "catalog:",
@@ -44,6 +49,9 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/crypto-js": "catalog:",
     "@types/css-modules": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "typescript": "catalog:"
   }
 }
