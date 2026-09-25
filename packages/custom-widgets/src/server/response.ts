@@ -132,7 +132,7 @@ export function redactResponseSecrets(data: unknown, secrets: Array<{ kind: stri
     ]) {
       sensitive.add(encoded);
       // Usernames and short credentials can be ordinary words or characters in response data.
-      if (kind !== "username" && value.length >= 12) embedded.add(encoded);
+      if (kind === "authenticationQuery" || (kind !== "username" && value.length >= 12)) embedded.add(encoded);
     }
   }
   const embeddedValues = [...embedded].toSorted((a, b) => b.length - a.length);

@@ -5,6 +5,7 @@ import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
+import type { IntegrationHttpAuthentication } from "../http-auth";
 import type { SessionStore } from "../base/session-store";
 import type { SynologyDiskRecord, SynologyVolumeRecord } from "./synology-types";
 import {
@@ -63,6 +64,15 @@ export class SynologyClient {
     this.username = options.username;
     this.password = options.password;
     this.sessionStore = options.sessionStore;
+  }
+
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    let session = await this.sessionStore.getAsync();
+    if (!session) {
+      session = await this.loginAsync();
+      await this.sessionStore.setAsync(session, { ttlSeconds: 600 });
+    }
+    return { headers: { Cookie: session.cookieHeader }, redactValues: [session.cookieHeader] };
   }
 
   public async getSystemInfoAsync() {

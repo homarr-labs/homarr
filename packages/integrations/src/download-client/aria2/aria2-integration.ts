@@ -11,8 +11,19 @@ import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/dow
 import type { IDownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
 import type { DownloadClientItem } from "../../interfaces/downloads/download-client-items";
 import type { Aria2Download, Aria2GetClient } from "./aria2-types";
+import type { IntegrationHttpAuthentication } from "../../http-auth";
 
 export class Aria2Integration extends Integration implements IDownloadClientIntegration {
+  public override async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    if (!this.hasSecretValue("apiKey")) return { headers: {} };
+    const token = this.getSecretValue("apiKey");
+    return {
+      headers: {},
+      body: { type: "jsonArrayPrefix", name: "params", value: `token:${token}` },
+      redactValues: [token, `token:${token}`],
+    };
+  }
+
   public async getClientJobsAndStatusAsync(input: { limit: number }): Promise<DownloadClientJobsAndStatus> {
     const client = this.getClient();
     const keys: (keyof Aria2Download)[] = [

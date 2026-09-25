@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import type { StatsProvider } from "../types";
+import type { StatsFetchContext, StatsProvider } from "../types";
 
 const countSchema = z.number().finite().nonnegative().int();
 
@@ -29,31 +29,22 @@ export const homeboxStatsProvider = {
     { key: "users", label: "Users", unit: "count" },
   ],
 
+  getHttpAuthenticationAsync,
+
   async fetchAsync(context) {
-    const loginResponse = await context.requestAsync("/api/v1/users/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({
-        username: context.secret("username"),
-        password: context.secret("password"),
-      }).toString(),
-      signal: context.signal,
-    });
-    const login = z
-      .object({ token: z.string().min(1) })
-      .passthrough()
-      .parse(loginResponse);
-    const token = login.token;
-    const headers = { Authorization: token };
+    const authentication = await getHttpAuthenticationAsync(context);
 
     const response = await context.requestAsync("/api/v1/groups/statistics", {
-      headers,
+      headers: authentication.headers,
       signal: context.signal,
     });
     const stats = groupStatsResponseSchema.parse(response);
-    const group = z
-      .object({ currency: z.string().min(1) })
-      .parse(await context.requestAsync("/api/v1/groups", { headers, signal: context.signal }));
+    const group = z.object({ currency: z.string().min(1) }).parse(
+      await context.requestAsync("/api/v1/groups", {
+        headers: authentication.headers,
+        signal: context.signal,
+      }),
+    );
 
     return {
       items: stats.totalItems,
@@ -65,3 +56,22 @@ export const homeboxStatsProvider = {
     };
   },
 } satisfies StatsProvider;
+
+async function getHttpAuthenticationAsync(context: StatsFetchContext) {
+  try {
+    const loginResponse = await context.requestAsync("/api/v1/users/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        username: context.secret("username"),
+        password: context.secret("password"),
+      }).toString(),
+      signal: context.signal,
+    });
+    const login = z.object({ token: z.string().min(1) }).safeParse(loginResponse);
+    if (!login.success) throw new Error("Homebox authentication failed");
+    return { headers: { Authorization: login.data.token }, redactValues: [login.data.token] };
+  } catch {
+    throw new Error("Homebox authentication failed");
+  }
+}

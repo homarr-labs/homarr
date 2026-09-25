@@ -33,7 +33,7 @@ export const healthMonitoringClusterIntegrationKinds = [
 ] as const satisfies readonly IntegrationKind[];
 
 export const widgetIntegrationConfigs = {
-  stats: { supportedIntegrations: integrationKinds },
+  stats: { supportedIntegrations: integrationKinds.filter((kind) => kind !== "ical") },
   dnsHoleSummary: { supportedIntegrations: getIntegrationKindsByCategory("dnsHole") },
   dnsHoleControls: { supportedIntegrations: getIntegrationKindsByCategory("dnsHole") },
   "smartHome-entityState": {

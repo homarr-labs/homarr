@@ -4,12 +4,17 @@ import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/h
 
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
+import type { IntegrationHttpAuthentication } from "../http-auth";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { ICalendarIntegration } from "../interfaces/calendar/calendar-integration";
 import type { CalendarEvent } from "../interfaces/calendar/calendar-types";
 
 export class ICalIntegration extends Integration implements ICalendarIntegration {
+  public override async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    throw new Error("iCal stores a private feed URL, which cannot authenticate arbitrary HTTP requests");
+  }
+
   async getCalendarEventsAsync(start: Date, end: Date): Promise<CalendarEvent[]> {
     const response = await fetchWithTrustedCertificatesAsync(super.getSecretValue("url"));
     const result = await response.text();

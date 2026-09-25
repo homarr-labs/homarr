@@ -3,6 +3,7 @@ import type { z } from "zod";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import { HandleIntegrationErrors } from "../base/errors/decorator";
+import type { IntegrationHttpAuthentication } from "../http-auth";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { createSessionStore } from "../base/session-store";
@@ -24,6 +25,10 @@ type StoredSession = {
 export class SynologyIntegration extends Integration implements ISystemHealthMonitoringIntegration {
   private readonly sessionStore = createSessionStore<StoredSession>(this.integration);
   private client?: SynologyClient;
+
+  public override async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    return await this.getClient().getHttpAuthenticationAsync();
+  }
 
   protected async testingAsync(_input: IntegrationTestingInput): Promise<TestingResult> {
     await this.getClient().testConnectionAsync();

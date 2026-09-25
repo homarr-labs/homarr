@@ -1,4 +1,5 @@
 import type { CustomWidgetHttpRequest, CustomWidgetHttpResponse } from "./request-types";
+import { CustomWidgetDomainError } from "./errors";
 import { assertCustomWidgetPathScope, resolveSameOriginTarget } from "./network-policy";
 
 type HeaderSetter = Pick<Headers, "set">;
@@ -45,6 +46,32 @@ export function applyAuth(
   if (handler && secretMap.apiKey) {
     handler(headers, url, secretMap.apiKey, headerName ?? undefined);
   }
+}
+
+export function applyBodyAuth(body: string | undefined, auth: CustomWidgetHttpRequest["auth"]): string | undefined {
+  if (!auth?.body) return body;
+  if (!body) throw new CustomWidgetDomainError({ code: "BAD_REQUEST", message: "Authenticated JSON body is required" });
+  let value: unknown;
+  try {
+    value = JSON.parse(body) as unknown;
+  } catch {
+    throw new CustomWidgetDomainError({ code: "BAD_REQUEST", message: "Authenticated JSON body is invalid" });
+  }
+  if (value === null || typeof value !== "object" || Array.isArray(value))
+    throw new CustomWidgetDomainError({ code: "BAD_REQUEST", message: "Authenticated JSON body must be an object" });
+  const record = value as Record<string, unknown>;
+  if (auth.body.type === "jsonField") {
+    record[auth.body.name] = auth.body.value;
+  } else {
+    const current = record[auth.body.name];
+    if (current !== undefined && !Array.isArray(current))
+      throw new CustomWidgetDomainError({
+        code: "BAD_REQUEST",
+        message: "Authenticated JSON parameter must be an array",
+      });
+    record[auth.body.name] = [auth.body.value, ...(current ?? [])];
+  }
+  return JSON.stringify(record);
 }
 
 export async function performAuthenticatedRequest(

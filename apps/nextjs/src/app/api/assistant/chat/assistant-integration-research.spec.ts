@@ -34,14 +34,13 @@ const readyResearch = {
   limitations: [],
 };
 
-const discoverMealie = (options: { supportsHttpRequests?: boolean; hasFullAccess?: boolean } = {}) => {
+const discoverMealie = (options: { hasFullAccess?: boolean } = {}) => {
   const controller = createAssistantIntegrationResearchController("Mealie");
   controller.observe("homarr_enableToolGroups", { enabledGroups: ["integration"] });
   controller.observe("integration_getKinds", [
     {
       kind: "mealie",
       name: "Mealie",
-      supportsHttpRequests: options.supportsHttpRequests ?? true,
     },
   ]);
   controller.observe("integration_all", [
@@ -85,9 +84,7 @@ describe("Assistant integration research", () => {
   test("does not confuse a generic uptime API with Uptime Kuma", () => {
     const controller = createAssistantIntegrationResearchController("uptime");
     controller.observe("homarr_enableToolGroups", { enabledGroups: ["integration"] });
-    controller.observe("integration_getKinds", [
-      { kind: "uptimeKuma", name: "Uptime Kuma", supportsHttpRequests: false },
-    ]);
+    controller.observe("integration_getKinds", [{ kind: "uptimeKuma", name: "Uptime Kuma" }]);
     controller.observe("integration_all", []);
     const contract = assistantIntegrationResearchSchema.parse({
       ...readyResearch,
@@ -215,7 +212,7 @@ describe("Assistant integration research", () => {
     expect(controller.getStage()).toBe("enable-integration-tools");
     controller.observe("homarr_enableToolGroups", { enabledGroups: ["integration"] });
     expect(controller.getStage()).toBe("discover-kinds");
-    controller.observe("integration_getKinds", [{ kind: "mealie", name: "Mealie", supportsHttpRequests: true }]);
+    controller.observe("integration_getKinds", [{ kind: "mealie", name: "Mealie" }]);
     expect(controller.getStage()).toBe("discover-saved-integrations");
     controller.observe("integration_all", [
       {
@@ -253,7 +250,7 @@ describe("Assistant integration research", () => {
       const controller = createAssistantIntegrationResearchController("Dispatcharr");
       controller.observe("homarr_enableToolGroups", { enabledGroups: ["integration"] });
       if (toolName === "integration_all") {
-        controller.observe("integration_getKinds", [{ kind: "mealie", name: "Mealie", supportsHttpRequests: true }]);
+        controller.observe("integration_getKinds", [{ kind: "mealie", name: "Mealie" }]);
       }
       controller.observeFailure(toolName);
       expect(controller.getStage()).toBe("unavailable");
@@ -278,16 +275,34 @@ describe("Assistant integration research", () => {
     expect(controller.getStage()).toBe("record-research");
   });
 
-  test("rejects saved integrations without both HTTP support and full access", () => {
-    const unsupported = discoverMealie({ supportsHttpRequests: false });
-    expect(unsupported.validate(assistantIntegrationResearchSchema.parse(readyResearch))).toContain(
-      "does not support HTTP",
-    );
-
+  test("rejects saved integrations without full access", () => {
     const denied = discoverMealie({ hasFullAccess: false });
     expect(denied.validate(assistantIntegrationResearchSchema.parse(readyResearch))).toContain(
       "does not grant full access",
     );
+  });
+
+  test.each([
+    ["ical", "iCal"],
+    ["truenas", "TrueNAS"],
+  ] as const)("does not author generic HTTP widgets from %s", (kind, name) => {
+    const controller = createAssistantIntegrationResearchController(name);
+    controller.observe("homarr_enableToolGroups", { enabledGroups: ["integration"] });
+    controller.observe("integration_getKinds", [{ kind, name }]);
+    controller.observe("integration_all", [
+      { id: `integration-${kind}`, name, kind, permissions: { hasFullAccess: true } },
+    ]);
+    const research = assistantIntegrationResearchSchema.parse({
+      ...readyResearch,
+      service: name,
+      connection: {
+        type: "savedIntegration",
+        integrationId: `integration-${kind}`,
+        integrationName: name,
+        integrationKind: kind,
+      },
+    });
+    expect(controller.validate(research)).toContain("cannot be used as generic HTTP widget sources");
   });
 
   test("blocks direct HTTP for a known kind but permits a genuinely unknown service", () => {
@@ -303,7 +318,7 @@ describe("Assistant integration research", () => {
 
     const dispatcharr = createAssistantIntegrationResearchController("Dispatcharr");
     dispatcharr.observe("homarr_enableToolGroups", { enabledGroups: ["integration"] });
-    dispatcharr.observe("integration_getKinds", [{ kind: "mealie", name: "Mealie", supportsHttpRequests: true }]);
+    dispatcharr.observe("integration_getKinds", [{ kind: "mealie", name: "Mealie" }]);
     dispatcharr.observe("integration_all", []);
     const directDispatcharr = assistantIntegrationResearchSchema.parse({
       ...readyResearch,
@@ -376,7 +391,7 @@ describe("Assistant integration research", () => {
   });
 
   test("asks for an exact choice between multiple matching full-access integrations", () => {
-    const kinds = [{ kind: "mealie", name: "Mealie", supportsHttpRequests: true }];
+    const kinds = [{ kind: "mealie", name: "Mealie" }];
     const integrations = [
       {
         id: "integration-mealie",

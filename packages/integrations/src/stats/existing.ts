@@ -419,12 +419,6 @@ for (const kind of ["lidarr", "readarr"] as const) {
     (data) => data,
   );
 }
-existingStatsProviders.ical = adapter(
-  "ical",
-  [metric("upcoming", "Events in the next 7 days")],
-  (client) => client.getCalendarEventsAsync(new Date(), new Date(Date.now() + 7 * 86_400_000)),
-  (data) => ({ upcoming: data.length }),
-);
 existingStatsProviders.mock = {
   metrics: [metric("documents", "Documents"), metric("songs", "Songs"), metric("storage", "Storage", "bytes")],
   async fetchAsync() {

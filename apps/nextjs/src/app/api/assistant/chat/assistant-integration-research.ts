@@ -1,11 +1,11 @@
 import { isRecord } from "@homarr/common";
 import type { AssistantIntegrationResearch } from "@homarr/custom-widgets/core";
 import { assistantIntegrationResearchToolName } from "@homarr/custom-widgets/core";
+import { isHttpIntegrationKind } from "@homarr/definitions";
 
 interface IntegrationKindDiscovery {
   kind: string;
   name: string;
-  supportsHttpRequests: boolean;
 }
 
 interface SavedIntegrationDiscovery {
@@ -55,15 +55,10 @@ const containsServiceName = (service: string, name: string) => {
 const parseIntegrationKinds = (output: unknown): IntegrationKindDiscovery[] | null => {
   if (!Array.isArray(output)) return null;
   const entries = output.flatMap((entry) => {
-    if (
-      !isRecord(entry) ||
-      typeof entry.kind !== "string" ||
-      typeof entry.name !== "string" ||
-      typeof entry.supportsHttpRequests !== "boolean"
-    ) {
+    if (!isRecord(entry) || typeof entry.kind !== "string" || typeof entry.name !== "string") {
       return [];
     }
-    return [{ kind: entry.kind, name: entry.name, supportsHttpRequests: entry.supportsHttpRequests }];
+    return [{ kind: entry.kind, name: entry.name }];
   });
   return entries.length === output.length ? entries : null;
 };
@@ -119,7 +114,7 @@ export const createAssistantIntegrationResearchController = (
       .filter((integration) => {
         if (!integration.permissions.hasFullAccess) return false;
         const integrationKind = discoveredKinds.find(({ kind }) => kind === integration.kind);
-        if (!integrationKind?.supportsHttpRequests) return false;
+        if (!integrationKind || !isHttpIntegrationKind(integration.kind)) return false;
         return (
           containsServiceName(requestedService, integration.name) ||
           containsServiceName(requestedService, integrationKind.kind) ||
@@ -321,7 +316,9 @@ export const createAssistantIntegrationResearchController = (
       }
       const kind = kinds.find(({ kind: candidate }) => candidate === selected.kind);
       if (!kind) return "The selected integration kind was not returned by integration_getKinds.";
-      if (!kind.supportsHttpRequests) return "The selected integration kind does not support HTTP requests.";
+      if (!isHttpIntegrationKind(selected.kind)) {
+        return "iCalendar feeds and the TrueNAS WebSocket API cannot be used as generic HTTP widget sources.";
+      }
       if (!selected.permissions.hasFullAccess) {
         return "The selected saved integration does not grant full access; never bypass this with direct HTTP.";
       }
@@ -401,7 +398,7 @@ export const createAssistantIntegrationResearchController = (
 export const getCustomWidgetProductionInstructions = (webResearchEnabled: boolean) => `
 
 ONE-PROMPT SAVED-INTEGRATION FLOW
-For a requested service widget, first enable the integration group, then call integration_getKinds and integration_all. Select only an exact requested/mentioned saved integration whose kind supports HTTP requests and whose permissions.hasFullAccess is true. If multiple matching full-access instances exist and the user did not name one, call ask_user with the exact returned choices and allowOther:false; never choose silently or accept free-text as an integration ID. Never ask for its URL or credentials and never expose them. If a matching kind exists but the saved integration is absent, denied, or does not support HTTP, record that blocker as status:"unavailable", then stop; never bypass it with a direct HTTP source. If Homarr has no integration kind for the requested service at all, use its documented canonical public API URL for a credential-free public service. For a self-hosted instance, use only the exact user-supplied URL or the standard https://your-service.example.com placeholder followed by secure source configuration. Do not replace a verified public API host with a self-hosted placeholder.
+For a requested service widget, first enable the integration group, then call integration_getKinds and integration_all. Select only an exact requested/mentioned saved integration whose permissions.hasFullAccess is true. iCalendar feeds (iCal) and the TrueNAS WebSocket API cannot be used as generic HTTP widget sources; record them as unavailable. If multiple matching full-access instances exist and the user did not name one, call ask_user with the exact returned choices and allowOther:false; never choose silently or accept free-text as an integration ID. Never ask for its URL or credentials and never expose them. If a matching kind exists but the saved integration is absent or denied, record that blocker as status:"unavailable", then stop; never bypass it with a direct HTTP source. If Homarr has no integration kind for the requested service at all, use its documented canonical public API URL for a credential-free public service. For a self-hosted instance, use only the exact user-supplied URL or the standard https://your-service.example.com placeholder followed by secure source configuration. Do not replace a verified public API host with a self-hosted placeholder.
 
 ${
   webResearchEnabled

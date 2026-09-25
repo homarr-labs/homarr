@@ -4,7 +4,7 @@ import { Headers, Response } from "undici";
 
 import type { CustomWidgetHttpRequest, CustomWidgetHttpResponse } from "./request-types";
 export type { CustomWidgetAuthConfig, CustomWidgetHttpRequest, CustomWidgetHttpResponse } from "./request-types";
-import { applyAuth, performAuthenticatedRequest } from "./auth";
+import { applyAuth, applyBodyAuth, performAuthenticatedRequest } from "./auth";
 import { CustomWidgetDomainError } from "./errors";
 import {
   assertSafeStaticHeaders,
@@ -91,16 +91,25 @@ async function performRequestWithinDeadline(
   const authenticated =
     input.auth !== undefined &&
     input.auth.type !== "none" &&
-    (input.auth.type !== "integration" || Object.keys(input.auth.headers ?? {}).length > 0);
+    (input.auth.type !== "integration" ||
+      Object.keys(input.auth.headers ?? {}).length > 0 ||
+      Object.keys(input.auth.query ?? {}).length > 0 ||
+      input.auth.body !== undefined);
   const maxRedirects = input.kind === "query" && !authenticated ? MAX_QUERY_REDIRECTS : 0;
   for (let redirects = 0; ; redirects += 1) {
     if (input.pathPrefix !== undefined) assertCustomWidgetPathScope(currentUrl, input.pathPrefix);
+    const requestBody = applyBodyAuth(currentBody, input.auth);
+    if (requestBody !== undefined && Buffer.byteLength(requestBody, "utf8") > MAX_REQUEST_BODY_BYTES)
+      throw new CustomWidgetDomainError({
+        code: "PAYLOAD_TOO_LARGE",
+        message: "Request body exceeds the 10 KiB limit",
+      });
     const dispatcher = createPinnedAgent(
       await resolveAndValidateHost(currentUrl.hostname, input.networkScope, { signal: deadlineSignal }),
       REQUEST_TIMEOUT_MS,
       input.tls,
     );
-    const headers = buildHeaders(input, currentUrl, currentBody);
+    const headers = buildHeaders(input, currentUrl, requestBody);
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
     let result: RequestHopResult | undefined;
@@ -111,7 +120,7 @@ async function performRequestWithinDeadline(
         path: `${currentUrl.pathname}${currentUrl.search}`,
         method: currentMethod,
         headers,
-        body: currentBody,
+        body: requestBody,
         signal: AbortSignal.any([deadlineSignal, controller.signal]),
       });
       if (![301, 302, 303, 307, 308].includes(responseData.statusCode)) {
@@ -242,6 +251,7 @@ function buildHeaders(input: CustomWidgetHttpRequest, url: URL, body: string | u
     if (input.auth.type === "apiKeyHeader") assertSafeStaticHeaders({ [input.auth.headerName ?? "X-API-Key"]: "" });
     applyAuth(headers, url, input.auth.type, input.auth.secrets, input.auth.headerName);
     for (const [name, value] of Object.entries(input.auth.headers ?? {})) headers.set(name, value);
+    for (const [name, value] of Object.entries(input.auth.query ?? {})) url.searchParams.set(name, value);
   }
   return headers;
 }

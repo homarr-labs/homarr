@@ -185,7 +185,7 @@ describe("integration_request validation", () => {
     expect(integrationRequestSchema.safeParse({ ...get, body: new Date() }).success).toBe(false);
     expect(integrationRequestSchema.safeParse({ ...get, method: "TRACE" }).success).toBe(false);
   });
-  test("resolves native authentication and rejects unsupported or incomplete credentials", async () => {
+  test("resolves native authentication and rejects incomplete credentials", async () => {
     const input = {
       id: "test",
       name: "Test",
@@ -199,9 +199,9 @@ describe("integration_request validation", () => {
     await expect(getIntegrationHttpAuthenticationAsync({ ...input, kind: "homeAssistant" })).resolves.toMatchObject({
       headers: { Authorization: `Bearer ${secret}` },
     });
-    await expect(getIntegrationHttpAuthenticationAsync({ ...input, kind: "qBittorrent" })).rejects.toThrow(
-      "does not support",
-    );
+    await expect(getIntegrationHttpAuthenticationAsync({ ...input, kind: "qBittorrent" })).resolves.toMatchObject({
+      headers: { Authorization: `Bearer ${secret}` },
+    });
     await expect(
       getIntegrationHttpAuthenticationAsync({ ...input, kind: "sonarr", decryptedSecrets: [] }),
     ).rejects.toThrow();
@@ -236,6 +236,20 @@ describe("integration_request with a mock integration server", () => {
     });
     expect(calls.at(-1)).toMatchObject({ method: "GET", path: "/api/v3/series", auth: secret });
   });
+  test.each([
+    ["ical", "iCalendar feeds"],
+    ["truenas", "TrueNAS uses a WebSocket API"],
+  ] as const)("rejects %s before sending a generic HTTP request", async (kind, message) => {
+    const caller = await fixture("full", async (db) => {
+      await db.update(integrations).set({ kind }).where(eq(integrations.id, "sonarr"));
+    });
+    const previousCalls = calls.length;
+    await expect(caller.request(get)).rejects.toMatchObject({
+      code: "BAD_REQUEST",
+      message: expect.stringContaining(message),
+    });
+    expect(calls).toHaveLength(previousCalls);
+  });
   test("reuses the Custom Widget authentication resolver for every HTTP-capable kind", async () => {
     const caller = await fixture("full", async (db) => {
       await db.update(integrations).set({ kind: "mealie" }).where(eq(integrations.id, "sonarr"));
@@ -244,6 +258,27 @@ describe("integration_request with a mock integration server", () => {
       status: 200,
     });
     expect(calls.at(-1)?.auth).toBe(`Bearer ${secret}`);
+  });
+  test("adds saved query credentials to a generic request", async () => {
+    const caller = await fixture("full", async (db) => {
+      await db.update(integrations).set({ kind: "jackett" }).where(eq(integrations.id, "sonarr"));
+    });
+    await caller.request({ ...get, path: "/api/v2/indexers?apikey=ignored" });
+    expect(calls.at(-1)?.path).toBe(`/api/v2/indexers?apikey=${secret}`);
+  });
+  test("prefixes saved JSON-RPC credentials before caller parameters", async () => {
+    const caller = await fixture("full", async (db) => {
+      await db.update(integrations).set({ kind: "aria2" }).where(eq(integrations.id, "sonarr"));
+    });
+    await caller.request({
+      ...get,
+      method: "POST",
+      path: "/jsonrpc",
+      body: { jsonrpc: "2.0", method: "aria2.getVersion", params: ["token:ignored"] },
+    });
+    expect(JSON.parse(calls.at(-1)?.body ?? "null")).toMatchObject({
+      params: [`token:${secret}`, "token:ignored"],
+    });
   });
   test("does not redact ordinary response values that match constant adapter headers", async () => {
     const caller = await fixture("full", async (db) => {

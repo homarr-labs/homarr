@@ -5,9 +5,11 @@ import { fetch as undiciFetch } from "undici";
 
 import { removeTrailingSlash } from "@homarr/common";
 import { createAxiosCertificateInstanceAsync, createCertificateAgentAsync } from "@homarr/core/infrastructure/http";
+import { getIntegrationHttpAuthDefinition } from "@homarr/definitions";
 import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
 
 import type { IntegrationHttpAuthentication } from "../http-auth";
+import { resolveDeclaredHttpAuthentication } from "../http-auth";
 import { HandleIntegrationErrors } from "./errors/decorator";
 import { TestConnectionError } from "./test-connection/test-connection-error";
 import type { TestingResult } from "./test-connection/test-connection-service";
@@ -38,6 +40,10 @@ export abstract class Integration {
   constructor(protected integration: IntegrationInput) {}
 
   public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    if (this.integration.kind) {
+      const definition = getIntegrationHttpAuthDefinition(this.integration.kind);
+      if (definition.type !== "adapter") return resolveDeclaredHttpAuthentication(this.integration, definition);
+    }
     throw new Error("This integration does not support arbitrary HTTP requests");
   }
 

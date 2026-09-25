@@ -29,7 +29,8 @@ with Custom Widgets—even when Homarr has no native feature for it.
 Have your agent consult the service’s API docs and test the endpoint through [`integration_request`](../mcp#authenticated-integration-requests),
 Homarr's most powerful MCP tool. Then bind the same saved integration to a
 [Custom Widget source](../custom-widgets/requests-and-security#existing-integrations) to display its data or run actions.
-Both reuse saved credentials and require **full integration access**; check `supportsHttpRequests` for compatibility.
+Both reuse saved credentials and require **full integration access**. The iCalendar feed integration and TrueNAS's WebSocket
+API cannot be used through these generic HTTP requests.
 
 ## Browser and server routes
 

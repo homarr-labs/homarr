@@ -1,5 +1,6 @@
 import type { ConnectionOptions } from "node:tls";
 
+import type { IntegrationHttpBodyAuth } from "@homarr/definitions";
 import type { CustomJsxNetworkScope, CustomWidgetMethod } from "../core";
 
 export interface CustomWidgetAuthConfig {
@@ -7,6 +8,8 @@ export interface CustomWidgetAuthConfig {
   secrets: Array<{ kind: string; value: string }>;
   headerName?: string | null;
   headers?: Record<string, string>;
+  query?: Record<string, string>;
+  body?: IntegrationHttpBodyAuth;
 }
 
 export interface CustomWidgetHttpRequest {

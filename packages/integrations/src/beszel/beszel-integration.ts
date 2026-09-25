@@ -11,6 +11,7 @@ import type { SessionStore } from "../base/session-store";
 import { createSessionStore } from "../base/session-store";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
+import type { IntegrationHttpAuthentication } from "../http-auth";
 import type {
   BeszelAlert,
   BeszelAlertHistory,
@@ -132,6 +133,15 @@ export class BeszelIntegration extends Integration {
     this.sessionStore = createSessionStore(integration);
   }
 
+  public override async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    const session = await this.authenticateAsync();
+
+    return {
+      headers: { Authorization: session.token },
+      redactValues: [session.token],
+    };
+  }
+
   private async authenticateAsync(): Promise<BeszelSession> {
     const existingSession = await this.sessionStore.getAsync();
     if (existingSession && !isSessionExpired(existingSession)) {
@@ -152,6 +162,7 @@ export class BeszelIntegration extends Integration {
     const response = await fetchWithTrustedCertificatesAsync(authUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      redirect: "error",
       body: JSON.stringify({
         identity: this.getSecretValue("username"),
         password: this.getSecretValue("password"),

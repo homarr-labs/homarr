@@ -79,7 +79,8 @@ before mutations by default.
 
 ## Authenticated integration requests
 
-Use `integration_getKinds.supportsHttpRequests` to check compatibility and `integration_all` to find saved instances.
+Use `integration_getKinds` to discover kinds and `integration_all` to find saved instances. iCalendar feeds (iCal) and the
+TrueNAS WebSocket API cannot be called through `integration_request` because it sends HTTP requests.
 All requests require **full integration access**. Supply one selector: `integrationId`, exact `integrationName`, or
 `integrationKind`. Name/type selects the first authorized match by name then ID; prefer an ID for writes.
 

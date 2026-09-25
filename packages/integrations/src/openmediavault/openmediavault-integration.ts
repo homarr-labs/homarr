@@ -6,6 +6,7 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import type { IntegrationInput, IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
+import type { IntegrationHttpAuthentication } from "../http-auth";
 import type { SessionStore } from "../base/session-store";
 import { createSessionStore } from "../base/session-store";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
@@ -25,6 +26,18 @@ export class OpenMediaVaultIntegration extends Integration implements ISystemHea
   constructor(integration: IntegrationInput) {
     super(integration);
     this.sessionStore = createSessionStore(integration);
+  }
+
+  public override async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    const session = await this.getSessionAsync();
+    if (session.type === "cookie") {
+      const cookie = `${session.loginToken};${session.sessionId}`;
+      return { headers: { Cookie: cookie }, redactValues: [cookie, session.loginToken, session.sessionId] };
+    }
+    return {
+      headers: { "X-OPENMEDIAVAULT-SESSIONID": session.sessionId },
+      redactValues: [session.sessionId],
+    };
   }
 
   public async getSystemInfoAsync(): Promise<SystemHealthMonitoring> {

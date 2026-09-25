@@ -2,7 +2,7 @@ import { Deluge } from "@ctrl/deluge";
 import dayjs from "dayjs";
 import type { Dispatcher } from "undici";
 
-import { createCertificateAgentAsync } from "@homarr/core/infrastructure/http";
+import { createCertificateAgentAsync, fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
 import { HandleIntegrationErrors } from "../../base/errors/decorator";
 import { integrationOFetchHttpErrorHandler } from "../../base/errors/http";
@@ -14,9 +14,34 @@ import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/dow
 import type { IDownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
 import type { DownloadClientItem } from "../../interfaces/downloads/download-client-items";
 import type { DownloadClientStatus } from "../../interfaces/downloads/download-client-status";
+import type { IntegrationHttpAuthentication } from "../../http-auth";
 
 @HandleIntegrationErrors([integrationOFetchHttpErrorHandler])
 export class DelugeIntegration extends Integration implements IDownloadClientIntegration {
+  public override async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    const password = this.getSecretValue("password");
+    const response = await fetchWithTrustedCertificatesAsync(this.url("/json"), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ method: "auth.login", params: [password], id: 1 }),
+      redirect: "error",
+    }).catch(() => {
+      throw new Error("Deluge authentication failed");
+    });
+
+    if (!response.ok) throw new Error("Deluge authentication failed");
+    const result = (await response.json().catch(() => null)) as { result?: unknown; error?: unknown } | null;
+    if (result?.result !== true || result.error) throw new Error("Deluge authentication failed");
+
+    const cookies = response.headers
+      .getSetCookie()
+      .map((cookie) => cookie.split(";", 1)[0])
+      .filter((cookie): cookie is string => Boolean(cookie));
+    if (cookies.length === 0) throw new Error("Deluge authentication failed");
+    const cookieHeader = cookies.join("; ");
+    return { headers: { Cookie: cookieHeader }, redactValues: [password, ...cookies] };
+  }
+
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const client = await this.getClientAsync(input.dispatcher);
     const isSuccess = await client.login();

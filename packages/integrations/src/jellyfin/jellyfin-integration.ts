@@ -7,12 +7,16 @@ import { getUserApi } from "@jellyfin/sdk/lib/utils/api/user-api";
 import { getUserLibraryApi } from "@jellyfin/sdk/lib/utils/api/user-library-api";
 import type { AxiosInstance } from "axios";
 
-import { createAxiosCertificateInstanceAsync } from "@homarr/core/infrastructure/http";
+import {
+  createAxiosCertificateInstanceAsync,
+  fetchWithTrustedCertificatesAsync,
+} from "@homarr/core/infrastructure/http";
 
 import { HandleIntegrationErrors } from "../base/errors/decorator";
 import { integrationAxiosHttpErrorHandler } from "../base/errors/http";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
+import type { IntegrationHttpAuthentication } from "../http-auth";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { IMediaServerIntegration } from "../interfaces/media-server/media-server-integration";
 import type { CurrentSessionsInput, StreamSession } from "../interfaces/media-server/media-server-types";
@@ -60,6 +64,39 @@ export function parseLocation(remoteEndPoint: string | null | undefined): "lan" 
 
 @HandleIntegrationErrors([integrationAxiosHttpErrorHandler])
 export class JellyfinIntegration extends Integration implements IMediaServerIntegration, IMediaReleasesIntegration {
+  public override async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    const authorizationPrefix = 'MediaBrowser Client="Homarr", Device="Homarr", DeviceId="homarr", Version="0.0.1"';
+    let accessToken: string;
+    if (this.hasSecretValue("apiKey")) {
+      accessToken = this.getSecretValue("apiKey");
+    } else {
+      const username = this.getSecretValue("username");
+      const password = this.getSecretValue("password");
+      const response = await fetchWithTrustedCertificatesAsync(this.url("/Users/AuthenticateByName"), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: authorizationPrefix,
+        },
+        body: JSON.stringify({ Username: username, Pw: password }),
+        redirect: "error",
+      }).catch(() => {
+        throw new Error("Jellyfin authentication failed");
+      });
+
+      if (!response.ok) throw new Error("Jellyfin authentication failed");
+      const result = (await response.json().catch(() => null)) as { AccessToken?: unknown } | null;
+      if (typeof result?.AccessToken !== "string" || result.AccessToken.length === 0)
+        throw new Error("Jellyfin authentication failed");
+      accessToken = result.AccessToken;
+    }
+
+    return {
+      headers: { Authorization: `${authorizationPrefix}, Token="${accessToken}"` },
+      redactValues: [accessToken],
+    };
+  }
+
   private readonly jellyfin: Jellyfin = new Jellyfin({
     clientInfo: {
       name: "Homarr",
