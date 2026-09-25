@@ -5276,7 +5276,8 @@
             },
             "complete": {
               "title": "Restore Complete",
-              "message": "Database has been restored successfully. The server is restarting — please refresh the page in a few seconds."
+              "message": "Database has been restored successfully and the server has restarted. Your previous session was invalidated, so you need to sign in again to see the restored board.",
+              "button": "Sign in now"
             },
             "failed": {
               "title": "Restore Failed"
