@@ -2,6 +2,7 @@ import type { NextRequest } from "next/server";
 
 import { auth } from "@homarr/auth/next";
 
+import { getMcpBaseUrl } from "../../_base-url";
 import { consumePendingAuth, createAuthCode, getClient, storePendingAuth } from "../_store";
 
 export async function GET(req: NextRequest) {
@@ -137,7 +138,8 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  const loginUrl = new URL("/auth/login", url.origin);
+  const baseUrl = getMcpBaseUrl(req.headers);
+  const loginUrl = new URL("/auth/login", baseUrl);
   loginUrl.searchParams.set("callbackUrl", `/api/mcp/oauth/authorize?pending=${id}`);
   return Response.redirect(loginUrl.toString());
 }
