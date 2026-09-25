@@ -2,7 +2,6 @@ import type tls from "node:tls";
 import axios from "axios";
 import { HttpCookieAgent, HttpsCookieAgent } from "http-cookie-agent/http";
 
-import { getPortFromUrl } from "@homarr/common";
 import {
   getAllTrustedCertificatesAsync,
   getTrustedCertificateHostnamesAsync,
@@ -67,26 +66,53 @@ export class UnifiControllerIntegration extends Integration implements NetworkCo
       checkServerIdentity: createCustomCheckServerIdentity(await getTrustedCertificateHostnamesAsync()),
     };
 
-    const client = new Unifi.Controller({
-      host: url.hostname,
-      port: getPortFromUrl(url),
-      username: this.getSecretValue("username"),
-      password: this.getSecretValue("password"),
-      createAxiosInstance({ cookies }) {
-        return axios.create({
-          adapter: "http",
-          httpAgent: new HttpCookieAgent({ cookies }),
-          httpsAgent: new HttpsCookieAgent({
-            cookies,
-            requestCert: true,
-            ...certificateOptions,
-          }),
-        });
-      },
-    });
+    // ponytail: node-unifi always connects over HTTPS, regardless of the protocol in the
+    // integration URL. UniFi OS consoles use port 443 while self-hosted controllers normally
+    // use 8443. If no port was provided, try both without hiding authentication errors.
+    const ports = url.port ? [Number(url.port)] : [443, 8443];
+    const createClientForPortAsync = async (port: number) => {
+      const client = new Unifi.Controller({
+        host: url.hostname,
+        port,
+        username: this.getSecretValue("username"),
+        password: this.getSecretValue("password"),
+        createAxiosInstance({ cookies }) {
+          return axios.create({
+            adapter: "http",
+            httpAgent: new HttpCookieAgent({ cookies }),
+            httpsAgent: new HttpsCookieAgent({
+              cookies,
+              requestCert: true,
+              ...certificateOptions,
+            }),
+          });
+        },
+      });
 
-    await client.login(this.getSecretValue("username"), this.getSecretValue("password"), null);
-    return client;
+      await client.login(this.getSecretValue("username"), this.getSecretValue("password"), null);
+      return client;
+    };
+
+    for (const [index, port] of ports.entries()) {
+      try {
+        return await createClientForPortAsync(port);
+      } catch (error) {
+        const isLastPort = index === ports.length - 1;
+        if (isLastPort || !this.isPortFallbackError(error)) {
+          throw error;
+        }
+      }
+    }
+
+    throw new Error("Unable to connect to the UniFi controller");
+  }
+
+  private isPortFallbackError(error: unknown) {
+    if (typeof error === "object" && error !== null && "isAxiosError" in error && error.isAxiosError === true) {
+      return !("response" in error) || error.response === undefined;
+    }
+
+    return error instanceof Error && error.message === "failed to detect UniFiOS status";
   }
 
   private getStatusValueOverAllSites<S extends HealthSubsystem>(
