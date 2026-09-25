@@ -319,6 +319,7 @@ export type HomarrDocumentationPath =
   | "/docs/integrations/synology"
   | "/docs/integrations/unraid"
   | "/docs/integrations/coolify"
+  | "/docs/integrations/komodo"
   | "/docs/integrations/immich"
   | "/docs/integrations/paperless-ngx"
   | "/docs/integrations/patchmon"
