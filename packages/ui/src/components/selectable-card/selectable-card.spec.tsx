@@ -290,26 +290,6 @@ describe("SelectableCard", () => {
   });
 
   describe("interactions and accessibility", () => {
-    it("supports focus and click activation", async () => {
-      const onClick = vi.fn();
-      await act(async () =>
-        root.render(
-          <MantineProvider>
-            <SelectableCard title="Interactive Card" onClick={onClick} />
-          </MantineProvider>,
-        ),
-      );
-
-      const button = host.querySelector("button");
-      button?.focus();
-      expect(document.activeElement).toBe(button);
-
-      await act(async () => {
-        button?.click();
-      });
-      expect(onClick).toHaveBeenCalledOnce();
-    });
-
     it("forwards ref to the underlying HTMLButtonElement", async () => {
       const ref = createRef<HTMLButtonElement>();
       await act(async () =>

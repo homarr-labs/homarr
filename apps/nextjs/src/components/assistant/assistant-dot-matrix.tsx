@@ -182,8 +182,6 @@ const states = {
 
 export type AssistantDotMatrixState = keyof typeof states;
 
-export const assistantDotMatrixStates = Object.keys(states) as readonly AssistantDotMatrixState[];
-
 interface AssistantDotMatrixProps extends Omit<ComponentProps<"output">, "children"> {
   state?: AssistantDotMatrixState;
   label?: string;

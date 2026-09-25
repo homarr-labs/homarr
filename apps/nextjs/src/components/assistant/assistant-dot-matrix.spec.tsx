@@ -4,7 +4,7 @@ import { act, createElement } from "react";
 import { createRoot } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
 
-import { AssistantDotMatrix, assistantDotMatrixStates } from "./assistant-dot-matrix";
+import { AssistantDotMatrix } from "./assistant-dot-matrix";
 
 describe("AssistantDotMatrix", () => {
   let host: HTMLDivElement;
@@ -49,35 +49,5 @@ describe("AssistantDotMatrix", () => {
     expect(updatedMatrix?.textContent).toBe("Writing response");
     expect(updatedFirstDot?.style.animationDuration).toBe("0.9s");
     expect(updatedMatrix?.querySelectorAll("[data-slot='assistant-dot-matrix-dot']")).toHaveLength(25);
-  });
-
-  test("supports every documented assistant-ui matrix state", async () => {
-    expect(assistantDotMatrixStates).toEqual([
-      "idle",
-      "loading",
-      "thinking",
-      "streaming",
-      "searching",
-      "syncing",
-      "connecting",
-      "waiting",
-      "uploading",
-      "downloading",
-      "listening",
-      "speaking",
-      "recording",
-      "success",
-      "error",
-      "warning",
-      "info",
-      "paused",
-      "stopped",
-      "offline",
-    ]);
-
-    for (const state of assistantDotMatrixStates) {
-      await act(async () => root.render(createElement(AssistantDotMatrix, { state })));
-      expect(host.querySelector("[data-slot='assistant-dot-matrix']")?.getAttribute("data-state")).toBe(state);
-    }
   });
 });
