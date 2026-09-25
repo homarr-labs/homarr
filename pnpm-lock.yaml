@@ -1259,9 +1259,6 @@ importers:
       postcss-preset-mantine:
         specifier: 'catalog:'
         version: 1.18.0(postcss@8.5.18)
-      posthog-js:
-        specifier: 'catalog:'
-        version: 1.399.2(preact-render-to-string@6.5.11)
       react:
         specifier: 'catalog:'
         version: 19.2.7

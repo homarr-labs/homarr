@@ -94,14 +94,16 @@ Crawlers can ignore these requests.
 ## Analytics
 
 When **Help us improve Homarr** is enabled, Homarr sends analytics to its PostHog server at `https://hog.homarr.dev`.
-The weekly server report also runs when Homarr starts.
+It sends on the first eligible startup, then no more than once every seven days; restarting Homarr does not create another report.
 
 The report contains the Homarr version, database and platform details, enabled authentication providers, default
-language, and counts or types of configured resources such as boards, apps, widgets, integrations, users, and groups.
-Selected setup flows also send coarse events such as the entry point, intent, outcome, and elapsed time.
+language, and aggregate counts of configured resources. Widget counts come from items placed on boards. It also reports
+how many boards contain each widget or linked integration type, and broad board-size and layout distributions. Zero-valued
+counts are omitted.
 
-Homarr does not send names, URLs, usernames, email addresses, credentials, integration secrets, API keys, logs, or error
-messages. Browser page views, page leaves, and automatic interaction capture are disabled.
+Homarr does not send widget option contents, board profiles, names, URLs, usernames, email addresses, credentials,
+integration secrets, API keys, logs, or error messages. It does not load PostHog in your browser or log API actions.
+The same random installation ID is reused for each report; no user or session IDs are sent.
 
 Disable the setting and reload the page to stop analytics. `NO_EXTERNAL_CONNECTION=true` blocks analytics together with
 all other external requests. See [Environment variables](/docs/advanced/environment-variables).

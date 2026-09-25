@@ -128,6 +128,7 @@ export const defaultServerSettings = {
   analytics: {
     enableGeneral: true,
     instanceId: null as string | null,
+    lastSuccessfulSnapshotAt: null as string | null,
   },
   crawlingAndIndexing: {
     noIndex: true,

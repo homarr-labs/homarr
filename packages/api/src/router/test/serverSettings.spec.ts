@@ -85,6 +85,7 @@ describe("saveSettings", () => {
         value: stringify({
           enableGeneral: true,
           instanceId: null,
+          lastSuccessfulSnapshotAt: null,
         }),
       },
     ]);

@@ -9,7 +9,6 @@ import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useI18n } from "@homarr/translation/client";
 
-import { useSetupAnalytics } from "~/components/create/setup-analytics";
 import { getBoardSetupProgress } from "./board-setup-progress";
 import { useBoardAddActions } from "./use-board-add-actions";
 import classes from "./board-setup-checklist.module.css";
@@ -25,7 +24,6 @@ export const BoardSetupChecklist = () => {
   });
   const t = useI18n("board.setupChecklist");
   const tCommon = useI18n("common.action");
-  const trackSetup = useSetupAnalytics();
   const progress = getBoardSetupProgress({
     itemKinds: board.items.map((item) => item.kind),
     usableIntegrationCount: integrations.length,
@@ -40,7 +38,6 @@ export const BoardSetupChecklist = () => {
           variant="default"
           leftSection={<IconChecklist size={18} />}
           onClick={() => {
-            trackSetup("checklist-resumed", { entryPoint: "board", outcome: "continued", hasBoardContext: true });
             setCollapsed(false);
           }}
         >

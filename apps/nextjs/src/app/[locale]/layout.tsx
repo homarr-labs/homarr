@@ -31,7 +31,6 @@ import { isLocaleRTL, isLocaleSupported } from "@homarr/translation";
 import { getI18n } from "@homarr/translation/server";
 import { resolveHomarrUrlConfig } from "@homarr/workshop/schema";
 
-import { Analytics } from "~/components/layout/analytics";
 import type { AssistantAvailability } from "~/components/assistant/assistant-gate";
 import { AssistantGate } from "~/components/assistant/assistant-gate";
 import { CrowdinLiveTranslation } from "~/components/layout/crowdin-live-translation";
@@ -203,7 +202,6 @@ export default async function Layout(props: {
         <style data-homarr-global-custom-css>{serverSettings.branding.customCss}</style>
       </head>
       <body className={[fontSans.className, fontSans.variable].join(" ")} suppressHydrationWarning>
-        <Analytics enabled={serverSettings.analytics.enableGeneral} />
         <ViewportHint />
         <StackedProvider>
           <Notifications pauseResetOnHover="notification" />
