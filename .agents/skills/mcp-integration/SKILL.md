@@ -93,6 +93,6 @@ Register the smallest router that owns the enabled procedures. If a parent route
 1. Confirm the procedure still enforces its ordinary auth and permission boundary.
 2. Confirm `packages/api/src/mcp.ts` eagerly includes the procedure.
 3. Confirm the generated tool name, description, and JSON schema are unambiguous.
-4. Run the focused API MCP spec when the tool list or extraction changes: `pnpm test packages/api/src/test/mcp.spec.ts`.
-5. Run the focused route spec when protocol or transport behavior changes: `pnpm test apps/nextjs/src/app/api/mcp/[transport]/route.spec.ts`.
+4. When validating tool-list or extraction changes, use the focused API MCP spec: `pnpm test packages/api/src/test/mcp.spec.ts`.
+5. When validating protocol or transport changes, use the focused route spec: `pnpm test apps/nextjs/src/app/api/mcp/[transport]/route.spec.ts`.
 6. If manually probing `/api/mcp/<transport>`, use a scoped API key and avoid printing credentials or secret-bearing results.

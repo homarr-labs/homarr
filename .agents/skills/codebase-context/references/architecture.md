@@ -105,6 +105,6 @@ User routes live below `apps/nextjs/src/app/[locale]/`; the locale segment does 
 - Read current scripts from the root or package `package.json`; avoid caching commands that do not exist.
 - Use `pnpm dev` for Next.js, `pnpm dev:docs` for docs, and `pnpm dev:cli -- <args>` for the Go developer CLI.
 - Use `pnpm docker:dev:up` for the Redis development dependency.
-- Use package-filtered typechecks or focused tests for the touched behavior.
+- Follow the Testing section in `AGENTS.md` for test creation and validation scope.
 - Use `~/*` only inside the Next.js app. Use public `@homarr/*` entrypoints across package boundaries.
 - Keep Mantine application styles separate from the Tailwind-based docs app.
