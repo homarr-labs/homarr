@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 	"sync"
@@ -315,7 +316,10 @@ func (provider *homarrProvider) chat(event *core.RequestEvent) error {
 		contentType = "application/json"
 	}
 	if upstreamResponse.StatusCode < 200 || upstreamResponse.StatusCode >= 300 {
-		return event.JSON(safeUpstreamStatus(upstreamResponse.StatusCode), openAIError("The model endpoint rejected the request."))
+		message := upstreamErrorMessage(upstreamResponse.Body, upstreamResponse.StatusCode, provider.apiKey)
+		return event.JSON(safeUpstreamStatus(upstreamResponse.StatusCode), map[string]any{
+			"error": map[string]any{"message": message, "type": "homarr_provider_upstream_error"},
+		})
 	}
 
 	if requestBody.Stream {
@@ -336,6 +340,52 @@ func (provider *homarrProvider) chat(event *core.RequestEvent) error {
 		return event.JSON(http.StatusBadGateway, openAIError("The model endpoint returned an invalid response."))
 	}
 	return event.Blob(upstreamResponse.StatusCode, contentType, responseBody)
+}
+
+var upstreamCredentialPattern = regexp.MustCompile(`(?i)\b(?:bearer\s+[^\s"<>]+|sk-[a-z0-9_-]+|eyJ[a-z0-9_-]+\.[a-z0-9_-]+\.[a-z0-9_-]+)`)
+
+// Forward only a bounded structured message, never provider metadata, request
+// headers, raw HTML, or a body that may contain the original conversation.
+func upstreamErrorMessage(body io.Reader, status int, apiKey string) string {
+	prefix := "Upstream model service returned HTTP " + strconv.Itoa(status) + "."
+	data, err := io.ReadAll(io.LimitReader(body, 16*1024+1))
+	if err != nil || len(data) > 16*1024 {
+		return prefix + " No readable error details were returned."
+	}
+	var payload struct {
+		Error struct {
+			Message string `json:"message"`
+		} `json:"error"`
+		Message string `json:"message"`
+	}
+	if json.Unmarshal(data, &payload) != nil {
+		return prefix + " The response was not a structured JSON error."
+	}
+	message := payload.Error.Message
+	if message == "" {
+		message = payload.Message
+	}
+	if apiKey != "" {
+		message = strings.ReplaceAll(message, apiKey, "[REDACTED]")
+	}
+	message = upstreamCredentialPattern.ReplaceAllString(message, "[REDACTED]")
+	message = strings.Join(strings.Fields(message), " ")
+	if message == "" {
+		return prefix + " No error message was returned."
+	}
+	// URLs can embed credentials or sensitive query strings. Keep only their origin/path.
+	words := strings.Split(message, " ")
+	for index, word := range words {
+		if strings.Contains(word, "://") {
+			words[index] = "[URL omitted]"
+		}
+	}
+	message = strings.Join(words, " ")
+	runes := []rune(message)
+	if len(runes) > 1000 {
+		message = string(runes[:1000]) + "…"
+	}
+	return prefix + " " + message
 }
 
 func streamErrorFrame() string {

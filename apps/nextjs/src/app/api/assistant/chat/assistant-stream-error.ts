@@ -80,6 +80,11 @@ export const getAssistantStreamErrorMessage = (error: unknown) => {
   const statusCode = getStatusCode(error);
   const message = getErrorMessage(error);
 
+  // Workshop has already bounded/redacted this message. Preserve its actual
+  // upstream status and detail instead of guessing a cause from the proxy status.
+  const upstreamMessage = getWorkshopUpstreamError(error);
+  if (upstreamMessage) return upstreamMessage;
+
   if (hasUnavailableToolError(error)) {
     return "The requested tool is unavailable at this step. Homarr did not run the action. Try again.";
   }
@@ -120,4 +125,22 @@ export const getAssistantStreamErrorMessage = (error: unknown) => {
   }
 
   return message || "The model endpoint stopped without providing an error message.";
+};
+
+const getWorkshopUpstreamError = (error: unknown, seen = new Set<object>()): string | undefined => {
+  const record = asRecord(error);
+  if (!record || seen.has(record)) return undefined;
+  seen.add(record);
+  if (record.type === "homarr_provider_upstream_error" && typeof record.message === "string") {
+    return record.message.slice(0, 1200);
+  }
+  if (typeof record.responseBody === "string" && record.responseBody.length <= 20_000) {
+    try {
+      const detail = getWorkshopUpstreamError(JSON.parse(record.responseBody), seen);
+      if (detail) return detail;
+    } catch {
+      // Non-JSON errors retain the existing status-based fallback.
+    }
+  }
+  return getWorkshopUpstreamError(record.error, seen) ?? getWorkshopUpstreamError(record.cause, seen);
 };

@@ -7,6 +7,27 @@ import (
 	"testing"
 )
 
+func TestUpstreamErrorMessage(t *testing.T) {
+	for _, tt := range []struct{ name, body, key, want string }{
+		{"routing", `{"error":{"message":"No endpoints found matching your data policy"}}`, "", "Upstream model service returned HTTP 404. No endpoints found matching your data policy"},
+		{"proxy", `{"message":"Route not found"}`, "", "Upstream model service returned HTTP 404. Route not found"},
+		{"redaction", `{"error":{"message":"opaque-private-key Bearer abc123 sk-or-v1-example https://user:pass@example.com/?key=secret"},"metadata":{"secret":"must not appear"}}`, "opaque-private-key", "Upstream model service returned HTTP 404. [REDACTED] [REDACTED] [REDACTED] [URL omitted]"},
+		{"html", `<html>private upstream page</html>`, "", "Upstream model service returned HTTP 404. The response was not a structured JSON error."},
+		{"empty", `{}`, "", "Upstream model service returned HTTP 404. No error message was returned."},
+		{"oversized", strings.Repeat("x", 16*1024+1), "", "Upstream model service returned HTTP 404. No readable error details were returned."},
+	} {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := upstreamErrorMessage(strings.NewReader(tt.body), 404, tt.key); got != tt.want {
+				t.Fatalf("got %q, want %q", got, tt.want)
+			}
+		})
+	}
+	message := upstreamErrorMessage(strings.NewReader(`{"error":{"message":"`+strings.Repeat("é", 2000)+`"}}`), 404, "")
+	if len([]rune(message)) > 1100 {
+		t.Fatal("upstream message was not bounded")
+	}
+}
+
 func TestSanitizeProviderPayload(t *testing.T) {
 	payload := map[string]any{
 		"model":                 homarrProviderModelID,
