@@ -29,7 +29,7 @@ Orient from the current checkout before editing. Treat package manifests, export
 - Client tRPC hooks: `@homarr/api/client`
 - Main router: `packages/api/src/root.ts`
 - MCP eager router: `packages/api/src/mcp.ts`
-- Database schemas: `packages/db/schema/{sqlite,mysql,postgresql}.ts`
+- Database schemas: `packages/db/schema/{sqlite,postgresql}.ts`
 - Widget registry: `packages/widgets/src/registry.ts`
 - Widget loading manifest: `packages/widgets/src/manifest.ts`
 - Integration definitions: `packages/definitions/src/integration.ts`

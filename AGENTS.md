@@ -13,7 +13,7 @@ homarr/
 ├── packages/
 │   ├── api/             # tRPC appRouter, procedures, OpenAPI
 │   ├── auth/            # NextAuth config, providers, session, API keys
-│   ├── db/              # Drizzle schema (3 DB drivers), migrations, queries
+│   ├── db/              # SQLite and PostgreSQL schemas, migrations, queries
 │   ├── core/            # Env validation, DB/Redis driver factories, logging
 │   ├── definitions/     # Domain enums: WidgetKind, IntegrationKind, permissions
 │   ├── widgets/         # Dashboard widget definitions and components
