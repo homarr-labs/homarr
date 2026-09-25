@@ -19,11 +19,7 @@ import Alert from "@theme/Admonition";
 ### Widgets & Capabilities
 
 <IntegrationCapabilites
-  items={[
-    { widget: healthMonitoringWidget },
-    { widget: systemResourcesWidget },
-    { widget: systemDisksWidget },
-  ]}
+  items={[{ widget: healthMonitoringWidget }, { widget: systemResourcesWidget }, { widget: systemDisksWidget }]}
 />
 
 ### Supported metrics
@@ -85,10 +81,10 @@ import Alert from "@theme/Admonition";
 
 ### Storage volume selection
 
-Health Monitoring and System Disks widgets can filter Synology storage volumes when **every** selected integration is a Synology DiskStation. Leave **Visible storage volumes** empty to show all volumes, or pick specific volumes from the list. When multiple Synology integrations are connected, volumes are labeled with the integration name.
+Health Monitoring and System Disks widgets can filter storage volumes when **every** selected integration is OpenMediaVault or Synology. Leave **Visible storage volumes** empty to show all volumes, or pick specific volumes from the list. When multiple integrations are connected, volumes are labeled with the integration name.
 
-<Alert type="note" title="Synology-only option">
-  The volume filter is hidden when the widget also uses non-Synology integrations such as TrueNAS or Unraid.
+<Alert type="note" title="Supported integrations only">
+  The volume filter is hidden when the widget also uses an unsupported integration such as TrueNAS or Unraid.
 </Alert>
 
 <Alert type="note" title="Volume ordering">

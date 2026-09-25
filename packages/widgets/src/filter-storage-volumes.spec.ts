@@ -1,7 +1,26 @@
 import { describe, expect, test } from "vitest";
 
-import { filterStorageVolumes, normalizeStorageDeviceName, toScopedStorageVolumeValue } from "./filter-storage-volumes";
+import {
+  filterStorageVolumes,
+  normalizeStorageDeviceName,
+  supportsStorageVolumeSelection,
+  toScopedStorageVolumeValue,
+} from "./filter-storage-volumes";
 import { matchFileSystemAndSmart } from "./health-monitoring/system-health";
+
+describe("supportsStorageVolumeSelection", () => {
+  test("supports Synology and OpenMediaVault integrations", () => {
+    expect(supportsStorageVolumeSelection(["synology"])).toBe(true);
+    expect(supportsStorageVolumeSelection(["openmediavault"])).toBe(true);
+    expect(supportsStorageVolumeSelection(["synology", "openmediavault"])).toBe(true);
+  });
+
+  test("requires at least one integration and rejects unsupported integration kinds", () => {
+    expect(supportsStorageVolumeSelection([])).toBe(false);
+    expect(supportsStorageVolumeSelection(["truenas"])).toBe(false);
+    expect(supportsStorageVolumeSelection(["synology", "unraid"])).toBe(false);
+  });
+});
 
 describe("normalizeStorageDeviceName", () => {
   test("strips partition suffixes from block device paths", () => {
@@ -45,6 +64,13 @@ describe("toScopedStorageVolumeValue", () => {
 describe("filterStorageVolumes", () => {
   const integrationId = "nas-1";
 
+  test("returns all entries when no storage volumes are selected", () => {
+    const entries = [{ deviceName: "sda1" }, { deviceName: "sdb1" }];
+
+    expect(filterStorageVolumes(entries, [], integrationId)).toEqual(entries);
+    expect(filterStorageVolumes(entries, undefined, integrationId)).toEqual(entries);
+  });
+
   test("matches SMART entries using normalized partition identifiers", () => {
     const entries = [
       { deviceName: "/dev/sda1", used: "1", available: "2", percentage: 50 },
@@ -59,6 +85,21 @@ describe("filterStorageVolumes", () => {
 
     expect(filterStorageVolumes(entries, visibleVolumes, integrationId)).toHaveLength(1);
     expect(filterStorageVolumes(smartEntries, visibleVolumes, integrationId)).toHaveLength(1);
+  });
+
+  test("filters real OpenMediaVault file system and SMART device names together", () => {
+    const fileSystemEntries = [
+      { deviceName: "sda1", used: "3.13 GiB", available: "26853056512", percentage: 12 },
+      { deviceName: "sdb1", used: "396.24 GiB", available: "1542365618176", percentage: 22 },
+    ];
+    const smartEntries = [
+      { deviceName: "sda", temperature: 0, overallStatus: "BAD_STATUS" },
+      { deviceName: "sdb", temperature: 33, overallStatus: "GOOD" },
+    ];
+    const visibleVolumes = [`${integrationId}:sdb1`];
+
+    expect(filterStorageVolumes(fileSystemEntries, visibleVolumes, integrationId)).toEqual([fileSystemEntries[1]]);
+    expect(filterStorageVolumes(smartEntries, visibleVolumes, integrationId)).toEqual([smartEntries[1]]);
   });
 
   test("keeps exact Synology volume matches", () => {

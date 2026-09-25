@@ -41,7 +41,7 @@ export const healthMonitoringWidget: WidgetDefinition = {
       {
         name: "Visible storage volumes",
         description:
-          "Only available when all selected integrations are Synology. Leave empty to show all detected storage volumes.",
+          "Only available when every selected integration is OpenMediaVault or Synology. Leave empty to show all detected storage volumes.",
         values: "List of storage volumes",
         defaultValue: "Empty list",
       },
