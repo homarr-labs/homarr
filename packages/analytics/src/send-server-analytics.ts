@@ -251,6 +251,9 @@ const sendSnapshotAsync = async (): Promise<AnalyticsResult> => {
       if (key.startsWith("count") && value === 0) delete properties[key];
     }
 
+    const currentSettings = await getServerSettingByKeyAsync(db, "analytics");
+    if (!currentSettings.enableGeneral || env.NO_EXTERNAL_CONNECTION) return "disabled";
+
     const client = createPostHogClient();
     client.capture({
       uuid: getSnapshotUuid(instanceId, now),
