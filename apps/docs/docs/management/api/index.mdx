@@ -81,6 +81,11 @@ Creating or changing an integration-backed widget requires use access to each ne
 free position on every layout and caps the requested width to that layout's available columns. This lets automation
 create a readable Notebook without saving the entire board merely to resize the new item.
 
+`PATCH /api/boards/{boardId}/items/{itemId}/layouts/{layoutId}` (tRPC `board.updateItemLayout`) moves or resizes one
+existing item in one layout. Supply `xOffset`, `yOffset`, `width`, and `height` in grid cells. It keeps the item in its
+current section and rejects placements outside that section or overlapping another item/container. Unlike `board.saveBoard`,
+it does not replace a full board snapshot; use it when an agent must not remove concurrently added items.
+
 ## Docker targets
 
 Docker actions identify both the configured endpoint and the container:
