@@ -489,7 +489,7 @@ func sanitizeProviderPayload(payload map[string]any, upstreamModelID string) err
 	// BYOK-only billing also requires disabling shared capacity on the OpenRouter key.
 	providerPreferences := map[string]any{
 		"zdr": true, "data_collection": "deny",
-		"only": []string{"openai"}, "allow_fallbacks": false,
+		"allow_fallbacks": false,
 	}
 	if upstreamModelID == defaultOpenRouterModelID {
 		delete(payload, "reasoning_effort")

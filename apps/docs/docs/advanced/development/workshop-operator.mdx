@@ -61,17 +61,18 @@ can use a comma-separated allowlist.
 
 `OPENROUTER_API_KEY` enables the [Homarr provider](/docs/workshop/homarr-provider). The default is `openai/gpt-6-luna`
 with Max reasoning and a 32K combined reasoning/output budget. Remove an old `HOMARR_AI_OPENROUTER_MODEL` override or set
-it explicitly to this model when upgrading. Workshop enforces OpenAI-only routing (`provider.only: ["openai"]`) with
-provider fallbacks disabled; a model override must also be served by OpenAI.
+it explicitly to this model when upgrading. OpenRouter selects an eligible provider for the model; Workshop does not
+pin a provider. Provider fallbacks remain disabled.
 
 For [BYOK](https://openrouter.ai/docs/guides/overview/auth/byok), configure your OpenAI key as a prioritized key in the
 same OpenRouter workspace as `OPENROUTER_API_KEY`. Set **Shared capacity fallback** to **Never use shared capacity for
-any model on this provider**. The request's `allow_fallbacks: false` prevents other providers, but does not replace this
-account-side setting. Store the OpenAI key in OpenRouter, not in Workshop or Homarr clients.
+any model on this provider**. The request's `allow_fallbacks: false` prevents retrying another provider, but does not
+pin the initial provider or guarantee OpenAI BYOK billing. Use OpenRouter provider restrictions if required. Store the
+OpenAI key in OpenRouter, not in Workshop or Homarr clients.
 
 Workshop retains zero-data-retention routing and denies data collection. Your BYOK key must be eligible under those
 policies; configure any provider-agreement declaration only if it reflects your actual OpenAI agreement. An ineligible
-or unavailable key should fail rather than use another provider or shared capacity.
+or unavailable key cannot make a non-ZDR route eligible. Other eligible providers may serve the model.
 
 Workshop does not retain prompts or responses and enforces per-user and global daily request limits. Keep spending
 controls on both the OpenAI account and OpenRouter workspace: request limits are not monetary limits, and OpenRouter
