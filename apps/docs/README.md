@@ -26,8 +26,10 @@ pnpm --filter @homarr/docs verify:search
 pnpm --filter @homarr/docs verify:seo
 ```
 
-The static export is written to `out/`. The build validates that every registered integration and widget has a docs
-page and typed metadata module. CI enforces this alongside schema drift and export validation. The link check validates internal Markdown and MDX links and rendered anchors against that export.
+The static export is written to `out/`. The build validates docs pages and typed metadata for integrations and widgets
+that declare a documentation slug. Set the slug to `null` when a page would add no useful information for advanced users.
+CI enforces coverage alongside schema drift and export validation. The link check validates internal Markdown and MDX
+links and rendered anchors against the export.
 The search check exercises the exported index with title, heading, and body queries and verifies result destinations.
 The SEO check validates canonical URLs, descriptions, social metadata, heading structure, and sitemap coverage in the
 exported HTML. These tags are generated at build time; set `HOMARR_WEBSITE_URL` before building for a different origin.
@@ -67,8 +69,9 @@ Integration and widget folders pair typed `index.ts` metadata with `index.mdx` c
 Use standard Markdown and MDX. Shared components live in `src/components/`. Mermaid fences, tabs, callouts, zoomable
 images, and syntax-highlighted code are supported by the Fumadocs pipeline.
 
-When a user-facing change affects setup or behavior, update the matching page in the same pull request. See the
-[documentation-sync skill](../../.agents/skills/documentation-sync/SKILL.md) for the code-to-content map.
+Update docs in the same pull request only when a smart, advanced user cannot infer the changed behavior from the UI or
+generated API schema. Routine or self-explanatory changes need no docs update. See the
+[documentation-sync skill](../../.agents/skills/documentation-sync/SKILL.md) for target paths.
 
 ## Published formats
 
