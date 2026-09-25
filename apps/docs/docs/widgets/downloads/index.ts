@@ -91,6 +91,19 @@ export const downloadsWidget: WidgetDefinition = {
         defaultValue: "yes",
       },
       {
+        name: "Include archived SABnzbd history",
+        description:
+          "Include completed SABnzbd jobs that have been moved to Archive. This option is only available when SABnzbd is used.",
+        values: { type: "boolean" },
+        defaultValue: "no",
+      },
+      {
+        name: "Archived history window",
+        description: "Number of days of archived jobs to include. Increase the item limit to show more results.",
+        values: "Any positive whole number of days",
+        defaultValue: "7 days",
+      },
+      {
         name: "Limit items per integration",
         description: "This will limit the number of items shown per integration, not globally.",
         values: "Any number above 1",
