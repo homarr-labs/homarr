@@ -20,10 +20,8 @@ export default function HealthMonitoringWidget(props: WidgetComponentProps<"heal
   const integrationsQuery = clientApi.integration.byIds.useQuery(props.integrationIds);
   const t = useI18n("widget.healthMonitoring");
 
-  // Integration kinds (cluster vs. system) aren't known until this resolves. Resolving the
-  // partition below against an empty array while this is still pending sends every integration
-  // - including cluster-only kinds like Proxmox - into the system-health branch, which rejects
-  // them with a NOT_FOUND error instead of just waiting for the data.
+  // Wait for integrations to load, or cluster-only kinds like Proxmox get routed to the
+  // system-only query below and error.
   if (isInitialWidgetQueryPending(integrationsQuery)) {
     return <WidgetQueryLoadingState />;
   }
