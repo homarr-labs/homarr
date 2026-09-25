@@ -7266,9 +7266,6 @@
           "globalCommand": {
             "title": "Global commands",
             "option": {
-              "create": {
-                "label": "Create something"
-              },
               "colorScheme": {
                 "auto": "Toggle appearance mode",
                 "light": "Switch to light mode",

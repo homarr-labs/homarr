@@ -2,6 +2,8 @@ package tui
 
 import (
 	"context"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 	"time"
@@ -178,5 +180,67 @@ func TestSidebarTabCycleAndCIRendering(t *testing.T) {
 	mLogs := tabbedAgain.(Model)
 	if mLogs.sidebar.source != sourceLogs {
 		t.Fatalf("expected sourceLogs after Tab, got %v", mLogs.sidebar.source)
+	}
+}
+
+func TestDeleteDataVerifiesMountBeforeRemoval(t *testing.T) {
+	for _, tc := range []struct {
+		name  string
+		state task.State
+		calls string
+	}{
+		{"matching", task.StateSucceeded, "inspect\nrm -f immutable-id\nvolume rm homarr_dev_data\n"},
+		{"mismatch", task.StateFailed, "inspect\n"},
+		{"inspect-error", task.StateFailed, "inspect\n"},
+		{"remove-error", task.StateFailed, "inspect\nrm -f immutable-id\n"},
+		{"missing", task.StateSucceeded, "inspect\nvolume rm homarr_dev_data\n"},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			dir := t.TempDir()
+			log := filepath.Join(dir, "calls")
+			script := `#!/bin/sh
+if [ "$1" = container ]; then
+  echo inspect >> "$CALL_LOG"
+  case "$SCENARIO" in
+    mismatch) echo '{"id":"immutable-id","mounts":[{"Name":"other_data"}]}'; exit 0 ;;
+    inspect-error) echo 'daemon unavailable' >&2; exit 1 ;;
+    missing) echo 'No such container: homarr_dev' >&2; exit 1 ;;
+  esac
+  echo '{"id":"immutable-id","mounts":[{"Name":"homarr_dev_data"}]}'
+else
+  echo "$*" >> "$CALL_LOG"
+  if [ "$1" = rm ] && [ "$SCENARIO" = remove-error ]; then
+    echo 'removal denied' >&2; exit 1
+  fi
+fi
+`
+			if err := os.WriteFile(filepath.Join(dir, "docker"), []byte(script), 0o700); err != nil {
+				t.Fatal(err)
+			}
+			t.Setenv("PATH", dir+string(os.PathListSeparator)+os.Getenv("PATH"))
+			t.Setenv("CALL_LOG", log)
+			t.Setenv("SCENARIO", tc.name)
+			m := Model{tasks: task.NewManager()}
+			t.Cleanup(m.tasks.CancelAll)
+			m.deleteData(target{container: "homarr_dev", volume: "homarr_dev_data"})
+			deadline := time.Now().Add(3 * time.Second)
+			for {
+				snapshot := m.tasks.Snapshots()[0]
+				if snapshot.State.Done() {
+					if snapshot.State != tc.state {
+						t.Fatalf("state = %v, want %v: %v", snapshot.State, tc.state, snapshot.Err)
+					}
+					break
+				}
+				if time.Now().After(deadline) {
+					t.Fatal("delete task did not finish")
+				}
+				time.Sleep(time.Millisecond)
+			}
+			calls, err := os.ReadFile(log)
+			if err != nil || string(calls) != tc.calls {
+				t.Fatalf("Docker calls = %q, want %q (read error: %v)", calls, tc.calls, err)
+			}
+		})
 	}
 }
