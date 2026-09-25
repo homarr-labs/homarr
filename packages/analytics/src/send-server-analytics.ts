@@ -35,11 +35,11 @@ import { env as dockerEnv } from "@homarr/docker/env";
 
 import packageJson from "../../../package.json";
 import { createPostHogClient } from "./client";
+import { getItemCountBucket, getSnapshotPeriod, isSnapshotDue, omitZeroCounts } from "./snapshot-properties";
 
 const logger = createLogger({ module: "analytics" });
 
 type AnalyticsResult = "sent" | "skipped" | "disabled" | "failed";
-const snapshotIntervalMs = 7 * 24 * 60 * 60 * 1_000;
 
 const getOrCreateInstanceId = async (
   analyticsSettings: Awaited<ReturnType<typeof getServerSettingByKeyAsync<"analytics">>>,
@@ -56,26 +56,10 @@ const getOrCreateInstanceId = async (
 
 const sumGroupedCounts = (rows: { count: number }[]): number => rows.reduce((sum, row) => sum + row.count, 0);
 
-const isSnapshotDue = (lastSuccessfulSnapshotAt: string | null, now: Date) => {
-  if (!lastSuccessfulSnapshotAt) return true;
-  const lastSent = Date.parse(lastSuccessfulSnapshotAt);
-  if (!Number.isFinite(lastSent)) return true;
-  return now.getTime() - lastSent >= snapshotIntervalMs;
-};
-
 const getSnapshotUuid = (instanceId: string, now: Date) => {
-  const period = Math.floor(now.getTime() / snapshotIntervalMs);
+  const period = getSnapshotPeriod(now);
   const hash = createHash("sha256").update(`${instanceId}:${period}:server-analytics`).digest("hex").slice(0, 32);
   return `${hash.slice(0, 8)}-${hash.slice(8, 12)}-5${hash.slice(13, 16)}-a${hash.slice(17, 20)}-${hash.slice(20)}`;
-};
-
-const getItemCountBucket = (itemCount: number) => {
-  if (itemCount === 0) return "empty";
-  if (itemCount === 1) return "one";
-  if (itemCount <= 3) return "two-to-three";
-  if (itemCount <= 7) return "four-to-seven";
-  if (itemCount <= 15) return "eight-to-fifteen";
-  return "sixteen-plus";
 };
 
 const sendSnapshotAsync = async (): Promise<AnalyticsResult> => {
@@ -253,10 +237,6 @@ const sendSnapshotAsync = async (): Promise<AnalyticsResult> => {
     for (const [bucket, boardCount] of boardSizeCounts) {
       properties[`boardsWithItemCount_${bucket}`] = boardCount;
     }
-    for (const [key, value] of Object.entries(properties)) {
-      if (key.startsWith("count") && value === 0) delete properties[key];
-    }
-
     const currentSettings = await getServerSettingByKeyAsync(db, "analytics");
     if (!currentSettings.enableGeneral || env.NO_EXTERNAL_CONNECTION) return "disabled";
 
@@ -265,7 +245,7 @@ const sendSnapshotAsync = async (): Promise<AnalyticsResult> => {
       uuid: getSnapshotUuid(instanceId, now),
       distinctId: instanceId,
       event: "server-analytics",
-      properties: { ...properties, $process_person_profile: false },
+      properties: { ...omitZeroCounts(properties), $process_person_profile: false },
       disableGeoip: true,
     });
 

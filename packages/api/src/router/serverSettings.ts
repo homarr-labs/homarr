@@ -28,6 +28,7 @@ const boardServerSettingsSchema = z.object({
 }) satisfies z.ZodType<ServerSettings["board"]>;
 
 const boardServerSettingsUpdateSchema = boardServerSettingsSchema.partial();
+const analyticsServerSettingsUpdateSchema = z.object({ enableGeneral: z.boolean().optional() }).strict();
 const brandingServerSettingsUpdateSchema = brandingServerSettingsSchema.partial().extend({
   authBranding: authBrandingSchema.partial().optional(),
 });
@@ -155,14 +156,8 @@ export const serverSettingsRouter = createTRPCRouter({
         return;
       }
       if (input.settingsKey === "analytics") {
-        await updateAnalyticsServerSettingAsync(
-          ctx.db,
-          (current) =>
-            ({
-              ...current,
-              ...input.value,
-            }) as ServerSettings["analytics"],
-        );
+        const parsedInput = analyticsServerSettingsUpdateSchema.parse(input.value);
+        await updateAnalyticsServerSettingAsync(ctx.db, (current) => ({ ...current, ...parsedInput }));
         return;
       }
       const current = await getServerSettingByKeyAsync(ctx.db, input.settingsKey);
