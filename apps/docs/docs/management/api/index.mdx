@@ -59,7 +59,7 @@ Omit `endpointIds` or pass an empty array to query every configured endpoint.
 Administrators can retrieve the Custom Widget authoring prompt, schema, component catalog, skill, and references under
 `/api/custom-widgets/`. See [agent authoring](/docs/management/custom-widgets/agent-authoring) for the workflow.
 
-## Integration requests
+## Call any integration API endpoint
 
 `POST /api/integrations/request` is available as tRPC `integration.request` and MCP `integration_request`. Homarr uses
 the saved integration credentials; callers do not supply them. The `path` stays within the saved integration URL, and
