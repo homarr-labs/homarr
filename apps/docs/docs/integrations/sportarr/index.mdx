@@ -1,0 +1,55 @@
+---
+title: 'Sportarr'
+description: "Sportarr is a sports event manager that monitors leagues, searches indexers for event releases, and organizes them into your media library."
+hide_title: true
+---
+
+import { IntegrationHeader } from '@site/src/components/integrations/header';
+import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
+import { AddingIntegration } from '@site/src/components/integrations/adding';
+import { IntegrationSecrets } from '@site/src/components/integrations/secrets';
+import { sportarrIntegration } from '.';
+import { calendarWidget } from '@site/docs/widgets/calendar';
+
+
+<IntegrationHeader
+  integration={sportarrIntegration}
+  categories={['Media manager', "Servarr"]}
+/>
+
+Sportarr manages sports events the same way Sonarr manages TV series. The Homarr integration uses your Sportarr API key to show upcoming and past events in the calendar widget.
+
+### Screenshots
+
+import apiKeySettings from './img/api-key-settings.png';
+import calendarWidgetBoard from './img/calendar-widget-board.png';
+
+<div className="flex flex-col gap-4">
+  <div>
+    <p>API key location in Sportarr (<strong>Settings → General → Security</strong>):</p>
+    <img src={apiKeySettings} alt="sportarr-api-key-settings" width={128 * 4} />
+  </div>
+  <div>
+    <p>Sportarr events in the calendar widget on a Homarr board:</p>
+    <img src={calendarWidgetBoard} alt="sportarr-calendar-widget-on-board" width={128 * 4} />
+  </div>
+</div>
+
+### Widgets & Capabilities
+<IntegrationCapabilites
+    items={[{ widget: calendarWidget }]}
+/>
+
+### Adding the integration
+<AddingIntegration />
+
+### Secrets
+You can find your Sportarr API key under **Settings → General → Security**.
+
+<IntegrationSecrets secrets={[{
+    credentials: ['apiKey'],
+    steps: [
+      "Open Sportarr and go to Settings → General → Security.",
+      "Copy the API key and paste it into Homarr when creating the integration.",
+    ],
+}]} />
