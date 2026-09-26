@@ -3,8 +3,8 @@ title: Homarr 2.0.0 - Workshop, Custom Widgets and a rebuilt board
 date: 2026-09-03
 authors:
   - ajnart
-tags: [homarr, update, version, assistant, custom widgets, dashboards, docker]
-description: Homarr 2.0 introduces Custom Widgets and Workshop, rebuilt board editing, Assistant tooling, responsive layouts, onboarding, and more.
+tags: [homarr, update, version, assistant, custom widgets, dashboards, docker, mcp]
+description: Homarr 2.0 introduces Custom Widgets and Workshop, rebuilt board editing, Assistant and MCP tooling that turns Homarr into the front door to your homelab, responsive layouts, onboarding, and more.
 image: ./img/homarr-v2-recap.webp
 draft: false
 ---
@@ -231,14 +231,69 @@ It only uses zero-data-retention (ZDR) providers. [The provider is open source](
 ### External assistants through MCP
 
 External assistants can use the same permission-checked tools through `/api/mcp`, with an API key or OAuth 2.1 with PKCE.
+The most powerful one gets its own section.
 
-<Alert type="tip" title="We made Homarr the front door to your homelab">
+## The front door to your homelab
 
-Configure a supported service once. Our most powerful MCP tool, `integration_request`, lets your agent test API
-endpoints beyond Homarr's native features, then expose their data or actions through Custom Widgets.
-See [Beyond native widgets](/docs/management/integrations#beyond-native-widgets).
+Homarr already knows how to reach your services: their URLs, API keys and auth headers. v2 adds one API endpoint that
+lets you use them without ever seeing them.
 
-</Alert>
+`POST /api/integrations/request` calls **any HTTP endpoint** on a saved integration. It is also available as tRPC
+`integration.request` and MCP `integration_request`. You send the integration, a method and a path, authenticated with
+your Homarr API key or session. Homarr checks your access, adds the credentials it stores and hands back the service's
+answer:
+
+```mermaid
+sequenceDiagram
+    participant C as Custom Widget or agent
+    participant H as Homarr
+    participant S as Sonarr
+    C->>H: POST /api/integrations/request (sonarr, GET /api/v3/queue) with your API key
+    H->>H: Authenticate you, check full integration access, keep the path on Sonarr's URL
+    H->>S: GET /api/v3/queue with the saved Sonarr API key
+    S-->>H: 200 and JSON
+    H-->>C: The response, with stored secrets redacted
+```
+
+The secrets stay in Homarr. API keys, passwords and tokens are stored encrypted, no API returns them, and Homarr redacts
+them from responses. If a service's API can do something, you can do it through Homarr, even when Homarr has no button
+for it:
+
+- **Custom Widgets** bind a saved integration as a [source](/docs/management/integrations#beyond-native-widgets) and call
+  its endpoints, so you never paste credentials into widget code.
+- **Agents** act on your behalf through MCP. The agent reads the service's official API docs, tells you which integration
+  it will use and what the call changes, then reports the result.
+
+It stays inside the lines:
+
+- Paths stay within the saved integration URL, and redirects are rejected.
+- Every request needs **full integration access**. `DELETE` needs explicit confirmation, and in Assistant every request,
+  even a `GET`, waits for your approval.
+
+### One prompt, seven services
+
+We asked a local model, through Homarr's MCP server:
+
+> Could you install a notification provider and then set it up everywhere it's supported in my installed integrations?
+
+It checked the Docker endpoint, asked which provider to use (it recommended ntfy), deployed ntfy and reported back:
+
+| Service     | How                                                                       | Verified                                   |
+| ----------- | ------------------------------------------------------------------------- | ------------------------------------------ |
+| Sonarr      | Native ntfy connection for grabs, downloads, upgrades and health          | Test fired ✓                               |
+| Radarr      | Native ntfy connection, plus movie added                                  | Test fired ✓                               |
+| Seerr       | Webhook with a JSON payload for readable titles                           | Fires on request, approve, available, fail |
+| SABnzbd     | 5.1.3 has no ntfy support, so a completion script on the default category | Dry run ✓                                  |
+| qBittorrent | `[AutoRun]` completion hook in `qBittorrent.conf`                         | Persisted after restart                    |
+| Bazarr      | ntfy provider enabled for subtitle events                                 | Restarted ✓                                |
+| Beszel      | Webhook with status, CPU, memory and disk alerts on all eight systems     | 29 alerts created                          |
+
+Two test notifications later, the phone buzzed. It cost $0: Qwen3.8-27B ran locally through MLX. The only side effect
+was warm feet.
+
+See [authenticated integration requests](/docs/management/mcp#authenticated-integration-requests) and the
+[API contract](/docs/management/api#call-any-integration-api-endpoint) for selectors, limits and the services that
+cannot use it.
 
 ## The rest (there is a lot)
 
