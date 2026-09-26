@@ -117,6 +117,7 @@
     "sass": "catalog:",
     "sql.js": "catalog:",
     "superjson": "catalog:",
+    "three": "catalog:",
     "use-deep-compare-effect": "catalog:",
     "yaml": "catalog:",
     "zod": "catalog:"
@@ -129,6 +130,7 @@
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "@types/three": "catalog:",
     "concurrently": "catalog:",
     "node-loader": "catalog:",
     "typescript": "catalog:"
