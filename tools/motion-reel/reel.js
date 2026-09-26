@@ -552,8 +552,6 @@
     const cap = words(root, "Your server runs a lot of apps.", { y: 930, size: 42, weight: 650 });
     const cat = div("abs chip", root);
     css(cat, { left: "96px", top: "108px", fontSize: "20px", padding: "8px 18px" });
-    const idx = div("abs mono", root);
-    css(idx, { left: "auto", right: "96px", top: "114px", fontSize: "22px", letterSpacing: ".12em", fontWeight: 600 });
     return {
       t0: T0,
       t1: 2 * BAR,
@@ -566,13 +564,11 @@
         const fg = cards[i].fg;
         cap.wrap.style.color = fg;
         cat.style.color = fg;
-        idx.style.color = fg;
         cap.ws.forEach(
           (s, k) =>
             (s.style.transform = `translateY(${(1 - E.outExpo(seg(t, T0 + 0.04 + k * 0.04, T0 + 0.5 + k * 0.04))) * 115}%)`),
         );
         cat.textContent = svc[i][1];
-        idx.textContent = String(i + 1).padStart(2, "0") + " / 87";
         const cp = E.outExpo(seg(lt, 0, 0.14));
         cat.style.transform = `translateY(${(1 - cp) * -18}px)`;
         cat.style.opacity = cp;
