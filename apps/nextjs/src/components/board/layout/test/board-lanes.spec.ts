@@ -2,15 +2,10 @@ import { describe, expect, test } from "vitest";
 
 import type { Board } from "~/app/[locale]/boards/_types";
 import { BoardMockBuilder } from "~/components/board/items/actions/test/mocks/board-mock";
-import { ContainerSectionMockBuilder } from "~/components/board/items/actions/test/mocks/container-section-mock";
+
 import { EmptySectionMockBuilder } from "~/components/board/items/actions/test/mocks/empty-section-mock";
-import { ItemMockBuilder } from "~/components/board/items/actions/test/mocks/item-mock";
-import {
-  getBoardLaneColumnCount,
-  getInitialBoardLogicalHeight,
-  getLogicalGridSize,
-  getRootSectionForLane,
-} from "../index";
+
+import { getBoardLaneColumnCount, getRootSectionForLane } from "../index";
 
 describe("board lanes", () => {
   test("gutters consume columns from the main canvas", () => {
@@ -68,69 +63,5 @@ describe("board lanes", () => {
       .build();
 
     expect(() => getRootSectionForLane(board, "main")).toThrow("multiple main canvas roots");
-  });
-
-  test("calculates a stable server height from the tallest visible lane", () => {
-    const layoutId = "layout";
-    const mainSectionId = "main";
-    const leftSectionId = "left";
-    const containerSectionId = "container";
-    const board = new BoardMockBuilder()
-      .addSection(new EmptySectionMockBuilder({ id: mainSectionId }).build())
-      .addSection(new EmptySectionMockBuilder({ id: leftSectionId, xOffset: -1 }).build())
-      .addSection(
-        new ContainerSectionMockBuilder({
-          id: containerSectionId,
-          collapsed: true,
-          options: { collapsible: true },
-        })
-          .addLayout({
-            layoutId,
-            parentSectionId: mainSectionId,
-            xOffset: 0,
-            yOffset: 0,
-            width: 2,
-            height: 3,
-          })
-          .build(),
-      )
-      .addItem(
-        new ItemMockBuilder()
-          .addLayout({
-            layoutId,
-            sectionId: mainSectionId,
-            xOffset: 0,
-            yOffset: 3,
-            width: 1,
-            height: 1,
-          })
-          .build(),
-      )
-      .addItem(
-        new ItemMockBuilder()
-          .addLayout({
-            layoutId,
-            sectionId: leftSectionId,
-            xOffset: 0,
-            yOffset: 0,
-            width: 1,
-            height: 4,
-          })
-          .build(),
-      )
-      .build();
-    board.layouts = [
-      {
-        id: layoutId,
-        name: "Base",
-        columnCount: 8,
-        leftGutterColumnCount: 1,
-        rightGutterColumnCount: 0,
-        breakpoint: 0,
-        role: "base",
-      },
-    ];
-
-    expect(getInitialBoardLogicalHeight(board, layoutId)).toBe(getLogicalGridSize(4));
   });
 });

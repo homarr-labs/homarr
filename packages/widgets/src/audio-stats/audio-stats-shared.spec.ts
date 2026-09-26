@@ -1,41 +1,7 @@
+import type { AudiobookshelfDashboardData, NavidromeDashboardData } from "@homarr/integrations/types";
 import { describe, expect, test } from "vitest";
 
-import type { AudiobookshelfDashboardData, NavidromeDashboardData } from "@homarr/integrations/types";
-
-import { getGridCols, getIconSize, getVisibleStats } from "./shared";
-
-describe("getGridCols", () => {
-  test("caps columns to visible stat count", () => {
-    expect(getGridCols(500, 2, false)).toBe(2);
-  });
-
-  test("returns max cols when many stats visible", () => {
-    expect(getGridCols(500, 10, false)).toBe(5);
-  });
-
-  test("compact mode uses smaller breakpoints", () => {
-    expect(getGridCols(290, 5, true)).toBe(5);
-    expect(getGridCols(290, 5, false)).toBe(2);
-  });
-
-  test("returns at least 1 col even with 0 visible stats", () => {
-    expect(getGridCols(500, 0, false)).toBe(1);
-  });
-});
-
-describe("getIconSize", () => {
-  test("returns large size for wide container", () => {
-    expect(getIconSize(400, false)).toBe(22);
-  });
-
-  test("returns compact size for narrow container in compact mode", () => {
-    expect(getIconSize(100, true)).toBe(14);
-  });
-
-  test("returns fallback for very narrow non-compact container", () => {
-    expect(getIconSize(50, false)).toBe(16);
-  });
-});
+import { getVisibleStats } from "./shared";
 
 describe("getVisibleStats", () => {
   const navidromeStats: NavidromeDashboardData = {

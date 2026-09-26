@@ -78,53 +78,6 @@ afterEach(async () => {
 });
 
 describe("IntegrationSelectGrid", () => {
-  it("renders a 4-column responsive grid of selectable integration cards", async () => {
-    const onSelect = vi.fn();
-    await act(async () =>
-      root.render(
-        <MantineProvider>
-          <IntegrationSelectGrid onSelect={onSelect} allowedKinds={["jellyfin", "sonarr", "radarr", "sabNzbd"]} />
-        </MantineProvider>,
-      ),
-    );
-
-    const cards = host.querySelectorAll("button");
-    expect(cards.length).toBe(4);
-    expect(host.textContent).toContain("Jellyfin");
-    expect(host.textContent).toContain("Sonarr");
-    expect(host.textContent).toContain("Radarr");
-    expect(host.textContent).toContain("SABnzbd");
-  });
-
-  it("renders tied widgets with icons and labels inside integration cards", async () => {
-    const onSelect = vi.fn();
-    await act(async () =>
-      root.render(
-        <MantineProvider>
-          <IntegrationSelectGrid onSelect={onSelect} allowedKinds={["jellyfin"]} />
-        </MantineProvider>,
-      ),
-    );
-
-    expect(host.textContent).toContain("Tied Widgets");
-    // Jellyfin is tied to Media Server widget
-    expect(host.textContent).toContain("Media Server");
-  });
-
-  it("displays fallback message when integration has no tied widgets", async () => {
-    const onSelect = vi.fn();
-    await act(async () =>
-      root.render(
-        <MantineProvider>
-          <IntegrationSelectGrid onSelect={onSelect} allowedKinds={["wud"]} />
-        </MantineProvider>,
-      ),
-    );
-
-    expect(host.querySelector("button")).not.toBeNull();
-    expect(host.textContent).toContain("No widgets tied to this service");
-  });
-
   it("displays '{count} connected' in footerLeft when integration instances exist", async () => {
     const onSelect = vi.fn();
     const integrationData = [

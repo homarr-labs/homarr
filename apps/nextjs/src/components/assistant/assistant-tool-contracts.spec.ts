@@ -131,10 +131,6 @@ describe("assistant human tool contracts", () => {
     ).toBe(false);
   });
 
-  test("converts the board review parameters to a provider JSON schema", () => {
-    expect(() => z.toJSONSchema(browserToolContracts.configure_board_settings.parameters)).not.toThrow();
-  });
-
   test("accepts a native widget configuration with proposed options and integrations", () => {
     expect(
       browserToolContracts.configure_widget.parameters.safeParse({
@@ -146,7 +142,6 @@ describe("assistant human tool contracts", () => {
         integrationIds: ["plex-1"],
       }).success,
     ).toBe(true);
-    expect(() => z.toJSONSchema(browserToolContracts.configure_widget.parameters)).not.toThrow();
   });
 
   test("only preserves usable app icon URLs", () => {

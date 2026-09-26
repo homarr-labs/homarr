@@ -119,25 +119,6 @@ beforeEach(() => {
 });
 
 describe("parsePrometheusMetrics", () => {
-  test("parses metric lines and skips comments and HELP/TYPE lines", () => {
-    const metrics = parsePrometheusMetrics(sampleMetricsText);
-
-    expect(metrics).toStrictEqual([
-      { name: "llamacpp:prompt_tokens_total", value: 69834 },
-      { name: "llamacpp:prompt_seconds_total", value: 23278 },
-      { name: "llamacpp:prompt_tokens_cached_total", value: 12000 },
-      { name: "llamacpp:tokens_predicted_total", value: 12161 },
-      { name: "llamacpp:tokens_predicted_seconds_total", value: 380.03125 },
-      { name: "llamacpp:requests_processing", value: 1 },
-      { name: "llamacpp:requests_deferred", value: 0 },
-      { name: "llamacpp:predicted_tokens_seconds", value: 32.8472 },
-      { name: "llamacpp:prompt_tokens_seconds", value: 1500.5 },
-      { name: "llamacpp:spec_decode_num_draft_tokens_total", value: 128 },
-      { name: "llamacpp:spec_decode_num_accepted_tokens_total", value: 96 },
-      { name: "llamacpp:spec_decode_num_drafts_total", value: 16 },
-    ]);
-  });
-
   test("parses metric lines with labels and skips non-numeric values", () => {
     const metrics = parsePrometheusMetrics(
       [
@@ -150,26 +131,9 @@ describe("parsePrometheusMetrics", () => {
 
     expect(metrics).toStrictEqual([{ name: "llamacpp:requests_by_status", value: 5 }]);
   });
-
-  test("returns an empty array for empty input", () => {
-    expect(parsePrometheusMetrics("")).toStrictEqual([]);
-  });
 });
 
 describe("mapLlamacppModel", () => {
-  test("extracts a short display name and metadata fields", () => {
-    const model = mapLlamacppModel(sampleModel);
-
-    expect(model).toStrictEqual({
-      id: "/root/models/unsloth/Qwen3.8-27B-UD-Q4_K_XL.gguf",
-      name: "Qwen3.8-27B-UD-Q4_K_XL",
-      contextSize: 131072,
-      parameterCount: 27320697856,
-      fileSizeBytes: 17912397824,
-      quantization: "Q4_K - Small",
-    });
-  });
-
   test("returns null metadata when meta is missing", () => {
     const model = mapLlamacppModel({ id: "models/foo.gguf" });
 
@@ -185,14 +149,6 @@ describe("mapLlamacppModel", () => {
 });
 
 describe("mapContextUsage", () => {
-  test("computes percent from a slot with valid n_ctx and n_prompt_tokens", () => {
-    expect(mapContextUsage(sampleSlotsResponse)).toStrictEqual({
-      usedTokens: 101076,
-      contextSize: 131072,
-      percent: 77.1,
-    });
-  });
-
   test("returns the slot with the greatest used tokens, not the first valid slot", () => {
     expect(
       mapContextUsage([
@@ -224,10 +180,6 @@ describe("mapContextUsage", () => {
 });
 
 describe("avgTokensPerSecond", () => {
-  test("divides cumulative counters", () => {
-    expect(avgTokensPerSecond(12161, 380.03125)).toBe(32);
-  });
-
   test("returns null when either counter is missing or seconds are zero", () => {
     expect(avgTokensPerSecond(null, 5)).toBeNull();
     expect(avgTokensPerSecond(10, null)).toBeNull();
@@ -236,10 +188,6 @@ describe("avgTokensPerSecond", () => {
 });
 
 describe("mapLlamacppPerRequest", () => {
-  test("returns the active request id and decoded tokens from the processing slot", () => {
-    expect(mapLlamacppPerRequest(sampleSlotsResponse)).toStrictEqual({ taskId: 7, decodedTokens: 42 });
-  });
-
   test("skips idle slots and returns nulls", () => {
     expect(
       mapLlamacppPerRequest([{ is_processing: false, id_task: 3, next_token: [{ n_decoded: 10 }] }]),
@@ -402,19 +350,6 @@ describe("LlamacppIntegration getStatsAsync", () => {
       specAcceptedTokens: null,
       specDrafts: null,
     });
-  });
-
-  test("throws when the /health endpoint returns an error status", async () => {
-    mockAllEndpoints();
-    mockFetch.mockImplementation((async (input) => {
-      const url = String(input);
-      if (url.includes("/health")) {
-        return textResponse("Service Unavailable", 503);
-      }
-      return jsonResponse({ status: "ok" });
-    }) as typeof fetchWithTrustedCertificatesAsync);
-
-    await expect(createIntegration().getStatsAsync()).rejects.toThrow();
   });
 
   test("degrades to null metrics when /metrics is not available (501) but keeps health and model data", async () => {

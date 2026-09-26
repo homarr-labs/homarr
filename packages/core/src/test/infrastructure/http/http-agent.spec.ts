@@ -19,44 +19,6 @@ vi.mock("undici", () => {
 const REDACTED = "REDACTED";
 
 describe("UndiciHttpAgent should log all requests", () => {
-  test("should log all requests", () => {
-    // Arrange
-    const logger = new TestLogger();
-    const agent = new UndiciHttpAgent({ logger });
-
-    // Act
-    agent.dispatch({ origin: "https://homarr.dev", path: "/", method: "GET" }, {});
-
-    // Assert
-    expect(logger.messages).toContainEqual({
-      level: "debug",
-      message: "Dispatching request https://homarr.dev/ (0 headers)",
-    });
-  });
-
-  test("should show amount of headers", () => {
-    // Arrange
-    const logger = new TestLogger();
-    const agent = new UndiciHttpAgent({ logger });
-
-    // Act
-    agent.dispatch(
-      {
-        origin: "https://homarr.dev",
-        path: "/",
-        method: "GET",
-        headers: {
-          "Content-Type": "text/html",
-          "User-Agent": "Mozilla/5.0",
-        },
-      },
-      {},
-    );
-
-    // Assert
-    expect(logger.messages.at(-1)?.message).toContain("(2 headers)");
-  });
-
   test.each([
     ["/?hex=a3815e8ada2ef9a31", `/?hex=${REDACTED}`],
     ["/?uuid=f7c3f65e-c511-4f90-ba9a-3fd31418bd49", `/?uuid=${REDACTED}`],

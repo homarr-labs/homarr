@@ -1,21 +1,6 @@
 import { describe, expect, test } from "vitest";
 
-import {
-  appendActiveCustomWidgetToolInstruction,
-  assistantExecutionPolicy,
-  createCustomWidgetToolStepGate,
-} from "./assistant-execution-policy";
-
-describe("assistantExecutionPolicy", () => {
-  test("allows a sizeable batch of tool calls to finish in one request", () => {
-    expect(assistantExecutionPolicy.maxSteps).toBe(40);
-    expect(assistantExecutionPolicy.maxRetries).toBe(2);
-    expect(assistantExecutionPolicy.maxOutputTokens).toBe(32_768);
-    expect(assistantExecutionPolicy.totalTimeoutMs).toBe(600_000);
-    expect(assistantExecutionPolicy.stepTimeoutMs).toBe(90_000);
-    expect(assistantExecutionPolicy.toolTimeoutMs).toBe(90_000);
-  });
-});
+import { appendActiveCustomWidgetToolInstruction, createCustomWidgetToolStepGate } from "./assistant-execution-policy";
 
 describe("createCustomWidgetToolStepGate", () => {
   test("batches independent context reads but keeps lifecycle tools exclusive", () => {

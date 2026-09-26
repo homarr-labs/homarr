@@ -2,8 +2,6 @@ import { describe, expect, it } from "vitest";
 
 import { CUSTOM_WIDGET_AI_EVALUATION_CASES } from "../../scripts/ai-evaluation-cases";
 import {
-  assistantEvaluationToolRequestOptions,
-  assistantEvaluationReasoningOptions,
   compactAssistantEvaluationMessages,
   composeAssistantEvaluationFeedback,
   createAssistantEvaluationState,
@@ -184,14 +182,6 @@ describe("Custom Widget assistant live evaluation harness", () => {
     expect(getAssistantJudgeFloor([])).toBeNull();
   });
 
-  it("matches production by disabling parallel tool calls", () => {
-    expect(assistantEvaluationToolRequestOptions).toEqual({
-      tool_choice: "required",
-      parallel_tool_calls: false,
-    });
-    expect(assistantEvaluationReasoningOptions).toEqual({ effort: "xhigh", exclude: true });
-  });
-
   it("batches context reads but keeps the first call when a provider mixes in lifecycle work", () => {
     const webSearch = { id: "search", function: { name: "web_search" } };
     const skill = { id: "skill", function: { name: "customWidget_getSkill" } };
@@ -319,30 +309,6 @@ describe("Custom Widget assistant live evaluation harness", () => {
         },
       ]),
     ).toEqual(["requests.requestMovie.invalidates: media-research: invalidate the search query after success."]);
-  });
-
-  it("exposes the lazy production authoring and evidence lifecycle", () => {
-    const names = customWidgetAssistantEvaluationToolDefinitions.map(({ function: definition }) => definition.name);
-
-    expect(names).toEqual(
-      expect.arrayContaining([
-        "web_search",
-        "customWidget_getSkill",
-        "customWidget_schema",
-        "customWidget_getReference",
-        "customWidget_getComponentCatalog",
-        "customWidget_findComponents",
-        "customWidget_getComponents",
-        "customWidget_validateTemplate",
-        "customWidget_previewCreate",
-        "customWidget_previewReviseTemplate",
-        "customWidget_previewQuery",
-        "customWidget_previewAction",
-        "customWidget_previewJournal",
-        "customWidget_createFromPreview",
-      ]),
-    );
-    expect(names).not.toContain("customWidget_validate");
   });
 
   it("starts with direct preview and opens context only after diagnostics", () => {

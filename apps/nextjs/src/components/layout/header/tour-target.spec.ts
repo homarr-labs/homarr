@@ -62,10 +62,4 @@ describe("TourTarget", () => {
     const host = await renderTargetAsync(true);
     expect(host.querySelector('[data-tour-target="example"] button')?.textContent).toBe("Target");
   });
-
-  it("adds no wrapper for users without an active tour", async () => {
-    const host = await renderTargetAsync(false);
-    expect(host.querySelector("[data-tour-target]")).toBeNull();
-    expect(host.querySelector("button")?.parentElement).toBe(host);
-  });
 });

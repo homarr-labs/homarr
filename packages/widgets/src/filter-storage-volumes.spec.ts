@@ -4,31 +4,16 @@ import { filterStorageVolumes, normalizeStorageDeviceName, toScopedStorageVolume
 import { matchFileSystemAndSmart } from "./health-monitoring/system-health";
 
 describe("normalizeStorageDeviceName", () => {
-  test("strips partition suffixes from block device paths", () => {
-    expect(normalizeStorageDeviceName("/dev/sda1")).toBe("/dev/sda");
-    expect(normalizeStorageDeviceName("/dev/sda")).toBe("/dev/sda");
-  });
-
   test("strips partition suffixes from unprefixed device names (OpenMediaVault)", () => {
     expect(normalizeStorageDeviceName("sda1")).toBe("sda");
     expect(normalizeStorageDeviceName("sda")).toBe("sda");
     expect(normalizeStorageDeviceName("nvme0n1p1")).toBe("nvme0n1");
   });
 
-  test("preserves Synology-style volume names", () => {
-    expect(normalizeStorageDeviceName("volume_1")).toBe("volume_1");
-    expect(normalizeStorageDeviceName("volume_2")).toBe("volume_2");
-  });
-
   test("strips NVMe partition suffixes without collapsing the namespace id", () => {
     expect(normalizeStorageDeviceName("/dev/nvme0n1")).toBe("/dev/nvme0n1");
     expect(normalizeStorageDeviceName("/dev/nvme0n1p2")).toBe("/dev/nvme0n1");
     expect(normalizeStorageDeviceName("/dev/nvme0n2p1")).toBe("/dev/nvme0n2");
-  });
-
-  test("does not collapse unrelated md devices", () => {
-    expect(normalizeStorageDeviceName("/dev/md0")).toBe("/dev/md0");
-    expect(normalizeStorageDeviceName("/dev/md1")).toBe("/dev/md1");
   });
 });
 

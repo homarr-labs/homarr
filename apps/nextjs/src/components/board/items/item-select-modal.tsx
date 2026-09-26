@@ -564,7 +564,7 @@ export const WidgetItem = ({
   );
 };
 
-export const ConnectionStatusBadge = ({ status }: { status: WidgetConnectionStatus }) => {
+const ConnectionStatusBadge = ({ status }: { status: WidgetConnectionStatus }) => {
   const t = useI18n();
   if (status === "noConnectionRequired") return null;
   const color = status === "ready" ? "green" : status === "needsSetup" ? "yellow" : "gray";
@@ -576,7 +576,7 @@ export const ConnectionStatusBadge = ({ status }: { status: WidgetConnectionStat
   );
 };
 
-export const SupportedIntegrations = ({ integrations }: { integrations: IntegrationKind[] }) => {
+const SupportedIntegrations = ({ integrations }: { integrations: IntegrationKind[] }) => {
   const t = useI18n();
 
   if (integrations.length === 0) {

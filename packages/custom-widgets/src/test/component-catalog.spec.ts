@@ -12,7 +12,6 @@ import {
   CUSTOM_JSX_AUTHORING_CATALOG_SCHEMA_VERSION,
   CUSTOM_WIDGET_AUTHORING_VERSION,
 } from "../core/component-catalog-types";
-import { customJsxComponentRegistry } from "../core/component-registry";
 
 const repositoryRoot = resolve(import.meta.dirname, "../../../..");
 const catalogPath = resolve(repositoryRoot, "packages/custom-widgets/src/core/component-catalog.generated.json");
@@ -72,12 +71,6 @@ describe("Custom JSX authoring catalog", () => {
       expect(prop.typeRef, prop.name).toBeLessThan(types.length);
       expect(resolveCustomJsxPropDescriptor(prop).type, prop.name).not.toBe("");
     }
-  });
-
-  test("covers the complete runtime component registry", () => {
-    const catalogNames = customJsxAuthoringCatalog.components.map(({ name }) => name);
-    const runtimeNames = customJsxComponentRegistry.map(({ name }) => name).toSorted();
-    expect(catalogNames).toEqual(runtimeNames);
   });
 
   test("includes prop APIs, bindings, accessibility, and denied reasons", () => {

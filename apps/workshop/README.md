@@ -76,14 +76,9 @@ pnpm --filter @homarr/workshop typecheck
 pnpm --filter @homarr/docs typecheck
 ```
 
-The integration suite uses a disposable Compose project. `pnpm test:workshop-image` additionally builds and smoke-tests
-the combined production image. The production image smoke also runs in PR CI on native amd64 and arm64 runners, including data persistence and backup restore. The broader integration suite remains available manually. Workshop CI validates Compose configuration and publishes images only on release branches. The main Fast gate owns workspace typechecking.
-
-To smoke-test an already built candidate without rebuilding:
-
-```sh
-WORKSHOP_IMAGE_TEST_IMAGE=homarr-workshop:candidate pnpm test:workshop-image
-```
+`pnpm test:workshop` runs the Go package tests and local JavaScript contract/migration checks.
+Workshop CI validates Compose configuration and publishes images only on release branches.
+The main Fast gate owns workspace typechecking.
 
 ## Data safety
 

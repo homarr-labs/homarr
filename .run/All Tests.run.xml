@@ -3,7 +3,7 @@
     <node-interpreter value="project" />
     <vitest-package value="$PROJECT_DIR$/node_modules/vitest" />
     <working-dir value="$PROJECT_DIR$" />
-    <vitest-options value="--exclude e2e --coverage.enabled" />
+    <vitest-options value="--project !integration --coverage.enabled" />
     <envs>
       <env name="NODE_ENV" value="development" />
       <env name="CI" value="true" />

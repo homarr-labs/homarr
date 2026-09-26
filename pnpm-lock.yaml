@@ -156,9 +156,6 @@ catalogs:
     '@paralleldrive/cuid2':
       specifier: ^3.3.0
       version: 3.3.0
-    '@playwright/test':
-      specifier: ^1.61.1
-      version: 1.61.1
     '@rexa-developer/tiks':
       specifier: ^0.3.0
       version: 0.3.0
@@ -211,9 +208,6 @@ catalogs:
       specifier: ^5.101.2
       version: 5.101.2
     '@testcontainers/postgresql':
-      specifier: ^12.0.4
-      version: 12.0.4
-    '@testcontainers/redis':
       specifier: ^12.0.4
       version: 12.0.4
     '@tiptap/extension-color':
@@ -760,9 +754,6 @@ importers:
       '@babel/parser':
         specifier: 'catalog:'
         version: 7.29.7
-      '@playwright/test':
-        specifier: 'catalog:'
-        version: 1.61.1
       '@semantic-release/changelog':
         specifier: 'catalog:'
         version: 7.0.0(semantic-release@25.0.5(supports-color@10.2.2)(typescript@7.0.2))
@@ -781,9 +772,6 @@ importers:
       '@semantic-release/release-notes-generator':
         specifier: 'catalog:'
         version: 14.1.1(semantic-release@25.0.5(supports-color@10.2.2)(typescript@7.0.2))(supports-color@10.2.2)
-      '@testcontainers/redis':
-        specifier: 'catalog:'
-        version: 12.0.4(supports-color@10.2.2)
       '@turbo/gen':
         specifier: 'catalog:'
         version: 2.10.4(@types/node@24.13.3)
@@ -5882,6 +5870,7 @@ packages:
   '@playwright/test@1.61.1':
     resolution: {integrity: sha512-8nKv6+0RJSL9FE4jYOEGXnPeM/Hg12qZpmqzZjRh3qM0Y7c3z1mrOTfFLids72RDQYVh9WpLEfR5WdpNX4fkig==}
     engines: {node: '>=18'}
+    hasBin: true
 
   '@pnpm/config.env-replace@1.1.0':
     resolution: {integrity: sha512-htyl8TWnKL7K/ESFa1oW2UB5lVDxuF5DpM7tBi6Hu2LNL3mWkIzNLG6N4zoCUP1lCKNxWy/3iu8mS8MvToGd6w==}
@@ -7553,9 +7542,6 @@ packages:
 
   '@testcontainers/postgresql@12.0.4':
     resolution: {integrity: sha512-a/pLU6j5lpKKAlUTPwqweqMGhOSjgTSb6HBX69TOrXn32ifU37nnQDmNFTj8ddOAw+BQL9oTRkeOxVbZkqhgZA==}
-
-  '@testcontainers/redis@12.0.4':
-    resolution: {integrity: sha512-44Ov3Lcptb3KqljcCy6xIJ2VxNsN+3Kw/YpBiotZpOcI4iLgLNmcOgvCFPVo+vDoh4rCfgtNUEbIpL5Mu7oRuw==}
 
   '@tiptap/core@3.31.3':
     resolution: {integrity: sha512-Cz50pvciQrxdSxgTkHOVz0uD0Yl/8Xt0QatGD6ILm47jW8EzyHR9RkUGs/D5IqzXKuVPntfw1ttaT926vXfiRg==}
@@ -12213,10 +12199,12 @@ packages:
   playwright-core@1.61.1:
     resolution: {integrity: sha512-h7Qlt6m4REp25qvIdvbDtVmD4LqVXfpRxhORv9L0jzETM05p4fuPJ3dKyuSXQxDSbXnmS79HAgi9589lGSpLkg==}
     engines: {node: '>=18'}
+    hasBin: true
 
   playwright@1.61.1:
     resolution: {integrity: sha512-DWnY5o3YbLWK4GovuAVwpqL+1VwGNdUGrRr++8j8PtQQzvAVZUIMjKQ90fY689sEJZJBbZVw1rXaOKSTitkzPQ==}
     engines: {node: '>=18'}
+    hasBin: true
 
   po-parser@2.1.1:
     resolution: {integrity: sha512-ECF4zHLbUItpUgE3OTtLKlPjeBN+fKEczj2zYjDfCGOzicNs0GK3Vg2IoAYwx7LH/XYw43fZQP6xnZ4TkNxSLQ==}
@@ -17083,6 +17071,7 @@ snapshots:
   '@playwright/test@1.61.1':
     dependencies:
       playwright: 1.61.1
+    optional: true
 
   '@pnpm/config.env-replace@1.1.0': {}
 
@@ -19166,13 +19155,6 @@ snapshots:
       vue: 3.5.42(typescript@7.0.2)
 
   '@testcontainers/postgresql@12.0.4(supports-color@10.2.2)':
-    dependencies:
-      testcontainers: 12.0.4(supports-color@10.2.2)
-    transitivePeerDependencies:
-      - bare-buffer
-      - supports-color
-
-  '@testcontainers/redis@12.0.4(supports-color@10.2.2)':
     dependencies:
       testcontainers: 12.0.4(supports-color@10.2.2)
     transitivePeerDependencies:
@@ -24360,13 +24342,15 @@ snapshots:
       find-up: 2.1.0
       load-json-file: 4.0.0
 
-  playwright-core@1.61.1: {}
+  playwright-core@1.61.1:
+    optional: true
 
   playwright@1.61.1:
     dependencies:
       playwright-core: 1.61.1
     optionalDependencies:
       fsevents: 2.3.2
+    optional: true
 
   po-parser@2.1.1: {}
 

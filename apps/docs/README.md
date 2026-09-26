@@ -49,14 +49,6 @@ migrate another database. Set `WORKSHOP_API_URL` to a remote PocketBase origin w
 `WORKSHOP_REMOTE_API_URL` can override the server-side metadata source independently. Direct item links then use that
 source for titles and social metadata. Missing remote items return 404; an unavailable backend returns 503.
 
-Verify public item pages without changing the remote database:
-
-```bash
-REMOTE_WORKSHOP_URL=https://workshop.example.com
-WORKSHOP_TEST_URL=http://127.0.0.1:8093 WORKSHOP_REMOTE_API_URL="$REMOTE_WORKSHOP_URL" \
-  node apps/workshop/tests/remote-workshop.integration.mjs
-```
-
 Stop it with `docker stop homarr-docs-static-preview`. Rebuild and restart the preview after changing source files;
 startup recreates the runtime configuration. `DOCS_PREVIEW_PORT`, `DOCS_PREVIEW_HOST`, and `DOCS_PREVIEW_NAME` override
 the defaults. Set the host to this machine's Tailscale address to access it from your other devices.

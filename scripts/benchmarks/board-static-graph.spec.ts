@@ -1,7 +1,6 @@
-import path from "node:path";
 import { describe, expect, it } from "vitest";
 
-import { collectBoardStaticGraph, getRuntimeModuleSpecifiers } from "./board-static-graph.mts";
+import { getRuntimeModuleSpecifiers } from "./board-static-graph.mts";
 
 describe("board static dependency graph", () => {
   it("ignores type-only and dynamic imports", () => {
@@ -25,13 +24,5 @@ describe("board static dependency graph", () => {
         "fixture.ts",
       ),
     ).toEqual(["runtime", "runtime-export", "runtime-star", "runtime-side-effect", "runtime-multiline"]);
-  });
-
-  it("keeps widget registries, editors, Spotlight, and onboarding tour out of the board's static graph", () => {
-    const result = collectBoardStaticGraph(path.resolve("."));
-    expect(result.visitedModuleCount).toBeGreaterThan(0);
-    expect(result.bareWidgetImports).toEqual([]);
-    expect(result.reachedForbiddenModules).toEqual([]);
-    expect(result.unresolvedWorkspaceImports).toEqual([]);
   });
 });

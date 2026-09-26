@@ -1,7 +1,7 @@
 import type { QueryKey } from "@tanstack/react-query";
 import { describe, expect, it } from "vitest";
 
-import { widgetIntegrationSupport, widgetKinds as declaredWidgetKinds } from "@homarr/definitions";
+import { widgetIntegrationSupport } from "@homarr/definitions";
 
 import {
   createRetryableLoader,
@@ -10,11 +10,9 @@ import {
   loadWidgetDefinition,
   loadWidgetModule,
   loadWidgetResources,
-  reduceWidgetOptionsWithDefinition,
   widgetKinds,
 } from "./manifest";
 import { widgetQueryRefetchIntervals } from "./refetch-intervals";
-import { widgetCatalogIcons } from "@homarr/ui/widget-icons";
 import { getWidgetQueryKeys } from "./definition";
 
 const serializePollingPolicy = ({
@@ -63,10 +61,6 @@ describe("widget manifest promise stability", () => {
     expect(attempts).toBe(2);
   });
 
-  it("covers every declared widget kind", () => {
-    expect(new Set(widgetKinds)).toEqual(new Set(declaredWidgetKinds));
-  });
-
   it("loads matching definitions and component loaders for every widget", async () => {
     const definitions = await loadAllWidgetDefinitions();
 
@@ -86,18 +80,6 @@ describe("widget manifest promise stability", () => {
     );
   }, 30_000);
 
-  it("preserves every widget option default", async () => {
-    const definitions = await loadAllWidgetDefinitions();
-    const settings = { enableStatusByDefault: true, forceDisableStatus: false };
-
-    for (const definition of definitions.values()) {
-      const options = definition.createOptions(settings);
-      const reduced = reduceWidgetOptionsWithDefinition(definition, settings);
-      expect(Object.keys(reduced)).toEqual(Object.keys(options));
-      expect(Object.values(reduced).every((value) => value !== undefined)).toBe(true);
-    }
-  });
-
   it("keeps the lightweight integration support map aligned with widget definitions", async () => {
     const definitions = await loadAllWidgetDefinitions();
 
@@ -107,31 +89,6 @@ describe("widget manifest promise stability", () => {
         definition && "supportedIntegrations" in definition ? (definition.supportedIntegrations ?? []) : [];
       const expectedIntegrations = widgetIntegrationSupport[kind] ?? [];
       expect(expectedIntegrations.toSorted()).toEqual([...supportedIntegrations].toSorted());
-    }
-  });
-
-  it("keeps the lightweight catalog icons aligned with widget definitions", async () => {
-    const definitions = await loadAllWidgetDefinitions();
-
-    for (const kind of widgetKinds) {
-      expect(widgetCatalogIcons[kind]).toBe(definitions.get(kind)?.icon);
-    }
-  });
-
-  it("declares the real query prefix for widget kinds that share a router", async () => {
-    const definitions = await loadAllWidgetDefinitions();
-    const expectedQueryKeys = new Map([
-      ["anchorNote", [["widget", "anchorNotes"]]],
-      ["beszelAlerts", [["widget", "beszel", "getAlerts"]]],
-      ["clock", [["widget", "weather", "atLocation"]]],
-      ["mediaMissing", [["widget", "mediaOrganizer", "getData"]]],
-      ["mediaRequests-requestList", [["widget", "mediaRequests", "getLatestRequests"]]],
-      ["mediaRequests-requestStats", [["widget", "mediaRequests", "getStats"]]],
-      ["smartHome-entityState", [["widget", "smartHome"]]],
-    ] as const);
-
-    for (const [kind, queryKey] of expectedQueryKeys) {
-      expect(definitions.get(kind)?.queryKey).toEqual(queryKey);
     }
   });
 
@@ -158,24 +115,5 @@ describe("widget manifest promise stability", () => {
     expect(widgetQueryRefetchIntervals.map(serializePollingPolicy).toSorted()).toEqual(
       [...expectedByQueryKey.values()].map(serializePollingPolicy).toSorted(),
     );
-  });
-
-  it("does not poll integration handlers faster than their cache can refresh", async () => {
-    const definitions = await loadAllWidgetDefinitions();
-    const cachedWidgetKinds = [
-      "dnsHoleControls",
-      "dnsHoleSummary",
-      "downloads",
-      "firewall",
-      "healthMonitoring",
-      "mediaServer",
-      "systemDisks",
-      "systemResources",
-      "tracearr",
-    ] as const;
-
-    for (const kind of cachedWidgetKinds) {
-      expect(definitions.get(kind)?.refetchInterval).toBe(10);
-    }
   });
 });

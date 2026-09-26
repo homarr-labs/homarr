@@ -4,12 +4,11 @@ Install [Act](https://nektosact.com/installation/index.html) and ensure Docker i
 
 ```bash
 pnpm ci:act:fast
-pnpm ci:act:docker
 pnpm ci:act:all
 pnpm ci:act:cleanup
 ```
 
-`fast` runs the quality gate. `docker` and `all` run the gate followed by the single container build, E2E suite, and memory regression test. `cleanup` validates the manual cleanup path without calling GitHub. The wrapper supports regular clones and Git worktrees, including non-default Docker contexts. Linux dependencies are kept in Docker volumes instead of overwriting host `node_modules`. The first run downloads the Act runner and Playwright browser dependencies.
+`fast` runs the quality gate. `all` runs the workflow's local PR jobs. `cleanup` validates the manual cleanup path without calling GitHub. The wrapper supports regular clones and Git worktrees, including non-default Docker contexts. Linux dependencies are kept in Docker volumes instead of overwriting host `node_modules`. The first run downloads the Act runner.
 
 Remote caching is optional locally. Copy `.github/act/.secrets.example` to `.github/act/.secrets`, populate it with rotated credentials, and run with:
 

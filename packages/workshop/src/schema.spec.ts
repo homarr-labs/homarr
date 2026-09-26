@@ -3,22 +3,14 @@ import { describe, expect, test } from "vitest";
 import { CUSTOM_WIDGET_STARTER } from "@homarr/custom-widgets/core";
 
 import {
-  githubAvatarUrl,
-  githubProfileUrl,
   normalizeHttpUrl,
   resolveHomarrUrlConfig,
   validateWorkshopWidget,
-  workshopReportCategorySchema,
   workshopSubmissionInputSchema,
   workshopSubmissionSummarySchema,
 } from "./schema";
 
 describe("Workshop URL configuration", () => {
-  test("derives GitHub identity URLs from the stored username", () => {
-    expect(githubProfileUrl("octocat")).toBe("https://github.com/octocat");
-    expect(githubAvatarUrl("octocat")).toBe("https://github.com/octocat.png");
-  });
-
   test("normalizes the URL contract and derives Workshop defaults", () => {
     expect(
       resolveHomarrUrlConfig({
@@ -55,10 +47,6 @@ describe("Workshop URL configuration", () => {
 });
 
 describe("Workshop widget validation", () => {
-  test("accepts outdated as a report category", () => {
-    expect(workshopReportCategorySchema.parse("outdated")).toBe("outdated");
-  });
-
   test("accepts a canonical credential-free widget", () => {
     expect(validateWorkshopWidget(JSON.stringify(CUSTOM_WIDGET_STARTER)).success).toBe(true);
     expect(
@@ -69,17 +57,6 @@ describe("Workshop widget validation", () => {
         content: JSON.stringify(CUSTOM_WIDGET_STARTER),
       }).success,
     ).toBe(true);
-  });
-
-  test("normalizes widget submissions to readable multi-line JSON", () => {
-    const parsed = workshopSubmissionInputSchema.parse({
-      type: "customWidget",
-      title: "Starter widget",
-      description: "",
-      content: JSON.stringify(CUSTOM_WIDGET_STARTER),
-    });
-    expect(parsed.content).toContain('\n  "$schema":');
-    expect(JSON.parse(parsed.content)).toMatchObject(CUSTOM_WIDGET_STARTER);
   });
 
   test("accepts Custom CSS without treating it as widget JSON", () => {

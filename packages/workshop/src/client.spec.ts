@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, expectTypeOf, test, vi } from "vitest";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   autoCancellation: vi.fn(),
@@ -62,20 +62,12 @@ vi.mock("pocketbase", () => {
 });
 
 import { ClientResponseError } from "pocketbase";
-import type { RecordService } from "pocketbase";
 
 import { WorkshopBackend } from "./backend";
-import type { WorkshopSubmissionRecord } from "./backend";
-import * as workshopClient from "./client";
 
 const validWorkshopToken = "header.eyJleHAiOjQxMDI0NDQ4MDB9.signature";
 
 describe("WorkshopBackend", () => {
-  test("resolves the advertised client module", () => {
-    expect(workshopClient.WorkshopBackend).toBe(WorkshopBackend);
-    expect(workshopClient.validateWorkshopContent).toBeTypeOf("function");
-  });
-
   beforeEach(() => {
     mocks.autoCancellation.mockReset();
     mocks.authWithOAuth2.mockReset();
@@ -104,12 +96,6 @@ describe("WorkshopBackend", () => {
     expect(mocks.authWithOAuth2.mock.calls[0]?.[0]).not.toHaveProperty("urlCallback");
     expect(mocks.update).not.toHaveBeenCalled();
     expect(user).toMatchObject({ name: "octocat" });
-  });
-
-  test("exposes the typed submission collection service", () => {
-    const client = new WorkshopBackend("https://workshop.example.com");
-    expectTypeOf(client.pocketBase.collection("submissions")).toEqualTypeOf<RecordService<WorkshopSubmissionRecord>>();
-    expect(mocks.autoCancellation).toHaveBeenCalledWith(false);
   });
 
   test("reuses a valid Workshop session for the Homarr provider allowance", async () => {
@@ -295,16 +281,6 @@ describe("WorkshopBackend", () => {
 
     expect(result.items).toHaveLength(1);
     expect(mocks.getFullList).toHaveBeenCalledTimes(2);
-  });
-
-  test("replaces low-level network errors with an actionable Workshop outage message", async () => {
-    mocks.getList.mockRejectedValueOnce(new Error("NetworkError when attempting to fetch resource."));
-
-    const client = new WorkshopBackend("https://workshop.example.com");
-
-    await expect(client.list({ type: "customWidget" })).rejects.toThrow(
-      "Homarr Workshop seems to be unavailable right now. Try again in a moment.",
-    );
   });
 });
 

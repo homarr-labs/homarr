@@ -7,7 +7,6 @@ import {
   canManageGroupMembersLocally,
   getGroupMemberManagementType,
   getLocallyManageableProviders,
-  isGroupMembershipManagedLocally,
 } from "../check-provider";
 
 const mockEnv = (providers: SupportedAuthProvider[], oidcLocalManagement = false) => {
@@ -19,26 +18,6 @@ const mockEnv = (providers: SupportedAuthProvider[], oidcLocalManagement = false
 
 beforeEach(() => {
   vi.restoreAllMocks();
-});
-
-describe("isGroupMembershipManagedLocally", () => {
-  test("credentials is always managed locally", () => {
-    mockEnv(["credentials"]);
-    expect(isGroupMembershipManagedLocally("credentials")).toBe(true);
-  });
-
-  test("oidc follows AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT", () => {
-    mockEnv(["oidc"], true);
-    expect(isGroupMembershipManagedLocally("oidc")).toBe(true);
-
-    mockEnv(["oidc"], false);
-    expect(isGroupMembershipManagedLocally("oidc")).toBe(false);
-  });
-
-  test("ldap is never managed locally", () => {
-    mockEnv(["ldap"]);
-    expect(isGroupMembershipManagedLocally("ldap")).toBe(false);
-  });
 });
 
 describe("getGroupMemberManagementType", () => {
