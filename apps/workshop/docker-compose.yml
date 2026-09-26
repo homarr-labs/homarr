@@ -1,19 +1,6 @@
 name: homarr-workshop
 
 services:
-  assistant-upstream:
-    profiles:
-      - test
-    image: node:24.18.0-alpine
-    command: ["node", "/mock/openrouter-mock.mjs"]
-    environment:
-      PORT: 18091
-      EXPECTED_MODEL: mock/team-selected-model
-    volumes:
-      - ./tests/openrouter-mock.mjs:/mock/openrouter-mock.mjs:ro
-    security_opt:
-      - no-new-privileges:true
-
   workshop:
     build:
       context: ../..

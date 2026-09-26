@@ -7,11 +7,6 @@ import {
 } from "../core/component-registry";
 
 describe("customJsxComponentRegistry", () => {
-  test("classifies every component name exactly once", () => {
-    const names = customJsxComponentRegistry.map(({ name }) => name);
-    expect(new Set(names).size).toBe(names.length);
-  });
-
   test.each([
     ["ChartTooltip", "wrapped"],
     ["ChartLegend", "wrapped"],

@@ -51,7 +51,6 @@ homarr/
 ├── tools/
 │   └── homarr-dev/      # Go CLI for local and PR Docker images
 ├── development/         # Dev docker-compose (Redis, MySQL, PostgreSQL)
-├── e2e/                 # E2E test specs
 └── Dockerfile           # Multi-stage production build
 ```
 
@@ -97,7 +96,13 @@ Only after this reader-value test passes, use these locations:
 
 ## Testing
 
-Use [useful-tests](.agents/skills/useful-tests/SKILL.md) when deciding whether to add, change, run, or prune tests. New tests are exceptional: add them only when explicitly requested or absolutely vital to protect a concrete security, data-integrity, or critical-workflow risk that existing checks cannot catch. Features, bug fixes, and refactors do not automatically require tests. Run the smallest relevant existing checks; broad test, Docker, and E2E suites are not the default.
+Use [useful-tests](.agents/skills/useful-tests/SKILL.md) when deciding whether to add, change, run, or prune tests. New tests are exceptional: add them only when explicitly requested or absolutely vital to protect a concrete security, data-integrity, or critical-workflow risk that existing checks cannot catch.
+
+- Never write unit tests after you write code.
+- Highly prefer E2E tests as the sole testing mechanism. Use them to verify complex features work. At the end of E2E tests, produce a verifiable and repeatable artifact.
+- If you must test a system in isolation, first write down all the ways it could fail, then write the code.
+
+The current E2E suites and harness have been removed. Add a replacement harness only when requested. Until then, use the smallest relevant existing checks when validation is needed. Features, bug fixes, and refactors do not automatically require tests; broad test, Docker, and E2E runs are not the default.
 
 ## MCP servers
 

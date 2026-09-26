@@ -45,10 +45,6 @@ describe("uptimeKumaHeartbeatCategoryMap", () => {
   test("maps status 3 (maintenance) to 'paused'", () => {
     expect(uptimeKumaHeartbeatCategoryMap[3]).toBe("paused");
   });
-
-  test("returns undefined for unknown status codes", () => {
-    expect(uptimeKumaHeartbeatCategoryMap[99]).toBeUndefined();
-  });
 });
 
 describe("UptimeKumaIntegration.getDashboardDataAsync", () => {

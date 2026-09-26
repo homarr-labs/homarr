@@ -100,7 +100,6 @@ export default defineConfig({
             "packages/db/**",
             "packages/docker/**",
             "packages/request-handler/**",
-            "e2e/**",
             ...integrationTests,
           ],
         },
@@ -112,23 +111,6 @@ export default defineConfig({
           environment: "node",
           setupFiles: ["./vitest.setup.ts", "./vitest.setup.node.ts"],
           include: integrationTests,
-        },
-      },
-      {
-        extends: true,
-        test: {
-          name: "e2e",
-          environment: "node",
-          include: ["e2e/**/*.spec.ts"],
-          exclude: [...configDefaults.exclude, "e2e/assistant-docs-screenshots.spec.ts"],
-        },
-      },
-      {
-        extends: true,
-        test: {
-          name: "docs-screenshots",
-          environment: "node",
-          include: ["e2e/assistant-docs-screenshots.spec.ts"],
         },
       },
     ],

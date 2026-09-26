@@ -50,7 +50,6 @@ catalog:
   "@mantine/tiptap": ^9.6.0
   "@octokit/auth-app": ^8.2.0
   "@paralleldrive/cuid2": ^3.3.0
-  "@playwright/test": ^1.61.1
   pocketbase: ^0.26.2
   "@semantic-release/changelog": ^7.0.0
   "@semantic-release/commit-analyzer": ^13.0.1
@@ -67,7 +66,6 @@ catalog:
   "@tanstack/react-query-next-experimental": ^5.101.2
   "@tanstack/react-query-persist-client": ^5.101.2
   "@testcontainers/postgresql": ^12.0.4
-  "@testcontainers/redis": ^12.0.4
   "@tiptap/extension-color": 3.30.5
   "@tiptap/extension-details": 3.30.5
   "@tiptap/extension-highlight": 3.30.5

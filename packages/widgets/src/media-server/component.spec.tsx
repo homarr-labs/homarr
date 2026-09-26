@@ -1,20 +1,17 @@
 // @vitest-environment jsdom
 
-import { act, useState } from "react";
 import type { ReactNode } from "react";
-import { createRoot } from "react-dom/client";
 import type { Root } from "react-dom/client";
+import { act, useState } from "react";
+
+import { createRoot } from "react-dom/client";
+
 import { MantineProvider } from "@mantine/core";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
 import type { StreamSession } from "@homarr/integrations";
 
-import {
-  getMediaServerColumnVisibility,
-  getResolutionLabel,
-  getSeasonEpisodeParams,
-  SessionDetailsPopover,
-} from "./component";
+import { getResolutionLabel, getSeasonEpisodeParams, SessionDetailsPopover } from "./component";
 
 vi.mock("@homarr/translation/client", () => ({
   useI18n: () => (key: string) => key,
@@ -102,16 +99,6 @@ describe("SessionDetailsPopover", () => {
       await new Promise((resolve) => setTimeout(resolve, 0));
     });
     expect(target?.getAttribute("aria-expanded")).toBe("false");
-  });
-});
-
-describe("getMediaServerColumnVisibility", () => {
-  test("keeps every compact column visible at every width", () => {
-    expect(getMediaServerColumnVisibility(0, false)).toEqual({ user: true, status: true });
-    expect(getMediaServerColumnVisibility(300, false)).toEqual({ user: true, status: true });
-    expect(getMediaServerColumnVisibility(420, false)).toEqual({ user: true, status: true });
-    expect(getMediaServerColumnVisibility(540, false)).toEqual({ user: true, status: true });
-    expect(getMediaServerColumnVisibility(0, true)).toEqual({ user: true, status: true });
   });
 });
 

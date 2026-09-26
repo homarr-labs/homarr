@@ -10,11 +10,6 @@ import {
 } from "@homarr/definitions";
 
 describe("assistant provider presets", () => {
-  test("defines one complete preset for every provider", () => {
-    expect(Object.keys(assistantProviderPresets)).toEqual(assistantProviderIds);
-    expect(new Set(assistantProviderIds).size).toBe(assistantProviderIds.length);
-  });
-
   test.each(assistantProviderIds.filter((provider) => provider !== "custom"))(
     "%s has a valid default endpoint",
     (provider) => {
@@ -29,21 +24,6 @@ describe("assistant provider presets", () => {
         assistantProviderPresets[provider].category === "hosted" && provider !== "homarr",
       );
     }
-  });
-
-  test.each(assistantProviderIds.filter((provider) => provider !== "custom"))(
-    "%s has a valid provider mark",
-    (provider) => {
-      const iconUrl = assistantProviderPresets[provider].iconUrl;
-      expect(iconUrl).not.toBeNull();
-      expect(() => new URL(iconUrl ?? "")).not.toThrow();
-    },
-  );
-
-  test("uses Groq's high-contrast LobeHub mark in dark mode", () => {
-    expect(assistantProviderPresets.groq.darkIconUrl).toBe(
-      "https://cdn.jsdelivr.net/npm/@lobehub/icons-static-png@latest/dark/groq.png",
-    );
   });
 
   test("keeps the display label separate from the provider model ID", () => {

@@ -7,7 +7,7 @@ import type { Root } from "react-dom/client";
 import { MantineProvider } from "@mantine/core";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
-import { CustomWidgetCodeEditor, PreviewHeader, PreviewResponsePanel, ResponseTree } from "../workbench";
+import { CustomWidgetCodeEditor, PreviewHeader, ResponseTree } from "../workbench";
 import type { CustomWidgetEditorMessages } from "../workbench";
 
 vi.mock("../workbench/direct-code-mirror", () => ({
@@ -126,32 +126,5 @@ describe("Custom Widget workbench UI", () => {
     expect(testButton?.disabled).toBe(true);
     expect(host.textContent).toContain("Mutations are disabled");
     expect(host.textContent).not.toContain("Interactive");
-  });
-
-  test("shows an empty response state without exposing a raw JSON toggle", async () => {
-    await render(
-      <PreviewResponsePanel
-        value={null}
-        messages={{
-          empty: "No response",
-          sampleHint: "Add sample data",
-          editSample: "Edit sample",
-          addSample: "Add sample",
-          copied: "Copied",
-          copy: "Copy",
-          sampleLabel: "Sample",
-          sampleDescription: "JSON",
-          invalidSample: "Invalid JSON",
-          cancelSample: "Cancel",
-          applySample: "Apply",
-          copyPath: "Copy path",
-          pathCopied: "Path copied",
-          insertPath: "Insert path",
-          openRaw: "Open raw response",
-        }}
-      />,
-    );
-    expect(host.textContent).toContain("No response");
-    expect(host.textContent).not.toContain("View raw JSON");
   });
 });

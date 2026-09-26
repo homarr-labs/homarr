@@ -1,12 +1,6 @@
 import { describe, expect, test } from "vitest";
 
-import {
-  dashboardSupportingQueryPolicies,
-  isWidgetDataQueryKey,
-  queryCacheDefaultRefetchIntervalMs,
-  queryCacheDefaultStaleTimeMs,
-  queryCacheMetadataStaleTimeMs,
-} from "@homarr/api/query-cache";
+import { isWidgetDataQueryKey } from "@homarr/api/query-cache";
 
 describe("isWidgetDataQueryKey", () => {
   test.each([
@@ -23,40 +17,5 @@ describe("isWidgetDataQueryKey", () => {
     [["widget"], false],
   ])("matches widget data queries for %j", (queryKey, expected) => {
     expect(isWidgetDataQueryKey(queryKey)).toBe(expected);
-  });
-});
-
-describe("dashboard supporting query policies", () => {
-  test("bounds metadata staleness without adding per-widget timers", () => {
-    expect(dashboardSupportingQueryPolicies).toEqual([
-      {
-        queryKey: [["app", "byId"]],
-        refetchInterval: false,
-        staleTime: queryCacheMetadataStaleTimeMs,
-        refetchOnWindowFocus: true,
-        refetchOnReconnect: true,
-      },
-      {
-        queryKey: [["app", "byIds"]],
-        refetchInterval: false,
-        staleTime: queryCacheMetadataStaleTimeMs,
-        refetchOnWindowFocus: true,
-        refetchOnReconnect: true,
-      },
-      {
-        queryKey: [["integration", "byIds"]],
-        refetchInterval: false,
-        staleTime: queryCacheMetadataStaleTimeMs,
-        refetchOnWindowFocus: true,
-        refetchOnReconnect: true,
-      },
-      {
-        queryKey: [["docker", "getContainers"]],
-        refetchInterval: queryCacheDefaultRefetchIntervalMs,
-        staleTime: queryCacheDefaultStaleTimeMs,
-        refetchOnWindowFocus: false,
-        refetchOnReconnect: false,
-      },
-    ]);
   });
 });

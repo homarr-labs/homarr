@@ -46,11 +46,10 @@ import type { CustomWidgetJudgePanel, CustomWidgetJudgePanelStatus, CustomWidget
 
 const MAX_ASSISTANT_STEPS = 40;
 const defaultAssistantEvaluationMaxOutputTokens = 32_768;
-export const assistantEvaluationToolRequestOptions = {
+const assistantEvaluationToolRequestOptions = {
   tool_choice: "required",
   parallel_tool_calls: false,
 } as const;
-export const assistantEvaluationReasoningOptions = getAiEvaluationReasoningOptions(DEFAULT_GENERATOR_MODEL);
 
 export function getAssistantEvaluationMaxOutputTokens(configuredValue: string | undefined) {
   if (configuredValue === undefined) return defaultAssistantEvaluationMaxOutputTokens;

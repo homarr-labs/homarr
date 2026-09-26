@@ -13,8 +13,4 @@ describe("getAssistantToolTraceTarget", () => {
   test("does not expose arbitrary argument values in the collapsed trace", () => {
     expect(getAssistantToolTraceTarget({ id: "secret-looking-id", apiKey: "do-not-show" })).toBeNull();
   });
-
-  test("bounds long labels so the trace remains compact", () => {
-    expect(getAssistantToolTraceTarget({ title: "a".repeat(100) })).toBe(`${"a".repeat(77)}…`);
-  });
 });

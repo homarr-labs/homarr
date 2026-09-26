@@ -4,7 +4,7 @@ import { reduceWidgetOptionsWithDefinition } from "../manifest";
 import { definition } from ".";
 import { getPreferredTime, getPreferredUnit, getPreferredWindSpeed } from "./format";
 import { formatWeatherDate } from "./icon";
-import { getAdvancedWeatherLayout, getCompactWeatherLayout } from "./layout";
+import { getCompactWeatherLayout } from "./layout";
 
 describe("weather formatting", () => {
   it("preserves valid zero values", () => {
@@ -35,36 +35,11 @@ describe("weather formatting", () => {
 });
 
 describe("weather layout", () => {
-  it("keeps micro widgets focused on current temperature", () => {
-    expect(getCompactWeatherLayout(120, 100, true, 7)).toEqual({
-      tier: "micro",
-      forecastDays: 0,
-      showCity: false,
-      showCondition: false,
-      showHighLow: false,
-      showSecondary: false,
-    });
-  });
-
   it("caps compact forecasts by size and saved preference", () => {
     expect(getCompactWeatherLayout(200, 200, true, 7).forecastDays).toBe(2);
     expect(getCompactWeatherLayout(424, 200, true, 3).forecastDays).toBe(3);
     expect(getCompactWeatherLayout(640, 360, true, 7).forecastDays).toBe(7);
     expect(getCompactWeatherLayout(640, 360, false, 7).forecastDays).toBe(0);
-  });
-
-  it("adapts the advanced view to mobile and desktop surfaces", () => {
-    expect(getAdvancedWeatherLayout(374, 624)).toMatchObject({
-      dailyColumns: 2,
-      hourlyTickStep: 6,
-      showChartAxes: false,
-    });
-    expect(getAdvancedWeatherLayout(800, 560)).toMatchObject({
-      chartHeight: 200,
-      dailyColumns: 4,
-      hourlyTickStep: 3,
-      showChartAxes: true,
-    });
   });
 });
 

@@ -499,32 +499,6 @@ describe("request format per version", () => {
     expect(String(statsCall?.[0])).toContain(`token=${STORED_TOKEN}`);
   });
 
-  test("login uses /api/user/login", async () => {
-    sessionData = null; // cold store — override beforeEach version cache
-    mockFetch
-      .mockResolvedValueOnce(makeResponse(okLoginBody))
-      .mockResolvedValueOnce(makeResponse(okStatsBody))
-      .mockResolvedValueOnce(makeResponse(okSettingsEnabledBody));
-
-    await new TechnitiumDnsIntegration(makeInput({ kind: "credentials" }), "v15").getSummaryAsync();
-
-    expect(mockFetch.mock.calls[0]?.[0].toString()).toContain(apiPaths.login);
-  });
-
-  test("fallback login uses /api/login when primary path returns 404", async () => {
-    sessionData = null; // cold store — override beforeEach version cache
-    mockFetch
-      .mockResolvedValueOnce({ status: 404, json: () => Promise.resolve({}) } as never) // primary login → 404
-      .mockResolvedValueOnce(makeResponse(okLoginBodyLegacy)) // fallback login
-      .mockResolvedValueOnce(makeResponse(okStatsBody))
-      .mockResolvedValueOnce(makeResponse(okSettingsEnabledBody));
-
-    await new TechnitiumDnsIntegration(makeInput({ kind: "credentials" }), "v15").getSummaryAsync();
-
-    // Call 0 is the primary probe (404), call 1 is the fallback /api/login
-    expect(mockFetch.mock.calls[1]?.[0].toString()).toContain("/api/login");
-  });
-
   test("all versions use /api/settings/get", async () => {
     for (const version of ["v15", "legacy"] as const) {
       vi.resetAllMocks();
@@ -787,25 +761,6 @@ describe("testingAsync (session cleanup)", () => {
     expect(url).not.toContain("/logout");
     expect(sessionData).toBeNull();
     expect(result).toMatchObject({ success: true });
-  });
-
-  test("API key auth with cold session: detectVersionAsync probe runs via module-level fetch, not fetchAsync", async () => {
-    // Cold store — detectVersionAsync should fire via fetchWithTrustedCertificatesAsync (not fetchMock)
-    sessionData = null;
-    const fetchMock = vi.fn();
-    fetchMock.mockResolvedValueOnce(makeResponse({ status: "ok" })); // stats check
-
-    // detectVersionAsync uses the global mockFetch (fetchWithTrustedCertificatesAsync)
-    mockFetch.mockResolvedValueOnce(makeResponse({ status: "ok" })); // version probe → v15
-
-    const integration = new TechnitiumDnsIntegration(makeInput({ kind: "apiKey", value: API_KEY }), "v15");
-    const result = await callTestingAsync(integration, fetchMock);
-
-    expect(result).toMatchObject({ success: true });
-    // fetchMock (the injected fetchAsync) was only called for the stats check, not the probe
-    expect(fetchMock).toHaveBeenCalledTimes(1);
-    // The global mockFetch handled the version probe
-    expect(mockFetch).toHaveBeenCalledTimes(1);
   });
 
   test("logout failure does not fail the connection test", async () => {

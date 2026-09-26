@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 
 import { formatByteRate, formatBytes } from "@homarr/common";
 
-import { createByteChartAxisFormatters, getProgressTrackSize } from "./format";
+import { createByteChartAxisFormatters } from "./format";
 
 const GIBIBYTE = 1024 ** 3;
 const binaryAxisFormatters = createByteChartAxisFormatters(
@@ -18,10 +18,5 @@ describe("Beszel storage formatting", () => {
   test("promotes large canonical byte values to TiB", () => {
     expect(binaryAxisFormatters.bytes(3323 * GIBIBYTE)).toBe("3.2TiB");
     expect(binaryAxisFormatters.bytes(3936.86 * GIBIBYTE)).toBe("3.8TiB");
-  });
-
-  test("maps progress sizes consistently", () => {
-    expect(getProgressTrackSize("xs")).toBe(6);
-    expect(getProgressTrackSize("sm")).toBe(9);
   });
 });

@@ -5,11 +5,10 @@ set -euo pipefail
 mode="${1:-all}"
 case "$mode" in
   fast) job="fast-gate" ;;
-  docker) job="container" ;;
   all) job="" ;;
   cleanup) job="cleanup" ;;
   *)
-    echo "Usage: $0 {fast|docker|all|cleanup}" >&2
+    echo "Usage: $0 {fast|all|cleanup}" >&2
     exit 2
     ;;
 esac
@@ -43,14 +42,6 @@ if [[ "$mode" == "cleanup" ]]; then
   cat >"$event_file" <<EOF
 {
   "inputs": { "operation": "cleanup", "pr_number": "1", "ref": "" },
-  "repository": { "full_name": "homarr-labs/homarr" }
-}
-EOF
-elif [[ "$mode" == "docker" ]]; then
-  event_name="workflow_dispatch"
-  cat >"$event_file" <<EOF
-{
-  "inputs": { "operation": "validate", "ref": "$head_sha" },
   "repository": { "full_name": "homarr-labs/homarr" }
 }
 EOF

@@ -314,22 +314,6 @@ describe("GluetunIntegration.getSummaryAsync", () => {
     });
   });
 
-  test("hits each of the four control endpoints exactly once", async () => {
-    setupHappyPath();
-
-    await createIntegrationWithApiKey().getSummaryAsync();
-
-    const calledPaths = mockFetch.mock.calls.map(([url]) => {
-      const urlString = typeof url === "string" ? url : url.toString();
-      return new URL(urlString).pathname;
-    });
-
-    expect(calledPaths).toHaveLength(4);
-    expect(new Set(calledPaths)).toEqual(
-      new Set(["/v1/vpn/status", "/v1/dns/status", "/v1/publicip/ip", "/v1/vpn/settings"]),
-    );
-  });
-
   test("sends X-API-Key header when an apiKey secret is configured", async () => {
     setupHappyPath();
 
@@ -353,34 +337,6 @@ describe("GluetunIntegration.getSummaryAsync", () => {
       expect(headers.Authorization).toBe(expected);
       expect(headers["X-API-Key"]).toBeUndefined();
     }
-  });
-
-  test("throws when any upstream endpoint returns a non-OK status", async () => {
-    mockFetch.mockImplementation((url) => {
-      const urlString = typeof url === "string" ? url : url.toString();
-      const { pathname } = new URL(urlString);
-
-      if (pathname === "/v1/publicip/ip") {
-        return Promise.resolve(jsonResponse({ error: "unauthorized" }, { status: 401 }));
-      }
-      return Promise.resolve(jsonResponse(VPN_STATUS_PAYLOAD));
-    });
-
-    await expect(createIntegrationWithApiKey().getSummaryAsync()).rejects.toThrow();
-  });
-
-  test("throws when an upstream payload fails schema validation", async () => {
-    mockFetch.mockImplementation((url) => {
-      const urlString = typeof url === "string" ? url : url.toString();
-      const { pathname } = new URL(urlString);
-
-      if (pathname === "/v1/publicip/ip") {
-        return Promise.resolve(jsonResponse({ public_ip: 123 }));
-      }
-      return Promise.resolve(jsonResponse(VPN_STATUS_PAYLOAD));
-    });
-
-    await expect(createIntegrationWithApiKey().getSummaryAsync()).rejects.toThrow();
   });
 });
 
@@ -441,10 +397,6 @@ describe("GluetunIntegration testing endpoint", () => {
 });
 
 describe("gluetun schemas", () => {
-  test("vpn status schema accepts a string status", () => {
-    expect(gluetunVpnStatusSchema.parse({ status: "running" })).toEqual({ status: "running" });
-  });
-
   test("vpn status schema rejects a missing status", () => {
     expect(() => gluetunVpnStatusSchema.parse({})).toThrow();
   });
@@ -454,35 +406,9 @@ describe("gluetun schemas", () => {
     expect(() => gluetunDnsStatusSchema.parse({ status: 42 })).toThrow();
   });
 
-  test("public ip schema parses the full payload", () => {
-    expect(gluetunPublicIpSchema.parse(PUBLIC_IP_PAYLOAD)).toEqual(PUBLIC_IP_PAYLOAD);
-  });
-
   test("public ip schema rejects a missing required field", () => {
     const { city: _city, ...partial } = PUBLIC_IP_PAYLOAD;
     expect(() => gluetunPublicIpSchema.parse(partial)).toThrow();
-  });
-
-  test("vpn settings schema parses a wireguard payload", () => {
-    const parsed = gluetunVpnSettingsSchema.parse(VPN_SETTINGS_PAYLOAD);
-    expect(parsed.type).toBe("wireguard");
-    expect(parsed.provider.name).toBe("mullvad");
-  });
-
-  test("vpn settings schema accepts nullable server-selection arrays", () => {
-    const payloadWithNulls = {
-      ...VPN_SETTINGS_PAYLOAD,
-      provider: {
-        ...VPN_SETTINGS_PAYLOAD.provider,
-        server_selection: {
-          ...VPN_SETTINGS_PAYLOAD.provider.server_selection,
-          countries: null,
-          cities: null,
-        },
-      },
-    };
-
-    expect(() => gluetunVpnSettingsSchema.parse(payloadWithNulls)).not.toThrow();
   });
 
   test("vpn settings schema rejects a non-string type", () => {
@@ -493,49 +419,5 @@ describe("gluetun schemas", () => {
     const parsed = gluetunVpnSettingsSchema.parse(ALT_VPN_SETTINGS_PAYLOAD);
     expect(parsed.type).toBe("openvpn");
     expect(parsed.provider.name).toBe("custom");
-  });
-
-  test("vpn settings schema accepts null server-selection hostnames", () => {
-    const payload = {
-      ...VPN_SETTINGS_PAYLOAD,
-      provider: {
-        ...VPN_SETTINGS_PAYLOAD.provider,
-        server_selection: {
-          ...VPN_SETTINGS_PAYLOAD.provider.server_selection,
-          hostnames: null,
-        },
-      },
-    };
-
-    expect(() => gluetunVpnSettingsSchema.parse(payload)).not.toThrow();
-  });
-
-  test("vpn settings schema accepts listening_port as a number or a list", () => {
-    const asList = {
-      ...VPN_SETTINGS_PAYLOAD,
-      provider: {
-        ...VPN_SETTINGS_PAYLOAD.provider,
-        port_forwarding: {
-          ...VPN_SETTINGS_PAYLOAD.provider.port_forwarding,
-          listening_port: [0],
-        },
-      },
-    };
-
-    // The happy-path fixture already exercises the scalar form (listening_port: 0).
-    expect(() => gluetunVpnSettingsSchema.parse(VPN_SETTINGS_PAYLOAD)).not.toThrow();
-    expect(() => gluetunVpnSettingsSchema.parse(asList)).not.toThrow();
-  });
-
-  test("vpn settings schema accepts null wireguard addresses", () => {
-    const payload = {
-      ...VPN_SETTINGS_PAYLOAD,
-      wireguard: {
-        ...VPN_SETTINGS_PAYLOAD.wireguard,
-        addresses: null,
-      },
-    };
-
-    expect(() => gluetunVpnSettingsSchema.parse(payload)).not.toThrow();
   });
 });

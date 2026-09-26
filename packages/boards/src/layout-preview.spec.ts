@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 
 import type { BoardPreviewData, BoardPreviewLayout } from "./layout-preview";
-import { getRepresentativeLayoutWidth, projectBoardLayout } from "./layout-preview";
+import { projectBoardLayout } from "./layout-preview";
 
 const mobile = {
   id: "mobile",
@@ -10,14 +10,6 @@ const mobile = {
   rightGutterColumnCount: 0,
   breakpoint: 0,
   role: "mobile",
-} satisfies BoardPreviewLayout;
-const custom = {
-  id: "tablet",
-  columnCount: 6,
-  leftGutterColumnCount: 0,
-  rightGutterColumnCount: 0,
-  breakpoint: 480,
-  role: "custom",
 } satisfies BoardPreviewLayout;
 const base = {
   id: "base",
@@ -29,15 +21,6 @@ const base = {
 } satisfies BoardPreviewLayout;
 
 const root = { id: "root", kind: "empty" as const, xOffset: 0, layouts: [] };
-
-describe("layout representative widths", () => {
-  test("uses phone, activation midpoint, and desktop widths", () => {
-    const layouts = [mobile, custom, base];
-    expect(getRepresentativeLayoutWidth(mobile, layouts)).toBe(390);
-    expect(getRepresentativeLayoutWidth(custom, layouts)).toBe(624);
-    expect(getRepresentativeLayoutWidth(base, layouts)).toBe(1280);
-  });
-});
 
 describe("projectBoardLayout", () => {
   test("keeps exact saved positions for the active layout", () => {

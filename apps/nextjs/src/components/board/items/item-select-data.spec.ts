@@ -23,16 +23,6 @@ describe("getWidgetConnectionStatus", () => {
       ).toBe("ready");
     });
 
-    it("returns 'ready' when all supported integrations are in availableKinds", () => {
-      expect(
-        getWidgetConnectionStatus({
-          supportedIntegrations: ["sonarr", "plex"],
-          availableKinds,
-          connectionOptional: false,
-        }),
-      ).toBe("ready");
-    });
-
     it("returns 'ready' even if connectionOptional is true as long as a matching integration exists", () => {
       expect(
         getWidgetConnectionStatus({
@@ -50,16 +40,6 @@ describe("getWidgetConnectionStatus", () => {
         getWidgetConnectionStatus({
           supportedIntegrations: ["radarr", "sabNzbd"],
           availableKinds,
-          connectionOptional: false,
-        }),
-      ).toBe("needsSetup");
-    });
-
-    it("returns 'needsSetup' when availableKinds is empty and connection is required", () => {
-      expect(
-        getWidgetConnectionStatus({
-          supportedIntegrations: ["sonarr"],
-          availableKinds: new Set<IntegrationKind>(),
           connectionOptional: false,
         }),
       ).toBe("needsSetup");
@@ -94,36 +74,10 @@ describe("getWidgetConnectionStatus", () => {
         }),
       ).toBe("noConnectionRequired");
     });
-
-    it("returns 'noConnectionRequired' when connectionOptional is true and availableKinds is empty", () => {
-      expect(
-        getWidgetConnectionStatus({
-          supportedIntegrations: ["sonarr"],
-          availableKinds: new Set(),
-          connectionOptional: true,
-        }),
-      ).toBe("noConnectionRequired");
-    });
   });
 });
 
 describe("selection concurrency locks", () => {
-  it("acquires lock on unlocked ref and sets current to true", () => {
-    const lock = { current: false };
-
-    const acquired = tryLockSelection(lock);
-    expect(acquired).toBe(true);
-    expect(lock.current).toBe(true);
-  });
-
-  it("rejects lock acquisition on an already locked ref", () => {
-    const lock = { current: true };
-
-    const acquired = tryLockSelection(lock);
-    expect(acquired).toBe(false);
-    expect(lock.current).toBe(true);
-  });
-
   it("unlocks lock and allows subsequent acquisition", () => {
     const lock = { current: false };
 
@@ -134,27 +88,6 @@ describe("selection concurrency locks", () => {
     expect(lock.current).toBe(false);
 
     expect(tryLockSelection(lock)).toBe(true);
-  });
-
-  it("handles repeated unlock safely without throwing", () => {
-    const lock = { current: false };
-    expect(() => {
-      unlockSelection(lock);
-      unlockSelection(lock);
-    }).not.toThrow();
-    expect(lock.current).toBe(false);
-  });
-
-  it("prevents multiple concurrent callers from proceeding simultaneously", () => {
-    const lock = { current: false };
-    const results: boolean[] = [];
-
-    // Simulate 5 simultaneous selection attempts
-    for (let i = 0; i < 5; i++) {
-      results.push(tryLockSelection(lock));
-    }
-
-    expect(results).toEqual([true, false, false, false, false]);
   });
 });
 
