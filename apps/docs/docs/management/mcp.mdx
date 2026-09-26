@@ -13,12 +13,12 @@ Connect an AI client to Homarr to manage boards, apps, integrations, and other s
 Homarr uses MCP v2 (protocol `2026-07-28`) at `/api/mcp`, with compatibility for 2025 Streamable HTTP clients.
 Requests are stateless: each request authenticates independently, without an MCP session ID.
 
-:::tip Homarr's most powerful MCP tool
+<Alert type="tip" title="Homarr's most powerful MCP tool">
 
 [`integration_request`](#authenticated-integration-requests) calls any API endpoint on supported saved integrations using their configured
 credentials. Features missing from Homarr can still be available through MCP when the integration’s API supports them.
 
-:::
+</Alert>
 
 ![The AI / MCP management tab](./img/mcp.png)
 

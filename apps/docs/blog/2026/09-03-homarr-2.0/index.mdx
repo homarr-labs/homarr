@@ -82,11 +82,11 @@ A `homarr-custom-widget-v2` definition can use several fixed-origin API sources.
 
 ![The Community Workshop catalog inside Custom Widget management](./img/community-workshop.webp)
 
-:::warning[Workshop is moderated]
+<Alert type="warning" title="Workshop is moderated">
 
 AI makes widgets easy to produce. It does not make the first thing it coughs up worth publishing. **Do not dump untested slop into Workshop.** Test it, add a useful screenshot and explain its setup. Workshop is moderated.
 
-:::
+</Alert>
 
 ### Docusaurus + PocketBase for the docs and Workshop
 
@@ -220,25 +220,25 @@ Open it with <kbd>Shift</kbd> + <kbd>A</kbd>. <kbd>Cmd</kbd>/<kbd>Ctrl</kbd> + <
 
 ### The Homarr provider
 
-:::note
+<Alert type="note">
 
 Assistant ships with a **"Homarr provider"**. It is free, will never offer paid plans, and is paid for by [Ajnart](https://github.com/ajnart) using the ad revenue from this website.
 
 It only uses zero-data-retention (ZDR) providers. [The provider is open source](https://github.com/homarr-labs/homarr/blob/release/v2/apps/workshop/homarr_provider.go), and neither prompts nor responses are logged. We are not selling your data. Pinky promise.
 
-:::
+</Alert>
 
 ### External assistants through MCP
 
 External assistants can use the same permission-checked tools through `/api/mcp`, with an API key or OAuth 2.1 with PKCE.
 
-:::tip We made Homarr the front door to your homelab
+<Alert type="tip" title="We made Homarr the front door to your homelab">
 
 Configure a supported service once. Our most powerful MCP tool, `integration_request`, lets your agent test API
 endpoints beyond Homarr's native features, then expose their data or actions through Custom Widgets.
 See [Beyond native widgets](/docs/management/integrations#beyond-native-widgets).
 
-:::
+</Alert>
 
 ## The rest (there is a lot)
 

@@ -49,11 +49,11 @@ Advanced view shows every configured repository in a roomier responsive layout. 
 
 <WidgetConfig configuration={releasesWidget.configuration} />
 
-:::note
+<Alert type="note">
 
 The version filter is used to match the version tag of the release. It is a combination of the prefix, precision and suffix.
 
 Setting the Prefix to `v`, precision to `2` and the Suffix to `-alpha`, will match `v1.0-alpha` but not `v1.0-beta`.  
 Setting the Prefix to `v`, precision to `3`, will match `v5.2.0` but not `v1.0.2-alpha` or `Beta v5.2.1`.
 
-:::
+</Alert>
