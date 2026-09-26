@@ -62,11 +62,11 @@ environment:
   DOCKER_PORTS: 2375,2375
 ```
 
-:::warning[Plaintext Docker API]
+<Alert type="warning" title="Plaintext Docker API">
 
 Unauthenticated Docker TCP provides control of the Docker host. Keep a socket proxy on a private network or use TLS.
 
-:::
+</Alert>
 
 Use `DOCKER_ENDPOINTS` for named endpoints, TLS, or restricted capabilities:
 

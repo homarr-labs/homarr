@@ -16,13 +16,13 @@ import { TabItem } from "@/components/mdx/legacy-tabs";
 
 Some users may come across a barrier, where they're unable to receive a 200 response from the Ping widget for some apps, while using self-signed certificates or a local certificate authory.
 
-:::note[What's going on?]
+<Alert type="note" title="What's going on?">
 
 Homarr is trying to communicate to your apps via the integrations.
 It usually doesn't matter if Homarr is running on `http` or `https`.
 Your apps have a self-signed certificate - Homarr will recognize that the certificate was signed by an unknown authority and requests will be blocked.
 
-:::
+</Alert>
 
 To allow self-signed certificates, you can configure them on the certificates management page. You can find more informations on the dedicated page: [Certificates](/docs/management/certificates/)
 
@@ -106,9 +106,11 @@ networks:
     external: true
 ```
 
-:::tip
+<Alert type="tip">
+
 Of particular note here is that both configurations explicitly define which network they are using, in this case "proxy", but it can be named anything. It just has to be the same across all apps for which Traefik is serving as a proxy. These are marked as external because the proxy network was manually created by running: `docker network create proxy` but this might be unnecessary depending on HOW exactly you are running Traefik. For example, if running [Traefik with Portainer](https://docs.portainer.io/advanced/reverse-proxy/traefik#deploying-in-a-docker-standalone-scenario), you can follow their official docs on how to set up Traefik and Portainer together, and you can just focus on the Homarr docker labels instead.
-:::
+
+</Alert>
 
 ## Securing Homarr with Caddy
 
@@ -142,7 +144,8 @@ networks:
     external: true
 ```
 
-:::important
+<Alert type="warning" title="Important">
+
 Homarr and Caddy must share the same Docker network:
 
 ```yaml
@@ -152,7 +155,7 @@ homarr:
     - proxy
 ```
 
-:::
+</Alert>
 
 Next, create a file named `Caddyfile` at the same level as your `docker-compose.yml` file with the following content:
 
