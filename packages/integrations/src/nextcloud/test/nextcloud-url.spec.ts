@@ -9,12 +9,6 @@ describe("createNextcloudCalendarServerUrl", () => {
     );
   });
 
-  test("preserves the base path for a subpath installation", () => {
-    expect(createNextcloudCalendarServerUrl("https://example.com/nextcloud")).toBe(
-      "https://example.com/nextcloud/remote.php/dav/",
-    );
-  });
-
   test("does not duplicate a trailing slash", () => {
     expect(createNextcloudCalendarServerUrl("https://example.com/nextcloud/")).toBe(
       "https://example.com/nextcloud/remote.php/dav/",

@@ -97,7 +97,7 @@ Only after this reader-value test passes, use these locations:
 
 ## Testing
 
-Add tests only when requested. Favor assertions that would fail for a plausible regression in user-visible behavior or a security boundary; avoid checks that repeat implementation details or duplicate stronger coverage. For focused changes, run only the relevant existing or newly requested checks when validation is needed. Do not run broad test, Docker, or E2E suites by default.
+Use [useful-tests](.agents/skills/useful-tests/SKILL.md) when deciding whether to add, change, run, or prune tests. New tests are exceptional: add them only when explicitly requested or absolutely vital to protect a concrete security, data-integrity, or critical-workflow risk that existing checks cannot catch. Features, bug fixes, and refactors do not automatically require tests. Run the smallest relevant existing checks; broad test, Docker, and E2E suites are not the default.
 
 ## MCP servers
 
@@ -111,3 +111,4 @@ Portable skills live in `.agents/skills/`. Read the relevant `SKILL.md` before w
 - `documentation-sync` — documentation for changes users need explained
 - `mcp-integration` — safe tRPC-to-MCP exposure
 - `homarr-custom-widget` — safe Custom JSX v2 authoring
+- `useful-tests` — proportional testing and the gate for adding or pruning tests

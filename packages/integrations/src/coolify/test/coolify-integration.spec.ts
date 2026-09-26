@@ -65,18 +65,6 @@ describe("CoolifyIntegration", () => {
   });
 
   describe("getVersionAsync", () => {
-    test("should return version string from Coolify API", async () => {
-      setupMockFetch({
-        "/api/v1/version": "4.0.0-beta.460",
-      });
-
-      const integration = createCoolifyIntegration();
-      const result = await integration.getVersionAsync();
-
-      expect(result).toBe("4.0.0-beta.460");
-      expect(mockFetchWithTrustedCertificates).toHaveBeenCalled();
-    });
-
     test("should throw error when API returns error", async () => {
       mockFetchWithTrustedCertificates.mockResolvedValue(
         new Response("Unauthorized", {

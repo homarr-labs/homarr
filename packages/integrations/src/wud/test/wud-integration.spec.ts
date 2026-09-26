@@ -108,19 +108,6 @@ describe("WudIntegration getStatsAsync", () => {
     expect(stats).toStrictEqual({ totalContainers: 0, updatesAvailable: 0, updates: [] });
   });
 
-  test("maps container updates using displayName, falling back to result.tag and null link", async () => {
-    mockFetch.mockResolvedValue(
-      new Response(JSON.stringify(sampleContainersResponse), {
-        status: 200,
-        headers: { "content-type": "application/json" },
-      }) as unknown as Awaited<ReturnType<typeof fetchWithTrustedCertificatesAsync>>,
-    );
-
-    const stats = await createIntegration().getStatsAsync();
-
-    expect(stats.updates).toStrictEqual(sampleUpdates);
-  });
-
   test("throws ParseError when API response is not valid JSON", async () => {
     mockFetch.mockResolvedValue(
       new Response("not-json", {

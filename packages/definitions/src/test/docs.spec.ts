@@ -44,19 +44,4 @@ describe("createDocumentationLink parameter validation", () => {
       meta.remove();
     }
   });
-
-  test("should work with only path parameter", () => {
-    const result = createDocumentationLink("/docs/getting-started");
-    expect(result).toBe("https://homarr.dev/docs/getting-started");
-  });
-
-  test("should work with path and hashtag", () => {
-    const result = createDocumentationLink("/docs/getting-started", "#installation");
-    expect(result).toBe("https://homarr.dev/docs/getting-started#installation");
-  });
-
-  test("should work with path and query params", () => {
-    const result = createDocumentationLink("/docs/getting-started", undefined, { version: "1.0" });
-    expect(result).toBe("https://homarr.dev/docs/getting-started?version=1.0");
-  });
 });

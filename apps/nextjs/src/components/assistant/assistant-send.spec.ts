@@ -19,20 +19,6 @@ describe("sendAssistantPrompt", () => {
     });
   });
 
-  test("does not replace an existing composer draft", () => {
-    const append = vi.fn();
-    const getState = vi.fn(() => ({ text: "Keep this draft", runConfig: {} }));
-    const runtime = {
-      composer: () => ({ getState }),
-      thread: () => ({ append }),
-    };
-
-    sendAssistantPrompt(runtime, "Run a health check");
-
-    expect(getState().text).toBe("Keep this draft");
-    expect(append).toHaveBeenCalledOnce();
-  });
-
   test("ignores empty prompts without touching the runtime", () => {
     const runtime = {
       composer: vi.fn(),

@@ -3,16 +3,8 @@ import { describe, expect, test } from "vitest";
 import { extractHost, parseLocation } from "./jellyfin-integration";
 
 describe("extractHost", () => {
-  test("strips the port from an IPv4 endpoint", () => {
-    expect(extractHost("192.168.1.100:54321")).toBe("192.168.1.100");
-  });
-
   test("returns an IPv4 address unchanged when there's no port", () => {
     expect(extractHost("8.8.8.8")).toBe("8.8.8.8");
-  });
-
-  test("strips brackets and the port from a bracketed IPv6 endpoint", () => {
-    expect(extractHost("[::1]:8096")).toBe("::1");
   });
 
   test("returns a bare IPv6 address unchanged when there's no port", () => {

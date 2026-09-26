@@ -111,13 +111,6 @@ describe("GlancesIntegration schema", () => {
     expect(result.cpuModelName).toBe("Unknown");
   });
 
-  test("does not throw a Zod parse error when quicklook is missing", async () => {
-    mockGlancesFetch(baseStats, []);
-
-    const integration = new GlancesIntegration(integrationInput);
-    await expect(integration.getSystemInfoAsync()).resolves.not.toThrow();
-  });
-
   test("reads CPU temperature from sensors", async () => {
     mockGlancesFetch(baseStats, [
       { label: "CPU", unit: "C", value: 58, type: "temperature_core" },

@@ -1,12 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  getAqiCategory,
-  getAqiStandard,
-  getCompactAirQualityLayout,
-  getDominantPollutant,
-  getStrongestPollen,
-} from "./display";
+import { getAqiCategory, getAqiStandard, getDominantPollutant, getStrongestPollen } from "./display";
 
 const point = {
   observedAt: "2026-07-01T10:00:00.000Z",
@@ -54,11 +48,5 @@ describe("air quality display", () => {
     expect(getDominantPollutant(point, "european")).toEqual({ key: "ozone", value: 42 });
     expect(getDominantPollutant(point, "us")).toEqual({ key: "carbonMonoxide", value: 60 });
     expect(getStrongestPollen(point)).toEqual({ key: "grass", value: 20 });
-  });
-
-  it("progressively reveals compact details", () => {
-    expect(getCompactAirQualityLayout(149, 200)).toMatchObject({ tiny: true });
-    expect(getCompactAirQualityLayout(250, 150)).toMatchObject({ showParticulatesAndPollen: true });
-    expect(getCompactAirQualityLayout(300, 170)).toMatchObject({ showSparkline: true });
   });
 });

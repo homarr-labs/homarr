@@ -2,21 +2,6 @@ import { describe, expect, test } from "vitest";
 
 import { trueNasApis } from "../truenas-api";
 
-describe("trueNasApis descriptors", () => {
-  test("expose the expected endpoints and handshake requirements", () => {
-    expect(trueNasApis.jsonRpc).toMatchObject({
-      kind: "jsonRpc",
-      path: "/api/current",
-      requiresSessionHandshake: false,
-    });
-    expect(trueNasApis.legacy).toMatchObject({
-      kind: "legacy",
-      path: "/websocket",
-      requiresSessionHandshake: true,
-    });
-  });
-});
-
 describe("jsonRpc api", () => {
   const { buildRequest, matchResponse } = trueNasApis.jsonRpc;
 

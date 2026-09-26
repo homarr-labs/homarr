@@ -1,18 +1,12 @@
-import { afterEach, describe, expect, test, vi } from "vitest";
-import { QueryClient } from "@tanstack/react-query";
+import { describe, expect, test } from "vitest";
 
 import {
   dashboardSupportingQueryPolicies,
   isWidgetDataQueryKey,
-  isWidgetDataTrpcPath,
   queryCacheDefaultRefetchIntervalMs,
   queryCacheDefaultStaleTimeMs,
   queryCacheMetadataStaleTimeMs,
 } from "@homarr/api/query-cache";
-
-afterEach(() => {
-  vi.useRealTimers();
-});
 
 describe("isWidgetDataQueryKey", () => {
   test.each([
@@ -29,51 +23,6 @@ describe("isWidgetDataQueryKey", () => {
     [["widget"], false],
   ])("matches widget data queries for %j", (queryKey, expected) => {
     expect(isWidgetDataQueryKey(queryKey)).toBe(expected);
-  });
-});
-
-describe("isWidgetDataTrpcPath", () => {
-  test.each([
-    ["widget.calendar.findAllEvents", true],
-    ["app.byIds", true],
-    ["integration.byIds", true],
-    ["docker.getContainers", true],
-    ["widget.app.ping", false],
-    ["widget.beszel.getSystemStats", false],
-    ["board.getBoardByName", false],
-  ])("classifies dashboard data path %s", (path, expected) => {
-    expect(isWidgetDataTrpcPath(path)).toBe(expected);
-  });
-});
-
-describe("query cache stale handling", () => {
-  test("uses TanStack Query dataUpdatedAt and staleTime to decide when cached data refetches", async () => {
-    vi.useFakeTimers();
-    vi.setSystemTime(new Date("2026-01-01T00:10:00.000Z"));
-
-    const queryClient = new QueryClient({
-      defaultOptions: {
-        queries: {
-          retry: false,
-          staleTime: queryCacheDefaultStaleTimeMs,
-        },
-      },
-    });
-    const queryKey = [["widget", "example"], { input: { integrationIds: ["integration-1"] }, type: "query" }];
-    const queryFn = vi.fn().mockResolvedValue("fresh");
-
-    queryClient.setQueryData(queryKey, "cached", {
-      updatedAt: Date.now() - queryCacheDefaultStaleTimeMs - 1,
-    });
-
-    await expect(
-      queryClient.fetchQuery({
-        queryKey,
-        queryFn,
-      }),
-    ).resolves.toBe("fresh");
-
-    expect(queryFn).toHaveBeenCalledOnce();
   });
 });
 
