@@ -243,17 +243,7 @@ lets you use them without ever seeing them.
 your Homarr API key or session. Homarr checks your access, adds the credentials it stores and hands back the service's
 answer:
 
-```mermaid
-sequenceDiagram
-    participant C as Custom Widget or agent
-    participant H as Homarr
-    participant S as Sonarr
-    C->>H: POST /api/integrations/request (sonarr, GET /api/v3/queue) with your API key
-    H->>H: Authenticate you, check full integration access, keep the path on Sonarr's URL
-    H->>S: GET /api/v3/queue with the saved Sonarr API key
-    S-->>H: 200 and JSON
-    H-->>C: The response, with stored secrets redacted
-```
+![A request from a Custom Widget or an agent goes to Homarr with your API key. Homarr authenticates you, checks full integration access, adds the saved Sonarr API key from its encrypted vault, calls Sonarr on its saved URL and returns the response](./img/front-door-diagram.webp)
 
 The secrets stay in Homarr. API keys, passwords and tokens are stored encrypted, no API returns them, and Homarr redacts
 them from responses. If a service's API can do something, you can do it through Homarr, even when Homarr has no button

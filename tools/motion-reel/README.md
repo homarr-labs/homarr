@@ -31,7 +31,7 @@ WARP=warp-b.json OUT=chunks-b WORKERS=4 node render.mjs
 ./assemble.sh
 ```
 
-Rendering is CPU-bound and takes about 30 minutes with eight workers. Chunks are resumable: stop the renderer at any
+Rendering is CPU-bound and takes about 20 minutes with eight workers (both halves at once). Chunks are resumable: stop the renderer at any
 time and run it again. Delete a chunk directory after changing `reel.js` or the warp.
 
 Use `node preview.mjs <reel seconds...>` to screenshot single frames into `preview/` while you work. Scene start times
