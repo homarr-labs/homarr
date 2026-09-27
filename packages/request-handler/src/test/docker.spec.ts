@@ -1,5 +1,5 @@
 import type { ContainerStats } from "dockerode";
-import { describe, expect, test, vi } from "vitest";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 
 import { createDb } from "@homarr/db/test";
 import { DockerSingleton } from "@homarr/docker";
@@ -7,6 +7,7 @@ import { DockerSingleton } from "@homarr/docker";
 import {
   calculateCpuUsage,
   calculateMemoryUsage,
+  clearCpuUsageCountersCacheForTesting,
   dockerContainersRequestHandler,
   getDockerEndpointsAsync,
   getContainersWithStatsAsync,
@@ -83,6 +84,32 @@ describe("calculateCpuUsage", () => {
     // (500 / 100000) * 100 = 0.5
     expect(calculateCpuUsage(stats)).toBe(0.5);
   });
+
+  test("should use previous poll counters when precpu_stats is zeroed (one-shot mode)", () => {
+    const stats = createStats({
+      cpu_stats: { online_cpus: 4, cpu_usage: { total_usage: 3_000 }, system_cpu_usage: 20_000 },
+      // Docker's one-shot response contains precpu_stats with all-zero values
+      precpu_stats: { cpu_usage: { total_usage: 0 }, system_cpu_usage: 0 },
+    });
+    // Delta vs previous poll: cpu 3_000 - 1_000 = 2_000, system 20_000 - 10_000 = 10_000 → 20%
+    expect(calculateCpuUsage(stats, { totalUsage: 1_000, systemUsage: 10_000 })).toBe(20);
+  });
+
+  test("should prefer a valid precpu_stats baseline over previous poll counters", () => {
+    const stats = createStats({
+      cpu_stats: { online_cpus: 4, cpu_usage: { total_usage: 3_000 }, system_cpu_usage: 20_000 },
+      precpu_stats: { cpu_usage: { total_usage: 2_500 }, system_cpu_usage: 15_000 },
+    });
+    // precpu deltas: cpu 500, system 5_000 → 10%; the previous counters must be ignored
+    expect(calculateCpuUsage(stats, { totalUsage: 1_000, systemUsage: 10_000 })).toBe(10);
+  });
+
+  test("should return 0 when current counters are lower than the previous poll (container restart)", () => {
+    const stats = createStats({
+      cpu_stats: { online_cpus: 4, cpu_usage: { total_usage: 100 }, system_cpu_usage: 20_000 },
+    });
+    expect(calculateCpuUsage(stats, { totalUsage: 1_000, systemUsage: 10_000 })).toBe(0);
+  });
 });
 
 describe("calculateMemoryUsage", () => {
@@ -129,6 +156,48 @@ describe("calculateMemoryUsage", () => {
 });
 
 describe("getContainersWithStatsAsync", () => {
+  beforeEach(() => {
+    clearCpuUsageCountersCacheForTesting();
+  });
+
+  test("computes current CPU usage from successive one-shot polls", async () => {
+    let totalUsage = 1_000_000;
+    let systemUsage = 10_000_000;
+    const dockerInstance = createDockerInstance("local", async () => [
+      {
+        Id: "busy",
+        Image: "immich:latest",
+        Labels: {},
+        Names: ["/immich"],
+        State: "running",
+        Ports: [],
+      },
+    ]);
+    dockerInstance.instance.getContainer = (() => ({
+      stats: async () => ({
+        cpu_stats: { online_cpus: 4, cpu_usage: { total_usage: totalUsage }, system_cpu_usage: systemUsage },
+        memory_stats: { usage: 0 },
+      }),
+    })) as never;
+    vi.spyOn(DockerSingleton, "getInstances").mockReturnValue([dockerInstance] as never);
+    vi.spyOn(DockerSingleton, "findInstance").mockReturnValue(dockerInstance as never);
+
+    try {
+      // First poll has no baseline: falls back to the cumulative ratio (10%)
+      const first = await getContainersWithStatsAsync(50);
+      expect(first.containers).toEqual([expect.objectContaining({ id: "busy", cpuUsage: 10 })]);
+
+      // Next poll used 2 of 4 core-seconds → current usage 50%, not a lifetime average
+      totalUsage += 2_000_000;
+      systemUsage += 4_000_000;
+
+      const second = await getContainersWithStatsAsync(50);
+      expect(second.containers).toEqual([expect.objectContaining({ id: "busy", cpuUsage: 50 })]);
+    } finally {
+      vi.restoreAllMocks();
+    }
+  });
+
   test("queries only selected Docker endpoints and leaves an empty selection as all", async () => {
     const firstListContainers = vi.fn(async () => []);
     const secondListContainers = vi.fn(async () => []);
