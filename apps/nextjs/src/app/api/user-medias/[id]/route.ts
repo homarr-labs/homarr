@@ -8,8 +8,11 @@ import { medias } from "@homarr/db/schema";
 
 export async function GET(_req: NextRequest, props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
+  // The URL may include the original file extension (e.g. /api/user-medias/abc123.mp4)
+  // so that video backgrounds can be detected by their extension. Strip it for the lookup.
+  const id = params.id.replace(/\.[^/.]+$/, "");
   const image = await db.query.medias.findFirst({
-    where: eq(medias.id, params.id),
+    where: eq(medias.id, id),
     columns: {
       content: true,
       contentType: true,

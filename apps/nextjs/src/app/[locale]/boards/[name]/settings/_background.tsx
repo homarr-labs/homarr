@@ -14,6 +14,7 @@ import type { TranslationObject } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import type { SelectItemWithDescriptionBadge } from "@homarr/ui";
 import { SelectWithDescriptionBadge } from "@homarr/ui";
+import { supportedImageUploadFormats, supportedVideoUploadFormats } from "@homarr/validation/media";
 
 import { SectionCard } from "~/components/manage/section-card";
 import type { FormValues } from "./_settings-form";
@@ -34,7 +35,9 @@ export const BackgroundSettingsContent = ({ form }: Props) => {
     search: debouncedSearch ?? "",
   });
   const images = medias.data?.items.filter((media) => media.contentType.startsWith("image/")) ?? [];
-  const imageMap = new Map(images.map((image) => [`/api/user-medias/${image.id}`, image]));
+  const videos = medias.data?.items.filter((media) => media.contentType.startsWith("video/")) ?? [];
+  const backgroundMedias = [...images, ...videos];
+  const mediaMap = new Map(backgroundMedias.map((media) => [createLocalMediaUrl(media), media]));
 
   const backgroundImageAttachmentData = useBackgroundOptionData(
     "backgroundImageAttachment",
@@ -56,11 +59,20 @@ export const BackgroundSettingsContent = ({ form }: Props) => {
                   <Popover width={300} withArrow>
                     <Popover.Target>
                       <Center h="100%">
-                        <ImagePreview src={form.values.backgroundImageUrl} w={20} h={20} />
+                        <MediaPreview
+                          src={form.values.backgroundImageUrl}
+                          contentType={mediaMap.get(form.values.backgroundImageUrl)?.contentType}
+                          w={20}
+                          h={20}
+                        />
                       </Center>
                     </Popover.Target>
                     <Popover.Dropdown>
-                      <ImagePreview src={form.values.backgroundImageUrl} w="100%" />
+                      <MediaPreview
+                        src={form.values.backgroundImageUrl}
+                        contentType={mediaMap.get(form.values.backgroundImageUrl)?.contentType}
+                        w="100%"
+                      />
                     </Popover.Dropdown>
                   </Popover>
                 )
@@ -70,12 +82,12 @@ export const BackgroundSettingsContent = ({ form }: Props) => {
               label={t("board.field.backgroundImageUrl.label")}
               placeholder={`${t("board.field.backgroundImageUrl.placeholder")}...`}
               renderOption={({ option }) => {
-                const current = imageMap.get(option.value);
+                const current = mediaMap.get(option.value);
                 if (!current) return null;
 
                 return (
                   <Group gap="sm">
-                    <ImagePreview src={option.value} w={20} h={20} />
+                    <MediaPreview src={option.value} contentType={current.contentType} w={20} h={20} />
                     <Stack gap={0}>
                       <Text size="sm">{current.name}</Text>
                       <Text size="xs" c="dimmed">
@@ -88,21 +100,22 @@ export const BackgroundSettingsContent = ({ form }: Props) => {
               data={[
                 {
                   group: t("board.field.backgroundImageUrl.group.your"),
-                  items: images
+                  items: backgroundMedias
                     .filter((media) => media.creatorId === session?.user.id)
-                    .map((media) => `/api/user-medias/${media.id}`),
+                    .map((media) => createLocalMediaUrl(media)),
                 },
                 {
                   group: t("board.field.backgroundImageUrl.group.other"),
-                  items: images
+                  items: backgroundMedias
                     .filter((media) => media.creatorId !== session?.user.id)
-                    .map((media) => `/api/user-medias/${media.id}`),
+                    .map((media) => createLocalMediaUrl(media)),
                 },
               ]}
               {...form.getInputProps("backgroundImageUrl")}
             />
             {session?.user.permissions.includes("media-upload") && (
               <UploadMedia
+                accept={[...supportedImageUploadFormats, ...supportedVideoUploadFormats]}
                 onSuccess={(uploadedMedias) => {
                   const first = uploadedMedias.at(0);
                   if (!first) return;
@@ -147,19 +160,30 @@ export const BackgroundSettingsContent = ({ form }: Props) => {
   );
 };
 
-interface ImagePreviewProps {
+interface MediaPreviewProps {
   src: string;
+  contentType?: string;
   w: string | number;
   h?: string | number;
 }
 
-const ImagePreview = ({ src, w, h }: ImagePreviewProps) => {
+const MediaPreview = ({ src, contentType, w, h }: MediaPreviewProps) => {
   if (!["/", "http://", "https://"].some((prefix) => src.startsWith(prefix))) {
     return <IconPhotoOff size={w} />;
   }
 
+  if (contentType?.startsWith("video/")) {
+    // eslint-disable-next-line jsx-a11y/media-has-caption
+    return <video src={src} style={{ width: w, height: h, objectFit: "contain" }} muted playsInline />;
+  }
+
   // eslint-disable-next-line @next/next/no-img-element
   return <img src={src} alt="preview image" style={{ width: w, height: h, objectFit: "contain" }} />;
+};
+
+const createLocalMediaUrl = (media: { id: string; name: string }) => {
+  const extension = media.name.match(/\.[^./\\]+$/)?.[0].toLowerCase() ?? "";
+  return `/api/user-medias/${media.id}${extension}`;
 };
 
 type BackgroundImageKey = "backgroundImageAttachment" | "backgroundImageSize" | "backgroundImageRepeat";
