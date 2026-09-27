@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { cache } from "react";
+import { cache, Suspense } from "react";
 import { notFound, redirect } from "next/navigation";
 import { TRPCError } from "@trpc/server";
 
@@ -10,19 +10,17 @@ import { IntegrationProvider } from "@homarr/auth/client";
 import { auth } from "@homarr/auth/next";
 import { getIntegrationsWithPermissionsAsync } from "@homarr/auth/server";
 import { isNullOrWhitespace } from "@homarr/common";
-import { createLogger } from "@homarr/core/infrastructure/logs";
-import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import type { WidgetKind } from "@homarr/definitions";
 import { getI18n } from "@homarr/translation/server";
-import { prefetchForKindAsync } from "@homarr/widgets/prefetch";
+import { prefetchForKind } from "@homarr/widgets/prefetch";
 
 import { env } from "~/env";
 import { createBoardLayout } from "../_layout-creator";
 import type { Board, Item } from "../_types";
 import { ClientBoard } from "./_client";
 import { BoardContentEditAction, BoardContentSettingsAction } from "./_header-actions";
+import { BoardLoadingShell } from "./_loading-shell";
 
-const logger = createLogger({ module: "createBoardContentPage" });
 const getQueryClient = cache(makeQueryClient);
 
 export type Params = Record<string, unknown>;
@@ -30,6 +28,16 @@ export type Params = Record<string, unknown>;
 interface Props<TParams extends Params> {
   getInitialBoardAsync: (params: TParams) => Promise<Board>;
 }
+
+const BoardWithIntegrations = async ({
+  integrationsPromise,
+}: {
+  integrationsPromise: ReturnType<typeof getIntegrationsWithPermissionsAsync>;
+}) => (
+  <IntegrationProvider integrations={await integrationsPromise}>
+    <ClientBoard />
+  </IntegrationProvider>
+);
 
 export const createBoardContentPage = <TParams extends Record<string, unknown>>({
   getInitialBoardAsync: getInitialBoard,
@@ -47,12 +55,14 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
       const queryClient = getQueryClient();
       const sessionPromise = auth();
       const boardPromise = getInitialBoard(resolvedParams);
-      const session = await sessionPromise;
+      const integrationsPromise = sessionPromise.then(getIntegrationsWithPermissionsAsync);
+      // The board can fail independently of the permissions read (e.g. a missing board).
+      void integrationsPromise.catch(() => undefined);
 
-      const board = await boardPromise.catch((error) => {
+      const board = await boardPromise.catch(async (error: unknown) => {
         if (error instanceof TRPCError && error.code === "NOT_FOUND") {
+          const session = await sessionPromise;
           if (!session) {
-            logger.debug("No home board found for anonymous user, redirecting to login");
             const requestedBoardName =
               typeof resolvedParams.name === "string" ? `/boards/${encodeURIComponent(resolvedParams.name)}` : null;
             redirect(
@@ -79,26 +89,13 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
         }
         return acc;
       }, new Map<WidgetKind, Item[]>());
-      const [integrations] = await Promise.all([
-        getIntegrationsWithPermissionsAsync(session),
-        ...Array.from(itemsMap).map(([kind, items]) =>
-          prefetchForKindAsync(kind, queryClient, items).catch((error) => {
-            logger.error(
-              new ErrorWithMetadata(
-                "Failed to prefetch widget",
-                { widgetKind: kind, itemCount: items.length },
-                { cause: error },
-              ),
-            );
-          }),
-        ),
-      ]);
+      for (const [kind, items] of itemsMap) prefetchForKind(kind, queryClient, items);
 
       return (
         <HydrationBoundary state={dehydrate(queryClient)}>
-          <IntegrationProvider integrations={integrations}>
-            <ClientBoard />
-          </IntegrationProvider>
+          <Suspense fallback={<BoardLoadingShell />}>
+            <BoardWithIntegrations integrationsPromise={integrationsPromise} />
+          </Suspense>
         </HydrationBoundary>
       );
     },
