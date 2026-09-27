@@ -10,7 +10,7 @@ import type { Database } from "@homarr/db";
 import { and, eq, handleTransactionsAsync, inArray, like } from "@homarr/db";
 import { getMaxGroupPositionAsync } from "@homarr/db/queries";
 import { boards, groupMembers, groupPermissions, groups, invites, users } from "@homarr/db/schema";
-import { selectUserSchema } from "@homarr/db/validationSchemas";
+import { selectGroupSchema, selectUserSchema } from "@homarr/db/validationSchemas";
 import type { SupportedAuthProvider } from "@homarr/definitions";
 import { credentialsAdminGroup, supportedAuthProviders } from "@homarr/definitions";
 import { byIdSchema } from "@homarr/validation/common";
@@ -335,24 +335,33 @@ export const userRouter = createTRPCRouter({
   getById: protectedProcedure
     .input(z.object({ userId: z.string() }))
     .output(
-      selectUserSchema.pick({
-        id: true,
-        name: true,
-        email: true,
-        emailVerified: true,
-        image: true,
-        provider: true,
-        homeBoardId: true,
-        mobileHomeBoardId: true,
-        firstDayOfWeek: true,
-        pingIconsEnabled: true,
-        enableRightClickOnWidgets: true,
-        defaultSearchEngineId: true,
-        openSearchInNewTab: true,
-        ddgBangs: true,
-        completedManageTour: true,
-        completedBoardTour: true,
-      }),
+      selectUserSchema
+        .pick({
+          id: true,
+          name: true,
+          email: true,
+          emailVerified: true,
+          image: true,
+          provider: true,
+          homeBoardId: true,
+          mobileHomeBoardId: true,
+          firstDayOfWeek: true,
+          pingIconsEnabled: true,
+          enableRightClickOnWidgets: true,
+          defaultSearchEngineId: true,
+          openSearchInNewTab: true,
+          ddgBangs: true,
+          completedManageTour: true,
+          completedBoardTour: true,
+        })
+        .extend({
+          groups: z.array(
+            selectGroupSchema.pick({
+              id: true,
+              name: true,
+            }),
+          ),
+        }),
     )
     .meta({
       openapi: {
@@ -390,6 +399,19 @@ export const userRouter = createTRPCRouter({
           completedManageTour: true,
           completedBoardTour: true,
         },
+        with: {
+          groups: {
+            columns: {},
+            with: {
+              group: {
+                columns: {
+                  id: true,
+                  name: true,
+                },
+              },
+            },
+          },
+        },
         where: eq(users.id, input.userId),
       });
 
@@ -400,7 +422,10 @@ export const userRouter = createTRPCRouter({
         });
       }
 
-      return user;
+      return {
+        ...user,
+        groups: user.groups.map(({ group }) => group),
+      };
     }),
   editProfile: protectedProcedure
     .input(userEditProfileSchema)

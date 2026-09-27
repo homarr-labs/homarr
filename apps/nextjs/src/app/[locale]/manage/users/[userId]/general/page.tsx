@@ -11,6 +11,7 @@ import { catchTrpcNotFound } from "~/errors/trpc-catch-error";
 import { createMetaTitle } from "~/metadata";
 import { canAccessUserEditPage } from "../access";
 import { DeleteUserButton } from "./_components/_delete-user-button";
+import { UserAuthenticationInfo } from "./_components/_authentication-info";
 import { UserGeneralSettingsForm } from "./_components/_general-settings-form";
 import { UserProfileAvatarForm } from "./_components/_profile-avatar-form";
 import { ResetTours } from "./_components/_reset-tours";
@@ -70,6 +71,7 @@ export default async function EditUserPage(props: Props) {
         </Alert>
       )}
       <Title>{tGeneral("title")}</Title>
+      <UserAuthenticationInfo user={user} />
       <Group gap="xl" align="flex-start" wrap="wrap">
         <Box flex={1} miw={{ base: "100%", md: 540 }}>
           <UserGeneralSettingsForm

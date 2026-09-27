@@ -39,6 +39,11 @@ A user can be edited on the ``Mangement`` > ``Users`` > ``Manage`` page when you
 Here you'll have access to two tabs: **General** and **Security**.
 
 ### General tab
+#### Authentication
+This section shows read-only information about how the user authenticates.
+The **Provider** indicates whether the user signs in with credentials, OpenID Connect (OIDC) or LDAP.
+The **Groups** list shows all Homarr groups the user is a member of, including groups synchronized from the SSO provider.
+
 #### Username
 This is the unique username that identifies this user. It can be changed to anything but must be at least 3 characters long with a limit of 255 characters.
 This name will be used for the credential's login. It is also used to auto-generate profile pictures if no picture was uploaded.

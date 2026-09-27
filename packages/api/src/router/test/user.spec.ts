@@ -4,7 +4,7 @@ import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/common";
 import type { Database } from "@homarr/db";
 import { eq } from "@homarr/db";
-import { invites, onboarding, users } from "@homarr/db/schema";
+import { groupMembers, groups, invites, onboarding, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import type { GroupPermissionKey, OnboardingStep } from "@homarr/definitions";
 
@@ -440,3 +440,49 @@ const createOnboardingStepAsync = async (db: Database, step: OnboardingStep) => 
     step,
   });
 };
+
+describe("getById should return user with groups", () => {
+  test("getById should include groups the user is a member of", async () => {
+    // arrange
+    const db = createDb();
+    const caller = userRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSession,
+    });
+
+    const groupId1 = createId();
+    const groupId2 = createId();
+    await db.insert(users).values({ id: defaultOwnerId, name: "testuser", provider: "oidc" });
+    await db.insert(groups).values({ id: groupId1, name: "group-one", position: 0 });
+    await db.insert(groups).values({ id: groupId2, name: "group-two", position: 1 });
+    await db.insert(groupMembers).values({ userId: defaultOwnerId, groupId: groupId1 });
+    await db.insert(groupMembers).values({ userId: defaultOwnerId, groupId: groupId2 });
+
+    // act
+    const user = await caller.getById({ userId: defaultOwnerId });
+
+    // assert
+    expect(user.groups).toHaveLength(2);
+    expect(user.groups).toContainEqual({ id: groupId1, name: "group-one" });
+    expect(user.groups).toContainEqual({ id: groupId2, name: "group-two" });
+  });
+
+  test("getById should return empty groups when user is in no groups", async () => {
+    // arrange
+    const db = createDb();
+    const caller = userRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSession,
+    });
+
+    await db.insert(users).values({ id: defaultOwnerId, name: "testuser", provider: "credentials" });
+
+    // act
+    const user = await caller.getById({ userId: defaultOwnerId });
+
+    // assert
+    expect(user.groups).toHaveLength(0);
+  });
+});

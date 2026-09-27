@@ -4724,6 +4724,12 @@
           "general": {
             "title": "General",
             "item": {
+              "authentication": {
+                "title": "Authentication",
+                "provider": "Provider",
+                "groups": "Groups",
+                "noGroups": "User is not a member of any groups"
+              },
               "language": "Language & Region",
               "board": {
                 "title": "Home board",
