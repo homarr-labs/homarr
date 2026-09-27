@@ -1,0 +1,93 @@
+{
+  "vpnStatus": {
+    "status": "running"
+  },
+  "dnsStatus": {
+    "status": "stopped"
+  },
+  "publicIp": {
+    "public_ip": "203.0.113.42",
+    "region": "Europe",
+    "country": "Germany",
+    "city": "Berlin",
+    "location": "52.5200,13.4050",
+    "organization": "Example Org",
+    "postal_code": "10115",
+    "timezone": "Europe/Berlin"
+  },
+  "settings": {
+    "type": "wireguard",
+    "provider": {
+      "name": "mullvad",
+      "server_selection": {
+        "vpn": "wireguard",
+        "countries": ["Germany"],
+        "categories": null,
+        "regions": null,
+        "cities": ["Berlin"],
+        "isps": null,
+        "names": null,
+        "numbers": null,
+        "hostnames": ["de-ber-wg-001"],
+        "owned_only": false,
+        "free_only": false,
+        "premium_only": false,
+        "stream_only": false,
+        "multi_hop_only": false,
+        "port_forward_only": false,
+        "secure_core_only": false,
+        "tor_only": false,
+        "openvpn": {
+          "config_file_path": "",
+          "protocol": "udp",
+          "endpoint_ip": "",
+          "custom_port": 0,
+          "pia_encryption_preset": ""
+        },
+        "wireguard": {
+          "endpoint_ip": "203.0.113.1",
+          "endpoint_port": 51820,
+          "public_key": "pubkey"
+        }
+      },
+      "port_forwarding": {
+        "enabled": false,
+        "provider": "mullvad",
+        "status_file_path": "",
+        "up_command": "",
+        "down_command": "",
+        "listening_port": 0,
+        "username": "",
+        "password": ""
+      }
+    },
+    "openvpn": {
+      "version": "",
+      "user": "",
+      "password": "",
+      "config_file_path": "",
+      "ciphers": null,
+      "auth": "",
+      "cert": "",
+      "key": "",
+      "encrypted_key": "",
+      "key_passphrase": "",
+      "pia_encryption_preset": "",
+      "mssfix": 0,
+      "interface": "tun0",
+      "process_user": "",
+      "verbosity": 0,
+      "flags": null
+    },
+    "wireguard": {
+      "private_key": "",
+      "pre_shared_key": "",
+      "addresses": ["10.0.0.2/32"],
+      "allowed_ips": ["0.0.0.0/0"],
+      "interface": "wg0",
+      "persistent_keep_alive_interval": 25,
+      "mtu": 1420,
+      "implementation": "auto"
+    }
+  }
+}

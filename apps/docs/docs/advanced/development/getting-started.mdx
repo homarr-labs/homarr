@@ -96,30 +96,28 @@ Workshop contributors can set up PocketBase and Fumadocs with the dedicated
 - `pnpm format` / `pnpm format:fix` — check or apply oxfmt.
 - `pnpm lint` / `pnpm lint:fix` — check or apply oxlint.
 - `pnpm typecheck` — typecheck all workspaces.
-- `pnpm test` — unit and contract suites.
+- `pnpm test <file>` — selected service contracts or critical flows.
 - `pnpm build` — production monorepo build.
 - `docker build -t homarr:local .` — build a production Docker image.
 - `docker run -p 7575:7575 -e SECRET_ENCRYPTION_KEY='your_64_character_hex_string' homarr:local` — run it.
 
 ## CI and focused validation
 
-The main CI workflow runs lint, typechecking, affected workspace builds, workspace configuration checks, OpenAPI validation, and Custom Widget architecture and bundle checks. Database CI runs selected migration and schema tests; the general unit suite does not run in the Fast gate. Preview images publish after the Fast gate and both architecture builds succeed.
+The main CI workflow runs lint, typechecking, affected workspace builds, workspace configuration checks, OpenAPI validation, and Custom Widget architecture and bundle checks. The regression contract suite runs before the Fast gate, under the existing Database validation check name. Preview images publish after the Fast gate and both architecture builds succeed.
 
 Workshop CI runs only when its workflow or Docker build inputs change. It validates Compose configuration and publishes production images on its configured release branches; workspace typechecks run in the main Fast gate.
 
-Choose the smallest relevant suite when changing behavior:
+Run only the relevant contract files while changing behavior:
 
-| Command                        | Scope                                                          | Requirements           |
-| ------------------------------ | -------------------------------------------------------------- | ---------------------- |
-| `pnpm test <file>`             | Focused unit or contract tests                                 | Workspace dependencies |
-| `pnpm test`                    | All unit and contract tests, without Docker integration suites | Workspace dependencies |
-| `pnpm test:coverage`           | Unit and contract tests with coverage                          | Workspace dependencies |
-| `pnpm test:integration <file>` | Docker-backed service and database compatibility tests         | Docker                 |
-| `pnpm test:workshop`           | Workshop Go and local JavaScript contract tests                | Go and Node.js         |
+```sh
+pnpm test network.contract.test.ts
+pnpm test media.contract.test.ts
+pnpm test flows
+```
 
-Omit `<file>` to run all tests in that command's scope. The default commands run once without automatic retries; coverage is opt-in. The previous E2E, browser QA, and deployed Workshop test harnesses have been removed pending a replacement harness.
+The runner requires `redis-server` on PATH alongside workspace dependencies. It creates temporary SQLite and Redis instances; external services are represented by HTTP protocol fixtures. `pnpm test` runs the complete small suite in CI. Results and reproduction metadata are written to `artifacts/tests/` and uploaded by CI.
 
-Keep behavioral coverage for authorization, migrations, persistence, and widget execution. Avoid tests that only search source code for particular component names, JSX, CSS, or documentation wording.
+The previous unit, Docker integration, Workshop, and E2E harnesses have been retired. Fixture checks cover recorded service examples and selected internal flows; they do not verify current live-provider compatibility or replace browser acceptance. See `tests/README.md` in the repository for fixture provenance, upkeep, and remaining coverage gaps.
 
 ## Documentation development
 

@@ -13,7 +13,6 @@
     "./migrations/seed": "./migrations/seed.ts",
     "./proxy-reader": "./proxy-reader.ts",
     "./schema": "./schema/index.ts",
-    "./test": "./test/index.ts",
     "./queries": "./queries/index.ts",
     "./validationSchemas": "./validationSchemas.ts"
   },
@@ -49,7 +48,6 @@
     "@homarr/validation": "workspace:^0.1.0",
     "@mantine/core": "catalog:",
     "@paralleldrive/cuid2": "catalog:",
-    "@testcontainers/postgresql": "catalog:",
     "better-sqlite3": "catalog:",
     "dotenv": "catalog:",
     "drizzle-kit": "catalog:",

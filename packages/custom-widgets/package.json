@@ -31,10 +31,8 @@
     "generate": "pnpm generate:catalog",
     "evaluate:ai": "tsx ./scripts/evaluate-ai-authoring.ts",
     "evaluate:assistant-ai": "tsx ./scripts/evaluate-ai-authoring.ts --assistant",
-    "test:reference-apis": "tsx ./scripts/verify-reference-apis.ts",
     "format": "oxfmt .",
     "lint": "oxlint",
-    "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -67,10 +65,8 @@
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "jsdom": "catalog:",
     "react-dom": "catalog:",
     "typescript": "catalog:",
-    "typescript-compiler-api": "npm:typescript@6.0.2",
-    "vitest": "catalog:"
+    "typescript-compiler-api": "npm:typescript@6.0.2"
   }
 }

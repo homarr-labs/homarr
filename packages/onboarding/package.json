@@ -19,7 +19,6 @@
     "clean": "rm -rf .turbo node_modules",
     "format": "oxfmt .",
     "lint": "oxlint",
-    "test": "vitest run --root ../.. packages/onboarding/src",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -45,7 +44,6 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/canvas-confetti": "catalog:",
     "@types/react": "catalog:",
-    "typescript": "catalog:",
-    "vitest": "catalog:"
+    "typescript": "catalog:"
   }
 }

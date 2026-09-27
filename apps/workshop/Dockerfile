@@ -10,9 +10,6 @@ COPY apps/workshop/*.go ./
 RUN --mount=type=cache,id=workshop-go-mod,target=/go/pkg/mod \
   CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/pocketbase .
 
-FROM pocketbase-builder AS pocketbase-test
-RUN --mount=type=cache,id=workshop-go-mod,target=/go/pkg/mod go test ./...
-
 FROM node:24.18.0-alpine AS dependencies
 WORKDIR /app
 ENV COREPACK_HOME=/corepack

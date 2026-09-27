@@ -96,13 +96,14 @@ Only after this reader-value test passes, use these locations:
 
 ## Testing
 
-Use [useful-tests](.agents/skills/useful-tests/SKILL.md) when deciding whether to add, change, run, or prune tests. New tests are exceptional: add them only when explicitly requested or absolutely vital to protect a concrete security, data-integrity, or critical-workflow risk that existing checks cannot catch.
+Use [useful-tests](.agents/skills/useful-tests/SKILL.md) when deciding whether to add, change, run, or prune tests. Add tests only when explicitly requested or absolutely vital to protect a concrete integration, security, data-integrity, or critical-workflow risk that existing checks cannot catch.
 
 - Never write unit tests after you write code.
-- Highly prefer E2E tests as the sole testing mechanism. Use them to verify complex features work. At the end of E2E tests, produce a verifiable and repeatable artifact.
-- If you must test a system in isolation, first write down all the ways it could fail, then write the code.
+- Prefer external-service contracts and critical internal flows through production boundaries. Keep the suite small; a changed function does not require a test.
+- Before testing a system in isolation, write down how it can fail and the independent observation that would expose each failure.
+- Run only relevant contract files for focused changes. Produce repeatable evidence with the runner; see [testing](tests/README.md) for prerequisites, fixture upkeep, and limits.
 
-The current E2E suites and harness have been removed. Add a replacement harness only when requested. Until then, use the smallest relevant existing checks when validation is needed. Features, bug fixes, and refactors do not automatically require tests; broad test, Docker, and E2E runs are not the default.
+The old unit and E2E suites are retired. Broad test runs, Docker builds, and a new E2E harness require an explicit task need.
 
 ## MCP servers
 

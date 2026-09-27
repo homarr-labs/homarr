@@ -31,7 +31,6 @@
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/dockerode": "catalog:",
-    "typescript": "catalog:",
-    "vitest": "catalog:"
+    "typescript": "catalog:"
   }
 }

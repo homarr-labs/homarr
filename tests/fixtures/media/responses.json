@@ -1,0 +1,107 @@
+{
+  "sonarrMissing": {
+    "page": 1,
+    "pageSize": 2,
+    "totalRecords": 31,
+    "records": [
+      {
+        "id": 71,
+        "title": "The Signal",
+        "seasonNumber": 2,
+        "episodeNumber": 3,
+        "series": {
+          "title": "Night Sky",
+          "year": 2022,
+          "titleSlug": "night-sky",
+          "images": [{ "coverType": "poster", "remoteUrl": "https://images.example.invalid/night-sky.jpg" }]
+        }
+      }
+    ]
+  },
+  "sonarrQueue": {
+    "page": 1,
+    "pageSize": 2,
+    "totalRecords": 4,
+    "records": [
+      {
+        "id": 81,
+        "title": "Night.Sky.S02E03",
+        "status": "downloading",
+        "timeleft": "00:02:00",
+        "size": 4000000000,
+        "sizeleft": 1000000000,
+        "series": { "title": "Night Sky", "titleSlug": "night-sky", "images": [] },
+        "episode": { "title": "The Signal", "seasonNumber": 2, "episodeNumber": 3 }
+      }
+    ]
+  },
+  "radarrCalendar": [
+    {
+      "title": "Orbit",
+      "originalTitle": "Orbit",
+      "titleSlug": "orbit-2025",
+      "overview": "A rescue mission.",
+      "inCinemas": "2025-05-02T00:00:00Z",
+      "digitalRelease": "2025-05-23T00:00:00Z",
+      "images": [],
+      "imdbId": "tt1234567"
+    }
+  ],
+  "radarrLibrary": [
+    { "monitored": true, "hasFile": true, "sizeOnDisk": 4000000000 },
+    { "monitored": true, "hasFile": false, "sizeOnDisk": 0 },
+    { "monitored": false, "hasFile": true, "sizeOnDisk": 2000000000 }
+  ],
+  "jellyfinSessions": [
+    {
+      "Id": "living-room",
+      "UserId": "viewer-1",
+      "UserName": "Alice",
+      "DeviceId": "tv-1",
+      "Client": "Jellyfin TV",
+      "DeviceName": "Living room",
+      "RemoteEndPoint": "::ffff:192.168.1.20",
+      "PlayState": { "PositionTicks": 1200000000, "IsPaused": true, "PlayMethod": "DirectPlay" },
+      "NowPlayingItem": {
+        "Id": "episode-71",
+        "Type": "Episode",
+        "Name": "The Signal",
+        "EpisodeTitle": "The Signal",
+        "SeriesName": "Night Sky",
+        "SeasonName": "Season 2",
+        "ParentIndexNumber": 2,
+        "IndexNumber": 3,
+        "RunTimeTicks": 18000000000,
+        "Width": 1920,
+        "Height": 1080,
+        "MediaStreams": [
+          { "Type": "Video", "BitRate": 8000000 },
+          { "Type": "Audio", "BitRate": 200000 }
+        ]
+      }
+    },
+    { "Id": "server-task", "DeviceId": "server" },
+    { "Id": "homarr-session", "UserId": "viewer-1", "DeviceId": "homarr" },
+    {
+      "Id": "idle-tablet",
+      "UserId": "viewer-1",
+      "DeviceId": "tablet",
+      "Client": "Jellyfin Web",
+      "DeviceName": "Tablet"
+    }
+  ],
+  "nextcloudNotifications": {
+    "ocs": {
+      "meta": { "status": "ok", "statuscode": 200, "message": "OK" },
+      "data": [
+        {
+          "notification_id": 17,
+          "datetime": "2025-05-02T10:30:00Z",
+          "subject": "Review shared folder",
+          "message": "Alice shared Project notes with you."
+        }
+      ]
+    }
+  },
+  "nextcloudEmpty": { "ocs": { "meta": { "status": "ok", "statuscode": 200, "message": "OK" }, "data": [] } }
+}

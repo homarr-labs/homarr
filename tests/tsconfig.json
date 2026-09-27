@@ -1,0 +1,12 @@
+{
+  "extends": "../tooling/typescript/base.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "../node_modules/.cache/contracts.tsbuildinfo",
+    "jsx": "react-jsx",
+    "paths": {
+      "@homarr/node-unifi": ["../node_modules/@types/node-unifi"]
+    }
+  },
+  "include": ["**/*.ts", "**/*.mts"],
+  "exclude": ["../node_modules"]
+}

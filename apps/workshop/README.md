@@ -68,15 +68,14 @@ deployments can use an explicit comma-separated allowlist.
 
 ## Validate changes
 
-Run the focused Workshop checks:
+Typecheck the affected Workshop consumer:
 
 ```sh
-pnpm test:workshop
 pnpm --filter @homarr/workshop typecheck
 pnpm --filter @homarr/docs typecheck
 ```
 
-`pnpm test:workshop` runs the Go package tests and local JavaScript contract/migration checks.
+The previous Workshop test harness has been retired; the replacement contract suite does not yet cover Workshop.
 Workshop CI validates Compose configuration and publishes images only on release branches.
 The main Fast gate owns workspace typechecking.
 

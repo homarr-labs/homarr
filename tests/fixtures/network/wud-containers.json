@@ -1,0 +1,35 @@
+[
+  {
+    "id": "1",
+    "name": "homeassistant",
+    "displayName": "Home Assistant",
+    "updateAvailable": true,
+    "link": "https://github.com/home-assistant/core/releases/tag/2024.1.0",
+    "image": {
+      "tag": {
+        "value": "2023.12.0"
+      }
+    },
+    "updateKind": {
+      "remoteValue": "2024.1.0"
+    }
+  },
+  {
+    "id": "2",
+    "name": "traefik",
+    "updateAvailable": false
+  },
+  {
+    "id": "3",
+    "name": "grafana",
+    "updateAvailable": true,
+    "image": {
+      "tag": {
+        "value": "10.0.0"
+      }
+    },
+    "result": {
+      "tag": "10.1.0"
+    }
+  }
+]
