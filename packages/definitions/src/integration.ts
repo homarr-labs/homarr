@@ -25,6 +25,10 @@ export const integrationSecretKindObject = {
   githubAppId: { isPublic: true, multiline: false },
   githubInstallationId: { isPublic: true, multiline: false },
   slug: { isPublic: true, multiline: false },
+  wazuhIndexerUrl: { isPublic: true, multiline: false },
+  wazuhIndexerUsername: { isPublic: true, multiline: false },
+  wazuhIndexerPassword: { isPublic: false, multiline: false },
+  wazuhDashboardUrl: { isPublic: true, multiline: false },
 } satisfies Record<string, { isPublic: boolean; multiline: boolean }>;
 
 const isIntegrationSecretKind = (value: string): value is IntegrationSecretKind =>
@@ -47,6 +51,8 @@ interface IntegrationDefinition {
   name: string;
   iconUrl: string;
   secretKinds: readonly [readonly IntegrationSecretKind[], ...(readonly IntegrationSecretKind[])[]];
+  /** Secrets that can be added to any of the secret kind alternatives but are never required. */
+  optionalSecretKinds?: readonly IntegrationSecretKind[];
   category: readonly [IntegrationCategory, ...IntegrationCategory[]];
   documentationSlug: IntegrationDocumentationSlug | null;
   features?: IntegrationFeatureMetadata;
@@ -967,6 +973,25 @@ export const integrationDefs = {
     documentationSlug: "archiveteam-warrior",
     defaultPort: 8001,
   },
+  wazuh: {
+    httpAuth: { type: "adapter" },
+    name: "Wazuh",
+    // 1. Server API only (URL = https://wazuh:55000)
+    // 2. Server API + indexer for alerts (URL = server API, indexer URL as extra secret)
+    // 3. Indexer only (URL = https://wazuh:9200)
+    secretKinds: [
+      ["username", "password"],
+      ["username", "password", "wazuhIndexerUrl", "wazuhIndexerUsername", "wazuhIndexerPassword"],
+      ["wazuhIndexerUsername", "wazuhIndexerPassword"],
+    ],
+    // Used for deep links from the widgets into the Wazuh dashboard.
+    optionalSecretKinds: ["wazuhDashboardUrl"],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/wazuh.svg",
+    category: ["security"],
+    documentationSlug: "wazuh",
+    defaultPort: 55000,
+    features: { docker: { aliases: ["wazuh", "wazuh-manager", "wazuh.manager"] } },
+  },
   wud: {
     httpAuth: {
       type: "modes",
@@ -1043,6 +1068,11 @@ export const getDefaultSecretKinds = (integration: IntegrationKind): Integration
 export const getAllSecretKindOptions = (integration: IntegrationKind): AtLeastOneOf<IntegrationSecretKind[]> => {
   const [first, ...rest] = integrationDefs[integration].secretKinds;
   return [[...first], ...rest.map((secretKinds) => [...secretKinds])];
+};
+
+export const getOptionalSecretKinds = (integration: IntegrationKind): IntegrationSecretKind[] => {
+  const definition: IntegrationDefinition = integrationDefs[integration];
+  return [...(definition.optionalSecretKinds ?? [])];
 };
 
 export const getIntegrationDefaultUrl = (integration: IntegrationKind) => {
@@ -1161,6 +1191,7 @@ export const integrationCategories = [
   "subtitleManager",
   "reverseProxy",
   "systemMonitoring",
+  "security",
 ] as const;
 
 export type IntegrationCategory = (typeof integrationCategories)[number];

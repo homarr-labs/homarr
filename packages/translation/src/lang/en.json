@@ -1428,7 +1428,8 @@
       "mediaLibrary": "Media Library",
       "uptimeMonitoring": "Uptime Monitoring",
       "beszel": "Beszel",
-      "systemMonitoring": "System Monitoring"
+      "systemMonitoring": "System Monitoring",
+      "security": "Security"
     },
     "testConnection": {
       "action": {
@@ -1713,6 +1714,22 @@
         "slug": {
           "label": "Status page slug",
           "newLabel": "New status page slug"
+        },
+        "wazuhIndexerUrl": {
+          "label": "Indexer URL",
+          "newLabel": "New indexer URL"
+        },
+        "wazuhIndexerUsername": {
+          "label": "Indexer username",
+          "newLabel": "New indexer username"
+        },
+        "wazuhIndexerPassword": {
+          "label": "Indexer password",
+          "newLabel": "New indexer password"
+        },
+        "wazuhDashboardUrl": {
+          "label": "Dashboard URL (optional)",
+          "newLabel": "New dashboard URL"
         }
       }
     },
@@ -5367,6 +5384,321 @@
       "plain": "Remove card backgrounds",
       "resetView": "Reset view",
       "allHidden": "All metrics are hidden in this view. Use Customize this view to restore them."
+    },
+    "wazuh": {
+      "target": {
+        "api": "Wazuh server API",
+        "indexer": "Wazuh indexer",
+        "wazuh": "Wazuh"
+      },
+      "severity": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High",
+        "critical": "Critical"
+      },
+      "error": {
+        "unauthorized": {
+          "title": "{target} rejected the credentials",
+          "description": "Check the username and password saved on the Wazuh integration. The server API (port 55000) and the indexer (port 9200) use separate users."
+        },
+        "certificate": {
+          "title": "{target} certificate is not trusted",
+          "description": "Wazuh uses a self-signed certificate by default. Run \"Test connection\" on the integration and trust the certificate, or add your CA under Settings → Certificates."
+        },
+        "unreachable": {
+          "title": "Cannot reach {target}",
+          "description": "The host refused or dropped the connection. Check the URL, port and firewall. The indexer only listens on localhost in a default all-in-one install."
+        },
+        "timeout": {
+          "title": "{target} timed out",
+          "description": "No response within 15 seconds. The service may be overloaded or the address may be wrong."
+        },
+        "status": {
+          "title": "{target} returned an error",
+          "description": "The request failed with HTTP status {status}."
+        },
+        "invalidResponse": {
+          "title": "Unexpected response from {target}",
+          "description": "Check that the URL points to the Wazuh server API or indexer and not to the dashboard."
+        },
+        "indexerRequired": {
+          "title": "Wazuh indexer credentials required",
+          "description": "Alerts, vulnerabilities and file integrity events are read from the Wazuh indexer. Add an indexer URL, username and password to the integration."
+        },
+        "unknown": {
+          "title": "Could not load data from {target}",
+          "description": "Check the Homarr logs for details."
+        }
+      },
+      "range": {
+        "1h": "1h",
+        "24h": "24h",
+        "7d": "7d",
+        "30d": "30d"
+      },
+      "levelTooltip": "Rule level {level} ({severity})"
+    },
+    "wazuhAgents": {
+      "name": "Wazuh agents",
+      "description": "Sortable list of Wazuh agents with status, OS, version and last keepalive",
+      "option": {
+        "statusFilter": {
+          "label": "Show agents"
+        },
+        "sortBy": {
+          "label": "Sort by"
+        },
+        "showVersion": {
+          "label": "Show Wazuh version column"
+        },
+        "showGroups": {
+          "label": "Show groups column"
+        }
+      },
+      "title": "Agents",
+      "total": "{count} agents",
+      "status": {
+        "active": "Active",
+        "disconnected": "Disconnected",
+        "neverConnected": "Never connected",
+        "pending": "Pending"
+      },
+      "statusLabel": {
+        "active": "Active",
+        "disconnected": "Disconnected",
+        "never_connected": "Never connected",
+        "pending": "Pending",
+        "unknown": "Unknown"
+      },
+      "live": "Live",
+      "snapshot": "Snapshot {age} old",
+      "snapshotHint": "Read from the Wazuh dashboard's agent snapshot (wazuh-monitoring) taken at {time}. Add server API credentials for live data.",
+      "staleSnapshot": "The agent snapshot from {time} is outdated. Check that the Wazuh dashboard monitoring job is running, or add server API credentials.",
+      "noDisconnected": "All agents are connected",
+      "empty": "No agents match this filter",
+      "column": {
+        "status": "Status",
+        "name": "Name",
+        "ip": "IP",
+        "os": "OS",
+        "version": "Version",
+        "lastKeepAlive": "Keepalive",
+        "groups": "Groups"
+      },
+      "outdated": "Older than the newest agent version ({version})"
+    },
+    "wazuhAlerts": {
+      "name": "Wazuh alerts feed",
+      "description": "Recent Wazuh alerts with level, MITRE ATT&CK techniques, agent and source IP",
+      "option": {
+        "minLevel": {
+          "label": "Minimum rule level",
+          "description": "Wazuh levels: 0-6 low, 7-11 medium, 12-14 high, 15+ critical"
+        },
+        "hours": {
+          "label": "Time window (hours)"
+        },
+        "limit": {
+          "label": "Number of alerts"
+        },
+        "showMitre": {
+          "label": "Show MITRE ATT&CK techniques"
+        },
+        "showAgent": {
+          "label": "Show agent"
+        },
+        "showSourceIp": {
+          "label": "Show source IP"
+        },
+        "showRuleId": {
+          "label": "Show rule ID"
+        }
+      },
+      "title": "Alerts · level {level}+ · {hours}h",
+      "empty": "No alerts at this level. All quiet.",
+      "rule": "Rule {id}",
+      "openInDashboard": "Open this alert in the Wazuh dashboard"
+    },
+    "wazuhSummary": {
+      "name": "Wazuh alert severity",
+      "description": "Alert severity breakdown with a trend against the previous period",
+      "option": {
+        "range": {
+          "label": "Time range"
+        },
+        "showTrend": {
+          "label": "Show trend against the previous period"
+        },
+        "showFooter": {
+          "label": "Show footer"
+        }
+      },
+      "title": "Alert severity · {range}",
+      "alerts": "alerts",
+      "none": "No alerts",
+      "trend": {
+        "new": "new",
+        "tooltip": "Previous period: {previous}"
+      },
+      "previous": "Previous {range}: {count}",
+      "maxLevel": "Max level {level}",
+      "health": "Indexer health: {status}",
+      "manager": "Manager {version}"
+    },
+    "wazuhTimeline": {
+      "name": "Wazuh alerts timeline",
+      "description": "Stacked chart of Wazuh alerts over time by severity",
+      "option": {
+        "range": {
+          "label": "Time range"
+        },
+        "interval": {
+          "label": "Interval"
+        },
+        "chartType": {
+          "label": "Chart type"
+        },
+        "yScale": {
+          "label": "Y axis scale",
+          "description": "Square root keeps high and critical alerts visible next to thousands of low ones"
+        },
+        "minLevel": {
+          "label": "Minimum rule level"
+        },
+        "showLegend": {
+          "label": "Show legend with totals"
+        }
+      },
+      "title": "Alerts timeline · {range}",
+      "total": "{count} alerts",
+      "interval": "per {interval}"
+    },
+    "wazuhTopList": {
+      "name": "Wazuh top list",
+      "description": "Top rules, agents, source IPs or MITRE ATT&CK tactics and techniques by alert count",
+      "option": {
+        "kind": {
+          "label": "Rank"
+        },
+        "range": {
+          "label": "Time range"
+        },
+        "limit": {
+          "label": "Number of entries"
+        },
+        "minLevel": {
+          "label": "Minimum rule level"
+        },
+        "showBars": {
+          "label": "Show bars"
+        }
+      },
+      "title": {
+        "rules": "Top rules · {range}",
+        "agents": "Top agents · {range}",
+        "sourceIps": "Top source IPs · {range}",
+        "mitreTactics": "MITRE tactics · {range}",
+        "mitreTechniques": "MITRE techniques · {range}"
+      },
+      "empty": {
+        "rules": "No alerts in this period",
+        "agents": "No alerts in this period",
+        "sourceIps": "No alerts with a source IP in this period",
+        "mitreTactics": "No alerts mapped to MITRE ATT&CK in this period",
+        "mitreTechniques": "No alerts mapped to MITRE ATT&CK in this period"
+      },
+      "totalTooltip": "{count} matching alerts",
+      "private": "LAN",
+      "public": "Public",
+      "agents": "Seen on {count} agents",
+      "others": "{count} more alerts in other entries"
+    },
+    "wazuhVulnerabilities": {
+      "name": "Wazuh vulnerabilities",
+      "description": "Vulnerability counts, top CVEs and the most vulnerable agents",
+      "option": {
+        "cveOrder": {
+          "label": "Rank CVEs by"
+        },
+        "minSeverity": {
+          "label": "CVE severity"
+        },
+        "cveLimit": {
+          "label": "Number of CVEs"
+        },
+        "agentLimit": {
+          "label": "Number of agents"
+        },
+        "showAgents": {
+          "label": "Show most vulnerable agents"
+        }
+      },
+      "title": "Vulnerabilities",
+      "topCves": "Top CVEs",
+      "score": "Score",
+      "agentsShort": "Agents",
+      "topAgents": "Most vulnerable agents",
+      "criticalHigh": "Crit / High",
+      "totalTooltip": "{count} findings on {agents} agents",
+      "affected": "{count} agents",
+      "empty": "No vulnerabilities detected",
+      "distribution": "Severity distribution. {unscored} findings without a score are not shown.",
+      "worst": "Worst: {id} ({score}) on {agents} agents"
+    },
+    "wazuhFim": {
+      "name": "Wazuh file integrity",
+      "description": "Recent file integrity monitoring (syscheck) events",
+      "option": {
+        "range": {
+          "label": "Time range"
+        },
+        "event": {
+          "label": "Events"
+        },
+        "limit": {
+          "label": "Number of events"
+        },
+        "includeRegistry": {
+          "label": "Include Windows registry events"
+        }
+      },
+      "title": "File integrity · {range}",
+      "event": {
+        "added": "Added",
+        "modified": "Modified",
+        "deleted": "Deleted",
+        "unknown": "Changed"
+      },
+      "empty": "No file integrity events in this period",
+      "user": "by {user}",
+      "registry": "Registry"
+    },
+    "wazuhAuthFailures": {
+      "name": "Wazuh authentication failures",
+      "description": "Failed logins and brute-force alerts per agent with hourly sparklines",
+      "option": {
+        "hours": {
+          "label": "Time window (hours)"
+        },
+        "limit": {
+          "label": "Number of agents"
+        },
+        "showSourceIps": {
+          "label": "Show top source IPs"
+        }
+      },
+      "title": "Auth failures · {hours}h",
+      "seriesTooltip": "All agents over the last {hours}h",
+      "peak": "Peak {count}/bucket",
+      "empty": "No failed logins in this period",
+      "failed": "Failed logins",
+      "failedHint": "Single authentication failures (sshd, PAM, Windows logon, invalid users)",
+      "bruteForce": "Brute force",
+      "bruteForceHint": "Correlated brute-force rules (multiple failures in a short period, MITRE T1110)",
+      "sourceIps": "Source IPs",
+      "ipTooltip": "{ip}: {count} failures",
+      "bruteForceCount": "{count} brute force"
     }
   },
   "widgetPreview": {

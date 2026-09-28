@@ -48,4 +48,5 @@ export const widgetRouter = createTRPCRouter({
   secrets: lazy(() => import("./widget-secrets").then((mod) => mod.widgetSecretsRouter)),
   wud: lazy(() => import("./wud").then((mod) => mod.wudRouter)),
   llamacpp: lazy(() => import("./llamacpp").then((mod) => mod.llamacppRouter)),
+  wazuh: lazy(() => import("./wazuh").then((mod) => mod.wazuhRouter)),
 });

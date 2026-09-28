@@ -61,6 +61,14 @@ import type * as vpn from "./vpn";
 import type * as weather from "./weather";
 import type * as wud from "./wud";
 import type * as llamacpp from "./llama-cpp";
+import type * as wazuhAgents from "./wazuh-agents";
+import type * as wazuhAlerts from "./wazuh-alerts";
+import type * as wazuhSummary from "./wazuh-summary";
+import type * as wazuhTimeline from "./wazuh-timeline";
+import type * as wazuhTopList from "./wazuh-top-list";
+import type * as wazuhVulnerabilities from "./wazuh-vulnerabilities";
+import type * as wazuhFim from "./wazuh-fim";
+import type * as wazuhAuthFailures from "./wazuh-auth-failures";
 
 // Keep these imports explicit so Next.js and Turbopack can discover every widget
 // module without loading any widget definition or component eagerly.
@@ -126,6 +134,14 @@ export const widgetModuleLoaders = {
   weather: () => import("./weather"),
   wud: () => import("./wud"),
   llamacpp: () => import("./llama-cpp"),
+  wazuhAgents: () => import("./wazuh-agents"),
+  wazuhAlerts: () => import("./wazuh-alerts"),
+  wazuhSummary: () => import("./wazuh-summary"),
+  wazuhTimeline: () => import("./wazuh-timeline"),
+  wazuhTopList: () => import("./wazuh-top-list"),
+  wazuhVulnerabilities: () => import("./wazuh-vulnerabilities"),
+  wazuhFim: () => import("./wazuh-fim"),
+  wazuhAuthFailures: () => import("./wazuh-auth-failures"),
 } satisfies { [TKind in WidgetKind]: () => Promise<WidgetImports[TKind]> };
 
 export type WidgetImports = {
@@ -190,6 +206,14 @@ export type WidgetImports = {
   weather: typeof weather;
   wud: typeof wud;
   llamacpp: typeof llamacpp;
+  wazuhAgents: typeof wazuhAgents;
+  wazuhAlerts: typeof wazuhAlerts;
+  wazuhSummary: typeof wazuhSummary;
+  wazuhTimeline: typeof wazuhTimeline;
+  wazuhTopList: typeof wazuhTopList;
+  wazuhVulnerabilities: typeof wazuhVulnerabilities;
+  wazuhFim: typeof wazuhFim;
+  wazuhAuthFailures: typeof wazuhAuthFailures;
 };
 
 type WidgetComponentLoaders = {
@@ -261,6 +285,14 @@ export const widgetComponentLoaders = {
   weather: () => import("./weather/component"),
   wud: () => import("./wud/component"),
   llamacpp: () => import("./llama-cpp/component"),
+  wazuhAgents: () => import("./wazuh-agents/component"),
+  wazuhAlerts: () => import("./wazuh-alerts/component"),
+  wazuhSummary: () => import("./wazuh-summary/component"),
+  wazuhTimeline: () => import("./wazuh-timeline/component"),
+  wazuhTopList: () => import("./wazuh-top-list/component"),
+  wazuhVulnerabilities: () => import("./wazuh-vulnerabilities/component"),
+  wazuhFim: () => import("./wazuh-fim/component"),
+  wazuhAuthFailures: () => import("./wazuh-auth-failures/component"),
 } satisfies WidgetComponentLoaders;
 
 export type WidgetImportKey = keyof WidgetImports;
