@@ -1,4 +1,5 @@
 import { IconBrandDocker, IconServerOff } from "@tabler/icons-react";
+import { z } from "zod/v4";
 
 import type { RouterOutputs } from "@homarr/api";
 
@@ -49,6 +50,13 @@ export const { definition, componentLoader } = createWidgetDefinition("dockerCon
           })),
         }),
         descendingDefaultSort: factory.switch({
+          defaultValue: false,
+        }),
+        containerFilter: factory.multiText({
+          defaultValue: [] as string[],
+          validate: z.string(),
+        }),
+        filterIsWhitelist: factory.switch({
           defaultValue: false,
         }),
         columnOrder: factory.text({ defaultValue: "" }),

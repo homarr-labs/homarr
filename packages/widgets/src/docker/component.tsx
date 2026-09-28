@@ -53,6 +53,12 @@ const containerMenuWidth = 240;
 const createContainerLogsPath = (container: Pick<DockerContainer, "id" | "name">) =>
   `/manage/tools/docker/logs/${container.id}?name=${encodeURIComponent(container.name)}`;
 
+export function matchesContainerFilter(name: string, containerFilter: string[], filterIsWhitelist: boolean): boolean {
+  if (containerFilter.length === 0) return true;
+  const matches = containerFilter.includes(name);
+  return filterIsWhitelist === matches;
+}
+
 const ContainerStateBadge = ({ state }: { state: ContainerState }) => {
   const t = useScopedI18n("docker.field.state.option");
 
@@ -201,7 +207,13 @@ export default function DockerWidget({
   const isTiny = width <= 256;
 
   const { data, refetch, isFetching } = clientApi.docker.getContainers.useQuery();
-  const containers = useMemo(() => data?.containers ?? [], [data?.containers]);
+  const containers = useMemo(
+    () =>
+      (data?.containers ?? []).filter((container) =>
+        matchesContainerFilter(container.name, options.containerFilter, options.filterIsWhitelist),
+      ),
+    [data?.containers, options.containerFilter, options.filterIsWhitelist],
+  );
   const timestamp = useMemo(() => data?.timestamp ?? new Date(), [data?.timestamp]);
   const relativeTime = useTimeAgo(timestamp);
 

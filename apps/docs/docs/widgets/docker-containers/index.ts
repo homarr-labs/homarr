@@ -35,6 +35,19 @@ export const dockerContainersWidget: WidgetDefinition = {
         values: { type: "boolean" },
         defaultValue: "No",
       },
+      {
+        name: "Containers to filter",
+        description: "You can filter the containers by name. Use a comma to separate multiple values.",
+        values: "Comma-separated list of container names",
+        defaultValue: "-",
+      },
+      {
+        name: "Filter as a whitelist",
+        description:
+          "If enabled, only containers that match the filter will be shown. If disabled, containers that match the filter will be hidden.",
+        values: { type: "boolean" },
+        defaultValue: "No",
+      },
     ],
   },
 };

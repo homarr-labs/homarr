@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
 
 import { parseColumnOrder, parseColumnWidths } from "../common/use-persisted-table-layout";
+import { matchesContainerFilter } from "./component";
 
 const columnAccessors = ["name", "state", "host", "cpuUsage", "memoryUsage", "actions"];
 
@@ -29,5 +30,22 @@ describe("Docker table column layout options", () => {
         columnAccessors,
       ),
     ).toEqual({ name: 180 });
+  });
+});
+
+describe("Docker container name filter", () => {
+  test("shows everything when the filter is empty", () => {
+    expect(matchesContainerFilter("jellyfin", [], false)).toBe(true);
+    expect(matchesContainerFilter("jellyfin", [], true)).toBe(true);
+  });
+
+  test("blacklist mode hides listed containers", () => {
+    expect(matchesContainerFilter("jellyfin-postgres", ["jellyfin-postgres"], false)).toBe(false);
+    expect(matchesContainerFilter("jellyfin", ["jellyfin-postgres"], false)).toBe(true);
+  });
+
+  test("whitelist mode only shows listed containers", () => {
+    expect(matchesContainerFilter("jellyfin", ["jellyfin"], true)).toBe(true);
+    expect(matchesContainerFilter("jellyfin-postgres", ["jellyfin"], true)).toBe(false);
   });
 });

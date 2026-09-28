@@ -2475,6 +2475,12 @@
         "descendingDefaultSort": {
           "label": "Invert sorting"
         },
+        "containerFilter": {
+          "label": "Containers to filter"
+        },
+        "filterIsWhitelist": {
+          "label": "Filter as a whitelist"
+        },
         "columnOrder": {
           "label": "Column order"
         },
