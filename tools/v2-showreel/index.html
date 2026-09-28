@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Homarr 2.0 — reel</title>
+    <link rel="stylesheet" href="src/style.css" />
+  </head>
+  <body>
+    <svg width="0" height="0" style="position: absolute">
+      <filter id="ca" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+        <feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="r" />
+        <feOffset in="r" dx="0" dy="0" result="ro" id="ca-r" />
+        <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="g" />
+        <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="b" />
+        <feOffset in="b" dx="0" dy="0" result="bo" id="ca-b" />
+        <feBlend in="ro" in2="g" mode="screen" result="rg" />
+        <feBlend in="rg" in2="bo" mode="screen" />
+      </filter>
+    </svg>
+    <div id="stage">
+      <div id="world">
+        <div id="bg" class="layer"></div>
+        <canvas id="gl" width="1920" height="1080"></canvas>
+        <div id="fg" class="layer"></div>
+      </div>
+      <div id="fx" class="layer">
+        <div id="flash" class="layer"></div>
+        <div id="vignette" class="layer"></div>
+        <div id="grain" class="layer"></div>
+        <div id="fade" class="layer"></div>
+      </div>
+    </div>
+    <script type="module" src="dist/reel.js"></script>
+  </body>
+</html>
