@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Box, Center, Group, Loader, Progress, Text } from "@mantine/core";
+import { Box, Group, Progress, Text } from "@mantine/core";
 import type { DataTableColumn, DataTableSortStatus } from "mantine-datatable";
 import {
   Activity,
@@ -27,6 +27,7 @@ import { showErrorNotification } from "@homarr/notifications";
 import { useByteFormatter } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 
+import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 import { HomarrDataTable } from "../common/homarr-data-table";
 import { getUsableWidgetQueryData } from "../common/query-state";
@@ -436,11 +437,7 @@ export default function BeszelSystemTableWidget({
   );
 
   if (isPending) {
-    return (
-      <Center h="100%">
-        <Loader size="sm" />
-      </Center>
-    );
+    return <WidgetQueryLoadingState />;
   }
 
   const table = (

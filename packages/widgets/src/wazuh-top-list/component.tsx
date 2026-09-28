@@ -13,7 +13,7 @@ import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common
 import type { WidgetComponentProps } from "../definition";
 import { isPrivateIp, WazuhChip, WazuhLevelBadge } from "../wazuh/_shared/badges";
 import { WazuhErrorState } from "../wazuh/_shared/error-state";
-import { WazuhSkeleton, WazuhWidgetFrame } from "../wazuh/_shared/frame";
+import { WazuhPendingState, WazuhWidgetFrame } from "../wazuh/_shared/frame";
 import type { WazuhDashboardLinks } from "../wazuh/_shared/links";
 import { formatWazuhCount, getWazuhSeverityForLevel, wazuhSeverityChartColors } from "../wazuh/_shared/severity";
 import { useWazuhLinks } from "../wazuh/_shared/use-wazuh-links";
@@ -77,7 +77,7 @@ export default function WazuhTopListWidget({
   if (isInitialWidgetQueryPending(query)) {
     return (
       <WazuhWidgetFrame icon={Icon} title={title} compact={compact} iconColor={kindColors[options.kind]}>
-        <WazuhSkeleton variant="list" rows={Math.min(options.limit, 6)} />
+        <WazuhPendingState />
       </WazuhWidgetFrame>
     );
   }

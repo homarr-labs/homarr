@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { Anchor, Box, Group, Skeleton, Stack, Text, ThemeIcon, Tooltip, UnstyledButton } from "@mantine/core";
+import { Anchor, Box, Group, Stack, Text, ThemeIcon, Tooltip, UnstyledButton } from "@mantine/core";
 import { IconExternalLink } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -9,6 +9,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { useCurrentIntlLocale } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
+import { WidgetQueryLoadingState } from "../../common/query-state-indicator";
 import { useWidgetNow } from "../../common/use-widget-now";
 import classes from "./wazuh.module.css";
 
@@ -75,58 +76,7 @@ export const WazuhWidgetFrame = ({
   </Stack>
 );
 
-export const WazuhSkeleton = ({
-  variant,
-  rows = 5,
-}: {
-  variant: "chart" | "list" | "tiles" | "donut";
-  rows?: number;
-}) => {
-  if (variant === "chart") {
-    return (
-      <Stack h="100%" gap={6}>
-        <Group gap={6}>
-          {Array.from({ length: 4 }, (_, index) => (
-            <Skeleton key={index} h={14} w={56} radius="xl" />
-          ))}
-        </Group>
-        <Skeleton style={{ flex: 1 }} radius="sm" />
-      </Stack>
-    );
-  }
-  if (variant === "donut") {
-    return (
-      <Group h="100%" wrap="nowrap" gap="md" justify="center">
-        <Skeleton circle h={96} w={96} />
-        <Stack gap={8} style={{ flex: 1 }} maw={180}>
-          {Array.from({ length: 4 }, (_, index) => (
-            <Skeleton key={index} h={12} radius="sm" />
-          ))}
-        </Stack>
-      </Group>
-    );
-  }
-  return (
-    <Stack gap={8}>
-      {variant === "tiles" && (
-        <Group gap={6} grow>
-          {Array.from({ length: 4 }, (_, index) => (
-            <Skeleton key={index} h={42} radius="sm" />
-          ))}
-        </Group>
-      )}
-      {Array.from({ length: rows }, (_, index) => (
-        <Group key={index} gap={8} wrap="nowrap">
-          <Skeleton h={18} w={28} radius="sm" />
-          <Stack gap={4} style={{ flex: 1 }}>
-            <Skeleton h={10} w={`${85 - ((index * 17) % 35)}%`} radius="sm" />
-            <Skeleton h={8} w="40%" radius="sm" />
-          </Stack>
-        </Group>
-      ))}
-    </Stack>
-  );
-};
+export const WazuhPendingState = () => <WidgetQueryLoadingState />;
 
 /** Relative time that re-renders every minute, with the absolute local time in a tooltip. */
 export const WazuhRelativeTime = ({

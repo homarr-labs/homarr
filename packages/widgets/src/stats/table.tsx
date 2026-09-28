@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { Avatar, Group, ScrollArea, Skeleton, Text } from "@mantine/core";
+import { Avatar, Group, ScrollArea, Text } from "@mantine/core";
 import { IconChevronDown } from "@tabler/icons-react";
 
 import type { DataTableColumn, DataTableProps } from "mantine-datatable";
@@ -98,7 +98,7 @@ function IntegrationTable({
               <Avatar src={group.iconUrl} size={14} radius={2} alt="" imageProps={{ referrerPolicy: "no-referrer" }} />
             )}
             <Text component="div" size="xs" fw={650} truncate style={{ flex: 1 }}>
-              {group.name || <Skeleton height={10} width={90} animate={false} />}
+              {group.name || "—"}
             </Text>
             <Text component="span" size="xs" c="dimmed">
               {group.metrics.length}
@@ -137,7 +137,7 @@ function IntegrationTable({
 const renderMetric = (record: StatsTableRow) => (
   <div>
     <Text component="div" size="xs" c="dimmed" className={classes.metric}>
-      {record.metric || <Skeleton height={8} width="65%" animate={false} />}
+      {record.metric || "—"}
     </Text>
     {record.status && (
       <Text size="xs" c="orange" className={classes.metric}>

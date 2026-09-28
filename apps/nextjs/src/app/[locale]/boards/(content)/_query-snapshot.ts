@@ -14,7 +14,8 @@ import {
 import type { Board } from "../_types";
 
 const snapshotMaxAgeMs = 3 * 24 * 60 * 60 * 1000;
-const maxQueryBytes = 32 * 1024;
+const maxQueryBytes = 128 * 1024;
+const maxBeszelStatsBytes = 256 * 1024;
 const maxSnapshotBytes = 512 * 1024;
 const snapshotVersion = "board-widget-queries-v1";
 
@@ -24,8 +25,8 @@ interface BoardSnapshot extends PersistedClient {
   generations: Record<string, string>;
 }
 
-// Only integration-backed data with the same result for every authorized viewer.
-// Browser-specific and arbitrary URL queries never enter the shared snapshot.
+// Only data shared by viewers of this board enters the snapshot. Browser-specific
+// queries stay out; RSS inputs must match the current board on save and restore.
 const sharedWidgetPaths = new Set([
   "widget.dnsHole.summary",
   "widget.beszel.getSystems",
@@ -41,13 +42,27 @@ const sharedWidgetPaths = new Set([
   "widget.calendar.findAllEvents",
 ]);
 
-const getQueryIntegrationIds = (queryKey: QueryKey) => {
+const getQueryIntegrationIds = (queryKey: QueryKey, board: Board) => {
   const path = queryKey[0];
-  if (!Array.isArray(path) || !sharedWidgetPaths.has(path.join("."))) return null;
+  if (!Array.isArray(path)) return null;
   const details = queryKey[1];
   if (!details || typeof details !== "object" || !("input" in details)) return null;
   const input = details.input;
   if (!input || typeof input !== "object") return null;
+  if (path.join(".") === "widget.rssFeed.getFeeds") {
+    if (!("urls" in input) || !Array.isArray(input.urls)) return null;
+    if (!("maximumAmountPosts" in input) || typeof input.maximumAmountPosts !== "number") return null;
+    const urls: unknown[] = input.urls;
+    const matchesBoardItem = board.items.some((item) => {
+      if (item.kind !== "rssFeed" || !Array.isArray(item.options.feedUrls)) return false;
+      if (Number(item.options.maximumAmountPosts ?? 100) !== input.maximumAmountPosts) return false;
+      return (
+        item.options.feedUrls.length === urls.length && item.options.feedUrls.every((url, index) => url === urls[index])
+      );
+    });
+    return matchesBoardItem ? [] : null;
+  }
+  if (!sharedWidgetPaths.has(path.join("."))) return null;
   if ("integrationIds" in input && Array.isArray(input.integrationIds)) {
     if (input.integrationIds.length === 0 || !input.integrationIds.every((id) => typeof id === "string")) return null;
     return input.integrationIds as string[];
@@ -56,15 +71,23 @@ const getQueryIntegrationIds = (queryKey: QueryKey) => {
   return null;
 };
 
-const getShareableQueries = (queries: CachedQuery[], boardIntegrationIds: Set<string>, allowedIds: Set<string>) => {
+const getShareableQueries = (
+  queries: CachedQuery[],
+  board: Board,
+  boardIntegrationIds: Set<string>,
+  allowedIds: Set<string>,
+) => {
   let totalBytes = 0;
   return queries.filter((query) => {
     if (query.meta?.rscWidgetPrefetch !== true || query.state.status !== "success") return false;
-    const ids = getQueryIntegrationIds(query.queryKey);
+    const ids = getQueryIntegrationIds(query.queryKey, board);
     if (!ids?.every((id) => boardIntegrationIds.has(id) && allowedIds.has(id))) return false;
     const serialized = superjson.stringify({ key: query.queryKey, data: query.state.data });
     const queryBytes = Buffer.byteLength(serialized);
-    if (queryBytes > maxQueryBytes || /data:[^,]{0,100};base64,/i.test(serialized)) return false;
+    const path = query.queryKey[0];
+    let limit = maxQueryBytes;
+    if (Array.isArray(path) && path.join(".") === "widget.beszel.getSystemStats") limit = maxBeszelStatsBytes;
+    if (queryBytes > limit || /data:[^,]{0,100};base64,/i.test(serialized)) return false;
     if (totalBytes + queryBytes > maxSnapshotBytes) return false;
     totalBytes += queryBytes;
     return true;
@@ -111,8 +134,9 @@ export const createBoardQuerySnapshot = (board: Board, integrations: Integration
       if (!snapshot || !snapshot.generations) return undefined;
       const generations = await initialGenerationsPromise;
       if (!generations) return undefined;
-      const queries = getShareableQueries(snapshot.clientState.queries, boardIntegrationIds, allowedIds).filter(
-        (query) => getQueryIntegrationIds(query.queryKey)?.every((id) => generations[id] === snapshot.generations[id]),
+      const queries = getShareableQueries(snapshot.clientState.queries, board, boardIntegrationIds, allowedIds).filter(
+        (query) =>
+          getQueryIntegrationIds(query.queryKey, board)?.every((id) => generations[id] === snapshot.generations[id]),
       );
       return {
         ...snapshot,
@@ -127,9 +151,9 @@ export const createBoardQuerySnapshot = (board: Board, integrations: Integration
     },
     persistClient: async (client: PersistedClient) => {
       if (!canSeedBoardSnapshot) return;
-      const queries = getShareableQueries(client.clientState.queries, boardIntegrationIds, allowedIds);
+      const queries = getShareableQueries(client.clientState.queries, board, boardIntegrationIds, allowedIds);
       if (queries.length === 0) return;
-      const ids = new Set(queries.flatMap((query) => getQueryIntegrationIds(query.queryKey) ?? []));
+      const ids = new Set(queries.flatMap((query) => getQueryIntegrationIds(query.queryKey, board) ?? []));
       const [initialGenerations, generations] = await Promise.all([
         initialGenerationsPromise,
         getGenerationsAsync(ids),

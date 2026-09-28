@@ -12,7 +12,7 @@ import { WidgetEmptyState } from "../common/empty-state";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
 import type { WidgetComponentProps } from "../definition";
 import { WazuhErrorState } from "../wazuh/_shared/error-state";
-import { WazuhLegendChip, WazuhSkeleton, WazuhWidgetFrame } from "../wazuh/_shared/frame";
+import { WazuhLegendChip, WazuhPendingState, WazuhWidgetFrame } from "../wazuh/_shared/frame";
 import { formatWazuhCount, wazuhSeverityChartColors } from "../wazuh/_shared/severity";
 import { useWazuhLinks } from "../wazuh/_shared/use-wazuh-links";
 
@@ -77,7 +77,7 @@ export default function WazuhTimelineWidget({
   if (isInitialWidgetQueryPending(query)) {
     return (
       <WazuhWidgetFrame icon={IconChartAreaLine} title={title} compact={compact}>
-        <WazuhSkeleton variant="chart" />
+        <WazuhPendingState />
       </WazuhWidgetFrame>
     );
   }

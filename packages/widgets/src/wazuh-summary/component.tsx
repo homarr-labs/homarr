@@ -12,7 +12,7 @@ import { WidgetEmptyState } from "../common/empty-state";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
 import type { WidgetComponentProps } from "../definition";
 import { WazuhErrorState } from "../wazuh/_shared/error-state";
-import { WazuhSkeleton, WazuhWidgetFrame } from "../wazuh/_shared/frame";
+import { WazuhPendingState, WazuhWidgetFrame } from "../wazuh/_shared/frame";
 import {
   formatWazuhCount,
   formatWazuhTrend,
@@ -90,7 +90,7 @@ export default function WazuhSummaryWidget({
   if (isInitialWidgetQueryPending(query)) {
     return (
       <WazuhWidgetFrame icon={IconShieldHalfFilled} title={title} compact={compact}>
-        <WazuhSkeleton variant="donut" />
+        <WazuhPendingState />
       </WazuhWidgetFrame>
     );
   }
