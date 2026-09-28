@@ -37,8 +37,8 @@ export const dockerContainersWidget: WidgetDefinition = {
       },
       {
         name: "Containers to filter",
-        description: "You can filter the containers by name. Use a comma to separate multiple values.",
-        values: "Comma-separated list of container names",
+        description: "You can filter the containers by name. Add one container name per entry.",
+        values: "List of container names",
         defaultValue: "-",
       },
       {
