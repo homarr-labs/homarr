@@ -50,6 +50,9 @@ describe("dashboard query persistence", () => {
     const image = createSuccessfulQuery([["widget", "mediaRequests", "getLatestRequests"], { type: "query" }], {
       artwork: "data:image/jpeg;base64,ZmFrZQ==",
     });
+    const rawImage = createSuccessfulQuery([["widget", "mediaRequests", "getLatestRequests"], { type: "query" }], {
+      artwork: "a".repeat(1_024),
+    });
     const large = createSuccessfulQuery([["widget", "mediaRequests", "getLatestRequests"], { type: "query" }], {
       requests: "x".repeat(65_536),
     });
@@ -71,6 +74,7 @@ describe("dashboard query persistence", () => {
     expect(shouldPersistDashboardQuery(customApi.query)).toBe(false);
     expect(shouldPersistDashboardQuery(unrelated.query)).toBe(false);
     expect(shouldPersistDashboardQuery(image.query)).toBe(false);
+    expect(shouldPersistDashboardQuery(rawImage.query)).toBe(false);
     expect(shouldPersistDashboardQuery(large.query)).toBe(false);
     expect(shouldPersistDashboardQuery(album.query)).toBe(false);
     expect(shouldPersistDashboardQuery(pending)).toBe(false);

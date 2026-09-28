@@ -25,6 +25,7 @@ export const shouldPersistDashboardQuery = (query: PersistableQuery) => {
   const serialized = stringify(query.state.data);
   if (serialized.length > maxQueryCharacters) return false;
   if (/data:[^,]{0,100};base64,/i.test(serialized)) return false;
+  if (/"[A-Za-z0-9+/]{512,}={0,2}"/.test(serialized)) return false;
   return !/"[^"\\]{8192}/.test(serialized);
 };
 
