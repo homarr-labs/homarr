@@ -24,6 +24,7 @@
     "./definition": "./src/definition.ts",
     "./errors": "./src/errors/component.tsx",
     "./manifest": "./src/manifest.ts",
+    "./initial-widget-resources": "./src/initial-widget-resources.ts",
     "./options": "./src/options.ts",
     "./option-translation": "./src/option-translation.ts",
     "./errors/classes": "./src/errors/index.ts",

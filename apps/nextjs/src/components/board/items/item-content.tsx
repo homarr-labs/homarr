@@ -2,7 +2,7 @@ import type { ComponentType, CSSProperties, MutableRefObject, PropsWithChildren 
 import { memo, Suspense, use, useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import dynamic from "next/dynamic";
-import { Box, Button, Center, Loader, Portal } from "@mantine/core";
+import { Box, Button, Center, Portal, Text } from "@mantine/core";
 import { useElementSize, useIsomorphicEffect } from "@mantine/hooks";
 import { QueryErrorResetBoundary, useQueryClient } from "@tanstack/react-query";
 import combineClasses from "clsx";
@@ -22,6 +22,7 @@ import {
   supportsAdvancedFocus as definitionSupportsAdvancedFocus,
 } from "@homarr/widgets/definition";
 import type { WidgetComponentProps, WidgetDefinition, WidgetRuntimeRef } from "@homarr/widgets/definition";
+import { initialWidgetResources } from "@homarr/widgets/initial-widget-resources";
 import { loadWidgetResources, reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 import { WidgetCardShell, WidgetTitleBadge } from "@homarr/widgets/widget-card-shell";
 
@@ -86,6 +87,18 @@ const WidgetDefinitionLoadError = ({
   </BoardItemCard>
 );
 
+const BoardItemPendingCard = ({ item, innerRef }: Pick<BoardItemCardProps, "item" | "innerRef">) => {
+  const t = useI18n();
+
+  return (
+    <BoardItemCard item={item} innerRef={innerRef}>
+      <Text c="dimmed" size="sm" p="sm">
+        {getWidgetName(item.kind, t)}
+      </Text>
+    </BoardItemCard>
+  );
+};
+
 const subscribeToHydration = () => () => undefined;
 const getHydratedSnapshot = () => true;
 const getServerHydratedSnapshot = () => false;
@@ -98,16 +111,10 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
   const width = measuredWidth || getLogicalTrackSize(item.width);
   const height = measuredHeight || getLogicalTrackSize(item.height);
 
-  // Keep useful app/bookmark HTML in the initial document. Other widget
+  // App and bookmark HTML is already in the initial document. Other widget
   // modules render after hydration while their server queries already run.
   if (!hydrated && item.kind !== "app" && item.kind !== "bookmarks") {
-    return (
-      <BoardItemCard item={item} innerRef={ref}>
-        <Center h="100%">
-          <Loader size="sm" />
-        </Center>
-      </BoardItemCard>
-    );
+    return <BoardItemPendingCard item={item} innerRef={ref} />;
   }
 
   return (
@@ -115,15 +122,7 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
       resetKeys={[item.kind]}
       fallbackRender={(fallbackProps) => <WidgetDefinitionLoadError {...fallbackProps} item={item} innerRef={ref} />}
     >
-      <Suspense
-        fallback={
-          <BoardItemCard item={item} innerRef={ref}>
-            <Center h="100%">
-              <Loader size="sm" />
-            </Center>
-          </BoardItemCard>
-        }
-      >
+      <Suspense fallback={<BoardItemPendingCard item={item} innerRef={ref} />}>
         <LoadedBoardItemContent
           item={item}
           width={width}
@@ -151,15 +150,46 @@ interface LoadedBoardItemContentProps {
   contentRef: (element: HTMLDivElement | null) => void;
 }
 
-const LoadedBoardItemContent = ({
+const LoadedBoardItemContent = (props: LoadedBoardItemContentProps) => {
+  if (props.item.kind === "app") {
+    const Component = initialWidgetResources.app.Component as ComponentType<WidgetComponentProps<SectionItem["kind"]>>;
+    return (
+      <ResolvedBoardItemContent {...props} definition={initialWidgetResources.app.definition} Component={Component} />
+    );
+  }
+  if (props.item.kind === "bookmarks") {
+    const Component = initialWidgetResources.bookmarks.Component as ComponentType<
+      WidgetComponentProps<SectionItem["kind"]>
+    >;
+    return (
+      <ResolvedBoardItemContent
+        {...props}
+        definition={initialWidgetResources.bookmarks.definition}
+        Component={Component}
+      />
+    );
+  }
+  return <DynamicBoardItemContent {...props} />;
+};
+
+const DynamicBoardItemContent = (props: LoadedBoardItemContentProps) => {
+  const resources = use(loadWidgetResources(props.item.kind));
+  return <ResolvedBoardItemContent {...props} {...resources} />;
+};
+
+const ResolvedBoardItemContent = ({
   item,
   width,
   height,
   widgetStateRef,
   widgetRuntimeRef,
   contentRef,
-}: LoadedBoardItemContentProps) => {
-  const { definition, Component } = use(loadWidgetResources(item.kind));
+  definition,
+  Component,
+}: LoadedBoardItemContentProps & {
+  definition: WidgetDefinition;
+  Component: ComponentType<WidgetComponentProps<SectionItem["kind"]>>;
+}) => {
   const sourceRef = useRef<HTMLDivElement>(null);
   const advancedFocusTriggerRef = useRef<HTMLButtonElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);

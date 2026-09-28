@@ -23,7 +23,7 @@ board switcher.
 
 Homarr starts supported widgets' initial data queries together on the server after resolving the board and its initial
 layout. Results stream independently while the board loads. The board remains visible as widgets fill in. App and
-bookmark tiles use the initial server HTML; other widgets show loading cards until browser hydration. Integration
+bookmark tiles use the initial server HTML; other widgets show labeled cards until browser hydration. Integration
 queries for collapsed sections wait until opened, and queries that need another result start when that dependency
 resolves. Existing integration permissions and live refresh intervals still apply.
 
