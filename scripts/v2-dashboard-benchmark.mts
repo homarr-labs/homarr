@@ -305,18 +305,21 @@ try {
     "browserTrpcRequests",
     "browserTrpcOperations",
   ] as const;
+  const metricMedian = (metricSamples: Sample[], metric: (typeof metrics)[number]) => {
+    const values = metricSamples
+      .map((sample) => sample[metric])
+      .filter((value): value is number => typeof value === "number");
+    if (values.length === 0) return null;
+    return median(values);
+  };
   const summary = Object.fromEntries(
     metrics.map((metric) => [
       metric,
       {
-        beforeCold: samples.before.cold.length
-          ? median(samples.before.cold.map((sample) => sample[metric] ?? 0))
-          : null,
-        afterCold: samples.after.cold.length ? median(samples.after.cold.map((sample) => sample[metric] ?? 0)) : null,
-        beforeWarm: samples.before.warm.length
-          ? median(samples.before.warm.map((sample) => sample[metric] ?? 0))
-          : null,
-        afterWarm: samples.after.warm.length ? median(samples.after.warm.map((sample) => sample[metric] ?? 0)) : null,
+        beforeCold: metricMedian(samples.before.cold, metric),
+        afterCold: metricMedian(samples.after.cold, metric),
+        beforeWarm: metricMedian(samples.before.warm, metric),
+        afterWarm: metricMedian(samples.after.warm, metric),
       },
     ]),
   );

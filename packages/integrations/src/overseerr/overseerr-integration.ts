@@ -309,6 +309,7 @@ export class OverseerrIntegration
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new Error(`Failed to fetch ${type} information for id ${id}: ${response.status} ${response.statusText}`);
     }
 

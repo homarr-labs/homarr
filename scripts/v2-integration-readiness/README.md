@@ -1,6 +1,6 @@
 # v2 integration readiness probe
 
-This preserves the historical DNS client-primer comparison. The current follow-up uses server prefetch on the restored real-service board; see `TASK.md` for its separate results and private runner paths. The client primer itself was removed.
+This preserves the historical DNS client-primer comparison. The client primer itself was removed; the current follow-up uses server prefetch on a restored real-service board. Results are summarized in PR #6927, with raw artifacts kept outside the repository.
 
 Compare the retained streaming image with a client-primer image using synthetic services through the production AdGuard and npm release adapters. Build images from the respective source revisions first; this runner does not build images.
 
