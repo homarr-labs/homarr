@@ -36,12 +36,14 @@ export default function SmartHomeTriggerAutomationWidget({
   const canInteract = useIntegrationsWithInteractAccess().some(({ id }) => id === integrationId);
   const [lastExecutedAt, setLastExecutedAt] = React.useState<Date | null>(null);
   const [isShowSuccess, { open: showSuccess, close: closeSuccess }] = useDisclosure();
+  const utils = clientApi.useUtils();
   const { start } = useTimeout(() => {
     closeSuccess();
   }, 1000);
 
   const { mutateAsync, isPending, error } = clientApi.widget.smartHome.executeAutomation.useMutation({
     onSuccess: () => {
+      void utils.widget.smartHome.entityDetails.invalidate();
       setLastExecutedAt(new Date());
       showSuccess();
       start();

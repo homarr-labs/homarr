@@ -21,6 +21,7 @@ const formSchema = z.object({
 
 export const AddDockerAppToHomarrModal = createModal<AddDockerAppToHomarrProps>(({ actions, innerProps }) => {
   const t = useI18n();
+  const utils = clientApi.useUtils();
   const form = useZodForm(formSchema, {
     initialValues: {
       containerUrls: innerProps.selectedContainers.map((container, index) => {
@@ -39,6 +40,7 @@ export const AddDockerAppToHomarrModal = createModal<AddDockerAppToHomarrProps>(
   });
   const { mutate, isPending } = clientApi.app.createMany.useMutation({
     onSuccess() {
+      void utils.app.invalidate();
       actions.closeModal();
       showSuccessNotification({
         title: t("docker.action.addToHomarr.notification.success.title"),
