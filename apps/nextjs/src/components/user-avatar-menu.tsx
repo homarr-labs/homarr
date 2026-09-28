@@ -24,6 +24,7 @@ import { useModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
+import { removeAllPersistedDashboardQueries } from "~/app/[locale]/_client-providers/query-persistence";
 import { useAuthContext } from "~/app/[locale]/_client-providers/session";
 import { useOptionalHomarrAssistant } from "./assistant/assistant-context";
 import type { BoardSwitcherControls } from "./board/board-switcher";
@@ -62,6 +63,7 @@ export const UserAvatarMenu = ({ children, availableUpdates, isDockerEnabled, bo
     logoutRedirectInProgress.current = true;
     try {
       await signOut({ redirect: false });
+      removeAllPersistedDashboardQueries();
       window.location.assign(redirectUrl);
     } catch (error) {
       logoutRedirectInProgress.current = false;

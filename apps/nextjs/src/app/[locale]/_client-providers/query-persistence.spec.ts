@@ -6,6 +6,7 @@ import {
   createSessionQueryPersistence,
   getQueryPersistenceStorageKey,
   queryPersistenceBuster,
+  removeAllPersistedDashboardQueries,
   shouldPersistDashboardQuery,
 } from "./query-persistence";
 
@@ -46,6 +47,15 @@ describe("dashboard query persistence", () => {
       apiKey: "secret",
     });
     const unrelated = createSuccessfulQuery([["board", "getBoardByName"], { type: "query" }], { name: "Home" });
+    const image = createSuccessfulQuery([["widget", "mediaRequests", "getLatestRequests"], { type: "query" }], {
+      artwork: "data:image/jpeg;base64,ZmFrZQ==",
+    });
+    const large = createSuccessfulQuery([["widget", "mediaRequests", "getLatestRequests"], { type: "query" }], {
+      requests: "x".repeat(65_536),
+    });
+    const album = createSuccessfulQuery([["widget", "immich", "getAlbum"], { type: "query" }], {
+      assets: [{ id: "photo" }],
+    });
     const pendingClient = new QueryClient();
     const pending = pendingClient.getQueryCache().build(pendingClient, {
       queryKey: [["widget", "calendar", "findAllEvents"], { type: "query" }],
@@ -60,6 +70,9 @@ describe("dashboard query persistence", () => {
     expect(shouldPersistDashboardQuery(beszel.query)).toBe(false);
     expect(shouldPersistDashboardQuery(customApi.query)).toBe(false);
     expect(shouldPersistDashboardQuery(unrelated.query)).toBe(false);
+    expect(shouldPersistDashboardQuery(image.query)).toBe(false);
+    expect(shouldPersistDashboardQuery(large.query)).toBe(false);
+    expect(shouldPersistDashboardQuery(album.query)).toBe(false);
     expect(shouldPersistDashboardQuery(pending)).toBe(false);
     expect(shouldPersistDashboardQuery(failed.query)).toBe(true);
   });
@@ -110,12 +123,42 @@ describe("dashboard query persistence", () => {
     expect(restored?.clientState.queries[0]?.state.status).toBe("success");
     expect(restored?.clientState.queries[0]?.state.error).toBeNull();
     expect(await userB.persister.restoreClient()).toBeUndefined();
+    expect(userA.maxAge).toBe(Infinity);
 
     await userA.persister.removeClient();
     expect(storage.getItem(getQueryPersistenceStorageKey("user-a"))).toBeNull();
   });
 
-  test("treats unavailable session storage as an empty cache", async () => {
+  test("retains a small result after query garbage collection and clears all user scopes on logout", async () => {
+    vi.useFakeTimers();
+    const storage = createMemoryStorage();
+    const userA = createSessionQueryPersistence("user-a", storage);
+    const userB = createSessionQueryPersistence("user-b", storage);
+    const key = [["widget", "weather", "atLocation"], { type: "query" }] as const;
+    const { queryClient } = createSuccessfulQuery(key, { temp: 21 });
+    const snapshot = (): PersistedClient => ({
+      timestamp: Date.now(),
+      buster: queryPersistenceBuster,
+      clientState: dehydrate(queryClient, userA.dehydrateOptions),
+    });
+
+    await userA.persister.persistClient(snapshot());
+    await vi.advanceTimersByTimeAsync(1_000);
+    queryClient.removeQueries({ queryKey: key });
+    await userA.persister.persistClient(snapshot());
+    await vi.advanceTimersByTimeAsync(1_000);
+
+    const restored = await userA.persister.restoreClient();
+    expect(restored?.clientState.queries).toHaveLength(1);
+    expect(restored?.clientState.queries[0]?.state.data).toEqual({ temp: 21 });
+
+    await userB.persister.persistClient({ ...snapshot(), clientState: { mutations: [], queries: [] } });
+    await vi.advanceTimersByTimeAsync(1_000);
+    removeAllPersistedDashboardQueries(storage);
+    expect(storage.length).toBe(0);
+  });
+
+  test("treats unavailable browser storage as an empty cache", async () => {
     const blockedStorage = createMemoryStorage();
     blockedStorage.getItem = () => {
       throw new DOMException("blocked", "SecurityError");
@@ -127,5 +170,19 @@ describe("dashboard query persistence", () => {
     const persistence = createSessionQueryPersistence("blocked", blockedStorage);
     expect(await persistence.persister.restoreClient()).toBeUndefined();
     expect(() => persistence.persister.removeClient()).not.toThrow();
+  });
+
+  test("does not persist anonymous dashboard data", async () => {
+    vi.useFakeTimers();
+    const storage = createMemoryStorage();
+    const anonymous = createSessionQueryPersistence(null, storage);
+    const { queryClient } = createSuccessfulQuery([["widget", "weather", "atLocation"]], { temp: 21 });
+    await anonymous.persister.persistClient({
+      timestamp: Date.now(),
+      buster: queryPersistenceBuster,
+      clientState: dehydrate(queryClient, anonymous.dehydrateOptions),
+    });
+    await vi.advanceTimersByTimeAsync(1_000);
+    expect(storage.length).toBe(0);
   });
 });

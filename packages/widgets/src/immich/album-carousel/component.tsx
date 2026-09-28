@@ -59,7 +59,7 @@ export default function ImmichAlbumCarouselWidget({
     const assets = album?.assets.filter((asset) => asset.type === "IMAGE") ?? [];
     if (!options.randomizePhotos) return assets;
     const randomized = shuffle(assets);
-    if (!fullAlbum || firstPreviewPhoto?.albumId !== albumId) return randomized;
+    if (!fullAlbum || !firstPreviewPhoto || firstPreviewPhoto.albumId !== albumId) return randomized;
     const first = randomized.find((asset) => asset.id === firstPreviewPhoto.assetId);
     if (!first) return randomized;
     return [first, ...randomized.filter((asset) => asset.id !== first.id)];

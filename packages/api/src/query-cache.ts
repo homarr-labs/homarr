@@ -19,7 +19,11 @@ export const queryCacheDefaultGcTimeMs = 1000 * 60 * 5;
 export const queryCacheMetadataStaleTimeMs = 1000 * 60 * 5;
 
 const widgetDataQueryPaths = new Set(["app.byId", "app.byIds", "docker.getContainers", "integration.byIds"]);
-const persistenceExcludedWidgetPaths = new Set(["widget.customApi.getData", "widget.customApi.queryRequest"]);
+const persistenceExcludedWidgetPaths = new Set([
+  "widget.customApi.getData",
+  "widget.customApi.queryRequest",
+  "widget.immich.getAlbum",
+]);
 // Beszel system stats are large time-series payloads and were deliberately kept out of
 // the persisted cache in #6289; live stats come from an SSE subscription instead.
 const excludedWidgetPaths = new Set(["widget.app.ping", "widget.beszel.getSystemStats"]);

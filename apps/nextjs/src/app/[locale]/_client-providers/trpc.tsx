@@ -39,7 +39,7 @@ import { widgetQueryRefetchIntervals } from "@homarr/widgets/refetch-intervals";
 
 import { useAuthContext } from "./session";
 import { getSessionQueryScope, SessionQueryScopeGuard } from "./session-query-scope";
-import { createSessionQueryPersistence } from "./query-persistence";
+import { createSessionQueryPersistence, removeAllPersistedDashboardQueries } from "./query-persistence";
 import type { SessionQueryPersistence } from "./query-persistence";
 import { createQueryRetry } from "./query-retry";
 
@@ -77,6 +77,7 @@ export function TRPCReactProvider({ children }: PropsWithChildren) {
   const [queryPersistence] = useState(() => createSessionQueryPersistence(initialSessionQueryScope));
   const handleScopeChange = useCallback(() => {
     void queryPersistence.persister.removeClient();
+    removeAllPersistedDashboardQueries();
     if (!logoutRedirectInProgress.current) reloadPage();
   }, [queryPersistence, logoutRedirectInProgress]);
 
