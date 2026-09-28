@@ -210,6 +210,15 @@ export const prefetchInitialWidgetData = (
         let albumId: string | undefined;
         if (typeof options.albumId === "string" && options.albumId && options.albumId !== ALL_PHOTOS_ALBUM_ID)
           albumId = options.albumId;
+        if (albumId)
+          prefetchQuery(
+            queryClient,
+            trpc.widget.immich.getAlbumPreview.queryOptions({
+              integrationId: integrationIds[0],
+              albumId,
+              randomizePhotos: options.randomizePhotos === true,
+            }),
+          );
         prefetchQuery(
           queryClient,
           trpc.widget.immich.getAlbum.queryOptions({ integrationId: integrationIds[0], albumId }),

@@ -25,6 +25,10 @@ and preserve CORS headers. An HTTPS API reference cannot call an HTTP-only insta
 - `POST /api/invites` and `invite.createInvite` accept `expirationDate` as a timezone-qualified ISO 8601 string.
 - `GET /api/health/live` is unauthenticated and returns `200` when all dependencies are healthy, `500` otherwise.
 
+`widget.immich.getAlbumPreview` returns at most one image from a selected album. Its input includes `albumId` and
+`randomizePhotos`; it uses the same saved-integration access rules as `widget.immich.getAlbum`. Use `getAlbum` for the
+complete album image list.
+
 ## Permissions and results
 
 Requests use the API key owner's permissions. Unauthorized operations return `FORBIDDEN`; resource-aware lists are

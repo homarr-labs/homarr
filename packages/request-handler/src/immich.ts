@@ -56,3 +56,15 @@ export const immichAlbumRequestHandler = createIntegrationRequestHandler<
     return await integrationInstance.getAlbumAsync(input.albumId);
   },
 });
+
+export const immichAlbumPreviewRequestHandler = createIntegrationRequestHandler<
+  ImmichAlbum,
+  IntegrationKindByCategory<"photoService">,
+  { albumId: string; randomizePhotos: boolean }
+>({
+  cacheNamespace: "immich:album-preview",
+  async requestAsync(integration, input) {
+    const integrationInstance = await createIntegrationAsync(integration);
+    return await integrationInstance.getAlbumPreviewAsync(input.albumId, input.randomizePhotos);
+  },
+});

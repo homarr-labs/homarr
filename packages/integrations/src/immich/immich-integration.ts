@@ -101,6 +101,30 @@ export class ImmichIntegration extends Integration {
     };
   }
 
+  public async getAlbumPreviewAsync(albumId: string, randomizePhotos: boolean): Promise<ImmichAlbum> {
+    const requestOptions = this.getRequestOptions();
+    let assets: AssetResponseDto[] = [];
+    if (randomizePhotos) {
+      try {
+        assets = await searchRandom(
+          { randomSearchDto: { albumIds: [albumId], size: 1, type: AssetTypeEnum.Image } },
+          requestOptions,
+        );
+      } catch {
+        // Older Immich instances may reject album-scoped random search.
+        // The first metadata page is still a valid preview for this album.
+      }
+    }
+    if (assets.length === 0) {
+      const result = await searchAssets(
+        { metadataSearchDto: { albumIds: [albumId], type: AssetTypeEnum.Image, size: 1, withExif: false } },
+        requestOptions,
+      );
+      assets = result.assets.items;
+    }
+    return { id: albumId, albumName: "", assets: await this.createAssetsAsync(assets.slice(0, 1)) };
+  }
+
   public async getAlbumsAsync(): Promise<
     {
       id: string;

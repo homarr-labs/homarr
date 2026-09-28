@@ -129,18 +129,28 @@ Measured completion is all 26 widget instances attached, 27 observed active API 
 
 Next substantive target is the remaining server rendering / browser hydration critical path, without truncating albums or changing randomization. Query results must not be sent twice through both hydration transports. Preserve loader retry behavior; the experimental generic next/dynamic registry wrappers were slower and reverted. The paired restored-board RAM evidence is recorded below; do not infer a 30% reduction.
 
+### 2026-09-28 Immich first-photo preview checkpoint
+
+The selected 1,436-photo Immich album previously waited for its complete album query before displaying a photo. A separate, bounded `getAlbumPreview` query now starts with the full query on the server. It asks Immich for one image in the selected album, registers that image with the proxy, and streams it to the client. If album-scoped random search is unavailable, it falls back to the first metadata page. The full album query still returns all 1,436 assets and replaces the preview; randomized mode pins the displayed preview as the first photo in the full carousel. The route uses the existing widget-integration authorization middleware, a separate request-cache namespace, exact query ownership and album input matching. All-photos mode retains its previous full-query path.
+
+Exact production image: `homarr:v2-board-stream-preview-final`, SHA-256 `b170874ca1f8a19a7c44b9433292cc89297480e68e657d24b532d056462ad113`. Compared with the committed staged-render image in two alternating restored-board **cold** pairs, the first decoded album photo was observed at **2,655 → 2,569 ms** and **2,884 → 2,132 ms**. Two-sample medians were 2,770 → 2,351 ms (about 15% earlier); the wide per-pair spread matters more than that median. Complete query/DOM data was 2,480 → 2,612 ms and 2,542 → 2,245 ms, so a consistent complete-data gain is not established. First visible board medians were 784 → 788 ms, effectively flat. Each sample attached 26 widgets, had all initial queries successful/idle, zero browser exceptions, and preserved the first preview photo in the full album. The candidate starts one additional upstream request and has 28 observed queries instead of 27. An independent earlier two-pair preview block found 446 and 646 ms earlier decoded photos; a single process-cold check found about 849 ms earlier, while two warm reload pairs showed about 17 ms later first board paint and 32 ms later complete data. Do not pool these separate blocks.
+
+The exact-image cold block also sampled container memory about every 100 ms and aligned samples to each navigation through complete data. Two-sample median peaks: container `memory.current` **404.9 → 393.8 MiB**, anonymous **391.7 → 380.5 MiB**, Next `VmRSS` **448.8 → 438.6 MiB** for staged → preview. This is a short directional comparison, not steady-state sizing or a population estimate. Separately, the earlier paired b5-era v2 versus staged-render block below measured 474.1 → 387.7 MiB cold peak container memory; do not combine its numbers with this preview block into a final percentage.
+
+Private evidence: `/tmp/opencode/v2-real-board/live-paired-preview-final-photo-and-ram-cold.json`, `live-memory-preview-final-samples-20260928.jsonl`, `live-memory-preview-final-aligned-summary.json`, `live-paired-preview-photo-cold.json`, `live-preview-process-cold.json`, and `live-preview-warm-reload.json`. The corrected query ownership passed 24 focused tests across the Immich integration and widget-query-scope specs; the exact production image built successfully. This checkpoint improves first-photo readiness, while the remaining cold board first paint and hydration delay need work.
+
 ### 2026-09-28 paired RAM measurement
 
-The retained v2 baseline and the staged-render image ran the same restored 26-item board in isolated 2-CPU/1-GiB Docker containers. A 100 ms host sampler followed each cgroup across restarts and aligned its numeric readings with the browser navigation epoch and complete-data time. Two alternating cold loads per image restarted the process and cleared Redis; two warm reloads per image followed successful cold loads. Warm reload samples also included a fixed five-second settle window. The first attempted RAM sampler lost its cgroup path on restart; its result was discarded. The corrected artifacts are `live-memory-paired-valid-data-cold.json`, `live-memory-samples-20260928.jsonl`, `live-memory-warm-reload.json`, `live-memory-warm-samples-20260928.jsonl`, and `live-memory-aligned-summary.json` under `/tmp/opencode/v2-real-board/`.
+The retained v2 baseline and the staged-render image ran the same restored 26-item board in isolated 2-CPU/1-GiB Docker containers. A roughly 100 ms host sampler re-resolved a cgroup if its former path disappeared, then aligned numeric readings with the browser navigation epoch and complete-data time. It did not record a PID per sample, so the saved data cannot independently prove the process mapping after every restart. Two alternating cold loads per image restarted the process and cleared Redis; two warm reloads per image followed successful cold loads. Warm reload samples also included a fixed five-second settle window. The first attempted RAM sampler lost its cgroup path on restart; its result was discarded. The corrected artifacts are `live-memory-paired-valid-data-cold.json`, `live-memory-samples-20260928.jsonl`, `live-memory-warm-reload.json`, `live-memory-warm-samples-20260928.jsonl`, and `live-memory-aligned-summary.json` under `/tmp/opencode/v2-real-board/`.
 
-| Two-pair median | Retained v2 before | Staged candidate | Relative change |
-| --- | ---: | ---: | ---: |
-| Cold navigation cgroup peak | 474.1 MiB | 387.7 MiB | 18.2% lower |
-| Cold navigation cgroup anonymous peak | 458.7 MiB | 374.9 MiB | 18.3% lower |
-| Cold navigation Next process RSS peak | 517.2 MiB | 432.2 MiB | 16.4% lower |
-| Warm reload cgroup peak | 489.7 MiB | 414.5 MiB | 15.4% lower |
-| Warm reload Next RSS peak | 533.3 MiB | 458.3 MiB | 14.1% lower |
-| Five seconds after warm data completion, cgroup | 483.8 MiB | 399.6 MiB | 17.4% lower |
+| Two-pair median                                 | Retained v2 before | Staged candidate | Relative change |
+| ----------------------------------------------- | -----------------: | ---------------: | --------------: |
+| Cold navigation cgroup peak                     |          474.1 MiB |        387.7 MiB |     18.2% lower |
+| Cold navigation cgroup anonymous peak           |          458.7 MiB |        374.9 MiB |     18.3% lower |
+| Cold navigation Next process RSS peak           |          517.2 MiB |        432.2 MiB |     16.4% lower |
+| Warm reload cgroup peak                         |          489.7 MiB |        414.5 MiB |     15.4% lower |
+| Warm reload Next RSS peak                       |          533.3 MiB |        458.3 MiB |     14.1% lower |
+| Five seconds after warm data completion, cgroup |          483.8 MiB |        399.6 MiB |     17.4% lower |
 
 `memory.current` includes Redis, kernel memory and file cache; Next RSS is a distinct process measurement and must not be added to cgroup memory. The cgroup file cache field was about 0–1 MiB in these navigation windows; most of the change was anonymous memory. These are short, two-pair observations on this board, not steady-state production sizing, Node heap data or evidence for 30% less RAM. In the new RAM block, cold data completion still improved, but cold board paint varied much more than the earlier block; do not pool timings across blocks.
 
@@ -148,16 +158,16 @@ The retained v2 baseline and the staged-render image ran the same restored 26-it
 
 **Current retained image:** `homarr:v2-board-stream-staged-render`, SHA-256 `223a19c41b2523a1e4a464eb6417620b0b62f2a8c554c19596cf85d0c0a3459e`. This supersedes the full-widget SSR candidate below. Source is checkpointed locally in the task worktree. Backend query initiation and full result streaming are unchanged. App/bookmark tiles retain their server-rendered HTML; other widgets use the existing loading-card appearance during SSR and initial hydration, then render in the browser. A stable `useSyncExternalStore` server snapshot prevents hydration mismatch. This intentionally defers static/custom widget contents too; it is not an all-widget server prefetch implementation.
 
-| Final comparison | Retained v2 before | Staged candidate | Scope |
-| --- | ---: | ---: | --- |
-| Cold browser + empty response caches, pair 1 | 4,832 ms | 2,355 ms | Complete widget data; 51% earlier |
-| Cold browser + empty response caches, pair 2 | 6,740 ms | 2,209 ms | Complete widget data; 67% earlier; retain the before outlier |
-| Same two pairs: first visible board, median | 633 ms | 805 ms | Cold first paint still regresses |
-| Same two pairs: all widgets attached, median | 1,298 ms | 1,711 ms | Hydration still later than baseline |
-| Process-cold complete widget data | 5,333 ms | 2,866 ms | One paired sanity check, 46% earlier |
-| Process-cold first album photo observed loaded | 6,029 ms | 2,878 ms | Observed upper bounds, one pair |
-| Warm reload first visible board, median | 178 ms | 148 ms | Two pairs; warm paint preserved |
-| Warm reload complete widget data, median | 1,172 ms | 1,091 ms | Two pairs; small directional gain |
+| Final comparison                               | Retained v2 before | Staged candidate | Scope                                                        |
+| ---------------------------------------------- | -----------------: | ---------------: | ------------------------------------------------------------ |
+| Cold browser + empty response caches, pair 1   |           4,832 ms |         2,355 ms | Complete widget data; 51% earlier                            |
+| Cold browser + empty response caches, pair 2   |           6,740 ms |         2,209 ms | Complete widget data; 67% earlier; retain the before outlier |
+| Same two pairs: first visible board, median    |             633 ms |           805 ms | Cold first paint still regresses                             |
+| Same two pairs: all widgets attached, median   |           1,298 ms |         1,711 ms | Hydration still later than baseline                          |
+| Process-cold complete widget data              |           5,333 ms |         2,866 ms | One paired sanity check, 46% earlier                         |
+| Process-cold first album photo observed loaded |           6,029 ms |         2,878 ms | Observed upper bounds, one pair                              |
+| Warm reload first visible board, median        |             178 ms |           148 ms | Two pairs; warm paint preserved                              |
+| Warm reload complete widget data, median       |           1,172 ms |         1,091 ms | Two pairs; small directional gain                            |
 
 The two ordinary cold pairs have a 5,786 → 2,282 ms median (about 61% earlier), but the before outlier affects that two-sample median. Report the actual range / per-pair values and the separate process-cold check; do not turn this into a p95 or population estimate. The earlier three-pair 37% and full-SSR two-pair 42% improvements remain independent evidence.
 
@@ -186,16 +196,16 @@ Previous candidate image: `homarr:v2-board-stream-final`, SHA-256 `4fbf43de95c76
 
 The retained implementation starts supported visible widget queries on the server without a global fan-out cap, overlaps auth/permissions/layout reads, warms only Redis connection readiness before board lookup, and streams pending query results. Query-hash ownership prevents duplicate transport by the RSC and experimental SSR hydration paths. Visible widget modules begin loading through a sibling client preloader. Jellyfin concurrent login and Beszel per-instance authentication are shared only while in flight; independent Overseerr/Beszel reads are parallel. Immich uses request-local credentials, larger metadata pages without EXIF, up to four overlapping album pages, and batched image-proxy registration using native UUIDs. All photos and existing randomization remain available. TLS context reuse is bounded and keyed by exact CA bytes; trusted certificates/hostname rules are still read for each new agent. The Assistant configuration modal now loads its editor lazily while preserving its original form, props and callbacks.
 
-| Final metric | Retained v2 before | New retained source | Evidence |
-| --- | ---: | ---: | --- |
-| Cold browser + empty integration caches: complete widget data | 5,102 ms | 2,976 ms | Two alternating paired rounds, about 42% earlier |
-| Same cold runs: first visible board | 675 ms | 856 ms | First paint regresses; do not hide this |
-| Same cold runs: all widgets attached | 1,385 ms | 2,573 ms | Attachment regresses despite earlier complete data |
-| First observed upstream request | 1,080 / 1,313 ms | 317 / 328 ms | Same two rounds |
-| Process-cold complete widget data | 5,408 ms | 3,263 ms | One paired sanity check, about 40% earlier |
-| Process-cold first album photo observed loaded | 5,909 ms | 3,356 ms | Observed upper bounds after query readiness, not exact image load events |
-| Warm reload: complete widget data | 1,175 ms | 1,186 ms | Two paired reloads; approximately flat |
-| Warm reload: first visible board | 164 ms | 432 ms | Warm first-paint regression remains |
+| Final metric                                                  | Retained v2 before | New retained source | Evidence                                                                 |
+| ------------------------------------------------------------- | -----------------: | ------------------: | ------------------------------------------------------------------------ |
+| Cold browser + empty integration caches: complete widget data |           5,102 ms |            2,976 ms | Two alternating paired rounds, about 42% earlier                         |
+| Same cold runs: first visible board                           |             675 ms |              856 ms | First paint regresses; do not hide this                                  |
+| Same cold runs: all widgets attached                          |           1,385 ms |            2,573 ms | Attachment regresses despite earlier complete data                       |
+| First observed upstream request                               |   1,080 / 1,313 ms |        317 / 328 ms | Same two rounds                                                          |
+| Process-cold complete widget data                             |           5,408 ms |            3,263 ms | One paired sanity check, about 40% earlier                               |
+| Process-cold first album photo observed loaded                |           5,909 ms |            3,356 ms | Observed upper bounds after query readiness, not exact image load events |
+| Warm reload: complete widget data                             |           1,175 ms |            1,186 ms | Two paired reloads; approximately flat                                   |
+| Warm reload: first visible board                              |             164 ms |              432 ms | Warm first-paint regression remains                                      |
 
 Every final sample had 26 widget instances, 27 successful idle observed initial queries, zero detected top-level integration failures and zero browser errors. The complete-data metric does not include every image or ongoing SSE updates. All 1,436 image assets remained in the album query result. The process-cold photo probe separately confirmed a decoded first album image. In its JSON, `firstAlbumPhotoAtDataReady` was collected after the image wait; use `firstAlbumPhotoLoadedObservedMs` for that probe, not the misleading field name. In the ordinary cold JSON the photo-count field really was collected at data readiness.
 

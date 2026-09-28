@@ -32,20 +32,38 @@ export default function ImmichAlbumCarouselWidget({
 }: WidgetComponentProps<"immich-albumCarousel">) {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [firstPreviewPhoto, setFirstPreviewPhoto] = useState<{ albumId: string; assetId: string } | null>(null);
+  let albumId: string | undefined;
+  if (options.albumId && options.albumId !== ALL_PHOTOS_ALBUM_ID) albumId = options.albumId;
+  const integrationId = integrationIds[0] ?? "";
 
   const albumQuery = clientApi.widget.immich.getAlbum.useQuery(
-    {
-      integrationId: integrationIds[0] ?? "",
-      albumId: options.albumId && options.albumId !== ALL_PHOTOS_ALBUM_ID ? options.albumId : undefined,
-    },
+    { integrationId, albumId },
     { enabled: integrationIds.length > 0 },
   );
-  const album = getUsableWidgetQueryData(albumQuery);
+  const previewQuery = clientApi.widget.immich.getAlbumPreview.useQuery(
+    { integrationId, albumId: albumId ?? "", randomizePhotos: options.randomizePhotos },
+    { enabled: integrationIds.length > 0 && albumId !== undefined },
+  );
+  const fullAlbum = getUsableWidgetQueryData(albumQuery);
+  const preview = previewQuery.data;
+  const album = fullAlbum ?? preview;
+
+  useEffect(() => {
+    const asset = preview?.assets[0];
+    if (!albumId || !asset || fullAlbum || firstPreviewPhoto?.albumId === albumId) return;
+    setFirstPreviewPhoto({ albumId, assetId: asset.id });
+  }, [albumId, firstPreviewPhoto?.albumId, fullAlbum, preview?.assets]);
 
   const photoAssets = useMemo(() => {
     const assets = album?.assets.filter((asset) => asset.type === "IMAGE") ?? [];
-    return options.randomizePhotos ? shuffle(assets) : assets;
-  }, [album?.assets, options.randomizePhotos]);
+    if (!options.randomizePhotos) return assets;
+    const randomized = shuffle(assets);
+    if (!fullAlbum || firstPreviewPhoto?.albumId !== albumId) return randomized;
+    const first = randomized.find((asset) => asset.id === firstPreviewPhoto.assetId);
+    if (!first) return randomized;
+    return [first, ...randomized.filter((asset) => asset.id !== first.id)];
+  }, [album?.assets, albumId, firstPreviewPhoto, fullAlbum, options.randomizePhotos]);
 
   useEffect(() => {
     if (photoAssets.length === 0) return;
@@ -66,7 +84,7 @@ export default function ImmichAlbumCarouselWidget({
     photoAssets.length > 1 ? { previousPhoto, nextPhoto, toggleSlideshow } : {},
   );
 
-  if (!album) return <WidgetEmptyState />;
+  if (!album || (!fullAlbum && album.assets.length === 0)) return <WidgetEmptyState />;
 
   return (
     <Box h="100%" pos="relative">
