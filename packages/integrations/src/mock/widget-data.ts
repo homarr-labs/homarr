@@ -13,6 +13,7 @@ import type { UmamiEventSeries, UmamiMetricItem, UmamiVisitorStats, UmamiWebsite
 import type { UptimeKumaDashboardData } from "../uptime-kuma/uptime-kuma-types";
 import type { LlamacppStats } from "../llama-cpp/llamacpp-types";
 import type { WudStats } from "../wud/wud-types";
+import { createWazuhMockData } from "../wazuh/wazuh-mock";
 import type {
   FirewallCpuSummary,
   FirewallInterfacesSummary,
@@ -200,6 +201,7 @@ export const mockWidgetData = {
       { name: "Fedora 42", count: 3, osType: "linux", osVersion: "42" },
     ],
   } satisfies PatchMonStats,
+  ...createWazuhMockData(demoTimestamp),
   speedtestTracker: {
     latestResult: {
       id: 42,

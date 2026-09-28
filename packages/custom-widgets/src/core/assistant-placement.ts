@@ -145,6 +145,18 @@ const getPlacementChoice = (event: CustomWidgetAssistantLifecycleEvent) => {
   return undefined;
 };
 
+const isLeaveUnplacedChoice = (event: CustomWidgetAssistantLifecycleEvent) => {
+  if (event.toolName !== "ask_user" || typeof event.output !== "object" || event.output === null) return false;
+  if (getRecordString(event.output, "source") !== "option") return false;
+  if (getRecordString(event.output, "optionId") !== "leave") return false;
+  if (getRecordString(event.output, "optionKind") !== "negative") return false;
+  if (typeof event.input !== "object" || event.input === null || !("options" in event.input)) return false;
+  if (!Array.isArray(event.input.options)) return false;
+  return event.input.options.some(
+    (option) => getRecordString(option, "id") === "leave" && getRecordString(option, "kind") === "negative",
+  );
+};
+
 const getDiscoveredBoards = (event: CustomWidgetAssistantLifecycleEvent) => {
   if (event.toolName !== "board_getAllBoards") return undefined;
   let candidates: unknown;
@@ -168,7 +180,8 @@ const getDiscoveredBoards = (event: CustomWidgetAssistantLifecycleEvent) => {
 const getBoardChoice = (event: CustomWidgetAssistantLifecycleEvent, boards: readonly CustomWidgetPlacementBoard[]) => {
   if (event.toolName !== "ask_user" || typeof event.output !== "object" || event.output === null) return undefined;
   if (getRecordString(event.output, "source") !== "option") return undefined;
-  if (getRecordString(event.output, "optionKind") !== "alternative") return undefined;
+  const optionKind = getRecordString(event.output, "optionKind");
+  if (optionKind !== "alternative" && optionKind !== "affirmative") return undefined;
   const optionId = getRecordString(event.output, "optionId");
   if (!optionId) return undefined;
   if (
@@ -188,8 +201,11 @@ const getBoardChoice = (event: CustomWidgetAssistantLifecycleEvent, boards: read
   const offeredIds = new Set<string>();
   for (const option of event.input.options) {
     const offeredId = getRecordString(option, "id");
-    if (!offeredId || getRecordString(option, "kind") !== "alternative") return undefined;
+    if (!offeredId) return undefined;
+    const offeredKind = getRecordString(option, "kind");
+    if (offeredKind !== undefined && offeredKind !== "alternative" && offeredKind !== "affirmative") return undefined;
     if (!boardById.has(offeredId) || offeredIds.has(offeredId)) return undefined;
+    if (offeredId === optionId && offeredKind !== undefined && offeredKind !== optionKind) return undefined;
     offeredIds.add(offeredId);
   }
   if (!offeredIds.has(optionId)) return undefined;
@@ -232,6 +248,10 @@ export const resolveCustomWidgetPlacementState = (
       continue;
     }
     if (state.status === "none") continue;
+    if (isLeaveUnplacedChoice(event)) {
+      state = nonePlacementState;
+      continue;
+    }
     if (state.status === "ask-user") {
       const choice = getPlacementChoice(event);
       if (choice === "leave") {

@@ -323,6 +323,7 @@ const integrationCreators = {
     new (await import("../immich/immich-integration")).ImmichIntegration(input),
   paperlessNgx: async (input: IntegrationInput) =>
     new (await import("../paperless-ngx/paperless-ngx-integration")).PaperlessNgxIntegration(input),
+  wazuh: async (input: IntegrationInput) => new (await import("../wazuh/wazuh-integration")).WazuhIntegration(input),
   patchmon: async (input: IntegrationInput) =>
     new (await import("../patchmon/patchmon-integration")).PatchMonIntegration(input),
   speedtestTracker: async (input: IntegrationInput) =>

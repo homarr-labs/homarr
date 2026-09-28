@@ -77,6 +77,8 @@ export type { Notification } from "./interfaces/notifications/notification-types
 export type { ImmichServerStats, ImmichAlbum, ImmichAsset } from "./immich/immich-integration";
 export type { PaperlessNgxStats } from "./paperless-ngx/paperless-ngx-types";
 export type { PatchMonStats, PatchMonOsDistributionEntry } from "./patchmon/patchmon-types";
+export { toWazuhPublicError } from "./wazuh/wazuh-errors";
+export type { WazuhErrorReason, WazuhPublicError } from "./wazuh/wazuh-errors";
 export type {
   AnchorNote,
   AnchorNotePermission,
