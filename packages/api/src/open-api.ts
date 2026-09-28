@@ -11,6 +11,8 @@ import { serverSettingsRouter } from "./router/serverSettings";
 import { userRouter } from "./router/user";
 import { createTRPCRouter } from "./trpc";
 
+export { normalizeRecursiveJsonSchemasForScalar } from "./open-api-scalar";
+
 export const openApiRouter = createTRPCRouter({
   appRouter,
   boardRouter,

@@ -52,7 +52,7 @@ export function ApiPageTabs({
       <TabsPanel value="authentication">
         <ApiKeysManagement apiKeys={apiKeys} onCreated={() => setHasApiKeys(true)} />
       </TabsPanel>
-      <TabsPanel value="documentation">{documentationPanel}</TabsPanel>
+      <TabsPanel value="documentation">{activeTab === "documentation" && documentationPanel}</TabsPanel>
       <TabsPanel value="mcp">
         <McpInstructions
           baseUrl={baseUrl}

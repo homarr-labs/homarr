@@ -3,6 +3,38 @@
 @import "fumadocs-ui/css/preset.css";
 @import "fumadocs-openapi/css/preset.css";
 
+/* Scalar mounts its client at the end of body, outside Fumadocs' themed Test button. */
+html .scalar-app {
+  --scalar-background-1: var(--color-fd-background);
+  --scalar-background-2: var(--color-fd-card);
+  --scalar-background-3: var(--color-fd-secondary);
+  --scalar-color-1: var(--color-fd-foreground);
+  --scalar-color-2: var(--color-fd-muted-foreground);
+  --scalar-color-3: var(--color-fd-muted-foreground);
+  --scalar-color-accent: var(--color-fd-primary);
+  --scalar-border-color: var(--color-fd-border);
+  --scalar-button-1: var(--color-fd-primary);
+  --scalar-button-1-hover: color-mix(in srgb, var(--color-fd-primary) 85%, var(--color-fd-background));
+  --scalar-button-1-color: var(--color-fd-primary-foreground);
+}
+
+html.light .scalar-app {
+  color-scheme: light;
+}
+
+html.dark .scalar-app {
+  color-scheme: dark;
+}
+
+.scalar-app .scalar-container.scalar-client--open {
+  z-index: 100;
+  background: rgb(0 0 0 / 65%);
+}
+
+.homarr-api-reference .not-prose:is(.light-mode, .dark-mode) + p {
+  margin-top: 1rem;
+}
+
 @source "../components/**/*.{ts,tsx}";
 @source "../../docs/**/*.{md,mdx}";
 
