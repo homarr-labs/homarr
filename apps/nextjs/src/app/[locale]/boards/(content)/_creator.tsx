@@ -150,16 +150,20 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
       const refreshingQueries = queryClient
         .getQueryCache()
         .getAll()
-        .filter((query) => query.meta?.rscWidgetPrefetch === true && query.promise)
-        .map((query) => ({ queryHash: query.queryHash, promise: query.promise! }));
+        .flatMap((query) => {
+          if (query.meta?.rscWidgetPrefetch !== true || !query.promise) return [];
+          return [{ queryHash: query.queryHash, promise: query.promise }];
+        });
       const restoredRefreshes = refreshingQueries.filter(({ queryHash }) => restoredQueryHashes.has(queryHash));
       void Promise.allSettled([...refreshingQueries.map(({ promise }) => promise), ...dependentQueries])
         .then(async () => {
           const lateQueries = queryClient
             .getQueryCache()
             .getAll()
-            .filter((query) => query.meta?.rscWidgetPrefetch === true && query.promise)
-            .map((query) => query.promise!);
+            .flatMap((query) => {
+              if (query.meta?.rscWidgetPrefetch !== true || !query.promise) return [];
+              return [query.promise];
+            });
           await Promise.allSettled(lateQueries);
           await snapshot.saveAsync(queryClient);
         })
