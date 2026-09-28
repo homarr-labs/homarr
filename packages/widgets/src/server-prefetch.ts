@@ -24,6 +24,9 @@ const prefetchQuery = <TQueryFnData, TError, TData, TQueryKey extends QueryKey>(
   void queryClient.prefetchQuery({
     ...options,
     meta: { ...options.meta, rscWidgetPrefetch: true },
+    // A restored board snapshot supplies the first paint while this request
+    // refreshes the value on the server for the current navigation.
+    staleTime: 0,
     queryFn: async (context) => {
       await setImmediate();
       await setImmediate();
