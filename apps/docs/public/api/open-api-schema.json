@@ -2344,7 +2344,15 @@
                       "customApi",
                       "assistant",
                       "wud",
-                      "llamacpp"
+                      "llamacpp",
+                      "wazuhAgents",
+                      "wazuhAlerts",
+                      "wazuhSummary",
+                      "wazuhTimeline",
+                      "wazuhTopList",
+                      "wazuhVulnerabilities",
+                      "wazuhFim",
+                      "wazuhAuthFailures"
                     ]
                   },
                   "options": {
@@ -5659,6 +5667,7 @@
                       "gluetun",
                       "traefik",
                       "archiveTeamWarrior",
+                      "wazuh",
                       "wud",
                       "llamacpp",
                       "mock"
@@ -5833,6 +5842,7 @@
                             "gluetun",
                             "traefik",
                             "archiveTeamWarrior",
+                            "wazuh",
                             "wud",
                             "llamacpp",
                             "mock"
