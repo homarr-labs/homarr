@@ -15,6 +15,8 @@ const columnsList = [
 
 const allColumnsList = ["name", "state", "host", "cpuUsage", "memoryUsage", "actions"] as const;
 
+const containerAliasSchema = z.string().regex(/^[^=]+=[^=]+$/);
+
 const columnTranslationKeyMap = {
   name: "docker.field.name.label",
   state: "docker.field.state.label",
@@ -58,6 +60,11 @@ export const { definition, componentLoader } = createWidgetDefinition("dockerCon
         }),
         filterIsWhitelist: factory.switch({
           defaultValue: false,
+        }),
+        containerAliases: factory.multiText({
+          defaultValue: [] as string[],
+          validate: containerAliasSchema,
+          withDescription: true,
         }),
         columnOrder: factory.text({ defaultValue: "" }),
         columnWidths: factory.text({ defaultValue: "" }),

@@ -48,6 +48,13 @@ export const dockerContainersWidget: WidgetDefinition = {
         values: { type: "boolean" },
         defaultValue: "No",
       },
+      {
+        name: "Container aliases",
+        description:
+          "Rename containers for display without renaming the actual Docker container. One entry per container, format: original name=alias.",
+        values: "List of original name=alias pairs",
+        defaultValue: "-",
+      },
     ],
   },
 };

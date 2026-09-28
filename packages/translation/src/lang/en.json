@@ -2481,6 +2481,10 @@
         "filterIsWhitelist": {
           "label": "Filter as a whitelist"
         },
+        "containerAliases": {
+          "label": "Container aliases",
+          "description": "Rename containers for display. Add one entry per container, format: original name=alias"
+        },
         "columnOrder": {
           "label": "Column order"
         },
