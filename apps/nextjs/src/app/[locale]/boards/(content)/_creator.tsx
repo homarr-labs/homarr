@@ -23,7 +23,6 @@ import { createBoardLayout, getInitialViewportWidthAsync } from "../_layout-crea
 import type { Board, Item } from "../_types";
 import { ClientBoard } from "./_client";
 import { BoardContentEditAction, BoardContentSettingsAction } from "./_header-actions";
-import { BoardLoadingShell } from "./_loading-shell";
 import { createBoardQuerySnapshot } from "./_query-snapshot";
 import { WidgetResourcePreload } from "./_widget-resource-preload";
 
@@ -187,7 +186,7 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
                 <DeferredWidgetHydration queryClient={queryClient} queries={dependentQueries} />
               </Suspense>
             )}
-            <Suspense fallback={<BoardLoadingShell />}>
+            <Suspense fallback={null}>
               <BoardWithIntegrations integrationsPromise={integrationsPromise} />
             </Suspense>
           </HydrationBoundary>
