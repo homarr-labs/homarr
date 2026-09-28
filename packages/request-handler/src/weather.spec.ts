@@ -67,7 +67,7 @@ const makeWeatherResponse = () => {
 };
 
 beforeEach(() => {
-  vi.clearAllMocks();
+  mockFetch.mockReset();
   weatherRequestHandler.invalidateCache();
 });
 
@@ -104,9 +104,28 @@ describe("weather request handler", () => {
     expect(requestUrl.searchParams.get("daily")).toContain("uv_index_max");
   });
 
-  it("rejects unsuccessful Open-Meteo responses", async () => {
+  it("retries one transient 503 before returning weather", async () => {
+    mockFetch
+      .mockResolvedValueOnce(new Response("unavailable", { status: 503 }))
+      .mockResolvedValueOnce(new Response(JSON.stringify(makeWeatherResponse())));
+
+    const result = await weatherRequestHandler.handler({ latitude: 48.85, longitude: 2.35 }).getDataAsync();
+
+    expect(result.data.current.temperature).toBe(24);
+    expect(mockFetch).toHaveBeenCalledTimes(2);
+  });
+
+  it("rejects unsuccessful Open-Meteo responses after one retry", async () => {
     mockFetch.mockResolvedValue(new Response("unavailable", { status: 503 }));
 
     await expect(weatherRequestHandler.handler({ latitude: 48.85, longitude: 2.35 }).getDataAsync()).rejects.toThrow();
+    expect(mockFetch).toHaveBeenCalledTimes(2);
+  });
+
+  it("does not retry other unsuccessful responses", async () => {
+    mockFetch.mockResolvedValue(new Response("unavailable", { status: 500 }));
+
+    await expect(weatherRequestHandler.handler({ latitude: 48.85, longitude: 2.35 }).getDataAsync()).rejects.toThrow();
+    expect(mockFetch).toHaveBeenCalledOnce();
   });
 });

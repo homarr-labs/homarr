@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
+import { setTimeout } from "node:timers/promises";
 import { z } from "zod";
 
 import { ResponseError } from "@homarr/common/server";
@@ -70,7 +71,14 @@ const requestWeatherAsync = async (
   url.searchParams.set("forecast_hours", HOURLY_FORECAST_LENGTH.toString());
   url.searchParams.set("forecast_days", DAILY_FORECAST_LENGTH.toString());
 
-  const res = await fetchWithTrustedCertificatesAsync(url.toString(), { signal });
+  let res = await fetchWithTrustedCertificatesAsync(url.toString(), { signal });
+  if (res.status === 503) {
+    await res.body?.cancel().catch(() => undefined);
+    // Retry one transient upstream outage while the server is already fetching
+    // for the board, before hydration starts a separate browser request.
+    await setTimeout(150, undefined, { signal });
+    res = await fetchWithTrustedCertificatesAsync(url.toString(), { signal });
+  }
   if (!res.ok) throw new ResponseError(res);
 
   const json: unknown = await res.json();

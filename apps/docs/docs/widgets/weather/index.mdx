@@ -29,7 +29,8 @@ adds hourly temperature and precipitation charts and the complete seven-day fore
 ### Data source
 
 Weather and location data come from Open-Meteo. Active weather refreshes every ten minutes; identical location requests
-can reuse a server response for five minutes. Failed refreshes keep the last successful data with an error indicator.
+can reuse a server response for five minutes. A temporary HTTP 503 response is retried once before a refresh fails.
+Failed refreshes keep the last successful data with an error indicator.
 
 Set `NO_EXTERNAL_CONNECTION=true` to disable this and other internet-backed requests. Weather data and the city search
 inside the widget configuration are unavailable while it is enabled. Allowlist `https://open-meteo.com` when outbound
