@@ -27,7 +27,7 @@ import { useWidgetNow } from "../common/use-widget-now";
 import type { WidgetComponentProps } from "../definition";
 import { WazuhChip } from "../wazuh/_shared/badges";
 import { WazuhErrorState } from "../wazuh/_shared/error-state";
-import { WazuhRelativeTime, WazuhSkeleton, WazuhStatTile, WazuhWidgetFrame } from "../wazuh/_shared/frame";
+import { WazuhRelativeTime, WazuhPendingState, WazuhStatTile, WazuhWidgetFrame } from "../wazuh/_shared/frame";
 import { useWazuhLinks } from "../wazuh/_shared/use-wazuh-links";
 import classes from "../wazuh/_shared/wazuh.module.css";
 
@@ -165,7 +165,7 @@ export default function WazuhAgentsWidget({
   if (isInitialWidgetQueryPending(query)) {
     return (
       <WazuhWidgetFrame icon={IconDevicesPc} title={t("title")} compact={compact} iconColor="teal">
-        <WazuhSkeleton variant="tiles" rows={4} />
+        <WazuhPendingState />
       </WazuhWidgetFrame>
     );
   }

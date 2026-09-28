@@ -1,19 +1,7 @@
 "use client";
 
 import type { MantineSize } from "@mantine/core";
-import {
-  Badge,
-  Box,
-  Card,
-  Center,
-  Group,
-  Loader,
-  Progress,
-  SimpleGrid,
-  Stack,
-  Text,
-  UnstyledButton,
-} from "@mantine/core";
+import { Badge, Box, Card, Center, Group, Progress, SimpleGrid, Stack, Text, UnstyledButton } from "@mantine/core";
 import {
   Activity,
   Battery,
@@ -39,6 +27,7 @@ import { zoomCompensatedSize } from "@homarr/ui";
 
 import classes from "./component.module.css";
 
+import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 import type { BeszelSystemRow } from "../beszel/_shared/types";
 import { statusColorMap, thresholdColor } from "../beszel/_shared/colors";
@@ -474,11 +463,7 @@ export default function BeszelSystemGridWidget({
   const filteredSystems = useBeszelFilteredSystems(results, options.statusFilter);
 
   if (isPending) {
-    return (
-      <Center h="100%">
-        <Loader size="sm" />
-      </Center>
-    );
+    return <WidgetQueryLoadingState />;
   }
 
   if (filteredSystems.length === 0) {

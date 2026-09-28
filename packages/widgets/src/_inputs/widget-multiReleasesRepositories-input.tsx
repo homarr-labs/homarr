@@ -269,9 +269,13 @@ const providersWithAuth: ReleaseProviderKind[] = [
 
 const ProviderTokensSection = ({ itemId, repositories }: { itemId: string; repositories: ReleasesRepository[] }) => {
   const tRepository = useI18n("widget.releases.option.repositories");
+  const utils = clientApi.useUtils();
   const { data: configuredKinds = [], refetch } = clientApi.widget.secrets.getConfiguredKinds.useQuery({ itemId });
   const setSecret = clientApi.widget.secrets.setSecret.useMutation({
-    onSuccess: () => refetch(),
+    onSuccess: () => {
+      void refetch();
+      void utils.widget.releases.getLatest.invalidate();
+    },
     onError: () => {
       showErrorNotification({
         title: tRepository("tokens.label"),
@@ -280,7 +284,10 @@ const ProviderTokensSection = ({ itemId, repositories }: { itemId: string; repos
     },
   });
   const deleteSecret = clientApi.widget.secrets.deleteSecret.useMutation({
-    onSuccess: () => refetch(),
+    onSuccess: () => {
+      void refetch();
+      void utils.widget.releases.getLatest.invalidate();
+    },
     onError: () => {
       showErrorNotification({
         title: tRepository("tokens.label"),

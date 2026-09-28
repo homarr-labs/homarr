@@ -11,7 +11,7 @@ import { WidgetEmptyState } from "../common/empty-state";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
 import type { WidgetComponentProps } from "../definition";
 import { WazuhErrorState } from "../wazuh/_shared/error-state";
-import { WazuhSkeleton, WazuhStatTile, WazuhWidgetFrame } from "../wazuh/_shared/frame";
+import { WazuhPendingState, WazuhStatTile, WazuhWidgetFrame } from "../wazuh/_shared/frame";
 import type { WazuhDashboardLinks } from "../wazuh/_shared/links";
 import { formatWazuhCount, getVulnerabilitySeverityColor } from "../wazuh/_shared/severity";
 import { useWazuhLinks } from "../wazuh/_shared/use-wazuh-links";
@@ -179,7 +179,7 @@ export default function WazuhVulnerabilitiesWidget({
   if (isInitialWidgetQueryPending(query)) {
     return (
       <WazuhWidgetFrame icon={IconBug} title={t("title")} compact={compact} iconColor="red">
-        <WazuhSkeleton variant="tiles" rows={4} />
+        <WazuhPendingState />
       </WazuhWidgetFrame>
     );
   }

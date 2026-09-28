@@ -5,7 +5,7 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 
 import { ChannelSubscriptionTracker } from "./channel-subscription-tracker";
-import { createRedisConnection, requireRedisConnection } from "./connection";
+import { createRedisConnection, requireRedisConnection, requireReadyRedisConnectionAsync } from "./connection";
 
 const publisher = createRedisConnection();
 const lastDataClient = createRedisConnection();
@@ -13,9 +13,16 @@ const logger = createLogger({ module: "redisChannel" });
 const boundedCacheClient = createRedisConnection({
   autoResendUnfulfilledCommands: false,
   commandTimeout: 500,
+  disableClientInfo: true,
   enableOfflineQueue: false,
   maxRetriesPerRequest: 1,
 });
+
+// Initialize transport before lazy widget routers occupy the event loop. This
+// reads no cache data and does not enable offline replay of lock commands.
+export const prepareIntegrationResponseCacheAsync = async () => {
+  await requireReadyRedisConnectionAsync(boundedCacheClient);
+};
 
 interface RedisChannelOptions {
   useBoundedCacheClient?: boolean;
@@ -70,7 +77,9 @@ export const createSubPubChannel = <TData>(name: string, { persist }: { persist:
   };
 };
 
-const getSetClient = createRedisConnection();
+// Album/image registration can issue thousands of independent commands in one
+// turn. Batch their transport while preserving each command's result and TTL.
+const getSetClient = createRedisConnection({ enableAutoPipelining: true });
 
 /**
  * Creates a new redis channel for a list
@@ -123,7 +132,7 @@ export const createGetSetChannel = <TData>(name: string, options: RedisChannelOp
      * @returns data or null if not found
      */
     getAsync: async () => {
-      const data = await requireRedisConnection(client).get(name);
+      const data = await (await requireReadyRedisConnectionAsync(client)).get(name);
       return data ? superjson.parse<TData>(data) : null;
     },
     /**
@@ -134,27 +143,31 @@ export const createGetSetChannel = <TData>(name: string, options: RedisChannelOp
     setAsync: async (data: TData, options?: { ttlSeconds?: number; ttlMs?: number }) => {
       if (options?.ttlMs !== undefined) {
         if (options.ttlMs <= 0) {
-          await requireRedisConnection(client).del(name);
+          await (await requireReadyRedisConnectionAsync(client)).del(name);
           return;
         }
-        await requireRedisConnection(client).set(name, superjson.stringify(data), "PX", options.ttlMs);
+        await (
+          await requireReadyRedisConnectionAsync(client)
+        ).set(name, superjson.stringify(data), "PX", options.ttlMs);
         return;
       }
       if (options?.ttlSeconds !== undefined) {
         if (options.ttlSeconds <= 0) {
-          await requireRedisConnection(client).del(name);
+          await (await requireReadyRedisConnectionAsync(client)).del(name);
           return;
         }
-        await requireRedisConnection(client).set(name, superjson.stringify(data), "EX", options.ttlSeconds);
+        await (
+          await requireReadyRedisConnectionAsync(client)
+        ).set(name, superjson.stringify(data), "EX", options.ttlSeconds);
         return;
       }
-      await requireRedisConnection(client).set(name, superjson.stringify(data));
+      await (await requireReadyRedisConnectionAsync(client)).set(name, superjson.stringify(data));
     },
     /**
      * Remove data from the channel
      */
     removeAsync: async () => {
-      await requireRedisConnection(client).del(name);
+      await (await requireReadyRedisConnectionAsync(client)).del(name);
     },
   };
 };
@@ -170,7 +183,9 @@ export const createLockChannel = (name: string, options: RedisChannelOptions = {
   const releaseIfOwnedAsync = async (token: string) => {
     if (!selectedClient) return;
 
-    await selectedClient.eval(
+    await (
+      await requireReadyRedisConnectionAsync(selectedClient)
+    ).eval(
       "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end",
       1,
       name,
@@ -185,7 +200,7 @@ export const createLockChannel = (name: string, options: RedisChannelOptions = {
       if (!client) return token;
 
       try {
-        const result = await client.set(name, token, "EX", ttlSeconds, "NX");
+        const result = await (await requireReadyRedisConnectionAsync(client)).set(name, token, "EX", ttlSeconds, "NX");
         return result === "OK" ? token : null;
       } catch (error) {
         // The SET may have reached Redis even when its reply timed out. Queue a
@@ -198,7 +213,9 @@ export const createLockChannel = (name: string, options: RedisChannelOptions = {
       const client = selectedClient;
       if (!client) return true;
 
-      const result = await client.eval(
+      const result = await (
+        await requireReadyRedisConnectionAsync(client)
+      ).eval(
         "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('expire', KEYS[1], ARGV[2]) else return 0 end",
         1,
         name,
@@ -211,7 +228,9 @@ export const createLockChannel = (name: string, options: RedisChannelOptions = {
       const client = selectedClient;
       if (!client) return true;
 
-      const result = await client.eval(
+      const result = await (
+        await requireReadyRedisConnectionAsync(client)
+      ).eval(
         "if redis.call('get', KEYS[1]) ~= ARGV[1] then return 0 end redis.call('set', KEYS[2], ARGV[2], 'PX', ARGV[3]) return 1",
         2,
         name,
@@ -224,7 +243,9 @@ export const createLockChannel = (name: string, options: RedisChannelOptions = {
     },
     setPersistentIfOwnedAsync: async <TData>(token: string, targetName: string, data: TData) => {
       if (!selectedClient) return false;
-      const result = await selectedClient.eval(
+      const result = await (
+        await requireReadyRedisConnectionAsync(selectedClient)
+      ).eval(
         "if redis.call('get', KEYS[1]) ~= ARGV[1] then return 0 end redis.call('set', KEYS[2], ARGV[2]) return 1",
         2,
         name,
@@ -304,7 +325,11 @@ const advanceGlobalCacheGenerationAsync = async (cacheKey: string) => {
   if (!client) return null;
 
   const results = await withCacheGenerationRedisTimeoutAsync(
-    client.multi().incr(cacheKey).expire(cacheKey, CACHE_GENERATION_REDIS_TTL_SECONDS).exec(),
+    (await requireReadyRedisConnectionAsync(client))
+      .multi()
+      .incr(cacheKey)
+      .expire(cacheKey, CACHE_GENERATION_REDIS_TTL_SECONDS)
+      .exec(),
   );
   const generationResult = results?.[0];
   const expiryResult = results?.[1];
@@ -396,7 +421,7 @@ const advanceIntegrationCacheGenerationAsync = async (integrationId: string) => 
   if (!client) return null;
 
   const results = await withCacheGenerationRedisTimeoutAsync(
-    client
+    (await requireReadyRedisConnectionAsync(client))
       .multi()
       .incr(integrationCacheGenerationKey(integrationId))
       .expire(integrationCacheGenerationKey(integrationId), CACHE_GENERATION_REDIS_TTL_SECONDS)
@@ -423,7 +448,7 @@ const advanceIntegrationResponseCacheGenerationAsync = async (integrationId: str
 
   const cacheKey = integrationCacheGenerationKey(integrationId);
   const results = await withCacheGenerationRedisTimeoutAsync(
-    client
+    (await requireReadyRedisConnectionAsync(client))
       .multi()
       .incr(cacheKey)
       .expire(cacheKey, CACHE_GENERATION_REDIS_TTL_SECONDS)
@@ -533,7 +558,7 @@ export const getIntegrationCacheGenerationAsync = async (
     readAsync: async () => {
       if (!client) return null;
       const [globalGeneration, scopedGeneration] = await withCacheGenerationRedisTimeoutAsync(
-        client.mget(integrationCacheGlobalGenerationKey, cacheKey),
+        (await requireReadyRedisConnectionAsync(client)).mget(integrationCacheGlobalGenerationKey, cacheKey),
       );
       return combineCacheGenerations(globalGeneration, scopedGeneration);
     },
@@ -619,7 +644,7 @@ const advanceWidgetCacheGenerationAsync = async (namespace: string) => {
 
   const cacheKey = widgetCacheGenerationKey(namespace);
   const results = await withCacheGenerationRedisTimeoutAsync(
-    client
+    (await requireReadyRedisConnectionAsync(client))
       .multi()
       .incr(cacheKey)
       .expire(cacheKey, CACHE_GENERATION_REDIS_TTL_SECONDS)
@@ -707,7 +732,7 @@ export const getWidgetCacheGenerationAsync = async (namespace: string): Promise<
     readAsync: async () => {
       if (!client) return null;
       const [globalGeneration, scopedGeneration] = await withCacheGenerationRedisTimeoutAsync(
-        client.mget(widgetCacheGlobalGenerationKey, cacheKey),
+        (await requireReadyRedisConnectionAsync(client)).mget(widgetCacheGlobalGenerationKey, cacheKey),
       );
       return combineCacheGenerations(globalGeneration, scopedGeneration);
     },

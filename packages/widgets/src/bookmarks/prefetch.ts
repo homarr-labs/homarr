@@ -1,8 +1,10 @@
-import { createLogger } from "@homarr/core/infrastructure/logs";
 import { db, inArray } from "@homarr/db";
 import { apps } from "@homarr/db/schema";
 
-import type { Prefetch } from "../definition";
+import type { QueryClient } from "@tanstack/react-query";
+
+import { createLogger } from "@homarr/core/infrastructure/logs";
+
 import { createTrpcQueryKey } from "../trpc-query-key";
 import { getDirectBookmarkUrl } from "./bookmark-item";
 
@@ -13,13 +15,17 @@ const getAppIds = (options: Record<string, unknown>) => {
   return options.items.filter((value): value is string => typeof value === "string" && !getDirectBookmarkUrl(value));
 };
 
-const prefetchAllAsync: Prefetch = async (queryClient, items) => {
+const prefetchAll = (queryClient: QueryClient, items: { options: Record<string, unknown> }[]) => {
   const appIds = items.flatMap((item) => getAppIds(item.options));
   const distinctAppIds = [...new Set(appIds)];
+  if (distinctAppIds.length === 0) return;
 
-  const dbApps = await db.query.apps.findMany({
-    where: inArray(apps.id, distinctAppIds),
-  });
+  const dbAppsPromise = Promise.resolve(db.query.apps.findMany({ where: inArray(apps.id, distinctAppIds) })).catch(
+    (error: unknown) => {
+      logger.error(new Error("Failed to prefetch apps for bookmarks", { cause: error }));
+      throw error;
+    },
+  );
 
   for (const item of items) {
     const itemAppIds = getAppIds(item.options);
@@ -27,13 +33,11 @@ const prefetchAllAsync: Prefetch = async (queryClient, items) => {
       continue;
     }
 
-    queryClient.setQueryData(
-      createTrpcQueryKey("app.byIds", itemAppIds),
-      dbApps.filter((app) => itemAppIds.includes(app.id)),
-    );
+    void queryClient.prefetchQuery({
+      queryKey: createTrpcQueryKey("app.byIds", itemAppIds),
+      queryFn: async () => (await dbAppsPromise).filter((app) => itemAppIds.includes(app.id)),
+    });
   }
-
-  logger.info("Successfully prefetched apps for bookmarks", { count: dbApps.length });
 };
 
-export default prefetchAllAsync;
+export default prefetchAll;

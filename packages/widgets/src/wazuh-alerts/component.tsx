@@ -11,7 +11,7 @@ import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common
 import type { WidgetComponentProps } from "../definition";
 import { isPrivateIp, WazuhChip, WazuhLevelBadge } from "../wazuh/_shared/badges";
 import { WazuhErrorState } from "../wazuh/_shared/error-state";
-import { WazuhRelativeTime, WazuhSkeleton, WazuhWidgetFrame } from "../wazuh/_shared/frame";
+import { WazuhRelativeTime, WazuhPendingState, WazuhWidgetFrame } from "../wazuh/_shared/frame";
 import { getWazuhSeverityForLevel, wazuhSeverities, wazuhSeverityColors } from "../wazuh/_shared/severity";
 import { useWazuhLinks } from "../wazuh/_shared/use-wazuh-links";
 import classes from "../wazuh/_shared/wazuh.module.css";
@@ -36,7 +36,7 @@ export default function WazuhAlertsWidget({
   if (isInitialWidgetQueryPending(query)) {
     return (
       <WazuhWidgetFrame icon={IconShieldBolt} title={title} compact={compact} iconColor="orange">
-        <WazuhSkeleton variant="list" rows={6} />
+        <WazuhPendingState />
       </WazuhWidgetFrame>
     );
   }

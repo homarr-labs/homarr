@@ -22,6 +22,7 @@ export const AppNewForm = ({
   const tScoped = useI18n("app.page.create.notification");
   const tCommon = useI18n("common");
   const router = useRouter();
+  const utils = clientApi.useUtils();
 
   const { mutate, isPending } = clientApi.app.create.useMutation({
     onError: () => {
@@ -36,6 +37,7 @@ export const AppNewForm = ({
     (values: z.infer<typeof appManageSchema>, redirect: boolean, afterSuccess?: () => void) => {
       mutate(values, {
         onSuccess() {
+          void utils.app.invalidate();
           showSuccessNotification({
             title: tCommon("notification.create.success"),
             message: tScoped("success.message"),
@@ -51,7 +53,7 @@ export const AppNewForm = ({
         },
       });
     },
-    [mutate, router, tCommon, tScoped],
+    [mutate, router, tCommon, tScoped, utils],
   );
 
   return (

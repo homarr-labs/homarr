@@ -1,4 +1,4 @@
-import { Avatar, Loader } from "@mantine/core";
+import { Avatar, Box } from "@mantine/core";
 
 import { useI18n } from "@homarr/translation/client";
 
@@ -10,8 +10,7 @@ export function StatsLoading({ iconUrl, source, size = 20 }: { iconUrl?: string;
   if (source) label = `${source}: ${label}`;
 
   return (
-    <Loader size={size} className={classes.root} role="status" aria-label={label}>
-      <span className={classes.ring} aria-hidden="true" />
+    <Box component="output" w={size} h={size} className={classes.root} aria-label={label}>
       <Avatar
         component="span"
         classNames={{ image: classes.image }}
@@ -26,6 +25,6 @@ export function StatsLoading({ iconUrl, source, size = 20 }: { iconUrl?: string;
       >
         <span />
       </Avatar>
-    </Loader>
+    </Box>
   );
 }

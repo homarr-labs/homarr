@@ -1,53 +1,17 @@
 import type { QueryClient } from "@tanstack/react-query";
 
-import { getRscServerSettingsAsync } from "@homarr/api/server-settings-server";
 import type { WidgetKind } from "@homarr/definitions";
-import { createSettings } from "@homarr/settings/creator";
 
-import { loadWidgetDefinition, reduceWidgetOptionsWithDefinition } from "./manifest";
-import type { PrefetchLoader } from "./definition";
+import prefetchApps from "./app/prefetch";
+import prefetchBookmarks from "./bookmarks/prefetch";
 
-const definePrefetchLoaders = <TLoaders extends Partial<Record<WidgetKind, PrefetchLoader>>>(loaders: TLoaders) =>
-  loaders;
+type PrefetchItem = {
+  options: Record<string, unknown>;
+};
 
-// Keep these imports explicit so Next.js can trace each optional prefetch
-// module without loading its database-specific implementation eagerly.
-const prefetchLoaders = definePrefetchLoaders({
-  app: () => import("./app/prefetch"),
-  bookmarks: () => import("./bookmarks/prefetch"),
-});
-
-type PrefetchWidgetKind = keyof typeof prefetchLoaders;
-
-const hasPrefetchLoader = (kind: WidgetKind): kind is PrefetchWidgetKind =>
-  Object.prototype.hasOwnProperty.call(prefetchLoaders, kind);
-
-export const prefetchForKindAsync = async (
-  kind: WidgetKind,
-  queryClient: QueryClient,
-  items: {
-    options: Record<string, unknown>;
-    integrationIds: string[];
-  }[],
-) => {
-  if (!hasPrefetchLoader(kind)) {
-    return;
-  }
-
-  const [{ default: callback }, serverSettings, definition] = await Promise.all([
-    prefetchLoaders[kind](),
-    getRscServerSettingsAsync(),
-    loadWidgetDefinition(kind),
-  ]);
-
-  const itemsWithDefaultOptions = items.map((item) => ({
-    ...item,
-    options: reduceWidgetOptionsWithDefinition(
-      definition,
-      createSettings({ user: null, serverSettings }),
-      item.options,
-    ),
-  }));
-
-  await callback(queryClient, itemsWithDefaultOptions);
+// Register pending queries before dehydrating the board. Their results can then
+// cross the RSC boundary without waiting for the database read to finish.
+export const prefetchForKind = (kind: WidgetKind, queryClient: QueryClient, items: PrefetchItem[]) => {
+  if (kind === "app") prefetchApps(queryClient, items);
+  if (kind === "bookmarks") prefetchBookmarks(queryClient, items);
 };

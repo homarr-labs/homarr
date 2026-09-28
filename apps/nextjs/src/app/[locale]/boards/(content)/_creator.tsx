@@ -1,35 +1,84 @@
 import type { Metadata } from "next";
-import { cache } from "react";
+import { Suspense } from "react";
 import { notFound, redirect } from "next/navigation";
 import { TRPCError } from "@trpc/server";
 
+import type { QueryClient } from "@tanstack/react-query";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { getRscServerSettingsAsync } from "@homarr/api/server-settings-server";
-import { makeQueryClient } from "@homarr/api/shared";
+import { getQueryClient } from "@homarr/api/server";
+import { getLayoutIdForViewportWidth } from "@homarr/boards/layout-selection";
 import { IntegrationProvider } from "@homarr/auth/client";
 import { auth } from "@homarr/auth/next";
 import { getIntegrationsWithPermissionsAsync } from "@homarr/auth/server";
 import { isNullOrWhitespace } from "@homarr/common";
-import { createLogger } from "@homarr/core/infrastructure/logs";
-import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import type { WidgetKind } from "@homarr/definitions";
+import { prepareIntegrationResponseCacheAsync } from "@homarr/redis";
 import { getI18n } from "@homarr/translation/server";
-import { prefetchForKindAsync } from "@homarr/widgets/prefetch";
+import { prefetchForKind } from "@homarr/widgets/prefetch";
+import { getInitiallyVisibleWidgetKinds, prefetchInitialWidgetData } from "@homarr/widgets/server-prefetch";
 
 import { env } from "~/env";
-import { createBoardLayout } from "../_layout-creator";
+import { createBoardLayout, getInitialViewportWidthAsync } from "../_layout-creator";
 import type { Board, Item } from "../_types";
 import { ClientBoard } from "./_client";
 import { BoardContentEditAction, BoardContentSettingsAction } from "./_header-actions";
-
-const logger = createLogger({ module: "createBoardContentPage" });
-const getQueryClient = cache(makeQueryClient);
+import { createBoardQuerySnapshot } from "./_query-snapshot";
+import { WidgetResourcePreload } from "./_widget-resource-preload";
 
 export type Params = Record<string, unknown>;
 
 interface Props<TParams extends Params> {
   getInitialBoardAsync: (params: TParams) => Promise<Board>;
 }
+
+const BoardWithIntegrations = async ({
+  integrationsPromise,
+}: {
+  integrationsPromise: ReturnType<typeof getIntegrationsWithPermissionsAsync>;
+}) => (
+  <IntegrationProvider integrations={await integrationsPromise}>
+    <ClientBoard />
+  </IntegrationProvider>
+);
+
+const DeferredWidgetHydration = async ({
+  queryClient,
+  queries,
+}: {
+  queryClient: QueryClient;
+  queries: Promise<void>[];
+}) => {
+  await Promise.allSettled(queries);
+  return (
+    <HydrationBoundary
+      state={dehydrate(queryClient, {
+        shouldDehydrateQuery: (query) =>
+          query.meta?.streamedBeszelSelection === true &&
+          (query.state.status === "pending" || query.state.status === "success"),
+      })}
+    />
+  );
+};
+
+const RefreshedQueryHydration = async ({
+  queryClient,
+  queryHashes,
+  promises,
+}: {
+  queryClient: QueryClient;
+  queryHashes: Set<string>;
+  promises: Promise<unknown>[];
+}) => {
+  await Promise.allSettled(promises);
+  return (
+    <HydrationBoundary
+      state={dehydrate(queryClient, {
+        shouldDehydrateQuery: (query) => queryHashes.has(query.queryHash) && query.state.status === "success",
+      })}
+    />
+  );
+};
 
 export const createBoardContentPage = <TParams extends Record<string, unknown>>({
   getInitialBoardAsync: getInitialBoard,
@@ -43,16 +92,20 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
     }),
     // eslint-disable-next-line no-restricted-syntax
     page: async ({ params }: { params: Promise<TParams> }) => {
+      void prepareIntegrationResponseCacheAsync().catch(() => undefined);
       const resolvedParams = await params;
       const queryClient = getQueryClient();
       const sessionPromise = auth();
       const boardPromise = getInitialBoard(resolvedParams);
-      const session = await sessionPromise;
+      const viewportWidthPromise = getInitialViewportWidthAsync();
+      const integrationsPromise = sessionPromise.then(getIntegrationsWithPermissionsAsync);
+      // The board can fail independently of the permissions read (e.g. a missing board).
+      void integrationsPromise.catch(() => undefined);
 
-      const board = await boardPromise.catch((error) => {
+      const board = await boardPromise.catch(async (error: unknown) => {
         if (error instanceof TRPCError && error.code === "NOT_FOUND") {
+          const session = await sessionPromise;
           if (!session) {
-            logger.debug("No home board found for anonymous user, redirecting to login");
             const requestedBoardName =
               typeof resolvedParams.name === "string" ? `/boards/${encodeURIComponent(resolvedParams.name)}` : null;
             redirect(
@@ -79,27 +132,65 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
         }
         return acc;
       }, new Map<WidgetKind, Item[]>());
-      const [integrations] = await Promise.all([
-        getIntegrationsWithPermissionsAsync(session),
-        ...Array.from(itemsMap).map(([kind, items]) =>
-          prefetchForKindAsync(kind, queryClient, items).catch((error) => {
-            logger.error(
-              new ErrorWithMetadata(
-                "Failed to prefetch widget",
-                { widgetKind: kind, itemCount: items.length },
-                { cause: error },
-              ),
-            );
-          }),
-        ),
-      ]);
+      for (const [kind, items] of itemsMap) prefetchForKind(kind, queryClient, items);
+
+      const layoutId = getLayoutIdForViewportWidth(board.layouts, await viewportWidthPromise);
+      const [session, integrations] = await Promise.all([sessionPromise, integrationsPromise]);
+      const snapshot = createBoardQuerySnapshot(board, integrations);
+      await snapshot.restoreAsync(queryClient).catch(() => undefined);
+      const restoredQueryHashes = new Set(
+        queryClient
+          .getQueryCache()
+          .getAll()
+          .filter((query) => query.meta?.rscWidgetPrefetch === true && query.state.status === "success")
+          .map((query) => query.queryHash),
+      );
+      const dependentQueries = prefetchInitialWidgetData(queryClient, board, layoutId, Boolean(session));
+      const refreshingQueries = queryClient
+        .getQueryCache()
+        .getAll()
+        .flatMap((query) => {
+          if (query.meta?.rscWidgetPrefetch !== true || !query.promise) return [];
+          return [{ queryHash: query.queryHash, promise: query.promise }];
+        });
+      const restoredRefreshes = refreshingQueries.filter(({ queryHash }) => restoredQueryHashes.has(queryHash));
+      void Promise.allSettled([...refreshingQueries.map(({ promise }) => promise), ...dependentQueries])
+        .then(async () => {
+          const lateQueries = queryClient
+            .getQueryCache()
+            .getAll()
+            .flatMap((query) => {
+              if (query.meta?.rscWidgetPrefetch !== true || !query.promise) return [];
+              return [query.promise];
+            });
+          await Promise.allSettled(lateQueries);
+          await snapshot.saveAsync(queryClient);
+        })
+        .catch(() => undefined);
 
       return (
-        <HydrationBoundary state={dehydrate(queryClient)}>
-          <IntegrationProvider integrations={integrations}>
-            <ClientBoard />
-          </IntegrationProvider>
-        </HydrationBoundary>
+        <>
+          <WidgetResourcePreload kinds={getInitiallyVisibleWidgetKinds(board, layoutId)} />
+          <HydrationBoundary state={dehydrate(queryClient)}>
+            {restoredRefreshes.length > 0 && (
+              <Suspense fallback={null}>
+                <RefreshedQueryHydration
+                  queryClient={queryClient}
+                  queryHashes={restoredQueryHashes}
+                  promises={restoredRefreshes.map(({ promise }) => promise)}
+                />
+              </Suspense>
+            )}
+            {dependentQueries.length > 0 && (
+              <Suspense fallback={null}>
+                <DeferredWidgetHydration queryClient={queryClient} queries={dependentQueries} />
+              </Suspense>
+            )}
+            <Suspense fallback={null}>
+              <BoardWithIntegrations integrationsPromise={integrationsPromise} />
+            </Suspense>
+          </HydrationBoundary>
+        </>
       );
     },
     generateMetadataAsync: async ({ params }: { params: Promise<TParams> }): Promise<Metadata> => {

@@ -12,7 +12,7 @@ import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common
 import type { WidgetComponentProps } from "../definition";
 import { isPrivateIp, WazuhChip } from "../wazuh/_shared/badges";
 import { WazuhErrorState } from "../wazuh/_shared/error-state";
-import { WazuhRelativeTime, WazuhSkeleton, WazuhStatTile, WazuhWidgetFrame } from "../wazuh/_shared/frame";
+import { WazuhRelativeTime, WazuhPendingState, WazuhStatTile, WazuhWidgetFrame } from "../wazuh/_shared/frame";
 import { formatWazuhCount } from "../wazuh/_shared/severity";
 import { useWazuhLinks } from "../wazuh/_shared/use-wazuh-links";
 import classes from "../wazuh/_shared/wazuh.module.css";
@@ -41,7 +41,7 @@ export default function WazuhAuthFailuresWidget({
   if (isInitialWidgetQueryPending(query)) {
     return (
       <WazuhWidgetFrame icon={IconLockExclamation} title={title} compact={compact} iconColor="red">
-        <WazuhSkeleton variant="tiles" rows={3} />
+        <WazuhPendingState />
       </WazuhWidgetFrame>
     );
   }

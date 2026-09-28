@@ -17,6 +17,7 @@ interface AppDeleteButtonProps {
 export const AppDeleteButton = ({ app }: AppDeleteButtonProps) => {
   const t = useI18n("app.page.delete");
   const tCommon = useI18n("common");
+  const utils = clientApi.useUtils();
   const { mutate, isPending } = clientApi.app.delete.useMutation();
 
   const onConfirm = useCallback(() => {
@@ -24,6 +25,7 @@ export const AppDeleteButton = ({ app }: AppDeleteButtonProps) => {
       { id: app.id },
       {
         onSuccess: () => {
+          void utils.app.invalidate();
           showSuccessNotification({
             title: tCommon("notification.delete.success"),
             message: t("notification.success.message"),
@@ -38,7 +40,7 @@ export const AppDeleteButton = ({ app }: AppDeleteButtonProps) => {
         },
       },
     );
-  }, [app.id, mutate, t, tCommon]);
+  }, [app.id, mutate, t, tCommon, utils]);
 
   return (
     <InlineConfirmActionIcon

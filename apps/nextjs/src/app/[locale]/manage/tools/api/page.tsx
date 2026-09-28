@@ -2,7 +2,6 @@ import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { Stack } from "@mantine/core";
 
-import { normalizeRecursiveJsonSchemasForScalar, openApiDocument } from "@homarr/api/open-api";
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { extractBaseUrlFromHeaders } from "@homarr/common";
@@ -60,7 +59,6 @@ export default async function ApiPage() {
     getMcpToolGroups(),
   ]);
   const baseUrl = extractBaseUrlFromHeaders(requestHeaders);
-  const document = normalizeRecursiveJsonSchemasForScalar(openApiDocument(baseUrl));
 
   return (
     <>
@@ -70,7 +68,7 @@ export default async function ApiPage() {
           documentationLabel={t("documentation.label")}
           apiKeyLabel={t("apiKey.label")}
           mcpLabel={t("mcp.label")}
-          documentationPanel={<ScalarApiReference document={document} />}
+          documentationPanel={<ScalarApiReference />}
           apiKeys={apiKeys}
           baseUrl={baseUrl}
           toolGroups={toolGroups}

@@ -8,15 +8,11 @@ import { ApiReferenceReact } from "@scalar/api-reference-react";
 import "@scalar/api-reference-react/style.css";
 import "./scalar-theme.css";
 
-interface ScalarApiReferenceProps {
-  document: object;
-}
-
-export function ScalarApiReference({ document }: ScalarApiReferenceProps) {
+export function ScalarApiReference() {
   const colorScheme = useComputedColorScheme("light");
   const configuration = useMemo<ComponentProps<typeof ApiReferenceReact>["configuration"]>(
     () => ({
-      content: document,
+      url: "/api/openapi?format=scalar",
       layout: "classic",
       theme: "alternate",
       showSidebar: false,
@@ -24,12 +20,13 @@ export function ScalarApiReference({ document }: ScalarApiReferenceProps) {
       hideSearch: true,
       hiddenClients: true,
       showDeveloperTools: "never",
+      defaultOpenAllTags: false,
       forceDarkModeState: colorScheme,
       authentication: {
         preferredSecurityScheme: "apikey",
       },
     }),
-    [document, colorScheme],
+    [colorScheme],
   );
 
   return <ApiReferenceReact configuration={configuration} />;

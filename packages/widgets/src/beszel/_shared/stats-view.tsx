@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { Button, Center, Group, SimpleGrid, Skeleton, Stack, Text } from "@mantine/core";
+import { Button, Center, SimpleGrid, Stack, Text } from "@mantine/core";
 import { IconPlugConnectedX, IconServerOff } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -12,6 +12,7 @@ import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 import { zoomCompensatedSize } from "@homarr/ui";
 
 import { getUsableWidgetQueryData } from "../../common/query-state";
+import { WidgetQueryLoadingState } from "../../common/query-state-indicator";
 import { containerColors } from "./colors";
 import type { BeszelTimePeriod } from "./chart";
 import {
@@ -31,16 +32,6 @@ import { useLiveStats } from "./use-live-stats";
 const CHART_HEIGHT = 180;
 const MEBIBYTE = 1024 * 1024;
 const GIBIBYTE = 1024 * MEBIBYTE;
-
-const ChartSkeleton = ({ height }: { height: number }) => (
-  <Stack gap={4} style={{ minWidth: 0 }}>
-    <Group gap="xs">
-      <Skeleton h={14} w={72} radius="sm" />
-      <Skeleton h={10} w={110} radius="sm" />
-    </Group>
-    <Skeleton h={height} radius="sm" />
-  </Stack>
-);
 
 export interface BeszelStatsVisibility {
   cpu: boolean;
@@ -268,17 +259,7 @@ export function BeszelStatsView({
   }
 
   if (!activeStats) {
-    const visibleChartCount = Object.values(visibility).filter(Boolean).length;
-    const effectiveColumns = Math.min(columns, Math.max(1, visibleChartCount)) as 1 | 2;
-    const rowCount = Math.ceil(visibleChartCount / effectiveColumns);
-    const chartHeight = computeChartHeight(availableHeight, rowCount);
-    return (
-      <SimpleGrid cols={effectiveColumns} spacing="md" aria-label={t("name")}>
-        {Array.from({ length: visibleChartCount }, (_, index) => (
-          <ChartSkeleton key={index} height={chartHeight} />
-        ))}
-      </SimpleGrid>
-    );
+    return <WidgetQueryLoadingState />;
   }
 
   if ("error" in activeStats && activeStats.error) {

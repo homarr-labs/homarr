@@ -20,7 +20,7 @@ import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common
 import type { WidgetComponentProps } from "../definition";
 import { WazuhChip } from "../wazuh/_shared/badges";
 import { WazuhErrorState } from "../wazuh/_shared/error-state";
-import { WazuhLegendChip, WazuhRelativeTime, WazuhSkeleton, WazuhWidgetFrame } from "../wazuh/_shared/frame";
+import { WazuhLegendChip, WazuhRelativeTime, WazuhPendingState, WazuhWidgetFrame } from "../wazuh/_shared/frame";
 import { formatWazuhCount } from "../wazuh/_shared/severity";
 import { useWazuhLinks } from "../wazuh/_shared/use-wazuh-links";
 import classes from "../wazuh/_shared/wazuh.module.css";
@@ -61,7 +61,7 @@ export default function WazuhFimWidget({ integrationIds, options, width, height 
   if (isInitialWidgetQueryPending(query)) {
     return (
       <WazuhWidgetFrame icon={IconFileAlert} title={title} compact={compact} iconColor="yellow">
-        <WazuhSkeleton variant="list" rows={5} />
+        <WazuhPendingState />
       </WazuhWidgetFrame>
     );
   }

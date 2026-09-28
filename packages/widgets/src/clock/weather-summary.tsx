@@ -1,10 +1,8 @@
-import { Box, Group, Loader, Stack, Text } from "@mantine/core";
+import { Box, Group, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
-import { useI18n } from "@homarr/translation/client";
 import { zoomCompensatedSize } from "@homarr/ui";
 
-import { isInitialWidgetQueryPending } from "../common/query-state";
 import { AnimatedWeatherIcon } from "../weather/animated-icon";
 import { WeatherDescription } from "../weather/icon";
 
@@ -31,17 +29,10 @@ export const ClockWeatherSummary = ({
   nightColor,
   detailed,
 }: ClockWeatherSummaryProps) => {
-  const tCommon = useI18n("common");
   const weatherQuery = clientApi.widget.weather.atLocation.useQuery({ latitude, longitude });
   const weather = weatherQuery.data;
 
-  if (!weather) {
-    if (isInitialWidgetQueryPending(weatherQuery)) {
-      return <Loader size="xs" aria-label={tCommon("action.loading")} />;
-    }
-
-    return null;
-  }
+  if (!weather) return null;
 
   const temperature = isFahrenheit ? weather.current.temperature * (9 / 5) + 32 : weather.current.temperature;
   const unit = isFahrenheit ? "°F" : "°C";
