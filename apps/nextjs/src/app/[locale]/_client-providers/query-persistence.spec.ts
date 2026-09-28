@@ -6,7 +6,6 @@ import {
   createSessionQueryPersistence,
   getQueryPersistenceStorageKey,
   queryPersistenceBuster,
-  removeAllPersistedDashboardQueries,
   shouldPersistDashboardQuery,
 } from "./query-persistence";
 
@@ -127,39 +126,10 @@ describe("dashboard query persistence", () => {
     expect(restored?.clientState.queries[0]?.state.status).toBe("success");
     expect(restored?.clientState.queries[0]?.state.error).toBeNull();
     expect(await userB.persister.restoreClient()).toBeUndefined();
-    expect(userA.maxAge).toBe(Infinity);
+    expect(userA.maxAge).toBe(5 * 60_000);
 
     await userA.persister.removeClient();
     expect(storage.getItem(getQueryPersistenceStorageKey("user-a"))).toBeNull();
-  });
-
-  test("retains a small result after query garbage collection and clears all user scopes on logout", async () => {
-    vi.useFakeTimers();
-    const storage = createMemoryStorage();
-    const userA = createSessionQueryPersistence("user-a", storage);
-    const userB = createSessionQueryPersistence("user-b", storage);
-    const key = [["widget", "weather", "atLocation"], { type: "query" }] as const;
-    const { queryClient } = createSuccessfulQuery(key, { temp: 21 });
-    const snapshot = (): PersistedClient => ({
-      timestamp: Date.now(),
-      buster: queryPersistenceBuster,
-      clientState: dehydrate(queryClient, userA.dehydrateOptions),
-    });
-
-    await userA.persister.persistClient(snapshot());
-    await vi.advanceTimersByTimeAsync(1_000);
-    queryClient.removeQueries({ queryKey: key });
-    await userA.persister.persistClient(snapshot());
-    await vi.advanceTimersByTimeAsync(1_000);
-
-    const restored = await userA.persister.restoreClient();
-    expect(restored?.clientState.queries).toHaveLength(1);
-    expect(restored?.clientState.queries[0]?.state.data).toEqual({ temp: 21 });
-
-    await userB.persister.persistClient({ ...snapshot(), clientState: { mutations: [], queries: [] } });
-    await vi.advanceTimersByTimeAsync(1_000);
-    removeAllPersistedDashboardQueries(storage);
-    expect(storage.length).toBe(0);
   });
 
   test("treats unavailable browser storage as an empty cache", async () => {

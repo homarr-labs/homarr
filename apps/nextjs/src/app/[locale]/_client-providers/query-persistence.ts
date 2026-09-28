@@ -4,13 +4,12 @@ import { removeOldestQuery } from "@tanstack/react-query-persist-client";
 import type { PersistedClient, PersistQueryClientProviderProps } from "@tanstack/react-query-persist-client";
 import { parse, stringify } from "superjson";
 
-import { isPersistableDashboardQueryKey } from "@homarr/api/query-cache";
+import { isPersistableDashboardQueryKey, queryCacheDefaultGcTimeMs } from "@homarr/api/query-cache";
 
-export const queryPersistenceBuster = "v7-dashboard-data";
+export const queryPersistenceBuster = "v8-dashboard-data";
 
 const queryPersistenceStoragePrefix = "homarr:widget-query-cache";
 const maxQueryCharacters = 64 * 1024;
-const maxSnapshotCharacters = 512 * 1024;
 
 export const getQueryPersistenceStorageKey = (scope: string | null) =>
   `${queryPersistenceStoragePrefix}:${encodeURIComponent(scope ?? "anonymous")}`;
@@ -49,11 +48,11 @@ const serializePersistedClient = (client: PersistedClient) =>
     },
   });
 
-const getLocalStorage = () => {
+const getSessionStorage = () => {
   if (typeof window === "undefined") return undefined;
 
   try {
-    return window.localStorage;
+    return window.sessionStorage;
   } catch {
     return undefined;
   }
@@ -85,9 +84,10 @@ const protectStorage = (storage: Storage | undefined) => {
 
 export type SessionQueryPersistence = PersistQueryClientProviderProps["persistOptions"];
 
-export const removeAllPersistedDashboardQueries = (storage: Storage | undefined = getLocalStorage()) => {
-  if (!storage) return;
+const clearLegacyLocalStorageQueries = () => {
+  if (typeof window === "undefined") return;
   try {
+    const storage = window.localStorage;
     for (let index = storage.length - 1; index >= 0; index--) {
       const key = storage.key(index);
       if (key?.startsWith(`${queryPersistenceStoragePrefix}:`)) storage.removeItem(key);
@@ -97,50 +97,21 @@ export const removeAllPersistedDashboardQueries = (storage: Storage | undefined 
   }
 };
 
-const retainRecentQueries = (current: PersistedClient, previous: PersistedClient | undefined) => {
-  if (!previous || previous.buster !== current.buster) return current;
-
-  const queries = new Map(previous.clientState.queries.map((query) => [query.queryHash, query]));
-  for (const query of current.clientState.queries) queries.set(query.queryHash, query);
-
-  let remaining = maxSnapshotCharacters;
-  const retained = [...queries.values()]
-    .toSorted((left, right) => right.state.dataUpdatedAt - left.state.dataUpdatedAt)
-    .filter((query) => {
-      const length = stringify(query).length;
-      if (length > remaining || !shouldPersistDashboardQuery(query)) return false;
-      remaining -= length;
-      return true;
-    });
-  return { ...current, clientState: { ...current.clientState, queries: retained } };
-};
-
 export const createSessionQueryPersistence = (
   scope: string | null,
-  storage: Storage | undefined = getLocalStorage(),
+  storage: Storage | undefined = getSessionStorage(),
 ): SessionQueryPersistence => {
-  const persister = createSyncStoragePersister({
-    storage: scope ? protectStorage(storage) : undefined,
-    key: getQueryPersistenceStorageKey(scope),
-    serialize: serializePersistedClient,
-    deserialize: parse,
-    retry: removeOldestQuery,
-  });
-  let latest: PersistedClient | undefined;
+  clearLegacyLocalStorageQueries();
 
   return {
-    persister: {
-      async persistClient(client) {
-        latest = retainRecentQueries(client, latest ?? (await persister.restoreClient()));
-        await persister.persistClient(latest);
-      },
-      restoreClient: () => persister.restoreClient(),
-      removeClient() {
-        latest = undefined;
-        return persister.removeClient();
-      },
-    },
-    maxAge: Infinity,
+    persister: createSyncStoragePersister({
+      storage: scope ? protectStorage(storage) : undefined,
+      key: getQueryPersistenceStorageKey(scope),
+      serialize: serializePersistedClient,
+      deserialize: parse,
+      retry: removeOldestQuery,
+    }),
+    maxAge: queryCacheDefaultGcTimeMs,
     buster: queryPersistenceBuster,
     dehydrateOptions: {
       shouldDehydrateMutation: () => false,
