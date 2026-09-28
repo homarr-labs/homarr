@@ -1,3 +1,5 @@
+import { createHash } from "node:crypto";
+
 import superjson from "superjson";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import type { QueryClient, QueryKey } from "@tanstack/react-query";
@@ -103,6 +105,15 @@ const getGenerationsAsync = async (ids: Set<string>) => {
 };
 
 export const createBoardQuerySnapshot = (board: Board, integrations: Integrations) => {
+  // A board edit must not restore data from a widget that has since been
+  // removed or reconfigured, even if another widget uses the same integration.
+  const boardContentFingerprint = createHash("sha256")
+    .update(
+      JSON.stringify(
+        board.items.map(({ id, kind, integrationIds, options }) => ({ id, kind, integrationIds, options })),
+      ),
+    )
+    .digest("hex");
   const boardIntegrationIds = new Set(board.items.flatMap((item) => item.integrationIds));
   // The board procedure has already granted view access. Integration query
   // authorization also grants use of integrations placed on a viewable board.
@@ -112,7 +123,9 @@ export const createBoardQuerySnapshot = (board: Board, integrations: Integration
   const initialGenerationsPromise = prepareIntegrationResponseCacheAsync()
     .then(async () => await getGenerationsAsync(boardIntegrationIds))
     .catch(() => null);
-  const channel = createGetSetChannel<string>(`${snapshotVersion}:${board.id}`, { useBoundedCacheClient: true });
+  const channel = createGetSetChannel<string>(`${snapshotVersion}:${board.id}:${boardContentFingerprint}`, {
+    useBoundedCacheClient: true,
+  });
   const redisPersister = createAsyncStoragePersister({
     key: board.id,
     throttleTime: 0,
