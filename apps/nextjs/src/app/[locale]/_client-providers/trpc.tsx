@@ -3,7 +3,7 @@
 import type { PropsWithChildren } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
-import { QueryCache, QueryClient } from "@tanstack/react-query";
+import { defaultShouldDehydrateQuery, QueryCache, QueryClient } from "@tanstack/react-query";
 import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import {
@@ -111,7 +111,8 @@ const ScopedTRPCReactProvider = ({
     },
     [wsClient],
   );
-  const [queryClient] = useState(() => {
+  const [{ queryClient, rscStreamedQueryHashes }] = useState(() => {
+    const streamedHashes = new Set<string>();
     const client = new QueryClient({
       queryCache: new QueryCache({
         onError(error, query) {
@@ -159,7 +160,13 @@ const ScopedTRPCReactProvider = ({
     for (const { queryKey, ...policy } of dashboardSupportingQueryPolicies) {
       client.setQueryDefaults(queryKey, policy);
     }
-    return client;
+    if (typeof window === "undefined") {
+      client.getQueryCache().subscribe((event) => {
+        if (event.query.meta?.rscWidgetPrefetch === true) streamedHashes.add(event.query.queryHash);
+        if (event.type === "removed") streamedHashes.delete(event.query.queryHash);
+      });
+    }
+    return { queryClient: client, rscStreamedQueryHashes: streamedHashes };
   });
 
   useEffect(() => () => queryClient.clear(), [queryClient]);
@@ -213,7 +220,21 @@ const ScopedTRPCReactProvider = ({
   return (
     <clientApi.Provider client={trpcClient} queryClient={queryClient}>
       <PersistQueryClientProvider client={queryClient} persistOptions={queryPersistence}>
-        <ReactQueryStreamedHydration transformer={superjson}>{children}</ReactQueryStreamedHydration>
+        <ReactQueryStreamedHydration
+          transformer={superjson}
+          options={{
+            dehydrate: {
+              // These promises already travel through the RSC boundary. Sending
+              // them again here duplicates large album and chart payloads.
+              shouldDehydrateQuery: (query) =>
+                !rscStreamedQueryHashes.has(query.queryHash) &&
+                query.meta?.rscWidgetPrefetch !== true &&
+                defaultShouldDehydrateQuery(query),
+            },
+          }}
+        >
+          {children}
+        </ReactQueryStreamedHydration>
         {process.env.NODE_ENV === "development" && <DevelopmentTools />}
       </PersistQueryClientProvider>
     </clientApi.Provider>

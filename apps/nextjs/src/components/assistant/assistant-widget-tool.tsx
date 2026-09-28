@@ -18,7 +18,7 @@ import { useI18n } from "@homarr/translation/client";
 import type { WidgetDefinition } from "@homarr/widgets/definition";
 import { loadWidgetDefinition, reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 import type { IntegrationSelectOption } from "@homarr/widgets/widget-integration-select";
-import { WidgetEditModal } from "@homarr/widgets/modals";
+import { LazyWidgetConfigurationModal } from "~/components/board/items/lazy-widget-edit-modal";
 
 import classes from "./assistant-panel.module.css";
 import { useAssistantAutomaticAction } from "./assistant-auto-approval";
@@ -144,7 +144,7 @@ const AssistantConfigureWidgetToolContent = ({
   }, [args, definition, hasCompleteArguments, integrations.data, needsIntegrations, settings]);
   const missingRequiredIntegration =
     configuration?.integrationsRequired === true && configuration.value.integrationIds.length === 0;
-  const { openModal: openWidgetModal } = useModalAction(WidgetEditModal);
+  const { openModal: openWidgetModal } = useModalAction(LazyWidgetConfigurationModal);
   const { openModal: openIntegrationModal } = useModalAction(IntegrationSelectModal);
   const autoConfirming = useAssistantAutomaticAction({
     toolCallId,

@@ -1,27 +1,30 @@
 import type { Metadata } from "next";
-import { cache, Suspense } from "react";
+import { Suspense } from "react";
 import { notFound, redirect } from "next/navigation";
 import { TRPCError } from "@trpc/server";
 
+import type { QueryClient } from "@tanstack/react-query";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { getRscServerSettingsAsync } from "@homarr/api/server-settings-server";
-import { makeQueryClient } from "@homarr/api/shared";
+import { getQueryClient } from "@homarr/api/server";
+import { getLayoutIdForViewportWidth } from "@homarr/boards/layout-selection";
 import { IntegrationProvider } from "@homarr/auth/client";
 import { auth } from "@homarr/auth/next";
 import { getIntegrationsWithPermissionsAsync } from "@homarr/auth/server";
 import { isNullOrWhitespace } from "@homarr/common";
 import type { WidgetKind } from "@homarr/definitions";
+import { prepareIntegrationResponseCacheAsync } from "@homarr/redis";
 import { getI18n } from "@homarr/translation/server";
 import { prefetchForKind } from "@homarr/widgets/prefetch";
+import { getInitiallyVisibleWidgetKinds, prefetchInitialWidgetData } from "@homarr/widgets/server-prefetch";
 
 import { env } from "~/env";
-import { createBoardLayout } from "../_layout-creator";
+import { createBoardLayout, getInitialViewportWidthAsync } from "../_layout-creator";
 import type { Board, Item } from "../_types";
 import { ClientBoard } from "./_client";
 import { BoardContentEditAction, BoardContentSettingsAction } from "./_header-actions";
 import { BoardLoadingShell } from "./_loading-shell";
-
-const getQueryClient = cache(makeQueryClient);
+import { WidgetResourcePreload } from "./_widget-resource-preload";
 
 export type Params = Record<string, unknown>;
 
@@ -39,6 +42,25 @@ const BoardWithIntegrations = async ({
   </IntegrationProvider>
 );
 
+const DeferredWidgetHydration = async ({
+  queryClient,
+  queries,
+}: {
+  queryClient: QueryClient;
+  queries: Promise<void>[];
+}) => {
+  await Promise.allSettled(queries);
+  return (
+    <HydrationBoundary
+      state={dehydrate(queryClient, {
+        shouldDehydrateQuery: (query) =>
+          query.meta?.streamedBeszelSelection === true &&
+          (query.state.status === "pending" || query.state.status === "success"),
+      })}
+    />
+  );
+};
+
 export const createBoardContentPage = <TParams extends Record<string, unknown>>({
   getInitialBoardAsync: getInitialBoard,
 }: Props<TParams>) => {
@@ -51,10 +73,12 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
     }),
     // eslint-disable-next-line no-restricted-syntax
     page: async ({ params }: { params: Promise<TParams> }) => {
+      void prepareIntegrationResponseCacheAsync().catch(() => undefined);
       const resolvedParams = await params;
       const queryClient = getQueryClient();
       const sessionPromise = auth();
       const boardPromise = getInitialBoard(resolvedParams);
+      const viewportWidthPromise = getInitialViewportWidthAsync();
       const integrationsPromise = sessionPromise.then(getIntegrationsWithPermissionsAsync);
       // The board can fail independently of the permissions read (e.g. a missing board).
       void integrationsPromise.catch(() => undefined);
@@ -91,12 +115,23 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
       }, new Map<WidgetKind, Item[]>());
       for (const [kind, items] of itemsMap) prefetchForKind(kind, queryClient, items);
 
+      const layoutId = getLayoutIdForViewportWidth(board.layouts, await viewportWidthPromise);
+      const dependentQueries = prefetchInitialWidgetData(queryClient, board, layoutId, Boolean(await sessionPromise));
+
       return (
-        <HydrationBoundary state={dehydrate(queryClient)}>
-          <Suspense fallback={<BoardLoadingShell />}>
-            <BoardWithIntegrations integrationsPromise={integrationsPromise} />
-          </Suspense>
-        </HydrationBoundary>
+        <>
+          <WidgetResourcePreload kinds={getInitiallyVisibleWidgetKinds(board, layoutId)} />
+          <HydrationBoundary state={dehydrate(queryClient)}>
+            {dependentQueries.length > 0 && (
+              <Suspense fallback={null}>
+                <DeferredWidgetHydration queryClient={queryClient} queries={dependentQueries} />
+              </Suspense>
+            )}
+            <Suspense fallback={<BoardLoadingShell />}>
+              <BoardWithIntegrations integrationsPromise={integrationsPromise} />
+            </Suspense>
+          </HydrationBoundary>
+        </>
       );
     },
     generateMetadataAsync: async ({ params }: { params: Promise<TParams> }): Promise<Metadata> => {

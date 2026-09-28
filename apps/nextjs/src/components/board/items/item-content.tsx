@@ -1,5 +1,5 @@
 import type { ComponentType, CSSProperties, MutableRefObject, PropsWithChildren } from "react";
-import { memo, Suspense, use, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { memo, Suspense, use, useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import dynamic from "next/dynamic";
 import { Box, Button, Center, Loader, Portal } from "@mantine/core";
@@ -86,12 +86,29 @@ const WidgetDefinitionLoadError = ({
   </BoardItemCard>
 );
 
+const subscribeToHydration = () => () => undefined;
+const getHydratedSnapshot = () => true;
+const getServerHydratedSnapshot = () => false;
+
 export const BoardItemContent = ({ item }: BoardItemContentProps) => {
+  const hydrated = useSyncExternalStore(subscribeToHydration, getHydratedSnapshot, getServerHydratedSnapshot);
   const { ref, width: measuredWidth, height: measuredHeight } = useElementSize<HTMLDivElement>();
   const { getEntryRuntime } = useBoardGridPortalHost();
   const { widgetStateRef, widgetRuntimeRef } = getEntryRuntime(item.id, createBoardItemRuntime);
   const width = measuredWidth || getLogicalTrackSize(item.width);
   const height = measuredHeight || getLogicalTrackSize(item.height);
+
+  // Keep useful app/bookmark HTML in the initial document. Other widget
+  // modules render after hydration while their server queries already run.
+  if (!hydrated && item.kind !== "app" && item.kind !== "bookmarks") {
+    return (
+      <BoardItemCard item={item} innerRef={ref}>
+        <Center h="100%">
+          <Loader size="sm" />
+        </Center>
+      </BoardItemCard>
+    );
+  }
 
   return (
     <ErrorBoundary

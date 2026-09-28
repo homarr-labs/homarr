@@ -142,7 +142,20 @@ export class BeszelIntegration extends Integration {
     };
   }
 
+  private pendingAuthentication: Promise<BeszelSession> | undefined;
+
   private async authenticateAsync(): Promise<BeszelSession> {
+    if (this.pendingAuthentication) return await this.pendingAuthentication;
+    const pending = this.loadSessionAsync();
+    this.pendingAuthentication = pending;
+    try {
+      return await pending;
+    } finally {
+      this.pendingAuthentication = undefined;
+    }
+  }
+
+  private async loadSessionAsync(): Promise<BeszelSession> {
     const existingSession = await this.sessionStore.getAsync();
     if (existingSession && !isSessionExpired(existingSession)) {
       logger.debug("Using stored Beszel session", { integrationId: this.integration.id });

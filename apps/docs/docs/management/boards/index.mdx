@@ -19,6 +19,14 @@ Boards can be public or restricted to users and groups.
 Create, duplicate, open, and delete boards under **Management → Boards**. Press `Shift+C` from a board to open the
 board switcher.
 
+## Initial loading
+
+Homarr starts supported widgets' initial data queries together on the server after resolving the board and its initial
+layout. Results stream independently while the board loads. App and bookmark tiles use the initial server HTML; other
+widgets show loading cards until browser hydration. Integration queries for collapsed sections wait until opened, and
+queries that need another result start when that dependency resolves. Existing integration permissions and live refresh
+intervals still apply.
+
 ## Responsive layouts
 
 <BoardLayoutsDiagram />

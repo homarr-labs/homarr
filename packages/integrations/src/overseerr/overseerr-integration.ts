@@ -1,7 +1,8 @@
+import type { Dispatcher } from "undici";
 import { z } from "zod/v4";
 
 import { ResponseError } from "@homarr/common/server";
-import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import { createCertificateAgentAsync, fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import type { IntegrationHttpAuthentication } from "../http-auth";
@@ -129,77 +130,84 @@ export class OverseerrIntegration
   }
 
   public async getRequestsAsync(): Promise<MediaRequest[]> {
-    const pendingRequests = await fetchWithTrustedCertificatesAsync(
-      this.url("/api/v1/request", { take: 20, filter: "pending" }),
-      {
-        headers: {
-          "X-Api-Key": this.getSecretValue("apiKey"),
-        },
-      },
-    );
+    // One load shares certificate setup, sockets and TLS sessions. A later load
+    // still reads current certificate settings, and no dispatcher is retained.
+    const dispatcher = await createCertificateAgentAsync();
+    try {
+      const fetchRequests = async (parameters: { take: number; filter?: string; sort?: string }) => {
+        const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/request", parameters), {
+          headers: { "X-Api-Key": this.getSecretValue("apiKey") },
+          dispatcher,
+        });
+        return (await getRequestsSchema.parseAsync(await response.json())).results;
+      };
+      const [pendingResults, allResults] = await Promise.all([
+        fetchRequests({ take: 20, filter: "pending" }),
+        fetchRequests({ take: 20, sort: "modified" }),
+      ]);
 
-    const allRequests = await fetchWithTrustedCertificatesAsync(
-      this.url("/api/v1/request", { take: 20, sort: "modified" }),
-      {
-        headers: {
-          "X-Api-Key": this.getSecretValue("apiKey"),
-        },
-      },
-    );
+      //Concat the 2 lists while remove any duplicate pending from the all items list
+      let requests;
 
-    const pendingResults = (await getRequestsSchema.parseAsync(await pendingRequests.json())).results;
-    const allResults = (await getRequestsSchema.parseAsync(await allRequests.json())).results;
+      if (pendingResults.length > 0 && allResults.length > 0) {
+        requests = pendingResults.concat(
+          allResults.filter(({ status }) => status !== UpstreamMediaRequestStatus.PendingApproval),
+        );
+      } else if (pendingResults.length > 0) requests = pendingResults;
+      else if (allResults.length > 0) requests = allResults;
+      else return [];
 
-    //Concat the 2 lists while remove any duplicate pending from the all items list
-    let requests;
+      // Requests for different users can reference the same movie or series. Share
+      // its in-flight lookup within this load, without retaining stale metadata.
+      const informationByMedia = new Map<string, Promise<MediaInformation>>();
+      const settled = await Promise.allSettled(
+        requests.map(async (request): Promise<MediaRequest> => {
+          const mediaKey = `${request.type}:${request.media.tmdbId}`;
+          let informationPromise = informationByMedia.get(mediaKey);
+          if (!informationPromise) {
+            informationPromise = this.getItemInformationAsync(request.media.tmdbId, request.type, dispatcher);
+            informationByMedia.set(mediaKey, informationPromise);
+          }
+          const information = await informationPromise;
 
-    if (pendingResults.length > 0 && allResults.length > 0) {
-      requests = pendingResults.concat(
-        allResults.filter(({ status }) => status !== UpstreamMediaRequestStatus.PendingApproval),
+          // See https://github.com/seerr-team/seerr/blob/af083a3cd5c3e3d5d7917fdf4fdd67fe3f39c46b/src/components/StatusBadge/index.tsx#L40
+          const inProgress = (request.media.downloadStatus ?? []).length >= 1;
+
+          return {
+            id: request.id,
+            name: information.name,
+            status: this.mapRequestStatus(request.status),
+            availability: this.mapAvailability(request.media.status, inProgress),
+            backdropImageUrl: `https://image.tmdb.org/t/p/original/${information.backdropPath}`,
+            posterImagePath: `https://image.tmdb.org/t/p/w600_and_h900_bestv2/${information.posterPath}`,
+            href: this.externalUrl(`/${request.type}/${request.media.tmdbId}`).toString(),
+            type: request.type,
+            createdAt: request.createdAt,
+            airDate: new Date(information.airDate),
+            requestedBy: request.requestedBy
+              ? ({
+                  ...request.requestedBy,
+                  displayName: request.requestedBy.displayName,
+                  link: this.externalUrl(`/users/${request.requestedBy.id}`).toString(),
+                  avatar: this.constructAvatarUrl(request.requestedBy.avatar).toString(),
+                } satisfies Omit<RequestUser, "requestCount">)
+              : undefined,
+          };
+        }),
       );
-    } else if (pendingResults.length > 0) requests = pendingResults;
-    else if (allResults.length > 0) requests = allResults;
-    else return [];
 
-    const settled = await Promise.allSettled(
-      requests.map(async (request): Promise<MediaRequest> => {
-        const information = await this.getItemInformationAsync(request.media.tmdbId, request.type);
+      const fulfilled = settled
+        .filter((result): result is PromiseFulfilledResult<MediaRequest> => result.status === "fulfilled")
+        .map((result) => result.value);
 
-        // See https://github.com/seerr-team/seerr/blob/af083a3cd5c3e3d5d7917fdf4fdd67fe3f39c46b/src/components/StatusBadge/index.tsx#L40
-        const inProgress = (request.media.downloadStatus ?? []).length >= 1;
+      if (fulfilled.length === 0) {
+        throw new Error("Failed to resolve any media request information");
+      }
 
-        return {
-          id: request.id,
-          name: information.name,
-          status: this.mapRequestStatus(request.status),
-          availability: this.mapAvailability(request.media.status, inProgress),
-          backdropImageUrl: `https://image.tmdb.org/t/p/original/${information.backdropPath}`,
-          posterImagePath: `https://image.tmdb.org/t/p/w600_and_h900_bestv2/${information.posterPath}`,
-          href: this.externalUrl(`/${request.type}/${request.media.tmdbId}`).toString(),
-          type: request.type,
-          createdAt: request.createdAt,
-          airDate: new Date(information.airDate),
-          requestedBy: request.requestedBy
-            ? ({
-                ...request.requestedBy,
-                displayName: request.requestedBy.displayName,
-                link: this.externalUrl(`/users/${request.requestedBy.id}`).toString(),
-                avatar: this.constructAvatarUrl(request.requestedBy.avatar).toString(),
-              } satisfies Omit<RequestUser, "requestCount">)
-            : undefined,
-        };
-      }),
-    );
-
-    const fulfilled = settled
-      .filter((result): result is PromiseFulfilledResult<MediaRequest> => result.status === "fulfilled")
-      .map((result) => result.value);
-
-    if (fulfilled.length === 0) {
-      throw new Error("Failed to resolve any media request information");
+      return fulfilled;
+    } finally {
+      await dispatcher.close();
     }
-
-    return fulfilled;
   }
 
   protected mapRequestStatus(status: UpstreamMediaRequestStatus): MediaRequestStatus {
@@ -288,8 +296,13 @@ export class OverseerrIntegration
     logger.info("Successfully declined media request", { requestId, integration: this.integration.name });
   }
 
-  private async getItemInformationAsync(id: number, type: MediaRequest["type"]): Promise<MediaInformation> {
+  private async getItemInformationAsync(
+    id: number,
+    type: MediaRequest["type"],
+    dispatcher: Dispatcher,
+  ): Promise<MediaInformation> {
     const response = await fetchWithTrustedCertificatesAsync(this.url(`/api/v1/${type}/${id}`), {
+      dispatcher,
       headers: {
         "X-Api-Key": this.getSecretValue("apiKey"),
       },

@@ -1,0 +1,10 @@
+const { DatabaseSync } = require('node:sqlite');
+const db = new DatabaseSync('/appdata/db/db.sqlite');
+const row = db.prepare("select id,options from item where kind='releases'").get();
+if (!row) throw new Error('Releases widget missing');
+const options = JSON.parse(row.options);
+if (!options.json) throw new Error('Unknown options serialization');
+const cycle = process.argv[2];
+options.json.repositories = [{id:`fixture-release-${cycle}`,provider:'npm',identifier:'v2-readiness-release',providerUrl:`http://127.0.0.1:9077/${cycle}`,name:'Readiness release',versionFilter:{precision:3}}];
+db.prepare('update item set options=? where id=?').run(JSON.stringify(options),row.id);
+db.close();
