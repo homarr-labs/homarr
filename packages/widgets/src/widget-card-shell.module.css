@@ -18,6 +18,11 @@
   border-color: transparent !important;
 }
 
+.card:global(.customApi-wrapper) :global(.mantine-Paper-root) {
+  background-color: rgb(from var(--mantine-color-body) r g b / var(--opacity, 1));
+  border-color: rgb(from var(--mantine-color-default-border) r g b / var(--opacity, 1));
+}
+
 .title {
   @mixin dark {
     --background-color: rgb(from var(--mantine-color-dark-6) r g b / var(--opacity));
