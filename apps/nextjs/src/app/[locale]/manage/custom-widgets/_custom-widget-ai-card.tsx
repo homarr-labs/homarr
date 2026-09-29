@@ -12,6 +12,7 @@ import { CopyAiPromptButton } from "./_copy-ai-prompt-button";
 interface AiCardProps {
   getDraft(): CustomWidgetAiDraft;
   getDiagnostics(): readonly CustomWidgetAiDiagnostic[];
+  getSampleResponse(): string | null;
   request: string;
   onRequestChange(value: string): void;
   documentationUrl: string;
@@ -73,6 +74,7 @@ export function CustomWidgetAiCard(props: AiCardProps) {
                 <CopyAiPromptButton
                   getDraft={props.getDraft}
                   getDiagnostics={props.getDiagnostics}
+                  getSampleResponse={props.getSampleResponse}
                   request={props.request}
                   documentationUrl={props.documentationUrl}
                 />

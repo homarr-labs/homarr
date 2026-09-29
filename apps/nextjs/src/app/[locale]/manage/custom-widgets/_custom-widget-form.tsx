@@ -104,6 +104,13 @@ const CustomWidgetFormView = memo(function CustomWidgetFormView(props: CustomWid
     () => analyzeCustomWidgetAiDiagnostics(documentStore.getValues()),
     [documentStore],
   );
+  const readAiSampleResponse = useCallback(() => {
+    const data = Object.fromEntries(
+      Object.entries(props.preview.data).filter(([, value]) => value !== null && value !== undefined),
+    );
+    if (Object.keys(data).length === 0) return null;
+    return JSON.stringify(data);
+  }, [props.preview.data]);
   const handleSectionSelect = useCallback(
     (section: string) => {
       setMobilePane(section === "preview" ? "preview" : "configure");
@@ -144,6 +151,7 @@ const CustomWidgetFormView = memo(function CustomWidgetFormView(props: CustomWid
               <CustomWidgetAiSection
                 getDraft={readAiDraft}
                 getDiagnostics={readAiDiagnostics}
+                getSampleResponse={readAiSampleResponse}
                 onPaste={props.onPasteAiResponse}
               />
               <CustomWidgetAdvancedManifest form={form} />

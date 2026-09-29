@@ -1023,7 +1023,7 @@
       },
       "ai": {
         "title": "Create or fix with any AI",
-        "description": "Copy the prompt, then paste the AI's JSON response. Homarr loads its JSX into the editor automatically.",
+        "description": "Preview first to include sample API responses. Copy the prompt, then paste the AI's JSON response. Homarr loads its JSX into the editor automatically.",
         "request": "What should this widget do?",
         "documentationUrl": "API documentation URL (optional)",
         "paste": "Paste",

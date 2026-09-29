@@ -12,7 +12,7 @@ import { useI18n } from "@homarr/translation/client";
 import { useOptionalHomarrAssistant } from "~/components/assistant/assistant-context";
 
 interface CopyAiPromptButtonProps {
-  rawResponse?: string | null;
+  getSampleResponse: () => string | null;
   request?: string | null;
   documentationUrl?: string | null;
   getDraft: () => CustomWidgetAiDraft;
@@ -20,7 +20,7 @@ interface CopyAiPromptButtonProps {
 }
 
 export const CopyAiPromptButton = ({
-  rawResponse,
+  getSampleResponse,
   getDraft,
   getDiagnostics,
   request,
@@ -35,7 +35,7 @@ export const CopyAiPromptButton = ({
   const handleAssistant = () => {
     const prompt = buildCustomWidgetAssistantPrompt(
       undefined,
-      rawResponse,
+      getSampleResponse(),
       getDraft(),
       request,
       documentationUrl,
@@ -48,7 +48,7 @@ export const CopyAiPromptButton = ({
   const handleCopy = async () => {
     const value = buildCustomWidgetAiPrompt(
       undefined,
-      rawResponse,
+      getSampleResponse(),
       getDraft(),
       request,
       documentationUrl,
