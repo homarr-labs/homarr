@@ -18,6 +18,7 @@ export const metadata = pageMetadata({
     "Simplify the management of your server with Homarr, a sleek, modern dashboard that puts all of your apps and services at your fingertips.",
 });
 
+/** Renders the public landing page with feature highlights, the motion reel, integrations, and user reviews. */
 export default function HomePage() {
   return (
     <main className="overflow-hidden">

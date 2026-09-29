@@ -77,6 +77,11 @@ func main() {
 	}
 }
 
+// staticCompression returns gzip middleware with a 1024-byte buffering threshold.
+// It skips requests with a nonempty Range header, recognized compressed asset
+// extensions, or a gzip quality value that cannot be parsed or is nonpositive.
+// Invalid quality values disable compression without returning a parse error;
+// errors from the delegated middleware and downstream handlers are propagated.
 func staticCompression() *hook.Handler[*core.RequestEvent] {
 	compression := apis.GzipWithConfig(apis.GzipConfig{Level: gzip.BestSpeed, MinLength: 1024})
 	compress := compression.Func
@@ -109,6 +114,8 @@ func staticCompression() *hook.Handler[*core.RequestEvent] {
 	return compression
 }
 
+// isCompressedAsset reports whether path has a recognized compressed image,
+// video, or font extension, ignoring case. It does not inspect file contents.
 func isCompressedAsset(path string) bool {
 	switch strings.ToLower(filepath.Ext(path)) {
 	case ".avif", ".gif", ".ico", ".jpeg", ".jpg", ".mp4", ".png", ".webm", ".webp", ".woff", ".woff2":
@@ -118,6 +125,13 @@ func isCompressedAsset(path string) bool {
 	}
 }
 
+// staticWebsite serves fsys through a route with a "{path...}" wildcard, applies
+// path-based cache headers, and preserves query strings in canonical redirects.
+// If indexFallback is true, missing resources first fall back to root index.html.
+// Remaining file-not-found errors outside /api/ serve 404.html with status 404
+// when readable; otherwise the original error is returned. Other serving errors
+// and errors writing the 404 response are propagated. Serving errors and custom
+// 404 responses set Cache-Control to no-store. A nil fsys panics.
 func staticWebsite(fsys fs.FS, indexFallback bool) func(*core.RequestEvent) error {
 	serve := apis.Static(fsys, indexFallback)
 	return func(event *core.RequestEvent) error {
@@ -142,6 +156,12 @@ func staticWebsite(fsys fs.FS, indexFallback bool) func(*core.RequestEvent) erro
 	}
 }
 
+// staticCacheControl returns the cache policy for a URL path without its query.
+// Workshop, marketplace, and runtime configuration paths use no-store; Next.js
+// build assets are immutable for one year. Recognized asset paths or extensions
+// use 600-second browser and 86400-second shared-cache lifetimes; other paths
+// use 60 and 300 seconds, respectively. Prefix matching is case-sensitive;
+// extension matching is case-insensitive. Response status is not considered.
 func staticCacheControl(path string) string {
 	if path == "/workshop-runtime-config.js" {
 		return "no-store"

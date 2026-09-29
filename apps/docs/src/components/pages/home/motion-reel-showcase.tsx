@@ -2,6 +2,7 @@ import homarrV2SocialImage from "@site/blog/2026/09-03-homarr-2.0/img/homarr-v2-
 
 import { SectionContainer } from "@/components/pages/home/container/section-container";
 
+/** Renders the externally hosted motion reel with a local poster and English captions, requesting no video preload. */
 export const MotionReelShowcase = () => {
   return (
     <section className="my-20 sm:my-24" aria-labelledby="motion-reel-title">
