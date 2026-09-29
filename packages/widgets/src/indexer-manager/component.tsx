@@ -7,10 +7,8 @@ import {
   Badge,
   Button,
   Card,
-  Center,
   Flex,
   Group,
-  Loader,
   ScrollArea,
   Stack,
   Text,
@@ -27,6 +25,7 @@ import { showErrorNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { iconSizes } from "@homarr/ui";
 
+import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 import { useWidgetRuntimeActions } from "../runtime-hooks";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
@@ -173,9 +172,7 @@ export default function IndexerManagerWidget({
         flex={1}
       >
         {isInitialPending ? (
-          <Center h="100%">
-            <Loader size="sm" />
-          </Center>
+          <WidgetQueryLoadingState />
         ) : allIndexers.length === 0 && !hasSourceError ? (
           <WidgetEmptyState />
         ) : (

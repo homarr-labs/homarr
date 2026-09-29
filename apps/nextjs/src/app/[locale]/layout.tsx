@@ -16,9 +16,9 @@ import { ColorSchemeScript } from "@mantine/core";
 import type { DayOfWeek } from "@mantine/dates";
 import { NextIntlClientProvider } from "next-intl";
 
-import { api } from "@homarr/api/server";
 import { env as authEnv } from "@homarr/auth/env";
 import { getRscServerSettingsAsync } from "@homarr/api/server-settings-server";
+import { getRscAssistantAvailabilityAsync } from "@homarr/api/assistant-availability-server";
 import { getRscUserSettingsAsync } from "@homarr/api/user-server";
 import { auth } from "@homarr/auth/next";
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -31,7 +31,6 @@ import { isLocaleRTL, isLocaleSupported } from "@homarr/translation";
 import { getI18n } from "@homarr/translation/server";
 import { resolveHomarrUrlConfig } from "@homarr/workshop/schema";
 
-import type { AssistantAvailability } from "~/components/assistant/assistant-gate";
 import { AssistantGate } from "~/components/assistant/assistant-gate";
 import { CrowdinLiveTranslation } from "~/components/layout/crowdin-live-translation";
 import { env } from "~/env";
@@ -106,6 +105,16 @@ export default async function Layout(props: {
 
   const sessionPromise = auth();
   const serverSettingsPromise = getRscServerSettingsAsync();
+  const assistantAvailabilityPromise = sessionPromise.then(async (session) => {
+    if (!session) return "unauthenticated" as const;
+
+    try {
+      const enabled = await getRscAssistantAvailabilityAsync();
+      return enabled ? ("enabled" as const) : ("unconfigured" as const);
+    } catch {
+      return "error" as const;
+    }
+  });
   const userPromise = sessionPromise.then((session) =>
     session
       ? getRscUserSettingsAsync(session.user.id).catch((error: unknown) => {
@@ -114,16 +123,6 @@ export default async function Layout(props: {
         })
       : null,
   );
-  const assistantAvailabilityPromise = sessionPromise.then(async (session): Promise<AssistantAvailability> => {
-    if (!session) return "unauthenticated";
-
-    try {
-      const availability = await api.assistant.getAvailability();
-      return availability.enabled ? "enabled" : "unconfigured";
-    } catch {
-      return "error";
-    }
-  });
   const [session, user, serverSettings, colorScheme, assistantAvailability] = await Promise.all([
     sessionPromise,
     userPromise,
@@ -176,7 +175,9 @@ export default async function Layout(props: {
     ),
     (innerProps) => <ModalProvider {...innerProps} />,
     (innerProps) => <SpotlightProvider {...innerProps} />,
-    (innerProps) => <AssistantGate availability={assistantAvailability} {...innerProps} />,
+    (innerProps) => (
+      <AssistantGate availability={session ? assistantAvailability : "unauthenticated"} {...innerProps} />
+    ),
   ]);
 
   return (

@@ -14,10 +14,9 @@ import { useRegisterAssistantSpotlightPlaceholder } from "./assistant-spotlight-
 /**
  * The enabled runtime is the expensive half of the assistant (assistant-ui, Lexical, Markdown,
  * Mermaid). Loading it through `next/dynamic` puts it in its own chunk that is only requested when
- * this component actually renders. Because `enabled` is resolved on the server and handed down as a
- * prop, an instance with the assistant switched off never renders it, so the chunk is never part of
- * the page payload. SSR stays on so enabled instances render children in the initial HTML without a
- * loading flash or a remount once the chunk arrives.
+ * this component actually renders. Availability is resolved alongside other root-layout reads on
+ * the server, so enabled instances render children in their final provider from the initial HTML
+ * without remounting the board after hydration.
  */
 const EnabledAssistantRoot = dynamic(() =>
   import("./assistant-provider").then((module) => ({ default: module.EnabledAssistantRoot })),
@@ -54,7 +53,7 @@ const DisabledAssistant = ({ children, description }: PropsWithChildren<{ descri
 };
 
 /**
- * Why the assistant is or is not usable, resolved on the server.
+ * Why the assistant is or is not usable, resolved alongside root-layout data.
  *
  * `unauthenticated` is kept apart from `unconfigured` because the server cannot check availability
  * for a signed-out visitor, and telling them the instance is unconfigured would be a guess.

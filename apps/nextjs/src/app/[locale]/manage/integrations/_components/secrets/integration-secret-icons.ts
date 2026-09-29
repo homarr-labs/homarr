@@ -32,4 +32,8 @@ export const integrationSecretIcons = {
   githubInstallationId: IconPlug,
   privateKey: IconKey,
   slug: IconTag,
+  wazuhIndexerUrl: IconLink,
+  wazuhIndexerUsername: IconUser,
+  wazuhIndexerPassword: IconPassword,
+  wazuhDashboardUrl: IconLink,
 } satisfies Record<IntegrationSecretKind, TablerIcon>;

@@ -8,7 +8,8 @@ import { ImmichIntegration } from "../immich-integration";
 const mocks = vi.hoisted(() => ({
   getAlbumInfo: vi.fn(),
   searchAssets: vi.fn(),
-  createImageAsync: vi.fn<(url: string) => Promise<string>>(),
+  searchRandom: vi.fn(),
+  createImagesAsync: vi.fn<(urls: string[]) => Promise<string[]>>(),
 }));
 
 vi.mock("@immich/sdk", () => ({
@@ -21,13 +22,13 @@ vi.mock("@immich/sdk", () => ({
   getServerStatistics: vi.fn(),
   init: vi.fn(),
   searchAssets: mocks.searchAssets,
-  searchRandom: vi.fn(),
+  searchRandom: mocks.searchRandom,
   searchUsers: vi.fn(),
 }));
 
 vi.mock("@homarr/image-proxy", () => ({
   ImageProxy: class {
-    createImageAsync = mocks.createImageAsync;
+    createImagesAsync = mocks.createImagesAsync;
   },
 }));
 
@@ -53,7 +54,8 @@ describe("ImmichIntegration.getAlbumAsync", () => {
   beforeEach(() => {
     mocks.getAlbumInfo.mockReset();
     mocks.searchAssets.mockReset();
-    mocks.createImageAsync.mockClear();
+    mocks.searchRandom.mockReset();
+    mocks.createImagesAsync.mockReset();
   });
 
   test("keeps every image across paginated album results", async () => {
@@ -71,16 +73,55 @@ describe("ImmichIntegration.getAlbumAsync", () => {
           nextPage: null,
         },
       });
-    mocks.createImageAsync.mockImplementation(async (url) => `proxied:${url}`);
+    mocks.createImagesAsync.mockImplementation(async (urls) => urls.map((url) => `proxied:${url}`));
 
     const album = await integration.getAlbumAsync("album-id");
 
     expect(mocks.searchAssets).toHaveBeenCalledTimes(2);
     expect(mocks.searchAssets.mock.calls.map(([input]) => input)).toStrictEqual([
-      { metadataSearchDto: { albumIds: ["album-id"], type: "IMAGE" } },
-      { metadataSearchDto: { albumIds: ["album-id"], type: "IMAGE", page: 2 } },
+      { metadataSearchDto: { albumIds: ["album-id"], type: "IMAGE", size: 1000, withExif: false, page: 1 } },
+      { metadataSearchDto: { albumIds: ["album-id"], type: "IMAGE", size: 1000, withExif: false, page: 2 } },
     ]);
     expect(album.assets.map(({ id }) => id)).toStrictEqual(Array.from({ length: 12 }, (_, index) => `asset-${index}`));
-    expect(mocks.createImageAsync).toHaveBeenCalledTimes(12);
+    expect(mocks.createImagesAsync).toHaveBeenCalledTimes(1);
+    expect(mocks.createImagesAsync.mock.calls[0]?.[0]).toHaveLength(12);
+  });
+
+  test("selects a single random photo from the requested album for its preview", async () => {
+    mocks.searchRandom.mockResolvedValue([createAsset(7)]);
+    mocks.createImagesAsync.mockImplementation(async (urls) => urls.map((url) => `proxied:${url}`));
+
+    const preview = await integration.getAlbumPreviewAsync("album-id", true);
+
+    expect(mocks.searchRandom.mock.calls[0]?.[0]).toStrictEqual({
+      randomSearchDto: { albumIds: ["album-id"], size: 1, type: "IMAGE" },
+    });
+    expect(mocks.searchAssets).not.toHaveBeenCalled();
+    expect(preview.assets.map(({ id }) => id)).toStrictEqual(["asset-7"]);
+    expect(mocks.createImagesAsync.mock.calls[0]?.[0]).toHaveLength(1);
+  });
+
+  test("falls back to the album's first metadata photo when random search is unavailable", async () => {
+    mocks.searchRandom.mockRejectedValue(new Error("Random search unavailable"));
+    mocks.searchAssets.mockResolvedValue({ assets: { items: [createAsset(3)], nextPage: null } });
+    mocks.createImagesAsync.mockImplementation(async (urls) => urls.map((url) => `proxied:${url}`));
+
+    const preview = await integration.getAlbumPreviewAsync("album-id", true);
+
+    expect(mocks.searchAssets.mock.calls[0]?.[0]).toStrictEqual({
+      metadataSearchDto: { albumIds: ["album-id"], type: "IMAGE", size: 1, withExif: false },
+    });
+    expect(preview.assets.map(({ id }) => id)).toStrictEqual(["asset-3"]);
+  });
+
+  test("keeps the first album photo when randomization is off", async () => {
+    mocks.searchAssets.mockResolvedValue({ assets: { items: [createAsset(2)], nextPage: "2" } });
+    mocks.createImagesAsync.mockImplementation(async (urls) => urls.map((url) => `proxied:${url}`));
+
+    const preview = await integration.getAlbumPreviewAsync("album-id", false);
+
+    expect(mocks.searchRandom).not.toHaveBeenCalled();
+    expect(preview.assets.map(({ id }) => id)).toStrictEqual(["asset-2"]);
+    expect(mocks.searchAssets).toHaveBeenCalledTimes(1);
   });
 });

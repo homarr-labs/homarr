@@ -26,4 +26,5 @@ export * from "./paperless-ngx/paperless-ngx-types";
 export * from "./umami/umami-types";
 export * from "./gluetun/gluetun-types";
 export * from "./beszel/beszel-types";
+export * from "./wazuh/wazuh-types";
 export * from "./traefik/traefik-types";

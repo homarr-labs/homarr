@@ -29,6 +29,7 @@ import {
 } from "@homarr/definitions";
 
 import type { createTRPCContext } from "../trpc";
+import { getAssistantAvailabilityAsync } from "../assistant-availability-server";
 import { fetchOpenRouterGenerationTelemetryAsync } from "../assistant-generation-telemetry";
 import { env } from "../env";
 import { orderMessagesByParent } from "../assistant-message-order";
@@ -553,16 +554,7 @@ const addFeedbackToMessageContent = (serializedContent: string, type: "positive"
 
 export const assistantRouter = createTRPCRouter({
   getAvailability: protectedProcedure.query(async ({ ctx }) => {
-    if (isDemoMode) {
-      return { enabled: true };
-    }
-    const configuration = await getConfigurationAsync(ctx.db);
-    const requiresApiKey = configuration ? assistantProviderRequiresApiKey(configuration.provider) : false;
-    return {
-      enabled: Boolean(
-        configuration?.enabled && configuration.modelId && (!requiresApiKey || configuration.encryptedApiKey),
-      ),
-    };
+    return { enabled: await getAssistantAvailabilityAsync(ctx.db) };
   }),
 
   getContextEntities: protectedProcedure.query(async ({ ctx }) => {

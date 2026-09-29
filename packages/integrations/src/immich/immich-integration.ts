@@ -6,12 +6,11 @@ import {
   getAllAlbums,
   getMyUser,
   getServerStatistics,
-  init,
   searchAssets,
   searchRandom,
   searchUsers,
 } from "@immich/sdk";
-import type { AssetResponseDto, MetadataSearchDto } from "@immich/sdk";
+import type { AlbumResponseDto, AssetResponseDto, MetadataSearchDto } from "@immich/sdk";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -59,7 +58,6 @@ export class ImmichIntegration extends Integration {
   }
 
   public async getServerStatsAsync(): Promise<ImmichServerStats> {
-    this.initClient();
     const [statistics, users] = await Promise.all([
       getServerStatistics(this.getRequestOptions()),
       searchUsers(this.getRequestOptions()),
@@ -73,7 +71,6 @@ export class ImmichIntegration extends Integration {
   }
 
   public async getAlbumAsync(albumId?: string): Promise<ImmichAlbum> {
-    this.initClient();
     const requestOptions = this.getRequestOptions();
 
     if (!albumId) {
@@ -95,15 +92,37 @@ export class ImmichIntegration extends Integration {
       };
     }
 
-    const [album, albumAssets] = await Promise.all([
-      getAlbumInfo({ id: albumId }, requestOptions),
-      this.searchAlbumAssetsAsync(albumId),
-    ]);
+    const albumPromise = getAlbumInfo({ id: albumId }, requestOptions);
+    const [album, albumAssets] = await Promise.all([albumPromise, this.searchAlbumAssetsAsync(albumId, albumPromise)]);
     return {
       albumName: album.albumName,
       assets: await this.createAssetsAsync(albumAssets),
       id: album.id,
     };
+  }
+
+  public async getAlbumPreviewAsync(albumId: string, randomizePhotos: boolean): Promise<ImmichAlbum> {
+    const requestOptions = this.getRequestOptions();
+    let assets: AssetResponseDto[] = [];
+    if (randomizePhotos) {
+      try {
+        assets = await searchRandom(
+          { randomSearchDto: { albumIds: [albumId], size: 1, type: AssetTypeEnum.Image } },
+          requestOptions,
+        );
+      } catch {
+        // Older Immich instances may reject album-scoped random search.
+        // The first metadata page is still a valid preview for this album.
+      }
+    }
+    if (assets.length === 0) {
+      const result = await searchAssets(
+        { metadataSearchDto: { albumIds: [albumId], type: AssetTypeEnum.Image, size: 1, withExif: false } },
+        requestOptions,
+      );
+      assets = result.assets.items;
+    }
+    return { id: albumId, albumName: "", assets: await this.createAssetsAsync(assets.slice(0, 1)) };
   }
 
   public async getAlbumsAsync(): Promise<
@@ -113,76 +132,93 @@ export class ImmichIntegration extends Integration {
       assetCount: number;
     }[]
   > {
-    this.initClient();
     const albums = await getAllAlbums({}, this.getRequestOptions());
     return albums.map((album) => ({ id: album.id, albumName: album.albumName, assetCount: album.assetCount }));
   }
 
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
-    this.initClient();
     const user = await getMyUser(this.getRequestOptions(input.fetchAsync));
     logger.debug(`Logged in as ${user.name} (${user.id})`);
     return { success: true };
   }
 
-  private async searchAlbumAssetsAsync(albumId: string): Promise<AssetResponseDto[]> {
+  private async searchAlbumAssetsAsync(
+    albumId: string,
+    albumPromise: Promise<AlbumResponseDto>,
+  ): Promise<AssetResponseDto[]> {
     const requestOptions = this.getRequestOptions();
+    const pageSize = 1000;
+    const metadataSearchDto: MetadataSearchDto = {
+      albumIds: [albumId],
+      type: AssetTypeEnum.Image,
+      size: pageSize,
+      withExif: false,
+    };
+    const pages = new Map<number, ReturnType<typeof searchAssets>>();
+    const getPage = (page: number) => {
+      const existing = pages.get(page);
+      if (existing) return existing;
+      const pending = searchAssets({ metadataSearchDto: { ...metadataSearchDto, page } }, requestOptions);
+      pages.set(page, pending);
+      // A speculative page can fail before pagination needs to await it.
+      void pending.catch(() => undefined);
+      return pending;
+    };
+    getPage(1);
+    // The count includes videos, so it is only a hint. Start at most four pages
+    // together, then follow actual nextPage values to preserve the full album.
+    void albumPromise
+      .then(
+        (album) => {
+          const initialPages = Math.min(4, Math.ceil(album.assetCount / pageSize));
+          for (let page = 2; page <= initialPages; page++) getPage(page);
+        },
+        () => undefined,
+      )
+      .catch(() => undefined);
+
     const assets: AssetResponseDto[] = [];
-    let nextPage: string | null = null;
-
+    let page: number | null = 1;
     do {
-      const metadataSearchDto: MetadataSearchDto = {
-        albumIds: [albumId],
-        type: AssetTypeEnum.Image,
-      };
-      if (nextPage !== null) metadataSearchDto.page = Number(nextPage);
-
-      const result = await searchAssets({ metadataSearchDto }, requestOptions);
+      const result = await getPage(page);
       assets.push(...result.assets.items);
-      nextPage = result.assets.nextPage;
-    } while (nextPage !== null);
-
+      if (result.assets.nextPage === null) break;
+      const nextPage = Number(result.assets.nextPage);
+      if (!Number.isInteger(nextPage) || nextPage <= page) throw new Error("Immich returned invalid album pagination");
+      page = nextPage;
+    } while (page !== null);
     return assets;
   }
 
   private async createAssetsAsync(assets: AssetResponseDto[]): Promise<ImmichAsset[]> {
     const imageProxy = new ImageProxy();
-    return await Promise.all(
-      assets.map(async (asset) => {
-        const publicLink = await imageProxy.createImageAsync(
-          // This is the URL generated by the SDK's viewAsset call. Preview images are
-          // browser-compatible while avoiding the large original asset download.
-          this.url(`/api/assets/${asset.id}/thumbnail`, { size: AssetMediaSize.Preview }).toString(),
-          {
-            "x-api-key": this.getSecretValue("apiKey"),
-          },
-        );
-        return {
-          id: asset.id,
-          type: asset.type,
-          thumbhash: asset.thumbhash,
-          fileCreatedAt: asset.fileCreatedAt,
-          fileModifiedAt: asset.fileModifiedAt,
-          updatedAt: asset.updatedAt,
-          publicLink,
-        };
-      }),
+    const publicLinks = await imageProxy.createImagesAsync(
+      assets.map((asset) => this.url(`/api/assets/${asset.id}/thumbnail`, { size: AssetMediaSize.Preview }).toString()),
+      { "x-api-key": this.getSecretValue("apiKey") },
     );
+    return assets.map((asset, index) => {
+      const publicLink = publicLinks[index];
+      if (!publicLink) throw new Error("Image proxy registration returned no link for an asset");
+      return {
+        id: asset.id,
+        type: asset.type,
+        thumbhash: asset.thumbhash,
+        fileCreatedAt: asset.fileCreatedAt,
+        fileModifiedAt: asset.fileModifiedAt,
+        updatedAt: asset.updatedAt,
+        publicLink,
+      };
+    });
   }
 
   private getRequestOptions(fetchAsync = fetchWithTrustedCertificatesAsync) {
     return {
+      // Every parallel integration call owns its endpoint and credentials.
+      // SDK-wide defaults can be overwritten by another Immich instance.
+      baseUrl: this.url("/api").toString(),
+      headers: { "x-api-key": this.getSecretValue("apiKey") },
       // Undici and node types are not the same
       fetch: fetchAsync as unknown as typeof fetch,
     };
-  }
-
-  /**
-   * Sets the credentials and prepares the client for calls.
-   * Must be called before any other functions.
-   * @private
-   */
-  private initClient() {
-    init({ baseUrl: this.url("/api").toString(), apiKey: this.getSecretValue("apiKey") });
   }
 }

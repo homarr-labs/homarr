@@ -1,4 +1,5 @@
-import { createHmac, hkdfSync } from "node:crypto";
+import { createHmac, hkdfSync, randomUUID } from "node:crypto";
+import { setImmediate } from "node:timers/promises";
 
 import { createId, formatBytes } from "@homarr/common";
 import { env } from "@homarr/common/env";
@@ -51,6 +52,35 @@ export class ImageProxy {
     await this.storeImageAsync(id, url, headers);
 
     return this.createImageUrl(id);
+  }
+
+  public async createImagesAsync(urls: string[], headers?: Record<string, string>): Promise<string[]> {
+    // Album assets share credentials. Hash/encrypt that immutable value once,
+    // and bound each registration batch so it cannot monopolize rendering.
+    const headerValue = JSON.stringify(headers ?? null);
+    const headerHash = this.hashSecret(headerValue);
+    const encryptedHeaders = encryptSecret(headerValue);
+    const links: string[] = [];
+    for (let index = 0; index < urls.length; index += 128) {
+      const batch = await Promise.all(
+        urls.slice(index, index + 128).map(async (url) => {
+          const urlHash = this.hashSecret(url);
+          const hashChannel = createHmacChannel(`${urlHash}.${headerHash}`);
+          const existingId = await hashChannel.getAsync();
+          if (existingId) return this.createImageUrl(existingId);
+          const id = randomUUID();
+          await createUrlByIdChannel(id).setAsync(
+            { url: encryptSecret(url), headers: encryptedHeaders },
+            { ttlSeconds: IMAGE_PROXY_REDIS_TTL_SECONDS },
+          );
+          await hashChannel.setAsync(id, { ttlSeconds: IMAGE_PROXY_REDIS_TTL_SECONDS });
+          return this.createImageUrl(id);
+        }),
+      );
+      links.push(...batch);
+      if (index + 128 < urls.length) await setImmediate();
+    }
+    return links;
   }
 
   public async forwardImageAsync(id: string): Promise<ForwardImageResult> {

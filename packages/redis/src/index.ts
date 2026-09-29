@@ -14,6 +14,7 @@ import { createRedisConnection } from "./lib/connection";
 
 export {
   handshakeAsync,
+  prepareIntegrationResponseCacheAsync,
   createSubPubChannel,
   createGetSetChannel,
   getIntegrationSessionStoreKey,

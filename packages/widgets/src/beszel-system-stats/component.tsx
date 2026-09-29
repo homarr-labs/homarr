@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useMemo, useRef } from "react";
-import { Box, Button, Center, Group, Loader, Menu, ScrollArea, Select, Stack, Text } from "@mantine/core";
+import { Box, Button, Center, Group, Menu, ScrollArea, Select, Stack, Text } from "@mantine/core";
 import { IconQuestionMark, IconServer, IconServerOff } from "@tabler/icons-react";
 import { getQueryKey } from "@trpc/react-query";
 
@@ -15,6 +15,7 @@ import { iconSizes, zoomCompensatedSize } from "@homarr/ui";
 
 import classes from "./component.module.css";
 
+import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 import { useWidgetRuntimeQueries } from "../runtime-hooks";
 import type { BeszelTimePeriod } from "../beszel/_shared/chart";
@@ -144,12 +145,7 @@ export default function BeszelSystemStatsWidget({
     [boardId, hasChangeAccess, itemId, options.timePeriod, saveItemOptions, setOptions],
   );
 
-  if (systemsPending)
-    return (
-      <Center h="100%">
-        <Loader size="sm" />
-      </Center>
-    );
+  if (systemsPending) return <WidgetQueryLoadingState />;
 
   if (systems.length === 0) {
     return (

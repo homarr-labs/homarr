@@ -2,7 +2,6 @@ import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { Stack } from "@mantine/core";
 
-import { openApiDocument } from "@homarr/api/open-api";
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { extractBaseUrlFromHeaders } from "@homarr/common";
@@ -11,7 +10,7 @@ import { getI18n } from "@homarr/translation/server";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { extractMcpTools } from "~/app/api/mcp/_extract-tools";
 import { ApiPageTabs } from "./components/api-page-tabs";
-import { ScalarApiReference } from "./components/scalar-api-reference";
+import { ScalarApiReferenceFrame } from "./components/scalar-api-reference-frame";
 
 import type { McpToolGroup } from "./components/api-page-tabs";
 
@@ -60,7 +59,6 @@ export default async function ApiPage() {
     getMcpToolGroups(),
   ]);
   const baseUrl = extractBaseUrlFromHeaders(requestHeaders);
-  const document = openApiDocument(baseUrl);
 
   return (
     <>
@@ -70,7 +68,7 @@ export default async function ApiPage() {
           documentationLabel={t("documentation.label")}
           apiKeyLabel={t("apiKey.label")}
           mcpLabel={t("mcp.label")}
-          documentationPanel={<ScalarApiReference document={document} />}
+          documentationPanel={<ScalarApiReferenceFrame />}
           apiKeys={apiKeys}
           baseUrl={baseUrl}
           toolGroups={toolGroups}

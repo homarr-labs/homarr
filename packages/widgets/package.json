@@ -24,6 +24,7 @@
     "./definition": "./src/definition.ts",
     "./errors": "./src/errors/component.tsx",
     "./manifest": "./src/manifest.ts",
+    "./initial-widget-resources": "./src/initial-widget-resources.ts",
     "./options": "./src/options.ts",
     "./option-translation": "./src/option-translation.ts",
     "./errors/classes": "./src/errors/index.ts",
@@ -31,7 +32,8 @@
     "./modals": "./src/modals/index.ts",
     "./prefetch": "./src/prefetch.ts",
     "./refetch-intervals": "./src/refetch-intervals.ts",
-    "./widget-card-shell": "./src/widget-card-shell.tsx"
+    "./widget-card-shell": "./src/widget-card-shell.tsx",
+    "./server-prefetch": "./src/server-prefetch.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",

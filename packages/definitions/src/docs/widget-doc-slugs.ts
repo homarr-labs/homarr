@@ -62,4 +62,12 @@ export const widgetDocSlugs = {
   assistant: "assistant",
   wud: "whats-up-docker",
   llamacpp: "llama-cpp",
+  wazuhAgents: null,
+  wazuhAlerts: null,
+  wazuhSummary: null,
+  wazuhTimeline: null,
+  wazuhTopList: null,
+  wazuhVulnerabilities: null,
+  wazuhFim: null,
+  wazuhAuthFailures: null,
 } satisfies Record<WidgetKind, string | null>;

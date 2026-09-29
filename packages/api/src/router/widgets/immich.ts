@@ -3,6 +3,7 @@ import { z } from "zod/v4";
 import { mockWidgetData } from "@homarr/integrations";
 import {
   immichAlbumRequestHandler,
+  immichAlbumPreviewRequestHandler,
   immichAlbumsRequestHandler,
   immichStatsRequestHandler,
 } from "@homarr/request-handler/immich";
@@ -34,6 +35,21 @@ export const immichRouter = createTRPCRouter({
         {
           albumId: input.albumId,
         },
+      );
+      const data = await innerHandler.getDataAsync();
+      return data.data;
+    }),
+
+  getAlbumPreview: publicProcedure
+    .concat(createOneWidgetIntegrationMiddleware("query", "immich-albumCarousel"))
+    .input(z.object({ albumId: z.string().min(1), randomizePhotos: z.boolean() }))
+    .query(async ({ ctx, input }) => {
+      if (ctx.integration.kind === "mock") {
+        return { ...mockWidgetData.immichAlbum, assets: mockWidgetData.immichAlbum.assets.slice(0, 1) };
+      }
+      const innerHandler = immichAlbumPreviewRequestHandler.handler(
+        { ...ctx.integration, kind: "immich" },
+        { albumId: input.albumId, randomizePhotos: input.randomizePhotos },
       );
       const data = await innerHandler.getDataAsync();
       return data.data;

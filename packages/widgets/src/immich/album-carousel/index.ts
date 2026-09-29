@@ -53,15 +53,18 @@ const createOptions = () =>
 export const { definition, componentLoader } = createWidgetDefinition("immich-albumCarousel", {
   icon: IconPhoto,
   supportsAdvancedFocus: true,
-  queryKey: [["widget", "immich", "getAlbum"]],
-  queryMatcher: ({ input }, scope) =>
-    widgetQueryInputMatches(input, {
-      integrationId: scope.integrationIds[0] ?? "",
-      albumId:
-        typeof scope.options.albumId === "string" && scope.options.albumId !== ALL_PHOTOS_ALBUM_ID
-          ? scope.options.albumId
-          : undefined,
-    }),
+  queryKeys: [[["widget", "immich", "getAlbum"]], [["widget", "immich", "getAlbumPreview"]]],
+  queryMatcher: ({ path, input }, scope) => {
+    let albumId: string | undefined;
+    if (typeof scope.options.albumId === "string" && scope.options.albumId !== ALL_PHOTOS_ALBUM_ID)
+      albumId = scope.options.albumId;
+    const expected = { integrationId: scope.integrationIds[0] ?? "", albumId };
+    if (path.at(-1) === "getAlbumPreview") {
+      if (!albumId) return false;
+      return widgetQueryInputMatches(input, { ...expected, randomizePhotos: scope.options.randomizePhotos === true });
+    }
+    return widgetQueryInputMatches(input, expected);
+  },
   refetchInterval: null,
   ...getWidgetIntegrationConfig("immich-albumCarousel"),
   contextActions: ({ widgetRuntimeRef }) => {

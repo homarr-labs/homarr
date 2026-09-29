@@ -1,3 +1,4 @@
+import { cache } from "react";
 import type { JSX, PropsWithChildren } from "react";
 import { cookies, headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
@@ -130,7 +131,7 @@ export const createBoardLayout = <TParams extends Params>({
   return Layout;
 };
 
-const getInitialViewportWidthAsync = async () => {
+export const getInitialViewportWidthAsync = cache(async () => {
   const cookieValue = (await cookies()).get(boardViewportWidthCookieName)?.value;
   const cookieWidth = Number(cookieValue);
   if (Number.isInteger(cookieWidth) && cookieWidth >= 200 && cookieWidth <= 10_000) {
@@ -147,4 +148,4 @@ const getInitialViewportWidthAsync = async () => {
   if (/iPad|Tablet|PlayBook|Silk/i.test(userAgent)) return 1024;
   if (/Mobi|Android|iPhone|iPod|IEMobile|Opera Mini/i.test(userAgent)) return 390;
   return 1440;
-};
+});

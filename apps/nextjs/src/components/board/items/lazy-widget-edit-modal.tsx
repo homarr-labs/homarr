@@ -9,7 +9,7 @@ import type { FallbackProps } from "react-error-boundary";
 import { clientApi } from "@homarr/api/client";
 import type { WidgetKind } from "@homarr/definitions";
 import { widgetDefaultSizes } from "@homarr/definitions";
-import { createModal, useModalAction } from "@homarr/modals";
+import { createModal, modalSizeForm, useModalAction } from "@homarr/modals";
 import { WidgetError } from "@homarr/widgets/errors";
 import type * as WidgetModalsModule from "@homarr/widgets/modals";
 import type { WidgetEditModalProps, WidgetEditModalSize } from "@homarr/widgets/modals";
@@ -179,7 +179,7 @@ const LazyWidgetEditModalContent = (props: LazyWidgetEditModalContentProps) => {
   );
 };
 
-export const LazyWidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>((props) => (
+const WidgetEditModalLoadBoundary = ({ children }: PropsWithChildren) => (
   <ErrorBoundary
     fallbackRender={({ error, resetErrorBoundary }) => (
       <Center py="xl">
@@ -200,9 +200,15 @@ export const LazyWidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>
         </Center>
       }
     >
-      <LazyWidgetEditModalContent {...props} />
+      {children}
     </Suspense>
   </ErrorBoundary>
+);
+
+export const LazyWidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>((props) => (
+  <WidgetEditModalLoadBoundary>
+    <LazyWidgetEditModalContent {...props} />
+  </WidgetEditModalLoadBoundary>
 )).withOptions({
   keepMounted: true,
   defaultTitle(t) {
@@ -213,5 +219,26 @@ export const LazyWidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>
     transition: "pop",
     duration: 180,
   },
+  closeOnClickOutside: false,
+});
+
+const LazyWidgetConfigurationContent = (props: LazyWidgetEditModalContentProps) => {
+  const { WidgetEditModal } = use(loadWidgetEditModal());
+  const Component = WidgetEditModal.component;
+  return <Component {...props} />;
+};
+
+// Assistant configuration keeps its existing form and callbacks, without
+// loading the editor or adding board preview queries on a dashboard visit.
+export const LazyWidgetConfigurationModal = createModal<WidgetEditModalProps<WidgetKind>>((props) => (
+  <WidgetEditModalLoadBoundary>
+    <LazyWidgetConfigurationContent {...props} />
+  </WidgetEditModalLoadBoundary>
+)).withOptions({
+  keepMounted: true,
+  defaultTitle(t) {
+    return t("item.edit.title");
+  },
+  size: modalSizeForm,
   closeOnClickOutside: false,
 });

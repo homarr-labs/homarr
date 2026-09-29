@@ -38,6 +38,7 @@ import type { PreviewState } from "./_custom-widget-preview-panel";
 import { createCustomWidgetRenameHandlers } from "./_custom-widget-rename-handlers";
 import type { CustomWidgetSaveIssue } from "./_custom-widget-save-errors";
 import { CustomWidgetSaveIssuesAlert } from "./_custom-widget-save-issues-alert";
+import { areCustomWidgetValuesEqual } from "./_custom-widget-value-equality";
 import { useCustomWidgetFormActions } from "./_use-custom-widget-form-actions";
 import { analyzeCustomWidgetAiDiagnostics, CustomWidgetFormAnalysisProvider } from "./_use-custom-widget-form-analysis";
 import classes from "./_custom-widget-form.module.css";
@@ -70,7 +71,7 @@ interface CustomWidgetFormViewProps {
   previewPending: boolean;
   onSubmit: FormEventHandler<HTMLFormElement>;
   onPreview(): void;
-  onPasteAiResponse(): void;
+  onPasteAiResponse(response: string): string | null;
 }
 
 function getAiDraft(values: CustomWidgetFormValues): CustomWidgetAiDraft {
@@ -99,11 +100,23 @@ const CustomWidgetFormView = memo(function CustomWidgetFormView(props: CustomWid
       }),
     [form, w],
   );
-  const readAiDraft = useCallback(() => getAiDraft(documentStore.getValues()), [documentStore]);
+  const readAiDraft = useCallback(() => {
+    const draft = getAiDraft(documentStore.getValues());
+    if (props.mode === "create" && areCustomWidgetValuesEqual(draft, getAiDraft(DEFAULT_CUSTOM_WIDGET_FORM_VALUES)))
+      return null;
+    return draft;
+  }, [documentStore, props.mode]);
   const readAiDiagnostics = useCallback(
     () => analyzeCustomWidgetAiDiagnostics(documentStore.getValues()),
     [documentStore],
   );
+  const readAiSampleResponse = useCallback(() => {
+    const data = Object.fromEntries(
+      Object.entries(props.preview.data).filter(([, value]) => value !== null && value !== undefined),
+    );
+    if (Object.keys(data).length === 0) return null;
+    return JSON.stringify(data);
+  }, [props.preview.data]);
   const handleSectionSelect = useCallback(
     (section: string) => {
       setMobilePane(section === "preview" ? "preview" : "configure");
@@ -144,6 +157,7 @@ const CustomWidgetFormView = memo(function CustomWidgetFormView(props: CustomWid
               <CustomWidgetAiSection
                 getDraft={readAiDraft}
                 getDiagnostics={readAiDiagnostics}
+                getSampleResponse={readAiSampleResponse}
                 onPaste={props.onPasteAiResponse}
               />
               <CustomWidgetAdvancedManifest form={form} />
@@ -223,7 +237,7 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
   }, [actions]);
   const handleSubmit = useCallback<FormEventHandler<HTMLFormElement>>((event) => latestActions.current.save(event), []);
   const handlePreview = useCallback(() => void latestActions.current.runPreview(), []);
-  const handlePasteAiResponse = useCallback(() => void latestActions.current.pasteAiResponse(), []);
+  const handlePasteAiResponse = useCallback((response: string) => latestActions.current.pasteAiResponse(response), []);
 
   return (
     <CustomWidgetFormView

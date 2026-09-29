@@ -1,0 +1,20 @@
+{
+  "headers": [
+    {
+      "source": "**",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=60, s-maxage=300" }]
+    },
+    {
+      "source": "{img,media,videos,data,custom-widgets}/**",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=600, s-maxage=86400" }]
+    },
+    {
+      "source": "_next/static/**",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+    },
+    {
+      "source": "{404.html,workshop-runtime-config.js,workshop,workshop/**,marketplace,marketplace/**}",
+      "headers": [{ "key": "Cache-Control", "value": "no-store" }]
+    }
+  ]
+}

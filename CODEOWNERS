@@ -222,6 +222,15 @@ packages/integrations/src/traefik @Nerdy-Technician
 packages/request-handler/src/traefik.ts @Nerdy-Technician
 packages/widgets/src/traefik @Nerdy-Technician
 
+# Wazuh - by @Nerdy-Technician
+apps/docs/docs/integrations/wazuh @Nerdy-Technician
+apps/docs/docs/widgets/wazuh @Nerdy-Technician
+packages/api/src/router/widgets/wazuh.ts @Nerdy-Technician
+packages/integrations/src/wazuh @Nerdy-Technician
+packages/request-handler/src/wazuh.ts @Nerdy-Technician
+packages/widgets/src/wazuh @Nerdy-Technician
+packages/widgets/src/wazuh-* @Nerdy-Technician
+
 # Exempt Renovate-managed files (no owners)
 package.json
 **/package.json

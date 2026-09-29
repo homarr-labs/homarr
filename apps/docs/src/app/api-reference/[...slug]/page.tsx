@@ -18,7 +18,9 @@ export default async function ApiPage({ params }: PageProps) {
   return (
     <DocsPage toc={page.data.toc} full>
       <DocsTitle>{page.data.title}</DocsTitle>
-      <OpenAPIPage {...page.data.getOpenAPIPageProps()} />
+      <div className="homarr-api-reference">
+        <OpenAPIPage {...page.data.getOpenAPIPageProps()} />
+      </div>
     </DocsPage>
   );
 }

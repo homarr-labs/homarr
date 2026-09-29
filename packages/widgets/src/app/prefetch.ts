@@ -1,28 +1,39 @@
-import { createLogger } from "@homarr/core/infrastructure/logs";
 import { db, inArray } from "@homarr/db";
 import { apps } from "@homarr/db/schema";
 
-import type { Prefetch } from "../definition";
+import type { QueryClient } from "@tanstack/react-query";
+
+import { createLogger } from "@homarr/core/infrastructure/logs";
+
 import { createTrpcQueryKey } from "../trpc-query-key";
 
 const logger = createLogger({ module: "appWidgetPrefetch" });
 
-const prefetchAllAsync: Prefetch = async (queryClient, items) => {
+const prefetchAll = (queryClient: QueryClient, items: { options: Record<string, unknown> }[]) => {
   const appIds: string[] = [];
   for (const item of items) {
-    if (typeof item.options.appId === "string") appIds.push(item.options.appId);
+    if (typeof item.options.appId === "string" && item.options.appId.length > 0) appIds.push(item.options.appId);
   }
   const distinctAppIds = [...new Set(appIds)];
+  if (distinctAppIds.length === 0) return;
 
-  const dbApps = await db.query.apps.findMany({
-    where: inArray(apps.id, distinctAppIds),
-  });
+  const dbAppsPromise = Promise.resolve(db.query.apps.findMany({ where: inArray(apps.id, distinctAppIds) })).catch(
+    (error: unknown) => {
+      logger.error(new Error("Failed to prefetch apps for app widgets", { cause: error }));
+      throw error;
+    },
+  );
 
-  for (const app of dbApps) {
-    queryClient.setQueryData(createTrpcQueryKey("app.byId", { id: app.id }), app);
+  for (const id of distinctAppIds) {
+    void queryClient.prefetchQuery({
+      queryKey: createTrpcQueryKey("app.byId", { id }),
+      queryFn: async () => {
+        const app = (await dbAppsPromise).find((candidate) => candidate.id === id);
+        if (!app) throw new Error("App not found");
+        return app;
+      },
+    });
   }
-
-  logger.info("Successfully prefetched apps for app widget", { count: dbApps.length });
 };
 
-export default prefetchAllAsync;
+export default prefetchAll;

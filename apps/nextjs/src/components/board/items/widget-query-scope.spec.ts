@@ -103,6 +103,26 @@ describe("matchesWidgetItemQuery", () => {
         carouselScope,
       ),
     ).toBe(false);
+    const selectedAlbumScope = createScope({
+      integrationIds: ["immich-1"],
+      options: { albumId: "album-1", randomizePhotos: true },
+    });
+    expect(
+      matches(
+        "immich-albumCarousel",
+        ["widget", "immich", "getAlbumPreview"],
+        { integrationId: "immich-1", albumId: "album-1", randomizePhotos: true },
+        selectedAlbumScope,
+      ),
+    ).toBe(true);
+    expect(
+      matches(
+        "immich-albumCarousel",
+        ["widget", "immich", "getAlbumPreview"],
+        { integrationId: "immich-1", albumId: "album-1", randomizePhotos: false },
+        selectedAlbumScope,
+      ),
+    ).toBe(false);
     expect(
       matches(
         "immich-albumCarousel",
