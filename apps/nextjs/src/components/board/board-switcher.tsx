@@ -2,6 +2,7 @@
 
 import type { KeyboardEvent, ReactNode, RefObject } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Badge,
   Card,
@@ -51,6 +52,7 @@ export const BoardSwitcher = ({ children }: BoardSwitcherProps) => {
   const t = useI18n("board.action.switcher");
   const tBoard = useI18n("board");
   const manageBoardsT = useI18n("management.page.board");
+  const router = useRouter();
   const currentBoard = useOptionalBoard();
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -59,6 +61,9 @@ export const BoardSwitcher = ({ children }: BoardSwitcherProps) => {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const optionRefs = useRef<Array<HTMLAnchorElement | null>>([]);
   const utils = clientApi.useUtils();
+  const { data: navigationBoards = [] } = clientApi.board.getAllBoards.useQuery(undefined, {
+    enabled: currentBoard !== null,
+  });
   const {
     data: boards = [],
     isPending,
@@ -106,6 +111,32 @@ export const BoardSwitcher = ({ children }: BoardSwitcherProps) => {
   useRegisterSpotlightContextActions("board-switcher", [spotlightAction], [spotlightAction]);
 
   useHotkeys([[boardSwitcherHotkey, openSwitcher, { preventDefault: true }]]);
+
+  const navigationHotkeys = useMemo(() => {
+    const entries: [string, () => void][] = [];
+    if (!currentBoard) return entries;
+
+    const currentIndex = navigationBoards.findIndex((board) => board.id === currentBoard.id);
+    const navigateToBoard = (index: number) => {
+      const target = navigationBoards[index];
+      if (target) router.push(`/boards/${target.name}`);
+    };
+
+    if (navigationBoards.length > 1 && currentIndex !== -1) {
+      entries.push(["mod+shift+ArrowRight", () => navigateToBoard((currentIndex + 1) % navigationBoards.length)]);
+      entries.push([
+        "mod+shift+ArrowLeft",
+        () => navigateToBoard((currentIndex - 1 + navigationBoards.length) % navigationBoards.length),
+      ]);
+    }
+
+    for (let index = 0; index < Math.min(navigationBoards.length, 9); index++) {
+      entries.push([`mod+shift+${index + 1}`, () => navigateToBoard(index)]);
+    }
+
+    return entries;
+  }, [currentBoard, navigationBoards, router]);
+  useHotkeys(navigationHotkeys);
 
   useEffect(() => {
     if (!isOpen || filteredBoards.length === 0) return;
