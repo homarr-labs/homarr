@@ -31,6 +31,8 @@ export function decryptSecretWithKey(value: `${string}.${string}`, key: Buffer) 
   return decrypted.toString();
 }
 
+// This HMAC is a server-keyed cache/session identity, never a password verifier.
+// Passwords used for authentication are stored separately with bcrypt.
 export function createKeyedFingerprint(value: string) {
   return crypto.createHmac("sha256", fingerprintKey).update(value).digest("hex");
 }
