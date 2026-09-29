@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "next dev --port 3003",
-    "start": "serve out --listen 3003 --config serve.json",
+    "start": "serve out --listen 3003 --config ../serve.json",
     "build": "pnpm validate:coverage && next build",
     "typecheck": "next typegen && tsc --noEmit",
     "lint": "oxlint",

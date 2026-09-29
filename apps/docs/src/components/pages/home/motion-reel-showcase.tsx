@@ -14,7 +14,7 @@ export const MotionReelShowcase = () => {
         <div className="aspect-video overflow-hidden rounded-2xl border-4 border-fd-primary bg-fd-muted">
           <video
             className="h-full w-full"
-            src="https://media.homarr.dev/videos/home/homarr-motion-reel-0c2d7b45.mp4"
+            src="https://media.homarr.dev/videos/home/homarr-motion-reel.mp4"
             poster={homarrV2SocialImage.src}
             aria-label="Homarr 2.0 motion reel showing dashboards and integrations"
             controls

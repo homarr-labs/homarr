@@ -13,7 +13,7 @@
       "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
     },
     {
-      "source": "{404.html,workshop-runtime-config.js}",
+      "source": "{404.html,workshop-runtime-config.js,workshop,workshop/**,marketplace,marketplace/**}",
       "headers": [{ "key": "Cache-Control", "value": "no-store" }]
     }
   ]

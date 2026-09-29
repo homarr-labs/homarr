@@ -146,6 +146,11 @@ func staticCacheControl(path string) string {
 	if path == "/workshop-runtime-config.js" {
 		return "no-store"
 	}
+	for _, prefix := range []string{"/workshop", "/marketplace"} {
+		if path == prefix || strings.HasPrefix(path, prefix+"/") {
+			return "no-store"
+		}
+	}
 	if strings.HasPrefix(path, "/_next/static/") {
 		return "public, max-age=31536000, immutable"
 	}
