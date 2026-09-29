@@ -26,7 +26,14 @@ export function intro(): Scene {
   });
   bg.append(glow, rays);
 
-  const now = h("div", { class: "abs mono", style: "left:1004px;top:318px;font-size:28px;font-weight:600;color:#ff8787;white-space:nowrap" }, "NOW IN");
+  const now = h(
+    "div",
+    {
+      class: "abs mono",
+      style: "left:1004px;top:318px;font-size:28px;font-weight:600;color:#ff8787;white-space:nowrap",
+    },
+    "NOW IN",
+  );
   const name = new Headline("Homarr", { size: 172, weight: 830 });
   name.el.style.letterSpacing = "-0.045em";
   const nameWrap = h("div", { class: "abs", style: "left:996px;top:340px;white-space:nowrap" }, name.el);
@@ -41,7 +48,10 @@ export function intro(): Scene {
   );
   const sub = h(
     "div",
-    { class: "abs mono", style: "left:1004px;top:912px;font-size:22px;letter-spacing:.3em;color:#cfcfd6;white-space:nowrap" },
+    {
+      class: "abs mono",
+      style: "left:1004px;top:912px;font-size:22px;letter-spacing:.3em;color:#cfcfd6;white-space:nowrap",
+    },
     "THE BIGGEST HOMARR UPDATE",
   );
   const txt = h("div", { class: "abs", style: "inset:0" }, now, nameWrap, v2, sub);
@@ -53,7 +63,8 @@ export function intro(): Scene {
   );
   const flash = h("div", {
     class: "abs",
-    style: "inset:0;background:radial-gradient(circle at 50% 50%,#fff 0%,rgba(255,170,170,.7) 30%,rgba(250,82,82,0) 70%);mix-blend-mode:screen",
+    style:
+      "inset:0;background:radial-gradient(circle at 50% 50%,#fff 0%,rgba(255,170,170,.7) 30%,rgba(250,82,82,0) 70%);mix-blend-mode:screen",
   });
   fg.append(txt, ...rings, flash);
 

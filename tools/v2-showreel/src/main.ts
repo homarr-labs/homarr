@@ -77,7 +77,19 @@ async function boot() {
   const gl = new LogoGL(glCanvas, svg, wordmarkSvg);
   (window as unknown as { __gl: LogoGL }).__gl = gl;
 
-  const scenes: Scene[] = [intro(), customWidgets(), workshop(), assistant(), frontDoor(), ntfy(), board(), advanced(), rest(), stats(), outro()];
+  const scenes: Scene[] = [
+    intro(),
+    customWidgets(),
+    workshop(),
+    assistant(),
+    frontDoor(),
+    ntfy(),
+    board(),
+    advanced(),
+    rest(),
+    stats(),
+    outro(),
+  ];
   for (const s of scenes) {
     if (s.bg) {
       s.bg.dataset.scene = s.name;
@@ -129,7 +141,8 @@ async function boot() {
   const whipAt = (T: number) => {
     for (let j = 1; j < scenes.length; j++) {
       const e = scenes[j]!.enter;
-      if (e && Math.abs(T - scenes[j]!.start) < e.dur / 2) return { j, dir: e.dir, u: (T - scenes[j]!.start + e.dur / 2) / e.dur, dur: e.dur };
+      if (e && Math.abs(T - scenes[j]!.start) < e.dur / 2)
+        return { j, dir: e.dir, u: (T - scenes[j]!.start + e.dur / 2) / e.dur, dur: e.dur };
     }
     return null;
   };

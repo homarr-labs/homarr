@@ -14,10 +14,20 @@ const FW = 1000;
 const FH = 688;
 const GX = FX + 40;
 const GY = FY + 110;
-const cell = (c: number, r: number, w = 1, hh = 1, fy = FY, fx = FX): Rect => [fx + 40 + c * 156, fy + 110 + r * 136, w * 156 - 16, hh * 136 - 16];
+const cell = (c: number, r: number, w = 1, hh = 1, fy = FY, fx = FX): Rect => [
+  fx + 40 + c * 156,
+  fy + 110 + r * 136,
+  w * 156 - 16,
+  hh * 136 - 16,
+];
 // Phone frame for the Mobile layout.
 const PHONE: Rect = [1110, 150, 420, 800];
-const mcell = (c: number, r: number, w = 1, hh = 1): Rect => [PHONE[0] + 20 + c * 198, PHONE[1] + 96 + r * 96, w * 198 - 16, hh * 96 - 12];
+const mcell = (c: number, r: number, w = 1, hh = 1): Rect => [
+  PHONE[0] + 20 + c * 198,
+  PHONE[1] + 96 + r * 96,
+  w * 198 - 16,
+  hh * 96 - 12,
+];
 
 const place = (el: HTMLElement, [x, y, w, hh]: Rect) => {
   el.style.left = `${x.toFixed(1)}px`;
@@ -25,7 +35,12 @@ const place = (el: HTMLElement, [x, y, w, hh]: Rect) => {
   el.style.width = `${w.toFixed(1)}px`;
   el.style.height = `${hh.toFixed(1)}px`;
 };
-const lerpR = (a: Rect, b: Rect, p: number): Rect => [lerp(a[0], b[0], p), lerp(a[1], b[1], p), lerp(a[2], b[2], p), lerp(a[3], b[3], p)];
+const lerpR = (a: Rect, b: Rect, p: number): Rect => [
+  lerp(a[0], b[0], p),
+  lerp(a[1], b[1], p),
+  lerp(a[2], b[2], p),
+  lerp(a[3], b[3], p),
+];
 
 /** Piecewise eased path through [t, x, y] keys. */
 function path(t: number, keys: Key[]): [number, number] {
@@ -51,11 +66,27 @@ const app = (key: string, name: string) =>
     h("div", { style: "font-size:15px;font-weight:650;color:#d7d8de;white-space:nowrap" }, name),
   );
 const widgetHead = (ic: HTMLElement, name: string, extra = "") =>
-  h("div", { class: "row", style: "gap:10px;font-size:17px;font-weight:750;white-space:nowrap" }, ic, name, extra ? h("div", { style: "margin-left:auto;font-size:14px;color:#8f919d;font-weight:600" }, extra) : "");
+  h(
+    "div",
+    { class: "row", style: "gap:10px;font-size:17px;font-weight:750;white-space:nowrap" },
+    ic,
+    name,
+    extra ? h("div", { style: "margin-left:auto;font-size:14px;color:#8f919d;font-weight:600" }, extra) : "",
+  );
 const bar = (p: number, color: string) =>
-  h("div", { style: "height:8px;border-radius:4px;background:rgba(255,255,255,.08);overflow:hidden;flex:none" }, h("div", { style: `height:100%;width:${p}%;background:${color};border-radius:4px` }));
+  h(
+    "div",
+    { style: "height:8px;border-radius:4px;background:rgba(255,255,255,.08);overflow:hidden;flex:none" },
+    h("div", { style: `height:100%;width:${p}%;background:${color};border-radius:4px` }),
+  );
 const downloadsW = () =>
-  h("div", { class: "abs card col", style: "padding:16px 18px;gap:12px;border-radius:16px;overflow:hidden" }, widgetHead(logo("qBittorrent", 24), "Downloads", "2 active"), bar(64, "#4fb3ff"), bar(31, "#3ddc97"));
+  h(
+    "div",
+    { class: "abs card col", style: "padding:16px 18px;gap:12px;border-radius:16px;overflow:hidden" },
+    widgetHead(logo("qBittorrent", 24), "Downloads", "2 active"),
+    bar(64, "#4fb3ff"),
+    bar(31, "#3ddc97"),
+  );
 const weatherW = () =>
   h(
     "div",
@@ -73,14 +104,19 @@ const calendarW = () =>
       "div",
       { style: "display:grid;grid-template-columns:repeat(7,1fr);gap:9px" },
       ...Array.from({ length: 21 }, (_, i) =>
-        h("div", { style: `height:22px;border-radius:6px;background:${[3, 9, 16].includes(i) ? "#fa5352" : i === 12 ? "#7c8cff" : "rgba(255,255,255,.06)"}` }),
+        h("div", {
+          style: `height:22px;border-radius:6px;background:${[3, 9, 16].includes(i) ? "#fa5352" : i === 12 ? "#7c8cff" : "rgba(255,255,255,.06)"}`,
+        }),
       ),
     ),
   );
 const clockW = () =>
   h(
     "div",
-    { class: "abs card col", style: "padding:14px 20px;gap:2px;border-radius:16px;overflow:hidden;justify-content:center" },
+    {
+      class: "abs card col",
+      style: "padding:14px 20px;gap:2px;border-radius:16px;overflow:hidden;justify-content:center",
+    },
     h("div", { class: "label", style: "font-size:13px;color:#8f919d" }, "Clock"),
     h("div", { class: "display", style: "font-size:56px" }, "21:04"),
   );
@@ -89,15 +125,36 @@ export function board(): Scene {
   const fg = h("div", { class: "scene" });
 
   // ---------- Window ----------
-  const editChip = h("div", { class: "chip", style: "font-size:16px;padding:7px 14px;gap:8px;color:#ffd79a;border-color:rgba(255,181,71,.5);background:rgba(255,181,71,.1)" }, icon("pencil", 16, 2.2), "Editing");
-  const status = h("div", { class: "chip mono", style: "font-size:15px;padding:7px 14px;gap:8px;min-width:190px;justify-content:center" }, "");
+  const editChip = h(
+    "div",
+    {
+      class: "chip",
+      style:
+        "font-size:16px;padding:7px 14px;gap:8px;color:#ffd79a;border-color:rgba(255,181,71,.5);background:rgba(255,181,71,.1)",
+    },
+    icon("pencil", 16, 2.2),
+    "Editing",
+  );
+  const status = h(
+    "div",
+    { class: "chip mono", style: "font-size:15px;padding:7px 14px;gap:8px;min-width:190px;justify-content:center" },
+    "",
+  );
   const headRight = h("div", { class: "row", style: "margin-left:auto;gap:10px" }, editChip, status);
   const frame = h(
     "div",
-    { class: "abs", style: "border-radius:22px;background:#0f1014;border:1px solid rgba(255,255,255,.1);box-shadow:0 50px 120px -30px rgba(0,0,0,.8);overflow:hidden" },
+    {
+      class: "abs",
+      style:
+        "border-radius:22px;background:#0f1014;border:1px solid rgba(255,255,255,.1);box-shadow:0 50px 120px -30px rgba(0,0,0,.8);overflow:hidden",
+    },
     h(
       "div",
-      { class: "row", style: "margin:22px 26px 0;height:64px;padding:0 18px;gap:12px;border-radius:14px;background:#17181d;border:1px solid var(--line)" },
+      {
+        class: "row",
+        style:
+          "margin:22px 26px 0;height:64px;padding:0 18px;gap:12px;border-radius:14px;background:#17181d;border:1px solid var(--line)",
+      },
       lobster(34),
       h("div", { style: "font-size:21px;font-weight:800" }, "Homelab"),
       headRight,
@@ -131,8 +188,27 @@ export function board(): Scene {
   const dl = downloadsW();
   const O = cell(0, 1, 2, 1);
   const preview = h("div", { class: "abs", style: "border-radius:16px;border:2.5px dashed;transition:none" });
-  const handles = [0, 1, 2].flatMap((i) => [0, 1, 2].filter((j) => i !== 1 || j !== 1).map((j) => ({ i, j, el: h("div", { class: "abs", style: "width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:#fff;border:3px solid #fa5352" }) })));
-  const aLayer = h("div", { class: "abs", style: "inset:0" }, ...aItems.map(([el]) => el), preview, dl, ...handles.map((x) => x.el));
+  const handles = [0, 1, 2].flatMap((i) =>
+    [0, 1, 2]
+      .filter((j) => i !== 1 || j !== 1)
+      .map((j) => ({
+        i,
+        j,
+        el: h("div", {
+          class: "abs",
+          style:
+            "width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:#fff;border:3px solid #fa5352",
+        }),
+      })),
+  );
+  const aLayer = h(
+    "div",
+    { class: "abs", style: "inset:0" },
+    ...aItems.map(([el]) => el),
+    preview,
+    dl,
+    ...handles.map((x) => x.el),
+  );
   aItems.forEach(([el, r]) => place(el, r));
 
   // ---------- B: Containers ----------
@@ -146,7 +222,18 @@ export function board(): Scene {
   ];
   bTop.forEach((el, i) => place(el, cell(i, 0)));
   const selRings = bTop.slice(0, 2).map((el) => {
-    const ring = h("div", { class: "abs", style: "inset:-5px;border-radius:20px;border:3px solid #fa5352;pointer-events:none" }, h("div", { class: "abs center", style: "right:-10px;top:-10px;width:26px;height:26px;border-radius:50%;background:#fa5352;color:#fff" }, icon("check", 16, 3)));
+    const ring = h(
+      "div",
+      { class: "abs", style: "inset:-5px;border-radius:20px;border:3px solid #fa5352;pointer-events:none" },
+      h(
+        "div",
+        {
+          class: "abs center",
+          style: "right:-10px;top:-10px;width:26px;height:26px;border-radius:50%;background:#fa5352;color:#fff",
+        },
+        icon("check", 16, 3),
+      ),
+    );
     el.style.overflow = "visible";
     el.append(ring);
     return ring;
@@ -165,27 +252,68 @@ export function board(): Scene {
   const inRad = inner("radarr", "Radarr", 3);
   const music = h(
     "div",
-    { class: "abs col", style: "left:16px;top:180px;width:272px;height:196px;border-radius:14px;border:1.5px solid rgba(124,140,255,.45);background:rgba(124,140,255,.06);padding:10px 12px;gap:10px" },
-    h("div", { class: "row", style: "gap:8px;font-size:15px;font-weight:750;color:#c3caff" }, icon("grip-vertical", 16, 2), "Music", h("div", { class: "mono", style: "margin-left:auto;font-size:11px;letter-spacing:.1em;color:#8f96d8" }, "CONTAINER")),
+    {
+      class: "abs col",
+      style:
+        "left:16px;top:180px;width:272px;height:196px;border-radius:14px;border:1.5px solid rgba(124,140,255,.45);background:rgba(124,140,255,.06);padding:10px 12px;gap:10px",
+    },
+    h(
+      "div",
+      { class: "row", style: "gap:8px;font-size:15px;font-weight:750;color:#c3caff" },
+      icon("grip-vertical", 16, 2),
+      "Music",
+      h(
+        "div",
+        { class: "mono", style: "margin-left:auto;font-size:11px;letter-spacing:.1em;color:#8f96d8" },
+        "CONTAINER",
+      ),
+    ),
     h(
       "div",
       { class: "row", style: "gap:12px;flex:1" },
       ...[
         ["navidrome", "Navidrome"],
         ["lidarr", "Lidarr"],
-      ].map(([k, n]) => h("div", { class: "card col center", style: "flex:1;height:100%;gap:6px;border-radius:12px" }, logo(k!, 36), h("div", { style: "font-size:13px;font-weight:650;color:#d7d8de" }, n!))),
+      ].map(([k, n]) =>
+        h(
+          "div",
+          { class: "card col center", style: "flex:1;height:100%;gap:6px;border-radius:12px" },
+          logo(k!, 36),
+          h("div", { style: "font-size:13px;font-weight:650;color:#d7d8de" }, n!),
+        ),
+      ),
     ),
   );
-  const contBody = h("div", { class: "abs", style: "inset:0" }, inner("jellyfin", "Jellyfin", 0), inner("plex", "Plex", 1), inSon, inRad, music);
+  const contBody = h(
+    "div",
+    { class: "abs", style: "inset:0" },
+    inner("jellyfin", "Jellyfin", 0),
+    inner("plex", "Plex", 1),
+    inSon,
+    inRad,
+    music,
+  );
   const container = h(
     "div",
-    { class: "abs", style: "border-radius:18px;border:1.5px solid rgba(250,83,82,.5);background:linear-gradient(180deg,rgba(250,83,82,.07),rgba(250,83,82,.02));overflow:hidden" },
+    {
+      class: "abs",
+      style:
+        "border-radius:18px;border:1.5px solid rgba(250,83,82,.5);background:linear-gradient(180deg,rgba(250,83,82,.07),rgba(250,83,82,.02));overflow:hidden",
+    },
     h(
       "div",
       { class: "row", style: "height:52px;padding:0 16px;gap:10px;border-bottom:1px solid rgba(250,83,82,.2)" },
       h("div", { style: "color:#8f919d" }, icon("grip-vertical", 20, 2)),
       h("div", { style: "font-size:19px;font-weight:800" }, "Media"),
-      h("div", { class: "mono", style: "font-size:12px;letter-spacing:.12em;color:#ff8f86;padding:3px 8px;border-radius:6px;background:rgba(250,83,82,.12)" }, "CONTAINER"),
+      h(
+        "div",
+        {
+          class: "mono",
+          style:
+            "font-size:12px;letter-spacing:.12em;color:#ff8f86;padding:3px 8px;border-radius:6px;background:rgba(250,83,82,.12)",
+        },
+        "CONTAINER",
+      ),
       h("div", { style: "margin-left:auto" }, chevron),
     ),
     contBody,
@@ -194,25 +322,66 @@ export function board(): Scene {
   place(bRight[0]!, cell(4, 1, 2, 2));
   place(bRight[1]!, cell(4, 3, 2, 1));
   const flyers = [app("sonarr", "Sonarr"), app("radarr", "Radarr")];
-  const moveBtn = h("div", { class: "row", style: "gap:8px;padding:10px 16px;border-radius:11px;background:#fa5352;color:#fff;font-size:17px;font-weight:800" }, icon("arrow-move-right", 18, 2.4), "Move to", icon("chevron-down", 16, 2.6));
+  const moveBtn = h(
+    "div",
+    {
+      class: "row",
+      style:
+        "gap:8px;padding:10px 16px;border-radius:11px;background:#fa5352;color:#fff;font-size:17px;font-weight:800",
+    },
+    icon("arrow-move-right", 18, 2.4),
+    "Move to",
+    icon("chevron-down", 16, 2.6),
+  );
   const selCount = h("span", {}, "1");
   const toolbar = h(
     "div",
-    { class: "abs row", style: "left:1100px;top:92px;height:64px;padding:0 10px 0 22px;gap:18px;border-radius:16px;background:#1d1e24;border:1px solid var(--line2);box-shadow:0 20px 50px rgba(0,0,0,.5);font-size:18px;font-weight:700" },
+    {
+      class: "abs row",
+      style:
+        "left:1100px;top:92px;height:64px;padding:0 10px 0 22px;gap:18px;border-radius:16px;background:#1d1e24;border:1px solid var(--line2);box-shadow:0 20px 50px rgba(0,0,0,.5);font-size:18px;font-weight:700",
+    },
     h("div", { style: "color:#ff8f86" }, icon("square-check", 22, 2.2)),
     h("span", {}, selCount, " selected"),
     moveBtn,
   );
-  const optMedia = h("div", { class: "row", style: "gap:12px;height:50px;padding:0 16px;border-radius:10px;font-size:18px;font-weight:700" }, h("div", { style: "color:#ff8f86" }, icon("box", 20, 2.2)), "Media");
-  const optMusic = h("div", { class: "row", style: "gap:12px;height:50px;padding:0 16px;border-radius:10px;font-size:18px;font-weight:700;color:#b9bbc6" }, h("div", { style: "color:#8f96d8" }, icon("box", 20, 2.2)), "Media / Music");
+  const optMedia = h(
+    "div",
+    { class: "row", style: "gap:12px;height:50px;padding:0 16px;border-radius:10px;font-size:18px;font-weight:700" },
+    h("div", { style: "color:#ff8f86" }, icon("box", 20, 2.2)),
+    "Media",
+  );
+  const optMusic = h(
+    "div",
+    {
+      class: "row",
+      style: "gap:12px;height:50px;padding:0 16px;border-radius:10px;font-size:18px;font-weight:700;color:#b9bbc6",
+    },
+    h("div", { style: "color:#8f96d8" }, icon("box", 20, 2.2)),
+    "Media / Music",
+  );
   const menu = h(
     "div",
-    { class: "abs col", style: "left:1250px;top:166px;width:280px;padding:8px;gap:2px;border-radius:14px;background:#1d1e24;border:1px solid var(--line2);box-shadow:0 30px 60px rgba(0,0,0,.6);transform-origin:50% 0" },
-    h("div", { class: "label", style: "font-size:12px;color:#8f919d;padding:8px 16px 6px;letter-spacing:.16em" }, "Move to"),
+    {
+      class: "abs col",
+      style:
+        "left:1250px;top:166px;width:280px;padding:8px;gap:2px;border-radius:14px;background:#1d1e24;border:1px solid var(--line2);box-shadow:0 30px 60px rgba(0,0,0,.6);transform-origin:50% 0",
+    },
+    h(
+      "div",
+      { class: "label", style: "font-size:12px;color:#8f919d;padding:8px 16px 6px;letter-spacing:.16em" },
+      "Move to",
+    ),
     optMedia,
     optMusic,
   );
-  const ctrlKbd = h("div", { class: "abs row", style: "left:0;top:0;gap:6px;z-index:30" }, h("div", { class: "kbd", style: "font-size:17px" }, "Ctrl"), h("div", { style: "font-size:15px;color:#8f919d" }, "/"), h("div", { class: "kbd", style: "font-size:17px" }, "⌘"));
+  const ctrlKbd = h(
+    "div",
+    { class: "abs row", style: "left:0;top:0;gap:6px;z-index:30" },
+    h("div", { class: "kbd", style: "font-size:17px" }, "Ctrl"),
+    h("div", { style: "font-size:15px;color:#8f919d" }, "/"),
+    h("div", { class: "kbd", style: "font-size:17px" }, "⌘"),
+  );
   const bLayer = h("div", { class: "abs", style: "inset:0" }, ...bTop, container, ...bRight, ...flyers);
   place(container, CONT);
 
@@ -251,15 +420,52 @@ export function board(): Scene {
   ).map(([k, n], i) => ({ el: app(k, n), c: i % 5, r: 3 + Math.floor(i / 5) }));
   const cLayer = h("div", { class: "abs", style: "inset:0" }, ...cDefs.map(([el]) => el), ...extras.map((x) => x.el));
   const segs = ["Base", "Mobile", "+ Breakpoint"].map((s, i) =>
-    h("div", { class: "center", style: `width:170px;height:48px;font-size:18px;font-weight:700;position:relative;z-index:1;color:${i === 2 ? "#8f919d" : "#e6e7ec"}` }, i === 0 ? icon("device-desktop", 20, 2) : i === 1 ? icon("device-mobile", 20, 2) : "", h("span", { style: "margin-left:8px" }, s)),
+    h(
+      "div",
+      {
+        class: "center",
+        style: `width:170px;height:48px;font-size:18px;font-weight:700;position:relative;z-index:1;color:${i === 2 ? "#8f919d" : "#e6e7ec"}`,
+      },
+      i === 0 ? icon("device-desktop", 20, 2) : i === 1 ? icon("device-mobile", 20, 2) : "",
+      h("span", { style: "margin-left:8px" }, s),
+    ),
   );
-  const segPill = h("div", { class: "abs", style: "left:6px;top:6px;width:170px;height:48px;border-radius:12px;background:#fa5352" });
-  const segCtl = h("div", { class: "abs row", style: "left:1060px;top:84px;padding:6px;border-radius:16px;background:#17181d;border:1px solid var(--line2)" }, segPill, ...segs);
-  const resetBtn = h("div", { class: "abs row", style: "left:1170px;top:520px;width:300px;height:64px;justify-content:center;gap:10px;border-radius:14px;border:2px solid #fa5352;background:rgba(250,83,82,.12);font-size:21px;font-weight:800;color:#ffd2ce" }, icon("restore", 22, 2.4), "Reset from Base");
+  const segPill = h("div", {
+    class: "abs",
+    style: "left:6px;top:6px;width:170px;height:48px;border-radius:12px;background:#fa5352",
+  });
+  const segCtl = h(
+    "div",
+    {
+      class: "abs row",
+      style: "left:1060px;top:84px;padding:6px;border-radius:16px;background:#17181d;border:1px solid var(--line2)",
+    },
+    segPill,
+    ...segs,
+  );
+  const resetBtn = h(
+    "div",
+    {
+      class: "abs row",
+      style:
+        "left:1170px;top:520px;width:300px;height:64px;justify-content:center;gap:10px;border-radius:14px;border:2px solid #fa5352;background:rgba(250,83,82,.12);font-size:21px;font-weight:800;color:#ffd2ce",
+    },
+    icon("restore", 22, 2.4),
+    "Reset from Base",
+  );
   const sidebar = h(
     "div",
-    { class: "abs col", style: "left:1640px;top:266px;width:160px;height:568px;padding:16px 14px;gap:14px;border-radius:16px;background:#17181d;border:1px solid rgba(124,140,255,.4)" },
-    h("div", { class: "row label", style: "gap:8px;font-size:12px;color:#aab3ff;letter-spacing:.14em" }, icon("pin", 14, 2.4), "Sidebar"),
+    {
+      class: "abs col",
+      style:
+        "left:1640px;top:266px;width:160px;height:568px;padding:16px 14px;gap:14px;border-radius:16px;background:#17181d;border:1px solid rgba(124,140,255,.4)",
+    },
+    h(
+      "div",
+      { class: "row label", style: "gap:8px;font-size:12px;color:#aab3ff;letter-spacing:.14em" },
+      icon("pin", 14, 2.4),
+      "Sidebar",
+    ),
     ...(
       [
         ["jellyfin", "Jellyfin"],
@@ -269,15 +475,34 @@ export function board(): Scene {
         ["qBittorrent", "qBittorrent"],
         ["immich", "Immich"],
       ] as const
-    ).map(([k, n]) => h("div", { class: "row", style: "gap:10px;height:58px;padding:0 10px;border-radius:12px;background:rgba(255,255,255,.04);font-size:15px;font-weight:650" }, logo(k, 30), n)),
+    ).map(([k, n]) =>
+      h(
+        "div",
+        {
+          class: "row",
+          style:
+            "gap:10px;height:58px;padding:0 10px;border-radius:12px;background:rgba(255,255,255,.04);font-size:15px;font-weight:650",
+        },
+        logo(k, 30),
+        n,
+      ),
+    ),
   );
-  const scrollThumb = h("div", { class: "abs", style: "left:1626px;width:5px;height:160px;border-radius:3px;background:rgba(255,255,255,.3)" });
+  const scrollThumb = h("div", {
+    class: "abs",
+    style: "left:1626px;width:5px;height:160px;border-radius:3px;background:rgba(255,255,255,.3)",
+  });
 
   // ---------- Copy ----------
   const chapter = new Chapter("05", "Board editing, rebuilt");
   const copy = (top = 250) => h("div", { class: "abs col", style: `left:96px;top:${top}px;width:650px;gap:24px` });
   const headA = new Headline("Drag and drop, rebuilt.", { size: 80, lh: 1.02 });
-  const subA = new Headline("Rebuilt on dnd-kit. Moves and eight-direction resizes are transactional.", { size: 28, weight: 550, color: "#b9bbc6", lh: 1.3 });
+  const subA = new Headline("Rebuilt on dnd-kit. Moves and eight-direction resizes are transactional.", {
+    size: 28,
+    weight: 550,
+    color: "#b9bbc6",
+    lh: 1.3,
+  });
   const checks = (
     [
       ["eye", "Previews the result"],
@@ -286,33 +511,126 @@ export function board(): Scene {
       ["device-floppy", "Only saves a valid layout"],
     ] as const
   ).map(([ic, text]) => {
-    const dot = h("div", { class: "center", style: "width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.05);color:#8f919d;flex:none" }, icon(ic, 22, 2.2));
+    const dot = h(
+      "div",
+      {
+        class: "center",
+        style: "width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.05);color:#8f919d;flex:none",
+      },
+      icon(ic, 22, 2.2),
+    );
     const el = h("div", { class: "row", style: "gap:16px;font-size:25px;font-weight:650" }, dot, text);
     return { el, dot };
   });
   const colA = copy();
-  colA.append(headA.el, subA.el, h("div", { class: "col", style: "gap:14px;margin-top:14px" }, ...checks.map((c) => c.el)));
+  colA.append(
+    headA.el,
+    subA.el,
+    h("div", { class: "col", style: "gap:14px;margin-top:14px" }, ...checks.map((c) => c.el)),
+  );
   const headB = new Headline("Containers replace Groups and sections.", { size: 70, lh: 1.04, accent: ["containers"] });
-  const subB = new Headline("They hold apps, widgets and other Containers.", { size: 28, weight: 550, color: "#b9bbc6", lh: 1.3 });
-  const tipRow = (lead: HTMLElement, text: string) => h("div", { class: "row", style: "gap:16px;font-size:24px;font-weight:600;line-height:1.35;align-items:flex-start;color:#e6e7ec" }, lead, h("div", {}, text));
-  const tipB1 = tipRow(h("div", { class: "row", style: "gap:6px;flex:none" }, h("div", { class: "kbd", style: "font-size:17px" }, "Ctrl"), h("div", { class: "kbd", style: "font-size:17px" }, "⌘")), "+ click to select several items, then Move to.");
-  const tipB2 = tipRow(h("div", { class: "center", style: "width:40px;height:40px;border-radius:12px;background:rgba(250,83,82,.14);color:#ff8f86;flex:none" }, icon("chevron-down", 22, 2.4)), "Move a Container with its contents, or collapse it when you need the space.");
+  const subB = new Headline("They hold apps, widgets and other Containers.", {
+    size: 28,
+    weight: 550,
+    color: "#b9bbc6",
+    lh: 1.3,
+  });
+  const tipRow = (lead: HTMLElement, text: string) =>
+    h(
+      "div",
+      {
+        class: "row",
+        style: "gap:16px;font-size:24px;font-weight:600;line-height:1.35;align-items:flex-start;color:#e6e7ec",
+      },
+      lead,
+      h("div", {}, text),
+    );
+  const tipB1 = tipRow(
+    h(
+      "div",
+      { class: "row", style: "gap:6px;flex:none" },
+      h("div", { class: "kbd", style: "font-size:17px" }, "Ctrl"),
+      h("div", { class: "kbd", style: "font-size:17px" }, "⌘"),
+    ),
+    "+ click to select several items, then Move to.",
+  );
+  const tipB2 = tipRow(
+    h(
+      "div",
+      {
+        class: "center",
+        style: "width:40px;height:40px;border-radius:12px;background:rgba(250,83,82,.14);color:#ff8f86;flex:none",
+      },
+      icon("chevron-down", 22, 2.4),
+    ),
+    "Move a Container with its contents, or collapse it when you need the space.",
+  );
   const colB = copy();
   colB.append(headB.el, subB.el, h("div", { class: "col", style: "gap:22px;margin-top:18px" }, tipB1, tipB2));
   const headC = new Headline("One board, several layouts.", { size: 76, lh: 1.04 });
-  const subC = new Headline("Base and Mobile layouts, plus optional breakpoints.", { size: 28, weight: 550, color: "#b9bbc6", lh: 1.3 });
-  const tipC = tipRow(h("div", { class: "center", style: "width:40px;height:40px;border-radius:12px;background:rgba(250,83,82,.14);color:#ff8f86;flex:none" }, icon("restore", 22, 2.4)), "Reset from Base creates a Mobile starting point without duplicating the board.");
+  const subC = new Headline("Base and Mobile layouts, plus optional breakpoints.", {
+    size: 28,
+    weight: 550,
+    color: "#b9bbc6",
+    lh: 1.3,
+  });
+  const tipC = tipRow(
+    h(
+      "div",
+      {
+        class: "center",
+        style: "width:40px;height:40px;border-radius:12px;background:rgba(250,83,82,.14);color:#ff8f86;flex:none",
+      },
+      icon("restore", 22, 2.4),
+    ),
+    "Reset from Base creates a Mobile starting point without duplicating the board.",
+  );
   const colC = copy();
   colC.append(headC.el, subC.el, h("div", { style: "margin-top:18px" }, tipC));
   const headD = new Headline("Fixed sidebars.", { size: 84, lh: 1.02 });
-  const subD = new Headline("Keep app shortcuts or widgets in a sidebar while the main board scrolls.", { size: 28, weight: 550, color: "#b9bbc6", lh: 1.3 });
+  const subD = new Headline("Keep app shortcuts or widgets in a sidebar while the main board scrolls.", {
+    size: 28,
+    weight: 550,
+    color: "#b9bbc6",
+    lh: 1.3,
+  });
   const colD = copy(300);
   colD.append(headD.el, subD.el);
 
-  const cursor = h("div", { class: "abs", style: "left:0;top:0;width:34px;height:34px;z-index:30;color:#fff;filter:drop-shadow(0 4px 8px rgba(0,0,0,.6))" }, icon("filled:pointer", 34, 1));
-  const moreBelow = h("div", { class: "abs", style: `left:${FX}px;top:${FY + FH - 90}px;width:${FW - 190}px;height:88px;border-radius:0 0 0 22px;background:linear-gradient(180deg,rgba(15,16,20,0),#0f1014 85%);pointer-events:none` });
+  const cursor = h(
+    "div",
+    {
+      class: "abs",
+      style: "left:0;top:0;width:34px;height:34px;z-index:30;color:#fff;filter:drop-shadow(0 4px 8px rgba(0,0,0,.6))",
+    },
+    icon("filled:pointer", 34, 1),
+  );
+  const moreBelow = h("div", {
+    class: "abs",
+    style: `left:${FX}px;top:${FY + FH - 90}px;width:${FW - 190}px;height:88px;border-radius:0 0 0 22px;background:linear-gradient(180deg,rgba(15,16,20,0),#0f1014 85%);pointer-events:none`,
+  });
 
-  fg.append(frame, gridDots, aLayer, bLayer, cLayer, moreBelow, sidebar, scrollThumb, segCtl, resetBtn, toolbar, menu, colA, colB, colC, colD, chapter.el, ctrlKbd, cursor);
+  fg.append(
+    frame,
+    gridDots,
+    aLayer,
+    bLayer,
+    cLayer,
+    moreBelow,
+    sidebar,
+    scrollThumb,
+    segCtl,
+    resetBtn,
+    toolbar,
+    menu,
+    colA,
+    colB,
+    colC,
+    colD,
+    chapter.el,
+    ctrlKbd,
+    cursor,
+  );
 
   // ---------- Timeline ----------
   const G1 = 1.1;
@@ -396,7 +714,6 @@ export function board(): Scene {
     fg,
     cues,
     update(t, ctx) {
-
       // Window rect: A/B board → shorter Base board → phone → board with sidebar.
       const toBase = E.inOutQuart(seg(t, C - 0.3, C + 0.3));
       const toPhone = E.inOutQuart(seg(t, MOB + 0.15, MOB + 0.8));
@@ -446,7 +763,17 @@ export function board(): Scene {
       } else if (t >= D2) {
         const [dx, dy] = path(D2 - 0.04, keysA);
         const sp = spring(t - D2, 2.6, 0.5);
-        const hh = t < R0 ? P2[3] : lerp(P2[3], P2[3] + 136, t < R1 ? clamp((path(t, keysA)[1] - hdl[1]) / 136) : spring(t - R1, 3, 0.55) * (1 - clamp((path(R1, keysA)[1] - hdl[1]) / 136)) + clamp((path(R1, keysA)[1] - hdl[1]) / 136));
+        const hh =
+          t < R0
+            ? P2[3]
+            : lerp(
+                P2[3],
+                P2[3] + 136,
+                t < R1
+                  ? clamp((path(t, keysA)[1] - hdl[1]) / 136)
+                  : spring(t - R1, 3, 0.55) * (1 - clamp((path(R1, keysA)[1] - hdl[1]) / 136)) +
+                      clamp((path(R1, keysA)[1] - hdl[1]) / 136),
+              );
         dr = [lerp(dx - 88, P2[0], sp), lerp(dy - 60, P2[1], sp), P2[2], hh];
       }
       place(dl, dr);
@@ -474,7 +801,9 @@ export function board(): Scene {
       preview.style.borderColor = collide ? "#fa5352" : "#3ddc97";
       preview.style.background = collide ? "rgba(250,83,82,.14)" : "rgba(61,220,151,.1)";
       calendarEl.style.boxShadow = collide ? "0 0 0 2px #fa5352, 0 0 40px rgba(250,83,82,.45)" : "";
-      calendarEl.style.transform = collide ? `translateX(${(Math.sin(t * 70) * 3).toFixed(1)}px)` : calendarEl.style.transform;
+      calendarEl.style.transform = collide
+        ? `translateX(${(Math.sin(t * 70) * 3).toFixed(1)}px)`
+        : calendarEl.style.transform;
       const hOn = E.outBack(seg(t, D2 + 0.25, D2 + 0.5), 2) * (1 - seg(t, R1 + 0.35, R1 + 0.55));
       handles.forEach(({ i, j, el }) => {
         el.style.left = `${(dr[0] + (dr[2] * i) / 2).toFixed(1)}px`;
@@ -484,12 +813,17 @@ export function board(): Scene {
       });
       // Header status
       const st: [string, string, string] =
-        t < G1 ? ["Ready", "#8f919d", "rgba(255,255,255,.04)"]
-        : dragging && collide ? ["Collision", "#ff8f86", "rgba(250,83,82,.14)"]
-        : dragging ? ["Valid layout", "#8ff0c4", "rgba(61,220,151,.12)"]
-        : t < G2 ? ["Rolled back", "#ff8f86", "rgba(250,83,82,.1)"]
-        : t >= R0 && t < R1 ? ["Resizing", "#8ff0c4", "rgba(61,220,151,.12)"]
-        : ["Saved", "#8ff0c4", "rgba(61,220,151,.12)"];
+        t < G1
+          ? ["Ready", "#8f919d", "rgba(255,255,255,.04)"]
+          : dragging && collide
+            ? ["Collision", "#ff8f86", "rgba(250,83,82,.14)"]
+            : dragging
+              ? ["Valid layout", "#8ff0c4", "rgba(61,220,151,.12)"]
+              : t < G2
+                ? ["Rolled back", "#ff8f86", "rgba(250,83,82,.1)"]
+                : t >= R0 && t < R1
+                  ? ["Resizing", "#8ff0c4", "rgba(61,220,151,.12)"]
+                  : ["Saved", "#8ff0c4", "rgba(61,220,151,.12)"];
       if (status.textContent !== st[0]) status.textContent = st[0];
       status.style.color = st[1];
       status.style.background = st[2];
@@ -525,7 +859,8 @@ export function board(): Scene {
         el.style.opacity = t >= land[i]! ? "1" : "0";
         const pop = t >= land[i]! ? Math.exp(-(t - land[i]!) * 8) : 0;
         el.style.transform = `scale(${(1 + pop * 0.08).toFixed(3)})`;
-        el.style.boxShadow = pop > 0.02 ? `0 0 ${(pop * 40).toFixed(0)}px rgba(250,83,82,${(pop * 0.8).toFixed(2)})` : "";
+        el.style.boxShadow =
+          pop > 0.02 ? `0 0 ${(pop * 40).toFixed(0)}px rgba(250,83,82,${(pop * 0.8).toFixed(2)})` : "";
       });
       flyers.forEach((el, i) => {
         const from = cell(i, 0);
@@ -587,7 +922,9 @@ export function board(): Scene {
         tf(el, { o: seg(t, SB + 0.7 + j * 0.02, SB + 1.0 + j * 0.02) * (1 - out) });
       });
       const flying = t > RST + 0.05 && t < RST + 1.5;
-      cLayer.style.clipPath = flying ? "" : `inset(${(fr[1] + 96).toFixed(1)}px ${(1920 - fr[0] - fr[2]).toFixed(1)}px ${(1080 - fr[1] - fr[3] + 8).toFixed(1)}px ${fr[0].toFixed(1)}px round 0 0 20px 20px)`;
+      cLayer.style.clipPath = flying
+        ? ""
+        : `inset(${(fr[1] + 96).toFixed(1)}px ${(1920 - fr[0] - fr[2]).toFixed(1)}px ${(1080 - fr[1] - fr[3] + 8).toFixed(1)}px ${fr[0].toFixed(1)}px round 0 0 20px 20px)`;
       const sIn = E.outExpo(seg(t, SB + 0.6, SB + 1.1));
       tf(sidebar, { x: (1 - sIn) * 200, o: sIn * (1 - out) });
       sidebar.style.clipPath = `inset(0 0 0 0 round 16px)`;
@@ -640,7 +977,7 @@ export function board(): Scene {
       cursor.style.display = cur ? "" : "none";
       if (cur) {
         cursor.style.transform = `translate(${cur[0].toFixed(1)}px,${cur[1].toFixed(1)}px) scale(${press ? 0.85 : 1})`;
-        const edge = Math.min(seg(t, 0.55, 0.75), 1 - seg(t, 5.5, 5.75), 1) ;
+        const edge = Math.min(seg(t, 0.55, 0.75), 1 - seg(t, 5.5, 5.75), 1);
         cursor.style.opacity = String(t < B ? edge : 1);
       }
       const kOn = E.outBack(seg(t, B + 0.9, B + 1.1), 1.6) * (1 - seg(t, B + 1.85, B + 2.0));

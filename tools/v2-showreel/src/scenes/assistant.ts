@@ -28,13 +28,19 @@ export function assistant(): Scene {
     );
   const newWidget = h(
     "div",
-    { class: "card col", style: "grid-column:span 2;height:150px;border-radius:16px;padding:18px 20px;gap:10px;border-color:rgba(250,83,82,.6)" },
+    {
+      class: "card col",
+      style:
+        "grid-column:span 2;height:150px;border-radius:16px;padding:18px 20px;gap:10px;border-color:rgba(250,83,82,.6)",
+    },
     h("div", { class: "row", style: "gap:10px;font-size:18px;font-weight:750" }, logo("radarr", 26), "Radarr upcoming"),
     ...["Friday · In cinemas", "Next week · Digital release", "In 2 weeks · Physical release"].map((d, i) =>
       h(
         "div",
         { class: "row", style: "gap:10px;font-size:15px;color:#b9bbc6" },
-        h("div", { style: `width:8px;height:8px;border-radius:50%;background:${["#fa5352", "#ffb547", "#4fb3ff"][i]}` }),
+        h("div", {
+          style: `width:8px;height:8px;border-radius:50%;background:${["#fa5352", "#ffb547", "#4fb3ff"][i]}`,
+        }),
         d,
       ),
     ),
@@ -44,10 +50,18 @@ export function assistant(): Scene {
     { class: "abs", style: "left:70px;top:60px;width:1780px;height:960px;transform-origin:50% 50%" },
     h(
       "div",
-      { class: "row", style: "height:70px;padding:0 26px;gap:14px;border-radius:16px;background:#15161b;border:1px solid var(--line)" },
+      {
+        class: "row",
+        style: "height:70px;padding:0 26px;gap:14px;border-radius:16px;background:#15161b;border:1px solid var(--line)",
+      },
       lobster(40),
       h("div", { style: "font-size:24px;font-weight:800" }, "Homelab"),
-      h("div", { class: "row", style: "margin-left:auto;gap:10px;color:#8f919d" }, icon("search", 22, 2), icon("user-circle", 26, 1.8)),
+      h(
+        "div",
+        { class: "row", style: "margin-left:auto;gap:10px;color:#8f919d" },
+        icon("search", 22, 2),
+        icon("user-circle", 26, 1.8),
+      ),
     ),
     h(
       "div",
@@ -75,7 +89,11 @@ export function assistant(): Scene {
     { class: "abs row", style: "left:0;right:0;top:0;justify-content:center;pointer-events:none" },
     h(
       "div",
-      { class: "row", style: "gap:12px;padding:14px 24px;border-radius:14px;background:#10231b;border:1px solid rgba(61,220,151,.55);font-size:22px;font-weight:750;color:#c9f7e1;box-shadow:0 18px 50px rgba(0,0,0,.5)" },
+      {
+        class: "row",
+        style:
+          "gap:12px;padding:14px 24px;border-radius:14px;background:#10231b;border:1px solid rgba(61,220,151,.55);font-size:22px;font-weight:750;color:#c9f7e1;box-shadow:0 18px 50px rgba(0,0,0,.5)",
+      },
       icon("circle-check", 26, 2.4),
       "Assistant installed “Radarr upcoming” on Homelab",
     ),
@@ -84,42 +102,93 @@ export function assistant(): Scene {
   // ---------- Keycaps ----------
   const kShift = h("div", { class: "kbd", style: "font-size:84px;padding:.2em .6em;border-radius:.28em" }, "Shift");
   const kA = h("div", { class: "kbd", style: "font-size:84px;min-width:1.6em;border-radius:.28em" }, "A");
-  const keys = h("div", { class: "abs row", style: "left:0;right:0;top:360px;justify-content:center;gap:34px" }, kShift, h("div", { style: "font-size:70px;color:#8f919d" }, "+"), kA);
+  const keys = h(
+    "div",
+    { class: "abs row", style: "left:0;right:0;top:360px;justify-content:center;gap:34px" },
+    kShift,
+    h("div", { style: "font-size:70px;color:#8f919d" }, "+"),
+    kA,
+  );
   const keyCap = new Headline("Open Assistant from anywhere.", { size: 46, weight: 650, color: "#d7d8de" });
   keyCap.el.style.textAlign = "center";
-  const keyCapWrap = h("div", { class: "abs", style: "left:0;right:0;top:600px;white-space:nowrap;text-align:center" }, keyCap.el);
+  const keyCapWrap = h(
+    "div",
+    { class: "abs", style: "left:0;right:0;top:600px;white-space:nowrap;text-align:center" },
+    keyCap.el,
+  );
 
   // ---------- Drawer ----------
   const chipModel = h(
     "div",
-    { class: "row", style: "margin-left:auto;gap:8px;padding:7px 14px;border-radius:999px;background:rgba(250,83,82,.12);border:1px solid rgba(250,83,82,.4);font-size:16px;font-weight:700;color:#ffb3ad" },
+    {
+      class: "row",
+      style:
+        "margin-left:auto;gap:8px;padding:7px 14px;border-radius:999px;background:rgba(250,83,82,.12);border:1px solid rgba(250,83,82,.4);font-size:16px;font-weight:700;color:#ffb3ad",
+    },
     icon("sparkles", 16, 2.2),
     "Homarr provider",
   );
   const sugg = SUGGESTIONS.map(([ic, label]) =>
-    h("div", { class: "row", style: "gap:14px;height:58px;padding:0 20px;border-radius:14px;border:1px solid var(--line2);background:rgba(255,255,255,.03);font-size:21px;font-weight:600" }, h("div", { style: "color:#ff8f86" }, icon(ic, 24, 2)), label),
+    h(
+      "div",
+      {
+        class: "row",
+        style:
+          "gap:14px;height:58px;padding:0 20px;border-radius:14px;border:1px solid var(--line2);background:rgba(255,255,255,.03);font-size:21px;font-weight:600",
+      },
+      h("div", { style: "color:#ff8f86" }, icon(ic, 24, 2)),
+      label,
+    ),
   );
   const empty = h(
     "div",
     { class: "abs col", style: "left:40px;right:40px;top:170px;gap:14px" },
     h("div", { style: "color:var(--coral)" }, icon("sparkles", 44, 1.8)),
     h("div", { class: "display", style: "font-size:40px;font-weight:800" }, "What can I help with?"),
-    h("div", { style: "font-size:20px;line-height:1.45;color:#a9abb6;margin-bottom:14px" }, "Ask about your Homarr setup, inspect live instance data, or approve actions when you want me to make a change."),
+    h(
+      "div",
+      { style: "font-size:20px;line-height:1.45;color:#a9abb6;margin-bottom:14px" },
+      "Ask about your Homarr setup, inspect live instance data, or approve actions when you want me to make a change.",
+    ),
     ...sugg,
   );
   const ask = new TypeBlock(ASK, "", "#fff");
-  const composerText = h("div", { style: "flex:1;font-size:21px;line-height:1.35" }, h("span", { style: "color:#d7d8de" }, PREFILL), ask.el);
-  const placeholder = h("div", { class: "abs", style: "left:22px;top:30px;font-size:21px;color:#6f717d" }, "Ask Assistant…");
-  const sendBtn = h("div", { class: "center", style: "width:48px;height:48px;border-radius:13px;background:#fa5352;color:#fff;flex:none" }, icon("arrow-up", 26, 2.6));
+  const composerText = h(
+    "div",
+    { style: "flex:1;font-size:21px;line-height:1.35" },
+    h("span", { style: "color:#d7d8de" }, PREFILL),
+    ask.el,
+  );
+  const placeholder = h(
+    "div",
+    { class: "abs", style: "left:22px;top:30px;font-size:21px;color:#6f717d" },
+    "Ask Assistant…",
+  );
+  const sendBtn = h(
+    "div",
+    { class: "center", style: "width:48px;height:48px;border-radius:13px;background:#fa5352;color:#fff;flex:none" },
+    icon("arrow-up", 26, 2.6),
+  );
   const composer = h(
     "div",
-    { class: "abs row", style: "left:28px;right:28px;bottom:26px;min-height:92px;padding:14px 16px 14px 22px;gap:14px;border-radius:18px;background:#121318;border:1px solid var(--line2)" },
+    {
+      class: "abs row",
+      style:
+        "left:28px;right:28px;bottom:26px;min-height:92px;padding:14px 16px 14px 22px;gap:14px;border-radius:18px;background:#121318;border:1px solid var(--line2)",
+    },
     placeholder,
     composerText,
     sendBtn,
   );
   // Conversation
-  const bubble = h("div", { style: "align-self:flex-end;max-width:560px;padding:16px 22px;border-radius:18px 18px 6px 18px;background:#2b1b1e;border:1px solid rgba(250,83,82,.45);font-size:21px;line-height:1.4" }, PREFILL + ASK);
+  const bubble = h(
+    "div",
+    {
+      style:
+        "align-self:flex-end;max-width:560px;padding:16px 22px;border-radius:18px 18px 6px 18px;background:#2b1b1e;border:1px solid rgba(250,83,82,.45);font-size:21px;line-height:1.4",
+    },
+    PREFILL + ASK,
+  );
   const step = (text: string, tag: string) => {
     const spin = h("div", { class: "abs", style: "left:0;top:0;color:var(--amber)" }, icon("loader-2", 22, 2.4));
     const ok = h("div", { class: "abs", style: "left:0;top:0;color:var(--mint)" }, icon("circle-check", 22, 2.4));
@@ -128,24 +197,61 @@ export function assistant(): Scene {
       { class: "row", style: "gap:14px;font-size:20px;color:#d7d8de" },
       h("div", { style: "position:relative;width:22px;height:22px;flex:none" }, spin, ok),
       text,
-      h("span", { class: "mono", style: "margin-left:auto;font-size:13px;padding:3px 9px;border-radius:6px;background:rgba(61,220,151,.12);color:var(--mint);letter-spacing:.06em" }, tag),
+      h(
+        "span",
+        {
+          class: "mono",
+          style:
+            "margin-left:auto;font-size:13px;padding:3px 9px;border-radius:6px;background:rgba(61,220,151,.12);color:var(--mint);letter-spacing:.06em",
+        },
+        tag,
+      ),
     );
     return { el, spin, ok };
   };
   const s1 = step("Reading your Radarr integration", "READ · AUTO");
   const s2 = step("Drafting the Custom Widget", "READ · AUTO");
-  const approveBtn = h("div", { class: "row", style: "gap:8px;padding:12px 20px;border-radius:11px;background:#fa5352;color:#fff;font-size:18px;font-weight:800" }, icon("player-play", 18, 2.6), "Approve and run");
-  const denyBtn = h("div", { style: "padding:12px 20px;border-radius:11px;border:1px solid var(--line2);font-size:18px;font-weight:700;color:#d7d8de" }, "Deny");
+  const approveBtn = h(
+    "div",
+    {
+      class: "row",
+      style:
+        "gap:8px;padding:12px 20px;border-radius:11px;background:#fa5352;color:#fff;font-size:18px;font-weight:800",
+    },
+    icon("player-play", 18, 2.6),
+    "Approve and run",
+  );
+  const denyBtn = h(
+    "div",
+    {
+      style:
+        "padding:12px 20px;border-radius:11px;border:1px solid var(--line2);font-size:18px;font-weight:700;color:#d7d8de",
+    },
+    "Deny",
+  );
   const approval = h(
     "div",
-    { class: "col", style: "gap:14px;padding:20px 22px;border-radius:16px;background:rgba(255,181,71,.07);border:1px solid rgba(255,181,71,.45)" },
-    h("div", { class: "row label", style: "gap:10px;color:var(--amber);font-size:14px" }, icon("shield-lock", 18, 2.2), "Approval required"),
+    {
+      class: "col",
+      style:
+        "gap:14px;padding:20px 22px;border-radius:16px;background:rgba(255,181,71,.07);border:1px solid rgba(255,181,71,.45)",
+    },
+    h(
+      "div",
+      { class: "row label", style: "gap:10px;color:var(--amber);font-size:14px" },
+      icon("shield-lock", 18, 2.2),
+      "Approval required",
+    ),
     h("div", { style: "font-size:23px;font-weight:750" }, "Create and install Custom Widget “Radarr upcoming”"),
     h("div", { class: "row", style: "gap:12px;justify-content:flex-end" }, denyBtn, approveBtn),
   );
   const installed = h(
     "div",
-    { class: "row", style: "gap:12px;padding:14px 18px;border-radius:14px;background:rgba(61,220,151,.1);border:1px solid rgba(61,220,151,.45);font-size:20px;font-weight:700;color:#c9f7e1" },
+    {
+      class: "row",
+      style:
+        "gap:12px;padding:14px 18px;border-radius:14px;background:rgba(61,220,151,.1);border:1px solid rgba(61,220,151,.45);font-size:20px;font-weight:700;color:#c9f7e1",
+    },
     icon("circle-check", 24, 2.4),
     "Installed on Homelab",
   );
@@ -153,7 +259,11 @@ export function assistant(): Scene {
   const thread = h("div", { class: "abs col", style: "left:28px;right:28px;top:110px;gap:18px" }, ...convo);
   const drawer = h(
     "div",
-    { class: "abs card", style: "left:1130px;top:36px;width:750px;height:1008px;overflow:hidden;border-color:rgba(255,255,255,.12);background:linear-gradient(180deg,#1c1d23,#141519)" },
+    {
+      class: "abs card",
+      style:
+        "left:1130px;top:36px;width:750px;height:1008px;overflow:hidden;border-color:rgba(255,255,255,.12);background:linear-gradient(180deg,#1c1d23,#141519)",
+    },
     h(
       "div",
       { class: "row", style: "height:78px;padding:0 26px;gap:12px;border-bottom:1px solid var(--line)" },
@@ -165,21 +275,47 @@ export function assistant(): Scene {
     thread,
     composer,
   );
-  const cursor = h("div", { class: "abs", style: "left:0;top:0;width:34px;height:34px;color:#fff;filter:drop-shadow(0 4px 8px rgba(0,0,0,.6))" }, icon("filled:pointer", 34, 1));
+  const cursor = h(
+    "div",
+    {
+      class: "abs",
+      style: "left:0;top:0;width:34px;height:34px;color:#fff;filter:drop-shadow(0 4px 8px rgba(0,0,0,.6))",
+    },
+    icon("filled:pointer", 34, 1),
+  );
 
   const chapter = new Chapter("03", "Assistant");
   const headA = new Headline("Or let Assistant build it for you.", { size: 70, lh: 1.05, accent: ["build"] });
-  const subA = new Headline("It works with live Homarr data: boards, apps, integrations, widgets, Docker and supported services.", { size: 30, weight: 550, color: "#b9bbc6", lh: 1.3 });
-  const headB = new Headline("Reads can run automatically. Changes wait for your approval.", { size: 62, lh: 1.08, accent: ["approval."] });
+  const subA = new Headline(
+    "It works with live Homarr data: boards, apps, integrations, widgets, Docker and supported services.",
+    { size: 30, weight: 550, color: "#b9bbc6", lh: 1.3 },
+  );
+  const headB = new Headline("Reads can run automatically. Changes wait for your approval.", {
+    size: 62,
+    lh: 1.08,
+    accent: ["approval."],
+  });
   const subB = new Headline("It also answers questions about your setup.", { size: 34, weight: 600, color: "#b9bbc6" });
   const leftA = h("div", { class: "abs col", style: "left:96px;top:300px;width:940px;gap:26px" }, headA.el, subA.el);
   const leftB = h("div", { class: "abs col", style: "left:96px;top:300px;width:940px;gap:26px" }, headB.el, subB.el);
 
   // ---------- Providers ----------
-  const provHead = new Headline("Free with the Homarr provider. Or bring your own key.", { size: 64, accent: ["Free", "own", "key."] });
-  const provHeadWrap = h("div", { class: "abs", style: "left:0;right:0;top:150px;text-align:center;white-space:nowrap" }, provHead.el);
+  const provHead = new Headline("Free with the Homarr provider. Or bring your own key.", {
+    size: 64,
+    accent: ["Free", "own", "key."],
+  });
+  const provHeadWrap = h(
+    "div",
+    { class: "abs", style: "left:0;right:0;top:150px;text-align:center;white-space:nowrap" },
+    provHead.el,
+  );
   const bullet = (ic: string, text: string, color: string) =>
-    h("div", { class: "row", style: "gap:16px;font-size:24px;line-height:1.35;align-items:flex-start;color:#e6e7ec" }, h("div", { style: `color:${color};margin-top:2px;flex:none` }, icon(ic, 26, 2.2)), text);
+    h(
+      "div",
+      { class: "row", style: "gap:16px;font-size:24px;line-height:1.35;align-items:flex-start;color:#e6e7ec" },
+      h("div", { style: `color:${color};margin-top:2px;flex:none` }, icon(ic, 26, 2.2)),
+      text,
+    );
   const provCard = (accent: string, iconName: string, title: string, badge: string, lines: [string, string][]) =>
     h(
       "div",
@@ -187,9 +323,23 @@ export function assistant(): Scene {
       h(
         "div",
         { class: "row", style: "gap:18px" },
-        h("div", { class: "center", style: `width:64px;height:64px;border-radius:18px;background:${accent}22;color:${accent}` }, icon(iconName, 36, 2)),
+        h(
+          "div",
+          {
+            class: "center",
+            style: `width:64px;height:64px;border-radius:18px;background:${accent}22;color:${accent}`,
+          },
+          icon(iconName, 36, 2),
+        ),
         h("div", { style: "font-size:36px;font-weight:850;letter-spacing:-.02em" }, title),
-        h("div", { class: "mono", style: `margin-left:auto;padding:6px 14px;border-radius:999px;background:${accent}22;color:${accent};font-size:16px;font-weight:800;letter-spacing:.1em` }, badge),
+        h(
+          "div",
+          {
+            class: "mono",
+            style: `margin-left:auto;padding:6px 14px;border-radius:999px;background:${accent}22;color:${accent};font-size:16px;font-weight:800;letter-spacing:.1em`,
+          },
+          badge,
+        ),
       ),
       ...lines.map(([ic, text]) => bullet(ic, text, accent)),
     );
@@ -202,7 +352,12 @@ export function assistant(): Scene {
     ["check", "Any OpenAI-compatible Chat Completions API"],
     ["check", "Keys are encrypted and never returned to the browser"],
   ]);
-  const provRow = h("div", { class: "abs row", style: "left:0;right:0;top:330px;justify-content:center;gap:56px;align-items:stretch" }, cardFree, cardByok);
+  const provRow = h(
+    "div",
+    { class: "abs row", style: "left:0;right:0;top:330px;justify-content:center;gap:56px;align-items:stretch" },
+    cardFree,
+    cardByok,
+  );
 
   fg.append(keys, keyCapWrap, toast, drawer, leftA, leftB, chapter.el, provHeadWrap, provRow, cursor);
 

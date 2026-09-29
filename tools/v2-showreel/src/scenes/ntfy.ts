@@ -4,7 +4,8 @@ import { CodeType, Headline, TypeBlock, countTo, type Tok } from "../lib/kit";
 import type { Scene } from "../lib/scene";
 
 // The real run from the blog post: one MCP prompt, seven services wired to ntfy.
-const PROMPT = "Install a notification provider and then set it up everywhere it's supported in my installed integrations";
+const PROMPT =
+  "Install a notification provider and then set it up everywhere it's supported in my installed integrations";
 const THOUGHTS = [
   "Their integrations: SABnzbd, qBittorrent, Sonarr, Radarr, Prowlarr, Jellyfin x2, Overseerr, Immich, Umami, Beszel.",
   "Sonarr/Radarr/Prowlarr/Lidarr: have Notifications with ntfy, Telegram, Discord, Gotify, etc.",
@@ -76,29 +77,49 @@ export function ntfy(): Scene {
   const BODY_TOP = 70;
   const VIEW_H = CHAT_H - BODY_TOP - 128;
   const thread = h("div", { class: "col", style: "gap:18px" });
-  const chatBody = h("div", { class: "abs", style: `left:28px;right:28px;top:${BODY_TOP}px;height:${VIEW_H}px;overflow:hidden` }, thread);
+  const chatBody = h(
+    "div",
+    { class: "abs", style: `left:28px;right:28px;top:${BODY_TOP}px;height:${VIEW_H}px;overflow:hidden` },
+    thread,
+  );
   const chat = h(
     "div",
     { class: "abs card", style: `left:0;top:${CHAT_TOP}px;width:${CHAT_W}px;height:${CHAT_H}px;overflow:hidden` },
     h(
       "div",
-      { class: "row", style: "height:54px;padding:0 22px;gap:9px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.02)" },
-      ...["#ff5f57", "#febc2e", "#28c840"].map((c) => h("div", { style: `width:12px;height:12px;border-radius:50%;background:${c}` })),
+      {
+        class: "row",
+        style:
+          "height:54px;padding:0 22px;gap:9px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.02)",
+      },
+      ...["#ff5f57", "#febc2e", "#28c840"].map((c) =>
+        h("div", { style: `width:12px;height:12px;border-radius:50%;background:${c}` }),
+      ),
       h("div", { style: "margin-left:16px;font-size:18px;font-weight:700" }, "Agent"),
       h(
         "div",
         { class: "row mono", style: "margin-left:auto;gap:9px;font-size:14px;color:#a9abb6" },
-        h("div", { style: "width:9px;height:9px;border-radius:50%;background:var(--mint);box-shadow:0 0 10px var(--mint)" }),
+        h("div", {
+          style: "width:9px;height:9px;border-radius:50%;background:var(--mint);box-shadow:0 0 10px var(--mint)",
+        }),
         "homarr · MCP connected",
       ),
     ),
     chatBody,
   );
   const prompt = new TypeBlock(PROMPT, "", "#fff");
-  const sendBtn = h("div", { class: "center", style: "width:48px;height:48px;border-radius:13px;background:#fa5352;color:#fff;flex:none" }, icon("arrow-up", 26, 2.6));
+  const sendBtn = h(
+    "div",
+    { class: "center", style: "width:48px;height:48px;border-radius:13px;background:#fa5352;color:#fff;flex:none" },
+    icon("arrow-up", 26, 2.6),
+  );
   const composer = h(
     "div",
-    { class: "abs row", style: "left:28px;right:28px;bottom:20px;min-height:92px;padding:12px 14px 12px 22px;gap:16px;border-radius:16px;background:#121318;border:1px solid var(--line2);font-size:21px;line-height:1.35" },
+    {
+      class: "abs row",
+      style:
+        "left:28px;right:28px;bottom:20px;min-height:92px;padding:12px 14px 12px 22px;gap:16px;border-radius:16px;background:#121318;border:1px solid var(--line2);font-size:21px;line-height:1.35",
+    },
     h("div", { style: "flex:1" }, prompt.el),
     sendBtn,
   );
@@ -106,43 +127,87 @@ export function ntfy(): Scene {
   const bubble = (text: string) =>
     h(
       "div",
-      { style: "align-self:flex-end;max-width:640px;padding:16px 22px;border-radius:18px 18px 6px 18px;background:#2b1b1e;border:1px solid rgba(250,83,82,.45);font-size:22px;line-height:1.4;font-weight:560" },
+      {
+        style:
+          "align-self:flex-end;max-width:640px;padding:16px 22px;border-radius:18px 18px 6px 18px;background:#2b1b1e;border:1px solid rgba(250,83,82,.45);font-size:22px;line-height:1.4;font-weight:560",
+      },
       text,
     );
   const userMsg = bubble(PROMPT);
-  const shimmer = h("span", { style: "background:linear-gradient(90deg,#8f919d 0%,#fff 50%,#8f919d 100%);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent" }, "Thinking");
+  const shimmer = h(
+    "span",
+    {
+      style:
+        "background:linear-gradient(90deg,#8f919d 0%,#fff 50%,#8f919d 100%);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent",
+    },
+    "Thinking",
+  );
   const thoughtTypes = THOUGHTS.map((tx) => new TypeBlock(tx, "", "#8f919d"));
   const thinking = h(
     "div",
     { class: "col", style: "gap:8px" },
-    h("div", { class: "row", style: "gap:10px;font-size:19px;font-weight:700;color:#a9abb6" }, icon("sparkles", 20, 2), shimmer),
     h(
       "div",
-      { class: "col", style: "gap:6px;padding-left:16px;border-left:2px solid rgba(255,255,255,.12);font-size:18px;line-height:1.4;color:#9a9ca8;font-style:italic" },
+      { class: "row", style: "gap:10px;font-size:19px;font-weight:700;color:#a9abb6" },
+      icon("sparkles", 20, 2),
+      shimmer,
+    ),
+    h(
+      "div",
+      {
+        class: "col",
+        style:
+          "gap:6px;padding-left:16px;border-left:2px solid rgba(255,255,255,.12);font-size:18px;line-height:1.4;color:#9a9ca8;font-style:italic",
+      },
       ...thoughtTypes.map((tt) => h("div", {}, tt.el)),
     ),
   );
   const opts = OPTIONS.map(([key, name], i) =>
     h(
       "div",
-      { class: "row", style: "gap:12px;height:56px;padding:0 16px;border-radius:13px;border:1.5px solid var(--line2);font-size:22px;font-weight:700" },
+      {
+        class: "row",
+        style:
+          "gap:12px;height:56px;padding:0 16px;border-radius:13px;border:1.5px solid var(--line2);font-size:22px;font-weight:700",
+      },
       logo(key, 30),
       name,
-      i === 0 ? h("span", { style: "margin-left:auto;font-size:14px;padding:3px 9px;border-radius:999px;background:rgba(61,220,151,.15);color:var(--mint);font-weight:700" }, "Recommended") : "",
+      i === 0
+        ? h(
+            "span",
+            {
+              style:
+                "margin-left:auto;font-size:14px;padding:3px 9px;border-radius:999px;background:rgba(61,220,151,.15);color:var(--mint);font-weight:700",
+            },
+            "Recommended",
+          )
+        : "",
     ),
   );
   const optNtfy = opts[0]!;
   const optOther = h(
     "div",
-    { class: "row", style: "grid-column:span 2;gap:12px;height:48px;padding:0 16px;border-radius:13px;border:1px dashed var(--line2);font-size:19px;color:#8f919d" },
+    {
+      class: "row",
+      style:
+        "grid-column:span 2;gap:12px;height:48px;padding:0 16px;border-radius:13px;border:1px dashed var(--line2);font-size:19px;color:#8f919d",
+    },
     icon("pencil", 20, 2),
     "Type your own answer",
   );
   const question = h(
     "div",
-    { class: "col", style: "gap:10px;padding:18px 20px;border-radius:16px;background:rgba(124,140,255,.07);border:1px solid rgba(124,140,255,.35)" },
+    {
+      class: "col",
+      style:
+        "gap:10px;padding:18px 20px;border-radius:16px;background:rgba(124,140,255,.07);border:1px solid rgba(124,140,255,.35)",
+    },
     h("div", { class: "label", style: "color:#aab4ff;font-size:13px" }, "Question"),
-    h("div", { style: "font-size:24px;font-weight:750;margin-bottom:4px" }, "Which notification provider should I install and wire up?"),
+    h(
+      "div",
+      { style: "font-size:24px;font-weight:750;margin-bottom:4px" },
+      "Which notification provider should I install and wire up?",
+    ),
     h("div", { style: "display:grid;grid-template-columns:1fr 1fr;gap:10px" }, ...opts, optOther),
   );
   const compose = new CodeType(COMPOSE);
@@ -150,11 +215,23 @@ export function ntfy(): Scene {
   const reply = h(
     "div",
     { class: "col", style: "gap:10px" },
-    h("div", { style: "font-size:21px;line-height:1.4;color:#e6e7ec" }, "Add ntfy to your compose file and start it. Tell me when it's up."),
+    h(
+      "div",
+      { style: "font-size:21px;line-height:1.4;color:#e6e7ec" },
+      "Add ntfy to your compose file and start it. Tell me when it's up.",
+    ),
     h(
       "div",
       { style: "padding:12px 16px;border-radius:12px;background:#0d0e12;border:1px solid var(--line2)" },
-      h("div", { class: "row mono", style: "gap:8px;font-size:13px;color:var(--muted);margin-bottom:6px;letter-spacing:.08em" }, icon("brand-docker", 16, 2), "COMPOSE.YAML"),
+      h(
+        "div",
+        {
+          class: "row mono",
+          style: "gap:8px;font-size:13px;color:var(--muted);margin-bottom:6px;letter-spacing:.08em",
+        },
+        icon("brand-docker", 16, 2),
+        "COMPOSE.YAML",
+      ),
       compose.el,
     ),
   );
@@ -175,13 +252,30 @@ export function ntfy(): Scene {
   });
   const wiring = h(
     "div",
-    { class: "col", style: "align-self:stretch;gap:4px;padding:12px 16px;border-radius:12px;background:#15161b;border:1px solid var(--line2)" },
-    h("div", { class: "row mono", style: "gap:10px;font-size:16px;margin-bottom:4px" }, h("span", { style: "color:#a9abb6" }, "execute"), h("span", { style: "font-weight:700" }, "homarr.integration_request"), h("span", { style: "margin-left:auto;color:var(--muted)" }, `×${CALLS.length}`)),
+    {
+      class: "col",
+      style:
+        "align-self:stretch;gap:4px;padding:12px 16px;border-radius:12px;background:#15161b;border:1px solid var(--line2)",
+    },
+    h(
+      "div",
+      { class: "row mono", style: "gap:10px;font-size:16px;margin-bottom:4px" },
+      h("span", { style: "color:#a9abb6" }, "execute"),
+      h("span", { style: "font-weight:700" }, "homarr.integration_request"),
+      h("span", { style: "margin-left:auto;color:var(--muted)" }, `×${CALLS.length}`),
+    ),
     ...callEls.map((c) => c.el),
   );
   const items = [userMsg, thinking, question, reply, userUp, wiring];
   thread.append(...items);
-  const cursor = h("div", { class: "abs", style: "left:0;top:0;width:34px;height:34px;color:#fff;filter:drop-shadow(0 4px 8px rgba(0,0,0,.6))" }, icon("filled:pointer", 34, 1));
+  const cursor = h(
+    "div",
+    {
+      class: "abs",
+      style: "left:0;top:0;width:34px;height:34px;color:#fff;filter:drop-shadow(0 4px 8px rgba(0,0,0,.6))",
+    },
+    icon("filled:pointer", 34, 1),
+  );
 
   // ---------- Report table (right of the chat once wiring starts) ----------
   const TX = 980;
@@ -189,17 +283,28 @@ export function ntfy(): Scene {
   const TY = 268;
   const RH = 86;
   const tableHead = new Headline("Then it set everything up itself:", { size: 44, weight: 750 });
-  const tableHeadWrap = h("div", { class: "abs", style: `left:${TX}px;top:${TY - 76}px;white-space:nowrap` }, tableHead.el);
+  const tableHeadWrap = h(
+    "div",
+    { class: "abs", style: `left:${TX}px;top:${TY - 76}px;white-space:nowrap` },
+    tableHead.el,
+  );
   const alerts = h("span", {}, "0");
   const rows = ROWS.map(([key, name, how, ver], i) => {
     const verEl = h(
       "div",
-      { class: "row", style: "justify-self:end;gap:6px;padding:5px 11px;border-radius:9px;background:rgba(61,220,151,.12);border:1px solid rgba(61,220,151,.4);color:#b8f5d8;font-size:15px;font-weight:700;line-height:1.3;max-width:210px;text-align:right" },
+      {
+        class: "row",
+        style:
+          "justify-self:end;gap:6px;padding:5px 11px;border-radius:9px;background:rgba(61,220,151,.12);border:1px solid rgba(61,220,151,.4);color:#b8f5d8;font-size:15px;font-weight:700;line-height:1.3;max-width:210px;text-align:right",
+      },
       key === "beszel" ? h("span", {}, alerts, " alerts created") : ver,
     );
     const el = h(
       "div",
-      { class: "abs", style: `left:${TX}px;top:${TY + i * (RH + 6)}px;width:${TW}px;height:${RH}px;display:grid;grid-template-columns:190px 1fr 220px;align-items:center;padding:0 18px;border-radius:13px;background:rgba(255,255,255,.025);border:1px solid var(--line)` },
+      {
+        class: "abs",
+        style: `left:${TX}px;top:${TY + i * (RH + 6)}px;width:${TW}px;height:${RH}px;display:grid;grid-template-columns:190px 1fr 220px;align-items:center;padding:0 18px;border-radius:13px;background:rgba(255,255,255,.025);border:1px solid var(--line)`,
+      },
       h("div", { class: "row", style: "gap:12px;font-size:21px;font-weight:800" }, logo(key, 36), name),
       h("div", { style: "font-size:17px;line-height:1.3;color:#d7d8de;padding-right:16px" }, how),
       verEl,
@@ -212,12 +317,25 @@ export function ntfy(): Scene {
   const notif = (key: string, name: string) =>
     h(
       "div",
-      { class: "row", style: "gap:14px;padding:16px;border-radius:22px;background:rgba(40,42,52,.92);border:1px solid rgba(255,255,255,.08);align-items:flex-start" },
-      h("div", { class: "center", style: "width:44px;height:44px;border-radius:12px;background:#1d2d35;flex:none" }, logo("ntfy", 30)),
+      {
+        class: "row",
+        style:
+          "gap:14px;padding:16px;border-radius:22px;background:rgba(40,42,52,.92);border:1px solid rgba(255,255,255,.08);align-items:flex-start",
+      },
+      h(
+        "div",
+        { class: "center", style: "width:44px;height:44px;border-radius:12px;background:#1d2d35;flex:none" },
+        logo("ntfy", 30),
+      ),
       h(
         "div",
         { class: "col", style: "gap:3px;flex:1" },
-        h("div", { class: "row", style: "font-size:15px;color:#a9abb6;gap:6px" }, "ntfy", h("span", { style: "margin-left:auto" }, "now")),
+        h(
+          "div",
+          { class: "row", style: "font-size:15px;color:#a9abb6;gap:6px" },
+          "ntfy",
+          h("span", { style: "margin-left:auto" }, "now"),
+        ),
         h("div", { class: "row", style: "gap:8px;font-size:19px;font-weight:750" }, logo(key, 20), name),
         h("div", { style: "font-size:17px;color:#d7d8de" }, "Test notification"),
       ),
@@ -226,24 +344,54 @@ export function ntfy(): Scene {
   const n2 = notif("radarr", "Radarr");
   const phone = h(
     "div",
-    { class: "abs", style: "left:1250px;top:140px;width:400px;height:820px;border-radius:64px;background:#0d0e13;border:10px solid #2a2b33;box-shadow:0 60px 120px rgba(0,0,0,.7),0 0 0 2px #3a3b44;overflow:hidden" },
+    {
+      class: "abs",
+      style:
+        "left:1250px;top:140px;width:400px;height:820px;border-radius:64px;background:#0d0e13;border:10px solid #2a2b33;box-shadow:0 60px 120px rgba(0,0,0,.7),0 0 0 2px #3a3b44;overflow:hidden",
+    },
     h("div", { class: "abs", style: "inset:0;background:radial-gradient(120% 70% at 30% 0%,#3a1c2a,#10121c 60%)" }),
-    h("div", { class: "abs", style: "left:50%;top:18px;width:120px;height:34px;margin-left:-60px;border-radius:20px;background:#000" }),
-    h("div", { class: "abs display", style: "left:0;right:0;top:110px;text-align:center;font-size:96px;font-weight:300;letter-spacing:-.03em;color:#f1eef4" }, "21:04"),
+    h("div", {
+      class: "abs",
+      style: "left:50%;top:18px;width:120px;height:34px;margin-left:-60px;border-radius:20px;background:#000",
+    }),
+    h(
+      "div",
+      {
+        class: "abs display",
+        style:
+          "left:0;right:0;top:110px;text-align:center;font-size:96px;font-weight:300;letter-spacing:-.03em;color:#f1eef4",
+      },
+      "21:04",
+    ),
     h("div", { class: "abs col", style: "left:18px;right:18px;top:300px;gap:12px" }, n1, n2),
   );
   const buzzLines = [0, 1].map(() =>
-    h("div", { class: "abs", style: "width:40px;height:220px;border-left:4px solid rgba(250,83,82,.7);border-radius:50%" }),
+    h("div", {
+      class: "abs",
+      style: "width:40px;height:220px;border-left:4px solid rgba(250,83,82,.7);border-radius:50%",
+    }),
   );
   const phoneWrap = h("div", { class: "abs", style: "inset:0" }, phone, ...buzzLines);
   const cap1 = new Headline("Two test notifications later, the phone buzzed.", { size: 50, weight: 700, lh: 1.15 });
   const cap1Wrap = h("div", { class: "abs", style: "left:120px;top:250px;width:980px" }, cap1.el);
-  const zero = h("div", { class: "abs display", style: "left:112px;top:410px;font-size:260px;font-weight:850;letter-spacing:-.05em;color:var(--mint);line-height:1" }, "$0");
+  const zero = h(
+    "div",
+    {
+      class: "abs display",
+      style:
+        "left:112px;top:410px;font-size:260px;font-weight:850;letter-spacing:-.05em;color:var(--mint);line-height:1",
+    },
+    "$0",
+  );
   const cost = h(
     "div",
     { class: "abs col", style: "left:124px;top:700px;gap:16px" },
     h("div", { style: "font-size:40px;font-weight:700" }, "Qwen3.8-27B ran locally through MLX."),
-    h("div", { style: "font-size:30px;font-weight:600;color:#cfd0d8" }, "Or $0.008 with DeepSeek v4.1 Flash, free through Homarr Assistant."),
+    h(
+      "div",
+      { style: "font-size:30px;font-weight:600;color:#cfd0d8" },
+      "Or $0.008 with DeepSeek v4.1 Flash, free through Homarr Assistant.",
+    ),
     h("div", { style: "font-size:28px;color:#8f919d" }, "The only side effect was a funny-smelling GPU."),
   );
   const costLines = [...cost.children] as HTMLElement[];
@@ -349,7 +497,9 @@ export function ntfy(): Scene {
         const sk = t > SEND ? Math.exp(-(t - SEND) * 6) : 0;
         sendBtn.style.transform = `scale(${(t > SEND && t < SEND + 0.1 ? 0.88 : 1 + sk * 0.12).toFixed(3)})`;
         sendBtn.style.boxShadow = `0 0 ${(sk * 40).toFixed(0)}px rgba(250,83,82,${(sk * 0.8).toFixed(2)})`;
-        thoughtTypes.forEach((tt, i) => tt.update(t, thStarts[i]!, TCPS, i === thoughtTypes.length - 1 ? Q : thStarts[i + 1]! - 0.05));
+        thoughtTypes.forEach((tt, i) =>
+          tt.update(t, thStarts[i]!, TCPS, i === thoughtTypes.length - 1 ? Q : thStarts[i + 1]! - 0.05),
+        );
         shimmer.style.backgroundPosition = `${(200 - ((t * 120) % 200)).toFixed(1)}% 0`;
         // Messages pop into the thread (no fade): a quick rise from just below.
         items.forEach((it, i) => {
@@ -374,7 +524,9 @@ export function ntfy(): Scene {
         const pk = picked ? Math.exp(-(t - CLICK) * 5) : 0;
         const hover = seg(t, CLICK - 0.25, CLICK - 0.12);
         optNtfy.style.borderColor = picked ? "#fa5352" : hover > 0 ? "rgba(255,255,255,.35)" : "var(--line2)";
-        optNtfy.style.background = picked ? `rgba(250,83,82,${(0.14 + pk * 0.3).toFixed(3)})` : `rgba(255,255,255,${(hover * 0.05).toFixed(3)})`;
+        optNtfy.style.background = picked
+          ? `rgba(250,83,82,${(0.14 + pk * 0.3).toFixed(3)})`
+          : `rgba(255,255,255,${(hover * 0.05).toFixed(3)})`;
         optNtfy.style.transform = `scale(${(t > CLICK && t < CLICK + 0.12 ? 0.97 : 1).toFixed(3)})`;
         opts.slice(1).forEach((o) => (o.style.opacity = picked ? "0.45" : "1"));
         optOther.style.opacity = picked ? "0.45" : "1";
@@ -436,7 +588,10 @@ export function ntfy(): Scene {
         n.style.visibility = t >= nt ? "visible" : "hidden";
       });
       buzzLines.forEach((b, i) => {
-        const k = Math.max(t > PH + 0.5 ? Math.exp(-(t - PH - 0.5) * 5) : 0, t > PH + 0.9 ? Math.exp(-(t - PH - 0.9) * 5) : 0);
+        const k = Math.max(
+          t > PH + 0.5 ? Math.exp(-(t - PH - 0.5) * 5) : 0,
+          t > PH + 0.9 ? Math.exp(-(t - PH - 0.9) * 5) : 0,
+        );
         const x = i === 0 ? 1212 : 1660;
         b.style.transform = `translate(${x}px,440px) scaleX(${i === 0 ? -1 : 1}) scale(${(1 + (1 - k) * 0.3).toFixed(3)})`;
         b.style.opacity = String(k);

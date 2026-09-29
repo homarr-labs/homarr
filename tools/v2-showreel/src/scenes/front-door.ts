@@ -4,7 +4,20 @@ import { Chapter, CodeType, Headline, svg, bez, type Tok } from "../lib/kit";
 import type { Scene } from "../lib/scene";
 import { LOGO_D, LOGO_VB } from "./intro";
 
-const services = ["sonarr", "radarr", "seerr", "sabNzbd", "qBittorrent", "bazarr", "beszel", "jellyfin", "prowlarr", "immich", "plex", "proxmox"];
+const services = [
+  "sonarr",
+  "radarr",
+  "seerr",
+  "sabNzbd",
+  "qBittorrent",
+  "bazarr",
+  "beszel",
+  "jellyfin",
+  "prowlarr",
+  "immich",
+  "plex",
+  "proxmox",
+];
 const names: Record<string, string> = {
   sonarr: "Sonarr",
   radarr: "Radarr",
@@ -80,21 +93,60 @@ export function frontDoor(): Scene {
       class: "abs",
       style: `left:${DX - DW / 2}px;top:${DY - DH / 2}px;width:${DW}px;height:${DH}px;border-radius:8px;transform-origin:0 50%;background:linear-gradient(90deg,#1b1b22,#121217);border:1.5px solid rgba(255,176,168,.35);box-shadow:inset 0 0 0 14px rgba(255,255,255,.02)`,
     },
-    h("div", { class: "abs", style: "left:26px;right:26px;top:30px;height:190px;border-radius:6px;border:1.5px solid rgba(255,255,255,.08)" }),
-    h("div", { class: "abs", style: "left:26px;right:26px;bottom:30px;height:210px;border-radius:6px;border:1.5px solid rgba(255,255,255,.08)" }),
-    h("div", { class: "abs", style: "right:24px;top:246px;width:16px;height:16px;border-radius:50%;background:#ffb0a8;box-shadow:0 0 12px rgba(250,83,82,.8)" }),
+    h("div", {
+      class: "abs",
+      style: "left:26px;right:26px;top:30px;height:190px;border-radius:6px;border:1.5px solid rgba(255,255,255,.08)",
+    }),
+    h("div", {
+      class: "abs",
+      style: "left:26px;right:26px;bottom:30px;height:210px;border-radius:6px;border:1.5px solid rgba(255,255,255,.08)",
+    }),
+    h("div", {
+      class: "abs",
+      style:
+        "right:24px;top:246px;width:16px;height:16px;border-radius:50%;background:#ffb0a8;box-shadow:0 0 12px rgba(250,83,82,.8)",
+    }),
   );
   const frame = h("div", {
     class: "abs",
     style: `left:${DX - DW / 2 - 10}px;top:${DY - DH / 2 - 10}px;width:${DW + 20}px;height:${DH + 10}px;border:4px solid #ffb0a8;border-bottom:none;border-radius:12px 12px 0 0;box-shadow:0 0 30px rgba(250,83,82,.7),inset 0 0 20px rgba(250,83,82,.5)`,
   });
-  const sill = h("div", { class: "abs", style: `left:260px;right:260px;top:${DY + DH / 2}px;height:2px;background:linear-gradient(90deg,transparent,rgba(255,176,168,.8),transparent)` });
-  const persp = h("div", { class: "abs", style: `inset:0;perspective:1400px;perspective-origin:${DX}px ${DY}px` }, panel);
+  const sill = h("div", {
+    class: "abs",
+    style: `left:260px;right:260px;top:${DY + DH / 2}px;height:2px;background:linear-gradient(90deg,transparent,rgba(255,176,168,.8),transparent)`,
+  });
+  const persp = h(
+    "div",
+    { class: "abs", style: `inset:0;perspective:1400px;perspective-origin:${DX}px ${DY}px` },
+    panel,
+  );
   const headL = new Headline("The front door", { size: 104, accent: ["front", "door"] });
   const headR = new Headline("to your homelab.", { size: 104 });
-  const headLWrap = h("div", { class: "abs", style: `right:${1920 - (DX - DW / 2 - 50)}px;top:${DY - 64}px;white-space:nowrap;text-align:right` }, headL.el);
-  const headRWrap = h("div", { class: "abs", style: `left:${DX + DW / 2 + 50}px;top:${DY - 64}px;white-space:nowrap` }, headR.el);
-  const doorScene = h("div", { class: "abs", style: `inset:0;transform-origin:${DX}px ${DY}px` }, rays, spill, sill, doorLight, persp, frame, headLWrap, headRWrap);
+  const headLWrap = h(
+    "div",
+    {
+      class: "abs",
+      style: `right:${1920 - (DX - DW / 2 - 50)}px;top:${DY - 64}px;white-space:nowrap;text-align:right`,
+    },
+    headL.el,
+  );
+  const headRWrap = h(
+    "div",
+    { class: "abs", style: `left:${DX + DW / 2 + 50}px;top:${DY - 64}px;white-space:nowrap` },
+    headR.el,
+  );
+  const doorScene = h(
+    "div",
+    { class: "abs", style: `inset:0;transform-origin:${DX}px ${DY}px` },
+    rays,
+    spill,
+    sill,
+    doorLight,
+    persp,
+    frame,
+    headLWrap,
+    headRWrap,
+  );
 
   const chapter = new Chapter("04", "Integration requests");
 
@@ -107,7 +159,10 @@ export function frontDoor(): Scene {
   });
   const hubLock = h(
     "div",
-    { class: "abs row mono", style: `left:${cx - 90}px;top:${cy + 130}px;width:180px;justify-content:center;gap:8px;font-size:15px;font-weight:700;color:var(--mint);letter-spacing:.14em` },
+    {
+      class: "abs row mono",
+      style: `left:${cx - 90}px;top:${cy + 130}px;width:180px;justify-content:center;gap:8px;font-size:15px;font-weight:700;color:var(--mint);letter-spacing:.14em`,
+    },
     icon("lock", 18, 2.4),
     "ENCRYPTED",
   );
@@ -146,7 +201,11 @@ export function frontDoor(): Scene {
     );
     const cred = h(
       "div",
-      { class: "abs row mono", style: "left:0;top:0;gap:6px;padding:6px 10px;border-radius:8px;background:#2a1a1c;border:1px solid rgba(250,83,82,.6);color:#ffb3ad;font-size:13px;font-weight:700;white-space:nowrap" },
+      {
+        class: "abs row mono",
+        style:
+          "left:0;top:0;gap:6px;padding:6px 10px;border-radius:8px;background:#2a1a1c;border:1px solid rgba(250,83,82,.6);color:#ffb3ad;font-size:13px;font-weight:700;white-space:nowrap",
+      },
       icon(i % 3 === 0 ? "world" : "key", 15, 2.2),
       credKinds[i % 3]!,
     );
@@ -158,8 +217,20 @@ export function frontDoor(): Scene {
     lh: 1.15,
   });
   hubCaption.el.style.letterSpacing = "-0.02em";
-  const hubCapWrap = h("div", { class: "abs", style: "left:260px;right:260px;top:888px;text-align:center" }, hubCaption.el);
-  const hubGroup = h("div", { class: "abs", style: "inset:0;transform-origin:960px 500px" }, lines, ...nodes.map((n) => n.el), hub, hubLock, ...nodes.map((n) => n.cred));
+  const hubCapWrap = h(
+    "div",
+    { class: "abs", style: "left:260px;right:260px;top:888px;text-align:center" },
+    hubCaption.el,
+  );
+  const hubGroup = h(
+    "div",
+    { class: "abs", style: "inset:0;transform-origin:960px 500px" },
+    lines,
+    ...nodes.map((n) => n.el),
+    hub,
+    hubLock,
+    ...nodes.map((n) => n.cred),
+  );
 
   // ---------- Explanation: an endpoint Homarr has no code for ----------
   const headA = new Headline("Homarr only has code for a few Sonarr endpoints.", { size: 60, accent: ["few"] });
@@ -168,15 +239,49 @@ export function frontDoor(): Scene {
   const headBWrap = h("div", { class: "abs", style: "left:96px;top:140px;white-space:nowrap" }, headB.el);
 
   const apiRows = API.map(([m, path, built]) => {
-    const tagCode = h("div", { class: "row mono", style: "gap:6px;font-size:14px;font-weight:700;letter-spacing:.06em;padding:5px 10px;border-radius:7px;background:rgba(250,83,82,.14);color:#ffb3ad" }, icon("code", 15, 2.4), "HOMARR CODE");
-    const tagNone = h("div", { class: "mono", style: "font-size:14px;letter-spacing:.06em;padding:5px 10px;border-radius:7px;border:1px dashed rgba(255,255,255,.2);color:#8f919d" }, "NO HOMARR CODE");
-    const tagDone = h("div", { class: "row mono", style: "white-space:nowrap;gap:6px;font-size:14px;font-weight:700;letter-spacing:.06em;padding:5px 10px;border-radius:7px;background:#1f7a55;color:#fff" }, icon("check", 15, 3), "CALLED THROUGH HOMARR");
-    const tags = h("div", { class: "row", style: "margin-left:auto;position:relative" }, built ? tagCode : tagNone, built ? "" : tagDone);
+    const tagCode = h(
+      "div",
+      {
+        class: "row mono",
+        style:
+          "gap:6px;font-size:14px;font-weight:700;letter-spacing:.06em;padding:5px 10px;border-radius:7px;background:rgba(250,83,82,.14);color:#ffb3ad",
+      },
+      icon("code", 15, 2.4),
+      "HOMARR CODE",
+    );
+    const tagNone = h(
+      "div",
+      {
+        class: "mono",
+        style:
+          "font-size:14px;letter-spacing:.06em;padding:5px 10px;border-radius:7px;border:1px dashed rgba(255,255,255,.2);color:#8f919d",
+      },
+      "NO HOMARR CODE",
+    );
+    const tagDone = h(
+      "div",
+      {
+        class: "row mono",
+        style:
+          "white-space:nowrap;gap:6px;font-size:14px;font-weight:700;letter-spacing:.06em;padding:5px 10px;border-radius:7px;background:#1f7a55;color:#fff",
+      },
+      icon("check", 15, 3),
+      "CALLED THROUGH HOMARR",
+    );
+    const tags = h(
+      "div",
+      { class: "row", style: "margin-left:auto;position:relative" },
+      built ? tagCode : tagNone,
+      built ? "" : tagDone,
+    );
     tagDone.style.position = "absolute";
     tagDone.style.right = "0";
     const el = h(
       "div",
-      { class: "row", style: "gap:16px;height:58px;padding:0 18px;border-top:1px solid var(--line);border-radius:10px" },
+      {
+        class: "row",
+        style: "gap:16px;height:58px;padding:0 18px;border-top:1px solid var(--line);border-radius:10px",
+      },
       h("div", { class: "mono", style: `width:62px;font-size:16px;font-weight:800;color:${methodColor[m]}` }, m),
       h("div", { class: "mono", style: "font-size:21px;color:#e4e5ea" }, path),
       tags,
@@ -186,20 +291,45 @@ export function frontDoor(): Scene {
   const apiCard = h(
     "div",
     { class: "abs card col", style: "left:96px;top:250px;width:790px;padding:14px 12px 10px" },
-    h("div", { class: "row", style: "gap:14px;height:62px;padding:0 18px;font-size:26px;font-weight:800" }, logo("sonarr", 38), "Sonarr API", h("div", { class: "mono", style: "margin-left:auto;font-size:15px;color:var(--muted);font-weight:500" }, "v3")),
+    h(
+      "div",
+      { class: "row", style: "gap:14px;height:62px;padding:0 18px;font-size:26px;font-weight:800" },
+      logo("sonarr", 38),
+      "Sonarr API",
+      h("div", { class: "mono", style: "margin-left:auto;font-size:15px;color:var(--muted);font-weight:500" }, "v3"),
+    ),
     ...apiRows.map((r) => r.el),
   );
 
   const reqCodeT = new CodeType(reqCode);
   reqCodeT.el.style.cssText = "font-size:21px;line-height:33px;font-family:'JetBrains Mono';color:#c9d1d9";
-  const reqStatus = h("div", { class: "row mono", style: "margin-left:auto;gap:8px;padding:5px 12px;border-radius:8px;background:#1f7a55;color:#fff;font-size:16px;font-weight:800" }, "201", h("span", { style: "font-weight:500" }, "Created"));
+  const reqStatus = h(
+    "div",
+    {
+      class: "row mono",
+      style:
+        "margin-left:auto;gap:8px;padding:5px 12px;border-radius:8px;background:#1f7a55;color:#fff;font-size:16px;font-weight:800",
+    },
+    "201",
+    h("span", { style: "font-weight:500" }, "Created"),
+  );
   const reqCard = h(
     "div",
-    { class: "abs card", style: "left:960px;top:250px;width:864px;padding:18px 26px 22px;border-color:rgba(250,83,82,.45)" },
+    {
+      class: "abs card",
+      style: "left:960px;top:250px;width:864px;padding:18px 26px 22px;border-color:rgba(250,83,82,.45)",
+    },
     h(
       "div",
       { class: "row", style: "gap:14px;height:46px;margin-bottom:10px" },
-      h("div", { class: "mono", style: "padding:4px 12px;border-radius:8px;background:#fa5352;color:#fff;font-size:18px;font-weight:800" }, "POST"),
+      h(
+        "div",
+        {
+          class: "mono",
+          style: "padding:4px 12px;border-radius:8px;background:#fa5352;color:#fff;font-size:18px;font-weight:800",
+        },
+        "POST",
+      ),
       h("div", { class: "mono", style: "font-size:24px;font-weight:700" }, "/api/integrations/request"),
       reqStatus,
     ),
@@ -208,42 +338,109 @@ export function frontDoor(): Scene {
   const FLOW_Y = 705;
   const homarrNode = h(
     "div",
-    { class: "abs card row", style: `left:960px;top:${FLOW_Y - 68}px;width:470px;height:136px;padding:0 24px;gap:18px` },
+    {
+      class: "abs card row",
+      style: `left:960px;top:${FLOW_Y - 68}px;width:470px;height:136px;padding:0 24px;gap:18px`,
+    },
     flatLogo(70),
-    h("div", { class: "col", style: "gap:6px" }, h("div", { style: "font-size:28px;font-weight:850" }, "Homarr"), h("div", { style: "font-size:18px;color:#b9bbc6;line-height:1.3" }, "Adds the saved URL and API key.", h("br"), "Never returns them.")),
+    h(
+      "div",
+      { class: "col", style: "gap:6px" },
+      h("div", { style: "font-size:28px;font-weight:850" }, "Homarr"),
+      h(
+        "div",
+        { style: "font-size:18px;color:#b9bbc6;line-height:1.3" },
+        "Adds the saved URL and API key.",
+        h("br"),
+        "Never returns them.",
+      ),
+    ),
   );
   const sonarrNode = h(
     "div",
-    { class: "abs card row", style: `left:1570px;top:${FLOW_Y - 68}px;width:254px;height:136px;padding:0 24px;gap:16px` },
+    {
+      class: "abs card row",
+      style: `left:1570px;top:${FLOW_Y - 68}px;width:254px;height:136px;padding:0 24px;gap:16px`,
+    },
     logo("sonarr", 64),
     h("div", { style: "font-size:28px;font-weight:850" }, "Sonarr"),
   );
-  const flowWire = h("div", { class: "abs", style: `left:1430px;width:140px;top:${FLOW_Y - 1}px;height:3px;background:rgba(250,83,82,.55);transform-origin:0 50%` });
+  const flowWire = h("div", {
+    class: "abs",
+    style: `left:1430px;width:140px;top:${FLOW_Y - 1}px;height:3px;background:rgba(250,83,82,.55);transform-origin:0 50%`,
+  });
   const packet = h(
     "div",
-    { class: "abs row mono", style: "left:0;top:0;gap:10px;padding:9px 14px;border-radius:11px;background:#fa5352;color:#fff;font-weight:700;font-size:17px;white-space:nowrap;box-shadow:0 0 30px rgba(250,83,82,.6)" },
+    {
+      class: "abs row mono",
+      style:
+        "left:0;top:0;gap:10px;padding:9px 14px;border-radius:11px;background:#fa5352;color:#fff;font-weight:700;font-size:17px;white-space:nowrap;box-shadow:0 0 30px rgba(250,83,82,.6)",
+    },
     "POST /api/v3/command",
   );
   // Second leg: the same call, now carrying Homarr's stored key, crosses the wire to Sonarr.
   const pkt2 = h(
     "div",
-    { class: "abs row", style: "left:0;top:0;gap:8px;padding:10px 12px;border-radius:999px;background:#fa5352;color:#fff;box-shadow:0 0 30px rgba(250,83,82,.8)" },
+    {
+      class: "abs row",
+      style:
+        "left:0;top:0;gap:8px;padding:10px 12px;border-radius:999px;background:#fa5352;color:#fff;box-shadow:0 0 30px rgba(250,83,82,.8)",
+    },
     icon("send", 26, 2.4),
-    h("span", { class: "center", style: "width:36px;height:36px;border-radius:50%;background:#1f7a55" }, icon("key", 22, 2.6)),
+    h(
+      "span",
+      { class: "center", style: "width:36px;height:36px;border-radius:50%;background:#1f7a55" },
+      icon("key", 22, 2.6),
+    ),
   );
   const resp = h(
     "div",
-    { class: "abs row mono", style: "left:0;top:0;gap:10px;padding:9px 14px;border-radius:11px;background:#15261f;border:1.5px solid var(--mint);color:#d8ffe9;font-size:17px;font-weight:700;white-space:nowrap;box-shadow:0 0 30px rgba(61,220,151,.35)" },
+    {
+      class: "abs row mono",
+      style:
+        "left:0;top:0;gap:10px;padding:9px 14px;border-radius:11px;background:#15261f;border:1.5px solid var(--mint);color:#d8ffe9;font-size:17px;font-weight:700;white-space:nowrap;box-shadow:0 0 30px rgba(61,220,151,.35)",
+    },
     h("span", { style: "color:var(--mint)" }, "201"),
     "Created",
   );
-  const statement = new Headline("If the service's API has the endpoint, Homarr can call it.", { size: 52, weight: 800 });
+  const statement = new Headline("If the service's API has the endpoint, Homarr can call it.", {
+    size: 52,
+    weight: 800,
+  });
   const stWrap = h("div", { class: "abs", style: "left:96px;top:836px;white-space:nowrap" }, statement.el);
   const lane = (tag: string, text: string) =>
-    h("div", { class: "row", style: "gap:12px;padding:9px 16px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid var(--line2)" }, h("div", { class: "mono", style: "font-size:14px;letter-spacing:.16em;color:var(--muted)" }, tag), h("div", { class: "mono", style: "font-size:20px;font-weight:600" }, text));
-  const lanes = [lane("REST", "POST /api/integrations/request"), lane("tRPC", "integration.request"), lane("MCP", "integration_request")];
+    h(
+      "div",
+      {
+        class: "row",
+        style:
+          "gap:12px;padding:9px 16px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid var(--line2)",
+      },
+      h("div", { class: "mono", style: "font-size:14px;letter-spacing:.16em;color:var(--muted)" }, tag),
+      h("div", { class: "mono", style: "font-size:20px;font-weight:600" }, text),
+    );
+  const lanes = [
+    lane("REST", "POST /api/integrations/request"),
+    lane("tRPC", "integration.request"),
+    lane("MCP", "integration_request"),
+  ];
   const laneRow = h("div", { class: "abs row", style: "left:96px;top:936px;gap:14px" }, ...lanes);
-  const expl = h("div", { class: "abs", style: "inset:0" }, apiCard, flowWire, reqCard, homarrNode, sonarrNode, packet, pkt2, resp, stWrap, laneRow, headAWrap, headBWrap);
+  const expl = h(
+    "div",
+    { class: "abs", style: "inset:0" },
+    apiCard,
+    flowWire,
+    reqCard,
+    homarrNode,
+    sonarrNode,
+    packet,
+    pkt2,
+    resp,
+    stWrap,
+    laneRow,
+    headAWrap,
+    headBWrap,
+  );
 
   bg.append(doorScene, hubGroup);
   fg.append(chapter.el, hubCapWrap, expl);
@@ -389,10 +586,15 @@ export function frontDoor(): Scene {
         r.tagDone.style.transform = `scale(${done ? clamp(spring(t - R1, 3.2, 0.45), 0, 1.5).toFixed(3) : 0})`;
         r.tagNone.style.visibility = done ? "hidden" : "visible";
         const focus = i === CALL && t > ROW;
-        r.el.style.background = done ? `rgba(61,220,151,${(0.1 + k * 0.2).toFixed(3)})` : focus ? "rgba(250,83,82,.12)" : "";
+        r.el.style.background = done
+          ? `rgba(61,220,151,${(0.1 + k * 0.2).toFixed(3)})`
+          : focus
+            ? "rgba(250,83,82,.12)"
+            : "";
         r.el.style.boxShadow = focus ? `inset 0 0 0 1.5px ${done ? "rgba(61,220,151,.6)" : "rgba(250,83,82,.6)"}` : "";
         // Other unsupported rows recede once the call is singled out.
-        r.el.style.opacity = t > ROW && i !== CALL && !r.built ? String(lerp(1, 0.55, seg(t, ROW, ROW + 0.3))) : r.el.style.opacity;
+        r.el.style.opacity =
+          t > ROW && i !== CALL && !r.built ? String(lerp(1, 0.55, seg(t, ROW, ROW + 0.3))) : r.el.style.opacity;
       });
 
       const rIn = E.outExpo(seg(t, REQ, REQ + 0.45));

@@ -17,7 +17,15 @@ interface JointChain {
   side: Side;
 }
 
-const lobsterParts = ["left-antenna", "right-antenna", "body", "left-eye", "right-eye", "right-claw", "left-claw"] as const;
+const lobsterParts = [
+  "left-antenna",
+  "right-antenna",
+  "body",
+  "left-eye",
+  "right-eye",
+  "right-claw",
+  "left-claw",
+] as const;
 
 function smoothstep(a: number, b: number, v: number) {
   const t = THREE.MathUtils.clamp((v - a) / (b - a), 0, 1);
@@ -299,9 +307,16 @@ export class LogoGL {
     this.model.children.forEach((child, i) => {
       const home = child.userData.home as THREE.Vector3;
       if (st.explode > 0) {
-        const dir = home.clone().setZ(i % 2 ? 60 : -60).normalize();
+        const dir = home
+          .clone()
+          .setZ(i % 2 ? 60 : -60)
+          .normalize();
         child.position.copy(home).add(dir.multiplyScalar(st.explode * (120 + (i % 3) * 40)));
-        child.rotation.set(st.explode * (i % 2 ? 0.8 : -0.6), st.explode * ((i % 3) - 1) * 0.9, st.explode * 0.4 * (i - 3));
+        child.rotation.set(
+          st.explode * (i % 2 ? 0.8 : -0.6),
+          st.explode * ((i % 3) - 1) * 0.9,
+          st.explode * 0.4 * (i - 3),
+        );
       } else {
         child.position.copy(home);
         child.rotation.set(0, 0, 0);

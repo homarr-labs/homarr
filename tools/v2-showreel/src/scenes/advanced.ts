@@ -15,7 +15,13 @@ const ROWS: Row[] = [
   ["Cosmos Laundromat", 0, "6.8 GiB", "0 B/s", "0 B/s", "∞", "PAUSED"],
   ["Spring", 100, "2.3 GiB", "0 B/s", "5.5 MiB/s", "an hour", "SEEDING"],
 ];
-const STATE_COLOR: Record<string, string> = { DOWNLOADING: "#4fb3ff", LEECHING: "#ffb547", COMPLETED: "#3ddc97", SEEDING: "#3ddc97", PAUSED: "#8f919d" };
+const STATE_COLOR: Record<string, string> = {
+  DOWNLOADING: "#4fb3ff",
+  LEECHING: "#ffb547",
+  COMPLETED: "#3ddc97",
+  SEEDING: "#3ddc97",
+  PAUSED: "#8f919d",
+};
 const COLS = "370px 240px 110px 140px 130px 140px 1fr";
 
 const FRAME = { x: 96, y: 300, w: 1728, h: 690 };
@@ -29,37 +35,82 @@ export function advanced(): Scene {
 
   const head = new Headline("Advanced views.", { size: 84, accent: ["advanced"] });
   const headWrap = h("div", { class: "abs", style: "left:96px;top:84px;white-space:nowrap" }, head.el);
-  const sub = new Headline("Supported widgets: hover and hold Shift for half a second.", { size: 32, weight: 600, color: "#b9bbc6" });
+  const sub = new Headline("Supported widgets: hover and hold Shift for half a second.", {
+    size: 32,
+    weight: 600,
+    color: "#b9bbc6",
+  });
   const subWrap = h("div", { class: "abs", style: "left:96px;top:196px;white-space:nowrap" }, sub.el);
 
   // ---------- Board ----------
   const tile = (key: string, name: string, c: number, r: number) =>
     h(
       "div",
-      { class: "abs card col center", style: `left:${cellX(c)}px;top:${cellY(r)}px;width:150px;height:140px;gap:8px;border-radius:16px` },
+      {
+        class: "abs card col center",
+        style: `left:${cellX(c)}px;top:${cellY(r)}px;width:150px;height:140px;gap:8px;border-radius:16px`,
+      },
       logo(key, 46),
       h("div", { style: "font-size:15px;font-weight:650;color:#d7d8de;white-space:nowrap" }, name),
     );
-  const bar = (p: number, color: string) => h("div", { style: "height:9px;border-radius:5px;background:rgba(255,255,255,.08);overflow:hidden" }, h("div", { style: `height:100%;width:${p}%;background:${color};border-radius:5px` }));
+  const bar = (p: number, color: string) =>
+    h(
+      "div",
+      { style: "height:9px;border-radius:5px;background:rgba(255,255,255,.08);overflow:hidden" },
+      h("div", { style: `height:100%;width:${p}%;background:${color};border-radius:5px` }),
+    );
   const widget = h(
     "div",
-    { class: "abs card col", style: `left:${WID.x}px;top:${WID.y}px;width:${WID.w}px;height:${WID.h}px;padding:18px 22px;gap:14px;border-radius:16px` },
-    h("div", { class: "row", style: "gap:10px;font-size:19px;font-weight:750" }, logo("qBittorrent", 26), "Downloads", h("div", { style: "margin-left:auto;font-size:15px;color:#8f919d;font-weight:600" }, "3 active")),
+    {
+      class: "abs card col",
+      style: `left:${WID.x}px;top:${WID.y}px;width:${WID.w}px;height:${WID.h}px;padding:18px 22px;gap:14px;border-radius:16px`,
+    },
+    h(
+      "div",
+      { class: "row", style: "gap:10px;font-size:19px;font-weight:750" },
+      logo("qBittorrent", 26),
+      "Downloads",
+      h("div", { style: "margin-left:auto;font-size:15px;color:#8f919d;font-weight:600" }, "3 active"),
+    ),
     bar(22, "#4fb3ff"),
     bar(61, "#3ddc97"),
   );
   const weather = h(
     "div",
-    { class: "abs card col", style: `left:${cellX(8)}px;top:${cellY(0)}px;width:316px;height:296px;padding:20px 22px;gap:6px;border-radius:16px` },
-    h("div", { class: "row", style: "gap:10px;font-size:17px;font-weight:750;color:#ffb547" }, icon("sun", 22, 2.2), h("span", { style: "color:#fff" }, "Weather")),
+    {
+      class: "abs card col",
+      style: `left:${cellX(8)}px;top:${cellY(0)}px;width:316px;height:296px;padding:20px 22px;gap:6px;border-radius:16px`,
+    },
+    h(
+      "div",
+      { class: "row", style: "gap:10px;font-size:17px;font-weight:750;color:#ffb547" },
+      icon("sun", 22, 2.2),
+      h("span", { style: "color:#fff" }, "Weather"),
+    ),
     h("div", { class: "display", style: "font-size:84px;margin-top:10px" }, "21°"),
     h("div", { style: "font-size:17px;color:#a9abb6" }, "Clear sky"),
   );
   const calendar = h(
     "div",
-    { class: "abs card col", style: `left:${cellX(4)}px;top:${cellY(1)}px;width:${WID.w}px;height:140px;padding:18px 22px;gap:12px;border-radius:16px` },
-    h("div", { class: "row", style: "gap:10px;font-size:17px;font-weight:750" }, h("div", { style: "color:#7c8cff" }, icon("calendar", 22, 2.2)), "Calendar"),
-    h("div", { style: "display:grid;grid-template-columns:repeat(14,1fr);gap:8px" }, ...Array.from({ length: 28 }, (_, i) => h("div", { style: `height:20px;border-radius:5px;background:${[3, 9, 16, 22].includes(i) ? "#fa5352" : i === 12 ? "#7c8cff" : "rgba(255,255,255,.06)"}` }))),
+    {
+      class: "abs card col",
+      style: `left:${cellX(4)}px;top:${cellY(1)}px;width:${WID.w}px;height:140px;padding:18px 22px;gap:12px;border-radius:16px`,
+    },
+    h(
+      "div",
+      { class: "row", style: "gap:10px;font-size:17px;font-weight:750" },
+      h("div", { style: "color:#7c8cff" }, icon("calendar", 22, 2.2)),
+      "Calendar",
+    ),
+    h(
+      "div",
+      { style: "display:grid;grid-template-columns:repeat(14,1fr);gap:8px" },
+      ...Array.from({ length: 28 }, (_, i) =>
+        h("div", {
+          style: `height:20px;border-radius:5px;background:${[3, 9, 16, 22].includes(i) ? "#fa5352" : i === 12 ? "#7c8cff" : "rgba(255,255,255,.06)"}`,
+        }),
+      ),
+    ),
   );
   const APPS: [string, string][] = [
     ["jellyfin", "Jellyfin"],
@@ -85,47 +136,118 @@ export function advanced(): Scene {
   const tiles = APPS.map(([k, n], i) => tile(k, n, ...cell(i)));
   const frame = h(
     "div",
-    { class: "abs", style: `left:${FRAME.x}px;top:${FRAME.y}px;width:${FRAME.w}px;height:${FRAME.h}px;border-radius:22px;background:#0f1014;border:1px solid rgba(255,255,255,.1);overflow:hidden` },
+    {
+      class: "abs",
+      style: `left:${FRAME.x}px;top:${FRAME.y}px;width:${FRAME.w}px;height:${FRAME.h}px;border-radius:22px;background:#0f1014;border:1px solid rgba(255,255,255,.1);overflow:hidden`,
+    },
     h(
       "div",
-      { class: "row", style: "margin:22px 26px 0;height:64px;padding:0 18px;gap:12px;border-radius:14px;background:#17181d;border:1px solid var(--line)" },
+      {
+        class: "row",
+        style:
+          "margin:22px 26px 0;height:64px;padding:0 18px;gap:12px;border-radius:14px;background:#17181d;border:1px solid var(--line)",
+      },
       lobster(34),
       h("div", { style: "font-size:21px;font-weight:800" }, "Homelab"),
     ),
   );
-  const boardEl = h("div", { class: "abs", style: "inset:0;transform-origin:960px 640px" }, frame, ...tiles, widget, weather, calendar);
+  const boardEl = h(
+    "div",
+    { class: "abs", style: "inset:0;transform-origin:960px 640px" },
+    frame,
+    ...tiles,
+    widget,
+    weather,
+    calendar,
+  );
 
   // ---------- Hover + Shift hold ----------
-  const cursor = h("div", { class: "abs", style: "left:0;top:0;width:34px;height:34px;z-index:30;color:#fff;filter:drop-shadow(0 4px 8px rgba(0,0,0,.6))" }, icon("filled:pointer", 34, 1));
+  const cursor = h(
+    "div",
+    {
+      class: "abs",
+      style: "left:0;top:0;width:34px;height:34px;z-index:30;color:#fff;filter:drop-shadow(0 4px 8px rgba(0,0,0,.6))",
+    },
+    icon("filled:pointer", 34, 1),
+  );
   const ring = h("div", { class: "abs", style: "inset:-8px;border-radius:50%" });
   const key = h("div", { class: "kbd", style: "font-size:24px;padding:.25em .6em;border-radius:.3em" }, "Shift");
   const holdTime = h("span", {}, "0.0s");
   const keyWrap = h(
     "div",
     { class: "abs row", style: "left:0;top:0;gap:14px;z-index:31" },
-    h("div", { style: "position:relative;width:44px;height:44px" }, ring, h("div", { class: "abs", style: "inset:6px;border-radius:50%;background:#15161b" })),
+    h(
+      "div",
+      { style: "position:relative;width:44px;height:44px" },
+      ring,
+      h("div", { class: "abs", style: "inset:6px;border-radius:50%;background:#15161b" }),
+    ),
     key,
     h("div", { class: "mono", style: "font-size:18px;color:#b9bbc6;min-width:52px" }, holdTime),
   );
-  const outline = h("div", { class: "abs", style: `left:${WID.x - 6}px;top:${WID.y - 6}px;width:${WID.w + 12}px;height:${WID.h + 12}px;border-radius:20px;border:3px solid #fa5352` });
+  const outline = h("div", {
+    class: "abs",
+    style: `left:${WID.x - 6}px;top:${WID.y - 6}px;width:${WID.w + 12}px;height:${WID.h + 12}px;border-radius:20px;border:3px solid #fa5352`,
+  });
 
   // ---------- Advanced panel ----------
-  const badge = (color: string, n: string) => h("div", { class: "row mono", style: `gap:6px;padding:4px 10px;border-radius:999px;background:${color}1f;color:${color};font-size:15px;font-weight:800` }, h("div", { style: `width:8px;height:8px;border-radius:50%;background:${color}` }), n);
+  const badge = (color: string, n: string) =>
+    h(
+      "div",
+      {
+        class: "row mono",
+        style: `gap:6px;padding:4px 10px;border-radius:999px;background:${color}1f;color:${color};font-size:15px;font-weight:800`,
+      },
+      h("div", { style: `width:8px;height:8px;border-radius:50%;background:${color}` }),
+      n,
+    );
   const totalPct = h("div", { class: "display", style: "font-size:52px;width:110px" }, "25%");
-  const totalBar = h("div", { style: "height:100%;width:25%;border-radius:5px;background:linear-gradient(90deg,#4fb3ff,#3ddc97)" });
+  const totalBar = h("div", {
+    style: "height:100%;width:25%;border-radius:5px;background:linear-gradient(90deg,#4fb3ff,#3ddc97)",
+  });
   const summary = h(
     "div",
     { class: "row", style: "gap:26px;height:86px;padding:0 6px;border-bottom:1px solid var(--line)" },
     totalPct,
-    h("div", { class: "col", style: "gap:8px;width:260px" }, h("div", { style: "height:10px;border-radius:5px;background:rgba(255,255,255,.08);overflow:hidden" }, totalBar), h("div", { class: "mono", style: "font-size:15px;color:#b9bbc6" }, "11.5 GiB / 45.6 GiB")),
-    h("div", { class: "row mono", style: "gap:8px;font-size:20px;font-weight:700;color:#4fb3ff" }, icon("arrow-down", 20, 2.6), "115.5 MiB/s"),
-    h("div", { class: "row mono", style: "gap:8px;font-size:20px;font-weight:700;color:#3ddc97" }, icon("arrow-up", 20, 2.6), "8.9 MiB/s"),
-    h("div", { class: "row", style: "gap:8px" }, badge("#4fb3ff", "3"), badge("#ffb547", "1"), badge("#3ddc97", "2"), badge("#8f919d", "1")),
-    h("div", { class: "row", style: "margin-left:auto;gap:10px;font-size:17px;font-weight:700;color:#d7d8de" }, logo("qBittorrent", 26), "1 client"),
+    h(
+      "div",
+      { class: "col", style: "gap:8px;width:260px" },
+      h("div", { style: "height:10px;border-radius:5px;background:rgba(255,255,255,.08);overflow:hidden" }, totalBar),
+      h("div", { class: "mono", style: "font-size:15px;color:#b9bbc6" }, "11.5 GiB / 45.6 GiB"),
+    ),
+    h(
+      "div",
+      { class: "row mono", style: "gap:8px;font-size:20px;font-weight:700;color:#4fb3ff" },
+      icon("arrow-down", 20, 2.6),
+      "115.5 MiB/s",
+    ),
+    h(
+      "div",
+      { class: "row mono", style: "gap:8px;font-size:20px;font-weight:700;color:#3ddc97" },
+      icon("arrow-up", 20, 2.6),
+      "8.9 MiB/s",
+    ),
+    h(
+      "div",
+      { class: "row", style: "gap:8px" },
+      badge("#4fb3ff", "3"),
+      badge("#ffb547", "1"),
+      badge("#3ddc97", "2"),
+      badge("#8f919d", "1"),
+    ),
+    h(
+      "div",
+      { class: "row", style: "margin-left:auto;gap:10px;font-size:17px;font-weight:700;color:#d7d8de" },
+      logo("qBittorrent", 26),
+      "1 client",
+    ),
   );
   const headerRow = h(
     "div",
-    { class: "label", style: `display:grid;grid-template-columns:${COLS};align-items:center;height:44px;padding:0 14px;font-size:13px;color:#8f919d;letter-spacing:.14em` },
+    {
+      class: "label",
+      style: `display:grid;grid-template-columns:${COLS};align-items:center;height:44px;padding:0 14px;font-size:13px;color:#8f919d;letter-spacing:.14em`,
+    },
     ...["Name", "Progress", "Size", "Down", "Up", "ETA", "State"].map((c) => h("div", {}, c)),
   );
   const fills: { el: HTMLElement; pct: HTMLElement; p: number }[] = [];
@@ -135,14 +257,34 @@ export function advanced(): Scene {
     fills.push({ el: fill, pct, p });
     return h(
       "div",
-      { style: `display:grid;grid-template-columns:${COLS};align-items:center;height:60px;padding:0 14px;border-top:1px solid var(--line);font-size:18px` },
-      h("div", { class: "row", style: "gap:10px;font-weight:650;white-space:nowrap;overflow:hidden" }, h("div", { style: "color:#ffd23f;flex:none" }, icon("filled:bolt", 18, 1)), name),
-      h("div", { class: "row", style: "gap:12px;padding-right:24px" }, h("div", { style: "flex:1;height:8px;border-radius:4px;background:rgba(255,255,255,.08);overflow:hidden" }, fill), h("div", { class: "mono", style: "width:44px;font-size:15px;color:#b9bbc6;text-align:right" }, pct)),
+      {
+        style: `display:grid;grid-template-columns:${COLS};align-items:center;height:60px;padding:0 14px;border-top:1px solid var(--line);font-size:18px`,
+      },
+      h(
+        "div",
+        { class: "row", style: "gap:10px;font-weight:650;white-space:nowrap;overflow:hidden" },
+        h("div", { style: "color:#ffd23f;flex:none" }, icon("filled:bolt", 18, 1)),
+        name,
+      ),
+      h(
+        "div",
+        { class: "row", style: "gap:12px;padding-right:24px" },
+        h(
+          "div",
+          { style: "flex:1;height:8px;border-radius:4px;background:rgba(255,255,255,.08);overflow:hidden" },
+          fill,
+        ),
+        h("div", { class: "mono", style: "width:44px;font-size:15px;color:#b9bbc6;text-align:right" }, pct),
+      ),
       h("div", { class: "mono", style: "font-size:16px;color:#d7d8de" }, size),
       h("div", { class: "mono", style: `font-size:16px;color:${down === "0 B/s" ? "#6f717d" : "#4fb3ff"}` }, down),
       h("div", { class: "mono", style: `font-size:16px;color:${up === "0 B/s" ? "#6f717d" : "#3ddc97"}` }, up),
       h("div", { style: "font-size:16px;color:#b9bbc6;white-space:nowrap" }, eta),
-      h("div", { class: "mono", style: `font-size:13px;font-weight:800;letter-spacing:.06em;color:${STATE_COLOR[state]}` }, state),
+      h(
+        "div",
+        { class: "mono", style: `font-size:13px;font-weight:800;letter-spacing:.06em;color:${STATE_COLOR[state]}` },
+        state,
+      ),
     );
   });
   const controls = h(
@@ -150,12 +292,28 @@ export function advanced(): Scene {
     { class: "row", style: "height:52px;padding:0 10px;border-top:1px solid var(--line);color:#a9abb6;gap:18px" },
     icon("filter", 22, 2),
     icon("bolt", 22, 2),
-    h("div", { class: "row", style: "margin-left:auto;gap:18px" }, icon("player-play", 22, 2), icon("player-pause", 22, 2)),
+    h(
+      "div",
+      { class: "row", style: "margin-left:auto;gap:18px" },
+      icon("player-play", 22, 2),
+      icon("player-pause", 22, 2),
+    ),
   );
-  const panelBody = h("div", { class: "col", style: "height:100%" }, summary, headerRow, ...rowEls, h("div", { style: "flex:1" }), controls);
+  const panelBody = h(
+    "div",
+    { class: "col", style: "height:100%" },
+    summary,
+    headerRow,
+    ...rowEls,
+    h("div", { style: "flex:1" }),
+    controls,
+  );
   const panel = h(
     "div",
-    { class: "abs card", style: `left:${PANEL.x}px;top:${PANEL.y}px;width:${PANEL.w}px;height:${PANEL.h}px;padding:18px 26px 8px;border-radius:22px;transform-origin:0 0;background:#16171c;border-color:rgba(255,255,255,.14);box-shadow:0 60px 140px rgba(0,0,0,.75)` },
+    {
+      class: "abs card",
+      style: `left:${PANEL.x}px;top:${PANEL.y}px;width:${PANEL.w}px;height:${PANEL.h}px;padding:18px 26px 8px;border-radius:22px;transform-origin:0 0;background:#16171c;border-color:rgba(255,255,255,.14);box-shadow:0 60px 140px rgba(0,0,0,.75)`,
+    },
     panelBody,
   );
 
@@ -192,7 +350,8 @@ export function advanced(): Scene {
       const open = E.outExpo(seg(t, OPEN, OPEN + 0.4));
       const bIn = E.outExpo(seg(t, 0, 0.5));
       boardEl.style.transform = `translateY(${((1 - bIn) * 60).toFixed(1)}px) scale(${lerp(1, 0.94, open).toFixed(4)})`;
-      boardEl.style.filter = open > 0.01 ? `brightness(${lerp(1, 0.45, open).toFixed(3)}) blur(${(open * 3).toFixed(2)}px)` : "";
+      boardEl.style.filter =
+        open > 0.01 ? `brightness(${lerp(1, 0.45, open).toFixed(3)}) blur(${(open * 3).toFixed(2)}px)` : "";
 
       // Cursor glides onto Downloads and stays while Shift is held.
       const cp = E.inOutCubic(seg(t, 0.1, HOVER));

@@ -8,7 +8,9 @@ export class Headline {
   ws: HTMLElement[];
   constructor(
     text: string,
-    opts: { size: number; cls?: string; accent?: string[]; color?: string; weight?: number; lh?: number } = { size: 96 },
+    opts: { size: number; cls?: string; accent?: string[]; color?: string; weight?: number; lh?: number } = {
+      size: 96,
+    },
   ) {
     const { el, words: ws } = words(text);
     this.el = h("div", { class: `display ${opts.cls ?? ""}` }, el);
@@ -18,7 +20,8 @@ export class Headline {
     if (opts.color) this.el.style.color = opts.color;
     this.ws = ws;
     const accent = new Set((opts.accent ?? []).map((w) => w.toLowerCase()));
-    for (const w of ws) if (accent.has(w.textContent!.toLowerCase().replace(/[.,!?]/g, ""))) w.style.color = "var(--coral)";
+    for (const w of ws)
+      if (accent.has(w.textContent!.toLowerCase().replace(/[.,!?]/g, ""))) w.style.color = "var(--coral)";
   }
   update(t: number, tin: number, tout = Infinity, stagger = 0.055, dur = 0.75) {
     this.ws.forEach((w, i) => {
@@ -70,7 +73,11 @@ export class Chapter {
   rule: HTMLElement;
   lab: HTMLElement;
   constructor(index: string, label: string) {
-    this.num = h("div", { class: "mono", style: "font-size:17px;font-weight:700;color:var(--coral);letter-spacing:.1em" }, index);
+    this.num = h(
+      "div",
+      { class: "mono", style: "font-size:17px;font-weight:700;color:var(--coral);letter-spacing:.1em" },
+      index,
+    );
     this.rule = h("div", { style: "height:2px;width:64px;background:var(--coral);transform-origin:0 50%" });
     this.lab = h("div", { class: "label", style: "color:var(--text);opacity:.9" }, label);
     this.el = h("div", { class: "abs row", style: "gap:18px;left:96px;top:78px" }, this.num, this.rule, this.lab);
@@ -164,7 +171,15 @@ export class CodeType {
 }
 
 /** Number that counts up with easing. */
-export function countTo(el: HTMLElement, t: number, t0: number, t1: number, to: number, from = 0, fmt = (v: number) => String(Math.round(v))) {
+export function countTo(
+  el: HTMLElement,
+  t: number,
+  t0: number,
+  t1: number,
+  to: number,
+  from = 0,
+  fmt = (v: number) => String(Math.round(v)),
+) {
   el.textContent = fmt(lerp(from, to, E.outExpo(seg(t, t0, t1))));
 }
 

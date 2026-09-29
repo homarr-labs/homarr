@@ -46,23 +46,61 @@ function thumb(item: Item, g: boolean) {
   if (item.kind === "queue")
     QUEUE.forEach((c, i) =>
       el.append(
-        h("div", { class: "abs", style: `left:16px;top:${12 + i * 24}px;width:14px;height:18px;border-radius:3px;background:${c}` }),
-        h("div", { class: "abs", style: `left:42px;top:${19 + i * 24}px;width:200px;height:5px;border-radius:3px;background:rgba(255,255,255,.12)` }),
-        h("div", { class: "abs", style: `left:42px;top:${19 + i * 24}px;width:${[172, 122, 74, 28][i]}px;height:5px;border-radius:3px;background:#fa5352` }),
+        h("div", {
+          class: "abs",
+          style: `left:16px;top:${12 + i * 24}px;width:14px;height:18px;border-radius:3px;background:${c}`,
+        }),
+        h("div", {
+          class: "abs",
+          style: `left:42px;top:${19 + i * 24}px;width:200px;height:5px;border-radius:3px;background:rgba(255,255,255,.12)`,
+        }),
+        h("div", {
+          class: "abs",
+          style: `left:42px;top:${19 + i * 24}px;width:${[172, 122, 74, 28][i]}px;height:5px;border-radius:3px;background:#fa5352`,
+        }),
       ),
     );
   else if (item.kind === "poke")
     el.append(
-      h("div", { class: "abs", style: "left:93px;top:14px;width:84px;height:84px;border-radius:50%;background:linear-gradient(180deg,#fa5352 0 46%,#222 46% 54%,#eee 54%);box-shadow:0 0 0 5px #222 inset" }),
-      h("div", { class: "abs", style: "left:124px;top:45px;width:22px;height:22px;border-radius:50%;background:#eee;border:5px solid #222" }),
+      h("div", {
+        class: "abs",
+        style:
+          "left:93px;top:14px;width:84px;height:84px;border-radius:50%;background:linear-gradient(180deg,#fa5352 0 46%,#222 46% 54%,#eee 54%);box-shadow:0 0 0 5px #222 inset",
+      }),
+      h("div", {
+        class: "abs",
+        style: "left:124px;top:45px;width:22px;height:22px;border-radius:50%;background:#eee;border:5px solid #222",
+      }),
     );
   else if (item.kind === "css") {
     const nord = item.title === "Nord";
     el.append(
-      h("div", { class: "abs mono", style: `left:14px;top:14px;font-size:13px;line-height:22px;color:hsl(${item.hue} 90% 80%)` }, ".mantine-Card-root {"),
-      h("div", { class: "abs mono", style: "left:30px;top:36px;font-size:13px;line-height:22px;color:#fff;opacity:.75" }, nord ? "background: #3b4252;" : "border-radius: 26px;"),
-      h("div", { class: "abs mono", style: "left:30px;top:58px;font-size:13px;line-height:22px;color:#fff;opacity:.75" }, nord ? "color: #eceff4;" : "backdrop-filter: blur(16px);"),
-      h("div", { class: "abs mono", style: `left:14px;top:80px;font-size:13px;line-height:22px;color:hsl(${item.hue} 90% 80%)` }, "}"),
+      h(
+        "div",
+        {
+          class: "abs mono",
+          style: `left:14px;top:14px;font-size:13px;line-height:22px;color:hsl(${item.hue} 90% 80%)`,
+        },
+        ".mantine-Card-root {",
+      ),
+      h(
+        "div",
+        { class: "abs mono", style: "left:30px;top:36px;font-size:13px;line-height:22px;color:#fff;opacity:.75" },
+        nord ? "background: #3b4252;" : "border-radius: 26px;",
+      ),
+      h(
+        "div",
+        { class: "abs mono", style: "left:30px;top:58px;font-size:13px;line-height:22px;color:#fff;opacity:.75" },
+        nord ? "color: #eceff4;" : "backdrop-filter: blur(16px);",
+      ),
+      h(
+        "div",
+        {
+          class: "abs mono",
+          style: `left:14px;top:80px;font-size:13px;line-height:22px;color:hsl(${item.hue} 90% 80%)`,
+        },
+        "}",
+      ),
     );
   } else if (item.kind === "bars")
     for (let b = 0; b < 9; b++)
@@ -75,8 +113,14 @@ function thumb(item: Item, g: boolean) {
   else
     for (let r = 0; r < 3; r++)
       el.append(
-        h("div", { class: "abs", style: `left:16px;top:${16 + r * 30}px;width:22px;height:22px;border-radius:${g ? 8 : 6}px;background:rgba(255,255,255,.2)` }),
-        h("div", { class: "abs", style: `left:48px;top:${22 + r * 30}px;width:${160 - r * 34}px;height:9px;border-radius:5px;background:hsla(${item.hue} 80% 75% / .45)` }),
+        h("div", {
+          class: "abs",
+          style: `left:16px;top:${16 + r * 30}px;width:22px;height:22px;border-radius:${g ? 8 : 6}px;background:rgba(255,255,255,.2)`,
+        }),
+        h("div", {
+          class: "abs",
+          style: `left:48px;top:${22 + r * 30}px;width:${160 - r * 34}px;height:9px;border-radius:5px;background:hsla(${item.hue} 80% 75% / .45)`,
+        }),
       );
   return el;
 }
@@ -93,7 +137,12 @@ function card(item: Item, g: boolean) {
     },
     "Install",
   );
-  const installed = h("div", { class: "abs row center", style: "inset:0;gap:5px;background:#2f9e6b;opacity:0" }, icon("check", 16, 3), "Installed");
+  const installed = h(
+    "div",
+    { class: "abs row center", style: "inset:0;gap:5px;background:#2f9e6b;opacity:0" },
+    icon("check", 16, 3),
+    "Installed",
+  );
   btn.append(installed);
   const badge =
     item.kind === "css"
@@ -108,11 +157,26 @@ function card(item: Item, g: boolean) {
       : h(
           "span",
           { class: "row", style: "gap:6px" },
-          item.uses ? h("span", { style: `font-size:13px;font-weight:600;margin-right:2px;color:${g ? "#a99fd6" : "var(--muted)"}` }, "Works with") : null,
+          item.uses
+            ? h(
+                "span",
+                { style: `font-size:13px;font-weight:600;margin-right:2px;color:${g ? "#a99fd6" : "var(--muted)"}` },
+                "Works with",
+              )
+            : null,
           ...(item.uses ?? []).map((u) =>
-            h("span", { class: "center", style: `width:30px;height:30px;border-radius:${g ? 11 : 7}px;background:${g ? "rgba(255,255,255,.12)" : "#2a2b31"}` }, logo(u, 20)),
+            h(
+              "span",
+              {
+                class: "center",
+                style: `width:30px;height:30px;border-radius:${g ? 11 : 7}px;background:${g ? "rgba(255,255,255,.12)" : "#2a2b31"}`,
+              },
+              logo(u, 20),
+            ),
           ),
-          item.uses ? null : h("span", { class: "mono", style: "font-size:12px;color:var(--muted);letter-spacing:.1em" }, "API"),
+          item.uses
+            ? null
+            : h("span", { class: "mono", style: "font-size:12px;color:var(--muted);letter-spacing:.1em" }, "API"),
         );
   const el = h(
     "div",
@@ -127,10 +191,17 @@ function card(item: Item, g: boolean) {
     thumb(item, g),
     h(
       "div",
-      { class: "abs", style: `left:16px;top:134px;width:170px;font-size:18px;font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;${g ? "color:#f1edff" : ""}` },
+      {
+        class: "abs",
+        style: `left:16px;top:134px;width:170px;font-size:18px;font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;${g ? "color:#f1edff" : ""}`,
+      },
       item.title,
     ),
-    h("div", { class: "abs", style: `left:16px;top:160px;font-size:14px;color:${g ? "#a99fd6" : "var(--muted)"}` }, `by ${item.by}`),
+    h(
+      "div",
+      { class: "abs", style: `left:16px;top:160px;font-size:14px;color:${g ? "#a99fd6" : "var(--muted)"}` },
+      `by ${item.by}`,
+    ),
     h(
       "div",
       { class: "abs row", style: `right:14px;top:137px;gap:10px;font-size:14px;color:${g ? "#d9d2ff" : "#cfcfd6"}` },
@@ -170,7 +241,11 @@ function panel(theme: Theme) {
       "div",
       {
         style: `padding:8px 16px;border-radius:${g ? 16 : 8}px;font-size:16px;font-weight:650;${
-          on ? (g ? "background:rgba(185,168,255,.22);color:#e6e0ff" : "background:rgba(250,83,82,.16);color:#ff8f86") : `color:${g ? "#a99fd6" : "var(--muted)"}`
+          on
+            ? g
+              ? "background:rgba(185,168,255,.22);color:#e6e0ff"
+              : "background:rgba(250,83,82,.16);color:#ff8f86"
+            : `color:${g ? "#a99fd6" : "var(--muted)"}`
         }`,
       },
       label,
@@ -187,10 +262,26 @@ function panel(theme: Theme) {
     },
     h(
       "div",
-      { class: "abs row", style: `left:${PAD}px;right:${PAD}px;top:18px;height:48px;gap:12px;font-weight:800;font-size:22px;${g ? "color:#e6e0ff" : ""}` },
-      h("div", { class: "center", style: `width:34px;height:34px;border-radius:${g ? 12 : 8}px;background:${g ? "#8b7bff" : "#fa5352"}` }, icon("building-store", 20, 2.2)),
+      {
+        class: "abs row",
+        style: `left:${PAD}px;right:${PAD}px;top:18px;height:48px;gap:12px;font-weight:800;font-size:22px;${g ? "color:#e6e0ff" : ""}`,
+      },
+      h(
+        "div",
+        {
+          class: "center",
+          style: `width:34px;height:34px;border-radius:${g ? 12 : 8}px;background:${g ? "#8b7bff" : "#fa5352"}`,
+        },
+        icon("building-store", 20, 2.2),
+      ),
       "Workshop",
-      h("div", { class: "row", style: "gap:4px;margin-left:18px" }, tab("Widgets", true), tab("Custom CSS", false), tab("Installed", false)),
+      h(
+        "div",
+        { class: "row", style: "gap:4px;margin-left:18px" },
+        tab("Widgets", true),
+        tab("Custom CSS", false),
+        tab("Installed", false),
+      ),
       h(
         "div",
         {
@@ -208,7 +299,8 @@ function panel(theme: Theme) {
 
 /** Screen rect of the published widget's catalog slot (inside the panel's 1px border). */
 export const SLOT = { x: PANEL.x + 1 + PAD, y: PANEL.y + 1 + HEAD, w: W, h: H };
-export const WORKSHOP_BG = "radial-gradient(ellipse 55% 50% at 14% 12%,rgba(250,82,82,.16),rgba(250,82,82,0) 62%),#0b0b0f";
+export const WORKSHOP_BG =
+  "radial-gradient(ellipse 55% 50% at 14% 12%,rgba(250,82,82,.16),rgba(250,82,82,0) 62%),#0b0b0f";
 
 /**
  * The published widget as a Workshop card, for Custom Widgets to morph into. It ends the scene alone in its slot and
@@ -228,7 +320,8 @@ export function workshop(): Scene {
   // The Custom CSS restyle spills past the catalog into the background.
   const bgGlass = h("div", {
     class: "abs",
-    style: "inset:0;background:radial-gradient(ellipse 70% 60% at 70% 20%,rgba(139,123,255,.3),rgba(139,123,255,0) 70%),#0d0b1c",
+    style:
+      "inset:0;background:radial-gradient(ellipse 70% 60% at 70% 20%,rgba(139,123,255,.3),rgba(139,123,255,0) 70%),#0d0b1c",
   });
   bg.append(bgGlass);
   const fg = h("div", { class: "scene" });
@@ -238,14 +331,22 @@ export function workshop(): Scene {
   const both = [A, B];
   const cursor = h(
     "div",
-    { class: "abs", style: "left:0;top:0;width:40px;height:40px;color:#fff;filter:drop-shadow(0 4px 8px rgba(0,0,0,.6))" },
+    {
+      class: "abs",
+      style: "left:0;top:0;width:40px;height:40px;color:#fff;filter:drop-shadow(0 4px 8px rgba(0,0,0,.6))",
+    },
     icon("filled:pointer", 40, 1),
   );
 
   const chapter = new Chapter("02", "Workshop");
   const h1 = new Headline("Share it in the", { size: 96, weight: 830 });
   const h2 = new Headline("Workshop.", { size: 96, weight: 830, color: "var(--coral)" });
-  const head = h("div", { class: "abs col", style: "left:100px;top:150px;line-height:1.08;white-space:nowrap" }, h1.el, h2.el);
+  const head = h(
+    "div",
+    { class: "abs col", style: "left:100px;top:150px;line-height:1.08;white-space:nowrap" },
+    h1.el,
+    h2.el,
+  );
   const desc = new Headline("Publish and install community submissions.", { size: 30, weight: 500, color: "#b5b5bf" });
   const descWrap = h("div", { class: "abs", style: "left:104px;top:392px;white-space:nowrap" }, desc.el);
   const chips = (
@@ -259,21 +360,35 @@ export function workshop(): Scene {
   ).map(([ic, label]) =>
     h(
       "div",
-      { class: "chip", style: "font-size:19px;padding:9px 17px;color:#dcdce2;border-color:rgba(255,255,255,.2);gap:9px" },
+      {
+        class: "chip",
+        style: "font-size:19px;padding:9px 17px;color:#dcdce2;border-color:rgba(255,255,255,.2);gap:9px",
+      },
       h("span", { style: "color:#ff8787;display:inline-flex" }, icon(ic, 20, 2)),
       label,
     ),
   );
-  const chipBox = h("div", { class: "abs row", style: "left:104px;top:458px;width:700px;flex-wrap:wrap;gap:12px" }, ...chips);
+  const chipBox = h(
+    "div",
+    { class: "abs row", style: "left:104px;top:458px;width:700px;flex-wrap:wrap;gap:12px" },
+    ...chips,
+  );
   const usesLabel = h(
     "div",
-    { class: "abs row", style: "left:104px;top:600px;width:700px;gap:14px;align-items:flex-start;font-size:26px;line-height:1.35;font-weight:600;color:#dcdce2" },
+    {
+      class: "abs row",
+      style:
+        "left:104px;top:600px;width:700px;gap:14px;align-items:flex-start;font-size:26px;line-height:1.35;font-weight:600;color:#dcdce2",
+    },
     h("span", { style: "color:#ff8787;display:inline-flex;margin-top:3px" }, icon("plug-connected", 28, 2)),
     h("span", {}, "Custom widgets can leverage your integrations, so you don't have to retype your credentials."),
   );
   const privacy = h(
     "div",
-    { class: "abs row", style: "left:104px;top:740px;gap:12px;font-size:22px;font-weight:550;color:#9a9ca8;white-space:nowrap" },
+    {
+      class: "abs row",
+      style: "left:104px;top:740px;gap:12px;font-size:22px;font-weight:550;color:#9a9ca8;white-space:nowrap",
+    },
     h("span", { style: "color:var(--mint);display:inline-flex" }, icon("lock", 22, 2)),
     "Deployment URLs and credentials stay on your Homarr instance.",
   );
@@ -335,14 +450,22 @@ export function workshop(): Scene {
       // Catalog: grows out of the published card (the first frame is just that card, as Custom Widgets left it), then
       // the other cards pop in.
       const open = E.outQuart(seg(t, 0.05, 0.75));
-      const inset = [SLOT.y - PANEL.y, PANEL.x + PANEL.w - SLOT.x - W, PANEL.y + PANEL.h - SLOT.y - H, SLOT.x - PANEL.x];
+      const inset = [
+        SLOT.y - PANEL.y,
+        PANEL.x + PANEL.w - SLOT.x - W,
+        PANEL.y + PANEL.h - SLOT.y - H,
+        SLOT.x - PANEL.x,
+      ];
       const press = 1 - 0.1 * Math.sin(seg(t, CLICK - 0.06, CLICK + 0.1) * Math.PI);
       const votes = String(Math.round(24 * E.outCubic(seg(t, LAND + 0.3, CLICK))));
       const comments = String(Math.round(5 * E.outCubic(seg(t, LAND + 0.8, CLICK))));
       for (const P of both) {
         if (P === A)
           // 1px outside the card so its own anti-aliased edge isn't clipped a second time.
-          P.el.style.clipPath = open < 1 ? `inset(${inset.map((v) => `${((v - 1) * (1 - open)).toFixed(2)}px`).join(" ")} round ${lerp(15, 20, open).toFixed(2)}px)` : "";
+          P.el.style.clipPath =
+            open < 1
+              ? `inset(${inset.map((v) => `${((v - 1) * (1 - open)).toFixed(2)}px`).join(" ")} round ${lerp(15, 20, open).toFixed(2)}px)`
+              : "";
         P.cards.forEach((c, i) => {
           if (i > 0) {
             const a = 0.3 + i * 0.05;

@@ -28,13 +28,34 @@ const code: Tok[][] = [
   [P("    }")],
   [P("  },")],
   [P("  "), K('"options"'), P(": {")],
-  [P("    "), K('"limit"'), P(": { "), K('"control"'), P(": "), S('"number"'), P(", "), K('"default"'), P(": "), N("4"), P(" }")],
+  [
+    P("    "),
+    K('"limit"'),
+    P(": { "),
+    K('"control"'),
+    P(": "),
+    S('"number"'),
+    P(", "),
+    K('"default"'),
+    P(": "),
+    N("4"),
+    P(" }"),
+  ],
   [P("  },")],
   [P("  "), K('"templateLines"'), P(": [")],
   [P("    "), S('"'), T("<Stack>"), S('",')],
   [P("    "), S('"  {data.queue.records.map(item =>"'), P(",")],
   [P("    "), S('"    '), T("<Progress"), S(" value={item.progress} "), T("/>"), S(')}"'), P(",")],
-  [P("    "), S('"  '), T('<ActionButton'), S(' requestId=\\"search\\"'), T(">"), S('Search'), T("</ActionButton>"), S('",')],
+  [
+    P("    "),
+    S('"  '),
+    T("<ActionButton"),
+    S(' requestId=\\"search\\"'),
+    T(">"),
+    S("Search"),
+    T("</ActionButton>"),
+    S('",'),
+  ],
   [P("    "), S('"'), T("</Stack>"), S('"')],
   [P("  ]")],
   [P("}")],
@@ -78,17 +99,32 @@ export function customWidgets(): Scene {
   bg.append(blobA, blobB, dots, bgWs);
 
   const chapter = new Chapter("01", "Custom Widgets v2");
-  const kicker = h("div", { class: "abs mono", style: "left:96px;top:300px;font-size:26px;color:var(--muted)" }, "This is the big one.");
+  const kicker = h(
+    "div",
+    { class: "abs mono", style: "left:96px;top:300px;font-size:26px;color:var(--muted)" },
+    "This is the big one.",
+  );
   const head = new Headline("Build your own widget.", { size: 168, accent: ["own"] });
-  const headWrap = h("div", { class: "abs", style: "left:92px;top:360px;transform-origin:0 0;white-space:nowrap" }, head.el);
-  const sub = new Headline("Utilize an integration or connect directly.", { size: 44, weight: 600, color: "var(--muted)" });
+  const headWrap = h(
+    "div",
+    { class: "abs", style: "left:92px;top:360px;transform-origin:0 0;white-space:nowrap" },
+    head.el,
+  );
+  const sub = new Headline("Utilize an integration or connect directly.", {
+    size: 44,
+    weight: 600,
+    color: "var(--muted)",
+  });
   sub.el.style.letterSpacing = "-0.02em";
   const subWrap = h("div", { class: "abs", style: "left:98px;top:560px" }, sub.el);
 
   // What the feature is, kept under the small title while the demo runs.
   const desc = h(
     "div",
-    { class: "abs", style: "left:98px;top:200px;font-size:26px;line-height:36px;font-weight:550;color:#b9bbc6;white-space:nowrap" },
+    {
+      class: "abs",
+      style: "left:98px;top:200px;font-size:26px;line-height:36px;font-weight:550;color:#b9bbc6;white-space:nowrap",
+    },
     h("div", {}, "Build widgets from JSX, API requests, actions and typed settings, or describe one to Assistant."),
     h("div", {}, "Test it in the workbench, then publish it to the Workshop."),
   );
@@ -105,8 +141,18 @@ export function customWidgets(): Scene {
     class: "abs",
     style: "left:-28px;right:-28px;height:28px;background:rgba(250,83,82,.09);border-left:3px solid var(--coral)",
   });
-  const scroller = h("div", { class: "abs", style: "left:0;top:0;right:0" }, lineHi, gutter, h("div", { style: "margin-left:62px" }, codeT.el));
-  const codeView = h("div", { class: "abs", style: "left:28px;right:28px;top:76px;bottom:20px;overflow:hidden" }, scroller);
+  const scroller = h(
+    "div",
+    { class: "abs", style: "left:0;top:0;right:0" },
+    lineHi,
+    gutter,
+    h("div", { style: "margin-left:62px" }, codeT.el),
+  );
+  const codeView = h(
+    "div",
+    { class: "abs", style: "left:28px;right:28px;top:76px;bottom:20px;overflow:hidden" },
+    scroller,
+  );
   const tabs = ["General", "API sources", "Requests", "Options", "JSX"].map((t) =>
     h("div", { class: "mono", style: "font-size:14px;color:var(--muted);padding:6px 12px;border-radius:8px" }, t),
   );
@@ -118,7 +164,10 @@ export function customWidgets(): Scene {
   );
   const titleBar = h(
     "div",
-    { class: "abs row", style: "left:0;right:0;top:0;height:58px;padding:0 20px;gap:10px;border-bottom:1px solid var(--line)" },
+    {
+      class: "abs row",
+      style: "left:0;right:0;top:0;height:58px;padding:0 20px;gap:10px;border-bottom:1px solid var(--line)",
+    },
     h("div", { style: "width:12px;height:12px;border-radius:50%;background:#ff5f57" }),
     h("div", { style: "width:12px;height:12px;border-radius:50%;background:#febc2e" }),
     h("div", { style: "width:12px;height:12px;border-radius:50%;background:#28c840" }),
@@ -126,7 +175,12 @@ export function customWidgets(): Scene {
     h("div", { class: "row", style: "gap:2px;margin-left:26px" }, ...tabs),
     valid,
   );
-  const editor = h("div", { class: "abs card", style: "left:96px;top:296px;width:880px;height:690px;overflow:hidden" }, titleBar, codeView);
+  const editor = h(
+    "div",
+    { class: "abs card", style: "left:96px;top:296px;width:880px;height:690px;overflow:hidden" },
+    titleBar,
+    codeView,
+  );
 
   // ---------- Preview widget ----------
   const chipDefs = ["API requests", "Actions", "Typed settings", "JSX"];
@@ -134,30 +188,47 @@ export function customWidgets(): Scene {
   const chipRow = h("div", { class: "abs row", style: "left:1060px;top:296px;gap:12px" }, ...chips);
 
   const rows = shows.map((s) => {
-    const bar = h("div", { style: "height:100%;width:0;background:linear-gradient(90deg,#ff7b70,#fa5352);border-radius:4px" });
-    const pct = h("div", { class: "mono", style: "font-size:15px;color:var(--muted);width:48px;text-align:right" }, "0%");
+    const bar = h("div", {
+      style: "height:100%;width:0;background:linear-gradient(90deg,#ff7b70,#fa5352);border-radius:4px",
+    });
+    const pct = h(
+      "div",
+      { class: "mono", style: "font-size:15px;color:var(--muted);width:48px;text-align:right" },
+      "0%",
+    );
     const el = h(
       "div",
       { class: "row", style: "gap:18px;height:84px;padding:0 4px;border-top:1px solid var(--line)" },
-      h("div", { style: `width:46px;height:64px;border-radius:8px;background:linear-gradient(160deg,${s.c[0]},${s.c[1]});flex:none` }),
+      h("div", {
+        style: `width:46px;height:64px;border-radius:8px;background:linear-gradient(160deg,${s.c[0]},${s.c[1]});flex:none`,
+      }),
       h(
         "div",
         { class: "col", style: "flex:1;gap:6px" },
-        h("div", { class: "row", style: "justify-content:space-between" }, h("div", { style: "font-size:21px;font-weight:700" }, s.t), pct),
+        h(
+          "div",
+          { class: "row", style: "justify-content:space-between" },
+          h("div", { style: "font-size:21px;font-weight:700" }, s.t),
+          pct,
+        ),
         h("div", { style: "font-size:15px;color:var(--muted)" }, s.e),
         h("div", { style: "height:7px;border-radius:4px;background:rgba(255,255,255,.07);margin-top:2px" }, bar),
       ),
     );
     const skel = h("div", {
       class: "abs",
-      style: "inset:10px 0;border-radius:10px;background:linear-gradient(90deg,rgba(255,255,255,.04),rgba(255,255,255,.1),rgba(255,255,255,.04));background-size:200% 100%",
+      style:
+        "inset:10px 0;border-radius:10px;background:linear-gradient(90deg,rgba(255,255,255,.04),rgba(255,255,255,.1),rgba(255,255,255,.04));background-size:200% 100%",
     });
     const wrap = h("div", { style: "position:relative" }, el, skel);
     return { wrap, el, bar, pct, skel, p: s.p };
   });
   const srcBadge = h(
     "div",
-    { class: "row mono", style: "gap:8px;font-size:13px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase" },
+    {
+      class: "row mono",
+      style: "gap:8px;font-size:13px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase",
+    },
     icon("plug-connected", 16, 2),
     "Source · saved Sonarr integration",
   );
@@ -180,7 +251,11 @@ export function customWidgets(): Scene {
     },
     icon("adjustments-horizontal", 20, 2),
     "Items",
-    h("div", { class: "mono", style: "padding:3px 12px;border-radius:6px;background:#1a1b21;border:1px solid var(--line2)" }, "4"),
+    h(
+      "div",
+      { class: "mono", style: "padding:3px 12px;border-radius:6px;background:#1a1b21;border:1px solid var(--line2)" },
+      "4",
+    ),
   );
   const header = h(
     "div",
@@ -201,7 +276,11 @@ export function customWidgets(): Scene {
       t,
     ),
   );
-  const wbBar = h("div", { class: "row", style: "gap:4px;padding-bottom:16px;margin-bottom:18px;border-bottom:1px solid var(--line)" }, ...wbTabs);
+  const wbBar = h(
+    "div",
+    { class: "row", style: "gap:4px;padding-bottom:16px;margin-bottom:18px;border-bottom:1px solid var(--line)" },
+    ...wbTabs,
+  );
   const wbBarWrap = h("div", { style: "overflow:hidden" }, wbBar);
   const preview = h(
     "div",
@@ -231,7 +310,11 @@ export function customWidgets(): Scene {
   );
   const published = h(
     "div",
-    { class: "abs row center", style: "inset:0;gap:10px;border-radius:12px;background:#2f9e6b;color:#fff;font-weight:800;font-size:22px;white-space:nowrap" },
+    {
+      class: "abs row center",
+      style:
+        "inset:0;gap:10px;border-radius:12px;background:#2f9e6b;color:#fff;font-weight:800;font-size:22px;white-space:nowrap",
+    },
     icon("check", 22, 2.6),
     "Published",
   );
@@ -307,7 +390,6 @@ export function customWidgets(): Scene {
       tf(blobA, { x: Math.sin(t * 0.3) * 120, y: Math.cos(t * 0.25) * 80 });
       tf(blobB, { x: Math.cos(t * 0.22) * 140, y: Math.sin(t * 0.3) * 90 });
       tf(dots, { y: -t * 6, o: 0.8 });
-
 
       // Intro title. After Publish the description clears out of the card's path at once; the title leaves as the
       // card lands, so the scene ends on the card alone.
@@ -392,10 +474,16 @@ export function customWidgets(): Scene {
       });
       handoff.style.display = u > 0.2 ? "" : "none";
       handoff.style.opacity = E.inOutSine(seg(u, 0.2, 0.4)).toFixed(3);
-      handoff.style.transform = u < 1 ? `translate(${(rx - SLOT.x).toFixed(2)}px,${(ry - SLOT.y).toFixed(2)}px) scale(${(rw / SLOT.w).toFixed(4)},${(rh / SLOT.h).toFixed(4)})` : "";
+      handoff.style.transform =
+        u < 1
+          ? `translate(${(rx - SLOT.x).toFixed(2)}px,${(ry - SLOT.y).toFixed(2)}px) scale(${(rw / SLOT.w).toFixed(4)},${(rh / SLOT.h).toFixed(4)})`
+          : "";
       const ring = seg(t, LANDED, LANDED + 0.35);
       tf(landRing, { s: lerp(1, 1.1, E.outCubic(ring)), o: t < LANDED ? 0 : (1 - ring) * 0.9 });
-      const flashK = Math.max(...feature.map((f) => (t >= f ? Math.exp(-(t - f) * 4) : 0)), t >= tSource ? Math.exp(-(t - tSource) * 4) : 0);
+      const flashK = Math.max(
+        ...feature.map((f) => (t >= f ? Math.exp(-(t - f) * 4) : 0)),
+        t >= tSource ? Math.exp(-(t - tSource) * 4) : 0,
+      );
       outlineFlash.style.opacity = String(flashK * 0.9);
 
       rows.forEach((r, i) => {

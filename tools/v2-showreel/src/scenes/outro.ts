@@ -21,8 +21,16 @@ export function outro(): Scene {
   });
   bg.append(glow, rays);
 
-  const tag = new Headline("A simple, yet powerful dashboard for your server.", { size: 40, weight: 500, color: "#d5d5dc" });
-  const tagWrap = h("div", { class: "abs", style: "left:0;right:0;top:768px;text-align:center;white-space:nowrap" }, tag.el);
+  const tag = new Headline("A simple, yet powerful dashboard for your server.", {
+    size: 40,
+    weight: 500,
+    color: "#d5d5dc",
+  });
+  const tagWrap = h(
+    "div",
+    { class: "abs", style: "left:0;right:0;top:768px;text-align:center;white-space:nowrap" },
+    tag.el,
+  );
   const pills = PILLS.map((p, i) =>
     h(
       "span",
@@ -33,7 +41,11 @@ export function outro(): Scene {
       p,
     ),
   );
-  const pillRow = h("div", { class: "abs row", style: "left:0;right:0;top:856px;justify-content:center;gap:16px" }, ...pills);
+  const pillRow = h(
+    "div",
+    { class: "abs row", style: "left:0;right:0;top:856px;justify-content:center;gap:16px" },
+    ...pills,
+  );
   const content = h("div", { class: "abs", style: `inset:0;transform-origin:50% ${CY}px` }, tagWrap, pillRow);
   const rings = [0, 1].map((i) =>
     h("div", {
