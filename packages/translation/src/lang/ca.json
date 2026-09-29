@@ -2,7 +2,7 @@
   "init": {
     "step": {
       "start": {
-        "title": "Us donem la benvinguda a Homarr",
+        "title": "Benvinguts a Homarr",
         "subtitle": "Comencem configurant la vostra instància de Homarr.",
         "description": "Per començar, seleccioneu com voleu configurar la vostra instància de Homarr.",
         "action": {
@@ -22,7 +22,7 @@
         },
         "fileInfo": {
           "action": {
-            "change": "Canvia el fitzer"
+            "change": "Canvia el fitxer"
           }
         },
         "importSettings": {
@@ -44,7 +44,7 @@
             "import": "Confirma la importació i continua"
           },
           "entities": {
-            "apps": "Aplicacions",
+            "apps": "Apps",
             "boards": "Tauler",
             "integrations": "Integracions",
             "credentialUsers": "Credencials d'usuari"
@@ -67,7 +67,7 @@
         }
       },
       "user": {
-        "title": "Usuari administrador",
+        "title": "Administrador",
         "subtitle": "Especifiqueu les credencials del vostre usuari administrador.",
         "notification": {
           "success": {
@@ -75,7 +75,7 @@
             "message": "L'usuari s'ha creat correctament"
           },
           "error": {
-            "title": "S'ha produït un error al crear l'usuari"
+            "title": "Error creant l'usuari"
           }
         }
       },
@@ -99,14 +99,14 @@
         "description": "Tria les integracions que vols connectar. Configurarem automàticament el teu tauler amb els widgets corresponents.",
         "action": {
           "continue": "Continua",
-          "skip": "Omet-ho ara"
+          "skip": "Omet per ara"
         },
         "configure": {
           "progress": "{current} de {total}",
           "skip": "Omet aquesta integració",
           "finishing": "Configurant el teu tauler...",
           "error": {
-            "title": "La configuració ha fallat",
+            "title": "La instal·lació ha fallat",
             "message": "S'ha produït un error en configurar el teu tauler. Torna-ho a provar."
           },
           "helpers": {
@@ -136,7 +136,7 @@
         }
       },
       "finish": {
-        "title": "Finalitza la configuració",
+        "title": "Acaba la configuració",
         "subtitle": "Ja està tot llest!",
         "description": "El procés de configuració s'ha completat correctament. Podeu començar a utilitzar Homarr. Escolliu la vostra propera acció:",
         "action": {
@@ -169,7 +169,7 @@
     },
     "field": {
       "email": {
-        "label": "Adreça electrònica",
+        "label": "E-mail",
         "verified": "Verificat"
       },
       "username": {
@@ -187,7 +187,7 @@
         }
       },
       "passwordConfirm": {
-        "label": "Confiremeu la contrasenya"
+        "label": "Confirmeu la contrasenya"
       },
       "previousPassword": {
         "label": "Contrasenya anterior"
@@ -217,16 +217,16 @@
     },
     "action": {
       "login": {
-        "label": "Inicia la sessió",
-        "labelWith": "Inicia la sessió amb {provider}",
+        "label": "Connexió",
+        "labelWith": "Iniciar sessió amb {provider}",
         "notification": {
           "success": {
             "title": "Inici de sessió correcte",
             "message": "Heu iniciat sessió"
           },
           "error": {
-            "title": "No s'ha pogut iniciar sessió",
-            "message": "No s'ha pogut iniciar la sessió"
+            "title": "Connexió fallida",
+            "message": "No s'ha pogut iniciar sessió"
           }
         },
         "forgotPassword": {
@@ -351,21 +351,21 @@
       "delete": {
         "label": "Eliminar l'usuari permanentment",
         "description": "Elimina l'usuari incloent les seves configuracions. Això no esborrarà cap tauler. No es notificarà l'usuari.",
-        "confirm": "Esteu segur que voleu eliminar l'usuari {username} i les seves configuracions?"
+        "confirm": "¿Esteu segur que voleu eliminar l'usuari {username} i les seves configuracions?"
       },
       "select": {
-        "label": "Seleccioneu l'usuari",
+        "label": "Selecciona l'usuari",
         "notFound": "No s'ha trobat l'usuari"
       },
       "transfer": {
-        "label": "Seleccioneu un nou propietari"
+        "label": "Selecciona un nou propietari"
       }
     }
   },
   "group": {
     "title": "Grups",
     "name": "Grup",
-    "search": "Troba un grup",
+    "search": "Trobar un grup",
     "field": {
       "name": "Nom",
       "members": "Membres",
@@ -380,7 +380,7 @@
     },
     "permission": {
       "admin": {
-        "title": "Administrador",
+        "title": "Admin",
         "item": {
           "admin": {
             "label": "Administrador",
@@ -389,23 +389,23 @@
         }
       },
       "app": {
-        "title": "Aplicacions",
+        "title": "Apps",
         "item": {
           "create": {
             "label": "Crear aplicacions",
-            "description": "Permet que els membres crein aplicacions"
+            "description": "Permet als membres crear apps"
           },
           "use-all": {
-            "label": "Utilitzar totes les aplicacions",
-            "description": "Permet que els membres afegeixin qualsevol aplicació als seus taulers"
+            "label": "Usar totes les apps",
+            "description": "Permet als membres afegir qualsevol aplicació als seus taulers"
           },
           "modify-all": {
-            "label": "Modificar totes les aplicacions",
-            "description": "Permet que els memebres modifiquin totes les aplicacions"
+            "label": "Modificar totes les apps",
+            "description": "Permet als membres modificar totes les apps"
           },
           "full-all": {
-            "label": "Accés complet a les aplicacions",
-            "description": "Permet que els membres gestionin, utilitzin i eliminin qualsevol aplicació"
+            "label": "Accés complet a les apps",
+            "description": "Permet als membres gestionar, utilitzar i eliminar qualsevol aplicació"
           }
         }
       },
@@ -414,19 +414,19 @@
         "item": {
           "create": {
             "label": "Crear taulers",
-            "description": "Permet que els membres crein taulers"
+            "description": "Permet als membres crear taulers"
           },
           "view-all": {
-            "label": "Visualitzar tots els taulers",
-            "description": "Permet que els membres visualitzin tots els taulers"
+            "label": "Veure tots els taulers",
+            "description": "Permet als membres visualitzar tots els taulers"
           },
           "modify-all": {
             "label": "Modificar tots els taulers",
-            "description": "Permet que els membres modifiquin tots els taulers (No inclou control d'accés ni zona de perill)"
+            "description": "Permet als membres modificar tots els taulers (No inclou control d'accés ni zona de perill)"
           },
           "full-all": {
-            "label": "Accés total a tots els taulers",
-            "description": "Permet que els membres visualitzin, modifiquin i esborrin tots els taulers (incloent-hi control d'accés i zona de perill)"
+            "label": "Accés total als taulers",
+            "description": "Permet als membres visualitzar, modificar i esborrar tots els taulers (incloent-hi control d'accés i zona de perill)"
           }
         }
       },
@@ -435,19 +435,19 @@
         "item": {
           "create": {
             "label": "Crear integracions",
-            "description": "Permet que els membres crein integracions"
+            "description": "Permet als membres crear integracions"
           },
           "use-all": {
             "label": "Utilitzar totes les integracions",
-            "description": "Permet que els membres afegeixin qualsevol integració als seus taulers"
+            "description": "Permet als membres afegir qualsevol integració als seus taulers"
           },
           "interact-all": {
             "label": "Interactuar amb qualsevol integració",
-            "description": "Permet que els usuaris interaccionin amb qualsevol integració"
+            "description": "Permet als usuaris interaccionar amb qualsevol integració"
           },
           "full-all": {
             "label": "Accés total a les integracions",
-            "description": "Permetre que els membres gestionin, utilitzin i interactuïn amb cada integració"
+            "description": "Permetre als membres gestionar, utilitzar i interactuar amb cada integració"
           }
         }
       },
@@ -460,7 +460,7 @@
           },
           "view-all": {
             "label": "Veure medis",
-            "description": "Permet que els membres vegin tots els continguts multimèdia"
+            "description": "Permet als membres veure tots els continguts multimèdia"
           },
           "full-all": {
             "label": "Accés complet als medis",
@@ -473,7 +473,7 @@
         "item": {
           "view-logs": {
             "label": "Veure registres",
-            "description": "Permet que els membres visualitzin els registres"
+            "description": "Permet als membres visualitzar els registres"
           }
         }
       },
@@ -482,11 +482,11 @@
         "item": {
           "create": {
             "label": "Crea motors de cerca",
-            "description": "Permet que els membres crein motors de cerca"
+            "description": "Permet als membres crear motors de cerca"
           },
           "modify-all": {
             "label": "Modifica tots els motors de cerca",
-            "description": "Permet que els membres modifiquin tots els motors de cerca"
+            "description": "Permet als membres modificar tots els motors de cerca"
           },
           "full-all": {
             "label": "Accés complet a la cerca",
@@ -607,14 +607,14 @@
     "search": "Troba una aplicació",
     "page": {
       "list": {
-        "title": "Aplicacions",
+        "title": "Apps",
         "noResults": {
           "title": "Encara no hi ha cap aplicació",
           "action": "Creeu la vostra primera aplicació"
         }
       },
       "create": {
-        "title": "Nova aplicació",
+        "title": "Nova app",
         "notification": {
           "success": {
             "title": "Creació correcta",
@@ -627,7 +627,7 @@
         }
       },
       "edit": {
-        "title": "Edita l'aplicació",
+        "title": "Editar l'app",
         "notification": {
           "success": {
             "title": "Els canvis s'han aplicat correctament",
@@ -640,7 +640,7 @@
         }
       },
       "delete": {
-        "title": "Elimina l'aplicació",
+        "title": "Eliminar l'app",
         "message": "Esteu segur que voleu eliminar l'aplicació {name}?",
         "notification": {
           "success": {
@@ -662,7 +662,7 @@
         "label": "Descripció"
       },
       "url": {
-        "label": "URL"
+        "label": "Url"
       },
       "useDifferentUrlForPing": {
         "checkbox": {
@@ -673,8 +673,8 @@
     },
     "action": {
       "select": {
-        "label": "Seleccioneu l'aplicació",
-        "notFound": "No s'ha trobat cap aplicació",
+        "label": "Seleccioneu l'app",
+        "notFound": "App no trobada",
         "search": "Cerca una aplicació",
         "noResults": "Cap resultat",
         "action": "Selecciona {app}",
@@ -691,7 +691,7 @@
   "customWidget": {
     "page": {
       "list": {
-        "title": "Widgets personalitzats",
+        "title": "Ginys personalitzats",
         "noResults": "Encara no hi ha widgets personalitzats. Crea el primer!",
         "loading": "Carregant..."
       },
@@ -789,7 +789,7 @@
       "color": "blau"
     },
     "cardStyleOption": {
-      "filled": "Emplenit",
+      "filled": "Ple",
       "outline": "Contorn",
       "subtle": "Subtil"
     },
@@ -801,7 +801,7 @@
       "sm": "Petit",
       "md": "Mitjà",
       "lg": "Gran",
-      "xl": "Extra gran"
+      "xl": "Extragran"
     },
     "labelPositionOption": {
       "above": "A sobre",
@@ -816,7 +816,7 @@
       "singleValue": "Mostra un valor extret amb una etiqueta i una unitat",
       "keyValue": "Mostra diversos valors etiquetats un al costat de l'altre",
       "table": "Mostra files de dades en format de taula",
-      "statGrid": "Targetes d'estadístiques de colors en una graella, com els widgets de Pi-Hole o Speedtest",
+      "statGrid": "Targetes d'estadístiques de colors en una graella, com els ginys de Pi-Hole o Speedtest",
       "progressBars": "Barres de progrés que mostren l'ús o la compleció, per a disc, memòria i quotes",
       "statusIndicator": "Punts d'estat de colors que mostren estats en línia/desconnectat o de salut",
       "countGrid": "Comptadors compactes de nombre i etiqueta en una graella estreta",
@@ -923,8 +923,8 @@
             "new": {
               "title": "Nou",
               "url": {
-                "label": "URL d'app",
-                "description": "URL que obrirà l'aplicació en accedir-hi des del tauler"
+                "label": "App URL",
+                "description": "L'URL que obrirà l'aplicació en accedir-hi des del tauler"
               }
             }
           }
@@ -974,7 +974,7 @@
       },
       "attemptSearchEngineCreation": {
         "label": "Crea un motor de cerca",
-        "description": "La integració \"{kind}\" es pot utilitzar amb els motors de cerca. Seleccioneu aquesta opció per configurar el motor de cerca automàticament."
+        "description": "L'integració \"{kind}\" es pot utilitzar amb els motors de cerca. Seleccioneu aquesta opció per configurar el motor de cerca automàticament."
       },
       "app": {
         "sectionTitle": "App enllaçada"
@@ -1062,7 +1062,7 @@
             "tooManyRequests": "Massa sol·licituds",
             "internalServerError": "Error intern del servidor",
             "serviceUnavailable": "Servei no disponible",
-            "gatewayTimeout": "Temps d'espera gateway"
+            "gatewayTimeout": "Temps d'espera excedit"
           }
         },
         "certificate": {
@@ -1167,7 +1167,7 @@
           "message": "S'ha connectat correctament"
         },
         "invalidUrl": {
-          "title": "Adreça URL no vàlida",
+          "title": "URL no vàlida",
           "message": "L'adreça URL no és vàlida"
         },
         "secretNotDefined": {
@@ -2028,18 +2028,18 @@
         "horizontalLine": "Línia horitzontal",
         "bulletList": "Llista no ordenada",
         "orderedList": "Llista ordenada",
-        "checkList": "Llista de verificació",
+        "checkList": "Llista de control",
         "increaseIndent": "Augmenta el sagnat",
         "decreaseIndent": "Disminueix el sagnat",
         "link": "Enllaç",
         "unlink": "Elimina l'enllaç",
         "image": "Incrusta una imatge",
-        "addTable": "Afegeix una taula",
+        "addTable": "Afegir una taula",
         "deleteTable": "Elimina la taula",
         "colorCell": "Color de la cel·la",
         "mergeCell": "Fusiona/desfusiona cel·les",
-        "addColumnLeft": "Afegeix una columna a l'esquerra",
-        "addColumnRight": "Afegeix una columna a la dreta",
+        "addColumnLeft": "Afegir columna a l'esquerra",
+        "addColumnRight": "Afegir columna a la dreta",
         "deleteColumn": "Elimina la columna",
         "addRowTop": "Afegeix una fila a dalt",
         "addRowBelow": "Afegeix una fila a baix",
@@ -2269,7 +2269,7 @@
           "label": "Acaba a"
         },
         "showUnmonitored": {
-          "label": "Mostrar no monitoritzat"
+          "label": "Mostrar no monitorat"
         }
       }
     },
@@ -2310,7 +2310,7 @@
       },
       "currentWindSpeed": "{currentWindSpeed} {unit}",
       "dailyForecast": {
-        "sunrise": "Sortida del sol",
+        "sunrise": "Albada",
         "sunset": "Posta de sol",
         "maxWindSpeed": "Velocitat màxima del vent: {maxWindSpeed} {unit}",
         "maxWindGusts": "Ràfegues màximes: {maxWindGusts} {unit}",
@@ -3140,7 +3140,7 @@
           "label": "Amaga els torrents completats sota aquest llindar (en kiB/s)"
         },
         "categoryFilter": {
-          "label": "Categories/etiquetes per filtrar"
+          "label": "Categories/etiquetes a filtrar"
         },
         "filterIsWhitelist": {
           "label": "Filtra com a llista blanca"
@@ -3319,7 +3319,7 @@
       "description": "Vegeu una llista de totes les sol·licituds multimèdia de la vostra instància Overseerr o Jellyseerr",
       "option": {
         "linksTargetNewTab": {
-          "label": "Obre els enllaços en una pestanya nova"
+          "label": "Obrir enllaços en una pestanya nova"
         },
         "statusFilter": {
           "label": "Estats que es mostraran"
