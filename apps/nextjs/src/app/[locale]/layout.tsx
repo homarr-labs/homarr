@@ -105,10 +105,16 @@ export default async function Layout(props: {
 
   const sessionPromise = auth();
   const serverSettingsPromise = getRscServerSettingsAsync();
-  const assistantAvailabilityPromise = getRscAssistantAvailabilityAsync().then(
-    (enabled) => (enabled ? ("enabled" as const) : ("unconfigured" as const)),
-    () => "error" as const,
-  );
+  const assistantAvailabilityPromise = sessionPromise.then(async (session) => {
+    if (!session) return "unauthenticated" as const;
+
+    try {
+      const enabled = await getRscAssistantAvailabilityAsync();
+      return enabled ? ("enabled" as const) : ("unconfigured" as const);
+    } catch {
+      return "error" as const;
+    }
+  });
   const userPromise = sessionPromise.then((session) =>
     session
       ? getRscUserSettingsAsync(session.user.id).catch((error: unknown) => {
