@@ -3,9 +3,11 @@
 //   node render.mjs video [--from a] [--to b] [--workers 3] [--fps 60] [--sub 1] [--chunk 120] [--recycle 6]
 //     resumable: finished chunks in out/seg are skipped; delete out/seg to start over
 //   node render.mjs cues                      → out/cues.json
+//   node render.mjs lobster outro@3 [name]    → out/recap/frames/<name>.png (the 3D logo alone, transparent)
+//   node render.mjs recap [1 2 3 4]           → out/recap/homarr-v2-recap-N.png from recap/index.html?v=N
 import { chromium } from "playwright-core";
 import { createServer } from "node:http";
-import { readFile, mkdir, writeFile, rename } from "node:fs/promises";
+import { readFile, mkdir, writeFile, rename, symlink } from "node:fs/promises";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { spawn } from "node:child_process";
 import { extname, join, resolve } from "node:path";
@@ -69,7 +71,7 @@ async function waitForHeadroom() {
   }
 }
 
-async function openPage(port) {
+async function openPage(port, path = "index.html") {
   const browser = await chromium.launch({
     executablePath: findChrome(),
     headless: true,
@@ -86,10 +88,10 @@ async function openPage(port) {
       ...(process.env.EXTRA_ARGS ? process.env.EXTRA_ARGS.split(" ") : []),
     ],
   });
-  const page = await browser.newPage({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: 1 });
+  const page = await browser.newPage({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: Number(process.env.SCALE ?? 1) });
   page.on("pageerror", (e) => console.error("[page]", e.message));
   page.on("console", (m) => m.type() === "error" && console.error("[console]", m.text()));
-  await page.goto(`http://127.0.0.1:${port}/index.html`);
+  await page.goto(`http://127.0.0.1:${port}/${path}`);
   await page.evaluate(() => window.__ready);
   return { browser, page };
 }
@@ -109,6 +111,8 @@ if (mode === "stills") {
   const { browser, page } = await openPage(port);
   // PATCH='{"waveR":0.6}' overrides the logo pose, for inspecting the rig.
   if (process.env.PATCH) await page.evaluate((p) => (window.__logoPatch = p), JSON.parse(process.env.PATCH));
+  // CLEAN=1 drops the vignette and grain, for stills that get cropped into other layouts.
+  if (process.env.CLEAN) await page.addStyleTag({ content: "#fx{display:none}" });
   // Accepts global seconds or scene@local (authored scene time, e.g. front-door@12.5).
   for (const arg of args.slice(1)) {
     const [name, lt] = arg.includes("@") ? arg.split("@") : [null, arg];
@@ -151,6 +155,31 @@ if (mode === "stills") {
   await writeFile(join(root, "out/cues.json"), JSON.stringify(data, null, 1));
   console.log(`${data.cues.length} cues, duration ${data.duration}`);
   await browser.close();
+} else if (mode === "lobster") {
+  await mkdir(join(root, "out/recap/frames"), { recursive: true });
+  const { browser, page } = await openPage(port);
+  if (process.env.PATCH) await page.evaluate((p) => (window.__logoPatch = p), JSON.parse(process.env.PATCH));
+  const [name, lt] = args[1].split("@");
+  await page.evaluate((x) => window.__seek(x), await page.evaluate(([n, x]) => window.__at(n, x), [name, Number(lt)]));
+  const url = await page.evaluate(() => document.getElementById("gl").toDataURL("image/png"));
+  const f = join(root, `out/recap/frames/${args[2] ?? "lobster"}.png`);
+  await writeFile(f, Buffer.from(url.split(",")[1], "base64"));
+  console.log(f);
+  await browser.close();
+} else if (mode === "recap") {
+  const out = join(root, "out/recap");
+  await mkdir(out, { recursive: true });
+  // The page reads the blog post's screenshots through this link and the lobster from `lobster outro@3`.
+  const blog = join(out, "blog");
+  if (!existsSync(blog)) await symlink(resolve(root, "../../apps/docs/blog/2026/09-03-homarr-2.0/img"), blog);
+  if (!existsSync(join(out, "frames/lobster-front.png"))) throw new Error('run: PATCH=\'{"x":0,"y":0,"scale":1.1,"dust":0,"sparks":-1}\' node render.mjs lobster outro@3 lobster-front');
+  for (const v of args.length > 1 ? args.slice(1) : ["1", "2", "3", "4"]) {
+    const { browser, page } = await openPage(port, `recap/index.html?v=${v}`);
+    const f = join(out, `homarr-v2-recap-${v}.png`);
+    await page.screenshot({ path: f });
+    console.log(f);
+    await browser.close();
+  }
 } else if (mode === "video") {
   // Resumable: the timeline is cut into short chunks pulled from a shared queue. Finished chunks
   // are kept on disk and skipped on the next run, and a crashed browser is relaunched and retried.
