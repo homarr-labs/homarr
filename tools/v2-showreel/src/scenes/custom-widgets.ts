@@ -1,7 +1,8 @@
-import { E, seg, lerp, env, spring, clamp } from "../lib/anim";
+import { E, seg, lerp, spring, clamp } from "../lib/anim";
 import { h, tf, icon, logo } from "../lib/dom";
-import { Chapter, CodeType, Headline, TypeLine, type Tok } from "../lib/kit";
+import { Chapter, CodeType, Headline, type Tok } from "../lib/kit";
 import type { Scene } from "../lib/scene";
+import { SLOT, WORKSHOP_BG, publishedCard } from "./workshop";
 
 // Code shown in the editor: a real homarr-custom-widget-v2 shape.
 const K = (s: string): Tok => [s, "k"];
@@ -72,24 +73,25 @@ export function customWidgets(): Scene {
     style:
       "width:1400px;height:1400px;border-radius:50%;left:900px;top:200px;background:radial-gradient(closest-side,rgba(124,140,255,.16),transparent)",
   });
-  bg.append(blobA, blobB, dots);
-
-  // Coral bars retracting: continuation of the intro fly-through.
-  const bars = Array.from({ length: 6 }, (_, i) =>
-    h("div", { class: "abs", style: `top:0;bottom:0;left:${i * 320}px;width:322px;background:#fa5352;transform-origin:50% 0` }),
-  );
+  // The Workshop's background, faded in during the publish so the cut to the next scene doesn't show.
+  const bgWs = h("div", { class: "abs", style: `inset:0;background:${WORKSHOP_BG}` });
+  bg.append(blobA, blobB, dots, bgWs);
 
   const chapter = new Chapter("01", "Custom Widgets v2");
   const kicker = h("div", { class: "abs mono", style: "left:96px;top:300px;font-size:26px;color:var(--muted)" }, "This is the big one.");
-  const head = new Headline("Build almost any widget.", { size: 168, accent: ["any"] });
+  const head = new Headline("Build your own widget.", { size: 168, accent: ["own"] });
   const headWrap = h("div", { class: "abs", style: "left:92px;top:360px;transform-origin:0 0;white-space:nowrap" }, head.el);
-  const sub = new Headline("From JSX, API requests, actions and typed settings.", { size: 44, weight: 600, color: "var(--muted)" });
+  const sub = new Headline("Utilize an integration or connect directly.", { size: 44, weight: 600, color: "var(--muted)" });
   sub.el.style.letterSpacing = "-0.02em";
   const subWrap = h("div", { class: "abs", style: "left:98px;top:560px" }, sub.el);
 
-  // Guard heading shares the header slot.
-  const head3 = new Headline("Every request is checked.", { size: 64 });
-  const head3Wrap = h("div", { class: "abs", style: "left:96px;top:128px;white-space:nowrap" }, head3.el);
+  // What the feature is, kept under the small title while the demo runs.
+  const desc = h(
+    "div",
+    { class: "abs", style: "left:98px;top:200px;font-size:26px;line-height:36px;font-weight:550;color:#b9bbc6;white-space:nowrap" },
+    h("div", {}, "Build widgets from JSX, API requests, actions and typed settings, or describe one to Assistant."),
+    h("div", {}, "Test it in the workbench, then publish it to the Workshop."),
+  );
 
   // ---------- Editor ----------
   const codeT = new CodeType(code);
@@ -124,12 +126,12 @@ export function customWidgets(): Scene {
     h("div", { class: "row", style: "gap:2px;margin-left:26px" }, ...tabs),
     valid,
   );
-  const editor = h("div", { class: "abs card", style: "left:96px;top:262px;width:880px;height:700px;overflow:hidden" }, titleBar, codeView);
+  const editor = h("div", { class: "abs card", style: "left:96px;top:296px;width:880px;height:690px;overflow:hidden" }, titleBar, codeView);
 
   // ---------- Preview widget ----------
   const chipDefs = ["API requests", "Actions", "Typed settings", "JSX"];
   const chips = chipDefs.map((c) => h("div", { class: "chip", style: "font-size:19px;padding:9px 16px" }, c));
-  const chipRow = h("div", { class: "abs row", style: "left:1060px;top:262px;gap:12px" }, ...chips);
+  const chipRow = h("div", { class: "abs row", style: "left:1060px;top:296px;gap:12px" }, ...chips);
 
   const rows = shows.map((s) => {
     const bar = h("div", { style: "height:100%;width:0;background:linear-gradient(90deg,#ff7b70,#fa5352);border-radius:4px" });
@@ -203,7 +205,7 @@ export function customWidgets(): Scene {
   const wbBarWrap = h("div", { style: "overflow:hidden" }, wbBar);
   const preview = h(
     "div",
-    { class: "abs card", style: "left:1060px;top:330px;width:764px;padding:26px 30px 28px;transform-origin:50% 50%" },
+    { class: "abs card", style: "left:1060px;top:364px;width:764px;padding:26px 30px 28px;transform-origin:50% 50%" },
     wbBarWrap,
     header,
     h("div", { style: "margin-top:12px" }, srcBadge),
@@ -227,79 +229,34 @@ export function customWidgets(): Scene {
     icon("upload", 22, 2.4),
     "Publish to Workshop",
   );
+  const published = h(
+    "div",
+    { class: "abs row center", style: "inset:0;gap:10px;border-radius:12px;background:#2f9e6b;color:#fff;font-weight:800;font-size:22px;white-space:nowrap" },
+    icon("check", 22, 2.6),
+    "Published",
+  );
+  publish.style.position = "absolute";
+  publish.append(published);
   preview.append(publish);
 
-  // ---------- Guardrails ----------
-  // The widget's action goes through one Homarr checkpoint whose rows tick off before Sonarr is called.
-  const pipeY = 535;
-  const CP_L = 740;
-  const CP_R = 1180;
-  const SN_L = 1420;
-  const checks = ["Host checks", "Timeouts", "Size limits", "Permissions", "Rate limits"].map((g) => {
-    const dot = h("div", { class: "abs", style: "inset:0;border-radius:50%;border:2.5px solid rgba(255,255,255,.22)" });
-    const ok = h("div", { class: "abs center", style: "inset:0;border-radius:50%;background:#3ddc97;color:#07130d" }, icon("check", 18, 3.2));
-    const el = h(
-      "div",
-      { class: "row", style: "gap:16px;height:58px;padding:0 22px;font-size:24px;font-weight:650;border-top:1px solid var(--line)" },
-      h("div", { style: "position:relative;width:28px;height:28px;flex:none" }, dot, ok),
-      g,
-    );
-    return { el, ok };
+  // On publish, the preview's card frame (shell) shrinks straight into the widget's catalog slot while the preview
+  // content fades out and the Workshop card fades in, both stretched to the shell so the two never ghost.
+  const shell = h("div", { class: "abs card", style: "left:0;top:0;box-sizing:border-box" });
+  const handoff = publishedCard();
+  const landRing = h("div", {
+    class: "abs",
+    style: `left:${SLOT.x}px;top:${SLOT.y}px;width:${SLOT.w}px;height:${SLOT.h}px;border-radius:16px;border:3px solid #ff8787;box-sizing:border-box`,
   });
-  const checkpoint = h(
-    "div",
-    { class: "abs card", style: `left:${CP_L}px;width:${CP_R - CP_L}px;top:${pipeY - 206}px;overflow:hidden;border-color:rgba(61,220,151,.28)` },
-    h(
-      "div",
-      { class: "row", style: "gap:14px;height:88px;padding:0 22px;font-size:26px;font-weight:800" },
-      h("div", { class: "center", style: "width:46px;height:46px;border-radius:13px;background:rgba(61,220,151,.14);color:#3ddc97" }, icon("shield-check", 26, 2.2)),
-      "Homarr",
-      h("div", { class: "mono", style: "margin-left:auto;font-size:14px;letter-spacing:.14em;color:var(--muted)" }, "EVERY REQUEST"),
-    ),
-    ...checks.map((c) => c.el),
-  );
-  const wireA = h("div", { class: "abs", style: `left:548px;width:${CP_L - 548}px;top:${pipeY - 1}px;height:3px;background:rgba(250,83,82,.55);transform-origin:0 50%` });
-  const wireB = h("div", { class: "abs", style: `left:${CP_R}px;width:${SN_L - CP_R}px;top:${pipeY - 1}px;height:3px;background:rgba(250,83,82,.55);transform-origin:0 50%` });
-  const packet = h(
-    "div",
-    {
-      class: "abs row mono",
-      style:
-        "left:0;top:0;gap:8px;padding:9px 15px;border-radius:999px;background:#fa5352;color:#fff;font-weight:700;font-size:16px;white-space:nowrap;box-shadow:0 0 30px rgba(250,83,82,.7)",
-    },
-    "POST /api/v3/command",
-  );
-  const sonarrNode = h(
-    "div",
-    { class: "abs card center col", style: `left:${SN_L}px;top:${pipeY - 110}px;width:220px;height:220px;gap:14px` },
-    logo("sonarr", 84),
-    h("div", { style: "font-size:24px;font-weight:700" }, "Sonarr"),
-  );
-  const methods = ["GET", "POST", "PUT", "PATCH", "DELETE"].map((m) =>
-    h("div", { class: "chip mono", style: `font-size:20px;${m === "DELETE" ? "border-color:rgba(250,83,82,.5);color:#ff8f86" : ""}` }, m),
-  );
-  const methodRow = h(
-    "div",
-    { class: "abs row", style: "left:96px;top:830px;gap:12px" },
-    h("div", { class: "label", style: "color:var(--muted);margin-right:10px" }, "Actions"),
-    ...methods,
-  );
-  const lockLine = h(
-    "div",
-    { class: "abs row", style: "left:96px;top:915px;gap:14px;font-size:26px;font-weight:600;color:#d7d8de" },
-    h("div", { style: "color:var(--mint)" }, icon("lock", 28, 2)),
-    "Credentials are encrypted separately and stay out of exports and Workshop submissions.",
-  );
-  const guard = h("div", { class: "abs", style: "inset:0" }, wireA, wireB, checkpoint, sonarrNode, methodRow, lockLine);
-
-  fg.append(chapter.el, kicker, headWrap, subWrap, head3Wrap, editor, chipRow, guard, preview, packet, ...bars);
+  fg.append(chapter.el, kicker, headWrap, subWrap, desc, editor, chipRow, shell, preview, handoff, landRing);
 
   // Timeline (scene-local seconds)
   const TYPE_A = 2.0;
   const TYPE_B = 4.9;
-  const GUARD = 5.5;
-  const PUBLISH = 8.5;
-  const END = 9.75;
+  const PUBLISH = 6.2;
+  const CLICK = PUBLISH + 0.4;
+  const MORPH = CLICK + 0.25; // text is already leaving, the shell starts for the slot
+  const LANDED = MORPH + 0.6;
+  const END = LANDED + 0.4; // last frame: the card alone in its slot on the Workshop background
   const lineStart = codeT.lineStart;
   const charAt = (line: number) => lineStart[line] ?? codeT.total;
   const typed = (t: number) => codeT.total * E.inOutSine(seg(t, TYPE_A, TYPE_B));
@@ -328,34 +285,20 @@ export function customWidgets(): Scene {
   const tOptions = tLine(L_OPTIONS);
   const tJsx = tLine(L_JSX);
   const feature = [tQueue, tAction, tOptions, tJsx];
-  // Guard beats
-  const PK0 = GUARD + 0.45; // packet leaves the widget
-  const PK_IN = PK0 + 0.3; // enters the checkpoint
-  const checkAt = (i: number) => PK_IN + 0.08 + i * 0.1;
-  const PK_OUT = checkAt(4) + 0.12;
-  const PK_HIT = PK_OUT + 0.28;
-
   const cues: Scene["cues"] = [
-    { t: 0.0, kind: "whoosh", gain: 0.7 },
-    { t: 0.45, kind: "hit", gain: 0.8 },
-    { t: 1.75, kind: "swish", gain: 0.6 },
     { t: TYPE_A, kind: "type", dur: TYPE_B - TYPE_A, gain: 0.55 },
     ...feature.map((f) => ({ t: f, kind: "pop" as const, gain: 0.7 })),
-    { t: tSource, kind: "tick", gain: 0.6 },
-    { t: TYPE_B + 0.15, kind: "chime", gain: 0.6 },
-    { t: GUARD - 0.15, kind: "whoosh", gain: 0.7 },
-    { t: PK0, kind: "swish", gain: 0.4 },
-    ...checks.map((_, i) => ({ t: checkAt(i), kind: "tick" as const, gain: 0.5, pitch: i + 2 })),
-    { t: PK_HIT, kind: "hit", gain: 0.5 },
-    { t: PUBLISH + 0.25, kind: "click", gain: 0.8 },
-    { t: PUBLISH + 0.4, kind: "riser", dur: 0.3, gain: 0.5 },
-    { t: PUBLISH + 0.72, kind: "whoosh", gain: 0.9 },
+    { t: PUBLISH - 0.4, kind: "swish", gain: 0.6 },
+    { t: CLICK, kind: "click", gain: 0.8 },
+    { t: MORPH + 0.1, kind: "swish", gain: 0.5 },
+    { t: LANDED, kind: "pop", gain: 0.6, pitch: 4 },
   ];
 
   return {
     name: "custom-widgets",
     start: 0,
     end: END,
+    enter: { dir: "up", dur: 0.45 },
     bg,
     fg,
     cues,
@@ -365,31 +308,28 @@ export function customWidgets(): Scene {
       tf(blobB, { x: Math.cos(t * 0.22) * 140, y: Math.sin(t * 0.3) * 90 });
       tf(dots, { y: -t * 6, o: 0.8 });
 
-      bars.forEach((b, i) => {
-        const p = E.inOutQuart(seg(t, 0.02 + i * 0.04, 0.4 + i * 0.04));
-        b.style.transform = `scaleY(${(1 - p).toFixed(4)})`;
-        b.style.display = p >= 1 ? "none" : "";
-      });
-      ctx.fx.shake = Math.exp(-t * 6) * 6;
 
-      // Intro title
-      chapter.update(t, 0.25, PUBLISH - 0.45);
+      // Intro title. After Publish the description clears out of the card's path at once; the title leaves as the
+      // card lands, so the scene ends on the card alone.
+      const leave = E.inCubic(seg(t, CLICK + 0.1, CLICK + 0.4));
+      const leaveHead = E.inCubic(seg(t, LANDED - 0.1, END - 0.1));
+      chapter.update(t, 0.25, LANDED - 0.1);
       kicker.style.opacity = t > 0.3 && t < 1.75 ? "1" : "0";
       head.update(t, 0.4, Infinity, 0.05, 0.6);
       sub.update(t, 0.75, 1.7, 0.025, 0.6);
       const shrink = E.inOutQuart(seg(t, 1.65, 2.2));
-      // The small title leaves with the editor instead of dropping word by word.
-      const hdOut = E.inOutQuart(seg(t, GUARD - 0.35, GUARD + 0.1));
-      headWrap.style.transform = `translate(${(lerp(0, 4, shrink) - hdOut * 1100).toFixed(1)}px,${lerp(0, -232, shrink)}px) scale(${lerp(1, 0.4, shrink)})`;
-      headWrap.style.filter = hdOut > 0.01 ? `blur(${(hdOut * 12).toFixed(1)}px)` : "";
-      headWrap.style.display = hdOut < 1 ? "" : "none";
+      headWrap.style.transform = `translate(${lerp(0, 4, shrink) - leaveHead * 80}px,${lerp(0, -232, shrink)}px) scale(${lerp(1, 0.4, shrink)})`;
+      headWrap.style.opacity = String(1 - leaveHead);
+      const dIn = E.outExpo(seg(t, 1.95, 2.5));
+      tf(desc, { x: -leave * 80, y: (1 - dIn) * 16, o: dIn * (1 - leave) });
+      desc.style.clipPath = `inset(0 ${((1 - E.outQuart(seg(t, 1.95, 2.7))) * 100).toFixed(1)}% 0 0)`;
 
-      // Editor: slides up with a slight 3D tilt, leaves left for the guard.
+      // Editor: slides up with a slight 3D tilt, leaves left once the widget is ready to publish.
       const edIn = E.outExpo(seg(t, 1.75, 2.4));
-      const edOut = E.inOutQuart(seg(t, GUARD - 0.35, GUARD + 0.25));
+      const edOut = E.inOutQuart(seg(t, PUBLISH - 0.45, PUBLISH + 0.15));
       editor.style.transform = `perspective(1600px) translate(${(-edOut * 1000).toFixed(1)}px,${((1 - edIn) * 160).toFixed(1)}px) rotateY(${((1 - edIn) * 12 + edOut * -25).toFixed(2)}deg)`;
       editor.style.opacity = String(Math.min(seg(t, 1.75, 1.9), 1 - edOut));
-      editor.style.display = t > 1.7 && t < GUARD + 0.3 ? "" : "none";
+      editor.style.display = t > 1.7 && t < PUBLISH + 0.2 ? "" : "none";
       const n = typed(t);
       const line = codeT.set(Math.floor(n), t < TYPE_B + 0.5);
       const lf = lineOf(n);
@@ -408,7 +348,7 @@ export function customWidgets(): Scene {
 
       // Chips light up as their code is typed.
       const chipIn = E.outExpo(seg(t, 1.9, 2.4));
-      const chipOut = t > GUARD - 0.3;
+      const chipOut = t > PUBLISH - 0.4;
       chips.forEach((c, i) => {
         const on = t >= feature[i]!;
         const k = on ? Math.exp(-(t - feature[i]!) * 3) : 0;
@@ -419,17 +359,42 @@ export function customWidgets(): Scene {
         c.style.opacity = chipOut ? "0" : String(chipIn);
       });
 
-      // Preview card: appears with the source, grows features, then shrinks left to become the request's origin.
+      // Preview card: appears with the source, grows features, then takes centre stage to be published.
       const pvIn = E.outExpo(seg(t, tSource - 0.1, tSource + 0.45));
-      const toGuard = E.inOutQuart(seg(t, GUARD - 0.3, GUARD + 0.3));
-      const pubFly = E.inExpo(seg(t, PUBLISH + 0.45, PUBLISH + 1.05));
       const toPub = E.inOutQuart(seg(t, PUBLISH - 0.4, PUBLISH + 0.05));
-      const px = lerp(lerp(0, -1112, toGuard), -482, toPub);
-      const py = lerp(lerp((1 - pvIn) * 80, -75, toGuard), -40, toPub) - pubFly * 900;
-      const ps = lerp(lerp(1, 0.55, toGuard), 0.9, toPub) * (1 + pubFly * 0.25);
-      preview.style.transform = `perspective(1600px) translate(${px.toFixed(1)}px,${py.toFixed(1)}px) scale(${ps.toFixed(4)}) rotateX(${(pubFly * 25).toFixed(2)}deg)`;
-      preview.style.opacity = String(Math.min(pvIn * 3, 1));
-      preview.style.filter = pubFly > 0.05 ? `blur(${(pubFly * 10).toFixed(1)}px)` : "";
+      const lift = t > CLICK ? E.outCubic(seg(t, CLICK, CLICK + 0.6)) : 0;
+      const pvH = preview.offsetHeight;
+      // Preview rect on screen (transform origin is its centre).
+      const ps = lerp(1, 0.9, toPub) * (1 + lift * 0.02);
+      const pw = 764 * ps;
+      const ph = pvH * ps;
+      const pcx = 1060 + 382 + lerp(0, -482, toPub);
+      const pcy = 364 + pvH / 2 + lerp((1 - pvIn) * 80, -40, toPub) - lift * 14;
+      // Shell rect: from the preview to the catalog slot.
+      const u = seg(t, MORPH, LANDED);
+      const m = E.inOutCubic(u);
+      const rw = lerp(pw, SLOT.w, m);
+      const rh = lerp(ph, SLOT.h, m);
+      const rx = lerp(pcx - pw / 2, SLOT.x, m);
+      const ry = lerp(pcy - ph / 2, SLOT.y, m);
+      preview.style.transform = `translate(${(rx + rw / 2 - 1442).toFixed(2)}px,${(ry + rh / 2 - 364 - pvH / 2).toFixed(2)}px) scale(${(rw / 764).toFixed(4)},${(rh / pvH).toFixed(4)})`;
+      // Quick crossfade to the card content early in the move; visibility (not display) keeps pvH measurable.
+      preview.style.opacity = String(Math.min(pvIn * 3, 1) * (1 - E.inOutSine(seg(u, 0.1, 0.3))));
+      preview.style.visibility = u < 0.3 ? "" : "hidden";
+      shell.style.display = t >= MORPH && u < 1 ? "" : "none";
+      Object.assign(shell.style, {
+        left: `${rx.toFixed(2)}px`,
+        top: `${ry.toFixed(2)}px`,
+        width: `${rw.toFixed(2)}px`,
+        height: `${rh.toFixed(2)}px`,
+        borderRadius: `${lerp(18 * ps, 14, m).toFixed(2)}px`,
+        boxShadow: `0 40px 90px -20px rgba(0,0,0,${(0.65 * (1 - m)).toFixed(3)})`,
+      });
+      handoff.style.display = u > 0.2 ? "" : "none";
+      handoff.style.opacity = E.inOutSine(seg(u, 0.2, 0.4)).toFixed(3);
+      handoff.style.transform = u < 1 ? `translate(${(rx - SLOT.x).toFixed(2)}px,${(ry - SLOT.y).toFixed(2)}px) scale(${(rw / SLOT.w).toFixed(4)},${(rh / SLOT.h).toFixed(4)})` : "";
+      const ring = seg(t, LANDED, LANDED + 0.35);
+      tf(landRing, { s: lerp(1, 1.1, E.outCubic(ring)), o: t < LANDED ? 0 : (1 - ring) * 0.9 });
       const flashK = Math.max(...feature.map((f) => (t >= f ? Math.exp(-(t - f) * 4) : 0)), t >= tSource ? Math.exp(-(t - tSource) * 4) : 0);
       outlineFlash.style.opacity = String(flashK * 0.9);
 
@@ -450,58 +415,17 @@ export function customWidgets(): Scene {
       const sIn = spring(t - tAction, 3, 0.45);
       searchBtn.style.transform = `scale(${clamp(sIn, 0, 2).toFixed(3)})`;
       searchBtn.style.opacity = t >= tAction ? "1" : "0";
-      // The Search action is what fires the guarded request.
-      const fire = t > PK0 - 0.1 ? Math.exp(-(t - PK0 + 0.1) * 5) : 0;
-      searchBtn.style.boxShadow = `0 0 ${(fire * 30).toFixed(0)}px rgba(250,83,82,${(fire * 0.9).toFixed(2)})`;
       const oIn = spring(t - tOptions, 3, 0.45);
       optPop.style.transform = `scale(${clamp(oIn, 0, 2).toFixed(3)})`;
       optPop.style.opacity = t >= tOptions ? "1" : "0";
-      const wb = E.outExpo(seg(t, TYPE_B + 0.1, TYPE_B + 0.5)) * (1 - toGuard);
+      const wb = E.outExpo(seg(t, TYPE_B + 0.1, TYPE_B + 0.5));
       wbBarWrap.style.height = `${(wb * 58).toFixed(1)}px`;
       wbBarWrap.style.opacity = String(wb);
       const pub = spring(t - PUBLISH, 3, 0.5);
-      const press = t > PUBLISH + 0.25 ? 1 - Math.sin(clamp((t - PUBLISH - 0.25) / 0.18) * Math.PI) * 0.1 : 1;
+      const press = 1 - Math.sin(seg(t, CLICK - 0.09, CLICK + 0.09) * Math.PI) * 0.1;
       publish.style.transform = `translateX(-50%) scale(${(clamp(pub, 0, 2) * press).toFixed(3)})`;
       publish.style.opacity = t >= PUBLISH ? "1" : "0";
-
-      // Guardrails
-      const gOn = t > GUARD - 0.1 && t < PUBLISH - 0.1;
-      guard.style.display = gOn ? "" : "none";
-      head3.update(t, GUARD + 0.08, PUBLISH - 0.5, 0.04, 0.55);
-      const gOut = E.inCubic(seg(t, PUBLISH - 0.45, PUBLISH - 0.15));
-      const cpIn = E.outBack(seg(t, GUARD + 0.05, GUARD + 0.4), 1.4);
-      tf(checkpoint, { s: lerp(0.9, 1, cpIn), y: -gOut * 30, o: (t > GUARD + 0.05 ? 1 : 0) * (1 - gOut) });
-      checkpoint.style.clipPath = `inset(0 0 ${((1 - E.outExpo(seg(t, GUARD + 0.05, GUARD + 0.45))) * 100).toFixed(1)}% 0 round 18px)`;
-      tf(wireA, { sx: E.outExpo(seg(t, GUARD + 0.2, GUARD + 0.5)), o: 1 - gOut });
-      tf(wireB, { sx: E.outExpo(seg(t, PK_OUT - 0.1, PK_OUT + 0.15)), o: 1 - gOut });
-      const snIn = E.outExpo(seg(t, GUARD + 0.15, GUARD + 0.5));
-      const hitS = t > PK_HIT ? Math.exp(-(t - PK_HIT) * 5) : 0;
-      tf(sonarrNode, { x: (1 - snIn) * 160, s: 1 + hitS * 0.1, o: (t > GUARD + 0.15 ? 1 : 0) * (1 - gOut) });
-      sonarrNode.style.boxShadow = `0 0 ${(hitS * 60).toFixed(0)}px rgba(250,83,82,${(hitS * 0.8).toFixed(2)})`;
-      checks.forEach((c, i) => {
-        const at = checkAt(i);
-        c.ok.style.transform = `scale(${clamp(E.outBack(seg(t, at, at + 0.2), 2.2), 0, 1.3).toFixed(3)})`;
-        c.ok.style.opacity = t >= at ? "1" : "0";
-        const k = t >= at ? Math.exp(-(t - at) * 6) : 0;
-        c.el.style.background = `rgba(61,220,151,${(k * 0.16).toFixed(3)})`;
-      });
-      // Packet: widget → checkpoint (hidden inside while checks run) → Sonarr.
-      const inA = E.inOutCubic(seg(t, PK0, PK_IN));
-      const inB = E.inOutCubic(seg(t, PK_OUT, PK_HIT));
-      const pkX = t < PK_OUT ? lerp(520, CP_L - 30, inA) : lerp(CP_R + 30, SN_L - 10, inB);
-      const pkW = 222;
-      packet.style.transform = `translate(${(pkX - pkW / 2).toFixed(1)}px,${pipeY - 20}px)`;
-      packet.style.opacity = (t > PK0 && t < PK_IN) || (t > PK_OUT && t < PK_HIT) ? "1" : "0";
-      methods.forEach((m, i) => {
-        const at = GUARD + 0.3 + i * 0.05;
-        const mi = E.outBack(seg(t, at, at + 0.25), 2);
-        m.style.opacity = String((t >= at ? 1 : 0) * (1 - gOut));
-        m.style.transform = `scale(${clamp(lerp(0.6, 1, mi), 0, 1.2).toFixed(3)})`;
-      });
-      (methodRow.firstElementChild as HTMLElement).style.opacity = String((t > GUARD + 0.25 ? 1 : 0) * (1 - gOut));
-      const li = E.outQuart(seg(t, PK_HIT - 0.1, PK_HIT + 0.4));
-      lockLine.style.opacity = String((t > PK_HIT - 0.1 ? 1 : 0) * (1 - gOut));
-      lockLine.style.clipPath = `inset(0 ${((1 - li) * 100).toFixed(1)}% 0 0)`;
+      published.style.opacity = t >= CLICK ? "1" : "0";
     },
   };
 }

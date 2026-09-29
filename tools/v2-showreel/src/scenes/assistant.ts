@@ -85,7 +85,7 @@ export function assistant(): Scene {
   const kShift = h("div", { class: "kbd", style: "font-size:84px;padding:.2em .6em;border-radius:.28em" }, "Shift");
   const kA = h("div", { class: "kbd", style: "font-size:84px;min-width:1.6em;border-radius:.28em" }, "A");
   const keys = h("div", { class: "abs row", style: "left:0;right:0;top:360px;justify-content:center;gap:34px" }, kShift, h("div", { style: "font-size:70px;color:#8f919d" }, "+"), kA);
-  const keyCap = new Headline("Open Assistant from anywhere in Homarr.", { size: 46, weight: 650, color: "#d7d8de" });
+  const keyCap = new Headline("Open Assistant from anywhere.", { size: 46, weight: 650, color: "#d7d8de" });
   keyCap.el.style.textAlign = "center";
   const keyCapWrap = h("div", { class: "abs", style: "left:0;right:0;top:600px;white-space:nowrap;text-align:center" }, keyCap.el);
 
@@ -167,11 +167,11 @@ export function assistant(): Scene {
   );
   const cursor = h("div", { class: "abs", style: "left:0;top:0;width:34px;height:34px;color:#fff;filter:drop-shadow(0 4px 8px rgba(0,0,0,.6))" }, icon("filled:pointer", 34, 1));
 
-  const chapter = new Chapter("04", "Assistant");
-  const headA = new Headline("It works with live Homarr data.", { size: 70, lh: 1.05 });
-  const subA = new Headline("Boards, apps, integrations, widgets, Docker and supported services.", { size: 30, weight: 550, color: "#b9bbc6", lh: 1.3 });
+  const chapter = new Chapter("03", "Assistant");
+  const headA = new Headline("Or let Assistant build it for you.", { size: 70, lh: 1.05, accent: ["build"] });
+  const subA = new Headline("It works with live Homarr data: boards, apps, integrations, widgets, Docker and supported services.", { size: 30, weight: 550, color: "#b9bbc6", lh: 1.3 });
   const headB = new Headline("Reads can run automatically. Changes wait for your approval.", { size: 62, lh: 1.08, accent: ["approval."] });
-  const subB = new Headline("And it builds Custom Widgets for you.", { size: 34, weight: 600, color: "#b9bbc6" });
+  const subB = new Headline("It also answers questions about your setup.", { size: 34, weight: 600, color: "#b9bbc6" });
   const leftA = h("div", { class: "abs col", style: "left:96px;top:300px;width:940px;gap:26px" }, headA.el, subA.el);
   const leftB = h("div", { class: "abs col", style: "left:96px;top:300px;width:940px;gap:26px" }, headB.el, subB.el);
 
@@ -349,7 +349,7 @@ export function assistant(): Scene {
       cursor.style.display = t > DR + 0.35 && t < CLICK + 0.3 ? "" : "none";
 
       // Left copy
-      chapter.update(t, DR + 0.1, END - 0.35);
+      chapter.update(t, DR + 0.1);
       // Copy blocks leave whole (a quick whip), never word by word over the next block.
       headA.update(t, DR + 0.1, Infinity, 0.04, 0.5);
       subA.update(t, DR + 0.35, Infinity, 0.02, 0.5);
@@ -363,12 +363,11 @@ export function assistant(): Scene {
       // Providers
       const pOn = t > PROV - 0.2;
       provHeadWrap.style.display = provRow.style.display = pOn ? "" : "none";
-      provHead.update(t, PROV, END - 0.4, 0.035, 0.5);
-      const pOut = E.inOutQuart(seg(t, END - 0.4, END));
+      provHead.update(t, PROV, Infinity, 0.035, 0.5);
       [cardFree, cardByok].forEach((c, i) => {
         const ci = spring(t - PROV - 0.05 - i * 0.12, 2.6, 0.55);
-        c.style.transform = `perspective(1600px) translateY(${((1 - clamp(ci, 0, 1.2)) * 160 + pOut * -80).toFixed(1)}px) rotateX(${((1 - clamp(ci, 0, 1)) * 25).toFixed(2)}deg)`;
-        c.style.opacity = String((t > PROV + 0.05 + i * 0.12 ? 1 : 0) * (1 - pOut));
+        c.style.transform = `perspective(1600px) translateY(${((1 - clamp(ci, 0, 1.2)) * 160).toFixed(1)}px) rotateX(${((1 - clamp(ci, 0, 1)) * 25).toFixed(2)}deg)`;
+        c.style.opacity = t > PROV + 0.05 + i * 0.12 ? "1" : "0";
         [...c.children].slice(1).forEach((b, j) => {
           const at = PROV + 0.3 + i * 0.12 + j * 0.08;
           const bi = E.outExpo(seg(t, at, at + 0.35));

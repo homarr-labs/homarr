@@ -16,6 +16,8 @@
         <feBlend in="ro" in2="g" mode="screen" result="rg" />
         <feBlend in="rg" in2="bo" mode="screen" />
       </filter>
+      <filter id="vblur" x="0" y="-10%" width="100%" height="120%"><feGaussianBlur id="vblur-std" stdDeviation="0 0" /></filter>
+      <filter id="hblur" x="-10%" y="0" width="120%" height="100%"><feGaussianBlur id="hblur-std" stdDeviation="0 0" /></filter>
     </svg>
     <div id="stage">
       <div id="world">

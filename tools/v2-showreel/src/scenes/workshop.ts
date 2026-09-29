@@ -1,391 +1,374 @@
-import { E, seg, lerp, env, spring, clamp } from "../lib/anim";
+import { E, seg, lerp, clamp, spring, BEAT } from "../lib/anim";
 import { h, tf, icon, logo } from "../lib/dom";
 import { Chapter, Headline } from "../lib/kit";
 import type { Scene } from "../lib/scene";
 
-const catalog: { title: string; by: string; css?: boolean; hue: number }[] = [
-  { title: "Pokédex", by: "ajnart", hue: 350 },
-  { title: "Recommended TV Shows", by: "ajnart", hue: 210 },
-  { title: "Categorized App List", by: "Clarkar00", hue: 150 },
-  { title: "Midnight Glass", by: "community", css: true, hue: 260 },
-  { title: "Pi-hole stats", by: "community", hue: 0 },
-  { title: "Proxmox nodes", by: "community", hue: 28 },
-  { title: "Frigate events", by: "community", hue: 190 },
-  { title: "Nord", by: "community", css: true, hue: 205 },
-  { title: "Jellyfin sessions", by: "community", hue: 280 },
-  { title: "Speedtest history", by: "community", hue: 120 },
-  { title: "Immich memories", by: "community", hue: 45 },
-  { title: "Rounded Soft", by: "community", css: true, hue: 330 },
-  { title: "qBittorrent speed", by: "community", hue: 100 },
-  { title: "Home Assistant scenes", by: "community", hue: 195 },
-  { title: "Uptime overview", by: "community", hue: 160 },
-  { title: "Paper", by: "community", css: true, hue: 40 },
-  { title: "Plex now playing", by: "community", hue: 38 },
-  { title: "Calendar agenda", by: "community", hue: 230 },
-  { title: "Gatus status", by: "community", hue: 140 },
-  { title: "Terminal Green", by: "community", css: true, hue: 130 },
+// Workshop: the catalog opens around the widget published in the previous scene, then a Custom CSS submission gets
+// installed and restyles the whole catalog.
+type Theme = "base" | "glass";
+type Item = {
+  title: string;
+  by: string;
+  hue: number;
+  kind: "queue" | "poke" | "rows" | "bars" | "css";
+  uses?: string[];
+  votes: number;
+  fresh?: boolean;
+};
+const ITEMS: Item[] = [
+  { title: "Sonarr queue", by: "you", hue: 212, kind: "queue", uses: ["sonarr"], votes: 0, fresh: true },
+  { title: "Pokédex", by: "ajnart", hue: 350, kind: "poke", votes: 412 },
+  { title: "Pi-hole stats", by: "community", hue: 0, kind: "bars", uses: ["piHole"], votes: 188 },
+  { title: "Jellyfin sessions", by: "community", hue: 280, kind: "rows", uses: ["jellyfin"], votes: 256 },
+  { title: "Proxmox nodes", by: "community", hue: 28, kind: "bars", uses: ["proxmox"], votes: 143 },
+  { title: "Midnight Glass", by: "community", hue: 258, kind: "css", votes: 331 },
+  { title: "Immich memories", by: "community", hue: 45, kind: "rows", uses: ["immich"], votes: 97 },
+  { title: "Nord", by: "community", hue: 205, kind: "css", votes: 274 },
+  { title: "Frigate events", by: "community", hue: 190, kind: "bars", uses: ["frigate"], votes: 165 },
+  { title: "Home Assistant scenes", by: "community", hue: 195, kind: "rows", uses: ["homeAssistant"], votes: 210 },
+  { title: "Plex now playing", by: "community", hue: 38, kind: "rows", uses: ["plex"], votes: 127 },
+  { title: "Release calendar", by: "community", hue: 150, kind: "bars", uses: ["sonarr", "radarr"], votes: 301 },
 ];
+const CSS_ITEM = 5;
+const W = 290;
+const H = 244;
+const GAP = 18;
+const PAD = 22;
+const HEAD = 86;
+const PANEL = { x: 890, y: 100, w: 3 * W + 2 * GAP + 2 * PAD, h: 880 };
+const QUEUE = ["#3b82f6", "#f59e0b", "#10b981", "#ef4444"];
 
-function thumb(hue: number, css = false, big = false) {
-  const H = big ? 190 : 120;
+function thumb(item: Item, g: boolean) {
   const el = h("div", {
-    style: `height:${H}px;border-radius:12px;position:relative;overflow:hidden;background:linear-gradient(150deg,hsl(${hue} 55% 22%),hsl(${hue + 30} 50% 10%))`,
+    class: "abs",
+    style: `left:10px;top:10px;width:${W - 20}px;height:112px;border-radius:${g ? 18 : 10}px;overflow:hidden;background:linear-gradient(150deg,hsl(${item.hue} 55% 22%),hsl(${item.hue + 30} 50% 10%))`,
   });
-  if (css) {
-    el.append(
-      h("div", { class: "abs mono", style: `left:16px;top:14px;font-size:${big ? 17 : 12}px;line-height:1.5;color:hsl(${hue} 90% 80%)` }, ".mantine-Card-root {"),
-      h("div", { class: "abs mono", style: `left:30px;top:${big ? 42 : 32}px;font-size:${big ? 17 : 12}px;color:#fff;opacity:.75` }, "border-radius: 24px;"),
-      h("div", { class: "abs mono", style: `left:16px;top:${big ? 70 : 50}px;font-size:${big ? 17 : 12}px;color:hsl(${hue} 90% 80%)` }, "}"),
+  if (item.kind === "queue")
+    QUEUE.forEach((c, i) =>
+      el.append(
+        h("div", { class: "abs", style: `left:16px;top:${12 + i * 24}px;width:14px;height:18px;border-radius:3px;background:${c}` }),
+        h("div", { class: "abs", style: `left:42px;top:${19 + i * 24}px;width:200px;height:5px;border-radius:3px;background:rgba(255,255,255,.12)` }),
+        h("div", { class: "abs", style: `left:42px;top:${19 + i * 24}px;width:${[172, 122, 74, 28][i]}px;height:5px;border-radius:3px;background:#fa5352` }),
+      ),
     );
-  } else {
-    for (let i = 0; i < 3; i++)
+  else if (item.kind === "poke")
+    el.append(
+      h("div", { class: "abs", style: "left:93px;top:14px;width:84px;height:84px;border-radius:50%;background:linear-gradient(180deg,#fa5352 0 46%,#222 46% 54%,#eee 54%);box-shadow:0 0 0 5px #222 inset" }),
+      h("div", { class: "abs", style: "left:124px;top:45px;width:22px;height:22px;border-radius:50%;background:#eee;border:5px solid #222" }),
+    );
+  else if (item.kind === "css") {
+    const nord = item.title === "Nord";
+    el.append(
+      h("div", { class: "abs mono", style: `left:14px;top:14px;font-size:13px;line-height:22px;color:hsl(${item.hue} 90% 80%)` }, ".mantine-Card-root {"),
+      h("div", { class: "abs mono", style: "left:30px;top:36px;font-size:13px;line-height:22px;color:#fff;opacity:.75" }, nord ? "background: #3b4252;" : "border-radius: 26px;"),
+      h("div", { class: "abs mono", style: "left:30px;top:58px;font-size:13px;line-height:22px;color:#fff;opacity:.75" }, nord ? "color: #eceff4;" : "backdrop-filter: blur(16px);"),
+      h("div", { class: "abs mono", style: `left:14px;top:80px;font-size:13px;line-height:22px;color:hsl(${item.hue} 90% 80%)` }, "}"),
+    );
+  } else if (item.kind === "bars")
+    for (let b = 0; b < 9; b++)
       el.append(
         h("div", {
           class: "abs",
-          style: `left:14px;right:${40 + i * 24}px;top:${16 + i * (big ? 50 : 32)}px;height:${big ? 34 : 20}px;border-radius:6px;background:hsla(${hue} 80% 70% / ${0.35 - i * 0.08})`,
+          style: `left:${18 + b * 27}px;bottom:14px;width:17px;height:${22 + ((b * 37 + item.hue) % 64)}px;border-radius:${g ? 6 : 3}px;background:${b % 3 ? "rgba(255,255,255,.22)" : g ? "#b9a8ff" : "#fa5352"}`,
         }),
       );
-  }
+  else
+    for (let r = 0; r < 3; r++)
+      el.append(
+        h("div", { class: "abs", style: `left:16px;top:${16 + r * 30}px;width:22px;height:22px;border-radius:${g ? 8 : 6}px;background:rgba(255,255,255,.2)` }),
+        h("div", { class: "abs", style: `left:48px;top:${22 + r * 30}px;width:${160 - r * 34}px;height:9px;border-radius:5px;background:hsla(${item.hue} 80% 75% / .45)` }),
+      );
   return el;
 }
 
-function wsCard(item: (typeof catalog)[number]) {
-  return h(
+/** A Workshop catalog card; `g` renders it with the Midnight Glass Custom CSS. */
+function card(item: Item, g: boolean) {
+  const vote = h("span", { class: "tnum" }, String(item.votes));
+  const comments = h("span", { class: "tnum" }, "0");
+  const btn = h(
     "div",
-    { class: "card", style: "width:300px;height:236px;padding:10px;border-radius:16px" },
-    thumb(item.hue, item.css),
-    h("div", { style: "font-size:17px;font-weight:700;margin-top:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" }, item.title),
+    {
+      class: "abs center",
+      style: `right:12px;bottom:12px;width:104px;height:36px;border-radius:${g ? 18 : 9}px;background:${g ? "#8b7bff" : "#fa5352"};font-size:15px;font-weight:750;overflow:hidden`,
+    },
+    "Install",
+  );
+  const installed = h("div", { class: "abs row center", style: "inset:0;gap:5px;background:#2f9e6b;opacity:0" }, icon("check", 16, 3), "Installed");
+  btn.append(installed);
+  const badge =
+    item.kind === "css"
+      ? h(
+          "span",
+          {
+            class: "mono",
+            style: `padding:5px 10px;border-radius:${g ? 12 : 6}px;background:${g ? "rgba(185,168,255,.2)" : "rgba(124,140,255,.2)"};color:#c3caff;font-size:12px;font-weight:700;letter-spacing:.08em`,
+          },
+          "CUSTOM CSS",
+        )
+      : h(
+          "span",
+          { class: "row", style: "gap:6px" },
+          item.uses ? h("span", { style: `font-size:13px;font-weight:600;margin-right:2px;color:${g ? "#a99fd6" : "var(--muted)"}` }, "Works with") : null,
+          ...(item.uses ?? []).map((u) =>
+            h("span", { class: "center", style: `width:30px;height:30px;border-radius:${g ? 11 : 7}px;background:${g ? "rgba(255,255,255,.12)" : "#2a2b31"}` }, logo(u, 20)),
+          ),
+          item.uses ? null : h("span", { class: "mono", style: "font-size:12px;color:var(--muted);letter-spacing:.1em" }, "API"),
+        );
+  const el = h(
+    "div",
+    {
+      class: "abs",
+      style: `width:${W}px;height:${H}px;border-radius:${g ? 26 : 14}px;overflow:hidden;${
+        g
+          ? "background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 20px 40px rgba(10,6,40,.45)"
+          : "background:#1d1e23;border:1px solid rgba(255,255,255,.08);box-shadow:0 18px 36px rgba(0,0,0,.4)"
+      }`,
+    },
+    thumb(item, g),
     h(
       "div",
-      { class: "row", style: "font-size:13px;color:var(--muted);margin-top:6px;gap:8px" },
-      item.by,
-      item.css ? h("span", { class: "mono", style: "padding:1px 7px;border-radius:5px;background:rgba(124,140,255,.2);color:#c3caff;font-size:11px" }, "CSS") : null,
-      h("span", { class: "row", style: "margin-left:auto;gap:4px" }, icon("arrow-big-up", 14, 2), String(20 + ((item.hue * 7) % 180))),
+      { class: "abs", style: `left:16px;top:134px;width:170px;font-size:18px;font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;${g ? "color:#f1edff" : ""}` },
+      item.title,
     ),
+    h("div", { class: "abs", style: `left:16px;top:160px;font-size:14px;color:${g ? "#a99fd6" : "var(--muted)"}` }, `by ${item.by}`),
+    h(
+      "div",
+      { class: "abs row", style: `right:14px;top:137px;gap:10px;font-size:14px;color:${g ? "#d9d2ff" : "#cfcfd6"}` },
+      h("span", { class: "row", style: "gap:4px" }, icon("arrow-big-up", 16, 2), vote),
+      h("span", { class: "row", style: "gap:4px" }, icon("message-circle", 15, 2), comments),
+    ),
+    h("div", { class: "abs row", style: "left:16px;bottom:15px" }, badge),
+    btn,
   );
+  if (item.fresh) {
+    el.style.border = `2px solid ${g ? "rgba(185,168,255,.8)" : "rgba(250,83,82,.8)"}`;
+    el.append(
+      h(
+        "div",
+        {
+          class: "abs mono",
+          style: `left:12px;top:12px;padding:4px 9px;border-radius:${g ? 10 : 6}px;background:${g ? "#8b7bff" : "#fa5352"};font-size:12px;font-weight:800;letter-spacing:.1em`,
+        },
+        "NEW",
+      ),
+    );
+  }
+  return { el, vote, comments, btn, installed };
 }
 
-/** Miniature board used for the Custom CSS restyle. */
-function miniBoard(theme: "base" | "glass") {
+function panel(theme: Theme) {
   const g = theme === "glass";
-  const tile = (w: number, hgt: number, content: HTMLElement | string, accent = false) =>
+  const cards = ITEMS.map((it, i) => {
+    const c = card(it, g);
+    c.el.style.left = `${PAD + (i % 3) * (W + GAP)}px`;
+    c.el.style.top = `${Math.floor(i / 3) * (H + GAP)}px`;
+    return c;
+  });
+  const grid = h("div", { class: "abs", style: "left:0;top:0;right:0" }, ...cards.map((c) => c.el));
+  const tab = (label: string, on: boolean) =>
     h(
       "div",
       {
-        style: `width:${w}px;height:${hgt}px;border-radius:${g ? 26 : 10}px;padding:16px;${
-          g
-            ? "background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.2)"
-            : "background:#292a2e;border:1px solid rgba(255,255,255,.07)"
-        };${accent ? (g ? "color:#b9a8ff" : "color:#fa5352") : ""}`,
+        style: `padding:8px 16px;border-radius:${g ? 16 : 8}px;font-size:16px;font-weight:650;${
+          on ? (g ? "background:rgba(185,168,255,.22);color:#e6e0ff" : "background:rgba(250,83,82,.16);color:#ff8f86") : `color:${g ? "#a99fd6" : "var(--muted)"}`
+        }`,
       },
-      content,
+      label,
     );
-  const big = (txt: string, sub: string) =>
-    h("div", { class: "col" }, h("div", { style: "font-size:40px;font-weight:800;letter-spacing:-.03em" }, txt), h("div", { style: "font-size:15px;opacity:.6" }, sub));
-  // One row that fits the tile's 328px content box.
-  const apps = h(
-    "div",
-    { class: "row", style: "gap:10px;height:100%" },
-    ...["sonarr", "radarr", "jellyfin", "piHole", "immich"].map((n) =>
-      h("div", { class: "center", style: `width:56px;height:56px;flex:none;border-radius:${g ? 18 : 10}px;background:${g ? "rgba(255,255,255,.1)" : "#1f2024"}` }, logo(n, 32)),
-    ),
-  );
-  const bars = h(
-    "div",
-    { class: "row", style: "gap:8px;align-items:flex-end;height:100%" },
-    ...[40, 64, 30, 80, 55, 92, 70].map((v) =>
-      h("div", { style: `flex:1;height:${v}%;border-radius:${g ? 8 : 3}px;background:${g ? "linear-gradient(180deg,#b9a8ff,#6d5dfc)" : "#fa5352"}` }),
-    ),
-  );
-  return h(
+  const el = h(
     "div",
     {
       class: "abs",
-      style: `inset:0;border-radius:${g ? 30 : 16}px;overflow:hidden;padding:22px;${
-        g ? "background:radial-gradient(120% 90% at 20% 0%,#3b2a7a,#12102a 60%,#0a0a18)" : "background:#11172f"
-      }`,
+      style: `left:${PANEL.x}px;top:${PANEL.y}px;width:${PANEL.w}px;height:${PANEL.h}px;border-radius:${g ? 34 : 20}px;overflow:hidden;${
+        g
+          ? "background:radial-gradient(120% 90% at 20% 0%,#3b2a7a,#12102a 60%,#0a0a18);border:1px solid rgba(255,255,255,.2)"
+          : "background:#141418;border:1px solid rgba(255,255,255,.08)"
+      };box-shadow:0 50px 100px -20px rgba(0,0,0,.7)`,
     },
     h(
       "div",
-      { class: "row", style: `height:44px;margin-bottom:18px;gap:12px;font-weight:700;font-size:18px;${g ? "color:#e6e0ff" : ""}` },
-      h("div", { style: `width:28px;height:28px;border-radius:${g ? 10 : 6}px;background:${g ? "#8b7bff" : "#fa5352"}` }),
-      "Homelab",
-      h("div", {
-        style: `margin-left:auto;width:260px;height:36px;border-radius:${g ? 18 : 8}px;background:${g ? "rgba(255,255,255,.1)" : "#1f2024"}`,
-      }),
+      { class: "abs row", style: `left:${PAD}px;right:${PAD}px;top:18px;height:48px;gap:12px;font-weight:800;font-size:22px;${g ? "color:#e6e0ff" : ""}` },
+      h("div", { class: "center", style: `width:34px;height:34px;border-radius:${g ? 12 : 8}px;background:${g ? "#8b7bff" : "#fa5352"}` }, icon("building-store", 20, 2.2)),
+      "Workshop",
+      h("div", { class: "row", style: "gap:4px;margin-left:18px" }, tab("Widgets", true), tab("Custom CSS", false), tab("Installed", false)),
+      h(
+        "div",
+        {
+          class: "row",
+          style: `margin-left:auto;gap:8px;width:190px;height:38px;padding:0 12px;border-radius:${g ? 19 : 9}px;background:${g ? "rgba(255,255,255,.1)" : "#1f2025"};font-size:15px;font-weight:500;color:${g ? "#a99fd6" : "var(--muted)"}`,
+        },
+        icon("search", 17, 2),
+        "Search",
+      ),
     ),
-    h(
-      "div",
-      { class: "row", style: "gap:16px;align-items:stretch" },
-      h("div", { class: "col", style: "gap:16px" }, tile(250, 130, big("21:47", "Paris · Saturday"), true), tile(250, 130, big("24.9°", "Mainly clear"))),
-      h("div", { class: "col", style: "gap:16px" }, tile(360, 130, apps), tile(360, 130, bars)),
-    ),
+    h("div", { class: "abs", style: `left:0;right:0;top:${HEAD}px;bottom:0;overflow:hidden` }, grid),
   );
+  return { el, grid, cards };
+}
+
+/** Screen rect of the published widget's catalog slot (inside the panel's 1px border). */
+export const SLOT = { x: PANEL.x + 1 + PAD, y: PANEL.y + 1 + HEAD, w: W, h: H };
+export const WORKSHOP_BG = "radial-gradient(ellipse 55% 50% at 14% 12%,rgba(250,82,82,.16),rgba(250,82,82,0) 62%),#0b0b0f";
+
+/**
+ * The published widget as a Workshop card, for Custom Widgets to morph into. It ends the scene alone in its slot and
+ * shadowless, matching the first Workshop frame, where the catalog is still clipped to that card.
+ */
+export function publishedCard() {
+  const c = card(ITEMS[0]!, false);
+  c.el.style.left = `${SLOT.x}px`;
+  c.el.style.top = `${SLOT.y}px`;
+  c.el.style.boxShadow = "none";
+  c.el.style.transformOrigin = "0 0";
+  return c.el;
 }
 
 export function workshop(): Scene {
-  const bg = h("div", { class: "scene" });
+  const bg = h("div", { class: "scene", style: `background:${WORKSHOP_BG}` });
+  // The Custom CSS restyle spills past the catalog into the background.
+  const bgGlass = h("div", {
+    class: "abs",
+    style: "inset:0;background:radial-gradient(ellipse 70% 60% at 70% 20%,rgba(139,123,255,.3),rgba(139,123,255,0) 70%),#0d0b1c",
+  });
+  bg.append(bgGlass);
   const fg = h("div", { class: "scene" });
 
-  // Catalog plane in perspective.
-  const grid = h("div", { class: "abs", style: "left:0;top:0;display:grid;grid-template-columns:repeat(5,300px);gap:26px" }, ...catalog.map(wsCard));
-  const plane = h("div", { class: "abs", style: "left:560px;top:-160px;transform-origin:50% 50%" }, grid);
-  const planeWrap = h("div", { class: "abs", style: "inset:0;perspective:1800px" }, plane);
-  const shade = h("div", {
-    class: "abs",
-    style: "inset:0;background:linear-gradient(90deg,#07070b 22%,rgba(7,7,11,.8) 42%,rgba(7,7,11,.2) 70%,rgba(7,7,11,.5))",
-  });
-  bg.append(planeWrap, shade);
+  const A = panel("base");
+  const B = panel("glass");
+  const both = [A, B];
+  const cursor = h(
+    "div",
+    { class: "abs", style: "left:0;top:0;width:40px;height:40px;color:#fff;filter:drop-shadow(0 4px 8px rgba(0,0,0,.6))" },
+    icon("filled:pointer", 40, 1),
+  );
 
   const chapter = new Chapter("02", "Workshop");
-  const head = new Headline("Publish and install Custom Widgets.", { size: 92, accent: ["install"] });
-  const headWrap = h("div", { class: "abs", style: "left:92px;top:150px;width:900px" }, head.el);
-
-  const verbs = ["Publish", "Install", "Update", "Vote", "Comment", "Report"];
-  const verbEls = verbs.map((v) => h("div", { class: "display", style: "font-size:64px;font-weight:800;transform-origin:0 50%" }, v));
-  const verbCol = h("div", { class: "abs col", style: "left:96px;top:420px;gap:6px" }, ...verbEls);
-
-  // Focus card: the Sonarr queue widget arriving from the previous scene.
-  const votes = h("span", { class: "mono" }, "41");
-  const upBtn = h("div", { class: "row", style: "gap:6px;padding:8px 12px;border-radius:10px;border:1px solid var(--line2)" }, icon("arrow-big-up", 20, 2), votes);
-  const comBtn = h("div", { class: "row", style: "gap:6px;padding:8px 12px;border-radius:10px;border:1px solid var(--line2)" }, icon("message-circle", 20, 2), h("span", { class: "mono" }, "7"));
-  const flagBtn = h("div", { class: "row", style: "gap:6px;padding:8px 12px;border-radius:10px;border:1px solid var(--line2)" }, icon("flag", 20, 2));
-  const instLabel = h("span", {}, "Install");
-  const instFill = h("div", { class: "abs", style: "left:0;top:0;bottom:0;width:0;background:rgba(255,255,255,.25)" });
-  const instBtn = h(
-    "div",
-    {
-      class: "row",
-      style:
-        "position:relative;overflow:hidden;margin-left:auto;gap:8px;padding:10px 20px;border-radius:10px;background:#fa5352;color:#fff;font-weight:800;font-size:18px",
-    },
-    instFill,
-    icon("download", 20, 2.4),
-    instLabel,
+  const h1 = new Headline("Share it in the", { size: 96, weight: 830 });
+  const h2 = new Headline("Workshop.", { size: 96, weight: 830, color: "var(--coral)" });
+  const head = h("div", { class: "abs col", style: "left:100px;top:150px;line-height:1.08;white-space:nowrap" }, h1.el, h2.el);
+  const desc = new Headline("Publish and install community submissions.", { size: 30, weight: 500, color: "#b5b5bf" });
+  const descWrap = h("div", { class: "abs", style: "left:104px;top:392px;white-space:nowrap" }, desc.el);
+  const chips = (
+    [
+      ["puzzle", "Custom Widgets"],
+      ["palette", "Custom CSS"],
+      ["refresh", "Updates"],
+      ["arrow-big-up", "Votes"],
+      ["message-circle", "Comments"],
+    ] as const
+  ).map(([ic, label]) =>
+    h(
+      "div",
+      { class: "chip", style: "font-size:19px;padding:9px 17px;color:#dcdce2;border-color:rgba(255,255,255,.2);gap:9px" },
+      h("span", { style: "color:#ff8787;display:inline-flex" }, icon(ic, 20, 2)),
+      label,
+    ),
   );
-  const version = h("span", { class: "mono", style: "padding:3px 10px;border-radius:6px;background:rgba(255,255,255,.08);font-size:15px" }, "v1.0");
-  const published = h(
+  const chipBox = h("div", { class: "abs row", style: "left:104px;top:458px;width:700px;flex-wrap:wrap;gap:12px" }, ...chips);
+  const usesLabel = h(
     "div",
-    { class: "abs row mono", style: "right:18px;top:18px;gap:6px;padding:6px 12px;border-radius:8px;background:rgba(61,220,151,.18);color:var(--mint);font-size:14px;font-weight:700" },
-    icon("check", 16, 2.6),
-    "PUBLISHED",
+    { class: "abs row", style: "left:104px;top:600px;width:700px;gap:14px;align-items:flex-start;font-size:26px;line-height:1.35;font-weight:600;color:#dcdce2" },
+    h("span", { style: "color:#ff8787;display:inline-flex;margin-top:3px" }, icon("plug-connected", 28, 2)),
+    h("span", {}, "Custom widgets can leverage your integrations, so you don't have to retype your credentials."),
   );
-  const bubble = h(
+  const privacy = h(
     "div",
-    {
-      class: "abs",
-      style:
-        "right:-40px;top:250px;padding:16px 20px;border-radius:16px 16px 16px 4px;background:#2a2b33;border:1px solid var(--line2);font-size:19px;width:330px;box-shadow:0 20px 50px rgba(0,0,0,.5)",
-    },
-    h("div", { class: "mono", style: "font-size:13px;color:var(--muted);margin-bottom:6px" }, "comment"),
-    "Works with my Sonarr v4 setup",
+    { class: "abs row", style: "left:104px;top:740px;gap:12px;font-size:22px;font-weight:550;color:#9a9ca8;white-space:nowrap" },
+    h("span", { style: "color:var(--mint);display:inline-flex" }, icon("lock", 22, 2)),
+    "Deployment URLs and credentials stay on your Homarr instance.",
   );
-  const reportTip = h(
+  const applied = h(
     "div",
     {
       class: "abs row",
       style:
-        "left:-24px;bottom:-66px;gap:10px;padding:12px 18px;border-radius:12px;background:#2a2b33;border:1px solid rgba(250,83,82,.5);font-size:18px;color:#ffb3ad;white-space:nowrap",
+        "left:104px;top:824px;gap:12px;padding:12px 20px;border-radius:16px;background:rgba(139,123,255,.16);border:1px solid rgba(185,168,255,.4);font-size:21px;font-weight:650;color:#e6e0ff;white-space:nowrap",
     },
-    icon("flag", 20, 2),
-    "Report sent to moderators",
+    icon("palette", 22, 2),
+    "Custom CSS installed: Midnight Glass",
   );
-  const focusThumb = thumb(350, false, true);
-  focusThumb.append(h("div", { class: "abs", style: "right:18px;bottom:16px" }, logo("sonarr", 64)));
-  const focus = h(
-    "div",
-    { class: "abs card", style: "left:1060px;top:230px;width:600px;padding:18px;border-radius:22px;border-color:rgba(250,83,82,.45)" },
-    focusThumb,
-    h("div", { class: "row", style: "margin-top:16px;gap:12px" }, h("div", { style: "font-size:30px;font-weight:800;letter-spacing:-.02em" }, "Sonarr queue"), version),
-    h("div", { style: "font-size:17px;color:var(--muted);margin-top:6px" }, "Queue with progress and a search action · by you"),
-    h("div", { class: "row", style: "margin-top:20px;gap:10px;font-size:17px;color:#d7d8de" }, upBtn, comBtn, flagBtn, instBtn),
-    published,
-    bubble,
-    reportTip,
-  );
+  fg.append(A.el, B.el, cursor, chapter.el, head, descWrap, chipBox, usesLabel, privacy, applied);
 
-  // Custom CSS restyle
-  const head2 = new Headline("Not only widgets: Custom CSS too.", { size: 92, accent: ["Custom", "CSS"] });
-  const head2Wrap = h("div", { class: "abs", style: "left:92px;top:150px;width:900px" }, head2.el);
-  const boardA = miniBoard("base");
-  const boardB = miniBoard("glass");
-  const boardFrame = h("div", { class: "abs", style: "left:1000px;top:290px;width:720px;height:420px;border-radius:30px" }, boardA, boardB);
-  const cssCard = h(
-    "div",
-    { class: "abs card", style: "left:96px;top:470px;width:560px;padding:24px 28px;border-color:rgba(124,140,255,.4)" },
-    h(
-      "div",
-      { class: "row", style: "gap:12px;font-size:24px;font-weight:800" },
-      "Midnight Glass",
-      h("span", { class: "mono", style: "padding:2px 9px;border-radius:6px;background:rgba(124,140,255,.2);color:#c3caff;font-size:13px" }, "CSS"),
-    ),
-    h(
-      "div",
-      { class: "mono", style: "margin-top:16px;font-size:18px;line-height:1.6;color:#c9d1d9" },
-      h("div", {}, h("span", { class: "tok-p" }, ".mantine-Card-root"), " {"),
-      h("div", {}, "  ", h("span", { class: "tok-k" }, "border-radius"), ": ", h("span", { class: "tok-n" }, "26px"), ";"),
-      h("div", {}, "  ", h("span", { class: "tok-k" }, "backdrop-filter"), ": ", h("span", { class: "tok-s" }, "blur(16px)"), ";"),
-      h("div", {}, "}"),
-    ),
-  );
-  const cssInstall = h(
-    "div",
-    { class: "abs row", style: "left:96px;top:760px;gap:10px;padding:14px 24px;border-radius:12px;background:#7c8cff;color:#fff;font-weight:800;font-size:20px" },
-    icon("download", 22, 2.4),
-    "Apply",
-  );
-  const cursor = h("div", { class: "abs", style: "left:0;top:0;width:34px;height:34px;color:#fff;filter:drop-shadow(0 4px 8px rgba(0,0,0,.6))" }, icon("filled:pointer", 34, 1));
-
-  const stamp = h(
-    "div",
-    {
-      class: "abs display center",
-      style:
-        "left:170px;top:560px;width:430px;height:130px;border:6px solid #fa5352;border-radius:14px;color:#fa5352;font-size:64px;font-weight:900;letter-spacing:.04em",
-    },
-    "MODERATED",
-  );
-  const stampSub = h(
-    "div",
-    { class: "abs", style: "left:130px;top:730px;width:520px;text-align:center;font-size:24px;color:#d7d8de;line-height:1.4" },
-    "Test it, add a useful screenshot and explain its setup.",
-  );
-
-  // Collapse into the door slit.
-  const slit = h("div", { class: "abs", style: "left:958px;top:0;bottom:0;width:4px;background:#ffb0a8;box-shadow:0 0 30px 8px rgba(250,83,82,.9)" });
-
-  const all = h("div", { class: "abs", style: "inset:0;transform-origin:50% 50%" });
-  all.append(chapter.el, headWrap, verbCol, focus, head2Wrap, boardFrame, cssCard, cssInstall, stamp, stampSub, cursor);
-  fg.append(all, slit);
-
-  const V0 = 0.75;
-  const VS = 0.36;
-  const vt = (i: number) => V0 + i * VS;
-  const CSS = 3.05;
-  const APPLY = 4.2;
-  const STAMP = 5.25;
-  const OUT = 6.45;
+  const LAND = 0.05;
+  const CLICK = 7 * BEAT;
+  const WIPE = CLICK + 0.12;
+  const END = WIPE + 1.5;
+  // Screen position of the Midnight Glass install button.
+  const bx = PANEL.x + PAD + (CSS_ITEM % 3) * (W + GAP) + W - 12 - 52;
+  const by = PANEL.y + HEAD + Math.floor(CSS_ITEM / 3) * (H + GAP) + H - 12 - 18;
+  // Diagonal wipe edge in screen px: x at a given y.
+  const edge = (wx: number, y: number) => wx - 0.55 * y;
 
   return {
     name: "workshop",
     start: 0,
-    end: OUT + 0.45,
+    end: END,
     bg,
     fg,
     cues: [
-      { t: 0.1, kind: "hit", gain: 0.7 },
-      ...verbs.map((_, i) => ({ t: vt(i), kind: "tick" as const, gain: 0.7, pitch: i })),
-      { t: vt(1) + 0.12, kind: "click", gain: 0.7 },
-      { t: vt(3) + 0.06, kind: "pop", gain: 0.6 },
-      { t: vt(4) + 0.06, kind: "pop", gain: 0.6 },
-      { t: CSS - 0.1, kind: "whoosh", gain: 0.7 },
-      { t: APPLY, kind: "click", gain: 0.8 },
-      { t: APPLY + 0.05, kind: "whoosh", gain: 0.6 },
-      { t: STAMP, kind: "stamp", gain: 1 },
-      { t: OUT - 0.1, kind: "riser", dur: 0.5, gain: 0.6 },
-      { t: OUT, kind: "reverse", gain: 0.6 },
+      { t: LAND, kind: "hit", gain: 0.55 },
+      { t: 0.25, kind: "swish", gain: 0.5 },
+      ...ITEMS.slice(1).map((_, i) => ({ t: 0.3 + i * 0.05, kind: "tick" as const, gain: 0.25, pitch: i % 6 })),
+      { t: 1.9, kind: "swish", gain: 0.35 },
+      { t: CLICK, kind: "click", gain: 0.8 },
+      { t: WIPE, kind: "swish", gain: 0.7 },
+      { t: WIPE + 0.5, kind: "pop", gain: 0.6 },
     ],
-    update(t, ctx) {
-      // Catalog plane drifts; dims behind the CSS beat and returns for the stamp.
-      const pIn = E.outExpo(seg(t, 0, 0.8));
-      plane.style.transform = `translate3d(0,${(-t * 30).toFixed(1)}px,0) rotateX(42deg) rotateZ(-16deg) rotateY(-8deg) scale(${lerp(1.3, 1, pIn).toFixed(3)})`;
-      const dim = seg(t, CSS - 0.3, CSS + 0.3) * (1 - seg(t, STAMP - 0.3, STAMP));
-      plane.style.opacity = String(pIn * lerp(0.9, 0.3, dim) * (1 - seg(t, OUT - 0.3, OUT)));
-      plane.style.filter = `blur(${lerp(0, 3, seg(t, 0.6, 1.4)).toFixed(2)}px)`;
-
-      chapter.update(t, 0.15, OUT - 0.3);
-      head.update(t, 0.2, CSS - 0.3, 0.04, 0.6);
-      verbEls.forEach((v, i) => {
-        const a = E.outExpo(seg(t, 0.4 + i * 0.04, 0.9 + i * 0.04));
-        const active = t >= vt(i) && t < (i === verbs.length - 1 ? CSS - 0.3 : vt(i + 1));
-        const k = t >= vt(i) ? Math.exp(-(t - vt(i)) * 6) : 0;
-        const out = t > CSS - 0.3 + i * 0.02;
-        v.style.opacity = out ? "0" : String(a * (active ? 1 : t > vt(i) ? 0.45 : 0.22));
-        v.style.color = active ? "#fa5352" : "#fff";
-        v.style.transform = `translateX(${((1 - a) * -40 + (active ? 16 : 0)).toFixed(1)}px) scale(${(1 + k * 0.06).toFixed(3)})`;
+    update(t) {
+      // Left column
+      chapter.update(t, 0.05, END + 1); // a finite exit keeps it hidden on the first frame, as Custom Widgets left it
+      h1.update(t, 0.1, Infinity, 0.05, 0.55);
+      h2.update(t, 0.25, Infinity, 0.05, 0.55);
+      desc.update(t, 0.55, Infinity, 0.015, 0.5);
+      chips.forEach((c, i) => {
+        const a = 1.2 + i * 0.09;
+        tf(c, { s: clamp(spring(t - a, 2.6, 0.5), 0, 1.3), o: seg(t, a, a + 0.08) });
       });
+      const ul = E.outExpo(seg(t, 1.9, 2.4));
+      tf(usesLabel, { y: (1 - ul) * 16, o: ul });
+      const pv = E.outQuart(seg(t, 2.8, 3.4));
+      tf(privacy, { o: pv });
+      privacy.style.clipPath = `inset(0 ${((1 - pv) * 100).toFixed(1)}% 0 0)`;
+      const ap = E.outBack(seg(t, WIPE + 0.45, WIPE + 0.85));
+      tf(applied, { y: (1 - ap) * 20, s: lerp(0.9, 1, ap), o: seg(t, WIPE + 0.45, WIPE + 0.55) });
 
-      // Focus card arrives from above (continuation of the publish fly-out).
-      const fIn = E.outExpo(seg(t, 0, 0.6));
-      const fOut = E.inOutQuart(seg(t, CSS - 0.4, CSS + 0.1));
-      focus.style.transform = `perspective(1600px) translate(${(fOut * 900).toFixed(1)}px,${((1 - fIn) * -700).toFixed(1)}px) rotateX(${((1 - fIn) * -30).toFixed(2)}deg) rotateY(${(-6 + Math.sin(t * 0.8) * 2).toFixed(2)}deg)`;
-      focus.style.opacity = String(Math.min(1, fIn * 1.5) * (1 - fOut));
-      focus.style.display = t < CSS + 0.15 ? "" : "none";
-      const pb = spring(t - vt(0), 3, 0.45);
-      published.style.transform = `scale(${clamp(pb, 0, 2).toFixed(3)})`;
-      published.style.opacity = t >= vt(0) ? "1" : "0";
-      // Install: fill then installed state.
-      const ip = seg(t, vt(1) + 0.08, vt(1) + 0.3);
-      instFill.style.width = `${(ip * 100).toFixed(1)}%`;
-      instLabel.textContent = ip >= 1 ? "Installed" : "Install";
-      instBtn.style.background = ip >= 1 ? "#2f9e6e" : "#fa5352";
-      // Update: version bump.
-      version.textContent = t > vt(2) + 0.08 ? "v1.1" : "v1.0";
-      const vk = t > vt(2) + 0.08 ? Math.exp(-(t - vt(2) - 0.08) * 6) : 0;
-      version.style.background = `rgba(250,83,82,${(0.08 + vk * 0.6).toFixed(2)})`;
-      version.style.transform = `scale(${(1 + vk * 0.3).toFixed(3)})`;
-      // Vote
-      votes.textContent = t > vt(3) + 0.06 ? "42" : "41";
-      const uk = t > vt(3) + 0.06 ? Math.exp(-(t - vt(3) - 0.06) * 6) : 0;
-      upBtn.style.color = t > vt(3) + 0.06 ? "#fa5352" : "";
-      upBtn.style.borderColor = t > vt(3) + 0.06 ? "rgba(250,83,82,.6)" : "";
-      upBtn.style.transform = `translateY(${(-uk * 8).toFixed(1)}px) scale(${(1 + uk * 0.15).toFixed(3)})`;
-      // Comment
-      const cb = spring(t - vt(4) - 0.06, 3.2, 0.5);
-      bubble.style.transform = `scale(${clamp(cb, 0, 2).toFixed(3)})`;
-      bubble.style.transformOrigin = "0 100%";
-      bubble.style.opacity = t > vt(4) + 0.06 ? "1" : "0";
-      // Report
-      const rb = E.outExpo(seg(t, vt(5) + 0.06, vt(5) + 0.35));
-      reportTip.style.opacity = t > vt(5) + 0.06 ? "1" : "0";
-      reportTip.style.transform = `translateY(${((1 - rb) * 16).toFixed(1)}px)`;
-      flagBtn.style.color = t > vt(5) + 0.06 ? "#fa5352" : "";
+      // Catalog: grows out of the published card (the first frame is just that card, as Custom Widgets left it), then
+      // the other cards pop in.
+      const open = E.outQuart(seg(t, 0.05, 0.75));
+      const inset = [SLOT.y - PANEL.y, PANEL.x + PANEL.w - SLOT.x - W, PANEL.y + PANEL.h - SLOT.y - H, SLOT.x - PANEL.x];
+      const press = 1 - 0.1 * Math.sin(seg(t, CLICK - 0.06, CLICK + 0.1) * Math.PI);
+      const votes = String(Math.round(24 * E.outCubic(seg(t, LAND + 0.3, CLICK))));
+      const comments = String(Math.round(5 * E.outCubic(seg(t, LAND + 0.8, CLICK))));
+      for (const P of both) {
+        if (P === A)
+          // 1px outside the card so its own anti-aliased edge isn't clipped a second time.
+          P.el.style.clipPath = open < 1 ? `inset(${inset.map((v) => `${((v - 1) * (1 - open)).toFixed(2)}px`).join(" ")} round ${lerp(15, 20, open).toFixed(2)}px)` : "";
+        P.cards.forEach((c, i) => {
+          if (i > 0) {
+            const a = 0.3 + i * 0.05;
+            tf(c.el, { s: lerp(0.85, 1, E.outBack(seg(t, a, a + 0.4))), o: seg(t, a, a + 0.12) });
+          }
+        });
+        P.cards[0]!.vote.textContent = votes;
+        P.cards[0]!.comments.textContent = comments;
+        const cc = P.cards[CSS_ITEM]!;
+        cc.installed.style.opacity = t >= CLICK + 0.04 ? "1" : "0";
+        cc.btn.style.transform = `scale(${press.toFixed(3)})`;
+      }
+      // The glass copy of the catalog and background, revealed by a diagonal wipe after the install.
+      const wx = lerp(-200, 2700, E.inOutQuart(seg(t, WIPE, WIPE + 0.62)));
+      const pl = (y: number) => (edge(wx, y) - PANEL.x).toFixed(1);
+      B.el.style.clipPath = `polygon(0 0,${pl(PANEL.y)}px 0,${pl(PANEL.y + PANEL.h)}px 100%,0 100%)`;
+      B.el.style.display = t > WIPE ? "" : "none";
+      bgGlass.style.clipPath = `polygon(0 0,${edge(wx, 0).toFixed(1)}px 0,${edge(wx, 1080).toFixed(1)}px 100%,0 100%)`;
+      bgGlass.style.display = t > WIPE ? "" : "none";
 
-      // CSS section
-      head2.update(t, CSS, STAMP - 0.3, 0.04, 0.55);
-      const bIn = E.outExpo(seg(t, CSS + 0.05, CSS + 0.6));
-      const bOut = E.inOutQuart(seg(t, STAMP - 0.35, STAMP + 0.05));
-      boardFrame.style.transform = `perspective(1800px) translate(${((1 - bIn) * 500 + bOut * 800).toFixed(1)}px,0) rotateY(${((1 - bIn) * -25 - 10 + Math.sin(t) * 2).toFixed(2)}deg) rotateX(4deg)`;
-      boardFrame.style.opacity = String(Math.min(1, bIn * 2) * (1 - bOut));
-      boardFrame.style.display = t > CSS && t < STAMP + 0.1 ? "" : "none";
-      const wipe = E.inOutQuart(seg(t, APPLY + 0.05, APPLY + 0.6));
-      const wx = lerp(-40, 140, wipe);
-      boardB.style.clipPath = `polygon(0 0, ${wx}% 0, ${wx - 30}% 100%, 0 100%)`;
-      const ci = E.outExpo(seg(t, CSS + 0.15, CSS + 0.6));
-      const co = t > STAMP - 0.3;
-      cssCard.style.transform = `translateY(${((1 - ci) * 40).toFixed(1)}px)`;
-      cssCard.style.opacity = co || t < CSS + 0.15 ? "0" : "1";
-      const bi = spring(t - CSS - 0.4, 3.2, 0.5);
-      const press = t > APPLY ? 1 - Math.sin(clamp((t - APPLY) / 0.2) * Math.PI) * 0.1 : 1;
-      cssInstall.style.transform = `scale(${(clamp(bi, 0, 2) * press).toFixed(3)})`;
-      cssInstall.style.opacity = co || t < CSS + 0.4 ? "0" : "1";
-      cssInstall.style.background = t > APPLY + 0.1 ? "#2f9e6e" : "#7c8cff";
-      (cssInstall.lastChild as Text).textContent = t > APPLY + 0.1 ? "Applied" : "Apply";
-      // Cursor path to the apply button
-      const cp = E.inOutCubic(seg(t, CSS + 0.45, APPLY - 0.05));
-      const cx = lerp(700, 190, cp);
-      const cy = lerp(980, 790, cp);
-      cursor.style.transform = `translate(${cx.toFixed(1)}px,${cy.toFixed(1)}px) scale(${t > APPLY && t < APPLY + 0.2 ? 0.85 : 1})`;
-      cursor.style.opacity = String(seg(t, CSS + 0.4, CSS + 0.55) * (1 - seg(t, APPLY + 0.3, APPLY + 0.5)));
-
-      // Moderated stamp
-      const st = seg(t, STAMP, STAMP + 0.14);
-      stamp.style.display = t >= STAMP ? "" : "none";
-      stamp.style.transform = `rotate(-8deg) scale(${lerp(2.4, 1, E.inCubic(st)).toFixed(3)})`;
-      stamp.style.opacity = String(Math.min(1, st * 3));
-      const ss = E.outExpo(seg(t, STAMP + 0.25, STAMP + 0.7));
-      stampSub.style.opacity = t > STAMP + 0.25 ? "1" : "0";
-      stampSub.style.transform = `translateY(${((1 - ss) * 14).toFixed(1)}px)`;
-      const hit = t >= STAMP + 0.14 ? Math.exp(-(t - STAMP - 0.14) * 7) : 0;
-      ctx.fx.shake = hit * 14 + Math.exp(-t * 7) * 8;
-      ctx.fx.zoom = 1 + hit * 0.015;
-
-      // Collapse to the slit
-      const c = E.inExpo(seg(t, OUT, OUT + 0.4));
-      all.style.transform = `scaleX(${(1 - c * 0.995).toFixed(4)})`;
-      all.style.filter = c > 0.01 ? `brightness(${(1 + c * 3).toFixed(2)})` : "";
-      bg.style.opacity = String(1 - c);
-      slit.style.opacity = String(seg(t, OUT + 0.25, OUT + 0.4));
+      // The cursor installs Midnight Glass.
+      const cp = E.inOutCubic(seg(t, CLICK - 0.8, CLICK - 0.04));
+      const cx = lerp(bx - 380, bx, cp);
+      const cy = lerp(by + 260, by, cp);
+      cursor.style.transform = `translate(${cx.toFixed(1)}px,${cy.toFixed(1)}px) scale(${press.toFixed(3)})`;
+      cursor.style.opacity = String(seg(t, CLICK - 0.9, CLICK - 0.75) * (1 - seg(t, CLICK + 0.5, CLICK + 0.65)));
     },
   };
 }

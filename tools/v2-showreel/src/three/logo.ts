@@ -3,6 +3,8 @@
 import * as THREE from "three";
 import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
+import { initialConfig } from "./lab-types";
+import { animateWordmarkRig, buildWordmarkRig, defaultWordmarkMotion, type WordmarkRig } from "./wordmark-rig";
 
 type Side = -1 | 1;
 type JointKind = "claw" | "antenna";
@@ -96,6 +98,8 @@ export interface LogoState {
   sparks: number; // 0..1 burst progress, <0 disabled
   dust: number; // opacity of dust field
   t: number;
+  /** Extruded wordmark plaque, posed independently of the lobster (world units, radians). */
+  wm: { on: boolean; x: number; y: number; scale: number; rx: number; ry: number };
 }
 
 export const defaultLogoState = (): LogoState => ({
@@ -121,6 +125,7 @@ export const defaultLogoState = (): LogoState => ({
   sparks: -1,
   dust: 0,
   t: 0,
+  wm: { on: false, x: 0, y: 0, scale: 1, rx: 0, ry: 0 },
 });
 
 export class LogoGL {
@@ -136,8 +141,10 @@ export class LogoGL {
   sparks: THREE.Points;
   sparkSeeds: Float32Array;
   dust: THREE.Points;
+  wordmark: WordmarkRig;
+  wmRoot = new THREE.Group();
 
-  constructor(canvas: HTMLCanvasElement, svg: string) {
+  constructor(canvas: HTMLCanvasElement, svg: string, wordmarkSvg: string) {
     this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
     this.renderer.setPixelRatio(1);
     this.renderer.setSize(1920, 1080, false);
@@ -162,6 +169,9 @@ export class LogoGL {
     this.scene.add(this.root);
     this.root.add(this.model);
     this.build(svg);
+    this.wordmark = buildWordmarkRig(wordmarkSvg, initialConfig);
+    this.wmRoot.add(this.wordmark.model);
+    this.scene.add(this.wmRoot);
 
     // Spark burst: 600 points on deterministic trajectories.
     const n = 600;
@@ -298,6 +308,14 @@ export class LogoGL {
       }
     });
     for (const { mesh, side } of this.eyes) mesh.scale.y = Math.max(0.08, 1 - (side === -1 ? st.blinkL : st.blinkR));
+
+    this.wmRoot.visible = st.wm.on;
+    if (st.wm.on) {
+      animateWordmarkRig(this.wordmark, st.t, 1 / 60, defaultWordmarkMotion, null);
+      this.wmRoot.position.set(st.wm.x, st.wm.y, 0);
+      this.wmRoot.rotation.set(st.wm.rx, st.wm.ry, 0);
+      this.wmRoot.scale.setScalar(Math.max(1e-3, st.wm.scale));
+    }
 
     // Sparks: radial burst in the logo's plane with gravity and fade.
     const sp = this.sparks.geometry.getAttribute("position") as THREE.BufferAttribute;

@@ -6,7 +6,7 @@
 import { chromium } from "playwright-core";
 import { createServer } from "node:http";
 import { readFile, mkdir, writeFile, rename } from "node:fs/promises";
-import { existsSync, readdirSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { spawn } from "node:child_process";
 import { extname, join, resolve } from "node:path";
 import os from "node:os";
@@ -50,6 +50,23 @@ function findChrome() {
     if (existsSync(p)) return p;
   }
   throw new Error("no chromium");
+}
+
+// Shared server: pause (between frames) while RAM or CPU headroom is low instead of pushing it into swap.
+const MIN_FREE = Number(process.env.MIN_FREE ?? 0.12); // fraction of RAM that must stay available
+const MAX_LOAD = Number(process.env.MAX_LOAD ?? 0.9); // 1-minute load per core
+function headroom() {
+  const mi = readFileSync("/proc/meminfo", "utf8");
+  const kb = (k) => Number(mi.match(new RegExp(`^${k}:\\s+(\\d+)`, "m"))[1]);
+  return { mem: kb("MemAvailable") / kb("MemTotal"), load: os.loadavg()[0] / os.cpus().length };
+}
+async function waitForHeadroom() {
+  for (let warned = false; ; warned = true) {
+    const h = headroom();
+    if (h.mem >= MIN_FREE && h.load <= MAX_LOAD) return;
+    if (!warned) console.error(`\npaused: ${(h.mem * 100).toFixed(0)}% RAM available, load ${(h.load * 100).toFixed(0)}% per core`);
+    await new Promise((r) => setTimeout(r, 5000));
+  }
 }
 
 async function openPage(port) {
@@ -170,7 +187,7 @@ if (mode === "stills") {
           "-y", "-loglevel", "error",
           "-f", "image2pipe", "-framerate", String(fps * sub), "-c:v", "png", "-i", "-",
           ...(sub > 1 ? ["-vf", `tmix=frames=${sub}:weights=${Array(sub).fill(1).join(" ")},select='eq(mod(n\\,${sub})\\,${sub - 1})',setpts=N/${fps}/TB`, "-r", String(fps)] : []),
-          "-c:v", "libx264", "-preset", "fast", "-crf", "8", "-pix_fmt", "yuv444p",
+          "-c:v", "libx264", "-preset", "fast", "-crf", "8", "-pix_fmt", "yuv444p", "-threads", "2",
           part,
         ],
         { stdio: ["pipe", "inherit", "inherit"] },
@@ -185,6 +202,7 @@ if (mode === "stills") {
     let n = 0;
     try {
       for (let f = c.a; f < c.b; f++) {
+        if ((f - c.a) % 15 === 0) await waitForHeadroom();
         for (let s = 0; s < sub; s++) {
           // Centered subframes spanning ~a 180° shutter.
           const t = from + (f + (sub > 1 ? (s / sub - 0.5) * 0.5 : 0)) / fps;

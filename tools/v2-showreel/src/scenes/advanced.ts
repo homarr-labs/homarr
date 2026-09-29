@@ -1,10 +1,10 @@
 import { E, seg, lerp, spring, clamp } from "../lib/anim";
-import { h, icon, logo, tf } from "../lib/dom";
+import { h, icon, logo } from "../lib/dom";
 import { Headline } from "../lib/kit";
 import { lobster } from "./assistant";
 import type { Scene } from "../lib/scene";
 
-// Hover Downloads, hold Shift for one second, the advanced view opens (as in the blog's clip).
+// Hover Downloads, hold Shift for half a second, the advanced view opens.
 type Row = [string, number, string, string, string, string, string];
 const ROWS: Row[] = [
   ["Tears of Steel", 22, "8.8 GiB", "26.7 MiB/s", "0 B/s", "4 minutes", "DOWNLOADING"],
@@ -29,7 +29,7 @@ export function advanced(): Scene {
 
   const head = new Headline("Advanced views.", { size: 84, accent: ["advanced"] });
   const headWrap = h("div", { class: "abs", style: "left:96px;top:84px;white-space:nowrap" }, head.el);
-  const sub = new Headline("Supported widgets: hover and hold Shift for one second.", { size: 32, weight: 600, color: "#b9bbc6" });
+  const sub = new Headline("Supported widgets: hover and hold Shift for half a second.", { size: 32, weight: 600, color: "#b9bbc6" });
   const subWrap = h("div", { class: "abs", style: "left:96px;top:196px;white-space:nowrap" }, sub.el);
 
   // ---------- Board ----------
@@ -164,14 +164,15 @@ export function advanced(): Scene {
   // ---------- Timeline ----------
   const HOVER = 0.5;
   const HOLD = 0.62;
-  const OPEN = HOLD + 1.0; // one real second of Shift
-  const END = OPEN + 2.1;
+  const HOLD_S = 0.5; // Shift is held for half a second in Homarr; the scene plays at its authored speed
+  const OPEN = HOLD + HOLD_S;
+  const END = OPEN + 2.75;
   const wc: [number, number] = [WID.x + WID.w * 0.62, WID.y + WID.h * 0.55];
 
   const cues: Scene["cues"] = [
     { t: 0.02, kind: "whoosh", gain: 0.6 },
     { t: HOLD, kind: "key", gain: 1 },
-    { t: HOLD + 0.05, kind: "riser", dur: 0.95, gain: 0.45 },
+    { t: HOLD + 0.05, kind: "riser", dur: HOLD_S - 0.05, gain: 0.45 },
     { t: OPEN, kind: "hit", gain: 0.8 },
     { t: OPEN + 0.02, kind: "swish", gain: 0.6 },
     ...ROWS.map((_, i) => ({ t: OPEN + 0.2 + i * 0.04, kind: "tick" as const, gain: 0.22, pitch: i })),
@@ -185,7 +186,6 @@ export function advanced(): Scene {
     fg,
     cues,
     update(t, ctx) {
-      ctx.fx.fade = E.inCubic(seg(t, END - 0.15, END));
       head.update(t, 0.02, Infinity, 0.05, 0.5);
       sub.update(t, 0.2, Infinity, 0.02, 0.5);
 
@@ -204,7 +204,7 @@ export function advanced(): Scene {
       widget.style.borderColor = hover ? "rgba(255,255,255,.3)" : "";
       const hold = seg(t, HOLD, OPEN);
       ring.style.background = `conic-gradient(#fa5352 ${(hold * 360).toFixed(1)}deg, rgba(255,255,255,.12) 0)`;
-      holdTime.textContent = `${(hold * 1.0).toFixed(1)}s`;
+      holdTime.textContent = `${(hold * HOLD_S).toFixed(1)}s`;
       const kIn = spring(t - HOLD + 0.08, 3.2, 0.5);
       keyWrap.style.transform = `translate(${(cx + 40).toFixed(1)}px,${(cy + 34).toFixed(1)}px) scale(${clamp(kIn, 0, 1.3).toFixed(3)})`;
       keyWrap.style.display = t > HOLD - 0.08 && t < OPEN + 0.12 ? "" : "none";

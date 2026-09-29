@@ -361,7 +361,6 @@ export function board(): Scene {
   const cues: Scene["cues"] = [
     { t: 0.05, kind: "whoosh", gain: 0.7 },
     { t: G1, kind: "click", gain: 0.8 },
-    { t: 1.6, kind: "buzz", gain: 0.35 },
     { t: D1, kind: "reverse", gain: 0.5 },
     { t: D1 + 0.05, kind: "swish", gain: 0.6, pitch: -2 },
     { t: G2, kind: "click", gain: 0.8 },
@@ -393,14 +392,10 @@ export function board(): Scene {
     start: 0,
     end: END,
     // Authored at a relaxed pace; played back faster.
-    warp: [
-      [0, C, 1.6],
-      [C, END, 1.9],
-    ],
+    warp: [[0, END, 1.6]],
     fg,
     cues,
     update(t, ctx) {
-      ctx.fx.fade = 1 - E.outCubic(seg(t, 0, 0.25));
 
       // Window rect: A/B board → shorter Base board → phone → board with sidebar.
       const toBase = E.inOutQuart(seg(t, C - 0.3, C + 0.3));
@@ -414,7 +409,7 @@ export function board(): Scene {
       frame.style.borderRadius = `${lerp(22, 46, phoneAmt).toFixed(1)}px`;
       frame.style.borderWidth = `${lerp(1, 7, phoneAmt).toFixed(1)}px`;
       frame.style.borderColor = phoneAmt > 0.02 ? "#2a2b33" : "rgba(255,255,255,.1)";
-      const fIn = E.outExpo(seg(t, 0.05, 0.7));
+      const fIn = E.outExpo(seg(t, -0.4, 0.3)); // already up as the push lands
       const out = E.inCubic(seg(t, END - 0.4, END));
       frame.style.opacity = String(fIn * (1 - out));
       frame.style.transform = `translateY(${((1 - fIn) * 60).toFixed(1)}px) scale(${(1 - out * 0.06).toFixed(3)})`;
@@ -432,7 +427,7 @@ export function board(): Scene {
       // ----- A -----
       const aExit = (i: number) => E.inCubic(seg(t, B - 0.3 + i * 0.02, B + 0.05 + i * 0.02));
       aItems.forEach(([el], i) => {
-        const pi = E.outBack(seg(t, 0.15 + i * 0.03, 0.6 + i * 0.03), 1.4);
+        const pi = E.outBack(seg(t, -0.35 + i * 0.03, 0.1 + i * 0.03), 1.4);
         const q = aExit(i);
         tf(el, { s: lerp(0.8, 1, pi) * (1 - q * 0.2), o: clamp(pi * 1.5) * (1 - q) });
       });
@@ -653,10 +648,10 @@ export function board(): Scene {
       if (cur) tf(ctrlKbd, { x: cur[0] + 34, y: cur[1] + 30, s: clamp(kOn, 0, 1.5), o: clamp(kOn * 1.5) });
 
       // ----- Copy -----
-      chapter.update(t, 0.15, C - 0.4);
+      chapter.update(t, -0.15, C - 0.4);
       colA.style.display = t < B + 0.3 ? "" : "none";
-      headA.update(t, 0.25, B - 0.45, 0.06);
-      subA.update(t, 0.55, B - 0.4, 0.02);
+      headA.update(t, -0.1, B - 0.45, 0.06);
+      subA.update(t, 0.3, B - 0.4, 0.02);
       checks.forEach((c, i) => {
         const at = [G1 + 0.15, 1.6, D1 + 0.05, D2][i]!;
         const inn = E.outExpo(seg(t, 0.8 + i * 0.08, 1.2 + i * 0.08));

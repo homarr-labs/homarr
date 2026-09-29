@@ -96,7 +96,7 @@ export function frontDoor(): Scene {
   const headRWrap = h("div", { class: "abs", style: `left:${DX + DW / 2 + 50}px;top:${DY - 64}px;white-space:nowrap` }, headR.el);
   const doorScene = h("div", { class: "abs", style: `inset:0;transform-origin:${DX}px ${DY}px` }, rays, spill, sill, doorLight, persp, frame, headLWrap, headRWrap);
 
-  const chapter = new Chapter("03", "Integration requests");
+  const chapter = new Chapter("04", "Integration requests");
 
   // ---------- Hub ----------
   const cx = 960;
@@ -152,7 +152,7 @@ export function frontDoor(): Scene {
     );
     return { el, path, x, y, a, cred, ctrl: [(cx + x) / 2 + Math.sin(a) * 60, (cy + y) / 2 - Math.cos(a) * 60] };
   });
-  const hubCaption = new Headline("Homarr already knows how to reach your services: their URLs, API keys and auth headers.", {
+  const hubCaption = new Headline("Homarr already has your services' URLs, API keys and auth headers.", {
     size: 44,
     weight: 700,
     lh: 1.15,

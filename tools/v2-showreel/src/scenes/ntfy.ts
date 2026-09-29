@@ -243,10 +243,10 @@ export function ntfy(): Scene {
     "div",
     { class: "abs col", style: "left:124px;top:700px;gap:16px" },
     h("div", { style: "font-size:40px;font-weight:700" }, "Qwen3.8-27B ran locally through MLX."),
-    h("div", { style: "font-size:28px;color:#8f919d" }, "The only side effect was warm feet."),
+    h("div", { style: "font-size:30px;font-weight:600;color:#cfd0d8" }, "Or $0.008 with DeepSeek v4.1 Flash, free through Homarr Assistant."),
+    h("div", { style: "font-size:28px;color:#8f919d" }, "The only side effect was a funny-smelling GPU."),
   );
-  const costA = cost.children[0] as HTMLElement;
-  const costB = cost.children[1] as HTMLElement;
+  const costLines = [...cost.children] as HTMLElement[];
 
   fg.append(titleWrap, kicker, table, chat, cursor, cap1Wrap, zero, cost, phoneWrap);
 
@@ -274,7 +274,7 @@ export function ntfy(): Scene {
   const callT = (i: number) => WIRE + 0.3 + i * RS;
   const LAST = callT(CALLS.length - 1);
   const PH = LAST + 1.15;
-  const OUT = PH + 2.9;
+  const OUT = PH + 3.6;
   const END = OUT + 0.45;
 
   let scrollTargets: number[] | null = null;
@@ -308,6 +308,11 @@ export function ntfy(): Scene {
     name: "ntfy",
     start: 0,
     end: END,
+    // Typing, thinking and the call table run fast; the phone and the cost lines are for reading.
+    warp: [
+      [P0, WIRE + 0.3, 1.5],
+      [WIRE + 0.3, PH, 1.2],
+    ],
     bg,
     fg,
     cues,
@@ -443,10 +448,10 @@ export function ntfy(): Scene {
       zero.style.transformOrigin = "0 80%";
       zero.style.opacity = String((t >= ZT ? 1 : 0) * (1 - pOut));
       zero.style.textShadow = `0 0 ${(40 + (t > ZT ? Math.exp(-(t - ZT) * 3) : 0) * 80).toFixed(0)}px rgba(61,220,151,.45)`;
-      const c1 = E.outExpo(seg(t, ZT + 0.2, ZT + 0.6));
-      const c2 = E.outExpo(seg(t, ZT + 0.5, ZT + 0.9));
-      costA.style.clipPath = `inset(-10px ${((1 - c1) * 100).toFixed(1)}% -10px 0)`;
-      costB.style.clipPath = `inset(-10px ${((1 - c2) * 100).toFixed(1)}% -10px 0)`;
+      costLines.forEach((l, i) => {
+        const c = E.outExpo(seg(t, ZT + 0.2 + i * 0.3, ZT + 0.6 + i * 0.3));
+        l.style.clipPath = `inset(-10px ${((1 - c) * 100).toFixed(1)}% -10px 0)`;
+      });
       cost.style.opacity = String(1 - pOut);
 
       const hitZ = t > ZT ? Math.exp(-(t - ZT) * 6) : 0;

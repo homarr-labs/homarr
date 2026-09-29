@@ -1,6 +1,6 @@
-import { E, seg, lerp, spring, clamp } from "../lib/anim";
-import { h, icon, logo, offsetWithin, tf } from "../lib/dom";
-import { Chapter, CharPop, Headline, TypeLine, countTo } from "../lib/kit";
+import { E, seg, lerp, spring, clamp, BEAT } from "../lib/anim";
+import { h, icon, logo, tf } from "../lib/dom";
+import { Chapter, CharPop, Headline, TypeLine } from "../lib/kit";
 import type { Scene } from "../lib/scene";
 
 const kbd = (k: string) => h("div", { class: "kbd", style: "font-size:17px" }, k);
@@ -193,55 +193,59 @@ export function rest(): Scene {
   const P2H = 348;
   page2.forEach((c, i) => {
     c.style.left = `${108 + (i % 2) * (P2W + 36)}px`;
-    c.style.top = `${170 + Math.floor(i / 2) * (P2H + 32)}px`;
+    c.style.top = `${930 + Math.floor(i / 2) * (P2H + 32)}px`;
     c.style.width = `${P2W}px`;
     c.style.height = `${P2H}px`;
   });
 
-  fg.append(title, ...page1, ...page2, chapter.el);
+  // All ten cards sit on one sheet that scrolls slowly under the chapter label.
+  const sheet = h("div", { class: "abs", style: "inset:0" }, ...page1, ...page2);
+  const topFade = h("div", { class: "abs", style: "left:0;right:0;top:0;height:160px;background:linear-gradient(180deg,#07070b 45%,rgba(7,7,11,0))" });
+  fg.append(title, sheet, topFade, chapter.el);
 
   // ---------- Timeline ----------
-  const P1 = 0.95;
-  const P2 = P1 + 2.9;
-  const END = P2 + 2.7;
-
+  const P1 = 0.9;
+  // Every card lands at once; the sheet then scrolls the lower ones into view, where their demos start.
+  const P2 = P1 + 1.3;
+  const P3 = P1 + 2.3;
+  const END = 10 * BEAT;
+  const SCROLL = [P1 + 1.0, END - 0.1] as const;
   const cues: Scene["cues"] = [
-    { t: 0.08, kind: "boom", gain: 0.7 },
-    { t: P1 - 0.3, kind: "whoosh", gain: 0.6 },
-    ...page1.map((_, i) => ({ t: P1 + i * 0.07 + 0.1, kind: "swish" as const, gain: 0.35, pitch: i })),
-    ...STAGES.map((_, i) => ({ t: P1 + 0.45 + i * 0.22, kind: "tick" as const, gain: 0.3, pitch: i })),
-    { t: P2 - 0.15, kind: "whoosh", gain: 0.7 },
-    ...page2.map((_, i) => ({ t: P2 + i * 0.08 + 0.1, kind: "swish" as const, gain: 0.35, pitch: i + 2 })),
-    { t: END - 0.3, kind: "whoosh", gain: 0.7 },
+    { t: 0.05, kind: "stamp", gain: 0.5 },
+    { t: P1, kind: "hit", gain: 0.5 },
+    { t: P1 + 0.4, kind: "key", gain: 0.4 },
+    { t: P1 + 0.5, kind: "key", gain: 0.4, pitch: 2 },
+    ...STAGES.map((_, i) => ({ t: P1 + 0.45 + i * 0.22, kind: "pop" as const, gain: 0.3, pitch: i * 2 })),
+    { t: P1 + 1.2, kind: "click", gain: 0.6 },
+    { t: P2 + 0.45, kind: "pop", gain: 0.3, pitch: 4 },
+    { t: P3 + 0.3, kind: "swish", gain: 0.4 },
   ];
 
   return {
     name: "rest",
     start: 0,
     end: END,
+    enter: { dir: "up", dur: 0.45 },
     fg,
     cues,
     update(t, ctx) {
-      ctx.fx.fade = 1 - E.outCubic(seg(t, 0, 0.12));
-
       // Title
       title.style.display = t < P1 + 0.1 ? "" : "none";
-      big.update(t, 0.03, P1 - 0.3, 0.03, "center");
-      bigSub.update(t, 0.3, P1 - 0.3, 0.04, 0.45);
+      big.update(t, -0.25, P1 - 0.3, 0.03, "center");
+      bigSub.update(t, 0.05, P1 - 0.3, 0.04, 0.45);
       title.style.transform = `scale(${(1 + seg(t, P1 - 0.35, P1 + 0.05) * 0.25).toFixed(3)})`;
-      chapter.update(t, P1 - 0.2, END - 0.4);
+      chapter.update(t, P1 - 0.2);
+      topFade.style.opacity = String(seg(t, P1, P1 + 0.3));
 
-      // Bento pages
-      const enter = (el: HTMLElement, at: number, outAt: number, i: number) => {
+      // Cards
+      const enter = (el: HTMLElement, at: number) => {
         const p = spring(t - at, 2.2, 0.6);
-        const pc = clamp(p, 0, 1.15);
-        const q = E.inCubic(seg(t, outAt + i * 0.04, outAt + 0.35 + i * 0.04));
-        el.style.transform = `perspective(1800px) translateY(${((1 - pc) * 140 - q * 90).toFixed(1)}px) rotateX(${((1 - clamp(p)) * 38).toFixed(2)}deg) scale(${(1 - q * 0.05).toFixed(3)})`;
-        el.style.opacity = String((t >= at ? 1 : 0) * (1 - q));
-        el.style.display = t > at - 0.05 && t < outAt + 0.5 + i * 0.04 ? "" : "none";
+        el.style.transform = `perspective(1800px) translateY(${((1 - clamp(p, 0, 1.15)) * 140).toFixed(1)}px) rotateX(${((1 - clamp(p)) * 38).toFixed(2)}deg)`;
+        el.style.opacity = t >= at ? "1" : "0";
+        el.style.display = t > at - 0.05 ? "" : "none";
       };
-      page1.forEach((c, i) => enter(c, P1 + i * 0.07, P2 - 0.35, i));
-      page2.forEach((c, i) => enter(c, P2 + i * 0.08, END - 0.4, i));
+      [...page1, ...page2].forEach((c, i) => enter(c, P1 + i * 0.025));
+      sheet.style.transform = `translateY(${(-628 * E.inOutSine(seg(t, SCROLL[0], SCROLL[1]))).toFixed(1)}px)`;
 
       // Page 1 micro-animations
       stageEls.forEach((s, i) => {
@@ -302,10 +306,10 @@ export function rest(): Scene {
         tf(c, { s: lerp(0.7, 1, clamp(p, 0, 1.3)), o: clamp(p * 1.5) });
       });
       perfBars.forEach((b, i) => {
-        const p = E.outCubic(seg(t, P2 + 0.4, P2 + 1.2 + i * 0.2));
+        const p = E.outCubic(seg(t, P3 + 0.3, P3 + 1.1 + i * 0.2));
         b.style.width = `${(p * 100).toFixed(1)}%`;
       });
-      mysql.style.opacity = String(lerp(1, 0.55, seg(t, P2 + 0.6, P2 + 1.0)));
+      mysql.style.opacity = String(lerp(1, 0.55, seg(t, P3 + 0.5, P3 + 0.9)));
     },
   };
 }

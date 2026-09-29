@@ -54,6 +54,8 @@ export interface Scene {
   cues: Cue[];
   /** Reading holds: scene-local [from, to, speed] ranges played slower than authored. */
   warp?: [number, number, number][];
+  /** Push transition from the previous scene, centred on this scene's first downbeat. */
+  enter?: { dir: "up" | "left"; dur: number };
   update(t: number, ctx: Ctx): void;
 }
 

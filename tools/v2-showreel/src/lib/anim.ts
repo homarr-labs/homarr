@@ -64,6 +64,7 @@ export function pulse(t: number, hits: number[], decay = 6) {
   return v;
 }
 
-export const BPM = 120;
+// Tempo of the soundtrack (MOKKA – Synthetic Pleasures); scene lengths are whole bars of it.
+export const BPM = 93;
 export const BEAT = 60 / BPM;
 export const BAR = BEAT * 4;
