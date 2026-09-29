@@ -6986,6 +6986,11 @@
               "restarting": "Restarting server",
               "relogin": "Restoring the database invalidated your current session. Homarr will send you to sign in when the server is ready."
             },
+            "complete": {
+              "title": "Restore complete",
+              "message": "The database was restored. Your previous session was invalidated, so sign in again to see your restored board.",
+              "button": "Sign in now"
+            },
             "timeout": {
               "title": "Server did not come back online",
               "message": "The database restore finished, but Homarr did not become ready again. Retry the connection check or refresh this page manually."
