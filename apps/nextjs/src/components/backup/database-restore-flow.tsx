@@ -1,10 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Alert, Button, Group, Loader, rem, Stack, Text } from "@mantine/core";
+import { Alert, Button, Group, Loader, rem, Stack, Text, ThemeIcon } from "@mantine/core";
 import type { FileWithPath } from "@mantine/dropzone";
 import { Dropzone, MIME_TYPES } from "@mantine/dropzone";
-import { IconAlertTriangle, IconArrowRight, IconFileZip, IconUpload, IconX } from "@tabler/icons-react";
+import { IconAlertTriangle, IconArrowRight, IconCheck, IconFileZip, IconUpload, IconX } from "@tabler/icons-react";
 
 import "@mantine/dropzone/styles.css"; // oxlint-disable-line import/no-unassigned-import
 
@@ -113,12 +113,14 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
   const [importError, setImportError] = useState<string | null>(null);
   const [restoreStatus, setRestoreStatus] = useState<"restoring" | "restarting" | "timedOut">("restoring");
   const restartControllerRef = useRef<AbortController | null>(null);
+  const redirectTimerRef = useRef<number | null>(null);
   const restoreDestinationRef = useRef<string | null>(null);
   const { analysis, loading, error: analysisError, migrationProgress, analyzeFile, reset } = useBackupAnalysis();
 
   useEffect(
     () => () => {
       restartControllerRef.current?.abort();
+      if (redirectTimerRef.current !== null) window.clearTimeout(redirectTimerRef.current);
     },
     [],
   );
@@ -137,6 +139,10 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
   );
 
   const handleClear = useCallback(() => {
+    if (redirectTimerRef.current !== null) {
+      window.clearTimeout(redirectTimerRef.current);
+      redirectTimerRef.current = null;
+    }
     setFile(null);
     setStep("upload");
     setImportError(null);
@@ -156,13 +162,27 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
     void waitForServerReadinessAsync({ restartAfterMs, signal: restartController.signal }).then((result) => {
       if (restartControllerRef.current !== restartController || result === "aborted") return;
       if (result === "ready") {
-        if (destination) window.location.assign(destination);
-        else window.location.reload();
+        if (destination === "/auth/login") {
+          setStep("complete");
+          redirectTimerRef.current = window.setTimeout(() => window.location.assign(destination), 2000);
+        } else if (destination) {
+          window.location.assign(destination);
+        } else {
+          window.location.reload();
+        }
         return;
       }
       restartControllerRef.current = null;
       setRestoreStatus("timedOut");
     });
+  }, []);
+
+  const handleSignInAgain = useCallback(() => {
+    if (redirectTimerRef.current !== null) {
+      window.clearTimeout(redirectTimerRef.current);
+      redirectTimerRef.current = null;
+    }
+    window.location.assign("/auth/login");
   }, []);
 
   const handleConfirm = useCallback(async () => {
@@ -200,7 +220,8 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
         restartAfterMs = data.restartAfterMs;
       }
       if (typeof data?.homeBoardName === "string") homeBoardName = data.homeBoardName;
-    } catch {
+    } catch (error) {
+      console.error("Restore request failed", error);
       setImportError(t("failed.title"));
       setStep("error");
       return;
@@ -328,6 +349,23 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
         onRetry={() => startReadinessCheck(0)}
         onReload={() => window.location.reload()}
       />
+    );
+  }
+
+  if (step === "complete") {
+    return (
+      <Stack gap="md" align="center" py="lg">
+        <ThemeIcon size={64} radius="xl" color="green" variant="light">
+          <IconCheck size={32} style={{ width: rem(40), height: rem(40) }} stroke={1.5} />
+        </ThemeIcon>
+        <Text size="lg" fw={600} ta="center">
+          {t("complete.title")}
+        </Text>
+        <Text size="sm" c="dimmed" ta="center" maw={480}>
+          {t("complete.message")}
+        </Text>
+        <Button onClick={handleSignInAgain}>{t("complete.button")}</Button>
+      </Stack>
     );
   }
 
