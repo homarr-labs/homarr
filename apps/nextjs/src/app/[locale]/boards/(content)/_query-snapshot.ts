@@ -2,7 +2,8 @@ import { createHash } from "node:crypto";
 
 import superjson from "superjson";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
-import type { QueryClient, QueryKey } from "@tanstack/react-query";
+import { dehydrate, hydrate, QueryClient } from "@tanstack/react-query";
+import type { QueryKey } from "@tanstack/react-query";
 import type { PersistedClient } from "@tanstack/react-query-persist-client";
 import { persistQueryClientRestore, persistQueryClientSave } from "@tanstack/react-query-persist-client";
 
@@ -16,6 +17,7 @@ import {
 import type { Board } from "../_types";
 
 const snapshotMaxAgeMs = 3 * 24 * 60 * 60 * 1000;
+const snapshotRestoreBudgetMs = 50;
 const maxQueryBytes = 128 * 1024;
 const maxBeszelStatsBytes = 256 * 1024;
 const maxSnapshotBytes = 512 * 1024;
@@ -181,11 +183,40 @@ export const createBoardQuerySnapshot = (board: Board, integrations: Integration
     },
   };
 
+  let restoreInFlight: Promise<void> = Promise.resolve();
+
   return {
     restoreAsync: async (queryClient: QueryClient) => {
-      await persistQueryClientRestore({ queryClient, persister, maxAge: snapshotMaxAgeMs, buster: snapshotVersion });
+      // A slow Redis read must not hold back the first uncached widget requests.
+      // Restore into an isolated client so a late result cannot overwrite them.
+      const restoredClient = new QueryClient();
+      const restore = persistQueryClientRestore({
+        queryClient: restoredClient,
+        persister,
+        maxAge: snapshotMaxAgeMs,
+        buster: snapshotVersion,
+      }).then(() => dehydrate(restoredClient));
+      restoreInFlight = restore.then(
+        () => undefined,
+        () => undefined,
+      );
+
+      let timeout: ReturnType<typeof setTimeout> | undefined;
+      try {
+        const state = await Promise.race([
+          restore,
+          new Promise<null>((resolve) => {
+            timeout = setTimeout(() => resolve(null), snapshotRestoreBudgetMs);
+          }),
+        ]);
+        if (state) hydrate(queryClient, state);
+      } finally {
+        clearTimeout(timeout);
+      }
     },
     saveAsync: async (queryClient: QueryClient) => {
+      // A late invalid/expired restore may remove its key; let it finish before saving.
+      await restoreInFlight;
       await persistQueryClientSave({
         queryClient,
         persister,
