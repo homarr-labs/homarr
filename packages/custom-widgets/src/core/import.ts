@@ -112,8 +112,8 @@ export function parseCustomWidgetAiResponse(text: string): CustomWidgetParseResu
   const blocks = extractFencedBlocks(text);
   const jsonBlocks = blocks.filter((block) => block.language === "json" || block.language === "");
   const formatIssues: CustomWidgetImportIssue[] = [];
-  if (jsonBlocks.length !== 1)
-    formatIssues.push({ code: "AI_JSON_BLOCK_REQUIRED", message: "Expected exactly one fenced json block." });
+  if (blocks.length > 0 && jsonBlocks.length !== 1)
+    formatIssues.push({ code: "AI_JSON_BLOCK_REQUIRED", message: "Expected exactly one JSON block." });
   if (blocks.length !== jsonBlocks.length)
     formatIssues.push({
       code: "AI_SINGLE_JSON_BLOCK_REQUIRED",

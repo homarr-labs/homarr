@@ -30,8 +30,8 @@ describe("Custom Widget imports", () => {
     expect(result.success).toBe(false);
   });
 
-  it("reports missing fences and removed local state", () => {
-    expect(parseCustomWidgetAiResponse(JSON.stringify(CUSTOM_WIDGET_STARTER)).success).toBe(false);
+  it("accepts JSON copied from a code block and reports removed local state", () => {
+    expect(parseCustomWidgetAiResponse(JSON.stringify(CUSTOM_WIDGET_STARTER)).success).toBe(true);
     const result = parseCustomWidgetAiResponse(
       response({ ...CUSTOM_WIDGET_STARTER, stateSchema: {}, template: "<Text>Ready</Text>" }),
     );
