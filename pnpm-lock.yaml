@@ -931,6 +931,9 @@ importers:
       remark-directive:
         specifier: 'catalog:'
         version: 3.0.1(supports-color@10.2.2)
+      serve:
+        specifier: 'catalog:'
+        version: 14.2.6(supports-color@10.2.2)
       shiki:
         specifier: 'catalog:'
         version: 4.4.3
@@ -968,9 +971,6 @@ importers:
       next-validate-link:
         specifier: 1.6.7
         version: 1.6.7(@types/mdast@4.0.4)(@types/unist@3.0.3)(supports-color@10.2.2)
-      serve:
-        specifier: 'catalog:'
-        version: 14.2.6(supports-color@10.2.2)
       tsx:
         specifier: 'catalog:'
         version: 4.20.4

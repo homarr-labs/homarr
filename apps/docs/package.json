@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "next dev --port 3003",
-    "start": "serve out --listen 3003",
+    "start": "serve out --listen 3003 --config ../serve.json",
     "build": "pnpm validate:coverage && next build",
     "typecheck": "next typegen && tsc --noEmit",
     "lint": "oxlint",
@@ -49,6 +49,7 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "remark-directive": "catalog:",
+    "serve": "catalog:",
     "shiki": "catalog:",
     "sonner": "catalog:",
     "swiper": "^14.0.5",
@@ -63,7 +64,6 @@
     "@types/react-dom": "catalog:",
     "cheerio": "^1.2.0",
     "next-validate-link": "1.6.7",
-    "serve": "catalog:",
     "tsx": "catalog:",
     "typescript": "catalog:",
     "zod": "catalog:"
