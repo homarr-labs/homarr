@@ -4,7 +4,7 @@ packages:
   - tooling/*
 catalog:
   "@babel/parser": ^7.29.7
-  "@auth/core": ^0.41.2
+  "@auth/core": ^0.41.3
   "@auth/drizzle-adapter": ^1.11.2
   "@ctrl/deluge": ^8.0.0
   "@ctrl/qbittorrent": ^9.14.0
@@ -100,7 +100,7 @@ catalog:
   "@xterm/addon-canvas": ^0.7.0
   "@xterm/addon-fit": 0.11.0
   "@xterm/xterm": ^6.0.0
-  adm-zip: 0.5.18
+  adm-zip: 0.6.1
   jszip: ^3.10.1
   sql.js: ^1.14.1
   babel-plugin-react-compiler: ^1.0.0
@@ -124,9 +124,9 @@ catalog:
   drizzle-kit: ^0.31.10
   drizzle-orm: ^0.45.2
   drizzle-zod: ^0.8.3
-  esbuild: ^0.28.0
+  esbuild: ^0.28.2
   fast-xml-parser: ^5.9.3
-  fastify: ^5.9.0
+  fastify: ^5.12.1
   flag-icons: ^7.5.0
   glob: ^13.0.6
   ical.js: ^2.2.1
@@ -144,7 +144,7 @@ catalog:
   mantine-react-table: npm:mantine-react-table-open@9.0.3
   mcp-handler: ^1.1.0
   maria2: ^0.4.1
-  mysql2: 3.22.6
+  mysql2: 3.23.1
   next: 16.3.0-preview.9
   next-auth: 5.0.0-beta.32
   next-intl: 4.13.1
@@ -178,11 +178,11 @@ catalog:
   turbo: ^2.10.4
   typescript: 7.0.2
   vite: ^8.1.4
-  undici: 7.28.0
+  undici: 7.29.1
   use-deep-compare-effect: ^1.8.1
   video.js: ^8.23.9
   vite-tsconfig-paths: ^6.1.1
-  vitest: ^4.1.10
+  vitest: ^5.0.2
   winston: 3.19.0
   ws: ^8.21.0
   xml2js: ^0.6.2
