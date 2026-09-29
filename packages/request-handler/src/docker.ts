@@ -338,10 +338,40 @@ export const getDockerEndpointsAsync = (): DockerEndpointStatus[] => {
   ];
 };
 
+/** CPU counters suitable as a delta baseline for current-usage calculation. */
+export type CpuUsageCounters = {
+  totalUsage: number;
+  systemUsage: number;
+};
+
+type CachedCpuUsageCounters = CpuUsageCounters & {
+  cachedAt: number;
+};
+
+// Docker's one-shot stats endpoint returns no usable precpu_stats baseline (the
+// fields are present but zero), so current CPU usage cannot be derived from a
+// single response. The request-handler process is long-lived and polls
+// repeatedly, so the previous poll's counters serve as the baseline instead.
+// Entries expire so removed containers do not accumulate.
+const cachedCpuUsageCounters = new Map<string, CachedCpuUsageCounters>();
+const cpuUsageCountersCacheTtlMs = 10 * 60 * 1000;
+
+/** @internal Only intended for tests to isolate the process-local counter cache between cases. */
+export function clearCpuUsageCountersCacheForTesting(): void {
+  cachedCpuUsageCounters.clear();
+}
+
 export async function getContainersWithStatsAsync(
   timeoutMs = dockerWidgetEndpointTimeoutMs,
   endpointIds: string[] = [],
 ) {
+  const cacheEvictedBefore = Date.now() - cpuUsageCountersCacheTtlMs;
+  for (const [key, counters] of cachedCpuUsageCounters) {
+    if (counters.cachedAt < cacheEvictedBefore) {
+      cachedCpuUsageCounters.delete(key);
+    }
+  }
+
   const selectedEndpointIds = new Set(endpointIds);
   const includesAllEndpoints = selectedEndpointIds.size === 0;
   const dockerInstances = DockerSingleton.getInstances().filter(
@@ -444,7 +474,19 @@ export async function getContainersWithStatsAsync(
       } as ContainerStats;
     }
 
-    const cpuUsage = calculateCpuUsage(stats);
+    const cpuUsageCacheKey = `${container.endpointId}:${container.Id}`;
+    const cpuUsage = calculateCpuUsage(stats, cachedCpuUsageCounters.get(cpuUsageCacheKey));
+
+    // Remember this poll's counters so the next one-shot response has a delta
+    // baseline even though the daemon does not provide precpu_stats.
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    const totalUsage = stats.cpu_stats?.cpu_usage?.total_usage;
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    const systemUsage = stats.cpu_stats?.system_cpu_usage;
+    if (typeof totalUsage === "number" && totalUsage > 0 && typeof systemUsage === "number" && systemUsage > 0) {
+      cachedCpuUsageCounters.set(cpuUsageCacheKey, { totalUsage, systemUsage, cachedAt: Date.now() });
+    }
+
     const memoryUsage = calculateMemoryUsage(stats);
 
     return {
@@ -474,15 +516,26 @@ export async function getContainersWithStatsAsync(
   };
 }
 
-export function calculateCpuUsage(stats: ContainerStats): number {
+export function calculateCpuUsage(stats: ContainerStats, previousCounters?: CpuUsageCounters): number {
   // Handle containers with missing or invalid stats (e.g., exited, dead containers, Podman responses)
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!stats.cpu_stats?.online_cpus || stats.cpu_stats.online_cpus === 0 || !stats.cpu_stats.cpu_usage?.total_usage) {
     return 0;
   }
 
-  const cpuDelta = stats.cpu_stats.cpu_usage.total_usage - (stats.precpu_stats?.cpu_usage?.total_usage ?? 0);
-  const systemDelta = (stats.cpu_stats.system_cpu_usage ?? 0) - (stats.precpu_stats?.system_cpu_usage ?? 0);
+  // Docker's one-shot mode (and Podman) return precpu_stats with zeroed values,
+  // so a system counter of zero means there is no usable daemon-side baseline;
+  // fall back to the previous poll's counters, then to the cumulative totals.
+  const hasPrecpuBaseline = (stats.precpu_stats?.system_cpu_usage ?? 0) > 0;
+  const previousTotalUsage = hasPrecpuBaseline
+    ? // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      (stats.precpu_stats?.cpu_usage?.total_usage ?? 0)
+    : (previousCounters?.totalUsage ?? 0);
+  const previousSystemUsage = hasPrecpuBaseline
+    ? stats.precpu_stats?.system_cpu_usage ?? 0
+    : (previousCounters?.systemUsage ?? 0);
+  const cpuDelta = stats.cpu_stats.cpu_usage.total_usage - previousTotalUsage;
+  const systemDelta = (stats.cpu_stats.system_cpu_usage ?? 0) - previousSystemUsage;
 
   if (systemDelta <= 0 || cpuDelta < 0) {
     return 0;

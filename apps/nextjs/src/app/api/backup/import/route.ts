@@ -17,12 +17,16 @@ import { auth } from "@homarr/auth/next";
 import { env } from "@homarr/common/env";
 import { DB_CASING } from "@homarr/core/infrastructure/db/constants";
 import { dbEnv } from "@homarr/core/infrastructure/db/env";
+import { createLogger } from "@homarr/core/infrastructure/logs";
+import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { db } from "@homarr/db";
 import type { Database } from "@homarr/db";
 import { applyCustomMigrationsAsync } from "@homarr/db/migrations/custom";
 import { schema } from "@homarr/db/schema";
 
 import { findMigrationsFolder } from "../shared";
+
+const logger = createLogger({ module: "backupImportRoute" });
 
 const REQUIRED_ZIP_ENTRIES = ["db.sqlite", "metadata.json"] as const;
 const ALGORITHM = "aes-256-cbc";
@@ -328,12 +332,12 @@ export async function POST(req: Request) {
         const sidecar = `${dbPath}${suffix}`;
         if (fs.existsSync(sidecar)) fs.unlinkSync(sidecar);
       } catch (cleanupErr) {
-        console.error(`Failed to remove ${suffix} file:`, cleanupErr);
+        logger.warn("Failed to remove SQLite sidecar file after restore", { suffix, dbPath, cause: cleanupErr });
       }
     }
 
     const restartTimer = setTimeout(() => {
-      console.log("Database restored, restarting server...");
+      logger.info("Database restored, restarting server...");
       process.exit(0);
     }, RESTART_DELAY_MS);
     restartTimer.unref();
@@ -345,7 +349,7 @@ export async function POST(req: Request) {
       homeBoardName,
     });
   } catch (error) {
-    console.error("[backup/import] Restore failed:", error);
+    logger.error(new ErrorWithMetadata("Backup restore failed", { dbPath }, { cause: error }));
     const message = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json({ error: `Restore failed: ${message}` }, { status: 500 });
   } finally {
@@ -353,13 +357,13 @@ export async function POST(req: Request) {
     try {
       tempDb?.close();
     } catch (error) {
-      console.error("[backup/import] Failed to close temporary database:", error);
+      logger.warn("Failed to close temporary database after restore", { cause: error });
     }
     if (tempDirectory) {
       try {
         fs.rmSync(tempDirectory, { recursive: true, force: true });
       } catch (error) {
-        console.error("[backup/import] Failed to remove temporary restore directory:", error);
+        logger.warn("Failed to remove temporary restore directory after restore", { cause: error });
       }
     }
   }

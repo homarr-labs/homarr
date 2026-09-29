@@ -18,15 +18,19 @@ dayjs.extend(duration);
 
 export default function HealthMonitoringWidget(props: WidgetComponentProps<"healthMonitoring">) {
   const integrationsQuery = clientApi.integration.byIds.useQuery(props.integrationIds);
-  const integrations = getUsableWidgetQueryData(integrationsQuery) ?? [];
   const t = useI18n("widget.healthMonitoring");
 
-  if (isInitialWidgetQueryPending(integrationsQuery)) return <WidgetQueryLoadingState />;
+  // Wait for integrations to load, or cluster-only kinds like Proxmox get routed to the
+  // system-only query below and error.
+  if (isInitialWidgetQueryPending(integrationsQuery)) {
+    return <WidgetQueryLoadingState />;
+  }
 
+  const integrations = getUsableWidgetQueryData(integrationsQuery) ?? [];
   const { clusterIntegrationIds, systemIntegrationIds } = partitionHealthMonitoringIntegrations(integrations);
 
   if (clusterIntegrationIds.length === 0) {
-    return <SystemHealthMonitoring {...props} />;
+    return <SystemHealthMonitoring {...props} integrationIds={systemIntegrationIds} />;
   }
 
   const clusters = (

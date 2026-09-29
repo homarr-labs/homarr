@@ -57,50 +57,35 @@ const getImageFromStringAsFallback = (feedUrl: string, content: string) => {
   return result[0];
 };
 
-const mediaProperties = [
-  {
-    path: ["enclosure", "@_url"],
-  },
-  {
-    path: ["media:content", "@_url"],
-  },
-];
+const mediaProperties = ["enclosure", "media:content", "media:thumbnail"] as const;
 
 /**
  * The RSS and Atom standards are poorly adhered to in most of the web.
  * We want to show pretty background images on the posts and therefore need to extract
- * the enclosure (aka. media images). This function uses the dynamic properties defined above
- * to search through the possible paths and detect valid image URLs.
+ * the enclosure (aka. media images). This function checks known media fields in priority
+ * order and picks the first valid image URL from a field.
  * @param feedObject The object to scan for.
- * @returns the value of the first path that is found within the object
+ * @returns the first valid media URL, or null when none is found
  */
 const getFirstMediaProperty = (feedObject: object) => {
   for (const mediaProperty of mediaProperties) {
-    let propertyIndex = 0;
-    let objectAtPath: object = feedObject;
-    while (propertyIndex < mediaProperty.path.length) {
-      const key = mediaProperty.path[propertyIndex];
-      if (key === undefined) {
-        break;
-      }
-      const propertyEntries = Object.entries(objectAtPath);
-      const propertyEntry = propertyEntries.find(([entryKey]) => entryKey === key);
-      if (!propertyEntry) {
-        break;
-      }
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const [_, propertyEntryValue] = propertyEntry;
-      objectAtPath = propertyEntryValue as object;
-      propertyIndex++;
-    }
+    const mediaValue: unknown = Object.entries(feedObject).find(([key]) => key === mediaProperty)?.[1];
+    const mediaEntries: unknown[] = Array.isArray(mediaValue) ? mediaValue : [mediaValue];
 
-    const validationResult = z.string().url().safeParse(objectAtPath);
-    if (!validationResult.success) {
-      continue;
-    }
+    for (const mediaEntry of mediaEntries) {
+      if (mediaEntry === null || typeof mediaEntry !== "object") {
+        continue;
+      }
 
-    logger.debug(`Found an image in the feed entry: ${validationResult.data}`);
-    return validationResult.data;
+      const url: unknown = Object.entries(mediaEntry).find(([key]) => key === "@_url")?.[1];
+      const validationResult = z.string().url().safeParse(url);
+      if (!validationResult.success) {
+        continue;
+      }
+
+      logger.debug(`Found an image in the feed entry: ${validationResult.data}`);
+      return validationResult.data;
+    }
   }
   return null;
 };

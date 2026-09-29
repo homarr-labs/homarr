@@ -3372,6 +3372,12 @@
           "description": "Leave empty to show containers from every Docker environment",
           "placeholder": "All Docker environments"
         },
+        "containerFilter": {
+          "label": "Containers to filter"
+        },
+        "filterIsWhitelist": {
+          "label": "Filter as a whitelist"
+        },
         "defaultSort": {
           "option": {
             "name": "Name",
@@ -3714,7 +3720,7 @@
       },
       "visibleStorageVolumes": {
         "label": "Visible storage volumes",
-        "description": "Only available when all selected integrations are Synology. Leave empty to show all detected storage volumes.",
+        "description": "Only available when every selected integration is OpenMediaVault or Synology. Leave empty to show all detected storage volumes.",
         "placeholder": "Select storage volumes"
       },
       "tableOptions": {
@@ -6985,6 +6991,11 @@
               "title": "Restoring database...",
               "restarting": "Restarting server",
               "relogin": "Restoring the database invalidated your current session. Homarr will send you to sign in when the server is ready."
+            },
+            "complete": {
+              "title": "Restore complete",
+              "message": "The database was restored. Your previous session was invalidated, so sign in again to see your restored board.",
+              "button": "Sign in now"
             },
             "timeout": {
               "title": "Server did not come back online",
