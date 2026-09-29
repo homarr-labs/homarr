@@ -7,7 +7,7 @@
 //   node render.mjs recap [1 2 3 4]           → out/recap/homarr-v2-recap-N.png from recap/index.html?v=N
 import { chromium } from "playwright-core";
 import { createServer } from "node:http";
-import { readFile, mkdir, writeFile, rename, symlink, rm } from "node:fs/promises";
+import { readFile, mkdir, writeFile, rename, symlink } from "node:fs/promises";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { spawn } from "node:child_process";
 import { extname, join, resolve } from "node:path";
@@ -180,24 +180,6 @@ if (mode === "stills") {
     console.log(f);
     await browser.close();
   }
-} else if (mode === "fdgif") {
-  // Frames of recap/front-door.html (a seamless D-second loop) for a GIF.
-  const dir = join(root, "out/fdg");
-  await rm(dir, { recursive: true, force: true }).catch(() => {});
-  await mkdir(dir, { recursive: true });
-  const { browser, page } = await openPage(port, "recap/front-door.html");
-  const fps = opt("fps", 24);
-  const dur = await page.evaluate(() => window.__duration);
-  const total = Math.round(dur * fps);
-  const cdp = await page.context().newCDPSession(page);
-  for (let i = 0; i < total; i++) {
-    await page.evaluate((x) => window.__seek(x), i / fps);
-    const { data } = await cdp.send("Page.captureScreenshot", { format: "png", optimizeForSpeed: true });
-    await writeFile(join(dir, `f${String(i).padStart(4, "0")}.png`), Buffer.from(data, "base64"));
-    if (i % 24 === 0) process.stderr.write(`\rframe ${i}/${total}`);
-  }
-  console.log(`\n${total} frames -> ${dir}`);
-  await browser.close();
 } else if (mode === "video") {
   // Resumable: the timeline is cut into short chunks pulled from a shared queue. Finished chunks
   // are kept on disk and skipped on the next run, and a crashed browser is relaunched and retried.
