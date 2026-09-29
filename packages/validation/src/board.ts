@@ -153,6 +153,22 @@ const boardPermissionEntrySchema = z.object({
   permission: z.enum(boardPermissions),
 });
 
+export const boardSectionSummarySchema = z.object({
+  id: z.string(),
+  kind: z.enum(["empty", "container", "dynamic"]),
+  name: z.string().nullable(),
+  xOffset: z.number().nullable(),
+  yOffset: z.number().nullable(),
+  layouts: z.array(
+    z.object({
+      layoutId: z.string(),
+      parentSectionId: z.string().nullable(),
+      xOffset: z.number(),
+      yOffset: z.number(),
+    }),
+  ),
+});
+
 export const boardSummarySchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -168,6 +184,7 @@ export const boardSummarySchema = z.object({
     .nullable(),
   isHome: z.boolean(),
   isMobileHome: z.boolean(),
+  sections: z.array(boardSectionSummarySchema),
   userPermissions: z.array(boardPermissionEntrySchema),
   groupPermissions: z.array(boardPermissionEntrySchema),
 });
@@ -182,6 +199,7 @@ export const addItemToBoardSchema = z.object({
     .max(32)
     .refine((ids) => new Set(ids).size === ids.length)
     .default([]),
+  sectionId: z.string().min(1).optional(),
 });
 
 export const updateBoardItemLayoutSchema = z.object({

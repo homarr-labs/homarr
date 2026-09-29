@@ -66,7 +66,7 @@ import {
 import { byIdSchema } from "@homarr/validation/common";
 import { zodUnionFromArray } from "@homarr/validation/enums";
 import type { BoardItemAdvancedOptions } from "@homarr/validation/shared";
-import { sectionSchema, sharedItemSchema } from "@homarr/validation/shared";
+import { containerSectionOptionsSchema, sectionSchema, sharedItemSchema } from "@homarr/validation/shared";
 
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
 import { throwIfActionForbiddenAsync } from "./board/board-access";
@@ -346,7 +346,7 @@ export const boardRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "List all boards the current user can access. Returns id, name, logoImageUrl, isPublic, creator, isHome and isMobileHome flags",
+          "List accessible boards with their section IDs, kinds, names, root lane positions, and container positions by layout. Use a section ID as sectionId in board_addItem. Adding an item requires modify access to that board",
       },
     })
     .query(async ({ ctx }) => {
@@ -370,6 +370,14 @@ export const boardRouter = createTRPCRouter({
               email: true,
             },
           },
+          sections: {
+            columns: { id: true, kind: true, name: true, xOffset: true, yOffset: true, options: true },
+            with: {
+              layouts: {
+                columns: { layoutId: true, parentSectionId: true, xOffset: true, yOffset: true },
+              },
+            },
+          },
           userPermissions: {
             where: eq(boardUserPermissions.userId, ctx.session?.user.id ?? ""),
           },
@@ -381,6 +389,18 @@ export const boardRouter = createTRPCRouter({
       });
       return dbBoards.map((board) => ({
         ...board,
+        sections: board.sections
+          .map(({ options, ...section }) => {
+            let name = section.name;
+            if (section.kind === "container") {
+              name = containerSectionOptionsSchema.parse(superjson.parse(options ?? emptySuperJSON)).title || name;
+            }
+            return { ...section, name };
+          })
+          .toSorted(
+            (sectionA, sectionB) =>
+              (sectionA.yOffset ?? 0) - (sectionB.yOffset ?? 0) || sectionA.id.localeCompare(sectionB.id),
+          ),
         isHome: currentUser?.homeBoardId === board.id,
         isMobileHome: currentUser?.mobileHomeBoardId === board.id,
       }));
@@ -2226,12 +2246,12 @@ export const boardRouter = createTRPCRouter({
         protect: true,
         summary: "Add an item to a board",
         description:
-          "Add a widget or app to the first available position in the main canvas of each layout and return its item ID. Requires modify access to the board and use access to linked integrations. Widget configurations must be valid; placing Custom Widgets requires admin permission.",
+          "Add a widget or app to the first available position in each layout of the selected section and return its item ID. Omit sectionId for the main canvas; obtain section IDs from the board listing. Requires modify access to the board and use access to linked integrations. Widget configurations must be valid; placing Custom Widgets requires admin permission.",
       },
       mcp: {
         enabled: true,
         description:
-          "Add a widget/app item to a board after configure_widget has reviewed it. Automatically places it in the main canvas at the first free grid position without overlapping items or containers. Use the configure_widget result's boardId, kind, options, and integrationIds exactly. Optional size {width,height} sets grid dimensions; width is capped by each layout's available columns. Integration IDs must be accessible to the current user. To create a formatted dashboard note, configure kind 'notebook' with options { content: Tiptap-compatible HTML, showToolbar: boolean, allowReadOnlyCheck: boolean }. Returns { itemId }",
+          "Add a widget/app item after configure_widget has reviewed it. Requires modify access to the board. Use the configure_widget result's boardId, kind, options, and integrationIds exactly. Optional sectionId from board_getAllBoards places the item in a root or container section; omit it for the main canvas. Places at the first free grid position without overlapping items or containers. Optional size {width,height} sets grid dimensions; width is capped by each layout's available columns. Integration IDs must be accessible to the current user. To create a formatted dashboard note, configure kind 'notebook' with options { content: Tiptap-compatible HTML, showToolbar: boolean, allowReadOnlyCheck: boolean }. Returns { itemId }",
       },
     })
     .input(addItemToBoardSchema)
@@ -2266,31 +2286,53 @@ export const boardRouter = createTRPCRouter({
           throw new TRPCError({ code: "NOT_FOUND", message: "Board not found" });
         }
 
-        const emptySection = board.sections
-          .filter((section) => section.kind === "empty" && getRootSectionLane(section.xOffset) === "main")
-          .toSorted(
-            (sectionA, sectionB) =>
-              (sectionA.yOffset ?? 0) - (sectionB.yOffset ?? 0) || sectionA.id.localeCompare(sectionB.id),
-          )[0];
-
-        if (!emptySection) {
-          throw new TRPCError({ code: "BAD_REQUEST", message: "Board has no main section to place items in" });
+        let targetSection;
+        if (input.sectionId === undefined) {
+          targetSection = board.sections
+            .filter((section) => section.kind === "empty" && getRootSectionLane(section.xOffset) === "main")
+            .toSorted(
+              (sectionA, sectionB) =>
+                (sectionA.yOffset ?? 0) - (sectionB.yOffset ?? 0) || sectionA.id.localeCompare(sectionB.id),
+            )[0];
+          if (!targetSection) {
+            throw new TRPCError({ code: "BAD_REQUEST", message: "Board has no main section to place items in" });
+          }
+        } else {
+          targetSection = board.sections.find((section) => section.id === input.sectionId);
+          if (!targetSection) {
+            throw new TRPCError({ code: "NOT_FOUND", message: "Section not found on this board" });
+          }
+          if (targetSection.kind !== "empty" && targetSection.kind !== "container") {
+            throw new TRPCError({ code: "BAD_REQUEST", message: "Items cannot be added to this section" });
+          }
         }
 
         const itemId = createId();
         const defaultSize = input.size ?? widgetDefaultSizes[input.kind as WidgetKind] ?? { width: 1, height: 1 };
         const layoutRows: (typeof itemLayouts.$inferInsert)[] = board.layouts.map((layout) => {
-          const columnCount = getBoardLaneColumnCount(layout, getRootSectionLane(emptySection.xOffset));
+          let columnCount: number;
+          if (targetSection.kind === "empty") {
+            columnCount = getBoardLaneColumnCount(layout, getRootSectionLane(targetSection.xOffset));
+          } else {
+            const sectionLayout = targetSection.layouts.find((candidate) => candidate.layoutId === layout.id);
+            if (!sectionLayout) {
+              throw new TRPCError({ code: "BAD_REQUEST", message: "Section has no layout at this breakpoint" });
+            }
+            columnCount = sectionLayout.width;
+          }
+          if (columnCount < 1) {
+            throw new TRPCError({ code: "BAD_REQUEST", message: "Section has no available columns" });
+          }
           const size = { ...defaultSize, width: Math.min(columnCount, defaultSize.width) };
           const itemPlacements = board.items
             .flatMap((item) => item.layouts)
-            .filter((itemLayout) => itemLayout.sectionId === emptySection.id && itemLayout.layoutId === layout.id);
+            .filter((itemLayout) => itemLayout.sectionId === targetSection.id && itemLayout.layoutId === layout.id);
           const containerPlacements = board.sections
             .filter((section) => section.kind === "container")
             .flatMap((section) => section.layouts)
             .filter(
               (sectionLayout) =>
-                sectionLayout.parentSectionId === emptySection.id && sectionLayout.layoutId === layout.id,
+                sectionLayout.parentSectionId === targetSection.id && sectionLayout.layoutId === layout.id,
             );
           const position = findFirstAvailableBoardItemPosition(
             [...itemPlacements, ...containerPlacements],
@@ -2307,7 +2349,7 @@ export const boardRouter = createTRPCRouter({
 
           return {
             itemId,
-            sectionId: emptySection.id,
+            sectionId: targetSection.id,
             layoutId: layout.id,
             ...position,
             width: size.width,
