@@ -81,6 +81,10 @@ func staticCompression() *hook.Handler[*core.RequestEvent] {
 	compression := apis.GzipWithConfig(apis.GzipConfig{Level: gzip.BestSpeed, MinLength: 1024})
 	compress := compression.Func
 	compression.Func = func(event *core.RequestEvent) error {
+		// A compressed 206 response no longer matches its Content-Range and cannot be cached as a video range.
+		if event.Request.Header.Get("Range") != "" || isCompressedAsset(event.Request.URL.Path) {
+			return event.Next()
+		}
 		// PocketBase's middleware matches "gzip" without checking its quality value.
 		// Respect clients that explicitly refuse it before delegating compression.
 		for _, encoding := range strings.Split(event.Request.Header.Get("Accept-Encoding"), ",") {
@@ -105,14 +109,27 @@ func staticCompression() *hook.Handler[*core.RequestEvent] {
 	return compression
 }
 
+func isCompressedAsset(path string) bool {
+	switch strings.ToLower(filepath.Ext(path)) {
+	case ".avif", ".gif", ".ico", ".jpeg", ".jpg", ".mp4", ".png", ".webm", ".webp", ".woff", ".woff2":
+		return true
+	default:
+		return false
+	}
+}
+
 func staticWebsite(fsys fs.FS, indexFallback bool) func(*core.RequestEvent) error {
 	serve := apis.Static(fsys, indexFallback)
 	return func(event *core.RequestEvent) error {
+		event.Response.Header().Set("Cache-Control", staticCacheControl(event.Request.URL.Path))
 		if event.Request.URL.RawQuery != "" {
 			// PocketBase's canonical file/directory redirects omit the request query.
 			event.Response = &staticRedirectResponse{event.Response, event.Request.URL.RawQuery}
 		}
 		err := serve(event)
+		if err != nil {
+			event.Response.Header().Set("Cache-Control", "no-store")
+		}
 		if !errors.Is(err, router.ErrFileNotFound) || strings.HasPrefix(event.Request.URL.Path, "/api/") {
 			return err
 		}
@@ -120,7 +137,28 @@ func staticWebsite(fsys fs.FS, indexFallback bool) func(*core.RequestEvent) erro
 		if readErr != nil {
 			return err
 		}
+		event.Response.Header().Set("Cache-Control", "no-store")
 		return event.HTML(http.StatusNotFound, string(page))
+	}
+}
+
+func staticCacheControl(path string) string {
+	if path == "/workshop-runtime-config.js" {
+		return "no-store"
+	}
+	if strings.HasPrefix(path, "/_next/static/") {
+		return "public, max-age=31536000, immutable"
+	}
+	for _, prefix := range []string{"/img/", "/media/", "/videos/", "/data/", "/custom-widgets/"} {
+		if strings.HasPrefix(path, prefix) {
+			return "public, max-age=600, s-maxage=86400"
+		}
+	}
+	switch strings.ToLower(filepath.Ext(path)) {
+	case ".avif", ".gif", ".ico", ".jpeg", ".jpg", ".mp4", ".png", ".svg", ".ttf", ".webm", ".webp", ".woff", ".woff2":
+		return "public, max-age=600, s-maxage=86400"
+	default:
+		return "public, max-age=60, s-maxage=300"
 	}
 }
 
