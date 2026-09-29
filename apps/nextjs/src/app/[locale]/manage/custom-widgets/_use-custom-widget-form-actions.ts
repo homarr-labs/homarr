@@ -224,27 +224,18 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
     }
   };
 
-  const pasteAiResponse = async () => {
-    try {
-      const result = applyCustomWidgetAiResponse(input.form, await navigator.clipboard.readText());
-      if (!result.success) {
-        throw new Error(formatCustomWidgetImportIssues(result.issues));
-      }
-      input.setOptionsSnapshot(getDefinitionDefaults(result.widget));
-      showSuccessNotification({
-        title: w("ai.response"),
-        message:
-          result.warnings.length > 0
-            ? `${w("ai.loaded")} ${formatCustomWidgetImportIssues(result.warnings)}`
-            : w("ai.loaded"),
-      });
-    } catch (error) {
-      showErrorNotification({
-        title: w("ai.response"),
-        message:
-          error instanceof Error ? w("ai.invalidResponseDetail", { message: error.message }) : w("ai.invalidResponse"),
-      });
-    }
+  const pasteAiResponse = (response: string): string | null => {
+    const result = applyCustomWidgetAiResponse(input.form, response);
+    if (!result.success) return formatCustomWidgetImportIssues(result.issues);
+    input.setOptionsSnapshot(getDefinitionDefaults(result.widget));
+    showSuccessNotification({
+      title: w("ai.response"),
+      message:
+        result.warnings.length > 0
+          ? `${w("ai.loaded")} ${formatCustomWidgetImportIssues(result.warnings)}`
+          : w("ai.loaded"),
+    });
+    return null;
   };
 
   return {

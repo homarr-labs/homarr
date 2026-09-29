@@ -30,7 +30,7 @@ export function CustomWidgetAiSection({
 }: {
   getDraft(): CustomWidgetAiDraft;
   getDiagnostics(): readonly CustomWidgetAiDiagnostic[];
-  onPaste(): void;
+  onPaste(response: string): string | null;
 }) {
   const [request, setRequest] = useState("");
   const [documentationUrl, setDocumentationUrl] = useState("");

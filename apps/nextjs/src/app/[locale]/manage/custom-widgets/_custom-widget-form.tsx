@@ -70,7 +70,7 @@ interface CustomWidgetFormViewProps {
   previewPending: boolean;
   onSubmit: FormEventHandler<HTMLFormElement>;
   onPreview(): void;
-  onPasteAiResponse(): void;
+  onPasteAiResponse(response: string): string | null;
 }
 
 function getAiDraft(values: CustomWidgetFormValues): CustomWidgetAiDraft {
@@ -223,7 +223,7 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
   }, [actions]);
   const handleSubmit = useCallback<FormEventHandler<HTMLFormElement>>((event) => latestActions.current.save(event), []);
   const handlePreview = useCallback(() => void latestActions.current.runPreview(), []);
-  const handlePasteAiResponse = useCallback(() => void latestActions.current.pasteAiResponse(), []);
+  const handlePasteAiResponse = useCallback((response: string) => latestActions.current.pasteAiResponse(response), []);
 
   return (
     <CustomWidgetFormView
