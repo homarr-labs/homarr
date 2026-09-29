@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Homarr v2 — the front door to your homelab (loop)</title>
+    <link rel="stylesheet" href="../src/style.css" />
+    <style>
+      html,
+      body {
+        margin: 0;
+        background: #070708;
+      }
+      #stage {
+        position: relative;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background:
+          radial-gradient(1100px 700px at 6% -8%, rgba(242, 84, 91, 0.16), transparent 62%),
+          radial-gradient(900px 620px at 96% 108%, rgba(242, 84, 91, 0.1), transparent 60%),
+          radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.045) 1px, transparent 0) 0 0 / 34px 34px,
+          #08080a;
+        color: #f2f2f4;
+        font-family: "Inter", system-ui, sans-serif;
+      }
+      .abs {
+        position: absolute;
+      }
+      .mono {
+        font-family: "JetBrains Mono", monospace;
+      }
+      .display {
+        font-family: "Inter Tight", "Inter", sans-serif;
+        font-weight: 800;
+        letter-spacing: -0.025em;
+      }
+      .coral {
+        color: #f2545b;
+      }
+      .mut {
+        color: #8b8b95;
+      }
+      .card {
+        position: absolute;
+        border-radius: 18px;
+        background: linear-gradient(180deg, #17181e 0%, #121318 100%);
+        box-shadow:
+          0 30px 70px -34px rgba(0, 0, 0, 0.9),
+          inset 0 0 0 1px rgba(255, 255, 255, 0.075);
+      }
+      .card.hot {
+        box-shadow:
+          0 30px 70px -34px rgba(0, 0, 0, 0.9),
+          inset 0 0 0 1px rgba(242, 84, 91, 0.55),
+          0 0 44px -6px rgba(242, 84, 91, 0.35);
+      }
+      .ibox {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        background: #241418;
+        color: #f2545b;
+      }
+      .row {
+        display: flex;
+        align-items: center;
+      }
+      .check {
+        border-radius: 50%;
+        background: #2fbf62;
+        color: #06220f;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+      }
+      .node {
+        border-radius: 50%;
+        background: #08080a;
+        box-shadow: 0 0 0 3px #f2545b;
+      }
+      .step {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        font-size: 23px;
+        font-weight: 650;
+        color: #e6e6ea;
+      }
+      .step .n {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 19px;
+        font-weight: 800;
+        background: #23232b;
+        color: #8b8b95;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.09);
+      }
+      .step .n.on {
+        background: #f2545b;
+        color: #fff;
+        box-shadow: 0 0 26px -2px rgba(242, 84, 91, 0.85);
+      }
+      .chip {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        height: 54px;
+        padding: 0 12px;
+        border-radius: 12px;
+        background: #e9e9ec;
+        color: #141418;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 20px;
+        font-weight: 700;
+        box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.8);
+      }
+      .chip .ok {
+        width: 34px;
+        height: 34px;
+        border-radius: 9px;
+        background: #2fbf62;
+        color: #06220f;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 900;
+      }
+      .chip .key {
+        width: 34px;
+        height: 34px;
+        border-radius: 9px;
+        background: #f2545b;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        height: 30px;
+        padding: 0 10px;
+        border-radius: 8px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        color: #f2545b;
+        box-shadow: inset 0 0 0 1px rgba(242, 84, 91, 0.6);
+      }
+      .logline {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 16px;
+        color: #9a9aa4;
+        white-space: pre;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="stage">
+      <!-- ── header ───────────────────────────────────────────── -->
+      <div class="abs row" style="left: 110px; top: 112px; gap: 18px">
+        <span
+          class="abs mono"
+          style="
+            position: relative;
+            background: #f2545b;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            padding: 6px 12px;
+            border-radius: 7px
+          "
+          >NEW</span
+        >
+        <span class="mono" style="font-size: 20px; letter-spacing: 0.32em; color: #d3d3d9">INTEGRATION REQUESTS</span>
+      </div>
+      <div class="abs display" style="left: 106px; top: 168px; font-size: 92px; line-height: 1">The front door</div>
+      <div class="abs display coral" style="left: 106px; top: 262px; font-size: 92px; line-height: 1">to your homelab.</div>
+
+      <div class="abs mono coral" style="left: 1012px; top: 126px; font-size: 18px; letter-spacing: 0.34em">ONE NEW API ENDPOINT</div>
+      <div
+        class="abs row"
+        style="
+          left: 1010px;
+          top: 168px;
+          width: 612px;
+          height: 78px;
+          border-radius: 14px;
+          background: #101015;
+          box-shadow: inset 0 0 0 1.5px rgba(242, 84, 91, 0.75);
+          gap: 18px;
+          padding: 0 20px
+        "
+      >
+        <span
+          class="mono"
+          style="background: #f2545b; color: #fff; font-size: 20px; font-weight: 800; padding: 7px 13px; border-radius: 8px"
+          >POST</span
+        >
+        <span class="mono" style="font-size: 34px; font-weight: 500">/api/integrations/request</span>
+      </div>
+      <div class="abs" style="left: 1012px; top: 278px; font-size: 35px; font-weight: 700; line-height: 1.22">
+        Call any path of any connected service.<br />Your secrets never leave Homarr.
+      </div>
+      <div class="abs mono mut" style="left: 1012px; top: 388px; font-size: 19px">
+        REST&nbsp; ·&nbsp; tRPC integration.request&nbsp; ·&nbsp; MCP integration_request
+      </div>
+
+      <!-- ── left: who calls it ───────────────────────────────── -->
+      <div class="abs mono mut" style="left: 110px; top: 508px; font-size: 17px; letter-spacing: 0.34em">WHO CALLS IT</div>
+
+      <div class="card" id="card-widget" style="left: 110px; top: 542px; width: 336px; height: 124px">
+        <div class="ibox abs" style="left: 24px; top: 26px; width: 50px; height: 50px">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" rx="1.5" />
+            <rect x="14" y="3" width="7" height="7" rx="1.5" />
+            <rect x="3" y="14" width="7" height="7" rx="1.5" />
+            <rect x="14" y="14" width="7" height="7" rx="1.5" />
+          </svg>
+        </div>
+        <div class="abs" style="left: 92px; top: 28px; font-size: 28px; font-weight: 750">Custom Widget</div>
+        <div class="abs mut" style="left: 92px; top: 68px; font-size: 17.5px; white-space: nowrap">No credentials to re-enter</div>
+      </div>
+
+      <div class="card" id="card-agent" style="left: 110px; top: 730px; width: 336px; height: 120px">
+        <div class="ibox abs" style="left: 24px; top: 24px; width: 50px; height: 50px">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="5" y="8" width="14" height="11" rx="3" />
+            <path d="M12 8V4M9 14h.01M15 14h.01" />
+          </svg>
+        </div>
+        <div class="abs" style="left: 92px; top: 26px; font-size: 28px; font-weight: 750">Your agent</div>
+        <div class="abs mut" style="left: 92px; top: 66px; font-size: 17.5px; white-space: nowrap">Acts on your behalf · MCP</div>
+      </div>
+
+      <!-- ── centre: Homarr ───────────────────────────────────── -->
+      <div class="card" id="card-homarr" style="left: 715px; top: 462px; width: 492px; height: 402px">
+        <div class="row abs" style="left: 30px; top: 22px; gap: 14px">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="#f2545b">
+            <path
+              d="M7 3c.6 0 1 .5 1.2 1.2L9 7l2.2-1.2C11 5.4 11.3 5 12 5s1 .4.8.8L10.6 7 13 8.2c.6.4.7.9.4 1.3-.3.4-.8.4-1.3.1L9.6 8.2 8 9.4c-.5.4-1.1.3-1.4-.2-.2-.4-.1-.9.3-1.2L8.4 7 7.2 4.6C7 4 6.7 3 7 3Z"
+            />
+            <path d="M8 12h8l1.4 6.2c.2.9-.4 1.8-1.3 1.8H8.9c-1 0-1.5-.9-1.3-1.8L8 12Z" />
+          </svg>
+          <span style="font-size: 29px; font-weight: 750">Homarr</span>
+          <span class="mono mut" style="font-size: 16px; margin-left: 34px">/api/integrations/request</span>
+        </div>
+
+        <div class="row abs" id="chk-row-0" style="left: 30px; top: 88px; width: 432px; height: 46px; gap: 16px">
+          <div class="ibox" style="width: 38px; height: 38px; background: #212228; color: #c9c9d0">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" y="8" r="3.4" />
+              <path d="M5.5 20c1.4-3 4-4.4 6.5-4.4S17 17 18.5 20" />
+            </svg>
+          </div>
+          <span style="font-size: 22px; color: #d7d7dd">Authenticates your API key</span>
+          <div class="check abs" id="chk-0" style="right: 4px; top: 8px; width: 30px; height: 30px; font-size: 17px">✓</div>
+        </div>
+        <div class="row abs" id="chk-row-1" style="left: 30px; top: 140px; width: 432px; height: 46px; gap: 16px">
+          <div class="ibox" style="width: 38px; height: 38px; background: #212228; color: #c9c9d0">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 3l7 3v5c0 4.4-3 8.2-7 10-4-1.8-7-5.6-7-10V6l7-3Z" />
+            </svg>
+          </div>
+          <span style="font-size: 22px; color: #d7d7dd">Checks full integration access</span>
+          <div class="check abs" id="chk-1" style="right: 4px; top: 8px; width: 30px; height: 30px; font-size: 17px">✓</div>
+        </div>
+        <div class="row abs" id="chk-row-2" style="left: 30px; top: 192px; width: 432px; height: 46px; gap: 16px">
+          <div class="ibox" style="width: 38px; height: 38px; background: #212228; color: #c9c9d0">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 8h10M4 16h16" />
+              <path d="M14 5l3 3-3 3M10 13l-3 3 3 3" />
+            </svg>
+          </div>
+          <span style="font-size: 22px; color: #d7d7dd">Keeps the path on Sonarr's URL</span>
+          <div class="check abs" id="chk-2" style="right: 4px; top: 8px; width: 30px; height: 30px; font-size: 17px">✓</div>
+        </div>
+
+        <div
+          class="abs"
+          id="secrets"
+          style="
+            left: 20px;
+            top: 262px;
+            width: 452px;
+            height: 118px;
+            border-radius: 14px;
+            background: #0e0e13;
+            box-shadow: inset 0 0 0 1.5px rgba(242, 84, 91, 0.35)
+          "
+        >
+          <div class="mono mut abs" style="left: 28px; top: 16px; font-size: 15px; letter-spacing: 0.22em">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align: -1px">
+              <rect x="5" y="11" width="14" height="9" rx="2" />
+              <path d="M8 11V8a4 4 0 0 1 8 0v3" />
+            </svg>
+            &nbsp;SAVED SECRETS · ENCRYPTED
+          </div>
+          <div class="row abs" style="left: 20px; top: 54px; width: 412px; height: 46px; gap: 14px">
+            <div class="ibox" style="width: 34px; height: 34px; background: #241418" id="key-ibox">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="8" cy="12" r="3.5" />
+                <path d="M11.5 12H21M17 12v3M20 12v2.5" />
+              </svg>
+            </div>
+            <span style="font-size: 21px; font-weight: 650">Sonarr API key</span>
+            <span class="mut mono" style="font-size: 20px; letter-spacing: 0.14em">••••</span>
+            <span class="badge abs" style="right: 12px; top: 8px">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" style="margin-right: 7px">
+                <path d="M3 3l18 18M10.6 10.7a3.5 3.5 0 0 0 4.7 4.7" />
+                <path d="M9.4 5.3A9.7 9.7 0 0 1 12 5c5 0 9 4.5 9 7a11 11 0 0 1-2.4 3.5M6.2 6.8C4 8.3 3 10.4 3 12c0 2.5 4 7 9 7 1.3 0 2.5-.3 3.6-.7" />
+              </svg>
+              NEVER RETURNED
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── right: Sonarr ────────────────────────────────────── -->
+      <div class="card" id="card-sonarr" style="left: 1485px; top: 582px; width: 328px; height: 234px">
+        <div class="abs" style="left: 26px; top: 26px; width: 50px; height: 50px; border-radius: 50%; overflow: hidden; background: #fff">
+          <svg width="50" height="50" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="9" fill="#2196f3" />
+            <circle cx="12" cy="12" r="3.6" fill="#fff" />
+            <circle cx="12" cy="12" r="1.7" fill="#2196f3" />
+          </svg>
+        </div>
+        <div class="abs" style="left: 92px; top: 28px; font-size: 31px; font-weight: 750">Sonarr</div>
+        <div class="abs mono mut" style="left: 92px; top: 68px; font-size: 16px">sonarr:8989&nbsp; ·&nbsp; LAN</div>
+        <div class="abs mono mut" style="left: 26px; top: 112px; font-size: 15px; letter-spacing: 0.22em">REQUEST LOG</div>
+        <div class="abs logline" id="log0" style="left: 26px; top: 146px">→ GET /api/v3/queue</div>
+        <div class="abs logline" id="log1" style="left: 26px; top: 176px">← 200 · 3 items</div>
+      </div>
+
+      <!-- ── flow paths ───────────────────────────────────────── -->
+      <svg class="abs" width="1920" height="1080" style="left: 0; top: 0" fill="none">
+        <path id="p-agent" d="M446,790 C566,790 592,712 715,712" stroke="#6a6a74" stroke-width="3" stroke-dasharray="4 12" stroke-linecap="round" />
+        <path id="p-main" d="M446,604 C566,604 588,712 715,712 L1487,712" stroke="#f2545b" stroke-width="4.5" stroke-linecap="round" opacity="0.8" />
+        <path id="c-agent" d="M446,790 C566,790 592,712 715,712" stroke="#c9c9d0" stroke-width="6" stroke-linecap="round" stroke-dasharray="70 4000" stroke-dashoffset="4070" opacity="0" />
+        <path id="c-main-a" d="M446,604 C566,604 588,712 715,712" stroke="#ffd2d4" stroke-width="7" stroke-linecap="round" stroke-dasharray="90 4000" stroke-dashoffset="4090" opacity="0" />
+        <path id="c-main-b" d="M715,712 L1487,712" stroke="#ffd2d4" stroke-width="7" stroke-linecap="round" stroke-dasharray="90 4000" stroke-dashoffset="4090" opacity="0" />
+        <path id="c-return" d="M1487,712 L715,712 C588,712 566,604 446,604" stroke="#8dffad" stroke-width="7" stroke-linecap="round" stroke-dasharray="90 4000" stroke-dashoffset="4090" opacity="0" />
+        <circle class="node" cx="715" cy="712" r="8" />
+        <circle class="node" cx="1487" cy="712" r="8" />
+        <circle class="node" cx="446" cy="604" r="7" />
+        <circle class="node" cx="446" cy="790" r="6" stroke-width="2" style="box-shadow: 0 0 0 2px #f2545b" />
+      </svg>
+
+      <!-- request chip on the line -->
+      <div class="chip" id="chip" style="left: 1128px; top: 685px">
+        <span class="ok">✓</span>
+        <span>GET /api/v3/queue</span>
+        <span class="key" id="chip-key">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <circle cx="8" cy="12" r="3.5" />
+            <path d="M11.5 12H21M17 12v3M20 12v2.5" />
+          </svg>
+        </span>
+      </div>
+
+      <!-- ── bottom steps ─────────────────────────────────────── -->
+      <div class="abs step" id="st0" style="left: 110px; top: 932px"><span class="n">1</span>Request + your API key</div>
+      <div class="abs step" id="st1" style="left: 455px; top: 932px"><span class="n">2</span>Homarr authenticates you</div>
+      <div class="abs step" id="st2" style="left: 815px; top: 932px"><span class="n">3</span>Adds the saved secret</div>
+      <div class="abs step" id="st3" style="left: 1155px; top: 932px"><span class="n">4</span>Calls your service</div>
+      <div class="abs step" id="st4" style="left: 1470px; top: 932px"><span class="n">5</span>Response comes back</div>
+    </div>
+
+    <script type="module">
+      const D = 6; // loop length, seconds
+      const stage = document.getElementById("stage");
+      const $ = (id) => document.getElementById(id);
+      const seg = (t, a, b) => Math.min(1, Math.max(0, (t - a) / (b - a)));
+      const easeOut = (x) => 1 - Math.pow(1 - x, 3);
+      const pop = (x) => (x <= 0 ? 0 : x >= 1 ? 1 : 1 + 2.2 * Math.pow(x - 1, 3) + 1.2 * Math.pow(x - 1, 2));
+      const flash = (t, at, up = 0.1, dn = 0.35) => (t < at ? 0 : t < at + up ? seg(t, at, at + up) : 1 - seg(t, at + up, at + up + dn));
+
+      // one-time geometry: comet dash lengths
+      for (const id of ["p-agent", "p-main", "c-agent", "c-main-a", "c-main-b", "c-return"]) {
+        const el = $(id);
+        el.dataset.len = el.getTotalLength ? el.getTotalLength() : 200;
+      }
+      // hidden helper paths for the two comet segments
+      const cAgent = $("c-agent");
+      const cMainA = $("c-main-a");
+      const cMainB = $("c-main-b");
+      const cReturn = $("c-return");
+      const pAgent = $("p-agent");
+      const pMain = $("p-main");
+
+      const steps = [0, 1, 2, 3, 4].map((i) => $(`st${i}`));
+      const stepAt = [0.0, 1.1, 2.15, 3.1, 4.35];
+      const stepEnd = [1.15, 2.2, 3.15, 4.4, 5.55];
+
+      const cards = {
+        widget: $("card-widget"),
+        agent: $("card-agent"),
+        homarr: $("card-homarr"),
+        sonarr: $("card-sonarr"),
+      };
+      const chipKey = $("chip-key");
+      const keyBox = $("key-ibox");
+      const secrets = $("secrets");
+      const logs = [$("log0"), $("log1")];
+      const checks = [0, 1, 2].map((i) => $(`chk-${i}`));
+      const checkRows = [0, 1, 2].map((i) => $(`chk-row-${i}`));
+
+      window.__duration = D;
+      window.__seek = (t) => {
+        const lt = ((t % D) + D) % D;
+
+        // drifting dashes on the static paths (idle "traffic")
+        const drift = -((t * 26) % 17);
+        pMain.style.strokeDasharray = "none";
+        pAgent.style.strokeDashoffset = String(drift * 0.8);
+
+        // step highlights
+        steps.forEach((el, i) => {
+          const on = lt >= stepAt[i] && lt < stepEnd[i];
+          const k = Math.max(flash(lt, stepAt[i], 0.12, 0.0), on ? 0 : 0);
+          el.querySelector(".n").classList.toggle("on", on || k > 0.6);
+          el.style.opacity = String(0.62 + 0.38 * Math.max(k, on ? 1 : 0));
+        });
+
+        // comets: agent→homarr (with step 1), homarr→sonarr (step 4), sonarr→widget (step 5)
+        const setC = (el, p, color) => {
+          if (p <= 0 || p >= 1) {
+            el.style.opacity = "0";
+            return;
+          }
+          const len = Number(el.dataset.len) || 200;
+          el.style.opacity = String(Math.sin(Math.PI * p) * 1.15);
+          el.style.strokeDashoffset = String(len * (1 - p) - 90 + 90);
+          el.style.strokeDasharray = `90 ${len + 200}`;
+          el.style.strokeDashoffset = String(90 - p * len);
+          el.style.stroke = color;
+        };
+        setC(cAgent, seg(lt, 0.0, 0.85), "#ffffff");
+        setC(cMainA, seg(lt, 0.55, 1.15), "#ffd2d4");
+        setC(cMainB, seg(lt, 3.1, 3.95), "#ffd2d4");
+        setC(cReturn, seg(lt, 4.35, 5.5), "#8dffad");
+
+        // checkmarks pop when the first comet lands
+        checks.forEach((el, i) => {
+          const p = 1 + 0.3 * flash(lt, 0.95 + i * 0.16, 0.1, 0.4);
+          el.style.transform = `scale(${p.toFixed(3)})`;
+          el.style.opacity = "1";
+          const g = flash(lt, 0.95 + i * 0.16, 0.1, 0.4);
+          checkRows[i].style.background = `rgba(255,255,255,${(0.05 * g).toFixed(3)})`;
+        });
+
+        // secrets + key flare (step 3)
+        const sec = flash(lt, 2.15, 0.14, 0.5);
+        secrets.style.boxShadow = `inset 0 0 0 1.5px rgba(242,84,91,${(0.35 + 0.5 * sec).toFixed(3)})`;
+        keyBox.style.transform = `scale(${(1 + 0.22 * sec).toFixed(3)})`;
+        chipKey.style.transform = `scale(${(1 + 0.3 * sec).toFixed(3)})`;
+
+        // card glows as the packet passes
+        const hot = (el, at) => {
+          const g = flash(lt, at, 0.12, 0.45);
+          el.classList.toggle("hot", g > 0.55);
+          el.style.transform = `scale(${(1 + 0.012 * g).toFixed(4)})`;
+        };
+        hot(cards.widget, 0.0);
+        hot(cards.agent, 0.2);
+        hot(cards.homarr, 0.85);
+        hot(cards.sonarr, 3.6);
+        hot(cards.widget, 5.3);
+
+        // request log lines arrive with the call and the answer
+        logs[0].style.opacity = String(0.35 + 0.65 * flash(lt, 3.45, 0.1, 0.6));
+        logs[1].style.opacity = String(0.35 + 0.65 * flash(lt, 3.95, 0.1, 0.7));
+      };
+
+      const fonts = [...document.fonts].map((f) => f.loaded.catch(() => {}));
+      window.__ready = Promise.all(fonts).then(() => {
+        window.__seek(0);
+        return new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      });
+    </script>
+  </body>
+</html>
