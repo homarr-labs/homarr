@@ -38,6 +38,7 @@ import type { PreviewState } from "./_custom-widget-preview-panel";
 import { createCustomWidgetRenameHandlers } from "./_custom-widget-rename-handlers";
 import type { CustomWidgetSaveIssue } from "./_custom-widget-save-errors";
 import { CustomWidgetSaveIssuesAlert } from "./_custom-widget-save-issues-alert";
+import { areCustomWidgetValuesEqual } from "./_custom-widget-value-equality";
 import { useCustomWidgetFormActions } from "./_use-custom-widget-form-actions";
 import { analyzeCustomWidgetAiDiagnostics, CustomWidgetFormAnalysisProvider } from "./_use-custom-widget-form-analysis";
 import classes from "./_custom-widget-form.module.css";
@@ -99,7 +100,12 @@ const CustomWidgetFormView = memo(function CustomWidgetFormView(props: CustomWid
       }),
     [form, w],
   );
-  const readAiDraft = useCallback(() => getAiDraft(documentStore.getValues()), [documentStore]);
+  const readAiDraft = useCallback(() => {
+    const draft = getAiDraft(documentStore.getValues());
+    if (props.mode === "create" && areCustomWidgetValuesEqual(draft, getAiDraft(DEFAULT_CUSTOM_WIDGET_FORM_VALUES)))
+      return null;
+    return draft;
+  }, [documentStore, props.mode]);
   const readAiDiagnostics = useCallback(
     () => analyzeCustomWidgetAiDiagnostics(documentStore.getValues()),
     [documentStore],

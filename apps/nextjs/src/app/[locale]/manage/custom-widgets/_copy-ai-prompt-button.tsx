@@ -15,7 +15,7 @@ interface CopyAiPromptButtonProps {
   getSampleResponse: () => string | null;
   request?: string | null;
   documentationUrl?: string | null;
-  getDraft: () => CustomWidgetAiDraft;
+  getDraft: () => CustomWidgetAiDraft | null;
   getDiagnostics: () => readonly CustomWidgetAiDiagnostic[];
 }
 

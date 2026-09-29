@@ -10,7 +10,7 @@ import { useI18n } from "@homarr/translation/client";
 import { CopyAiPromptButton } from "./_copy-ai-prompt-button";
 
 interface AiCardProps {
-  getDraft(): CustomWidgetAiDraft;
+  getDraft(): CustomWidgetAiDraft | null;
   getDiagnostics(): readonly CustomWidgetAiDiagnostic[];
   getSampleResponse(): string | null;
   request: string;

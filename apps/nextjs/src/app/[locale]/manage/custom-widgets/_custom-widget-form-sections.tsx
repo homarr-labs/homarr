@@ -29,7 +29,7 @@ export function CustomWidgetAiSection({
   getSampleResponse,
   onPaste,
 }: {
-  getDraft(): CustomWidgetAiDraft;
+  getDraft(): CustomWidgetAiDraft | null;
   getDiagnostics(): readonly CustomWidgetAiDiagnostic[];
   getSampleResponse(): string | null;
   onPaste(response: string): string | null;
