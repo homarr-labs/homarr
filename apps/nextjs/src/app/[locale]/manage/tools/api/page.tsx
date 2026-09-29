@@ -10,7 +10,7 @@ import { getI18n } from "@homarr/translation/server";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { extractMcpTools } from "~/app/api/mcp/_extract-tools";
 import { ApiPageTabs } from "./components/api-page-tabs";
-import { ScalarApiReference } from "./components/scalar-api-reference";
+import { ScalarApiReferenceFrame } from "./components/scalar-api-reference-frame";
 
 import type { McpToolGroup } from "./components/api-page-tabs";
 
@@ -68,7 +68,7 @@ export default async function ApiPage() {
           documentationLabel={t("documentation.label")}
           apiKeyLabel={t("apiKey.label")}
           mcpLabel={t("mcp.label")}
-          documentationPanel={<ScalarApiReference />}
+          documentationPanel={<ScalarApiReferenceFrame />}
           apiKeys={apiKeys}
           baseUrl={baseUrl}
           toolGroups={toolGroups}
