@@ -1,6 +1,19 @@
+import type { IntegrationKind } from "@homarr/definitions";
+
 interface StorageVolumeEntry {
   deviceName: string;
 }
+
+const storageVolumeSelectionIntegrationKinds = ["openmediavault", "synology"] as const satisfies IntegrationKind[];
+
+export const supportsStorageVolumeSelection = (integrationKinds: IntegrationKind[]): boolean => {
+  return (
+    integrationKinds.length > 0 &&
+    integrationKinds.every((kind) =>
+      storageVolumeSelectionIntegrationKinds.some((supportedKind) => supportedKind === kind),
+    )
+  );
+};
 
 const partitionSuffixPatterns: ReadonlyArray<{ pattern: RegExp; baseGroupIndex: number }> = [
   // SCSI/SATA/VirtIO: /dev/sda1 -> /dev/sda
