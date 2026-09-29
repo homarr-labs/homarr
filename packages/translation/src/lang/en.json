@@ -3372,6 +3372,12 @@
           "description": "Leave empty to show containers from every Docker environment",
           "placeholder": "All Docker environments"
         },
+        "containerFilter": {
+          "label": "Containers to filter"
+        },
+        "filterIsWhitelist": {
+          "label": "Filter as a whitelist"
+        },
         "defaultSort": {
           "option": {
             "name": "Name",
