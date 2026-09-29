@@ -3163,8 +3163,8 @@
         "noColumns": "Spalten in Elementen auswählen",
         "noCommunications": "Kann keine Daten von der Integration laden",
         "noItems": "",
-        "actionFailed": "",
-        "actionFailedMessage": ""
+        "actionFailed": "Aktion fehlgeschlagen",
+        "actionFailedMessage": "Diese Aktion konnte nicht abgeschlossen werden. Bitte versuche es erneut."
       },
       "items": {
         "actions": {
@@ -3452,7 +3452,7 @@
         "queued": ""
       },
       "type": {
-        "movie": "",
+        "movie": "Film",
         "episode": ""
       },
       "empty": {
@@ -3812,7 +3812,7 @@
       },
       "resource": {
         "routers": "",
-        "services": "",
+        "services": "Dienste",
         "middlewares": ""
       },
       "status": {
@@ -4098,7 +4098,7 @@
         "temp": "",
         "battery": "",
         "services": "Dienste",
-        "uptime": "",
+        "uptime": "Verfügbarkeit",
         "agent": "Agent"
       }
     },
@@ -4173,12 +4173,12 @@
       "chart": {
         "cpu": {
           "title": "CPU Auslastung",
-          "subtitle": "",
+          "subtitle": "Durchschnittliche Systemweite CPU-Auslastung",
           "series": "CPU"
         },
         "memory": {
-          "title": "",
-          "subtitle": "",
+          "title": "Speicherverbrauch",
+          "subtitle": "Genaue Auslastung zum erfassten Zeitpunkt",
           "series": "Belegt",
           "cache": ""
         },
@@ -4189,7 +4189,7 @@
         },
         "diskIO": {
           "title": "Festplatten-E/A",
-          "subtitle": "",
+          "subtitle": "Durchsatz des Root-Dateisystems",
           "read": "Lesen",
           "write": "Schreiben"
         },
@@ -6096,7 +6096,7 @@
           }
         },
         "availability": {
-          "available": "",
+          "available": "Verfügbar",
           "partiallyAvailable": "",
           "processing": "",
           "requested": "",

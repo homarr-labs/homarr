@@ -13,19 +13,6 @@ import { UndiciHttpAgent } from "@homarr/core/infrastructure/http";
 
 import type { TrustedCertificateHostname } from "../certificates/hostnames";
 import { withTimeoutAsync } from "./timeout";
-
-import packageJson from "../../../../../package.json";
-
-export const getDefaultUserAgent = () => `Homarr/${packageJson.version} (+https://homarr.dev)`;
-
-export const mergeHeadersWithUserAgent = (headers: unknown): Headers => {
-  const mergedHeaders = new Headers(headers as HeadersInit);
-  if (!mergedHeaders.has("user-agent")) {
-    mergedHeaders.set("user-agent", getDefaultUserAgent());
-  }
-  return mergedHeaders;
-};
-
 export const createCustomCheckServerIdentity = (
   trustedHostnames: TrustedCertificateHostname[],
 ): typeof checkServerIdentity => {
@@ -85,18 +72,22 @@ export const fetchWithTrustedCertificatesAsync = async (
       undefined,
       options?.bodyTimeout !== undefined ? { bodyTimeout: options.bodyTimeout } : undefined,
     ));
-  const buildFetchOptions = (fetchOptions: Omit<RequestInit, "dispatcher" | "bodyTimeout" | "timeout">) => ({
-    ...fetchOptions,
-    headers: mergeHeadersWithUserAgent(fetchOptions.headers) as unknown as RequestInit["headers"],
-  });
   if (options?.timeout) {
     const { bodyTimeout: _bodyTimeout, dispatcher: _dispatcher, ...fetchOptions } = options;
     return await withTimeoutAsync(
-      async (signal) => fetch(url, { ...buildFetchOptions(fetchOptions), signal, dispatcher: agent }),
+      async (signal) =>
+        fetch(url, {
+          ...fetchOptions,
+          signal,
+          dispatcher: agent,
+        }),
       options.timeout,
     );
   }
 
   const { bodyTimeout: _bodyTimeout, dispatcher: _dispatcher, ...fetchOptions } = options ?? {};
-  return fetch(url, { ...buildFetchOptions(fetchOptions), dispatcher: agent });
+  return fetch(url, {
+    ...fetchOptions,
+    dispatcher: agent,
+  });
 };
