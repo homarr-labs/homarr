@@ -1023,7 +1023,7 @@
       },
       "ai": {
         "title": "Create or fix with any AI",
-        "description": "Describe the widget, copy the prompt, then paste the AI's JSON response. API docs and a preview are optional.",
+        "description": "Add an API docs URL first if you have one. For fixes, run Preview if possible. Copy the prompt into any AI; it can ask for missing details. Paste its final JSON here.",
         "request": "What should this widget do?",
         "documentationUrl": "API documentation URL (optional)",
         "paste": "Paste",
