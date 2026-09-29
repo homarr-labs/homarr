@@ -20,7 +20,9 @@ export const MotionReelShowcase = () => {
             controls
             playsInline
             preload="none"
-          />
+          >
+            <track kind="captions" src="/media/homepage-motion-reel.vtt" srcLang="en" label="English" />
+          </video>
         </div>
       </SectionContainer>
     </section>
