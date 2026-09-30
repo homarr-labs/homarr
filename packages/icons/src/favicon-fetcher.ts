@@ -1,11 +1,17 @@
-import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import type { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
+
+import { cancelBodyAsync, fetchGuardedAsync } from "./guarded-fetch";
 
 const logger = createLogger({ module: "faviconFetcher" });
 
 type FetchResponse = Awaited<ReturnType<typeof fetchWithTrustedCertificatesAsync>>;
 
 const requestTimeoutInMs = 5_000;
+// Lets the page, one redirect and the favicon.ico probe each use their full request timeout,
+// while a server that drips its page byte by byte cannot hold the detection open until the
+// size limit.
+const detectionTimeoutInMs = 3 * requestTimeoutInMs;
 // Icon declarations live in the document head, so only the beginning of the page is read.
 const maximumHtmlBytes = 256 * 1024;
 
@@ -30,17 +36,29 @@ interface IconCandidate {
  * `<link rel="apple-touch-icon">` declarations of the page it serves and by
  * falling back to the well known `/favicon.ico` of its origin.
  *
- * Returns `null` when the site is unreachable or declares no usable icon.
+ * Returns `null` when the site is unreachable, declares no usable icon or does not
+ * answer within the detection timeout.
  *
- * The request goes to an address the user provided, so this may only be called
- * from an authorized context. Addresses in the local network are allowed on
- * purpose because self hosted apps usually run next to Homarr.
+ * The requests go to an address the user provided, so this may only be called
+ * from an authorized context. They pass through fetchGuardedAsync, which keeps
+ * them away from loopback and metadata addresses but lets them reach the local
+ * network, where self hosted apps usually run next to Homarr.
  */
 export const fetchFaviconUrlAsync = async (href: string): Promise<string | null> => {
   const websiteUrl = parseHttpUrl(href);
   if (websiteUrl === null) return null;
 
-  const page = await fetchPageAsync(websiteUrl);
+  const deadline = new AbortController();
+  const timer = setTimeout(() => deadline.abort(new Error("Favicon detection timed out")), detectionTimeoutInMs);
+  try {
+    return await detectFaviconUrlAsync(websiteUrl, deadline.signal);
+  } finally {
+    clearTimeout(timer);
+  }
+};
+
+const detectFaviconUrlAsync = async (websiteUrl: URL, signal: AbortSignal): Promise<string | null> => {
+  const page = await fetchPageAsync(websiteUrl, signal);
   const declaredIconUrl = page?.html == null ? null : findDeclaredIconUrl(page.html, page.url);
   if (declaredIconUrl !== null) return declaredIconUrl;
 
@@ -51,7 +69,7 @@ export const fetchFaviconUrlAsync = async (href: string): Promise<string | null>
   // null when no response was obtained at all, which is the one case with no better url
   // than the one originally requested.
   const wellKnownUrl = new URL("/favicon.ico", page?.url.origin ?? websiteUrl.origin);
-  return (await isImageAsync(wellKnownUrl)) ? wellKnownUrl.href : null;
+  return (await isImageAsync(wellKnownUrl, signal)) ? wellKnownUrl.href : null;
 };
 
 const parseHttpUrl = (value: string): URL | null => {
@@ -67,37 +85,33 @@ const parseHttpUrl = (value: string): URL | null => {
 // url is always returned, even when the response carries no usable html, so a caller
 // falling back to the well known favicon still targets the origin that actually
 // answered, which can differ from the requested address when the app redirects.
-const fetchPageAsync = async (websiteUrl: URL): Promise<{ html: string | null; url: URL } | null> => {
-  let response: FetchResponse;
+const fetchPageAsync = async (
+  websiteUrl: URL,
+  signal: AbortSignal,
+): Promise<{ html: string | null; url: URL } | null> => {
   try {
-    response = await fetchWithTrustedCertificatesAsync(websiteUrl, {
-      headers: { Accept: "text/html" },
-      timeout: requestTimeoutInMs,
-      // The timeout above ends once the headers are there, so the body needs its own
-      // limit to keep a stalled page from holding the request open forever.
-      bodyTimeout: requestTimeoutInMs,
-    });
+    return await fetchGuardedAsync(
+      websiteUrl,
+      { headers: { Accept: "text/html" }, timeout: requestTimeoutInMs, signal },
+      async (response, finalUrl) => {
+        const body = response.body;
+        const contentType = response.headers.get("content-type")?.toLowerCase() ?? "";
+        if (!response.ok || !contentType.includes("text/html") || body === null) {
+          await cancelBodyAsync(response);
+          return { html: null, url: finalUrl };
+        }
+
+        try {
+          return { html: await readDocumentHeadAsync(body), url: finalUrl };
+        } catch (error) {
+          logger.debug("Unable to read website for favicon detection", { url: finalUrl.href, error });
+          return { html: null, url: finalUrl };
+        }
+      },
+    );
   } catch (error) {
     logger.debug("Unable to load website for favicon detection", { url: websiteUrl.href, error });
     return null;
-  }
-
-  // Relative icons are resolved against the page that answered, which can differ from
-  // the requested address when the app redirects, for example to a login page.
-  const finalUrl = parseHttpUrl(response.url) ?? websiteUrl;
-
-  const body = response.body;
-  const contentType = response.headers.get("content-type")?.toLowerCase() ?? "";
-  if (!response.ok || !contentType.includes("text/html") || body === null) {
-    await cancelBodyAsync(response);
-    return { html: null, url: finalUrl };
-  }
-
-  try {
-    return { html: await readDocumentHeadAsync(body), url: finalUrl };
-  } catch (error) {
-    logger.debug("Unable to read website for favicon detection", { url: websiteUrl.href, error });
-    return { html: null, url: finalUrl };
   }
 };
 
@@ -184,28 +198,19 @@ const resolveHttpUrl = (href: string, pageUrl: URL): string | null => {
   }
 };
 
-const isImageAsync = async (url: URL): Promise<boolean> => {
-  let response: FetchResponse;
+const isImageAsync = async (url: URL, signal: AbortSignal): Promise<boolean> => {
   try {
-    response = await fetchWithTrustedCertificatesAsync(url, { timeout: requestTimeoutInMs });
+    return await fetchGuardedAsync(url, { timeout: requestTimeoutInMs, signal }, async (response) => {
+      await cancelBodyAsync(response);
+      if (!response.ok) return false;
+
+      // Many self hosted apps answer unknown paths with their HTML entry point, so only the
+      // content type tells apart a real icon from such a fallback page.
+      const contentType = response.headers.get("content-type")?.toLowerCase() ?? "";
+      return contentType.startsWith("image/") || contentType.includes("icon");
+    });
   } catch (error) {
     logger.debug("Unable to load the well known favicon", { url: url.href, error });
     return false;
-  }
-
-  await cancelBodyAsync(response);
-  if (!response.ok) return false;
-
-  // Many self hosted apps answer unknown paths with their HTML entry point, so only the
-  // content type tells apart a real icon from such a fallback page.
-  const contentType = response.headers.get("content-type")?.toLowerCase() ?? "";
-  return contentType.startsWith("image/") || contentType.includes("icon");
-};
-
-const cancelBodyAsync = async (response: FetchResponse): Promise<void> => {
-  try {
-    await response.body?.cancel();
-  } catch {
-    // The connection is already gone, so there is nothing left to release
   }
 };
