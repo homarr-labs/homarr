@@ -48,7 +48,31 @@ interface WidgetContextMenuProps {
   children: ReactNode;
 }
 
-export const WidgetContextMenu = ({
+export const WidgetContextMenu = (props: WidgetContextMenuProps) => {
+  const { data: session } = useSession();
+  const [isEditMode] = useEditMode();
+  const settings = useSettings();
+
+  if (
+    !session ||
+    !settings.enableRightClickOnWidgets ||
+    isEditMode ||
+    props.item.kind === "app" ||
+    props.item.kind === "bookmarks"
+  ) {
+    return <>{props.children}</>;
+  }
+
+  return <WidgetContextMenuInner {...props} session={session} settings={settings} isEditMode={isEditMode} />;
+};
+
+interface WidgetContextMenuInnerProps extends WidgetContextMenuProps {
+  session: NonNullable<ReturnType<typeof useSession>["data"]>;
+  settings: ReturnType<typeof useSettings>;
+  isEditMode: boolean;
+}
+
+const WidgetContextMenuInner = ({
   item,
   definition,
   previewDimensions,
@@ -56,16 +80,15 @@ export const WidgetContextMenu = ({
   sourceRef,
   disabled = false,
   children,
-}: WidgetContextMenuProps) => {
-  const { data: session } = useSession();
-  const [isEditMode] = useEditMode();
+  session,
+  settings,
+  isEditMode,
+}: WidgetContextMenuInnerProps) => {
   const board = useRequiredBoard();
   const { hasChangeAccess } = useBoardPermissions(board);
   const { updateAndPersistBoard } = usePersistBoard(board);
   const t = useI18n();
   const tMenu = useI18n("item.menu.label");
-  const tCommon = useI18n("common.action");
-  const settings = useSettings();
   const { openModal } = useModalAction(LazyWidgetEditModal);
   const { updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations } = useItemActions();
   const hasSupportedIntegrations = (definition.supportedIntegrations?.length ?? 0) > 0;
@@ -116,13 +139,6 @@ export const WidgetContextMenu = ({
       ),
     [board.id, definition.queryMatcher, item.id, item.integrationIds, options, widgetQueryKeys, widgetRuntimeRef],
   );
-  const isQueryFetching =
-    useIsFetching({
-      type: "active",
-      predicate: (query) => matchesWidgetQuery(query.queryKey),
-    }) > 0;
-  const dataStatus = widgetRuntimeRef.current.actions.getDataStatus?.();
-  const isWidgetFetching = isRefreshingSources || isQueryFetching || !!dataStatus?.isRefreshing;
   const handleRefetch = useCallback(async () => {
     setRefreshingSources(true);
     try {
@@ -255,16 +271,6 @@ export const WidgetContextMenu = ({
     setMenuOpened(false);
   }, []);
 
-  if (
-    !session ||
-    !settings.enableRightClickOnWidgets ||
-    isEditMode ||
-    item.kind === "app" ||
-    item.kind === "bookmarks"
-  ) {
-    return <>{children}</>;
-  }
-
   const visibleWidgetActions = widgetContextActions.filter((action) => !action.hidden);
 
   return (
@@ -322,22 +328,16 @@ export const WidgetContextMenu = ({
         )}
 
         {(toggleOptions.length > 0 || visibleWidgetActions.length > 0) && <Menu.Divider />}
-        <Menu.Item
-          leftSection={isWidgetFetching ? <Loader size={16} /> : <IconRefresh size={16} />}
-          onClick={handleRefetch}
-          disabled={isWidgetFetching}
-        >
-          <Group justify="space-between" wrap="nowrap" gap="sm">
-            {tCommon("refresh")}
-            <WidgetQueryStatus
-              queryClient={queryClient}
-              dataStatus={dataStatus}
-              matchesQuery={matchesWidgetQuery}
-              isFetching={isWidgetFetching}
-              t={t}
-            />
-          </Group>
-        </Menu.Item>
+        {menuOpened && (
+          <WidgetRefreshMenuItem
+            queryClient={queryClient}
+            matchesQuery={matchesWidgetQuery}
+            widgetRuntimeRef={widgetRuntimeRef}
+            isRefreshingSources={isRefreshingSources}
+            onRefresh={handleRefetch}
+            t={t}
+          />
+        )}
         <Menu.Item
           closeMenuOnClick
           leftSection={<IconSettings size={16} />}
@@ -378,6 +378,49 @@ const WidgetContextMenuDropdown = ({ opened, onClose, title, children }: WidgetC
         {children}
       </div>
     </Drawer>
+  );
+};
+
+interface WidgetRefreshMenuItemProps extends Pick<WidgetQueryStatusProps, "queryClient" | "matchesQuery" | "t"> {
+  widgetRuntimeRef: WidgetRuntimeRef;
+  isRefreshingSources: boolean;
+  onRefresh: () => Promise<void>;
+}
+
+const WidgetRefreshMenuItem = ({
+  queryClient,
+  matchesQuery,
+  widgetRuntimeRef,
+  isRefreshingSources,
+  onRefresh,
+  t,
+}: WidgetRefreshMenuItemProps) => {
+  const tCommon = useI18n("common.action");
+  const isQueryFetching =
+    useIsFetching({
+      type: "active",
+      predicate: (query) => matchesQuery(query.queryKey),
+    }) > 0;
+  const dataStatus = widgetRuntimeRef.current.actions.getDataStatus?.();
+  const isWidgetFetching = isRefreshingSources || isQueryFetching || !!dataStatus?.isRefreshing;
+
+  return (
+    <Menu.Item
+      leftSection={isWidgetFetching ? <Loader size={16} /> : <IconRefresh size={16} />}
+      onClick={onRefresh}
+      disabled={isWidgetFetching}
+    >
+      <Group justify="space-between" wrap="nowrap" gap="sm">
+        {tCommon("refresh")}
+        <WidgetQueryStatus
+          queryClient={queryClient}
+          dataStatus={dataStatus}
+          matchesQuery={matchesQuery}
+          isFetching={isWidgetFetching}
+          t={t}
+        />
+      </Group>
+    </Menu.Item>
   );
 };
 
