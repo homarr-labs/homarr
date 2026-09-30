@@ -1,8 +1,9 @@
 import type { AgentOptions } from "node:https";
 import { Agent as HttpsAgent } from "node:https";
+import type { LookupFunction } from "node:net";
 import { checkServerIdentity } from "node:tls";
 import axios from "axios";
-import type { Agent as UndiciAgent, RequestInfo, RequestInit, Response } from "undici";
+import type { EnvHttpProxyAgent as UndiciEnvHttpProxyAgent, RequestInfo, RequestInit, Response } from "undici";
 import { fetch } from "undici";
 
 import {
@@ -13,6 +14,7 @@ import { UndiciHttpAgent } from "@homarr/core/infrastructure/http";
 
 import type { TrustedCertificateHostname } from "../certificates/hostnames";
 import { withTimeoutAsync } from "./timeout";
+
 export const createCustomCheckServerIdentity = (
   trustedHostnames: TrustedCertificateHostname[],
 ): typeof checkServerIdentity => {
@@ -29,17 +31,25 @@ export const createCustomCheckServerIdentity = (
 };
 
 export const createCertificateAgentAsync = async (
-  override?: {
+  override?: Partial<{
     ca: string | string[];
     checkServerIdentity: typeof checkServerIdentity;
-  },
-  agentOptions?: Pick<UndiciAgent.Options, "bodyTimeout">,
+    lookup: LookupFunction;
+  }>,
+  agentOptions?: Pick<
+    UndiciEnvHttpProxyAgent.Options,
+    "autoSelectFamily" | "bodyTimeout" | "httpProxy" | "httpsProxy" | "noProxy"
+  >,
 ) => {
+  const ca = override?.ca ?? (await getAllTrustedCertificatesAsync());
+  const identityCheck =
+    override?.checkServerIdentity ?? createCustomCheckServerIdentity(await getTrustedCertificateHostnamesAsync());
   return new UndiciHttpAgent({
     ...agentOptions,
-    connect: override ?? {
-      ca: await getAllTrustedCertificatesAsync(),
-      checkServerIdentity: createCustomCheckServerIdentity(await getTrustedCertificateHostnamesAsync()),
+    connect: {
+      ca,
+      checkServerIdentity: identityCheck,
+      ...(override?.lookup ? { lookup: override.lookup } : {}),
     },
   });
 };

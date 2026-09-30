@@ -33,6 +33,10 @@ Icons that are high quality and printable ([SVG](https://wikipedia.org/wiki/Scal
 
 You can clear the selected image with the clear button or the usual keyboard shortcut for deleting a line (Command+Backspace on macOS or Control+Backspace on other platforms). Clearing the field does not restore the previous image.
 
+### Icon of the app website
+
+When an app has a URL, the picker offers the icon of that website as its first suggestion. Homarr requests the page the URL points to, reads its `<link rel="icon">` and `<link rel="apple-touch-icon">` declarations and falls back to `/favicon.ico` of the same origin. The suggestion is only requested while the picker is open and it is never selected for you, so an image you picked yourself is never replaced. Nothing is suggested when the site cannot be reached or declares no icon.
+
 ### Using external icons
 
 If you don't find the icon you're looking for on Dashboard Icons or wish to use a different source, you can simply enter a URL that points to an icon.
