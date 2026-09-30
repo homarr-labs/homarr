@@ -6,6 +6,7 @@ import { extrudeSvg } from "../../../../../tools/motion-reel/three/logo-rig";
 export interface MascotScene {
   rotate: (x: number, y: number) => void;
   wink: () => void;
+  setHovered: (hovered: boolean) => void;
   reset: () => void;
   dispose: () => void;
 }
@@ -38,6 +39,8 @@ export function createMascotScene(host: HTMLElement, svg: string): MascotScene {
   let lastRender = 0;
   let yaw = -0.28;
   let pitch = -0.1;
+  let hovered = false;
+  let greetingStarted = -1000;
   let winkStarted = -1000;
   let nextWink = performance.now() + 6500;
 
@@ -45,13 +48,11 @@ export function createMascotScene(host: HTMLElement, svg: string): MascotScene {
     frame = 0;
     if (disposed || document.hidden || !visible) return;
     if (now - lastRender >= 32 || reducedMotion.matches) {
+      const delta = Math.min((now - lastRender) / 1000, 0.1);
       lastRender = now;
-      let float = 0;
-      let sway = 0;
       let wink = 1;
       if (!reducedMotion.matches) {
-        float = Math.sin(now / 1400) * 0.22;
-        sway = Math.sin(now / 1800) * 0.04;
+        if (!hovered) yaw += delta * 0.28;
         if (now > nextWink) {
           winkStarted = now;
           nextWink = now + 8000 + Math.random() * 6000;
@@ -59,12 +60,15 @@ export function createMascotScene(host: HTMLElement, svg: string): MascotScene {
         const progress = (now - winkStarted) / 420;
         if (progress >= 0 && progress <= 1) wink = 1 - Math.sin(progress * Math.PI) * 0.94;
       }
-      pivot.rotation.set(pitch, yaw + sway, sway * 0.5);
-      pivot.position.set(sway * 1.5, float, 0);
+      pivot.rotation.set(pitch, yaw, 0);
       const eye = rig.eyes[1];
       if (eye) eye.scale.y = wink;
       // Reuse the closing-claw and 3D antenna motion from the reel's poseLobster loop.
-      let motionStrength = 1;
+      let motionStrength = 0.15;
+      const greetingProgress = (now - greetingStarted) / 700;
+      let greeting = 0;
+      if (greetingProgress >= 0 && greetingProgress <= 1) greeting = Math.sin(greetingProgress * Math.PI);
+      motionStrength += greeting * 0.2;
       if (reducedMotion.matches) motionStrength = 0;
       const t = now / 1000;
       for (const claw of rig.claws) {
@@ -128,6 +132,15 @@ export function createMascotScene(host: HTMLElement, svg: string): MascotScene {
     rotate(x, y) {
       yaw += x;
       pitch += y;
+      wake();
+    },
+    setHovered(value) {
+      if (value && !hovered && !reducedMotion.matches) {
+        greetingStarted = performance.now();
+        winkStarted = greetingStarted;
+        nextWink = greetingStarted + 10000;
+      }
+      hovered = value;
       wake();
     },
     wink() {

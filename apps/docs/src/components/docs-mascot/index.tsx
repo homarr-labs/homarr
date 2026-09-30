@@ -17,7 +17,6 @@ export default function DocsMascot() {
   const host = useRef<HTMLSpanElement>(null);
   const scene = useRef<MascotScene | null>(null);
   const drag = useRef({ x: 0, y: 0, active: false, moved: false });
-  const hover = useRef<{ x: number; y: number } | null>(null);
   const [ready, setReady] = useState(false);
   const [message, setMessage] = useState("");
   const logoUrl = "/img/mascot/homarr.svg";
@@ -70,13 +69,7 @@ export default function DocsMascot() {
   }
 
   function moveDrag(event: PointerEvent<HTMLButtonElement>) {
-    if (!drag.current.active) {
-      if (event.pointerType !== "mouse") return;
-      const previous = hover.current;
-      hover.current = { x: event.clientX, y: event.clientY };
-      if (previous) scene.current?.rotate((event.clientX - previous.x) * 0.035, (event.clientY - previous.y) * 0.035);
-      return;
-    }
+    if (!drag.current.active) return;
     const dx = event.clientX - drag.current.x;
     const dy = event.clientY - drag.current.y;
     if (!drag.current.moved && Math.hypot(dx, dy) < 5) return;
@@ -121,13 +114,11 @@ export default function DocsMascot() {
         type="button"
         className={styles.launcher}
         aria-label="Ask AI"
-        aria-describedby="docs-mascot-hint"
         onClick={openChat}
         onPointerDown={startDrag}
         onPointerMove={moveDrag}
-        onPointerLeave={() => {
-          hover.current = null;
-        }}
+        onPointerEnter={() => scene.current?.setHovered(true)}
+        onPointerLeave={() => scene.current?.setHovered(false)}
         onPointerUp={() => {
           drag.current.active = false;
         }}
@@ -144,10 +135,6 @@ export default function DocsMascot() {
         </span>
         <span className={styles.label}>Ask AI</span>
       </button>
-      <span id="docs-mascot-hint" className={styles.hint}>
-        Move to spin · Click to chat
-        <span>Arrow keys to turn · W to wink · R to reset</span>
-      </span>
       {message && <output className={styles.status}>{message}</output>}
     </div>
   );

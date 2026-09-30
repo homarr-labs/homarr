@@ -48,9 +48,12 @@
   font-size: 10px;
   font-weight: 600;
   line-height: 16px;
+  padding: 2px 9px;
+  border: 1px solid var(--color-fd-border);
+  border-radius: 999px;
+  background: var(--color-fd-background);
 }
 
-.hint,
 .status {
   position: absolute;
   bottom: 4px;
@@ -65,21 +68,6 @@
   font-size: 11px;
 }
 
-.hint {
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 160ms;
-}
-.hint span {
-  display: block;
-  margin-top: 2px;
-  font-size: 10px;
-  color: var(--color-fd-muted-foreground);
-}
-.mascot:hover .hint,
-.mascot:focus-within .hint {
-  opacity: 1;
-}
 .status {
   bottom: calc(100% + 4px);
   right: 0;
@@ -89,14 +77,5 @@
   .model {
     width: 56px;
     height: 56px;
-  }
-  .hint span {
-    display: none;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hint {
-    transition: none;
   }
 }
