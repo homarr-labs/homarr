@@ -30,9 +30,9 @@ export const createGridResizeOutlineController = (
       shell.querySelector<HTMLElement>(":scope > [data-grid-resize-outline]") ?? createResizeOutline(shell);
     outline.style.position = "absolute";
     outline.style.left = `${(preview.placement.x - visualX) * LOGICAL_GRID_PITCH}px`;
-    outline.style.top = `${(preview.placement.y - visualY) * LOGICAL_GRID_PITCH}px`;
+    outline.style.top = `calc(${(preview.placement.y - visualY) * LOGICAL_GRID_PITCH}px * var(--board-grid-row-scale, 1))`;
     outline.style.width = `${getLogicalGridSize(preview.placement.w)}px`;
-    outline.style.height = `${getLogicalGridSize(preview.placement.h)}px`;
+    outline.style.height = `calc(${getLogicalGridSize(preview.placement.h)}px * var(--board-grid-row-scale, 1))`;
     outline.dataset.gridResizeValid = String(preview.valid);
   };
 

@@ -354,10 +354,13 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
       for (const candidateId of fallbackIds) {
         const candidate = gridsRef.current.get(candidateId);
         if (!candidate) continue;
+        const rectangle = candidate.element.getBoundingClientRect();
+        const renderedRowCount = Number(candidate.element.dataset.gridRowCount);
         const coordinates = getSnappedGridCoordinates({
           dragShape: shape,
-          target: candidate.element.getBoundingClientRect(),
+          target: rectangle,
           columnCount: candidate.columnCount,
+          verticalVisualScale: rectangle.height / getLogicalGridSize(renderedRowCount),
         });
         if (!coordinates) {
           invalidPreviewKey = `invalid:${candidate.id}:coordinates`;
@@ -796,10 +799,11 @@ export default function GridEditor({
       className={className}
       data-grid-section-id={sectionId}
       data-grid-depth={depth}
+      data-grid-row-count={rowCount}
       style={
         {
           width: getLogicalGridSize(columnCount),
-          height: getLogicalGridSize(rowCount),
+          height: `calc(${getLogicalGridSize(rowCount)}px * var(--board-grid-row-scale, 1))`,
           "--board-grid-pitch": `${LOGICAL_GRID_PITCH}px`,
         } as CSSProperties
       }

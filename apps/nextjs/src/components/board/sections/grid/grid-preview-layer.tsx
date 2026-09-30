@@ -87,7 +87,8 @@ export const GridPreviewLayer = ({
     } else {
       delete grid.dataset.dndPreviewRevision;
     }
-    grid.style.height = `${getLogicalGridSize(renderedRowCount)}px`;
+    grid.dataset.gridRowCount = String(renderedRowCount);
+    grid.style.height = `calc(${getLogicalGridSize(renderedRowCount)}px * var(--board-grid-row-scale, 1))`;
 
     const viewport = grid.parentElement;
     if (viewport?.hasAttribute("data-section-id")) {
@@ -98,7 +99,10 @@ export const GridPreviewLayer = ({
       // stray value would silently blow the cap open for the rest of the session, well after any
       // drag ended, since nothing else would ever clear it back out.
       if (maxRowCount === null) {
-        viewport.style.setProperty("--board-grid-drag-height", `${getLogicalGridSize(renderedRowCount)}px`);
+        viewport.style.setProperty(
+          "--board-grid-drag-height",
+          `calc(${getLogicalGridSize(renderedRowCount)}px * var(--board-grid-row-scale, 1) * var(--board-grid-content-scale, 1))`,
+        );
       } else {
         viewport.style.removeProperty("--board-grid-drag-height");
       }
@@ -108,6 +112,7 @@ export const GridPreviewLayer = ({
     gridRef,
     interaction,
     isTargetGrid,
+    maxRowCount,
     placements,
     previewGrid?.placements,
     renderedRowCount,
@@ -133,7 +138,7 @@ export const GridPreviewLayer = ({
   return (
     <div
       className="board-grid-placeholder"
-      style={getLogicalItemStyle(targetPlacement)}
+      style={getLogicalItemStyle(targetPlacement, "var(--board-grid-row-scale, 1)")}
       data-grid-placeholder-for={interaction?.activeId}
       data-grid-placeholder-mode={interaction?.mode}
       data-grid-placeholder-type={targetPlacement.type}
