@@ -1,6 +1,6 @@
 "use client";
 
-import type { CSSProperties, KeyboardEvent, PointerEvent } from "react";
+import type { CSSProperties, KeyboardEvent, PointerEvent, RefObject } from "react";
 import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Box } from "@mantine/core";
 import combineClasses from "clsx";
@@ -30,6 +30,7 @@ import { useBoardGridPortalHost } from "./grid-portal-host";
 import classes from "./section-grid.module.css";
 
 const GridContentScaleContext = createContext(1);
+const GridRowScaleContext = createContext(1);
 const CONTAINER_CARD_INSET = 5;
 
 interface SectionGridProps {
@@ -37,6 +38,7 @@ interface SectionGridProps {
   columnCount: number;
   requestedRowCount?: number;
   viewportRowCountOverride?: number;
+  containerInlineInsetCount?: number;
   label: string;
   railPlacement?: "main" | "left" | "right";
   className?: string;
@@ -47,6 +49,7 @@ export const SectionGrid = ({
   columnCount,
   requestedRowCount = 0,
   viewportRowCountOverride,
+  containerInlineInsetCount = 2,
   label,
   railPlacement = "main",
   className,
@@ -54,6 +57,7 @@ export const SectionGrid = ({
   const [isEditMode] = useEditMode();
   const canvasScale = useBoardCanvasScale();
   const parentContentScale = useContext(GridContentScaleContext);
+  const parentRowScale = useContext(GridRowScaleContext);
   const editorRuntimeStatus = useGridEditorRuntimeStatus();
   const editorRegistry = useGridEditorRegistry();
   const editorHostRef = useRef<HTMLDivElement>(null);
@@ -134,14 +138,24 @@ export const SectionGrid = ({
     () => innerSections.map((item) => withPlacement(item, placementById.get(item.id))),
     [innerSections, placementById],
   );
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const isRail = railPlacement !== "main";
+  const railLogicalHeight = useRailLogicalHeight(viewportRef, isRail, canvasScale);
   const minimumViewportRowCount = useMinimumViewportRowCount(section.kind === "empty", canvasScale);
   const contentRowCount = Math.max(1, getLayoutRowCount(displayPlacements));
-  const rowCount = Math.max(contentRowCount, requestedRowCount, minimumViewportRowCount);
-  const maxRowCount = section.kind === "container" || railPlacement !== "main" ? rowCount : null;
-  let placementMaxRowCount = maxRowCount;
-  if (railPlacement !== "main") {
-    placementMaxRowCount = minimumViewportRowCount;
+  const railBaselineRef = useRef({ key: "", rowCount: 1 });
+  const railBaselineKey = `${section.id}:${currentLayoutId}`;
+  if (railBaselineRef.current.key !== railBaselineKey) {
+    railBaselineRef.current = { key: railBaselineKey, rowCount: Math.max(1, getLayoutRowCount(placements)) };
   }
+  const railViewportRowCount = getGridRowCountForVisualHeight(railLogicalHeight, 1);
+  let rowCount = Math.max(contentRowCount, requestedRowCount, minimumViewportRowCount);
+  if (isRail) {
+    // Existing taller rails remain scrollable, but collision pushes cannot grow this cap.
+    rowCount = Math.max(railViewportRowCount, railBaselineRef.current.rowCount);
+  }
+  const maxRowCount = section.kind === "container" || isRail ? rowCount : null;
+  const placementMaxRowCount = maxRowCount;
   // A scrollable container isn't forced to grow with its content - it scrolls internally instead
   // of expanding to fit every widget, so its viewport height is capped independently of rowCount.
   const isScrollableContainer = section.kind === "container" && section.options.scrollable;
@@ -152,22 +166,31 @@ export const SectionGrid = ({
   // Match the card's inset without changing its persisted grid footprint. Include ancestor
   // container zoom so equally sized nested containers keep distinct borders at every depth.
   let outerCardInset = 0;
+  let outerCardInlineInset = 0;
   if (section.kind === "container") {
     outerCardInset = (2 * CONTAINER_CARD_INSET) / effectiveCanvasScale;
+    outerCardInlineInset = (containerInlineInsetCount * CONTAINER_CARD_INSET) / effectiveCanvasScale;
   }
   const fullGridWidth = getLogicalGridSize(columnCount);
   const fullGridHeight = getLogicalGridSize(rowCount);
   const fullViewportHeight = getLogicalGridSize(viewportRowCount);
-  const logicalWidth = Math.max(1, fullGridWidth - outerCardInset);
-  const viewportHeight = Math.max(1, fullViewportHeight - outerCardInset);
-  // Fit square cells into the inset card. Scrollable grids use the visible row count,
-  // not their full content height. Collapse controls never change this geometry.
+  let allocatedViewportHeight = fullViewportHeight;
+  if (isRail && railLogicalHeight > 0) {
+    allocatedViewportHeight = railLogicalHeight;
+  } else if (section.kind === "container") {
+    allocatedViewportHeight *= parentRowScale;
+  }
+  const logicalWidth = Math.max(1, fullGridWidth - outerCardInlineInset);
+  const viewportHeight = Math.max(1, allocatedViewportHeight - outerCardInset);
+  // Fit columns to the card width. Rows fit the available height independently
+  // without creating horizontal gutters or distorting text and icons.
   let containerContentScale = 1;
+  let rowScale = 1;
   if (section.kind === "container" && fullGridWidth > 0 && fullViewportHeight > 0) {
-    containerContentScale = Math.max(
-      0.01,
-      Math.min(logicalWidth / fullGridWidth, viewportHeight / fullViewportHeight, 1),
-    );
+    containerContentScale = Math.max(0.01, Math.min(logicalWidth / fullGridWidth, 1));
+    rowScale = Math.max(0.01, viewportHeight / (fullViewportHeight * containerContentScale));
+  } else if (isRail && railLogicalHeight > 0 && rowCount <= railViewportRowCount) {
+    rowScale = viewportHeight / fullViewportHeight;
   }
   const contentScale = parentContentScale * containerContentScale;
   const effectiveContentScale = effectiveCanvasScale * containerContentScale;
@@ -238,7 +261,6 @@ export const SectionGrid = ({
     section,
   ]);
 
-  const viewportRef = useRef<HTMLDivElement>(null);
   const previousItemIdsRef = useRef<Set<string> | null>(null);
   useEffect(() => {
     const currentIds = new Set([...items, ...innerSections].map((item) => item.id));
@@ -275,6 +297,7 @@ export const SectionGrid = ({
             height: `var(--board-grid-drag-height, ${viewportHeight}px)`,
             "--board-item-radius": `var(--mantine-radius-${board.itemRadius})`,
             "--board-grid-content-scale": containerContentScale,
+            "--board-grid-row-scale": rowScale,
             "--board-container-inset": `${CONTAINER_CARD_INSET / effectiveContentScale}px`,
           } as CSSProperties
         }
@@ -291,9 +314,8 @@ export const SectionGrid = ({
           style={
             {
               width: fullGridWidth,
-              height: fullGridHeight,
+              height: `calc(${fullGridHeight}px * var(--board-grid-row-scale, 1))`,
               zoom: containerContentScale,
-              margin: containerContentScale < 1 ? "0 auto" : undefined,
               "--board-canvas-inverse-scale": 1 / effectiveContentScale,
               "--board-canvas-ui-scale": combinedUiScale,
             } as CSSProperties
@@ -303,7 +325,9 @@ export const SectionGrid = ({
           data-grid-editor-error={isEditMode && editorRuntimeStatus === "error" ? "true" : undefined}
         >
           <GridContentScaleContext.Provider value={contentScale}>
-            <SectionContent />
+            <GridRowScaleContext.Provider value={rowScale}>
+              <SectionContent />
+            </GridRowScaleContext.Provider>
           </GridContentScaleContext.Provider>
         </Box>
         <div ref={editorHostRef} className={classes.editorPortalHost} />
@@ -315,6 +339,25 @@ export const SectionGrid = ({
 const INTERACTIVE_GRID_SELECTOR =
   'a,button,input,textarea,select,option,[contenteditable="true"],[role="button"],[data-grid-no-drag]';
 const EDIT_ACTIVATION_KEYS = new Set(["Enter", " ", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"]);
+
+const useRailLogicalHeight = (viewportRef: RefObject<HTMLDivElement | null>, enabled: boolean, canvasScale: number) => {
+  const [visualHeight, setVisualHeight] = useState(0);
+
+  useLayoutEffect(() => {
+    if (!enabled) return;
+    const rail = viewportRef.current?.closest<HTMLElement>("[data-board-gutter]");
+    if (!rail) return;
+
+    const update = () => setVisualHeight(rail.getBoundingClientRect().height);
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(rail);
+    return () => observer.disconnect();
+  }, [enabled, viewportRef, canvasScale]);
+
+  if (!enabled || canvasScale <= 0) return 0;
+  return visualHeight / canvasScale;
+};
 
 const useMinimumViewportRowCount = (enabled: boolean, canvasScale: number) => {
   const [visualHeight, setVisualHeight] = useState(0);

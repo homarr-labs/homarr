@@ -321,26 +321,24 @@ const GutterSettings = ({ left, right, columnCount, onLeftChange, onRightChange 
           </Text>
         </Box>
 
-        <GutterPreview left={left} right={right} columnCount={columnCount} />
-
-        <Grid>
-          <Grid.Col span={{ base: 12, sm: 6 }}>
+        <div className={classes.gutterControls}>
+          <div>
             <GutterControl
               side="left"
               value={left}
               max={Math.min(maxGutterWidth, columnCount - right - 1)}
               onChange={onLeftChange}
             />
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, sm: 6 }}>
+          </div>
+          <div>
             <GutterControl
               side="right"
               value={right}
               max={Math.min(maxGutterWidth, columnCount - left - 1)}
               onChange={onRightChange}
             />
-          </Grid.Col>
-        </Grid>
+          </div>
+        </div>
       </Stack>
     </Paper>
   );
@@ -369,7 +367,7 @@ const GutterControl = ({
         label={t(`field.gutters.${side}.label` as never)}
       />
       {enabled && (
-        <Input.Wrapper label={t("field.gutters.width.label")}>
+        <Input.Wrapper className={classes.gutterWidth} label={t("field.gutters.width.label")}>
           <Slider
             mt="xs"
             min={1}
@@ -383,31 +381,5 @@ const GutterControl = ({
         </Input.Wrapper>
       )}
     </Stack>
-  );
-};
-
-const GutterPreview = ({ left, right, columnCount }: { left: number; right: number; columnCount: number }) => {
-  const t = useI18n("layout");
-  const safeColumnCount = Math.max(1, columnCount);
-  const main = Math.max(1, safeColumnCount - left - right);
-  const tracks = [left > 0 ? `${left}fr` : null, `${main}fr`, right > 0 ? `${right}fr` : null]
-    .filter((track) => track !== null)
-    .join(" ");
-
-  return (
-    <Box
-      className={classes.gutterPreview}
-      aria-label={t("field.gutters.preview.label")}
-      style={{ gridTemplateColumns: tracks }}
-    >
-      {left > 0 && <Box className={classes.previewGutter} data-side="left" />}
-      <Box className={classes.previewCanvas}>
-        <Box />
-        <Box />
-        <Box />
-        <Box />
-      </Box>
-      {right > 0 && <Box className={classes.previewGutter} data-side="right" />}
-    </Box>
   );
 };

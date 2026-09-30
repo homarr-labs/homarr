@@ -107,7 +107,9 @@ See the [widget catalog](/docs/widgets).
 ### Containers and rails
 
 A **Container** groups board items and can be nested. A **rail** reserves a fixed area at the left or right of a
-responsive layout. Both are configured in board edit mode.
+responsive layout. Both are configured in board edit mode. Rails align with the board edges and scroll their
+contents independently. Rails fit the available viewport height; edit moves that would push items beyond their
+row limit are rejected.
 
 ![Board layout settings with fixed sidebars](./img/after-installation-containers-rails.webp)
 

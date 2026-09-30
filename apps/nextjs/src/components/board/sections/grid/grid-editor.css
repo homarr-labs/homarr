@@ -1,7 +1,6 @@
 .board-grid-editor {
   position: absolute;
-  inset: 0 0 auto;
-  margin: 0 auto;
+  inset: 0 auto auto 0;
   overflow: visible;
   border-radius: var(--mantine-radius-md);
   pointer-events: none;
