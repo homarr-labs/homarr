@@ -21,7 +21,12 @@ import { translateIfNecessary } from "@homarr/translation";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import { useIsMobile } from "@homarr/ui/hooks";
-import type { WidgetDataStatus, WidgetDefinition, WidgetRuntimeRef } from "@homarr/widgets/definition";
+import type {
+  WidgetContextMenuAction,
+  WidgetDataStatus,
+  WidgetDefinition,
+  WidgetRuntimeRef,
+} from "@homarr/widgets/definition";
 import { getWidgetQueryKeys, getWidgetRuntimeQueries, supportsAdvancedFocus } from "@homarr/widgets/definition";
 import { reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 import { getWidgetOptionTranslationNamespace } from "@homarr/widgets/option-translation";
@@ -176,7 +181,7 @@ const WidgetContextMenuInner = ({
     ) as ToggleOption[];
   }, [canConfigureWidget, definition, settings]);
 
-  const widgetContextActions =
+  const getWidgetContextActions = () =>
     definition.contextActions?.({
       options,
       setOptions: setItemOptions,
@@ -271,8 +276,6 @@ const WidgetContextMenuInner = ({
     setMenuOpened(false);
   }, []);
 
-  const visibleWidgetActions = widgetContextActions.filter((action) => !action.hidden);
-
   return (
     <Menu
       shadow="md"
@@ -305,33 +308,12 @@ const WidgetContextMenuInner = ({
           </>
         )}
 
-        {visibleWidgetActions.length > 0 && (
-          <>
-            {toggleOptions.length > 0 && <Menu.Divider />}
-            <Menu.Label>{tMenu("actions")}</Menu.Label>
-            {visibleWidgetActions.map((action) => {
-              const Icon = action.icon;
-              return (
-                <Menu.Item
-                  key={action.key}
-                  closeMenuOnClick
-                  leftSection={Icon ? <Icon size={16} /> : undefined}
-                  onClick={action.onClick}
-                  disabled={action.disabled}
-                  color={action.color}
-                >
-                  {translateIfNecessary(t, action.label)}
-                </Menu.Item>
-              );
-            })}
-          </>
-        )}
-
-        {(toggleOptions.length > 0 || visibleWidgetActions.length > 0) && <Menu.Divider />}
         {menuOpened && (
-          <WidgetRefreshMenuItem
+          <WidgetContextMenuActions
             queryClient={queryClient}
             matchesQuery={matchesWidgetQuery}
+            getContextActions={getWidgetContextActions}
+            hasToggleOptions={toggleOptions.length > 0}
             widgetRuntimeRef={widgetRuntimeRef}
             isRefreshingSources={isRefreshingSources}
             onRefresh={handleRefetch}
@@ -381,20 +363,25 @@ const WidgetContextMenuDropdown = ({ opened, onClose, title, children }: WidgetC
   );
 };
 
-interface WidgetRefreshMenuItemProps extends Pick<WidgetQueryStatusProps, "queryClient" | "matchesQuery" | "t"> {
+interface WidgetContextMenuActionsProps extends Pick<WidgetQueryStatusProps, "queryClient" | "matchesQuery" | "t"> {
+  getContextActions: () => WidgetContextMenuAction[];
+  hasToggleOptions: boolean;
   widgetRuntimeRef: WidgetRuntimeRef;
   isRefreshingSources: boolean;
   onRefresh: () => Promise<void>;
 }
 
-const WidgetRefreshMenuItem = ({
+const WidgetContextMenuActions = ({
   queryClient,
   matchesQuery,
+  getContextActions,
+  hasToggleOptions,
   widgetRuntimeRef,
   isRefreshingSources,
   onRefresh,
   t,
-}: WidgetRefreshMenuItemProps) => {
+}: WidgetContextMenuActionsProps) => {
+  const tMenu = useI18n("item.menu.label");
   const tCommon = useI18n("common.action");
   const isQueryFetching =
     useIsFetching({
@@ -403,24 +390,49 @@ const WidgetRefreshMenuItem = ({
     }) > 0;
   const dataStatus = widgetRuntimeRef.current.actions.getDataStatus?.();
   const isWidgetFetching = isRefreshingSources || isQueryFetching || !!dataStatus?.isRefreshing;
+  const visibleWidgetActions = getContextActions().filter((action) => !action.hidden);
 
   return (
-    <Menu.Item
-      leftSection={isWidgetFetching ? <Loader size={16} /> : <IconRefresh size={16} />}
-      onClick={onRefresh}
-      disabled={isWidgetFetching}
-    >
-      <Group justify="space-between" wrap="nowrap" gap="sm">
-        {tCommon("refresh")}
-        <WidgetQueryStatus
-          queryClient={queryClient}
-          dataStatus={dataStatus}
-          matchesQuery={matchesQuery}
-          isFetching={isWidgetFetching}
-          t={t}
-        />
-      </Group>
-    </Menu.Item>
+    <>
+      {visibleWidgetActions.length > 0 && (
+        <>
+          {hasToggleOptions && <Menu.Divider />}
+          <Menu.Label>{tMenu("actions")}</Menu.Label>
+          {visibleWidgetActions.map((action) => {
+            const Icon = action.icon;
+            return (
+              <Menu.Item
+                key={action.key}
+                closeMenuOnClick
+                leftSection={Icon ? <Icon size={16} /> : undefined}
+                onClick={action.onClick}
+                disabled={action.disabled}
+                color={action.color}
+              >
+                {translateIfNecessary(t, action.label)}
+              </Menu.Item>
+            );
+          })}
+        </>
+      )}
+      {(hasToggleOptions || visibleWidgetActions.length > 0) && <Menu.Divider />}
+      <Menu.Item
+        leftSection={isWidgetFetching ? <Loader size={16} /> : <IconRefresh size={16} />}
+        onClick={onRefresh}
+        disabled={isWidgetFetching}
+      >
+        <Group justify="space-between" wrap="nowrap" gap="sm">
+          {tCommon("refresh")}
+          <WidgetQueryStatus
+            queryClient={queryClient}
+            dataStatus={dataStatus}
+            matchesQuery={matchesQuery}
+            isFetching={isWidgetFetching}
+            t={t}
+          />
+        </Group>
+      </Menu.Item>
+    </>
   );
 };
 
