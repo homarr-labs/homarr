@@ -68,17 +68,20 @@ export function createMascotScene(host: HTMLElement, svg: string): MascotScene {
       const greetingProgress = (now - greetingStarted) / 700;
       let greeting = 0;
       if (greetingProgress >= 0 && greetingProgress <= 1) greeting = Math.sin(greetingProgress * Math.PI);
-      motionStrength += greeting * 0.2;
-      if (reducedMotion.matches) motionStrength = 0;
+      if (reducedMotion.matches) {
+        motionStrength = 0;
+        greeting = 0;
+      }
       const t = now / 1000;
       for (const claw of rig.claws) {
         let offset = 0;
         if (claw.side === 1) offset = 0.55;
         const cycle = (1 - Math.cos(t * initialConfig.clawSpeed * initialConfig.clawFrequency * 2.2 + offset)) / 2;
-        const closure = Math.pow(cycle, 1.8) * 0.6 * initialConfig.clawStrength * 1.25 * motionStrength;
+        const closure =
+          Math.pow(cycle, 1.8) * 0.6 * initialConfig.clawStrength * 1.25 * motionStrength + greeting * 0.025;
         claw.middle.rotation.z = -claw.side * closure * 2.1;
         claw.tip.rotation.z = -claw.side * closure;
-        claw.shoulder.rotation.z = Math.sin(t * 1.4 + offset) * claw.side * 0.06 * motionStrength;
+        claw.shoulder.rotation.z = claw.side * (Math.sin(t * 1.4 + offset) * 0.06 * motionStrength + greeting * 0.04);
       }
       for (const antenna of rig.antennae) {
         let offset = 0;
