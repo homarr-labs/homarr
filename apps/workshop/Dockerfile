@@ -20,6 +20,7 @@ RUN mkdir -p /corepack && corepack enable pnpm && corepack install --global pnpm
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json turbo.json ./
 COPY patches ./patches
 COPY apps/docs ./apps/docs
+COPY tools/motion-reel/three ./tools/motion-reel/three
 COPY packages/common ./packages/common
 COPY packages/core ./packages/core
 COPY packages/custom-widgets ./packages/custom-widgets

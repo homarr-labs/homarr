@@ -246,7 +246,7 @@ catalog:
   "@tanstack/query-async-storage-persister": 5.101.2
   "@tanstack/react-query-persist-client": 5.101.2
   three: 0.180.0
-  '@types/three': 0.180.0
+  "@types/three": 0.180.0
 
 catalogMode: strict
 nodeLinker: hoisted
