@@ -1,3 +1,4 @@
+import { createContext, useContext } from "react";
 import dynamic from "next/dynamic";
 import { ActionIcon, Badge, Box, Button, Card } from "@mantine/core";
 import { IconChevronDown, IconChevronUp, IconExternalLink } from "@tabler/icons-react";
@@ -9,7 +10,8 @@ import { getRootSectionLane } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
 import type { ContainerSectionItem } from "~/app/[locale]/boards/_types";
-import { COLLAPSED_SECTION_ROW_COUNT } from "~/components/board/layout";
+import { COLLAPSED_SECTION_ROW_COUNT, getLogicalGridSize } from "~/components/board/layout";
+import { calculateBoardUiScale, useBoardCanvasScale } from "~/components/board/layout/scaled-board-canvas";
 import { SectionGrid } from "./grid/section-grid";
 import { useSectionCollapse } from "./section-collapse";
 import { useSectionContext } from "./section-context";
@@ -21,12 +23,21 @@ const BoardContainerMenu = dynamic(
   { ssr: false },
 );
 
+const ContainerDepthContext = createContext(0);
+
 interface Props {
   section: ContainerSectionItem;
 }
 
 export const BoardContainerSection = ({ section }: Props) => {
   const board = useRequiredBoard();
+  const containerDepth = useContext(ContainerDepthContext);
+  const canvasScale = useBoardCanvasScale();
+  const controlWidth = getLogicalGridSize(section.width) / calculateBoardUiScale(canvasScale);
+  // Keep nested settings targets distinct, wrapping inward offsets in narrow containers.
+  const menuColumns = Math.max(1, Math.floor((controlWidth - 8) / 32));
+  const menuRightOffset = 4 + (containerDepth % menuColumns) * 32;
+  const menuTopOffset = 4 + Math.floor(containerDepth / menuColumns) * 32;
   const parent = useSectionContext();
   let containerInlineInsetCount = 2;
   if (parent.section.kind === "empty" && getRootSectionLane(parent.section.xOffset) !== "main") {
@@ -47,12 +58,12 @@ export const BoardContainerSection = ({ section }: Props) => {
   });
   const label = options.title.trim() || t("untitled");
   const contentId = `board-container-${section.id}-content`;
-  const menuPosition = { right: 4, top: 4 };
+  const menuPosition = { right: menuRightOffset, top: menuTopOffset };
   const labelTop = "calc(var(--mantine-spacing-xs) * -1)";
   const labelLeft = 8;
   let labelRight = 8;
   if (isEditMode) {
-    labelRight = 36;
+    labelRight = menuRightOffset + 32;
   } else if (options.showOpenAll) {
     labelRight = 40;
   }
@@ -172,14 +183,16 @@ export const BoardContainerSection = ({ section }: Props) => {
           aria-hidden={isVisuallyCollapsed}
           inert={isVisuallyCollapsed}
         >
-          <SectionGrid
-            section={section}
-            columnCount={section.width}
-            containerInlineInsetCount={containerInlineInsetCount}
-            requestedRowCount={section.height}
-            viewportRowCountOverride={isVisuallyCollapsed ? COLLAPSED_SECTION_ROW_COUNT : undefined}
-            label={label}
-          />
+          <ContainerDepthContext value={containerDepth + 1}>
+            <SectionGrid
+              section={section}
+              columnCount={section.width}
+              containerInlineInsetCount={containerInlineInsetCount}
+              requestedRowCount={section.height}
+              viewportRowCountOverride={isVisuallyCollapsed ? COLLAPSED_SECTION_ROW_COUNT : undefined}
+              label={label}
+            />
+          </ContainerDepthContext>
         </Box>
         {isEditMode && <BoardContainerMenu section={section} position={menuPosition} />}
       </Card>
