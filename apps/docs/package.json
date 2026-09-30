@@ -54,7 +54,8 @@
     "sonner": "catalog:",
     "swiper": "^14.0.5",
     "tailwind-merge": "^3.6.0",
-    "tailwindcss": "^4.3.2"
+    "tailwindcss": "^4.3.2",
+    "three": "catalog:"
   },
   "devDependencies": {
     "@fec/remark-a11y-emoji": "^4.0.2",
@@ -62,6 +63,7 @@
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "@types/three": "catalog:",
     "cheerio": "^1.2.0",
     "next-validate-link": "1.6.7",
     "tsx": "catalog:",

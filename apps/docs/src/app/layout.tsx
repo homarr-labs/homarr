@@ -3,6 +3,7 @@ import Script from "next/script";
 import type { ReactNode } from "react";
 
 import { siteUrl } from "@/lib/metadata";
+import DocsMascot from "@/components/docs-mascot";
 import { Analytics } from "@/components/analytics";
 import { Provider } from "@/components/provider";
 
@@ -36,7 +37,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en" suppressHydrationWarning>
       <body className="flex min-h-screen flex-col bg-fd-background text-fd-foreground antialiased">
         <Script src="/workshop-runtime-config.js" strategy="beforeInteractive" />
-        <Provider>{children}</Provider>
+        <Provider>
+          {children}
+          {kapaWebsiteId && <DocsMascot />}
+        </Provider>
         <Analytics />
         {kapaWebsiteId && (
           <Script
@@ -48,6 +52,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             data-project-color="#2B2B2B"
             data-project-logo={new URL("/img/favicon.png", siteUrl).href}
             data-modal-open-on-command-k="false"
+            data-button-hide="true"
+            data-color-scheme="auto"
+            data-color-scheme-selector="html.dark"
           />
         )}
       </body>
