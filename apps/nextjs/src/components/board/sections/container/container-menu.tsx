@@ -43,7 +43,7 @@ export const BoardContainerMenu = ({ section, position }: ContainerMenuProps) =>
           radius="sm"
           pos="absolute"
           {...position}
-          style={{ zIndex: 26 }}
+          style={{ zIndex: 26, minWidth: 0, minHeight: 0, maxWidth: "100%", maxHeight: "100%" }}
           aria-label={tItem("menu.label.settingsFor", { name: label })}
         >
           <IconLayoutKanban size="1rem" />

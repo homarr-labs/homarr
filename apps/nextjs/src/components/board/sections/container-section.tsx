@@ -10,8 +10,7 @@ import { getRootSectionLane } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
 import type { ContainerSectionItem } from "~/app/[locale]/boards/_types";
-import { COLLAPSED_SECTION_ROW_COUNT, getLogicalGridSize } from "~/components/board/layout";
-import { calculateBoardUiScale, useBoardCanvasScale } from "~/components/board/layout/scaled-board-canvas";
+import { COLLAPSED_SECTION_ROW_COUNT } from "~/components/board/layout";
 import { SectionGrid } from "./grid/section-grid";
 import { useSectionCollapse } from "./section-collapse";
 import { useSectionContext } from "./section-context";
@@ -26,7 +25,7 @@ const BoardContainerMenu = dynamic(
 const ContainerDepthContext = createContext(0);
 
 const getBoundedMenuOffset = (offset: number) =>
-  `max(calc(4px * var(--mantine-scale)), min(calc(${offset}px * var(--mantine-scale)), calc(100% - 28px * var(--mantine-scale))))`;
+  `max(0px, min(calc(${offset}px * var(--mantine-scale)), calc(100% - 24px * var(--mantine-scale))))`;
 
 interface Props {
   section: ContainerSectionItem;
@@ -35,12 +34,9 @@ interface Props {
 export const BoardContainerSection = ({ section }: Props) => {
   const board = useRequiredBoard();
   const containerDepth = useContext(ContainerDepthContext);
-  const canvasScale = useBoardCanvasScale();
-  const controlWidth = getLogicalGridSize(section.width) / calculateBoardUiScale(canvasScale);
-  // Keep nested settings targets distinct, wrapping inward offsets in narrow containers.
-  const menuColumns = Math.max(1, Math.floor((controlWidth - 8) / 32));
-  const menuRightOffset = 4 + (containerDepth % menuColumns) * 32;
-  const menuTopOffset = 4 + Math.floor(containerDepth / menuColumns) * 32;
+  // Stagger nested controls inward and downward without wrapping back over ancestors.
+  const menuRightOffset = 4 + containerDepth * 32;
+  const menuTopOffset = 4 + containerDepth * 32;
   const parent = useSectionContext();
   let containerInlineInsetCount = 2;
   if (parent.section.kind === "empty" && getRootSectionLane(parent.section.xOffset) !== "main") {

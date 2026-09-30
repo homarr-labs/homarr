@@ -32,7 +32,7 @@ import { BoardSelectionProvider } from "~/components/board/selection/board-selec
 import { BoardSelectionToolbar } from "~/components/board/selection/board-selection-toolbar";
 import classes from "./_client.module.css";
 
-const APP_SHELL_SIDE_PADDING = 16;
+const APP_SHELL_SIDE_PADDING = 32;
 
 const BoardSelectionGridProvider = ({ children }: PropsWithChildren) => (
   <GridEditorRegistryProvider>
