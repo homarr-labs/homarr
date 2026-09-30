@@ -25,6 +25,9 @@ const BoardContainerMenu = dynamic(
 
 const ContainerDepthContext = createContext(0);
 
+const getBoundedMenuOffset = (offset: number) =>
+  `max(calc(4px * var(--mantine-scale)), min(calc(${offset}px * var(--mantine-scale)), calc(100% - 28px * var(--mantine-scale))))`;
+
 interface Props {
   section: ContainerSectionItem;
 }
@@ -58,7 +61,7 @@ export const BoardContainerSection = ({ section }: Props) => {
   });
   const label = options.title.trim() || t("untitled");
   const contentId = `board-container-${section.id}-content`;
-  const menuPosition = { right: menuRightOffset, top: menuTopOffset };
+  const menuPosition = { right: getBoundedMenuOffset(menuRightOffset), top: getBoundedMenuOffset(menuTopOffset) };
   const labelTop = "calc(var(--mantine-spacing-xs) * -1)";
   const labelLeft = 8;
   let labelRight = 8;
@@ -66,6 +69,13 @@ export const BoardContainerSection = ({ section }: Props) => {
     labelRight = menuRightOffset + 32;
   } else if (options.showOpenAll) {
     labelRight = 40;
+  }
+  let labelMaxWidth = `calc(100% - ${labelLeft + labelRight}px)`;
+  let collapsedLabelPaddingRight: number | string = labelRight;
+  if (isEditMode) {
+    const reservedMenuWidth = `calc(${menuPosition.right} + 28px * var(--mantine-scale))`;
+    labelMaxWidth = `calc(100% - ${labelLeft}px - ${reservedMenuWidth})`;
+    collapsedLabelPaddingRight = reservedMenuWidth;
   }
   // Expanded controls sit on the border without reserving a header row.
   const toggleLayout = isVisuallyCollapsed
@@ -75,7 +85,7 @@ export const BoardContainerSection = ({ section }: Props) => {
         left: labelLeft,
         w: "auto",
         h: 20,
-        maw: `calc(100% - ${labelLeft + labelRight}px)`,
+        maw: labelMaxWidth,
       };
   const toggleIcon = isVisuallyCollapsed ? (
     <IconChevronDown size="var(--mantine-font-size-md)" />
@@ -120,7 +130,7 @@ export const BoardContainerSection = ({ section }: Props) => {
             {...toggleLayout}
             px={6}
             ps={isVisuallyCollapsed ? labelLeft : 6}
-            pe={isVisuallyCollapsed ? labelRight : 6}
+            pe={isVisuallyCollapsed ? collapsedLabelPaddingRight : 6}
             radius="sm"
             variant="default"
             justify={options.showLabel ? "flex-start" : "center"}
@@ -142,7 +152,7 @@ export const BoardContainerSection = ({ section }: Props) => {
             pos="absolute"
             top={labelTop}
             left={labelLeft}
-            maw={`calc(100% - ${labelLeft + labelRight}px)`}
+            maw={labelMaxWidth}
             size="md"
             radius="sm"
             variant="default"
