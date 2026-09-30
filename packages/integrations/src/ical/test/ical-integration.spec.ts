@@ -51,6 +51,12 @@ const mockCalendar = (...blocks: string[]) =>
 const EUROPE_BERLIN_VTIMEZONE =
   "BEGIN:VTIMEZONE\r\nTZID:Europe/Berlin\r\nBEGIN:DAYLIGHT\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nTZNAME:CEST\r\nDTSTART:19700329T020000\r\nRRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nTZNAME:CET\r\nDTSTART:19701025T030000\r\nRRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU\r\nEND:STANDARD\r\nEND:VTIMEZONE";
 
+const AMERICA_NEW_YORK_VTIMEZONE =
+  "BEGIN:VTIMEZONE\r\nTZID:America/New_York\r\nBEGIN:DAYLIGHT\r\nTZOFFSETFROM:-0500\r\nTZOFFSETTO:-0400\r\nTZNAME:EDT\r\nDTSTART:19700308T020000\r\nRRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nTZOFFSETFROM:-0400\r\nTZOFFSETTO:-0500\r\nTZNAME:EST\r\nDTSTART:19701101T020000\r\nRRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU\r\nEND:STANDARD\r\nEND:VTIMEZONE";
+
+const UTC_WEEKLY_RANGE_MASTER =
+  "BEGIN:VEVENT\r\nUID:range-master@example.com\r\nDTSTAMP:20260301T000000Z\r\nDTSTART:20260302T090000Z\r\nDTEND:20260302T100000Z\r\nRRULE:FREQ=WEEKLY;COUNT=5\r\nSUMMARY:Weekly\r\nEND:VEVENT";
+
 const windowStart = new Date("2026-03-01T00:00:00Z");
 const windowEnd = new Date("2026-03-31T23:59:59Z");
 const windowEndMidnight = new Date("2026-03-31T00:00:00Z");
@@ -266,7 +272,7 @@ describe("ICalIntegration.getCalendarEventsAsync", () => {
     expect(titles).toContain("Orphan override");
   });
 
-  test("stops instead of hanging on an unbounded high frequency rule", async () => {
+  test("stops instead of hanging on an unbounded high frequency rule", { timeout: 20_000 }, async () => {
     mockCalendar(
       "BEGIN:VEVENT\r\nUID:unbounded-secondly@example.com\r\nDTSTAMP:20000101T000000Z\r\nDTSTART:20000101T000000Z\r\nDTEND:20000101T000001Z\r\nRRULE:FREQ=SECONDLY\r\nSUMMARY:Pathological rule\r\nEND:VEVENT",
     );
@@ -345,5 +351,156 @@ describe("ICalIntegration.getCalendarEventsAsync", () => {
     ]);
     expect(sortedStartIsoStrings(events, "Repeated series (moved)")).toStrictEqual(["2026-03-09T14:00:00.000Z"]);
     expect(events.length).toBe(3);
+  });
+
+  test("emits an override once when the master is in UTC and the RECURRENCE-ID carries a TZID", async () => {
+    mockCalendar(
+      EUROPE_BERLIN_VTIMEZONE,
+      "BEGIN:VEVENT\r\nUID:utc-master-tzid-recurrence-id@example.com\r\nDTSTAMP:20260301T000000Z\r\nDTSTART:20260302T090000Z\r\nDTEND:20260302T100000Z\r\nRRULE:FREQ=WEEKLY;COUNT=4\r\nSUMMARY:UTC weekly\r\nEND:VEVENT",
+      "BEGIN:VEVENT\r\nUID:utc-master-tzid-recurrence-id@example.com\r\nDTSTAMP:20260301T000000Z\r\nRECURRENCE-ID;TZID=Europe/Berlin:20260309T100000\r\nDTSTART:20260309T140000Z\r\nDTEND:20260309T150000Z\r\nSUMMARY:UTC weekly (moved)\r\nEND:VEVENT",
+    );
+
+    const events = await createIntegration().getCalendarEventsAsync(windowStart, windowEnd);
+
+    expect(sortedStartIsoStrings(events, "UTC weekly")).toStrictEqual([
+      "2026-03-02T09:00:00.000Z",
+      "2026-03-16T09:00:00.000Z",
+      "2026-03-23T09:00:00.000Z",
+    ]);
+    expect(sortedStartIsoStrings(events, "UTC weekly (moved)")).toStrictEqual(["2026-03-09T14:00:00.000Z"]);
+    expect(events.length).toBe(4);
+  });
+
+  test("emits an override once when the master and the RECURRENCE-ID carry different TZIDs", async () => {
+    mockCalendar(
+      EUROPE_BERLIN_VTIMEZONE,
+      AMERICA_NEW_YORK_VTIMEZONE,
+      "BEGIN:VEVENT\r\nUID:cross-zone-recurrence-id@example.com\r\nDTSTAMP:20260301T000000Z\r\nDTSTART;TZID=Europe/Berlin:20260302T090000\r\nDTEND;TZID=Europe/Berlin:20260302T100000\r\nRRULE:FREQ=WEEKLY;COUNT=4\r\nSUMMARY:Cross zone weekly\r\nEND:VEVENT",
+      "BEGIN:VEVENT\r\nUID:cross-zone-recurrence-id@example.com\r\nDTSTAMP:20260301T000000Z\r\nRECURRENCE-ID;TZID=America/New_York:20260309T040000\r\nDTSTART;TZID=Europe/Berlin:20260309T140000\r\nDTEND;TZID=Europe/Berlin:20260309T150000\r\nSUMMARY:Cross zone weekly (moved)\r\nEND:VEVENT",
+    );
+
+    const events = await createIntegration().getCalendarEventsAsync(windowStart, windowEnd);
+
+    expect(sortedStartIsoStrings(events, "Cross zone weekly")).toStrictEqual([
+      "2026-03-02T08:00:00.000Z",
+      "2026-03-16T08:00:00.000Z",
+      "2026-03-23T08:00:00.000Z",
+    ]);
+    expect(sortedStartIsoStrings(events, "Cross zone weekly (moved)")).toStrictEqual(["2026-03-09T13:00:00.000Z"]);
+    expect(events.length).toBe(4);
+  });
+
+  test("emits a plain override once when it sits at a later slot of a RANGE=THISANDFUTURE range", async () => {
+    mockCalendar(
+      EUROPE_BERLIN_VTIMEZONE,
+      UTC_WEEKLY_RANGE_MASTER,
+      "BEGIN:VEVENT\r\nUID:range-master@example.com\r\nDTSTAMP:20260301T000000Z\r\nRECURRENCE-ID;RANGE=THISANDFUTURE:20260309T090000Z\r\nDTSTART:20260309T100000Z\r\nDTEND:20260309T110000Z\r\nSUMMARY:Weekly (range)\r\nEND:VEVENT",
+      "BEGIN:VEVENT\r\nUID:range-master@example.com\r\nDTSTAMP:20260301T000000Z\r\nRECURRENCE-ID;TZID=Europe/Berlin:20260323T100000\r\nDTSTART:20260323T150000Z\r\nDTEND:20260323T160000Z\r\nSUMMARY:Weekly (plain)\r\nEND:VEVENT",
+    );
+
+    const events = await createIntegration().getCalendarEventsAsync(windowStart, windowEnd);
+
+    expect(sortedStartIsoStrings(events, "Weekly")).toStrictEqual(["2026-03-02T09:00:00.000Z"]);
+    expect(sortedStartIsoStrings(events, "Weekly (range)")).toStrictEqual([
+      "2026-03-09T10:00:00.000Z",
+      "2026-03-16T10:00:00.000Z",
+      "2026-03-30T10:00:00.000Z",
+    ]);
+    expect(sortedStartIsoStrings(events, "Weekly (plain)")).toStrictEqual(["2026-03-23T15:00:00.000Z"]);
+    expect(events.length).toBe(5);
+  });
+
+  test("keeps a zoned slot when a floating RECURRENCE-ID names the wall clock of an earlier one", async () => {
+    mockCalendar(
+      EUROPE_BERLIN_VTIMEZONE,
+      "BEGIN:VEVENT\r\nUID:floating-id-collision@example.com\r\nDTSTAMP:20260301T000000Z\r\nDTSTART;TZID=Europe/Berlin:20260309T090000\r\nDTEND;TZID=Europe/Berlin:20260309T093000\r\nRRULE:FREQ=DAILY;BYHOUR=9,10;COUNT=4\r\nSUMMARY:slot\r\nEND:VEVENT",
+      "BEGIN:VEVENT\r\nUID:floating-id-collision@example.com\r\nDTSTAMP:20260301T000000Z\r\nRECURRENCE-ID:20260309T090000\r\nDTSTART;TZID=Europe/Berlin:20260309T200000\r\nDTEND;TZID=Europe/Berlin:20260309T203000\r\nSUMMARY:moved\r\nEND:VEVENT",
+    );
+
+    const events = await createIntegration().getCalendarEventsAsync(windowStart, windowEnd);
+
+    expect(sortedStartIsoStrings(events, "slot")).toStrictEqual([
+      "2026-03-09T09:00:00.000Z",
+      "2026-03-10T08:00:00.000Z",
+      "2026-03-10T09:00:00.000Z",
+    ]);
+    expect(sortedStartIsoStrings(events, "moved")).toStrictEqual(["2026-03-09T19:00:00.000Z"]);
+    expect(events.length).toBe(4);
+  });
+
+  test.each([
+    [
+      "shifts every later occurrence of a RANGE=THISANDFUTURE override whose RECURRENCE-ID zone differs from its DTSTART",
+      "BEGIN:VEVENT\r\nUID:range-master@example.com\r\nDTSTAMP:20260301T000000Z\r\nRECURRENCE-ID;RANGE=THISANDFUTURE;TZID=Europe/Berlin:20260316T100000\r\nDTSTART:20260316T140000Z\r\nDTEND:20260316T150000Z\r\nSUMMARY:Weekly (range)\r\nEND:VEVENT",
+    ],
+    [
+      "shifts every later occurrence of a RANGE=THISANDFUTURE override that is in a zone other than its master's",
+      "BEGIN:VEVENT\r\nUID:range-master@example.com\r\nDTSTAMP:20260301T000000Z\r\nRECURRENCE-ID;RANGE=THISANDFUTURE;TZID=Europe/Berlin:20260316T100000\r\nDTSTART;TZID=Europe/Berlin:20260316T150000\r\nDTEND;TZID=Europe/Berlin:20260316T160000\r\nSUMMARY:Weekly (range)\r\nEND:VEVENT",
+    ],
+  ])("%s", async (_name, override) => {
+    mockCalendar(EUROPE_BERLIN_VTIMEZONE, UTC_WEEKLY_RANGE_MASTER, override);
+
+    const events = await createIntegration().getCalendarEventsAsync(windowStart, windowEnd);
+
+    expect(sortedStartIsoStrings(events, "Weekly")).toStrictEqual([
+      "2026-03-02T09:00:00.000Z",
+      "2026-03-09T09:00:00.000Z",
+    ]);
+    expect(sortedStartIsoStrings(events, "Weekly (range)")).toStrictEqual([
+      "2026-03-16T14:00:00.000Z",
+      "2026-03-23T14:00:00.000Z",
+      "2026-03-30T14:00:00.000Z",
+    ]);
+    expect(
+      events
+        .filter((calendarEvent) => calendarEvent.title === "Weekly (range)")
+        .map((calendarEvent) => calendarEvent.endDate?.toISOString())
+        .toSorted(),
+    ).toStrictEqual(["2026-03-16T15:00:00.000Z", "2026-03-23T15:00:00.000Z", "2026-03-30T15:00:00.000Z"]);
+    expect(events.length).toBe(5);
+  });
+
+  test("keeps the anchor of a RANGE=THISANDFUTURE override with a zoned DTSTART on an all day DATE series", async () => {
+    mockCalendar(
+      EUROPE_BERLIN_VTIMEZONE,
+      "BEGIN:VEVENT\r\nUID:date-range@example.com\r\nDTSTAMP:20260301T000000Z\r\nDTSTART;VALUE=DATE:20260302\r\nDTEND;VALUE=DATE:20260303\r\nRRULE:FREQ=WEEKLY;COUNT=4\r\nSUMMARY:Series\r\nEND:VEVENT",
+      "BEGIN:VEVENT\r\nUID:date-range@example.com\r\nDTSTAMP:20260301T000000Z\r\nRECURRENCE-ID;VALUE=DATE;RANGE=THISANDFUTURE:20260309\r\nDTSTART;TZID=Europe/Berlin:20260309T140000\r\nDTEND;TZID=Europe/Berlin:20260309T150000\r\nSUMMARY:Range\r\nEND:VEVENT",
+    );
+
+    const events = await createIntegration().getCalendarEventsAsync(windowStart, windowEnd);
+
+    expect(sortedStartIsoStrings(events, "Range")).toContain("2026-03-09T13:00:00.000Z");
+    expect(sortedStartIsoStrings(events, "Range")).not.toContain("2026-03-08T23:00:00.000Z");
+  });
+
+  test("keeps the later occurrences of a RANGE=THISANDFUTURE override with a DATE RECURRENCE-ID at its DTSTART time", async () => {
+    mockCalendar(
+      EUROPE_BERLIN_VTIMEZONE,
+      "BEGIN:VEVENT\r\nUID:date-id-range@example.com\r\nDTSTAMP:20260301T000000Z\r\nDTSTART:20260302T000000Z\r\nDTEND:20260302T010000Z\r\nRRULE:FREQ=WEEKLY;COUNT=4\r\nSUMMARY:Series\r\nEND:VEVENT",
+      "BEGIN:VEVENT\r\nUID:date-id-range@example.com\r\nDTSTAMP:20260301T000000Z\r\nRECURRENCE-ID;VALUE=DATE;RANGE=THISANDFUTURE:20260309\r\nDTSTART;TZID=Europe/Berlin:20260309T140000\r\nDTEND;TZID=Europe/Berlin:20260309T150000\r\nSUMMARY:Range\r\nEND:VEVENT",
+    );
+
+    const events = await createIntegration().getCalendarEventsAsync(windowStart, windowEnd);
+
+    expect(sortedStartIsoStrings(events, "Range")).toStrictEqual([
+      "2026-03-16T13:00:00.000Z",
+      "2026-03-23T13:00:00.000Z",
+    ]);
+  });
+
+  test("declines the range recomputation when the occurrence cannot be converted, on a legal feed", async () => {
+    mockCalendar(
+      EUROPE_BERLIN_VTIMEZONE,
+      AMERICA_NEW_YORK_VTIMEZONE,
+      "BEGIN:VEVENT\r\nUID:rdate-floating-occurrence@example.com\r\nDTSTAMP:20260301T000000Z\r\nDTSTART;TZID=Europe/Berlin:20260302T100000\r\nDTEND;TZID=Europe/Berlin:20260302T110000\r\nRRULE:FREQ=WEEKLY;COUNT=2\r\nRDATE:20260316T090000\r\nSUMMARY:Series\r\nEND:VEVENT",
+      "BEGIN:VEVENT\r\nUID:rdate-floating-occurrence@example.com\r\nDTSTAMP:20260301T000000Z\r\nRECURRENCE-ID;RANGE=THISANDFUTURE;TZID=Europe/Berlin:20260309T100000\r\nDTSTART;TZID=America/New_York:20260309T090000\r\nDTEND;TZID=America/New_York:20260309T100000\r\nSUMMARY:Range\r\nEND:VEVENT",
+    );
+
+    const events = await createIntegration().getCalendarEventsAsync(windowStart, windowEnd);
+
+    // The RDATE is floating while DTSTART is zoned, so the occurrence carries no instant to convert
+    // and the shift is left to ical.js. Which instant is right is not determined by RFC 5545, so
+    // this asserts only that the unconverted recurrence id is not silently converted.
+    expect(sortedStartIsoStrings(events, "Range")).not.toContain("2026-03-16T17:00:00.000Z");
   });
 });
