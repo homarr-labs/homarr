@@ -1,0 +1,16 @@
+apps/docs/src/components/pages/home/motion-reel-showcase.tsx
+  h_d6e478ca18e517 1,11
+packages/definitions/src/docs/homarr-docs-sitemap.ts
+  h_d6e478ca18e517 368
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "8c80a296b15371d2d3ba60efa07fe5945bc05302",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
