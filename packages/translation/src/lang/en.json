@@ -2309,6 +2309,11 @@
         }
       },
       "currentWindSpeed": "{currentWindSpeed} {unit}",
+      "error": {
+        "disabled": "Weather data is unavailable because outbound connections are disabled",
+        "failed": "Failed to load weather data",
+        "retry": "Retry"
+      },
       "dailyForecast": {
         "sunrise": "Sunrise",
         "sunset": "Sunset",
