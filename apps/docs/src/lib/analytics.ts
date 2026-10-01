@@ -2,13 +2,6 @@
 
 import posthog from "posthog-js";
 
-type AnalyticsEvent =
-  | "Installation Opened"
-  | "Search No Results"
-  | "Workshop Item Downloaded"
-  | "Workshop Submit Started"
-  | "Workshop Submit Completed";
-
 let initialized = false;
 
 export function initAnalytics() {
@@ -69,7 +62,7 @@ export function initAnalytics() {
   });
 }
 
-export function track(event: AnalyticsEvent, properties: Record<string, unknown> = {}) {
+export function track(event: string, properties: Record<string, unknown> = {}) {
   if (typeof window === "undefined" || !initialized) return;
   posthog.capture(event, { ...properties, source_path: window.location.pathname });
 }
