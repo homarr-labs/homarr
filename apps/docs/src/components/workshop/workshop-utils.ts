@@ -21,11 +21,6 @@ interface WorkshopVoteBackend {
 export const voteAndReconcile = async (backend: WorkshopVoteBackend, submissionId: string, value: 1 | -1) => {
   await backend.vote(submissionId, value);
   const [submission, votes] = await Promise.all([backend.get(submissionId), backend.listVotesForCurrentUser()]);
-  const cast = votes.find((vote) => vote.submission === submissionId);
-  track("Workshop Vote Cast", {
-    item_id: submissionId,
-    direction: cast ? (cast.value === 1 ? "upvote" : "downvote") : "removed",
-  });
   return { submission, votes };
 };
 

@@ -15,7 +15,7 @@ import {
 } from "fumadocs-ui/components/dialog/search";
 import { useEffect, useRef } from "react";
 
-import { normalizeDestination, searchTrigger, track } from "@/lib/analytics";
+import { track } from "@/lib/analytics";
 
 export default function Search(props: SharedProps) {
   const { search, setSearch, query } = useDocsSearch({
@@ -25,49 +25,22 @@ export default function Search(props: SharedProps) {
   const lastTracked = useRef("");
 
   useEffect(() => {
-    if (!open) {
-      lastTracked.current = "";
-      return;
-    }
-    track("Search Opened", { trigger: searchTrigger() });
+    if (!open) lastTracked.current = "";
   }, [open]);
 
   useEffect(() => {
-    if (!open || query.isLoading || !Array.isArray(query.data)) return;
+    if (!open || query.isLoading || query.error || !Array.isArray(query.data) || query.data.length > 0) return;
     const trimmed = search.trim();
     if (!trimmed || trimmed === lastTracked.current) return;
     const timeout = setTimeout(() => {
       lastTracked.current = trimmed;
-      if (!Array.isArray(query.data)) return;
-      if (query.data.length === 0) {
-        track("Search No Results", { query: trimmed });
-        return;
-      }
-      track("Search Performed", { query: trimmed, result_count: query.data.length });
+      track("Search No Results", { query: trimmed });
     }, 900);
     return () => clearTimeout(timeout);
-  }, [open, search, query.data, query.isLoading]);
+  }, [open, search, query.data, query.isLoading, query.error]);
 
   return (
-    <SearchDialog
-      search={search}
-      onSearchChange={setSearch}
-      isLoading={query.isLoading}
-      onSelect={(item) => {
-        if (item.type === "action") return;
-        const results = Array.isArray(query.data) ? query.data : [];
-        track("Search Result Clicked", {
-          query: search.trim(),
-          result_index: Math.max(
-            0,
-            results.findIndex((result) => result.id === item.id),
-          ),
-          result_type: item.type,
-          destination: normalizeDestination(item.url),
-        });
-      }}
-      {...props}
-    >
+    <SearchDialog search={search} onSearchChange={setSearch} isLoading={query.isLoading} {...props}>
       <SearchDialogOverlay />
       <SearchDialogContent>
         <SearchDialogHeader>

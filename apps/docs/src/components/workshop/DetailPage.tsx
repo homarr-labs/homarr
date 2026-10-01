@@ -266,14 +266,6 @@ const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string;
     return () => tags.forEach((tag) => document.head.append(tag));
   }, [submission?.id, submissionId, notFound]);
 
-  const trackedItem = useRef<string | null>(null);
-
-  useEffect(() => {
-    if (!submission || trackedItem.current === submission.id) return;
-    trackedItem.current = submission.id;
-    track("Workshop Item Opened", { item_id: submission.id, item_type: submission.type });
-  }, [submission]);
-
   useEffect(() => {
     void backend.refreshAuth();
     return backend.subscribeToAuth(setUser);

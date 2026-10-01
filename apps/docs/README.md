@@ -153,10 +153,11 @@ The production image compiles the docs itself; it does not depend on a host `out
 Build-time `HOMARR_WEBSITE_URL` controls canonical metadata. Runtime URL overrides configure Workshop connections
 but do not rewrite already-exported canonical URLs.
 
-PostHog records SPA pageviews and named interaction events through `hog.homarr.dev`; see [ANALYTICS.md](./ANALYTICS.md)
-for the event reference, legacy name mapping, and verification steps. Form autocapture and session replay are disabled;
-tracked URL query strings and fragments are removed. Localhost and `?analytics_test` traffic carries
-`verification=true`; exclude it from production reports.
+PostHog records SPA pageviews, installation clicks, searches with no results (including the search query), and Workshop
+content downloads and submission starts/completions through `hog.homarr.dev`. Downloads include JSON files and
+successful JSON/CSS clipboard copies. All events carry `site` and `source_path`. Autocapture, page-leave events, and
+session replay are disabled; tracked URL query strings and fragments are removed. Localhost and `?analytics_test`
+traffic carries `verification=true`; exclude it from production reports.
 
 Carbon loads one visible placement after the desktop TOC, below API examples, or below content on other layouts.
 The homepage is excluded at every viewport size. Navigation reloads the ad script; resizing changes placement only when crossing its breakpoint. Ad blockers
