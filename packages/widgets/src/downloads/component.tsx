@@ -315,6 +315,8 @@ export default function DownloadClientsWidget({
   } = clientApi.widget.downloads.getJobsAndStatuses.useQuery({
     integrationIds,
     limitPerIntegration: options.limitPerIntegration,
+    includeArchivedHistory: options.includeArchivedHistory,
+    historyWindowDays: options.historyWindowDays,
   });
 
   const t = useScopedI18n("widget.downloads");
