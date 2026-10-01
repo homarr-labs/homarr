@@ -31,43 +31,54 @@ import { useScopedI18n } from "@homarr/translation/client";
 import type { WidgetComponentProps } from "../definition";
 import { HomarrDataTable } from "../common/homarr-data-table";
 import { usePersistedTableLayout, useTableLayoutPersistence } from "../common/use-persisted-table-layout";
+import { isContainerColumnVisible, isContainerContextMenuEnabled } from "./komodo-display";
+import { getKomodoRefreshIntervalMs } from "./komodo-refresh-interval";
+import { KomodoServerTable } from "./komodo-server-table";
+import { KomodoSummary } from "./komodo-summary";
 
 type DockerContainer = RouterOutputs["docker"]["getContainers"]["containers"][number];
+type KomodoContainer = RouterOutputs["widget"]["komodo"]["getContainers"]["containers"][number];
+type NativeContainerRow = DockerContainer & { source: "docker" };
+type KomodoContainerRow = KomodoContainer & { source: "komodo" };
+type ContainerRow = NativeContainerRow | KomodoContainerRow;
 type ContainerAction = "start" | "stop" | "restart" | "remove";
 
 interface ContextMenuState {
   x: number;
   y: number;
-  container: DockerContainer;
+  container: NativeContainerRow;
 }
 
 interface ContainerActionHandlers {
-  onAction: (action: ContainerAction, container: DockerContainer) => void;
-  onAddToHomarr: (container: DockerContainer) => void;
-  onOpenLogs: (container: DockerContainer) => void;
+  onAction: (action: ContainerAction, container: NativeContainerRow) => void;
+  onAddToHomarr: (container: NativeContainerRow) => void;
+  onOpenLogs: (container: NativeContainerRow) => void;
 }
 
 const columnAccessors = ["name", "state", "host", "cpuUsage", "memoryUsage", "actions"] as const;
 const containerMenuWidth = 240;
 
-const createContainerLogsPath = (container: Pick<DockerContainer, "id" | "name">) =>
+const createContainerLogsPath = (container: Pick<NativeContainerRow, "id" | "name">) =>
   `/manage/tools/docker/logs/${container.id}?name=${encodeURIComponent(container.name)}`;
 
-const ContainerStateBadge = ({ state }: { state: ContainerState }) => {
+const isNativeContainer = (container: ContainerRow): container is NativeContainerRow => container.source === "docker";
+
+const ContainerStateBadge = ({ state }: { state: ContainerState | "unknown" }) => {
   const t = useScopedI18n("docker.field.state.option");
+  const tWidget = useScopedI18n("widget.dockerContainers");
 
   return (
-    <Badge size="xs" radius="sm" variant="light" color={containerStateColorMap[state]}>
-      {t(state)}
+    <Badge size="xs" radius="sm" variant="light" color={state === "unknown" ? "gray" : containerStateColorMap[state]}>
+      {state === "unknown" ? tWidget("komodo.resourceState.unknown") : t(state)}
     </Badge>
   );
 };
 
 const createColumns = (
   t: ReturnType<typeof useScopedI18n<"docker">>,
-  handlers: ContainerActionHandlers,
+  handlers: ContainerActionHandlers | undefined,
   sortingEnabled: boolean,
-): DataTableColumn<DockerContainer>[] => [
+): DataTableColumn<ContainerRow>[] => [
   {
     accessor: "name",
     title: t("field.name.label"),
@@ -144,14 +155,17 @@ const createColumns = (
     title: "",
     width: 44,
     textAlign: "right",
-    render: (container) => <ContainerMenuButton container={container} handlers={handlers} />,
+    render: (container) =>
+      handlers && isNativeContainer(container) ? (
+        <ContainerMenuButton container={container} handlers={handlers} />
+      ) : null,
   },
 ];
 
 const compareContainers = (
-  first: DockerContainer,
-  second: DockerContainer,
-  accessor: DataTableSortStatus<DockerContainer>["columnAccessor"],
+  first: ContainerRow,
+  second: ContainerRow,
+  accessor: DataTableSortStatus<ContainerRow>["columnAccessor"],
 ) => {
   if (accessor === "cpuUsage") return safeValue(first.cpuUsage) - safeValue(second.cpuUsage);
   if (accessor === "memoryUsage") return safeValue(first.memoryUsage) - safeValue(second.memoryUsage);
@@ -185,6 +199,7 @@ const useContainerAction = (action: ContainerAction) => {
 };
 
 export default function DockerWidget({
+  integrationIds,
   options,
   width,
   isEditMode,
@@ -199,18 +214,39 @@ export default function DockerWidget({
   const { data: session } = useSession();
   const hasChangeAccess = board ? constructBoardPermissions(board, session).hasChangeAccess : false;
   const isTiny = width <= 256;
+  const integrationId = integrationIds[0];
+  const isKomodo = integrationId !== undefined;
+  const view = isKomodo ? options.view : "containers";
 
-  const { data, refetch, isFetching } = clientApi.docker.getContainers.useQuery();
-  const containers = useMemo(() => data?.containers ?? [], [data?.containers]);
-  const timestamp = useMemo(() => data?.timestamp ?? new Date(), [data?.timestamp]);
+  const nativeQuery = clientApi.docker.getContainers.useQuery(undefined, { enabled: !isKomodo });
+  const komodoQuery = clientApi.widget.komodo.getContainers.useQuery(
+    { integrationId: integrationId ?? "" },
+    {
+      enabled: isKomodo && view === "containers",
+      refetchInterval: getKomodoRefreshIntervalMs(options.refreshInterval),
+    },
+  );
+
+  const containers = useMemo<ContainerRow[]>(() => {
+    if (isKomodo) {
+      return (komodoQuery.data?.containers ?? []).map((container) => ({ ...container, source: "komodo" as const }));
+    }
+    return (nativeQuery.data?.containers ?? []).map((container) => ({ ...container, source: "docker" as const }));
+  }, [isKomodo, komodoQuery.data?.containers, nativeQuery.data?.containers]);
+  const timestamp = useMemo(
+    () => (isKomodo ? komodoQuery.data?.timestamp : nativeQuery.data?.timestamp) ?? new Date(),
+    [isKomodo, komodoQuery.data?.timestamp, nativeQuery.data?.timestamp],
+  );
+  const isFetching = isKomodo ? komodoQuery.isFetching : nativeQuery.isFetching;
   const relativeTime = useTimeAgo(timestamp);
+  const refetch = isKomodo ? komodoQuery.refetch : nativeQuery.refetch;
 
   const { mutate: startContainer } = useContainerAction("start");
   const { mutate: stopContainer } = useContainerAction("stop");
   const { mutate: restartContainer } = useContainerAction("restart");
   const { mutate: removeContainer } = useContainerAction("remove");
   const handleContainerAction = useCallback(
-    (action: ContainerAction, container: DockerContainer) => {
+    (action: ContainerAction, container: NativeContainerRow) => {
       if (action === "start") startContainer({ ids: [container.id] });
       else if (action === "stop") stopContainer({ ids: [container.id] });
       else if (action === "restart") restartContainer({ ids: [container.id] });
@@ -219,11 +255,11 @@ export default function DockerWidget({
     [removeContainer, restartContainer, startContainer, stopContainer],
   );
   const handleOpenLogs = useCallback(
-    (container: DockerContainer) => window.location.assign(createContainerLogsPath(container)),
+    (container: NativeContainerRow) => window.location.assign(createContainerLogsPath(container)),
     [],
   );
   const handleAddToHomarr = useCallback(
-    (container: DockerContainer) => openModal({ selectedContainers: [container] }),
+    (container: NativeContainerRow) => openModal({ selectedContainers: [container] }),
     [openModal],
   );
   const actionHandlers = useMemo<ContainerActionHandlers>(
@@ -251,7 +287,7 @@ export default function DockerWidget({
   });
 
   const defaultDirection = options.descendingDefaultSort ? "desc" : "asc";
-  const [sortStatus, setSortStatus] = useState<DataTableSortStatus<DockerContainer>>({
+  const [sortStatus, setSortStatus] = useState<DataTableSortStatus<ContainerRow>>({
     columnAccessor: options.defaultSort,
     direction: defaultDirection,
   });
@@ -282,10 +318,10 @@ export default function DockerWidget({
   const selectedColumns = useMemo(() => new Set<string>(options.columns), [options.columns]);
   const columns = useMemo(() => {
     const sortingEnabled = options.enableRowSorting && !isEditMode;
-    return createColumns(t, actionHandlers, sortingEnabled).filter(({ accessor }) =>
-      selectedColumns.has(String(accessor)),
+    return createColumns(t, isKomodo ? undefined : actionHandlers, sortingEnabled).filter(({ accessor }) =>
+      isContainerColumnVisible(String(accessor), selectedColumns, isKomodo),
     );
-  }, [actionHandlers, isEditMode, options.enableRowSorting, selectedColumns, t]);
+  }, [actionHandlers, isEditMode, isKomodo, options.enableRowSorting, selectedColumns, t]);
   const { effectiveColumns, storeKey } = usePersistedTableLayout({
     columns,
     columnAccessors,
@@ -298,12 +334,16 @@ export default function DockerWidget({
 
   const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null);
   const closeContextMenu = useCallback(() => setContextMenu(null), []);
-  const handleContextMenu = useCallback(({ record, event }: { record: DockerContainer; event: React.MouseEvent }) => {
+  const handleContextMenu = useCallback(({ record, event }: { record: ContainerRow; event: React.MouseEvent }) => {
+    if (!isNativeContainer(record)) return;
     event.preventDefault();
     setContextMenu({ x: event.clientX, y: event.clientY, container: record });
   }, []);
 
-  if (options.columns.length === 0) {
+  if (!isKomodo && nativeQuery.error) throw nativeQuery.error;
+  if (isKomodo && view === "containers" && komodoQuery.error) throw komodoQuery.error;
+
+  if (view === "containers" && (options.columns.length === 0 || (isKomodo && columns.length === 0))) {
     return (
       <Center h="100%">
         <Text>{t("error.noColumns")}</Text>
@@ -313,28 +353,36 @@ export default function DockerWidget({
 
   return (
     <Stack gap={0} h="100%" style={{ overflow: "hidden" }}>
+      {isKomodo && options.showSummary && integrationId ? (
+        <KomodoSummary integrationId={integrationId} options={options} width={width} />
+      ) : null}
+
       <Box style={{ flex: 1, minHeight: 0 }}>
-        <HomarrDataTable
-          isEditMode={isEditMode}
-          cellPadding={width < 400 ? "2px 8px" : "4px 8px"}
-          rowCursor="default"
-          fetching={isFetching && containers.length === 0}
-          fz={width < 400 ? "xs" : "sm"}
-          records={sortedContainers}
-          noRecordsText={tWidget("empty.noContainers")}
-          columns={effectiveColumns}
-          storeColumnsKey={storeKey}
-          sortStatus={sortStatus}
-          onSortStatusChange={options.enableRowSorting && !isEditMode ? setSortStatus : undefined}
-          idAccessor="id"
-          onRowContextMenu={isEditMode ? undefined : handleContextMenu}
-          onScroll={() => {
-            if (contextMenu) closeContextMenu();
-          }}
-        />
+        {isKomodo && view === "servers" && integrationId ? (
+          <KomodoServerTable integrationId={integrationId} options={options} width={width} />
+        ) : (
+          <HomarrDataTable
+            isEditMode={isEditMode}
+            cellPadding={width < 400 ? "2px 8px" : "4px 8px"}
+            rowCursor="default"
+            fetching={isFetching && containers.length === 0}
+            fz={width < 400 ? "xs" : "sm"}
+            records={sortedContainers}
+            noRecordsText={tWidget("empty.noContainers")}
+            columns={effectiveColumns}
+            storeColumnsKey={storeKey}
+            sortStatus={sortStatus}
+            onSortStatusChange={options.enableRowSorting && !isEditMode ? setSortStatus : undefined}
+            idAccessor="id"
+            onRowContextMenu={isContainerContextMenuEnabled(isEditMode, isKomodo) ? handleContextMenu : undefined}
+            onScroll={() => {
+              if (contextMenu) closeContextMenu();
+            }}
+          />
+        )}
       </Box>
 
-      {!isTiny && (
+      {!isTiny && view === "containers" && (
         <Group justify="space-between" style={{ borderTop: "0.0625rem solid var(--border-color)" }} p={4} wrap="nowrap">
           <Group gap={4} wrap="nowrap">
             <IconBrandDocker size={20} style={{ flexShrink: 0 }} />
@@ -375,7 +423,7 @@ function ContainerMenuButton({
   container,
   handlers,
 }: {
-  container: DockerContainer;
+  container: NativeContainerRow;
   handlers: ContainerActionHandlers;
 }) {
   const t = useScopedI18n("docker.action");
@@ -407,7 +455,7 @@ function ContainerActionItems({
   handlers,
   onClose,
 }: {
-  container: DockerContainer;
+  container: NativeContainerRow;
   handlers: ContainerActionHandlers;
   onClose: () => void;
 }) {
