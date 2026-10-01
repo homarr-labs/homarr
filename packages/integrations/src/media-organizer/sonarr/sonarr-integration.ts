@@ -53,7 +53,7 @@ export class SonarrIntegration extends Integration implements ICalendarIntegrati
               aspectRatio: { width: 7, height: 12 },
               badge: {
                 color: "red",
-                content: `S${event.seasonNumber}/E${event.episodeNumber}`,
+                content: this.getCalendarBadgeContent(event.seasonNumber, event.episodeNumber),
               },
             }
           : null,
@@ -64,12 +64,29 @@ export class SonarrIntegration extends Integration implements ICalendarIntegrati
     });
   }
 
+  /**
+   * Branding used for the calendar entry link; Sonarr-API-compatible
+   * subclasses (Sportarr) override these so events link with their own
+   * name and logo.
+   */
+  protected get calendarLinkName(): string {
+    return "Sonarr";
+  }
+
+  protected get calendarLinkLogo(): string {
+    return "/images/apps/sonarr.svg";
+  }
+
+  protected getCalendarBadgeContent(seasonNumber: number, episodeNumber: number): string {
+    return `S${seasonNumber}/E${episodeNumber}`;
+  }
+
   private getLinksForSonarrCalendarEvent = (event: z.infer<typeof sonarrCalendarEventSchema>) => {
     const links: CalendarLink[] = [
       {
         href: this.externalUrl(`/series/${event.series.titleSlug}`).toString(),
-        name: "Sonarr",
-        logo: "/images/apps/sonarr.svg",
+        name: this.calendarLinkName,
+        logo: this.calendarLinkLogo,
         color: undefined,
         isDark: true,
       },
