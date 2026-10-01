@@ -28,21 +28,6 @@ const toCalendarEvent = (event: ICAL.Event, startDate: Date, endDate: Date): Cal
   links: [],
 });
 
-// convertToZone only converts a zoned date-time; a DATE or floating time is reinterpreted, as ical.js does.
-const isConvertible = (time: ICAL.Time) => !time.isDate && time.zone !== ICAL.Timezone.localTimezone;
-
-// ical.js reinterprets the zone of a THISANDFUTURE occurrence instead of converting it; convert it where possible.
-const shiftMismatchedRange = (range: ICAL.Event, occurrence: ICAL.Time) => {
-  if (!range.modifiesFuture()) return undefined;
-  if (![occurrence, range.recurrenceId, range.startDate].every(isConvertible)) return undefined;
-  const zone = range.startDate.zone;
-  const startDate = occurrence.convertToZone(zone);
-  startDate.addDuration(range.startDate.subtractDate(range.recurrenceId.convertToZone(zone)));
-  const endDate = startDate.clone();
-  endDate.addDuration(range.duration);
-  return { startDate, endDate };
-};
-
 export class ICalIntegration extends Integration implements ICalendarIntegration {
   public override async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
     throw new Error("iCal stores a private feed URL, which cannot authenticate arbitrary HTTP requests");
@@ -75,18 +60,11 @@ export class ICalIntegration extends Integration implements ICalendarIntegration
       // exceptions: [] so an unrelated series sharing no uid is never auto-attached; uids are matched by hand below.
       const event = new ICAL.Event(masterVevent, { exceptions: [] });
 
-      // ical.js matches an override to a slot by rendered string, which misses a zoned RECURRENCE-ID.
-      const overridesByInstant = new Map<number, ICAL.Event>();
-
       for (const exceptionVevent of exceptionVevents) {
         const exceptionEvent = new ICAL.Event(exceptionVevent, { exceptions: [] });
         if (exceptionEvent.uid !== event.uid) continue;
 
         event.relateException(exceptionVevent);
-        // A floating time is a wall clock, not an instant: toUnixTime() would read it as UTC and hit the wrong slot.
-        if (exceptionEvent.recurrenceId.zone !== ICAL.Timezone.localTimezone) {
-          overridesByInstant.set(exceptionEvent.recurrenceId.toUnixTime(), exceptionEvent);
-        }
       }
 
       if (!event.isRecurring()) {
@@ -116,25 +94,22 @@ export class ICalIntegration extends Integration implements ICalendarIntegration
         if (next.toJSDate() > end) break;
 
         const details = event.getOccurrenceDetails(next);
-        const overrideAtInstant = overridesByInstant.get(next.toUnixTime());
-        const resolved = overrideAtInstant ?? details.item;
-        const times = overrideAtInstant ?? shiftMismatchedRange(details.item, next) ?? details;
-        const startDate = times.startDate.toJSDate();
-        const endDate = times.endDate.toJSDate();
+        const startDate = details.startDate.toJSDate();
+        const endDate = details.endDate.toJSDate();
 
         if (startDate > end) continue;
         if (endDate < start) continue;
 
-        if (resolved.isRecurrenceException()) {
+        if (details.item.isRecurrenceException()) {
           // Keyed on details.recurrenceId, not details.item.recurrenceId: for a RANGE=THISANDFUTURE
           // override those collapse to the same value for every later occurrence, which would drop them.
-          const exceptionKey = `${resolved.uid}:${details.recurrenceId.toString()}`;
+          const exceptionKey = `${details.item.uid}:${details.recurrenceId.toString()}`;
           if (emittedExceptionKeys.has(exceptionKey)) continue;
           emittedExceptionKeys.add(exceptionKey);
-          emittedExceptionComponents.add(resolved.component);
+          emittedExceptionComponents.add(details.item.component);
         }
 
-        events.push(toCalendarEvent(resolved, startDate, endDate));
+        events.push(toCalendarEvent(details.item, startDate, endDate));
       }
 
       if (cappedByIterationLimit) {
