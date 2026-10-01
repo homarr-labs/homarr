@@ -41,3 +41,28 @@ import { healthMonitoringWidget } from "@site/docs/widgets/health-monitoring";
     },
   ]}
 />
+
+### Disk health (SMART)
+
+The health monitoring widget shows a status and temperature for each disk when the Glances SMART plugin is enabled. The plugin is disabled by default and needs direct access to the disks:
+
+- use a `-full` image tag (it ships `smartctl` and pySMART) and run Glances as root (the image default)
+- enable the plugin with `--enable-plugin smart`
+- add the `SYS_RAWIO` capability for SATA disks and `SYS_ADMIN` for NVMe drives
+- pass every disk to the container
+
+```yaml
+services:
+  glances:
+    image: nicolargo/glances:latest-full
+    environment:
+      - GLANCES_OPT=-w --enable-plugin smart
+    cap_add:
+      - SYS_RAWIO
+      - SYS_ADMIN
+    devices:
+      - /dev/sda
+      - /dev/nvme0
+```
+
+The status is `PASSED`, or `FAILED` when a SATA SMART attribute has crossed its failure threshold or an NVMe drive reports a critical warning.

@@ -133,6 +133,24 @@ describe("matchFileSystemAndSmart", () => {
     ]);
   });
 
+  test("joins NVMe partitions with controller-level SMART data (Glances)", () => {
+    const result = matchFileSystemAndSmart(
+      [{ deviceName: "/dev/nvme0n1p3", used: "100", available: "900", percentage: 10 }],
+      [{ deviceName: "/dev/nvme0", temperature: 30, overallStatus: "PASSED" }],
+    );
+
+    expect(result[0]).toMatchObject({ deviceName: "/dev/nvme0", temperature: 30, overallStatus: "PASSED" });
+  });
+
+  test("does not join SMART data from a different NVMe controller", () => {
+    const result = matchFileSystemAndSmart(
+      [{ deviceName: "/dev/nvme1n1p1", used: "100", available: "900", percentage: 10 }],
+      [{ deviceName: "/dev/nvme0", temperature: 30, overallStatus: "PASSED" }],
+    );
+
+    expect(result[0]).toMatchObject({ deviceName: "/dev/nvme1n1p1", temperature: null, overallStatus: "" });
+  });
+
   test("does not join SMART data from a different md device", () => {
     const result = matchFileSystemAndSmart(
       [{ deviceName: "/dev/md0", used: "100", available: "900", percentage: 10 }],

@@ -35,7 +35,11 @@ export class GlancesIntegration extends Integration implements ISystemHealthMoni
 
     if (session == null) throw new Error("Session was unexpectitly null");
 
-    const [stats, cpuTemp] = await Promise.all([this.getAllStatsAsync(), this.getCpuTempAsync()]);
+    const [stats, cpuTemp, smart] = await Promise.all([
+      this.getAllStatsAsync(),
+      this.getCpuTempAsync(),
+      this.getSmartAsync(),
+    ]);
 
     return {
       cpuUtilization: stats.cpu.total,
@@ -57,7 +61,7 @@ export class GlancesIntegration extends Integration implements ISystemHealthMoni
       rebootRequired: false,
       cpuModelName: stats.quicklook?.cpu_name ?? "Unknown",
       loadAverage: null,
-      smart: [],
+      smart,
       cpuTemp,
       gpu: stats.gpu.map((gpu) => ({
         gpuId: gpu.gpu_id,
@@ -94,6 +98,23 @@ export class GlancesIntegration extends Integration implements ISystemHealthMoni
       return parseGlancesCpuTempFromSensors(sensors);
     } catch {
       return undefined;
+    }
+  }
+
+  private async getSmartAsync(): Promise<SystemHealthMonitoring["smart"]> {
+    // The SMART plugin is disabled by default (Glances answers 400), so a missing
+    // or unexpected /api/4/smart response must not fail getSystemInfoAsync().
+    try {
+      const response = await fetchWithTrustedCertificatesAsync(this.url("/api/4/smart"));
+
+      if (!response.ok) {
+        return [];
+      }
+
+      const devices = await smartSchema.parseAsync(await response.json());
+      return devices.map(mapGlancesSmartDevice);
+    } catch {
+      return [];
     }
   }
 
@@ -219,4 +240,52 @@ export const parseGlancesCpuTempFromSensors = (sensors: z.infer<typeof sensorsSc
   }
 
   return undefined;
+};
+
+// Glances (pySMART) returns one object per disk: "DeviceName" is "<device> <model>",
+// every other object value is a SMART attribute (ATA) or an NVMe health log entry.
+const smartAttributeSchema = z.object({
+  name: z.string().nullable().optional(),
+  key: z.string().nullable().optional(),
+  value: z.union([z.string(), z.number()]).nullable().optional(),
+  raw: z.union([z.string(), z.number()]).nullable().optional(),
+  when_failed: z.string().nullable().optional(),
+});
+
+const smartSchema = z.array(z.object({ DeviceName: z.string() }).catchall(z.unknown()));
+
+const ataTemperatureNames = ["Temperature_Celsius", "Airflow_Temperature_Cel"] as const;
+
+const mapGlancesSmartDevice = (device: z.infer<typeof smartSchema>[number]) => {
+  const attributes = Object.values(device).flatMap((value) => {
+    const result = smartAttributeSchema.safeParse(value);
+    return result.success ? [result.data] : [];
+  });
+
+  // ATA: when_failed is "-" unless the attribute crossed its threshold. NVMe: critical warning bitmask.
+  const healthy = attributes.every((attribute) => {
+    if (attribute.key === "criticalWarning") return Number(attribute.value ?? 0) === 0;
+    return !attribute.when_failed || attribute.when_failed === "-";
+  });
+
+  return {
+    deviceName: `/dev/${device.DeviceName.split(" ")[0]}`,
+    temperature: getSmartTemperature(attributes),
+    overallStatus: healthy ? "PASSED" : "FAILED",
+    healthy,
+  };
+};
+
+const getSmartTemperature = (attributes: z.infer<typeof smartAttributeSchema>[]): number | null => {
+  const nvmeTemperature = attributes.find((attribute) => attribute.key === "_temperature")?.value;
+  if (typeof nvmeTemperature === "number") return nvmeTemperature;
+
+  for (const name of ataTemperatureNames) {
+    // ATA raw values may carry extra data, e.g. "35 (Min/Max 20/45)".
+    const raw = attributes.find((attribute) => attribute.name === name)?.raw;
+    const temperature = Number.parseInt(String(raw ?? ""), 10);
+    if (!Number.isNaN(temperature)) return temperature;
+  }
+
+  return null;
 };

@@ -47,10 +47,22 @@ export const toScopedStorageVolumeValue = (integrationId: string, value: string)
   return `${integrationId}:${volumeName}`;
 };
 
+// SMART data for NVMe can be reported per controller (Glances: /dev/nvme0), which owns
+// every namespace and partition below it (/dev/nvme0n1p3). Namespaces never match each other.
+const nvmeControllerPattern = /^((?:\/dev\/)?nvme[0-9]+)$/;
+const nvmeNamespacePattern = /^((?:\/dev\/)?nvme[0-9]+)n[0-9]+(?:p[0-9]+)?$/;
+
+const isNvmeControllerOf = (controllerName: string, deviceName: string): boolean => {
+  const controller = nvmeControllerPattern.exec(controllerName)?.[1];
+  return controller !== undefined && nvmeNamespacePattern.exec(deviceName)?.[1] === controller;
+};
+
 export const storageDeviceNamesMatch = (leftDeviceName: string, rightDeviceName: string): boolean => {
   return (
     leftDeviceName === rightDeviceName ||
-    normalizeStorageDeviceName(leftDeviceName) === normalizeStorageDeviceName(rightDeviceName)
+    normalizeStorageDeviceName(leftDeviceName) === normalizeStorageDeviceName(rightDeviceName) ||
+    isNvmeControllerOf(leftDeviceName, rightDeviceName) ||
+    isNvmeControllerOf(rightDeviceName, leftDeviceName)
   );
 };
 
