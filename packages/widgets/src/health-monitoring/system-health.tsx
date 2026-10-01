@@ -16,13 +16,16 @@ import {
   ScrollArea,
   Stack,
   Text,
+  Tooltip,
+  useMantineTheme,
 } from "@mantine/core";
 import {
   IconBrain,
+  IconCircleCheckFilled,
+  IconCircleXFilled,
   IconClock,
   IconCpu,
   IconCpu2,
-  IconFileReport,
   IconInfoCircle,
   IconPackages,
   IconRefreshAlert,
@@ -243,21 +246,18 @@ export const SystemHealthMonitoring = ({
                               {disk.deviceName}
                             </Text>
                           </Group>
-                          {disk.temperature !== null && (
-                            <Group gap={4} wrap="nowrap">
-                              <IconTemperature className="health-monitoring-disk-temperature-icon" size="1rem" />
-                              <Text className="health-monitoring-disk-temperature-value" size="xs">
-                                {options.fahrenheit
-                                  ? `${(disk.temperature * 1.8 + 32).toFixed(1)}°F`
-                                  : `${disk.temperature}°C`}
-                              </Text>
-                            </Group>
-                          )}
-                          <Group gap={4} wrap="nowrap">
-                            <IconFileReport className="health-monitoring-disk-status-icon" size="1rem" />
-                            <Text className="health-monitoring-disk-status-value" size="xs">
-                              {disk.overallStatus ? disk.overallStatus : "N/A"}
-                            </Text>
+                          <Group gap={8} wrap="nowrap">
+                            <DiskStatus healthy={disk.healthy} overallStatus={disk.overallStatus} />
+                            {disk.temperature !== null && (
+                              <Group gap={4} wrap="nowrap">
+                                <IconTemperature className="health-monitoring-disk-temperature-icon" size="1rem" />
+                                <Text className="health-monitoring-disk-temperature-value" size="xs">
+                                  {options.fahrenheit
+                                    ? `${(disk.temperature * 1.8 + 32).toFixed(1)}°F`
+                                    : `${disk.temperature}°C`}
+                                </Text>
+                              </Group>
+                            )}
                           </Group>
                         </Group>
                         <Progress.Root className="health-monitoring-disk-use" radius={board.itemRadius} size="lg">
@@ -392,6 +392,31 @@ export const formatUptime = (uptimeInSeconds: number, t: ScopedTranslationFuncti
   });
 };
 
+// Green check or red cross from the SMART healthy flag; the raw status stays available on hover.
+const DiskStatus = ({ healthy, overallStatus }: { healthy?: boolean; overallStatus: string }) => {
+  const mantineTheme = useMantineTheme();
+
+  if (healthy === undefined) {
+    return (
+      <Text className="health-monitoring-disk-status-value" size="xs" c="dimmed">
+        N/A
+      </Text>
+    );
+  }
+
+  const Icon = healthy ? IconCircleCheckFilled : IconCircleXFilled;
+  return (
+    <Tooltip label={overallStatus} disabled={!overallStatus}>
+      <Icon
+        className="health-monitoring-disk-status-icon"
+        size="1rem"
+        color={healthy ? mantineTheme.colors.green[6] : mantineTheme.colors.red[6]}
+        aria-label={overallStatus}
+      />
+    </Tooltip>
+  );
+};
+
 export const progressColor = (percentage: number) => {
   if (percentage < 40) return "green";
   else if (percentage < 60) return "yellow";
@@ -439,6 +464,7 @@ interface SmartData {
   deviceName: string;
   temperature: number | null;
   overallStatus: string;
+  healthy?: boolean;
 }
 
 export const matchFileSystemAndSmart = (fileSystems: FileSystem[], smartData: SmartData[]) => {
@@ -453,6 +479,7 @@ export const matchFileSystemAndSmart = (fileSystems: FileSystem[], smartData: Sm
         percentage: fileSystem.percentage,
         temperature: smartDisk?.temperature ?? null,
         overallStatus: smartDisk?.overallStatus ?? "",
+        healthy: smartDisk?.healthy,
       };
     })
     .toSorted((fileSystemA, fileSystemB) => fileSystemA.deviceName.localeCompare(fileSystemB.deviceName));

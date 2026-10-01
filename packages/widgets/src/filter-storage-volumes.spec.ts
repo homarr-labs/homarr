@@ -151,6 +151,26 @@ describe("matchFileSystemAndSmart", () => {
     expect(result[0]).toMatchObject({ deviceName: "/dev/nvme1n1p1", temperature: null, overallStatus: "" });
   });
 
+  test("passes the SMART healthy flag through for the status icon", () => {
+    const result = matchFileSystemAndSmart(
+      [
+        { deviceName: "/dev/sda", used: "100", available: "900", percentage: 10 },
+        { deviceName: "/dev/sdb", used: "100", available: "900", percentage: 10 },
+        { deviceName: "/dev/md0", used: "100", available: "900", percentage: 10 },
+      ],
+      [
+        { deviceName: "/dev/sda", temperature: 35, overallStatus: "PASSED", healthy: true },
+        { deviceName: "/dev/sdb", temperature: 36, overallStatus: "FAILED", healthy: false },
+      ],
+    );
+
+    expect(result.map(({ deviceName, healthy }) => ({ deviceName, healthy }))).toEqual([
+      { deviceName: "/dev/md0", healthy: undefined },
+      { deviceName: "/dev/sda", healthy: true },
+      { deviceName: "/dev/sdb", healthy: false },
+    ]);
+  });
+
   test("does not join SMART data from a different md device", () => {
     const result = matchFileSystemAndSmart(
       [{ deviceName: "/dev/md0", used: "100", available: "900", percentage: 10 }],
