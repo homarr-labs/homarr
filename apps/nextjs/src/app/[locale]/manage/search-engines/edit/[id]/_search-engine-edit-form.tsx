@@ -52,10 +52,17 @@ export const SearchEngineEditForm = ({ searchEngine }: SearchEngineEditFormProps
 
   const submitButtonTranslation = useCallback((t: TranslationFunction) => t("common.action.save"), []);
 
+  // The stored row uses null for whatever does not belong to its type, the form expects it to be absent
+  const initialValues = {
+    ...searchEngine,
+    integrationId: searchEngine.integrationId ?? undefined,
+    urlTemplate: searchEngine.urlTemplate ?? "",
+  };
+
   return (
     <SearchEngineForm
       submitButtonTranslation={submitButtonTranslation}
-      initialValues={searchEngine}
+      initialValues={initialValues}
       handleSubmit={handleSubmit}
       isPending={isPending}
       disableShort

@@ -1,4 +1,4 @@
-import z from "zod";
+import { z } from "zod/v4";
 import { zfd } from "zod-form-data";
 
 import { createCustomErrorParams } from "./form/i18n";
