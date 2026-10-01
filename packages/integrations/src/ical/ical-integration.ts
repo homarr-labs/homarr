@@ -1,6 +1,7 @@
 import ICAL from "ical.js";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
@@ -9,6 +10,23 @@ import { TestConnectionError } from "../base/test-connection/test-connection-err
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { ICalendarIntegration } from "../interfaces/calendar/calendar-integration";
 import type { CalendarEvent } from "../interfaces/calendar/calendar-types";
+
+const logger = createLogger({ module: "icalIntegration" });
+
+// Caps the walk so a high frequency rule on an untrusted feed can't hang the request.
+const MAX_OCCURRENCE_ITERATIONS = 100000;
+
+const toCalendarEvent = (event: ICAL.Event, startDate: Date, endDate: Date): CalendarEvent => ({
+  title: event.summary,
+  subTitle: null,
+  description: event.description,
+  startDate,
+  endDate,
+  image: null,
+  location: event.location,
+  indicatorColor: "red",
+  links: [],
+});
 
 export class ICalIntegration extends Integration implements ICalendarIntegration {
   public override async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
@@ -21,26 +39,102 @@ export class ICalIntegration extends Integration implements ICalendarIntegration
     const jcal = ICAL.parse(result) as unknown[];
     const comp = new ICAL.Component(jcal);
 
-    return comp.getAllSubcomponents("vevent").reduce((prev, vevent) => {
-      const event = new ICAL.Event(vevent);
-      const startDate = event.startDate.toJSDate();
-      const endDate = event.endDate.toJSDate();
+    const vevents = comp.getAllSubcomponents("vevent");
+    const masterVevents: ICAL.Component[] = [];
+    const exceptionVevents: ICAL.Component[] = [];
 
-      if (startDate > end) return prev;
-      if (endDate < start) return prev;
+    for (const vevent of vevents) {
+      const event = new ICAL.Event(vevent, { exceptions: [] });
+      if (event.isRecurrenceException()) {
+        exceptionVevents.push(vevent);
+      } else {
+        masterVevents.push(vevent);
+      }
+    }
 
-      return prev.concat({
-        title: event.summary,
-        subTitle: null,
-        description: event.description,
-        startDate,
-        endDate,
-        image: null,
-        location: event.location,
-        indicatorColor: "red",
-        links: [],
-      });
-    }, [] as CalendarEvent[]);
+    const events: CalendarEvent[] = [];
+    const emittedExceptionKeys = new Set<string>();
+    const emittedExceptionComponents = new Set<ICAL.Component>();
+
+    for (const masterVevent of masterVevents) {
+      // exceptions: [] so an unrelated series sharing no uid is never auto-attached; uids are matched by hand below.
+      const event = new ICAL.Event(masterVevent, { exceptions: [] });
+
+      for (const exceptionVevent of exceptionVevents) {
+        const exceptionEvent = new ICAL.Event(exceptionVevent, { exceptions: [] });
+        if (exceptionEvent.uid !== event.uid) continue;
+
+        event.relateException(exceptionVevent);
+      }
+
+      if (!event.isRecurring()) {
+        const startDate = event.startDate.toJSDate();
+        const endDate = event.endDate.toJSDate();
+
+        if (startDate > end) continue;
+        if (endDate < start) continue;
+
+        events.push(toCalendarEvent(event, startDate, endDate));
+        continue;
+      }
+
+      const iterator = event.iterator();
+      let next: ICAL.Time | undefined;
+      let iterations = 0;
+      let cappedByIterationLimit = false;
+
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      while ((next = iterator.next())) {
+        if (iterations >= MAX_OCCURRENCE_ITERATIONS) {
+          cappedByIterationLimit = true;
+          break;
+        }
+        iterations++;
+
+        if (next.toJSDate() > end) break;
+
+        const details = event.getOccurrenceDetails(next);
+        const startDate = details.startDate.toJSDate();
+        const endDate = details.endDate.toJSDate();
+
+        if (startDate > end) continue;
+        if (endDate < start) continue;
+
+        if (details.item.isRecurrenceException()) {
+          // Keyed on details.recurrenceId, not details.item.recurrenceId: for a RANGE=THISANDFUTURE
+          // override those collapse to the same value for every later occurrence, which would drop them.
+          const exceptionKey = `${details.item.uid}:${details.recurrenceId.toString()}`;
+          if (emittedExceptionKeys.has(exceptionKey)) continue;
+          emittedExceptionKeys.add(exceptionKey);
+          emittedExceptionComponents.add(details.item.component);
+        }
+
+        events.push(toCalendarEvent(details.item, startDate, endDate));
+      }
+
+      if (cappedByIterationLimit) {
+        logger.warn(
+          `iCal integration "${this.integration.id}": stopped expanding a recurring event after ${MAX_OCCURRENCE_ITERATIONS} occurrences (MAX_OCCURRENCE_ITERATIONS); some occurrences in the requested window may be missing`,
+        );
+      }
+    }
+
+    for (const exceptionVevent of exceptionVevents) {
+      if (emittedExceptionComponents.has(exceptionVevent)) continue;
+      const exceptionEvent = new ICAL.Event(exceptionVevent, { exceptions: [] });
+      const key = `${exceptionEvent.uid}:${exceptionEvent.recurrenceId.toString()}`;
+      if (emittedExceptionKeys.has(key)) continue;
+
+      const startDate = exceptionEvent.startDate.toJSDate();
+      const endDate = exceptionEvent.endDate.toJSDate();
+
+      if (startDate > end) continue;
+      if (endDate < start) continue;
+
+      events.push(toCalendarEvent(exceptionEvent, startDate, endDate));
+    }
+
+    return events;
   }
 
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
