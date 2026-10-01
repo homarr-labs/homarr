@@ -1,7 +1,7 @@
 import { Box, Center, Image } from "@mantine/core";
 import { IconLayoutGrid } from "@tabler/icons-react";
 
-import type { BoardPreviewData } from "@homarr/boards/layout-preview";
+import type { BoardPreviewData, BoardPreviewLayout } from "@homarr/boards/layout-preview";
 import { projectBoardLayout } from "@homarr/boards/layout-preview";
 import { boardLanes, getBoardLaneColumnCount, getRootSectionLane } from "@homarr/definitions";
 import { widgetCatalogIcons } from "@homarr/ui/widget-icons";
@@ -13,6 +13,8 @@ interface BoardLayoutThumbnailProps {
   label: string;
   previewRowLimit?: number;
   className?: string;
+  layout?: BoardPreviewLayout;
+  sourceLayout?: BoardPreviewLayout;
 }
 
 const compactBoardLayoutThumbnailRows = 12;
@@ -23,9 +25,12 @@ export const BoardLayoutThumbnail = ({
   label,
   previewRowLimit = compactBoardLayoutThumbnailRows,
   className,
+  layout: selectedLayout,
+  sourceLayout,
 }: BoardLayoutThumbnailProps) => {
   const canvasClassName = [classes.canvas, className].filter(Boolean).join(" ");
-  const layout = preview?.layouts.find((candidate) => candidate.role === "base") ?? preview?.layouts.at(0);
+  const layout =
+    selectedLayout ?? preview?.layouts.find((candidate) => candidate.role === "base") ?? preview?.layouts.at(0);
   if (!preview || !layout) {
     return (
       <Center className={canvasClassName} role="img" aria-label={label}>
@@ -34,7 +39,7 @@ export const BoardLayoutThumbnail = ({
     );
   }
 
-  const elements = projectBoardLayout(preview, layout, layout);
+  const elements = projectBoardLayout(preview, sourceLayout ?? layout, layout);
   const thumbnailRowLimit = Math.max(1, Math.min(Math.floor(previewRowLimit), maxBoardLayoutThumbnailRows));
   const roots = preview.sections
     .filter((section) => section.kind === "empty")
