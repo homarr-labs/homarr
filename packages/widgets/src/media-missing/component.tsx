@@ -254,7 +254,15 @@ const PosterIcon = ({ type, style }: { type: "movie" | "episode" | "book"; style
   return <IconVideo style={style} />;
 };
 
-const Poster = ({ src, type, density }: { src?: string | null; type: "movie" | "episode" | "book"; density: Density }) => {
+const Poster = ({
+  src,
+  type,
+  density,
+}: {
+  src?: string | null;
+  type: "movie" | "episode" | "book";
+  density: Density;
+}) => {
   const size = posterSizes[density];
   const w = Math.round(size * 0.68);
 

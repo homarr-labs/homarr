@@ -1,10 +1,6 @@
 .accordion {
-  --coolify-neutral-fill: rgb(
-    from var(--mantine-color-default-hover) r g b / calc(var(--opacity, 1) * 0.12)
-  );
-  --coolify-neutral-border: rgb(
-    from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45)
-  );
+  --coolify-neutral-fill: rgb(from var(--mantine-color-default-hover) r g b / calc(var(--opacity, 1) * 0.12));
+  --coolify-neutral-border: rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45));
 }
 
 .accordion :global(.mantine-Accordion-item) {

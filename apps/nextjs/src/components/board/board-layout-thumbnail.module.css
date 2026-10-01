@@ -5,11 +5,7 @@
   overflow: hidden;
   color: var(--mantine-color-dimmed);
   background:
-    linear-gradient(
-      to top,
-      color-mix(in srgb, var(--mantine-primary-color-filled) 12%, transparent),
-      transparent 55%
-    ),
+    linear-gradient(to top, color-mix(in srgb, var(--mantine-primary-color-filled) 12%, transparent), transparent 55%),
     var(--mantine-color-body);
 }
 

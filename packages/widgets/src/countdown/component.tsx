@@ -340,13 +340,7 @@ const AlertControls = ({
         disabled={disabled || notificationPermission === "unsupported" || notificationPermission === "denied"}
         onChange={(event) => void onNotificationsChange(event.currentTarget.checked)}
         label={t("notifications")}
-        thumbIcon={
-          preferences.notifications ? (
-            <IconBell style={iconSizes.sm} />
-          ) : (
-            <IconBellOff style={iconSizes.sm} />
-          )
-        }
+        thumbIcon={preferences.notifications ? <IconBell style={iconSizes.sm} /> : <IconBellOff style={iconSizes.sm} />}
       />
       {notificationPermission === "denied" && (
         <Text size="xs" c="dimmed" mt="xs">
