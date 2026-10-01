@@ -38,6 +38,7 @@ import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 
 import type { RouterOutputs } from "@homarr/api";
+import type { SystemHealthMonitoring as HealthMonitoringData } from "@homarr/integrations/types";
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useByteFormatter } from "@homarr/settings";
@@ -247,7 +248,11 @@ export const SystemHealthMonitoring = ({
                             </Text>
                           </Group>
                           <Group gap={8} wrap="nowrap">
-                            <DiskStatus healthy={disk.healthy} overallStatus={disk.overallStatus} />
+                            <DiskStatus
+                              healthy={disk.healthy}
+                              overallStatus={disk.overallStatus}
+                              statusReason={disk.statusReason}
+                            />
                             {disk.temperature !== null && (
                               <Group gap={4} wrap="nowrap">
                                 <IconTemperature className="health-monitoring-disk-temperature-icon" size="1rem" />
@@ -392,9 +397,21 @@ export const formatUptime = (uptimeInSeconds: number, t: ScopedTranslationFuncti
   });
 };
 
-// Green check or red cross from the SMART healthy flag; the raw status stays available on hover.
-const DiskStatus = ({ healthy, overallStatus }: { healthy?: boolean; overallStatus: string }) => {
+type SmartStatusReason = HealthMonitoringData["smart"][number]["statusReason"];
+
+// Green check or red cross from the SMART healthy flag. The tooltip says what the verdict is based on,
+// or shows the integration's raw status when it reports no reason.
+const DiskStatus = ({
+  healthy,
+  overallStatus,
+  statusReason,
+}: {
+  healthy?: boolean;
+  overallStatus: string;
+  statusReason?: SmartStatusReason;
+}) => {
   const mantineTheme = useMantineTheme();
+  const t = useI18n("widget.healthMonitoring");
 
   if (healthy === undefined) {
     return (
@@ -405,13 +422,18 @@ const DiskStatus = ({ healthy, overallStatus }: { healthy?: boolean; overallStat
   }
 
   const Icon = healthy ? IconCircleCheckFilled : IconCircleXFilled;
+  const label = statusReason
+    ? statusReason.type === "attributesFailed"
+      ? t("smartStatus.attributesFailed", { attributes: statusReason.attributes.join(", ") })
+      : t(`smartStatus.${statusReason.type}`)
+    : overallStatus;
   return (
-    <Tooltip label={overallStatus} disabled={!overallStatus}>
+    <Tooltip label={label} disabled={!label}>
       <Icon
         className="health-monitoring-disk-status-icon"
         size="1rem"
         color={healthy ? mantineTheme.colors.green[6] : mantineTheme.colors.red[6]}
-        aria-label={overallStatus}
+        aria-label={label}
       />
     </Tooltip>
   );
@@ -465,6 +487,7 @@ interface SmartData {
   temperature: number | null;
   overallStatus: string;
   healthy?: boolean;
+  statusReason?: SmartStatusReason;
 }
 
 export const matchFileSystemAndSmart = (fileSystems: FileSystem[], smartData: SmartData[]) => {
@@ -480,6 +503,7 @@ export const matchFileSystemAndSmart = (fileSystems: FileSystem[], smartData: Sm
         temperature: smartDisk?.temperature ?? null,
         overallStatus: smartDisk?.overallStatus ?? "",
         healthy: smartDisk?.healthy,
+        statusReason: smartDisk?.statusReason,
       };
     })
     .toSorted((fileSystemA, fileSystemB) => fileSystemA.deviceName.localeCompare(fileSystemB.deviceName));

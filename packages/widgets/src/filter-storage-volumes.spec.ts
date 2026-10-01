@@ -171,6 +171,16 @@ describe("matchFileSystemAndSmart", () => {
     ]);
   });
 
+  test("passes the SMART status reason through for the status tooltip", () => {
+    const statusReason = { type: "attributesFailed" as const, attributes: ["Reallocated_Sector_Ct"] };
+    const result = matchFileSystemAndSmart(
+      [{ deviceName: "/dev/sda", used: "100", available: "900", percentage: 10 }],
+      [{ deviceName: "/dev/sda", temperature: 35, overallStatus: "FAILED", healthy: false, statusReason }],
+    );
+
+    expect(result[0]?.statusReason).toEqual(statusReason);
+  });
+
   test("does not join SMART data from a different md device", () => {
     const result = matchFileSystemAndSmart(
       [{ deviceName: "/dev/md0", used: "100", available: "900", percentage: 10 }],

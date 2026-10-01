@@ -263,17 +263,30 @@ const mapGlancesSmartDevice = (device: z.infer<typeof smartSchema>[number]) => {
   });
 
   // ATA: when_failed is "-" unless the attribute crossed its threshold. NVMe: critical warning bitmask.
-  const healthy = attributes.every((attribute) => {
-    if (attribute.key === "criticalWarning") return Number(attribute.value ?? 0) === 0;
-    return !attribute.when_failed || attribute.when_failed === "-";
-  });
+  const failedAttributes = attributes
+    .filter((attribute) => attribute.when_failed && attribute.when_failed !== "-")
+    .flatMap((attribute) => attribute.name ?? attribute.key ?? []);
+  const criticalWarning = attributes.find((attribute) => attribute.key === "criticalWarning");
+  const hasCriticalWarning = criticalWarning !== undefined && Number(criticalWarning.value ?? 0) !== 0;
+  const healthy = failedAttributes.length === 0 && !hasCriticalWarning;
 
   return {
     deviceName: `/dev/${device.DeviceName.split(" ")[0]}`,
     temperature: getSmartTemperature(attributes),
     overallStatus: healthy ? "PASSED" : "FAILED",
     healthy,
+    statusReason: getSmartStatusReason(failedAttributes, criticalWarning !== undefined, hasCriticalWarning),
   };
+};
+
+const getSmartStatusReason = (
+  failedAttributes: string[],
+  isNvme: boolean,
+  hasCriticalWarning: boolean,
+): SystemHealthMonitoring["smart"][number]["statusReason"] => {
+  if (failedAttributes.length > 0) return { type: "attributesFailed", attributes: failedAttributes };
+  if (hasCriticalWarning) return { type: "criticalWarning" };
+  return { type: isNvme ? "noCriticalWarning" : "attributesWithinThresholds" };
 };
 
 const getSmartTemperature = (attributes: z.infer<typeof smartAttributeSchema>[]): number | null => {

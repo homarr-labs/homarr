@@ -229,6 +229,7 @@ describe("GlancesIntegration SMART", () => {
       temperature: 35,
       overallStatus: "PASSED",
       healthy: true,
+      statusReason: { type: "attributesWithinThresholds" },
     });
   });
 
@@ -243,6 +244,7 @@ describe("GlancesIntegration SMART", () => {
       temperature: 30,
       overallStatus: "PASSED",
       healthy: true,
+      statusReason: { type: "noCriticalWarning" },
     });
   });
 
@@ -261,8 +263,18 @@ describe("GlancesIntegration SMART", () => {
     const result = await integration.getSystemInfoAsync();
 
     expect(result.smart).toEqual([
-      expect.objectContaining({ deviceName: "/dev/nvme0", overallStatus: "FAILED", healthy: false }),
-      expect.objectContaining({ deviceName: "/dev/sda", overallStatus: "FAILED", healthy: false }),
+      expect.objectContaining({
+        deviceName: "/dev/nvme0",
+        overallStatus: "FAILED",
+        healthy: false,
+        statusReason: { type: "criticalWarning" },
+      }),
+      expect.objectContaining({
+        deviceName: "/dev/sda",
+        overallStatus: "FAILED",
+        healthy: false,
+        statusReason: { type: "attributesFailed", attributes: ["Reallocated_Sector_Ct"] },
+      }),
     ]);
   });
 
