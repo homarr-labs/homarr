@@ -73,7 +73,7 @@ export class Aria2Integration extends Integration implements IDownloadClientInte
           downSpeed: Number(download.downloadSpeed),
           upSpeed: Number(download.uploadSpeed),
           time: this.calculateEta(completedSize, totalSize, Number(download.downloadSpeed)),
-          state: this.getState(download.status, Boolean(download.bittorrent)),
+          state: this.getState(download.status, Boolean(download.bittorrent), progress),
           category: [],
           progress,
         };
@@ -158,8 +158,12 @@ export class Aria2Integration extends Integration implements IDownloadClientInte
     ) as Aria2GetClient;
   }
 
-  private getState(aria2Status: Aria2Download["status"], isTorrent: boolean): DownloadClientItem["state"] {
-    return isTorrent ? this.getTorrentState(aria2Status) : this.getNonTorrentState(aria2Status);
+  private getState(
+    aria2Status: Aria2Download["status"],
+    isTorrent: boolean,
+    progress: number,
+  ): DownloadClientItem["state"] {
+    return isTorrent ? this.getTorrentState(aria2Status, progress) : this.getNonTorrentState(aria2Status);
   }
   private getNonTorrentState(aria2Status: Aria2Download["status"]): DownloadClientItem["state"] {
     switch (aria2Status) {
@@ -178,10 +182,14 @@ export class Aria2Integration extends Integration implements IDownloadClientInte
         return "unknown";
     }
   }
-  private getTorrentState(aria2Status: Aria2Download["status"]): DownloadClientItem["state"] {
+  // aria2 reports an active torrent as "active" whether it is still downloading
+  // or has finished and is only seeding, so the download state has to come from
+  // the progress (1 once completedLength reaches totalLength). Without this a
+  // seeding torrent is indistinguishable from an actively downloading one.
+  private getTorrentState(aria2Status: Aria2Download["status"], progress: number): DownloadClientItem["state"] {
     switch (aria2Status) {
       case "active":
-        return "leeching";
+        return progress >= 1 ? "seeding" : "leeching";
       case "waiting":
         return "queued";
       case "paused":
