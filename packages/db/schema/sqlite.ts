@@ -54,6 +54,7 @@ export const users = sqliteTable("user", {
   image: text(),
   password: text(),
   provider: text().$type<SupportedAuthProvider>().default("credentials").notNull(),
+  disabled: int({ mode: "boolean" }).default(false).notNull(),
   homeBoardId: text().references((): AnySQLiteColumn => boards.id, {
     onDelete: "set null",
   }),
