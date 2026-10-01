@@ -8,6 +8,7 @@ import { getWorkshopBackend } from "@site/src/lib/pocketbase";
 import type { SubmissionType } from "@site/src/lib/workshop-schema";
 import { validateSubmissionContent } from "@site/src/lib/workshop-schema";
 import { errorMessage, oauthErrorMessage } from "@site/src/lib/utils";
+import { track } from "@/lib/analytics";
 
 import { voteAndReconcile } from "./workshop-utils";
 
@@ -207,6 +208,7 @@ export const useWorkshop = (workshopUrl: string) => {
         },
         input.screenshots,
       );
+      track("Workshop Submit Completed", { item_type: input.type });
       await refresh();
       return true;
     },

@@ -1,6 +1,9 @@
 import type { WorkshopSubmission, WorkshopVote } from "@site/src/lib/pocketbase";
 
+import { track } from "@/lib/analytics";
+
 export const downloadSubmissionJson = (submission: WorkshopSubmission) => {
+  track("Workshop Item Downloaded", { item_id: submission.id, item_type: submission.type, method: "file" });
   const url = URL.createObjectURL(new Blob([submission.content], { type: "application/json" }));
   Object.assign(document.createElement("a"), {
     href: url,

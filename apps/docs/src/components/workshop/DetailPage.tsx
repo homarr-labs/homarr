@@ -57,6 +57,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Toaster } from "@/components/ui/sonner";
 import Link from "@/components/mdx/link";
+import { track } from "@/lib/analytics";
 import { CustomWidgetCodeExample, CustomWidgetCodeInput } from "../custom-widget-code";
 import { validateSubmissionContent } from "@site/src/lib/workshop-schema";
 import { cn, errorMessage, oauthErrorMessage } from "@site/src/lib/utils";
@@ -493,6 +494,7 @@ const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string;
       await navigator.clipboard.writeText(submission.content);
       setCopied(true);
       setCopyFailed(false);
+      track("Workshop Item Downloaded", { item_id: submission.id, item_type: submission.type, method: "clipboard" });
       if (copyTimer.current) clearTimeout(copyTimer.current);
       if (copyFailedTimer.current) clearTimeout(copyFailedTimer.current);
       copyTimer.current = setTimeout(() => setCopied(false), 1500);
