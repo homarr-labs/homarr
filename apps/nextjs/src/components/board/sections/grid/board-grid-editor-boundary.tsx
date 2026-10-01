@@ -19,9 +19,7 @@ type LoadedGridEditorModule = Awaited<ReturnType<typeof loadGridEditorAsync>>;
  */
 export const BoardGridEditorBoundary = ({ children }: PropsWithChildren) => {
   const [isEditMode] = useEditMode();
-  const [EditorModule, setEditorModule] = useState<LoadedGridEditorModule | null>(
-    getLoadedGridEditorModule() ?? null,
-  );
+  const [EditorModule, setEditorModule] = useState<LoadedGridEditorModule | null>(getLoadedGridEditorModule() ?? null);
   const [hasLoadError, setHasLoadError] = useState(false);
   const resolvedEditorModule = EditorModule ?? getLoadedGridEditorModule() ?? null;
 
@@ -43,13 +41,7 @@ export const BoardGridEditorBoundary = ({ children }: PropsWithChildren) => {
     };
   }, [isEditMode, resolvedEditorModule]);
 
-  const runtimeStatus = !isEditMode
-    ? "idle"
-    : hasLoadError
-      ? "error"
-      : resolvedEditorModule
-        ? "ready"
-        : "loading";
+  const runtimeStatus = !isEditMode ? "idle" : hasLoadError ? "error" : resolvedEditorModule ? "ready" : "loading";
   const Provider: BoardGridEditorProviderComponent | null = resolvedEditorModule?.BoardGridEditorProvider ?? null;
   const GridEditor = resolvedEditorModule?.default ?? null;
 

@@ -45,13 +45,7 @@ const NavLinkHref = (props: NavigationLinkHref) => {
   const link = props.external ? (
     <NavLink component="a" label={props.label} leftSection={props.icon} href={props.href} target="_blank" />
   ) : (
-    <NavLink
-      component={Link}
-      label={props.label}
-      leftSection={props.icon}
-      href={props.href}
-      active={isActive}
-    />
+    <NavLink component={Link} label={props.label} leftSection={props.icon} href={props.href} active={isActive} />
   );
   return withOptionalTourTarget(tourId, link);
 };

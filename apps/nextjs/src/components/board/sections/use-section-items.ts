@@ -20,10 +20,7 @@ interface SectionItemsIndex {
   itemsBySectionId: ReadonlyMap<string, SectionItem[]>;
 }
 
-const sectionItemsIndexCache = new WeakMap<
-  ReturnType<typeof useRequiredBoard>,
-  Map<string, SectionItemsIndex>
->();
+const sectionItemsIndexCache = new WeakMap<ReturnType<typeof useRequiredBoard>, Map<string, SectionItemsIndex>>();
 const EMPTY_INNER_SECTIONS: ContainerSectionItem[] = [];
 const EMPTY_ITEMS: SectionItem[] = [];
 

@@ -314,7 +314,12 @@ export function JsonPathTreePicker({
         {hasData && (
           <Combobox.Header>
             <Group gap="xs" px="xs" pt="xs" pb={4}>
-              <Badge size="sm" color="teal" variant="light" leftSection={<IconCircleCheck size="var(--mantine-font-size-xs)" />}>
+              <Badge
+                size="sm"
+                color="teal"
+                variant="light"
+                leftSection={<IconCircleCheck size="var(--mantine-font-size-xs)" />}
+              >
                 {loadedHint}
               </Badge>
               <Text size="xs" c="dimmed">

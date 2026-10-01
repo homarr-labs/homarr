@@ -208,13 +208,7 @@ const UpdateCard = ({
   const showVersionTooltip = versionText !== null && !isDigestUpdate && versionText !== fullVersionText;
 
   return (
-    <Card
-      className={combineClasses(className)}
-      radius={radius}
-      p="xs"
-      bg="transparent"
-      style={{ overflow: "visible" }}
-    >
+    <Card className={combineClasses(className)} radius={radius} p="xs" bg="transparent" style={{ overflow: "visible" }}>
       <Group justify="space-between" wrap="nowrap" gap="xs" miw={0}>
         <Text size="xs" fw={500} lineClamp={1} miw={0}>
           {update.name}

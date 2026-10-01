@@ -13,7 +13,7 @@
 | Path             | Role                                                                                     |
 | ---------------- | ---------------------------------------------------------------------------------------- |
 | `apps/nextjs`    | Main Next.js application and HTTP APIs on port 3000                                      |
-| `apps/docs`      | Next.js and Fumadocs documentation site on port 3003                                      |
+| `apps/docs`      | Next.js and Fumadocs documentation site on port 3003                                     |
 | `apps/tasks`     | Cron-job initialization and scheduling runtime; it does not expose the old port-3002 API |
 | `apps/websocket` | tRPC WebSocket subscriptions on port 3001                                                |
 | `apps/workshop`  | Go/PocketBase Workshop service and provider integration                                  |

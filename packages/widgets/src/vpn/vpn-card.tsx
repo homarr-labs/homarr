@@ -19,8 +19,7 @@ import { getStatusColor, RUNNING_STATUS } from "./helpers";
 
 export type VpnInfo = RouterOutputs["widget"]["vpn"]["getSummaries"][number]["summary"];
 
-const neutralBorderColor =
-  "rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45))";
+const neutralBorderColor = "rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45))";
 
 export function VpnIntegrationCard({
   vpn,

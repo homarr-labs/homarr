@@ -532,7 +532,7 @@ export function calculateCpuUsage(stats: ContainerStats, previousCounters?: CpuU
       (stats.precpu_stats?.cpu_usage?.total_usage ?? 0)
     : (previousCounters?.totalUsage ?? 0);
   const previousSystemUsage = hasPrecpuBaseline
-    ? stats.precpu_stats?.system_cpu_usage ?? 0
+    ? (stats.precpu_stats?.system_cpu_usage ?? 0)
     : (previousCounters?.systemUsage ?? 0);
   const cpuDelta = stats.cpu_stats.cpu_usage.total_usage - previousTotalUsage;
   const systemDelta = (stats.cpu_stats.system_cpu_usage ?? 0) - previousSystemUsage;
