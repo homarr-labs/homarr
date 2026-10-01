@@ -10,7 +10,12 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
-import { getAllSecretKindOptions, getDefaultSecretKinds, invariantTechnicalLabels } from "@homarr/definitions";
+import {
+  getAllSecretKindOptions,
+  getDefaultSecretKinds,
+  getOptionalSecretKinds,
+  invariantTechnicalLabels,
+} from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { AppSelectModal } from "@homarr/modals-collection";
@@ -47,6 +52,7 @@ const formSchema = integrationUpdateSchema.omit({ id: true, appId: true }).and(
         href: z.string().nullable(),
       })
       .nullable(),
+    optionalSecrets: z.array(z.object({ kind: z.string(), value: z.string() })),
   }),
 );
 
@@ -60,11 +66,17 @@ export const EditIntegrationForm = ({
   const tIntegration = useI18n("integration");
   const { openConfirmModal } = useConfirmModal();
   const allSecretKinds = getAllSecretKindOptions(integration.kind);
+  const optionalSecretKinds = getOptionalSecretKinds(integration.kind);
+  const requiredSecrets = integration.secrets.filter((secret) => !optionalSecretKinds.includes(secret.kind));
 
+  // Prefer the alternative that matches the stored secrets exactly (e.g. Wazuh indexer-only) over the first superset.
+  const matchingSecretKinds = getAllSecretKindOptions(integration.kind).filter((secretKinds) =>
+    requiredSecrets.every((secret) => secretKinds.includes(secret.kind)),
+  );
   const initialSecretsKinds =
-    getAllSecretKindOptions(integration.kind).find((secretKinds) =>
-      integration.secrets.every((secret) => secretKinds.includes(secret.kind)),
-    ) ?? getDefaultSecretKinds(integration.kind);
+    matchingSecretKinds.find((secretKinds) => secretKinds.length === requiredSecrets.length) ??
+    matchingSecretKinds[0] ??
+    getDefaultSecretKinds(integration.kind);
 
   const hasUrlSecret = initialSecretsKinds.includes("url");
   const utils = clientApi.useUtils();
@@ -78,6 +90,10 @@ export const EditIntegrationForm = ({
         value: integration.secrets.find((secret) => secret.kind === kind)?.value ?? "",
       })),
       app: integration.app ?? null,
+      optionalSecrets: optionalSecretKinds.map((kind) => ({
+        kind,
+        value: integration.secrets.find((secret) => secret.kind === kind)?.value ?? "",
+      })),
     },
   });
   const { mutateAsync, isPending } = clientApi.integration.update.useMutation({
@@ -94,7 +110,7 @@ export const EditIntegrationForm = ({
   const secretsMap = new Map(integration.secrets.map((secret) => [secret.kind, secret]));
 
   const handleSubmitAsync = useCallback(
-    async ({ app, ...values }: FormType) => {
+    async ({ app, optionalSecrets, ...values }: FormType) => {
       setError(null);
       let url: string;
       try {
@@ -113,10 +129,17 @@ export const EditIntegrationForm = ({
         id: integration.id,
         ...values,
         url,
-        secrets: values.secrets.map((secret) => ({
-          kind: secret.kind,
-          value: secret.value === "" ? null : secret.value,
-        })),
+        secrets: [
+          ...values.secrets.map((secret) => ({
+            kind: secret.kind,
+            value: secret.value === "" ? null : secret.value,
+          })),
+          // Optional secrets that were cleared are left out, which removes them from the integration.
+          ...optionalSecretKinds.flatMap((optionalKind) => {
+            const value = optionalSecrets.find((secret) => secret.kind === optionalKind)?.value.trim() ?? "";
+            return value.length > 0 ? [{ kind: optionalKind, value }] : [];
+          }),
+        ],
         appId: app?.id ?? null,
       });
 
@@ -146,6 +169,7 @@ export const EditIntegrationForm = ({
       hasUrlSecret,
       hideButtons,
       integration.id,
+      optionalSecretKinds,
       mutateAsync,
       onSuccess,
       router,
@@ -241,6 +265,13 @@ export const EditIntegrationForm = ({
               <Text c={"blue"}>{tIntegration("secrets.noSecretsRequired.text")}</Text>
             </Alert>
           )}
+          {optionalSecretKinds.map((optionalKind, index) => (
+            <IntegrationSecretInput
+              key={optionalKind}
+              kind={optionalKind}
+              {...form.getInputProps(`optionalSecrets.${index}.value`)}
+            />
+          ))}
         </Stack>
       </Fieldset>
 

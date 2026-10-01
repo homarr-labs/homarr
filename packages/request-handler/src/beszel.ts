@@ -134,13 +134,17 @@ export const beszelStatsRequestHandler = createIntegrationRequestHandler<
     const start = performance.now();
     const config = timePeriodConfig[input.timePeriod] ?? { type: "1m", perPage: 60 };
     const instance = await createIntegrationAsync(integration);
-    const systemStats = await instance.getSystemStatsAsync(input.systemId, config.type, config.perPage);
-    const containerStats = input.includeDocker
-      ? await instance.getContainerStatsAsync(input.systemId, config.type, config.perPage).catch((error) => {
+    const systemStatsPromise = instance.getSystemStatsAsync(input.systemId, config.type, config.perPage);
+    let containerStatsPromise: Promise<BeszelContainerStatsRecord[]> = Promise.resolve([]);
+    if (input.includeDocker) {
+      containerStatsPromise = instance
+        .getContainerStatsAsync(input.systemId, config.type, config.perPage)
+        .catch((error) => {
           logger.warn("Failed to fetch Beszel container stats", { systemId: input.systemId, error: String(error) });
           return [];
-        })
-      : [];
+        });
+    }
+    const [systemStats, containerStats] = await Promise.all([systemStatsPromise, containerStatsPromise]);
     logger.debug("beszelStats fetch completed", {
       integrationId: integration.id,
       systemId: input.systemId,

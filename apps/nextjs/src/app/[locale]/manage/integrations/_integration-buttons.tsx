@@ -29,6 +29,7 @@ export const DeleteIntegrationActionButton = ({ integration }: DeleteIntegration
           });
           void revalidatePathActionAsync("/manage/integrations");
           void utils.integration.invalidate();
+          void utils.widget.invalidate();
         },
         onError: () => {
           showErrorNotification({

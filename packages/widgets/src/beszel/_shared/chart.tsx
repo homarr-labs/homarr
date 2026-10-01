@@ -13,10 +13,10 @@ import { formatLocalizedDate } from "../../common/locale";
 export type BeszelTimePeriod = "1m" | "1h" | "12h" | "24h" | "1w" | "30d";
 
 const timeFormatOptions: Record<BeszelTimePeriod, Intl.DateTimeFormatOptions> = {
-  "1m": { hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23" },
-  "1h": { hour: "2-digit", minute: "2-digit", hourCycle: "h23" },
-  "12h": { hour: "2-digit", minute: "2-digit", hourCycle: "h23" },
-  "24h": { hour: "2-digit", minute: "2-digit", hourCycle: "h23" },
+  "1m": { hour: "numeric", minute: "2-digit", second: "2-digit" },
+  "1h": { hour: "numeric", minute: "2-digit" },
+  "12h": { hour: "numeric", minute: "2-digit" },
+  "24h": { hour: "numeric", minute: "2-digit" },
   "1w": { month: "short", day: "numeric" },
   "30d": { month: "short", day: "numeric" },
 };
@@ -138,7 +138,6 @@ const BeszelAreaChart = memo(
     const mergedXAxis = useMemo(
       () => ({
         interval: "preserveEnd" as const,
-        tick: { fontSize: "var(--mantine-font-size-xs)" },
         ...xAxisPropsOverride,
       }),
       [xAxisPropsOverride],

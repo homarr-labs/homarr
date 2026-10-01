@@ -21,13 +21,20 @@ export const getLogicalGridSize = (trackCount: number) => {
   return normalizedTrackCount * LOGICAL_GRID_PITCH;
 };
 
-export const getLogicalItemStyle = ({ x, y, w, h }: GridCoordinates): CSSProperties => ({
-  position: "absolute",
-  left: x * LOGICAL_GRID_PITCH,
-  top: y * LOGICAL_GRID_PITCH,
-  width: getLogicalGridSize(w),
-  height: getLogicalGridSize(h),
-});
+export const getLogicalItemStyle = ({ x, y, w, h }: GridCoordinates, rowScale?: string): CSSProperties => {
+  const style: CSSProperties = {
+    position: "absolute",
+    left: x * LOGICAL_GRID_PITCH,
+    top: y * LOGICAL_GRID_PITCH,
+    width: getLogicalGridSize(w),
+    height: getLogicalGridSize(h),
+  };
+  if (rowScale) {
+    style.top = `calc(${y * LOGICAL_GRID_PITCH}px * ${rowScale})`;
+    style.height = `calc(${getLogicalGridSize(h)}px * ${rowScale})`;
+  }
+  return style;
+};
 
 export const getLayoutRowCount = (placements: readonly GridCoordinates[]) =>
   placements.reduce((rowCount, placement) => Math.max(rowCount, placement.y + placement.h), 0);

@@ -30,17 +30,21 @@ server outside the Homarr container, use a hostname that the container can resol
 The [Homarr provider](/docs/workshop/homarr-provider) is available through the Community Workshop without an administrator
 API key and has a daily request allowance.
 
-:::warning Using an existing AI subscription
+<Alert type="warning" title="Using an existing AI subscription">
 
 Homarr Assistant cannot use existing AI subscriptions such as Claude or GitHub Copilot, and this is not planned. To use
 your preferred AI client with Homarr, connect it to the [Homarr MCP server](/docs/management/mcp).
 
-:::
+</Alert>
 
 ## Access
 
 Open Assistant from the user menu, with `Shift+A`, from search with `Cmd/Ctrl+/`, or through the
 [Assistant widget](/docs/widgets/assistant).
+
+Homarr checks Assistant availability alongside other page settings, so an enabled Assistant appears with the dashboard
+without reloading its widgets after the page opens. Widget configuration loads its editor when you open the configuration
+dialog.
 
 Assistant can work with boards, apps, integrations, widgets, Custom Widgets, and supported connected services. Mention
 Homarr resources with `@`; the model loads additional live context only when needed.

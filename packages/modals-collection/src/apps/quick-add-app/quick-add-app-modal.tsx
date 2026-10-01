@@ -16,6 +16,7 @@ export const QuickAddAppModal = createModal<QuickAddAppModalProps>(({ actions, i
   const tScoped = useI18n("app.page.create.notification");
   const tCommon = useI18n("common");
   const tBoard = useI18n("board");
+  const utils = clientApi.useUtils();
 
   const { mutate, isPending } = clientApi.app.create.useMutation({
     onError: () => {
@@ -29,6 +30,7 @@ export const QuickAddAppModal = createModal<QuickAddAppModalProps>(({ actions, i
   const handleSubmit = (values: z.infer<typeof appManageSchema>) => {
     mutate(values, {
       onSuccess(app) {
+        void utils.app.invalidate();
         showSuccessNotification({
           title: tCommon("notification.create.success"),
           message: tScoped("success.message"),

@@ -77,6 +77,26 @@ export const secretKinds = {
     description: "The slug or path identifier for the resource",
     icon: IconLink,
   },
+  wazuhIndexerUrl: {
+    name: "Indexer URL",
+    description: "URL of the Wazuh indexer (OpenSearch), usually https://wazuh:9200",
+    icon: IconLink,
+  },
+  wazuhIndexerUsername: {
+    name: "Indexer username",
+    description: "Wazuh indexer user with read access to wazuh-alerts-*, wazuh-monitoring-* and wazuh-states-*",
+    icon: IconUser,
+  },
+  wazuhIndexerPassword: {
+    name: "Indexer password",
+    description: "Password of the Wazuh indexer user",
+    icon: IconPassword,
+  },
+  wazuhDashboardUrl: {
+    name: "Dashboard URL",
+    description: "Optional. Public URL of the Wazuh dashboard, used for deep links from the widgets",
+    icon: IconLink,
+  },
 };
 
 type SecretKind = keyof typeof secretKinds;

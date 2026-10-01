@@ -74,9 +74,15 @@ export const clearGridPreviewGeometry = (
 
 const applyPreviewGeometry = (element: HTMLElement, controlled: GridPlacement, preview: GridPlacement) => {
   element.style.setProperty("--board-grid-preview-x", `${(preview.x - controlled.x) * LOGICAL_GRID_PITCH}px`);
-  element.style.setProperty("--board-grid-preview-y", `${(preview.y - controlled.y) * LOGICAL_GRID_PITCH}px`);
+  element.style.setProperty(
+    "--board-grid-preview-y",
+    `calc(${(preview.y - controlled.y) * LOGICAL_GRID_PITCH}px * var(--board-grid-row-scale, 1))`,
+  );
   element.style.setProperty("--board-grid-preview-width", `${getLogicalGridSize(preview.w)}px`);
-  element.style.setProperty("--board-grid-preview-height", `${getLogicalGridSize(preview.h)}px`);
+  element.style.setProperty(
+    "--board-grid-preview-height",
+    `calc(${getLogicalGridSize(preview.h)}px * var(--board-grid-row-scale, 1))`,
+  );
   element.setAttribute("data-grid-preview", "true");
   setPlacementAttributes(element, preview);
 };

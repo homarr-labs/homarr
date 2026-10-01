@@ -31,6 +31,7 @@ import {
   getIntegrationApiKeyUrl,
   getIntegrationDefaultUrl,
   getIntegrationName,
+  getOptionalSecretKinds,
   invariantTechnicalLabels,
   integrationDefs,
 } from "@homarr/definitions";
@@ -62,6 +63,7 @@ const formSchema = integrationCreateSchema.omit({ kind: true, app: true }).and(
     hasApp: z.boolean(),
     appHref: appHrefSchema,
     appId: z.string().nullable(),
+    optionalSecrets: z.array(z.object({ kind: z.string(), value: z.string() })),
   }),
 );
 
@@ -69,6 +71,7 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
   const tCommon = useI18n("common");
   const tIntegration = useI18n("integration");
   const secretKinds = getAllSecretKindOptions(kind);
+  const optionalSecretKinds = getOptionalSecretKinds(kind);
   const hasUrlSecret = secretKinds.some((kinds) => kinds.includes("url"));
   const { data: session } = useSession();
   const canCreateApps = session?.user.permissions.includes("app-create") ?? false;
@@ -94,6 +97,7 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
       hasApp: canCreateApps,
       appHref: url,
       appId: null,
+      optionalSecrets: optionalSecretKinds.map((optionalKind) => ({ kind: optionalKind, value: "" })),
     },
   });
 
@@ -106,7 +110,18 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
   });
   const [error, setError] = useState<null | AnyMappedTestConnectionError>(null);
 
-  const handleSubmitAsync = async ({ appId, appHref, hasApp, ...values }: FormType) => {
+  const handleSubmitAsync = async ({ appId, appHref, hasApp, optionalSecrets, ...formValues }: FormType) => {
+    // Optional secrets are only stored when a value was entered.
+    const values = {
+      ...formValues,
+      secrets: [
+        ...formValues.secrets,
+        ...optionalSecretKinds.flatMap((optionalKind) => {
+          const value = optionalSecrets.find((secret) => secret.kind === optionalKind)?.value.trim() ?? "";
+          return value.length > 0 ? [{ kind: optionalKind, value }] : [];
+        }),
+      ],
+    };
     const url = hasUrlSecret
       ? new URL(values.secrets.find((secret) => secret.kind === "url")?.value ?? values.url).origin
       : values.url;
@@ -189,6 +204,13 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
                 <Text c={"blue"}>{tIntegration("secrets.noSecretsRequired.text")}</Text>
               </Alert>
             )}
+            {optionalSecretKinds.map((optionalKind, index) => (
+              <IntegrationSecretInput
+                key={optionalKind}
+                kind={optionalKind}
+                {...form.getInputProps(`optionalSecrets.${index}.value`)}
+              />
+            ))}
             <ApiKeySettingsLink kind={kind} url={form.values.url} />
           </Stack>
         </Fieldset>

@@ -33,18 +33,22 @@ export const getSnappedGridCoordinates = ({
   dragShape,
   target,
   columnCount,
+  verticalVisualScale,
 }: {
   dragShape: Pick<RectangleLike, "left" | "top">;
   target: RectangleLike;
   columnCount: number;
+  verticalVisualScale?: number;
 }) => {
   const logicalWidth = getLogicalGridSize(columnCount);
   const visualScale = logicalWidth > 0 ? target.width / logicalWidth : 0;
+  const rowVisualScale = verticalVisualScale ?? visualScale;
   if (!Number.isFinite(visualScale) || visualScale <= 0) return null;
+  if (!Number.isFinite(rowVisualScale) || rowVisualScale <= 0) return null;
 
   return {
     x: Math.round((dragShape.left - target.left) / (LOGICAL_GRID_PITCH * visualScale)),
-    y: Math.round((dragShape.top - target.top) / (LOGICAL_GRID_PITCH * visualScale)),
+    y: Math.round((dragShape.top - target.top) / (LOGICAL_GRID_PITCH * rowVisualScale)),
   };
 };
 

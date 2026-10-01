@@ -1,0 +1,7 @@
+.frame {
+  display: block;
+  width: 100%;
+  height: calc(100dvh - 12rem);
+  min-height: 30rem;
+  border: 0;
+}

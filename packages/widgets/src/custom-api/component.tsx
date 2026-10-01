@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { Button, Center, Loader, Stack, Text } from "@mantine/core";
+import { Button, Center, Stack, Text } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -9,6 +9,7 @@ import { useSession } from "@homarr/auth/client";
 import { useI18n } from "@homarr/translation/client";
 import { Link, zoomCompensatedSize } from "@homarr/ui";
 
+import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 import { isLegacyCustomWidgetMigrationError, isTerminalCustomWidgetDefinitionError } from "./migration-state";
 
@@ -41,12 +42,7 @@ export default function CustomApiWidget({
     return <Unavailable message={t("definitionNotFound")} removeLabel={t("removeFromBoard")} onRemove={removeItem} />;
   }
   if (isEditMode && !itemId) return <Unavailable message={t("editModePending")} />;
-  if (query.isLoading)
-    return (
-      <Center h="100%">
-        <Loader size="sm" />
-      </Center>
-    );
+  if (query.isLoading) return <WidgetQueryLoadingState />;
   if (query.error) {
     const errorCode = query.error.data?.code;
     const migrationRequired = isLegacyCustomWidgetMigrationError(query.error);

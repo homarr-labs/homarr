@@ -13,6 +13,11 @@ match the legacy responsive grid. The visual canvas always fits the available
 width, every root lane keeps at least one viewport of height, and edit-mode
 previews extend it downward as needed.
 
+Container columns fit the full inner width. Their row pitch adjusts independently
+to fit the available height within the existing footprint. This changes item
+box heights without stretching widget content; editor previews and pointer
+coordinates use the same row metric.
+
 The read-only renderer should:
 
 1. convert persisted `xOffset/yOffset/width/height` values to `x/y/w/h`;

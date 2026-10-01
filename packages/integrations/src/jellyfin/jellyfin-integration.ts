@@ -12,6 +12,8 @@ import {
   fetchWithTrustedCertificatesAsync,
 } from "@homarr/core/infrastructure/http";
 
+import { createKeyedFingerprint } from "@homarr/common/server";
+
 import { HandleIntegrationErrors } from "../base/errors/decorator";
 import { integrationAxiosHttpErrorHandler } from "../base/errors/http";
 import type { IntegrationTestingInput } from "../base/integration";
@@ -62,39 +64,49 @@ export function parseLocation(remoteEndPoint: string | null | undefined): "lan" 
   return privateAddresses.check(host, family === 4 ? "ipv4" : "ipv6") ? "lan" : "wan";
 }
 
+const authorizationPrefix = 'MediaBrowser Client="Homarr", Device="Homarr", DeviceId="homarr", Version="0.0.1"';
+const pendingAuthentications = new Map<string, Promise<string>>();
+
 @HandleIntegrationErrors([integrationAxiosHttpErrorHandler])
 export class JellyfinIntegration extends Integration implements IMediaServerIntegration, IMediaReleasesIntegration {
   public override async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
-    const authorizationPrefix = 'MediaBrowser Client="Homarr", Device="Homarr", DeviceId="homarr", Version="0.0.1"';
-    let accessToken: string;
-    if (this.hasSecretValue("apiKey")) {
-      accessToken = this.getSecretValue("apiKey");
-    } else {
-      const username = this.getSecretValue("username");
-      const password = this.getSecretValue("password");
+    const accessToken = await this.getAccessTokenAsync();
+    return {
+      headers: { Authorization: `${authorizationPrefix}, Token="${accessToken}"` },
+      redactValues: [accessToken],
+    };
+  }
+
+  private async getAccessTokenAsync(): Promise<string> {
+    if (this.hasSecretValue("apiKey")) return this.getSecretValue("apiKey");
+    const username = this.getSecretValue("username");
+    const password = this.getSecretValue("password");
+    const identity = createKeyedFingerprint(JSON.stringify([this.url("/").toString(), username, password]));
+    const existing = pendingAuthentications.get(identity);
+    if (existing) return await existing;
+
+    const authenticate = async () => {
       const response = await fetchWithTrustedCertificatesAsync(this.url("/Users/AuthenticateByName"), {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: authorizationPrefix,
-        },
+        headers: { "Content-Type": "application/json", Authorization: authorizationPrefix },
         body: JSON.stringify({ Username: username, Pw: password }),
         redirect: "error",
       }).catch(() => {
         throw new Error("Jellyfin authentication failed");
       });
-
       if (!response.ok) throw new Error("Jellyfin authentication failed");
       const result = (await response.json().catch(() => null)) as { AccessToken?: unknown } | null;
       if (typeof result?.AccessToken !== "string" || result.AccessToken.length === 0)
         throw new Error("Jellyfin authentication failed");
-      accessToken = result.AccessToken;
-    }
-
-    return {
-      headers: { Authorization: `${authorizationPrefix}, Token="${accessToken}"` },
-      redactValues: [accessToken],
+      return result.AccessToken;
     };
+    const pending = authenticate();
+    pendingAuthentications.set(identity, pending);
+    try {
+      return await pending;
+    } finally {
+      pendingAuthentications.delete(identity);
+    }
   }
 
   private readonly jellyfin: Jellyfin = new Jellyfin({
@@ -273,18 +285,20 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
    * @returns An instance of Api that has been authenticated
    */
   private async getApiAsync(fallbackInstance?: AxiosInstance) {
-    const axiosInstance = fallbackInstance ?? (await createAxiosCertificateInstanceAsync());
-    if (this.hasSecretValue("apiKey")) {
-      const apiKey = this.getSecretValue("apiKey");
-      return this.jellyfin.createApi(this.url("/").toString(), apiKey, axiosInstance);
+    // Testing supplies a confined Axios client; keep all its traffic on that
+    // client. Normal query work shares only the in-flight authentication token.
+    if (fallbackInstance) {
+      if (this.hasSecretValue("apiKey"))
+        return this.jellyfin.createApi(this.url("/").toString(), this.getSecretValue("apiKey"), fallbackInstance);
+      const api = this.jellyfin.createApi(this.url("/").toString(), undefined, fallbackInstance);
+      await api.authenticateUserByName(this.getSecretValue("username"), this.getSecretValue("password"));
+      return api;
     }
-
-    const apiClient = this.jellyfin.createApi(this.url("/").toString(), undefined, axiosInstance);
-    // Authentication state is stored internally in the Api class, so now
-    // requests that require authentication can be made normally.
-    // see https://typescript-sdk.jellyfin.org/#usage
-    await apiClient.authenticateUserByName(this.getSecretValue("username"), this.getSecretValue("password"));
-    return apiClient;
+    const [axiosInstance, accessToken] = await Promise.all([
+      createAxiosCertificateInstanceAsync(),
+      this.getAccessTokenAsync(),
+    ]);
+    return this.jellyfin.createApi(this.url("/").toString(), accessToken, axiosInstance);
   }
 }
 

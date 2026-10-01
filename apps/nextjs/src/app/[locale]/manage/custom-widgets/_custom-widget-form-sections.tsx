@@ -26,11 +26,13 @@ import { useCustomWidgetFormAnalysisField } from "./_use-custom-widget-form-anal
 export function CustomWidgetAiSection({
   getDraft,
   getDiagnostics,
+  getSampleResponse,
   onPaste,
 }: {
-  getDraft(): CustomWidgetAiDraft;
+  getDraft(): CustomWidgetAiDraft | null;
   getDiagnostics(): readonly CustomWidgetAiDiagnostic[];
-  onPaste(): void;
+  getSampleResponse(): string | null;
+  onPaste(response: string): string | null;
 }) {
   const [request, setRequest] = useState("");
   const [documentationUrl, setDocumentationUrl] = useState("");
@@ -38,6 +40,7 @@ export function CustomWidgetAiSection({
     <CustomWidgetAiCard
       getDraft={getDraft}
       getDiagnostics={getDiagnostics}
+      getSampleResponse={getSampleResponse}
       request={request}
       onRequestChange={setRequest}
       documentationUrl={documentationUrl}

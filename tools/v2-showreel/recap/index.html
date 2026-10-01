@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Homarr v2 — announcement image</title>
+    <link rel="stylesheet" href="../src/style.css" />
+    <style>
+      #stage {
+        background: #070708;
+      }
+      .abs {
+        position: absolute;
+      }
+      .clip {
+        position: absolute;
+        overflow: hidden;
+      }
+      .clip > img {
+        position: absolute;
+        max-width: none;
+      }
+      .shot {
+        border-radius: 18px;
+        background: #1b1c21;
+        box-shadow:
+          0 50px 110px -30px rgba(0, 0, 0, 0.85),
+          0 0 0 1px rgba(255, 255, 255, 0.12);
+      }
+      .tile {
+        position: absolute;
+        overflow: hidden;
+        border-radius: 22px;
+        background: linear-gradient(180deg, #1d1e24 0%, #16171b 100%);
+        box-shadow:
+          0 40px 90px -30px rgba(0, 0, 0, 0.7),
+          inset 0 0 0 1px rgba(255, 255, 255, 0.09);
+      }
+      .tag {
+        display: inline-block;
+        font: 700 15px/1 "JetBrains Mono", monospace;
+        letter-spacing: 0.14em;
+        padding: 7px 10px 6px;
+        border-radius: 7px;
+      }
+      .tag.new {
+        color: #8ff0c4;
+        background: rgba(61, 220, 151, 0.12);
+        box-shadow: inset 0 0 0 1px rgba(61, 220, 151, 0.45);
+      }
+      .tag.rework {
+        color: #ff8a87;
+        background: rgba(250, 82, 82, 0.12);
+        box-shadow: inset 0 0 0 1px rgba(250, 82, 82, 0.5);
+      }
+      .rays {
+        position: absolute;
+        width: 3000px;
+        height: 3000px;
+        margin: -1500px 0 0 -1500px;
+        background: repeating-conic-gradient(
+          from 0deg at 50% 50%,
+          rgba(255, 130, 130, 0.08) 0deg 3deg,
+          rgba(255, 130, 130, 0) 3deg 12deg
+        );
+      }
+    </style>
+  </head>
+  <body>
+    <div id="stage"></div>
+    <script type="module">
+      // Candidate announcement images for the Homarr v2 blog post: real screenshots from the post, dressed in
+      // the motion reel's lobster, type and colours. node render.mjs recap [1 2 3 4] renders them.
+      const V = new URLSearchParams(location.search).get("v") ?? "1";
+      const BLOG = "../out/recap/blog/"; // symlink to the post's img folder, made by render.mjs
+      const stage = document.getElementById("stage");
+      const loads = [];
+
+      function h(tag, css = "", ...kids) {
+        const e = document.createElement(tag);
+        if (css) e.style.cssText = css;
+        e.append(...kids);
+        return e;
+      }
+      function img(src, css) {
+        const e = h("img", css);
+        e.src = src;
+        loads.push(e.decode());
+        return e;
+      }
+
+      // Natural widths of the screenshots used below.
+      const NAT = {
+        "homarr-v2-dashboard.webp": 1440,
+        "assistant-control-surface.webp": 1300,
+        "community-workshop.webp": 1120,
+        "custom-widget-dashboard.webp": 1570,
+        "advanced-downloads.webp": 1050,
+      };
+      // Crops in source pixels, and which edge to keep when the box has another aspect ratio (0 = left/top).
+      const CROP = {
+        dashboard: ["homarr-v2-dashboard.webp", [0, 0, 1440, 900], 0.5, 0.5],
+        pokedex: ["custom-widget-dashboard.webp", [10, 20, 582, 440], 0, 0],
+        workshop: ["community-workshop.webp", [100, 34, 940, 520], 0, 0],
+        assistant: ["assistant-control-surface.webp", [740, 70, 545, 380], 0.5, 0.5],
+        advanced: ["advanced-downloads.webp", [246, 36, 798, 520], 0, 0],
+      };
+
+      /** A crop of a blog screenshot covering a w×h box. */
+      function shot(name, w, hh, css = "", cls = "clip shot") {
+        const [file, [x, y, cw, ch], ax, ay] = CROP[name];
+        const s = Math.max(w / cw, hh / ch);
+        const ox = x + (cw - w / s) * ax;
+        const oy = y + (ch - hh / s) * ay;
+        const box = h("div", `width:${w}px;height:${hh}px;${css}`);
+        box.className = cls;
+        box.append(img(BLOG + file, `left:${-ox * s}px;top:${-oy * s}px;width:${NAT[file] * s}px`));
+        return box;
+      }
+
+      // The reel's 3D lobster, rendered transparent by `node render.mjs lobster`; bbox of the logo in that frame.
+      const LOB = [475, 209, 922, 672];
+      function lobster(left, top, w) {
+        const s = w / LOB[2];
+        const box = h("div", `left:${left}px;top:${top}px;width:${w}px;height:${LOB[3] * s}px`);
+        box.className = "clip";
+        box.style.overflow = "visible";
+        box.append(img("../out/recap/frames/lobster-front.png", `left:${-LOB[0] * s}px;top:${-LOB[1] * s}px;width:${1920 * s}px`));
+        return box;
+      }
+      const lobH = (w) => (w * LOB[3]) / LOB[2];
+
+      function word(text, size, css = "") {
+        return h(
+          "span",
+          `font-family:"Inter Tight";font-size:${size}px;font-weight:830;letter-spacing:-0.045em;line-height:1;white-space:nowrap;${css}`,
+          text,
+        );
+      }
+      const V2 = "color:#fa5352;font-weight:900;letter-spacing:-0.06em;text-shadow:0 30px 80px rgba(250,82,82,.35)";
+      function tag(t) {
+        const e = h("span", "", t);
+        e.className = `tag ${t === "NEW" ? "new" : "rework"}`;
+        return e;
+      }
+      function glow(css) {
+        return h("div", `position:absolute;inset:0;background:${css}`);
+      }
+      function rays(x, y, reach) {
+        const e = h("div", `left:${x}px;top:${y}px;-webkit-mask-image:radial-gradient(circle at 50% 50%,#000 0%,rgba(0,0,0,.4) ${reach * 0.43}%,transparent ${reach}%)`);
+        e.className = "rays";
+        return e;
+      }
+      function mono(text, css = "") {
+        return h("div", `font-family:"JetBrains Mono";text-transform:uppercase;white-space:nowrap;${css}`, text);
+      }
+      function chapter(num, label, css = "") {
+        return h(
+          "div",
+          `display:flex;align-items:center;gap:16px;${css}`,
+          h("span", 'font:700 18px "JetBrains Mono";color:#fa5352;letter-spacing:.1em', num),
+          h("span", "width:52px;height:2px;background:#fa5352"),
+          mono(label, "font-size:17px;font-weight:600;letter-spacing:.24em;color:#e9e9ee"),
+        );
+      }
+      function headline(text, size, accent = [], css = "") {
+        const e = h("div", `font-family:"Inter Tight";font-weight:800;letter-spacing:-0.045em;line-height:1.02;font-size:${size}px;${css}`);
+        for (const [i, w] of text.split(" ").entries()) {
+          e.append(h("span", accent.includes(w) ? "color:#fa5352" : "", w), i < text.split(" ").length - 1 ? " " : "");
+        }
+        return e;
+      }
+      const at = (e, left, top) => ((e.style.position = "absolute"), (e.style.left = `${left}px`), (e.style.top = `${top}px`), e);
+
+      const NEW_INTEGRATIONS = "autobrr fileflows jackett jellystat komga maintainerr romm stash tubearchivist unmanic xteve yourSpotify caddy changedetection frigate gatus healthchecks netalertx netdata prometheus scrutiny syncthingRelay homebox karakeep linkwarden mealie miniflux plantit spoolman tandoor trilium".split(" ");
+      const PNG = ["linkwarden", "plantit", "tubearchivist", "unmanic", "xteve"];
+      const logoSrc = (k) => `../assets/icons/${k}.${PNG.includes(k) ? "png" : "svg"}`;
+
+      // 1 — Lockup + dashboard: the reel's intro lockup beside the real demo board.
+      function v1() {
+        stage.append(
+          glow("radial-gradient(ellipse 42% 60% at 17% 42%,rgba(250,82,82,.30),rgba(250,82,82,0) 70%)"),
+          glow("radial-gradient(ellipse 50% 70% at 82% 52%,rgba(64,84,220,.22),rgba(64,84,220,0) 70%)"),
+          rays(330, 300, 30),
+        );
+        stage.append(lobster(120, 140, 420));
+        stage.append(at(word("Homarr", 156), 112, 452));
+        stage.append(at(word("v2", 330, V2), 104, 560));
+        stage.append(
+          at(
+            h("div", "font-size:34px;font-weight:600;line-height:1.3;color:#d5d5dc", "Workshop, Custom Widgets", h("br"), "and a rebuilt board."),
+            122,
+            904,
+          ),
+        );
+        const dash = shot("dashboard", 1360, 850, "left:0;top:0;border-radius:22px");
+        stage.append(
+          h(
+            "div",
+            "position:absolute;left:770px;top:112px;width:1360px;height:850px;transform:perspective(2600px) rotateY(-15deg) rotateX(3deg);transform-origin:0 50%",
+            dash,
+          ),
+        );
+      }
+
+      // 2 — Title card: the reel's centred end card with the headline features fanned below.
+      function v2() {
+        stage.append(
+          glow("radial-gradient(ellipse 50% 46% at 50% 26%,rgba(250,82,82,.34),rgba(250,82,82,0) 70%)"),
+          rays(960, 250, 34),
+        );
+        const LW = 330;
+        stage.append(lobster(960 - LW / 2, 64, LW));
+        const t = h("div", "position:absolute;left:0;right:0;top:340px;text-align:center", word("Homarr", 176), word("v2", 176, `${V2};margin-left:.22em`));
+        stage.append(t);
+        stage.append(
+          h(
+            "div",
+            "position:absolute;left:0;right:0;top:548px;display:flex;justify-content:center",
+            mono("Workshop · Custom Widgets · A rebuilt board", "font-size:24px;font-weight:600;letter-spacing:.3em;color:#cfcfd6"),
+          ),
+        );
+        const CARDS = [
+          ["pokedex", "REWORK", "Custom Widgets v2"],
+          ["workshop", "NEW", "Workshop"],
+          ["assistant", "NEW", "Assistant"],
+          ["advanced", "NEW", "Advanced views"],
+        ];
+        const W = 430;
+        const H = 330;
+        CARDS.forEach(([name, kind, label], i) => {
+          const k = i - 1.5;
+          const card = h(
+            "div",
+            `position:absolute;left:${960 + k * 452 - W / 2}px;top:${676 + Math.abs(k) * 26}px;width:${W}px;transform:rotate(${k * 2.6}deg);transform-origin:50% 100%`,
+          );
+          card.append(
+            h("div", "display:flex;align-items:center;gap:12px;margin:0 0 14px 4px", tag(kind), h("span", "font-size:25px;font-weight:700;color:#f4f4f7;white-space:nowrap", label)),
+            shot(name, W, H, "position:relative"),
+          );
+          stage.append(card);
+        });
+      }
+
+      // 3 — Bento, rebuilt: four large real screenshots and the 31 new integrations.
+      function v3() {
+        stage.append(glow("radial-gradient(ellipse 36% 55% at 14% 30%,rgba(250,82,82,.26),rgba(250,82,82,0) 70%)"), rays(250, 200, 22));
+        stage.append(lobster(96, 110, 260));
+        stage.append(at(word("Homarr", 128), 88, 330));
+        stage.append(at(word("v2", 270, V2), 82, 418));
+        stage.append(
+          at(
+            h(
+              "div",
+              "width:500px;font-size:27px;font-weight:500;line-height:1.42;color:#c9cad3",
+              "Build widgets from JSX, API requests, actions and typed settings. Share them in the Workshop, or let Assistant build them for you.",
+            ),
+            98,
+            740,
+          ),
+        );
+        const X0 = 680;
+        const TW = 560;
+        const TH = 386;
+        const G = 24;
+        const TILES = [
+          ["pokedex", "REWORK", "Custom Widgets v2"],
+          ["workshop", "NEW", "Workshop"],
+          ["assistant", "NEW", "Homarr Assistant"],
+          ["advanced", "NEW", "Advanced views"],
+        ];
+        TILES.forEach(([name, kind, label], i) => {
+          const tile = h("div", `left:${X0 + (i % 2) * (TW + G)}px;top:${74 + Math.floor(i / 2) * (TH + G)}px;width:${TW}px;height:${TH}px`);
+          tile.className = "tile";
+          tile.append(
+            at(h("div", "display:flex;align-items:center;gap:12px", tag(kind), h("span", "font-size:26px;font-weight:700;white-space:nowrap", label)), 26, 22),
+            shot(name, TW - 52, TH - 76, "left:26px;top:76px;border-radius:14px 14px 0 0"),
+          );
+          stage.append(tile);
+        });
+        const band = h("div", `left:${X0}px;top:${74 + 2 * (TH + G)}px;width:${2 * TW + G}px;height:112px`);
+        band.className = "tile";
+        band.append(
+          at(h("div", "display:flex;align-items:center;gap:12px", tag("NEW"), h("span", "font-size:26px;font-weight:700;white-space:nowrap", "31 new integrations")), 26, 38),
+        );
+        const grid = h("div", "position:absolute;left:386px;top:12px;display:grid;grid-template-columns:repeat(16,40px);gap:8px 6px");
+        for (const k of NEW_INTEGRATIONS)
+          grid.append(h("div", "width:40px;height:40px;border-radius:9px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center", img(logoSrc(k), "width:28px;height:28px;object-fit:contain")));
+        band.append(grid);
+        stage.append(band);
+      }
+
+      // 4 — Build · Share · Ask: the reel's first three chapters, each over the real screen.
+      function v4() {
+        stage.append(glow("radial-gradient(ellipse 60% 40% at 50% 0%,rgba(250,82,82,.22),rgba(250,82,82,0) 70%)"), rays(960, -200, 40));
+        const LW = 170;
+        stage.append(lobster(100, 72, LW));
+        stage.append(at(h("div", "", word("Homarr", 118), word("v2", 118, `${V2};margin-left:.2em`)), 296, 62));
+        stage.append(at(mono("The biggest Homarr update", "font-size:22px;font-weight:600;letter-spacing:.3em;color:#cfcfd6"), 306, 196));
+        // The reel's end-card pills.
+        const PILL = "font-family:'JetBrains Mono';font-size:19px;font-weight:600;letter-spacing:.12em;padding:11px 22px;border-radius:999px;white-space:nowrap";
+        stage.append(
+          h(
+            "div",
+            "position:absolute;right:100px;top:112px;display:flex;gap:14px",
+            h("span", `${PILL};color:#cfcfd6;box-shadow:inset 0 0 0 1px rgba(255,255,255,.22)`, "Open source"),
+            h("span", `${PILL};color:#cfcfd6;box-shadow:inset 0 0 0 1px rgba(255,255,255,.22)`, "Self-hosted"),
+            h("span", `${PILL};color:#fff;background:#fa5252`, "homarr.dev"),
+          ),
+        );
+        const COLS = [
+          ["01", "Custom Widgets v2", "Build your own widget.", ["own"], "pokedex"],
+          ["02", "Workshop", "Share it in the Workshop.", ["Workshop."], "workshop"],
+          ["03", "Assistant", "Or let Assistant build it for you.", ["build"], "assistant"],
+        ];
+        const CW = 536;
+        COLS.forEach(([num, label, text, accent, name], i) => {
+          const x = 100 + i * (CW + 56);
+          stage.append(chapter(num, label, `position:absolute;left:${x}px;top:300px`));
+          stage.append(at(headline(text, 56, accent, `width:${CW}px`), x, 346));
+          stage.append(shot(name, CW, 420, `left:${x}px;top:${520}px`));
+        });
+        stage.append(
+          h(
+            "div",
+            "position:absolute;left:0;right:0;top:985px;display:flex;justify-content:center",
+            mono("Also in v2 · Integration requests · Drag and drop, rebuilt · Advanced views · 31 new integrations", "font-size:19px;font-weight:600;letter-spacing:.18em;color:#8f919d"),
+          ),
+        );
+      }
+
+      ({ 1: v1, 2: v2, 3: v3, 4: v4 })[V]();
+      const fonts = ['830 100px "Inter Tight"', '900 100px "Inter Tight"', '600 20px "Inter"', '600 20px "JetBrains Mono"'];
+      window.__ready = Promise.all([...fonts.map((f) => document.fonts.load(f)), ...loads]).then(() => document.fonts.ready);
+    </script>
+  </body>
+</html>

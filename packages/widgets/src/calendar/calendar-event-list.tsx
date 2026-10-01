@@ -65,7 +65,7 @@ export const CalendarEventList = ({
         },
       }}
     >
-      <Stack gap="md">
+      <Stack gap="md" pb="xs">
         {groups ? (
           groups.map(([date, groupedEvents]) => {
             const headingId = `${headingIdPrefix}-${date}`;

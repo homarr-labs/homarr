@@ -202,13 +202,15 @@ export const FixedGridItem = ({
         isEditorActive && "board-grid-entry",
         isEditorActive && classes.editorEntry,
       )}
-      style={getLogicalItemStyle(placement)}
+      style={getLogicalItemStyle(placement, "var(--board-grid-row-scale, 1)")}
       data-grid-item-id={item.id}
       data-grid-item-type={item.type}
       data-grid-x={placement.x}
       data-grid-y={placement.y}
       data-grid-w={placement.w}
       data-grid-h={placement.h}
+      data-grid-inline-start={placement.x === 0 || undefined}
+      data-grid-inline-end={placement.x + placement.w === columnCount || undefined}
       data-editor-grid-entry={isEditorActive ? "true" : undefined}
       data-type={item.type}
       data-kind={item.kind}

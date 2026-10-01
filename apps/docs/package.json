@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "next dev --port 3003",
-    "start": "serve out --listen 3003",
+    "start": "serve out --listen 3003 --config ../serve.json",
     "build": "pnpm validate:coverage && next build",
     "typecheck": "next typegen && tsc --noEmit",
     "lint": "oxlint",
@@ -49,11 +49,13 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "remark-directive": "catalog:",
+    "serve": "catalog:",
     "shiki": "catalog:",
     "sonner": "catalog:",
     "swiper": "^14.0.5",
     "tailwind-merge": "^3.6.0",
-    "tailwindcss": "^4.3.2"
+    "tailwindcss": "^4.3.2",
+    "three": "catalog:"
   },
   "devDependencies": {
     "@fec/remark-a11y-emoji": "^4.0.2",
@@ -61,9 +63,9 @@
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "@types/three": "catalog:",
     "cheerio": "^1.2.0",
     "next-validate-link": "1.6.7",
-    "serve": "catalog:",
     "tsx": "catalog:",
     "typescript": "catalog:",
     "zod": "catalog:"

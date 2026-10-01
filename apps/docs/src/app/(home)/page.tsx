@@ -3,7 +3,7 @@ import { pageMetadata } from "@/lib/metadata";
 import { SectionContainer } from "@/components/pages/home/container/section-container";
 import { HomeDataflow } from "@/components/pages/home/dataflow/dataflow";
 import { DocsGateway } from "@/components/pages/home/docs-gateway";
-import { DragAndDropShowcase } from "@/components/pages/home/drag-and-drop/drag-and-drop-showcase";
+import { MotionReelShowcase } from "@/components/pages/home/motion-reel-showcase";
 import HomepageFeatures from "@/components/pages/home/features/features";
 import HomeHero from "@/components/pages/home/hero/hero";
 import { AvailableIntegrations } from "@/components/pages/home/integrations/available-integrations";
@@ -42,7 +42,7 @@ export default function HomePage() {
       </SectionContainer>
       <DocsGateway />
       <HomeDataflow />
-      <DragAndDropShowcase />
+      <MotionReelShowcase />
       <AvailableIntegrations />
       <SectionContainer>
         <HomepageUserReviews />

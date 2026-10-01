@@ -21,7 +21,12 @@ import { translateIfNecessary } from "@homarr/translation";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import { useIsMobile } from "@homarr/ui/hooks";
-import type { WidgetDataStatus, WidgetDefinition, WidgetRuntimeRef } from "@homarr/widgets/definition";
+import type {
+  WidgetContextMenuAction,
+  WidgetDataStatus,
+  WidgetDefinition,
+  WidgetRuntimeRef,
+} from "@homarr/widgets/definition";
 import { getWidgetQueryKeys, getWidgetRuntimeQueries, supportsAdvancedFocus } from "@homarr/widgets/definition";
 import { reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 import { getWidgetOptionTranslationNamespace } from "@homarr/widgets/option-translation";
@@ -48,7 +53,31 @@ interface WidgetContextMenuProps {
   children: ReactNode;
 }
 
-export const WidgetContextMenu = ({
+export const WidgetContextMenu = (props: WidgetContextMenuProps) => {
+  const { data: session } = useSession();
+  const [isEditMode] = useEditMode();
+  const settings = useSettings();
+
+  if (
+    !session ||
+    !settings.enableRightClickOnWidgets ||
+    isEditMode ||
+    props.item.kind === "app" ||
+    props.item.kind === "bookmarks"
+  ) {
+    return <>{props.children}</>;
+  }
+
+  return <WidgetContextMenuInner {...props} session={session} settings={settings} isEditMode={isEditMode} />;
+};
+
+interface WidgetContextMenuInnerProps extends WidgetContextMenuProps {
+  session: NonNullable<ReturnType<typeof useSession>["data"]>;
+  settings: ReturnType<typeof useSettings>;
+  isEditMode: boolean;
+}
+
+const WidgetContextMenuInner = ({
   item,
   definition,
   previewDimensions,
@@ -56,16 +85,15 @@ export const WidgetContextMenu = ({
   sourceRef,
   disabled = false,
   children,
-}: WidgetContextMenuProps) => {
-  const { data: session } = useSession();
-  const [isEditMode] = useEditMode();
+  session,
+  settings,
+  isEditMode,
+}: WidgetContextMenuInnerProps) => {
   const board = useRequiredBoard();
   const { hasChangeAccess } = useBoardPermissions(board);
   const { updateAndPersistBoard } = usePersistBoard(board);
   const t = useI18n();
   const tMenu = useI18n("item.menu.label");
-  const tCommon = useI18n("common.action");
-  const settings = useSettings();
   const { openModal } = useModalAction(LazyWidgetEditModal);
   const { updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations } = useItemActions();
   const hasSupportedIntegrations = (definition.supportedIntegrations?.length ?? 0) > 0;
@@ -116,13 +144,6 @@ export const WidgetContextMenu = ({
       ),
     [board.id, definition.queryMatcher, item.id, item.integrationIds, options, widgetQueryKeys, widgetRuntimeRef],
   );
-  const isQueryFetching =
-    useIsFetching({
-      type: "active",
-      predicate: (query) => matchesWidgetQuery(query.queryKey),
-    }) > 0;
-  const dataStatus = widgetRuntimeRef.current.actions.getDataStatus?.();
-  const isWidgetFetching = isRefreshingSources || isQueryFetching || !!dataStatus?.isRefreshing;
   const handleRefetch = useCallback(async () => {
     setRefreshingSources(true);
     try {
@@ -160,7 +181,7 @@ export const WidgetContextMenu = ({
     ) as ToggleOption[];
   }, [canConfigureWidget, definition, settings]);
 
-  const widgetContextActions =
+  const getWidgetContextActions = () =>
     definition.contextActions?.({
       options,
       setOptions: setItemOptions,
@@ -255,18 +276,6 @@ export const WidgetContextMenu = ({
     setMenuOpened(false);
   }, []);
 
-  if (
-    !session ||
-    !settings.enableRightClickOnWidgets ||
-    isEditMode ||
-    item.kind === "app" ||
-    item.kind === "bookmarks"
-  ) {
-    return <>{children}</>;
-  }
-
-  const visibleWidgetActions = widgetContextActions.filter((action) => !action.hidden);
-
   return (
     <Menu
       shadow="md"
@@ -299,45 +308,18 @@ export const WidgetContextMenu = ({
           </>
         )}
 
-        {visibleWidgetActions.length > 0 && (
-          <>
-            {toggleOptions.length > 0 && <Menu.Divider />}
-            <Menu.Label>{tMenu("actions")}</Menu.Label>
-            {visibleWidgetActions.map((action) => {
-              const Icon = action.icon;
-              return (
-                <Menu.Item
-                  key={action.key}
-                  closeMenuOnClick
-                  leftSection={Icon ? <Icon size={16} /> : undefined}
-                  onClick={action.onClick}
-                  disabled={action.disabled}
-                  color={action.color}
-                >
-                  {translateIfNecessary(t, action.label)}
-                </Menu.Item>
-              );
-            })}
-          </>
+        {menuOpened && (
+          <WidgetContextMenuActions
+            queryClient={queryClient}
+            matchesQuery={matchesWidgetQuery}
+            getContextActions={getWidgetContextActions}
+            hasToggleOptions={toggleOptions.length > 0}
+            widgetRuntimeRef={widgetRuntimeRef}
+            isRefreshingSources={isRefreshingSources}
+            onRefresh={handleRefetch}
+            t={t}
+          />
         )}
-
-        {(toggleOptions.length > 0 || visibleWidgetActions.length > 0) && <Menu.Divider />}
-        <Menu.Item
-          leftSection={isWidgetFetching ? <Loader size={16} /> : <IconRefresh size={16} />}
-          onClick={handleRefetch}
-          disabled={isWidgetFetching}
-        >
-          <Group justify="space-between" wrap="nowrap" gap="sm">
-            {tCommon("refresh")}
-            <WidgetQueryStatus
-              queryClient={queryClient}
-              dataStatus={dataStatus}
-              matchesQuery={matchesWidgetQuery}
-              isFetching={isWidgetFetching}
-              t={t}
-            />
-          </Group>
-        </Menu.Item>
         <Menu.Item
           closeMenuOnClick
           leftSection={<IconSettings size={16} />}
@@ -378,6 +360,79 @@ const WidgetContextMenuDropdown = ({ opened, onClose, title, children }: WidgetC
         {children}
       </div>
     </Drawer>
+  );
+};
+
+interface WidgetContextMenuActionsProps extends Pick<WidgetQueryStatusProps, "queryClient" | "matchesQuery" | "t"> {
+  getContextActions: () => WidgetContextMenuAction[];
+  hasToggleOptions: boolean;
+  widgetRuntimeRef: WidgetRuntimeRef;
+  isRefreshingSources: boolean;
+  onRefresh: () => Promise<void>;
+}
+
+const WidgetContextMenuActions = ({
+  queryClient,
+  matchesQuery,
+  getContextActions,
+  hasToggleOptions,
+  widgetRuntimeRef,
+  isRefreshingSources,
+  onRefresh,
+  t,
+}: WidgetContextMenuActionsProps) => {
+  const tMenu = useI18n("item.menu.label");
+  const tCommon = useI18n("common.action");
+  const isQueryFetching =
+    useIsFetching({
+      type: "active",
+      predicate: (query) => matchesQuery(query.queryKey),
+    }) > 0;
+  const dataStatus = widgetRuntimeRef.current.actions.getDataStatus?.();
+  const isWidgetFetching = isRefreshingSources || isQueryFetching || !!dataStatus?.isRefreshing;
+  const visibleWidgetActions = getContextActions().filter((action) => !action.hidden);
+
+  return (
+    <>
+      {visibleWidgetActions.length > 0 && (
+        <>
+          {hasToggleOptions && <Menu.Divider />}
+          <Menu.Label>{tMenu("actions")}</Menu.Label>
+          {visibleWidgetActions.map((action) => {
+            const Icon = action.icon;
+            return (
+              <Menu.Item
+                key={action.key}
+                closeMenuOnClick
+                leftSection={Icon ? <Icon size={16} /> : undefined}
+                onClick={action.onClick}
+                disabled={action.disabled}
+                color={action.color}
+              >
+                {translateIfNecessary(t, action.label)}
+              </Menu.Item>
+            );
+          })}
+        </>
+      )}
+      {(hasToggleOptions || visibleWidgetActions.length > 0) && <Menu.Divider />}
+      <Menu.Item
+        leftSection={isWidgetFetching ? <Loader size={16} /> : <IconRefresh size={16} />}
+        onClick={onRefresh}
+        disabled={isWidgetFetching}
+      >
+        <Group justify="space-between" wrap="nowrap" gap="sm">
+          {tCommon("refresh")}
+          <WidgetQueryStatus
+            queryClient={queryClient}
+            dataStatus={dataStatus}
+            matchesQuery={matchesQuery}
+            isFetching={isWidgetFetching}
+            t={t}
+          />
+        </Group>
+      </Menu.Item>
+    </>
   );
 };
 
