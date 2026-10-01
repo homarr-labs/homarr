@@ -1,4 +1,5 @@
 import { IconBrandDocker, IconServerOff } from "@tabler/icons-react";
+import { z } from "zod/v4";
 
 import type { RouterOutputs } from "@homarr/api";
 
@@ -13,6 +14,8 @@ const columnsList = [
 ] as const satisfies (keyof RouterOutputs["docker"]["getContainers"]["containers"][number])[];
 
 const allColumnsList = ["name", "state", "host", "cpuUsage", "memoryUsage", "actions"] as const;
+
+const containerAliasSchema = z.string().regex(/^[^=]+=[^=]+$/);
 
 const columnTranslationKeyMap = {
   name: "docker.field.name.label",
@@ -50,6 +53,18 @@ export const { definition, componentLoader } = createWidgetDefinition("dockerCon
         }),
         descendingDefaultSort: factory.switch({
           defaultValue: false,
+        }),
+        containerFilter: factory.multiText({
+          defaultValue: [] as string[],
+          validate: z.string(),
+        }),
+        filterIsWhitelist: factory.switch({
+          defaultValue: false,
+        }),
+        containerAliases: factory.multiText({
+          defaultValue: [] as string[],
+          validate: containerAliasSchema,
+          withDescription: true,
         }),
         columnOrder: factory.text({ defaultValue: "" }),
         columnWidths: factory.text({ defaultValue: "" }),

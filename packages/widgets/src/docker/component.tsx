@@ -53,6 +53,29 @@ const containerMenuWidth = 240;
 const createContainerLogsPath = (container: Pick<DockerContainer, "id" | "name">) =>
   `/manage/tools/docker/logs/${container.id}?name=${encodeURIComponent(container.name)}`;
 
+export function matchesContainerFilter(name: string, containerFilter: string[], filterIsWhitelist: boolean): boolean {
+  if (containerFilter.length === 0) return true;
+  const matches = containerFilter.includes(name);
+  return filterIsWhitelist === matches;
+}
+
+export function parseContainerAliases(containerAliases: string[]): Map<string, string> {
+  const aliasMap = new Map<string, string>();
+
+  for (const entry of containerAliases) {
+    const separatorIndex = entry.indexOf("=");
+    if (separatorIndex <= 0) continue;
+
+    const originalName = entry.slice(0, separatorIndex).trim();
+    const alias = entry.slice(separatorIndex + 1).trim();
+    if (originalName.length > 0 && alias.length > 0) {
+      aliasMap.set(originalName, alias);
+    }
+  }
+
+  return aliasMap;
+}
+
 const ContainerStateBadge = ({ state }: { state: ContainerState }) => {
   const t = useScopedI18n("docker.field.state.option");
 
@@ -201,7 +224,15 @@ export default function DockerWidget({
   const isTiny = width <= 256;
 
   const { data, refetch, isFetching } = clientApi.docker.getContainers.useQuery();
-  const containers = useMemo(() => data?.containers ?? [], [data?.containers]);
+  const containers = useMemo(() => {
+    const aliasMap = parseContainerAliases(options.containerAliases);
+    return (data?.containers ?? [])
+      .filter((container) => matchesContainerFilter(container.name, options.containerFilter, options.filterIsWhitelist))
+      .map((container) => {
+        const alias = aliasMap.get(container.name);
+        return alias ? { ...container, name: alias } : container;
+      });
+  }, [data?.containers, options.containerFilter, options.filterIsWhitelist, options.containerAliases]);
   const timestamp = useMemo(() => data?.timestamp ?? new Date(), [data?.timestamp]);
   const relativeTime = useTimeAgo(timestamp);
 

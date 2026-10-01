@@ -35,6 +35,26 @@ export const dockerContainersWidget: WidgetDefinition = {
         values: { type: "boolean" },
         defaultValue: "No",
       },
+      {
+        name: "Containers to filter",
+        description: "You can filter the containers by name. Add one container name per entry.",
+        values: "List of container names",
+        defaultValue: "-",
+      },
+      {
+        name: "Filter as a whitelist",
+        description:
+          "If enabled, only containers that match the filter will be shown. If disabled, containers that match the filter will be hidden.",
+        values: { type: "boolean" },
+        defaultValue: "No",
+      },
+      {
+        name: "Container aliases",
+        description:
+          "Rename containers for display without renaming the actual Docker container. One entry per container, format: original name=alias.",
+        values: "List of original name=alias pairs",
+        defaultValue: "-",
+      },
     ],
   },
 };
