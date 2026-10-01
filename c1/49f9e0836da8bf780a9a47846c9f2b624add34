@@ -1,0 +1,14 @@
+packages/integrations/src/ical/ical-integration.ts
+  h_d6e478ca18e517 97-98,103,106,109,112
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "c149f9e0836da8bf780a9a47846c9f2b624add34",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
