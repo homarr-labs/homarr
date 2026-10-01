@@ -291,6 +291,23 @@ describe("GlancesIntegration SMART", () => {
     expect(result.gpu).toEqual([]);
   });
 
+  test("omits devices without SMART health data instead of reporting them healthy", async () => {
+    const [nvme] = smartStats;
+    mockGlancesFetch(
+      baseStats,
+      [],
+      [
+        { DeviceName: "sdc USB Disk", key: "DeviceName" },
+        { ...nvme, "1": { ...nvme?.["1"], value: null, raw: null } },
+      ],
+    );
+
+    const integration = new GlancesIntegration(integrationInput);
+    const result = await integration.getSystemInfoAsync();
+
+    expect(result.smart).toEqual([]);
+  });
+
   test("returns no SMART data when the payload is malformed", async () => {
     mockGlancesFetch(baseStats, [], { unexpected: true });
 

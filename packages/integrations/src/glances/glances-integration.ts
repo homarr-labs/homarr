@@ -112,7 +112,7 @@ export class GlancesIntegration extends Integration implements ISystemHealthMoni
       }
 
       const devices = await smartSchema.parseAsync(await response.json());
-      return devices.map(mapGlancesSmartDevice);
+      return devices.flatMap(mapGlancesSmartDevice);
     } catch {
       return [];
     }
@@ -256,7 +256,7 @@ const smartSchema = z.array(z.object({ DeviceName: z.string() }).catchall(z.unkn
 
 const ataTemperatureNames = ["Temperature_Celsius", "Airflow_Temperature_Cel"] as const;
 
-const mapGlancesSmartDevice = (device: z.infer<typeof smartSchema>[number]) => {
+const mapGlancesSmartDevice = (device: z.infer<typeof smartSchema>[number]): SystemHealthMonitoring["smart"] => {
   const attributes = Object.values(device).flatMap((value) => {
     const result = smartAttributeSchema.safeParse(value);
     return result.success ? [result.data] : [];
@@ -266,17 +266,27 @@ const mapGlancesSmartDevice = (device: z.infer<typeof smartSchema>[number]) => {
   const failedAttributes = attributes
     .filter((attribute) => attribute.when_failed && attribute.when_failed !== "-")
     .flatMap((attribute) => attribute.name ?? attribute.key ?? []);
-  const criticalWarning = attributes.find((attribute) => attribute.key === "criticalWarning");
-  const hasCriticalWarning = criticalWarning !== undefined && Number(criticalWarning.value ?? 0) !== 0;
+  const criticalWarningValue = attributes.find((attribute) => attribute.key === "criticalWarning")?.value;
+  const criticalWarningCount = criticalWarningValue == null ? Number.NaN : Number(criticalWarningValue);
+  const isNvme = Number.isFinite(criticalWarningCount);
+
+  // Glances lists a device even when no health attribute was read (or all are hidden by hide_attributes).
+  // Without ATA thresholds or an NVMe critical warning there is no verdict, so the widget shows N/A.
+  const hasAtaThresholds = attributes.some((attribute) => typeof attribute.when_failed === "string");
+  if (!hasAtaThresholds && !isNvme) return [];
+
+  const hasCriticalWarning = isNvme && criticalWarningCount !== 0;
   const healthy = failedAttributes.length === 0 && !hasCriticalWarning;
 
-  return {
-    deviceName: `/dev/${device.DeviceName.split(" ")[0]}`,
-    temperature: getSmartTemperature(attributes),
-    overallStatus: healthy ? "PASSED" : "FAILED",
-    healthy,
-    statusReason: getSmartStatusReason(failedAttributes, criticalWarning !== undefined, hasCriticalWarning),
-  };
+  return [
+    {
+      deviceName: `/dev/${device.DeviceName.split(" ")[0]}`,
+      temperature: getSmartTemperature(attributes),
+      overallStatus: healthy ? "PASSED" : "FAILED",
+      healthy,
+      statusReason: getSmartStatusReason(failedAttributes, isNvme, hasCriticalWarning),
+    },
+  ];
 };
 
 const getSmartStatusReason = (
