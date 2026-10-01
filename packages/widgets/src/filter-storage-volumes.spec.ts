@@ -139,7 +139,22 @@ describe("matchFileSystemAndSmart", () => {
       [{ deviceName: "/dev/nvme0", temperature: 30, overallStatus: "PASSED" }],
     );
 
-    expect(result[0]).toMatchObject({ deviceName: "/dev/nvme0", temperature: 30, overallStatus: "PASSED" });
+    expect(result[0]).toMatchObject({ deviceName: "/dev/nvme0n1p3", temperature: 30, overallStatus: "PASSED" });
+  });
+
+  test("keeps each NVMe namespace name when several match one controller", () => {
+    const result = matchFileSystemAndSmart(
+      [
+        { deviceName: "/dev/nvme0n1", used: "100", available: "900", percentage: 10 },
+        { deviceName: "/dev/nvme0n2", used: "200", available: "800", percentage: 20 },
+      ],
+      [{ deviceName: "/dev/nvme0", temperature: 30, overallStatus: "PASSED" }],
+    );
+
+    expect(result).toMatchObject([
+      { deviceName: "/dev/nvme0n1", used: "100", temperature: 30, overallStatus: "PASSED" },
+      { deviceName: "/dev/nvme0n2", used: "200", temperature: 30, overallStatus: "PASSED" },
+    ]);
   });
 
   test("does not join SMART data from a different NVMe controller", () => {
