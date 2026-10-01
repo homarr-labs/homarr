@@ -76,7 +76,7 @@ export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: C
       closeDelay={400}
     >
       <HoverCard.Target>{cell}</HoverCard.Target>
-      <HoverCard.Dropdown maw="calc(100vw - 24px)" w={512} pe={4} pb={0} style={{ overflow: "hidden" }}>
+      <HoverCard.Dropdown maw="calc(100vw - 24px)" w={512} ps={4} pe={4} pt={4} pb={0} style={{ overflow: "hidden" }}>
         <CalendarEventList events={events} />
       </HoverCard.Dropdown>
     </HoverCard>

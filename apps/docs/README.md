@@ -125,8 +125,10 @@ The September 2026 update moves Core/UI from 16.15.4 to 16.15.12, MDX from 15.4.
 
 ## Kapa AI
 
-The **Ask AI** launcher uses Homarr's existing public Kapa Website ID. The root layout loads the widget once across
-client-side navigation. **Search** and `Ctrl+K` / `Cmd+K` always use Fumadocs search, including when Kapa is unavailable.
+The compact Homarr mascot in the bottom-right opens **Ask AI**. It slowly spins when idle and gives a subtle claw movement and wink on hover. Animation respects reduced motion.
+
+The launcher uses Homarr's existing public Kapa Website ID. The root layout loads the widget once across
+client-side navigation and follows the docs light or dark theme. **Search** and `Ctrl+K` / `Cmd+K` always use Fumadocs search, including when Kapa is unavailable.
 
 Set `KAPA_WEBSITE_ID` at build time to use a different Kapa Website Widget integration. An explicitly empty value
 disables the widget, for example `KAPA_WEBSITE_ID= pnpm --filter @homarr/docs build`. This is a public integration ID

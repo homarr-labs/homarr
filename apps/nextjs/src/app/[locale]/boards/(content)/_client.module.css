@@ -1,7 +1,14 @@
+.board[data-board-left-rail="true"]:not([data-board-layout-preview]) {
+  margin-inline-start: calc(-1 * var(--app-shell-padding, 0px));
+}
+
+.board[data-board-right-rail="true"]:not([data-board-layout-preview]) {
+  margin-inline-end: calc(-1 * var(--app-shell-padding, 0px));
+}
+
 .columns {
   display: grid;
   align-items: start;
-  gap: 24px;
 }
 
 .lane {
@@ -30,7 +37,6 @@
 }
 
 .gutter[data-board-editing="true"] {
-  overflow: clip;
   outline: 0.0625rem solid var(--mantine-color-default-border);
   outline-offset: -0.0625rem;
   border-radius: var(--mantine-radius-md);

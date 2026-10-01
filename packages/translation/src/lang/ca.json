@@ -187,7 +187,7 @@
         }
       },
       "passwordConfirm": {
-        "label": "Confiremeu la contrasenya"
+        "label": "Confirmeu la contrasenya"
       },
       "previousPassword": {
         "label": "Contrasenya anterior"
@@ -401,7 +401,7 @@
           },
           "modify-all": {
             "label": "Modificar totes les aplicacions",
-            "description": "Permet que els memebres modifiquin totes les aplicacions"
+            "description": "Permet que els membres modifiquin totes les aplicacions"
           },
           "full-all": {
             "label": "Accés complet a les aplicacions",

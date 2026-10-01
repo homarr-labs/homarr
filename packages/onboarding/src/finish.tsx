@@ -20,7 +20,11 @@ export const Finish = ({ environment }: OnboardingStudioProps) => {
   const sounds = useOnboardingSounds();
   const primaryColor = environment.initialBoard?.primaryColor ?? "#fa5252";
   const secondaryColor = environment.initialBoard?.secondaryColor ?? "#fd7e14";
-  const boardHref = `/boards/${encodeURIComponent(environment.initialBoard?.name ?? "dashboard")}`;
+  const board = environment.initialBoard ?? environment.availableBoards[0];
+  let boardHref = "/manage/boards";
+  if (board) {
+    boardHref = `/boards/${encodeURIComponent(board.name)}`;
+  }
   const destination = environment.canConfigurePrivileged
     ? boardHref
     : `/auth/login?callbackUrl=${encodeURIComponent(boardHref)}`;

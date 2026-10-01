@@ -32,7 +32,7 @@ import { BoardSelectionProvider } from "~/components/board/selection/board-selec
 import { BoardSelectionToolbar } from "~/components/board/selection/board-selection-toolbar";
 import classes from "./_client.module.css";
 
-const APP_SHELL_INLINE_PADDING = 32;
+const APP_SHELL_SIDE_PADDING = 32;
 
 const BoardSelectionGridProvider = ({ children }: PropsWithChildren) => (
   <GridEditorRegistryProvider>
@@ -67,7 +67,11 @@ export const ClientBoard = () => {
     laneWidths.reduce((total, width) => total + width, 0) + (laneWidths.length - 1) * LOGICAL_GRID_GAP;
   const initialLogicalHeight = getInitialBoardLogicalHeight(board, currentLayoutId);
   const representativeWidth = layoutOverrideId ? getRepresentativeLayoutWidth(currentLayout, board.layouts) : null;
-  const initialAvailableWidth = Math.max(1, (representativeWidth ?? initialViewportWidth) - APP_SHELL_INLINE_PADDING);
+  let inlinePadding = 0;
+  if (leftColumnCount === 0) inlinePadding += APP_SHELL_SIDE_PADDING;
+  if (rightColumnCount === 0) inlinePadding += APP_SHELL_SIDE_PADDING;
+  if (representativeWidth !== null) inlinePadding = APP_SHELL_SIDE_PADDING * 2;
+  const initialAvailableWidth = Math.max(1, (representativeWidth ?? initialViewportWidth) - inlinePadding);
   const gridTemplateColumns = [
     leftColumnCount > 0 ? `${getLogicalGridSize(leftColumnCount)}px` : null,
     `${getLogicalGridSize(mainColumnCount)}px`,
@@ -79,7 +83,15 @@ export const ClientBoard = () => {
   const content = (
     <BoardSelectionGridProvider>
       <BoardAdvancedFocusProvider>
-        <Box h="100%" pos="relative" data-homarr-dev-benchmark-board>
+        <Box
+          h="100%"
+          pos="relative"
+          className={classes.board}
+          data-board-left-rail={leftColumnCount > 0 || undefined}
+          data-board-right-rail={rightColumnCount > 0 || undefined}
+          data-board-layout-preview={representativeWidth !== null || undefined}
+          data-homarr-dev-benchmark-board
+        >
           <BoardAppsSpotlightRegistrar />
           <BoardBackgroundVideo />
           <BoardEmptyState />
@@ -93,7 +105,7 @@ export const ClientBoard = () => {
                 label={board.name}
               >
                 <BoardGridEditorBoundary key={currentLayoutId}>
-                  <div className={classes.columns} style={{ gridTemplateColumns }}>
+                  <div className={classes.columns} style={{ gridTemplateColumns, gap: LOGICAL_GRID_GAP }}>
                     {leftColumnCount > 0 && leftSection && (
                       <aside
                         className={`${classes.lane} ${classes.gutter}`}

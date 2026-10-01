@@ -6,13 +6,14 @@ import combineClasses from "clsx";
 
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
+import { getRootSectionLane } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
 import type { ContainerSectionItem } from "~/app/[locale]/boards/_types";
-import { COLLAPSED_SECTION_ROW_COUNT, getLogicalGridSize } from "~/components/board/layout";
-import { calculateBoardUiScale, useBoardCanvasScale } from "~/components/board/layout/scaled-board-canvas";
+import { COLLAPSED_SECTION_ROW_COUNT } from "~/components/board/layout";
 import { SectionGrid } from "./grid/section-grid";
 import { useSectionCollapse } from "./section-collapse";
+import { useSectionContext } from "./section-context";
 import { useOpenSectionApps } from "./use-open-section-apps";
 import classes from "./item.module.css";
 
@@ -24,7 +25,7 @@ const BoardContainerMenu = dynamic(
 const ContainerDepthContext = createContext(0);
 
 const getBoundedMenuOffset = (offset: number) =>
-  `max(calc(4px * var(--mantine-scale)), min(calc(${offset}px * var(--mantine-scale)), calc(100% - 28px * var(--mantine-scale))))`;
+  `max(0px, min(calc(${offset}px * var(--mantine-scale)), calc(100% - 24px * var(--mantine-scale))))`;
 
 interface Props {
   section: ContainerSectionItem;
@@ -33,13 +34,15 @@ interface Props {
 export const BoardContainerSection = ({ section }: Props) => {
   const board = useRequiredBoard();
   const containerDepth = useContext(ContainerDepthContext);
-  const canvasScale = useBoardCanvasScale();
-  const uiScale = calculateBoardUiScale(canvasScale);
-  const controlWidth = getLogicalGridSize(section.width) / uiScale;
-  // Keep room for both the menu and collapse control; wrap narrow containers.
-  const menuColumns = Math.max(1, Math.floor((controlWidth - 8) / 64));
-  const menuLeftOffset = 4 + (containerDepth % menuColumns) * 64;
-  const menuTopOffset = 4 + Math.floor(containerDepth / menuColumns) * 32;
+  // Stagger nested controls inward and downward without wrapping back over ancestors.
+  const menuRightOffset = 4 + containerDepth * 32;
+  const menuTopOffset = 4 + containerDepth * 32;
+  const parent = useSectionContext();
+  let containerInlineInsetCount = 2;
+  if (parent.section.kind === "empty" && getRootSectionLane(parent.section.xOffset) !== "main") {
+    if (section.xOffset === 0) containerInlineInsetCount -= 1;
+    if (section.xOffset + section.width === parent.columnCount) containerInlineInsetCount -= 1;
+  }
   const [isEditMode] = useEditMode();
   const t = useI18n("section.container");
   const tSection = useI18n("section");
@@ -54,26 +57,23 @@ export const BoardContainerSection = ({ section }: Props) => {
   });
   const label = options.title.trim() || t("untitled");
   const contentId = `board-container-${section.id}-content`;
-  let menuPosition: { left?: number | string; right?: number; top: number | string } = {
-    left: getBoundedMenuOffset(menuLeftOffset),
-    top: getBoundedMenuOffset(menuTopOffset),
-  };
-  if (isVisuallyCollapsed) menuPosition = { right: 4, top: 4 };
-  let labelTop = "calc(var(--mantine-spacing-xs) * -1)";
-  let labelLeft = 8;
+  const menuPosition = { right: getBoundedMenuOffset(menuRightOffset), top: getBoundedMenuOffset(menuTopOffset) };
+  const labelTop = "calc(var(--mantine-spacing-xs) * -1)";
+  const labelLeft = 8;
   let labelRight = 8;
   if (isEditMode) {
-    if (isVisuallyCollapsed) {
-      labelRight = 36;
-    } else {
-      // Reserve a distinct control position for every ancestor, not just the immediate parent.
-      labelLeft = menuLeftOffset + 32;
-      labelTop = `min(calc(var(--mantine-spacing-xs) * -1 + ${menuTopOffset - 4}px * var(--mantine-scale)), calc(100% - 28px * var(--mantine-scale)))`;
-    }
+    labelRight = menuRightOffset + 32;
   } else if (options.showOpenAll) {
     labelRight = 40;
   }
-  // Expanded controls sit on the border like the ordinary label, without reserving a header row.
+  let labelMaxWidth = `calc(100% - ${labelLeft + labelRight}px)`;
+  let collapsedLabelPaddingRight: number | string = labelRight;
+  if (isEditMode) {
+    const reservedMenuWidth = `calc(${menuPosition.right} + 28px * var(--mantine-scale))`;
+    labelMaxWidth = `calc(100% - ${labelLeft}px - ${reservedMenuWidth})`;
+    collapsedLabelPaddingRight = reservedMenuWidth;
+  }
+  // Expanded controls sit on the border without reserving a header row.
   const toggleLayout = isVisuallyCollapsed
     ? { top: 0, left: 0, w: "100%", h: "100%", maw: "100%" }
     : {
@@ -81,7 +81,7 @@ export const BoardContainerSection = ({ section }: Props) => {
         left: labelLeft,
         w: "auto",
         h: 20,
-        maw: `calc(100% - ${labelLeft + labelRight}px)`,
+        maw: labelMaxWidth,
       };
   const toggleIcon = isVisuallyCollapsed ? (
     <IconChevronDown size="var(--mantine-font-size-md)" />
@@ -90,7 +90,15 @@ export const BoardContainerSection = ({ section }: Props) => {
   );
 
   return (
-    <Box className="board-grid-item-content" data-grid-item-content w="100%" h="100%" style={{ overflow: "visible" }}>
+    <Box
+      className="board-grid-item-content"
+      data-grid-item-content
+      w="100%"
+      h="100%"
+      style={{
+        overflow: "visible",
+      }}
+    >
       <Card
         className={combineClasses(
           classes.itemCard,
@@ -118,7 +126,7 @@ export const BoardContainerSection = ({ section }: Props) => {
             {...toggleLayout}
             px={6}
             ps={isVisuallyCollapsed ? labelLeft : 6}
-            pe={isVisuallyCollapsed ? labelRight : 6}
+            pe={isVisuallyCollapsed ? collapsedLabelPaddingRight : 6}
             radius="sm"
             variant="default"
             justify={options.showLabel ? "flex-start" : "center"}
@@ -140,7 +148,7 @@ export const BoardContainerSection = ({ section }: Props) => {
             pos="absolute"
             top={labelTop}
             left={labelLeft}
-            maw={`calc(100% - ${labelLeft + labelRight}px)`}
+            maw={labelMaxWidth}
             size="md"
             radius="sm"
             variant="default"
@@ -159,7 +167,7 @@ export const BoardContainerSection = ({ section }: Props) => {
           <ActionIcon
             className={classes.containerAction}
             pos="absolute"
-            top={isVisuallyCollapsed ? "50%" : "calc(var(--mantine-spacing-xs) * -1)"}
+            top={isVisuallyCollapsed ? "50%" : labelTop}
             right={8}
             style={{ zIndex: 10, transform: isVisuallyCollapsed ? "translateY(-50%)" : undefined }}
             variant={options.collapsible ? "subtle" : "default"}
@@ -185,14 +193,15 @@ export const BoardContainerSection = ({ section }: Props) => {
             <SectionGrid
               section={section}
               columnCount={section.width}
+              containerInlineInsetCount={containerInlineInsetCount}
               requestedRowCount={section.height}
               viewportRowCountOverride={isVisuallyCollapsed ? COLLAPSED_SECTION_ROW_COUNT : undefined}
               label={label}
             />
           </ContainerDepthContext>
         </Box>
+        {isEditMode && <BoardContainerMenu section={section} position={menuPosition} />}
       </Card>
-      {isEditMode && <BoardContainerMenu section={section} position={menuPosition} />}
     </Box>
   );
 };
