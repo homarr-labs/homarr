@@ -2821,7 +2821,7 @@
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Error al obtener los datos de Bazarr"
       }
     },
     "immich-serverStats": {
@@ -2852,7 +2852,7 @@
     },
     "immich-albumCarousel": {
       "name": "Álbum de Immich",
-      "allPhotos": "",
+      "allPhotos": "Todas las fotos",
       "option": {
         "albumId": {
           "label": "ID de álbum",
@@ -3514,7 +3514,7 @@
       }
     },
     "uptimeKuma": {
-      "name": "",
+      "name": "Uptime Kuma",
       "description": "",
       "option": {
         "showAverageUptime": {
@@ -3554,7 +3554,7 @@
       }
     },
     "traefik": {
-      "name": "",
+      "name": "Traefik",
       "description": "",
       "option": {
         "showTcp": {
@@ -3567,8 +3567,8 @@
           "label": ""
         }
       },
-      "instances": "",
-      "versionUnknown": "",
+      "instances": "Instancias de Traefik",
+      "versionUnknown": "Versión desconocida",
       "summary": {
         "routers": "",
         "entryPoints": ""
@@ -3773,15 +3773,15 @@
         "system": "",
         "cpu": "",
         "memory": "",
-        "disk": "",
+        "disk": "Disco",
         "gpu": "",
         "loadAvg": "",
         "net": "",
-        "temp": "",
+        "temp": "Temperatura",
         "battery": "",
         "services": "",
         "uptime": "",
-        "agent": ""
+        "agent": "Agente"
       }
     },
     "beszelSystemGrid": {
@@ -3861,9 +3861,9 @@
         "internalServerError": ""
       },
       "history": "Historial",
-      "resolved": "",
+      "resolved": "Resuelto",
       "status": {
-        "triggered": "",
+        "triggered": "Desencadenado",
         "ok": ""
       }
     },
@@ -3916,7 +3916,7 @@
       "chart": {
         "cpu": {
           "title": "",
-          "subtitle": "",
+          "subtitle": "Promedio de uso de CPU en el sistema",
           "series": "CPU"
         },
         "memory": {
@@ -3927,12 +3927,12 @@
         },
         "disk": {
           "title": "",
-          "subtitle": "",
+          "subtitle": "Uso por sistema de archivos",
           "series": ""
         },
         "diskIO": {
           "title": "",
-          "subtitle": "",
+          "subtitle": "Rendimiento del sistema de archivos raíz",
           "read": "",
           "write": ""
         },
@@ -4985,7 +4985,7 @@
             "boards": "",
             "entities": {
               "board": "",
-              "user": "",
+              "user": "Users",
               "app": "",
               "integration": "",
               "item": "",
@@ -5145,7 +5145,7 @@
         "label": "Puertos"
       },
       "host": {
-        "label": ""
+        "label": "Equipo"
       }
     },
     "action": {
