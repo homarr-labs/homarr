@@ -1,0 +1,39 @@
+apps/docs/README.md
+  s_9c95bc5e00fdd0::t_2721523bf01b93 156-160
+apps/docs/src/components/analytics.tsx
+  s_9c95bc5e00fdd0::t_335ab96cc8a0fc 5,14,18
+apps/docs/src/components/custom-widget-code-client.tsx
+  s_9c95bc5e00fdd0::t_cd19abdb2d14a7 61-70,78-80,91-114
+apps/docs/src/components/docs/directory-grid.tsx
+  s_9c95bc5e00fdd0::t_7efb6d9f043f00 7
+apps/docs/src/components/docs/docs-sidebar-folder.tsx
+  s_9c95bc5e00fdd0::t_f6f5f209c107ae 58-62,64,94,136
+apps/docs/src/components/mdx/legacy-tabs.tsx
+  s_9c95bc5e00fdd0::t_2d144dbf5acae3 4,26
+apps/docs/src/components/pages/home/hero/launch-menu.tsx
+  s_9c95bc5e00fdd0::t_2cd7bfa4a82b17 16
+apps/docs/src/components/pages/installation/docker/dynamic-docker-install.tsx
+  s_9c95bc5e00fdd0::t_094fb7adcbaf1e 28,56
+apps/docs/src/components/search.tsx
+  s_9c95bc5e00fdd0::t_036737f0479b3d 18,28,32,37,40,43
+apps/docs/src/components/workshop/WorkshopApp.tsx
+  s_9c95bc5e00fdd0::t_21488300f9b3d2 157,314
+apps/docs/src/lib/analytics.ts
+  s_9c95bc5e00fdd0::t_11cf0e31442afb 5-10,24,36,72
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "df7da09d3e86b2f36e6f5d507b7af002fb4b07dd",
+  "prompts": {},
+  "sessions": {
+    "s_9c95bc5e00fdd0": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0f769-0375-7613-b19e-5df608616d8b",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
