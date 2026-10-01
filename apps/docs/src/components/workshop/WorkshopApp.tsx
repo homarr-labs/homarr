@@ -35,6 +35,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
 import { SubmitForm } from "./SubmitForm";
@@ -78,6 +79,11 @@ export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
   const [search, setSearch] = useState("");
   const [includeOutdated, setIncludeOutdated] = useState(true);
   const [showSubmit, setShowSubmit] = useState(false);
+
+  const signIn = () => {
+    track("Workshop Sign In Clicked");
+    void workshop.login();
+  };
 
   // Stable sort order: only re-sort when filter/sort/search or submission set changes (not vote counts)
   const submissionIds = useMemo(() => workshop.submissions.map((s) => s.id).join(","), [workshop.submissions]);
@@ -154,7 +160,7 @@ export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
             </>
           ) : (
             <div className="flex flex-col items-start gap-1 sm:items-end">
-              <Button variant="outline" className="h-10 sm:h-8" onClick={() => void workshop.login()}>
+              <Button variant="outline" className="h-10 sm:h-8" onClick={signIn}>
                 <IconBrandGithub size={14} /> Sign in with GitHub
               </Button>
               <p className="text-xs text-muted-foreground">Vote, comment, report, and publish</p>
@@ -311,7 +317,7 @@ export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
               </Button>
             )}
             {workshop.submissions.length === 0 && (
-              <Button size="sm" onClick={() => (workshop.user ? setShowSubmit(true) : void workshop.login())}>
+              <Button size="sm" onClick={() => (workshop.user ? setShowSubmit(true) : signIn())}>
                 {workshop.user ? <IconPlus /> : <IconBrandGithub />}
                 {workshop.user ? "Create submission" : "Sign in to share"}
               </Button>

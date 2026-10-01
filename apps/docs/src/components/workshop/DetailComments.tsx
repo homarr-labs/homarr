@@ -26,6 +26,7 @@ import { Button } from "@/components/ui/button";
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
+import { track } from "@/lib/analytics";
 
 import { formatRelativeTime } from "./format";
 
@@ -78,6 +79,7 @@ export const CommentsSection = ({ submissionId, backend, currentUser, onRequireA
       const created = await backend.createComment(submissionId, trimmed);
       setRows((previous) => [...previous, created]);
       setNewComment("");
+      track("Workshop Comment Posted", { item_id: submissionId });
     } catch (caught) {
       setMutationError(errorMessage(caught, "Failed to post comment"));
     }

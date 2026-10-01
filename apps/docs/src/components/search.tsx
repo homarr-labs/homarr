@@ -13,14 +13,61 @@ import {
   SearchDialogOverlay,
   type SharedProps,
 } from "fumadocs-ui/components/dialog/search";
+import { useEffect, useRef } from "react";
+
+import { normalizeDestination, searchTrigger, track } from "@/lib/analytics";
 
 export default function Search(props: SharedProps) {
   const { search, setSearch, query } = useDocsSearch({
     client: staticClient(),
   });
+  const { open } = props;
+  const lastTracked = useRef("");
+
+  useEffect(() => {
+    if (!open) {
+      lastTracked.current = "";
+      return;
+    }
+    track("Search Opened", { trigger: searchTrigger() });
+  }, [open]);
+
+  useEffect(() => {
+    if (!open || query.isLoading || !Array.isArray(query.data)) return;
+    const trimmed = search.trim();
+    if (!trimmed || trimmed === lastTracked.current) return;
+    const timeout = setTimeout(() => {
+      lastTracked.current = trimmed;
+      if (!Array.isArray(query.data)) return;
+      if (query.data.length === 0) {
+        track("Search No Results", { query: trimmed });
+        return;
+      }
+      track("Search Performed", { query: trimmed, result_count: query.data.length });
+    }, 900);
+    return () => clearTimeout(timeout);
+  }, [open, search, query.data, query.isLoading]);
 
   return (
-    <SearchDialog search={search} onSearchChange={setSearch} isLoading={query.isLoading} {...props}>
+    <SearchDialog
+      search={search}
+      onSearchChange={setSearch}
+      isLoading={query.isLoading}
+      onSelect={(item) => {
+        if (item.type === "action") return;
+        const results = Array.isArray(query.data) ? query.data : [];
+        track("Search Result Clicked", {
+          query: search.trim(),
+          result_index: Math.max(
+            0,
+            results.findIndex((result) => result.id === item.id),
+          ),
+          result_type: item.type,
+          destination: normalizeDestination(item.url),
+        });
+      }}
+      {...props}
+    >
       <SearchDialogOverlay />
       <SearchDialogContent>
         <SearchDialogHeader>

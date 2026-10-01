@@ -4,7 +4,9 @@ import type { WidgetKind } from "@homarr/definitions";
 import { widgetCatalogIcons } from "@homarr/ui/widget-icons";
 import { IconSearch, IconX } from "@tabler/icons-react";
 import Link from "next/link";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+
+import { track } from "@/lib/analytics";
 
 export interface DirectoryIntegration {
   iconUrl: string;
@@ -40,6 +42,15 @@ export function DirectoryGrid({ items, label }: DirectoryGridProps) {
       `${title} ${description ?? ""}`.toLocaleLowerCase().includes(normalizedQuery),
     );
   }, [items, query]);
+
+  useEffect(() => {
+    const trimmed = query.trim();
+    if (!trimmed) return;
+    const timeout = setTimeout(() => {
+      track("Directory Filtered", { label, query: trimmed, result_count: visibleItems.length });
+    }, 700);
+    return () => clearTimeout(timeout);
+  }, [query, visibleItems.length, label]);
 
   return (
     <nav className="not-prose my-8" aria-label={label}>

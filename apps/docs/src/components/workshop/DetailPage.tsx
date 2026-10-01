@@ -57,6 +57,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Toaster } from "@/components/ui/sonner";
 import Link from "@/components/mdx/link";
+import { track } from "@/lib/analytics";
 import { CustomWidgetCodeExample, CustomWidgetCodeInput } from "../custom-widget-code";
 import { validateSubmissionContent } from "@site/src/lib/workshop-schema";
 import { cn, errorMessage, oauthErrorMessage } from "@site/src/lib/utils";
@@ -264,6 +265,14 @@ const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string;
     tags.forEach((tag) => tag.remove());
     return () => tags.forEach((tag) => document.head.append(tag));
   }, [submission?.id, submissionId, notFound]);
+
+  const trackedItem = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!submission || trackedItem.current === submission.id) return;
+    trackedItem.current = submission.id;
+    track("Workshop Item Opened", { item_id: submission.id, item_type: submission.type });
+  }, [submission]);
 
   useEffect(() => {
     void backend.refreshAuth();
@@ -493,6 +502,7 @@ const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string;
       await navigator.clipboard.writeText(submission.content);
       setCopied(true);
       setCopyFailed(false);
+      track("Workshop Item Downloaded", { item_id: submission.id, item_type: submission.type, method: "clipboard" });
       if (copyTimer.current) clearTimeout(copyTimer.current);
       if (copyFailedTimer.current) clearTimeout(copyFailedTimer.current);
       copyTimer.current = setTimeout(() => setCopied(false), 1500);

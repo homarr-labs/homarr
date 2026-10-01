@@ -32,6 +32,7 @@ import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Progress, ProgressLabel, ProgressValue } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { track } from "@/lib/analytics";
 import { cn, errorMessage } from "@/lib/utils";
 
 import type { SubmitInput } from "./useWorkshop";
@@ -79,6 +80,10 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
   const [pending, setPending] = useState(false);
   const [jsonDropHint, setJsonDropHint] = useState(false);
   const previewUrlsRef = useRef<Set<string>>(new Set());
+
+  useEffect(() => {
+    track("Workshop Submit Started");
+  }, []);
 
   const canAdvance = [type !== null, title.trim().length >= 3 && content.trim().length > 0, true];
 

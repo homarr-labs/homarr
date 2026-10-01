@@ -13,6 +13,8 @@ import {
 } from "fumadocs-ui/components/sidebar/base";
 import type { MouseEvent, ReactNode } from "react";
 
+import { track } from "@/lib/analytics";
+
 const normalizePath = (path: string) => (path.length > 1 && path.endsWith("/") ? path.slice(0, -1) : path);
 
 const isActivePath = (url: string, pathname: string, nested = false) => {
@@ -37,15 +39,20 @@ const folderItemClass =
 
 const getItemOffset = (depth: number) => `calc(${2 + 3 * depth} * var(--spacing))`;
 
+const reportSidebarToggle = (folderName: string, expanded: boolean) =>
+  track("Sidebar Toggled", { folder: folderName, expanded });
+
 function ToggleableFolderLink({
   active,
   children,
   external,
+  folderName,
   href,
 }: {
   active: boolean;
   children: ReactNode;
   external?: boolean;
+  folderName: string;
   href: string;
 }) {
   const folder = useFolder();
@@ -55,15 +62,12 @@ function ToggleableFolderLink({
     if (!folder?.collapsible || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
 
     const target = event.target;
-    if (target instanceof Element && target.closest("[data-icon]")) {
-      event.preventDefault();
-      folder.setOpen((open) => !open);
-      return;
-    }
+    const iconClick = target instanceof Element && target.closest("[data-icon]");
 
-    if (active) {
+    if (iconClick || active) {
       event.preventDefault();
       folder.setOpen((open) => !open);
+      reportSidebarToggle(folderName, !folder.open);
       return;
     }
 
@@ -91,7 +95,7 @@ function ToggleableFolderLink({
   );
 }
 
-function StyledFolderTrigger({ children }: { children: ReactNode }) {
+function StyledFolderTrigger({ children, folderName }: { children: ReactNode; folderName: string }) {
   const depth = useFolderDepth();
   const folder = useFolder();
 
@@ -99,6 +103,7 @@ function StyledFolderTrigger({ children }: { children: ReactNode }) {
     <SidebarFolderTrigger
       className={`${folderItemClass} ${folder?.collapsible ? "transition-colors hover:bg-fd-accent/50 hover:text-fd-accent-foreground/80" : ""} w-full`}
       style={{ paddingInlineStart: getItemOffset(depth - 1) }}
+      onClick={folder?.collapsible ? () => reportSidebarToggle(folderName, !folder.open) : undefined}
     >
       {children}
     </SidebarFolderTrigger>
@@ -120,11 +125,13 @@ function StyledFolderContent({ children }: { children: ReactNode }) {
 export function DocsSidebarFolder({ item, children }: { item: Folder; children: ReactNode }) {
   const pathname = usePathname();
   const active = containsPath(item, pathname);
+  const folderName = typeof item.name === "string" ? item.name : (item.index?.url ?? "folder");
 
   return (
     <SidebarFolder collapsible={item.collapsible} active={active} defaultOpen={item.defaultOpen}>
       {item.index ? (
         <ToggleableFolderLink
+          folderName={folderName}
           href={item.index.url}
           active={isActivePath(item.index.url, pathname)}
           external={item.index.external}
@@ -133,7 +140,7 @@ export function DocsSidebarFolder({ item, children }: { item: Folder; children: 
           {item.name}
         </ToggleableFolderLink>
       ) : (
-        <StyledFolderTrigger>
+        <StyledFolderTrigger folderName={folderName}>
           {item.icon}
           {item.name}
         </StyledFolderTrigger>

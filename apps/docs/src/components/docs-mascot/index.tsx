@@ -2,6 +2,8 @@
 import { useEffect, useRef, useState } from "react";
 import type { KeyboardEvent, PointerEvent } from "react";
 
+import { track } from "@/lib/analytics";
+
 import type { MascotScene } from "./scene";
 import styles from "./styles.module.css";
 
@@ -59,6 +61,7 @@ export default function DocsMascot() {
       return;
     }
     setMessage("");
+    track("Ask AI Opened", { trigger: "mascot" });
     window.Kapa("open", { mode: "ai" });
   }
 

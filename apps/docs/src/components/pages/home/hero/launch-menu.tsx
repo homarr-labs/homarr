@@ -1,5 +1,10 @@
+"use client";
+
 import { Menu } from "@base-ui/react/menu";
 import { IconChevronDown, IconExternalLink } from "@tabler/icons-react";
+
+import { track } from "@/lib/analytics";
+
 import styles from "./launch-menu.module.css";
 
 const providers = [
@@ -13,7 +18,7 @@ export function LaunchMenu() {
 
   return (
     <Menu.Root modal={false}>
-      <Menu.Trigger className={styles.trigger}>
+      <Menu.Trigger className={styles.trigger} onClick={() => track("Launch Menu Opened")}>
         <span className={styles.label}>Launch</span>
         <span className={styles.chevron} aria-hidden="true">
           <IconChevronDown size={18} />

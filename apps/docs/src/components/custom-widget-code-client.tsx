@@ -58,16 +58,18 @@ export function CustomWidgetCodeExampleClient(props: CustomWidgetCodeExampleProp
   const { colorMode } = useColorMode();
 
   return (
-    <MantineProvider forceColorScheme={colorMode}>
-      <ReadOnlyCustomWidgetCode
-        id={props.id}
-        label={props.label}
-        language={props.language ?? "json"}
-        value={props.code}
-        messages={messages}
-        height={props.height}
-      />
-    </MantineProvider>
+    <div data-code-surface="custom-widget">
+      <MantineProvider forceColorScheme={colorMode}>
+        <ReadOnlyCustomWidgetCode
+          id={props.id}
+          label={props.label}
+          language={props.language ?? "json"}
+          value={props.code}
+          messages={messages}
+          height={props.height}
+        />
+      </MantineProvider>
+    </div>
   );
 }
 
@@ -75,9 +77,11 @@ export function CustomWidgetCodeInputClient(props: CustomWidgetCodeInputProps) {
   const { colorMode } = useColorMode();
 
   return (
-    <MantineProvider forceColorScheme={colorMode}>
-      <CustomWidgetCodeEditor {...props} messages={editableMessages} />
-    </MantineProvider>
+    <div data-code-surface="custom-widget">
+      <MantineProvider forceColorScheme={colorMode}>
+        <CustomWidgetCodeEditor {...props} messages={editableMessages} />
+      </MantineProvider>
+    </div>
   );
 }
 
@@ -88,29 +92,31 @@ export function BundledCustomWidgetGalleryClient() {
   if (!selected) return null;
 
   return (
-    <MantineProvider forceColorScheme={colorMode}>
-      <Stack gap="md">
-        <Select
-          label="Bundled widget"
-          data={BUNDLED_CUSTOM_WIDGETS.map(({ id, widget }) => ({ value: id, label: widget.name }))}
-          value={selected.id}
-          onChange={(value) => {
-            if (value) setSelectedId(value);
-          }}
-          allowDeselect={false}
-        />
-        <Text size="sm" c="dimmed">
-          {selected.widget.description}
-        </Text>
-        <ReadOnlyCustomWidgetCode
-          id={`${selected.id}-manifest`}
-          label="Complete widget.json"
-          language="json"
-          value={JSON.stringify(selected.widget, null, 2)}
-          messages={messages}
-          height="680px"
-        />
-      </Stack>
-    </MantineProvider>
+    <div data-code-surface="custom-widget">
+      <MantineProvider forceColorScheme={colorMode}>
+        <Stack gap="md">
+          <Select
+            label="Bundled widget"
+            data={BUNDLED_CUSTOM_WIDGETS.map(({ id, widget }) => ({ value: id, label: widget.name }))}
+            value={selected.id}
+            onChange={(value) => {
+              if (value) setSelectedId(value);
+            }}
+            allowDeselect={false}
+          />
+          <Text size="sm" c="dimmed">
+            {selected.widget.description}
+          </Text>
+          <ReadOnlyCustomWidgetCode
+            id={`${selected.id}-manifest`}
+            label="Complete widget.json"
+            language="json"
+            value={JSON.stringify(selected.widget, null, 2)}
+            messages={messages}
+            height="680px"
+          />
+        </Stack>
+      </MantineProvider>
+    </div>
   );
 }
