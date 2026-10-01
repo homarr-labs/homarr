@@ -31,6 +31,9 @@
   },
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "typescript": "catalog:"
   }
 }

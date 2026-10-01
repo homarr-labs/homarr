@@ -35,6 +35,7 @@ catalog:
   "@mantine/spotlight": ^9.4.1
   "@mantine/tiptap": ^9.4.1
   "@octokit/auth-app": ^8.2.0
+  "@octokit/plugin-rest-endpoint-methods": ^17.0.0
   "@paralleldrive/cuid2": ^3.3.0
   "@playwright/test": ^1.61.1
   "@semantic-release/changelog": ^7.0.0
@@ -45,6 +46,7 @@ catalog:
   "@semantic-release/release-notes-generator": ^14.1.1
   "@t3-oss/env-nextjs": ^0.13.11
   "@tabler/icons-react": ^3.44.0
+  "@tanstack/query-core": ^5.101.2
   "@tanstack/react-devtools": ^0.10.8
   "@tanstack/react-query": ^5.101.2
   "@tanstack/react-query-devtools": ^5.101.2
@@ -83,15 +85,22 @@ catalog:
   "@types/css-modules": ^1.0.5
   "@types/dockerode": ^4.0.1
   "@types/node": ^24.13.3
+  "@types/node-fetch": ^2.6.13
   "@types/node-unifi": ^2.5.1
   "@types/pg": ^8.20.0
   "@types/prismjs": ^1.26.6
   "@types/react": 19.2.17
   "@types/react-dom": 19.2.3
   "@scalar/api-reference-react": ^0.9.54
+  "@scalar/types": ^0.16.2
   "@types/video.js": ^7.3.58
   "@types/ws": ^8.18.1
   "@types/xml2js": ^0.4.14
+  axios: ^1.15.0
+  csstype: ^3.2.3
+  http-cookie-agent: ^6.0.8
+  node-fetch: ^2.7.0
+  ofetch: ^1.5.1
   posthog-js: ^1.399.1
   posthog-node: ^5.40.0
   "@vitejs/plugin-react": ^6.0.3
@@ -102,6 +111,7 @@ catalog:
   "@xterm/xterm": ^6.0.0
   adm-zip: 0.5.18
   jszip: ^3.10.1
+  prosemirror-model: ^1.25.10
   sql.js: ^1.14.1
   babel-plugin-react-compiler: ^1.0.0
   bcrypt: ^6.0.0
@@ -154,6 +164,7 @@ catalog:
   oxlint: ^1.73.0
   pg: ^8.22.0
   postcss-preset-mantine: ^1.18.0
+  postcss-simple-vars: ^7.0.1
   prismjs: ^1.30.0
   proxmox-api: 1.1.1
   react: 19.2.7
@@ -184,6 +195,7 @@ catalog:
   vite-tsconfig-paths: ^6.1.1
   vitest: ^4.1.10
   winston: 3.19.0
+  winston-transport: ^4.9.0
   ws: ^8.21.0
   xml2js: ^0.6.2
   yaml: 2.9.0
@@ -192,7 +204,6 @@ catalog:
   zod-validation-error: ^5.0.0
 
 catalogMode: strict
-nodeLinker: hoisted
 strictPeerDependencies: false
 engineStrict: true
 verifyDepsBeforeRun: warn

@@ -26,11 +26,17 @@
   },
   "dependencies": {
     "@homarr/core": "workspace:^0.1.0",
+    "@mantine/core": "catalog:",
     "@paralleldrive/cuid2": "catalog:",
+    "@tanstack/query-core": "catalog:",
+    "@types/node-fetch": "catalog:",
+    "axios": "catalog:",
     "cookie": "catalog:",
     "dayjs": "catalog:",
     "next": "catalog:",
+    "node-fetch": "catalog:",
     "octokit": "catalog:",
+    "ofetch": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "undici": "catalog:",
@@ -39,6 +45,10 @@
   },
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",
+    "@types/node": "catalog:",
+    "@types/node-fetch": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "typescript": "catalog:"
   }
 }

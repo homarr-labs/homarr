@@ -26,12 +26,14 @@
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/redis": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
+    "@trpc/server": "catalog:",
     "dotenv": "catalog:",
     "tsx": "catalog:",
     "ws": "catalog:"
   },
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",
+    "@types/node": "catalog:",
     "@types/ws": "catalog:",
     "esbuild": "catalog:",
     "typescript": "catalog:"
