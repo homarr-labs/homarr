@@ -1,4 +1,4 @@
-import homarrV2SocialImage from "@site/blog/2026/09-03-homarr-2.0/img/homarr-v2-recap.webp";
+import homarrV2SocialImage from "@site/public/media/homarr-home.webp";
 
 import { SectionContainer } from "@/components/pages/home/container/section-container";
 
@@ -8,7 +8,7 @@ export const MotionReelShowcase = () => {
       <SectionContainer className="relative max-w-5xl">
         <div className="mx-auto mb-8 max-w-2xl text-center">
           <h2 id="motion-reel-title" className="m-0 text-3xl font-bold tracking-tight sm:text-5xl">
-            See Homarr 2.0 in action
+            Homarr showreel
           </h2>
         </div>
         <div className="aspect-video overflow-hidden rounded-2xl border-4 border-fd-primary bg-fd-muted">
