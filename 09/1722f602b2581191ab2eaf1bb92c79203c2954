@@ -1,0 +1,21 @@
+apps/docs/src/lib/analytics.spec.ts
+  s_9c95bc5e00fdd0::t_9b738ef46b561a 1-38
+apps/docs/src/lib/analytics.ts
+  s_9c95bc5e00fdd0::t_e1306dbbd6346a 65
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "091722f602b2581191ab2eaf1bb92c79203c2954",
+  "prompts": {},
+  "sessions": {
+    "s_9c95bc5e00fdd0": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0f769-0375-7613-b19e-5df608616d8b",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
