@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "@types/three": "^0.180.0",
-    "esbuild": "^0.25.0",
+    "esbuild": "^0.28.0",
     "playwright-core": "^1.55.0"
   }
 }
