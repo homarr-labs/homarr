@@ -24,7 +24,7 @@ for (const file of files) {
   const $ = load(await readFile(path.join(outputDirectory, file), "utf8"));
   const noindex = /\bnoindex\b/.test($("meta[name=robots]").attr("content") ?? "");
   const isExcluded =
-    /^\/(?:404|_not-found|blog|workshop\/admin)\/$/.test(pathname) || pathname.startsWith("/docs/category/");
+    /^\/(?:404|_not-found|blog|search|workshop\/admin)\/$/.test(pathname) || pathname.startsWith("/docs/category/");
   assert.equal(noindex, isExcluded, `${pathname}: unexpected robots indexing policy`);
   if (isExcluded) {
     assert(!indexed.has(`${origin}${pathname}`), `${pathname}: noindex page in sitemap`);

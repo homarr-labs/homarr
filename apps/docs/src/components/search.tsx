@@ -17,12 +17,16 @@ import { useEffect, useRef } from "react";
 
 import { track } from "@/lib/analytics";
 
-export default function Search(props: SharedProps) {
+export default function Search({ initialSearch, ...props }: SharedProps & { initialSearch?: string }) {
   const { search, setSearch, query } = useDocsSearch({
     client: staticClient(),
   });
   const { open } = props;
   const lastTracked = useRef("");
+
+  useEffect(() => {
+    if (initialSearch !== undefined) setSearch(initialSearch);
+  }, [initialSearch, setSearch]);
 
   useEffect(() => {
     if (!open) lastTracked.current = "";

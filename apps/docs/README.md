@@ -83,6 +83,7 @@ generated API schema. Routine or self-explanatory changes need no docs update. S
 - `/llms.mdx/blog/.../content.md` — raw Markdown for each blog post
 - `/llms.mdx/api-reference/.../content.md` — operation parameters, bodies, responses, and authentication
 - `/blog/rss.xml` — RSS feed for project posts
+- `/search?q=...` — opens documentation search with the supplied query, including existing Homarr search-engine links
 
 Every docs page and blog post includes copy-Markdown and view-source actions. Search is generated at build time and
 runs locally in the browser; it does not depend on an external crawler. Markdown exports and search resolve
