@@ -267,7 +267,7 @@ overrides:
   "assistant-cloud": 0.1.38
   "@babel/helpers@<7.26.10": ">=7.29.7"
   "@babel/runtime@<7.26.10": ">=7.29.7"
-  "axios@>=1.0.0 <1.18.1": "1.18.1"
+  "axios@>=1.0.0 <1.18.1": "1.20.0"
   "brace-expansion@>=1.0.0 <1.1.18": "1.1.18"
   "brace-expansion@>=2.0.0 <2.1.4": "2.1.4"
   "brace-expansion@>=4.0.0 <5.0.9": "5.0.12"
