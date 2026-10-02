@@ -16,13 +16,16 @@ import {
   ScrollArea,
   Stack,
   Text,
+  Tooltip,
+  useMantineTheme,
 } from "@mantine/core";
 import {
   IconBrain,
+  IconCircleCheckFilled,
+  IconCircleXFilled,
   IconClock,
   IconCpu,
   IconCpu2,
-  IconFileReport,
   IconInfoCircle,
   IconPackages,
   IconRefreshAlert,
@@ -35,6 +38,7 @@ import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 
 import type { RouterOutputs } from "@homarr/api";
+import type { SystemHealthMonitoring as HealthMonitoringData } from "@homarr/integrations/types";
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useByteFormatter } from "@homarr/settings";
@@ -42,7 +46,7 @@ import type { ScopedTranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import { zoomCompensatedSize } from "@homarr/ui";
 
-import { filterStorageVolumes, storageDeviceNamesMatch } from "../filter-storage-volumes";
+import { filterStorageVolumes, isSameStorageDevice, storageDeviceNamesMatch } from "../filter-storage-volumes";
 import { WidgetEmptyState } from "../common/empty-state";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
@@ -243,21 +247,22 @@ export const SystemHealthMonitoring = ({
                               {disk.deviceName}
                             </Text>
                           </Group>
-                          {disk.temperature !== null && (
-                            <Group gap={4} wrap="nowrap">
-                              <IconTemperature className="health-monitoring-disk-temperature-icon" size="1rem" />
-                              <Text className="health-monitoring-disk-temperature-value" size="xs">
-                                {options.fahrenheit
-                                  ? `${(disk.temperature * 1.8 + 32).toFixed(1)}°F`
-                                  : `${disk.temperature}°C`}
-                              </Text>
-                            </Group>
-                          )}
-                          <Group gap={4} wrap="nowrap">
-                            <IconFileReport className="health-monitoring-disk-status-icon" size="1rem" />
-                            <Text className="health-monitoring-disk-status-value" size="xs">
-                              {disk.overallStatus ? disk.overallStatus : "N/A"}
-                            </Text>
+                          <Group gap={8} wrap="nowrap">
+                            <DiskStatus
+                              healthy={disk.healthy}
+                              overallStatus={disk.overallStatus}
+                              statusReason={disk.statusReason}
+                            />
+                            {disk.temperature !== null && (
+                              <Group gap={4} wrap="nowrap">
+                                <IconTemperature className="health-monitoring-disk-temperature-icon" size="1rem" />
+                                <Text className="health-monitoring-disk-temperature-value" size="xs">
+                                  {options.fahrenheit
+                                    ? `${(disk.temperature * 1.8 + 32).toFixed(1)}°F`
+                                    : `${disk.temperature}°C`}
+                                </Text>
+                              </Group>
+                            )}
                           </Group>
                         </Group>
                         <Progress.Root className="health-monitoring-disk-use" radius={board.itemRadius} size="lg">
@@ -392,6 +397,48 @@ export const formatUptime = (uptimeInSeconds: number, t: ScopedTranslationFuncti
   });
 };
 
+type SmartStatusReason = HealthMonitoringData["smart"][number]["statusReason"];
+
+// Green check or red cross from the SMART healthy flag. The tooltip says what the verdict is based on,
+// or shows the integration's raw status when it reports no reason.
+const DiskStatus = ({
+  healthy,
+  overallStatus,
+  statusReason,
+}: {
+  healthy?: boolean;
+  overallStatus: string;
+  statusReason?: SmartStatusReason;
+}) => {
+  const mantineTheme = useMantineTheme();
+  const t = useI18n("widget.healthMonitoring");
+
+  if (healthy === undefined) {
+    return (
+      <Text className="health-monitoring-disk-status-value" size="xs" c="dimmed">
+        N/A
+      </Text>
+    );
+  }
+
+  const Icon = healthy ? IconCircleCheckFilled : IconCircleXFilled;
+  const label = statusReason
+    ? statusReason.type === "attributesFailed"
+      ? t("smartStatus.attributesFailed", { attributes: statusReason.attributes.join(", ") })
+      : t(`smartStatus.${statusReason.type}`)
+    : overallStatus;
+  return (
+    <Tooltip label={label} disabled={!label}>
+      <Icon
+        className="health-monitoring-disk-status-icon"
+        size="1rem"
+        color={healthy ? mantineTheme.colors.green[6] : mantineTheme.colors.red[6]}
+        aria-label={label}
+      />
+    </Tooltip>
+  );
+};
+
 export const progressColor = (percentage: number) => {
   if (percentage < 40) return "green";
   else if (percentage < 60) return "yellow";
@@ -439,6 +486,8 @@ interface SmartData {
   deviceName: string;
   temperature: number | null;
   overallStatus: string;
+  healthy?: boolean;
+  statusReason?: SmartStatusReason;
 }
 
 export const matchFileSystemAndSmart = (fileSystems: FileSystem[], smartData: SmartData[]) => {
@@ -446,13 +495,19 @@ export const matchFileSystemAndSmart = (fileSystems: FileSystem[], smartData: Sm
     .map((fileSystem) => {
       const smartDisk = smartData.find((smart) => storageDeviceNamesMatch(smart.deviceName, fileSystem.deviceName));
 
+      // Take the SMART name only for the same disk (sda1 -> sda). A controller-level match (nvme0 for
+      // nvme0n1 and nvme0n2) keeps the file system name, so namespaces stay distinct.
+      const isSameDisk = smartDisk !== undefined && isSameStorageDevice(smartDisk.deviceName, fileSystem.deviceName);
+
       return {
-        deviceName: smartDisk?.deviceName ?? fileSystem.deviceName,
+        deviceName: isSameDisk ? smartDisk.deviceName : fileSystem.deviceName,
         used: fileSystem.used,
         available: fileSystem.available,
         percentage: fileSystem.percentage,
         temperature: smartDisk?.temperature ?? null,
         overallStatus: smartDisk?.overallStatus ?? "",
+        healthy: smartDisk?.healthy,
+        statusReason: smartDisk?.statusReason,
       };
     })
     .toSorted((fileSystemA, fileSystemB) => fileSystemA.deviceName.localeCompare(fileSystemB.deviceName));

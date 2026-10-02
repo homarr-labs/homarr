@@ -30,6 +30,12 @@ export interface SystemHealthMonitoring {
     temperature: number | null;
     overallStatus: string;
     healthy: boolean;
+    // What the health verdict is based on, shown in the widget's status tooltip.
+    statusReason?:
+      | { type: "attributesWithinThresholds" }
+      | { type: "attributesFailed"; attributes: string[] }
+      | { type: "noCriticalWarning" }
+      | { type: "criticalWarning" };
   }[];
   gpu: {
     gpuId: string;

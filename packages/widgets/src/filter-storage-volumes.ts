@@ -47,10 +47,34 @@ export const toScopedStorageVolumeValue = (integrationId: string, value: string)
   return `${integrationId}:${volumeName}`;
 };
 
-export const storageDeviceNamesMatch = (leftDeviceName: string, rightDeviceName: string): boolean => {
+// Integrations differ in whether device names carry the /dev/ prefix (Glances SMART, OMV report
+// bare names). The prefix is dropped after partition normalization, so the prefixed-only patterns still apply.
+const withoutDevicePrefix = (deviceName: string): string => deviceName.replace(/^\/dev\//, "");
+
+// The same disk under either name form: /dev/sda1, sda1 and sda are all sda.
+export const isSameStorageDevice = (leftDeviceName: string, rightDeviceName: string): boolean => {
   return (
     leftDeviceName === rightDeviceName ||
-    normalizeStorageDeviceName(leftDeviceName) === normalizeStorageDeviceName(rightDeviceName)
+    withoutDevicePrefix(normalizeStorageDeviceName(leftDeviceName)) ===
+      withoutDevicePrefix(normalizeStorageDeviceName(rightDeviceName))
+  );
+};
+
+// SMART data for NVMe can be reported per controller (Glances: nvme0), which owns every
+// namespace and partition below it (nvme0n1p3). Namespaces never match each other.
+const nvmeControllerPattern = /^(nvme[0-9]+)$/;
+const nvmeNamespacePattern = /^(nvme[0-9]+)n[0-9]+(?:p[0-9]+)?$/;
+
+const isNvmeControllerOf = (controllerName: string, deviceName: string): boolean => {
+  const controller = nvmeControllerPattern.exec(withoutDevicePrefix(controllerName))?.[1];
+  return controller !== undefined && nvmeNamespacePattern.exec(withoutDevicePrefix(deviceName))?.[1] === controller;
+};
+
+export const storageDeviceNamesMatch = (leftDeviceName: string, rightDeviceName: string): boolean => {
+  return (
+    isSameStorageDevice(leftDeviceName, rightDeviceName) ||
+    isNvmeControllerOf(leftDeviceName, rightDeviceName) ||
+    isNvmeControllerOf(rightDeviceName, leftDeviceName)
   );
 };
 

@@ -3313,6 +3313,12 @@
         "rebootRequired": "Reboot required",
         "rebootNotRequired": "No reboot required"
       },
+      "smartStatus": {
+        "attributesWithinThresholds": "SMART: attributes within thresholds",
+        "attributesFailed": "SMART: {attributes} failed",
+        "noCriticalWarning": "SMART: no warning reported by SSD",
+        "criticalWarning": "SMART: critical warning reported by SSD"
+      },
       "gauge": {
         "cpuUsage": "CPU usage",
         "cpuTemperature": "CPU temperature",
