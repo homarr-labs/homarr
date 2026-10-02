@@ -717,7 +717,7 @@ overrides:
   brace-expansion@>=4.0.0 <5.0.9: 5.0.9
   browserslist@<4.28.7: 4.28.7
   esbuild@<=0.24.2: '>=0.28.1'
-  fast-uri@>=3.0.0 <3.1.6: 3.1.6
+  fast-uri@>=3.0.0 <3.1.6: 3.1.8
   '@ai-sdk/provider-utils>undici': 8.10.2
   find-my-way@<9.6.1: 9.9.0
   form-data@>=4.0.0 <4.0.4: '>=4.0.6'
@@ -8496,67 +8496,79 @@ packages:
     resolution: {integrity: sha512-xt4Vy3RTBw1NfszBlf4A0Rr6ZjA/th2Pj9XlWFLQHW9A1qOCtxNCoIWSzn/INtnZLMB4jO2gWdEtSaHUtK73wA==}
     cpu: [arm64]
     os: [android]
+    deprecated: yuku-analyzer runs on yuku-core since 0.14
 
   '@yuku-analyzer/binding-darwin-arm64@0.10.2':
     resolution: {integrity: sha512-ftokSqvYXZxfmA/bfIbp8c1BJ8QxNax371kUOQNFyvR5hmtKqQyTqSKtMk+WaixHM3w4tKj/JdyY+ud1bGamXA==}
     cpu: [arm64]
     os: [darwin]
+    deprecated: yuku-analyzer runs on yuku-core since 0.14
 
   '@yuku-analyzer/binding-darwin-x64@0.10.2':
     resolution: {integrity: sha512-yUrmmhmF5R4Xmbfo8gUxJKr3YbvbLcE2JvLhDLzFJkMN29/fGm6K3dZX6YpNecfgBDnQ+VywGp8K9xjRaBFZ3Q==}
     cpu: [x64]
     os: [darwin]
+    deprecated: yuku-analyzer runs on yuku-core since 0.14
 
   '@yuku-analyzer/binding-freebsd-x64@0.10.2':
     resolution: {integrity: sha512-cy9+KvVoK5Xad3Vs5pLwAeZf3JC/1y0XJElgv1q6g7W7g/n52FRjedpYmQiJeMZdnhJiAshq7Vz/Xj3jC5Ns2Q==}
     cpu: [x64]
     os: [freebsd]
+    deprecated: yuku-analyzer runs on yuku-core since 0.14
 
   '@yuku-analyzer/binding-linux-arm-gnu@0.10.2':
     resolution: {integrity: sha512-AgVZ6VCV2XP4yHCwyv78KLV76gcu2neiEF2+RBTPQN7sqYY+bLvMxphGPmfG+9qk5Uf1PJAhZYIUnMGVbbRCZw==}
     cpu: [arm]
     os: [linux]
     libc: [glibc]
+    deprecated: yuku-analyzer runs on yuku-core since 0.14
 
   '@yuku-analyzer/binding-linux-arm-musl@0.10.2':
     resolution: {integrity: sha512-5qAj2GjoSN6+HuH75+g5r40CFhWmMvH0K8VKWmPfQyOgA/LonoDMr5H5O5feJwzdnfdCytPDAh1RAf7/SSg7dg==}
     cpu: [arm]
     os: [linux]
     libc: [musl]
+    deprecated: yuku-analyzer runs on yuku-core since 0.14
 
   '@yuku-analyzer/binding-linux-arm64-gnu@0.10.2':
     resolution: {integrity: sha512-eJvQ4Ja5oPf/HOjmBkCLYyhOHUkL7U+iMAN8sX44x8exBBpPRyqnhEgTsuU73HzxPLrGPdRhybFnAE63Omib/Q==}
     cpu: [arm64]
     os: [linux]
     libc: [glibc]
+    deprecated: yuku-analyzer runs on yuku-core since 0.14
 
   '@yuku-analyzer/binding-linux-arm64-musl@0.10.2':
     resolution: {integrity: sha512-TppF2j194mOQ/kBXvNr9u5TYO+eR9r8ieg4lTIEyJIVYHAR9GWeB0oFHLcJiLXVa3qUJGzE4bmzSntCW5ylA7A==}
     cpu: [arm64]
     os: [linux]
     libc: [musl]
+    deprecated: yuku-analyzer runs on yuku-core since 0.14
 
   '@yuku-analyzer/binding-linux-x64-gnu@0.10.2':
     resolution: {integrity: sha512-03xu6ocJuwhm1a/JKmrHiaJUO1Oj86rABsm4FAl8AvfewfW/9idIUmPiFxZfb6RfiIONegebsTGJhFx0NbBNpA==}
     cpu: [x64]
     os: [linux]
     libc: [glibc]
+    deprecated: yuku-analyzer runs on yuku-core since 0.14
 
   '@yuku-analyzer/binding-linux-x64-musl@0.10.2':
     resolution: {integrity: sha512-f7W2sAWWQN8x8YB0RRxIche7mLImH7lDgzUy9+B69cM2I6VFJ4a5+0pgAuMLROPOqimaxFPdXqLdDE/vpgGltg==}
     cpu: [x64]
     os: [linux]
     libc: [musl]
+    deprecated: yuku-analyzer runs on yuku-core since 0.14
 
   '@yuku-analyzer/binding-win32-arm64@0.10.2':
     resolution: {integrity: sha512-f534qNc5YaJI29e1oryxEnxPkp7WCYJ1j7ChSec8pQNlYqTm8Tao7hij7NxRF+9BuxzeZCZ+WsbaAfLlklR0Eg==}
     cpu: [arm64]
     os: [win32]
+    deprecated: yuku-analyzer runs on yuku-core since 0.14
 
   '@yuku-analyzer/binding-win32-x64@0.10.2':
     resolution: {integrity: sha512-sKHkmLK8BsindMfyIThoN0bWC5uqSJEVNaLRD/ifA99mtb0UDin1ZCg4WYSVQAmM4k2iOTl4UZx/p3zcBiBgYw==}
     cpu: [x64]
     os: [win32]
+    deprecated: yuku-analyzer runs on yuku-core since 0.14
 
   '@yuku-toolchain/types@0.10.2':
     resolution: {integrity: sha512-sSeo4SSSToiS+sSD+bwn/s94EEcaLJ7tG5LCp8gFYC1G5VzxzX7fqB6m9RU1yMD8KTpu6zdU/I1NlQf8hVBJ9Q==}
@@ -10034,8 +10046,8 @@ packages:
   fast-string-width@3.0.2:
     resolution: {integrity: sha512-gX8LrtNEI5hq8DVUfRQMbr5lpaS4nMIWV+7XEbXk2b8kiQIizgnlr12B4dA3ZEx3308ze0O4Q1R+cHts8kyUJg==}
 
-  fast-uri@3.1.6:
-    resolution: {integrity: sha512-7Ical1vFEMr0onbVzEDIreM22I4khW+fzyQPwvAFWBp1iwdshSZRsL4jjRvPG9JP1uiqMHRto+YU6R2/CzDz5Q==}
+  fast-uri@3.1.8:
+    resolution: {integrity: sha512-GZMtZUTNRpOVIECoXwLNZS5xUGE+mVNbTB8h/7Rwh2TFWcBQiPzTgyZi05BF9UMZKkLJv8XBRJTlU7zg8+ZfMg==}
 
   fast-uri@4.2.1:
     resolution: {integrity: sha512-TmHQgewjHtMq1E5QKA0tOE0yeYGQs25KZC/ziJpubRtWI15W92e6vPFydWOeZBVROSHBYw/QhD9d5OefdD6LDg==}
@@ -15397,7 +15409,7 @@ snapshots:
     dependencies:
       ajv: 8.18.0
       ajv-formats: 3.0.1(ajv@8.18.0)
-      fast-uri: 3.1.6
+      fast-uri: 3.1.8
 
   '@fastify/error@4.2.0': {}
 
@@ -19978,7 +19990,7 @@ snapshots:
   ajv@8.18.0:
     dependencies:
       fast-deep-equal: 3.1.3
-      fast-uri: 3.1.6
+      fast-uri: 3.1.8
       json-schema-traverse: 1.0.0
       require-from-string: 2.0.2
 
@@ -21502,7 +21514,7 @@ snapshots:
       '@fastify/merge-json-schemas': 0.2.1
       ajv: 8.18.0
       ajv-formats: 3.0.1(ajv@8.18.0)
-      fast-uri: 3.1.6
+      fast-uri: 3.1.8
       json-schema-ref-resolver: 3.0.0
       rfdc: 1.4.1
 
@@ -21527,7 +21539,7 @@ snapshots:
       fast-string-truncated-width: 3.0.3
     optional: true
 
-  fast-uri@3.1.6: {}
+  fast-uri@3.1.8: {}
 
   fast-uri@4.2.1: {}
 
