@@ -1,6 +1,11 @@
 import { describe, expect, test } from "vitest";
 
-import { filterStorageVolumes, normalizeStorageDeviceName, toScopedStorageVolumeValue } from "./filter-storage-volumes";
+import {
+  filterStorageVolumes,
+  normalizeStorageDeviceName,
+  storageDeviceNamesMatch,
+  toScopedStorageVolumeValue,
+} from "./filter-storage-volumes";
 import { matchFileSystemAndSmart } from "./health-monitoring/system-health";
 
 describe("normalizeStorageDeviceName", () => {
@@ -29,6 +34,22 @@ describe("normalizeStorageDeviceName", () => {
   test("does not collapse unrelated md devices", () => {
     expect(normalizeStorageDeviceName("/dev/md0")).toBe("/dev/md0");
     expect(normalizeStorageDeviceName("/dev/md1")).toBe("/dev/md1");
+  });
+});
+
+describe("storageDeviceNamesMatch", () => {
+  test("ignores the /dev/ prefix on either side", () => {
+    expect(storageDeviceNamesMatch("/dev/sda1", "sda")).toBe(true);
+    expect(storageDeviceNamesMatch("sdb1", "/dev/sdb")).toBe(true);
+    expect(storageDeviceNamesMatch("nvme0", "/dev/nvme0n1p3")).toBe(true);
+    expect(storageDeviceNamesMatch("/dev/nvme0", "nvme0n2")).toBe(true);
+  });
+
+  test("does not match different devices across prefix forms", () => {
+    expect(storageDeviceNamesMatch("/dev/sda1", "sdb")).toBe(false);
+    expect(storageDeviceNamesMatch("/dev/md0", "md1")).toBe(false);
+    expect(storageDeviceNamesMatch("nvme1", "/dev/nvme0n1p1")).toBe(false);
+    expect(storageDeviceNamesMatch("/dev/nvme0n1", "nvme0n2")).toBe(false);
   });
 });
 
@@ -194,6 +215,15 @@ describe("matchFileSystemAndSmart", () => {
     );
 
     expect(result[0]?.statusReason).toEqual(statusReason);
+  });
+
+  test("joins a prefixed partition with unprefixed SMART data and takes the SMART name", () => {
+    const result = matchFileSystemAndSmart(
+      [{ deviceName: "/dev/sda1", used: "100", available: "900", percentage: 10 }],
+      [{ deviceName: "sda", temperature: 35, overallStatus: "GOOD" }],
+    );
+
+    expect(result[0]).toMatchObject({ deviceName: "sda", temperature: 35, overallStatus: "GOOD" });
   });
 
   test("does not join SMART data from a different md device", () => {

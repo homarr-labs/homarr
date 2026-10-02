@@ -46,7 +46,7 @@ import type { ScopedTranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import { zoomCompensatedSize } from "@homarr/ui";
 
-import { filterStorageVolumes, normalizeStorageDeviceName, storageDeviceNamesMatch } from "../filter-storage-volumes";
+import { filterStorageVolumes, isSameStorageDevice, storageDeviceNamesMatch } from "../filter-storage-volumes";
 import { WidgetEmptyState } from "../common/empty-state";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
@@ -497,9 +497,7 @@ export const matchFileSystemAndSmart = (fileSystems: FileSystem[], smartData: Sm
 
       // Take the SMART name only for the same disk (sda1 -> sda). A controller-level match (nvme0 for
       // nvme0n1 and nvme0n2) keeps the file system name, so namespaces stay distinct.
-      const isSameDisk =
-        smartDisk !== undefined &&
-        normalizeStorageDeviceName(smartDisk.deviceName) === normalizeStorageDeviceName(fileSystem.deviceName);
+      const isSameDisk = smartDisk !== undefined && isSameStorageDevice(smartDisk.deviceName, fileSystem.deviceName);
 
       return {
         deviceName: isSameDisk ? smartDisk.deviceName : fileSystem.deviceName,
