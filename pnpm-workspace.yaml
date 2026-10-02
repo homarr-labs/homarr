@@ -261,7 +261,7 @@ overrides:
   "@assistant-ui/core": 0.3.7
   "@assistant-ui/store": 0.3.5
   "@assistant-ui/tap": 0.9.10
-  "@grpc/grpc-js@<1.12.7": "1.12.7"
+  "@grpc/grpc-js@<1.12.7": "1.13.6"
   "@rvf/set-get@<7.0.2": "7.0.2"
   "@xmldom/xmldom@<0.8.15": "0.8.15"
   "assistant-cloud": 0.1.38
