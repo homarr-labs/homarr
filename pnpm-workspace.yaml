@@ -270,7 +270,7 @@ overrides:
   "axios@>=1.0.0 <1.18.1": "1.18.1"
   "brace-expansion@>=1.0.0 <1.1.18": "1.1.18"
   "brace-expansion@>=2.0.0 <2.1.4": "2.1.4"
-  "brace-expansion@>=4.0.0 <5.0.9": "5.0.9"
+  "brace-expansion@>=4.0.0 <5.0.9": "5.0.12"
   "browserslist@<4.28.7": "4.28.7"
   "esbuild@<=0.24.2": ">=0.28.1"
   "fast-uri@>=3.0.0 <3.1.6": "3.1.6"
