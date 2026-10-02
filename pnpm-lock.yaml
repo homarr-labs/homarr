@@ -711,7 +711,7 @@ overrides:
   assistant-cloud: 0.1.38
   '@babel/helpers@<7.26.10': '>=7.29.7'
   '@babel/runtime@<7.26.10': '>=7.29.7'
-  axios@>=1.0.0 <1.18.1: 1.18.1
+  axios@>=1.0.0 <1.18.1: 1.20.0
   brace-expansion@>=1.0.0 <1.1.18: 1.1.18
   brace-expansion@>=2.0.0 <2.1.4: 2.1.4
   brace-expansion@>=4.0.0 <5.0.9: 5.0.9
@@ -873,7 +873,7 @@ importers:
         version: 0.99.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@scalar/api-client-react':
         specifier: 'catalog:'
-        version: 2.0.51(axios@1.18.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2))(nprogress@0.2.0)(react@19.2.7)(supports-color@10.2.2)(tailwindcss@4.3.2)(typescript@7.0.2)
+        version: 2.0.51(axios@1.20.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2))(nprogress@0.2.0)(react@19.2.7)(supports-color@10.2.2)(tailwindcss@4.3.2)(typescript@7.0.2)
       '@tabler/icons-react':
         specifier: 'catalog:'
         version: 3.44.0(react@19.2.7)
@@ -903,7 +903,7 @@ importers:
         version: 15.4.3(ca407bc45757862c0553f46d1969d5d6)
       fumadocs-openapi:
         specifier: 'catalog:'
-        version: 12.0.1(2b987dc9753a22b34010c9167028a29c)
+        version: 12.0.1(18308fb02f1370e08bd00c000219c030)
       fumadocs-ui:
         specifier: 'catalog:'
         version: 16.15.12(@types/mdx@2.0.14)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(fumadocs-core@16.15.12(@mdx-js/mdx@3.1.1(supports-color@10.2.2))(@modelcontextprotocol/server@2.0.0)(@types/estree-jsx@1.0.5)(@types/hast@3.0.5)(@types/mdast@4.0.4)(@types/react@19.2.17)(algoliasearch@5.53.0)(lucide-react@1.47.0(react@19.2.7))(next@16.3.3(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(@types/node@24.13.3)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(supports-color@10.2.2)(zod@4.4.3))(next@16.3.3(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.0)(@playwright/test@1.61.1)(@types/node@24.13.3)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(tailwindcss@4.3.2)
@@ -2308,7 +2308,7 @@ importers:
         version: 3.0.2
       '@jellyfin/sdk':
         specifier: 'catalog:'
-        version: 0.13.0(axios@1.18.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2))
+        version: 0.13.0(axios@1.20.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2))
       ical.js:
         specifier: 'catalog:'
         version: 2.2.1
@@ -4903,7 +4903,7 @@ packages:
   '@jellyfin/sdk@0.13.0':
     resolution: {integrity: sha512-oiBAOXH6s+dKdReSsYgNktBDzbxtg4JVWhEzIxZSxKcWMdSKmBtK41MhXRO7IWAC40DguKUm3nU/Z493qPAlWA==}
     peerDependencies:
-      axios: 1.18.1
+      axios: 1.20.0
 
   '@jridgewell/gen-mapping@0.3.13':
     resolution: {integrity: sha512-2kkt/7niJ6MgEPxF0bYdQ6etZaA+fQvDcLKckhy1yIQOzaoKjBBjSj63/aLVjYE3qhRt5dvM+uUyfCg6UKCBbA==}
@@ -8368,7 +8368,7 @@ packages:
     resolution: {integrity: sha512-SDobKBbPIOe0cVL7QxMzGkuUGHvWTdihi9zOrrWaWUgFKe15cwEcwfWmgrcNzjT6kHnNmWuTajPHoIzUjYNYYQ==}
     peerDependencies:
       async-validator: ^4
-      axios: 1.18.1
+      axios: 1.20.0
       change-case: ^5
       drauu: ^0.4
       focus-trap: ^7
@@ -8496,67 +8496,79 @@ packages:
     resolution: {integrity: sha512-xt4Vy3RTBw1NfszBlf4A0Rr6ZjA/th2Pj9XlWFLQHW9A1qOCtxNCoIWSzn/INtnZLMB4jO2gWdEtSaHUtK73wA==}
     cpu: [arm64]
     os: [android]
+    deprecated: yuku-analyzer runs on yuku-core since 0.14
 
   '@yuku-analyzer/binding-darwin-arm64@0.10.2':
     resolution: {integrity: sha512-ftokSqvYXZxfmA/bfIbp8c1BJ8QxNax371kUOQNFyvR5hmtKqQyTqSKtMk+WaixHM3w4tKj/JdyY+ud1bGamXA==}
     cpu: [arm64]
     os: [darwin]
+    deprecated: yuku-analyzer runs on yuku-core since 0.14
 
   '@yuku-analyzer/binding-darwin-x64@0.10.2':
     resolution: {integrity: sha512-yUrmmhmF5R4Xmbfo8gUxJKr3YbvbLcE2JvLhDLzFJkMN29/fGm6K3dZX6YpNecfgBDnQ+VywGp8K9xjRaBFZ3Q==}
     cpu: [x64]
     os: [darwin]
+    deprecated: yuku-analyzer runs on yuku-core since 0.14
 
   '@yuku-analyzer/binding-freebsd-x64@0.10.2':
     resolution: {integrity: sha512-cy9+KvVoK5Xad3Vs5pLwAeZf3JC/1y0XJElgv1q6g7W7g/n52FRjedpYmQiJeMZdnhJiAshq7Vz/Xj3jC5Ns2Q==}
     cpu: [x64]
     os: [freebsd]
+    deprecated: yuku-analyzer runs on yuku-core since 0.14
 
   '@yuku-analyzer/binding-linux-arm-gnu@0.10.2':
     resolution: {integrity: sha512-AgVZ6VCV2XP4yHCwyv78KLV76gcu2neiEF2+RBTPQN7sqYY+bLvMxphGPmfG+9qk5Uf1PJAhZYIUnMGVbbRCZw==}
     cpu: [arm]
     os: [linux]
     libc: [glibc]
+    deprecated: yuku-analyzer runs on yuku-core since 0.14
 
   '@yuku-analyzer/binding-linux-arm-musl@0.10.2':
     resolution: {integrity: sha512-5qAj2GjoSN6+HuH75+g5r40CFhWmMvH0K8VKWmPfQyOgA/LonoDMr5H5O5feJwzdnfdCytPDAh1RAf7/SSg7dg==}
     cpu: [arm]
     os: [linux]
     libc: [musl]
+    deprecated: yuku-analyzer runs on yuku-core since 0.14
 
   '@yuku-analyzer/binding-linux-arm64-gnu@0.10.2':
     resolution: {integrity: sha512-eJvQ4Ja5oPf/HOjmBkCLYyhOHUkL7U+iMAN8sX44x8exBBpPRyqnhEgTsuU73HzxPLrGPdRhybFnAE63Omib/Q==}
     cpu: [arm64]
     os: [linux]
     libc: [glibc]
+    deprecated: yuku-analyzer runs on yuku-core since 0.14
 
   '@yuku-analyzer/binding-linux-arm64-musl@0.10.2':
     resolution: {integrity: sha512-TppF2j194mOQ/kBXvNr9u5TYO+eR9r8ieg4lTIEyJIVYHAR9GWeB0oFHLcJiLXVa3qUJGzE4bmzSntCW5ylA7A==}
     cpu: [arm64]
     os: [linux]
     libc: [musl]
+    deprecated: yuku-analyzer runs on yuku-core since 0.14
 
   '@yuku-analyzer/binding-linux-x64-gnu@0.10.2':
     resolution: {integrity: sha512-03xu6ocJuwhm1a/JKmrHiaJUO1Oj86rABsm4FAl8AvfewfW/9idIUmPiFxZfb6RfiIONegebsTGJhFx0NbBNpA==}
     cpu: [x64]
     os: [linux]
     libc: [glibc]
+    deprecated: yuku-analyzer runs on yuku-core since 0.14
 
   '@yuku-analyzer/binding-linux-x64-musl@0.10.2':
     resolution: {integrity: sha512-f7W2sAWWQN8x8YB0RRxIche7mLImH7lDgzUy9+B69cM2I6VFJ4a5+0pgAuMLROPOqimaxFPdXqLdDE/vpgGltg==}
     cpu: [x64]
     os: [linux]
     libc: [musl]
+    deprecated: yuku-analyzer runs on yuku-core since 0.14
 
   '@yuku-analyzer/binding-win32-arm64@0.10.2':
     resolution: {integrity: sha512-f534qNc5YaJI29e1oryxEnxPkp7WCYJ1j7ChSec8pQNlYqTm8Tao7hij7NxRF+9BuxzeZCZ+WsbaAfLlklR0Eg==}
     cpu: [arm64]
     os: [win32]
+    deprecated: yuku-analyzer runs on yuku-core since 0.14
 
   '@yuku-analyzer/binding-win32-x64@0.10.2':
     resolution: {integrity: sha512-sKHkmLK8BsindMfyIThoN0bWC5uqSJEVNaLRD/ifA99mtb0UDin1ZCg4WYSVQAmM4k2iOTl4UZx/p3zcBiBgYw==}
     cpu: [x64]
     os: [win32]
+    deprecated: yuku-analyzer runs on yuku-core since 0.14
 
   '@yuku-toolchain/types@0.10.2':
     resolution: {integrity: sha512-sSeo4SSSToiS+sSD+bwn/s94EEcaLJ7tG5LCp8gFYC1G5VzxzX7fqB6m9RU1yMD8KTpu6zdU/I1NlQf8hVBJ9Q==}
@@ -8755,8 +8767,8 @@ packages:
   avvio@9.2.0:
     resolution: {integrity: sha512-2t/sy01ArdHHE0vRH5Hsay+RtCZt3dLPji7W7/MMOCEgze5b7SNDC4j5H6FnVgPkI1MTNFGzHdHrVXDDl7QSSQ==}
 
-  axios@1.18.1:
-    resolution: {integrity: sha512-3nTvFlvpn9Zu/RkHUqtc7/+al4UpRW5az71ap5zccp6e8RAYEzhMTecX8Dz1wWDYrPpUoB1HAQEGEAEvUr7S9g==}
+  axios@1.20.0:
+    resolution: {integrity: sha512-r8aOh8j9cGKpgQAqpzrUHnSIc6a59Y3Xf/cv8sy1DrHCkZHzQGEuoq1tARk6qSyDdtQGSDgpb9kFlruzPvrgwg==}
 
   b4a@1.6.6:
     resolution: {integrity: sha512-5Tk1HLk6b6ctmjIkAcU/Ujv/1WqiDl0F0JdRCR80VsOcUlHcu7pWeWRlOqQLHfDEsVx9YH/aif5AG4ehoCtTmg==}
@@ -15593,7 +15605,7 @@ snapshots:
 
   '@homarr/node-unifi@2.6.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)(undici@7.29.1)':
     dependencies:
-      axios: 1.18.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
+      axios: 1.20.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
       eventemitter2: 6.4.9
       http-cookie-agent: 6.0.8(tough-cookie@5.1.2)(undici@7.29.1)
       tough-cookie: 5.1.2
@@ -15902,9 +15914,9 @@ snapshots:
 
   '@isaacs/cliui@9.0.0': {}
 
-  '@jellyfin/sdk@0.13.0(axios@1.18.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2))':
+  '@jellyfin/sdk@0.13.0(axios@1.20.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2))':
     dependencies:
-      axios: 1.18.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
+      axios: 1.20.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
 
   '@jridgewell/gen-mapping@0.3.13':
     dependencies:
@@ -17865,7 +17877,7 @@ snapshots:
   '@scalar/agent-chat@0.12.37(supports-color@10.2.2)(tailwindcss@4.3.2)(typescript@7.0.2)(zod@4.4.3)':
     dependencies:
       '@ai-sdk/vue': 3.0.33(vue@3.5.42(typescript@7.0.2))(zod@4.4.3)
-      '@scalar/api-client': 3.21.1(axios@1.18.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2))(nprogress@0.2.0)(supports-color@10.2.2)(tailwindcss@4.3.2)(typescript@7.0.2)
+      '@scalar/api-client': 3.21.1(axios@1.20.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2))(nprogress@0.2.0)(supports-color@10.2.2)(tailwindcss@4.3.2)(typescript@7.0.2)
       '@scalar/components': 0.30.3(supports-color@10.2.2)(tailwindcss@4.3.2)(typescript@7.0.2)
       '@scalar/helpers': 0.15.0
       '@scalar/icons': 0.7.6(typescript@7.0.2)
@@ -17900,9 +17912,9 @@ snapshots:
       - universal-cookie
       - zod
 
-  '@scalar/api-client-react@2.0.51(axios@1.18.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2))(nprogress@0.2.0)(react@19.2.7)(supports-color@10.2.2)(tailwindcss@4.3.2)(typescript@7.0.2)':
+  '@scalar/api-client-react@2.0.51(axios@1.20.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2))(nprogress@0.2.0)(react@19.2.7)(supports-color@10.2.2)(tailwindcss@4.3.2)(typescript@7.0.2)':
     dependencies:
-      '@scalar/api-client': 3.21.1(axios@1.18.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2))(nprogress@0.2.0)(supports-color@10.2.2)(tailwindcss@4.3.2)(typescript@7.0.2)
+      '@scalar/api-client': 3.21.1(axios@1.20.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2))(nprogress@0.2.0)(supports-color@10.2.2)(tailwindcss@4.3.2)(typescript@7.0.2)
       '@scalar/blocks': 0.4.0(supports-color@10.2.2)(tailwindcss@4.3.2)(typescript@7.0.2)
       '@scalar/helpers': 0.15.0
       '@scalar/workspace-store': 0.67.0(typescript@7.0.2)
@@ -17923,7 +17935,7 @@ snapshots:
       - typescript
       - universal-cookie
 
-  '@scalar/api-client@3.21.1(axios@1.18.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2))(nprogress@0.2.0)(supports-color@10.2.2)(tailwindcss@4.3.2)(typescript@7.0.2)':
+  '@scalar/api-client@3.21.1(axios@1.20.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2))(nprogress@0.2.0)(supports-color@10.2.2)(tailwindcss@4.3.2)(typescript@7.0.2)':
     dependencies:
       '@headlessui/tailwindcss': 0.2.2(tailwindcss@4.3.2)
       '@headlessui/vue': 1.7.23(vue@3.5.42(typescript@7.0.2))
@@ -17944,7 +17956,7 @@ snapshots:
       '@scalar/use-toasts': 0.10.5(typescript@7.0.2)
       '@scalar/workspace-store': 0.67.0(typescript@7.0.2)
       '@vueuse/core': 13.9.0(vue@3.5.42(typescript@7.0.2))
-      '@vueuse/integrations': 13.9.0(axios@1.18.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2))(focus-trap@7.8.0)(fuse.js@7.5.0)(nprogress@0.2.0)(vue@3.5.42(typescript@7.0.2))
+      '@vueuse/integrations': 13.9.0(axios@1.20.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2))(focus-trap@7.8.0)(fuse.js@7.5.0)(nprogress@0.2.0)(vue@3.5.42(typescript@7.0.2))
       focus-trap: 7.8.0
       fuse.js: 7.5.0
       js-base64: 3.9.3
@@ -17998,7 +18010,7 @@ snapshots:
     dependencies:
       '@headlessui/vue': 1.7.23(vue@3.5.42(typescript@7.0.2))
       '@scalar/agent-chat': 0.12.37(supports-color@10.2.2)(tailwindcss@4.3.2)(typescript@7.0.2)(zod@4.4.3)
-      '@scalar/api-client': 3.21.1(axios@1.18.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2))(nprogress@0.2.0)(supports-color@10.2.2)(tailwindcss@4.3.2)(typescript@7.0.2)
+      '@scalar/api-client': 3.21.1(axios@1.20.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2))(nprogress@0.2.0)(supports-color@10.2.2)(tailwindcss@4.3.2)(typescript@7.0.2)
       '@scalar/blocks': 0.4.0(supports-color@10.2.2)(tailwindcss@4.3.2)(typescript@7.0.2)
       '@scalar/code-highlight': 0.4.7(supports-color@10.2.2)
       '@scalar/components': 0.30.3(supports-color@10.2.2)(tailwindcss@4.3.2)(typescript@7.0.2)
@@ -19747,13 +19759,13 @@ snapshots:
       '@vueuse/shared': 13.9.0(vue@3.5.42(typescript@7.0.2))
       vue: 3.5.42(typescript@7.0.2)
 
-  '@vueuse/integrations@13.9.0(axios@1.18.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2))(focus-trap@7.8.0)(fuse.js@7.5.0)(nprogress@0.2.0)(vue@3.5.42(typescript@7.0.2))':
+  '@vueuse/integrations@13.9.0(axios@1.20.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2))(focus-trap@7.8.0)(fuse.js@7.5.0)(nprogress@0.2.0)(vue@3.5.42(typescript@7.0.2))':
     dependencies:
       '@vueuse/core': 13.9.0(vue@3.5.42(typescript@7.0.2))
       '@vueuse/shared': 13.9.0(vue@3.5.42(typescript@7.0.2))
       vue: 3.5.42(typescript@7.0.2)
     optionalDependencies:
-      axios: 1.18.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
+      axios: 1.20.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
       focus-trap: 7.8.0
       fuse.js: 7.5.0
       nprogress: 0.2.0
@@ -20108,7 +20120,7 @@ snapshots:
       '@fastify/error': 4.2.0
       fastq: 1.20.1
 
-  axios@1.18.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2):
+  axios@1.20.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2):
     dependencies:
       follow-redirects: 1.16.0(debug@4.4.3(supports-color@10.2.2))
       form-data: 4.0.6
@@ -21744,7 +21756,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  fumadocs-openapi@12.0.1(2b987dc9753a22b34010c9167028a29c):
+  fumadocs-openapi@12.0.1(18308fb02f1370e08bd00c000219c030):
     dependencies:
       '@base-ui/react': 1.8.0(@date-fns/tz@1.5.0)(@types/react@19.2.17)(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@fuma-translate/react': 1.0.2(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -21768,7 +21780,7 @@ snapshots:
       shiki: 4.4.3
       yaml: 2.9.1
     optionalDependencies:
-      '@scalar/api-client-react': 2.0.51(axios@1.18.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2))(nprogress@0.2.0)(react@19.2.7)(supports-color@10.2.2)(tailwindcss@4.3.2)(typescript@7.0.2)
+      '@scalar/api-client-react': 2.0.51(axios@1.20.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2))(nprogress@0.2.0)(react@19.2.7)(supports-color@10.2.2)(tailwindcss@4.3.2)(typescript@7.0.2)
       '@types/react': 19.2.17
       json-schema-typed: 8.0.2
     transitivePeerDependencies:
