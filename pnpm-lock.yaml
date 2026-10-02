@@ -705,7 +705,7 @@ overrides:
   '@assistant-ui/core': 0.3.7
   '@assistant-ui/store': 0.3.5
   '@assistant-ui/tap': 0.9.10
-  '@grpc/grpc-js@<1.12.7': 1.12.7
+  '@grpc/grpc-js@<1.12.7': 1.13.6
   '@rvf/set-get@<7.0.2': 7.0.2
   '@xmldom/xmldom@<0.8.15': 0.8.15
   assistant-cloud: 0.1.38
@@ -4516,8 +4516,8 @@ packages:
       react: ^18.x || ^19.x
       react-dom: ^18.x || ^19.x
 
-  '@grpc/grpc-js@1.12.7':
-    resolution: {integrity: sha512-Tugep4V4GCsN9dSAVkXoBWqJXDoH+NSXd50kFGsm7ZG1tBXFEAnLoxzkGUIksTrDjiaMwlpsbC24oWbESGHpIQ==}
+  '@grpc/grpc-js@1.13.6':
+    resolution: {integrity: sha512-S9U8ioEds9fo8zCt4K8CyWHLJPg63FBgZo/hYUPVTiKppwsx/ykTnFg4g4/70beoa/DYao9uROQRcoahVH8PVQ==}
     engines: {node: '>=12.10.0'}
 
   '@grpc/proto-loader@0.7.13':
@@ -15580,7 +15580,7 @@ snapshots:
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
 
-  '@grpc/grpc-js@1.12.7':
+  '@grpc/grpc-js@1.13.6':
     dependencies:
       '@grpc/proto-loader': 0.7.13
       '@js-sdsl/ordered-map': 4.4.2
@@ -21036,7 +21036,7 @@ snapshots:
   dockerode@5.0.0(supports-color@10.2.2):
     dependencies:
       '@balena/dockerignore': 1.0.2
-      '@grpc/grpc-js': 1.12.7
+      '@grpc/grpc-js': 1.13.6
       '@grpc/proto-loader': 0.7.13
       docker-modem: 5.0.7(supports-color@10.2.2)
       protobufjs: 7.6.6
@@ -21047,7 +21047,7 @@ snapshots:
   dockerode@5.0.1(supports-color@10.2.2):
     dependencies:
       '@balena/dockerignore': 1.0.2
-      '@grpc/grpc-js': 1.12.7
+      '@grpc/grpc-js': 1.13.6
       '@grpc/proto-loader': 0.7.13
       docker-modem: 5.0.7(supports-color@10.2.2)
       protobufjs: 7.6.6
