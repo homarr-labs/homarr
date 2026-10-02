@@ -273,7 +273,7 @@ overrides:
   "brace-expansion@>=4.0.0 <5.0.9": "5.0.12"
   "browserslist@<4.28.7": "4.28.7"
   "esbuild@<=0.24.2": ">=0.28.1"
-  "fast-uri@>=3.0.0 <3.1.6": "3.1.6"
+  "fast-uri@>=3.0.0 <3.1.6": "3.1.8"
   "@ai-sdk/provider-utils>undici": "8.10.2"
   "find-my-way@<9.6.1": "9.9.0"
   "form-data@>=4.0.0 <4.0.4": ">=4.0.6"
