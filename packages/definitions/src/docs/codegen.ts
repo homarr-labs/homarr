@@ -90,7 +90,7 @@ const main = async () => {
     paths = [];
   }
 
-  paths.push("/sitemap.xml");
+  paths.push("/sitemap.xml", "/blog", "/search");
   for (const p of slugMapPaths) {
     if (!paths.includes(p)) {
       paths.push(p);
