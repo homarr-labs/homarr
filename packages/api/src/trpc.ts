@@ -169,6 +169,8 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
  */
 export const protectedProcedure = baseProcedure.use(enforceUserIsAuthed);
 
+export const demoWritableProtectedProcedure = t.procedure.use(enforceUserIsAuthed);
+
 /**
  * Procedure that requires a specific permission
  *

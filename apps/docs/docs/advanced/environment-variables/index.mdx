@@ -45,6 +45,10 @@ Using the `PUID` and `PGID` will require you to set the correct permissions on t
 Workshop service operators can find its server-only configuration in the
 [Workshop operator guide](/docs/advanced/development/workshop-operator#environment-variables).
 
+### Demo mode
+
+`DEMO_MODE=true` seeds demo data and makes Assistant return a fixed response without calling a model provider. `DEMO_READ_ONLY` defaults to `true`, blocking dashboard and configuration changes. Authenticated users can still save and manage their own Assistant conversations so canned chats work. Set `DEMO_READ_ONLY=false` for editable preview deployments.
+
 ### Workshop service
 
 These variables configure the separate Workshop service, not the Homarr application container.

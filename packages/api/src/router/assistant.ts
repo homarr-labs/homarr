@@ -34,10 +34,18 @@ import { fetchOpenRouterGenerationTelemetryAsync } from "../assistant-generation
 import { env } from "../env";
 import { orderMessagesByParent } from "../assistant-message-order";
 import { verifyAssistantGenerationAccessToken } from "../assistant-generation-access";
-import { createTRPCRouter, isDemoMode, permissionRequiredProcedure, protectedProcedure } from "../trpc";
+import {
+  createTRPCRouter,
+  demoWritableProtectedProcedure,
+  isDemoMode,
+  isDemoReadOnly,
+  permissionRequiredProcedure,
+  protectedProcedure,
+} from "../trpc";
 import { boardRouter, getHomeIdBoardAsync } from "./board";
 
 const adminProcedure = permissionRequiredProcedure.requiresPermission("admin");
+const conversationProcedure = isDemoReadOnly ? demoWritableProtectedProcedure : protectedProcedure;
 const configurationId = "default";
 const providerSchema = z.enum(assistantProviderIds);
 
@@ -776,7 +784,7 @@ export const assistantRouter = createTRPCRouter({
     });
   }),
 
-  createThread: protectedProcedure
+  createThread: conversationProcedure
     .input(z.object({ localId: z.string().max(128).optional() }).optional())
     .mutation(async ({ ctx }) => {
       const configuration = await getConfigurationAsync(ctx.db);
@@ -792,13 +800,20 @@ export const assistantRouter = createTRPCRouter({
       return { id };
     }),
 
-  updateThreadModel: protectedProcedure
+  updateThreadModel: conversationProcedure
     .input(z.object({ threadId: z.string().max(64), modelId: z.string().trim().min(1).max(256) }))
     .mutation(async ({ ctx, input }) => {
       const [thread, configuration] = await Promise.all([
         ownedThreadAsync(ctx.db, input.threadId, ctx.session.user.id),
         getConfigurationAsync(ctx.db),
       ]);
+      if (isDemoMode) {
+        await ctx.db
+          .update(assistantThreads)
+          .set({ modelId: input.modelId, updatedAt: new Date() })
+          .where(eq(assistantThreads.id, thread.id));
+        return { modelId: input.modelId };
+      }
       if (!configuration?.enabled || !configuration.modelId) {
         throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Assistant is not configured." });
       }
@@ -883,7 +898,7 @@ export const assistantRouter = createTRPCRouter({
       };
     }),
 
-  renameThread: protectedProcedure
+  renameThread: conversationProcedure
     .input(z.object({ threadId: z.string().max(64), title: z.string().trim().min(1).max(120) }))
     .mutation(async ({ ctx, input }) => {
       await ownedThreadAsync(ctx.db, input.threadId, ctx.session.user.id);
@@ -893,14 +908,14 @@ export const assistantRouter = createTRPCRouter({
         .where(eq(assistantThreads.id, input.threadId));
     }),
 
-  deleteThread: protectedProcedure
+  deleteThread: conversationProcedure
     .input(z.object({ threadId: z.string().max(64) }))
     .mutation(async ({ ctx, input }) => {
       await ownedThreadAsync(ctx.db, input.threadId, ctx.session.user.id);
       await ctx.db.delete(assistantThreads).where(eq(assistantThreads.id, input.threadId));
     }),
 
-  appendMessage: protectedProcedure
+  appendMessage: conversationProcedure
     .input(
       z.object({
         threadId: z.string().max(64),
@@ -961,7 +976,7 @@ export const assistantRouter = createTRPCRouter({
         .where(eq(assistantThreads.id, thread.id));
     }),
 
-  submitFeedback: protectedProcedure
+  submitFeedback: conversationProcedure
     .input(
       z.object({
         threadId: z.string().max(64),
@@ -1005,7 +1020,7 @@ export const assistantRouter = createTRPCRouter({
       });
     }),
 
-  deleteMessages: protectedProcedure
+  deleteMessages: conversationProcedure
     .input(z.object({ threadId: z.string().max(64), ids: z.array(z.string().max(128)).max(100) }))
     .mutation(async ({ ctx, input }) => {
       await ownedThreadAsync(ctx.db, input.threadId, ctx.session.user.id);
