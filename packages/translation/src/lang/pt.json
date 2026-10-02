@@ -688,211 +688,6 @@
       "add": "Adicionar app"
     }
   },
-  "customWidget": {
-    "page": {
-      "list": {
-        "title": "Widgets personalizados",
-        "noResults": "Ainda não há widgets personalizados. Crie o primeiro!",
-        "loading": "Carregando..."
-      },
-      "create": {
-        "title": "Criar widget personalizado",
-        "subtitle": "Defina uma URL de API, a autenticação e como exibir os dados da resposta."
-      },
-      "edit": {
-        "title": "Editar widget personalizado"
-      }
-    },
-    "action": {
-      "create": "Criar",
-      "import": "Importar",
-      "save": "Salvar",
-      "delete": "Excluir widget personalizado",
-      "deleteConfirm": "Tem certeza de que deseja excluir \"{name}\"? Esta ação não pode ser desfeita.",
-      "export": "Exportar",
-      "addMapping": "Adicionar mapeamento",
-      "addColumn": "Adicionar coluna",
-      "edit": "Editar",
-      "removeMapping": "Remover mapeamento",
-      "removeColumn": "Remover coluna",
-      "addItem": "Adicionar item",
-      "removeItem": "Remover item",
-      "addBar": "Adicionar barra",
-      "duplicate": "Duplicar",
-      "copyAiPrompt": "Copiar prompt de IA",
-      "enable": "Ativar",
-      "disable": "Desativar",
-      "menu": "Ações"
-    },
-    "field": {
-      "name": "Nome",
-      "description": "Descrição",
-      "iconUrl": "URL do ícone",
-      "url": "URL",
-      "authType": "Tipo de autenticação",
-      "headerName": "Nome do parâmetro de cabeçalho/consulta",
-      "method": "Método",
-      "requestBody": "Corpo da solicitação",
-      "displayType": "Tipo de exibição",
-      "jsonPath": "Caminho JSON",
-      "jsonPathHint": "Use a sintaxe JSONPath para extrair valores, por exemplo, $.data.temperature ou $.items[0].name",
-      "label": "Rótulo",
-      "unit": "Unidade",
-      "mappings": "Mapeamentos",
-      "tablePath": "Caminho JSON do array",
-      "tablePathHint": "Caminho para o array na resposta, por exemplo, $.data.items",
-      "columns": "Colunas",
-      "header": "Cabeçalho",
-      "items": "Itens",
-      "gridColumns": "Colunas da grade",
-      "cardStyle": "Estilo do cartão",
-      "bars": "Barras",
-      "valuePath": "Caminho JSON do valor",
-      "maxPath": "Caminho JSON do valor máximo",
-      "showPercentage": "Exibir porcentagem",
-      "barSize": "Tamanho da barra",
-      "goodValues": "Valores bons (separados por vírgulas)",
-      "dotSize": "Tamanho do ponto",
-      "valueSize": "Tamanho do valor",
-      "labelPosition": "Posição do rótulo",
-      "kvLayout": "Layout",
-      "striped": "Linhas listradas",
-      "compact": "Modo compacto",
-      "maxHeight": "Altura máxima (px)",
-      "color": "Cor",
-      "buttonLabel": "Rótulo do botão",
-      "buttonColor": "Cor do botão",
-      "confirmText": "Texto de confirmação",
-      "confirmTextHint": "Se definido, uma caixa de diálogo de confirmação aparecerá antes de executar a solicitação",
-      "successMessage": "Mensagem de sucesso",
-      "successMessageHint": "Mensagem exibida após a execução bem-sucedida",
-      "enabled": "Ativado",
-      "template": {
-        "label": "Modelo JSX",
-        "description": "Modelo JSX do Mantine. Acesse os campos da resposta da API por meio de vinculações de dados (por exemplo, data.name). Use apenas componentes permitidos. Proibidos: constructor, __proto__, eval, Function, window, document."
-      }
-    },
-    "placeholder": {
-      "exampleLabel": "Temperatura da CPU",
-      "exampleLabelShort": "Temp. da CPU",
-      "exampleHeader": "Nome",
-      "exampleUnit": "°C",
-      "iconUrl": "https://...",
-      "url": "https://api.example.com/api/v1/status",
-      "headerName": "X-API-Key",
-      "jsonPath": "$.data.value",
-      "tablePath": "$.data.items",
-      "columnJsonPath": "$.name",
-      "valuePath": "$.data.used",
-      "maxPath": "$.data.total",
-      "goodValues": "online, verdadeiro, ativo",
-      "color": "azul"
-    },
-    "cardStyleOption": {
-      "filled": "Preenchido",
-      "outline": "Contorno",
-      "subtle": "Sutil"
-    },
-    "layoutOption": {
-      "list": "Lista",
-      "grid": "Grade"
-    },
-    "sizeOption": {
-      "sm": "Pequeno",
-      "md": "Médio",
-      "lg": "Grande",
-      "xl": "Extra grande"
-    },
-    "labelPositionOption": {
-      "above": "Acima",
-      "below": "Abaixo"
-    },
-    "fieldset": {
-      "general": "Geral",
-      "connection": "Conexão da API",
-      "display": "Configuração de exibição"
-    },
-    "displayTypeDescription": {
-      "singleValue": "Exibir um valor extraído com rótulo e unidade",
-      "keyValue": "Exibir vários valores rotulados lado a lado",
-      "table": "Exibir linhas de dados em formato de tabela",
-      "statGrid": "Cartões de estatísticas coloridos em uma grade — como os widgets Pi-hole ou Speedtest",
-      "progressBars": "Barras de progresso mostrando uso ou conclusão — para disco, memória e cotas",
-      "statusIndicator": "Pontos de status coloridos mostrando estados online/offline ou de integridade",
-      "countGrid": "Contadores compactos de número + rótulo em uma grade estreita",
-      "raw": "Saída JSON formatada para depuração",
-      "actionButton": "Um botão que aciona uma solicitação quando clicado",
-      "customJsx": "Layout JSX personalizado usando componentes Mantine permitidos, com vinculação completa aos dados da API"
-    },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
-    "authType": {
-      "none": "Nenhum",
-      "bearer": "Token Bearer",
-      "basic": "Autenticação básica",
-      "apiKeyHeader": "Chave de API (cabeçalho)",
-      "apiKeyQuery": "Chave de API (consulta)"
-    },
-    "displayType": {
-      "singleValue": "Valor único",
-      "keyValue": "Chave-valor",
-      "table": "Tabela",
-      "statGrid": "Grade de estatísticas",
-      "progressBars": "Barras de progresso",
-      "statusIndicator": "Indicador de status",
-      "countGrid": "Grade de contagens",
-      "raw": "JSON bruto",
-      "actionButton": "Botão de ação",
-      "customJsx": "JSX personalizado"
-    },
-    "secret": {
-      "apiKey": "Chave de API / Token",
-      "username": "Nome de usuário",
-      "password": "Senha",
-      "savedPlaceholder": "••••••• (salvo, deixe vazio para manter)"
-    },
-    "preview": {
-      "title": "Pré-visualização",
-      "test": "Testar",
-      "hint": "Clique em Testar para pré-visualizar a resposta da API com sua configuração atual.",
-      "rawResponse": "Resposta JSON bruta"
-    },
-    "notification": {
-      "created": "Widget \"{name}\" criado com sucesso.",
-      "updated": "Widget \"{name}\" atualizado com sucesso.",
-      "deleted": "Widget \"{name}\" excluído.",
-      "imported": "Widget importado com sucesso.",
-      "aiPromptCopied": "Prompt de IA copiado para a área de transferência",
-      "aiPromptDescription": "Copie um prompt pronto para colar em qualquer chatbot de IA (ChatGPT, Claude, Gemini...). Ele inclui o esquema completo do widget e sua resposta da API para que a IA possa gerar uma configuração JSON pronta para importação.",
-      "aiPromptCopy": "Copiar para a área de transferência",
-      "aiPromptNoResponse": "Dica: execute um teste primeiro para incluir sua resposta da API no prompt e obter melhores resultados.",
-      "aiPromptCopyError": "Falha ao copiar o prompt para a área de transferência. Seu navegador pode não oferecer suporte a esse recurso.",
-      "createError": "Falha ao criar o widget. Verifique se o endpoint da API está acessível.",
-      "updateError": "Falha ao atualizar o widget. Suas alterações não foram salvas.",
-      "importError": "Falha ao importar o widget. Verifique se o arquivo é uma exportação JSON válida de widget personalizado.",
-      "exportError": "Falha ao exportar o widget.",
-      "duplicated": "Widget \"{name}\" duplicado.",
-      "duplicateError": "Falha ao duplicar o widget.",
-      "toggleError": "Falha ao alternar o status do widget.",
-      "deleteError": "Falha ao excluir o widget.",
-      "previewError": "Falha ao buscar a pré-visualização. Verifique a URL e tente novamente.",
-      "executed": "Ação executada com sucesso.",
-      "executeError": "Falha na ação: {error}"
-    },
-    "table": {
-      "name": "Nome",
-      "url": "URL",
-      "display": "Exibição"
-    },
-    "widget": {
-      "disabled": "Este widget está desativado"
-    }
-  },
   "integration": {
     "page": {
       "list": {
@@ -1344,10 +1139,6 @@
       "name": "Traefik",
       "description": "Proxy reverso e balanceador de carga nativos da nuvem"
     },
-    "wud": {
-      "name": "O Docker",
-      "description": "Monitora qual dos seus contêineres Docker tem atualizações de imagem disponíveis"
-    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "Sistema de gerenciamento de documentos para arquivamento e organização de documentos digitalizados"
@@ -1359,6 +1150,10 @@
     "bazarr": {
       "name": "Bazarr",
       "description": "Aplicativo complementar ao Sonarr e Radarr que gerencia e baixa legendas"
+    },
+    "wud": {
+      "name": "O Docker",
+      "description": "Monitora qual dos seus contêineres Docker tem atualizações de imagem disponíveis"
     }
   },
   "media": {
@@ -1441,9 +1236,11 @@
     "here": "aqui",
     "iconPicker": {
       "label": "URL do ícone",
-      "description": "Procure na biblioteca, cole uma URL da imagem ou envie um arquivo.",
       "header": "Digite o nome ou os objetos para filtrar os ícones... O Homarr pesquisará {countIcons} ícones para você.",
       "headerLoading": "Pesquisar imagens por nome",
+      "noResults": "Nenhum ícone corresponde a \"{search}\".",
+      "error": "Não foi possível carregar os ícones.",
+      "description": "Procure na biblioteca, cole uma URL da imagem ou envie um arquivo.",
       "clear": "Limpar imagem",
       "uploadImage": "Upload de imagem",
       "results": "Resultados da busca por imagem",
@@ -1452,9 +1249,7 @@
       "otherImages": "Outras imagens",
       "urlLoading": "Verificando imagem…",
       "urlReady": "A imagem está pronta para uso",
-      "urlError": "Esta imagem não pôde ser carregada. Verifique a URL e tente novamente.",
-      "noResults": "Nenhum ícone corresponde a \"{search}\".",
-      "error": "Não foi possível carregar os ícones."
+      "urlError": "Esta imagem não pôde ser carregada. Verifique a URL e tente novamente."
     },
     "colorScheme": {
       "options": {
@@ -1804,38 +1599,6 @@
       "option": {
         "showBroadcastMessage": {
           "label": "Exibir mensagens de transmissão"
-        }
-      }
-    },
-    "wud": {
-      "name": "O Docker",
-      "description": "Mostrar quantos contêineres assistidos possuem atualizações disponíveis.",
-      "title": "O Docker",
-      "monitored": "Monitorado",
-      "updatesAvailable": "{count, plural, one {# atualização disponível} other {# atualizações disponíveis}}",
-      "updateAvailable": "Atualização disponível",
-      "openReleaseNotes": "Abrir notas de lançamento",
-      "option": {
-        "showTitle": {
-          "label": "Mostrar título"
-        },
-        "showRing": {
-          "label": "Mostrar atualização de toque"
-        },
-        "layout": {
-          "label": "Disposição",
-          "option": {
-            "horizontal": {
-              "label": "Horizontal"
-            },
-            "vertical": {
-              "label": "Vertical"
-            }
-          }
-        },
-        "showUpdateList": {
-          "label": "Mostrar lista de atualização do recipiente",
-          "description": "Lista cada container monitorado que tem uma atualização de imagem disponível"
         }
       }
     },
@@ -2391,8 +2154,8 @@
       "popover": {
         "information": "Informação",
         "processor": "Processador: {cpuModelName}",
-        "memory": "Memória: {memory} GiB",
-        "memoryAvailable": "Disponível: {memoryAvailable} GiB ({percent}%)",
+        "memory": "Memória: {memory}",
+        "memoryAvailable": "Disponível: {memoryAvailable} ({percent}%)",
         "version": "Versão: {version}",
         "uptime": "Uptime: {months} meses, {days} dias, {hours} horas, {minutes} minutos",
         "loadAverage": "Carga média:",
@@ -2874,193 +2637,6 @@
         "internalServerError": "Falha ao buscar dados do Paperless-ngx"
       }
     },
-    "patchmon": {
-      "name": "PatchMon",
-      "description": "Visão geral do status dos patches dos hosts pelo PatchMon",
-      "title": "Estatísticas do PatchMon",
-      "totalHosts": "Total de hosts",
-      "hostsNeedingUpdates": "Precisa de atualizações",
-      "securityUpdates": "Atualizações de segurança",
-      "upToDateHosts": "Hosts atualizados",
-      "hostsWithSecurityUpdates": "Hosts com atualizações de segurança",
-      "recentUpdates24h": "Atualizações (24 h)",
-      "totalOutdatedPackages": "Pacotes desatualizados",
-      "totalRepos": "Repositórios",
-      "osDistribution": "Distribuição do sistema operacional",
-      "compliance": "Conformidade dos patches",
-      "complianceRatio": "{upToDate} / {total}",
-      "lastUpdated": "Atualizado {time}",
-      "option": {
-        "showTotalHosts": {
-          "label": "Exibir total de hosts",
-          "description": "Exibir o número total de hosts monitorados"
-        },
-        "showHostsNeedingUpdates": {
-          "label": "Exibir hosts que precisam de atualizações",
-          "description": "Exibir hosts com pelo menos um pacote desatualizado"
-        },
-        "showSecurityUpdates": {
-          "label": "Exibir atualizações de segurança",
-          "description": "Exibir o número total de atualizações de segurança disponíveis"
-        },
-        "showUpToDateHosts": {
-          "label": "Exibir hosts atualizados",
-          "description": "Exibir hosts sem pacotes desatualizados"
-        },
-        "showHostsWithSecurityUpdates": {
-          "label": "Exibir hosts com atualizações de segurança",
-          "description": "Exibir hosts que exigem patches de segurança"
-        },
-        "showRecentUpdates24h": {
-          "label": "Exibir atualizações recentes (24 h)",
-          "description": "Exibir o número de atualizações aplicadas nas últimas 24 horas"
-        },
-        "showTotalOutdatedPackages": {
-          "label": "Exibir pacotes desatualizados",
-          "description": "Exibir o número total de pacotes desatualizados em todos os hosts"
-        },
-        "showTotalRepos": {
-          "label": "Exibir repositórios",
-          "description": "Exibir o número de repositórios ativos monitorados"
-        },
-        "enableThresholdColors": {
-          "label": "Ativar cores de limite",
-          "description": "Colorir os valores das estatísticas de verde, amarelo ou vermelho com base nas predefinições de gravidade"
-        },
-        "useCustomThresholds": {
-          "label": "Limites avançados",
-          "description": "Personalize os limites de aviso e crítico por estatística usando contagens absolutas ou porcentagens do total de hosts"
-        },
-        "thresholdMode": {
-          "option": {
-            "absolute": "Contagem absoluta",
-            "percent": "Porcentagem do total de hosts"
-          }
-        },
-        "hostsNeedingUpdatesThresholdMode": {
-          "label": "Modo de limite de atualizações necessárias",
-          "description": "Compare a contagem de atualizações necessárias como valor absoluto ou porcentagem do total de hosts"
-        },
-        "hostsNeedingUpdatesWarningAt": {
-          "label": "Limite de aviso de atualizações necessárias",
-          "description": "Insira amarelo quando o valor atingir este limite"
-        },
-        "hostsNeedingUpdatesCriticalAt": {
-          "label": "Limite crítico de atualizações necessárias",
-          "description": "Insira vermelho quando o valor atingir este limite"
-        },
-        "securityUpdatesThresholdMode": {
-          "label": "Modo de limite de atualizações de segurança",
-          "description": "Compare a contagem de atualizações de segurança como valor absoluto ou porcentagem do total de hosts"
-        },
-        "securityUpdatesWarningAt": {
-          "label": "Limite de aviso de atualizações de segurança",
-          "description": "Insira amarelo quando o valor atingir este limite"
-        },
-        "securityUpdatesCriticalAt": {
-          "label": "Limite crítico de atualizações de segurança",
-          "description": "Insira vermelho quando o valor atingir este limite"
-        },
-        "hostsWithSecurityUpdatesThresholdMode": {
-          "label": "Modo de limite de hosts com atualizações de segurança",
-          "description": "Compare a contagem de hosts como valor absoluto ou porcentagem do total de hosts"
-        },
-        "hostsWithSecurityUpdatesWarningAt": {
-          "label": "Limite de aviso de hosts com atualizações de segurança",
-          "description": "Insira amarelo quando o valor atingir este limite"
-        },
-        "hostsWithSecurityUpdatesCriticalAt": {
-          "label": "Limite crítico de hosts com atualizações de segurança",
-          "description": "Insira vermelho quando o valor atingir este limite"
-        },
-        "upToDateHostsThresholdMode": {
-          "label": "Modo de limite de hosts atualizados",
-          "description": "Compare a contagem de hosts atualizados como valor absoluto ou porcentagem do total de hosts"
-        },
-        "upToDateHostsWarningAt": {
-          "label": "Limite de aviso de hosts atualizados",
-          "description": "Insira amarelo quando o valor estiver neste limite ou acima dele, mas abaixo da cobertura total"
-        },
-        "upToDateHostsCriticalAt": {
-          "label": "Limite crítico de hosts atualizados",
-          "description": "Insira vermelho quando o valor ficar abaixo deste limite"
-        },
-        "totalOutdatedPackagesThresholdMode": {
-          "label": "Modo de limite de pacotes desatualizados",
-          "description": "Compare a contagem de pacotes desatualizados como valor absoluto ou porcentagem do total de hosts"
-        },
-        "totalOutdatedPackagesWarningAt": {
-          "label": "Limite de aviso de pacotes desatualizados",
-          "description": "Insira amarelo quando o valor atingir este limite"
-        },
-        "totalOutdatedPackagesCriticalAt": {
-          "label": "Limite crítico de pacotes desatualizados",
-          "description": "Insira vermelho quando o valor atingir este limite"
-        },
-        "showOsDistribution": {
-          "label": "Exibir distribuição do sistema operacional",
-          "description": "Exibir uma divisão dos hosts monitorados por sistema operacional"
-        },
-        "osDistributionLimit": {
-          "label": "Limite da distribuição do sistema operacional",
-          "description": "Número máximo de sistemas operacionais a exibir",
-          "option": {
-            "3": "3 principais",
-            "5": "5 principais",
-            "10": "10 principais",
-            "all": "Todos"
-          }
-        },
-        "showOsVersion": {
-          "label": "Exibir versão do sistema operacional",
-          "description": "Acrescentar a versão do sistema operacional a cada rótulo de distribuição quando disponível"
-        },
-        "showComplianceHero": {
-          "label": "Exibir destaque de conformidade",
-          "description": "Exibir um anel de conformidade mostrando a porcentagem de hosts atualizados"
-        },
-        "osDisplayMode": {
-          "label": "Modo de exibição do sistema operacional",
-          "description": "Escolha como exibir a distribuição do sistema operacional",
-          "option": {
-            "bars": "Barras horizontais",
-            "donut": "Gráfico de rosca"
-          }
-        }
-      },
-      "error": {
-        "internalServerError": "Falha ao buscar dados do PatchMon"
-      }
-    },
-    "bazarr": {
-      "name": "Bazarr",
-      "description": "Visão geral das legendas ausentes e do status de integridade da sua instância do Bazarr",
-      "episodes": "Episódios ausentes",
-      "movies": "Filmes ausentes",
-      "providers": "Problemas dos provedores",
-      "status": "Problemas de integridade",
-      "option": {
-        "showMissingEpisodes": {
-          "label": "Exibir episódios ausentes",
-          "description": "Exibir o número de episódios com legendas ausentes"
-        },
-        "showMissingMovies": {
-          "label": "Exibir filmes ausentes",
-          "description": "Exibir o número de filmes com legendas ausentes"
-        },
-        "showProviderIssues": {
-          "label": "Exibir problemas dos provedores",
-          "description": "Exibir o número de provedores de legendas com problemas"
-        },
-        "showHealthIssues": {
-          "label": "Exibir problemas de integridade",
-          "description": "Exibir o número de problemas de integridade do Bazarr"
-        }
-      },
-      "error": {
-        "internalServerError": "Falha ao buscar dados do Bazarr"
-      }
-    },
     "immich-serverStats": {
       "name": "Estatísticas do servidor Immich",
       "description": "Informações sobre sua instância do Immich",
@@ -3137,7 +2713,7 @@
           "label": "Exibir entradas diversas marcadas como concluídas"
         },
         "activeTorrentThreshold": {
-          "label": "Ocultar torrents concluídos abaixo deste limite (em kiB/s)"
+          "label": "Ocultar torrents concluídos abaixo deste limite"
         },
         "categoryFilter": {
           "label": "Categorias/rótulos para filtrar"
@@ -3432,35 +3008,6 @@
           }
         }
       }
-    },
-    "mediaMissing": {
-      "name": "Mídia ausente e na fila",
-      "description": "Exibe filmes e episódios ausentes e na fila do Radarr e Sonarr",
-      "option": {
-        "showMissing": {
-          "label": "Exibir itens ausentes"
-        },
-        "showQueued": {
-          "label": "Exibir itens na fila"
-        },
-        "pageSize": {
-          "label": "Itens por página"
-        }
-      },
-      "tab": {
-        "missing": "Ausentes",
-        "queued": "Na fila"
-      },
-      "type": {
-        "movie": "Filme",
-        "episode": "Episódio"
-      },
-      "empty": {
-        "missing": "Nenhum item ausente",
-        "queued": "Nenhum item na fila",
-        "noTabsEnabled": "Ative pelo menos uma aba nas configurações do widget"
-      },
-      "timeLeft": "Tempo restante"
     },
     "rssFeed": {
       "name": "Feeds RSS",
@@ -3790,40 +3337,6 @@
         "internalServerError": "Falha ao buscar dados de disponibilidade"
       }
     },
-    "traefik": {
-      "name": "Traefik",
-      "description": "Visão geral dos roteadores, serviços, middlewares e pontos de entrada do Traefik",
-      "option": {
-        "showTcp": {
-          "label": "Exibir TCP"
-        },
-        "showUdp": {
-          "label": "Exibir UDP"
-        },
-        "showEntryPoints": {
-          "label": "Exibir pontos de entrada"
-        }
-      },
-      "instances": "Instâncias do Traefik",
-      "versionUnknown": "Versão desconhecida",
-      "summary": {
-        "routers": "Roteadores",
-        "entryPoints": "Pontos de entrada"
-      },
-      "resource": {
-        "routers": "Roteadores",
-        "services": "Serviços",
-        "middlewares": "Middlewares"
-      },
-      "status": {
-        "healthy": "Saudável",
-        "errors": "{count} erros",
-        "warnings": "{count} avisos"
-      },
-      "error": {
-        "internalServerError": "Falha ao buscar dados do Traefik"
-      }
-    },
     "audioStats": {
       "name": "Estatísticas de áudio",
       "description": "Estatísticas da biblioteca e da reprodução do Navidrome ou Audiobookshelf",
@@ -3946,26 +3459,6 @@
       "status": {
         "unhealthy": "Não saudável"
       }
-    },
-    "customApi": {
-      "name": "API personalizada",
-      "description": "Exiba dados de qualquer API externa com configuração personalizada.",
-      "option": {
-        "definitionId": {
-          "label": "ID da definição"
-        },
-        "refreshInterval": {
-          "label": "Intervalo de atualização",
-          "description": "Com que frequência buscar novamente os dados da API (em segundos)"
-        }
-      },
-      "noDefinition": "Nenhuma definição selecionada",
-      "definitionNotFound": "Definição do widget não encontrada. Talvez ela tenha sido excluída.",
-      "noDisplayOutput": "Nenhuma saída de exibição",
-      "executeConfirm": "Tem certeza de que deseja executar esta ação?",
-      "executing": "Executando...",
-      "executeSuccess": "Ação executada com sucesso",
-      "executeFailed": "Falha na ação. Verifique a configuração do widget."
     },
     "beszelSystemTable": {
       "name": "Sistemas Beszel (Tabela)",
@@ -4215,6 +3708,288 @@
         "dockerNetwork": {
           "title": "E/S de Rede Docker",
           "subtitle": "Tráfego de rede dos contêineres Docker"
+        }
+      }
+    },
+    "patchmon": {
+      "name": "PatchMon",
+      "description": "Visão geral do status dos patches dos hosts pelo PatchMon",
+      "title": "Estatísticas do PatchMon",
+      "totalHosts": "Total de hosts",
+      "hostsNeedingUpdates": "Precisa de atualizações",
+      "securityUpdates": "Atualizações de segurança",
+      "upToDateHosts": "Hosts atualizados",
+      "hostsWithSecurityUpdates": "Hosts com atualizações de segurança",
+      "recentUpdates24h": "Atualizações (24 h)",
+      "totalOutdatedPackages": "Pacotes desatualizados",
+      "totalRepos": "Repositórios",
+      "osDistribution": "Distribuição do sistema operacional",
+      "compliance": "Conformidade dos patches",
+      "complianceRatio": "{upToDate} / {total}",
+      "lastUpdated": "Atualizado {time}",
+      "option": {
+        "showTotalHosts": {
+          "label": "Exibir total de hosts",
+          "description": "Exibir o número total de hosts monitorados"
+        },
+        "showHostsNeedingUpdates": {
+          "label": "Exibir hosts que precisam de atualizações",
+          "description": "Exibir hosts com pelo menos um pacote desatualizado"
+        },
+        "showSecurityUpdates": {
+          "label": "Exibir atualizações de segurança",
+          "description": "Exibir o número total de atualizações de segurança disponíveis"
+        },
+        "showUpToDateHosts": {
+          "label": "Exibir hosts atualizados",
+          "description": "Exibir hosts sem pacotes desatualizados"
+        },
+        "showHostsWithSecurityUpdates": {
+          "label": "Exibir hosts com atualizações de segurança",
+          "description": "Exibir hosts que exigem patches de segurança"
+        },
+        "showRecentUpdates24h": {
+          "label": "Exibir atualizações recentes (24 h)",
+          "description": "Exibir o número de atualizações aplicadas nas últimas 24 horas"
+        },
+        "showTotalOutdatedPackages": {
+          "label": "Exibir pacotes desatualizados",
+          "description": "Exibir o número total de pacotes desatualizados em todos os hosts"
+        },
+        "showTotalRepos": {
+          "label": "Exibir repositórios",
+          "description": "Exibir o número de repositórios ativos monitorados"
+        },
+        "enableThresholdColors": {
+          "label": "Ativar cores de limite",
+          "description": "Colorir os valores das estatísticas de verde, amarelo ou vermelho com base nas predefinições de gravidade"
+        },
+        "useCustomThresholds": {
+          "label": "Limites avançados",
+          "description": "Personalize os limites de aviso e crítico por estatística usando contagens absolutas ou porcentagens do total de hosts"
+        },
+        "thresholdMode": {
+          "option": {
+            "absolute": "Contagem absoluta",
+            "percent": "Porcentagem do total de hosts"
+          }
+        },
+        "hostsNeedingUpdatesThresholdMode": {
+          "label": "Modo de limite de atualizações necessárias",
+          "description": "Compare a contagem de atualizações necessárias como valor absoluto ou porcentagem do total de hosts"
+        },
+        "hostsNeedingUpdatesWarningAt": {
+          "label": "Limite de aviso de atualizações necessárias",
+          "description": "Insira amarelo quando o valor atingir este limite"
+        },
+        "hostsNeedingUpdatesCriticalAt": {
+          "label": "Limite crítico de atualizações necessárias",
+          "description": "Insira vermelho quando o valor atingir este limite"
+        },
+        "securityUpdatesThresholdMode": {
+          "label": "Modo de limite de atualizações de segurança",
+          "description": "Compare a contagem de atualizações de segurança como valor absoluto ou porcentagem do total de hosts"
+        },
+        "securityUpdatesWarningAt": {
+          "label": "Limite de aviso de atualizações de segurança",
+          "description": "Insira amarelo quando o valor atingir este limite"
+        },
+        "securityUpdatesCriticalAt": {
+          "label": "Limite crítico de atualizações de segurança",
+          "description": "Insira vermelho quando o valor atingir este limite"
+        },
+        "hostsWithSecurityUpdatesThresholdMode": {
+          "label": "Modo de limite de hosts com atualizações de segurança",
+          "description": "Compare a contagem de hosts como valor absoluto ou porcentagem do total de hosts"
+        },
+        "hostsWithSecurityUpdatesWarningAt": {
+          "label": "Limite de aviso de hosts com atualizações de segurança",
+          "description": "Insira amarelo quando o valor atingir este limite"
+        },
+        "hostsWithSecurityUpdatesCriticalAt": {
+          "label": "Limite crítico de hosts com atualizações de segurança",
+          "description": "Insira vermelho quando o valor atingir este limite"
+        },
+        "upToDateHostsThresholdMode": {
+          "label": "Modo de limite de hosts atualizados",
+          "description": "Compare a contagem de hosts atualizados como valor absoluto ou porcentagem do total de hosts"
+        },
+        "upToDateHostsWarningAt": {
+          "label": "Limite de aviso de hosts atualizados",
+          "description": "Insira amarelo quando o valor estiver neste limite ou acima dele, mas abaixo da cobertura total"
+        },
+        "upToDateHostsCriticalAt": {
+          "label": "Limite crítico de hosts atualizados",
+          "description": "Insira vermelho quando o valor ficar abaixo deste limite"
+        },
+        "totalOutdatedPackagesThresholdMode": {
+          "label": "Modo de limite de pacotes desatualizados",
+          "description": "Compare a contagem de pacotes desatualizados como valor absoluto ou porcentagem do total de hosts"
+        },
+        "totalOutdatedPackagesWarningAt": {
+          "label": "Limite de aviso de pacotes desatualizados",
+          "description": "Insira amarelo quando o valor atingir este limite"
+        },
+        "totalOutdatedPackagesCriticalAt": {
+          "label": "Limite crítico de pacotes desatualizados",
+          "description": "Insira vermelho quando o valor atingir este limite"
+        },
+        "showOsDistribution": {
+          "label": "Exibir distribuição do sistema operacional",
+          "description": "Exibir uma divisão dos hosts monitorados por sistema operacional"
+        },
+        "osDistributionLimit": {
+          "label": "Limite da distribuição do sistema operacional",
+          "description": "Número máximo de sistemas operacionais a exibir",
+          "option": {
+            "3": "3 principais",
+            "5": "5 principais",
+            "10": "10 principais",
+            "all": "Todos"
+          }
+        },
+        "showOsVersion": {
+          "label": "Exibir versão do sistema operacional",
+          "description": "Acrescentar a versão do sistema operacional a cada rótulo de distribuição quando disponível"
+        },
+        "showComplianceHero": {
+          "label": "Exibir destaque de conformidade",
+          "description": "Exibir um anel de conformidade mostrando a porcentagem de hosts atualizados"
+        },
+        "osDisplayMode": {
+          "label": "Modo de exibição do sistema operacional",
+          "description": "Escolha como exibir a distribuição do sistema operacional",
+          "option": {
+            "bars": "Barras horizontais",
+            "donut": "Gráfico de rosca"
+          }
+        }
+      },
+      "error": {
+        "internalServerError": "Falha ao buscar dados do PatchMon"
+      }
+    },
+    "bazarr": {
+      "name": "Bazarr",
+      "description": "Visão geral das legendas ausentes e do status de integridade da sua instância do Bazarr",
+      "episodes": "Episódios ausentes",
+      "movies": "Filmes ausentes",
+      "providers": "Problemas dos provedores",
+      "status": "Problemas de integridade",
+      "option": {
+        "showMissingEpisodes": {
+          "label": "Exibir episódios ausentes",
+          "description": "Exibir o número de episódios com legendas ausentes"
+        },
+        "showMissingMovies": {
+          "label": "Exibir filmes ausentes",
+          "description": "Exibir o número de filmes com legendas ausentes"
+        },
+        "showProviderIssues": {
+          "label": "Exibir problemas dos provedores",
+          "description": "Exibir o número de provedores de legendas com problemas"
+        },
+        "showHealthIssues": {
+          "label": "Exibir problemas de integridade",
+          "description": "Exibir o número de problemas de integridade do Bazarr"
+        }
+      },
+      "error": {
+        "internalServerError": "Falha ao buscar dados do Bazarr"
+      }
+    },
+    "mediaMissing": {
+      "name": "Mídia ausente e na fila",
+      "description": "Exibe filmes e episódios ausentes e na fila do Radarr e Sonarr",
+      "option": {
+        "showMissing": {
+          "label": "Exibir itens ausentes"
+        },
+        "showQueued": {
+          "label": "Exibir itens na fila"
+        },
+        "pageSize": {
+          "label": "Itens por página"
+        }
+      },
+      "tab": {
+        "missing": "Ausentes",
+        "queued": "Na fila"
+      },
+      "type": {
+        "movie": "Filme",
+        "episode": "Episódio"
+      },
+      "empty": {
+        "missing": "Nenhum item ausente",
+        "queued": "Nenhum item na fila",
+        "noTabsEnabled": "Ative pelo menos uma aba nas configurações do widget"
+      },
+      "timeLeft": "Tempo restante"
+    },
+    "traefik": {
+      "name": "Traefik",
+      "description": "Visão geral dos roteadores, serviços, middlewares e pontos de entrada do Traefik",
+      "option": {
+        "showTcp": {
+          "label": "Exibir TCP"
+        },
+        "showUdp": {
+          "label": "Exibir UDP"
+        },
+        "showEntryPoints": {
+          "label": "Exibir pontos de entrada"
+        }
+      },
+      "instances": "Instâncias do Traefik",
+      "versionUnknown": "Versão desconhecida",
+      "summary": {
+        "routers": "Roteadores",
+        "entryPoints": "Pontos de entrada"
+      },
+      "resource": {
+        "routers": "Roteadores",
+        "services": "Serviços",
+        "middlewares": "Middlewares"
+      },
+      "status": {
+        "healthy": "Saudável",
+        "errors": "{count} erros",
+        "warnings": "{count} avisos"
+      },
+      "error": {
+        "internalServerError": "Falha ao buscar dados do Traefik"
+      }
+    },
+    "wud": {
+      "name": "O Docker",
+      "description": "Mostrar quantos contêineres assistidos possuem atualizações disponíveis.",
+      "title": "O Docker",
+      "monitored": "Monitorado",
+      "updatesAvailable": "{count, plural, one {# atualização disponível} other {# atualizações disponíveis}}",
+      "updateAvailable": "Atualização disponível",
+      "openReleaseNotes": "Abrir notas de lançamento",
+      "option": {
+        "showTitle": {
+          "label": "Mostrar título"
+        },
+        "showRing": {
+          "label": "Mostrar atualização de toque"
+        },
+        "layout": {
+          "label": "Disposição",
+          "option": {
+            "horizontal": {
+              "label": "Horizontal"
+            },
+            "vertical": {
+              "label": "Vertical"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Mostrar lista de atualização do recipiente",
+          "description": "Lista cada container monitorado que tem uma atualização de imagem disponível"
         }
       }
     }
@@ -4597,11 +4372,11 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "Início",
         "boards": "Painéis",
         "apps": "Aplicativos",
         "integrations": "Integrações",
-        "customWidgets": "Widgets personalizados",
         "searchEngies": "Mecanismos de busca",
         "medias": "Mídias",
         "users": {
@@ -5224,7 +4999,7 @@
           "restore": {
             "dropzone": {
               "title": "Solte seu backup ZIP aqui",
-              "description": "Aceita arquivos .zip de um backup SQLite do Homarr (máx. 256 MB)"
+              "description": "Aceita arquivos .zip de um backup SQLite do Homarr (máx. {maxSize})"
             },
             "analyzing": "Analisando backup...",
             "changeFile": "Alterar arquivo",
@@ -5740,6 +5515,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "Gerenciar",
       "boards": {
         "label": "Painéis"
@@ -5772,18 +5550,6 @@
         },
         "edit": {
           "label": "Editar"
-        }
-      },
-      "custom-widgets": {
-        "label": "Widgets personalizados",
-        "new": {
-          "label": "Novo"
-        },
-        "edit": {
-          "label": "Editar",
-          "flow": {
-            "label": "Fluxo"
-          }
         }
       },
       "users": {

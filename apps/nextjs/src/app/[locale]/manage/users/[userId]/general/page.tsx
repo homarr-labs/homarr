@@ -1,14 +1,13 @@
 import { notFound } from "next/navigation";
-import { Alert, Box, Group, Stack, Title } from "@mantine/core";
+import { Alert, Stack, Title } from "@mantine/core";
 import { IconExclamationCircle } from "@tabler/icons-react";
 
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
-import { getI18n, getScopedI18n } from "@homarr/translation/server";
+import { getI18n } from "@homarr/translation/server";
 
 import { DangerZoneItem, DangerZoneRoot } from "~/components/manage/danger-zone";
 import { catchTrpcNotFound } from "~/errors/trpc-catch-error";
-import { createMetaTitle } from "~/metadata";
 import { canAccessUserEditPage } from "../access";
 import { DeleteUserButton } from "./_components/_delete-user-button";
 import { UserGeneralSettingsForm } from "./_components/_general-settings-form";
@@ -34,18 +33,19 @@ export async function generateMetadata(props: Props) {
     return {};
   }
 
-  const t = await getScopedI18n("management.page.user.edit");
+  const t = await getI18n("management.page.user.edit");
 
   return {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    title: createMetaTitle(t("metaTitle", { username: user.name! })),
+    title: t("metaTitle", { username: user.name! }),
   };
 }
 
 export default async function EditUserPage(props: Props) {
   const params = await props.params;
-  const t = await getI18n();
-  const tGeneral = await getScopedI18n("management.page.user.setting.general");
+  const tUserManagement = await getI18n("management.page.user");
+  const tUser = await getI18n("user");
+  const tGeneral = await getI18n("management.page.user.setting.general");
   const session = await auth();
   const user = await api.user
     .getById({
@@ -57,7 +57,7 @@ export default async function EditUserPage(props: Props) {
     notFound();
   }
 
-  const boards = await api.board.getAllBoards();
+  const boards = await api.board.getManageOverview({ fullPreview: false, userId: user.id });
   const searchEngines = await api.searchEngine.getSelectable();
   const isSelf = session?.user.id === user.id;
   const isCredentialsUser = user.provider === "credentials";
@@ -66,27 +66,22 @@ export default async function EditUserPage(props: Props) {
     <Stack>
       {!isCredentialsUser && (
         <Alert variant="light" color="yellow" icon={<IconExclamationCircle size="1rem" stroke={1.5} />}>
-          {t("management.page.user.fieldsDisabledExternalProvider")}
+          {tUserManagement("fieldsDisabledExternalProvider")}
         </Alert>
       )}
       <Title>{tGeneral("title")}</Title>
-      <Group gap="xl" align="flex-start" wrap="wrap">
-        <Box flex={1} miw={{ base: "100%", md: 540 }}>
-          <UserGeneralSettingsForm
-            user={user}
-            boardsData={boards.map((board) => ({
-              id: board.id,
-              name: board.name,
-              logoImageUrl: board.logoImageUrl,
-            }))}
-            searchEnginesData={searchEngines}
-            showLanguageSelector={isSelf}
-          />
-        </Box>
-        <Box w={{ base: "100%", lg: 260 }}>
-          <UserProfileAvatarForm user={user} />
-        </Box>
-      </Group>
+      <UserGeneralSettingsForm
+        user={user}
+        boardsData={boards.map((board) => ({
+          id: board.id,
+          name: board.name,
+          logoImageUrl: board.logoImageUrl,
+          preview: board.preview,
+        }))}
+        searchEnginesData={searchEngines}
+        showLanguageSelector={isSelf}
+        profileAvatar={<UserProfileAvatarForm user={user} />}
+      />
 
       {session?.user.id === user.id && (
         <Stack mb="lg">
@@ -97,8 +92,8 @@ export default async function EditUserPage(props: Props) {
 
       <DangerZoneRoot>
         <DangerZoneItem
-          label={t("user.action.delete.label")}
-          description={t("user.action.delete.description")}
+          label={tUser("action.delete.label")}
+          description={tUser("action.delete.description")}
           action={<DeleteUserButton user={user} />}
         />
       </DangerZoneRoot>

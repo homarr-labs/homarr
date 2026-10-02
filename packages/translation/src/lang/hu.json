@@ -688,211 +688,6 @@
       "add": "Alkalmazás hozzáadása"
     }
   },
-  "customWidget": {
-    "page": {
-      "list": {
-        "title": "Egyéni widgetek",
-        "noResults": "Még nincsenek egyéni widgetek. Hozd létre az elsőt!",
-        "loading": "Töltés..."
-      },
-      "create": {
-        "title": "Egyéni widget létrehozása",
-        "subtitle": "Adj meg egy API URL-t, hitelesítést, és hogy hogyan jelenjenek meg a válaszadatok."
-      },
-      "edit": {
-        "title": "Egyéni widget szerkesztése"
-      }
-    },
-    "action": {
-      "create": "Létrehozás",
-      "import": "Importálás",
-      "save": "Mentés",
-      "delete": "Egyéni widget törlése",
-      "deleteConfirm": "Biztosan törölni szeretnéd \"{name}\" widgetet? Ez a művelet nem vonható vissza.",
-      "export": "Exportálás",
-      "addMapping": "Leképezés hozzáadása",
-      "addColumn": "Oszlop hozzáadása",
-      "edit": "Szerkesztés",
-      "removeMapping": "Leképezés eltávolítása",
-      "removeColumn": "Oszlop eltávolítása",
-      "addItem": "Elem hozzáadása",
-      "removeItem": "Elem eltávolítása",
-      "addBar": "Sáv hozzáadása",
-      "duplicate": "Duplikálás",
-      "copyAiPrompt": "AI-utasítás másolása",
-      "enable": "Engedélyezés",
-      "disable": "Letiltás",
-      "menu": "Műveletek"
-    },
-    "field": {
-      "name": "Név",
-      "description": "Leírás",
-      "iconUrl": "Ikon URL",
-      "url": "URL",
-      "authType": "Hitelesítés típusa",
-      "headerName": "Fejléc/lekérdezési paraméter neve",
-      "method": "Metódus",
-      "requestBody": "Kérelem törzse",
-      "displayType": "Megjelenítés típusa",
-      "jsonPath": "JSON elérési út",
-      "jsonPathHint": "Használd a JSONPath szintaxist az értékek kinyeréséhez, pl. $.data.temperature vagy $.items[0].name",
-      "label": "Címke",
-      "unit": "Mértékegység",
-      "mappings": "Leképezések",
-      "tablePath": "Tömb JSON elérési útja",
-      "tablePathHint": "A válaszban lévő tömb elérési útja, pl. $.data.items",
-      "columns": "Oszlopok",
-      "header": "Fejléc",
-      "items": "Elemek",
-      "gridColumns": "Rács oszlopok",
-      "cardStyle": "Kártya stílus",
-      "bars": "Sávok",
-      "valuePath": "Érték JSON elérési út",
-      "maxPath": "Maximális érték JSON elérési út",
-      "showPercentage": "Százalék megjelenítése",
-      "barSize": "Sáv mérete",
-      "goodValues": "Jó értékek (vesszővel elválasztva)",
-      "dotSize": "Pont mérete",
-      "valueSize": "Érték mérete",
-      "labelPosition": "Címke pozíciója",
-      "kvLayout": "Elrendezés",
-      "striped": "Csíkos sorok",
-      "compact": "Kompakt mód",
-      "maxHeight": "Maximális magasság (px)",
-      "color": "Szín",
-      "buttonLabel": "Gomb felirata",
-      "buttonColor": "Gomb színe",
-      "confirmText": "Megerősítő szöveg",
-      "confirmTextHint": "Ha be van állítva, egy megerősítő ablak jelenik meg a kérés végrehajtása előtt",
-      "successMessage": "Sikerüzenet",
-      "successMessageHint": "A sikeres végrehajtás után megjelenő üzenet",
-      "enabled": "Engedélyezve",
-      "template": {
-        "label": "JSX sablon",
-        "description": "Mantine JSX sablon. Az API válasz mezőit adatkötéseken keresztül éred el (pl. data.name). Csak engedélyezett komponenseket használj. Tilos: constructor, __proto__, eval, Function, window, document."
-      }
-    },
-    "placeholder": {
-      "exampleLabel": "CPU hőmérséklet",
-      "exampleLabelShort": "CPU hőm",
-      "exampleHeader": "Név",
-      "exampleUnit": "°C",
-      "iconUrl": "https://...",
-      "url": "https://api.example.com/api/v1/status",
-      "headerName": "X-API-Key",
-      "jsonPath": "$.data.value",
-      "tablePath": "$.data.items",
-      "columnJsonPath": "$.name",
-      "valuePath": "$.data.used",
-      "maxPath": "$.data.total",
-      "goodValues": "online, true, up",
-      "color": "kék"
-    },
-    "cardStyleOption": {
-      "filled": "Kitöltött",
-      "outline": "Körvonal",
-      "subtle": "Halvány"
-    },
-    "layoutOption": {
-      "list": "Lista",
-      "grid": "Rács"
-    },
-    "sizeOption": {
-      "sm": "Kicsi",
-      "md": "Közepes",
-      "lg": "Nagy",
-      "xl": "Extra nagy"
-    },
-    "labelPositionOption": {
-      "above": "Felette",
-      "below": "Alatta"
-    },
-    "fieldset": {
-      "general": "Általános",
-      "connection": "API kapcsolat",
-      "display": "Megjelenítési konfiguráció"
-    },
-    "displayTypeDescription": {
-      "singleValue": "Egy kinyert érték megjelenítése címkével és mértékegységgel",
-      "keyValue": "Több címkézett érték megjelenítése egymás mellett",
-      "table": "Adatsorok megjelenítése táblázatos formában",
-      "statGrid": "Színezett statisztikai kártyák rácsban – mint a Pi-Hole vagy Speedtest widgetek",
-      "progressBars": "Folyamatjelző sávok használat vagy készültség mutatására – lemez, memória, kvóta",
-      "statusIndicator": "Színezett állapotpontok, amelyek online/offline vagy egészségügyi állapotot mutatnak",
-      "countGrid": "Kompakt szám + címke számlálók sűrű rácsban",
-      "raw": "Szépen formázott JSON kimenet hibakereséshez",
-      "actionButton": "Egy gomb, ami kérés végrehajtását váltja ki kattintásra",
-      "customJsx": "Egyéni JSX elrendezés engedélyezett Mantine komponensekkel és teljes API adatkötéssel"
-    },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
-    "authType": {
-      "none": "Nincs",
-      "bearer": "Bearer token",
-      "basic": "Alapszintű hitelesítés",
-      "apiKeyHeader": "API-kulcs (fejléc)",
-      "apiKeyQuery": "API-kulcs (lekérdezés)"
-    },
-    "displayType": {
-      "singleValue": "Egyedi érték",
-      "keyValue": "Kulcs-érték",
-      "table": "Táblázat",
-      "statGrid": "Statisztikai rács",
-      "progressBars": "Folyamatjelző sávok",
-      "statusIndicator": "Állapotjelző",
-      "countGrid": "Számláló rács",
-      "raw": "Nyers JSON",
-      "actionButton": "Műveleti gomb",
-      "customJsx": "Egyéni JSX"
-    },
-    "secret": {
-      "apiKey": "API-kulcs / token",
-      "username": "Felhasználónév",
-      "password": "Jelszó",
-      "savedPlaceholder": "••••••• (mentve, üresen hagyva megtartja)"
-    },
-    "preview": {
-      "title": "Előnézet",
-      "test": "Teszt",
-      "hint": "Kattints a Teszt gombra az API válasz előnézetéhez a jelenlegi konfigurációval.",
-      "rawResponse": "Nyers JSON válasz"
-    },
-    "notification": {
-      "created": "\"{name}\" widget sikeresen létrehozva.",
-      "updated": "\"{name}\" widget sikeresen frissítve.",
-      "deleted": "\"{name}\" widget törölve.",
-      "imported": "A widget importálása sikerült.",
-      "aiPromptCopied": "AI-utasítás a vágólapra másolva",
-      "aiPromptDescription": "Másolj egy előre elkészített promptot bármelyik AI chatbotba (ChatGPT, Claude, Gemini...). Tartalmazza a teljes widget sémát és az API választ, így az AI generálhat egy importálásra kész JSON konfigurációt.",
-      "aiPromptCopy": "Másolás a vágólapra",
-      "aiPromptNoResponse": "Tipp: Előbb futtass egy tesztet, hogy az API-válasz is bekerüljön az utasításba a jobb eredmény érdekében.",
-      "aiPromptCopyError": "Az utasítást nem sikerült a vágólapra másolni. Lehet, hogy a böngésződ nem támogatja ezt a funkciót.",
-      "createError": "A widget létrehozása sikertelen. Ellenőrizd, hogy az API végpont elérhető-e.",
-      "updateError": "A widget frissítése sikertelen. A módosításaid nem lettek mentve.",
-      "importError": "A widget importálása sikertelen. Ellenőrizd, hogy a fájl érvényes egyéni widget JSON export-e.",
-      "exportError": "A widget exportálása sikertelen.",
-      "duplicated": "\"{name}\" widget duplikálva.",
-      "duplicateError": "A widget duplikálása sikertelen.",
-      "toggleError": "A widget állapotának átkapcsolása sikertelen.",
-      "deleteError": "A widget törlése sikertelen.",
-      "previewError": "Az előnézet lekérése sikertelen. Ellenőrizd az URL-t és próbáld újra.",
-      "executed": "A művelet sikeresen végrehajtva.",
-      "executeError": "A művelet sikertelen: {error}"
-    },
-    "table": {
-      "name": "Név",
-      "url": "URL",
-      "display": "Megjelenítés"
-    },
-    "widget": {
-      "disabled": "Ez a widget le van tiltva"
-    }
-  },
   "integration": {
     "page": {
       "list": {
@@ -1344,10 +1139,6 @@
       "name": "Traefik",
       "description": "Felhőnatív fordított proxy és terheléselosztó"
     },
-    "wud": {
-      "name": "What's Up Docker",
-      "description": "Figyelje, hogy mely Docker-konténereihez érhetők el lemezképfrissítések"
-    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "Dokumentumkezelő rendszer beolvasott dokumentumok archiválására és rendszerezésére"
@@ -1359,6 +1150,10 @@
     "bazarr": {
       "name": "Bazarr",
       "description": "A Sonarr és a Radarr kiegészítő alkalmazása feliratok kezeléséhez és letöltéséhez"
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Figyelje, hogy mely Docker-konténereihez érhetők el lemezképfrissítések"
     }
   },
   "media": {
@@ -1441,9 +1236,11 @@
     "here": "itt",
     "iconPicker": {
       "label": "Ikonhivatkozás",
-      "description": "Kereshet a könyvtárban, beilleszthet egy kép URL-t, vagy feltölthet egy fájlt.",
       "header": "Írjon be nevet vagy objektumokat az ikonok szűréséhez... A Homarr a {countIcons} ikonok között keres",
       "headerLoading": "Keresés képek neve alapján",
+      "noResults": "Nincs a(z) „{search}” keresésnek megfelelő ikon.",
+      "error": "Az ikonok betöltése nem sikerült.",
+      "description": "Kereshet a könyvtárban, beilleszthet egy kép URL-t, vagy feltölthet egy fájlt.",
       "clear": "Kép törlése",
       "uploadImage": "Kép feltöltése",
       "results": "Képkeresés eredményei",
@@ -1452,9 +1249,7 @@
       "otherImages": "Egyéb képek",
       "urlLoading": "Kép ellenőrzése…",
       "urlReady": "A kép használatra kész.",
-      "urlError": "A kép nem tölthető be. Ellenőrizd az URL-t, majd próbáld újra.",
-      "noResults": "Nincs a(z) „{search}” keresésnek megfelelő ikon.",
-      "error": "Az ikonok betöltése nem sikerült."
+      "urlError": "A kép nem tölthető be. Ellenőrizd az URL-t, majd próbáld újra."
     },
     "colorScheme": {
       "options": {
@@ -1804,38 +1599,6 @@
       "option": {
         "showBroadcastMessage": {
           "label": "Közlemények megjelenítése"
-        }
-      }
-    },
-    "wud": {
-      "name": "What's Up Docker",
-      "description": "Megmutatja, hány figyelt konténerhez érhető el frissítés.",
-      "title": "What's Up Docker",
-      "monitored": "Figyelt",
-      "updatesAvailable": "{count, plural, one {# frissítés érhető el} other {# frissítés érhető el}}",
-      "updateAvailable": "Frissítés érhető el",
-      "openReleaseNotes": "Kiadási megjegyzések megnyitása",
-      "option": {
-        "showTitle": {
-          "label": "Cím megjelenítése"
-        },
-        "showRing": {
-          "label": "Frissítési gyűrű megjelenítése"
-        },
-        "layout": {
-          "label": "Elrendezés",
-          "option": {
-            "horizontal": {
-              "label": "Vízszintes"
-            },
-            "vertical": {
-              "label": "Függőleges"
-            }
-          }
-        },
-        "showUpdateList": {
-          "label": "A konténerfrissítések listájának megjelenítése",
-          "description": "Felsorolja az összes figyelt konténert, amelyhez elérhető képfrissítés."
         }
       }
     },
@@ -2391,8 +2154,8 @@
       "popover": {
         "information": "Információ",
         "processor": "Processzor: {cpuModelName}",
-        "memory": "Memória: {memory} GiB",
-        "memoryAvailable": "Rendelkezésre álló: {memoryAvailable}GiB ({percent}%)",
+        "memory": "Memória: {memory}",
+        "memoryAvailable": "Rendelkezésre álló: {memoryAvailable} ({percent}%)",
         "version": "Verzió: {version}",
         "uptime": "Üzemidő: {months} hónap, {days} nap, {hours} óra, {minutes} perc",
         "loadAverage": "Átlagos terhelés:",
@@ -2874,193 +2637,6 @@
         "internalServerError": "A Paperless-ngx adatok letöltése nem sikerült"
       }
     },
-    "patchmon": {
-      "name": "PatchMon",
-      "description": "A gépek javítási állapotának áttekintése a PatchMonból",
-      "title": "PatchMon-statisztikák",
-      "totalHosts": "Összes gép",
-      "hostsNeedingUpdates": "Frissítést igénylő gépek",
-      "securityUpdates": "Biztonsági frissítések",
-      "upToDateHosts": "Naprakész gépek",
-      "hostsWithSecurityUpdates": "Biztonsági frissítést igénylő gépek",
-      "recentUpdates24h": "Frissítések (24 óra)",
-      "totalOutdatedPackages": "Elavult csomagok",
-      "totalRepos": "Szoftvertárolók",
-      "osDistribution": "Operációs rendszerek megoszlása",
-      "compliance": "Frissítési megfelelőség",
-      "complianceRatio": "{upToDate} / {total}",
-      "lastUpdated": "Frissítve: {time}",
-      "option": {
-        "showTotalHosts": {
-          "label": "Gépek számának megjelenítése",
-          "description": "A felügyelt gépek számának megjelenítése"
-        },
-        "showHostsNeedingUpdates": {
-          "label": "Frissítést igénylő gépek megjelenítése",
-          "description": "A legalább egy elavult csomaggal rendelkező gépek megjelenítése"
-        },
-        "showSecurityUpdates": {
-          "label": "Biztonsági frissítések megjelenítése",
-          "description": "Az elérhető biztonsági frissítések számának megjelenítése"
-        },
-        "showUpToDateHosts": {
-          "label": "Naprakész gépek megjelenítése",
-          "description": "Az elavult csomag nélküli gépek megjelenítése"
-        },
-        "showHostsWithSecurityUpdates": {
-          "label": "Biztonsági frissítést igénylő gépek megjelenítése",
-          "description": "A biztonsági javítást igénylő gépek megjelenítése"
-        },
-        "showRecentUpdates24h": {
-          "label": "Legutóbbi frissítések megjelenítése (24 óra)",
-          "description": "Az elmúlt 24 órában alkalmazott frissítések számának megjelenítése"
-        },
-        "showTotalOutdatedPackages": {
-          "label": "Elavult csomagok megjelenítése",
-          "description": "Az elavult csomagok teljes számának megjelenítése az összes gépen"
-        },
-        "showTotalRepos": {
-          "label": "Szoftvertárolók megjelenítése",
-          "description": "A felügyelt aktív szoftvertárolók számának megjelenítése"
-        },
-        "enableThresholdColors": {
-          "label": "Küszöbérték szerinti színezés engedélyezése",
-          "description": "A statisztikai értékek színezése zöldre, sárgára vagy pirosra a súlyossági beállítások alapján"
-        },
-        "useCustomThresholds": {
-          "label": "Speciális küszöbértékek",
-          "description": "A figyelmeztetési és kritikus küszöbértékek testreszabása statisztikánként, abszolút számmal vagy az összes gép százalékában"
-        },
-        "thresholdMode": {
-          "option": {
-            "absolute": "Abszolút szám",
-            "percent": "Az összes gép százaléka"
-          }
-        },
-        "hostsNeedingUpdatesThresholdMode": {
-          "label": "Frissítést igénylő gépek küszöbértékének módja",
-          "description": "A frissítést igénylő gépek számának összehasonlítása abszolút értékként vagy az összes gép százalékában"
-        },
-        "hostsNeedingUpdatesWarningAt": {
-          "label": "Frissítési igény figyelmeztetési küszöbértéke",
-          "description": "Az érték sárgára vált e küszöb elérésekor"
-        },
-        "hostsNeedingUpdatesCriticalAt": {
-          "label": "Frissítési igény kritikus küszöbértéke",
-          "description": "Az érték pirosra vált e küszöb elérésekor"
-        },
-        "securityUpdatesThresholdMode": {
-          "label": "Biztonsági frissítések küszöbértékének módja",
-          "description": "A biztonsági frissítések számának összehasonlítása abszolút értékként vagy az összes gép százalékában"
-        },
-        "securityUpdatesWarningAt": {
-          "label": "Biztonsági frissítések figyelmeztetési küszöbértéke",
-          "description": "Az érték sárgára vált e küszöb elérésekor"
-        },
-        "securityUpdatesCriticalAt": {
-          "label": "Biztonsági frissítések kritikus küszöbértéke",
-          "description": "Az érték pirosra vált e küszöb elérésekor"
-        },
-        "hostsWithSecurityUpdatesThresholdMode": {
-          "label": "Biztonsági frissítést igénylő gépek küszöbértékének módja",
-          "description": "A gépek számának összehasonlítása abszolút értékként vagy az összes gép százalékában"
-        },
-        "hostsWithSecurityUpdatesWarningAt": {
-          "label": "Biztonsági frissítést igénylő gépek figyelmeztetési küszöbértéke",
-          "description": "Az érték sárgára vált e küszöb elérésekor"
-        },
-        "hostsWithSecurityUpdatesCriticalAt": {
-          "label": "Biztonsági frissítést igénylő gépek kritikus küszöbértéke",
-          "description": "Az érték pirosra vált e küszöb elérésekor"
-        },
-        "upToDateHostsThresholdMode": {
-          "label": "Naprakész gépek küszöbértékének módja",
-          "description": "A naprakész gépek számának összehasonlítása abszolút értékként vagy az összes gép százalékában"
-        },
-        "upToDateHostsWarningAt": {
-          "label": "Naprakész gépek figyelmeztetési küszöbértéke",
-          "description": "Az érték sárgára vált, ha eléri vagy meghaladja ezt a küszöböt, de még nincs teljes lefedettség"
-        },
-        "upToDateHostsCriticalAt": {
-          "label": "Naprakész gépek kritikus küszöbértéke",
-          "description": "Az érték pirosra vált, ha e küszöb alá esik"
-        },
-        "totalOutdatedPackagesThresholdMode": {
-          "label": "Elavult csomagok küszöbértékének módja",
-          "description": "Az elavult csomagok számának összehasonlítása abszolút értékként vagy az összes gép százalékában"
-        },
-        "totalOutdatedPackagesWarningAt": {
-          "label": "Elavult csomagok figyelmeztetési küszöbértéke",
-          "description": "Az érték sárgára vált e küszöb elérésekor"
-        },
-        "totalOutdatedPackagesCriticalAt": {
-          "label": "Elavult csomagok kritikus küszöbértéke",
-          "description": "Az érték pirosra vált e küszöb elérésekor"
-        },
-        "showOsDistribution": {
-          "label": "Operációs rendszerek megoszlásának megjelenítése",
-          "description": "A felügyelt gépek operációs rendszer szerinti bontásának megjelenítése"
-        },
-        "osDistributionLimit": {
-          "label": "Megjelenített operációs rendszerek száma",
-          "description": "A megjelenítendő operációs rendszerek legnagyobb száma",
-          "option": {
-            "3": "3 leggyakoribb",
-            "5": "5 leggyakoribb",
-            "10": "10 leggyakoribb",
-            "all": "Összes"
-          }
-        },
-        "showOsVersion": {
-          "label": "Operációs rendszer verziójának megjelenítése",
-          "description": "Az operációsrendszer-verzió hozzáadása az egyes címkékhez, ha elérhető"
-        },
-        "showComplianceHero": {
-          "label": "Kiemelt megfelelőségi mutató megjelenítése",
-          "description": "A naprakész gépek százalékát jelző megfelelőségi gyűrű megjelenítése"
-        },
-        "osDisplayMode": {
-          "label": "Operációs rendszer megjelenítési módja",
-          "description": "Válaszd ki az operációs rendszerek megoszlásának megjelenítési módját",
-          "option": {
-            "bars": "Vízszintes sávok",
-            "donut": "Gyűrűdiagram"
-          }
-        }
-      },
-      "error": {
-        "internalServerError": "A PatchMon-adatok lekérése nem sikerült"
-      }
-    },
-    "bazarr": {
-      "name": "Bazarr",
-      "description": "A hiányzó feliratok és az állapot áttekintése a Bazarr-példányodból",
-      "episodes": "Hiányzó epizódok",
-      "movies": "Hiányzó filmek",
-      "providers": "Szolgáltatói problémák",
-      "status": "Állapotproblémák",
-      "option": {
-        "showMissingEpisodes": {
-          "label": "Hiányzó epizódok megjelenítése",
-          "description": "A hiányzó felirattal rendelkező epizódok számának megjelenítése"
-        },
-        "showMissingMovies": {
-          "label": "Hiányzó filmek megjelenítése",
-          "description": "A hiányzó felirattal rendelkező filmek számának megjelenítése"
-        },
-        "showProviderIssues": {
-          "label": "Szolgáltatói problémák megjelenítése",
-          "description": "A problémás feliratszolgáltatók számának megjelenítése"
-        },
-        "showHealthIssues": {
-          "label": "Állapotproblémák megjelenítése",
-          "description": "A Bazarr állapotproblémáinak számának megjelenítése"
-        }
-      },
-      "error": {
-        "internalServerError": "A Bazarr-adatok lekérése nem sikerült"
-      }
-    },
     "immich-serverStats": {
       "name": "Immich szerver statisztikák",
       "description": "Információk az Immich-példányodról",
@@ -3137,7 +2713,7 @@
           "label": "Mutassa a befejezettként megjelölt Vegyes bejegyzéseket"
         },
         "activeTorrentThreshold": {
-          "label": "A küszöbérték alatt lévő befejezett torrenteket elrejtés (kiB/s-ban)"
+          "label": "A küszöbérték alatt lévő befejezett torrenteket elrejtés"
         },
         "categoryFilter": {
           "label": "Szűrhető kategóriák/címkék"
@@ -3432,35 +3008,6 @@
           }
         }
       }
-    },
-    "mediaMissing": {
-      "name": "Hiányzó és várólistán lévő média",
-      "description": "A Radarr és a Sonarr hiányzó és várólistán lévő filmjeinek és epizódjainak megjelenítése",
-      "option": {
-        "showMissing": {
-          "label": "Hiányzó elemek megjelenítése"
-        },
-        "showQueued": {
-          "label": "Várólistán lévő elemek megjelenítése"
-        },
-        "pageSize": {
-          "label": "Oldalankénti elemek száma"
-        }
-      },
-      "tab": {
-        "missing": "Hiányzó",
-        "queued": "Várólistán"
-      },
-      "type": {
-        "movie": "Film",
-        "episode": "Epizód"
-      },
-      "empty": {
-        "missing": "Nincs hiányzó elem",
-        "queued": "Nincs várólistán lévő elem",
-        "noTabsEnabled": "Engedélyezz legalább egy lapot a widget beállításaiban"
-      },
-      "timeLeft": "Hátralévő idő"
     },
     "rssFeed": {
       "name": "RSS feedek",
@@ -3790,40 +3337,6 @@
         "internalServerError": "Az üzemidőadatok letöltése nem sikerült"
       }
     },
-    "traefik": {
-      "name": "Traefik",
-      "description": "A Traefik útválasztóinak, szolgáltatásainak, köztes rétegeinek és belépési pontjainak áttekintése",
-      "option": {
-        "showTcp": {
-          "label": "TCP megjelenítése"
-        },
-        "showUdp": {
-          "label": "UDP megjelenítése"
-        },
-        "showEntryPoints": {
-          "label": "Belépési pontok megjelenítése"
-        }
-      },
-      "instances": "Traefik-példányok",
-      "versionUnknown": "Ismeretlen verzió",
-      "summary": {
-        "routers": "Útválasztók",
-        "entryPoints": "Belépési pontok"
-      },
-      "resource": {
-        "routers": "Útválasztók",
-        "services": "Szolgáltatások",
-        "middlewares": "Köztes rétegek"
-      },
-      "status": {
-        "healthy": "Rendben",
-        "errors": "{count} hiba",
-        "warnings": "{count} figyelmeztetés"
-      },
-      "error": {
-        "internalServerError": "A Traefik-adatok lekérése nem sikerült"
-      }
-    },
     "audioStats": {
       "name": "Audió statisztikák",
       "description": "Könyvtári és lejátszási statisztikák Navidrome-ból vagy Audiobookshelf-ből",
@@ -3927,7 +3440,7 @@
               "label": "Százalék (pl: 76%)"
             },
             "absolute": {
-              "label": "Abszolút értékek (pl. 800 Gb / 1 Tb)"
+              "label": "Abszolút értékek"
             },
             "free": {
               "label": "A szabad hely aránya (pl. 24% szabad)"
@@ -3946,26 +3459,6 @@
       "status": {
         "unhealthy": "Hibás"
       }
-    },
-    "customApi": {
-      "name": "Egyéni API",
-      "description": "Adatok megjelenítése bármely külső API-ból egyedi konfigurációval.",
-      "option": {
-        "definitionId": {
-          "label": "Definíció azonosító"
-        },
-        "refreshInterval": {
-          "label": "Frissítési időköz",
-          "description": "Milyen gyakran kérje le újra az adatokat az API-tól (másodpercben)"
-        }
-      },
-      "noDefinition": "Nincs definíció kiválasztva",
-      "definitionNotFound": "A widget definíció nem található. Lehet, hogy törölték.",
-      "noDisplayOutput": "Nincs megjelenítési kimenet",
-      "executeConfirm": "Biztosan végre szeretnéd hajtani ezt a műveletet?",
-      "executing": "Végrehajtás...",
-      "executeSuccess": "A művelet sikeresen végrehajtva",
-      "executeFailed": "A művelet sikertelen. Ellenőrizd a widget konfigurációját."
     },
     "beszelSystemTable": {
       "name": "Beszel Rendszerek (Táblázat)",
@@ -4215,6 +3708,288 @@
         "dockerNetwork": {
           "title": "Docker Hálózati I/O",
           "subtitle": "A Docker konténerek hálózati forgalma"
+        }
+      }
+    },
+    "patchmon": {
+      "name": "PatchMon",
+      "description": "A gépek javítási állapotának áttekintése a PatchMonból",
+      "title": "PatchMon-statisztikák",
+      "totalHosts": "Összes gép",
+      "hostsNeedingUpdates": "Frissítést igénylő gépek",
+      "securityUpdates": "Biztonsági frissítések",
+      "upToDateHosts": "Naprakész gépek",
+      "hostsWithSecurityUpdates": "Biztonsági frissítést igénylő gépek",
+      "recentUpdates24h": "Frissítések (24 óra)",
+      "totalOutdatedPackages": "Elavult csomagok",
+      "totalRepos": "Szoftvertárolók",
+      "osDistribution": "Operációs rendszerek megoszlása",
+      "compliance": "Frissítési megfelelőség",
+      "complianceRatio": "{upToDate} / {total}",
+      "lastUpdated": "Frissítve: {time}",
+      "option": {
+        "showTotalHosts": {
+          "label": "Gépek számának megjelenítése",
+          "description": "A felügyelt gépek számának megjelenítése"
+        },
+        "showHostsNeedingUpdates": {
+          "label": "Frissítést igénylő gépek megjelenítése",
+          "description": "A legalább egy elavult csomaggal rendelkező gépek megjelenítése"
+        },
+        "showSecurityUpdates": {
+          "label": "Biztonsági frissítések megjelenítése",
+          "description": "Az elérhető biztonsági frissítések számának megjelenítése"
+        },
+        "showUpToDateHosts": {
+          "label": "Naprakész gépek megjelenítése",
+          "description": "Az elavult csomag nélküli gépek megjelenítése"
+        },
+        "showHostsWithSecurityUpdates": {
+          "label": "Biztonsági frissítést igénylő gépek megjelenítése",
+          "description": "A biztonsági javítást igénylő gépek megjelenítése"
+        },
+        "showRecentUpdates24h": {
+          "label": "Legutóbbi frissítések megjelenítése (24 óra)",
+          "description": "Az elmúlt 24 órában alkalmazott frissítések számának megjelenítése"
+        },
+        "showTotalOutdatedPackages": {
+          "label": "Elavult csomagok megjelenítése",
+          "description": "Az elavult csomagok teljes számának megjelenítése az összes gépen"
+        },
+        "showTotalRepos": {
+          "label": "Szoftvertárolók megjelenítése",
+          "description": "A felügyelt aktív szoftvertárolók számának megjelenítése"
+        },
+        "enableThresholdColors": {
+          "label": "Küszöbérték szerinti színezés engedélyezése",
+          "description": "A statisztikai értékek színezése zöldre, sárgára vagy pirosra a súlyossági beállítások alapján"
+        },
+        "useCustomThresholds": {
+          "label": "Speciális küszöbértékek",
+          "description": "A figyelmeztetési és kritikus küszöbértékek testreszabása statisztikánként, abszolút számmal vagy az összes gép százalékában"
+        },
+        "thresholdMode": {
+          "option": {
+            "absolute": "Abszolút szám",
+            "percent": "Az összes gép százaléka"
+          }
+        },
+        "hostsNeedingUpdatesThresholdMode": {
+          "label": "Frissítést igénylő gépek küszöbértékének módja",
+          "description": "A frissítést igénylő gépek számának összehasonlítása abszolút értékként vagy az összes gép százalékában"
+        },
+        "hostsNeedingUpdatesWarningAt": {
+          "label": "Frissítési igény figyelmeztetési küszöbértéke",
+          "description": "Az érték sárgára vált e küszöb elérésekor"
+        },
+        "hostsNeedingUpdatesCriticalAt": {
+          "label": "Frissítési igény kritikus küszöbértéke",
+          "description": "Az érték pirosra vált e küszöb elérésekor"
+        },
+        "securityUpdatesThresholdMode": {
+          "label": "Biztonsági frissítések küszöbértékének módja",
+          "description": "A biztonsági frissítések számának összehasonlítása abszolút értékként vagy az összes gép százalékában"
+        },
+        "securityUpdatesWarningAt": {
+          "label": "Biztonsági frissítések figyelmeztetési küszöbértéke",
+          "description": "Az érték sárgára vált e küszöb elérésekor"
+        },
+        "securityUpdatesCriticalAt": {
+          "label": "Biztonsági frissítések kritikus küszöbértéke",
+          "description": "Az érték pirosra vált e küszöb elérésekor"
+        },
+        "hostsWithSecurityUpdatesThresholdMode": {
+          "label": "Biztonsági frissítést igénylő gépek küszöbértékének módja",
+          "description": "A gépek számának összehasonlítása abszolút értékként vagy az összes gép százalékában"
+        },
+        "hostsWithSecurityUpdatesWarningAt": {
+          "label": "Biztonsági frissítést igénylő gépek figyelmeztetési küszöbértéke",
+          "description": "Az érték sárgára vált e küszöb elérésekor"
+        },
+        "hostsWithSecurityUpdatesCriticalAt": {
+          "label": "Biztonsági frissítést igénylő gépek kritikus küszöbértéke",
+          "description": "Az érték pirosra vált e küszöb elérésekor"
+        },
+        "upToDateHostsThresholdMode": {
+          "label": "Naprakész gépek küszöbértékének módja",
+          "description": "A naprakész gépek számának összehasonlítása abszolút értékként vagy az összes gép százalékában"
+        },
+        "upToDateHostsWarningAt": {
+          "label": "Naprakész gépek figyelmeztetési küszöbértéke",
+          "description": "Az érték sárgára vált, ha eléri vagy meghaladja ezt a küszöböt, de még nincs teljes lefedettség"
+        },
+        "upToDateHostsCriticalAt": {
+          "label": "Naprakész gépek kritikus küszöbértéke",
+          "description": "Az érték pirosra vált, ha e küszöb alá esik"
+        },
+        "totalOutdatedPackagesThresholdMode": {
+          "label": "Elavult csomagok küszöbértékének módja",
+          "description": "Az elavult csomagok számának összehasonlítása abszolút értékként vagy az összes gép százalékában"
+        },
+        "totalOutdatedPackagesWarningAt": {
+          "label": "Elavult csomagok figyelmeztetési küszöbértéke",
+          "description": "Az érték sárgára vált e küszöb elérésekor"
+        },
+        "totalOutdatedPackagesCriticalAt": {
+          "label": "Elavult csomagok kritikus küszöbértéke",
+          "description": "Az érték pirosra vált e küszöb elérésekor"
+        },
+        "showOsDistribution": {
+          "label": "Operációs rendszerek megoszlásának megjelenítése",
+          "description": "A felügyelt gépek operációs rendszer szerinti bontásának megjelenítése"
+        },
+        "osDistributionLimit": {
+          "label": "Megjelenített operációs rendszerek száma",
+          "description": "A megjelenítendő operációs rendszerek legnagyobb száma",
+          "option": {
+            "3": "3 leggyakoribb",
+            "5": "5 leggyakoribb",
+            "10": "10 leggyakoribb",
+            "all": "Összes"
+          }
+        },
+        "showOsVersion": {
+          "label": "Operációs rendszer verziójának megjelenítése",
+          "description": "Az operációsrendszer-verzió hozzáadása az egyes címkékhez, ha elérhető"
+        },
+        "showComplianceHero": {
+          "label": "Kiemelt megfelelőségi mutató megjelenítése",
+          "description": "A naprakész gépek százalékát jelző megfelelőségi gyűrű megjelenítése"
+        },
+        "osDisplayMode": {
+          "label": "Operációs rendszer megjelenítési módja",
+          "description": "Válaszd ki az operációs rendszerek megoszlásának megjelenítési módját",
+          "option": {
+            "bars": "Vízszintes sávok",
+            "donut": "Gyűrűdiagram"
+          }
+        }
+      },
+      "error": {
+        "internalServerError": "A PatchMon-adatok lekérése nem sikerült"
+      }
+    },
+    "bazarr": {
+      "name": "Bazarr",
+      "description": "A hiányzó feliratok és az állapot áttekintése a Bazarr-példányodból",
+      "episodes": "Hiányzó epizódok",
+      "movies": "Hiányzó filmek",
+      "providers": "Szolgáltatói problémák",
+      "status": "Állapotproblémák",
+      "option": {
+        "showMissingEpisodes": {
+          "label": "Hiányzó epizódok megjelenítése",
+          "description": "A hiányzó felirattal rendelkező epizódok számának megjelenítése"
+        },
+        "showMissingMovies": {
+          "label": "Hiányzó filmek megjelenítése",
+          "description": "A hiányzó felirattal rendelkező filmek számának megjelenítése"
+        },
+        "showProviderIssues": {
+          "label": "Szolgáltatói problémák megjelenítése",
+          "description": "A problémás feliratszolgáltatók számának megjelenítése"
+        },
+        "showHealthIssues": {
+          "label": "Állapotproblémák megjelenítése",
+          "description": "A Bazarr állapotproblémáinak számának megjelenítése"
+        }
+      },
+      "error": {
+        "internalServerError": "A Bazarr-adatok lekérése nem sikerült"
+      }
+    },
+    "mediaMissing": {
+      "name": "Hiányzó és várólistán lévő média",
+      "description": "A Radarr és a Sonarr hiányzó és várólistán lévő filmjeinek és epizódjainak megjelenítése",
+      "option": {
+        "showMissing": {
+          "label": "Hiányzó elemek megjelenítése"
+        },
+        "showQueued": {
+          "label": "Várólistán lévő elemek megjelenítése"
+        },
+        "pageSize": {
+          "label": "Oldalankénti elemek száma"
+        }
+      },
+      "tab": {
+        "missing": "Hiányzó",
+        "queued": "Várólistán"
+      },
+      "type": {
+        "movie": "Film",
+        "episode": "Epizód"
+      },
+      "empty": {
+        "missing": "Nincs hiányzó elem",
+        "queued": "Nincs várólistán lévő elem",
+        "noTabsEnabled": "Engedélyezz legalább egy lapot a widget beállításaiban"
+      },
+      "timeLeft": "Hátralévő idő"
+    },
+    "traefik": {
+      "name": "Traefik",
+      "description": "A Traefik útválasztóinak, szolgáltatásainak, köztes rétegeinek és belépési pontjainak áttekintése",
+      "option": {
+        "showTcp": {
+          "label": "TCP megjelenítése"
+        },
+        "showUdp": {
+          "label": "UDP megjelenítése"
+        },
+        "showEntryPoints": {
+          "label": "Belépési pontok megjelenítése"
+        }
+      },
+      "instances": "Traefik-példányok",
+      "versionUnknown": "Ismeretlen verzió",
+      "summary": {
+        "routers": "Útválasztók",
+        "entryPoints": "Belépési pontok"
+      },
+      "resource": {
+        "routers": "Útválasztók",
+        "services": "Szolgáltatások",
+        "middlewares": "Köztes rétegek"
+      },
+      "status": {
+        "healthy": "Rendben",
+        "errors": "{count} hiba",
+        "warnings": "{count} figyelmeztetés"
+      },
+      "error": {
+        "internalServerError": "A Traefik-adatok lekérése nem sikerült"
+      }
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Megmutatja, hány figyelt konténerhez érhető el frissítés.",
+      "title": "What's Up Docker",
+      "monitored": "Figyelt",
+      "updatesAvailable": "{count, plural, one {# frissítés érhető el} other {# frissítés érhető el}}",
+      "updateAvailable": "Frissítés érhető el",
+      "openReleaseNotes": "Kiadási megjegyzések megnyitása",
+      "option": {
+        "showTitle": {
+          "label": "Cím megjelenítése"
+        },
+        "showRing": {
+          "label": "Frissítési gyűrű megjelenítése"
+        },
+        "layout": {
+          "label": "Elrendezés",
+          "option": {
+            "horizontal": {
+              "label": "Vízszintes"
+            },
+            "vertical": {
+              "label": "Függőleges"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "A konténerfrissítések listájának megjelenítése",
+          "description": "Felsorolja az összes figyelt konténert, amelyhez elérhető képfrissítés."
         }
       }
     }
@@ -4597,11 +4372,11 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "Nyitólap",
         "boards": "Táblák",
         "apps": "Alkalmazások",
         "integrations": "Integrációk",
-        "customWidgets": "Egyéni widgetek",
         "searchEngies": "Keresőmotorok",
         "medias": "Média",
         "users": {
@@ -4876,7 +4651,7 @@
             "title": "Analitika",
             "general": {
               "title": "Segíts fejleszteni a Homarrt",
-              "text": "A Homarr az Umami nevű nyílt forráskódú szoftver segítségével névtelen elemzési adatokat küld. Ha ez az opció engedélyezve van, a következő adatokat gyűjtjük: a Homarr verziója, az adatbázis típusa (MySQL/PostgreSQL/SQLite), a Docker/Kubernetes állapota, az engedélyezett hitelesítési módszerek, valamint az egyes funkciók száma. Minden adat névtelen és összesített formában kerül rögzítésre – személyes adatokat, URL-eket, neveket vagy bármilyen azonosítható adatot soha nem gyűjtünk. Ez segít nyílt forráskódú fejlesztői csapatunknak a használati szokások megértésében és a fejlesztési feladatok fontossági sorrendjének meghatározásában."
+              "text": "A Homarr az Umami nevű nyílt forráskódú szoftver segítségével névtelen elemzési adatokat küld. Ha ez az opció engedélyezve van, a következő adatokat gyűjtjük: a Homarr verziója, az adatbázis típusa (PostgreSQL/SQLite), a Docker/Kubernetes állapota, az engedélyezett hitelesítési módszerek, valamint az egyes funkciók száma. Minden adat névtelen és összesített formában kerül rögzítésre – személyes adatokat, URL-eket, neveket vagy bármilyen azonosítható adatot soha nem gyűjtünk. Ez segít nyílt forráskódú fejlesztői csapatunknak a használati szokások megértésében és a fejlesztési feladatok fontossági sorrendjének meghatározásában."
             }
           },
           "crawlingAndIndexing": {
@@ -5224,7 +4999,7 @@
           "restore": {
             "dropzone": {
               "title": "Húzd ide a biztonsági mentés ZIP fájlt",
-              "description": "Homarr SQLite biztonsági mentésből származó .zip fájlok fogadhatók el (max 256 MB)"
+              "description": "Homarr SQLite biztonsági mentésből származó .zip fájlok fogadhatók el (max {maxSize})"
             },
             "analyzing": "Biztonsági mentés elemzése...",
             "changeFile": "Fájl módosítása",
@@ -5740,6 +5515,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "Kezelés",
       "boards": {
         "label": "Táblák"
@@ -5772,18 +5550,6 @@
         },
         "edit": {
           "label": "Szerkesztés"
-        }
-      },
-      "custom-widgets": {
-        "label": "Egyéni widgetek",
-        "new": {
-          "label": "Új"
-        },
-        "edit": {
-          "label": "Szerkesztés",
-          "flow": {
-            "label": "Folyamat"
-          }
         }
       },
       "users": {

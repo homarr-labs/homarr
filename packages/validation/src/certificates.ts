@@ -35,7 +35,7 @@ export const checkCertificateFile: z.core.CheckFn<File> = (context) => {
       code: "custom",
       params: createCustomErrorParams({
         key: "fileTooLarge",
-        params: { maxSize: "1 MB" },
+        params: { maxSize: "1 MiB" },
       }),
       input: context.value.size,
     });

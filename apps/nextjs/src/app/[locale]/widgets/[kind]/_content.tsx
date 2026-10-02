@@ -1,5 +1,7 @@
 "use client";
 
+/* eslint-disable react/no-unstable-nested-components -- Widget modules and definition-bound fallbacks are loaded dynamically. */
+
 import { use, useCallback, useState } from "react";
 import { ActionIcon, Affix, Card } from "@mantine/core";
 import { IconDimensions, IconPencil, IconToggleLeft, IconToggleRight } from "@tabler/icons-react";
@@ -7,6 +9,7 @@ import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import { ErrorBoundary } from "react-error-boundary";
 
 import { clientApi } from "@homarr/api/client";
+import { getWidgetName } from "@homarr/definitions";
 import type { WidgetKind } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
@@ -17,8 +20,8 @@ import { WidgetError } from "@homarr/widgets/errors";
 import { loadWidgetResources, reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 
 import { LazyWidgetEditModal, preloadWidgetEditModal } from "~/components/board/items/lazy-widget-edit-modal";
-import type { Dimensions } from "./_dimension-modal";
-import { PreviewDimensionsModal } from "./_dimension-modal";
+import type { Dimensions } from "./_dimension-popover";
+import { PreviewDimensionsPopover } from "./_dimension-popover";
 
 interface WidgetPreviewPageContentProps {
   kind: WidgetKind;
@@ -29,7 +32,6 @@ export const WidgetPreviewPageContent = ({ kind }: WidgetPreviewPageContentProps
   const t = useI18n();
   const utils = clientApi.useUtils();
   const { openModal: openWidgetEditModal } = useModalAction(LazyWidgetEditModal);
-  const { openModal: openPreviewDimensionsModal } = useModalAction(PreviewDimensionsModal);
   const { definition: currentDefinition, Component } = use(loadWidgetResources(kind));
   const [editMode, setEditMode] = useState(false);
   const [isEditorLoading, setIsEditorLoading] = useState(false);
@@ -70,10 +72,11 @@ export const WidgetPreviewPageContent = ({ kind }: WidgetPreviewPageContentProps
           ),
           integrationSupport: hasIntegrationSupport,
           settings,
+          previewDimensions: dimensions,
         },
         {
           title(translate) {
-            return `${translate("item.edit.title")} - ${translate(`widget.${kind}.name`)}`;
+            return `${translate("item.edit.title")} - ${getWidgetName(kind, translate)}`;
           },
         },
       );
@@ -85,21 +88,14 @@ export const WidgetPreviewPageContent = ({ kind }: WidgetPreviewPageContentProps
     } finally {
       setIsEditorLoading(false);
     }
-  }, [currentDefinition, kind, openWidgetEditModal, settings, state, t, utils]);
+  }, [currentDefinition, dimensions, kind, openWidgetEditModal, settings, state, t, utils]);
 
   const toggleEditMode = useCallback(() => {
-    setEditMode((editMode) => !editMode);
+    setEditMode((currentEditMode) => !currentEditMode);
     showSuccessNotification({
       message: editMode ? t("widgetPreview.toggle.disabled") : t("widgetPreview.toggle.enabled"),
     });
   }, [editMode, t]);
-
-  const openDimensionsModal = useCallback(() => {
-    openPreviewDimensionsModal({
-      dimensions,
-      setDimensions,
-    });
-  }, [dimensions, openPreviewDimensionsModal]);
 
   const updateOptions = useCallback(
     ({ newOptions }: { newOptions: Record<string, unknown> }) =>
@@ -158,15 +154,21 @@ export const WidgetPreviewPageContent = ({ kind }: WidgetPreviewPageContentProps
         </ActionIcon>
       </Affix>
       <Affix bottom={12} right={72 + 120}>
-        <ActionIcon
-          size={48}
-          variant="default"
-          radius="xl"
-          onClick={openDimensionsModal}
-          aria-label={t("widgetPreview.dimensions.title")}
-        >
-          <IconDimensions size={24} />
-        </ActionIcon>
+        <PreviewDimensionsPopover
+          dimensions={dimensions}
+          setDimensions={setDimensions}
+          target={(onClick) => (
+            <ActionIcon
+              size={48}
+              variant="default"
+              radius="xl"
+              aria-label={t("widgetPreview.dimensions.title")}
+              onClick={onClick}
+            >
+              <IconDimensions size={24} />
+            </ActionIcon>
+          )}
+        />
       </Affix>
     </>
   );

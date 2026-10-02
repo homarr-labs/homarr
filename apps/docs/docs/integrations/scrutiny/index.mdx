@@ -1,0 +1,23 @@
+---
+title: "Scrutiny"
+description: "Hard drive S.M.A.R.T. monitoring and reporting."
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { statsWidget } from "@site/docs/widgets/stats";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { scrutinyIntegration } from ".";
+
+<IntegrationHeader integration={scrutinyIntegration} categories={["Monitoring"]} />
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites items={[{ widget: statsWidget }]} />
+
+The Scrutiny statistics expose passed, failed, and unknown non-archived devices. Scrutiny must have access to SMART-capable disks for these values to represent real disk health.
+
+### Adding the integration
+
+<AddingIntegration />

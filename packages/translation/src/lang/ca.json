@@ -187,7 +187,7 @@
         }
       },
       "passwordConfirm": {
-        "label": "Confiremeu la contrasenya"
+        "label": "Confirmeu la contrasenya"
       },
       "previousPassword": {
         "label": "Contrasenya anterior"
@@ -401,7 +401,7 @@
           },
           "modify-all": {
             "label": "Modificar totes les aplicacions",
-            "description": "Permet que els memebres modifiquin totes les aplicacions"
+            "description": "Permet que els membres modifiquin totes les aplicacions"
           },
           "full-all": {
             "label": "Accés complet a les aplicacions",
@@ -686,211 +686,6 @@
         "action": "Obre la creació d'aplicacions"
       },
       "add": "Afegeix una app"
-    }
-  },
-  "customWidget": {
-    "page": {
-      "list": {
-        "title": "Widgets personalitzats",
-        "noResults": "Encara no hi ha widgets personalitzats. Crea el primer!",
-        "loading": "Carregant..."
-      },
-      "create": {
-        "title": "Crea un widget personalitzat",
-        "subtitle": "Defineix un URL d'API, l'autenticació i com es mostraran les dades de resposta."
-      },
-      "edit": {
-        "title": "Edita el widget personalitzat"
-      }
-    },
-    "action": {
-      "create": "Crea",
-      "import": "Importa",
-      "save": "Desa",
-      "delete": "Elimina el widget personalitzat",
-      "deleteConfirm": "Segur que vols eliminar «{name}»? Aquesta acció no es pot desfer.",
-      "export": "Exporta",
-      "addMapping": "Afegeix un mapatge",
-      "addColumn": "Afegeix una columna",
-      "edit": "Edita",
-      "removeMapping": "Elimina el mapatge",
-      "removeColumn": "Elimina la columna",
-      "addItem": "Afegeix un element",
-      "removeItem": "Elimina l'element",
-      "addBar": "Afegeix una barra",
-      "duplicate": "Duplica",
-      "copyAiPrompt": "Copia la indicació per a la IA",
-      "enable": "Activa",
-      "disable": "Desactiva",
-      "menu": "Accions"
-    },
-    "field": {
-      "name": "Nom",
-      "description": "Descripció",
-      "iconUrl": "URL de la icona",
-      "url": "URL",
-      "authType": "Tipus d'autenticació",
-      "headerName": "Nom de la capçalera/paràmetre de consulta",
-      "method": "Mètode",
-      "requestBody": "Cos de la sol·licitud",
-      "displayType": "Tipus de visualització",
-      "jsonPath": "Ruta JSON",
-      "jsonPathHint": "Utilitza la sintaxi JSONPath per extreure valors, p. ex. $.data.temperature o $.items[0].name",
-      "label": "Etiqueta",
-      "unit": "Unitat",
-      "mappings": "Mapatges",
-      "tablePath": "Ruta JSON de la matriu",
-      "tablePathHint": "Ruta de la matriu a la resposta, p. ex. $.data.items",
-      "columns": "Columnes",
-      "header": "Capçalera",
-      "items": "Elements",
-      "gridColumns": "Columnes de la graella",
-      "cardStyle": "Estil de targeta",
-      "bars": "Barres",
-      "valuePath": "Ruta JSON del valor",
-      "maxPath": "Ruta JSON del valor màxim",
-      "showPercentage": "Mostra el percentatge",
-      "barSize": "Mida de la barra",
-      "goodValues": "Valors bons (separats per comes)",
-      "dotSize": "Mida del punt",
-      "valueSize": "Mida del valor",
-      "labelPosition": "Posició de l'etiqueta",
-      "kvLayout": "Disseny",
-      "striped": "Files ratllades",
-      "compact": "Mode compacte",
-      "maxHeight": "Alçada màxima (px)",
-      "color": "Color",
-      "buttonLabel": "Etiqueta del botó",
-      "buttonColor": "Color del botó",
-      "confirmText": "Text de confirmació",
-      "confirmTextHint": "Si s'estableix, apareixerà un diàleg de confirmació abans d'executar la sol·licitud",
-      "successMessage": "Missatge d'èxit",
-      "successMessageHint": "Missatge que es mostra després d'una execució correcta",
-      "enabled": "Activat",
-      "template": {
-        "label": "Plantilla JSX",
-        "description": "Plantilla JSX de Mantine. Accedeix als camps de resposta de l'API mitjançant vinculacions de dades (p. ex. data.name). Utilitza només components permesos. Prohibit: constructor, __proto__, eval, Function, window, document."
-      }
-    },
-    "placeholder": {
-      "exampleLabel": "Temperatura de la CPU",
-      "exampleLabelShort": "Temp. de la CPU",
-      "exampleHeader": "Nom",
-      "exampleUnit": "°C",
-      "iconUrl": "https://...",
-      "url": "https://api.example.com/api/v1/status",
-      "headerName": "X-API-Key",
-      "jsonPath": "$.data.value",
-      "tablePath": "$.data.items",
-      "columnJsonPath": "$.nom",
-      "valuePath": "$.data.used",
-      "maxPath": "$.data.total",
-      "goodValues": "online, true, up",
-      "color": "blau"
-    },
-    "cardStyleOption": {
-      "filled": "Emplenit",
-      "outline": "Contorn",
-      "subtle": "Subtil"
-    },
-    "layoutOption": {
-      "list": "Llista",
-      "grid": "Graella"
-    },
-    "sizeOption": {
-      "sm": "Petit",
-      "md": "Mitjà",
-      "lg": "Gran",
-      "xl": "Extra gran"
-    },
-    "labelPositionOption": {
-      "above": "A sobre",
-      "below": "A sota"
-    },
-    "fieldset": {
-      "general": "General",
-      "connection": "Connexió a l'API",
-      "display": "Configuració de visualització"
-    },
-    "displayTypeDescription": {
-      "singleValue": "Mostra un valor extret amb una etiqueta i una unitat",
-      "keyValue": "Mostra diversos valors etiquetats un al costat de l'altre",
-      "table": "Mostra files de dades en format de taula",
-      "statGrid": "Targetes d'estadístiques de colors en una graella, com els widgets de Pi-Hole o Speedtest",
-      "progressBars": "Barres de progrés que mostren l'ús o la compleció, per a disc, memòria i quotes",
-      "statusIndicator": "Punts d'estat de colors que mostren estats en línia/desconnectat o de salut",
-      "countGrid": "Comptadors compactes de nombre i etiqueta en una graella estreta",
-      "raw": "Sortida JSON amb format per a la depuració",
-      "actionButton": "Un botó que activa una sol·licitud quan s'hi fa clic",
-      "customJsx": "Disseny JSX personalitzat amb components Mantine permesos i vinculació completa de dades de l'API"
-    },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
-    "authType": {
-      "none": "Cap",
-      "bearer": "Testimoni Bearer",
-      "basic": "Autenticació bàsica",
-      "apiKeyHeader": "Clau d'API (capçalera)",
-      "apiKeyQuery": "Clau d'API (consulta)"
-    },
-    "displayType": {
-      "singleValue": "Valor únic",
-      "keyValue": "Clau-valor",
-      "table": "Taula",
-      "statGrid": "Graella d'estadístiques",
-      "progressBars": "Barres de progrés",
-      "statusIndicator": "Indicador d'estat",
-      "countGrid": "Graella de recomptes",
-      "raw": "JSON sense processar",
-      "actionButton": "Botó d'acció",
-      "customJsx": "JSX personalitzat"
-    },
-    "secret": {
-      "apiKey": "Clau d'API / testimoni",
-      "username": "Nom d'usuari",
-      "password": "Contrasenya",
-      "savedPlaceholder": "••••••• (desat, deixa-ho buit per conservar-ho)"
-    },
-    "preview": {
-      "title": "Previsualització",
-      "test": "Prova",
-      "hint": "Fes clic a Prova per previsualitzar la resposta de l'API amb la configuració actual.",
-      "rawResponse": "Resposta JSON sense processar"
-    },
-    "notification": {
-      "created": "El widget «{name}» s'ha creat correctament.",
-      "updated": "El widget «{name}» s'ha actualitzat correctament.",
-      "deleted": "S'ha eliminat el widget «{name}».",
-      "imported": "El giny s'ha importat correctament.",
-      "aiPromptCopied": "La indicació per a la IA s'ha copiat al porta-retalls",
-      "aiPromptDescription": "Copia una indicació preparada per enganxar-la en qualsevol chatbot d'IA (ChatGPT, Claude, Gemini...). Inclou l'esquema complet del widget i la resposta de l'API perquè la IA pugui generar una configuració JSON llesta per importar.",
-      "aiPromptCopy": "Copia al porta-retalls",
-      "aiPromptNoResponse": "Consell: executa primer una prova per incloure la resposta de l'API a la indicació i obtenir millors resultats.",
-      "aiPromptCopyError": "No s'ha pogut copiar la indicació al porta-retalls. És possible que el navegador no admeti aquesta funció.",
-      "createError": "No s'ha pogut crear el widget. Comprova que el punt final de l'API sigui accessible.",
-      "updateError": "No s'ha pogut actualitzar el widget. No s'han desat els canvis.",
-      "importError": "No s'ha pogut importar el widget. Assegura't que el fitxer sigui una exportació JSON de widget personalitzat vàlida.",
-      "exportError": "No s'ha pogut exportar el widget.",
-      "duplicated": "El widget «{name}» s'ha duplicat.",
-      "duplicateError": "No s'ha pogut duplicar el widget.",
-      "toggleError": "No s'ha pogut canviar l'estat del giny.",
-      "deleteError": "No s'ha pogut eliminar el giny.",
-      "previewError": "No s'ha pogut obtenir la previsualització. Comproveu l'URL i torneu-ho a provar.",
-      "executed": "L'acció s'ha executat correctament.",
-      "executeError": "L'acció ha fallat: {error}"
-    },
-    "table": {
-      "name": "Nom",
-      "url": "URL",
-      "display": "Mostra"
-    },
-    "widget": {
-      "disabled": "Aquest giny està desactivat"
     }
   },
   "integration": {
@@ -1344,10 +1139,6 @@
       "name": "Traefik",
       "description": "Proxy invers i equilibrador de càrrega natius del núvol"
     },
-    "wud": {
-      "name": "What's Up Docker",
-      "description": "Controla quins contenidors Docker tenen actualitzacions d'imatges disponibles"
-    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "Sistema de gestió documental per arxivar i organitzar documents escanejats"
@@ -1359,6 +1150,10 @@
     "bazarr": {
       "name": "Bazarr",
       "description": "Aplicació complementària de Sonarr i Radarr que gestiona i descarrega subtítols"
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Controla quins contenidors Docker tenen actualitzacions d'imatges disponibles"
     }
   },
   "media": {
@@ -1441,9 +1236,11 @@
     "here": "aquí",
     "iconPicker": {
       "label": "URL de la icona",
-      "description": "Cerca a la biblioteca, enganxa l'URL d'una imatge o puja un fitxer.",
       "header": "Cerca {countIcons} imatges per nom",
       "headerLoading": "Cerca imatges per nom",
+      "noResults": "No hi ha icones que coincideixin amb «{search}».",
+      "error": "No s'han pogut carregar les icones.",
+      "description": "Cerca a la biblioteca, enganxa l'URL d'una imatge o puja un fitxer.",
       "clear": "Esborra la imatge",
       "uploadImage": "Puja una imatge",
       "results": "Resultats de la cerca d'imatges",
@@ -1452,9 +1249,7 @@
       "otherImages": "Altres imatges",
       "urlLoading": "Comprovant la imatge…",
       "urlReady": "La imatge està a punt per utilitzar",
-      "urlError": "No s'ha pogut carregar aquesta imatge. Comprova l'URL i torna-ho a provar.",
-      "noResults": "No hi ha icones que coincideixin amb «{search}».",
-      "error": "No s'han pogut carregar les icones."
+      "urlError": "No s'ha pogut carregar aquesta imatge. Comprova l'URL i torna-ho a provar."
     },
     "colorScheme": {
       "options": {
@@ -1804,38 +1599,6 @@
       "option": {
         "showBroadcastMessage": {
           "label": "Mostra els missatges de difusió"
-        }
-      }
-    },
-    "wud": {
-      "name": "What's Up Docker",
-      "description": "Mostra quants contenidors supervisats tenen actualitzacions disponibles.",
-      "title": "What's Up Docker",
-      "monitored": "Monitoritzats",
-      "updatesAvailable": "{count, plural, one {# actualització disponible} other {# actualitzacions disponibles}}",
-      "updateAvailable": "Actualització disponible",
-      "openReleaseNotes": "Obre les notes de versió",
-      "option": {
-        "showTitle": {
-          "label": "Mostra el títol"
-        },
-        "showRing": {
-          "label": "Mostra l'anell d'actualització"
-        },
-        "layout": {
-          "label": "Disposició",
-          "option": {
-            "horizontal": {
-              "label": "Horitzontal"
-            },
-            "vertical": {
-              "label": "Vertical"
-            }
-          }
-        },
-        "showUpdateList": {
-          "label": "Mostra la llista d'actualitzacions de contenidors",
-          "description": "Llista cada contenidor monitoritzat que té una actualització d'imatge disponible"
         }
       }
     },
@@ -2391,8 +2154,8 @@
       "popover": {
         "information": "Informació",
         "processor": "Processador: {cpuModelName}",
-        "memory": "Memòria: {memory}GiB",
-        "memoryAvailable": "Disponible: {memoryAvailable}GiB ({percent}%)",
+        "memory": "Memòria: {memory}",
+        "memoryAvailable": "Disponible: {memoryAvailable} ({percent}%)",
         "version": "Versió: {version}",
         "uptime": "Temps d'activitat: {months} Mesos, {days} Dies, {hours} Hores, {minutes} Minuts",
         "loadAverage": "Càrrega mitjana:",
@@ -2874,193 +2637,6 @@
         "internalServerError": "No s'han pogut obtenir les dades de Paperless-ngx"
       }
     },
-    "patchmon": {
-      "name": "PatchMon",
-      "description": "Resum de l'estat dels pedaços dels amfitrions des de PatchMon",
-      "title": "Estadístiques de PatchMon",
-      "totalHosts": "Amfitrions totals",
-      "hostsNeedingUpdates": "Necessiten actualitzacions",
-      "securityUpdates": "Actualitzacions de seguretat",
-      "upToDateHosts": "Amfitrions actualitzats",
-      "hostsWithSecurityUpdates": "Amfitrions amb actualitzacions de seguretat",
-      "recentUpdates24h": "Actualitzacions (24 h)",
-      "totalOutdatedPackages": "Paquets obsolets",
-      "totalRepos": "Repositoris",
-      "osDistribution": "Distribució del sistema operatiu",
-      "compliance": "Compliment dels pedaços",
-      "complianceRatio": "{upToDate} / {total}",
-      "lastUpdated": "Actualitzat {time}",
-      "option": {
-        "showTotalHosts": {
-          "label": "Mostra el total d'amfitrions",
-          "description": "Mostra el nombre total d'amfitrions supervisats"
-        },
-        "showHostsNeedingUpdates": {
-          "label": "Mostra els amfitrions que necessiten actualitzacions",
-          "description": "Mostra els amfitrions amb almenys un paquet obsolet"
-        },
-        "showSecurityUpdates": {
-          "label": "Mostra les actualitzacions de seguretat",
-          "description": "Mostra el nombre total d'actualitzacions de seguretat disponibles"
-        },
-        "showUpToDateHosts": {
-          "label": "Mostra els amfitrions actualitzats",
-          "description": "Mostra els amfitrions sense cap paquet obsolet"
-        },
-        "showHostsWithSecurityUpdates": {
-          "label": "Mostra els amfitrions amb actualitzacions de seguretat",
-          "description": "Mostra els amfitrions que necessiten pedaços de seguretat"
-        },
-        "showRecentUpdates24h": {
-          "label": "Mostra les actualitzacions recents (24 h)",
-          "description": "Mostra el nombre d'actualitzacions aplicades durant les darreres 24 hores"
-        },
-        "showTotalOutdatedPackages": {
-          "label": "Mostra els paquets obsolets",
-          "description": "Mostra el nombre total de paquets obsolets de tots els amfitrions"
-        },
-        "showTotalRepos": {
-          "label": "Mostra els repositoris",
-          "description": "Mostra el nombre de repositoris actius que se supervisen"
-        },
-        "enableThresholdColors": {
-          "label": "Activa els colors dels llindars",
-          "description": "Acoloreix els valors de les estadístiques de verd, groc o vermell segons els nivells de gravetat predefinits"
-        },
-        "useCustomThresholds": {
-          "label": "Llindars avançats",
-          "description": "Personalitzeu els llindars d'avís i crític per estadística mitjançant recomptes absoluts o percentatges del total d'amfitrions"
-        },
-        "thresholdMode": {
-          "option": {
-            "absolute": "Recompte absolut",
-            "percent": "Percentatge del total d'amfitrions"
-          }
-        },
-        "hostsNeedingUpdatesThresholdMode": {
-          "label": "Mode de llindar d'amfitrions que necessiten actualitzacions",
-          "description": "Compareu el recompte d'amfitrions que necessiten actualitzacions com a valor absolut o percentatge del total d'amfitrions"
-        },
-        "hostsNeedingUpdatesWarningAt": {
-          "label": "Llindar d'avís d'amfitrions que necessiten actualitzacions",
-          "description": "Introduïu el groc quan el valor arribi a aquest llindar"
-        },
-        "hostsNeedingUpdatesCriticalAt": {
-          "label": "Llindar crític d'amfitrions que necessiten actualitzacions",
-          "description": "Introduïu el vermell quan el valor arribi a aquest llindar"
-        },
-        "securityUpdatesThresholdMode": {
-          "label": "Mode de llindar d'actualitzacions de seguretat",
-          "description": "Compareu el recompte d'actualitzacions de seguretat com a valor absolut o percentatge del total d'amfitrions"
-        },
-        "securityUpdatesWarningAt": {
-          "label": "Llindar d'avís d'actualitzacions de seguretat",
-          "description": "Introduïu el groc quan el valor arribi a aquest llindar"
-        },
-        "securityUpdatesCriticalAt": {
-          "label": "Llindar crític d'actualitzacions de seguretat",
-          "description": "Introduïu el vermell quan el valor arribi a aquest llindar"
-        },
-        "hostsWithSecurityUpdatesThresholdMode": {
-          "label": "Mode de llindar d'amfitrions amb actualitzacions de seguretat",
-          "description": "Compareu el recompte d'amfitrions com a valor absolut o percentatge del total d'amfitrions"
-        },
-        "hostsWithSecurityUpdatesWarningAt": {
-          "label": "Llindar d'avís d'amfitrions amb actualitzacions de seguretat",
-          "description": "Introduïu el groc quan el valor arribi a aquest llindar"
-        },
-        "hostsWithSecurityUpdatesCriticalAt": {
-          "label": "Llindar crític d'amfitrions amb actualitzacions de seguretat",
-          "description": "Introduïu el vermell quan el valor arribi a aquest llindar"
-        },
-        "upToDateHostsThresholdMode": {
-          "label": "Mode de llindar d'amfitrions actualitzats",
-          "description": "Compareu el recompte d'amfitrions actualitzats com a valor absolut o percentatge del total d'amfitrions"
-        },
-        "upToDateHostsWarningAt": {
-          "label": "Llindar d'avís d'amfitrions actualitzats",
-          "description": "Introduïu el groc quan el valor sigui igual o superior a aquest llindar però inferior a la cobertura total"
-        },
-        "upToDateHostsCriticalAt": {
-          "label": "Llindar crític d'amfitrions actualitzats",
-          "description": "Introduïu el vermell quan el valor caigui per sota d'aquest llindar"
-        },
-        "totalOutdatedPackagesThresholdMode": {
-          "label": "Mode de llindar de paquets obsolets",
-          "description": "Compareu el recompte de paquets obsolets com a valor absolut o percentatge del total d'amfitrions"
-        },
-        "totalOutdatedPackagesWarningAt": {
-          "label": "Llindar d'avís de paquets obsolets",
-          "description": "Introduïu el groc quan el valor arribi a aquest llindar"
-        },
-        "totalOutdatedPackagesCriticalAt": {
-          "label": "Llindar crític de paquets obsolets",
-          "description": "Introduïu el vermell quan el valor arribi a aquest llindar"
-        },
-        "showOsDistribution": {
-          "label": "Mostra la distribució del sistema operatiu",
-          "description": "Mostra el desglossament dels amfitrions supervisats per sistema operatiu"
-        },
-        "osDistributionLimit": {
-          "label": "Límit de distribucions del sistema operatiu",
-          "description": "Nombre màxim de sistemes operatius que es mostraran",
-          "option": {
-            "3": "3 principals",
-            "5": "5 principals",
-            "10": "10 principals",
-            "all": "Tots"
-          }
-        },
-        "showOsVersion": {
-          "label": "Mostra la versió del sistema operatiu",
-          "description": "Afegeix la versió del sistema operatiu a cada etiqueta de distribució quan estigui disponible"
-        },
-        "showComplianceHero": {
-          "label": "Mostra el resum del compliment",
-          "description": "Mostra un anell de compliment amb el percentatge d'amfitrions actualitzats"
-        },
-        "osDisplayMode": {
-          "label": "Mode de visualització del sistema operatiu",
-          "description": "Trieu com es mostrarà la distribució del sistema operatiu",
-          "option": {
-            "bars": "Barres horitzontals",
-            "donut": "Gràfic de rosca"
-          }
-        }
-      },
-      "error": {
-        "internalServerError": "No s'han pogut obtenir les dades de PatchMon"
-      }
-    },
-    "bazarr": {
-      "name": "Bazarr",
-      "description": "Resum dels subtítols que falten i de l'estat de salut de la vostra instància de Bazarr",
-      "episodes": "Episodis que falten",
-      "movies": "Pel·lícules que falten",
-      "providers": "Problemes dels proveïdors",
-      "status": "Problemes de salut",
-      "option": {
-        "showMissingEpisodes": {
-          "label": "Mostra els episodis que falten",
-          "description": "Mostra el nombre d'episodis als quals falten subtítols"
-        },
-        "showMissingMovies": {
-          "label": "Mostra les pel·lícules que falten",
-          "description": "Mostra el nombre de pel·lícules a les quals falten subtítols"
-        },
-        "showProviderIssues": {
-          "label": "Mostra els problemes dels proveïdors",
-          "description": "Mostra el nombre de proveïdors de subtítols amb problemes"
-        },
-        "showHealthIssues": {
-          "label": "Mostra els problemes de salut",
-          "description": "Mostra el nombre de problemes de salut de Bazarr"
-        }
-      },
-      "error": {
-        "internalServerError": "No s'han pogut obtenir les dades de Bazarr"
-      }
-    },
     "immich-serverStats": {
       "name": "Estadístiques del servidor Immich",
       "description": "Informació sobre la teva instància d'Immich",
@@ -3137,7 +2713,7 @@
           "label": "Mostra les entrades diverses marcades com a completades"
         },
         "activeTorrentThreshold": {
-          "label": "Amaga els torrents completats sota aquest llindar (en kiB/s)"
+          "label": "Amaga els torrents completats sota aquest llindar"
         },
         "categoryFilter": {
           "label": "Categories/etiquetes per filtrar"
@@ -3432,35 +3008,6 @@
           }
         }
       }
-    },
-    "mediaMissing": {
-      "name": "Contingut que falta i en cua",
-      "description": "Mostra les pel·lícules i els episodis que falten i en cua de Radarr i Sonarr",
-      "option": {
-        "showMissing": {
-          "label": "Mostra els elements que falten"
-        },
-        "showQueued": {
-          "label": "Mostra els elements en cua"
-        },
-        "pageSize": {
-          "label": "Elements per pàgina"
-        }
-      },
-      "tab": {
-        "missing": "Falten",
-        "queued": "En cua"
-      },
-      "type": {
-        "movie": "Pel·lícula",
-        "episode": "Episodi"
-      },
-      "empty": {
-        "missing": "No hi ha elements que faltin",
-        "queued": "No hi ha elements en cua",
-        "noTabsEnabled": "Activeu almenys una pestanya a la configuració del giny"
-      },
-      "timeLeft": "Temps restant"
     },
     "rssFeed": {
       "name": "Fonts RSS",
@@ -3790,40 +3337,6 @@
         "internalServerError": "No s'han pogut obtenir les dades de temps d'activitat"
       }
     },
-    "traefik": {
-      "name": "Traefik",
-      "description": "Resum dels encaminadors, serveis, intermediaris i punts d'entrada de Traefik",
-      "option": {
-        "showTcp": {
-          "label": "Mostra TCP"
-        },
-        "showUdp": {
-          "label": "Mostra UDP"
-        },
-        "showEntryPoints": {
-          "label": "Mostra els punts d'entrada"
-        }
-      },
-      "instances": "Instàncies de Traefik",
-      "versionUnknown": "Versió desconeguda",
-      "summary": {
-        "routers": "Encaminadors",
-        "entryPoints": "Punts d'entrada"
-      },
-      "resource": {
-        "routers": "Encaminadors",
-        "services": "Serveis",
-        "middlewares": "Intermediaris"
-      },
-      "status": {
-        "healthy": "En bon estat",
-        "errors": "{count} errors",
-        "warnings": "{count} avisos"
-      },
-      "error": {
-        "internalServerError": "No s'han pogut obtenir les dades de Traefik"
-      }
-    },
     "audioStats": {
       "name": "Estadístiques d'àudio",
       "description": "Estadístiques de la biblioteca i la reproducció de Navidrome o Audiobookshelf",
@@ -3946,26 +3459,6 @@
       "status": {
         "unhealthy": "En mal estat"
       }
-    },
-    "customApi": {
-      "name": "API personalitzada",
-      "description": "Mostra dades de qualsevol API externa amb una configuració personalitzada.",
-      "option": {
-        "definitionId": {
-          "label": "ID de definició"
-        },
-        "refreshInterval": {
-          "label": "Interval d'actualització",
-          "description": "Amb quina freqüència es tornen a obtenir dades de l'API (en segons)"
-        }
-      },
-      "noDefinition": "No s'ha seleccionat cap definició",
-      "definitionNotFound": "No s'ha trobat la definició del giny. És possible que s'hagi eliminat.",
-      "noDisplayOutput": "Sense sortida per mostrar",
-      "executeConfirm": "Esteu segur que voleu executar aquesta acció?",
-      "executing": "S'està executant...",
-      "executeSuccess": "L'acció s'ha executat correctament",
-      "executeFailed": "L'acció ha fallat. Comproveu la configuració del giny."
     },
     "beszelSystemTable": {
       "name": "Sistemes Beszel (taula)",
@@ -4215,6 +3708,288 @@
         "dockerNetwork": {
           "title": "E/S de xarxa de Docker",
           "subtitle": "Trànsit de xarxa dels contenidors Docker"
+        }
+      }
+    },
+    "patchmon": {
+      "name": "PatchMon",
+      "description": "Resum de l'estat dels pedaços dels amfitrions des de PatchMon",
+      "title": "Estadístiques de PatchMon",
+      "totalHosts": "Amfitrions totals",
+      "hostsNeedingUpdates": "Necessiten actualitzacions",
+      "securityUpdates": "Actualitzacions de seguretat",
+      "upToDateHosts": "Amfitrions actualitzats",
+      "hostsWithSecurityUpdates": "Amfitrions amb actualitzacions de seguretat",
+      "recentUpdates24h": "Actualitzacions (24 h)",
+      "totalOutdatedPackages": "Paquets obsolets",
+      "totalRepos": "Repositoris",
+      "osDistribution": "Distribució del sistema operatiu",
+      "compliance": "Compliment dels pedaços",
+      "complianceRatio": "{upToDate} / {total}",
+      "lastUpdated": "Actualitzat {time}",
+      "option": {
+        "showTotalHosts": {
+          "label": "Mostra el total d'amfitrions",
+          "description": "Mostra el nombre total d'amfitrions supervisats"
+        },
+        "showHostsNeedingUpdates": {
+          "label": "Mostra els amfitrions que necessiten actualitzacions",
+          "description": "Mostra els amfitrions amb almenys un paquet obsolet"
+        },
+        "showSecurityUpdates": {
+          "label": "Mostra les actualitzacions de seguretat",
+          "description": "Mostra el nombre total d'actualitzacions de seguretat disponibles"
+        },
+        "showUpToDateHosts": {
+          "label": "Mostra els amfitrions actualitzats",
+          "description": "Mostra els amfitrions sense cap paquet obsolet"
+        },
+        "showHostsWithSecurityUpdates": {
+          "label": "Mostra els amfitrions amb actualitzacions de seguretat",
+          "description": "Mostra els amfitrions que necessiten pedaços de seguretat"
+        },
+        "showRecentUpdates24h": {
+          "label": "Mostra les actualitzacions recents (24 h)",
+          "description": "Mostra el nombre d'actualitzacions aplicades durant les darreres 24 hores"
+        },
+        "showTotalOutdatedPackages": {
+          "label": "Mostra els paquets obsolets",
+          "description": "Mostra el nombre total de paquets obsolets de tots els amfitrions"
+        },
+        "showTotalRepos": {
+          "label": "Mostra els repositoris",
+          "description": "Mostra el nombre de repositoris actius que se supervisen"
+        },
+        "enableThresholdColors": {
+          "label": "Activa els colors dels llindars",
+          "description": "Acoloreix els valors de les estadístiques de verd, groc o vermell segons els nivells de gravetat predefinits"
+        },
+        "useCustomThresholds": {
+          "label": "Llindars avançats",
+          "description": "Personalitzeu els llindars d'avís i crític per estadística mitjançant recomptes absoluts o percentatges del total d'amfitrions"
+        },
+        "thresholdMode": {
+          "option": {
+            "absolute": "Recompte absolut",
+            "percent": "Percentatge del total d'amfitrions"
+          }
+        },
+        "hostsNeedingUpdatesThresholdMode": {
+          "label": "Mode de llindar d'amfitrions que necessiten actualitzacions",
+          "description": "Compareu el recompte d'amfitrions que necessiten actualitzacions com a valor absolut o percentatge del total d'amfitrions"
+        },
+        "hostsNeedingUpdatesWarningAt": {
+          "label": "Llindar d'avís d'amfitrions que necessiten actualitzacions",
+          "description": "Introduïu el groc quan el valor arribi a aquest llindar"
+        },
+        "hostsNeedingUpdatesCriticalAt": {
+          "label": "Llindar crític d'amfitrions que necessiten actualitzacions",
+          "description": "Introduïu el vermell quan el valor arribi a aquest llindar"
+        },
+        "securityUpdatesThresholdMode": {
+          "label": "Mode de llindar d'actualitzacions de seguretat",
+          "description": "Compareu el recompte d'actualitzacions de seguretat com a valor absolut o percentatge del total d'amfitrions"
+        },
+        "securityUpdatesWarningAt": {
+          "label": "Llindar d'avís d'actualitzacions de seguretat",
+          "description": "Introduïu el groc quan el valor arribi a aquest llindar"
+        },
+        "securityUpdatesCriticalAt": {
+          "label": "Llindar crític d'actualitzacions de seguretat",
+          "description": "Introduïu el vermell quan el valor arribi a aquest llindar"
+        },
+        "hostsWithSecurityUpdatesThresholdMode": {
+          "label": "Mode de llindar d'amfitrions amb actualitzacions de seguretat",
+          "description": "Compareu el recompte d'amfitrions com a valor absolut o percentatge del total d'amfitrions"
+        },
+        "hostsWithSecurityUpdatesWarningAt": {
+          "label": "Llindar d'avís d'amfitrions amb actualitzacions de seguretat",
+          "description": "Introduïu el groc quan el valor arribi a aquest llindar"
+        },
+        "hostsWithSecurityUpdatesCriticalAt": {
+          "label": "Llindar crític d'amfitrions amb actualitzacions de seguretat",
+          "description": "Introduïu el vermell quan el valor arribi a aquest llindar"
+        },
+        "upToDateHostsThresholdMode": {
+          "label": "Mode de llindar d'amfitrions actualitzats",
+          "description": "Compareu el recompte d'amfitrions actualitzats com a valor absolut o percentatge del total d'amfitrions"
+        },
+        "upToDateHostsWarningAt": {
+          "label": "Llindar d'avís d'amfitrions actualitzats",
+          "description": "Introduïu el groc quan el valor sigui igual o superior a aquest llindar però inferior a la cobertura total"
+        },
+        "upToDateHostsCriticalAt": {
+          "label": "Llindar crític d'amfitrions actualitzats",
+          "description": "Introduïu el vermell quan el valor caigui per sota d'aquest llindar"
+        },
+        "totalOutdatedPackagesThresholdMode": {
+          "label": "Mode de llindar de paquets obsolets",
+          "description": "Compareu el recompte de paquets obsolets com a valor absolut o percentatge del total d'amfitrions"
+        },
+        "totalOutdatedPackagesWarningAt": {
+          "label": "Llindar d'avís de paquets obsolets",
+          "description": "Introduïu el groc quan el valor arribi a aquest llindar"
+        },
+        "totalOutdatedPackagesCriticalAt": {
+          "label": "Llindar crític de paquets obsolets",
+          "description": "Introduïu el vermell quan el valor arribi a aquest llindar"
+        },
+        "showOsDistribution": {
+          "label": "Mostra la distribució del sistema operatiu",
+          "description": "Mostra el desglossament dels amfitrions supervisats per sistema operatiu"
+        },
+        "osDistributionLimit": {
+          "label": "Límit de distribucions del sistema operatiu",
+          "description": "Nombre màxim de sistemes operatius que es mostraran",
+          "option": {
+            "3": "3 principals",
+            "5": "5 principals",
+            "10": "10 principals",
+            "all": "Tots"
+          }
+        },
+        "showOsVersion": {
+          "label": "Mostra la versió del sistema operatiu",
+          "description": "Afegeix la versió del sistema operatiu a cada etiqueta de distribució quan estigui disponible"
+        },
+        "showComplianceHero": {
+          "label": "Mostra el resum del compliment",
+          "description": "Mostra un anell de compliment amb el percentatge d'amfitrions actualitzats"
+        },
+        "osDisplayMode": {
+          "label": "Mode de visualització del sistema operatiu",
+          "description": "Trieu com es mostrarà la distribució del sistema operatiu",
+          "option": {
+            "bars": "Barres horitzontals",
+            "donut": "Gràfic de rosca"
+          }
+        }
+      },
+      "error": {
+        "internalServerError": "No s'han pogut obtenir les dades de PatchMon"
+      }
+    },
+    "bazarr": {
+      "name": "Bazarr",
+      "description": "Resum dels subtítols que falten i de l'estat de salut de la vostra instància de Bazarr",
+      "episodes": "Episodis que falten",
+      "movies": "Pel·lícules que falten",
+      "providers": "Problemes dels proveïdors",
+      "status": "Problemes de salut",
+      "option": {
+        "showMissingEpisodes": {
+          "label": "Mostra els episodis que falten",
+          "description": "Mostra el nombre d'episodis als quals falten subtítols"
+        },
+        "showMissingMovies": {
+          "label": "Mostra les pel·lícules que falten",
+          "description": "Mostra el nombre de pel·lícules a les quals falten subtítols"
+        },
+        "showProviderIssues": {
+          "label": "Mostra els problemes dels proveïdors",
+          "description": "Mostra el nombre de proveïdors de subtítols amb problemes"
+        },
+        "showHealthIssues": {
+          "label": "Mostra els problemes de salut",
+          "description": "Mostra el nombre de problemes de salut de Bazarr"
+        }
+      },
+      "error": {
+        "internalServerError": "No s'han pogut obtenir les dades de Bazarr"
+      }
+    },
+    "mediaMissing": {
+      "name": "Contingut que falta i en cua",
+      "description": "Mostra les pel·lícules i els episodis que falten i en cua de Radarr i Sonarr",
+      "option": {
+        "showMissing": {
+          "label": "Mostra els elements que falten"
+        },
+        "showQueued": {
+          "label": "Mostra els elements en cua"
+        },
+        "pageSize": {
+          "label": "Elements per pàgina"
+        }
+      },
+      "tab": {
+        "missing": "Falten",
+        "queued": "En cua"
+      },
+      "type": {
+        "movie": "Pel·lícula",
+        "episode": "Episodi"
+      },
+      "empty": {
+        "missing": "No hi ha elements que faltin",
+        "queued": "No hi ha elements en cua",
+        "noTabsEnabled": "Activeu almenys una pestanya a la configuració del giny"
+      },
+      "timeLeft": "Temps restant"
+    },
+    "traefik": {
+      "name": "Traefik",
+      "description": "Resum dels encaminadors, serveis, intermediaris i punts d'entrada de Traefik",
+      "option": {
+        "showTcp": {
+          "label": "Mostra TCP"
+        },
+        "showUdp": {
+          "label": "Mostra UDP"
+        },
+        "showEntryPoints": {
+          "label": "Mostra els punts d'entrada"
+        }
+      },
+      "instances": "Instàncies de Traefik",
+      "versionUnknown": "Versió desconeguda",
+      "summary": {
+        "routers": "Encaminadors",
+        "entryPoints": "Punts d'entrada"
+      },
+      "resource": {
+        "routers": "Encaminadors",
+        "services": "Serveis",
+        "middlewares": "Intermediaris"
+      },
+      "status": {
+        "healthy": "En bon estat",
+        "errors": "{count} errors",
+        "warnings": "{count} avisos"
+      },
+      "error": {
+        "internalServerError": "No s'han pogut obtenir les dades de Traefik"
+      }
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Mostra quants contenidors supervisats tenen actualitzacions disponibles.",
+      "title": "What's Up Docker",
+      "monitored": "Monitoritzats",
+      "updatesAvailable": "{count, plural, one {# actualització disponible} other {# actualitzacions disponibles}}",
+      "updateAvailable": "Actualització disponible",
+      "openReleaseNotes": "Obre les notes de versió",
+      "option": {
+        "showTitle": {
+          "label": "Mostra el títol"
+        },
+        "showRing": {
+          "label": "Mostra l'anell d'actualització"
+        },
+        "layout": {
+          "label": "Disposició",
+          "option": {
+            "horizontal": {
+              "label": "Horitzontal"
+            },
+            "vertical": {
+              "label": "Vertical"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Mostra la llista d'actualitzacions de contenidors",
+          "description": "Llista cada contenidor monitoritzat que té una actualització d'imatge disponible"
         }
       }
     }
@@ -4597,11 +4372,11 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "Inici",
         "boards": "Taulers",
         "apps": "Aplicacions",
         "integrations": "Integracions",
-        "customWidgets": "Ginys personalitzats",
         "searchEngies": "Motors de cerca",
         "medias": "Multimèdia",
         "users": {
@@ -5224,7 +4999,7 @@
           "restore": {
             "dropzone": {
               "title": "Deixa aquí la còpia ZIP",
-              "description": "Accepta fitxers .zip d'una còpia de seguretat SQLite d'Homarr (màx. 256 MB)"
+              "description": "Accepta fitxers .zip d'una còpia de seguretat SQLite d'Homarr (màx. {maxSize})"
             },
             "analyzing": "Analitzant la còpia de seguretat...",
             "changeFile": "Canvia el fitxer",
@@ -5740,6 +5515,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "Gestiona",
       "boards": {
         "label": "Taulers"
@@ -5772,18 +5550,6 @@
         },
         "edit": {
           "label": "Edita"
-        }
-      },
-      "custom-widgets": {
-        "label": "Ginys personalitzats",
-        "new": {
-          "label": "Nou"
-        },
-        "edit": {
-          "label": "Edita",
-          "flow": {
-            "label": "Flux"
-          }
         }
       },
       "users": {

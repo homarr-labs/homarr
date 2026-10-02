@@ -1,10 +1,10 @@
 "use client";
 
-import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import type { MantineColor } from "@mantine/core";
-import { ActionIcon, Avatar, Badge, Box, Button, Group, Menu, Text, Tooltip } from "@mantine/core";
+import { ActionIcon, Alert, Avatar, Badge, Box, Button, Group, Menu, Stack, Text, Tooltip } from "@mantine/core";
 import {
+  IconAlertTriangle,
   IconCategoryPlus,
   IconDots,
   IconFileText,
@@ -19,27 +19,65 @@ import { MantineReactTable } from "mantine-react-table";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { formatBytes, useTimeAgo } from "@homarr/common";
-import type { ContainerState } from "@homarr/docker";
+import { useTimeAgo } from "@homarr/common";
+import { invariantTechnicalLabels } from "@homarr/definitions";
+import type { ContainerState, DockerEndpointCapability } from "@homarr/docker";
 import { containerStateColorMap, cpuUsageColor, memoryUsageColor, safeValue } from "@homarr/docker/shared";
 import { useModalAction } from "@homarr/modals";
-import { AddDockerAppToHomarr } from "@homarr/modals-collection";
+import { AddDockerAppToHomarr, useDockerContainerRemovalConfirmation } from "@homarr/modals-collection";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import type { TranslationFunction } from "@homarr/translation";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useByteFormatter } from "@homarr/settings";
+import type { ScopedTranslationFunction } from "@homarr/translation";
+import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 import { OverflowBadge } from "@homarr/ui";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
 type DockerContainer = RouterOutputs["docker"]["getContainers"]["containers"][number];
+type DockerEndpoint = RouterOutputs["docker"]["getContainers"]["endpoints"][number];
 
-const createContainerLogsPath = (container: Pick<DockerContainer, "id" | "name">) =>
-  `/manage/tools/docker/logs/${container.id}?name=${encodeURIComponent(container.name)}`;
+const createContainerLogsPath = (container: Pick<DockerContainer, "endpointId" | "id" | "name">) =>
+  `/manage/tools/docker/logs/${container.id}?name=${encodeURIComponent(container.name)}&endpointId=${encodeURIComponent(container.endpointId)}`;
 
-const createColumns = (t: TranslationFunction): MRT_ColumnDef<DockerContainer>[] => [
+const getContainerTarget = ({ endpointId, id }: DockerContainer) => ({ endpointId, id });
+
+const showContainerActionResult = (
+  action: "start" | "stop" | "restart" | "remove",
+  containers: DockerContainer[],
+  results: RouterOutputs["docker"]["startAll"],
+  t: ScopedTranslationFunction<"docker.action">,
+) => {
+  const failures = results.filter((result) => !result.success);
+  if (failures.length === 0) {
+    showSuccessNotification({
+      title: t(`${action}.notification.success.title`),
+      message: t(`${action}.notification.success.message`),
+    });
+    return;
+  }
+
+  const failedNames = failures.map(
+    ({ target }) =>
+      containers.find(({ endpointId, id }) => endpointId === target.endpointId && id === target.id)?.name ?? target.id,
+  );
+  showErrorNotification({
+    title: t("result.failure.title"),
+    message: t("result.failure.message", {
+      failed: String(failures.length),
+      total: String(results.length),
+      names: failedNames.join(", "),
+    }),
+  });
+};
+
+const createColumns = (
+  tDocker: ScopedTranslationFunction<"docker">,
+  tCommon: ScopedTranslationFunction<"common">,
+  formatBytes: (bytes: number) => string,
+): MRT_ColumnDef<DockerContainer>[] => [
   {
     accessorKey: "name",
-    header: t("docker.field.name.label"),
+    header: tCommon("field.name"),
     Cell({ renderedCellValue, row }) {
       return (
         <Group gap="xs" wrap="nowrap">
@@ -61,7 +99,7 @@ const createColumns = (t: TranslationFunction): MRT_ColumnDef<DockerContainer>[]
   },
   {
     accessorKey: "state",
-    header: t("docker.field.state.label"),
+    header: tDocker("field.state.label"),
     size: 120,
     Cell({ cell }) {
       return <ContainerStateBadge state={cell.row.original.state} />;
@@ -69,7 +107,7 @@ const createColumns = (t: TranslationFunction): MRT_ColumnDef<DockerContainer>[]
   },
   {
     accessorKey: "host",
-    header: t("docker.field.host.label"),
+    header: tDocker("field.host.label"),
     size: 140,
     Cell({ row }) {
       return (
@@ -81,7 +119,7 @@ const createColumns = (t: TranslationFunction): MRT_ColumnDef<DockerContainer>[]
   },
   {
     accessorKey: "image",
-    header: t("docker.field.containerImage.label"),
+    header: tDocker("field.containerImage.label"),
     maxSize: 200,
     Cell({ renderedCellValue, cell }) {
       return (
@@ -95,7 +133,7 @@ const createColumns = (t: TranslationFunction): MRT_ColumnDef<DockerContainer>[]
   },
   {
     accessorKey: "ports",
-    header: t("docker.field.ports.label"),
+    header: tDocker("field.ports.label"),
     Cell({ cell }) {
       if (!cell.row.original.ports) return null;
       if (!cell.row.original.ports.length) return null;
@@ -108,7 +146,7 @@ const createColumns = (t: TranslationFunction): MRT_ColumnDef<DockerContainer>[]
     id: "cpuUsage",
     accessorKey: "cpuUsage",
     size: 120,
-    header: t("docker.field.stats.cpu.label"),
+    header: invariantTechnicalLabels.cpu,
     enableHiding: true,
     sortingFn: (rowA, rowB) => {
       const cpuUsageA = safeValue(rowA.original.cpuUsage);
@@ -130,7 +168,7 @@ const createColumns = (t: TranslationFunction): MRT_ColumnDef<DockerContainer>[]
     id: "memoryUsage",
     accessorKey: "memoryUsage",
     size: 140,
-    header: t("docker.field.stats.memory.label"),
+    header: tDocker("field.stats.memory.label"),
     enableHiding: true,
     sortingFn: (rowA, rowB) => {
       const memoryUsageA = safeValue(rowA.original.memoryUsage);
@@ -155,34 +193,42 @@ interface DockerTableProps {
 }
 
 export function DockerTable({ initialData }: DockerTableProps) {
-  const t = useI18n();
-  const tDocker = useScopedI18n("docker");
-  const { data, isFetching, refetch } = clientApi.docker.getContainers.useQuery(undefined, {
+  const tDocker = useI18n("docker");
+  const tCommon = useI18n("common");
+  const utils = clientApi.useUtils();
+  const { formatBytes } = useByteFormatter();
+  const { data, isFetching } = clientApi.docker.getContainers.useQuery(undefined, {
     initialData,
     refetchOnMount: false,
   });
+  const refreshInventory = clientApi.docker.refreshInventory.useMutation({
+    async onSuccess() {
+      await Promise.all([
+        utils.docker.getContainers.invalidate(),
+        utils.docker.reconcileServices.invalidate(),
+        utils.docker.getServiceHealth.invalidate(),
+      ]);
+      showSuccessNotification({
+        title: tDocker("action.refresh.notification.success.title"),
+        message: tDocker("action.refresh.notification.success.message"),
+      });
+    },
+    onError() {
+      showErrorNotification({
+        title: tDocker("action.refresh.notification.error.title"),
+        message: tDocker("action.refresh.notification.error.message"),
+      });
+    },
+  });
   const relativeTime = useTimeAgo(data?.timestamp ?? new Date());
-  const mutate = useCallback(() => {
-    void refetch().then((result) => {
-      if (result.isError) {
-        showErrorNotification({
-          title: tDocker("action.refresh.notification.error.title"),
-          message: tDocker("action.refresh.notification.error.message"),
-        });
-      } else {
-        showSuccessNotification({
-          title: tDocker("action.refresh.notification.success.title"),
-          message: tDocker("action.refresh.notification.success.message"),
-        });
-      }
-    });
-  }, [refetch, tDocker]);
 
   const containers = data?.containers ?? [];
+  const unavailableEndpoints = data?.endpoints.filter(({ status }) => status === "unavailable") ?? [];
 
   const table = useTranslatedMantineReactTable({
     data: containers,
-    state: { isLoading: isFetching },
+    getRowId: (row) => row.resourceId,
+    state: { isLoading: isFetching || refreshInventory.isPending },
     enableDensityToggle: false,
     enableColumnActions: false,
     enableColumnFilters: false,
@@ -207,15 +253,20 @@ export function DockerTable({ initialData }: DockerTableProps) {
     initialState: { density: "xs", showGlobalFilter: true, columnVisibility: { cpuUsage: false, memoryUsage: false } },
     mantineTableBodyCellProps: { style: { padding: "4px 8px" } },
     mantineTableHeadCellProps: { style: { padding: "4px 8px" } },
-    renderRowActions: ({ row }: { row: MRT_Row<DockerContainer> }) => <ContainerRowMenu container={row.original} />,
+    renderRowActions: ({ row }: { row: MRT_Row<DockerContainer> }) => (
+      <ContainerRowMenu
+        container={row.original}
+        endpoint={data?.endpoints.find(({ id }) => id === row.original.endpointId)}
+      />
+    ),
     renderTopToolbarCustomActions: () => (
       <Button
         variant="default"
         rightSection={<IconRefresh size="1rem" />}
-        onClick={() => mutate()}
-        loading={isFetching}
+        onClick={() => refreshInventory.mutate()}
+        loading={isFetching || refreshInventory.isPending}
       >
-        {tDocker("action.refresh.label")}
+        {tCommon("action.refresh")}
       </Button>
     ),
     renderToolbarAlertBannerContent: ({ groupedAlert, table }) => {
@@ -229,19 +280,27 @@ export function DockerTable({ initialData }: DockerTableProps) {
               totalCount: String(table.getRowCount()),
             })}
           </Text>
-          <ContainerActionBar selectedContainers={dockerContainers} />
+          <ContainerActionBar selectedContainers={dockerContainers} endpoints={data?.endpoints ?? []} />
         </Group>
       );
     },
 
-    columns: createColumns(t),
+    columns: createColumns(tDocker, tCommon, formatBytes),
   });
 
   return (
-    <>
+    <Stack gap="xs">
+      {unavailableEndpoints.length > 0 && (
+        <Alert color="yellow" icon={<IconAlertTriangle size={16} />}>
+          {tDocker("error.endpointUnavailable", {
+            count: String(unavailableEndpoints.length),
+            names: unavailableEndpoints.map(({ name }) => name).join(", "),
+          })}
+        </Alert>
+      )}
       <Text>{tDocker("table.updated", { when: relativeTime })}</Text>
       <MantineReactTable table={table} />
-    </>
+    </Stack>
   );
 }
 
@@ -252,22 +311,25 @@ const containerActions: { action: "start" | "stop" | "restart" | "remove"; icon:
   { action: "remove", icon: IconTrash, color: "red" },
 ];
 
-const ContainerRowMenu = ({ container }: { container: DockerContainer }) => {
-  const t = useScopedI18n("docker.action");
+const ContainerRowMenu = ({ container, endpoint }: { container: DockerContainer; endpoint?: DockerEndpoint }) => {
+  const t = useI18n("docker.action");
+  const tCommon = useI18n("common");
   const router = useRouter();
   const utils = clientApi.useUtils();
   const { openModal } = useModalAction(AddDockerAppToHomarr);
+  const confirmRemoval = useDockerContainerRemovalConfirmation();
+  const getActionLabel = (action: "start" | "stop" | "restart" | "remove") => {
+    if (action === "remove") return tCommon("action.remove");
+    return t(`${action}.label`);
+  };
 
   const useContainerAction = (action: "start" | "stop" | "restart" | "remove") =>
     clientApi.docker[`${action}All`].useMutation({
       async onSettled() {
         await utils.docker.getContainers.invalidate();
       },
-      onSuccess() {
-        showSuccessNotification({
-          title: t(`${action}.notification.success.title`),
-          message: t(`${action}.notification.success.message`),
-        });
+      onSuccess(results) {
+        showContainerActionResult(action, [container], results, t);
       },
       onError() {
         showErrorNotification({
@@ -294,6 +356,7 @@ const ContainerRowMenu = ({ container }: { container: DockerContainer }) => {
       <Menu.Dropdown>
         <Menu.Item
           leftSection={<IconFileText size="1rem" />}
+          disabled={!endpointHasCapability(endpoint, "logs")}
           onClick={() => router.push(createContainerLogsPath(container))}
         >
           {t("logs.label")}
@@ -304,9 +367,14 @@ const ContainerRowMenu = ({ container }: { container: DockerContainer }) => {
             key={action}
             leftSection={<Icon size="1rem" />}
             color={color}
-            onClick={() => mutations[action].mutate({ ids: [container.id] })}
+            disabled={!endpointHasCapability(endpoint, action === "remove" ? "remove" : "lifecycle")}
+            onClick={() => {
+              const runAction = () => mutations[action].mutate({ targets: [getContainerTarget(container)] });
+              if (action === "remove") confirmRemoval([container], runAction);
+              else runAction();
+            }}
           >
-            {t(`${action}.label`)}
+            {getActionLabel(action)}
           </Menu.Item>
         ))}
         <Menu.Divider />
@@ -324,18 +392,24 @@ const ContainerRowMenu = ({ container }: { container: DockerContainer }) => {
 
 interface ContainerActionBarProps {
   selectedContainers: DockerContainer[];
+  endpoints: DockerEndpoint[];
 }
 
-const ContainerActionBar = ({ selectedContainers }: ContainerActionBarProps) => {
-  const t = useScopedI18n("docker.action");
+const ContainerActionBar = ({ selectedContainers, endpoints }: ContainerActionBarProps) => {
+  const t = useI18n("docker.action");
   const { openModal } = useModalAction(AddDockerAppToHomarr);
-
-  const selectedIds = selectedContainers.map((container) => container.id);
 
   return (
     <Group gap="xs">
       {containerActions.map(({ action, icon, color }) => (
-        <ContainerActionBarButton key={action} icon={icon} color={color} action={action} selectedIds={selectedIds} />
+        <ContainerActionBarButton
+          key={action}
+          icon={icon}
+          color={color}
+          action={action}
+          selectedContainers={selectedContainers}
+          endpoints={endpoints}
+        />
       ))}
       <Button
         leftSection={<IconCategoryPlus />}
@@ -353,12 +427,22 @@ interface ContainerActionBarButtonProps {
   icon: TablerIcon;
   color: MantineColor;
   action: "start" | "stop" | "restart" | "remove";
-  selectedIds: string[];
+  selectedContainers: DockerContainer[];
+  endpoints: DockerEndpoint[];
 }
 
 const ContainerActionBarButton = (props: ContainerActionBarButtonProps) => {
-  const t = useScopedI18n("docker.action");
+  const t = useI18n("docker.action");
+  const tCommon = useI18n("common");
   const utils = clientApi.useUtils();
+  const confirmRemoval = useDockerContainerRemovalConfirmation();
+  const requiredCapability = props.action === "remove" ? "remove" : "lifecycle";
+  const isAllowed = props.selectedContainers.every((container) =>
+    endpointHasCapability(
+      props.endpoints.find(({ id }) => id === container.endpointId),
+      requiredCapability,
+    ),
+  );
 
   const { mutateAsync, isPending } = clientApi.docker[`${props.action}All`].useMutation({
     async onSettled() {
@@ -367,23 +451,28 @@ const ContainerActionBarButton = (props: ContainerActionBarButtonProps) => {
   });
 
   const handleClickAsync = async () => {
-    await mutateAsync(
-      { ids: props.selectedIds },
-      {
-        onSuccess() {
-          showSuccessNotification({
-            title: t(`${props.action}.notification.success.title`),
-            message: t(`${props.action}.notification.success.message`),
-          });
+    const runActionAsync = async () => {
+      await mutateAsync(
+        { targets: props.selectedContainers.map(getContainerTarget) },
+        {
+          onSuccess(results) {
+            showContainerActionResult(props.action, props.selectedContainers, results, t);
+          },
+          onError() {
+            showErrorNotification({
+              title: t(`${props.action}.notification.error.title`),
+              message: t(`${props.action}.notification.error.message`),
+            });
+          },
         },
-        onError() {
-          showErrorNotification({
-            title: t(`${props.action}.notification.error.title`),
-            message: t(`${props.action}.notification.error.message`),
-          });
-        },
-      },
-    );
+      );
+    };
+
+    if (props.action === "remove") {
+      confirmRemoval(props.selectedContainers, runActionAsync);
+      return;
+    }
+    await runActionAsync();
   };
 
   return (
@@ -392,15 +481,19 @@ const ContainerActionBarButton = (props: ContainerActionBarButtonProps) => {
       color={props.color}
       onClick={handleClickAsync}
       loading={isPending}
+      disabled={!isAllowed}
       variant="light"
     >
-      {t(`${props.action}.label`)}
+      {props.action === "remove" ? tCommon("action.remove") : t(`${props.action}.label`)}
     </Button>
   );
 };
 
+const endpointHasCapability = (endpoint: DockerEndpoint | undefined, capability: DockerEndpointCapability) =>
+  endpoint && "capabilities" in endpoint ? endpoint.capabilities.includes(capability) : true;
+
 const ContainerStateBadge = ({ state }: { state: ContainerState }) => {
-  const t = useScopedI18n("docker.field.state.option");
+  const t = useI18n("docker.field.state.option");
 
   return (
     <Badge size="lg" radius="sm" variant="light" w={120} color={containerStateColorMap[state]}>

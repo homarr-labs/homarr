@@ -89,3 +89,47 @@ func TestListPRsExcludesBotsIntegration(t *testing.T) {
 		}
 	}
 }
+
+func TestCheckHelpersAndDuration(t *testing.T) {
+	c1 := Check{
+		Name:        "Test Job",
+		State:       "SUCCESS",
+		Bucket:      "pass",
+		StartedAt:   "2026-08-21T10:00:00Z",
+		CompletedAt: "2026-08-21T10:05:30Z",
+	}
+	if !c1.IsSuccess() || c1.IsFailure() || c1.IsPending() || c1.IsSkipped() {
+		t.Fatalf("unexpected state helpers for c1: success=%v, fail=%v, pend=%v, skip=%v", c1.IsSuccess(), c1.IsFailure(), c1.IsPending(), c1.IsSkipped())
+	}
+	if d := c1.Duration(); d != "5m30s" {
+		t.Fatalf("Duration() = %q, want 5m30s", d)
+	}
+
+	c2 := Check{
+		Name:   "Fail Job",
+		State:  "FAILURE",
+		Bucket: "fail",
+	}
+	if !c2.IsFailure() {
+		t.Fatalf("expected c2 to be failure")
+	}
+	if c2.Duration() != "" {
+		t.Fatalf("expected empty duration for missing timestamps")
+	}
+
+	c3 := Check{
+		Name:   "Pending Job",
+		Bucket: "pending",
+	}
+	if !c3.IsPending() {
+		t.Fatalf("expected c3 to be pending")
+	}
+
+	c4 := Check{
+		Name:   "Skipped Job",
+		Bucket: "skipping",
+	}
+	if !c4.IsSkipped() {
+		t.Fatalf("expected c4 to be skipped")
+	}
+}

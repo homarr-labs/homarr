@@ -3,14 +3,15 @@
 import { MultiSelect, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
 
 export const WidgetUmamiEventNamesInput = ({ property, kind }: CommonWidgetInputProps<"umamiEventNames">) => {
-  const t = useScopedI18n("widget.umami.option.eventNames");
+  const t = useI18n("widget.umami.option.eventNames");
+  const tEvents = useI18n("widget.umami.option.events");
   const tInput = useWidgetInputTranslation(kind, property);
   const form = useFormContext();
 
@@ -25,7 +26,7 @@ export const WidgetUmamiEventNamesInput = ({ property, kind }: CommonWidgetInput
   if (!websiteId || integrationIds.length === 0) {
     return (
       <Text size="sm" c="dimmed">
-        {t("configureWebsiteFirst")}
+        {tEvents("configureWebsiteFirst")}
       </Text>
     );
   }
@@ -34,9 +35,9 @@ export const WidgetUmamiEventNamesInput = ({ property, kind }: CommonWidgetInput
     <MultiSelect
       label={tInput("label")}
       description={tInput("description")}
-      placeholder={isPending ? t("loading") : t("placeholder")}
+      placeholder={isPending ? tEvents("loading") : t("placeholder")}
       searchable
-      nothingFoundMessage={t("noEvents")}
+      nothingFoundMessage={tEvents("noEvents")}
       data={eventNames ?? []}
       {...form.getInputProps(`options.${property}`)}
     />

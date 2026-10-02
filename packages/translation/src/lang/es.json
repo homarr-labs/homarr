@@ -688,211 +688,6 @@
       "add": "Añadir una aplicación"
     }
   },
-  "customWidget": {
-    "page": {
-      "list": {
-        "title": "Widgets personalizados",
-        "noResults": "Aún no hay widgets personalizados. ¡Crea tu primero!",
-        "loading": "Cargando..."
-      },
-      "create": {
-        "title": "Crear widget personalizado",
-        "subtitle": "Definir una URL de API, autenticación y cómo mostrar los datos de respuesta."
-      },
-      "edit": {
-        "title": "Editar widget personalizado"
-      }
-    },
-    "action": {
-      "create": "Crear",
-      "import": "Importar",
-      "save": "Guardar",
-      "delete": "Eliminar widget personalizado",
-      "deleteConfirm": "¿Está seguro de que desea eliminar \"{name}\"? Esta acción no se puede deshacer.",
-      "export": "Exportar",
-      "addMapping": "Agregar asignación",
-      "addColumn": "Añadir columna",
-      "edit": "Editar",
-      "removeMapping": "Eliminar mapeo",
-      "removeColumn": "Eliminar columna",
-      "addItem": "Añadir elemento",
-      "removeItem": "Eliminar elemento",
-      "addBar": "Añadir barra",
-      "duplicate": "Duplicar",
-      "copyAiPrompt": "Copiar prompt de IA",
-      "enable": "Activar",
-      "disable": "Desactivar",
-      "menu": "Acciones"
-    },
-    "field": {
-      "name": "Nombre",
-      "description": "Descripción",
-      "iconUrl": "URL del icono",
-      "url": "URL",
-      "authType": "Tipo de autenticación",
-      "headerName": "Nombre del parámetro de cabecera/consulta",
-      "method": "Método",
-      "requestBody": "Cuerpo de la Solicitud",
-      "displayType": "Tipo de visualización",
-      "jsonPath": "JSON Path",
-      "jsonPathHint": "Usa la sintaxis JSONPath para extraer valores, por ejemplo, $.data.temperature o $.items[0].name",
-      "label": "Nombre",
-      "unit": "Unidad",
-      "mappings": "Asignaciones",
-      "tablePath": "",
-      "tablePathHint": "",
-      "columns": "",
-      "header": "",
-      "items": "Elementos",
-      "gridColumns": "Columnas de cuadrícula",
-      "cardStyle": "Estilo de tarjeta",
-      "bars": "Barras",
-      "valuePath": "",
-      "maxPath": "",
-      "showPercentage": "Mostrar porcentaje",
-      "barSize": "Tamaño de la barra",
-      "goodValues": "",
-      "dotSize": "Tamaño del punto",
-      "valueSize": "Tamaño del valor",
-      "labelPosition": "Posición de la etiqueta",
-      "kvLayout": "Diseño",
-      "striped": "",
-      "compact": "",
-      "maxHeight": "",
-      "color": "Color",
-      "buttonLabel": "",
-      "buttonColor": "Color de botón",
-      "confirmText": "Texto de confirmación",
-      "confirmTextHint": "",
-      "successMessage": "",
-      "successMessageHint": "",
-      "enabled": "Habilitado",
-      "template": {
-        "label": "",
-        "description": ""
-      }
-    },
-    "placeholder": {
-      "exampleLabel": "Temperatura de la CPU",
-      "exampleLabelShort": "Temp. CPU",
-      "exampleHeader": "Nombre",
-      "exampleUnit": "°C",
-      "iconUrl": "https://...",
-      "url": "https://api.example.com/api/v1/estatus",
-      "headerName": "",
-      "jsonPath": "",
-      "tablePath": "",
-      "columnJsonPath": "",
-      "valuePath": "",
-      "maxPath": "",
-      "goodValues": "",
-      "color": ""
-    },
-    "cardStyleOption": {
-      "filled": "Rellenado",
-      "outline": "Contorno",
-      "subtle": "Sutil"
-    },
-    "layoutOption": {
-      "list": "Lista",
-      "grid": "Cuadrícula"
-    },
-    "sizeOption": {
-      "sm": "Pequeño",
-      "md": "Mediano",
-      "lg": "Grande",
-      "xl": "Extra grande"
-    },
-    "labelPositionOption": {
-      "above": "Encima",
-      "below": "Debajo"
-    },
-    "fieldset": {
-      "general": "General",
-      "connection": "Conexión de la API",
-      "display": "Configuración de visualización"
-    },
-    "displayTypeDescription": {
-      "singleValue": "Mostrar un valor extraído con una etiqueta y una unidad",
-      "keyValue": "",
-      "table": "",
-      "statGrid": "",
-      "progressBars": "",
-      "statusIndicator": "",
-      "countGrid": "",
-      "raw": "",
-      "actionButton": "Un botón que manda una solicitud al hacer clic",
-      "customJsx": ""
-    },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
-    "authType": {
-      "none": "Ninguno",
-      "bearer": "Tóken de portador",
-      "basic": "Autenticación básica",
-      "apiKeyHeader": "Clave API (cabecera)",
-      "apiKeyQuery": "Clave API (Consulta)"
-    },
-    "displayType": {
-      "singleValue": "Valor único",
-      "keyValue": "",
-      "table": "",
-      "statGrid": "",
-      "progressBars": "Barras de progreso",
-      "statusIndicator": "",
-      "countGrid": "Cuadricula de contadores",
-      "raw": "JSON sin procesar",
-      "actionButton": "Botón de Acción",
-      "customJsx": "JSX personalizado"
-    },
-    "secret": {
-      "apiKey": "",
-      "username": "Nombre de usario",
-      "password": "Contraseña",
-      "savedPlaceholder": "••••••• (guardado, dejar vacío para mantener)"
-    },
-    "preview": {
-      "title": "Vista previa",
-      "test": "Probar",
-      "hint": "Haga clic en \"Probar\" para previsualizar la respuesta de la API con su configuración actual.",
-      "rawResponse": "Respuesta de JSON sin procesar"
-    },
-    "notification": {
-      "created": "Widget \"{name}\" creado con éxito.",
-      "updated": "Widget \"{name}\" actualizado con éxito.",
-      "deleted": "Widget \"{name}\" eliminado.",
-      "imported": "Widget importado con éxito.",
-      "aiPromptCopied": "Prompt de IA copiado en el portapapeles",
-      "aiPromptDescription": "Copie un prompt precompilado para pegar en cualquier chatbot de IA (ChatGPT, Claude, Gemini...). Incluye el esquema completo del widget y su respuesta de la API para que la IA pueda generar una configuración JSON lista para importar para usted.",
-      "aiPromptCopy": "Copiar al portapapeles",
-      "aiPromptNoResponse": "Consejo: Ejecute una prueba primero para incluir su respuesta API en el prompt para mejores resultados.",
-      "aiPromptCopyError": "",
-      "createError": "",
-      "updateError": "",
-      "importError": "",
-      "exportError": "Error al exportar el widget.",
-      "duplicated": "Widget \"{name}\" duplicado.",
-      "duplicateError": "Error al duplicar el widget.",
-      "toggleError": "",
-      "deleteError": "",
-      "previewError": "",
-      "executed": "",
-      "executeError": ""
-    },
-    "table": {
-      "name": "Nombre",
-      "url": "URL",
-      "display": "Visualización"
-    },
-    "widget": {
-      "disabled": "Este widget está deshabilitado"
-    }
-  },
   "integration": {
     "page": {
       "list": {
@@ -1344,10 +1139,6 @@
       "name": "Traefik",
       "description": ""
     },
-    "wud": {
-      "name": "Qué hay de nuevo Docker",
-      "description": "Controlar cuál de sus contenedores Docker tiene actualizaciones de imagen disponibles"
-    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": ""
@@ -1359,6 +1150,10 @@
     "bazarr": {
       "name": "Bazarr",
       "description": ""
+    },
+    "wud": {
+      "name": "Qué hay de nuevo Docker",
+      "description": "Controlar cuál de sus contenedores Docker tiene actualizaciones de imagen disponibles"
     }
   },
   "media": {
@@ -1441,9 +1236,11 @@
     "here": "aquí",
     "iconPicker": {
       "label": "URL del icono",
-      "description": "Busca en la biblioteca, pega una URL de imagen o sube un archivo.",
       "header": "Buscar imágenes {countIcons} por nombre",
       "headerLoading": "Buscar imágenes por nombre",
+      "noResults": "No hay iconos que coincidan con \"{search}\".",
+      "error": "No se pudieron cargar los iconos.",
+      "description": "Busca en la biblioteca, pega una URL de imagen o sube un archivo.",
       "clear": "Borrar imagen",
       "uploadImage": "Subir imagen",
       "results": "Resultados de búsqueda de imágenes",
@@ -1452,9 +1249,7 @@
       "otherImages": "Otras imágenes",
       "urlLoading": "Comprobando imagen…",
       "urlReady": "La imagen está lista para usar",
-      "urlError": "Esta imagen no se pudo cargar. Compruebe la URL e inténtelo de nuevo.",
-      "noResults": "No hay iconos que coincidan con \"{search}\".",
-      "error": "No se pudieron cargar los iconos."
+      "urlError": "Esta imagen no se pudo cargar. Compruebe la URL e inténtelo de nuevo."
     },
     "colorScheme": {
       "options": {
@@ -1804,38 +1599,6 @@
       "option": {
         "showBroadcastMessage": {
           "label": ""
-        }
-      }
-    },
-    "wud": {
-      "name": "Qué hay de nuevo Docker",
-      "description": "Mostrar cuántos contenedores vistos tienen actualizaciones disponibles.",
-      "title": "Qué hay de nuevo Docker",
-      "monitored": "Monitoreado",
-      "updatesAvailable": "{count, plural, one {# actualización disponible} other {# actualizaciones disponibles}}",
-      "updateAvailable": "Actualización disponible",
-      "openReleaseNotes": "Notas de la versión abierta",
-      "option": {
-        "showTitle": {
-          "label": "Mostrar título"
-        },
-        "showRing": {
-          "label": "Mostrar anillo de actualización"
-        },
-        "layout": {
-          "label": "Diseño",
-          "option": {
-            "horizontal": {
-              "label": "Horizontal"
-            },
-            "vertical": {
-              "label": "Vertical"
-            }
-          }
-        },
-        "showUpdateList": {
-          "label": "Mostrar lista de actualización del contenedor",
-          "description": "Lista cada contenedor supervisado que tiene una actualización de imagen disponible"
         }
       }
     },
@@ -2391,8 +2154,8 @@
       "popover": {
         "information": "Información",
         "processor": "Procesador: {cpuModelName}",
-        "memory": "Memoria: {memory} GiB",
-        "memoryAvailable": "Disponible: {memoryAvailable} GiB ({percent} %)",
+        "memory": "Memoria: {memory}",
+        "memoryAvailable": "Disponible: {memoryAvailable} ({percent} %)",
         "version": "Versión: {version}",
         "uptime": "Tiempo de actividad: {months} Meses, {days} Días, {hours} Horas, {minutes} Minutos",
         "loadAverage": "Carga promedio:",
@@ -3058,7 +2821,7 @@
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Error al obtener los datos de Bazarr"
       }
     },
     "immich-serverStats": {
@@ -3089,7 +2852,7 @@
     },
     "immich-albumCarousel": {
       "name": "Álbum de Immich",
-      "allPhotos": "",
+      "allPhotos": "Todas las fotos",
       "option": {
         "albumId": {
           "label": "ID de álbum",
@@ -3137,7 +2900,7 @@
           "label": "Mostrar entradas variadas marcadas como completadas"
         },
         "activeTorrentThreshold": {
-          "label": "Ocultar Torrent completado bajo este umbral (en kiB/s)"
+          "label": "Ocultar Torrent completado bajo este umbral"
         },
         "categoryFilter": {
           "label": "Categorías/etiquetas para filtrar"
@@ -3751,7 +3514,7 @@
       }
     },
     "uptimeKuma": {
-      "name": "",
+      "name": "Uptime Kuma",
       "description": "",
       "option": {
         "showAverageUptime": {
@@ -3791,7 +3554,7 @@
       }
     },
     "traefik": {
-      "name": "",
+      "name": "Traefik",
       "description": "",
       "option": {
         "showTcp": {
@@ -3804,8 +3567,8 @@
           "label": ""
         }
       },
-      "instances": "",
-      "versionUnknown": "",
+      "instances": "Instancias de Traefik",
+      "versionUnknown": "Versión desconocida",
       "summary": {
         "routers": "",
         "entryPoints": ""
@@ -3927,7 +3690,7 @@
               "label": "Porcentaje (e.g., 76 %)"
             },
             "absolute": {
-              "label": "Valores absolutos (e.g., 800 GB / 1 TB)"
+              "label": "Valores absolutos"
             },
             "free": {
               "label": "Porcentaje de espacio libre (e.g., 24 % libre)"
@@ -3946,26 +3709,6 @@
       "status": {
         "unhealthy": "Poco sano"
       }
-    },
-    "customApi": {
-      "name": "",
-      "description": "",
-      "option": {
-        "definitionId": {
-          "label": ""
-        },
-        "refreshInterval": {
-          "label": "",
-          "description": ""
-        }
-      },
-      "noDefinition": "",
-      "definitionNotFound": "",
-      "noDisplayOutput": "",
-      "executeConfirm": "",
-      "executing": "",
-      "executeSuccess": "",
-      "executeFailed": ""
     },
     "beszelSystemTable": {
       "name": "",
@@ -4030,15 +3773,15 @@
         "system": "",
         "cpu": "",
         "memory": "",
-        "disk": "",
+        "disk": "Disco",
         "gpu": "",
         "loadAvg": "",
         "net": "",
-        "temp": "",
+        "temp": "Temperatura",
         "battery": "",
         "services": "",
         "uptime": "",
-        "agent": ""
+        "agent": "Agente"
       }
     },
     "beszelSystemGrid": {
@@ -4118,9 +3861,9 @@
         "internalServerError": ""
       },
       "history": "Historial",
-      "resolved": "",
+      "resolved": "Resuelto",
       "status": {
-        "triggered": "",
+        "triggered": "Desencadenado",
         "ok": ""
       }
     },
@@ -4173,7 +3916,7 @@
       "chart": {
         "cpu": {
           "title": "",
-          "subtitle": "",
+          "subtitle": "Promedio de uso de CPU en el sistema",
           "series": "CPU"
         },
         "memory": {
@@ -4184,12 +3927,12 @@
         },
         "disk": {
           "title": "",
-          "subtitle": "",
+          "subtitle": "Uso por sistema de archivos",
           "series": ""
         },
         "diskIO": {
           "title": "",
-          "subtitle": "",
+          "subtitle": "Rendimiento del sistema de archivos raíz",
           "read": "",
           "write": ""
         },
@@ -4215,6 +3958,38 @@
         "dockerNetwork": {
           "title": "",
           "subtitle": ""
+        }
+      }
+    },
+    "wud": {
+      "name": "Qué hay de nuevo Docker",
+      "description": "Mostrar cuántos contenedores vistos tienen actualizaciones disponibles.",
+      "title": "Qué hay de nuevo Docker",
+      "monitored": "Monitoreado",
+      "updatesAvailable": "{count, plural, one {# actualización disponible} other {# actualizaciones disponibles}}",
+      "updateAvailable": "Actualización disponible",
+      "openReleaseNotes": "Notas de la versión abierta",
+      "option": {
+        "showTitle": {
+          "label": "Mostrar título"
+        },
+        "showRing": {
+          "label": "Mostrar anillo de actualización"
+        },
+        "layout": {
+          "label": "Diseño",
+          "option": {
+            "horizontal": {
+              "label": "Horizontal"
+            },
+            "vertical": {
+              "label": "Vertical"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Mostrar lista de actualización del contenedor",
+          "description": "Lista cada contenedor supervisado que tiene una actualización de imagen disponible"
         }
       }
     }
@@ -4597,11 +4372,11 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "Inicio",
         "boards": "Tableros",
         "apps": "Aplicaciones",
         "integrations": "Integraciones",
-        "customWidgets": "Widgets personalizados",
         "searchEngies": "Motores de búsqueda",
         "medias": "Imágenes",
         "users": {
@@ -5210,7 +4985,7 @@
             "boards": "",
             "entities": {
               "board": "",
-              "user": "",
+              "user": "Users",
               "app": "",
               "integration": "",
               "item": "",
@@ -5224,7 +4999,7 @@
           "restore": {
             "dropzone": {
               "title": "Arrastra tu ZIP de copia de seguridad aquí",
-              "description": "Acepta archivos .zip desde una copia de seguridad de SQLite de Homarr (máx. 256 MB)"
+              "description": "Acepta archivos .zip desde una copia de seguridad de SQLite de Homarr (máx. {maxSize})"
             },
             "analyzing": "",
             "changeFile": "",
@@ -5370,7 +5145,7 @@
         "label": "Puertos"
       },
       "host": {
-        "label": ""
+        "label": "Equipo"
       }
     },
     "action": {
@@ -5740,6 +5515,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "Administrar",
       "boards": {
         "label": "Tableros"
@@ -5772,18 +5550,6 @@
         },
         "edit": {
           "label": "Editar"
-        }
-      },
-      "custom-widgets": {
-        "label": "Widgets personalizados",
-        "new": {
-          "label": "Nuevo"
-        },
-        "edit": {
-          "label": "",
-          "flow": {
-            "label": ""
-          }
         }
       },
       "users": {

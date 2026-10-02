@@ -11,18 +11,24 @@ import classes from "./resource-tile.module.css";
 
 interface ResourceTileProps {
   count: number;
+  contextId: string;
   label: KubernetesLabelResourceType;
 }
 
 export function ResourceTile(props: ResourceTileProps) {
-  const t = useI18n();
+  const tResource = useI18n("kubernetes.cluster.resources");
+
   return (
-    <Card component={Link} href={`/manage/tools/kubernetes/${props.label}`} className={classes.cardContainer}>
+    <Card
+      component={Link}
+      href={`/manage/tools/kubernetes/${props.label}?context=${encodeURIComponent(props.contextId)}`}
+      className={classes.cardContainer}
+    >
       <Group justify="space-between" wrap="nowrap">
         <Image src={`/images/kubernetes/${props.label}.svg`} alt={props.label} width={64} height={64} />
         <Group gap="xs">
           <Text size="xl" fw={700} tt="capitalize">
-            {props.count} {t(`kubernetes.cluster.resources.${props.label}`)}
+            {props.count} {tResource(props.label)}
           </Text>
           <IconArrowRight />
         </Group>

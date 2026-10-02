@@ -6,80 +6,73 @@ tags:
   - Interface
 ---
 
-Using the Homarr API, you can interface with the application with your own code and business logic.
-It enables you to trigger almost all actions that you can perform from the Homarr UI.
-With the API, you can build resilient systems that automatically update Homarr with data - for example syncing it with
-your deployments in a cluster or dynamically adding integrations depending on how many replicas you run.
+Use the generated specification under **Management → Tools → API** or the [interactive API reference](/api-reference).
+This page covers contracts that are not obvious from those schemas.
+The in-app reference loads its schema from `/api/openapi?format=scalar` on your Homarr instance. `/api/openapi` provides the raw JSON specification.
 
-This page is language-neutral, and you must implement the API on your own in your desired language.
-It requires you to know your programming language well and have a basic understanding of HTTP, JSON and networking.
-You can test out API endpoints using any OpenAPI client - for example [Yaak](https://yaak.app/).
+![Homarr's API documentation page](../img/api.png)
 
-## Opening the API specification
+## Authentication and browser access
 
-The specification is implemented according to the OpenAPI standard.
-To access the documentation, you'll need to spin up an instance of Homarr.
-Navigate to `Management` > `Tools` > `API`.
-You can copy the JSON url into your OpenAPI client or try out the endpoints directly from your browser.
+API keys are shown once as `<id>.<token>`. Send one in the `ApiKey` header; it acts as its creator and does not expire.
+tRPC accepts the same header. Same-origin browser requests can use the Homarr session cookie.
 
-Alternatively, you can [open the full interactive API reference](/api-reference) directly in your browser.
+Cross-origin browser requests require `ApiKey`; they do not use session cookies. Reverse proxies must forward `OPTIONS`
+and preserve CORS headers. An HTTPS API reference cannot call an HTTP-only instance because browsers block mixed content.
 
-## Authentication
+## Endpoint constraints
 
-Many endpoints will require you to authenticate. At the top of the API reference, you'll find a button to authenticate yourself with an API key.
-You can obtain API keys from the "Authentication" tab at the top of the page.
-API keys will not expire and can be used indefinitely.
+- General pagination and shared search are capped at 100 records.
+- `POST /api/invites` and `invite.createInvite` accept `expirationDate` as a timezone-qualified ISO 8601 string.
+- `GET /api/health/live` is unauthenticated and returns `200` when all dependencies are healthy, `500` otherwise.
 
-### API Key Format
+`widget.immich.getAlbumPreview` returns at most one image from a selected album. Its input includes `albumId` and
+`randomizePhotos`; it uses the same saved-integration access rules as `widget.immich.getAlbum`. Use `getAlbum` for the
+complete album image list.
 
-API keys are provided in the format `<id>.<token>`. When making requests, include the key in the `ApiKey` header:
+## Permissions and results
 
-```
-ApiKey: abc123def456.xyz789tokenvalue...
-```
+Requests use the API key owner's permissions. Unauthorized operations return `FORBIDDEN`; resource-aware lists are
+filtered on the server.
 
-### Supported Endpoints
+`app.all`, `app.getPaginated`, and `app.search` require **Modify all apps** because they include internal URLs. Use
+`app.selectable` for reduced picker data. Integration lists include only accessible integrations; check `hasUseAccess`
+and `hasInteractAccess` before reading data or invoking actions.
 
-API key authentication works with both endpoint types:
+Multi-integration queries can return partial data with endpoint-specific failure metadata.
 
-| Endpoint Type | Path Pattern    | API Key Support |
-| ------------- | --------------- | --------------- |
-| OpenAPI       | `/api/...`      | ✅ Supported    |
-| tRPC          | `/api/trpc/...` | ✅ Supported    |
+## Board automation
 
-If no API key is provided, Homarr falls back to session cookie authentication (for browser-based access).
+Each board has one Base and one Mobile layout; Mobile uses breakpoint `0`. Other breakpoints must be unique, and Homarr
+uses the highest breakpoint that fits. Reuse canonical layouts and generated IDs returned by save operations.
 
-### Usage Examples
+Integration-backed widgets require use access to each newly selected integration.
 
-**OpenAPI endpoint:**
+`board.addItem` accepts `size: { width, height }` in grid cells (1–24 each), places the item in the first free position
+on every layout, and caps width to the available columns.
 
-```bash
-curl -H 'ApiKey: <id>.<token>' http://localhost:7575/api/health/live
-```
+`board.updateItemLayout` (`PATCH /api/boards/{boardId}/items/{itemId}/layouts/{layoutId}`) moves or resizes one item in
+one layout without replacing the board. It cannot move the item outside its section or overlap another item/container.
 
-**tRPC endpoint:**
+## Docker targets
 
-```bash
-curl -H 'ApiKey: <id>.<token>' http://localhost:7575/api/trpc/app.all
-```
+Docker actions require `{ endpointId, id }` targets from `docker.getContainers`; `endpointId` distinguishes hosts.
+Omit `endpointIds` or pass an empty array to query every configured endpoint.
 
-### Use Cases
+## Custom Widget resources
 
-API key authentication enables programmatic access for:
+Administrators can retrieve the Custom Widget authoring prompt, schema, component catalog, skill, and references under
+`/api/custom-widgets/`. See [agent authoring](/docs/management/custom-widgets/agent-authoring) for the workflow.
 
-- Automation scripts and CI/CD pipelines
-- Third-party integrations
-- Custom dashboards and monitoring tools
-- Container orchestration systems that need to sync app definitions
+## Call any integration API endpoint
 
-## Board Automation
+`POST /api/integrations/request` is available as tRPC `integration.request` and MCP `integration_request`. Homarr uses
+the saved integration credentials; callers do not supply them. The `path` stays within the saved integration URL, and
+redirects are rejected. See the generated schema for selectors, permissions, and request limits.
 
-The OpenAPI and MCP APIs include board management endpoints for common automation workflows:
+Even `GET` can change upstream state. Homarr `200` can contain an upstream failure; inspect `ok`, `status`, and `data`.
+Requests are not retried, so check upstream state after a timeout before retrying a write.
 
-- Create, duplicate, rename and delete boards
-- Change board visibility
-- Update board visual and behavior settings
-- Set desktop and mobile home boards for the current user
-- Configure global board defaults such as public home boards and status behavior
-
-Use the interactive API reference to inspect the exact request body for each endpoint under the `boards` and `settings` tags.
+The iCalendar feed integration stores a calendar URL rather than arbitrary HTTP API credentials. TrueNAS uses a WebSocket
+API. Neither works with `integration_request` or Custom Widget integration sources. qBittorrent generic requests require
+a saved API key and qBittorrent 5.2.0 or newer. UniFi generic requests require the controller's HTTPS URL and actual port.

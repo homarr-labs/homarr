@@ -1,5 +1,5 @@
 import type { IntegrationKindByCategory } from "@homarr/definitions";
-import { createIntegrationAsync } from "@homarr/integrations";
+import { createIntegrationAsync } from "@homarr/integrations/factory";
 import type {
   FirewallCpuSummary,
   FirewallInterfacesSummary,
@@ -14,6 +14,7 @@ export const firewallCpuRequestHandler = createIntegrationRequestHandler<
   IntegrationKindByCategory<"firewall">,
   Record<string, never>
 >({
+  cacheNamespace: "firewall:cpu",
   async requestAsync(integration, _input) {
     const integrationInstance = await createIntegrationAsync(integration);
     return integrationInstance.getFirewallCpuAsync();
@@ -25,6 +26,7 @@ export const firewallMemoryRequestHandler = createIntegrationRequestHandler<
   IntegrationKindByCategory<"firewall">,
   Record<string, never>
 >({
+  cacheNamespace: "firewall:memory",
   async requestAsync(integration, _input) {
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getFirewallMemoryAsync();
@@ -36,6 +38,7 @@ export const firewallInterfacesRequestHandler = createIntegrationRequestHandler<
   IntegrationKindByCategory<"firewall">,
   Record<string, never>
 >({
+  cacheNamespace: "firewall:interfaces",
   async requestAsync(integration, _input) {
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getFirewallInterfacesAsync();
@@ -47,6 +50,7 @@ export const firewallVersionRequestHandler = createIntegrationRequestHandler<
   IntegrationKindByCategory<"firewall">,
   Record<string, never>
 >({
+  cacheNamespace: "firewall:version",
   async requestAsync(integration, _input) {
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getFirewallVersionAsync();

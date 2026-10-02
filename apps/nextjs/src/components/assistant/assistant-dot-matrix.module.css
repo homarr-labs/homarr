@@ -1,0 +1,87 @@
+@property --assistant-dot-matrix-hi {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 1;
+}
+
+@property --assistant-dot-matrix-lo {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0.15;
+}
+
+.root {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  flex: 0 0 auto;
+  color: currentColor;
+}
+
+.root[data-state="idle"],
+.root[data-state="paused"],
+.root[data-state="stopped"],
+.root[data-state="offline"] {
+  color: var(--mantine-color-dimmed);
+}
+
+.root[data-state="recording"],
+.root[data-state="error"] {
+  color: var(--mantine-color-red-filled);
+}
+
+.root[data-state="success"] {
+  color: var(--mantine-color-green-filled);
+}
+
+.root[data-state="warning"] {
+  color: var(--mantine-color-yellow-filled);
+}
+
+.root[data-state="info"] {
+  color: var(--mantine-color-blue-filled);
+}
+
+.grid {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.dot {
+  transition-duration: 300ms;
+  transition-property: --assistant-dot-matrix-hi, --assistant-dot-matrix-lo, opacity;
+  animation-name: assistant-dot-matrix-blink;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  padding: 0;
+  border: 0;
+  margin: -1px;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+@keyframes assistant-dot-matrix-blink {
+  0%,
+  100% {
+    opacity: var(--assistant-dot-matrix-hi, 1);
+  }
+
+  50% {
+    opacity: var(--assistant-dot-matrix-lo, 0.15);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dot {
+    transition-duration: 0ms;
+    animation-name: none;
+  }
+}

@@ -1,31 +1,30 @@
 import type { Metadata } from "next";
-import { cache } from "react";
+import { Suspense } from "react";
+import { notFound, redirect } from "next/navigation";
 import { TRPCError } from "@trpc/server";
 
-// Placed here because gridstack styles are used for board content
-import "~/styles/gridstack.scss";
-
+import type { QueryClient } from "@tanstack/react-query";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { makeQueryClient } from "@homarr/api/shared";
+import { getRscServerSettingsAsync } from "@homarr/api/server-settings-server";
+import { getQueryClient } from "@homarr/api/server";
+import { getLayoutIdForViewportWidth } from "@homarr/boards/layout-selection";
 import { IntegrationProvider } from "@homarr/auth/client";
 import { auth } from "@homarr/auth/next";
 import { getIntegrationsWithPermissionsAsync } from "@homarr/auth/server";
 import { isNullOrWhitespace } from "@homarr/common";
-import { createLogger } from "@homarr/core/infrastructure/logs";
-import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import type { WidgetKind } from "@homarr/definitions";
+import { prepareIntegrationResponseCacheAsync } from "@homarr/redis";
 import { getI18n } from "@homarr/translation/server";
-import { prefetchForKindAsync } from "@homarr/widgets/prefetch";
+import { prefetchForKind } from "@homarr/widgets/prefetch";
+import { getInitiallyVisibleWidgetKinds, prefetchInitialWidgetData } from "@homarr/widgets/server-prefetch";
 
-import { createMetaTitle } from "~/metadata";
 import { env } from "~/env";
-import { createBoardLayout } from "../_layout-creator";
+import { createBoardLayout, getInitialViewportWidthAsync } from "../_layout-creator";
 import type { Board, Item } from "../_types";
-import { DynamicClientBoard } from "./_dynamic-client";
-import { BoardContentHeaderActions } from "./_header-actions";
-
-const logger = createLogger({ module: "createBoardContentPage" });
-const getQueryClient = cache(makeQueryClient);
+import { ClientBoard } from "./_client";
+import { BoardContentEditAction, BoardContentSettingsAction } from "./_header-actions";
+import { createBoardQuerySnapshot } from "./_query-snapshot";
+import { WidgetResourcePreload } from "./_widget-resource-preload";
 
 export type Params = Record<string, unknown>;
 
@@ -33,21 +32,96 @@ interface Props<TParams extends Params> {
   getInitialBoardAsync: (params: TParams) => Promise<Board>;
 }
 
+const BoardWithIntegrations = async ({
+  integrationsPromise,
+}: {
+  integrationsPromise: ReturnType<typeof getIntegrationsWithPermissionsAsync>;
+}) => (
+  <IntegrationProvider integrations={await integrationsPromise}>
+    <ClientBoard />
+  </IntegrationProvider>
+);
+
+const DeferredWidgetHydration = async ({
+  queryClient,
+  queries,
+}: {
+  queryClient: QueryClient;
+  queries: Promise<void>[];
+}) => {
+  await Promise.allSettled(queries);
+  return (
+    <HydrationBoundary
+      state={dehydrate(queryClient, {
+        shouldDehydrateQuery: (query) =>
+          query.meta?.streamedBeszelSelection === true &&
+          (query.state.status === "pending" || query.state.status === "success"),
+      })}
+    />
+  );
+};
+
+const RefreshedQueryHydration = async ({
+  queryClient,
+  queryHashes,
+  promises,
+}: {
+  queryClient: QueryClient;
+  queryHashes: Set<string>;
+  promises: Promise<unknown>[];
+}) => {
+  await Promise.allSettled(promises);
+  return (
+    <HydrationBoundary
+      state={dehydrate(queryClient, {
+        shouldDehydrateQuery: (query) => queryHashes.has(query.queryHash) && query.state.status === "success",
+      })}
+    />
+  );
+};
+
 export const createBoardContentPage = <TParams extends Record<string, unknown>>({
   getInitialBoardAsync: getInitialBoard,
 }: Props<TParams>) => {
   return {
     layout: createBoardLayout({
-      headerActions: <BoardContentHeaderActions demoReadOnly={env.DEMO_MODE && env.DEMO_READ_ONLY} />,
+      headerBoardEditAction: <BoardContentEditAction demoReadOnly={env.DEMO_MODE && env.DEMO_READ_ONLY} />,
+      headerBoardSettingsAction: <BoardContentSettingsAction demoReadOnly={env.DEMO_MODE && env.DEMO_READ_ONLY} />,
       getInitialBoardAsync: getInitialBoard,
       withTour: true,
     }),
     // eslint-disable-next-line no-restricted-syntax
     page: async ({ params }: { params: Promise<TParams> }) => {
+      void prepareIntegrationResponseCacheAsync().catch(() => undefined);
       const resolvedParams = await params;
       const queryClient = getQueryClient();
+      const sessionPromise = auth();
+      const boardPromise = getInitialBoard(resolvedParams);
+      const viewportWidthPromise = getInitialViewportWidthAsync();
+      const integrationsPromise = sessionPromise.then(getIntegrationsWithPermissionsAsync);
+      // The board can fail independently of the permissions read (e.g. a missing board).
+      void integrationsPromise.catch(() => undefined);
 
-      const [board, session] = await Promise.all([getInitialBoard(resolvedParams), auth()]);
+      const board = await boardPromise.catch(async (error: unknown) => {
+        if (error instanceof TRPCError && error.code === "NOT_FOUND") {
+          const session = await sessionPromise;
+          if (!session) {
+            const requestedBoardName =
+              typeof resolvedParams.name === "string" ? `/boards/${encodeURIComponent(resolvedParams.name)}` : null;
+            redirect(
+              requestedBoardName ? `/auth/login?callbackUrl=${encodeURIComponent(requestedBoardName)}` : "/auth/login",
+            );
+          }
+
+          notFound();
+        }
+
+        if (error instanceof TRPCError && error.code === "BAD_REQUEST") {
+          notFound();
+        }
+
+        throw error;
+      });
 
       const itemsMap = board.items.reduce((acc, item) => {
         const existing = acc.get(item.kind);
@@ -58,49 +132,93 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
         }
         return acc;
       }, new Map<WidgetKind, Item[]>());
-      const [integrations] = await Promise.all([
-        getIntegrationsWithPermissionsAsync(session),
-        ...Array.from(itemsMap).map(([kind, items]) =>
-          prefetchForKindAsync(kind, queryClient, items).catch((error) => {
-            logger.error(
-              new ErrorWithMetadata(
-                "Failed to prefetch widget",
-                { widgetKind: kind, itemCount: items.length },
-                { cause: error },
-              ),
-            );
-          }),
-        ),
-      ]);
+      for (const [kind, items] of itemsMap) prefetchForKind(kind, queryClient, items);
+
+      const layoutId = getLayoutIdForViewportWidth(board.layouts, await viewportWidthPromise);
+      const [session, integrations] = await Promise.all([sessionPromise, integrationsPromise]);
+      const snapshot = createBoardQuerySnapshot(board, integrations);
+      await snapshot.restoreAsync(queryClient).catch(() => undefined);
+      const restoredQueryHashes = new Set(
+        queryClient
+          .getQueryCache()
+          .getAll()
+          .filter((query) => query.meta?.rscWidgetPrefetch === true && query.state.status === "success")
+          .map((query) => query.queryHash),
+      );
+      const dependentQueries = prefetchInitialWidgetData(queryClient, board, layoutId, Boolean(session));
+      const refreshingQueries = queryClient
+        .getQueryCache()
+        .getAll()
+        .flatMap((query) => {
+          if (query.meta?.rscWidgetPrefetch !== true || !query.promise) return [];
+          return [{ queryHash: query.queryHash, promise: query.promise }];
+        });
+      const restoredRefreshes = refreshingQueries.filter(({ queryHash }) => restoredQueryHashes.has(queryHash));
+      void Promise.allSettled([...refreshingQueries.map(({ promise }) => promise), ...dependentQueries])
+        .then(async () => {
+          const lateQueries = queryClient
+            .getQueryCache()
+            .getAll()
+            .flatMap((query) => {
+              if (query.meta?.rscWidgetPrefetch !== true || !query.promise) return [];
+              return [query.promise];
+            });
+          await Promise.allSettled(lateQueries);
+          await snapshot.saveAsync(queryClient);
+        })
+        .catch(() => undefined);
 
       return (
-        <HydrationBoundary state={dehydrate(queryClient)}>
-          <IntegrationProvider integrations={integrations}>
-            <DynamicClientBoard />
-          </IntegrationProvider>
-        </HydrationBoundary>
+        <>
+          <WidgetResourcePreload kinds={getInitiallyVisibleWidgetKinds(board, layoutId)} />
+          <HydrationBoundary state={dehydrate(queryClient)}>
+            {restoredRefreshes.length > 0 && (
+              <Suspense fallback={null}>
+                <RefreshedQueryHydration
+                  queryClient={queryClient}
+                  queryHashes={restoredQueryHashes}
+                  promises={restoredRefreshes.map(({ promise }) => promise)}
+                />
+              </Suspense>
+            )}
+            {dependentQueries.length > 0 && (
+              <Suspense fallback={null}>
+                <DeferredWidgetHydration queryClient={queryClient} queries={dependentQueries} />
+              </Suspense>
+            )}
+            <Suspense fallback={null}>
+              <BoardWithIntegrations integrationsPromise={integrationsPromise} />
+            </Suspense>
+          </HydrationBoundary>
+        </>
       );
     },
     generateMetadataAsync: async ({ params }: { params: Promise<TParams> }): Promise<Metadata> => {
       try {
-        const board = await getInitialBoard(await params);
-        const t = await getI18n();
+        const [board, t, serverSettings] = await Promise.all([
+          getInitialBoard(await params),
+          getI18n("board"),
+          getRscServerSettingsAsync(),
+        ]);
+        const brandLogo = serverSettings.branding.logoImageUrl ?? "/logo/logo.png";
+        const brandFavicon = serverSettings.branding.faviconImageUrl ?? brandLogo;
+        const favicon = !isNullOrWhitespace(board.faviconImageUrl) ? board.faviconImageUrl : brandFavicon;
 
         return {
-          title: board.metaTitle ?? createMetaTitle(t("board.content.metaTitle", { boardName: board.name })),
+          title: board.metaTitle ? { absolute: board.metaTitle } : t("content.metaTitle", { boardName: board.name }),
           icons: {
-            icon: !isNullOrWhitespace(board.faviconImageUrl) ? board.faviconImageUrl : undefined,
-            apple: !isNullOrWhitespace(board.faviconImageUrl) ? board.faviconImageUrl : undefined,
+            icon: favicon,
+            apple: favicon,
           },
           appleWebApp: {
             startupImage: {
-              url: !isNullOrWhitespace(board.faviconImageUrl) ? board.faviconImageUrl : "/logo/logo.png",
+              url: favicon,
             },
           },
         };
       } catch (error) {
-        // Ignore not found errors and return empty metadata
-        if (error instanceof TRPCError && error.code === "NOT_FOUND") {
+        // Ignore not found and bad-request errors and return empty metadata
+        if (error instanceof TRPCError && (error.code === "NOT_FOUND" || error.code === "BAD_REQUEST")) {
           return {};
         }
 

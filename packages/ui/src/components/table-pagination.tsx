@@ -3,8 +3,9 @@
 import { useCallback } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { PaginationProps } from "@mantine/core";
-import { Pagination } from "@mantine/core";
+import { Box, Group, Pagination } from "@mantine/core";
 
+import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
 interface TablePaginationProps {
@@ -16,7 +17,8 @@ export const TablePagination = ({ total }: TablePaginationProps) => {
   const { replace } = useRouter();
   const pathName = usePathname();
   const searchParams = useSearchParams();
-  const current = Number(searchParams.get("page")) || 1;
+  const t = useI18n("common.pagination");
+  const current = parsePage(searchParams.getAll("page"));
 
   const getItemProps = useCallback(
     (page: number) => {
@@ -47,9 +49,39 @@ export const TablePagination = ({ total }: TablePaginationProps) => {
     [pathName, replace, searchParams],
   );
 
+  if (total <= 0) return null;
+
   return (
-    <Pagination total={total} getItemProps={getItemProps} getControlProps={getControlProps} onChange={handleChange} />
+    <Pagination.Root
+      total={total}
+      value={current}
+      layout="responsive"
+      w="100%"
+      getItemProps={getItemProps}
+      onChange={handleChange}
+    >
+      <Group gap={8} justify="end" wrap="nowrap">
+        <Pagination.Previous {...getControlProps("previous")} />
+        <Box className={Pagination.classes.items}>
+          <Pagination.Items />
+        </Box>
+        <Pagination.Label formatLabel={({ page, totalPages }) => t("pageOf", { page, totalPages })} />
+        <Pagination.Next {...getControlProps("next")} />
+      </Group>
+    </Pagination.Root>
   );
+};
+
+const parsePage = (pageValues: string[]) => {
+  if (pageValues.length !== 1) return 1;
+
+  const [pageValue] = pageValues;
+  if (!pageValue || !/^[1-9]\d*$/u.test(pageValue)) return 1;
+
+  const page = Number(pageValue);
+  if (!Number.isSafeInteger(page)) return 1;
+
+  return page;
 };
 
 type ControlType = Parameters<Exclude<PaginationProps["getControlProps"], undefined>>[0];

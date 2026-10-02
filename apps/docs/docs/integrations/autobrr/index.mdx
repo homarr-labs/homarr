@@ -1,0 +1,26 @@
+---
+title: "Autobrr"
+description: "Autobrr automates release-based actions for torrent and Usenet workflows."
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { autobrrIntegration } from ".";
+import { statsWidget } from "@site/docs/widgets/stats";
+
+<IntegrationHeader integration={autobrrIntegration} categories={["Miscellaneous"]} />
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites items={[{ widget: statsWidget }]} />
+
+### Adding the integration
+
+<AddingIntegration />
+
+### Secrets
+
+<IntegrationSecrets secrets={[{ credentials: ["apiKey"], steps: ["Create an API key in Settings > API Keys."] }]} />

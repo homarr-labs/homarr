@@ -1,0 +1,121 @@
+import { TRPCError } from "@trpc/server";
+import { z } from "zod/v4";
+
+import { permissionRequiredProcedure } from "../../trpc";
+import {
+  getPreviewRequestSource,
+  getPreviewRequestSourceConfigurationFailure,
+  previewSessionRequestSchema,
+  recordPreviewJournal,
+  resolvePreviewRequestParams,
+} from "./preview-procedure-helpers";
+import { executeCustomWidgetRequest, invalidateCustomWidgetResponseCache } from "./request-executor";
+import { hashRuntimeParams, renderRequestBody, renderRequestTarget } from "./request-manifest";
+import { acquireCustomWidgetRequestLimit } from "./request-limits";
+import { getPreviewJournal, getPreviewSession, setPreviewSessionLiveActions } from "./preview-sessions";
+
+export const previewQueryProcedures = {
+  previewRefresh: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .input(
+      z.object({
+        sessionId: z.string().min(1),
+        requestIds: z.array(z.string().min(1).max(128)).max(128).optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const session = await getPreviewSession(input.sessionId, ctx.session.user.id);
+      if (input.requestIds) {
+        const prefixes = input.requestIds
+          .filter((id) => Object.hasOwn(session.requests, id))
+          .map((id) => `custom-jsx:preview:${session.id}:${id}:`);
+        invalidateCustomWidgetResponseCache(prefixes);
+        return;
+      }
+      invalidateCustomWidgetResponseCache([`custom-jsx:preview:${session.id}:`]);
+    }),
+
+  previewQuery: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Execute one real API query from a preview evidence list and return its HTTP status plus parsed data so request paths and template bindings can be verified. Call once for every query in the current preview revision before createFromPreview or updateFromPreview persistence.",
+      },
+    })
+    .input(previewSessionRequestSchema)
+    .query(async ({ ctx, input }) => {
+      const session = await getPreviewSession(input.sessionId, ctx.session.user.id);
+      const definition = session.requests[input.requestId];
+      if (definition?.kind !== "query")
+        throw new TRPCError({ code: "NOT_FOUND", message: "Preview query was not found" });
+      const request = { id: input.requestId, ...definition };
+      const sourceConfigurationFailure = getPreviewRequestSourceConfigurationFailure(session, request);
+      if (sourceConfigurationFailure) return sourceConfigurationFailure;
+      const params = resolvePreviewRequestParams(request, session.options, input.params);
+      const body = renderRequestBody(request, params);
+      const release = await acquireCustomWidgetRequestLimit({
+        category: "query",
+        userId: ctx.session.user.id,
+        itemId: `preview:${session.id}`,
+        definitionId: session.definitionId ?? `preview:${session.id}`,
+      });
+      const startedAt = Date.now();
+      try {
+        const resolved = await getPreviewRequestSource(ctx, session, request);
+        if (!resolved) throw new TRPCError({ code: "NOT_FOUND", message: "Preview source was not found" });
+        const targetUrl = renderRequestTarget(resolved.baseUrl, request, params);
+        const response = await executeCustomWidgetRequest({
+          ...resolved,
+          targetUrl,
+          method: request.method,
+          body,
+          staticHeaders: request.headers,
+          auth: request.auth === "none" ? undefined : resolved.auth,
+          kind: "query",
+          cacheKey: `custom-jsx:preview:${session.id}:${request.id}:${hashRuntimeParams(params)}:${resolved.cacheVersion}`,
+          cacheTtlSeconds: request.cacheSeconds,
+        });
+        await recordPreviewJournal(session, {
+          requestId: request.id,
+          kind: "query",
+          method: request.method,
+          path: request.path,
+          status: response.status,
+          durationMs: Date.now() - startedAt,
+          simulated: false,
+        });
+        return {
+          sessionId: session.id,
+          requestId: request.id,
+          sourceId: request.source,
+          ok: response.ok,
+          status: response.status,
+          statusText: response.statusText,
+          data: response.data,
+          error: response.ok ? undefined : `HTTP ${response.status}: ${response.statusText}`,
+        };
+      } finally {
+        await release();
+      }
+    }),
+
+  setPreviewLiveActions: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .input(z.object({ sessionId: z.string().min(1), enabled: z.boolean() }))
+    .mutation(async ({ ctx, input }) =>
+      setPreviewSessionLiveActions(input.sessionId, ctx.session.user.id, input.enabled),
+    ),
+
+  previewJournal: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .meta({
+      mcp: {
+        enabled: true,
+        description: "Read the redacted request journal for a custom widget preview session.",
+      },
+    })
+    .input(z.object({ sessionId: z.string().min(1) }))
+    .query(async ({ ctx, input }) => getPreviewJournal(input.sessionId, ctx.session.user.id)),
+};

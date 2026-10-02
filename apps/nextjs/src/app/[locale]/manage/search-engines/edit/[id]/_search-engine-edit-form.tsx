@@ -8,8 +8,8 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import type { TranslationFunction } from "@homarr/translation";
-import { useScopedI18n } from "@homarr/translation/client";
+import type { ScopedTranslationFunction } from "@homarr/translation";
+import { useI18n } from "@homarr/translation/client";
 import type { searchEngineManageSchema } from "@homarr/validation/search-engine";
 
 import { SearchEngineForm } from "../../_form";
@@ -19,13 +19,14 @@ interface SearchEngineEditFormProps {
 }
 
 export const SearchEngineEditForm = ({ searchEngine }: SearchEngineEditFormProps) => {
-  const t = useScopedI18n("search.engine.page.edit.notification");
+  const t = useI18n("search.engine.page.edit.notification");
+  const tCommon = useI18n("common");
   const router = useRouter();
 
   const { mutate, isPending } = clientApi.searchEngine.update.useMutation({
     onSuccess: () => {
       showSuccessNotification({
-        title: t("success.title"),
+        title: tCommon("notification.update.success"),
         message: t("success.message"),
       });
       void revalidatePathActionAsync("/manage/search-engines").then(() => {
@@ -34,7 +35,7 @@ export const SearchEngineEditForm = ({ searchEngine }: SearchEngineEditFormProps
     },
     onError: () => {
       showErrorNotification({
-        title: t("error.title"),
+        title: tCommon("notification.update.error"),
         message: t("error.message"),
       });
     },
@@ -50,7 +51,7 @@ export const SearchEngineEditForm = ({ searchEngine }: SearchEngineEditFormProps
     [mutate, searchEngine.id],
   );
 
-  const submitButtonTranslation = useCallback((t: TranslationFunction) => t("common.action.save"), []);
+  const submitButtonTranslation = useCallback((t: ScopedTranslationFunction<"common">) => t("action.save"), []);
 
   return (
     <SearchEngineForm

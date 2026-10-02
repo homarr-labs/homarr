@@ -7,16 +7,24 @@ import type { KubernetesPod } from "@homarr/definitions";
 
 import { kubernetesMiddleware } from "../../../middlewares/kubernetes";
 import { createTRPCRouter, permissionRequiredProcedure } from "../../../trpc";
-import { KubernetesClient } from "../kubernetes-client";
+import { getKubernetesClient, kubernetesContextInput } from "../kubernetes-context";
 
 const logger = createLogger({ module: "podsRouter" });
 
 export const podsRouter = createTRPCRouter({
   getPods: permissionRequiredProcedure
     .requiresPermission("admin")
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "List Kubernetes pod inventory and inferred workload types for a context. Get the required contextId from kubernetes_contexts_getContexts. Requires admin permission.",
+      },
+    })
     .concat(kubernetesMiddleware())
-    .query(async (): Promise<KubernetesPod[]> => {
-      const { coreApi, kubeConfig } = KubernetesClient.getInstance();
+    .input(kubernetesContextInput)
+    .query(async ({ input }): Promise<KubernetesPod[]> => {
+      const { coreApi, kubeConfig } = getKubernetesClient(input.contextId);
       try {
         const podsResp = await coreApi.listPodForAllNamespaces();
 

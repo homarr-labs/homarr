@@ -9,6 +9,12 @@ export const dockerContainersWidget: WidgetDefinition = {
   configuration: {
     items: [
       {
+        name: "Docker environments",
+        description: "Select one or more automatically discovered Docker environments, or leave empty to show all",
+        values: "Any Docker socket or host configured for Homarr",
+        defaultValue: "All Docker environments",
+      },
+      {
         name: "Columns to show",
         description: "Select which columns are visible in the table",
         values: "Name, State, Host, CPU usage, Memory usage, and Actions",

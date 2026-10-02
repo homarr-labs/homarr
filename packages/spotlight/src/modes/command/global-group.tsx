@@ -2,7 +2,6 @@ import { Group, Text } from "@mantine/core";
 import {
   IconBox,
   IconCategoryPlus,
-  IconFileImport,
   IconMailForward,
   IconPlug,
   IconUserPlus,
@@ -10,9 +9,7 @@ import {
 } from "@tabler/icons-react";
 
 import { useSession } from "@homarr/auth/client";
-import { useModalAction } from "@homarr/modals";
-import { AddBoardModal, AddGroupModal, ImportBoardModal, InviteCreateModal } from "@homarr/modals-collection";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
 import { createGroup } from "../../lib/group";
@@ -34,7 +31,8 @@ type Command<TSearchInteraction extends SearchInteraction = SearchInteraction> =
 
 export const globalCommandGroup = createGroup<Command>({
   keyPath: "commandKey",
-  title: "Global commands",
+  title: (t) => t("search.mode.command.group.globalCommand.title"),
+  source: { kind: "local" },
   useInteraction: (option, query) => option.useInteraction(option, query),
   Component: ({ icon: Icon, name }) => (
     <Group px="md" py="sm">
@@ -46,7 +44,7 @@ export const globalCommandGroup = createGroup<Command>({
     return option.name.toLowerCase().includes(query.toLowerCase());
   },
   useOptions() {
-    const tOption = useScopedI18n("search.mode.command.group.globalCommand.option");
+    const tOption = useI18n("search.mode.command.group.globalCommand.option");
     const { data: session } = useSession();
 
     const commands: (Command & { hidden?: boolean })[] = [
@@ -54,32 +52,7 @@ export const globalCommandGroup = createGroup<Command>({
         commandKey: "newBoard",
         icon: IconCategoryPlus,
         name: tOption("newBoard.label"),
-        useInteraction() {
-          const { openModal } = useModalAction(AddBoardModal);
-
-          return {
-            type: "javaScript",
-            onSelect() {
-              openModal(undefined);
-            },
-          };
-        },
-        hidden: !session?.user.permissions.includes("board-create"),
-      },
-      {
-        commandKey: "importBoard",
-        icon: IconFileImport,
-        name: tOption("importBoard.label"),
-        useInteraction() {
-          const { openModal } = useModalAction(ImportBoardModal);
-
-          return {
-            type: "javaScript",
-            onSelect() {
-              openModal(undefined);
-            },
-          };
-        },
+        useInteraction: interaction.link(() => ({ href: "/manage/boards?create=true" })),
         hidden: !session?.user.permissions.includes("board-create"),
       },
       {
@@ -87,8 +60,7 @@ export const globalCommandGroup = createGroup<Command>({
         icon: IconBox,
         name: tOption("newApp.label"),
         useInteraction: interaction.link(() => ({ href: "/manage/apps/new" })),
-        hidden:
-          !session?.user.permissions.includes("board-modify-all") || !session?.user.permissions.includes("app-create"),
+        hidden: !session?.user.permissions.includes("app-create"),
       },
       {
         commandKey: "newIntegration",
@@ -108,32 +80,14 @@ export const globalCommandGroup = createGroup<Command>({
         commandKey: "newInvite",
         icon: IconMailForward,
         name: tOption("newInvite.label"),
-        useInteraction() {
-          const { openModal } = useModalAction(InviteCreateModal);
-
-          return {
-            type: "javaScript",
-            onSelect() {
-              openModal(undefined);
-            },
-          };
-        },
+        useInteraction: interaction.link(() => ({ href: "/manage/users/invites?create=true" })),
         hidden: !session?.user.permissions.includes("admin"),
       },
       {
         commandKey: "newGroup",
         icon: IconUsersGroup,
         name: tOption("newGroup.label"),
-        useInteraction() {
-          const { openModal } = useModalAction(AddGroupModal);
-
-          return {
-            type: "javaScript",
-            onSelect() {
-              openModal(undefined);
-            },
-          };
-        },
+        useInteraction: interaction.link(() => ({ href: "/manage/users/groups?create=true" })),
         hidden: !session?.user.permissions.includes("admin"),
       },
     ];

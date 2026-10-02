@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button, Stack } from "@mantine/core";
 import { z } from "zod/v4";
 
+import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { env } from "@homarr/common/env";
@@ -11,12 +13,15 @@ import { colorSchemes } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import type { ServerSettings, defaultServerSettingsKeys } from "@homarr/server-settings";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { brandingServerSettingsSchema } from "@homarr/server-settings";
+import { useI18n } from "@homarr/translation/client";
 
 import { UnsavedChangesBar } from "~/components/manage/unsaved-changes-bar";
+import { useUnsavedChangesGuard } from "~/components/manage/use-unsaved-changes-guard";
 import { AnalyticsSettings } from "./analytics.settings";
 import { AppearanceSettingsForm } from "./appearance-settings-form";
 import { BoardSettingsForm } from "./board-settings-form";
+import { BrandingSettingsForm } from "./branding-settings-form";
 import { CrawlingAndIndexingSettings } from "./crawling-and-indexing.settings";
 import { CultureSettingsForm } from "./culture-settings-form";
 import { SearchSettingsForm } from "./search-settings-form";
@@ -36,6 +41,7 @@ const settingsFormSchema = z.object({
   defaultSearchEngineId: z.string().nullable(),
   defaultColorScheme: z.enum(colorSchemes),
   defaultLocale: z.string(),
+  branding: brandingServerSettingsSchema,
 });
 
 export type FormValues = z.infer<typeof settingsFormSchema>;
@@ -54,15 +60,19 @@ const buildInitialValues = (initialData: ServerSettings): FormValues => ({
   defaultSearchEngineId: initialData.search.defaultSearchEngineId,
   defaultColorScheme: initialData.appearance.defaultColorScheme,
   defaultLocale: initialData.culture.defaultLocale,
+  branding: initialData.branding,
 });
 
 interface SettingsFormProps {
   initialData: ServerSettings;
+  selectableBoards: RouterOutputs["board"]["getPublicBoards"];
+  selectableSearchEngines: RouterOutputs["searchEngine"]["getSelectable"];
 }
 
-export const SettingsForm = ({ initialData }: SettingsFormProps) => {
-  const t = useI18n();
-  const tSettings = useScopedI18n("management.page.settings");
+export const SettingsForm = ({ initialData, selectableBoards, selectableSearchEngines }: SettingsFormProps) => {
+  const tCommon = useI18n("common");
+  const tSettings = useI18n("management.page.settings");
+  const router = useRouter();
 
   const initialValues = buildInitialValues(initialData);
   const initialValuesRef = useRef(initialValues);
@@ -71,25 +81,15 @@ export const SettingsForm = ({ initialData }: SettingsFormProps) => {
     initialValues,
   });
 
-  const isDirtyRef = useRef(false);
-  isDirtyRef.current = form.isDirty();
+  useUnsavedChangesGuard(form.isDirty(), { guardBeforeUnload: env.NODE_ENV !== "development" });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const saveSettingsMutation = clientApi.serverSettings.saveSettings.useMutation({
     onError(error) {
-      showErrorNotification({ title: t("common.notification.update.error"), message: error.message });
+      showErrorNotification({ title: tCommon("notification.update.error"), message: error.message });
     },
   });
-
-  useEffect(() => {
-    const handler = (event: BeforeUnloadEvent) => {
-      if (env.NODE_ENV === "development") return;
-      if (isDirtyRef.current) event.preventDefault();
-    };
-    window.addEventListener("beforeunload", handler);
-    return () => window.removeEventListener("beforeunload", handler);
-  }, []);
 
   const handleSubmitAsync = async (values: FormValues) => {
     const defaults = initialValuesRef.current;
@@ -134,6 +134,11 @@ export const SettingsForm = ({ initialData }: SettingsFormProps) => {
         value: { defaultColorScheme: values.defaultColorScheme },
       },
       { settingsKey: "culture", when: changed("defaultLocale"), value: { defaultLocale: values.defaultLocale } },
+      {
+        settingsKey: "branding",
+        when: changed("branding"),
+        value: values.branding,
+      },
     ];
 
     const promises = groups
@@ -152,8 +157,9 @@ export const SettingsForm = ({ initialData }: SettingsFormProps) => {
       form.setInitialValues(values);
       form.resetDirty();
       await revalidatePathActionAsync("/manage/settings");
+      router.refresh();
       showSuccessNotification({
-        title: t("common.notification.update.success"),
+        title: tCommon("notification.update.success"),
         message: tSettings("notification.success.message"),
       });
     } finally {
@@ -169,21 +175,22 @@ export const SettingsForm = ({ initialData }: SettingsFormProps) => {
   return (
     <form onSubmit={form.onSubmit((values) => void handleSubmitAsync(values))}>
       <Stack gap="xl">
+        <BoardSettingsForm form={form} selectableBoards={selectableBoards} />
+        <UserSettingsForm form={form} />
+        <SearchSettingsForm form={form} selectableSearchEngines={selectableSearchEngines} />
+        <AppearanceSettingsForm form={form} />
+        <BrandingSettingsForm form={form} />
+        <CultureSettingsForm form={form} />
         <AnalyticsSettings form={form} />
         <CrawlingAndIndexingSettings form={form} />
-        <BoardSettingsForm form={form} />
-        <UserSettingsForm form={form} />
-        <SearchSettingsForm form={form} />
-        <AppearanceSettingsForm form={form} />
-        <CultureSettingsForm form={form} />
 
         {form.isDirty() && (
           <UnsavedChangesBar>
             <Button type="button" disabled={isSubmitting} variant="default" onClick={handleDiscard}>
-              {t("common.action.discard")}
+              {tCommon("action.discard")}
             </Button>
             <Button loading={isSubmitting} type="submit" disabled={!form.isValid()}>
-              {t("common.action.saveChanges")}
+              {tCommon("action.saveChanges")}
             </Button>
           </UnsavedChangesBar>
         )}

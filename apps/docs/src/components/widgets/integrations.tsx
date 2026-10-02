@@ -1,6 +1,10 @@
-import { useColorMode } from "@docusaurus/theme-common";
+"use client";
+
+import { useColorMode } from "@/hooks/use-color-mode";
+import { getDocsHref } from "@/lib/docs-path";
 import { IntegrationDefinition } from "@site/src/types";
-import { IconExternalLink } from "@tabler/icons-react";
+import { IconArrowRight } from "@tabler/icons-react";
+import Link from "next/link";
 import { getIntegrationIconUrl } from "../integrations/header";
 
 interface WidgetIntegrationsProps {
@@ -14,36 +18,38 @@ export const WidgetIntegrations = ({ items }: WidgetIntegrationsProps) => {
   const { isDarkTheme } = useColorMode();
 
   return (
-    <div className="flex flex-col gap-4 mt-4 w-full">
-      <div className="flex flex-col gap-2">
+    <div className="not-prose mt-4 grid w-full gap-2">
+      <div className="grid gap-2">
         {items.map((item) => (
           <div
             key={item.integration.name}
-            className="flex gap-6 rounded-xl border border-solid dark:border-[#333] border-[#e5e7eb] p-4 shadow-sm w-full items-center justify-between"
+            className="flex flex-col gap-4 rounded-xl border bg-fd-card p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between"
           >
-            <div className="flex gap-6 items-center">
+            <div className="flex min-w-0 items-start gap-4 sm:items-center">
               <img
                 width={40}
                 height={40}
                 src={getIntegrationIconUrl(item.integration, isDarkTheme)}
                 alt={`${item.integration.name} icon`}
-                className="w-10 h-10"
+                className="size-10 shrink-0 object-contain"
               />
 
-              <div className="flex flex-col gap-0">
-                <span className="text-base font-bold">{item.integration.name}</span>
-                <span className="text-sm dark:text-[#999999] text-[#696969]">{item.integration.description}</span>
-                {item.note && <span className="text-xs text-yellow-500 mt-1">{item.note}</span>}
+              <div className="min-w-0">
+                <span className="block text-base font-semibold text-fd-foreground">{item.integration.name}</span>
+                <span className="mt-1 block text-sm leading-5 text-fd-muted-foreground">
+                  {item.integration.description}
+                </span>
+                {item.note && <span className="mt-1 block text-xs text-fd-muted-foreground">{item.note}</span>}
               </div>
             </div>
 
-            <a
-              href={item.integration.path}
-              className="border border-solid border-[#e5e7eb] dark:border-[#333] p-2 py-1 rounded-md gap-2 flex justify-center items-center hover:no-underline hover:bg-slate-100 dark:hover:bg-gray-800"
+            <Link
+              href={getDocsHref(item.integration.path)}
+              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-md border px-3 py-2 text-sm font-medium text-fd-foreground hover:bg-fd-muted hover:no-underline"
             >
-              <IconExternalLink size={16} stroke={1.5} className="dark:stroke-white stroke-black" />
-              <span className="dark:text-white text-black font-medium text-sm">Details</span>
-            </a>
+              View guide
+              <IconArrowRight aria-hidden="true" size={16} stroke={1.5} />
+            </Link>
           </div>
         ))}
       </div>

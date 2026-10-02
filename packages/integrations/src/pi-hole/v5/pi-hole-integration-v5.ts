@@ -1,8 +1,10 @@
+import { isRecord } from "@homarr/common";
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
 import type { IntegrationTestingInput } from "../../base/integration";
 import { Integration } from "../../base/integration";
+import type { IntegrationHttpAuthentication } from "../../http-auth";
 import { TestConnectionError } from "../../base/test-connection/test-connection-error";
 import type { TestingResult } from "../../base/test-connection/test-connection-service";
 import type { DnsHoleSummaryIntegration } from "../../interfaces/dns-hole-summary/dns-hole-summary-integration";
@@ -10,6 +12,11 @@ import type { DnsHoleSummary } from "../../interfaces/dns-hole-summary/dns-hole-
 import { summaryResponseSchema } from "./pi-hole-schemas-v5";
 
 export class PiHoleIntegrationV5 extends Integration implements DnsHoleSummaryIntegration {
+  public override async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    if (!this.hasSecretValue("apiKey")) return { headers: {} };
+    return { headers: {}, query: { auth: this.getSecretValue("apiKey") } };
+  }
+
   public async getSummaryAsync(): Promise<DnsHoleSummary> {
     const apiKey = super.getSecretValue("apiKey");
     const response = await fetchWithTrustedCertificatesAsync(this.url("/admin/api.php?summaryRaw", { auth: apiKey }));
@@ -38,7 +45,7 @@ export class PiHoleIntegrationV5 extends Integration implements DnsHoleSummaryIn
     const data = await response.json();
 
     // Pi-hole v5 returned an empty array if the API key is wrong
-    if (typeof data !== "object" || Array.isArray(data)) {
+    if (!isRecord(data)) {
       return TestConnectionError.UnauthorizedResult(401);
     }
 

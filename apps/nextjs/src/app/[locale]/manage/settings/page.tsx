@@ -1,19 +1,17 @@
 import { notFound } from "next/navigation";
-import { Stack, Title } from "@mantine/core";
 
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
-import { getScopedI18n } from "@homarr/translation/server";
+import { getI18n } from "@homarr/translation/server";
 
-import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
+import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import { SettingsForm } from "./_components/settings-form";
 
 export async function generateMetadata() {
-  const t = await getScopedI18n("management");
-  const metaTitle = `${t("metaTitle")} • Homarr`;
+  const t = await getI18n("management");
 
   return {
-    title: metaTitle,
+    title: t("metaTitle"),
   };
 }
 
@@ -24,16 +22,20 @@ export default async function SettingsPage() {
     notFound();
   }
 
-  const serverSettings = await api.serverSettings.getAll();
-  const tSettings = await getScopedI18n("management.page.settings");
+  const [serverSettings, selectableBoards, selectableSearchEngines, tSettings] = await Promise.all([
+    api.serverSettings.getAll(),
+    api.board.getPublicBoards(),
+    api.searchEngine.getSelectable({ withIntegrations: false }),
+    getI18n("management.page.settings"),
+  ]);
 
   return (
-    <>
-      <DynamicBreadcrumb />
-      <Stack>
-        <Title order={1}>{tSettings("title")}</Title>
-        <SettingsForm initialData={serverSettings} />
-      </Stack>
-    </>
+    <ManagePageLayout title={tSettings("title")}>
+      <SettingsForm
+        initialData={serverSettings}
+        selectableBoards={selectableBoards}
+        selectableSearchEngines={selectableSearchEngines}
+      />
+    </ManagePageLayout>
   );
 }

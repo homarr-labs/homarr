@@ -1,21 +1,24 @@
 import { TRPCError } from "@trpc/server";
-import type { MySqlRawQueryResult } from "drizzle-orm/mysql2";
-import type { QueryResult } from "pg";
 import { z } from "zod/v4";
 
 import { comparePasswordsAsync, hashPasswordAsync } from "@homarr/auth";
+import { isProviderEnabled } from "@homarr/auth/server";
 import { createId } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { Database } from "@homarr/db";
 import { and, eq, handleTransactionsAsync, inArray, like } from "@homarr/db";
 import { getMaxGroupPositionAsync } from "@homarr/db/queries";
-import { boards, groupMembers, groupPermissions, groups, invites, users } from "@homarr/db/schema";
+import { boards, groupMembers, groupPermissions, groups, invites, onboarding, users } from "@homarr/db/schema";
 import { selectUserSchema } from "@homarr/db/validationSchemas";
 import type { SupportedAuthProvider } from "@homarr/definitions";
 import { credentialsAdminGroup, supportedAuthProviders } from "@homarr/definitions";
 import { byIdSchema } from "@homarr/validation/common";
-import type { userBaseCreateSchema } from "@homarr/validation/user";
+import type { HeaderPreferences, userBaseCreateSchema } from "@homarr/validation/user";
 import {
+  getHeaderItems,
+  headerPreferencesMutationSchema,
+  parseHeaderPreferences,
+  userByteUnitSystemSchema,
   userChangeColorSchemeSchema,
   userChangeHomeBoardsSchema,
   userChangePasswordApiSchema,
@@ -29,6 +32,7 @@ import {
   userPingIconsEnabledSchema,
   userRegistrationApiSchema,
 } from "@homarr/validation/user";
+import { serializeHeaderPreferences } from "@homarr/validation/header-preferences";
 
 import { convertIntersectionToZodObject } from "../schema-merger";
 import {
@@ -39,9 +43,9 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "../trpc";
+import { getAccessibleBoardIdsForUserAsync } from "./board";
 import { throwIfActionForbiddenAsync } from "./board/board-access";
 import { throwIfCredentialsDisabled } from "./invite/checks";
-import { nextOnboardingStepAsync } from "./onboard/onboard-queries";
 import { changeSearchPreferencesAsync, changeSearchPreferencesInputSchema } from "./user/change-search-preferences";
 
 const logger = createLogger({ module: "userRouter" });
@@ -52,25 +56,46 @@ export const userRouter = createTRPCRouter({
     .input(userInitSchema)
     .mutation(async ({ ctx, input }) => {
       throwIfCredentialsDisabled();
+      await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, "credentials", input.username);
 
       const maxPosition = await getMaxGroupPositionAsync(ctx.db);
-      const userId = await createUserAsync(ctx.db, input);
+      const hashedPassword = await hashPasswordAsync(input.password);
+      const userId = createId();
       const groupId = createId();
-      await ctx.db.insert(groups).values({
+      const userRow = {
+        id: userId,
+        name: input.username,
+        email: input.email,
+        password: hashedPassword,
+      };
+      const groupRow = {
         id: groupId,
         name: credentialsAdminGroup,
         ownerId: userId,
         position: maxPosition + 1,
+      };
+      const nextStep = isProviderEnabled("ldap") || isProviderEnabled("oidc") ? "group" : "setup";
+
+      await handleTransactionsAsync(ctx.db, {
+        async handleAsync(db, schema) {
+          await db.transaction(async (transaction) => {
+            await transaction.insert(schema.users).values(userRow);
+            await transaction.insert(schema.groups).values(groupRow);
+            await transaction.insert(schema.groupPermissions).values({ groupId, permission: "admin" });
+            await transaction.insert(schema.groupMembers).values({ groupId, userId });
+            await transaction.update(schema.onboarding).set({ previousStep: "user", step: nextStep });
+          });
+        },
+        handleSync(db) {
+          db.transaction((transaction) => {
+            transaction.insert(users).values(userRow).run();
+            transaction.insert(groups).values(groupRow).run();
+            transaction.insert(groupPermissions).values({ groupId, permission: "admin" }).run();
+            transaction.insert(groupMembers).values({ groupId, userId }).run();
+            transaction.update(onboarding).set({ previousStep: "user", step: nextStep }).run();
+          });
+        },
       });
-      await ctx.db.insert(groupPermissions).values({
-        groupId,
-        permission: "admin",
-      });
-      await ctx.db.insert(groupMembers).values({
-        groupId,
-        userId,
-      });
-      await nextOnboardingStepAsync(ctx.db, undefined);
     }),
   register: publicProcedure
     .input(userRegistrationApiSchema)
@@ -110,15 +135,8 @@ export const userRouter = createTRPCRouter({
             await trx.insert(schema.users).values(user);
 
             // Delete invite as it's used
-            const queryResult = (await trx.delete(schema.invites).where(inviteWhere)) as
-              | QueryResult
-              | MySqlRawQueryResult;
-            let count: number;
-            if (Array.isArray(queryResult)) {
-              count = queryResult[0].affectedRows;
-            } else {
-              count = queryResult.rowCount ?? 0;
-            }
+            const queryResult = await trx.delete(schema.invites).where(inviteWhere);
+            const count = queryResult.rowCount ?? 0;
             if (count === 0) {
               throw new TRPCError({
                 code: "FORBIDDEN",
@@ -151,6 +169,9 @@ export const userRouter = createTRPCRouter({
         path: "/api/users",
         tags: ["users"],
         protect: true,
+        summary: "Create a user",
+        description:
+          "Create a credentials account and assign the supplied groups. Requires admin permission and credentials authentication to be enabled. The username must be unique and password confirmation must match.",
       },
       mcp: {
         enabled: true,
@@ -178,6 +199,9 @@ export const userRouter = createTRPCRouter({
         path: "/api/users/profileImage",
         tags: ["users"],
         protect: true,
+        summary: "Set a profile image",
+        description:
+          "Set a user's image to a base64 PNG, JPEG, GIF, or WebP data URL, or null to clear it. The data URL is limited to 350,000 characters. Users can update themselves; updating another user requires admin permission.",
       },
     })
     .input(
@@ -186,7 +210,7 @@ export const userRouter = createTRPCRouter({
         image: z
           .string()
           .regex(/^data:image\/(png|jpeg|gif|webp);base64,[A-Za-z0-9/+]+=*$/g)
-          .max(350000) // approximately 256KB in base64 (256 * 1024 * 4 / 3 + prefixes)
+          .max(350000) // approximately 256 KiB in base64 (256 * 1024 * 4 / 3 + prefixes)
           .nullable(),
       }),
     )
@@ -242,6 +266,9 @@ export const userRouter = createTRPCRouter({
         path: "/api/users",
         tags: ["users"],
         protect: true,
+        summary: "List all users",
+        description:
+          "Return user IDs, names, email addresses, verification dates, and profile images. Requires admin permission.",
       },
       mcp: { enabled: true, description: "List all users (admin only)" },
     })
@@ -275,6 +302,9 @@ export const userRouter = createTRPCRouter({
         path: "/api/users/selectable",
         tags: ["users"],
         protect: true,
+        summary: "List selectable users",
+        description:
+          "Return user IDs, names, profile images, and email addresses for selection controls, optionally filtered by authentication provider. Requires authentication.",
       },
     })
     .query(({ ctx, input }) => {
@@ -312,6 +342,9 @@ export const userRouter = createTRPCRouter({
         path: "/api/users/search",
         tags: ["users"],
         protect: true,
+        summary: "Search users",
+        description:
+          "Find users whose names contain the query. Returns IDs, names, profile images, and email addresses, with up to 100 results. Requires admin permission.",
       },
     })
     .query(async ({ input, ctx }) => {
@@ -344,9 +377,11 @@ export const userRouter = createTRPCRouter({
         provider: true,
         homeBoardId: true,
         mobileHomeBoardId: true,
+        byteUnitSystem: true,
         firstDayOfWeek: true,
         pingIconsEnabled: true,
         enableRightClickOnWidgets: true,
+        headerPreferences: true,
         defaultSearchEngineId: true,
         openSearchInNewTab: true,
         ddgBangs: true,
@@ -360,6 +395,9 @@ export const userRouter = createTRPCRouter({
         path: "/api/users/{userId}",
         tags: ["users"],
         protect: true,
+        summary: "Get a user",
+        description:
+          "Return a user's profile, authentication provider, and preferences. Users can read themselves; reading another user requires admin permission.",
       },
       mcp: { enabled: true, description: "Get user details by user ID. REQUIRED: userId (string)" },
     })
@@ -381,9 +419,11 @@ export const userRouter = createTRPCRouter({
           provider: true,
           homeBoardId: true,
           mobileHomeBoardId: true,
+          byteUnitSystem: true,
           firstDayOfWeek: true,
           pingIconsEnabled: true,
           enableRightClickOnWidgets: true,
+          headerPreferences: true,
           defaultSearchEngineId: true,
           openSearchInNewTab: true,
           ddgBangs: true,
@@ -411,6 +451,9 @@ export const userRouter = createTRPCRouter({
         path: "/api/users/profile",
         tags: ["users"],
         protect: true,
+        summary: "Update a user profile",
+        description:
+          "Update a credentials account's username and email. Users can update themselves; updating another user requires admin permission. External-provider profiles cannot be edited, and username changes are disabled in demo mode.",
       },
     })
     .mutation(async ({ input, ctx }) => {
@@ -423,7 +466,7 @@ export const userRouter = createTRPCRouter({
       }
 
       const user = await ctx.db.query.users.findFirst({
-        columns: { email: true, provider: true },
+        columns: { name: true, email: true, provider: true },
         where: eq(users.id, input.id),
       });
 
@@ -438,6 +481,13 @@ export const userRouter = createTRPCRouter({
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "Username and email can not be changed for users with external providers",
+        });
+      }
+
+      if (isDemoMode && input.name !== user.name) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Username changes are disabled in demo mode",
         });
       }
 
@@ -462,10 +512,20 @@ export const userRouter = createTRPCRouter({
         path: "/api/users/{userId}",
         tags: ["users"],
         protect: true,
+        summary: "Delete a user",
+        description:
+          "Delete a user account. Users can delete themselves; deleting another user requires admin permission. Disabled in demo mode.",
       },
       mcp: { enabled: true, description: "Delete a user by ID. REQUIRED: userId (string)" },
     })
     .mutation(async ({ input, ctx }) => {
+      if (isDemoMode) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "User deletion is disabled in demo mode",
+        });
+      }
+
       // Only admins and user itself can delete a user
       if (ctx.session.user.id !== input.userId && !ctx.session.user.permissions.includes("admin")) {
         throw new TRPCError({
@@ -485,9 +545,19 @@ export const userRouter = createTRPCRouter({
         path: "/api/users/{userId}/changePassword",
         tags: ["users"],
         protect: true,
+        summary: "Change a user password",
+        description:
+          "Change a credentials account's password. Changing your own password requires the previous password, including for admins. Admins can reset another user's password without verifying their previous password. Disabled in demo mode.",
       },
     })
     .mutation(async ({ ctx, input }) => {
+      if (isDemoMode) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Password changes are disabled in demo mode",
+        });
+      }
+
       const user = ctx.session.user;
       // Only admins can change other users' passwords
       if (!user.permissions.includes("admin") && user.id !== input.userId) {
@@ -557,6 +627,9 @@ export const userRouter = createTRPCRouter({
         path: "/api/users/changeHome",
         tags: ["users"],
         protect: true,
+        summary: "Change user home boards",
+        description:
+          "Set or clear a user's desktop and mobile home boards. The caller must be able to view each selected board. Users can update themselves; updating another user requires admin permission.",
       },
     })
     .mutation(async ({ input, ctx }) => {
@@ -613,6 +686,9 @@ export const userRouter = createTRPCRouter({
         tags: ["users"],
         protect: true,
         deprecated: true,
+        summary: "Change the default search engine",
+        description:
+          "Deprecated: use PATCH /api/users/search-preferences instead. Updates the default search engine and supplied DuckDuckGo bang preference while preserving the new-tab preference. Users can update themselves; updating another user requires admin permission.",
       },
     })
     .mutation(async ({ input, ctx }) => {
@@ -630,6 +706,9 @@ export const userRouter = createTRPCRouter({
         path: "/api/users/search-preferences",
         tags: ["users"],
         protect: true,
+        summary: "Update search preferences",
+        description:
+          "Set a user's default search engine, new-tab behavior, and DuckDuckGo bang preference. Users can update themselves; updating another user requires admin permission.",
       },
     })
     .mutation(async ({ input, ctx }) => {
@@ -644,6 +723,8 @@ export const userRouter = createTRPCRouter({
         path: "/api/users/changeScheme",
         tags: ["users"],
         protect: true,
+        summary: "Change your color scheme",
+        description: "Set the current user's preferred color scheme. Requires authentication.",
       },
     })
     .mutation(async ({ input, ctx }) => {
@@ -654,6 +735,38 @@ export const userRouter = createTRPCRouter({
         })
         .where(eq(users.id, ctx.session.user.id));
     }),
+  changeByteUnitSystem: protectedProcedure
+    .input(userByteUnitSystemSchema.and(byIdSchema))
+    .output(z.void())
+    .mutation(async ({ input, ctx }) => {
+      if (!ctx.session.user.permissions.includes("admin") && ctx.session.user.id !== input.id) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      const dbUser = await ctx.db.query.users.findFirst({
+        columns: {
+          id: true,
+        },
+        where: eq(users.id, input.id),
+      });
+
+      if (!dbUser) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      await ctx.db
+        .update(users)
+        .set({
+          byteUnitSystem: input.byteUnitSystem,
+        })
+        .where(eq(users.id, input.id));
+    }),
   changeEnableRightClickOnWidgets: protectedProcedure
     .meta({
       openapi: {
@@ -661,6 +774,9 @@ export const userRouter = createTRPCRouter({
         path: "/api/users/right-click-widgets",
         tags: ["users"],
         protect: true,
+        summary: "Change widget context menu behavior",
+        description:
+          "Enable or disable opening widget context menus with a right click for a user. Users can update themselves; updating another user requires admin permission.",
       },
     })
     .input(convertIntersectionToZodObject(userEnableRightClickOnWidgetsSchema.and(byIdSchema)))
@@ -698,6 +814,66 @@ export const userRouter = createTRPCRouter({
         })
         .where(eq(users.id, input.id));
     }),
+  changeHeaderPreferences: protectedProcedure
+    .meta({
+      openapi: {
+        method: "PATCH",
+        path: "/api/users/header-preferences",
+        tags: ["users"],
+        protect: true,
+        summary: "Update header preferences",
+        description:
+          "Replace a user's header layout and display preferences. New board shortcuts must reference boards the target user can view; existing shortcuts may be retained. Users can update themselves; updating another user requires admin permission.",
+      },
+      mcp: {
+        enabled: true,
+        description:
+          "Update the header layout preferences of a user. REQUIRED: id (user ID), headerPreferences (zones for left, center and right, visible flag, searchDisplay and logoDisplay). Admins can change any user; other users can only change their own. Board shortcut items must reference boards the target user can view",
+      },
+    })
+    .input(z.object({ id: z.string(), headerPreferences: headerPreferencesMutationSchema }))
+    .output(z.void())
+    .mutation(async ({ input, ctx }) => {
+      if (!ctx.session.user.permissions.includes("admin") && ctx.session.user.id !== input.id) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      const targetUser = await ctx.db.query.users.findFirst({
+        columns: { headerPreferences: true },
+        where: eq(users.id, input.id),
+      });
+      if (!targetUser) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      const submittedBoardIds = getBoardShortcutIds(input.headerPreferences);
+      if (submittedBoardIds.length > 0) {
+        const existingBoardIds = new Set(getBoardShortcutIds(parseHeaderPreferences(targetUser.headerPreferences)));
+        const accessibleBoardIds = await getAccessibleBoardIdsForUserAsync(ctx.db, input.id);
+        const hasUnavailableShortcut = submittedBoardIds.some(
+          (boardId) => !accessibleBoardIds.has(boardId) && !existingBoardIds.has(boardId),
+        );
+        if (hasUnavailableShortcut) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "One or more board shortcuts are unavailable to this user",
+          });
+        }
+      }
+
+      await ctx.db
+        .update(users)
+        .set({
+          headerPreferences: serializeHeaderPreferences(input.headerPreferences),
+        })
+        .where(eq(users.id, input.id));
+    }),
   changeDdgBangs: protectedProcedure
     .input(convertIntersectionToZodObject(userDdgBangsSchema.and(byIdSchema)))
     .output(z.void())
@@ -708,6 +884,9 @@ export const userRouter = createTRPCRouter({
         tags: ["users"],
         protect: true,
         deprecated: true,
+        summary: "Change DuckDuckGo bang behavior",
+        description:
+          "Deprecated: use PATCH /api/users/search-preferences instead. Enable or disable DuckDuckGo bangs for a user. Users can update themselves; updating another user requires admin permission.",
       },
     })
     .mutation(async ({ input, ctx }) => {
@@ -734,6 +913,9 @@ export const userRouter = createTRPCRouter({
         path: "/api/users/firstDayOfWeek",
         tags: ["users"],
         protect: true,
+        summary: "Change the first day of the week",
+        description:
+          "Set a user's preferred first day of the week. Users can update themselves; updating another user requires admin permission.",
       },
     })
     .mutation(async ({ input, ctx }) => {
@@ -807,6 +989,9 @@ export const userRouter = createTRPCRouter({
     };
   }),
 });
+
+const getBoardShortcutIds = (preferences: HeaderPreferences) =>
+  getHeaderItems(preferences.zones).flatMap((item) => (item.type === "board" ? [item.boardId] : []));
 
 const createUserAsync = async (db: Database, input: Omit<z.infer<typeof userBaseCreateSchema>, "groupIds">) => {
   const hashedPassword = await hashPasswordAsync(input.password);

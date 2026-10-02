@@ -1,6 +1,7 @@
 // General integrations
 export { ArchiveTeamWarriorIntegration } from "./archive-team-warrior/archive-team-warrior-integration";
 export { WudIntegration } from "./wud/wud-integration";
+export { LlamacppIntegration } from "./llama-cpp/llamacpp-integration";
 export { AdGuardHomeIntegration } from "./adguard-home/adguard-home-integration";
 export { TechnitiumDnsIntegration } from "./technitium/technitium-integration";
 export { AnchorIntegration } from "./anchor/anchor-integration";
@@ -14,6 +15,7 @@ export { TransmissionIntegration } from "./download-client/transmission/transmis
 export { HomeAssistantIntegration } from "./homeassistant/homeassistant-integration";
 export { JellyfinIntegration } from "./jellyfin/jellyfin-integration";
 export { JellyseerrIntegration } from "./jellyseerr/jellyseerr-integration";
+export { BinderyIntegration } from "./media-organizer/bindery/bindery-integration";
 export { LidarrIntegration } from "./media-organizer/lidarr/lidarr-integration";
 export { RadarrIntegration } from "./media-organizer/radarr/radarr-integration";
 export { ReadarrIntegration } from "./media-organizer/readarr/readarr-integration";
@@ -29,6 +31,7 @@ export { PiHoleIntegrationV5 } from "./pi-hole/v5/pi-hole-integration-v5";
 export { PiHoleIntegrationV6 } from "./pi-hole/v6/pi-hole-integration-v6";
 export { PlexIntegration } from "./plex/plex-integration";
 export { ProwlarrIntegration } from "./prowlarr/prowlarr-integration";
+export { JackettIntegration } from "./jackett/jackett-integration";
 export { TrueNasIntegration } from "./truenas/truenas-integration";
 export { SynologyIntegration } from "./synology/synology-integration";
 export { UnraidIntegration } from "./unraid/unraid-integration";
@@ -45,6 +48,7 @@ export { UmamiIntegration } from "./umami/umami-integration";
 export { PeaNutIntegration } from "./peanut/peanut-integration";
 export { BazarrIntegration } from "./bazarr/bazarr-integration";
 export { TraefikIntegration } from "./traefik/traefik-integration";
+export { mockWidgetData } from "./mock/widget-data";
 
 // Types
 export type { IntegrationInput } from "./base/integration";
@@ -62,6 +66,7 @@ export type { SystemHealthMonitoring } from "./interfaces/health-monitoring/heal
 export { UpstreamMediaRequestStatus } from "./interfaces/media-requests/media-request-types";
 export type { MediaRequestList, MediaRequestStats } from "./interfaces/media-requests/media-request-types";
 export type { StreamSession } from "./interfaces/media-server/media-server-types";
+export type { EntityState } from "./interfaces/smart-home/smart-home-types";
 export type {
   TdarrQueue,
   TdarrPieSegment,
@@ -72,6 +77,8 @@ export type { Notification } from "./interfaces/notifications/notification-types
 export type { ImmichServerStats, ImmichAlbum, ImmichAsset } from "./immich/immich-integration";
 export type { PaperlessNgxStats } from "./paperless-ngx/paperless-ngx-types";
 export type { PatchMonStats, PatchMonOsDistributionEntry } from "./patchmon/patchmon-types";
+export { toWazuhPublicError } from "./wazuh/wazuh-errors";
+export type { WazuhErrorReason, WazuhPublicError } from "./wazuh/wazuh-errors";
 export type {
   AnchorNote,
   AnchorNotePermission,
@@ -93,11 +100,13 @@ export type {
   ArchiveTeamWarriorStatus,
 } from "./archive-team-warrior/archive-team-warrior-types";
 export type { WudStats, WudContainerUpdate } from "./wud/wud-types";
+export type { LlamacppStats, LlamacppModel } from "./llama-cpp/llamacpp-types";
 
 // Schemas
-export { anchorNotesListInputSchema } from "./anchor/anchor-types";
-export { anchorNoteUpdateInputSchema } from "./anchor/anchor-types";
+export { anchorNotesListInputSchema, anchorNoteUpdateInputSchema } from "./anchor/anchor-types";
 export { downloadClientItemSchema } from "./interfaces/downloads/download-client-items";
 
 // Helpers
 export { createIntegrationAsync } from "./base/creator";
+export { simulateResponseContractAsync } from "./base/response-contract";
+export type { ResponseContractFixture, ResponseContractParser } from "./base/response-contract";

@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 
-import { getGridCols, shouldShowComplianceHeroText } from "../layout-utils";
+import { getGridCols, getVisiblePatchMonStatKeys, shouldShowComplianceHeroText } from "../layout-utils";
 
 describe("getGridCols", () => {
   test("returns 1 column for narrow widths", () => {
@@ -32,5 +32,33 @@ describe("shouldShowComplianceHeroText", () => {
     expect(shouldShowComplianceHeroText(220)).toBe(true);
     expect(shouldShowComplianceHeroText(256)).toBe(true);
     expect(shouldShowComplianceHeroText(384)).toBe(true);
+  });
+});
+
+describe("getVisiblePatchMonStatKeys", () => {
+  test("keeps compact visibility choices", () => {
+    expect(
+      getVisiblePatchMonStatKeys(
+        {
+          showTotalHosts: true,
+          showSecurityUpdates: true,
+          showTotalRepos: false,
+        },
+        false,
+      ),
+    ).toEqual(["totalHosts", "securityUpdates"]);
+  });
+
+  test("returns every owned statistic in advanced mode", () => {
+    expect(getVisiblePatchMonStatKeys({}, true)).toEqual([
+      "totalHosts",
+      "hostsNeedingUpdates",
+      "securityUpdates",
+      "upToDateHosts",
+      "hostsWithSecurityUpdates",
+      "recentUpdates24h",
+      "totalOutdatedPackages",
+      "totalRepos",
+    ]);
   });
 });

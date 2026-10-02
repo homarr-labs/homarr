@@ -8,6 +8,8 @@ import type { QueryClient } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
 
+import { useByteFormatter } from "@homarr/settings";
+
 const valueStyle = { fontFamily: "monospace", overflowWrap: "anywhere" } as const;
 const metricStyle = {
   background: "color-mix(in srgb, currentColor 4%, transparent)",
@@ -33,11 +35,9 @@ const readDiagnostics = (queryClient: QueryClient) => {
     total: queries.length,
     readyWidgets,
     widgetItems,
-    scriptKiB: Math.round(
-      resources
-        .filter((resource) => resource.initiatorType === "script")
-        .reduce((total, resource) => total + resource.decodedBodySize, 0) / 1024,
-    ),
+    scriptBytes: resources
+      .filter((resource) => resource.initiatorType === "script")
+      .reduce((total, resource) => total + resource.decodedBodySize, 0),
   };
 };
 
@@ -51,6 +51,7 @@ const Metric = ({ label, value }: { label: string; value: number | string }) => 
 const HomarrDevtoolsPanel = ({ active }: { active: boolean }) => {
   const pathname = usePathname();
   const queryClient = useQueryClient();
+  const { formatBytes } = useByteFormatter();
   const [diagnostics, setDiagnostics] = useState(() => readDiagnostics(queryClient));
 
   useEffect(() => {
@@ -95,7 +96,7 @@ const HomarrDevtoolsPanel = ({ active }: { active: boolean }) => {
         <Metric label="Errors" value={diagnostics.errors} />
         <Metric label="Mutations" value={diagnostics.pendingMutations} />
         <Metric label="Widgets ready" value={`${diagnostics.readyWidgets}/${diagnostics.widgetItems}`} />
-        <Metric label="Script KiB" value={diagnostics.scriptKiB} />
+        <Metric label="Script" value={formatBytes(diagnostics.scriptBytes)} />
       </div>
     </section>
   );

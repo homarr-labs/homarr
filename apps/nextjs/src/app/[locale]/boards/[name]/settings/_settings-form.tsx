@@ -10,12 +10,14 @@ import { revalidatePathActionAsync } from "@homarr/common/client";
 import { env } from "@homarr/common/env";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useSettings } from "@homarr/settings";
+import { useI18n } from "@homarr/translation/client";
 import { boardSaveLayoutsSchema, boardSavePartialSettingsSchema } from "@homarr/validation/board";
 
-import { homarrLogoPath } from "~/components/layout/logo/homarr-logo";
+import { homarrLogoPath } from "~/components/layout/logo/constants";
 import { SectionCard } from "~/components/manage/section-card";
 import { UnsavedChangesBar } from "~/components/manage/unsaved-changes-bar";
+import { useUnsavedChangesGuard } from "~/components/manage/use-unsaved-changes-guard";
 
 import type { Board } from "../../_types";
 import { ColorSettingsContent } from "./_appereance";
@@ -35,6 +37,11 @@ const boardSettingsFormSchema = boardSavePartialSettingsSchema
   .required();
 
 export type FormValues = z.infer<typeof boardSettingsFormSchema>;
+
+const normalizeMobileLayoutGutters = (layouts: readonly FormValues["layouts"][number][]) =>
+  layouts.map((layout) =>
+    layout.role === "mobile" ? { ...layout, leftGutterColumnCount: 0, rightGutterColumnCount: 0 } : layout,
+  );
 
 const PARTIAL_FORM_KEYS = [
   "pageTitle",
@@ -70,7 +77,7 @@ const buildInitialValues = (board: Board): FormValues => ({
   itemRadius: board.itemRadius,
   customCss: board.customCss ?? "",
   disableStatus: board.disableStatus,
-  layouts: board.layouts,
+  layouts: normalizeMobileLayoutGutters(board.layouts),
 });
 
 interface BoardSettingsFormProps {
@@ -81,8 +88,9 @@ interface BoardSettingsFormProps {
 }
 
 export const BoardSettingsForm = ({ board, permissions, hasFullAccess, hideVisibility }: BoardSettingsFormProps) => {
-  const t = useI18n();
-  const tSection = useScopedI18n("board.setting.section");
+  const t = useI18n("common");
+  const tSection = useI18n("board.setting.section");
+  const { branding } = useSettings();
   const { updateBoard } = useUpdateBoard();
   const savePartialSettings = useSavePartialSettingsMutation(board);
   const saveLayouts = useSaveLayoutsMutation(board);
@@ -100,8 +108,7 @@ export const BoardSettingsForm = ({ board, permissions, hasFullAccess, hideVisib
   const initialValuesRef = useRef(buildInitialValues(board));
   const lastSavedRef = useRef({ pageTitle: board.pageTitle, logoImageUrl: board.logoImageUrl });
 
-  const isDirtyRef = useRef(false);
-  isDirtyRef.current = form.isDirty();
+  useUnsavedChangesGuard(form.isDirty(), { guardBeforeUnload: env.NODE_ENV !== "development" });
 
   useEffect(() => {
     return () => {
@@ -113,55 +120,47 @@ export const BoardSettingsForm = ({ board, permissions, hasFullAccess, hideVisib
     };
   }, [updateBoard]);
 
-  useEffect(() => {
-    const handler = (event: BeforeUnloadEvent) => {
-      if (env.NODE_ENV === "development") return;
-      if (isDirtyRef.current) event.preventDefault();
-    };
-    window.addEventListener("beforeunload", handler);
-    return () => window.removeEventListener("beforeunload", handler);
-  }, []);
-
-  const handleSubmitAsync = async (values: FormValues) => {
+  const saveSettingsAsync = async (values: FormValues): Promise<FormValues | null> => {
     const defaults = initialValuesRef.current;
     const changed = <TKey extends keyof FormValues>(...fields: TKey[]) =>
       fields.some((field) => values[field] !== defaults[field]);
 
-    const { layouts, ...partialSettings } = values;
-
-    const saveActions: { when: boolean; action: () => Promise<unknown> }[] = [
-      {
-        when: changed(...PARTIAL_FORM_KEYS),
-        action: () =>
-          savePartialSettings.mutateAsync({ id: board.id, ...partialSettings }).then(() => {
-            updateFavicon(values.faviconImageUrl ?? homarrLogoPath);
-          }),
-      },
-      {
-        when: changed("layouts"),
-        action: () => saveLayouts.mutateAsync({ id: board.id, layouts }),
-      },
-    ];
-
-    const promises = saveActions.filter((saveAction) => saveAction.when).map((saveAction) => saveAction.action());
-    if (promises.length === 0) return;
+    const { layouts: submittedLayouts, ...partialSettings } = values;
+    const layouts = normalizeMobileLayoutGutters(submittedLayouts);
+    const partialSettingsChanged = changed(...PARTIAL_FORM_KEYS);
+    const layoutsChanged = changed("layouts");
+    if (!partialSettingsChanged && !layoutsChanged) return values;
 
     try {
-      await Promise.all(promises);
-      lastSavedRef.current = { pageTitle: values.pageTitle, logoImageUrl: values.logoImageUrl };
-      initialValuesRef.current = values;
-      form.setInitialValues(values);
-      form.resetDirty();
+      const [, canonicalLayouts] = await Promise.all([
+        partialSettingsChanged
+          ? savePartialSettings.mutateAsync({ id: board.id, ...partialSettings }).then(() => {
+              updateFavicon(
+                values.faviconImageUrl ?? branding.faviconImageUrl ?? branding.logoImageUrl ?? homarrLogoPath,
+              );
+            })
+          : Promise.resolve(),
+        layoutsChanged ? saveLayouts.mutateAsync({ id: board.id, layouts }) : Promise.resolve(null),
+      ]);
+      const canonicalValues = canonicalLayouts ? { ...values, layouts: canonicalLayouts } : values;
+
+      lastSavedRef.current = { pageTitle: canonicalValues.pageTitle, logoImageUrl: canonicalValues.logoImageUrl };
+      initialValuesRef.current = canonicalValues;
+      form.setValues(canonicalValues);
+      form.setInitialValues(canonicalValues);
+      form.resetDirty(canonicalValues);
       await revalidatePathActionAsync(`/boards/${board.name}/settings`);
       showSuccessNotification({
-        title: t("common.notification.update.success"),
-        message: t("common.notification.update.success"),
+        title: t("notification.update.success"),
+        message: t("notification.update.success"),
       });
+      return canonicalValues;
     } catch {
       showErrorNotification({
-        title: t("common.notification.update.error"),
-        message: t("common.notification.update.error"),
+        title: t("notification.update.error"),
+        message: t("notification.update.error"),
       });
+      return null;
     }
   };
 
@@ -179,10 +178,15 @@ export const BoardSettingsForm = ({ board, permissions, hasFullAccess, hideVisib
 
   return (
     <Stack gap="xl">
-      <form onSubmit={form.onSubmit((values) => void handleSubmitAsync(values))}>
+      <form onSubmit={form.onSubmit((values) => void saveSettingsAsync(values))}>
         <Stack gap="xl">
           <GeneralSettingsContent board={board} form={form} />
-          <LayoutSettingsContent form={form} />
+          <LayoutSettingsContent
+            board={board}
+            form={form}
+            isSaving={isPending}
+            saveSettingsAsync={() => saveSettingsAsync(form.values)}
+          />
           <BackgroundSettingsContent form={form} />
           <ColorSettingsContent form={form} />
           <CustomCssSettingsContent form={form} />
@@ -191,10 +195,10 @@ export const BoardSettingsForm = ({ board, permissions, hasFullAccess, hideVisib
           {form.isDirty() && (
             <UnsavedChangesBar>
               <Button type="button" disabled={isPending} variant="default" onClick={handleDiscard}>
-                {t("common.action.discard")}
+                {t("action.discard")}
               </Button>
               <Button loading={isPending} type="submit" disabled={!form.isValid()}>
-                {t("common.action.saveChanges")}
+                {t("action.saveChanges")}
               </Button>
             </UnsavedChangesBar>
           )}

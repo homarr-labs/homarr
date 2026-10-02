@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Center, Group, Indicator, Loader, Progress, Text } from "@mantine/core";
+import { Box, Group, Progress, Text } from "@mantine/core";
 import type { DataTableColumn, DataTableSortStatus } from "mantine-datatable";
 import {
   Activity,
@@ -18,36 +18,41 @@ import {
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
+import { zoomCompensatedSize } from "@homarr/ui";
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import { useOptionalBoard } from "@homarr/boards/context";
+import { invariantTechnicalLabels } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import { showErrorNotification } from "@homarr/notifications";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useByteFormatter } from "@homarr/settings";
+import { useI18n } from "@homarr/translation/client";
 
+import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 import { HomarrDataTable } from "../common/homarr-data-table";
+import { getUsableWidgetQueryData } from "../common/query-state";
 import { usePersistedTableLayout, useTableLayoutPersistence } from "../common/use-persisted-table-layout";
 import type { BeszelSystemRow } from "../beszel/_shared/types";
 import { loadAvgColor, statusColorMap, thresholdColor } from "../beszel/_shared/colors";
-import {
-  formatByteRate,
-  formatLoadAvg,
-  formatPercent,
-  formatTemp,
-  formatUptime,
-  getProgressTrackSize,
-} from "../beszel/_shared/format";
+import { formatLoadAvg, formatPercent, formatTemp, formatUptime, getProgressTrackSize } from "../beszel/_shared/format";
 import { useBeszelFilteredSystems } from "../beszel/_shared/hooks";
-import { BeszelIntegrationErrorIndicator } from "../beszel/_shared/error-indicator";
+import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { BeszelSystemStatsModal } from "../beszel/_shared/system-stats-modal";
 import { DiskUsage } from "../beszel/_shared/disk-usage";
+import { getBeszelTableVisibleMetricKeys } from "./display";
 
 const directionMultiplier: Record<string, number> = { asc: 1, desc: -1 };
 
-type SystemRowWithKey = BeszelSystemRow & { _key: string };
+type SystemRowWithKey = BeszelSystemRow & { rowKey: string; integrationName: string };
 
 const columnAccessors = [
   "name",
+  "integrationName",
+  "hostname",
+  "osName",
+  "cpuModel",
+  "cores",
+  "memoryTotal",
   "cpu",
   "memory",
   "disk",
@@ -59,7 +64,7 @@ const columnAccessors = [
   "services",
   "uptime",
   "agentVersion",
-] as const satisfies readonly (keyof BeszelSystemRow)[];
+] as const satisfies readonly (keyof SystemRowWithKey)[];
 
 interface SizeConfig {
   iconSize: number;
@@ -88,6 +93,22 @@ const getSizeConfig = (width: number): SizeConfig => {
   };
 };
 
+const PercentCell = ({ value, size }: { value: number; size: SizeConfig }) => {
+  return (
+    <Group gap={8} wrap="nowrap" style={{ flex: 1 }}>
+      <Text size={size.fontSize} fw={500} w={size.valueMiw} ta="left" style={{ whiteSpace: "nowrap", flexShrink: 0 }}>
+        {formatPercent(value)}
+      </Text>
+      <Progress
+        value={value}
+        color={thresholdColor(value)}
+        size={getProgressTrackSize(size.progressSize)}
+        style={{ flex: 1 }}
+      />
+    </Group>
+  );
+};
+
 export default function BeszelSystemTableWidget({
   options,
   integrationIds,
@@ -96,18 +117,26 @@ export default function BeszelSystemTableWidget({
   boardId,
   itemId,
   setOptions,
+  displayMode,
 }: WidgetComponentProps<"beszelSystemTable">) {
-  const t = useScopedI18n("widget.beszelSystemTable");
+  const t = useI18n("widget.beszelSystemTable");
+  const tBeszel = useI18n("widget.beszel");
+  const tCommon = useI18n("common");
   const { openModal } = useModalAction(BeszelSystemStatsModal);
   const board = useOptionalBoard();
   const { data: session } = useSession();
+  const { formatByteRate, formatBytes } = useByteFormatter();
   const hasChangeAccess = board ? constructBoardPermissions(board, session).hasChangeAccess : false;
-  const {
-    data: results = [],
-    error: systemsError,
-    isPending,
-  } = clientApi.widget.beszel.getSystems.useQuery({ integrationIds });
+  const systemsQuery = clientApi.widget.beszel.getSystems.useQuery({ integrationIds });
+  const systemsData = getUsableWidgetQueryData(systemsQuery);
+  const results = useMemo(() => systemsData ?? [], [systemsData]);
+  const { isPending } = systemsQuery;
+  const isAdvanced = displayMode === "advanced";
   const size = useMemo(() => getSizeConfig(width), [width]);
+  const visibleMetricKeys = useMemo(
+    () => getBeszelTableVisibleMetricKeys(options, width, isAdvanced),
+    [options, width, isAdvanced],
+  );
 
   const { mutate: saveItemOptions } = clientApi.widget.options.saveItemOptions.useMutation({
     onError: () =>
@@ -125,6 +154,18 @@ export default function BeszelSystemTableWidget({
   });
 
   const filteredSystems = useBeszelFilteredSystems(results, options.statusFilter);
+  const integrationNames = useMemo(
+    () => new Map(results.map((result) => [result.integrationId, result.integrationName])),
+    [results],
+  );
+  const systemsWithSource = useMemo(
+    () =>
+      filteredSystems.map((system) => ({
+        ...system,
+        integrationName: integrationNames.get(system.rowKey.split(":")[0] ?? "") ?? "—",
+      })),
+    [filteredSystems, integrationNames],
+  );
 
   const [sortStatus, setSortStatus] = useState<DataTableSortStatus<SystemRowWithKey>>({
     columnAccessor: options.sortBy,
@@ -138,30 +179,16 @@ export default function BeszelSystemTableWidget({
   }, [options.sortBy, options.sortDirection]);
 
   const sortedSystems = useMemo(() => {
-    const accessor = sortStatus.columnAccessor as keyof BeszelSystemRow;
+    const accessor = sortStatus.columnAccessor as keyof SystemRowWithKey;
     const dir = directionMultiplier[sortStatus.direction] ?? 1;
-    return [...filteredSystems].toSorted((a, b) => {
+    return [...systemsWithSource].toSorted((a, b) => {
       const aVal = a[accessor] ?? 0;
       const bVal = b[accessor] ?? 0;
       if (typeof aVal === "string" && typeof bVal === "string") return aVal.localeCompare(bVal) * dir;
       if (typeof aVal === "number" && typeof bVal === "number") return (aVal - bVal) * dir;
       return 0;
     });
-  }, [filteredSystems, sortStatus]);
-
-  const PercentCell = ({ value }: { value: number }) => (
-    <Group gap={8} wrap="nowrap" style={{ flex: 1 }}>
-      <Text size={size.fontSize} fw={500} w={size.valueMiw} ta="left" style={{ whiteSpace: "nowrap", flexShrink: 0 }}>
-        {formatPercent(value)}
-      </Text>
-      <Progress
-        value={value}
-        color={thresholdColor(value)}
-        size={getProgressTrackSize(size.progressSize)}
-        style={{ flex: 1 }}
-      />
-    </Group>
-  );
+  }, [systemsWithSource, sortStatus]);
 
   const columns = useMemo((): DataTableColumn<SystemRowWithKey>[] => {
     const cols: (DataTableColumn<SystemRowWithKey> | false)[] = [
@@ -171,51 +198,99 @@ export default function BeszelSystemTableWidget({
         ellipsis: true,
         title: (
           <Group gap={4} wrap="nowrap">
-            <Server size={size.iconSize} />
-            <Text inherit>{t("column.system")}</Text>
+            <Server style={zoomCompensatedSize(size.iconSize)} />
+            <Text inherit>{tBeszel("metric.system")}</Text>
           </Group>
         ),
         sortable: true,
         render: (record) => (
           <Group gap={8} wrap="nowrap" style={{ overflow: "hidden", paddingInlineStart: 4 }}>
-            <Indicator color={statusColorMap[record.status]} size={7} />
+            <Box w={7} h={7} bg={statusColorMap[record.status]} style={{ borderRadius: "50%", flexShrink: 0 }} />
             <Text size={size.fontSize} fw={500} truncate>
               {record.name}
             </Text>
           </Group>
         ),
       },
-      options.showCpu && {
+      isAdvanced && {
+        accessor: "integrationName",
+        width: 140,
+        ellipsis: true,
+        title: tBeszel("metric.source"),
+        sortable: true,
+        render: (record) => <Text size={size.fontSize}>{record.integrationName}</Text>,
+      },
+      isAdvanced && {
+        accessor: "hostname",
+        width: 150,
+        ellipsis: true,
+        title: tBeszel("metric.hostname"),
+        sortable: true,
+        render: (record) => <Text size={size.fontSize}>{record.hostname || "—"}</Text>,
+      },
+      isAdvanced && {
+        accessor: "osName",
+        width: 160,
+        ellipsis: true,
+        title: invariantTechnicalLabels.os,
+        sortable: true,
+        render: (record) => <Text size={size.fontSize}>{record.osName || "—"}</Text>,
+      },
+      isAdvanced && {
+        accessor: "cpuModel",
+        width: 220,
+        ellipsis: true,
+        title: tBeszel("metric.cpuModel"),
+        sortable: true,
+        render: (record) => <Text size={size.fontSize}>{record.cpuModel || "—"}</Text>,
+      },
+      isAdvanced && {
+        accessor: "cores",
+        width: 80,
+        title: tBeszel("metric.cores"),
+        sortable: true,
+        render: (record) => <Text size={size.fontSize}>{record.cores}</Text>,
+      },
+      isAdvanced && {
+        accessor: "memoryTotal",
+        width: 120,
+        title: tBeszel("metric.memoryTotal"),
+        sortable: true,
+        render: (record) => (
+          <Text size={size.fontSize}>{record.memoryTotal > 0 ? formatBytes(record.memoryTotal) : "—"}</Text>
+        ),
+      },
+      visibleMetricKeys.has("showCpu") && {
         accessor: "cpu",
         width: 140,
         title: (
           <Group gap={4} wrap="nowrap">
-            <Cpu size={size.iconSize} />
-            <Text inherit>{t("column.cpu")}</Text>
+            <Cpu style={zoomCompensatedSize(size.iconSize)} />
+            <Text inherit>{invariantTechnicalLabels.cpu}</Text>
           </Group>
         ),
         sortable: true,
-        render: (record) => <PercentCell value={record.cpu} />,
+        render: (record) => <PercentCell value={record.cpu} size={size} />,
       },
-      options.showMemory && {
+      visibleMetricKeys.has("showMemory") && {
         accessor: "memory",
         width: 140,
         title: (
           <Group gap={4} wrap="nowrap">
-            <MemoryStick size={size.iconSize} />
-            <Text inherit>{t("column.memory")}</Text>
+            <MemoryStick style={zoomCompensatedSize(size.iconSize)} />
+            <Text inherit>{tBeszel("metric.memory")}</Text>
           </Group>
         ),
         sortable: true,
-        render: (record) => <PercentCell value={record.memory} />,
+        render: (record) => <PercentCell value={record.memory} size={size} />,
       },
-      options.showDisk && {
+      visibleMetricKeys.has("showDisk") && {
         accessor: "disk",
         width: 160,
         title: (
           <Group gap={4} wrap="nowrap">
-            <HardDrive size={size.iconSize} />
-            <Text inherit>{t("column.disk")}</Text>
+            <HardDrive style={zoomCompensatedSize(size.iconSize)} />
+            <Text inherit>{tBeszel("metric.disk")}</Text>
           </Group>
         ),
         sortable: true,
@@ -229,42 +304,47 @@ export default function BeszelSystemTableWidget({
           />
         ),
       },
-      options.showGpu && {
+      visibleMetricKeys.has("showGpu") && {
         accessor: "gpu",
         width: 140,
         title: (
           <Group gap={4} wrap="nowrap">
-            <Monitor size={size.iconSize} />
-            <Text inherit>{t("column.gpu")}</Text>
+            <Monitor style={zoomCompensatedSize(size.iconSize)} />
+            <Text inherit>{invariantTechnicalLabels.gpu}</Text>
           </Group>
         ),
         sortable: true,
-        render: (record) => <PercentCell value={record.gpu} />,
+        render: (record) => <PercentCell value={record.gpu} size={size} />,
       },
-      options.showLoadAvg && {
+      visibleMetricKeys.has("showLoadAvg") && {
         accessor: "loadAvg",
         width: 100,
         title: (
           <Group gap={4} wrap="nowrap">
-            <Activity size={size.iconSize} />
-            <Text inherit>{t("column.loadAvg")}</Text>
+            <Activity style={zoomCompensatedSize(size.iconSize)} />
+            <Text inherit>{tBeszel("metric.loadAvg")}</Text>
           </Group>
         ),
         sortable: true,
         render: (record) => (
           <Group gap={8} wrap="nowrap">
-            <Indicator color={record.loadAvg ? loadAvgColor(record.loadAvg[0], record.cores) : "gray"} size={7} />
+            <Box
+              w={7}
+              h={7}
+              bg={record.loadAvg ? loadAvgColor(record.loadAvg[0], record.cores) : "gray"}
+              style={{ borderRadius: "50%", flexShrink: 0 }}
+            />
             <Text size={size.fontSize}>{formatLoadAvg(record.loadAvg)}</Text>
           </Group>
         ),
       },
-      options.showNet && {
+      visibleMetricKeys.has("showNet") && {
         accessor: "netBytes",
         width: 100,
         title: (
           <Group gap={4} wrap="nowrap">
-            <Network size={size.iconSize} />
-            <Text inherit>{t("column.net")}</Text>
+            <Network style={zoomCompensatedSize(size.iconSize)} />
+            <Text inherit>{tBeszel("metric.net")}</Text>
           </Group>
         ),
         sortable: true,
@@ -274,60 +354,60 @@ export default function BeszelSystemTableWidget({
           </Text>
         ),
       },
-      options.showTemp && {
+      visibleMetricKeys.has("showTemp") && {
         accessor: "temp",
         width: 80,
         title: (
           <Group gap={4} wrap="nowrap">
-            <Thermometer size={size.iconSize} />
-            <Text inherit>{t("column.temp")}</Text>
+            <Thermometer style={zoomCompensatedSize(size.iconSize)} />
+            <Text inherit>{tBeszel("metric.temp")}</Text>
           </Group>
         ),
         sortable: true,
         render: (record) => <Text size={size.fontSize}>{formatTemp(record.temp, false)}</Text>,
       },
-      options.showBattery && {
+      visibleMetricKeys.has("showBattery") && {
         accessor: "battery",
         width: 70,
         title: (
           <Group gap={4} wrap="nowrap">
-            <Battery size={size.iconSize} />
-            <Text inherit>{t("column.battery")}</Text>
+            <Battery style={zoomCompensatedSize(size.iconSize)} />
+            <Text inherit>{tBeszel("metric.battery")}</Text>
           </Group>
         ),
         render: (record) => <Text size={size.fontSize}>{record.battery ? `${record.battery[0]}%` : "—"}</Text>,
       },
-      options.showServices && {
+      visibleMetricKeys.has("showServices") && {
         accessor: "services",
         width: 80,
         title: (
           <Group gap={4} wrap="nowrap">
-            <Server size={size.iconSize} />
-            <Text inherit>{t("column.services")}</Text>
+            <Server style={zoomCompensatedSize(size.iconSize)} />
+            <Text inherit>{tCommon("services")}</Text>
           </Group>
         ),
         sortable: true,
         render: (record) => <Text size={size.fontSize}>{record.services}</Text>,
       },
-      options.showUptime && {
+      visibleMetricKeys.has("showUptime") && {
         accessor: "uptime",
         width: 90,
         title: (
           <Group gap={4} wrap="nowrap">
-            <Activity size={size.iconSize} />
-            <Text inherit>{t("column.uptime")}</Text>
+            <Activity style={zoomCompensatedSize(size.iconSize)} />
+            <Text inherit>{tBeszel("metric.uptime")}</Text>
           </Group>
         ),
         sortable: true,
         render: (record) => <Text size={size.fontSize}>{formatUptime(record.uptime)}</Text>,
       },
-      options.showAgent && {
+      visibleMetricKeys.has("showAgent") && {
         accessor: "agentVersion",
         width: 90,
         title: (
           <Group gap={4} wrap="nowrap">
-            <Wifi size={size.iconSize} />
-            <Text inherit>{t("column.agent")}</Text>
+            <Wifi style={zoomCompensatedSize(size.iconSize)} />
+            <Text inherit>{tBeszel("metric.agent")}</Text>
           </Group>
         ),
         sortable: true,
@@ -336,21 +416,7 @@ export default function BeszelSystemTableWidget({
     ];
 
     return cols.filter(Boolean) as DataTableColumn<SystemRowWithKey>[];
-  }, [
-    options.showAgent,
-    options.showBattery,
-    options.showCpu,
-    options.showDisk,
-    options.showGpu,
-    options.showLoadAvg,
-    options.showMemory,
-    options.showNet,
-    options.showServices,
-    options.showTemp,
-    options.showUptime,
-    size,
-    t,
-  ]);
+  }, [formatByteRate, formatBytes, tBeszel, tCommon, size, visibleMetricKeys, isAdvanced]);
 
   const { effectiveColumns, storeKey } = usePersistedTableLayout({
     columns,
@@ -364,26 +430,22 @@ export default function BeszelSystemTableWidget({
 
   const handleRowClick = useCallback(
     ({ record }: { record: SystemRowWithKey }) => {
-      const integrationId = record._key.split(":")[0] ?? "";
+      const integrationId = record.rowKey.split(":")[0] ?? "";
       openModal({ integrationId, systemId: record.id }, { title: record.name });
     },
     [openModal],
   );
 
-  if (systemsError) throw systemsError;
-
   if (isPending) {
-    return (
-      <Center h="100%">
-        <Loader size="sm" />
-      </Center>
-    );
+    return <WidgetQueryLoadingState />;
   }
 
-  return (
+  const table = (
     <div style={{ position: "relative", height: "100%" }}>
       <div style={{ position: "absolute", top: 4, right: 8, zIndex: 1 }}>
-        <BeszelIntegrationErrorIndicator results={results} />
+        <Group gap={0}>
+          <IntegrationErrorIndicator results={results} />
+        </Group>
       </div>
       <HomarrDataTable
         isEditMode={isEditMode}
@@ -393,11 +455,13 @@ export default function BeszelSystemTableWidget({
         columns={effectiveColumns}
         sortStatus={sortStatus}
         onSortStatusChange={setSortStatus}
-        noRecordsText={t("noRecords")}
-        idAccessor="_key"
+        noRecordsText={tBeszel("empty.noSystems")}
+        idAccessor="rowKey"
         storeColumnsKey={storeKey}
         onRowClick={isEditMode ? undefined : handleRowClick}
       />
     </div>
   );
+
+  return table;
 }

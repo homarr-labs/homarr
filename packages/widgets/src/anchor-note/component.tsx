@@ -1,110 +1,25 @@
 "use client";
 
 import { startTransition, useCallback, useEffect, useMemo, useState } from "react";
-import type { ComponentProps } from "react";
 import dynamic from "next/dynamic";
-import { Button, Center, Group, Stack, Text, TextInput } from "@mantine/core";
-import { Quill } from "react-quill-new";
-import type { DeltaStatic } from "react-quill-new";
-import type ReactQuillComponent from "react-quill-new";
-import { z } from "zod/v4";
+import { ActionIcon, Badge, Button, Center, Group, Stack, Text, TextInput, Tooltip } from "@mantine/core";
+import { IconEdit } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
 import { useTimeAgo } from "@homarr/common";
 import type { AnchorNotePermission } from "@homarr/integrations";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
+import { getUsableWidgetQueryData } from "../common/query-state";
+import actionTargetClasses from "../common/action-target.module.css";
+import { storedContentToPlainText } from "./content";
 
-import "react-quill-new/dist/quill.snow.css";
 import "./anchor-note.css";
 
-type ReactQuillProps = ComponentProps<typeof ReactQuillComponent>;
-type ReactQuillOnChange = NonNullable<ReactQuillProps["onChange"]>;
-
-const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
-
-const quillDeltaOperationSchema = z.object({
-  insert: z.unknown().optional(),
-  attributes: z.record(z.string(), z.unknown()).optional(),
-});
-
-const quillDeltaSchema = z.object({
-  ops: z.array(quillDeltaOperationSchema),
-});
-
-type QuillDelta = z.infer<typeof quillDeltaSchema>;
-
-const DeltaConstructor = Quill.import("delta") as new (
-  ops?: QuillDelta["ops"] | { ops: QuillDelta["ops"] },
-) => DeltaStatic;
-
-const quillModules = {
-  toolbar: [
-    ["bold", "italic", "underline", "strike"],
-    [{ header: [1, 2, 3, 4, false] }],
-    [{ align: [] }],
-    [{ list: "ordered" }, { list: "bullet" }, { list: "check" }],
-    [{ indent: "-1" }, { indent: "+1" }],
-    ["blockquote", "code-block"],
-    ["link"],
-    ["clean"],
-  ],
-  history: {
-    delay: 1000,
-    maxStack: 200,
-    userOnly: true,
-  },
-};
-
-const readOnlyModules = {
-  toolbar: false,
-};
-
-const quillFormats = [
-  "bold",
-  "italic",
-  "underline",
-  "strike",
-  "header",
-  "align",
-  "list",
-  "indent",
-  "blockquote",
-  "code-block",
-  "link",
-];
-
-const emptyDelta = (): DeltaStatic => new DeltaConstructor([{ insert: "\n" }]);
-
-const toPlainTextDelta = (value: string): DeltaStatic => {
-  const normalized = value.endsWith("\n") ? value : `${value}\n`;
-  return new DeltaConstructor([{ insert: normalized }]);
-};
-
-const parseStoredContent = (content?: string | null): DeltaStatic => {
-  if (!content) return emptyDelta();
-
-  try {
-    const parsedDelta = quillDeltaSchema.safeParse(JSON.parse(content));
-    if (parsedDelta.success) {
-      return new DeltaConstructor(parsedDelta.data.ops);
-    }
-  } catch {
-    return toPlainTextDelta(content);
-  }
-
-  return toPlainTextDelta(content);
-};
-
-const stringifyDelta = (delta: unknown): string => {
-  const parsedDelta = quillDeltaSchema.safeParse(delta);
-  if (parsedDelta.success) {
-    return JSON.stringify(parsedDelta.data);
-  }
-  return JSON.stringify(emptyDelta());
-};
+const AnchorNoteEditor = dynamic(() => import("./editor"), { ssr: false });
 
 const canEditPermission = (permission: AnchorNotePermission) => {
   return permission === "owner" || permission === "editor";
@@ -119,8 +34,14 @@ const isForbiddenError = (error: unknown): boolean => {
   return (data as { code?: unknown }).code === "FORBIDDEN";
 };
 
-export default function AnchorNoteWidget({ options, integrationIds }: WidgetComponentProps<"anchorNote">) {
-  const t = useScopedI18n("widget.anchorNote");
+export default function AnchorNoteWidget({
+  options,
+  integrationIds,
+  width,
+  height,
+  displayMode,
+}: WidgetComponentProps<"anchorNote">) {
+  const t = useI18n("widget.anchorNote");
   const noteId = options.noteId.trim();
   if (!noteId) {
     return (
@@ -134,21 +55,45 @@ export default function AnchorNoteWidget({ options, integrationIds }: WidgetComp
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const integrationId = integrationIds[0]!;
 
-  return <AnchorNoteWidgetContent options={options} integrationId={integrationId} noteId={noteId} />;
+  return (
+    <AnchorNoteWidgetContent
+      options={options}
+      integrationId={integrationId}
+      noteId={noteId}
+      width={width}
+      height={height}
+      isAdvanced={displayMode === "advanced"}
+    />
+  );
 }
 
 interface AnchorNoteWidgetContentProps {
   options: WidgetComponentProps<"anchorNote">["options"];
   integrationId: string;
   noteId: string;
+  width: number;
+  height: number;
+  isAdvanced: boolean;
 }
 
-const AnchorNoteWidgetContent = ({ options, integrationId, noteId }: AnchorNoteWidgetContentProps) => {
-  const t = useScopedI18n("widget.anchorNote");
-  const { data: note, refetch } = clientApi.widget.anchorNotes.getNote.useQuery({
+const AnchorNoteWidgetContent = ({
+  options,
+  integrationId,
+  noteId,
+  width,
+  height,
+  isAdvanced,
+}: AnchorNoteWidgetContentProps) => {
+  const t = useI18n("widget.anchorNote");
+  const tWidgetCommon = useI18n("widget.common");
+  const actionT = useI18n("common.action");
+  const locale = useCurrentIntlLocale();
+  const noteQuery = clientApi.widget.anchorNotes.getNote.useQuery({
     integrationId,
     noteId,
   });
+  const note = getUsableWidgetQueryData(noteQuery);
+  const { refetch } = noteQuery;
   const { mutateAsync: updateNoteAsync, isPending: isUpdating } = clientApi.widget.anchorNotes.updateNote.useMutation();
 
   const [isEditing, setIsEditing] = useState(false);
@@ -165,7 +110,8 @@ const AnchorNoteWidgetContent = ({ options, integrationId, noteId }: AnchorNoteW
     });
   }, [isEditing, note]);
 
-  const canEdit = canEditPermission(note?.permission ?? "viewer");
+  const hasInteractAccess = useIntegrationsWithInteractAccess().some(({ id }) => id === integrationId);
+  const canEdit = canEditPermission(note?.permission ?? "viewer") && hasInteractAccess;
   const isViewer = !note || note.permission === "viewer";
   const updatedAt = useMemo(() => (note ? new Date(note.updatedAt) : new Date()), [note]);
   const updatedAtRelative = useTimeAgo(updatedAt, 30000);
@@ -176,16 +122,7 @@ const AnchorNoteWidgetContent = ({ options, integrationId, noteId }: AnchorNoteW
     return normalizedTitle !== note.title || draftContent !== (note.content ?? "");
   }, [draftContent, draftTitle, note]);
 
-  const editorValue = useMemo(() => parseStoredContent(draftContent), [draftContent]);
-  const readOnlyValue = useMemo(() => parseStoredContent(note?.content), [note?.content]);
-  const handleEditorChange = useCallback<ReactQuillOnChange>(
-    (_html, _delta, source, editor) => {
-      if (!isEditing || source !== "user") return;
-      const next = stringifyDelta(editor.getContents());
-      setDraftContent(next);
-    },
-    [isEditing],
-  );
+  const plainText = useMemo(() => storedContentToPlainText(note?.content), [note?.content]);
 
   const handleEdit = useCallback(() => {
     if (!canEdit || !note) return;
@@ -260,17 +197,17 @@ const AnchorNoteWidgetContent = ({ options, integrationId, noteId }: AnchorNoteW
   if (!note) return <WidgetEmptyState />;
 
   return (
-    <Stack h="100%" gap="xs" p="sm">
+    <Stack className="homarr-anchor-note" h="100%" gap="xs" p={height < 120 ? "xs" : "sm"}>
       <Group justify="space-between" align="flex-start">
         <Stack gap={2} style={{ flex: 1 }}>
           {isEditing ? (
             <TextInput value={draftTitle} onChange={(event) => setDraftTitle(event.currentTarget.value)} size="sm" />
           ) : (
-            options.showTitle && <Text fw={600}>{note.title || t("untitled")}</Text>
+            (isAdvanced || options.showTitle) && <Text fw={600}>{note.title || t("untitled")}</Text>
           )}
-          {!isEditing && options.showUpdatedAt && (
+          {!isEditing && (isAdvanced || options.showUpdatedAt) && (
             <Text size="xs" c="dimmed">
-              {t("updatedAt", { date: updatedAtRelative })}
+              {tWidgetCommon("updatedAt", { date: updatedAtRelative })}
             </Text>
           )}
           {!isEditing && isViewer && (
@@ -278,40 +215,84 @@ const AnchorNoteWidgetContent = ({ options, integrationId, noteId }: AnchorNoteW
               {t("readOnlyViewer")}
             </Text>
           )}
+          {!isEditing && isAdvanced && (
+            <Group gap={4}>
+              <Badge size="xs" variant="light">
+                {t(`permission.${note.permission}`)}
+              </Badge>
+              {note.isPinned && <Badge size="xs">{t("status.pinned")}</Badge>}
+              {note.isArchived && (
+                <Badge size="xs" color="gray">
+                  {t("status.archived")}
+                </Badge>
+              )}
+              <Text size="xs" c="dimmed">
+                {t("createdAt", { date: new Date(note.createdAt).toLocaleDateString(locale) })}
+              </Text>
+            </Group>
+          )}
           {saveError && (
             <Text size="xs" c="red">
               {saveError}
             </Text>
           )}
         </Stack>
-        <Group gap="xs">
-          {isEditing ? (
-            <>
-              <Button size="xs" onClick={handleSave} loading={isUpdating} disabled={!hasChanges || !canEdit}>
-                {t("save")}
-              </Button>
-              <Button size="xs" variant="subtle" onClick={handleCancel} disabled={isUpdating}>
-                {t("cancel")}
-              </Button>
-            </>
-          ) : (
-            <Button size="xs" variant="light" onClick={handleEdit} disabled={!canEdit || isUpdating}>
-              {t("edit")}
-            </Button>
+        <Group gap="xs" wrap="nowrap">
+          {(isEditing || canEdit) && (
+            <Group className="homarr-anchor-actions" data-visible={isEditing || isAdvanced || undefined} gap="xs">
+              {isEditing ? (
+                <>
+                  <Button size="xs" onClick={handleSave} loading={isUpdating} disabled={!hasChanges || !canEdit}>
+                    {actionT("save")}
+                  </Button>
+                  <Button size="xs" variant="subtle" onClick={handleCancel} disabled={isUpdating}>
+                    {actionT("cancel")}
+                  </Button>
+                </>
+              ) : isAdvanced ? (
+                <Button size="xs" variant="light" onClick={handleEdit} disabled={isUpdating}>
+                  {actionT("edit")}
+                </Button>
+              ) : (
+                <Tooltip label={actionT("edit")}>
+                  <ActionIcon
+                    className={actionTargetClasses.root}
+                    aria-label={actionT("edit")}
+                    size="md"
+                    variant="light"
+                    onClick={handleEdit}
+                    disabled={isUpdating}
+                  >
+                    <IconEdit size="var(--mantine-font-size-md)" />
+                  </ActionIcon>
+                </Tooltip>
+              )}
+            </Group>
           )}
         </Group>
       </Group>
-      <div className={`homarr-anchor-quill${isEditing ? "" : " homarr-anchor-quill--readonly"}`} style={{ flex: 1 }}>
-        <ReactQuill
-          theme="snow"
-          readOnly={!isEditing}
-          value={isEditing ? editorValue : readOnlyValue}
-          onChange={handleEditorChange}
-          modules={isEditing ? quillModules : readOnlyModules}
-          formats={quillFormats}
-          placeholder={t("emptyContent")}
-        />
-      </div>
+      {isEditing || isAdvanced ? (
+        <div
+          className={`homarr-anchor-quill${isEditing ? "" : " homarr-anchor-quill--readonly"}`}
+          style={{ flex: 1, minHeight: 0 }}
+        >
+          <AnchorNoteEditor
+            content={isEditing ? draftContent : note.content}
+            readOnly={!isEditing}
+            onChange={setDraftContent}
+            placeholder={t("emptyContent")}
+          />
+        </div>
+      ) : (
+        <Text
+          size={width < 180 || height < 100 ? "xs" : "sm"}
+          c={plainText ? undefined : "dimmed"}
+          style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}
+          lineClamp={Math.max(2, Math.floor((height - 70) / 18))}
+        >
+          {plainText || t("emptyContent")}
+        </Text>
+      )}
     </Stack>
   );
 };

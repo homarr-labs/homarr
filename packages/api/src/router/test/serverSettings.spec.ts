@@ -3,6 +3,7 @@ import { describe, expect, test, vi } from "vitest";
 
 import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/common";
+import { eq } from "@homarr/db";
 import { boards, serverSettings } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server-settings";
@@ -79,15 +80,38 @@ describe("saveSettings", () => {
     });
 
     const dbSettings = await db.select().from(serverSettings);
-    expect(dbSettings).toStrictEqual([
+    expect(dbSettings.filter(({ settingKey }) => settingKey === "analytics")).toStrictEqual([
       {
         settingKey: "analytics",
         value: stringify({
           enableGeneral: true,
           instanceId: null,
+          lastSuccessfulSnapshotAt: null,
         }),
       },
     ]);
+  });
+
+  test("analytics settings cannot overwrite the installation ID or snapshot timestamp", async () => {
+    const db = createDb();
+    const caller = serverSettingsRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const analyticsSettings = {
+      enableGeneral: true,
+      instanceId: createId(),
+      lastSuccessfulSnapshotAt: "2026-09-25T00:00:00.000Z",
+    };
+    await db.insert(serverSettings).values({ settingKey: "analytics", value: stringify(analyticsSettings) });
+
+    await expect(
+      caller.saveSettings({
+        settingsKey: "analytics",
+        value: { enableGeneral: false, lastSuccessfulSnapshotAt: null },
+      }),
+    ).rejects.toThrow();
+
+    await caller.saveSettings({ settingsKey: "analytics", value: { enableGeneral: false } });
+    const saved = await db.query.serverSettings.findFirst({ where: eq(serverSettings.settingKey, "analytics") });
+    expect(saved?.value).toBe(stringify({ ...analyticsSettings, enableGeneral: false }));
   });
 });
 
@@ -124,7 +148,7 @@ describe("board settings API", () => {
       forceDisableStatus: true,
     });
     const dbSettings = await db.select().from(serverSettings);
-    expect(dbSettings).toStrictEqual([
+    expect(dbSettings.filter(({ settingKey }) => settingKey === "board")).toStrictEqual([
       {
         settingKey: "board",
         value: stringify(result),
@@ -155,7 +179,7 @@ describe("board settings API", () => {
       enableStatusByDefault: false,
     });
     const dbSettings = await db.select().from(serverSettings);
-    expect(dbSettings).toStrictEqual([
+    expect(dbSettings.filter(({ settingKey }) => settingKey === "board")).toStrictEqual([
       {
         settingKey: "board",
         value: stringify(result),

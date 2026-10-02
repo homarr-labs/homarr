@@ -29,12 +29,24 @@
   gap: clamp(2px, 1.5cqi, 5px);
   padding: clamp(4px, 2.5cqi, 10px);
   border-radius: var(--mantine-radius-md);
-  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+  background-color: transparent;
   overflow: hidden;
 }
 
+.grid[data-short] .statTile {
+  flex-direction: row;
+  gap: 3px;
+  padding: 3px 4px;
+}
+
+.grid[data-short] .statLabel {
+  text-align: left;
+}
+
 .statTileWarning {
-  background-color: light-dark(var(--mantine-color-orange-0), var(--mantine-color-dark-5));
+  background-color: rgb(
+    from light-dark(var(--mantine-color-orange-0), var(--mantine-color-dark-5)) r g b / var(--opacity, 1)
+  );
 }
 
 .statIcon {
@@ -59,6 +71,8 @@
   color: var(--mantine-primary-color-filled);
   line-height: 1.1;
   text-align: center;
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 .statValueWarning {

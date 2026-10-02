@@ -1,0 +1,1 @@
+ALTER TABLE `user` ADD `enable_right_click_on_widgets` integer DEFAULT true NOT NULL;

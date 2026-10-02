@@ -691,206 +691,11 @@
   "customWidget": {
     "page": {
       "list": {
-        "title": "Pielāgotie logrīki",
-        "noResults": "Vēl nav pielāgotu logrīku. Izveidojiet pirmo!",
         "loading": "Notiek ielāde..."
-      },
-      "create": {
-        "title": "Izveidot pielāgotu logrīku",
-        "subtitle": "Definējiet API URL, autentifikāciju un to, kā attēlot atbildes datus."
-      },
-      "edit": {
-        "title": "Rediģēt pielāgoto logrīku"
       }
     },
     "action": {
-      "create": "Izveidot",
-      "import": "Importēt",
-      "save": "Saglabāt",
-      "delete": "Dzēst pielāgoto logrīku",
-      "deleteConfirm": "Vai tiešām vēlaties dzēst \"{name}\"? Šo darbību nevar atsaukt.",
-      "export": "Eksportēt",
-      "addMapping": "Pievienot kartējumu",
-      "addColumn": "Pievienot kolonnu",
-      "edit": "Rediģēt",
-      "removeMapping": "Noņemt kartējumu",
-      "removeColumn": "Noņemt kolonnu",
-      "addItem": "Pievienot vienumu",
-      "removeItem": "Noņemt vienumu",
-      "addBar": "Pievienot joslu",
-      "duplicate": "Dublēt",
-      "copyAiPrompt": "Kopēt MI uzvedni",
-      "enable": "Iespējot",
-      "disable": "Atspējot",
-      "menu": "Darbības"
-    },
-    "field": {
-      "name": "Nosaukums",
-      "description": "Apraksts",
-      "iconUrl": "Ikonas URL",
-      "url": "URL",
-      "authType": "Autentifikācijas tips",
-      "headerName": "Galvenes/vaicājuma parametra nosaukums",
-      "method": "Metode",
-      "requestBody": "Pieprasījuma pamatteksts",
-      "displayType": "Attēlojuma tips",
-      "jsonPath": "JSON ceļš",
-      "jsonPathHint": "Izmantojiet JSONPath sintaksi vērtību izgūšanai, piemēram, $.data.temperature vai $.items[0].name",
-      "label": "Etiķete",
-      "unit": "Vienība",
-      "mappings": "Kartējumi",
-      "tablePath": "Masīva JSON ceļš",
-      "tablePathHint": "Masīva ceļš atbildē, piemēram, $.data.items",
-      "columns": "Kolonnas",
-      "header": "Galvene",
-      "items": "Vienumi",
-      "gridColumns": "Režģa kolonnas",
-      "cardStyle": "Kartītes stils",
-      "bars": "Joslas",
-      "valuePath": "Vērtības JSON ceļš",
-      "maxPath": "Maksimālās vērtības JSON ceļš",
-      "showPercentage": "Rādīt procentuālo vērtību",
-      "barSize": "Joslas izmērs",
-      "goodValues": "Labās vērtības (atdalītas ar komatiem)",
-      "dotSize": "Punkta izmērs",
-      "valueSize": "Vērtības izmērs",
-      "labelPosition": "Etiķetes novietojums",
-      "kvLayout": "Izkārtojums",
-      "striped": "Svītrotas rindas",
-      "compact": "Kompaktais režīms",
-      "maxHeight": "Maksimālais augstums (pikseļos)",
-      "color": "Krāsa",
-      "buttonLabel": "Pogas etiķete",
-      "buttonColor": "Pogas krāsa",
-      "confirmText": "Apstiprinājuma teksts",
-      "confirmTextHint": "Ja iestatīts, pirms pieprasījuma izpildes tiks parādīts apstiprinājuma dialoglodziņš",
-      "successMessage": "Veiksmes ziņojums",
-      "successMessageHint": "Ziņojums, kas tiek parādīts pēc veiksmīgas izpildes",
-      "enabled": "Iespējots",
-      "template": {
-        "label": "JSX veidne",
-        "description": "Mantine JSX veidne. Piekļūstiet API atbildes laukiem, izmantojot datu saistījumus (piemēram, data.name). Izmantojiet tikai atļautos komponentus. Aizliegts: constructor, __proto__, eval, Function, window, document."
-      }
-    },
-    "placeholder": {
-      "exampleLabel": "CPU temperatūra",
-      "exampleLabelShort": "CPU temperatūra",
-      "exampleHeader": "Nosaukums",
-      "exampleUnit": "°C",
-      "iconUrl": "https://...",
-      "url": "https://api.example.com/api/v1/status",
-      "headerName": "X-API-Key",
-      "jsonPath": "$.data.value",
-      "tablePath": "$.data.items",
-      "columnJsonPath": "$.nosaukums",
-      "valuePath": "$.data.used",
-      "maxPath": "$.data.total",
-      "goodValues": "tiešsaistē, true, darbojas",
-      "color": "zils"
-    },
-    "cardStyleOption": {
-      "filled": "Aizpildīts",
-      "outline": "Kontūra",
-      "subtle": "Smalks"
-    },
-    "layoutOption": {
-      "list": "Saraksts",
-      "grid": "Režģis"
-    },
-    "sizeOption": {
-      "sm": "Mazs",
-      "md": "Vidējs",
-      "lg": "Liels",
-      "xl": "Īpaši liels"
-    },
-    "labelPositionOption": {
-      "above": "Virs",
-      "below": "Zem"
-    },
-    "fieldset": {
-      "general": "Vispārīgi",
-      "connection": "API savienojums",
-      "display": "Attēlojuma konfigurācija"
-    },
-    "displayTypeDescription": {
-      "singleValue": "Rādīt vienu izgūtu vērtību ar etiķeti un mērvienību",
-      "keyValue": "Rādīt vairākas apzīmētas vērtības blakus",
-      "table": "Rādīt datu rindas tabulas formātā",
-      "statGrid": "Krāsainas statistikas kartītes režģī — līdzīgi Pi-Hole vai Speedtest logrīkiem",
-      "progressBars": "Progresa joslas, kas rāda lietojumu vai pabeigtību — diskam, atmiņai un kvotām",
-      "statusIndicator": "Krāsaini statusa punkti, kas rāda tiešsaistes/bezsaistes vai darbspējas stāvokli",
-      "countGrid": "Kompakti skaitītāji ar skaitli un etiķeti blīvā režģī",
-      "raw": "Skaisti formatēta JSON izvade atkļūdošanai",
-      "actionButton": "Poga, kas nospiešanas brīdī aktivizē pieprasījumu",
-      "customJsx": "Pielāgots JSX izkārtojums, izmantojot atļautos Mantine komponentus ar pilnu API datu saistīšanu"
-    },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
-    "authType": {
-      "none": "Nav",
-      "bearer": "Bearer marķieris",
-      "basic": "Pamata autentifikācija",
-      "apiKeyHeader": "API atslēga (galvene)",
-      "apiKeyQuery": "API atslēga (vaicājums)"
-    },
-    "displayType": {
-      "singleValue": "Viena vērtība",
-      "keyValue": "Atslēga–vērtība",
-      "table": "Tabula",
-      "statGrid": "Statistikas režģis",
-      "progressBars": "Progresa joslas",
-      "statusIndicator": "Statusa indikators",
-      "countGrid": "Skaitītāju režģis",
-      "raw": "Neapstrādāts JSON",
-      "actionButton": "Darbības poga",
-      "customJsx": "Pielāgots JSX"
-    },
-    "secret": {
-      "apiKey": "API atslēga / marķieris",
-      "username": "Lietotājvārds",
-      "password": "Parole",
-      "savedPlaceholder": "••••••• (saglabāts, atstājiet tukšu, lai saglabātu)"
-    },
-    "preview": {
-      "title": "Priekšskatījums",
-      "test": "Testēt",
-      "hint": "Noklikšķiniet uz “Testēt”, lai priekšskatītu API atbildi ar pašreizējo konfigurāciju.",
-      "rawResponse": "Neapstrādāta JSON atbilde"
-    },
-    "notification": {
-      "created": "Logrīks “{name}” ir veiksmīgi izveidots.",
-      "updated": "Logrīks “{name}” ir veiksmīgi atjaunināts.",
-      "deleted": "Logrīks “{name}” ir dzēsts.",
-      "imported": "Logrīks ir veiksmīgi importēts.",
-      "aiPromptCopied": "MI uzvedne nokopēta starpliktuvē",
-      "aiPromptDescription": "Kopējiet iepriekš sagatavotu uzvedni, ko ielīmēt jebkurā MI tērzēšanas robotā (ChatGPT, Claude, Gemini...). Tajā ir iekļauta pilna logrīka shēma un jūsu API atbilde, lai MI varētu ģenerēt importēšanai gatavu JSON konfigurāciju.",
-      "aiPromptCopy": "Kopēt starpliktuvē",
-      "aiPromptNoResponse": "Padoms: vispirms veiciet testu, lai uzvednē iekļautu API atbildi un iegūtu labākus rezultātus.",
-      "aiPromptCopyError": "Neizdevās nokopēt uzvedni starpliktuvē. Iespējams, jūsu pārlūkprogramma šo funkciju neatbalsta.",
-      "createError": "Neizdevās izveidot logrīku. Pārbaudiet, vai API galapunkts ir sasniedzams.",
-      "updateError": "Neizdevās atjaunināt logrīku. Jūsu izmaiņas netika saglabātas.",
-      "importError": "Neizdevās importēt logrīku. Pārliecinieties, ka fails ir derīgs pielāgota logrīka JSON eksports.",
-      "exportError": "Neizdevās eksportēt logrīku.",
-      "duplicated": "Logrīks “{name}” ir dublēts.",
-      "duplicateError": "Neizdevās dublēt logrīku.",
-      "toggleError": "Neizdevās pārslēgt logrīka statusu.",
-      "deleteError": "Neizdevās dzēst logrīku.",
-      "previewError": "Neizdevās izgūt priekšskatījumu. Pārbaudiet URL un mēģiniet vēlreiz.",
-      "executed": "Darbība ir veiksmīgi izpildīta.",
-      "executeError": "Darbība neizdevās: {error}"
-    },
-    "table": {
-      "name": "Nosaukums",
-      "url": "URL",
-      "display": "Attēlojums"
-    },
-    "widget": {
-      "disabled": "Šis logrīks ir atspējots"
+      "create": "Izveidot"
     }
   },
   "integration": {
@@ -1344,10 +1149,6 @@
       "name": "Traefik",
       "description": "Mākonim piemērots reversais starpniekserveris un slodzes balansētājs"
     },
-    "wud": {
-      "name": "What's Up Docker",
-      "description": "Uzrauga, kuriem no jūsu Docker konteineriem ir pieejami attēlu atjauninājumi"
-    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "Dokumentu pārvaldības sistēma skenētu dokumentu arhivēšanai un organizēšanai"
@@ -1359,6 +1160,10 @@
     "bazarr": {
       "name": "Bazarr",
       "description": "Sonarr un Radarr papildprogramma, kas pārvalda un lejupielādē subtitrus"
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Uzrauga, kuriem no jūsu Docker konteineriem ir pieejami attēlu atjauninājumi"
     }
   },
   "media": {
@@ -1441,9 +1246,11 @@
     "here": "šeit",
     "iconPicker": {
       "label": "Ikonas URL",
-      "description": "Meklējiet bibliotēkā, ielīmējiet attēla URL vai augšupielādējiet failu.",
       "header": "Rakstiet nosaukumu vai objektus, lai filtrētu ikonas... Homarr pārmeklēs {countIcons} ikonas jūsu vietā",
       "headerLoading": "Meklēt attēlus pēc nosaukuma",
+      "noResults": "Neviena ikona neatbilst “{search}”.",
+      "error": "Neizdevās ielādēt ikonas.",
+      "description": "Meklējiet bibliotēkā, ielīmējiet attēla URL vai augšupielādējiet failu.",
       "clear": "Notīrīt attēlu",
       "uploadImage": "Augšupielādēt attēlu",
       "results": "Attēlu meklēšanas rezultāti",
@@ -1452,9 +1259,7 @@
       "otherImages": "Citi attēli",
       "urlLoading": "Pārbauda attēlu…",
       "urlReady": "Attēls ir gatavs lietošanai",
-      "urlError": "Šo attēlu nevarēja ielādēt. Pārbaudiet URL un mēģiniet vēlreiz.",
-      "noResults": "Neviena ikona neatbilst “{search}”.",
-      "error": "Neizdevās ielādēt ikonas."
+      "urlError": "Šo attēlu nevarēja ielādēt. Pārbaudiet URL un mēģiniet vēlreiz."
     },
     "colorScheme": {
       "options": {
@@ -1804,38 +1609,6 @@
       "option": {
         "showBroadcastMessage": {
           "label": "Rādīt apraides ziņojumus"
-        }
-      }
-    },
-    "wud": {
-      "name": "What's Up Docker",
-      "description": "Parāda, cik uzraudzītajiem konteineriem ir pieejami atjauninājumi.",
-      "title": "What's Up Docker",
-      "monitored": "Uzraudzītie",
-      "updatesAvailable": "{count, plural, zero {# atjauninājumu pieejami} one {# atjauninājums pieejams} other {# atjauninājumi pieejami}}",
-      "updateAvailable": "Pieejams atjauninājums",
-      "openReleaseNotes": "Atvērt laidiena piezīmes",
-      "option": {
-        "showTitle": {
-          "label": "Rādīt nosaukumu"
-        },
-        "showRing": {
-          "label": "Rādīt atjaunināšanas gredzenu"
-        },
-        "layout": {
-          "label": "Izkārtojums",
-          "option": {
-            "horizontal": {
-              "label": "Horizontāli"
-            },
-            "vertical": {
-              "label": "Vertikāli"
-            }
-          }
-        },
-        "showUpdateList": {
-          "label": "Rādīt konteineru atjauninājumu sarakstu",
-          "description": "Uzskaita katru uzraudzīto konteineru, kuram ir pieejams attēla atjauninājums"
         }
       }
     },
@@ -2391,8 +2164,8 @@
       "popover": {
         "information": "Informācija",
         "processor": "Procesors: {cpuModelName}",
-        "memory": "Atmiņa: {memory} GiB",
-        "memoryAvailable": "Pieejams: {memoryAvailable} GiB ({percent}%)",
+        "memory": "Atmiņa: {memory}",
+        "memoryAvailable": "Pieejams: {memoryAvailable} ({percent}%)",
         "version": "Versija: {version}",
         "uptime": "Darbības laiks: {months} mēn., {days} d., {hours} st., {minutes} min.",
         "loadAverage": "Vidējā slodze:",
@@ -2874,193 +2647,6 @@
         "internalServerError": "Neizdevās iegūt Paperless-ngx datus"
       }
     },
-    "patchmon": {
-      "name": "PatchMon",
-      "description": "Resursdatoru labojumu statusa pārskats no PatchMon",
-      "title": "PatchMon statistika",
-      "totalHosts": "Kopējais resursdatoru skaits",
-      "hostsNeedingUpdates": "Nepieciešami atjauninājumi",
-      "securityUpdates": "Drošības atjauninājumi",
-      "upToDateHosts": "Atjauninātie resursdatori",
-      "hostsWithSecurityUpdates": "Resursdatori ar drošības atjauninājumiem",
-      "recentUpdates24h": "Atjauninājumi (24 h)",
-      "totalOutdatedPackages": "Novecojušas pakotnes",
-      "totalRepos": "Repozitoriji",
-      "osDistribution": "Operētājsistēmu sadalījums",
-      "compliance": "Labojumu atbilstība",
-      "complianceRatio": "{upToDate} / {total}",
-      "lastUpdated": "Atjaunināts {time}",
-      "option": {
-        "showTotalHosts": {
-          "label": "Rādīt kopējo resursdatoru skaitu",
-          "description": "Rādīt pārraudzīto resursdatoru kopskaitu"
-        },
-        "showHostsNeedingUpdates": {
-          "label": "Rādīt resursdatorus, kuriem nepieciešami atjauninājumi",
-          "description": "Rādīt resursdatorus ar vismaz vienu novecojušu pakotni"
-        },
-        "showSecurityUpdates": {
-          "label": "Rādīt drošības atjauninājumus",
-          "description": "Rādīt pieejamo drošības atjauninājumu kopskaitu"
-        },
-        "showUpToDateHosts": {
-          "label": "Rādīt atjauninātos resursdatorus",
-          "description": "Rādīt resursdatorus bez novecojušām pakotnēm"
-        },
-        "showHostsWithSecurityUpdates": {
-          "label": "Rādīt resursdatorus ar drošības atjauninājumiem",
-          "description": "Rādīt resursdatorus, kuriem nepieciešami drošības labojumi"
-        },
-        "showRecentUpdates24h": {
-          "label": "Rādīt nesenos atjauninājumus (24 h)",
-          "description": "Rādīt pēdējo 24 stundu laikā lietoto atjauninājumu skaitu"
-        },
-        "showTotalOutdatedPackages": {
-          "label": "Rādīt novecojušās pakotnes",
-          "description": "Rādīt novecojušo pakotņu kopskaitu visos resursdatoros"
-        },
-        "showTotalRepos": {
-          "label": "Rādīt repozitorijus",
-          "description": "Rādīt pārraudzīto aktīvo repozitoriju skaitu"
-        },
-        "enableThresholdColors": {
-          "label": "Iespējot sliekšņu krāsas",
-          "description": "Krāsot statistikas vērtības zaļā, dzeltenā vai sarkanā krāsā atbilstoši nopietnības iestatījumiem"
-        },
-        "useCustomThresholds": {
-          "label": "Papildu sliekšņi",
-          "description": "Pielāgot brīdinājuma un kritiskos sliekšņus katrai statistikas vērtībai, izmantojot absolūtos skaitļus vai procentuālo daļu no kopējā resursdatoru skaita"
-        },
-        "thresholdMode": {
-          "option": {
-            "absolute": "Absolūtais skaits",
-            "percent": "Procentuālā daļa no kopējā resursdatoru skaita"
-          }
-        },
-        "hostsNeedingUpdatesThresholdMode": {
-          "label": "Nepieciešamo atjauninājumu sliekšņa režīms",
-          "description": "Salīdzināt nepieciešamo atjauninājumu skaitu kā absolūtu vērtību vai procentuālo daļu no kopējā resursdatoru skaita"
-        },
-        "hostsNeedingUpdatesWarningAt": {
-          "label": "Nepieciešamo atjauninājumu brīdinājuma slieksnis",
-          "description": "Iestatīt dzeltenu krāsu, kad vērtība sasniedz šo slieksni"
-        },
-        "hostsNeedingUpdatesCriticalAt": {
-          "label": "Nepieciešamo atjauninājumu kritiskais slieksnis",
-          "description": "Iestatīt sarkanu krāsu, kad vērtība sasniedz šo slieksni"
-        },
-        "securityUpdatesThresholdMode": {
-          "label": "Drošības atjauninājumu sliekšņa režīms",
-          "description": "Salīdzināt drošības atjauninājumu skaitu kā absolūtu vērtību vai procentuālo daļu no kopējā resursdatoru skaita"
-        },
-        "securityUpdatesWarningAt": {
-          "label": "Drošības atjauninājumu brīdinājuma slieksnis",
-          "description": "Iestatīt dzeltenu krāsu, kad vērtība sasniedz šo slieksni"
-        },
-        "securityUpdatesCriticalAt": {
-          "label": "Drošības atjauninājumu kritiskais slieksnis",
-          "description": "Iestatīt sarkanu krāsu, kad vērtība sasniedz šo slieksni"
-        },
-        "hostsWithSecurityUpdatesThresholdMode": {
-          "label": "Resursdatoru ar drošības atjauninājumiem sliekšņa režīms",
-          "description": "Salīdzināt resursdatoru skaitu kā absolūtu vērtību vai procentuālo daļu no kopējā resursdatoru skaita"
-        },
-        "hostsWithSecurityUpdatesWarningAt": {
-          "label": "Resursdatoru ar drošības atjauninājumiem brīdinājuma slieksnis",
-          "description": "Iestatīt dzeltenu krāsu, kad vērtība sasniedz šo slieksni"
-        },
-        "hostsWithSecurityUpdatesCriticalAt": {
-          "label": "Resursdatoru ar drošības atjauninājumiem kritiskais slieksnis",
-          "description": "Iestatīt sarkanu krāsu, kad vērtība sasniedz šo slieksni"
-        },
-        "upToDateHostsThresholdMode": {
-          "label": "Atjaunināto resursdatoru sliekšņa režīms",
-          "description": "Salīdzināt atjaunināto resursdatoru skaitu kā absolūtu vērtību vai procentuālo daļu no kopējā resursdatoru skaita"
-        },
-        "upToDateHostsWarningAt": {
-          "label": "Atjaunināto resursdatoru brīdinājuma slieksnis",
-          "description": "Iestatīt dzeltenu krāsu, kad vērtība ir sasniegusi vai pārsniegusi šo slieksni, bet nav pilnīga pārklājuma"
-        },
-        "upToDateHostsCriticalAt": {
-          "label": "Atjaunināto resursdatoru kritiskais slieksnis",
-          "description": "Iestatīt sarkanu krāsu, kad vērtība nokrītas zem šī sliekšņa"
-        },
-        "totalOutdatedPackagesThresholdMode": {
-          "label": "Novecojušo pakotņu sliekšņa režīms",
-          "description": "Salīdzināt novecojušo pakotņu skaitu kā absolūtu vērtību vai procentuālo daļu no kopējā resursdatoru skaita"
-        },
-        "totalOutdatedPackagesWarningAt": {
-          "label": "Novecojušo pakotņu brīdinājuma slieksnis",
-          "description": "Iestatīt dzeltenu krāsu, kad vērtība sasniedz šo slieksni"
-        },
-        "totalOutdatedPackagesCriticalAt": {
-          "label": "Novecojušo pakotņu kritiskais slieksnis",
-          "description": "Iestatīt sarkanu krāsu, kad vērtība sasniedz šo slieksni"
-        },
-        "showOsDistribution": {
-          "label": "Rādīt operētājsistēmu sadalījumu",
-          "description": "Rādīt pārraudzīto resursdatoru sadalījumu pēc operētājsistēmas"
-        },
-        "osDistributionLimit": {
-          "label": "Operētājsistēmu sadalījuma ierobežojums",
-          "description": "Maksimālais attēlojamo operētājsistēmu skaits",
-          "option": {
-            "3": "3 populārākās",
-            "5": "5 populārākās",
-            "10": "10 populārākās",
-            "all": "Visas"
-          }
-        },
-        "showOsVersion": {
-          "label": "Rādīt operētājsistēmas versiju",
-          "description": "Ja pieejams, pievienot operētājsistēmas versiju katrai sadalījuma etiķetei"
-        },
-        "showComplianceHero": {
-          "label": "Rādīt atbilstības galveno elementu",
-          "description": "Rādīt atbilstības gredzenu ar atjaunināto resursdatoru procentuālo daļu"
-        },
-        "osDisplayMode": {
-          "label": "Operētājsistēmas attēlojuma režīms",
-          "description": "Izvēlieties, kā attēlot operētājsistēmu sadalījumu",
-          "option": {
-            "bars": "Horizontālas joslas",
-            "donut": "Gredzena diagramma"
-          }
-        }
-      },
-      "error": {
-        "internalServerError": "Neizdevās izgūt PatchMon datus"
-      }
-    },
-    "bazarr": {
-      "name": "Bazarr",
-      "description": "Trūkstošo subtitru un Bazarr instances darbspējas statusa pārskats",
-      "episodes": "Trūkstošās sērijas",
-      "movies": "Trūkstošās filmas",
-      "providers": "Nodrošinātāju problēmas",
-      "status": "Darbspējas problēmas",
-      "option": {
-        "showMissingEpisodes": {
-          "label": "Rādīt trūkstošās sērijas",
-          "description": "Rādīt to sēriju skaitu, kurām trūkst subtitru"
-        },
-        "showMissingMovies": {
-          "label": "Rādīt trūkstošās filmas",
-          "description": "Rādīt to filmu skaitu, kurām trūkst subtitru"
-        },
-        "showProviderIssues": {
-          "label": "Rādīt nodrošinātāju problēmas",
-          "description": "Rādīt to subtitru nodrošinātāju skaitu, kuriem ir problēmas"
-        },
-        "showHealthIssues": {
-          "label": "Rādīt darbspējas problēmas",
-          "description": "Rādīt Bazarr darbspējas problēmu skaitu"
-        }
-      },
-      "error": {
-        "internalServerError": "Neizdevās izgūt Bazarr datus"
-      }
-    },
     "immich-serverStats": {
       "name": "Immich servera statistika",
       "description": "Informācija par jūsu Immich instanci",
@@ -3433,35 +3019,6 @@
         }
       }
     },
-    "mediaMissing": {
-      "name": "Trūkstošie un rindā esošie multivides faili",
-      "description": "Rāda trūkstošās un rindā esošās filmas un sērijas no Radarr un Sonarr",
-      "option": {
-        "showMissing": {
-          "label": "Rādīt trūkstošos vienumus"
-        },
-        "showQueued": {
-          "label": "Rādīt rindā esošos vienumus"
-        },
-        "pageSize": {
-          "label": "Vienumu skaits lapā"
-        }
-      },
-      "tab": {
-        "missing": "Trūkstošie",
-        "queued": "Rindā"
-      },
-      "type": {
-        "movie": "Filma",
-        "episode": "Sērija"
-      },
-      "empty": {
-        "missing": "Nav trūkstošu vienumu",
-        "queued": "Nav rindā esošu vienumu",
-        "noTabsEnabled": "Logrīka iestatījumos iespējojiet vismaz vienu cilni"
-      },
-      "timeLeft": "Atlikušais laiks"
-    },
     "rssFeed": {
       "name": "RSS plūsmas",
       "description": "Pārraugiet un rādiet vienu vai vairākas vispārīgas RSS, ATOM vai JSON plūsmas",
@@ -3790,40 +3347,6 @@
         "internalServerError": "Neizdevās iegūt pieejamības datus"
       }
     },
-    "traefik": {
-      "name": "Traefik",
-      "description": "Traefik maršrutētāju, pakalpojumu, starpprogrammatūras un ieejas punktu pārskats",
-      "option": {
-        "showTcp": {
-          "label": "Rādīt TCP"
-        },
-        "showUdp": {
-          "label": "Rādīt UDP"
-        },
-        "showEntryPoints": {
-          "label": "Rādīt ieejas punktus"
-        }
-      },
-      "instances": "Traefik serveri",
-      "versionUnknown": "Versija nav zināma",
-      "summary": {
-        "routers": "Maršrutētāji",
-        "entryPoints": "Ieejas punkti"
-      },
-      "resource": {
-        "routers": "Maršrutētāji",
-        "services": "Pakalpojumi",
-        "middlewares": "Starpprogrammatūra"
-      },
-      "status": {
-        "healthy": "Darbojas pareizi",
-        "errors": "{count} kļūdas",
-        "warnings": "{count} brīdinājumi"
-      },
-      "error": {
-        "internalServerError": "Neizdevās izgūt Traefik datus"
-      }
-    },
     "audioStats": {
       "name": "Audio statistika",
       "description": "Bibliotēkas un atskaņošanas statistika no Navidrome vai Audiobookshelf",
@@ -3946,26 +3469,6 @@
       "status": {
         "unhealthy": "Nedarb."
       }
-    },
-    "customApi": {
-      "name": "Pielāgots API",
-      "description": "Rādiet datus no jebkura ārēja API ar pielāgotu konfigurāciju.",
-      "option": {
-        "definitionId": {
-          "label": "Definīcijas ID"
-        },
-        "refreshInterval": {
-          "label": "Atjaunināšanas intervāls",
-          "description": "Cik bieži atkārtoti izgūt datus no API (sekundēs)"
-        }
-      },
-      "noDefinition": "Nav atlasīta definīcija",
-      "definitionNotFound": "Logrīka definīcija nav atrasta. Iespējams, tā ir dzēsta.",
-      "noDisplayOutput": "Nav attēlojamas izvades",
-      "executeConfirm": "Vai tiešām vēlaties izpildīt šo darbību?",
-      "executing": "Notiek izpilde...",
-      "executeSuccess": "Darbība ir veiksmīgi izpildīta",
-      "executeFailed": "Darbība neizdevās. Pārbaudiet logrīka konfigurāciju."
     },
     "beszelSystemTable": {
       "name": "Beszel sistēmas (Tabula)",
@@ -4215,6 +3718,288 @@
         "dockerNetwork": {
           "title": "Docker tīkla I/O",
           "subtitle": "Docker konteineru tīkla trafika"
+        }
+      }
+    },
+    "patchmon": {
+      "name": "PatchMon",
+      "description": "Resursdatoru labojumu statusa pārskats no PatchMon",
+      "title": "PatchMon statistika",
+      "totalHosts": "Kopējais resursdatoru skaits",
+      "hostsNeedingUpdates": "Nepieciešami atjauninājumi",
+      "securityUpdates": "Drošības atjauninājumi",
+      "upToDateHosts": "Atjauninātie resursdatori",
+      "hostsWithSecurityUpdates": "Resursdatori ar drošības atjauninājumiem",
+      "recentUpdates24h": "Atjauninājumi (24 h)",
+      "totalOutdatedPackages": "Novecojušas pakotnes",
+      "totalRepos": "Repozitoriji",
+      "osDistribution": "Operētājsistēmu sadalījums",
+      "compliance": "Labojumu atbilstība",
+      "complianceRatio": "{upToDate} / {total}",
+      "lastUpdated": "Atjaunināts {time}",
+      "option": {
+        "showTotalHosts": {
+          "label": "Rādīt kopējo resursdatoru skaitu",
+          "description": "Rādīt pārraudzīto resursdatoru kopskaitu"
+        },
+        "showHostsNeedingUpdates": {
+          "label": "Rādīt resursdatorus, kuriem nepieciešami atjauninājumi",
+          "description": "Rādīt resursdatorus ar vismaz vienu novecojušu pakotni"
+        },
+        "showSecurityUpdates": {
+          "label": "Rādīt drošības atjauninājumus",
+          "description": "Rādīt pieejamo drošības atjauninājumu kopskaitu"
+        },
+        "showUpToDateHosts": {
+          "label": "Rādīt atjauninātos resursdatorus",
+          "description": "Rādīt resursdatorus bez novecojušām pakotnēm"
+        },
+        "showHostsWithSecurityUpdates": {
+          "label": "Rādīt resursdatorus ar drošības atjauninājumiem",
+          "description": "Rādīt resursdatorus, kuriem nepieciešami drošības labojumi"
+        },
+        "showRecentUpdates24h": {
+          "label": "Rādīt nesenos atjauninājumus (24 h)",
+          "description": "Rādīt pēdējo 24 stundu laikā lietoto atjauninājumu skaitu"
+        },
+        "showTotalOutdatedPackages": {
+          "label": "Rādīt novecojušās pakotnes",
+          "description": "Rādīt novecojušo pakotņu kopskaitu visos resursdatoros"
+        },
+        "showTotalRepos": {
+          "label": "Rādīt repozitorijus",
+          "description": "Rādīt pārraudzīto aktīvo repozitoriju skaitu"
+        },
+        "enableThresholdColors": {
+          "label": "Iespējot sliekšņu krāsas",
+          "description": "Krāsot statistikas vērtības zaļā, dzeltenā vai sarkanā krāsā atbilstoši nopietnības iestatījumiem"
+        },
+        "useCustomThresholds": {
+          "label": "Papildu sliekšņi",
+          "description": "Pielāgot brīdinājuma un kritiskos sliekšņus katrai statistikas vērtībai, izmantojot absolūtos skaitļus vai procentuālo daļu no kopējā resursdatoru skaita"
+        },
+        "thresholdMode": {
+          "option": {
+            "absolute": "Absolūtais skaits",
+            "percent": "Procentuālā daļa no kopējā resursdatoru skaita"
+          }
+        },
+        "hostsNeedingUpdatesThresholdMode": {
+          "label": "Nepieciešamo atjauninājumu sliekšņa režīms",
+          "description": "Salīdzināt nepieciešamo atjauninājumu skaitu kā absolūtu vērtību vai procentuālo daļu no kopējā resursdatoru skaita"
+        },
+        "hostsNeedingUpdatesWarningAt": {
+          "label": "Nepieciešamo atjauninājumu brīdinājuma slieksnis",
+          "description": "Iestatīt dzeltenu krāsu, kad vērtība sasniedz šo slieksni"
+        },
+        "hostsNeedingUpdatesCriticalAt": {
+          "label": "Nepieciešamo atjauninājumu kritiskais slieksnis",
+          "description": "Iestatīt sarkanu krāsu, kad vērtība sasniedz šo slieksni"
+        },
+        "securityUpdatesThresholdMode": {
+          "label": "Drošības atjauninājumu sliekšņa režīms",
+          "description": "Salīdzināt drošības atjauninājumu skaitu kā absolūtu vērtību vai procentuālo daļu no kopējā resursdatoru skaita"
+        },
+        "securityUpdatesWarningAt": {
+          "label": "Drošības atjauninājumu brīdinājuma slieksnis",
+          "description": "Iestatīt dzeltenu krāsu, kad vērtība sasniedz šo slieksni"
+        },
+        "securityUpdatesCriticalAt": {
+          "label": "Drošības atjauninājumu kritiskais slieksnis",
+          "description": "Iestatīt sarkanu krāsu, kad vērtība sasniedz šo slieksni"
+        },
+        "hostsWithSecurityUpdatesThresholdMode": {
+          "label": "Resursdatoru ar drošības atjauninājumiem sliekšņa režīms",
+          "description": "Salīdzināt resursdatoru skaitu kā absolūtu vērtību vai procentuālo daļu no kopējā resursdatoru skaita"
+        },
+        "hostsWithSecurityUpdatesWarningAt": {
+          "label": "Resursdatoru ar drošības atjauninājumiem brīdinājuma slieksnis",
+          "description": "Iestatīt dzeltenu krāsu, kad vērtība sasniedz šo slieksni"
+        },
+        "hostsWithSecurityUpdatesCriticalAt": {
+          "label": "Resursdatoru ar drošības atjauninājumiem kritiskais slieksnis",
+          "description": "Iestatīt sarkanu krāsu, kad vērtība sasniedz šo slieksni"
+        },
+        "upToDateHostsThresholdMode": {
+          "label": "Atjaunināto resursdatoru sliekšņa režīms",
+          "description": "Salīdzināt atjaunināto resursdatoru skaitu kā absolūtu vērtību vai procentuālo daļu no kopējā resursdatoru skaita"
+        },
+        "upToDateHostsWarningAt": {
+          "label": "Atjaunināto resursdatoru brīdinājuma slieksnis",
+          "description": "Iestatīt dzeltenu krāsu, kad vērtība ir sasniegusi vai pārsniegusi šo slieksni, bet nav pilnīga pārklājuma"
+        },
+        "upToDateHostsCriticalAt": {
+          "label": "Atjaunināto resursdatoru kritiskais slieksnis",
+          "description": "Iestatīt sarkanu krāsu, kad vērtība nokrītas zem šī sliekšņa"
+        },
+        "totalOutdatedPackagesThresholdMode": {
+          "label": "Novecojušo pakotņu sliekšņa režīms",
+          "description": "Salīdzināt novecojušo pakotņu skaitu kā absolūtu vērtību vai procentuālo daļu no kopējā resursdatoru skaita"
+        },
+        "totalOutdatedPackagesWarningAt": {
+          "label": "Novecojušo pakotņu brīdinājuma slieksnis",
+          "description": "Iestatīt dzeltenu krāsu, kad vērtība sasniedz šo slieksni"
+        },
+        "totalOutdatedPackagesCriticalAt": {
+          "label": "Novecojušo pakotņu kritiskais slieksnis",
+          "description": "Iestatīt sarkanu krāsu, kad vērtība sasniedz šo slieksni"
+        },
+        "showOsDistribution": {
+          "label": "Rādīt operētājsistēmu sadalījumu",
+          "description": "Rādīt pārraudzīto resursdatoru sadalījumu pēc operētājsistēmas"
+        },
+        "osDistributionLimit": {
+          "label": "Operētājsistēmu sadalījuma ierobežojums",
+          "description": "Maksimālais attēlojamo operētājsistēmu skaits",
+          "option": {
+            "3": "3 populārākās",
+            "5": "5 populārākās",
+            "10": "10 populārākās",
+            "all": "Visas"
+          }
+        },
+        "showOsVersion": {
+          "label": "Rādīt operētājsistēmas versiju",
+          "description": "Ja pieejams, pievienot operētājsistēmas versiju katrai sadalījuma etiķetei"
+        },
+        "showComplianceHero": {
+          "label": "Rādīt atbilstības galveno elementu",
+          "description": "Rādīt atbilstības gredzenu ar atjaunināto resursdatoru procentuālo daļu"
+        },
+        "osDisplayMode": {
+          "label": "Operētājsistēmas attēlojuma režīms",
+          "description": "Izvēlieties, kā attēlot operētājsistēmu sadalījumu",
+          "option": {
+            "bars": "Horizontālas joslas",
+            "donut": "Gredzena diagramma"
+          }
+        }
+      },
+      "error": {
+        "internalServerError": "Neizdevās izgūt PatchMon datus"
+      }
+    },
+    "bazarr": {
+      "name": "Bazarr",
+      "description": "Trūkstošo subtitru un Bazarr instances darbspējas statusa pārskats",
+      "episodes": "Trūkstošās sērijas",
+      "movies": "Trūkstošās filmas",
+      "providers": "Nodrošinātāju problēmas",
+      "status": "Darbspējas problēmas",
+      "option": {
+        "showMissingEpisodes": {
+          "label": "Rādīt trūkstošās sērijas",
+          "description": "Rādīt to sēriju skaitu, kurām trūkst subtitru"
+        },
+        "showMissingMovies": {
+          "label": "Rādīt trūkstošās filmas",
+          "description": "Rādīt to filmu skaitu, kurām trūkst subtitru"
+        },
+        "showProviderIssues": {
+          "label": "Rādīt nodrošinātāju problēmas",
+          "description": "Rādīt to subtitru nodrošinātāju skaitu, kuriem ir problēmas"
+        },
+        "showHealthIssues": {
+          "label": "Rādīt darbspējas problēmas",
+          "description": "Rādīt Bazarr darbspējas problēmu skaitu"
+        }
+      },
+      "error": {
+        "internalServerError": "Neizdevās izgūt Bazarr datus"
+      }
+    },
+    "mediaMissing": {
+      "name": "Trūkstošie un rindā esošie multivides faili",
+      "description": "Rāda trūkstošās un rindā esošās filmas un sērijas no Radarr un Sonarr",
+      "option": {
+        "showMissing": {
+          "label": "Rādīt trūkstošos vienumus"
+        },
+        "showQueued": {
+          "label": "Rādīt rindā esošos vienumus"
+        },
+        "pageSize": {
+          "label": "Vienumu skaits lapā"
+        }
+      },
+      "tab": {
+        "missing": "Trūkstošie",
+        "queued": "Rindā"
+      },
+      "type": {
+        "movie": "Filma",
+        "episode": "Sērija"
+      },
+      "empty": {
+        "missing": "Nav trūkstošu vienumu",
+        "queued": "Nav rindā esošu vienumu",
+        "noTabsEnabled": "Logrīka iestatījumos iespējojiet vismaz vienu cilni"
+      },
+      "timeLeft": "Atlikušais laiks"
+    },
+    "traefik": {
+      "name": "Traefik",
+      "description": "Traefik maršrutētāju, pakalpojumu, starpprogrammatūras un ieejas punktu pārskats",
+      "option": {
+        "showTcp": {
+          "label": "Rādīt TCP"
+        },
+        "showUdp": {
+          "label": "Rādīt UDP"
+        },
+        "showEntryPoints": {
+          "label": "Rādīt ieejas punktus"
+        }
+      },
+      "instances": "Traefik serveri",
+      "versionUnknown": "Versija nav zināma",
+      "summary": {
+        "routers": "Maršrutētāji",
+        "entryPoints": "Ieejas punkti"
+      },
+      "resource": {
+        "routers": "Maršrutētāji",
+        "services": "Pakalpojumi",
+        "middlewares": "Starpprogrammatūra"
+      },
+      "status": {
+        "healthy": "Darbojas pareizi",
+        "errors": "{count} kļūdas",
+        "warnings": "{count} brīdinājumi"
+      },
+      "error": {
+        "internalServerError": "Neizdevās izgūt Traefik datus"
+      }
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Parāda, cik uzraudzītajiem konteineriem ir pieejami atjauninājumi.",
+      "title": "What's Up Docker",
+      "monitored": "Uzraudzītie",
+      "updatesAvailable": "{count, plural, zero {# atjauninājumu pieejami} one {# atjauninājums pieejams} other {# atjauninājumi pieejami}}",
+      "updateAvailable": "Pieejams atjauninājums",
+      "openReleaseNotes": "Atvērt laidiena piezīmes",
+      "option": {
+        "showTitle": {
+          "label": "Rādīt nosaukumu"
+        },
+        "showRing": {
+          "label": "Rādīt atjaunināšanas gredzenu"
+        },
+        "layout": {
+          "label": "Izkārtojums",
+          "option": {
+            "horizontal": {
+              "label": "Horizontāli"
+            },
+            "vertical": {
+              "label": "Vertikāli"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Rādīt konteineru atjauninājumu sarakstu",
+          "description": "Uzskaita katru uzraudzīto konteineru, kuram ir pieejams attēla atjauninājums"
         }
       }
     }
@@ -4597,11 +4382,11 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "Sākums",
         "boards": "Dēļi",
         "apps": "Lietotnes",
         "integrations": "Integrācijas",
-        "customWidgets": "Pielāgotie logrīki",
         "searchEngies": "Meklētājprogrammas",
         "medias": "Multivide",
         "users": {
@@ -5224,7 +5009,7 @@
           "restore": {
             "dropzone": {
               "title": "Iemetiet savu dublējuma ZIP šeit",
-              "description": "Pieņem .zip failus no Homarr SQLite dublējuma (maks. 256 MB)"
+              "description": "Pieņem .zip failus no Homarr SQLite dublējuma (maks. {maxSize})"
             },
             "analyzing": "Notiek dublējuma analīze...",
             "changeFile": "Mainīt failu",
@@ -5740,6 +5525,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "Pārvaldīt",
       "boards": {
         "label": "Dēļi"
@@ -5772,18 +5560,6 @@
         },
         "edit": {
           "label": "Rediģēt"
-        }
-      },
-      "custom-widgets": {
-        "label": "Pielāgotie logrīki",
-        "new": {
-          "label": "Jauns"
-        },
-        "edit": {
-          "label": "Rediģēt",
-          "flow": {
-            "label": "Plūsma"
-          }
         }
       },
       "users": {

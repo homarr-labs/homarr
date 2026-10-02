@@ -4,7 +4,7 @@ import type { KeyboardEvent, ReactNode } from "react";
 import { Input, ScrollArea, SimpleGrid, Stack } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 
-export const selectGridCols = { base: 2, xs: 3, sm: 4, md: 5 };
+export const selectGridCols = { base: 1, xs: 2, sm: 3, md: 4, lg: 5 };
 export const selectGridCardHeight = 140;
 export const selectGridScrollMaxHeight = "70vh";
 
@@ -12,6 +12,7 @@ interface SelectGridLayoutProps {
   search: string;
   onSearchChange: (value: string) => void;
   placeholder: string;
+  ariaLabel: string;
   onSearchKeyDown?: (event: KeyboardEvent<HTMLInputElement>) => void;
   disableScroll?: boolean;
   disableAutoFocus?: boolean;
@@ -22,6 +23,7 @@ export const SelectGridLayout = ({
   search,
   onSearchChange,
   placeholder,
+  ariaLabel,
   onSearchKeyDown,
   disableScroll = false,
   disableAutoFocus = false,
@@ -40,6 +42,7 @@ export const SelectGridLayout = ({
         onChange={(event) => onSearchChange(event.currentTarget.value)}
         leftSection={<IconSearch />}
         placeholder={placeholder}
+        aria-label={ariaLabel}
         data-autofocus={disableAutoFocus ? undefined : true}
         onKeyDown={onSearchKeyDown}
       />

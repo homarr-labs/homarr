@@ -688,211 +688,6 @@
       "add": "הוסף אפליקציה"
     }
   },
-  "customWidget": {
-    "page": {
-      "list": {
-        "title": "",
-        "noResults": "",
-        "loading": ""
-      },
-      "create": {
-        "title": "",
-        "subtitle": ""
-      },
-      "edit": {
-        "title": ""
-      }
-    },
-    "action": {
-      "create": "",
-      "import": "",
-      "save": "",
-      "delete": "",
-      "deleteConfirm": "",
-      "export": "",
-      "addMapping": "",
-      "addColumn": "",
-      "edit": "",
-      "removeMapping": "",
-      "removeColumn": "",
-      "addItem": "",
-      "removeItem": "",
-      "addBar": "",
-      "duplicate": "",
-      "copyAiPrompt": "",
-      "enable": "",
-      "disable": "",
-      "menu": ""
-    },
-    "field": {
-      "name": "",
-      "description": "",
-      "iconUrl": "",
-      "url": "",
-      "authType": "",
-      "headerName": "",
-      "method": "",
-      "requestBody": "",
-      "displayType": "",
-      "jsonPath": "",
-      "jsonPathHint": "",
-      "label": "",
-      "unit": "",
-      "mappings": "",
-      "tablePath": "",
-      "tablePathHint": "",
-      "columns": "",
-      "header": "",
-      "items": "",
-      "gridColumns": "",
-      "cardStyle": "",
-      "bars": "",
-      "valuePath": "",
-      "maxPath": "",
-      "showPercentage": "",
-      "barSize": "",
-      "goodValues": "",
-      "dotSize": "",
-      "valueSize": "",
-      "labelPosition": "",
-      "kvLayout": "",
-      "striped": "",
-      "compact": "",
-      "maxHeight": "",
-      "color": "",
-      "buttonLabel": "",
-      "buttonColor": "",
-      "confirmText": "",
-      "confirmTextHint": "",
-      "successMessage": "",
-      "successMessageHint": "",
-      "enabled": "",
-      "template": {
-        "label": "",
-        "description": ""
-      }
-    },
-    "placeholder": {
-      "exampleLabel": "",
-      "exampleLabelShort": "",
-      "exampleHeader": "",
-      "exampleUnit": "",
-      "iconUrl": "",
-      "url": "",
-      "headerName": "",
-      "jsonPath": "",
-      "tablePath": "",
-      "columnJsonPath": "",
-      "valuePath": "",
-      "maxPath": "",
-      "goodValues": "",
-      "color": ""
-    },
-    "cardStyleOption": {
-      "filled": "",
-      "outline": "",
-      "subtle": ""
-    },
-    "layoutOption": {
-      "list": "",
-      "grid": ""
-    },
-    "sizeOption": {
-      "sm": "",
-      "md": "",
-      "lg": "",
-      "xl": ""
-    },
-    "labelPositionOption": {
-      "above": "",
-      "below": ""
-    },
-    "fieldset": {
-      "general": "",
-      "connection": "",
-      "display": ""
-    },
-    "displayTypeDescription": {
-      "singleValue": "",
-      "keyValue": "",
-      "table": "",
-      "statGrid": "",
-      "progressBars": "",
-      "statusIndicator": "",
-      "countGrid": "",
-      "raw": "",
-      "actionButton": "",
-      "customJsx": ""
-    },
-    "method": {
-      "GET": "",
-      "POST": "",
-      "PUT": "",
-      "DELETE": "",
-      "PATCH": ""
-    },
-    "authType": {
-      "none": "",
-      "bearer": "",
-      "basic": "",
-      "apiKeyHeader": "",
-      "apiKeyQuery": ""
-    },
-    "displayType": {
-      "singleValue": "",
-      "keyValue": "",
-      "table": "",
-      "statGrid": "",
-      "progressBars": "",
-      "statusIndicator": "",
-      "countGrid": "",
-      "raw": "",
-      "actionButton": "",
-      "customJsx": ""
-    },
-    "secret": {
-      "apiKey": "",
-      "username": "",
-      "password": "",
-      "savedPlaceholder": ""
-    },
-    "preview": {
-      "title": "",
-      "test": "",
-      "hint": "",
-      "rawResponse": ""
-    },
-    "notification": {
-      "created": "",
-      "updated": "",
-      "deleted": "",
-      "imported": "",
-      "aiPromptCopied": "",
-      "aiPromptDescription": "",
-      "aiPromptCopy": "",
-      "aiPromptNoResponse": "",
-      "aiPromptCopyError": "",
-      "createError": "",
-      "updateError": "",
-      "importError": "",
-      "exportError": "",
-      "duplicated": "",
-      "duplicateError": "",
-      "toggleError": "",
-      "deleteError": "",
-      "previewError": "",
-      "executed": "",
-      "executeError": ""
-    },
-    "table": {
-      "name": "",
-      "url": "",
-      "display": ""
-    },
-    "widget": {
-      "disabled": ""
-    }
-  },
   "integration": {
     "page": {
       "list": {
@@ -1344,10 +1139,6 @@
       "name": "",
       "description": ""
     },
-    "wud": {
-      "name": "וואטס אפ דוקר",
-      "description": "עקוב אחר אילו מקונטיינרי הדוקר שלך כוללים עדכוני תמונה זמינים"
-    },
     "paperlessNgx": {
       "name": "",
       "description": ""
@@ -1359,6 +1150,10 @@
     "bazarr": {
       "name": "",
       "description": ""
+    },
+    "wud": {
+      "name": "וואטס אפ דוקר",
+      "description": "עקוב אחר אילו מקונטיינרי הדוקר שלך כוללים עדכוני תמונה זמינים"
     }
   },
   "media": {
@@ -1441,9 +1236,11 @@
     "here": "כאן",
     "iconPicker": {
       "label": "קישור של הסמל",
-      "description": "חפש בספרייה, הדבק כתובת URL של תמונה, או העלה קובץ.",
       "header": "הקלד שם או אובייקטים לסינון עבור אייקונים... Homarr יחפש עבורך סמלים של {countIcons} ",
       "headerLoading": "חפש תמונות לפי שם",
+      "noResults": "",
+      "error": "",
+      "description": "חפש בספרייה, הדבק כתובת URL של תמונה, או העלה קובץ.",
       "clear": "נקה תמונה",
       "uploadImage": "העלה תמונה",
       "results": "תוצאות חיפוש תמונות",
@@ -1452,9 +1249,7 @@
       "otherImages": "תמונות אחרות",
       "urlLoading": "בודק תמונה…",
       "urlReady": "התמונה מוכנה לשימוש",
-      "urlError": "לא ניתן היה לטעון את התמונה. בדוק את כתובת ה-URL ונסה שוב.",
-      "noResults": "",
-      "error": ""
+      "urlError": "לא ניתן היה לטעון את התמונה. בדוק את כתובת ה-URL ונסה שוב."
     },
     "colorScheme": {
       "options": {
@@ -1804,38 +1599,6 @@
       "option": {
         "showBroadcastMessage": {
           "label": ""
-        }
-      }
-    },
-    "wud": {
-      "name": "וואטס אפ דוקר",
-      "description": "הצג כמה מהמכולות הנצפות עם עדכונים זמינים.",
-      "title": "What's Up Docker",
-      "monitored": "מנוטר",
-      "updatesAvailable": "{count, plural, one {# עדכון זמין} two {# עדכונים זמינים} many {# עדכונים זמינים} other {# עדכונים זמינים}}",
-      "updateAvailable": "עדכון זמין",
-      "openReleaseNotes": "פתח הערות שחרור",
-      "option": {
-        "showTitle": {
-          "label": "הצג כותרת"
-        },
-        "showRing": {
-          "label": "הצג טבעת עדכון"
-        },
-        "layout": {
-          "label": "פריסה",
-          "option": {
-            "horizontal": {
-              "label": "אופקי"
-            },
-            "vertical": {
-              "label": "אנכי"
-            }
-          }
-        },
-        "showUpdateList": {
-          "label": "הצג רשימת עדכוני מכולות",
-          "description": "מפרט כל מכולה מנוטרת שיש עדכון תמונה זמין עבורה"
         }
       }
     },
@@ -2391,8 +2154,8 @@
       "popover": {
         "information": "מידע",
         "processor": "מעבד: {cpuModelName}",
-        "memory": "זיכרון: {memory}GiB",
-        "memoryAvailable": "זמין: {memoryAvailable}GiB ({percent}%)",
+        "memory": "זיכרון: {memory}",
+        "memoryAvailable": "זמין: {memoryAvailable} ({percent}%)",
         "version": "גרסה: {version}",
         "uptime": "זמן פעילות: {months} חודשים, {days} ימים, {hours} שעות, {minutes} דקות",
         "loadAverage": "ממוצע עומס:",
@@ -3137,7 +2900,7 @@
           "label": "הצג ערכים שונים שסומנו כהשלמה"
         },
         "activeTorrentThreshold": {
-          "label": "הסתר טורנט שהושלם מתחת לסף הזה (בקיB/s)"
+          "label": "הסתר טורנט שהושלם מתחת לסף הזה"
         },
         "categoryFilter": {
           "label": "קטגוריות/תוויות לסינון"
@@ -3927,7 +3690,7 @@
               "label": "אחוז (לדוגמה, 76%)"
             },
             "absolute": {
-              "label": "ערכים מוחלטים (לדוגמה, 800GB / 1TB)"
+              "label": "ערכים מוחלטים"
             },
             "free": {
               "label": "אחוז שטח פנוי (לדוגמה, 24% פנוי)"
@@ -3946,26 +3709,6 @@
       "status": {
         "unhealthy": "לא בריא"
       }
-    },
-    "customApi": {
-      "name": "",
-      "description": "",
-      "option": {
-        "definitionId": {
-          "label": ""
-        },
-        "refreshInterval": {
-          "label": "",
-          "description": ""
-        }
-      },
-      "noDefinition": "",
-      "definitionNotFound": "",
-      "noDisplayOutput": "",
-      "executeConfirm": "",
-      "executing": "",
-      "executeSuccess": "",
-      "executeFailed": ""
     },
     "beszelSystemTable": {
       "name": "",
@@ -4215,6 +3958,38 @@
         "dockerNetwork": {
           "title": "",
           "subtitle": ""
+        }
+      }
+    },
+    "wud": {
+      "name": "וואטס אפ דוקר",
+      "description": "הצג כמה מהמכולות הנצפות עם עדכונים זמינים.",
+      "title": "What's Up Docker",
+      "monitored": "מנוטר",
+      "updatesAvailable": "{count, plural, one {# עדכון זמין} two {# עדכונים זמינים} many {# עדכונים זמינים} other {# עדכונים זמינים}}",
+      "updateAvailable": "עדכון זמין",
+      "openReleaseNotes": "פתח הערות שחרור",
+      "option": {
+        "showTitle": {
+          "label": "הצג כותרת"
+        },
+        "showRing": {
+          "label": "הצג טבעת עדכון"
+        },
+        "layout": {
+          "label": "פריסה",
+          "option": {
+            "horizontal": {
+              "label": "אופקי"
+            },
+            "vertical": {
+              "label": "אנכי"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "הצג רשימת עדכוני מכולות",
+          "description": "מפרט כל מכולה מנוטרת שיש עדכון תמונה זמין עבורה"
         }
       }
     }
@@ -4597,11 +4372,11 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "מסך הבית",
         "boards": "לוחות",
         "apps": "אפליקציות",
         "integrations": "אינטגרציות",
-        "customWidgets": "",
         "searchEngies": "מנועי חיפוש",
         "medias": "מדיה",
         "users": {
@@ -5740,6 +5515,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "ניהול",
       "boards": {
         "label": "לוחות"
@@ -5772,18 +5550,6 @@
         },
         "edit": {
           "label": "עריכה"
-        }
-      },
-      "custom-widgets": {
-        "label": "",
-        "new": {
-          "label": ""
-        },
-        "edit": {
-          "label": "",
-          "flow": {
-            "label": ""
-          }
         }
       },
       "users": {

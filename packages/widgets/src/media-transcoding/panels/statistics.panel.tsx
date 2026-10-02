@@ -3,8 +3,8 @@ import { Card, Center, Group, RingProgress, ScrollArea, Stack, Text, Title, Tool
 import { IconDatabaseHeart, IconFileDescription, IconHeartbeat, IconTransform } from "@tabler/icons-react";
 
 import { useRequiredBoard } from "@homarr/boards/context";
-import { formatBytes } from "@homarr/common";
 import type { TdarrPieSegment, TdarrStatistics } from "@homarr/integrations";
+import { useByteFormatter } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
@@ -16,6 +16,8 @@ interface StatisticsPanelProps {
 
 export function StatisticsPanel(props: StatisticsPanelProps) {
   const t = useI18n("widget.mediaTranscoding.panel.statistics");
+  const tCommon = useI18n("widget.mediaTranscoding.panel.common");
+  const { formatBytes } = useByteFormatter();
 
   const allLibs = props.statistics;
 
@@ -23,7 +25,7 @@ export function StatisticsPanel(props: StatisticsPanelProps) {
   if (!(allLibs.totalFileCount > 0)) {
     return (
       <Center style={{ flex: "1" }}>
-        <Title order={6}>{t("empty")}</Title>
+        <Title order={6}>{tCommon("empty")}</Title>
       </Center>
     );
   }
@@ -31,10 +33,14 @@ export function StatisticsPanel(props: StatisticsPanelProps) {
   return (
     <ScrollArea h="100%">
       <Group wrap="wrap" justify="center" p={4} w="100%" gap="xs">
-        <StatisticItem icon={IconTransform} label={t("transcodesCount")} value={props.statistics.totalTranscodeCount} />
+        <StatisticItem
+          icon={IconTransform}
+          label={tCommon("transcodes")}
+          value={props.statistics.totalTranscodeCount}
+        />
         <StatisticItem
           icon={IconHeartbeat}
-          label={t("healthChecksCount")}
+          label={tCommon("healthChecks")}
           value={props.statistics.totalHealthCheckCount}
         />
         <StatisticItem icon={IconFileDescription} label={t("filesCount")} value={props.statistics.totalFileCount} />
@@ -45,8 +51,8 @@ export function StatisticsPanel(props: StatisticsPanelProps) {
         />
       </Group>
       <Group justify="center" wrap="wrap" grow>
-        <StatisticRingProgress items={allLibs.transcodeStatus} label={t("transcodes")} />
-        <StatisticRingProgress items={allLibs.healthCheckStatus} label={t("healthChecks")} />
+        <StatisticRingProgress items={allLibs.transcodeStatus} label={tCommon("transcodes")} />
+        <StatisticRingProgress items={allLibs.healthCheckStatus} label={tCommon("healthChecks")} />
         <StatisticRingProgress items={allLibs.videoCodecs} label={t("videoCodecs")} />
         <StatisticRingProgress items={allLibs.videoContainers} label={t("videoContainers")} />
         <StatisticRingProgress items={allLibs.videoResolutions} label={t("videoResolutions")} />
@@ -71,8 +77,9 @@ const StatisticRingProgress = ({ items, label }: StatisticRingProgressProps) => 
   );
 };
 
-function toRingProgressSections(segments: TdarrPieSegment[]): RingProgressProps["sections"] {
+export function toRingProgressSections(segments: TdarrPieSegment[]): RingProgressProps["sections"] {
   const total = segments.reduce((prev, curr) => prev + curr.value, 0);
+  if (total <= 0) return [];
   return segments.map((segment, index) => ({
     value: (segment.value * 100) / total,
     tooltip: `${segment.name}: ${segment.value}`,
@@ -91,9 +98,9 @@ function StatisticItem(props: StatisticItemProps) {
   const board = useRequiredBoard();
   return (
     <Tooltip label={props.label}>
-      <Card p={0} radius={board.itemRadius} miw={48} flex={1}>
+      <Card p={0} radius={board.itemRadius} miw={48} flex={1} bg="transparent">
         <Group justify="center" align="center" gap="xs" w="100%" wrap="nowrap">
-          <props.icon size={16} style={{ minWidth: 16 }} />
+          <props.icon size="var(--mantine-font-size-md)" style={{ flexShrink: 0 }} />
           <Text size="md">{props.value}</Text>
         </Group>
       </Card>

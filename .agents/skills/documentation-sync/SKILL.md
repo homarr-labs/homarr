@@ -1,44 +1,57 @@
 ---
 name: documentation-sync
-description: Keep Homarr documentation in sync with code changes. Use when modifying code that affects user-facing behavior, or when adding/modifying widgets, integrations, cron jobs, API routes, env vars, permissions, auth providers, or UI in apps/docs. Covers the docs/ mapping table, integration doc pattern, and widget doc pattern.
+description: Write concise Homarr docs only when changed behavior is not clear to a smart, advanced user from the UI or generated schema. Skip routine, obvious, or self-explanatory changes.
 ---
 
 # Documentation Sync
 
-When modifying code that affects user-facing behavior, you MUST also update the documentation in `apps/docs/`.
+Apply the audience and scope rules in `AGENTS.md` first. A code, UI, or API change alone does not warrant documentation. Add a passage only when a smart, advanced user cannot infer the behavior from the interface or generated schema.
 
-## What triggers a doc update
+For hidden capabilities such as the advanced widget feature, explain discovery, activation, and non-obvious behavior. For visible standard controls such as Delete, omit narration of what the label already conveys. Use the shortest explanation that preserves necessary technical detail; remove redundant prose in the passage being edited.
 
-| Code change            | Doc location                                                |
-| ---------------------- | ----------------------------------------------------------- |
-| New integration        | `apps/docs/docs/integrations/<slug>/index.mdx` + `index.ts` |
-| New widget             | `apps/docs/docs/widgets/<slug>/index.mdx` + `index.ts`      |
-| Changed API surface    | `apps/docs/docs/management/api.mdx`                         |
-| New/changed env vars   | `apps/docs/docs/advanced/`                                  |
-| New CLI commands       | `apps/docs/docs/advanced/command-line/`                     |
-| Changed auth providers | `apps/docs/docs/advanced/` SSO pages                        |
-| UI/UX changes          | Relevant getting-started or management pages                |
-| New cron job           | `apps/docs/docs/management/tasks.mdx`                       |
-| Changed permissions    | `apps/docs/docs/management/users.mdx`                       |
+When an update is warranted, inspect adjacent pages for structure and types, not as a verbosity target. The mappings below locate needed information; they do not require a page for every feature or code change.
 
-## Integration doc pattern
+## Locate a needed update
 
-Each integration has a folder under `apps/docs/docs/integrations/<slug>/`:
+These are destinations for warranted updates, not triggers to add documentation:
 
-- `index.ts` — exports a typed `IntegrationDefinition` with name, description, iconUrl, path
-- `index.mdx` — uses shared components: `IntegrationHeader`, `IntegrationCapabilites`, `IntegrationSecrets`
-- Import metadata from `@homarr/definitions` where possible
+| Code change                         | Documentation target                                                 |
+| ----------------------------------- | -------------------------------------------------------------------- |
+| New integration                     | `apps/docs/docs/integrations/<slug>/index.mdx` and `index.ts`        |
+| New widget                          | `apps/docs/docs/widgets/<slug>/index.mdx` and `index.ts`             |
+| Changed public or management API    | `apps/docs/docs/management/api/index.mdx`                            |
+| New or changed environment variable | Relevant page under `apps/docs/docs/advanced/` or installation docs  |
+| New or changed CLI command          | `apps/docs/docs/advanced/command-line/`                              |
+| Authentication/provider change      | Relevant SSO or authentication page under `apps/docs/docs/advanced/` |
+| UI or workflow change               | Relevant getting-started, management, widget, or integration page    |
+| Cron-job behavior                   | `apps/docs/docs/management/tasks.mdx`                                |
+| Permission behavior                 | `apps/docs/docs/management/users.mdx` and the affected feature page  |
+| Custom Widget or Workshop behavior  | Relevant Custom Widget, Assistant, or Workshop documentation         |
 
-## Widget doc pattern
+If no existing row fits, search by the user-visible term and update the page where a user would look for the behavior:
 
-Each widget has a folder under `apps/docs/docs/widgets/<slug>/`:
+```bash
+rg -n "<term>" apps/docs/docs apps/docs/src
+```
 
-- `index.ts` — exports a typed `WidgetDefinition` with icon, name, description, path, configuration
-- `index.mdx` — uses shared components: `WidgetHeader`, `WidgetConfig`, `WidgetAdding`
+## Follow existing typed patterns
 
-## Development
+For an integration:
 
-- Run docs locally: `pnpm dev:docs` from root
-- Build docs: `pnpm turbo build --filter=@homarr/docs`
-- The docs app can import from `@homarr/definitions` for type-safe integration/widget metadata
-- Docusaurus strict mode throws on broken links — fix any broken references before committing
+- Add or update `apps/docs/docs/integrations/<slug>/index.ts` with the local `IntegrationDefinition` pattern.
+- Add or update `index.mdx` with the established `IntegrationHeader`, `IntegrationCapabilites`, and `IntegrationSecrets` components as applicable.
+- Reuse metadata from `@homarr/definitions` when the docs app already exposes it.
+
+For a widget:
+
+- Add or update `apps/docs/docs/widgets/<slug>/index.ts` with the local `WidgetDefinition` pattern.
+- Add or update `index.mdx` with the established `WidgetHeader`, `WidgetConfig`, and `AddingWidget` components as applicable.
+- Explain only non-obvious option semantics, integration prerequisites, permission constraints, or behavior that the interface does not make clear.
+
+## Completion criteria
+
+1. Every passage adds information an advanced user cannot reasonably infer from the interface. Remove obvious, repetitive, or unnecessary prose.
+2. Keep names, defaults, paths, screenshots, links, and prerequisites consistent with code.
+3. Update every affected page and remove superseded guidance.
+4. Run the narrowest useful docs validation. Use `pnpm turbo build --filter=@homarr/docs` when links, MDX, generated definitions, or navigation can fail; otherwise run the docs package formatter on touched files.
+5. Treat broken links and anchors as failures; run `pnpm --filter @homarr/docs validate:links` after the static build.

@@ -2,16 +2,13 @@ import type { InferSelectModel } from "drizzle-orm";
 
 import { createSchema } from "@homarr/core/infrastructure/db";
 
-import * as mysqlSchema from "./mysql";
 import * as pgSchema from "./postgresql";
 import * as sqliteSchema from "./sqlite";
 
 export type PostgreSqlSchema = typeof pgSchema;
-export type MySqlSchema = typeof mysqlSchema;
 
 export const schema = createSchema({
   "better-sqlite3": () => sqliteSchema,
-  mysql2: () => mysqlSchema,
   "node-postgres": () => pgSchema,
 });
 
@@ -19,6 +16,9 @@ export const schema = createSchema({
 export const {
   accounts,
   apiKeys,
+  assistantConfigurations,
+  assistantMessages,
+  assistantThreads,
   apps,
   boardGroupPermissions,
   boardUserPermissions,
@@ -51,14 +51,21 @@ export const {
   cronJobConfigurations,
   customWidgetDefinitions,
   customWidgetSecrets,
+  legacyCustomWidgetDefinitions,
+  legacyCustomWidgetSecrets,
   widgetSecrets,
 } = schema;
 
 export type User = InferSelectModel<typeof schema.users>;
 export type Account = InferSelectModel<typeof schema.accounts>;
+export type AssistantConfiguration = InferSelectModel<typeof schema.assistantConfigurations>;
+export type AssistantMessage = InferSelectModel<typeof schema.assistantMessages>;
+export type AssistantThread = InferSelectModel<typeof schema.assistantThreads>;
 export type Session = InferSelectModel<typeof schema.sessions>;
 export type VerificationToken = InferSelectModel<typeof schema.verificationTokens>;
 export type Integration = InferSelectModel<typeof schema.integrations>;
 export type IntegrationSecret = InferSelectModel<typeof schema.integrationSecrets>;
 export type CustomWidgetDefinition = InferSelectModel<typeof schema.customWidgetDefinitions>;
 export type CustomWidgetSecret = InferSelectModel<typeof schema.customWidgetSecrets>;
+export type LegacyCustomWidgetDefinition = InferSelectModel<typeof schema.legacyCustomWidgetDefinitions>;
+export type LegacyCustomWidgetSecret = InferSelectModel<typeof schema.legacyCustomWidgetSecrets>;

@@ -1,0 +1,38 @@
+---
+title: "Plant-it"
+description: "A self-hosted gardening companion for tracking plants, species, photos, and care events."
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { plantitIntegration } from ".";
+import { statsWidget } from "@site/docs/widgets/stats";
+
+<IntegrationHeader integration={plantitIntegration} categories={["Plant management"]} />
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites items={[{ widget: statsWidget }]} />
+
+The Stats widget displays the number of plants, species, photos, and logged events in Plant-it. Homarr signs in with the configured Plant-it account before requesting these counters because current Plant-it releases expose stats through JWT authentication.
+
+### Adding the integration
+
+<AddingIntegration />
+
+### Secrets
+
+<IntegrationSecrets
+  secrets={[
+    {
+      credentials: ["username", "password"],
+      steps: [
+        "Create or use a Plant-it account with access to the REST API.",
+        "Enter the Plant-it username and password when creating the integration in Homarr.",
+      ],
+    },
+  ]}
+/>

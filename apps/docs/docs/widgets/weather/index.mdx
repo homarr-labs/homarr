@@ -1,40 +1,37 @@
 ---
-title: 'Weather'
-description: 'Displays the current weather information of a set location.'
+title: "Weather"
+description: "Displays current weather and a forecast for a location."
 hide_title: true
 ---
 
-import { AddingWidget } from '@site/src/components/widgets/adding';
-import { WidgetConfig } from '@site/src/components/widgets/configuration';
-import { WidgetHeader } from '@site/src/components/widgets/header';
-import { weatherWidget } from '.';
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
 
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { weatherWidget } from ".";
 
-<WidgetHeader
-  widget={weatherWidget}
-  categories={["Weather"]}
-/>
+<WidgetHeader widget={weatherWidget} categories={["Weather"]} />
 
-The Weather Widget uses your location to display the current, highest and lowest temperature.
+The Weather widget shows current conditions and a responsive forecast. Select a forecast day for details; advanced view
+adds hourly temperature and precipitation charts and the complete seven-day forecast.
 
-### Screenshots
-
-import forecastWeather from './img/forecast.png';
-import currentWeather from './img/current.png';
-
-<div className="flex flex-col gap-1">
-  <img src={forecastWeather} alt="weather forecast-5-days" width={128 * 4.5} />
-  <img src={currentWeather} alt="weather current" width={128 * 3} />
-</div>
+<WidgetInteractionGuide />
 
 ### Adding the widget
 
 <AddingWidget />
 
 ### Configuration
+
 <WidgetConfig configuration={weatherWidget.configuration} />
 
 ### Data source
 
-We use the Open Meteo API to fetch the weather and locations.
-If you need to whitelist the api, please use the following URL: `https://open-meteo.com`
+Weather and location data come from Open-Meteo. Active weather refreshes every ten minutes; identical location requests
+can reuse a server response for five minutes. A temporary HTTP 503 response is retried once before a refresh fails.
+Failed refreshes keep the last successful data with an error indicator.
+
+Set `NO_EXTERNAL_CONNECTION=true` to disable this and other internet-backed requests. Weather data and the city search
+inside the widget configuration are unavailable while it is enabled. Allowlist `https://open-meteo.com` when outbound
+access is restricted.

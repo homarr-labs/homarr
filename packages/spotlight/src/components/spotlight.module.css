@@ -1,0 +1,106 @@
+.content {
+  overflow: hidden;
+  border: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+  box-shadow: var(--mantine-shadow-xl);
+}
+
+.search {
+  border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+}
+
+.modeRailViewport {
+  border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+}
+
+.modeRail {
+  min-width: max-content;
+  padding: var(--mantine-spacing-xs);
+}
+
+.modeButton {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 30px;
+  padding-inline: 6px;
+  border-radius: var(--mantine-radius-sm);
+  color: var(--mantine-color-dimmed);
+  transition:
+    color 100ms ease,
+    background-color 100ms ease;
+}
+
+.modeKey {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-size: 10px;
+}
+
+.modeButton:hover {
+  color: var(--mantine-color-text);
+  background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6));
+}
+
+.modeButton[data-active] {
+  color: var(--mantine-primary-color-filled);
+  background: var(--mantine-primary-color-light);
+}
+
+.modeButton:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: -2px;
+}
+
+.actionsList {
+  padding-block: 4px;
+}
+
+.actionsList [data-search-source="fallback"] {
+  margin-top: var(--mantine-spacing-xs);
+  padding-top: var(--mantine-spacing-xs);
+  border-top: 1px dashed light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+}
+
+.actionsList > [data-search-source="fallback"]:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.actionsList:has([data-action]) .emptyState,
+.actionsList:has([data-search-pending]) .emptyState,
+.actionsList:has([data-search-status]) .emptyState {
+  display: none;
+}
+
+.actionsList [data-search-source]:has([data-search-pending]) {
+  display: none;
+}
+
+.footer {
+  min-height: 42px;
+  border-top: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+}
+
+.footerHint {
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-4));
+}
+
+@media (max-width: 48em) {
+  .modeLabel {
+    display: none;
+  }
+
+  .footerSecondary {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modeButton {
+    transition: none;
+  }
+}

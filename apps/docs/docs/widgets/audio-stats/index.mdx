@@ -4,6 +4,8 @@ description: "Displays media and listening statistics from Navidrome or Audioboo
 hide_title: true
 ---
 
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
 import { WidgetHeader } from "@site/src/components/widgets/header";
 import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
@@ -21,6 +23,8 @@ This widget adapts its display based on the linked integration:
 
 Only options relevant to your linked integration are shown in the configuration panel.
 
+Compact mode keeps every configured statistic visible in the familiar filled tile layout, including a vertical stack for narrow Navidrome cards. Advanced mode retains the complete expanded statistics and stream details.
+
 ### Supported Integrations
 
 <WidgetIntegrations
@@ -35,6 +39,8 @@ Only options relevant to your linked integration are shown in the configuration 
     },
   ]}
 />
+
+<WidgetInteractionGuide />
 
 ### Adding the widget
 

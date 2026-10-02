@@ -1,7 +1,20 @@
 "use client";
 
 import { Fragment } from "react";
-import { Avatar, Badge, Box, Divider, Group, Image, Stack, Text, TooltipFloating, UnstyledButton } from "@mantine/core";
+import {
+  Avatar,
+  Badge,
+  Box,
+  Divider,
+  Group,
+  Image,
+  ScrollArea,
+  SimpleGrid,
+  Stack,
+  Text,
+  Tooltip,
+  UnstyledButton,
+} from "@mantine/core";
 import { IconBook, IconCalendar, IconClock, IconStarFilled } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -10,69 +23,125 @@ import { getMantineColor, toValidDate } from "@homarr/common";
 import { getIconUrl } from "@homarr/definitions";
 import type { MediaRelease } from "@homarr/integrations/types";
 import { mediaTypeConfigurations } from "@homarr/integrations/types";
-import type { TranslationFunction } from "@homarr/translation";
-import { useCurrentLocale, useI18n } from "@homarr/translation/client";
+import type { ScopedTranslationFunction } from "@homarr/translation";
+import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 import { OverflowBadge } from "@homarr/ui";
 
+import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
+import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
+import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
+import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
+import { WidgetQueryLoadingState } from "../common/query-state-indicator";
+import classes from "./component.module.css";
 
-export default function MediaReleasesWidget({ options, integrationIds }: WidgetComponentProps<"mediaReleases">) {
-  const { data: releases = [] } = clientApi.widget.mediaRelease.getMediaReleases.useQuery({
-    integrationIds,
-  });
+export default function MediaReleasesWidget({
+  options,
+  integrationIds,
+  width,
+  displayMode,
+}: WidgetComponentProps<"mediaReleases">) {
+  const releasesQuery = clientApi.widget.mediaRelease.getMediaReleases.useQuery({ integrationIds });
+  const response = getUsableWidgetQueryData(releasesQuery);
+
+  if (isInitialWidgetQueryPending(releasesQuery)) return <WidgetQueryLoadingState />;
+  if (!response) return <WidgetEmptyState />;
+
+  const { releases, failedIntegrations } = response;
+
+  const isAdvanced = displayMode === "advanced";
 
   return (
-    <Stack p="xs" gap="sm">
-      {releases.map((item, index) => (
-        <Fragment key={item.id}>
-          {index !== 0 && options.layout === "poster" && <Divider />}
-          <Item item={item} options={options} />
-        </Fragment>
-      ))}
-    </Stack>
+    <Box h="100%" pos="relative">
+      {releases.length === 0 ? (
+        <WidgetEmptyState />
+      ) : (
+        <ScrollArea h="100%">
+          <SimpleGrid cols={isAdvanced ? Math.max(1, Math.floor(width / 360)) : 1} p="xs" spacing="sm">
+            {releases.map((item, index) => (
+              <Fragment key={`${item.integration.id}:${item.id}`}>
+                {!isAdvanced && index !== 0 && options.layout === "poster" && <Divider />}
+                <Item item={item} options={options} isAdvanced={isAdvanced} />
+              </Fragment>
+            ))}
+          </SimpleGrid>
+        </ScrollArea>
+      )}
+      {failedIntegrations.length > 0 && (
+        <Group pos="absolute" top={4} right={4} gap={0}>
+          <IntegrationErrorIndicator results={failedIntegrations} />
+        </Group>
+      )}
+    </Box>
   );
 }
 
 interface ItemProps {
-  item: RouterOutputs["widget"]["mediaRelease"]["getMediaReleases"][number];
+  item: RouterOutputs["widget"]["mediaRelease"]["getMediaReleases"]["releases"][number];
   options: WidgetComponentProps<"mediaReleases">["options"];
+  isAdvanced: boolean;
 }
 
-const formatReleaseDate = (value: unknown, locale: string) => {
+const formatReleaseDate = (value: unknown, locale: string, isDateOnly?: boolean) => {
   const date = toValidDate(value);
   if (!date) return "—";
-  return Intl.DateTimeFormat(locale, {
+  const options: Intl.DateTimeFormatOptions = {
     month: "2-digit",
     year: "numeric",
     day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  }).format(date);
+  };
+  if (isDateOnly) options.timeZone = "UTC";
+  else {
+    options.hour = "2-digit";
+    options.minute = "2-digit";
+    options.hour12 = false;
+  }
+  return Intl.DateTimeFormat(locale, options).format(date);
 };
 
-const Item = ({ item, options }: ItemProps) => {
-  const locale = useCurrentLocale();
-  const t = useI18n();
+const Item = ({ item, options, isAdvanced }: ItemProps) => {
+  const locale = useCurrentIntlLocale();
+  const t = useI18n("widget.mediaReleases");
   const length = formatLength(item.length, item.type, t);
+  const showPoster = isAdvanced || options.layout === "poster";
+  const showSide = isAdvanced || options.showType || options.showSource;
+  const href = getSafeApplicationUrl(item.href);
 
   return (
-    <TooltipFloating
+    <Tooltip
       label={item.description}
       w={300}
       multiline
-      disabled={item.description === undefined || item.description.trim() === "" || !options.showDescriptionTooltip}
+      events={{ hover: true, focus: true, touch: true }}
+      disabled={
+        isAdvanced ||
+        item.description === undefined ||
+        item.description.trim() === "" ||
+        !options.showDescriptionTooltip
+      }
     >
       <UnstyledButton
-        component="a"
-        href={item.href}
-        target="_blank"
-        rel="noopener noreferrer"
+        className={classes.item}
+        data-defer-rendering={isAdvanced ? undefined : true}
+        component={href ? "a" : "div"}
+        href={href}
+        target={href ? "_blank" : undefined}
+        rel={href ? SAFE_NEW_TAB_REL : undefined}
         pos="relative"
-        p={options.layout === "poster" ? 0 : 4}
+        p={isAdvanced ? "sm" : options.layout === "poster" ? 0 : 4}
+        h="100%"
+        title={item.title}
+        style={
+          isAdvanced
+            ? {
+                border: "1px solid var(--mantine-color-default-border)",
+                borderRadius: "var(--mantine-radius-sm)",
+              }
+            : undefined
+        }
       >
-        {options.layout === "backdrop" && (
+        {!isAdvanced && options.layout === "backdrop" && (
           <Box
             w="100%"
             h="100%"
@@ -89,10 +158,19 @@ const Item = ({ item, options }: ItemProps) => {
             }}
           />
         )}
-        <Group justify="space-between" h="100%" wrap="nowrap">
-          <Group align="start" wrap="nowrap" style={{ zIndex: 0 }}>
-            {options.layout === "poster" && <Image w={60} src={item.imageUrls.poster} alt={item.title} />}
-            <Stack gap={4}>
+        <Group justify="space-between" h="100%" wrap="nowrap" gap={isAdvanced ? "sm" : undefined}>
+          <Group align="start" wrap="nowrap" style={{ zIndex: 0, minWidth: 0, flex: 1 }} gap="xs">
+            {showPoster && (
+              <Image
+                w={isAdvanced ? 80 : 60}
+                src={item.imageUrls.poster}
+                alt={isAdvanced ? "" : item.title}
+                radius={isAdvanced ? "xs" : undefined}
+                loading="lazy"
+                style={{ flexShrink: 0 }}
+              />
+            )}
+            <Stack gap={4} style={{ minWidth: 0, flex: 1 }}>
               <Stack gap={0}>
                 <Text size="sm" fw="bold" lineClamp={2}>
                   {item.title}
@@ -103,8 +181,15 @@ const Item = ({ item, options }: ItemProps) => {
                   </Text>
                 )}
               </Stack>
-              <Group gap={6} style={{ rowGap: 0 }}>
-                <Info icon={IconCalendar} label={formatReleaseDate(item.releaseDate, locale)} />
+              <Group
+                gap={6}
+                wrap={isAdvanced ? "nowrap" : "wrap"}
+                style={isAdvanced ? { minWidth: 0 } : { minWidth: 0, rowGap: 0 }}
+              >
+                <Info
+                  icon={IconCalendar}
+                  label={formatReleaseDate(item.releaseDate, locale, item.releaseDateIsDateOnly)}
+                />
                 {length !== undefined && (
                   <>
                     <InfoDivider />
@@ -136,15 +221,20 @@ const Item = ({ item, options }: ItemProps) => {
                   groupGap={4}
                   data={item.tags}
                   overflowCount={3}
-                  disablePopover
-                  style={{ cursor: "pointer" }}
+                  disablePopover={!isAdvanced}
+                  style={{ cursor: isAdvanced ? "pointer" : undefined }}
                 />
+              )}
+              {isAdvanced && item.description && (
+                <Text size="xs" c="dimmed">
+                  {item.description}
+                </Text>
               )}
             </Stack>
           </Group>
-          {(options.showType || options.showSource) && (
+          {showSide && (
             <Stack justify="space-between" align="end" h="100%" style={{ zIndex: 0 }}>
-              {options.showType && (
+              {(isAdvanced || options.showType) && (
                 <Badge
                   w="max-content"
                   size="xs"
@@ -155,14 +245,22 @@ const Item = ({ item, options }: ItemProps) => {
                 </Badge>
               )}
 
-              {options.showSource && (
-                <Avatar size="sm" radius="xl" src={getIconUrl(item.integration.kind)} alt={item.integration.name} />
-              )}
+              {(isAdvanced || options.showSource) &&
+                (isAdvanced ? (
+                  <Group gap={4} wrap="nowrap">
+                    <Avatar size="sm" radius="xl" src={getIconUrl(item.integration.kind)} alt="" />
+                    <Text size="xs" fw={500} lineClamp={1}>
+                      {item.integration.name}
+                    </Text>
+                  </Group>
+                ) : (
+                  <Avatar size="sm" radius="xl" src={getIconUrl(item.integration.kind)} alt={item.integration.name} />
+                ))}
             </Stack>
           )}
         </Group>
       </UnstyledButton>
-    </TooltipFloating>
+    </Tooltip>
   );
 };
 
@@ -179,21 +277,25 @@ const InfoDivider = () => (
 
 const Info = ({ icon: Icon, label }: IconAndLabelProps) => {
   return (
-    <Group gap={4}>
-      {Icon && <Icon size={12} color={getMantineColor("gray", 5)} />}
-      <Text size="xs" c="gray.5">
+    <Group gap={4} wrap="nowrap" miw={0}>
+      {Icon && <Icon size="var(--mantine-font-size-xs)" color={getMantineColor("gray", 5)} style={{ flexShrink: 0 }} />}
+      <Text size="xs" c="dimmed" truncate="end">
         {label}
       </Text>
     </Group>
   );
 };
 
-const formatLength = (length: number | undefined, type: MediaRelease["type"], t: TranslationFunction) => {
+const formatLength = (
+  length: number | undefined,
+  type: MediaRelease["type"],
+  t: ScopedTranslationFunction<"widget.mediaReleases">,
+) => {
   if (!length) return undefined;
   if (type === "movie" || type === "tv" || type === "video" || type === "music" || type === "article") {
     return {
       type: "duration" as const,
-      label: t("widget.mediaReleases.length.duration", {
+      label: t("length.duration", {
         length: Math.round(length / 60).toString(),
       }),
     };

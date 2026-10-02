@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 
+import { useCurrentLayout } from "@homarr/boards/context";
 import { useUpdateBoard } from "@homarr/boards/updater";
 import type { BoardItemAdvancedOptions } from "@homarr/validation/shared";
 
@@ -31,13 +32,9 @@ interface UpdateItemIntegrations {
 
 export const useItemActions = () => {
   const { updateBoard } = useUpdateBoard();
+  const currentLayoutId = useCurrentLayout();
 
-  const createItem = useCallback(
-    (input: CreateItemInput) => {
-      updateBoard(createItemCallback(input));
-    },
-    [updateBoard],
-  );
+  const createItem = useCallback((input: CreateItemInput) => updateBoard(createItemCallback(input)), [updateBoard]);
 
   const duplicateItem = useCallback(
     ({ itemId }: DuplicateItemInput) => {
@@ -81,17 +78,17 @@ export const useItemActions = () => {
   );
 
   const moveAndResizeItem = useCallback(
-    (input: MoveAndResizeItemInput) => {
-      updateBoard(moveAndResizeItemCallback(input));
+    (input: Omit<MoveAndResizeItemInput, "layoutId">) => {
+      updateBoard(moveAndResizeItemCallback({ ...input, layoutId: currentLayoutId }));
     },
-    [updateBoard],
+    [currentLayoutId, updateBoard],
   );
 
   const moveItemToSection = useCallback(
-    (input: MoveItemToSectionInput) => {
-      updateBoard(moveItemToSectionCallback(input));
+    (input: Omit<MoveItemToSectionInput, "layoutId">) => {
+      updateBoard(moveItemToSectionCallback({ ...input, layoutId: currentLayoutId }));
     },
-    [updateBoard],
+    [currentLayoutId, updateBoard],
   );
 
   const removeItem = useCallback(

@@ -1,6 +1,8 @@
 import { Center, RingProgress, Stack, Text, Tooltip } from "@mantine/core";
 import { IconDeviceDesktop } from "@tabler/icons-react";
 
+import { zoomCompensatedSize } from "@homarr/ui";
+
 import { progressColor } from "../system-health";
 
 interface GpuRingProps {
@@ -14,15 +16,18 @@ interface GpuRingProps {
   };
   isTiny: boolean;
   fahrenheit: boolean;
+  ariaLabel: string;
 }
 
-export const GpuRing = ({ gpu, isTiny, fahrenheit }: GpuRingProps) => {
+export const GpuRing = ({ gpu, isTiny, fahrenheit, ariaLabel }: GpuRingProps) => {
   const tempDisplay =
     gpu.temperature != null
       ? fahrenheit
         ? `${(gpu.temperature * 1.8 + 32).toFixed(0)}°F`
         : `${gpu.temperature}°C`
       : null;
+
+  const percentage = Math.max(0, Math.min(100, Number(gpu.processorUtilization.toFixed(2))));
 
   return (
     <Tooltip
@@ -40,24 +45,29 @@ export const GpuRing = ({ gpu, isTiny, fahrenheit }: GpuRingProps) => {
     >
       <RingProgress
         className={`health-monitoring-gpu health-monitoring-gpu-${gpu.gpuId}`}
+        aria-label={ariaLabel}
         roundCaps
         size={isTiny ? 50 : 100}
         thickness={isTiny ? 4 : 8}
+        // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- RingProgress renders the custom meter graphic.
+        role="meter"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={percentage}
+        aria-valuetext={`${percentage.toFixed(0)}%`}
+        sections={[{ value: percentage, color: progressColor(percentage) }]}
         label={
           <Center style={{ flexDirection: "column" }}>
             <Text
               className="health-monitoring-gpu-utilization-value"
               size={isTiny ? "8px" : "xs"}
             >{`${gpu.processorUtilization.toFixed(0)}%`}</Text>
-            <IconDeviceDesktop className="health-monitoring-gpu-utilization-icon" size={isTiny ? 8 : 16} />
+            <IconDeviceDesktop
+              className="health-monitoring-gpu-utilization-icon"
+              style={zoomCompensatedSize(isTiny ? 8 : 16)}
+            />
           </Center>
         }
-        sections={[
-          {
-            value: Number(gpu.processorUtilization.toFixed(2)),
-            color: progressColor(Number(gpu.processorUtilization.toFixed(2))),
-          },
-        ]}
       />
     </Tooltip>
   );

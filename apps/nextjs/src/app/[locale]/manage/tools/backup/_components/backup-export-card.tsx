@@ -4,12 +4,14 @@ import { useState } from "react";
 import { Alert, Button, Card, Group, Stack, Text, Title } from "@mantine/core";
 import { IconAlertTriangle, IconDatabaseExport, IconDownload } from "@tabler/icons-react";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { DangerousActionConfirmation } from "~/components/backup/dangerous-action-confirmation";
 
 export const BackupExportCard = () => {
-  const t = useScopedI18n("management.page.tool.backup.export");
+  const t = useI18n("management.page.tool.backup.export");
+  const tBackup = useI18n("management.page.tool.backup");
+  const tCommon = useI18n("common");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -66,10 +68,10 @@ export const BackupExportCard = () => {
             title={t("confirm.title")}
             warningTitle={t("confirm.warningTitle")}
             warningBody={t("confirm.warningBody")}
-            typePrompt={t("confirm.typePrompt", { phrase: "I understand" })}
+            typePrompt={tBackup("confirm.typePrompt", { phrase: "I understand" })}
             submitLabel={t("confirm.submit")}
             submitIcon={<IconDownload size={16} />}
-            cancelLabel={t("confirm.cancel")}
+            cancelLabel={tCommon("action.cancel")}
             onConfirm={handleExport}
             onCancel={() => setShowConfirm(false)}
             disabled={loading}

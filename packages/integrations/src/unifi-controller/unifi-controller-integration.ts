@@ -2,12 +2,15 @@ import type tls from "node:tls";
 import axios from "axios";
 import { HttpCookieAgent, HttpsCookieAgent } from "http-cookie-agent/http";
 
-import { getPortFromUrl } from "@homarr/common";
 import {
   getAllTrustedCertificatesAsync,
   getTrustedCertificateHostnamesAsync,
 } from "@homarr/core/infrastructure/certificates";
-import { createCustomCheckServerIdentity } from "@homarr/core/infrastructure/http";
+import {
+  createCustomCheckServerIdentity,
+  fetchWithTrustedCertificatesAsync,
+  getHttpRequestSignal,
+} from "@homarr/core/infrastructure/http";
 import type { SiteStats } from "@homarr/node-unifi";
 import Unifi from "@homarr/node-unifi";
 
@@ -15,6 +18,8 @@ import { HandleIntegrationErrors } from "../base/errors/decorator";
 import { integrationAxiosHttpErrorHandler } from "../base/errors/http";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
+import { createSessionStore } from "../base/session-store";
+import type { IntegrationHttpAuthentication } from "../http-auth";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { NetworkControllerSummaryIntegration } from "../interfaces/network-controller-summary/network-controller-summary-integration";
 import type { NetworkControllerSummary } from "../interfaces/network-controller-summary/network-controller-summary-types";
@@ -22,6 +27,21 @@ import type { HealthSubsystem } from "./unifi-controller-types";
 
 @HandleIntegrationErrors([integrationAxiosHttpErrorHandler])
 export class UnifiControllerIntegration extends Integration implements NetworkControllerSummaryIntegration {
+  private readonly httpSessionStore = createSessionStore<{ cookie: string; csrfToken?: string }>(this.integration);
+
+  public override async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    let session = await this.httpSessionStore.getAsync();
+    if (!session) {
+      session = await this.loginForHttpRequestsAsync();
+      await this.httpSessionStore.setAsync(session, { ttlSeconds: 300 });
+    }
+    const headers: Record<string, string> = { Cookie: session.cookie };
+    if (session.csrfToken) headers["X-CSRF-Token"] = session.csrfToken;
+    const redactValues = [session.cookie];
+    if (session.csrfToken) redactValues.push(session.csrfToken);
+    return { headers, redactValues };
+  }
+
   public async getNetworkSummaryAsync(): Promise<NetworkControllerSummary> {
     const client = await this.createControllerClientAsync();
     const stats = await client.getSitesStats();
@@ -57,6 +77,52 @@ export class UnifiControllerIntegration extends Integration implements NetworkCo
     return { success: true };
   }
 
+  private async loginForHttpRequestsAsync(): Promise<{ cookie: string; csrfToken?: string }> {
+    const integrationUrl = new URL(this.integration.url);
+    if (integrationUrl.protocol !== "https:") {
+      throw new Error("UniFi generic HTTP requests require an HTTPS integration URL to protect the session cookie");
+    }
+
+    // Use the saved origin exactly. Generic requests target the saved URL, so falling back
+    // to another port would bind the cookie to a different origin than the later request.
+    const loginUrl = new URL(integrationUrl);
+    loginUrl.pathname = "/api/auth/login";
+    loginUrl.search = "";
+    loginUrl.hash = "";
+    let response = await fetchWithTrustedCertificatesAsync(loginUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({
+        username: this.getSecretValue("username"),
+        password: this.getSecretValue("password"),
+      }),
+      redirect: "error",
+    });
+
+    if (response.status === 404) {
+      loginUrl.pathname = "/api/login";
+      response = await fetchWithTrustedCertificatesAsync(loginUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          username: this.getSecretValue("username"),
+          password: this.getSecretValue("password"),
+        }),
+        redirect: "error",
+      });
+    }
+
+    if (!response.ok) throw new Error("UniFi controller authentication failed");
+    const cookies = response.headers
+      .getSetCookie()
+      .map((cookie) => cookie.split(";", 1)[0])
+      .filter(Boolean);
+    if (cookies.length === 0) throw new Error("UniFi controller did not return a session cookie");
+
+    const csrfToken = response.headers.get("x-csrf-token") ?? undefined;
+    return { cookie: cookies.join("; "), ...(csrfToken ? { csrfToken } : {}) };
+  }
+
   private async createControllerClientAsync(options?: {
     ca: string | string[];
     checkServerIdentity: typeof tls.checkServerIdentity;
@@ -67,26 +133,54 @@ export class UnifiControllerIntegration extends Integration implements NetworkCo
       checkServerIdentity: createCustomCheckServerIdentity(await getTrustedCertificateHostnamesAsync()),
     };
 
-    const client = new Unifi.Controller({
-      host: url.hostname,
-      port: getPortFromUrl(url),
-      username: this.getSecretValue("username"),
-      password: this.getSecretValue("password"),
-      createAxiosInstance({ cookies }) {
-        return axios.create({
-          adapter: "http",
-          httpAgent: new HttpCookieAgent({ cookies }),
-          httpsAgent: new HttpsCookieAgent({
-            cookies,
-            requestCert: true,
-            ...certificateOptions,
-          }),
-        });
-      },
-    });
+    // node-unifi always connects over HTTPS, regardless of the protocol in the
+    // integration URL. UniFi OS consoles use port 443 while self-hosted controllers normally
+    // use 8443. If no port was provided, try both without hiding authentication errors.
+    const ports = url.port ? [Number(url.port)] : [443, 8443];
+    const createClientForPortAsync = async (port: number) => {
+      const client = new Unifi.Controller({
+        host: url.hostname,
+        port,
+        username: this.getSecretValue("username"),
+        password: this.getSecretValue("password"),
+        createAxiosInstance({ cookies }) {
+          return axios.create({
+            adapter: "http",
+            signal: getHttpRequestSignal(),
+            httpAgent: new HttpCookieAgent({ cookies }),
+            httpsAgent: new HttpsCookieAgent({
+              cookies,
+              requestCert: true,
+              ...certificateOptions,
+            }),
+          });
+        },
+      });
 
-    await client.login(this.getSecretValue("username"), this.getSecretValue("password"), null);
-    return client;
+      await client.login(this.getSecretValue("username"), this.getSecretValue("password"), null);
+      return client;
+    };
+
+    for (const [index, port] of ports.entries()) {
+      try {
+        return await createClientForPortAsync(port);
+      } catch (error) {
+        const isLastPort = index === ports.length - 1;
+        if (isLastPort || !this.isPortFallbackError(error)) {
+          throw error;
+        }
+      }
+    }
+
+    throw new Error("Unable to connect to the UniFi controller");
+  }
+
+  private isPortFallbackError(error: unknown) {
+    if (typeof error === "object" && error !== null && "isAxiosError" in error && error.isAxiosError === true) {
+      return !("response" in error) || error.response === undefined;
+    }
+
+    return error instanceof Error && error.message === "failed to detect UniFiOS status";
   }
 
   private getStatusValueOverAllSites<S extends HealthSubsystem>(

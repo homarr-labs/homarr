@@ -1,28 +1,36 @@
 ---
-title: 'Coolify'
-description: 'Overview of your Coolify instance with servers, applications, and services.'
+title: "Coolify"
+description: "Overview of your Coolify instance with servers, applications, and services."
 hide_title: true
 ---
 
-import { WidgetHeader } from '@site/src/components/widgets/header';
-import { AddingWidget } from '@site/src/components/widgets/adding';
-import { WidgetConfig } from '@site/src/components/widgets/configuration';
-import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
-import { coolifyWidget } from '.';
-import { coolifyIntegration } from '@site/docs/integrations/coolify';
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
 
-<WidgetHeader
-  widget={coolifyWidget}
-  categories={['System monitoring', 'Deployment']}
-/>
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
+import { coolifyWidget } from ".";
+import { coolifyIntegration } from "@site/docs/integrations/coolify";
 
-The Coolify widget displays a compact overview of your Coolify instance. It can show servers, applications, and services with status indicators, project and environment context, direct links to Coolify, and the installed Coolify version.
+<WidgetHeader widget={coolifyWidget} categories={["System monitoring", "Deployment"]} />
+
+The Coolify widget shows servers, applications, and services with their status, project, environment, and Coolify links.
 
 ### Supported Integrations
 
-<WidgetIntegrations items={[{
-  integration: coolifyIntegration,
-}]} />
+<WidgetIntegrations
+  items={[
+    {
+      integration: coolifyIntegration,
+    },
+  ]}
+/>
+
+Advanced view shows all sections, source integrations, reachability fields, and nested applications. IP addresses remain
+masked until revealed. Healthy integrations remain visible when another source fails.
+
+<WidgetInteractionGuide advancedView />
 
 ### Adding the widget
 
@@ -34,14 +42,10 @@ The Coolify widget displays a compact overview of your Coolify instance. It can 
 
 ### Sections
 
-| Section | Description |
-|---|---|
-| **Servers** | Lists Coolify servers, reachability status, and application/service counts per server. |
+| Section          | Description                                                                                                                        |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| **Servers**      | Lists Coolify servers, reachability status, and application/service counts per server.                                             |
 | **Applications** | Lists applications with runtime status, project and environment context, public URL links, Coolify dashboard links, and log links. |
-| **Services** | Lists services with runtime status, project and environment context, public URL links, Coolify dashboard links, and log links. |
+| **Services**     | Lists services with runtime status, project and environment context, public URL links, Coolify dashboard links, and log links.     |
 
-### Notes
-
-- The widget supports one or more Coolify integrations. With multiple integrations, each instance is shown as a separate card.
-- The Coolify API token is team-scoped. Homarr only shows resources available to the team where the token was created.
-- Data is cached for 30 seconds and refreshed in the background.
+The Coolify API token is team-scoped; Homarr shows only resources available to that team.

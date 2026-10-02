@@ -12,15 +12,14 @@ import { everyoneGroup, groupPermissions } from "@homarr/definitions";
 import type { IsValid } from "@homarr/form";
 import { useZodForm } from "@homarr/form";
 import { UserCreatePasswordFields } from "@homarr/forms-collection";
-import { useModalAction } from "@homarr/modals";
 import { showErrorNotification } from "@homarr/notifications";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { UserAvatar } from "@homarr/ui";
 import { createCustomErrorParams } from "@homarr/validation/form/i18n";
 import { optionalEmailSchema } from "@homarr/validation/email";
 import { userPasswordSchema } from "@homarr/validation/user";
 
-import { GroupSelectModal } from "~/components/access/group-select-modal";
+import { GroupSelect } from "~/components/access/group-select";
 import { StepperNavigationComponent } from "./stepper-navigation";
 
 interface GroupWithPermissions {
@@ -34,8 +33,8 @@ interface UserCreateStepperComponentProps {
 }
 
 export const UserCreateStepperComponent = ({ initialGroups }: UserCreateStepperComponentProps) => {
-  const t = useScopedI18n("management.page.user.create");
-  const tUserField = useScopedI18n("user.field");
+  const t = useI18n("management.page.user.create");
+  const tUserField = useI18n("user.field");
 
   const stepperMax = 4;
   const [active, setActive] = useState(0);
@@ -220,25 +219,10 @@ interface GroupsFormProps {
 }
 
 const GroupsForm = ({ addGroup, removeGroup, initialGroups }: GroupsFormProps) => {
-  const t = useI18n();
+  const tCreate = useI18n("management.page.user.create");
+  const tCommon = useI18n("common");
+  const tPermission = useI18n("permission");
   const [groups, { append, filter }] = useListState<GroupWithPermissions>(initialGroups);
-  const { openModal } = useModalAction(GroupSelectModal);
-
-  const handleAddClick = () => {
-    openModal({
-      presentGroupIds: groups.map((group) => group.id),
-      withPermissions: true,
-      onSelect({ id, name, permissions }) {
-        if (!permissions) return;
-
-        startTransition(() => {
-          addGroup(id);
-          append({ id, name, permissions });
-        });
-      },
-    });
-  };
-
   const handleGroupRemove = (id: string) => {
     filter((group) => group.id !== id);
     removeGroup(id);
@@ -249,25 +233,34 @@ const GroupsForm = ({ addGroup, removeGroup, initialGroups }: GroupsFormProps) =
       <Stack>
         <Group justify="space-between">
           <Stack gap={0}>
-            <Text fw={500}>{t("management.page.user.create.step.groups.title")}</Text>
+            <Text fw={500}>{tCreate("step.groups.title")}</Text>
             <Text size="sm" c="gray.6">
-              {t("management.page.user.create.step.groups.description", { everyoneGroup })}
+              {tCreate("step.groups.description", { everyoneGroup })}
             </Text>
           </Stack>
-          <Button
-            variant="subtle"
-            color="gray"
-            leftSection={<IconPlus size={16} stroke={1.5} />}
-            onClick={handleAddClick}
-          >
-            {t("common.action.add")}
-          </Button>
+          <GroupSelect
+            presentGroupIds={groups.map((group) => group.id)}
+            withPermissions
+            onSelect={({ id, name, permissions }) => {
+              if (!permissions) return;
+
+              startTransition(() => {
+                addGroup(id);
+                append({ id, name, permissions });
+              });
+            }}
+            triggerProps={{
+              variant: "subtle",
+              color: "gray",
+              leftSection: <IconPlus size={16} stroke={1.5} />,
+            }}
+          />
         </Group>
         <Table>
           <Table.Thead>
             <Table.Tr>
-              <Table.Th>{t("group.field.name")}</Table.Th>
-              <Table.Th>{t("permission.title")}</Table.Th>
+              <Table.Th>{tCommon("field.name")}</Table.Th>
+              <Table.Th>{tPermission("title")}</Table.Th>
               <Table.Th></Table.Th>
             </Table.Tr>
           </Table.Thead>
@@ -296,7 +289,7 @@ const GroupsForm = ({ addGroup, removeGroup, initialGroups }: GroupsFormProps) =
                 <Table.Td>
                   {group.name !== everyoneGroup && (
                     <Button variant="subtle" onClick={() => handleGroupRemove(group.id)}>
-                      {t("common.action.remove")}
+                      {tCommon("action.remove")}
                     </Button>
                   )}
                 </Table.Td>
@@ -310,12 +303,12 @@ const GroupsForm = ({ addGroup, removeGroup, initialGroups }: GroupsFormProps) =
 };
 
 const PermissionBadge = ({ category, value }: { category: string; value: string }) => {
-  const t = useI18n();
+  const t = useI18n("group.permission");
 
   return (
-    <Tooltip label={t(`group.permission.${category}.item.${value}.description` as never)}>
+    <Tooltip label={t(`${category}.item.${value}.description` as never)}>
       <Badge color={category === "admin" ? "red" : "blue"} size="sm" variant="dot">
-        {t(`group.permission.${category}.item.${value}.label` as never)}
+        {t(`${category}.item.${value}.label` as never)}
       </Badge>
     </Tooltip>
   );

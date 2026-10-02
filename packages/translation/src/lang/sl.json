@@ -688,211 +688,6 @@
       "add": "Dodaj aplikacijo"
     }
   },
-  "customWidget": {
-    "page": {
-      "list": {
-        "title": "Pripomočki po meri",
-        "noResults": "Pripomočkov po meri še ni. Ustvarite svojega prvega!",
-        "loading": "Nalaganje..."
-      },
-      "create": {
-        "title": "Ustvari pripomoček po meri",
-        "subtitle": "Določite URL API-ja, preverjanje pristnosti in način prikaza podatkov odgovora."
-      },
-      "edit": {
-        "title": "Uredi pripomoček po meri"
-      }
-    },
-    "action": {
-      "create": "Ustvari",
-      "import": "Uvozi",
-      "save": "Shrani",
-      "delete": "Izbriši pripomoček po meri",
-      "deleteConfirm": "Ali ste prepričani, da želite izbrisati »{name}«? Tega dejanja ni mogoče razveljaviti.",
-      "export": "Izvozi",
-      "addMapping": "Dodaj preslikavo",
-      "addColumn": "Dodaj stolpec",
-      "edit": "Uredi",
-      "removeMapping": "Odstrani preslikavo",
-      "removeColumn": "Odstrani stolpec",
-      "addItem": "Dodaj element",
-      "removeItem": "Odstrani element",
-      "addBar": "Dodaj stolpec",
-      "duplicate": "Podvoji",
-      "copyAiPrompt": "Kopiraj poziv AI",
-      "enable": "Omogoči",
-      "disable": "Onemogoči",
-      "menu": "Dejanja"
-    },
-    "field": {
-      "name": "Ime",
-      "description": "Opis",
-      "iconUrl": "URL ikone",
-      "url": "URL",
-      "authType": "Vrsta preverjanja pristnosti",
-      "headerName": "Ime parametra glave/poizvedbe",
-      "method": "Metoda",
-      "requestBody": "Telo zahteve",
-      "displayType": "Vrsta prikaza",
-      "jsonPath": "Pot JSON",
-      "jsonPathHint": "Za pridobivanje vrednosti uporabite sintakso JSONPath, npr. $.data.temperature ali $.items[0].name",
-      "label": "Oznaka",
-      "unit": "Enota",
-      "mappings": "Preslikave",
-      "tablePath": "Pot polja JSON",
-      "tablePathHint": "Pot do polja v odgovoru, npr. $.data.items",
-      "columns": "Stolpci",
-      "header": "Glava",
-      "items": "Elementi",
-      "gridColumns": "Stolpci mreže",
-      "cardStyle": "Slog kartice",
-      "bars": "Stolpci",
-      "valuePath": "Pot vrednosti JSON",
-      "maxPath": "Pot največje vrednosti JSON",
-      "showPercentage": "Prikaži odstotek",
-      "barSize": "Velikost stolpca",
-      "goodValues": "Dobre vrednosti (ločene z vejicami)",
-      "dotSize": "Velikost pike",
-      "valueSize": "Velikost vrednosti",
-      "labelPosition": "Položaj oznake",
-      "kvLayout": "Postavitev",
-      "striped": "Črtaste vrstice",
-      "compact": "Kompaktni način",
-      "maxHeight": "Največja višina (px)",
-      "color": "Barva",
-      "buttonLabel": "Oznaka gumba",
-      "buttonColor": "Barva gumba",
-      "confirmText": "Besedilo potrditve",
-      "confirmTextHint": "Če je nastavljeno, se pred izvedbo zahteve prikaže potrditveno pogovorno okno",
-      "successMessage": "Sporočilo o uspehu",
-      "successMessageHint": "Sporočilo, prikazano po uspešni izvedbi",
-      "enabled": "Omogočeno",
-      "template": {
-        "label": "Predloga JSX",
-        "description": "Predloga JSX Mantine. Do polj odgovora API-ja dostopajte prek vezav podatkov (npr. data.name). Uporabljajte samo komponente z dovoljenega seznama. Prepovedano: constructor, __proto__, eval, Function, window, document."
-      }
-    },
-    "placeholder": {
-      "exampleLabel": "Temperatura CPE",
-      "exampleLabelShort": "Temp. CPE",
-      "exampleHeader": "Ime",
-      "exampleUnit": "°C",
-      "iconUrl": "https://...",
-      "url": "https://api.example.com/api/v1/status",
-      "headerName": "X-API-Key",
-      "jsonPath": "$.data.value",
-      "tablePath": "$.data.items",
-      "columnJsonPath": "$.ime",
-      "valuePath": "$.data.used",
-      "maxPath": "$.data.total",
-      "goodValues": "online, true, up",
-      "color": "modra"
-    },
-    "cardStyleOption": {
-      "filled": "Zapolnjeno",
-      "outline": "Oris",
-      "subtle": "Nežno"
-    },
-    "layoutOption": {
-      "list": "Seznam",
-      "grid": "Mreža"
-    },
-    "sizeOption": {
-      "sm": "Majhna",
-      "md": "Srednja",
-      "lg": "Velika",
-      "xl": "Zelo velika"
-    },
-    "labelPositionOption": {
-      "above": "Nad",
-      "below": "Pod"
-    },
-    "fieldset": {
-      "general": "Splošno",
-      "connection": "Povezava API",
-      "display": "Konfiguracija prikaza"
-    },
-    "displayTypeDescription": {
-      "singleValue": "Prikaži eno pridobljeno vrednost z oznako in enoto",
-      "keyValue": "Prikaži več označenih vrednosti drugo ob drugi",
-      "table": "Prikaži vrstice podatkov v obliki tabele",
-      "statGrid": "Barvne kartice s statistiko v mreži — kot pripomočka Pi-Hole ali Speedtest",
-      "progressBars": "Vrstice napredka, ki prikazujejo porabo ali dokončanje — za disk, pomnilnik in kvote",
-      "statusIndicator": "Barvne pike stanja, ki prikazujejo stanje povezave ali zdravja",
-      "countGrid": "Kompaktni števci števil in oznak v strnjeni mreži",
-      "raw": "Lepo oblikovan izpis JSON za odpravljanje napak",
-      "actionButton": "Gumb, ki ob kliku sproži zahtevo",
-      "customJsx": "Postavitev JSX po meri z dovoljenimi komponentami Mantine in popolno vezavo podatkov API-ja"
-    },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
-    "authType": {
-      "none": "Brez",
-      "bearer": "Žeton Bearer",
-      "basic": "Osnovno preverjanje pristnosti",
-      "apiKeyHeader": "Ključ API (glava)",
-      "apiKeyQuery": "Ključ API (poizvedba)"
-    },
-    "displayType": {
-      "singleValue": "Ena vrednost",
-      "keyValue": "Ključ–vrednost",
-      "table": "Tabela",
-      "statGrid": "Mreža statistike",
-      "progressBars": "Vrstice napredka",
-      "statusIndicator": "Kazalnik stanja",
-      "countGrid": "Mreža števcev",
-      "raw": "Neobdelan JSON",
-      "actionButton": "Gumb dejanja",
-      "customJsx": "JSX po meri"
-    },
-    "secret": {
-      "apiKey": "Ključ API / žeton",
-      "username": "Uporabniško ime",
-      "password": "Geslo",
-      "savedPlaceholder": "••••••• (shranjeno, pustite prazno, da ohranite)"
-    },
-    "preview": {
-      "title": "Predogled",
-      "test": "Preizkusi",
-      "hint": "Kliknite Preizkusi za predogled odgovora API-ja s trenutno konfiguracijo.",
-      "rawResponse": "Neobdelan odgovor JSON"
-    },
-    "notification": {
-      "created": "Pripomoček »{name}« je bil uspešno ustvarjen.",
-      "updated": "Pripomoček »{name}« je bil uspešno posodobljen.",
-      "deleted": "Pripomoček »{name}« je izbrisan.",
-      "imported": "Pripomoček je bil uspešno uvožen.",
-      "aiPromptCopied": "Poziv AI je kopiran v odložišče",
-      "aiPromptDescription": "Kopirajte vnaprej pripravljen poziv in ga prilepite v katerega koli klepetalnega robota AI (ChatGPT, Claude, Gemini...). Vključuje celotno shemo pripomočka in vaš odgovor API-ja, tako da lahko AI za vas ustvari konfiguracijo JSON, pripravljeno za uvoz.",
-      "aiPromptCopy": "Kopiraj v odložišče",
-      "aiPromptNoResponse": "Namig: najprej zaženite preizkus, da bo poziv vključeval odgovor API-ja za boljše rezultate.",
-      "aiPromptCopyError": "Poziva ni bilo mogoče kopirati v odložišče. Vaš brskalnik morda ne podpira te funkcije.",
-      "createError": "Pripomočka ni bilo mogoče ustvariti. Preverite, ali je končna točka API-ja dosegljiva.",
-      "updateError": "Pripomočka ni bilo mogoče posodobiti. Spremembe niso bile shranjene.",
-      "importError": "Pripomočka ni bilo mogoče uvoziti. Prepričajte se, da je datoteka veljaven izvoz pripomočka po meri JSON.",
-      "exportError": "Pripomočka ni bilo mogoče izvoziti.",
-      "duplicated": "Pripomoček »{name}« je podvojen.",
-      "duplicateError": "Pripomočka ni bilo mogoče podvojiti.",
-      "toggleError": "Stanja pripomočka ni bilo mogoče preklopiti.",
-      "deleteError": "Pripomočka ni bilo mogoče izbrisati.",
-      "previewError": "Predogleda ni bilo mogoče pridobiti. Preverite URL in poskusite znova.",
-      "executed": "Dejanje je bilo uspešno izvedeno.",
-      "executeError": "Dejanje ni uspelo: {error}"
-    },
-    "table": {
-      "name": "Ime",
-      "url": "URL",
-      "display": "Prikaz"
-    },
-    "widget": {
-      "disabled": "Ta pripomoček je onemogočen"
-    }
-  },
   "integration": {
     "page": {
       "list": {
@@ -1344,10 +1139,6 @@
       "name": "Traefik",
       "description": "Povratni posredniški strežnik in izravnalnik obremenitve, zasnovan za oblak"
     },
-    "wud": {
-      "name": "What's Up Docker",
-      "description": "Spremljajte, kateri vaši Docker vsebniki imajo na voljo posodobitve slik"
-    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "Sistem za upravljanje dokumentov ter arhiviranje in urejanje optično prebranih dokumentov"
@@ -1359,6 +1150,10 @@
     "bazarr": {
       "name": "Bazarr",
       "description": "Spremljevalna aplikacija za Sonarr in Radarr, ki upravlja in prenaša podnapise"
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Spremljajte, kateri vaši Docker vsebniki imajo na voljo posodobitve slik"
     }
   },
   "media": {
@@ -1441,9 +1236,11 @@
     "here": "tukaj",
     "iconPicker": {
       "label": "URL ikone",
-      "description": "Iščite po knjižnici, prilepite URL slike ali naložite datoteko.",
       "header": "Vnesite ime ali predmete za filtriranje ikon... Homarr bo za vas iskal med {countIcons} ikonami",
       "headerLoading": "Išči slike po imenu",
+      "noResults": "Nobena ikona se ne ujema z »{search}«.",
+      "error": "Ikon ni bilo mogoče naložiti.",
+      "description": "Iščite po knjižnici, prilepite URL slike ali naložite datoteko.",
       "clear": "Počisti sliko",
       "uploadImage": "Naloži sliko",
       "results": "Rezultati iskanja slik",
@@ -1452,9 +1249,7 @@
       "otherImages": "Druge slike",
       "urlLoading": "Preverjanje slike…",
       "urlReady": "Slika je pripravljena za uporabo",
-      "urlError": "Te slike ni bilo mogoče naložiti. Preverite URL in poskusite znova.",
-      "noResults": "Nobena ikona se ne ujema z »{search}«.",
-      "error": "Ikon ni bilo mogoče naložiti."
+      "urlError": "Te slike ni bilo mogoče naložiti. Preverite URL in poskusite znova."
     },
     "colorScheme": {
       "options": {
@@ -1804,38 +1599,6 @@
       "option": {
         "showBroadcastMessage": {
           "label": "Prikaži oddajna sporočila"
-        }
-      }
-    },
-    "wud": {
-      "name": "What's Up Docker",
-      "description": "Prikaže, koliko spremljanih vsebnikov ima na voljo posodobitve.",
-      "title": "What's Up Docker",
-      "monitored": "Spremljani",
-      "updatesAvailable": "{count, plural, one {# posodobitev na voljo} two {# posodobitvi na voljo} few {# posodobitve na voljo} other {# posodobitev na voljo}}",
-      "updateAvailable": "Na voljo je posodobitev",
-      "openReleaseNotes": "Odpri opombe ob izdaji",
-      "option": {
-        "showTitle": {
-          "label": "Pokaži naslov"
-        },
-        "showRing": {
-          "label": "Pokaži obroč posodobitev"
-        },
-        "layout": {
-          "label": "Postavitev",
-          "option": {
-            "horizontal": {
-              "label": "Vodoravno"
-            },
-            "vertical": {
-              "label": "Navpično"
-            }
-          }
-        },
-        "showUpdateList": {
-          "label": "Pokaži seznam posodobitev vsebnikov",
-          "description": "Prikaže seznam vseh nadzorovanih vsebnikov, ki imajo na voljo posodobitev slike"
         }
       }
     },
@@ -2391,8 +2154,8 @@
       "popover": {
         "information": "Informacije",
         "processor": "Procesor: {cpuModelName}",
-        "memory": "Pomnilnik: {memory}GiB",
-        "memoryAvailable": "Na voljo: {memoryAvailable}GiB ({percent}%)",
+        "memory": "Pomnilnik: {memory}",
+        "memoryAvailable": "Na voljo: {memoryAvailable} ({percent}%)",
         "version": "Različica: {version}",
         "uptime": "Čas delovanja: {months} mesecev, {days} dni, {hours} ur, {minutes} minut",
         "loadAverage": "Povprečna obremenitev:",
@@ -3137,7 +2900,7 @@
           "label": "Prikaži razne vnose, označene kot dokončane"
         },
         "activeTorrentThreshold": {
-          "label": "Skrij dokončane torrente pod tem pragom (v kiB/s)"
+          "label": "Skrij dokončane torrente pod tem pragom"
         },
         "categoryFilter": {
           "label": "Kategorije/oznake za filtriranje"
@@ -3947,26 +3710,6 @@
         "unhealthy": "Nezdravo"
       }
     },
-    "customApi": {
-      "name": "API po meri",
-      "description": "Prikažite podatke iz katerega koli zunanjega API-ja s konfiguracijo po meri.",
-      "option": {
-        "definitionId": {
-          "label": "ID definicije"
-        },
-        "refreshInterval": {
-          "label": "Interval osveževanja",
-          "description": "Kako pogosto se podatki znova pridobijo iz API-ja (v sekundah)"
-        }
-      },
-      "noDefinition": "Definicija ni izbrana",
-      "definitionNotFound": "Definicije pripomočka ni mogoče najti. Morda je bila izbrisana.",
-      "noDisplayOutput": "Izhod prikaza ni na voljo",
-      "executeConfirm": "Ali ste prepričani, da želite izvesti to dejanje?",
-      "executing": "Izvajanje...",
-      "executeSuccess": "Dejanje je bilo uspešno izvedeno",
-      "executeFailed": "Dejanje ni uspelo. Preverite konfiguracijo pripomočka."
-    },
     "beszelSystemTable": {
       "name": "Beszel sistemi (tabela)",
       "description": "Tabelarni pogled vseh sistemov, ki jih spremlja Beszel, z razvrščljivimi stolpci in indikatorji stanja",
@@ -4215,6 +3958,38 @@
         "dockerNetwork": {
           "title": "V/I omrežja Dockerja",
           "subtitle": "Omrežni promet vsebnikov Docker"
+        }
+      }
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Prikaže, koliko spremljanih vsebnikov ima na voljo posodobitve.",
+      "title": "What's Up Docker",
+      "monitored": "Spremljani",
+      "updatesAvailable": "{count, plural, one {# posodobitev na voljo} two {# posodobitvi na voljo} few {# posodobitve na voljo} other {# posodobitev na voljo}}",
+      "updateAvailable": "Na voljo je posodobitev",
+      "openReleaseNotes": "Odpri opombe ob izdaji",
+      "option": {
+        "showTitle": {
+          "label": "Pokaži naslov"
+        },
+        "showRing": {
+          "label": "Pokaži obroč posodobitev"
+        },
+        "layout": {
+          "label": "Postavitev",
+          "option": {
+            "horizontal": {
+              "label": "Vodoravno"
+            },
+            "vertical": {
+              "label": "Navpično"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Pokaži seznam posodobitev vsebnikov",
+          "description": "Prikaže seznam vseh nadzorovanih vsebnikov, ki imajo na voljo posodobitev slike"
         }
       }
     }
@@ -4597,11 +4372,11 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "Domov",
         "boards": "Deske",
         "apps": "Aplikacije",
         "integrations": "Integracije",
-        "customWidgets": "Pripomočki po meri",
         "searchEngies": "Iskalniki",
         "medias": "Mediji",
         "users": {
@@ -5224,7 +4999,7 @@
           "restore": {
             "dropzone": {
               "title": "Spustite svojo varnostno kopijo ZIP tukaj",
-              "description": "Sprejema datoteke .zip iz varnostne kopije SQLite Homarr (največ 256 MB)"
+              "description": "Sprejema datoteke .zip iz varnostne kopije SQLite Homarr (največ {maxSize})"
             },
             "analyzing": "Analiziranje varnostne kopije...",
             "changeFile": "Spremeni datoteko",
@@ -5740,6 +5515,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "Upravljanje",
       "boards": {
         "label": "Deske"
@@ -5772,18 +5550,6 @@
         },
         "edit": {
           "label": "Uredi"
-        }
-      },
-      "custom-widgets": {
-        "label": "Pripomočki po meri",
-        "new": {
-          "label": "Novo"
-        },
-        "edit": {
-          "label": "Uredi",
-          "flow": {
-            "label": "Potek"
-          }
         }
       },
       "users": {

@@ -4,7 +4,7 @@ import { IconBookmark } from "@tabler/icons-react";
 export const bookmarksWidget: WidgetDefinition = {
   icon: IconBookmark,
   name: "Bookmarks",
-  description: "Displays multiple app links",
+  description: "Keeps useful links together",
   path: "../../widgets/bookmarks",
   configuration: {
     items: [
@@ -15,13 +15,38 @@ export const bookmarksWidget: WidgetDefinition = {
         defaultValue: "-",
       },
       {
-        name: "Layout",
-        description: "Layout in which the bookmarks are displayed.",
-        values: { type: "select", options: ["Vertical", "Horizontal", "Grid", "Grid horizontal"] },
-        defaultValue: "Vertical",
+        name: "Show widget title",
+        description: "Hide the widget heading without clearing its saved text. Does not affect bookmark names.",
+        values: { type: "boolean" },
+        defaultValue: "yes",
       },
       {
-        name: "Hide title",
+        name: "Widget title size (px)",
+        description: "Heading font size before preview or dashboard scaling. Does not resize bookmark names.",
+        values: "8–32",
+        defaultValue: "11",
+      },
+      {
+        name: "Layout",
+        description:
+          "How bookmarks use the available widget space. Vertical keeps compact rows and stable title visibility.",
+        values: { type: "select", options: ["Adaptive", "Vertical", "Horizontal", "Grid", "Compact grid", "Icons"] },
+        defaultValue: "Adaptive",
+      },
+      {
+        name: "Appearance",
+        description: "Card surface style.",
+        values: { type: "select", options: ["Soft", "Filled", "Outline", "Plain"] },
+        defaultValue: "Soft",
+      },
+      {
+        name: "Card spacing",
+        description: "Space between bookmark cards. Horizontal, compact-grid, and icon-only layouts cap larger gaps.",
+        values: { type: "select", options: ["Extra small", "Small", "Medium", "Large", "Extra large"] },
+        defaultValue: "Extra small",
+      },
+      {
+        name: "Hide bookmark names",
         description: "Whether to hide the title of the bookmark items.",
         values: { type: "boolean" },
         defaultValue: "no",
@@ -45,9 +70,15 @@ export const bookmarksWidget: WidgetDefinition = {
         defaultValue: "yes",
       },
       {
+        name: "Expand cards to fill row",
+        description: "Whether cards in an incomplete final row expand to use the remaining width.",
+        values: { type: "boolean" },
+        defaultValue: "no",
+      },
+      {
         name: "Bookmarks",
-        description: "List of bookmarks to display in the widget.",
-        values: "Select of all your apps and order them as you like.",
+        description: "URLs and existing Apps shown by the widget.",
+        values: "Paste one or many URLs, or find an existing App. Drag to reorder.",
         defaultValue: "No bookmarks selected",
       },
     ],

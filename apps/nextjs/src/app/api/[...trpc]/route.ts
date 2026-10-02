@@ -12,6 +12,18 @@ import { db } from "@homarr/db";
 
 const logger = createLogger({ module: "trpcOpenApiRoute" });
 
+function withCors(response: Response) {
+  // REST authenticates explicitly with ApiKey, never with ambient session cookies.
+  response.headers.set("Access-Control-Allow-Origin", "*");
+  response.headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
+  response.headers.set("Access-Control-Allow-Headers", `Content-Type, ${API_KEY_HEADER_NAME}`);
+  return response;
+}
+
+export function OPTIONS() {
+  return withCors(new Response(null, { status: 204 }));
+}
+
 const handlerAsync = async (req: NextRequest) => {
   const apiKeyHeaderValue = req.headers.get(API_KEY_HEADER_NAME);
   const ipAddress = ipAddressFromHeaders(req.headers);
@@ -28,7 +40,7 @@ const handlerAsync = async (req: NextRequest) => {
     req.headers.set("Content-Type", "application/json");
   }
 
-  return createOpenApiFetchHandler({
+  const response = await createOpenApiFetchHandler({
     req,
     endpoint: "/",
     router: openApiRouter,
@@ -37,6 +49,7 @@ const handlerAsync = async (req: NextRequest) => {
       logger.error(new ErrorWithMetadata("tRPC Error occured", { path, type }, { cause: error }));
     },
   });
+  return withCors(response);
 };
 
 export {
