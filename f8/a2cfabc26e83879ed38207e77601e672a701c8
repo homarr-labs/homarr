@@ -1,0 +1,14 @@
+apps/docs/blog/2026/09-03-homarr-2.0/index.mdx
+  h_d6e478ca18e517 22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "f8a2cfabc26e83879ed38207e77601e672a701c8",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
