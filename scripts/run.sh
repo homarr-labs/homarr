@@ -50,7 +50,7 @@ if [ "$DB_MIGRATIONS_DISABLED" = "true" ]; then
   echo "DB migrations are disabled, skipping"
 else
     echo "Running DB migrations"
-    DISABLE_REDIS_LOGS=true node ./db/migrations/$DB_DIALECT/migrate.cjs ./db/migrations/$DB_DIALECT &
+    DISABLE_REDIS_LOGS=true bun ./db/migrations/$DB_DIALECT/migrate.cjs ./db/migrations/$DB_DIALECT &
     MIGRATION_PID=$!
     wait "$MIGRATION_PID"
     MIGRATION_EXIT_CODE=$?
@@ -93,8 +93,7 @@ fi
 # Next.js standalone uses HOSTNAME as its bind address. Docker's generated
 # hostname can be unresolvable, so bind explicitly while nginx uses loopback.
 export HOSTNAME=0.0.0.0
-export NODE_OPTIONS="--max-semi-space-size=4 ${NODE_OPTIONS:-}"
-node apps/nextjs/server.js &
+bun apps/nextjs/server.js &
 NEXTJS_PID=$!
 
 while true; do
@@ -107,6 +106,6 @@ while true; do
 
     echo "Next.js exited with code $EXIT_CODE, restarting in 1s..."
     sleep 1
-    node apps/nextjs/server.js &
+    bun apps/nextjs/server.js &
     NEXTJS_PID=$!
 done

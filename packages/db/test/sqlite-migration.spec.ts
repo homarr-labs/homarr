@@ -1,8 +1,8 @@
 import path from "path";
 import { readFileSync } from "node:fs";
-import BetterSqlite3 from "better-sqlite3";
-import { drizzle } from "drizzle-orm/better-sqlite3";
-import { migrate } from "drizzle-orm/better-sqlite3/migrator";
+import { Database as BetterSqlite3 } from "bun:sqlite";
+import { drizzle } from "drizzle-orm/bun-sqlite";
+import { migrate } from "drizzle-orm/bun-sqlite/migrator";
 import SuperJSON from "superjson";
 import { expect, test } from "vitest";
 
@@ -14,7 +14,7 @@ import { seedDataAsync } from "../migrations/seed";
 import * as sqliteSchema from "../schema/sqlite";
 import { expectBundledCustomWidgetsSeeded } from "./custom-widget-seed-assertions";
 
-const applyMigration = (connection: BetterSqlite3.Database, fileName: string) => {
+const applyMigration = (connection: BetterSqlite3, fileName: string) => {
   const migration = readFileSync(path.join(__dirname, "..", "migrations", "sqlite", fileName), "utf8");
   for (const statement of migration
     .split("--> statement-breakpoint")

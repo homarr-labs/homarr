@@ -53,7 +53,7 @@ For a TLS connection, add `MYSQL_SSL_CA=/certs/mysql-ca.pem` to the env file and
 
 1. Keep a separate copy of the converted file before the first v2 startup.
 2. Place `db.sqlite` at `/appdata/db/db.sqlite` in the appdata volume used by Homarr. Ensure the Homarr process can write to the file and its directory.
-3. Set `DB_DRIVER=better-sqlite3` and `DB_URL=/appdata/db/db.sqlite`. Remove the previous MySQL connection settings; if you explicitly set `DB_DIALECT`, change it to `sqlite`.
+3. Set `DB_DRIVER=bun-sqlite` and `DB_URL=/appdata/db/db.sqlite`. Remove the previous MySQL connection settings; if you explicitly set `DB_DIALECT`, change it to `sqlite`.
 4. Preserve the original `/appdata` files and **the same `SECRET_ENCRYPTION_KEY`**. The converter copies encrypted values without re-encrypting them; a different key will make those secrets unreadable.
 5. Start Homarr v2 and wait for its database migrations to finish. Check the startup logs, sign in, and verify your boards, users, integrations, and uploaded files.
 

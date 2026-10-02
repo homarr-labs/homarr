@@ -5,9 +5,9 @@ import os from "os";
 import path from "path";
 
 import AdmZip from "adm-zip";
-import Database from "better-sqlite3";
-import { drizzle } from "drizzle-orm/better-sqlite3";
-import { migrate } from "drizzle-orm/better-sqlite3/migrator";
+import { Database } from "bun:sqlite";
+import { drizzle } from "drizzle-orm/bun-sqlite";
+import { migrate } from "drizzle-orm/bun-sqlite/migrator";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { DB_CASING } from "@homarr/core/infrastructure/db/constants";
@@ -17,7 +17,7 @@ const routeMocks = vi.hoisted(() => ({
   claimAllowed: vi.fn(),
   onboardingFindFirst: vi.fn(),
   dbEnv: {
-    DRIVER: "better-sqlite3",
+    DRIVER: "bun-sqlite",
     URL: "",
   },
   commonEnv: {
@@ -104,7 +104,7 @@ describe("POST /api/backup/import", () => {
     vi.useFakeTimers();
     temporaryDirectory = fs.mkdtempSync(path.join(os.tmpdir(), "homarr-import-route-test-"));
     activeDatabasePath = path.join(temporaryDirectory, "db.sqlite");
-    routeMocks.dbEnv.DRIVER = "better-sqlite3";
+    routeMocks.dbEnv.DRIVER = "bun-sqlite";
     routeMocks.dbEnv.URL = activeDatabasePath;
     routeMocks.auth.mockResolvedValue({ user: { permissions: ["admin"] } });
     routeMocks.claimAllowed.mockResolvedValue(false);

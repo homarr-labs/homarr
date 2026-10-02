@@ -3,6 +3,6 @@ import * as postgresql from "./postgresql";
 import * as sqlite from "./sqlite";
 
 export const schema = createSchema({
-  "better-sqlite3": () => sqlite,
+  "bun-sqlite": () => sqlite,
   "node-postgres": () => postgresql,
 });

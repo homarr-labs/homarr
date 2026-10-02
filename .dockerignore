@@ -6,8 +6,8 @@ npm-debug.log
 README.md
 .next
 .turbo
-.pnpm-store
-**/.pnpm-store
+.bun-cache
+**/.bun-cache
 coverage
 **/coverage
 **/.docusaurus

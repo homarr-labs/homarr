@@ -97,21 +97,21 @@ jobs:
         run: cp .env.example .env
 
       - name: Lint, typecheck, and build affected workspaces
-        run: pnpm turbo run lint typecheck build --affected --continue=dependencies-successful --concurrency=2
+        run: bun run turbo run lint typecheck build --affected --continue=dependencies-successful --concurrency=2
 
       - name: Validate workspace configuration
-        run: pnpm lint:ws
+        run: bun run lint:ws
 
       - name: Validate Custom Widget architecture
-        run: pnpm check:custom-widgets
+        run: bun run check:custom-widgets
 
       - name: Validate checked-in OpenAPI schema
-        run: pnpm check:openapi
+        run: bun run check:openapi
 
       - name: Validate Custom Widget bundle budget
         run: |
-          pnpm turbo run build --filter=@homarr/nextjs
-          pnpm check:custom-widget-bundle
+          bun run turbo run build --filter=@homarr/nextjs
+          bun run check:custom-widget-bundle
 
   container:
     name: Container and migration smoke
@@ -195,24 +195,24 @@ jobs:
         uses: actions/cache@v6
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+          key: playwright-${{ runner.os }}-${{ hashFiles('bun.lock') }}
 
       - name: Install Playwright Chromium
         if: steps.playwright-cache.outputs.cache-hit != 'true' || env.ACT
-        run: pnpm exec playwright install --with-deps chromium
+        run: bun x --bun playwright install --with-deps chromium
 
       - name: Install Playwright system deps
         if: steps.playwright-cache.outputs.cache-hit == 'true'
-        run: pnpm exec playwright install-deps chromium
+        run: bun x --bun playwright install-deps chromium
 
       - name: Install standalone converter test dependencies
-        run: npm ci --prefix tools/mysql-to-sqlite
+        run: bun install --cwd tools/mysql-to-sqlite --frozen-lockfile
 
       - name: Verify converted database boots and survives restart
         env:
           NODE_ENV: development
           CI: "true"
-        run: pnpm exec vitest run --project e2e e2e/mysql-conversion.spec.ts --maxWorkers 1
+        run: bun x --bun vitest run --project e2e e2e/mysql-conversion.spec.ts --maxWorkers 1
 
       - name: Upload E2E artifacts
         if: failure() && !env.ACT

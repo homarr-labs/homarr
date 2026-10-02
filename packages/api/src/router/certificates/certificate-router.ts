@@ -98,12 +98,13 @@ export const certificateRouter = createTRPCRouter({
             eq(trustedCertificateHostnames.hostname, input.hostname),
             eq(trustedCertificateHostnames.thumbprint, input.thumbprint),
           ),
-        );
+        )
+        .returning({ hostname: trustedCertificateHostnames.hostname });
 
       logger.info("Removed trusted hostname", {
         hostname: input.hostname,
         thumbprint: input.thumbprint,
-        count: dbResult.changes,
+        count: dbResult.length,
       });
     }),
   removeCertificate: permissionRequiredProcedure

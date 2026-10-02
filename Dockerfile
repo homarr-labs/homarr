@@ -1,84 +1,45 @@
 # syntax=docker/dockerfile:1.25
 
-FROM node:24.18.0-alpine AS base
+FROM oven/bun:1.4.2-alpine AS base
 
 FROM base AS builder
 ARG TARGETPLATFORM
 WORKDIR /app
-# Native dependencies normally use prebuilds, but the build must remain
-# reproducible when a prebuild download times out and compilation is required.
-RUN apk add --no-cache libc6-compat curl bash python3 make g++
-
-RUN corepack enable pnpm
-COPY .npmrc pnpm-lock.yaml pnpm-workspace.yaml package.json ./
+# Compiler tools stay in the builder for optional native dependency fallbacks.
+RUN apk add --no-cache libstdc++ python3 make g++
+COPY bun.lock bunfig.toml package.json ./
 COPY patches ./patches
 COPY --parents ./apps/*/package.json ./packages/*/package.json ./tooling/*/package.json ./
-# @homarr/definitions generates documentation types during install.
 COPY --parents ./packages/definitions/src ./
-# Workaround for pnpm/pnpm#5268: pnpm fetch crashes when patchedDependencies
-# are configured with nodeLinker: hoisted. The applyPatchToDir function tries
-# to chdir into node_modules/<pkg> which doesn't exist during fetch (only the
-# content-addressable store is populated). By temporarily switching to the
-# isolated linker, patches apply inside the virtual store (node_modules/.pnpm/...)
-# which IS created by pnpm fetch. The original hoisted linker is restored
-# before the install step so the final node_modules layout stays flat.
-RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store,sharing=locked \
-    pnpm config set store-dir /pnpm/store && \
-    sed -i 's/nodeLinker: hoisted/nodeLinker: isolated/' pnpm-workspace.yaml && \
-    pnpm fetch --ignore-scripts && \
-    sed -i 's/nodeLinker: isolated/nodeLinker: hoisted/' pnpm-workspace.yaml
-
-# Install only from the fetched, committed lockfile so local and Docker builds
-# resolve the same dependency graph. Serial lifecycle builds avoid esbuild's
-# atomic binary replacement racing across the hoisted workspace (pnpm/pnpm#8200).
-RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store,sharing=locked \
-    npm_config_nodedir=/usr/local pnpm install --recursive --offline --frozen-lockfile --child-concurrency=1
+RUN --mount=type=cache,id=homarr-bun-cache,target=/root/.bun/install/cache,sharing=locked \
+    bun install --frozen-lockfile --concurrent-scripts=1
 
 COPY . .
-
 ARG SKIP_ENV_VALIDATION='true'
 ARG CI='true'
 ARG DISABLE_REDIS_LOGS='true'
 ARG TARGETPLATFORM
-
 RUN --mount=type=secret,id=TURBO_API,env=TURBO_API \
     --mount=type=secret,id=TURBO_TEAM,env=TURBO_TEAM \
     --mount=type=secret,id=TURBO_TOKEN,env=TURBO_TOKEN \
     --mount=type=secret,id=TURBO_REMOTE_CACHE_SIGNATURE_KEY,env=TURBO_REMOTE_CACHE_SIGNATURE_KEY \
     --mount=type=cache,id=homarr-next-build-${TARGETPLATFORM},target=/app/apps/nextjs/.next/cache,sharing=locked \
     TURBO_PLATFORM="${TARGETPLATFORM:-linux/amd64}" \
-    pnpm turbo build --filter=@homarr/nextjs... --filter=@homarr/cli
+    bun run turbo build --filter=@homarr/nextjs... --filter=@homarr/cli
 
 FROM base AS runner
 WORKDIR /app
-
-# gettext is required for envsubst, openssl for generating AUTH_SECRET, su-exec for running application as non-root
-RUN apk add --no-cache redis nginx bash gettext su-exec openssl
-RUN mkdir /appdata
+# envsubst, privilege drop and AUTH_SECRET generation are used by the entrypoint.
+RUN apk add --no-cache redis nginx bash gettext su-exec openssl && \
+    mkdir -p /appdata /var/cache/nginx /var/log/nginx /var/lib/nginx \
+      /run/nginx /etc/nginx/templates /etc/nginx/ssl/certs && \
+    touch /run/nginx/nginx.pid
 VOLUME /appdata
-
-# Enable homarr cli
 COPY --from=builder /app/packages/cli/cli.cjs /app/apps/cli/cli.cjs
-RUN echo $'#!/bin/bash\ncd /app/apps/cli && node ./cli.cjs "$@"' > /usr/bin/homarr
-RUN chmod +x /usr/bin/homarr
-
-# Don't run production as root
-RUN mkdir -p /var/cache/nginx && \
-    mkdir -p /var/log/nginx && \
-    mkdir -p /var/lib/nginx && \
-    touch /run/nginx/nginx.pid && \
-    mkdir -p /etc/nginx/templates /etc/nginx/ssl/certs
-
-COPY --from=builder /app/apps/nextjs/next.config.ts .
-COPY --from=builder /app/apps/nextjs/package.json .
-COPY --from=builder /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
-
-COPY --from=builder /app/node_modules/better-sqlite3/build/Release/better_sqlite3.node /app/build/better_sqlite3.node
-
+RUN printf '#!/bin/sh\ncd /app/apps/cli && exec bun ./cli.cjs "$@"\n' > /usr/bin/homarr && \
+    chmod +x /usr/bin/homarr
 COPY --from=builder /app/packages/db/migrations ./db/migrations
-
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
+# Ship only Next's traced production dependencies and application assets.
 COPY --from=builder /app/apps/nextjs/.next/standalone ./
 COPY --from=builder /app/apps/nextjs/.next/static ./apps/nextjs/.next/static
 COPY --from=builder /app/apps/nextjs/public ./apps/nextjs/public
@@ -86,15 +47,12 @@ COPY scripts/run.sh ./run.sh
 COPY --chmod=755 scripts/entrypoint.sh ./entrypoint.sh
 COPY packages/redis/redis.conf /app/redis.conf
 COPY nginx.conf /etc/nginx/templates/nginx.conf
-
-
 ENV DB_URL='/appdata/db/db.sqlite'
 ENV DB_DIALECT='sqlite'
-ENV DB_DRIVER='better-sqlite3'
+ENV DB_DRIVER='bun-sqlite'
 ENV AUTH_PROVIDERS='credentials'
 ENV REDIS_IS_EXTERNAL='false'
 ENV NODE_ENV='production'
-
 EXPOSE 7575
-ENTRYPOINT [ "/app/entrypoint.sh" ]
+ENTRYPOINT ["/app/entrypoint.sh"]
 CMD ["sh", "run.sh"]

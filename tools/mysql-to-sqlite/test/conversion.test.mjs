@@ -3,7 +3,7 @@ import { execFile } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { DatabaseSync } from "node:sqlite";
+import { Database as DatabaseSync } from "bun:sqlite";
 import { promisify } from "node:util";
 import { test } from "node:test";
 import { setTimeout } from "node:timers/promises";
@@ -41,7 +41,7 @@ test("real v1.77.1 MySQL converts losslessly and rejects unsafe sources", { time
   assert.equal(Object.keys(result.counts).length, 35);
   assert.equal(result.counts.serverSetting, 252);
   assert.deepEqual(await sourceSnapshot(), before);
-  const database = new DatabaseSync(output, { readOnly: true });
+  const database = new DatabaseSync(output, { readonly: true });
   try {
     assert.deepEqual(database.prepare("PRAGMA foreign_key_check").all(), []);
     assert.equal(database.prepare("PRAGMA integrity_check").get().integrity_check, "ok");
@@ -166,7 +166,7 @@ test("real v1.77.1 MySQL converts losslessly and rejects unsafe sources", { time
     "/output/packaged.sqlite",
     "--homarr-stopped",
   ]);
-  const packaged = new DatabaseSync(join(directory, "packaged.sqlite"), { readOnly: true });
+  const packaged = new DatabaseSync(join(directory, "packaged.sqlite"), { readonly: true });
   try {
     assert.equal(packaged.prepare("SELECT password FROM user").get().password, fixturePasswordHash);
   } finally {

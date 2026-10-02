@@ -4,13 +4,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "node src/cli.mjs",
-    "test": "node --test test/*.test.mjs"
+    "start": "bun src/cli.mjs",
+    "test": "bun test/*.test.mjs"
   },
   "dependencies": {
     "mysql2": "3.23.1"
   },
   "engines": {
-    "node": ">=24.18.0 <25"
+    "bun": ">=1.4.2"
   }
 }

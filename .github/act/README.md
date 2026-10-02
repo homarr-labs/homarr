@@ -3,18 +3,18 @@
 Install [Act](https://nektosact.com/installation/index.html) and ensure Docker is running, then use:
 
 ```bash
-pnpm ci:act:fast
-pnpm ci:act:docker
-pnpm ci:act:all
-pnpm ci:act:cleanup
+bun run ci:act:fast
+bun run ci:act:docker
+bun run ci:act:all
+bun run ci:act:cleanup
 ```
 
-`fast` runs the quality gate. `docker` and `all` run the gate followed by the single container build, E2E suite, and memory regression test. `cleanup` validates the manual cleanup path without calling GitHub. The wrapper supports regular clones and Git worktrees, including non-default Docker contexts. Linux dependencies are kept in Docker volumes instead of overwriting host `node_modules`. The first run downloads the Act runner and Playwright browser dependencies.
+`fast` runs the database checks and quality gate. `docker` and `all` use the manual validation event to run those checks, build the container once, and run the converter boot/restart smoke test. `cleanup` validates the manual cleanup path without calling GitHub. The wrapper supports regular clones and Git worktrees, including non-default Docker contexts. Linux dependencies are kept in Docker volumes instead of overwriting host `node_modules`. The first run downloads the Act runner and Playwright browser dependencies.
 
 Remote caching is optional locally. Copy `.github/act/.secrets.example` to `.github/act/.secrets`, populate it with rotated credentials, and run with:
 
 ```bash
-ACT_SECRET_FILE=.github/act/.secrets pnpm ci:act:all
+ACT_SECRET_FILE=.github/act/.secrets bun run ci:act:all
 ```
 
 Act never publishes or deletes GHCR images. The secret file is ignored by Git.

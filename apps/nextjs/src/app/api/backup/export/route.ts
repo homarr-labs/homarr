@@ -3,7 +3,7 @@ import path from "path";
 
 import { NextResponse } from "next/server";
 import AdmZip from "adm-zip";
-import Database from "better-sqlite3";
+import { Database } from "bun:sqlite";
 
 import { auth } from "@homarr/auth/next";
 import { env } from "@homarr/common/env";
@@ -15,7 +15,7 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
 
-  if (dbEnv.DRIVER !== "better-sqlite3") {
+  if (dbEnv.DRIVER !== "bun-sqlite") {
     return NextResponse.json({ error: "SQLite backup is only available for SQLite databases" }, { status: 400 });
   }
 
@@ -29,7 +29,7 @@ export async function GET() {
 
   try {
     sourceDb = new Database(dbPath, { readonly: true });
-    sourceDb.pragma("wal_checkpoint(TRUNCATE)");
+    sourceDb.exec("PRAGMA wal_checkpoint(TRUNCATE)");
     sourceDb.exec(`VACUUM INTO '${tempPath}'`);
     sourceDb.close();
     sourceDb = null;

@@ -19,7 +19,7 @@
     "clean": "rm -rf .turbo node_modules",
     "format": "oxfmt .",
     "lint": "oxlint",
-    "test": "vitest run --root ../.. packages/onboarding/src",
+    "test": "bun --bun vitest run --root ../.. packages/onboarding/src",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

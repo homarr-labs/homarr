@@ -13,13 +13,17 @@ if (
 }
 
 const drivers = {
-  betterSqlite3: "better-sqlite3",
+  bunSqlite: "bun-sqlite",
   nodePostgres: "node-postgres",
 } as const;
 
+if (process.env.DB_DRIVER === "better-sqlite3") {
+  process.env.DB_DRIVER = "bun-sqlite";
+}
+
 const isDriver = (driver: (typeof drivers)[keyof typeof drivers]) => process.env.DB_DRIVER === driver;
 const isUsingDbHost = Boolean(process.env.DB_HOST);
-const onlyAllowUrl = isDriver(drivers.betterSqlite3);
+const onlyAllowUrl = isDriver(drivers.bunSqlite);
 const urlRequired = onlyAllowUrl || !isUsingDbHost;
 const hostRequired = isUsingDbHost && !onlyAllowUrl;
 
@@ -30,15 +34,15 @@ export const dbEnv = createEnv({
    */
   server: {
     DRIVER: z
-      .union([z.literal(drivers.betterSqlite3), z.literal(drivers.nodePostgres)], {
+      .union([z.literal(drivers.bunSqlite), z.literal(drivers.nodePostgres)], {
         message: `Invalid database driver, supported are ${Object.values(drivers).join(", ")}`,
       })
-      .default(drivers.betterSqlite3),
+      .default(drivers.bunSqlite),
     ...(urlRequired
       ? {
           URL:
             // Fallback to the default sqlite file path in production
-            process.env.NODE_ENV === "production" && isDriver("better-sqlite3")
+            process.env.NODE_ENV === "production" && isDriver("bun-sqlite")
               ? z.string().default("/appdata/db/db.sqlite")
               : z.string().nonempty(),
         }

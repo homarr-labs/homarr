@@ -4,11 +4,9 @@ description: "Common setup steps for Actions"
 runs:
   using: composite
   steps:
-    - uses: pnpm/action-setup@v6
-    - uses: actions/setup-node@v6
+    - uses: oven-sh/setup-bun@v2
       with:
-        node-version: 24.18.0
-        cache: "pnpm"
+        bun-version: 1.4.2
 
     - shell: bash
-      run: pnpm install --frozen-lockfile
+      run: bun install --frozen-lockfile

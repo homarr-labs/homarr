@@ -4,9 +4,9 @@ import path from "path";
 
 import { NextResponse } from "next/server";
 import AdmZip from "adm-zip";
-import BetterSqlite3 from "better-sqlite3";
-import { drizzle } from "drizzle-orm/better-sqlite3";
-import { migrate } from "drizzle-orm/better-sqlite3/migrator";
+import { Database as BetterSqlite3 } from "bun:sqlite";
+import { drizzle } from "drizzle-orm/bun-sqlite";
+import { migrate } from "drizzle-orm/bun-sqlite/migrator";
 
 import {
   getOnboardingClaimTokenFromCookieHeader,
@@ -221,7 +221,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
 
-  if (dbEnv.DRIVER !== "better-sqlite3") {
+  if (dbEnv.DRIVER !== "bun-sqlite") {
     return NextResponse.json({ error: "SQLite restore is only available for SQLite databases" }, { status: 400 });
   }
 

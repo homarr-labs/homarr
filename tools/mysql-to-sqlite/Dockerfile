@@ -1,7 +1,7 @@
-FROM node:24.18.0-bookworm-slim
+FROM oven/bun:1.4.2-slim
 WORKDIR /converter
-COPY package.json package-lock.json ./
-RUN npm ci --omit=dev --ignore-scripts
+COPY package.json bun.lock ./
+RUN bun install --frozen-lockfile --production --ignore-scripts
 COPY src ./src
 COPY legacy ./legacy
-ENTRYPOINT ["node", "src/cli.mjs"]
+ENTRYPOINT ["bun", "src/cli.mjs"]

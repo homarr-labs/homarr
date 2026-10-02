@@ -14,6 +14,9 @@ jobs:
     timeout-minutes: 2
     steps:
       - uses: actions/checkout@v7
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.2
       - run: |
-          npx --yes --package renovate -- \
+          bunx --bun --package renovate \
               renovate-config-validator --strict .github/renovate.json5

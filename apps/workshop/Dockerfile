@@ -13,14 +13,11 @@ RUN --mount=type=cache,id=workshop-go-mod,target=/go/pkg/mod \
 FROM pocketbase-builder AS pocketbase-test
 RUN --mount=type=cache,id=workshop-go-mod,target=/go/pkg/mod go test ./...
 
-FROM node:24.18.0-alpine AS dependencies
+FROM oven/bun:1.4.2-alpine AS dependencies
 WORKDIR /app
-ENV COREPACK_HOME=/corepack
-RUN mkdir -p /corepack && corepack enable pnpm && corepack install --global pnpm@11.15.1
-COPY pnpm-lock.yaml pnpm-workspace.yaml package.json turbo.json ./
+COPY bun.lock bunfig.toml package.json turbo.json ./
 COPY patches ./patches
 COPY apps/docs ./apps/docs
-COPY tools/motion-reel/three ./tools/motion-reel/three
 COPY packages/common ./packages/common
 COPY packages/core ./packages/core
 COPY packages/custom-widgets ./packages/custom-widgets
@@ -33,7 +30,7 @@ COPY packages/ui ./packages/ui
 COPY packages/validation ./packages/validation
 COPY packages/workshop ./packages/workshop
 COPY tooling/typescript ./tooling/typescript
-RUN --mount=type=cache,id=workshop-pnpm-store,target=/pnpm/store pnpm config set store-dir /pnpm/store && pnpm install --filter @homarr/docs... --frozen-lockfile
+RUN --mount=type=cache,id=workshop-bun-cache,target=/root/.bun/install/cache bun install --filter @homarr/docs --frozen-lockfile
 
 FROM dependencies AS website
 ARG KAPA_WEBSITE_ID=1e4656f4-abeb-4343-bbae-1d8626f52378
@@ -44,7 +41,7 @@ ARG WORKSHOP_WEB_URL=https://homarr.dev/workshop
 ENV HOMARR_WEBSITE_URL=$HOMARR_WEBSITE_URL
 ENV WORKSHOP_API_URL=$WORKSHOP_API_URL
 ENV WORKSHOP_WEB_URL=$WORKSHOP_WEB_URL
-RUN CI=true SKIP_ENV_VALIDATION=true pnpm --filter @homarr/docs build
+RUN CI=true SKIP_ENV_VALIDATION=true bun run --filter @homarr/docs build
 
 FROM ${POCKETBASE_IMAGE} AS pocketbase-runtime
 ENV PORT=8090

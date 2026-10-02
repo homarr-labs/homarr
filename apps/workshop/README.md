@@ -12,14 +12,14 @@ From the repository root:
 
 ```sh
 cp apps/workshop/.env.example apps/workshop/.env
-pnpm install --frozen-lockfile
+bun install --frozen-lockfile
 docker compose --env-file apps/workshop/.env -f apps/workshop/docker-compose.yml up --build workshop
 ```
 
 Start the documentation site in another terminal:
 
 ```sh
-WORKSHOP_API_URL=http://127.0.0.1:8090 pnpm dev:docs
+WORKSHOP_API_URL=http://127.0.0.1:8090 bun run dev:docs
 ```
 
 Open PocketBase administration at `http://127.0.0.1:8090/_/` and Workshop at
@@ -71,18 +71,18 @@ deployments can use an explicit comma-separated allowlist.
 Run the focused Workshop checks:
 
 ```sh
-pnpm test:workshop
-pnpm --filter @homarr/workshop typecheck
-pnpm --filter @homarr/docs typecheck
+bun run test:workshop
+bun run --filter @homarr/workshop typecheck
+bun run --filter @homarr/docs typecheck
 ```
 
-The integration suite uses a disposable Compose project. `pnpm test:workshop-image` additionally builds and smoke-tests
+The integration suite uses a disposable Compose project. `bun run test:workshop-image` additionally builds and smoke-tests
 the combined production image. The production image smoke also runs in PR CI on native amd64 and arm64 runners, including data persistence and backup restore. The broader integration suite remains available manually. Workshop CI validates Compose configuration and publishes images only on release branches. The main Fast gate owns workspace typechecking.
 
 To smoke-test an already built candidate without rebuilding:
 
 ```sh
-WORKSHOP_IMAGE_TEST_IMAGE=homarr-workshop:candidate pnpm test:workshop-image
+WORKSHOP_IMAGE_TEST_IMAGE=homarr-workshop:candidate bun run test:workshop-image
 ```
 
 ## Data safety

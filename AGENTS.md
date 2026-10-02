@@ -44,7 +44,7 @@ homarr/
 │   ├── custom-widgets/  # Custom JSX v2 schema, validation, and runtime
 │   ├── onboarding/      # Onboarding studio and setup flow
 │   ├── workshop/        # Homarr-side Workshop client and contracts
-│   └── cli/             # Node CLI for ops (brocli)
+│   └── cli/             # Bun CLI for ops (brocli)
 ├── tooling/
 │   ├── typescript/      # Base tsconfig
 │   └── github/          # CI setup action
@@ -73,15 +73,15 @@ Only after this reader-value test passes, use these locations:
 
 ## Monorepo Commands
 
-- `pnpm dev` — Next.js app only
-- `pnpm dev:cli -- dev` — run the developer CLI without installing a global binary
-- `pnpm db:seed` — seed default database data explicitly
-- `pnpm docker:dev:up` — start the Redis development service in the background
-- `pnpm dev:docs` — Fumadocs site only
-- `pnpm turbo build` — build all packages
-- `pnpm turbo build --filter=@homarr/docs` — build docs only
-- `pnpm turbo typecheck` — typecheck all packages
-- `pnpm lint` / `pnpm format` — oxlint / oxfmt
+- `bun run dev` — Next.js app only
+- `bun run dev:cli -- dev` — run the developer CLI without installing a global binary
+- `bun run db:seed` — seed default database data explicitly
+- `bun run docker:dev:up` — start the Redis development service in the background
+- `bun run dev:docs` — Fumadocs site only
+- `bun run turbo build` — build all packages
+- `bun run turbo build --filter=@homarr/docs` — build docs only
+- `bun run turbo typecheck` — typecheck all packages
+- `bun run lint` / `bun run format` — oxlint / oxfmt
 
 ## Code Style
 
@@ -91,9 +91,9 @@ Only after this reader-value test passes, use these locations:
 - Mantine: use the `mantine` MCP server in `.mcp.json` for current v9 APIs before writing component code. Prefer built-in primitives (`Combobox`/`useCombobox`, the polymorphic `component` prop, `@mantine/hooks`) and check `packages/ui/` for existing conventions first.
 - Icons: @tabler/icons-react
 - Docs app can import from `@homarr/definitions` for shared types
-- Run `pnpm dev:cli -- dev` to browse local `homarr:*` images and remote PR images.
-- Run `pnpm dev:cli -- build <name>` from a Homarr checkout to build `homarr:<name>` with rebuild provenance.
-- Run `pnpm dev:cli -- build --pr <number>` to build a PR locally from a temporary checkout.
+- Run `bun run dev:cli -- dev` to browse local `homarr:*` images and remote PR images.
+- Run `bun run dev:cli -- build <name>` from a Homarr checkout to build `homarr:<name>` with rebuild provenance.
+- Run `bun run dev:cli -- build --pr <number>` to build a PR locally from a temporary checkout.
 
 ## Testing
 
@@ -111,3 +111,14 @@ Portable skills live in `.agents/skills/`. Read the relevant `SKILL.md` before w
 - `documentation-sync` — documentation for changes users need explained
 - `mcp-integration` — safe tRPC-to-MCP exposure
 - `homarr-custom-widget` — safe Custom JSX v2 authoring
+
+<!-- BEGIN:turborepo-agent-rules -->
+
+# This is NOT the Turborepo you know
+
+Turborepo configuration, task behavior, and CLI commands can vary between installed versions and may differ from your training data. Resolve the `turbo` package from this file's directory or relevant workspace; in monorepos, it may not be visible from the repository root. For example, run `node -p "require.resolve('turbo/package.json')"` from a workspace that depends on `turbo`.
+
+Read `docs/README.md` inside that installed package first, then read the relevant pages from its `docs/` directory before changing Turborepo configuration or commands. Heed deprecation notices. These bundled docs match the installed package version and are available without network access.
+
+This block is written and re-added by `turbo` before repository-scoped commands when an AI agent is detected. In the Turborepo source repository, its template is defined in `crates/turborepo-cli/src/cli/agent_guidance.rs`. Removing the managed block while updates are enabled means a later qualifying invocation will add it again. Set `"agentGuidance": false` in the root `turbo.json` or `turbo.jsonc` to opt out; this does not remove an existing block. Keep the block committed with your work to avoid an uncommitted change on the next agent invocation.
+<!-- END:turborepo-agent-rules -->

@@ -21,7 +21,7 @@ cleanup() {
 trap cleanup EXIT
 
 verify_persisted_data() {
-  WORKSHOP_TEST_URL="$1" node --input-type=module -e '
+  WORKSHOP_TEST_URL="$1" bun -e '
     import assert from "node:assert/strict";
     const baseUrl = process.env.WORKSHOP_TEST_URL;
     const response = await fetch(`${baseUrl}/api/collections/_superusers/auth-with-password`, {

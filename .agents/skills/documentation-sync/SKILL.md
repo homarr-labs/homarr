@@ -53,5 +53,5 @@ For a widget:
 1. Every passage adds information an advanced user cannot reasonably infer from the interface. Remove obvious, repetitive, or unnecessary prose.
 2. Keep names, defaults, paths, screenshots, links, and prerequisites consistent with code.
 3. Update every affected page and remove superseded guidance.
-4. Run the narrowest useful docs validation. Use `pnpm turbo build --filter=@homarr/docs` when links, MDX, generated definitions, or navigation can fail; otherwise run the docs package formatter on touched files.
-5. Treat broken links and anchors as failures; run `pnpm --filter @homarr/docs validate:links` after the static build.
+4. Run the narrowest useful docs validation. Use `bun run turbo build --filter=@homarr/docs` when links, MDX, generated definitions, or navigation can fail; otherwise run the docs package formatter on touched files.
+5. Treat broken links and anchors as failures; run `bun run --filter @homarr/docs validate:links` after the static build.

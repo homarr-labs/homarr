@@ -15,11 +15,11 @@
     ".": "./index.ts"
   },
   "scripts": {
-    "build": "esbuild src/index.ts --bundle --platform=node --outfile=cli.cjs --external:bcrypt --external:cpu-features --loader:.html=text --loader:.node=text",
+    "build": "bun build src/index.ts --target=bun --format=cjs --outfile=cli.cjs --external=bcrypt --external=cpu-features",
     "clean": "rm -rf .turbo node_modules",
     "format": "oxfmt .",
     "lint": "oxlint",
-    "run": "pnpm with-env node cli.cjs",
+    "run": "bun run with-env bun cli.cjs",
     "typecheck": "tsc --noEmit",
     "with-env": "dotenv -e .env --"
   },

@@ -5,18 +5,18 @@
   "license": "Apache-2.0",
   "type": "module",
   "scripts": {
-    "dev": "next dev --port 3003",
+    "dev": "bun --bun next dev --port 3003",
     "start": "serve out --listen 3003 --config ../serve.json",
-    "build": "pnpm validate:coverage && next build",
-    "typecheck": "next typegen && tsc --noEmit",
+    "build": "bun run validate:coverage && bun --bun next build",
+    "typecheck": "bun --bun next typegen && tsc --noEmit",
     "lint": "oxlint",
     "format": "oxfmt .",
     "clean": "git clean -xdf .next out node_modules",
-    "api-dump-contributors": "node ./scripts/dump-contributors.mjs",
-    "validate:coverage": "tsx ./scripts/validate-docs-coverage.ts",
-    "validate:links": "tsx ./scripts/validate-links.ts",
-    "verify:search": "tsx ./scripts/verify-search.ts",
-    "verify:seo": "tsx ./scripts/verify-seo.ts"
+    "api-dump-contributors": "bun ./scripts/dump-contributors.mjs",
+    "validate:coverage": "bun ./scripts/validate-docs-coverage.ts",
+    "validate:links": "bun ./scripts/validate-links.ts",
+    "verify:search": "bun ./scripts/verify-search.ts",
+    "verify:seo": "bun ./scripts/verify-seo.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",
@@ -66,7 +66,6 @@
     "@types/three": "catalog:",
     "cheerio": "^1.2.0",
     "next-validate-link": "1.6.7",
-    "tsx": "catalog:",
     "typescript": "catalog:",
     "zod": "catalog:"
   }

@@ -4,12 +4,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "HOMARR_VERSION=$(node -p \"require('../../package.json').version\") pnpm with-env next build",
+    "build": "HOMARR_VERSION=$(bun -p \"require('../../package.json').version\") bun run with-env bun --bun next build",
     "clean": "git clean -xdf .next .turbo node_modules",
-    "dev": "pnpm with-env next dev",
+    "dev": "bun run with-env bun --bun next dev",
     "format": "oxfmt .",
     "lint": "oxlint",
-    "start": "pnpm with-env next start",
+    "start": "bun run with-env bun --bun next start",
     "typecheck": "tsc --noEmit",
     "with-env": "dotenv -e ../../.env --"
   },
@@ -90,7 +90,6 @@
     "ai": "catalog:",
     "assistant-stream": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
-    "better-sqlite3": "catalog:",
     "chroma-js": "catalog:",
     "clsx": "catalog:",
     "dayjs": "catalog:",
@@ -123,7 +122,6 @@
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/adm-zip": "catalog:",
-    "@types/better-sqlite3": "catalog:",
     "@types/chroma-js": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",

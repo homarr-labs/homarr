@@ -4,7 +4,7 @@ import { promisify } from "node:util";
 import path from "node:path";
 
 import { chromium, expect as expectBrowser } from "@playwright/test";
-import Database from "better-sqlite3";
+import { Database } from "bun:sqlite";
 import { expect, test } from "vitest";
 
 import { decryptSecretWithKey } from "../packages/common/src/encryption";

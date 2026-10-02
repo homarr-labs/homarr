@@ -1,0 +1,8 @@
+[install]
+# Share compatible dependencies across all workspaces at the repository root.
+linker = "hoisted"
+# ssh2 uses its JavaScript crypto fallback: the optional addon requires unsupported libuv APIs.
+
+[run]
+# Honor Bun even for CLIs with a Node shebang.
+bun = true

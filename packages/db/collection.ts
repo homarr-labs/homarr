@@ -68,8 +68,8 @@ export const createDbInsertCollectionWithoutTransaction = <TTableKey extends Tab
           await insertAllAsync(db as unknown as HomarrDatabasePostgresql);
           return;
         default:
-          // For better-sqlite3, we need to use the synchronous insertAll method
-          // default assumes better-sqlite3. It's original implementation.
+          // For Bun SQLite, we need to use the synchronous insertAll method
+          // default assumes Bun SQLite. It's original implementation.
           insertAll(db);
           break;
       }

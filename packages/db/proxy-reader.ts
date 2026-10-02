@@ -68,10 +68,10 @@ const createProxyReader = (database: unknown, schema: ProxySchema, closeAsync: (
 
 const createProxyReaderAsync = async (): Promise<ProxyReader> => {
   switch (dbEnv.DRIVER) {
-    case "better-sqlite3": {
-      const [{ default: Database }, { drizzle }, { proxySchema }] = await Promise.all([
-        import("better-sqlite3"),
-        import("drizzle-orm/better-sqlite3"),
+    case "bun-sqlite": {
+      const [{ Database }, { drizzle }, { proxySchema }] = await Promise.all([
+        import("bun:sqlite"),
+        import("drizzle-orm/bun-sqlite"),
         import("./proxy/sqlite"),
       ]);
       const connection = new Database(dbEnv.URL);

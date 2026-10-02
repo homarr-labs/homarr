@@ -20,7 +20,7 @@
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
     "format": "oxfmt .",
-    "postinstall": "tsx ./src/docs/codegen.ts",
+    "postinstall": "bun ./src/docs/codegen.ts",
     "lint": "oxlint",
     "typecheck": "tsc --noEmit"
   },
@@ -31,7 +31,6 @@
   },
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "tsx": "catalog:",
     "typescript": "catalog:"
   }
 }

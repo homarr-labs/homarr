@@ -15,7 +15,7 @@ down once its content is on screen and every cut lands on a beat. Change pacing 
 
 ## Requirements
 
-Run `pnpm install` at the repository root first; the scripts use its Playwright, esbuild and `@tabler/icons`. You also
+Run `bun install` at the repository root first; the scripts use its Playwright, esbuild and `@tabler/icons`. You also
 need Python 3 with `numpy` and `scipy`, `ffmpeg`, `npm` and network access for the first setup.
 
 ## Render

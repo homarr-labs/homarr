@@ -20,10 +20,9 @@ on:
       - "tooling/typescript/**"
       - "patches/**"
       - "package.json"
-      - "pnpm-lock.yaml"
-      - "pnpm-workspace.yaml"
+      - "bun.lock"
+      - "bunfig.toml"
       - "turbo.json"
-      - ".npmrc"
   push:
     branches: [dev, v2, release/v2, main]
     paths:
@@ -44,10 +43,9 @@ on:
       - "tooling/typescript/**"
       - "patches/**"
       - "package.json"
-      - "pnpm-lock.yaml"
-      - "pnpm-workspace.yaml"
+      - "bun.lock"
+      - "bunfig.toml"
       - "turbo.json"
-      - ".npmrc"
 
 permissions:
   contents: read
@@ -72,9 +70,9 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-node@v6
+      - uses: oven-sh/setup-bun@v2
         with:
-          node-version: 24.18.0
+          bun-version: 1.4.2
       - name: Build and exercise the combined production image
         run: sh apps/workshop/test-image.sh
 

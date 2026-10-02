@@ -17,11 +17,11 @@ Orient from the current checkout before editing. Treat package manifests, export
 
 ## Current toolchain
 
-- Use Node `24.18.0` from `mise.toml` and pnpm `11.15.1` from `package.json`.
-- Use pnpm workspaces with Turborepo. Workspace packages use the `@homarr/` scope and catalog-managed dependencies.
+- Use Bun `1.4.2` from `mise.toml` and `package.json`.
+- Use Bun workspaces with Turborepo and a shared hoisted install. Workspace packages use the `@homarr/` scope and catalog-managed dependencies.
 - Use Next.js App Router, TypeScript, tRPC, Drizzle, Mantine v9, Tabler icons, Jotai, TanStack Query, next-intl, Vitest, and Playwright.
 - Use oxlint and oxfmt. Mantine is the application UI system; Tailwind is limited to the docs app.
-- `pnpm dev` starts only `@homarr/nextjs`. Start a standalone runtime explicitly when the task needs it.
+- `bun run dev` starts only `@homarr/nextjs`. Start a standalone runtime explicitly when the task needs it.
 
 ## High-value seams
 

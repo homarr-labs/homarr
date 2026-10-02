@@ -30,7 +30,7 @@ if [[ -z "${DOCKER_HOST:-}" ]]; then
 fi
 
 head_sha=$(git rev-parse HEAD)
-base_sha=$(git rev-parse HEAD~1 2>/dev/null || echo "$head_sha")
+base_sha=$(git merge-base origin/dev HEAD)
 head_ref=$(git branch --show-current)
 head_ref=${head_ref:-act-local}
 event_file=$(mktemp "${TMPDIR:-/tmp}/homarr-act-event.XXXXXX")
@@ -46,7 +46,7 @@ if [[ "$mode" == "cleanup" ]]; then
   "repository": { "full_name": "homarr-labs/homarr" }
 }
 EOF
-elif [[ "$mode" == "docker" ]]; then
+elif [[ "$mode" == "docker" || "$mode" == "all" ]]; then
   event_name="workflow_dispatch"
   cat >"$event_file" <<EOF
 {
@@ -91,7 +91,7 @@ if [[ -n "$job" ]]; then
 fi
 
 git_common_dir=$(cd "$(git rev-parse --git-common-dir)" && pwd)
-container_options="--volume homarr-act-node-modules:$PWD/node_modules --volume homarr-act-pnpm-store:$PWD/.pnpm-store"
+container_options="--volume homarr-act-node-modules:$PWD/node_modules --volume homarr-act-bun-cache:/root/.bun/install/cache"
 case "$git_common_dir" in
   "$PWD" | "$PWD"/*) ;;
   *) container_options="$container_options --volume $git_common_dir:$git_common_dir:ro" ;;

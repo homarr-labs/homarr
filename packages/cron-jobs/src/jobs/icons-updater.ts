@@ -124,8 +124,8 @@ export const iconsUpdaterJob = createCronJob("iconsUpdater", EVERY_WEEK, {
     },
     handleSync() {
       db.transaction((transaction) => {
-        const result = transaction.delete(icons).where(deadIconsFilter).run();
-        countDeleted += result.changes;
+        const result = transaction.delete(icons).where(deadIconsFilter).returning({ id: icons.id }).all();
+        countDeleted += result.length;
 
         if (deadIconRepositories.length >= 1) {
           transaction

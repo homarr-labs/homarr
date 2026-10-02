@@ -19,7 +19,7 @@
     "noUncheckedIndexedAccess": true,
     "strictNullChecks": true,
     "experimentalDecorators": true,
-    "types": ["node"],
+    "types": ["node", "bun-types/sqlite"],
     "paths": {
       "@homarr/node-unifi": ["${configDir}/../../node_modules/@types/node-unifi"]
     }
